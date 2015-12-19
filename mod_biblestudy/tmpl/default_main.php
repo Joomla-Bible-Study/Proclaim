@@ -16,6 +16,7 @@ JLoader::register('JBSMHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . 'helper.php');
 JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/listing.php');
 $JBSMListing = new JBSMListing;
 ?>
+<<<<<<< HEAD
 <div class="container-fluid">
 	<?php if (($params->get('pageheader')))
 	{ ?>
@@ -35,6 +36,23 @@ $JBSMListing = new JBSMListing;
 			?>
 		</div>
 	</div>
+=======
+<div id="biblestudy" class="noRefTagger">
+	<?php if($params->get('pageheader') != '<div>&nbsp;</div>') : ?>
+		<div id="jbsmoduleheader"><?php echo $params->get('pageheader'); ?></div>
+	<?php endif; ?>
+	<!-- This div is the container for the whole page -->
+	<table id="bsmsmoduletable">
+		<?php
+		$header = $JBSMListing->getHeader($list[0], $params, $admin_params, $template, $params->get('use_headers'), $ismodule);
+		echo $header;
+		?>
+		<tbody>
+		<?php
+		$class1 = 'bsodd';
+		$class2 = 'bseven';
+		$oddeven = $class1;
+>>>>>>> Joomla-Bible-Study/master
 
 	<div class="row-fluid">
 		<div class="span12">

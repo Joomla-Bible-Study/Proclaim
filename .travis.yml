@@ -5,6 +5,7 @@ language: php
 
 php:
   - 5.3
+<<<<<<< HEAD
 # Until we start using phpunit we only need to test are menumum version.
 #  - 5.4
 #  - 5.5
@@ -18,6 +19,29 @@ services:
 before_script:
   # Make sure all dev dependencies are installed
   - composer install
+=======
+  - 5.4
+
+before_script:
+  - "export DISPLAY=:99:0"
+  - "sh -e /etc/init.d/xvfb start"
+  - pear config-set auto_discover 1
+  - pear channel-discover pear.phing.info
+  - pear channel-discover pear.pdepend.org
+  - pear channel-discover pear.phpmd.org
+  - pear channel-discover pear.phpdoc.org
+  - pear install phing/phing
+  - pear install pdepend/PHP_Depend-beta
+  - pear install pear.phpunit.de/PHPUnit
+  - pear install pear.phpunit.de/phpcpd
+  - pear install pear.phpunit.de/phploc
+  - pear install phpunit/DbUnit
+  - pear install phpunit/PHPUnit_Selenium
+  - pear install phpmd/PHP_PMD
+  - pear install PHP_CodeSniffer
+  - pear install phpdoc/phpDocumentor-alpha
+  - pear install VersionControl_Git-0.4.4
+>>>>>>> Joomla-Bible-Study/master
   - phpenv rehash
   # Set up Apache
   # - ./build/travis/php-apache.sh
@@ -25,6 +49,7 @@ before_script:
   - sh -c "if [ '$TRAVIS_PHP_VERSION' == '5.3' ] || [ '$TRAVIS_PHP_VERSION' == '5.4' ]; then phpenv config-add build/travis/phpenv/apc-$TRAVIS_PHP_VERSION.ini; fi"
 
 script:
+<<<<<<< HEAD
   - bin/phing pmd
   - sh -c "if [ '$TRAVIS_PHP_VERSION' != '7.0' ]; then bin/phpcs --report=full --extensions=php -p --standard=build/phpcs/Joomla .; fi"
 
@@ -39,3 +64,6 @@ notifications:
     on_success: change  # options: [always|never|change] default: always
     on_failure: always  # options: [always|never|change] default: always
     on_start: false     # default: false
+=======
+  - phing pmd
+>>>>>>> Joomla-Bible-Study/master

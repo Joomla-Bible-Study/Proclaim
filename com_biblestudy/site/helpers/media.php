@@ -357,8 +357,20 @@ class JBSMMedia
 
 		$imagereturn = '<img src="' . JUri::base() . $path . '" alt="' . $alt . '" ' . $return->attributes . ' >';
 
+<<<<<<< HEAD
 		return $imagereturn;
 	}
+=======
+			if ($compat_mode == 0)
+			{
+				$out .= '<a href="index.php?option=com_biblestudy&amp;id=' . $media->id . '&amp;view=sermons&amp;controller=sermons&amp;task=download">';
+			}
+			else
+			{
+				$out .= '<a href="//joomlabiblestudy.org/router.php?file=' . $media->spath . $media->fpath . $media->filename .
+					'&amp;size=' . $media->size . '">';
+			}
+>>>>>>> Joomla-Bible-Study/master
 
 	/**
 	 * Set up Player Attributes

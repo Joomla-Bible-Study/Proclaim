@@ -42,6 +42,7 @@ if ($msg)
 				<div class="fbmainmenu"><?php echo $this->data->version . ' (' . $this->data->versiondate . ')'; ?></div>
 			</div>
 
+<<<<<<< HEAD
 			<div id="jbspaypal">
 				<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
 					<input type="hidden" name="cmd" value="_donations">
@@ -148,6 +149,17 @@ if ($msg)
 						<a href="index.php?option=com_biblestudy&amp;view=templatecodes"
 						   style="text-decoration:none;"
 						   title="<?php echo JText::_('JBS_CMN_TEMPLATECODE'); ?>" class="btn cpanl-img"> <span class="icon-stack" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_TEMPLATECODE'); ?> </span></a>
+=======
+    <p><?php echo JText::_('JBS_CPL_INTRO') . ' - <a href="//www.joomlabiblestudy.org/jbs-documentation.html" target="_blank">' . JText::_('JBS_CPL_ONLINE_DOCUMENTATION') . '</a> - <a href="//www.joomlabiblestudy.org/forum/" target="_blank">' . JText::_('JBS_CPL_VISIT_FAQ'); ?></a></p>
+</div>
+<?php if (!BIBLESTUDY_CHECKREL)
+{
+	?>
+<div style="border:1px solid #ddd; background:#FBFBFB;">
+    <h3 style="text-align: center">
+		<?php echo JText::_('JBS_CPL_MENUE_LINKS'); ?>
+    </h3>
+>>>>>>> Joomla-Bible-Study/master
 
 						<a href="index.php?option=com_biblestudy&amp;view=styles"
 						   style="text-decoration:none;"

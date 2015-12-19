@@ -2,10 +2,17 @@
 /**
  * Part of Joomla BibleStudy Package
  *
+<<<<<<< HEAD
  * @package    BibleStudy.Admin
  * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
+=======
+ * @package        BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link           http://www.JoomlaBibleStudy.org
+>>>>>>> Joomla-Bible-Study/master
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -31,7 +38,11 @@ class BiblestudyModelSermon extends JModelItem
 	/**
 	 * Constructor
 	 *
+<<<<<<< HEAD
 	 * @param   array  $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
+=======
+	 * @param   array $config An array of configuration options (name, state, dbo, table_path, ignore_request).
+>>>>>>> Joomla-Bible-Study/master
 	 *
 	 * @since   11.1
 	 */
@@ -43,12 +54,16 @@ class BiblestudyModelSermon extends JModelItem
 	/**
 	 * Method to increment the hit counter for the study
 	 *
+<<<<<<< HEAD
 	 * @param   int  $pk  ID
+=======
+	 * @param   int $pk ID
+>>>>>>> Joomla-Bible-Study/master
 	 *
 	 * @access    public
 	 * @return    boolean    True on success
 	 *
-	 * @todo      this look like it could be moved to a helper.
+	 * @todo      this look like it could be moved to a helper. And pass info along to make it work like the id. bcc
 	 * @since     1.5
 	 */
 	public function hit($pk = null)
@@ -56,7 +71,7 @@ class BiblestudyModelSermon extends JModelItem
 		$pk    = (!empty($pk)) ? $pk : (int) $this->getState('study.id');
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
-		$query->update('#__bsms_studies')->set('hits = hits  + 1')->where('id = ' . (int) $pk);
+		$query->update('#__bsms_studies')->set('hits = hits + 1')->where('id = ' . (int) $pk);
 		$db->setQuery($query);
 		$db->execute();
 
@@ -64,9 +79,50 @@ class BiblestudyModelSermon extends JModelItem
 	}
 
 	/**
+<<<<<<< HEAD
 	 * Method to get study data.
 	 *
 	 * @param   int  $pk  The id of the study.
+=======
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @return void
+	 *
+	 * @since    1.6
+	 */
+	protected function populateState()
+	{
+		$app = JFactory::getApplication('site');
+
+		// Load state from the request.
+		$pk = $app->input->get('id', '', 'int');
+		$this->setState('study.id', $pk);
+
+		$offset = $app->input->get('limitstart', '', 'int');
+		$this->setState('list.offset', $offset);
+
+		// Load the parameters.
+		$params = $app->getParams();
+		$this->setState('params', $params);
+
+		$user = JFactory::getUser();
+
+		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
+		{
+			$this->setState('filter.published', 1);
+			$this->setState('filter.archived', 2);
+		}
+
+		parent::populateState();
+	}
+
+	/**
+	 * Method to get study data.
+	 *
+	 * @param   int $pk The id of the study.
+>>>>>>> Joomla-Bible-Study/master
 	 *
 	 * @since 7.1.0
 	 * @return    mixed    Menu item data object on success, false on failure.
@@ -139,6 +195,7 @@ class BiblestudyModelSermon extends JModelItem
 
 					$nowDate = $db->quote($date->toSql());
 
+<<<<<<< HEAD
 					$query->where('(s.publish_up = ' . $nullDate . ' OR s.publish_up <= ' . $nowDate . ')')
 						->where('(s.publish_down = ' . $nullDate . ' OR s.publish_down >= ' . $nowDate . ')');
 				}
@@ -149,6 +206,22 @@ class BiblestudyModelSermon extends JModelItem
 					$groups = implode(',', $user->getAuthorisedViewLevels());
 					$query->where('s.access IN (' . $groups . ')');
 				}
+=======
+			$registry = new JRegistry;
+			$registry->loadString($data->params);
+			$data->params = $registry;
+
+			$template     = clone JBSMParams::getTemplateparams();
+			if($template)
+			{
+				$template->params->merge($data->params);
+				$data->params = $template->params;
+			}
+
+			$params = clone $this->getState('params');
+			$params->merge($data->params);
+			$data->params = $params;
+>>>>>>> Joomla-Bible-Study/master
 
 				// Filter by published state.
 				$published = $this->getState('filter.published');

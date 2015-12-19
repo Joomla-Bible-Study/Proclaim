@@ -91,7 +91,18 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 
 		$mainframe = JFactory::getApplication();
 		$input     = new JInput;
+<<<<<<< HEAD
 		$document = JFactory::getDocument();
+=======
+		$option    = $input->get('option', '', 'cmd');
+		$document  = JFactory::getDocument();
+		$document->addScript('//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
+		$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
+		$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
+		$pathway       = $mainframe->getPathWay();
+		$contentConfig = JFactory::getApplication('site')->getParams();
+		$dispatcher    = JDispatcher::getInstance();
+>>>>>>> Joomla-Bible-Study/master
 
 		// Get the menu item object
 		// Load the Admin settings and params from the template

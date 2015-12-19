@@ -20,6 +20,7 @@ jimport('joomla.filesystem.file');
 class Com_BiblestudyInstallerScript
 {
 
+<<<<<<< HEAD
 	/** @var string The component's name */
 	protected $biblestudy_extension = 'com_biblestudy';
 
@@ -28,6 +29,14 @@ class Com_BiblestudyInstallerScript
 
 	/** @var string The release value to be displayed and check against throughout this file. */
 	private $_release = '9.0.0';
+=======
+	/**
+	 * The release value to be displayed and check against throughout this file.
+	 *
+	 * @var string
+	 */
+	private $_release = '8.0.8';
+>>>>>>> Joomla-Bible-Study/master
 
 	/**
 	 * Find minimum required joomla version for this extension.
@@ -35,7 +44,11 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @var string
 	 */
+<<<<<<< HEAD
 	private $_minimum_joomla_release = '3.4.1';
+=======
+	private $_minimum_joomla_release = '2.5.11';
+>>>>>>> Joomla-Bible-Study/master
 
 	/**
 	 * Find minimum required PHP version for this extension.

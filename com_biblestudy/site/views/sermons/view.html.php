@@ -488,9 +488,35 @@ class BiblestudyViewSermons extends JViewLegacy
 			$this->document->setMetadata('robots', $this->params->get('robots'));
 		}
 
+<<<<<<< HEAD
 		JHtml::_('behavior.framework');
 		JHtml::_('biblestudy.framework');
 		JHtml::_('biblestudy.loadcss', $this->params, '', 'font-awesome');
+=======
+		if ($css <= "-1")
+		{
+			$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
+		}
+		else
+		{
+			$this->document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
+		}
+		$this->document->addScript('//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
+
+		// Errors when using local swfobject.js file.  IE 6 doesn't work
+		// Import Scripts
+		$this->document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery.js');
+		$this->document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery-noconflict.js');
+		$this->document->addScript(JURI::base() . 'media/com_biblestudy/js/noconflict.js');
+		$this->document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
+		$this->document->addScript(JURI::base() . 'media/com_biblestudy/js/views/studieslist.js');
+		$this->document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
+		$this->document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
+
+		// Styles from tooltip.css moved to css/biblestudy.css
+		// Import Stylesheets
+		$this->document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/general.css');
+>>>>>>> Joomla-Bible-Study/master
 	}
 
 }

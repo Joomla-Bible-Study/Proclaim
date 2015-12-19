@@ -165,7 +165,11 @@ class JBSMBackup
 					}
 					else
 					{
+<<<<<<< HEAD:com_biblestudy/admin/lib/backup.php
 						$data[] = $db->qn($key) . "=" . $db->q(trim(str_replace(array("\r\n", "\r"), "\n", $value)));
+=======
+						$data[] = $db->qn($key) . "=" . $db->q($value);
+>>>>>>> Joomla-Bible-Study/master:com_biblestudy/admin/lib/biblestudy.backup.php
 					}
 				}
 				$export .= implode(',', $data);

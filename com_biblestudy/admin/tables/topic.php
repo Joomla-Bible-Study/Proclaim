@@ -111,7 +111,11 @@ class TableTopic extends JTable
 	 * @link    https://docs.joomla.org/JTable/store
 	 * @since   11.1
 	 */
+<<<<<<< HEAD
 	public function store($updateNulls = false)
+=======
+	protected function _getAssetParentId(JTable $table = null, $id = null)
+>>>>>>> Joomla-Bible-Study/master
 	{
 		if (!$this->_rules)
 		{

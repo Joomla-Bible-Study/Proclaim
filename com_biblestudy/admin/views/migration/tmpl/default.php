@@ -41,12 +41,17 @@ else
 	<div class="status"><?php echo $pre . ' ' . JText::_('JBS_MIG_PROCESSING') . ' ' . $this->running; ?></div>
 </div>
 
-
 <div class="progress progress-striped active">
 	<div class="bar"
 	     style="margin-right: 5px; width: <?php echo $this->percentage ?>%;"></div> <?php echo $this->percentage; ?>%
 </div>
+<<<<<<< HEAD
 <br/>
+=======
+<div class="migration-status">
+	<div class="status"><?php echo JText::_('JBS_MIG_PROCESSING') . ' ' . $this->running; ?></div>
+</div>
+>>>>>>> Joomla-Bible-Study/master
 
 <form action="index.php" name="adminForm" id="adminForm">
 	<input type="hidden" name="option" value="com_biblestudy"/>
@@ -54,6 +59,7 @@ else
 	<input type="hidden" name="task" value="migration.run"/>
 </form>
 
+<<<<<<< HEAD
 <?php if (!$this->more)
 {
 	?>
@@ -72,3 +78,22 @@ else
 	</div>
 	<?php
 }
+=======
+<?php if (!$this->more): ?>
+<div id="j-main-container" class="span10">
+    <div id="cpanel" style="padding-left: 20px">
+        <div class="pull-left">
+            <div class="icon">
+                <a href="index.php?option=com_biblestudy&view=cpanel">
+                    <img class="image" src="../media/com_biblestudy/images/icons/icon-48-administration.png"
+                         border="0" alt="<?php echo JText::_('JBS_CMN_CONTROL_PANEL') ?>" width="32" height="32"/>
+					<span>
+						<?php echo JText::_('JBS_CMN_CONTROL_PANEL') ?>
+					</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+>>>>>>> Joomla-Bible-Study/master

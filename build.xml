@@ -7,7 +7,11 @@
 	<property name="project.name" value="Joomla Bible Study"/>
 
 	<!-- Joomla version to run the unit tests against -->
+<<<<<<< HEAD
 	<property name="joomla.version" value="3.3.6"/>
+=======
+	<property name="joomla.version" value="2.5.11" />
+>>>>>>> Joomla-Bible-Study/master
 
 	<property name="config_path" value="${basedir}/tests/system/servers"/>
 
@@ -102,7 +106,11 @@
 	</target>
 
 	<!-- Build distributable package -->
+<<<<<<< HEAD
 	<target name="package" depends="dev.clean,init,package.modules,package.plugins,package.component" description="Builds the whole component, including modules and plugins">
+=======
+	<target name="package" depends="dev.clean,init,package.modules,package.plugins,package.component,package.addons" description="Builds the whole component, including modules and plugins">
+>>>>>>> Joomla-Bible-Study/master
 
 		<!-- Stage the package -->
 		<mkdir dir="${basedir}/build/packages/_tmp"/>
@@ -158,6 +166,7 @@
 
 	<!-- Setup config file for running the Selenium Webdriver tests -->
 	<target name="test.setup">
+<<<<<<< HEAD
 		<propertyprompt propertyName="server_root" defaultValue="/Applications/MAMP/htdocs" promptText="Enter the path to your Joomla! root directory"/>
 		<propertyprompt propertyName="host" defaultValue="http://localhost" promptText="Enter the sever host"/>
 		<propertyprompt propertyName="db_host" defaultValue="localhost" promptText="Enter database host"/>
@@ -167,6 +176,17 @@
 		<propertyprompt propertyName="joomla_username" defaultValue="admin" promptText="Enter an initial Joomla username"/>
 		<propertyprompt propertyName="joomla_password" defaultValue="password" promptText="Enter an initial Joomla password"/>
 		<propertyprompt propertyName="joomla_email" defaultValue="example@example.com" promptText="Enter an initial Joomla email"/>
+=======
+    	<propertyprompt propertyName="server_root" defaultValue="/Applications/MAMP/htdocs" promptText="Enter the path to your Joomla! root directory"/>
+    	<propertyprompt propertyName="host" defaultValue="//localhost" promptText="Enter the sever host"/>
+    	<propertyprompt propertyName="db_host" defaultValue="localhost" promptText="Enter database host"/>
+    	<propertyprompt propertyName="db_user" defaultValue="root" promptText="Enter Database username"/>
+    	<propertyprompt propertyName="db_pass" defaultValue="root" promptText="Enter database password"/>
+    	<propertyprompt propertyName="db_name" defaultValue="joomla-dev" promptText="Enter Database name"/>
+    	<propertyprompt propertyName="joomla_username" defaultValue="admin" promptText="Enter an initial Joomla username"/>
+    	<propertyprompt propertyName="joomla_password" defaultValue="password" promptText="Enter an initial Joomla password"/>
+    	<propertyprompt propertyName="joomla_email" defaultValue="example@example.com" promptText="Enter an initial Joomla email"/>
+>>>>>>> Joomla-Bible-Study/master
 
 		<copy file="${config_path}/configdef.php.dist" tofile="${config_path}/configdef.php" overwrite="true">
 			<filterchain>
@@ -228,6 +248,20 @@
 		<echo message="Joomla path set to: ${joomla_path}${joomla_dir}"/>
 
 		<echo message="Linking component to Joomla!"/>
+<<<<<<< HEAD
+=======
+
+    	<!-- Create symbolic links for component in the Joomla directory -->
+        <symlink target="${basedir}/com_biblestudy/media" link="${joomla_path}${joomla_dir}/media/com_biblestudy" overwrite="true"/>
+        <symlink target="${basedir}/com_biblestudy/admin" link="${joomla_path}${joomla_dir}/administrator/components/com_biblestudy" overwrite="true"/>
+		<symlink target="${basedir}/com_biblestudy/site" link="${joomla_path}${joomla_dir}/components/com_biblestudy" overwrite="true"/>
+    	<symlink target="${basedir}/mod_biblestudy" link="${joomla_path}${joomla_dir}/modules/mod_biblestudy" overwrite="true"/>
+    	<symlink target="${basedir}/mod_biblestudy_podcast" link="${joomla_path}${joomla_dir}/modules/mod_biblestudy_podcast" overwrite="true"/>
+    	<symlink target="${basedir}/plg_biblestudy_backup" link="${joomla_path}${joomla_dir}/plugins/system/jbsbackup" overwrite="true"/>
+    	<symlink target="${basedir}/plg_biblestudy_finder" link="${joomla_path}${joomla_dir}/plugins/finder/biblestudy" overwrite="true"/>
+    	<symlink target="${basedir}/plg_biblestudy_podcast" link="${joomla_path}${joomla_dir}/plugins/system/jbspodcast" overwrite="true"/>
+    	<symlink target="${basedir}/plg_biblestudy_podcast" link="${joomla_path}${joomla_dir}/plugins/search/biblestudysearch" overwrite="true"/>
+>>>>>>> Joomla-Bible-Study/master
 
 		<!-- Create symbolic links for component in the Joomla directory -->
 		<symlink target="${basedir}/com_biblestudy/media" link="${joomla_path}${joomla_dir}/media/com_biblestudy" overwrite="true"/>
@@ -276,6 +310,7 @@
 		<!-- Possible conditions for staging-->
 		<condition property="staged_but_not_forced">
 			<and>
+<<<<<<< HEAD
 				<istrue value="${joomla-stage-dir}"/>
 				<equals arg1="${force}" arg2="n"/>
 			</and>
@@ -298,6 +333,24 @@
 				<gitclone repository="https://github.com/joomla/joomla-cms.git" targetPath="${joomla-stage-dir}"/>
 				<!-- Switch to the Joomla version that we want to test on -->
 				<gitcheckout repository="${joomla-stage-dir}" branchname="${joomla.version}" create="false"/>
+=======
+    			<istrue value="${joomla-stage-dir}"/>
+    			<equals arg1="${force}" arg2="y"/>
+    		</and>
+    	</condition>
+        <if>
+    		<or>
+    			<isfalse value="${joomla-stage-dir}"/>
+    			<isfalse value="#{staged_but__not_forced}"/>
+    			<istrue value="#{staged_but_forced}"/>
+    		</or>
+    		<then>
+                <delete dir="${joomla-stage-dir}" includeemptydirs="true" verbose="true"/>
+                <echo message="Staging Joomla ${joomla.version}. This will take a few minutes" />
+                <gitclone repository="https://github.com/joomla/joomla-cms.git" targetPath="${joomla-stage-dir}"/>
+                <!-- Switch to the Joomla version that we want to test on -->
+                <gitcheckout repository="${joomla-stage-dir}" branchname="${joomla.version}" create="false"/>
+>>>>>>> Joomla-Bible-Study/master
 			</then>
 			<else>
 				<echo message="Joomla ${joomla.version} is already staged"/>

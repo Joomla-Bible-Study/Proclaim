@@ -34,6 +34,10 @@ class JBSMCustom
 	public function getCustom($rowid, $custom, $row, $params, $template)
 	{
 		$isCustom = ($rowid == 24) ? true : false;
+<<<<<<< HEAD
+=======
+		$elementid   = new stdClass;
+>>>>>>> Joomla-Bible-Study/master
 		$countbraces = substr_count($custom, '{');
 		$JBSMElements = new JBSMListing;
 		while ($countbraces > 0)

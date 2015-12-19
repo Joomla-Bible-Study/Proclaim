@@ -134,6 +134,10 @@ elseif ($params->get('moduletemplate'))
 {
 	$template = 'default_' . $params->get('moduletemplate');
 }
+elseif ($params->get('moduletemplate'))
+{
+	$layout = 'default_'.$params->get('moduletemplate');
+}
 else
 {
 	$template = 'default_main';

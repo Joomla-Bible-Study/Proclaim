@@ -423,6 +423,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function resetDownloads()
 	{
+<<<<<<< HEAD
 		// Check for request forgeries.
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
@@ -442,6 +443,42 @@ class BiblestudyControllerAdmin extends JControllerForm
 		{
 			$updated = $db->getAffectedRows();
 			$msg     = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
+=======
+		$db     = JFactory::getDBO();
+		$msg    = JText::_('JBS_ADM_ERROR_OCCURED');
+		$post   = $_POST['jform'];
+		$reg    = new JRegistry();
+		$reg->loadArray($post['params']);
+		$from   = $reg->get('from');
+		$to     = $reg->get('to');
+		if ($from != 'x' && $to != 'x')
+		{
+			switch ($from)
+			{
+				case '100':
+					$query = $db->getQuery(true);
+					$query->update('#__bsms_mediafiles')
+						->set('player = ' . $db->quote($to))
+						->where('player IS NULL');
+					break;
+
+				default:
+					$query = $db->getQuery(true);
+					$query->update('#__bsms_mediafiles')
+						->set('player = ' . $db->quote($to))
+						->where('player = ' . $db->quote($from));
+			}
+			$db->setQuery($query);
+
+			if ($db->execute())
+			{
+				$msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
+			}
+		}
+		else
+		{
+			 $msg .= ': Missed setting the From or Two';
+>>>>>>> Joomla-Bible-Study/master
 		}
 		$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
 	}
@@ -453,12 +490,23 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function resetPlays()
 	{
+<<<<<<< HEAD
 		// Check for request forgeries.
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
 		$msg   = null;
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
+=======
+		$db     = JFactory::getDBO();
+		$msg    = null;
+		$post   = $_POST['jform'];
+		$reg = new JRegistry();
+		$reg->loadArray($post['params']);
+		$from   = $reg->get(';from');
+		$to     = $reg->get(';to');
+		$query  = $db->getQuery(true);
+>>>>>>> Joomla-Bible-Study/master
 		$query->update('#__bsms_mediafiles')
 			->set('plays = ' . 0)
 			->where('plays != 0');
@@ -518,6 +566,8 @@ class BiblestudyControllerAdmin extends JControllerForm
 	/**
 	 * Convert PreachIt to BibleStudy
 	 *
+	 * @throws string
+	 *
 	 * @return void
 	 */
 	public function convertPreachIt()
@@ -534,6 +584,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 * Tries to fix missing database updates
 	 *
 	 * @return void
+	 * @throws string
 	 *
 	 * @since    7.1.0
 	 */
@@ -551,6 +602,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 * Reset Db to install
 	 *
 	 * @return void
+	 * @throws  string
 	 *
 	 * @since    7.1.0
 	 */

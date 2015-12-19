@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 INSERT INTO `#__bsms_update` (id, version) VALUES (13, '7.1.0')
 ON DUPLICATE KEY UPDATE version= '7.1.0';
+=======
+INSERT INTO `#__bsms_update` (id, version) VALUES (7, '7.1.0')
+ON DUPLICATE KEY UPDATE version = '7.1.0';
+>>>>>>> Joomla-Bible-Study/master
 --
 -- Admin Table
 --
@@ -29,7 +34,11 @@ ALTER TABLE `#__bsms_locations` ADD COLUMN `landing_show` INT(3) DEFAULT '1';
 
 ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `language` CHAR(3) NOT NULL DEFAULT '';
 ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `created_by` INT(10) UNSIGNED NOT NULL DEFAULT '0';
+<<<<<<< HEAD
 ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `created_by_alias` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+=======
+ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `created_by_alias` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '';
+>>>>>>> Joomla-Bible-Study/master
 ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `modified` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00';
 ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `modified_by` INT(10) UNSIGNED NOT NULL DEFAULT '0';
 ALTER TABLE `#__bsms_mediafiles` ADD INDEX `idx_study_id` (`study_id`);
@@ -77,6 +86,32 @@ ALTER TABLE `#__bsms_servers` ADD COLUMN `aws_key` VARCHAR(100) NOT NULL;
 ALTER TABLE `#__bsms_servers` ADD COLUMN `aws_secret` VARCHAR(100) NOT NULL;
 
 --
+<<<<<<< HEAD
+=======
+-- Share Table
+--
+UPDATE `#__bsms_share`
+SET
+  `params` = '{"mainlink":"//www.facebook.com/sharer.php?","item1prefix":"u=","item1":200,"item1custom":"","item2prefix":"t=","item2":5,"item2custom":"","item3prefix":"","item3":6,"item3custom":"","item4prefix":"","item4":8,"item4custom":"","use_bitly":0,"username":"","api":"","shareimage":"media/com_biblestudy/images/facebook.png","shareimageh":"33px","shareimagew":"33px","totalcharacters":"","alttext":"FaceBook"}'
+WHERE `#__bsms_share`.`id` = 1;
+
+UPDATE `#__bsms_share`
+SET
+  `params` = '{"mainlink":"//twitter.com/?","item1prefix":"status=","item1":200,"item1custom":"","item2prefix":"","item2":5,"item2custom":"","item3prefix":"","item3":1,"item3custom":"","item4prefix":"","item4":0,"item4custom":"","use_bitly":0,"username":"","api":"","shareimage":"media/com_biblestudy/images/twitter.png","shareimageh":"33px","shareimagew":"33px","totalcharacters":140,"alttext":"Twitter"}'
+WHERE `#__bsms_share`.`id` = 2;
+
+UPDATE `#__bsms_share`
+SET
+  `params` = '{"mainlink":"//delicious.com/save?","item1prefix":"url=","item1":200,"item1custom":"","item2prefix":"&title=","item2":5,"item2custom":"","item3prefix":"","item3":6,"item3custom":"","item4prefix":"","item4":"","item4custom":"","use_bitly":0,"username":"","api":"","shareimage":"media/com_biblestudy/images/delicious.png","shareimagew":"33px","shareimageh":"33px","totalcharacters":"","alttext":"Delicious"}'
+WHERE `#__bsms_share`.`id` = 3;
+
+UPDATE `#__bsms_share`
+SET
+  `params` = '{"mainlink":"//www.myspace.com/index.cfm?","item1prefix":"fuseaction=postto&t=","item1":5,"item1custom":"","item2prefix":"&c=","item2":6,"item2custom":"","item3prefix":"&u=","item3":200,"item3custom":"","item4prefix":"&l=1","item4":"","item4custom":"","use_bitly":0,"username":"","api":"","shareimage":"media/com_biblestudy/images/myspace.png","shareimagew":"33px","shareimageh":"33px","totalcharacters":"","alttext":"MySpace"}'
+WHERE `#__bsms_share`.`id` = 4;
+
+--
+>>>>>>> Joomla-Bible-Study/master
 -- Studies Table
 --
 ALTER TABLE `#__bsms_studies` ADD COLUMN `language` CHAR(3) NOT NULL DEFAULT '';

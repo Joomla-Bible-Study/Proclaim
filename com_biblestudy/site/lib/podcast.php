@@ -44,6 +44,7 @@ class JBSMPodcast
 		$admin_params = JBSMParams::getAdmin();
 		$msg          = array();
 		$db           = JFactory::getDBO();
+
 		jimport('joomla.utilities.date');
 		$year = '(' . date('Y') . ')';
 		$date = date('r');
@@ -71,6 +72,7 @@ class JBSMPodcast
 				// Work Around all language
 				if ($podinfo->language == '*')
 				{
+<<<<<<< HEAD:com_biblestudy/site/lib/podcast.php
 					$podlanguage = JFactory::getConfig()->get('language');
 				}
 				else
@@ -81,6 +83,15 @@ class JBSMPodcast
 				// Load language file
 				$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, $podlanguage, true);
 
+=======
+					$language = JFactory::getConfig()->get('language');
+				}
+				else
+				{
+					$language = $podinfo->language;
+				}
+
+>>>>>>> Joomla-Bible-Study/master:com_biblestudy/site/lib/biblestudy.podcast.class.php
 				// Check to see if there is a media file associated - if not, don't continue
 				$query = $db->getQuery(true);
 				$query->select('id')->from('#__bsms_mediafiles')->where('podcast_id LIKE  ' . $db->q('%' . $podinfo->id . '%'))->where('published = ' . 1);
@@ -89,7 +100,11 @@ class JBSMPodcast
 
 				if ($checkresult)
 				{
+<<<<<<< HEAD:com_biblestudy/site/lib/podcast.php
 					$description = $this->escapeHTML($podinfo->description);
+=======
+					$description       = $this->escapeHTML($podinfo->description);
+>>>>>>> Joomla-Bible-Study/master:com_biblestudy/site/lib/biblestudy.podcast.class.php
 					$detailstemplateid = $podinfo->detailstemplateid;
 					$podcastimage      = $this->jimage($podinfo->image);
 					if (!$detailstemplateid)
@@ -111,15 +126,26 @@ class JBSMPodcast
                 		<link>http://' . $podinfo->website . '</link>
                 		<url>http://' . $podinfo->website . '/' . $podinfo->image . '</url>
                 		<title>' . $this->escapeHTML($podinfo->title) . '</title>
+<<<<<<< HEAD:com_biblestudy/site/lib/podcast.php
                 		<height>' . $podcastimage[1] . '</height>
                 		<width>' . $podcastimage[0] . '</width>
                 	</image>
                 	<itunes:image href="http://' . $podinfo->website . '/' . $podinfo->podcastimage . '" />
+=======
+                		<height>' . $podinfo->imageh . '</height>
+                		<width>' . $podinfo->imagew . '</width>
+                	</image>
+                	<itunes:image href="http://' . $podinfo->website  . '/' . $podinfo->podcastimage . '" />
+>>>>>>> Joomla-Bible-Study/master:com_biblestudy/site/lib/biblestudy.podcast.class.php
                 	<category>Religion &amp; Spirituality</category>
                 	<itunes:category text="Religion &amp; Spirituality">
                 		<itunes:category text="Christianity" />
                 	</itunes:category>
+<<<<<<< HEAD:com_biblestudy/site/lib/podcast.php
                 	<language>' . $podlanguage . '</language>
+=======
+                	<language>' . $language . '</language>
+>>>>>>> Joomla-Bible-Study/master:com_biblestudy/site/lib/biblestudy.podcast.class.php
                 	<copyright>' . $year . ' All rights reserved.</copyright>
                 	<pubDate>' . $date . '</pubDate>
                 	<lastBuildDate>' . $date . '</lastBuildDate>
@@ -169,7 +195,11 @@ class JBSMPodcast
 						{
 							$hours = '00';
 						}
+<<<<<<< HEAD:com_biblestudy/site/lib/podcast.php
 						// If there is no length set, we default to 35 mints
+=======
+						// If there is no length set, we default to 35 minuets
+>>>>>>> Joomla-Bible-Study/master:com_biblestudy/site/lib/biblestudy.podcast.class.php
 						if (!$episode->media_minutes && !$episode->media_seconds)
 						{
 							$episode->media_minutes = 35;
@@ -184,10 +214,13 @@ class JBSMPodcast
 
 						if ($episode->params->get('size'))
 						{
+<<<<<<< HEAD:com_biblestudy/site/lib/podcast.php
 							$episode->size = $episode->params->get('size');
 						}
 						else
 						{
+=======
+>>>>>>> Joomla-Bible-Study/master:com_biblestudy/site/lib/biblestudy.podcast.class.php
 							$episode->size = '30000000';
 						}
 						switch ($pod_title)
@@ -341,6 +374,7 @@ class JBSMPodcast
 
 						$episodedetailtemp = '
                         	   <item>
+<<<<<<< HEAD:com_biblestudy/site/lib/podcast.php
                         		<title>' . $title . '</title>';
 						/*
 						 * Default is to episode
@@ -363,6 +397,12 @@ class JBSMPodcast
 						}
 
 						$episodedetailtemp .= '<comments>http://' . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=sermon&amp;id='
+=======
+                        		<title>' . $title . '</title>
+                        		<link>http://' . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=sermon&amp;id='
+							. $episode->sid . $detailstemplateid . '</link>
+                        		<comments>http://' . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=sermon&amp;id='
+>>>>>>> Joomla-Bible-Study/master:com_biblestudy/site/lib/biblestudy.podcast.class.php
 							. $episode->sid . $detailstemplateid . '</comments>
                         		<itunes:author>' . $this->escapeHTML($episode->teachername) . '</itunes:author>
                         		<dc:creator>' . $this->escapeHTML($episode->teachername) . '</dc:creator>
@@ -380,8 +420,13 @@ class JBSMPodcast
 						// Here is where we test to see if the link should be an article or docMan link, otherwise it is a mediafile
 						if ($episode->params->get('article_id') > 1)
 						{
+<<<<<<< HEAD:com_biblestudy/site/lib/podcast.php
 							$episodedetailtemp .=
 								'<enclosure url="http://' . $episode->srparams->get('path') .
+=======
+							$episodedetailtemp .= '
+								<enclosure url="http://' . $episode->server_path .
+>>>>>>> Joomla-Bible-Study/master:com_biblestudy/site/lib/biblestudy.podcast.class.php
 								'/index.php?option=com_content&amp;view=article&amp;id=' .
 								$episode->params->get('article_id') . '" length="' . $episode->params->get('size') . '" type="' .
 								$episode->params->get('mimetype') . '" />
@@ -391,8 +436,13 @@ class JBSMPodcast
 						}
 						if ($episode->params->get('docMan_id') > 1)
 						{
+<<<<<<< HEAD:com_biblestudy/site/lib/podcast.php
 							$episodedetailtemp .=
 								'<enclosure url="http://' . $episode->srparams->get('path') .
+=======
+							$episodedetailtemp .= '
+							<enclosure url="http://' . $episode->server_path .
+>>>>>>> Joomla-Bible-Study/master:com_biblestudy/site/lib/biblestudy.podcast.class.php
 								'/index.php?option=com_docman&amp;task=doc_download&amp;gid=' .
 								$episode->params->get('docMan_id') . '" length="' . $episode->params->get('size') . '" type="' .
 								$episode->params->get('mimetype') . '" />
@@ -402,8 +452,13 @@ class JBSMPodcast
 						}
 						else
 						{
+<<<<<<< HEAD:com_biblestudy/site/lib/podcast.php
 							$episodedetailtemp .=
 								'<enclosure url="http://' . $episode->srparams->get('path') . str_replace(
+=======
+							$episodedetailtemp .= '
+							<enclosure url="http://' . $episode->server_path . $episode->folderpath . str_replace(
+>>>>>>> Joomla-Bible-Study/master:com_biblestudy/site/lib/biblestudy.podcast.class.php
 									' ',
 									"%20",
 									$episode->params->get('filename')
@@ -521,6 +576,7 @@ class JBSMPodcast
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('p.id AS pid, p.podcastlimit,'
+<<<<<<< HEAD:com_biblestudy/site/lib/podcast.php
 			. ' mf.id AS mfid, mf.study_id, mf.server_id, mf.podcast_id,'
 		. ' mf.published AS mfpub, mf.createdate, mf.params,'
 		. ' s.id AS sid, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.verse_begin,'
@@ -530,6 +586,20 @@ class JBSMPodcast
 		. ' sr.id AS srid, sr.params as srparams,'
 		. ' t.id AS tid, t.teachername,'
 		. ' b.id AS bid, b.booknumber AS bnumber, b.bookname')
+=======
+			. ' mf.id AS mfid, mf.study_id, mf.server, mf.path, mf.filename, mf.size, mf.mime_type, mf.podcast_id,'
+			. ' mf.published AS mfpub, mf.createdate, mf.params,'
+			. ' mf.docMan_id, mf.article_id,'
+			. ' s.id AS sid, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.verse_begin,'
+			. ' s.chapter_end, s.verse_end, s.studytitle, s.studyintro, s.published AS spub,'
+			. ' s.media_hours, s.media_minutes, s.media_seconds,'
+			. ' se.series_text,'
+			. ' sr.id AS srid, sr.server_path,'
+			. ' f.id AS fid, f.folderpath,'
+			. ' t.id AS tid, t.teachername,'
+			. ' b.id AS bid, b.booknumber AS bnumber, b.bookname,'
+			. ' mt.id AS mtid, mt.mimetype')
+>>>>>>> Joomla-Bible-Study/master:com_biblestudy/site/lib/biblestudy.podcast.class.php
 			->from('#__bsms_mediafiles AS mf')
 			->leftJoin('#__bsms_studies AS s ON (s.id = mf.study_id)')
 			->leftJoin('#__bsms_series AS se ON (se.id = s.series_id)')
@@ -541,7 +611,17 @@ class JBSMPodcast
 
 		$db->setQuery($query, 0, $set_limit);
 		$episodes = $db->loadObjectList();
+		// Go through each and remove the -1 strings and retest
+		$epis = array();
+		foreach ($episodes as $e)
+		{
+			$e->podcast_id = str_replace('-1','',$e->podcast_id);
+			if (substr_count($e->podcast_id,$id)){$epis[]= $e;}
+		}
 
+		return $epis;
+
+<<<<<<< HEAD:com_biblestudy/site/lib/podcast.php
 		// Go through each and remove the -1 strings and retest
 		$epis = array();
 		foreach ($episodes as $e)
@@ -562,6 +642,8 @@ class JBSMPodcast
 		}
 
 		return $epis;
+=======
+>>>>>>> Joomla-Bible-Study/master:com_biblestudy/site/lib/biblestudy.podcast.class.php
 	}
 
 	/**
@@ -574,7 +656,6 @@ class JBSMPodcast
 	 */
 	public function writeFile($file, $filecontent)
 	{
-
 		// Set FTP credentials, if given
 		$files[]        = $file;
 		$podcastresults = '';
@@ -613,4 +694,82 @@ class JBSMPodcast
 
 		return $podcastresults;
 	}
+<<<<<<< HEAD:com_biblestudy/site/lib/podcast.php
+=======
+
+	/**
+	 * Method to get file size
+	 *
+	 * @param   string $url URL
+	 *
+	 * @return  boolean
+	 */
+	protected function getRemoteFileSize($url)
+	{
+		$parsed = parse_url($url);
+		$host   = $parsed["host"];
+		$fp     = null;
+
+		if (function_exists('fsockopen'))
+		{
+			$fp = @fsockopen($host, 80, $errno, $errstr, 20);
+		}
+		if (!$fp)
+		{
+			return false;
+		}
+		else
+		{
+			@fputs($fp, "HEAD $url HTTP/1.1\r\n");
+			@fputs($fp, "HOST: $host\r\n");
+			@fputs($fp, "Connection: close\r\n\r\n");
+			$headers = "";
+
+			while (!@feof($fp))
+			{
+				$headers .= @fgets($fp, 128);
+			}
+		}
+		@fclose($fp);
+		$return      = false;
+		$arr_headers = explode("\n", $headers);
+
+		foreach ($arr_headers as $header)
+		{
+			$s = "Content-Length: ";
+
+			if (substr(strtolower($header), 0, strlen($s)) == strtolower($s))
+			{
+				$return = trim(substr($header, strlen($s)));
+				break;
+			}
+		}
+
+		return $return;
+	}
+
+	/**
+	 * Escape Html to XML
+	 *
+	 * @param $html
+	 *
+	 * @return mixed|string
+	 */
+	protected function escapeHTML($html)
+	{
+		$string = str_replace(' & ', " and ", $html);
+		$string = trim(html_entity_decode($string));
+		if(!empty($string))
+		{
+			$string = '<![CDATA[' . $string . ']]>';
+		}
+		else
+		{
+			$string = "";
+		}
+
+		return $string;
+	}
+
+>>>>>>> Joomla-Bible-Study/master:com_biblestudy/site/lib/biblestudy.podcast.class.php
 }

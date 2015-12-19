@@ -65,6 +65,8 @@ class BiblestudyModelTeachers extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
+		$app = JFactory::getApplication();
+
 		// Adjust the context to support modal layouts.
 		$input  = new JInput;
 		$layout = $input->get('layout');
@@ -74,11 +76,26 @@ class BiblestudyModelTeachers extends JModelList
 			$this->context .= '.' . $layout;
 		}
 
+		// Load the parameters.
+		$params = JComponentHelper::getParams('com_biblestudy');
+		$this->setState('params', $params);
+
+		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+		$this->setState('filter.search', $search);
+
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
 
 		$language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $language);
+
+		// Force a language
+		$forcedLanguage = $app->input->get('forcedLanguage');
+		if (!empty($forcedLanguage))
+		{
+			$this->setState('filter.language', $forcedLanguage);
+			$this->setState('filter.forcedLanguage', $forcedLanguage);
+		}
 
 		// List state information.
 		parent::populateState('teacher.teachername', 'asc');
@@ -101,6 +118,7 @@ class BiblestudyModelTeachers extends JModelList
 	{
 
 		// Compile the store id.
+		$id .= ':' . $this->getState('filter.search');
 		$id .= ':' . $this->getState('filter.published');
 		$id .= ':' . $this->getState('filter.language');
 
@@ -140,6 +158,25 @@ class BiblestudyModelTeachers extends JModelList
 		elseif ($published === '')
 		{
 			$query->where('(teacher.published = 0 OR teacher.published = 1)');
+		}
+
+		// Filter by search in title.
+		$search = $this->getState('filter.search');
+		if (!empty($search))
+		{
+			if (stripos($search, 'id:') === 0)
+			{
+				$query->where('teacher.id = ' . (int) substr($search, 3));
+			}
+			elseif (stripos($search, 'title:') === 0)
+			{
+				$query->where('teacher.title = ' . $db->q(substr($search, 6)));
+			}
+			else
+			{
+				$search = $db->quote('%' . $db->escape($search, true) . '%');
+				$query->where('(teacher.teachername LIKE ' . $search . ')');
+			}
 		}
 
 		// Add the list ordering clause

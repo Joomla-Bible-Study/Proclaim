@@ -50,7 +50,7 @@ class BiblestudyController extends JControllerLegacy
 		$db->setQuery('SET SQL_BIG_SELECTS=1');
 		$db->execute();
 
-		$view   = $app->input->getCmd('view', 'cpanel');
+		$view   = $app->input->getCmd('view');
 		$layout = $app->input->getCmd('layout', 'default');
 
 		if ($layout !== 'modal')
@@ -60,7 +60,7 @@ class BiblestudyController extends JControllerLegacy
 
 		$jbsstate = JBSMDbHelper::getInstallState();
 
-		if ($jbsstate)
+		if ($jbsstate && $view != 'install')
 		{
 			$jbsname = $jbsstate->get('jbsname');
 			$jbstype = $jbsstate->get('jbstype');
@@ -73,13 +73,12 @@ class BiblestudyController extends JControllerLegacy
 			$this->setRedirect('index.php?option=com_biblestudy&view=install&jbsname=' . $jbsname . '&jbstype=' . $jbstype);
 
 		}
-		$type = $app->input->getWord('view');
 
-		if (!$type)
+		if ($view == 'install')
 		{
-			$app->input->set('view ', 'cpanel');
+			$cachable = false;
 		}
-		if ($type == 'admin')
+		if ($view == 'admin')
 		{
 			$tool = $app->input->get('tooltype', '', 'post');
 
@@ -100,7 +99,27 @@ class BiblestudyController extends JControllerLegacy
 			}
 		}
 
+<<<<<<< HEAD
 		parent::display();
+=======
+		$fixassets = $app->input->getWord('task ', ' ', 'get');
+
+		if ($fixassets == 'fixassetid')
+		{
+			$dofix = fixJBSAssets::fixassets();
+
+			if (!$dofix)
+			{
+				$app->enqueueMessage('SOME_ERROR_CODE', ' Fix Asset Function not successful', 'notice');
+			}
+			else
+			{
+				$app->enqueueMessage('SOME_ERROR_CODE ', 'Fix assets successful', 'notice');
+			}
+		}
+
+		parent::display($cachable, $urlparams);
+>>>>>>> Joomla-Bible-Study/master
 
 		return $this;
 	}

@@ -226,8 +226,19 @@ class BiblestudyViewSermon extends JViewLegacy
 		$template      = $this->get('template');
 		$this->related = $relatedstudies->getRelated($this->item, $this->item->params);
 
+<<<<<<< HEAD
 		JHtml::_('biblestudy.framework');
 		JHtml::_('biblestudy.loadcss', $this->params, '', 'font-awesome');
+=======
+		$document = JFactory::getDocument();
+		$document->addScript('//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
+		$document->addScript('//www.google.com/recaptcha/api/js/recaptcha_ajax.js');
+		$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
+		$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery.js');
+		$document->addScript(JURI::base() . 'media/com_biblestudy/js/noconflict.js');
+		$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
+		$css = $this->item->params->get('css');
+>>>>>>> Joomla-Bible-Study/master
 
 		// Only load pagebuilder if the default template is NOT being used
 		if ($this->item->params->get('useexpert_details') > 0 || is_string($this->params->get('sermontemplate')))

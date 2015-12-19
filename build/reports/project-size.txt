@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Directories:                                        154
 Files:                                              453
 
@@ -5,10 +6,20 @@ Lines of Code (LOC):                              87713
   Cyclomatic Complexity / Lines of Code:           0.10
 Comment Lines of Code (CLOC):                     26134
 Non-Comment Lines of Code (NCLOC):                61579
+=======
+Directories:                                        148
+Files:                                              399
+
+Lines of Code (LOC):                              79575
+  Cyclomatic Complexity / Lines of Code:           0.09
+Comment Lines of Code (CLOC):                     23208
+Non-Comment Lines of Code (NCLOC):                56367
+>>>>>>> Joomla-Bible-Study/master
 
 Namespaces:                                           0
 Interfaces:                                           0
 Traits:                                               0
+<<<<<<< HEAD
 Classes:                                            320
   Abstract:                                          11 (3.44%)
   Concrete:                                         309 (96.56%)
@@ -28,4 +39,25 @@ Functions:                                           48
 
 Constants:                                           64
   Global constants:                                  64
+=======
+Classes:                                            287
+  Abstract:                                           8 (2.79%)
+  Concrete:                                         279 (97.21%)
+  Average Class Length (NCLOC):                     153
+Methods:                                           1209
+  Scope:
+    Non-Static:                                    1055 (87.26%)
+    Static:                                         154 (12.74%)
+  Visibility:
+    Public:                                         713 (58.97%)
+    Non-Public:                                     496 (41.03%)
+  Average Method Length (NCLOC):                     36
+  Cyclomatic Complexity / Number of Methods:       4.20
+
+Anonymous Functions:                                  0
+Functions:                                           26
+
+Constants:                                           41
+  Global constants:                                  41
+>>>>>>> Joomla-Bible-Study/master
   Class constants:                                    0

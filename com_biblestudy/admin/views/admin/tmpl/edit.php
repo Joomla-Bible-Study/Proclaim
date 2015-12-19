@@ -20,10 +20,23 @@ $app   = JFactory::getApplication();
 $input = $app->input;
 ?>
 <script type="text/javascript">
+<<<<<<< HEAD
 	jQuery.submitbutton3 = function () {
 		jQuery('[name=tooltype]').val('players');
 		jQuery('[name=task]').val('admin.tools');
 		jQuery("#item-admin").submit();
+=======
+	jQuery.submitbutton3 = function (pressbutton) {
+		jQuery('[name=tooltype]').val('players');
+		jQuery('[name=task]').val('admin.tools');
+		jQuery( "#item-form" ).submit();
+	};
+
+	jQuery.submitbutton4 = function (pressbutton) {
+		jQuery('[name=tooltype]').val('popups');
+		jQuery('[name=task]').val('admin.tools');
+		jQuery( "#item-form" ).submit();
+>>>>>>> Joomla-Bible-Study/master
 	};
 
 	jQuery.submitbutton4 = function () {
@@ -424,6 +437,7 @@ $input = $app->input;
 						<div class="control-group">
 							<?php echo JText::_('JBS_ADM_MEDIA_PLAYER_STAT'); ?><br/>
 
+<<<<<<< HEAD
 							<div class="controls">
 								<?php echo $this->playerstats; ?>
 							</div>
@@ -448,6 +462,32 @@ $input = $app->input;
 					</div>
 					<div class="span6">
 						<p class="tab-description"><?php echo JText::_('JBS_ADM_POPUP_OPTIONS'); ?></p>
+=======
+			<div class="controls">
+				<?php echo $this->playerstats; ?>
+			</div>
+		</div>
+		<div class="control-group">
+			<?php echo $this->form->getLabel('from', 'params'); ?>
+			<div class="controls">
+				<?php echo $this->form->getInput('from', 'params'); ?>
+			</div>
+		</div>
+		<div class="control-group">
+			<?php echo $this->form->getLabel('to', 'params'); ?>
+			<div class="controls">
+				<?php echo $this->form->getInput('to', 'params'); ?>
+			</div>
+		</div>
+		<div class="control-group">
+			<button type="button" class="btn btn-primary" onclick="jQuery.submitbutton3(task)">
+				<i class="icon-user icon-white"></i> Submit
+			</button>
+		</div>
+	</div>
+	<div class="span6">
+		<h4><?php echo JText::_('JBS_ADM_POPUP_OPTIONS'); ?></h4>
+>>>>>>> Joomla-Bible-Study/master
 
 						<div class="control-group">
 							<?php echo JText::_('JBS_ADM_MEDIA_PLAYER_POPUP_STAT'); ?><br/>
@@ -554,6 +594,14 @@ $input = $app->input;
 				</div>
 			</div>
 		</div>
+<<<<<<< HEAD
+=======
+		<div class="control-group">
+			<button type="button" class="btn btn-primary" onclick="jQuery.submitbutton4(task)">
+				<i class="icon-user icon-white"></i> Submit
+			</button>
+		</div>
+>>>>>>> Joomla-Bible-Study/master
 	</div>
 	<div>
 		<!-- Track thumbnail sizes to fire event if they are changed -->
@@ -568,4 +616,27 @@ $input = $app->input;
 		<input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
 		<?php echo JHtml::_('form.token'); ?>
 	</div>
+<<<<<<< HEAD
+=======
+<?php
+} ?>
+<div class="tab-pane" id="database">
+	<?php echo $this->loadTemplate('database'); ?>
+</div>
+<div class="tab-pane" id="convert">
+	<h4><?php echo JText::_('JBS_IBM_CONVERT'); ?></h4>
+
+	<div> <?php echo $this->ss; ?> </div>
+	<div> <?php echo $this->pi; ?> </div>
+</div>
+</div>
+</div>
+</div>
+<div>
+	<input type="hidden" name="task" value=""/>
+	<input type="hidden" name="tooltype" value=""/>
+	<input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
+	<?php echo JHtml::_('form.token'); ?>
+</div>
+>>>>>>> Joomla-Bible-Study/master
 </form>

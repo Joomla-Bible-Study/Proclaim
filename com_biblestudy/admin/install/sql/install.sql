@@ -1,5 +1,7 @@
-DROP TABLE IF EXISTS `#__bsms_install`;
+# Dump of table #__bsms_update
+# ------------------------------------------------------------
 
+<<<<<<< HEAD
 -- Dump of table #__bsms_update
 --  ------------------------------------------------------------
 
@@ -24,6 +26,31 @@ VALUES
   (17, '8.0.0'),
   (18, '8.0.8'),
   (19, '9.0.0');
+=======
+DROP TABLE IF EXISTS `#__bsms_update`;
+DROP TABLE IF EXISTS `#__bsms_schemaVersion`;
+
+CREATE TABLE `#__bsms_update` (
+  `id`      INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `version` VARCHAR(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE =InnoDB DEFAULT CHARSET =utf8;
+
+INSERT INTO `#__bsms_update` (`id`, `version`)
+VALUES
+(1, '7.0.0'),
+(2, '7.0.1'),
+(3, '7.0.1.1'),
+(4, '7.0.2'),
+(5, '7.0.3'),
+(6, '7.0.4'),
+(7, '7.1.0'),
+(8, '7.1.1'),
+(9, '7.1.2'),
+(10, '7.1.3'),
+(11, '8.0.0'),
+(16, '8.0.8');
+>>>>>>> Joomla-Bible-Study/master
 
 -- --------------------------------------------------------
 
@@ -41,7 +68,11 @@ CREATE TABLE `#__bsms_admin` (
   `debug`        TINYINT(3)       NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idx_access` (`access`)
+<<<<<<< HEAD
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+=======
+) ENGINE =InnoDB DEFAULT CHARSET =utf8;
+>>>>>>> Joomla-Bible-Study/master
 
 -- --------------------------------------------------------
 
@@ -56,7 +87,11 @@ CREATE TABLE `#__bsms_books` (
   `published`  TINYINT(3)       NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`)
+<<<<<<< HEAD
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+=======
+) ENGINE =InnoDB DEFAULT CHARSET =utf8;
+>>>>>>> Joomla-Bible-Study/master
 
 -- --------------------------------------------------------
 
@@ -76,10 +111,35 @@ CREATE TABLE `#__bsms_comments` (
   `asset_id`     INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access`       INT(10) UNSIGNED NOT NULL DEFAULT '0',
   `language`     CHAR(7)          NOT NULL COMMENT 'The language code for the Comments.',
+<<<<<<< HEAD
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
   KEY `idx_access` (`access`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+=======
+  PRIMARY KEY (`id`),
+  KEY `idx_state` (`published`),
+  KEY `idx_access` (`access`)
+) ENGINE =InnoDB DEFAULT CHARSET =utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `#__bsms_folders`
+--
+
+CREATE TABLE IF NOT EXISTS `#__bsms_folders` (
+  `id`         INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `foldername` VARCHAR(250)     NOT NULL DEFAULT '',
+  `folderpath` VARCHAR(250)     NOT NULL DEFAULT '',
+  `published`  TINYINT(3)       NOT NULL DEFAULT '1',
+  `asset_id`   INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
+  `access`     INT(10) UNSIGNED NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `idx_state` (`published`),
+  KEY `idx_access` (`access`)
+) ENGINE =InnoDB DEFAULT CHARSET =utf8;
+>>>>>>> Joomla-Bible-Study/master
 
 -- --------------------------------------------------------
 
@@ -87,6 +147,7 @@ CREATE TABLE `#__bsms_comments` (
 -- Table structure for table `#__bsms_locations`
 --
 
+<<<<<<< HEAD
 CREATE TABLE `#__bsms_locations` (
   `id`               INT(10) UNSIGNED    NOT NULL AUTO_INCREMENT,
   `location_text`    VARCHAR(250)                 DEFAULT NULL,
@@ -135,6 +196,20 @@ CREATE TABLE `#__bsms_locations` (
   KEY `idx_state` (`published`),
   KEY `idx_access` (`access`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+=======
+CREATE TABLE IF NOT EXISTS `#__bsms_locations` (
+  `id`            INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `location_text` VARCHAR(250) DEFAULT NULL,
+  `published`     TINYINT(3)       NOT NULL DEFAULT '1',
+  `asset_id`      INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
+  `access`        INT(10) UNSIGNED NOT NULL DEFAULT '1',
+  `ordering`      INT(11)          NOT NULL DEFAULT '0',
+  `landing_show`  INT(3),
+  PRIMARY KEY (`id`),
+  KEY `idx_state` (`published`),
+  KEY `idx_access` (`access`)
+) ENGINE =InnoDB DEFAULT CHARSET =utf8;
+>>>>>>> Joomla-Bible-Study/master
 
 -- --------------------------------------------------------
 
@@ -144,6 +219,7 @@ CREATE TABLE `#__bsms_locations` (
 
 CREATE TABLE `#__bsms_mediafiles` (
   `id`               INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+<<<<<<< HEAD
   `study_id`         INT(5)                    DEFAULT NULL,
   `server_id`        INT(5)                    DEFAULT NULL,
   `podcast_id`       VARCHAR(50)               DEFAULT NULL,
@@ -152,10 +228,53 @@ CREATE TABLE `#__bsms_mediafiles` (
   `createdate`       DATETIME                  DEFAULT NULL,
   `hits`             INT(10)                   DEFAULT '0',
   `published`        TINYINT(3)       NOT NULL DEFAULT '1',
+=======
+  `media_text`       TEXT,
+  `media_image_name` VARCHAR(250)     NOT NULL DEFAULT '',
+  `media_image_path` VARCHAR(250)     NOT NULL DEFAULT '',
+  `path2`            VARCHAR(150)     NOT NULL,
+  `media_alttext`    VARCHAR(250)     NOT NULL DEFAULT '',
+  `published`        TINYINT(3)       NOT NULL DEFAULT '1',
+  `asset_id`         INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
+  `access`           INT(10) UNSIGNED NOT NULL DEFAULT '1',
+  `ordering`         INT(11)          NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `idx_state` (`published`),
+  KEY `idx_access` (`access`)
+) ENGINE =InnoDB DEFAULT CHARSET =utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `#__bsms_mediafiles`
+--
+
+CREATE TABLE IF NOT EXISTS `#__bsms_mediafiles` (
+  `id`               INT(10) UNSIGNED                                        NOT NULL AUTO_INCREMENT,
+  `study_id`         INT(5) DEFAULT NULL,
+  `media_image`      INT(3) DEFAULT NULL,
+  `server`           VARCHAR(250) DEFAULT NULL,
+  `path`             VARCHAR(250) DEFAULT NULL,
+  `special`          VARCHAR(250) DEFAULT '_self',
+  `filename`         TEXT,
+  `size`             VARCHAR(50) DEFAULT NULL,
+  `mime_type`        INT(3) DEFAULT NULL,
+  `podcast_id`       VARCHAR(50) DEFAULT NULL,
+  `internal_viewer`  TINYINT(1) DEFAULT '0',
+  `mediacode`        TEXT,
+  `ordering`         INT(11)                                                 NOT NULL DEFAULT '0',
+  `createdate`       DATETIME DEFAULT NULL,
+  `link_type`        CHAR(1) DEFAULT NULL,
+  `hits`             INT(10) DEFAULT NULL,
+  `published`        TINYINT(3)                                              NOT NULL DEFAULT '1',
+  `docMan_id`        INT(11) DEFAULT NULL,
+  `article_id`       INT(11) DEFAULT NULL,
+>>>>>>> Joomla-Bible-Study/master
   `comment`          TEXT,
   `downloads`        INT(10)                   DEFAULT '0',
   `plays`            INT(10)                   DEFAULT '0',
   `params`           TEXT,
+<<<<<<< HEAD
   `asset_id`         INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access`           INT(10) UNSIGNED NOT NULL DEFAULT '1',
   `language`         CHAR(7)          NOT NULL COMMENT 'The language code for the MediaFile.',
@@ -172,6 +291,22 @@ CREATE TABLE `#__bsms_mediafiles` (
   KEY `idx_checkout` (`checked_out`),
   KEY `idx_createdby` (`created_by`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+=======
+  `player`           INT(2) DEFAULT NULL,
+  `popup`            INT(2) DEFAULT NULL,
+  `asset_id`         INT(10) UNSIGNED                                        NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
+  `access`           INT(10) UNSIGNED                                        NOT NULL DEFAULT '1',
+  `language`         CHAR(7)                                                 NOT NULL COMMENT 'The language code for the MediaFile.',
+  `created_by`       INT(10) UNSIGNED                                        NOT NULL DEFAULT '0',
+  `created_by_alias` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+  `modified`         DATETIME                                                NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `modified_by`      INT(10) UNSIGNED                                        NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `idx_state` (`published`),
+  KEY `idx_study_id` (`study_id`),
+  KEY `idx_access` (`access`)
+) ENGINE =InnoDB DEFAULT CHARSET =utf8;
+>>>>>>> Joomla-Bible-Study/master
 
 -- --------------------------------------------------------
 
@@ -179,7 +314,11 @@ CREATE TABLE `#__bsms_mediafiles` (
 -- Table structure for table `#__bsms_message_type`
 --
 
+<<<<<<< HEAD
 CREATE TABLE `#__bsms_message_type` (
+=======
+CREATE TABLE IF NOT EXISTS `#__bsms_message_type` (
+>>>>>>> Joomla-Bible-Study/master
   `id`           INT(10) UNSIGNED                                 NOT NULL AUTO_INCREMENT,
   `message_type` TEXT                                             NOT NULL,
   `alias`        VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
@@ -187,11 +326,54 @@ CREATE TABLE `#__bsms_message_type` (
   `asset_id`     INT(10) UNSIGNED                                 NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access`       INT(10) UNSIGNED                                 NOT NULL DEFAULT '1',
   `ordering`     INT(11)                                          NOT NULL DEFAULT '0',
+<<<<<<< HEAD
   `landing_show` INT(3)                                                    DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
   KEY `idx_access` (`access`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+=======
+  `landing_show` INT(3),
+  PRIMARY KEY (`id`),
+  KEY `idx_state` (`published`),
+  KEY `idx_access` (`access`)
+) ENGINE =InnoDB DEFAULT CHARSET =utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `#__bsms_mimetype`
+--
+
+CREATE TABLE IF NOT EXISTS `#__bsms_mimetype` (
+  `id`        INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `mimetype`  VARCHAR(50) DEFAULT NULL,
+  `mimetext`  VARCHAR(50) DEFAULT NULL,
+  `published` TINYINT(3)       NOT NULL DEFAULT '1',
+  `asset_id`  INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
+  `access`    INT(10) UNSIGNED NOT NULL DEFAULT '1',
+  `ordering`  INT(11)          NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `idx_state` (`published`),
+  KEY `idx_access` (`access`)
+) ENGINE =InnoDB DEFAULT CHARSET =utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `#__bsms_order`
+--
+
+CREATE TABLE IF NOT EXISTS `#__bsms_order` (
+  `id`       INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `value`    VARCHAR(15) DEFAULT '',
+  `text`     VARCHAR(50) DEFAULT '',
+  `asset_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
+  `access`   INT(10) UNSIGNED NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `idx_access` (`access`)
+) ENGINE =InnoDB DEFAULT CHARSET =utf8;
+>>>>>>> Joomla-Bible-Study/master
 
 -- --------------------------------------------------------
 
@@ -216,9 +398,15 @@ CREATE TABLE `#__bsms_podcast` (
   `editor_email`            VARCHAR(150)              DEFAULT NULL,
   `podcastlimit`            INT(5)                    DEFAULT NULL,
   `published`               TINYINT(3)       NOT NULL DEFAULT '1',
+<<<<<<< HEAD
   `episodetitle`            INT(11)                   DEFAULT NULL,
   `custom`                  VARCHAR(200)              DEFAULT NULL,
   `detailstemplateid`       INT(11)                   DEFAULT NULL,
+=======
+  `episodetitle`            INT(11) DEFAULT NULL,
+  `custom`                  VARCHAR(200) DEFAULT NULL,
+  `detailstemplateid`       INT(11) DEFAULT NULL,
+>>>>>>> Joomla-Bible-Study/master
   `asset_id`                INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access`                  INT(10) UNSIGNED NOT NULL DEFAULT '1',
   `alternatelink`           VARCHAR(300)              DEFAULT NULL COMMENT 'replaces podcast file link on subscription',
@@ -233,7 +421,11 @@ CREATE TABLE `#__bsms_podcast` (
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
   KEY `idx_access` (`access`)
+<<<<<<< HEAD
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+=======
+) ENGINE =InnoDB DEFAULT CHARSET =utf8;
+>>>>>>> Joomla-Bible-Study/master
 
 -- --------------------------------------------------------
 
@@ -241,6 +433,7 @@ CREATE TABLE `#__bsms_podcast` (
 -- Table structure for table `#__bsms_series`
 --
 
+<<<<<<< HEAD
 CREATE TABLE `#__bsms_series` (
   `id`               INT(10) UNSIGNED                                 NOT NULL AUTO_INCREMENT,
   `series_text`      TEXT,
@@ -248,16 +441,33 @@ CREATE TABLE `#__bsms_series` (
   `teacher`          INT(3)                                                    DEFAULT NULL,
   `description`      TEXT,
   `series_thumbnail` VARCHAR(150)                                              DEFAULT NULL,
+=======
+CREATE TABLE IF NOT EXISTS `#__bsms_series` (
+  `id`               INT(10) UNSIGNED                                 NOT NULL AUTO_INCREMENT,
+  `series_text`      TEXT,
+  `alias`            VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
+  `teacher`          INT(3) DEFAULT NULL,
+  `description`      TEXT,
+  `series_thumbnail` VARCHAR(150) DEFAULT NULL,
+>>>>>>> Joomla-Bible-Study/master
   `published`        TINYINT(3)                                       NOT NULL DEFAULT '1',
   `asset_id`         INT(10) UNSIGNED                                 NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `ordering`         INT(11)                                          NOT NULL DEFAULT '0',
   `access`           INT(10) UNSIGNED                                 NOT NULL DEFAULT '1',
   `language`         CHAR(7)                                          NOT NULL COMMENT 'The language code for the Series.',
+<<<<<<< HEAD
   `landing_show`     INT(3)                                                    DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
   KEY `idx_access` (`access`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+=======
+  `landing_show`     INT(3),
+  PRIMARY KEY (`id`),
+  KEY `idx_state` (`published`),
+  KEY `idx_access` (`access`)
+) ENGINE =InnoDB DEFAULT CHARSET =utf8;
+>>>>>>> Joomla-Bible-Study/master
 
 -- --------------------------------------------------------
 
@@ -265,6 +475,7 @@ CREATE TABLE `#__bsms_series` (
 -- Table structure for table `#__bsms_servers`
 --
 
+<<<<<<< HEAD
 CREATE TABLE `#__bsms_servers` (
   `id`          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `server_name` VARCHAR(250)     NOT NULL DEFAULT '',
@@ -278,6 +489,48 @@ CREATE TABLE `#__bsms_servers` (
   KEY `idx_state` (`published`),
   KEY `idx_access` (`access`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+=======
+CREATE TABLE IF NOT EXISTS `#__bsms_servers` (
+  `id`           INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `server_name`  VARCHAR(250)     NOT NULL DEFAULT '',
+  `server_path`  VARCHAR(250)     NOT NULL DEFAULT '',
+  `published`    TINYINT(3)       NOT NULL DEFAULT '1',
+  `server_type`  CHAR(5)          NOT NULL DEFAULT 'local',
+  `ftp_username` CHAR(255)        NOT NULL,
+  `ftp_password` CHAR(255)        NOT NULL,
+  `asset_id`     INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
+  `access`       INT(10) UNSIGNED NOT NULL DEFAULT '1',
+  `type`         TINYINT(3)       NOT NULL,
+  `ftphost`      VARCHAR(100)     NOT NULL,
+  `ftpuser`      VARCHAR(250)     NOT NULL,
+  `ftppassword`  VARCHAR(250)     NOT NULL,
+  `ftpport`      VARCHAR(10)      NOT NULL,
+  `aws_key`      VARCHAR(100)     NOT NULL,
+  `aws_secret`   VARCHAR(100)     NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_state` (`published`),
+  KEY `idx_access` (`access`)
+) ENGINE =InnoDB DEFAULT CHARSET =utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `#__bsms_share`
+--
+
+CREATE TABLE IF NOT EXISTS `#__bsms_share` (
+  `id`        INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name`      VARCHAR(250) DEFAULT NULL,
+  `params`    TEXT,
+  `published` TINYINT(3)       NOT NULL DEFAULT '1',
+  `asset_id`  INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
+  `access`    INT(10) UNSIGNED NOT NULL DEFAULT '1',
+  `ordering`  INT(11)          NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `idx_state` (`published`),
+  KEY `idx_access` (`access`)
+) ENGINE =InnoDB DEFAULT CHARSET =utf8;
+>>>>>>> Joomla-Bible-Study/master
 
 -- --------------------------------------------------------
 
@@ -285,6 +538,7 @@ CREATE TABLE `#__bsms_servers` (
 -- Table structure for table `#__bsms_studies`
 --
 
+<<<<<<< HEAD
 CREATE TABLE `#__bsms_studies` (
   `id`                  INT(10) UNSIGNED                                 NOT NULL AUTO_INCREMENT,
   `studydate`           DATETIME                                                  DEFAULT NULL,
@@ -295,6 +549,18 @@ CREATE TABLE `#__bsms_studies` (
   `verse_begin`         INT(3)                                                    DEFAULT '1',
   `chapter_end`         INT(3)                                                    DEFAULT '1',
   `verse_end`           INT(3)                                                    DEFAULT '1',
+=======
+CREATE TABLE IF NOT EXISTS `#__bsms_studies` (
+  `id`                  INT(10) UNSIGNED                                 NOT NULL AUTO_INCREMENT,
+  `studydate`           DATETIME DEFAULT NULL,
+  `teacher_id`          INT(11) DEFAULT '1',
+  `studynumber`         VARCHAR(100) DEFAULT '',
+  `booknumber`          INT(3) DEFAULT '101',
+  `chapter_begin`       INT(3) DEFAULT '1',
+  `verse_begin`         INT(3) DEFAULT '1',
+  `chapter_end`         INT(3) DEFAULT '1',
+  `verse_end`           INT(3) DEFAULT '1',
+>>>>>>> Joomla-Bible-Study/master
   `secondary_reference` TEXT,
   `booknumber2`         VARCHAR(4)                                                DEFAULT NULL,
   `chapter_begin2`      VARCHAR(4)                                                DEFAULT NULL,
@@ -308,12 +574,21 @@ CREATE TABLE `#__bsms_studies` (
   `image_cd`            VARCHAR(10)                                               DEFAULT NULL,
   `image_dvd`           VARCHAR(10)                                               DEFAULT '0',
   `studytext2`          TEXT,
+<<<<<<< HEAD
   `comments`            TINYINT(1)                                                DEFAULT '1',
   `hits`                INT(10)                                          NOT NULL DEFAULT '0',
   `user_id`             INT(10)                                                   DEFAULT NULL,
   `user_name`           VARCHAR(50)                                               DEFAULT NULL,
   `show_level`          VARCHAR(100)                                     NOT NULL DEFAULT '0',
   `location_id`         INT(3)                                                    DEFAULT NULL,
+=======
+  `comments`            TINYINT(1) DEFAULT '1',
+  `hits`                INT(10)                                          NOT NULL DEFAULT '0',
+  `user_id`             INT(10) DEFAULT NULL,
+  `user_name`           VARCHAR(50) DEFAULT NULL,
+  `show_level`          VARCHAR(100)                                     NOT NULL DEFAULT '0',
+  `location_id`         INT(3) DEFAULT NULL,
+>>>>>>> Joomla-Bible-Study/master
   `studytitle`          TEXT,
   `alias`               VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
   `studyintro`          TEXT,
@@ -327,6 +602,7 @@ CREATE TABLE `#__bsms_studies` (
   `thumbhm`             INT(11)                                                   DEFAULT NULL,
   `thumbwm`             INT(11)                                                   DEFAULT NULL,
   `params`              TEXT,
+<<<<<<< HEAD
   `checked_out`         INT(11) UNSIGNED                                 NOT NULL DEFAULT '0',
   `checked_out_time`    DATETIME                                         NOT NULL DEFAULT '0000-00-00 00:00:00',
   `published`           TINYINT(3)                                       NOT NULL DEFAULT '0',
@@ -334,6 +610,9 @@ CREATE TABLE `#__bsms_studies` (
   `publish_down`        DATETIME                                         NOT NULL DEFAULT '0000-00-00 00:00:00',
   `modified`            DATETIME                                         NOT NULL DEFAULT '0000-00-00 00:00:00',
   `modified_by`         INT(10) UNSIGNED                                 NOT NULL DEFAULT '0',
+=======
+  `published`           TINYINT(3)                                       NOT NULL DEFAULT '0',
+>>>>>>> Joomla-Bible-Study/master
   `asset_id`            INT(10) UNSIGNED                                 NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access`              INT(10) UNSIGNED                                 NOT NULL DEFAULT '1',
   `ordering`            INT(11)                                          NOT NULL DEFAULT '0',
@@ -343,10 +622,15 @@ CREATE TABLE `#__bsms_studies` (
   KEY `idx_state` (`published`),
   KEY `idx_access` (`access`),
   KEY `idx_seriesid` (`series_id`),
+<<<<<<< HEAD
   KEY `idx_user` (`user_id`),
   KEY `idx_createdby` (`user_id`),
   KEY `idx_checkout` (`checked_out`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+=======
+  KEY `idx_user` (`user_id`)
+) ENGINE =InnoDB DEFAULT CHARSET =utf8;
+>>>>>>> Joomla-Bible-Study/master
 
 -- --------------------------------------------------------
 
@@ -364,7 +648,11 @@ CREATE TABLE `#__bsms_studytopics` (
   KEY `idx_access` (`access`),
   KEY `idx_study` (`study_id`),
   KEY `idx_topic` (`topic_id`)
+<<<<<<< HEAD
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+=======
+) ENGINE =InnoDB DEFAULT CHARSET =utf8;
+>>>>>>> Joomla-Bible-Study/master
 
 -- --------------------------------------------------------
 
@@ -380,7 +668,11 @@ CREATE TABLE `#__bsms_styles` (
   `asset_id`  INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`)
+<<<<<<< HEAD
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+=======
+) ENGINE =InnoDB DEFAULT CHARSET =utf8;
+>>>>>>> Joomla-Bible-Study/master
 
 -- --------------------------------------------------------
 
@@ -388,15 +680,25 @@ CREATE TABLE `#__bsms_styles` (
 -- Table structure for table `#__bsms_teachers`
 --
 
+<<<<<<< HEAD
 CREATE TABLE `#__bsms_teachers` (
+=======
+CREATE TABLE IF NOT EXISTS `#__bsms_teachers` (
+>>>>>>> Joomla-Bible-Study/master
   `id`                INT(10) UNSIGNED                                 NOT NULL AUTO_INCREMENT,
   `teacher_image`     TEXT,
   `teacher_thumbnail` TEXT,
   `teachername`       VARCHAR(250)                                     NOT NULL DEFAULT '',
   `alias`             VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
+<<<<<<< HEAD
   `title`             VARCHAR(250)                                              DEFAULT NULL,
   `phone`             VARCHAR(50)                                               DEFAULT NULL,
   `email`             VARCHAR(100)                                              DEFAULT NULL,
+=======
+  `title`             VARCHAR(250) DEFAULT NULL,
+  `phone`             VARCHAR(50) DEFAULT NULL,
+  `email`             VARCHAR(100) DEFAULT NULL,
+>>>>>>> Joomla-Bible-Study/master
   `website`           TEXT,
   `information`       TEXT,
   `image`             TEXT,
@@ -407,12 +709,17 @@ CREATE TABLE `#__bsms_teachers` (
   `thumbh`            TEXT,
   `short`             TEXT,
   `ordering`          INT(11)                                          NOT NULL DEFAULT '0',
+<<<<<<< HEAD
   `catid`             INT(3)                                                    DEFAULT '1',
+=======
+  `catid`             INT(3) DEFAULT '1',
+>>>>>>> Joomla-Bible-Study/master
   `list_show`         TINYINT(1)                                       NOT NULL DEFAULT '1',
   `published`         TINYINT(3)                                       NOT NULL DEFAULT '1',
   `asset_id`          INT(10) UNSIGNED                                 NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access`            INT(10) UNSIGNED                                 NOT NULL DEFAULT '1',
   `language`          CHAR(7)                                          NOT NULL COMMENT 'The language code for the Teachers.',
+<<<<<<< HEAD
   `facebooklink`      VARCHAR(150)                                              DEFAULT NULL,
   `twitterlink`       VARCHAR(150)                                              DEFAULT NULL,
   `bloglink`          VARCHAR(150)                                              DEFAULT NULL,
@@ -425,11 +732,29 @@ CREATE TABLE `#__bsms_teachers` (
   `contact`           INT(11)                                                   DEFAULT NULL,
   `address`           MEDIUMTEXT                                       NOT NULL,
   `landing_show`      INT(3)                                                    DEFAULT NULL,
+=======
+  `facebooklink`      VARCHAR(150),
+  `twitterlink`       VARCHAR(150),
+  `bloglink`          VARCHAR(150),
+  `link1`             VARCHAR(150),
+  `linklabel1`        VARCHAR(150),
+  `link2`             VARCHAR(150),
+  `linklabel2`        VARCHAR(150),
+  `link3`             VARCHAR(150),
+  `linklabel3`        VARCHAR(150),
+  `contact`           INT(11),
+  `address`           MEDIUMTEXT                                       NOT NULL,
+  `landing_show`      INT(3),
+>>>>>>> Joomla-Bible-Study/master
   `address1`          MEDIUMTEXT                                       NOT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
   KEY `idx_access` (`access`)
+<<<<<<< HEAD
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+=======
+) ENGINE =InnoDB DEFAULT CHARSET =utf8;
+>>>>>>> Joomla-Bible-Study/master
 
 -- --------------------------------------------------------
 
@@ -445,7 +770,11 @@ CREATE TABLE `#__bsms_templatecode` (
   `asset_id`     INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `templatecode` MEDIUMTEXT       NOT NULL,
   PRIMARY KEY (`id`)
+<<<<<<< HEAD
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+=======
+) ENGINE =InnoDB DEFAULT CHARSET =utf8;
+>>>>>>> Joomla-Bible-Study/master
 
 -- --------------------------------------------------------
 
@@ -467,7 +796,11 @@ CREATE TABLE `#__bsms_templates` (
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
   KEY `idx_access` (`access`)
+<<<<<<< HEAD
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+=======
+) ENGINE =InnoDB DEFAULT CHARSET =utf8;
+>>>>>>> Joomla-Bible-Study/master
 
 -- --------------------------------------------------------
 
@@ -479,7 +812,11 @@ CREATE TABLE `#__bsms_timeset` (
   `timeset` VARCHAR(14) NOT NULL DEFAULT '',
   `backup`  VARCHAR(14)          DEFAULT NULL,
   PRIMARY KEY (`timeset`)
+<<<<<<< HEAD
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+=======
+) ENGINE =InnoDB DEFAULT CHARSET =utf8;
+>>>>>>> Joomla-Bible-Study/master
 
 -- --------------------------------------------------------
 
@@ -491,11 +828,21 @@ CREATE TABLE `#__bsms_topics` (
   `id`         INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `topic_text` TEXT,
   `published`  TINYINT(3)       NOT NULL DEFAULT '1',
+<<<<<<< HEAD
   `params`     VARCHAR(511)              DEFAULT NULL,
   `asset_id`   INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `language`   CHAR(7)                   DEFAULT '*',
+=======
+  `params`     VARCHAR(511) DEFAULT NULL,
+  `asset_id`   INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
+  `language`   CHAR(7) DEFAULT '*',
+>>>>>>> Joomla-Bible-Study/master
   `access`     INT(10) UNSIGNED NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
   KEY `idx_access` (`access`)
+<<<<<<< HEAD
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+=======
+) ENGINE =InnoDB DEFAULT CHARSET =utf8;
+>>>>>>> Joomla-Bible-Study/master

@@ -2,10 +2,17 @@
 /**
  * Part of Joomla BibleStudy Package
  *
+<<<<<<< HEAD
  * @package    BibleStudy.Admin
  * @copyright  2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
+=======
+ * @package        BibleStudy.Admin
+ * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link           http://www.JoomlaBibleStudy.org
+>>>>>>> Joomla-Bible-Study/master
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -98,8 +105,14 @@ class JBSMTeacher extends JBSMListing
 	/**
 	 * Get Teacher
 	 *
+<<<<<<< HEAD
 	 * @param   Joomla\Registry\Registry  $params  Item Params
 	 * @param   int                       $id      Item ID
+=======
+	 * @param   JRegistry $params       Item Params
+	 * @param   int       $id           Item ID
+	 * @param   object    $admin_params Admin Params
+>>>>>>> Joomla-Bible-Study/master
 	 *
 	 * @return string
 	 *
@@ -142,34 +155,38 @@ class JBSMTeacher extends JBSMListing
 			$query->select('*')->from('#__bsms_teachers')->where('id = ' . $teachers);
 			$database->setQuery($query);
 			$tresult = $database->loadObject();
-			$i_path  = null;
-
-			// Check to see if there is a teacher image, if not, skip this step
-			$images = new JBSMImages;
-			$image  = $images->getTeacherThumbnail($tresult->teacher_thumbnail, $tresult->thumb);
-
-			if (!$image)
+			if ($tresult)
 			{
-				$image->path   = '';
-				$image->width  = 0;
-				$image->height = 0;
-			}
-			$teacher .= '<td><table class="table cellspacing"><tr><td><img src="' . $image->path . '" border="1" width="' . $image->width
-				. '" height="' . $image->height . '" alt="" /></td></tr>';
+				$i_path = null;
 
-			$teacher .= '<tr><td>';
+				// Check to see if there is a teacher image, if not, skip this step
+				$images = new JBSMImages;
+				$image  = $images->getTeacherThumbnail($tresult->teacher_thumbnail, $tresult->thumb);
 
-			if ($params->get('teacherlink') > 0)
-			{
-				$teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&amp;id=' . $tresult->id . '&amp;t=' . $t) . '">';
-			}
-			$teacher .= $tresult->teachername;
+				if (!$image)
+				{
+					$image->path   = '';
+					$image->width  = 0;
+					$image->height = 0;
+				}
+				$teacher .= '<td><table class="table cellspacing"><tr><td><img src="' . $image->path . '" border="1" width="' . $image->width
+					. '" height="' . $image->height . '" alt="" /></td></tr>';
 
-			if ($params->get('teacherlink') > 0)
-			{
-				$teacher .= '</a>';
+				$teacher .= '<tr><td>';
+
+				if ($params->get('teacherlink') > 0)
+				{
+					$teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&amp;id=' . $tresult->id . '&amp;t=' . $t) . '">';
+				}
+				$teacher .= $tresult->teachername;
+
+				if ($params->get('teacherlink') > 0)
+				{
+					$teacher .= '</a>';
+				}
+				$teacher .= '</td>';
 			}
-			$teacher .= '</td></tr></table></td>';
+			$teacher .= '</tr></table></td>';
 		}
 		if ($params->get('intro_show') == 2 && $viewtype == 'sermons')
 		{
@@ -184,10 +201,18 @@ class JBSMTeacher extends JBSMListing
 	/**
 	 * Get TeacherList Exp
 	 *
+<<<<<<< HEAD
 	 * @param   object         $row       Table info
 	 * @param   object         $params    Item Params
 	 * @param   string         $oddeven   Odd Even
 	 * @param   TableTemplate  $template  Template
+=======
+	 * @param   object $row          Table info
+	 * @param   object $params       Item Params
+	 * @param   string $oddeven      Odd Even
+	 * @param   object $admin_params Admin Params
+	 * @param   object $template     Template
+>>>>>>> Joomla-Bible-Study/master
 	 *
 	 * @return object
 	 */
@@ -224,8 +249,15 @@ class JBSMTeacher extends JBSMListing
 	/**
 	 * Get Teacher Details Exp
 	 *
+<<<<<<< HEAD
 	 * @param   object                    $row     Table Row
 	 * @param   Joomla\Registry\Registry  $params  Item Params
+=======
+	 * @param   object    $row          Table Row
+	 * @param   JRegistry $params       Item Params
+	 * @param   int       $template     Template
+	 * @param   JRegistry $admin_params Admin Params
+>>>>>>> Joomla-Bible-Study/master
 	 *
 	 * @return object
 	 */
@@ -262,8 +294,15 @@ class JBSMTeacher extends JBSMListing
 	/**
 	 * Get Teacher Studies Exp
 	 *
+<<<<<<< HEAD
 	 * @param   int                       $id      Item ID
 	 * @param   Joomla\Registry\Registry  $params  Item Params
+=======
+	 * @param   int       $id           Item ID
+	 * @param   JRegistry $params       Item Params
+	 * @param   JRegistry $admin_params Admin Params
+	 * @param   int       $template     Template
+>>>>>>> Joomla-Bible-Study/master
 	 *
 	 * @return string
 	 */

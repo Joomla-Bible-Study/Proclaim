@@ -36,6 +36,84 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 		<?php
 		if ($this->params->get('listteachers') && $this->params->get('list_teacher_show') > 0)
 		{
+<<<<<<< HEAD
+=======
+			$teacher = $JBSMTeacher->getTeacher($params, $id = 0, $this->admin_params);
+
+			if ($teacher)
+			{
+				echo $teacher;
+			}
+		}
+		?>
+	</div>
+	<!--header-->
+
+	<div id="listintro">
+		<p>
+			<?php
+			if ($this->template->params->get('intro_show') == 1)
+			{
+				echo $params->get('list_intro');
+			}
+			?>
+		</p>
+	</div>
+	<fieldset id="filter-bar">
+		<div class="filter-select fltrt">
+			<?php
+			if ($this->params->get('use_go_button') > 0)
+			{
+				echo $this->page->gobutton;
+			}
+
+			if ($this->params->get('show_pagination') == 1)
+			{
+				echo '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM') . $this->pagination->getLimitBox() . '</span>';
+			}
+			if (($this->params->get('show_locations_search') > 0 && ($location_menu == -1)) || $this->params->get('show_locations_search') > 1)
+			{
+				echo $this->page->locations;
+			}
+			if (($this->params->get('show_book_search') > 0 && $book_menu == -1) || $this->params->get('show_book_search') > 1)
+			{
+				echo $this->page->books;
+			}
+			if (($this->params->get('show_teacher_search') > 0 && ($teacher_menu == -1)) || $this->params->get('show_teacher_search') > 1)
+			{
+				echo $this->page->teachers;
+			}
+			if (($this->params->get('show_series_search') > 0 && ($series_menu == -1)) || $this->params->get('show_series_search') > 1)
+			{
+				echo $this->page->series;
+			}
+			if (($this->params->get('show_type_search') > 0 && ($messagetype_menu == -1)) || $this->params->get('show_type_search') > 1)
+			{
+				echo $this->page->messagetypes;
+			}
+			if ($this->params->get('show_year_search') > 0)
+			{
+				echo $this->page->years;
+			}
+
+			if ($this->params->get('listlanguage') == 1)
+			{
+				echo $this->page->languages;
+			}
+
+			if ($this->params->get('show_order_search') > 0)
+			{
+				echo $this->page->order;
+			}
+			if (($this->params->get('show_topic_search') > 0 && ($topic_menu == -1)) || $this->params->get('show_topic_search') > 1)
+			{
+				echo $this->page->topics;
+			}
+			if ($this->params->get('show_popular') > 0)
+			{
+				echo $this->page->popular;
+			}
+>>>>>>> Joomla-Bible-Study/master
 			?>
 			<div class="row-fluid">
 				<ul class="thumbnails">

@@ -4,10 +4,15 @@
     <author>Joomla Bible Study Team</author>
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
+<<<<<<< HEAD
     <copyright>(C) 2007 - 2015 Joomla Bible Study All rights reserved.</copyright>
     <version>9.0.0-beta1</version>
     <creationDate>Sep 19, 2015</creationDate>
     <license>http://www.gnu.org/licenses/gpl.html</license>
+=======
+    <version>8.0.1</version>
+    <creationDate>Oct 19, 2013</creationDate>
+>>>>>>> Joomla-Bible-Study/master
     <description>JBS_PLG_BACKUP_XML_DESCRIPTION</description>
 
     <!-- Runs on install/uninstall/update; New in 1.7 -->
@@ -62,10 +67,17 @@
                 <field name="filestokeep" type="text" default="5" size="3"
                        label="JBS_PLG_BACKUP_FILES" description="JBS_PLG_BACKUP_FILES_DESC"/>
                 <field name="xhours" type="text" default="24" size="3"
+<<<<<<< HEAD
                        label="JBS_PLG_PODCASTBACKUP_GENERATE_EVERY" description="JBS_PLG_PODCASTBACKUP_GENERATE_EVERY_DESC"/>
                 <field name="day1" type="list" default="0" label="JBS_PLG_PODCASTBACKUP_DAY1"
                        description="JBS_PLG_PODCASTBACKUP_CHOOSE_DAY">
                     <option value="-1">JBS_PLG_PODCASTBACKUP_CHOOSE_DAY</option>
+=======
+                       label="JBS_PLG_BACKUP_PUBLISH_EVERY" description="JBS_PLG_BACKUP_PUBLISH_EVERY_DESC"/>
+                <field name="day1" type="list" default="0" label="JBS_PLG_BACKUP_DAY1"
+                       description="JBS_PLG_BACKUP_CHOOSE_DAY">
+                    <option value="-1">JBS_PLG_BACKUP_CHOOSE_DAY</option>
+>>>>>>> Joomla-Bible-Study/master
                     <option value="0">SUNDAY</option>
                     <option value="1">MONDAY</option>
                     <option value="2">TUESDAY</option>
@@ -102,9 +114,15 @@
                     <option value="23">23:00 (11PM)</option>
                     <option value="24">24:00 (12AM)</option>
                 </field>
+<<<<<<< HEAD
                 <field name="day2" type="list" default="0" label="JBS_PLG_PODCASTBACKUP_DAY2"
                        description="JBS_PLG_PODCASTBACKUP_CHOOSE_DAY">
                     <option value="-1">JBS_PLG_PODCASTBACKUP_CHOOSE_DAY</option>
+=======
+                <field name="day2" type="list" default="0" label="JBS_PLG_BACKUP_DAY2"
+                       description="JBS_PLG_BACKUP_CHOOSE_DAY">
+                    <option value="-1">JBS_PLG_BACKUP_CHOOSE_DAY</option>
+>>>>>>> Joomla-Bible-Study/master
                     <option value="0">SUNDAY</option>
                     <option value="1">MONDAY</option>
                     <option value="2">TUESDAY</option>
@@ -141,9 +159,15 @@
                     <option value="23">23:00 (11PM)</option>
                     <option value="24">24:00 (12AM)</option>
                 </field>
+<<<<<<< HEAD
                 <field name="day3" type="list" default="0" label="JBS_PLG_PODCASTBACKUP_DAY3"
                        description="JBS_PLG_PODCASTBACKUP_CHOOSE_DAY">
                     <option value="-1">JBS_PLG_PODCASTBACKUP_CHOOSE_DAY</option>
+=======
+                <field name="day3" type="list" default="0" label="JBS_PLG_BACKUP_DAY3"
+                       description="JBS_PLG_BACKUP_CHOOSE_DAY">
+                    <option value="-1">JBS_PLG_BACKUP_CHOOSE_DAY</option>
+>>>>>>> Joomla-Bible-Study/master
                     <option value="0">SUNDAY</option>
                     <option value="1">MONDAY</option>
                     <option value="2">TUESDAY</option>
@@ -180,9 +204,15 @@
                     <option value="23">23:00 (11PM)</option>
                     <option value="24">24:00 (12AM)</option>
                 </field>
+<<<<<<< HEAD
                 <field name="day4" type="list" default="0" label="JBS_PLG_PODCASTBACKUP_DAY4"
                        description="JBS_PLG_PODCASTBACKUP_CHOOSE_DAY">
                     <option value="-1">JBS_PLG_PODCASTBACKUP_CHOOSE_DAY</option>
+=======
+                <field name="day4" type="list" default="0" label="JBS_PLG_BACKUP_DAY4"
+                       description="JBS_PLG_BACKUP_CHOOSE_DAY">
+                    <option value="-1">JBS_PLG_BACKUP_CHOOSE_DAY</option>
+>>>>>>> Joomla-Bible-Study/master
                     <option value="0">SUNDAY</option>
                     <option value="1">MONDAY</option>
                     <option value="2">TUESDAY</option>
@@ -219,9 +249,15 @@
                     <option value="23">23:00 (11PM)</option>
                     <option value="24">24:00 (12AM)</option>
                 </field>
+<<<<<<< HEAD
                 <field name="day5" type="list" default="0" label="JBS_PLG_PODCASTBACKUP_DAY5"
                        description="JBS_PLG_PODCASTBACKUP_CHOOSE_DAY">
                     <option value="-1">JBS_PLG_PODCASTBACKUP_CHOOSE_DAY</option>
+=======
+                <field name="day5" type="list" default="0" label="JBS_PLG_BACKUP_DAY5"
+                       description="JBS_PLG_BACKUP_CHOOSE_DAY">
+                    <option value="-1">JBS_PLG_BACKUP_CHOOSE_DAY</option>
+>>>>>>> Joomla-Bible-Study/master
                     <option value="0">SUNDAY</option>
                     <option value="1">MONDAY</option>
                     <option value="2">TUESDAY</option>
@@ -258,9 +294,15 @@
                     <option value="23">23:00 (11PM)</option>
                     <option value="24">24:00 (12AM)</option>
                 </field>
+<<<<<<< HEAD
                 <field name="day6" type="list" default="0" label="JBS_PLG_PODCASTBACKUP_DAY6"
                        description="JBS_PLG_PODCASTBACKUP_CHOOSE_DAY">
                     <option value="-1">JBS_PLG_PODCASTBACKUP_CHOOSE_DAY</option>
+=======
+                <field name="day6" type="list" default="0" label="JBS_PLG_BACKUP_DAY6"
+                       description="JBS_PLG_BACKUP_CHOOSE_DAY">
+                    <option value="-1">JBS_PLG_BACKUP_CHOOSE_DAY</option>
+>>>>>>> Joomla-Bible-Study/master
                     <option value="0">SUNDAY</option>
                     <option value="1">MONDAY</option>
                     <option value="2">TUESDAY</option>
@@ -297,9 +339,15 @@
                     <option value="23">23:00 (11PM)</option>
                     <option value="24">24:00 (12AM)</option>
                 </field>
+<<<<<<< HEAD
                 <field name="day7" type="list" default="0" label="JBS_PLG_PODCASTBACKUP_DAY7"
                        description="JBS_PLG_PODCASTBACKUP_CHOOSE_DAY">
                     <option value="-1">JBS_PLG_PODCASTBACKUP_CHOOSE_DAY</option>
+=======
+                <field name="day7" type="list" default="0" label="JBS_PLG_BACKUP_DAY7"
+                       description="JBS_PLG_BACKUP_CHOOSE_DAY">
+                    <option value="-1">JBS_PLG_BACKUP_CHOOSE_DAY</option>
+>>>>>>> Joomla-Bible-Study/master
                     <option value="0">SUNDAY</option>
                     <option value="1">MONDAY</option>
                     <option value="2">TUESDAY</option>
@@ -336,9 +384,15 @@
                     <option value="23">23:00 (11PM)</option>
                     <option value="24">24:00 (12AM)</option>
                 </field>
+<<<<<<< HEAD
                 <field name="day8" type="list" default="0" label="JBS_PLG_PODCASTBACKUP_DAY8"
                        description="JBS_PLG_PODCASTBACKUP_CHOOSE_DAY">
                     <option value="-1">JBS_PLG_PODCASTBACKUP_CHOOSE_DAY</option>
+=======
+                <field name="day8" type="list" default="0" label="JBS_PLG_BACKUP_DAY8"
+                       description="JBS_PLG_BACKUP_CHOOSE_DAY">
+                    <option value="-1">JBS_PLG_BACKUP_CHOOSE_DAY</option>
+>>>>>>> Joomla-Bible-Study/master
                     <option value="0">SUNDAY</option>
                     <option value="1">MONDAY</option>
                     <option value="2">TUESDAY</option>
@@ -375,9 +429,15 @@
                     <option value="23">23:00 (11PM)</option>
                     <option value="24">24:00 (12AM)</option>
                 </field>
+<<<<<<< HEAD
                 <field name="day9" type="list" default="0" label="JBS_PLG_PODCASTBACKUP_DAY9"
                        description="JBS_PLG_PODCASTBACKUP_CHOOSE_DAY">
                     <option value="-1">JBS_PLG_PODCASTBACKUP_CHOOSE_DAY</option>
+=======
+                <field name="day9" type="list" default="0" label="JBS_PLG_BACKUP_DAY9"
+                       description="JBS_PLG_BACKUP_CHOOSE_DAY">
+                    <option value="-1">JBS_PLG_BACKUP_CHOOSE_DAY</option>
+>>>>>>> Joomla-Bible-Study/master
                     <option value="0">SUNDAY</option>
                     <option value="1">MONDAY</option>
                     <option value="2">TUESDAY</option>
@@ -414,9 +474,15 @@
                     <option value="23">23:00 (11PM)</option>
                     <option value="24">24:00 (12AM)</option>
                 </field>
+<<<<<<< HEAD
                 <field name="day10" type="list" default="0" label="JBS_PLG_PODCASTBACKUP_DAY10"
                        description="JBS_PLG_PODCASTBACKUP_CHOOSE_DAY">
                     <option value="-1">JBS_PLG_PODCASTBACKUP_CHOOSE_DAY</option>
+=======
+                <field name="day10" type="list" default="0" label="JBS_PLG_BACKUP_DAY10"
+                       description="JBS_PLG_BACKUP_CHOOSE_DAY">
+                    <option value="-1">JBS_PLG_BACKUP_CHOOSE_DAY</option>
+>>>>>>> Joomla-Bible-Study/master
                     <option value="0">SUNDAY</option>
                     <option value="1">MONDAY</option>
                     <option value="2">TUESDAY</option>

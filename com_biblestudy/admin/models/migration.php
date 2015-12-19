@@ -75,7 +75,26 @@ class BibleStudyModelMigration extends JModelLegacy
 		}
 		ksort($this->_versionStack);
 
+<<<<<<< HEAD
 		$this->saveStack();
+=======
+	/**
+	 * Saves the Versions/SQL/After stack in the session
+	 *
+	 * @return void
+	 */
+	private function saveStack()
+	{
+		$stack = array(
+			'version' => $this->_versionStack,
+			'files'   => $this->_filesStack,
+			'after'   => $this->_afterStack,
+			'total'   => $this->totalVersions,
+			'done'    => $this->doneVersions,
+			'run'     => $this->running,
+		);
+		$stack = json_encode($stack);
+>>>>>>> Joomla-Bible-Study/master
 
 		if (!$this->haveEnoughTime())
 		{
@@ -100,7 +119,11 @@ class BibleStudyModelMigration extends JModelLegacy
 		$this->_finish       = array();
 		$this->totalVersions = 0;
 		$this->doneVersions  = 0;
+<<<<<<< HEAD
 		$this->running       = JText::_('JBS_MIG_STARTING');
+=======
+		$this->running       = null;
+>>>>>>> Joomla-Bible-Study/master
 	}
 
 	/**
@@ -108,7 +131,88 @@ class BibleStudyModelMigration extends JModelLegacy
 	 *
 	 * @return void
 	 */
+<<<<<<< HEAD
 	private function resetTimer()
+=======
+	private function loadStack()
+	{
+		$session = JFactory::getSession();
+		$stack   = $session->get('migration_stack', '', 'biblestudy');
+
+		if (empty($stack))
+		{
+			$this->_versionStack = array();
+			$this->_filesStack   = array();
+			$this->_afterStack   = array();
+			$this->totalVersions = 0;
+			$this->doneVersions  = 0;
+			$this->running       = null;
+			return;
+		}
+
+		if (function_exists('base64_encode') && function_exists('base64_decode'))
+		{
+			$stack = base64_decode($stack);
+
+			if (function_exists('gzdeflate') && function_exists('gzinflate'))
+			{
+				$stack = gzinflate($stack);
+			}
+		}
+		$stack = json_decode($stack, true);
+
+		$this->_versionStack = $stack['version'];
+		$this->_filesStack   = $stack['files'];
+		$this->_afterStack   = $stack['after'];
+		$this->totalVersions = $stack['total'];
+		$this->doneVersions  = $stack['done'];
+		$this->running       = $stack['run'];
+
+	}
+
+	/**
+	 * Start Looking though the Versions
+	 *
+	 * @return bool
+	 */
+	public function startScanning()
+	{
+		$this->resetStack();
+		$this->resetTimer();
+		$this->getVersions();
+		$this->getSqlFiles();
+		$this->getAfter();
+
+		if (empty($this->_versionStack))
+		{
+			$this->_versionStack = array();
+		}
+		if (empty($this->_filesStack))
+		{
+			$this->_filesStack = array();
+		}
+		if (empty($this->_afterStack))
+		{
+			$this->_afterStack = array();
+		}
+		arsort($this->_filesStack);
+		arsort($this->_versionStack);
+		arsort($this->_afterStack);
+
+		$this->saveStack();
+
+		return true;
+	}
+
+	/**
+	 *  Run the Migration will there is time.
+	 *
+	 * @param   bool  $resetTimer  If the time must be reset
+	 *
+	 * @return bool
+	 */
+	public function run($resetTimer = true)
+>>>>>>> Joomla-Bible-Study/master
 	{
 		$this->_startTime = $this->microtime_float();
 	}
@@ -120,7 +224,53 @@ class BibleStudyModelMigration extends JModelLegacy
 	 */
 	private function microtime_float()
 	{
+<<<<<<< HEAD
 		list($usec, $sec) = explode(" ", microtime());
+=======
+		if (!empty($this->_versionStack))
+		{
+			while (!empty($this->_versionStack) && $this->haveEnoughTime())
+			{
+				$version = array_pop($this->_versionStack);
+				$this->running .= ', ' . $version;
+				$this->doneVersions++;
+				$this->doVersionUpdate($version);
+			}
+		}
+
+		if (empty($this->_versionStack) && !empty($this->_filesStack))
+		{
+			while (!empty($this->_filesStack) && $this->haveEnoughTime())
+			{
+				$files = array_pop($this->_filesStack);
+				$this->running .= ', ' . $files;
+				$this->doneVersions++;
+				$this->allUpdate($files);
+			}
+		}
+
+		if (empty($this->_versionStack) && empty($this->_filesStack) && !empty($this->_afterStack))
+		{
+			while (!empty($this->_afterStack) && $this->haveEnoughTime())
+			{
+				$versions = array_pop($this->_afterStack);
+				$this->running .= ', ' . $versions;
+				$this->doneVersions++;
+				$this->doVersionUpdate($versions);
+			}
+		}
+
+		if (empty($this->_filesStack) && empty($this->_versionStack) && empty($this->_afterStack))
+		{
+			// Just finished
+			$this->doneVersions = 90;
+			$this->resetStack();
+			$this->running .= JText::_('JBS_MIG_FINISHED');
+			$this->finish();
+
+			return false;
+		}
+>>>>>>> Joomla-Bible-Study/master
 
 		return ((float) $usec + (float) $sec);
 	}
@@ -251,7 +401,10 @@ class BibleStudyModelMigration extends JModelLegacy
 					->from('#__bsms_version')
 					->order('build desc');
 				$db->setQuery($query);
+<<<<<<< HEAD
 				$db->execute();
+=======
+>>>>>>> Joomla-Bible-Study/master
 				$version = $db->loadObject();
 
 				$this->_versionSwitch = implode('.', preg_split('//', $version->build, -1, PREG_SPLIT_NO_EMPTY));
@@ -345,10 +498,15 @@ class BibleStudyModelMigration extends JModelLegacy
 
 			foreach ($php as $i => $value)
 			{
+<<<<<<< HEAD
 				if (version_compare($value, $this->_versionSwitch) <= 0)
 				{
 					unset($php[$i]);
 				}
+=======
+				$this->totalVersions += count($files);
+				$this->_filesStack = $files;
+>>>>>>> Joomla-Bible-Study/master
 			}
 
 			$this->totalVersions += count($php);
@@ -359,6 +517,42 @@ class BibleStudyModelMigration extends JModelLegacy
 	}
 
 	/**
+<<<<<<< HEAD
+=======
+	 * Get After Array for thing that cannot be don in SQL
+	 *
+	 * @return void
+	 */
+	private function getAfter()
+	{
+		if (empty($this->_afterStack))
+		{
+			$this->_afterStack = array('0' => 'upgrade710', '1' => 'upgrade800');
+			$this->totalVersions += count($this->_afterStack);
+		}
+	}
+
+	/**
+	 * System to Update based on versions
+	 *
+	 * @param   string  $version  Version to update
+	 *
+	 * @return boolean
+	 * @throws string
+	 */
+	private function doVersionUpdate($version)
+	{
+		$migration = new MigrationUpgrade;
+
+		if (call_user_func(array($migration, $version)))
+		{
+			return true;
+		}
+		throw new Exception('Version did not update ' . $version, 'error');
+	}
+
+	/**
+>>>>>>> Joomla-Bible-Study/master
 	 * Correct problem in are update table under 7.0.2 systems
 	 *
 	 * @return boolean
@@ -380,7 +574,7 @@ class BibleStudyModelMigration extends JModelLegacy
 			if (($value->id === '3') && ($value->version !== '7.0.1.1'))
 			{
 				/* Find Last updated Version in Update table */
-				$query = "INSERT INTO `#__bsms_update` (id,version) VALUES (3,'7.0.1.1')
+				$query = "INSERT INTO #__bsms_update (id,version) VALUES (3,'7.0.1.1')
                             ON DUPLICATE KEY UPDATE version= '7.0.1.1';";
 				$db->setQuery($query);
 
@@ -397,6 +591,59 @@ class BibleStudyModelMigration extends JModelLegacy
 	}
 
 	/**
+<<<<<<< HEAD
+=======
+	 * Function to do updates after 7.0.2 using the SQL Stack
+	 *
+	 * @param   string  $value  The File to run sql.
+	 * @throws  string  Error on sql file
+	 *
+	 * @return boolean
+	 *
+	 * @since 7.0.4
+	 */
+	protected function allUpdate($value)
+	{
+		$db  = JFactory::getDbo();
+
+		$buffer = file_get_contents(JPATH_ADMINISTRATOR . $this->filePath . '/' . $value . '.sql');
+
+		// Graceful exit and rollback if read not successful
+		if ($buffer === false)
+		{
+			JLog::add(JText::_('JLIB_INSTALLER_ERROR_SQL_READBUFFER'), JLog::WARNING, 'jerror');
+
+			return false;
+		}
+
+		// Create an array of queries from the sql file
+		$queries = $db->splitSql($buffer);
+
+		if (count($queries) == 0)
+		{
+			// No queries to process
+			return 0;
+		}
+
+		// Process each query in the $queries array (split out of sql file).
+		foreach ($queries as $query)
+		{
+			if ($query = JBSMDbHelper::trimQuery($query))
+			{
+				$db->setQuery($query);
+
+				if (!$db->execute())
+				{
+					throw new Exception(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $query));
+				}
+			}
+		}
+
+		return true;
+	}
+
+	/**
+>>>>>>> Joomla-Bible-Study/master
 	 * Set the schema version for an extension by looking at its latest update
 	 *
 	 * @param   string   $version  Version number

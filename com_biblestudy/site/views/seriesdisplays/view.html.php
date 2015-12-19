@@ -94,6 +94,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		JHtml::_('biblestudy.framework');
 		JHtml::_('biblestudy.loadcss', $params, $params->get('stylesheet'), 'font-awesome');
 
+<<<<<<< HEAD
 		$uri            = new JUri;
 		$filter_series  = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');
 		$filter_teacher = $mainframe->getUserStateFromRequest($option . 'filter_teacher', 'filter_teacher', 0, 'int');
@@ -101,6 +102,31 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		$pagebuilder    = new JBSMPagebuilder;
 		$items          = $this->get('Items');
 		$images         = new JBSMImages;
+=======
+
+		// Import Scripts
+		$document->addScript(JURI::base() . 'media/com_biblestudy/js/jquery.js');
+		$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
+		$document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
+		$document->addScript('//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
+		$document->addScript(JURI::base() . 'media/com_biblestudy/js/jwplayer.js');
+
+		// Import Stylesheets
+		$document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/general.css');
+
+		$url = $params->get('stylesheet');
+
+		if ($url)
+		{
+			$document->addStyleSheet($url);
+		}
+
+		$uri           = new JUri;
+		$filter_series = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');
+		$pagebuilder   = new JBSPagebuilder;
+		$items         = $this->get('Items');
+		$images        = new JBSMImages;
+>>>>>>> Joomla-Bible-Study/master
 
 		// Adjust the slug if there is no alias in the row
 

@@ -27,7 +27,10 @@ ALTER TABLE `#__bsms_update` ENGINE = INNODB;
 ALTER TABLE `#__bsms_podcast` ADD COLUMN `episodesubtitle` INT(11) DEFAULT NULL;
 ALTER TABLE `#__bsms_podcast` ADD COLUMN `customsubtitle` VARCHAR(200) DEFAULT NULL;
 ALTER TABLE `#__bsms_topics` ADD COLUMN `language` CHAR(7) DEFAULT '*';
+<<<<<<< HEAD
 
 ALTER TABLE `#__bsms_studies` DROP `topics_id` ;
 
+=======
+>>>>>>> Joomla-Bible-Study/master
 ALTER TABLE `#__bsms_studies` ADD COLUMN `download_id` INT(10) NOT NULL DEFAULT '0' COMMENT 'Used for link to download of mediafile';

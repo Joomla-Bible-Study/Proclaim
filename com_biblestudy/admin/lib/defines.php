@@ -11,9 +11,15 @@
 defined('_JEXEC') or die;
 
 // Version information
+<<<<<<< HEAD:com_biblestudy/admin/lib/defines.php
 define('BIBLESTUDY_VERSION', '9.0.0');
 define('BIBLESTUDY_VERSION_DATE', '2015-05-15');
 define('BIBLESTUDY_VERSION_BUILD', '4000');
+=======
+define('BIBLESTUDY_VERSION', '8.0.8');
+define('BIBLESTUDY_VERSION_DATE', '2014-9-11');
+define('BIBLESTUDY_VERSION_BUILD', '3439');
+>>>>>>> Joomla-Bible-Study/master:com_biblestudy/admin/lib/biblestudy.defines.php
 define('BIBLESTUDY_VERSION_UPDATEFILE', 'JBS Version ' . BIBLESTUDY_VERSION);
 
 // Default values
