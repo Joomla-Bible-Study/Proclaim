@@ -11,11 +11,8 @@
  * */
 defined('JPATH_BASE') or die;
 
-<<<<<<< HEAD
 use Joomla\Registry\Registry;
 
-=======
->>>>>>> Joomla-Bible-Study/master
 // Load the base adapter.
 require_once JPATH_ADMINISTRATOR . '/components/com_finder/helpers/indexer/adapter.php';
 
@@ -79,17 +76,6 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 
 	/**
 	 * Load the language file on instantiation.
-<<<<<<< HEAD
-=======
-	 *
-	 * @var    boolean
-	 * @since  3.1
-	 */
-	protected $autoloadLanguage = true;
-
-	/**
-	 * Constructor
->>>>>>> Joomla-Bible-Study/master
 	 *
 	 * @var    boolean
 	 * @since  3.1
@@ -256,16 +242,12 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 		// Initialize the item parameters.
 		$registry = new Registry;
 		$registry->loadString($item->params);
-<<<<<<< HEAD
 		$item->params = JComponentHelper::getParams('com_biblestudy', true);
 		$item->params->merge($registry);
 
 		$registry = new Registry;
 		$registry->loadString($item->metadata);
 		$item->metadata = $registry;
-=======
-		$item->params = $registry;
->>>>>>> Joomla-Bible-Study/master
 
 		// Trigger the onContentPrepare event.
 		$item->summary = FinderIndexerHelper::prepareContent($item->summary, $item->params);
@@ -273,11 +255,7 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 
 		// Build the necessary route and path information.
 		$item->url   = $this->getURL($item->id, $this->extension, $this->layout);
-<<<<<<< HEAD
 		$item->route = JBSMHelperRoute::getArticleRoute($item->slug, $item->language);
-=======
-		$item->route = JBSMHelperRoute::getArticleRoute($item->slug);
->>>>>>> Joomla-Bible-Study/master
 		$item->path  = FinderIndexerHelper::getContentPath($item->route);
 
 		// Get the menu title if it exists.
@@ -312,18 +290,7 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 		FinderIndexerHelper::getContentExtras($item);
 
 		// Index the item.
-<<<<<<< HEAD
 		$this->indexer->index($item);
-=======
-		if (version_compare(JVERSION, '3.0', 'ge'))
-		{
-			$this->indexer->index($item);
-		}
-		else
-		{
-			FinderIndexer::index($item);
-		}
->>>>>>> Joomla-Bible-Study/master
 	}
 
 	/**
@@ -346,11 +313,7 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 
 	/**
 	 * Method to get a SQL query to load the published and access states for
-<<<<<<< HEAD
 	 * an biblestudy.
-=======
-	 * an article and category.
->>>>>>> Joomla-Bible-Study/master
 	 *
 	 * @return  JDatabaseQuery  A database object.
 	 *
@@ -405,13 +368,8 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 		$sql->select($case_when_item_alias);
 
 		$sql->select('u.teachername AS author')
-<<<<<<< HEAD
 			->from('#__bsms_studies AS a')
 			->join('LEFT', '#__bsms_teachers AS u ON u.id = a.teacher_id');
-=======
-				->from('#__bsms_studies AS a')
-				->join('LEFT', '#__bsms_teachers AS u ON u.id = a.teacher_id');
->>>>>>> Joomla-Bible-Study/master
 
 		return $sql;
 	}

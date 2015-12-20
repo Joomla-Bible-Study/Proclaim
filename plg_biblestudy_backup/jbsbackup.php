@@ -286,7 +286,6 @@ class PlgSystemJBSBackup extends JPlugin
 		$mail = JFactory::getMailer();
 		$mail->IsHTML(true);
 		jimport('joomla.utilities.date');
-<<<<<<< HEAD
 		$sender = array(
 			$mailfrom,
 			$fromname);
@@ -305,20 +304,6 @@ class PlgSystemJBSBackup extends JPlugin
 				$config->get('config.mailfrom'));
 		}
 		$mail->addRecipient($recipients);
-=======
-		$year = '(' . date('Y') . ')';
-		$date = date('r');
-		$Body = $params->get('body') . '<br />';
-		$Body .= JText::_('JBS_PLG_BACKUP_EMAIL_BODY_RUN') . $date . '<br />';
-		$Body2 = '';
-
-		// $Body2 .= '<br><a href="' . JURI::root() . $dobackup . '</a>';
-		$Body2 .= $msg;
-
-		$Body3    = $Body . $Body2;
-		$Subject  = $params->get('subject');
-		$FromName = $params->def('fromname', $fromname);
->>>>>>> Joomla-Bible-Study/master
 
 		$mail->setSubject($Subject . ' ' . $livesite);
 		$mail->setBody($Body);

@@ -58,21 +58,8 @@ class BiblestudyViewTeacher extends JViewLegacy
 	{
 		$pagebuilder = new JBSMPagebuilder;
 
-<<<<<<< HEAD
 		$images        = new JBSMImages;
 		$this->state   = $this->get('state');
-=======
-		$app         = JFactory::getApplication();
-		$pagebuilder = new JBSPagebuilder;
-		$document    = JFactory::getDocument();
-		$document->addScript('//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery-noconflict.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/js/noconflict.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
-		$images = new JBSMImages;
->>>>>>> Joomla-Bible-Study/master
 
 		/** @var Registry $params */
 		$params = $this->state->template->params;

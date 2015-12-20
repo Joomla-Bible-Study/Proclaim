@@ -825,15 +825,9 @@ class JBSMPIconvert
 			{
 				case 4:
 					// Bliptv
-<<<<<<< HEAD:com_biblestudy/admin/lib/piconvert.php
 					$mediacode   = '<embed src="http://blip.tv/play/' . $pi->video_link
 							. '" type="application/x-shockwave-flash" width="500" height="500" wmode="transparent"'
 							. 'allowscriptaccess="always" allowfullscreen="true" ></embed>';
-=======
-					$mediacode   = '<embed src="//blip.tv/play/' . $pi->video_link
-						. '" type="application/x-shockwave-flash" width="500" height="500" wmode="transparent"'
-						. 'allowscriptaccess="always" allowfullscreen="true" ></embed>';
->>>>>>> Joomla-Bible-Study/master:com_biblestudy/admin/lib/biblestudy.preachitconvert.class.php
 					$mediacode   = $db->escape($mediacode);
 					$player      = '8';
 					$media_image = '5';
@@ -884,7 +878,7 @@ class JBSMPIconvert
 
 				case 2:
 					// Vimeo
-					$mediacode   = '<iframe src="//player.vimeo.com/video/' . $pi->video_link . '" width="500" height="500" frameborder="0"></iframe> ';
+					$mediacode   = '<iframe src="http://player.vimeo.com/video/' . $pi->video_link . '" width="500" height="500" frameborder="0"></iframe> ';
 					$mediacode   = $db->escape($mediacode);
 					$player      = '8';
 					$media_image = '5';
@@ -895,13 +889,8 @@ class JBSMPIconvert
 
 				case 3:
 					// Youtube
-<<<<<<< HEAD:com_biblestudy/admin/lib/piconvert.php
 					$mediacode   = '<iframe width="500" height="500" src="http://www.youtube.com/embed/' . $pi->video_link
 							. '" frameborder="0" allowfullscreen></iframe>';
-=======
-					$mediacode   = '<iframe width="500" height="500" src="//www.youtube.com/embed/' . $pi->video_link
-						. '" frameborder="0" allowfullscreen></iframe>';
->>>>>>> Joomla-Bible-Study/master:com_biblestudy/admin/lib/biblestudy.preachitconvert.class.php
 					$mediacode   = $db->escape($mediacode);
 					$player      = '8';
 					$media_image = '13';

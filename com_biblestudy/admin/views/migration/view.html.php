@@ -68,13 +68,7 @@ class BiblestudyViewMigration extends JViewLegacy
 		{
 			if ($this->totalVersions > 0)
 			{
-<<<<<<< HEAD
 				$percent = round($this->doneVersions / $this->totalVersions * 100);
-=======
-				$count = ($this->doneVersions / $this->totalVersions) * 100;
-				$percent = (int) number_format($count, 0);
-				$percent = ($percent + 1) * 5;
->>>>>>> Joomla-Bible-Study/master
 			}
 
 			$more = true;
@@ -113,7 +107,6 @@ class BiblestudyViewMigration extends JViewLegacy
 	{
 		$session = JFactory::getSession();
 		$stack   = $session->get('migration_stack', '', 'biblestudy');
-		$this->stack = & $stack;
 
 		if (empty($stack))
 		{

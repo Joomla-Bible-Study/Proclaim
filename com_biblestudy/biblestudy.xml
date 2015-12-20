@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<<<<<<< HEAD
 <extension type="component" version="3.1" method="upgrade">
 	<!-- Generic Metadata -->
 	<name>COM_BIBLESTUDY</name>
@@ -11,23 +10,6 @@
 	<creationDate>Nov 7, 2015</creationDate>
 	<license>http://www.gnu.org/licenses/gpl.html</license>
 	<description>JBS_INS_XML_DESCRIPTION</description>
-=======
-<extension type="component" version="2.5" method="upgrade">
-    <!-- Note: we can use method="upgrade" to ensure an upgrade regardless of
-    if it is a new install or an actual upgrade; Normal installs will
-    behave like an install but upgrades will be treated appropriately even
-    if the interface doesn't support it properly -->
-    <!-- Generic Metadata -->
-    <name>COM_BIBLESTUDY</name>
-    <author>Joomla Bible Study Team</author>
-    <copyright>(C) 2007 - 2013 Joomla Bible Study Team All rights reserved</copyright>
-    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-    <version>8.0.8</version>
-    <creationDate>Sep 10, 2014</creationDate>
-    <authorEmail>info@joomlabiblestudy.org</authorEmail>
-    <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
-    <description>JBS_INS_XML_DESCRIPTION</description>
->>>>>>> Joomla-Bible-Study/master
 
 	<!-- Installer Hooks -->
 	<scriptfile>biblestudy.script.php</scriptfile>

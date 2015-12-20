@@ -191,11 +191,8 @@ class BiblestudyModelMessages extends JModelList
 		$location = $this->getUserStateFromRequest($this->context . 'filter.location', 'filter_location');
 		$this->setState('filter.location', $location);
 
-<<<<<<< HEAD
 		parent::populateState('study.studydate', 'desc');
 
-=======
->>>>>>> Joomla-Bible-Study/master
 		// Force a language
 		$forcedLanguage = $app->input->get('forcedLanguage');
 

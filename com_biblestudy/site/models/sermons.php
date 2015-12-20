@@ -74,7 +74,6 @@ class BiblestudyModelSermons extends JModelList
 	 */
 	public function getTranslated($items = array())
 	{
-<<<<<<< HEAD
 		foreach ($items as $item)
 		{
 			$item->bookname   = JText::_($item->bookname);
@@ -82,17 +81,10 @@ class BiblestudyModelSermons extends JModelList
 			$item->bookname2   = JText::_($item->bookname2);
 			$item->topic_text = JBSMTranslated::getTopicItemTranslated($item);
 		}
-=======
-		$app = JFactory::getApplication();
-
-		// Load the parameters.
-		$params     = $app->getParams();
->>>>>>> Joomla-Bible-Study/master
 
 		return $items;
 	}
 
-<<<<<<< HEAD
 	/**
 	 * Returns the topics
 	 *
@@ -119,11 +111,6 @@ class BiblestudyModelSermons extends JModelList
 			{
 				return false;
 			}
-=======
-		$params->merge($template->params);
-
-		$this->setState('params', $params);
->>>>>>> Joomla-Bible-Study/master
 
 			$output = array();
 
@@ -186,22 +173,12 @@ class BiblestudyModelSermons extends JModelList
 
 		$db_result = $db->loadAssocList();
 
-<<<<<<< HEAD
 		foreach ($db_result as $i => $value)
 		{
 			$db_result[$i]['text'] = JText::_($value['text']);
 		}
 
 		return $db_result;
-=======
-		/**
-		 * @todo We need to figure out how to properly use the populate state so that
-		 * @todo limitstart works with and without SEF, Tom need to know what to do with this todo
-		 */
-		parent::populateState('study.studydate', 'DESC');
-		$value = $this->input->get('start', '', 'int');
-		$this->setState('list.start', $value);
->>>>>>> Joomla-Bible-Study/master
 	}
 
 	/**
@@ -235,31 +212,9 @@ class BiblestudyModelSermons extends JModelList
 	 */
 	public function getSeries()
 	{
-<<<<<<< HEAD
 		$db     = $this->getDbo();
 		$user   = JFactory::getUser();
 		$groups = implode(',', $user->getAuthorisedViewLevels());
-=======
-		$user            = JFactory::getUser();
-		$groups          = implode(',', $user->getAuthorisedViewLevels());
-		$db              = $this->getDbo();
-		$query           = $db->getQuery(true);
-		$secondaryorderstate = 0;
-		$query->select(
-			$this->getState(
-				'list.select', 'study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
-		                study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.studyintro,
-		                study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, study.media_hours, study.media_minutes,
-		                study.media_seconds, study.series_id, study.download_id, study.thumbnailm, study.thumbhm, study.thumbwm,
-		                study.access, study.user_name, study.user_id, study.studynumber, study.chapter_begin2, study.chapter_end2,
-		                study.verse_end2, study.verse_begin2 ') . ','
-			. ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug ');
-		$query->from('#__bsms_studies AS study');
-
-		// Join over Message Types
-		$query->select('messageType.message_type AS message_type');
-		$query->join('LEFT', '#__bsms_message_type AS messageType ON messageType.id = study.messagetype');
->>>>>>> Joomla-Bible-Study/master
 
 		$query = $db->getQuery(true);
 
@@ -316,7 +271,6 @@ class BiblestudyModelSermons extends JModelList
 		$query->from('#__bsms_studies');
 		$query->order('value');
 
-<<<<<<< HEAD
 		$db->setQuery($query->__toString());
 
 		return $db->loadObjectList();
@@ -335,104 +289,6 @@ class BiblestudyModelSermons extends JModelList
 	{
 		$db    = $this->getDBO();
 		$query = $db->getQuery(true);
-=======
-		$books       = null;
-		$teacher     = null;
-		$locations   = null;
-		$messagetype = null;
-		$topics      = null;
-		$series      = null;
-		$years       = null;
-
-		// See if we are getting itemid
-		$itemid      = $this->input->get('Itemid', '', 'int');
-		$item        = JFactory::getApplication()->getMenu()->getItem($itemid);
-
-		$params = $this->getState('params');
-
-		// Only do this if item id is available
-		if ($item != null)
-		{
-			$teacher     = $params->get('mteacher_id');
-			$locations   = $params->get('mlocations');
-			$books       = $params->get('mbooknumber');
-			$series      = $params->get('mseries_id');
-			$topics      = $params->get('mtopic_id');
-			$messagetype = $params->get('mmessagetype');
-			$years       = $params->get('years');
-
-			// Filter over teachers
-			$filters = $teacher;
-
-			if ($filters)
-			{
-				if (count($filters) > 1)
-				{
-					$where2   = array();
-					$subquery = '(';
-
-					foreach ($filters as $filter)
-					{
-						$where2[] = 'study.teacher_id = ' . (int) $filter;
-					}
-					$subquery .= implode(' OR ', $where2);
-					$subquery .= ')';
-
-					$query->where($subquery);
-				}
-				else
-				{
-					foreach ($filters as $filter)
-					{
-						if ($filter >= 1)
-						{
-							$query->where('study.teacher_id = ' . (int) $filter);
-						}
-					}
-				}
-			}
-
-			// Filter locations
-			$filters = $locations;
-
-			if ($filters)
-			{
-				if (count($filters) > 1)
-				{
-					$where2   = array();
-					$subquery = '(';
-
-					foreach ($filters as $filter)
-					{
-						$where2[] = 'study.location_id = ' . (int) $filter;
-					}
-					$subquery .= implode(' OR ', $where2);
-					$subquery .= ')';
-
-					$query->where($subquery);
-				}
-				else
-				{
-					foreach ($filters AS $filter)
-					{
-						if ($filter >= 1)
-						{
-							$query->where('study.location_id = ' . (int) $filter);
-						}
-					}
-				}
-			}
-
-			// Filter over books
-			$filters = $books;
-
-			if ($filters)
-			{
-				if (count($filters) > 1)
-				{
-					$where2   = array();
-					$subquery = '(';
->>>>>>> Joomla-Bible-Study/master
 
 		$query->select('SUM(plays) AS totalPlays');
 		$query->from('#__bsms_mediafiles');
@@ -577,41 +433,9 @@ class BiblestudyModelSermons extends JModelList
 			$this->setState('sendingview', '');
 			$input->set('sendingview', '');
 
-<<<<<<< HEAD
-=======
-			//set the secondary order
-			$secondaryorderstate = $this->setState('secondaryorderstate', 1);
-			if ($chb && $che)
-			{
-				$query->where('(study.booknumber = ' . (int) $book .
-					' AND study.chapter_begin >= ' . $chb .
-					' AND study.chapter_end <= ' . $che . ')' .
-					'OR study.booknumber2 = ' . (int) $book
-				);
-			}
-			else
-			{
-				if ($chb)
-				{
-					$query->where('(study.booknumber = ' . (int) $book . ' AND study.chapter_begin > = ' . $chb . ') OR study.booknumber2 = ' . (int) $book);
-				}
-				else
-				{
-					if ($che)
-					{
-						$query->where('(study.booknumber = ' . (int) $book . ' AND study.chapter_end <= ' . $che . ') OR study.booknumber2 = ' . (int) $book);
-					}
-					else
-					{
-						$query->where('(study.booknumber = ' . (int) $book . ' OR study.booknumber2 = ' . (int) $book . ')');
-					}
-				}
-			}
->>>>>>> Joomla-Bible-Study/master
 		}
 		else
 		{
-<<<<<<< HEAD
 			$this->setState('filter.book', 0);
 			$this->setState('filter.teacher', 0);
 			$this->setState('filter.series', 0);
@@ -627,25 +451,13 @@ class BiblestudyModelSermons extends JModelList
 			$this->setState('filter.landingtopic', 0);
 			$this->setState('filter.landinglocation', 0);
 			$this->landing = 0;
-=======
-			$query->where('study.teacher_id = ' . (int) $teacher);
-			$this->setState('secondaryorderstate', 1);
->>>>>>> Joomla-Bible-Study/master
 		}
 
 		$template->id = $t;
 		$this->setState('template', $template);
 		$this->setState('admin', $admin);
 
-<<<<<<< HEAD
 		$this->setState('filter.language', JLanguageMultilang::isEnabled());
-=======
-		if ($series >= 1)
-		{
-			$query->where('study.series_id = ' . (int) $series);
-			$this->setState('secondaryorderstate', 1);
-		}
->>>>>>> Joomla-Bible-Study/master
 
 		$studytitle = $this->getUserStateFromRequest($this->context . '.filter.studytitle', 'filter_studytitle');
 		$this->setState('filter.studytitle', $studytitle);
@@ -655,42 +467,22 @@ class BiblestudyModelSermons extends JModelList
 
 		if ($landing == 1)
 		{
-<<<<<<< HEAD
 			$book = $this->getUserStateFromRequest($this->context . '.filter.landingbook', 'filter_book_landing');
-=======
-			$query->where('study.messageType = ' . (int) $messageType);
-			$this->setState('secondaryorderstate', 1);
->>>>>>> Joomla-Bible-Study/master
 		}
 		else
 		{
-<<<<<<< HEAD
 			$book = $this->getUserStateFromRequest($this->context . '.filter.book', 'filter_book');
-=======
-			$query->where('YEAR(study.studydate) = ' . (int) $year);
-			$this->setState('secondaryorderstate', 1);
->>>>>>> Joomla-Bible-Study/master
 		}
 		$this->setState('filter.book', $book);
 		$this->setState('filter.landingbook', $book);
 
 		if ($landing == 1)
 		{
-<<<<<<< HEAD
 			$teacher = $this->getUserStateFromRequest($this->context . '.filter.landingteacher', 'filter_teacher_landing');
-=======
-			$query->where('st.topic_id LIKE "%' . $topic . '%"');
-			$this->setState('secondaryorderstate', 1);
->>>>>>> Joomla-Bible-Study/master
 		}
 		else
 		{
-<<<<<<< HEAD
 			$teacher = $this->getUserStateFromRequest($this->context . '.filter.teacher', 'filter_teacher');
-=======
-			$query->where('study.location_id = ' . (int) $location);
-			$this->setState('secondaryorderstate', 1);
->>>>>>> Joomla-Bible-Study/master
 		}
 		$this->setState('filter.teacher', $teacher);
 		$this->setState('filter.landingteacher', $teacher);
@@ -717,7 +509,6 @@ class BiblestudyModelSermons extends JModelList
 		$this->setState('filter.messageType', $messageType);
 		$this->setState('filter.landingmessagetype', $messageType);
 
-<<<<<<< HEAD
 		if ($landing == 1)
 		{
 			$year = $this->getUserStateFromRequest($this->context . '.filter.landingyear', 'filter_year_landing');
@@ -746,16 +537,6 @@ class BiblestudyModelSermons extends JModelList
 		else
 		{
 			$topic = $this->getUserStateFromRequest($this->context . '.filter.topic', 'filter_topic');
-=======
-		// Order by order filter
-		$order = $params->get('default_order');
-
-		$secondaryorderstate = $this->getState('secondaryorderstate');
-
-		if (!empty($secondaryorderstate))
-		{
-			$order = $params->get('default_order_secondary');
->>>>>>> Joomla-Bible-Study/master
 		}
 		$this->setState('filter.topic', $topic);
 		$this->setState('filter.landingtopic', $topic);
@@ -798,7 +579,6 @@ class BiblestudyModelSermons extends JModelList
 	 */
 	protected function getStoreId($id = '')
 	{
-<<<<<<< HEAD
 		// Compile the store id.
 		$id .= ':' . serialize($this->getState('filter.published'));
 		$id .= ':' . $this->getState('filter.studytitle');
@@ -811,13 +591,6 @@ class BiblestudyModelSermons extends JModelList
 		$id .= ':' . $this->getState('filter.topic');
 		$id .= ':' . $this->getState('filter.location');
 		$id .= ':' . $this->getState('list.start');
-=======
-		foreach ($items as $i => $item)
-		{
-			$items[$i]->bookname   = JText::_($item->bookname);
-			$items[$i]->topic_text = JBSMTranslated::getTopicItemTranslated($item);
-		}
->>>>>>> Joomla-Bible-Study/master
 
 		return parent::getStoreId($id);
 	}
@@ -965,11 +738,7 @@ class BiblestudyModelSermons extends JModelList
 			// Filter locations
 			$filters = $locations;
 
-<<<<<<< HEAD
 			if ($filters)
-=======
-			foreach ($db_result as $value)
->>>>>>> Joomla-Bible-Study/master
 			{
 				if (count($filters) > 1)
 				{
@@ -1007,16 +776,12 @@ class BiblestudyModelSermons extends JModelList
 					$where2   = array();
 					$subquery = '(';
 
-<<<<<<< HEAD
 					foreach ($filters as $filter)
 					{
 						$where2[] = 'study.booknumber = ' . (int) $filter;
 					}
 					$subquery .= implode(' OR ', $where2);
 					$subquery .= ')';
-=======
-		$params   = $this->getState('params');
->>>>>>> Joomla-Bible-Study/master
 
 					$query->where($subquery);
 				}
@@ -1242,7 +1007,6 @@ class BiblestudyModelSermons extends JModelList
 		{
 			$query->where('study.messageType = ' . (int) $messageType);
 
-<<<<<<< HEAD
 			// Set the secondary order
 			$this->setState('secondaryorderstate', 1);
 		}
@@ -1257,18 +1021,11 @@ class BiblestudyModelSermons extends JModelList
 		if ($year >= 1)
 		{
 			$query->where('YEAR(study.studydate) = ' . (int) $year);
-=======
-		$db->setQuery($query->__toString());
-
-		return $db->loadObjectList();
-	}
->>>>>>> Joomla-Bible-Study/master
 
 			// Set the secondary order
 			$this->setState('secondaryorderstate', 1);
 		}
 
-<<<<<<< HEAD
 		// Filter by topic
 		$topic = $this->getState('filter.topic');
 		if ($this->landing == 1)
@@ -1283,16 +1040,6 @@ class BiblestudyModelSermons extends JModelList
 			// Set the secondary order
 			$this->setState('secondaryorderstate', 1);
 		}
-=======
-		$query->select('SUM(plays) AS totalPlays');
-		$query->from('#__bsms_mediafiles');
-		$query->group('study_id');
-		$query->where('study_id = ' . $id);
-		$db->setQuery($query->__toString());
-
-		return $db->loadResult();
-	}
->>>>>>> Joomla-Bible-Study/master
 
 		// Filter by location
 		$location = $this->getState('filter.location');

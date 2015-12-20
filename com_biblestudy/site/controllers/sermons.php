@@ -93,7 +93,7 @@ class BiblestudyControllerSermons extends JControllerLegacy
 	 */
 	public function inlinePlayer()
 	{
-		echo('{m4vremote}//www.livingwatersweb.com/video/John_14_15-31.m4v{/m4vremote}');
+		echo('{m4vremote}http://www.livingwatersweb.com/video/John_14_15-31.m4v{/m4vremote}');
 	}
 
 }

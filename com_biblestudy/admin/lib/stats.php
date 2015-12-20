@@ -421,29 +421,18 @@ class JBSMStats
 			$db->setQuery($query);
 			$hits = $db->loadObject();
 
-			if ($hits)
+			if ($format < 1)
 			{
-<<<<<<< HEAD:com_biblestudy/admin/lib/stats.php
 				$total = $result['added'] + $hits->hits;
 			}
 			else
 			{
 				$total = $result->added;
-=======
-				if ($format < 1)
-				{
-					$total = $result->added + $hits->hits;
-				}
-				else
-				{
-					$total = $result->added;
-				}
-				$link    = ' <a href="index.php?option=com_biblestudy&amp;task=message.edit&amp;id=' . $hits->id . '">' .
-					$hits->studytitle . '</a> ' . date('Y-m-d', strtotime($hits->studydate)) . '<br>';
-				$final2  = array('total' => $total, 'link' => $link);
-				$final[] = $final2;
->>>>>>> Joomla-Bible-Study/master:com_biblestudy/admin/lib/biblestudy.stats.class.php
 			}
+			$link    = ' <a href="index.php?option=com_biblestudy&amp;task=message.edit&amp;id=' . $hits->id . '">' .
+				$hits->studytitle . '</a> ' . date('Y-m-d', strtotime($hits->studydate)) . '<br>';
+			$final2  = array('total' => $total, 'link' => $link);
+			$final[] = $final2;
 		}
 		rsort($final);
 		array_splice($final, 5);
@@ -516,7 +505,6 @@ class JBSMStats
 				}
 			}
 
-<<<<<<< HEAD:com_biblestudy/admin/lib/stats.php
 			$media_players = '<br /><strong>' . JText::_('JBS_CMN_TOTAL_PLAYERS') . ': ' . $total_players . '</strong>' .
 				'<br /><strong>' . JText::_('JBS_CMN_INTERNAL_PLAYER') . ': </strong>' . $count_internal_player .
 				'<br /><strong><a href="http://extensions.joomla.org/extensions/extension/multimedia/multimedia-players/allvideos" target="blank">' .
@@ -526,16 +514,6 @@ class JBSMStats
 				JText::_('JBS_CMN_GLOBAL_SETTINGS') . ': </strong>' . $count_global_player . '<br /><strong>' .
 				JText::_('JBS_CMN_EMBED_CODE') . ': </strong>' . $count_embed_code;
 		}
-=======
-		$media_players = '<br /><strong>' . JText::_('JBS_CMN_TOTAL_PLAYERS') . ': ' . $total_players . '</strong>' .
-			'<br /><strong>' . JText::_('JBS_CMN_INTERNAL_PLAYER') . ': </strong>' . $count_internal_player .
-			'<br /><strong><a href="//extensions.joomla.org/extensions/multimedia/multimedia-players/video-players-a-gallery/11572" target="blank">' .
-			JText::_('JBS_CMN_AVPLUGIN') . '</a>: </strong>' . $count_av_player . '<br /><strong>' .
-			JText::_('JBS_CMN_LEGACY_PLAYER') . ': </strong>' . $count_legacy_player . '<br /><strong>' .
-			JText::_('JBS_CMN_NO_PLAYER_TREATED_DIRECT') . ': </strong>' . $count_no_player . '<br /><strong>' .
-			JText::_('JBS_CMN_GLOBAL_SETTINGS') . ': </strong>' . $count_global_player . '<br /><strong>' .
-			JText::_('JBS_CMN_EMBED_CODE') . ': </strong>' . $count_embed_code;
->>>>>>> Joomla-Bible-Study/master:com_biblestudy/admin/lib/biblestudy.stats.class.php
 
 		return $media_players;
 	}
@@ -651,7 +629,6 @@ class JBSMStats
 				->where('#__bsms_mediafiles.study_id = ' . (int) $result->study_id);
 			$db->setQuery($query);
 			$hits = $db->loadObject();
-<<<<<<< HEAD:com_biblestudy/admin/lib/stats.php
 			if (!$hits)
 			{
 				return false;
@@ -665,36 +642,21 @@ class JBSMStats
 				$name = $hits->studytitle;
 			}
 			if ($format < 1)
-=======
-
-			if ($hits)
->>>>>>> Joomla-Bible-Study/master:com_biblestudy/admin/lib/biblestudy.stats.class.php
 			{
-				if (!$hits->studytitle)
-				{
-					$name = $hits->id;
-				}
-				else
-				{
-					$name = $hits->studytitle;
-				}
-				if ($format < 1)
-				{
-					$total = $result->added + $hits->hits;
-				}
-				else
-				{
-					$total = $result->added;
-				}
-				$selectvalue   = JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $hits->id . '&t=' . $t);
-				$selectdisplay = $name . ' - ' . JText::_('JBS_CMN_SCORE') . ': ' . $total;
-				$final2        = array(
-					'score'   => $total,
-					'select'  => $selectvalue,
-					'display' => $selectdisplay
-				);
-				$final[]       = $final2;
+				$total = $result->added + $hits->hits;
 			}
+			else
+			{
+				$total = $result->added;
+			}
+			$selectvalue   = JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $hits->id . '&t=' . $t);
+			$selectdisplay = $name . ' - ' . JText::_('JBS_CMN_SCORE') . ': ' . $total;
+			$final2        = array(
+				'score'   => $total,
+				'select'  => $selectvalue,
+				'display' => $selectdisplay
+			);
+			$final[]       = $final2;
 		}
 		rsort($final);
 		array_splice($final, $limit);

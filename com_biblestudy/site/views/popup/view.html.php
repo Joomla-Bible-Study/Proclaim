@@ -121,21 +121,9 @@ class BiblestudyViewPopup extends JViewLegacy
 		$this->media    = $this->getMedia->getMediaRows2($mediaid);
 		$this->state    = $this->get('state');
 
-<<<<<<< HEAD
 		/** @var Registry params */
 		$this->params   = $this->state->template->params;
 		$this->template = $this->state->get('template');
-=======
-		$document->addScript('//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
-
-		jimport('joomla.application.component.helper');
-
-		$getMedia     = new jbsMedia;
-		$this->media  = $getMedia->getMediaRows2($mediaid);
-		$template     = JBSMParams::getTemplateparams();
-		$this->params = $template->params;
->>>>>>> Joomla-Bible-Study/master
 
 		/*
 		 *  Convert parameter fields to objects.
@@ -175,12 +163,8 @@ class BiblestudyViewPopup extends JViewLegacy
 
 		if (!substr_count($this->path1, '://') && !substr_count($this->path1, '//'))
 		{
-<<<<<<< HEAD
 			$protocol    = $this->params->get('protocol', 'http://');
 			$this->path1 = $protocol . $this->path1;
-=======
-			$this->path1 = '//' . $this->path1;
->>>>>>> Joomla-Bible-Study/master
 		}
 		$this->playerwidth  = $this->params->get('player_width');
 		$this->playerheight = $this->params->get('player_height');

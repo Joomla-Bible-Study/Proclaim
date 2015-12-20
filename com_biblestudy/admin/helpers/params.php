@@ -75,17 +75,13 @@ class JBSMParams
 	/**
 	 * Get Template Params
 	 *
-<<<<<<< HEAD
 	 * @param   int  $pk  Id of Template to look for
 	 *
-=======
->>>>>>> Joomla-Bible-Study/master
 	 * @return TableTemplate Return active template info
 	 */
 	public static function getTemplateparams($pk = null)
 	{
 		$db = JFactory::getDbo();
-<<<<<<< HEAD
 		if (!$pk)
 		{
 			$pk = JFactory::getApplication()->input->getInt('t', '1');
@@ -111,27 +107,6 @@ class JBSMParams
 		}
 
 		return self::$template_table;
-=======
-		$pk = JFactory::getApplication()->input->getInt('t', 1);
-
-		$query = $db->getQuery(true);
-		$query->select('*')
-			->from('#__bsms_templates')
-			->where('published = ' . (int) 1)
-			->where('id = ' . (int) $pk);
-		$db->setQuery($query);
-		$template = $db->loadObject();
-
-		if ($template)
-		{
-			$registry = new JRegistry;
-			$registry->loadString($template->params);
-			$template->params = $registry;
-			return $template;
-		}
-
-		return false;
->>>>>>> Joomla-Bible-Study/master
 	}
 
 }

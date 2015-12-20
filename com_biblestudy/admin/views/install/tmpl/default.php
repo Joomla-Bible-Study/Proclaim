@@ -104,7 +104,6 @@ defined('_JEXEC') or die;
 
 	</tr>
 
-<<<<<<< HEAD
 	<tr>
 		<td>
 			<p><a href="http://www.joomlabiblestudy.org/forum.html"
@@ -119,20 +118,6 @@ defined('_JEXEC') or die;
 			<p><?php echo JText::_('JBS_INS_TITLE'); ?> &copy; by <a href="http://www.JoomlaBibleStudy.org"
 			                                                         target="_blank">www.JoomlaBibleStudy.org</a>
 				All rights reserved.</p>
-=======
-        <tr><td>
-          <p><a href="//www.joomlabiblestudy.org/forum.html"
-              target="_blank"><?php echo JText::_('JBS_INS_VISIT_FORUM'); ?></a></p>
-
-        <p><a href="//www.joomlabiblestudy.org"
-              target="_blank"><?php echo JText::_('JBS_INS_GET_MORE_HELP'); ?></a></p>
-
-            <p><a href="//www.joomlabiblestudy.org/jbs-documentation.html"
-              target="_blank"><?php echo JText::_('JBS_INS_VISIT_DOCUMENTATION'); ?></a></p>
-
-        <p><?php echo JText::_('JBS_INS_TITLE'); ?> &copy; by <a href="//www.JoomlaBibleStudy.org" target="_blank">www.JoomlaBibleStudy.org</a>
-            All rights reserved.</p>
->>>>>>> Joomla-Bible-Study/master
 
 		</td>
 	</tr>

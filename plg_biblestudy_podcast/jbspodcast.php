@@ -26,7 +26,7 @@ class PlgSystemJBSPodcast extends JPlugin
 	 *                             Recognized key values include 'name', 'group', 'params', 'language'
 	 *                             (this list is not meant to be comprehensive).
 	 */
-	public function __construct(&$subject, $config)
+	public function __construct(& $subject, $config)
 	{
 
 		parent::__construct($subject, $config);
@@ -41,11 +41,6 @@ class PlgSystemJBSPodcast extends JPlugin
 	 */
 	public function onAfterInitialise()
 	{
-<<<<<<< HEAD
-=======
-
-		JPluginHelper::getPlugin('system', 'jbspodcast');
->>>>>>> Joomla-Bible-Study/master
 		$params = $this->params;
 
 		// First check to see what method of updating the podcast we are using
@@ -68,23 +63,12 @@ class PlgSystemJBSPodcast extends JPlugin
 			// Update the database to show a new time
 			$this->updatetime();
 
-<<<<<<< HEAD
 			// Check to see if we need to email anything
-=======
-			// Last we check to see if we need to email anything
->>>>>>> Joomla-Bible-Study/master
 			if ($params->get('email') > 0)
 			{
 				if ($params->get('email') > 1)
 				{
-					if (substr_count($dopodcast, 'not') || $dopodcast == false)
-					{
-						$iserror = 1;
-					}
-					else
-					{
-						$iserror = 0;
-					}
+					$iserror = substr_count($dopodcast, 'not');
 
 					if ($iserror)
 					{
@@ -102,11 +86,7 @@ class PlgSystemJBSPodcast extends JPlugin
 	/**
 	 * Check Time
 	 *
-<<<<<<< HEAD
 	 * @param   object  $params  Plugin params
-=======
-	 * @param   JRegistry  $params  ?
->>>>>>> Joomla-Bible-Study/master
 	 *
 	 * @return boolean   True if Time is difference. False if not grater then now.
 	 */
@@ -138,11 +118,7 @@ class PlgSystemJBSPodcast extends JPlugin
 	/**
 	 * Check Days
 	 *
-<<<<<<< HEAD
 	 * @param   Joomla\Registry\Registry  $params  Plugin params
-=======
-	 * @param   JRegistry  $params  ?
->>>>>>> Joomla-Bible-Study/master
 	 *
 	 * @return boolean Check to see if to day is right.
 	 */
@@ -288,13 +264,8 @@ class PlgSystemJBSPodcast extends JPlugin
 	/**
 	 * Send the Email
 	 *
-<<<<<<< HEAD
 	 * @param   Joomla\Registry\Registry  $params     Plugin params
 	 * @param   object                    $dopodcast  ?
-=======
-	 * @param   JRegistry  $params     ?
-	 * @param   object     $dopodcast  ?
->>>>>>> Joomla-Bible-Study/master
 	 *
 	 * @return void
 	 */
@@ -302,11 +273,6 @@ class PlgSystemJBSPodcast extends JPlugin
 	{
 
 		$livesite = JURI::root();
-<<<<<<< HEAD
-=======
-		$config   = JFactory::getConfig();
-		$fromname = $config->get('config.fromname');
->>>>>>> Joomla-Bible-Study/master
 		jimport('joomla.filesystem.file');
 
 		$mail = JFactory::getMailer();
@@ -323,7 +289,6 @@ class PlgSystemJBSPodcast extends JPlugin
 
 		foreach ($recipients AS $recipient)
 		{
-			$mail->filenameToType($FromName);
 			$mail->addRecipient($recipient);
 			$mail->setSubject($Subject . ' ' . $livesite);
 			$mail->setBody($Body3);

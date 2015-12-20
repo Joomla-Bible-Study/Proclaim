@@ -30,32 +30,4 @@ class BiblestudyControllerInstall extends JControllerForm
 	{
 		parent::__construct($config);
 	}
-<<<<<<< HEAD
-=======
-
-	/**
-	 * Fix Assets
-	 *
-	 * @return void
-	 */
-	public function fixAssets()
-	{
-		$asset      = new fixJBSAssets;
-		$fix_assets = $asset->fixAssets();
-		/** @var BibleStudyModelInstall $modale */
-		$modale     = $this->getModel('Install', 'BibleStudyModel');
-		$modale->subcleanCache();
-		$input      = new JInput;
-		$input->set('messages', $fix_assets);
-
-		$jbsname = $input->get('jbsname');
-		$jbstype = $input->get('jbstype');
-
-		if ($jbsname)
-		{
-			$this->setRedirect('index.php?option=com_biblestudy&view=install&jbsname=' . $jbsname . '&jbstype=' . $jbstype);
-		}
-	}
-
->>>>>>> Joomla-Bible-Study/master
 }

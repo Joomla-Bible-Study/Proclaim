@@ -169,7 +169,6 @@ class BiblestudyControllerMessage extends JControllerForm
 	 */
 	public function save($key = null, $urlVar = null)
 	{
-<<<<<<< HEAD
 		// Check for request forgeries.
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
@@ -177,12 +176,6 @@ class BiblestudyControllerMessage extends JControllerForm
 		$model      = $this->getModel('Topic');
 		$app        = JFactory::getApplication();
 		$data       = $this->input->post->get('jform', array(), 'array');
-=======
-		$model     = $this->getModel('Topic');
-		$jinput    = new JInput;
-		$data      = $jinput->post->get('jform', array(), 'array');
-		$topic_ids = array();
->>>>>>> Joomla-Bible-Study/master
 
 		// Get Tags
 		$vTags = $data['topics'];
