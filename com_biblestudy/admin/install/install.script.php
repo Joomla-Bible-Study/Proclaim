@@ -207,7 +207,7 @@ class Com_KunenaInstallerScript
 
 		// Do not install over Git repository (K1.6+).
 		if ((class_exists('Kunena') && method_exists('Kunena', 'isSvn') && Kunena::isSvn())
-			|| (class_exists('BibleStudyForum') && method_exists('BibleStudyForum', 'isDev') && BibleStudyForum::isDev()))
+			|| (class_exists('JBSM') && method_exists('JBSM', 'isDev') && JBSM::isDev()))
 		{
 			$app->enqueueMessage('Oops! You should not install Kunena over your Git reporitory!', 'notice');
 

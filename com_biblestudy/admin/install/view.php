@@ -66,7 +66,7 @@ class BibleStudyViewInstall extends JViewLegacy
 	function setToolBar()
 	{
 		// Set the titlebar text
-		JToolBarHelper::title('<span>Kunena ' . BibleStudyForum::version() . '</span> ' . JText::_('COM_BIBLESTUDY_INSTALLER'), 'jbsm.png');
+		JToolBarHelper::title('<span>Kunena ' . JBSM::version() . '</span> ' . JText::_('COM_BIBLESTUDY_INSTALLER'), 'jbsm.png');
 
 	}
 
@@ -79,7 +79,7 @@ class BibleStudyViewInstall extends JViewLegacy
 		echo $this->escape($schema->getSchema()->saveXML());
 		echo '</textarea>';
 
-		if (BibleStudyForum::isDev())
+		if (JBSM::isDev())
 		{
 			echo '<textarea cols="80" rows="20">';
 
@@ -102,7 +102,7 @@ class BibleStudyViewInstall extends JViewLegacy
 		echo $this->escape($diff->saveXML());
 		echo '</textarea>';
 
-		if (BibleStudyForum::isDev())
+		if (JBSM::isDev())
 		{
 			echo '<textarea cols="80" rows="20">';
 

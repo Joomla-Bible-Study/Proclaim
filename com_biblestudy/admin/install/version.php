@@ -22,35 +22,35 @@ class BibleStudyVersion
 	 */
 	public function getVersionWarning($msg = 'COM_BIBLESTUDY_VERSION_WARNING')
 	{
-		if (strpos(BibleStudyForum::version(), 'GIT') !== false)
+		if (strpos(JBSM::version(), 'GIT') !== false)
 		{
 			$kn_version_type    = JText::_('COM_BIBLESTUDY_VERSION_GIT');
 			$kn_version_warning = JText::_('COM_BIBLESTUDY_VERSION_GIT_WARNING');
 		}
 		else
 		{
-			if (strpos(BibleStudyForum::version(), 'DEV') !== false)
+			if (strpos(JBSM::version(), 'DEV') !== false)
 			{
 				$kn_version_type    = JText::_('COM_BIBLESTUDY_VERSION_DEV');
 				$kn_version_warning = JText::_('COM_BIBLESTUDY_VERSION_DEV_WARNING');
 			}
 			else
 			{
-				if (strpos(BibleStudyForum::version(), 'RC') !== false)
+				if (strpos(JBSM::version(), 'RC') !== false)
 				{
 					$kn_version_type    = JText::_('COM_BIBLESTUDY_VERSION_RC');
 					$kn_version_warning = JText::_('COM_BIBLESTUDY_VERSION_RC_WARNING');
 				}
 				else
 				{
-					if (strpos(BibleStudyForum::version(), 'BETA') !== false)
+					if (strpos(JBSM::version(), 'BETA') !== false)
 					{
 						$kn_version_type    = JText::_('COM_BIBLESTUDY_VERSION_BETA');
 						$kn_version_warning = JText::_('COM_BIBLESTUDY_VERSION_BETA_WARNING');
 					}
 					else
 					{
-						if (strpos(BibleStudyForum::version(), 'ALPHA') !== false)
+						if (strpos(JBSM::version(), 'ALPHA') !== false)
 						{
 							$kn_version_type    = JText::_('COM_BIBLESTUDY_VERSION_ALPHA');
 							$kn_version_warning = JText::_('COM_BIBLESTUDY_VERSION_ALPHA_WARNING');
@@ -62,7 +62,7 @@ class BibleStudyVersion
 
 		if (!empty($kn_version_warning) && !empty($kn_version_type))
 		{
-			return JText::sprintf($msg, BibleStudyForum::version(), $kn_version_type) . ' ' . $kn_version_warning;
+			return JText::sprintf($msg, JBSM::version(), $kn_version_type) . ' ' . $kn_version_warning;
 		}
 
 		return '';
@@ -112,7 +112,7 @@ class BibleStudyVersion
 		}
 		elseif (!empty($version->state))
 		{
-			if ($version->version != BibleStudyForum::version())
+			if ($version->version != JBSM::version())
 			{
 				$version->state = '';
 			}
@@ -128,7 +128,7 @@ class BibleStudyVersion
 	 */
 	static function getVersionHTML()
 	{
-		return 'Kunena ' . BibleStudyForum::version() . ' | ' . BibleStudyForum::versionDate() . ' [ ' . BibleStudyForum::versionName() . ' ]';
+		return 'Kunena ' . JBSM::version() . ' | ' . JBSM::versionDate() . ' [ ' . JBSM::versionName() . ' ]';
 	}
 
 	/**

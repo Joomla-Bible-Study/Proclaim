@@ -29,7 +29,7 @@ if (version_compare(PHP_VERSION, BIBLESTUDY_MIN_PHP, '<'))
 define("COM_BIBLESTUDY_DEBUG", false);
 
 JLoader::discover('JBSM', BIBLESTUDY_PATH_LIB);
-JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_LIB);
+JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_LIB, true, true);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_ADDON);
@@ -39,6 +39,39 @@ JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html/');
 $language = JFactory::getLanguage();
 $language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
 $language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, null, true);
+$app = JFactory::getApplication();
+
+// Safety check to prevent fatal error if 'System - Kunena Forum' plug-in has been disabled.
+if ($app->input->getCmd('view') == 'install' || !class_exists('JBSM') || !JBSM::isCompatible('4.0'))
+{
+	// Run installer instead..
+	require_once __DIR__ . '/install/controller.php';
+
+	$controller = new JBSMControllerInstall();
+
+	// TODO: execute special task that checks what's wrong
+	$controller->execute($app->input->getCmd('task'));
+	$controller->redirect();
+
+	return;
+}
+
+if ($app->input->getCmd('view') == 'uninstall')
+{
+	$allowed = $app->getUserState('com_biblestudy.uninstall.allowed');
+
+	if ($allowed)
+	{
+		require_once __DIR__ . '/install/controller.php';
+		$controller = new JBSMControllerInstall;
+		$controller->execute('uninstall');
+		$controller->redirect();
+
+		$app->setUserState('com_kunena.uninstall.allowed', null);
+
+		return;
+	}
+}
 
 addCSS();
 

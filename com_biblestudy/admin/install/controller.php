@@ -15,14 +15,18 @@ defined('_JEXEC') or die ();
  *
  * @since        1.6
  */
-class BibleStudyControllerInstall extends JControllerLegacy
+class JBSMControllerInstall extends JControllerLegacy
 {
 	protected $step = null;
 	protected $steps = null;
+	protected $status = null;
 
 	/** @type JModelLegacy  */
 	protected $model = null;
 
+	/**
+	 * JBSMControllerInstall constructor.
+	 */
 	public function __construct()
 	{
 		parent::__construct();
@@ -32,6 +36,15 @@ class BibleStudyControllerInstall extends JControllerLegacy
 		$this->steps = $this->model->getSteps();
 	}
 
+	/**
+	 * Display
+	 *
+	 * @param bool $cachable
+	 * @param bool $urlparams
+	 *
+	 * @return bool
+	 * @throws \Exception
+	 */
 	public function display($cachable = false, $urlparams = false)
 	{
 		require_once __DIR__ . '/view.php';
@@ -54,6 +67,8 @@ class BibleStudyControllerInstall extends JControllerLegacy
 	}
 
 	/**
+	 * Run
+	 *
 	 * @throws \Exception
 	 */
 	public function run()
@@ -131,7 +146,7 @@ class BibleStudyControllerInstall extends JControllerLegacy
 		ob_end_clean();
 
 		JFactory::getDocument()->setMimeEncoding('application/json');
-		JResponse::setHeader('Content-Disposition', 'attachment;filename="jbsm-install.json"');
+		JFactory::getApplication()->setHeader('Content-Disposition', 'attachment;filename="jbsm-install.json"');
 
 		$percent = intval(99 * $this->step / count($this->steps));
 		if ($error)
@@ -165,7 +180,7 @@ class BibleStudyControllerInstall extends JControllerLegacy
 		$app = JFactory::getApplication();
 		$app->enqueueMessage(JText::_('COM_BIBLESTUDY_INSTALL_REMOVED'));
 
-		if (class_exists('BibleStudyForum') && !BibleStudyForum::isDev())
+		if (class_exists('JBSM') && !JBSM::isDev())
 		{
 			jimport('joomla.application.component.helper');
 			jimport('joomla.filesystem.folder');
@@ -193,6 +208,11 @@ class BibleStudyControllerInstall extends JControllerLegacy
 		}
 	}
 
+	/**
+	 * Run the Step
+	 *
+	 * @return mixed|null
+	 */
 	function runStep()
 	{
 		if (empty($this->steps[$this->step]['step']))
@@ -203,13 +223,26 @@ class BibleStudyControllerInstall extends JControllerLegacy
 		return call_user_func(array($this->model, "step" . $this->steps[$this->step]['step']));
 	}
 
+	/**
+	 * Error Add
+	 *
+	 * @param $type
+	 * @param $errstr
+	 */
 	static public function error($type, $errstr)
 	{
-		$model = JModelLegacy::getInstance('Install', 'BibleStudyModel');
+		$model = JModelLegacy::getInstance('Install', 'JBSMModel');
 		$model->addStatus($type, false, $errstr);
 		echo json_encode(array('success' => false, 'html' => $errstr));
 	}
 
+	/**
+	 * Set Exception
+	 *
+	 * @param   JException  $exception  Exception
+	 *
+	 * @return bool
+	 */
 	static public function exceptionHandler($exception)
 	{
 		self::error('', 'Uncaught Exception: ' . $exception->getMessage());
@@ -217,6 +250,16 @@ class BibleStudyControllerInstall extends JControllerLegacy
 		return true;
 	}
 
+	/**
+	 * Error Handler
+	 *
+	 * @param $errno
+	 * @param $errstr
+	 * @param $errfile
+	 * @param $errline
+	 *
+	 * @return bool
+	 */
 	static public function errorHandler($errno, $errstr, $errfile, $errline)
 	{
 		//self::error('', "Fatal Error: $errstr in $errfile on line $errline");

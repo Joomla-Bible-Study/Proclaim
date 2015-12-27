@@ -27,7 +27,7 @@ use Joomla\Registry\Registry;
  *
  * @since        1.6
  */
-class BibleStudyModelInstall extends JModelLegacy
+class JBSMModelInstall extends JModelLegacy
 {
 	/**
 	 * Flag to indicate model state initialization.
@@ -57,13 +57,6 @@ class BibleStudyModelInstall extends JModelLegacy
 	 */
 	public function __construct()
 	{
-		// Load installer language file only from the component
-		$lang = JFactory::getLanguage();
-		$lang->load('com_biblestudy.install', BIBLESTUDY_INSTALLER_ADMINPATH, 'en-GB');
-		$lang->load('com_biblestudy.install', BIBLESTUDY_INSTALLER_ADMINPATH);
-		$lang->load('com_biblestudy.libraries', BIBLESTUDY_INSTALLER_ADMINPATH, 'en-GB');
-		$lang->load('com_biblestudy.libraries', BIBLESTUDY_INSTALLER_ADMINPATH);
-
 		parent::__construct();
 		$this->db = JFactory::getDBO();
 
@@ -75,27 +68,6 @@ class BibleStudyModelInstall extends JModelLegacy
 		$this->setState('default_max_time', @ini_get('max_execution_time'));
 		@set_time_limit(300);
 		$this->setState('max_time', @ini_get('max_execution_time'));
-
-		// TODO: move to migration
-		$this->_versiontablearray = array(array('prefix' => 'bsms_', 'table' => 'bsms_version'), array('prefix' => 'fb_', 'table' => 'fb_version'));
-
-		// TODO: move to migration
-		$this->_kVersions = array(
-			array('component' => null, 'prefix' => null, 'version' => null, 'date' => null));
-
-		// TODO: move to migration
-		$this->_fbVersions = array(
-			array('component' => 'FireBoard', 'prefix' => 'fb_', 'version' => '1.0.4', 'date' => '2007-12-23', 'table' => 'fb_sessions', 'column' => 'currvisit'),
-			array('component' => 'FireBoard', 'prefix' => 'fb_', 'version' => '1.0.3', 'date' => '2007-09-04', 'table' => 'fb_categories', 'column' => 'headerdesc'),
-			array('component' => 'FireBoard', 'prefix' => 'fb_', 'version' => '1.0.2', 'date' => '2007-08-03', 'table' => 'fb_users', 'column' => 'rank'),
-			array('component' => 'FireBoard', 'prefix' => 'fb_', 'version' => '1.0.1', 'date' => '2007-05-20', 'table' => 'fb_users', 'column' => 'uhits'),
-			array('component' => 'FireBoard', 'prefix' => 'fb_', 'version' => '1.0.0', 'date' => '2007-04-15', 'table' => 'fb_messages'),
-			array('component' => null, 'prefix' => null, 'version' => null, 'date' => null));
-
-		// TODO: move to migration
-		$this->_sbVersions = array(
-			array('component' => 'JoomlaBoard', 'prefix' => 'sb_', 'version' => 'v1.0.5', 'date' => '0000-00-00', 'table' => 'sb_messages'),
-			array('component' => null, 'prefix' => null, 'version' => null, 'date' => null));
 
 		$this->steps = array(
 			array('step' => '', 'menu' => JText::_('COM_BIBLESTUDY_INSTALL_STEP_INSTALL')),
@@ -143,26 +115,26 @@ class BibleStudyModelInstall extends JModelLegacy
 		// Uninstall menu module.
 		$this->uninstallModule('mod_biblstudymenu');
 
-		// Remove all Kunena related menu items, including aliases
-		if (class_exists('BibleStudyMenuFix'))
-		{
-			$items = BibleStudyMenuFix::getAll();
-			foreach ($items as $item)
-			{
-				BibleStudyMenuFix::delete($item->id);
-			}
-		}
+		// Remove all JBSM related menu items, including aliases
+//		if (class_exists('BibleStudyMenuFix'))
+//		{
+//			$items = BibleStudyMenuFix::getAll();
+//			foreach ($items as $item)
+//			{
+//				BibleStudyMenuFix::delete($item->id);
+//			}
+//		}
 
 		$this->deleteMenu();
 
 		// Uninstall Kunena library
-		$this->uninstallLibrary();
+		// $this->uninstallLibrary();
 
 		// Uninstall Kunena media
-		$this->uninstallMedia();
+		// $this->uninstallMedia();
 
 		// Uninstall Kunena system plugin
-		$this->uninstallPlugin('system', 'kunena');
+		// $this->uninstallPlugin('system', 'kunena');
 
 		return true;
 	}
@@ -407,61 +379,6 @@ class BibleStudyModelInstall extends JModelLegacy
 		return $success;
 	}
 
-	// TODO: move to migration (exists in 2.0)
-	/**
-	 * @param        $tag
-	 * @param string $name
-	 *
-	 * @return bool
-	 */
-	function installLanguage($tag, $name = '')
-	{
-		$exists       = false;
-		$success      = true;
-		$destinations = array(
-			'site'  => JPATH_SITE . '/components/com_biblestudy',
-			'admin' => JPATH_ADMINISTRATOR . '/components/com_biblestudy'
-		);
-
-		foreach ($destinations as $key => $dest)
-		{
-			if ($success != true)
-			{
-				continue;
-			}
-
-			$installdir = "{$dest}/language/{$tag}";
-
-			// Install language from dest/language/xx-XX
-			if (is_dir($installdir))
-			{
-				$exists = $success;
-				// Older versions installed language files into main folders
-				// Those files need to be removed to bring language up to date!
-				jimport('joomla.filesystem.folder');
-				$files = JFolder::files($installdir, '\.ini$');
-				foreach ($files as $filename)
-				{
-					if (is_file(JPATH_SITE . "/language/{$tag}/{$filename}"))
-					{
-						JFile::delete(JPATH_SITE . "/language/{$tag}/{$filename}");
-					}
-
-					if (is_file(JPATH_ADMINISTRATOR . "/language/{$tag}/{$filename}"))
-					{
-						JFile::delete(JPATH_ADMINISTRATOR . "/language/{$tag}/{$filename}");
-					}
-				}
-			}
-		}
-		if ($exists && $name)
-		{
-			$this->addStatus(JText::sprintf('COM_BIBLESTUDY_INSTALL_LANGUAGE', $name), $success);
-		}
-
-		return $success;
-	}
-
 	/**
 	 * @param $group
 	 * @param $element
@@ -486,7 +403,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	{
 		$success = false;
 
-		$dest = JPATH_ROOT . "/tmp/kinstall_mod_{$name}";
+		$dest = JPATH_ROOT . "/tmp/jbsminstall_mod_{$name}";
 
 		if (is_dir($dest))
 		{
@@ -502,21 +419,6 @@ class BibleStudyModelInstall extends JModelLegacy
 		{
 			// Extract file
 			$success = $this->extract(BIBLESTUDY_INSTALLER_ADMINPATH, $path, $dest);
-		}
-
-		if ($success)
-		{
-			$success = JFolder::create($dest . '/language/en-GB');
-		}
-
-		if ($success && is_file(BIBLESTUDY_INSTALLER_SITEPATH . "/language/en-GB/en-GB.mod_{$name}.ini"))
-		{
-			$success = JFile::copy(BIBLESTUDY_INSTALLER_SITEPATH . "/language/en-GB/en-GB.mod_{$name}.ini", "{$dest}/language/en-GB/en-GB.mod_{$name}.ini");
-		}
-
-		if ($success && is_file(BIBLESTUDY_INSTALLER_SITEPATH . "/language/en-GB/en-GB.mod_{$name}.sys.ini"))
-		{
-			$success = JFile::copy(BIBLESTUDY_INSTALLER_SITEPATH . "/language/en-GB/en-GB.mod_{$name}.sys.ini", "{$dest}/language/en-GB/en-GB.mod_{$name}.sys.ini");
 		}
 
 		// Only install module if it can be used in current Joomla version (manifest exists)
@@ -549,7 +451,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	{
 		$success = false;
 
-		$dest = JPATH_ROOT . "/tmp/kinstall_plg_{$group}_{$name}";
+		$dest = JPATH_ROOT . "/tmp/jbsminstall_plg_{$group}_{$name}";
 
 		if (is_dir($dest))
 		{
@@ -565,21 +467,6 @@ class BibleStudyModelInstall extends JModelLegacy
 		{
 			// Extract file
 			$success = $this->extract(BIBLESTUDY_INSTALLER_PATH, $path, $dest);
-		}
-
-		if ($success)
-		{
-			$success = JFolder::create($dest . '/language/en-GB');
-		}
-
-		if ($success && is_file(BIBLESTUDY_INSTALLER_ADMINPATH . "/language/en-GB/en-GB.plg_{$group}_{$name}.ini"))
-		{
-			$success = JFile::copy(BIBLESTUDY_INSTALLER_ADMINPATH . "/language/en-GB/en-GB.plg_{$group}_{$name}.ini", "{$dest}/language/en-GB/en-GB.plg_{$group}_{$name}.ini");
-		}
-
-		if ($success && is_file(BIBLESTUDY_INSTALLER_ADMINPATH . "/language/en-GB/en-GB.plg_{$group}_{$name}.sys.ini"))
-		{
-			$success = JFile::copy(BIBLESTUDY_INSTALLER_ADMINPATH . "/language/en-GB/en-GB.plg_{$group}_{$name}.sys.ini", "{$dest}/language/en-GB/en-GB.plg_{$group}_{$name}.sys.ini");
 		}
 
 		// Only install plugin if it can be used in current Joomla version (manifest exists)
@@ -651,7 +538,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	}
 
 	/**
-	 * Method to uninstall the Kunena library during uninstall process
+	 * Method to uninstall the jbsm library during uninstall process
 	 *
 	 * @return void
 	 */
@@ -667,7 +554,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	}
 
 	/**
-	 * Method to uninstall the Kunena media during uninstall process
+	 * Method to uninstall the JBSM media during uninstall process
 	 *
 	 * @return void
 	 */
@@ -683,7 +570,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	}
 
 	/**
-	 * Method to uninstall the Kunena media during uninstall process
+	 * Method to uninstall the JBSM media during uninstall process
 	 *
 	 * @param   string $element Name of the package or of the component
 	 *
@@ -753,7 +640,9 @@ class BibleStudyModelInstall extends JModelLegacy
 	}
 
 	/**
-	 * @throws \BibleStudyInstallerException
+	 * Start up Steps
+	 *
+	 * @throws \JBSMInstallerException
 	 * @throws \KunenaSchemaException
 	 */
 	public function stepPrepare()
@@ -761,8 +650,6 @@ class BibleStudyModelInstall extends JModelLegacy
 		$results = array();
 
 		$this->setVersion(null);
-		$this->setAvatarStatus();
-		$this->setAttachmentStatus();
 		$this->addStatus(JText::_('COM_BIBLESTUDY_INSTALL_STEP_PREPARE'), true);
 
 		$action = $this->getAction();
@@ -831,7 +718,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	public function stepExtract()
 	{
 		$path = JPATH_ADMINISTRATOR . '/components/com_biblestudy/archive';
-		if (BibleStudyForum::isDev() || !is_file("{$path}/fileformat"))
+		if (JBSM::isDev() || !is_file("{$path}/fileformat"))
 		{
 			// Git install
 			$dir = JPATH_ADMINISTRATOR . '/components/com_biblestudy/media/kunena';
@@ -879,7 +766,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				}
 
 				// Copy new files into folder
-				$this->extract($path, $file['name'] . $ext, $dest, BibleStudyForum::isDev());
+				$this->extract($path, $file['name'] . $ext, $dest, JBSM::isDev());
 			}
 
 			$this->setTask($task + 1);
@@ -931,7 +818,9 @@ class BibleStudyModelInstall extends JModelLegacy
 	}
 
 	/**
-	 * @throws \BibleStudyInstallerException
+	 * Work through Database update or move to migration
+	 *
+	 * @throws \JBSMInstallerException
 	 */
 	public function stepDatabase()
 	{
@@ -963,36 +852,6 @@ class BibleStudyModelInstall extends JModelLegacy
 				}
 				break;
 			case 4:
-				if ($this->migrateCategoryImages())
-				{
-					$this->setTask($task + 1);
-				}
-				break;
-			case 5:
-				if ($this->migrateAvatars())
-				{
-					$this->setTask($task + 1);
-				}
-				break;
-			case 6:
-				if ($this->migrateAvatarGalleries())
-				{
-					$this->setTask($task + 1);
-				}
-				break;
-			case 7:
-				if ($this->migrateAttachments())
-				{
-					$this->setTask($task + 1);
-				}
-				break;
-			case 8:
-				if ($this->recountCategories())
-				{
-					$this->setTask($task + 1);
-				}
-				break;
-			case 9:
 				if ($this->recountThankyou())
 				{
 					$this->setTask($task + 1);
@@ -1006,9 +865,14 @@ class BibleStudyModelInstall extends JModelLegacy
 		}
 	}
 
+	/**
+	 * Finish out installation steps
+	 *
+	 * @throws \JBSMInstallerException
+	 */
 	public function stepFinish()
 	{
-		BibleStudyForum::setup();
+		JBSM::setup();
 
 		$lang = JFactory::getLanguage();
 		$lang->load('com_biblestudy', JPATH_SITE) || $lang->load('com_biblestudy', BIBLESTUDY_INSTALLER_SITEPATH);
@@ -1016,16 +880,16 @@ class BibleStudyModelInstall extends JModelLegacy
 		$this->createMenu(false);
 
 		// Fix broken category aliases (workaround for < 2.0-DEV12 bug)
-		BibleStudyForumCategoryHelper::fixAliases();
+		JBSMCategoryHelper::fixAliases();
 
 		// Clean cache, just in case
-		BibleStudyMenuHelper::cleanCache();
+		JBSMMenuHelper::cleanCache();
 		/** @var JCache|JCacheController $cache */
 		$cache = JFactory::getCache();
 		$cache->clean('com_biblestudy');
 
 		// Delete installer file (only if not using GIT build).
-		if (!BibleStudyForum::isDev())
+		if (!JBSM::isDev())
 		{
 			JFile::delete(BIBLESTUDY_PATH_ADMIN . '/install.php');
 		}
@@ -1043,7 +907,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	/**
 	 * @return bool
 	 * @throws \Exception
-	 * @throws \BibleStudyInstallerException
+	 * @throws \JBSMInstallerException
 	 */
 	public function migrateDatabase()
 	{
@@ -1096,7 +960,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	/**
 	 * @return bool
 	 * @throws \Exception
-	 * @throws \BibleStudyInstallerException
+	 * @throws \JBSMInstallerException
 	 * @throws \KunenaSchemaException
 	 */
 	public function installDatabase()
@@ -1158,7 +1022,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	/**
 	 * @return bool
 	 * @throws \Exception
-	 * @throws \BibleStudyInstallerException
+	 * @throws \JBSMInstallerException
 	 */
 	public function upgradeDatabase()
 	{
@@ -1190,9 +1054,6 @@ class BibleStudyModelInstall extends JModelLegacy
 		if ($state === null)
 		{
 			$state = array();
-
-			// Migrate configuration from FB <1.0.5, otherwise update it
-			$this->migrateConfig();
 		}
 
 		// Allow queries to fail
@@ -1213,7 +1074,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			if ($version['version'] == '@' . 'kunenaversion' . '@')
 			{
 				$git    = 1;
-				$vernum = BibleStudyForum::version();
+				$vernum = JBSM::version();
 			}
 
 			if (isset($git) || version_compare(strtolower($version['version']), strtolower($curversion->version), '>'))
@@ -1323,7 +1184,7 @@ class BibleStudyModelInstall extends JModelLegacy
 
 	/**
 	 * @return bool
-	 * @throws \BibleStudyInstallerException
+	 * @throws \JBSMInstallerException
 	 */
 	public function installSampleData()
 	{
@@ -1339,7 +1200,7 @@ class BibleStudyModelInstall extends JModelLegacy
 
 	/**
 	 * @return bool|null
-	 * @throws \BibleStudyInstallerException
+	 * @throws \JBSMInstallerException
 	 */
 	public function getVersionPrefix()
 	{
@@ -1365,7 +1226,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	// TODO: move to migration
 	/**
 	 * @return array
-	 * @throws \BibleStudyInstallerException
+	 * @throws \JBSMInstallerException
 	 */
 	public function getDetectVersions()
 	{
@@ -1445,11 +1306,13 @@ class BibleStudyModelInstall extends JModelLegacy
 	}
 
 	/**
+	 * Check to see if Migration is possible.
+	 *
 	 * @param $new
 	 * @param $old
 	 *
 	 * @return bool
-	 * @throws \BibleStudyInstallerException
+	 * @throws \JBSMInstallerException
 	 */
 	public function isMigration($new, $old)
 	{
@@ -1461,12 +1324,6 @@ class BibleStudyModelInstall extends JModelLegacy
 
 		// If old not installed: upgrade
 		if (!$old->component || !$this->detectTable($old->prefix . 'messages'))
-		{
-			return false;
-		}
-
-		// If K1.6 is installed and old is not Kunena: upgrade
-		if ($old->component != 'Kunena')
 		{
 			return false;
 		}
@@ -1495,7 +1352,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * @param bool $state
 	 *
 	 * @return mixed|null|\StdClass
-	 * @throws \BibleStudyInstallerException
+	 * @throws \JBSMInstallerException
 	 */
 	public function getInstalledVersion($prefix, $versionlist, $state = false)
 	{
@@ -1529,7 +1386,7 @@ class BibleStudyModelInstall extends JModelLegacy
 
 			if ($this->db->getErrorNum())
 			{
-				throw new BibleStudyInstallerException ($this->db->getErrorMsg(), $this->db->getErrorNum());
+				throw new JBSMInstallerException ($this->db->getErrorMsg(), $this->db->getErrorNum());
 			}
 
 			if ($version)
@@ -1585,28 +1442,28 @@ class BibleStudyModelInstall extends JModelLegacy
 	/**
 	 * @param string $state
 	 *
-	 * @throws \BibleStudyInstallerException
+	 * @throws \JBSMInstallerException
 	 */
 	protected function insertVersion($state = 'beginInstall')
 	{
 		// Insert data from the new version
-		$this->insertVersionData(BibleStudyForum::version(), BibleStudyForum::versionDate(), BibleStudyForum::versionName(), $state);
+		$this->insertVersionData(JBSM::version(), JBSM::versionDate(), JBSM::versionName(), $state);
 	}
 
 	/**
 	 * @param $state
 	 *
-	 * @throws \BibleStudyInstallerException
+	 * @throws \JBSMInstallerException
 	 */
 	protected function updateVersionState($state)
 	{
 		// Insert data from the new version
 		$this->db->setQuery("UPDATE " . $this->db->quoteName($this->db->getPrefix() . 'bsms_version') . " SET state = " . $this->db->Quote($state) . " ORDER BY id DESC LIMIT 1");
-		$this->db->query();
+		$this->db->execute();
 
 		if ($this->db->getErrorNum())
 		{
-			throw new BibleStudyInstallerException ($this->db->getErrorMsg(), $this->db->getErrorNum());
+			throw new JBSMInstallerException ($this->db->getErrorMsg(), $this->db->getErrorNum());
 		}
 	}
 
@@ -1636,7 +1493,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		 */
 
 		static $search = array('#COMPONENT_OLD#', '#VERSION_OLD#', '#VERSION#');
-		$replace = array($version->component, $version->version, BibleStudyForum::version());
+		$replace = array($version->component, $version->version, JBSM::version());
 
 		if (!$action)
 		{
@@ -1686,13 +1543,13 @@ class BibleStudyModelInstall extends JModelLegacy
 			}
 			else
 			{
-				if (version_compare(strtolower(BibleStudyForum::version()), strtolower($version->version), '>'))
+				if (version_compare(strtolower(JBSM::version()), strtolower($version->version), '>'))
 				{
 					$this->_action = 'UPGRADE';
 				}
 				else
 				{
-					if (version_compare(strtolower(BibleStudyForum::version()), strtolower($version->version), '<'))
+					if (version_compare(strtolower(JBSM::version()), strtolower($version->version), '<'))
 					{
 						$this->_action = 'DOWNGRADE';
 					}
@@ -1711,7 +1568,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * @param $detectlist
 	 *
 	 * @return array
-	 * @throws \BibleStudyInstallerException
+	 * @throws \JBSMInstallerException
 	 */
 	protected function detectTable($detectlist)
 	{
@@ -1743,7 +1600,7 @@ class BibleStudyModelInstall extends JModelLegacy
 
 				if ($this->db->getErrorNum())
 				{
-					throw new BibleStudyInstallerException ($this->db->getErrorMsg(), $this->db->getErrorNum());
+					throw new JBSMInstallerException ($this->db->getErrorMsg(), $this->db->getErrorNum());
 				}
 
 				$tables [$table] = $result;
@@ -1764,7 +1621,7 @@ class BibleStudyModelInstall extends JModelLegacy
 
 					if ($this->db->getErrorNum())
 					{
-						throw new BibleStudyInstallerException ($this->db->getErrorMsg(), $this->db->getErrorNum());
+						throw new JBSMInstallerException ($this->db->getErrorMsg(), $this->db->getErrorNum());
 					}
 
 					$fields [$table] = $result;
@@ -1793,7 +1650,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * @param $newtable
 	 *
 	 * @return array
-	 * @throws \BibleStudyInstallerException
+	 * @throws \JBSMInstallerException
 	 */
 	protected function migrateTable($oldprefix, $oldtable, $newtable)
 	{
@@ -1832,7 +1689,7 @@ class BibleStudyModelInstall extends JModelLegacy
 
 		if ($this->db->getErrorNum())
 		{
-			throw new BibleStudyInstallerException ($this->db->getErrorMsg(), $this->db->getErrorNum());
+			throw new JBSMInstallerException ($this->db->getErrorMsg(), $this->db->getErrorNum());
 		}
 
 		$this->tables ['bsms_'] [$newtable] = $newtable;
@@ -1844,7 +1701,7 @@ class BibleStudyModelInstall extends JModelLegacy
 
 		if ($this->db->getErrorNum())
 		{
-			throw new BibleStudyInstallerException ($this->db->getErrorMsg(), $this->db->getErrorNum());
+			throw new JBSMInstallerException ($this->db->getErrorMsg(), $this->db->getErrorNum());
 		}
 
 		return array('name' => $oldtable, 'action' => 'migrate', 'sql' => $sql);
@@ -1874,7 +1731,7 @@ class BibleStudyModelInstall extends JModelLegacy
 
 	/**
 	 * @return array|null
-	 * @throws \BibleStudyInstallerException
+	 * @throws \JBSMInstallerException
 	 */
 	function createVersionTable()
 	{
@@ -1907,7 +1764,7 @@ class BibleStudyModelInstall extends JModelLegacy
 
 		if ($this->db->getErrorNum())
 		{
-			throw new BibleStudyInstallerException ($this->db->getErrorMsg(), $this->db->getErrorNum());
+			throw new JBSMInstallerException ($this->db->getErrorMsg(), $this->db->getErrorNum());
 		}
 
 		$this->tables ['bsms_'] ['bsms_version'] = 'bsms_version';
@@ -1922,7 +1779,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * @param        $versionname
 	 * @param string $state
 	 *
-	 * @throws \BibleStudyInstallerException
+	 * @throws \JBSMInstallerException
 	 */
 	protected function insertVersionData($version, $versiondate, $versionname, $state = '')
 	{
@@ -1936,7 +1793,7 @@ class BibleStudyModelInstall extends JModelLegacy
 
 		if ($this->db->getErrorNum())
 		{
-			throw new BibleStudyInstallerException ($this->db->getErrorMsg(), $this->db->getErrorNum());
+			throw new JBSMInstallerException ($this->db->getErrorMsg(), $this->db->getErrorNum());
 		}
 	}
 
@@ -1945,7 +1802,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * @param bool $reload
 	 *
 	 * @return mixed
-	 * @throws \BibleStudyInstallerException
+	 * @throws \JBSMInstallerException
 	 */
 	protected function listTables($prefix, $reload = false)
 	{
@@ -1959,7 +1816,7 @@ class BibleStudyModelInstall extends JModelLegacy
 
 		if ($this->db->getErrorNum())
 		{
-			throw new BibleStudyInstallerException ($this->db->getErrorMsg(), $this->db->getErrorNum());
+			throw new JBSMInstallerException ($this->db->getErrorMsg(), $this->db->getErrorNum());
 		}
 
 		$this->tables [$prefix] = array();
@@ -1976,7 +1833,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	/**
 	 * @param $prefix
 	 *
-	 * @throws \BibleStudyInstallerException
+	 * @throws \JBSMInstallerException
 	 */
 	function deleteTables($prefix)
 	{
@@ -1989,234 +1846,11 @@ class BibleStudyModelInstall extends JModelLegacy
 
 			if ($this->db->getErrorNum())
 			{
-				throw new BibleStudyInstallerException ($this->db->getErrorMsg(), $this->db->getErrorNum());
+				throw new JBSMInstallerException ($this->db->getErrorMsg(), $this->db->getErrorNum());
 			}
 		}
 
 		unset($this->tables [$prefix]);
-	}
-
-	/**
-	 * Create a Joomla menu for the main
-	 * navigation tab and publish it in the Kunena module position bsms_menu.
-	 * In addition it checks if there is a link to Kunena in any of the menus
-	 * and if not, adds a forum link in the mainmenu.
-	 */
-	protected function createMenu()
-	{
-		$menu    = array('name' => JText::_('COM_BIBLESTUDY_MENU_ITEM_FORUM'), 'alias' => KunenaRoute::stringURLSafe(JText::_('COM_BIBLESTUDY_MENU_FORUM_ALIAS'), 'forum'),
-		                 'link' => 'index.php?option=com_biblestudy&view=home', 'access' => 1, 'params' => array('catids' => 0));
-		$submenu = array(
-			'index'     => array('name' => JText::_('COM_BIBLESTUDY_MENU_ITEM_INDEX'), 'alias' => KunenaRoute::stringURLSafe(JText::_('COM_BIBLESTUDY_MENU_INDEX_ALIAS'), 'index'),
-			                     'link' => 'index.php?option=com_biblestudy&view=category&layout=list', 'access' => 1, 'default' => 'categories', 'params' => array()),
-			'recent'    => array('name' => JText::_('COM_BIBLESTUDY_MENU_ITEM_RECENT'), 'alias' => KunenaRoute::stringURLSafe(JText::_('COM_BIBLESTUDY_MENU_RECENT_ALIAS'), 'recent'),
-			                     'link' => 'index.php?option=com_biblestudy&view=topics&mode=replies', 'access' => 1, 'default' => 'recent', 'params' => array('topics_catselection' => '', 'topics_categories' => '', 'topics_time' => '')),
-			'newtopic'  => array('name' => JText::_('COM_BIBLESTUDY_MENU_ITEM_NEWTOPIC'), 'alias' => KunenaRoute::stringURLSafe(JText::_('COM_BIBLESTUDY_MENU_NEWTOPIC_ALIAS'), 'newtopic'),
-			                     'link' => 'index.php?option=com_biblestudy&view=topic&layout=create', 'access' => 2, 'params' => array()),
-			'noreplies' => array('name' => JText::_('COM_BIBLESTUDY_MENU_ITEM_NOREPLIES'), 'alias' => KunenaRoute::stringURLSafe(JText::_('COM_BIBLESTUDY_MENU_NOREPLIES_ALIAS'), 'noreplies'),
-			                     'link' => 'index.php?option=com_biblestudy&view=topics&mode=noreplies', 'access' => 2, 'params' => array('topics_catselection' => '', 'topics_categories' => '', 'topics_time' => '')),
-			'mylatest'  => array('name' => JText::_('COM_BIBLESTUDY_MENU_ITEM_MYLATEST'), 'alias' => KunenaRoute::stringURLSafe(JText::_('COM_BIBLESTUDY_MENU_MYLATEST_ALIAS'), 'mylatest'),
-			                     'link' => 'index.php?option=com_biblestudy&view=topics&layout=user&mode=default', 'access' => 2, 'default' => 'my', 'params' => array('topics_catselection' => '2', 'topics_categories' => '0', 'topics_time' => '')),
-			'profile'   => array('name' => JText::_('COM_BIBLESTUDY_MENU_ITEM_PROFILE'), 'alias' => KunenaRoute::stringURLSafe(JText::_('COM_BIBLESTUDY_MENU_PROFILE_ALIAS'), 'profile'),
-			                     'link' => 'index.php?option=com_biblestudy&view=user', 'access' => 2, 'params' => array('integration' => 1)),
-			'help'      => array('name' => JText::_('COM_BIBLESTUDY_MENU_ITEM_HELP'), 'alias' => KunenaRoute::stringURLSafe(JText::_('COM_BIBLESTUDY_MENU_HELP_ALIAS'), 'help'),
-			                     'link' => 'index.php?option=com_biblestudy&view=misc', 'access' => 3, 'params' => array('body' => JText::_('COM_BIBLESTUDY_MENU_HELP_BODY'), 'body_format' => 'bbcode')),
-			'search'    => array('name' => JText::_('COM_BIBLESTUDY_MENU_ITEM_SEARCH'), 'alias' => KunenaRoute::stringURLSafe(JText::_('COM_BIBLESTUDY_MENU_SEARCH_ALIAS'), 'search'),
-			                     'link' => 'index.php?option=com_biblestudy&view=search', 'access' => 1, 'params' => array()),
-		);
-
-		// Disable language debugging while creating menu items.
-		$lang  = JFactory::getLanguage();
-		$debug = $lang->setDebug(false);
-
-		$this->createMenuJ25($menu, $submenu);
-		BibleStudyMenuHelper::cleanCache();
-		$lang->setDebug($debug);
-	}
-
-	/**
-	 * @param $menu
-	 * @param $submenu
-	 *
-	 * @return bool
-	 * @throws \BibleStudyInstallerException
-	 * @throws \Exception
-	 */
-	function createMenuJ25($menu, $submenu)
-	{
-		jimport('joomla.utilities.string');
-		jimport('joomla.application.component.helper');
-
-		$config = JFactory::getConfig();
-
-		$component_id = JComponentHelper::getComponent('com_biblestudy')->id;
-
-		// First fix all broken menu items
-		$query = "UPDATE #__menu SET component_id={$this->db->quote($component_id)} WHERE type = 'component' AND link LIKE '%option=com_biblestudy%'";
-		$this->db->setQuery($query);
-		$this->db->query();
-
-		if ($this->db->getErrorNum())
-		{
-			throw new BibleStudyInstallerException ($this->db->getErrorMsg(), $this->db->getErrorNum());
-		}
-
-		/** @type JTableMenu $table */
-		$table = JTable::getInstance('MenuType');
-		$data  = array(
-			'menutype'    => 'biblestudymenu',
-			'title'       => JText::_('COM_BIBLESTUDY_MENU_TITLE'),
-			'description' => JText::_('COM_BIBLESTUDY_MENU_TITLE_DESC')
-		);
-
-		if (!$table->bind($data) || !$table->check())
-		{
-			// Menu already exists, do nothing
-			return true;
-		}
-
-		if (!$table->store())
-		{
-			throw new BibleStudyInstallerException ($table->getError());
-		}
-
-		$table = JTable::getInstance('menu');
-		$table->load(array('menutype' => 'biblestudymenu', 'link' => $menu ['link']));
-		$paramdata = array('menu-anchor_title'     => '',
-		                   'menu-anchor_css'       => '',
-		                   'menu_image'            => '',
-		                   'menu_text'             => 1,
-		                   'page_title'            => '',
-		                   'show_page_heading'     => 0,
-		                   'page_heading'          => '',
-		                   'pageclass_sfx'         => '',
-		                   'menu-meta_description' => '',
-		                   'menu-meta_keywords'    => '',
-		                   'robots'                => '',
-		                   'secure'                => 0);
-
-		$gparams = new Registry($paramdata);
-
-		$params = clone $gparams;
-		$params->loadArray($menu['params']);
-		$data = array(
-			'menutype'     => 'biblestudymenu',
-			'title'        => $menu ['name'],
-			'alias'        => $menu ['alias'],
-			'link'         => $menu ['link'],
-			'type'         => 'component',
-			'published'    => 1,
-			'parent_id'    => 1,
-			'component_id' => $component_id,
-			'access'       => $menu ['access'],
-			'params'       => (string) $params,
-			'home'         => 0,
-			'language'     => '*',
-			'client_id'    => 0
-		);
-		$table->setLocation(1, 'last-child');
-
-		if (!$table->bind($data) || !$table->check() || !$table->store())
-		{
-			$table->alias = 'biblestudy';
-
-			if (!$table->check() || !$table->store())
-			{
-				throw new BibleStudyInstallerException ($table->getError());
-			}
-		}
-
-		/** @type JTableMenu $parent */
-		$parent      = $table;
-		$defaultmenu = 0;
-
-		foreach ($submenu as $menuitem)
-		{
-			$params = clone $gparams;
-			$params->loadArray($menuitem['params']);
-			$table = JTable::getInstance('menu');
-			$table->load(array('menutype' => 'biblestudymenu', 'link' => $menuitem ['link']));
-			$data = array(
-				'menutype'     => 'biblestudymenu',
-				'title'        => $menuitem ['name'],
-				'alias'        => $menuitem ['alias'],
-				'link'         => $menuitem ['link'],
-				'type'         => 'component',
-				'published'    => 1,
-				'parent_id'    => $parent->id,
-				'component_id' => $component_id,
-				'access'       => $menuitem ['access'],
-				'params'       => (string) $params,
-				'home'         => 0,
-				'language'     => '*',
-				'client_id'    => 0
-			);
-			$table->setLocation($parent->id, 'last-child');
-
-			if (!$table->bind($data) || !$table->check() || !$table->store())
-			{
-				throw new BibleStudyInstallerException ($table->getError());
-			}
-
-			if (!$defaultmenu || (isset ($menuitem ['default']) && $config->defaultpage == $menuitem ['default']))
-			{
-				$defaultmenu = $table->id;
-			}
-		}
-
-		// Update forum menuitem to point into default page
-		$parent->link .= "&defaultmenu={$defaultmenu}";
-
-		if (!$parent->check() || !$parent->store())
-		{
-			throw new BibleStudyInstallerException ($table->getError());
-		}
-
-		// Finally create alias
-		$defaultmenu = JMenu::getInstance('site')->getDefault();
-
-		if (!$defaultmenu)
-		{
-			return true;
-		}
-
-		$table = JTable::getInstance('menu');
-		$table->load(array('menutype' => $defaultmenu->menutype, 'type' => 'alias', 'title' => JText::_('COM_BIBLESTUDY_MENU_ITEM_FORUM')));
-
-		if (!$table->id)
-		{
-			$data = array(
-				'menutype'     => $defaultmenu->menutype,
-				'title'        => JText::_('COM_BIBLESTUDY_MENU_ITEM_FORUM'),
-				'alias'        => 'kunena-' . JFactory::getDate()->format('Y-m-d'),
-				'link'         => 'index.php?Itemid=' . $parent->id,
-				'type'         => 'alias',
-				'published'    => 0,
-				'parent_id'    => 1,
-				'component_id' => 0,
-				'access'       => 1,
-				'params'       => '{"aliasoptions":"' . (int) $parent->id . '","menu-anchor_title":"","menu-anchor_css":"","menu_image":""}',
-				'home'         => 0,
-				'language'     => '*',
-				'client_id'    => 0
-			);
-			$table->setLocation(1, 'last-child');
-		}
-		else
-		{
-			$data = array(
-				'alias'  => 'kunena-' . JFactory::getDate()->format('Y-m-d'),
-				'link'   => 'index.php?Itemid=' . $parent->id,
-				'params' => '{"aliasoptions":"' . (int) $parent->id . '","menu-anchor_title":"","menu-anchor_css":"","menu_image":""}',
-			);
-		}
-
-		if (!$table->bind($data) || !$table->check() || !$table->store())
-		{
-			throw new BibleStudyInstallerException ($table->getError());
-		}
-
-		return true;
 	}
 
 	/**
@@ -2299,8 +1933,8 @@ class BibleStudyModelInstall extends JModelLegacy
 }
 
 /**
- * Class BibleStudyInstallerException
+ * Class JBSMInstallerException
  */
-class BibleStudyInstallerException extends Exception
+class JBSMInstallerException extends Exception
 {
 }
