@@ -245,7 +245,7 @@ EOS;
 
 		// Do not install over Git repository (K1.6+).
 		if ((class_exists('JBSM') && method_exists('JBSM', 'isSvn'))
-				|| (class_exists('JBSMForum') && method_exists('JBSM', 'isDev') && JBSM::isDev())) {
+				|| (class_exists('JBSMForum') && method_exists('JBSM', 'isDev') && JBSMFrame::isDev())) {
 			$app->enqueueMessage('Oops! You should not install BibleStudy over your Git reporitory!', 'notice');
 			return false;
 		}

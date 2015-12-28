@@ -4,7 +4,7 @@
  *
  * @package       BibleStudy.Installer
  *
- * @copyright (C) 2008 - 2015 BibleStudy Team. All rights reserved.
+ * @copyright (C) 2008 - 2016 BibleStudy Team. All rights reserved.
  * @license       http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link          http://www.joomlabiblestudy.org
  **/
@@ -180,7 +180,7 @@ class JBSMControllerInstall extends JControllerLegacy
 		$app = JFactory::getApplication();
 		$app->enqueueMessage(JText::_('COM_BIBLESTUDY_INSTALL_REMOVED'));
 
-		if (class_exists('JBSM') && !JBSM::isDev())
+		if (class_exists('JBSM') && !JBSMFrame::isDev())
 		{
 			jimport('joomla.application.component.helper');
 			jimport('joomla.filesystem.folder');

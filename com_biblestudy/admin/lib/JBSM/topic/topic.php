@@ -307,7 +307,7 @@ class JBSMTopic extends KunenaDatabaseObject
 	 *
 	 * @return bool
 	 */
-	public function publish($value=JBSM::PUBLISHED)
+	public function publish($value=JBSMFrame::PUBLISHED)
 	{
 		if ($value < 0 || $value > 3)
 		{
@@ -1543,7 +1543,7 @@ class JBSMTopic extends KunenaDatabaseObject
 		{
 			if(!isset($this->hold))
 			{
-				$this->hold=JBSM::TOPIC_DELETED;
+				$this->hold=JBSMFrame::TOPIC_DELETED;
 			}
 
 			// If message isn't visible anymore, check if we need to update cache
@@ -1592,7 +1592,7 @@ class JBSMTopic extends KunenaDatabaseObject
 		if (!$this->first_post_id || !$this->last_post_id)
 		{
 			// If topic has no visible posts, mark it deleted and recount
-			$this->hold = $exists ? $message->hold : JBSM::TOPIC_DELETED;
+			$this->hold = $exists ? $message->hold : JBSMFrame::TOPIC_DELETED;
 			$this->recount();
 		}
 

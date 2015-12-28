@@ -661,7 +661,7 @@ class JBSMCategory extends KunenaDatabaseObject
 
 		$topic = new JBSMTopic();
 		$topic->category_id = $catid;
-		$topic->hold = JBSM::TOPIC_CREATION;
+		$topic->hold = JBSMFrame::TOPIC_CREATION;
 
 		if ($safefields)
 		{

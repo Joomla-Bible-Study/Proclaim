@@ -11,9 +11,9 @@
 defined('_JEXEC') or die ();
 
 /**
- * The HTML Kunena configuration view.
+ * The HTML JBSM configuration view.
  */
-class BibleStudyViewInstall extends JViewLegacy
+class JBSMViewInstall extends JViewLegacy
 {
 	protected $model = null;
 
@@ -45,7 +45,7 @@ class BibleStudyViewInstall extends JViewLegacy
 		$this->model->setAction(strtolower($version->action));
 		$this->model->setStep(0);
 
-		JRequest::setVar('hidemainmenu', 1);
+		JFactory::getApplication()->input->set('hidemainmenu', 1);
 
 		// Joomla 2.5 support
 		if ($layout == 'default' && !$tpl && version_compare(JVERSION, '3.0', '<'))
@@ -66,20 +66,25 @@ class BibleStudyViewInstall extends JViewLegacy
 	function setToolBar()
 	{
 		// Set the titlebar text
-		JToolBarHelper::title('<span>Kunena ' . JBSM::version() . '</span> ' . JText::_('COM_BIBLESTUDY_INSTALLER'), 'jbsm.png');
+		JToolBarHelper::title('<span>BibleStudy ' . JBSMFrame::version() . '</span> ' . JText::_('COM_BIBLESTUDY_INSTALLER'), 'jbsm.png');
 
 	}
 
+	/**
+	 * Display Schema
+	 *
+	 * @return void
+	 */
 	function displaySchema()
 	{
 		require_once BIBLESTUDY_PATH_ADMIN . '/install/schema.php';
-		$schema = new BibleStudyModelSchema ();
+		$schema = new JBSMModelSchema ();
 		$create = $schema->getCreateSQL();
 		echo '<textarea cols="80" rows="50">';
 		echo $this->escape($schema->getSchema()->saveXML());
 		echo '</textarea>';
 
-		if (JBSM::isDev())
+		if (JBSMFrame::isDev())
 		{
 			echo '<textarea cols="80" rows="20">';
 
@@ -92,17 +97,22 @@ class BibleStudyViewInstall extends JViewLegacy
 		}
 	}
 
+	/**
+	 * Display Schema Diff
+	 *
+	 * @return null
+	 */
 	function displaySchemaDiff()
 	{
 		require_once BIBLESTUDY_PATH_ADMIN . '/install/schema.php';
-		$schema = new BibleStudyModelSchema ();
+		$schema = new JBSMModelSchema ();
 		$diff   = $schema->getDiffSchema();
 		$sql    = $schema->getSchemaSQL($diff);
 		echo '<textarea cols="80" rows="20">';
 		echo $this->escape($diff->saveXML());
 		echo '</textarea>';
 
-		if (JBSM::isDev())
+		if (JBSMFrame::isDev())
 		{
 			echo '<textarea cols="80" rows="20">';
 

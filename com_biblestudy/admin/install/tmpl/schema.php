@@ -11,7 +11,7 @@
  **/
 defined('_JEXEC') or die ();
 
-/** @var BibleStudyViewInstall $this */
+/** @var JBSMViewInstall $this */
 
 $this->document->addStyleSheet(JUri::base(true) . '/components/com_biblestudy/install/media/install.css');
 ?>

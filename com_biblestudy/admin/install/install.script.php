@@ -4,7 +4,7 @@
  *
  * @package       BibleStudy.Installer
  *
- * @copyright (C) 2008 - 2014 BibleStudy Team. All rights reserved.
+ * @copyright (C) 2008 - 2016 BibleStudy Team. All rights reserved.
  * @license       http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link          http://www.joomlabiblestudy.org
  **/
@@ -13,7 +13,10 @@ defined('_JEXEC') or die ();
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
 
-class Com_KunenaInstallerScript
+/**
+ * Class Com_BibleStudyInstallerScript
+ */
+class Com_BibleStudyInstallerScript
 {
 	protected $versions = array(
 		'PHP'     => array(
@@ -33,10 +36,17 @@ class Com_KunenaInstallerScript
 	);
 	protected $extensions = array('dom', 'gd', 'json', 'pcre', 'SimpleXML');
 
+	/**
+	 * JBSM Installer
+	 *
+	 * @param $parent
+	 *
+	 * @return bool
+	 */
 	public function install($parent)
 	{
 		// Delete all cached files.
-		$cacheDir = JPATH_CACHE . '/kunena';
+		$cacheDir = JPATH_CACHE . '/jbsm';
 		if (is_dir($cacheDir))
 		{
 			JFolder::delete($cacheDir);
@@ -46,16 +56,37 @@ class Com_KunenaInstallerScript
 		return true;
 	}
 
+	/**
+	 * Installer Script Dicover
+	 *
+	 * @param $parent
+	 *
+	 * @return bool
+	 */
 	public function discover_install($parent)
 	{
 		return self::install($parent);
 	}
 
+	/**
+	 * Update
+	 *
+	 * @param $parent
+	 *
+	 * @return bool
+	 */
 	public function update($parent)
 	{
 		return self::install($parent);
 	}
 
+	/**
+	 * Uninstaller
+	 *
+	 * @param $parent
+	 *
+	 * @return bool
+	 */
 	public function uninstall($parent)
 	{
 		$adminpath = $parent->getParent()->getPath('extension_administrator');
@@ -63,13 +94,21 @@ class Com_KunenaInstallerScript
 		if (file_exists($model))
 		{
 			require_once($model);
-			$installer = new BibleStudyModelInstall();
+			$installer = new JBSMModelInstall();
 			$installer->uninstall();
 		}
 
 		return true;
 	}
 
+	/**
+	 * PreFlight
+	 *
+	 * @param $type
+	 * @param $parent
+	 *
+	 * @return bool
+	 */
 	public function preflight($type, $parent)
 	{
 		$parent   = $parent->getParent();
@@ -84,21 +123,19 @@ class Com_KunenaInstallerScript
 		$adminPath = $parent->getPath('extension_administrator');
 		$sitePath  = $parent->getPath('extension_site');
 
-		if (is_file($adminPath . '/admin.jbsm.php'))
+		if (is_file($adminPath . '/biblestudy.php'))
 		{
 			// Kunena 2.0 or older release found, clean up the directories.
-			static $ignoreAdmin = array('index.html', 'jbsm.xml', 'archive');
+			static $ignoreAdmin = array('index.html', 'biblestudy.xml', 'archive');
 			if (is_file($adminPath . '/install.script.php'))
 			{
 				// Kunena 1.7 or older release..
 				$ignoreAdmin[] = 'install.script.php';
-				$ignoreAdmin[] = 'admin.jbsm.php';
+				$ignoreAdmin[] = 'biblestudy.php';
 			}
-			static $ignoreSite = array('index.html', 'jbsm.php', 'router.php', 'template', 'COPYRIGHT.php', 'CHANGELOG.php');
+			static $ignoreSite = array('index.html', 'biblestudy.php', 'router.php', 'COPYRIGHT.php', 'CHANGELOG.php');
 			$this->deleteFolder($adminPath, $ignoreAdmin);
 			$this->deleteFolder($sitePath, $ignoreSite);
-			$this->deleteFolder($sitePath . '/template/blue_eagle', array('params.ini'));
-			// TODO: delete also en-GB files!
 		}
 
 		// Prepare installation.
@@ -106,18 +143,33 @@ class Com_KunenaInstallerScript
 		if (file_exists($model))
 		{
 			require_once($model);
-			$installer = new BibleStudyModelInstall();
+			$installer = new JBSMModelInstall();
 			$installer->install();
 		}
 
 		return true;
 	}
 
+	/**
+	 * Postflight
+	 *
+	 * @param $type
+	 * @param $parent
+	 *
+	 * @return bool
+	 */
 	public function postflight($type, $parent)
 	{
 		return true;
 	}
 
+	/**
+	 * Check Requirements
+	 *
+	 * @param $version
+	 *
+	 * @return bool|int
+	 */
 	public function checkRequirements($version)
 	{
 		$db   = JFactory::getDbo();
@@ -126,13 +178,22 @@ class Com_KunenaInstallerScript
 		$pass &= $this->checkVersion('MySQL', $db->getVersion());
 		$pass &= $this->checkDbo($db->name, array('mysql', 'mysqli'));
 		$pass &= $this->checkExtensions($this->extensions);
-		$pass &= $this->checkKunena($version);
+		$pass &= $this->checkJBSM($version);
 
 		return $pass;
 	}
 
 	// Internal functions
 
+	/**
+	 * Check Version
+	 *
+	 * @param $name
+	 * @param $version
+	 *
+	 * @return bool
+	 * @throws \Exception
+	 */
 	protected function checkVersion($name, $version)
 	{
 		$app = JFactory::getApplication();
@@ -162,6 +223,15 @@ class Com_KunenaInstallerScript
 		return false;
 	}
 
+	/**
+	 * Check DBo
+	 *
+	 * @param $name
+	 * @param $types
+	 *
+	 * @return bool
+	 * @throws \Exception
+	 */
 	protected function checkDbo($name, $types)
 	{
 		$app = JFactory::getApplication();
@@ -176,6 +246,14 @@ class Com_KunenaInstallerScript
 		return false;
 	}
 
+	/**
+	 * Check PHP Extensions
+	 *
+	 * @param $extensions
+	 *
+	 * @return int
+	 * @throws \Exception
+	 */
 	protected function checkExtensions($extensions)
 	{
 		$app = JFactory::getApplication();
@@ -193,11 +271,19 @@ class Com_KunenaInstallerScript
 		return $pass;
 	}
 
-	protected function checkKunena($version)
+	/**
+	 * Check to see if JBSM is correct
+	 *
+	 * @param $version
+	 *
+	 * @return bool
+	 * @throws \Exception
+	 */
+	protected function checkJBSM($version)
 	{
 		$app = JFactory::getApplication();
 
-		// Always load Kunena API if it exists.
+		// Always load JBSM API if it exists.
 		$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
 
 		if (file_exists($api))
@@ -206,10 +292,9 @@ class Com_KunenaInstallerScript
 		}
 
 		// Do not install over Git repository (K1.6+).
-		if ((class_exists('Kunena') && method_exists('Kunena', 'isSvn') && Kunena::isSvn())
-			|| (class_exists('JBSM') && method_exists('JBSM', 'isDev') && JBSM::isDev()))
+		if (class_exists('JBSM') && method_exists('JBSM', 'isDev') && JBSMFrame::isDev())
 		{
-			$app->enqueueMessage('Oops! You should not install Kunena over your Git reporitory!', 'notice');
+			$app->enqueueMessage('Oops! You should not install JBSM over your Git reporitory!', 'notice');
 
 			return false;
 		}
@@ -225,7 +310,7 @@ class Com_KunenaInstallerScript
 			return true;
 		}
 
-		// Get installed Kunena version
+		// Get installed JBSM version
 		$db->setQuery("SELECT version FROM {$db->quoteName($table)} ORDER BY `id` DESC", 0, 1);
 		$installed = $db->loadResult();
 
@@ -241,9 +326,9 @@ class Com_KunenaInstallerScript
 		}
 
 		// Check if we can downgrade to the current version
-		if (class_exists('KunenaInstaller'))
+		if (class_exists('JBSMInstaller'))
 		{
-			if (KunenaInstaller::canDowngrade($version))
+			if (JBSMInstaller::canDowngrade($version))
 			{
 				return true;
 			}
@@ -259,11 +344,17 @@ class Com_KunenaInstallerScript
 			}
 		}
 
-		$app->enqueueMessage(sprintf('Sorry, it is not possible to downgrade Kunena %s to version %s.', $installed, $version), 'notice');
+		$app->enqueueMessage(sprintf('Sorry, it is not possible to downgrade JBSM %s to version %s.', $installed, $version), 'notice');
 
 		return false;
 	}
 
+	/**
+	 * Delete Files not needed
+	 *
+	 * @param       $path
+	 * @param array $ignore
+	 */
 	public function deleteFiles($path, $ignore = array())
 	{
 		$ignore = array_merge($ignore, array('.git', '.svn', 'CVS', '.DS_Store', '__MACOSX'));
@@ -280,6 +371,12 @@ class Com_KunenaInstallerScript
 		}
 	}
 
+	/**
+	 * Delete Folders not Needed.
+	 *
+	 * @param       $path
+	 * @param array $ignore
+	 */
 	public function deleteFolders($path, $ignore = array())
 	{
 		$ignore = array_merge($ignore, array('.git', '.svn', 'CVS', '.DS_Store', '__MACOSX'));
@@ -296,6 +393,12 @@ class Com_KunenaInstallerScript
 		}
 	}
 
+	/**
+	 * Delete Individual Folder
+	 *
+	 * @param       $path
+	 * @param array $ignore
+	 */
 	public function deleteFolder($path, $ignore = array())
 	{
 		$this->deleteFiles($path, $ignore);

@@ -10,8 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-use Joomla\Registry\Registry;
-
 // Access check.
 if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy'))
 {
@@ -23,6 +21,17 @@ include_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
 if (version_compare(PHP_VERSION, BIBLESTUDY_MIN_PHP, '<'))
 {
 	throw new Exception(JText::_('JERROR_ERROR') . JText::sprintf('JBS_CMN_PHP_ERROR', BIBLESTUDY_MIN_PHP), 404);
+}
+
+// Check if installation hasn't been completed.
+if (is_file(__DIR__ . '/install.php'))
+{
+	require_once __DIR__ . '/install.php';
+
+	if (class_exists('JBSMControllerInstall'))
+	{
+		return;
+	}
 }
 
 // Component debugging
@@ -41,8 +50,8 @@ $language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
 $language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, null, true);
 $app = JFactory::getApplication();
 
-// Safety check to prevent fatal error if 'System - Kunena Forum' plug-in has been disabled.
-if ($app->input->getCmd('view') == 'install' || !class_exists('JBSM') || !JBSM::isCompatible('4.0'))
+// Safety check to prevent fatal error if 'System - JBSM Frame' plug-in has been disabled.
+if ($app->input->getCmd('view') == 'install' || !class_exists('JBSMFrame') || !JBSMFrame::isCompatible('6.2'))
 {
 	// Run installer instead..
 	require_once __DIR__ . '/install/controller.php';
@@ -67,7 +76,7 @@ if ($app->input->getCmd('view') == 'uninstall')
 		$controller->execute('uninstall');
 		$controller->redirect();
 
-		$app->setUserState('com_kunena.uninstall.allowed', null);
+		$app->setUserState('com_biblestudy.uninstall.allowed', null);
 
 		return;
 	}

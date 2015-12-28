@@ -10,7 +10,10 @@
  **/
 defined('_JEXEC') or die ();
 
-class BibleStudyVersion
+/**
+ * Class JBSMVersion
+ */
+class JBSMVersion
 {
 	/**
 	 * Get warning for unstable releases
@@ -22,35 +25,35 @@ class BibleStudyVersion
 	 */
 	public function getVersionWarning($msg = 'COM_BIBLESTUDY_VERSION_WARNING')
 	{
-		if (strpos(JBSM::version(), 'GIT') !== false)
+		if (strpos(JBSMFrame::version(), 'GIT') !== false)
 		{
 			$kn_version_type    = JText::_('COM_BIBLESTUDY_VERSION_GIT');
 			$kn_version_warning = JText::_('COM_BIBLESTUDY_VERSION_GIT_WARNING');
 		}
 		else
 		{
-			if (strpos(JBSM::version(), 'DEV') !== false)
+			if (strpos(JBSMFrame::version(), 'DEV') !== false)
 			{
 				$kn_version_type    = JText::_('COM_BIBLESTUDY_VERSION_DEV');
 				$kn_version_warning = JText::_('COM_BIBLESTUDY_VERSION_DEV_WARNING');
 			}
 			else
 			{
-				if (strpos(JBSM::version(), 'RC') !== false)
+				if (strpos(JBSMFrame::version(), 'RC') !== false)
 				{
 					$kn_version_type    = JText::_('COM_BIBLESTUDY_VERSION_RC');
 					$kn_version_warning = JText::_('COM_BIBLESTUDY_VERSION_RC_WARNING');
 				}
 				else
 				{
-					if (strpos(JBSM::version(), 'BETA') !== false)
+					if (strpos(JBSMFrame::version(), 'BETA') !== false)
 					{
 						$kn_version_type    = JText::_('COM_BIBLESTUDY_VERSION_BETA');
 						$kn_version_warning = JText::_('COM_BIBLESTUDY_VERSION_BETA_WARNING');
 					}
 					else
 					{
-						if (strpos(JBSM::version(), 'ALPHA') !== false)
+						if (strpos(JBSMFrame::version(), 'ALPHA') !== false)
 						{
 							$kn_version_type    = JText::_('COM_BIBLESTUDY_VERSION_ALPHA');
 							$kn_version_warning = JText::_('COM_BIBLESTUDY_VERSION_ALPHA_WARNING');
@@ -62,12 +65,17 @@ class BibleStudyVersion
 
 		if (!empty($kn_version_warning) && !empty($kn_version_type))
 		{
-			return JText::sprintf($msg, JBSM::version(), $kn_version_type) . ' ' . $kn_version_warning;
+			return JText::sprintf($msg, JBSMFrame::version(), $kn_version_type) . ' ' . $kn_version_warning;
 		}
 
 		return '';
 	}
 
+	/**
+	 * Check Version
+	 *
+	 * @return bool
+	 */
 	function checkVersion()
 	{
 		$version = $this->getDBVersion();
@@ -88,7 +96,7 @@ class BibleStudyVersion
 	/**
 	 * Get version information from database
 	 *
-	 * @param    string    Kunena table prefix
+	 * @param    string    JBSM table prefix
 	 *
 	 * @return    object    Version table
 	 * @since    1.6
@@ -112,7 +120,7 @@ class BibleStudyVersion
 		}
 		elseif (!empty($version->state))
 		{
-			if ($version->version != JBSM::version())
+			if ($version->version != JBSMFrame::version())
 			{
 				$version->state = '';
 			}
@@ -122,13 +130,13 @@ class BibleStudyVersion
 	}
 
 	/**
-	 * Retrieve installed Kunena version as string.
+	 * Retrieve installed JBSM version as string.
 	 *
-	 * @return string "Kunena X.Y.Z | YYYY-MM-DD [versionname]"
+	 * @return string "BibleStudy X.Y.Z | YYYY-MM-DD [versionname]"
 	 */
 	static function getVersionHTML()
 	{
-		return 'Kunena ' . JBSM::version() . ' | ' . JBSM::versionDate() . ' [ ' . JBSM::versionName() . ' ]';
+		return 'BibleStudy ' . JBSMFrame::version() . ' | ' . JBSMFrame::versionDate() . ' [ ' . JBSMFrame::versionName() . ' ]';
 	}
 
 	/**
@@ -145,9 +153,9 @@ class BibleStudyVersion
 	}
 
 	/**
-	 * Retrieve installed Kunena version, copyright and license as string.
+	 * Retrieve installed BibleStudy version, copyright and license as string.
 	 *
-	 * @return string "Kunena X.Y.Z | YYYY-MM-DD | © 2008 - 2015 Copyright: BibleStudy Team. All rights reserved. | License: GNU General Public License"
+	 * @return string "BibleStudy X.Y.Z | YYYY-MM-DD | © 2008 - 2015 Copyright: BibleStudy Team. All rights reserved. | License: GNU General Public License"
 	 */
 	static function getLongVersionHTML()
 	{
@@ -156,6 +164,9 @@ class BibleStudyVersion
 
 }
 
+/**
+ * Class BibleStudyVersionException
+ */
 class BibleStudyVersionException extends Exception
 {
 }

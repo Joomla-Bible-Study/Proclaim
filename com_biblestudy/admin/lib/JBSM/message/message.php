@@ -435,7 +435,7 @@ class JBSMMessage extends KunenaDatabaseObject
 	 *
 	 * @return bool
 	 */
-	public function publish($value=JBSM::PUBLISHED)
+	public function publish($value=JBSMFrame::PUBLISHED)
 	{
 		if ($this->hold == $value)
 		{

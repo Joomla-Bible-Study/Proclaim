@@ -4,7 +4,7 @@
  *
  * @package       BibleStudy.Installer
  *
- * @copyright (C) 2008 - 2015 BibleStudy Team. All rights reserved.
+ * @copyright (C) 2008 - 2016 BibleStudy Team. All rights reserved.
  * @license       http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link          http://www.joomlabiblestudy.org
  **/
@@ -41,6 +41,7 @@ class JBSMModelInstall extends JModelLegacy
 	protected $_installed = array();
 	protected $_versions = array();
 	protected $_action = false;
+	protected $_kVersions = "8.0.0";
 
 	protected $_errormsg = null;
 
@@ -53,7 +54,7 @@ class JBSMModelInstall extends JModelLegacy
 	public $db;
 
 	/**
-	 * BibleStudyModelInstall constructor.
+	 * JBSMModelInstall constructor.
 	 */
 	public function __construct()
 	{
@@ -79,18 +80,15 @@ class JBSMModelInstall extends JModelLegacy
 	}
 
 	/**
-	 * Initialise Kunena, run from Joomla installer.
+	 * Initialise JBSM, run from Joomla installer.
 	 */
 	public function install()
 	{
-		// Make sure that we are using the latest English language files
-		$this->installLanguage('en-GB');
-
 		$this->setStep(0);
 	}
 
 	/**
-	 * Uninstall Kunena, run from Joomla installer.
+	 * Uninstall JBSM, run from Joomla installer.
 	 *
 	 * @return boolean
 	 */
@@ -101,19 +99,14 @@ class JBSMModelInstall extends JModelLegacy
 		JFile::write(BIBLESTUDY_PATH_ADMIN . '/install.php', $contents);
 
 		// Uninstall all plugins.
-		$this->uninstallPlugin('kunena', 'alphauserpoints');
-		$this->uninstallPlugin('kunena', 'community');
-		$this->uninstallPlugin('kunena', 'comprofiler');
-		$this->uninstallPlugin('kunena', 'gravatar');
-		$this->uninstallPlugin('kunena', 'joomla');
-		$this->uninstallPlugin('kunena', 'kunena');
-		$this->uninstallPlugin('kunena', 'uddeim');
-		$this->uninstallPlugin('finder', 'kunena');
-		$this->uninstallPlugin('quickicon', 'kunena');
-		$this->uninstallPlugin('content', 'kunena');
+		$this->uninstallPlugin('system', 'jbsbackup');
+		$this->uninstallPlugin('fidner', 'biblestudy');
+		$this->uninstallPlugin('system', 'jbspodcast');
+		$this->uninstallPlugin('search', 'biblestudysearch');
 
-		// Uninstall menu module.
-		$this->uninstallModule('mod_biblstudymenu');
+		// Uninstall module.
+		$this->uninstallModule('mod_biblstudy');
+		$this->uninstallModule('mod_biblstudy_podcast');
 
 		// Remove all JBSM related menu items, including aliases
 //		if (class_exists('BibleStudyMenuFix'))
@@ -140,6 +133,8 @@ class JBSMModelInstall extends JModelLegacy
 	}
 
 	/**
+	 * Get Model
+	 *
 	 * @return $this
 	 */
 	public function getModel()
@@ -183,6 +178,8 @@ class JBSMModelInstall extends JModelLegacy
 	}
 
 	/**
+	 * Get Status
+	 *
 	 * @return object
 	 */
 	public function getStatus()
@@ -191,6 +188,8 @@ class JBSMModelInstall extends JModelLegacy
 	}
 
 	/**
+	 * Get Action
+	 *
 	 * @return object
 	 */
 	public function getAction()
@@ -199,6 +198,8 @@ class JBSMModelInstall extends JModelLegacy
 	}
 
 	/**
+	 * Get Step
+	 *
 	 * @return object
 	 */
 	public function getStep()
@@ -207,6 +208,8 @@ class JBSMModelInstall extends JModelLegacy
 	}
 
 	/**
+	 * Get Task
+	 *
 	 * @return object
 	 */
 	public function getTask()
@@ -215,6 +218,8 @@ class JBSMModelInstall extends JModelLegacy
 	}
 
 	/**
+	 * Get Version
+	 *
 	 * @return object
 	 */
 	public function getVersion()
@@ -223,6 +228,8 @@ class JBSMModelInstall extends JModelLegacy
 	}
 
 	/**
+	 * Set Action
+	 *
 	 * @param $action
 	 *
 	 * @throws \Exception
@@ -235,6 +242,8 @@ class JBSMModelInstall extends JModelLegacy
 	}
 
 	/**
+	 * Set Step
+	 *
 	 * @param $step
 	 *
 	 * @throws \Exception
@@ -248,6 +257,8 @@ class JBSMModelInstall extends JModelLegacy
 	}
 
 	/**
+	 * Set Task
+	 *
 	 * @param $task
 	 *
 	 * @throws \Exception
@@ -260,6 +271,8 @@ class JBSMModelInstall extends JModelLegacy
 	}
 
 	/**
+	 * Set Version
+	 *
 	 * @param $version
 	 *
 	 * @throws \Exception
@@ -272,6 +285,8 @@ class JBSMModelInstall extends JModelLegacy
 	}
 
 	/**
+	 * Add Status
+	 *
 	 * @param        $task
 	 * @param bool   $result
 	 * @param string $msg
@@ -380,6 +395,8 @@ class JBSMModelInstall extends JModelLegacy
 	}
 
 	/**
+	 * Load Plugin
+	 *
 	 * @param $group
 	 * @param $element
 	 *
@@ -394,6 +411,8 @@ class JBSMModelInstall extends JModelLegacy
 	}
 
 	/**
+	 * Install Module
+	 *
 	 * @param $path
 	 * @param $name
 	 *
@@ -521,8 +540,12 @@ class JBSMModelInstall extends JModelLegacy
 	}
 
 	/**
-	 * @param $folder
-	 * @param $name
+	 * Uninstall Plugin
+	 *
+	 * @param   string  $folder  Folder inside the plugin folder.
+	 * @param   string  $name    Name of Plugin to unistall
+	 *
+	 * @return bool
 	 */
 	function uninstallPlugin($folder, $name)
 	{
@@ -533,8 +556,10 @@ class JBSMModelInstall extends JModelLegacy
 		if ($pluginid)
 		{
 			$installer = new JInstaller ();
-			$installer->uninstall('plugin', $pluginid);
+			return $installer->uninstall('plugin', $pluginid);
 		}
+
+		return false;
 	}
 
 	/**
@@ -630,6 +655,8 @@ class JBSMModelInstall extends JModelLegacy
 	}
 
 	/**
+	 * Delete Folder
+	 *
 	 * @param       $path
 	 * @param array $ignore
 	 */
@@ -643,7 +670,6 @@ class JBSMModelInstall extends JModelLegacy
 	 * Start up Steps
 	 *
 	 * @throws \JBSMInstallerException
-	 * @throws \KunenaSchemaException
 	 */
 	public function stepPrepare()
 	{
@@ -670,24 +696,13 @@ class JBSMModelInstall extends JModelLegacy
 		}
 		else
 		{
-			$version = $installed['kunena'];
+			$version = $installed['biblestudy'];
 		}
 
 		$this->setVersion($version);
 
-		// Always enable the System - Kunena plugin
-		$query = $this->db->getQuery(true);
-		$query->clear()
-			->update($this->db->quoteName('#__extensions'))
-			->set($this->db->quoteName('enabled') . ' = 1')
-			->where($this->db->quoteName('type') . ' = ' . $this->db->quote('plugin'))
-			->where($this->db->quoteName('folder') . ' = ' . $this->db->quote('system'))
-			->where($this->db->quoteName('element') . ' = ' . $this->db->quote('kunena'));
-		$this->db->setQuery($query);
-		$this->db->execute();
-
 		require_once BIBLESTUDY_INSTALLER_PATH . '/schema.php';
-		$schema    = new BibleStudyModelSchema();
+		$schema    = new JBSMModelSchema();
 		$results[] = $schema->updateSchemaTable('bsms_version');
 
 		// Insert data from the old version, if it does not exist in the version table
@@ -696,11 +711,6 @@ class JBSMModelInstall extends JModelLegacy
 			$this->insertVersionData($version->version, $version->versiondate, $version->versionname, null);
 		}
 
-		/*
-				foreach ( $results as $result )
-					if (!empty($result['action']) && empty($result['success']))
-						$this->addStatus ( JText::_('COM_BIBLESTUDY_INSTALL_'.strtoupper($result['action'])) . ' ' . $result ['name'], $result ['success'] );
-		*/
 		$this->insertVersion('migrateDatabase');
 
 		if (!$this->getInstallError())
@@ -718,10 +728,10 @@ class JBSMModelInstall extends JModelLegacy
 	public function stepExtract()
 	{
 		$path = JPATH_ADMINISTRATOR . '/components/com_biblestudy/archive';
-		if (JBSM::isDev() || !is_file("{$path}/fileformat"))
+		if (JBSMFrame::isDev() || !is_file("{$path}/fileformat"))
 		{
 			// Git install
-			$dir = JPATH_ADMINISTRATOR . '/components/com_biblestudy/media/kunena';
+			$dir = JPATH_ADMINISTRATOR . '/components/com_biblestudy/media/biblestudy';
 
 			if (is_dir($dir))
 			{
@@ -741,8 +751,8 @@ class JBSMModelInstall extends JModelLegacy
 			array('name' => 'com_biblestudy-media', 'dest' => BIBLESTUDY_INSTALLER_MEDIAPATH)
 		);
 		static $ignore = array(
-			BIBLESTUDY_INSTALLER_ADMINPATH => array('index.html', 'jbsm.xml', 'jbsm.j25.xml', 'jbsm.php', 'api.php', 'archive', 'install', 'language'),
-			BIBLESTUDY_INSTALLER_SITEPATH  => array('index.html', 'jbsm.php', 'router.php', 'COPYRIGHT.php', 'template', 'language')
+			BIBLESTUDY_INSTALLER_ADMINPATH => array('index.html', 'biblestudy.xml', 'biblestudy.php', 'api.php', 'archive', 'install', 'language'),
+			BIBLESTUDY_INSTALLER_SITEPATH  => array('index.html', 'biblestudy.php', 'router.php', 'COPYRIGHT.php', 'language')
 		);
 		$task = $this->getTask();
 
@@ -758,15 +768,10 @@ class JBSMModelInstall extends JModelLegacy
 				{
 					// Delete all files and folders (cleanup)
 					$this->deleteFolder($dest, $ignore[$dest]);
-
-					if ($dest == BIBLESTUDY_INSTALLER_SITEPATH)
-					{
-						$this->deleteFolder("$dest/template/blue_eagle", array('params.ini'));
-					}
 				}
 
 				// Copy new files into folder
-				$this->extract($path, $file['name'] . $ext, $dest, JBSM::isDev());
+				$this->extract($path, $file['name'] . $ext, $dest, JBSMFrame::isDev());
 			}
 
 			$this->setTask($task + 1);
@@ -794,17 +799,10 @@ class JBSMModelInstall extends JModelLegacy
 	public function stepPlugins()
 	{
 		// TODO: Complete smart search support
-		//$this->installPlugin('plugins/plg_finder_kunena', 'finder', 'kunena', false, 1);
-		$this->installPlugin('plugins/plg_bsms_alphauserpoints', 'kunena', 'alphauserpoints', false, 1);
-		$this->installPlugin('plugins/plg_bsms_community', 'kunena', 'community', false, 2);
-		$this->installPlugin('plugins/plg_bsms_comprofiler', 'kunena', 'comprofiler', false, 3);
-		$this->installPlugin('plugins/plg_bsms_gravatar', 'kunena', 'gravatar', false, 4);
-		$this->installPlugin('plugins/plg_bsms_uddeim', 'kunena', 'uddeim', false, 5);
-		$this->installPlugin('plugins/plg_bsms_kunena', 'kunena', 'kunena', true, 6);
-		$this->installPlugin('plugins/plg_bsms_joomla', 'kunena', 'joomla', true, 7);
-
-		// TODO: install also menu module
-		//$this->installModule('install/modules/mod_biblstudymenu', 'kunenamenu');
+		$this->installPlugin('plugins/plg_biblestudy_backup', 'system', 'jbsbackup', false, 1);
+		$this->installPlugin('plugins/plg_biblestudy_finder', 'finder', 'biblestudy', false, 2);
+		$this->installPlugin('plugins/plg_biblestudy_podcast', 'system', 'jbspodcast', false, 3);
+		$this->installPlugin('plugins/plg_biblestudy_search', 'search', 'biblestudysearch', false, 4);
 
 		if (function_exists('apc_clear_cache'))
 		{
@@ -819,6 +817,8 @@ class JBSMModelInstall extends JModelLegacy
 
 	/**
 	 * Work through Database update or move to migration
+	 *
+	 * @todo Update steps to work with new migration system from JBSM
 	 *
 	 * @throws \JBSMInstallerException
 	 */
@@ -872,24 +872,19 @@ class JBSMModelInstall extends JModelLegacy
 	 */
 	public function stepFinish()
 	{
-		JBSM::setup();
+		JBSMFrame::setup();
 
 		$lang = JFactory::getLanguage();
 		$lang->load('com_biblestudy', JPATH_SITE) || $lang->load('com_biblestudy', BIBLESTUDY_INSTALLER_SITEPATH);
 
-		$this->createMenu(false);
-
-		// Fix broken category aliases (workaround for < 2.0-DEV12 bug)
-		JBSMCategoryHelper::fixAliases();
-
 		// Clean cache, just in case
-		JBSMMenuHelper::cleanCache();
+		// JBSMMenuHelper::cleanCache();
 		/** @var JCache|JCacheController $cache */
 		$cache = JFactory::getCache();
 		$cache->clean('com_biblestudy');
 
 		// Delete installer file (only if not using GIT build).
-		if (!JBSM::isDev())
+		if (!JBSMFrame::isDev())
 		{
 			JFile::delete(BIBLESTUDY_PATH_ADMIN . '/install.php');
 		}
@@ -903,8 +898,11 @@ class JBSMModelInstall extends JModelLegacy
 		}
 	}
 
-	// TODO: move to migration
 	/**
+	 * Migrate Database
+	 *
+	 * @todo Need to move to Migration system
+	 *
 	 * @return bool
 	 * @throws \Exception
 	 * @throws \JBSMInstallerException
@@ -963,7 +961,6 @@ class JBSMModelInstall extends JModelLegacy
 	 * @return bool
 	 * @throws \Exception
 	 * @throws \JBSMInstallerException
-	 * @throws \KunenaSchemaException
 	 */
 	public function installDatabase()
 	{
@@ -975,7 +972,7 @@ class JBSMModelInstall extends JModelLegacy
 		{
 			// Run only once: get table creation SQL and existing tables
 			require_once BIBLESTUDY_INSTALLER_PATH . '/schema.php';
-			$schema = new BibleStudyModelSchema();
+			$schema = new JBSMModelSchema();
 			$create = $schema->getCreateSQL();
 			$tables = $this->listTables('bsms_', true);
 		}
@@ -1022,6 +1019,10 @@ class JBSMModelInstall extends JModelLegacy
 	}
 
 	/**
+	 * Upgrade Database
+	 *
+	 * @todo move into migration so that php will fire after sql
+	 *
 	 * @return bool
 	 * @throws \Exception
 	 * @throws \JBSMInstallerException
@@ -1046,7 +1047,8 @@ class JBSMModelInstall extends JModelLegacy
 
 		if ($xml === false)
 		{
-			$this->addStatus(JText::_('COM_BIBLESTUDY_INSTALL_DB_UPGRADE_FAILED_XML'), false, '', 'upgrade');
+			$this->addStatus(JText::_('COM_BIBLESTUDY_INSTALL_DB_UPGRADE_FAILED881
+			_XML'), false, '', 'upgrade');
 		}
 
 		$app   = JFactory::getApplication();
@@ -1076,7 +1078,7 @@ class JBSMModelInstall extends JModelLegacy
 			if ($version['version'] == '@' . 'jbsmversion' . '@')
 			{
 				$git    = 1;
-				$vernum = JBSM::version();
+				$vernum = JBSMFrame::version();
 			}
 
 			if (isset($git) || version_compare(strtolower($version['version']), strtolower($curversion->version), '>'))
@@ -1109,6 +1111,8 @@ class JBSMModelInstall extends JModelLegacy
 	}
 
 	/**
+	 * Process Upgrade XML Node
+	 *
 	 * @param   object  $action  Return of xml actions
 	 *
 	 * @return array|mixed|null
@@ -1185,6 +1189,10 @@ class JBSMModelInstall extends JModelLegacy
 	}
 
 	/**
+	 * Install Sample Data
+	 *
+	 * @todo need to update sample data from our xml file.
+	 *
 	 * @return bool
 	 * @throws \JBSMInstallerException
 	 */
@@ -1227,7 +1235,7 @@ class JBSMModelInstall extends JModelLegacy
 		return $this->_versionprefix;
 	}
 
-	// TODO: move to migration
+	// TODO: move to migration may need to look into this function workings.
 	/**
 	 * @return array
 	 * @throws \JBSMInstallerException
@@ -1417,7 +1425,7 @@ class JBSMModelInstall extends JModelLegacy
 	protected function insertVersion($state = 'beginInstall')
 	{
 		// Insert data from the new version
-		$this->insertVersionData(JBSM::version(), JBSM::versionDate(), JBSM::versionName(), $state);
+		$this->insertVersionData(JBSMFrame::version(), JBSMFrame::versionDate(), JBSMFrame::versionName(), $state);
 	}
 
 	/**
@@ -1463,7 +1471,7 @@ class JBSMModelInstall extends JModelLegacy
 		 */
 
 		static $search = array('#COMPONENT_OLD#', '#VERSION_OLD#', '#VERSION#');
-		$replace = array($version->component, $version->version, JBSM::version());
+		$replace = array($version->component, $version->version, JBSMFrame::version());
 
 		if (!$action)
 		{
@@ -1513,13 +1521,13 @@ class JBSMModelInstall extends JModelLegacy
 			}
 			else
 			{
-				if (version_compare(strtolower(JBSM::version()), strtolower($version->version), '>'))
+				if (version_compare(strtolower(JBSMFrame::version()), strtolower($version->version), '>'))
 				{
 					$this->_action = 'UPGRADE';
 				}
 				else
 				{
-					if (version_compare(strtolower(JBSM::version()), strtolower($version->version), '<'))
+					if (version_compare(strtolower(JBSMFrame::version()), strtolower($version->version), '<'))
 					{
 						$this->_action = 'DOWNGRADE';
 					}

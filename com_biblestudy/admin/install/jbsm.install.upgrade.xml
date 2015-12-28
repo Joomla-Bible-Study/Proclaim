@@ -1,0 +1,169 @@
+<?xml version="1.0" ?>
+<!DOCTYPE comupgrade>
+<comupgrade version="1.0">
+	<upgrade>
+		<version version="1.0.0"
+		         versiondate="2007-04-15"
+		         versionname="">
+		</version>
+		<version version="1.0.1"
+		         versiondate="2007-05-20"
+		         versionname="">
+			<query mode="silenterror">ALTER TABLE `#__bsms_attachments` ADD KEY `mesid`(`mesid`)</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_categories` ADD PRIMARY KEY(`id`)</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_categories` ADD KEY `parent`(`parent`)</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_categories` ADD KEY
+				`published_pubaccess_id`(`published`,`pub_access`,`id`)
+			</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_categories` DROP KEY `catid`</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_categories` DROP KEY `catparent`</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_messages` ADD KEY `hold_time`(`hold`,`time`)</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_messages` ADD KEY `locked`(`locked`)</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_messages` ADD KEY `time`(`time`)</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_messages` DROP KEY `id`</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_messages_text` DROP KEY `mesid`</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_messages_text` ADD PRIMARY KEY(`mesid`)</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_moderation` DROP KEY `catid`</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_users` ADD COLUMN `group_id` int(4) NULL DEFAULT '1' AFTER
+				`karma_time`
+			</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_users` ADD COLUMN `uhits` int(11) NULL DEFAULT '0' AFTER
+				`group_id`
+			</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_users` ADD KEY `group_id`(`group_id`)</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_whoisonline` ADD KEY `userid`(`userid`)</query>
+
+			<query mode="silenterror">UPDATE `#__bsms_messages_text` SET `message` = REPLACE(`message`, "&lt;br>&lt;br>",
+				"\n\n")
+			</query>
+			<query mode="silenterror">INSERT INTO `#__bsms_groups` VALUES ('1', 'Registered User')</query>
+		</version>
+		<version version="1.0.2"
+		         versiondate="2007-08-03"
+		         versionname="">
+			<query mode="silenterror">ALTER TABLE `#__bsms_categories` MODIFY `moderated` tinyint(4) NOT NULL default
+				'1' AFTER `alert_admin`;
+			</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_categories` ADD COLUMN `id_last_msg` int(10) NOT NULL
+				DEFAULT '0' AFTER `description`
+			</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_categories` ADD COLUMN `numTopics` mediumint(8) NOT NULL
+				DEFAULT '0' AFTER `id_last_msg`
+			</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_categories` ADD COLUMN `numPosts` mediumint(8) NOT NULL
+				DEFAULT '0' AFTER `numTopics`
+			</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_categories` ADD COLUMN `time_last_msg` int(11) NULL AFTER
+				`numPosts`
+			</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_categories` ADD KEY `msg_id`(`id_last_msg`)</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_messages` ADD COLUMN `modified_by` int(7) NULL AFTER
+				`moved`
+			</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_messages` ADD COLUMN `modified_time` int(11) NULL AFTER
+				`modified_by`
+			</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_messages` ADD COLUMN `modified_reason` tinytext NULL AFTER
+				`modified_time`
+			</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_users` ADD COLUMN `personalText` tinytext NULL AFTER
+				`uhits`
+			</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_users` ADD COLUMN `gender` tinyint(4) NOT NULL DEFAULT '0'
+				AFTER `personalText`
+			</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_users` ADD COLUMN `birthdate` date NOT NULL DEFAULT
+				'0001-01-01' AFTER `gender`
+			</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_users` ADD COLUMN `location` varchar(50) NULL AFTER
+				`birthdate`
+			</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_users` ADD COLUMN `ICQ` varchar(50) NULL AFTER `location`
+			</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_users` ADD COLUMN `AIM` varchar(50) NULL AFTER `ICQ`
+			</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_users` ADD COLUMN `YIM` varchar(50) NULL AFTER `AIM`
+			</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_users` ADD COLUMN `MSN` varchar(50) NULL AFTER `YIM`
+			</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_users` ADD COLUMN `SKYPE` varchar(50) NULL AFTER `MSN`
+			</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_users` ADD COLUMN `hideEmail` tinyint(1) NOT NULL DEFAULT
+				'1' AFTER `SKYPE`
+			</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_users` ADD COLUMN `showOnline` tinyint(1) NOT NULL DEFAULT
+				'1' AFTER `hideEmail`
+			</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_users` ADD COLUMN `rank` tinyint(4) NOT NULL DEFAULT '0'
+				AFTER `showOnline`
+			</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_users` ADD COLUMN `GTALK` varchar(50) NULL AFTER `rank`
+			</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_users` ADD COLUMN `websitename` varchar(50) NULL AFTER
+				`GTALK`
+			</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_users` ADD COLUMN `websiteurl` varchar(50) NULL AFTER
+				`websitename`
+			</query>
+
+			<query>UPDATE `#__bsms_categories` SET `moderated` = '1';</query>
+		</version>
+		<version version="1.0.3"
+		         versiondate="2007-09-04"
+		         versionname="">
+			<query mode="silenterror">ALTER TABLE `#__bsms_categories` ADD COLUMN `headerdesc` text NOT NULL AFTER
+				`description`
+			</query>
+			<query mode="silenterror">ALTER TABLE `#__bsms_categories` ADD COLUMN `class_sfx` varchar(20) NOT NULL
+				AFTER `headerdesc`
+			</query>
+		</version>
+		<version version="1.0.4"
+		         versiondate="2007-12-23"
+		         versionname="">
+			<query mode="silenterror">ALTER TABLE `#__bsms_sessions` ADD COLUMN `currvisit` int(11) NOT NULL default
+				'0' AFTER `readtopics`
+			</query>
+		</version>
+		<version version="1.0.5"
+		         versiondate="2008-12-01"
+		         versionname="Redwood">
+			<query mode="silenterror">ALTER TABLE `#__bsms_announcement` MODIFY `title` tinytext NOT NULL AFTER
+				`id`;
+			</query>
+			<query>UPDATE `#__bsms_users` SET `rank`=8 WHERE `moderator`=1 AND `rank`=0</query>
+			<query>UPDATE `#__bsms_messages_text` SET `message` = REPLACE(`message`, "&amp;amp;#039;", "'")</query>
+			<query>UPDATE `#__bsms_messages_text` SET `message` = REPLACE(`message`, "&amp;amp;quot;", '"')</query>
+			<query>UPDATE `#__bsms_messages_text` SET `message` = REPLACE(`message`, "&amp;amp;nbsp;", " ")</query>
+			<query>UPDATE `#__bsms_messages_text` SET `message` = REPLACE(`message`, "&amp;lt;br />", "\n")</query>
+			<query>UPDATE `#__bsms_messages_text` SET `message` = REPLACE(`message`, "&amp;lt;br>", "\n")</query>
+			<query>UPDATE `#__bsms_messages_text` SET `message` = REPLACE(`message`, "&amp;amp;lt;", "&lt;")</query>
+			<query>UPDATE `#__bsms_messages_text` SET `message` = REPLACE(`message`, "&amp;amp;gt;", "&gt;")</query>
+			<query>UPDATE `#__bsms_messages_text` SET `message` = REPLACE(`message`, "&amp;amp;amp;", "&amp;")</query>
+			<query>UPDATE `#__bsms_messages_text` SET `message` = REPLACE(`message`, "[IMG", "[img")</query>
+			<query>UPDATE `#__bsms_messages_text` SET `message` = REPLACE(`message`, "[/IMG]", "[/img]")</query>
+			<query>UPDATE `#__bsms_messages_text` SET `message` = REPLACE(`message`, "[URL", "[url")</query>
+			<query>UPDATE `#__bsms_messages_text` SET `message` = REPLACE(`message`, "[/URL]", "[/url]")</query>
+			<query>UPDATE `#__bsms_messages_text` SET `message` = REPLACE(`message`, "[QUOTE", "[quote")</query>
+			<query>UPDATE `#__bsms_messages_text` SET `message` = REPLACE(`message`, "[/QUOTE]", "[/quote]")</query>
+			<query>UPDATE `#__bsms_messages_text` SET `message` = REPLACE(`message`, "[CODE", "[code")</query>
+			<query>UPDATE `#__bsms_messages_text` SET `message` = REPLACE(`message`, "[/CODE", "[/code")</query>
+			<query>UPDATE `#__bsms_users` SET `signature` = REPLACE(`signature`, "&amp;amp;#039;", "'")</query>
+			<query>UPDATE `#__bsms_users` SET `signature` = REPLACE(`signature`, "&amp;amp;quot;", '"')</query>
+			<query>UPDATE `#__bsms_users` SET `signature` = REPLACE(`signature`, "&amp;amp;nbsp;", " ")</query>
+			<query>UPDATE `#__bsms_users` SET `signature` = REPLACE(`signature`, "&amp;lt;br />", "\n")</query>
+			<query>UPDATE `#__bsms_users` SET `signature` = REPLACE(`signature`, "&amp;lt;br>", "\n")</query>
+			<query>UPDATE `#__bsms_users` SET `signature` = REPLACE(`signature`, "&amp;amp;lt;", "&lt;")</query>
+			<query>UPDATE `#__bsms_users` SET `signature` = REPLACE(`signature`, "&amp;amp;gt;", "&gt;")</query>
+			<query>UPDATE `#__bsms_users` SET `signature` = REPLACE(`signature`, "&amp;amp;amp;", "&amp;")</query>
+			<query>UPDATE `#__bsms_users` SET `signature` = REPLACE(`signature`, "[IMG", "[img")</query>
+			<query>UPDATE `#__bsms_users` SET `signature` = REPLACE(`signature`, "[/IMG]", "[/img]")</query>
+			<query>UPDATE `#__bsms_users` SET `signature` = REPLACE(`signature`, "[URL", "[url")</query>
+			<query>UPDATE `#__bsms_users` SET `signature` = REPLACE(`signature`, "[/URL]", "[/url]")</query>
+			<query>UPDATE `#__bsms_users` SET `signature` = REPLACE(`signature`, "[QUOTE", "[quote")</query>
+			<query>UPDATE `#__bsms_users` SET `signature` = REPLACE(`signature`, "[/QUOTE]", "[/quote]")</query>
+			<query>UPDATE `#__bsms_users` SET `signature` = REPLACE(`signature`, "[CODE", "[code")</query>
+			<query>UPDATE `#__bsms_users` SET `signature` = REPLACE(`signature`, "[/CODE", "[/code")</query>
+		</version>
+	</upgrade>
+</comupgrade>

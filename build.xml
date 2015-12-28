@@ -94,7 +94,7 @@
 	</target>
 
 	<!-- Build distributable package -->
-	<target name="package" depends="dev.clean,init,package.modules,package.plugins,package.component" description="Builds the whole component, including modules and plugins">
+	<target name="package" depends="dev.clean,init,package.component" description="Builds the whole component, including modules and plugins">
 
 		<!-- Stage the package -->
 		<mkdir dir="${basedir}/build/packages/_tmp"/>
@@ -205,10 +205,10 @@
 		<symlink target="${basedir}/com_biblestudy/site" link="${joomla_path}${joomla_dir}/components/com_biblestudy" overwrite="true"/>
 		<symlink target="${basedir}/mod_biblestudy" link="${joomla_path}${joomla_dir}/modules/mod_biblestudy" overwrite="true"/>
 		<symlink target="${basedir}/mod_biblestudy_podcast" link="${joomla_path}${joomla_dir}/modules/mod_biblestudy_podcast" overwrite="true"/>
-		<symlink target="${basedir}/plg_biblestudy_backup" link="${joomla_path}${joomla_dir}/plugins/system/jbsbackup" overwrite="true"/>
-		<symlink target="${basedir}/plg_biblestudy_finder" link="${joomla_path}${joomla_dir}/plugins/finder/biblestudy" overwrite="true"/>
-		<symlink target="${basedir}/plg_biblestudy_podcast" link="${joomla_path}${joomla_dir}/plugins/system/jbspodcast" overwrite="true"/>
-		<symlink target="${basedir}/plg_biblestudy_podcast" link="${joomla_path}${joomla_dir}/plugins/search/biblestudysearch" overwrite="true"/>
+		<symlink target="${basedir}/com_biblestudy/admin/install/plugins/plg_biblestudy_backup" link="${joomla_path}${joomla_dir}/plugins/system/jbsbackup" overwrite="true"/>
+		<symlink target="${basedir}/com_biblestudy/admin/install/plugins/plg_biblestudy_finder" link="${joomla_path}${joomla_dir}/plugins/finder/biblestudy" overwrite="true"/>
+		<symlink target="${basedir}/com_biblestudy/admin/install/plugins/plg_biblestudy_podcast" link="${joomla_path}${joomla_dir}/plugins/system/jbspodcast" overwrite="true"/>
+		<symlink target="${basedir}/com_biblestudy/admin/install/plugins/plg_biblestudy_podcast" link="${joomla_path}${joomla_dir}/plugins/search/biblestudysearch" overwrite="true"/>
 
 		<phingcall target="dev.init"/>
 	</target>

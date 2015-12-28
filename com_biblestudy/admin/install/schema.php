@@ -4,7 +4,7 @@
  *
  * @package       BibleStudy.Installer
  *
- * @copyright (C) 2008 - 2014 BibleStudy Team. All rights reserved.
+ * @copyright (C) 2008 - 2016 BibleStudy Team. All rights reserved.
  * @license       http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link          http://www.joomlabiblestudy.org
  **/
@@ -85,7 +85,7 @@ class JBSMModelSchema extends JModelLegacy
 	 * Get Schema
 	 *
 	 * @return bool|\DOMDocument|null
-	 * @throws \KunenaSchemaException
+	 * @throws \JBSMSchemaException
 	 */
 	public function getSchema()
 	{
@@ -102,7 +102,7 @@ class JBSMModelSchema extends JModelLegacy
 	 *
 	 * @param string $input
 	 *
-	 * @return null
+	 * @return DOMDocument
 	 */
 	public function getXmlSchema($input = BIBLESTUDY_SCHEMA_FILE)
 	{
@@ -165,8 +165,6 @@ class JBSMModelSchema extends JModelLegacy
 			$this->usingschema = $using;
 			$this->upgradeSchema($from, $using);
 			$this->diffschema = $this->getSchemaDiff($from, $to);
-			//echo "<pre>",htmlentities($this->fromschema->saveXML()),"</pre>";
-			//echo "<pre>",htmlentities($this->toschema->saveXML()),"</pre>";
 			$this->sql = null;
 		}
 
@@ -237,7 +235,7 @@ class JBSMModelSchema extends JModelLegacy
 	 *
 	 * @param $table
 	 *
-	 * @return null
+	 * @return array
 	 * @throws \JBSMSchemaException
 	 */
 	public function updateSchemaTable($table)
@@ -554,7 +552,7 @@ class JBSMModelSchema extends JModelLegacy
 	 * @param   string       $name
 	 * @param   array        $loc
 	 *
-	 * @return null
+	 * @return object
 	 */
 	public function getSchemaNodeDiff($schema, $tag, $name, $loc)
 	{
@@ -752,8 +750,8 @@ class JBSMModelSchema extends JModelLegacy
 	/**
 	 * Get Schema SQL
 	 *
-	 * @param   Object  $schema
-	 * @param   bool    $drop    If we need to drop.
+	 * @param   DOMDocument  $schema
+	 * @param   bool         $drop    If we need to drop.
 	 *
 	 * @return array
 	 */
@@ -1042,14 +1040,14 @@ class JBSMModelSchema extends JModelLegacy
 	}
 
 	/**
-	 * Finde Node
+	 * Find Node
 	 *
 	 * @param        $schema
 	 * @param        $type
 	 * @param        $table
 	 * @param string $field
 	 *
-	 * @return null
+	 * @return Object|null
 	 */
 	protected function findNode($schema, $type, $table, $field = '')
 	{
