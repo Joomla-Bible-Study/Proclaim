@@ -958,6 +958,8 @@ class JBSMModelInstall extends JModelLegacy
 	}
 
 	/**
+	 * Install DB from PHP
+	 *
 	 * @return bool
 	 * @throws \Exception
 	 * @throws \JBSMInstallerException
@@ -1071,7 +1073,7 @@ class JBSMModelInstall extends JModelLegacy
 			// Update state
 			$state[$vernum] = 1;
 
-			if ($version['version'] == '@' . 'kunenaversion' . '@')
+			if ($version['version'] == '@' . 'jbsmversion' . '@')
 			{
 				$git    = 1;
 				$vernum = JBSM::version();
@@ -1199,6 +1201,8 @@ class JBSMModelInstall extends JModelLegacy
 	}
 
 	/**
+	 * Get Version Prefix
+	 *
 	 * @return bool|null
 	 * @throws \JBSMInstallerException
 	 */
@@ -1235,53 +1239,34 @@ class JBSMModelInstall extends JModelLegacy
 			return $this->_versions;
 		}
 
-		$kunena    = $this->getInstalledVersion('bsms_', $this->_kVersions);
-		$fireboard = $this->getInstalledVersion('fb_', $this->_fbVersions);
+		$jbsm    = $this->getInstalledVersion('bsms_', $this->_kVersions);
 
-		if (!empty($kunena->state))
+		if (!empty($jbsm->state))
 		{
-			$this->_versions['failed'] = $kunena;
-			$kunena                    = $this->getInstalledVersion('bsms_', $this->_kVersions, true);
+			$this->_versions['failed'] = $jbsm;
+			$jbsm                    = $this->getInstalledVersion('bsms_', $this->_kVersions, true);
 
-			if (version_compare($kunena->version, '1.6.0-ALPHA', "<"))
+			if (version_compare($jbsm->version, '1.6.0-ALPHA', "<"))
 			{
-				$kunena->ignore = true;
+				$jbsm->ignore = true;
 			}
 		}
 
-		if ($kunena->component && empty($kunena->ignore))
+		if ($jbsm->component && empty($jbsm->ignore))
 		{
-			$this->_versions['kunena'] = $kunena;
+			$this->_versions['biblestudy'] = $jbsm;
 			$migrate                   = false;
 		}
-		else
-		{
-			$migrate = $this->isMigration($kunena, $fireboard);
-		}
 
-		if (!empty($fireboard->component) && $migrate)
+		if (empty($jbsm->component))
 		{
-			$this->_versions['fb'] = $fireboard;
-		}
-
-		if (empty($kunena->component))
-		{
-			$this->_versions['kunena'] = $kunena;
+			$this->_versions['biblestudy'] = $jbsm;
 		}
 		else
 		{
-			if (!empty($fireboard->component))
-			{
-				$uninstall                    = clone $fireboard;
-				$uninstall->action            = 'RESTORE';
-				$this->_versions['uninstall'] = $uninstall;
-			}
-			else
-			{
-				$uninstall                    = clone $kunena;
-				$uninstall->action            = 'UNINSTALL';
-				$this->_versions['uninstall'] = $uninstall;
-			}
+			$uninstall                    = clone $jbsm;
+			$uninstall->action            = 'UNINSTALL';
+			$this->_versions['uninstall'] = $uninstall;
 		}
 
 		foreach ($this->_versions as $version)
@@ -1293,14 +1278,7 @@ class JBSMModelInstall extends JModelLegacy
 			$version->link        = JUri::base(true) . '/index.php?option=com_biblestudy&view=install&task=' . strtolower($version->action) . '&' . JSession::getFormToken() . '=1';
 		}
 
-		if ($migrate)
-		{
-			$kunena->warning = $this->getActionText($fireboard, 'warn', 'upgrade');
-		}
-		else
-		{
-			$kunena->warning = '';
-		}
+		$jbsm->warning = '';
 
 		return $this->_versions;
 	}
@@ -1393,15 +1371,7 @@ class JBSMModelInstall extends JModelLegacy
 			{
 				$version->version = strtolower($version->version);
 				$version->prefix  = $versionprefix;
-
-				if (version_compare($version->version, '1.0.5', ">"))
-				{
-					$version->component = 'Kunena';
-				}
-				else
-				{
-					$version->component = 'FireBoard';
-				}
+				$version->component = 'biblestudy';
 				$version->version = strtoupper($version->version);
 
 				// Version table may contain dummy version.. Ignore it
@@ -1685,7 +1655,7 @@ class JBSMModelInstall extends JModelLegacy
 		$create .= " DEFAULT CHARACTER SET utf8 COLLATE {$collation}";
 		$query = preg_replace('/' . $this->db->getPrefix() . $oldtable . '/', $this->db->getPrefix() . $newtable, $create);
 		$this->db->setQuery($query);
-		$this->db->query();
+		$this->db->execute();
 
 		if ($this->db->getErrorNum())
 		{
@@ -1697,7 +1667,7 @@ class JBSMModelInstall extends JModelLegacy
 		// And copy data into it
 		$sql = "INSERT INTO " . $this->db->quoteName($this->db->getPrefix() . $newtable) . ' ' . $this->selectWithStripslashes($this->db->getPrefix() . $oldtable);
 		$this->db->setQuery($sql);
-		$this->db->query();
+		$this->db->execute();
 
 		if ($this->db->getErrorNum())
 		{
@@ -1760,7 +1730,7 @@ class JBSMModelInstall extends JModelLegacy
 		PRIMARY KEY (`id`)
 		) DEFAULT CHARACTER SET utf8 COLLATE {$collation};";
 		$this->db->setQuery($query);
-		$this->db->query();
+		$this->db->execute();
 
 		if ($this->db->getErrorNum())
 		{
@@ -1789,7 +1759,7 @@ class JBSMModelInstall extends JModelLegacy
 			`installdate` = CURDATE(),
 			`versionname` = {$this->db->quote($versionname)},
 			`state` = {$this->db->quote($state)}");
-		$this->db->query();
+		$this->db->execute();
 
 		if ($this->db->getErrorNum())
 		{
@@ -1842,7 +1812,7 @@ class JBSMModelInstall extends JModelLegacy
 		foreach ($tables as $table)
 		{
 			$this->db->setQuery("DROP TABLE IF EXISTS " . $this->db->quoteName($this->db->getPrefix() . $table));
-			$this->db->query();
+			$this->db->execute();
 
 			if ($this->db->getErrorNum())
 			{

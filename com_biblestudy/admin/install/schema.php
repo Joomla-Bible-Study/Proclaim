@@ -10,10 +10,10 @@
  **/
 defined('_JEXEC') or die ();
 
-DEFINE('KUNENA_SCHEMA_FILE', BIBLESTUDY_PATH_ADMIN . '/install/install.xml');
-DEFINE('KUNENA_UPGRADE_SCHEMA_FILE', BIBLESTUDY_PATH_ADMIN . '/install/upgrade/upgrade.xml');
-DEFINE('KUNENA_INSTALL_SCHEMA_EMPTY', '<?xml version="1.0" encoding="utf-8"?><!DOCTYPE schema><schema></schema>');
-DEFINE('KUNENA_INPUT_DATABASE', '_DB_');
+DEFINE('BIBLESTUDY_SCHEMA_FILE', BIBLESTUDY_PATH_ADMIN . '/install/install.xml');
+DEFINE('BIBLESTUDY_UPGRADE_SCHEMA_FILE', BIBLESTUDY_PATH_ADMIN . '/install/upgrade/upgrade.xml');
+DEFINE('BIBLESTUDY_INSTALL_SCHEMA_EMPTY', '<?xml version="1.0" encoding="utf-8"?><!DOCTYPE schema><schema></schema>');
+DEFINE('BIBLESTUDY_INPUT_DATABASE', '_DB_');
 
 jimport('joomla.application.component.model');
 
@@ -22,7 +22,7 @@ jimport('joomla.application.component.model');
  *
  * @since        1.6
  */
-class BibleStudyModelSchema extends JModelLegacy
+class JBSMModelSchema extends JModelLegacy
 {
 	/**
 	 * Flag to indicate model state initialization.
@@ -40,6 +40,9 @@ class BibleStudyModelSchema extends JModelLegacy
 	protected $sql = null;
 	protected $version = null;
 
+	/**
+	 * JBSMModelSchema constructor.
+	 */
 	public function __construct()
 	{
 		parent::__construct();
@@ -68,11 +71,22 @@ class BibleStudyModelSchema extends JModelLegacy
 		return (is_null($value) ? $default : $value);
 	}
 
+	/**
+	 * Set Version
+	 *
+	 * @param $version
+	 */
 	public function setVersion($version)
 	{
 		$this->version = $version;
 	}
 
+	/**
+	 * Get Schema
+	 *
+	 * @return bool|\DOMDocument|null
+	 * @throws \KunenaSchemaException
+	 */
 	public function getSchema()
 	{
 		if ($this->schema == null)
@@ -83,7 +97,14 @@ class BibleStudyModelSchema extends JModelLegacy
 		return $this->schema;
 	}
 
-	public function getXmlSchema($input = KUNENA_SCHEMA_FILE)
+	/**
+	 * Get SML Schema
+	 *
+	 * @param string $input
+	 *
+	 * @return null
+	 */
+	public function getXmlSchema($input = BIBLESTUDY_SCHEMA_FILE)
 	{
 		if ($this->xmlschema == null)
 		{
@@ -93,7 +114,14 @@ class BibleStudyModelSchema extends JModelLegacy
 		return $this->xmlschema;
 	}
 
-	public function getUpgradeSchema($input = KUNENA_UPGRADE_SCHEMA_FILE)
+	/**
+	 * Get Upgrade Schema
+	 *
+	 * @param string $input
+	 *
+	 * @return \DOMDocument|null
+	 */
+	public function getUpgradeSchema($input = BIBLESTUDY_UPGRADE_SCHEMA_FILE)
 	{
 		if ($this->upgradeschema == null)
 		{
@@ -104,6 +132,15 @@ class BibleStudyModelSchema extends JModelLegacy
 		return $this->upgradeschema;
 	}
 
+	/**
+	 * Get Differnce in Schema
+	 *
+	 * @param null $from
+	 * @param null $to
+	 * @param null $using
+	 *
+	 * @return \DOMDocument|null
+	 */
 	public function getDiffSchema($from = null, $to = null, $using = null)
 	{
 		if ($this->diffschema == null)
@@ -136,6 +173,11 @@ class BibleStudyModelSchema extends JModelLegacy
 		return $this->diffschema;
 	}
 
+	/**
+	 * Get SQL verions
+	 *
+	 * @return array|null
+	 */
 	protected function getSQL()
 	{
 		if ($this->sql == null)
@@ -147,6 +189,11 @@ class BibleStudyModelSchema extends JModelLegacy
 		return $this->sql;
 	}
 
+	/**
+	 * Get Create SQL
+	 *
+	 * @return array|null
+	 */
 	public function getCreateSQL()
 	{
 		if ($this->sql == null)
@@ -159,6 +206,13 @@ class BibleStudyModelSchema extends JModelLegacy
 		return $this->sql;
 	}
 
+	/**
+	 * Get Schema Tables
+	 *
+	 * @param null $prefix
+	 *
+	 * @return array
+	 */
 	public function getSchemaTables($prefix = null)
 	{
 		$schema = $this->getXmlSchema();
@@ -178,7 +232,14 @@ class BibleStudyModelSchema extends JModelLegacy
 		return $tables;
 	}
 
-	// helper function to update table schema
+	/**
+	 * Helper function to update table schema
+	 *
+	 * @param $table
+	 *
+	 * @return null
+	 * @throws \JBSMSchemaException
+	 */
 	public function updateSchemaTable($table)
 	{
 		$sql = $this->getSQL();
@@ -189,11 +250,11 @@ class BibleStudyModelSchema extends JModelLegacy
 		}
 
 		$this->db->setQuery($sql[$table]['sql']);
-		$this->db->query();
+		$this->db->execute();
 
 		if ($this->db->getErrorNum())
 		{
-			throw new KunenaSchemaException($this->db->getErrorMsg(), $this->db->getErrorNum());
+			throw new JBSMSchemaException($this->db->getErrorMsg(), $this->db->getErrorNum());
 		}
 
 		$result            = $sql[$table];
@@ -202,7 +263,12 @@ class BibleStudyModelSchema extends JModelLegacy
 		return $result;
 	}
 
-	// helper function to update schema
+	/**
+	 * Helper function to update schema
+	 *
+	 * @return array
+	 * @throws \JBSMSchemaException
+	 */
 	public function updateSchema()
 	{
 		$sqls    = $this->getSQL();
@@ -216,11 +282,11 @@ class BibleStudyModelSchema extends JModelLegacy
 			}
 
 			$this->db->setQuery($sql['sql']);
-			$this->db->query();
+			$this->db->execute();
 
 			if ($this->db->getErrorNum())
 			{
-				throw new KunenaSchemaException($this->db->getErrorMsg(), $this->db->getErrorNum());
+				throw new JBSMSchemaException($this->db->getErrorMsg(), $this->db->getErrorNum());
 			}
 
 			$results[] = $sql;
@@ -229,6 +295,15 @@ class BibleStudyModelSchema extends JModelLegacy
 		return $results;
 	}
 
+	/**
+	 * List Tables
+	 *
+	 * @param      $prefix
+	 * @param bool $reload
+	 *
+	 * @return mixed
+	 * @throws \JBSMSchemaException
+	 */
 	protected function listTables($prefix, $reload = false)
 	{
 		if (isset($this->tables[$prefix]) && !$reload)
@@ -241,7 +316,7 @@ class BibleStudyModelSchema extends JModelLegacy
 
 		if ($this->db->getErrorNum())
 		{
-			throw new KunenaSchemaException($this->db->getErrorMsg(), $this->db->getErrorNum());
+			throw new JBSMSchemaException($this->db->getErrorMsg(), $this->db->getErrorNum());
 		}
 
 		$this->tables[$prefix] = array();
@@ -255,16 +330,29 @@ class BibleStudyModelSchema extends JModelLegacy
 		return $this->tables[$prefix];
 	}
 
+	/**
+	 * Create Schema
+	 *
+	 * @return \DOMDocument
+	 */
 	public function createSchema()
 	{
 		$schema                     = new DOMDocument('1.0', 'utf-8');
 		$schema->formatOutput       = true;
 		$schema->preserveWhiteSpace = false;
-		$schema->loadXML(KUNENA_INSTALL_SCHEMA_EMPTY);
+		$schema->loadXML(BIBLESTUDY_INSTALL_SCHEMA_EMPTY);
 
 		return $schema;
 	}
 
+	/**
+	 * Get Schema From File
+	 *
+	 * @param   string  $filename
+	 * @param   bool    $reload
+	 *
+	 * @return mixed
+	 */
 	public function getSchemaFromFile($filename, $reload = false)
 	{
 		static $schema = array();
@@ -283,6 +371,14 @@ class BibleStudyModelSchema extends JModelLegacy
 		return $schema[$filename];
 	}
 
+	/**
+	 * Get Schema From Database
+	 *
+	 * @param bool $reload
+	 *
+	 * @return bool|\DOMDocument
+	 * @throws \JBSMSchemaException
+	 */
 	public function getSchemaFromDatabase($reload = false)
 	{
 		static $schema = false;
@@ -314,7 +410,7 @@ class BibleStudyModelSchema extends JModelLegacy
 
 			if ($this->db->getErrorNum())
 			{
-				throw new KunenaSchemaException($this->db->getErrorMsg(), $this->db->getErrorNum());
+				throw new JBSMSchemaException($this->db->getErrorMsg(), $this->db->getErrorNum());
 			}
 
 			foreach ($fields as $row)
@@ -347,7 +443,7 @@ class BibleStudyModelSchema extends JModelLegacy
 
 			if ($this->db->getErrorNum())
 			{
-				throw new KunenaSchemaException($this->db->getErrorMsg(), $this->db->getErrorNum());
+				throw new JBSMSchemaException($this->db->getErrorMsg(), $this->db->getErrorNum());
 			}
 
 			$keyNode = null;
@@ -383,6 +479,14 @@ class BibleStudyModelSchema extends JModelLegacy
 		return $schema;
 	}
 
+	/**
+	 * Get Schema Diff
+	 *
+	 * @param   object  $old
+	 * @param   object  $new
+	 *
+	 * @return \DOMDocument|null
+	 */
 	public function getSchemaDiff($old, $new)
 	{
 		$old = $this->getDOMDocument($old);
@@ -392,8 +496,6 @@ class BibleStudyModelSchema extends JModelLegacy
 			return null;
 		}
 
-		//$old->validate();
-		//$new->validate();
 		$schema     = $this->createSchema();
 		$schemaNode = $schema->documentElement;
 		$schemaNode->setAttribute('type', 'diff');
@@ -416,6 +518,13 @@ class BibleStudyModelSchema extends JModelLegacy
 		return $schema;
 	}
 
+	/**
+	 * List All Nodes
+	 *
+	 * @param   array  $nodeLists  List of Nodes
+	 *
+	 * @return array
+	 */
 	protected function listAllNodes($nodeLists)
 	{
 		$list = array();
@@ -437,6 +546,16 @@ class BibleStudyModelSchema extends JModelLegacy
 		return $list;
 	}
 
+	/**
+	 * Get Schema Node Diff
+	 *
+	 * @param   DOMDocument  $schema  Schema
+	 * @param   string       $tag
+	 * @param   string       $name
+	 * @param   array        $loc
+	 *
+	 * @return null
+	 */
 	public function getSchemaNodeDiff($schema, $tag, $name, $loc)
 	{
 		$node = null;
@@ -582,6 +701,14 @@ class BibleStudyModelSchema extends JModelLegacy
 		return $node;
 	}
 
+	/**
+	 * Get DOM Document
+	 *
+	 * @param   string  $input  File to inport
+	 *
+	 * @return bool|\DOMDocument|\DOMNode|mixed|null
+	 * @throws \JBSMSchemaException
+	 */
 	protected function getDOMDocument($input)
 	{
 		if (($input instanceof DOMNode))
@@ -590,7 +717,7 @@ class BibleStudyModelSchema extends JModelLegacy
 		}
 		else
 		{
-			if ($input === KUNENA_INPUT_DATABASE)
+			if ($input === BIBLESTUDY_INPUT_DATABASE)
 			{
 				$schema = $this->getSchemaFromDatabase();
 			}
@@ -622,6 +749,14 @@ class BibleStudyModelSchema extends JModelLegacy
 		return $schema;
 	}
 
+	/**
+	 * Get Schema SQL
+	 *
+	 * @param   Object  $schema
+	 * @param   bool    $drop    If we need to drop.
+	 *
+	 * @return array
+	 */
 	public function getSchemaSQL($schema, $drop = false)
 	{
 		$tables = array();
@@ -747,7 +882,7 @@ class BibleStudyModelSchema extends JModelLegacy
 					$str .= implode(",\n", $fields) . " ) DEFAULT CHARACTER SET utf8 COLLATE {$collation};";
 					break;
 				default:
-					echo("Kunena Installer: Unknown action $tablename.$action on xml file<br />");
+					echo("BibleStudy Installer: Unknown action $tablename.$action on xml file<br />");
 			}
 
 			if (!empty($str))
@@ -759,6 +894,14 @@ class BibleStudyModelSchema extends JModelLegacy
 		return $tables;
 	}
 
+	/**
+	 * Get Schema SQL Field
+	 *
+	 * @param        $field
+	 * @param string $after
+	 *
+	 * @return string
+	 */
 	protected function getSchemaSQLField($field, $after = '')
 	{
 		if (!($field instanceof DOMElement))
@@ -812,6 +955,14 @@ class BibleStudyModelSchema extends JModelLegacy
 		return $str;
 	}
 
+	/**
+	 * Upgrade Schema
+	 *
+	 * @param $dbschema
+	 * @param $upgrade
+	 *
+	 * @return void
+	 */
 	public function upgradeSchema($dbschema, $upgrade)
 	{
 		$dbschema = $this->getDOMDocument($dbschema);
@@ -822,12 +973,18 @@ class BibleStudyModelSchema extends JModelLegacy
 			return;
 		}
 
-		//$dbschema->validate();
-		//$upgrade->validate();
-
 		$this->upgradeNewAction($dbschema, $upgrade->documentElement);
 	}
 
+	/**
+	 * Upgrade New Action
+	 *
+	 * @param        $dbschema
+	 * @param        $node
+	 * @param string $table
+	 *
+	 * @return void
+	 */
 	protected function upgradeNewAction($dbschema, $node, $table = '')
 	{
 		if (!$node)
@@ -884,6 +1041,16 @@ class BibleStudyModelSchema extends JModelLegacy
 		}
 	}
 
+	/**
+	 * Finde Node
+	 *
+	 * @param        $schema
+	 * @param        $type
+	 * @param        $table
+	 * @param string $field
+	 *
+	 * @return null
+	 */
 	protected function findNode($schema, $type, $table, $field = '')
 	{
 		$rootNode = $schema->documentElement;
@@ -920,6 +1087,15 @@ class BibleStudyModelSchema extends JModelLegacy
 		return null;
 	}
 
+	/**
+	 * Upgrade Action
+	 *
+	 * @param        $dbschema
+	 * @param        $node
+	 * @param string $table
+	 *
+	 * @return void
+	 */
 	protected function upgradeAction($dbschema, $node, $table = '')
 	{
 		if (!$table)
@@ -986,6 +1162,9 @@ class BibleStudyModelSchema extends JModelLegacy
 
 }
 
-class KunenaSchemaException extends Exception
+/**
+ * Class JBSMSchemaException
+ */
+class JBSMSchemaException extends Exception
 {
 }
