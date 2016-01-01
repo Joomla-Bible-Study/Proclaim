@@ -29,21 +29,24 @@ class Com_BiblestudyInstallerScript
 	/** @var string The release value to be displayed and check against throughout this file. */
 	private $_release = '9.0.0';
 
-	/**
-	 * Find minimum required joomla version for this extension.
-	 * It will be read from the version attribute (install tag) in the manifest file
-	 *
-	 * @var string
-	 */
-	private $_minimum_joomla_release = '3.4.1';
+	protected $versions = array(
+		'PHP'     => array(
+			'5.3' => '5.3.1',
+			'0'   => '5.4.23' // Preferred version
+		),
+		'MySQL'   => array(
+			'5.1' => '5.1',
+			'0'   => '5.5' // Preferred version
+		),
+		'Joomla!' => array(
+			'3.4' => '3.4.1',
+			'3.3' => '3.3.6',
+			'2.5' => '2.5.28',
+			'0'   => '3.4.1' // Preferred version
+		)
+	);
 
-	/**
-	 * Find minimum required PHP version for this extension.
-	 * It will be read from the version attribute (install tag) in the manifest file
-	 *
-	 * @var string
-	 */
-	private $_minimum_php = '5.3.1';
+	protected $extensions = array('dom', 'gd', 'json', 'pcre', 'SimpleXML');
 
 	/**
 	 * $parent is the class calling this method.
@@ -58,58 +61,95 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function preflight($type, $parent)
 	{
-		// This component does not work with Joomla releases prior to 3.4
-		// abort if the current Joomla release is older
+		$parent   = $parent->getParent();
+		$manifest = $parent->getManifest();
 
-		// Extract the version number from the manifest. This will overwrite the 1.0 value set above
-		/** @noinspection PhpUndefinedMethodInspection */
-		$this->_release = $parent->get("manifest")->version;
-
-		// Start DB factory
-		$db = JFactory::getDbo();
-
-		// Set the #__schemas version_id to the correct number so the update will occur if out of sequence.
-		$query = $db->getQuery(true);
-		$query->select('extension_id')
-			->from('#__extensions')
-			->where('name LIKE ' . $db->q('%com_biblestudy%'));
-		$db->setQuery($query);
-		$extensionid = $db->loadResult();
-
-		if ($extensionid)
+		// Prevent installation if requirements are not met.
+		if (!$this->checkRequirements($manifest->version))
 		{
-			$query = $db->getQuery(true);
-			$query->select('version_id')
-				->from('#__schemas')
-				->where('extension_id = ' . $db->quote($extensionid));
-			$db->setQuery($query);
-			$jbsversion = $db->loadResult();
+			return false;
+		}
 
-			if ($jbsversion == '20100101')
+		$adminPath = $parent->getPath('extension_administrator');
+		$sitePath  = $parent->getPath('extension_site');
+
+		if (is_file($adminPath . '/admin.biblestudy.php'))
+		{
+			// Kunena 2.0 or older release found, clean up the directories.
+			static $ignoreAdmin = array('index.html', 'biblestudy.xml', 'archive');
+			if (is_file($adminPath . '/install.script.php'))
 			{
-				$query = $db->getQuery(true);
-				$query->update('#__schemas')
-					->set('version_id = ' . $db->q('7.0.0'))
-					->where('extension_id = ' . $db->quote($extensionid));
-				$db->setQuery($query);
-				$db->execute();
+				// Kunena 1.7 or older release..
+				$ignoreAdmin[] = 'install.script.php';
+				$ignoreAdmin[] = 'admin.biblestudy.php';
 			}
+			static $ignoreSite = array('index.html', 'biblestudy.php', 'router.php', 'COPYRIGHT.php', 'CHANGELOG.php');
+			$this->deleteFolder($adminPath, $ignoreAdmin);
+			$this->deleteFolder($sitePath, $ignoreSite);
 		}
 
-		$install_good = version_compare(PHP_VERSION, $this->_minimum_php, '<');
-
-		if (!$install_good)
+		// Prepare installation.
+		$model = "{$adminPath}/install/model.php";
+		if (file_exists($model))
 		{
-			$install_good = version_compare(JVERSION, $this->_minimum_joomla_release, 'ge');
-		}
-		else
-		{
-			JFactory::getApplication()->enqueueMessage('Your host needs to use PHP ' . $this->_minimum_php . ' or higher to run Joomla Bible Study');
-			$install_good = false;
+			require_once($model);
+			$installer = new BibleStudyModelInstall();
+			$installer->install();
 		}
 
-		// Only allow to install on minimum Joomla! version
-		return $install_good;
+		return true;
+//		// This component does not work with Joomla releases prior to 3.4
+//		// abort if the current Joomla release is older
+//
+//		// Extract the version number from the manifest. This will overwrite the 1.0 value set above
+//		/** @noinspection PhpUndefinedMethodInspection */
+//		$this->_release = $parent->get("manifest")->version;
+//
+//		// Start DB factory
+//		$db = JFactory::getDbo();
+//
+//		// Set the #__schemas version_id to the correct number so the update will occur if out of sequence.
+//		$query = $db->getQuery(true);
+//		$query->select('extension_id')
+//			->from('#__extensions')
+//			->where('name LIKE ' . $db->q('%com_biblestudy%'));
+//		$db->setQuery($query);
+//		$extensionid = $db->loadResult();
+//
+//		if ($extensionid)
+//		{
+//			$query = $db->getQuery(true);
+//			$query->select('version_id')
+//				->from('#__schemas')
+//				->where('extension_id = ' . $db->quote($extensionid));
+//			$db->setQuery($query);
+//			$jbsversion = $db->loadResult();
+//
+//			if ($jbsversion == '20100101')
+//			{
+//				$query = $db->getQuery(true);
+//				$query->update('#__schemas')
+//					->set('version_id = ' . $db->q('7.0.0'))
+//					->where('extension_id = ' . $db->quote($extensionid));
+//				$db->setQuery($query);
+//				$db->execute();
+//			}
+//		}
+//
+//		$install_good = version_compare(PHP_VERSION, $this->_minimum_php, '<');
+//
+//		if (!$install_good)
+//		{
+//			$install_good = version_compare(JVERSION, $this->_minimum_joomla_release, 'ge');
+//		}
+//		else
+//		{
+//			JFactory::getApplication()->enqueueMessage('Your host needs to use PHP ' . $this->_minimum_php . ' or higher to run Joomla Bible Study');
+//			$install_good = false;
+//		}
+//
+//		// Only allow to install on minimum Joomla! version
+//		return $install_good;
 	}
 
 	/**
@@ -117,207 +157,172 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @param   JInstallerFile  $parent  Where call is coming from
 	 *
-	 * @return  void
+	 * @return  bool
 	 */
 	public function install($parent)
 	{
-		$db     = JFactory::getDbo();
-		$buffer = file_get_contents(JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/sql/install-defaults.sql');
-
-		if ($buffer === false)
+		// Delete all cached files.
+		$cacheDir = JPATH_CACHE . '/biblestudy';
+		if (is_dir($cacheDir))
 		{
-			die('No install-defaults.sql file');
+			JFolder::delete($cacheDir);
 		}
+		JFolder::create($cacheDir);
 
-		// Create an array of queries from the sql file
-		$queries = $db->splitSql($buffer);
+		return true;
+//		$db     = JFactory::getDbo();
+//		$buffer = file_get_contents(JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/sql/install-defaults.sql');
+//
+//		if ($buffer === false)
+//		{
+//			die('No install-defaults.sql file');
+//		}
+//
+//		// Create an array of queries from the sql file
+//		$queries = $db->splitSql($buffer);
+//
+//		foreach ($queries as $querie)
+//		{
+//			$querie = trim($querie);
+//
+//			if ($querie != '' && $querie{0} != '#')
+//			{
+//				$db->setQuery($querie);
+//				if (!$db->execute())
+//				{
+//					JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_ERROR', $db->stderr(true)), JLog::WARNING, 'jerror');
+//					die;
+//				}
+//			}
+//		}
 
-		foreach ($queries as $querie)
-		{
-			$querie = trim($querie);
-
-			if ($querie != '' && $querie{0} != '#')
-			{
-				$db->setQuery($querie);
-				if (!$db->execute())
-				{
-					JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_ERROR', $db->stderr(true)), JLog::WARNING, 'jerror');
-					die;
-				}
-			}
-		}
-
-		require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/biblestudy.install.special.php';
-		$fresh = new JBSMFreshInstall;
-
-		if (!$fresh->installCSS())
-		{
-			JFactory::getApplication()->enqueueMessage(JText::_('JBS_INS_FAILURE'), 'error');
-		}
+		//require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/biblestudy.install.special.php';
+//		$fresh = new JBSMFreshInstall;
+//
+//		if (!$fresh->installCSS())
+//		{
+//			JFactory::getApplication()->enqueueMessage(JText::_('JBS_INS_FAILURE'), 'error');
+//		}
 
 	}
 
 	/**
-	 * Uninstall
+	 * Rout to Install
 	 *
-	 * @param   JInstallerFile  $parent  Where call is coming from
+	 * @param   JInstallerFile  $parent
 	 *
-	 * @return   void
+	 * @return bool
 	 */
-	public function uninstall($parent)
+	public function discover_install($parent)
 	{
-		JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
-
-		// Need to load JBSMDbHelper for script
-		$dbhelper    = new JBSMDbHelper;
-		$db    = JFactory::getDbo();
-		$drop_result = '';
-
-		if ($dbhelper->checkIfTable('#__bsms_admin'))
-		{
-			$query = $db->getQuery(true);
-			$query->select('*')
-				->from('#__bsms_admin')
-				->where('id = 1');
-			$db->setQuery($query);
-			$adminsettings = $db->loadObject();
-
-			$drop_tables = $adminsettings->drop_tables;
-
-			if ($drop_tables > 0)
-			{
-				// We must remove the assets manually each time
-				$query = $db->getQuery(true);
-				$query->select('id')
-					->from('#__assets')
-					->where('name = ' . $db->q($this->biblestudy_extension));
-				$db->setQuery($query);
-				$parent_id = $db->loadResult();
-				$query     = $db->getQuery(true);
-
-				if ($parent_id != '0')
-				{
-					$query->delete()
-						->from('#__assets')
-						->where('parent_id = ' . $db->q($parent_id))
-						->where('name != ' . $db->q('root.1'));
-					$db->setQuery($query);
-					$db->execute();
-				}
-
-				$query = $db->getQuery(true);
-				$query->delete()
-					->from('#__assets')
-					->where('name LIKE ' . $db->q($this->biblestudy_extension))
-					->where('name != ' . $db->q('root.1'));
-				$db->setQuery($query);
-				$db->execute();
-				$buffer = file_get_contents(JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/sql/uninstall-dbtables.sql');
-
-				// Graceful exit and rollback if read not successful
-				if ($buffer === false)
-				{
-					die('no uninstall-dbtables.sql');
-				}
-				$queries = $db->splitSql($buffer);
-
-				foreach ($queries as $querie)
-				{
-					$querie = trim($querie);
-
-					if ($querie != '' && $querie{0} != '#' && $querie != '`')
-					{
-						$db->setQuery($querie);
-						$db->execute();
-					}
-				}
-			}
-		}
-		else
-		{
-			$drop_result = '<h3>' . JText::_('JBS_INS_NO_DATABASE_REMOVED') . '</h3>';
-		}
-
-		// Post Install Messages Cleanup for Component
-		$query = $db->getQuery(true);
-		$query->delete('#__postinstall_messages')
-			->where($db->qn('language_extension') . ' = ' . $db->q('com_biblestudy'));
-		$db->setQuery($query);
-		$db->execute();
-
-		echo '<h2>' . JText::_('JBS_INS_UNINSTALLED') . ' ' . $this->_release . '</h2> <div>' . $drop_result . '</div>';
+		return self::install($parent);
 	}
 
 	/**
-	 * Update
+	 * Update will go to install
 	 *
-	 * @param   JInstallerAdapterComponent  $parent  Where call is coming from
+	 * @param   JInstallerFile  $parent
 	 *
-	 * @return   void
+	 * @return bool
 	 */
 	public function update($parent)
 	{
-		JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
-		$row = JTable::getInstance('extension');
-		$eid = $row->find(array('element' => strtolower($parent->get('element')), 'type' => 'component'));
+		return self::install($parent);
+	}
 
-		if ($eid)
+	/**
+	 * Uninstall rout to JBSMModelInstall
+	 *
+	 * @param   JInstallerFile  $parent
+	 *
+	 * @return bool
+	 */
+	public function uninstall($parent)
+	{
+		$adminpath = $parent->getParent()->getPath('extension_administrator');
+		$model     = "{$adminpath}/install/model.php";
+		if (file_exists($model))
 		{
-			$db         = JFactory::getDbo();
-
-			$files = str_replace('.sql', '', JFolder::files(JPATH_ADMINISTRATOR . $this->filePath, '\.sql$'));
-			if (!count($files))
-			{
-				return;
-			}
-
-			usort($files, 'version_compare');
-
-			// Load currently installed version
-			$query = $db->getQuery(true)
-				->select('version_id')
-				->from('#__schemas')
-				->where('extension_id = ' . $eid);
-			$db->setQuery($query);
-			$version = $db->loadResult();
-
-			// No version - use initial version.
-			if (!$version)
-			{
-				$version = '0.0.0';
-			}
-
-			// Used for php files updates.
-			require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
-
-			// We have a version!
-			foreach ($files as $file)
-			{
-				if (version_compare($file, $version) > 0)
-				{
-					$this->allUpdate($file, $db);
-					$this->updatePHP($file, $db);
-				}
-			}
-
-			// Update the database with new version
-			$query = $db->getQuery(true)
-				->delete('#__schemas')
-				->where('extension_id = ' . $eid);
-			$db->setQuery($query);
-
-			if ($db->execute())
-			{
-				$query->clear()->insert($db->quoteName('#__schemas'))
-					->columns(array($db->quoteName('extension_id'), $db->quoteName('version_id')))
-					->values($eid . ', ' . $db->quote(end($files)));
-				$db->setQuery($query);
-				$db->execute();
-			}
+			require_once($model);
+			$installer = new BibleStudyModelInstall();
+			$installer->uninstall();
 		}
 
-		return;
+		return true;
 	}
+
+
+
+//	/**
+//	 * Update
+//	 *
+//	 * @param   JInstallerAdapterComponent  $parent  Where call is coming from
+//	 *
+//	 * @return   void
+//	 */
+//	public function update($parent)
+//	{
+//		JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
+//		$row = JTable::getInstance('extension');
+//		$eid = $row->find(array('element' => strtolower($parent->get('element')), 'type' => 'component'));
+//
+//		if ($eid)
+//		{
+//			$db         = JFactory::getDbo();
+//
+//			$files = str_replace('.sql', '', JFolder::files(JPATH_ADMINISTRATOR . $this->filePath, '\.sql$'));
+//			if (!count($files))
+//			{
+//				return;
+//			}
+//
+//			usort($files, 'version_compare');
+//
+//			// Load currently installed version
+//			$query = $db->getQuery(true)
+//				->select('version_id')
+//				->from('#__schemas')
+//				->where('extension_id = ' . $eid);
+//			$db->setQuery($query);
+//			$version = $db->loadResult();
+//
+//			// No version - use initial version.
+//			if (!$version)
+//			{
+//				$version = '0.0.0';
+//			}
+//
+//			// Used for php files updates.
+//			require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
+//
+//			// We have a version!
+//			foreach ($files as $file)
+//			{
+//				if (version_compare($file, $version) > 0)
+//				{
+//					$this->allUpdate($file, $db);
+//					$this->updatePHP($file, $db);
+//				}
+//			}
+//
+//			// Update the database with new version
+//			$query = $db->getQuery(true)
+//				->delete('#__schemas')
+//				->where('extension_id = ' . $eid);
+//			$db->setQuery($query);
+//
+//			if ($db->execute())
+//			{
+//				$query->clear()->insert($db->quoteName('#__schemas'))
+//					->columns(array($db->quoteName('extension_id'), $db->quoteName('version_id')))
+//					->values($eid . ', ' . $db->quote(end($files)));
+//				$db->setQuery($query);
+//				$db->execute();
+//			}
+//		}
+//
+//		return;
+//	}
 
 	/**
 	 * Function to update using the version number for sql files
@@ -533,13 +538,184 @@ class Com_BiblestudyInstallerScript
 	}
 
 	/**
+	 * Check Requirements
+	 *
+	 * @param $version
+	 *
+	 * @return bool
+	 */
+	public function checkRequirements($version)
+	{
+		$db   = JFactory::getDbo();
+		$pass = $this->checkVersion('PHP', phpversion());
+		$pass &= $this->checkVersion('Joomla!', JVERSION);
+		$pass &= $this->checkVersion('MySQL', $db->getVersion());
+		$pass &= $this->checkDbo($db->name, array('mysql', 'mysqli'));
+		$pass &= $this->checkExtensions($this->extensions);
+		$pass &= $this->checkJBSM($version);
+
+		return $pass;
+	}
+
+	// Internal functions
+
+	/**
+	 * Check Database Driver
+	 *
+	 * @param $name
+	 * @param $types
+	 *
+	 * @return bool
+	 * @throws \Exception
+	 */
+	protected function checkDbo($name, $types)
+	{
+		$app = JFactory::getApplication();
+
+		if (in_array($name, $types))
+		{
+			return true;
+		}
+
+		$app->enqueueMessage(sprintf("Database driver '%s' is not supported. Please use MySQL instead.", $name), 'notice');
+
+		return false;
+	}
+
+	/**
+	 * Check PHP Extension Requirement
+	 *
+	 * @param   array  $extensions Array of version to look for
+	 *
+	 * @return int
+	 * @throws \Exception
+	 */
+	protected function checkExtensions($extensions)
+	{
+		$app = JFactory::getApplication();
+
+		$pass = 1;
+		foreach ($extensions as $name)
+		{
+			if (!extension_loaded($name))
+			{
+				$pass = 0;
+				$app->enqueueMessage(sprintf("Required PHP extension '%s' is missing. Please install it into your system.", $name), 'notice');
+			}
+		}
+
+		return $pass;
+	}
+
+		/**
+	 * Check Verions of JBSM
+	 *
+	 * @param   string  $name     Name of version
+	 * @param   string  $version  Version to look for
+	 *
+	 * @return bool
+	 * @throws \Exception
+	 */
+	protected function checkVersion($name, $version)
+	{
+		$app = JFactory::getApplication();
+
+		$major = $minor = 0;
+		foreach ($this->versions[$name] as $major => $minor)
+		{
+			if (!$major || version_compare($version, $major, '<'))
+			{
+				continue;
+			}
+
+			if (version_compare($version, $minor, '>='))
+			{
+				return true;
+			}
+
+			break;
+		}
+		if (!$major)
+		{
+			$minor = reset($this->versions[$name]);
+		}
+		$recommended = end($this->versions[$name]);
+		$app->enqueueMessage(sprintf("%s %s is not supported. Minimum required version is %s %s, but it is higly recommended to use %s %s or later.", $name, $version, $name, $minor, $name, $recommended), 'notice');
+
+		return false;
+	}
+
+	/**
+	 * Check the installed version of JBSM
+	 *
+	 * @param   Joomla\String\ $version
+	 *
+	 * @return bool
+	 * @throws \Exception
+	 */
+	protected function checkJBSM($version)
+	{
+		$app = JFactory::getApplication();
+
+		// Allways load Kunena API if it exists.
+		$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+
+		if (file_exists($api))
+		{
+			require_once $api;
+		}
+
+		// Do not install over Git repository (K1.6+).
+//		if ((class_exists('JBSMFrame') && method_exists('JBSMFrame', 'isSvn') && JBSMFrame::isSvn())
+//			|| (class_exists('JBSMFrame') && method_exists('JBSMFrame', 'isDev') && JBSMFrame::isDev())
+//		)
+//		{
+//			$app->enqueueMessage('Oops! You should not install BibleStudy over your Git reporitory!', 'notice');
+//
+//			return false;
+//		}
+
+		$db = JFactory::getDBO();
+
+		// Check if JBSM can be found from the database
+		$table = $db->getPrefix() . 'bsms_update';
+		$db->setQuery("SHOW TABLES LIKE {$db->quote($table)}");
+
+		if ($db->loadResult() != $table)
+		{
+			return true;
+		}
+
+		// Get installed JBSM version
+		$db->setQuery("SELECT version FROM {$db->quoteName($table)} ORDER BY `id` DESC", 0, 1);
+		$installed = $db->loadResult();
+
+		if (!$installed)
+		{
+			return true;
+		}
+
+		// Always allow upgrade to the newer version
+		if (version_compare($version, $installed, '>='))
+		{
+			return true;
+		}
+
+		$app->enqueueMessage(sprintf('Sorry, it is not possible to downgrade BibleStudy %s to version %s.', $installed, $version), 'notice');
+
+		return false;
+	}
+
+	/**
 	 * Remove Old Files and Folders
 	 *
 	 * @since 7.1.0
 	 *
 	 * @return   void
+	 *
+	 * @deprecated 9.0.0
 	 */
-	public function deleteUnexistingFiles()
+	protected function deleteUnexistingFiles()
 	{
 		$files = array(
 			'/media/com_biblestudy/css/biblestudy.css.dist',
@@ -986,6 +1162,8 @@ class Com_BiblestudyInstallerScript
 	 * Old Update URL's
 	 *
 	 * @return array
+	 *
+	 * @deprecated 9.0.0
 	 */
 	public function rmoldurl()
 	{
@@ -997,5 +1175,67 @@ class Com_BiblestudyInstallerScript
 			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=5&dummy=extension.xml /extension.xml");
 
 		return $urls;
+	}
+
+	/**
+	 * Delete Files
+	 *
+	 * @param       $path
+	 * @param array $ignore
+	 *
+	 * @return void
+	 */
+	public function deleteFiles($path, $ignore = array())
+	{
+		$ignore = array_merge($ignore, array('.git', '.svn', 'CVS', '.DS_Store', '__MACOSX'));
+
+		if (JFolder::exists($path))
+		{
+			foreach (JFolder::files($path, '.', false, true, $ignore) as $file)
+			{
+				if (JFile::exists($file))
+				{
+					JFile::delete($file);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Delete Folders
+	 *
+	 * @param   array  $path    Path to folders
+	 * @param   array  $ignore  Ingnore array of files
+	 *
+	 * @return void;
+	 */
+	public function deleteFolders($path, $ignore = array())
+	{
+		$ignore = array_merge($ignore, array('.git', '.svn', 'CVS', '.DS_Store', '__MACOSX'));
+
+		if (JFolder::exists($path))
+		{
+			foreach (JFolder::folders($path, '.', false, true, $ignore) as $folder)
+			{
+				if (JFolder::exists($folder))
+				{
+					JFolder::delete($folder);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Delete Folder
+	 *
+	 * @param       $path
+	 * @param array $ignore
+	 *
+	 * @return void
+	 */
+	public function deleteFolder($path, $ignore = array())
+	{
+		$this->deleteFiles($path, $ignore);
+		$this->deleteFolders($path, $ignore);
 	}
 }

@@ -18,16 +18,64 @@ defined('_JEXEC') or die;
  */
 class BiblestudyControllerInstall extends JControllerForm
 {
-
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
-	 *
-	 * @since   12.2
+	 * @param   array $config An optional associative array of configuration settings.
 	 */
 	public function __construct($config = array())
 	{
 		parent::__construct($config);
+
+		$this->modelName = 'install';
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @param   string $task An optional associative array of configuration settings.
+	 *
+	 * @return void
+	 */
+	public function execute($task)
+	{
+		if ($task != 'run')
+		{
+			$task = 'browse';
+		}
+		parent::execute($task);
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @return void
+	 */
+	public function browse()
+	{
+		$app = JFactory::getApplication();
+		/** @var BibleStudyModelInstall $model */
+		$model = $this->getModel('install');
+		$state = $model->startScanning();
+		$app->input->set('scanstate', $state);
+
+		$this->display(false);
+	}
+
+	/**
+	 * Run Function
+	 *
+	 * @return void
+	 *
+	 * @since 8.0.0
+	 */
+	public function run()
+	{
+		$app   = JFactory::getApplication();
+		$model = $this->getModel('install');
+		$state = $model->run();
+		$app->input->set('scanstate', $state);
+
+		$this->display(false);
 	}
 }

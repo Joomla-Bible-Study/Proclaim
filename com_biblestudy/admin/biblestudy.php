@@ -42,9 +42,26 @@ $language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, null, true);
 
 addCSS();
 
+$app = JFactory::getApplication();
+
+$jbsstate = JBSMDbHelper::getInstallState();
+
+$type = $app->input->getWord('view');
+
 $controller = JControllerLegacy::getInstance('Biblestudy');
-$controller->execute(JFactory::getApplication()->input->getCmd('task'));
-$controller->redirect();
+
+$controller->execute($app->input->getCmd('task'));
+if ($jbsstate && $type == 'install')
+{
+	$cache = new JCache(array('defaultgroup' => 'default'));
+	$cache->clean();
+	$app->input->set('view', 'install');
+	$controller->setRedirect('index.php?option=com_biblestudy&view=install');
+}
+else
+{
+	$controller->redirect();
+}
 
 /**
  * Global css
