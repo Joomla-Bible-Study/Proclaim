@@ -81,7 +81,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		$this->resetTimer();
 		$this->getVersions();
 		$this->postinstallclenup(JFactory::getDbo());
-		$this->_finish = array('updateversion', 'fixassets', 'fixmenus', 'fixemptyaccess', 'fixemptylanguage');
+		$this->_finish = array('updateversion', 'fixassets', 'fixmenus', 'fixemptyaccess', 'fixemptylanguage', 'finish');
 		$this->totalVersions += count($this->_finish);
 
 		if (empty($this->_versionStack))
@@ -153,9 +153,6 @@ class BibleStudyModelInstall extends JModelLegacy
 		if($this->type != 'migration')
 		{
 			$this->type = 'install';
-			var_dump($this->_finish);
-			var_dump(count($this->_finish) . ' count for finish');
-			$this->totalVersions += count($this->_finish);
 			return true;
 
 		}
@@ -582,6 +579,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		if ($this->type == 'install' && JBSMDbHelper::getInstallState())
 		{
 			JBSMDbHelper::resetdb(true);
+			$this->doneVersions++;
 		}
 
 		if ($this->_isimport)
@@ -647,10 +645,6 @@ class BibleStudyModelInstall extends JModelLegacy
 	 */
 	private function finish($step)
 	{
-		var_dump($step);
-		var_dump($this->_finish);
-		var_dump($this->totalVersions);
-		var_dump($this->doneVersions);
 		$app = JFactory::getApplication();
 		$installer = new Com_BiblestudyInstallerScript;
 		switch ($step)
@@ -682,7 +676,6 @@ class BibleStudyModelInstall extends JModelLegacy
 			default:
 				$app->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . JText::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE'), 'message');
 				break;
-
 		}
 
 		return true;
