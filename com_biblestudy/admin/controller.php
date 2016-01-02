@@ -55,23 +55,20 @@ class BiblestudyController extends JControllerLegacy
 
 		$jbsstate = JBSMDbHelper::getInstallState();
 
-		$type = $app->input->getWord('view');
-
-		if ($jbsstate && $type != 'install')
+		if ($jbsstate && $view != 'install')
 		{
 			$cache = new JCache(array('defaultgroup' => 'default'));
 			$cache->clean();
 			$app->input->set('view', 'install');
 			$app->input->set('task', '');
 			$this->setRedirect('index.php?option=com_biblestudy&view=install&' . JSession::getFormToken() . '=1');
-			return parent::display();
 		}
 
-		if (!$type)
+		if (!$view)
 		{
 			$app->input->set('view ', 'cpanel');
 		}
-		if ($type == 'admin')
+		if ($view == 'admin')
 		{
 			$tool = $app->input->get('tooltype', '', 'post');
 
@@ -154,7 +151,7 @@ class BiblestudyController extends JControllerLegacy
 		$app  = JFactory::getApplication();
 		$db   = JFactory::getDbo();
 		$msg  = null;
-		$data = $app->input->get('jform', array(), 'post', 'array  ');
+		$data = $app->input->get('jform', array(), 'post');
 		$from = $data['params']['pFrom'];
 		$to   = $data['params']['pTo'];
 
@@ -197,7 +194,7 @@ class BiblestudyController extends JControllerLegacy
 	public function resetHits()
 	{
 		$app   = JFactory::getApplication();
-		$id    = $app->input->getInt('id', 0, 'get');
+		$id    = $app->input->getInt('id', 0);
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_studies')
@@ -225,7 +222,7 @@ class BiblestudyController extends JControllerLegacy
 	public function resetDownloads()
 	{
 		$app   = JFactory::getApplication();
-		$id    = $app->input->getInt('id', 0, 'get');
+		$id    = $app->input->getInt('id', 0);
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
@@ -253,7 +250,7 @@ class BiblestudyController extends JControllerLegacy
 	public function resetPlays()
 	{
 		$jinput = new JInput;
-		$id     = $jinput->getInt('id', 0, 'get');
+		$id     = $jinput->getInt('id', 0);
 		$db     = JFactory::getDbo();
 		$query  = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
@@ -291,8 +288,8 @@ class BiblestudyController extends JControllerLegacy
 		jimport('joomla.filesystem.file');
 
 		// Get the server and folder id from the request
-		$serverid = $jinput->getInt('upload_server', '', 'post');
-		$folderid = $jinput->getInt('upload_folder', '', 'post');
+		$serverid = $jinput->getInt('upload_server', '');
+		$folderid = $jinput->getInt('upload_folder', '');
 		$app      = JFactory::getApplication();
 		$app->setUserState($option . 'serverid', $serverid);
 		$app->setUserState($option . 'folderid', $folderid);
@@ -342,7 +339,6 @@ class BiblestudyController extends JControllerLegacy
 
 		// Delete temp file
 		JBSMUpload::deletetempfile($tempfile);
-		$mediafileid = $jinput->getInt('id', '', 'post');
 
 		if ($layout == ' modal')
 		{
@@ -352,6 +348,8 @@ class BiblestudyController extends JControllerLegacy
 		{
 			$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid . '&' . JSession::getFormToken() . '=1', $uploadmsg);
 		}
+
+		return;
 	}
 
 	/**
@@ -367,8 +365,8 @@ class BiblestudyController extends JControllerLegacy
 		$option    = $jinput->getCmd('option');
 		$uploadmsg = '';
 		$size      = 0;
-		$serverid  = $jinput->getInt('upload_server', '', 'post');
-		$folderid  = $jinput->getInt('upload_folder', '', 'post');
+		$serverid  = $jinput->getInt('upload_server', '');
+		$folderid  = $jinput->getInt('upload_folder', '');
 		$form      = $jinput->get('jform', array(), 'post', 'array');
 		$returnid  = $form['id'];
 		$url       = 'index.php?option=com_biblestudy&view=mediafile&id=' . $form['id'] . '&' . JSession::getFormToken() . '=1';

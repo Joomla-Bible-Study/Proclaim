@@ -98,58 +98,6 @@ class Com_BiblestudyInstallerScript
 		}
 
 		return true;
-//		// This component does not work with Joomla releases prior to 3.4
-//		// abort if the current Joomla release is older
-//
-//		// Extract the version number from the manifest. This will overwrite the 1.0 value set above
-//		/** @noinspection PhpUndefinedMethodInspection */
-//		$this->_release = $parent->get("manifest")->version;
-//
-//		// Start DB factory
-//		$db = JFactory::getDbo();
-//
-//		// Set the #__schemas version_id to the correct number so the update will occur if out of sequence.
-//		$query = $db->getQuery(true);
-//		$query->select('extension_id')
-//			->from('#__extensions')
-//			->where('name LIKE ' . $db->q('%com_biblestudy%'));
-//		$db->setQuery($query);
-//		$extensionid = $db->loadResult();
-//
-//		if ($extensionid)
-//		{
-//			$query = $db->getQuery(true);
-//			$query->select('version_id')
-//				->from('#__schemas')
-//				->where('extension_id = ' . $db->quote($extensionid));
-//			$db->setQuery($query);
-//			$jbsversion = $db->loadResult();
-//
-//			if ($jbsversion == '20100101')
-//			{
-//				$query = $db->getQuery(true);
-//				$query->update('#__schemas')
-//					->set('version_id = ' . $db->q('7.0.0'))
-//					->where('extension_id = ' . $db->quote($extensionid));
-//				$db->setQuery($query);
-//				$db->execute();
-//			}
-//		}
-//
-//		$install_good = version_compare(PHP_VERSION, $this->_minimum_php, '<');
-//
-//		if (!$install_good)
-//		{
-//			$install_good = version_compare(JVERSION, $this->_minimum_joomla_release, 'ge');
-//		}
-//		else
-//		{
-//			JFactory::getApplication()->enqueueMessage('Your host needs to use PHP ' . $this->_minimum_php . ' or higher to run Joomla Bible Study');
-//			$install_good = false;
-//		}
-//
-//		// Only allow to install on minimum Joomla! version
-//		return $install_good;
 	}
 
 	/**
@@ -170,31 +118,6 @@ class Com_BiblestudyInstallerScript
 		JFolder::create($cacheDir);
 
 		return true;
-//		$db     = JFactory::getDbo();
-//		$buffer = file_get_contents(JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/sql/install-defaults.sql');
-//
-//		if ($buffer === false)
-//		{
-//			die('No install-defaults.sql file');
-//		}
-//
-//		// Create an array of queries from the sql file
-//		$queries = $db->splitSql($buffer);
-//
-//		foreach ($queries as $querie)
-//		{
-//			$querie = trim($querie);
-//
-//			if ($querie != '' && $querie{0} != '#')
-//			{
-//				$db->setQuery($querie);
-//				if (!$db->execute())
-//				{
-//					JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_ERROR', $db->stderr(true)), JLog::WARNING, 'jerror');
-//					die;
-//				}
-//			}
-//		}
 
 		//require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/biblestudy.install.special.php';
 //		$fresh = new JBSMFreshInstall;
@@ -430,54 +353,54 @@ class Com_BiblestudyInstallerScript
 			// Copy the images to the new folder
 			JFolder::copy('/media/com_biblestudy/images', 'images/biblestudy/', JPATH_SITE, true);
 		}
-
-		// Set the #__schemas version_id to the correct number for error from 7.0.0
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true);
-		$query->select('extension_id')
-			->from('#__extensions')
-			->where('name LIKE' . $db->q('%com_biblestudy%'));
-		$db->setQuery($query);
-		$extensionid = $db->loadResult();
-
-		if ($extensionid)
-		{
-			$query = $db->getQuery(true);
-			$query->select('version_id')
-				->from('#__schemas')
-				->where('extension_id = ' . $db->q($extensionid));
-			$db->setQuery($query);
-			$jbsversion = $db->loadResult();
-
-			if ($jbsversion == '20100101')
-			{
-				$query = $db->getQuery(true);
-				$query->update('#__schemas')
-					->set('version_id = ' . $db->q($this->_release))
-					->where('extension_id = ' . $db->q($extensionid));
-				$db->setQuery($query);
-				$db->execute();
-			}
-		}
-
-		// Set initial values for component parameters
-		$params['my_param0'] = 'Component version ' . $this->_release;
-		$params['my_param1'] = 'Start';
-		$params['my_param2'] = '1';
-		$this->setParams($params);
-
-		// Set install state
-		$subquery = '{"release":"' . $this->_release . '","jbsparent":"' .
-			$parent . '","jbstype":"' . $type . '","jbsname":"com_biblestudy"}';
-		$query1   = $db->getQuery(true);
-		$query1->update('#__bsms_admin')
-			->set('installstate = ' . $db->q($subquery))
-			->where('id = 1');
-		$db->setQuery($query1);
-		$db->execute();
+//
+//		// Set the #__schemas version_id to the correct number for error from 7.0.0
+//		$db = JFactory::getDbo();
+//		$query = $db->getQuery(true);
+//		$query->select('extension_id')
+//			->from('#__extensions')
+//			->where('name LIKE' . $db->q('%com_biblestudy%'));
+//		$db->setQuery($query);
+//		$extensionid = $db->loadResult();
+//
+//		if ($extensionid)
+//		{
+//			$query = $db->getQuery(true);
+//			$query->select('version_id')
+//				->from('#__schemas')
+//				->where('extension_id = ' . $db->q($extensionid));
+//			$db->setQuery($query);
+//			$jbsversion = $db->loadResult();
+//
+//			if ($jbsversion == '20100101')
+//			{
+//				$query = $db->getQuery(true);
+//				$query->update('#__schemas')
+//					->set('version_id = ' . $db->q($this->_release))
+//					->where('extension_id = ' . $db->q($extensionid));
+//				$db->setQuery($query);
+//				$db->execute();
+//			}
+//		}
+//
+//		// Set initial values for component parameters
+//		$params['my_param0'] = 'Component version ' . $this->_release;
+//		$params['my_param1'] = 'Start';
+//		$params['my_param2'] = '1';
+//		$this->setParams($params);
+//
+//		// Set install state
+//		$subquery = '{"release":"' . $this->_release . '","jbsparent":"' .
+//			$parent . '","jbstype":"' . $type . '","jbsname":"com_biblestudy"}';
+//		$query1   = $db->getQuery(true);
+//		$query1->update('#__bsms_admin')
+//			->set('installstate = ' . $db->q($subquery))
+//			->where('id = 1');
+//		$db->setQuery($query1);
+//		$db->execute();
 
 		// An redirect to a new location after the install is completed.
-		$parent->getParent()->set('redirect_url', JUri::base() . 'index.php?option=com_biblestudy');
+		$parent->getParent()->set('redirect_url', JUri::base() . 'index.php?option=com_biblestudy&' . JSession::getFormToken() . '=1');
 	}
 
 	/**

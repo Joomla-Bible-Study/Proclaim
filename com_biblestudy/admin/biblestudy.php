@@ -18,6 +18,7 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy'))
 	throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'), 404);
 }
 
+// @todo depercate this to us api.php as new loader. bcc
 include_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
 
 if (version_compare(PHP_VERSION, BIBLESTUDY_MIN_PHP, '<'))
@@ -58,10 +59,8 @@ if ($jbsstate && $type == 'install')
 	$app->input->set('view', 'install');
 	$controller->setRedirect('index.php?option=com_biblestudy&view=install');
 }
-else
-{
-	$controller->redirect();
-}
+
+$controller->redirect();
 
 /**
  * Global css
