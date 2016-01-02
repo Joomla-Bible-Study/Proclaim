@@ -26,9 +26,6 @@ class Com_BiblestudyInstallerScript
 	/** @var string Path to Mysql files */
 	public $filePath = '/components/com_biblestudy/install/sql/updates/mysql';
 
-	/** @var string The release value to be displayed and check against throughout this file. */
-	private $_release = '9.0.0';
-
 	protected $versions = array(
 		'PHP'     => array(
 			'5.3' => '5.3.1',
@@ -75,11 +72,11 @@ class Com_BiblestudyInstallerScript
 
 		if (is_file($adminPath . '/admin.biblestudy.php'))
 		{
-			// Kunena 2.0 or older release found, clean up the directories.
+			// JBSM 8.0 or older release found, clean up the directories.
 			static $ignoreAdmin = array('index.html', 'biblestudy.xml', 'archive');
 			if (is_file($adminPath . '/install.script.php'))
 			{
-				// Kunena 1.7 or older release..
+				// JBSM 6.2 or older release..
 				$ignoreAdmin[] = 'install.script.php';
 				$ignoreAdmin[] = 'admin.biblestudy.php';
 			}
@@ -89,11 +86,11 @@ class Com_BiblestudyInstallerScript
 		}
 
 		// Prepare installation.
-		$model = "{$adminPath}/install/model.php";
+		$model = "{$adminPath}/models/install.php";
 		if (file_exists($model))
 		{
 			require_once($model);
-			$installer = new BibleStudyModelInstall();
+			$installer = new BibleStudyModelInstall;
 			$installer->install();
 		}
 
@@ -119,20 +116,20 @@ class Com_BiblestudyInstallerScript
 
 		return true;
 
-		//require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/biblestudy.install.special.php';
-//		$fresh = new JBSMFreshInstall;
-//
-//		if (!$fresh->installCSS())
-//		{
-//			JFactory::getApplication()->enqueueMessage(JText::_('JBS_INS_FAILURE'), 'error');
-//		}
+/*		require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/biblestudy.install.special.php';
+		$fresh = new JBSMFreshInstall;
+
+		if (!$fresh->installCSS())
+		{
+			JFactory::getApplication()->enqueueMessage(JText::_('JBS_INS_FAILURE'), 'error');
+		} */
 
 	}
 
 	/**
 	 * Rout to Install
 	 *
-	 * @param   JInstallerFile  $parent
+	 * @param   JInstallerFile  $parent  ?
 	 *
 	 * @return bool
 	 */
@@ -144,7 +141,7 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * Update will go to install
 	 *
-	 * @param   JInstallerFile  $parent
+	 * @param   JInstallerFile  $parent  ?
 	 *
 	 * @return bool
 	 */
@@ -156,96 +153,23 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * Uninstall rout to JBSMModelInstall
 	 *
-	 * @param   JInstallerFile  $parent
+	 * @param   JInstallerFile  $parent  ?
 	 *
 	 * @return bool
 	 */
 	public function uninstall($parent)
 	{
 		$adminpath = $parent->getParent()->getPath('extension_administrator');
-		$model     = "{$adminpath}/install/model.php";
+		$model     = "{$adminpath}/models/install.php";
 		if (file_exists($model))
 		{
 			require_once($model);
-			$installer = new BibleStudyModelInstall();
+			$installer = new BibleStudyModelInstall;
 			$installer->uninstall();
 		}
 
 		return true;
 	}
-
-
-
-//	/**
-//	 * Update
-//	 *
-//	 * @param   JInstallerAdapterComponent  $parent  Where call is coming from
-//	 *
-//	 * @return   void
-//	 */
-//	public function update($parent)
-//	{
-//		JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
-//		$row = JTable::getInstance('extension');
-//		$eid = $row->find(array('element' => strtolower($parent->get('element')), 'type' => 'component'));
-//
-//		if ($eid)
-//		{
-//			$db         = JFactory::getDbo();
-//
-//			$files = str_replace('.sql', '', JFolder::files(JPATH_ADMINISTRATOR . $this->filePath, '\.sql$'));
-//			if (!count($files))
-//			{
-//				return;
-//			}
-//
-//			usort($files, 'version_compare');
-//
-//			// Load currently installed version
-//			$query = $db->getQuery(true)
-//				->select('version_id')
-//				->from('#__schemas')
-//				->where('extension_id = ' . $eid);
-//			$db->setQuery($query);
-//			$version = $db->loadResult();
-//
-//			// No version - use initial version.
-//			if (!$version)
-//			{
-//				$version = '0.0.0';
-//			}
-//
-//			// Used for php files updates.
-//			require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
-//
-//			// We have a version!
-//			foreach ($files as $file)
-//			{
-//				if (version_compare($file, $version) > 0)
-//				{
-//					$this->allUpdate($file, $db);
-//					$this->updatePHP($file, $db);
-//				}
-//			}
-//
-//			// Update the database with new version
-//			$query = $db->getQuery(true)
-//				->delete('#__schemas')
-//				->where('extension_id = ' . $eid);
-//			$db->setQuery($query);
-//
-//			if ($db->execute())
-//			{
-//				$query->clear()->insert($db->quoteName('#__schemas'))
-//					->columns(array($db->quoteName('extension_id'), $db->quoteName('version_id')))
-//					->values($eid . ', ' . $db->quote(end($files)));
-//				$db->setQuery($query);
-//				$db->execute();
-//			}
-//		}
-//
-//		return;
-//	}
 
 	/**
 	 * Function to update using the version number for sql files
@@ -353,51 +277,6 @@ class Com_BiblestudyInstallerScript
 			// Copy the images to the new folder
 			JFolder::copy('/media/com_biblestudy/images', 'images/biblestudy/', JPATH_SITE, true);
 		}
-//
-//		// Set the #__schemas version_id to the correct number for error from 7.0.0
-//		$db = JFactory::getDbo();
-//		$query = $db->getQuery(true);
-//		$query->select('extension_id')
-//			->from('#__extensions')
-//			->where('name LIKE' . $db->q('%com_biblestudy%'));
-//		$db->setQuery($query);
-//		$extensionid = $db->loadResult();
-//
-//		if ($extensionid)
-//		{
-//			$query = $db->getQuery(true);
-//			$query->select('version_id')
-//				->from('#__schemas')
-//				->where('extension_id = ' . $db->q($extensionid));
-//			$db->setQuery($query);
-//			$jbsversion = $db->loadResult();
-//
-//			if ($jbsversion == '20100101')
-//			{
-//				$query = $db->getQuery(true);
-//				$query->update('#__schemas')
-//					->set('version_id = ' . $db->q($this->_release))
-//					->where('extension_id = ' . $db->q($extensionid));
-//				$db->setQuery($query);
-//				$db->execute();
-//			}
-//		}
-//
-//		// Set initial values for component parameters
-//		$params['my_param0'] = 'Component version ' . $this->_release;
-//		$params['my_param1'] = 'Start';
-//		$params['my_param2'] = '1';
-//		$this->setParams($params);
-//
-//		// Set install state
-//		$subquery = '{"release":"' . $this->_release . '","jbsparent":"' .
-//			$parent . '","jbstype":"' . $type . '","jbsname":"com_biblestudy"}';
-//		$query1   = $db->getQuery(true);
-//		$query1->update('#__bsms_admin')
-//			->set('installstate = ' . $db->q($subquery))
-//			->where('id = 1');
-//		$db->setQuery($query1);
-//		$db->execute();
 
 		// An redirect to a new location after the install is completed.
 		$parent->getParent()->set('redirect_url', JUri::base() . 'index.php?option=com_biblestudy&' . JSession::getFormToken() . '=1');

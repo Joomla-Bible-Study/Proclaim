@@ -306,7 +306,8 @@ class BiblestudyController extends JControllerLegacy
 
 		if ($layout == 'modal')
 		{
-			$url = 'index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid . '&' . JSession::getFormToken() . '=1';
+			$url = 'index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid .
+					'&' . JSession::getFormToken() . '=1';
 		}
 		else
 		{
@@ -342,11 +343,15 @@ class BiblestudyController extends JControllerLegacy
 
 		if ($layout == ' modal')
 		{
-			$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid . '&' . JSession::getFormToken() . '=1', $uploadmsg);
+			$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid .
+					'&' . JSession::getFormToken() . '=1', $uploadmsg
+			);
 		}
 		else
 		{
-			$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid . '&' . JSession::getFormToken() . '=1', $uploadmsg);
+			$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid . '&' .
+					JSession::getFormToken() . '=1', $uploadmsg
+			);
 		}
 
 		return;
@@ -398,11 +403,15 @@ class BiblestudyController extends JControllerLegacy
 
 		if ($layout == 'modal')
 		{
-			$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid . '&' . JSession::getFormToken() . '=1', $uploadmsg);
+			$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid .
+					'&' . JSession::getFormToken() . '=1', $uploadmsg
+			);
 		}
 		else
 		{
-			$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid . '&' . JSession::getFormToken() . '=1', $uploadmsg);
+			$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid . '&' .
+					JSession::getFormToken() . '=1', $uploadmsg
+			);
 		}
 
 		return;
