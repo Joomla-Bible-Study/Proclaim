@@ -51,15 +51,14 @@ $type = $app->input->getWord('view');
 
 $controller = JControllerLegacy::getInstance('Biblestudy');
 
-$controller->execute($app->input->getCmd('task'));
 if ($jbsstate && $type == 'install')
 {
 	$cache = new JCache(array('defaultgroup' => 'default'));
 	$cache->clean();
-	$app->input->set('view', 'install');
-	$controller->setRedirect('index.php?option=com_biblestudy&view=install');
+	$app->input->set('task', 'browse');
 }
 
+$controller->execute($app->input->getCmd('task'));
 $controller->redirect();
 
 /**

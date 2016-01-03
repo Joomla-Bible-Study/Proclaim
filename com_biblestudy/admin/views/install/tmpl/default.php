@@ -13,7 +13,7 @@ defined('_JEXEC') or die();
 
 JHtml::_('behavior.modal');
 
-if ($this->totalVersions != '0')
+if ($this->totalSteps != '0')
 {
 	$pre = $this->doneSteps . ' of ' . $this->totalSteps;
 }
