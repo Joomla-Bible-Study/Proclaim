@@ -98,8 +98,6 @@ class BibleStudyModelInstall extends JModelLegacy
 		$this->resetTimer();
 		$this->getSteps();
 		$this->postinstallclenup();
-		$this->_finish = array('updateversion', 'fixassets', 'fixmenus', 'fixemptyaccess', 'fixemptylanguage', 'finish');
-		$this->totalSteps += count($this->_finish);
 
 		if (empty($this->_versionStack))
 		{
@@ -168,6 +166,10 @@ class BibleStudyModelInstall extends JModelLegacy
 		$olderversiontype = 0;
 		$app              = JFactory::getApplication();
 		$check            = JBSMDbHelper::getInstallState();
+
+		// Set Finishing Steps
+		$this->_finish = array('updateversion', 'fixassets', 'fixmenus', 'fixemptyaccess', 'fixemptylanguage', 'finish');
+		$this->totalSteps += count($this->_finish);
 
 		// Check to see if this is not a migration before proceding.
 		if ($this->type != 'migration' && $check)
@@ -534,8 +536,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			$this->resetTimer();
 		}
 
-		$this->loadStack();
-		$result = true;
+		$result = $this->loadStack();
 
 		while ($result && $this->haveEnoughTime())
 		{
@@ -555,13 +556,13 @@ class BibleStudyModelInstall extends JModelLegacy
 	public function browse()
 	{
 		$this->startScanning();
-		$this->run();
+		return;
 	}
 
 	/**
 	 * Loads the Versions/SQL/After stack from the session
 	 *
-	 * @return void
+	 * @return bool
 	 */
 	private function loadStack()
 	{
@@ -577,7 +578,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			$this->doneSteps     = 0;
 			$this->running       = JText::_('JBS_MIG_STARTING');
 
-			return;
+			return false;
 		}
 
 		if (function_exists('base64_encode') && function_exists('base64_decode'))
@@ -597,6 +598,8 @@ class BibleStudyModelInstall extends JModelLegacy
 		$this->totalSteps    = $stack['total'];
 		$this->doneSteps     = $stack['done'];
 		$this->running       = $stack['run'];
+
+		return true;
 
 	}
 
