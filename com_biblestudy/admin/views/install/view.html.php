@@ -21,11 +21,11 @@ JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/compo
 class BiblestudyViewInstall extends JViewLegacy
 {
 
-	/** @var int Total numbers of Versions */
-	public $totalVersions = 0;
+	/** @var int Total numbers of Steps */
+	public $totalSteps = 0;
 
-	/** @var int Numbers of Versions already processed */
-	public $doneVersions = 0;
+	/** @var int Numbers of Steps already processed */
+	public $doneSteps = 0;
 
 	/** @var string Running Now */
 	public $running = 'Prepering';
@@ -48,6 +48,9 @@ class BiblestudyViewInstall extends JViewLegacy
 	/** @var array Array of Finish Task */
 	private $_finish = array();
 
+	/** @var array Array of Install Task */
+	private $_install = array();
+
 	/**
 	 * Display
 	 *
@@ -67,9 +70,9 @@ class BiblestudyViewInstall extends JViewLegacy
 
 		if ($state)
 		{
-			if ($this->totalVersions > 0)
+			if ($this->totalSteps > 0)
 			{
-				$percent = round($this->doneVersions / $this->totalVersions * 100);
+				$percent = round($this->doneSteps / $this->totalSteps * 100);
 			}
 
 			$more = true;
@@ -119,8 +122,9 @@ class BiblestudyViewInstall extends JViewLegacy
 		{
 			$this->_versionStack = array();
 			$this->_finish       = array();
-			$this->totalVersions = 0;
-			$this->doneVersions  = 0;
+			$this->_install      = array();
+			$this->totalSteps    = 0;
+			$this->doneSteps     = 0;
 			$this->running       = null;
 
 			return;
@@ -143,8 +147,9 @@ class BiblestudyViewInstall extends JViewLegacy
 
 		$this->_versionStack = $stack['version'];
 		$this->_finish       = $stack['finish'];
-		$this->totalVersions = $stack['total'];
-		$this->doneVersions  = $stack['done'];
+		$this->_install      = $stack['install'];
+		$this->totalSteps    = $stack['total'];
+		$this->doneSteps     = $stack['done'];
 		$this->running       = $stack['run'];
 
 	}

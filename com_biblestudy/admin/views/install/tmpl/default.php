@@ -15,7 +15,7 @@ JHtml::_('behavior.modal');
 
 if ($this->totalVersions != '0')
 {
-	$pre = $this->doneVersions . ' of ' . $this->totalVersions;
+	$pre = $this->doneSteps . ' of ' . $this->totalSteps;
 }
 else
 {

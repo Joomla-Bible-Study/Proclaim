@@ -254,7 +254,7 @@ class JBSMDbHelper
 	/**
 	 * Get State of install for Main Admin Controller
 	 *
-	 * @return Registry
+	 * @return Registry|bool
 	 *
 	 * @since 7.1.0
 	 */

@@ -14,18 +14,6 @@
 	<!-- Installer Hooks -->
 	<scriptfile>biblestudy.script.php</scriptfile>
 
-	<!-- SQL Files -->
-	<install> <!-- Runs on install -->
-		<sql>
-			<file driver="mysql" charset="utf8">install/sql/install.sql</file>
-		</sql>
-	</install>
-	<uninstall> <!-- Runs on uninstall -->
-		<sql>
-			<file driver="mysql" charset="utf8">install/sql/uninstall.sql</file>
-		</sql>
-	</uninstall>
-
 	<files folder="site">
 		<filename>biblestudy.php</filename>
 		<filename>controller.php</filename>
