@@ -118,23 +118,6 @@ class BibleStudyModelInstall extends JModelLegacy
 	}
 
 	/**
-	 * Resets the Versions/SQL/After stack saved in the session
-	 *
-	 * @return void
-	 */
-	private function resetStack()
-	{
-		$session = JFactory::getSession();
-		$session->set('migration_stack', '', 'biblestudy');
-		$this->_versionStack = array();
-		$this->_finish       = array();
-		$this->_install      = array();
-		$this->totalSteps    = 0;
-		$this->doneSteps     = 0;
-		$this->running       = JText::_('JBS_MIG_STARTING');
-	}
-
-	/**
 	 * Starts or resets the internal timer
 	 *
 	 * @return void
@@ -168,7 +151,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		$check            = JBSMDbHelper::getInstallState();
 
 		// Set Finishing Steps
-		$this->_finish = array('updateversion', 'fixassets', 'fixmenus', 'fixemptyaccess', 'fixemptylanguage', 'finish');
+		$this->_finish = array('updateversion', 'fixassets', 'fixmenus', 'fixemptyaccess', 'fixemptylanguage', 'rmoldurl', 'setupdateurl', 'finish');
 		$this->totalSteps += count($this->_finish);
 
 		// Check to see if this is not a migration before proceding.
@@ -494,6 +477,44 @@ class BibleStudyModelInstall extends JModelLegacy
 	}
 
 	/**
+	 *  Run the Migration will there is time.
+	 *
+	 * @param   bool  $resetTimer  If the time must be reset
+	 *
+	 * @return bool
+	 */
+	public function run($resetTimer = true)
+	{
+		if ($resetTimer)
+		{
+			$this->resetTimer();
+		}
+
+		$this->loadStack();
+
+		$result = true;
+		while ($result && $this->haveEnoughTime())
+		{
+			$result = $this->RealRun();
+		}
+
+		$this->saveStack();
+
+		return $result;
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @return void
+	 */
+	public function browse()
+	{
+		$this->startScanning();
+		return;
+	}
+
+	/**
 	 * Saves the Versions/SQL/After stack in the session
 	 *
 	 * @return void
@@ -523,40 +544,20 @@ class BibleStudyModelInstall extends JModelLegacy
 	}
 
 	/**
-	 *  Run the Migration will there is time.
-	 *
-	 * @param   bool  $resetTimer  If the time must be reset
-	 *
-	 * @return bool
-	 */
-	public function run($resetTimer = true)
-	{
-		if ($resetTimer)
-		{
-			$this->resetTimer();
-		}
-
-		$result = $this->loadStack();
-
-		while ($result && $this->haveEnoughTime())
-		{
-			$result = $this->RealRun();
-		}
-
-		$this->saveStack();
-
-		return $result;
-	}
-
-	/**
-	 * Constructor.
+	 * Resets the Versions/SQL/After stack saved in the session
 	 *
 	 * @return void
 	 */
-	public function browse()
+	private function resetStack()
 	{
-		$this->startScanning();
-		return;
+		$session = JFactory::getSession();
+		$session->set('migration_stack', '', 'biblestudy');
+		$this->_versionStack = array();
+		$this->_finish       = array();
+		$this->_install      = array();
+		$this->totalSteps    = 0;
+		$this->doneSteps     = 0;
+		$this->running       = JText::_('JBS_MIG_STARTING');
 	}
 
 	/**
@@ -613,7 +614,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		$now     = $this->microtime_float();
 		$elapsed = abs($now - $this->_startTime);
 
-		return $elapsed < 3;
+		return $elapsed < 2;
 	}
 
 	/**
@@ -638,19 +639,18 @@ class BibleStudyModelInstall extends JModelLegacy
 		var_dump('Total: ' . $this->totalSteps);
 		var_dump('Done: ' . $this->doneSteps);
 
-		if (!empty($this->_install))
+		if (!empty($this->_install) && $this->haveEnoughTime())
 		{
-			while (!empty($this->_install) && $this->haveEnoughTime())
+			while (!empty($this->_install))
 			{
 				$install       = array_pop($this->_install);
 				$this->running = 'Install step: ' . $install;
-				$this->doneSteps++;
 				$this->install($install);
 				$this->doneSteps++;
 			}
 		}
 
-		if ($this->_isimport)
+		if ($this->_isimport && $this->haveEnoughTime())
 		{
 			$this->fiximport();
 			$this->running   = 'Fixing Imported Params';
@@ -658,10 +658,10 @@ class BibleStudyModelInstall extends JModelLegacy
 			$this->doneSteps++;
 		}
 
-		if (!empty($this->_versionStack))
+		if (!empty($this->_versionStack) && $this->haveEnoughTime())
 		{
 			krsort($this->_versionStack);
-			while (!empty($this->_versionStack) && $this->haveEnoughTime())
+			while (!empty($this->_versionStack))
 			{
 				$version = array_pop($this->_versionStack);
 				$this->running .= ', ' . $version;
@@ -674,9 +674,9 @@ class BibleStudyModelInstall extends JModelLegacy
 				}
 			}
 		}
-		if (!empty($this->_finish))
+		if (!empty($this->_finish) && $this->haveEnoughTime())
 		{
-			while (!empty($this->_finish) && $this->haveEnoughTime())
+			while (!empty($this->_finish))
 			{
 				$finish = array_pop($this->_finish);
 				$this->doneSteps++;
@@ -685,7 +685,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			}
 		}
 
-		if (empty($this->_versionStack) && empty($this->_finish))
+		if (empty($this->_install) && empty($this->_versionStack) && empty($this->_finish))
 		{
 			// Just finished
 			$this->resetStack();
@@ -697,6 +697,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		if ($run == false)
 		{
 			JBSMDbHelper::resetdb();
+			$this->resetStack();
 			$app->enqueueMessage(JText::_('JBS_CMN_DATABASE_NOT_MIGRATED'), 'warning');
 
 			return false;
@@ -722,6 +723,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				$this->running = $step;
 				break;
 			case 'installSpecail':
+				// @todo need to complete this step
 				$this->running = $step;
 				break;
 		}
@@ -850,6 +852,16 @@ class BibleStudyModelInstall extends JModelLegacy
 				break;
 			case 'rmoldurl':
 				$this->rmoldurl();
+				$this->running = 'Remove Old Update URL\'s';
+				break;
+			case 'setupdateurl':
+				// @todo need to compleate this update url install as the install redirect bracks this.
+				$this->running = 'Set New Update URL';
+				break;
+			case 'deleteUnexistingFiles':
+				// @todo this deleteUnexistingFiles should be moved to migration path and not trigerd unless.
+				$this->deleteUnexistingFiles();
+				$this->running = 'Cleanup Old files';
 				break;
 			default:
 				$app->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . JText::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE'), 'message');
@@ -1054,8 +1066,6 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * @since      7.1.0
 	 *
 	 * @return   void
-	 *
-	 * @deprecated 9.0.0
 	 */
 	protected function deleteUnexistingFiles()
 	{
