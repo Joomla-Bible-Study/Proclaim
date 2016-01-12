@@ -451,7 +451,6 @@ class JBSMDbHelper
 		$files = str_replace('.sql', '', JFolder::files($path, '\.sql$'));
 		$files = array_reverse($files, true);
 
-
 		if ($install == true)
 		{
 			foreach ($files as $a => $file)
