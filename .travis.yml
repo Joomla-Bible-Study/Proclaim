@@ -13,7 +13,6 @@ matrix:
   include:
     - php: 5.3
       env: INSTALL_APC="yes"
-      env: RUN_PHPCS="yes"
 #    - php: 5.4
 #      env: INSTALL_APC="yes"
 #    - php: 5.5
