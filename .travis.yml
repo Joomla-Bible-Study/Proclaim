@@ -42,7 +42,7 @@ before_script:
 
 script:
   #- libraries/vendor/bin/phpunit --configuration travisci-phpunit.xml
-  - sh -c "if [  "$RUN_PHPCS" == "yes" ]; then bin/phpcs --report=full --extensions=php -p --standard=build/phpcs/Joomla .; fi"
+  - sh -c "if [ "$RUN_PHPCS" == "yes" ]; then bin/phpcs --report=full --extensions=php -p --standard=build/phpcs/Joomla .; fi"
 
 branches:
   except:
