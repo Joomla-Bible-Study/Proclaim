@@ -50,7 +50,7 @@ class JFormFieldDocman extends JFormFieldList
 
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
-		$query->select('dm.slug, dm.docman_document_id, dm.title');
+		$query->select('dm.docman_document_id, dm.title');
 		$query->from('#__docman_documents AS dm');
 		$query->order('dm.docman_document_id DESC');
 		$db->setQuery((string) $query);
@@ -59,11 +59,11 @@ class JFormFieldDocman extends JFormFieldList
 
 		if ($docs)
 		{
-			$options[] = JHtml::_('select.option', '-1', JTEXT::_('JBS_MED_SELECT_DOCMAN'));
+			$options[] = JHtml::_('select.option', '-1', JTEXT::_('JBS_MED_DOCMAN_SELECT'));
 
 			foreach ($docs as $doc)
 			{
-				$options[] = JHtml::_('select.option', $doc->slug, $doc->title);
+				$options[] = JHtml::_('select.option', $doc->id, $doc->title);
 			}
 		}
 		$options = array_merge(parent::getOptions(), $options);
