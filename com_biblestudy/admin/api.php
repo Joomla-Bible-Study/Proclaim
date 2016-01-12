@@ -16,7 +16,7 @@ if (defined('JBSM_LOADED'))
 }
 
 // Manually enable code profiling by setting value to 1
-define ('JBSM_PROFILER', 0);
+define('JBSM_PROFILER', 0);
 
 // Version information
 define('BIBLESTUDY_VERSION', '9.0.0');
@@ -74,4 +74,4 @@ define('BIBLESTUDY_SECONDS_IN_YEAR', 31536000);
 define('BIBLESTUDY_DB_MISSING_COLUMN', 1054);
 
 // JBSM has been initialized
-define ('JBSM_LOADED', 1);
+define('JBSM_LOADED', 1);

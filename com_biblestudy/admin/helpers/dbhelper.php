@@ -436,6 +436,8 @@ class JBSMDbHelper
 	/**
 	 * Reset Database back to defaults
 	 *
+	 * @param   bool  $install  If coming from the installer true|false not form installer
+	 *
 	 * @return boolean|int
 	 */
 	public static function resetdb($install = false)
