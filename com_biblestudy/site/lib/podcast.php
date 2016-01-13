@@ -14,7 +14,14 @@ jimport('joomla.html.parameter');
 use Joomla\Registry\Registry;
 
 /* Put in do to this file is used in a plugin. */
-require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
+
+// Always load JBSM API if it exists.
+$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+
+if (file_exists($api))
+{
+	require_once $api;
+}
 
 JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
 JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');

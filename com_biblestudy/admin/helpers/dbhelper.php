@@ -271,23 +271,6 @@ class JBSMDbHelper
 			return true;
 		}
 
-		$query = $db->getQuery(true);
-		$query->select('*')->from('#__bsms_admin');
-		$db->setQuery($query);
-		$results = $db->loadObjectList();
-
-		if (isset($results[0]->installstate))
-		{
-			if (!empty($results[0]->installstate))
-			{
-				// Convert parameter fields to objects.
-				$registry = new Registry;
-				$registry->loadString($results{0}->installstate);
-
-				return $registry;
-			}
-		}
-
 		return false;
 	}
 

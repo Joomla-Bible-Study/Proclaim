@@ -10,36 +10,24 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-use Joomla\Registry\Registry;
-
 // Access check.
 if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy'))
 {
 	throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'), 404);
 }
 
-// @todo depercate this to us api.php as new loader. bcc
-include_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
+// Always load JBSM API if it exists.
+$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+
+if (file_exists($api))
+{
+	require_once $api;
+}
 
 if (version_compare(PHP_VERSION, BIBLESTUDY_MIN_PHP, '<'))
 {
 	throw new Exception(JText::_('JERROR_ERROR') . JText::sprintf('JBS_CMN_PHP_ERROR', BIBLESTUDY_MIN_PHP), 404);
 }
-
-// Component debugging
-define("COM_BIBLESTUDY_DEBUG", false);
-
-JLoader::discover('JBSM', BIBLESTUDY_PATH_LIB);
-JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_LIB);
-JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS);
-JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS);
-JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_ADDON);
-JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html/');
-
-// If phrase is not found in specific language file, load english language file:
-$language = JFactory::getLanguage();
-$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
-$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, null, true);
 
 addCSS();
 

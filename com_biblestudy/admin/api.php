@@ -18,6 +18,9 @@ if (defined('JBSM_LOADED'))
 // Manually enable code profiling by setting value to 1
 define('JBSM_PROFILER', 0);
 
+// Component debugging
+define("COM_BIBLESTUDY_DEBUG", false);
+
 // Version information
 define('BIBLESTUDY_VERSION', '9.0.0');
 define('BIBLESTUDY_VERSION_DATE', '2015-05-15');
@@ -72,6 +75,19 @@ define('BIBLESTUDY_SECONDS_IN_YEAR', 31536000);
 
 // Database defines
 define('BIBLESTUDY_DB_MISSING_COLUMN', 1054);
+
+// Load JBSM Class
+JLoader::discover('JBSM', BIBLESTUDY_PATH_LIB, 'true', 'true');
+JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_LIB, 'true', 'true');
+JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS, 'false', 'true');
+JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS, 'false', 'true');
+JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_ADDON, 'false', 'true');
+JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html/');
+
+// If phrase is not found in specific language file, load english language file:
+$language = JFactory::getLanguage();
+$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
+$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, null, true);
 
 // JBSM has been initialized
 define('JBSM_LOADED', 1);
