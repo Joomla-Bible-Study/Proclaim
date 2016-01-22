@@ -8,6 +8,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+
 /**
  * Fresh install class
  *

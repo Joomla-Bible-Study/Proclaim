@@ -11,7 +11,8 @@
 defined('_JEXEC') or die;
 
 JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.script.php');
-
+JLoader::register('JBSMFreshInstall', JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/biblestudy.install.special.php');
+JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 // Always load JBSM API if it exists.
 $api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
 
@@ -170,7 +171,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		if ($this->type != 'migration' && $check)
 		{
 			$this->type     = 'install';
-			$this->_install = array('installdb', 'installSpecail');
+			$this->_install = array('installdb', 'installSpecial');
 			$this->totalSteps += count($this->_install);
 
 			return true;
@@ -786,7 +787,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				}
 				$this->running = $step;
 				break;
-			case 'installSpecail':
+			case 'installSpecial':
 				JBSMFreshInstall::installCSS();
 				$this->running = $step;
 				break;
