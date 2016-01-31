@@ -149,10 +149,7 @@ if ($msg)
 						   style="text-decoration:none;"
 						   title="<?php echo JText::_('JBS_CMN_TEMPLATECODE'); ?>" class="btn cpanl-img"> <span class="icon-stack" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_TEMPLATECODE'); ?> </span></a>
 
-						<a href="index.php?option=com_biblestudy&amp;view=styles"
-						   style="text-decoration:none;"
-						   title="<?php echo JText::_('JBS_CMN_STYLES'); ?>" class="btn cpanl-img"> <span class="icon-contract-2" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_STYLES'); ?> </span></a>
-					</div>
+											</div>
 					<div style="clear: both;"></div>
 				</div>
 				<div style="clear: both;"></div>

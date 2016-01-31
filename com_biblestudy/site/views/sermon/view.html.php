@@ -227,7 +227,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		$this->related = $relatedstudies->getRelated($this->item, $this->item->params);
 
 		JHtml::_('biblestudy.framework');
-		JHtml::_('biblestudy.loadcss', $this->params, '', 'font-awesome');
+
 
 		// Only load pagebuilder if the default template is NOT being used
 		if ($this->item->params->get('useexpert_details') > 0 || is_string($this->params->get('sermontemplate')))
@@ -300,6 +300,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		$this->loadHelper('params');
 
 		// Get the podcast subscription
+		JHtml::styleSheet('media/css/podcast.css');
 		$podcast         = new JBSMpodcastSubscribe;
 		$this->subscribe = $podcast->buildSubscribeTable($this->item->params->get('subscribeintro', 'Our Podcasts'));
 

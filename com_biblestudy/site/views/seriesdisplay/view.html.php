@@ -115,7 +115,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 			. $teacherimage->width . '" alt="" />';
 
 		JHtml::_('biblestudy.framework');
-		JHtml::_('biblestudy.loadcss', $params, '', 'font-awesome');
+
 
 		$items->slug = $items->alias ? ($items->id . ':' . $items->alias) : str_replace(' ', '-', htmlspecialchars_decode($items->series_text, ENT_QUOTES))
 			. ':' . $items->id;

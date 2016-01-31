@@ -74,7 +74,7 @@ class BiblestudyViewLandingpage extends JViewLegacy
 			$document->setDescription($this->params->get('metadesc'));
 		}
 		JHtml::_('biblestudy.framework');
-		JHtml::_('biblestudy.loadcss', $this->params, $this->params->get('stylesheet'), 'font-awesome');
+
 
 		$images   = new JBSMImages;
 		$images->getShowhide();

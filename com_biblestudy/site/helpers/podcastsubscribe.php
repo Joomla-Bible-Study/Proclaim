@@ -7,7 +7,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
-
+// No Direct Access
+defined('_JEXEC') or die;
 /**
  * A helper to return buttons for podcast subscriptions
  *
@@ -15,6 +16,7 @@
  * @since    7.1.0
  *
  */
+require_once JPATH_SITE . '/components/com_biblestudy/lib/images.php';
 class JBSMPodcastSubscribe
 {
 

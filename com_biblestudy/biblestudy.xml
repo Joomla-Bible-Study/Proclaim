@@ -69,7 +69,7 @@
 			<menu link="option=com_biblestudy&amp;view=podcasts" img="../media/com_biblestudy/images/menu/icon-16-podcast.png">JBS_MNU_PODCASTS</menu>
 			<menu link="option=com_biblestudy&amp;view=templates" img="../media/com_biblestudy/images/menu/icon-16-templates.png">JBS_MNU_TEMPLATE_DISPLAY</menu>
 			<menu link="option=com_biblestudy&amp;view=templatecodes" img="../media/com_biblestudy/images/menu/icon-16-templates.png">JBS_MNU_TEMPLATE_CODE_DISPLAY</menu>
-			<menu link="option=com_biblestudy&amp;view=styles" img="../media/com_biblestudy/images/menu/icon-16-css.png">JBS_MNU_STYLES</menu>
+
 			<!-- Instead of link you can specify individual link attributes -->
 		</submenu>
 
@@ -118,7 +118,7 @@
 		<table>#__bsms_comments</table>
 		<table>#__bsms_studytopics</table>
 		<table>#__bsms_locations</table>
-		<table>#__bsms_styles</table>
+
 		<table>#__bsms_timeset</table>
 		<table type="optional">#__bsms_update</table>
 	</tables>

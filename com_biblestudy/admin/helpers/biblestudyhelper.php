@@ -104,9 +104,6 @@ class JBSMBibleStudyHelper
 					$assetName = 'com_biblestudy.mediafile.' . (int) $Itemid;
 					break;
 
-				case 'style':
-					$assetName = 'com_biblestudy.style' . (int) $Itemid;
-					break;
 				case 'templatecode':
 					$assetName = 'com_biblestudy.templatecode' . (int) $Itemid;
 					break;

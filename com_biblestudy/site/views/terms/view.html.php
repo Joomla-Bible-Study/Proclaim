@@ -105,7 +105,7 @@ class BiblestudyViewTerms extends JViewLegacy
 		$app   = JFactory::getApplication();
 		$menus = $app->getMenu();
 
-		JHtml::_('biblestudy.loadcss', $this->params, '', 'font-awesome');
+
 		$itemparams = JComponentHelper::getParams('com_biblestudy');
 		$title      = null;
 

@@ -28,7 +28,7 @@ else
 }
 
 JHtml::_('biblestudy.framework');
-JHtml::_('biblestudy.loadcss', $params);
+JHtml::styleSheet('media/css/podcast.css');
 $podcast   = new JBSMPodcastSubscribe;
 $subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
 

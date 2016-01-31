@@ -147,13 +147,7 @@ class Com_BiblestudyInstallerScript
 			}
 		}
 
-		require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/biblestudy.install.special.php';
-		$fresh = new JBSMFreshInstall;
 
-		if (!$fresh->installCSS())
-		{
-			JFactory::getApplication()->enqueueMessage(JText::_('JBS_INS_FAILURE'), 'error');
-		}
 
 	}
 

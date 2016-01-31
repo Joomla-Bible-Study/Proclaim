@@ -74,28 +74,6 @@ class Migration613
 			return false;
 		}
 
-		$query = "INSERT INTO `#__bsms_share` (`id`, `name`, `params`, `published`) VALUES" .
-			"(NULL, 'FaceBook', 'mainlink=http://www.facebook.com/sharer.php? item1prefix=u= item1=200 item1custom= item2prefix=t= item2=5 item2custom= " .
-			"item3prefix= item3=6 item3custom= item4prefix= item4=8 item4custom= use_bitly=0 username= api= " .
-			"shareimage=../media/com_biblestudy/images/facebook.png " .
-			"shareimageh=33px shareimagew=33px totalcharacters= alttext=FaceBook  ', 1)," .
-			"(null, 'Twitter', 'mainlink=http://twitter.com/home? item1prefix=status= item1=200 item1custom= item2prefix= " .
-			"item2=5 item2custom= item3prefix= item3=1 item3custom=" .
-			"item4prefix= item4= item4custom= use_bitly=0 username= api= shareimage=../media/com_biblestudy/images/twitter.png " .
-			"shareimagew=33px shareimageh=33px totalcharacters=140 alttext=Twitter', 1)," .
-			"(null, 'Delicious', 'mainlink=http://delicious.com/save? item1prefix=url= item1=200 item1custom= " .
-			"item2prefix=&amp;title= item2=5 item2custom= item3prefix= item3=6 item3custom= item4prefix= item4= item4custom= " .
-			"use_bitly=0 username= api= shareimage=../media/com_biblestudy/images/delicious.png shareimagew=33px " .
-			"shareimageh=33px totalcharacters= alttext=Delicious', 1), " .
-			"(null, 'MySpace', 'mainlink=http://www.myspace.com/index.cfm? item1prefix=fuseaction=postto&amp;t= item1=5 item1custom= " .
-			"item2prefix=&amp;c= item2=6 item2custom= item3prefix=&amp;u= item3=200 item3custom= item4prefix=&amp;l=1 item4= item4custom= " .
-			"use_bitly=0 username= api= " .
-			"shareimage=../media/com_biblestudy/images/myspace.png\nshareimagew=33px\nshareimageh=33px\ntotalcharacters=\nalttext=MySpace', 1)";
-
-		if (!JBSMDbHelper::performdb($query, "Build 613: "))
-		{
-			return false;
-		}
 
 		$query = "INSERT INTO `#__bsms_templates` VALUES(1, 'tmplList', '', 1," .
 			" 'itemslimit=10\n compatibilityMode=0\n studieslisttemplateid=1\n " .
