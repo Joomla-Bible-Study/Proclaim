@@ -42,9 +42,7 @@
 			       buttons="true"/>
 		</fieldset>
 		<fieldset name="TEMPLATES">
-			<field name="css" type="filelist" label="JBS_STYLE_CHOOSE_CSS_FILE"
-			       description="JBS_STYLE_CHOOSE_CSS_FILE_DESC"
-			       directory="/media/com_biblestudy/css/site" exclude=".html" hide_default="true" required="true"/>
+			
 			<field name="studieslisttemplateid" type="sql" default=""
 			       label="JBS_TPL_TEMPLATE_STUDIES_LIST" description="JBS_TPL_TEMPLATE_STUDIES_LIST_DESC"
 			       query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"

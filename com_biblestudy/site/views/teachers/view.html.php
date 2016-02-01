@@ -113,8 +113,8 @@ class BiblestudyViewTeachers extends JViewLegacy
 		$uri                = new JUri;
 
 		JHtml::_('biblestudy.framework');
-		JHtml::_('biblestudy.loadcss', $params, '', 'font-awesome');
-		JHtml::stylesheet('media/com_biblestudy/css/studieslist.css');
+
+
 
 		$images = new JBSMImages;
 		if ($params->get('useexpert_teacherdetail') > 0 || is_string($params->get('teacherstemplate')))

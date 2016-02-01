@@ -26,52 +26,6 @@ class Migration702
 	 */
 	public function up($db)
 	{
-		$newcss = '#main ul, #main li
-					{
-					display: inline;
-					}
-
-					.component-content ul
-					{
-					text-align: center;
-					}
-
-					.component-content li
-					{
-					display: inline;
-					}
-
-					.pagenav
-					{
-					margin-left: 10px;
-					margin-right: 10px;
-					}
-
-					#recaptcha_widget_div {
-					position:static !important;}
-		';
-
-		$csscheck = '#main ul, #main li';
-
-		$dest      = JPATH_SITE . DIRECTORY_SEPARATOR . 'media/com_biblestudy/css/biblestudy.css';
-		$cssexists = JFile::exists($dest);
-
-		if ($cssexists)
-		{
-			$cssread = file_get_contents($dest);
-
-			$csstest = substr_count($cssread, $csscheck);
-
-			if (!$csstest)
-			{
-				$cssread = $cssread . $newcss;
-			}
-
-			if (!JFile::write($dest, $cssread))
-			{
-				return false;
-			}
-		}
 
 		return true;
 	}

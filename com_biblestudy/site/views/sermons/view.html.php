@@ -208,6 +208,7 @@ class BiblestudyViewSermons extends JViewLegacy
 			}
 		}
 		// Get the podcast subscription
+		JHtml::styleSheet('media/css/podcast.css');
 		$podcast         = new JBSMPodcastSubscribe;
 		$this->subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
 
@@ -490,7 +491,7 @@ class BiblestudyViewSermons extends JViewLegacy
 
 		JHtml::_('behavior.framework');
 		JHtml::_('biblestudy.framework');
-		JHtml::_('biblestudy.loadcss', $this->params, '', 'font-awesome');
+
 	}
 
 }
