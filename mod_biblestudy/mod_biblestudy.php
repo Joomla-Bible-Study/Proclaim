@@ -12,20 +12,13 @@ defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
 
-require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
-JLoader::discover('JBSM', BIBLESTUDY_PATH_LIB);
-JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_LIB);
-JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS);
-JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS);
-require_once BIBLESTUDY_PATH_MOD . '/helper.php';
-JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html/');
+// Always load JBSM API if it exists.
+$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
 
-/* Load language file out of administrator folder
- * if phrase is not found in specific language file, load english language file:
- */
-$language = JFactory::getLanguage();
-$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
-$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, null, true);
+if (file_exists($api))
+{
+	require_once $api;
+}
 
 // Need for inline player
 $document = JFactory::getDocument();

@@ -11,10 +11,13 @@
 // No direct access
 defined('_JEXEC') or die;
 
-require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
-JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS);
-JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS);
-JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html/');
+// Always load JBSM API if it exists.
+$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+
+if (file_exists($api))
+{
+	require_once $api;
+}
 
 $templateparams = null;
 

@@ -7,10 +7,15 @@
  * @link        http://www.JoomlaBibleStudy.org
  * */
 defined('_JEXEC') or die;
-/**
- * Bible Study Core Defines
- */
-require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
+
+// Always load JBSM API if it exists.
+$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+
+if (file_exists($api))
+{
+	require_once $api;
+}
+
 /**
  * JBSBackup jPlugin class
  *
@@ -31,8 +36,6 @@ class PlgSystemJBSBackup extends JPlugin
 	 */
 	public function __construct(& $subject, $config)
 	{
-		JLoader::register('JBSMBackup', JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/backup.php');
-		JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 		parent::__construct($subject, $config);
 
 		$this->loadLanguage();
