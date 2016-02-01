@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="component" version="3.1" method="upgrade">
+<extension type="component" version="2.5" method="upgrade">
 	<!-- Generic Metadata -->
 	<name>COM_BIBLESTUDY</name>
 	<author>Joomla Bible Study Team</author>
@@ -13,18 +13,6 @@
 
 	<!-- Installer Hooks -->
 	<scriptfile>biblestudy.script.php</scriptfile>
-
-	<!-- SQL Files -->
-	<install> <!-- Runs on install -->
-		<sql>
-			<file driver="mysql" charset="utf8">install/sql/install.sql</file>
-		</sql>
-	</install>
-	<uninstall> <!-- Runs on uninstall -->
-		<sql>
-			<file driver="mysql" charset="utf8">install/sql/uninstall.sql</file>
-		</sql>
-	</uninstall>
 
 	<files folder="site">
 		<filename>biblestudy.php</filename>
@@ -69,13 +57,14 @@
 			<menu link="option=com_biblestudy&amp;view=podcasts" img="../media/com_biblestudy/images/menu/icon-16-podcast.png">JBS_MNU_PODCASTS</menu>
 			<menu link="option=com_biblestudy&amp;view=templates" img="../media/com_biblestudy/images/menu/icon-16-templates.png">JBS_MNU_TEMPLATE_DISPLAY</menu>
 			<menu link="option=com_biblestudy&amp;view=templatecodes" img="../media/com_biblestudy/images/menu/icon-16-templates.png">JBS_MNU_TEMPLATE_CODE_DISPLAY</menu>
-
+			<menu link="option=com_biblestudy&amp;view=styles" img="../media/com_biblestudy/images/menu/icon-16-css.png">JBS_MNU_STYLES</menu>
 			<!-- Instead of link you can specify individual link attributes -->
 		</submenu>
 
 		<!-- Administration Main File Copy Section -->
 		<files folder="admin">
 			<filename>access.xml</filename>
+			<filename>api.php</filename>
 			<filename>biblestudy.php</filename>
 			<filename>config.xml</filename>
 			<filename>controller.php</filename>
@@ -93,38 +82,7 @@
 			<folder>postinstall</folder>
 		</files>
 	</administration>
-
-	<!-- new server call -->
 	<updateservers>
 		<server type="extension" priority="1" name="Joomla Bible Study"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=2&dummy=extension.xml]]></server>
 	</updateservers>
-
-	<!-- Tables -->
-	<!-- These are used for backups to determine which tables to backup; ones marked optional are only backed up if they exist -->
-	<tables>
-		<table>#__bsms_admin</table>
-		<table>#__bsms_studies</table>
-		<table>#__bsms_teachers</table>
-		<table>#__bsms_topics</table>
-		<table>#__bsms_servers</table>
-		<table>#__bsms_series</table>
-		<table>#__bsms_message_type</table>
-		<table>#__bsms_media</table>
-		<table>#__bsms_books</table>
-		<table>#__bsms_podcast</table>
-		<table>#__bsms_mediafiles</table>
-		<table>#__bsms_templates</table>
-		<table>#__bsms_templatecode</table>
-		<table>#__bsms_comments</table>
-		<table>#__bsms_studytopics</table>
-		<table>#__bsms_locations</table>
-
-		<table>#__bsms_timeset</table>
-		<table type="optional">#__bsms_update</table>
-	</tables>
-
-	<!--  Dependencies -->
-	<dependencies>
-		<dependency type="platform" name="joomla" operator="=" version="3.2"/>
-	</dependencies>
 </extension>

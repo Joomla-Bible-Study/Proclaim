@@ -254,28 +254,21 @@ class JBSMDbHelper
 	/**
 	 * Get State of install for Main Admin Controller
 	 *
-	 * @return Registry
+	 * @return Registry|bool
 	 *
 	 * @since 7.1.0
 	 */
 	public static function getInstallState()
 	{
 		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
-		$query->select('*')->from('#__bsms_admin');
-		$db->setQuery($query);
-		$results = $db->loadObjectList();
 
-		if (isset($results[0]->installstate))
+		// Check if JBSM can be found from the database
+		$table = $db->getPrefix() . 'bsms_admin';
+		$db->setQuery("SHOW TABLES LIKE {$db->quote($table)}");
+
+		if ($db->loadResult() != $table)
 		{
-			if (!empty($results[0]->installstate))
-			{
-				// Convert parameter fields to objects.
-				$registry = new Registry;
-				$registry->loadString($results{0}->installstate);
-
-				return $registry;
-			}
+			return true;
 		}
 
 		return false;
@@ -426,9 +419,11 @@ class JBSMDbHelper
 	/**
 	 * Reset Database back to defaults
 	 *
+	 * @param   bool  $install  If coming from the installer true|false not form installer
+	 *
 	 * @return boolean|int
 	 */
-	public static function resetdb()
+	public static function resetdb($install = false)
 	{
 		$app = JFactory::getApplication();
 		$db  = JFactory::getDbo();
@@ -438,6 +433,17 @@ class JBSMDbHelper
 
 		$files = str_replace('.sql', '', JFolder::files($path, '\.sql$'));
 		$files = array_reverse($files, true);
+
+		if ($install == true)
+		{
+			foreach ($files as $a => $file)
+			{
+				if (strpos($file, 'uninstall') !== false)
+				{
+					unset($files[$a]);
+				}
+			}
+		}
 
 		foreach ($files as $value)
 		{
@@ -487,7 +493,10 @@ class JBSMDbHelper
 		$db->setQuery($query);
 		$db->execute();
 
-		$app->enqueueMessage(JText::_('JBS_INS_RESETDB'), 'message');
+		if (!$install)
+		{
+			$app->enqueueMessage(JText::_('JBS_INS_RESETDB'), 'message');
+		}
 
 		return true;
 	}

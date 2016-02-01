@@ -12,10 +12,13 @@ defined('_JEXEC') or die;
 
 use \Joomla\Registry\Registry;
 
-/**
- * Bible Study Core Difines
- */
-require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
+// Always load JBSM API if it exists.
+$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+
+if (file_exists($api))
+{
+	require_once $api;
+}
 
 /**
  * Controller for Core BibleStudy
@@ -171,10 +174,6 @@ class BiblestudyController extends JControllerLegacy
 
 				return;
 			}
-			else
-			{
-				$cap = 1;
-			}
 		}
 
 		if ($cap == 1)
@@ -222,13 +221,9 @@ class BiblestudyController extends JControllerLegacy
 		}
 		$comment_author    = $this->input->get('full_name', 'Anonymous', 'WORD');
 		$comment_study_id  = $this->input->get('study_detail_id', 0, 'INT');
-		$comment_email     = $this->input->get('user_email', 'No Email', 'WORD');
-		$comment_text      = $this->input->get('comment_text', 'None', 'WORD');
 		$comment_published = $this->input->get('published', 0, 'INT');
-		$comment_date      = $this->input->get('comment_date', 0, 'INT');
-		$comment_date      = date('Y-m-d H:i:s');
+		$comment_date      = $this->input->get('comment_date', 0, 'WORD');
 		$config            = JFactory::getConfig();
-		$comment_abspath   = JPATH_SITE;
 		$comment_mailfrom  = $config->get('config.mailfrom');
 		$comment_fromname  = $config->get('config.fromname');
 		$comment_livesite  = JURI::root();

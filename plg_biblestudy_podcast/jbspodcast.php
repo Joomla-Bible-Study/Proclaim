@@ -32,6 +32,14 @@ class PlgSystemJBSPodcast extends JPlugin
 		parent::__construct($subject, $config);
 
 		$this->loadLanguage();
+
+		// Always load JBSM API if it exists.
+		$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+
+		if (file_exists($api))
+		{
+			require_once $api;
+		}
 	}
 
 	/**

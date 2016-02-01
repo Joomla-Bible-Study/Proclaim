@@ -10,7 +10,15 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
+
+// Always load JBSM API if it exists.
+$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+
+if (file_exists($api))
+{
+	require_once $api;
+}
+
 /**
  * This is a dummy form element to load the components language file
  *
