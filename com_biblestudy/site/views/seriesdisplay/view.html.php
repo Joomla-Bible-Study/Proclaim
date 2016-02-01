@@ -116,7 +116,6 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 
 		JHtml::_('biblestudy.framework');
 
-
 		$items->slug = $items->alias ? ($items->id . ':' . $items->alias) : str_replace(' ', '-', htmlspecialchars_decode($items->series_text, ENT_QUOTES))
 			. ':' . $items->id;
 

@@ -228,7 +228,6 @@ class BiblestudyViewSermon extends JViewLegacy
 
 		JHtml::_('biblestudy.framework');
 
-
 		// Only load pagebuilder if the default template is NOT being used
 		if ($this->item->params->get('useexpert_details') > 0 || is_string($this->params->get('sermontemplate')))
 		{

@@ -93,7 +93,6 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 
 		JHtml::_('biblestudy.framework');
 
-
 		$uri            = new JUri;
 		$filter_series  = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');
 		$filter_teacher = $mainframe->getUserStateFromRequest($option . 'filter_teacher', 'filter_teacher', 0, 'int');

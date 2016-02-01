@@ -9,6 +9,7 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
 /**
  * A helper to return buttons for podcast subscriptions
  *
@@ -16,7 +17,6 @@ defined('_JEXEC') or die;
  * @since    7.1.0
  *
  */
-require_once JPATH_SITE . '/components/com_biblestudy/lib/images.php';
 class JBSMPodcastSubscribe
 {
 

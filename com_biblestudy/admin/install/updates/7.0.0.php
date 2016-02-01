@@ -375,8 +375,6 @@ class Migration700
 			return false;
 		}
 
-
-
 		$table = '#__bsms_studies';
 
 		if (!$this->addAssetColumn($table))

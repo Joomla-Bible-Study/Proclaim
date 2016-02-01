@@ -66,7 +66,6 @@ class BiblestudyViewTeacher extends JViewLegacy
 
 		JHtml::_('biblestudy.framework');
 
-
 		$input = new JInput;
 
 		$item = $this->get('Item');

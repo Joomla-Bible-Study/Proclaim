@@ -74,7 +74,6 @@ class Migration613
 			return false;
 		}
 
-
 		$query = "INSERT INTO `#__bsms_templates` VALUES(1, 'tmplList', '', 1," .
 			" 'itemslimit=10\n compatibilityMode=0\n studieslisttemplateid=1\n " .
 			"detailstemplateid=1\n teachertemplateid=1\n serieslisttemplateid=1\n seriesdetailtemplateid=1\n teacher_id=\n " .

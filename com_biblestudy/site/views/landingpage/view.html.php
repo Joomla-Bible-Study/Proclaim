@@ -75,7 +75,6 @@ class BiblestudyViewLandingpage extends JViewLegacy
 		}
 		JHtml::_('biblestudy.framework');
 
-
 		$images   = new JBSMImages;
 		$images->getShowhide();
 

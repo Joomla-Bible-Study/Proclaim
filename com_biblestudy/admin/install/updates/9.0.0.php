@@ -426,7 +426,6 @@ class Migration900
 	public function css900 ()
 	{
 
-
 		return true;
 	}
 

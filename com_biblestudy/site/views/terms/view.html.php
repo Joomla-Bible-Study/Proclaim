@@ -105,7 +105,6 @@ class BiblestudyViewTerms extends JViewLegacy
 		$app   = JFactory::getApplication();
 		$menus = $app->getMenu();
 
-
 		$itemparams = JComponentHelper::getParams('com_biblestudy');
 		$title      = null;
 

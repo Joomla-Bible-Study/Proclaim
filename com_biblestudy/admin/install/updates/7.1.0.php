@@ -32,7 +32,6 @@ class Migration710
 	public function up($db)
 	{
 
-
 		return true;
 
 		// End if no new css file
