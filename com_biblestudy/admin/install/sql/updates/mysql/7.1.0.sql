@@ -91,22 +91,6 @@ ALTER TABLE `#__bsms_studytopics` ADD INDEX `idx_study` (`study_id`);
 ALTER TABLE `#__bsms_studytopics` ADD INDEX `idx_topic` (`topic_id`);
 
 --
--- Style Table
---
-DROP TABLE IF EXISTS `#__bsms_styles`;
-CREATE TABLE IF NOT EXISTS `#__bsms_styles` (
-  `id`        INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `published` TINYINT(3)       NOT NULL DEFAULT '1',
-  `filename`  TEXT             NOT NULL,
-  `stylecode` LONGTEXT         NOT NULL,
-  `asset_id`  INT(10) UNSIGNED NOT NULL DEFAULT '0'
-  COMMENT 'FK to the #__assets table.',
-  PRIMARY KEY (`id`),
-  KEY `idx_state` (`published`)
-)
-  DEFAULT CHARSET =utf8;
-
---
 -- Teachers Table
 --
 

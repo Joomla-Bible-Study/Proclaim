@@ -366,21 +366,6 @@ CREATE TABLE `#__bsms_studytopics` (
   KEY `idx_topic` (`topic_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `#__bsms_styles`
---
-
-CREATE TABLE `#__bsms_styles` (
-  `id`        INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `published` TINYINT(3)       NOT NULL DEFAULT '1',
-  `filename`  TEXT             NOT NULL,
-  `stylecode` LONGTEXT         NOT NULL,
-  `asset_id`  INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
-  PRIMARY KEY (`id`),
-  KEY `idx_state` (`published`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
 -- --------------------------------------------------------
 

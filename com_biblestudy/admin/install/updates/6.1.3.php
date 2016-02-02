@@ -78,7 +78,7 @@ class Migration613
 			" 'itemslimit=10\n compatibilityMode=0\n studieslisttemplateid=1\n " .
 			"detailstemplateid=1\n teachertemplateid=1\n serieslisttemplateid=1\n seriesdetailtemplateid=1\n teacher_id=\n " .
 			"show_teacher_list=0\n series_id=0\n booknumber=0\n topic_id=0\n messagetype=0\n locations=0\n default_order=DESC\n " .
-			"show_page_image=1\n tooltip=1\n show_verses=0\n stylesheet=\n date_format=2\n duration_type=1\n useavr=0\n popuptype=window\n " .
+			"show_page_image=1\n tooltip=1\n show_verses=0\n date_format=2\n duration_type=1\n useavr=0\n popuptype=window\n " .
 			"media_player=0\n player_width=290\n show_filesize=1\n store_page=flypage.tpl\n show_page_title=1\n page_title=Bible\n " .
 			"Studies\n use_headers_list=1\n list_intro=\n intro_show=1\n listteachers=1\n teacherlink=1\n details_text=Study\n Details\n " .
 			"show_book_search=1\n show_teacher_search=1\n show_series_search=1\n show_type_search=1\n show_year_search=1\n " .

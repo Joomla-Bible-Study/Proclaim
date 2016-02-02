@@ -21,7 +21,6 @@ ALTER TABLE `#__bsms_admin` ENGINE = INNODB;
 ALTER TABLE `#__bsms_studytopics` ENGINE = INNODB;
 ALTER TABLE `#__bsms_locations` ENGINE = INNODB;
 ALTER TABLE `#__bsms_timeset` ENGINE = INNODB;
-ALTER TABLE `#__bsms_styles` ENGINE = INNODB;
 ALTER TABLE `#__bsms_update` ENGINE = INNODB;
 
 ALTER TABLE `#__bsms_podcast` ADD COLUMN `episodesubtitle` INT(11) DEFAULT NULL;

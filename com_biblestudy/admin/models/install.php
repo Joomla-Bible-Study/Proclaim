@@ -171,7 +171,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		if ($this->type != 'migration' && $check)
 		{
 			$this->type     = 'install';
-			$this->_install = array(0 => 'installdb', 1 => 'installSpecial');
+			$this->_install = array(0 => 'installdb');
 			$this->totalSteps += count($this->_install);
 
 			return true;
@@ -788,10 +788,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				}
 				$this->running = $step;
 				break;
-			case 'installSpecial':
-				JBSMFreshInstall::installCSS();
-				$this->running = $step;
-				break;
+
 		}
 
 		return true;
