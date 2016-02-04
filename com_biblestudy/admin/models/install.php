@@ -742,9 +742,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	 */
 	private function install($step)
 	{
-		switch ($step)
-		{
-			case 'installdb':
+
 				$app = JFactory::getApplication();
 				$db  = JFactory::getDbo();
 				jimport('joomla.filesystem.folder');
@@ -785,11 +783,12 @@ class BibleStudyModelInstall extends JModelLegacy
 					}
 					$this->totalStepsSub += count($queries);
 					$this->_allupdates = array_merge($this->_allupdates, $queries);
+
 				}
 				$this->running = $step;
-				break;
 
-		}
+
+
 
 		return true;
 	}
@@ -1063,14 +1062,13 @@ class BibleStudyModelInstall extends JModelLegacy
 	 *
 	 * @return bool
 	 */
-	private function runUpdates($queries)
+	private function runUpdates($query)
 	{
 		// Process each query in the $queries array (split out of sql file).
-		foreach ($queries as $query)
-		{
+
 			$query = trim($query);
 
-			if ($query != '' && $query{0} != '#')
+			if ($query != '' )
 			{
 				$this->_db->setQuery($query);
 
@@ -1085,9 +1083,10 @@ class BibleStudyModelInstall extends JModelLegacy
 					$queryString = (string) $query;
 					$queryString = str_replace(array("\r", "\n"), array('', ' '), substr($queryString, 0, 80));
 					JLog::add(JText::sprintf('JLIB_INSTALLER_UPDATE_LOG_QUERY', $this->runningSub, $queryString), JLog::INFO, 'Update');
+
 				}
 			}
-		}
+
 		return true;
 	}
 
