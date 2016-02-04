@@ -170,12 +170,6 @@ class JBSMAssets
 						'realname'   => 'JBS_CMN_TOPICS'
 				),
 				array(
-						'name'       => '#__bsms_styles',
-						'titlefield' => 'filename',
-						'assetname'  => 'style',
-						'realname'   => 'JBS_CMN_STYLES'
-				),
-				array(
 						'name'       => '#__bsms_templatecode',
 						'titlefield' => 'filename',
 						'assetname'  => 'templatecode',
