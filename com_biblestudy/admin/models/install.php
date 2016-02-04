@@ -758,6 +758,9 @@ class BibleStudyModelInstall extends JModelLegacy
 						unset($files[$a]);
 					}
 				}
+		//Get the two install sql files
+
+		$files = array('install.sql','install.defaults.sql');
 
 				foreach ($files as $value)
 				{
