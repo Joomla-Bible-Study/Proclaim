@@ -484,3 +484,17 @@ CREATE TABLE `#__bsms_topics` (
   KEY `idx_state` (`published`),
   KEY `idx_access` (`access`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `#__bsms_update`
+--
+
+CREATE TABLE `#__bsms_update` (
+  id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  version VARCHAR(255) DEFAULT NULL,
+  PRIMARY KEY (id)
+) DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
