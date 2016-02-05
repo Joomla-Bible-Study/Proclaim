@@ -749,7 +749,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				jimport('joomla.filesystem.file');
 				$path = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_biblestudy/install/sql';
 
-				$files = str_replace('.sql', '', JFolder::files($path, '\.sql$'));
+				/*$files = str_replace('.sql', '', JFolder::files($path, '\.sql$'));
 				$files = array_reverse($files, true);
 				foreach ($files as $a => $file)
 				{
@@ -757,10 +757,10 @@ class BibleStudyModelInstall extends JModelLegacy
 					{
 						unset($files[$a]);
 					}
-				}
+				}*/
 		//Get the two install sql files
 
-		$files = array('install.sql','install.defaults.sql');
+		$files = array('install','install-defaults');
 
 				foreach ($files as $value)
 				{
