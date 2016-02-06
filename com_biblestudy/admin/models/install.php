@@ -641,7 +641,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	{
 		$app = JFactory::getApplication();
 		$run = true;
-
+//dump($this->_install);
 		if (!empty($this->_install) && $this->haveEnoughTime())
 		{
 			while (!empty($this->_install))
