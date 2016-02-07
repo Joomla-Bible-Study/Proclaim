@@ -641,7 +641,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	{
 		$app = JFactory::getApplication();
 		$run = true;
-//dump($this->_install);
+
 		if (!empty($this->_install) && $this->haveEnoughTime())
 		{
 			while (!empty($this->_install))
@@ -689,14 +689,23 @@ class BibleStudyModelInstall extends JModelLegacy
 					$percent = round($this->doneStepsSub / $this->totalStepsSub * 100);
 				}
 				$version = array_pop($this->_allupdates);
-				$this->running .= $this->runningSub . ', ' . $percent . '%';
+				$this->running = $this->runningSub . ', ' . $percent . '%';
 				$this->doneStepsSub++;
 				$run = $this->runUpdates($version);
-			}
-			if (empty($this->_allupdates) && $run)
-			{
-				$this->doneSteps++;
-				$run = $this->updatePHP($version);
+				if ($run)
+				{
+					$this->doneSteps++;
+					$run = $this->updatePHP($version);
+				}
+
+				if ($run == false)
+				{
+					JBSMDbHelper::resetdb();
+					$this->resetStack();
+					$app->enqueueMessage(JText::_('JBS_CMN_DATABASE_NOT_MIGRATED'), 'warning');
+
+					return false;
+				}
 			}
 		}
 
@@ -720,15 +729,6 @@ class BibleStudyModelInstall extends JModelLegacy
 			return false;
 		}
 
-		if ($run == false)
-		{
-			JBSMDbHelper::resetdb();
-			$this->resetStack();
-			$app->enqueueMessage(JText::_('JBS_CMN_DATABASE_NOT_MIGRATED'), 'warning');
-
-			return false;
-		}
-
 		// If we have more Versions or SQL files, continue in the next step
 		return true;
 	}
@@ -743,55 +743,41 @@ class BibleStudyModelInstall extends JModelLegacy
 	private function install($step)
 	{
 
-				$app = JFactory::getApplication();
-				$db  = JFactory::getDbo();
-				jimport('joomla.filesystem.folder');
-				jimport('joomla.filesystem.file');
-				$path = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_biblestudy/install/sql';
+		$app = JFactory::getApplication();
+		$db  = JFactory::getDbo();
+		jimport('joomla.filesystem.folder');
+		jimport('joomla.filesystem.file');
+		$path = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_biblestudy/install/sql';
 
-				/*$files = str_replace('.sql', '', JFolder::files($path, '\.sql$'));
-				$files = array_reverse($files, true);
-				foreach ($files as $a => $file)
-				{
-					if (strpos($file, 'uninstall') !== false)
-					{
-						unset($files[$a]);
-					}
-				}*/
-		//Get the two install sql files
-
+		// Get the two install sql files
 		$files = array('install','install-defaults');
 
-				foreach ($files as $value)
-				{
-					// Get file contents
-					$buffer = file_get_contents($path . '/' . $value . '.sql');
-					$this->runningSub = $value . '.sql';
+		foreach ($files as $value)
+		{
+			// Get file contents
+			$buffer = file_get_contents($path . '/' . $value . '.sql');
+			$this->runningSub = $value . '.sql';
 
-					// Graceful exit and rollback if read not successful
-					if ($buffer === false)
-					{
-						$app->enqueueMessage(JText::_('JBS_INS_ERROR_SQL_READBUFFER'), 'error');
+			// Graceful exit and rollback if read not successful
+			if ($buffer === false)
+			{
+				$app->enqueueMessage(JText::_('JBS_INS_ERROR_SQL_READBUFFER'), 'error');
 
-						return false;
-					}
+				return false;
+			}
 
-					// Create an array of queries from the sql file
-					$queries = $db->splitSql($buffer);
+			// Create an array of queries from the sql file
+			$queries = $db->splitSql($buffer);
 
-					if (count($queries) == 0)
-					{
-						// No queries to process
-						return 0;
-					}
-					$this->totalStepsSub += count($queries);
-					$this->_allupdates = array_merge($this->_allupdates, $queries);
+			if (count($queries) == 0)
+			{
+				// No queries to process
+				return 0;
+			}
+			$this->totalStepsSub += count($queries);
+			$this->_allupdates = array_merge($this->_allupdates, $queries);
 
-				}
-				$this->running = $step;
-
-
-
+		}
 
 		return true;
 	}
@@ -1061,34 +1047,35 @@ class BibleStudyModelInstall extends JModelLegacy
 	/**
 	 * Run updates SQL array
 	 *
-	 * @param   array  $queries  Array of SQL to proses.
+	 * @param   array  $query  Array of SQL to proses.
 	 *
 	 * @return bool
 	 */
 	private function runUpdates($query)
 	{
+		$app = JFactory::getApplication();
+
 		// Process each query in the $queries array (split out of sql file).
+		$query = trim($query);
 
-			$query = trim($query);
+		if ($query != '' && $query{0} != '#')
+		{
+			$this->_db->setQuery($query);
 
-			if ($query != '' )
+			if (!$this->_db->execute())
 			{
-				$this->_db->setQuery($query);
+				$app->enqueueMessage($this->_db->stderr(true), 'warning');
 
-				if (!$this->_db->execute())
-				{
-					JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_ERROR', $this->_db->stderr(true)), JLog::WARNING, 'jerror');
-
-					return false;
-				}
-				else
-				{
-					$queryString = (string) $query;
-					$queryString = str_replace(array("\r", "\n"), array('', ' '), substr($queryString, 0, 80));
-					JLog::add(JText::sprintf('JLIB_INSTALLER_UPDATE_LOG_QUERY', $this->runningSub, $queryString), JLog::INFO, 'Update');
-
-				}
+				return false;
 			}
+			else
+			{
+				$queryString = (string) $query;
+				$queryString = str_replace(array("\r", "\n"), array('', ' '), substr($queryString, 0, 80));
+				JLog::add(JText::sprintf('JLIB_INSTALLER_UPDATE_LOG_QUERY', $this->runningSub, $queryString), JLog::INFO, 'Update');
+
+			}
+		}
 
 		return true;
 	}
