@@ -569,8 +569,6 @@ class BibleStudyModelInstall extends JModelLegacy
 		$this->_install      = array();
 		$this->totalSteps    = 0;
 		$this->doneSteps     = 0;
-		$this->totalStepsSub = 0;
-		$this->doneStepsSub  = 0;
 		$this->runningSub    = null;
 		$this->running       = JText::_('JBS_MIG_STARTING');
 	}
@@ -662,14 +660,12 @@ class BibleStudyModelInstall extends JModelLegacy
 			$this->doneSteps++;
 		}
 
-		if (!empty($this->_versionStack) && empty($this->_allupdates) && $this->haveEnoughTime())
+		if (!empty($this->_versionStack) && $this->haveEnoughTime())
 		{
 			krsort($this->_versionStack);
 			while (!empty($this->_versionStack))
 			{
 				$version = array_pop($this->_versionStack);
-				$this->totalStepsSub  = 0;
-				$this->doneStepsSub   = 0;
 				$this->runningSub     = $version;
 				$this->_allupdates    = array();
 				$this->running .= ', ' . $version;
@@ -687,11 +683,11 @@ class BibleStudyModelInstall extends JModelLegacy
 			{
 				if ($this->totalSteps > 0)
 				{
-					$percent = round($this->doneStepsSub / $this->totalSteps * 100);
+					$percent = round($this->doneSteps / $this->totalSteps * 100);
 				}
 				$version = array_pop($this->_allupdates);
 				$this->running = $this->runningSub . ', ' . $percent . '%';
-				$this->doneStepsSub++;
+				$this->doneSteps++;
 				$run = $this->runUpdates($version);
 				if ($run)
 				{
@@ -710,7 +706,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			}
 		}
 
-		if (!empty($this->_finish) && empty($this->_allupdates) && $this->haveEnoughTime())
+		if (!empty($this->_finish) && $this->haveEnoughTime())
 		{
 			while (!empty($this->_finish))
 			{
@@ -903,11 +899,25 @@ class BibleStudyModelInstall extends JModelLegacy
 				$this->running = 'Fix Empty Language';
 				break;
 			case 'rmoldurl':
-				$this->rmoldurl();
+				// Removes all other update urls except package url.
+				$conditions = $this->rmoldurl();
+				$query = $this->_db->getQuery(true);
+
+				$query->delete($this->_db->quoteName('#__update_sites'));
+				$query->where($conditions);
+
+				$this->_db->setQuery($query);
+
+				$this->_db->execute();
 				$this->running = 'Remove Old Update URL\'s';
 				break;
 			case 'setupdateurl':
-				// @todo need to compleate this update url install as the install redirect bracks this.
+				$updateurl = new stdClass();
+				$updateurl->name = 'Joomla Bible Study Package';
+				$updateurl->type = 'collection';
+				$updateurl->location = 'http://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=1&dummy=extension.xml';
+				$updateurl->enable = '1';
+				$this->_db->insertObject('#__update_sites', $updateurl);
 				$this->running = 'Set New Update URL';
 				break;
 			case 'deleteUnexistingFiles':
@@ -1586,12 +1596,19 @@ class BibleStudyModelInstall extends JModelLegacy
 	 */
 	public function rmoldurl()
 	{
-		$urls = array("http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=3&dummy=extension.xml /extension.xml",
-			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=14&dummy=extension.xml /extension.xml, ",
-			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=13&dummy=extension.xml /extension.xml, ",
-			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=4&dummy=extension.xml /extension.xml, ",
-			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=8&dummy=extension.xml /extension.xml ",
-			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=5&dummy=extension.xml /extension.xml");
+		$urls = array(
+			$this->_db->qn('location') . ' = ' .
+			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=3&dummy=extension.xml",
+			$this->_db->qn('location') . ' = ' .
+			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=14&dummy=extension.xml",
+			$this->_db->qn('location') . ' = ' .
+			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=13&dummy=extension.xml",
+			$this->_db->qn('location') . ' = ' .
+			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=4&dummy=extension.xml",
+			$this->_db->qn('location') . ' = ' .
+			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=8&dummy=extension.xml",
+			$this->_db->qn('location') . ' = ' .
+			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=5&dummy=extension.xml");
 
 		return $urls;
 	}

@@ -49,19 +49,15 @@ else
 </script>
 
 <div id="install-progress-pane">
+	<?php
+	if ($this->more)
+	{ ?>
 	<div class="migration-status">
 		<div class="status"><?php echo $pre . ' ' . JText::_('JBS_MIG_PROCESSING') . ' ' . $this->running; ?></div>
 	</div>
-
+	<?php } ?>
 	<fieldset>
 		<div id="install-progress-content">
-			<div id="install-steps">
-			</div>
-			<?php if ($this->more){ ?>
-			<div id="install-status" class="well">
-				<div id="install-step"></div>
-			</div>
-			<?php } ?>
 			<div id="install-percentage" class="progress">
 				<div class="progress progress-striped active">
 					<div class="bar" style="width: <?php echo $this->percentage ?>%"></div> <?php echo $this->percentage; ?>%

@@ -33,9 +33,6 @@ class BiblestudyViewInstall extends JViewLegacy
 	/** @var array Call stack for the Visioning System. */
 	public $callstack = array();
 
-	/** @var null Sub running processes */
-	public $subrun = null;
-
 	/** @var string More */
 	protected $more;
 
@@ -126,10 +123,6 @@ class BiblestudyViewInstall extends JViewLegacy
 			$this->running       = null;
 
 			return;
-		}
-		if (empty($subrun))
-		{
-			$this->subrun = null;
 		}
 
 		if (function_exists('base64_encode') && function_exists('base64_decode'))
