@@ -916,7 +916,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				$updateurl->name = 'Joomla Bible Study Package';
 				$updateurl->type = 'collection';
 				$updateurl->location = 'http://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=1&dummy=extension.xml';
-				$updateurl->enable = '1';
+				$updateurl->enabled = '1';
 				$this->_db->insertObject('#__update_sites', $updateurl);
 				$this->running = 'Set New Update URL';
 				break;
