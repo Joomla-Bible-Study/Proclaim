@@ -57,10 +57,11 @@ else
 		<div id="install-progress-content">
 			<div id="install-steps">
 			</div>
+			<?php if ($this->more){ ?>
 			<div id="install-status" class="well">
 				<div id="install-step"></div>
-				<div id="install-substep"></div>
 			</div>
+			<?php } ?>
 			<div id="install-percentage" class="progress">
 				<div class="progress progress-striped active">
 					<div class="bar" style="width: <?php echo $this->percentage ?>%"></div> <?php echo $this->percentage; ?>%

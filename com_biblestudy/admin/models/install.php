@@ -378,7 +378,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				}
 				elseif ($files)
 				{
-					$this->totalSteps    = count($files);
+					$this->totalSteps    += count($files);
 					$this->_versionStack = $files;
 				}
 				else
@@ -682,11 +682,12 @@ class BibleStudyModelInstall extends JModelLegacy
 		{
 			$version = null;
 			$percent = 100;
+			krsort($this->_allupdates);
 			while (!empty($this->_allupdates) && $run)
 			{
-				if ($this->totalStepsSub > 0)
+				if ($this->totalSteps > 0)
 				{
-					$percent = round($this->doneStepsSub / $this->totalStepsSub * 100);
+					$percent = round($this->doneStepsSub / $this->totalSteps * 100);
 				}
 				$version = array_pop($this->_allupdates);
 				$this->running = $this->runningSub . ', ' . $percent . '%';
@@ -774,7 +775,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				// No queries to process
 				return 0;
 			}
-			$this->totalStepsSub += count($queries);
+			$this->totalSteps += count($queries);
 			$this->_allupdates = array_merge($this->_allupdates, $queries);
 
 		}
@@ -1018,13 +1019,12 @@ class BibleStudyModelInstall extends JModelLegacy
 	 */
 	private function allUpdate($value)
 	{
-
 		$buffer = file_get_contents(JPATH_ADMINISTRATOR . $this->filePath . '/' . $value . '.sql');
 
 		// Graceful exit and rollback if read not successful
 		if ($buffer === false)
 		{
-			JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_READBUFFER'), JLog::WARNING, 'jerror');
+			JFactory::getApplication()->enqueueMessage(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_READBUFFER'), 'WARNING');
 
 			return false;
 		}
@@ -1037,7 +1037,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			// No queries to process
 			return false;
 		}
-		$this->totalStepsSub = count($queries);
+		$this->totalSteps += count($queries);
 
 		$this->_allupdates = $queries;
 
