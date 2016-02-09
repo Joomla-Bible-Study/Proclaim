@@ -903,8 +903,8 @@ class BibleStudyModelInstall extends JModelLegacy
 				$conditions = $this->rmoldurl();
 				$query = $this->_db->getQuery(true);
 
-				$query->delete($this->_db->quoteName('#__update_sites'));
-				$query->where($conditions);
+				$query->delete($this->_db->qn('#__update_sites'));
+				$query->where($conditions, 'OR');
 
 				$this->_db->setQuery($query);
 
@@ -1598,17 +1598,17 @@ class BibleStudyModelInstall extends JModelLegacy
 	{
 		$urls = array(
 			$this->_db->qn('location') . ' = ' .
-			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=3&dummy=extension.xml",
+			$this->_db->q('http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=3&dummy=extension.xml'),
 			$this->_db->qn('location') . ' = ' .
-			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=14&dummy=extension.xml",
+			$this->_db->q('http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=14&dummy=extension.xml'),
 			$this->_db->qn('location') . ' = ' .
-			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=13&dummy=extension.xml",
+			$this->_db->q('http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=13&dummy=extension.xml'),
 			$this->_db->qn('location') . ' = ' .
-			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=4&dummy=extension.xml",
+			$this->_db->q('http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=4&dummy=extension.xml'),
 			$this->_db->qn('location') . ' = ' .
-			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=8&dummy=extension.xml",
+			$this->_db->q('http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=8&dummy=extension.xml'),
 			$this->_db->qn('location') . ' = ' .
-			"http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=5&dummy=extension.xml");
+			$this->_db->q('http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=5&dummy=extension.xml'));
 
 		return $urls;
 	}
