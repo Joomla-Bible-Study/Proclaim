@@ -676,7 +676,6 @@ class BibleStudyModelInstall extends JModelLegacy
 
 		if (!empty($this->_allupdates) && $this->haveEnoughTime())
 		{
-			$version = null;
 			$percent = 100;
 			krsort($this->_allupdates);
 			while (!empty($this->_allupdates) && $run)
@@ -691,7 +690,6 @@ class BibleStudyModelInstall extends JModelLegacy
 				$run = $this->runUpdates($version);
 				if ($run)
 				{
-					$this->doneSteps++;
 					$run = $this->updatePHP($version);
 				}
 
@@ -706,7 +704,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			}
 		}
 
-		if (!empty($this->_finish) && $this->haveEnoughTime())
+		if (!empty($this->_finish) && empty($this->_versionStack) && $this->haveEnoughTime())
 		{
 			while (!empty($this->_finish))
 			{
