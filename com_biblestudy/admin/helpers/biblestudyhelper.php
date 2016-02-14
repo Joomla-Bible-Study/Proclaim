@@ -185,9 +185,7 @@ class JBSMBibleStudyHelper
 		self::rendermenu(
 			JText::_('JBS_CMN_TEMPLATECODE'), 'index.php?option=com_biblestudy&view=templatecodes', $vName == 'templatecodes'
 		);
-		self::rendermenu(
-			JText::_('JBS_CMN_STYLES'), 'index.php?option=com_biblestudy&view=styles', $vName == 'styles'
-		);
+
 	}
 
 	/**
