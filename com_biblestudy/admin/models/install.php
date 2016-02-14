@@ -9,7 +9,15 @@
  * */
 
 defined('_JEXEC') or die;
-
+// Include the JLog class.
+jimport('joomla.log.log');
+JLog::addLogger(
+	array(
+		'text_file' => 'com_biblestudy.errors.php'
+	),
+	JLog::ALL,
+	'com_biblestudy'
+);
 JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.script.php');
 JLoader::register('JBSMFreshInstall', JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/biblestudy.install.special.php');
 
@@ -1083,7 +1091,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			{
 				$queryString = (string) $query;
 				$queryString = str_replace(array("\r", "\n"), array('', ' '), substr($queryString, 0, 80));
-				JLog::add(JText::sprintf('JLIB_INSTALLER_UPDATE_LOG_QUERY', $this->runningSub, $queryString), JLog::INFO, 'Update');
+				JLog::add(JText::sprintf('JLIB_INSTALLER_UPDATE_LOG_QUERY', $this->runningSub, $queryString), JLog::INFO, 'com_biblestudy');
 
 			}
 		}
@@ -1111,7 +1119,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			$migration      = new $migrationClass;
 			if (!$migration->up($this->_db))
 			{
-				JLog::add(JText::sprintf('Data Migration failed'), JLog::WARNING, 'jerror');
+				JLog::add(JText::sprintf('Data Migration failed'), JLog::WARNING, 'com_biblestudy');
 
 				return false;
 			}
