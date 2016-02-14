@@ -9,6 +9,7 @@
  * */
 
 defined('_JEXEC') or die;
+
 // Include the JLog class.
 jimport('joomla.log.log');
 JLog::addLogger(
@@ -100,11 +101,6 @@ class BibleStudyModelInstall extends JModelLegacy
 	{
 		parent::__construct($config);
 
-		if (JFactory::getApplication()->input->get('task') == 'browse')
-		{
-			$this->browse();
-		}
-
 		$this->name = 'install';
 	}
 
@@ -171,23 +167,28 @@ class BibleStudyModelInstall extends JModelLegacy
 		$app              = JFactory::getApplication();
 		$check            = JBSMDbHelper::getInstallState();
 
+		if ($check)
+		{
+			$this->type = 'install';
+		}
+		else
+		{
+			$this->type = 'migration';
+		}
+
 		// Set Finishing Steps
 		$this->_finish = array('updateversion', 'fixassets', 'fixmenus', 'fixemptyaccess', 'fixemptylanguage', 'rmoldurl', 'setupdateurl', 'finish');
 		$this->totalSteps += count($this->_finish);
 
 		// Check to see if this is not a migration before proceding.
-		if ($this->type != 'migration' && $check)
+		if ($this->type != 'migration')
 		{
 			$this->type     = 'install';
-			$this->_install = array(0 => 'installdb');
+			$this->_install = array('install', 'install-defaults');
 			$this->totalSteps += count($this->_install);
 
 			return true;
 
-		}
-		elseif ($check !== true)
-		{
-			$this->type = 'migration';
 		}
 
 		// First we check to see if there is a current version database installed. This will have a #__bsms_version table so we check for it's existence.
@@ -386,7 +387,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				}
 				elseif ($files)
 				{
-					$this->totalSteps    += count($files);
+					$this->totalSteps    = count($files);
 					$this->_versionStack = $files;
 				}
 				else
@@ -521,17 +522,6 @@ class BibleStudyModelInstall extends JModelLegacy
 		$this->saveStack();
 
 		return $result;
-	}
-
-	/**
-	 * Browse
-	 *
-	 * @return void
-	 */
-	public function browse()
-	{
-		$this->startScanning();
-		return;
 	}
 
 	/**
@@ -673,9 +663,9 @@ class BibleStudyModelInstall extends JModelLegacy
 			krsort($this->_versionStack);
 			while (!empty($this->_versionStack))
 			{
-				$version = array_pop($this->_versionStack);
-				$this->runningSub     = $version;
-				$this->_allupdates    = array();
+				$version           = array_pop($this->_versionStack);
+				$this->runningSub  = $version;
+				$this->_allupdates = array();
 				$this->running .= ', ' . $version;
 				$this->doneSteps++;
 				$this->allUpdate($version);
@@ -692,13 +682,13 @@ class BibleStudyModelInstall extends JModelLegacy
 				{
 					$percent = round($this->doneSteps / $this->totalSteps * 100);
 				}
-				$version = array_pop($this->_allupdates);
+				$key           = key($this->_allupdates);
+				$string        = array_pop($this->_allupdates);
 				$this->running = $this->runningSub . ', ' . $percent . '%';
-				$this->doneSteps++;
-				$run = $this->runUpdates($version);
+				$run           = $this->runUpdates($string);
 				if ($run)
 				{
-					$run = $this->updatePHP($version);
+					$run = $this->updatePHP($key);
 				}
 
 				if ($run == false)
@@ -739,26 +729,22 @@ class BibleStudyModelInstall extends JModelLegacy
 	/**
 	 * Install step system
 	 *
-	 * @param   string  $step  Step to perform next on install
+	 * @param   array  $files  List of installs to install
 	 *
 	 * @return bool
 	 */
-	private function install($step)
+	private function install($files = array('install', 'install-defaults'))
 	{
-
 		$app = JFactory::getApplication();
 		$db  = JFactory::getDbo();
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');
 		$path = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_biblestudy/install/sql';
 
-		// Get the two install sql files
-		$files = array('install','install-defaults');
-
 		foreach ($files as $value)
 		{
 			// Get file contents
-			$buffer = file_get_contents($path . '/' . $value . '.sql');
+			$buffer           = file_get_contents($path . '/' . $value . '.sql');
 			$this->runningSub = $value . '.sql';
 
 			// Graceful exit and rollback if read not successful
@@ -907,7 +893,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			case 'rmoldurl':
 				// Removes all other update urls except package url.
 				$conditions = $this->rmoldurl();
-				$query = $this->_db->getQuery(true);
+				$query      = $this->_db->getQuery(true);
 
 				$query->delete($this->_db->qn('#__update_sites'));
 				$query->where($conditions, 'OR');
@@ -918,12 +904,12 @@ class BibleStudyModelInstall extends JModelLegacy
 				$this->running = 'Remove Old Update URL\'s';
 				break;
 			case 'setupdateurl':
-				$updateurl = new stdClass;
-				$updateurl->name = 'Joomla Bible Study Package';
-				$updateurl->type = 'collection';
+				$updateurl           = new stdClass;
+				$updateurl->name     = 'Joomla Bible Study Package';
+				$updateurl->type     = 'collection';
 				$updateurl->location = 'http://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=' .
 					'stream&amp;format=xml&amp;id=1&dummy=extension.xml';
-				$updateurl->enabled = '1';
+				$updateurl->enabled  = '1';
 				$this->_db->insertObject('#__update_sites', $updateurl);
 				$this->running = 'Set New Update URL';
 				break;
@@ -1056,41 +1042,50 @@ class BibleStudyModelInstall extends JModelLegacy
 		}
 		$this->totalSteps += count($queries);
 
-		$this->_allupdates = $queries;
+		$this->_allupdates = array_merge($this->_allupdates, array($value => $queries));
 
 		return true;
 	}
 
 	/**
-	 * Run updates SQL array
+	 * Run updates SQL
 	 *
-	 * @param   array  $query  Array of SQL to proses.
+	 * @param   string|array  $mix  String or Array of SQL to proses.
 	 *
 	 * @return bool
 	 */
-	private function runUpdates($query)
+	private function runUpdates($mix)
 	{
 		$app = JFactory::getApplication();
 
-		// Process each query in the $queries array (split out of sql file).
-		$query = trim($query);
-
-		if ($query != '' && $query{0} != '#')
+		if (!is_array($mix))
 		{
-			$this->_db->setQuery($query);
+			$mix = array($mix);
+		}
 
-			if (!$this->_db->execute())
+		foreach ($mix as $string)
+		{
+			// Process each query in the $queries array (split out of sql file).
+			$string = trim($string);
+
+			if ($string != '' && $string{0} != '#')
 			{
-				$app->enqueueMessage($this->_db->stderr(true), 'warning');
+				$this->_db->setQuery($string);
+				$this->doneSteps++;
 
-				return false;
-			}
-			else
-			{
-				$queryString = (string) $query;
-				$queryString = str_replace(array("\r", "\n"), array('', ' '), substr($queryString, 0, 80));
-				JLog::add(JText::sprintf('JLIB_INSTALLER_UPDATE_LOG_QUERY', $this->runningSub, $queryString), JLog::INFO, 'com_biblestudy');
+				if (!$this->_db->execute())
+				{
+					$app->enqueueMessage($this->_db->stderr(true), 'warning');
 
+					return false;
+				}
+				else
+				{
+					$queryString = (string) $string;
+					$queryString = str_replace(array("\r", "\n"), array('', ' '), substr($queryString, 0, 80));
+					JLog::add(JText::sprintf('JLIB_INSTALLER_UPDATE_LOG_QUERY', $this->runningSub, $queryString), JLog::INFO, 'com_biblestudy');
+
+				}
 			}
 		}
 

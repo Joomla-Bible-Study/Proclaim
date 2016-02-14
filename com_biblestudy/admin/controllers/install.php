@@ -18,6 +18,31 @@ defined('_JEXEC') or die;
  */
 class BiblestudyControllerInstall extends JControllerForm
 {
+
+	/**
+	 * The context for storing internal data, e.g. record.
+	 *
+	 * @var    string
+	 * @since  12.2
+	 */
+	protected $context = 'install';
+
+	/**
+	 * The URL view item variable.
+	 *
+	 * @var    string
+	 * @since  12.2
+	 */
+	protected $view_item = 'install';
+
+	/**
+	 * The URL view list variable.
+	 *
+	 * @var    string
+	 * @since  12.2
+	 */
+	protected $view_list = 'install';
+
 	/**
 	 * Constructor.
 	 *
@@ -58,6 +83,7 @@ class BiblestudyControllerInstall extends JControllerForm
 		$model = $this->getModel('install');
 		$state = $model->startScanning();
 		$app->input->set('scanstate', $state);
+		$app->input->set('view', 'install');
 
 		$this->display(false);
 	}
@@ -75,6 +101,7 @@ class BiblestudyControllerInstall extends JControllerForm
 		$model = $this->getModel('install');
 		$state = $model->run();
 		$app->input->set('scanstate', $state);
+		$app->input->set('view', 'install');
 
 		$this->display(false);
 	}

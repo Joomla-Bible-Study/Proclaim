@@ -49,13 +49,9 @@ else
 </script>
 
 <div id="install-progress-pane">
-	<?php
-	if ($this->more)
-	{ ?>
 	<div class="migration-status">
 		<div class="status"><?php echo $pre . ' ' . JText::_('JBS_MIG_PROCESSING') . ' ' . $this->running; ?></div>
 	</div>
-	<?php } ?>
 	<fieldset>
 		<div id="install-progress-content">
 			<div id="install-percentage" class="progress">
@@ -74,7 +70,14 @@ else
 	<form action="index.php" name="adminForm" id="adminForm" method="get">
 		<input type="hidden" name="option" value="com_biblestudy"/>
 		<input type="hidden" name="view" value="install"/>
-		<input type="hidden" name="task" value="run"/>
+		<?php if ($this->state == 'start')
+		{ ?>
+			<input type="hidden" name="task" value="install.browse"/>
+		<?php }
+		else
+		{ ?>
+			<input type="hidden" name="task" value="install.run"/>
+		<?php } ?>
 		<input type="hidden" name="<?php echo JFactory::getSession()->getFormToken() ?>" value="1"/>
 	</form>
 </div>

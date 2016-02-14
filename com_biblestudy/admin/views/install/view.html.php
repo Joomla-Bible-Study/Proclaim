@@ -48,6 +48,9 @@ class BiblestudyViewInstall extends JViewLegacy
 	/** @var array Array of Install Task */
 	private $_install = array();
 
+	/** @var string Starte of install */
+	public $state;
+
 	/**
 	 * Display
 	 *
@@ -60,10 +63,11 @@ class BiblestudyViewInstall extends JViewLegacy
 		$input = new JInput;
 		$input->set('hidemainmenu', true);
 		$app   = JFactory::getApplication();
-		$state = $app->input->getBool('scanstate', false);
+		$this->state = $app->input->getBool('scanstate', false);
+
 		$this->loadStack();
 
-		if ($state)
+		if ($this->state)
 		{
 			if ($this->totalSteps > 0)
 			{
