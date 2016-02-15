@@ -429,25 +429,40 @@ class Migration900
 		jimport('joomla.filesystem.file');
 		jimport('joomla.filesystem.folder');
 
-		$path = array(BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR. 'style.php',
-			BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR .'styles.php',
-			BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'tables' . DIRECTORY_SEPARATOR . 'style.php',
-			BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . 'style.php',
-			BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . 'styles.php',
-			BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'style' . DIRECTORY_SEPARATOR . 'index.html',
-			BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'style' . DIRECTORY_SEPARATOR . 'view.html.php',
-			BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'style' . DIRECTORY_SEPARATOR . 'tmpl' . DIRECTORY_SEPARATOR .'index.html',
-			BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'style' . DIRECTORY_SEPARATOR . 'view.html.php',
-			BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'style' . DIRECTORY_SEPARATOR . 'tmpl' . DIRECTORY_SEPARATOR . 'edit.php',
-			BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'styles' . DIRECTORY_SEPARATOR . 'index.html',
-			BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'styles' . DIRECTORY_SEPARATOR . 'view.html.php',
-			BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'styles' . DIRECTORY_SEPARATOR . 'tmpl' . DIRECTORY_SEPARATOR .'index.html',
-			BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'styles' . DIRECTORY_SEPARATOR . 'view.html.php',
-			BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'styles' . DIRECTORY_SEPARATOR . 'tmpl' . DIRECTORY_SEPARATOR . 'default.php'
+		$path = array(
+			BIBLESTUDY_PATH_ADMIN . '/models/style.php',
+			BIBLESTUDY_PATH_ADMIN . '/models/styles.php',
+			BIBLESTUDY_PATH_ADMIN . '/tables/style.php',
+			BIBLESTUDY_PATH_ADMIN . '/controllers/style.php',
+			BIBLESTUDY_PATH_ADMIN . '/controllers/styles.php',
+			BIBLESTUDY_PATH_ADMIN . '/views/style/index.html',
+			BIBLESTUDY_PATH_ADMIN . '/views/style/view.html.php',
+			BIBLESTUDY_PATH_ADMIN . '/views/style/tmpl/index.html',
+			BIBLESTUDY_PATH_ADMIN . '/views/style/view.html.php',
+			BIBLESTUDY_PATH_ADMIN . '/views/style/tmpl/edit.php',
+			BIBLESTUDY_PATH_ADMIN . '/views/styles/index.html',
+			BIBLESTUDY_PATH_ADMIN . '/views/styles/view.html.php',
+			BIBLESTUDY_PATH_ADMIN . '/views/styles/tmpl/index.html',
+			BIBLESTUDY_PATH_ADMIN . '/views/styles/view.html.php',
+			BIBLESTUDY_PATH_ADMIN . '/views/styles/tmpl/default.php',
+			BIBLESTUDY_PATH_ADMIN . '/models/share.php',
+			BIBLESTUDY_PATH_ADMIN . '/models/shares.php',
+			BIBLESTUDY_PATH_ADMIN . '/tables/share.php',
+			BIBLESTUDY_PATH_ADMIN . '/controllers/share.php',
+			BIBLESTUDY_PATH_ADMIN . '/controllers/shares.php',
+			BIBLESTUDY_PATH_ADMIN . '/views/share/index.html',
+			BIBLESTUDY_PATH_ADMIN . '/views/share/view.html.php',
+			BIBLESTUDY_PATH_ADMIN . '/views/share/tmpl/index.html',
+			BIBLESTUDY_PATH_ADMIN . '/views/share/view.html.php',
+			BIBLESTUDY_PATH_ADMIN . '/views/share/tmpl/edit.php',
+			BIBLESTUDY_PATH_ADMIN . '/views/shares/index.html',
+			BIBLESTUDY_PATH_ADMIN . '/views/shares/view.html.php',
+			BIBLESTUDY_PATH_ADMIN . '/views/shares/tmpl/index.html',
+			BIBLESTUDY_PATH_ADMIN . '/views/shares/view.html.php',
+			BIBLESTUDY_PATH_ADMIN . '/views/shares/tmpl/default.php'
 		);
 
-		if (JFolder::exists($path))
-		{
+
 			foreach ($path as $file)
 			{
 				if (JFile::exists($file))
@@ -455,9 +470,12 @@ class Migration900
 					JFile::delete($file);
 				}
 			}
-		}
-		$folders = array(BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'styles',
-		BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'style');
+
+		$folders = array(
+			BIBLESTUDY_PATH_ADMIN . '/views/styles',
+			BIBLESTUDY_PATH_ADMIN . '/views/style',
+			BIBLESTUDY_PATH_ADMIN . '/views/shares',
+			BIBLESTUDY_PATH_ADMIN . '/views/share');
 
 		foreach ($folders as $folder)
 		{
