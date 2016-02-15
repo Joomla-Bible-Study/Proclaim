@@ -425,7 +425,47 @@ class Migration900
 	 */
 	public function css900 ()
 	{
+		// Import filesystem libraries. Perhaps not necessary, but does not hurt
+		jimport('joomla.filesystem.file');
+		jimport('joomla.filesystem.folder');
 
+		$path = array(BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR. 'style.php',
+			BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR .'styles.php',
+			BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'tables' . DIRECTORY_SEPARATOR . 'style.php',
+			BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . 'style.php',
+			BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . 'styles.php',
+			BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'style' . DIRECTORY_SEPARATOR . 'index.html',
+			BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'style' . DIRECTORY_SEPARATOR . 'view.html.php',
+			BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'style' . DIRECTORY_SEPARATOR . 'tmpl' . DIRECTORY_SEPARATOR .'index.html',
+			BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'style' . DIRECTORY_SEPARATOR . 'view.html.php',
+			BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'style' . DIRECTORY_SEPARATOR . 'tmpl' . DIRECTORY_SEPARATOR . 'edit.php',
+			BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'styles' . DIRECTORY_SEPARATOR . 'index.html',
+			BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'styles' . DIRECTORY_SEPARATOR . 'view.html.php',
+			BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'styles' . DIRECTORY_SEPARATOR . 'tmpl' . DIRECTORY_SEPARATOR .'index.html',
+			BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'styles' . DIRECTORY_SEPARATOR . 'view.html.php',
+			BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'styles' . DIRECTORY_SEPARATOR . 'tmpl' . DIRECTORY_SEPARATOR . 'default.php'
+		);
+
+		if (JFolder::exists($path))
+		{
+			foreach ($path as $file)
+			{
+				if (JFile::exists($file))
+				{
+					JFile::delete($file);
+				}
+			}
+		}
+		$folders = array(BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'styles',
+		BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'style');
+
+		foreach ($folders as $folder)
+		{
+			if (JFolder::exists($folder))
+			{
+				JFolder::delete($folder);
+			}
+		}
 		return true;
 	}
 
