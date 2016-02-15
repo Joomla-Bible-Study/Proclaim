@@ -351,8 +351,8 @@ class Migration900
 			JFolder::copy('/media/com_biblestudy/images', 'images/biblestudy/', JPATH_SITE, true);
 		}
 
-		$script = new BibleStudyModelMigration;
-		$script->postinstall_messages($message, $db);
+		$script = new BibleStudyModelInstall;
+		$script->postinstall_messages($message);
 
 		return true;
 	}
