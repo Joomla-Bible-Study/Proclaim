@@ -353,7 +353,7 @@ class Migration900
 
 		$script = new BibleStudyModelInstall;
 		$script->postinstall_messages($message);
-
+		$this->css900();
 		return true;
 	}
 
