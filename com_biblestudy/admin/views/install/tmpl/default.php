@@ -89,7 +89,7 @@ else
 		<div id="j-main-container" class="span10">
 			<div id="cpanel" class="btn-group">
 				<div class="pull-left">
-					<a href="index.php?option=com_biblestudy" class="btn cpanl-img">
+					<a href="index.php?option=com_biblestudy&view=install&layout=install_finished&<?php echo JSession::getFormToken() ?>=1" class="btn cpanl-img">
 						<img src="../media/com_biblestudy/images/icons/icon-48-administration.png"
 						     border="0" alt="<?php echo JText::_('JBS_CMN_CONTROL_PANEL') ?>" width="32"
 						     height="32"/>

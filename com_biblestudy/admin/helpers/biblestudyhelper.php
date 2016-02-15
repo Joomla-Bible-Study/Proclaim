@@ -363,16 +363,20 @@ class JBSMBibleStudyHelper
 	 */
 	public static function debug()
 	{
-		include_once BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php';
-		$admin_params = JBSMParams::getAdmin();
-
-		if (!isset($admin_params->debug))
+		if (JBSMDbHelper::getInstallState())
 		{
-			$admin_params        = new stdClass;
-			$admin_params->debug = 1;
+			$admin_params = JBSMParams::getAdmin();
+
+			if (!isset($admin_params->debug))
+			{
+				$admin_params        = new stdClass;
+				$admin_params->debug = 1;
+			}
+
+			return $admin_params->debug;
 		}
 
-		return $admin_params->debug;
+		return 0;
 	}
 
 	/**

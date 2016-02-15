@@ -32,7 +32,7 @@ defined('_JEXEC') or die;
 
 <h1>
 	<img src="../media/com_biblestudy/images/openbible.png" alt="Bible Study" border="0" class="float: left"/>
-	<?php echo JText::sprintf('JBS_INS_INSTALLATION_RESULTS', $this->jbstype . '_TEXT'); ?>
+	<?php echo JText::sprintf('JBS_INS_INSTALLATION_RESULTS', JText::_('JBS_MIG_MIGRATION_DONE')); ?>
 </h1>
 
 <?php $rows = 0; ?>

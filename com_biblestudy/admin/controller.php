@@ -57,12 +57,12 @@ class BiblestudyController extends JControllerLegacy
 
 		$jbsstate = JBSMDbHelper::getInstallState();
 
-		if ($jbsstate && $view != 'install' && $app->input->getCmd('task'))
+		if ($jbsstate)
 		{
 			$cache = new JCache(array('defaultgroup' => 'default'));
 			$cache->clean();
 			$app->input->set('view', 'install');
-			$app->input->set('task', 'browse');
+			$app->input->set('scanstate', 'start');
 		}
 
 		if (!$view)

@@ -4,9 +4,9 @@
     <author>Joomla Bible Study Team</author>
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
-    <copyright>(C) 2007 - 2015 Joomla Bible Study All rights reserved.</copyright>
-    <version>9.0.0-beta1</version>
-    <creationDate>Sep 19, 2015</creationDate>
+    <copyright>(C) 2007 - 2016 Joomla Bible Study All rights reserved.</copyright>
+    <version>9.0.0-beta2</version>
+    <creationDate>Feb 15, 2016</creationDate>
     <license>http://www.gnu.org/licenses/gpl.html</license>
     <description>JBS_MDL_PODCAST_XML_DESCRIPTION</description>
     <files>
@@ -19,7 +19,7 @@
         <fields name="params">
             <fieldset name="basic"
                       addfieldpath="/administrator/components/com_biblestudy/models/fields">
-                <field name="dummy" type="loadlanguagefile" default=""/>   <!-- load common language file --> 
+                <field name="dummy" type="loadlanguagefile" default=""/>   <!-- load common language file -->
                 <field name="t" type="sql" default="1"
                        label="JBS_MDL_SELECT_TEMPLATE" description="JBS_MDL_SELECT_TEMPLATE_DESC"
                        query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
