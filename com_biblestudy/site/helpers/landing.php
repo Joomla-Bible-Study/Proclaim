@@ -314,21 +314,21 @@ class JBSMLanding
 
 						if ($params->get('linkto') == 0)
 						{
-							$teacher .= 'div class="span3">';
+							$teacher .= '<div class="span4">';
 							$teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;t=' . $template)
 								. '&amp;filter_teacher_landing=' . $b->id
 								. $langlink . '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
 						}
 						else
 						{
-
+							$teacher .= '<div class="span4">';
 							$teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&id=' . $b->id . $langlink . '&t=' . $template) . '">';
 						}
 						$teacher .= $b->teachername;
 
-						$teacher .= '</a>';
+						$teacher .= '</a></div>';
 
-						$teacher .= '</div>';
+
 						$i++;
 						$t++;
 
@@ -353,17 +353,14 @@ class JBSMLanding
 
 				case 1:
 
-					$teacher = '<div class="landingtable" style="display:inline;">';
-
 					foreach ($tresult as $b)
 					{
 						if ($b->landing_show == 1)
 						{
-							$teacher .= '<div class="landingrow">';
 
 							if ($params->get('linkto') == 0)
 							{
-								$teacher .= '<div class="landingcell"><a class="landinglink="'
+								$teacher .= '<div class="span4"> <a '
 									. JRoute::_('index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;t=' . $template)
 									. '&amp;filter_teacher_landing=' . $b->id
 									. '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
@@ -371,15 +368,15 @@ class JBSMLanding
 							else
 							{
 
-								$teacher .= '<div class="landingcell"><a class="landinglink" href="'
+								$teacher .= '<div class="span4"><a href="'
 									. JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&amp;id=' . $b->id . '&amp;t=' . $template) . '">';
 							}
 							$teacher .= $b->teachername;
 
-							$teacher .= '</a></div></div>';
+							$teacher .= '</a></div>';
 						}
 					}
-					$teacher .= '</div>';
+
 					$teacher .= '<div id="showhideteachers" style="display:none;">';
 
 					foreach ($tresult as $b)
@@ -387,11 +384,10 @@ class JBSMLanding
 
 						if ($b->landing_show == 2)
 						{
-							$teacher .= '<div class="landingrow">';
 
 							if ($params->get('linkto') == 0)
 							{
-								$teacher .= '<div class="landingcell"><a class="landinglink" href="'
+								$teacher .= '<div class="span4"><a href="'
 									. JRoute::_('index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;t=' . $template)
 									. '&amp;filter_teacher_landing=' . $b->id
 									. '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
@@ -399,14 +395,14 @@ class JBSMLanding
 							else
 							{
 
-								$teacher .= '<div class="landingcell"><a class="landinglink" href="'
+								$teacher .= '<div class="span4"><a href="'
 									. JRoute::_('index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=teacher_landing&amp;id=' .
 												$b->id . '&amp;t=' . $template
 										) . '">';
 							}
 							$teacher .= $b->teachername;
 
-							$teacher .= '</a></div></div>';
+							$teacher .= '</a></div>';
 						}
 					}
 
