@@ -36,6 +36,8 @@ class JFormFieldModal_Seriesdetail extends JFormField
 	 */
 	protected function getInput()
 	{
+		// Load the modal behavior script.
+		JHtml::_('behavior.modal', 'a.modal');
 		// Load the javascript and css
 		JHtml::_('behavior.framework');
 		JHTML::_('script', 'system/modal.js', false, true);
