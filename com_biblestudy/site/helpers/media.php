@@ -87,7 +87,11 @@ class JBSMMedia
 		if ($params->get('show_filesize') > 0 && isset($media) && $link_type < 2)
 		{
 
-				$file_size = $media->params->get('size');
+				$file_size = $media->params->get('size', '0');
+				if (!$file_size)
+				{
+					$file_size = JBSMHelper::getRemoteFileSize($params->get('protocol') . $media->sparams->get('path') . $media->params->get('filename'));
+				}
 				switch ($file_size)
 				{
 					case  $file_size < 1024 :
@@ -632,9 +636,14 @@ class JBSMMedia
 	 */
 	public function getFluidFilesize($media, $params)
 	{
-		$filesize  = '';
+		$filesize = '';
 
-		$file_size = $media->params->get('size');
+		$file_size = $media->params->get('size', '0');
+		if (!$file_size)
+		{
+			$file_size = JBSMHelper::getRemoteFileSize($params->get('protocol') . $media->sparams->get('path') . $params->get('filename'));
+		}
+
 		if ($file_size)
 		{
 			switch ($file_size)
