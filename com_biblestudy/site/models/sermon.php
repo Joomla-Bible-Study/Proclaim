@@ -2,20 +2,15 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package        BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link           http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-if (!BIBLESTUDY_CHECKREL)
-{
-	jimport('joomla.application.component.modelitem');
-}
-include_once JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php';
-JLoader::register('JBSMParams', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helper/params.php');
+use Joomla\Registry\Registry;
 
 /**
  * Model class for Sermon
@@ -36,7 +31,7 @@ class BiblestudyModelSermon extends JModelItem
 	/**
 	 * Constructor
 	 *
-	 * @param   array $config An array of configuration options (name, state, dbo, table_path, ignore_request).
+	 * @param   array  $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
 	 *
 	 * @since   11.1
 	 */
@@ -48,20 +43,20 @@ class BiblestudyModelSermon extends JModelItem
 	/**
 	 * Method to increment the hit counter for the study
 	 *
-	 * @param   int $pk ID
+	 * @param   int  $pk  ID
 	 *
 	 * @access    public
 	 * @return    boolean    True on success
 	 *
-	 * @todo      this look like it could be moved to a helper. And pass info along to make it work like the id. bcc
+	 * @todo      this look like it could be moved to a helper.
 	 * @since     1.5
 	 */
 	public function hit($pk = null)
 	{
 		$pk    = (!empty($pk)) ? $pk : (int) $this->getState('study.id');
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
-		$query->update('#__bsms_studies')->set('hits = hits + 1')->where('id = ' . (int) $pk);
+		$query->update('#__bsms_studies')->set('hits = hits  + 1')->where('id = ' . (int) $pk);
 		$db->setQuery($query);
 		$db->execute();
 
@@ -69,44 +64,9 @@ class BiblestudyModelSermon extends JModelItem
 	}
 
 	/**
-	 * Method to auto-populate the model state.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @return void
-	 *
-	 * @since    1.6
-	 */
-	protected function populateState()
-	{
-		$app = JFactory::getApplication('site');
-
-		// Load state from the request.
-		$pk = $app->input->get('id', '', 'int');
-		$this->setState('study.id', $pk);
-
-		$offset = $app->input->get('limitstart', '', 'int');
-		$this->setState('list.offset', $offset);
-
-		// Load the parameters.
-		$params = $app->getParams();
-		$this->setState('params', $params);
-
-		$user = JFactory::getUser();
-
-		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
-		{
-			$this->setState('filter.published', 1);
-			$this->setState('filter.archived', 2);
-		}
-
-		parent::populateState();
-	}
-
-	/**
 	 * Method to get study data.
 	 *
-	 * @param   int $pk The id of the study.
+	 * @param   int  $pk  The id of the study.
 	 *
 	 * @since 7.1.0
 	 * @return    mixed    Menu item data object on success, false on failure.
@@ -115,6 +75,8 @@ class BiblestudyModelSermon extends JModelItem
 	 */
 	public function &getItem($pk = null)
 	{
+		$user	= JFactory::getUser();
+
 		// Initialise variables.
 		$pk = (!empty($pk)) ? $pk : (int) $this->getState('study.id');
 
@@ -125,118 +87,171 @@ class BiblestudyModelSermon extends JModelItem
 
 		if (!isset($this->_item[$pk]))
 		{
-			$db    = $this->getDbo();
-			$query = $db->getQuery(true);
-			$query->select($this->getState('item.select', 's.*,CASE WHEN CHAR_LENGTH(s.alias) THEN CONCAT_WS(\':\', s.id, s.alias) ELSE s.id END as slug'));
-			$query->from('#__bsms_studies AS s');
 
-			// Join over teachers
-			$query->select('t.id AS tid, t.teachername AS teachername, t.title AS teachertitle, t.image, t.imagew, t.imageh, t.thumb, t.thumbw, t.thumbh');
-
-			$query->join('LEFT', '#__bsms_teachers as t on s.teacher_id = t.id');
-
-			// Join over series
-			$query->select('se.id AS sid, se.series_text, se.series_thumbnail, se.description as sdescription');
-			$query->join('LEFT', '#__bsms_series as se on s.series_id = se.id');
-
-			// Join over message type
-			$query->select('mt.id as mid, mt.message_type');
-			$query->join('LEFT', '#__bsms_message_type as mt on s.messagetype = mt.id');
-
-			// Join over books
-			$query->select('b.bookname as bname');
-			$query->join('LEFT', '#__bsms_books as b on s.booknumber = b.booknumber');
-
-			// Join over locations
-			$query->select('l.id as lid, l.location_text');
-			$query->join('LEFT', '#__bsms_locations as l on s.location_id = l.id');
-
-			// Join over topics
-			$query->select('group_concat(stp.id separator ", ") AS tp_id, group_concat(stp.topic_text separator ", ")
-				 as topic_text, group_concat(stp.params separator ", ") as topic_params');
-			$query->join('LEFT', '#__bsms_studytopics as tp on s.id = tp.study_id');
-			$query->join('LEFT', '#__bsms_topics as stp on stp.id = tp.topic_id');
-
-			// Join over media files
-			$query->select('sum(m.plays) AS totalplays, sum(m.downloads) AS totaldownloads, m.id');
-			$query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
-			$query->join('LEFT', '#__bsms_mediafiles AS m on s.id = m.study_id');
-
-			$query->group('s.id');
-			$query->where('s.id = ' . (int) $pk);
-			$db->setQuery($query);
-			$data = $db->loadObject();
-
-			if (empty($data))
+			try
 			{
-				JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_STUDY_NOT_FOUND', 'error'));
+				$db    = $this->getDbo();
+				$query = $db->getQuery(true);
+				$query->select($this->getState('item.select', 's.*,CASE WHEN CHAR_LENGTH(s.alias) THEN CONCAT_WS(\':\', s.id, s.alias) ELSE s.id END as slug'));
+				$query->from('#__bsms_studies AS s');
 
-				return false;
-			}
+				// Join over teachers
+				$query->select('t.id AS tid, t.teachername AS teachername, t.title AS teachertitle, t.image, t.imagew, t.imageh,' .
+					't.teacher_thumbnail as thumb, t.thumbw, t.thumbh');
 
-			// Concat topic_text and concat topic_params do not fit, so translate individually
-			$topic_text       = JBSMTranslated::getTopicItemTranslated($data);
-			$data->id         = $pk;
-			$data->topic_text = $topic_text;
-			$data->bname      = JText::_($data->bname);
+				$query->join('LEFT', '#__bsms_teachers as t on s.teacher_id = t.id');
 
-			$registry = new JRegistry;
-			$registry->loadString($data->params);
-			$data->params = $registry;
+				// Join over series
+				$query->select('se.id AS sid, se.series_text, se.series_thumbnail, se.description as sdescription');
+				$query->join('LEFT', '#__bsms_series as se on s.series_id = se.id');
 
-			$template     = clone JBSMParams::getTemplateparams();
-			if($template)
-			{
-				$template->params->merge($data->params);
-				$data->params = $template->params;
-			}
+				// Join over message type
+				$query->select('mt.id as mid, mt.message_type');
+				$query->join('LEFT', '#__bsms_message_type as mt on s.messagetype = mt.id');
 
-			$params = clone $this->getState('params');
-			$params->merge($data->params);
-			$data->params = $params;
+				// Join over books
+				$query->select('b.bookname as bookname');
+				$query->join('LEFT', '#__bsms_books as b on s.booknumber = b.booknumber');
 
-			$a_params           = JBSMParams::getAdmin();
-			$data->admin_params = $a_params->params;
+				$query->select('book2.bookname as bookname2');
+				$query->join('LEFT', '#__bsms_books AS book2 ON book2.booknumber = s.booknumber2');
 
-			// Compute selected asset permissions.
-			$user = JFactory::getUser();
+				// Join over locations
+				$query->select('l.id as lid, l.location_text');
+				$query->join('LEFT', '#__bsms_locations as l on s.location_id = l.id');
 
-			// Technically guest could edit an article, but lets not check that to improve performance a little.
-			if (!$user->get('guest'))
-			{
-				$userId = $user->get('id');
-				$asset  = 'com_biblestudy.message.' . $data->id;
+				// Join over topics
+				$query->select('group_concat(stp.id separator ", ") AS tp_id, group_concat(stp.topic_text separator ", ")
+					 as topic_text, group_concat(stp.params separator ", ") as topic_params');
+				$query->join('LEFT', '#__bsms_studytopics as tp on s.id = tp.study_id');
+				$query->join('LEFT', '#__bsms_topics as stp on stp.id = tp.topic_id');
 
-				// Check general edit permission first.
-				if ($user->authorise('core.edit', $asset))
+				// Join over media files
+				$query->select('sum(m.plays) AS totalplays, sum(m.downloads) AS totaldownloads, m.id');
+				$query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
+				$query->join('LEFT', '#__bsms_mediafiles AS m on s.id = m.study_id');
+
+				if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
 				{
-					$data->params->set('access-edit', true);
+					// Filter by start and end dates.
+					$nullDate = $db->quote($db->getNullDate());
+					$date     = JFactory::getDate();
+
+					$nowDate = $db->quote($date->toSql());
+
+					$query->where('(s.publish_up = ' . $nullDate . ' OR s.publish_up <= ' . $nowDate . ')')
+						->where('(s.publish_down = ' . $nullDate . ' OR s.publish_down >= ' . $nowDate . ')');
 				}
-				// Now check if edit.own is available.
-				elseif (!empty($userId) && $user->authorise('core.edit.own', $asset))
+
+				// Implement View Level Access
+				if (!$user->authorise('core.admin'))
 				{
-					$data->params->set('access-edit', true);
+					$groups = implode(',', $user->getAuthorisedViewLevels());
+					$query->where('s.access IN (' . $groups . ')');
+				}
+
+				// Filter by published state.
+				$published = $this->getState('filter.published');
+				$archived  = $this->getState('filter.archived');
+
+				if (is_numeric($published))
+				{
+					$query->where('(s.published = ' . (int) $published . ' OR s.published =' . (int) $archived . ')');
+				}
+
+				$query->group('s.id');
+				$query->where('s.id = ' . (int) $pk);
+				$db->setQuery($query);
+				$data = $db->loadObject();
+
+				if (empty($data))
+				{
+					JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_STUDY_NOT_FOUND', 'error'));
+					return $data;
+				}
+
+				// Check for published state if filter set.
+				if (((is_numeric($published)) || (is_numeric($archived))) && (($data->published != $published) && ($data->published != $archived)))
+				{
+					JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_ITEM_NOT_PUBLISHED'), 'error');
+					$data = null;
+					return $data;
+				}
+
+				// Concat topic_text and concat topic_params do not fit, so translate individually
+				$topic_text       = JBSMTranslated::getTopicItemTranslated($data);
+				$data->id         = $pk;
+				$data->topic_text = $topic_text;
+				$data->bookname   = JText::_($data->bookname);
+
+				$registry = new Registry;
+				$registry->loadString($data->params);
+				$data->params = $registry;
+				$template     = JBSMParams::getTemplateparams();
+
+				$data->params->merge($template->params);
+				$mparams = clone $this->getState('params');
+				$mj      = new Registry;
+				$mj->loadString($mparams);
+				$data->params->merge($mj);
+
+				$a_params           = JBSMParams::getAdmin();
+				$data->admin_params = $a_params->params;
+
+				// Technically guest could edit an article, but lets not check that to improve performance a little.
+				if (!$user->get('guest'))
+				{
+					$userId = $user->get('id');
+					$asset  = 'com_biblestudy.message.' . $data->id;
+
+					// Check general edit permission first.
+					if ($user->authorise('core.edit', $asset))
+					{
+						$data->params->set('access-edit', true);
+					}
+					// Now check if edit.own is available.
+					elseif (!empty($userId) && $user->authorise('core.edit.own', $asset))
+					{
+						// Check for a valid user and that they are the owner.
+						if ($userId == $data->created_by)
+						{
+							$data->params->set('access-edit', true);
+						}
+					}
+				}
+
+				// Compute view access permissions.
+				$access = $this->getState('filter.access');
+
+				if ($access)
+				{
+					// If the access filter has been set, we already know this user can view.
+					$data->params->set('access-view', true);
+				}
+				else
+				{
+					// If no access filter is set, the layout takes some responsibility for display of limited information.
+					$user   = JFactory::getUser();
+					$groups = $user->getAuthorisedViewLevels();
+
+					$data->params->set('access-view', in_array($data->access, $groups));
+				}
+
+				$this->_item[$pk] = $data;
+			}
+			catch (Exception $e)
+			{
+				if ($e->getCode() == 404)
+				{
+					// Need to go through the error handler to allow Redirect to work.
+					JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+				}
+				else
+				{
+					JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+					$this->_item[$pk] = false;
 				}
 			}
-
-			// Compute view access permissions.
-			$access = $this->getState('filter.access');
-
-			if ($access)
-			{
-				// If the access filter has been set, we already know this user can view.
-				$data->params->set('access-view', true);
-			}
-			else
-			{
-				// If no access filter is set, the layout takes some responsibility for display of limited information.
-				$user   = JFactory::getUser();
-				$groups = $user->getAuthorisedViewLevels();
-
-				$data->params->set('access-view', in_array($data->access, $groups));
-			}
-
-			$this->_item[$pk] = $data;
 		}
 
 		return $this->_item[$pk];
@@ -253,7 +268,7 @@ class BiblestudyModelSermon extends JModelItem
 		$app = JFactory::getApplication('site');
 		$id  = $app->input->get('id', '', 'int');
 
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('c.*')->from('#__bsms_comments AS c')->where('c.published = 1')->where('c.study_id = ' . $id)->order('c.comment_date asc');
 		$db->setQuery($query);
@@ -293,5 +308,55 @@ class BiblestudyModelSermon extends JModelItem
 		return true;
 	}
 
-// End class
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @return void
+	 *
+	 * @since    1.6
+	 */
+	protected function populateState()
+	{
+		$app = JFactory::getApplication('site');
+
+		// Load state from the request.
+		$pk = $app->input->get('id', '', 'int');
+		$this->setState('study.id', $pk);
+
+		$offset = $app->input->get('limitstart', '', 'int');
+		$this->setState('list.offset', $offset);
+
+		// Load the parameters.
+		$params = $app->getParams();
+		$this->setState('params', $params);
+		$template = JBSMParams::getTemplateparams();
+		$admin    = JBSMParams::getAdmin();
+
+		$template->params->merge($params);
+		$template->params->merge($admin->params);
+		$params = $template->params;
+
+		$t = $params->get('sermonid');
+
+		if (!$t)
+		{
+			$input = new JInput;
+			$t     = $input->get('t', 1, 'int');
+		}
+
+		$template->id = $t;
+
+		$this->setState('template', $template);
+		$this->setState('admin', $admin);
+
+		$user = JFactory::getUser();
+
+		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
+		{
+			$this->setState('filter.published', 1);
+			$this->setState('filter.archived', 2);
+		}
+	}
 }

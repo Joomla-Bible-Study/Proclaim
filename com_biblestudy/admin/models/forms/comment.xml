@@ -25,7 +25,7 @@
         </option>
     </field>
     <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
-           description="COM_CONTACT_FIELD_LANGUAGE_DESC" class="inputbox span12">
+           description="JBS_CMN_SELECT_LANGUAGE_DESC" class="inputbox span12">
         <option value="*">JALL</option>
     </field>
     <field name="study_id" type="Modal_Study" label="JBS_CMN_STUDY"

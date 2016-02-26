@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -57,7 +57,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -72,7 +72,6 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'teacher');
 
 		// Load the Admin settings
-		$this->loadHelper('params');
 		$this->admin = JBSMParams::getAdmin();
 
 		$this->setLayout("edit");
@@ -103,25 +102,25 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolBarHelper::title(JText::_('JBS_CMN_TEACHERS') . ': <small><small>[' . $title . ']</small></small>', 'teachers.png');
+		JToolbarHelper::title(JText::_('JBS_CMN_TEACHERS') . ': <small><small>[' . $title . ']</small></small>', 'user user');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_biblestudy'))
 		{
-			JToolBarHelper::apply('teacher.apply');
-			JToolBarHelper::save('teacher.save');
-			JToolBarHelper::cancel('teacher.cancel');
+			JToolbarHelper::apply('teacher.apply');
+			JToolbarHelper::save('teacher.save');
+			JToolbarHelper::cancel('teacher.cancel');
 		}
 		else
 		{
 			if ($this->canDo->get('core.edit', 'com_biblestudy'))
 			{
-				JToolBarHelper::apply('teacher.apply');
-				JToolBarHelper::save('teacher.save');
+				JToolbarHelper::apply('teacher.apply');
+				JToolbarHelper::save('teacher.save');
 			}
-			JToolBarHelper::cancel('teacher.cancel', 'JTOOLBAR_CLOSE');
+			JToolbarHelper::cancel('teacher.cancel', 'JTOOLBAR_CLOSE');
 		}
-		JToolBarHelper::divider();
-		JToolBarHelper::help('biblestudy', true);
+		JToolbarHelper::divider();
+		JToolbarHelper::help('biblestudy', true);
 	}
 
 	/**

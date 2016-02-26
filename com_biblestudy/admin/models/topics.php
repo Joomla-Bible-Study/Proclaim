@@ -3,14 +3,12 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-jimport('joomla.application.component.modellist');
 
 /**
  * Topics model class
@@ -24,7 +22,7 @@ class BiblestudyModelTopics extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config  An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 */
 	public function __construct($config = array())
 	{
@@ -42,10 +40,31 @@ class BiblestudyModelTopics extends JModelList
 	}
 
 	/**
+	 * translate item entries: books, topics
+	 *
+	 * @param   array  $items  Items for entries
+	 *
+	 * @return object
+	 *
+	 * @since 7.0
+	 */
+	public function getTranslated($items = array())
+	{
+		$translate = new JBSMTranslated;
+
+		foreach ($items as $item)
+		{
+			$item->topic_text = $translate->getTopicItemTranslated($item);
+		}
+
+		return $items;
+	}
+
+	/**
 	 * Populate State
 	 *
-	 * @param   string $ordering   An optional ordering field.
-	 * @param   string $direction  An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -73,7 +92,7 @@ class BiblestudyModelTopics extends JModelList
 	/**
 	 * Get Stored ID
 	 *
-	 * @param   string $id  A prefix for the store id
+	 * @param   string  $id  A prefix for the store id
 	 *
 	 * @return string      A store id
 	 *
@@ -135,27 +154,5 @@ class BiblestudyModelTopics extends JModelList
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
 		return $query;
-	}
-
-	/**
-	 * translate item entries: books, topics
-	 *
-	 * @param   array $items  Items for entries
-	 *
-	 * @return object
-	 *
-	 * @since 7.0
-	 */
-	public function getTranslated($items = array())
-	{
-		JLoader::register('JBSMTranslated', BIBLESTUDY_PATH_ADMIN_HELPERS . '/translated.php');
-		$translate = new JBSMTranslated;
-
-		foreach ($items as $item)
-		{
-			$item->topic_text = $translate->getTopicItemTranslated($item);
-		}
-
-		return $items;
 	}
 }

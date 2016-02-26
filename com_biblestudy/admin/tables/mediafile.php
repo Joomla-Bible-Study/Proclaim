@@ -3,12 +3,15 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
+use Joomla\Registry\Registry;
+
 /**
  * Table class for MediaFile
  *
@@ -26,32 +29,18 @@ class TableMediafile extends JTable
 	public $id = null;
 
 	/**
-	 * Study ID
+	 * Study id
 	 *
-	 * @var string
+	 * @var int
 	 */
 	public $study_id = null;
 
 	/**
-	 * Media Image
-	 *
-	 * @var string
-	 */
-	public $media_image = null;
-
-	/**
-	 * Server
-	 *
-	 * @var string
-	 */
-	public $server = null;
-
-	/**
-	 * Path
-	 *
-	 * @var string
-	 */
-	public $path = null;
+     * Server id
+     *
+     * @var int
+     */
+	public $server_id = null;
 
 	/**
 	 * Published
@@ -61,46 +50,11 @@ class TableMediafile extends JTable
 	public $published = 1;
 
 	/**
-	 * Special
-	 *
-	 * @var string
-	 */
-	public $special = null;
-
-	/**
-	 * File Name
-	 *
-	 * @var string
-	 */
-	public $filename = null;
-
-	/**
-	 * File Size
-	 *
-	 * @var string
-	 */
-	public $size = null;
-
-	/**
-	 * File Mime Type
-	 *
-	 * @var string
-	 */
-	public $mime_type = null;
-
-	/**
 	 * Podcast ID
 	 *
 	 * @var string
 	 */
 	public $podcast_id = null;
-
-	/**
-	 * Internal Viewer
-	 *
-	 * @var string
-	 */
-	public $internal_viewer = null;
 
 	/**
 	 * Ordering
@@ -110,53 +64,11 @@ class TableMediafile extends JTable
 	public $ordering = null;
 
 	/**
-	 * Media Code
-	 *
-	 * @var string
-	 */
-	public $mediacode = null;
-
-	/**
 	 * Create Date
 	 *
 	 * @var string
 	 */
 	public $createdate = null;
-
-	/**
-	 * Link type
-	 *
-	 * @var string
-	 */
-	public $link_type = null;
-
-	/**
-	 * Hits
-	 *
-	 * @var string
-	 */
-	public $hits = null;
-
-	/**
-	 * DocMan ID
-	 *
-	 * @var string
-	 */
-	public $docMan_id = null;
-
-	/**
-	 * Content Article ID
-	 *
-	 * @var string
-	 */
-	public $article_id = null;
-
-	/**
-	 * VirtueMart ID
-	 *
-	 * @var string
-	 */
-	public $virtueMart_id = null;
 
 	/**
 	 * Comment Text
@@ -166,32 +78,33 @@ class TableMediafile extends JTable
 	public $comment = null;
 
 	/**
-	 * Params before jSon
+	 * Media configuration
 	 *
 	 * @var string
 	 */
 	public $params = null;
 
 	/**
-	 * Player state
-	 *
-	 * @var string
-	 */
-	public $player = null;
+     * Hold transitive data (i.e statistics)
+     *
+     * @var null
+     */
+	public $metadata = null;
 
-	/**
-	 * Popup state
-	 *
-	 * @var string
-	 */
-	public $popup = null;
+	public $plays = 0;
+
+	public $downloads = 0;
+
+	public $hits = 0;
+
+	public $checked_out;
 
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver &$db  Database connector object
+	 * @param   JDatabaseDriver  &$db  Database connector object
 	 */
-	public function Tablemediafile(& $db)
+	public function __construct(&$db)
 	{
 		parent::__construct('#__bsms_mediafiles', 'id', $db);
 	}
@@ -201,8 +114,8 @@ class TableMediafile extends JTable
 	 * method only binds properties that are publicly accessible and optionally
 	 * takes an array of properties to ignore when binding.
 	 *
-	 * @param   mixed $array   An associative array or object to bind to the JTable instance.
-	 * @param   mixed $ignore  An optional array or space separated list of properties to ignore while binding.
+	 * @param   mixed  $array   An associative array or object to bind to the JTable instance.
+	 * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
 	 *
 	 * @return  boolean  True on success.
 	 */
@@ -210,7 +123,7 @@ class TableMediafile extends JTable
 	{
 		if (isset($array['params']) && is_array($array['params']))
 		{
-			$registry = new JRegistry;
+			$registry = new Registry;
 			$registry->loadArray($array['params']);
 			$array['params'] = (string) $registry;
 		}
@@ -228,6 +141,30 @@ class TableMediafile extends JTable
 		}
 
 		return parent::bind($array, $ignore);
+	}
+
+	/**
+	 * Method to store a row in the database from the JTable instance properties.
+	 * If a primary key value is set the row with that primary key value will be
+	 * updated with the instance property values.  If no primary key value is set
+	 * a new row will be inserted into the database with the properties from the
+	 * JTable instance.
+	 *
+	 * @param   boolean  $updateNulls  True to update fields even if they are null.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @link    https://docs.joomla.org/JTable/store
+	 * @since   11.1
+	 */
+	public function store($updateNulls = false)
+	{
+		if (!$this->_rules)
+		{
+			$this->setRules('{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}');
+		}
+
+		return parent::store($updateNulls);
 	}
 
 	/**
@@ -255,7 +192,7 @@ class TableMediafile extends JTable
 	 */
 	protected function _getAssetTitle()
 	{
-		$title = 'JBS Media File: ' . $this->filename . '-' . $this->id;
+		$title = 'JBS Media File: ' . $this->id;
 
 		return $title;
 	}
@@ -266,8 +203,8 @@ class TableMediafile extends JTable
 	 * The extended class can define a table and id to lookup.  If the
 	 * asset does not exist it will be created.
 	 *
-	 * @param   JTable  $table  A JTable object for the asset parent.
-	 * @param   integer $id     Id to look up
+	 * @param   JTable   $table  A JTable object for the asset parent.
+	 * @param   integer  $id     Id to look up
 	 *
 	 * @return  integer
 	 *
@@ -282,30 +219,64 @@ class TableMediafile extends JTable
 	}
 
 	/**
-	 * Overloaded load function
+	 * Method to check a row in if the necessary properties/fields exist.  Checking
+	 * a row in will allow other users the ability to edit the row.
 	 *
-	 * @param   int     $pk     primary key
-	 * @param   boolean $reset  reset data
+	 * @param   mixed  $pk  An optional primary key value to check out.  If not set the instance property value is used.
 	 *
-	 * @return      boolean
+	 * @return  boolean  True on success.
 	 *
-	 * @see JTable:load
+	 * @link    http://docs.joomla.org/JTable/checkIn
+	 * @since   11.1
+	 * @throws  UnexpectedValueException
 	 */
-	public function load($pk = null, $reset = true)
+	public function checkIn($pk = null)
 	{
-		if (parent::load($pk, $reset))
+		// If there is no checked_out or checked_out_time field, just return true.
+		if (!property_exists($this, 'checked_out') || !property_exists($this, 'checked_out_time'))
 		{
-			// Convert the params field to a registry.
-			$params = new JRegistry;
-			$params->loadString($this->params);
-			$this->params = $params;
-
 			return true;
 		}
-		else
-		{
-			return false;
-		}
-	}
 
+		if (is_null($pk))
+		{
+			$pk = array();
+
+			foreach ($this->_tbl_keys AS $key)
+			{
+				$pk[$this->$key] = $this->$key;
+			}
+		}
+		elseif (!is_array($pk))
+		{
+			$pk = array($this->_tbl_key => $pk);
+		}
+
+		foreach ($this->_tbl_keys AS $key)
+		{
+			$pk[$key] = empty($pk[$key]) ? $this->$key : $pk[$key];
+
+			if ($pk[$key] === null)
+			{
+				throw new UnexpectedValueException('Null primary key not allowed.');
+			}
+		}
+
+		// Check the row in by primary key.
+		$query = $this->_db->getQuery(true)
+			->update($this->_tbl)
+			->set($this->_db->quoteName($this->getColumnAlias('checked_out')) . ' = 0')
+			->set($this->_db->quoteName($this->getColumnAlias('checked_out_time')) . ' = ' . $this->_db->quote($this->_db->getNullDate()));
+		$this->appendPrimaryKeys($query, $pk);
+		$this->_db->setQuery($query);
+
+		// Check for a database error.
+		$this->_db->execute();
+
+		// Set table values in the object.
+		$this->checked_out      = 0;
+		$this->checked_out_time = '';
+
+		return true;
+	}
 }

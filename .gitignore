@@ -1,9 +1,18 @@
+/tests/test.css
 # System files #
 .gitignore
 .idea
 .c9revisions
 .DS_Store
 .joomla-dev
+.buildpath
+.project
+.settings
+.vagrant
+
+# Misc
+composer.lock
+*.log
 
 # Test Related Files #
 /tests/system/servers/configdef.php
@@ -24,3 +33,19 @@ com_biblestudy/admin/views/test/index.html
 com_biblestudy/admin/views/test/tmpl/index.html
 
 tests/unit/.joomla-cms/
+
+/vendor/
+/bin/phing
+/bin/pdepend
+/bin/phpcpd
+/bin/phploc
+/bin/phpmd
+/bin/phpunit
+/bin/phpcs
+/composer.phar
+
+tests/.joomla-cms
+
+*.phar
+
+tests/test.php

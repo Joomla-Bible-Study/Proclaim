@@ -3,7 +3,7 @@
  * Default Custom
  *
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -22,16 +22,13 @@ if (!$t)
 {
 	$t = $input->get('t', 1, 'int');
 }
-$admin_params = $this->admin_params;
-$JViewLegacy = new JViewLegacy;
-$JViewLegacy->loadHelper('teacher');
 $JBSMTeacher = new JBSMTeacher;
 ?>
 <div id="biblestudy" class="noRefTagger">
 	<table class="table table-striped" id="bsm_teachertable">
 		<tbody>
 		<tr class="titlerow">
-			<td style="text-align: center" colspan="3" class="title">
+			<td style="text-align: center;" colspan="3" class="title">
 				<?php echo $this->params->get('teacher_title', JText::_('JBS_TCH_OUR_TEACHERS')); ?>
 			</td>
 		</tr>
@@ -57,7 +54,7 @@ $JBSMTeacher = new JBSMTeacher;
 
 	foreach ($this->items as $row)
 	{ // Run through each row of the data result from the model
-		$listing = $JBSMTeacher->getTeacherListExp($row, $params, $oddeven = 0, $this->admin_params, $t);
+		$listing = $JBSMTeacher->getTeacherListExp($row, $params, $oddeven = 0, $t);
 		echo $listing;
 	}
 

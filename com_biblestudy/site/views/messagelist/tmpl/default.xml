@@ -6,19 +6,6 @@
             <![CDATA[JBS_MNU_STUDIES_LIST_EDIT_LAYOUT_DESC]]>
         </message>
     </layout>
-    <fields name="request">
-        <fieldset name="request">
-            <field name="templatemenuid" type="sql"
-                   description="JBS_MNU_SELECT_TEMPLATE_DESC"
-                   label="JBS_MNU_SELECT_TEMPLATE"
-                   default="1"
-                   query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
-                   key_field="id"
-                   value_field="title"
-                   required="true"
-                    />
-        </fieldset>
-    </fields>
     <fields name="params">
         <fieldset name="basic"
                   label="JBS_MNU_STUDIES_LIST_LAYOUT"
@@ -64,7 +51,7 @@
             <field name="mmessagetype"
                    type="messagetypelist"
                    multiple="true"
-                   label="JBS_CMN_FILTERS_MESSAGE_TYPES"
+                   label="JBS_CMN_FILTERS_MESSAGETYPES"
                    description="JBS_CMN_FILTERS_DESC"
                    default="-1">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>

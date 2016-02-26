@@ -3,14 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
-//No Direct Access
+// No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
+use \Joomla\Registry\Registry;
 
 /**
  * Update for 8.0.0 class
@@ -18,18 +18,20 @@ JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblest
  * @package  BibleStudy.Admin
  * @since    8.0.0
  */
-class JBS800Update
+class Migration800
 {
 
 	/**
 	 * Method to Update to 8.0.0
 	 *
+	 * @param   JDatabaseDriver  $db  Joomla Data bass driver
+	 *
 	 * @return boolean
 	 */
-	public function update800()
+	public function up($db)
 	{
-		self::migrate_topics();
-		self::fix_mediafile_params();
+		self::migrate_topics($db);
+		self::fix_mediafile_params($db);
 
 		return true;
 	}
@@ -37,12 +39,13 @@ class JBS800Update
 	/**
 	 * Migrate Topics
 	 *
+	 * @param   JDatabaseDriver  $db  Joomla Data bass driver
+	 *
 	 * @return bool
 	 */
-	private function migrate_topics()
+	private function migrate_topics($db)
 	{
-		$db       = JFactory::getDBO();
-		$registry = new JRegistry;
+		$registry = new Registry;
 		$query    = $db->getQuery(true);
 		$query->select('id, params')
 			->from('#__bsms_topics');
@@ -57,7 +60,7 @@ class JBS800Update
 				/**
 				 * Leave record alone, since it would load language from ini file
 				 *
-				 * @depricated 8.2.0
+				 * @deprecated 8.2.0
 				 **/
 				// Case: Params is not null
 			}
@@ -66,7 +69,7 @@ class JBS800Update
 				$registry->loadString($topic->params);
 				$params = $registry->toArray();
 
-				// Loop through every param language and create a new record
+				// Loop through every param language and create a new rocord
 				foreach ($params as $key => $value)
 				{
 					// Load Topic table
@@ -84,7 +87,7 @@ class JBS800Update
 					}
 					$new_topic->topic_text = $value;
 					$table->save($new_topic);
-					$this->update_studies($table, $topic->id);
+					$this->update_studies($table, $topic->id, $db);
 				}
 
 				// Delete old topic
@@ -96,7 +99,7 @@ class JBS800Update
 				if (!$db->execute())
 				{
 
-					JFactory::getApplication()->enqueueMessage('Filed to delete old topic id: ' . $topic->id, 'warning');
+					JFactory::getApplication()->enqueueMessage('Failed to delete old topic id: ' . $topic->id, 'warning');
 
 					return false;
 				}
@@ -106,18 +109,17 @@ class JBS800Update
 		return true;
 	}
 
-
 	/**
 	 * Update studies to reference newly created topics
 	 *
-	 * @param   Object $topic_table   Object containing the saved topic record
-	 * @param   String $old_topic_id  Reference to the old topic id
+	 * @param   Object           $topic_table   Object containing the saved topic record
+	 * @param   String           $old_topic_id  Reference to the old topic id
+	 * @param   JDatabaseDriver  $db            Joomla Data bass driver
 	 *
 	 * @return void
 	 */
-	private function update_studies($topic_table, $old_topic_id)
+	private function update_studies($topic_table, $old_topic_id, $db)
 	{
-		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('studytopics.id, studytopics.topic_id, studytopics.study_id, study.language as study_language')
 			->from('#__bsms_studytopics AS studytopics')
@@ -141,7 +143,7 @@ class JBS800Update
 
 				if (!$db->execute())
 				{
-					JFactory::getApplication()->enqueueMessage('Update of Studies topics Filed' . $result->id, 'warning');
+					JFactory::getApplication()->enqueueMessage('Update of Studies topics Failed' . $result->id, 'warning');
 
 					return;
 				}
@@ -152,11 +154,12 @@ class JBS800Update
 	/**
 	 * Fix Media File Player settings
 	 *
+	 * @param   JDatabaseDriver  $db  Joomla Data bass driver
+	 *
 	 * @return mixed
 	 */
-	public function fix_mediafile_params()
+	public function fix_mediafile_params($db)
 	{
-		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('id, params')
 			->from('#__bsms_mediafiles')
@@ -166,7 +169,7 @@ class JBS800Update
 
 		foreach ($results as $result)
 		{
-			$registry = new JRegistry;
+			$registry = new Registry;
 			$registry->loadString($result->params);
 			$old_params = $registry->toObject();
 
@@ -238,7 +241,7 @@ class JBS800Update
 
 			if (!$db->execute())
 			{
-				JFactory::getApplication()->enqueueMessage('Update of mediafile params Filed' . $result->id, 'warning');
+				JFactory::getApplication()->enqueueMessage('Update of mediafile params Failed' . $result->id, 'warning');
 
 				return false;
 			}

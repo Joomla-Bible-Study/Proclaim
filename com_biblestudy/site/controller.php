@@ -3,20 +3,22 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-/**
- * Bible Study Core Difines
- */
-require_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php');
+use \Joomla\Registry\Registry;
 
-JLoader::register('JBSMUpload', BIBLESTUDY_PATH_HELPERS . '/upload.php');
-jimport('joomla.application.component.controller');
+// Always load JBSM API if it exists.
+$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+
+if (file_exists($api))
+{
+	require_once $api;
+}
 
 /**
  * Controller for Core BibleStudy
@@ -32,21 +34,21 @@ class BiblestudyController extends JControllerLegacy
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config   An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *                          Recognized key values include 'name', 'default_task', 'model_path', and
 	 * 'view_path' (this list is not meant to be comprehensive).
 	 */
 	public function __construct($config = array())
 	{
-		$input = JFactory::getApplication()->input;
+		$this->input = JFactory::getApplication()->input;
 
 		// Article frontpage Editor pagebreak proxying:
-		if ($input->get('view') === 'sermon' && $input->get('layout') === 'pagebreak')
+		if ($this->input->get('view') === 'sermon' && $this->input->get('layout') === 'pagebreak')
 		{
 			$config['base_path'] = JPATH_COMPONENT_ADMINISTRATOR;
 		}
 		// Article frontpage Editor article proxying:
-		elseif ($input->get('view') === 'sermons' && $input->get('layout') === 'modal')
+		elseif ($this->input->get('view') === 'sermons' && $this->input->get('layout') === 'modal')
 		{
 			JHtml::_('stylesheet', 'system/adminlist.css', array(), true);
 			$config['base_path'] = JPATH_COMPONENT_ADMINISTRATOR;
@@ -61,8 +63,8 @@ class BiblestudyController extends JControllerLegacy
 	 * This function is provide as a default implementation, in most cases
 	 * you will need to override it in your own controllers.
 	 *
-	 * @param   boolean $cachable   If true, the view output will be cached
-	 * @param   array   $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
+	 * @param   boolean  $cachable   If true, the view output will be cached
+	 * @param   array    $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
 	 *
 	 * @return  JControllerLegacy  A JControllerLegacy object to support chaining.
 	 */
@@ -73,10 +75,9 @@ class BiblestudyController extends JControllerLegacy
 		/* Set the default view name and format from the Request.
 		   Note we are using a_id to avoid collisions with the router and the return page.
 		   Frontend is a bit messier than the backend. */
-		$input = JFactory::getApplication()->input;
-		$id    = $input->getInt('a_id');
-		$vName = $input->get('view', 'landingpage', 'cmd');
-		$input->set('view', $vName);
+		$id    = $this->input->getInt('a_id');
+		$vName = $this->input->get('view', 'landingpage', 'cmd');
+		$this->input->set('view', $vName);
 
 		$user = JFactory::getUser();
 
@@ -85,10 +86,7 @@ class BiblestudyController extends JControllerLegacy
 			$cachable = false;
 		}
 
-		if ($user->get('id') ||
-			($_SERVER['REQUEST_METHOD'] == 'POST' &&
-				($vName == 'archive'))
-		)
+		if ($user->get('id') || ($_SERVER['REQUEST_METHOD'] == 'POST' && ($vName == 'archive')))
 		{
 			$cachable = false;
 		}
@@ -96,14 +94,14 @@ class BiblestudyController extends JControllerLegacy
 		// Attempt to change mysql for error in large select
 		$db = JFactory::getDBO();
 		$db->setQuery('SET SQL_BIG_SELECTS=1');
-		$db->query();
-		$t = $input->get('t', '', 'int');
+		$db->execute();
+		$t = $this->input->get('t', '', 'int');
 
 		if (!$t)
 		{
 			$t = 1;
 		}
-		$input->set('t', $t, 'string');
+		$this->input->set('t', $t);
 
 		$safeurlparams = array(
 			'id'               => 'INT',
@@ -122,15 +120,15 @@ class BiblestudyController extends JControllerLegacy
 			'lang'             => 'CMD'
 		);
 
-		// Check for edit form.TF commented this out as checkEditId was causing an error due to it having a protect member
-		/*if ($vName == 'form' && !$this->checkEditId('com_biblestudy.edit.message', $id))
+		// Check for edit form.
+		if ($vName == 'form' && !$this->checkEditId('com_biblestudy.edit.message', $id))
 		{
 			// Somehow the person just went to the form - we don't allow that.
 			JFactory::getApplication()->enqueueMessage(JText::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id), 'error');
 
 			return false;
 		}
-        */
+
 		parent::display($cachable, $safeurlparams);
 
 		return $this;
@@ -143,35 +141,29 @@ class BiblestudyController extends JControllerLegacy
 	 */
 	public function comment()
 	{
-		$input     = JFactory::getApplication()->input;
 		$mainframe = JFactory::getApplication();
-		$option    = $input->get('option', '', 'cmd');
 
 		$model = $this->getModel('sermon');
-		$t     = $input->get('t');
+		$t     = $this->input->get('t');
 
 		if (!$t)
 		{
 			$t = 1;
 		}
-		$input->set('t', $t);
+		$this->input->set('t', $t);
 
 		// Convert parameter fields to objects.
-		$registry = new JRegistry;
+		$registry = new Registry;
 		$registry->loadString($model->_template[0]->params);
 		$params = $registry;
 		$cap    = 1;
 
 		if ($params->get('use_captcha') > 0)
 		{
-			// Begin reCaptcha
-			require_once(JPATH_SITE . '/media/com_biblestudy/captcha/recaptchalib.php');
-			$privatekey = $params->get('private_key');
-			$challenge  = $input->get('recaptcha_challenge_field', '', 'post');
-			$response   = $input->get('recaptcha_response_field', '', 'string');
-			$resp       = recaptcha_check_answer($privatekey, $_SERVER["REMOTE_ADDR"], $challenge, $response);
-
-			if (!$resp->is_valid)
+			JPluginHelper::importPlugin('captcha');
+			$dispatcher = JEventDispatcher::getInstance();
+			$res        = $dispatcher->trigger('onCheckAnswer', $_POST['recaptcha_response_field']);
+			if (!$res[0])
 			{
 				// What happens when the CAPTCHA was entered incorrectly
 				$mess = JText::_('JBS_STY_INCORRECT_KEY');
@@ -182,15 +174,11 @@ class BiblestudyController extends JControllerLegacy
 
 				return;
 			}
-			else
-			{
-				$cap = 1;
-			}
 		}
 
 		if ($cap == 1)
 		{
-			if ($input->get('published', '', 'int') == 0)
+			if ($this->input->get('published', '', 'int') == 0)
 			{
 				$msg = JText::_('JBS_STY_COMMENT_UNPUBLISHED');
 			}
@@ -207,7 +195,7 @@ class BiblestudyController extends JControllerLegacy
 			{
 				$this->commentsEmail($params);
 			}
-			$study_detail_id = $input->get('study_detail_id', 0, 'INT');
+			$study_detail_id = $this->input->get('study_detail_id', 0, 'INT');
 
 			$mainframe->redirect('index.php?option=com_biblestudy&id=' . $study_detail_id . '&view=sermon&t=' . $t, $msg);
 
@@ -217,32 +205,27 @@ class BiblestudyController extends JControllerLegacy
 	/**
 	 * Comments Email
 	 *
-	 * @param   string $params  To pass to the email
+	 * @param   Registry  $params  To pass to the email
 	 *
 	 * @return void
 	 */
 	public function commentsEmail($params)
 	{
-		$input      = JFactory::getApplication()->input;
 		$mainframe  = JFactory::getApplication();
-		$menuitemid = $input->get('Itemid', '', 'int');
+		$menuitemid = $this->input->get('Itemid', '', 'int');
 
 		if ($menuitemid)
 		{
 			$menu       = $mainframe->getMenu();
 			$menuparams = $menu->getParams($menuitemid);
 		}
-		$comment_author    = $input->get('full_name', 'Anonymous', 'WORD');
-		$comment_study_id  = $input->get('study_detail_id', 0, 'INT');
-		$comment_email     = $input->get('user_email', 'No Email', 'WORD');
-		$comment_text      = $input->get('comment_text', 'None', 'WORD');
-		$comment_published = $input->get('published', 0, 'INT');
-		$comment_date      = $input->get('comment_date', 0, 'INT');
-		$comment_date      = date('Y-m-d H:i:s');
+		$comment_author    = $this->input->get('full_name', 'Anonymous', 'WORD');
+		$comment_study_id  = $this->input->get('study_detail_id', 0, 'INT');
+		$comment_published = $this->input->get('published', 0, 'INT');
+		$comment_date      = $this->input->get('comment_date', 0, 'WORD');
 		$config            = JFactory::getConfig();
-		$comment_abspath   = JPATH_SITE;
-		$comment_mailfrom  = $config->getValue('config.mailfrom');
-		$comment_fromname  = $config->getValue('config.fromname');
+		$comment_mailfrom  = $config->get('config.mailfrom');
+		$comment_fromname  = $config->get('config.fromname');
 		$comment_livesite  = JURI::root();
 		$db                = JFactory::getDBO();
 		$query             = $db->getQuery(true);
@@ -260,7 +243,8 @@ class BiblestudyController extends JControllerLegacy
 		{
 			$ToEmail = $comment_mailfrom;
 		}
-		$Body = $comment_author . ' ' . JText::_('JBS_STY_HAS_ENTERED_COMMENT') . ': ' . $comment_title . ' - ' . $comment_study_date . ' '
+		$Body = $comment_author . ' ' . JText::_('JBS_STY_HAS_ENTERED_COMMENT') . ': ' . $comment_title .
+			' - ' . $comment_study_date . ' '
 			. JText::_('JBS_STY_ON') . ': ' . $comment_date;
 
 		if ($comment_published > 0)
@@ -285,14 +269,12 @@ class BiblestudyController extends JControllerLegacy
 	 */
 	public function download()
 	{
-		$input = JFactory::getApplication()->input;
-		JLoader::register('Dump_File', BIBLESTUDY_PATH_LIB . '/biblestudy.download.class.php');
-		$task = $input->get('task');
+		$task = $this->input->get('task');
 
 		if ($task == 'download')
 		{
-			$mid        = $input->get('mid', '0', 'int');
-			$downloader = new Dump_File;
+			$mid        = $this->input->get('mid', '0', 'int');
+			$downloader = new JBSMDownload;
 			$downloader->download($mid);
 
 			die;
@@ -306,16 +288,13 @@ class BiblestudyController extends JControllerLegacy
 	 */
 	public function avplayer()
 	{
-		$input = JFactory::getApplication()->input;
-		$task  = $input->get('task', '', 'cmd');
+		$task = $this->input->get('task', '', 'cmd');
 
 		if ($task == 'avplayer')
 		{
-			$input           = new JInput;
-			$mediacode       = $input->get('code', '', 'string');
+			$mediacode       = $this->input->get('code', '', 'string');
 			$this->mediaCode = $mediacode;
-
-			//echo $mediacode;
+			echo $mediacode;
 
 			return;
 		}
@@ -328,9 +307,8 @@ class BiblestudyController extends JControllerLegacy
 	 */
 	public function playHit()
 	{
-		$input = new JInput;
-		JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
-		$getMedia = new jbsMedia;
+		$input    = new JInput;
+		$getMedia = new JBSMMedia;
 		$getMedia->hitPlay($input->get('id', '', 'int'));
 	}
 
@@ -342,7 +320,7 @@ class BiblestudyController extends JControllerLegacy
 	 */
 	public function inlinePlayer()
 	{
-		echo('{m4vremote}//www.livingwatersweb.com/video/John_14_15-31.m4v{/m4vremote}');
+		echo('{m4vremote}http://www.livingwatersweb.com/video/John_14_15-31.m4v{/m4vremote}');
 	}
 
 	/**
@@ -354,18 +332,17 @@ class BiblestudyController extends JControllerLegacy
 	 */
 	public function uploadflash()
 	{
-		$input = JFactory::getApplication()->input;
 		// JRequest::checktoken() or jexit('Invalid Token');
-		$option = $input->get('option', '', 'cmd');
+		$option = $this->input->get('option', '', 'cmd');
 		jimport('joomla.filesystem.file');
 
 		// Get the server and folder id from the request
-		$serverid = $input->get('upload_server', '', 'int');
-		$folderid = $input->get('upload_folder', '', 'int');
+		$serverid = $this->input->get('upload_server', '', 'int');
+		$folderid = $this->input->get('upload_folder', '', 'int');
 		$app      = JFactory::getApplication();
-		$app->setUserState($option, 'serverid', $serverid);
+		$app->setUserState($option . 'serverid', $serverid);
 		$app->setUserState($option . 'folderid', $folderid);
-		$form     = $input->get('jform', '', 'array');
+		$form     = $this->input->get('jform', '', 'array');
 		$returnid = $form['id'];
 
 		// Get temp file details
@@ -374,7 +351,7 @@ class BiblestudyController extends JControllerLegacy
 		$tempfile    = $temp_folder . $temp;
 
 		// Get path and abort if none
-		$layout = $input->get('layout', '', 'string');
+		$layout = $this->input->get('layout', '', 'string');
 
 		if ($layout == 'modal')
 		{
@@ -386,13 +363,12 @@ class BiblestudyController extends JControllerLegacy
 		}
 		$path = JBSMUpload::getpath($url, $tempfile);
 
-		// Check filetype is allowed
+		// Check file type is allowed
 		$allow = JBSMUpload::checkfile($temp);
 
 		if ($allow)
 		{
 			$filename = JBSMUpload::buildpath($temp, 1, $serverid, $folderid, $path, 1);
-
 
 			// Process file
 			$uploadmsg = JBSMUpload::processflashfile($tempfile, $filename);
@@ -408,11 +384,8 @@ class BiblestudyController extends JControllerLegacy
 		{
 			$uploadmsg = JText::_('JBS_MED_NOT_UPLOAD_THIS_FILE_EXT');
 		}
-		//  $podmsg = PIHelperadmin::setpods($row);
-		// delete temp file
 
 		JBSMUpload::deletetempfile($tempfile);
-		$mediafileid = $input->get('id', '', 'int');
 
 		if ($layout == 'modal')
 		{
@@ -424,82 +397,6 @@ class BiblestudyController extends JControllerLegacy
 		}
 	}
 
-	/*
-	 * Upload Flash System
-	 * @return text
-	 */
-	/*    function upflash() {
-		   jimport('joomla.filesystem.file');
-			jimport('joomla.filesystem.folder');
-			$serverid = JRequest::getInt('upload_server', '', 'post');
-			$folderid = JRequest::getInt('upload_folder', '', 'post');
-			//import joomla filesystem functions, we will do all the filewriting with joomlas functions,
-			//so if the ftp layer is on, joomla will write with that, not the apache user, which might
-			//not have the correct permissions
-			$abspath = JPATH_SITE;
-			//this is the name of the field in the html form, filedata is the default name for swfupload
-			//so we will leave it as that
-			$fieldName = 'Filedata';
-			//any errors the server registered on uploading
-			$fileError = $_FILES[$fieldName]['error'];
-			if ($fileError > 0) {
-				switch ($fileError) {
-				   case 1:
-						echo JText::_('JBS_MED_FILE_TOO_LARGE_THAN_PHP_INI_ALLOWS');
-						return;
-
-				   case 2:
-						echo JText::_('JBS_MED_FILE_TO_LARGE_THAN_HTML_FORM_ALLOWS');
-						return;
-
-					case 3:
-						echo JText::_('JBS_MED_ERROR_PARTIAL_UPLOAD');
-						return;
-
-					case 4:
-						echo JText::_('JBS_MED_ERROR_NO_FILE');
-						return;
-				}
-			}
-
-			// Check for filesize
-			$fileSize = $_FILES[$fieldName]['size'];
-			if ($fileSize > 500000000) {
-				echo JText::_('JBS_MED_FILE_BIGGER_THAN') . ' 500MB';
-			}
-
-			// Check the file extension is ok
-			$fileName = $_FILES[$fieldName]['name'];
-			$extOk = JBSMUpload::checkfile($fileName);
-			$app = JFactory::getApplication();
-			$option = JRequest::getCmd('option');
-			$app->setUserState($option.'fname', $_FILES[$fieldName]['name']);
-			$app->setUserState($option.'size', $_FILES[$fieldName]['size']);
-			$app->setUserState($option.'serverid', $serverid);
-			$app->setUserState($option.'folderid', $folderid);
-			if ($extOk == false) {
-				echo JText::_('JBS_MED_NOT_UPLOAD_THIS_FILE_EXT');
-				return;
-			}
-
-			// The name of the file in PHP's temp directory that we are going to move to our folder
-			$fileTemp = $_FILES[$fieldName]['tmp_name'];
-
-			// Always use constants when making file paths, to avoid the possibilty of remote file inclusion
-
-			$uploadPath = $abspath . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'swfupload' . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $fileName;
-
-
-			if (!JFile::upload($fileTemp, $uploadPath)) {
-				echo JText::_('JBS_MED_ERROR_MOVING_FILE');
-				return;
-			} else {
-
-				// success, exit with code 0 for Mac users, otherwise they receive an IO Error
-				exit(0);
-			}
-		} */
-
 	/**
 	 * Upload function
 	 *
@@ -507,13 +404,12 @@ class BiblestudyController extends JControllerLegacy
 	 */
 	public function upload()
 	{
-		$input     = JFactory::getApplication()->input;
-		$option    = $input->get('option', '', 'cmd');
+		$option    = $this->input->get('option', '', 'cmd');
 		$uploadmsg = '';
-		$serverid  = $input->get('upload_server', '', 'int');
-		$folderid  = $input->get('upload_folder', '', 'int');
-		$form      = $input->get('jform', array(), 'array');
-		$layout    = $input->get('layout', '', 'string');
+		$serverid  = $this->input->get('upload_server', '', 'int');
+		$folderid  = $this->input->get('upload_folder', '', 'int');
+		$form      = $this->input->get('jform', array(), 'array');
+		$layout    = $this->input->get('layout', '', 'string');
 		$returnid  = $form['id'];
 		$url       = 'index.php?option=com_biblestudy&view=mediafile&id=' . $returnid;
 		$path      = JBSMUpload::getpath($url, '');
@@ -534,12 +430,12 @@ class BiblestudyController extends JControllerLegacy
 			{
 				$uploadmsg = JText::_('JBS_MED_FILE_UPLOADED');
 			}
-			$app = JFactory::getApplication();
-			$app->setUserState($option . 'fname', $filename->file);
-			$app->setUserState($option . 'size', $file['size']);
-			$app->setUserState($option . 'serverid', $serverid);
-			$app->setUserState($option . 'folderid', $folderid);
 		}
+		$app = JFactory::getApplication();
+		$app->setUserState($option . 'fname', $file['name']);
+		$app->setUserState($option . 'size', $file['size']);
+		$app->setUserState($option . 'serverid', $serverid);
+		$app->setUserState($option . 'folderid', $folderid);
 
 		if ($layout == 'modal')
 		{
@@ -550,6 +446,5 @@ class BiblestudyController extends JControllerLegacy
 			$this->setRedirect('index.php?option=' . $option . '&view=mediafileform&task=edit&a_id=' . $returnid, $uploadmsg);
 		}
 	}
-
 
 }

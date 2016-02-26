@@ -3,15 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-include_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.backup.php';
 
-jimport('joomla.application.component.controlleradmin');
+use \Joomla\Registry\Registry;
 
 /**
  * Controller for Templates
@@ -25,8 +24,8 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	/**
 	 * Proxy for getModel
 	 *
-	 * @param   string $name    The name of the model
-	 * @param   string $prefix  The prefix for the PHP class name
+	 * @param   string  $name    The name of the model
+	 * @param   string  $prefix  The prefix for the PHP class name
 	 *
 	 * @return JModel
 	 *
@@ -46,6 +45,9 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	 */
 	public function template_import()
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		/**
 		 * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
 		 */
@@ -80,7 +82,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		}
 
 		// Build the appropriate paths
-		$tmp_dest = JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name'];
+		$tmp_dest = JPATH_SITE . '/tmp/' . $userfile['name'];
 
 		$tmp_src = $userfile['tmp_name'];
 
@@ -88,9 +90,9 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		jimport('joomla.filesystem.file');
 		move_uploaded_file($tmp_src, $tmp_dest);
 
-		$db = JFactory::getDBO();
+		$db = JFactory::getDbo();
 
-		$query   = file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
+		$query   = file_get_contents(JPATH_SITE . '/tmp/' . $userfile['name']);
 		$queries = $db->splitSql($query);
 
 		if (count($queries) == 0)
@@ -213,7 +215,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 			->from('#__bsms_templatecode')
 			->order($db->q('id') . ' DESC');
 		$db->setQuery($query, 0, $tc);
-		$data = $db->loadObjectlist();
+		$data = $db->loadObjectList();
 
 		foreach ($data AS $tpcode):
 
@@ -260,8 +262,11 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		endforeach;
 
 		// Get new record insert to change name
-		$query = 'SELECT id, title, params from #__bsms_templates ORDER BY id DESC LIMIT 1';
-		$db->setQuery($query);
+		$query = $db->getQuery(true);
+		$query->select('id, title, params')
+			->from('#__bsms_templates')
+			->order('id');
+		$db->setQuery($query, 1);
 		$data = $db->loadObject();
 
 		// Load Table Data.
@@ -278,7 +283,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		}
 
 		// Need to adjust the params and write back
-		$registry = new JRegistry;
+		$registry = new Registry;
 		$registry->loadString($table->params);
 		$params = $registry;
 		$params->set('css', $css);
@@ -301,12 +306,35 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	}
 
 	/**
+	 * Perform DB Query
+	 *
+	 * @param   string  $query  Query
+	 *
+	 * @return boolean
+	 */
+	private function performDB($query)
+	{
+		$db = JFactory::getDbo();
+		$db->setQuery($query);
+
+		if (!$db->execute())
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Export the Template
 	 *
 	 * @return boolean
 	 */
 	public function template_export()
 	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$input          = new JInput;
 		$data           = $input->get('template_export');
 		$exporttemplate = $data;
@@ -317,23 +345,23 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 			$this->setRedirect('index.php?option=com_biblestudy&view=templates', $message);
 		}
 		jimport('joomla.filesystem.file');
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('t.id, t.type, t.params, t.title, t.text');
 		$query->from('#__bsms_templates as t');
 		$query->where('t.id = ' . $exporttemplate);
 		$db->setQuery($query);
 		$result       = $db->loadObject();
-		$objects[]    = $this->getExportSetting($result, $data);
+		$objects[]    = $this->getExportSetting($result);
 		$filecontents = implode(' ', $objects);
 		$filename     = $result->title . '.sql';
-		$filepath     = JPATH_ROOT . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $filename;
+		$filepath     = JPATH_ROOT . '/tmp/' . $filename;
 
 		if (!JFile::write($filepath, $filecontents))
 		{
 			return false;
 		}
-		$xport = new JBSExport;
+		$xport = new JBSMBackup;
 		$xport->output_file($filepath, $filename, 'text/x-sql');
 		JFile::delete($filepath);
 		$message = JText::_('JBS_TPL_EXPORT_SUCCESS');
@@ -344,17 +372,17 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	/**
 	 * Get Exported Template Settings
 	 *
-	 * @param   object $result  ?
+	 * @param   object  $result  ?
 	 *
 	 * @return string
 	 */
 	private function getExportSetting($result)
 	{
 		// Export must be in this order: css, template files, template.
-		$registry = new JRegistry;
+		$registry = new Registry;
 		$registry->loadString($result->params);
 		$params  = $registry;
-		$db      = JFactory::getDBO();
+		$db      = JFactory::getDbo();
 		$objects = '';
 		$css     = $params->get('css');
 		$css     = substr($css, 0, -4);
@@ -367,10 +395,10 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 			$query2->from('#__bsms_styles AS style');
 			$query2->where('style.filename = "' . $css . '"');
 			$db->setQuery($query2);
-			$db->query();
+			$db->execute();
 			$cssresult = $db->loadObject();
-			$objects .= "\nINSERT INTO #__bsms_styles SET `published` = '1',\n`filename` = '" . $db->escape($cssresult->filename)
-				. "',\n`stylecode` = '" . $db->escape($cssresult->stylecode) . "';\n";
+			$objects .= "\nINSERT INTO #__bsms_styles SET `published` = '1',\n`filename` = " . $db->q($cssresult->filename)
+				. ",\n`stylecode` = " . $db->q($cssresult->stylecode) . ";\n";
 		}
 
 		// Get the individual template files
@@ -420,10 +448,10 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		$objects .= "\n\n--\n-- Template Table\n--\n";
 
 		// Create the main template insert
-		$objects .= "\nINSERT INTO #__bsms_templates SET `type` = '" . $db->escape($result->type) . "',";
-		$objects .= "\n`params` = '" . $db->escape($result->params) . "',";
-		$objects .= "\n`title` = '" . $db->escape($result->title) . "',";
-		$objects .= "\n`text` = '" . $db->escape($result->text) . "';";
+		$objects .= "\nINSERT INTO #__bsms_templates SET `type` = " . $db->q($result->type) . ",";
+		$objects .= "\n`params` = " . $db->q($result->params) . ",";
+		$objects .= "\n`title` = " . $db->q($result->title) . ",";
+		$objects .= "\n`text` = " . $db->q($result->text) . ";";
 
 		$objects .= "\n-- --------------------------------------------------------\n\n";
 
@@ -433,13 +461,13 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	/**
 	 * Get Template Settings
 	 *
-	 * @param   array $template  ?
+	 * @param   array  $template  ?
 	 *
 	 * @return boolean|string
 	 */
 	public function getTemplate($template)
 	{
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('tc.id, tc.templatecode,tc.type,tc.filename');
 		$query->from('#__bsms_templatecode as tc');
@@ -451,33 +479,13 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 			return false;
 		}
 		$templatereturn = '
-                        INSERT INTO #__bsms_templatecode SET `type` = "' . $db->escape($object->type) . '",
+                        INSERT INTO `#__bsms_templatecode` SET `type` = "' . $db->escape($object->type) . '",
                         `templatecode` = "' . $db->escape($object->templatecode) . '",
                         `filename`="' . $db->escape($template) . '",
                         `published` = "1";
                         ';
 
 		return $templatereturn;
-	}
-
-	/**
-	 * Perform DB Query
-	 *
-	 * @param   string $query  Query
-	 *
-	 * @return boolean
-	 */
-	public function performDB($query)
-	{
-		$db = JFactory::getDBO();
-		$db->setQuery($query);
-
-		if (!$db->query())
-		{
-			return false;
-		}
-
-		return true;
 	}
 
 }

@@ -3,15 +3,12 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-// Import Joomla modelform library
-jimport('joomla.application.component.modeladmin');
 
 /**
  * HelloWorld Model
@@ -31,57 +28,10 @@ class BiblestudyModelTemplatecode extends JModelAdmin
 	protected $text_prefix = 'COM_BIBLESTUDY';
 
 	/**
-	 * Method to auto-populate the model state.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @return  void
-	 *
-	 * @since    1.6
-	 */
-	protected function populateState()
-	{
-
-		$app = JFactory::getApplication('administrator');
-
-		// Save the syntax for later use
-		$app->setUserState('editor.source.syntax', 'php');
-
-		// Initialise variables.
-		$table = $this->getTable();
-		$key   = $table->getKeyName();
-
-		// Get the pk of the record from the request.
-		$input = new JInput;
-		$pk    = $input->get($key, '', 'int');
-		$this->setState($this->getName() . '.id', $pk);
-
-		// Load the parameters.
-		$value = JComponentHelper::getParams($this->option);
-		$this->setState('params', $value);
-	}
-
-	/**
-	 * Returns a reference to the a Table object, always creating it.
-	 *
-	 * @param   string $name     The table name. Optional.
-	 * @param   string $prefix   The class prefix. Optional.
-	 * @param   array  $options  Configuration array for model. Optional.
-	 *
-	 * @return  JTable  A JTable object
-	 *
-	 * @since    2.5
-	 */
-	public function getTable($name = 'Templatecode', $prefix = 'Table', $options = array())
-	{
-		return JTable::getInstance($name, $prefix, $options);
-	}
-
-	/**
 	 * Method to get the record form.
 	 *
-	 * @param   array   $data      Data for the form.
-	 * @param   boolean $loadData  True if the form is to load its own data (default case), false if not.
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  mixed  A JForm object on success, false on failure
 	 *
@@ -101,29 +51,9 @@ class BiblestudyModelTemplatecode extends JModelAdmin
 	}
 
 	/**
-	 * Method to get the data that should be injected in the form.
-	 *
-	 * @return    mixed    The data for the form.
-	 *
-	 * @since    2.5
-	 */
-	protected function loadFormData()
-	{
-		// Check the session for previously entered form data.
-		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.templatecode.data', array());
-
-		if (empty($data))
-		{
-			$data = $this->getItem();
-		}
-
-		return $data;
-	}
-
-	/**
 	 * Method to check-out a row for editing.
 	 *
-	 * @param   integer $pk  The numeric id of the primary key.
+	 * @param   integer  $pk  The numeric id of the primary key.
 	 *
 	 * @return  boolean  False on failure or error, true otherwise.
 	 *
@@ -132,27 +62,6 @@ class BiblestudyModelTemplatecode extends JModelAdmin
 	public function checkout($pk = null)
 	{
 		return $pk;
-	}
-
-	/**
-	 * Method to get a single record.
-	 *
-	 * @param   integer $pk  The id of the primary key.
-	 *
-	 * @return  mixed    Object on success, false on failure.
-	 *
-	 * @since    1.6
-	 */
-	public function getItem($pk = null)
-	{
-		$item = parent::getItem($pk);
-
-		if ($item)
-		{
-
-		}
-
-		return $item;
 	}
 
 	/**
@@ -200,6 +109,94 @@ class BiblestudyModelTemplatecode extends JModelAdmin
 		}
 
 		return $type;
+	}
+
+	/**
+	 * Method to get a single record.
+	 *
+	 * @param   integer  $pk  The id of the primary key.
+	 *
+	 * @return  mixed    Object on success, false on failure.
+	 *
+	 * @since    1.6
+	 */
+	public function getItem($pk = null)
+	{
+		$item = parent::getItem($pk);
+
+		if ($item)
+		{
+
+		}
+
+		return $item;
+	}
+
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @return  void
+	 *
+	 * @since    1.6
+	 */
+	protected function populateState()
+	{
+
+		$app = JFactory::getApplication('administrator');
+
+		// Save the syntax for later use
+		$app->setUserState('editor.source.syntax', 'php');
+
+		// Initialise variables.
+		$table = $this->getTable();
+		$key   = $table->getKeyName();
+
+		// Get the pk of the record from the request.
+		$input = new JInput;
+		$pk    = $input->get($key, '', 'int');
+		$this->setState($this->getName() . '.id', $pk);
+
+		// Load the parameters.
+		$value = JComponentHelper::getParams($this->option);
+		$this->setState('params', $value);
+	}
+
+	/**
+	 * Returns a reference to the a Table object, always creating it.
+	 *
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
+	 *
+	 * @return  JTable  A JTable object
+	 *
+	 * @since    2.5
+	 */
+	public function getTable($name = 'Templatecode', $prefix = 'Table', $options = array())
+	{
+		return JTable::getInstance($name, $prefix, $options);
+	}
+
+	/**
+	 * Method to get the data that should be injected in the form.
+	 *
+	 * @return    mixed    The data for the form.
+	 *
+	 * @since    2.5
+	 */
+	protected function loadFormData()
+	{
+		// Check the session for previously entered form data.
+		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.templatecode.data', array());
+
+		if (empty($data))
+		{
+			$data = $this->getItem();
+		}
+
+		return $data;
 	}
 
 }

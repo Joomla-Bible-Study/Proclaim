@@ -3,13 +3,12 @@
  * View html
  *
  * @package    BibleStudy
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
 
 /**
  * View class for Comments
@@ -19,6 +18,13 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewComments extends JViewLegacy
 {
+
+	/**
+	 * Side Bar
+	 *
+	 * @var string
+	 */
+	public $sidebar;
 
 	/**
 	 * Items
@@ -48,17 +54,14 @@ class BiblestudyViewComments extends JViewLegacy
 	 */
 	protected $f_levels;
 
-	/**
-	 * Side Bar
-	 *
-	 * @var string
-	 */
-	public $sidebar;
+	public $filterForm;
+
+	protected $activeFilters;
 
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -70,6 +73,9 @@ class BiblestudyViewComments extends JViewLegacy
 		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
+
+		$this->filterForm    = $this->get('FilterForm');
+		$this->activeFilters = $this->get('ActiveFilters');
 
 		// Check for errors
 		if (count($errors = $this->get('Errors')))
@@ -98,11 +104,8 @@ class BiblestudyViewComments extends JViewLegacy
 		if ($this->getLayout() !== 'modal')
 		{
 			$this->addToolbar();
+			$this->sidebar = JHtmlSidebar::render();
 
-			if (BIBLESTUDY_CHECKREL)
-			{
-				$this->sidebar = JHtmlSidebar::render();
-			}
 		}
 
 		// Set the document
@@ -126,16 +129,18 @@ class BiblestudyViewComments extends JViewLegacy
 		// Get the toolbar object instance
 		$bar   = JToolBar::getInstance('toolbar');
 		$canDo = JBSMBibleStudyHelper::getActions('', 'comment');
-		JToolBarHelper::title(JText::_('JBS_CMN_COMMENTS'), 'comments.png');
+		JToolBarHelper::title(JText::_('JBS_CMN_COMMENTS'), 'comments-2 comments-2');
 
 		if ($canDo->get('core.create'))
 		{
 			JToolBarHelper::addNew('comment.add');
 		}
+
 		if ($canDo->get('core.edit'))
 		{
 			JToolBarHelper::editList('comment.edit');
 		}
+
 		if ($canDo->get('core.edit.state'))
 		{
 			JToolBarHelper::divider();
@@ -145,40 +150,38 @@ class BiblestudyViewComments extends JViewLegacy
 
 		if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete'))
 		{
+			JToolBarHelper::divider();
 			JToolBarHelper::deleteList('', 'comments.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
-        elseif ($canDo->get('core.delete'))
-        {
-            JToolBarHelper::trash('comments.trash');
-        }
+		elseif ($canDo->get('core.delete'))
+		{
+			JToolBarHelper::divider();
+			JToolBarHelper::trash('comments.trash');
+		}
+
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
-			if (BIBLESTUDY_CHECKREL)
-			{
-				JHtml::_('bootstrap.modal', 'collapseModal');
-			}
+			JToolBarHelper::divider();
+			JHtml::_('bootstrap.modal', 'collapseModal');
+
 			$title = JText::_('JBS_CMN_BATCH_LABLE');
 			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
 						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
 						$title</button>";
 			$bar->appendButton('Custom', $dhtml, 'batch');
 		}
-		if (BIBLESTUDY_CHECKREL)
-		{
-			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=comments');
+		JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=comments');
 
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
-				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
+		JHtmlSidebar::addFilter(
+			JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
+			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
+		);
+
+		JHtmlSidebar::addFilter(
+			JText::_('JOPTION_SELECT_ACCESS'), 'filter_access',
+			JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
 			);
-
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_ACCESS'), 'filter_access',
-				JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
-			);
-
-		}
 	}
 
 	/**

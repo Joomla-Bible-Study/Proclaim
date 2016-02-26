@@ -3,14 +3,15 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
+use Joomla\Registry\Registry;
+
 /**
  * View class for Message
  *
@@ -33,13 +34,6 @@ class BiblestudyViewMessage extends JViewLegacy
 	 * @var object
 	 */
 	protected $item;
-
-	/**
-	 * State
-	 *
-	 * @var object
-	 */
-	protected $state;
 
 	/**
 	 * Admin
@@ -65,14 +59,14 @@ class BiblestudyViewMessage extends JViewLegacy
 	/**
 	 * Admin Params
 	 *
-	 * @var JRegistry
+	 * @var Registry
 	 */
 	protected $admin_params;
 
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -92,9 +86,8 @@ class BiblestudyViewMessage extends JViewLegacy
 		$app = JFactory::getApplication();
 		$app->setUserState($option . 'sid', $this->item->id);
 		$app->setUserState($option . 'sdate', $this->item->studydate);
-		$this->loadHelper('params');
 		$this->admin = JBSMParams::getAdmin();
-		$registry    = new JRegistry;
+		$registry    = new Registry;
 		$registry->loadString($this->admin->params);
 		$this->admin_params = $registry;
 		$this->canDo        = JBSMBibleStudyHelper::getActions($type = 'message', $Itemid = $this->item->id);
@@ -102,12 +95,7 @@ class BiblestudyViewMessage extends JViewLegacy
 
 		JHtml::stylesheet('media/com_biblestudy/css/token-input-jbs.css');
 
-		if (BIBLESTUDY_CHECKREL)
-		{
-			JHtml::_('jquery.framework');
-		}
-
-		JHtml::script('media/com_biblestudy/js/biblestudy.js');
+		JHtml::_('biblestudy.framework');
 		$script = "
             jQuery(document).ready(function() {
                 jQuery('#topics').tokenInput(" . $this->get('alltopics') . ",
@@ -128,7 +116,6 @@ class BiblestudyViewMessage extends JViewLegacy
 		$document->addScriptDeclaration($script);
 
 		JHtml::script('media/com_biblestudy/js/plugins/jquery.tokeninput.js');
-		JHtml::stylesheet('media/com_biblestudy/js/ui/theme/ui.all.css');
 
 		// Set the toolbar
 		$this->addToolbar();
@@ -153,7 +140,7 @@ class BiblestudyViewMessage extends JViewLegacy
 		$input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolBarHelper::title(JText::_('JBS_CMN_STUDIES') . ': <small><small>[ ' . $title . ' ]</small></small>', 'studies.png');
+		JToolBarHelper::title(JText::_('JBS_CMN_STUDIES') . ': <small><small>[ ' . $title . ' ]</small></small>', 'book book');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_biblestudy'))
 		{

@@ -3,14 +3,12 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-jimport('joomla.application.component.modellist');
 
 /**
  * Podcasts model class
@@ -24,7 +22,7 @@ class BiblestudyModelPodcasts extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config  An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 */
 	public function __construct($config = array())
 	{
@@ -48,7 +46,7 @@ class BiblestudyModelPodcasts extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param   string $id  An identifier string to generate the store id.
+	 * @param   string  $id  An identifier string to generate the store id.
 	 *
 	 * @return  string  A store id.
 	 *
@@ -58,6 +56,8 @@ class BiblestudyModelPodcasts extends JModelList
 	{
 
 		// Compile the store id.
+		$id .= ':' . $this->getState('filter.search');
+		$id .= ':' . $this->getState('filter.access');
 		$id .= ':' . $this->getState('filter.published');
 		$id .= ':' . $this->getState('filter.language');
 
@@ -73,8 +73,8 @@ class BiblestudyModelPodcasts extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string $ordering   An optional ordering field.
-	 * @param   string $direction  An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -91,14 +91,17 @@ class BiblestudyModelPodcasts extends JModelList
 			$this->context .= '.' . $layout;
 		}
 
+		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+		$this->setState('filter.search', $search);
+
+		$access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
+		$this->setState('filter.access', $access);
+
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
 
 		$language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $language);
-
-		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
-		$this->setState('filter.search', $search);
 
 		parent::populateState('podcast.title', 'ASC');
 	}
@@ -114,16 +117,34 @@ class BiblestudyModelPodcasts extends JModelList
 	{
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
+		$user  = JFactory::getUser();
 
 		$query->select(
 			$this->getState(
-				'list.select', 'podcast.id, podcast.published, podcast.title, podcast.description, podcast.language')
+				'list.select', 'podcast.id, podcast.published, podcast.title, podcast.description, podcast.language, podcast.access')
 		);
 		$query->from('#__bsms_podcast AS podcast');
 
 		// Join over the language
 		$query->select('l.title AS language_title');
 		$query->join('LEFT', $db->quoteName('#__languages') . ' AS l ON l.lang_code = podcast.language');
+
+		// Join over the asset groups.
+		$query->select('ag.title AS access_level')
+				->join('LEFT', '#__viewlevels AS ag ON ag.id = podcast.access');
+
+		// Filter by access level.
+		if ($access = $this->getState('filter.access'))
+		{
+			$query->where('podcast.access = ' . (int) $access);
+		}
+
+		// Implement View Level Access
+		if (!$user->authorise('core.admin'))
+		{
+			$groups = implode(',', $user->getAuthorisedViewLevels());
+			$query->where('podcast.access IN (' . $groups . ')');
+		}
 
 		// Filter by published state
 		$published = $this->getState('filter.published');
@@ -136,6 +157,13 @@ class BiblestudyModelPodcasts extends JModelList
 		{
 			$query->where('(podcast.published = 0 OR podcast.published = 1)');
 		}
+
+		// Filter on the language.
+		if ($language = $this->getState('filter.language'))
+		{
+			$query->where('podcast.language = ' . $db->quote($language));
+		}
+
 		// Filter by search in filename or study title
 		$search = $this->getState('filter.search');
 
@@ -153,8 +181,8 @@ class BiblestudyModelPodcasts extends JModelList
 		}
 
 		// Add the list ordering clause
-		$orderCol  = $this->state->get('list.ordering');
-		$orderDirn = $this->state->get('list.direction');
+		$orderCol  = $this->state->get('list.ordering', 'podcast.id');
+		$orderDirn = $this->state->get('list.direction', 'desc');
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
 		return $query;

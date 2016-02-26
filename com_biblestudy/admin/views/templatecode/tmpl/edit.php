@@ -3,7 +3,7 @@
  * Form
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -14,14 +14,23 @@ defined('_JEXEC') or die;
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
-if (BIBLESTUDY_CHECKREL)
-	JHtml::_('formbehavior.chosen', 'select');
+JHtml::_('formbehavior.chosen', 'select');
 
 // Create shortcut to parameters.
 $params = $this->state->get('params');
 $params = $params->toArray();
 $app = JFactory::getApplication();
 $input = $app->input;
+
+// Set up defaults
+if ($input->getInt('a_id'))
+{
+	$templatecode = $this->item->templatecode;
+}
+else
+{
+	$templatecode = $this->defaultcode;
+}
 ?>
 <script type="text/javascript">
 	Joomla.submitbutton = function (task) {
@@ -70,7 +79,7 @@ $input = $app->input;
 							else
 							{
 								?><label id="jform_type-lbl" for="jform_type"
-								         style="clear: both"><?php echo $this->type ?></label>
+								         style="clear: both;"><?php echo $this->type ?></label>
 							<?php } ?>
 						</div>
 						<div class="control-group">
@@ -80,7 +89,7 @@ $input = $app->input;
 							<div class="clr"></div>
 							<hr/>
 							<div class="editor-border">
-								<?php echo $this->form->getInput('templatecode', null, empty($this->item->templatecode) ? $this->defaultcode : $this->item->templatecode); ?>
+								<?php echo $this->form->getInput('templatecode', null, $templatecode); ?>
 							</div>
 						</div>
 					</div>
@@ -96,7 +105,7 @@ $input = $app->input;
 		</div>
 		<!-- Begin Sidebar -->
 		<div class="span2 form-vertical">
-			<h4><?php echo JText::_('JDETAILS');?></h4>
+			<h4><?php echo JText::_('JDETAILS'); ?></h4>
 			<hr/>
 			<div class="control-group">
 				<div class="control-label">

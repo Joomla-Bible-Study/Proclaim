@@ -3,7 +3,7 @@
  * Default Custom
  *
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -12,19 +12,16 @@ defined('_JEXEC') or die;
 
 $mainframe = JFactory::getApplication();
 
-$pathway      = $mainframe->getPathWay();
-$uri          = new JUri;
-$database     = JFactory::getDBO();
-$teacher      = $this->teacher;
-$admin_params = $this->admin_params;
-$params       = $this->params;
-$image        = new stdClass;
-JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
-JLoader::register('JBSMTeacher', BIBLESTUDY_PATH_HELPERS . '/teacher.php');
+$pathway = $mainframe->getPathWay();
+$uri = new JUri;
+$database = JFactory::getDBO();
+$teacher = $this->teacher;
+$params = $this->params;
+$image = new stdClass;
 $JBSMTeacher = new JBSMTeacher;
-$JBSMImage   = new JBSMImage;
-$input       = new JInput;
-$t           = $input->get('t', 1, 'int');
+$JBSMImage = new JBSMImage;
+$input = new JInput;
+$t = $input->get('t', 1, 'int');
 
 if (!$t)
 {
@@ -74,14 +71,14 @@ else
 		$image = $JBSMImage->getImage($i_path);
 	}
 	?>
-    <table class="table table-striped bslisttable">
+	<table class="table table-striped bslisttable">
 		<?php
-		$listing = $JBSMTeacher->getTeacherDetailsExp($teacher, $params, $this->template, $admin_params);
+		$listing = $JBSMTeacher->getTeacherDetailsExp($teacher, $params);
 		echo $listing;
 
 		if ($this->params->get('show_teacher_studies') > 0)
 		{
-			$studies = $JBSMTeacher->getTeacherStudiesExp($teacher->id, $params, $admin_params, $this->template);
+			$studies = $JBSMTeacher->getTeacherStudiesExp($teacher->id, $params);
 			echo $studies;
 		}
 
@@ -89,10 +86,10 @@ else
 		<a href="' . JRoute::_('index.php?option=com_biblestudy&view=sermons&filter_teacher=' . $teacher->id) . '">'
 			. JText::_('JBS_TCH_MORE_FROM_THIS_TEACHER') . ' --></a></td><tr></table>';
 		?>
-        <tr>
-            <td style="text-align: center" colspan="0" class="bsm_teacherfooter">
-                <a href="index.php?option=com_biblestudy&view=teacher<?php echo '&t=' . $t; ?>">
+		<tr>
+			<td style="text-align: center;" colspan="0" class="bsm_teacherfooter">
+				<a href="index.php?option=com_biblestudy&view=teacher<?php echo '&t=' . $t; ?>">
 					<?php echo '<--' . JText::_('JBS_TCH_RETURN_TEACHER_LIST'); ?>
-                </a>
-    </table>
+				</a>
+	</table>
 </div>

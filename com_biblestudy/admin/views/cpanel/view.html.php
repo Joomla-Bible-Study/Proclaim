@@ -3,19 +3,12 @@
  * View html
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-JLoader::register('jbStats', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.stats.class.php');
-
-if (!BIBLESTUDY_CHECKREL)
-{
-	JLoader::register('LiveUpdate', JPATH_COMPONENT_ADMINISTRATOR . '/liveupdate/liveupdate.php');
-}
 
 /**
  * JView class for Cpanel
@@ -26,25 +19,11 @@ if (!BIBLESTUDY_CHECKREL)
 class BiblestudyViewCpanel extends JViewLegacy
 {
 	/**
-	 * State
+	 * Data from Model
 	 *
 	 * @var string
 	 */
-	protected $state;
-
-	/**
-	 * Version
-	 *
-	 * @var string
-	 */
-	public $version;
-
-	/**
-	 * Version date
-	 *
-	 * @var string
-	 */
-	public $versiondate;
+	public $data;
 
 	/**
 	 * Total Messages
@@ -61,9 +40,20 @@ class BiblestudyViewCpanel extends JViewLegacy
 	public $sidebar;
 
 	/**
+	 * State
+	 *
+	 * @var string
+	 */
+	protected $state;
+
+	protected $hasPostInstallationMessages;
+
+	protected $extension_id;
+
+	/**
 	 * Display
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a Error object.
 	 */
@@ -71,36 +61,20 @@ class BiblestudyViewCpanel extends JViewLegacy
 	{
 
 		$this->state = $this->get('State');
+		$this->data  = $this->get('Data');
+		$model       = $this->getModel();
 
-		JHTML::stylesheet('media/com_biblestudy/css/cpanel.css');
+		JHtml::stylesheet('media/com_biblestudy/css/cpanel.css');
 
-		// Get version information
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
-		$query->select('*');
-		$query->from('#__extensions');
-		$query->where('element = "com_biblestudy" and type = "component"');
-		$db->setQuery($query);
-		$data = $db->loadObject();
-
-		// Convert parameter fields to objects.
-		$registry = new JRegistry;
-		$registry->loadString($data->manifest_cache);
-
-		if ($data)
-		{
-			$this->version     = $registry->get('version');
-			$this->versiondate = $registry->get('creationDate');
-		}
-
-		$this->total_messages = jbStats::get_total_messages();
+		$this->total_messages = JBSMStats::get_total_messages();
 
 		$this->addToolbar();
 
-		if (BIBLESTUDY_CHECKREL)
-		{
-			$this->sidebar = JHtmlSidebar::render();
-		}
+		$this->sidebar = JHtmlSidebar::render();
+
+		// Post-installation messages information
+		$this->hasPostInstallationMessages = $model->hasPostInstallMessages();
+		$this->extension_id                = $this->state->get('extension_id', 0, 'int');
 
 		// Display the template
 		parent::display($tpl);

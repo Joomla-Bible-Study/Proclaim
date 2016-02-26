@@ -3,14 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.controlleradmin');
+
 
 /**
  * Messages list controller class.
@@ -35,24 +35,6 @@ class BiblestudyControllerMessages extends JControllerAdmin
 	}
 
 	/**
-	 * Proxy for getModel
-	 *
-	 * @param   string  $name    The model name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return JModel
-	 *
-	 * @since 7.0
-	 */
-	public function getModel($name = 'Message', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
-	{
-		$model = parent::getModel($name, $prefix, $config);
-
-		return $model;
-	}
-
-	/**
 	 * Method to save the submitted ordering values for records via AJAX.
 	 *
 	 * @return    void
@@ -69,7 +51,6 @@ class BiblestudyControllerMessages extends JControllerAdmin
 		JArrayHelper::toInteger($pks);
 		JArrayHelper::toInteger($order);
 
-		// Get the model
 		$model = $this->getModel();
 
 		// Save the ordering
@@ -82,5 +63,23 @@ class BiblestudyControllerMessages extends JControllerAdmin
 
 		// Close the application
 		JFactory::getApplication()->close();
+	}
+
+	/**
+	 * Proxy for getModel
+	 *
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 *
+	 * @return BiblestudyModelMessage
+	 *
+	 * @since 7.0
+	 */
+	public function getModel($name = 'Message', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
+	{
+		$model = parent::getModel($name, $prefix, $config);
+
+		return $model;
 	}
 }

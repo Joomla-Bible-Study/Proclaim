@@ -3,23 +3,19 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSPagebuilder', BIBLESTUDY_PATH_LIB . '/biblestudy.pagebuilder.class.php');
-JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
-JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
-JLoader::register('JBSMTeacher', BIBLESTUDY_PATH_HELPERS . '/teacher.php');
+use Joomla\Registry\Registry;
 
 /**
  * View class for Teacher
  *
- * @package  BibleStudy.Site
- * @since    7.0.0
+ * @since  7.0.0
  */
 class BiblestudyViewTeacher extends JViewLegacy
 {
@@ -27,19 +23,16 @@ class BiblestudyViewTeacher extends JViewLegacy
 	/** @var  object Item */
 	protected $item;
 
-	/** @var  String Contact */
+	/** @var  object Contact */
 	protected $contact;
 
-	/**  @var JRegistry Admin Params */
-	protected $admin_params;
+	/** @var  Registry Admin */
+	protected $state;
 
-	/** @var  JObject Admin */
-	protected $admin;
-
-	/** @var  JRegistry Params */
+	/** @var  Registry Params */
 	protected $params;
 
-	/** @var  JObject Template Info */
+	/** @var  TableTemplate Template Info */
 	protected $template;
 
 	/** @var  JObject Template Studies */
@@ -48,45 +41,32 @@ class BiblestudyViewTeacher extends JViewLegacy
 	/** @var  JObject Print */
 	protected $print;
 
+	/** @var  JDocument Print */
+	public $document;
+
+	/** @var  JObject Studies */
+	protected $studies;
+
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
 	public function display($tpl = null)
 	{
+		$pagebuilder = new JBSMPagebuilder;
 
-		$app         = JFactory::getApplication();
-		$pagebuilder = new JBSPagebuilder;
-		$document    = JFactory::getDocument();
-		$document->addScript('//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/jui/js/jquery-noconflict.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/js/noconflict.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
-		$images = new JBSMImages;
+		$images        = new JBSMImages;
+		$this->state   = $this->get('state');
 
-		$this->admin        = JBSMParams::getAdmin();
-		$this->admin_params = $this->admin->params;
-		$input              = new JInput;
+		/** @var Registry $params */
+		$params = $this->state->template->params;
 
-		$template = JBSMParams::getTemplateparams();
+		JHtml::_('biblestudy.framework');
 
-		$params = $template->params;
-
-		$css = $params->get('css');
-
-		if ($css <= "-1")
-		{
-			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
-		}
-		else
-		{
-			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
-		}
+		$input = new JInput;
 
 		$item = $this->get('Item');
 
@@ -120,6 +100,8 @@ class BiblestudyViewTeacher extends JViewLegacy
 		// Check to see if com_contact used instead
 		if ($item->contact)
 		{
+			$language = JFactory::getLanguage();
+			$language->load('com_contact', JPATH_SITE);
 			require_once JPATH_ROOT . '/components/com_contact/models/contact.php';
 			$contactmodel  = JModelLegacy::getInstance('contact', 'contactModel');
 			$this->contact = $contactmodel->getItem($pk = $item->contact);
@@ -132,7 +114,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 			$item->largeimage  = '<img src="' . $largeimage->path . '" height="' . $largeimage->height . '" <width="' . $largeimage->width . '" alt="" />';
 			$item->information = $this->contact->misc;
 			$item->phone       = $this->contact->telephone;
-			$cregistry         = new JRegistry;
+			$cregistry         = new Registry;
 			$cregistry->loadString($this->contact->params);
 			$contact_params     = $cregistry;
 			$item->facebooklink = $contact_params->get('linka');
@@ -152,6 +134,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$wherefield = 'study.teacher_id';
 		$limit      = $params->get('studies', '20');
 		$order      = 'DESC';
+		$template      = $this->get('template');
 
 		if ($params->get('show_teacher_studies') > 0)
 		{
@@ -159,14 +142,14 @@ class BiblestudyViewTeacher extends JViewLegacy
 				$whereitem,
 				$wherefield,
 				$params,
-				$this->admin_params,
 				$limit,
-				$order
+				$order,
+				$template
 			);
 
 			foreach ($studies as $i => $study)
 			{
-				$pelements               = $pagebuilder->buildPage($study, $params, $this->admin_params);
+				$pelements               = $pagebuilder->buildPage($study, $params, $template);
 				$studies[$i]->scripture1 = $pelements->scripture1;
 				$studies[$i]->scripture2 = $pelements->scripture2;
 				$studies[$i]->media      = $pelements->media;
@@ -217,6 +200,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 				}
 			}
 			$this->teacherstudies = $studies;
+			$this->studies = $studies;
 		}
 
 		$this->item = $item;
@@ -225,8 +209,8 @@ class BiblestudyViewTeacher extends JViewLegacy
 		// Build the html select list for ordering
 		$this->print    = $print;
 		$this->params   = $params;
-		$this->template = $template;
-
+		$this->template = $this->state->template;
+		$this->document = JFactory::getDocument();
 		$this->_prepareDocument();
 
 		parent::display($tpl);
@@ -242,7 +226,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$app   = JFactory::getApplication('site');
 		$menus = $app->getMenu();
 
-		/** @var $itemparams JRegistry */
+		/** @var $itemparams Registry */
 		$itemparams = $app->getParams();
 		$title      = null;
 
@@ -263,30 +247,30 @@ class BiblestudyViewTeacher extends JViewLegacy
 
 		if (empty($title))
 		{
-			$title = $app->getCfg('sitename');
+			$title = $app->get('sitename');
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 1)
+		elseif ($app->get('sitename_pagetitles', 0) == 1)
 		{
-			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
+			$title = JText::sprintf('JPAGETITLE', $app->get('sitename'), $title);
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 2)
+		elseif ($app->get('sitename_pagetitles', 0) == 2)
 		{
-			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
+			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
 		$this->document->setTitle($title);
 
 		// Prepare meta information (under development)
 		if ($itemparams->get('metakey'))
 		{
-			$this->document->setMetadata('keywords', $itemparams->get('metakey'));
+			$this->document->setMetaData('keywords', $itemparams->get('metakey'));
 		}
 		elseif ($this->params->get('menu-meta_keywords'))
 		{
-			$this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
+			$this->document->setMetaData('keywords', $this->params->get('menu-meta_keywords'));
 		}
 		else
 		{
-			$this->document->setMetadata('keywords', $this->admin_params->get('metakey'));
+			$this->document->setMetaData('keywords', $this->params->get('metakey'));
 		}
 
 		if ($itemparams->get('metadesc'))
@@ -299,12 +283,12 @@ class BiblestudyViewTeacher extends JViewLegacy
 		}
 		else
 		{
-			$this->document->setDescription($this->admin_params->get('metadesc'));
+			$this->document->setDescription($this->params->get('metadesc'));
 		}
 
 		if ($this->params->get('robots'))
 		{
-			$this->document->setMetadata('robots', $this->params->get('robots'));
+			$this->document->setMetaData('robots', $this->params->get('robots'));
 		}
 	}
 

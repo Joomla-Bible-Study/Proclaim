@@ -3,16 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2013 Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.modellist');
-
-JLoader::register('JBSMParams', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helper/params.php');
+use Joomla\Registry\Registry;
 
 /**
  * Model class for SeriesDisplays
@@ -32,8 +30,8 @@ class BiblestudyModelSeriesdisplays extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string $ordering   An optional ordering field.
-	 * @param   string $direction  An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -41,6 +39,8 @@ class BiblestudyModelSeriesdisplays extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
+		$app = JFactory::getApplication('site');
+
 		// Adjust the context to support modal layouts.
 		$input  = new JInput;
 		$layout = $input->get('layout');
@@ -49,14 +49,43 @@ class BiblestudyModelSeriesdisplays extends JModelList
 		{
 			$this->context .= '.' . $layout;
 		}
-		$params = JComponentHelper::getParams('com_biblestudy');
+
+		// Load the parameters.
+		$params   = $app->getParams();
 		$this->setState('params', $params);
+		$template = JBSMParams::getTemplateparams();
+		$admin    = JBSMParams::getAdmin();
+
+		$template->params->merge($params);
+		$template->params->merge($admin->params);
+		$params = $template->params;
+
+		$t = $params->get('seriesid');
+
+		if (!$t)
+		{
+			$input = new JInput;
+			$t     = $input->get('t', 1, 'int');
+		}
+
+		$template->id = $t;
+
+		$this->setState('template', $template);
+		$this->setState('admin', $admin);
 
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
+
 		$series = $this->getUserStateFromRequest($this->context . '.filter.series', 'filter_series');
 		$this->setState('filter.series', $series);
+
 		$this->setState('filter.language', JLanguageHelper::getLanguages());
+
+		$teacher = $this->getUserStateFromRequest($this->context . '.filter.teacher', 'filter_teacher', '');
+		$this->setState('filter.teacher', $teacher);
+
+		$year = $this->getUserStateFromRequest($this->context . '.filter.year', 'filter_year', '');
+		$this->setState('filter.year', $year);
 
 		// Process show_noauth parameter
 		if (!$params->get('show_noauth'))
@@ -67,8 +96,11 @@ class BiblestudyModelSeriesdisplays extends JModelList
 		{
 			$this->setState('filter.access', false);
 		}
-		$input = new JInput;
+
 		$this->setState('layout', $input->get('layout', '', 'cmd'));
+		parent::populateState('se.id', 'ASC');
+		$value = $input->get('start', '', 'int');
+		$this->setState('list.start', $value);
 	}
 
 	/**
@@ -85,7 +117,7 @@ class BiblestudyModelSeriesdisplays extends JModelList
 		$t_params        = $template_params->params;
 		$app             = JFactory::getApplication('site');
 		$params          = JComponentHelper::getParams('com_biblestudy');
-		$menuparams      = new JRegistry;
+		$menuparams      = new Registry;
 		$menu            = $app->getMenu()->getActive();
 
 		if ($menu)
@@ -97,6 +129,9 @@ class BiblestudyModelSeriesdisplays extends JModelList
 		$query->from('#__bsms_series as se');
 		$query->select('t.id as tid, t.teachername, t.title as teachertitle, t.thumb, t.thumbh, t.thumbw, t.teacher_thumbnail');
 		$query->join('LEFT', '#__bsms_teachers as t on se.teacher = t.id');
+		$query->select('s.id as sid, s.series_id, s.studydate');
+		$query->join('INNER', '#__bsms_studies as s on s.series_id = se.id');
+		$query->group('se.id');
 		$where = $this->_buildContentWhere();
 		$query->where($where);
 
@@ -107,28 +142,9 @@ class BiblestudyModelSeriesdisplays extends JModelList
 		{
 			$query->where('se.language in (' . $db->Quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
 		}
-		$orderparam = $params->get('default_order');
-
-		if (empty($orderparam))
-		{
-			$orderparam = $t_params->get('default_order', '1');
-		}
-		if ($orderparam == 2)
-		{
-			$order = "ASC";
-		}
-		else
-		{
-			$order = "DESC";
-		}
-		$orderstate = $this->getState('filter.order');
-
-		if (!empty($orderstate))
-		{
-			$order = $orderstate;
-		}
-
-		$query->order('series_text ' . $order);
+		$orderDir = $t_params->get('series_list_order', 'DESC');
+		$orderCol = $t_params->get('series_order_field', 'series_text');
+		$query->order($orderCol . ' ' . $orderDir);
 
 		return $query;
 	}
@@ -140,19 +156,28 @@ class BiblestudyModelSeriesdisplays extends JModelList
 	 */
 	public function _buildContentWhere()
 	{
-		$mainframe     = JFactory::getApplication();
-		$input         = new JInput;
-		$option        = $input->get('option', '', 'cmd');
-		$params        = JComponentHelper::getParams($option);
-		$filter_series = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');
-		$where         = array();
-		$where[]       = ' se.published = 1';
+		$mainframe      = JFactory::getApplication();
+		$input          = new JInput;
+		$option         = $input->get('option', '', 'cmd');
+		$params         = JComponentHelper::getParams($option);
+		$filter_series  = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');
+		$filter_teacher = $mainframe->getUserStateFromRequest($option . 'filter_teacher', 'filter_teacher', 0, 'int');
+		$filter_year    = $mainframe->getUserStateFromRequest($option . 'filter_year', 'filter_year', 0, 'int');
+		$where          = array();
+		$where[]        = ' se.published = 1';
 
 		if ($filter_series > 0)
 		{
 			$where[] = ' se.id = ' . (int) $filter_series;
 		}
-
+		if ($filter_teacher > 0)
+		{
+			$where[] = ' se.teacher = ' . (int) $filter_teacher;
+		}
+		if ($filter_year > 0)
+		{
+			$where[] = ' YEAR(s.studydate) = ' . (int) $filter_year;
+		}
 		$where = (count($where) ? implode(' AND ', $where) : '');
 
 		$where2   = array();
@@ -196,6 +221,51 @@ class BiblestudyModelSeriesdisplays extends JModelList
 		}
 
 		return $where;
+	}
+
+	/**
+	 * Get a list of teachers associated with series
+	 *
+	 * @since 9.0.0
+	 * @return mixed
+	 */
+	public function getTeachers()
+	{
+		$db    = $this->getDbo();
+		$query = $db->getQuery(true);
+		$query->select('t.id AS value, t.teachername AS text');
+		$query->from('#__bsms_teachers AS t');
+		$query->select('series.access');
+		$query->join('INNER', '#__bsms_series AS series ON t.id = series.teacher');
+		$query->group('t.id');
+		$query->order('t.teachername ASC');
+
+		$db->setQuery($query->__toString());
+		$items = $db->loadObjectList();
+
+		return $items;
+	}
+
+	/**
+	 * Get a list of teachers associated with series
+	 *
+	 * @since 9.0.0
+	 * @return mixed
+	 */
+	public function getYears()
+	{
+		$db    = $this->getDbo();
+		$query = $db->getQuery(true);
+		$query->select('DISTINCT YEAR(s.studydate) as value, YEAR(s.studydate) as text');
+		$query->from('#__bsms_studies as s');
+		$query->select('series.access');
+		$query->join('INNER', '#__bsms_series as series on s.series_id = series.id');
+		$query->order('value');
+
+		$db->setQuery($query->__toString());
+		$items = $db->loadObjectList();
+
+		return $items;
 	}
 
 	/**

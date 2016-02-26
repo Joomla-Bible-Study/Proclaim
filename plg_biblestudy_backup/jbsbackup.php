@@ -1,45 +1,44 @@
 <?php
-
 /**
- * Joomla BibleStudy Backup Plugin
- *
  * @package     BibleStudy
  * @subpackage  Plugin.JBSBackup
- * @copyright   (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright   (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        http://www.JoomlaBibleStudy.org
  * */
 defined('_JEXEC') or die;
 
-/* Import library dependencies */
+// Always load JBSM API if it exists.
+$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
 
-jimport('joomla.plugin.plugin');
+if (file_exists($api))
+{
+	require_once $api;
+}
 
 /**
- * JBSBackup jplugin class
+ * JBSBackup jPlugin class
  *
  * @package     BibleStudy
  * @subpackage  Plugin.JBSBackup
  * @since       7.1.0
  */
-class PlgSystemjbsbackup extends JPlugin
+class PlgSystemJBSBackup extends JPlugin
 {
 
 	/**
 	 * Constructor
 	 *
-	 * @param   object &$subject   The object to observe
-	 * @param   array  $config     An optional associative array of configuration settings.
+	 * @param   object  &$subject  The object to observe
+	 * @param   array   $config    An optional associative array of configuration settings.
 	 *                             Recognized key values include 'name', 'group', 'params', 'language'
 	 *                             (this list is not meant to be comprehensive).
 	 */
 	public function __construct(& $subject, $config)
 	{
-
 		parent::__construct($subject, $config);
 
 		$this->loadLanguage();
-		$this->loadLanguage('com_biblestudy', JPATH_ADMINISTRATOR);
 	}
 
 	/**
@@ -69,16 +68,14 @@ class PlgSystemjbsbackup extends JPlugin
 			// Perform the backup and email and update time and zip file
 			$dobackup = $this->doBackup();
 
-			// If we have run the backupcheck and it returned no errors then the last thing we do is reset the time we did it to current
-
-			$updatetime = $this->updatetime();
+			// If we have run the backup check and it returned no errors then the last thing we do is reset the time we did it to current
+			$this->updatetime();
 
 			// Check to see if we need to email anything
 			if ($check && $params->get('email') > 0)
 			{
 				$this->doEmail($params, $dobackup);
 			}
-			//$this->updatefiles($params);
 
 		}
 	}
@@ -86,7 +83,7 @@ class PlgSystemjbsbackup extends JPlugin
 	/**
 	 * Check Time
 	 *
-	 * @param   object $params  ?
+	 * @param   Joomla\Registry\Registry  $params  ?
 	 *
 	 * @return boolean
 	 */
@@ -117,7 +114,7 @@ class PlgSystemjbsbackup extends JPlugin
 	/**
 	 * Check Days
 	 *
-	 * @param   object $params  ?
+	 * @param   Joomla\Registry\Registry  $params  ?
 	 *
 	 * @return boolean
 	 */
@@ -138,6 +135,7 @@ class PlgSystemjbsbackup extends JPlugin
 		$date       = getdate($now);
 		$day        = $date['wday'];
 		$systemhour = $date['hours'];
+
 		if ($params->get('offset', '0') > 0)
 		{
 			$hour = $systemhour + $offset;
@@ -219,7 +217,20 @@ class PlgSystemjbsbackup extends JPlugin
 	}
 
 	/**
-	 * Update the time
+	 * Do the backup
+	 *
+	 * @return boolean
+	 */
+	public function doBackup()
+	{
+		$dbbackup = new JBSMBackup;
+		$backup   = $dbbackup->exportdb($run = 2);
+
+		return $backup;
+	}
+
+	/**
+	 * Update Time
 	 *
 	 * @return boolean
 	 */
@@ -227,9 +238,10 @@ class PlgSystemjbsbackup extends JPlugin
 	{
 		$time  = time();
 		$db    = JFactory::getDBO();
-		$query = 'UPDATE #__jbsbackup_timeset SET `backup` = ' . $time;
+		$query = $db->getQuery(true);
+		$query->update('#__jbsbackup_timeset')->set($db->qn('backup') . ' = ' . $db->q($time));
 		$db->setQuery($query);
-		$db->query();
+		$db->execute();
 		$updateresult = $db->getAffectedRows();
 
 		if ($updateresult > 0)
@@ -243,25 +255,10 @@ class PlgSystemjbsbackup extends JPlugin
 	}
 
 	/**
-	 * Do the backup
-	 *
-	 * @return object
-	 */
-	public function doBackup()
-	{
-		$path1 = JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/';
-		include_once $path1 . 'biblestudy.backup.php';
-		$dbbackup = new JBSExport;
-		$backup   = $dbbackup->exportdb($run = 2);
-
-		return $backup;
-	}
-
-	/**
 	 * Send the Email
 	 *
-	 * @param   object $params    ?
-	 * @param   object $dobackup  ?
+	 * @param   Joomla\Registry\Registry  $params    Component Params
+	 * @param   string                    $dobackup  File of Backup
 	 *
 	 * @return void
 	 */
@@ -278,48 +275,56 @@ class PlgSystemjbsbackup extends JPlugin
 
 		if (!$backupexists)
 		{
-			$msg = JText::_('JBS_PLG_BACKUP_ERROR');
+			$msg = JText::_('JBS_PLG_BACKUP_EMAIL_MSG_ERROR');
 		}
 		else
 		{
-			$msg = JText::_('JBS_PLG_BACKUP_SUCCESS');
+			$msg = JText::_('JBS_PLG_BACKUP_EMAIL_MSG_SUCCESS');
+		}
+		if ($params->def('fromname', $fromname))
+		{
+
+			$fromname = $params->def('fromname', $fromname);
 		}
 		$mail = JFactory::getMailer();
 		$mail->IsHTML(true);
 		jimport('joomla.utilities.date');
-		$year = '(' . date('Y') . ')';
-		$date = date('r');
-		$Body = $params->get('body') . '<br />';
-		$Body .= JText::_('JBS_PLG_BACKUP_EMAIL_BODY_RUN') . $date . '<br />';
-		$Body2 = '';
+		$sender = array(
+			$mailfrom,
+			$fromname);
+		$mail->setSender($sender);
+		$Body = $params->def('Body', '<strong>' . JText::_('PLG_JBSBACKUP_HEADER') . ' ' . $fromname . '</strong><br />');
+		$Body .= JText::_('Process run at: ') . JHtml::date($input = 'now', 'm/d/Y h:i:s a', false) . '<br />';
+		$Body .= '';
+		$Body .= $msg;
+		$Subject = $params->def('subject', JText::_('PLG_JBSBACKUP_REPORT'));
 
-		// $Body2 .= '<br><a href="' . JURI::root() . $dobackup . '</a>';
-		$Body2 .= $msg;
+		$recipients = explode(',', $params->get('recipients'));
 
-		$Body3    = $Body . $Body2;
-		$Subject  = $params->get('subject');
-		$FromName = $params->def('fromname', $fromname);
-
-		$recipients = explode(",", $params->get('recipients'));
-
-		foreach ($recipients AS $recipient)
+		if ($recipients == false)
 		{
-			$mail->addRecipient($recipient);
-			$mail->setSubject($Subject . ' ' . $livesite);
-			$mail->setBody($Body3);
+			$recipients = array(
+				$config->get('config.mailfrom'));
+		}
+		$mail->addRecipient($recipients);
 
-			if ($params->get('includedb') == 1)
-			{
-				$mail->addAttachment($dobackup);
-			}
-			$mail->Send();
+		$mail->setSubject($Subject . ' ' . $livesite);
+		$mail->setBody($Body);
+
+		if ($params->get('includedb') == 1)
+		{
+			$mail->addAttachment($dobackup);
+		}
+		if (!$mail->Send())
+		{
+			JLog::add('JBSM Bakup Plugin email faild.', 404, 'JBSM', DateTime::W3C);
 		}
 	}
 
 	/**
 	 * Update files
 	 *
-	 * @param   object $params  ?
+	 * @param   Joomla\Registry\Registry  $params  JBSM Params
 	 *
 	 * @return void
 	 */
@@ -327,8 +332,8 @@ class PlgSystemjbsbackup extends JPlugin
 	{
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');
-		$path          = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'database';
-		$exclude       = array('.svn', 'CVS', '.DS_Store', '__MACOSX');
+		$path          = JPATH_SITE . '/media/com_biblestudy/database';
+		$exclude = array('.git', '.svn', 'CVS', '.DS_Store', '__MACOSX');
 		$excludefilter = array('^\..*', '.*~');
 		$files         = JFolder::files($path, '.sql', 'false', 'true', $exclude, $excludefilter);
 		arsort($files, SORT_STRING);

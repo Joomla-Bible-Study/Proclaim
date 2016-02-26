@@ -2,32 +2,31 @@
 <extension type="module" version="2.5" method="upgrade" client="site">
     <name>JBS_MDL_PODCAST</name>
     <author>Joomla Bible Study Team</author>
-    <copyright>(C) 2007-2013 Joomla Bible Study</copyright>
-    <license>GPL/GNU</license>
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
-    <version>8.0.0</version>
-    <creationDate>June 12, 2013</creationDate>
+    <copyright>(C) 2007 - 2016 Joomla Bible Study All rights reserved.</copyright>
+    <version>9.0.0-beta2</version>
+    <creationDate>Feb 15, 2016</creationDate>
+    <license>http://www.gnu.org/licenses/gpl.html</license>
     <description>JBS_MDL_PODCAST_XML_DESCRIPTION</description>
     <files>
         <filename module="mod_biblestudy_podcast">mod_biblestudy_podcast.php</filename>
         <folder>language</folder>
         <folder>tmpl</folder>
-        <filename>index.html</filename>
-        <filename>helper.php</filename>
         <filename>mod_biblestudy_podcast.xml</filename>
     </files>
     <config>
         <fields name="params">
-            <fieldset name="basic" label="JBS_MDL_LIST_LAYOUT"
+            <fieldset name="basic"
                       addfieldpath="/administrator/components/com_biblestudy/models/fields">
+                <field name="dummy" type="loadlanguagefile" default=""/>   <!-- load common language file -->
                 <field name="t" type="sql" default="1"
-                       label="JBS_MNU_SELECT_TEMPLATE" description="JBS_MNU_SELECT_TEMPLATE_DESC"
+                       label="JBS_MDL_SELECT_TEMPLATE" description="JBS_MDL_SELECT_TEMPLATE_DESC"
                        query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
                        key_field="id" value_field="title" required="true"/>
 
                 <field name="subscribeintro" type="text" default="Our Podcasts" size="50"
-                       label="JBS_TPL_SUBSCRIBE_INTRO" description="JBS_TPL_SUBSCRIBE_INTRO_DESC"/>
+                       label="JBS_MDL_HEADER_TEXT" description="JBS_MDL_HEADER_TEXT_DESC"/>
             </fieldset>
             <fieldset name="advanced">
                 <field

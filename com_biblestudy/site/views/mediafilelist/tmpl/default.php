@@ -3,30 +3,21 @@
  * Default
  *
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-if (BIBLESTUDY_CHECKREL)
-{
-	JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-	JHtml::_('bootstrap.tooltip');
-	JHtml::_('dropdown.init');
-	JHtml::_('formbehavior.chosen', 'select');
-}
-else
-{
-	JHtml::_('behavior.tooltip');
-	JHtml::stylesheet('media/com_biblestudy/css/biblestudy-j2.5.css');
-	JHtml::stylesheet('media/com_biblestudy/jui/css/bootstrap.css');
-	JHtml::script('media/com_biblestudy/jui/js/jquery.js');
-	JHtml::script('media/com_biblestudy/jui/js/jquery-noconflict.js');
-	JHtml::script('media/com_biblestudy/jui/js/bootstrap.js');
-}
+/** @var $this BiblestudyViewMediafilelist */
+JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+JHtml::_('bootstrap.tooltip');
+JHtml::_('dropdown.init');
+JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.multiselect');
+JHtml::_('biblestudy.framework');
+JHtml::_('biblestudy.loadcss', $this->params);
 
 $app = JFactory::getApplication();
 $user = JFactory::getUser();
@@ -35,8 +26,30 @@ $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn = $this->escape($this->state->get('list.direction'));
 $archived = $this->state->get('filter.published') == 2 ? true : false;
 $trashed = $this->state->get('filter.published') == -2 ? true : false;
-$saveOrder = $listOrder == 'ordering';
+$saveOrder = $listOrder == 'mediafile.ordering';
+
+if ($saveOrder)
+{
+	$saveOrderingUrl = 'index.php?option=com_biblestudy&task=mediafiles.saveOrderAjax&tmpl=component';
+	JHtml::_('sortablelist.sortable', 'mediafileList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+}
+$sortFields = $this->getSortFields();
 ?>
+<script type="text/javascript">
+	Joomla.orderTable=function () {
+		var table = document.getElementById("sortTable");
+		var direction = document.getElementById("directionTable");
+		var order = table.options[table.selectedIndex].value;
+		var dirn;
+		if (order != '<?php echo $listOrder; ?>') {
+			dirn = 'asc';
+		} else {
+			dirn = direction.options[direction.selectedIndex].value;
+		}
+		Joomla.tableOrdering(order, dirn, '');
+	}
+</script>
+
 <h2><?php echo JText::_('JBS_CMN_MEDIA'); ?></h2>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafilelist'); ?>" method="post"
       name="adminForm" id="adminForm">
@@ -44,34 +57,31 @@ $saveOrder = $listOrder == 'ordering';
 		<div id="filter-bar" class="btn-toolbar">
 			<div class="filter-search btn-group pull-left">
 				<label for="filter_search"
-				       class="element-invisible"><?php echo JText::_('JBS_MED_FILENAME'); ?>
+						class="element-invisible"><?php echo JText::_('JBS_MED_FILENAME'); ?>
 					: </label>
-				<input type="text" name="filter_search"placeholder="<?php echo JText::_('JBS_MED_FILENAME') ?>"
-				       id="filter_search"
-				       value="<?php echo $this->escape($this->state->get('filter.search')); ?>"
-				       title="<?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?>"/>
+				<input type="text" name="filter_search" placeholder="<?php echo JText::_('JBS_MED_FILENAME') ?>"
+						id="filter_search"
+						value="<?php echo $this->escape($this->state->get('filter.search')); ?>"
+						title="<?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?>"/>
 			</div>
 			<div class="btn-group pull-left hidden-phone">
-				<button class="btn tip hasTooltip" type="submit" title="<?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?>"><i
-							class="icon-search"></i></button>
+				<button class="btn tip hasTooltip" type="submit"
+						title="<?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?>"><i
+						class="icon-search"></i></button>
 				<button class="btn tip hasTooltip" type="button"
-				        onclick="document.id('filter_filename').value='';this.form.submit();"
-				        title="<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>"><i class="icon-remove"></i></button>
+						onclick="document.id('filter_filename').value='';this.form.submit();"
+						title="<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>"><i class="icon-remove"></i></button>
 			</div>
 			<div class="clearfix"></div>
 			<div class="btn-group pull-right hidden-phone">
 				<label for="directionTable"
-				       class="element-invisible"><?php echo JText::_('JFIELD_ORDERING_DESC'); ?></label>
+						class="element-invisible"><?php echo JText::_('JFIELD_ORDERING_DESC'); ?></label>
 				<select name="directionTable" id="directionTable" class="input-medium" onchange="Joomla.orderTable()">
 					<option value=""><?php echo JText::_('JFIELD_ORDERING_DESC'); ?></option>
-					<option value="asc" <?php if ($listDirn == 'asc')
-					{
-						echo 'selected="selected"';
-					} ?>><?php echo JText::_('JBS_CMN_ASCENDING'); ?></option>
-					<option value="desc" <?php if ($listDirn == 'desc')
-					{
-						echo 'selected="selected"';
-					} ?>><?php echo JText::_('JBS_CMN_DESCENDING'); ?></option>
+					<option
+						value="asc" <?php if ($listDirn == 'asc') echo 'selected="selected"'; ?>><?php echo JText::_('JBS_CMN_ASCENDING'); ?></option>
+					<option
+						value="desc" <?php if ($listDirn == 'desc') echo 'selected="selected"'; ?>><?php echo JText::_('JBS_CMN_DESCENDING'); ?></option>
 				</select>
 			</div>
 			<div class="btn-group pull-right">
@@ -96,28 +106,13 @@ $saveOrder = $listOrder == 'ordering';
 			<tr>
 				<th width="1%" class="hidden-phone">
 					<input type="checkbox" name="checkall-toggle" value=""
-					       title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
+							title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
 				</th>
-				<th width="1%" style="min-width:25px" class="nowrap center">
+				<th width="1%" style="min-width:25px;" class="nowrap center">
 					<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'mediafile.published', $listDirn, $listOrder); ?>
 				</th>
 				<th width="20%">
 					<?php echo JHtml::_('grid.sort', 'JBS_MED_FILENAME', 'mediafile.filename', $listDirn, $listOrder); ?>
-				</th>
-				<th>
-					<?php echo JHtml::_('grid.sort', 'JBS_CMN_STUDY_TITLE', 'study.studytitle', $listDirn, $listOrder); ?>
-				</th>
-				<th width="20%">
-					<?php echo JHtml::_('grid.sort', 'JBS_MED_MEDIA_TYPE', 'mediaType.media_text', $listDirn, $listOrder); ?>
-				</th>
-				<th width="15%">
-					<?php echo JHtml::_('grid.sort', 'JBS_CMN_MEDIA_CREATE_DATE', 'mediafile.createdate', $listDirn, $listOrder); ?>
-				</th>
-				<th width="10%" class="nowrap hidden-phone">
-					<?php echo JHtml::_('grid.sort', 'JBS_CMN_PLAYS', 'mediafile.plays', $listDirn, $listOrder); ?>
-				</th>
-				<th width="5%">
-					<?php echo JHtml::_('grid.sort', 'JBS_CMN_DOWNLOADS', 'mediafile.downloads', $listDirn, $listOrder); ?>
 				</th>
 				<th width="5%">
 					<?php echo JHtml::_('grid.sort', 'JBS_CMN_ID', 'mediafile.id', $listDirn, $listOrder); ?>
@@ -127,7 +122,7 @@ $saveOrder = $listOrder == 'ordering';
 			<tbody>
 			<?php
 			foreach ($this->items as $i => $item) :
-				$item->max_ordering = 0; //??
+				$item->max_ordering = 0;
 				$canCreate          = $user->authorise('core.create');
 				$canEdit            = $user->authorise('core.edit', 'com_biblestudy.mediafile.' . $item->id);
 				$canEditOwn         = $user->authorise('core.edit.own', 'com_biblestudy.mediafile.' . $item->id);
@@ -146,17 +141,23 @@ $saveOrder = $listOrder == 'ordering';
 					<td class="nowrap has-context">
 						<div class="pull-left">
 							<?php if ($canEdit || $canEditOwn) : ?>
-								<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=mediafileform.edit&a_id=' . (int) $item->id); ?>">
-									<?php echo($this->escape($item->filename) ? $this->escape($item->filename) : 'ID: ' . $this->escape($item->id)); ?>
-								</a>
-							<?php else : ?>
-								<?php echo($this->escape($item->filename) ? $this->escape($item->filename) : 'ID: ' . $this->escape($item->id)); ?>
-							<?php endif; ?>
+							<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=mediafileform.edit&a_id=' . (int) $item->id); ?>">
+								<?php endif; ?>
+								<span class="label">
+										<?php
+										$label = $this->escape($item->serverConfig->name->__toString()) . ' - ';
+										$label .= $this->escape($item->params[$item->serverConfig->config->media_resource->__toString()])
+											? $item->serverConfig->config->media_resource->__toString() : 'mediacode';
+										?>
+										<?php echo $label; ?>
+								</span>
+								<?php echo '...' . substr($this->escape($item->params[$item->serverConfig->config->media_resource->__toString()]), -25); ?>
+								<?php if ($canEdit || $canEditOwn) : ?>
+							</a>
+						<?php endif; ?>
 						</div>
 						<div class="pull-left">
 							<?php
-							if (BIBLESTUDY_CHECKREL)
-							{
 								// Create dropdown items
 								if ($item->published) :
 									JHtml::_('dropdown.unpublish', 'cb' . $i, 'mediafilelist.');
@@ -180,29 +181,7 @@ $saveOrder = $listOrder == 'ordering';
 
 								// Render dropdown list
 								echo JHtml::_('dropdown.render');
-							}
 							?>
-						</div>
-					</td>
-					<td class="nowrap has-context">
-						<div class="pull-left">
-							<?php echo $this->escape($item->studytitle); ?>
-						</div>
-					</td>
-					<td class="small hidden-phone">
-						<?php echo $this->escape($item->mediaType); ?>
-					</td>
-					<td class="small hidden-phone">
-						<?php echo JHtml::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
-					</td>
-					<td class="nowrap has-context">
-						<div class="pull-left">
-							<?php echo $this->escape($item->plays); ?>
-						</div>
-					</td>
-					<td class="nowrap has-context">
-						<div class="pull-left">
-							<?php echo $this->escape($item->downloads); ?>
 						</div>
 					</td>
 					<td class="center hidden-phone">

@@ -1,328 +1,305 @@
---
--- Dumping data for table `#__bsms_admin`
---
+-- Dump of table #__bsms_admin
+-- ------------------------------------------------------------
 
-INSERT INTO `#__bsms_admin` (`id`, `drop_tables`, `params`, `asset_id`, `access`, `installstate`, `debug`) VALUES
-(1, 0, '{"metakey":"","metadesc":"","compat_mode":"0","jbsmigrationshow":"0","studylistlimit":"10","show_location_media":"0","popular_limit":"","character_filter":"1","format_popular":"0","uploadtype":"1","socialnetworking":"1","sharetype":"1","default_main_image":"","default_series_image":"","default_teacher_image":"","default_download_image":"","default_showHide_image":"","location_id":"-1","teacher_id":"1","series_id":"-1","booknumber":"-1","messagetype":"-1","default_study_image":"","download":"1","target":" ","server":"1","path":"-1","podcast":["-1"],"mime":"1","from":"x","to":"x","pFrom":"x","pTo":"x","debug":"0"}', 0, 1, NULL, 0);
+INSERT INTO `#__bsms_admin` (`id`, `drop_tables`, `params`, `asset_id`, `access`, `installstate`, `debug`)
+VALUES
+  (1, 0,
+   '{\"metakey\":\"\",\"metadesc\":\"\",\"compat_mode\":\"0\",\"studylistlimit\":\"10\",\"show_location_media\":\"0\",\"popular_limit\":\"\",\"character_filter\":\"1\",\"format_popular\":\"0\",\"default_main_image\":\"\",\"default_series_image\":\"\",\"default_teacher_image\":\"\",\"default_download_image\":\"\",\"default_showHide_image\":\"\",\"thumbnail_teacher_size\":\"150\",\"thumbnail_series_size\":\"150\",\"thumbnail_study_size\":\"150\",\"location_id\":\"-1\",\"teacher_id\":\"1\",\"series_id\":\"-1\",\"booknumber\":\"-1\",\"messagetype\":\"-1\",\"default_study_image\":\"\",\"download\":\"1\",\"target\":\" \",\"server\":\"1\",\"podcast\":[\"-1\"],\"from\":\"x\",\"to\":\"x\",\"pFrom\":\"x\",\"pTo\":\"x\",\"controls\":\"1\",\"jwplayer_pro\":\"0\",\"jwplayer_key\":\"\",\"jwplayer_cdn\":\"\",\"jwplayer_skin\":\"\",\"jwplayer_autostart\":\"false\",\"jwplayer_fallback\":\"true\",\"jwplayer_mute\":\"false\",\"jwplayer_stagevideo\":\"false\",\"jwplayer_primary\":\"html5\",\"playlist\":\"false\",\"jwplayer_listbar\":\"false\",\"jwplayer_logo\":\"\",\"sharing\":\"false\",\"jwplayer_related\":\"false\",\"jwplayer_advertising\":\"\",\"rtmp\":\"Comming Soon\",\"ga\":\"Comming Soon\",\"jwplayer_sitecatalyst\":\"Comming Soon\",\"captions\":\"false\"}',
+   7587, 1, NULL, 0);
 
---
--- Dumping data for table `#__bsms_books`
---
 
-INSERT INTO `#__bsms_books` (`id`, `bookname`, `booknumber`, `published`) VALUES
-(1, 'JBS_BBK_GENESIS', 101, 1),
-(2, 'JBS_BBK_EXODUS', 102, 1),
-(3, 'JBS_BBK_LEVITICUS', 103, 1),
-(4, 'JBS_BBK_NUMBERS', 104, 1),
-(5, 'JBS_BBK_DEUTERONOMY', 105, 1),
-(6, 'JBS_BBK_JOSHUA', 106, 1),
-(7, 'JBS_BBK_JUDGES', 107, 1),
-(8, 'JBS_BBK_RUTH', 108, 1),
-(9, 'JBS_BBK_1SAMUEL', 109, 1),
-(10, 'JBS_BBK_2SAMUEL', 110, 1),
-(11, 'JBS_BBK_1KINGS', 111, 1),
-(12, 'JBS_BBK_2KINGS', 112, 1),
-(13, 'JBS_BBK_1CHRONICLES', 113, 1),
-(14, 'JBS_BBK_2CHRONICLES', 114, 1),
-(15, 'JBS_BBK_EZRA', 115, 1),
-(16, 'JBS_BBK_NEHEMIAH', 116, 1),
-(17, 'JBS_BBK_ESTHER', 117, 1),
-(18, 'JBS_BBK_JOB', 118, 1),
-(19, 'JBS_BBK_PSALM', 119, 1),
-(20, 'JBS_BBK_PROVERBS', 120, 1),
-(21, 'JBS_BBK_ECCLESIASTES', 121, 1),
-(22, 'JBS_BBK_SONG_OF_SOLOMON', 122, 1),
-(23, 'JBS_BBK_ISAIAH', 123, 1),
-(24, 'JBS_BBK_JEREMIAH', 124, 1),
-(25, 'JBS_BBK_LAMENTATIONS', 125, 1),
-(26, 'JBS_BBK_EZEKIEL', 126, 1),
-(27, 'JBS_BBK_DANIEL', 127, 1),
-(28, 'JBS_BBK_HOSEA', 128, 1),
-(29, 'JBS_BBK_JOEL', 129, 1),
-(30, 'JBS_BBK_AMOS', 130, 1),
-(31, 'JBS_BBK_OBADIAH', 131, 1),
-(32, 'JBS_BBK_JONAH', 132, 1),
-(33, 'JBS_BBK_MICAH', 133, 1),
-(34, 'JBS_BBK_NAHUM', 134, 1),
-(35, 'JBS_BBK_HABAKKUK', 135, 1),
-(36, 'JBS_BBK_ZEPHANIAH', 136, 1),
-(37, 'JBS_BBK_HAGGAI', 137, 1),
-(38, 'JBS_BBK_ZECHARIAH', 138, 1),
-(39, 'JBS_BBK_MALACHI', 139, 1),
-(40, 'JBS_BBK_MATTHEW', 140, 1),
-(41, 'JBS_BBK_MARK', 141, 1),
-(42, 'JBS_BBK_LUKE', 142, 1),
-(43, 'JBS_BBK_JOHN', 143, 1),
-(44, 'JBS_BBK_ACTS', 144, 1),
-(45, 'JBS_BBK_ROMANS', 145, 1),
-(46, 'JBS_BBK_1CORINTHIANS', 146, 1),
-(47, 'JBS_BBK_2CORINTHIANS', 147, 1),
-(48, 'JBS_BBK_GALATIANS', 148, 1),
-(49, 'JBS_BBK_EPHESIANS', 149, 1),
-(50, 'JBS_BBK_PHILIPPIANS', 150, 1),
-(51, 'JBS_BBK_COLOSSIANS', 151, 1),
-(52, 'JBS_BBK_1THESSALONIANS', 152, 1),
-(53, 'JBS_BBK_2THESSALONIANS', 153, 1),
-(54, 'JBS_BBK_1TIMOTHY', 154, 1),
-(55, 'JBS_BBK_2TIMOTHY', 155, 1),
-(56, 'JBS_BBK_TITUS', 156, 1),
-(57, 'JBS_BBK_PHILEMON', 157, 1),
-(58, 'JBS_BBK_HEBREWS', 158, 1),
-(59, 'JBS_BBK_JAMES', 159, 1),
-(60, 'JBS_BBK_1PETER', 160, 1),
-(61, 'JBS_BBK_2PETER', 161, 1),
-(62, 'JBS_BBK_1JOHN', 162, 1),
-(63, 'JBS_BBK_2JOHN', 163, 1),
-(64, 'JBS_BBK_3JOHN', 164, 1),
-(65, 'JBS_BBK_JUDE', 165, 1),
-(66, 'JBS_BBK_REVELATION', 166, 1),
-(67, 'JBS_BBK_TOBIT', 167, 1),
-(68, 'JBS_BBK_JUDITH', 168, 1),
-(69, 'JBS_BBK_1MACCABEES', 169, 1),
-(70, 'JBS_BBK_2MACCABEES', 170, 1),
-(71, 'JBS_BBK_WISDOM', 171, 1),
-(72, 'JBS_BBK_SIRACH', 172, 1),
-(73, 'JBS_BBK_BARUCH', 173, 1);
+-- Dump of table #__bsms_books
+-- ------------------------------------------------------------
 
---
--- Dumping data for table `#__bsms_folders`
---
+INSERT INTO `#__bsms_books` (`id`, `bookname`, `booknumber`, `published`)
+VALUES
+  (1, 'JBS_BBK_GENESIS', 101, 1),
+  (2, 'JBS_BBK_EXODUS', 102, 1),
+  (3, 'JBS_BBK_LEVITICUS', 103, 1),
+  (4, 'JBS_BBK_NUMBERS', 104, 1),
+  (5, 'JBS_BBK_DEUTERONOMY', 105, 1),
+  (6, 'JBS_BBK_JOSHUA', 106, 1),
+  (7, 'JBS_BBK_JUDGES', 107, 1),
+  (8, 'JBS_BBK_RUTH', 108, 1),
+  (9, 'JBS_BBK_1SAMUEL', 109, 1),
+  (10, 'JBS_BBK_2SAMUEL', 110, 1),
+  (11, 'JBS_BBK_1KINGS', 111, 1),
+  (12, 'JBS_BBK_2KINGS', 112, 1),
+  (13, 'JBS_BBK_1CHRONICLES', 113, 1),
+  (14, 'JBS_BBK_2CHRONICLES', 114, 1),
+  (15, 'JBS_BBK_EZRA', 115, 1),
+  (16, 'JBS_BBK_NEHEMIAH', 116, 1),
+  (17, 'JBS_BBK_ESTHER', 117, 1),
+  (18, 'JBS_BBK_JOB', 118, 1),
+  (19, 'JBS_BBK_PSALM', 119, 1),
+  (20, 'JBS_BBK_PROVERBS', 120, 1),
+  (21, 'JBS_BBK_ECCLESIASTES', 121, 1),
+  (22, 'JBS_BBK_SONG_OF_SOLOMON', 122, 1),
+  (23, 'JBS_BBK_ISAIAH', 123, 1),
+  (24, 'JBS_BBK_JEREMIAH', 124, 1),
+  (25, 'JBS_BBK_LAMENTATIONS', 125, 1),
+  (26, 'JBS_BBK_EZEKIEL', 126, 1),
+  (27, 'JBS_BBK_DANIEL', 127, 1),
+  (28, 'JBS_BBK_HOSEA', 128, 1),
+  (29, 'JBS_BBK_JOEL', 129, 1),
+  (30, 'JBS_BBK_AMOS', 130, 1),
+  (31, 'JBS_BBK_OBADIAH', 131, 1),
+  (32, 'JBS_BBK_JONAH', 132, 1),
+  (33, 'JBS_BBK_MICAH', 133, 1),
+  (34, 'JBS_BBK_NAHUM', 134, 1),
+  (35, 'JBS_BBK_HABAKKUK', 135, 1),
+  (36, 'JBS_BBK_ZEPHANIAH', 136, 1),
+  (37, 'JBS_BBK_HAGGAI', 137, 1),
+  (38, 'JBS_BBK_ZECHARIAH', 138, 1),
+  (39, 'JBS_BBK_MALACHI', 139, 1),
+  (40, 'JBS_BBK_MATTHEW', 140, 1),
+  (41, 'JBS_BBK_MARK', 141, 1),
+  (42, 'JBS_BBK_LUKE', 142, 1),
+  (43, 'JBS_BBK_JOHN', 143, 1),
+  (44, 'JBS_BBK_ACTS', 144, 1),
+  (45, 'JBS_BBK_ROMANS', 145, 1),
+  (46, 'JBS_BBK_1CORINTHIANS', 146, 1),
+  (47, 'JBS_BBK_2CORINTHIANS', 147, 1),
+  (48, 'JBS_BBK_GALATIANS', 148, 1),
+  (49, 'JBS_BBK_EPHESIANS', 149, 1),
+  (50, 'JBS_BBK_PHILIPPIANS', 150, 1),
+  (51, 'JBS_BBK_COLOSSIANS', 151, 1),
+  (52, 'JBS_BBK_1THESSALONIANS', 152, 1),
+  (53, 'JBS_BBK_2THESSALONIANS', 153, 1),
+  (54, 'JBS_BBK_1TIMOTHY', 154, 1),
+  (55, 'JBS_BBK_2TIMOTHY', 155, 1),
+  (56, 'JBS_BBK_TITUS', 156, 1),
+  (57, 'JBS_BBK_PHILEMON', 157, 1),
+  (58, 'JBS_BBK_HEBREWS', 158, 1),
+  (59, 'JBS_BBK_JAMES', 159, 1),
+  (60, 'JBS_BBK_1PETER', 160, 1),
+  (61, 'JBS_BBK_2PETER', 161, 1),
+  (62, 'JBS_BBK_1JOHN', 162, 1),
+  (63, 'JBS_BBK_2JOHN', 163, 1),
+  (64, 'JBS_BBK_3JOHN', 164, 1),
+  (65, 'JBS_BBK_JUDE', 165, 1),
+  (66, 'JBS_BBK_REVELATION', 166, 1),
+  (67, 'JBS_BBK_TOBIT', 167, 1),
+  (68, 'JBS_BBK_JUDITH', 168, 1),
+  (69, 'JBS_BBK_1MACCABEES', 169, 1),
+  (70, 'JBS_BBK_2MACCABEES', 170, 1),
+  (71, 'JBS_BBK_WISDOM', 171, 1),
+  (72, 'JBS_BBK_SIRACH', 172, 1),
+  (73, 'JBS_BBK_BARUCH', 173, 1);
 
-INSERT INTO `#__bsms_folders` (`id`, `foldername`, `folderpath`, `published`, `asset_id`, `access`) VALUES
-(1, 'My Folder Name', '/media/', 1, 0, 1);
+-- Dump of table #__bsms_locations
+-- ------------------------------------------------------------
 
---
--- Dumping data for table `#__bsms_locations`
---
+INSERT INTO `#__bsms_locations` (`id`, `location_text`, `contact_id`, `address`, `suburb`, `state`, `country`, `postcode`, `telephone`, `fax`, `misc`, `image`, `email_to`, `default_con`, `checked_out`, `checked_out_time`, `params`, `user_id`, `mobile`, `webpage`, `sortname1`, `sortname2`, `sortname3`, `language`, `created`, `created_by`, `created_by_alias`, `modified`, `modified_by`, `metakey`, `metadesc`, `metadata`, `featured`, `xreference`, `version`, `hits`, `publish_up`, `publish_down`, `published`, `asset_id`, `access`, `ordering`, `landing_show`)
+VALUES
+  (1, 'My Location', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '0000-00-00 00:00:00', '', 0,
+   '', '', '', '', '', '', '0000-00-00 00:00:00', 0, '', '0000-00-00 00:00:00', 0, '', '', '', 0, '', 1, 0,
+   '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 7480, 1, 1, NULL);
 
-INSERT INTO `#__bsms_locations` (`id`, `location_text`, `published`, `asset_id`, `access`, `ordering`) VALUES
-(1, 'My Location', 1, 0, 1, 1);
+-- Dump of table #__bsms_mediafiles
+-- ------------------------------------------------------------
 
---
--- Dumping data for table `#__bsms_media`
---
+INSERT INTO `#__bsms_mediafiles` (`id`, `study_id`, `server_id`, `podcast_id`, `metadata`, `ordering`, `createdate`, `hits`, `published`, `comment`, `downloads`, `plays`, `params`, `asset_id`, `access`, `language`, `created_by`, `created_by_alias`, `modified`, `modified_by`, `checked_out`, `checked_out_time`)
+VALUES
+  (1, 1, 1, '1', '{\"plays\":\"0\", \"downloads\":\"0\"}', 0, '2009-09-13 00:10:00', 0, 1, 'Sample Media file', 0, 10,
+   '{\"link_type\":\"\",\"docMan_id\":\"0\",\"article_id\":\"-1\",\"virtueMart_id\":\"0\",\"player\":\"7\",\"popup\":\"3\",\"mediacode\":\"\",\"filename\":\"\\/MediaFiles\\/2015\\/2015-008.mp3\",\"size\":false,\"special\":\"\",\"media_image\":\"images\\/biblestudy\\/speaker24.png\",\"mime_type\":\"audio\\/mp3\",\"playerwidth\":\"\",\"playerheight\":\"\",\"itempopuptitle\":\"\",\"itempopupfooter\":\"\",\"popupmargin\":\"50\",\"autostart\":\"false\"}',
+   7481, 1, '*', 1, 'admin', '0000-00-00 00:00:00', 1, 0, '0000-00-00 00:00:00'),
+  (2, 1, 3, '', '', 0, '2010-03-12 18:10:00', 0, 1, '', 0, 6,
+   '{\"link_type\":\"0\",\"docMan_id\":\"0\",\"article_id\":\"-1\",\"virtueMart_id\":\"0\",\"player\":\"0\",\"popup\":\"2\",\"mediacode\":\"\",\"filename\":\"\\/images\\/growthgroupquestions\\/Colossians3_5-11Questions.pdf\",\"size\":0,\"special\":\"\",\"media_image\":\"images\\/biblestudy\\/pdf16.png\",\"mime_type\":\"application\\/pdf\",\"playerwidth\":\"\",\"playerheight\":\"\",\"itempopuptitle\":\"\",\"itempopupfooter\":\"\",\"popupmargin\":\"50\",\"autostart\":\"\"}',
+   7593, 1, '*', 0, '', '0000-00-00 00:00:00', 0, 0, '0000-00-00 00:00:00'),
+  (3, 1, 2, '', '', 0, '2015-07-28 19:18:07', 0, 1, '', 0, 0,
+   '{\"link_type\":\"0\",\"docMan_id\":\"0\",\"article_id\":\"-1\",\"virtueMart_id\":\"0\",\"player\":\"1\",\"popup\":\"3\",\"mediacode\":\"\",\"filename\":\"https:\\/\\/youtu.be\\/PsFo6MhAB9o\",\"size\":0,\"special\":\"\",\"media_image\":\"images\\/biblestudy\\/youtube24.png\",\"mime_type\":\"video\\/mp4\",\"playerwidth\":\"\",\"playerheight\":\"\",\"itempopuptitle\":\"\",\"itempopupfooter\":\"\",\"popupmargin\":\"50\",\"autostart\":\"\"}',
+   7596, 1, '*', 0, '', '0000-00-00 00:00:00', 0, 0, '0000-00-00 00:00:00');
 
-INSERT INTO `#__bsms_media` (`id`, `media_text`, `media_image_name`, `media_image_path`, `path2`, `media_alttext`, `published`, `asset_id`, `access`, `ordering`) VALUES
-(1, 'mp3 compressed audio file', 'mp3', '', 'speaker24.png', 'mp3 audio file', 1, 0, 1, 1),
-(2, 'Video', 'Video File', '', 'video24.png', 'Video File', 1, 0, 1, 2),
-(3, 'm4v', 'Video Podcast', '', 'podcast-video24.png', 'Video Podcast', 1, 0, 1, 3),
-(4, 'Streaming Audio', 'Streaming Audio', '', 'streamingaudio24.png', 'Streaming Audio', 1, 0, 1, 4),
-(5, 'Streaming Video', 'Streaming Video', '', 'streamingvideo24.png', 'Streaming Video', 1, 0, 1, 5),
-(6, 'Real Audio', 'Real Audio', '', 'realplayer24.png', 'Real Audio', 1, 0, 1, 6),
-(7, 'Windows Media Audio', 'Windows Media Audio', '', 'windows-media24.png', 'Windows Media File', 1, 0, 1, 7),
-(8, 'Podcast Audio', 'Podcast Audio', '', 'podcast-audio24.png', 'Podcast Audio', 1, 0, 1, 8),
-(9, 'CD', 'CD', '', 'cd.png', 'CD', 1, 0, 1, 9),
-(10, 'DVD', 'DVD', '', 'dvd.png', 'DVD', 1, 0, 1, 10),
-(11, 'Download', 'Download', '', 'download.png', 'Download', 1, 0, 1, 11),
-(12, 'Article', 'Article', '', 'textfile24.png', 'Article', 1, 0, 1, 12),
-(13, 'You Tube', 'You Tube', '', 'youtube24.png', 'You Tube Video', 1, 0, 1, 13);
+-- Dump of table #__bsms_message_type
+-- ------------------------------------------------------------
 
---
--- Dumping data for table `#__bsms_mediafiles`
---
+INSERT INTO `#__bsms_message_type` (`id`, `message_type`, `alias`, `published`, `asset_id`, `access`, `ordering`, `landing_show`)
+VALUES
+  (1, 'Sunday', X'73756E646179', 1, 7482, 1, 1, NULL);
 
-INSERT INTO `#__bsms_mediafiles` (`id`, `study_id`, `media_image`, `server`, `path`, `special`, `filename`, `size`, `mime_type`, `podcast_id`, `internal_viewer`, `mediacode`, `ordering`, `createdate`, `link_type`, `hits`, `published`, `docMan_id`, `article_id`, `comment`, `virtueMart_id`, `downloads`, `plays`, `params`, `player`, `popup`, `asset_id`, `access`, `language`) VALUES
-(1, 1, 2, '1', '1', '', 'myfile.mp3', '12332', 1, '1', 0, '', 0, '2009-09-13 00:10:00', '1', 0, 1, 0, -1, '', 0, 0, 0, '{"playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50"}', 1, 1, 0, 1, '*');
+-- Dump of table #__bsms_podcast
+-- ------------------------------------------------------------
 
---
--- Dumping data for table `#__bsms_message_type`
---
+INSERT INTO `#__bsms_podcast` (`id`, `title`, `website`, `description`, `image`, `imageh`, `imagew`, `author`, `podcastimage`, `podcastsearch`, `filename`, `language`, `editor_name`, `editor_email`, `podcastlimit`, `published`, `episodetitle`, `custom`, `detailstemplateid`, `asset_id`, `access`, `alternatelink`, `alternateimage`, `podcast_subscribe_show`, `podcast_image_subscribe`, `podcast_subscribe_desc`, `alternatewords`, `episodesubtitle`, `customsubtitle`, `linktype`)
+VALUES
+  (1, 'My Podcast', 'www.mywebsite.com', 'Podcast Description goes here', 'www.mywebsite.com/myimage.jpg', 30, 30,
+   'Pastor Billy', 'www.mywebsite.com/myimage.jpg', 'jesus', 'mypodcast.xml', '*', 'Jim Editor', 'jim@mywebsite.com',
+   50, 1, 0, '', 1, 7483, 1, '', '', 0, '', '', '', 0, '', 0);
 
-INSERT INTO `#__bsms_message_type` (`id`, `message_type`, `alias`, `published`, `asset_id`, `access`, `ordering`) VALUES
-(1, 'Sunday', 'sunday', 1, 0, 1, 1);
+-- Dump of table #__bsms_series
+-- ------------------------------------------------------------
 
---
--- Dumping data for table `#__bsms_mimetype`
---
+INSERT INTO `#__bsms_series` (`id`, `series_text`, `alias`, `teacher`, `description`, `series_thumbnail`, `published`, `asset_id`, `ordering`, `access`, `language`, `landing_show`)
+VALUES
+  (1, 'Worship Series', X'776F72736869702D736572696573', -1, '', '', 1, 7484, 1, 1, '*', NULL);
 
-INSERT INTO `#__bsms_mimetype` (`id`, `mimetype`, `mimetext`, `published`, `asset_id`, `access`, `ordering`) VALUES
-(1, 'audio/mpeg3', 'MP3 Audio', 1, 0, 1, 1),
-(2, 'audio/x-pn-realaudio', 'Real Audio', 1, 0, 1, 2),
-(3, 'video/x-m4v', 'Podcast Video m4v', 1, 0, 1, 3),
-(4, 'application/vnd.rn-realmedia', 'Real Media rm', 1, 0, 1, 4),
-(5, 'audio/x-ms-wma', 'Windows Media Audio WMA', 1, 0, 1, 5),
-(6, 'text/html', 'Text', 1, 0, 1, 6),
-(7, 'audio/x-wav', 'Windows wav File', 1, 0, 1, 7),
-(8, 'audio/x-pn-realaudio-plugin', ' Real audio Plugin.rpm', 1, 0, 1, 8),
-(9, 'audio/x-pn-realaudio', 'Real Media File .rm', 1, 0, 1, 9),
-(10, 'audio/x-realaudio', 'Rea Audio File .ra', 1, 0, 1, 10),
-(11, 'audio/x-pn-realaudio', 'Read Audio File.ram', 1, 0, 1, 11),
-(12, 'video/mpeg', ' Mpeg video .mpg', 1, 0, 1, 12),
-(13, 'audio/mpeg', 'Video .mp2 File', 1, 0, 1, 13),
-(14, 'video/x-msvideo', ' Video .avi File', 1, 0, 1, 14),
-(15, 'video/x-flv', ' Flash Video FLV', 1, 0, 1, 15);
+-- Dump of table #__bsms_servers
+-- ------------------------------------------------------------
 
---
--- Dumping data for table `#__bsms_order`
---
+INSERT INTO `#__bsms_servers` (`id`, `server_name`, `published`, `asset_id`, `access`, `type`, `params`, `media`)
+VALUES
+  (1, 'Legacy MP3', 1, 7478, 1, 'legacy',
+   '{\"path\":\"\\/\\/www.calvarychapelnewberg.net\\/\",\"protocol\":\"http:\\/\\/\"}',
+   '{\"link_type\":\"1\",\"player\":\"7\",\"popup\":\"3\",\"mediacode\":\"\",\"media_image\":\"images\\/biblestudy\\/mp3.png\",\"mime_type\":\"audio\\/mp3\",\"autostart\":\"1\"}'),
+  (2, 'Legacy YouTube', 1, 7588, 1, 'legacy', '{\"path\":\"\",\"protocol\":\"http:\\/\\/\"}',
+   '{\"link_type\":\"0\",\"player\":\"1\",\"popup\":\"3\",\"mediacode\":\"\",\"media_image\":\"images\\/biblestudy\\/youtube24.png\",\"mime_type\":\"video\\/mp4\",\"autostart\":\"1\"}'),
+  (3, 'Legacy PDF', 1, 7589, 1, 'legacy',
+   '{\"path\":\"http:\\/\\/calvarynewberg.org\\/\",\"protocol\":\"http:\\/\\/\"}',
+   '{\"link_type\":\"1\",\"player\":\"0\",\"popup\":\"2\",\"mediacode\":\"\",\"media_image\":\"images\\/biblestudy\\/pdf16.png\",\"mime_type\":\"application\\/pdf\",\"autostart\":\"1\"}');
 
-INSERT INTO `#__bsms_order` (`id`, `value`, `text`) VALUES
-(1, 'ASC', 'JBS_CMN_ASCENDING'),
-(2, 'DESC', 'JBS_CMN_DESCENDING');
 
---
--- Dumping data for table `#__bsms_podcast`
---
+-- Dump of table #__bsms_studies
+-- ------------------------------------------------------------
 
-INSERT INTO `#__bsms_podcast` (`id`, `title`, `website`, `description`, `image`, `imageh`, `imagew`, `author`, `podcastimage`, `podcastsearch`, `filename`, `language`, `editor_name`, `editor_email`, `podcastlimit`, `published`, `episodetitle`, `custom`, `detailstemplateid`, `asset_id`, `access`) VALUES
-(1, 'My Podcast', 'www.mywebsite.com', 'Podcast Description goes here', 'www.mywebsite.com/myimage.jpg', 30, 30, 'Pastor Billy', 'www.mywebsite.com/myimage.jpg', 'jesus', 'mypodcast.xml', '*', 'Jim Editor', 'jim@mywebsite.com', 50, 1, 0, '', 1, 0, 1);
+INSERT INTO `#__bsms_studies` (`id`, `studydate`, `teacher_id`, `studynumber`, `booknumber`, `chapter_begin`, `verse_begin`, `chapter_end`, `verse_end`, `secondary_reference`, `booknumber2`, `chapter_begin2`, `verse_begin2`, `chapter_end2`, `verse_end2`, `prod_dvd`, `prod_cd`, `server_cd`, `server_dvd`, `image_cd`, `image_dvd`, `studytext2`, `comments`, `hits`, `user_id`, `user_name`, `show_level`, `location_id`, `studytitle`, `alias`, `studyintro`, `media_hours`, `media_minutes`, `media_seconds`, `messagetype`, `series_id`, `studytext`, `thumbnailm`, `thumbhm`, `thumbwm`, `params`, `checked_out`, `checked_out_time`, `published`, `publish_up`, `publish_down`, `modified`, `modified_by`, `asset_id`, `access`, `ordering`, `language`, `download_id`)
+VALUES
+  (1, '2010-03-13 00:10:00', 1, '2015-01', 151, 3, 5, 3, 11, '', '-1', '', '', '', '', NULL, NULL, NULL, NULL, NULL,
+   '0', NULL, 1, 0, 0, '', '0', 1, 'Four Steps to Defeating the Flesh',
+   X'666F75722D73746570732D746F2D646566656174696E672D7468652D666C657368',
+   'If you’ve lived around Oregon very long you know what Oregon mud is like. The soils in the Willamette Valley contain a fair amount of clay. I remember trying to put in a sprinkler system when we first built our house. Foolishly, I thought I could beat the winter rains and get the system put in. Such was not the case. Towards the end I remember slogging around the yard—with each step I took it got harder and harder to walk as more and more mud clung to my shoes.',
+   '00', '50', '06', '1', 1,
+   'If you’ve lived around Oregon very long you know what Oregon mud is like. The soils in the Willamette Valley contain a fair amount of clay. I remember trying to put in a sprinkler system when we first built our house. Foolishly, I thought I could beat the winter rains and get the system put in. Such was not the case. Towards the end I remember slogging around the yard—with each step I took it got harder and harder to walk as more and more mud clung to my shoes. I use that analogy because the goal of becoming a Christian is to become like God in our character. We realize the old ways of sin just aren’t working for us and we come to Christ who forgives us and gives us eternal life. As Paul says: “old things have passed away, and look new things have come” (2 Cor 5:17). So far so good. The trouble starts when we begin walking around in this life. Instead of feeling light and free and pure—we feel the “old man” or “the flesh” sticking to our character like clay sticking to our shoes. The old ways of thinking, speaking, and acting are still with us—ready to take over at the slightest provocation or temptation. It makes it hard to walk with Christ effectively and smoothly. Paul says it well in: Romans 7:18 “For I know that nothing good lives in me, that is, in my flesh. For the desire to do what is good is with me, but there is no ability to do it. 19 For I do not do the good that I want to do, but I practice the evil that I do not want to do. 20 Now if I do what I do not want, I am no longer the one doing it, but it is the sin that lives in me.” So what’s a Christian to do? The goal is to be like Christ but the flesh seems to be so successful in holding us back. That’s what Colossians 3 and much of Chapter 4 is about. Paul outlines for us what the old character looks like, and what the new nature looks like by contrast. He describes the process of change as something as simple as changing your clothes. It’s simple in theory, difficult in practice, but totally worth the effort. He describes this change away from the old character with four actions: “put to death” (verse 5), “put away” (verse 8) and “put off” (verse 9), then we are to “put on” the new character of Christ (verse 10). The character traits that we are to kill, put away, and put off are: improper or unchecked desire, anger, and lying. From these three spring most of the things we associate with “the flesh”. 5 Paul starts off with “therefore”. In light of the fact that we are risen people, we need to start thinking like citizens of heaven (the new age), not like residents of earth (this age). Paul says for us to “put to death what belongs to your earthly nature.” The word “put to death” means: “to make dead.” How does that happen? Paul gives us a clue in Romans 8:13: “But if by the Spirit you put to death the deeds of the body, you will live.” So there is this cooperation that takes place between God’s Spirit and us. In reality, you will not be free from the presence and temptation to act in the old ways until you are given you new body. But as James 1:14 says: “But each person is tempted when he is drawn away and enticed by his own evil desires. 15 Then after desire has conceived, it gives birth to sin, and when sin is fully grown, it gives birth to death.   Evil thoughts will occur; it is what we do with them that matters. When they come we can, by the power of the Spirit, tell them they are dead and have no place in us anymore. Do it strongly; do it often. Picture those thoughts on a paper, and then nail that paper to the cross. Jesus died to rid you of acting on those thought patterns. The word “put to death” can mean: “to deprive of power.” Cut the supply lines to the old nature and it will become weak nd starve. So here is the big question: what in your life is still feeding the flesh? It’s different for everyone, mind you. Starve the flesh and it will go a long way to killing it. This is part 1: “kill the old ways, one thought at a time.” Next, Paul lists five manifestations of the flesh that we need to watch out for. Make no mistake—these are powerful forces in the human mind and are not easily dissuaded or killed. Sexual immorality. It means any sexual intimacy outside of the marriage between a man and a woman. Impurity means the character infected by immoral behavior. Lust refers to any unbridled passion but here likely refers to sexual desire that is out of bounds and out of control. Evil desire is probably better translated as lust—but could refer to the thoughts that precede lust. Remember again, it isn’t the temptation but what we do with it that matters. We sin when we focus on and even encourage impure thoughts that lead to impure actions. Greed, which is idolatry. Greed here is a general term for unchecked physical pleasure. Paul calls it greed because the worship of pleasure – the worship of anything for that matter – takes first place in front of God, and that is idolatry. In Paul’s day, literal idol worship was rampant, as was sexual immorality with temple prostitutes as part of that idolatry. And because sex is such a powerful thing, these actions led to impure thoughts, desires, and lusts. 6 God’s wrath is the natural outpouring against anyone who is not pure. Doing something that is sinful is disobeying God because He said “Be holy, even as I am holy” (Lev. 11:45). Some people say that a loving God cannot be a wrathful God. But you cannot have love without wrath against evil. Love means protecting the innocent against evil. It means coming against evil and destroying it. Just ask any parent who has lost a child to horrible violence—and you begin to understand the love and wrath of God. Before we get too smug in the opinion that we aren’t like those disobedient sinners—look at the next verse. 7 Before we knew Jesus we all disobeyed and were guilty as charged. “All have sinned and fall short of the glory of God” (Romans 3:23). We acted out these things (“walked”) because we were steeped in them. We could translate this verse as: “when your life consisted of such wretched things as these.” As fallen people we couldn’t help but act in these ways, but not anymore. Now we are steeped in the Messiah’s forgiving and cleansing love. We don’t have to act out the deeds of the flesh any more. And Paul goes onto to step 2 of how to do that next. 8 Step One is to “Kill kill, kill them all” – all the thoughts that come from the flesh and urge us to think and do things that are not like God. We should nail those thoughts to the cross. Step Two is to “put off” or “put away” the deeds of the flesh. The flesh should feel like a foreign intruder. We don’t just ignore it; we actively push it away. The Greek here is the picture of taking off your clothes. The flesh is like an old set of worn out clothes that, through the Spirit, we can literally take off. Paul helps us understand this by being very specific in another major area of the old nature: anger. He brings in five ways anger destroys us. Anger and wrath are related. Anger is Greek word for a plant that is bursting with juice. What a great picture of when we get red-hot with anger and our face literally flushes red with blood. Wrath means: “to rush in” and is what we do when we are angry. How often do we get angry and let our anger vent with hurtful words that later we wish we could take back. Malice is when we mean to hurt someone—often the result of anger. Slander is what we say about them to hurt them. It’s the Greek word: blasphema. In this case it is hurtful words about another, rather than God. Finally “filthy language” refers to the words used—words which hurt both the speaker and the hearer. Why do we get angry? There are many answers to that question—but I want to bring in four main ones: Frustration – when a goal is thwarted; like getting to work on time thwarted by heavy traffic. Hurt – when the words or actions of another wounds us. Loss – when something that we hold dear is taken away, like a job or a spouse. Victim thinking – when I don’t get what I think I deserve. Put it to death by declaring the sin nature dead on the cross. Romans 6:6 “For we know that our old self was crucified with Him in order that sin’s dominion over the body may be abolished, so that we may no longer be enslaved to sin”. Put it away by separating yourself from that old character, like you’d change out of an old set of clothes. Put it off, remove its power, by thinking of the flesh as something foreign to you, like a limb that is no longer a part of your body—gangrenous and in need of amputation. Then put on the character of Christ like putting on a costume in a play. The more you wear it the more comfortable you will be in it and the more you will own that new character Each one of us struggles with different parts of our old nature. You can be a Christian for many years and still struggle with areas of the flesh. I think that often what happens is a trigger occurs—perhaps a word or phrase that reminds our unconscious mind of an abuse from childhood. We don’t think about but that trigger dis-regulates us, our pre-frontal cortex goes offline and our fleshly nature takes over. The trick is to begin to notice it—even physically in our body—and then work with the Holy Spirit to put you back into your new-self state of mind. 9 – 10 In verse 9, Paul moves to the third major category of the flesh—our interactions with others in relation to the truth. Lying is a default human behavior that we learn at a very young age. We bend facts and manipulate the truth in order to get a result we feel we can’t get by telling the truth. We do it in big ways and in small ways all the time. But lying is not a character trait of heaven—and lying is one of the sins specifically mentioned in Revelation 21:15 as being excluded from heaven. It’s part of the old set of clothes that we need to “put off”. It means: “to wholly strip off of oneself” or “to disarm”. Does it mean we must then be completely transparently honest with everything we think at all times? Of course not. Ephesians 4:15 says: “Speaking the truth in love let us grow in every way into Him.” Be honest always, and always speak those truths in a way that will build up and encourage another’s relationship with Christ. One way we disarm lying is to think: what can I say that will benefit this person, truly. Sometimes that is saying a difficult thing, but not in a hurtful way, but a helpful one. We move now from “putting off” the old character to “putting on” a new one—which is the character of Christ. The words literally mean to put on a change of clothes. Paul uses the same Greek word in Rom. 13:14: “But put on the Lord Jesus Christ, and make no plans to satisfy the fleshly desires.” The word can also mean: “to sink into”. Believe it or not, you have the power to put on or sink into the character of Jesus—forcing out the old flesh, which is always making plans to satisfy itself. At first it might feel very foreign, like wearing a costume while playing a part in a play. But you know, that’s okay. Play the part of a person who thinks, acts, and speaks like Jesus in love, joy, peace, patience, kindness, gentleness and the like. It might feel a little hypocritical at first but the more you practice the part the more comfortable you get with it and the more it becomes part of you. All you are doing really is cooperating with the force of the Holy Spirit in you that already wants to make these changes. It is part of that “renewal” process Paul talks about here. The more we know about Jesus and His character, and the more we work towards mirroring that character, the more into His “image” we become. You’ll find in the end that this new character is the “real” new you that God has been making all along. 11 Verse 11 brings up what is often the source of the fleshly desires that run counter to the character of Christ—divisions along racial, economic, social, and religious differences. After Alexander the Great conquered much of the known world, he spread the Greek culture far and wide. So the Greeks felt very self-important culturally. The Jews also felt very superior religiously as they had the Torah and a covenant with Yahweh. This division was never so strident when it came to who was in the covenant and who was out—via circumcision. Barbarians were any non-Greek or non-Jews and Scythians were a little known race of people from the far-northern part of the Middle East who were thought to be no better than animals. Slavery was well known in that culture and separated people along socio-economic lines. Often times it is these things that cause the flesh to flare up. But Paul says Christ is in all peoples (how that could be rendered). Jesus is the great equalizer of religious, racial, cultural and socio-economic status. Also, as Paul says in Galatians 3:28, the great equalizer of gender inequalities. In Christ we should never let those things separate us. That’s the old way, not the new. So we’re talked about three ways to help rid ourselves of the old nature and one way to help nurture the new character. Try it on with something you are struggling with, like anger. Picture what it would be like if something or someone makes you angry. How would you normally react and how can these new steps intervene? What are the qualities in the new character that replace unchecked desire, anger, and dishonesty? Fidelity (commitment in your relationships with others and with God) Security (trusting that God will supply your needs) Love (self-sacrificing, other-centered affection that looks out for the good of others always) We’ll talk more about these as they relate to everyday life in the coming verses.',
+   '', NULL, NULL,
+   '{\"metakey\":\"Rain, Flesh, \\\"Sexual immorality\\\", Impurity, Lust, \\\"Evil desire\\\", Greed, Frustration, Hurt, Loss, \\\"Victim thinking\\\", \\\"Put it to death\\\", \\\"Put it away\\\",\\\"Put it off\\\"\",\"metadesc\":\"\"}',
+   0, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2015-07-28 23:46:05', 627, 7479, 1, 1,
+   '*', -1);
 
---
--- Dumping data for table `#__bsms_series`
---
+-- Dump of table #__bsms_studytopics
+-- ------------------------------------------------------------
 
-INSERT INTO `#__bsms_series` (`id`, `series_text`, `alias`, `teacher`, `description`, `series_thumbnail`, `published`, `asset_id`, `ordering`, `access`, `language`) VALUES
-(1, 'Worship Series', 'worship-series', -1, '', '', 1, 0, 1, 1, '*');
+INSERT INTO `#__bsms_studytopics` (`id`, `study_id`, `topic_id`, `asset_id`, `access`)
+VALUES
+  (3, 1, 114, 7594, 1),
+  (4, 1, 114, 7595, 1);
 
---
--- Dumping data for table `#__bsms_servers`
---
 
-INSERT INTO `#__bsms_servers` (`id`, `server_name`, `server_path`, `published`, `server_type`, `ftp_username`, `ftp_password`, `asset_id`, `access`, `type`, `ftphost`, `ftpuser`, `ftppassword`, `ftpport`, `aws_key`, `aws_secret`) VALUES
-(1, 'Your Server Name', 'www.mywebsite.com', 1, 'local', '', '', 0, 1, 0, '', '', '', '', '', '');
+-- Dump of table #__bsms_teachers
+-- ------------------------------------------------------------
 
---
--- Dumping data for table `#__bsms_share`
---
+INSERT INTO `#__bsms_teachers` (`id`, `teacher_image`, `teacher_thumbnail`, `teachername`, `alias`, `title`, `phone`, `email`, `website`, `information`, `image`, `imageh`, `imagew`, `thumb`, `thumbw`, `thumbh`, `short`, `ordering`, `catid`, `list_show`, `published`, `asset_id`, `access`, `language`, `facebooklink`, `twitterlink`, `bloglink`, `link1`, `linklabel1`, `link2`, `linklabel2`, `link3`, `linklabel3`, `contact`, `address`, `landing_show`, `address1`)
+VALUES
+  (1, '', '', 'Billy Sunday', X'62696C6C792D73756E646179', 'Pastor', '555-555-5555', 'billy@sunday.com',
+   'http://billysunday.com',
+   'William Ashley Sunday was an American athlete who after being a popular outfielder in baseballs National League during the 1880s became the most celebrated and influential American evangelist during the first two decades of the 20th century. ',
+   'media/com_biblestudy/images/billy_sunday11.jpg', '276', '197', 'media/com_biblestudy/images/images.jpg', '101',
+   '141', 'Billy Sunday: 1862-1935', 0, 1, 1, 1, 7489, 1, '*', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+   NULL, '', NULL, '');
 
-INSERT INTO `#__bsms_share` (`id`, `name`, `params`, `published`, `asset_id`, `access`, `ordering`) VALUES
-(1, 'FaceBook', '{"mainlink":"//www.facebook.com/sharer.php?","item1prefix":"u=","item1":200,"item1custom":"","item2prefix":"t=","item2":5,"item2custom":"","item3prefix":"","item3":6,"item3custom":"","item4prefix":"","item4":8,"item4custom":"","use_bitly":0,"username":"","api":"","shareimage":"media/com_biblestudy/images/facebook.png","shareimageh":"33px","shareimagew":"33px","totalcharacters":"","alttext":"FaceBook"}', 1, 0, 1, 1),
-(2, 'Twitter', '{"mainlink":"//twitter.com/nfsda?","item1prefix":"status=","item1":200,"item1custom":"","item2prefix":"","item2":5,"item2custom":"","item3prefix":"","item3":1,"item3custom":"","item4prefix":"","item4":0,"item4custom":"","use_bitly":0,"username":"","api":"","shareimage":"media/com_biblestudy/images/twitter.png","shareimageh":"33px","shareimagew":"33px","totalcharacters":140,"alttext":"Twitter"}', 1, 0, 1, 2),
-(3, 'Delicious', '{"mainlink":"//delicious.com/save?","item1prefix":"url=","item1":200,"item1custom":"","item2prefix":"&title=","item2":5,"item2custom":"","item3prefix":"","item3":6,"item3custom":"","item4prefix":"","item4":"","item4custom":"","use_bitly":0,"username":"","api":"","shareimage":"media/com_biblestudy/images/delicious.png","shareimagew":"33px","shareimageh":"33px","totalcharacters":"","alttext":"Delicious"}', 1, 0, 1, 3),
-(4, 'MySpace', '{"mainlink":"//www.myspace.com/index.cfm?","item1prefix":"fuseaction=postto&t=","item1":5,"item1custom":"","item2prefix":"&c=","item2":6,"item2custom":"","item3prefix":"&u=","item3":200,"item3custom":"","item4prefix":"&l=1","item4":"","item4custom":"","use_bitly":0,"username":"","api":"","shareimage":"media/com_biblestudy/images/myspace.png","shareimagew":"33px","shareimageh":"33px","totalcharacters":"","alttext":"MySpace"}', 1, 0, 1, 4);
+-- Dump of table #__bsms_templates
+-- ------------------------------------------------------------
 
---
--- Dumping data for table `#__bsms_studies`
---
+INSERT INTO `#__bsms_templates` (`id`, `type`, `tmpl`, `published`, `params`, `title`, `text`, `pdf`, `asset_id`, `access`)
+VALUES
+  (1, 'tmplList', '', 1,
+   '{\"useterms\":\"0\",\"terms\":\"\",\"css\":\"biblestudy.css\",\"studieslisttemplateid\":\"1\",\"sermonstemplate\":\"0\",\"detailstemplateid\":\"1\",\"sermontemplate\":\"0\",\"teachertemplateid\":\"1\",\"teachertemplate\":\"0\",\"teacherstemplate\":\"0\",\"serieslisttemplateid\":\"1\",\"seriesdisplaystemplate\":\"0\",\"seriesdetailtemplateid\":\"1\",\"seriesdisplaytemplate\":\"0\",\"offset\":\"false\",\"teacher_id\":[\"-1\"],\"series_id\":[\"-1\"],\"booknumber\":[\"-1\"],\"topic_id\":[\"-1\"],\"messagetype\":[\"-1\"],\"locations\":[\"-1\"],\"show_verses\":\"0\",\"stylesheet\":\"\",\"date_format\":\"2\",\"custom_date_format\":\"\",\"duration_type\":\"2\",\"protocol\":\"http:\\/\\/\",\"player\":\"0\",\"popuptype\":\"window\",\"internal_popup\":\"1\",\"special\":\"_blank\",\"autostart\":\"1\",\"playerresposive\":\"1\",\"player_width\":\"400\",\"player_height\":\"300\",\"embedshare\":\"TRUE\",\"backcolor\":\"0x287585\",\"frontcolor\":\"0xFFFFFF\",\"lightcolor\":\"0x000000\",\"screencolor\":\"0x000000\",\"popuptitle\":\"{{title}}\",\"popupfooter\":\"{{filename}}\",\"popupmargin\":\"50\",\"popupbackground\":\"black\",\"popupimage\":\"media\\/com_biblestudy\\/images\\/speaker24.png\",\"show_filesize\":\"1\",\"playerposition\":\"over\",\"playeridlehide\":\"1\",\"useexpert_list\":\"0\",\"headercode\":\"\",\"templatecode\":\"                                   {{teacher}}             {{title}}             {{date}}                                   {{studyintro}}             {{scripture}}                               \",\"wrapcode\":\"0\",\"default_order\":\"DESC\",\"default_order_secondary\":\"ASC\",\"show_page_title\":\"1\",\"show_page_image\":\"1\",\"list_page_title\":\"Bible Studies\",\"list_title_align\":\"text-align:center\",\"use_headers_list\":\"1\",\"studies_element\":\"1\",\"list_intro\":\"\",\"intro_show\":\"1\",\"list_teacher_show\":\"1\",\"listteachers\":[],\"teacherlink\":\"1\",\"showpodcastsubscribelist\":\"1\",\"subscribeintro\":\"Our Podcasts\",\"details_text\":\"Study Details\",\"show_book_search\":\"1\",\"ddbooks\":\"1\",\"booklist\":\"1\",\"use_go_button\":\"1\",\"ddgobutton\":\"2\",\"show_teacher_search\":\"1\",\"ddteachers\":\"3\",\"show_series_search\":\"1\",\"ddseries\":\"4\",\"show_type_search\":\"1\",\"ddmessagetype\":\"5\",\"show_year_search\":\"1\",\"ddyears\":\"6\",\"show_order_search\":\"1\",\"ddorder\":\"7\",\"show_topic_search\":\"1\",\"ddtopics\":\"8\",\"show_locations_search\":\"1\",\"ddlocations\":\"9\",\"show_popular\":\"1\",\"ddpopular\":\"10\",\"listlanguage\":\"0\",\"ddlanguage\":\"11\",\"show_pagination\":\"1\",\"listcolor1\":\"#8f8fb2\",\"listcolor2\":\"#ccccff\",\"rowspanitem\":\"1\",\"rowspanitemspan\":\"2\",\"rowspanitemimage\":\"img-polaroid\",\"rowspanitempull\":\"pull-left\",\"scripture1row\":\"1\",\"scripture1col\":\"3\",\"scripture1colspan\":\"2\",\"scripture1element\":\"1\",\"scripture1custom\":\"\",\"scripture1linktype\":\"0\",\"scripture2row\":\"0\",\"scripture2col\":\"1\",\"scripture2colspan\":\"3\",\"scripture2element\":\"1\",\"scripture2custom\":\"\",\"scripture2linktype\":\"0\",\"secondaryrow\":\"0\",\"secondarycol\":\"1\",\"secondarycolspan\":\"1\",\"secondaryelement\":\"1\",\"secondarycustom\":\"\",\"secondarylinktype\":\"0\",\"jbsmediarow\":\"1\",\"jbsmediacol\":\"4\",\"jbsmediacolspan\":\"4\",\"jbsmediaelement\":\"0\",\"jbsmediacustom\":\"\",\"jbsmedialinktype\":\"2\",\"titlerow\":\"1\",\"titlecol\":\"2\",\"titlecolspan\":\"4\",\"titleelement\":\"1\",\"titlecustom\":\"\",\"titlelinktype\":\"0\",\"daterow\":\"1\",\"datecol\":\"1\",\"datecolspan\":\"2\",\"dateelement\":\"1\",\"datecustom\":\"\",\"datelinktype\":\"0\",\"teacherrow\":\"0\",\"teachercol\":\"1\",\"teachercolspan\":\"1\",\"teacherelement\":\"1\",\"teachercustom\":\"\",\"teacherlinktype\":\"0\",\"teacherimagerrow\":\"0\",\"teacherimagecol\":\"1\",\"teacherimagecolspan\":\"1\",\"teacherimageelement\":\"1\",\"teacherimagecustom\":\"\",\"teacher-titlerow\":\"0\",\"teacher-titlecol\":\"1\",\"teacher-titlecolspan\":\"1\",\"teacher-titleelement\":\"1\",\"teacher-titlecustom\":\"\",\"teacher-titlelinktype\":\"0\",\"durationrow\":\"0\",\"durationcol\":\"1\",\"durationcolspan\":\"1\",\"durationelement\":\"1\",\"durationcustom\":\"\",\"durationlinktype\":\"0\",\"studyintrorow\":\"3\",\"studyintrocol\":\"1\",\"studyintrocolspan\":\"12\",\"studyintroelement\":\"1\",\"studyintrocustom\":\"\",\"studyintrolinktype\":\"0\",\"seriesrow\":\"0\",\"seriescol\":\"1\",\"seriescolspan\":\"1\",\"serieselement\":\"1\",\"seriescustom\":\"\",\"serieslinktype\":\"0\",\"seriesthumbnailrow\":\"0\",\"seriesthumbnailcol\":\"1\",\"seriesthumbnailcolspan\":\"1\",\"seriesthumbnailelement\":\"1\",\"seriesthumbnailcustom\":\"\",\"seriesthumbnaillinktype\":\"0\",\"seriesdescriptionrow\":\"0\",\"seriesdescriptioncol\":\"1\",\"seriesdescriptioncolspan\":\"1\",\"seriesdescriptionelement\":\"1\",\"seriesdescriptioncustom\":\"\",\"seriesdescriptionlinktype\":\"0\",\"submittedrow\":\"0\",\"submittedcol\":\"1\",\"submittedcolspan\":\"1\",\"submittedelement\":\"1\",\"submittedcustom\":\"\",\"submittedlinktype\":\"0\",\"hitsrow\":\"0\",\"hitscol\":\"1\",\"hitscolspan\":\"6\",\"hitselement\":\"1\",\"hitscustom\":\"\",\"hitslinktype\":\"0\",\"downloadsrow\":\"0\",\"downloadscol\":\"1\",\"downloadscolspan\":\"1\",\"downloadselement\":\"1\",\"downloadscustom\":\"\",\"downloadslinktype\":\"0\",\"studynumberrow\":\"0\",\"studynumbercol\":\"1\",\"studynumbercolspan\":\"1\",\"studynumberelement\":\"1\",\"studynumbercustom\":\"\",\"studynumberlinktype\":\"0\",\"topicrow\":\"0\",\"topiccol\":\"1\",\"topiccolspan\":\"6\",\"topicelement\":\"1\",\"topiccustom\":\"\",\"topiclinktype\":\"0\",\"locationsrow\":\"0\",\"locationscol\":\"1\",\"locationscolspan\":\"1\",\"locationselement\":\"1\",\"locationscustom\":\"\",\"locationslinktype\":\"0\",\"messagetyperow\":\"0\",\"messagetypecol\":\"1\",\"messagetypecolspan\":\"6\",\"messagetypeelement\":\"1\",\"messagetypecustom\":\"\",\"messagetypelinktype\":\"0\",\"thumbnailrow\":\"0\",\"thumbnailcol\":\"1\",\"thumbnailcolspan\":\"1\",\"thumbnailelement\":\"1\",\"thumbnailcustom\":\"\",\"thumbnaillinktype\":\"0\",\"customrow\":\"0\",\"customcol\":\"1\",\"customcolspan\":\"1\",\"customelement\":\"1\",\"customcustom\":\"\",\"customtext\":\"\",\"show_print_view\":\"1\",\"link_text\":\"Return to Studies List\",\"showrelated\":\"1\",\"showpodcastsubscribedetails\":\"1\",\"show_scripture_link\":\"0\",\"show_passage_view\":\"1\",\"bible_version\":\"51\",\"socialnetworking\":\"1\",\"sharetype\":\"1\",\"sharelabel\":\"Share This\",\"comments_type\":\"0\",\"show_comments\":\"1\",\"link_comments\":\"0\",\"comment_access\":\"1\",\"comment_publish\":\"0\",\"use_captcha\":\"1\",\"public_key\":\"\",\"private_key\":\"\",\"email_comments\":\"1\",\"recipient\":\"\",\"subject\":\"Comments on studies\",\"body\":\"Comments entered.\",\"useexpert_details\":\"0\",\"study_detailtemplate\":\"\",\"teacher_title\":\"Our Teachers\",\"teachers_element\":\"1\",\"useexpert_teacherlist\":\"0\",\"tsrowspanitem\":\"0\",\"tsrowspanitemspan\":\"4\",\"tsrowspanitemimage\":\"img-polaroid\",\"tsrowspanitempull\":\"pull-left\",\"use_headers_teacher_list\":\"1\",\"tslistcolor1\":\"\",\"tslistcolor2\":\"\",\"tsteacherrow\":\"1\",\"tsteachercol\":\"1\",\"tsteachercolspan\":\"2\",\"tsteacherelement\":\"1\",\"tsteachercustom\":\"\",\"tsteacherlinktype\":\"0\",\"tsteacherimagerrow\":\"0\",\"tsteacherimagecol\":\"1\",\"tsteacherimagecolspan\":\"1\",\"tsteacherimageelement\":\"1\",\"tsteacherimagecustom\":\"\",\"tsteacher-titlerow\":\"0\",\"tsteacher-titlecol\":\"1\",\"tsteacher-titlecolspan\":\"1\",\"tsteacher-titleelement\":\"1\",\"tsteacher-titlecustom\":\"\",\"tsteacher-titlelinktype\":\"0\",\"tsteacheremailrow\":\"0\",\"tsteacheremailcol\":\"1\",\"tsteacheremailcolspan\":\"1\",\"tsteacheremailelement\":\"1\",\"tsteacheremailcustom\":\"\",\"tsteacherwebrow\":\"0\",\"tsteacherwebcol\":\"1\",\"tsteacherwebcolspan\":\"1\",\"tsteacherwebelement\":\"1\",\"tsteacherphonerow\":\"0\",\"tsteacherphonecol\":\"1\",\"tsteacherphonecolspan\":\"1\",\"tsteacherphoneelement\":\"1\",\"tsteacherphonecustom\":\"\",\"tsteacherfbrow\":\"0\",\"tsteacherfbcol\":\"1\",\"tsteacherfbcolspan\":\"1\",\"tsteacherfbelement\":\"1\",\"tsteacherfbcustom\":\"\",\"tsteachertwrow\":\"0\",\"tsteachertwcol\":\"1\",\"tsteachertwcolspan\":\"1\",\"tsteachertwelement\":\"1\",\"tsteachertwcustom\":\"\",\"tsteacherblogrow\":\"0\",\"tsteacherblogcol\":\"1\",\"tsteacherblogcolspan\":\"1\",\"tsteacherblogelement\":\"1\",\"tsteacherblogcustom\":\"\",\"tsteachershortrow\":\"0\",\"tsteachershortcol\":\"1\",\"tsteachershortcolspan\":\"1\",\"tsteachershortelement\":\"1\",\"tsteachershortcustom\":\"\",\"tsteachershortlinktype\":\"0\",\"tscustomrow\":\"\",\"tscustomcol\":\"1\",\"tscustomcolspan\":\"1\",\"tscustomelement\":\"1\",\"tscustomcustom\":\"\",\"tscustomtext\":\"\",\"tsteacherallinonerow\":\"0\",\"tsteacherallinonecol\":\"1\",\"tsteacherallinonecolspan\":\"1\",\"tsteacherallinoneelement\":\"1\",\"tsteacherallinonecustom\":\"\",\"teacher_headercode\":\"\",\"teacher_templatecode\":\"           {{teacher}}     {{title}}     {{teacher}}           {{short}}     {{information}}       \",\"teacher_wrapcode\":\"0\",\"show_teacher_studies\":\"0\",\"studies\":\"\",\"label_teacher\":\"Latest Messages\",\"teacherlinkstudies\":\"1\",\"tdrowspanitem\":\"0\",\"tdrowspanitemspan\":\"4\",\"tdrowspanitemimage\":\"img-polaroid\",\"tdrowspanitempull\":\"pull-left\",\"use_headers_teacher_details\":\"1\",\"teacherdisplay_color\":\"\",\"tdteacherrow\":\"1\",\"tdteachercol\":\"1\",\"tdteachercolspan\":\"2\",\"tdteacherelement\":\"1\",\"tdteachercustom\":\"\",\"tdteacherimagerrow\":\"0\",\"tdteacherimagecol\":\"1\",\"tdteacherimagecolspan\":\"1\",\"tdteacherimageelement\":\"1\",\"tdteacherimagecustom\":\"\",\"tdteacher-titlerow\":\"0\",\"tdteacher-titlecol\":\"1\",\"tdteacher-titlecolspan\":\"1\",\"tdteacher-titleelement\":\"1\",\"tdteacher-titlecustom\":\"\",\"tdteacheremailrow\":\"0\",\"tdteacheremailcol\":\"1\",\"tdteacheremailcolspan\":\"1\",\"tdteacheremailelement\":\"1\",\"tdteacheremailcustom\":\"\",\"tdteacherwebrow\":\"0\",\"tdteacherwebcol\":\"1\",\"tdteacherwebcolspan\":\"1\",\"tdteacherwebelement\":\"1\",\"tdteacherphonerow\":\"0\",\"tdteacherphonecol\":\"1\",\"tdteacherphonecolspan\":\"1\",\"tdteacherphoneelement\":\"1\",\"tdteacherphonecustom\":\"\",\"tdteacherfbrow\":\"0\",\"tdteacherfbcol\":\"1\",\"tdteacherfbcolspan\":\"1\",\"tdteacherfbelement\":\"1\",\"tdteacherfbcustom\":\"\",\"tdteachertwrow\":\"0\",\"tdteachertwcol\":\"1\",\"tdteachertwcolspan\":\"1\",\"tdteachertwelement\":\"1\",\"tdteachertwcustom\":\"\",\"tdteacherblogrow\":\"0\",\"tdteacherblogcol\":\"1\",\"tdteacherblogcolspan\":\"1\",\"tdteacherblogelement\":\"1\",\"tdteacherblogcustom\":\"\",\"tdteachershortrow\":\"0\",\"tdteachershortcol\":\"1\",\"tdteachershortcolspan\":\"1\",\"tdteachershortelement\":\"1\",\"tdteachershortcustom\":\"\",\"tdteacherlongrow\":\"0\",\"tdteacherlongcol\":\"1\",\"tdteacherlongcolspan\":\"1\",\"tdteacherlongelement\":\"1\",\"tdteacherlongcustom\":\"\",\"tdteacheraddressrow\":\"0\",\"tdteacheraddresscol\":\"1\",\"tdteacheraddresscolspan\":\"1\",\"tdteacheraddresselement\":\"1\",\"tdteacheraddresscustom\":\"\",\"tdteacherlink1row\":\"0\",\"tdteacherlink1col\":\"1\",\"tdteacherlink1colspan\":\"1\",\"tdteacherlink1element\":\"1\",\"tdteacherlink1custom\":\"\",\"tdteacherlink2row\":\"0\",\"tdteacherlink2col\":\"1\",\"tdteacherlink2colspan\":\"1\",\"tdteacherlink2element\":\"1\",\"tdteacherlink2custom\":\"\",\"tdteacherlink3row\":\"0\",\"tdteacherlink3col\":\"1\",\"tdteacherlink3colspan\":\"1\",\"tdteacherlink3element\":\"1\",\"tdteacherlink3custom\":\"\",\"tdteacherlargeimagerow\":\"0\",\"tdteacherlargeimagecol\":\"1\",\"tdteacherlargeimagecolspan\":\"1\",\"tdteacherlargeimageelement\":\"1\",\"tdteacherlargeimagecustom\":\"\",\"tdcustomrow\":\"\",\"tdcustomcol\":\"1\",\"tdcustomcolspan\":\"1\",\"tdcustomelement\":\"1\",\"tdcustomcustom\":\"\",\"tdcustomtext\":\"\",\"tdteacherallinonerow\":\"0\",\"tdteacherallinonecol\":\"1\",\"tdteacherallinonecolspan\":\"1\",\"tdteacherallinoneelement\":\"1\",\"tdteacherallinonecustom\":\"\",\"useexpert_teacherdetail\":\"0\",\"teacher_detailtemplate\":\"           {{teacher}}     {{title}}     {{teacher}}           {{short}}     {{information}}       \",\"slistcolor1\":\"\",\"slistcolor2\":\"\",\"series_title\":\"Our Series\",\"show_series_title\":\"1\",\"show_page_image_series\":\"1\",\"series_element\":\"1\",\"use_headers_series\":\"1\",\"series_show_description\":\"1\",\"series_characters\":\"\",\"search_series\":\"1\",\"series_list_teachers\":\"1\",\"series_list_years\":\"1\",\"series_list_show_pagination\":\"1\",\"series_list_order\":\"ASC\",\"series_order_field\":\"series_text\",\"srowspanitem\":\"0\",\"srowspanitemspan\":\"4\",\"srowspanitemimage\":\"img-polaroid\",\"srowspanitempull\":\"pull-left\",\"sseriesrow\":\"2\",\"sseriescol\":\"1\",\"sseriescolspan\":\"6\",\"sserieselement\":\"1\",\"sseriescustom\":\"\",\"sserieslinktype\":\"0\",\"sseriesthumbnailrow\":\"1\",\"sseriesthumbnailcol\":\"2\",\"sseriesthumbnailcolspan\":\"1\",\"sseriesthumbnailelement\":\"1\",\"sseriesthumbnailcustom\":\"\",\"sseriesthumbnaillinktype\":\"0\",\"steacherrow\":\"0\",\"steachercol\":\"1\",\"steachercolspan\":\"1\",\"steacherelement\":\"1\",\"steachercustom\":\"\",\"steacherlinktype\":\"0\",\"steacherimagerow\":\"0\",\"steacherimagecol\":\"1\",\"steacherimagecolspan\":\"1\",\"steacherimageelement\":\"1\",\"steacherimagecustom\":\"\",\"steacher-titlerow\":\"0\",\"steacher-titlecol\":\"1\",\"steacher-titlecolspan\":\"1\",\"steacher-titleelement\":\"1\",\"steacher-titlecustom\":\"\",\"steacher-titlelinktype\":\"0\",\"sdescriptionrow\":\"0\",\"sdescriptioncol\":\"1\",\"sdescriptioncolspan\":\"1\",\"sdescriptionelement\":\"1\",\"sdescriptioncustom\":\"\",\"sdescriptionlinktype\":\"0\",\"sdcustomrow\":\"0\",\"sdcustomcol\":\"1\",\"sdcustomcolspan\":\"1\",\"sdcustomelement\":\"1\",\"sdcustomcustom\":\"\",\"sdcustomtext\":\"\",\"series_detail_sort\":\"studydate\",\"series_detail_order\":\"DESC\",\"series_detail_limit\":\"\",\"series_list_return\":\"1\",\"sdrowspanitem\":\"0\",\"sdrowspanitemspan\":\"4\",\"sdrowspanitemimage\":\"img-polaroid\",\"sdrowspanitempull\":\"pull-left\",\"seriesdisplay_color\":\"\",\"use_header_seriesdisplay\":\"0\",\"sdseriesrow\":\"2\",\"sdseriescol\":\"1\",\"sdseriescolspan\":\"6\",\"sdserieselement\":\"1\",\"sdseriescustom\":\"\",\"sdserieslinktype\":\"0\",\"sdseriesthumbnailrow\":\"1\",\"sdseriesthumbnailcol\":\"2\",\"sdseriesthumbnailcolspan\":\"1\",\"sdseriesthumbnailelement\":\"1\",\"sdseriesthumbnailcustom\":\"\",\"sdseriesthumbnaillinktype\":\"0\",\"sdteacherrow\":\"0\",\"sdteachercol\":\"1\",\"sdteachercolspan\":\"1\",\"sdteacherelement\":\"1\",\"sdteachercustom\":\"\",\"sdteacherlinktype\":\"0\",\"sdteacherimagerow\":\"0\",\"sdteacherimagecol\":\"1\",\"sdteacherimagecolspan\":\"1\",\"sdteacherimageelement\":\"1\",\"sdteacherimagecustom\":\"\",\"sdteacher-titlerow\":\"0\",\"sdteacher-titlecol\":\"1\",\"sdteacher-titlecolspan\":\"1\",\"sdteacher-titleelement\":\"1\",\"sdteacher-titlecustom\":\"\",\"sdteacher-titlelinktype\":\"0\",\"sddescriptionrow\":\"0\",\"sddescriptioncol\":\"1\",\"sddescriptioncolspan\":\"1\",\"sddescriptionelement\":\"1\",\"sddescriptioncustom\":\"\",\"sddescriptionlinktype\":\"0\",\"tip_title\":\"Sermon Information\",\"tooltip\":\"1\",\"tip_item1_title\":\"Title\",\"tip_item1\":\"title\",\"tip_item2_title\":\"Details\",\"tip_item2\":\"title\",\"tip_item3_title\":\"Teacher\",\"tip_item3\":\"title\",\"tip_item4_title\":\"Reference\",\"tip_item4\":\"title\",\"tip_item5_title\":\"Date\",\"tip_item5\":\"title\",\"drowspanitem\":\"0\",\"drowspanitemspan\":\"4\",\"drowspanitemimage\":\"img-polaroid\",\"drowspanitempull\":\"pull-left\",\"dscripture1row\":\"1\",\"dscripture1col\":\"1\",\"dscripture1colspan\":\"1\",\"dscripture1element\":\"1\",\"dscripture1custom\":\"\",\"dscripture1linktype\":\"0\",\"dscripture2row\":\"0\",\"dscripture2col\":\"1\",\"dscripture2colspan\":\"1\",\"dscripture2element\":\"1\",\"dscripture2custom\":\"\",\"dscripture2linktype\":\"0\",\"dsecondaryrow\":\"0\",\"dsecondarycol\":\"1\",\"dsecondarycolspan\":\"1\",\"dsecondaryelement\":\"1\",\"dsecondarycustom\":\"\",\"dsecondarylinktype\":\"0\",\"djbsmediarow\":\"1\",\"djbsmediacol\":\"3\",\"djbsmediacolspan\":\"1\",\"djbsmediaelement\":\"1\",\"djbsmediacustom\":\"\",\"djbsmedialinktype\":\"0\",\"dcustomrow\":\"0\",\"dcustomcol\":\"1\",\"dcustomcolspan\":\"1\",\"dcustomelement\":\"1\",\"dcustomcustom\":\"\",\"dcustomtext\":\"\",\"dtitlerow\":\"1\",\"dtitlecol\":\"2\",\"dtitlecolspan\":\"3\",\"dtitleelement\":\"1\",\"dtitlecustom\":\"\",\"dtitlelinktype\":\"0\",\"ddaterow\":\"0\",\"ddatecol\":\"1\",\"ddatecolspan\":\"1\",\"ddateelement\":\"1\",\"ddatecustom\":\"\",\"ddatelinktype\":\"0\",\"dteacherrow\":\"0\",\"dteachercol\":\"1\",\"dteachercolspan\":\"1\",\"dteacherelement\":\"1\",\"dteachercustom\":\"\",\"dteacherlinktype\":\"0\",\"dteacherimagerrow\":\"0\",\"dteacherimagecol\":\"1\",\"dteacherimagecolspan\":\"1\",\"dteacherimageelement\":\"1\",\"dteacherimagecustom\":\"\",\"dteacher-titlerow\":\"0\",\"dteacher-titlecol\":\"1\",\"dteacher-titlecolspan\":\"1\",\"dteacher-titleelement\":\"1\",\"dteacher-titlecustom\":\"\",\"dteacher-titlelinktype\":\"0\",\"ddurationrow\":\"0\",\"ddurationcol\":\"1\",\"ddurationcolspan\":\"1\",\"ddurationelement\":\"1\",\"ddurationcustom\":\"\",\"ddurationlinktype\":\"0\",\"dstudyintrorow\":\"0\",\"dstudyintrocol\":\"1\",\"dstudyintrocolspan\":\"6\",\"dstudyintroelement\":\"1\",\"dstudyintrocustom\":\"\",\"dstudyintrolinktype\":\"0\",\"dseriesrow\":\"0\",\"dseriescol\":\"1\",\"dseriescolspan\":\"1\",\"dserieselement\":\"1\",\"dseriescustom\":\"\",\"dserieslinktype\":\"0\",\"dseriesthumbnailrow\":\"0\",\"dseriesthumbnailcol\":\"1\",\"dseriesthumbnailcolspan\":\"1\",\"dseriesthumbnailelement\":\"1\",\"dseriesthumbnailcustom\":\"\",\"dseriesthumbnaillinktype\":\"0\",\"dseriesdescriptionrow\":\"0\",\"dseriesdescriptioncol\":\"1\",\"dseriesdescriptioncolspan\":\"1\",\"dseriesdescriptionelement\":\"1\",\"dseriesdescriptioncustom\":\"\",\"dseriesdescriptionlinktype\":\"0\",\"dsubmittedrow\":\"0\",\"dsubmittedcol\":\"1\",\"dsubmittedcolspan\":\"1\",\"dsubmittedelement\":\"1\",\"dsubmittedcustom\":\"\",\"dsubmittedlinktype\":\"0\",\"dhitsrow\":\"0\",\"dhitscol\":\"1\",\"dhitscolspan\":\"6\",\"dhitselement\":\"1\",\"dhitscustom\":\"\",\"dhitslinktype\":\"0\",\"ddownloadsrow\":\"0\",\"ddownloadscol\":\"1\",\"ddownloadscolspan\":\"1\",\"ddownloadselement\":\"1\",\"ddownloadscustom\":\"\",\"ddownloadslinktype\":\"0\",\"dstudynumberrow\":\"0\",\"dstudynumbercol\":\"1\",\"dstudynumbercolspan\":\"1\",\"dstudynumberelement\":\"1\",\"dstudynumbercustom\":\"\",\"dstudynumberlinktype\":\"0\",\"dtopicrow\":\"0\",\"dtopiccol\":\"1\",\"dtopiccolspan\":\"6\",\"dtopicelement\":\"1\",\"dtopiccustom\":\"\",\"dtopiclinktype\":\"0\",\"dlocationsrow\":\"0\",\"dlocationscol\":\"1\",\"dlocationscolspan\":\"1\",\"dlocationselement\":\"1\",\"dlocationscustom\":\"\",\"dlocationslinktype\":\"0\",\"dmessagetyperow\":\"0\",\"dmessagetypecol\":\"1\",\"dmessagetypecolspan\":\"6\",\"dmessagetypeelement\":\"1\",\"dmessagetypecustom\":\"\",\"dmessagetypelinktype\":\"0\",\"dthumbnailrow\":\"0\",\"dthumbnailcol\":\"1\",\"dthumbnailcolspan\":\"1\",\"dthumbnailelement\":\"1\",\"dthumbnailcustom\":\"\",\"dthumbnaillinktype\":\"0\",\"landing_hide\":\"0\",\"landing_default_order\":\"ASC\",\"landing_hidelabel\":\"Show\\/Hide All\",\"headingorder_1\":\"teachers\",\"headingorder_2\":\"series\",\"headingorder_3\":\"books\",\"headingorder_4\":\"topics\",\"headingorder_5\":\"locations\",\"headingorder_6\":\"messagetypes\",\"headingorder_7\":\"years\",\"showteachers\":\"1\",\"landingteachersuselimit\":\"0\",\"landingteacherslimit\":\"\",\"teacherslabel\":\"Speakers\",\"linkto\":\"1\",\"showseries\":\"1\",\"landingseriesuselimit\":\"0\",\"landingserieslimit\":\"\",\"serieslabel\":\"Series\",\"series_linkto\":\"0\",\"showbooks\":\"1\",\"landingbookslimit\":\"\",\"bookslabel\":\"Books\",\"showtopics\":\"1\",\"landingtopicslimit\":\"\",\"topicslabel\":\"Topics\",\"showlocations\":\"1\",\"landinglocationsuselimit\":\"0\",\"landinglocationslimit\":\"\",\"locationslabel\":\"Locations\",\"showmessagetypes\":\"1\",\"landingmessagetypeuselimit\":\"0\",\"landingmessagetypeslimit\":\"\",\"messagetypeslabel\":\"Message Types\",\"showyears\":\"1\",\"landingyearslimit\":\"\",\"yearslabel\":\"Years\",\"series_order\":\"2\",\"books_order\":\"2\",\"teachers_order\":\"2\",\"years_order\":\"1\",\"topics_order\":\"2\",\"locations_order\":\"2\",\"messagetypes_order\":\"2\"}',
+   'Default', 'textfile24.png', 'pdf24.png', 7490, 1);
 
-INSERT INTO `#__bsms_studies` (`id`, `studydate`, `teacher_id`, `studynumber`, `booknumber`, `chapter_begin`, `verse_begin`, `chapter_end`, `verse_end`, `secondary_reference`, `booknumber2`, `chapter_begin2`, `verse_begin2`, `chapter_end2`, `verse_end2`, `prod_dvd`, `prod_cd`, `server_cd`, `server_dvd`, `image_cd`, `image_dvd`, `studytext2`, `comments`, `hits`, `user_id`, `user_name`, `show_level`, `location_id`, `studytitle`, `alias`, `studyintro`, `media_hours`, `media_minutes`, `media_seconds`, `messagetype`, `series_id`, `studytext`, `thumbnailm`, `thumbhm`, `thumbwm`, `params`, `published`, `asset_id`, `access`, `ordering`, `language`) VALUES
-(1, '2010-03-13 00:10:00', 1, '2010-001', 101, 1, 1, 1, 31, '', '-1', '', '', '', '', NULL, NULL, NULL, NULL, NULL, '0', NULL, 1, 0, 0, NULL, '0', -1, 'Sample Study Title', 'sample-study-title', 'Sample text you can use as an introduction to your study', '', '', '', '1', -1, 'This is where you would put study notes or other information. This could be the full text of your study as well. If you install the scripture links plugin you will have all verses as links to BibleGateway.com', '', NULL, NULL, '{"metakey":"","metadesc":""}', 1, 0, 1, 1, '*');
+-- Dump of table #__bsms_timeset
+-- ------------------------------------------------------------
 
---
--- Dumping data for table `#__bsms_styles`
---
+INSERT INTO `#__bsms_timeset` (`timeset`, `backup`)
+VALUES
+  ('1281646339', '1281646339');
 
-INSERT INTO `#__bsms_styles` (`id`, `published`, `filename`, `stylecode`, `asset_id`) VALUES
-(1, 1, 'biblestudy', '/* New Teacher Codes */\r\n#bsm_teachertable_list .bsm_teachername\r\n{\r\n    font-weight: bold;\r\n    font-size: 14px;\r\n    color: #000000;\r\n}\r\n#bsm_teachertable_list\r\n{\r\n    margin: 0;\r\n    border-collapse:separate;\r\n}\r\n#bsm_teachertable_list td {\r\n    text-align:left;\r\n    padding:0 5px 0 5px;\r\n    border:none;\r\n}\r\n#bsm_teachertable_list .titlerow\r\n{\r\n    border-bottom: thick;\r\n}\r\n#bsm_teachertable_list .title\r\n{\r\n    font-size:18px;\r\n    font-weight:bold;\r\n    border-bottom: 3px solid #999999;\r\n    padding: 4px 0px 4px 4px;\r\n}\r\n#bsm_teachertable_list .bsm_separator\r\n{\r\n    border-bottom: 1px solid #999999;\r\n}\r\n\r\n.bsm_teacherthumbnail_list\r\n{\r\n\r\n}\r\n#bsm_teachertable_list .bsm_teacheremail\r\n{\r\n    font-weight:normal;\r\n    font-size: 11px;\r\n}\r\n#bsm_teachertable_list .bsm_teacherwebsite\r\n{\r\n    font-weight:normal;\r\n    font-size: 11px;\r\n}\r\n#bsm_teachertable_list .bsm_teacherphone\r\n{\r\n    font-weight:normal;\r\n    font-size: 11px;\r\n}\r\n#bsm_teachertable_list .bsm_short\r\n{\r\n    padding: 8px 4px 4px;\r\n}\r\n#bsm_teachertable .bsm_studiestitlerow {\r\n    background-color: #666;\r\n}\r\n#bsm_teachertable_list .bsm_titletitle\r\n{\r\n    font-weight:bold;\r\n    color:#FFFFFF;\r\n}\r\n#bsm_teachertable_list .bsm_titlescripture\r\n{\r\n    font-weight:bold;\r\n    color:#FFFFFF;\r\n}\r\n#bsm_teachertable_list .bsm_titledate\r\n{\r\n    font-weight:bold;\r\n    color:#FFFFFF;\r\n}\r\n#bsm_teachertable_list .bsm_teacherlong\r\n{\r\n    padding: 8px 4px 4px;\r\n    border-bottom: 1px solid #999999;\r\n}\r\n#bsm_teachertable_list tr.bsodd {\r\n    background-color:#FFFFFF;\r\n    border-bottom: 1px solid #999999;\r\n}\r\n#bsm_teachertable_list tr.bseven {\r\n    background-color:#FFFFF0;\r\n    border-bottom: 1px solid #999999;\r\n}\r\n\r\n#bsm_teachertable_list .lastrow td {\r\n    border-bottom:1px solid grey;\r\n    padding-bottom:7px;\r\n    padding-top:7px;\r\n}\r\n#bsm_teachertable_list .bsm_teacherfooter\r\n{\r\n    border-top: 1px solid #999999;\r\n    padding: 4px 1px 1px 4px;\r\n}\r\n/* New Teacher Details Codes */\r\n\r\n#bsm_teachertable .teacheraddress{\r\n    text-align:left;\r\n}\r\n\r\n#bsm_teachertable .teacherwebsite{\r\n    text-align:left;}\r\n\r\n#bsm_teachertable .teacherfacebook{\r\n    text-align:left;\r\n}\r\n\r\n#bsm_teachertable .bsm_teachertwitter{\r\n    text-align:left;\r\n}\r\n\r\n#bsm_teachertable .bsm_teacherblog{\r\n    text-align:left;\r\n}\r\n\r\n#bsm_teachertable .bsm_teacherlink1{\r\n    text-align:left;\r\n}\r\n\r\n\r\n/* New Landing Page CSS */\r\n\r\n.landingtable {\r\n    clear:both;\r\n    width:auto;\r\n    display:table;\r\n\r\n}\r\n\r\n.landingrow {\r\n    display:inline;\r\n    padding: 1em;\r\n}\r\n.landingcell {\r\n    display:table-cell;\r\n}\r\n\r\n.landinglink a{\r\n    display:inline;\r\n}\r\n\r\n/* Terms of use or donate display settings */\r\n.termstext {\r\n}\r\n\r\n.termslink{\r\n}\r\n/* Podcast Subscription Display Settings */\r\n\r\n.podcastsubscribe{\r\n    clear:both;\r\n    display:table;\r\n    width:100%;\r\n    background-color:#eee;\r\n    border-radius: 15px 15px 15px 15px;\r\n    border: 1px solid grey;\r\n    padding: 1em;\r\n}\r\n.podcastsubscribe .image {\r\n    float: left;\r\n    padding-right: 5px;\r\n    display: inline;\r\n}\r\n.podcastsubscribe .image .text {\r\n    display:inline;\r\n    position:relative;\r\n    right:50px;\r\n    bottom:-10px;\r\n}\r\n.podcastsubscribe .prow {\r\n    display: table-row;\r\n    width:auto;\r\n    clear:both;\r\n}\r\n.podcastsubscribe .pcell {\r\n    display: table-cell;\r\n    float:left;\r\n    background-color:#e3e2e2;\r\n    border-radius: 15px 15px 15px 15px;\r\n    border: 1px solid grey;\r\n    padding: 1em;\r\n    margin-right: 5px;\r\n}\r\n.podcastheader h3{\r\n    display:table-header;\r\n    text-align:center;\r\n}\r\n\r\n.podcastheader{\r\n    font-weight: bold;\r\n}\r\n\r\n.podcastlinks{\r\n    display: inline;\r\n\r\n}\r\n\r\n.fltlft {\r\n  float:left;\r\n  padding-right: 5px;\r\n}\r\n\r\n/* Listing Page Items */\r\n#subscribelinks {\r\n\r\n}\r\n\r\ndiv.listingfooter ul li {\r\n    list-style: none outside none;\r\n}\r\n\r\n/* Listing Page Items */\r\n#listintro p, #listintro td {\r\n    margin: 0;\r\n    font-weight: bold;\r\n    color: black;\r\n}\r\n\r\n#listingfooter li, #listingfooter ul\r\n{\r\n    display: inline;\r\n}\r\n#main ul, #main li\r\n{\r\n    display: inline;\r\n}\r\n#bsdropdownmenu {\r\n    margin-bottom: 10px;\r\n}\r\n.bslisttable {\r\n    margin: 0;\r\n    border-collapse:separate;\r\n}\r\n.bslisttable th, .bslisttable td {\r\n    text-align:left;\r\n    padding:0 5px 0 5px;\r\n    border:none;\r\n}\r\n.bslisttable .row1col1,\r\n.bslisttable .row2col1,\r\n.bslisttable .row3col1,\r\n.bslisttable .row4col1 {\r\n    border-left: grey 2px solid;\r\n}\r\n.bslisttable .lastcol {\r\n    border-right: grey 2px solid;\r\n}\r\n.bslisttable .lastrow td {\r\n    border-bottom:2px solid grey;\r\n    padding-bottom:7px;\r\n}\r\n.bslisttable th {\r\n    background-color:#707070;\r\n    font-weight:bold;\r\n    color:white;\r\n\r\n}\r\n.bslisttable th.row1col1,\r\n.bslisttable th.row1col2,\r\n.bslisttable th.row1col3,\r\n.bslisttable th.row1col4 {\r\n    border-top: grey 2px solid;\r\n    padding-top:3px;\r\n}\r\n.bslisttable th.firstrow {\r\n    border-bottom: grey 2px solid;\r\n}\r\n.bslisttable tr.lastrow th {\r\n    border-bottom:2px solid grey;\r\n    padding-bottom:3px;\r\n}\r\n\r\n.bslisttable tr.bsodd td {\r\n    background-color:#FFFFFF;\r\n}\r\n.bslisttable tr.bseven td {\r\n    background-color:#FFFFF0;\r\n}\r\n\r\n.bslisttable .date {\r\n    white-space:nowrap;\r\n    font-size:1.2em;\r\n    color:grey;\r\n    font-weight:bold;\r\n}\r\n.bslisttable .scripture1 {\r\n    white-space:nowrap;\r\n    color:#c02121;\r\n    font-weight:bold;\r\n}\r\n.bslisttable .scripture2 {\r\n    white-space:nowrap;\r\n    color:#c02121;\r\n    font-weight:bold;\r\n}\r\n.bslisttable .title {\r\n    font-size:1.2em;\r\n    color:#707070;\r\n    font-weight:bold;\r\n}\r\n.bslisttable .series_text {\r\n    white-space:nowrap;\r\n    color:grey;\r\n}\r\n.bslisttable .duration {\r\n    white-space:nowrap;\r\n    font-style:italic;\r\n}\r\n.bslisttable .studyintro {\r\n\r\n}\r\n.bslisttable .teacher {\r\n    white-space:nowrap;\r\n}\r\n.bslisttable .location_text {\r\n    white-space:nowrap;\r\n}\r\n.bslisttable .topic_text {\r\n    white-space:nowrap;\r\n}\r\n.bslisttable .message_type {\r\n    white-space:nowrap;\r\n}\r\n.bslisttable .jbsmedia {\r\n    white-space:nowrap;\r\n}\r\n.bslisttable .store {\r\n    white-space:nowrap;\r\n}\r\n.bslisttable .details-text {\r\n    white-space:nowrap;\r\n}\r\n.bslisttable .details-pdf {\r\n    white-space:nowrap;\r\n}\r\n.bslisttable .details-text-pdf {\r\n    white-space:nowrap;\r\n}\r\n.bslisttable .detailstable td {\r\n    border: none;\r\n    padding: 0 2px 0 0;\r\n}\r\n.bslisttable .secondary_reference {\r\n    white-space:nowrap;\r\n}\r\n.bslisttable .teacher-title-name {\r\n    white-space:nowrap;\r\n}\r\n.bslisttable .submitted {\r\n    white-space:nowrap;\r\n}\r\n.bslisttable .hits {\r\n    white-space:nowrap;\r\n}\r\n.bslisttable .studynumber {\r\n    white-space:nowrap;\r\n}\r\n.bslisttable .filesize {\r\n    white-space:nowrap;\r\n}\r\n.bslisttable .custom {\r\n    white-space:nowrap;\r\n}\r\n.bslisttable .commentshead {\r\n    font-size: 2em;\r\n    font-weight:bold;\r\n}\r\n.bslisttable .thumbnail {\r\n    white-space:nowrap;\r\n}\r\n.bslisttable .mediatable td {\r\n    border: none;\r\n    padding: 0 6px 0 0;\r\n}\r\n.bslisttable .mediatable span.bsfilesize {\r\n    font-size:0.6em;\r\n    position:relative; bottom: 7px;\r\n}\r\n\r\n.component-content ul\r\n{\r\n    text-align: center;\r\n}\r\n\r\n.component-content li\r\n{\r\n    display: inline;\r\n}\r\n\r\n.pagenav\r\n{\r\n    margin-left: 10px;\r\n    margin-right: 10px;\r\n}\r\n\r\n/* Study Details CSS */\r\n\r\n#bsmsdetailstable {\r\n    margin: 0;\r\n    border-collapse:separate;\r\n}\r\n#bsmsdetailstable th, #bsmsdetailstable td {\r\n    text-align:left;\r\n    padding:0 5px 0 5px;\r\n    border:none;\r\n}\r\n#bsmsdetailstable .row1col1,\r\n#bsmsdetailstable .row2col1,\r\n#bsmsdetailstable .row3col1,\r\n#bsmsdetailstable .row4col1 {\r\n    border-left: grey 2px solid;\r\n}\r\n#bsmsdetailstable .lastcol {\r\n    border-right: grey 2px solid;\r\n}\r\n#bsmsdetailstable .lastrow td {\r\n    border-bottom:2px solid grey;\r\n    padding-bottom:7px;\r\n}\r\n#bsmsdetailstable th {\r\n    background-color:#707070;\r\n    font-weight:bold;\r\n    color:white;\r\n\r\n}\r\n#bsmsdetailstable th.row1col1,\r\n#bsmsdetailstable th.row1col2,\r\n#bsmsdetailstable th.row1col3,\r\n#bsmsdetailstable th.row1col4 {\r\n    border-top: grey 2px solid;\r\n    padding-top:3px;\r\n}\r\n#bsmsdetailstable tr.lastrow th {\r\n    border-bottom:2px solid grey;\r\n    padding-bottom:3px;\r\n}\r\n#bsmsdetailstable th.firstrow {\r\n    border-bottom: grey 2px solid;\r\n}\r\n#bsmsdetailstable tr.bsodd td {\r\n    background-color:#FFFFFF;\r\n}\r\n#bsmsdetailstable tr.bseven td {\r\n    background-color:#FFFFF0;\r\n}\r\n\r\n#bsmsdetailstable .date {\r\n    white-space:nowrap;\r\n    font-size:1.2em;\r\n    color:grey;\r\n    font-weight:bold;\r\n}\r\n#bsmsdetailstable .scripture1 {\r\n    white-space:nowrap;\r\n    color:#c02121;\r\n    font-weight:bold;\r\n}\r\n#bsmsdetailstable .scripture2 {\r\n    white-space:nowrap;\r\n    color:#c02121;\r\n    font-weight:bold;\r\n}\r\n#bsmsdetailstable .title {\r\n    font-size:1.2em;\r\n    color:#707070;\r\n    font-weight:bold;\r\n}\r\n#bsmsdetailstable .series_text {\r\n    white-space:nowrap;\r\n    color:grey;\r\n}\r\n#bsmsdetailstable .duration {\r\n    white-space:nowrap;\r\n    font-style:italic;\r\n}\r\n#bsmsdetailstable .studyintro {\r\n\r\n}\r\n#bsmsdetailstable .teacher {\r\n    white-space:nowrap;\r\n}\r\n#bsmsdetailstable .location_text {\r\n    white-space:nowrap;\r\n}\r\n#bsmsdetailstable .topic_text {\r\n    white-space:nowrap;\r\n}\r\n#bsmsdetailstable .message_type {\r\n    white-space:nowrap;\r\n}\r\n#bsmsdetailstable .jbsmedia {\r\n    white-space:nowrap;\r\n}\r\n#bsmsdetailstable .store {\r\n    white-space:nowrap;\r\n}\r\n#bsmsdetailstable .details-text {\r\n    white-space:nowrap;\r\n}\r\n#bsmsdetailstable .details-pdf {\r\n    white-space:nowrap;\r\n}\r\n#bsmsdetailstable .details-text-pdf {\r\n    white-space:nowrap;\r\n}\r\n#bsmsdetailstable .detailstable td {\r\n    border: none;\r\n    padding: 0 2px 0 0;\r\n}\r\n#bsmsdetailstable .secondary_reference {\r\n    white-space:nowrap;\r\n}\r\n#bsmsdetailstable .teacher-title-name {\r\n    white-space:nowrap;\r\n}\r\n#bsmsdetailstable .submitted {\r\n    white-space:nowrap;\r\n}\r\n#bsmsdetailstable .hits {\r\n    white-space:nowrap;\r\n}\r\n#bsmsdetailstable .studynumber {\r\n    white-space:nowrap;\r\n}\r\n#bsmsdetailstable .filesize {\r\n    white-space:nowrap;\r\n}\r\n#bsmsdetailstable .custom {\r\n    white-space:nowrap;\r\n}\r\n#bsmsdetailstable .commentshead {\r\n    font-size: 2em;\r\n    font-weight:bold;\r\n}\r\n#bsmsdetailstable .thumbnail {\r\n    white-space:nowrap;\r\n}\r\n#bsmsdetailstable .mediatable td {\r\n    border: none;\r\n    padding: 0 6px 0 0;\r\n}\r\n#bsmsdetailstable .mediatable span.bsfilesize {\r\n    font-size:0.6em;\r\n    position:relative; bottom: 7px;\r\n}\r\n#bsdetailstable th, #bsdetailstable td {\r\n    text-align:left;\r\n    padding:0 5px 0 5px;\r\n    border:none;\r\n}\r\n#bsdetailstable .studydetailstext td {\r\n    font-size:1.2em;\r\n    color:#707070;\r\n    font-family:Verdana, Geneva, sans-serif;\r\n}\r\n#titletable {\r\n    margin: 0;\r\n    border-collapse:separate;\r\n}\r\n#titletable th, #titletable td {\r\n    text-align:left;\r\n    padding:0 5px 0 5px;\r\n    border:none;\r\n}\r\n\r\n#titletable .titlesecondline {\r\n    font-weight: bold;\r\n}\r\n#titletable .titlefirstline {\r\n    font-size:20px;\r\n    font-weight:bold;\r\n}\r\n\r\n#recaptcha_widget_div {\r\n    position:static !important;\r\n}\r\n/* Module Style Settings */\r\n\r\n#bsmsmoduletable {\r\n    margin: 0;\r\n    border-collapse:separate;\r\n}\r\n#bsmsmoduletable th, #bsmsmoduletable td {\r\n    text-align:left;\r\n    padding:0 5px 0 5px;\r\n    border:none;\r\n}\r\n#bsmsmoduletable .row1col1,\r\n#bsmsmoduletable .row2col1,\r\n#bsmsmoduletable .row3col1,\r\n#bsmsmoduletable .row4col1 {\r\n    border-left: grey 2px solid;\r\n}\r\n#bsmsmoduletable .lastcol {\r\n    border-right: grey 2px solid;\r\n}\r\n#bsmsmoduletable .lastrow td {\r\n    border-bottom:2px solid grey;\r\n    padding-bottom:7px;\r\n}\r\n#bsmsmoduletable th {\r\n    background-color:#707070;\r\n    font-weight:bold;\r\n    color:white;\r\n\r\n}\r\n#bsmsmoduletable th.row1col1,\r\n#bsmsmoduletable th.row1col2,\r\n#bsmsmoduletable th.row1col3,\r\n#bsmsmoduletable th.row1col4 {\r\n    border-top: grey 2px solid;\r\n    padding-top:3px;\r\n}\r\n#bsmsmoduletable th.firstrow {\r\n    border-bottom: grey 2px solid;\r\n}\r\n#bsmsmoduletable tr.lastrow th {\r\n    border-bottom:2px solid grey;\r\n    padding-bottom:3px;\r\n}\r\n\r\n#bsmsmoduletable tr.bsodd td {\r\n    background-color:#FFFFFF;\r\n}\r\n#bsmsmoduletable tr.bseven td {\r\n    background-color:#FFFFF0;\r\n}\r\n\r\n#bsmsmoduletable .date {\r\n    white-space:nowrap;\r\n    font-size:1.2em;\r\n    color:grey;\r\n    font-weight:bold;\r\n}\r\n#bsmsmoduletable .scripture1 {\r\n    white-space:nowrap;\r\n    color:#c02121;\r\n    font-weight:bold;\r\n}\r\n#bsmsmoduletable .scripture2 {\r\n    white-space:nowrap;\r\n    color:#c02121;\r\n    font-weight:bold;\r\n}\r\n#bsmsmoduletable .title {\r\n    font-size:1.2em;\r\n    color:#707070;\r\n    font-weight:bold;\r\n}\r\n#bsmsmoduletable .series_text {\r\n    white-space:nowrap;\r\n    color:grey;\r\n}\r\n#bsmsmoduletable .duration {\r\n    white-space:nowrap;\r\n    font-style:italic;\r\n}\r\n#bsmsmoduletable .studyintro {\r\n\r\n}\r\n#bsmsmoduletable .teacher {\r\n    white-space:nowrap;\r\n}\r\n#bsmsmoduletable .location_text {\r\n    white-space:nowrap;\r\n}\r\n#bsmsmoduletable .topic_text {\r\n    white-space:nowrap;\r\n}\r\n#bsmsmoduletable .message_type {\r\n    white-space:nowrap;\r\n}\r\n#bsmsmoduletable .jbsmedia {\r\n    white-space:nowrap;\r\n}\r\n#bsmsmoduletable .store {\r\n    white-space:nowrap;\r\n}\r\n#bsmsmoduletable .details-text {\r\n    white-space:nowrap;\r\n}\r\n#bsmsmoduletable .details-pdf {\r\n    white-space:nowrap;\r\n}\r\n#bsmsmoduletable .details-text-pdf {\r\n    white-space:nowrap;\r\n}\r\n#bsmsmoduletable .detailstable td {\r\n    border: none;\r\n    padding: 0 2px 0 0;\r\n}\r\n#bsmsmoduletable .secondary_reference {\r\n    white-space:nowrap;\r\n}\r\n#bsmsmoduletable .teacher-title-name {\r\n    white-space:nowrap;\r\n}\r\n#bsmsmoduletable .submitted {\r\n    white-space:nowrap;\r\n}\r\n#bsmsmoduletable .hits {\r\n    white-space:nowrap;\r\n}\r\n#bsmsmoduletable .studynumber {\r\n    white-space:nowrap;\r\n}\r\n#bsmsmoduletable .filesize {\r\n    white-space:nowrap;\r\n}\r\n#bsmsmoduletable .custom {\r\n    white-space:nowrap;\r\n}\r\n#bsmsmoduletable .commentshead {\r\n    font-size: 2em;\r\n    font-weight:bold;\r\n}\r\n#bsmsmoduletable .thumbnail {\r\n    white-space:nowrap;\r\n}\r\n#bsmsmoduletable .mediatable td {\r\n    border: none;\r\n    padding: 0 6px 0 0;\r\n}\r\n#bsmsmoduletable .mediatable span.bsfilesize {\r\n    font-size:0.6em;\r\n    position:relative; bottom: 7px;\r\n}\r\n/* Series List-Details Items */\r\n#seriestable {\r\n    margin: 0;\r\n    border-collapse:separate;\r\n}\r\n#seriestable th, #seriestable td {\r\n    text-align:left;\r\n    padding: 3px 3px 3px 3px;\r\n    border:none;\r\n}\r\n#seriestable .firstrow td {\r\n    border-top: grey 2px solid;\r\n}\r\n#seriestable .firstcol {\r\n    border-left: grey 2px solid;\r\n}\r\n#seriestable .lastcol {\r\n    border-right: grey 2px solid;\r\n}\r\n#seriestable .lastrow td {\r\n    border-bottom:2px solid grey;\r\n    border-left: 2px solid grey;\r\n    border-right: 2px solid grey;\r\n    padding-bottom:3px;\r\n}\r\n#seriesttable tr.bsodd td {\r\n    background-color:#FFFFFF;\r\n}\r\n#seriestable tr.bseven td {\r\n    background-color:#FFFFF0;\r\n}\r\n#seriestable tr.onlyrow td {\r\n    border-bottom: 2px solid grey;\r\n    border-top:  grey 2px solid;\r\n}\r\n#seriestable .thumbnail img {\r\n    border: 1px solid grey;\r\n}\r\n#seriestable .teacher img {\r\n    border: 1px solid grey;\r\n}\r\n#seriestable .title {\r\n    font-weight: bold;\r\n    font-size: larger;\r\n}\r\n#seriestable tr.noborder td{\r\n    border: none;\r\n}\r\n#seriestable .description p{\r\n    width:500px;\r\n}\r\n#seriestable .teacher {\r\n    font-weight: bold;\r\n}\r\n/* Series Detail Study Links Items */\r\n#seriesstudytable {\r\n    margin: 0;\r\n    border-collapse:separate;\r\n}\r\n#seriesstudytable th, #seriesstudytable td {\r\n    text-align:left;\r\n    padding:0 5px 0 5px;\r\n    border:none;\r\n}\r\n#seriesstudytable .row1col1,\r\n#seriesstudytable .row2col1,\r\n#seriesstudytable .row3col1,\r\n#seriesstudytable .row4col1 {\r\n    border-left: grey 2px solid;\r\n}\r\n#seriesstudytable .lastcol {\r\n    border-right: grey 2px solid;\r\n}\r\n#seriesstudytable .lastrow td {\r\n    border-bottom:2px solid grey;\r\n    padding-bottom:7px;\r\n}\r\n#seriesstudytable th {\r\n    background-color:#707070;\r\n    font-weight:bold;\r\n    color:white;\r\n\r\n}\r\n#seriesstudytable th.row1col1,\r\n#seriesstudytable th.row1col2,\r\n#seriesstudytable th.row1col3,\r\n#seriesstudytable th.row1col4 {\r\n    border-top: grey 2px solid;\r\n    padding-top:3px;\r\n}\r\n#seriesstudytable th.firstrow {\r\n    border-bottom: grey 2px solid;\r\n}\r\n#seriesstudytable tr.lastrow th {\r\n    border-bottom:2px solid grey;\r\n    padding-bottom:3px;\r\n}\r\n\r\n#seriesstudytable tr.bsodd td {\r\n    background-color:#FFFFFF;\r\n}\r\n#seriesstudytable tr.bseven td {\r\n    background-color:#FFFFF0;\r\n}\r\n\r\n#seriesstudytable .date {\r\n    white-space:nowrap;\r\n    font-size:1.2em;\r\n    color:grey;\r\n    font-weight:bold;\r\n}\r\n#seriesstudytable .scripture1 {\r\n    white-space:nowrap;\r\n    color:#c02121;\r\n    font-weight:bold;\r\n}\r\n#seriesstudytable .scripture2 {\r\n    white-space:nowrap;\r\n    color:#c02121;\r\n    font-weight:bold;\r\n}\r\n#seriesstudytable .title {\r\n    font-size:1.2em;\r\n    color:#707070;\r\n    font-weight:bold;\r\n    font-style:italic;\r\n}\r\n#seriesstudytable .series_text {\r\n    white-space:nowrap;\r\n    color:grey;\r\n}\r\n#seriesstudytable .duration {\r\n    white-space:nowrap;\r\n    font-style:italic;\r\n}\r\n#seriesstudytable .studyintro {\r\n\r\n}\r\n#seriesstudytable .teacher {\r\n    white-space:nowrap;\r\n}\r\n#seriesstudytable .location_text {\r\n    white-space:nowrap;\r\n}\r\n#seriesstudytable .topic_text {\r\n    white-space:nowrap;\r\n}\r\n#seriesstudytable .message_type {\r\n    white-space:nowrap;\r\n}\r\n#seriesstudytable .jbsmedia {\r\n    white-space:nowrap;\r\n}\r\n#seriesstudytable .store {\r\n    white-space:nowrap;\r\n}\r\n#seriesstudytable .details-text {\r\n    white-space:nowrap;\r\n}\r\n#seriesstudytable .details-pdf {\r\n    white-space:nowrap;\r\n}\r\n#seriesstudytable .details-text-pdf {\r\n    white-space:nowrap;\r\n}\r\n#seriesstudytable .detailstable td {\r\n    border: none;\r\n    padding: 0 2px 0 0;\r\n}\r\n#seriesstudytable .secondary_reference {\r\n    white-space:nowrap;\r\n}\r\n#seriesstudytable .teacher-title-name {\r\n    white-space:nowrap;\r\n}\r\n#seriesstudytable .submitted {\r\n    white-space:nowrap;\r\n}\r\n#seriesstudytable .hits {\r\n    white-space:nowrap;\r\n}\r\n#seriesstudytable .studynumber {\r\n    white-space:nowrap;\r\n}\r\n#seriesstudytable .filesize {\r\n    white-space:nowrap;\r\n}\r\n#seriesstudytable .custom {\r\n    white-space:nowrap;\r\n}\r\n#seriesstudytable .commentshead {\r\n    font-size: 2em;\r\n    font-weight:bold;\r\n}\r\n#seriesstudytable .thumbnail {\r\n    white-space:nowrap;\r\n}\r\n#seriesstudytable .mediatable td {\r\n    border: none;\r\n    padding: 0 6px 0 0;\r\n}\r\n#seriesstudytable .mediatable span.bsfilesize {\r\n    font-size:0.6em;\r\n    position:relative; bottom: 7px;\r\n}\r\n#seriesstudytable .studyrow {\r\n\r\n}\r\n.tool-tip {\r\n    color: #fff;\r\n    width: 300px;\r\n    z-index: 13000;\r\n}\r\n/* Tooltip Styles */\r\n/* @todo need to find these files */\r\n.tool-title {\r\n    font-weight: bold;\r\n    font-size: 11px;\r\n    margin: 0;\r\n    color: #9FD4FF;\r\n    padding: 8px 8px 4px;\r\n    background: url(/images/tooltip/bubble.gif) top left;\r\n}\r\n.tool-text {\r\n    font-size: 11px;\r\n    padding: 4px 8px 8px;\r\n    background: url(/images/tooltip/bubble_filler.gif) bottom right;\r\n}\r\n.custom-tip {\r\n    color: #000;\r\n    width: 300px;\r\n    z-index: 13000;\r\n    border: 2px solid #666666;\r\n    background-color: white;\r\n}\r\n\r\n.custom-title {\r\n    font-weight: bold;\r\n    font-size: 11px;\r\n    margin: 0;\r\n    color: #000000;\r\n    padding: 8px 8px 4px;\r\n    background: #666666;\r\n    border-bottom: 1px solid #999999;\r\n}\r\n\r\n.custom-text {\r\n    font-size: 11px;\r\n    padding: 4px 8px 8px;\r\n    background: #999999;\r\n}\r\n/* Teacher List Styles */\r\n#bsm_teachertable\r\n{\r\n    margin: 0;\r\n    border-collapse:separate;\r\n}\r\n#bsm_teachertable td {\r\n    text-align:left;\r\n    padding:0 5px 0 5px;\r\n    border:none;\r\n}\r\n#bsm_teachertable .titlerow\r\n{\r\n    border-bottom: thick;\r\n}\r\n#bsm_teachertable .title\r\n{\r\n    font-size:18px;\r\n    font-weight:bold;\r\n    border-bottom: 3px solid #999999;\r\n    padding: 4px 0px 4px 4px;\r\n}\r\n#bsm_teachertable .bsm_separator\r\n{\r\n    border-bottom: 1px solid #999999;\r\n}\r\n\r\n.bsm_teacherthumbnail\r\n{\r\n\r\n}\r\n#bsm_teachertable .bsm_teachername\r\n{\r\n    font-weight: bold;\r\n    font-size: 14px;\r\n    color: #000000;\r\n    white-space:nowrap;\r\n\r\n}\r\n#bsm_teachertable .bsm_teacheremail\r\n{\r\n    font-weight:normal;\r\n    font-size: 11px;\r\n}\r\n#bsm_teachertable .bsm_teacherwebsite\r\n{\r\n    font-weight:normal;\r\n    font-size: 11px;\r\n}\r\n#bsm_teachertable .bsm_teacherphone\r\n{\r\n    font-weight:normal;\r\n    font-size: 11px;\r\n}\r\n#bsm_teachertable .bsm_short\r\n{\r\n    padding: 8px 4px 4px;\r\n}\r\n#bsm_teachertable .bsm_studiestitlerow {\r\n    background-color: #666;\r\n}\r\n#bsm_teachertable .bsm_titletitle\r\n{\r\n    font-weight:bold;\r\n    color:#FFFFFF;\r\n}\r\n#bsm_teachertable .bsm_titlescripture\r\n{\r\n    font-weight:bold;\r\n    color:#FFFFFF;\r\n}\r\n#bsm_teachertable .bsm_titledate\r\n{\r\n    font-weight:bold;\r\n    color:#FFFFFF;\r\n}\r\n#bsm_teachertable .bsm_teacherlong\r\n{\r\n    padding: 8px 4px 4px;\r\n    border-bottom: 1px solid #999999;\r\n}\r\n#bsm_teachertable tr.bsodd {\r\n    background-color:#FFFFFF;\r\n    border-bottom: 1px solid #999999;\r\n}\r\n#bsm_teachertable tr.bseven {\r\n    background-color:#FFFFF0;\r\n    border-bottom: 1px solid #999999;\r\n}\r\n\r\n#bsm_teachertable .lastrow td {\r\n    border-bottom:1px solid grey;\r\n    padding-bottom:7px;\r\n    padding-top:7px;\r\n}\r\n#bsm_teachertable .bsm_teacherfooter\r\n{\r\n    border-top: 1px solid #999999;\r\n    padding: 4px 1px 1px 4px;\r\n}\r\n/*Study Edit CSS */\r\n\r\n.bsmbutton\r\n{\r\n    background-color:white;\r\n\r\n}\r\n#toolbar td.white {\r\n    background-color:#FFFFFF;\r\n}\r\n#toolbar a hover visited{\r\n    color:#0B55C4;\r\n}\r\n\r\n/*Social Networking Items */\r\n#bsmsshare {\r\n    margin: 0;\r\n    border-collapse:separate;\r\n    float:right;\r\n    border: 1px solid #CFCFCF;\r\n    background-color: #F5F5F5;\r\n}\r\n#bsmsshare th, #bsmsshare td {\r\n    text-align:center;\r\n    padding:0 0 0 0;\r\n    border:none;\r\n}\r\n#bsmsshare th {\r\n    color:#0b55c4;\r\n    font-weight:bold;\r\n}\r\n/* Landing Page Items */\r\n.landinglist {\r\n\r\n}\r\n#landing_label {\r\n\r\n}\r\n.landing_item {\r\n\r\n}\r\n.landing_title {\r\n    font-family:arial;\r\n    font-size:16px;\r\n    font-weight:bold;\r\n\r\n}\r\n#biblestudy_landing {\r\n\r\n}\r\n#showhide {\r\n    font-family:arial;\r\n    font-size:12px;\r\n    font-weight:bold;\r\n    text-decoration:none;\r\n}\r\n\r\n#showhide .showhideheadingbutton img {\r\n    vertical-align:bottom;\r\n}\r\n\r\n.landing_table {\r\n\r\n}\r\n\r\n#landing_td {\r\n    width: 33%;\r\n}\r\n\r\n.landing_separator {\r\n    height:15px;\r\n}\r\n/* Popup Window Items */\r\n.popupwindow\r\n{\r\n    margin: 5px;\r\n    text-align:center;\r\n}\r\np.popuptitle {\r\n    font-weight: bold;\r\n    color: black;\r\n}\r\n\r\n.popupfooter\r\n{\r\n    margin: 5px;\r\n    text-align:center;\r\n}\r\np.popupfooter {\r\n    font-weight: bold;\r\n    color: grey;\r\n}\r\n#main ul, #main li\r\n{\r\n    display: inline;\r\n}\r\n\r\n.component-content ul\r\n{\r\n    text-align: center;\r\n}\r\n\r\n.component-content li\r\n{\r\n    display: inline;\r\n}\r\n\r\n.pagenav\r\n{\r\n    margin-left: 10px;\r\n    margin-right: 10px;\r\n}\r\n\r\n#recaptcha_widget_div {\r\n    position:static !important;}', 0);
+-- Dump of table #__bsms_topics
+-- ------------------------------------------------------------
 
---
--- Dumping data for table `#__bsms_teachers`
---
-
-INSERT INTO `#__bsms_teachers` (`id`, `teacher_image`, `teacher_thumbnail`, `teachername`, `alias`, `title`, `phone`, `email`, `website`, `information`, `image`, `imageh`, `imagew`, `thumb`, `thumbw`, `thumbh`, `short`, `ordering`, `catid`, `list_show`, `published`, `asset_id`, `access`, `language`) VALUES
-(1, '', '', 'Billy Sunday', 'billy-sunday', 'Pastor', '555-555-5555', 'billy@sunday.com', '//billysunday.com', 'William Ashley Sunday was an American athlete who after being a popular outfielder in baseballs National League during the 1880s became the most celebrated and influential American evangelist during the first two decades of the 20th century. ', 'media/com_biblestudy/images/billy_sunday11.jpg', '276', '197', 'media/com_biblestudy/images/images.jpg', '101', '141', 'Billy Sunday: 1862-1935', 0, 1, 1, 1, 0, 1, '*');
-
---
--- Dumping data for table `#__bsms_templates`
---
-
-INSERT INTO `#__bsms_templates` (`id`, `type`, `tmpl`, `published`, `params`, `title`, `text`, `pdf`, `asset_id`, `access`) VALUES
-(1, 'tmplList', '', 1, '{"useterms":"0","terms":"","css":"biblestudy.css","studieslisttemplateid":"1","sermonstemplate":"0","detailstemplateid":"1","sermontemplate":"0","teachertemplateid":"1","teachertemplate":"0","teacherstemplate":"0","serieslisttemplateid":"1","seriesdisplaystemplate":"0","seriesdetailtemplateid":"1","seriesdisplaytemplate":"0","teacher_id":["-1"],"series_id":["-1"],"booknumber":["-1"],"topic_id":["-1"],"messagetype":["-1"],"locations":["-1"],"show_verses":"0","stylesheet":"","date_format":"2","custom_date_format":"","duration_type":"2","protocol":"http:\\/\\/","media_player":"0","popuptype":"window","internal_popup":"1","autostart":"1","player_width":"400","player_height":"300","embedshare":"TRUE","backcolor":"0x287585","frontcolor":"0xFFFFFF","lightcolor":"0x000000","screencolor":"0x000000","popuptitle":"{{title}}","popupfooter":"{{filename}}","popupmargin":"50","popupbackground":"black","popupimage":"components\\/com_biblestudy\\/images\\/speaker24.png","show_filesize":"1","useexpert_list":"0","headercode":"","templatecode":"                                   {{teacher}}             {{title}}             {{date}}                                   {{studyintro}}             {{scripture}}                               ","wrapcode":"0","listlanguage":"0","default_order":"DESC","show_page_title":"1","show_page_image":"1","page_title":"Bible Studies","use_headers_list":"1","list_intro":"","intro_show":"1","list_teacher_show":"1","listteachers":"","teacherlink":"1","showpodcastsubscribelist":"1","subscribeintro":"Our Podcasts","details_text":"Study Details","show_book_search":"1","use_go_button":"1","booklist":"1","show_teacher_search":"1","show_series_search":"1","show_type_search":"1","show_year_search":"1","show_order_search":"1","show_topic_search":"1","show_locations_search":"1","show_popular":"1","show_pagination":"1","row1col1":"10","r1c1custom":"","r1c1customlabel":"","r1c1span":"1","linkr1c1":"0","row1col2":"5","r1c2custom":"","r1c2customlabel":"","r1c2span":"2","linkr1c2":"0","row1col3":"0","r1c3custom":"","r1c3customlabel":"","r1c3span":"1","linkr1c3":"0","row1col4":"20","r1c4custom":"","r1c4customlabel":"","linkr1c4":"0","row2col1":"9","r2c1custom":"","r2c1customlabel":"","r2c1span":"1","linkr2c1":"0","row2col2":"7","r2c2custom":"","r2c2customlabel":"","r2c2span":"1","linkr2c2":"0","row2col3":"1","r2c3custom":"","r2c3customlabel":"","r2c3span":"1","linkr2c3":"0","row2col4":"2","r2c4custom":"","r2c4customlabel":"","linkr2c4":"0","row3col1":"6","r3c1custom":"","r3c1customlabel":"","r3c1span":"4","linkr3c1":"0","row3col2":"0","r3c2custom":"","r3c2customlabel":"","r3c2span":"1","linkr3c2":"0","row3col3":"0","r3c3custom":"","r3c3customlabel":"","r3c3span":"1","linkr3c3":"0","row3col4":"0","r3c4custom":"","r3c4customlabel":"","linkr3c4":"0","row4col1":"0","r4c1custom":"","r4c1customlabel":"","r4c1span":"1","linkr4c1":"0","row4col2":"0","r4c2custom":"","r4c2customlabel":"","r4c2span":"1","linkr4c2":"0","row4col3":"0","r4c3custom":"","r4c3customlabel":"","r4c3span":"1","linkr4c3":"0","row4col4":"0","r4c4custom":"","r4c4customlabel":"","linkr4c4":"0","show_print_view":"1","show_teacher_view":"0","use_headers_view":"1","list_items_view":"0","title_line_1":"1","customtitle1":"","title_line_2":"4","customtitle2":"","view_link":"1","link_text":"Return to Studies List","showrelated":"1","showpodcastsubscribedetails":"1","show_scripture_link":"0","show_passage_view":"1","bible_version":"51","show_comments":"1","link_comments":"0","comment_access":"1","comment_publish":"0","use_captcha":"1","public_key":"","private_key":"","email_comments":"1","recipient":"","subject":"Comments on studies","body":"Comments entered.","useexpert_details":"0","study_detailtemplate":"","teacher_title":"Our Teachers","show_teacher_studies":"1","studies":"","label_teacher":"Latest Messages","useexpert_teacherlist":"0","teacher_headercode":"","teacher_templatecode":"           {{teacher}}     {{title}}     {{teacher}}           {{short}}     {{information}}       ","teacher_wrapcode":"0","useexpert_teacherdetail":"0","teacher_detailtemplate":"           {{teacher}}     {{title}}     {{teacher}}           {{short}}     {{information}}       ","series_title":"Our Series","show_series_title":"1","show_page_image_series":"1","series_show_description":"1","series_characters":"","search_series":"1","series_limit":"5","series_list_order":"ASC","series_order_field":"series_text","serieselement1":"1","seriesislink1":"1","serieselement2":"6","seriesislink2":"1","serieselement3":"0","seriesislink3":"1","serieselement4":"0","seriesislink4":"1","useexpert_serieslist":"0","series_headercode":"","series_templatecode":"","series_wrapcode":"0","series_detail_sort":"studydate","series_detail_order":"DESC","series_detail_limit":"","series_list_return":"1","series_detail_listtype":"0","series_detail_1":"5","series_detail_islink1":"1","series_detail_2":"7","series_detail_islink2":"0","series_detail_3":"10","series_detail_islink3":"0","series_detail_4":"20","series_detail_islink4":"0","useexpert_seriesdetail":"0","series_detailcode":"","tip_title":"Sermon Information","tooltip":"1","tip_item1_title":"Title","tip_item1":"5","tip_item2_title":"Details","tip_item2":"6","tip_item3_title":"Teacher","tip_item3":"7","tip_item4_title":"Reference","tip_item4":"1","tip_item5_title":"Date","tip_item5":"10","drow1col1":"5","dr1c1custom":"","dr1c1customlabel":"","dr1c1span":"2","dlinkr1c1":"0","drow1col2":"0","dr1c2custom":"","dr1c2customlabel":"","dr1c2span":"1","dlinkr1c2":"0","drow1col3":"8","dr1c3custom":"","dr1c3customlabel":"","dr1c3span":"2","dlinkr1c3":"0","drow1col4":"0","dr1c4custom":"","dr1c4customlabel":"","dlinkr1c4":"0","drow2col1":"1","dr2c1custom":"","dr2c1customlabel":"","dr2c1span":"1","dlinkr2c1":"0","drow2col2":"2","dr2c2custom":"","dr2c2customlabel":"","dr2c2span":"1","dlinkr2c2":"0","drow2col3":"3","dr2c3custom":"","dr2c3customlabel":"","dr2c3span":"2","dlinkr2c3":"0","drow2col4":"0","dr2c4custom":"","dr2c4customlabel":"","dlinkr2c4":"0","drow3col1":"10","dr3c1custom":"","dr3c1customlabel":"","dr3c1span":"1","dlinkr3c1":"0","drow3col2":"9","dr3c2custom":"","dr3c2customlabel":"","dr3c2span":"1","dlinkr3c2":"0","drow3col3":"20","dr3c3custom":"","dr3c3customlabel":"","dr3c3span":"2","dlinkr3c3":"0","drow3col4":"0","dr3c4custom":"","dr3c4customlabel":"","dlinkr3c4":"0","drow4col1":"6","dr4c1custom":"","dr4c1customlabel":"","dr4c1span":"4","dlinkr4c1":"0","drow4col2":"0","dr4c2custom":"","dr4c2customlabel":"","dr4c2span":"1","dlinkr4c2":"0","drow4col3":"0","dr4c3custom":"","dr4c3customlabel":"","dr4c3span":"1","dlinkr4c3":"0","drow4col4":"0","dr4c4custom":"","dr4c4customlabel":"","dlinkr4c4":"0","landing_hide":"0","landing_default_order":"ASC","landing_hidelabel":"Show\\/Hide All","headingorder_1":"teachers","headingorder_2":"series","headingorder_3":"books","headingorder_4":"topics","headingorder_5":"locations","headingorder_6":"messagetypes","headingorder_7":"years","showteachers":"1","landingteachersuselimit":"0","landingteacherslimit":"","teacherslabel":"Speakers","linkto":"1","showseries":"1","landingseriesuselimit":"0","landingserieslimit":"","serieslabel":"Series","series_linkto":"0","showbooks":"1","landingbookslimit":"","bookslabel":"Books","showtopics":"1","landingtopicslimit":"","topicslabel":"Topics","showlocations":"1","landinglocationsuselimit":"0","landinglocationslimit":"","locationslabel":"Locations","showmessagetypes":"1","landingmessagetypeuselimit":"0","landingmessagetypeslimit":"","messagetypeslabel":"Message Types","showyears":"1","landingyearslimit":"","yearslabel":"Years"}', 'Default', 'textfile24.png', 'pdf24.png', 0, 1);
-
---
--- Dumping data for table `#__bsms_timeset`
---
-
-INSERT INTO `#__bsms_timeset` (`timeset`, `backup`) VALUES
-('1281646339', '1281646339');
-
---
--- Dumping data for table `#__bsms_topics`
---
-
-INSERT INTO `#__bsms_topics` (`id`, `topic_text`, `published`, `params`, `asset_id`, `access`) VALUES
-(1, 'JBS_TOP_ABORTION', 1, NULL, 0, 1),
-(3, 'JBS_TOP_ADDICTION', 1, NULL, 0, 1),
-(4, 'JBS_TOP_AFTERLIFE', 1, NULL, 0, 1),
-(5, 'JBS_TOP_APOLOGETICS', 1, NULL, 0, 1),
-(7, 'JBS_TOP_BAPTISM', 1, NULL, 0, 1),
-(8, 'JBS_TOP_BASICS_OF_CHRISTIANITY', 1, NULL, 0, 1),
-(9, 'JBS_TOP_BECOMING_A_CHRISTIAN', 1, NULL, 0, 1),
-(10, 'JBS_TOP_BIBLE', 1, NULL, 0, 1),
-(37, 'JBS_TOP_BLENDED_FAMILY_RELATIONSHIPS', 1, NULL, 0, 1),
-(12, 'JBS_TOP_CHILDREN', 1, NULL, 0, 1),
-(13, 'JBS_TOP_CHRIST', 1, NULL, 0, 1),
-(14, 'JBS_TOP_CHRISTIAN_CHARACTER_FRUITS', 1, NULL, 0, 1),
-(15, 'JBS_TOP_CHRISTIAN_VALUES', 1, NULL, 0, 1),
-(16, 'JBS_TOP_CHRISTMAS_SEASON', 1, NULL, 0, 1),
-(17, 'JBS_TOP_CHURCH', 1, NULL, 0, 1),
-(18, 'JBS_TOP_COMMUNICATION', 1, NULL, 0, 1),
-(19, 'JBS_TOP_COMMUNION___LORDS_SUPPER', 1, NULL, 0, 1),
-(21, 'JBS_TOP_CREATION', 1, NULL, 0, 1),
-(23, 'JBS_TOP_CULTS', 1, NULL, 0, 1),
-(113, 'JBS_TOP_DA_VINCI_CODE', 1, NULL, 0, 1),
-(24, 'JBS_TOP_DEATH', 1, NULL, 0, 1),
-(26, 'JBS_TOP_DESCRIPTIONS_OF_GOD', 1, NULL, 0, 1),
-(27, 'JBS_TOP_DISCIPLES', 1, NULL, 0, 1),
-(28, 'JBS_TOP_DISCIPLESHIP', 1, NULL, 0, 1),
-(30, 'JBS_TOP_DIVORCE', 1, NULL, 0, 1),
-(32, 'JBS_TOP_EASTER_SEASON', 1, NULL, 0, 1),
-(33, 'JBS_TOP_EMOTIONS', 1, NULL, 0, 1),
-(34, 'JBS_TOP_ENTERTAINMENT', 1, NULL, 0, 1),
-(35, 'JBS_TOP_EVANGELISM', 1, NULL, 0, 1),
-(36, 'JBS_TOP_FAITH', 1, NULL, 0, 1),
-(103, 'JBS_TOP_FAMILY', 1, NULL, 0, 1),
-(39, 'JBS_TOP_FORGIVING_OTHERS', 1, NULL, 0, 1),
-(104, 'JBS_TOP_FREEDOM', 1, NULL, 0, 1),
-(41, 'JBS_TOP_FRIENDSHIP', 1, NULL, 0, 1),
-(42, 'JBS_TOP_FULFILLMENT_IN_LIFE', 1, NULL, 0, 1),
-(43, 'JBS_TOP_FUND_RAISING_RALLY', 1, NULL, 0, 1),
-(44, 'JBS_TOP_FUNERALS', 1, NULL, 0, 1),
-(45, 'JBS_TOP_GIVING', 1, NULL, 0, 1),
-(2, 'JBS_TOP_GODS_ACTIVITY', 1, NULL, 0, 1),
-(6, 'JBS_TOP_GODS_ATTRIBUTES', 1, NULL, 0, 1),
-(40, 'JBS_TOP_GODS_FORGIVENESS', 1, NULL, 0, 1),
-(58, 'JBS_TOP_GODS_LOVE', 1, NULL, 0, 1),
-(65, 'JBS_TOP_GODS_NATURE', 1, NULL, 0, 1),
-(46, 'JBS_TOP_GODS_WILL', 1, NULL, 0, 1),
-(47, 'JBS_TOP_HARDSHIP_OF_LIFE', 1, NULL, 0, 1),
-(107, 'JBS_TOP_HOLIDAYS', 1, NULL, 0, 1),
-(48, 'JBS_TOP_HOLY_SPIRIT', 1, NULL, 0, 1),
-(111, 'JBS_TOP_HOT_TOPICS', 1, NULL, 0, 1),
-(11, 'JBS_TOP_JESUS_BIRTH', 1, NULL, 0, 1),
-(22, 'JBS_TOP_JESUS_CROSS_FINAL_WEEK', 1, NULL, 0, 1),
-(29, 'JBS_TOP_JESUS_DIVINITY', 1, NULL, 0, 1),
-(50, 'JBS_TOP_JESUS_HUMANITY', 1, NULL, 0, 1),
-(56, 'JBS_TOP_JESUS_LIFE', 1, NULL, 0, 1),
-(61, 'JBS_TOP_JESUS_MIRACLES', 1, NULL, 0, 1),
-(84, 'JBS_TOP_JESUS_RESURRECTION', 1, NULL, 0, 1),
-(93, 'JBS_TOP_JESUS_TEACHING', 1, NULL, 0, 1),
-(52, 'JBS_TOP_KINGDOM_OF_GOD', 1, NULL, 0, 1),
-(55, 'JBS_TOP_LEADERSHIP_ESSENTIALS', 1, NULL, 0, 1),
-(57, 'JBS_TOP_LOVE', 1, NULL, 0, 1),
-(59, 'JBS_TOP_MARRIAGE', 1, NULL, 0, 1),
-(109, 'JBS_TOP_MEN', 1, NULL, 0, 1),
-(82, 'JBS_TOP_MESSIANIC_PROPHECIES', 1, NULL, 0, 1),
-(62, 'JBS_TOP_MISCONCEPTIONS_OF_CHRISTIANITY', 1, NULL, 0, 1),
-(63, 'JBS_TOP_MONEY', 1, NULL, 0, 1),
-(112, 'JBS_TOP_NARNIA', 1, NULL, 0, 1),
-(66, 'JBS_TOP_OUR_NEED_FOR_GOD', 1, NULL, 0, 1),
-(69, 'JBS_TOP_PARABLES', 1, NULL, 0, 1),
-(70, 'JBS_TOP_PARANORMAL', 1, NULL, 0, 1),
-(71, 'JBS_TOP_PARENTING', 1, NULL, 0, 1),
-(73, 'JBS_TOP_POVERTY', 1, NULL, 0, 1),
-(74, 'JBS_TOP_PRAYER', 1, NULL, 0, 1),
-(76, 'JBS_TOP_PROMINENT_N_T__MEN', 1, NULL, 0, 1),
-(77, 'JBS_TOP_PROMINENT_N_T__WOMEN', 1, NULL, 0, 1),
-(78, 'JBS_TOP_PROMINENT_O_T__MEN', 1, NULL, 0, 1),
-(79, 'JBS_TOP_PROMINENT_O_T__WOMEN', 1, NULL, 0, 1),
-(83, 'JBS_TOP_RACISM', 1, NULL, 0, 1),
-(85, 'JBS_TOP_SECOND_COMING', 1, NULL, 0, 1),
-(86, 'JBS_TOP_SEXUALITY', 1, NULL, 0, 1),
-(87, 'JBS_TOP_SIN', 1, NULL, 0, 1),
-(88, 'JBS_TOP_SINGLENESS', 1, NULL, 0, 1),
-(89, 'JBS_TOP_SMALL_GROUPS', 1, NULL, 0, 1),
-(108, 'JBS_TOP_SPECIAL_SERVICES', 1, NULL, 0, 1),
-(90, 'JBS_TOP_SPIRITUAL_DISCIPLINES', 1, NULL, 0, 1),
-(91, 'JBS_TOP_SPIRITUAL_GIFTS', 1, NULL, 0, 1),
-(105, 'JBS_TOP_STEWARDSHIP', 1, NULL, 0, 1),
-(92, 'JBS_TOP_SUPERNATURAL', 1, NULL, 0, 1),
-(94, 'JBS_TOP_TEMPTATION', 1, NULL, 0, 1),
-(95, 'JBS_TOP_TEN_COMMANDMENTS', 1, NULL, 0, 1),
-(97, 'JBS_TOP_TRUTH', 1, NULL, 0, 1),
-(98, 'JBS_TOP_TWELVE_APOSTLES', 1, NULL, 0, 1),
-(100, 'JBS_TOP_WEDDINGS', 1, NULL, 0, 1),
-(110, 'JBS_TOP_WOMEN', 1, NULL, 0, 1),
-(101, 'JBS_TOP_WORKPLACE_ISSUES', 1, NULL, 0, 1),
-(102, 'JBS_TOP_WORLD_RELIGIONS', 1, NULL, 0, 1),
-(106, 'JBS_TOP_WORSHIP', 1, NULL, 0, 1);
+INSERT INTO `#__bsms_topics` (`id`, `topic_text`, `published`, `params`, `asset_id`, `language`, `access`)
+VALUES
+  (1, 'JBS_TOP_ABORTION', 1, NULL, 7491, '*', 1),
+  (2, 'JBS_TOP_GODS_ACTIVITY', 1, NULL, 7492, '*', 1),
+  (3, 'JBS_TOP_ADDICTION', 1, NULL, 7493, '*', 1),
+  (4, 'JBS_TOP_AFTERLIFE', 1, NULL, 7494, '*', 1),
+  (5, 'JBS_TOP_APOLOGETICS', 1, NULL, 7495, '*', 1),
+  (6, 'JBS_TOP_GODS_ATTRIBUTES', 1, NULL, 7496, '*', 1),
+  (7, 'JBS_TOP_BAPTISM', 1, NULL, 7497, '*', 1),
+  (8, 'JBS_TOP_BASICS_OF_CHRISTIANITY', 1, NULL, 7498, '*', 1),
+  (9, 'JBS_TOP_BECOMING_A_CHRISTIAN', 1, NULL, 7499, '*', 1),
+  (10, 'JBS_TOP_BIBLE', 1, NULL, 7500, '*', 1),
+  (11, 'JBS_TOP_JESUS_BIRTH', 1, NULL, 7501, '*', 1),
+  (12, 'JBS_TOP_CHILDREN', 1, NULL, 7502, '*', 1),
+  (13, 'JBS_TOP_CHRIST', 1, NULL, 7503, '*', 1),
+  (14, 'JBS_TOP_CHRISTIAN_CHARACTER_FRUITS', 1, NULL, 7504, '*', 1),
+  (15, 'JBS_TOP_CHRISTIAN_VALUES', 1, NULL, 7505, '*', 1),
+  (16, 'JBS_TOP_CHRISTMAS_SEASON', 1, NULL, 7506, '*', 1),
+  (17, 'JBS_TOP_CHURCH', 1, NULL, 7507, '*', 1),
+  (18, 'JBS_TOP_COMMUNICATION', 1, NULL, 7508, '*', 1),
+  (19, 'JBS_TOP_COMMUNION___LORDS_SUPPER', 1, NULL, 7509, '*', 1),
+  (21, 'JBS_TOP_CREATION', 1, NULL, 7510, '*', 1),
+  (22, 'JBS_TOP_JESUS_CROSS_FINAL_WEEK', 1, NULL, 7511, '*', 1),
+  (23, 'JBS_TOP_CULTS', 1, NULL, 7512, '*', 1),
+  (24, 'JBS_TOP_DEATH', 1, NULL, 7513, '*', 1),
+  (26, 'JBS_TOP_DESCRIPTIONS_OF_GOD', 1, NULL, 7514, '*', 1),
+  (27, 'JBS_TOP_DISCIPLES', 1, NULL, 7515, '*', 1),
+  (28, 'JBS_TOP_DISCIPLESHIP', 1, NULL, 7516, '*', 1),
+  (29, 'JBS_TOP_JESUS_DIVINITY', 1, NULL, 7517, '*', 1),
+  (30, 'JBS_TOP_DIVORCE', 1, NULL, 7518, '*', 1),
+  (32, 'JBS_TOP_EASTER_SEASON', 1, NULL, 7519, '*', 1),
+  (33, 'JBS_TOP_EMOTIONS', 1, NULL, 7520, '*', 1),
+  (34, 'JBS_TOP_ENTERTAINMENT', 1, NULL, 7521, '*', 1),
+  (35, 'JBS_TOP_EVANGELISM', 1, NULL, 7522, '*', 1),
+  (36, 'JBS_TOP_FAITH', 1, NULL, 7523, '*', 1),
+  (37, 'JBS_TOP_BLENDED_FAMILY_RELATIONSHIPS', 1, NULL, 7524, '*', 1),
+  (39, 'JBS_TOP_FORGIVING_OTHERS', 1, NULL, 7525, '*', 1),
+  (40, 'JBS_TOP_GODS_FORGIVENESS', 1, NULL, 7526, '*', 1),
+  (41, 'JBS_TOP_FRIENDSHIP', 1, NULL, 7527, '*', 1),
+  (42, 'JBS_TOP_FULFILLMENT_IN_LIFE', 1, NULL, 7528, '*', 1),
+  (43, 'JBS_TOP_FUND_RAISING_RALLY', 1, NULL, 7529, '*', 1),
+  (44, 'JBS_TOP_FUNERALS', 1, NULL, 7530, '*', 1),
+  (45, 'JBS_TOP_GIVING', 1, NULL, 7531, '*', 1),
+  (46, 'JBS_TOP_GODS_WILL', 1, NULL, 7532, '*', 1),
+  (47, 'JBS_TOP_HARDSHIP_OF_LIFE', 1, NULL, 7533, '*', 1),
+  (48, 'JBS_TOP_HOLY_SPIRIT', 1, NULL, 7534, '*', 1),
+  (50, 'JBS_TOP_JESUS_HUMANITY', 1, NULL, 7535, '*', 1),
+  (52, 'JBS_TOP_KINGDOM_OF_GOD', 1, NULL, 7536, '*', 1),
+  (55, 'JBS_TOP_LEADERSHIP_ESSENTIALS', 1, NULL, 7537, '*', 1),
+  (56, 'JBS_TOP_JESUS_LIFE', 1, NULL, 7538, '*', 1),
+  (57, 'JBS_TOP_LOVE', 1, NULL, 7539, '*', 1),
+  (58, 'JBS_TOP_GODS_LOVE', 1, NULL, 7540, '*', 1),
+  (59, 'JBS_TOP_MARRIAGE', 1, NULL, 7541, '*', 1),
+  (61, 'JBS_TOP_JESUS_MIRACLES', 1, NULL, 7542, '*', 1),
+  (62, 'JBS_TOP_MISCONCEPTIONS_OF_CHRISTIANITY', 1, NULL, 7543, '*', 1),
+  (63, 'JBS_TOP_MONEY', 1, NULL, 7544, '*', 1),
+  (65, 'JBS_TOP_GODS_NATURE', 1, NULL, 7545, '*', 1),
+  (66, 'JBS_TOP_OUR_NEED_FOR_GOD', 1, NULL, 7546, '*', 1),
+  (69, 'JBS_TOP_PARABLES', 1, NULL, 7547, '*', 1),
+  (70, 'JBS_TOP_PARANORMAL', 1, NULL, 7548, '*', 1),
+  (71, 'JBS_TOP_PARENTING', 1, NULL, 7549, '*', 1),
+  (73, 'JBS_TOP_POVERTY', 1, NULL, 7550, '*', 1),
+  (74, 'JBS_TOP_PRAYER', 1, NULL, 7551, '*', 1),
+  (76, 'JBS_TOP_PROMINENT_N_T__MEN', 1, NULL, 7552, '*', 1),
+  (77, 'JBS_TOP_PROMINENT_N_T__WOMEN', 1, NULL, 7553, '*', 1),
+  (78, 'JBS_TOP_PROMINENT_O_T__MEN', 1, NULL, 7554, '*', 1),
+  (79, 'JBS_TOP_PROMINENT_O_T__WOMEN', 1, NULL, 7555, '*', 1),
+  (82, 'JBS_TOP_MESSIANIC_PROPHECIES', 1, NULL, 7556, '*', 1),
+  (83, 'JBS_TOP_RACISM', 1, NULL, 7557, '*', 1),
+  (84, 'JBS_TOP_JESUS_RESURRECTION', 1, NULL, 7558, '*', 1),
+  (85, 'JBS_TOP_SECOND_COMING', 1, NULL, 7559, '*', 1),
+  (86, 'JBS_TOP_SEXUALITY', 1, NULL, 7560, '*', 1),
+  (87, 'JBS_TOP_SIN', 1, NULL, 7561, '*', 1),
+  (88, 'JBS_TOP_SINGLENESS', 1, NULL, 7562, '*', 1),
+  (89, 'JBS_TOP_SMALL_GROUPS', 1, NULL, 7563, '*', 1),
+  (90, 'JBS_TOP_SPIRITUAL_DISCIPLINES', 1, NULL, 7564, '*', 1),
+  (91, 'JBS_TOP_SPIRITUAL_GIFTS', 1, NULL, 7565, '*', 1),
+  (92, 'JBS_TOP_SUPERNATURAL', 1, NULL, 7566, '*', 1),
+  (93, 'JBS_TOP_JESUS_TEACHING', 1, NULL, 7567, '*', 1),
+  (94, 'JBS_TOP_TEMPTATION', 1, NULL, 7568, '*', 1),
+  (95, 'JBS_TOP_TEN_COMMANDMENTS', 1, NULL, 7569, '*', 1),
+  (97, 'JBS_TOP_TRUTH', 1, NULL, 7570, '*', 1),
+  (98, 'JBS_TOP_TWELVE_APOSTLES', 1, NULL, 7571, '*', 1),
+  (100, 'JBS_TOP_WEDDINGS', 1, NULL, 7572, '*', 1),
+  (101, 'JBS_TOP_WORKPLACE_ISSUES', 1, NULL, 7573, '*', 1),
+  (102, 'JBS_TOP_WORLD_RELIGIONS', 1, NULL, 7574, '*', 1),
+  (103, 'JBS_TOP_FAMILY', 1, NULL, 7575, '*', 1),
+  (104, 'JBS_TOP_FREEDOM', 1, NULL, 7576, '*', 1),
+  (105, 'JBS_TOP_STEWARDSHIP', 1, NULL, 7577, '*', 1),
+  (106, 'JBS_TOP_WORSHIP', 1, NULL, 7578, '*', 1),
+  (107, 'JBS_TOP_HOLIDAYS', 1, NULL, 7579, '*', 1),
+  (108, 'JBS_TOP_SPECIAL_SERVICES', 1, NULL, 7580, '*', 1),
+  (109, 'JBS_TOP_MEN', 1, NULL, 7581, '*', 1),
+  (110, 'JBS_TOP_WOMEN', 1, NULL, 7582, '*', 1),
+  (111, 'JBS_TOP_HOT_TOPICS', 1, NULL, 7583, '*', 1),
+  (112, 'JBS_TOP_NARNIA', 1, NULL, 7584, '*', 1),
+  (113, 'JBS_TOP_DA_VINCI_CODE', 1, NULL, 7585, '*', 1),
+  (114, 'JBS_TOP_RAIN', 1, NULL, 7590, '*', 1);

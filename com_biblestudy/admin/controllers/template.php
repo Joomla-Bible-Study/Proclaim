@@ -3,14 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-include_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.backup.php';
-jimport('joomla.application.component.controllerform');
+
+
 
 /**
  * Template controller class
@@ -86,7 +86,7 @@ class BiblestudyControllerTemplate extends JControllerForm
 	/**
 	 * Get Template Settings
 	 *
-	 * @param   string  $template  ?
+	 * @param   string  $template  filename
 	 *
 	 * @return boolean|string
 	 *
@@ -94,7 +94,7 @@ class BiblestudyControllerTemplate extends JControllerForm
 	 */
 	public function getTemplate($template)
 	{
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('tc.id, tc.templatecode,tc.type,tc.filename');
 		$query->from('#__bsms_templatecode as tc');
@@ -106,11 +106,10 @@ class BiblestudyControllerTemplate extends JControllerForm
 			return false;
 		}
 		$templatereturn = '
-                        INSERT INTO #__bsms_templatecode SET `type` = "' . $db->q($object->type) . '",
-                        `templatecode` = "' . $db->q($object->templatecode) . '",
-                        `filename`="' . $db->q($template) . '",
-                        `published` = "1";
-                        ';
+                        INSERT INTO `#__bsms_templatecode` SET `type` = ' . $db->q($object->type) . ',
+                        `templatecode` = ' . $db->q($object->templatecode) . ',
+                        `filename` = ' . $db->q($template) . ',
+                        `published` = ' . $db->q('1');
 
 		return $templatereturn;
 	}

@@ -1,12 +1,13 @@
 <?php
-
 /**
  * sh404SEF support for com_biblestudy component.
  *
  * @package     BibleStudy.Site
  * @subpackage  sh404SEF.BibleStudy
  * @author      Nick Fossen <nfossen@gmail.com>
- *              Home URL : http://www.newhorizoncf.org
+ * @copyright   2015 (C) Joomla Bible Study
+ * @url         http://www.newhorizoncf.org
+ * @license     GPL v2
  * {shSourceVersionTag: Version 6.2 - 2010-07-06}
  *
  */
@@ -53,7 +54,7 @@ switch ($view)
 		shRemoveFromGETVarsList('view');
 		shRemoveFromGETVarsList('Itemid');
 		break;
-	case 'sermon': // Need to keep the id because of the number of teachings
+	case 'sermon': /* Need to keep the id because of the number of teachings */
 		$title[] = $view;
 		shRemoveFromGETVarsList('view');
 		shRemoveFromGETVarsList('Itemid');
@@ -117,13 +118,17 @@ if (isset($task))
 	}
 }
 
-// remove biblestudy URL from GET vars list, so that they don't show up as query string in the URL
+// Remove biblestudy URL from GET vars list, so that they don't show up as query string in the URL
 shRemoveFromGETVarsList('t');
 
 
 // ------------------  standard plugin finalize function - don't change ---------------------------
 if ($dosef)
 {
-	$string = shFinalizePlugin($string, $title, $shAppendString, $shItemidString, (isset($limit) ? @$limit : null), (isset($limitstart) ? @$limitstart : null), (isset($shLangName) ? @$shLangName : null));
+	$string = shFinalizePlugin(
+		$string, $title, $shAppendString, $shItemidString, (isset($limit) ? @$limit : null),
+		(isset($limitstart) ? @$limitstart : null), (isset($shLangName) ? @$shLangName : null)
+	);
 }
+
 // ------------------  standard plugin finalize function - don't change ---------------------------

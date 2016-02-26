@@ -13,9 +13,9 @@ defined('_JEXEC') or die();
 $document = JFactory::getDocument();
 $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
 
-JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
+/** @var JBSMListing $JBSMListing */
 $JBSMListing = new JBSMListing;
-
+/** @var Joomla\Registry\Registry $params */
 $params = $this->params;
 ?>
 <div id="biblestudy" class="noRefTagger">
@@ -42,14 +42,14 @@ if ($params->get('module_headercode'))
 }
 else
 {
-	include_once($path1 . 'helper.php');
+	include_once($path1 . 'helper.php'); /* Todo Tom you need ot look into this error. */
 	$header = $JBSMListing->getHeader($list[0], $params, $admin_params, $templatemenuid, $params->get('use_headers'), $ismodule);
 	echo $header;
 }
 
 foreach ($list as $row)
 {
-	$listing = $JBSMListing->getListingExp($row, $params, $admin_params, $templatemenuid);
+	$listing = $JBSMListing->getListingExp($row, $params, $templatemenuid);
 	echo $listing;
 }
 

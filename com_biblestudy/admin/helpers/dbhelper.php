@@ -3,11 +3,13 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 defined('_JEXEC') or die;
+
+use \Joomla\Registry\Registry;
 
 /**
  * Database Helper class for version 7.1.0
@@ -27,7 +29,7 @@ class JBSMDbHelper
 	/**
 	 * System to Check if Table Exists
 	 *
-	 * @param    string $cktable  Table to check for exp:"#__bsms_admin
+	 * @param   string  $cktable  Table to check for exp:"#__bsms_admin
 	 *
 	 * @return bool  If table is there True else False if not.
 	 */
@@ -41,6 +43,7 @@ class JBSMDbHelper
 		foreach ($tables AS $table)
 		{
 			$tableAF = str_replace($prefix, "#__", $table);
+
 			if ($tableAF == $cktable)
 			{
 				return true;
@@ -52,40 +55,17 @@ class JBSMDbHelper
 	}
 
 	/**
-	 * Discover the fields in a table
-	 *
-	 * @param   string $table  Is the table you are checking
-	 * @param   string $field  Checking against.
-	 *
-	 * @return boolean false equals field does not exist
-	 */
-	public static function checkTables($table, $field)
-	{
-		$db     = JFactory::getDBO();
-		$fields = $db->getTableColumns($table, 'false');
-
-		if ($fields)
-		{
-			if (array_key_exists($field, $fields) === true)
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	/**
 	 * Alters a table
 	 * command is only needed for MODIFY. Can be used to ADD, DROP, MODIFY, or CHANGE tables.
 	 *
-	 * @param   array  $tables  Tables is an array of tables, fields, type of query and optional command line
-	 * @param   string $from    Where the query is coming from for msg
+	 * @param   array   $tables  Tables is an array of tables, fields, type of query and optional command line
+	 * @param   string  $from    Where the query is coming from for msg
 	 *
 	 * @return boolean
 	 */
 	public static function alterDB($tables, $from = null)
 	{
+		$db = JFactory::getDbo();
 		foreach ($tables as $t)
 		{
 			$type    = strtolower($t['type']);
@@ -104,7 +84,7 @@ class JBSMDbHelper
 					// Check the field to see if it exists first
 					if (self::checkTables($table, $field) === true)
 					{
-						$query = 'ALTER TABLE `' . $table . '` DROP `' . $field . '`';
+						$query = 'ALTER TABLE ' . $db->qn($table) . ' DROP ' . $db->qn($field);
 
 						if (!self::performDB($query, $from))
 						{
@@ -120,7 +100,7 @@ class JBSMDbHelper
 					}
 					if (self::checkTables($table, $field) !== true)
 					{
-						$query = 'ALTER TABLE `' . $table . '` ADD `' . $field . '` ' . $command;
+						$query = 'ALTER TABLE ' . $db->qn($table) . ' ADD ' . $db->qn($field) . ' ' . $command;
 
 						if (!self::performDB($query, $from))
 						{
@@ -136,7 +116,7 @@ class JBSMDbHelper
 					}
 					if (self::checkTables($table, $field) === true)
 					{
-						$query = 'ALTER TABLE `' . $table . '` MODIFY `' . $field . '` ' . $command;
+						$query = 'ALTER TABLE ' . $db->qn($table) . ' MODIFY ' . $db->qn($field) . ' ' . $command;
 
 						if (!self::performDB($query, $from))
 						{
@@ -152,7 +132,7 @@ class JBSMDbHelper
 					}
 					if (self::checkTables($table, $field) === true)
 					{
-						$query = 'ALTER TABLE `' . $table . '` CHANGE `' . $field . '`' . $command;
+						$query = 'ALTER TABLE ' . $db->qn($table) . ' CHANGE ' . $db->qn($field) . ' ' . $command;
 
 						if (!self::performDB($query, $from))
 						{
@@ -166,21 +146,46 @@ class JBSMDbHelper
 	}
 
 	/**
+	 * Discover the fields in a table
+	 *
+	 * @param   string  $table  Is the table you are checking
+	 * @param   string  $field  Checking against.
+	 *
+	 * @return boolean false equals field does not exist
+	 */
+	public static function checkTables($table, $field)
+	{
+		$db     = JFactory::getDbo();
+		$fields = $db->getTableColumns($table, 'false');
+
+		if ($fields)
+		{
+			if (array_key_exists($field, $fields) === true)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * performs a database query
 	 *
-	 * @param   string $query  Is a Joomla ready query
-	 * @param   string $from   Where the sorce of the query comes from
+	 * @param   string  $query  Is a Joomla ready query
+	 * @param   string  $from   Where the source of the query comes from
+	 * @param   int     $limit  Set the Limit of the query
 	 *
 	 * @return boolean true if success, or error string if failed
 	 */
-	public static function performDB($query, $from = null)
+	public static function performDB($query, $from = null, $limit = null)
 	{
 		if (!$query)
 		{
 			return false;
 		}
 		$db = JFactory::getDbo();
-		$db->setQuery($query);
+		$db->setQuery($query, 0, $limit);
 
 		if (!$db->execute())
 		{
@@ -195,15 +200,14 @@ class JBSMDbHelper
 	}
 
 	/**
-	 * Checks a table for the existance of a field, if it does not find it, runs the Admin model fix()
+	 * Checks a table for the existence of a field, if it does not find it, runs the Admin model fix()
 	 *
-	 * @param   string  $table        table is the table you are checking
-	 * @param   string  $field        field you are checking
-	 * @param   boolean $description  ?
+	 * @param   string  $table  table is the table you are checking
+	 * @param   string  $field  field you are checking
 	 *
 	 * @return boolean
 	 */
-	public static function checkDB($table, $field, $description = null)
+	public static function checkDB($table, $field)
 	{
 		$done = self::checkTables($table, $field);
 
@@ -221,13 +225,13 @@ class JBSMDbHelper
 	}
 
 	/**
-	 * Get Opjects for tables
+	 * Get Objects for tables
 	 *
 	 * @return array
 	 */
 	public static function getObjects()
 	{
-		$db        = JFactory::getDBO();
+		$db        = JFactory::getDbo();
 		$tables    = $db->getTableList();
 		$prefix    = $db->getPrefix();
 		$prelength = strlen($prefix);
@@ -237,7 +241,7 @@ class JBSMDbHelper
 		foreach ($tables as $table)
 		{
 
-			if (substr_count($table, $prefix) && substr_count($table, $bsms))
+			if (strstr($table, $prefix) && strstr($table, $bsms))
 			{
 				$table     = substr_replace($table, '#__', 0, $prelength);
 				$objects[] = array('name' => $table);
@@ -250,28 +254,21 @@ class JBSMDbHelper
 	/**
 	 * Get State of install for Main Admin Controller
 	 *
-	 * @return JRegistry
+	 * @return Registry|bool
 	 *
 	 * @since 7.1.0
 	 */
 	public static function getInstallState()
 	{
-		$db    = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->select('*')->from('#__bsms_admin');
-		$db->setQuery($query);
-		$results = $db->loadObjectList();
+		$db    = JFactory::getDbo();
 
-		if (isset($results[0]->installstate))
+		// Check if JBSM can be found from the database
+		$table = $db->getPrefix() . 'bsms_admin';
+		$db->setQuery("SHOW TABLES LIKE {$db->quote($table)}");
+
+		if ($db->loadResult() != $table)
 		{
-			if (!empty($results[0]->installstate))
-			{
-				// Convert parameter fields to objects.
-				$registry = new JRegistry;
-				$registry->loadString($results{0}->installstate);
-
-				return $registry;
-			}
+			return true;
 		}
 
 		return false;
@@ -280,13 +277,17 @@ class JBSMDbHelper
 	/**
 	 * Get State of install for Main Admin Controller
 	 *
-	 * @return JRegistry
+	 * @return Registry
 	 *
 	 * @since 7.1.0
 	 */
 	public static function setInstallState()
 	{
-		$query = 'UPDATE #__bsms_admin SET installstate = NULL WHERE id = 1';
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->update('#__bsms_admin')
+			->set('installstate = NULL')
+			->where('id = 1');
 
 		if (!self::performDB($query, null))
 		{
@@ -299,12 +300,12 @@ class JBSMDbHelper
 	}
 
 	/**
-	 * Fixupcss.
+	 * Fix up css.
 	 *
-	 * @param   string  $filename  Name of css file
-	 * @param   boolean $parent    if coming form the update script
-	 * @param   string  $newcss    New css style
-	 * @param   int     $id        this is the id of record to be fixed
+	 * @param   string   $filename  Name of css file
+	 * @param   boolean  $parent    if coming form the update script
+	 * @param   string   $newcss    New css style
+	 * @param   int      $id        this is the id of record to be fixed
 	 *
 	 * @return boolean
 	 *
@@ -313,8 +314,8 @@ class JBSMDbHelper
 	public static function fixupcss($filename, $parent, $newcss, $id = null)
 	{
 		$app = JFactory::getApplication();
-		/* Start by getting exesting Style */
-		$db    = JFactory::getDBO();
+		/* Start by getting existing Style */
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('*')->from('#__bsms_styles');
 
@@ -341,7 +342,7 @@ class JBSMDbHelper
 		);
 		$oldcss   = str_replace($oldlines, $newlines, $oldcss);
 
-		/* now see if we are adding newcss to the db css */
+		/* now see if we are adding new css to the db css */
 		if ($parent || $newcss)
 		{
 			$newcss = $db->escape($newcss) . ' ' . $oldcss;
@@ -367,7 +368,7 @@ class JBSMDbHelper
 
 		if (!$db->execute())
 		{
-			$app->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'error');
+			$app->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', ''), 'error');
 
 			return false;
 		}
@@ -385,8 +386,8 @@ class JBSMDbHelper
 	/**
 	 * Set table store()
 	 *
-	 * @param   object $result  Objectlist that we will get the id from.
-	 * @param   string $table   Table to be reloaded.
+	 * @param   object  $result  Object list that we will get the id from.
+	 * @param   string  $table   Table to be reloaded.
 	 *
 	 * @return boolean
 	 *
@@ -394,7 +395,7 @@ class JBSMDbHelper
 	 */
 	public static function reloadtable($result, $table = 'Style')
 	{
-		$db = JFactory::getDBO();
+		$db = JFactory::getDbo();
 
 		// Store new Recorder so it can be seen.
 		JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
@@ -403,7 +404,8 @@ class JBSMDbHelper
 		try
 		{
 			$table->load($result->id);
-			//this is a Joomla bug for currentAssetId being missing in table.php. When fixed in Joomla should be removed
+
+			// This is a Joomla bug for currentAssetId being missing in table.php. When fixed in Joomla should be removed
 			@$table->store();
 		}
 		catch (Exception $e)
@@ -417,18 +419,31 @@ class JBSMDbHelper
 	/**
 	 * Reset Database back to defaults
 	 *
+	 * @param   bool  $install  If coming from the installer true|false not form installer
+	 *
 	 * @return boolean|int
 	 */
-	public static function resetdb()
+	public static function resetdb($install = false)
 	{
 		$app = JFactory::getApplication();
-		$db  = JFactory::getDBO();
+		$db  = JFactory::getDbo();
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');
 		$path = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_biblestudy/install/sql';
 
 		$files = str_replace('.sql', '', JFolder::files($path, '\.sql$'));
 		$files = array_reverse($files, true);
+
+		if ($install == true)
+		{
+			foreach ($files as $a => $file)
+			{
+				if (strpos($file, 'uninstall') !== false)
+				{
+					unset($files[$a]);
+				}
+			}
+		}
 
 		foreach ($files as $value)
 		{
@@ -455,20 +470,33 @@ class JBSMDbHelper
 			// Process each query in the $queries array (split out of sql file).
 			foreach ($queries as $query)
 			{
-				if ($query = self::trimQuery($query))
+				$query = trim($query);
+
+				if ($query != '' && $query{0} != '#')
 				{
 					$db->setQuery($query);
 
 					if (!$db->execute())
 					{
-						$app->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'error');
+						$app->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', ' in ' . $value), 'error');
 
 						return false;
 					}
 				}
 			}
 		}
-		$app->enqueueMessage(JText::_('JBS_INS_RESETDB'), 'message');
+
+		// Remove old assets.
+		$query = $db->getQuery(true);
+		$query->delete('#__assets')
+			->where('name LIKE ' . $db->q('com_biblestudy.%'));
+		$db->setQuery($query);
+		$db->execute();
+
+		if (!$install)
+		{
+			$app->enqueueMessage(JText::_('JBS_INS_RESETDB'), 'message');
+		}
 
 		return true;
 	}
@@ -483,10 +511,8 @@ class JBSMDbHelper
 	public static function CleanStudyTopics()
 	{
 
-		$app = JFactory::getApplication();
-		$db  = JFactory::getDBO();
-
-
+		$app   = JFactory::getApplication();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('id')->from('#__bsms_studies');
 		$db->setQuery($query);
@@ -504,7 +530,11 @@ class JBSMDbHelper
 				foreach ($resulta AS $study_topics)
 				{
 					$query = $db->getQuery(true);
-					$query->select('id')->from('#__bsms_studytopics')->where('study_id = ' . $result->id)->where('topic_id = ' . $study_topics->topic_id)->order('id desc');
+					$query->select('id')
+						->from('#__bsms_studytopics')
+						->where('study_id = ' . $result->id)
+						->where('topic_id = ' . $study_topics->topic_id)
+						->order('id desc');
 					$db->setQuery($query);
 					$results = $db->loadObjectList();
 					$records = count($results);
@@ -516,8 +546,10 @@ class JBSMDbHelper
 							if ($t < $records)
 							{
 								$query = $db->getQuery(true);
-								$query->delete('#__bsms_studytopics')->where('id = ' . $id->id);
+								$query->delete('#__bsms_studytopics')
+									->where('id = ' . $id->id);
 								$db->setQuery($query);
+
 								if (!$db->execute())
 								{
 									$app->enqueueMessage('Error with Deleting duplicat topics record ' . $id->id, 'error');
@@ -534,39 +566,6 @@ class JBSMDbHelper
 				}
 			}
 		}
-	}
-
-
-
-	/**
-	 * Trim comment and blank lines out of a query string
-	 *
-	 * @param   string  $query  query string to be trimmed
-	 *
-	 * @return  string  String with leading comment lines removed
-	 *
-	 * @since   3.1
-	 */
-	public static  function trimQuery($query)
-	{
-		$query = trim($query);
-
-		while (substr($query, 0, 1) == '#' || substr($query, 0, 2) == '--' || substr($query, 0, 2) == '/*')
-		{
-			$endChars = (substr($query, 0, 1) == '#' || substr($query, 0, 2) == '--') ? "\n" : "*/";
-
-			if ($position = strpos($query, $endChars))
-			{
-				$query = trim(substr($query, $position + strlen($endChars)));
-			}
-			else
-			{
-				// If no newline, the rest of the file is a comment, so return an empty string.
-				return '';
-			}
-		}
-
-		return trim($query);
 	}
 
 }

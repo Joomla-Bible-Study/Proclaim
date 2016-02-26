@@ -1,26 +1,21 @@
 <?php
 /**
- * Joomla BibleStudy Podcast Plugin
- *
  * @package     BibleStudy
  * @subpackage  Plugin.JBSPodcast
- * @copyright   (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright   (C) 2007 - 2014 Joomla Bible Study Team All rights reserved
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        http://www.JoomlaBibleStudy.org
  * */
 defined('_JEXEC') or die;
 
-/* Import library dependencies */
-jimport('joomla.plugin.plugin');
-
 /**
- * Podcast plugin class
+ * JBSPodcast jPlugin class
  *
  * @package     BibleStudy
  * @subpackage  Plugin.JBSPodcast
  * @since       7.0.0
  */
-class PlgSystemJbspodcast extends JPlugin
+class PlgSystemJBSPodcast extends JPlugin
 {
 
 	/**
@@ -31,24 +26,29 @@ class PlgSystemJbspodcast extends JPlugin
 	 *                             Recognized key values include 'name', 'group', 'params', 'language'
 	 *                             (this list is not meant to be comprehensive).
 	 */
-	public function __construct(&$subject, $config)
+	public function __construct(& $subject, $config)
 	{
 
 		parent::__construct($subject, $config);
 
 		$this->loadLanguage();
-		$this->loadLanguage('com_biblestudy', JPATH_ADMINISTRATOR);
+
+		// Always load JBSM API if it exists.
+		$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+
+		if (file_exists($api))
+		{
+			require_once $api;
+		}
 	}
 
 	/**
-	 * Initialise
+	 * After Initialise system
 	 *
 	 * @return void
 	 */
 	public function onAfterInitialise()
 	{
-
-		JPluginHelper::getPlugin('system', 'jbspodcast');
 		$params = $this->params;
 
 		// First check to see what method of updating the podcast we are using
@@ -62,6 +62,7 @@ class PlgSystemJbspodcast extends JPlugin
 		{
 			$check = $this->checkdays($params);
 		}
+
 		if ($check)
 		{
 			// Perform the podcast and email and update time
@@ -70,19 +71,12 @@ class PlgSystemJbspodcast extends JPlugin
 			// Update the database to show a new time
 			$this->updatetime();
 
-			// Last we check to see if we need to email anything
+			// Check to see if we need to email anything
 			if ($params->get('email') > 0)
 			{
 				if ($params->get('email') > 1)
 				{
-					if (substr_count($dopodcast, 'not') || $dopodcast == false)
-					{
-						$iserror = 1;
-					}
-					else
-					{
-						$iserror = 0;
-					}
+					$iserror = substr_count($dopodcast, 'not');
 
 					if ($iserror)
 					{
@@ -100,9 +94,9 @@ class PlgSystemJbspodcast extends JPlugin
 	/**
 	 * Check Time
 	 *
-	 * @param   JRegistry  $params  ?
+	 * @param   object  $params  Plugin params
 	 *
-	 * @return boolean
+	 * @return boolean   True if Time is difference. False if not grater then now.
 	 */
 	public function checktime($params)
 	{
@@ -110,7 +104,8 @@ class PlgSystemJbspodcast extends JPlugin
 		$now   = time();
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
-		$query->select('timeset')->from('#__jbspodcast_timeset');
+		$query->select('timeset')
+			->from('#__jbspodcast_timeset');
 		$db->setQuery($query, 0, 1);
 		$result     = $db->loadObject();
 		$lasttime   = $result->timeset;
@@ -131,20 +126,21 @@ class PlgSystemJbspodcast extends JPlugin
 	/**
 	 * Check Days
 	 *
-	 * @param   JRegistry  $params  ?
+	 * @param   Joomla\Registry\Registry  $params  Plugin params
 	 *
-	 * @return boolean
+	 * @return boolean Check to see if to day is right.
 	 */
 	public function checkdays($params)
 	{
 		$checkdays = false;
-		$config    = & JFactory::getConfig();
+		$config    = JFactory::getConfig();
 		$offset    = $config->get('config.offset');
 
 		$now   = time();
 		$db    = JFactory::getDBO();
 		$query = $db->getQuery(true);
-		$query->select('timeset')->from('#__jbspodcast_timeset');
+		$query->select('timeset')
+			->from('#__jbspodcast_timeset');
 		$db->setQuery($query, 0, 1);
 		$result     = $db->loadObject();
 		$lasttime   = $result->timeset;
@@ -234,6 +230,20 @@ class PlgSystemJbspodcast extends JPlugin
 	}
 
 	/**
+	 * Do Podcast
+	 *
+	 * @return object
+	 */
+	public function doPodcast()
+	{
+		JLoader::register('JBSMPodcast', JPATH_SITE . '/components/com_biblestudy/lib/podcast.php');
+		$podcasts = new JBSMPodcast;
+		$result   = $podcasts->makePodcasts();
+
+		return $result;
+	}
+
+	/**
 	 * Update Time
 	 *
 	 * @return boolean
@@ -242,7 +252,9 @@ class PlgSystemJbspodcast extends JPlugin
 	{
 		$time  = time();
 		$db    = JFactory::getDBO();
-		$query = 'UPDATE #__jbspodcast_timeset SET `timeset` = ' . $time;
+		$query = $db->getQuery(true);
+		$query->update('#__jbspodcast_timeset')
+			->set('timeset = ' . $time);
 		$db->setQuery($query);
 		$db->execute();
 		$updateresult = $db->getAffectedRows();
@@ -258,24 +270,10 @@ class PlgSystemJbspodcast extends JPlugin
 	}
 
 	/**
-	 * Do Podcast
+	 * Send the Email
 	 *
-	 * @return object
-	 */
-	public function doPodcast()
-	{
-		JLoader::register('JBSMPodcast', JPATH_SITE . '/components/com_biblestudy/lib/biblestudy.podcast.class.php');
-		$podcasts = new JBSMPodcast;
-		$result   = $podcasts->makePodcasts();
-
-		return $result;
-	}
-
-	/**
-	 * Do Email
-	 *
-	 * @param   JRegistry  $params     ?
-	 * @param   object     $dopodcast  ?
+	 * @param   Joomla\Registry\Registry  $params     Plugin params
+	 * @param   object                    $dopodcast  ?
 	 *
 	 * @return void
 	 */
@@ -283,8 +281,6 @@ class PlgSystemJbspodcast extends JPlugin
 	{
 
 		$livesite = JURI::root();
-		$config   = JFactory::getConfig();
-		$fromname = $config->get('config.fromname');
 		jimport('joomla.filesystem.file');
 
 		$mail = JFactory::getMailer();
@@ -296,13 +292,11 @@ class PlgSystemJbspodcast extends JPlugin
 		$Body2    = $dopodcast;
 		$Body3    = $Body . $Body2;
 		$Subject  = $params->get('subject');
-		$FromName = $params->def('fromname', $fromname);
 
 		$recipients = explode(",", $params->get('recipients'));
 
 		foreach ($recipients AS $recipient)
 		{
-			$mail->filenameToType($FromName);
 			$mail->addRecipient($recipient);
 			$mail->setSubject($Subject . ' ' . $livesite);
 			$mail->setBody($Body3);

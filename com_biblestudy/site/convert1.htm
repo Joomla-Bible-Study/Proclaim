@@ -1,6 +1,9 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <title>File Size Converter</title>
     <!-- Script by hscripts.com -->
     <script type="text/javascript" language="javascript">
@@ -46,7 +49,7 @@
                 alert("Numbers only please.");
                 return false;
             } else {
-                window.opener.document.getElementById('jform_size').value = ss;
+                window.opener.document.getElementById('jform_params_size').value = ss;
                 window.close();
                 return true;
             }
@@ -58,7 +61,7 @@
         .style1 {
             font-family: Arial, Helvetica, sans-serif;
             font-weight: bold;
-            font-size: 14px
+            font-size: 14px;
         }
 
         -->
@@ -66,8 +69,6 @@
 </head>
 <body>
 <h2>File Size Converter</h2>
-<br>
-
 <div>
             <span class="style1">Enter the
                 size of your file and click "Convert" to easily convert your file to

@@ -3,12 +3,15 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
+use \Joomla\Registry\Registry;
+
 /**
  * class for Translated Helper
  *
@@ -25,9 +28,30 @@ class JBSMTranslated
 	public static $extension = 'com_biblestudy';
 
 	/**
+	 * Translate a list of topicItems to clear text each
+	 *
+	 * @param   array  $topicItems  array of stdClass containing topic_text and topic_params
+	 *
+	 * @return  array  list of topicItems containing translated strings in topic_text
+	 */
+	public static function getTopicItemsTranslated($topicItems = array())
+	{
+		$output = array();
+
+		foreach ($topicItems as $topicItem)
+		{
+			$text                  = self::getTopicItemTranslated($topicItem);
+			$topicItem->topic_text = $text;
+			$output[]              = $topicItem;
+		}
+
+		return $output;
+	}
+
+	/**
 	 * Translate a topicItem to clear text
 	 *
-	 * @param   object $topicItem  stdClass containing topic_text and topic_params
+	 * @param   object  $topicItem  stdClass containing topic_text and topic_params
 	 *
 	 * @return string|NULL  translated string or null if topicItem is not initialised
 	 */
@@ -37,7 +61,7 @@ class JBSMTranslated
 		if ($topicItem)
 		{
 			// First choice: evaluate language strings
-			$itemparams = new JRegistry;
+			$itemparams = new Registry;
 			$itemparams->loadString($topicItem->topic_params);
 			$currentLanguage = JFactory::getLanguage()->getTag();
 
@@ -78,30 +102,9 @@ class JBSMTranslated
 	}
 
 	/**
-	 * Translate a list of topicItems to clear text each
-	 *
-	 * @param   array $topicItems  array of stdClass containing topic_text and topic_params
-	 *
-	 * @return  array  list of topicItems containing translated strings in topic_text
-	 */
-	public static function getTopicItemsTranslated($topicItems = array())
-	{
-		$output = array();
-
-		foreach ($topicItems as $topicItem)
-		{
-			$text                  = self::getTopicItemTranslated($topicItem);
-			$topicItem->topic_text = $text;
-			$output[]              = $topicItem;
-		}
-
-		return $output;
-	}
-
-	/**
 	 * Translate a concatenated list of topics to clear text
 	 *
-	 * @param   object $topicItem  stdClass containing the studies id and tp_id (i.e. concatenated topic ids)
+	 * @param   object  $topicItem  stdClass containing the studies id and tp_id (i.e. concatenated topic ids)
 	 *
 	 * @return string:null  translated string with format '<text>[, <text>[, <text>]]' or null if topicItem is not initialised
 	 */

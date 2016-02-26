@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
+    <field name="id" type="text" default="0"/>
     <field name="published"
            type="list"
-           class="span12 small"
            id="published"
            label="JSTATUS"
            description="JFIELD_PUBLISHED_DESC"
-           size="1"
            default="1"
            filter="integer">
         <option value="1">
@@ -19,43 +18,22 @@
             JTRASHED
         </option>
     </field>
+    <field
+            name="type"
+            type="ServerType"
+            label="JBS_CMN_SERVER"
+            description="JBS_MED_SERVER_DESC"
+            class="inputbox"
+            required="true"
+            size="40" />
     <field name="server_name" type="text" label="JBS_SVR_SERVER_NAME"
            description="JBS_SVR_SERVER_NAME_DESC" size="50" required="true"/>
-    <field name="server_path" type="text" label="JBS_SVR_SERVER_PATH"
-           description="JBS_SVR_SERVER_PATH_DESC" size="75" required="true"/>
     <field name="rules" type="rules" label="JFIELD_RULES_LABEL"
            translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"
            section="server" validate="rules"/>
     <field name="asset_id" type="hidden" filter="unset"/>
-    <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
-           description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"
-           class="readonly"/>
-    <field name="type"
-           type="list"
-           label="JBS_SVR_FILEPATH_TYPE"
-           description="JBS_SVR_FILEPATH_TYPE_DESC"
-           class="inputbox"
-           size="1"
-           default="0">
-        <option value="0">JBS_SVR_FTYPE_LOCAL
-        </option>
-        <option value="1">JBS_SVR_FTYPE_3RDPARTY
-        </option>
-        <option value="2">JBS_SVR_FTYPE_3RDPARTY_FTP
-        </option>
-        <option value="3">JBS_SVR_FTYPE_AMAZON
-        </option>
-    </field>
-    <field name="ftphost" type="text" class="inputbox"
-           size="50" label="JBS_SVR_FTPHOST" description="JBS_SVR_FTPHOST_DESC"/>
-    <field name="ftpuser" type="text" class="inputbox"
-           size="50" label="JBS_SVR_FTPUSER" description="JBS_SVR_FTPUSER_DESC"/>
-    <field name="ftppassword" type="password" class="inputbox"
-           size="50" label="JBS_SVR_FTPPASSWORD" description="JBS_SVR_FTPPASSWORD_DESC"/>
-    <field name="ftpport" type="text" class="inputbox"
-           size="2" label="JBS_SVR_FTPPORT" description="JBS_SVR_FTPPORT_DESC"/>
-    <field name="aws_key" type="text" class="inputbox"
-           size="50" label="JBS_SVR_AWSKEY" description="JBS_SVR_AWSKEY_DESC"/>
-    <field name="aws_secret" type="password" class="inputbox"
-           size="50" label="JBS_SVR_AWSSECRET" description="JBS_SVR_AWSSECRET_DESC"/>
+
+    <!-- Server specific fields-->
+    <field name="params"/>
+    <field name="media"/>
 </form>

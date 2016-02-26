@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -13,7 +13,8 @@ defined('_JEXEC') or die;
 // Import library dependencies for database
 JLoader::register('InstallerModel', JPATH_ADMINISTRATOR . '/components/com_installer/models/extension.php');
 JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.script.php');
-jimport('joomla.application.component.modeladmin');
+use \Joomla\Registry\Registry;
+
 /**
  * Admin admin model class
  *
@@ -35,47 +36,6 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 * @var string
 	 */
 	protected $_context = 'com_biblestudy.discover';
-
-	/**
-	 * Method to auto-populate the model state.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @param   string  $ordering   ?
-	 * @param   string  $direction  ?
-	 *
-	 * @return  void
-	 *
-	 * @since    1.7.2
-	 */
-	protected function populateState($ordering = null, $direction = null)
-	{
-		$app = JFactory::getApplication();
-		$this->setState('message', $app->getUserState('com_biblestudy.message'));
-		$this->setState('extension_message', $app->getUserState('com_biblestudy.extension_message'));
-		$app->setUserState('com_biblestudy.message', '');
-		$app->setUserState('com_biblestudy.extension_message', '');
-		parent::populateState('name', 'asc');
-	}
-
-	/**
-	 * Prepare and sanitise the table data prior to saving.
-	 *
-	 * @param   JTable  $table  A JTable object.
-	 *
-	 * @return   void
-	 *
-	 * @since    1.6
-	 */
-	protected function prepareTable($table)
-	{
-
-		// Reorder the articles within the category so the new article is first
-		if (empty($table->id))
-		{
-			$table->id = 1;
-		}
-	}
 
 	/**
 	 * Returns a reference to the a Table object, always creating it.
@@ -115,23 +75,6 @@ class BiblestudyModelAdmin extends JModelAdmin
 	}
 
 	/**
-	 * Load Form Date
-	 *
-	 * @return object
-	 */
-	protected function loadFormData()
-	{
-		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.admin.data', array());
-
-		if (empty($data))
-		{
-			$data = $this->getItem();
-		}
-
-		return $data;
-	}
-
-	/**
 	 * Method to save the form data.
 	 *
 	 * @param   array  $data  The form data.
@@ -142,7 +85,6 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 */
 	public function save($data)
 	{
-		$app = JFactory::getApplication();
 
 		if (parent::save($data))
 		{
@@ -168,19 +110,52 @@ class BiblestudyModelAdmin extends JModelAdmin
 	}
 
 	/**
-	 * Custom clean the cache of com_biblestudy and biblestudy modules
+	 * Get Media Image
 	 *
-	 * @param   string   $group      The cache group
-	 * @param   integer  $client_id  The ID of the client
+	 * @todo may not be used
 	 *
-	 * @return  void
-	 *
-	 * @since    1.6
-	 */
-	protected function cleanCache($group = null, $client_id = 0)
+	 * @return void
+	public function getMediaImages()
 	{
-		parent::cleanCache('com_biblestudy');
-		parent::cleanCache('mod_biblestudy');
+		$mediafiles = $this->getMediaFiles();
+
+		$images = new stdClass;
+
+		foreach ($mediafiles as $mediafile)
+		{
+			$reg = new Registry;
+			$reg->loadString($mediafile->params);
+			$image = $mediafile->params->get('media_image');
+			$imagecount = substr_count($image,'png');
+		}
+	}
+	 *
+	 */
+
+	/**
+	 * Get Media Files
+	 *
+	 * @return mixed
+	 *
+	 * @todo not sure if this should be here.
+	 */
+	public function getMediaFiles()
+	{
+		$db              = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select('*');
+		$query->from('#__bsms_mediafiles');
+		$db->setQuery($query->__toString());
+		$mediafiles = $db->loadObjectList();
+
+		foreach ($mediafiles as $i => $mediafile)
+		{
+			$reg = new Registry;
+			$reg->loadString($mediafile->params);
+			$mediafiles[$i]->params = $reg;
+		}
+
+		return $mediafiles;
 	}
 
 	/**
@@ -200,7 +175,6 @@ class BiblestudyModelAdmin extends JModelAdmin
 		$installer = new Com_BiblestudyInstallerScript;
 		$installer->deleteUnexistingFiles();
 		$installer->fixMenus();
-		$installer->fixImagePaths();
 		$installer->fixemptyaccess();
 		$installer->fixemptylanguage();
 		$this->fixDefaultTextFilters();
@@ -229,36 +203,6 @@ class BiblestudyModelAdmin extends JModelAdmin
 		}
 
 		return $changeSet;
-	}
-
-	/**
-	 * Get Pagination state but is harde coded to be true right now.
-	 *
-	 * @return boolean
-	 */
-	public function getPagination()
-	{
-		return true;
-	}
-
-	/**
-	 * Get version from #__schemas table
-	 *
-	 * @return  mixed  the return value from the query, or null if the query fails
-	 *
-	 * @throws Exception
-	 */
-	public function getSchemaVersion()
-	{
-		$db              = JFactory::getDbo();
-		$query           = $db->getQuery(true);
-		$extensionresult = $this->getExtentionId();
-		$query->select('version_id')->from($db->qn('#__schemas'))
-			->where('extension_id = ' . $db->q($extensionresult));
-		$db->setQuery($query);
-		$result = $db->loadResult();
-
-		return $result;
 	}
 
 	/**
@@ -307,92 +251,25 @@ class BiblestudyModelAdmin extends JModelAdmin
 	}
 
 	/**
-	 * Get current version from #__extensions table
+	 * To retrieve component version
 	 *
-	 * @return  mixed   version if successful, false if fail
-	 */
-	public function getUpdateVersion()
-	{
-		$table = JTable::getInstance('Extension');
-		$table->load($this->getExtentionId());
-		$cache = new JRegistry($table->manifest_cache);
-
-		return $cache->get('version');
-	}
-
-	/**
-	 * Fix Joomla version in #__extensions table if wrong (doesn't equal JVersion short version)
+	 * @return string Version of component
 	 *
-	 * @return   mixed  string update version if success, false if fail
+	 * @since 1.7.3
 	 */
-	public function fixUpdateVersion()
+	public function getCompVersion()
 	{
-		$table = JTable::getInstance('Extension');
-		$table->load($this->getExtentionId());
-		$cache         = new JRegistry($table->manifest_cache);
-		$updateVersion = $cache->get('version');
+		$jversion = null;
+		$xml      = null;
+		$file     = JPATH_COMPONENT_ADMINISTRATOR . '/biblestudy.xml';
+		$xml      = simplexml_load_file($file, 'JXMLElement');
 
-		if ($updateVersion == $this->getCompVersion())
+		if ($xml)
 		{
-			return $updateVersion;
-		}
-		else
-		{
-			$cache->set('version', $this->getCompVersion());
-			$table->manifest_cache = $cache->toString();
-
-			if ($table->store())
-			{
-				return $this->getCompVersion();
-			}
-			else
-			{
-				return false;
-			}
-		}
-	}
-
-	/**
-	 * Check if com_biblestudy parameters are blank.
-	 *
-	 * @return  string  default text filters (if any)
-	 */
-	public function getDefaultTextFilters()
-	{
-		$table = JTable::getInstance('Extension');
-		$table->load($table->find(array('name' => 'com_biblestudy')));
-
-		return $table->params;
-	}
-
-	/**
-	 * Check if com_biblestudy parameters are blank. If so, populate with com_content text filters.
-	 *
-	 * @return  mixed  boolean true if params are updated, null otherwise
-	 */
-	public function fixDefaultTextFilters()
-	{
-		$table = JTable::getInstance('Extension');
-		$table->load($table->find(array('name' => 'com_biblestudy')));
-
-		// Check for empty $config and non-empty content filters
-		if (!$table->params)
-		{
-			// Get filters from com_content and store if you find them
-			$contentParams = JComponentHelper::getParams('com_biblestudy');
-
-			if ($contentParams->get('filters'))
-			{
-				$newParams = new JRegistry;
-				$newParams->set('filters', $contentParams->get('filters'));
-				$table->params = (string) $newParams;
-				$table->store();
-
-				return true;
-			}
+			$jversion = (string) $xml->version;
 		}
 
-		return false;
+		return $jversion;
 	}
 
 	/**
@@ -421,25 +298,211 @@ class BiblestudyModelAdmin extends JModelAdmin
 	}
 
 	/**
-	 * To retrieve component version
+	 * Get version from #__schemas table
 	 *
-	 * @return string Version of component
+	 * @return  mixed  the return value from the query, or null if the query fails
 	 *
-	 * @since 1.7.3
+	 * @throws Exception
 	 */
-	public function getCompVersion()
+	public function getSchemaVersion()
 	{
-		$jversion = null;
-		$xml      = null;
-		$file     = JPATH_COMPONENT_ADMINISTRATOR . '/biblestudy.xml';
-		$xml      = simplexml_load_file($file, 'JXMLElement');
+		$db              = JFactory::getDbo();
+		$query           = $db->getQuery(true);
+		$extensionresult = $this->getExtentionId();
+		$query->select('version_id')->from($db->qn('#__schemas'))
+			->where('extension_id = ' . $db->q($extensionresult));
+		$db->setQuery($query);
+		$result = $db->loadResult();
 
-		if ($xml)
+		return $result;
+	}
+
+	/**
+	 * Fix Joomla version in #__extensions table if wrong (doesn't equal JVersion short version)
+	 *
+	 * @return   mixed  string update version if success, false if fail
+	 */
+	public function fixUpdateVersion()
+	{
+		$table = JTable::getInstance('Extension');
+		$table->load($this->getExtentionId());
+		$cache         = new Registry($table->manifest_cache);
+		$updateVersion = $cache->get('version');
+
+		if ($updateVersion == $this->getCompVersion())
 		{
-			$jversion = (string) $xml->version;
+			return $updateVersion;
+		}
+		else
+		{
+			$cache->set('version', $this->getCompVersion());
+			$table->manifest_cache = $cache->toString();
+
+			if ($table->store())
+			{
+				return $this->getCompVersion();
+			}
+			else
+			{
+				return false;
+			}
+		}
+	}
+
+	/**
+	 * Check if com_biblestudy parameters are blank. If so, populate with com_content text filters.
+	 *
+	 * @return  mixed  boolean true if params are updated, null otherwise
+	 */
+	public function fixDefaultTextFilters()
+	{
+		$table = JTable::getInstance('Extension');
+		$table->load($table->find(array('name' => 'com_biblestudy')));
+
+		// Check for empty $config and non-empty content filters
+		if (!$table->params)
+		{
+			// Get filters from com_content and store if you find them
+			$contentParams = JComponentHelper::getParams('com_biblestudy');
+
+			if ($contentParams->get('filters'))
+			{
+				$newParams = new Registry;
+				$newParams->set('filters', $contentParams->get('filters'));
+				$table->params = (string) $newParams;
+				$table->store();
+
+				return true;
+			}
 		}
 
-		return $jversion;
+		return false;
+	}
+
+	/**
+	 * Get Pagination state but is hard coded to be true right now.
+	 *
+	 * @return boolean
+	 */
+	public function getPagination()
+	{
+		return true;
+	}
+
+	/**
+	 * Get current version from #__extensions table
+	 *
+	 * @return  mixed   version if successful, false if fail
+	 */
+	public function getUpdateVersion()
+	{
+		$table = JTable::getInstance('Extension');
+		$table->load($this->getExtentionId());
+		$cache = new Registry($table->manifest_cache);
+
+		return $cache->get('version');
+	}
+
+	/**
+	 * Check if com_biblestudy parameters are blank.
+	 *
+	 * @return  string  default text filters (if any)
+	 */
+	public function getDefaultTextFilters()
+	{
+		$table = JTable::getInstance('Extension');
+		$table->load($table->find(array('name' => 'com_biblestudy')));
+
+		return $table->params;
+	}
+
+	/**
+	 * Check for SermonSpeaker and PreachIt
+	 *
+	 * @return object
+	 */
+	public function getSSorPI()
+	{
+		$db    = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select('extension_id, name, element')->from('#__extensions');
+		$db->setQuery($query);
+
+		return $db->loadObjectList();
+	}
+
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @param   string  $ordering   ?
+	 * @param   string  $direction  ?
+	 *
+	 * @return  void
+	 *
+	 * @since    1.7.2
+	 */
+	protected function populateState($ordering = null, $direction = null)
+	{
+		$app = JFactory::getApplication();
+		$this->setState('message', $app->getUserState('com_biblestudy.message'));
+		$this->setState('extension_message', $app->getUserState('com_biblestudy.extension_message'));
+		$app->setUserState('com_biblestudy.message', '');
+		$app->setUserState('com_biblestudy.extension_message', '');
+		parent::populateState('name', 'asc');
+	}
+
+	/**
+	 * Prepare and sanitise the table data prior to saving.
+	 *
+	 * @param   JTable  $table  A JTable object.
+	 *
+	 * @return   void
+	 *
+	 * @since    1.6
+	 */
+	protected function prepareTable($table)
+	{
+
+		// Reorder the articles within the category so the new article is first
+		if (empty($table->id))
+		{
+			$table->id = 1;
+		}
+	}
+
+	/**
+	 * Load Form Date
+	 *
+	 * @return object
+	 */
+	protected function loadFormData()
+	{
+		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.admin.data', array());
+
+		if (empty($data))
+		{
+			$data = $this->getItem();
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Custom clean the cache of com_biblestudy and biblestudy modules
+	 *
+	 * @param   string   $group      The cache group
+	 * @param   integer  $client_id  The ID of the client
+	 *
+	 * @return  void
+	 *
+	 * @since    1.6
+	 */
+	protected function cleanCache($group = null, $client_id = 0)
+	{
+		parent::cleanCache('com_biblestudy');
+		parent::cleanCache('mod_biblestudy');
 	}
 
 }

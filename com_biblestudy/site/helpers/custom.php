@@ -3,14 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMElements', BIBLESTUDY_PATH_HELPERS . '/elements.php');
+use Joomla\Registry\Registry;
 
 /**
  * Class custom helper
@@ -18,26 +18,24 @@ JLoader::register('JBSMElements', BIBLESTUDY_PATH_HELPERS . '/elements.php');
  * @package  BibleStudy.Site
  * @since    8.0.0
  * */
-class JBSMCustom extends JBSMElements
+class JBSMCustom
 {
 	/**
 	 * Get Custom page
 	 *
-	 * @param   int       $rowid         ID of Row
-	 * @param   string    $custom        Custom String
-	 * @param   object    $row           Row info
-	 * @param   JRegistry $params        Params for intro
-	 * @param   object    $admin_params  Admin Params
-	 * @param   int       $template      Template ID
+	 * @param   int            $rowid     ID of Row
+	 * @param   string         $custom    Custom String
+	 * @param   object         $row       Row info
+	 * @param   Registry       $params    Params for intro
+	 * @param   TableTemplate  $template  Template ID
 	 *
 	 * @return object
 	 */
-	public function getCustom($rowid, $custom, $row, $params, $admin_params, $template)
+	public function getCustom($rowid, $custom, $row, $params, $template)
 	{
 		$isCustom = ($rowid == 24) ? true : false;
-		$elementid   = new stdClass;
 		$countbraces = substr_count($custom, '{');
-
+		$JBSMElements = new JBSMListing;
 		while ($countbraces > 0)
 		{
 			$bracebegin = strpos($custom, '{');
@@ -48,11 +46,11 @@ class JBSMCustom extends JBSMElements
 			{
 				$rowid = $this->getElementnumber($subcustom);
 			}
-			$elementid = $this->getElementid($rowid, $row, $params, $admin_params, $template);
-			$custom    = substr_replace($custom, $elementid->element, $bracebegin, (($braceend - $bracebegin) + 1));
+			$elementid = $JBSMElements->getElement($rowid, $row, $params, $template, $type = 0);
+			$custom    = substr_replace($custom, $elementid, $bracebegin, (($braceend - $bracebegin) + 1));
 			$countbraces--;
 		}
-		$elementid->element = $custom;
+		$elementid = $custom;
 		$elementid->id      = 'custom';
 
 		return $elementid;
@@ -61,7 +59,7 @@ class JBSMCustom extends JBSMElements
 	/**
 	 * Get Element Number.
 	 *
-	 * @param   int $rowid  Row ID
+	 * @param   int  $rowid  Row ID
 	 *
 	 * @return int
 	 */

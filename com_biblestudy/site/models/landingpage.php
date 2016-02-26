@@ -3,17 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.modellist');
-
-// --JLoader::register('JBSMTranslated' ,JPATH_COMPONENT_ADMINISTRATOR . '/helpers/translated.php');
-JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params.php');
+use Joomla\Registry\Registry;
 
 /**
  * Model class for LandingPage
@@ -27,7 +24,7 @@ class BiblestudyModelLandingpage extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config  An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
 	 * @see        JController
 	 * @since      1.6
@@ -56,8 +53,8 @@ class BiblestudyModelLandingpage extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string $ordering   An optional ordering field.
-	 * @param   string $direction  An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -67,6 +64,25 @@ class BiblestudyModelLandingpage extends JModelList
 	{
 		$order = $this->getUserStateFromRequest($this->context . '.filter.order', 'filter_orders');
 		$this->setState('filter.order', $order);
+
+		// Load the parameters.
+		$template = JBSMParams::getTemplateparams();
+		$admin    = JBSMParams::getAdmin();
+
+		$params = $template->params;
+
+		$t = $params->get('sermonsid');
+
+		if (!$t)
+		{
+			$input = new JInput;
+			$t     = $input->get('t', 1, 'int');
+		}
+
+		$template->id = $t;
+
+		$this->setState('template', $template);
+		$this->setState('admin', $admin);
 
 		parent::populateState('s.studydate', 'DESC');
 	}
@@ -83,21 +99,23 @@ class BiblestudyModelLandingpage extends JModelList
 		$db              = $this->getDbo();
 		$query           = $db->getQuery(true);
 		$template_params = JBSMParams::getTemplateparams();
-		$registry        = new JRegistry;
+		$registry        = new Registry;
 		$registry->loadString($template_params->params);
 		$t_params = $registry;
 
 		// Load the parameters. Merge Global and Menu Item params into new object
 		$app        = JFactory::getApplication('site');
+		/** @var Registry $params */
 		$params     = $app->getParams();
-		$menuparams = new JRegistry;
+		$this->setState('params', $params);
+		$menuparams = new Registry;
 		$menu       = $app->getMenu()->getActive();
 
 		if ($menu)
 		{
 			$menuparams->loadString($menu->params);
 		}
-		$query->select('list.select', 's.id');
+		$query->select("'list.select', 's.id'");
 		$query->from('#__bsms_studies as s');
 		$query->select('t.id as tid, t.teachername, t.title as teachertitle, t.language');
 		$query->join('LEFT', '#__bsms_teachers as t on s.teacher_id = t.id');

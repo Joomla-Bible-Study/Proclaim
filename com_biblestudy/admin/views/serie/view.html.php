@@ -3,12 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
+use Joomla\Registry\Registry;
 
 /**
  * JView class for Serie
@@ -18,6 +20,13 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewSerie extends JViewLegacy
 {
+
+	/**
+	 * Can Do
+	 *
+	 * @var object
+	 */
+	public $canDo;
 
 	/**
 	 * Form
@@ -34,30 +43,16 @@ class BiblestudyViewSerie extends JViewLegacy
 	protected $item;
 
 	/**
-	 * State
-	 *
-	 * @var object
-	 */
-	protected $state;
-
-	/**
 	 * Admin
 	 *
-	 * @var object
+	 * @var Registry
 	 */
-	protected $admin;
-
-	/**
-	 * Can Do
-	 *
-	 * @var object
-	 */
-	public $canDo;
+	protected $admin_params;
 
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 */
@@ -65,8 +60,11 @@ class BiblestudyViewSerie extends JViewLegacy
 	{
 		$this->form  = $this->get("Form");
 		$this->item  = $this->get("Item");
-		$this->state = $this->get("State");
 		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'serie');
+		$admin = JBSMParams::getAdmin();
+		$registry    = new Registry;
+		$registry->loadString($admin->params);
+		$this->admin_params = $registry;
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
@@ -98,7 +96,7 @@ class BiblestudyViewSerie extends JViewLegacy
 		JFactory::getApplication()->input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolBarHelper::title(JText::_('JBS_CMN_SERIES') . ': <small><small>[' . $title . ']</small></small>', 'series.png');
+		JToolBarHelper::title(JText::_('JBS_CMN_SERIES') . ': <small><small>[' . $title . ']</small></small>', 'tree tree');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_biblestudy'))
 		{

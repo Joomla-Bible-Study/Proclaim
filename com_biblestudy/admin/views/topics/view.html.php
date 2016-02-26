@@ -1,10 +1,9 @@
 <?php
-
 /**
- * JView html
+ * Topics html
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -19,6 +18,20 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewTopics extends JViewLegacy
 {
+
+	/**
+	 * Filter Levels
+	 *
+	 * @var array
+	 */
+	public $f_levels;
+
+	/**
+	 * Side Bar
+	 *
+	 * @var string
+	 */
+	public $sidebar;
 
 	/**
 	 * Items
@@ -49,23 +62,9 @@ class BiblestudyViewTopics extends JViewLegacy
 	protected $canDo;
 
 	/**
-	 * Filter Levels
-	 *
-	 * @var array
-	 */
-	public $f_levels;
-
-	/**
-	 * Side Bar
-	 *
-	 * @var string
-	 */
-	public $sidebar;
-
-	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -77,6 +76,7 @@ class BiblestudyViewTopics extends JViewLegacy
 		$items            = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
+
 		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'topic');
 
 		// Check for errors
@@ -109,10 +109,7 @@ class BiblestudyViewTopics extends JViewLegacy
 		{
 			$this->addToolbar();
 
-			if (BIBLESTUDY_CHECKREL)
-			{
-				$this->sidebar = JHtmlSidebar::render();
-			}
+			$this->sidebar = JHtmlSidebar::render();
 		}
 
 		// Set the document
@@ -131,43 +128,42 @@ class BiblestudyViewTopics extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JToolBarHelper::title(JText::_('JBS_CMN_TOPICS'), 'topics.png');
+		JToolBarHelper::title(JText::_('JBS_CMN_TOPICS'), 'tags tags');
 
 		if ($this->canDo->get('core.create'))
 		{
 			JToolBarHelper::addNew('topic.add');
 		}
+
 		if ($this->canDo->get('core.edit'))
 		{
 			JToolBarHelper::editList('topic.edit');
 		}
+
 		if ($this->canDo->get('core.edit.state'))
 		{
 			JToolBarHelper::divider();
 			JToolBarHelper::publishList('topics.publish');
 			JToolBarHelper::unpublishList('topics.unpublish');
+			JToolBarHelper::divider();
 			JToolBarHelper::archiveList('topics.archive', 'JTOOLBAR_ARCHIVE');
 		}
-        if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
-        {
-            JToolBarHelper::deleteList('', 'topics.delete', 'JTOOLBAR_EMPTY_TRASH');
-        }
+
+		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
+		{
+			JToolBarHelper::deleteList('', 'topics.delete', 'JTOOLBAR_EMPTY_TRASH');
+		}
 		elseif ($this->canDo->get('core.delete'))
 		{
 			JToolBarHelper::trash('topics.trash');
-
-
 		}
-		if (BIBLESTUDY_CHECKREL)
-		{
-			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=topics');
 
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
-				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
-			);
+		JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=topics');
 
-		}
+		JHtmlSidebar::addFilter(
+			JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
+			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
+		);
 	}
 
 	/**

@@ -3,13 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
 
 /**
  * View class for Mediafiles
@@ -19,27 +20,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewMediafiles extends JViewLegacy
 {
-
-	/**
-	 * Items
-	 *
-	 * @var array
-	 */
-	protected $items;
-
-	/**
-	 * Pagination
-	 *
-	 * @var array
-	 */
-	protected $pagination;
-
-	/**
-	 * State
-	 *
-	 * @var object
-	 */
-	protected $state;
 
 	/**
 	 * Media Types
@@ -70,9 +50,30 @@ class BiblestudyViewMediafiles extends JViewLegacy
 	public $sidebar;
 
 	/**
+	 * Items
+	 *
+	 * @var array
+	 */
+	protected $items;
+
+	/**
+	 * Pagination
+	 *
+	 * @var array
+	 */
+	protected $pagination;
+
+	/**
+	 * State
+	 *
+	 * @var object
+	 */
+	protected $state;
+
+	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -81,12 +82,17 @@ class BiblestudyViewMediafiles extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-
 		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
 		$this->mediatypes = $this->get('Mediatypes');
 		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'mediafile');
+
+		$this->filterForm    = $this->get('FilterForm');
+		$this->activeFilters = $this->get('ActiveFilters');
+
+		$this->sortDirection = $this->state->get('list.direction');
+		$this->sortColumn    = $this->state->get('list.ordering');
 
 		// Check for errors
 		if (count($errors = $this->get('Errors')))
@@ -116,10 +122,7 @@ class BiblestudyViewMediafiles extends JViewLegacy
 		{
 			$this->addToolbar();
 
-			if (BIBLESTUDY_CHECKREL)
-			{
-				$this->sidebar = JHtmlSidebar::render();
-			}
+			$this->sidebar = JHtmlSidebar::render();
 		}
 
 		// Set the document
@@ -142,23 +145,29 @@ class BiblestudyViewMediafiles extends JViewLegacy
 
 		// Get the toolbar object instance
 		$bar = JToolBar::getInstance('toolbar');
-		JToolBarHelper::title(JText::_('JBS_CMN_MEDIA_FILES'), 'mp3.png');
+
+		JToolBarHelper::title(JText::_('JBS_CMN_MEDIA_FILES'), 'video video');
 
 		if ($this->canDo->get('core.create'))
 		{
 			JToolBarHelper::addNew('mediafile.add');
 		}
+
 		if ($this->canDo->get('core.edit'))
 		{
 			JToolBarHelper::editList('mediafile.edit');
 		}
+
 		if ($this->canDo->get('core.edit.state'))
 		{
 			JToolBarHelper::divider();
 			JToolBarHelper::publishList('mediafiles.publish');
 			JToolBarHelper::unpublishList('mediafiles.unpublish');
-			JToolBarHelper::archiveList('mediafiles.archive', 'JTOOLBAR_ARCHIVE');
+			JToolBarHelper::divider();
+			JToolBarHelper::archiveList('mediafiles.archive');
+			JToolbarHelper::checkin('mediafiles.checkin');
 		}
+
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
 			JToolBarHelper::deleteList('', 'mediafiles.delete', 'JTOOLBAR_EMPTY_TRASH');
@@ -166,65 +175,22 @@ class BiblestudyViewMediafiles extends JViewLegacy
 		elseif ($this->canDo->get('core.edit.state'))
 		{
 			JToolBarHelper::trash('mediafiles.trash');
-			JToolBarHelper::divider();
 		}
 
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
-			if (BIBLESTUDY_CHECKREL)
-			{
-				JHtml::_('bootstrap.modal', 'collapseModal');
-			}
+			JToolBarHelper::divider();
+			JHtml::_('bootstrap.modal', 'collapseModal');
+
 			$title = JText::_('JBS_CMN_BATCH_LABLE');
 			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
 						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
 						$title</button>";
 			$bar->appendButton('Custom', $dhtml, 'batch');
 		}
-		if (BIBLESTUDY_CHECKREL)
-		{
-			include_once JPATH_COMPONENT . '/helpers/html/biblestudy.php';
 
-			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=mediafiles');
-
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
-				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
-			);
-
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_ACCESS'), 'filter_access',
-				JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
-			);
-
-			JHtmlSidebar::addFilter(
-				JText::_('JBS_MED_SELECT'),
-				'filter_mediaType',
-				JHtml::_('select.options', JBSMBiblestudyHelper::getMediaTypes(), 'value', 'text', $this->state->get('filter.mediaType'))
-			);
-
-			JHtmlSidebar::addFilter(
-				JText::_('JBS_MED_SELECT_YEAR'),
-				'filter_mediaYears',
-				JHtml::_('select.options', JBSMBiblestudyHelper::getMediaYears(), 'value', 'text', $this->state->get('filter.mediaYears'))
-			);
-			JHtmlSidebar::addFilter(
-				JText::_('JBS_FILTER_DOWNLOAD'),
-				'filter_download',
-				JHtml::_('select.options', JHtmlBiblestudy::Link_typelist(), 'value', 'text', $this->state->get('filter.download'))
-			);
-			JHtmlSidebar::addFilter(
-				JText::_('JBS_CMS_FILTER_PLAYER'),
-				'filter_player',
-				JHtml::_('select.options', JHtmlBiblestudy::playerlist(), 'value', 'text', $this->state->get('filter.player'))
-			);
-			JHtmlSidebar::addFilter(
-				JText::_('JBS_CMN_FILTER_POPUP'),
-				'filter_popup',
-				JHtml::_('select.options', JHtmlBiblestudy::popuplist(), 'value', 'text', $this->state->get('filter.popup'))
-			);
-		}
+		include_once JPATH_COMPONENT . '/helpers/html/biblestudy.php';
 	}
 
 	/**

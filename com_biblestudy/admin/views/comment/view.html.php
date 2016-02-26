@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -18,6 +18,13 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewComment extends JViewLegacy
 {
+
+	/**
+	 * Can Do
+	 *
+	 * @var object
+	 */
+	public $canDo;
 
 	/**
 	 * Form Data
@@ -41,16 +48,9 @@ class BiblestudyViewComment extends JViewLegacy
 	protected $state;
 
 	/**
-	 * Can Do
-	 *
-	 * @var object
-	 */
-	public $canDo;
-
-	/**
 	 * Display the view
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a Error object.
 	 */
@@ -90,7 +90,7 @@ class BiblestudyViewComment extends JViewLegacy
 		JFactory::getApplication()->input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolBarHelper::title(JText::_('JBS_CMN_COMMENTS') . ': <small><small>[ ' . $title . ' ]</small></small>', 'comments.png');
+		JToolBarHelper::title(JText::_('JBS_CMN_COMMENTS') . ': <small><small>[ ' . $title . ' ]</small></small>', 'comment comment');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_biblestudy'))
 		{

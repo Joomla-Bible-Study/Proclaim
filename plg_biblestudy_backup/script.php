@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -11,13 +11,13 @@
 defined('_JEXEC') or die;
 
 /**
- * Script file of JBSBACKUP component
+ * Script file of JBSBackup component
  *
  * @package     BibleStudy
  * @subpackage  Plugin.JBSBackup
  * @since       7.1.0
  */
-class plgSystemjbsbackupInstallerScript
+class PlgSystemJBSBackupInstallerScript
 {
 	/** @var  string If it is 7.0.0 code */
 	public $is700;
@@ -25,7 +25,7 @@ class plgSystemjbsbackupInstallerScript
 	/**
 	 * method to install the component
 	 *
-	 * @param   string $parent  is the class calling this method
+	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
 	 */
@@ -37,24 +37,27 @@ class plgSystemjbsbackupInstallerScript
 	/**
 	 * method to uninstall the component
 	 *
-	 * @param   string $parent  is the class calling this method
+	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
 	 */
 	public function uninstall($parent)
 	{
+		// $parent is the class calling this method
 		echo '<p>' . JText::_('JBS_PLG_BACKUP_UNINSTALL_TEXT') . '</p>';
 	}
 
 	/**
 	 * method to update the component
 	 *
-	 * @param   string $parent  is the class calling this method
+	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
 	 */
 	public function update($parent)
 	{
+		// $parent is the class calling this method
+		// check to see if we are dealing with version 7.0.0 and create the update table if needed
 		$db = JFactory::getDBO();
 
 		// First see if there is an update table
@@ -92,8 +95,8 @@ class plgSystemjbsbackupInstallerScript
 	/**
 	 * method to run before an install/update/uninstall method
 	 *
-	 * @param   string $type    is the type of change (install, update or discover_install)
-	 * @param   string $parent  is the class calling this method
+	 * @param   string  $type    is the type of change (install, update or discover_install)
+	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
 	 */
@@ -104,8 +107,8 @@ class plgSystemjbsbackupInstallerScript
 	/**
 	 * method to run after an install/update/uninstall method
 	 *
-	 * @param   string $type    is the type of change (install, update or discover_install)
-	 * @param   string $parent  is the class calling this method
+	 * @param   string  $type    is the type of change (install, update or discover_install)
+	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
 	 */

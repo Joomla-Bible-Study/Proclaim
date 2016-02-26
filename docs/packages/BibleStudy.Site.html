@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
 <meta charset="utf-8">
-<title>Joomla Bible Study API » BibleStudy\Site</title>
+<title>Joomla Bible Study API » BibleStudy.Site</title>
 <meta name="author" content="Mike van Riel">
 <meta name="description" content="">
 <link href="../css/template.css" rel="stylesheet" media="all">
@@ -21,8 +21,9 @@
                                     API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a>Packages</a></li>
 <li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
-<li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
-<li><a href="../packages/Joomla.html"><i class="icon-folder-open"></i> Joomla</a></li>
+<li><a href="../packages/BibleStudy.Admin.html"><i class="icon-folder-open"></i> BibleStudy.Admin</a></li>
+<li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
 <li><a href="../packages/LiveUpdate.html"><i class="icon-folder-open"></i> LiveUpdate</a></li>
 <li><a href="../packages/SefExt.html"><i class="icon-folder-open"></i> SefExt</a></li>
 </ul>
@@ -35,18 +36,11 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">2</span></a></li>
+                <span class="label label-info">3</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
-                <ul>
-<li>todo 
-                <span class="label label-info">38</span>
-</li>
-<li>fixme 
-                <span class="label label-info">1</span>
-</li>
-</ul></a></li>
+                <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
-                <span class="label label-info">12</span></a></li>
+                <span class="label label-info">18</span></a></li>
 </ul>
 </li>
 </ul></div>
@@ -67,93 +61,82 @@
 <li class="nav-header">
 <i class="icon-map-marker"></i> Packages</li>
 <li>
-<a href="../packages/BibleStudy.Site.html" title="Site"><i class="icon-folder-open"></i>Site</a><ul class="nav nav-list nav-packages">
-<li>
+<a href="../packages/BibleStudy.Site.html" title="BibleStudy.Site"><i class="icon-folder-open"></i>BibleStudy.Site</a><ul class="nav nav-list nav-packages"><li>
 <a href="../packages/BibleStudy.Site.Form.html" title="Form"><i class="icon-folder-open"></i>Form</a><ul class="nav nav-list nav-packages"></ul>
-</li>
-<li>
-<span class="empty-package"><i class="icon-folder-close"></i>sh404SEF</span><ul class="nav nav-list nav-packages"><li>
-<span class="empty-package"><i class="icon-folder-close"></i>BibleStudy</span><ul class="nav nav-list nav-packages"></ul>
 </li></ul>
-</li>
-</ul>
 </li>
 <li class="nav-header">
 <i class="icon-custom icon-class"></i> Classes</li>
+<li><a href="#BiblestudyViewLandingpage" title="Landing page list view class">BiblestudyViewLandingpage</a></li>
+<li><a href="#BiblestudyViewMessagelist" title="View class for Messages">BiblestudyViewMessagelist</a></li>
+<li><a href="#BiblestudyViewTeachers" title="View class for Teachers">BiblestudyViewTeachers</a></li>
 <li><a href="#BiblestudyController" title="Controller for Core BibleStudy">BiblestudyController</a></li>
-<li><a href="#BiblestudyControllerMediafileform" title="Controller class for MediaFile">BiblestudyControllerMediafileform</a></li>
-<li><a href="#BiblestudyControllerMediafilelist" title="Controller for MediaFiles">BiblestudyControllerMediafilelist</a></li>
-<li><a href="#BiblestudyControllerMessagelist" title="Controller for MediaFiles">BiblestudyControllerMessagelist</a></li>
-<li><a href="#BiblestudyControllerSeriesdisplay" title="Controller for Seriesdisplay">BiblestudyControllerSeriesdisplay</a></li>
-<li><a href="#BiblestudyControllerTeachers" title="Controller for Teachers">BiblestudyControllerTeachers</a></li>
-<li><a href="#BiblestudyControllerSermon" title="Class for Sermon">BiblestudyControllerSermon</a></li>
-<li><a href="#BiblestudyControllerSermons" title="Controller class for Sermons">BiblestudyControllerSermons</a></li>
-<li><a href="#BiblestudyControllerTeacher" title="Controller class for Teacher">BiblestudyControllerTeacher</a></li>
-<li><a href="#BiblestudyControllerTeachers" title="Controller for Teachers">BiblestudyControllerTeachers</a></li>
-<li><a href="#ShowScripture" title="Scripture Show class.">ShowScripture</a></li>
-<li><a href="#JBSMCustom" title="Class custom helper">JBSMCustom</a></li>
+<li><a href="#BiblestudyViewMediafilelist" title="View class for MediaFilelist">BiblestudyViewMediafilelist</a></li>
 <li><a href="#JBSMElements" title="Class for Elements">JBSMElements</a></li>
 <li><a href="#JHtmlIcon" title="Content Component HTML Helper">JHtmlIcon</a></li>
-<li><a href="#JBSMLanding" title="Class for JBSMLanding">JBSMLanding</a></li>
-<li><a href="#JBSMMediaHelper" title="class for Media Helper">JBSMMediaHelper</a></li>
-<li><a href="#PodcastSubscribe" title="A helper to return buttons for podcast subscriptions">PodcastSubscribe</a></li>
-<li><a href="#RelatedStudies" title="helper to get related studies to the current one">RelatedStudies</a></li>
-<li><a href="#JBSMHelperRoute" title="Biblestudy Component Route Helper">JBSMHelperRoute</a></li>
-<li><a href="#JBSMSerieslist" title="Class for Series List">JBSMSerieslist</a></li>
-<li><a href="#JBSMTeacher" title="Class for Teachers Helper">JBSMTeacher</a></li>
-<li><a href="#JBSMUpload" title="JBS Upload class">JBSMUpload</a></li>
-<li><a href="#Dump_File" title="BibleStudy Download Class">Dump_File</a></li>
-<li><a href="#JBSMImages" title="BibleStudy images class">JBSMImages</a></li>
-<li><a href="#JBSMListing" title="BibleStudy listing class">JBSMListing</a></li>
-<li><a href="#jbsMedia" title="Joomla! Bible Study Media class.">jbsMedia</a></li>
-<li><a href="#JBSPagebuilder" title="Class to build page elements in use by custom template files">JBSPagebuilder</a></li>
-<li><a href="#JBSMPodcast" title="BibleStudy Podcast Class">JBSMPodcast</a></li>
-<li><a href="#JFormFieldDocman" title="Virtuemart Category List Form Field class for the Joomla Bible Study component">JFormFieldDocman</a></li>
-<li><a href="#JFormFieldModal_Article" title="Supports a modal article picker.">JFormFieldModal_Article</a></li>
-<li><a href="#JFormFieldModal_Study" title="Field Modal class for Sutdy">JFormFieldModal_Study</a></li>
+<li><a href="#BiblestudyModelMediaplayer" title="Model class for MediaPlayer">BiblestudyModelMediaplayer</a></li>
 <li><a href="#JFormFieldModal_studydetails" title="Supports a modal study picker.">JFormFieldModal_studydetails</a></li>
+<li><a href="#JFormFieldModal_Study" title="Field Modal class for Sutdy">JFormFieldModal_Study</a></li>
+<li><a href="#BiblestudyModelMessageform" title="Model class for Message">BiblestudyModelMessageform</a></li>
+<li><a href="#JFormFieldDocman" title="Virtuemart Category List Form Field class for the Joomla Bible Study component">JFormFieldDocman</a></li>
+<li><a href="#JBSMListing" title="BibleStudy listing class">JBSMListing</a></li>
+<li><a href="#JBSMImages" title="BibleStudy images class">JBSMImages</a></li>
+<li><a href="#BiblestudyControllerMediafilelist" title="Controller for MediaFiles">BiblestudyControllerMediafilelist</a></li>
+<li><a href="#JBSMRelatedStudies" title="helper to get related studies to the current one">JBSMRelatedStudies</a></li>
+<li><a href="#JBSMPageBuilder" title="Class to build page elements in use by custom template files">JBSMPageBuilder</a></li>
+<li><a href="#JBSMMedia" title="class for Media Helper">JBSMMedia</a></li>
+<li><a href="#BiblestudyModelSeriesdisplay" title="Model class for SeriesDisplay">BiblestudyModelSeriesdisplay</a></li>
+<li><a href="#JBSMPodcast" title="BibleStudy Podcast Class">JBSMPodcast</a></li>
+<li><a href="#BiblestudyControllerMediafileform" title="Controller class for MediaFile">BiblestudyControllerMediafileform</a></li>
+<li><a href="#JBSMTeacher" title="Class for Teachers Helper">JBSMTeacher</a></li>
+<li><a href="#BiblestudyControllerMessagelist" title="Controller class for Messages">BiblestudyControllerMessagelist</a></li>
+<li><a href="#BiblestudyModelSermons" title="Model class for Sermons">BiblestudyModelSermons</a></li>
+<li><a href="#JBSMPodcastSubscribe" title="A helper to return buttons for podcast subscriptions">JBSMPodcastSubscribe</a></li>
+<li><a href="#BiblestudyModelLandingpage" title="Model class for LandingPage">BiblestudyModelLandingpage</a></li>
+<li><a href="#JBSMShowScripture" title="Scripture Show class.">JBSMShowScripture</a></li>
+<li><a href="#BiblestudyModelMediafileform" title="Model class for MediaFile">BiblestudyModelMediafileform</a></li>
+<li><a href="#BiblestudyModelTeacher" title="Model class for Teacher">BiblestudyModelTeacher</a></li>
+<li><a href="#JBSMCustom" title="Class custom helper">JBSMCustom</a></li>
+<li><a href="#BiblestudyControllerSeriesdisplay" title="Controller for Seriesdisplay">BiblestudyControllerSeriesdisplay</a></li>
+<li><a href="#BiblestudyControllerSermon" title="Class for Sermon">BiblestudyControllerSermon</a></li>
+<li><a href="#JBSMUpload" title="JBS Upload class">JBSMUpload</a></li>
+<li><a href="#BiblestudyViewMessageform" title="View class for Message">BiblestudyViewMessageform</a></li>
+<li><a href="#BiblestudyModelMessagelist" title="Model class for MessageList">BiblestudyModelMessagelist</a></li>
+<li><a href="#BiblestudyControllerTeachers" title="Controller for Teachers">BiblestudyControllerTeachers</a></li>
 <li><a href="#JFormFieldTopicslist" title="Topics List Form Field class for the Joomla Bible Study component
 Displays a topics list of ALL published topics">JFormFieldTopicslist</a></li>
-<li><a href="#JFormFieldVirtuemart" title="Virtuemart Category List Form Field class for the Joomla Bible Study component">JFormFieldVirtuemart</a></li>
-<li><a href="#BiblestudyModelLandingpage" title="Model class for LandingPage">BiblestudyModelLandingpage</a></li>
-<li><a href="#BiblestudyModelMediafileform" title="Model class for MediaFile">BiblestudyModelMediafileform</a></li>
+<li><a href="#BiblestudyViewSermon" title="View class for Sermon">BiblestudyViewSermon</a></li>
+<li><a href="#BiblestudyControllerTeacher" title="Controller class for Teacher">BiblestudyControllerTeacher</a></li>
+<li><a href="#BiblestudyViewSermons" title="View for Sermons class">BiblestudyViewSermons</a></li>
+<li><a href="#BiblestudyViewMediafileform" title="View class for MediaFile">BiblestudyViewMediafileform</a></li>
+<li><a href="#JBSMDownload" title="BibleStudy Download Class">JBSMDownload</a></li>
+<li><a href="#BiblestudyViewTerms" title="View class for Terms">BiblestudyViewTerms</a></li>
+<li><a href="#BiblestudyControllerSermons" title="Controller class for Sermons">BiblestudyControllerSermons</a></li>
+<li><a href="#BiblestudyViewLatest" title="View class for Latest">BiblestudyViewLatest</a></li>
+<li><a href="#JBSMLanding" title="Class for JBSMLanding">JBSMLanding</a></li>
+<li><a href="#BiblestudyViewSeriesdisplays" title="View class for SeriesDisplays">BiblestudyViewSeriesdisplays</a></li>
 <li><a href="#BiblestudyModelMediafilelist" title="Model class for MediaFiles">BiblestudyModelMediafilelist</a></li>
-<li><a href="#BiblestudyModelMediaplayer" title="Model class for MediaPlayer">BiblestudyModelMediaplayer</a></li>
-<li><a href="#BiblestudyModelMessageform" title="Model class for Message">BiblestudyModelMessageform</a></li>
-<li><a href="#BiblestudyModelMessagelist" title="Model class for MessageList">BiblestudyModelMessagelist</a></li>
-<li><a href="#BiblestudyModelSeriesdisplay" title="Model class for SeriesDisplay">BiblestudyModelSeriesdisplay</a></li>
+<li><a href="#JBSMHelperRoute" title="Biblestudy Component Route Helper">JBSMHelperRoute</a></li>
 <li><a href="#BiblestudyModelSeriesdisplays" title="Model class for SeriesDisplays">BiblestudyModelSeriesdisplays</a></li>
 <li><a href="#BiblestudyModelSermon" title="Model class for Sermon">BiblestudyModelSermon</a></li>
-<li><a href="#BiblestudyModelSermons" title="Model class for Sermons">BiblestudyModelSermons</a></li>
-<li><a href="#BiblestudyModelTeacher" title="Model class for Teacher">BiblestudyModelTeacher</a></li>
 <li><a href="#BiblestudyModelTeachers" title="Model class for Teachers">BiblestudyModelTeachers</a></li>
-<li><a href="#BiblestudyViewLandingpage" title="Landing page list view class">BiblestudyViewLandingpage</a></li>
-<li><a href="#BiblestudyViewLatest" title="View class for Latest">BiblestudyViewLatest</a></li>
-<li><a href="#BiblestudyViewMediafileform" title="View class for MediaFile">BiblestudyViewMediafileform</a></li>
-<li><a href="#BiblestudyViewMediafilelist" title="View class for MediaFilelist">BiblestudyViewMediafilelist</a></li>
-<li><a href="#BiblestudyViewMessageform" title="View class for Message">BiblestudyViewMessageform</a></li>
-<li><a href="#BiblestudyViewMessagelist" title="View class for Messages">BiblestudyViewMessagelist</a></li>
+<li><a href="#JFormFieldVirtuemart" title="Virtuemart Category List Form Field class for the Joomla Bible Study component">JFormFieldVirtuemart</a></li>
 <li><a href="#BiblestudyViewPopup" title="View class for Popup">BiblestudyViewPopup</a></li>
+<li><a href="#JBSMSerieslist" title="Class for Series List">JBSMSerieslist</a></li>
 <li><a href="#BiblestudyViewSeriesdisplay" title="View class for SeriesDisplay">BiblestudyViewSeriesdisplay</a></li>
-<li><a href="#BiblestudyViewSeriesdisplays" title="View class for SeriesDisplays">BiblestudyViewSeriesdisplays</a></li>
-<li><a href="#BiblestudyViewSermon" title="View class for Sermon">BiblestudyViewSermon</a></li>
-<li><a href="#BiblestudyViewSermons" title="View for Sermons class">BiblestudyViewSermons</a></li>
 <li><a href="#BiblestudyViewSqueezeBox" title="View for SqueezeBox class">BiblestudyViewSqueezeBox</a></li>
 <li><a href="#BiblestudyViewTeacher" title="View class for Teacher">BiblestudyViewTeacher</a></li>
-<li><a href="#BiblestudyViewTeachers" title="View class for Teachers">BiblestudyViewTeachers</a></li>
-<li><a href="#BiblestudyViewTerms" title="View class for Terms">BiblestudyViewTerms</a></li>
+<li><a href="#BiblestudyControllerTeachers" title="Controller for Teachers">BiblestudyControllerTeachers</a></li>
+<li><a href="#JFormFieldModal_Article" title="Supports a modal article picker.">JFormFieldModal_Article</a></li>
 <li class="nav-header">
 <i class="icon-custom icon-constant"></i> Constants</li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_CHECKREL" title="BIBLESTUDY_CHECKREL :: "><span class="description">BIBLESTUDY_CHECKREL</span><pre>BIBLESTUDY_CHECKREL</pre></a></li>
-<li class="constant  "><a href="#constant_JBSPAGETITLE" title="JBSPAGETITLE :: "><span class="description">JBSPAGETITLE</span><pre>JBSPAGETITLE</pre></a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_CHECKREL" title="BIBLESTUDY_CHECKREL() :: "><span class="description">BIBLESTUDY_CHECKREL</span><pre>BIBLESTUDY_CHECKREL</pre></a></li>
+<li class="constant  "><a href="#constant_JBSPAGETITLE" title="JBSPAGETITLE() :: "><span class="description">JBSPAGETITLE</span><pre>JBSPAGETITLE</pre></a></li>
 </ul>
 </div>
 <div class="span8 package-contents">
 <ul class="breadcrumb"><li>
-<a href="../index.html"><i class="icon-folder-open"></i></a><span class="divider">\</span><li><a href="../packages/BibleStudy.html">BibleStudy</a></li>
-<li class="active">
-<span class="divider">\</span><a href="../packages/BibleStudy.Site.html">Site</a>
-</li>
+<a href="../index.html"><i class="icon-folder-open"></i></a><span class="divider">\</span><li class="active"><a href="../packages/BibleStudy.Site.html">BibleStudy.Site</a></li>
 </li></ul>
 <div class="package-indent">
 <h3>
@@ -182,7 +165,7 @@ Displays a topics list of ALL published topics">JFormFieldTopicslist</a></li>
 <div id="BiblestudyControllerMessagelist" class="element ajax clickable class">
 <h1>BiblestudyControllerMessagelist<a href="../classes/BiblestudyControllerMessagelist.html">¶</a>
 </h1>
-<p class="short_description">Controller for MediaFiles</p>
+<p class="short_description">Controller class for Messages</p>
 <div class="details collapse"></div>
 <a href="../classes/BiblestudyControllerMessagelist.html" class="more">« More »</a>
 </div>
@@ -417,13 +400,6 @@ Displays a topics list of ALL published topics">JFormFieldTopicslist</a></li>
 <div class="details collapse"></div>
 <a href="../classes/BiblestudyViewTerms.html" class="more">« More »</a>
 </div>
-<div id="Dump_File" class="element ajax clickable class">
-<h1>Dump_File<a href="../classes/Dump_File.html">¶</a>
-</h1>
-<p class="short_description">BibleStudy Download Class</p>
-<div class="details collapse"></div>
-<a href="../classes/Dump_File.html" class="more">« More »</a>
-</div>
 <div id="JBSMCustom" class="element ajax clickable class">
 <h1>JBSMCustom<a href="../classes/JBSMCustom.html">¶</a>
 </h1>
@@ -431,19 +407,19 @@ Displays a topics list of ALL published topics">JFormFieldTopicslist</a></li>
 <div class="details collapse"></div>
 <a href="../classes/JBSMCustom.html" class="more">« More »</a>
 </div>
+<div id="JBSMDownload" class="element ajax clickable class">
+<h1>JBSMDownload<a href="../classes/JBSMDownload.html">¶</a>
+</h1>
+<p class="short_description">BibleStudy Download Class</p>
+<div class="details collapse"></div>
+<a href="../classes/JBSMDownload.html" class="more">« More »</a>
+</div>
 <div id="JBSMElements" class="element ajax clickable class">
 <h1>JBSMElements<a href="../classes/JBSMElements.html">¶</a>
 </h1>
 <p class="short_description">Class for Elements</p>
 <div class="details collapse"></div>
 <a href="../classes/JBSMElements.html" class="more">« More »</a>
-</div>
-<div id="JBSMHelperRoute" class="element ajax clickable class">
-<h1>JBSMHelperRoute<a href="../classes/JBSMHelperRoute.html">¶</a>
-</h1>
-<p class="short_description">Biblestudy Component Route Helper</p>
-<div class="details collapse"></div>
-<a href="../classes/JBSMHelperRoute.html" class="more">« More »</a>
 </div>
 <div id="JBSMImages" class="element ajax clickable class">
 <h1>JBSMImages<a href="../classes/JBSMImages.html">¶</a>
@@ -466,12 +442,19 @@ Displays a topics list of ALL published topics">JFormFieldTopicslist</a></li>
 <div class="details collapse"></div>
 <a href="../classes/JBSMListing.html" class="more">« More »</a>
 </div>
-<div id="JBSMMediaHelper" class="element ajax clickable class">
-<h1>JBSMMediaHelper<a href="../classes/JBSMMediaHelper.html">¶</a>
+<div id="JBSMMedia" class="element ajax clickable class">
+<h1>JBSMMedia<a href="../classes/JBSMMedia.html">¶</a>
 </h1>
 <p class="short_description">class for Media Helper</p>
 <div class="details collapse"></div>
-<a href="../classes/JBSMMediaHelper.html" class="more">« More »</a>
+<a href="../classes/JBSMMedia.html" class="more">« More »</a>
+</div>
+<div id="JBSMPageBuilder" class="element ajax clickable class">
+<h1>JBSMPageBuilder<a href="../classes/JBSMPageBuilder.html">¶</a>
+</h1>
+<p class="short_description">Class to build page elements in use by custom template files</p>
+<div class="details collapse"></div>
+<a href="../classes/JBSMPageBuilder.html" class="more">« More »</a>
 </div>
 <div id="JBSMPodcast" class="element ajax clickable class">
 <h1>JBSMPodcast<a href="../classes/JBSMPodcast.html">¶</a>
@@ -480,12 +463,40 @@ Displays a topics list of ALL published topics">JFormFieldTopicslist</a></li>
 <div class="details collapse"></div>
 <a href="../classes/JBSMPodcast.html" class="more">« More »</a>
 </div>
+<div id="JBSMPodcastSubscribe" class="element ajax clickable class">
+<h1>JBSMPodcastSubscribe<a href="../classes/JBSMPodcastSubscribe.html">¶</a>
+</h1>
+<p class="short_description">A helper to return buttons for podcast subscriptions</p>
+<div class="details collapse"></div>
+<a href="../classes/JBSMPodcastSubscribe.html" class="more">« More »</a>
+</div>
+<div id="JBSMRelatedStudies" class="element ajax clickable class">
+<h1>JBSMRelatedStudies<a href="../classes/JBSMRelatedStudies.html">¶</a>
+</h1>
+<p class="short_description">helper to get related studies to the current one</p>
+<div class="details collapse"></div>
+<a href="../classes/JBSMRelatedStudies.html" class="more">« More »</a>
+</div>
+<div id="JBSMHelperRoute" class="element ajax clickable class">
+<h1>JBSMHelperRoute<a href="../classes/JBSMHelperRoute.html">¶</a>
+</h1>
+<p class="short_description">Biblestudy Component Route Helper</p>
+<div class="details collapse"></div>
+<a href="../classes/JBSMHelperRoute.html" class="more">« More »</a>
+</div>
 <div id="JBSMSerieslist" class="element ajax clickable class">
 <h1>JBSMSerieslist<a href="../classes/JBSMSerieslist.html">¶</a>
 </h1>
 <p class="short_description">Class for Series List</p>
 <div class="details collapse"></div>
 <a href="../classes/JBSMSerieslist.html" class="more">« More »</a>
+</div>
+<div id="JBSMShowScripture" class="element ajax clickable class">
+<h1>JBSMShowScripture<a href="../classes/JBSMShowScripture.html">¶</a>
+</h1>
+<p class="short_description">Scripture Show class.</p>
+<div class="details collapse"></div>
+<a href="../classes/JBSMShowScripture.html" class="more">« More »</a>
 </div>
 <div id="JBSMTeacher" class="element ajax clickable class">
 <h1>JBSMTeacher<a href="../classes/JBSMTeacher.html">¶</a>
@@ -500,13 +511,6 @@ Displays a topics list of ALL published topics">JFormFieldTopicslist</a></li>
 <p class="short_description">JBS Upload class</p>
 <div class="details collapse"></div>
 <a href="../classes/JBSMUpload.html" class="more">« More »</a>
-</div>
-<div id="JBSPagebuilder" class="element ajax clickable class">
-<h1>JBSPagebuilder<a href="../classes/JBSPagebuilder.html">¶</a>
-</h1>
-<p class="short_description">Class to build page elements in use by custom template files</p>
-<div class="details collapse"></div>
-<a href="../classes/JBSPagebuilder.html" class="more">« More »</a>
 </div>
 <div id="JFormFieldDocman" class="element ajax clickable class">
 <h1>JFormFieldDocman<a href="../classes/JFormFieldDocman.html">¶</a>
@@ -558,34 +562,6 @@ Displays a topics list of ALL published topics</p>
 <div class="details collapse"></div>
 <a href="../classes/JHtmlIcon.html" class="more">« More »</a>
 </div>
-<div id="PodcastSubscribe" class="element ajax clickable class">
-<h1>PodcastSubscribe<a href="../classes/PodcastSubscribe.html">¶</a>
-</h1>
-<p class="short_description">A helper to return buttons for podcast subscriptions</p>
-<div class="details collapse"></div>
-<a href="../classes/PodcastSubscribe.html" class="more">« More »</a>
-</div>
-<div id="RelatedStudies" class="element ajax clickable class">
-<h1>RelatedStudies<a href="../classes/RelatedStudies.html">¶</a>
-</h1>
-<p class="short_description">helper to get related studies to the current one</p>
-<div class="details collapse"></div>
-<a href="../classes/RelatedStudies.html" class="more">« More »</a>
-</div>
-<div id="ShowScripture" class="element ajax clickable class">
-<h1>ShowScripture<a href="../classes/ShowScripture.html">¶</a>
-</h1>
-<p class="short_description">Scripture Show class.</p>
-<div class="details collapse"></div>
-<a href="../classes/ShowScripture.html" class="more">« More »</a>
-</div>
-<div id="jbsMedia" class="element ajax clickable class">
-<h1>jbsMedia<a href="../classes/jbsMedia.html">¶</a>
-</h1>
-<p class="short_description">Joomla! Bible Study Media class.</p>
-<div class="details collapse"></div>
-<a href="../classes/jbsMedia.html" class="more">« More »</a>
-</div>
 <h3>
 <i class="icon-custom icon-constant"></i> Constants</h3>
 <a id="constant_BIBLESTUDY_CHECKREL"> </a><div class="element clickable constant  constant_BIBLESTUDY_CHECKREL" data-toggle="collapse" data-target=".constant_BIBLESTUDY_CHECKREL .collapse">
@@ -601,10 +577,7 @@ Displays a topics list of ALL published topics</p>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
 <ul class="breadcrumb"><li>
-<a href="../index.html"><i class="icon-folder-open"></i></a><span class="divider">\</span><li><a href="../packages/BibleStudy.html">BibleStudy</a></li>
-<li>
-<span class="divider">\</span><a href="../packages/BibleStudy.Site.html">Site</a>
-</li>
+<a href="../index.html"><i class="icon-folder-open"></i></a><span class="divider">\</span><li><a href="../packages/BibleStudy.Site.html">BibleStudy.Site</a></li>
 <li class="active">
 <span class="divider">\</span><a href="../packages/BibleStudy.Site.Form.html">Form</a>
 </li>
@@ -627,23 +600,14 @@ Displays a topics list of ALL published topics</p>
 <a href="../classes/JFormFieldTopics.html" class="more">« More »</a>
 </div>
 </div>
-<ul class="breadcrumb"><li>
-<a href="../index.html"><i class="icon-folder-open"></i></a><span class="divider">\</span><li><a href="../packages/BibleStudy.html">BibleStudy</a></li>
-<li>
-<span class="divider">\</span><a href="../packages/BibleStudy.Site.html">Site</a>
-</li>
-<li class="active">
-<span class="divider">\</span><a href="../packages/BibleStudy.Site.sh404SEF.html">sh404SEF</a>
-</li>
-</li></ul>
-<div class="package-indent"></div>
 </div>
 </div>
 </div>
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
-            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
-            generated on 2013-06-22T20:25:31-05:00.<br></footer></div>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.1
+</a> and<br>
+            generated on 2013-10-17T22:45:23-05:00.<br></footer></div>
 </div>
 </body>
 </html>

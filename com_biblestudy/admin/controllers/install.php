@@ -3,15 +3,12 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-JLoader::register('fixJBSAssets', BIBLESTUDY_PATH_ADMIN_LIB . '/biblestudy.assets.php');
-jimport('joomla.application.component.controllerform');
 
 /**
  * Controller for Admin
@@ -23,39 +20,89 @@ class BiblestudyControllerInstall extends JControllerForm
 {
 
 	/**
+	 * The context for storing internal data, e.g. record.
+	 *
+	 * @var    string
+	 * @since  12.2
+	 */
+	protected $context = 'install';
+
+	/**
+	 * The URL view item variable.
+	 *
+	 * @var    string
+	 * @since  12.2
+	 */
+	protected $view_item = 'install';
+
+	/**
+	 * The URL view list variable.
+	 *
+	 * @var    string
+	 * @since  12.2
+	 */
+	protected $view_list = 'install';
+
+	/**
 	 * Constructor.
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
-	 *
-	 * @since   12.2
 	 */
 	public function __construct($config = array())
 	{
 		parent::__construct($config);
+
+		$this->modelName = 'install';
 	}
 
 	/**
-	 * Fix Assets
+	 * Constructor.
+	 *
+	 * @param   string  $task  An optional associative array of configuration settings.
 	 *
 	 * @return void
 	 */
-	public function fixAssets()
+	public function execute($task)
 	{
-		$asset      = new fixJBSAssets;
-		$fix_assets = $asset->fixAssets();
-		/** @var BibleStudyModelInstall $modale */
-		$modale     = $this->getModel('Install', 'BibleStudyModel');
-		$modale->subcleanCache();
-		$input      = new JInput;
-		$input->set('messages', $fix_assets);
-
-		$jbsname = $input->get('jbsname');
-		$jbstype = $input->get('jbstype');
-
-		if ($jbsname)
+		if ($task != 'run')
 		{
-			$this->setRedirect('index.php?option=com_biblestudy&view=install&jbsname=' . $jbsname . '&jbstype=' . $jbstype);
+			$task = 'browse';
 		}
+		parent::execute($task);
 	}
 
+	/**
+	 * Constructor.
+	 *
+	 * @return void
+	 */
+	public function browse()
+	{
+		$app = JFactory::getApplication();
+		/** @var BibleStudyModelInstall $model */
+		$model = $this->getModel('install');
+		$state = $model->startScanning();
+		$app->input->set('scanstate', $state);
+		$app->input->set('view', 'install');
+
+		$this->display(false);
+	}
+
+	/**
+	 * Run Function
+	 *
+	 * @return void
+	 *
+	 * @since 8.0.0
+	 */
+	public function run()
+	{
+		$app   = JFactory::getApplication();
+		$model = $this->getModel('install');
+		$state = $model->run();
+		$app->input->set('scanstate', $state);
+		$app->input->set('view', 'install');
+
+		$this->display(false);
+	}
 }

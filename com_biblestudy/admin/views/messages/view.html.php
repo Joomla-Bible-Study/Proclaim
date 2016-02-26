@@ -3,13 +3,12 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
 
 /**
  * View class for a list of Messages.
@@ -19,27 +18,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewMessages extends JViewLegacy
 {
-
-	/**
-	 * Items
-	 *
-	 * @var object
-	 */
-	protected $items;
-
-	/**
-	 * Pagination
-	 *
-	 * @var object
-	 */
-	protected $pagination;
-
-	/**
-	 * State
-	 *
-	 * @var object
-	 */
-	protected $state;
 
 	/**
 	 * Can Do
@@ -98,9 +76,30 @@ class BiblestudyViewMessages extends JViewLegacy
 	public $sidebar;
 
 	/**
+	 * Items
+	 *
+	 * @var object
+	 */
+	protected $items;
+
+	/**
+	 * Pagination
+	 *
+	 * @var object
+	 */
+	protected $pagination;
+
+	/**
+	 * State
+	 *
+	 * @var object
+	 */
+	protected $state;
+
+	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -109,7 +108,6 @@ class BiblestudyViewMessages extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-
 		$items            = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
@@ -118,11 +116,8 @@ class BiblestudyViewMessages extends JViewLegacy
 		$modelView   = $this->getModel();
 		$this->items = $modelView->getTranslated($items);
 
-		$this->books        = $this->get('Books');
-		$this->teachers     = $this->get('Teachers');
-		$this->series       = $this->get('Series');
-		$this->messageTypes = $this->get('MessageTypes');
-		$this->years        = $this->get('Years');
+		$this->filterForm    = $this->get('FilterForm');
+		$this->activeFilters = $this->get('ActiveFilters');
 
 		// Check for errors
 		if (count($errors = $this->get('Errors')))
@@ -151,11 +146,7 @@ class BiblestudyViewMessages extends JViewLegacy
 		if ($this->getLayout() !== 'modal')
 		{
 			$this->addToolbar();
-
-			if (BIBLESTUDY_CHECKREL)
-			{
-				$this->sidebar = JHtmlSidebar::render();
-			}
+			$this->sidebar = JHtmlSidebar::render();
 		}
 
 		// Set the document
@@ -175,9 +166,11 @@ class BiblestudyViewMessages extends JViewLegacy
 	protected function addToolbar()
 	{
 		$user = JFactory::getUser();
-		$bar  = JToolBar::getInstance('toolbar');
 
-		JToolBarHelper::title(JText::_('JBS_CMN_STUDIES'), 'studies.png');
+		// Get the toolbar object instance
+		$bar = JToolBar::getInstance('toolbar');
+
+		JToolBarHelper::title(JText::_('JBS_CMN_STUDIES'), 'book book');
 
 		if ($this->canDo->get('core.create'))
 		{
@@ -192,10 +185,10 @@ class BiblestudyViewMessages extends JViewLegacy
 		if ($this->canDo->get('core.edit.state'))
 		{
 			JToolBarHelper::divider();
-			JToolBarHelper::publishList('messages.publish', 'JTOOLBAR_PUBLISH', true);
-			JToolBarHelper::unpublishList('messages.unpublish', 'JTOOLBAR_UNPUBLISH', true);
+			JToolBarHelper::publishList('messages.publish');
+			JToolBarHelper::unpublishList('messages.unpublish');
 			JToolBarHelper::divider();
-			JToolBarHelper::archiveList('messages.archive', 'JTOOLBAR_ARCHIVE');
+			JToolBarHelper::archiveList('messages.archive');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
@@ -205,74 +198,28 @@ class BiblestudyViewMessages extends JViewLegacy
 		elseif ($this->canDo->get('core.edit.state'))
 		{
 			JToolBarHelper::trash('messages.trash');
-			JToolBarHelper::divider();
 		}
 
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
-			if (BIBLESTUDY_CHECKREL)
-			{
-				JHtml::_('bootstrap.modal', 'collapseModal');
-			}
+			JToolBarHelper::divider();
+			JHtml::_('bootstrap.modal', 'collapseModal');
+
 			$title = JText::_('JBS_CMN_BATCH_LABLE');
 			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
 						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
 						$title</button>";
 			$bar->appendButton('Custom', $dhtml, 'batch');
 		}
-		if (BIBLESTUDY_CHECKREL)
-		{
-			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=messages');
-
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
-				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
-			);
-
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_ACCESS'), 'filter_access',
-				JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
-			);
-
-			JHtmlSidebar::addFilter(
-				JText::_('JBS_CMN_SELECT_TEACHER'),
-				'filter_teacher',
-				JHtml::_('select.options', JBSMBibleStudyHelper::getTeachers(), 'value', 'text', $this->state->get('filter.teacher'))
-			);
-
-			JHtmlSidebar::addFilter(
-				JText::_('JBS_MED_SELECT_YEAR'),
-				'filter_year',
-				JHtml::_('select.options', JBSMBibleStudyHelper::getStudyYears(), 'value', 'text', $this->state->get('filter.year'))
-			);
-
-			JHtmlSidebar::addFilter(
-				JText::_('JBS_CMS_SELECT_BOOK'),
-				'filter_book',
-				JHtml::_('select.options', JBSMBibleStudyHelper::getStudyBooks(), 'value', 'text', $this->state->get('filter.book'))
-			);
-
-			JHtmlSidebar::addFilter(
-				JText::_('JBS_CMN_SELECT_MESSAGE_TYPE'),
-				'filter_messagetype',
-				JHtml::_('select.options', JBSMBibleStudyHelper::getMessageTypes(), 'value', 'text', $this->state->get('filter.messagetype'))
-			);
-
-			JHtmlSidebar::addFilter(
-				JText::_('JBS_CMN_SELECT_LOCATION'),
-				'filter_location',
-				JHtml::_('select.options', JBSMBibleStudyHelper::getStudyLocations(), 'value', 'text', $this->state->get('filter.location'))
-			);
-
-		}
 	}
 
 	/**
 	 * Add the page title to browser.
 	 *
-	 * @since    7.1.0
 	 * @return void
+	 *
+	 * @since    7.1.0
 	 */
 	protected function setDocument()
 	{

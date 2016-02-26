@@ -3,15 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMBibleStudyHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php');
-JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params.php');
+use Joomla\Registry\Registry;
 
 /**
  * View class for Messages
@@ -22,25 +21,13 @@ JLoader::register('JBSMParams', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/params
 class BiblestudyViewMessagelist extends JViewLegacy
 {
 
-	/** @var array Items */
-	protected $items;
-
-	/** @var array Pagination */
-	protected $pagination;
-
-	/** @var array State */
-	protected $state;
-
-	/** @var object Admin */
-	protected $admin;
-
 	/** @var  string Can Do */
 	public $canDo;
 
 	/** @var  string Books */
 	public $books;
 
-	/** @var  JRegistry Teachers */
+	/** @var  Registry Teachers */
 	public $teachers;
 
 	/** @var  string Series */
@@ -52,19 +39,45 @@ class BiblestudyViewMessagelist extends JViewLegacy
 	/** @var  string Years */
 	public $years;
 
-	/** @var JRegistry Params */
-	protected $params;
-
 	/** @var  string New Link */
 	public $newlink;
 
-	/** @var  string Document */
+	/** @var  JDocument Document */
 	public $document;
+
+	/**
+	 * Items
+	 *
+	 * @var array
+	 */
+	protected $items;
+
+	/**
+	 * Pagination
+	 *
+	 * @var array
+	 */
+	protected $pagination;
+
+	/**
+	 * State
+	 *
+	 * @var array
+	 */
+	protected $state;
+
+	/**
+	 * @var object
+	 */
+	protected $admin;
+
+	/** @var Registry Params */
+	protected $params;
 
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -73,36 +86,26 @@ class BiblestudyViewMessagelist extends JViewLegacy
 		$items            = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
+		$this->params     = $this->state->template->params;
 
-		// Load the Admin settings and params from the template
-		$this->admin = JBSMParams::getAdmin(true);
-		$this->loadHelper('image');
-		$template = JBSMParams::getTemplateparams();
-
-		// Convert parameter fields to objects.
-		$registry = new JRegistry;
-		$registry->loadString($template->params);
-		$this->params = $registry;
-
-		if (!BIBLESTUDY_CHECKREL)
-		{
-			$document = JFactory::getDocument();
-			$document->addStyleSheet(JURI::base() . 'administrator/templates/system/css/system.css');
-			$document->addStyleSheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
-		}
 		$this->canDo = JBSMBibleStudyHelper::getActions('', 'message');
 
-		$this->books        = $this->get('Books');
-		$this->teachers     = $this->get('Teachers');
-		$this->series       = $this->get('Series');
-		$this->messageTypes = $this->get('MessageTypes');
-		$this->years        = $this->get('Years');
-		$modelView          = $this->getModel();
-		$this->items        = $modelView->getTranslated($items);
+		$this->books         = $this->get('Books');
+		$this->teachers      = $this->get('Teachers');
+		$this->series        = $this->get('Series');
+		$this->messageTypes  = $this->get('MessageTypes');
+		$this->years         = $this->get('Years');
+		$modelView           = $this->getModel();
+		$this->items         = $modelView->getTranslated($items);
+		$this->filterForm    = $this->get('FilterForm');
+		$this->activeFilters = $this->get('ActiveFilters');
+
+		$language = JFactory::getLanguage();
+		$language->load('', JPATH_ADMINISTRATOR, null, true);
 
 		if (!$this->canDo->get('core.edit'))
 		{
-			JFactory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'message');
+			JFactory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
 
 			return;
 		}
@@ -111,7 +114,7 @@ class BiblestudyViewMessagelist extends JViewLegacy
 		if ($this->canDo->get('core.create'))
 		{
 			$this->newlink = '<a href="' . JRoute::_('index.php?option=com_biblestudy&view=sermons&task=sermon.edit') . '" class="btn btn-primary">'
-				. JText::_('JBS_CMN_NEW') . ' <i class="icon-plus icon-white"></i></a>';
+				. JText::_('JBS_CMN_NEW') . ' <i class="icon-plus"></i></a>';
 		}
 
 		$this->_prepareDocument();
@@ -126,9 +129,8 @@ class BiblestudyViewMessagelist extends JViewLegacy
 	 */
 	protected function _prepareDocument()
 	{
-		$app     = JFactory::getApplication();
+		$app     = JFactory::getApplication('site');
 		$menus   = $app->getMenu();
-		$pathway = $app->getPathway();
 		$title   = null;
 
 		// Because the application sets a default page title,
@@ -145,15 +147,17 @@ class BiblestudyViewMessagelist extends JViewLegacy
 		}
 
 		$title = $this->params->def('page_title', '');
-		$title .= ' : ' . JText::_('JBS_CMN_MESSAGES_LIST');
-
-		if ($app->getCfg('sitename_pagetitles', 0) == 1)
+		if (empty($title))
 		{
-			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
+			$title = $app->get('sitename');
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 2)
+		elseif ($app->get('sitename_pagetitles', 0) == 1)
 		{
-			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
+			$title = JText::sprintf('JPAGETITLE', $app->get('sitename'), $title);
+		}
+		elseif ($app->get('sitename_pagetitles', 0) == 2)
+		{
+			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
 		$this->document->setTitle($title);
 

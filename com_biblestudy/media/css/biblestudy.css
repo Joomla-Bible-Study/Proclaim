@@ -1,1198 +1,506 @@
-/* New Teacher Codes */
-#bsm_teachertable_list .bsm_teachername
-{
-    font-weight: bold;
-    font-size: 14px;
-    color: #000000;
-}
-#bsm_teachertable_list
-{
-    margin: 0;
-    border-collapse:separate;
-}
-#bsm_teachertable_list td {
-    text-align:left;
-    padding:0 5px 0 5px;
-    border:none;
-}
-#bsm_teachertable_list .titlerow
-{
-    border-bottom: thick;
-}
-#bsm_teachertable_list .title
-{
-    font-size:18px;
-    font-weight:bold;
-    border-bottom: 3px solid #999999;
-    padding: 4px 0px 4px 4px;
-}
-#bsm_teachertable_list .bsm_separator
-{
-    border-bottom: 1px solid #999999;
-}
-
-.bsm_teacherthumbnail_list
-{
-
-}
-#bsm_teachertable_list .bsm_teacheremail
-{
-    font-weight:normal;
-    font-size: 11px;
-}
-#bsm_teachertable_list .bsm_teacherwebsite
-{
-    font-weight:normal;
-    font-size: 11px;
-}
-#bsm_teachertable_list .bsm_teacherphone
-{
-    font-weight:normal;
-    font-size: 11px;
-}
-#bsm_teachertable_list .bsm_short
-{
-    padding: 8px 4px 4px;
+/* This file is generated out of the database table #__bsms_styles */
+/* It will be overwritten when saving the CSS Style content to the database */
+/* New Teacher Details Codes */
+#bsm_teachertable {
+  margin: 0;
+  border-collapse: separate;
 }
 #bsm_teachertable .bsm_studiestitlerow {
-    background-color: #666;
+  background-color: #666;
 }
-#bsm_teachertable_list .bsm_titletitle
-{
-    font-weight:bold;
-    color:#FFFFFF;
+#bsm_teachertable .teacheraddress {
+  text-align: left;
 }
-#bsm_teachertable_list .bsm_titlescripture
-{
-    font-weight:bold;
-    color:#FFFFFF;
+#bsm_teachertable .teacherwebsite {
+  text-align: left;
 }
-#bsm_teachertable_list .bsm_titledate
-{
-    font-weight:bold;
-    color:#FFFFFF;
+#bsm_teachertable .teacherfacebook {
+  text-align: left;
 }
-#bsm_teachertable_list .bsm_teacherlong
-{
-    padding: 8px 4px 4px;
-    border-bottom: 1px solid #999999;
+#bsm_teachertable .bsm_teachertwitter {
+  text-align: left;
 }
-#bsm_teachertable_list tr.bsodd {
-    background-color:#FFFFFF;
-    border-bottom: 1px solid #999999;
+#bsm_teachertable .bsm_teacherblog {
+  text-align: left;
 }
-#bsm_teachertable_list tr.bseven {
-    background-color:#FFFFF0;
-    border-bottom: 1px solid #999999;
+#bsm_teachertable .bsm_teacherlink1 {
+  text-align: left;
 }
-
-#bsm_teachertable_list .lastrow td {
-    border-bottom:1px solid grey;
-    padding-bottom:7px;
-    padding-top:7px;
+#bsm_teachertable td {
+  text-align: left;
+  padding: 0 5px 0 5px;
+  border: none;
 }
-#bsm_teachertable_list .bsm_teacherfooter
-{
-    border-top: 1px solid #999999;
-    padding: 4px 1px 1px 4px;
+#bsm_teachertable .titlerow {
+  border-bottom: thick;
 }
-/* New Teacher Details Codes */
-
-#bsm_teachertable .teacheraddress{
-    text-align:left;
+#bsm_teachertable .title {
+  font-size: 18px;
+  font-weight: bold;
+  border-bottom: 3px solid #999999;
+  padding: 4px 0 4px 4px;
 }
-
-#bsm_teachertable .teacherwebsite{
-    text-align:left;}
-
-#bsm_teachertable .teacherfacebook{
-    text-align:left;
+#bsm_teachertable .bsm_separator {
+  border-bottom: 1px solid #999999;
 }
-
-#bsm_teachertable .bsm_teachertwitter{
-    text-align:left;
+#bsm_teachertable .bsm_teachername {
+  font-weight: bold;
+  font-size: 14px;
+  color: #000000;
+  white-space: nowrap;
 }
-
-#bsm_teachertable .bsm_teacherblog{
-    text-align:left;
+#bsm_teachertable .bsm_teacheremail {
+  font-weight: normal;
+  font-size: 11px;
 }
-
-#bsm_teachertable .bsm_teacherlink1{
-    text-align:left;
+#bsm_teachertable .bsm_teacherwebsite {
+  font-weight: normal;
+  font-size: 11px;
 }
-
-
+#bsm_teachertable .bsm_teacherphone {
+  font-weight: normal;
+  font-size: 11px;
+}
+#bsm_teachertable .bsm_short {
+  padding: 8px 4px 4px;
+}
+#bsm_teachertable .bsm_titletitle {
+  font-weight: bold;
+  color: #ffffff;
+}
+#bsm_teachertable .bsm_titlescripture {
+  font-weight: bold;
+  color: #ffffff;
+}
+#bsm_teachertable .bsm_titledate {
+  font-weight: bold;
+  color: #ffffff;
+}
+#bsm_teachertable .bsm_teacherlong {
+  padding: 8px 4px 4px;
+  border-bottom: 1px solid #999999;
+}
+#bsm_teachertable tr.bsodd {
+  background-color: #ffffff;
+  border-bottom: 1px solid #999999;
+}
+#bsm_teachertable tr.bseven {
+  background-color: #fffff0;
+  border-bottom: 1px solid #999999;
+}
+#bsm_teachertable .lastrow td {
+  border-bottom: 1px solid grey;
+  padding-bottom: 7px;
+  padding-top: 7px;
+}
+#bsm_teachertable .bsm_teacherfooter {
+  border-top: 1px solid #999999;
+  padding: 4px 1px 1px 4px;
+}
 /* New Landing Page CSS */
-
 .landingtable {
-    clear:both;
-    width:auto;
-    display:table;
-
+  clear: both;
+  width: auto;
+  display: table;
 }
-
 .landingrow {
-    display:inline;
-    padding: 1em;
+  display: inline;
+  padding: 1em;
 }
 .landingcell {
-    display:table-cell;
+  display: table-cell;
 }
-
-.landinglink a{
-    display:inline;
+.landinglink a {
+  display: inline;
 }
-
-/* Terms of use or donate display settings */
-.termstext {
-}
-
-.termslink{
-}
-/* Podcast Subscription Display Settings */
-
-.podcastsubscribe{
-    clear:both;
-    display:table;
-    width:auto;
-    background-color:#eee;
-    border-radius: 15px 15px 15px 15px;
-    border: 1px solid grey;
-    padding: 1em;
+.podcastsubscribe {
+  clear: both;
+  display: table;
+  width: 100%;
+  background-color: #eee;
+  border-radius: 15px 15px 15px 15px;
+  border: 1px solid grey;
+  padding: 1em;
 }
 .podcastsubscribe .image {
-    float: left;
-    padding-right: 5px;
-    display: inline;
+  float: left;
+  padding-right: 5px;
+  display: inline;
 }
 .podcastsubscribe .image .text {
-    display:inline;
-    position:relative;
-    right:50px;
-    bottom:-10px;
+  display: inline;
+  position: relative;
+  right: 50px;
+  bottom: -10px;
 }
 .podcastsubscribe .prow {
-    display: table-row;
-    width:auto;
-    clear:both;
+  display: table-row;
+  width: auto;
+  clear: both;
 }
 .podcastsubscribe .pcell {
-    display: table-cell;
-    float:left;
-    background-color:#e3e2e2;
-    border-radius: 15px 15px 15px 15px;
-    border: 1px solid grey;
-    padding: 1em;
-    margin-right: 5px;
+  display: table-cell;
+  float: left;
+  background-color: #e3e2e2;
+  border-radius: 15px 15px 15px 15px;
+  border: 1px solid grey;
+  padding: 1em;
+  margin-right: 5px;
 }
-.podcastheader h3{
-    display:table-header;
-    text-align:center;
+/* Listing Page Items */
+.podcastheader {
+  font-weight: bold;
 }
-
-.podcastheader{
-    font-weight: bold;
+.podcastheader h3 {
+  display: inline;
+  text-align: center;
 }
-
-.podcastlinks{
-    display: inline;
-
-}
-
 .fltlft {
-    float:left;
-    padding-right: 5px;
+  float: left;
+  padding-right: 5px;
 }
-
-/* Listing Page Items */
-#subscribelinks {
-
-}
-
 div.listingfooter ul li {
-    list-style: none outside none;
+  list-style: none outside none;
 }
-
-/* Listing Page Items */
-#listintro p, #listintro td {
-    margin: 0;
-    font-weight: bold;
-    color: black;
+#listingfooter li,
+#listingfooter ul {
+  display: inline;
 }
-
-#listingfooter li, #listingfooter ul
-{
-    display: inline;
-}
-#main ul, #main li
-{
-    display: inline;
+#listintro p,
+#listintro td {
+  margin: 0;
+  font-weight: bold;
+  color: black;
 }
 #bsdropdownmenu {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 .bslisttable {
-    margin: 0;
-    border-collapse:separate;
+  margin: 0;
+  border-collapse: separate;
 }
-.bslisttable th, .bslisttable td {
-    text-align:left;
-    padding:0 5px 0 5px;
-    border:none;
+.bslisttable .lastcol {
+  border-right: grey 2px solid;
+}
+.bslisttable .lastrow td {
+  border-bottom: 2px solid grey;
+  padding-bottom: 7px;
+}
+.bslisttable th {
+  background-color: #707070;
+  font-weight: bold;
+  color: white;
+}
+.bslisttable th.firstrow {
+  border-bottom: grey 2px solid;
+}
+.bslisttable tr.lastrow th {
+  border-bottom: 2px solid grey;
+  padding-bottom: 3px;
+}
+.bslisttable tr.bsodd td {
+  background-color: #ffffff;
+}
+.bslisttable tr.bseven td {
+  background-color: #fffff0;
+}
+.bslisttable .date {
+  white-space: nowrap;
+  font-size: 1.2em;
+  color: grey;
+  font-weight: bold;
+}
+.bslisttable .scripture1 {
+  white-space: nowrap;
+  color: #c02121;
+  font-weight: bold;
+}
+.bslisttable .scripture2 {
+  white-space: nowrap;
+  color: #c02121;
+  font-weight: bold;
+}
+.bslisttable .title {
+  font-size: 1.2em;
+  color: #707070;
+  font-weight: bold;
+}
+.bslisttable .series_text {
+  white-space: nowrap;
+  color: grey;
+}
+.bslisttable .duration {
+  white-space: nowrap;
+  font-style: italic;
+}
+.bslisttable .teacher {
+  white-space: nowrap;
+}
+.bslisttable .location_text {
+  white-space: nowrap;
+}
+.bslisttable .topic_text {
+  white-space: nowrap;
+}
+.bslisttable .message_type {
+  white-space: nowrap;
+}
+.bslisttable .jbsmedia {
+  white-space: nowrap;
+}
+.bslisttable .store {
+  white-space: nowrap;
+}
+.bslisttable .details-text {
+  white-space: nowrap;
+}
+.bslisttable .details-pdf {
+  white-space: nowrap;
+}
+.bslisttable .details-text-pdf {
+  white-space: nowrap;
+}
+.bslisttable .detailstable td {
+  border: none;
+  padding: 0 2px 0 0;
+}
+.bslisttable .secondary_reference {
+  white-space: nowrap;
+}
+.bslisttable .teacher-title-name {
+  white-space: nowrap;
+}
+.bslisttable .submitted {
+  white-space: nowrap;
+}
+.bslisttable .hits {
+  white-space: nowrap;
+}
+.bslisttable .studynumber {
+  white-space: nowrap;
+}
+.bslisttable .filesize {
+  white-space: nowrap;
+}
+.bslisttable .custom {
+  white-space: nowrap;
+}
+.bslisttable .commentshead {
+  font-size: 2em;
+  font-weight: bold;
+}
+.bslisttable .thumbnail {
+  white-space: nowrap;
+}
+.bslisttable .mediatable td {
+  border: none;
+  padding: 0 6px 0 0;
+}
+.bslisttable .mediatable span.bsfilesize {
+  font-size: 0.6em;
+  position: relative;
+  bottom: 7px;
+}
+.bslisttable th,
+.bslisttable td {
+  text-align: left;
+  padding: 0 5px 0 5px;
+  border: none;
 }
 .bslisttable .row1col1,
 .bslisttable .row2col1,
 .bslisttable .row3col1,
 .bslisttable .row4col1 {
-    border-left: grey 2px solid;
-}
-.bslisttable .lastcol {
-    border-right: grey 2px solid;
-}
-.bslisttable .lastrow td {
-    border-bottom:2px solid grey;
-    padding-bottom:7px;
-}
-.bslisttable th {
-    background-color:#707070;
-    font-weight:bold;
-    color:white;
-
+  border-left: grey 2px solid;
 }
 .bslisttable th.row1col1,
 .bslisttable th.row1col2,
 .bslisttable th.row1col3,
 .bslisttable th.row1col4 {
-    border-top: grey 2px solid;
-    padding-top:3px;
+  border-top: grey 2px solid;
+  padding-top: 3px;
 }
-.bslisttable th.firstrow {
-    border-bottom: grey 2px solid;
-}
-.bslisttable tr.lastrow th {
-    border-bottom:2px solid grey;
-    padding-bottom:3px;
-}
-
-.bslisttable tr.bsodd td {
-    background-color:#FFFFFF;
-}
-.bslisttable tr.bseven td {
-    background-color:#FFFFF0;
-}
-
-.bslisttable .date {
-    white-space:nowrap;
-    font-size:1.2em;
-    color:grey;
-    font-weight:bold;
-}
-.bslisttable .scripture1 {
-    white-space:nowrap;
-    color:#c02121;
-    font-weight:bold;
-}
-.bslisttable .scripture2 {
-    white-space:nowrap;
-    color:#c02121;
-    font-weight:bold;
-}
-.bslisttable .title {
-    font-size:1.2em;
-    color:#707070;
-    font-weight:bold;
-}
-.bslisttable .series_text {
-    white-space:nowrap;
-    color:grey;
-}
-.bslisttable .duration {
-    white-space:nowrap;
-    font-style:italic;
-}
-.bslisttable .studyintro {
-
-}
-.bslisttable .teacher {
-    white-space:nowrap;
-}
-.bslisttable .location_text {
-    white-space:nowrap;
-}
-.bslisttable .topic_text {
-    white-space:nowrap;
-}
-.bslisttable .message_type {
-    white-space:nowrap;
-}
-.bslisttable .jbsmedia {
-    white-space:nowrap;
-}
-.bslisttable .store {
-    white-space:nowrap;
-}
-.bslisttable .details-text {
-    white-space:nowrap;
-}
-.bslisttable .details-pdf {
-    white-space:nowrap;
-}
-.bslisttable .details-text-pdf {
-    white-space:nowrap;
-}
-.bslisttable .detailstable td {
-    border: none;
-    padding: 0 2px 0 0;
-}
-.bslisttable .secondary_reference {
-    white-space:nowrap;
-}
-.bslisttable .teacher-title-name {
-    white-space:nowrap;
-}
-.bslisttable .submitted {
-    white-space:nowrap;
-}
-.bslisttable .hits {
-    white-space:nowrap;
-}
-.bslisttable .studynumber {
-    white-space:nowrap;
-}
-.bslisttable .filesize {
-    white-space:nowrap;
-}
-.bslisttable .custom {
-    white-space:nowrap;
-}
-.bslisttable .commentshead {
-    font-size: 2em;
-    font-weight:bold;
-}
-.bslisttable .thumbnail {
-    white-space:nowrap;
-}
-.bslisttable .mediatable td {
-    border: none;
-    padding: 0 6px 0 0;
-}
-.bslisttable .mediatable span.bsfilesize {
-    font-size:0.6em;
-    position:relative; bottom: 7px;
-}
-
-.component-content ul
-{
-    text-align: center;
-}
-
-.component-content li
-{
-    display: inline;
-}
-
-.pagenav
-{
-    margin-left: 10px;
-    margin-right: 10px;
-}
-
-/* Study Details CSS */
-
-#bsmsdetailstable {
-    margin: 0;
-    border-collapse:separate;
-}
-#bsmsdetailstable th, #bsmsdetailstable td {
-    text-align:left;
-    padding:0 5px 0 5px;
-    border:none;
-}
-#bsmsdetailstable .row1col1,
-#bsmsdetailstable .row2col1,
-#bsmsdetailstable .row3col1,
-#bsmsdetailstable .row4col1 {
-    border-left: grey 2px solid;
-}
-#bsmsdetailstable .lastcol {
-    border-right: grey 2px solid;
-}
-#bsmsdetailstable .lastrow td {
-    border-bottom:2px solid grey;
-    padding-bottom:7px;
-}
-#bsmsdetailstable th {
-    background-color:#707070;
-    font-weight:bold;
-    color:white;
-
-}
-#bsmsdetailstable th.row1col1,
-#bsmsdetailstable th.row1col2,
-#bsmsdetailstable th.row1col3,
-#bsmsdetailstable th.row1col4 {
-    border-top: grey 2px solid;
-    padding-top:3px;
-}
-#bsmsdetailstable tr.lastrow th {
-    border-bottom:2px solid grey;
-    padding-bottom:3px;
-}
-#bsmsdetailstable th.firstrow {
-    border-bottom: grey 2px solid;
-}
-#bsmsdetailstable tr.bsodd td {
-    background-color:#FFFFFF;
-}
-#bsmsdetailstable tr.bseven td {
-    background-color:#FFFFF0;
-}
-
-#bsmsdetailstable .date {
-    white-space:nowrap;
-    font-size:1.2em;
-    color:grey;
-    font-weight:bold;
-}
-#bsmsdetailstable .scripture1 {
-    white-space:nowrap;
-    color:#c02121;
-    font-weight:bold;
-}
-#bsmsdetailstable .scripture2 {
-    white-space:nowrap;
-    color:#c02121;
-    font-weight:bold;
-}
-#bsmsdetailstable .title {
-    font-size:1.2em;
-    color:#707070;
-    font-weight:bold;
-}
-#bsmsdetailstable .series_text {
-    white-space:nowrap;
-    color:grey;
-}
-#bsmsdetailstable .duration {
-    white-space:nowrap;
-    font-style:italic;
-}
-#bsmsdetailstable .studyintro {
-
-}
-#bsmsdetailstable .teacher {
-    white-space:nowrap;
-}
-#bsmsdetailstable .location_text {
-    white-space:nowrap;
-}
-#bsmsdetailstable .topic_text {
-    white-space:nowrap;
-}
-#bsmsdetailstable .message_type {
-    white-space:nowrap;
-}
-#bsmsdetailstable .jbsmedia {
-    white-space:nowrap;
-}
-#bsmsdetailstable .store {
-    white-space:nowrap;
-}
-#bsmsdetailstable .details-text {
-    white-space:nowrap;
-}
-#bsmsdetailstable .details-pdf {
-    white-space:nowrap;
-}
-#bsmsdetailstable .details-text-pdf {
-    white-space:nowrap;
-}
-#bsmsdetailstable .detailstable td {
-    border: none;
-    padding: 0 2px 0 0;
-}
-#bsmsdetailstable .secondary_reference {
-    white-space:nowrap;
-}
-#bsmsdetailstable .teacher-title-name {
-    white-space:nowrap;
-}
-#bsmsdetailstable .submitted {
-    white-space:nowrap;
-}
-#bsmsdetailstable .hits {
-    white-space:nowrap;
-}
-#bsmsdetailstable .studynumber {
-    white-space:nowrap;
-}
-#bsmsdetailstable .filesize {
-    white-space:nowrap;
-}
-#bsmsdetailstable .custom {
-    white-space:nowrap;
-}
-#bsmsdetailstable .commentshead {
-    font-size: 2em;
-    font-weight:bold;
-}
-#bsmsdetailstable .thumbnail {
-    white-space:nowrap;
-}
-#bsmsdetailstable .mediatable td {
-    border: none;
-    padding: 0 6px 0 0;
-}
-#bsmsdetailstable .mediatable span.bsfilesize {
-    font-size:0.6em;
-    position:relative; bottom: 7px;
-}
-#bsdetailstable th, #bsdetailstable td {
-    text-align:left;
-    padding:0 5px 0 5px;
-    border:none;
-}
-#bsdetailstable .studydetailstext td {
-    font-size:1.2em;
-    color:#707070;
-    font-family:Verdana, Geneva, sans-serif;
-}
-#titletable {
-    margin: 0;
-    border-collapse:separate;
-}
-#titletable th, #titletable td {
-    text-align:left;
-    padding:0 5px 0 5px;
-    border:none;
-}
-
-#titletable .titlesecondline {
-    font-weight: bold;
-}
-#titletable .titlefirstline {
-    font-size:20px;
-    font-weight:bold;
-}
-
-#recaptcha_widget_div {
-    position:static !important;
-}
-/* Module Style Settings */
-
 #bsmsmoduletable {
-    margin: 0;
-    border-collapse:separate;
+  margin: 0;
+  border-collapse: separate;
 }
-#bsmsmoduletable th, #bsmsmoduletable td {
-    text-align:left;
-    padding:0 5px 0 5px;
-    border:none;
+#bsmsmoduletable .lastcol {
+  border-right: grey 2px solid;
+}
+#bsmsmoduletable .lastrow td {
+  border-bottom: 2px solid grey;
+  padding-bottom: 7px;
+}
+#bsmsmoduletable th {
+  background-color: #707070;
+  font-weight: bold;
+  color: white;
+}
+#bsmsmoduletable th.firstrow {
+  border-bottom: grey 2px solid;
+}
+#bsmsmoduletable tr.lastrow th {
+  border-bottom: 2px solid grey;
+  padding-bottom: 3px;
+}
+#bsmsmoduletable tr.bsodd td {
+  background-color: #ffffff;
+}
+#bsmsmoduletable tr.bseven td {
+  background-color: #fffff0;
+}
+#bsmsmoduletable .date {
+  white-space: nowrap;
+  font-size: 1.2em;
+  color: grey;
+  font-weight: bold;
+}
+#bsmsmoduletable .scripture1 {
+  white-space: nowrap;
+  color: #c02121;
+  font-weight: bold;
+}
+#bsmsmoduletable .scripture2 {
+  white-space: nowrap;
+  color: #c02121;
+  font-weight: bold;
+}
+#bsmsmoduletable .title {
+  font-size: 1.2em;
+  color: #707070;
+  font-weight: bold;
+}
+#bsmsmoduletable .series_text {
+  white-space: nowrap;
+  color: grey;
+}
+#bsmsmoduletable .duration {
+  white-space: nowrap;
+  font-style: italic;
+}
+#bsmsmoduletable .teacher {
+  white-space: nowrap;
+}
+#bsmsmoduletable .location_text {
+  white-space: nowrap;
+}
+#bsmsmoduletable .topic_text {
+  white-space: nowrap;
+}
+#bsmsmoduletable .message_type {
+  white-space: nowrap;
+}
+#bsmsmoduletable .jbsmedia {
+  white-space: nowrap;
+}
+#bsmsmoduletable .store {
+  white-space: nowrap;
+}
+#bsmsmoduletable .details-text {
+  white-space: nowrap;
+}
+#bsmsmoduletable .details-pdf {
+  white-space: nowrap;
+}
+#bsmsmoduletable .details-text-pdf {
+  white-space: nowrap;
+}
+#bsmsmoduletable .detailstable td {
+  border: none;
+  padding: 0 2px 0 0;
+}
+#bsmsmoduletable .secondary_reference {
+  white-space: nowrap;
+}
+#bsmsmoduletable .teacher-title-name {
+  white-space: nowrap;
+}
+#bsmsmoduletable .submitted {
+  white-space: nowrap;
+}
+#bsmsmoduletable .hits {
+  white-space: nowrap;
+}
+#bsmsmoduletable .studynumber {
+  white-space: nowrap;
+}
+#bsmsmoduletable .filesize {
+  white-space: nowrap;
+}
+#bsmsmoduletable .custom {
+  white-space: nowrap;
+}
+#bsmsmoduletable .commentshead {
+  font-size: 2em;
+  font-weight: bold;
+}
+#bsmsmoduletable .thumbnail {
+  white-space: nowrap;
+}
+#bsmsmoduletable .mediatable td {
+  border: none;
+  padding: 0 6px 0 0;
+}
+#bsmsmoduletable .mediatable span.bsfilesize {
+  font-size: 0.6em;
+  position: relative;
+  bottom: 7px;
+}
+#bsmsmoduletable th,
+#bsmsmoduletable td {
+  text-align: left;
+  padding: 0 5px 0 5px;
+  border: none;
 }
 #bsmsmoduletable .row1col1,
 #bsmsmoduletable .row2col1,
 #bsmsmoduletable .row3col1,
 #bsmsmoduletable .row4col1 {
-    border-left: grey 2px solid;
-}
-#bsmsmoduletable .lastcol {
-    border-right: grey 2px solid;
-}
-#bsmsmoduletable .lastrow td {
-    border-bottom:2px solid grey;
-    padding-bottom:7px;
-}
-#bsmsmoduletable th {
-    background-color:#707070;
-    font-weight:bold;
-    color:white;
-
+  border-left: grey 2px solid;
 }
 #bsmsmoduletable th.row1col1,
 #bsmsmoduletable th.row1col2,
 #bsmsmoduletable th.row1col3,
 #bsmsmoduletable th.row1col4 {
-    border-top: grey 2px solid;
-    padding-top:3px;
-}
-#bsmsmoduletable th.firstrow {
-    border-bottom: grey 2px solid;
-}
-#bsmsmoduletable tr.lastrow th {
-    border-bottom:2px solid grey;
-    padding-bottom:3px;
-}
-
-#bsmsmoduletable tr.bsodd td {
-    background-color:#FFFFFF;
-}
-#bsmsmoduletable tr.bseven td {
-    background-color:#FFFFF0;
-}
-
-#bsmsmoduletable .date {
-    white-space:nowrap;
-    font-size:1.2em;
-    color:grey;
-    font-weight:bold;
-}
-#bsmsmoduletable .scripture1 {
-    white-space:nowrap;
-    color:#c02121;
-    font-weight:bold;
-}
-#bsmsmoduletable .scripture2 {
-    white-space:nowrap;
-    color:#c02121;
-    font-weight:bold;
-}
-#bsmsmoduletable .title {
-    font-size:1.2em;
-    color:#707070;
-    font-weight:bold;
-}
-#bsmsmoduletable .series_text {
-    white-space:nowrap;
-    color:grey;
-}
-#bsmsmoduletable .duration {
-    white-space:nowrap;
-    font-style:italic;
-}
-#bsmsmoduletable .studyintro {
-
-}
-#bsmsmoduletable .teacher {
-    white-space:nowrap;
-}
-#bsmsmoduletable .location_text {
-    white-space:nowrap;
-}
-#bsmsmoduletable .topic_text {
-    white-space:nowrap;
-}
-#bsmsmoduletable .message_type {
-    white-space:nowrap;
-}
-#bsmsmoduletable .jbsmedia {
-    white-space:nowrap;
-}
-#bsmsmoduletable .store {
-    white-space:nowrap;
-}
-#bsmsmoduletable .details-text {
-    white-space:nowrap;
-}
-#bsmsmoduletable .details-pdf {
-    white-space:nowrap;
-}
-#bsmsmoduletable .details-text-pdf {
-    white-space:nowrap;
-}
-#bsmsmoduletable .detailstable td {
-    border: none;
-    padding: 0 2px 0 0;
-}
-#bsmsmoduletable .secondary_reference {
-    white-space:nowrap;
-}
-#bsmsmoduletable .teacher-title-name {
-    white-space:nowrap;
-}
-#bsmsmoduletable .submitted {
-    white-space:nowrap;
-}
-#bsmsmoduletable .hits {
-    white-space:nowrap;
-}
-#bsmsmoduletable .studynumber {
-    white-space:nowrap;
-}
-#bsmsmoduletable .filesize {
-    white-space:nowrap;
-}
-#bsmsmoduletable .custom {
-    white-space:nowrap;
-}
-#bsmsmoduletable .commentshead {
-    font-size: 2em;
-    font-weight:bold;
-}
-#bsmsmoduletable .thumbnail {
-    white-space:nowrap;
-}
-#bsmsmoduletable .mediatable td {
-    border: none;
-    padding: 0 6px 0 0;
-}
-#bsmsmoduletable .mediatable span.bsfilesize {
-    font-size:0.6em;
-    position:relative; bottom: 7px;
-}
-/* Series List-Details Items */
-#seriestable {
-    margin: 0;
-    border-collapse:separate;
-}
-#seriestable th, #seriestable td {
-    text-align:left;
-    padding: 3px 3px 3px 3px;
-    border:none;
-}
-#seriestable .firstrow td {
-    border-top: grey 2px solid;
-}
-#seriestable .firstcol {
-    border-left: grey 2px solid;
-}
-#seriestable .lastcol {
-    border-right: grey 2px solid;
-}
-#seriestable .lastrow td {
-    border-bottom:2px solid grey;
-    border-left: 2px solid grey;
-    border-right: 2px solid grey;
-    padding-bottom:3px;
-}
-#seriesttable tr.bsodd td {
-    background-color:#FFFFFF;
-}
-#seriestable tr.bseven td {
-    background-color:#FFFFF0;
-}
-#seriestable tr.onlyrow td {
-    border-bottom: 2px solid grey;
-    border-top:  grey 2px solid;
-}
-#seriestable .thumbnail img {
-    border: 1px solid grey;
-}
-#seriestable .teacher img {
-    border: 1px solid grey;
-}
-#seriestable .title {
-    font-weight: bold;
-    font-size: larger;
-}
-#seriestable tr.noborder td{
-    border: none;
-}
-#seriestable .description p{
-    width:500px;
-}
-#seriestable .teacher {
-    font-weight: bold;
-}
-/* Series Detail Study Links Items */
-#seriesstudytable {
-    margin: 0;
-    border-collapse:separate;
-}
-#seriesstudytable th, #seriesstudytable td {
-    text-align:left;
-    padding:0 5px 0 5px;
-    border:none;
-}
-#seriesstudytable .row1col1,
-#seriesstudytable .row2col1,
-#seriesstudytable .row3col1,
-#seriesstudytable .row4col1 {
-    border-left: grey 2px solid;
-}
-#seriesstudytable .lastcol {
-    border-right: grey 2px solid;
-}
-#seriesstudytable .lastrow td {
-    border-bottom:2px solid grey;
-    padding-bottom:7px;
-}
-#seriesstudytable th {
-    background-color:#707070;
-    font-weight:bold;
-    color:white;
-
-}
-#seriesstudytable th.row1col1,
-#seriesstudytable th.row1col2,
-#seriesstudytable th.row1col3,
-#seriesstudytable th.row1col4 {
-    border-top: grey 2px solid;
-    padding-top:3px;
-}
-#seriesstudytable th.firstrow {
-    border-bottom: grey 2px solid;
-}
-#seriesstudytable tr.lastrow th {
-    border-bottom:2px solid grey;
-    padding-bottom:3px;
-}
-
-#seriesstudytable tr.bsodd td {
-    background-color:#FFFFFF;
-}
-#seriesstudytable tr.bseven td {
-    background-color:#FFFFF0;
-}
-
-#seriesstudytable .date {
-    white-space:nowrap;
-    font-size:1.2em;
-    color:grey;
-    font-weight:bold;
-}
-#seriesstudytable .scripture1 {
-    white-space:nowrap;
-    color:#c02121;
-    font-weight:bold;
-}
-#seriesstudytable .scripture2 {
-    white-space:nowrap;
-    color:#c02121;
-    font-weight:bold;
-}
-#seriesstudytable .title {
-    font-size:1.2em;
-    color:#707070;
-    font-weight:bold;
-    font-style:italic;
-}
-#seriesstudytable .series_text {
-    white-space:nowrap;
-    color:grey;
-}
-#seriesstudytable .duration {
-    white-space:nowrap;
-    font-style:italic;
-}
-#seriesstudytable .studyintro {
-
-}
-#seriesstudytable .teacher {
-    white-space:nowrap;
-}
-#seriesstudytable .location_text {
-    white-space:nowrap;
-}
-#seriesstudytable .topic_text {
-    white-space:nowrap;
-}
-#seriesstudytable .message_type {
-    white-space:nowrap;
-}
-#seriesstudytable .jbsmedia {
-    white-space:nowrap;
-}
-#seriesstudytable .store {
-    white-space:nowrap;
-}
-#seriesstudytable .details-text {
-    white-space:nowrap;
-}
-#seriesstudytable .details-pdf {
-    white-space:nowrap;
-}
-#seriesstudytable .details-text-pdf {
-    white-space:nowrap;
-}
-#seriesstudytable .detailstable td {
-    border: none;
-    padding: 0 2px 0 0;
-}
-#seriesstudytable .secondary_reference {
-    white-space:nowrap;
-}
-#seriesstudytable .teacher-title-name {
-    white-space:nowrap;
-}
-#seriesstudytable .submitted {
-    white-space:nowrap;
-}
-#seriesstudytable .hits {
-    white-space:nowrap;
-}
-#seriesstudytable .studynumber {
-    white-space:nowrap;
-}
-#seriesstudytable .filesize {
-    white-space:nowrap;
-}
-#seriesstudytable .custom {
-    white-space:nowrap;
-}
-#seriesstudytable .commentshead {
-    font-size: 2em;
-    font-weight:bold;
-}
-#seriesstudytable .thumbnail {
-    white-space:nowrap;
-}
-#seriesstudytable .mediatable td {
-    border: none;
-    padding: 0 6px 0 0;
-}
-#seriesstudytable .mediatable span.bsfilesize {
-    font-size:0.6em;
-    position:relative; bottom: 7px;
-}
-#seriesstudytable .studyrow {
-
-}
-.tool-tip {
-    color: #fff;
-    width: 300px;
-    z-index: 13000;
-}
-/* Tooltip Styles */
-/* @todo need to find these files */
-.tool-title {
-    font-weight: bold;
-    font-size: 11px;
-    margin: 0;
-    color: #9FD4FF;
-    padding: 8px 8px 4px;
-    background: url(/images/tooltip/bubble.gif) top left;
-}
-.tool-text {
-    font-size: 11px;
-    padding: 4px 8px 8px;
-    background: url(/images/tooltip/bubble_filler.gif) bottom right;
-}
-.custom-tip {
-    color: #000;
-    width: 300px;
-    z-index: 13000;
-    border: 2px solid #666666;
-    background-color: white;
-}
-
-.custom-title {
-    font-weight: bold;
-    font-size: 11px;
-    margin: 0;
-    color: #000000;
-    padding: 8px 8px 4px;
-    background: #666666;
-    border-bottom: 1px solid #999999;
-}
-
-.custom-text {
-    font-size: 11px;
-    padding: 4px 8px 8px;
-    background: #999999;
-}
-/* Teacher List Styles */
-#bsm_teachertable
-{
-    margin: 0;
-    border-collapse:separate;
-}
-#bsm_teachertable td {
-    text-align:left;
-    padding:0 5px 0 5px;
-    border:none;
-}
-#bsm_teachertable .titlerow
-{
-    border-bottom: thick;
-}
-#bsm_teachertable .title
-{
-    font-size:18px;
-    font-weight:bold;
-    border-bottom: 3px solid #999999;
-    padding: 4px 0px 4px 4px;
-}
-#bsm_teachertable .bsm_separator
-{
-    border-bottom: 1px solid #999999;
-}
-
-.bsm_teacherthumbnail
-{
-
-}
-#bsm_teachertable .bsm_teachername
-{
-    font-weight: bold;
-    font-size: 14px;
-    color: #000000;
-    white-space:nowrap;
-
-}
-#bsm_teachertable .bsm_teacheremail
-{
-    font-weight:normal;
-    font-size: 11px;
-}
-#bsm_teachertable .bsm_teacherwebsite
-{
-    font-weight:normal;
-    font-size: 11px;
-}
-#bsm_teachertable .bsm_teacherphone
-{
-    font-weight:normal;
-    font-size: 11px;
-}
-#bsm_teachertable .bsm_short
-{
-    padding: 8px 4px 4px;
-}
-#bsm_teachertable .bsm_studiestitlerow {
-    background-color: #666;
-}
-#bsm_teachertable .bsm_titletitle
-{
-    font-weight:bold;
-    color:#FFFFFF;
-}
-#bsm_teachertable .bsm_titlescripture
-{
-    font-weight:bold;
-    color:#FFFFFF;
-}
-#bsm_teachertable .bsm_titledate
-{
-    font-weight:bold;
-    color:#FFFFFF;
-}
-#bsm_teachertable .bsm_teacherlong
-{
-    padding: 8px 4px 4px;
-    border-bottom: 1px solid #999999;
-}
-#bsm_teachertable tr.bsodd {
-    background-color:#FFFFFF;
-    border-bottom: 1px solid #999999;
-}
-#bsm_teachertable tr.bseven {
-    background-color:#FFFFF0;
-    border-bottom: 1px solid #999999;
-}
-
-#bsm_teachertable .lastrow td {
-    border-bottom:1px solid grey;
-    padding-bottom:7px;
-    padding-top:7px;
-}
-#bsm_teachertable .bsm_teacherfooter
-{
-    border-top: 1px solid #999999;
-    padding: 4px 1px 1px 4px;
-}
-/*Study Edit CSS */
-
-.bsmbutton
-{
-    background-color:white;
-
-}
-#toolbar td.white {
-    background-color:#FFFFFF;
-}
-#toolbar a hover visited{
-    color:#0B55C4;
-}
-
-/*Social Networking Items */
-#bsmsshare {
-    margin: 0;
-    border-collapse:separate;
-    float:right;
-    border: 1px solid #CFCFCF;
-    background-color: #F5F5F5;
-}
-#bsmsshare th, #bsmsshare td {
-    text-align:center;
-    padding:0 0 0 0;
-    border:none;
-}
-#bsmsshare th {
-    color:#0b55c4;
-    font-weight:bold;
-}
-/* Landing Page Items */
-.landinglist {
-
-}
-#landing_label {
-
-}
-.landing_item {
-
+  border-top: grey 2px solid;
+  padding-top: 3px;
 }
 .landing_title {
-    font-family:arial;
-    font-size:16px;
-    font-weight:bold;
-
+  font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: bold;
 }
-#biblestudy_landing {
-
+#landing_td {
+  width: 33%;
+}
+.landing_separator {
+  height: 15px;
 }
 #showhide {
-    font-family:arial;
-    font-size:12px;
-    font-weight:bold;
-    text-decoration:none;
+  font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  text-decoration: none;
 }
-
 #showhide .showhideheadingbutton img {
-    vertical-align:bottom;
+  vertical-align: bottom;
 }
-
-.landing_table {
-
-}
-
-#landing_td {
-    width: 33%;
-}
-
-.landing_separator {
-    height:15px;
-}
-/* Popup Window Items */
-.popupwindow
-{
-    margin: 5px;
-    text-align:center;
+.popupwindow {
+  margin: 5px;
+  text-align: center;
 }
 p.popuptitle {
-    font-weight: bold;
-    color: black;
+  font-weight: bold;
+  color: white;
 }
-
-.popupfooter
-{
-    margin: 5px;
-    text-align:center;
+.popupfooter {
+  margin: 5px;
+  text-align: center;
 }
 p.popupfooter {
-    font-weight: bold;
-    color: grey;
+  font-weight: bold;
+  color: grey;
 }
-#main ul, #main li
-{
-    display: inline;
-}
-
-.component-content ul
-{
-    text-align: center;
-}
-
-.component-content li
-{
-    display: inline;
-}
-
-.pagenav
-{
-    margin-left: 10px;
-    margin-right: 10px;
-}
-
-#recaptcha_widget_div {
-    position:static !important;
+.JBSM [class*="span"] {
+  margin-left: 0;
 }

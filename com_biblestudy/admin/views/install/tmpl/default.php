@@ -1,125 +1,110 @@
 <?php
 /**
- * View html
+ * Default
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
-// No Direct Access
-defined('_JEXEC') or die;
+
+// Protect from unauthorized access
+defined('_JEXEC') or die();
+
+// Apply error container chrome if there are errors detected
+// $quirks_style = $this->haserrors ? 'alert-error' : "";
+$formstyle    = '';
+
+JHtml::_('behavior.framework');
+
+if ($this->totalSteps != '0')
+{
+	$pre = $this->doneSteps . ' of ' . $this->totalSteps;
+}
+else
+{
+	$pre = '';
+}
 ?>
-<?php if (!empty($errors)): ?>
-<!--suppress HtmlUnknownTarget -->
-<div style="background-color: #900; color: #fff; font-size: large;">
-    <h1>MySQL errors during installation</h1>
+<?php
+if ($this->more)
+{
+	?>
+	<h1><?php echo JText::_('JBS_MIG_WORKING'); ?></h1>
+	<?php
+}
+else
+{
+	?>
+	<h1><?php echo JText::_('JBS_MIG_MIGRATION_DONE'); ?></h1>
+	<?php
+}
+?>
+<script type="text/javascript" language="javascript">
+	if (typeof jQuery == 'function') {
+		if (typeof jQuery.ui == 'object') {
+			jQuery('#nojquerywarning'). css('display', 'none');
+		}
+	}
+</script>
 
-    <p>The installation script detected MySQL error which will
-        prevent the component from working properly. We suggest uninstalling
-        any previous version of Akeeba Backup and trying a clean installation.
-    </p>
+<div id="install-progress-pane">
+	<div class="migration-status">
+		<div class="status"><?php echo $pre . ' ' . JText::_('JBS_MIG_PROCESSING') . ' ' . $this->running; ?></div>
+	</div>
+	<fieldset>
+		<div id="install-progress-content">
+			<div id="install-percentage" class="progress">
+				<div class="progress progress-striped active">
+					<div class="bar" style="width: <?php echo $this->percentage ?>%"></div> <?php echo $this->percentage; ?>%
+				</div>
+				<div class="bar" style="width: 0%"></div>
+			</div>
+			<div id="response-timer">
+				<div class="color-overlay"></div>
+				<div class="text"></div>
+			</div>
+		</div>
+	</fieldset>
 
-    <p>
-        The MySQL errors were:
-    </p>
-
-    <p style="font-size: normal;">
-		<?php echo implode("<br/>", $errors); ?>
-    </p>
+	<form action="index.php" name="adminForm" id="adminForm" method="get">
+		<input type="hidden" name="option" value="com_biblestudy"/>
+		<input type="hidden" name="view" value="install"/>
+		<?php if ($this->state == 'start')
+		{ ?>
+			<input type="hidden" name="task" value="install.browse"/>
+		<?php }
+		else
+		{ ?>
+			<input type="hidden" name="task" value="install.run"/>
+		<?php } ?>
+		<input type="hidden" name="<?php echo JFactory::getSession()->getFormToken() ?>" value="1"/>
+	</form>
 </div>
-<?php endif; ?>
 
-<h1>
-    <img src="../media/com_biblestudy/images/openbible.png" alt="Bible Study" border="0" class="float: left"/>
-    <?php echo JText::sprintf('JBS_INS_INSTALLATION_RESULTS', $this->jbstype . '_TEXT'); ?>
-</h1>
+<div id="backup-complete">
+	<?php if (!$this->more)
+	{
+		?>
+		<div id="j-main-container" class="span10">
+			<div id="cpanel" class="btn-group">
+				<div class="pull-left">
+					<a href="index.php?option=com_biblestudy&view=install&layout=install_finished&<?php echo JSession::getFormToken() ?>=1" class="btn cpanl-img">
+						<img src="../media/com_biblestudy/images/icons/icon-48-administration.png"
+						     border="0" alt="<?php echo JText::_('JBS_CMN_CONTROL_PANEL') ?>" width="32"
+						     height="32"/>
+				<span>
+					<?php echo JText::_('JBS_CMN_CONTROL_PANEL') ?>
+				</span>
+					</a>
+				</div>
+			</div>
+		</div>
+		<?php
+	}
+	?>
+</div>
 
-<?php $rows = 0; ?>
- <div class="clearfix"></div>
+<div id="error-panel" style="display: none">
 
-    <table class="table table-striped adminlist" id="install">
-    <thead>
-    <tr>
-        <th class="title" colspan="2">Extension</th>
-        <th width="30%">Status</th>
-    </tr>
-    </thead>
-    <tfoot>
-    <tr>
-        <td colspan="3"></td>
-    </tr>
-    </tfoot>
-    <tbody>
-    <tr class="row0">
-        <td class="key" colspan="2">Joomla Bible Study Component</td>
-        <td><strong>Installed</strong></td>
-    </tr>
-	<?php if (count($this->status->modules)) : ?>
-    <tr>
-        <th>Module</th>
-        <th>Client</th>
-        <th></th>
-    </tr>
-		<?php foreach ($this->status->modules as $module) : ?>
-        <tr class="row<?php echo (++$rows % 2); ?>">
-            <td class="key"><?php echo $module['name']; ?></td>
-            <td class="key"><?php echo ucfirst($module['client']); ?></td>
-            <td><strong
-                    style="color: <?php echo ($module['result']) ? "green" : "red" ?>"><?php echo ($module['result']) ? 'Installed' : 'Not installed'; ?></strong>
-            </td>
-        </tr>
-			<?php endforeach; ?>
-		<?php endif; ?>
-	<?php if (count($this->status->plugins)) : ?>
-    <tr>
-        <th>Plugin</th>
-        <th>Group</th>
-        <th></th>
-    </tr>
-		<?php foreach ($this->status->plugins as $plugin) : ?>
-        <tr class="row<?php echo (++$rows % 2); ?>">
-            <td class="key"><?php echo ucfirst($plugin['name']); ?></td>
-            <td class="key"><?php echo ucfirst($plugin['group']); ?></td>
-            <td><strong
-                    style="color: <?php echo ($plugin['result']) ? "green" : "red" ?>"><?php echo ($plugin['result']) ? 'Installed' : 'Not installed'; ?></strong>
-            </td>
-        </tr>
-			<?php endforeach; ?>
-		<?php endif; ?>
-        </tbody>
-</table>
-<table class="table table-striped adminlist" id="install">
-    <tbody>
-        <tr>
-        <td >
-
-            <a href="index.php?option=com_biblestudy">
-                <img src="../media/com_biblestudy/images/done-icon.jpg" alt="Done" />
-
-                <h3 style="text-align: left;"><?php echo JText::_('JBS_INS_CLICK_TO_FINISH'); ?></h3>
-            </a>
-
-        </td>
-
-        </tr>
-
-        <tr><td>
-          <p><a href="//www.joomlabiblestudy.org/forum.html"
-              target="_blank"><?php echo JText::_('JBS_INS_VISIT_FORUM'); ?></a></p>
-
-        <p><a href="//www.joomlabiblestudy.org"
-              target="_blank"><?php echo JText::_('JBS_INS_GET_MORE_HELP'); ?></a></p>
-
-            <p><a href="//www.joomlabiblestudy.org/jbs-documentation.html"
-              target="_blank"><?php echo JText::_('JBS_INS_VISIT_DOCUMENTATION'); ?></a></p>
-
-        <p><?php echo JText::_('JBS_INS_TITLE'); ?> &copy; by <a href="//www.JoomlaBibleStudy.org" target="_blank">www.JoomlaBibleStudy.org</a>
-            All rights reserved.</p>
-
-        </td>
-        </tr>
-    </tbody>
-</table>
-
-
+</div>

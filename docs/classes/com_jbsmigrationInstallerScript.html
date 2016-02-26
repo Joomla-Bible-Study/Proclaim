@@ -21,8 +21,9 @@
                                     API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a>Packages</a></li>
 <li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
-<li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
-<li><a href="../packages/Joomla.html"><i class="icon-folder-open"></i> Joomla</a></li>
+<li><a href="../packages/BibleStudy.Admin.html"><i class="icon-folder-open"></i> BibleStudy.Admin</a></li>
+<li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
 <li><a href="../packages/LiveUpdate.html"><i class="icon-folder-open"></i> LiveUpdate</a></li>
 <li><a href="../packages/SefExt.html"><i class="icon-folder-open"></i> SefExt</a></li>
 </ul>
@@ -35,18 +36,11 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">2</span></a></li>
+                <span class="label label-info">3</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
-                <ul>
-<li>todo 
-                <span class="label label-info">38</span>
-</li>
-<li>fixme 
-                <span class="label label-info">1</span>
-</li>
-</ul></a></li>
+                <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
-                <span class="label label-info">12</span></a></li>
+                <span class="label label-info">18</span></a></li>
 </ul>
 </li>
 </ul></div>
@@ -67,13 +61,13 @@
 <li class="nav-header">
 <i class="icon-custom icon-method"></i> Methods
                     <ul>
-<li class="method public "><a href="#method_install" title="install :: $parent is the class calling this method."><span class="description">$parent is the class calling this method.</span><pre>install()</pre></a></li>
-<li class="method public "><a href="#method_postflight" title="postflight :: $parent is the class calling this method."><span class="description">$parent is the class calling this method.</span><pre>postflight()</pre></a></li>
-<li class="method public "><a href="#method_preflight" title="preflight :: $parent is the class calling this method."><span class="description">$parent is the class calling this method.</span><pre>preflight()</pre></a></li>
-<li class="method public "><a href="#method_uninstall" title="uninstall :: $parent is the class calling this method
+<li class="method public "><a href="#method_install" title="install() :: $parent is the class calling this method."><span class="description">$parent is the class calling this method.</span><pre>install()</pre></a></li>
+<li class="method public "><a href="#method_postflight" title="postflight() :: $parent is the class calling this method."><span class="description">$parent is the class calling this method.</span><pre>postflight()</pre></a></li>
+<li class="method public "><a href="#method_preflight" title="preflight() :: $parent is the class calling this method."><span class="description">$parent is the class calling this method.</span><pre>preflight()</pre></a></li>
+<li class="method public "><a href="#method_uninstall" title="uninstall() :: $parent is the class calling this method
 uninstall runs before any other action is taken (file removal or database processing)."><span class="description">$parent is the class calling this method
 uninstall runs before any other action is taken (file removal or database processing).</span><pre>uninstall()</pre></a></li>
-<li class="method public "><a href="#method_update" title="update :: $parent is the class calling this method."><span class="description">$parent is the class calling this method.</span><pre>update()</pre></a></li>
+<li class="method public "><a href="#method_update" title="update() :: $parent is the class calling this method."><span class="description">$parent is the class calling this method.</span><pre>update()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header">
@@ -82,8 +76,8 @@ uninstall runs before any other action is taken (file removal or database proces
 </li>
 <li class="nav-header private">» Private
                     <ul>
-<li class="property private "><a href="#property_minimum_joomla_release" title="$minimum_joomla_release :: Find mimimum required joomla version for this extension."><span class="description"></span><pre>$minimum_joomla_release</pre></a></li>
-<li class="property private "><a href="#property_release" title="$release :: The release value to be displayed and check against throughout this file."><span class="description"></span><pre>$release</pre></a></li>
+<li class="property private "><a href="#property_minimum_joomla_release" title="$minimum_joomla_release() :: Find mimimum required joomla version for this extension. It will be read from the version attribute (install tag) in the manifest file"><span class="description"></span><pre>$minimum_joomla_release</pre></a></li>
+<li class="property private "><a href="#property_release" title="$release() :: The release value to be displayed and check against throughout this file."><span class="description"></span><pre>$release</pre></a></li>
 </ul>
 </li>
 </ul>
@@ -93,7 +87,6 @@ uninstall runs before any other action is taken (file removal or database proces
 <li>
 <a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
 </li>
-<li><a href="../namespaces/global.html">global</a></li>
 <li class="active">
 <span class="divider">\</span><a href="../classes/com_jbsmigrationInstallerScript.html">com_jbsmigrationInstallerScript</a>
 </li>
@@ -113,7 +106,7 @@ uninstall runs before any other action is taken (file removal or database proces
 </tr>
 <tr>
 <th>since</th>
-<td>7.0.2</td>
+<td></td>
 </tr>
 </table>
 <h3>
@@ -123,9 +116,9 @@ uninstall runs before any other action is taken (file removal or database proces
 <pre>install(string $parent) : boolean</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
-<div class="long_description"><p>install runs after the database scripts are executed.
+<div class="long_description">install runs after the database scripts are executed.
 If the extension is new, the install method is run.
-If install returns false, Joomla will abort the install and undo everything already done.</p></div>
+If install returns false, Joomla will abort the install and undo everything already done.</div>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$parent</h4>
@@ -140,8 +133,8 @@ If install returns false, Joomla will abort the install and undo everything alre
 <pre>postflight(string $type, string $parent) : boolean</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
-<div class="long_description"><p>$type is the type of change (install, update or discover_install, not uninstall).
-postflight is run after the extension is registered in the database.</p></div>
+<div class="long_description">$type is the type of change (install, update or discover_install, not uninstall).
+postflight is run after the extension is registered in the database.</div>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$type</h4>
@@ -160,9 +153,9 @@ postflight is run after the extension is registered in the database.</p></div>
 <pre>preflight(string $type, string $parent) : boolean</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
-<div class="long_description"><p>$type is the type of change (install, update or discover_install, not uninstall).
+<div class="long_description">$type is the type of change (install, update or discover_install, not uninstall).
 preflight runs before anything else and while the extracted files are in the uploaded temp folder.
-If preflight returns false, Joomla will abort the update and undo everything already done.</p></div>
+If preflight returns false, Joomla will abort the update and undo everything already done.</div>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$type</h4>
@@ -201,9 +194,9 @@ uninstall runs before any other action is taken (file removal or database proces
 <pre>update(string $parent) : boolean</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
-<div class="long_description"><p>update runs after the database scripts are executed.
+<div class="long_description">update runs after the database scripts are executed.
 If the extension exists, then the update method is run.
-If this returns false, Joomla will abort the update and undo everything already done.</p></div>
+If this returns false, Joomla will abort the update and undo everything already done.</div>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$parent</h4>
@@ -216,13 +209,13 @@ If this returns false, Joomla will abort the update and undo everything already 
 <h3>
 <i class="icon-custom icon-property"></i> Properties</h3>
 <a id="property_minimum_joomla_release"> </a><div class="element clickable property private property_minimum_joomla_release" data-toggle="collapse" data-target=".property_minimum_joomla_release .collapse">
-<h2></h2>
+<h2>Find mimimum required joomla version for this extension. It will be read from the version attribute (install tag) in the manifest file</h2>
 <pre>$minimum_joomla_release : string</pre>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"><p>It will be read from the version attribute (install tag) in the manifest file</p></div></div></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
 <a id="property_release"> </a><div class="element clickable property private property_release" data-toggle="collapse" data-target=".property_release .collapse">
-<h2></h2>
+<h2>The release value to be displayed and check against throughout this file.</h2>
 <pre>$release : string</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
@@ -233,8 +226,9 @@ If this returns false, Joomla will abort the update and undo everything already 
 </div>
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
-            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
-            generated on 2013-06-22T20:25:41-05:00.<br></footer></div>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.1
+</a> and<br>
+            generated on 2013-10-17T22:45:28-05:00.<br></footer></div>
 </div>
 </body>
 </html>

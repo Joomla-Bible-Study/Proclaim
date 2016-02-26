@@ -1,7 +1,7 @@
-INSERT INTO `#__bsms_update` (id, version) VALUES (4, '7.0.2')
+INSERT INTO `#__bsms_update` (id, version) VALUES (10, '7.0.2')
 ON DUPLICATE KEY UPDATE version= '7.0.2';
 --
--- Old Talbes No longer used.
+-- Old Tales No longer used.
 --
 DROP TABLE IF EXISTS `#__bsms_install`;
 DROP TABLE IF EXISTS `#__bsms_version`;
@@ -114,9 +114,7 @@ MODIFY `access` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
 MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '1',
 MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
--- Order
--- removed this as it causes an error when the user tries to use the admin tab of jbs
--- ALTER TABLE `#__bsms_order` MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
 --
 -- Podcast
 --
@@ -127,10 +125,6 @@ MODIFY `access` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
 MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '1',
 MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
--- Search
---
--- Removed at 8.0.4 do to error in JSchemaChangeset::getInstance;
--- ALTER TABLE `#__bsms_search` MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- Series
 --
@@ -147,16 +141,6 @@ MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 ALTER TABLE `#__bsms_servers` ADD INDEX `idx_state` ( `published` );
 ALTER TABLE `#__bsms_servers` ADD INDEX `idx_access` ( `access` ),
-MODIFY `asset_id` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
-MODIFY `access` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
-MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '1',
-MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- Share
---
-ALTER TABLE `#__bsms_share` ADD INDEX `idx_state` ( `published` );
-ALTER TABLE `#__bsms_share` ADD INDEX `idx_access` ( `access` );
-ALTER TABLE `#__bsms_share` ADD COLUMN `ordering` INT( 11 ) NOT NULL DEFAULT '0',
 MODIFY `asset_id` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
 MODIFY `access` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
 MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '1',
@@ -215,4 +199,4 @@ MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- Drop `#__bsms_version`
 --
-DROP TABLE IF EXISTS #__bsms_version;
+DROP TABLE IF EXISTS `#__bsms_version`;

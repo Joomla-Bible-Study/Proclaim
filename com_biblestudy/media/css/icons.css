@@ -1,87 +1,71 @@
-.icon-48-administration {
-    background-image: url("../images/icons/icon-48-administration.png");
-}
+.icon-administration {
+	background-image: url("../images/icons/icon-administration.png");
+	}
 
-.icon-48-studies {
-    background-image: url("../images/icons/icon-48-studies.png");
-}
+.icon-studies {
+	background-image: url("../images/icons/icon-studies.png");
+	}
 
-.icon-48-mp3 {
-    background-image: url("../images/icons/icon-48-mp3.png");
-}
+.icon-mp3 {
+	background-image: url("../images/icons/icon-mp3.png");
+	}
 
-.icon-48-templates {
-    background-image: url("../images/icons/icon-48-templates.png");
-}
+.icon-templates {
+	background-image: url("../images/icons/icon-templates.png");
+	}
 
-.icon-48-css {
-    background-image: url("../images/icons/icon-48-css.png");
-}
+.icon-css {
+	background-image: url("../images/icons/icon-css.png");
+	}
 
-.icon-48-podcast {
-    background-image: url("../images/icons/icon-48-podcast.png");
-}
+.icon-podcast {
+	background-image: url("../images/icons/icon-podcast.png");
+	}
 
-.icon-48-series {
-    background-image: url("../images/icons/icon-48-series.png");
-}
+.icon-series {
+	background-image: url("../images/icons/icon-series.png");
+	}
 
-.icon-48-teachers {
-    background-image: url("../images/icons/icon-48-teachers.png");
-}
+.icon-teachers {
+	background-image: url("../images/icons/icon-teachers.png");
+	}
 
 .icon-48-biblebooks {
-    background-image: url("../images/icons/icon-48-biblebooks.png");
-}
+	background-image: url("../images/icons/icon-48-biblebooks.png");
+	}
 
 .icon-48-mediaimages {
-    background-image: url("../images/icons/icon-48-mediaimages.png");
-}
+	background-image: url("../images/icons/icon-48-mediaimages.png");
+	}
 
-.icon-48-servers {
-    background-image: url("../images/icons/icon-48-servers.png");
-}
+.icon-servers {
+	background-image: url("../images/icons/icon-servers.png");
+	}
 
-.icon-48-folder {
-    background-image: url("../images/icons/icon-48-folder.png");
-}
+.icon-messagetype {
+	background-image: url("../images/icons/icon-messagetype.png");
+	}
 
-.icon-48-messagetype {
-    background-image: url("../images/icons/icon-48-messagetype.png");
-}
+.icon-topics {
+	background-image: url("../images/icons/icon-topics.png");
+	}
 
-.icon-48-locations {
-    background-image: url("../images/icons/icon-48-locations.png");
-}
+.icon-locations {
+	background-image: url("../images/icons/icon-locations.png");
+	}
 
-.icon-48-topics {
-    background-image: url("../images/icons/icon-48-topics.png");
-}
+.icon-comments {
+	background-image: url("../images/icons/icon-comments.png");
+	}
 
-.icon-48-mimetype {
-    background-image: url("../images/icons/icon-48-mimetype.png");
-}
+.icon-social {
+	background-image: url("../images/icons/icon-social.png");
+	}
 
-.icon-48-comments {
-    background-image: url("../images/icons/icon-48-comments.png");
-}
+.icon-openbible {
+	background-image: url('../images/openbible.gif');
+	}
 
-.icon-48-social {
-    background-image: url("../images/icons/icon-48-social.png");
-}
-
-.icon-32-reset {
-    background-image: url("../images/icons/icon-32-reset.png");
-}
-
-.icon-32-xml {
-    background-image: url("../images/icons/icon-32-xml.png");
-}
-
-.icon-32-download {
-    background-image: url("../images/icons/icon-32-download.png");
-}
-
-.icon-32-play {
-    background-image: url("../images/icons/icon-32-play.png");
-}
+.icon-xml {
+	background-image: url('../images/icons/icon-xml.png');
+	}
