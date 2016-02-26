@@ -463,7 +463,6 @@ class Migration900
 			BIBLESTUDY_PATH_ADMIN . '/controllers/migration.php'
 		);
 
-
 			foreach ($path as $file)
 			{
 				if (JFile::exists($file))
