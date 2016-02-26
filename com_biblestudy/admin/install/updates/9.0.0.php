@@ -459,7 +459,9 @@ class Migration900
 			BIBLESTUDY_PATH_ADMIN . '/views/shares/view.html.php',
 			BIBLESTUDY_PATH_ADMIN . '/views/shares/tmpl/index.html',
 			BIBLESTUDY_PATH_ADMIN . '/views/shares/view.html.php',
-			BIBLESTUDY_PATH_ADMIN . '/views/shares/tmpl/default.php'
+			BIBLESTUDY_PATH_ADMIN . '/views/shares/tmpl/default.php',
+			BIBLESTUDY_PATH_ADMIN . '/moduels/migration.php',
+			BIBLESTUDY_PATH_ADMIN . '/controllers/migration.php'
 		);
 
 
@@ -475,7 +477,8 @@ class Migration900
 			BIBLESTUDY_PATH_ADMIN . '/views/styles',
 			BIBLESTUDY_PATH_ADMIN . '/views/style',
 			BIBLESTUDY_PATH_ADMIN . '/views/shares',
-			BIBLESTUDY_PATH_ADMIN . '/views/share');
+			BIBLESTUDY_PATH_ADMIN . '/views/share',
+			BIBLESTUDY_PATH_ADMIN . '/views/migration');
 
 		foreach ($folders as $folder)
 		{
