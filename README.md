@@ -16,16 +16,15 @@ Status
     <tr>
         <td><a href="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study" target="_blank"><img src="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=development"/></a></td>
         <td>Development</td>
-        <td>9.0.0-bata1</td>
-        <td>Jan 1, 2015</td>
-        <td align="center">3.x+</td>
+        <td>9.0.0-bate3</td>
+        <td>March 25, 2016</td>
+        <td align="center">3.4+</td>
     </tr>
     <tr>
         <td><a href="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study" target="_blank"><img src="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=master"/></a></td>
-        <td>Master</td>
-        <td>8.0.9</td>
-        <td>Jan 1, 2015</td>
-        <td align="center">2.5+</td>
+        <td>9.0.0-bate2</td>
+        <td>Feb 26, 2016</td>
+        <td align="center">3.4+</td>
     </tr>
 </table>
 
