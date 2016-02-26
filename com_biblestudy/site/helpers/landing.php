@@ -328,7 +328,6 @@ class JBSMLanding
 
 						$teacher .= '</a></div>';
 
-
 						$i++;
 						$t++;
 
