@@ -502,7 +502,7 @@ class JBSMMedia
 		{
 			$media->malttext = '';
 		}
-		if (substr_count($path, '://') && substr_count($path, '//'))
+		if (!substr_count($path, '://') && !substr_count($path, '//'))
 		{
 			$protocol = $params->get('protocol', '//');
 			$path     = $protocol . $media->sparams->get('path') . $path;
