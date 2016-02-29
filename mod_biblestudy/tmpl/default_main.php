@@ -29,7 +29,7 @@ $JBSMListing = new JBSMListing;
 	?>
 	<div class="row-fluid">
 		<div class="span12">
-			<?php
+			<?php dump($params->get('use_headers_list'));
 			$list = $JBSMListing->getFluidListing($items, $params, $template, $type = "sermons");
 			echo $list;
 			?>

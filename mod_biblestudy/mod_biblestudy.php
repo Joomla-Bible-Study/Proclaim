@@ -31,7 +31,8 @@ $pagebuilder = new JBSMPagebuilder;
 $admin = JBSMParams::getAdmin();
 $admin_params = new Registry($admin->params);
 $params->merge($admin_params);
-$params->merge($template->params);
+$template->params->merge($params);
+$params = $template->params;
 $items = $pagebuilder->studyBuilder(null, null, $params);
 
 
