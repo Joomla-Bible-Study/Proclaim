@@ -128,13 +128,6 @@
 				       query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
 				       key_field="id" value_field="title" required="true"/>
 			</fieldset>
-			<fieldset name="JBS_MDL_TOOLTIP" label="JBS_MDL_TOOLTIP">
-				<field name="tip_title" type="text" default="Sermon Information"
-				       size="100" label="JBS_TPL_TOOLTIP_TIP_TITLE" description="JBS_TPL_TOOLTIP_TIP_TITLE_DESC"/>
-				<field name="tip_item1_title" type="text" default="Title"
-				       label="JBS_TPL_TOOLTIP_TIP_ITEM1_TITLE" description="JBS_TPL_TOOLTIP_TIP_ITEM_TITLE_DESC"
-				       size="100"/>
-			</fieldset>
 			<fieldset name="JBS_MDL_MEDIA" label="JBS_MDL_MEDIA">
 				<field name="media_player" type="list" default="0"
 				       label="JBS_TPL_MEDIA_MEDIA_PLAYER" description="JBS_TPL_MEDIA_MEDIA_PLAYER_DESC">
@@ -240,14 +233,6 @@
 			</fieldset>
 			<fieldset name="JBS_TPL_DISPLAY_ITEMS1" label="JBS_TPL_DISPLAY_ITEMS1"
 			          addfieldpath="/administrator/components/com_biblestudy/models/fields">
-				<field name="use_headers_module" type="list" default="1"
-				       label="JBS_TPL_LISTITEMS_USE_HEADERS_LIST" description="JBS_TPL_LISTITEMS_USE_HEADERS_LIST_DESC">
-					<option value="0">JBS_TPL_NO_HEADER_ROW</option>
-					<option value="1">JBS_TPL_USE_HEADER_ROW</option>
-				</field>
-				<field name="listcolor1" type="text" default="" label="JBS_TPL_LISTCOLOR1" description="JBS_TPL_LISTCOLOR_DESC"/>
-				<field name="listcolor2" type="text" default="" label="JBS_TPL_LISTCOLOR2" description="JBS_TPL_LISTCOLOR_DESC"/>
-
 				<field name="rowspanitem" type="list" default="0" label="JBS_TPL_ROWSPANITEM" description="JBS_TPL_ROWSPANITEM_DESC">
 					<option value="0">JBS_TPL_NO_ITEM</option>
 					<option value="1">JBS_TPL_TEACHERAIMGE</option>
