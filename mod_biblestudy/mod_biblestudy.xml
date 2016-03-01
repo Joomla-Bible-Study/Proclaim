@@ -32,9 +32,6 @@
 				       key_field="filename" value_field="filename">
 					<option value="0">JBS_CMN_USE_DEFAULT</option>
 				</field>
-				<field name="css" type="filelist" label="JBS_STYLE_CHOOSE_CSS_FILE"
-				       description="JBS_STYLE_CHOOSE_CSS_FILE_DESC"
-				       directory="/media/com_biblestudy/css/site" exclude=".html" hide_default="true" required="true"/>
 				<field name="moduleitems" label="JBS_MDL_ITEMS"
 				       description="JBS_MDL_ITEMS_DESC" default="5" type="text" size="10"/>
 				<field name="use_headers_list" type="radio" default="1" label="JBS_MDL_USE_LIST_HEADER"
@@ -130,125 +127,6 @@
 				       label="JBS_TPL_TEMPLATE_SERIES_DETAIL" description="JBS_TPL_TEMPLATE_SERIES_DETAIL_DESC"
 				       query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
 				       key_field="id" value_field="title" required="true"/>
-			</fieldset>
-			<fieldset name="JBS_MDL_TOOLTIP" label="JBS_MDL_TOOLTIP">
-				<field name="tip_title" type="text" default="Sermon Information"
-				       size="100" label="JBS_TPL_TOOLTIP_TIP_TITLE" description="JBS_TPL_TOOLTIP_TIP_TITLE_DESC"/>
-				<field name="tip_item1_title" type="text" default="Title"
-				       label="JBS_TPL_TOOLTIP_TIP_ITEM1_TITLE" description="JBS_TPL_TOOLTIP_TIP_ITEM_TITLE_DESC"
-				       size="100"/>
-				<field name="tip_item1" type="list" default="5"
-				       label="JBS_TPL_TOOLTIP_TIP_ITEM1" description="JBS_TPL_TOOLTIP_TIP_ITEM_DESC">
-					<option value="5">JBS_CMN_STUDY_TITLE</option>
-					<option value="10">JBS_CMN_STUDY_DATE</option>
-					<option value="7">JBS_CMN_TEACHER_NAME</option>
-					<option value="8">JBS_CMN_TEACHER_TITLE</option>
-					<option value="1">JBS_CMN_SCRIPTURE</option>
-					<option value="2">JBS_CMN_SCRIPTURE2</option>
-					<option value="3">JBS_CMN_SECONDARY_REFERENCES</option>
-					<option value="4">JBS_CMN_DURATION</option>
-					<option value="6">JBS_CMN_STUDY_INTRO</option>
-					<option value="12">JBS_CMN_HITS</option>
-					<option value="13">JBS_CMN_STUDYNUMBER</option>
-					<option value="14">JBS_CMN_TOPIC</option>
-					<option value="15">JBS_CMN_LOCATION</option>
-					<option value="16">JBS_CMN_MESSAGETYPE</option>
-					<option value="23">JBS_CMN_FILESIZE</option>
-					<option value="28">JBS_TPL_MEDIA_PLAYS</option>
-					<option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
-				</field>
-				<field name="tip_item2_title" type="text" default="Details"
-				       label="JBS_TPL_TOOLTIP_TIP_ITEM2_TITLE" description="JBS_TPL_TOOLTIP_TIP_ITEM_TITLE_DESC"
-				       size="100"/>
-				<field name="tip_item2" type="list" default="6"
-				       label="JBS_TPL_TOOLTIP_TIP_ITEM2" description="JBS_TPL_TOOLTIP_TIP_ITEM_DESC">
-					<option value="5">JBS_CMN_STUDY_TITLE</option>
-					<option value="10">JBS_CMN_STUDY_DATE</option>
-					<option value="7">JBS_CMN_TEACHER_NAME</option>
-					<option value="8">JBS_CMN_TEACHER_TITLE</option>
-					<option value="1">JBS_CMN_SCRIPTURE</option>
-					<option value="2">JBS_CMN_SCRIPTURE2</option>
-					<option value="3">JBS_CMN_SECONDARY_REFERENCES</option>
-					<option value="4">JBS_CMN_DURATION</option>
-					<option value="6">JBS_CMN_STUDY_INTRO</option>
-					<option value="12">JBS_CMN_HITS</option>
-					<option value="13">JBS_CMN_STUDYNUMBER</option>
-					<option value="14">JBS_CMN_TOPIC</option>
-					<option value="15">JBS_CMN_LOCATION</option>
-					<option value="16">JBS_CMN_MESSAGETYPE</option>
-					<option value="23">JBS_CMN_FILESIZE</option>
-					<option value="28">JBS_TPL_MEDIA_PLAYS</option>
-					<option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
-				</field>
-				<field name="tip_item3_title" type="text" default="Teacher"
-				       label="JBS_TPL_TOOLTIP_TIP_ITEM3_TITLE" description="JBS_TPL_TOOLTIP_TIP_ITEM_TITLE_DESC"
-				       size="100"/>
-				<field name="tip_item3" type="list" default="7"
-				       label="JBS_TPL_TOOLTIP_TIP_ITEM3" description="JBS_TPL_TOOLTIP_TIP_ITEM_DESC">
-					<option value="5">JBS_CMN_STUDY_TITLE</option>
-					<option value="10">JBS_CMN_STUDY_DATE</option>
-					<option value="7">JBS_CMN_TEACHER_NAME</option>
-					<option value="8">JBS_CMN_TEACHER_TITLE</option>
-					<option value="1">JBS_CMN_SCRIPTURE</option>
-					<option value="2">JBS_CMN_SCRIPTURE2</option>
-					<option value="3">JBS_CMN_SECONDARY_REFERENCES</option>
-					<option value="4">JBS_CMN_DURATION</option>
-					<option value="6">JBS_CMN_STUDY_INTRO</option>
-					<option value="12">JBS_CMN_HITS</option>
-					<option value="13">JBS_CMN_STUDYNUMBER</option>
-					<option value="14">JBS_CMN_TOPIC</option>
-					<option value="15">JBS_CMN_LOCATION</option>
-					<option value="16">JBS_CMN_MESSAGETYPE</option>
-					<option value="23">JBS_CMN_FILESIZE</option>
-					<option value="28">JBS_TPL_MEDIA_PLAYS</option>
-					<option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
-				</field>
-				<field name="tip_item4_title" type="text" default="Reference"
-				       label="JBS_TPL_TOOLTIP_TIP_ITEM4_TITLE" description="JBS_TPL_TOOLTIP_TIP_ITEM_TITLE_DESC"
-				       size="100"/>
-				<field name="tip_item4" type="list" default="1"
-				       label="JBS_TPL_TOOLTIP_TIP_ITEM4" description="JBS_TPL_TOOLTIP_TIP_ITEM_DESC">
-					<option value="5">JBS_CMN_STUDY_TITLE</option>
-					<option value="10">JBS_CMN_STUDY_DATE</option>
-					<option value="7">JBS_CMN_TEACHER_NAME</option>
-					<option value="8">JBS_CMN_TEACHER_TITLE</option>
-					<option value="1">JBS_CMN_SCRIPTURE</option>
-					<option value="2">JBS_CMN_SCRIPTURE2</option>
-					<option value="3">JBS_CMN_SECONDARY_REFERENCES</option>
-					<option value="4">JBS_CMN_DURATION</option>
-					<option value="6">JBS_CMN_STUDY_INTRO</option>
-					<option value="12">JBS_CMN_HITS</option>
-					<option value="13">JBS_CMN_STUDYNUMBER</option>
-					<option value="14">JBS_CMN_TOPIC</option>
-					<option value="15">JBS_CMN_LOCATION</option>
-					<option value="16">JBS_CMN_MESSAGETYPE</option>
-					<option value="23">JBS_CMN_FILESIZE</option>
-					<option value="28">JBS_TPL_MEDIA_PLAYS</option>
-					<option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
-				</field>
-				<field name="tip_item5_title" type="text" default="Date"
-				       label="JBS_TPL_TOOLTIP_TIP_ITEM5_TITLE" description="JBS_TPL_TOOLTIP_TIP_ITEM_TITLE_DESC"
-				       size="100"/>
-				<field name="tip_item5" type="list" default="10"
-				       label="JBS_TPL_TOOLTIP_TIP_ITEM5" description="JBS_TPL_TOOLTIP_TIP_ITEM_DESC">
-					<option value="5">JBS_CMN_STUDY_TITLE</option>
-					<option value="10">JBS_CMN_STUDY_DATE</option>
-					<option value="7">JBS_CMN_TEACHER_NAME</option>
-					<option value="8">JBS_CMN_TEACHER_TITLE</option>
-					<option value="1">JBS_CMN_SCRIPTURE</option>
-					<option value="2">JBS_CMN_SCRIPTURE2</option>
-					<option value="3">JBS_CMN_SECONDARY_REFERENCES</option>
-					<option value="4">JBS_CMN_DURATION</option>
-					<option value="6">JBS_CMN_STUDY_INTRO</option>
-					<option value="12">JBS_CMN_HITS</option>
-					<option value="13">JBS_CMN_STUDYNUMBER</option>
-					<option value="14">JBS_CMN_TOPIC</option>
-					<option value="15">JBS_CMN_LOCATION</option>
-					<option value="16">JBS_CMN_MESSAGETYPE</option>
-					<option value="23">JBS_CMN_FILESIZE</option>
-					<option value="28">JBS_TPL_MEDIA_PLAYS</option>
-					<option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
-				</field>
 			</fieldset>
 			<fieldset name="JBS_MDL_MEDIA" label="JBS_MDL_MEDIA">
 				<field name="media_player" type="list" default="0"
