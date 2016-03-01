@@ -33,7 +33,7 @@ $admin_params = new Registry($admin->params);
 $params->merge($admin_params);
 $template->params->merge($params);
 $params = $template->params;
-$items = $pagebuilder->studyBuilder(null, null, $params);
+$items = $pagebuilder->studyBuilder(null, null, $params, $params->get('moduleitems', '10'));
 
 
 // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
@@ -48,7 +48,7 @@ if ($params->get('useexpert_module') > 0 || is_string($params->get('moduletempla
 	{
 		$item->slug       = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
 			. str_replace(' ', '-', htmlspecialchars_decode($item->studytitle, ENT_QUOTES));
-		$pelements        = $pagebuilder->buildPage($item, $params, $admin_params);
+		$pelements        = $pagebuilder->buildPage($item, $params, $template);
 		$item->scripture1 = $pelements->scripture1;
 		$item->scripture2 = $pelements->scripture2;
 		$item->media      = $pelements->media;
