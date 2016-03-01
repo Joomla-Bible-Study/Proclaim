@@ -41,7 +41,7 @@ $user   = JFactory::getUser();
 $groups = $user->getAuthorisedViewLevels();
 $count  = count($items);
 
-if ($params->get('useexpert_module') > 0 || is_string($params->get('moduletemplate')))
+if ($params->get('useexpert_module') > 0 || is_string($params->get('moduletemplate')) == true)
 {
 
 	foreach ($items AS $item)
