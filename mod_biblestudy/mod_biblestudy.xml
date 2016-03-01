@@ -34,19 +34,19 @@
 				</field>
 				<field name="moduleitems" label="JBS_MDL_ITEMS"
 				       description="JBS_MDL_ITEMS_DESC" default="5" type="text" size="10"/>
-				<field name="use_headers_list" type="radio" default="1" label="JBS_MDL_USE_LIST_HEADER"
+				<field name="use_headers_list" type="radio" default="" label="JBS_MDL_USE_LIST_HEADER"
 				       description="JBS_MDL_USE_LIST_HEADER_DESC">
 					<option value="1">JYES</option>
 					<option value="0">JNO</option>
 				</field>
-				<field name="show_link" type="radio" default="1"
+				<field name="show_link" type="radio" default=""
 				       label="JBS_MDL_SHOW_COMPONENT" description="JBS_MDL_SHOW_COMPONENT_DESC">
 					<option value="1">JSHOW</option>
 					<option value="0">JHIDE</option>
 				</field>
 				<field name="pagetext" type="text" size="50" default="More Bible Studies"
 				       label="JBS_MDL_LINK_TEXT" description="JBS_MDL_LINK_TEXT_DESC"/>
-				<field name="show_verses" type="list" default="0"
+				<field name="show_verses" type="list" default=""
 				       label="JBS_TPL_VERSES_SHOW_VERSES" description="JBS_TPL_VERSES_SHOW_VERSES_DESC">
 					<option value="0">JBS_TPL_SHOW_ONLY_CHAPTERS</option>
 					<option value="1">JBS_TPL_SHOW_VERSES_AND_CHAPTERS</option>
@@ -54,8 +54,9 @@
 			</fieldset>
 			<fieldset name="JBS_MDL_FILTERS" label="JBS_MDL_FILTERS"
 			          addfieldpath="/administrator/components/com_biblestudy/models/fields">
-				<field name="condition" type="radio" default="1" label="JBS_MDL_AND_OR"
+				<field name="condition" type="radio" default="" label="JBS_MDL_AND_OR"
 				       description="JBS_MDL_AND_OR_DESC">
+					<option value="">JGLOBAL_USE_GLOBAL</option>
 					<option value="0">JBS_MDL_OR</option>
 					<option value="1">JBS_MDL_AND</option>
 				</field>
@@ -63,7 +64,8 @@
 				       type="list"
 				       label="JBS_CMN_ORDERING"
 				       description="JBS_CMN_ORDERING_DESC"
-				       default="1">
+				       default="">
+					<option value="">JGLOBAL_USE_GLOBAL</option>
 					<option value="1">JBS_CMN_DESCENDING</option>
 					<option value="2">JBS_CMN_ASCENDING</option>
 				</field>
@@ -71,40 +73,47 @@
 				       label="JFIELD_LANGUAGE_LABEL" description="JBS_MDL_LANGUAGE_DESC">
 					<option value="*">JALL</option>
 				</field>
-				<field name="teacher_id" type="teacherlist" multiple="true" default="-1"
+				<field name="teacher_id" type="teacherlist" multiple="true" default=""
 				       label="JBS_CMN_FILTERS_TEACHER" description="JBS_CMN_FILTERS_DESC">
+					<option value="">JGLOBAL_USE_GLOBAL</option>
 					<option value="-1">JBS_CMN_SHOW_ALL</option>
 				</field>
-				<field name="series_id" type="serieslist" multiple="true" default="-1"
+				<field name="series_id" type="serieslist" multiple="true" default=""
 				       label="JBS_CMN_FILTERS_SERIES" description="JBS_CMN_FILTERS_DESC">
+					<option value="">JGLOBAL_USE_GLOBAL</option>
 					<option value="-1">JBS_CMN_SHOW_ALL</option>
 				</field>
 				<field name="booknumber" type="SQL" class="inputbox" multiple="true" translate="true"
 				       label="JBS_CMN_FILTERS_BOOKS" description="JBS_CMN_FILTERS_DESC"
 				       query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC"
 				       key_field="booknumber" value_field="bookname"
-				       default="-1">
+				       default="">
+					<option value="">JGLOBAL_USE_GLOBAL</option>
 					<option value="-1">JBS_CMN_SHOW_ALL</option>
 				</field>
 				<field name="topic_id" type="topicslist" multiple="true" size="10"
 				       label="JBS_CMN_FILTERS_TOPICS" description="JBS_CMN_FILTERS_DESC"
-				       default="-1">
+				       default="">
+					<option value="">JGLOBAL_USE_GLOBAL</option>
 					<option value="-1">JBS_CMN_SHOW_ALL</option>
 				</field>
 				<field name="messagetype" type="messagetypelist" multiple="true"
 				       label="JBS_CMN_FILTERS_MESSAGETYPES" description="JBS_CMN_FILTERS_DESC"
-				       default="-1">
+				       default="">
+					<option value="">JGLOBAL_USE_GLOBAL</option>
 					<option value="-1">JBS_CMN_SHOW_ALL</option>
 				</field>
 				<field name="locations" type="locationslist" multiple="true"
 				       label="JBS_CMN_FILTERS_LOCATIONS" description="JBS_CMN_FILTERS_DESC"
-				       default="-1">
+				       default="">
+					<option value="">JGLOBAL_USE_GLOBAL</option>
 					<option value="-1">JBS_CMN_SHOW_ALL</option>
 				</field>
-				<field name="year" type="sql" default="-1" multiple="true"
+				<field name="year" type="sql" default="" multiple="true"
 				       label="JBS_CMN_FILTERS_YEARS" description="JBS_CMN_FILTERS_DESC"
 				       query="SELECT DISTINCT(YEAR(studydate)) as date FROM #__bsms_studies ORDER BY studydate DESC"
 				       key_field="date" value_field="date">
+					<option value="">JGLOBAL_USE_GLOBAL</option>
 					<option value="-1">JBS_CMN_SHOW_ALL</option>
 				</field>
 				<field name="studieslisttemplateid" type="sql" default=""
@@ -129,30 +138,30 @@
 				       key_field="id" value_field="title" required="true"/>
 			</fieldset>
 			<fieldset name="JBS_MDL_MEDIA" label="JBS_MDL_MEDIA">
-				<field name="media_player" type="list" default="0"
-				       label="JBS_TPL_MEDIA_MEDIA_PLAYER" description="JBS_TPL_MEDIA_MEDIA_PLAYER_DESC">
+				<field name="player" type="list" label="JBS_MED_PLAYER"
+				       description="JBS_MED_PLAYER_DESC" class="inputbox" size="1" default="">
+					<option value="">JGLOBAL_USE_GLOBAL</option>
 					<option value="0">JBS_CMN_DIRECT_LINK</option>
 					<option value="1">JBS_CMN_USE_INTERNAL_PLAYER</option>
 					<option value="3">JBS_CMN_USE_AV</option>
 					<option value="7">JBS_CMN_USE_MP3_PLAYER</option>
 					<option value="8">JBS_CMN_USE_EMBED_CODE</option>
 				</field>
-				<field name="popuptype" type="list" default="window"
-				       label="JBS_TPL_MEDIA_POPUPTYPE" description="JBS_TPL_MEDIA_POPUPTYPE_DESC">
-					<option value="window">JBS_TPL_WINDOW</option>
-					<option value="lightbox">JBS_TPL_LIGHTBOX</option>
-				</field>
-				<field name="internal_popup" type="list" default="1"
-				       label="JBS_TPL_MEDIA_INTERNAL_POPUP" description="JBS_TPL_MEDIA_INTERNAL_POPUP_DESC">
-					<option value="1">JBS_CMN_POPUP_NEW_WINDOW</option>
+				<field name="popup" type="list" label="JBS_MED_INTERNAL_POPUP"
+				       description="JBS_MED_INTERNAL_POPUP_DESC" class="inputbox" size="1"
+				       default="">
+					<option value="">JGLOBAL_USE_GLOBAL</option>
+					<option value="1">JBS_CMN_POPUP</option>
 					<option value="2">JBS_CMN_INLINE</option>
+					<option value="3">JBS_CMN_SQUEEZEBOX</option>
 				</field>
 				<field name="player_width" type="text" default="400"
 				       label="JBS_TPL_MEDIA_PLAYER_WIDTH" description="JBS_TPL_MEDIA_PLAYER_WIDTH_DESC"/>
 				<field name="player_height" type="text" default="300"
 				       label="JBS_TPL_MEDIA_PLAYER_HEIGHT" description="JBS_TPL_MEDIA_PLAYER_HEIGHT_DESC"/>
-				<field name="embedshare" default="TRUE" type="list"
+				<field name="embedshare" default="" type="list"
 				       label="JBS_TPL_MEDIA_EMBEDSHARE" description="JBS_TPL_MEDIA_EMBEDSHARE_DESC">
+					<option value="">JGLOBAL_USE_GLOBAL</option>
 					<option value="FALSE">JBS_TPL_NO_SHARE</option>
 					<option value="TRUE">JBS_TPL_SHOW_SHARE</option>
 				</field>
@@ -175,8 +184,9 @@
 				<field name="popupimage" type="text" size="150"
 				       default="media/com_biblestudy/images/speaker24.png" label="JBS_TPL_MEDIA_POPUPIMAGE"
 				       description="JBS_TPL_MEDIA_POPUPIMAGE_DESC"/>
-				<field name="show_filesize" type="list" default="1"
+				<field name="show_filesize" type="list" default=""
 				       label="JBS_TPL_MEDIA_SHOW_FILESIZE" description="JBS_TPL_MEDIA_SHOW_FILESIZE_DESC">
+					<option value="">JGLOBAL_USE_GLOBAL</option>
 					<option value="0">JBS_CMN_HIDE</option>
 					<option value="1">JBS_TPL_SHOW_FILESIZE</option>
 					<option value="2">JBS_TPL_SHOW_COMMENT</option>
@@ -191,8 +201,9 @@
 				<field name="store_page" type="text" default="flypage.tpl"
 				       label="JBS_MDL_MEDIA_STORE_PAGE" description="JBS_MDL_MEDIA_STORE_PAGE_DESC"
 				       size="60"/>
-				<field name="duration_type" type="list" default="2"
+				<field name="duration_type" type="list" default=""
 				       label="JBS_TPL_VERSES_DURATION_TYPE" description="JBS_TPL_VERSES_DURATION_TYPE_DESC">
+					<option value="">JGLOBAL_USE_GLOBAL</option>
 					<option value="1">JBS_TPL_HOURS_MIN_SEC_SLASH</option>
 					<option value="2">JBS_TPL_HOURS_MIN_SEC_COLON</option>
 				</field>
@@ -201,8 +212,9 @@
 				       description="JBS_TPL_LISTITEMS_DETAILS_TEXT_DESC"/>
 				<field name="stylesheet" type="text" size="50" default=""
 				       label="JBS_TPL_VERSES_STYLESHEET" description="JBS_TPL_VERSES_STYLESHEET_DESC"/>
-				<field name="date_format" type="list" default="2"
+				<field name="date_format" type="list" default=""
 				       label="JBS_TPL_VERSES_DATE_FORMAT" description="JBS_TPL_VERSES_DATE_FORMAT_DESC">
+					<option value="">JGLOBAL_USE_GLOBAL</option>
 					<option value="0">JBS_TPL_DATE_FORMAT_MMM_D_YYYY</option>
 					<option value="1">JBS_TPL_DATE_FORMAT_MMM_D</option>
 					<option value="2">JBS_TPL_DATE_FORMAT_M_D_YYYY</option>
@@ -217,7 +229,8 @@
 			</fieldset>
 			<fieldset name="JBS_MDL_EXPERT_MODE" label="JBS_MDL_EXPERT_MODE">
 				<field name="useexpert_module" type="list" label="JBS_TPL_CUSTOM_VIEW"
-				       default="0" description="JBS_TPL_CUSTOM_VIEW_DESC">
+				       default="" description="JBS_TPL_CUSTOM_VIEW_DESC">
+					<option value="">JGLOBAL_USE_GLOBAL</option>
 					<option value="0">JBS_CMN_DONT_USE</option>
 					<option value="1">JBS_TPL_USE_CUSTOM_VIEW</option>
 				</field>
@@ -233,21 +246,23 @@
 			</fieldset>
 			<fieldset name="JBS_TPL_DISPLAY_ITEMS1" label="JBS_TPL_DISPLAY_ITEMS1"
 			          addfieldpath="/administrator/components/com_biblestudy/models/fields">
-				<field name="use_headers_module" type="list" default="1"
+				<field name="use_headers_module" type="list" default=""
 				       label="JBS_TPL_LISTITEMS_USE_HEADERS_LIST" description="JBS_TPL_LISTITEMS_USE_HEADERS_LIST_DESC">
+					<option value="">JGLOBAL_USE_GLOBAL</option>
 					<option value="0">JBS_TPL_NO_HEADER_ROW</option>
 					<option value="1">JBS_TPL_USE_HEADER_ROW</option>
 				</field>
 				<field name="listcolor1" type="color" default="" label="JBS_TPL_LISTCOLOR1" description="JBS_TPL_LISTCOLOR_DESC"/>
 				<field name="listcolor2" type="color" default="" label="JBS_TPL_LISTCOLOR2" description="JBS_TPL_LISTCOLOR_DESC"/>
 
-				<field name="rowspanitem" type="list" default="0" label="JBS_TPL_ROWSPANITEM" description="JBS_TPL_ROWSPANITEM_DESC">
+				<field name="rowspanitem" type="list" default="" label="JBS_TPL_ROWSPANITEM" description="JBS_TPL_ROWSPANITEM_DESC">
+					<option value="">JGLOBAL_USE_GLOBAL</option>
 					<option value="0">JBS_TPL_NO_ITEM</option>
 					<option value="1">JBS_TPL_TEACHERAIMGE</option>
 					<option value="2">JBS_TPL_STUDYIMAGE</option>
 					<option value="3">JBS_TPL_SERIESIMAGE</option>
 				</field>
-				<field name="rowspanitemspan" type="spanoptions" default="4" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
+				<field name="rowspanitemspan" type="spanoptions" default="" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
 				<field name="rowspanitemimage" type="list" default="img-polaroid" label="JBS_TPL_ROWSPANITEMIMAGE" description="JBS_TPL_ROWSPANITEMIMAGE_DESC">
 					<option value="">JBS_TPL_ROWSPANITEMIMAGENONE</option>
 					<option value="img-polaroid">JBS_TPL_ROWSPANITEMIMAGEPOLAROID</option>
