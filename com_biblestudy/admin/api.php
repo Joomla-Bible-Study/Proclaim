@@ -89,5 +89,10 @@ $language = JFactory::getLanguage();
 $language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
 $language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, null, true);
 
+if (JBSMBibleStudyHelper::debug() === '1')
+{
+	define('JBSMDEBUG', 1);
+}
+
 // JBSM has been initialized
 define('JBSM_LOADED', 1);

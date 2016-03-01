@@ -360,8 +360,8 @@
 					<option value="0">JBS_TPL_NO_HEADER_ROW</option>
 					<option value="1">JBS_TPL_USE_HEADER_ROW</option>
 				</field>
-				<field name="listcolor1" type="text" default="" label="JBS_TPL_LISTCOLOR1" description="JBS_TPL_LISTCOLOR_DESC"/>
-				<field name="listcolor2" type="text" default="" label="JBS_TPL_LISTCOLOR2" description="JBS_TPL_LISTCOLOR_DESC"/>
+				<field name="listcolor1" type="color" default="" label="JBS_TPL_LISTCOLOR1" description="JBS_TPL_LISTCOLOR_DESC"/>
+				<field name="listcolor2" type="color" default="" label="JBS_TPL_LISTCOLOR2" description="JBS_TPL_LISTCOLOR_DESC"/>
 
 				<field name="rowspanitem" type="list" default="0" label="JBS_TPL_ROWSPANITEM" description="JBS_TPL_ROWSPANITEM_DESC">
 					<option value="0">JBS_TPL_NO_ITEM</option>

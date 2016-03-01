@@ -58,7 +58,7 @@ $controller->redirect();
  */
 function addCSS()
 {
-	if (JBSMBibleStudyHelper::debug() === '1')
+	if (JBSMDEBUG)
 	{
 		JHTML::stylesheet('media/com_biblestudy/css/biblestudy-debug.css');
 	}
