@@ -93,6 +93,10 @@ if (JBSMBibleStudyHelper::debug() === '1')
 {
 	define('JBSMDEBUG', 1);
 }
+else
+{
+	define('JBSMDEBUG', 0);
+}
 
 // JBSM has been initialized
 define('JBSM_LOADED', 1);
