@@ -33,9 +33,10 @@ $admin_params = new Registry($admin->params);
 $params->merge($admin_params);
 $template->params->merge($params);
 $params = $template->params;
-$items = $pagebuilder->studyBuilder(null, null, $params, $params->get('moduleitems', '10'));
 
+require_once dirname(__FILE__) . '/helper.php';
 
+$items        = ModJBSMHelper::getLatest($params);
 // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 $user   = JFactory::getUser();
 $groups = $user->getAuthorisedViewLevels();
@@ -117,9 +118,7 @@ if ($url)
 	$document->addStyleSheet($url);
 }
 $pageclass_sfx = $params->get('pageclass_sfx');
-/**
- * @todo fork the layout based on params to other custom template files, Tom can you see if this to do is still needed. TOM
- */
+
 if ($params->get('useexpert_module') > 0)
 {
 	$template = 'default_custom';
