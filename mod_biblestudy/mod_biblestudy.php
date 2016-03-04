@@ -36,7 +36,8 @@ $params = $template->params;
 
 require_once dirname(__FILE__) . '/helper.php';
 
-$items        = ModJBSMHelper::getLatest($params);
+$items = ModJBSMHelper::getLatest($params);
+
 // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 $user   = JFactory::getUser();
 $groups = $user->getAuthorisedViewLevels();
