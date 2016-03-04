@@ -1,12 +1,9 @@
 <?php
 /**
- * Part of Joomla Package
- *
- * @package     Joomla.Libraries
- * @subpackage  HTML
- *
- * @copyright   Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE
+ * @package    BibleStudy.Admin
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  */
 
 defined('JPATH_PLATFORM') or die;

@@ -5,7 +5,7 @@
  * @package     BibleStudy.Site
  * @subpackage  sh404SEF.BibleStudy
  * @author      Nick Fossen <nfossen@gmail.com>
- * @copyright   2015 (C) Joomla Bible Study
+ * @copyright   2016 (C) Joomla Bible Study
  * @url         http://www.newhorizoncf.org
  * @license     GPL v2
  * {shSourceVersionTag: Version 6.2 - 2010-07-06}
