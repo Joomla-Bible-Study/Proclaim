@@ -754,7 +754,7 @@ class JBSMListing
 
 				if ($row1count == $row1count2)
 				{
-					$frow .= '<div class="row-fluid JBSM" id="row1-' . $row1count . '">';
+					$frow .= '<div class="row-fluid JBSM" about="row1-' . $row1count . '">';
 				}
 				if ($header == 1)
 				{
@@ -775,7 +775,7 @@ class JBSMListing
 
 				if ($row2count == $row2count2)
 				{
-					$frow .= '<div class="row-fluid JBSM" id="row2-' . $row2count . '">';
+					$frow .= '<div class="row-fluid JBSM" about="row2-' . $row2count . '">';
 				}
 				if ($header == 1)
 				{
@@ -796,7 +796,7 @@ class JBSMListing
 
 				if ($row3count == $row3count2)
 				{
-					$frow .= '<div class="row-fluid JBSM" id="row3-' . $row3count . '">';
+					$frow .= '<div class="row-fluid JBSM" about="row3-' . $row3count . '">';
 				}
 				if ($header == 1)
 				{
@@ -817,7 +817,7 @@ class JBSMListing
 
 				if ($row4count == $row4count2)
 				{
-					$frow .= '<div class="row-fluid JBSM" id="row4-' . $row4count . '">';
+					$frow .= '<div class="row-fluid JBSM" about="row4-' . $row4count . '">';
 				}
 				if ($header == 1)
 				{
@@ -838,7 +838,7 @@ class JBSMListing
 
 				if ($row5count == $row5count2)
 				{
-					$frow .= '<div class="row-fluid JBSM" id="row5-' . $row5count . '">';
+					$frow .= '<div class="row-fluid JBSM" about="row5-' . $row5count . '">';
 				}
 				if ($header == 1)
 				{
@@ -859,7 +859,7 @@ class JBSMListing
 
 				if ($row6count == $row6count2)
 				{
-					$frow .= '<div class="row-fluid JBSM" id="row5-' . $row5count . '">';
+					$frow .= '<div class="row-fluid JBSM" about="row5-' . $row5count . '">';
 				}
 				if ($header == 1)
 				{
