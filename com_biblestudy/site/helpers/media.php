@@ -547,9 +547,9 @@ class JBSMMedia
 						{
 							$player->playerheight = 40;
 						}
-						$playercode = '<a href="' . $path . '" id="linkmedia' . $media->id . '" class="" pwidth="' . $player->playerwidth .
+						$playercode = '<a href="' . $path . '" id="linkmedia' . $media->id . '" class="fancybox fancybox_jwplayer" pwidth="' . $player->playerwidth .
 							'" pheight="' . $player->playerheight . '" autostart="' . $params->get('autostart', false) . '">' . $image . '</a>';
-						//return $playercode;
+						return $playercode;
 						break;
 
 					case 2: // Inline
