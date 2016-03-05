@@ -26,10 +26,6 @@ function biblestudyBuildRoute(&$query)
 		{
 			return $segments;
 		}
-		if ($query['view'] == 'message')
-		{
-			return $segments;
-		}
 		if ($query['view'] == 'comment')
 		{
 			return $segments;
@@ -46,6 +42,12 @@ function biblestudyBuildRoute(&$query)
 	{
 		$segments[] = $query['id'];
 		unset($query['id']);
+	}
+
+	if (isset($query['mid']))
+	{
+		$segments[] = $query['mid'];
+		unset($query['mid']);
 	}
 
 	if (isset($query['t']))

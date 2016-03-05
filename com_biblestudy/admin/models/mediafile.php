@@ -166,8 +166,9 @@ class BiblestudyModelMediafile extends JModelAdmin
 			}
 		}
 		// Reverse lookup server_id to server type
+		/** @type BiblestudyModelServer $model */
 		$model       = JModelLegacy::getInstance('Server', 'BibleStudyModel');
-		$server_type = $model->getType($server_id);
+		$server_type = $model->getType($server_id, true);
 
 		$path = JPath::clean(JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/' . $server_type);
 
