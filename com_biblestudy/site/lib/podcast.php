@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -103,6 +103,11 @@ class JBSMPodcast
 					{
 						$detailstemplateid = 1;
 					}
+					if ((int) $podcastimage[0] < "144")
+					{
+						$podcastimage[0] = 144;
+						$podcastimage[1] = (int) $podcastimage[1] - ((int) $podcastimage[0] - 144);
+					}
 					$detailstemplateid = '&amp;t=' . $detailstemplateid;
 					$podhead           = '<?xml version="1.0" encoding="utf-8"?>
                 <rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/"
@@ -111,15 +116,13 @@ class JBSMPodcast
                 	<title>' . $this->escapeHTML($podinfo->title) . '</title>
                 	<link>http://' . $podinfo->website . '</link>
                 	<description>' . $description . '</description>
-                	<itunes:summary>' . $description . '</itunes:summary>
+                	<itunes:summary>' . strip_tags($podinfo->description) . '</itunes:summary>
                 	<itunes:subtitle>' . $this->escapeHTML($podinfo->title) . '</itunes:subtitle>
                 	<itunes:author>' . $this->escapeHTML($podinfo->editor_name) . '</itunes:author>
                 	<image>
                 		<link>http://' . $podinfo->website . '</link>
                 		<url>http://' . $podinfo->website . '/' . $podinfo->image . '</url>
                 		<title>' . $this->escapeHTML($podinfo->title) . '</title>
-                		<height>' . $podcastimage[1] . '</height>
-                		<width>' . $podcastimage[0] . '</width>
                 	</image>
                 	<itunes:image href="http://' . $podinfo->website . '/' . $podinfo->podcastimage . '" />
                 	<category>Religion &amp; Spirituality</category>
@@ -377,7 +380,7 @@ class JBSMPodcast
                         		<content:encoded>' . $description . '</content:encoded>
                         		<pubDate>' . $episodedate . '</pubDate>
                         		<itunes:subtitle>' . $this->escapeHTML($subtitle) . '</itunes:subtitle>
-                        		<itunes:summary>' . $description . '</itunes:summary>
+                        		<itunes:summary>' . strip_tags($podinfo->description) . '</itunes:summary>
                         		<itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>
                         		<itunes:duration>' . $hours . ':' . sprintf(
 								"%02d",
@@ -388,10 +391,11 @@ class JBSMPodcast
 						if ($episode->params->get('article_id') > 1)
 						{
 							$episodedetailtemp .=
-								'<enclosure url="http://' . $episode->srparams->get('path') .
+								'
+								<enclosure url="http://' . $episode->srparams->get('path') .
 								'/index.php?option=com_content&amp;view=article&amp;id=' .
-								$episode->params->get('article_id') . '" length="' . $episode->params->get('size') . '" type="' .
-								$episode->params->get('mimetype') . '" />
+								$episode->params->get('article_id') . '" length="' . $episode->params->get('size', '100') . '" type="' .
+								$episode->params->get('mimetype', 'application/octet-stream') . '" />
                         			<guid>http://' . $episode->srparams->get('path') .
 								'/index.php?option=com_content&amp;view=article&amp;id=' .
 								$episode->params->get('article_id') . '</guid>';
@@ -399,7 +403,8 @@ class JBSMPodcast
 						if ($episode->params->get('docMan_id') > 1)
 						{
 							$episodedetailtemp .=
-								'<enclosure url="http://' . $episode->srparams->get('path') .
+								'
+								<enclosure url="http://' . $episode->srparams->get('path') .
 								'/index.php?option=com_docman&amp;task=doc_download&amp;gid=' .
 								$episode->params->get('docMan_id') . '" length="' . $episode->params->get('size') . '" type="' .
 								$episode->params->get('mimetype') . '" />
@@ -410,13 +415,14 @@ class JBSMPodcast
 						else
 						{
 							$episodedetailtemp .=
-								'<enclosure url="http://' . $episode->srparams->get('path') . str_replace(
+								'
+								<enclosure url="http://' . $episode->srparams->get('path') . str_replace(
 									' ',
 									"%20",
 									$episode->params->get('filename')
-								) . '" length="' . $episode->params->get('size') . '" type="'
-								. $episode->params->get('mimetype') . '" />
-                        			<guid>http://' . str_replace(
+								) . '" length="' . $episode->params->get('size', '100') . '" type="'
+								. $episode->params->get('mimetype', 'audio/mpeg3') . '" />
+                        			<guid>http://' . $episode->srparams->get('path') . str_replace(
 									' ',
 									"%20",
 									$episode->params->get('filename')

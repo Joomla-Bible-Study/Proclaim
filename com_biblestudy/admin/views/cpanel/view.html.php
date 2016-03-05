@@ -3,7 +3,7 @@
  * View html
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -63,8 +63,6 @@ class BiblestudyViewCpanel extends JViewLegacy
 		$this->state = $this->get('State');
 		$this->data  = $this->get('Data');
 		$model       = $this->getModel();
-
-		JHtml::stylesheet('media/com_biblestudy/css/cpanel.css');
 
 		$this->total_messages = JBSMStats::get_total_messages();
 

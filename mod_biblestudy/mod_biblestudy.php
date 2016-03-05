@@ -4,7 +4,7 @@
  *
  * @package     BibleStudy
  * @subpackage  Model.BibleStudy
- * @copyright   2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright   2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        http://www.JoomlaBibleStudy.org
  * */
@@ -33,22 +33,24 @@ $admin_params = new Registry($admin->params);
 $params->merge($admin_params);
 $template->params->merge($params);
 $params = $template->params;
-$items = $pagebuilder->studyBuilder(null, null, $params);
 
+require_once dirname(__FILE__) . '/helper.php';
+
+$items = ModJBSMHelper::getLatest($params);
 
 // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 $user   = JFactory::getUser();
 $groups = $user->getAuthorisedViewLevels();
 $count  = count($items);
 
-if ($params->get('useexpert_module') > 0 || is_string($params->get('moduletemplate')))
+if ($params->get('useexpert_module') > 0 || is_string($params->get('moduletemplate')) == true)
 {
 
 	foreach ($items AS $item)
 	{
 		$item->slug       = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
 			. str_replace(' ', '-', htmlspecialchars_decode($item->studytitle, ENT_QUOTES));
-		$pelements        = $pagebuilder->buildPage($item, $params, $admin_params);
+		$pelements        = $pagebuilder->buildPage($item, $params, $template);
 		$item->scripture1 = $pelements->scripture1;
 		$item->scripture2 = $pelements->scripture2;
 		$item->media      = $pelements->media;
@@ -117,9 +119,7 @@ if ($url)
 	$document->addStyleSheet($url);
 }
 $pageclass_sfx = $params->get('pageclass_sfx');
-/**
- * @todo fork the layout based on params to other custom template files, Tom can you see if this to do is still needed. TOM
- */
+
 if ($params->get('useexpert_module') > 0)
 {
 	$template = 'default_custom';

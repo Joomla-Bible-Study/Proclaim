@@ -3,7 +3,7 @@
  * Core Admin BibleStudy file
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -88,6 +88,15 @@ JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html/');
 $language = JFactory::getLanguage();
 $language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
 $language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, null, true);
+
+if (JBSMBibleStudyHelper::debug() === '1')
+{
+	define('JBSMDEBUG', 1);
+}
+else
+{
+	define('JBSMDEBUG', 0);
+}
 
 // JBSM has been initialized
 define('JBSM_LOADED', 1);

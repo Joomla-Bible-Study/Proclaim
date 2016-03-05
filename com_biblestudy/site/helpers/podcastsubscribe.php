@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -37,7 +37,7 @@ class JBSMPodcastSubscribe
 		{
 
 			$subscribe .= '<div class="podcastheader" ><h3>' . $introtext . '</h3></div>';
-			$subscribe .= '<div class="prow">';
+			$subscribe .= '<div class="prow row-fluid">';
 
 			foreach ($podcasts AS $podcast)
 			{
@@ -55,21 +55,21 @@ class JBSMPodcastSubscribe
 						break;
 
 					case 2:
-						$subscribe .= '<div class="pcell pull-left span6"><h4>' . $podcast->title . '</h4><hr />';
+						$subscribe .= '<div class="pcell span6"><h4>' . $podcast->title . '</h4><hr />';
 						$subscribe .= $this->buildStandardPodcast($podcast);
 						$subscribe .= '</div>';
 						break;
 
 					case 3:
-						$subscribe .= '<div class="pcell pull-left span6"><h4>' . $podcast->title . '</h4><hr />';
+						$subscribe .= '<div class="pcell span6"><h4>' . $podcast->title . '</h4><hr />';
 						$subscribe .= $this->buildAlternatePodcast($podcast);
 						$subscribe .= '</div>';
 						break;
 
 					case 4:
-						$subscribe .= '<div class="pcell pull-left span6"><h4>' . $podcast->title . '</h4><hr /><div class="pull-left span2">';
+						$subscribe .= '<div class="pcell span6"><h4>' . $podcast->title . '</h4><hr /><div class="span2">';
 						$subscribe .= $this->buildStandardPodcast($podcast);
-						$subscribe .= '</div><div class="pull-left span2">';
+						$subscribe .= '</div><div class="span2">';
 						$subscribe .= $this->buildAlternatePodcast($podcast);
 						$subscribe .= '</div></div>';
 						break;

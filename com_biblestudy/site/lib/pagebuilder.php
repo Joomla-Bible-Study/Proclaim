@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2015 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -401,6 +401,8 @@ class JBSMPageBuilder
 			->join('LEFT', '#__users AS uam ON uam.id = study.modified_by');
 
 		$query->group('study.id');
+
+		// Select only published studies
 		$query->where('study.published = 1');
 		$query->where('series.published = 1 OR study.series_id <= 0');
 		if ($wherefield && $whereitem)
@@ -408,20 +410,25 @@ class JBSMPageBuilder
 			$query->where($wherefield . ' = ' . $whereitem);
 		}
 
+		// Filter by language
+		$language = $params->get('language', '*');
+
+		if ($language == '*')
+		{
+			$query->where('study.language in (' . $db->Quote($language) . ',' . $db->Quote('*') . ')');
+		}
+		elseif ($language != '*')
+		{
+			$query->where('study.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
+		}
 		$query->order('studydate ' . $order);
 
 		// Filter only for authorized view
-		$query->where('(series.access IN (' . $groups . ') AND study.series_id <= 0)');
+		$query->where('(series.access IN (' . $groups . ') or study.series_id <= 0)');
 		$query->where('study.access IN (' . $groups . ')');
+
 		$db->setQuery($query, 0, $limit);
 		$studies = $db->loadObjectList();
-
-		// Get media files for each study
-		for ($i = 0, $n = count($studies); $i < $n; $i++)
-		{
-			$study = &$studies[$i];
-			$study->media = $this->mediaBuilder($study->mids, $params, $template, $study);
-		}
 
 		return $studies;
 	}
