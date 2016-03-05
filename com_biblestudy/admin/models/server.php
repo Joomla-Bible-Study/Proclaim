@@ -51,13 +51,14 @@ class BiblestudyModelServer extends JModelAdmin
 	/**
 	 * Reverse look up of id to server_type
 	 *
-	 * @param   int  $pk  ID to get
+	 * @param   int   $pk   ID to get
+	 * @param   bool  $ext  If comfing from externl
 	 *
 	 * @return String
 	 */
-	public function getType($pk)
+	public function getType($pk, $ext = false)
 	{
-		$item = $this->getItem($pk);
+		$item = $this->getItem($pk, $ext);
 
 		return $item->type;
 	}
@@ -65,13 +66,14 @@ class BiblestudyModelServer extends JModelAdmin
 	/**
 	 * Method to get a server item.
 	 *
-	 * @param   null  $pk  An optional id of the object to get
+	 * @param   null  $pk   An optional id of the object to get
+	 * @param   bool  $ext  If comfing from externl
 	 *
 	 * @return mixed Server Server data object, false on failure
 	 *
 	 * @since 9.0.0
 	 */
-	public function getItem($pk = null)
+	public function getItem($pk = null, $ext = false)
 	{
 		if (!empty($this->data))
 		{
@@ -90,7 +92,11 @@ class BiblestudyModelServer extends JModelAdmin
 			$server_name             = $this->getState('server.server_name');
 			$this->data->server_name = empty($server_name) ? $this->data->server_name : $server_name;
 
-			$type                    = $this->getState('server.type');
+			$type = null;
+			if (!$ext)
+			{
+				$type = $this->getState('server.type');
+			}
 			$this->data->type        = empty($type) ? $this->data->type : $type;
 
 			// Load server type configuration if available

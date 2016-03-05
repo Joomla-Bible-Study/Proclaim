@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Admin
  * @since    9.0.0
  */
-class JBSMAddonYoutube extends JBSMAddon
+class JBSMAddonYouTube extends JBSMAddon
 {
 	protected $config;
 

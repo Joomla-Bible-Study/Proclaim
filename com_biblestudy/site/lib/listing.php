@@ -2114,11 +2114,13 @@ class JBSMListing
 	{
 		$med      = new JBSMMedia;
 
-		$mediarow = '';
+		$mediarow = '<div class="bsms_media_contaner" style="display: inline-block;" >';
 		foreach ($item->mediafiles as $media)
 		{
-			$mediarow .= '<div style="display:inline; padding-right:1px;">' . $med->getFluidMedia($media, $params, $template) . '</div>';
+			$mediarow .= '<div id="bsms_media_file' . $media->id . '" class="bsms_media_file" style="display:inline; padding-right:1px;">' .
+				$med->getFluidMedia($media, $params, $template) . '</div>';
 		}
+		$mediarow .= '</div>';
 
 		return $mediarow;
 	}
@@ -2570,29 +2572,21 @@ class JBSMListing
 	 */
 	public function getShare($link, $row, $params)
 	{
-		jimport('joomla.html.parameter');
-
-		// Find a better way to do this.
-		$db           = JFactory::getDbo();
-		$template     = new TableTemplate($db);
-		$template->id = (int) '1';
-
 		$sharetype = $params->get('socialnetworking', 1);
 
+		$shareit = '<div class="row-fluid">';
 		if ($sharetype == 1)
 		{
-			$shareit = '<div class="row-fluid">
-						<div class="span2 pull-right">
-						';
-			$shareit .= '<!-- AddThis Button BEGIN -->
+			$shareit .= '<div class="span2 pull-right">
+						<!-- AddThis Button BEGIN -->
 						<a class="addthis_button" href="//www.addthis.com/bookmark.php?v=250">
 						<img src="//s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" border="0" alt="Share" />
 						</a>
 						<script type="text/javascript">var addthis_config = {"data_track_clickback":true};</script>
 						<script type="text/javascript" src="//s7.addthis.com/js/250/addthis_widget.js"></script>
-						<!-- AddThis Button END --></div>';
+						<!-- AddThis Button END -->
+						</div>';
 		}
-
 		$shareit .= '</div>';
 
 		return $shareit;
