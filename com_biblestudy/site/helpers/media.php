@@ -36,8 +36,6 @@ class JBSMMedia
 	{
 		$mediafile = null;
 		$filesize  = null;
-		jimport('joomla.html.parameter');
-		JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
 
 		// Smedia are the media settings for each server
 		$registory = new Registry;
@@ -132,8 +130,8 @@ class JBSMMedia
 					break;
 			}
 
-			$filesize = '<div style="font-size: 0.6em;display:inline;">' .
-				$file_size . '</div>';
+			$filesize = '<span style="font-size: 0.6em;display:inline;">' .
+				$file_size . '</span>';
 		}
 
 		switch ($link_type)
@@ -270,7 +268,7 @@ class JBSMMedia
 				{
 					$icon = $imageparams->get('media_icon_type', 'fa fa-play');
 				}
-				$mediaimage = '<span class="' . $icon . '" title="' . $buttontext . '" style="font-size:' . $textsize . 'px;"></span></div>';
+				$mediaimage = '<span class="' . $icon . '" title="' . $buttontext . '" style="font-size:' . $textsize . 'px;"></span>';
 				break;
 		}
 
@@ -549,9 +547,9 @@ class JBSMMedia
 						{
 							$player->playerheight = 40;
 						}
-						$playercode = '<a href="' . $path . '" id="linkmedia' . $media->id . '" class="fancybox fancybox_jwplayer" pwidth="' . $player->playerwidth .
+						$playercode = '<a href="' . $path . '" id="linkmedia' . $media->id . '" class="" pwidth="' . $player->playerwidth .
 							'" pheight="' . $player->playerheight . '" autostart="' . $params->get('autostart', false) . '">' . $image . '</a>';
-						return $playercode;
+						//return $playercode;
 						break;
 
 					case 2: // Inline

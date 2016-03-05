@@ -14,9 +14,9 @@ JHtml::_('behavior.framework', true);
 JHtml::_('jquery.framework');
 JHtml::_('formbehavior.chosen', 'select');
 
-$JBSMTeacher = new JBSMTeacher;
-$teachers = $JBSMTeacher->getTeachersFluid($this->params);
-$listing = new JBSMListing;
+$JBSMTeacher  = new JBSMTeacher;
+$teachers     = $JBSMTeacher->getTeachersFluid($this->params);
+$listing      = new JBSMListing;
 $classelement = $listing->createelement($this->params->get('studies_element'));
 ?>
 
@@ -55,7 +55,7 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 						if ($this->params->get('teacherlink') > 0)
 						{
 							echo '<div class="caption"><p><a href="index.php?option=com_biblestudy&view=teacher&id=' .
-								$teacher['id'] . '&t=' . $teacher['t'] . '">' . $teacher['name'] . '</a></p>';
+									$teacher['id'] . '&t=' . $teacher['t'] . '">' . $teacher['name'] . '</a></p>';
 						}
 						else
 						{
@@ -70,15 +70,15 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 		<div class="row-fluid">
 			<div class="span12">
 				<?php if ($this->params->get('show_page_image') > 0)
-				{ ?> <img class="imgcenter" src="<?php echo JURI::base() . $this->main->path; ?>"><?php } ?>
+				{ ?> <img class="imgcenter" src="<?php echo JURI::base() . $this->main->path; ?>" alt=""><?php } ?>
 				<?php if ($this->params->get('show_page_title') == 1)
-				{ ?><<?php echo $classelement; ?> style="<?php echo $this->params->get('list_title_align');?>"><?php echo $this->params->get('list_page_title'); ?></<?php echo $classelement; ?>><?php } ?>
-				<?php if ($this->params->get('list_intro'))
-				{ ?><p><?php echo $this->params->get('list_intro'); ?></p><?php } ?>
-			</div>
+				{ ?><<?php echo $classelement; ?> style="<?php echo $this->params->get('list_title_align'); ?>
+				    "><?php echo $this->params->get('list_page_title'); ?></<?php echo $classelement; ?>><?php } ?>
+			<?php if ($this->params->get('list_intro'))
+			{ ?><p><?php echo $this->params->get('list_intro'); ?></p><?php } ?>
 		</div>
 	</div>
-
+</div>
 
 <?php } ?>
 
