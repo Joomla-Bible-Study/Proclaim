@@ -66,8 +66,8 @@ class BiblestudyModelServer extends JModelAdmin
 	/**
 	 * Method to get a server item.
 	 *
-	 * @param   null  $pk  An optional id of the object to get
-	 * @param   bool  $ext If comfing from externl
+	 * @param   null  $pk   An optional id of the object to get
+	 * @param   bool  $ext  If comfing from externl
 	 *
 	 * @return mixed Server Server data object, false on failure
 	 *
