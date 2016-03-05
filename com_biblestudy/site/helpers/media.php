@@ -141,7 +141,14 @@ class JBSMMedia
 				break;
 
 			case 1:
-				$mediafile = $playercode . '<div style="display:inline;position:relative;">' . $downloadlink . $filesize . '</div>';
+				if ($downloadlink)
+				{
+					$mediafile = $playercode . '<div style="display:inline;position:relative;">' . $downloadlink . $filesize . '</div>';
+				}
+				else
+				{
+					$mediafile = $playercode;
+				}
 				break;
 
 			case 2:
@@ -155,15 +162,20 @@ class JBSMMedia
 	/**
 	 * Return download link
 	 *
-	 * @param   Object                    $media       Media
-	 * @param   Joomla\Registry\Registry  $params      Params
-	 * @param   TableTemplate             $template    Template ID
-	 * @param   string                    $playercode  Player Code
+	 * @param   Object                    $media     Media
+	 * @param   Joomla\Registry\Registry  $params    Params
+	 * @param   TableTemplate             $template  Template ID
 	 *
 	 * @return string
 	 */
-	public function getFluidDownloadLink($media, $params, $template, $playercode)
+	public function getFluidDownloadLink($media, $params, $template)
 	{
+		// Remove download form Youtube links.
+		$filename = $media->params->get('filename');
+		if (substr_count($filename, 'youtube') || substr_count($filename, 'youtu.be'))
+		{
+			return '';
+		}
 
 		$downloadlink = '';
 		if ($params->get('download_use_button_icon') >= 2)
@@ -505,7 +517,7 @@ class JBSMMedia
 			$protocol = $params->get('protocol', '//');
 			$path     = $protocol . $media->sparams->get('path') . $path;
 		}
-		else
+		elseif (!substr_count($path, '://'))
 		{
 			$path = $media->sparams->get('path') . $path;
 		}
