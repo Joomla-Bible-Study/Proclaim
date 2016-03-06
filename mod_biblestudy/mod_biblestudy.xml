@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="module" version="2.5" method="upgrade" client="site">
+<extension type="module" version="3.3" method="upgrade" client="site">
 	<name>mod_biblestudy</name>
 	<author>Joomla Bible Study Team</author>
 	<authorEmail>info@joomlabiblestudy.org</authorEmail>
 	<authorUrl>http://www.joomlabiblestudy.org</authorUrl>
 	<copyright>(C) 2007 - 2016 Joomla Bible Study All rights reserved.</copyright>
-	<version>9.0.0-beta3</version>
-	<creationDate>March 4, 2016</creationDate>
+	<version>9.0.0-beta4</version>
+	<creationDate>March 6, 2016</creationDate>
 	<license>http://www.gnu.org/licenses/gpl.html</license>
 	<description>JBS_MDL_DESCRIPTION</description>
 	<files>
@@ -473,8 +473,6 @@
 	<!-- UPDATESERVER DEFINITION -->
 	<updateservers>
 		<!-- Note: No spaces or linebreaks allowed between the server tags -->
-		<server type="extension" priority="1" name="Joomla Bible Study Module">
-			<![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=3&dummy=extension.xml]]>
-		</server>
+		<server type="extension" priority="1" name="Joomla Bible Study Module"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=3]]></server>
 	</updateservers>
 </extension>

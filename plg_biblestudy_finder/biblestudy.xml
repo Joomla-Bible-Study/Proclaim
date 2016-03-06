@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="3.1" type="plugin" group="finder" method="upgrade">
-    <name>JBS_PLG_FINDER</name>
-    <author>Joomla Bible Study Team</author>
-    <authorEmail>info@joomlabiblestudy.org</authorEmail>
-    <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
-    <copyright>(C) 2007 - 2016 Joomla Bible Study All rights reserved.</copyright>
-    <version>9.0.0-beta3</version>
-    <creationDate>March 4, 2016</creationDate>
-    <license>http://www.gnu.org/licenses/gpl.html</license>
-    <description>JBS_PLG_FINDER_XML_DESCRIPTION</description>
-    <files>
-        <file plugin="biblestudy">biblestudy.php</file>
-        <folder>language</folder>
-    </files>
-    <!-- UPDATESERVER DEFINITION -->
-    <updateservers>
-        <!-- Note: No spaces or linebreaks allowed between the server tags -->
-        <server type="extension" priority="1" name="Joomla Bible Study Finder Plg">
-            <![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=13&dummy=extension.xml]]>
-        </server>
-    </updateservers>
+<extension version="3.2" type="plugin" group="finder" method="upgrade">
+	<name>JBS_PLG_FINDER</name>
+	<author>Joomla Bible Study Team</author>
+	<authorEmail>info@joomlabiblestudy.org</authorEmail>
+	<authorUrl>http://www.joomlabiblestudy.org</authorUrl>
+	<copyright>(C) 2007 - 2016 Joomla Bible Study All rights reserved.</copyright>
+	<version>9.0.0-beta4</version>
+	<creationDate>March 6, 2016</creationDate>
+	<license>http://www.gnu.org/licenses/gpl.html</license>
+	<description>JBS_PLG_FINDER_XML_DESCRIPTION</description>
+	<files>
+		<file plugin="biblestudy">biblestudy.php</file>
+		<folder>language</folder>
+	</files>
+	<!-- UPDATESERVER DEFINITION -->
+	<updateservers>
+		<!-- Note: No spaces or linebreaks allowed between the server tags -->
+		<server type="extension" priority="1" name="Joomla Bible Study Finder Plg"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=13]]></server>
+	</updateservers>
 </extension>
