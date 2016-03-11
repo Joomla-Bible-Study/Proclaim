@@ -82,7 +82,7 @@
         <option value="7">JBS_CMN_CUSTOM</option>
     </field>
     <field name="linktype" type="list" default="0"
-           label="JBS_PDC_LINKTYPE" description="JBS_PDC_LINKTYPE_DESC" class="span12 small">
+           label="JBS_PDC_LINKTYPE" description="JBS_PDC_LINKTYPE_DESC">
         <option value="0">JBS_PDC_LINK_EPISODE</option>
         <option value="1">JBS_PDC_LINK_DIRECT_MEDIA</option>
         <option value="2">JBS_PDC_LINK_MEDIA_PLAYER</option>
