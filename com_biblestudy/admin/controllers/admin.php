@@ -589,7 +589,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 
 		$app   = JFactory::getApplication();
 		$asset = new JBSMAssets;
-		$dofix = $asset->fixassets();
+		$dofix = $asset->fixAssets();
 
 		if (!$dofix)
 		{
@@ -667,7 +667,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		}
 		if ($result || $copysuccess)
 		{
-			$this->setRedirect('index.php?option=com_biblestudy&view=migration&task=migration.browse&jbsimport=1' . $alt);
+			$this->setRedirect('index.php?option=com_biblestudy&view=install&scanstate=start&jbsimport=1' . $alt);
 		}
 		else
 		{

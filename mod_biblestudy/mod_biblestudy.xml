@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="module" version="2.5" method="upgrade" client="site">
+<extension type="module" version="3.3" method="upgrade" client="site">
 	<name>mod_biblestudy</name>
 	<author>Joomla Bible Study Team</author>
 	<authorEmail>info@joomlabiblestudy.org</authorEmail>
 	<authorUrl>http://www.joomlabiblestudy.org</authorUrl>
 	<copyright>(C) 2007 - 2016 Joomla Bible Study All rights reserved.</copyright>
-	<version>9.0.0-beta3</version>
-	<creationDate>March 4, 2016</creationDate>
+	<version>9.0.0-beta4</version>
+	<creationDate>March 6, 2016</creationDate>
 	<license>http://www.gnu.org/licenses/gpl.html</license>
 	<description>JBS_MDL_DESCRIPTION</description>
 	<files>
@@ -165,13 +165,13 @@
 					<option value="FALSE">JBS_TPL_NO_SHARE</option>
 					<option value="TRUE">JBS_TPL_SHOW_SHARE</option>
 				</field>
-				<field name="backcolor" type="text" default="0x287585"
+				<field name="backcolor" type="color" default="0x287585"
 				       label="JBS_TPL_MEDIA_BACKCOLOR" description="JBS_TPL_MEDIA_BACKCOLOR_DESC"/>
-				<field name="frontcolor" type="text" default="0xFFFFFF"
+				<field name="frontcolor" type="color" default="0xFFFFFF"
 				       label="JBS_TPL_MEDIA_FRONTCOLOR" description="JBS_TPL_MEDIA_FRONTCOLOR_DESC"/>
-				<field name="lightcolor" type="text" default="0x000000"
+				<field name="lightcolor" type="color" default="0x000000"
 				       label="JBS_TPL_MEDIA_LIGHTCOLOR" description="JBS_TPL_MEDIA_LIGHTCOLOR_DESC"/>
-				<field name="screencolor" type="text" default="0x000000"
+				<field name="screencolor" type="color" default="0x000000"
 				       label="JBS_TPL_MEDIA_SCREENCOLOR" description="JBS_TPL_MEDIA_SCREENCOLOR_DESC"/>
 				<field name="popuptitle" type="text" size="150" default="{{title}}"
 				       label="JBS_MED_MEDIA_POPUPTITLE" description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER_DESC"/>
@@ -473,8 +473,6 @@
 	<!-- UPDATESERVER DEFINITION -->
 	<updateservers>
 		<!-- Note: No spaces or linebreaks allowed between the server tags -->
-		<server type="extension" priority="1" name="Joomla Bible Study Module">
-			<![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=3&dummy=extension.xml]]>
-		</server>
+		<server type="extension" priority="1" name="Joomla Bible Study Module"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=3]]></server>
 	</updateservers>
 </extension>

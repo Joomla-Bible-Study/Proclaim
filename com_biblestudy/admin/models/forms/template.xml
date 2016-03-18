@@ -172,8 +172,14 @@
 			</field>
 		</fieldset>
 		<fieldset name="MEDIA">
-			<field name="protocol" type="text" size="10" default="http://"
-			       label="JBS_TPL_MEDIA_PROTOCOL" description="JBS_TPL_MEDIA_PROTOCOL_DESC"/>
+			<field name="protocol" type="list" default="http://"
+			       label="JBS_TPL_MEDIA_PROTOCOL" description="JBS_TPL_MEDIA_PROTOCOL_DESC">
+				<option value="http://">http://</option>
+				<option value="https://">https://</option>
+				<option value="ftp://">ftp://</option>
+				<option value="icy://">icy://</option>
+				<option value="rtmpt://">rtmpt://</option>
+			</field>
 			<field name="player" type="list" default="0"
 			       label="JBS_TPL_MEDIA_MEDIA_PLAYER" description="JBS_TPL_MEDIA_MEDIA_PLAYER_DESC">
 				<option value="0">JBS_CMN_DIRECT_LINK</option>
@@ -205,32 +211,32 @@
 				<option value="1">JYES</option>
 				<option value="2">JNO</option>
 			</field>
-			<field name="player_width" type="text" default="640"
+			<field name="player_width" type="int" default="640"
 			       label="JBS_TPL_MEDIA_PLAYER_WIDTH" description="JBS_TPL_MEDIA_PLAYER_WIDTH_DESC"/>
-			<field name="player_height" type="text" default="385"
+			<field name="player_height" type="int" default="385"
 			       label="JBS_TPL_MEDIA_PLAYER_HEIGHT" description="JBS_TPL_MEDIA_PLAYER_HEIGHT_DESC"/>
 			<field name="embedshare" default="TRUE" type="list"
 			       label="JBS_TPL_MEDIA_EMBEDSHARE" description="JBS_TPL_MEDIA_EMBEDSHARE_DESC">
 				<option value="FALSE">JBS_TPL_NO_SHARE</option>
 				<option value="TRUE">JBS_TPL_SHOW_SHARE</option>
 			</field>
-			<field name="backcolor" type="text" default="0x287585"
+			<field name="backcolor" type="color" default="0x287585"
 			       label="JBS_TPL_MEDIA_BACKCOLOR" description="JBS_TPL_MEDIA_BACKCOLOR_DESC"/>
-			<field name="frontcolor" type="text" default="0xFFFFFF"
+			<field name="frontcolor" type="color" default="0xFFFFFF"
 			       label="JBS_TPL_MEDIA_FRONTCOLOR" description="JBS_TPL_MEDIA_FRONTCOLOR_DESC"/>
-			<field name="lightcolor" type="text" default="0x000000"
+			<field name="lightcolor" type="color" default="0x000000"
 			       label="JBS_TPL_MEDIA_LIGHTCOLOR" description="JBS_TPL_MEDIA_LIGHTCOLOR_DESC"/>
-			<field name="screencolor" type="text" default="0x000000"
+			<field name="screencolor" type="color" default="0x000000"
 			       label="JBS_TPL_MEDIA_SCREENCOLOR" description="JBS_TPL_MEDIA_SCREENCOLOR_DESC"/>
 			<field name="popuptitle" type="text" size="75" default="{{title}}"
 			       label="JBS_MED_MEDIA_POPUPTITLE" description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER_DESC"/>
 			<field name="popupfooter" type="text" size="75" default="{{filename}}"
 			       label="JBS_MED_MEDIA_POPUPFOOTER" description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER_DESC"/>
-			<field name="popupmargin" type="text" default="50"
+			<field name="popupmargin" type="int" default="50"
 			       label="JBS_MED_MEDIA_POPUPMARGIN" description="JBS_TPL_MEDIA_POPUPMARGIN_DESC"/>
 			<field name="popupbackground" type="text" default="black"
 			       label="JBS_TPL_MEDIA_POPUPBACKGROUND" description="JBS_TPL_MEDIA_POPUPBACKGROUND_DESC"/>
-			<field name="popupimage" type="text" size="75"
+			<field name="popupimage" type="media" size="75"
 			       default="/images/biblestudy/speaker24.png" label="JBS_TPL_MEDIA_POPUPIMAGE"
 			       description="JBS_TPL_MEDIA_POPUPIMAGE_DESC"/>
 			<field name="show_filesize" type="list" default="1"
@@ -811,7 +817,7 @@
 				<option value="0">JBS_TPL_NO_EMAIL</option>
 				<option value="1">JBS_TPL_EMAIL_SENT</option>
 			</field>
-			<field name="recipient" type="text" default="" size="40"
+			<field name="recipient" type="email" default="" size="40"
 			       label="JBS_TPL_DETAILS_RECIPIENT" description="JBS_TPL_DETAILS_RECIPIENT_DESC"/>
 			<field name="subject" type="text" default="Comments on studies"
 			       size="40" label="JBS_TPL_DETAILS_SUBJECT"/>
@@ -854,8 +860,8 @@
 				<option value="0">JBS_TPL_NO_HEADER_ROW</option>
 				<option value="1">JBS_TPL_USE_HEADER_ROW</option>
 			</field>
-			<field name="tslistcolor1" type="text" default="" label="JBS_TPL_LISTCOLOR1" description="JBS_TPL_LISTCOLOR_DESC"/>
-			<field name="tslistcolor2" type="text" default="" label="JBS_TPL_LISTCOLOR2" description="JBS_TPL_LISTCOLOR_DESC"/>
+			<field name="tslistcolor1" type="color" default="" label="JBS_TPL_LISTCOLOR1" description="JBS_TPL_LISTCOLOR_DESC"/>
+			<field name="tslistcolor2" type="color" default="" label="JBS_TPL_LISTCOLOR2" description="JBS_TPL_LISTCOLOR_DESC"/>
 			<field type="spacer" name="myspacer30" hr="true"/>
 			<field name="tsteacherrow" type="rowoptions" size="1" default="1" label="JBS_CMN_TEACHER" description="JBS_TPL_ROW_DESC"/>
 			<field name="tsteachercol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
@@ -970,7 +976,7 @@
 				<option value="2">JBS_TPL_SHOW_STUDIES_STUDIESLIST</option>
 
 			</field>
-			<field name="studies" type="text" default=""
+			<field name="studies" type="int" default=""
 			       label="JBS_TPL_TEACHER_STUDIES" description="JBS_TPL_TEACHER_STUDIES_DESC"/>
 			<field name="label_teacher" type="text" default="Latest Messages"
 			       label="JBS_TPL_TEACHER_LABEL_TEACHER" description="JBS_TPL_TEACHER_LABEL_TEACHER_DESC"/>
@@ -999,7 +1005,7 @@
 				<option value="0">JBS_TPL_NO_HEADER_ROW</option>
 				<option value="1">JBS_TPL_USE_HEADER_ROW</option>
 			</field>
-			<field name="teacherdisplay_color" type="text" label="JBS_TPL_SERIESDISPLAY_COLOR" description="JBS_TPL_SERIESDISPLAY_COLOR"/>
+			<field name="teacherdisplay_color" type="color" label="JBS_TPL_SERIESDISPLAY_COLOR" description="JBS_TPL_SERIESDISPLAY_COLOR"/>
 			<field type="spacer" name="myspacer40" hr="true"/>
 			<field name="tdteacherrow" type="rowoptions" size="1" default="1" label="JBS_CMN_TEACHER" description="JBS_TPL_ROW_DESC"/>
 			<field name="tdteachercol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
@@ -1136,8 +1142,8 @@
 			       filter="raw"/>
 		</fieldset>
 		<fieldset name="SERIES" addfieldpath="/administrator/components/com_biblestudy/models/fields">
-			<field name="slistcolor1" type="text" default="" label="JBS_TPL_LISTCOLOR1" description="JBS_TPL_LISTCOLOR_DESC"/>
-			<field name="slistcolor2" type="text" default="" label="JBS_TPL_LISTCOLOR2" description="JBS_TPL_LISTCOLOR_DESC"/>
+			<field name="slistcolor1" type="color" default="" label="JBS_TPL_LISTCOLOR1" description="JBS_TPL_LISTCOLOR_DESC"/>
+			<field name="slistcolor2" type="color" default="" label="JBS_TPL_LISTCOLOR2" description="JBS_TPL_LISTCOLOR_DESC"/>
 
 			<field name="series_title" default="Our Series" type="text"
 			       label="JBS_TPL_PAGE_TITLE"/>
@@ -1162,7 +1168,7 @@
 				<option value="0">JBS_CMN_HIDE</option>
 				<option value="1">JBS_CMN_SHOW</option>
 			</field>
-			<field name="series_characters" type="text" default=""
+			<field name="series_characters" type="int" default=""
 			       label="JBS_TPL_SERIES_SERIES_CHARACTERS" description="JBS_TPL_SERIES_SERIES_CHARACTERS_DESC"/>
 			<field name="search_series" default="1" type="list"
 			       label="JBS_TPL_SERIES_SEARCH_SERIES" description="JBS_TPL_SERIES_SEARCH_SERIES_DESC">
@@ -1301,7 +1307,7 @@
 				<option value="pull-left">JBS_TPL_PULLLEFT</option>
 				<option value="pull-right">JBS_TPL_PULLRIGHT</option>
 			</field>
-			<field name="seriesdisplay_color" type="text" label="JBS_TPL_SERIESDISPLAY_COLOR" description="JBS_TPL_SERIESDISPLAY_COLOR"/>
+			<field name="seriesdisplay_color" type="color" label="JBS_TPL_SERIESDISPLAY_COLOR" description="JBS_TPL_SERIESDISPLAY_COLOR"/>
 			<field name="use_header_seriesdisplay" type="list" label="JBS_TPL_SERIESDISPLAY_USE_HEADER" description="JBS_TPL_SERIESDISPLAY_USE_HEADER_DESC">
 				<option value="0">JBS_CMN_HIDE</option>
 				<option value="1">JBS_CMN_SHOW</option>
@@ -1773,7 +1779,7 @@
 				<option value="0">JBS_TPL_USE_LIMIT</option>
 				<option value="1">JBS_TPL_USE_RECORD_SETTING</option>
 			</field>
-			<field name="landingserieslimit" type="text"
+			<field name="landingserieslimit" type="int"
 			       label="JBS_TPL_LANDINGPAGE_LANDINGSERIESLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
 			       size="5"/>
 			<field name="serieslabel" type="text"
@@ -1788,7 +1794,7 @@
 				<option value="0">JBS_CMN_NO</option>
 				<option value="1">JBS_CMN_YES</option>
 			</field>
-			<field name="landingbookslimit" type="text"
+			<field name="landingbookslimit" type="int"
 			       label="JBS_TPL_LANDINGPAGE_LANDINGBOOKSLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
 			       size="5"/>
 			<field name="bookslabel" type="text" label="JBS_TPL_LANDINGPAGE_BOOKSLABEL"
@@ -1798,7 +1804,7 @@
 				<option value="0">JBS_CMN_NO</option>
 				<option value="1">JBS_CMN_YES</option>
 			</field>
-			<field name="landingtopicslimit" type="text"
+			<field name="landingtopicslimit" type="int"
 			       label="JBS_TPL_LANDINGPAGE_LANDINGTOPICSLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
 			       size="5"/>
 			<field name="topicslabel" type="text"
@@ -1813,7 +1819,7 @@
 				<option value="0">JBS_TPL_USE_LIMIT</option>
 				<option value="1">JBS_TPL_USE_RECORD_SETTING</option>
 			</field>
-			<field name="landinglocationslimit" type="text"
+			<field name="landinglocationslimit" type="int"
 			       label="JBS_TPL_LANDINGPAGE_LANDINGLOCATIONSLIMIT"
 			       description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
 			       size="5"/>
@@ -1829,7 +1835,7 @@
 				<option value="0">JBS_TPL_USE_LIMIT</option>
 				<option value="1">JBS_TPL_USE_RECORD_SETTING</option>
 			</field>
-			<field name="landingmessagetypeslimit" type="text"
+			<field name="landingmessagetypeslimit" type="int"
 			       label="JBS_TPL_LANDINGPAGE_LANDINGMESSAGETYPESLIMIT"
 			       description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
 			       size="5"/>
@@ -1841,7 +1847,7 @@
 				<option value="0">JBS_CMN_NO</option>
 				<option value="1">JBS_CMN_YES</option>
 			</field>
-			<field name="landingyearslimit" type="text"
+			<field name="landingyearslimit" type="int"
 			       label="JBS_TPL_LANDINGPAGE_LANDINGYEARSLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
 			       size="5"/>
 			<field name="yearslabel" type="text" label="JBS_TPL_LANDINGPAGE_YEARSLABEL"

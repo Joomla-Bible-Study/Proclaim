@@ -27,7 +27,7 @@ class JBSMRestore
 	{
 		$backuptables = self::getObjects();
 
-		$db = JFactory::getDBO();
+		$db = JFactory::getDbo();
 
 		foreach ($backuptables AS $backuptable)
 		{
@@ -72,7 +72,7 @@ class JBSMRestore
 	 */
 	protected static function getObjects()
 	{
-		$db        = JFactory::getDBO();
+		$db        = JFactory::getDbo();
 		$tables    = $db->getTableList();
 		$prefix    = $db->getPrefix();
 		$prelength = strlen($prefix);
@@ -100,7 +100,7 @@ class JBSMRestore
 	{
 		$backuptables = self::getObjects();
 
-		$db = JFactory::getDBO();
+		$db = JFactory::getDbo();
 
 		foreach ($backuptables AS $backuptable)
 		{
@@ -156,7 +156,7 @@ class JBSMRestore
 			set_time_limit(3000);
 		}
 		$input         = new JInput;
-		$installtype   = $input->get('install_directory');
+		$installtype   = $input->getPath('install_directory');
 		$backuprestore = $input->getWord('backuprestore', '');
 
 		if (substr_count($backuprestore, '.sql'))
@@ -194,7 +194,7 @@ class JBSMRestore
 			if (($parent !== true) && $result)
 			{
 				$fix = new JBSMAssets;
-				$fix->fixassets();
+				$fix->fixAssets();
 			}
 		}
 
@@ -212,7 +212,7 @@ class JBSMRestore
 	public static function restoreDB($backuprestore)
 	{
 		$app = JFactory::getApplication();
-		$db  = JFactory::getDBO();
+		$db  = JFactory::getDbo();
 		/**
 		 * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
 		 */
@@ -272,7 +272,7 @@ class JBSMRestore
 	private static function _getPackageFromFolder()
 	{
 		$input = new JInput;
-		$p_dir = $input->getString('install_directory');
+		$p_dir = $input->getPath('install_directory');
 
 		return $p_dir;
 	}
@@ -287,8 +287,14 @@ class JBSMRestore
 		$app = JFactory::getApplication();
 
 		// Get the uploaded file information
-		$input    = new JInput;
-		$userfile = $input->files->get('importdb');
+		if (JBSMDEBUG)
+		{
+			$userfile = $_FILES['importdb'];
+		}
+		else
+		{
+			$userfile = $app->input->files->get('importdb');
+		}
 
 		// Make sure that file uploads are enabled in php
 		if (!(bool) ini_get('file_uploads'))
@@ -364,7 +370,7 @@ class JBSMRestore
 			set_time_limit(3000);
 		}
 		$app = JFactory::getApplication();
-		$db  = JFactory::getDBO();
+		$db  = JFactory::getDbo();
 
 		$query  = file_get_contents($tmp_src);
 

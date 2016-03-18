@@ -1,68 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="module" version="2.5" method="upgrade" client="site">
-    <name>JBS_MDL_PODCAST</name>
-    <author>Joomla Bible Study Team</author>
-    <authorEmail>info@joomlabiblestudy.org</authorEmail>
-    <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
-    <copyright>(C) 2007 - 2016 Joomla Bible Study All rights reserved.</copyright>
-    <version>9.0.0-beta3</version>
-    <creationDate>Feb 15, 2016</creationDate>
-    <license>http://www.gnu.org/licenses/gpl.html</license>
-    <description>JBS_MDL_PODCAST_XML_DESCRIPTION</description>
-    <files>
-        <filename module="mod_biblestudy_podcast">mod_biblestudy_podcast.php</filename>
-        <folder>language</folder>
-        <folder>tmpl</folder>
-        <filename>mod_biblestudy_podcast.xml</filename>
-    </files>
-    <config>
-        <fields name="params">
-            <fieldset name="basic"
-                      addfieldpath="/administrator/components/com_biblestudy/models/fields">
-                <field name="dummy" type="loadlanguagefile" default=""/>   <!-- load common language file -->
-                <field name="t" type="sql" default="1"
-                       label="JBS_MDL_SELECT_TEMPLATE" description="JBS_MDL_SELECT_TEMPLATE_DESC"
-                       query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
-                       key_field="id" value_field="title" required="true"/>
+<extension type="module" version="3.3" method="upgrade" client="site">
+	<name>JBS_MDL_PODCAST</name>
+	<author>Joomla Bible Study Team</author>
+	<authorEmail>info@joomlabiblestudy.org</authorEmail>
+	<authorUrl>http://www.joomlabiblestudy.org</authorUrl>
+	<copyright>(C) 2007 - 2016 Joomla Bible Study All rights reserved.</copyright>
+	<version>9.0.0-beta4</version>
+	<creationDate>March 6, 2016</creationDate>
+	<license>http://www.gnu.org/licenses/gpl.html</license>
+	<description>JBS_MDL_PODCAST_XML_DESCRIPTION</description>
+	<files>
+		<filename module="mod_biblestudy_podcast">mod_biblestudy_podcast.php</filename>
+		<folder>language</folder>
+		<folder>tmpl</folder>
+		<filename>mod_biblestudy_podcast.xml</filename>
+	</files>
+	<config>
+		<fields name="params">
+			<fieldset name="basic"
+			          addfieldpath="/administrator/components/com_biblestudy/models/fields">
+				<field name="dummy" type="loadlanguagefile" default=""/>   <!-- load common language file -->
+				<field name="t" type="sql" default="1"
+				       label="JBS_MDL_SELECT_TEMPLATE" description="JBS_MDL_SELECT_TEMPLATE_DESC"
+				       query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
+				       key_field="id" value_field="title" required="true"/>
 
-                <field name="subscribeintro" type="text" default="Our Podcasts" size="50"
-                       label="JBS_MDL_HEADER_TEXT" description="JBS_MDL_HEADER_TEXT_DESC"/>
-            </fieldset>
-            <fieldset name="advanced">
-                <field
-                        name="layout"
-                        type="modulelayout"
-                        label="JFIELD_ALT_LAYOUT_LABEL"
-                        description="JFIELD_ALT_MODULE_LAYOUT_DESC"/>
+				<field name="subscribeintro" type="text" default="Our Podcasts" size="50"
+				       label="JBS_MDL_HEADER_TEXT" description="JBS_MDL_HEADER_TEXT_DESC"/>
+			</fieldset>
+			<fieldset name="advanced">
+				<field
+						name="layout"
+						type="modulelayout"
+						label="JFIELD_ALT_LAYOUT_LABEL"
+						description="JFIELD_ALT_MODULE_LAYOUT_DESC"/>
 
-                <field
-                        name="cache"
-                        type="list"
-                        default="1"
-                        label="COM_MODULES_FIELD_CACHING_LABEL"
-                        description="COM_MODULES_FIELD_CACHING_LABEL">
-                    <option
-                            value="1">JGLOBAL_USE_GLOBAL
-                    </option>
-                    <option
-                            value="0">COM_MODULES_FIELD_VALUE_NOCACHING
-                    </option>
-                </field>
+				<field
+						name="cache"
+						type="list"
+						default="1"
+						label="COM_MODULES_FIELD_CACHING_LABEL"
+						description="COM_MODULES_FIELD_CACHING_LABEL">
+					<option
+							value="1">JGLOBAL_USE_GLOBAL
+					</option>
+					<option
+							value="0">COM_MODULES_FIELD_VALUE_NOCACHING
+					</option>
+				</field>
 
-                <field
-                        name="cache_time"
-                        type="text"
-                        default="900"
-                        label="COM_MODULES_FIELD_CACHE_TIME_LABEL"
-                        description="COM_MODULES_FIELD_CACHE_TIME_LABEL"/>
-            </fieldset>
-        </fields>
-    </config>
-    <!-- UPDATESERVER DEFINITION -->
-    <updateservers>
-        <!-- Note: No spaces or linebreaks allowed between the server tags -->
-        <server type="extension" priority="1" name="Joomla Bible Study Podcast Module">
-            <![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=14&dummy=extension.xml]]>
-        </server>
-    </updateservers>
+				<field
+						name="cache_time"
+						type="text"
+						default="900"
+						label="COM_MODULES_FIELD_CACHE_TIME_LABEL"
+						description="COM_MODULES_FIELD_CACHE_TIME_LABEL"/>
+			</fieldset>
+		</fields>
+	</config>
+	<!-- UPDATESERVER DEFINITION -->
+	<updateservers>
+		<!-- Note: No spaces or linebreaks allowed between the server tags -->
+		<server type="extension" priority="1" name="Joomla Bible Study Podcast Module"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=14&dummy=extension.xml]]></server>
+	</updateservers>
 </extension>
