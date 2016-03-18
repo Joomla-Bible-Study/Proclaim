@@ -589,7 +589,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 
 		$app   = JFactory::getApplication();
 		$asset = new JBSMAssets;
-		$dofix = $asset->fixassets();
+		$dofix = $asset->fixAssets();
 
 		if (!$dofix)
 		{
