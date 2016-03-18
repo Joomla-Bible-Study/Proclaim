@@ -156,7 +156,7 @@ class JBSMRestore
 			set_time_limit(3000);
 		}
 		$input         = new JInput;
-		$installtype   = $input->get('install_directory');
+		$installtype   = $input->getPath('install_directory');
 		$backuprestore = $input->getWord('backuprestore', '');
 
 		if (substr_count($backuprestore, '.sql'))
