@@ -56,7 +56,7 @@ class BiblestudyViewComments extends JViewLegacy
 
 	public $filterForm;
 
-	protected $activeFilters;
+	public $activeFilters;
 
 	/**
 	 * Execute and display a template script.
