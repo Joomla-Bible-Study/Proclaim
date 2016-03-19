@@ -14,7 +14,7 @@ $mainframe = JFactory::getApplication();
 $input = new JInput;
 $option = $input->get('option', '', 'cmd');
 $message = $input->get('msg', '', 'string');
-$database = JFactory::getDBO();
+$database = JFactory::getDbo();
 $teacher_menu1 = $this->params->get('teacher_id');
 $teacher_menu = $teacher_menu1[0];
 $topic_menu1 = $this->params->get('topic_id');
@@ -41,7 +41,7 @@ $JBSMTeacher = new JBSMTeacher;
 				if ($this->params->get('show_page_image') > 0)
 				{
 					?>
-					<img src="<?php echo JURI::base() . $this->main->path; ?>"
+					<img src="<?php echo JUri::base() . $this->main->path; ?>"
 					     alt="<?php echo $this->params->get('page_title'); ?>"
 					     width="<?php echo $this->main->width; ?>"
 					     height="<?php echo $this->main->height; ?>"/>

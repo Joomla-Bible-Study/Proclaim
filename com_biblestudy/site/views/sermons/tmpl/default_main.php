@@ -46,11 +46,11 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 						if ($this->params->get('teacherlink') > 0)
 						{
 							echo '<a href="index.php?option=com_biblestudy&view=teacher&id=' . $teacher['id'] . '&t=' . $teacher['t'] . '" >
-							<img class="img-polaroid" src="' . JURI::base() . $teacher['image'] . '"></a>';
+							<img class="img-polaroid" src="' . JUri::base() . $teacher['image'] . '"></a>';
 						}
 						else
 						{
-							echo '<img class="img-polaroid" src="' . JURI::base() . $teacher['image'] . '">';
+							echo '<img class="img-polaroid" src="' . JUri::base() . $teacher['image'] . '">';
 						}
 						if ($this->params->get('teacherlink') > 0)
 						{
@@ -70,7 +70,7 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 		<div class="row-fluid">
 			<div class="span12">
 				<?php if ($this->params->get('show_page_image') > 0)
-				{ ?> <img class="imgcenter" src="<?php echo JURI::base() . $this->main->path; ?>" alt=""><?php } ?>
+				{ ?> <img class="imgcenter" src="<?php echo JUri::base() . $this->main->path; ?>" alt=""><?php } ?>
 				<?php if ($this->params->get('show_page_title') == 1)
 				{ ?><<?php echo $classelement; ?> style="<?php echo $this->params->get('list_title_align'); ?>
 				    "><?php echo $this->params->get('list_page_title'); ?></<?php echo $classelement; ?>><?php } ?>
