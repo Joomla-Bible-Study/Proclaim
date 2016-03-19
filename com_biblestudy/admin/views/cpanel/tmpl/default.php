@@ -26,7 +26,7 @@ if ($msg)
 }
 ?>
 <!-- Header -->
-<form action="index.php" method="post" name="adminForm" id="adminForm">
+<a action="index.php" method="post" name="adminForm" id="adminForm">
 	<div class="row-fluid">
 		<?php if (!empty($this->sidebar)) : ?>
 		<div id="j-sidebar-container" class="span2">
@@ -43,19 +43,12 @@ if ($msg)
 			</div>
 
 			<div id="jbspaypal">
-				<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-					<input type="hidden" name="cmd" value="_donations">
-					<input type="hidden" name="business" value="tfuller@calvarynewberg.org">
-					<input type="hidden" name="lc" value="US">
-					<input type="hidden" name="item_name" value="Joomla Bible Study Team">
-					<input type="hidden" name="no_note" value="0">
-					<input type="hidden" name="currency_code" value="USD">
-					<input type="hidden" name="bn" value="PP-DonationsBF:btn_donateCC_LG.gif:NonHostedGuest">
+				<a href="index.php?option=com_biblestudy&view=donate&tmpl=component" target="_blank">
 					<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"
 					       name="submit" alt="PayPal - The safer, easier way to pay online!">
 					<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1"
 					     height="1">
-				</form>
+				</a>
 			</div>
 			<hr/>
 			<?php echo $this->sidebar; ?>
