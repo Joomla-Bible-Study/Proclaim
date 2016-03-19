@@ -87,7 +87,7 @@ class TableComment extends JTable
 	 *
 	 * @param   JDatabaseDriver  &$db  Database connector object
 	 */
-	public function TableComment(&$db)
+	public function __construct(&$db)
 	{
 		parent::__construct('#__bsms_comments', 'id', $db);
 	}
