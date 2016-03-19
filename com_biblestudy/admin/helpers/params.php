@@ -45,9 +45,9 @@ class JBSMParams
 	 */
 	public static function getAdmin()
 	{
-		if (JBSMDbHelper::checkIfTable('#__bsms_admin') && !self::$admin)
+		if (!self::$admin)
 		{
-			$db    = JFactory::getDBO();
+			$db    = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query->select('*')
 				->from('#__bsms_admin')
@@ -63,10 +63,6 @@ class JBSMParams
 			$admin->user_id = $user->id;
 
 			self::$admin = $admin;
-		}
-		elseif (!self::$admin)
-		{
-			return false;
 		}
 
 		return self::$admin;
