@@ -10,8 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JHtml::_('behavior.framework', true);
-JHtml::_('jquery.framework');
+JHtml::_('bootstrap.framework');
 JHtml::_('formbehavior.chosen', 'select');
 
 $JBSMTeacher  = new JBSMTeacher;
