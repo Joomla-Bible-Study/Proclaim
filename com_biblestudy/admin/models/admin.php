@@ -172,7 +172,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 		$changeSet->fix();
 		$this->fixSchemaVersion();
 		$this->fixUpdateVersion();
-		$installer = new Com_BiblestudyInstallerScript;
+		$installer = new BiblestudyModelInstall;
 		$installer->deleteUnexistingFiles();
 		$installer->fixMenus();
 		$installer->fixemptyaccess();
@@ -423,7 +423,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 */
 	public function getSSorPI()
 	{
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('extension_id, name, element')->from('#__extensions');
 		$db->setQuery($query);
@@ -450,7 +450,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 		$this->setState('extension_message', $app->getUserState('com_biblestudy.extension_message'));
 		$app->setUserState('com_biblestudy.message', '');
 		$app->setUserState('com_biblestudy.extension_message', '');
-		parent::populateState('name', 'asc');
+		parent::populateState();
 	}
 
 	/**
