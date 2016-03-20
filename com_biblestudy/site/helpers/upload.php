@@ -220,7 +220,7 @@ class JBSMUpload
 
 		// Chmod the file (just as example)
 
-		// Try to chmod the new file to 666 (writeable)
+		// Try to chmod the new file to 666 (writable)
 		if (ftp_chmod($conn_id, 0755, $ftp_path) == false)
 		{
 			if ($admin == 0)
@@ -233,7 +233,7 @@ class JBSMUpload
 		// Close the FTP stream
 		ftp_close($conn_id);
 
-		if (!$ftpsuccess1 || !$ftpsuccess2 || !$ftpsuccess3)
+		if (!$ftpsuccess1 || !$ftpsuccess2 || !$ftpsuccess3 || !$ftpsuccess4)
 		{
 			$ftpsuccess = false;
 		}
@@ -559,7 +559,7 @@ class JBSMUpload
 		else
 		{
 
-			if (!JFILE::upload($file['tmp_name'], $filename->path))
+			if (!JFile::upload($file['tmp_name'], $filename->path))
 			{
 				$uploadmsg = JText::_('JBS_MED_UPLOAD_FAILED_CHECK_PATH');
 			}
@@ -594,7 +594,7 @@ class JBSMUpload
 		$msg = '';
 		jimport('joomla.filesystem.file');
 
-		if (!JFILE::upload($file['tmp_name'], $filename))
+		if (!JFile::upload($file['tmp_name'], $filename))
 		{
 			$msg = JText::_('JBS_MED_UPLOAD_FAILED_CHECK_PATH') . ' ' . $filename . ' ' . JText::_('JBS_MED_UPLOAD_EXISTS');
 		}
@@ -615,7 +615,7 @@ class JBSMUpload
 		$msg = '';
 		jimport('joomla.filesystem.file');
 
-		if (!JFILE::upload($file['tmp_name'], $filename->path))
+		if (!JFile::upload($file['tmp_name'], $filename->path))
 		{
 			$msg = JText::_('JBS_MED_UPLOAD_FAILED_CHECK_PATH') . ' ' . $filename->path . ' ' . JText::_('JBS_MED_UPLOAD_EXISTS');
 		}
@@ -638,40 +638,22 @@ class JBSMUpload
 	public static function buildpath($file, $type, $serverid, $folderid, $path, $flash = 0)
 	{
 		JTable::addIncludePath(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_biblestudy/tables');
+		/** @type TableServer $filepath */
 		$filepath = JTable::getInstance('Server', 'Table');
 		$filepath->load($serverid);
-		$folderpath = JTable::getInstance('Folder', 'Table');
-		$folderpath->load($folderid);
+
+		$reg = new \Joomla\Registry\Registry;
+		$filepath->params = $reg->loadString($filepath->params);
 		$filename = new stdClass;
 
-		$folder                = $folderpath->folderpath;
 		$filename->type        = $filepath->type;
-		$filename->ftphost     = $filepath->ftphost;
-		$filename->ftpuser     = $filepath->ftpuser;
-		$filename->ftppassword = $filepath->ftppassword;
-		$filename->ftpport     = $filepath->ftpport;
-		$filename->aws_key     = $filepath->aws_key;
-		$filename->aws_secret  = $filepath->aws_secret;
-		$filename->aws_bucket  = $filepath->server_path . $folderpath->folderpath;
-
-		// Sanitise folder
-		// Remove last / if present from folder
-
-		$last1 = substr($folder, -1);
-
-		if ($last1 == '/')
-		{
-			$folder = substr_replace($folder, "", -1);
-		}
-
-		// Remove first / if present from folder
-
-		$first = substr($folder, 0, 1);
-
-		if ($first == '/')
-		{
-			$folder = substr_replace($folder, '', 0, 1);
-		}
+		$filename->ftphost     = $filepath->params->get('ftphost');
+		$filename->ftpuser     = $filepath->params->get('ftpuser');
+		$filename->ftppassword = $filepath->params->get('ftppassword');
+		$filename->ftpport     = $filepath->params->get('ftpport');
+		$filename->aws_key     = $filepath->params->get('aws_key');
+		$filename->aws_secret  = $filepath->params->get('aws_secret');
+		$filename->aws_bucket  = $filepath->params->get('server_path');
 
 		// This removes any characters that might cause headaches to browsers. This also does the same thing in the model
 		$badchars = array(
@@ -707,21 +689,21 @@ class JBSMUpload
 		if ($flash == 0)
 		{
 			$file['name']   = str_replace($badchars, '_', $file['name']);
-			$filename->file = JFILE::makeSafe($file['name']);
+			$filename->file = JFile::makeSafe($file['name']);
 		}
 
 		if ($flash == 1)
 		{
 			$file           = str_replace($badchars, '_', $file);
-			$filename->file = JFILE::makeSafe($file);
+			$filename->file = JFile::makeSafe($file);
 		}
 		if ($filename->type == 2)
 		{
-			$filename->path = $folder . '/' . $filename->file;
+			$filename->path = $filename->file;
 		}
 		else
 		{
-			$filename->path = JPATH_SITE . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $filename->file;
+			$filename->path = JPATH_SITE . DIRECTORY_SEPARATOR . $filename->file;
 		}
 
 		return $filename;
