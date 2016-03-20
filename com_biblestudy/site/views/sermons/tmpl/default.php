@@ -9,7 +9,7 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-JHTML::_('behavior.modal');
+JHtml::_('behavior.modal');
 
 echo $this->loadTemplate('formheader');
 

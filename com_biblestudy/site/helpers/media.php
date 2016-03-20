@@ -72,7 +72,7 @@ class JBSMMedia
 
 		$player     = self::getPlayerAttributes($params, $media);
 		$playercode = self::getPlayerCode($params, $player, $image, $media);
-		$downloadlink  = self::getFluidDownloadLink($media, $params, $template, $playercode);
+		$downloadlink  = self::getFluidDownloadLink($media, $params, $template);
 
 		if ($media->params->get('link_type'))
 		{
