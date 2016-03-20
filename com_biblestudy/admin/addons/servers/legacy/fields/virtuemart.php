@@ -52,7 +52,7 @@ class JFormFieldVirtuemart extends JFormFieldList
 		{
 			return JText::_('JBS_CMN_VIRTUEMART_NOT_INSTALLED');
 		}
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('v.virtuemart_product_id, v.product_name');
 		$query->from('#__virtuemart_products_' . VMLANG . ' AS v');

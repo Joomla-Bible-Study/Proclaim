@@ -91,7 +91,7 @@ class PlgSystemJBSBackup extends JPlugin
 	{
 
 		$now   = time();
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('backup')->from('#__jbsbackup_timeset');
 		$db->setQuery($query, 0, 1);
@@ -125,7 +125,7 @@ class PlgSystemJBSBackup extends JPlugin
 		$offset    = $config->get('config.offset');
 
 		$now   = time();
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('backup')->from('#__jbsbackup_timeset');
 		$db->setQuery($query, 0, 1);
@@ -237,7 +237,7 @@ class PlgSystemJBSBackup extends JPlugin
 	public function updatetime()
 	{
 		$time  = time();
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->update('#__jbsbackup_timeset')->set($db->qn('backup') . ' = ' . $db->q($time));
 		$db->setQuery($query);
@@ -264,7 +264,7 @@ class PlgSystemJBSBackup extends JPlugin
 	 */
 	public function doEmail($params, $dobackup)
 	{
-		$livesite = JURI::root();
+		$livesite = JUri::root();
 		$config   = JFactory::getConfig();
 		$mailfrom = $config->get('config.mailfrom');
 		$fromname = $config->get('config.fromname');
@@ -287,7 +287,7 @@ class PlgSystemJBSBackup extends JPlugin
 			$fromname = $params->def('fromname', $fromname);
 		}
 		$mail = JFactory::getMailer();
-		$mail->IsHTML(true);
+		$mail->isHtml(true);
 		jimport('joomla.utilities.date');
 		$sender = array(
 			$mailfrom,

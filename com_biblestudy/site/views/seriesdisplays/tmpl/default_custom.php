@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 $mainframe = JFactory::getApplication();
 $input = new JInput;
 $option = $input->get('option', '', 'cmd');
-JHTML::_('behavior.tooltip');
+JHtml::_('behavior.tooltip');
 $series_menu = $this->params->get('series_id', 1);
 $document = JFactory::getDocument();
 /** @var Joomla\Registry\Registry $params */
@@ -35,7 +35,7 @@ $JBSMSerieslist = new JBSMSerieslist;
 				if ($this->params->get('show_page_image_series') > 0)
 				{
 					?>
-					<img src="<?php echo JURI::base() . $this->main->path; ?>"
+					<img src="<?php echo JUri::base() . $this->main->path; ?>"
 					     alt="<?php echo $this->params->get('series_title') ?>"
 					     width="<?php echo $this->main->width; ?>"
 					     height="<?php echo $this->main->height; ?>"/>

@@ -299,7 +299,7 @@ class Migration700
 		{
 			$query = 'UPDATE `#__bsms_admin` SET `drop_tables` = 0 WHERE `id` = 1';
 
-			if (!JBSMDbHelper::performdb($query, "Build 700: "))
+			if (!JBSMDbHelper::performDB($query, "Build 700: "))
 			{
 				return false;
 			}
@@ -415,7 +415,7 @@ class Migration700
 		$query = "UPDATE `#__bsms_mimetype` SET `id` = '15', `mimetype` = 'video/x-flv .flv', " .
 			"`mimetext` = ' Flash Video FLV', `published` = '1', `asset_id` = '3900', `access` = '1' WHERE `#__bsms_mimetype`.`id` = '15'";
 
-		if (!JBSMDbHelper::performdb($query, "Build 700: "))
+		if (!JBSMDbHelper::performDB($query, "Build 700: "))
 		{
 			return false;
 		}
@@ -423,43 +423,43 @@ class Migration700
 		/* Update Show levels */
 		$query = "UPDATE `#__bsms_studies` SET `access` = '1' WHERE `show_level` = '0'";
 
-		if (!JBSMDbHelper::performdb($query, "Build 700: "))
+		if (!JBSMDbHelper::performDB($query, "Build 700: "))
 		{
 			return false;
 		}
 		$query = "UPDATE `#__bsms_studies` SET `access` = '2' WHERE `show_level` = '18'";
 
-		if (!JBSMDbHelper::performdb($query, "Build 700: "))
+		if (!JBSMDbHelper::performDB($query, "Build 700: "))
 		{
 			return false;
 		}
 		$query = "UPDATE `#__bsms_studies` SET `access` = '2' WHERE `show_level` = '19'";
 
-		if (!JBSMDbHelper::performdb($query, "Build 700: "))
+		if (!JBSMDbHelper::performDB($query, "Build 700: "))
 		{
 			return false;
 		}
 		$query = "UPDATE `#__bsms_studies` SET `access` = '2' WHERE `show_level` = '20'";
 
-		if (!JBSMDbHelper::performdb($query, "Build 700: "))
+		if (!JBSMDbHelper::performDB($query, "Build 700: "))
 		{
 			return false;
 		}
 		$query = "UPDATE `#__bsms_studies` SET `access` = '3' WHERE `show_level` = '22'";
 
-		if (!JBSMDbHelper::performdb($query, "Build 700: "))
+		if (!JBSMDbHelper::performDB($query, "Build 700: "))
 		{
 			return false;
 		}
 		$query = "UPDATE `#__bsms_studies` SET `access` = '3' WHERE `show_level` = '23'";
 
-		if (!JBSMDbHelper::performdb($query, "Build 700: "))
+		if (!JBSMDbHelper::performDB($query, "Build 700: "))
 		{
 			return false;
 		}
 		$query = "UPDATE `#__bsms_studies` SET `access` = '3' WHERE `show_level` = '24'";
 
-		if (!JBSMDbHelper::performdb($query, "Build 700: "))
+		if (!JBSMDbHelper::performDB($query, "Build 700: "))
 		{
 			return false;
 		}
@@ -504,7 +504,7 @@ class Migration700
 					$query = "UPDATE `#__bsms_mediafiles` SET `player` = " . $db->quote($player) . " WHERE `id` = " .
 						$db->quote($result->id) . " LIMIT 1";
 
-					if (!JBSMDbHelper::performdb($query, "Build 700: "))
+					if (!JBSMDbHelper::performDB($query, "Build 700: "))
 					{
 						return false;
 					}
@@ -514,7 +514,7 @@ class Migration700
 					$query = "UPDATE `#__bsms_mediafiles` SET `popup` = " . $db->quote($popup) . " WHERE `id` = " .
 						$db->quote($result->id) . " LIMIT 1";
 
-					if (!JBSMDbHelper::performdb($query, "Build 700: "))
+					if (!JBSMDbHelper::performDB($query, "Build 700: "))
 					{
 						return false;
 					}
@@ -525,7 +525,7 @@ class Migration700
 					$query    = "UPDATE `#__bsms_mediafiles` SET `podcast_id` = " . $db->quote($podcasts) . " WHERE `id` = " .
 						$db->quote($result->id) . " LIMIT 1";
 
-					if (!JBSMDbHelper::performdb($query, "Build 700: "))
+					if (!JBSMDbHelper::performDB($query, "Build 700: "))
 					{
 						return false;
 					}
@@ -536,7 +536,7 @@ class Migration700
 				$query = "UPDATE `#__bsms_mediafiles` SET `params` = " . $db->quote($params2) . " WHERE `id` = " .
 					$db->quote($result->id) . " LIMIT 1";
 
-				if (!JBSMDbHelper::performdb($query, "Build 700: "))
+				if (!JBSMDbHelper::performDB($query, "Build 700: "))
 				{
 					return false;
 				}
@@ -545,7 +545,7 @@ class Migration700
 
 		$query = 'DROP TABLE IF EXISTS `#__bsms_books`';
 
-		if (!JBSMDbHelper::performdb($query, "Build 700: "))
+		if (!JBSMDbHelper::performDB($query, "Build 700: "))
 		{
 			return false;
 		}
@@ -558,7 +558,7 @@ class Migration700
 					  PRIMARY KEY (`id`)
 					) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1";
 
-		if (!JBSMDbHelper::performdb($query, "Build 700: "))
+		if (!JBSMDbHelper::performDB($query, "Build 700: "))
 		{
 			return false;
 		}
@@ -638,7 +638,7 @@ class Migration700
 				 (72, 'JBS_BBK_SIRACH', 172, 1),
 				 (73, 'JBS_BBK_BARUCH', 173, 1)";
 
-		if (!JBSMDbHelper::performdb($query, "Build 700: "))
+		if (!JBSMDbHelper::performDB($query, "Build 700: "))
 		{
 			return false;
 		}
@@ -650,7 +650,7 @@ class Migration700
 			// Fix timeset primary key
 			$query = "ALTER TABLE `#__bsms_timeset` DROP INDEX  `timeset` , ADD PRIMARY KEY (  `timeset` )";
 
-			if (!JBSMDbHelper::performdb($query, "Build 700: "))
+			if (!JBSMDbHelper::performDB($query, "Build 700: "))
 			{
 				return false;
 			}
@@ -674,7 +674,7 @@ class Migration700
 				$query   = "UPDATE `#__bsms_studies` SET `params` = " . $db->quote($params2) . " WHERE `id` = " .
 					(int) $db->quote($result->id) . " LIMIT 1";
 
-				if (!JBSMDbHelper::performdb($query, "Build 700: "))
+				if (!JBSMDbHelper::performDB($query, "Build 700: "))
 				{
 					return false;
 				}
@@ -697,7 +697,7 @@ class Migration700
 				$query = "UPDATE `#__bsms_topics` SET `topic_text` = " . $db->quote($topic) . " WHERE `id` = " .
 					(int) $db->quote($result->id);
 
-				if (!JBSMDbHelper::performdb($query, "Build 700: "))
+				if (!JBSMDbHelper::performDB($query, "Build 700: "))
 				{
 					return false;
 				}
@@ -734,7 +734,7 @@ class Migration700
 				$query   = "UPDATE `#__bsms_templates` SET `params` = " . $db->quote($params2) . " WHERE `id` = " .
 					(int) $db->quote($result->id) . " LIMIT 1";
 
-				if (!JBSMDbHelper::performdb($query, "Build 700: "))
+				if (!JBSMDbHelper::performDB($query, "Build 700: "))
 				{
 					return false;
 				}
@@ -771,7 +771,7 @@ class Migration700
 				$query   = "UPDATE `#__bsms_admin` SET `params` = " . $db->quote($params2) . " WHERE `id` = " .
 					(int) $db->quote($result->id) . " LIMIT 1";
 
-				if (!JBSMDbHelper::performdb($query, "Build 700: "))
+				if (!JBSMDbHelper::performDB($query, "Build 700: "))
 				{
 					return false;
 				}

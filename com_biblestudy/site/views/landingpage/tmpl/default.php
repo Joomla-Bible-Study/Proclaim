@@ -10,7 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JHTML::_('behavior.tooltip');
+JHtml::_('behavior.tooltip');
 
 $JBSMLanding = new JBSMLanding;
 /** @var Joomla\Registry\Registry $params */
@@ -26,7 +26,7 @@ $params = $this->params;
 				if (isset($this->main->path))
 				{
 					?>
-					<img src="<?php echo JURI::base() . $this->main->path; ?>"
+					<img src="<?php echo JUri::base() . $this->main->path; ?>"
 					     alt="<?php echo $this->params->get('page_title'); ?>" width="<?php echo $this->main->width; ?>"
 					     height="<?php echo $this->main->height; ?>"/>
 					<?php
@@ -109,7 +109,7 @@ $params = $this->params;
 				{
 					case 0: // Image only
 						$showhideall .= $buttonlink;
-						$showhideall .= "\n\t\t" . '<img src="' . JURI::base() . $showhide_tmp->path . '" alt="' . JText::_('JBS_CMN_SHOW_HIDE_ALL');
+						$showhideall .= "\n\t\t" . '<img src="' . JUri::base() . $showhide_tmp->path . '" alt="' . JText::_('JBS_CMN_SHOW_HIDE_ALL');
 						$showhideall .= ' ' . $showIt_phrase . '" title="' . JText::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' . $showIt_phrase . '" border="0" width="';
 						$showhideall .= $showhide_tmp->width . '" height="' . $showhide_tmp->height . '" />';
 
@@ -120,7 +120,7 @@ $params = $this->params;
 
 					case 1: // Image and label
 						$showhideall .= $buttonlink;
-						$showhideall .= "\n\t\t" . '<img src="' . JURI::base() . $showhide_tmp->path . '" alt="' . JText::_('JBS_CMN_SHOW_HIDE_ALL');
+						$showhideall .= "\n\t\t" . '<img src="' . JUri::base() . $showhide_tmp->path . '" alt="' . JText::_('JBS_CMN_SHOW_HIDE_ALL');
 						$showhideall .= ' ' . $showIt_phrase . '" title="' . JText::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' . $showIt_phrase . '" border="0" width="';
 						$showhideall .= $showhide_tmp->width . '" height="' . $showhide_tmp->height . '" />';
 

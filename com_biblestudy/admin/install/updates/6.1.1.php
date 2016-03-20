@@ -33,21 +33,21 @@ class Migration611
 				`published` TINYINT(1) NOT NULL DEFAULT '1',
 				PRIMARY KEY (`id`) ) ENGINE=InnoDB CHARACTER SET `utf8`";
 
-		if (!JBSMDbHelper::performdb($query, "Build 611: "))
+		if (!JBSMDbHelper::performDB($query, "Build 611: "))
 		{
 			return false;
 		}
 
 		$query = "ALTER TABLE `#__bsms_studies` ADD COLUMN show_level VARCHAR(100) NOT NULL DEFAULT '0' AFTER user_name";
 
-		if (!JBSMDbHelper::performdb($query, "Build 611: "))
+		if (!JBSMDbHelper::performDB($query, "Build 611: "))
 		{
 			return false;
 		}
 
 		$query = "ALTER TABLE `#__bsms_studies` ADD COLUMN location_id INT(3) NULL AFTER show_level";
 
-		if (!JBSMDbHelper::performdb($query, "Build 611: "))
+		if (!JBSMDbHelper::performDB($query, "Build 611: "))
 		{
 			return false;
 		}
@@ -61,7 +61,7 @@ class Migration611
 								`versionname` VARCHAR(40) NULL,
 								PRIMARY KEY(`id`)) DEFAULT CHARSET=utf8;";
 
-		if (!JBSMDbHelper::performdb($query, "Build 611: "))
+		if (!JBSMDbHelper::performDB($query, "Build 611: "))
 		{
 			return false;
 		}
@@ -69,7 +69,7 @@ class Migration611
 		$query = "INSERT INTO `#__bsms_version` SET `version` = '6.0.11', `installdate`='2008-10-22', `build`='611'," .
 			"`versionname`='Leviticus', `versiondate`='2008-10-22'";
 
-		if (!JBSMDbHelper::performdb($query, "Build 611: "))
+		if (!JBSMDbHelper::performDB($query, "Build 611: "))
 		{
 			return false;
 		}

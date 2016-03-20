@@ -42,8 +42,8 @@ class JFormFieldModal_Teacherdisplay extends JFormField
 
 		// Load the javascript and css
 		JHtml::_('behavior.framework');
-		JHTML::_('script', 'system/modal.js', false, true);
-		JHTML::_('stylesheet', 'system/modal.css', array(), true);
+		JHtml::_('script', 'system/modal.js', false, true);
+		JHtml::_('stylesheet', 'system/modal.css', array(), true);
 
 		// Build the script.
 		$script   = array();
@@ -69,7 +69,7 @@ class JFormFieldModal_Teacherdisplay extends JFormField
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
 
 		// Get the title of the linked chart
-		$db = JFactory::getDBO();
+		$db = JFactory::getDbo();
 		$db->setQuery(
 			'SELECT teachername AS name' .
 			' FROM #__bsms_teachers' .
@@ -89,7 +89,7 @@ class JFormFieldModal_Teacherdisplay extends JFormField
 
 		$link = 'index.php?option=com_biblestudy&amp;view=teachers&amp;layout=modal&amp;tmpl=component&amp;function=jSelectChart_' . $this->id;
 
-		JHTML::_('behavior.modal', 'a.modal');
+		JHtml::_('behavior.modal', 'a.modal');
 		$html = "\n" . '<div class="fltlft"><input type="text" id="' . $this->id . '_name" value="' .
 			htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '" disabled="disabled" /></div>';
 		$html .= '<div class="button2-left"><div class="blank"><a class="modal" title="' . JText::_('JBS_CMN_SELECT_TEACHER') .

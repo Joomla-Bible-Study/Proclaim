@@ -120,34 +120,34 @@ class BiblestudyViewServers extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JToolBarHelper::title(JText::_('JBS_CMN_SERVERS'), 'database database');
+		JToolbarHelper::title(JText::_('JBS_CMN_SERVERS'), 'database database');
 
 		if ($this->canDo->get('core.create'))
 		{
-			JToolBarHelper::addNew('server.add');
+			JToolbarHelper::addNew('server.add');
 		}
 
 		if ($this->canDo->get('core.edit'))
 		{
-			JToolBarHelper::editList('server.edit');
+			JToolbarHelper::editList('server.edit');
 		}
 
 		if ($this->canDo->get('core.edit.state'))
 		{
-			JToolBarHelper::divider();
-			JToolBarHelper::publishList('servers.publish');
-			JToolBarHelper::unpublishList('servers.unpublish');
-			JToolBarHelper::divider();
-			JToolBarHelper::archiveList('servers.archive');
+			JToolbarHelper::divider();
+			JToolbarHelper::publishList('servers.publish');
+			JToolbarHelper::unpublishList('servers.unpublish');
+			JToolbarHelper::divider();
+			JToolbarHelper::archiveList('servers.archive');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
-			JToolBarHelper::deleteList('', 'servers.delete', 'JTOOLBAR_EMPTY_TRASH');
+			JToolbarHelper::deleteList('', 'servers.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
 		elseif ($this->canDo->get('core.delete'))
 		{
-			JToolBarHelper::trash('servers.trash');
+			JToolbarHelper::trash('servers.trash');
 		}
 	}
 

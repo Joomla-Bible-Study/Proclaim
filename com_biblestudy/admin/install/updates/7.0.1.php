@@ -92,7 +92,7 @@ class Migration701
 	 */
 	public function updatetopics()
 	{
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->insert('#__bsms_studytopics (study_id, topic_id)')
 			->select('#__bsms_studies.id, #__bsms_studies.topics_id ')

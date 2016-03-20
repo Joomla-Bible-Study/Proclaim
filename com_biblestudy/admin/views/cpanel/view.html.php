@@ -90,7 +90,7 @@ class BiblestudyViewCpanel extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JToolBarHelper::title(JText::_('JBS_CMN_CONTROL_PANEL'), 'administration');
+		JToolbarHelper::title(JText::_('JBS_CMN_CONTROL_PANEL'), 'administration');
 	}
 
 	/**

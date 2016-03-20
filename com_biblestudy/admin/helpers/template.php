@@ -99,7 +99,7 @@ class JBSMTemplate
 			'tagsStudy'       => $tagsStudy, 'tagsStudyList' => $tagsStudyList, 'tagsTeacher' => $tagsTeacher,
 			'tagsTeacherList' => $tagsTeacherList
 		);
-		$this->_DBO  = JFactory::getDBO();
+		$this->_DBO  = JFactory::getDbo();
 	}
 
 	/**
@@ -127,7 +127,7 @@ class JBSMTemplate
 	 * @param   int      $id          Int  An Id of a template to load. This replaces the contents of the $itemTmpl
 	 * @param   boolean  $fieldNames  Boolean  Default False. Set to True of you want to load the db fieldnames that correspond to the tags
 	 *
-	 * @return Array
+	 * @return array
 	 */
 	public function loadTagList($itemTmpl = null, $id = null, $fieldNames = false)
 	{
@@ -200,11 +200,11 @@ class JBSMTemplate
 
 		foreach ($this->tmplTypes as $type)
 		{
-			$i[] = JHTML::_('select.option', key($this->tmplTypes), $type);
+			$i[] = JHtml::_('select.option', key($this->tmplTypes), $type);
 			next($this->tmplTypes);
 		}
 
-		return JHTML::_('select.genericlist', $i, 'type', null, 'value', 'text', $DefaultSelected);
+		return JHtml::_('select.genericlist', $i, 'type', null, 'value', 'text', $DefaultSelected);
 	}
 
 	/**

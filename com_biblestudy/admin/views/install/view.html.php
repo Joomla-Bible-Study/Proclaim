@@ -132,7 +132,7 @@ class BiblestudyViewInstall extends JViewLegacy
 			JFactory::getDocument()->addScriptDeclaration($script);
 		}
 
-		JToolBarHelper::title(JText::_('JBS_MIG_TITLE'), 'administration');
+		JToolbarHelper::title(JText::_('JBS_MIG_TITLE'), 'administration');
 		$document = JFactory::getDocument();
 		$document->setTitle(JText::_('JBS_MIG_TITLE'));
 
@@ -206,8 +206,8 @@ class BiblestudyViewInstall extends JViewLegacy
 	protected function addToolbar()
 	{
 		JFactory::getApplication()->input->set('hidemainmenu', true);
-		JToolBarHelper::help('biblestudy', true);
-		JToolBarHelper::title(JText::_('JBS_CMN_INSTALL'), 'administration');
+		JToolbarHelper::help('biblestudy', true);
+		JToolbarHelper::title(JText::_('JBS_CMN_INSTALL'), 'administration');
 	}
 
 	/**
@@ -258,7 +258,7 @@ class BiblestudyViewInstall extends JViewLegacy
 
 		// -- General settings
 		jimport('joomla.installer.installer');
-		$db                    = JFactory::getDBO();
+		$db                    = JFactory::getDbo();
 		$this->status          = new JObject;
 		$this->status->modules = array();
 		$this->status->plugins = array();

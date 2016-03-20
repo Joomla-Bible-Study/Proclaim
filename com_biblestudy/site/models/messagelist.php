@@ -35,6 +35,7 @@ class BiblestudyModelMessagelist extends BiblestudyModelMessages
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
+		/** @type JApplicationSite $app */
 		$app = JFactory::getApplication();
 
 		$return = $app->input->get('return', null, 'base64');

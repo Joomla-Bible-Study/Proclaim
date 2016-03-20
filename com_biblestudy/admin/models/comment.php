@@ -127,6 +127,7 @@ class BiblestudyModelComment extends JModelAdmin
 		$categoryId = (int) '';
 		$newIds     = array();
 
+		/** @type TableComment $table */
 		$table = $this->getTable();
 		$i     = 0;
 
@@ -168,9 +169,7 @@ class BiblestudyModelComment extends JModelAdmin
 			}
 
 			// Alter the title & alias
-			$data         = $this->generateNewTitle($categoryId, $table->alias, $table->title);
-			$table->title = $data['0'];
-			$table->alias = $data['1'];
+			$data         = $this->generateNewTitle($categoryId, '', '');
 
 			// Reset the ID because we are making a copy
 			$table->id = 0;

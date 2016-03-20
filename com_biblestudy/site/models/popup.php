@@ -31,6 +31,7 @@ class BiblestudyModelPopup extends JModelLegacy
 	 */
 	protected function populateState()
 	{
+		/** @type JApplicationSite $app */
 		$app = JFactory::getApplication('site');
 
 		// Load the parameters.

@@ -103,7 +103,7 @@ class BiblestudyControllerMessage extends JControllerForm
 		$msg   = null;
 		$input = new JInput;
 		$id    = $input->get('id', 0, 'int');
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_studies')
 			->set('hits = ' . $db->q('0'))
@@ -200,6 +200,7 @@ class BiblestudyControllerMessage extends JControllerForm
 				// It's an existing tag.  Add it
 				if ($aTag != "")
 				{
+					/** @type TableStudyTopics $tagRow */
 					$tagRow = JTable::getInstance('studytopics', 'Table');
 					$tagRow->study_id = $data['id'];
 					$tagRow->topic_id = $aTag;
@@ -218,6 +219,7 @@ class BiblestudyControllerMessage extends JControllerForm
 					$model->save(array('topic_text' => $aTag, 'language' => $data['language']));
 
 					// Gotta somehow make sure this isn't a duplicate...
+					/** @type TableStudyTopics $tagRow */
 					$tagRow           = JTable::getInstance('studytopics', 'Table');
 					$tagRow->study_id = $data['id'];
 					$tagRow->topic_id = $model->getState('topic.id');

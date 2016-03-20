@@ -314,7 +314,7 @@ class Com_BiblestudyInstallerScript
 			require_once $api;
 		}
 
-		$db = JFactory::getDBO();
+		$db = JFactory::getDbo();
 
 		// Check if JBSM can be found from the database
 		$table = $db->getPrefix() . 'bsms_update';

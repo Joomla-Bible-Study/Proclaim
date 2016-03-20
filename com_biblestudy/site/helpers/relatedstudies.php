@@ -101,7 +101,7 @@ class JBSMRelatedStudies
 	 */
 	public function getTopics()
 	{
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery('true');
 		$query->select('id');
 		$query->from('#__bsms_topics');
@@ -812,7 +812,7 @@ class JBSMRelatedStudies
 	 */
 	public function getStudies()
 	{
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery('true');
 		$query->select('s.id, s.params, s.access');
 		$query->from('#__bsms_studies as s');
@@ -914,7 +914,7 @@ class JBSMRelatedStudies
 	 */
 	public function getRelatedLinks()
 	{
-		$db           = JFactory::getDBO();
+		$db           = JFactory::getDbo();
 		$scored       = array_count_values($this->score);
 		$sorted       = arsort($scored);
 		$output       = array_slice($scored, 0, 20, true);

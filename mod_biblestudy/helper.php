@@ -265,7 +265,7 @@ class ModJBSMHelper
 
 		if ($lang || $language != '*')
 		{
-			$query->where('study.language in (' . $db->Quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
+			$query->where('study.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
 		}
 
 		$filters = $messagetype_menu;

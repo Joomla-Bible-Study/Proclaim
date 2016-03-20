@@ -48,7 +48,7 @@ class JFormFieldDocman extends JFormFieldList
 			return JText::_('JBS_CMN_DOCMAN_NOT_INSTALLED');
 		}
 
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('dm.docman_document_id, dm.title');
 		$query->from('#__docman_documents AS dm');
@@ -59,7 +59,7 @@ class JFormFieldDocman extends JFormFieldList
 
 		if ($docs)
 		{
-			$options[] = JHtml::_('select.option', '-1', JTEXT::_('JBS_MED_DOCMAN_SELECT'));
+			$options[] = JHtml::_('select.option', '-1', JText::_('JBS_MED_DOCMAN_SELECT'));
 
 			foreach ($docs as $doc)
 			{

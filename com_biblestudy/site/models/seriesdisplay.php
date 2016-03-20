@@ -51,6 +51,7 @@ class BiblestudyModelSeriesdisplay extends JModelItem
 	 */
 	protected function populateState()
 	{
+		/** @type JApplicationSite $app */
 		$app = JFactory::getApplication('site');
 
 		// Load state from the request.
@@ -150,6 +151,7 @@ class BiblestudyModelSeriesdisplay extends JModelItem
 	 */
 	public function getStudies()
 	{
+		/** @type JApplicationSite $app */
 		$app = JFactory::getApplication('site');
 		$sid = $app->getUserState('sid');
 

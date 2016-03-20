@@ -43,18 +43,18 @@ class TableMediafile extends JTable
 	public $server_id = null;
 
 	/**
-	 * Published
-	 *
-	 * @var string
-	 */
-	public $published = 1;
-
-	/**
 	 * Podcast ID
 	 *
 	 * @var string
 	 */
 	public $podcast_id = null;
+
+	/**
+	 * Hold transitive data (i.e statistics)
+	 *
+	 * @var null
+	 */
+	public $metadata = null;
 
 	/**
 	 * Ordering
@@ -70,12 +70,25 @@ class TableMediafile extends JTable
 	 */
 	public $createdate = null;
 
+	public $hits = 0;
+
+	/**
+	 * Published
+	 *
+	 * @var string
+	 */
+	public $published = 1;
+
 	/**
 	 * Comment Text
 	 *
 	 * @var string
 	 */
 	public $comment = null;
+
+	public $downloads = 0;
+
+	public $plays = 0;
 
 	/**
 	 * Media configuration
@@ -84,20 +97,23 @@ class TableMediafile extends JTable
 	 */
 	public $params = null;
 
-	/**
-     * Hold transitive data (i.e statistics)
-     *
-     * @var null
-     */
-	public $metadata = null;
+	public $asset_id;
 
-	public $plays = 0;
+	public $access;
 
-	public $downloads = 0;
+	public $language;
 
-	public $hits = 0;
+	public $created_by;
+
+	public $created_by_alias;
+
+	public $modified;
+
+	public $modified_by;
 
 	public $checked_out;
+
+	public $checked_out_time;
 
 	/**
 	 * Constructor
@@ -212,6 +228,7 @@ class TableMediafile extends JTable
 	 */
 	protected function _getAssetParentId(JTable $table = null, $id = null)
 	{
+		/** @type JTableAsset $asset */
 		$asset = JTable::getInstance('Asset');
 		$asset->loadByName('com_biblestudy');
 

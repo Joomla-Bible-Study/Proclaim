@@ -45,14 +45,14 @@ JFactory::getDocument()->addScriptDeclaration("
 			<div class="span2">
 				<a onclick="Joomla.submitbutton('admin.checkassets')">
 					<img
-						src="<?php echo JURI::base() . '../media/com_biblestudy/images/icons/import.png'; ?>"
+						src="<?php echo JUri::base() . '../media/com_biblestudy/images/icons/import.png'; ?>"
 						alt="Check Assets" height="48" width="48" style="clear: right;"/>
 					<div><?php echo JText::_('JBS_ADM_CHECK_ASSETS'); ?></div>
 				</a>
 			</div>
 			<div class="span2">
 				<a onclick="Joomla.submitbutton('admin.fixAssets')"><img
-						src="<?php echo JURI::base() . '../media/com_biblestudy/images/icons/export.png'; ?>"
+						src="<?php echo JUri::base() . '../media/com_biblestudy/images/icons/export.png'; ?>"
 						alt="Fix Assets" height="48" width="48"/>
 					<div><?php echo JText::_('JBS_ADM_FIX'); ?></div>
 				</a>

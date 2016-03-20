@@ -140,11 +140,11 @@ class BiblestudyViewTerms extends JViewLegacy
 		// Prepare meta information (under development)
 		if ($itemparams->get('metakey'))
 		{
-			$this->document->setMetadata('keywords', $itemparams->get('metakey'));
+			$this->document->setMetaData('keywords', $itemparams->get('metakey'));
 		}
 		elseif ($this->params->get('menu-meta_keywords'))
 		{
-			$this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
+			$this->document->setMetaData('keywords', $this->params->get('menu-meta_keywords'));
 		}
 
 		if ($itemparams->get('metadesc'))
@@ -158,7 +158,7 @@ class BiblestudyViewTerms extends JViewLegacy
 
 		if ($this->params->get('robots'))
 		{
-			$this->document->setMetadata('robots', $this->params->get('robots'));
+			$this->document->setMetaData('robots', $this->params->get('robots'));
 		}
 	}
 

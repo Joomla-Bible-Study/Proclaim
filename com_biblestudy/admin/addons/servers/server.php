@@ -96,6 +96,7 @@ abstract class JBSServer
 	public static function getInstance($options = array())
 	{
 		$options['type'] = (isset($options['type'])) ? $options['type'] : 'amazons3';
+		$instance = null;
 
 		// Get the options signature for this server type
 		$signature = md5(serialize($options));

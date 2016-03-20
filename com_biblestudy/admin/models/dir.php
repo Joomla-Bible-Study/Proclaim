@@ -141,7 +141,7 @@ class BiblestudyModelDir extends JModelItem
 
 		// Make filtered full directory path
 		$fullDirPath = BIBLESTUDY_ROOT_PATH . $separator . $directoryVar;
-		$dirPath     = JPath::check($fullDirPath, $separator);
+		$dirPath     = JPath::check($fullDirPath);
 
 		if (file_exists($dirPath))
 		{
@@ -189,7 +189,7 @@ class BiblestudyModelDir extends JModelItem
 			$OFiles[$i]           = new JObject;
 			$OFiles[$i]->basename = basename($path);
 			$OFiles[$i]->fullPath = dirname($path) . DS . basename($path);
-			$OFiles[$i]->link     = JURI::root() . '/images' . $this->_getCurrentDir(false, "/") . '/' . basename($path);
+			$OFiles[$i]->link     = JUri::root() . '/images' . $this->_getCurrentDir(false, "/") . '/' . basename($path);
 			$OFiles[$i]->ext      = JFile::getExt($path);
 
 			// Image info, if file is image

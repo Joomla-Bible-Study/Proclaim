@@ -38,7 +38,7 @@ class BiblestudyViewDir extends JViewLegacy
 	public function display($tpl = null)
 	{
 		$document = JFactory::getDocument();
-		$mediaDir = JURI::root() . "media/com_biblestudy/";
+		$mediaDir = JUri::root() . "media/com_biblestudy/";
 
 		// Add style sheet
 		$document->addStyleSheet($mediaDir . 'css/com_biblestudy.css');

@@ -44,7 +44,7 @@ JFactory::getDocument()->addScriptDeclaration("
 			</div>
 			<div class="control-group">
 				<div class="control-label">
-					<img src="<?php echo JURI::base() . '../media/com_biblestudy/images/icons/import.png'; ?>"
+					<img src="<?php echo JUri::base() . '../media/com_biblestudy/images/icons/import.png'; ?>"
 					     alt="Import" height="48" width="48"/>
 				</div>
 				<div class="controls">
@@ -62,7 +62,7 @@ JFactory::getDocument()->addScriptDeclaration("
 			</div>
 			<div class="control-group">
 				<div class="control-label">
-					<img src="<?php echo JURI::base() . '../media/com_biblestudy/images/icons/backuprestore.png'; ?>"
+					<img src="<?php echo JUri::base() . '../media/com_biblestudy/images/icons/backuprestore.png'; ?>"
 					     alt="Backup Folder" height="48" width="48"/>
 
 				</div>
@@ -72,7 +72,7 @@ JFactory::getDocument()->addScriptDeclaration("
 			</div>
 			<div class="control-group">
 				<div class="control-label">
-					<img src="<?php echo JURI::base() . '../media/com_biblestudy/images/icons/folder.png'; ?>"
+					<img src="<?php echo JUri::base() . '../media/com_biblestudy/images/icons/folder.png'; ?>"
 					     alt="Tmp Folder" height="48" width="48"/>
 				</div>
 				<div class="controls">

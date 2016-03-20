@@ -60,7 +60,7 @@ Class JBSMDebug
 	 */
 	public function Trigger_Db_error($text = '', $back = 0)
 	{
-		$db      = JFactory::getDBO();
+		$db      = JFactory::getDbo();
 		$dberror = $db->stderr(true);
 		echo self::Debug_Call_Stack_info($back + 1);
 

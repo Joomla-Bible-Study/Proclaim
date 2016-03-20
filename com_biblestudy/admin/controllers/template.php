@@ -10,7 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-
+use Joomla\Utilities\ArrayHelper;
 
 /**
  * Template controller class
@@ -42,7 +42,7 @@ class BiblestudyControllerTemplate extends JControllerForm
 	{
 		$input = new JInput;
 		$cid   = $input->get('cid', '', 'array');
-		JArrayHelper::toInteger($cid);
+		ArrayHelper::toInteger($cid);
 
 		$model = & $this->getModel('template');
 

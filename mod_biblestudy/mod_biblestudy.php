@@ -26,7 +26,7 @@ $document = JFactory::getDocument();
 /** @var $params Registry */
 $templatemenuid = $params->get('t');
 $template = JBSMParams::getTemplateparams($templatemenuid);
-$pagebuilder = new JBSMPagebuilder;
+$pagebuilder = new JBSMPageBuilder;
 
 $admin = JBSMParams::getAdmin();
 $admin_params = new Registry($admin->params);

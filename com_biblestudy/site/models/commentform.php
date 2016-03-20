@@ -12,6 +12,7 @@ defined('_JEXEC') or die;
 
 // Base this model on the backend version.
 JLoader::register('BiblestudyModelComment', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/comment.php');
+use Joomla\Utilities\ArrayHelper;
 
 /**
  * Comment model class
@@ -46,7 +47,7 @@ class BiblestudyModelCommentform extends BiblestudyModelComment
 		}
 
 		$properties = $table->getProperties(1);
-		$value      = JArrayHelper::toObject($properties, 'JObject');
+		$value      = ArrayHelper::toObject($properties, 'JObject');
 
 		return $value;
 	}
@@ -74,6 +75,7 @@ class BiblestudyModelCommentform extends BiblestudyModelComment
 	 */
 	protected function populateState()
 	{
+		/** @type JApplicationSite $app */
 		$app = JFactory::getApplication('site');
 
 		// Load state from the request.

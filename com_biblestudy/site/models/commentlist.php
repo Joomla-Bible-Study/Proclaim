@@ -34,6 +34,7 @@ class BiblestudyModelCommentlist extends BiblestudyModelComments
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
+		/** @type JApplicationSite $app */
 		$app    = JFactory::getApplication();
 		$layout = $app->input->get('layout');
 

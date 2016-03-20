@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 JFormHelper::loadFieldClass('list');
-
+use Joomla\Utilities\ArrayHelper;
 
 /**
  * ServerType Field class
@@ -38,7 +38,7 @@ class JFormFieldServerType extends JFormFieldList
 		$model    = JModelLegacy::getInstance('servers', 'BibleStudyModel');
 		$rlu_type = $model->getTypeReverseLookup();
 
-		$value = JArrayHelper::getValue($rlu_type, $this->value);
+		$value = ArrayHelper::getValue($rlu_type, $this->value);
 		JHtml::_('behavior.framework');
 		JHtml::_('behavior.modal');
 

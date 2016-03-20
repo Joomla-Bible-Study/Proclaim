@@ -30,7 +30,7 @@ defined('_JEXEC') or die;
 $mainframe = JFactory::getApplication();
 $input = new JInput;
 $option = $input->get('option', '', 'cmd');
-JHTML::_('behavior.tooltip');
+JHtml::_('behavior.tooltip');
 $params = $this->item->params;
 $document = JFactory::getDocument();
 
@@ -39,7 +39,7 @@ $row = $this->studydetails;
 <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
 	<?php
 	// @todo need to be converted to bootstrap.
-	$details = $JBSMListing->getStudyExp($row, $params, $this->template);
+	$details = $JBSMListing->getStudyExp($row, $params);
 	echo $details;
 
 	switch ($this->item->params->get('show_passage_view', '0'))

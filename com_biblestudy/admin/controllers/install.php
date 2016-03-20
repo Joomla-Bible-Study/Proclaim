@@ -18,6 +18,7 @@ defined('_JEXEC') or die;
  */
 class BiblestudyControllerInstall extends JControllerForm
 {
+	public $modelName;
 
 	/**
 	 * The context for storing internal data, e.g. record.

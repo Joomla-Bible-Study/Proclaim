@@ -123,7 +123,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 
 		if (empty($return) || !JUri::isInternal(base64_decode($return)))
 		{
-			return JURI::base() . 'index.php?option=com_biblestudy&view=mediafilelist';
+			return JUri::base() . 'index.php?option=com_biblestudy&view=mediafilelist';
 		}
 		else
 		{

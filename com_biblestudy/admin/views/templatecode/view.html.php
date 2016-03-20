@@ -121,27 +121,27 @@ class BiblestudyViewTemplatecode extends JViewLegacy
 		$input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolBarHelper::title(JText::_('JBS_CMN_TEMPLATECODE') . ': <small><small>[' . $title . ']</small></small>', 'file file');
+		JToolbarHelper::title(JText::_('JBS_CMN_TEMPLATECODE') . ': <small><small>[' . $title . ']</small></small>', 'file file');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_biblestudy'))
 		{
-			JToolBarHelper::apply('templatecode.apply');
-			JToolBarHelper::save('templatecode.save');
+			JToolbarHelper::apply('templatecode.apply');
+			JToolbarHelper::save('templatecode.save');
 			JToolbarHelper::save2new('templatecode.save2new');
-			JToolBarHelper::cancel('templatecode.cancel');
+			JToolbarHelper::cancel('templatecode.cancel');
 		}
 		else
 		{
 			if ($this->canDo->get('core.edit', 'com_biblestudy'))
 			{
-				JToolBarHelper::apply('templatecode.apply');
-				JToolBarHelper::save('templatecode.save');
-				JToolBarHelper::save2copy('templatecode.save2copy');
+				JToolbarHelper::apply('templatecode.apply');
+				JToolbarHelper::save('templatecode.save');
+				JToolbarHelper::save2copy('templatecode.save2copy');
 			}
-			JToolBarHelper::cancel('templatecode.cancel', 'JTOOLBAR_CLOSE');
+			JToolbarHelper::cancel('templatecode.cancel', 'JTOOLBAR_CLOSE');
 		}
-		JToolBarHelper::divider();
-		JToolBarHelper::help('templatecodehelp', true);
+		JToolbarHelper::divider();
+		JToolbarHelper::help('templatecodehelp', true);
 	}
 
 	/**

@@ -74,7 +74,7 @@ class JBSMBiblestudyVersion
 	public function versionObject()
 	{
 		static $biblestudyversion;
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('*')->from('#__extensions')->where('element = ' . $db->q('com_biblestudy'));
 		$db->setQuery($query, 0, 1);
@@ -97,7 +97,7 @@ class JBSMBiblestudyVersion
 
 		if (!$mysqlversion)
 		{
-			$biblestudy_db = JFactory::getDBO();
+			$biblestudy_db = JFactory::getDbo();
 			$biblestudy_db->setQuery("SELECT VERSION() AS mysql_version");
 			$mysqlversion = $biblestudy_db->loadResult();
 

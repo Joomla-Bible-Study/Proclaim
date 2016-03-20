@@ -12,9 +12,9 @@ defined('_JEXEC') or die;
 
 $mainframe = JFactory::getApplication();
 
-$pathway = $mainframe->getPathWay();
+$pathway = $mainframe->getPathway();
 $uri = new JUri;
-$database = JFactory::getDBO();
+$database = JFactory::getDbo();
 $teacher = $this->teacher;
 $params = $this->params;
 $image = new stdClass;

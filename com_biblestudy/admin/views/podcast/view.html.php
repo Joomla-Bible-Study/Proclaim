@@ -93,21 +93,21 @@ class BiblestudyViewPodcast extends JViewLegacy
 		$input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolBarHelper::title(JText::_('JBS_CMN_PODCASTS') . ': <small><small>[' . $title . ']</small></small>', 'feed feed');
+		JToolbarHelper::title(JText::_('JBS_CMN_PODCASTS') . ': <small><small>[' . $title . ']</small></small>', 'feed feed');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_biblestudy'))
 		{
-			JToolBarHelper::apply('podcast.apply');
-			JToolBarHelper::save('podcast.save');
-			JToolBarHelper::save2new('podcast.save2new');
-			JToolBarHelper::cancel('podcast.cancel');
+			JToolbarHelper::apply('podcast.apply');
+			JToolbarHelper::save('podcast.save');
+			JToolbarHelper::save2new('podcast.save2new');
+			JToolbarHelper::cancel('podcast.cancel');
 		}
 		else
 		{
 			if ($this->canDo->get('core.edit', 'com_biblestudy'))
 			{
-				JToolBarHelper::apply('podcast.apply');
-				JToolBarHelper::save('podcast.save');
+				JToolbarHelper::apply('podcast.apply');
+				JToolbarHelper::save('podcast.save');
 
 				// We can save this record, but check the create permission to see if we can return to make a new one.
 				if ($this->canDo->get('core.create', 'com_biblestudy'))
@@ -118,12 +118,12 @@ class BiblestudyViewPodcast extends JViewLegacy
 			// If checked out, we can still save
 			if ($this->canDo->get('core.create', 'com_biblestudy'))
 			{
-				JToolBarHelper::save2copy('podcast.save2copy');
+				JToolbarHelper::save2copy('podcast.save2copy');
 			}
-			JToolBarHelper::cancel('podcast.cancel', 'JTOOLBAR_CLOSE');
+			JToolbarHelper::cancel('podcast.cancel', 'JTOOLBAR_CLOSE');
 		}
-		JToolBarHelper::divider();
-		JToolBarHelper::help('biblestudy', true);
+		JToolbarHelper::divider();
+		JToolbarHelper::help('biblestudy', true);
 	}
 
 	/**

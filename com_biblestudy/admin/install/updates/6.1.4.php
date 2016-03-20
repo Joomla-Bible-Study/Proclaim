@@ -36,7 +36,7 @@ class Migration614
 				  KEY `id_2` (`id`)
 				) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1";
 
-		if (!JBSMDbHelper::performdb($query, "Build 614: "))
+		if (!JBSMDbHelper::performDB($query, "Build 614: "))
 		{
 			return false;
 		}
@@ -46,32 +46,32 @@ class Migration614
                 KEY `timeset` (`timeset`)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
-		if (!JBSMDbHelper::performdb($query, "Build 614: "))
+		if (!JBSMDbHelper::performDB($query, "Build 614: "))
 		{
 			return false;
 		}
 		$query = "ALTER TABLE `#__bsms_teachers` MODIFY `title` VARCHAR(250)";
 
-		if (!JBSMDbHelper::performdb($query, "Build 614: "))
+		if (!JBSMDbHelper::performDB($query, "Build 614: "))
 		{
 			return false;
 		}
 		$query = "ALTER TABLE `#__bsms_mediafiles` ADD COLUMN downloads INT(10) DEFAULT 0";
 
-		if (!JBSMDbHelper::performdb($query, "Build 614: "))
+		if (!JBSMDbHelper::performDB($query, "Build 614: "))
 		{
 			return false;
 		}
 		$query = "ALTER TABLE `#__bsms_mediafiles` ADD COLUMN plays INT(10) DEFAULT 0";
 
-		if (!JBSMDbHelper::performdb($query, "Build 614: "))
+		if (!JBSMDbHelper::performDB($query, "Build 614: "))
 		{
 			return false;
 		}
 		$query = $db->getQuery(true);
 		$query->insert('#__bsms_timeset')->set('timeset = ' . 1281646339);
 
-		if (!JBSMDbHelper::performdb($query, "Build 614: "))
+		if (!JBSMDbHelper::performDB($query, "Build 614: "))
 		{
 			return false;
 		}
@@ -96,7 +96,7 @@ class Migration614
 				$query   = $db->getQuery(true);
 				$query->update('#__bsms_mediafiles')->set('params = ' . $db->q($update) . ', podcast_id = ' . 0)->where('id = ' . (int) $result->id);
 
-				if (!JBSMDbHelper::performdb($query, "Build 614: "))
+				if (!JBSMDbHelper::performDB($query, "Build 614: "))
 				{
 					return false;
 				}
@@ -112,7 +112,7 @@ class Migration614
 								`versionname` VARCHAR(40) NULL,
 								PRIMARY KEY(`id`)) DEFAULT CHARSET=utf8;";
 
-		if (!JBSMDbHelper::performdb($query, "Build 614: "))
+		if (!JBSMDbHelper::performDB($query, "Build 614: "))
 		{
 			return false;
 		}
@@ -120,7 +120,7 @@ class Migration614
 		$query = "INSERT INTO `#__bsms_version` SET `version` = '6.2.0', `installdate`='2010-09-06', " .
 			"`build`='614', `versionname`='Deuteronomy', `versiondate`='2010-09-06'";
 
-		if (!JBSMDbHelper::performdb($query, "Build 614: "))
+		if (!JBSMDbHelper::performDB($query, "Build 614: "))
 		{
 			return false;
 		}

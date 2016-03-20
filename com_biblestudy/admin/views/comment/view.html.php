@@ -90,26 +90,26 @@ class BiblestudyViewComment extends JViewLegacy
 		JFactory::getApplication()->input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolBarHelper::title(JText::_('JBS_CMN_COMMENTS') . ': <small><small>[ ' . $title . ' ]</small></small>', 'comment comment');
+		JToolbarHelper::title(JText::_('JBS_CMN_COMMENTS') . ': <small><small>[ ' . $title . ' ]</small></small>', 'comment comment');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_biblestudy'))
 		{
-			JToolBarHelper::apply('comment.apply');
-			JToolBarHelper::save('comment.save');
-			JToolBarHelper::save2new('comment.save2new');
-			JToolBarHelper::cancel('comment.cancel');
+			JToolbarHelper::apply('comment.apply');
+			JToolbarHelper::save('comment.save');
+			JToolbarHelper::save2new('comment.save2new');
+			JToolbarHelper::cancel('comment.cancel');
 		}
 		else
 		{
 			if ($this->canDo->get('core.edit', 'com_biblestudy'))
 			{
-				JToolBarHelper::apply('comment.apply');
-				JToolBarHelper::save('comment.save');
+				JToolbarHelper::apply('comment.apply');
+				JToolbarHelper::save('comment.save');
 			}
-			JToolBarHelper::cancel('comment.cancel', 'JTOOLBAR_CLOSE');
+			JToolbarHelper::cancel('comment.cancel', 'JTOOLBAR_CLOSE');
 		}
-		JToolBarHelper::divider();
-		JToolBarHelper::help('biblestudy', true);
+		JToolbarHelper::divider();
+		JToolbarHelper::help('biblestudy', true);
 	}
 
 	/**

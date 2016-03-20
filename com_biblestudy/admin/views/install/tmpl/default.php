@@ -56,9 +56,9 @@ else
 		<div id="install-progress-content">
 			<div id="install-percentage" class="progress">
 				<div class="progress progress-striped active">
-					<div class="bar" style="width: <?php echo $this->percentage ?>%"></div> <?php echo $this->percentage; ?>%
+					<div class="bar" style="width: <?php echo $this->percentage ?>%;"></div> <?php echo $this->percentage; ?>%
 				</div>
-				<div class="bar" style="width: 0%"></div>
+				<div class="bar" style="width: 0;"></div>
 			</div>
 			<div id="response-timer">
 				<div class="color-overlay"></div>
@@ -105,6 +105,6 @@ else
 	?>
 </div>
 
-<div id="error-panel" style="display: none">
+<div id="error-panel" style="display: none;">
 
 </div>

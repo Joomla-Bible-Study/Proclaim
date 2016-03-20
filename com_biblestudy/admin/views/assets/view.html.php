@@ -101,12 +101,12 @@ class BiblestudyViewAssets extends JViewLegacy
 	{
 		JFactory::getApplication()->input->set('hidemainmenu', true);
 
-		JToolBarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
-		JToolBarHelper::preferences('com_biblestudy', '600', '800', 'JBS_ADM_PERMISSIONS');
-		JToolBarHelper::divider();
-		JToolBarHelper::custom('admin.back', 'back', 'back', 'JTOOLBAR_BACK', false);
-		JToolBarHelper::divider();
-		JToolBarHelper::help('biblestudy', true);
+		JToolbarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
+		JToolbarHelper::preferences('com_biblestudy', '600', '800', 'JBS_ADM_PERMISSIONS');
+		JToolbarHelper::divider();
+		JToolbarHelper::custom('admin.back', 'back', 'back', 'JTOOLBAR_BACK', false);
+		JToolbarHelper::divider();
+		JToolbarHelper::help('biblestudy', true);
 	}
 
 	/**

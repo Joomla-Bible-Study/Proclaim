@@ -33,9 +33,9 @@ class JFormFieldUpload extends JFormField
 	{
 		// Include Plupload libraries
 		$document = JFactory::getDocument();
-		$document->addScript(JURI::root() . 'administrator/components/com_biblestudy/addons/servers/legacy/includes/js/plupload.full.min.js');
+		$document->addScript(JUri::root() . 'administrator/components/com_biblestudy/addons/servers/legacy/includes/js/plupload.full.min.js');
 
-		$document->addScript(JURI::root() . 'administrator/components/com_biblestudy/addons/servers/legacy/includes/js/legacy.js');
+		$document->addScript(JUri::root() . 'administrator/components/com_biblestudy/addons/servers/legacy/includes/js/legacy.js');
 
 		$document->addScriptDeclaration('
             jQuery(document).ready(function() {

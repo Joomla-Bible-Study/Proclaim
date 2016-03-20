@@ -98,7 +98,7 @@ class BiblestudyModelTemplatecodes extends JModelList
 			}
 			else
 			{
-				$search = $db->Quote('%' . $db->escape($search, true) . '%');
+				$search = $db->quote('%' . $db->escape($search, true) . '%');
 				$query->where('(templatecode.filename LIKE ' . $search . ' OR templatecode.templatecode LIKE ' . $search . ')');
 			}
 		}

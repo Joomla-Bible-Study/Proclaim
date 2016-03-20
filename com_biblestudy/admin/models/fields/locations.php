@@ -37,7 +37,7 @@ class JFormFieldMediafile extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('id,location_text');
 		$query->from('#__bsms_locations');

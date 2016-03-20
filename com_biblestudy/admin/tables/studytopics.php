@@ -40,6 +40,10 @@ class TableStudyTopics extends JTable
 	 */
 	public $topic_id = null;
 
+	public $asset_id;
+
+	public $access;
+
 	/**
 	 * Object constructor to set table and key fields.  In most cases this will
 	 * be overridden by child classes to explicitly set the table and key fields
@@ -103,7 +107,7 @@ class TableStudyTopics extends JTable
 	 */
 	protected function _getAssetTitle()
 	{
-		$title = 'JBS StudyTopics: ' . $this->name;
+		$title = 'JBS StudyTopics: ' . $this->id;
 
 		return $title;
 	}
@@ -123,6 +127,7 @@ class TableStudyTopics extends JTable
 	 */
 	protected function _getAssetParentId(JTable $table = null, $id = null)
 	{
+		/** @type JTableAsset $asset */
 		$asset = JTable::getInstance('Asset');
 		$asset->loadByName('com_biblestudy');
 

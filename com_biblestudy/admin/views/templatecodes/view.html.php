@@ -148,34 +148,34 @@ class BiblestudyViewTemplatecodes extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JToolBarHelper::title(JText::_('JBS_TPLCODE_TPLCODES'), 'stack stack');
+		JToolbarHelper::title(JText::_('JBS_TPLCODE_TPLCODES'), 'stack stack');
 
 		if ($this->canDo->get('core.create'))
 		{
-			JToolBarHelper::addNew('templatecode.add');
+			JToolbarHelper::addNew('templatecode.add');
 		}
 
 		if ($this->canDo->get('core.edit'))
 		{
-			JToolBarHelper::editList('templatecode.edit');
+			JToolbarHelper::editList('templatecode.edit');
 		}
 
 		if ($this->canDo->get('core.edit.state'))
 		{
-			JToolBarHelper::divider();
-			JToolBarHelper::publishList('templatecodes.publish');
-			JToolBarHelper::unpublishList('templatecodes.unpublish');
-			JToolBarHelper::divider();
-			JToolBarHelper::archiveList('templatecodes.archive');
+			JToolbarHelper::divider();
+			JToolbarHelper::publishList('templatecodes.publish');
+			JToolbarHelper::unpublishList('templatecodes.unpublish');
+			JToolbarHelper::divider();
+			JToolbarHelper::archiveList('templatecodes.archive');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
-			JToolBarHelper::deleteList('', 'templatecodes.delete', 'JTOOLBAR_EMPTY_TRASH');
+			JToolbarHelper::deleteList('', 'templatecodes.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
 		elseif ($this->canDo->get('core.edit.state'))
 		{
-			JToolBarHelper::trash('templatecodes.trash');
+			JToolbarHelper::trash('templatecodes.trash');
 		}
 
 		JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=templatecodes');

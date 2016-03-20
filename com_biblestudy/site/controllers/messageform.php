@@ -91,7 +91,7 @@ class BiblestudyControllerMessageform extends BiblestudyControllerMessage
 
 		if (empty($return) || !JUri::isInternal(base64_decode($return)))
 		{
-			return JURI::base() . 'index.php?option=com_biblestudy&view=messagelist';
+			return JUri::base() . 'index.php?option=com_biblestudy&view=messagelist';
 		}
 		else
 		{

@@ -170,40 +170,40 @@ class BiblestudyViewMessages extends JViewLegacy
 		// Get the toolbar object instance
 		$bar = JToolBar::getInstance('toolbar');
 
-		JToolBarHelper::title(JText::_('JBS_CMN_STUDIES'), 'book book');
+		JToolbarHelper::title(JText::_('JBS_CMN_STUDIES'), 'book book');
 
 		if ($this->canDo->get('core.create'))
 		{
-			JToolBarHelper::addNew('message.add');
+			JToolbarHelper::addNew('message.add');
 		}
 
 		if ($this->canDo->get('core.edit'))
 		{
-			JToolBarHelper::editList('message.edit');
+			JToolbarHelper::editList('message.edit');
 		}
 
 		if ($this->canDo->get('core.edit.state'))
 		{
-			JToolBarHelper::divider();
-			JToolBarHelper::publishList('messages.publish');
-			JToolBarHelper::unpublishList('messages.unpublish');
-			JToolBarHelper::divider();
-			JToolBarHelper::archiveList('messages.archive');
+			JToolbarHelper::divider();
+			JToolbarHelper::publishList('messages.publish');
+			JToolbarHelper::unpublishList('messages.unpublish');
+			JToolbarHelper::divider();
+			JToolbarHelper::archiveList('messages.archive');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
-			JToolBarHelper::deleteList('', 'messages.delete', 'JTOOLBAR_EMPTY_TRASH');
+			JToolbarHelper::deleteList('', 'messages.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
 		elseif ($this->canDo->get('core.edit.state'))
 		{
-			JToolBarHelper::trash('messages.trash');
+			JToolbarHelper::trash('messages.trash');
 		}
 
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
-			JToolBarHelper::divider();
+			JToolbarHelper::divider();
 			JHtml::_('bootstrap.modal', 'collapseModal');
 
 			$title = JText::_('JBS_CMN_BATCH_LABLE');

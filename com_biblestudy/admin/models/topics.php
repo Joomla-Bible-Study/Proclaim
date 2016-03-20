@@ -132,7 +132,7 @@ class BiblestudyModelTopics extends JModelList
 			}
 			else
 			{
-				$search = $db->Quote('%' . $db->escape($search, true) . '%');
+				$search = $db->quote('%' . $db->escape($search, true) . '%');
 				$query->where('(topic.topic_text LIKE ' . $search . ')');
 			}
 		}

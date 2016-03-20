@@ -26,7 +26,7 @@ if ($msg)
 }
 ?>
 <!-- Header -->
-<a action="index.php" method="post" name="adminForm" id="adminForm">
+<form action="index.php" method="post" name="adminForm" id="adminForm">
 	<div class="row-fluid">
 		<?php if (!empty($this->sidebar)) : ?>
 		<div id="j-sidebar-container" class="span2">
@@ -91,9 +91,9 @@ if ($msg)
 				<div class="fbwelcome">
 					<h3><?php echo JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY'); ?></h3>
 
-					<p><?php echo JText::_('JBS_CPL_INTRO') . ' - <a href="http://www.joomlabiblestudy.org/jbs-documentation.html" target="_blank">' .
-								JText::_('JBS_CPL_ONLINE_DOCUMENTATION') . '</a> - <a href="http://www.joomlabiblestudy.org/forum/" target="_blank">' .
-								JText::_('JBS_CPL_VISIT_FAQ'); ?></a></p>
+					<p><?php echo JText::_('JBS_CPL_INTRO'); ?> - <a href="http://www.joomlabiblestudy.org/jbs-documentation.html" target="_blank">
+								<?php echo JText::_('JBS_CPL_ONLINE_DOCUMENTATION'); ?></a> - <a href="http://www.joomlabiblestudy.org/forum/" target="_blank">
+								<?php echo JText::_('JBS_CPL_VISIT_FAQ'); ?></a></p>
 				</div>
 				<div style="border:1px solid #ddd; background:#FBFBFB;">
 					<h3 style="text-align: center;">

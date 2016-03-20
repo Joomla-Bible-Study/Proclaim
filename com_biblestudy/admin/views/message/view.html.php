@@ -140,43 +140,43 @@ class BiblestudyViewMessage extends JViewLegacy
 		$input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolBarHelper::title(JText::_('JBS_CMN_STUDIES') . ': <small><small>[ ' . $title . ' ]</small></small>', 'book book');
+		JToolbarHelper::title(JText::_('JBS_CMN_STUDIES') . ': <small><small>[ ' . $title . ' ]</small></small>', 'book book');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_biblestudy'))
 		{
-			JToolBarHelper::apply('message.apply');
-			JToolBarHelper::save('message.save');
-			JToolBarHelper::save2new('message.save2new');
-			JToolBarHelper::cancel('message.cancel');
+			JToolbarHelper::apply('message.apply');
+			JToolbarHelper::save('message.save');
+			JToolbarHelper::save2new('message.save2new');
+			JToolbarHelper::cancel('message.cancel');
 		}
 		else
 		{
 			if ($this->canDo->get('core.edit', 'com_biblestudy'))
 			{
-				JToolBarHelper::apply('message.apply');
-				JToolBarHelper::save('message.save');
+				JToolbarHelper::apply('message.apply');
+				JToolbarHelper::save('message.save');
 
 				// We can save this record, but check the create permission to see if we can return to make a new one.
 				if ($this->canDo->get('core.create', 'com_biblestudy'))
 				{
-					JToolBarHelper::save2new('message.save2new');
+					JToolbarHelper::save2new('message.save2new');
 				}
 			}
 			// If checked out, we can still save
 			if ($this->canDo->get('core.create', 'com_biblestudy'))
 			{
-				JToolBarHelper::save2copy('message.save2copy');
+				JToolbarHelper::save2copy('message.save2copy');
 			}
-			JToolBarHelper::cancel('message.cancel', 'JTOOLBAR_CLOSE');
+			JToolbarHelper::cancel('message.cancel', 'JTOOLBAR_CLOSE');
 
 			if ($this->canDo->get('core.edit', 'com_biblestudy'))
 			{
-				JToolBarHelper::divider();
-				JToolBarHelper::custom('resetHits', 'reset.png', 'Reset Hits', 'JBS_STY_RESET_HITS', false, false);
+				JToolbarHelper::divider();
+				JToolbarHelper::custom('resetHits', 'reset.png', 'Reset Hits', 'JBS_STY_RESET_HITS', false, false);
 			}
 		}
-		JToolBarHelper::divider();
-		JToolBarHelper::help('biblestudy', true);
+		JToolbarHelper::divider();
+		JToolbarHelper::help('biblestudy', true);
 	}
 
 	/**

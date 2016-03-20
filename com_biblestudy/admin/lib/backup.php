@@ -110,7 +110,7 @@ class JBSMBackup
 			set_time_limit(3000);
 		}
 
-		$db = JFactory::getDBO();
+		$db = JFactory::getDbo();
 
 		// Get the prefix
 		$prefix = $db->getPrefix();
@@ -305,7 +305,7 @@ class JBSMBackup
 
 		// Test for protocol and set the appropriate headers
 		jimport('joomla.environment.uri');
-		$_tmp_uri      = JURI::getInstance(JURI::current());
+		$_tmp_uri      = JUri::getInstance(JUri::current());
 		$_tmp_protocol = $_tmp_uri->getScheme();
 
 		if ($_tmp_protocol == "https")

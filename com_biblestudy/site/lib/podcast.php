@@ -50,7 +50,7 @@ class JBSMPodcast
 	{
 		$admin_params = JBSMParams::getAdmin();
 		$msg          = array();
-		$db           = JFactory::getDBO();
+		$db           = JFactory::getDbo();
 		jimport('joomla.utilities.date');
 		$year = '(' . date('Y') . ')';
 		$date = date('r');
@@ -512,7 +512,7 @@ class JBSMPodcast
 		{
 			return false;
 		}
-		$return = @getimagesize(JURI::root() . $path);
+		$return = @getimagesize(JUri::root() . $path);
 
 		return $return;
 	}
@@ -531,7 +531,7 @@ class JBSMPodcast
 		$set_limit = implode(' ', $set_limit[0]);
 
 		// Here's where we look at each mediafile to see if they are connected to this podcast
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('p.id AS pid, p.podcastlimit,'
 			. ' mf.id AS mfid, mf.study_id, mf.server_id, mf.podcast_id,'

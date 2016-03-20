@@ -11,7 +11,7 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 $document = JFactory::getDocument();
-$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
+$document->addStyleSheet(JUri::base() . 'media/com_biblestudy/css/biblestudy.css');
 
 /** @var JBSMListing $JBSMListing */
 $JBSMListing = new JBSMListing;

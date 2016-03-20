@@ -28,13 +28,6 @@ class TableServer extends JTable
 	public $id = null;
 
 	/**
-	 * Published
-	 *
-	 * @var int
-	 */
-	public $published = 1;
-
-	/**
 	 * Server Name
 	 *
 	 * @var string
@@ -42,18 +35,11 @@ class TableServer extends JTable
 	public $server_name = null;
 
 	/**
-	 * Server Type
+	 * Published
 	 *
-	 * @var string
+	 * @var int
 	 */
-	public $type = null;
-
-	/**
-	 * Rules
-	 *
-	 * @var string
-	 */
-	public $rules = null;
+	public $published = 1;
 
 	/**
 	 * Asset ID
@@ -61,6 +47,15 @@ class TableServer extends JTable
 	 * @var int
 	 */
 	public $assset_id = null;
+
+	public $access;
+
+	/**
+	 * Server Type
+	 *
+	 * @var string
+	 */
+	public $type = null;
 
 	public $params = null;
 
@@ -184,6 +179,7 @@ class TableServer extends JTable
 	 */
 	protected function _getAssetParentId(JTable $table = null, $id = null)
 	{
+		/** @type JTableAsset $asset */
 		$asset = JTable::getInstance('Asset');
 		$asset->loadByName('com_biblestudy');
 

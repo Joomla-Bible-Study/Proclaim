@@ -58,7 +58,7 @@ class PlgSystemJBSPodcastInstallerScript
 	{
 		// $parent is the class calling this method
 		// check to see if we are dealing with version 7.0.0 and create the update table if needed
-		$db = JFactory::getDBO();
+		$db = JFactory::getDbo();
 
 		// First see if there is an update table
 		$tables      = $db->getTableList();

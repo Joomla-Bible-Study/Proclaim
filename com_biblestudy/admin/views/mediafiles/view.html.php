@@ -146,41 +146,41 @@ class BiblestudyViewMediafiles extends JViewLegacy
 		// Get the toolbar object instance
 		$bar = JToolBar::getInstance('toolbar');
 
-		JToolBarHelper::title(JText::_('JBS_CMN_MEDIA_FILES'), 'video video');
+		JToolbarHelper::title(JText::_('JBS_CMN_MEDIA_FILES'), 'video video');
 
 		if ($this->canDo->get('core.create'))
 		{
-			JToolBarHelper::addNew('mediafile.add');
+			JToolbarHelper::addNew('mediafile.add');
 		}
 
 		if ($this->canDo->get('core.edit'))
 		{
-			JToolBarHelper::editList('mediafile.edit');
+			JToolbarHelper::editList('mediafile.edit');
 		}
 
 		if ($this->canDo->get('core.edit.state'))
 		{
-			JToolBarHelper::divider();
-			JToolBarHelper::publishList('mediafiles.publish');
-			JToolBarHelper::unpublishList('mediafiles.unpublish');
-			JToolBarHelper::divider();
-			JToolBarHelper::archiveList('mediafiles.archive');
+			JToolbarHelper::divider();
+			JToolbarHelper::publishList('mediafiles.publish');
+			JToolbarHelper::unpublishList('mediafiles.unpublish');
+			JToolbarHelper::divider();
+			JToolbarHelper::archiveList('mediafiles.archive');
 			JToolbarHelper::checkin('mediafiles.checkin');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
-			JToolBarHelper::deleteList('', 'mediafiles.delete', 'JTOOLBAR_EMPTY_TRASH');
+			JToolbarHelper::deleteList('', 'mediafiles.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
 		elseif ($this->canDo->get('core.edit.state'))
 		{
-			JToolBarHelper::trash('mediafiles.trash');
+			JToolbarHelper::trash('mediafiles.trash');
 		}
 
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
-			JToolBarHelper::divider();
+			JToolbarHelper::divider();
 			JHtml::_('bootstrap.modal', 'collapseModal');
 
 			$title = JText::_('JBS_CMN_BATCH_LABLE');

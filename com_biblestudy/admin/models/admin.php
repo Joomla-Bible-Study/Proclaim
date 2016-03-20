@@ -324,6 +324,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 */
 	public function fixUpdateVersion()
 	{
+		/** @type JTableExtension $table */
 		$table = JTable::getInstance('Extension');
 		$table->load($this->getExtentionId());
 		$cache         = new Registry($table->manifest_cache);
@@ -356,6 +357,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 */
 	public function fixDefaultTextFilters()
 	{
+		/** @type JTableExtension $table */
 		$table = JTable::getInstance('Extension');
 		$table->load($table->find(array('name' => 'com_biblestudy')));
 
@@ -410,6 +412,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 */
 	public function getDefaultTextFilters()
 	{
+		/** @type JTableExtension $table */
 		$table = JTable::getInstance('Extension');
 		$table->load($table->find(array('name' => 'com_biblestudy')));
 
@@ -456,7 +459,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	/**
 	 * Prepare and sanitise the table data prior to saving.
 	 *
-	 * @param   JTable  $table  A JTable object.
+	 * @param   TableAdmin  $table  A JTable object.
 	 *
 	 * @return   void
 	 *

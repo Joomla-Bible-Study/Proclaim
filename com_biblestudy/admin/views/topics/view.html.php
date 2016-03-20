@@ -128,34 +128,34 @@ class BiblestudyViewTopics extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JToolBarHelper::title(JText::_('JBS_CMN_TOPICS'), 'tags tags');
+		JToolbarHelper::title(JText::_('JBS_CMN_TOPICS'), 'tags tags');
 
 		if ($this->canDo->get('core.create'))
 		{
-			JToolBarHelper::addNew('topic.add');
+			JToolbarHelper::addNew('topic.add');
 		}
 
 		if ($this->canDo->get('core.edit'))
 		{
-			JToolBarHelper::editList('topic.edit');
+			JToolbarHelper::editList('topic.edit');
 		}
 
 		if ($this->canDo->get('core.edit.state'))
 		{
-			JToolBarHelper::divider();
-			JToolBarHelper::publishList('topics.publish');
-			JToolBarHelper::unpublishList('topics.unpublish');
-			JToolBarHelper::divider();
-			JToolBarHelper::archiveList('topics.archive', 'JTOOLBAR_ARCHIVE');
+			JToolbarHelper::divider();
+			JToolbarHelper::publishList('topics.publish');
+			JToolbarHelper::unpublishList('topics.unpublish');
+			JToolbarHelper::divider();
+			JToolbarHelper::archiveList('topics.archive', 'JTOOLBAR_ARCHIVE');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
-			JToolBarHelper::deleteList('', 'topics.delete', 'JTOOLBAR_EMPTY_TRASH');
+			JToolbarHelper::deleteList('', 'topics.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
 		elseif ($this->canDo->get('core.delete'))
 		{
-			JToolBarHelper::trash('topics.trash');
+			JToolbarHelper::trash('topics.trash');
 		}
 
 		JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=topics');

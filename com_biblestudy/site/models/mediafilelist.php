@@ -41,6 +41,7 @@ class BiblestudyModelMediafilelist extends BiblestudyModelMediafiles
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
+		/** @type JApplicationSite $app */
 		$app = JFactory::getApplication('site');
 
 		// Load the parameters.

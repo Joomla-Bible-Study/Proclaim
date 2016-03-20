@@ -114,7 +114,7 @@ class BiblestudyViewPopup extends JViewLegacy
 		 */
 		if ($close == 1)
 		{
-			echo JHTML::_('content.prepare', '<script language="javascript" type="text/javascript">window.close();</script>');
+			echo JHtml::_('content.prepare', '<script language="javascript" type="text/javascript">window.close();</script>');
 		}
 
 		$this->getMedia = new JBSMMedia;
@@ -144,7 +144,7 @@ class BiblestudyViewPopup extends JViewLegacy
 		$JBSMListing   = new JBSMListing;
 		$this->scripture = $JBSMListing->getScripture($this->params, $this->media, $esv = '0', $scripturerow = '1');
 		$this->media->id = $saveid;
-		$this->date      = $JBSMListing->getstudyDate($this->params, $this->media->studydate);
+		$this->date      = $JBSMListing->getStudyDate($this->params, $this->media->studydate);
 		/*
 		 *  The popup window call the counter function
 		 */
@@ -153,10 +153,10 @@ class BiblestudyViewPopup extends JViewLegacy
 
 		$images                 = new JBSMImages;
 		$seriesimage            = $images->getSeriesThumbnail($this->media->series_thumbnail);
-		$this->series_thumbnail = '<img src="' . JURI::base() . $seriesimage->path . '" width="' . $seriesimage->width . '" height="'
+		$this->series_thumbnail = '<img src="' . JUri::base() . $seriesimage->path . '" width="' . $seriesimage->width . '" height="'
 			. $seriesimage->height . '" alt="' . $this->media->series_text . '" />';
 		$image                  = $images->getTeacherThumbnail($this->media->teacher_thumbnail, $this->media->thumb);
-		$this->teacherimage     = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height
+		$this->teacherimage     = '<img src="' . JUri::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height
 			. '" alt="' . $this->media->teachername . '" />';
 
 		$this->path1 = $this->media->spath . $this->params->get('filename');

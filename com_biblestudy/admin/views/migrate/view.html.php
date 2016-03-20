@@ -216,9 +216,9 @@ class BiblestudyViewMigrate extends JViewLegacy
 					$filelist[]   = $filelisttemp;
 				}
 
-				$types[]                      = JHTML::_('select.option', '0', JTEXT::_('JBS_IBM_SELECT_DB'));
+				$types[]                      = JHtml::_('select.option', '0', JText::_('JBS_IBM_SELECT_DB'));
 				$types                        = array_merge($types, $filelist);
-				$this->lists['backedupfiles'] = JHTML::_('select.genericlist', $types, 'backuprestore', 'class="inputbox" size="1" ', 'value', 'text', '');
+				$this->lists['backedupfiles'] = JHtml::_('select.genericlist', $types, 'backuprestore', 'class="inputbox" size="1" ', 'value', 'text', '');
 			}
 		}
 		else
@@ -290,10 +290,10 @@ class BiblestudyViewMigrate extends JViewLegacy
 	{
 		JFactory::getApplication()->input->set('hidemainmenu', true);
 
-		JToolBarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
-		JToolBarHelper::preferences('com_biblestudy', '600', '800', 'JBS_ADM_PERMISSIONS');
-		JToolBarHelper::divider();
-		JToolBarHelper::help('biblestudy', true);
+		JToolbarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
+		JToolbarHelper::preferences('com_biblestudy', '600', '800', 'JBS_ADM_PERMISSIONS');
+		JToolbarHelper::divider();
+		JToolbarHelper::help('biblestudy', true);
 	}
 
 	/**

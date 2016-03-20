@@ -108,7 +108,7 @@ class BiblestudyViewSermon extends JViewLegacy
 			return null;
 		}
 
-		$Biblepassage  = new JBSMshowScripture;
+		$Biblepassage  = new JBSMShowScripture;
 		$this->passage = $Biblepassage->buildPassage($this->item, $this->item->params);
 
 		// Add router helpers.
@@ -231,7 +231,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		// Only load pagebuilder if the default template is NOT being used
 		if ($this->item->params->get('useexpert_details') > 0 || is_string($this->params->get('sermontemplate')))
 		{
-			$pagebuilder            = new JBSMPagebuilder;
+			$pagebuilder            = new JBSMPageBuilder;
 			$pelements              = $pagebuilder->buildPage($this->item, $this->item->params, $template);
 			$this->item->scripture1 = $pelements->scripture1;
 			$this->item->scripture2 = $pelements->scripture2;
@@ -299,8 +299,8 @@ class BiblestudyViewSermon extends JViewLegacy
 		$this->loadHelper('params');
 
 		// Get the podcast subscription
-		JHtml::styleSheet('media/css/podcast.css');
-		$podcast         = new JBSMpodcastSubscribe;
+		JHtml::stylesheet('media/css/podcast.css');
+		$podcast         = new JBSMPodcastSubscribe;
 		$this->subscribe = $podcast->buildSubscribeTable($this->item->params->get('subscribeintro', 'Our Podcasts'));
 
 		// Passage link to BibleGateway
@@ -319,7 +319,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		}
 
 		// Added database queries from the default template - moved here instead
-		$database = JFactory::getDBO();
+		$database = JFactory::getDbo();
 		$query    = $database->getQuery(true);
 		$query->select('id')->from('#__menu')->where('link =' . $database->q('index.php?option=com_biblestudy&view=sermons'))->where('published = 1');
 		$database->setQuery($query);
@@ -359,18 +359,18 @@ class BiblestudyViewSermon extends JViewLegacy
 
 		} // End if $linkit
 
-		$Biblepassage  = new JBSMshowScripture;
+		$Biblepassage  = new JBSMShowScripture;
 		$this->passage = $Biblepassage->buildPassage($this->item, $this->item->params);
 
 		// Prepares a link string for use in social networking
-		$u                 = JURI::getInstance();
+		$u                 = JUri::getInstance();
 		$detailslink       = htmlspecialchars($u->toString());
 		$detailslink       = JRoute::_($detailslink);
 		$this->detailslink = $detailslink;
 
 		$this->page         = new stdClass;
 		$this->page->social = $JBSMListing->getShare($detailslink, $this->item, $this->item->params);
-		JHTML::_('behavior.tooltip');
+		JHtml::_('behavior.tooltip');
 
 		// End process prepare content plugins
 		$this->template = $template;

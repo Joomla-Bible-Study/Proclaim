@@ -55,7 +55,7 @@ class PlgSearchBiblestudysearch extends JPlugin
 	 * routine:
 	 *
 	 * @param   string  $text      Target search string
-	 * @param   string  $phrase    mathcing option, exact|any|all
+	 * @param   string  $phrase    matching option, exact|any|all
 	 * @param   string  $ordering  ordering option, newest|oldest|popular|alpha|category
 	 * @param   mixed   $areas     An array if the search it to be restricted to areas, null if search all
 	 *
@@ -101,7 +101,7 @@ class PlgSearchBiblestudysearch extends JPlugin
 		switch ($phrase)
 		{
 			case 'exact':
-				$text      = $db->Quote('%' . $db->escape($text) . '%', false);
+				$text      = $db->quote('%' . $db->escape($text) . '%', false);
 				$wheres2   = array();
 				$wheres2[] = 'a.studytext LIKE ' . $text;
 				$wheres2[] = 'a.studyintro LIKE ' . $text;
@@ -120,7 +120,7 @@ class PlgSearchBiblestudysearch extends JPlugin
 
 				foreach ($words as $word)
 				{
-					$word      = $db->Quote('%' . $db->escape($word) . '%', false);
+					$word      = $db->quote('%' . $db->escape($word) . '%', false);
 					$wheres2   = array();
 					$wheres2[] = 'a.studytext LIKE ' . $word;
 					$wheres2[] = 'a.studyintro LIKE ' . $word;

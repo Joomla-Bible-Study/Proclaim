@@ -33,7 +33,7 @@ class BiblestudyModelTemplate extends JModelAdmin
 		// Make sure we cannot unpublished default template.
 		if ($data['id'] == '1' && $data['published'] != '1')
 		{
-			JFactory::getApplication()->enqueueMessage(JTEXT::_('JBS_TPL_DEFAULT_ERROR'), 'error');
+			JFactory::getApplication()->enqueueMessage(JText::_('JBS_TPL_DEFAULT_ERROR'), 'error');
 			return false;
 		}
 

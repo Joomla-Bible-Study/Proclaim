@@ -56,7 +56,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$pagebuilder = new JBSMPagebuilder;
+		$pagebuilder = new JBSMPageBuilder;
 
 		$images        = new JBSMImages;
 		$this->state   = $this->get('state');

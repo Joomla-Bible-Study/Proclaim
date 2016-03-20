@@ -417,7 +417,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		$query->select('*')
 			->from('#__bsms_update');
 		$this->_db->setQuery($query);
-		$updates = $this->_db->loadObjectlist();
+		$updates = $this->_db->loadObjectList();
 
 		foreach ($updates AS $value)
 		{

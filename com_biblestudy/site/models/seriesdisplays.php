@@ -39,6 +39,7 @@ class BiblestudyModelSeriesdisplays extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
+		/** @type JApplicationSite $app */
 		$app = JFactory::getApplication('site');
 
 		// Adjust the context to support modal layouts.
@@ -140,7 +141,7 @@ class BiblestudyModelSeriesdisplays extends JModelList
 
 		if ($this->getState('filter.language') || $language != '*')
 		{
-			$query->where('se.language in (' . $db->Quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
+			$query->where('se.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
 		}
 		$orderDir = $t_params->get('series_list_order', 'DESC');
 		$orderCol = $t_params->get('series_order_field', 'series_text');

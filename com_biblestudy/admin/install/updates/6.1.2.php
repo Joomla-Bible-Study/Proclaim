@@ -34,7 +34,7 @@ class Migration612
 			->where('internal_view = ' . (int) $query->q('1'))
 			->where('params IS NULL');
 
-		if (!JBSMDbHelper::performdb($query, "Build 612: "))
+		if (!JBSMDbHelper::performDB($query, "Build 612: "))
 		{
 			return false;
 		}

@@ -55,7 +55,7 @@ $input = $app->input;
 								<?php echo $this->form->getLabel('topic_text'); ?>
 							</div>
 							<div class="controls">
-								<?php echo $this->form->getInput('topic_text'); ?></li>
+								<?php echo $this->form->getInput('topic_text'); ?>
 							</div>
 						</div>
 

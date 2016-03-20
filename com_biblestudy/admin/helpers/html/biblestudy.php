@@ -77,11 +77,11 @@ abstract class JHtmlBiblestudy
 
 		if ($css <= "-1")
 		{
-			JHtml::styleSheet('media/com_biblestudy/css/biblestudy.css');
+			JHtml::stylesheet('media/com_biblestudy/css/biblestudy.css');
 		}
 		else
 		{
-			JHtml::styleSheet('media/com_biblestudy/css/site/' . $css);
+			JHtml::stylesheet('media/com_biblestudy/css/site/' . $css);
 		}
 		if ($url)
 		{

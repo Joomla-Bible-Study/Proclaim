@@ -37,7 +37,7 @@ class JBSMDownload
 		$this->hitDownloads($mid);
 		$input    = new JInput;
 		$template = $input->get('t', '1', 'int');
-		$db       = JFactory::getDBO();
+		$db       = JFactory::getDbo();
 
 		// Get the template so we can find a protocol
 		$query = $db->getQuery(true);
@@ -61,7 +61,7 @@ class JBSMDownload
 			->where('#__bsms_mediafiles.id = ' . (int) $mid);
 		$db->setQuery($query, 0, 1);
 
-		$media = $db->LoadObject();
+		$media = $db->loadObject();
 		if ($media)
 		{
 			$reg = new Registry;
@@ -140,7 +140,7 @@ class JBSMDownload
 	 */
 	protected function hitDownloads($mid)
 	{
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
 			->set('downloads = downloads + 1 ')

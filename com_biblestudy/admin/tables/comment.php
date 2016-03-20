@@ -27,6 +27,13 @@ class TableComment extends JTable
 	public $id = null;
 
 	/**
+	 * Published
+	 *
+	 * @var string
+	 */
+	public $published = 1;
+
+	/**
 	 * Study ID
 	 *
 	 * @var string
@@ -41,32 +48,11 @@ class TableComment extends JTable
 	public $user_id = null;
 
 	/**
-	 * Comment Date
-	 *
-	 * @var string
-	 */
-	public $comment_date = null;
-
-	/**
 	 * Full Name
 	 *
 	 * @var string
 	 */
 	public $full_name = null;
-
-	/**
-	 * Published
-	 *
-	 * @var string
-	 */
-	public $published = 1;
-
-	/**
-	 * Comment Text
-	 *
-	 * @var string
-	 */
-	public $comment_text = null;
 
 	/**
 	 * User Email
@@ -76,11 +62,24 @@ class TableComment extends JTable
 	public $user_email = null;
 
 	/**
-	 * Title
+	 * Comment Date
 	 *
 	 * @var string
 	 */
-	public $title;
+	public $comment_date = null;
+
+	/**
+	 * Comment Text
+	 *
+	 * @var string
+	 */
+	public $comment_text = null;
+
+	public $asset_id;
+
+	public $access;
+
+	public $language;
 
 	/**
 	 * Constructor

@@ -163,9 +163,11 @@ class BiblestudyModelSerie extends JModelAdmin
 	 */
 	protected function batchCopy($value, $pks, $contexts)
 	{
-		$app   = JFactory::getApplication();
-		$table = $this->getTable();
-		$i     = 0;
+		$app    = JFactory::getApplication();
+		/** @type TableSerie $table */
+		$table  = $this->getTable();
+		$i      = 0;
+		$newIds = array();
 
 		// Check that the user has create permission for the component
 		$extension = $app->input->get('option', '');
@@ -205,9 +207,9 @@ class BiblestudyModelSerie extends JModelAdmin
 			}
 
 			// Alter the title & alias
-			$data         = $this->generateNewTitle('', $table->alias, $table->title);
-			$table->title = $data['0'];
-			$table->alias = $data['1'];
+			$data               = $this->generateNewTitle('', $table->alias, $table->series_text);
+			$table->series_text = $data['0'];
+			$table->alias       = $data['1'];
 
 			// Reset the ID because we are making a copy
 			$table->id = 0;
@@ -324,7 +326,7 @@ class BiblestudyModelSerie extends JModelAdmin
 	/**
 	 * Prepare and sanitise the table data prior to saving.
 	 *
-	 * @param   JTable  $table  A reference to a JTable object.
+	 * @param   TableSerie  $table  A reference to a JTable object.
 	 *
 	 * @return  void
 	 *

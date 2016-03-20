@@ -24,7 +24,7 @@ defined('_JEXEC') or die();
                 alert("<?php echo JText::_('JBS_MED_ENTER_SERVER'); ?>");
             }
             else {
-                submitform(task);
+                document.submitform(task);
                 window.location.setTimeout('window.location.reload(true)', 1000);
                 return true;
             }
@@ -71,7 +71,7 @@ echo JRoute::_($url);
 
     <div id="uploader">
 
-        <p><?php JText::printf('JBS_UPLOADER_ERROR_RUNTIME_NOT_SUPORTED', $this->runtime) ?></p>
+        <p><?php echo JText::_('JBS_UPLOADER_ERROR_RUNTIME_NOT_SUPORTED') . ' ' .  $this->runtime; ?></p>
 
 </div>
 <?php echo JHtml::_('form.token'); ?>
