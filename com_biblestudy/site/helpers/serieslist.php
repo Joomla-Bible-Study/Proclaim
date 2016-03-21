@@ -23,38 +23,6 @@ use Joomla\Registry\Registry;
 class JBSMSerieslist extends JBSMListing
 {
 
-	/**
-	 * Series Get Custom
-	 *
-	 * @param   string    $r              ?
-	 * @param   object    $row            JTable
-	 * @param   object    $customelement  ?
-	 * @param   string    $custom         ?
-	 * @param   string    $islink         Is a Link
-	 * @param   Registry  $params         Item Params
-	 *
-	 * @return string
-	 */
-	public function seriesGetcustom($r, $row, $customelement, $custom, $islink, $params)
-	{
-		$countbraces = substr_count($custom, '{');
-		$braceend    = 0;
-
-		while ($countbraces > 0)
-		{
-			$bracebegin    = strpos($custom, '{');
-			$braceend      = strpos($custom, '}');
-			$subcustom     = substr($custom, ($bracebegin + 1), (($braceend - $bracebegin) - 1));
-			$customelement = $this->getseriesElementnumber($subcustom);
-
-			// @Fixme Need to find working replacement for this function.
-			$element       = $this->seriesGetelement($r, $row, $customelement, $custom, $islink, $params, $view = null);
-			$custom        = substr_replace($custom, $element, $bracebegin, (($braceend - $bracebegin) + 1));
-			$countbraces--;
-		}
-
-		return $custom;
-	}
 
 	/**
 	 * Get Series ElementNumber
