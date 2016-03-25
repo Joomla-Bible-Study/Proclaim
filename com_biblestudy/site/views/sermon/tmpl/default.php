@@ -12,11 +12,7 @@ defined('_JEXEC') or die;
 ?>
 <div class="container-fluid"> <!-- This div is the container for the whole page --><?php
 
-	if ($this->item->params->get('useexpert_details') > 0)
-	{
-		echo $this->loadTemplate('custom');
-	}
-	elseif ($this->item->params->get('sermontemplate'))
+	if ($this->item->params->get('sermontemplate'))
 	{
 		echo $this->loadTemplate($this->item->params->get('sermontemplate'));
 	}
