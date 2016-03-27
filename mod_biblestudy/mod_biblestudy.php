@@ -120,11 +120,7 @@ if ($url)
 }
 $pageclass_sfx = $params->get('pageclass_sfx');
 
-if ($params->get('useexpert_module') > 0)
-{
-	$template = 'default_custom';
-}
-elseif ($params->get('moduletemplate'))
+if ($params->get('moduletemplate'))
 {
 	$template = 'default_' . $params->get('moduletemplate');
 }

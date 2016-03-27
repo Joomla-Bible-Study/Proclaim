@@ -459,6 +459,7 @@ class Migration900
 			$db->updateObject('#__bsms_templates', $d, 'id');
 			$filenumber ++;
 		}
+
 		return true;
 	}
 
