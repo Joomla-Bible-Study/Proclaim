@@ -109,6 +109,7 @@ class Migration901
 			BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php',
 			BIBLESTUDY_PATH_LIB . '/biblestudy.pagebuilder.class.php',
 			BIBLESTUDY_PATH_LIB . '/biblestudy.podcast.class.php',
+			BIBLESTUDY_PATH_MOD . '/tmpl/default_custom.php'
 		);
 
 			foreach ($path as $file)
