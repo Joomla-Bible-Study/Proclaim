@@ -354,8 +354,161 @@ class Migration900
 		$script->postinstall_messages($message);
 		$this->css900();
 		$this->deleteUnexistingFiles();
+		$this->removeexpert($db);
 		return true;
 	}
+
+	private function removeexpert($db)
+	{
+		jimport('joomla.client.helper');
+		jimport('joomla.filesystem.file');
+		$query = $db->getQuery(true);
+		$query->select('*')
+			->from('#__bsms_templates');
+		$db->setQuery($query);
+		$data = $db->loadObjectList();
+		$filenumber = 1;
+		foreach ($data as $d)
+		{
+			$dataitem = '';
+			$dataheader = '';
+			$registry = new Registry;
+			$registry->loadString($d->params);
+			if ($registry->get('useexpert_list') > 0)
+			{
+				$dataheaderlist = $registry->get('headercode');
+				$dataitemlist = $registry->get('templatecode');
+				$dataheaderlist = $this->itemreplace($dataheaderlist);
+				$dataitemlist = $this->itemreplace($dataitemlist);
+				$filecontent = '<?php defined(\'_JEXEC\') or die; ?>' . $dataheaderlist .'<?php foreach ($this->items as $study){ ?>'. $dataitemlist.'<?php } ?>';
+				$filename = 'default_listtemplate'.$filenumber;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/sermons/tmpl' . DIRECTORY_SEPARATOR . $filename.'.php';
+				$return = JFile::write($file, $filecontent);
+				$profile = new stdClass();
+				$profile->published = 1;
+				$profile->type = 1;
+				$profile->filename = $filename;
+				$profile->templatecode = $filecontent;
+				$profile->asset_id = '';
+				$result = $db->insertObject('#__bsms_templatecode', $profile);
+				$registry->set('sermonstemplate', $filename);
+			}
+			if ($registry->get('useexpert_details') > 0)
+			{
+				$dataitemlist = $registry->get('study_detailtemplate');
+				$dataitemlist = $this->itemreplace($dataitemlist);
+				$filecontent = '<?php defined(\'_JEXEC\') or die; $study = $this->item; ?>' . $dataitemlist;
+				$filename = 'default_sermontemplate'.$filenumber;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/sermon/tmpl' . DIRECTORY_SEPARATOR . $filename.'.php';
+				$return = JFile::write($file, $filecontent);
+				$profile = new stdClass();
+				$profile->published = 1;
+				$profile->type = 2;
+				$profile->filename = $filename;
+				$profile->templatecode = $filecontent;
+				$profile->asset_id = '';
+				$result = $db->insertObject('#__bsms_templatecode', $profile);
+				$registry->set('sermontemplate', $filename);
+			}
+			if ($registry->get('useexpert_teacherlist') > 0)
+			{
+				$dataheaderlist = $registry->get('teacher_headercode');
+				$dataitemlist = $registry->get('teacher_templatecode');
+				$dataheaderlist = $this->itemreplace($dataheaderlist);
+				$dataitemlist  = str_replace('{{title}}', '{{teachertitlelist}}', $dataitemlist);
+				$dataitemlist  = str_replace('{{teacher}}', '{{teachernamelist}}', $dataitemlist);
+				$dataitemlist  = str_replace('{{phone}}', '{{teacherphonelist}}', $dataitemlist);
+				$dataitemlist  = str_replace('{{website}}', '{{teacherwebsitelist}}', $dataitemlist);
+				$dataitemlist  = str_replace('{{information}}', '{{teacherinformationlist}}', $dataitemlist);
+				$dataitemlist  = str_replace('{{image}}', '{{teacherimagelist}}', $dataitemlist);
+				$dataitemlist  = str_replace('{{thumbnail}}', '{{teacherthumbnaillist}}', $dataitemlist);
+				$dataitemlist  = str_replace('{{short}}', '{{teachershortlist}}', $dataitemlist);
+				$dataitemlist = $this->itemreplace($dataitemlist);
+				$filecontent = '<?php defined(\'_JEXEC\') or die; ?>' . $dataheaderlist .'<?php foreach ($this->items as $teacher){ ?>'. $dataitemlist . '<?php } ?>';
+				$filename = 'default_teacherstemplate'.$filenumber;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/teachers/tmpl' . DIRECTORY_SEPARATOR . $filename.'.php';
+				$return = JFile::write($file, $filecontent);
+				$profile = new stdClass();
+				$profile->published = 1;
+				$profile->type = 3;
+				$profile->filename = $filename;
+				$profile->templatecode = $filecontent;
+				$profile->asset_id = '';
+				$result = $db->insertObject('#__bsms_templatecode', $profile);
+				$registry->set('teacherstemplate', $filename);
+			}
+			if ($registry->get('useexpert_teacherdetail') > 0)
+			{
+				$dataitemlist = $registry->get('teacher_detailtemplate');
+				$dataitemlist  = str_replace('{{title}}', '{{teachertitle}}', $dataitemlist);
+				$dataitemlist  = str_replace('{{teacher}}', '{{teachername}}', $dataitemlist);
+				$dataitemlist = $this->itemreplace($dataitemlist);
+				$filecontent = '<?php defined(\'_JEXEC\') or die; ?>' . $dataitemlist;
+				$filename = 'default_teachertemplate'.$filenumber;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/teacher/tmpl' . DIRECTORY_SEPARATOR . $filename.'.php';
+				$return = JFile::write($file, $filecontent);
+				$profile = new stdClass();
+				$profile->published = 1;
+				$profile->type = 4;
+				$profile->filename = $filename;
+				$profile->templatecode = $filecontent;
+				$profile->asset_id = '';
+				$result = $db->insertObject('#__bsms_templatecode', $profile);
+				$registry->set('teachertemplate', $filename);
+			}
+			$d->params = $registry->toString();
+			$db->updateObject('#__bsms_templates', $d, 'id');
+			$filenumber ++;
+		}
+
+		return true;
+	}
+
+	private function itemreplace($item)
+	{
+		$item  = str_replace('{{teacher}}', '<?php echo $study->teachername; ?>', $item);
+		$item  = str_replace('{{teachertitle}}', '<?php echo $this->item->title; ?>', $item);
+		$item  = str_replace('{{teachername}}', '<?php echo $this->item->teachername; ?>', $item);
+		$item  = str_replace('{{teachertitlelist}}', '<?php echo $teacher->title; ?>', $item);
+		$item  = str_replace('{{teachernamelist}}', '<?php echo $teacher->teachername; ?>', $item);
+		$item  = str_replace('{{title}}', '<?php echo $study->studytitle; ?>', $item);
+		$item  = str_replace('{{date}}', '<?php echo $study->studydate; ?>', $item);
+		$item  = str_replace('{{studyintro}}', '<?php echo $study->studyintro; ?>', $item);
+		$item  = str_replace('{{scripture}}', '<?php echo $study->scripture1; ?>', $item);
+		$item  = str_replace('{{topics}}', '<?php echo $study->topics; ?>', $item);
+		$item  = str_replace('{{scripture}}', '<?php echo $study->scripture1; ?>', $item);
+		$item  = str_replace('{{url}}', '<?php echo $study->detailslink; ?>', $item);
+		$item  = str_replace('{{mediatime}}', '<?php echo $study->duration; ?>', $item);
+		$item  = str_replace('{{thumbnail}}', '<?php echo $study->study_thumbnail; ?>', $item);
+		$item  = str_replace('{{seriestext}}', '', $item);
+		$item  = str_replace('{{bookname}}', '<?php echo $study->scripture1; ?>', $item);
+		$item  = str_replace('{{hits}}', '<?php echo $study->hits;', $item);
+		$item  = str_replace('{{location}}', '<?php echo $study->location_text; ?>', $item);
+		$item  = str_replace('{{plays}}', '<?php echo $study->totaplays; ?>', $item);
+		$item  = str_replace('{{downloads}}', '<?php echo $study->totaldownloads; ?>', $item);
+		$item  = str_replace('{{media}}', '<?php echo $study->media; ?>', $item);
+		$item  = str_replace('{{messagetype}}', '<?php echo $study->messagetypes; ?>', $item);
+		$item  = str_replace('{{studytext}}', '<?php echo $this->item->studytext; ?>', $item);
+		$item  = str_replace('{{scipturelink}}', '<?php  echo $this->passage; ?>', $item);
+		$item  = str_replace('{{share}}', '<?php echo $this->page->social; ?>', $item);
+		$item  = str_replace('{{printview}}', '<?php echo $this->page->print; ?>', $item);
+		$item  = str_replace('{{pdfview}}', '', $item);
+		$item  = str_replace('{{phone}}', '<?php echo $this->item->phone; ?>', $item);
+		$item  = str_replace('{{teacherphonelist}}', '<?php echo $teacher->phone; ?>', $item);
+		$item  = str_replace('{{website}}', '<?php echo $this->item->website; ?>', $item);
+		$item  = str_replace('{{teacherwebsitelist}}', '<?php echo $teacher->website; ?>', $item);
+		$item  = str_replace('{{information}}', '<?php echo $this->item->information; ?>', $item);
+		$item  = str_replace('{{teacherinformationlist}}', '<?php echo $teacher->information; ?>', $item);
+		$item  = str_replace('{{image}}', '<?php echo $this->item->largeimage; ?>', $item);
+		$item  = str_replace('{{teacherimagelist}}', '<?php echo $teacher->largeimage; ?>', $item);
+		$item  = str_replace('{{thumbnail}}', '<?php echo $this->item->image; ?>', $item);
+		$item  = str_replace('{{teacherthumbnaillist}}', '<?php echo $teacher->image; ?>', $item);
+		$item  = str_replace('{{short}}', '<?php echo $this->item->short; ?>', $item);
+		$item  = str_replace('{{teachershortlist}}', '<?php echo $teacher->short; ?>', $item);
+
+		return $item;
+	}
+
 
 	/**
 	 * Set del columns
@@ -461,7 +614,11 @@ class Migration900
 			BIBLESTUDY_PATH_ADMIN . '/views/shares/view.html.php',
 			BIBLESTUDY_PATH_ADMIN . '/views/shares/tmpl/default.php',
 			BIBLESTUDY_PATH_ADMIN . '/moduels/migration.php',
-			BIBLESTUDY_PATH_ADMIN . '/controllers/migration.php'
+			BIBLESTUDY_PATH_ADMIN . '/controllers/migration.php',
+			BIBLESTUDY_PATH . '/views/sermons/tmpl/default_custom.php',
+			BIBLESTUDY_PATH . '/views/sermon/tmpl/default_custom.php',
+			BIBLESTUDY_PATH . '/views/teachers/tmpl/default_custom.php',
+			BIBLESTUDY_PATH . '/views/teacher/tmpl/default_custom.php'
 		);
 
 			foreach ($path as $file)
