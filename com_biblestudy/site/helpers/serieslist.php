@@ -23,7 +23,6 @@ use Joomla\Registry\Registry;
 class JBSMSerieslist extends JBSMListing
 {
 
-
 	/**
 	 * Get Series ElementNumber
 	 *
@@ -80,7 +79,6 @@ class JBSMSerieslist extends JBSMListing
 	 */
 	public function getSerieslistExp($row, $params, $template)
 	{
-		$t      = $params->get('serieslisttemplateid');
 		$images = new JBSMImages;
 		$image  = $images->getSeriesThumbnail($row->series_thumbnail);
 
@@ -145,7 +143,6 @@ class JBSMSerieslist extends JBSMListing
 		}
 		// Fixme Need to find working replacement for this function.
 		$items   = $this->getSeriesstudiesDBO($id, $params, $limit);
-		$numrows = count($items);
 
 		$studies = '';
 
@@ -183,7 +180,6 @@ class JBSMSerieslist extends JBSMListing
 		}
 		foreach ($items AS $row)
 		{
-			$oddeven = 0;
 			$studies .= $this->getListingExp($row, $params, $params->get('seriesdetailtemplateid'));
 		}
 
@@ -209,7 +205,7 @@ class JBSMSerieslist extends JBSMListing
 	 * Get SeriesStudies DBO
 	 *
 	 * @param   int       $id      ID
-	 * @param   JRegistry $params  Item Params
+	 * @param   Registry  $params  Item Params
 	 * @param   string    $limit   Limit of Records
 	 *
 	 * @return array
@@ -217,10 +213,8 @@ class JBSMSerieslist extends JBSMListing
 	public function getSeriesstudiesDBO($id, $params, $limit = null)
 	{
 		$app       = JFactory::getApplication();
-		$db        = JFactory::getDBO();
+		$db        = JFactory::getDbo();
 		$user      = JFactory::getUser();
-		$menu      = $app->getMenu();
-		$item      = $menu->getActive();
 		$language  = $language = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
 		$set_limit = null;
 
@@ -230,14 +224,6 @@ class JBSMSerieslist extends JBSMListing
 			$set_limit = implode(' ', $set_limit[0]);
 		}
 
-		if ($language == '*' || !$language)
-		{
-			$langlink = '';
-		}
-		elseif ($language != '*')
-		{
-			$langlink = '&amp;filter.languages=' . $language;
-		}
 		// Compute view access permissions.
 		$groups = implode(',', $user->getAuthorisedViewLevels());
 		$query  = $db->getQuery(true);
@@ -275,6 +261,5 @@ class JBSMSerieslist extends JBSMListing
 
 		return $items;
 	}
-
 
 }
