@@ -358,6 +358,13 @@ class Migration900
 		return true;
 	}
 
+	/**
+	 * Remove Export function to TemplateFiles
+	 *
+	 * @param   JDatabaseDriver  $db  ?
+	 *
+	 * @return bool
+	 */
 	private function removeexpert($db)
 	{
 		jimport('joomla.client.helper');
@@ -370,8 +377,6 @@ class Migration900
 		$filenumber = 1;
 		foreach ($data as $d)
 		{
-			$dataitem = '';
-			$dataheader = '';
 			$registry = new Registry;
 			$registry->loadString($d->params);
 			if ($registry->get('useexpert_list') > 0)
@@ -383,14 +388,14 @@ class Migration900
 				$filecontent = '<?php defined(\'_JEXEC\') or die; ?>' . $dataheaderlist .'<?php foreach ($this->items as $study){ ?>'. $dataitemlist.'<?php } ?>';
 				$filename = 'default_listtemplate'.$filenumber;
 				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/sermons/tmpl' . DIRECTORY_SEPARATOR . $filename.'.php';
-				$return = JFile::write($file, $filecontent);
+				$JFile::write($file, $filecontent);
 				$profile = new stdClass();
 				$profile->published = 1;
 				$profile->type = 1;
 				$profile->filename = $filename;
 				$profile->templatecode = $filecontent;
 				$profile->asset_id = '';
-				$result = $db->insertObject('#__bsms_templatecode', $profile);
+				$db->insertObject('#__bsms_templatecode', $profile);
 				$registry->set('sermonstemplate', $filename);
 			}
 			if ($registry->get('useexpert_details') > 0)
@@ -400,14 +405,14 @@ class Migration900
 				$filecontent = '<?php defined(\'_JEXEC\') or die; $study = $this->item; ?>' . $dataitemlist;
 				$filename = 'default_sermontemplate'.$filenumber;
 				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/sermon/tmpl' . DIRECTORY_SEPARATOR . $filename.'.php';
-				$return = JFile::write($file, $filecontent);
+				JFile::write($file, $filecontent);
 				$profile = new stdClass();
 				$profile->published = 1;
 				$profile->type = 2;
 				$profile->filename = $filename;
 				$profile->templatecode = $filecontent;
 				$profile->asset_id = '';
-				$result = $db->insertObject('#__bsms_templatecode', $profile);
+				$db->insertObject('#__bsms_templatecode', $profile);
 				$registry->set('sermontemplate', $filename);
 			}
 			if ($registry->get('useexpert_teacherlist') > 0)
@@ -427,14 +432,14 @@ class Migration900
 				$filecontent = '<?php defined(\'_JEXEC\') or die; ?>' . $dataheaderlist .'<?php foreach ($this->items as $teacher){ ?>'. $dataitemlist . '<?php } ?>';
 				$filename = 'default_teacherstemplate'.$filenumber;
 				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/teachers/tmpl' . DIRECTORY_SEPARATOR . $filename.'.php';
-				$return = JFile::write($file, $filecontent);
+				JFile::write($file, $filecontent);
 				$profile = new stdClass();
 				$profile->published = 1;
 				$profile->type = 3;
 				$profile->filename = $filename;
 				$profile->templatecode = $filecontent;
 				$profile->asset_id = '';
-				$result = $db->insertObject('#__bsms_templatecode', $profile);
+				$db->insertObject('#__bsms_templatecode', $profile);
 				$registry->set('teacherstemplate', $filename);
 			}
 			if ($registry->get('useexpert_teacherdetail') > 0)
@@ -446,14 +451,14 @@ class Migration900
 				$filecontent = '<?php defined(\'_JEXEC\') or die; ?>' . $dataitemlist;
 				$filename = 'default_teachertemplate'.$filenumber;
 				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/teacher/tmpl' . DIRECTORY_SEPARATOR . $filename.'.php';
-				$return = JFile::write($file, $filecontent);
+				JFile::write($file, $filecontent);
 				$profile = new stdClass();
 				$profile->published = 1;
 				$profile->type = 4;
 				$profile->filename = $filename;
 				$profile->templatecode = $filecontent;
 				$profile->asset_id = '';
-				$result = $db->insertObject('#__bsms_templatecode', $profile);
+				$db->insertObject('#__bsms_templatecode', $profile);
 				$registry->set('teachertemplate', $filename);
 			}
 			$d->params = $registry->toString();
@@ -464,6 +469,13 @@ class Migration900
 		return true;
 	}
 
+	/**
+	 * Replace Strings to actueal code
+	 *
+	 * @param    string  $item  ?
+	 *
+	 * @return mixed
+	 */
 	private function itemreplace($item)
 	{
 		$item  = str_replace('{{teacher}}', '<?php echo $study->teachername; ?>', $item);
