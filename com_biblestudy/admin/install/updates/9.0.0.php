@@ -24,7 +24,7 @@ class Migration900
 	 *
 	 * @return bool
 	 */
-	public function up ($db)
+	public function up($db)
 	{
 		/**
 		 * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
@@ -385,11 +385,12 @@ class Migration900
 				$dataitemlist = $registry->get('templatecode');
 				$dataheaderlist = $this->itemreplace($dataheaderlist);
 				$dataitemlist = $this->itemreplace($dataitemlist);
-				$filecontent = '<?php defined(\'_JEXEC\') or die; ?>' . $dataheaderlist .'<?php foreach ($this->items as $study){ ?>'. $dataitemlist.'<?php } ?>';
-				$filename = 'default_listtemplate'.$filenumber;
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/sermons/tmpl' . DIRECTORY_SEPARATOR . $filename.'.php';
-				$JFile::write($file, $filecontent);
-				$profile = new stdClass();
+				$filecontent = '<?php defined(\'_JEXEC\') or die; ?>' . $dataheaderlist . '<?php foreach ($this->items as $study){ ?>' .
+					$dataitemlist . '<?php } ?>';
+				$filename = 'default_listtemplate' . $filenumber;
+				$file = JPATH_ROOT . '/components/com_biblestudy/views/sermons/tmpl/' . $filename . '.php';
+				JFile::write($file, $filecontent);
+				$profile = new stdClass;
 				$profile->published = 1;
 				$profile->type = 1;
 				$profile->filename = $filename;
@@ -403,10 +404,10 @@ class Migration900
 				$dataitemlist = $registry->get('study_detailtemplate');
 				$dataitemlist = $this->itemreplace($dataitemlist);
 				$filecontent = '<?php defined(\'_JEXEC\') or die; $study = $this->item; ?>' . $dataitemlist;
-				$filename = 'default_sermontemplate'.$filenumber;
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/sermon/tmpl' . DIRECTORY_SEPARATOR . $filename.'.php';
+				$filename = 'default_sermontemplate' . $filenumber;
+				$file = JPATH_ROOT . '/components/com_biblestudy/views/sermon/tmpl/' . $filename . '.php';
 				JFile::write($file, $filecontent);
-				$profile = new stdClass();
+				$profile = new stdClass;
 				$profile->published = 1;
 				$profile->type = 2;
 				$profile->filename = $filename;
@@ -429,11 +430,12 @@ class Migration900
 				$dataitemlist  = str_replace('{{thumbnail}}', '{{teacherthumbnaillist}}', $dataitemlist);
 				$dataitemlist  = str_replace('{{short}}', '{{teachershortlist}}', $dataitemlist);
 				$dataitemlist = $this->itemreplace($dataitemlist);
-				$filecontent = '<?php defined(\'_JEXEC\') or die; ?>' . $dataheaderlist .'<?php foreach ($this->items as $teacher){ ?>'. $dataitemlist . '<?php } ?>';
-				$filename = 'default_teacherstemplate'.$filenumber;
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/teachers/tmpl' . DIRECTORY_SEPARATOR . $filename.'.php';
+				$filecontent = '<?php defined(\'_JEXEC\') or die; ?>' . $dataheaderlist . '<?php foreach ($this->items as $teacher){ ?>' .
+					$dataitemlist . '<?php } ?>';
+				$filename = 'default_teacherstemplate' . $filenumber;
+				$file = JPATH_ROOT . '/components/com_biblestudy/views/teachers/tmpl/' . $filename . '.php';
 				JFile::write($file, $filecontent);
-				$profile = new stdClass();
+				$profile = new stdClass;
 				$profile->published = 1;
 				$profile->type = 3;
 				$profile->filename = $filename;
@@ -449,10 +451,10 @@ class Migration900
 				$dataitemlist  = str_replace('{{teacher}}', '{{teachername}}', $dataitemlist);
 				$dataitemlist = $this->itemreplace($dataitemlist);
 				$filecontent = '<?php defined(\'_JEXEC\') or die; ?>' . $dataitemlist;
-				$filename = 'default_teachertemplate'.$filenumber;
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/teacher/tmpl' . DIRECTORY_SEPARATOR . $filename.'.php';
+				$filename = 'default_teachertemplate' . $filenumber;
+				$file = JPATH_ROOT . '/components/com_biblestudy/views/teacher/tmpl/' . $filename . '.php';
 				JFile::write($file, $filecontent);
-				$profile = new stdClass();
+				$profile = new stdClass;
 				$profile->published = 1;
 				$profile->type = 4;
 				$profile->filename = $filename;
@@ -472,7 +474,7 @@ class Migration900
 	/**
 	 * Replace Strings to actueal code
 	 *
-	 * @param    string  $item  ?
+	 * @param   string  $item  ?
 	 *
 	 * @return mixed
 	 */
@@ -521,7 +523,6 @@ class Migration900
 		return $item;
 	}
 
-
 	/**
 	 * Set del columns
 	 *
@@ -531,7 +532,7 @@ class Migration900
 	 *
 	 * @return void
 	 */
-	private function deleteColumns ($table, $columns, $db)
+	private function deleteColumns($table, $columns, $db)
 	{
 		$columns2 = $db->getTableColumns($table);
 		foreach ($columns as $column)
@@ -552,7 +553,7 @@ class Migration900
 	 *
 	 * @return void
 	 */
-	private function deleteTable ($table, $db)
+	private function deleteTable($table, $db)
 	{
 		$db->setQuery('DROP TABLE ' . $db->qn($table));
 		$db->execute();
@@ -588,7 +589,7 @@ class Migration900
 	 *
 	 * @return boolean
 	 */
-	public function css900 ()
+	public function css900()
 	{
 		// Import filesystem libraries. Perhaps not necessary, but does not hurt
 		jimport('joomla.filesystem.file');
