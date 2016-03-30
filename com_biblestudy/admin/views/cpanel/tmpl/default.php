@@ -43,12 +43,13 @@ if ($msg)
 			</div>
 
 			<div id="jbspaypal">
-				<a href="index.php?option=com_biblestudy&view=donate&tmpl=component" target="_blank">
-					<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"
-					       name="submit" alt="PayPal - The safer, easier way to pay online!">
-					<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1"
-					     height="1">
-				</a>
+				<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+					<input type="hidden" name="cmd" value="_s-xclick">
+					<input type="hidden" name="hosted_button_id" value="XMJT8SDW8RHZW">
+					<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+					<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+				</form>
+
 			</div>
 			<hr/>
 			<?php echo $this->sidebar; ?>
@@ -99,52 +100,41 @@ if ($msg)
 					<h3 style="text-align: center;">
 						<?php echo JText::_('JBS_CPL_MENUE_LINKS'); ?>
 					</h3>
-
-					<div id="cpanel" class="btn-group">
+<div class="row-fluid">
+	<div class="span12">
+		<div class="well well-small">
+			<div id="dashboard-icons" class="btn-group">
 						<a href="index.php?option=com_biblestudy&amp;task=admin.edit&amp;id=1"
-						   style="text-decoration:none;"
-						   title="<?php echo JText::_('JBS_CMN_ADMINISTRATION'); ?>" class="btn cpanl-img"> <span class="icon-options" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_ADMINISTRATION'); ?> </span></a>
+						   title="<?php echo JText::_('JBS_CMN_ADMINISTRATION'); ?>" class="btn"> <i class="icon-big icon-options"> </i> <span><br/> <?php echo JText::_('JBS_CMN_ADMINISTRATION'); ?> </span></a>
 						<a href="index.php?option=com_biblestudy&amp;view=messages"
-						   style="text-decoration:none;"
-						   title="<?php echo JText::_('JBS_CMN_STUDIES'); ?>" class="btn cpanl-img"> <span class="icon-book" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_STUDIES'); ?> </span></a>
+						   title="<?php echo JText::_('JBS_CMN_STUDIES'); ?>" class="btn"> <i class="icon-big icon-book"></i> <span><br/> <?php echo JText::_('JBS_CMN_STUDIES'); ?> </span></a>
 						<a href="index.php?option=com_biblestudy&amp;view=mediafiles"
-						   style="text-decoration:none;"
-						   title="<?php echo JText::_('JBS_CMN_MEDIA_FILES'); ?>" class="btn cpanl-img"> <span class="icon-video" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_MEDIA_FILES'); ?> </span></a>
+						   title="<?php echo JText::_('JBS_CMN_MEDIA_FILES'); ?>" class="btn"> <i class="icon-big icon-video"></i> <span><br/> <?php echo JText::_('JBS_CMN_MEDIA_FILES'); ?> </span></a>
 						<a href="index.php?option=com_biblestudy&amp;view=teachers"
-						   style="text-decoration:none;"
-						   title="<?php echo JText::_('JBS_CMN_TEACHERS'); ?>" class="btn cpanl-img"> <span class="icon-user" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_TEACHERS'); ?> </span></a>
+						   title="<?php echo JText::_('JBS_CMN_TEACHERS'); ?>" class="btn"> <i class="icon-user icon-big"></i> <span><br/> <?php echo JText::_('JBS_CMN_TEACHERS'); ?> </span></a>
 						<a href="index.php?option=com_biblestudy&amp;view=series"
-						   style="text-decoration:none;"
-						   title="<?php echo JText::_('JBS_CMN_SERIES'); ?>" class="btn cpanl-img"> <span class="icon-tree-2" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_SERIES'); ?> </span></a>
+						   title="<?php echo JText::_('JBS_CMN_SERIES'); ?>" class="btn"> <i class="icon-big icon-tree-2"></i> <span><br/> <?php echo JText::_('JBS_CMN_SERIES'); ?> </span></a>
 						<a href="index.php?option=com_biblestudy&amp;view=messagetypes"
-						   style="text-decoration:none;"
-						   title="<?php echo JText::_('JBS_CMN_MESSAGETYPES'); ?>" class="btn cpanl-img"> <span class="icon-list-2" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_MESSAGETYPES'); ?> </span></a>
+						   title="<?php echo JText::_('JBS_CMN_MESSAGETYPES'); ?>" class="btn"> <i class="icon-big icon-list-2"></i><br/> <span> <?php echo JText::_('JBS_CMN_MESSAGETYPES'); ?> </span></a>
 						<a href="index.php?option=com_biblestudy&amp;view=locations"
-						   style="text-decoration:none;"
-						   title="<?php echo JText::_('JBS_CMN_LOCATIONS'); ?>" class="btn cpanl-img"> <span class="icon-home" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_LOCATIONS'); ?> </span></a>
+						   title="<?php echo JText::_('JBS_CMN_LOCATIONS'); ?>" class="btn"> <i class="icon-big icon-home"></i> <span><br/> <?php echo JText::_('JBS_CMN_LOCATIONS'); ?> </span></a>
 						<a href="index.php?option=com_biblestudy&amp;view=topics"
-						   style="text-decoration:none;"
-						   title="<?php echo JText::_('JBS_CMN_TOPICS'); ?>" class="btn cpanl-img"> <span class="icon-tags" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_TOPICS'); ?> </span></a>
+						   title="<?php echo JText::_('JBS_CMN_TOPICS'); ?>" class="btn"> <i class="icon-big icon-tags"></i> <span><br/> <?php echo JText::_('JBS_CMN_TOPICS'); ?> </span></a>
 						<a href="index.php?option=com_biblestudy&amp;view=comments"
-						   style="text-decoration:none;"
-						   title="<?php echo JText::_('JBS_CMN_COMMENTS'); ?>" class="btn cpanl-img"> <span class="icon-comments-2" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_COMMENTS'); ?> </span></a>
+						   title="<?php echo JText::_('JBS_CMN_COMMENTS'); ?>" class="btn"> <span class="icon-big icon-comments-2"></span><br/> <span> <?php echo JText::_('JBS_CMN_COMMENTS'); ?> </span></a>
 						<a href="index.php?option=com_biblestudy&amp;view=servers"
-						   style="text-decoration:none;"
-						   title="<?php echo JText::_('JBS_CMN_SERVERS'); ?>" class="btn cpanl-img"> <span class="icon-database" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_SERVERS'); ?> </span></a>
+						   title="<?php echo JText::_('JBS_CMN_SERVERS'); ?>" class="btn"> <span class="icon-big icon-database"></span> <span><br/> <?php echo JText::_('JBS_CMN_SERVERS'); ?> </span></a>
 						<a href="index.php?option=com_biblestudy&amp;view=podcasts"
-						   style="text-decoration:none;"
-						   title="<?php echo JText::_('JBS_CMN_PODCASTS'); ?>" class="btn cpanl-img"> <span class="icon-stack" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_PODCASTS'); ?> </span></a>
+						   title="<?php echo JText::_('JBS_CMN_PODCASTS'); ?>" class="btn"> <span class="icon-big icon-stack"></span> <span><br/> <?php echo JText::_('JBS_CMN_PODCASTS'); ?> </span></a>
 						<a href="index.php?option=com_biblestudy&amp;view=templates"
-						   style="text-decoration:none;"
-						   title="<?php echo JText::_('JBS_CMN_TEMPLATES'); ?>" class="btn cpanl-img"> <span class="icon-grid" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_TEMPLATES'); ?> </span></a>
+						   title="<?php echo JText::_('JBS_CMN_TEMPLATES'); ?>" class="btn"> <span class="icon-big icon-grid"></span> <span><br/> <?php echo JText::_('JBS_CMN_TEMPLATES'); ?> </span></a>
 						<a href="index.php?option=com_biblestudy&amp;view=templatecodes"
-						   style="text-decoration:none;"
-						   title="<?php echo JText::_('JBS_CMN_TEMPLATECODE'); ?>" class="btn cpanl-img"> <span class="icon-stack" style="margin-left:auto; margin-right:auto; font-size:24px; padding:2px; line-height:16px;"></span> <span> <?php echo JText::_('JBS_CMN_TEMPLATECODE'); ?> </span></a>
-
-											</div>
-					<div style="clear: both;"></div>
+						   title="<?php echo JText::_('JBS_CMN_TEMPLATECODE'); ?>" class="btn"> <span class="icon-big icon-stack"></span> <span><br/> <?php echo JText::_('JBS_CMN_TEMPLATECODE'); ?> </span></a>
 				</div>
-				<div style="clear: both;"></div>
+</div></div></div>
+
+				</div>
+				<div class="clearfix"></div>
 				<!-- BEGIN: STATS -->
 				<div class="fbstatscover">
 					<table cellspacing="1" border="0" width="100%" class="fbstat">

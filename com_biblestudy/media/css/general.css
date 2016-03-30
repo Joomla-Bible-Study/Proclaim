@@ -1,3 +1,23 @@
+.well.well-small {
+  background-color: transparent !important;
+  min-height: 123px;
+}
+.icon-big {
+  font-size  : 32px;
+  margin-top : 20px;
+  padding-right: 10px;
+  padding-bottom: 20px;
+  color: rgba(85, 85, 85, 1);
+}
+#dashboard-icons.btn-group {
+  white-space: normal;
+}
+.module-title {
+  color: rgba(85, 85, 85, 1) !important;
+}
+.nav-header img {
+  padding-bottom: 10px;
+}
 div.current .panelform {
   border: 1px solid #CCCCCC !important;
 }
