@@ -10,7 +10,6 @@
 
 defined('_JEXEC') or die;
 
-//JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidation');
@@ -29,6 +28,8 @@ else
 	$createdate = $this->options->createdate;
 	$podcast_id = $this->admin_params->get('podcast');
 }
+
+$new = ($this->item->id == '0' || $this->item->id == false);
 
 JFactory::getDocument()->addScriptDeclaration('
 	Joomla.submitbutton = function (task, server_id) {
@@ -151,6 +152,17 @@ JFactory::getDocument()->addScriptDeclaration('
 									<?php echo $field->label; ?>
 								</div>
 								<div class="controls">
+									<?php
+									// Way to set defaults on new media
+									if ($new)
+									{
+										$s_name = $field->fieldname;
+										if (isset($this->media_form->s_params[$s_name]))
+										{
+											$field->setValue($this->media_form->s_params[$s_name]);
+										}
+									}
+									?>
 									<?php echo $field->input; ?>
 								</div>
 							</div>

@@ -169,6 +169,14 @@ class BiblestudyModelMediafile extends JModelAdmin
 		/** @type BiblestudyModelServer $model */
 		$model       = JModelLegacy::getInstance('Server', 'BibleStudyModel');
 		$server_type = $model->getType($server_id, true);
+		$s_item = $model->getItem($server_id);
+
+		$reg = new Registry;
+		$reg->loadArray($s_item->params);
+
+		$reg1 = new Registry;
+		$reg1->loadArray($s_item->media);
+		$reg1->merge($reg);
 
 		$path = JPath::clean(JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/' . $server_type);
 
@@ -188,6 +196,8 @@ class BiblestudyModelMediafile extends JModelAdmin
 		{
 			return false;
 		}
+
+		$form->s_params = $reg1->toArray();
 
 		return $form;
 	}
