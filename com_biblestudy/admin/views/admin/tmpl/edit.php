@@ -137,7 +137,7 @@ $input = $app->input;
 		<!-- Begin Sidebar -->
 		<div class="span12">
 			<ul class="nav nav-tabs" id="configTabs">
-				<li><a href="#cpanl" data-toggle="tab"><?php echo JText::_('JBS_ADM_ADMIN_CPANL'); ?></a></li>
+				<li class="active"><a href="#cpanl" data-toggle="tab"><?php echo JText::_('JBS_ADM_ADMIN_CPANL'); ?></a></li>
 				<li><a href="#admin" data-toggle="tab"><?php echo JText::_('JBS_ADM_ADMIN_PARAMS'); ?></a></li>
 				<li><a href="#defaults" data-toggle="tab"><?php echo JText::_('JBS_ADM_SYSTEM_DEFAULTS'); ?></a></li>
 				<li><a href="#playersettings" data-toggle="tab"><?php echo JText::_('JBS_ADM_PLAYER_SETTINGS'); ?></a>
@@ -170,6 +170,12 @@ $input = $app->input;
 									src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt=""
 									align="middle"
 									border="0"/> <span> <?php echo JText::_('JBS_ADM_BACKUP_RESTORE') ?> </span></a>
+						<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=archive'); ?>"
+						   style="text-decoration:none; margin: 5px;"
+						   title="<?php echo JText::_('JBS_ADM_ARCHIVE') ?>" class="btn"> <img
+									src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt=""
+									align="middle"
+									border="0"/> <span> <?php echo JText::_('JBS_ADM_ARCHIVE') ?> </span></a>
 						<button onclick="Joomla::submitbutton('admin.alaisfix')" class="btn" style="margin-top: 5px;"><img
 									src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt=""
 									align="middle"
