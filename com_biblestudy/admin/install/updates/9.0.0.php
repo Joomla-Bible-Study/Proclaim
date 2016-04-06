@@ -35,8 +35,6 @@ class Migration900
 		}
 		$registry = new Registry;
 		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_biblestudy/tables');
-		//migrate template display settings
-		$this->migratetemplatelists($db);
 		// Migrate servers
 		$query = $db->getQuery(true)->select('*')->from('#__bsms_servers');
 		$db->setQuery($query);
@@ -325,9 +323,9 @@ class Migration900
 		$this->deleteTable('#__bsms_media', $db);
 		$this->deleteTable('#__bsms_mimetype', $db);
 
+		$this->migratetemplatelists($db);
 		$this->updatetemplates($db);
 		$this->css900();
-		$this->migratetemplatelists();
 		$message = new stdClass;
 		$message->title_key          = 'JBS_POSTINSTALL_TITLE_TEMPLATE';
 		$message->description_key    = 'JBS_POSTINSTALL_BODY_TEMPLATE';
