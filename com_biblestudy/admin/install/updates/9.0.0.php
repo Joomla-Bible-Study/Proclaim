@@ -326,6 +326,8 @@ class Migration900
 		$this->migratetemplatelists($db);
 		$this->updatetemplates($db);
 		$this->css900();
+		$this->deleteUnexistingFiles();
+		$this->removeexpert($db);
 		$message = new stdClass;
 		$message->title_key          = 'JBS_POSTINSTALL_TITLE_TEMPLATE';
 		$message->description_key    = 'JBS_POSTINSTALL_BODY_TEMPLATE';
@@ -351,9 +353,8 @@ class Migration900
 
 		$script = new BibleStudyModelInstall;
 		$script->postinstall_messages($message);
-		$this->css900();
-		$this->deleteUnexistingFiles();
-		$this->removeexpert($db);
+
+
 		return true;
 	}
 
