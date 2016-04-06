@@ -405,51 +405,61 @@ private function migratetemplatelists($db)
 			$row = 2;
 			$col = 3;
 			$return = $this->changesetting($row, $col, $registry);
+			$registry = $return;
 		}
 		if ($registry->get('row2col4') > 0) {
 			$row = 2;
 			$col = 4;
 			$return = $this->changesetting($row, $col, $registry);
+			$registry = $return;
 		}
 		if ($registry->get('row3col1') > 0) {
 			$row = 3;
 			$col = 1;
 			$return = $this->changesetting($row, $col, $registry);
+			$registry = $return;
 		}
 		if ($registry->get('row3col2') > 0) {
 			$row = 3;
 			$col = 2;
 			$return = $this->changesetting($row, $col, $registry);
+			$registry = $return;
 		}
 		if ($registry->get('row3col3') > 0) {
 			$row = 3;
 			$col = 3;
 			$return = $this->changesetting($row, $col, $registry);
+			$registry = $return;
 		}
 		if ($registry->get('row3col4') > 0) {
 			$row = 3;
 			$col = 4;
 			$return = $this->changesetting($row, $col, $registry);
+			$registry = $return;
 		}
 		if ($registry->get('row4col1') > 0) {
 			$row = 4;
 			$col = 1;
 			$return = $this->changesetting($row, $col, $registry);
+			$registry = $return;
 		}
 		if ($registry->get('row4col2') > 0) {
 			$row = 4;
 			$col = 2;
 			$return = $this->changesetting($row, $col, $registry);
+			$registry = $return;
 		}
 		if ($registry->get('row4col3') > 0) {
 			$row = 4;
 			$col = 3;
 			$return = $this->changesetting($row, $col, $registry);
+			$registry = $return;
 		}
 		if ($registry->get('row4col4') > 0) {
 			$row = 4;
 			$col = 4;
 			$return = $this->changesetting($row, $col, $registry);
+			$registry = $return;
 		}
 		if ($registry->get('serieselement1') > 0 )
 		{
@@ -626,7 +636,7 @@ private function migratetemplatelists($db)
 		$registry->set($return.'col',$col);
 		$registry->set($return.'colspan',$registry->get('r'.$row.'c'.$col.'span'));
 		$registry->set($return.'linktype',$registry->get('linkr'.$row.'c'.$col));
-		return true;
+		return $registry;
 	}
 	/**
 	 * Remove Export function to TemplateFiles
