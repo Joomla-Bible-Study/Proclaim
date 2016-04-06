@@ -35,7 +35,8 @@ class Migration900
 		}
 		$registry = new Registry;
 		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_biblestudy/tables');
-
+		//migrate template display settings
+		$this->migratetemplatelists($db);
 		// Migrate servers
 		$query = $db->getQuery(true)->select('*')->from('#__bsms_servers');
 		$db->setQuery($query);
@@ -326,7 +327,7 @@ class Migration900
 
 		$this->updatetemplates($db);
 		$this->css900();
-
+		$this->migratetemplatelists();
 		$message = new stdClass;
 		$message->title_key          = 'JBS_POSTINSTALL_TITLE_TEMPLATE';
 		$message->description_key    = 'JBS_POSTINSTALL_BODY_TEMPLATE';
@@ -358,6 +359,276 @@ class Migration900
 		return true;
 	}
 
+	/**
+	 * @param $db
+	 */
+private function migratetemplatelists($db)
+{
+	$query = $db->getQuery(true);
+	$query->select('*')
+		->from('#__bsms_templates');
+	$db->setQuery($query);
+	$data = $db->loadObjectList();
+	foreach ($data as $d) {
+		$registry = new Registry;
+		$registry->loadString($d->params);
+		if ($registry->get('row1col1') > 0) {
+			$row = 1;
+			$col = 1;
+			$return = $this->changesetting($row, $col, $registry);
+		}
+		if ($registry->get('row1col2') > 0) {
+			$row = 1;
+			$col = 2;
+			$return = $this->changesetting($row, $col, $registry);
+		}
+		if ($registry->get('row1col3') > 0) {
+			$row = 1;
+			$col = 3;
+			$return = $this->changesetting($row, $col, $registry);
+		}
+		if ($registry->get('row1col4') > 0) {
+			$row = 1;
+			$col = 4;
+			$return = $this->changesetting($row, $col, $registry);
+		}
+		if ($registry->get('row2col1') > 0) {
+			$row = 2;
+			$col = 1;
+			$return = $this->changesetting($row, $col, $registry);
+		}
+		if ($registry->get('row2col2') > 0) {
+			$row = 2;
+			$col = 2;
+			$return = $this->changesetting($row, $col, $registry);
+		}
+		if ($registry->get('row2col3') > 0) {
+			$row = 2;
+			$col = 3;
+			$return = $this->changesetting($row, $col, $registry);
+		}
+		if ($registry->get('row2col4') > 0) {
+			$row = 2;
+			$col = 4;
+			$return = $this->changesetting($row, $col, $registry);
+		}
+		if ($registry->get('row3col1') > 0) {
+			$row = 3;
+			$col = 1;
+			$return = $this->changesetting($row, $col, $registry);
+		}
+		if ($registry->get('row3col2') > 0) {
+			$row = 3;
+			$col = 2;
+			$return = $this->changesetting($row, $col, $registry);
+		}
+		if ($registry->get('row3col3') > 0) {
+			$row = 3;
+			$col = 3;
+			$return = $this->changesetting($row, $col, $registry);
+		}
+		if ($registry->get('row3col4') > 0) {
+			$row = 3;
+			$col = 4;
+			$return = $this->changesetting($row, $col, $registry);
+		}
+		if ($registry->get('row4col1') > 0) {
+			$row = 4;
+			$col = 1;
+			$return = $this->changesetting($row, $col, $registry);
+		}
+		if ($registry->get('row4col2') > 0) {
+			$row = 4;
+			$col = 2;
+			$return = $this->changesetting($row, $col, $registry);
+		}
+		if ($registry->get('row4col3') > 0) {
+			$row = 4;
+			$col = 3;
+			$return = $this->changesetting($row, $col, $registry);
+		}
+		if ($registry->get('row4col4') > 0) {
+			$row = 4;
+			$col = 4;
+			$return = $this->changesetting($row, $col, $registry);
+		}
+		if ($registry->get('serieselement1') > 0 )
+		{
+			$element = $registry->get('serieselement1');
+			$elementname = $this->serieselement($element);
+			$registry->set($elementname.'row', 1);
+			$registry->set($elementname.'col', 1);
+			$registry->set($elementname.'colspan', 6);
+			$registry->set($elementname.'linktype', $registry->get('serieslink1'));
+		}
+		if ($registry->get('serieselement2') > 0 )
+		{
+			$element = $registry->get('serieselement2');
+			$elementname = $this->serieselement($element);
+			$registry->set($elementname.'row', 1);
+			$registry->set($elementname.'col', 2);
+			$registry->set($elementname.'colspan', 6);
+			$registry->set($elementname.'linktype', $registry->get('serieslink2'));
+		}
+		if ($registry->get('serieselement3') > 0 )
+		{
+			$element = $registry->get('serieselement3');
+			$elementname = $this->serieselement($element);
+			$registry->set($elementname.'row', 2);
+			$registry->set($elementname.'col', 1);
+			$registry->set($elementname.'colspan', 6);
+			$registry->set($elementname.'linktype', $registry->get('serieslink3'));
+		}
+		if ($registry->get('serieselement4') > 0 )
+		{
+			$element = $registry->get('serieselement4');
+			$elementname = $this->serieselement($element);
+			$registry->set($elementname.'row', 2);
+			$registry->set($elementname.'col', 2);
+			$registry->set($elementname.'colspan', 6);
+			$registry->set($elementname.'linktype', $registry->get('serieslink4'));
+		}
+	$d->params = $registry->toString();
+	$db->updateObject('#__bsms_templates', $d, 'id');
+	}
+}
+
+	/**
+	 * @param $element
+	 * @return bool|string
+	 */
+	private function tsettingmigration($element)
+	{
+		$elementtext = $this->element($element);
+		return $elementtext;
+
+	}
+
+	/**
+	 * @param $elementnumber
+	 * @return bool|string
+	 */
+	private function element($elementnumber)
+	{
+		switch ($elementnumber)
+		{
+			case 1:
+				$element = 'scripture1';
+				break;
+			case 2:
+				$element = 'scripture2';
+				break;
+			case 3:
+				$element = 'secondary';
+				break;
+			case 4:
+				$element = 'duration';
+				break;
+			case 5:
+				$element = 'title';
+				break;
+			case 6:
+				$element = 'studyintro';
+				break;
+			case 7:
+				$element = 'teacher';
+				break;
+			case 8:
+				$element = 'teacher-title';
+				break;
+			case 9:
+				$element = 'series';
+				break;
+			case 10:
+				$element = 'date';
+				break;
+			case 11:
+				$element = 'submitted';
+				break;
+			case 12:
+				$element = 'hits';
+				break;
+			case 13:
+				$element = 'studynumber';
+				break;
+			case 14:
+				$element = 'topic';
+				break;
+			case 15:
+				$element = 'locations';
+				break;
+			case 16:
+				$element = 'messagetype';
+				break;
+			case 17:
+				$element = 'studyintro';
+				break;
+			case 20:
+				$element = 'jbsmedia';
+				break;
+			case 25:
+				$element = 'thumbnail';
+				break;
+			case 29:
+				$element = 'downloads';
+				break;
+			case 24:
+				$element = 'customtext';
+				break;
+		}
+		if (isset($element)){return $element;}
+		else {return false;}
+	}
+
+	/**
+	 * @param $element
+	 * @return string
+	 */
+	private function serieselement($element)
+	{
+		switch ($element)
+		{
+			case 1:
+				$return = 'sseries';
+				break;
+			case 2:
+				$return = 'sseriesthumbnail';
+				break;
+			case 3:
+				$return = 'sseriesthumbnail';
+				break;
+			case 4:
+				$return = 'steacher';
+				break;
+			case 5:
+				$return = 'steacherimage';
+				break;
+			case 6:
+				$return = 'steacher-title';
+				break;
+			case 7:
+				$return = 'sdescription';
+				break;
+		}
+		return $return;
+	}
+
+	/**
+	 * @param $row
+	 * @param $col
+	 * @param $registry
+	 * @return bool
+	 */
+	private function changesetting($row, $col, $registry)
+	{
+		$element = $registry->get('row'.$row.'col'.$col);
+		$return = $this->tsettingmigration($element); echo $return;
+		$registry->set($return.'row',$row);
+		$registry->set($return.'col',$col);
+		$registry->set($return.'colspan',$registry->get('r'.$row.'c'.$col.'span'));
+		$registry->set($return.'linktype',$registry->get('linkr'.$row.'c'.$col));
+		return true;
+	}
 	/**
 	 * Remove Export function to TemplateFiles
 	 *
