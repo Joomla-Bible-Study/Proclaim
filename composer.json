@@ -21,9 +21,9 @@
       "symfony/yaml": "2.*"
     },
     "require-dev": {
-        "phing/phing": "@stable",
+        "phing/phing": "2.*",
         "pdepend/pdepend": "~2.0",
-        "phpmd/phpmd": "@stable",
+        "phpmd/phpmd": "2.*",
         "pear/versioncontrol_git": "dev-master",
         "pear/pear_exception": "dev-master",
         "phpunit/phpunit": "4.*",
