@@ -375,31 +375,37 @@ private function migratetemplatelists($db)
 			$row = 1;
 			$col = 1;
 			$return = $this->changesetting($row, $col, $registry);
+			$registry = $return;
 		}
 		if ($registry->get('row1col2') > 0) {
 			$row = 1;
 			$col = 2;
 			$return = $this->changesetting($row, $col, $registry);
+			$registry = $return;
 		}
 		if ($registry->get('row1col3') > 0) {
 			$row = 1;
 			$col = 3;
 			$return = $this->changesetting($row, $col, $registry);
+			$registry = $return;
 		}
 		if ($registry->get('row1col4') > 0) {
 			$row = 1;
 			$col = 4;
 			$return = $this->changesetting($row, $col, $registry);
+			$registry = $return;
 		}
 		if ($registry->get('row2col1') > 0) {
 			$row = 2;
 			$col = 1;
 			$return = $this->changesetting($row, $col, $registry);
+			$registry = $return;
 		}
 		if ($registry->get('row2col2') > 0) {
 			$row = 2;
 			$col = 2;
 			$return = $this->changesetting($row, $col, $registry);
+			$registry = $return;
 		}
 		if ($registry->get('row2col3') > 0) {
 			$row = 2;
