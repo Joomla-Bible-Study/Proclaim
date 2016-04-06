@@ -20,7 +20,7 @@ class Migration900
 	/**
 	 * Call Script for Updates of 9.0.0
 	 *
-	 * @param   JDatabaseDriver  $db  Joomla Data bass driver
+	 * @param   JDatabaseDriver $db Joomla Data bass driver
 	 *
 	 * @return bool
 	 */
@@ -82,8 +82,8 @@ class Migration900
 
 			// Migrate media files
 			$query = $db->getQuery(true)->select('*')
-					->from('#__bsms_mediafiles')
-					->where('server = ' . $server->id);
+				->from('#__bsms_mediafiles')
+				->where('server = ' . $server->id);
 			$db->setQuery($query);
 
 			foreach ($db->loadObjectList() as $mediaFile)
@@ -141,13 +141,13 @@ class Migration900
 				$registry->loadString($mediaFile->params);
 				$params = $registry->toObject();
 
-				$params->media_image   	= $mimage;
-				$params->media_text    	= $mediaImage->media_alttext;
+				$params->media_image = $mimage;
+				$params->media_text  = $mediaImage->media_alttext;
 				if (!empty($mimtype))
 				{
 					$params->mime_type = $mimtype->mimetype;
 				}
-				$params->special      	= $mediaFile->special;
+				$params->special = $mediaFile->special;
 				if (!empty($mediaFile->filename))
 				{
 					if (@empty($path->folderpath))
@@ -168,14 +168,14 @@ class Migration900
 				{
 					$mediaFile->player = '';
 				}
-				$params->player         = $mediaFile->player;
-				$params->size          	= $mediaFile->size;
-				$params->mediacode     	= $mediaFile->mediacode;
-				$params->link_type     	= $mediaFile->link_type;
-				$params->docMan_id     	= $mediaFile->docMan_id;
-				$params->article_id    	= $mediaFile->article_id;
-				$params->virtueMart_id 	= $mediaFile->virtueMart_id;
-				$params->popup	        = $mediaFile->popup;
+				$params->player        = $mediaFile->player;
+				$params->size          = $mediaFile->size;
+				$params->mediacode     = $mediaFile->mediacode;
+				$params->link_type     = $mediaFile->link_type;
+				$params->docMan_id     = $mediaFile->docMan_id;
+				$params->article_id    = $mediaFile->article_id;
+				$params->virtueMart_id = $mediaFile->virtueMart_id;
+				$params->popup         = $mediaFile->popup;
 
 				$registry->loadObject($params);
 
@@ -186,8 +186,8 @@ class Migration900
 				// @todo Not sure if we are still needing to do this Eugen
 				$registry = new Registry;
 				$registry->loadArray($metadata);
-				$newMediaFile->metadata  = $registry->toString();
-				$newMediaFile->id        = null;
+				$newMediaFile->metadata = $registry->toString();
+				$newMediaFile->id       = null;
 				$newMediaFile->store();
 
 				// Delete old mediafile
@@ -196,7 +196,7 @@ class Migration900
 		}
 
 		/** @var TableServer $newServer */
-		$newServer = JTable::getInstance('Server', 'Table', array('dbo' => $db));
+		$newServer              = JTable::getInstance('Server', 'Table', array('dbo' => $db));
 		$newServer->server_name = 'Default';
 		$newServer->type        = 'legacy';
 		$newServer->params      = '{"path":""}';
@@ -252,13 +252,13 @@ class Migration900
 			$registry->loadString($mediaFile->params);
 			$params = $registry->toObject();
 
-			$params->media_image   	= $mimage;
-			$params->media_text    	= $mediaImage->media_alttext;
+			$params->media_image = $mimage;
+			$params->media_text  = $mediaImage->media_alttext;
 			if (!empty($mimtype))
 			{
 				$params->mime_type = $mimtype->mimetype;
 			}
-			$params->special      	= $mediaFile->special;
+			$params->special = $mediaFile->special;
 			if (!empty($mediaFile->filename))
 			{
 				$params->filename = $mediaFile->filename;
@@ -271,14 +271,14 @@ class Migration900
 			{
 				$mediaFile->player = '';
 			}
-			$params->player         = $mediaFile->player;
-			$params->size          	= $mediaFile->size;
-			$params->mediacode     	= $mediaFile->mediacode;
-			$params->link_type     	= $mediaFile->link_type;
-			$params->docMan_id     	= $mediaFile->docMan_id;
-			$params->article_id    	= $mediaFile->article_id;
-			$params->virtueMart_id 	= $mediaFile->virtueMart_id;
-			$params->popup	        = $mediaFile->popup;
+			$params->player        = $mediaFile->player;
+			$params->size          = $mediaFile->size;
+			$params->mediacode     = $mediaFile->mediacode;
+			$params->link_type     = $mediaFile->link_type;
+			$params->docMan_id     = $mediaFile->docMan_id;
+			$params->article_id    = $mediaFile->article_id;
+			$params->virtueMart_id = $mediaFile->virtueMart_id;
+			$params->popup         = $mediaFile->popup;
 
 			$registry->loadObject($params);
 
@@ -294,7 +294,7 @@ class Migration900
 
 		// Delete unused columns
 		$columns = array('media_image', 'special', 'filename', 'size', 'mime_type', 'mediacode', 'link_type',
-				'docMan_id', 'article_id', 'virtueMart_id', 'player', 'popup', 'server', 'internal_viewer', 'path');
+			'docMan_id', 'article_id', 'virtueMart_id', 'player', 'popup', 'server', 'internal_viewer', 'path');
 		$this->deleteColumns('#__bsms_mediafiles', $columns, $db);
 
 		// Delete unused columns
@@ -309,12 +309,12 @@ class Migration900
 			->from('#__bsms_admin')
 			->where('id = 1');
 		$db->setQuery($query);
-		$admin = $db->loadObject();
+		$admin    = $db->loadObject();
 		$registry = new Registry;
 		$registry->loadString($admin->params);
 		$registry->set('server', $newServer->id);
 		$admin->params = $registry->toString();
-		$query = $db->getQuery(true);
+		$query         = $db->getQuery(true);
 		$query->update('#__bsms_admin')->set('params = ' . $db->q($admin->params))->where('id = 1');
 		$db->setQuery($query);
 		$db->execute();
@@ -328,7 +328,7 @@ class Migration900
 		$this->css900();
 		$this->deleteUnexistingFiles();
 		$this->removeexpert($db);
-		$message = new stdClass;
+		$message                     = new stdClass;
 		$message->title_key          = 'JBS_POSTINSTALL_TITLE_TEMPLATE';
 		$message->description_key    = 'JBS_POSTINSTALL_BODY_TEMPLATE';
 		$message->action_key         = 'JBS_POSTINSTALL_ACTION_TEMPLATE';
@@ -340,7 +340,7 @@ class Migration900
 		$message->condition_file     = "admin://components/com_biblestudy/postinstall/template.php";
 		$message->condition_method   = 'admin_postinstall_template_condition';
 		$message->version_introduced = '9.0.0';
-		$message->enabled = 1;
+		$message->enabled            = 1;
 
 		// Import filesystem libraries. Perhaps not necessary, but does not hurt
 		jimport('joomla.filesystem.file');
@@ -359,168 +359,196 @@ class Migration900
 	}
 
 	/**
-	 * @param $db
+	 * Migrate Template Lists
+	 *
+	 * @param   JDatabaseDriver  $db  ?
+	 *
+	 * @return void
 	 */
-private function migratetemplatelists($db)
-{
-	$query = $db->getQuery(true);
-	$query->select('*')
-		->from('#__bsms_templates');
-	$db->setQuery($query);
-	$data = $db->loadObjectList();
-	foreach ($data as $d) {
-		$registry = new Registry;
-		$registry->loadString($d->params);
-		if ($registry->get('row1col1') > 0) {
-			$row = 1;
-			$col = 1;
-			$return = $this->changesetting($row, $col, $registry);
-			$registry = $return;
-		}
-		if ($registry->get('row1col2') > 0) {
-			$row = 1;
-			$col = 2;
-			$return = $this->changesetting($row, $col, $registry);
-			$registry = $return;
-		}
-		if ($registry->get('row1col3') > 0) {
-			$row = 1;
-			$col = 3;
-			$return = $this->changesetting($row, $col, $registry);
-			$registry = $return;
-		}
-		if ($registry->get('row1col4') > 0) {
-			$row = 1;
-			$col = 4;
-			$return = $this->changesetting($row, $col, $registry);
-			$registry = $return;
-		}
-		if ($registry->get('row2col1') > 0) {
-			$row = 2;
-			$col = 1;
-			$return = $this->changesetting($row, $col, $registry);
-			$registry = $return;
-		}
-		if ($registry->get('row2col2') > 0) {
-			$row = 2;
-			$col = 2;
-			$return = $this->changesetting($row, $col, $registry);
-			$registry = $return;
-		}
-		if ($registry->get('row2col3') > 0) {
-			$row = 2;
-			$col = 3;
-			$return = $this->changesetting($row, $col, $registry);
-			$registry = $return;
-		}
-		if ($registry->get('row2col4') > 0) {
-			$row = 2;
-			$col = 4;
-			$return = $this->changesetting($row, $col, $registry);
-			$registry = $return;
-		}
-		if ($registry->get('row3col1') > 0) {
-			$row = 3;
-			$col = 1;
-			$return = $this->changesetting($row, $col, $registry);
-			$registry = $return;
-		}
-		if ($registry->get('row3col2') > 0) {
-			$row = 3;
-			$col = 2;
-			$return = $this->changesetting($row, $col, $registry);
-			$registry = $return;
-		}
-		if ($registry->get('row3col3') > 0) {
-			$row = 3;
-			$col = 3;
-			$return = $this->changesetting($row, $col, $registry);
-			$registry = $return;
-		}
-		if ($registry->get('row3col4') > 0) {
-			$row = 3;
-			$col = 4;
-			$return = $this->changesetting($row, $col, $registry);
-			$registry = $return;
-		}
-		if ($registry->get('row4col1') > 0) {
-			$row = 4;
-			$col = 1;
-			$return = $this->changesetting($row, $col, $registry);
-			$registry = $return;
-		}
-		if ($registry->get('row4col2') > 0) {
-			$row = 4;
-			$col = 2;
-			$return = $this->changesetting($row, $col, $registry);
-			$registry = $return;
-		}
-		if ($registry->get('row4col3') > 0) {
-			$row = 4;
-			$col = 3;
-			$return = $this->changesetting($row, $col, $registry);
-			$registry = $return;
-		}
-		if ($registry->get('row4col4') > 0) {
-			$row = 4;
-			$col = 4;
-			$return = $this->changesetting($row, $col, $registry);
-			$registry = $return;
-		}
-		if ($registry->get('serieselement1') > 0 )
+	private function migratetemplatelists($db)
+	{
+		$query = $db->getQuery(true);
+		$query->select('*')
+			->from('#__bsms_templates');
+		$db->setQuery($query);
+		$data = $db->loadObjectList();
+		foreach ($data as $d)
 		{
-			$element = $registry->get('serieselement1');
-			$elementname = $this->serieselement($element);
-			$registry->set($elementname.'row', 1);
-			$registry->set($elementname.'col', 1);
-			$registry->set($elementname.'colspan', 6);
-			$registry->set($elementname.'linktype', $registry->get('serieslink1'));
+			$registry = new Registry;
+			$registry->loadString($d->params);
+			if ($registry->get('row1col1') > 0)
+			{
+				$row      = 1;
+				$col      = 1;
+				$return   = $this->changesetting($row, $col, $registry);
+				$registry = $return;
+			}
+			if ($registry->get('row1col2') > 0)
+			{
+				$row      = 1;
+				$col      = 2;
+				$return   = $this->changesetting($row, $col, $registry);
+				$registry = $return;
+			}
+			if ($registry->get('row1col3') > 0)
+			{
+				$row      = 1;
+				$col      = 3;
+				$return   = $this->changesetting($row, $col, $registry);
+				$registry = $return;
+			}
+			if ($registry->get('row1col4') > 0)
+			{
+				$row      = 1;
+				$col      = 4;
+				$return   = $this->changesetting($row, $col, $registry);
+				$registry = $return;
+			}
+			if ($registry->get('row2col1') > 0)
+			{
+				$row      = 2;
+				$col      = 1;
+				$return   = $this->changesetting($row, $col, $registry);
+				$registry = $return;
+			}
+			if ($registry->get('row2col2') > 0)
+			{
+				$row      = 2;
+				$col      = 2;
+				$return   = $this->changesetting($row, $col, $registry);
+				$registry = $return;
+			}
+			if ($registry->get('row2col3') > 0)
+			{
+				$row      = 2;
+				$col      = 3;
+				$return   = $this->changesetting($row, $col, $registry);
+				$registry = $return;
+			}
+			if ($registry->get('row2col4') > 0)
+			{
+				$row      = 2;
+				$col      = 4;
+				$return   = $this->changesetting($row, $col, $registry);
+				$registry = $return;
+			}
+			if ($registry->get('row3col1') > 0)
+			{
+				$row      = 3;
+				$col      = 1;
+				$return   = $this->changesetting($row, $col, $registry);
+				$registry = $return;
+			}
+			if ($registry->get('row3col2') > 0)
+			{
+				$row      = 3;
+				$col      = 2;
+				$return   = $this->changesetting($row, $col, $registry);
+				$registry = $return;
+			}
+			if ($registry->get('row3col3') > 0)
+			{
+				$row      = 3;
+				$col      = 3;
+				$return   = $this->changesetting($row, $col, $registry);
+				$registry = $return;
+			}
+			if ($registry->get('row3col4') > 0)
+			{
+				$row      = 3;
+				$col      = 4;
+				$return   = $this->changesetting($row, $col, $registry);
+				$registry = $return;
+			}
+			if ($registry->get('row4col1') > 0)
+			{
+				$row      = 4;
+				$col      = 1;
+				$return   = $this->changesetting($row, $col, $registry);
+				$registry = $return;
+			}
+			if ($registry->get('row4col2') > 0)
+			{
+				$row      = 4;
+				$col      = 2;
+				$return   = $this->changesetting($row, $col, $registry);
+				$registry = $return;
+			}
+			if ($registry->get('row4col3') > 0)
+			{
+				$row      = 4;
+				$col      = 3;
+				$return   = $this->changesetting($row, $col, $registry);
+				$registry = $return;
+			}
+			if ($registry->get('row4col4') > 0)
+			{
+				$row      = 4;
+				$col      = 4;
+				$return   = $this->changesetting($row, $col, $registry);
+				$registry = $return;
+			}
+			if ($registry->get('serieselement1') > 0)
+			{
+				$element     = $registry->get('serieselement1');
+				$elementname = $this->serieselement($element);
+				$registry->set($elementname . 'row', 1);
+				$registry->set($elementname . 'col', 1);
+				$registry->set($elementname . 'colspan', 6);
+				$registry->set($elementname . 'linktype', $registry->get('serieslink1'));
+			}
+			if ($registry->get('serieselement2') > 0)
+			{
+				$element     = $registry->get('serieselement2');
+				$elementname = $this->serieselement($element);
+				$registry->set($elementname . 'row', 1);
+				$registry->set($elementname . 'col', 2);
+				$registry->set($elementname . 'colspan', 6);
+				$registry->set($elementname . 'linktype', $registry->get('serieslink2'));
+			}
+			if ($registry->get('serieselement3') > 0)
+			{
+				$element     = $registry->get('serieselement3');
+				$elementname = $this->serieselement($element);
+				$registry->set($elementname . 'row', 2);
+				$registry->set($elementname . 'col', 1);
+				$registry->set($elementname . 'colspan', 6);
+				$registry->set($elementname . 'linktype', $registry->get('serieslink3'));
+			}
+			if ($registry->get('serieselement4') > 0)
+			{
+				$element     = $registry->get('serieselement4');
+				$elementname = $this->serieselement($element);
+				$registry->set($elementname . 'row', 2);
+				$registry->set($elementname . 'col', 2);
+				$registry->set($elementname . 'colspan', 6);
+				$registry->set($elementname . 'linktype', $registry->get('serieslink4'));
+			}
+			$d->params = $registry->toString();
+			$db->updateObject('#__bsms_templates', $d, 'id');
 		}
-		if ($registry->get('serieselement2') > 0 )
-		{
-			$element = $registry->get('serieselement2');
-			$elementname = $this->serieselement($element);
-			$registry->set($elementname.'row', 1);
-			$registry->set($elementname.'col', 2);
-			$registry->set($elementname.'colspan', 6);
-			$registry->set($elementname.'linktype', $registry->get('serieslink2'));
-		}
-		if ($registry->get('serieselement3') > 0 )
-		{
-			$element = $registry->get('serieselement3');
-			$elementname = $this->serieselement($element);
-			$registry->set($elementname.'row', 2);
-			$registry->set($elementname.'col', 1);
-			$registry->set($elementname.'colspan', 6);
-			$registry->set($elementname.'linktype', $registry->get('serieslink3'));
-		}
-		if ($registry->get('serieselement4') > 0 )
-		{
-			$element = $registry->get('serieselement4');
-			$elementname = $this->serieselement($element);
-			$registry->set($elementname.'row', 2);
-			$registry->set($elementname.'col', 2);
-			$registry->set($elementname.'colspan', 6);
-			$registry->set($elementname.'linktype', $registry->get('serieslink4'));
-		}
-	$d->params = $registry->toString();
-	$db->updateObject('#__bsms_templates', $d, 'id');
 	}
-}
 
 	/**
-	 * @param $element
+	 * T Settings Migration
+	 * 
+	 * @param   int  $element  ?
+	 *
 	 * @return bool|string
 	 */
 	private function tsettingmigration($element)
 	{
 		$elementtext = $this->element($element);
+
 		return $elementtext;
 
 	}
 
 	/**
-	 * @param $elementnumber
+	 * Elements workings
+	 *
+	 * @param   int  $elementnumber  Number to stirng 
+	 *
 	 * @return bool|string
 	 */
 	private function element($elementnumber)
@@ -591,16 +619,26 @@ private function migratetemplatelists($db)
 				$element = 'customtext';
 				break;
 		}
-		if (isset($element)){return $element;}
-		else {return false;}
+		if (isset($element))
+		{
+			return $element;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	/**
-	 * @param $element
+	 * Seriese Elements
+	 *
+	 * @param   int  $element  ID
+	 *
 	 * @return string
 	 */
 	private function serieselement($element)
 	{
+		$return = null;
 		switch ($element)
 		{
 			case 1:
@@ -625,25 +663,31 @@ private function migratetemplatelists($db)
 				$return = 'sdescription';
 				break;
 		}
+
 		return $return;
 	}
 
 	/**
-	 * @param $row
-	 * @param $col
-	 * @param $registry
+	 * Change Settings
+	 * 
+	 * @param   int       $row       ID
+	 * @param   int       $col       ID
+	 * @param   Registry  $registry  Strings for Registry
+	 *
 	 * @return bool
 	 */
 	private function changesetting($row, $col, $registry)
 	{
-		$element = $registry->get('row'.$row.'col'.$col);
-		$return = $this->tsettingmigration($element); echo $return;
-		$registry->set($return.'row',$row);
-		$registry->set($return.'col',$col);
-		$registry->set($return.'colspan',$registry->get('r'.$row.'c'.$col.'span'));
-		$registry->set($return.'linktype',$registry->get('linkr'.$row.'c'.$col));
+		$element = $registry->get('row' . $row . 'col' . $col);
+		$return  = $this->tsettingmigration($element);
+		$registry->set($return . 'row', $row);
+		$registry->set($return . 'col', $col);
+		$registry->set($return . 'colspan', $registry->get('r' . $row . 'c' . $col . 'span'));
+		$registry->set($return . 'linktype', $registry->get('linkr' . $row . 'c' . $col));
+
 		return $registry;
 	}
+
 	/**
 	 * Remove Export function to TemplateFiles
 	 *
@@ -659,7 +703,7 @@ private function migratetemplatelists($db)
 		$query->select('*')
 			->from('#__bsms_templates');
 		$db->setQuery($query);
-		$data = $db->loadObjectList();
+		$data       = $db->loadObjectList();
 		$filenumber = 1;
 		foreach ($data as $d)
 		{
@@ -668,20 +712,20 @@ private function migratetemplatelists($db)
 			if ($registry->get('useexpert_list') > 0)
 			{
 				$dataheaderlist = $registry->get('headercode');
-				$dataitemlist = $registry->get('templatecode');
+				$dataitemlist   = $registry->get('templatecode');
 				$dataheaderlist = $this->itemreplace($dataheaderlist);
-				$dataitemlist = $this->itemreplace($dataitemlist);
-				$filecontent = '<?php defined(\'_JEXEC\') or die; ?>' . $dataheaderlist . '<?php foreach ($this->items as $study){ ?>' .
+				$dataitemlist   = $this->itemreplace($dataitemlist);
+				$filecontent    = '<?php defined(\'_JEXEC\') or die; ?>' . $dataheaderlist . '<?php foreach ($this->items as $study){ ?>' .
 					$dataitemlist . '<?php } ?>';
-				$filename = 'default_listtemplate' . $filenumber;
-				$file = JPATH_ROOT . '/components/com_biblestudy/views/sermons/tmpl/' . $filename . '.php';
+				$filename       = 'default_listtemplate' . $filenumber;
+				$file           = JPATH_ROOT . '/components/com_biblestudy/views/sermons/tmpl/' . $filename . '.php';
 				JFile::write($file, $filecontent);
-				$profile = new stdClass;
-				$profile->published = 1;
-				$profile->type = 1;
-				$profile->filename = $filename;
+				$profile               = new stdClass;
+				$profile->published    = 1;
+				$profile->type         = 1;
+				$profile->filename     = $filename;
 				$profile->templatecode = $filecontent;
-				$profile->asset_id = '';
+				$profile->asset_id     = '';
 				$db->insertObject('#__bsms_templatecode', $profile);
 				$registry->set('sermonstemplate', $filename);
 			}
@@ -689,69 +733,69 @@ private function migratetemplatelists($db)
 			{
 				$dataitemlist = $registry->get('study_detailtemplate');
 				$dataitemlist = $this->itemreplace($dataitemlist);
-				$filecontent = '<?php defined(\'_JEXEC\') or die; $study = $this->item; ?>' . $dataitemlist;
-				$filename = 'default_sermontemplate' . $filenumber;
-				$file = JPATH_ROOT . '/components/com_biblestudy/views/sermon/tmpl/' . $filename . '.php';
+				$filecontent  = '<?php defined(\'_JEXEC\') or die; $study = $this->item; ?>' . $dataitemlist;
+				$filename     = 'default_sermontemplate' . $filenumber;
+				$file         = JPATH_ROOT . '/components/com_biblestudy/views/sermon/tmpl/' . $filename . '.php';
 				JFile::write($file, $filecontent);
-				$profile = new stdClass;
-				$profile->published = 1;
-				$profile->type = 2;
-				$profile->filename = $filename;
+				$profile               = new stdClass;
+				$profile->published    = 1;
+				$profile->type         = 2;
+				$profile->filename     = $filename;
 				$profile->templatecode = $filecontent;
-				$profile->asset_id = '';
+				$profile->asset_id     = '';
 				$db->insertObject('#__bsms_templatecode', $profile);
 				$registry->set('sermontemplate', $filename);
 			}
 			if ($registry->get('useexpert_teacherlist') > 0)
 			{
 				$dataheaderlist = $registry->get('teacher_headercode');
-				$dataitemlist = $registry->get('teacher_templatecode');
+				$dataitemlist   = $registry->get('teacher_templatecode');
 				$dataheaderlist = $this->itemreplace($dataheaderlist);
-				$dataitemlist  = str_replace('{{title}}', '{{teachertitlelist}}', $dataitemlist);
-				$dataitemlist  = str_replace('{{teacher}}', '{{teachernamelist}}', $dataitemlist);
-				$dataitemlist  = str_replace('{{phone}}', '{{teacherphonelist}}', $dataitemlist);
-				$dataitemlist  = str_replace('{{website}}', '{{teacherwebsitelist}}', $dataitemlist);
-				$dataitemlist  = str_replace('{{information}}', '{{teacherinformationlist}}', $dataitemlist);
-				$dataitemlist  = str_replace('{{image}}', '{{teacherimagelist}}', $dataitemlist);
-				$dataitemlist  = str_replace('{{thumbnail}}', '{{teacherthumbnaillist}}', $dataitemlist);
-				$dataitemlist  = str_replace('{{short}}', '{{teachershortlist}}', $dataitemlist);
-				$dataitemlist = $this->itemreplace($dataitemlist);
-				$filecontent = '<?php defined(\'_JEXEC\') or die; ?>' . $dataheaderlist . '<?php foreach ($this->items as $teacher){ ?>' .
+				$dataitemlist   = str_replace('{{title}}', '{{teachertitlelist}}', $dataitemlist);
+				$dataitemlist   = str_replace('{{teacher}}', '{{teachernamelist}}', $dataitemlist);
+				$dataitemlist   = str_replace('{{phone}}', '{{teacherphonelist}}', $dataitemlist);
+				$dataitemlist   = str_replace('{{website}}', '{{teacherwebsitelist}}', $dataitemlist);
+				$dataitemlist   = str_replace('{{information}}', '{{teacherinformationlist}}', $dataitemlist);
+				$dataitemlist   = str_replace('{{image}}', '{{teacherimagelist}}', $dataitemlist);
+				$dataitemlist   = str_replace('{{thumbnail}}', '{{teacherthumbnaillist}}', $dataitemlist);
+				$dataitemlist   = str_replace('{{short}}', '{{teachershortlist}}', $dataitemlist);
+				$dataitemlist   = $this->itemreplace($dataitemlist);
+				$filecontent    = '<?php defined(\'_JEXEC\') or die; ?>' . $dataheaderlist . '<?php foreach ($this->items as $teacher){ ?>' .
 					$dataitemlist . '<?php } ?>';
-				$filename = 'default_teacherstemplate' . $filenumber;
-				$file = JPATH_ROOT . '/components/com_biblestudy/views/teachers/tmpl/' . $filename . '.php';
+				$filename       = 'default_teacherstemplate' . $filenumber;
+				$file           = JPATH_ROOT . '/components/com_biblestudy/views/teachers/tmpl/' . $filename . '.php';
 				JFile::write($file, $filecontent);
-				$profile = new stdClass;
-				$profile->published = 1;
-				$profile->type = 3;
-				$profile->filename = $filename;
+				$profile               = new stdClass;
+				$profile->published    = 1;
+				$profile->type         = 3;
+				$profile->filename     = $filename;
 				$profile->templatecode = $filecontent;
-				$profile->asset_id = '';
+				$profile->asset_id     = '';
 				$db->insertObject('#__bsms_templatecode', $profile);
 				$registry->set('teacherstemplate', $filename);
 			}
 			if ($registry->get('useexpert_teacherdetail') > 0)
 			{
 				$dataitemlist = $registry->get('teacher_detailtemplate');
-				$dataitemlist  = str_replace('{{title}}', '{{teachertitle}}', $dataitemlist);
-				$dataitemlist  = str_replace('{{teacher}}', '{{teachername}}', $dataitemlist);
+				$dataitemlist = str_replace('{{title}}', '{{teachertitle}}', $dataitemlist);
+				$dataitemlist = str_replace('{{teacher}}', '{{teachername}}', $dataitemlist);
 				$dataitemlist = $this->itemreplace($dataitemlist);
-				$filecontent = '<?php defined(\'_JEXEC\') or die; ?>' . $dataitemlist;
-				$filename = 'default_teachertemplate' . $filenumber;
-				$file = JPATH_ROOT . '/components/com_biblestudy/views/teacher/tmpl/' . $filename . '.php';
+				$filecontent  = '<?php defined(\'_JEXEC\') or die; ?>' . $dataitemlist;
+				$filename     = 'default_teachertemplate' . $filenumber;
+				$file         = JPATH_ROOT . '/components/com_biblestudy/views/teacher/tmpl/' . $filename . '.php';
 				JFile::write($file, $filecontent);
-				$profile = new stdClass;
-				$profile->published = 1;
-				$profile->type = 4;
-				$profile->filename = $filename;
+				$profile               = new stdClass;
+				$profile->published    = 1;
+				$profile->type         = 4;
+				$profile->filename     = $filename;
 				$profile->templatecode = $filecontent;
-				$profile->asset_id = '';
+				$profile->asset_id     = '';
 				$db->insertObject('#__bsms_templatecode', $profile);
 				$registry->set('teachertemplate', $filename);
 			}
 			$d->params = $registry->toString();
 			$db->updateObject('#__bsms_templates', $d, 'id');
-			$filenumber ++;
+			$filenumber++;
 		}
 
 		return true;
@@ -766,45 +810,45 @@ private function migratetemplatelists($db)
 	 */
 	private function itemreplace($item)
 	{
-		$item  = str_replace('{{teacher}}', '<?php echo $study->teachername; ?>', $item);
-		$item  = str_replace('{{teachertitle}}', '<?php echo $this->item->title; ?>', $item);
-		$item  = str_replace('{{teachername}}', '<?php echo $this->item->teachername; ?>', $item);
-		$item  = str_replace('{{teachertitlelist}}', '<?php echo $teacher->title; ?>', $item);
-		$item  = str_replace('{{teachernamelist}}', '<?php echo $teacher->teachername; ?>', $item);
-		$item  = str_replace('{{title}}', '<?php echo $study->studytitle; ?>', $item);
-		$item  = str_replace('{{date}}', '<?php echo $study->studydate; ?>', $item);
-		$item  = str_replace('{{studyintro}}', '<?php echo $study->studyintro; ?>', $item);
-		$item  = str_replace('{{scripture}}', '<?php echo $study->scripture1; ?>', $item);
-		$item  = str_replace('{{topics}}', '<?php echo $study->topics; ?>', $item);
-		$item  = str_replace('{{scripture}}', '<?php echo $study->scripture1; ?>', $item);
-		$item  = str_replace('{{url}}', '<?php echo $study->detailslink; ?>', $item);
-		$item  = str_replace('{{mediatime}}', '<?php echo $study->duration; ?>', $item);
-		$item  = str_replace('{{thumbnail}}', '<?php echo $study->study_thumbnail; ?>', $item);
-		$item  = str_replace('{{seriestext}}', '', $item);
-		$item  = str_replace('{{bookname}}', '<?php echo $study->scripture1; ?>', $item);
-		$item  = str_replace('{{hits}}', '<?php echo $study->hits;', $item);
-		$item  = str_replace('{{location}}', '<?php echo $study->location_text; ?>', $item);
-		$item  = str_replace('{{plays}}', '<?php echo $study->totaplays; ?>', $item);
-		$item  = str_replace('{{downloads}}', '<?php echo $study->totaldownloads; ?>', $item);
-		$item  = str_replace('{{media}}', '<?php echo $study->media; ?>', $item);
-		$item  = str_replace('{{messagetype}}', '<?php echo $study->messagetypes; ?>', $item);
-		$item  = str_replace('{{studytext}}', '<?php echo $this->item->studytext; ?>', $item);
-		$item  = str_replace('{{scipturelink}}', '<?php  echo $this->passage; ?>', $item);
-		$item  = str_replace('{{share}}', '<?php echo $this->page->social; ?>', $item);
-		$item  = str_replace('{{printview}}', '<?php echo $this->page->print; ?>', $item);
-		$item  = str_replace('{{pdfview}}', '', $item);
-		$item  = str_replace('{{phone}}', '<?php echo $this->item->phone; ?>', $item);
-		$item  = str_replace('{{teacherphonelist}}', '<?php echo $teacher->phone; ?>', $item);
-		$item  = str_replace('{{website}}', '<?php echo $this->item->website; ?>', $item);
-		$item  = str_replace('{{teacherwebsitelist}}', '<?php echo $teacher->website; ?>', $item);
-		$item  = str_replace('{{information}}', '<?php echo $this->item->information; ?>', $item);
-		$item  = str_replace('{{teacherinformationlist}}', '<?php echo $teacher->information; ?>', $item);
-		$item  = str_replace('{{image}}', '<?php echo $this->item->largeimage; ?>', $item);
-		$item  = str_replace('{{teacherimagelist}}', '<?php echo $teacher->largeimage; ?>', $item);
-		$item  = str_replace('{{thumbnail}}', '<?php echo $this->item->image; ?>', $item);
-		$item  = str_replace('{{teacherthumbnaillist}}', '<?php echo $teacher->image; ?>', $item);
-		$item  = str_replace('{{short}}', '<?php echo $this->item->short; ?>', $item);
-		$item  = str_replace('{{teachershortlist}}', '<?php echo $teacher->short; ?>', $item);
+		$item = str_replace('{{teacher}}', '<?php echo $study->teachername; ?>', $item);
+		$item = str_replace('{{teachertitle}}', '<?php echo $this->item->title; ?>', $item);
+		$item = str_replace('{{teachername}}', '<?php echo $this->item->teachername; ?>', $item);
+		$item = str_replace('{{teachertitlelist}}', '<?php echo $teacher->title; ?>', $item);
+		$item = str_replace('{{teachernamelist}}', '<?php echo $teacher->teachername; ?>', $item);
+		$item = str_replace('{{title}}', '<?php echo $study->studytitle; ?>', $item);
+		$item = str_replace('{{date}}', '<?php echo $study->studydate; ?>', $item);
+		$item = str_replace('{{studyintro}}', '<?php echo $study->studyintro; ?>', $item);
+		$item = str_replace('{{scripture}}', '<?php echo $study->scripture1; ?>', $item);
+		$item = str_replace('{{topics}}', '<?php echo $study->topics; ?>', $item);
+		$item = str_replace('{{scripture}}', '<?php echo $study->scripture1; ?>', $item);
+		$item = str_replace('{{url}}', '<?php echo $study->detailslink; ?>', $item);
+		$item = str_replace('{{mediatime}}', '<?php echo $study->duration; ?>', $item);
+		$item = str_replace('{{thumbnail}}', '<?php echo $study->study_thumbnail; ?>', $item);
+		$item = str_replace('{{seriestext}}', '', $item);
+		$item = str_replace('{{bookname}}', '<?php echo $study->scripture1; ?>', $item);
+		$item = str_replace('{{hits}}', '<?php echo $study->hits;', $item);
+		$item = str_replace('{{location}}', '<?php echo $study->location_text; ?>', $item);
+		$item = str_replace('{{plays}}', '<?php echo $study->totaplays; ?>', $item);
+		$item = str_replace('{{downloads}}', '<?php echo $study->totaldownloads; ?>', $item);
+		$item = str_replace('{{media}}', '<?php echo $study->media; ?>', $item);
+		$item = str_replace('{{messagetype}}', '<?php echo $study->messagetypes; ?>', $item);
+		$item = str_replace('{{studytext}}', '<?php echo $this->item->studytext; ?>', $item);
+		$item = str_replace('{{scipturelink}}', '<?php  echo $this->passage; ?>', $item);
+		$item = str_replace('{{share}}', '<?php echo $this->page->social; ?>', $item);
+		$item = str_replace('{{printview}}', '<?php echo $this->page->print; ?>', $item);
+		$item = str_replace('{{pdfview}}', '', $item);
+		$item = str_replace('{{phone}}', '<?php echo $this->item->phone; ?>', $item);
+		$item = str_replace('{{teacherphonelist}}', '<?php echo $teacher->phone; ?>', $item);
+		$item = str_replace('{{website}}', '<?php echo $this->item->website; ?>', $item);
+		$item = str_replace('{{teacherwebsitelist}}', '<?php echo $teacher->website; ?>', $item);
+		$item = str_replace('{{information}}', '<?php echo $this->item->information; ?>', $item);
+		$item = str_replace('{{teacherinformationlist}}', '<?php echo $teacher->information; ?>', $item);
+		$item = str_replace('{{image}}', '<?php echo $this->item->largeimage; ?>', $item);
+		$item = str_replace('{{teacherimagelist}}', '<?php echo $teacher->largeimage; ?>', $item);
+		$item = str_replace('{{thumbnail}}', '<?php echo $this->item->image; ?>', $item);
+		$item = str_replace('{{teacherthumbnaillist}}', '<?php echo $teacher->image; ?>', $item);
+		$item = str_replace('{{short}}', '<?php echo $this->item->short; ?>', $item);
+		$item = str_replace('{{teachershortlist}}', '<?php echo $teacher->short; ?>', $item);
 
 		return $item;
 	}
@@ -852,11 +896,11 @@ private function migratetemplatelists($db)
 	 *
 	 * @return void
 	 */
-	private function updatetemplates ($db)
+	private function updatetemplates($db)
 	{
 		$query = $db->getQuery(true);
 		$query->select('*')
-				->from('#__bsms_templates');
+			->from('#__bsms_templates');
 		$db->setQuery($query);
 		$data = $db->loadObjectList();
 		foreach ($data as $d)
@@ -867,6 +911,7 @@ private function migratetemplatelists($db)
 			$d->params = $registry->toString();
 			$db->updateObject('#__bsms_templates', $d, 'id');
 		}
+
 		return;
 	}
 
@@ -920,13 +965,13 @@ private function migratetemplatelists($db)
 			BIBLESTUDY_PATH . '/views/teacher/tmpl/default_custom.php'
 		);
 
-			foreach ($path as $file)
+		foreach ($path as $file)
+		{
+			if (JFile::exists($file))
 			{
-				if (JFile::exists($file))
-				{
-					JFile::delete($file);
-				}
+				JFile::delete($file);
 			}
+		}
 
 		$folders = array(
 			BIBLESTUDY_PATH_ADMIN . '/views/styles',
@@ -942,6 +987,7 @@ private function migratetemplatelists($db)
 				JFolder::delete($folder);
 			}
 		}
+
 		return true;
 	}
 
