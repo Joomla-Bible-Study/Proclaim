@@ -20,7 +20,7 @@ class Migration900
 	/**
 	 * Call Script for Updates of 9.0.0
 	 *
-	 * @param   JDatabaseDriver $db Joomla Data bass driver
+	 * @param   JDatabaseDriver  $db  Joomla Data bass driver
 	 *
 	 * @return bool
 	 */
@@ -35,6 +35,7 @@ class Migration900
 		}
 		$registry = new Registry;
 		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_biblestudy/tables');
+
 		// Migrate servers
 		$query = $db->getQuery(true)->select('*')->from('#__bsms_servers');
 		$db->setQuery($query);
@@ -353,7 +354,6 @@ class Migration900
 
 		$script = new BibleStudyModelInstall;
 		$script->postinstall_messages($message);
-
 
 		return true;
 	}
