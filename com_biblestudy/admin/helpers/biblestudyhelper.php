@@ -363,7 +363,7 @@ class JBSMBibleStudyHelper
 	 */
 	public static function debug()
 	{
-		if (JBSMDbHelper::getInstallState())
+		if (!JBSMDbHelper::getInstallState())
 		{
 			$admin_params = JBSMParams::getAdmin();
 

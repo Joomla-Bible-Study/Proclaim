@@ -668,10 +668,13 @@ class BibleStudyModelInstall extends JModelLegacy
 			while (!empty($this->_versionStack))
 			{
 				$version           = array_pop($this->_versionStack);
-				$this->_allupdates = array();
 				$this->running .= ', ' . $version;
 				$this->doneSteps++;
-				$this->allUpdate($version);
+				$run = $this->allUpdate($version);
+				if (!$run)
+				{
+					JFactory::getApplication()->enqueueMessage('error updateing updates', 'error');
+				}
 			}
 		}
 
@@ -685,8 +688,8 @@ class BibleStudyModelInstall extends JModelLegacy
 				{
 					$percent = round($this->doneSteps / $this->totalSteps * 100);
 				}
-				$key           = key($this->_allupdates);
-				$string        = array_pop($this->_allupdates);
+				$key  = key($this->_allupdates);
+				$string = array_pop($this->_allupdates);
 				$this->running = $key . ', ' . $percent . '%';
 				$run           = $this->runUpdates($string);
 				if ($run && $this->type == 'migration')
@@ -1031,6 +1034,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		if (count($queries) == 0)
 		{
 			// No queries to process
+			JFactory::getApplication()->enqueueMessage('No Queries', 'error');
 			return false;
 		}
 		$this->totalSteps += count($queries);

@@ -26,6 +26,7 @@ class Migration900
 	 */
 	public function up($db)
 	{
+		die('9.0.0');
 		/**
 		 * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
 		 */
@@ -78,8 +79,6 @@ class Migration900
 
 			// Delete old server
 			JTable::getInstance('Server', 'Table', array('dbo' => $db))->delete($server->id);
-
-			// Todo: Migrate media defaults
 
 			// Migrate media files
 			$query = $db->getQuery(true)->select('*')
@@ -184,7 +183,6 @@ class Migration900
 				$newMediaFile->params    = $registry->toString();
 
 				// Properly encode the metadata.
-				// @todo Not sure if we are still needing to do this Eugen
 				$registry = new Registry;
 				$registry->loadArray($metadata);
 				$newMediaFile->metadata = $registry->toString();
@@ -531,7 +529,7 @@ class Migration900
 
 	/**
 	 * T Settings Migration
-	 * 
+	 *
 	 * @param   int  $element  ?
 	 *
 	 * @return bool|string
@@ -547,7 +545,7 @@ class Migration900
 	/**
 	 * Elements workings
 	 *
-	 * @param   int  $elementnumber  Number to stirng 
+	 * @param   int  $elementnumber  Number to stirng
 	 *
 	 * @return bool|string
 	 */
@@ -669,7 +667,7 @@ class Migration900
 
 	/**
 	 * Change Settings
-	 * 
+	 *
 	 * @param   int       $row       ID
 	 * @param   int       $col       ID
 	 * @param   Registry  $registry  Strings for Registry

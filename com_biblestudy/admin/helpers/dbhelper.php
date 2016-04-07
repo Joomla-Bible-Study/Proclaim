@@ -254,7 +254,7 @@ class JBSMDbHelper
 	/**
 	 * Get State of install for Main Admin Controller
 	 *
-	 * @return Registry|bool
+	 * @return  bool false if table exists | true if dos not
 	 *
 	 * @since 7.1.0
 	 */

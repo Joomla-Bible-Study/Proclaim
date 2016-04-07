@@ -76,7 +76,7 @@
 	</target>
 
 	<!-- Creates API documentation -->
-	<target name="apidoc" depends="init" description="Generate project API documentation">
+	<target name="phpdoc" depends="init" description="Generate project API documentation">
 		<phpdoc2 title="${project.name} API" destdir="${basedir}/docs" template="responsive">
 			<fileset refid="distributed_files"/>
 		</phpdoc2>
