@@ -26,7 +26,7 @@ class Migration900
 	 */
 	public function up($db)
 	{
-		die('9.0.0');
+		//die('9.0.0');
 		/**
 		 * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
 		 */
@@ -322,7 +322,7 @@ class Migration900
 		$this->deleteTable('#__bsms_media', $db);
 		$this->deleteTable('#__bsms_mimetype', $db);
 
-		$this->migratetemplatelists($db);
+		if (!$this->migratetemplatelists($db)){die('migratetemplatelists');}
 		$this->updatetemplates($db);
 		$this->css900();
 		$this->deleteUnexistingFiles();
@@ -365,6 +365,7 @@ class Migration900
 	 */
 	private function migratetemplatelists($db)
 	{
+
 		$query = $db->getQuery(true);
 		$query->select('*')
 			->from('#__bsms_templates');
@@ -522,9 +523,14 @@ class Migration900
 				$registry->set($elementname . 'colspan', 6);
 				$registry->set($elementname . 'linktype', $registry->get('serieslink4'));
 			}
-			$d->params = $registry->toString();
-			$db->updateObject('#__bsms_templates', $d, 'id');
+			JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
+			$table = JTable::getInstance('template', 'Table');
+			$table->load($d->id, false);
+			$table->bind(array('params' => $registry->toString()));
+			$table->store();
+
 		}
+		return true;
 	}
 
 	/**
@@ -791,8 +797,11 @@ class Migration900
 				$db->insertObject('#__bsms_templatecode', $profile);
 				$registry->set('teachertemplate', $filename);
 			}
-			$d->params = $registry->toString();
-			$db->updateObject('#__bsms_templates', $d, 'id');
+			JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
+			$table = JTable::getInstance('template', 'Table');
+			$table->load($d->id, false);
+			$table->bind(array('params' => $registry->toString()));
+			$table->store();
 			$filenumber++;
 		}
 
@@ -906,8 +915,11 @@ class Migration900
 			$registry = new Registry;
 			$registry->loadString($d->params);
 			$registry->def('player', $registry->get('media_player'));
-			$d->params = $registry->toString();
-			$db->updateObject('#__bsms_templates', $d, 'id');
+			JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
+			$table = JTable::getInstance('template', 'Table');
+			$table->load($d->id, false);
+			$table->bind(array('params' => $registry->toString()));
+			$table->store();
 		}
 
 		return;

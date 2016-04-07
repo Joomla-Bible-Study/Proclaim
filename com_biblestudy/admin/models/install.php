@@ -681,7 +681,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		if (!empty($this->_allupdates) && $this->haveEnoughTime())
 		{
 			$percent = 100;
-			krsort($this->_allupdates);
+			ksort($this->_allupdates);
 			while (!empty($this->_allupdates))
 			{
 				if ($this->totalSteps > 0)
@@ -689,7 +689,7 @@ class BibleStudyModelInstall extends JModelLegacy
 					$percent = round($this->doneSteps / $this->totalSteps * 100);
 				}
 				$key  = key($this->_allupdates);
-				$string = array_pop($this->_allupdates);
+				$string = array_shift($this->_allupdates); 
 				$this->running = $key . ', ' . $percent . '%';
 				$run           = $this->runUpdates($string);
 				if ($run && $this->type == 'migration')
@@ -1102,6 +1102,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	{
 		// Check for corresponding PHP file and run migration
 		$migration_file = JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/updates/' . $value . '.php';
+
 		if (JFile::exists($migration_file))
 		{
 			require_once $migration_file;
