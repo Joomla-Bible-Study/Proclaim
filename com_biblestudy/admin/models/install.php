@@ -689,7 +689,7 @@ class BibleStudyModelInstall extends JModelLegacy
 					$percent = round($this->doneSteps / $this->totalSteps * 100);
 				}
 				$key  = key($this->_allupdates);
-				$string = array_shift($this->_allupdates); 
+				$string = array_shift($this->_allupdates);
 				$this->running = $key . ', ' . $percent . '%';
 				$run           = $this->runUpdates($string);
 				if ($run && $this->type == 'migration')

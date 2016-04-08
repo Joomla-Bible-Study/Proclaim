@@ -26,7 +26,6 @@ class Migration900
 	 */
 	public function up($db)
 	{
-		//die('9.0.0');
 		/**
 		 * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
 		 */
@@ -322,7 +321,7 @@ class Migration900
 		$this->deleteTable('#__bsms_media', $db);
 		$this->deleteTable('#__bsms_mimetype', $db);
 
-		if (!$this->migratetemplatelists($db)){die('migratetemplatelists');}
+		$this->migratetemplatelists($db);
 		$this->updatetemplates($db);
 		$this->css900();
 		$this->deleteUnexistingFiles();
