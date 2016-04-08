@@ -848,13 +848,19 @@ class BiblestudyControllerAdmin extends JControllerForm
 	}
 
 	/**
-	 * Archivee Old Message and Media
-	 * 
+	 * Archive Old Message and Media
+	 *
 	 * @return void
+	 *
+	 * @since 9.0.1
 	 */
-	public function archive()
-	{        
-     $this->setRedirect('index.php?option=com_biblestudy&task=archive.run');
-     
-   }
+	public function doArchive()
+	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		$model = $this->getModel('archive');
+		$msg = $model->doArchive();
+		$this->setRedirect('index.php?option=com_biblestudy&view=cpanel', $msg);
+	}
+
 }

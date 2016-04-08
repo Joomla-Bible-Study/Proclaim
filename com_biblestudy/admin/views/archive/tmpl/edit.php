@@ -25,23 +25,28 @@ JFactory::getDocument()->addScriptDeclaration("
 			{
 				Joomla.submitform(task, form);
 			}
-			elseif (task == 'admin.doArchive' || document.formvalidator.isValid(form))
-			{
-				Joomla.submitform(task, form);
-			}
 		};
 ");
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=archive'); ?>" enctype="multipart/form-data"
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=cpanel'); ?>" enctype="multipart/form-data"
       method="post" name="adminForm" id="adminForm">
-	<div class="row-fluid">
+	<div class="row-fluid" style="margin-top: 50px;">
 		<div class="span12 form-horizontal">
-			<h3><?php echo JText::_('JBS_CMN_ARCHIVE'); ?></h3>
 			<div class="control-group">
 				<div class="control-label">
-					<img src="<?php echo JUri::base() . '../media/com_biblestudy/images/icons/import.png'; ?>"
-					     alt="Import" height="48" width="48"/>
+					<?php echo $this->form->getLabel('timeframe'); ?>
 				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('timeframe'); ?>
+					<?php echo $this->form->getInput('swich'); ?>
+				</div>
+			</div>
+			<div class="control-group">
+				<input class="btn btn-primary" type="submit" value="<?php echo JText::_('JBS_CMN_SUBMIT'); ?>"
+				       name="submit"/>
+				<a href="#">
+					<button type="button" class="btn btn-default"><?php echo JText::_('JTOOLBAR_BACK'); ?></button>
+				</a>
 			</div>
 		</div>
 	</div>

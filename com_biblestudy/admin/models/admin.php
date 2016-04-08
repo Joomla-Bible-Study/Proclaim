@@ -173,7 +173,6 @@ class BiblestudyModelAdmin extends JModelAdmin
 		$this->fixSchemaVersion();
 		$this->fixUpdateVersion();
 		$installer = new BiblestudyModelInstall;
-		$installer->deleteUnexistingFiles();
 		$installer->fixMenus();
 		$installer->fixemptyaccess();
 		$installer->fixemptylanguage();
@@ -398,6 +397,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 */
 	public function getUpdateVersion()
 	{
+		/** @type JTableExtension $table */
 		$table = JTable::getInstance('Extension');
 		$table->load($this->getExtentionId());
 		$cache = new Registry($table->manifest_cache);
