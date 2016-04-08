@@ -846,4 +846,15 @@ class BiblestudyControllerAdmin extends JControllerForm
 
 		JFactory::getApplication()->close();
 	}
+
+	/**
+	 * Archivee Old Message and Media
+	 * 
+	 * @return void
+	 */
+	public function archive()
+	{        
+     $this->setRedirect('index.php?option=com_biblestudy&task=archive.run');
+     
+   }
 }
