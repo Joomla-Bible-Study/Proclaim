@@ -101,7 +101,7 @@ if ($msg)
 					<div class="row-fluid">
 						<div class="span12">
 							<div class="well well-small">
-								<div id="dashboard-icons" class="btn-group">
+								<div id="dashboard-icons" class="btn-group" style="white-space:normal;">
 									<a href="index.php?option=com_biblestudy&amp;task=admin.edit&amp;id=1"
 									   title="<?php echo JText::_('JBS_CMN_ADMINISTRATION'); ?>" class="btn"> <i
 												class="icon-big icon-options"> </i>

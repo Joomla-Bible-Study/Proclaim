@@ -151,36 +151,34 @@ $input = $app->input;
 
 				<!-- Begin Tabs -->
 				<div class="tab-pane active" id="cpanl">
-					<div id="cpanel" class="btn-group">
-						<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets'); ?>"
-						   style="text-decoration:none; margin: 5px;"
-						   title="<?php echo JText::_('JBS_ADM_ASSET_CHECK') ?>" class="btn cpanl-img"> <img
-									src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt=""
-									align="middle"
-									border="0"/> <span> <?php echo JText::_('JBS_ADM_ASSET_CHECK') ?> </span></a>
-						<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=migrate'); ?>"
-						   style="text-decoration:none; margin: 5px;"
-						   title="<?php echo JText::_('JBS_ADM_MIGRATE') ?>" class="btn"> <img
-									src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt=""
-									align="middle"
-									border="0"/> <span> <?php echo JText::_('JBS_ADM_MIGRATE') ?> </span></a>
-						<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=backup'); ?>"
-						   style="text-decoration:none; margin: 5px;"
-						   title="<?php echo JText::_('JBS_ADM_BACKUP_RESTORE') ?>" class="btn"> <img
-									src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt=""
-									align="middle"
-									border="0"/> <span> <?php echo JText::_('JBS_ADM_BACKUP_RESTORE') ?> </span></a>
-						<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=archive'); ?>"
-						   style="text-decoration:none; margin: 5px;"
-						   title="<?php echo JText::_('JBS_ADM_ARCHIVE') ?>" class="btn"> <img
-									src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt=""
-									align="middle"
-									border="0"/> <span> <?php echo JText::_('JBS_ADM_ARCHIVE') ?> </span></a>
-						<button onclick="Joomla::submitbutton('admin.alaisfix')" class="btn" style="margin-top: 5px;"><img
-									src="../media/com_biblestudy/images/icons/icon-48-administration.png" alt=""
-									align="middle"
-									border="0"/> <span> <?php echo JText::_('JBS_ADM_RESET_ALIAS') ?> </span></button>
-					</div>
+					<div class="row-fluid">
+						<div class="span12">
+							<div class="well well-small">
+								<div id="dashboard-icons" class="btn-group" style="white-space: normal;">
+									<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets'); ?>"
+									   title="<?php echo JText::_('JBS_ADM_ASSET_CHECK'); ?>" class="btn"> <i
+											class="icon-big icon-list"> </i>
+										<span><br/> <?php echo JText::_('JBS_ADM_ASSET_CHECK'); ?> </span></a>
+									<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=migrate'); ?>"
+									   title="<?php echo JText::_('JBS_ADM_MIGRATE'); ?>" class="btn"> <i
+											class="icon-big icon-share-alt"></i>
+										<span><br/> <?php echo JText::_('JBS_ADM_MIGRATE'); ?> </span></a>
+									<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=backup'); ?>
+									   title="<?php echo JText::_('JBS_ADM_BACKUP_RESTORE'); ?>" class="btn"> <i
+											class="icon-big icon-database"></i>
+										<span><br/> <?php echo JText::_('JBS_ADM_BACKUP_RESTORE'); ?> </span></a>
+									<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=archive'); ?>"
+									   title="<?php echo JText::_('JBS_ADM_ARCHIVE'); ?>" class="btn"> <i
+											class="icon-archive icon-big"></i>
+										<span><br/> <?php echo JText::_('JBS_ADM_ARCHIVE'); ?> </span></a>
+									<button  onclick="Joomla::submitbutton('admin.alaisfix')"
+									   title="<?php echo JText::_('JBS_ADM_RESET_ALIAS'); ?>" class="btn"> <i
+											class="icon-big icon-tree-2"></i>
+										<span><br/> <?php echo JText::_('JBS_ADM_RESET_ALIAS'); ?> </span></button>
+									</div>
+								</div>
+							</div>
+						</div>
 				</div>
 				<div class="tab-pane" id="admin">
 					<p class="tab-description"><?php echo JText::_('JBS_ADM_COMPONENT_SETTINGS'); ?></p>
@@ -425,7 +423,7 @@ $input = $app->input;
 				</div>
 				<div class="tab-pane" id="playersettings">
 					<div class="span6">
-						<p class="tab-description"><?php echo JText::_('JBS_CMN_MEDIA_FILES'); ?></p>
+						<strong><p class="tab-description"><?php echo JText::_('JBS_CMN_MEDIA_FILES'); ?></p></strong>
 
 						<div class="control-group">
 							<?php echo JText::_('JBS_ADM_MEDIA_PLAYER_STAT'); ?><br/>
@@ -453,10 +451,10 @@ $input = $app->input;
 						</div>
 					</div>
 					<div class="span6">
-						<p class="tab-description"><?php echo JText::_('JBS_ADM_POPUP_OPTIONS'); ?></p>
+						<strong><p class="tab-description"><?php echo JText::_('JBS_ADM_POPUP_OPTIONS'); ?></p></strong>
 
 						<div class="control-group">
-							<?php echo JText::_('JBS_ADM_MEDIA_PLAYER_POPUP_STAT'); ?><br/>
+							<strong><p></strong><?php echo JText::_('JBS_ADM_MEDIA_PLAYER_POPUP_STAT'); ?></p></strong><br/>
 
 							<div class="controls">
 								<?php echo $this->popups; ?>
@@ -486,9 +484,9 @@ $input = $app->input;
 				</div>
 				<div class="tab-pane" id="convert">
 					<h4><?php echo JText::_('JBS_IBM_CONVERT'); ?></h4>
-
-					<div> <?php echo $this->ss; ?> </div>
-					<div> <?php echo $this->pi; ?> </div>
+					<h3><?php echo JText::_('CONVERSION_NOT_AVAILABLE_IN_900');?></h3>
+					<div> <?php //echo $this->ss; ?> </div>
+					<div> <?php //echo $this->pi; ?> </div>
 				</div>
 				<div class="tab-pane" id="images">
 					<div class="span12"><h3><?php echo JText::_('JBS_IBM_IMAGES'); ?></h3></div>
