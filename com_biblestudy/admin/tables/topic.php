@@ -3,12 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
+use \Joomla\Registry\Registry;
 
 /**
  * Topic table class
@@ -27,18 +29,18 @@ class TableTopic extends JTable
 	public $id = null;
 
 	/**
-	 * Published
-	 *
-	 * @var int
-	 */
-	public $published = 1;
-
-	/**
 	 * Topic text
 	 *
 	 * @var string
 	 */
 	public $topic_text = null;
+
+	/**
+	 * Published
+	 *
+	 * @var int
+	 */
+	public $published = 1;
 
 	/**
 	 * Params
@@ -47,12 +49,18 @@ class TableTopic extends JTable
 	 */
 	public $params = null;
 
+	public $asset_id;
+
+	public $language;
+
+	public $access;
+
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver &$db  Database connector object
+	 * @param   JDatabaseDriver  &$db  Database connector object
 	 */
-	public function Tabletopic(& $db)
+	public function __construct(& $db)
 	{
 		parent::__construct('#__bsms_topics', 'id', $db);
 	}
@@ -62,8 +70,8 @@ class TableTopic extends JTable
 	 * method only binds properties that are publicly accessible and optionally
 	 * takes an array of properties to ignore when binding.
 	 *
-	 * @param   mixed $array   An associative array or object to bind to the JTable instance.
-	 * @param   mixed $ignore  An optional array or space separated list of properties to ignore while binding.
+	 * @param   mixed  $array   An associative array or object to bind to the JTable instance.
+	 * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -74,11 +82,13 @@ class TableTopic extends JTable
 	public function bind($array, $ignore = '')
 	{
 		if (is_object($array))
+		{
 			return parent::bind($array, $ignore);
+		}
 
 		if (isset($array['params']) && is_array($array['params']))
 		{
-			$registry = new JRegistry;
+			$registry = new Registry;
 			$registry->loadArray($array['params']);
 			$array['params'] = (string) $registry;
 		}
@@ -91,6 +101,107 @@ class TableTopic extends JTable
 		}
 
 		return parent::bind($array, $ignore);
+	}
+
+	/**
+	 * Method to store a row in the database from the JTable instance properties.
+	 * If a primary key value is set the row with that primary key value will be
+	 * updated with the instance property values.  If no primary key value is set
+	 * a new row will be inserted into the database with the properties from the
+	 * JTable instance.
+	 *
+	 * @param   boolean  $updateNulls  True to update fields even if they are null.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @link    https://docs.joomla.org/JTable/store
+	 * @since   11.1
+	 */
+	public function store($updateNulls = false)
+	{
+		if (!$this->_rules)
+		{
+			$this->setRules('{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}');
+		}
+
+		return parent::store($updateNulls);
+	}
+
+	/**
+	 * Overloaded load function
+	 *
+	 * @param   mixed    $keys   An optional primary key value to load the row by, or an array of fields to match.  If not
+	 *                           set the instance property value is used.
+	 * @param   boolean  $reset  True to reset the default values before loading the new row.
+	 *
+	 * @return  boolean  True if successful. False if row not found.
+	 *
+	 * @see JTable:load
+	 */
+	public function load($keys = null, $reset = true)
+	{
+		if (parent::load($keys, $reset))
+		{
+			// Convert the languages field to a registry.
+			$params = new Registry;
+			$params->loadString($this->params);
+			$this->params = $params;
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	/**
+	 * check and (re-)construct the alias before storing the topic
+	 *
+	 * @param   array  $data      Data of record
+	 * @param   int    $recordId  id
+	 *
+	 * @return      boolean true on success
+	 *
+	 * @todo this look like it is not used. (Neither Tom nor Brent wrote this one)
+	 */
+	public function checkAlias($data = array(), $recordId = null)
+	{
+		$topic = $data['topic_text'];
+
+		// Topic_text not given? -> use the first language item with some text
+		if ($topic == null || strlen($topic) == 0)
+		{
+			if (isset($data['params']) && is_array($data['params']))
+			{
+				foreach ($data['params'] AS $language)
+				{
+					if (strlen($language) > 0)
+					{
+						$topic = $language;
+						break;
+					}
+				}
+			}
+		}
+
+		// If still empty: use id
+		// todo: For new items, this is always '0'. Next primary key would be nice...
+		if ($topic == null || strlen($topic) == 0)
+		{
+			$topic = $recordId;
+		}
+
+		// Add prefix if needed
+		if (strncmp($topic, 'JBS_TOP_', 8) != 0)
+		{
+			$topic = 'JBS_TOP_' . $topic;
+		}
+		// And form well
+		$topic              = strtoupper(preg_replace('/[^a-z0-9]/i', '_', $topic)); // replace all non a-Z 0-9 by '_'
+		$data['topic_text'] = $topic;
+
+		return $data;
 	}
 
 	/**
@@ -129,8 +240,8 @@ class TableTopic extends JTable
 	 * The extended class can define a table and id to lookup.  If the
 	 * asset does not exist it will be created.
 	 *
-	 * @param   JTable  $table  A JTable object for the asset parent.
-	 * @param   integer $id     Id to look up
+	 * @param   JTable   $table  A JTable object for the asset parent.
+	 * @param   integer  $id     Id to look up
 	 *
 	 * @return  integer
 	 *
@@ -138,87 +249,11 @@ class TableTopic extends JTable
 	 */
 	protected function _getAssetParentId(JTable $table = null, $id = null)
 	{
+		/** @type JTableAsset $asset */
 		$asset = JTable::getInstance('Asset');
 		$asset->loadByName('com_biblestudy');
 
 		return $asset->id;
-	}
-
-	/**
-	 * Overloaded load function
-	 *
-	 * @param   mixed   $keys      An optional primary key value to load the row by, or an array of fields to match.  If not
-	 *                             set the instance property value is used.
-	 * @param   boolean $reset     True to reset the default values before loading the new row.
-	 *
-	 * @return  boolean  True if successful. False if row not found.
-	 *
-	 * @see JTable:load
-	 */
-	public function load($keys = null, $reset = true)
-	{
-		if (parent::load($keys, $reset))
-		{
-			// Convert the languages field to a registry.
-			$params = new JRegistry;
-			$params->loadString($this->params);
-			$this->params = $params;
-
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	/**
-	 * check and (re-)construct the alias before storing the topic
-	 *
-	 * @param   array $data      Data of record
-	 * @param   int   $recordId  id
-	 *
-	 * @return      boolean true on success
-	 *
-	 * @todo this look like it is not used. TOM (I didn't write this one)
-	 */
-	public function checkAlias($data = array(), $recordId)
-	{
-		$topic = $data['topic_text'];
-
-		// Topic_text not given? -> use the first language item with some text
-		if ($topic == null || strlen($topic) == 0)
-		{
-			if (isset($data['params']) && is_array($data['params']))
-			{
-				foreach ($data['params'] AS $language)
-				{
-					if (strlen($language) > 0)
-					{
-						$topic = $language;
-						break;
-					}
-				}
-			}
-		}
-
-		// If still empty: use id
-		// todo: For new items, this is always '0'. Next primary key would be nice...
-		if ($topic == null || strlen($topic) == 0)
-		{
-			$topic = $recordId;
-		}
-
-		// Add prefix if needed
-		if (strncmp($topic, 'JBS_TOP_', 8) != 0)
-		{
-			$topic = 'JBS_TOP_' . $topic;
-		}
-		// And form well
-		$topic              = strtoupper(preg_replace('/[^a-z0-9]/i', '_', $topic)); // replace all non a-Z 0-9 by '_'
-		$data['topic_text'] = $topic;
-
-		return $data;
 	}
 
 }

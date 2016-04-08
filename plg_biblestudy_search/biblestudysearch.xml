@@ -1,55 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="2.5" type="plugin" group="search" method="upgrade">
-    <name>JBS_PLG_SEARCH</name>
-    <author>Joomla Bible Study Team</author>
-    <authorEmail>info@joomlabiblestudy.org</authorEmail>
-    <authorUrl>http://www.JoomlaBibleStudy.org</authorUrl>
-    <copyright>2007-2013 Joomla Bible Study</copyright>
-    <license>GNU/GPL</license>
-    <version>8.0.0</version>
-    <creationDate>June 12, 2013</creationDate>
-    <description>JBS_PLG_SEARCH_XML_DESCRIPTION</description>
-    <files>
-        <filename plugin="biblestudysearch">biblestudysearch.php</filename>
-        <filename>index.html</filename>
-        <folder>language</folder>
-    </files>
-    <config>
-        <fields name="params">
-            <fieldset name="basic">
-                <field name="search_limit" type="text" size="5" default="50"
-                       label="JBS_PLG_SEARCH_LIMIT" description="JBS_PLG_SEARCH_LIMIT_DESC"/>
-                <field name="show_description" type="radio" default="1"
-                       label="JBS_PLG_SEARCH_DESCRIPTION" description="JBS_PLG_SEARCH_DESCRIPTION_DESC">
-                    <option value="0">JBS_PLG_SEARCH_HIDE</option>
-                    <option value="1">JBS_PLG_SEARCH_SHOW</option>
-                </field>
-                <field name="set_title" type="radio" default="1"
-                       label="JBS_PLG_SEARCH_TITLE" description="JBS_PLG_SEARCH_TITLE_DESC">
-                    <option value="0">JBS_PLG_SEARCH_BOOK_FIRST</option>
-                    <option value="1">JBS_PLG_SEARCH_STUDY_FIRST</option>
-                </field>
-                <field name="search_content" type="radio" default="1"
-                       label="JBS_PLG_SEARCH_FIELD_CONTENT"
-                       description="JBS_PLG_SEARCH_FIELD_CONTENT_DESC">
-                    <option value="0">JOFF</option>
-                    <option value="1">JON</option>
-                </field>
-                <field name="search_archived" type="radio" default="0"
-                       label="JBS_PLG_SEARCH_FIELD_ARCHIVED"
-                       description="JBS_PLG_SEARCH_FIELD_ARCHIVED_DESC">
-                    <option value="0">JOFF</option>
-                    <option value="1">JON</option>
-                </field>
-            </fieldset>
-        </fields>
-    </config>
-    <!-- UPDATESERVER DEFINITION -->
-    <updateservers>
-        <!-- Note: No spaces or linebreaks allowed between the server tags -->
-        <server type="extension" priority="1"
-                name="Joomla Bible Study Search Plg">
-            <![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=4&dummy=extension.xml]]>
-        </server>
-    </updateservers>
+<extension version="3.3" type="plugin" group="search" method="upgrade">
+	<name>JBS_PLG_SEARCH</name>
+	<author>Joomla Bible Study Team</author>
+	<authorEmail>info@joomlabiblestudy.org</authorEmail>
+	<authorUrl>http://www.JoomlaBibleStudy.org</authorUrl>
+	<copyright>(C) 2007 - 2016 Joomla Bible Study All rights reserved.</copyright>
+	<version>9.0.0-beta4</version>
+	<creationDate>March 6, 2016</creationDate>
+	<license>http://www.gnu.org/licenses/gpl.html</license>
+	<description>JBS_PLG_SEARCH_XML_DESCRIPTION</description>
+	<files>
+		<filename plugin="biblestudysearch">biblestudysearch.php</filename>
+		<folder>language</folder>
+	</files>
+	<config>
+		<fields name="params">
+			<fieldset name="basic"
+			          addfieldpath="/administrator/components/com_biblestudy/models/fields">
+				<field name="dummy" type="loadlanguagefile" default=""/>   <!-- load common language file -->
+				<field name="search_limit" type="text" size="5" default="50"
+				       label="JBS_PLG_SEARCH_LIMIT" description="JBS_PLG_SEARCH_LIMIT_DESC"/>
+				<field name="show_description" type="radio" default="1"
+				       label="JBS_PLG_SEARCH_DESCRIPTION" description="JBS_PLG_SEARCH_DESCRIPTION_DESC">
+					<option value="0">JBS_PLG_SEARCH_HIDE</option>
+					<option value="1">JBS_PLG_SEARCH_SHOW</option>
+				</field>
+				<field name="set_title" type="radio" default="1"
+				       label="JBS_PLG_SEARCH_TITLE" description="JBS_PLG_SEARCH_TITLE_DESC">
+					<option value="0">JBS_PLG_SEARCH_BOOK_FIRST</option>
+					<option value="1">JBS_PLG_SEARCH_STUDY_FIRST</option>
+				</field>
+				<field name="search_content" type="radio" default="1"
+				       label="JBS_PLG_SEARCH_FIELD_CONTENT"
+				       description="JBS_PLG_SEARCH_FIELD_CONTENT_DESC">
+					<option value="0">JOFF</option>
+					<option value="1">JON</option>
+				</field>
+				<field name="search_archived" type="radio" default="0"
+				       label="JBS_PLG_SEARCH_FIELD_ARCHIVED"
+				       description="JBS_PLG_SEARCH_FIELD_ARCHIVED_DESC">
+					<option value="0">JOFF</option>
+					<option value="1">JON</option>
+				</field>
+			</fieldset>
+		</fields>
+	</config>
+	<!-- UPDATESERVER DEFINITION -->
+	<updateservers>
+		<!-- Note: No spaces or linebreaks allowed between the server tags -->
+		<server type="extension" priority="1" name="Joomla Bible Study Search Plg"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=4&dummy=extension.xml]]></server>
+	</updateservers>
 </extension>

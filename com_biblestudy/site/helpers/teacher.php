@@ -2,16 +2,13 @@
 /**
  * Part of Joomla BibleStudy Package
  *
- * @package        BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link           http://www.JoomlaBibleStudy.org
+ * @package    BibleStudy.Admin
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-JLoader::register('JBSMImages', BIBLESTUDY_PATH_LIB . '/biblestudy.images.class.php');
-JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.class.php');
 
 /**
  * Class for Teachers Helper
@@ -21,16 +18,94 @@ JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/biblestudy.listing.clas
  */
 class JBSMTeacher extends JBSMListing
 {
+	private $contact;
+	/**
+	 * Get Teacher for Fluid layout
+	 *
+	 * @param   Joomla\Registry\Registry  $params  ?
+	 *
+	 * @return array
+	 */
+	public function getTeachersFluid($params)
+	{
+		$input      = new JInput;
+		$id         = $input->get('id', '', 'int');
+		$teachers   = array();
+		$teacherid  = null;
+		$teacherids = new stdClass;
+		$t          = $params->get('teachertemplateid');
+		if (!$t)
+		{
+			$t = $input->get('t', 1, 'int');
+		}
+		$viewtype = $input->get('view');
+
+		if ($viewtype == 'sermons')
+		{
+			$teacherids = $params->get('listteachers');
+		}
+		if ($viewtype == 'sermon' && $id != 0)
+		{
+			$teacherids->id = $id;
+		}
+
+		if (!isset($teacherids))
+		{
+			return $teachers;
+		}
+		foreach ($teacherids as $teach)
+		{
+			$database = JFactory::getDbo();
+			$query    = $database->getQuery(true);
+			$query->select('*')->from('#__bsms_teachers')->where('id = ' . $teach);
+			$database->setQuery($query);
+			$result = $database->loadObject();
+
+			// Check to see if com_contact used instead
+			if ($result->contact)
+			{
+				require_once JPATH_ROOT . '/components/com_contact/models/contact.php';
+				$contactmodel  = JModelLegacy::getInstance('contact', 'contactModel');
+				$this->contact = $contactmodel->getItem($pk = $result->contact);
+
+				// Substitute contact info from com_contacts for duplicate fields
+				$result->title       = $this->contact->con_position;
+				$result->teachername = $this->contact->name;
+			}
+			if ($result->teacher_thumbnail)
+			{
+				$image = $result->teacher_thumbnail;
+			}
+			else
+			{
+				$image = $result->thumb;
+			}
+			if ($result->title)
+			{
+				$teachername = $result->title . ' ' . $result->teachername;
+			}
+			else
+			{
+				$teachername = $result->teachername;
+			}
+			$teachers[] = array('name' => $teachername, 'image' => $image, 't' => $t, 'id' => $result->id);
+
+		}
+
+		return $teachers;
+	}
+
 	/**
 	 * Get Teacher
 	 *
-	 * @param   JRegistry $params       Item Params
-	 * @param   int       $id           Item ID
-	 * @param   object    $admin_params Admin Params
+	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   int                       $id      Item ID
 	 *
 	 * @return string
+	 *
+	 * @todo need to redo to bootstrap
 	 */
-	public function getTeacher($params, $id, $admin_params)
+	public function getTeacher($params, $id)
 	{
 		$input       = new JInput;
 		$JViewLegacy = new JViewLegacy;
@@ -62,47 +137,43 @@ class JBSMTeacher extends JBSMListing
 		}
 		foreach ($teacherids as $teachers)
 		{
-			$database = JFactory::getDBO();
+			$database = JFactory::getDbo();
 			$query    = $database->getQuery(true);
 			$query->select('*')->from('#__bsms_teachers')->where('id = ' . $teachers);
 			$database->setQuery($query);
 			$tresult = $database->loadObject();
-			if ($tresult)
+			$i_path  = null;
+
+			// Check to see if there is a teacher image, if not, skip this step
+			$images = new JBSMImages;
+			$image  = $images->getTeacherThumbnail($tresult->teacher_thumbnail, $tresult->thumb);
+
+			if (!$image)
 			{
-				$i_path = null;
-
-				// Check to see if there is a teacher image, if not, skip this step
-				$images = new JBSMImages;
-				$image  = $images->getTeacherThumbnail($tresult->teacher_thumbnail, $tresult->thumb);
-
-				if (!$image)
-				{
-					$image->path   = '';
-					$image->width  = 0;
-					$image->height = 0;
-				}
-				$teacher .= '<td><table class="table cellspacing"><tr><td><img src="' . $image->path . '" border="1" width="' . $image->width
-					. '" height="' . $image->height . '" alt="" /></td></tr>';
-
-				$teacher .= '<tr><td>';
-
-				if ($params->get('teacherlink') > 0)
-				{
-					$teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&amp;id=' . $tresult->id . '&amp;t=' . $t) . '">';
-				}
-				$teacher .= $tresult->teachername;
-
-				if ($params->get('teacherlink') > 0)
-				{
-					$teacher .= '</a>';
-				}
-				$teacher .= '</td>';
+				$image->path   = '';
+				$image->width  = 0;
+				$image->height = 0;
 			}
-			$teacher .= '</tr></table></td>';
+			$teacher .= '<td><table class="table cellspacing"><tr><td><img src="' . $image->path . '" border="1" width="' . $image->width
+				. '" height="' . $image->height . '" alt="" /></td></tr>';
+
+			$teacher .= '<tr><td>';
+
+			if ($params->get('teacherlink') > 0)
+			{
+				$teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&amp;id=' . $tresult->id . '&amp;t=' . $t) . '">';
+			}
+			$teacher .= $tresult->teachername;
+
+			if ($params->get('teacherlink') > 0)
+			{
+				$teacher .= '</a>';
+			}
+			$teacher .= '</td></tr></table></td>';
 		}
 		if ($params->get('intro_show') == 2 && $viewtype == 'sermons')
 		{
-			$teacher .= '<td><div id="listintro"><table class="table" id="listintro"><tr><td><p>';
+			$teacher .= '<td><div id="listintrodiv"><table class="table" id="listintrotable"><tr><td><p>';
 			$teacher .= $params->get('list_intro') . '</p></td></tr></table> </div></td>';
 		}
 		$teacher .= '</tr></table>';
@@ -113,15 +184,14 @@ class JBSMTeacher extends JBSMListing
 	/**
 	 * Get TeacherList Exp
 	 *
-	 * @param   object $row          Table info
-	 * @param   object $params       Item Params
-	 * @param   string $oddeven      Odd Even
-	 * @param   object $admin_params Admin Params
-	 * @param   object $template     Template
+	 * @param   object         $row       Table info
+	 * @param   object         $params    Item Params
+	 * @param   string         $oddeven   Odd Even
+	 * @param   TableTemplate  $template  Template
 	 *
 	 * @return object
 	 */
-	public function getTeacherListExp($row, $params, $oddeven, $admin_params, $template)
+	public function getTeacherListExp($row, $params, $oddeven, $template)
 	{
 		$JViewLegacy = new JViewLegacy;
 		$JViewLegacy->loadHelper('image');
@@ -136,10 +206,17 @@ class JBSMTeacher extends JBSMListing
 		$label = str_replace('{{phone}}', $row->phone, $label);
 		$label = str_replace('{{website}}', '<A href="' . $row->website . '">Website</a>', $label);
 		$label = str_replace('{{information}}', $row->information, $label);
-		$label = str_replace('{{image}}', '<img src="' . $imagelarge->path . '" width="' . $imagelarge->width . '" height="' . $imagelarge->height . '" />', $label);
+		$label = str_replace('{{image}}', '<img src="' . $imagelarge->path . '" width="' . $imagelarge->width .
+			'" height="' . $imagelarge->height . '" />', $label
+		);
 		$label = str_replace('{{short}}', $row->short, $label);
-		$label = str_replace('{{thumbnail}}', '<img src="' . $imagesmall->path . '" width="' . $imagesmall->width . '" height="' . $imagesmall->height . '" />', $label);
-		$label = str_replace('{{url}}', JRoute::_('index.php?option=com_biblestudy&amp;view=teacherdisplay&amp;id=' . $row->id . '&amp;t=' . $template), $label);
+		$label = str_replace('{{thumbnail}}', '<img src="' . $imagesmall->path . '" width="' . $imagesmall->width .
+			'" height="' . $imagesmall->height . '" />', $label
+		);
+		$label = str_replace('{{url}}', JRoute::_('index.php?option=com_biblestudy&amp;view=teacherdisplay&amp;id=' .
+			$row->id . '&amp;t=' . $template
+			), $label
+		);
 
 		return $label;
 	}
@@ -147,14 +224,12 @@ class JBSMTeacher extends JBSMListing
 	/**
 	 * Get Teacher Details Exp
 	 *
-	 * @param   object    $row          Table Row
-	 * @param   JRegistry $params       Item Params
-	 * @param   int       $template     Template
-	 * @param   JRegistry $admin_params Admin Params
+	 * @param   object                    $row     Table Row
+	 * @param   Joomla\Registry\Registry  $params  Item Params
 	 *
 	 * @return object
 	 */
-	public function getTeacherDetailsExp($row, $params, $template, $admin_params)
+	public function getTeacherDetailsExp($row, $params)
 	{
 		$JViewLegacy = new JViewLegacy;
 		$JViewLegacy->loadHelper('image');
@@ -187,14 +262,12 @@ class JBSMTeacher extends JBSMListing
 	/**
 	 * Get Teacher Studies Exp
 	 *
-	 * @param   int       $id           Item ID
-	 * @param   JRegistry $params       Item Params
-	 * @param   JRegistry $admin_params Admin Params
-	 * @param   int       $template     Template
+	 * @param   int                       $id      Item ID
+	 * @param   Joomla\Registry\Registry  $params  Item Params
 	 *
 	 * @return string
 	 */
-	public function getTeacherStudiesExp($id, $params, $admin_params, $template)
+	public function getTeacherStudiesExp($id, $params)
 	{
 		$limit   = '';
 		$input   = new JInput;
@@ -208,7 +281,7 @@ class JBSMTeacher extends JBSMListing
 		{
 			$limit = '';
 		}
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('#__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
 			. ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
@@ -273,7 +346,7 @@ class JBSMTeacher extends JBSMListing
 			{
 				break;
 			}
-			$studies .= $this->getListingExp($row, $params, $admin_params, $params->get('studieslisttemplateid'));
+			$studies .= $this->getListingExp($row, $params, $params->get('studieslisttemplateid'));
 			$j++;
 		}
 

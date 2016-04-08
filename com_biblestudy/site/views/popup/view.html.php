@@ -3,17 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('jbsMedia', JPATH_ROOT . '/components/com_biblestudy/lib/biblestudy.media.class.php');
-JLoader::register('JBSMImages', JPATH_ROOT . '/components/com_biblestudy/lib/biblestudy.images.class.php');
-JLoader::register('JBSMElements', BIBLESTUDY_PATH_HELPERS . '/elements.php');
-JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
+use Joomla\Registry\Registry;
 
 // This is the popup window for the teachings.  We could put anything in this window.
 
@@ -31,8 +28,8 @@ class BiblestudyViewPopup extends JViewLegacy
 	/** @var  string Media */
 	public $media;
 
-	/** @var  JRegistry Params */
-	protected $params;
+	/** @var  JObject Media info */
+	public $getMedia;
 
 	/** @var  string Scripture Text */
 	public $scripture;
@@ -41,7 +38,7 @@ class BiblestudyViewPopup extends JViewLegacy
 	public $date;
 
 	/** @var  string Length */
-	public $lenght;
+	public $length;
 
 	/** @var  string Series Thumbnail */
 	public $series_thumbnail;
@@ -57,9 +54,6 @@ class BiblestudyViewPopup extends JViewLegacy
 
 	/** @var  string Player Height */
 	public $playerheight;
-
-	/** @var  JRegistry Extra Params */
-	protected $extraparams;
 
 	/** @var  string Flash Vars */
 	public $flashvars;
@@ -88,10 +82,22 @@ class BiblestudyViewPopup extends JViewLegacy
 	/** @var  string Footer Text */
 	public $footertext;
 
+	/** @var  Registry Params */
+	protected $params;
+
+	/** @var  Registry Params */
+	protected $state;
+
+	/** @var  Registry Extra Params */
+	protected $extraparams;
+
+	/** @var  TableTemplate Template */
+	protected $template;
+
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -108,60 +114,57 @@ class BiblestudyViewPopup extends JViewLegacy
 		 */
 		if ($close == 1)
 		{
-			echo JHTML::_('content.prepare', '<script language="javascript" type="text/javascript">window.close();</script>');
+			echo JHtml::_('content.prepare', '<script language="javascript" type="text/javascript">window.close();</script>');
 		}
 
-		$document = JFactory::getDocument();
+		$this->getMedia = new JBSMMedia;
+		$this->media    = $this->getMedia->getMediaRows2($mediaid);
+		$this->state    = $this->get('state');
 
-		$document->addScript('//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
-		$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
-
-		jimport('joomla.application.component.helper');
-
-		$getMedia     = new jbsMedia;
-		$this->media  = $getMedia->getMediaRows2($mediaid);
-		$template     = JBSMParams::getTemplateparams();
-		$this->params = $template->params;
+		/** @var Registry params */
+		$this->params   = $this->state->template->params;
+		$this->template = $this->state->get('template');
 
 		/*
 		 *  Convert parameter fields to objects.
 		 */
-		$registry = new JRegistry;
+		$registry = new Registry;
 		$registry->loadString($this->media->params);
+		$this->template->params->merge($registry);
+
+		$registry = new Registry;
+		$registry->loadString($this->template->params);
 		$this->params->merge($registry);
 
-		$css = $this->params->get('css', 'biblestudy.css');
-
-		if ($css != '-1')
-		{
-			$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
-		}
+		JHtml::_('biblestudy.framework');
+		JHtml::_('biblestudy.loadcss', $this->params);
 
 		$saveid          = $this->media->id;
 		$this->media->id = $this->media->study_id;
-		$this->loadHelper('elements');
-		$JBSMElements    = new JBSMElements;
-		$this->scripture = $JBSMElements->getScripture($this->params, $this->media, $esv = '0', $scripturerow = '1');
+		$JBSMListing   = new JBSMListing;
+		$this->scripture = $JBSMListing->getScripture($this->params, $this->media, $esv = '0', $scripturerow = '1');
 		$this->media->id = $saveid;
-		$this->date      = $JBSMElements->getstudyDate($this->params, $this->media->studydate);
+		$this->date      = $JBSMListing->getStudyDate($this->params, $this->media->studydate);
 		/*
 		 *  The popup window call the counter function
 		 */
-		$getMedia->hitPlay($mediaid);
-		$this->lenght = $JBSMElements->getDuration($this->params, $this->media);
+		$this->getMedia->hitPlay($mediaid);
+		$this->length = $JBSMListing->getDuration($this->params, $this->media);
 
 		$images                 = new JBSMImages;
 		$seriesimage            = $images->getSeriesThumbnail($this->media->series_thumbnail);
-		$this->series_thumbnail = '<img src="' . JURI::base() . $seriesimage->path . '" width="' . $seriesimage->width . '" height="'
+		$this->series_thumbnail = '<img src="' . JUri::base() . $seriesimage->path . '" width="' . $seriesimage->width . '" height="'
 			. $seriesimage->height . '" alt="' . $this->media->series_text . '" />';
 		$image                  = $images->getTeacherThumbnail($this->media->teacher_thumbnail, $this->media->thumb);
-		$this->teacherimage     = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height
+		$this->teacherimage     = '<img src="' . JUri::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height
 			. '" alt="' . $this->media->teachername . '" />';
-		$this->path1            = $this->media->spath . $this->media->fpath . $this->media->filename;
 
-		if (preg_match('@^(?:http://)?([^/]+)@i', $this->path1))
+		$this->path1 = $this->media->spath . $this->params->get('filename');
+
+		if (!substr_count($this->path1, '://') && !substr_count($this->path1, '//'))
 		{
-			$this->path1 = '//' . $this->path1;
+			$protocol    = $this->params->get('protocol', 'http://');
+			$this->path1 = $protocol . $this->path1;
 		}
 		$this->playerwidth  = $this->params->get('player_width');
 		$this->playerheight = $this->params->get('player_height');
@@ -215,17 +218,17 @@ class BiblestudyViewPopup extends JViewLegacy
 		{
 			$this->autostart = 'false';
 		}
-		$this->headertext = $this->titles($this->params->get('popuptitle'), $this->media, $this->scripture, $this->date, $this->lenght);
+		$this->headertext = $this->titles($this->params->get('popuptitle'), $this->media, $this->scripture, $this->date, $this->length);
 
 		if ($this->params->get('itempopuptitle'))
 		{
-			$this->headertext = $this->titles($this->params->get('itempopuptitle'), $this->media, $this->scripture, $this->date, $this->lenght);
+			$this->headertext = $this->titles($this->params->get('itempopuptitle'), $this->media, $this->scripture, $this->date, $this->length);
 		}
-		$this->footertext = $this->titles($this->params->get('popupfooter'), $this->media, $this->scripture, $this->date, $this->lenght);
+		$this->footertext = $this->titles($this->params->get('popupfooter'), $this->media, $this->scripture, $this->date, $this->length);
 
 		if ($this->params->get('itempopupfooter'))
 		{
-			$this->footertext = $this->titles($this->params->get('itempopupfooter'), $this->media, $this->scripture, $this->date, $this->lenght);
+			$this->footertext = $this->titles($this->params->get('itempopupfooter'), $this->media, $this->scripture, $this->date, $this->length);
 		}
 
 		parent::display($tpl);
@@ -234,11 +237,11 @@ class BiblestudyViewPopup extends JViewLegacy
 	/**
 	 * Set Titles
 	 *
-	 * @param   string $text       Text info
-	 * @param   object $media      Media info
-	 * @param   string $scripture  scripture
-	 * @param   string $date       Date
-	 * @param   string $length     Length of Title
+	 * @param   string  $text       Text info
+	 * @param   object  $media      Media info
+	 * @param   string  $scripture  scripture
+	 * @param   string  $date       Date
+	 * @param   string  $length     Length of Title
 	 *
 	 * @return object
 	 */
@@ -252,9 +255,9 @@ class BiblestudyViewPopup extends JViewLegacy
 		{
 			$text = str_replace('{{studydate}}', $date, $text);
 		}
-		if (isset($media->filename))
+		if ($this->params->get('filename'))
 		{
-			$text = str_replace('{{filename}}', $media->filename, $text);
+			$text = str_replace('{{filename}}', $this->params->get('filename'), $text);
 		}
 		if (isset($media->studyintro))
 		{
@@ -289,5 +292,3 @@ class BiblestudyViewPopup extends JViewLegacy
 	}
 
 }
-
-// End of class

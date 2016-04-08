@@ -3,36 +3,32 @@
  * Default
  *
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-JHTML::_('behavior.tooltip');
-
-$jview = new JViewLegacy;
-$jview->loadHelper('listing');
-$jview->loadHelper('landing');
+JHtml::_('behavior.tooltip');
 
 $JBSMLanding = new JBSMLanding;
-
+/** @var Joomla\Registry\Registry $params */
 $params = $this->params;
 ?>
 
 <div id="biblestudy_landing" class="noRefTagger"> <!-- This div is the container for the whole page -->
-    <div id="bsms_header">
-        <h1 class="componentheading">
+	<div id="bsms_header">
+		<h1 class="componentheading">
 			<?php
 			if ($this->params->get('show_page_image') > 0)
 			{
 				if (isset($this->main->path))
 				{
 					?>
-                    <img src="<?php echo JURI::base() . $this->main->path; ?>"
-                         alt="<?php echo $this->params->get('page_title'); ?>" width="<?php echo $this->main->width; ?>"
-                         height="<?php echo $this->main->height; ?>"/>
+					<img src="<?php echo JUri::base() . $this->main->path; ?>"
+					     alt="<?php echo $this->params->get('page_title'); ?>" width="<?php echo $this->main->width; ?>"
+					     height="<?php echo $this->main->height; ?>"/>
 					<?php
 					// End of column for logo
 				}
@@ -42,9 +38,9 @@ $params = $this->params;
 				echo $this->params->get('page_title');
 			}
 			?>
-        </h1>
-    </div>
-    <!-- End div id="bsms_header" -->
+		</h1>
+	</div>
+	<!-- End div id="bsms_header" -->
 
 	<?php
 	$i = 1;
@@ -63,44 +59,37 @@ $params = $this->params;
 			{
 
 				case 'teachers':
-					$jview->loadHelper('teacher');
-					$heading       = $JBSMLanding->getTeacherLandingPage($params, $id = 0, $this->admin_params);
+					$heading       = $JBSMLanding->getTeacherLandingPage($params, $id = 0);
 					$showIt_phrase = JText::_('JBS_CMN_TEACHERS');
 					break;
 
 				case 'series':
-					$jview->loadHelper('serieslist');
-					$heading       = $JBSMLanding->getSeriesLandingPage($params, $id = 0, $this->admin_params);
+					$heading       = $JBSMLanding->getSeriesLandingPage($params, $id = 0);
 					$showIt_phrase = JText::_('JBS_CMN_SERIES');
 					break;
 
 				case 'locations':
-					$jview->loadHelper('location');
-					$heading       = $JBSMLanding->getLocationsLandingPage($params, $id = 0, $this->admin_params);
+					$heading       = $JBSMLanding->getLocationsLandingPage($params, $id = 0);
 					$showIt_phrase = JText::_('JBS_CMN_LOCATIONS');
 					break;
 
 				case 'messagetypes':
-					$jview->loadHelper('messagetype');
-					$heading       = $JBSMLanding->getMessageTypesLandingPage($params, $id = 0, $this->admin_params);
-					$showIt_phrase = JText::_('JBS_CMN_MESSAGE_TYPES');
+					$heading       = $JBSMLanding->getMessageTypesLandingPage($params, $id = 0);
+					$showIt_phrase = JText::_('JBS_CMN_MESSAGETYPES');
 					break;
 
 				case 'topics':
-					$jview->loadHelper('topics');
-					$heading       = $JBSMLanding->getTopicsLandingPage($params, $id = 0, $this->admin_params);
+					$heading       = $JBSMLanding->getTopicsLandingPage($params, $id = 0);
 					$showIt_phrase = JText::_('JBS_CMN_TOPICS');
 					break;
 
 				case 'books':
-					$jview->loadHelper('book');
-					$heading       = $JBSMLanding->getBooksLandingPage($params, $id = 0, $this->admin_params);
+					$heading       = $JBSMLanding->getBooksLandingPage($params, $id = 0);
 					$showIt_phrase = JText::_('JBS_CMN_BOOKS');
 					break;
 
 				case 'years':
-					$jview->loadHelper('year');
-					$heading       = $JBSMLanding->getYearsLandingPage($params, $id = 0, $this->admin_params);
+					$heading       = $JBSMLanding->getYearsLandingPage($params, $id = 0);
 					$showIt_phrase = JText::_('JBS_CMN_YEARS');
 					break;
 			}
@@ -120,7 +109,7 @@ $params = $this->params;
 				{
 					case 0: // Image only
 						$showhideall .= $buttonlink;
-						$showhideall .= "\n\t\t" . '<img src="' . JURI::base() . $showhide_tmp->path . '" alt="' . JText::_('JBS_CMN_SHOW_HIDE_ALL');
+						$showhideall .= "\n\t\t" . '<img src="' . JUri::base() . $showhide_tmp->path . '" alt="' . JText::_('JBS_CMN_SHOW_HIDE_ALL');
 						$showhideall .= ' ' . $showIt_phrase . '" title="' . JText::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' . $showIt_phrase . '" border="0" width="';
 						$showhideall .= $showhide_tmp->width . '" height="' . $showhide_tmp->height . '" />';
 
@@ -131,7 +120,7 @@ $params = $this->params;
 
 					case 1: // Image and label
 						$showhideall .= $buttonlink;
-						$showhideall .= "\n\t\t" . '<img src="' . JURI::base() . $showhide_tmp->path . '" alt="' . JText::_('JBS_CMN_SHOW_HIDE_ALL');
+						$showhideall .= "\n\t\t" . '<img src="' . JUri::base() . $showhide_tmp->path . '" alt="' . JText::_('JBS_CMN_SHOW_HIDE_ALL');
 						$showhideall .= ' ' . $showIt_phrase . '" title="' . JText::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' . $showIt_phrase . '" border="0" width="';
 						$showhideall .= $showhide_tmp->width . '" height="' . $showhide_tmp->height . '" />';
 
@@ -153,16 +142,16 @@ $params = $this->params;
 				$showhideall .= "\n" . '      </div> <!-- end div id="showhide" for ' . $i . ' -->' . "\n";
 			}
 			?>
-            <!-- Wrap each in a DIV... -->
-            <div class="landing_item">
-                <div class="landing_title">
+			<!-- Wrap each in a DIV... -->
+			<div class="landing_item">
+				<div class="landing_title">
 					<?php
 					echo $params->get($showIt . 'label');
 					echo "\n";
 					?>
-                </div>
-                <!-- end div id="landing_title" -->
-                <div class="landinglist">
+				</div>
+				<!-- end div id="landing_title" -->
+				<div class="landinglist">
 					<?php
 					if (isset($showhideall))
 					{
@@ -173,10 +162,10 @@ $params = $this->params;
 						echo $heading;
 					}
 					?>
-                </div>
-                <!-- end div class="landinglist" -->
-            </div><!-- end div class="landing_item" -->
-			<?php
+				</div>
+				<!-- end div class="landinglist" -->
+			</div><!-- end div class="landing_item" -->
+		<?php
 		}
 	} // End Loop for the landing items
 	?>

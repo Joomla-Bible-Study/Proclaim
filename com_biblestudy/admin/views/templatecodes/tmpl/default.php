@@ -10,16 +10,9 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-if (BIBLESTUDY_CHECKREL)
-{
-	JHtml::_('bootstrap.tooltip');
-	JHtml::_('dropdown.init');
-	JHtml::_('formbehavior.chosen', 'select');
-}
-else
-{
-	JHtml::_('behavior.tooltip');
-}
+JHtml::_('bootstrap.tooltip');
+JHtml::_('dropdown.init');
+JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.multiselect');
 
 $app        = JFactory::getApplication();
@@ -34,9 +27,10 @@ $sortFields = $this->getSortFields();
 ?>
 <script type="text/javascript">
     Joomla.orderTable = function () {
-        table = document.getElementById("sortTable");
-        direction = document.getElementById("directionTable");
-        order = table.options[table.selectedIndex].value;
+        var table = document.getElementById("sortTable");
+        var direction = document.getElementById("directionTable");
+        var order = table.options[table.selectedIndex].value;
+	    var dirn;
         if (order != '<?php echo $listOrder; ?>') {
             dirn = 'asc';
         } else {
@@ -50,6 +44,7 @@ $sortFields = $this->getSortFields();
 	<?php if (!empty($this->sidebar)): ?>
     <div id="j-sidebar-container" class="span2">
 		<?php echo $this->sidebar; ?>
+	    <hr/>
     </div>
         <div id="j-main-container" class="span10">
         <?php else : ?>
@@ -73,7 +68,7 @@ $sortFields = $this->getSortFields();
         </div>
         <div class="btn-group pull-right hidden-phone">
             <label for="limit"
-                   class="element-invisible"><?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'); ?></label>
+                   class="element-invisible"><?php echo JText::_('JGLOBAL_DISPLAY_NUM'); ?></label>
 			<?php echo $this->pagination->getLimitBox(); ?>
         </div>
         <div class="btn-group pull-right hidden-phone">
@@ -92,18 +87,6 @@ $sortFields = $this->getSortFields();
 				<?php echo JHtml::_('select.options', $sortFields, 'value', 'text', $listOrder); ?>
             </select>
         </div>
-		<?php if (!BIBLESTUDY_CHECKREL): ?>
-		<div class="clearfix"></div>
-        <div class="btn-group pull-right">
-            <label for="filter_published" id="filter_published"
-                   class="element-invisible"><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></label>
-            <select name="filter_published" class="input-medium" onchange="this.form.submit()">
-                <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
-				<?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true); ?>
-            </select>
-        </div>
-
-		<?php endif; ?>
     </div>
     <div class="clearfix"></div>
 
@@ -136,9 +119,9 @@ $sortFields = $this->getSortFields();
 			$link               = JRoute::_('index.php?option=com_biblestudy&task=templatecode.edit&id=' . (int) $item->id);
 			$item->max_ordering = 0; //??
 			$canCreate          = $user->authorise('core.create');
-			$canEdit            = $user->authorise('core.edit', 'com_biblestudy.mediafile.' . $item->id);
-			$canEditOwn         = $user->authorise('core.edit.own', 'com_biblestudy.mediafile.' . $item->id);
-			$canChange          = $user->authorise('core.edit.state', 'com_biblestudy.mediafile.' . $item->id);
+			$canEdit            = $user->authorise('core.edit', 'com_biblestudy.templatcode.' . $item->id);
+			$canEditOwn         = $user->authorise('core.edit.own', 'com_biblestudy.templatecode.' . $item->id);
+			$canChange          = $user->authorise('core.edit.state', 'com_biblestudy.templatecode.' . $item->id);
 			?>
         <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo '1' ?>">
 
@@ -147,7 +130,7 @@ $sortFields = $this->getSortFields();
             </td>
             <td class="center">
                 <div class="btn-group">
-					<?php echo JHtml::_('jgrid.published', $item->published, $i, 'messages.', $canChange, 'cb', '', ''); ?>
+					<?php echo JHtml::_('jgrid.published', $item->published, $i, 'templatecodes.', $canChange, 'cb', '', ''); ?>
                 </div>
             </td>
 
@@ -160,34 +143,31 @@ $sortFields = $this->getSortFields();
 					<?php endif; ?>
                     <div class="pull-left">
 						<?php
-						if (BIBLESTUDY_CHECKREL)
-						{
 							// Create dropdown items
-							JHtml::_('dropdown.edit', $item->id, 'message.');
+							JHtml::_('dropdown.edit', $item->id, 'templatecode.');
 							JHtml::_('dropdown.divider');
 							if ($item->published) :
-								JHtml::_('dropdown.unpublish', 'cb' . $i, 'messages.');
+								JHtml::_('dropdown.unpublish', 'cb' . $i, 'templatecodes.');
 							else :
-								JHtml::_('dropdown.publish', 'cb' . $i, 'messages.');
+								JHtml::_('dropdown.publish', 'cb' . $i, 'templatecodes.');
 							endif;
 
 							JHtml::_('dropdown.divider');
 
 							if ($archived) :
-								JHtml::_('dropdown.unarchive', 'cb' . $i, 'messages.');
+								JHtml::_('dropdown.unarchive', 'cb' . $i, 'templatecodes.');
 							else :
-								JHtml::_('dropdown.archive', 'cb' . $i, 'messages.');
+								JHtml::_('dropdown.archive', 'cb' . $i, 'templatecodes.');
 							endif;
 
 							if ($trashed) :
-								JHtml::_('dropdown.untrash', 'cb' . $i, 'messages.');
+								JHtml::_('dropdown.untrash', 'cb' . $i, 'templatecodes.');
 							else :
-								JHtml::_('dropdown.trash', 'cb' . $i, 'messages.');
+								JHtml::_('dropdown.trash', 'cb' . $i, 'templatecodes.');
 							endif;
 
 							// Render dropdown list
 							echo JHtml::_('dropdown.render');
-						}
 						?>
                     </div>
 

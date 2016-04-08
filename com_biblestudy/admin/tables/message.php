@@ -3,12 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
+use Joomla\Registry\Registry;
 
 /**
  * Table class for Message
@@ -27,11 +29,11 @@ class TableMessage extends JTable
 	public $id = null;
 
 	/**
-	 * Published
+	 * Study Date
 	 *
-	 * @var int
+	 * @var string
 	 */
-	public $published = 1;
+	public $studydate = null;
 
 	/**
 	 * Teacher id
@@ -39,13 +41,6 @@ class TableMessage extends JTable
 	 * @var int
 	 */
 	public $teacher_id = null;
-
-	/**
-	 * Study Date
-	 *
-	 * @var string
-	 */
-	public $studydate = null;
 
 	/**
 	 * Study Number
@@ -62,25 +57,11 @@ class TableMessage extends JTable
 	public $booknumber = null;
 
 	/**
-	 * Scripture
-	 *
-	 * @var string
-	 */
-	public $scripture = null;
-
-	/**
 	 * Chapter Begin
 	 *
 	 * @var int
 	 */
 	public $chapter_begin = null;
-
-	/**
-	 * Chapter End
-	 *
-	 * @var int
-	 */
-	public $chapter_end = null;
 
 	/**
 	 * Verse Begin
@@ -90,6 +71,13 @@ class TableMessage extends JTable
 	public $verse_begin = null;
 
 	/**
+	 * Chapter End
+	 *
+	 * @var int
+	 */
+	public $chapter_end = null;
+
+	/**
 	 * Verse End
 	 *
 	 * @var int
@@ -97,74 +85,11 @@ class TableMessage extends JTable
 	public $verse_end = null;
 
 	/**
-	 * Study Title
-	 *
-	 * @var string
-	 */
-	public $studytitle = null;
-
-	/**
-	 * Study Intro
-	 *
-	 * @var string
-	 */
-	public $studyintro = null;
-
-	/**
-	 * MessageType
-	 *
-	 * @var string
-	 */
-	public $messagetype = null;
-
-	/**
-	 * Series ID
-	 *
-	 * @var int
-	 */
-	public $series_id = null;
-
-	/**
-	 * Study Text
-	 *
-	 * @var string
-	 */
-	public $studytext = null;
-
-	/**
-	 * Topics ID
-	 *
-	 * @var int
-	 */
-	public $topics_id = null;
-
-	/**
 	 * Secondary Reference
 	 *
 	 * @var string
 	 */
 	public $secondary_reference = null;
-
-	/**
-	 * Media Hours
-	 *
-	 * @var int
-	 */
-	public $media_hours = null;
-
-	/**
-	 * Media Minutes
-	 *
-	 * @var int
-	 */
-	public $media_minutes = null;
-
-	/**
-	 * Media seconds
-	 *
-	 * @var int
-	 */
-	public $media_seconds = null;
 
 	/**
 	 * Book Number 2
@@ -181,13 +106,6 @@ class TableMessage extends JTable
 	public $chapter_begin2 = null;
 
 	/**
-	 * Chapter End2
-	 *
-	 * @var int
-	 */
-	public $chapter_end2 = null;
-
-	/**
 	 * Verse Begin2
 	 *
 	 * @var int
@@ -195,11 +113,32 @@ class TableMessage extends JTable
 	public $verse_begin2 = null;
 
 	/**
+	 * Chapter End2
+	 *
+	 * @var int
+	 */
+	public $chapter_end2 = null;
+
+	/**
 	 * Verse End2
 	 *
 	 * @var int
 	 */
 	public $verse_end2 = null;
+
+	public $prod_dvd;
+
+	public $prod_cd;
+
+	public $server_cd;
+
+	public $server_dvd;
+
+	public $image_cd;
+
+	public $image_dvd;
+
+	public $studytext2;
 
 	/**
 	 * Comments
@@ -244,6 +183,69 @@ class TableMessage extends JTable
 	public $location_id = null;
 
 	/**
+	 * Study Title
+	 *
+	 * @var string
+	 */
+	public $studytitle = null;
+
+	/**
+	 * Alias
+	 *
+	 * @var string
+	 */
+	public $alias = null;
+
+	/**
+	 * Study Intro
+	 *
+	 * @var string
+	 */
+	public $studyintro = null;
+
+	/**
+	 * Media Hours
+	 *
+	 * @var int
+	 */
+	public $media_hours = null;
+
+	/**
+	 * Media Minutes
+	 *
+	 * @var int
+	 */
+	public $media_minutes = null;
+
+	/**
+	 * Media seconds
+	 *
+	 * @var int
+	 */
+	public $media_seconds = null;
+
+	/**
+	 * MessageType
+	 *
+	 * @var string
+	 */
+	public $messagetype = null;
+
+	/**
+	 * Series ID
+	 *
+	 * @var int
+	 */
+	public $series_id = null;
+
+	/**
+	 * Study Text
+	 *
+	 * @var string
+	 */
+	public $studytext = null;
+
+	/**
 	 * ThumbNail Media
 	 *
 	 * @var string
@@ -271,19 +273,48 @@ class TableMessage extends JTable
 	 */
 	public $params = null;
 
+	public $checked_out;
+
+	public $checked_out_time;
+
 	/**
-	 * The rules associated with this record.
+	 * Published
 	 *
-	 * @var    JRules    A JRules object.
+	 * @var int
 	 */
-	protected $_rules;
+	public $published = 1;
+
+	/** @var string Publish Up */
+	public $publish_up = '0000-00-00 00:00:00';
+
+	/** @var string Publish Down */
+	public $publish_down = '0000-00-00 00:00:00';
+
+	public $modified;
+
+	public $modified_by;
+
+	public $asset_id;
+
+	public $access;
+
+	/**
+	 * Ordering
+	 *
+	 * @var string
+	 */
+	public $ordering = null;
+
+	public $language;
+
+	public $download_id;
 
 	/**
 	 * Constructor.
 	 *
 	 * @param   JDatabaseDriver  &$db  Database connector object
 	 */
-	public function TableMessage(& $db)
+	public function __construct(&$db)
 	{
 		parent::__construct('#__bsms_studies', 'id', $db);
 	}
@@ -305,7 +336,7 @@ class TableMessage extends JTable
 	{
 		if (array_key_exists('params', $array) && is_array($array['params']))
 		{
-			$registry = new JRegistry;
+			$registry = new Registry;
 			$registry->loadArray($array['params']);
 			$array['params'] = $registry->toString();
 		}
@@ -318,6 +349,40 @@ class TableMessage extends JTable
 		}
 
 		return parent::bind($array, $ignore);
+	}
+
+	/**
+	 * Method to store a row in the database from the JTable instance properties.
+	 * If a primary key value is set the row with that primary key value will be
+	 * updated with the instance property values.  If no primary key value is set
+	 * a new row will be inserted into the database with the properties from the
+	 * JTable instance.
+	 *
+	 * @param   boolean  $updateNulls  True to update fields even if they are null.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @link    https://docs.joomla.org/JTable/store
+	 * @since   11.1
+	 */
+	public function store($updateNulls = false)
+	{
+		if (!$this->_rules)
+		{
+			$this->setRules('{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}');
+		}
+
+		return parent::store($updateNulls);
+	}
+
+	/**
+	 * Ordering.
+	 *
+	 * @return void
+	 */
+	public function ordering()
+	{
+
 	}
 
 	/**
@@ -365,20 +430,11 @@ class TableMessage extends JTable
 	 */
 	protected function _getAssetParentId(JTable $table = null, $id = null)
 	{
+		/** @type JTableAsset $asset */
 		$asset = JTable::getInstance('Asset');
 		$asset->loadByName('com_biblestudy');
 
 		return $asset->id;
-	}
-
-	/**
-	 * Ordering.
-	 *
-	 * @return void
-	 */
-	public function ordering()
-	{
-
 	}
 
 }

@@ -1,36 +1,25 @@
 <?php
 /**
- * Default Main
+ * Default for sermons
  *
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-$teacher_menu1 = $this->params->get('teacher_id');
-$teacher_menu = $teacher_menu1[0];
-$topic_menu1 = $this->params->get('topic_id');
-$topic_menu = $topic_menu1[0];
-$book_menu1 = $this->params->get('booknumber');
-$book_menu = $book_menu1[0];
-$location_menu1 = $this->params->get('locations');
-$location_menu = $location_menu1[0];
-$series_menu1 = $this->params->get('series_id');
-$series_menu = $series_menu1[0];
-$messagetype_menu1 = $this->params->get('messagetype');
-$messagetype_menu = $messagetype_menu1[0];
-$params = $this->params;
+JHtml::_('bootstrap.framework');
+JHtml::_('formbehavior.chosen', 'select');
 
-$JViewLegacy = new JViewLegacy;
-$JViewLegacy->loadHelper('teacher');
-$JBSMTeacher = new JBSMTeacher;
-// @todo are we using these $teachers & $listingcall
-$teachers = $params->get('teacher_id');
+$JBSMTeacher  = new JBSMTeacher;
+$teachers     = $JBSMTeacher->getTeachersFluid($this->params);
+$listing      = new JBSMListing;
+$classelement = $listing->createelement($this->params->get('studies_element'));
 ?>
-<div id="biblestudy" class="row-fluid noRefTagger"> <!-- This div is the container for the whole page -->
+
+<div class="container-fluid">
 	<div id="bsheader">
 		<?php
 		if ($this->params->get('showpodcastsubscribelist') == 1)
@@ -38,142 +27,67 @@ $teachers = $params->get('teacher_id');
 			echo $this->subscribe;
 		}
 		?>
-		<h1 class="componentheading">
+	</div>
+	<?php if ($this->params->get('intro_show') > 0)
+	{
+		?>
+		<div class="hero-unit" style="padding-top:30px; padding-bottom:20px;">
 			<?php
-			if ($this->params->get('show_page_image') > 0)
+			if ($this->params->get('listteachers') && $this->params->get('list_teacher_show') > 0)
 			{
 				?>
-				<img src="<?php echo JURI::base() . $this->main->path; ?>"
-				     alt="<?php echo $this->params->get('page_title'); ?>" width="<?php echo $this->main->width; ?>"
-				     height="<?php echo $this->main->height; ?>"/>
-				<?php
-				// End of column for logo
-			}
-			?>
-			<?php
-			if ($this->params->get('show_page_title') > 0)
-			{
-				echo $this->params->get('page_title');
-			}
-			?>
-		</h1>
-		<?php
-		if ($params->get('listteachers') && $params->get('list_teacher_show') > 0)
-		{
-			$teacher = $JBSMTeacher->getTeacher($params, $id = 0, $this->admin_params);
-
-			if ($teacher)
-			{
-				echo $teacher;
-			}
-		}
-		?>
-	</div>
-	<!--header-->
-
-	<div id="listintro">
-		<p>
-			<?php
-			if ($this->template->params->get('intro_show') == 1)
-			{
-				echo $params->get('list_intro');
-			}
-			?>
-		</p>
-	</div>
-	<fieldset id="filter-bar">
-		<div class="filter-select fltrt">
-			<?php
-			if ($this->params->get('use_go_button') > 0)
-			{
-				echo $this->page->gobutton;
-			}
-
-			if ($this->params->get('show_pagination') == 1)
-			{
-				echo '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM') . $this->pagination->getLimitBox() . '</span>';
-			}
-			if (($this->params->get('show_locations_search') > 0 && ($location_menu == -1)) || $this->params->get('show_locations_search') > 1)
-			{
-				echo $this->page->locations;
-			}
-			if (($this->params->get('show_book_search') > 0 && $book_menu == -1) || $this->params->get('show_book_search') > 1)
-			{
-				echo $this->page->books;
-			}
-			if (($this->params->get('show_teacher_search') > 0 && ($teacher_menu == -1)) || $this->params->get('show_teacher_search') > 1)
-			{
-				echo $this->page->teachers;
-			}
-			if (($this->params->get('show_series_search') > 0 && ($series_menu == -1)) || $this->params->get('show_series_search') > 1)
-			{
-				echo $this->page->series;
-			}
-			if (($this->params->get('show_type_search') > 0 && ($messagetype_menu == -1)) || $this->params->get('show_type_search') > 1)
-			{
-				echo $this->page->messagetypes;
-			}
-			if ($this->params->get('show_year_search') > 0)
-			{
-				echo $this->page->years;
-			}
-
-			if ($this->params->get('listlanguage') == 1)
-			{
-				echo $this->page->languages;
-			}
-
-			if ($this->params->get('show_order_search') > 0)
-			{
-				echo $this->page->order;
-			}
-			if (($this->params->get('show_topic_search') > 0 && ($topic_menu == -1)) || $this->params->get('show_topic_search') > 1)
-			{
-				echo $this->page->topics;
-			}
-			if ($this->params->get('show_popular') > 0)
-			{
-				echo $this->page->popular;
-			}
-			?>
+				<div class="row-fluid">
+					<ul class="thumbnails">
+						<?php $spans = 12 / count($teachers);
+						foreach ($teachers as $teacher)
+						{
+							echo '<li class="span' . $spans . '">';
+							if ($this->params->get('teacherlink') > 0)
+							{
+								echo '<a href="index.php?option=com_biblestudy&view=teacher&id=' . $teacher['id'] . '&t=' . $teacher['t'] . '" >
+							<img class="img-polaroid" src="' . JUri::base() . $teacher['image'] . '"></a>';
+							}
+							else
+							{
+								echo '<img class="img-polaroid" src="' . JUri::base() . $teacher['image'] . '">';
+							}
+							if ($this->params->get('teacherlink') > 0)
+							{
+								echo '<div class="caption"><p><a href="index.php?option=com_biblestudy&view=teacher&id=' .
+										$teacher['id'] . '&t=' . $teacher['t'] . '">' . $teacher['name'] . '</a></p>';
+							}
+							else
+							{
+								echo '<div class="caption"><p>' . $teacher['name'] . '</p></div>';
+							}
+							echo '</li>';
+						}
+						?>
+					</ul>
+				</div>
+			<?php } ?>
+			<div class="row-fluid">
+				<div class="span12">
+					<?php if ($this->params->get('show_page_image') > 0)
+					{ ?>
+						<img class="imgcenter" src="<?php echo JUri::base() . $this->main->path; ?>" alt=""><?php } ?>
+					<?php if ($this->params->get('show_page_title') == 1)
+					{ ?><<?php echo $classelement; ?> style="<?php echo $this->params->get('list_title_align'); ?>
+					    "><?php echo $this->params->get('list_page_title'); ?></<?php echo $classelement; ?>><?php } ?>
+				<?php if ($this->params->get('list_intro'))
+				{ ?><p><?php echo $this->params->get('list_intro'); ?></p><?php } ?>
+			</div>
 		</div>
-		<!--dropdownmenu-->
-	</fieldset>
-	<div class="clr"></div>
-	<table class="table table-striped bslisttable">
-		<thead>
-		<?php
-		if (isset($this->items['0']))
-		{
-			$header = $JBSMTeacher->getHeader(
-				$this->items['0'], $params, $this->admin_params, $this->template,
-				$showheader = $params->get('use_headers_list'), $ismodule = 0
-			);
-			echo $header;
-		}
-		?>
-		</thead>
-		<tbody>
+	<?php } ?>
+</div>
 
-		<?php
-		// This sets the alternativing colors for the background of the table cells
-		$class1 = 'bsodd';
-		$class2 = 'bseven';
-		$oddeven = $class1;
-
-		foreach ($this->items as $row)
-		{ // Run through each row of the data result from the model
-
-			// Alternate row colors
-			$oddeven = ($oddeven == $class1) ? $class2 : $class1;
-
-			$listing = $JBSMTeacher->getListing($row, $params, $oddeven, $this->admin_params, $this->template, $ismodule = 0);
-
-			echo $listing;
-		}
-		?>
-		</tbody>
-	</table>
+<div class="container-fluid">
+	<?php echo $this->page->dropdowns; ?>
+	<hr/>
+	<?php
+	$list = $listing->getFluidListing($this->items, $this->params, $this->template, $type = 'sermons');
+	echo $list;
+	?>
 	<div class="listingfooter pagination">
 		<?php
 		if ($this->params->get('show_pagination') == 2)
@@ -183,12 +97,10 @@ $teachers = $params->get('teacher_id');
 		echo $this->pagination->getPageslinks();
 		?>
 	</div>
-	<!--end of bsfooter div-->
 	<?php
 	if ($this->params->get('showpodcastsubscribelist') == 2)
 	{
 		echo $this->subscribe;
 	}
 	?>
-</div><!--end of bspagecontainer div-->
-<div class="clearfix"></div>
+</div>

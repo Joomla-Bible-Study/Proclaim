@@ -40,7 +40,7 @@
            size="80"/>
     <field name="podcastlanguage" type="language" label="JBS_PDC_PODCAST_LANGUAGE"/>
     <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
-           description="COM_CONTACT_FIELD_LANGUAGE_DESC" class="inputbox span12">
+           description="JBS_CMN_SELECT_LANGUAGE_DESC" class="inputbox span12">
         <option value="*">JALL</option>
     </field>
     <field name="detailstemplateid" type="sql"
@@ -71,15 +71,21 @@
     <field name="custom" type="textarea" label="JBS_CMN_CUSTOM"
            description="JBS_PDC_EPISODES_CUSTOM_DESC" size="20" cols="48" rows="2" class="span12"/>
     <field name="episodesubtitle" type="list" default="0"
-        label="JBS_PDC_SUBTITLE" class="span12 small">
-        <option value="0">JBS_PDC_TEACHER</option>
-        <option value="1">JBS_PDC_TEACHER_SCRIPTURE</option>
-        <option value="2">JBS_PDC_SCRIPTURE_ONLY</option>
+        label="JBS_PDC_EPISODE_SUBTITLE" class="span12 small">
+        <option value="0">JBS_CMN_TEACHER</option>
+        <option value="1">JBS_PDC_EPISODE_TEACHER_SCRIPTURE</option>
+        <option value="2">JBS_PDC_EPISODE_SCRIPTURE_ONLY</option>
         <option value="3">JBS_PDC_EPISODE_TITLE_ONLY</option>
         <option value="4">JBS_PDC_EPISODE_DATE_SCRIPTURE_TITLE</option>
         <option value="5">JBS_PDC_EPISODE_SCRIPTURE_TITLE</option>
         <option value="6">JBS_PDC_BOOK_CHAPTER</option>
         <option value="7">JBS_CMN_CUSTOM</option>
+    </field>
+    <field name="linktype" type="list" default="0"
+           label="JBS_PDC_LINKTYPE" description="JBS_PDC_LINKTYPE_DESC">
+        <option value="0">JBS_PDC_LINK_EPISODE</option>
+        <option value="1">JBS_PDC_LINK_DIRECT_MEDIA</option>
+        <option value="2">JBS_PDC_LINK_MEDIA_PLAYER</option>
     </field>
     <field name="customsubtitle" type="textarea" label="JBS_CMN_CUSTOM"
            description="JBS_PDC_EPISODES_CUSTOM_DESC" size="20" cols="48" rows="2" class="span12"/>

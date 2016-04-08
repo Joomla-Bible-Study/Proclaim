@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -56,7 +56,7 @@ class BiblestudyViewServers extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -65,10 +65,13 @@ class BiblestudyViewServers extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$this->items      = $this->get('Items');
-		$this->pagination = $this->get('Pagination');
-		$this->state      = $this->get('State');
-		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'server');
+		$this->items         = $this->get('Items');
+		$this->pagination    = $this->get('Pagination');
+		$this->state         = $this->get('State');
+		$this->canDo         = JBSMBibleStudyHelper::getActions('', 'server');
+		$this->types         = $this->get('ServerOptions');
+		$this->filterForm    = $this->get('FilterForm');
+		$this->activeFilters = $this->get('ActiveFilters');
 
 		// Check for errors
 		if (count($errors = $this->get('Errors')))
@@ -98,10 +101,7 @@ class BiblestudyViewServers extends JViewLegacy
 		{
 			$this->addToolbar();
 
-			if (BIBLESTUDY_CHECKREL)
-			{
-				$this->sidebar = JHtmlSidebar::render();
-			}
+			$this->sidebar = JHtmlSidebar::render();
 		}
 
 		// Set the document
@@ -120,59 +120,35 @@ class BiblestudyViewServers extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		$user = JFactory::getUser();
-
-		// Get the toolbar object instance
-		$bar = JToolBar::getInstance('toolbar');
-		JToolBarHelper::title(JText::_('JBS_CMN_SERVERS'), 'servers.png');
+		JToolbarHelper::title(JText::_('JBS_CMN_SERVERS'), 'database database');
 
 		if ($this->canDo->get('core.create'))
 		{
-			JToolBarHelper::addNew('server.add');
+			JToolbarHelper::addNew('server.add');
 		}
+
 		if ($this->canDo->get('core.edit'))
 		{
-			JToolBarHelper::editList('server.edit');
+			JToolbarHelper::editList('server.edit');
 		}
+
 		if ($this->canDo->get('core.edit.state'))
 		{
-			JToolBarHelper::divider();
-			JToolBarHelper::publishList('servers.publish');
-			JToolBarHelper::unpublishList('servers.unpublish');
-			JToolBarHelper::archiveList('servers.archive', 'JTOOLBAR_ARCHIVE');
+			JToolbarHelper::divider();
+			JToolbarHelper::publishList('servers.publish');
+			JToolbarHelper::unpublishList('servers.unpublish');
+			JToolbarHelper::divider();
+			JToolbarHelper::archiveList('servers.archive');
 		}
 
-		// Add a batch button
-		if ($user->authorise('core.edit'))
-		{
-			if (BIBLESTUDY_CHECKREL)
-			{
-				JHtml::_('bootstrap.modal', 'collapseModal');
-			}
-			$title = JText::_('JBS_CMN_BATCH_LABLE');
-			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
-						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
-						$title</button>";
-			$bar->appendButton('Custom', $dhtml, 'batch');
-		}
-		if (BIBLESTUDY_CHECKREL)
-		{
-			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=servers');
-
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
-				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
-			);
-
-		}
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
-			JToolBarHelper::deleteList('', 'servers.delete', 'JTOOLBAR_EMPTY_TRASH');
+			JToolbarHelper::deleteList('', 'servers.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
-        elseif ($this->canDo->get('core.delete'))
-        {
-            JToolBarHelper::trash('servers.trash');
-        }
+		elseif ($this->canDo->get('core.delete'))
+		{
+			JToolbarHelper::trash('servers.trash');
+		}
 	}
 
 	/**

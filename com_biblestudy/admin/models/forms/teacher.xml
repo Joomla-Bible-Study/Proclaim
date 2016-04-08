@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
     <fieldset addfieldpath="/administrator/components/com_contact/models/fields">
-        <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
+        <field name="id" type="hidden" label="JGLOBAL_FIELD_ID_LABEL"
                description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"
                class="readonly span12 small"/>
         <field name="published"
@@ -49,15 +49,11 @@
                 />
         <field name="title" type="text" class="inputbox" size="60"
                label="JBS_CMN_TITLE" description="JBS_TCH_TITLE_DESC"/>
-        <field name="teacher_image" type="media" label="JBS_TCH_TEACHER_IMAGE"/>
-        <field name="teacher_thumbnail" type="media" label="JBS_TCH_TEACHER_THUMBNAIL"/>
-        <field name="image" type="text" class="inputbox" size="60"
-               label="JBS_TCH_LARGE_IMAGE_URL" description="JBS_TCH_IMAGE_URL_DESC"/>
-        <field name="thumb" type="text" class="inputbox" size="60"
-               label="JBS_TCH_THUMBNAIL_URL" description="JBS_TCH_IMAGE_URL_DESC"/>
-        <field name="phone" type="text" class="inputbox" size="60"
+        <field name="image" type="media" accept="image/*" label="JBS_TCH_TEACHER_IMAGE_LARGE" class="span10 small"/>
+        <field name="teacher_image" type="hidden"/>
+        <field name="phone" type="tel" class="inputbox" size="60"
                label="JBS_TCH_PHONE"/>
-        <field name="email" type="text" format="raw" size="50" label="JBS_TCH_EMAIL" description="JBS_TCH_EMAIL_DESC"/>
+        <field name="email" type="email" format="raw" size="50" label="JBS_TCH_EMAIL" description="JBS_TCH_EMAIL_DESC"/>
         <field name="website" type="text" class="inputbox" size="60"
                label="JBS_TCH_WEBSITE"/>
         <field name="short" type="editor" class="inputbox"
@@ -91,7 +87,7 @@
         <field name="address" type="textarea" format="raw" label="JBS_TCH_ADDRESS" description="JBS_TCH_ADDRESS_DESC"
                cols="50" rows="10"/>
         <field name="contact"
-               type="modal_contacts"
+               type="Modal_Contact"
                description="JBS_TCH_SELECT_CONTACT_DESC"
                label="JBS_TCH_SELECT_CONTACT_LABEL"
                 />

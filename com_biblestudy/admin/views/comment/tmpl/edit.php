@@ -3,7 +3,7 @@
  * Form
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -17,8 +17,7 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
-if (BIBLESTUDY_CHECKREL)
-	JHtml::_('formbehavior.chosen', 'select');
+JHtml::_('formbehavior.chosen', 'select');
 
 // Create shortcut to parameters.
 $params = $this->state->get('params');
@@ -103,7 +102,7 @@ $input = $app->input;
 						<div class="tab-pane" id="permissions">
 							<div class="control-group">
 								<div class="control-label">
-									<?php echo JText::_('JBS_CMN_FIELDSET_RULES');?>
+									<?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?>
 								</div>
 								<div class="controls">
 									<?php echo $this->form->getInput('rules'); ?>
@@ -119,7 +118,7 @@ $input = $app->input;
 		</div>
 		<!-- Begin Sidebar -->
 		<div class="span2 form-vertical">
-			<h4><?php echo JText::_('JDETAILS');?></h4>
+			<h4><?php echo JText::_('JDETAILS'); ?></h4>
 			<hr/>
 			<div class="control-group">
 				<div class="control-label">

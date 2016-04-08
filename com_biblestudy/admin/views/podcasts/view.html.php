@@ -1,16 +1,14 @@
 <?php
-
 /**
- * JView html
+ * Podcasts html
  *
  * @package    BibleStudy
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
 
 /**
  * View class for Podcasts
@@ -20,6 +18,19 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewPodcasts extends JViewLegacy
 {
+
+	/**
+	 * Can Do
+	 *
+	 * @var object
+	 */
+	public $canDo;
+
+	/** @var  array Filter Levels */
+	public $f_levels;
+
+	/** @var  array Side Bar */
+	public $sidebar;
 
 	/**
 	 * Items
@@ -43,22 +54,9 @@ class BiblestudyViewPodcasts extends JViewLegacy
 	protected $state;
 
 	/**
-	 * Can Do
-	 *
-	 * @var object
-	 */
-	public $canDo;
-
-	/** @var  array Filter Levels */
-	public $f_levels;
-
-	/** @var  array Side Bar */
-	public $sidebar;
-
-	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -70,8 +68,10 @@ class BiblestudyViewPodcasts extends JViewLegacy
 		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
-		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'podcast');
-		$this->addToolbar();
+
+		$this->canDo         = JBSMBibleStudyHelper::getActions('', 'podcast');
+		$this->filterForm    = $this->get('FilterForm');
+		$this->activeFilters = $this->get('ActiveFilters');
 
 		// Levels filter.
 		$options   = array();
@@ -88,10 +88,9 @@ class BiblestudyViewPodcasts extends JViewLegacy
 
 		$this->f_levels = $options;
 
-		if (BIBLESTUDY_CHECKREL)
-		{
-			$this->sidebar = JHtmlSidebar::render();
-		}
+		$this->addToolbar();
+		$this->sidebar = JHtmlSidebar::render();
+
 		// Display the template
 		parent::display($tpl);
 
@@ -108,54 +107,40 @@ class BiblestudyViewPodcasts extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JToolBarHelper::title(JText::_('JBS_CMN_PODCASTS'), 'podcast.png');
+		JToolbarHelper::title(JText::_('JBS_CMN_PODCASTS'), 'feed feed');
 
 		if ($this->canDo->get('core.create'))
 		{
-			JToolBarHelper::addNew('podcast.add');
+			JToolbarHelper::addNew('podcast.add');
 		}
+
 		if ($this->canDo->get('core.edit'))
 		{
-			JToolBarHelper::editList('podcast.edit');
+			JToolbarHelper::editList('podcast.edit');
 		}
+
 		if ($this->canDo->get('core.edit.state'))
 		{
-			JToolBarHelper::divider();
-			JToolBarHelper::publishList('podcasts.publish');
-			JToolBarHelper::unpublishList('podcasts.unpublish');
-			JToolBarHelper::archiveList('podcasts.archive', 'JTOOLBAR_ARCHIVE');
+			JToolbarHelper::divider();
+			JToolbarHelper::publishList('podcasts.publish');
+			JToolbarHelper::unpublishList('podcasts.unpublish');
+			JToolbarHelper::divider();
+			JToolbarHelper::archiveList('podcasts.archive');
 		}
-        if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
-        {
-            JToolBarHelper::deleteList('', 'podcasts.delete', 'JTOOLBAR_EMPTY_TRASH');
-        }
+
+		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
+		{
+			JToolbarHelper::deleteList('', 'podcasts.delete', 'JTOOLBAR_EMPTY_TRASH');
+		}
 		elseif ($this->canDo->get('core.delete'))
 		{
-			JToolBarHelper::trash('podcasts.trash');
+			JToolbarHelper::trash('podcasts.trash');
 		}
+
 		if ($this->canDo->get('core.create'))
 		{
-			JToolBarHelper::divider();
-			JToolBarHelper::custom('writeXMLFile', 'xml.png', 'JBS_PDC_WRITE_XML_FILES', 'JBS_PDC_WRITE_XML_FILES', false, false);
-		}
-		if (BIBLESTUDY_CHECKREL)
-		{
-			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=series');
-
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
-				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
-			);
-
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_ACCESS'), 'filter_access',
-				JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
-			);
-
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_LANGUAGE'), 'filter_language',
-				JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value', 'text', $this->state->get('filter.language'))
-			);
+			JToolbarHelper::divider();
+			JToolbarHelper::custom('writeXMLFile', 'xml.png', '', 'JBS_PDC_WRITE_XML_FILES', false);
 		}
 	}
 

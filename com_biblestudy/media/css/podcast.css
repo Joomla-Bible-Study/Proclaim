@@ -1,0 +1,54 @@
+/* Podcast Subscription Display Settings */
+
+.podcastsubscribe{
+    clear:both;
+    display:table;
+    width:100%;
+    background-color:#eee;
+    border-radius: 15px 15px 15px 15px;
+    border: 1px solid grey;
+    padding: 1em;
+}
+.podcastsubscribe .image {
+    float: left;
+    padding-right: 5px;
+    display: inline;
+}
+.podcastsubscribe .image .text {
+    display:inline;
+    position:relative;
+    right:50px;
+    bottom:-10px;
+}
+.podcastsubscribe .prow {
+    display: table-row;
+    width:auto;
+    clear:both;
+}
+.podcastsubscribe .pcell {
+    display: table-cell;
+    float:left;
+    background-color:#e3e2e2;
+    border-radius: 15px 15px 15px 15px;
+    border: 1px solid grey;
+    padding: 1em;
+    margin-right: 5px;
+}
+.podcastheader h3{
+    display:table-header;
+    text-align:center;
+}
+
+.podcastheader{
+    font-weight: bold;
+}
+
+.podcastlinks{
+    display: inline;
+
+}
+
+.fltlft {
+    float:left;
+    padding-right: 5px;
+}

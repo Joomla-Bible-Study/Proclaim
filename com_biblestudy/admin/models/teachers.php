@@ -3,14 +3,12 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-jimport('joomla.application.component.modellist');
 
 /**
  * Teachers model class
@@ -24,7 +22,7 @@ class BiblestudyModelTeachers extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config  An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
 	 * @see        JController
 	 * @since      1.7.0
@@ -58,8 +56,8 @@ class BiblestudyModelTeachers extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string $ordering   An optional ordering field.
-	 * @param   string $direction  An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -67,8 +65,6 @@ class BiblestudyModelTeachers extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		$app = JFactory::getApplication();
-
 		// Adjust the context to support modal layouts.
 		$input  = new JInput;
 		$layout = $input->get('layout');
@@ -78,26 +74,11 @@ class BiblestudyModelTeachers extends JModelList
 			$this->context .= '.' . $layout;
 		}
 
-		// Load the parameters.
-		$params = JComponentHelper::getParams('com_biblestudy');
-		$this->setState('params', $params);
-
-		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
-		$this->setState('filter.search', $search);
-
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
 
 		$language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $language);
-
-		// Force a language
-		$forcedLanguage = $app->input->get('forcedLanguage');
-		if (!empty($forcedLanguage))
-		{
-			$this->setState('filter.language', $forcedLanguage);
-			$this->setState('filter.forcedLanguage', $forcedLanguage);
-		}
 
 		// List state information.
 		parent::populateState('teacher.teachername', 'asc');
@@ -110,7 +91,7 @@ class BiblestudyModelTeachers extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param   string $id  A prefix for the store id.
+	 * @param   string  $id  A prefix for the store id.
 	 *
 	 * @return  string  A store id.
 	 *
@@ -120,7 +101,6 @@ class BiblestudyModelTeachers extends JModelList
 	{
 
 		// Compile the store id.
-		$id .= ':' . $this->getState('filter.search');
 		$id .= ':' . $this->getState('filter.published');
 		$id .= ':' . $this->getState('filter.language');
 
@@ -160,25 +140,6 @@ class BiblestudyModelTeachers extends JModelList
 		elseif ($published === '')
 		{
 			$query->where('(teacher.published = 0 OR teacher.published = 1)');
-		}
-
-		// Filter by search in title.
-		$search = $this->getState('filter.search');
-		if (!empty($search))
-		{
-			if (stripos($search, 'id:') === 0)
-			{
-				$query->where('teacher.id = ' . (int) substr($search, 3));
-			}
-			elseif (stripos($search, 'title:') === 0)
-			{
-				$query->where('teacher.title = ' . $db->q(substr($search, 6)));
-			}
-			else
-			{
-				$search = $db->quote('%' . $db->escape($search, true) . '%');
-				$query->where('(teacher.teachername LIKE ' . $search . ')');
-			}
 		}
 
 		// Add the list ordering clause

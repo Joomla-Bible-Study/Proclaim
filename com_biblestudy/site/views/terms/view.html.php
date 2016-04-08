@@ -3,14 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
+use Joomla\Registry\Registry;
 
 // This is the popup window for the teachings.  We could put anything in this window.
 /**
@@ -22,9 +22,16 @@ JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
 class BiblestudyViewTerms extends JViewLegacy
 {
 	/**
+	 * Media
+	 *
+	 * @var Object
+	 */
+	public $media;
+
+	/**
 	 * Params
 	 *
-	 * @var JRegistry
+	 * @var Registry
 	 */
 	protected $params;
 
@@ -33,26 +40,18 @@ class BiblestudyViewTerms extends JViewLegacy
 	 *
 	 * @var JDocument
 	 */
-	protected $document;
-
-	/**
-	 * Media
-	 *
-	 * @var Object
-	 */
-	public $media;
+	public $document;
 
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
 	public function display($tpl = null)
 	{
 		$input       = new JInput;
-		$t           = $input->get('t', 1, 'int');
 		$mid         = $input->get('mid', '', 'int');
 		$compat_mode = $input->get('compat_mode', '0', 'int');
 
@@ -66,6 +65,11 @@ class BiblestudyViewTerms extends JViewLegacy
 		$query->where('id= ' . (int) $mid);
 		$db->setQuery($query);
 		$this->media = $db->loadObject();
+
+		// Params are the individual params for the media file record
+		$registory = new Registry;
+		$registory->loadString($this->media->params);
+		$this->media->params = $registory;
 		?>
 		<div class="termstext">
 			<?php
@@ -76,7 +80,7 @@ class BiblestudyViewTerms extends JViewLegacy
 			<?php
 			if ($compat_mode == 1)
 			{
-				echo '<a href="//joomlabiblestudy.org/router.php?file=' . $this->media->spath . $this->media->fpath . $this->media->filename
+				echo '<a href="http://joomlabiblestudy.org/router.php?file=' . $this->media->spath . $this->media->fpath . $this->media->filename
 					. '&size=' . $this->media->size . '">' . JText::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a>';
 			}
 			else
@@ -117,30 +121,30 @@ class BiblestudyViewTerms extends JViewLegacy
 			$this->params->def('page_heading', JText::_('JGLOBAL_ARTICLES'));
 		}
 		$title = $this->params->get('page_title', '');
-		$title .= ' : ' . $this->media->filename;
+		$title .= ' : ' . $this->media->params->get('filename');
 
 		if (empty($title))
 		{
-			$title = $app->getCfg('sitename');
+			$title = $app->get('sitename');
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 1)
+		elseif ($app->get('sitename_pagetitles', 0) == 1)
 		{
-			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
+			$title = JText::sprintf('JPAGETITLE', $app->get('sitename'), $title);
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 2)
+		elseif ($app->get('sitename_pagetitles', 0) == 2)
 		{
-			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
+			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
 		$this->document->setTitle($title);
 
 		// Prepare meta information (under development)
 		if ($itemparams->get('metakey'))
 		{
-			$this->document->setMetadata('keywords', $itemparams->get('metakey'));
+			$this->document->setMetaData('keywords', $itemparams->get('metakey'));
 		}
 		elseif ($this->params->get('menu-meta_keywords'))
 		{
-			$this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
+			$this->document->setMetaData('keywords', $this->params->get('menu-meta_keywords'));
 		}
 
 		if ($itemparams->get('metadesc'))
@@ -154,10 +158,8 @@ class BiblestudyViewTerms extends JViewLegacy
 
 		if ($this->params->get('robots'))
 		{
-			$this->document->setMetadata('robots', $this->params->get('robots'));
+			$this->document->setMetaData('robots', $this->params->get('robots'));
 		}
 	}
 
 }
-
-//end of class

@@ -3,14 +3,12 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-jimport('joomla.application.component.modellist');
 
 /**
  * Templates model class
@@ -37,7 +35,7 @@ class BiblestudyModelTemplates extends JModelList
 	{
 		if (empty($this->_templates))
 		{
-			$query            = 'SELECT id as value, title as text FROM #__bsms_templates WHERE published = 1 ORDER BY id ASC';
+			$query            = 'SELECT id as value, title as text FROM `#__bsms_templates` WHERE published = 1 ORDER BY id ASC';
 			$this->_templates = $this->_getList($query);
 		}
 
@@ -69,8 +67,8 @@ class BiblestudyModelTemplates extends JModelList
 	/**
 	 * Populate State
 	 *
-	 * @param   string $ordering   An optional ordering field.
-	 * @param   string $direction  An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -140,7 +138,7 @@ class BiblestudyModelTemplates extends JModelList
 			}
 			else
 			{
-				$search = $db->Quote('%' . $db->escape($search, true) . '%');
+				$search = $db->quote('%' . $db->escape($search, true) . '%');
 				$query->where('(template.title LIKE ' . $search . ' OR template.params LIKE ' . $search . ')');
 			}
 		}

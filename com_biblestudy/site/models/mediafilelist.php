@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -24,122 +24,6 @@ class BiblestudyModelMediafilelist extends BiblestudyModelMediafiles
 {
 
 	/**
-	 * Build Query
-	 *
-	 * @return string
-	 *
-	 * @todo may not be needed.
-	 */
-	public function _buildQuery()
-	{
-		$where   = $this->_buildContentWhere();
-		$orderby = $this->_buildContentOrderBy();
-		$query   = ' SELECT m.*, s.id AS sid, s.studytitle, md.media_image_name, md.id AS mid'
-			. ' FROM #__bsms_mediafiles AS m'
-			. ' LEFT JOIN #__bsms_studies AS s ON (s.id = m.study_id)'
-			. ' LEFT JOIN #__bsms_media AS md ON (md.id = m.media_image)'
-			. $where
-			. $orderby;
-
-		return $query;
-	}
-
-	/**
-	 * Retrieves the data
-	 *
-	 * @return array Array of objects containing the data from the database
-	 *
-	 * @todo may not be needed.
-	 */
-	public function getData()
-	{
-		// Lets load the data if it doesn't already exist
-		if (empty($this->_data))
-		{
-			$query       = $this->_buildQuery();
-			$this->_data = $this->_getList($query, (int) $this->getState('limitstart'), (int) $this->getState('limit'));
-		}
-
-		return $this->_data;
-	}
-
-	/**
-	 * Build Content Where
-	 *
-	 * @return string
-	 *
-	 * @todo may not be needed.
-	 */
-	public function _buildContentWhere()
-	{
-		$mainframe      = JFactory::getApplication();
-		$input          = new JInput;
-		$option         = $input->get('option', '', 'cmd');
-		$where          = array();
-		$filter_studyid = $mainframe->getUserStateFromRequest($option . 'filter_studyid', 'filter_studyid', 0, 'int');
-
-		if ($filter_studyid > 0)
-		{
-			$where[] = 'm.study_id = ' . (int) $filter_studyid;
-		}
-		$where = (count($where) ? ' WHERE ' . implode(' AND ', $where) : '');
-
-		return $where;
-	}
-
-	/**
-	 * Build Content Order By
-	 *
-	 * @return string
-	 *
-	 * @todo may not be needed.
-	 */
-	public function _buildContentOrderBy()
-	{
-		$mainframe        = JFactory::getApplication();
-		$input            = new JInput;
-		$option           = $input->get('option', '', 'cmd');
-		$orders           = array(
-			'id',
-			'published',
-			'studytitle',
-			'ordering',
-			'media_image_name',
-			'createdate',
-			'filename'
-		);
-		$filter_order     = $mainframe->getUserStateFromRequest(
-			$option . 'filter_order',
-			'filter_order',
-			'ordering',
-			'cmd'
-		);
-		$filter_order_Dir = strtoupper(
-			$mainframe->getUserStateFromRequest($option . 'filter_order_Dir', 'filter_order_Dir', 'ASC')
-		);
-
-		if ($filter_order_Dir != 'ASC' && $filter_order_Dir != 'DESC')
-		{
-			$filter_order_Dir = 'ASC';
-		}
-		if (!in_array($filter_order, $orders))
-		{
-			$filter_order = 'ordering';
-		}
-
-		if ($filter_order == 'ordering')
-		{
-			$orderby = ' ORDER BY study_id, ordering ' . $filter_order_Dir;
-		}
-		else
-		{
-			$orderby = ' ORDER BY ' . $filter_order . ' ' . $filter_order_Dir . ' , study_id, ordering ';
-		}
-
-		return $orderby;
-	}
-
-	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * This method should only be called once per instantiation and is designed
@@ -148,8 +32,8 @@ class BiblestudyModelMediafilelist extends BiblestudyModelMediafiles
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string $ordering   An optional ordering field.
-	 * @param   string $direction  An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -157,10 +41,31 @@ class BiblestudyModelMediafilelist extends BiblestudyModelMediafiles
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
+		/** @type JApplicationSite $app */
+		$app = JFactory::getApplication('site');
 
 		// Load the parameters.
-		$params = JFactory::getApplication('site')->getParams();
+		$params   = $app->getParams();
 		$this->setState('params', $params);
+		$template = JBSMParams::getTemplateparams();
+		$admin    = JBSMParams::getAdmin();
+
+		$template->params->merge($params);
+		$template->params->merge($admin->params);
+		$params = $template->params;
+
+		$t = $params->get('mediafileid');
+
+		if (!$t)
+		{
+			$input = new JInput;
+			$t     = $input->get('t', 1, 'int');
+		}
+
+		$template->id = $t;
+
+		$this->setState('template', $template);
+		$this->setState('admin', $admin);
 
 		$filename = $this->getUserStateFromRequest($this->context . '.filter.filename', 'filter_filename');
 		$this->setState('filter.filename', $filename);

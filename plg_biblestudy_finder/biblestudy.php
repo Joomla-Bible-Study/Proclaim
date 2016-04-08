@@ -5,11 +5,13 @@
  *
  * @package     BibleStudy
  * @subpackage  Finder.BibleStudy
- * @copyright   (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @copyright   2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        http://www.JoomlaBibleStudy.org
  * */
 defined('JPATH_BASE') or die;
+
+use Joomla\Registry\Registry;
 
 // Load the base adapter.
 require_once JPATH_ADMINISTRATOR . '/components/com_finder/helpers/indexer/adapter.php';
@@ -81,27 +83,13 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 	protected $autoloadLanguage = true;
 
 	/**
-	 * Constructor
-	 *
-	 * @param   object &$subject  The object to observe
-	 * @param   array  $config    An array that holds the plugin configuration
-	 *
-	 * @since   7.1.0
-	 */
-	public function __construct(&$subject, $config)
-	{
-		parent::__construct($subject, $config);
-		$this->loadLanguage();
-	}
-
-	/**
 	 * Method to update the item link information when the item category is
 	 * changed. This is fired when the item category is published or unpublished
 	 * from the list view.
 	 *
-	 * @param   string  $extension  The extension whose category has been updated.
-	 * @param   array   $pks        A list of primary key ids of the content that has changed state.
-	 * @param   integer $value      The value of the state that the content has been changed to.
+	 * @param   string   $extension  The extension whose category has been updated.
+	 * @param   array    $pks        A list of primary key ids of the content that has changed state.
+	 * @param   integer  $value      The value of the state that the content has been changed to.
 	 *
 	 * @return  void
 	 *
@@ -109,18 +97,13 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 	 */
 	public function onFinderCategoryChangeState($extension, $pks, $value)
 	{
-		// We probably don't need this
-		if ($extension == 'com_biblestudy')
-		{
-
-		}
 	}
 
 	/**
 	 * Method to remove the link information for items that have been deleted.
 	 *
-	 * @param   string $context  The context of the action being performed.
-	 * @param   JTable $table    A JTable object containing the record to be deleted
+	 * @param   string  $context  The context of the action being performed.
+	 * @param   JTable  $table    A JTable object containing the record to be deleted
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -149,9 +132,9 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 	/**
 	 * Method to determine if the access level of an item changed.
 	 *
-	 * @param   string  $context  The context of the content passed to the plugin.
-	 * @param   JTable  $row      A JTable object
-	 * @param   boolean $isNew    If the content has just been created
+	 * @param   string   $context  The context of the content passed to the plugin.
+	 * @param   JTable   $row      A JTable object
+	 * @param   boolean  $isNew    If the content has just been created
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -161,7 +144,7 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 	public function onFinderAfterSave($context, $row, $isNew)
 	{
 
-		if ($context == 'com_biblestudy.message')
+		if ($context == 'com_biblestudy.message' || $context == 'com_biblestudy.messageform')
 		{
 			// Check if the access levels are different
 
@@ -183,9 +166,9 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 	 * This event is fired before the data is actually saved so we are going
 	 * to queue the item to be indexed later.
 	 *
-	 * @param   string  $context  The context of the content passed to the plugin.
-	 * @param   JTable  $row      A JTable object
-	 * @param   boolean $isNew    If the content is just about to be created
+	 * @param   string   $context  The context of the content passed to the plugin.
+	 * @param   JTable   $row      A JTable object
+	 * @param   boolean  $isNew    If the content is just about to be created
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -195,7 +178,7 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 	public function onFinderBeforeSave($context, $row, $isNew)
 	{
 		// We only want to handle sermons here
-		if ($context == 'com_biblestudy.message')
+		if ($context == 'com_biblestudy.message' || $context == 'com_biblestudy.messageform')
 		{
 			// Query the database for the old access level if the item isn't new
 			if (!$isNew)
@@ -212,9 +195,9 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 	 * from outside the edit screen. This is fired when the item is published,
 	 * unpublished, archived, or unarchived from the list view.
 	 *
-	 * @param   string  $context  The context for the content passed to the plugin.
-	 * @param   array   $pks      A list of primary key ids of the content that has changed state.
-	 * @param   integer $value    The value of the state that the content has been changed to.
+	 * @param   string   $context  The context for the content passed to the plugin.
+	 * @param   array    $pks      A list of primary key ids of the content that has changed state.
+	 * @param   integer  $value    The value of the state that the content has been changed to.
 	 *
 	 * @return  void
 	 *
@@ -223,7 +206,7 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 	public function onFinderChangeState($context, $pks, $value)
 	{
 		// We only want to handle sermons here
-		if ($context == 'com_biblestudy.message')
+		if ($context == 'com_biblestudy.message' || $context == 'com_biblestudy.messageform')
 		{
 			$this->itemStateChange($pks, $value);
 		}
@@ -238,8 +221,8 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 	/**
 	 * Method to index an item. The item must be a FinderIndexerResult object.
 	 *
-	 * @param   FinderIndexerResult $item    The item to index as an FinderIndexerResult object.
-	 * @param   string              $format  The item format
+	 * @param   FinderIndexerResult  $item    The item to index as an FinderIndexerResult object.
+	 * @param   string               $format  The item format
 	 *
 	 * @return  void
 	 *
@@ -248,6 +231,8 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 	 */
 	protected function index(FinderIndexerResult $item, $format = 'html')
 	{
+		$item->setLanguage();
+
 		// Check if the extension is enabled
 		if (JComponentHelper::isEnabled($this->extension) == false)
 		{
@@ -255,17 +240,22 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 		}
 
 		// Initialize the item parameters.
-		$registry = new JRegistry;
+		$registry = new Registry;
 		$registry->loadString($item->params);
-		$item->params = $registry;
+		$item->params = JComponentHelper::getParams('com_biblestudy', true);
+		$item->params->merge($registry);
+
+		$registry = new Registry;
+		$registry->loadString($item->metadata);
+		$item->metadata = $registry;
 
 		// Trigger the onContentPrepare event.
 		$item->summary = FinderIndexerHelper::prepareContent($item->summary, $item->params);
 		$item->body    = FinderIndexerHelper::prepareContent($item->body, $item->params);
 
 		// Build the necessary route and path information.
-		$item->url   = $this->getURL($item->id, $this->extension, $this->layout);
-		$item->route = JBSMHelperRoute::getArticleRoute($item->slug);
+		$item->url   = $this->getUrl($item->id, $this->extension, $this->layout);
+		$item->route = JBSMHelperRoute::getArticleRoute($item->slug, $item->language);
 		$item->path  = FinderIndexerHelper::getContentPath($item->route);
 
 		// Get the menu title if it exists.
@@ -300,14 +290,7 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 		FinderIndexerHelper::getContentExtras($item);
 
 		// Index the item.
-		if (version_compare(JVERSION, '3.0', 'ge'))
-		{
-			$this->indexer->index($item);
-		}
-		else
-		{
-			FinderIndexer::index($item);
-		}
+		$this->indexer->index($item);
 	}
 
 	/**
@@ -330,7 +313,7 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 
 	/**
 	 * Method to get a SQL query to load the published and access states for
-	 * an article and category.
+	 * an biblestudy.
 	 *
 	 * @return  JDatabaseQuery  A database object.
 	 *
@@ -356,7 +339,7 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 	/**
 	 * Method to get the SQL query used to retrieve the list of content items.
 	 *
-	 * @param   mixed $sql  A JDatabaseQuery object or null.
+	 * @param   mixed  $sql  A JDatabaseQuery object or null.
 	 *
 	 * @return  JDatabaseQuery  A database object.
 	 *
@@ -385,8 +368,8 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 		$sql->select($case_when_item_alias);
 
 		$sql->select('u.teachername AS author')
-				->from('#__bsms_studies AS a')
-				->join('LEFT', '#__bsms_teachers AS u ON u.id = a.teacher_id');
+			->from('#__bsms_studies AS a')
+			->join('LEFT', '#__bsms_teachers AS u ON u.id = a.teacher_id');
 
 		return $sql;
 	}

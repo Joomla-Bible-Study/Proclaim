@@ -3,16 +3,12 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-jimport('joomla.application.component.controller');
-
-JLoader::register('Dump_File', BIBLESTUDY_PATH_LIB . '/biblestudy.download.class.php');
-JLoader::register('jbsMedia', BIBLESTUDY_PATH_LIB . '/biblestudy.media.class.php');
 
 /**
  * Controller class for Sermons
@@ -53,7 +49,7 @@ class BiblestudyControllerSermons extends JControllerLegacy
 
 		if ($task == 'download')
 		{
-			$downloader = new Dump_File;
+			$downloader = new JBSMDownload;
 			$downloader->download($mid);
 		}
 	}
@@ -72,7 +68,6 @@ class BiblestudyControllerSermons extends JControllerLegacy
 		{
 			$mediacode       = $input->get('code', '', 'string');
 			$this->mediaCode = $mediacode;
-			//echo $mediacode;
 		}
 	}
 
@@ -83,7 +78,7 @@ class BiblestudyControllerSermons extends JControllerLegacy
 	 */
 	public function playHit()
 	{
-		$getMedia = new jbsMedia;
+		$getMedia = new JBSMMedia;
 		$input    = new JInput;
 		$getMedia->hitPlay($input->get('id', '', 'int'));
 	}
@@ -98,7 +93,7 @@ class BiblestudyControllerSermons extends JControllerLegacy
 	 */
 	public function inlinePlayer()
 	{
-		echo('{m4vremote}//www.livingwatersweb.com/video/John_14_15-31.m4v{/m4vremote}');
+		echo('{m4vremote}http://www.livingwatersweb.com/video/John_14_15-31.m4v{/m4vremote}');
 	}
 
 }

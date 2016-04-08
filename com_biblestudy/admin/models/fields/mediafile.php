@@ -3,15 +3,15 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-// Import the list field type
-jimport('joomla.form.helper');
+use Joomla\Registry\Registry;
+
 JFormHelper::loadFieldClass('list');
 
 /**
@@ -39,11 +39,10 @@ class JFormFieldMediafile extends JFormFieldList
 	{
 		if ($this->form->getValue('id'))
 		{
-			$db    = JFactory::getDBO();
+			$db    = JFactory::getDbo();
 			$query = $db->getQuery(true);
-			$query->select('a.id, a.filename, b.mimetext');
+			$query->select('a.id, a.params');
 			$query->from('#__bsms_mediafiles as a');
-			$query->join('LEFT', '#__bsms_mimetype as b on a.mime_type = b.id');
 			$query->where('study_id = ' . $this->form->getValue('id'));
 			$db->setQuery((string) $query);
 			$messages = $db->loadObjectList();
@@ -59,7 +58,12 @@ class JFormFieldMediafile extends JFormFieldList
 		{
 			foreach ($messages as $message)
 			{
-				$options[] = JHtml::_('select.option', $message->id, empty($message->filename) ? $message->id . ' - ' . $message->mimetext : $message->filename);
+				$reg = new Registry;
+				$reg->loadString($message->params);
+				$message->params = $reg;
+				$options[]       = JHtml::_('select.option', $message->id, $message->params->get('filename') ? $message->id . ' - ' .
+						$message->params->get('mimetext') : $message->params->get('filename')
+				);
 			}
 		}
 

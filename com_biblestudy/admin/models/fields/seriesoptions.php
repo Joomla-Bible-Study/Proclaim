@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -46,12 +46,12 @@ class JFormFieldSeriesoptions extends JFormFieldList
 		$options[] = JHtml::_('select.option', '3', JText::_('JBS_TPL_SECONDARY_REFERENCES_BRACE'));
 		$options[] = JHtml::_('select.option', '4', JText::_('JBS_TPL_DURATION_BRACE'));
 		$options[] = JHtml::_('select.option', '25', JText::_('JBS_TPL_SERIES_THUMBNAIL_BRACE'));
-		$options[] = JHtml::_('select.option', '6', JText::_('JBS_TPL_INTRODUCTION_BRACE'));
+		$options[] = JHtml::_('select.option', '6', JText::_('JBS_TPL_STUDY_INTRO_BRACE'));
 		$options[] = JHtml::_('select.option', '12', JText::_('JBS_TPL_HITS_BRACE'));
 		$options[] = JHtml::_('select.option', '13', JText::_('JBS_TPL_STUDYNUMBER_BRACE'));
 		$options[] = JHtml::_('select.option', '14', JText::_('JBS_TPL_TOPIC_BRACE'));
 		$options[] = JHtml::_('select.option', '15', JText::_('JBS_TPL_LOCATION_BRACE'));
-		$options[] = JHtml::_('select.option', '16', JText::_('JBS_TPL_MESSAGE_TYPE_BRACE'));
+		$options[] = JHtml::_('select.option', '16', JText::_('JBS_TPL_MESSAGETYPE_BRACE'));
 		$options[] = JHtml::_('select.option', '17', JText::_('JBS_TPL_DETAILS_TEXT_BRACE'));
 		$options[] = JHtml::_('select.option', '18', JText::_('JBS_TPL_DETAILS_TEXT_PDF'));
 		$options[] = JHtml::_('select.option', '19', JText::_('JBS_TPL_DETAILS_PDF'));

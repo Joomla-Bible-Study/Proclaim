@@ -3,23 +3,16 @@
  * Default
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-if (BIBLESTUDY_CHECKREL)
-{
-	JHtml::_('bootstrap.tooltip');
-	JHtml::_('dropdown.init');
-	JHtml::_('formbehavior.chosen', 'select');
-}
-else
-{
-	JHtml::_('behavior.tooltip');
-}
+JHtml::_('bootstrap.tooltip');
+JHtml::_('dropdown.init');
+JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.multiselect');
 
 $app = JFactory::getApplication();
@@ -34,9 +27,10 @@ $sortFields = $this->getSortFields();
 ?>
 <script type="text/javascript">
 	Joomla.orderTable = function () {
-		table = document.getElementById("sortTable");
-		direction = document.getElementById("directionTable");
-		order = table.options[table.selectedIndex].value;
+		var table = document.getElementById("sortTable");
+		var direction = document.getElementById("directionTable");
+		var order = table.options[table.selectedIndex].value;
+		var dirn;
 		if (order != '<?php echo $listOrder; ?>') {
 			dirn = 'asc';
 		} else {
@@ -50,6 +44,7 @@ $sortFields = $this->getSortFields();
 	<?php if (!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
 		<?php echo $this->sidebar; ?>
+		<hr/>
 	</div>
 	<div id="j-main-container" class="span10">
 		<?php else : ?>
@@ -74,7 +69,7 @@ $sortFields = $this->getSortFields();
 				</div>
 				<div class="btn-group pull-right hidden-phone">
 					<label for="limit"
-					       class="element-invisible"><?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'); ?></label>
+					       class="element-invisible"><?php echo JText::_('JGLOBAL_DISPLAY_NUM'); ?></label>
 					<?php echo $this->pagination->getLimitBox(); ?>
 				</div>
 				<div class="btn-group pull-right hidden-phone">
@@ -106,7 +101,7 @@ $sortFields = $this->getSortFields();
 						<input type="checkbox" name="checkall-toggle" value=""
 						       title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
 					</th>
-					<th width="1%" style="min-width:55px" class="nowrap center">
+					<th width="1%" style="min-width:55px;" class="nowrap center">
 						<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'template.published', $listDirn, $listOrder); ?>
 					</th>
 					<th>
@@ -121,7 +116,7 @@ $sortFields = $this->getSortFields();
 				<?php
 				foreach ($this->items as $i => $item) :
 					$link               = JRoute::_('index.php?option=com_biblestudy&task=template.edit&id=' . (int) $item->id);
-					$item->max_ordering = 0; //??
+					$item->max_ordering = 0;
 					$canCreate          = $user->authorise('core.create');
 					$canEdit            = $user->authorise('core.edit', 'com_biblestudy.template.' . $item->id);
 					$canEditOwn         = $user->authorise('core.edit.own', 'com_biblestudy.template.' . $item->id);
@@ -149,8 +144,6 @@ $sortFields = $this->getSortFields();
 							</div>
 							<div class="pull-left">
 								<?php
-								if (BIBLESTUDY_CHECKREL)
-								{
 									// Create dropdown items
 									JHtml::_('dropdown.edit', $item->id, 'template.');
 									JHtml::_('dropdown.divider');
@@ -176,7 +169,6 @@ $sortFields = $this->getSortFields();
 
 									// Render dropdown list
 									echo JHtml::_('dropdown.render');
-								}
 								?>
 							</div>
 						</td>

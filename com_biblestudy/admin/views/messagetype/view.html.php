@@ -3,13 +3,12 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
 
 /**
  * View class for Messagetype
@@ -58,7 +57,7 @@ class BiblestudyViewMessagetype extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -96,25 +95,25 @@ class BiblestudyViewMessagetype extends JViewLegacy
 		$input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolBarHelper::title(JText::_('JBS_CMN_MESSAGE_TYPES') . ': <small><small>[' . $title . ']</small></small>', 'messagetype.png');
+		JToolbarHelper::title(JText::_('JBS_CMN_MESSAGETYPES') . ': <small><small>[' . $title . ']</small></small>', 'menu menu');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_biblestudy'))
 		{
-			JToolBarHelper::apply('messagetype.apply');
-			JToolBarHelper::save('messagetype.save');
-			JToolBarHelper::cancel('messagetype.cancel');
+			JToolbarHelper::apply('messagetype.apply');
+			JToolbarHelper::save('messagetype.save');
+			JToolbarHelper::cancel('messagetype.cancel');
 		}
 		else
 		{
 			if ($this->canDo->get('core.edit', 'com_biblestudy'))
 			{
-				JToolBarHelper::apply('messagetype.apply');
-				JToolBarHelper::save('messagetype.save');
+				JToolbarHelper::apply('messagetype.apply');
+				JToolbarHelper::save('messagetype.save');
 			}
-			JToolBarHelper::cancel('messagetype.cancel', 'JTOOLBAR_CLOSE');
+			JToolbarHelper::cancel('messagetype.cancel', 'JTOOLBAR_CLOSE');
 		}
-		JToolBarHelper::divider();
-		JToolBarHelper::help('biblestudy', true);
+		JToolbarHelper::divider();
+		JToolbarHelper::help('biblestudy', true);
 	}
 
 	/**
@@ -129,8 +128,8 @@ class BiblestudyViewMessagetype extends JViewLegacy
 		$isNew    = ($this->item->id < 1);
 		$document = JFactory::getDocument();
 		$document->setTitle(
-			$isNew ? JText::_('JBS_TITLE_MESSAGE_TYPES_CREATING')
-				: JText::sprintf('JBS_TITLE_MESSAGE_TYPES_EDITING', $this->item->message_type)
+			$isNew ? JText::_('JBS_TITLE_MESSAGETYPES_CREATING')
+				: JText::sprintf('JBS_TITLE_MESSAGETYPES_EDITING', $this->item->message_type)
 		);
 	}
 

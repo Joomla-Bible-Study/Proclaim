@@ -1,17 +1,14 @@
 <?php
-
 /**
  * Controller MediaFile
  *
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-jimport('joomla.application.component.controllerform');
 
 /**
  * Controller class for MediaFile
@@ -43,22 +40,6 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	protected $text_prefix = 'COM_BIBLESTUDY';
 
 	/**
-	 * Method to add a new record.
-	 *
-	 * @return    boolean    True if the article can be added, false if not.
-	 *
-	 * @since    1.6
-	 */
-	public function add()
-	{
-		if (!parent::add())
-		{
-			// Redirect to the return page.
-			$this->setRedirect($this->getReturnPage());
-		}
-	}
-
-	/**
 	 * Constructor.
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
@@ -69,43 +50,85 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	 */
 	public function __construct($config = array())
 	{
-		$input = new JInput;
-		$input->set('a_id', $input->get('a_id', 0, 'int'));
 		parent::__construct($config);
-
-		// Register Extra tasks
-		$this->registerTask('add', 'edit');
-		$this->registerTask('upload', 'upload');
 	}
 
 	/**
-	 * Method override to check if you can add a new record.
+	 * Handles XHR requests (i.e. File uploads)
 	 *
-	 * @param   array  $data  An array of input data.
+	 * @return void
 	 *
-	 * @return  boolean
-	 *
-	 * @since   1.6
+	 * @throws  Exception
+	 * @since   9.0.0
 	 */
-	protected function allowAdd($data = array())
+	public function xhr()
 	{
-		// In the absense of better information, revert to the component permissions.
-		return parent::allowAdd();
+		JSession::checkToken('get') or die('Invalid Token');
+
+		$addonType = $this->input->get('type', 'Legacy', 'string');
+		$handler   = $this->input->get('handler');
+
+		// Load the addon
+		$addon = JBSMAddon::getInstance($addonType);
+
+		if (method_exists($addon, $handler))
+		{
+			echo json_encode($addon->$handler($this->input));
+
+			$app = JFactory::getApplication();
+			$app->close();
+		}
+		else
+		{
+			throw new Exception(JText::sprintf('Handler: "' . $handler . '" does not exist!'), 404);
+		}
 	}
 
 	/**
-	 * Method override to check if you can edit an existing record.
+	 * Method to add a new record.
 	 *
-	 * @param   array   $data  An array of input data.
-	 * @param   string  $key   The name of the key for the primary key.
+	 * @return    boolean    True if the article can be added, false if not.
 	 *
-	 * @return  boolean
-	 *
-	 * @since   1.6
+	 * @since    1.6
 	 */
-	protected function allowEdit($data = array(), $key = 'a_id')
+	public function add()
 	{
-		return true;
+		$app = JFactory::getApplication();
+
+		if (!parent::add())
+		{
+			$app->setUserState('com_biblestudy.edit.mediafile.createdate', null);
+			$app->setUserState('com_biblestudy.edit.mediafile.study_id', null);
+			$app->setUserState('com_biblestudy.edit.mediafile.server_id', null);
+
+			// Redirect to the return page.
+			$this->setRedirect($this->getReturnPage());
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get the return URL.
+	 *
+	 * If a "return" variable has been passed in the request
+	 *
+	 * @return    string    The return URL.
+	 *
+	 * @since    1.6
+	 */
+	protected function getReturnPage()
+	{
+		$return = JFactory::getApplication()->input->get('return', null, 'base64');
+
+		if (empty($return) || !JUri::isInternal(base64_decode($return)))
+		{
+			return JUri::base() . 'index.php?option=com_biblestudy&view=mediafilelist';
+		}
+		else
+		{
+			return base64_decode($return);
+		}
 	}
 
 	/**
@@ -120,9 +143,14 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	public function cancel($key = 'a_id')
 	{
 		parent::cancel($key);
+		if ($this->input->getCmd('return') && parent::cancel($key))
+		{
+			$this->setRedirect(base64_decode($this->input->getCmd('return')));
 
-		// Redirect to the return page.
-		$this->setRedirect($this->getReturnPage());
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -137,7 +165,15 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	 */
 	public function edit($key = null, $urlVar = 'a_id')
 	{
+		$app    = JFactory::getApplication();
 		$result = parent::edit($key, $urlVar);
+
+		if ($result)
+		{
+			$app->setUserState('com_biblestudy.edit.mediafile.createdate', null);
+			$app->setUserState('com_biblestudy.edit.mediafile.study_id', null);
+			$app->setUserState('com_biblestudy.edit.mediafile.server_id', null);
+		}
 
 		return $result;
 	}
@@ -164,83 +200,6 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	}
 
 	/**
-	 * Gets the URL arguments to append to an item redirect.
-	 *
-	 * @param   int     $recordId  The primary key id for the item.
-	 * @param   string  $urlVar    The name of the URL variable for the id.
-	 *
-	 * @return    string    The arguments to append to the redirect URL.
-	 *
-	 * @since    1.6
-	 */
-	protected function getRedirectToItemAppend($recordId = null, $urlVar = 'a_id')
-	{
-		$this->input = new JInput;
-
-		// Need to override the parent method completely.
-		$tmpl   = $this->input->get('tmpl');
-		$layout = $this->input->get('layout', 'edit');
-		$append = '';
-
-		// Setup redirect info.
-		if ($tmpl)
-		{
-			$append .= '&tmpl=' . $tmpl;
-		}
-
-		$append .= '&layout=edit';
-
-		if ($recordId)
-		{
-			$append .= '&' . $urlVar . '=' . $recordId;
-		}
-
-		$itemId = $this->input->getInt('Itemid');
-		$return = $this->getReturnPage();
-		$catId  = $this->input->getInt('catid', null, 'get');
-
-		if ($itemId)
-		{
-			$append .= '&Itemid=' . $itemId;
-		}
-
-		if ($catId)
-		{
-			$append .= '&catid=' . $catId;
-		}
-
-		if ($return)
-		{
-			$append .= '&return=' . base64_encode($return);
-		}
-
-		return $append;
-	}
-
-	/**
-	 * Get the return URL.
-	 *
-	 * If a "return" variable has been passed in the request
-	 *
-	 * @return    string    The return URL.
-	 *
-	 * @since    1.6
-	 */
-	protected function getReturnPage()
-	{
-		$return = JFactory::getApplication()->input->get('return', null, 'base64');
-
-		if (empty($return) || !JUri::isInternal(base64_decode($return)))
-		{
-			return JURI::base() . 'index.php?option=com_biblestudy&view=mediafilelist';
-		}
-		else
-		{
-			return base64_decode($return);
-		}
-	}
-
-	/**
 	 * Method to save a record.
 	 *
 	 * @param   string  $key     The name of the primary key of the URL variable.
@@ -252,92 +211,136 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	 */
 	public function save($key = null, $urlVar = 'a_id')
 	{
-		// Load the backend helper for filtering.
-		// -- require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php';
-		JLoader::register('JBSMHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php');
+		$input = JFactory::getApplication()->input;
+		$input->set('a_id', $input->get('id'));
 		$result = parent::save($key, $urlVar);
-
-		// If ok, redirect to the return page.
-		if ($result)
-		{
-			$this->setRedirect($this->getReturnPage());
-		}
 
 		return $result;
 	}
 
 	/**
-	 * Link to Docman Category Items
+	 * Function that allows child controller access to model data after the data has been saved.
 	 *
-	 * @return object
+	 * @param   JModelLegacy  $model      The data model object.
+	 * @param   array         $validData  The validated data.
 	 *
-	 * @todo This is brocken and not sure if needed. TOM (this function can be removed. I think it is hanlded by admin/fields/docman)
+	 * @return    void
+	 *
+	 * @since    3.1
 	 */
-	public function docmanCategoryItems()
+	protected function postSaveHook(JModelLegacy $model, $validData = array())
 	{
-		// Hide errors and warnings
-		error_reporting(0);
-		$input = new JInput;
-		$catId = $input->get('catId', '', 'int');
+		$return = $this->input->getCmd('return');
+		$task   = $this->input->get('task');
+		if ($return && $task != 'apply')
+		{
+			JFactory::getApplication()->enqueueMessage(JText::_('JBS_MED_SAVE'), 'message');
+			$this->setRedirect(base64_decode($return));
+		}
 
-		$model = $this->getModel('mediafile');
-		$items = $model->getdocManCategoryItems($catId);
-
-		return $items;
+		return;
 	}
 
 	/**
-	 * Link to Sections May need to be Removed.
+	 * Method override to check if you can add a new record.
 	 *
-	 * @todo This is brocken and not sure if needed. TOM
-	 * @return object
+	 * @param   array  $data  An array of input data.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   1.6
 	 */
-	public function articlesSectionCategories()
+	protected function allowAdd($data = array())
 	{
-		error_reporting(0);
-		$input = new JInput;
-		$secId = $input->get('secId', '', 'int');
-
-		$model = & $this->getModel('mediafile');
-		$items = & $model->getArticlesSectionCategories($secId);
-
-		return $items;
+		// In the absence of better information, revert to the component permissions.
+		return parent::allowAdd();
 	}
 
 	/**
-	 * Link to Articles Category Items
+	 * Method override to check if you can edit an existing record.
 	 *
-	 * @todo This is bracken and not sure if needed. TOM
-	 * @return object
+	 * @param   array   $data  An array of input data.
+	 * @param   string  $key   The name of the key for the primary key.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   1.6
 	 */
-	public function articlesCategoryItems()
+	protected function allowEdit($data = array(), $key = 'a_id')
 	{
-		$input = new JInput;
-		error_reporting(0);
-		$catId = $input->get('catId', '', 'int');
-
-		$model = & $this->getModel('mediafile');
-		$items = & $model->getCategoryItems($catId);
-
-		return $items;
+		return true;
 	}
 
 	/**
-	 * Link to VertueMart Items
+	 * Sets the server for this media record
 	 *
-	 * @todo This is brocken and not sure if needed. TOM
-	 * @return object
+	 * @return  void
+	 *
+	 * @since   9.0.0
 	 */
-	public function virtueMartItems()
+	public function setServer()
 	{
-		$input = new JInput;
-		error_reporting(0);
-		$catId = $input->get('catId', '', 'int');
+		$app   = JFactory::getApplication();
+		$input = $app->input;
 
-		$model = & $this->getModel('mediafile');
-		$items = & $model->getVirtueMartItems($catId);
+		$data = $input->get('jform', array(), 'post');
+		$cdate = $data['createdate'];
+		$study_id = $data['study_id'];
+		$server_id = $data['server_id'];
 
-		return $items;
+		// Save server in the session
+		$app->setUserState('com_biblestudy.edit.mediafile.createdate', $cdate);
+		$app->setUserState('com_biblestudy.edit.mediafile.study_id', $study_id);
+		$app->setUserState('com_biblestudy.edit.mediafile.server_id', $server_id);
+
+		$redirect = $this->getRedirectToItemAppend($data['id']);
+		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item . $redirect, false));
 	}
 
+	/**
+	 * Gets the URL arguments to append to an item redirect.
+	 *
+	 * @param   integer  $recordId  The primary key id for the item.
+	 * @param   string   $urlVar    The name of the URL variable for the id.
+	 *
+	 * @return  string  The arguments to append to the redirect URL.
+	 *
+	 * @since   12.2
+	 */
+	protected function getRedirectToItemAppend($recordId = null, $urlVar = 'a_id')
+	{
+		$tmpl    = $this->input->get('tmpl');
+		$layout  = $this->input->get('layout', 'edit', 'string');
+		$options = $this->input->get('options');
+		$return  = $this->input->getCmd('return');
+		$append  = '';
+
+		// Setup redirect info.
+		if ($tmpl)
+		{
+			$append .= '&tmpl=' . $tmpl;
+		}
+
+		if ($layout)
+		{
+			$append .= '&layout=' . $layout;
+		}
+
+		if ($recordId)
+		{
+			$append .= '&' . $urlVar . '=' . $recordId;
+		}
+
+		if ($return)
+		{
+			$append .= '&return=' . $return;
+		}
+
+		if ($options)
+		{
+			$append .= '&options=' . $options;
+		}
+
+		return $append;
+	}
 }

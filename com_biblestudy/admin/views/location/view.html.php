@@ -3,13 +3,12 @@
  * JView html
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
 
 /**
  * View class for Location
@@ -58,7 +57,7 @@ class BiblestudyViewLocation extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -97,21 +96,21 @@ class BiblestudyViewLocation extends JViewLegacy
 		$input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolBarHelper::title(JText::_('JBS_CMN_LOCATIONS') . ': <small><small>[' . $title . ']</small></small>', 'locations.png');
+		JToolbarHelper::title(JText::_('JBS_CMN_LOCATIONS') . ': <small><small>[' . $title . ']</small></small>', 'home home');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_biblestudy'))
 		{
-			JToolBarHelper::apply('location.apply');
-			JToolBarHelper::save('location.save');
-			JToolBarHelper::save2new('location.save2new');
-			JToolBarHelper::cancel('location.cancel');
+			JToolbarHelper::apply('location.apply');
+			JToolbarHelper::save('location.save');
+			JToolbarHelper::save2new('location.save2new');
+			JToolbarHelper::cancel('location.cancel');
 		}
 		else
 		{
 			if ($this->canDo->get('core.edit', 'com_biblestudy'))
 			{
-				JToolBarHelper::apply('location.apply');
-				JToolBarHelper::save('location.save');
+				JToolbarHelper::apply('location.apply');
+				JToolbarHelper::save('location.save');
 
 				// We can save this record, but check the create permission to see if we can return to make a new one.
 				if ($this->canDo->get('core.create', 'com_biblestudy'))
@@ -122,13 +121,13 @@ class BiblestudyViewLocation extends JViewLegacy
 			// If checked out, we can still save
 			if ($this->canDo->get('core.create', 'com_biblestudy'))
 			{
-				JToolBarHelper::save2copy('location.save2copy');
+				JToolbarHelper::save2copy('location.save2copy');
 			}
 
-			JToolBarHelper::cancel('location.cancel', 'JTOOLBAR_CLOSE');
+			JToolbarHelper::cancel('location.cancel', 'JTOOLBAR_CLOSE');
 		}
-		JToolBarHelper::divider();
-		JToolBarHelper::help('biblestudy', true);
+		JToolbarHelper::divider();
+		JToolbarHelper::help('biblestudy', true);
 	}
 
 	/**

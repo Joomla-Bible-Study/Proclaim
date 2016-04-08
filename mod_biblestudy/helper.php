@@ -5,11 +5,13 @@
  *
  * @package     BibleStudy
  * @subpackage  Model.BibleStudy
- * @copyright   (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
+ * @copyright   2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        http://www.JoomlaBibleStudy.org
  * */
 defined('_JEXEC') or die;
+
+use Joomla\Registry\Registry;
 
 /**
  * BibleStudy mod helper
@@ -24,13 +26,14 @@ class ModJBSMHelper
 	/**
 	 * Get Latest
 	 *
-	 * @param   JRegistry  $params  Item Params
+	 * @param   Registry  $params  Item Params
 	 *
 	 * @return array
 	 */
 	public static function getLatest($params)
 	{
-		$items = $params->get('locations', 1);
+		$user   = JFactory::getUser();
+		$groups = implode(',', $user->getAuthorisedViewLevels());
 
 		$db = JFactory::getDbo();
 		$db->setQuery('SET SQL_BIG_SELECTS=1');
@@ -72,7 +75,7 @@ class ModJBSMHelper
                         study.media_seconds, study.series_id, study.chapter_begin2, study.chapter_end2, study.verse_begin2,
 						study.verse_end2, study.thumbnailm, study.thumbhm, study.thumbwm, study.access, study.user_name,
                         study.user_id, study.studynumber,'
-		. ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug ');
+			. ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug ');
 
 		// Join over mediafile ids
 		$query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
@@ -104,6 +107,22 @@ class ModJBSMHelper
 		$query->join('LEFT', '#__bsms_studytopics AS st ON study.id = st.study_id');
 		$query->select('GROUP_CONCAT(DISTINCT t.id), GROUP_CONCAT(DISTINCT t.topic_text) as topics_text, GROUP_CONCAT(DISTINCT t.params)');
 		$query->join('LEFT', '#__bsms_topics AS t ON t.id = st.topic_id');
+
+		// Join over the users for the author and modified_by names.
+		$query->select("CASE WHEN study.user_name > ' ' THEN study.user_name ELSE users.name END AS submitted")
+			->select("users.email AS author_email")
+			->join('LEFT', '#__users AS users ON study.user_id = users.id')
+			->join('LEFT', '#__users AS uam ON uam.id = study.modified_by');
+
+		$query->group('study.id');
+
+		// Filter only for authorized view
+		$query->where('(series.access IN (' . $groups . ') or study.series_id <= 0)');
+		$query->where('study.access IN (' . $groups . ')');
+
+		// Select only published studies
+		$query->where('study.published = 1');
+		$query->where('(series.published = 1 or study.series_id <= 0)');
 
 		// Filter over teachers
 		$filters = $teacher;
@@ -246,7 +265,7 @@ class ModJBSMHelper
 
 		if ($lang || $language != '*')
 		{
-			$query->where('study.language in (' . $db->Quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
+			$query->where('study.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
 		}
 
 		$filters = $messagetype_menu;
@@ -304,74 +323,16 @@ class ModJBSMHelper
 				}
 			}
 		}
+
+		// Select only published studies
 		$query->where('study.published = 1');
+		$query->where('(series.published = 1 or study.series_id <= 0)');
+
 		$query->order('studydate ' . $order);
 		$db->setQuery((string) $query, 0, $params->get('moduleitems', '5'));
 		$rows = $db->loadObjectList();
 
 		return $rows;
-	}
-
-	/**
-	 * Build Content Where
-	 *
-	 * @return void;
-	 *
-	 * @deprecated since version 7.1.0
-	 */
-	public static function _buildContentWhere()
-	{
-		die('function _buildContentWhere() Deprecated since version 7.1.0');
-	}
-
-	/**
-	 * Get Template Setting
-	 *
-	 * @param   JRegistry $params  Item params
-	 *
-	 * @return object
-	 */
-	public static function getTemplate($params)
-	{
-		$db         = JFactory::getDBO();
-		$templateid = $params->get('modulemenuid', 1);
-		$query      = $db->getQuery(true);
-		$query->select('*')->from('#__bsms_templates')->where('published = 1')->where('id = ' . $templateid);
-		$db->setQuery($query);
-		$template = $db->loadObjectList();
-
-		return $template;
-	}
-
-	/**
-	 * Get Admin Setting
-	 *
-	 * @return   object
-	 */
-	public static function getAdmin()
-	{
-		$db    = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->select('*')->from('#__bsms_admin')->where('id = 1');
-		$db->setQuery($query);
-		$admin = $db->loadObjectList();
-
-		return $admin;
-	}
-
-	/**
-	 * Render Study
-	 *
-	 * @param   string  $study   Study ?
-	 * @param   JObject $params  Params
-	 *
-	 * @return void
-	 *
-	 * @todo make this change according to the parameter settings for new template. TOM ????
-	 */
-	public function renderStudy($study = '_study', $params = null)
-	{
-		JModuleHelper::getLayoutPath('mod_biblestudy', $study);
 	}
 
 }

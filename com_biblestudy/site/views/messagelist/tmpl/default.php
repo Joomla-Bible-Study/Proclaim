@@ -3,29 +3,19 @@
  * Default
  *
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-if (BIBLESTUDY_CHECKREL)
-{
-	JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-	JHtml::_('bootstrap.tooltip');
-	JHtml::_('dropdown.init');
-	JHtml::_('formbehavior.chosen', 'select');
-}
-else
-{
-	JHtml::_('behavior.tooltip');
-	JHtml::stylesheet('media/com_biblestudy/css/biblestudy-j2.5.css');
-	JHtml::stylesheet('media/com_biblestudy/jui/css/bootstrap.css');
-	JHtml::script('media/com_biblestudy/jui/js/jquery.js');
-	JHtml::script('media/com_biblestudy/jui/js/jquery-noconflict.js');
-	JHtml::script('media/com_biblestudy/jui/js/bootstrap.js');
-}
+JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+JHtml::_('bootstrap.tooltip');
+JHtml::_('dropdown.init');
+JHtml::_('formbehavior.chosen', 'select');
+JHtml::_('biblestudy.framework');
+JHtml::_('biblestudy.loadcss', $this->params);
 JHtml::_('behavior.multiselect');
 
 $app = JFactory::getApplication();
@@ -76,7 +66,7 @@ $saveOrder = $listOrder == 'ordering';
 			</div>
 			<div class="btn-group btn-small pull-right">
 				<select name="filter_message_type" class="inputbox" onchange="Joomla.submitbutton()">
-					<option value=""><?php echo JText::_('JBS_CMN_MESSAGE_TYPE'); ?></option>
+					<option value=""><?php echo JText::_('JBS_CMN_MESSAGETYPE'); ?></option>
 					<?php echo JHtml::_('select.options', $this->messageTypes, 'value', 'text', $this->state->get('filter.messageType')); ?>
 				</select>
 				<select name="filter_year" class="inputbox" onchange="Joomla.submitbutton()">
@@ -100,10 +90,9 @@ $saveOrder = $listOrder == 'ordering';
 					       title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
 				</th>
 				<th width="1%" class="nowrap hidden-phone">
-					<?php //echo 'id'; ?>
-					<?php echo JHtml::_('grid.sort', 'ID', 'study.id', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('grid.sort', 'JBS_CMN_ID', 'study.id', $listDirn, $listOrder); ?>
 				</th>
-				<th width="1%" style="min-width:25px" class="nowrap center">
+				<th width="1%" style="min-width:25px;" class="nowrap center">
 					<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'study.published', $listDirn, $listOrder); ?>
 				</th>
 				<th width="10%" class="nowrap hidden-phone">
@@ -119,20 +108,20 @@ $saveOrder = $listOrder == 'ordering';
 					<?php echo JHtml::_('grid.sort', 'JBS_CMN_TEACHER', 'teacher.teachername', $listDirn, $listOrder); ?>
 				</th>
 				<th width="5%" class="nowrap hidden-phone">
-					<?php echo JHtml::_('grid.sort', 'JBS_CMN_MESSAGE_TYPE', 'messageType.message_type', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('grid.sort', 'JBS_CMN_MESSAGETYPE', 'messageType.message_type', $listDirn, $listOrder); ?>
 				</th>
 			</tr>
 			</thead>
 			<tbody>
 			<?php
 			foreach ($this->items as $i => $item) :
-				$item->max_ordering = 0; //??
+				$item->max_ordering = 0;
 				$canCreate          = $user->authorise('core.create');
 				$canEdit            = $user->authorise('core.edit', 'com_biblestudy.message.' . $item->id);
 				$canEditOwn         = $user->authorise('core.edit.own', 'com_biblestudy.message.' . $item->id);
 				$canChange          = $user->authorise('core.edit.state', 'com_biblestudy.message.' . $item->id);
 				?>
-				<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->study_id; ?>">
+				<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->id; ?>">
 					<td class="center hidden-phone">
 						<?php echo JHtml::_('grid.id', $i, $item->id); ?>
 					</td>
@@ -141,7 +130,7 @@ $saveOrder = $listOrder == 'ordering';
 					</td>
 					<td class="center">
 						<div class="btn-group">
-                            <?php echo JHtml::_('jgrid.published', $item->published, $i, 'messagelist.', $canChange, 'cb', '', ''); ?>
+							<?php echo JHtml::_('jgrid.published', $item->published, $i, 'messagelist.', $canChange, 'cb', '', ''); ?>
 						</div>
 					</td>
 					<td class="nowrap small hidden-phone">
@@ -158,8 +147,6 @@ $saveOrder = $listOrder == 'ordering';
 						</div>
 						<div class="pull-left">
 							<?php
-							if (BIBLESTUDY_CHECKREL)
-							{
 								// Create dropdown items
 								if ($item->published) :
 									JHtml::_('dropdown.unpublish', 'cb' . $i, 'messagelist.');
@@ -183,7 +170,6 @@ $saveOrder = $listOrder == 'ordering';
 
 								// Render dropdown list
 								echo JHtml::_('dropdown.render');
-							}
 							?>
 						</div>
 					</td>

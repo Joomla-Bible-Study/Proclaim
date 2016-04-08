@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -27,32 +27,13 @@ class TableSerie extends JTable
 	public $id = null;
 
 	/**
-	 * Publish state
-	 *
-	 * @var int
-	 */
-	public $published = 1;
-
-	/**
 	 * Series Text
 	 *
 	 * @var string
 	 */
 	public $series_text = null;
 
-	/**
-	 * Series Thumbnail
-	 *
-	 * @var string
-	 */
-	public $series_thumbnail = null;
-
-	/**
-	 * Description
-	 *
-	 * @var string
-	 */
-	public $description = null;
+	public $alias;
 
 	/**
 	 * Teacher
@@ -62,13 +43,68 @@ class TableSerie extends JTable
 	public $teacher = null;
 
 	/**
+	 * Description
+	 *
+	 * @var string
+	 */
+	public $description = null;
+
+	/**
+	 * Series Thumbnail
+	 *
+	 * @var string
+	 */
+	public $series_thumbnail = null;
+
+	/**
+	 * Publish state
+	 *
+	 * @var int
+	 */
+	public $published = 1;
+
+	public $asset_id;
+
+	public $ordering;
+
+	public $access;
+
+	public $language;
+
+	public $landing_show;
+
+	/**
 	 * Constructor
 	 *
 	 * @param   JDatabaseDriver  &$db  Database connector object
 	 */
-	public function TableSerie(& $db)
+	public function __construct(&$db)
 	{
 		parent::__construct('#__bsms_series', 'id', $db);
+	}
+
+	/**
+	 * Method to store a row in the database from the JTable instance properties.
+	 * If a primary key value is set the row with that primary key value will be
+	 * updated with the instance property values.  If no primary key value is set
+	 * a new row will be inserted into the database with the properties from the
+	 * JTable instance.
+	 *
+	 * @param   boolean  $updateNulls  True to update fields even if they are null.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @link    https://docs.joomla.org/JTable/store
+	 * @since   11.1
+	 */
+	public function store($updateNulls = false)
+	{
+		if (!$this->_rules)
+		{
+			$this->setRules('{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}');
+		}
+
+		return parent::store($updateNulls);
 	}
 
 	/**
@@ -116,6 +152,7 @@ class TableSerie extends JTable
 	 */
 	protected function _getAssetParentId(JTable $table = null, $id = null)
 	{
+		/** @type JTableAsset $asset */
 		$asset = JTable::getInstance('Asset');
 		$asset->loadByName('com_biblestudy');
 

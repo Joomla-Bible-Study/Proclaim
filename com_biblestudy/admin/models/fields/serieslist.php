@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -20,7 +20,7 @@ JFormHelper::loadFieldClass('list');
  * @package  BibleStudy.Admin
  * @since    7.0.4
  */
-class JFormFieldSerieslist extends JFormFieldList
+class JFormFieldSeriesList extends JFormFieldList
 {
 
 	/**
@@ -28,7 +28,7 @@ class JFormFieldSerieslist extends JFormFieldList
 	 *
 	 * @var         string
 	 */
-	protected $type = 'Series';
+	protected $type = 'SeriesList';
 
 	/**
 	 * Method to get a list of options for a list input.
@@ -37,10 +37,12 @@ class JFormFieldSerieslist extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		$db    = JFactory::getDBO();
+
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('id,series_text');
 		$query->from('#__bsms_series');
+		$query->where('published = 1');
 		$db->setQuery((string) $query);
 		$messages = $db->loadObjectList();
 		$options  = array();

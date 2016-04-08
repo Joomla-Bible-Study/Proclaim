@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -11,19 +11,21 @@
 defined('_JEXEC') or die;
 
 /**
- * Script file of jbspodcast component
+ * Script file of JBSPodcast component
  *
  * @package     BibleStudy
  * @subpackage  Plugin.JBSPodcast
  * @since       7.0.4
  */
-class PlgSystemjbspodcastInstallerScript
+class PlgSystemJBSPodcastInstallerScript
 {
+
+	private $is700;
 
 	/**
 	 * method to install the component
 	 *
-	 * @param   string $parent  is the class calling this method
+	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
 	 */
@@ -35,7 +37,7 @@ class PlgSystemjbspodcastInstallerScript
 	/**
 	 * method to uninstall the component
 	 *
-	 * @param   string $parent  is the class calling this method
+	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
 	 */
@@ -46,9 +48,9 @@ class PlgSystemjbspodcastInstallerScript
 	}
 
 	/**
-	 * method to update the component
+	 * Method to update the component
 	 *
-	 * @param   string $parent  is the class calling this method
+	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
 	 */
@@ -56,7 +58,7 @@ class PlgSystemjbspodcastInstallerScript
 	{
 		// $parent is the class calling this method
 		// check to see if we are dealing with version 7.0.0 and create the update table if needed
-		$db = JFactory::getDBO();
+		$db = JFactory::getDbo();
 
 		// First see if there is an update table
 		$tables      = $db->getTableList();
@@ -76,8 +78,8 @@ class PlgSystemjbspodcastInstallerScript
 		{
 			// Do the query here to create the table. This will tell Joomla to update the db from this version on
 			$query = "CREATE TABLE IF NOT EXISTS `#__jbspodcast_timeset` (
-					`timeset` VARCHAR(14) NOT NULL DEFAULT '',
-					`backup` VARCHAR(14) DEFAULT NULL,
+					`timeset` varchar(14) NOT NULL DEFAULT '',
+					`backup` varchar(14) DEFAULT NULL,
 					PRIMARY KEY (`timeset`)
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8";
 			$db->setQuery($query);
@@ -93,8 +95,8 @@ class PlgSystemjbspodcastInstallerScript
 	/**
 	 * method to run before an install/update/uninstall method
 	 *
-	 * @param   string $type    is the type of change (install, update or discover_install)
-	 * @param   string $parent  is the class calling this method
+	 * @param   string  $type    is the type of change (install, update or discover_install)
+	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
 	 */
@@ -105,12 +107,12 @@ class PlgSystemjbspodcastInstallerScript
 	/**
 	 * method to run after an install/update/uninstall method
 	 *
-	 * @param   string $type    is the type of change (install, update or discover_install)
-	 * @param   string $parent  is the class calling this method
+	 * @param   string  $type    is the type of change (install, update or discover_install)
+	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
 	 */
-	public function  postflight($type, $parent)
+	public function postflight($type, $parent)
 	{
 	}
 

@@ -3,14 +3,12 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-JLoader::register('JBSMBibleStudyHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php');
 
 /**
  * View class for CommentList extends Comments
@@ -18,8 +16,7 @@ JLoader::register('JBSMBibleStudyHelper', JPATH_ADMINISTRATOR . '/components/com
  * @property mixed canDo
  * @property array f_levels
  * @property mixed sidebar
- * @package  BibleStudy.Admin
- * @since    7.0.0
+ * @since  7.0.0
  */
 class BiblestudyViewCommentlist extends JViewLegacy
 {
@@ -46,9 +43,16 @@ class BiblestudyViewCommentlist extends JViewLegacy
 	protected $state;
 
 	/**
+	 * State
+	 *
+	 * @var array
+	 */
+	protected $params;
+
+	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
@@ -58,6 +62,7 @@ class BiblestudyViewCommentlist extends JViewLegacy
 		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
+		$this->params     = $this->state->template->params;
 
 		// Check for errors
 		if (count($errors = $this->get('Errors')))
@@ -66,6 +71,10 @@ class BiblestudyViewCommentlist extends JViewLegacy
 
 			return;
 		}
+
+		$language = JFactory::getLanguage();
+		$language->load('', JPATH_ADMINISTRATOR, null, true);
+
 		$this->canDo = JBSMBibleStudyHelper::getActions('', 'comments');
 
 		// Check permissions to enter studies
@@ -94,10 +103,7 @@ class BiblestudyViewCommentlist extends JViewLegacy
 		// We don't need toolbar in the modal window.
 		if ($this->getLayout() !== 'modal')
 		{
-			if (BIBLESTUDY_CHECKREL)
-			{
-				$this->sidebar = JHtmlSidebar::render();
-			}
+			$this->sidebar = JHtmlSidebar::render();
 		}
 
 		// Display the template
@@ -134,7 +140,6 @@ class BiblestudyViewCommentlist extends JViewLegacy
 			'comment.published' => JText::_('JSTATUS'),
 			'study.studytitle'  => JText::_('JBS_CMN_TITLE'),
 			'comment.language'  => JText::_('JGRID_HEADING_LANGUAGE'),
-			'access_level'      => JText::_('JGRID_HEADING_ACCESS'),
 			'comment.id'        => JText::_('JGRID_HEADING_ID')
 		);
 	}

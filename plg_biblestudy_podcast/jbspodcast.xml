@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="2.5" type="plugin" group="system" method="upgrade">
+<extension version="3.2" type="plugin" group="system" method="upgrade">
     <name>JBS_PLG_PODCAST</name>
     <author>Joomla Bible Study Team</author>
-    <copyright>This plugin is released under the GNU/GPL License</copyright>
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
-    <version>8.0.1</version>
-    <creationDate>June 12, 2013</creationDate>
+    <copyright>(C) 2007 - 2016 Joomla Bible Study All rights reserved.</copyright>
+    <version>9.0.0-beta4</version>
+    <creationDate>March 6, 2016</creationDate>
+    <license>http://www.gnu.org/licenses/gpl.html</license>
     <description>JBS_PLG_PODCAST_XML_DESCRIPTION</description>
 
     <!-- Runs on install/uninstall/update; New in 1.7 -->
@@ -35,30 +36,32 @@
     </files>
     <config>
         <fields name="params">
-            <fieldset name="basic">
-                <field name="email" type="list" default="1"
-                       label="JBS_PLG_PODCAST_SEND_EMAIL" description="JBS_PLG_PODCAST_SEND_EMAIL_DESC">
+            <fieldset name="basic"
+                      addfieldpath="/administrator/components/com_biblestudy/models/fields">
+                <field name="dummy" type="loadlanguagefile" default=""/>   <!-- load common language file -->
+                <field name="email" type="list" default="0"
+                       label="JBS_PLG_PODCASTBACKUP_EMAIL_SEND" description="JBS_PLG_PODCASTBACKUP_EMAIL_SEND_DESC">
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
                     <option value="2">JBS_PLG_PODCAST_ONLY_EMAIL_ERRORS</option>
                 </field>
                 <field name="recipients" type="text" default="" size="80"
-                       label="JBS_PLG_PODCAST_TO_EMAIL" description="JBS_PLG_PODCAST_TO_EMAIL_DESC"/>
+                       label="JBS_PLG_PODCASTBACKUP_EMAIL_TO" description="JBS_PLG_PODCASTBACKUP_EMAIL_TO_DESC"/>
                 <field name="subject" type="text"
                        default="Joomla Bible Study Podcast(s) Published" size="60"
-                       label="JBS_PLG_PODCAST_EMAIL_SUBJECT" description=""/>
+                       label="JBS_PLG_PODCASTBACKUP_EMAIL_SUBJECT" description=""/>
                 <field name="body" type="text" default="Podcast(s) publishing status:"
-                       size="60" label="JBS_PLG_PODCAST_EMAIL_BODY" description=""/>
+                       size="60" label="JBS_PLG_PODCASTBACKUP_EMAIL_BODY" description=""/>
                 <field name="method" type="list" default="0"
-                       label="JBS_PLG_PODCAST_PUBLISH_METHOD" description="JBS_PLG_PODCAST_PUBLISH_METHOD_DESC">
-                    <option value="0">JBS_PLG_PODCAST_HOURS</option>
-                    <option value="1">JBS_PLG_PODCAST_SCHEDULE</option>
+                       label="JBS_PLG_PODCASTBACKUP_GENERATE_METHOD" description="JBS_PLG_PODCASTBACKUP_GENERATE_METHOD_DESC">
+                    <option value="0">JBS_PLG_PODCASTBACKUP_HOURS</option>
+                    <option value="1">JBS_PLG_PODCASTBACKUP_SCHEDULE</option>
                 </field>
                 <field name="xhours" type="text" default="24" size="3"
-                       label="JBS_PLG_PODCAST_PUBLISH_EVERY" description="JBS_PLG_PODCAST_PUBLISH_EVERY_DESC"/>
-                <field name="day1" type="list" default="0" label="JBS_PLG_PODCAST_DAY1"
-                       description="JBS_PLG_PODCAST_CHOOSE_DAY">
-                    <option value="-1">JBS_PLG_PODCAST_CHOOSE_DAY</option>
+                       label="JBS_PLG_PODCASTBACKUP_GENERATE_EVERY" description="JBS_PLG_PODCASTBACKUP_GENERATE_EVERY_DESC"/>
+                <field name="day1" type="list" default="0" label="JBS_PLG_PODCASTBACKUP_DAY1"
+                       description="JBS_PLG_PODCASTBACKUP_CHOOSE_DAY">
+                    <option value="-1">JBS_PLG_PODCASTBACKUP_CHOOSE_DAY</option>
                     <option value="0">SUNDAY</option>
                     <option value="1">MONDAY</option>
                     <option value="2">TUESDAY</option>
@@ -68,8 +71,8 @@
                     <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour1" type="list" default="0"
-                       label="JBS_PLG_PODCAST_HOUR_DAY1" description="JBS_PLG_PODCAST_CHOOSE_HOUR">
-                    <option value="0">JBS_PLG_PODCAST_CHOOSE_HOUR</option>
+                       label="JBS_PLG_PODCASTBACKUP_HOUR_DAY1" description="JBS_PLG_PODCASTBACKUP_CHOOSE_HOUR">
+                    <option value="0">JBS_PLG_PODCASTBACKUP_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
                     <option value="3">3:00</option>
@@ -95,9 +98,9 @@
                     <option value="23">23:00 (11PM)</option>
                     <option value="24">24:00 (12AM)</option>
                 </field>
-                <field name="day2" type="list" default="0" label="JBS_PLG_PODCAST_DAY2"
-                       description="JBS_PLG_PODCAST_CHOOSE_DAY">
-                    <option value="-1">JBS_PLG_PODCAST_CHOOSE_DAY</option>
+                <field name="day2" type="list" default="0" label="JBS_PLG_PODCASTBACKUP_DAY2"
+                       description="JBS_PLG_PODCASTBACKUP_CHOOSE_DAY">
+                    <option value="-1">JBS_PLG_PODCASTBACKUP_CHOOSE_DAY</option>
                     <option value="0">SUNDAY</option>
                     <option value="1">MONDAY</option>
                     <option value="2">TUESDAY</option>
@@ -107,8 +110,8 @@
                     <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour2" type="list" default="0"
-                       label="JBS_PLG_PODCAST_HOUR_DAY2" description="JBS_PLG_PODCAST_CHOOSE_HOUR">
-                    <option value="0">JBS_PLG_PODCAST_CHOOSE_HOUR</option>
+                       label="JBS_PLG_PODCASTBACKUP_HOUR_DAY2" description="JBS_PLG_PODCASTBACKUP_CHOOSE_HOUR">
+                    <option value="0">JBS_PLG_PODCASTBACKUP_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
                     <option value="3">3:00</option>
@@ -134,9 +137,9 @@
                     <option value="23">23:00 (11PM)</option>
                     <option value="24">24:00 (12AM)</option>
                 </field>
-                <field name="day3" type="list" default="0" label="JBS_PLG_PODCAST_DAY3"
-                       description="JBS_PLG_PODCAST_CHOOSE_DAY">
-                    <option value="-1">JBS_PLG_PODCAST_CHOOSE_DAY</option>
+                <field name="day3" type="list" default="0" label="JBS_PLG_PODCASTBACKUP_DAY3"
+                       description="JBS_PLG_PODCASTBACKUP_CHOOSE_DAY">
+                    <option value="-1">JBS_PLG_PODCASTBACKUP_CHOOSE_DAY</option>
                     <option value="0">SUNDAY</option>
                     <option value="1">MONDAY</option>
                     <option value="2">TUESDAY</option>
@@ -146,8 +149,8 @@
                     <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour3" type="list" default="0"
-                       label="JBS_PLG_PODCAST_HOUR_DAY3" description="JBS_PLG_PODCAST_CHOOSE_HOUR">
-                    <option value="0">JBS_PLG_PODCAST_CHOOSE_HOUR</option>
+                       label="JBS_PLG_PODCASTBACKUP_HOUR_DAY3" description="JBS_PLG_PODCASTBACKUP_CHOOSE_HOUR">
+                    <option value="0">JBS_PLG_PODCASTBACKUP_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
                     <option value="3">3:00</option>
@@ -173,9 +176,9 @@
                     <option value="23">23:00 (11PM)</option>
                     <option value="24">24:00 (12AM)</option>
                 </field>
-                <field name="day4" type="list" default="0" label="JBS_PLG_PODCAST_DAY4"
-                       description="JBS_PLG_PODCAST_CHOOSE_DAY">
-                    <option value="-1">JBS_PLG_PODCAST_CHOOSE_DAY</option>
+                <field name="day4" type="list" default="0" label="JBS_PLG_PODCASTBACKUP_DAY4"
+                       description="JBS_PLG_PODCASTBACKUP_CHOOSE_DAY">
+                    <option value="-1">JBS_PLG_PODCASTBACKUP_CHOOSE_DAY</option>
                     <option value="0">SUNDAY</option>
                     <option value="1">MONDAY</option>
                     <option value="2">TUESDAY</option>
@@ -185,8 +188,8 @@
                     <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour4" type="list" default="0"
-                       label="JBS_PLG_PODCAST_HOUR_DAY4" description="JBS_PLG_PODCAST_CHOOSE_HOUR">
-                    <option value="0">JBS_PLG_PODCAST_CHOOSE_HOUR</option>
+                       label="JBS_PLG_PODCASTBACKUP_HOUR_DAY4" description="JBS_PLG_PODCASTBACKUP_CHOOSE_HOUR">
+                    <option value="0">JBS_PLG_PODCASTBACKUP_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
                     <option value="3">3:00</option>
@@ -212,9 +215,9 @@
                     <option value="23">23:00 (11PM)</option>
                     <option value="24">24:00 (12AM)</option>
                 </field>
-                <field name="day5" type="list" default="0" label="JBS_PLG_PODCAST_DAY5"
-                       description="JBS_PLG_PODCAST_CHOOSE_DAY">
-                    <option value="-1">JBS_PLG_PODCAST_CHOOSE_DAY</option>
+                <field name="day5" type="list" default="0" label="JBS_PLG_PODCASTBACKUP_DAY5"
+                       description="JBS_PLG_PODCASTBACKUP_CHOOSE_DAY">
+                    <option value="-1">JBS_PLG_PODCASTBACKUP_CHOOSE_DAY</option>
                     <option value="0">SUNDAY</option>
                     <option value="1">MONDAY</option>
                     <option value="2">TUESDAY</option>
@@ -224,8 +227,8 @@
                     <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour5" type="list" default="0"
-                       label="JBS_PLG_PODCAST_HOUR_DAY5" description="JBS_PLG_PODCAST_CHOOSE_HOUR">
-                    <option value="0">JBS_PLG_PODCAST_CHOOSE_HOUR</option>
+                       label="JBS_PLG_PODCASTBACKUP_HOUR_DAY5" description="JBS_PLG_PODCASTBACKUP_CHOOSE_HOUR">
+                    <option value="0">JBS_PLG_PODCASTBACKUP_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
                     <option value="3">3:00</option>
@@ -251,9 +254,9 @@
                     <option value="23">23:00 (11PM)</option>
                     <option value="24">24:00 (12AM)</option>
                 </field>
-                <field name="day6" type="list" default="0" label="JBS_PLG_PODCAST_DAY6"
-                       description="JBS_PLG_PODCAST_CHOOSE_DAY">
-                    <option value="-1">JBS_PLG_PODCAST_CHOOSE_DAY</option>
+                <field name="day6" type="list" default="0" label="JBS_PLG_PODCASTBACKUP_DAY6"
+                       description="JBS_PLG_PODCASTBACKUP_CHOOSE_DAY">
+                    <option value="-1">JBS_PLG_PODCASTBACKUP_CHOOSE_DAY</option>
                     <option value="0">SUNDAY</option>
                     <option value="1">MONDAY</option>
                     <option value="2">TUESDAY</option>
@@ -263,8 +266,8 @@
                     <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour6" type="list" default="0"
-                       label="JBS_PLG_PODCAST_HOUR_DAY6" description="JBS_PLG_PODCAST_CHOOSE_HOUR">
-                    <option value="0">JBS_PLG_PODCAST_CHOOSE_HOUR</option>
+                       label="JBS_PLG_PODCASTBACKUP_HOUR_DAY6" description="JBS_PLG_PODCASTBACKUP_CHOOSE_HOUR">
+                    <option value="0">JBS_PLG_PODCASTBACKUP_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
                     <option value="3">3:00</option>
@@ -290,9 +293,9 @@
                     <option value="23">23:00 (11PM)</option>
                     <option value="24">24:00 (12AM)</option>
                 </field>
-                <field name="day7" type="list" default="0" label="JBS_PLG_PODCAST_DAY7"
-                       description="JBS_PLG_PODCAST_CHOOSE_DAY">
-                    <option value="-1">JBS_PLG_PODCAST_CHOOSE_DAY</option>
+                <field name="day7" type="list" default="0" label="JBS_PLG_PODCASTBACKUP_DAY7"
+                       description="JBS_PLG_PODCASTBACKUP_CHOOSE_DAY">
+                    <option value="-1">JBS_PLG_PODCASTBACKUP_CHOOSE_DAY</option>
                     <option value="0">SUNDAY</option>
                     <option value="1">MONDAY</option>
                     <option value="2">TUESDAY</option>
@@ -302,8 +305,8 @@
                     <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour7" type="list" default="0"
-                       label="JBS_PLG_PODCAST_HOUR_DAY7" description="JBS_PLG_PODCAST_CHOOSE_HOUR">
-                    <option value="0">JBS_PLG_PODCAST_CHOOSE_HOUR</option>
+                       label="JBS_PLG_PODCASTBACKUP_HOUR_DAY7" description="JBS_PLG_PODCASTBACKUP_CHOOSE_HOUR">
+                    <option value="0">JBS_PLG_PODCASTBACKUP_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
                     <option value="3">3:00</option>
@@ -329,9 +332,9 @@
                     <option value="23">23:00 (11PM)</option>
                     <option value="24">24:00 (12AM)</option>
                 </field>
-                <field name="day8" type="list" default="0" label="JBS_PLG_PODCAST_DAY8"
-                       description="JBS_PLG_PODCAST_CHOOSE_DAY">
-                    <option value="-1">JBS_PLG_PODCAST_CHOOSE_DAY</option>
+                <field name="day8" type="list" default="0" label="JBS_PLG_PODCASTBACKUP_DAY8"
+                       description="JBS_PLG_PODCASTBACKUP_CHOOSE_DAY">
+                    <option value="-1">JBS_PLG_PODCASTBACKUP_CHOOSE_DAY</option>
                     <option value="0">SUNDAY</option>
                     <option value="1">MONDAY</option>
                     <option value="2">TUESDAY</option>
@@ -341,8 +344,8 @@
                     <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour8" type="list" default="0"
-                       label="JBS_PLG_PODCAST_HOUR_DAY8" description="JBS_PLG_PODCAST_CHOOSE_HOUR">
-                    <option value="0">JBS_PLG_PODCAST_CHOOSE_HOUR</option>
+                       label="JBS_PLG_PODCASTBACKUP_HOUR_DAY8" description="JBS_PLG_PODCASTBACKUP_CHOOSE_HOUR">
+                    <option value="0">JBS_PLG_PODCASTBACKUP_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
                     <option value="3">3:00</option>
@@ -368,9 +371,9 @@
                     <option value="23">23:00 (11PM)</option>
                     <option value="24">24:00 (12AM)</option>
                 </field>
-                <field name="day9" type="list" default="0" label="JBS_PLG_PODCAST_DAY9"
-                       description="JBS_PLG_PODCAST_CHOOSE_DAY">
-                    <option value="-1">JBS_PLG_PODCAST_CHOOSE_DAY</option>
+                <field name="day9" type="list" default="0" label="JBS_PLG_PODCASTBACKUP_DAY9"
+                       description="JBS_PLG_PODCASTBACKUP_CHOOSE_DAY">
+                    <option value="-1">JBS_PLG_PODCASTBACKUP_CHOOSE_DAY</option>
                     <option value="0">SUNDAY</option>
                     <option value="1">MONDAY</option>
                     <option value="2">TUESDAY</option>
@@ -380,8 +383,8 @@
                     <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour9" type="list" default="0"
-                       label="JBS_PLG_PODCAST_HOUR_DAY9" description="JBS_PLG_PODCAST_CHOOSE_HOUR">
-                    <option value="0">JBS_PLG_PODCAST_CHOOSE_HOUR</option>
+                       label="JBS_PLG_PODCASTBACKUP_HOUR_DAY9" description="JBS_PLG_PODCASTBACKUP_CHOOSE_HOUR">
+                    <option value="0">JBS_PLG_PODCASTBACKUP_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
                     <option value="3">3:00</option>
@@ -407,9 +410,9 @@
                     <option value="23">23:00 (11PM)</option>
                     <option value="24">24:00 (12AM)</option>
                 </field>
-                <field name="day10" type="list" default="0" label="JBS_PLG_PODCAST_DAY10"
-                       description="JBS_PLG_PODCAST_CHOOSE_DAY">
-                    <option value="-1">JBS_PLG_PODCAST_CHOOSE_DAY</option>
+                <field name="day10" type="list" default="0" label="JBS_PLG_PODCASTBACKUP_DAY10"
+                       description="JBS_PLG_PODCASTBACKUP_CHOOSE_DAY">
+                    <option value="-1">JBS_PLG_PODCASTBACKUP_CHOOSE_DAY</option>
                     <option value="0">SUNDAY</option>
                     <option value="1">MONDAY</option>
                     <option value="2">TUESDAY</option>
@@ -419,8 +422,8 @@
                     <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour10" type="list" default="0"
-                       label="JBS_PLG_PODCAST_HOUR_DAY10" description="JBS_PLG_PODCAST_CHOOSE_HOUR">
-                    <option value="0">JBS_PLG_PODCAST_CHOOSE_HOUR</option>
+                       label="JBS_PLG_PODCASTBACKUP_HOUR_DAY10" description="JBS_PLG_PODCASTBACKUP_CHOOSE_HOUR">
+                    <option value="0">JBS_PLG_PODCASTBACKUP_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
                     <option value="3">3:00</option>
@@ -446,10 +449,10 @@
                     <option value="23">23:00 (11PM)</option>
                     <option value="24">24:00 (12AM)</option>
                 </field>
-                <field name="offset" type="list" label="JBS_PLG_PODCAST_SERVER_OFFSET"
-                       default="0" description="JBS_PLG_PODCAST_SERVER_OFFSET_DESC">
-                    <option value="0">JBS_PLG_PODCAST_NO_OFFSET</option>
-                    <option value="1">JBS_PLG_PODCAST_USE_OFFSET</option>
+                <field name="offset" type="list" label="JBS_PLG_PODCASTBACKUP_SERVER_OFFSET"
+                       default="0" description="JBS_PLG_PODCASTBACKUP_SERVER_OFFSET_DESC">
+                    <option value="0">JBS_PLG_PODCASTBACKUP_SERVER_NO_OFFSET</option>
+                    <option value="1">JBS_PLG_PODCASTBACKUP_SERVER_USE_OFFSET</option>
                 </field>
             </fieldset>
         </fields>
@@ -457,10 +460,7 @@
     <!-- UPDATESERVER DEFINITION -->
     <updateservers>
         <!-- Note: No spaces or linebreaks allowed between the server tags -->
-        <server type="extension" priority="1"
-                name="Joomla Bible Study Podcast Plg">
-            <![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=8&dummy=extension.xml]]>
-        </server>
+        <server type="extension" priority="1" name="Joomla Bible Study Podcast Plg"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=8]]></server>
     </updateservers>
     <!-- Tables -->
     <!-- These are used for backups to determine which tables to backup; ones
@@ -473,6 +473,6 @@
     <!-- Dependencies -->
     <dependencies>
         <dependency type="platform" name="joomla" operator="="
-                    version="1.6"/>
+                    version="3.2"/>
     </dependencies>
 </extension>

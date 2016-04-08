@@ -3,15 +3,12 @@
  * JView html
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-jimport('joomla.application.component.helper');
-jimport('joomla.i18n.help');
 
 /**
  * View class for Teachers
@@ -59,7 +56,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 	/**
 	 * Execute and display a template script.
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
@@ -71,6 +68,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
+
 		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'teacher');
 
 		// Check for errors
@@ -101,10 +99,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 		{
 			$this->addToolbar();
 
-			if (BIBLESTUDY_CHECKREL)
-			{
-				$this->sidebar = JHtmlSidebar::render();
-			}
+			$this->sidebar = JHtmlSidebar::render();
 		}
 
 		// Set the document
@@ -127,68 +122,69 @@ class BiblestudyViewTeachers extends JViewLegacy
 
 		// Get the toolbar object instance
 		$bar = JToolBar::getInstance('toolbar');
-		JToolBarHelper::title(JText::_('JBS_CMN_TEACHERS'), 'teachers.png');
+
+		JToolbarHelper::title(JText::_('JBS_CMN_TEACHERS'), 'users users');
 
 		if ($this->canDo->get('core.create'))
 		{
-			JToolBarHelper::addNew('teacher.add');
+			JToolbarHelper::addNew('teacher.add');
 		}
+
 		if ($this->canDo->get('core.edit'))
 		{
-			JToolBarHelper::editList('teacher.edit');
+			JToolbarHelper::editList('teacher.edit');
 		}
+
 		if ($this->canDo->get('core.edit.state'))
 		{
-			JToolBarHelper::divider();
-			JToolBarHelper::publishList('teachers.publish');
-			JToolBarHelper::unpublishList('teachers.unpublish');
-			JToolBarHelper::archiveList('teachers.archive', 'JTOOLBAR_ARCHIVE');
+			JToolbarHelper::divider();
+			JToolbarHelper::publishList('teachers.publish');
+			JToolbarHelper::unpublishList('teachers.unpublish');
+			JToolbarHelper::divider();
+			JToolbarHelper::archiveList('teachers.archive');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
-			JToolBarHelper::deleteList('', 'teachers.delete', 'JTOOLBAR_EMPTY_TRASH');
+			JToolbarHelper::deleteList('', 'teachers.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
-        elseif ($this->canDo->get('core.delete'))
-        {
-            JToolBarHelper::trash('teachers.trash');
-        }
+		elseif ($this->canDo->get('core.edit.state'))
+		{
+			JToolbarHelper::trash('teachers.trash');
+		}
+
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
-			if (BIBLESTUDY_CHECKREL)
-			{
-				JHtml::_('bootstrap.modal', 'collapseModal');
-			}
+			JToolbarHelper::divider();
+			JHtml::_('bootstrap.modal', 'collapseModal');
+
 			$title = JText::_('JBS_CMN_BATCH_LABLE');
 			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
 						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
 						$title</button>";
 			$bar->appendButton('Custom', $dhtml, 'batch');
 		}
-		if (BIBLESTUDY_CHECKREL)
-		{
-			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=teachers');
 
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
-				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
-			);
+		JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=teachers');
 
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_ACCESS'), 'filter_access',
-				JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
-			);
+		JHtmlSidebar::addFilter(
+			JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
+			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
+		);
 
-		}
+		JHtmlSidebar::addFilter(
+			JText::_('JOPTION_SELECT_ACCESS'), 'filter_access',
+			JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
+		);
 	}
 
 	/**
 	 * Add the page title to browser.
 	 *
-	 * @return void
-	 *
 	 * @since    7.1.0
+	 *
+	 * @return void
 	 */
 	protected function setDocument()
 	{

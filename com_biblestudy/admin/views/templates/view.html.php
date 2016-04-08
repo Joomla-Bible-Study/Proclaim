@@ -1,16 +1,14 @@
 <?php
-
 /**
- * JView html
+ * Templates html
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
 
 /**
  * View class for Templates
@@ -20,27 +18,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewTemplates extends JViewLegacy
 {
-
-	/**
-	 * Items
-	 *
-	 * @var array
-	 */
-	protected $items;
-
-	/**
-	 * Pagination
-	 *
-	 * @var array
-	 */
-	protected $pagination;
-
-	/**
-	 * State
-	 *
-	 * @var object
-	 */
-	protected $state;
 
 	/**
 	 * State
@@ -71,6 +48,27 @@ class BiblestudyViewTemplates extends JViewLegacy
 	public $sidebar;
 
 	/**
+	 * Items
+	 *
+	 * @var array
+	 */
+	protected $items;
+
+	/**
+	 * Pagination
+	 *
+	 * @var array
+	 */
+	protected $pagination;
+
+	/**
+	 * State
+	 *
+	 * @var object
+	 */
+	protected $state;
+
+	/**
 	 * Execute and display a template script.
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
@@ -82,15 +80,15 @@ class BiblestudyViewTemplates extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-
 		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
+
 		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'template');
 		$templates        = $this->get('templates');
-		$types[]          = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_TEMPLATE'));
+		$types[]          = JHtml::_('select.option', '0', JText::_('JBS_CMN_SELECT_TEMPLATE'));
 		$types            = array_merge($types, $templates);
-		$this->templates  = JHTML::_('select.genericlist', $types, 'template_export', 'class="inputbox" size="1" ', 'value', 'text', "$");
+		$this->templates  = JHtml::_('select.genericlist', $types, 'template_export', 'class="inputbox" size="1" ', 'value', 'text', "$");
 
 		// Levels filter.
 		$options   = array();
@@ -112,10 +110,7 @@ class BiblestudyViewTemplates extends JViewLegacy
 		{
 			$this->addToolbar();
 
-			if (BIBLESTUDY_CHECKREL)
-			{
-				$this->sidebar = JHtmlSidebar::render();
-			}
+			$this->sidebar = JHtmlSidebar::render();
 		}
 
 		$bar = JToolBar::getInstance('toolbar');
@@ -138,51 +133,52 @@ class BiblestudyViewTemplates extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JToolBarHelper::title(JText::_('JBS_CMN_TEMPLATES'), 'templates.png');
+		JToolbarHelper::title(JText::_('JBS_CMN_TEMPLATES'), 'grid grid');
 
 		if ($this->canDo->get('core.create'))
 		{
-			JToolBarHelper::addNew('template.add');
+			JToolbarHelper::addNew('template.add');
 		}
+
 		if ($this->canDo->get('core.edit'))
 		{
-			JToolBarHelper::editList('template.edit');
+			JToolbarHelper::editList('template.edit');
 		}
+
 		if ($this->canDo->get('core.edit.state'))
 		{
-			JToolBarHelper::divider();
-			JToolBarHelper::publishList('templates.publish');
-			JToolBarHelper::unpublishList('templates.unpublish');
+			JToolbarHelper::divider();
+			JToolbarHelper::publishList('templates.publish');
+			JToolbarHelper::unpublishList('templates.unpublish');
 		}
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
-			JToolBarHelper::deleteList('', 'templates.delete', 'JTOOLBAR_EMPTY_TRASH');
+			JToolbarHelper::divider();
+			JToolbarHelper::deleteList('', 'templates.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
 		elseif ($this->canDo->get('core.delete'))
 		{
-			JToolBarHelper::trash('templates.trash');
+			JToolbarHelper::divider();
+			JToolbarHelper::trash('templates.trash');
 		}
-		JToolBarHelper::divider();
+		JToolbarHelper::divider();
 
-		if (BIBLESTUDY_CHECKREL)
-		{
-			JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=templates');
+		JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=templates');
 
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
-				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
-			);
+		JHtmlSidebar::addFilter(
+			JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
+			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
+		);
 
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_ACCESS'), 'filter_access',
-				JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
-			);
+		JHtmlSidebar::addFilter(
+			JText::_('JOPTION_SELECT_ACCESS'), 'filter_access',
+			JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
+		);
 
-			JHtmlSidebar::addFilter(
-				JText::_('JOPTION_SELECT_LANGUAGE'), 'filter_language',
-				JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value', 'text', $this->state->get('filter.language'))
-			);
-		}
+		JHtmlSidebar::addFilter(
+			JText::_('JOPTION_SELECT_LANGUAGE'), 'filter_language',
+			JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value', 'text', $this->state->get('filter.language'))
+		);
 	}
 
 	/**
@@ -213,5 +209,4 @@ class BiblestudyViewTemplates extends JViewLegacy
 			'template.id'        => JText::_('JGRID_HEADING_ID')
 		);
 	}
-
 }

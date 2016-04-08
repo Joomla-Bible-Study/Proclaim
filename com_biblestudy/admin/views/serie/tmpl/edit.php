@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -17,15 +17,20 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
-if (BIBLESTUDY_CHECKREL)
-	JHtml::_('formbehavior.chosen', 'select');
-
-// Create shortcut to parameters.
-$params = $this->state->get('params');
-$params = $params->toArray();
+JHtml::_('formbehavior.chosen', 'select');
 
 $app = JFactory::getApplication();
 $input = $app->input;
+
+// Set up defaults
+if ($input->getInt('id'))
+{
+	$series_thumbnail = $this->item->series_thumbnail;
+}
+else
+{
+	$series_thumbnail = $this->admin_params->get('default_series_image');
+}
 ?>
 
 <script type="text/javascript">
@@ -39,7 +44,7 @@ $input = $app->input;
 </script>
 
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=edit&id=' . (int) $this->item->id); ?>"
-      method="post" name="adminForm" id="item-form" class="form-validate">
+      method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
 	<div class="row-fluid">
 		<!-- Begin Content -->
 		<div class="span10 form-horizontal">
@@ -60,9 +65,6 @@ $input = $app->input;
 						<div class="control-group form-inline">
 							<?php echo $this->form->getLabel('series_text'); ?> <?php echo $this->form->getInput('series_text'); ?>
 						</div>
-						<div class="control-group  form-inline">
-							<?php echo $this->form->getLabel('id'); ?> <?php echo $this->form->getInput('id'); ?>
-						</div>
 						<?php echo $this->form->getInput('description'); ?>
 					</fieldset>
 				</div>
@@ -75,18 +77,6 @@ $input = $app->input;
 									<?php echo $this->form->getInput('alias'); ?>
 								</div>
 							</div>
-							<?php if (!BIBLESTUDY_CHECKREL)
-							{
-								?>
-								<div class="control-group">
-									<div class="control-label">
-										<?php echo $this->form->getLabel('ordering'); ?>
-									</div>
-									<div class="controls">
-										<?php echo $this->form->getInput('ordering'); ?>
-									</div>
-								</div>
-							<?php } ?>
 							<div class="control-group">
 								<div class="control-label">
 									<?php echo $this->form->getLabel('teacher'); ?>
@@ -105,13 +95,10 @@ $input = $app->input;
 							</div>
 							<div class="control-group">
 								<div class="control-label">
-									<?php echo $this->form->getLabel('series_thumbnail'); ?>
+									<?php echo $this->form->getLabel('image'); ?>
 								</div>
 								<div class="controls">
-									<?php
-									// series_text is required; fill in default if empty and leave value otherwise
-									echo $this->form->getInput('series_thumbnail', null, empty($this->item->series_text) ? $this->admin->params['default_series_image'] : $this->item->series_thumbnail);
-									?>
+									<?php echo $this->form->getInput('image', null, $series_thumbnail); ?>
 								</div>
 							</div>
 						</div>
@@ -166,4 +153,6 @@ $input = $app->input;
 		</div>
 		<!-- End Sidebar -->
 	</div>
+	<?php echo $this->form->getInput('series_thumbnail'); ?>
+	<?php echo $this->form->getInput('id'); ?>
 </form>

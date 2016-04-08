@@ -3,20 +3,17 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.modellist');
-
 /**
  * Comments model class
  *
- * @package  BibleStudy.Admin
- * @since    7.0.0
+ * @since  7.0.0
  */
 class BiblestudyModelComments extends JModelList
 {
@@ -43,6 +40,37 @@ class BiblestudyModelComments extends JModelList
 		}
 
 		parent::__construct($config);
+	}
+
+	/**
+	 * Method to get a list of articles.
+	 * Overridden to add a check for access levels.
+	 *
+	 * @return    mixed    An array of data items on success, false on failure.
+	 *
+	 * @since    1.6.1
+	 */
+	public function getItems()
+	{
+		$items = parent::getItems();
+		$app   = JFactory::getApplication();
+
+		if ($app->isSite())
+		{
+			$user   = JFactory::getUser();
+			$groups = $user->getAuthorisedViewLevels();
+
+			for ($x = 0, $count = count($items); $x < $count; $x++)
+			{
+				// Check the access level. Remove articles the user shouldn't see
+				if (!in_array($items[$x]->access, $groups))
+				{
+					unset($items[$x]);
+				}
+			}
+		}
+
+		return $items;
 	}
 
 	/**
@@ -110,9 +138,6 @@ class BiblestudyModelComments extends JModelList
 	{
 		// Create a new query object.
 		$db    = $this->getDbo();
-		$query = $db->getQuery(true);
-		$user  = JFactory::getUser();
-		$app   = JFactory::getApplication();
 
 		// Select the required fields from the table.
 		$query = $db->getQuery(true);
@@ -150,7 +175,7 @@ class BiblestudyModelComments extends JModelList
 			}
 			else
 			{
-				$search = $db->Quote('%' . $db->escape($search, true) . '%');
+				$search = $db->quote('%' . $db->escape($search, true) . '%');
 				$query->where('(study.studytitle LIKE ' . $search . ' OR book.bookname LIKE ' . $search . ')');
 			}
 		}
@@ -173,37 +198,6 @@ class BiblestudyModelComments extends JModelList
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
 		return $query;
-	}
-
-	/**
-	 * Method to get a list of articles.
-	 * Overridden to add a check for access levels.
-	 *
-	 * @return    mixed    An array of data items on success, false on failure.
-	 *
-	 * @since    1.6.1
-	 */
-	public function getItems()
-	{
-		$items = parent::getItems();
-		$app   = JFactory::getApplication();
-
-		if ($app->isSite())
-		{
-			$user   = JFactory::getUser();
-			$groups = $user->getAuthorisedViewLevels();
-
-			for ($x = 0, $count = count($items); $x < $count; $x++)
-			{
-				// Check the access level. Remove articles the user shouldn't see
-				if (!in_array($items[$x]->access, $groups))
-				{
-					unset($items[$x]);
-				}
-			}
-		}
-
-		return $items;
 	}
 
 }

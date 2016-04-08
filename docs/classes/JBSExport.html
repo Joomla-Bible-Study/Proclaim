@@ -21,8 +21,9 @@
                                     API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a>Packages</a></li>
 <li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
-<li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
-<li><a href="../packages/Joomla.html"><i class="icon-folder-open"></i> Joomla</a></li>
+<li><a href="../packages/BibleStudy.Admin.html"><i class="icon-folder-open"></i> BibleStudy.Admin</a></li>
+<li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
 <li><a href="../packages/LiveUpdate.html"><i class="icon-folder-open"></i> LiveUpdate</a></li>
 <li><a href="../packages/SefExt.html"><i class="icon-folder-open"></i> SefExt</a></li>
 </ul>
@@ -35,18 +36,11 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">2</span></a></li>
+                <span class="label label-info">3</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
-                <ul>
-<li>todo 
-                <span class="label label-info">38</span>
-</li>
-<li>fixme 
-                <span class="label label-info">1</span>
-</li>
-</ul></a></li>
+                <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
-                <span class="label label-info">12</span></a></li>
+                <span class="label label-info">18</span></a></li>
 </ul>
 </li>
 </ul></div>
@@ -63,45 +57,14 @@
 <span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
 <button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
 </div>
-<ul class="side-nav nav nav-list">
-<li class="nav-header">
-<i class="icon-custom icon-method"></i> Methods
-                    <ul>
-<li class="method public "><a href="#method_exportdb" title="exportdb :: Export DB//"><span class="description">Export DB//</span><pre>exportdb()</pre></a></li>
-<li class="method public "><a href="#method_getExportTable" title="getExportTable :: Get Export Table"><span class="description">Get Export Table</span><pre>getExportTable()</pre></a></li>
-<li class="method public "><a href="#method_output_file" title="output_file :: File output"><span class="description">File output</span><pre>output_file()</pre></a></li>
-</ul>
-</li>
-<li class="nav-header protected">» Protected
-                    <ul><li class="method protected "><a href="#method_writeline" title="writeline :: Saves the string in $fileData to the file $backupfile."><span class="description">Saves the string in $fileData to the file $backupfile.</span><pre>writeline()</pre></a></li></ul>
-</li>
-<li class="nav-header">
-<i class="icon-custom icon-property"></i> Properties
-                    <ul></ul>
-</li>
-<li class="nav-header protected">» Protected
-                    <ul>
-<li class="property protected "><a href="#property_data_cache" title="$data_cache :: "><span class="description">Data cache, used to cache data before being written to disk</span><pre>$data_cache</pre></a></li>
-<li class="property protected "><a href="#property_dumpFile" title="$dumpFile :: "><span class="description">Absolute path to dump file; must be writable (optional; if left blank it is automatically calculated)</span><pre>$dumpFile</pre></a></li>
-<li class="property protected "><a href="#property_saveAsName" title="$saveAsName :: "><span class="description">Relative path of how the file should be saved in the archive</span><pre>$saveAsName</pre></a></li>
-<li class="property protected "><a href="#property_tempFile" title="$tempFile :: "><span class="description">Absolute path to the temp file</span><pre>$tempFile</pre></a></li>
-</ul>
-</li>
-<li class="nav-header private">» Private
-                    <ul><li class="property private "><a href="#property_fp" title="$fp :: "><span class="description">Filepointer to the current dump part</span><pre>$fp</pre></a></li></ul>
-</li>
-</ul>
-<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
-<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
-</div>
 <ul class="side-nav nav nav-list"><li class="nav-header">
 <i class="icon-custom icon-method"></i> Methods
                     <ul>
-<li class="method public "><a href="#method_createBackup" title="createBackup :: Creates Backup File."><span class="description">Creates Backup File.</span><pre>createBackup()</pre></a></li>
-<li class="method public "><a href="#method_exportdb" title="exportdb :: Export Db function"><span class="description">Export Db function</span><pre>exportdb()</pre></a></li>
-<li class="method public "><a href="#method_getExportTable" title="getExportTable :: Get Export Table"><span class="description">Get Export Table</span><pre>getExportTable()</pre></a></li>
-<li class="method public "><a href="#method_getObjects" title="getObjects :: Get Opjects for tables"><span class="description">Get Opjects for tables</span><pre>getObjects()</pre></a></li>
-<li class="method public "><a href="#method_output_file" title="output_file :: File output"><span class="description">File output</span><pre>output_file()</pre></a></li>
+<li class="method public "><a href="#method_createBackup" title="createBackup() :: Creates Backup File."><span class="description">Creates Backup File.</span><pre>createBackup()</pre></a></li>
+<li class="method public "><a href="#method_exportdb" title="exportdb() :: Export Db function"><span class="description">Export Db function</span><pre>exportdb()</pre></a></li>
+<li class="method public "><a href="#method_getExportTable" title="getExportTable() :: Get Export Table"><span class="description">Get Export Table</span><pre>getExportTable()</pre></a></li>
+<li class="method public "><a href="#method_getObjects" title="getObjects() :: Get Opjects for tables"><span class="description">Get Opjects for tables</span><pre>getObjects()</pre></a></li>
+<li class="method public "><a href="#method_output_file" title="output_file() :: File output"><span class="description">File output</span><pre>output_file()</pre></a></li>
 </ul>
 </li></ul>
 </div>
@@ -110,134 +73,6 @@
 <li>
 <a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
 </li>
-<li><a href="../namespaces/global.html">global</a></li>
-<li class="active">
-<span class="divider">\</span><a href="../classes/JBSExport.html">JBSExport</a>
-</li>
-</ul>
-<div class="element class">
-<p class="short_description">JBS Export class</p>
-<div class="details">
-<div class="long_description"></div>
-<table class="table table-bordered">
-<tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr>
-<tr>
-<th>since</th>
-<td>7.1.0</td>
-</tr>
-<tr>
-<th>todo</th>
-<td>Look like we are duplicating the Class</td>
-</tr>
-</table>
-<h3>
-<i class="icon-custom icon-method"></i> Methods</h3>
-<a id="method_exportdb"></a><div class="element clickable method public method_exportdb" data-toggle="collapse" data-target=".method_exportdb .collapse">
-<h2>Export DB//</h2>
-<pre>exportdb(int $run) : boolean</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$run</h4>
-<code>int</code><p>ID</p></div>
-<h3>Returns</h3>
-<div class="subelement response"><code>boolean</code></div>
-</div></div>
-</div>
-<a id="method_getExportTable"></a><div class="element clickable method public method_getExportTable" data-toggle="collapse" data-target=".method_getExportTable .collapse">
-<h2>Get Export Table</h2>
-<pre>getExportTable(string $table) : boolean | string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$table</h4>
-<code>string</code><p>Table name</p></div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>boolean</code><code>string</code>
-</div>
-</div></div>
-</div>
-<a id="method_output_file"></a><div class="element clickable method public method_output_file" data-toggle="collapse" data-target=".method_output_file .collapse">
-<h2>File output</h2>
-<pre>output_file(string $file, string $name, string $mime_type) : void</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$file</h4>
-<code>string</code><p>File Name</p></div>
-<div class="subelement argument">
-<h4>$name</h4>
-<code>string</code><p>Name output</p></div>
-<div class="subelement argument">
-<h4>$mime_type</h4>
-<code>string</code><p>Meme_Type</p></div>
-</div></div>
-</div>
-<a id="method_writeline"></a><div class="element clickable method protected method_writeline" data-toggle="collapse" data-target=".method_writeline .collapse">
-<h2>Saves the string in $fileData to the file $backupfile.</h2>
-<pre>writeline(string $fileData) : boolean</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"><p>Returns TRUE. If saving
-failed, return value is FALSE.</p></div>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$fileData</h4>
-<code>string</code><p>Data to write. Set to null to close the file handle.</p></div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>boolean</code>TRUE is saving to the file succeeded</div>
-</div></div>
-</div>
-<h3>
-<i class="icon-custom icon-property"></i> Properties</h3>
-<a id="property_data_cache"> </a><div class="element clickable property protected property_data_cache" data-toggle="collapse" data-target=".property_data_cache .collapse">
-<h2>Data cache, used to cache data before being written to disk</h2>
-<pre>$data_cache : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
-</div>
-<a id="property_dumpFile"> </a><div class="element clickable property protected property_dumpFile" data-toggle="collapse" data-target=".property_dumpFile .collapse">
-<h2>Absolute path to dump file; must be writable (optional; if left blank it is automatically calculated)</h2>
-<pre>$dumpFile : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
-</div>
-<a id="property_saveAsName"> </a><div class="element clickable property protected property_saveAsName" data-toggle="collapse" data-target=".property_saveAsName .collapse">
-<h2>Relative path of how the file should be saved in the archive</h2>
-<pre>$saveAsName : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
-</div>
-<a id="property_tempFile"> </a><div class="element clickable property protected property_tempFile" data-toggle="collapse" data-target=".property_tempFile .collapse">
-<h2>Absolute path to the temp file</h2>
-<pre>$tempFile : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
-</div>
-<a id="property_fp"> </a><div class="element clickable property private property_fp" data-toggle="collapse" data-target=".property_fp .collapse">
-<h2>Filepointer to the current dump part</h2>
-<pre>$fp : resource</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
-</div>
-</div>
-</div>
-<a id="\JBSExport"></a><ul class="breadcrumb">
-<li>
-<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
-</li>
-<li><a href="../namespaces/global.html">global</a></li>
 <li class="active">
 <span class="divider">\</span><a href="../classes/JBSExport.html">JBSExport</a>
 </li>
@@ -257,7 +92,7 @@ failed, return value is FALSE.</p></div>
 </tr>
 <tr>
 <th>since</th>
-<td>7.0.2</td>
+<td></td>
 </tr>
 </table>
 <h3>
@@ -339,8 +174,9 @@ failed, return value is FALSE.</p></div>
 </div>
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
-            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
-            generated on 2013-06-22T20:25:41-05:00.<br></footer></div>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.1
+</a> and<br>
+            generated on 2013-10-17T22:45:25-05:00.<br></footer></div>
 </div>
 </body>
 </html>

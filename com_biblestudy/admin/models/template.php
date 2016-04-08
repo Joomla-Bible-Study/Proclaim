@@ -3,16 +3,12 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-jimport('joomla.application.component.modeladmin');
-
-JLoader::register('JBSMBibleStudyHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . '/biblestudy.php');
 
 /**
  * Template model class
@@ -24,9 +20,30 @@ class BiblestudyModelTemplate extends JModelAdmin
 {
 
 	/**
+	 * Method to save the form data.
+	 *
+	 * @param   array  $data  The form data.
+	 *
+	 * @return  boolean  True on success, False on error.
+	 *
+	 * @since   12.2
+	 */
+	public function save($data)
+	{
+		// Make sure we cannot unpublished default template.
+		if ($data['id'] == '1' && $data['published'] != '1')
+		{
+			JFactory::getApplication()->enqueueMessage(JText::_('JBS_TPL_DEFAULT_ERROR'), 'error');
+			return false;
+		}
+
+		return parent::save($data);
+	}
+
+	/**
 	 * Copy Template
 	 *
-	 * @param   array $cid  ID of template
+	 * @param   array  $cid  ID of template
 	 *
 	 * @return boolean
 	 */
@@ -34,7 +51,8 @@ class BiblestudyModelTemplate extends JModelAdmin
 	{
 		foreach ($cid as $id)
 		{
-			$tmplCurr = JTable::getInstance('template', 'Table');
+			/** @type TableTemplate $tmplCurr */
+			$tmplCurr = JTable::getInstance('Template', 'Table');
 
 			$tmplCurr->load($id);
 			$tmplCurr->id = null;
@@ -52,10 +70,33 @@ class BiblestudyModelTemplate extends JModelAdmin
 	}
 
 	/**
+	 * Method to change the published state of one or more records.
+	 *
+	 * @param   array    &$pks   A list of the primary keys to change.
+	 * @param   integer  $value  The value of the published state.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   12.2
+	 */
+	public function publish(&$pks, $value = 1)
+	{
+		foreach ($pks as $i => $pk)
+		{
+			if ($pk == 1 && $value != 1)
+			{
+				JFactory::getApplication()->enqueueMessage(JText::_('JBS_TPL_DEFAULT_ERROR'), 'error');
+				unset($pks[$i]);
+			}
+		}
+		return parent::publish($pks, $value);
+	}
+
+	/**
 	 * Get the form data
 	 *
-	 * @param   array   $data      Data for the form.
-	 * @param   boolean $loadData  True if the form is to load its own data (default case), false if not.
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  mixed  A JForm object on success, false on failure
 	 *
@@ -75,15 +116,33 @@ class BiblestudyModelTemplate extends JModelAdmin
 	}
 
 	/**
-	 * Get Items
+	 * Method to check-out a row for editing.
 	 *
-	 * @param   integer $pk  The id of the primary key.
+	 * @param   integer  $pk  The numeric id of the primary key.
 	 *
-	 * @return  mixed    Object on success, false on failure.
+	 * @return  boolean  False on failure or error, true otherwise.
+	 *
+	 * @since   11.1
 	 */
-	public function getItem($pk = null)
+	public function checkout($pk = null)
 	{
-		return parent::getItem($pk);
+		return $pk;
+	}
+
+	/**
+	 * Method to get a table object, load it if necessary.
+	 *
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
+	 *
+	 * @return  JTable  A JTable object
+	 *
+	 * @since       1.6
+	 */
+	public function getTable($name = 'template', $prefix = 'Table', $options = array())
+	{
+		return JTable::getInstance($name, $prefix, $options);
 	}
 
 	/**
@@ -106,40 +165,22 @@ class BiblestudyModelTemplate extends JModelAdmin
 	}
 
 	/**
-	 * Method to check-out a row for editing.
+	 * Get Items
 	 *
-	 * @param   integer $pk  The numeric id of the primary key.
+	 * @param   integer  $pk  The id of the primary key.
 	 *
-	 * @return  boolean  False on failure or error, true otherwise.
-	 *
-	 * @since   11.1
+	 * @return  mixed    Object on success, false on failure.
 	 */
-	public function checkout($pk = null)
+	public function getItem($pk = null)
 	{
-		return $pk;
-	}
-
-	/**
-	 * Method to get a table object, load it if necessary.
-	 *
-	 * @param   string $name     The table name. Optional.
-	 * @param   string $prefix   The class prefix. Optional.
-	 * @param   array  $options  Configuration array for model. Optional.
-	 *
-	 * @return  JTable  A JTable object
-	 *
-	 * @since       1.6
-	 */
-	public function getTable($name = 'template', $prefix = 'Table', $options = array())
-	{
-		return JTable::getInstance($name, $prefix, $options);
+		return parent::getItem($pk);
 	}
 
 	/**
 	 * Custom clean the cache of com_biblestudy and biblestudy modules
 	 *
-	 * @param   string  $group      The cache group
-	 * @param   integer $client_id  The ID of the client
+	 * @param   string   $group      The cache group
+	 * @param   integer  $client_id  The ID of the client
 	 *
 	 * @return  void
 	 *

@@ -21,10 +21,9 @@
                                     API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a>Packages</a></li>
 <li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
-<li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
-<li><a href="../packages/Joomla.html"><i class="icon-folder-open"></i> Joomla</a></li>
-<li><a href="../packages/LiveUpdate.html"><i class="icon-folder-open"></i> LiveUpdate</a></li>
-<li><a href="../packages/SefExt.html"><i class="icon-folder-open"></i> SefExt</a></li>
+<li><a href="../packages/BibleStudy.Admin.html"><i class="icon-folder-open"></i> BibleStudy.Admin</a></li>
+<li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
 </ul>
 </li>
 <li class="dropdown" id="charts-menu">
@@ -35,18 +34,11 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">2</span></a></li>
+                <span class="label label-info">151</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
-                <ul>
-<li>todo 
-                <span class="label label-info">38</span>
-</li>
-<li>fixme 
-                <span class="label label-info">1</span>
-</li>
-</ul></a></li>
+                <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
-                <span class="label label-info">12</span></a></li>
+                <span class="label label-info">20</span></a></li>
 </ul>
 </li>
 </ul></div>
@@ -60,53 +52,60 @@
                         </div></noscript>
 <div class="row">
 <div class="span4">
-<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
+<div xmlns:php="http://php.net/xsl" class="btn-toolbar">
+<div class="btn-group visibility" data-toggle="buttons-checkbox">
+<button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button>
+</div>
+<div class="btn-group view pull-right" data-toggle="buttons-radio">
 <button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
 </div>
-<ul class="side-nav nav nav-list">
+</div>
+<ul xmlns:php="http://php.net/xsl" class="side-nav nav nav-list">
 <li class="nav-header">
-<i class="icon-custom icon-method"></i> Methods
+<i title="Methods" class="icon-custom icon-method"></i> Methods
                     <ul>
-<li class="method public "><a href="#method_checkout" title="checkout :: Method to check-out a row for editing."><span class="description">Method to check-out a row for editing.</span><pre>checkout()</pre></a></li>
-<li class="method public "><a href="#method_getForm" title="getForm :: Abstract method for getting the form from the model."><span class="description">Abstract method for getting the form from the model.</span><pre>getForm()</pre></a></li>
-<li class="method public "><a href="#method_getItem" title="getItem :: Method to get a single record."><span class="description">Method to get a single record.</span><pre>getItem()</pre></a></li>
-<li class="method public "><a href="#method_getTable" title="getTable :: Method to get a table object, load it if necessary."><span class="description">Method to get a table object, load it if necessary.</span><pre>getTable()</pre></a></li>
-<li class="method public "><a href="#method_getTeacher" title="getTeacher :: Get Teacher data"><span class="description">Get Teacher data</span><pre>getTeacher()</pre></a></li>
-<li class="method public "><a href="#method_save" title="save :: Method to save the form data."><span class="description">Method to save the form data.</span><pre>save()</pre></a></li>
+<li class="method public "><a href="#method_checkout" title="checkout() :: Method to check-out a row for editing."><span class="description">Method to check-out a row for editing.</span><pre>checkout()</pre></a></li>
+<li class="method public "><a href="#method_getForm" title="getForm() :: Abstract method for getting the form from the model."><span class="description">Abstract method for getting the form from the model.</span><pre>getForm()</pre></a></li>
+<li class="method public "><a href="#method_getItem" title="getItem() :: Method to get a single record."><span class="description">Method to get a single record.</span><pre>getItem()</pre></a></li>
+<li class="method public "><a href="#method_getTable" title="getTable() :: Method to get a table object, load it if necessary."><span class="description">Method to get a table object, load it if necessary.</span><pre>getTable()</pre></a></li>
+<li class="method public "><a href="#method_getTeacher" title="getTeacher() :: Get Teacher data"><span class="description">Get Teacher data</span><pre>getTeacher()</pre></a></li>
+<li class="method public "><a href="#method_save" title="save() :: Method to save the form data."><span class="description">Method to save the form data.</span><pre>save()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header protected">» Protected
                     <ul>
-<li class="method protected "><a href="#method_batchCopy" title="batchCopy :: Batch copy items to a new category or current."><span class="description">Batch copy items to a new category or current.</span><pre>batchCopy()</pre></a></li>
-<li class="method protected "><a href="#method_canDelete" title="canDelete :: Method to test whether a record can be deleted."><span class="description">Method to test whether a record can be deleted.</span><pre>canDelete()</pre></a></li>
-<li class="method protected "><a href="#method_canEditState" title="canEditState :: Method to test whether a record can be deleted."><span class="description">Method to test whether a record can be deleted.</span><pre>canEditState()</pre></a></li>
-<li class="method protected "><a href="#method_cleanCache" title="cleanCache :: Custom clean the cache of com_biblestudy and biblestudy modules"><span class="description">Custom clean the cache of com_biblestudy and biblestudy modules</span><pre>cleanCache()</pre></a></li>
-<li class="method protected "><a href="#method_getReorderConditions" title="getReorderConditions :: A protected method to get a set of ordering conditions."><span class="description">A protected method to get a set of ordering conditions.</span><pre>getReorderConditions()</pre></a></li>
-<li class="method protected "><a href="#method_loadFormData" title="loadFormData :: Method to get the data that should be injected in the form."><span class="description">Method to get the data that should be injected in the form.</span><pre>loadFormData()</pre></a></li>
-<li class="method protected "><a href="#method_prepareTable" title="prepareTable :: Prepare and sanitise the table data prior to saving."><span class="description">Prepare and sanitise the table data prior to saving.</span><pre>prepareTable()</pre></a></li>
-<li class="method protected "><a href="#method_preprocessForm" title="preprocessForm :: Method to allow derived classes to prepossess the form."><span class="description">Method to allow derived classes to prepossess the form.</span><pre>preprocessForm()</pre></a></li>
+<li class="method protected "><a href="#method_batchCopy" title="batchCopy() :: Batch copy items to a new category or current."><span class="description">Batch copy items to a new category or current.</span><pre>batchCopy()</pre></a></li>
+<li class="method protected "><a href="#method_canDelete" title="canDelete() :: Method to test whether a record can be deleted."><span class="description">Method to test whether a record can be deleted.</span><pre>canDelete()</pre></a></li>
+<li class="method protected "><a href="#method_canEditState" title="canEditState() :: Method to test whether a record can be deleted."><span class="description">Method to test whether a record can be deleted.</span><pre>canEditState()</pre></a></li>
+<li class="method protected "><a href="#method_cleanCache" title="cleanCache() :: Custom clean the cache of com_biblestudy and biblestudy modules"><span class="description">Custom clean the cache of com_biblestudy and biblestudy modules</span><pre>cleanCache()</pre></a></li>
+<li class="method protected "><a href="#method_getReorderConditions" title="getReorderConditions() :: A protected method to get a set of ordering conditions."><span class="description">A protected method to get a set of ordering conditions.</span><pre>getReorderConditions()</pre></a></li>
+<li class="method protected "><a href="#method_loadFormData" title="loadFormData() :: Method to get the data that should be injected in the form."><span class="description">Method to get the data that should be injected in the form.</span><pre>loadFormData()</pre></a></li>
+<li class="method protected "><a href="#method_prepareTable" title="prepareTable() :: Prepare and sanitise the table data prior to saving."><span class="description">Prepare and sanitise the table data prior to saving.</span><pre>prepareTable()</pre></a></li>
+<li class="method protected "><a href="#method_preprocessForm" title="preprocessForm() :: Method to allow derived classes to prepossess the form."><span class="description">Method to allow derived classes to prepossess the form.</span><pre>preprocessForm()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header">
-<i class="icon-custom icon-property"></i> Properties
+<i title="Properties" class="icon-custom icon-property"></i> Properties
                     <ul></ul>
 </li>
 <li class="nav-header protected">» Protected
-                    <ul><li class="property protected "><a href="#property_text_prefix" title="$text_prefix :: "><span class="description">The prefix to use with controller messages.</span><pre>$text_prefix</pre></a></li></ul>
+                    <ul>
+<li class="property protected "><a href="#property__teacher" title="$_teacher() :: "><span class="description"></span><pre>$_teacher</pre></a></li>
+<li class="property protected "><a href="#property_text_prefix" title="$text_prefix() :: "><span class="description">The prefix to use with controller messages.</span><pre>$text_prefix</pre></a></li>
+</ul>
 </li>
 </ul>
 </div>
 <div class="span8">
-<a id="\BiblestudyModelSerie"></a><ul class="breadcrumb">
+<a xmlns:php="http://php.net/xsl" id="\BiblestudyModelSerie"></a><ul xmlns:php="http://php.net/xsl" class="breadcrumb">
 <li>
-<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+<a href="../index.html"><i title="Classes" class="icon-custom icon-class"></i></a><span class="divider">\</span>
 </li>
-<li><a href="../namespaces/global.html">global</a></li>
 <li class="active">
 <span class="divider">\</span><a href="../classes/BiblestudyModelSerie.html">BiblestudyModelSerie</a>
 </li>
 </ul>
-<div class="element class">
+<div xmlns:php="http://php.net/xsl" class="element class">
 <p class="short_description">Serie admin model</p>
 <div class="details">
 <div class="long_description"></div>
@@ -121,10 +120,10 @@
 </tr>
 </table>
 <h3>
-<i class="icon-custom icon-method"></i> Methods</h3>
-<a id="method_checkout"></a><div class="element clickable method public method_checkout" data-toggle="collapse" data-target=".method_checkout .collapse">
+<i title="Methods" class="icon-custom icon-method"></i> Methods</h3>
+<a id="method_checkout"></a><div class="element clickable method public method_checkout " data-toggle="collapse" data-target=".method_checkout .collapse" title="public">
 <h2>Method to check-out a row for editing.</h2>
-<pre>checkout(integer $pk) : boolean</pre>
+<pre>checkout(integer $pk<code> = null</code>) : boolean</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -141,9 +140,9 @@
 <code>boolean</code>False on failure or error, true otherwise.</div>
 </div></div>
 </div>
-<a id="method_getForm"></a><div class="element clickable method public method_getForm" data-toggle="collapse" data-target=".method_getForm .collapse">
+<a id="method_getForm"></a><div class="element clickable method public method_getForm " data-toggle="collapse" data-target=".method_getForm .collapse" title="public">
 <h2>Abstract method for getting the form from the model.</h2>
-<pre>getForm(array $data, boolean $loadData) : mixed</pre>
+<pre>getForm(array $data<code> = array()</code>, boolean $loadData<code> = true</code>) : mixed</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -157,31 +156,30 @@
 <code>array</code><p>Data for the form.</p></div>
 <div class="subelement argument">
 <h4>$loadData</h4>
-<code>boolean</code><p>True if the form is to load its own data (default case), false if not.</p>
-</div>
+<code>boolean</code><p>True if the form is to load its own data (default case), false if not.</p></div>
 <h3>Returns</h3>
 <div class="subelement response">
 <code>mixed</code>A JForm object on success, false on failure</div>
 </div></div>
 </div>
-<a id="method_getItem"></a><div class="element clickable method public method_getItem" data-toggle="collapse" data-target=".method_getItem .collapse">
+<a id="method_getItem"></a><div class="element clickable method public method_getItem " data-toggle="collapse" data-target=".method_getItem .collapse" title="public">
 <h2>Method to get a single record.</h2>
-<pre>getItem(int $pk) : mixed</pre>
+<pre>getItem(integer $pk<code> = null</code>) : mixed</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$pk</h4>
-<code>int</code><p>The id of the primary key.</p></div>
+<code>integer</code><p>The id of the primary key.</p></div>
 <h3>Returns</h3>
 <div class="subelement response">
 <code>mixed</code>Object on success, false on failure.</div>
 </div></div>
 </div>
-<a id="method_getTable"></a><div class="element clickable method public method_getTable" data-toggle="collapse" data-target=".method_getTable .collapse">
+<a id="method_getTable"></a><div class="element clickable method public method_getTable " data-toggle="collapse" data-target=".method_getTable .collapse" title="public">
 <h2>Method to get a table object, load it if necessary.</h2>
-<pre>getTable(string $name, string $prefix, array $options) : \JTable</pre>
+<pre>getTable(string $name<code> = 'Serie'</code>, string $prefix<code> = 'Table'</code>, array $options<code> = array()</code>) : \JTable</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -200,7 +198,7 @@
 <code>\JTable</code>A JTable object</div>
 </div></div>
 </div>
-<a id="method_getTeacher"></a><div class="element clickable method public method_getTeacher" data-toggle="collapse" data-target=".method_getTeacher .collapse">
+<a id="method_getTeacher"></a><div class="element clickable method public method_getTeacher " data-toggle="collapse" data-target=".method_getTeacher .collapse" title="public">
 <h2>Get Teacher data</h2>
 <pre>getTeacher() : object</pre>
 <div class="labels"></div>
@@ -210,7 +208,7 @@
 <div class="subelement response"><code>object</code></div>
 </div></div>
 </div>
-<a id="method_save"></a><div class="element clickable method public method_save" data-toggle="collapse" data-target=".method_save .collapse">
+<a id="method_save"></a><div class="element clickable method public method_save " data-toggle="collapse" data-target=".method_save .collapse" title="public">
 <h2>Method to save the form data.</h2>
 <pre>save(array $data) : boolean</pre>
 <div class="labels"></div>
@@ -229,7 +227,7 @@
 <code>boolean</code>True on success.</div>
 </div></div>
 </div>
-<a id="method_batchCopy"></a><div class="element clickable method protected method_batchCopy" data-toggle="collapse" data-target=".method_batchCopy .collapse">
+<a id="method_batchCopy"></a><div class="element clickable method protected method_batchCopy " data-toggle="collapse" data-target=".method_batchCopy .collapse" title="protected">
 <h2>Batch copy items to a new category or current.</h2>
 <pre>batchCopy(integer $value, array $pks, array $contexts) : mixed</pre>
 <div class="labels"></div>
@@ -254,7 +252,7 @@
 <code>mixed</code>An array of new IDs on success, boolean false on failure.</div>
 </div></div>
 </div>
-<a id="method_canDelete"></a><div class="element clickable method protected method_canDelete" data-toggle="collapse" data-target=".method_canDelete .collapse">
+<a id="method_canDelete"></a><div class="element clickable method protected method_canDelete " data-toggle="collapse" data-target=".method_canDelete .collapse" title="protected">
 <h2>Method to test whether a record can be deleted.</h2>
 <pre>canDelete(object $record) : boolean</pre>
 <div class="labels"></div>
@@ -273,7 +271,7 @@
 <code>boolean</code>True if allowed to delete the record. Defaults to the permission set in the component.</div>
 </div></div>
 </div>
-<a id="method_canEditState"></a><div class="element clickable method protected method_canEditState" data-toggle="collapse" data-target=".method_canEditState .collapse">
+<a id="method_canEditState"></a><div class="element clickable method protected method_canEditState " data-toggle="collapse" data-target=".method_canEditState .collapse" title="protected">
 <h2>Method to test whether a record can be deleted.</h2>
 <pre>canEditState(object $record) : boolean</pre>
 <div class="labels"></div>
@@ -292,9 +290,9 @@
 <code>boolean</code>True if allowed to change the state of the record. Defaults to the permission for the component.</div>
 </div></div>
 </div>
-<a id="method_cleanCache"></a><div class="element clickable method protected method_cleanCache" data-toggle="collapse" data-target=".method_cleanCache .collapse">
+<a id="method_cleanCache"></a><div class="element clickable method protected method_cleanCache " data-toggle="collapse" data-target=".method_cleanCache .collapse" title="protected">
 <h2>Custom clean the cache of com_biblestudy and biblestudy modules</h2>
-<pre>cleanCache(string $group, integer $client_id) : void</pre>
+<pre>cleanCache(string $group<code> = null</code>, integer $client_id<code> = 0</code>) : void</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -311,7 +309,7 @@
 <code>integer</code><p>The ID of the client</p></div>
 </div></div>
 </div>
-<a id="method_getReorderConditions"></a><div class="element clickable method protected method_getReorderConditions" data-toggle="collapse" data-target=".method_getReorderConditions .collapse">
+<a id="method_getReorderConditions"></a><div class="element clickable method protected method_getReorderConditions " data-toggle="collapse" data-target=".method_getReorderConditions .collapse" title="protected">
 <h2>A protected method to get a set of ordering conditions.</h2>
 <pre>getReorderConditions(\JTable $table) : array</pre>
 <div class="labels"></div>
@@ -330,7 +328,7 @@
 <code>array</code>An array of conditions to add to ordering queries.</div>
 </div></div>
 </div>
-<a id="method_loadFormData"></a><div class="element clickable method protected method_loadFormData" data-toggle="collapse" data-target=".method_loadFormData .collapse">
+<a id="method_loadFormData"></a><div class="element clickable method protected method_loadFormData " data-toggle="collapse" data-target=".method_loadFormData .collapse" title="protected">
 <h2>Method to get the data that should be injected in the form.</h2>
 <pre>loadFormData() : array</pre>
 <div class="labels"></div>
@@ -345,9 +343,9 @@
 <code>array</code>The default data is an empty array.</div>
 </div></div>
 </div>
-<a id="method_prepareTable"></a><div class="element clickable method protected method_prepareTable" data-toggle="collapse" data-target=".method_prepareTable .collapse">
+<a id="method_prepareTable"></a><div class="element clickable method protected method_prepareTable " data-toggle="collapse" data-target=".method_prepareTable .collapse" title="protected">
 <h2>Prepare and sanitise the table data prior to saving.</h2>
-<pre>prepareTable(\JTable $table) : void</pre>
+<pre>prepareTable(\TableSerie $table) : void</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -358,12 +356,12 @@
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$table</h4>
-<code>\JTable</code><p>A reference to a JTable object.</p></div>
+<code>\TableSerie</code><p>A reference to a JTable object.</p></div>
 </div></div>
 </div>
-<a id="method_preprocessForm"></a><div class="element clickable method protected method_preprocessForm" data-toggle="collapse" data-target=".method_preprocessForm .collapse">
+<a id="method_preprocessForm"></a><div class="element clickable method protected method_preprocessForm " data-toggle="collapse" data-target=".method_preprocessForm .collapse" title="protected">
 <h2>Method to allow derived classes to prepossess the form.</h2>
-<pre>preprocessForm(\JForm $form, mixed $data, string $group) : void</pre>
+<pre>preprocessForm(\JForm $form, mixed $data, string $group<code> = 'content'</code>) : void</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -380,15 +378,28 @@
 <code>mixed</code><p>The data expected for the form.</p></div>
 <div class="subelement argument">
 <h4>$group</h4>
-<code>string</code><p>The name of the plugin group to import (defaults to "content").</p>
-</div>
+<code>string</code><p>The name of the plugin group to import (defaults to "content").</p></div>
 </div></div>
 </div>
 <h3>
-<i class="icon-custom icon-property"></i> Properties</h3>
-<a id="property_text_prefix"> </a><div class="element clickable property protected property_text_prefix" data-toggle="collapse" data-target=".property_text_prefix .collapse">
+<i title="Properties" class="icon-custom icon-property"></i> Properties</h3>
+<a id="property__teacher"> </a><div class="element clickable property protected property__teacher" data-toggle="collapse" data-target=".property__teacher .collapse" title="protected">
+<h2>$_teacher</h2>
+<pre>$_teacher </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_text_prefix"> </a><div class="element clickable property protected property_text_prefix" data-toggle="collapse" data-target=".property_text_prefix .collapse" title="protected">
 <h2>The prefix to use with controller messages.</h2>
 <pre>$text_prefix : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>'COM_BIBLESTUDY'</code></div>
+</div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -404,8 +415,8 @@
 </div>
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
-            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
-            generated on 2013-06-22T20:25:37-05:00.<br></footer></div>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
+            generated on 2016-04-06T22:36:12-05:00.<br></footer></div>
 </div>
 </body>
 </html>

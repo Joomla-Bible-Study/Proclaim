@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Admin
  * @since    7.1.0
  */
-class JBSMFixAlias
+class JBSMAlias
 {
 	/**
 	 * Extension Name
@@ -34,7 +34,7 @@ class JBSMFixAlias
 	public static function updateAlias()
 	{
 		$done    = 0;
-		$db      = JFactory::getDBO();
+		$db      = JFactory::getDbo();
 		$objects = self::getObjects();
 		$results = array();
 
@@ -59,7 +59,7 @@ class JBSMFixAlias
 						->set('alias=' . $db->q($alias))
 						->where('id=' . $db->q($r['id']));
 					$db->setQuery($query);
-					$db->query();
+					$db->execute();
 					$done++;
 				}
 			}
@@ -69,10 +69,27 @@ class JBSMFixAlias
 	}
 
 	/**
+	 * Get Object's for tables
+	 *
+	 * @return array
+	 */
+	private static function getObjects()
+	{
+		$objects = array(
+			array('name' => '#__bsms_series', 'titlefield' => 'series_text'),
+			array('name' => '#__bsms_studies', 'titlefield' => 'studytitle'),
+			array('name' => '#__bsms_message_type', 'titlefield' => 'message_type'),
+			array('name' => '#__bsms_teachers', 'titlefield' => 'teachername'),
+		);
+
+		return $objects;
+	}
+
+	/**
 	 * Get Table fields for updating.
 	 *
-	 * @param   string $table  Table
-	 * @param   string $title  Title
+	 * @param   string  $table  Table
+	 * @param   string  $title  Title
 	 *
 	 * @return boolean|array
 	 */
@@ -84,7 +101,7 @@ class JBSMFixAlias
 		{
 			return false;
 		}
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('id, alias, ' . $title)
 			->from($table);
@@ -106,23 +123,6 @@ class JBSMFixAlias
 		}
 
 		return $data;
-	}
-
-	/**
-	 * Get Object's for tables
-	 *
-	 * @return array
-	 */
-	private static function getObjects()
-	{
-		$objects = array(
-			array('name' => '#__bsms_series', 'titlefield' => 'series_text'),
-			array('name' => '#__bsms_studies', 'titlefield' => 'studytitle'),
-			array('name' => '#__bsms_message_type', 'titlefield' => 'message_type'),
-			array('name' => '#__bsms_teachers', 'titlefield' => 'teachername'),
-		);
-
-		return $objects;
 	}
 
 }

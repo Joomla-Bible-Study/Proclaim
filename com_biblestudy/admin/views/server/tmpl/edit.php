@@ -3,7 +3,7 @@
  * Form
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -14,16 +14,20 @@ defined('_JEXEC') or die;
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
+
 // Create shortcut to parameters.
-$params = $this->state->get('params');
-$params = $params->toArray();
-$app = JFactory::getApplication();
+$app   = JFactory::getApplication();
 $input = $app->input;
 ?>
 <script type="text/javascript">
-	Joomla.submitbutton = function (task) {
-		if (task == 'server.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
-			Joomla.submitform(task, document.getElementById('item-form'));
+	Joomla.submitbutton = function (task, type) {
+		if (task == 'server.setType') {
+			document.id('server-form').elements['jform[type]'].value = type;
+			Joomla.submitform(task, document.id('server-form'));
+		} else if (task == 'server.cancel') {
+			Joomla.submitform(task, document.getElementById('server-form'));
+		} else if (task == 'server.apply' || document.formvalidator.isValid(document.id('server-form'))) {
+			Joomla.submitform(task, document.getElementById('server-form'));
 		} else {
 			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
 		}
@@ -31,14 +35,27 @@ $input = $app->input;
 </script>
 
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=edit&id=' . (int) $this->item->id); ?>"
-      method="post" name="adminForm" id="item-form" class="form-validate">
+      method="post" name="adminForm" id="server-form" class="form-validate">
 	<div class="row-fluid">
 		<!-- Begin Content -->
-		<div class="span10 form-horizontal">
+		<div class="span8 form-horizontal">
 			<ul class="nav nav-tabs">
 				<li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
 				</li>
-				<li><a href="#ftp" data-toggle="tab"><?php echo JText::_('JBS_CMN_FTP'); ?></a></li>
+				<?php foreach ($this->server_form->getFieldsets('params') as $fieldsets): ?>
+					<li>
+						<a href="#<?php echo $fieldsets->name; ?>" data-toggle="tab">
+							<?php echo JText::_($fieldsets->label); ?>
+						</a>
+					</li>
+				<?php endforeach; ?>
+				<?php if (count($this->server_form->getFieldsets('media')) > 0): ?>
+					<li>
+						<a href="#media_settings" data-toggle="tab">
+							<?php echo JText::_("JBS_SVR_MEDIA_SETTINGS"); ?>
+						</a>
+					</li>
+				<?php endif; ?>
 				<?php if ($this->canDo->get('core.admin')): ?>
 					<li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a>
 					</li>
@@ -47,19 +64,12 @@ $input = $app->input;
 			<div class="tab-content">
 				<!-- Begin Tabs -->
 				<div class="tab-pane active" id="general">
-					<div class="control-group  form-inline">
-						<?php echo $this->form->getLabel('id'); ?> <?php echo $this->form->getInput('id'); ?>
-					</div>
-					<div class="control-group form-inline">
-						<?php echo $this->form->getLabel('server_name'); ?> <?php echo $this->form->getInput('server_name'); ?>
-					</div>
-
 					<div class="control-group">
 						<div class="control-label">
-							<?php echo $this->form->getLabel('server_path'); ?>
+							<?php echo $this->form->getLabel('server_name'); ?>
 						</div>
 						<div class="controls">
-							<?php echo $this->form->getInput('server_path'); ?>
+							<?php echo $this->form->getInput('server_name'); ?>
 						</div>
 					</div>
 					<div class="control-group">
@@ -70,69 +80,65 @@ $input = $app->input;
 							<?php echo $this->form->getInput('type'); ?>
 						</div>
 					</div>
-				</div>
-
-				<div class="tab-pane" id="ftp">
-					<div class="row-fluid">
-						<div class="span6">
-							<div class="control-group">
-								<div class="control-label">
-									<?php echo $this->form->getLabel('ftphost'); ?>
-								</div>
-								<div class="controls">
-									<?php echo $this->form->getInput('ftphost'); ?>
-								</div>
-							</div>
-							<div class="control-group">
-								<div class="control-label">
-									<?php echo $this->form->getLabel('ftpuser'); ?>
-								</div>
-								<div class="controls">
-									<?php echo $this->form->getInput('ftpuser'); ?>
-								</div>
-							</div>
-							<div class="control-group">
-								<div class="control-label">
-									<?php echo $this->form->getLabel('ftppassword'); ?>
-								</div>
-								<div class="controls">
-									<?php echo $this->form->getInput('ftppassword'); ?>
-								</div>
-							</div>
-							<div class="control-group">
-								<div class="control-label">
-									<?php echo $this->form->getLabel('ftpport'); ?>
-								</div>
-								<div class="controls">
-									<?php echo $this->form->getInput('ftpport'); ?>
-								</div>
-							</div>
-							<div class="control-group">
-								<div class="control-label">
-									<?php echo $this->form->getLabel('aws_key'); ?>
-								</div>
-								<div class="controls">
-									<?php echo $this->form->getInput('aws_key'); ?>
-								</div>
-							</div>
-							<div class="control-group">
-								<div class="control-label">
-									<?php echo $this->form->getLabel('aws_secret'); ?>
-								</div>
-								<div class="controls">
-									<?php echo $this->form->getInput('aws_secret'); ?>
-								</div>
-							</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('published'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('published'); ?>
 						</div>
 					</div>
 				</div>
-
+				<?php foreach ($this->server_form->getFieldsets('params') as $fieldset): ?>
+					<div class="tab-pane" id="<?php echo $fieldset->name; ?>">
+						<?php foreach ($this->server_form->getFieldset($fieldset->name) as $field): ?>
+							<div class="control-group">
+								<div class="control-label">
+									<?php echo $field->label; ?>
+								</div>
+								<div class="controls">
+									<?php echo $field->input; ?>
+								</div>
+							</div>
+						<?php endforeach; ?>
+					</div>
+				<?php endforeach; ?>
+				<div class="tab-pane" id="media_settings">
+					<div class="accordion" id="accordion">
+						<?php $first = true; ?>
+						<?php foreach ($this->server_form->getFieldsets('media') as $name => $fieldset): ?>
+							<div class="accordion-group">
+								<div class="accordion-heading">
+									<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion"
+									   href="#<?php echo $name; ?>">
+										<?php echo JText::_($fieldset->label); ?>
+									</a>
+								</div>
+								<div id="<?php echo $name; ?>"
+								     class="accordion-body collapse <?php echo $first ? "in" : ""; ?>">
+									<div class="accordion-inner">
+										<?php foreach ($this->server_form->getFieldset($name) as $field): ?>
+											<div class="control-group">
+												<div class="control-label">
+													<?php echo $field->label; ?>
+												</div>
+												<div class="controls">
+													<?php echo $field->input; ?>
+												</div>
+											</div>
+										<?php endforeach; ?>
+									</div>
+								</div>
+							</div>
+							<?php $first = false; ?>
+						<?php endforeach; ?>
+					</div>
+				</div>
 				<?php if ($this->canDo->get('core.admin')): ?>
 					<div class="tab-pane" id="permissions">
 						<?php echo $this->form->getInput('rules'); ?>
 					</div>
 				<?php endif; ?>
-
 			</div>
 			<input type="hidden" name="task" value=""/>
 			<input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
@@ -140,20 +146,18 @@ $input = $app->input;
 		</div>
 		<!-- End Content -->
 		<!-- Begin Sidebar -->
-		<div class="span2 form-vertical">
-			<h4><?php echo JText::_('JDETAILS'); ?></h4>
-			<hr/>
-			<div class="control-group">
-				<div class="controls">
-					<?php echo $this->form->getValue('server_bane'); ?>
-				</div>
-			</div>
-			<div class="control-group">
-				<?php echo $this->form->getLabel('published'); ?>
-				<div class="controls">
-					<?php echo $this->form->getInput('published'); ?>
-				</div>
-			</div>
+		<div class="span3 form-vertical">
+			<h4>
+				<?php
+                if (!is_null($this->item->id)) {echo $this->escape($this->item->addon->name); }
+				?>
+			</h4>
+
+			<p>
+				<?php
+                if (!is_null($this->item->id)) {echo $this->escape($this->item->addon->description);}
+				?>
+			</p>
 		</div>
 		<!-- End Sidebar -->
 	</div>

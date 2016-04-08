@@ -3,12 +3,15 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
+use \Joomla\Registry\Registry;
+
 /**
  * Table class for Server
  *
@@ -17,20 +20,12 @@ defined('_JEXEC') or die;
  */
 class TableServer extends JTable
 {
-
 	/**
 	 * Primary Key
 	 *
 	 * @var int
 	 */
 	public $id = null;
-
-	/**
-	 * Published
-	 *
-	 * @var int
-	 */
-	public $published = 1;
 
 	/**
 	 * Server Name
@@ -40,39 +35,11 @@ class TableServer extends JTable
 	public $server_name = null;
 
 	/**
-	 * Server Path
+	 * Published
 	 *
-	 * @var string
+	 * @var int
 	 */
-	public $server_path = null;
-
-	/**
-	 * Server Type
-	 *
-	 * @var string
-	 */
-	public $server_type = null;
-
-	/**
-	 * Ftp User Name
-	 *
-	 * @var string
-	 */
-	public $ftp_username = null;
-
-	/**
-	 * FTP Password
-	 *
-	 * @var string
-	 */
-	public $ftp_password = null;
-
-	/**
-	 * Rules
-	 *
-	 * @var string
-	 */
-	public $rules = null;
+	public $published = 1;
 
 	/**
 	 * Asset ID
@@ -81,12 +48,25 @@ class TableServer extends JTable
 	 */
 	public $assset_id = null;
 
+	public $access;
+
+	/**
+	 * Server Type
+	 *
+	 * @var string
+	 */
+	public $type = null;
+
+	public $params = null;
+
+	public $media = null;
+
 	/**
 	 * Constructor
 	 *
 	 * @param   JDatabaseDriver  &$db  Database connector object
 	 */
-	public function Tableserver(& $db)
+	public function __construct(&$db)
 	{
 		parent::__construct('#__bsms_servers', 'id', $db);
 	}
@@ -106,11 +86,20 @@ class TableServer extends JTable
 	 */
 	public function bind($array, $ignore = '')
 	{
+		// Bind the server params
 		if (isset($array['params']) && is_array($array['params']))
 		{
-			$registry = new JRegistry;
+			$registry = new Registry;
 			$registry->loadArray($array['params']);
 			$array['params'] = (string) $registry;
+		}
+
+		// Bind the media defaults
+		if (isset($array['media']) && is_array($array['media']))
+		{
+			$registry = new Registry;
+			$registry->loadArray($array['media']);
+			$array['media'] = (string) $registry;
 		}
 
 		// Bind the rules.
@@ -121,6 +110,30 @@ class TableServer extends JTable
 		}
 
 		return parent::bind($array, $ignore);
+	}
+
+	/**
+	 * Method to store a row in the database from the JTable instance properties.
+	 * If a primary key value is set the row with that primary key value will be
+	 * updated with the instance property values.  If no primary key value is set
+	 * a new row will be inserted into the database with the properties from the
+	 * JTable instance.
+	 *
+	 * @param   boolean  $updateNulls  True to update fields even if they are null.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @link    https://docs.joomla.org/JTable/store
+	 * @since   11.1
+	 */
+	public function store($updateNulls = false)
+	{
+		if (!$this->_rules)
+		{
+			$this->setRules('{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}');
+		}
+
+		return parent::store($updateNulls);
 	}
 
 	/**
@@ -166,6 +179,7 @@ class TableServer extends JTable
 	 */
 	protected function _getAssetParentId(JTable $table = null, $id = null)
 	{
+		/** @type JTableAsset $asset */
 		$asset = JTable::getInstance('Asset');
 		$asset->loadByName('com_biblestudy');
 

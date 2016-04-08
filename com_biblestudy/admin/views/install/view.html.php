@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -20,64 +20,124 @@ JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/compo
  */
 class BiblestudyViewInstall extends JViewLegacy
 {
-	/**
-	 * Messages
-	 *
-	 * @var string
-	 */
-	public $msg;
 
-	/**
-	 * Joomla Bible Study Name
-	 *
-	 * @var string
-	 */
-	public $jbsname;
+	/** @var int Total numbers of Steps */
+	public $totalSteps = 0;
 
-	/**
-	 * Joomla Bible Study Type
-	 *
-	 * @var string
-	 */
-	public $jbstype;
+	/** @var int Numbers of Steps already processed */
+	public $doneSteps = 0;
 
-	/**
-	 * Status
-	 *
-	 * @var JObject
-	 */
+	/** @var string Running Now */
+	public $running;
+
+	/** @var array Call stack for the Visioning System. */
+	public $callstack = array();
+
+	/** @var string More */
+	protected $more;
+
+	/** @var  string Percentage */
+	protected $percentage;
+
+	/** @var string Starte of install */
+	public $state;
+
+	/** @var JObject Status */
 	public $status;
+
+	/** @var array The pre versions to process */
+	private $_versionStack = array();
+
+	/** @var array The pre versions sub sql array to process */
+	private $_allupdates = array();
+
+	/** @var array Array of Finish Task */
+	private $_finish = array();
+
+	/** @var array Array of Install Task */
+	private $_install = array();
+
+	/** @var int If was inported */
+	private $_isimport = 0;
+
+	/** @type string Type of process */
+	protected $type = null;
 
 	/**
 	 * Display
 	 *
-	 * @param   string $tpl  Template to display
+	 * @param   string  $tpl  Template to display
 	 *
-	 * @return null
+	 * @return null|void
 	 */
 	public function display($tpl = null)
 	{
+		$input = new JInput;
+		$input->set('hidemainmenu', true);
+		$app   = JFactory::getApplication();
+		$this->state = $app->input->getBool('scanstate', false);
+		$layout = $app->input->get('layout', 'default');
 
-		$input         = new JInput;
-		$this->msg     = $input->get('msg', '', 'post');
-		$this->jbsname = $input->get('jbsname');
-		$this->jbstype = $input->get('jbstype');
-
-		if ($this->jbsname === null || $this->jbstype === null)
+		if ($this->state == 'start')
 		{
-			JFactory::getApplication()->enqueueMessage(JText::_('JBS_INS_WARNING_INSTALL'), 'warning');
-			$input->set('hidemainmenu', true);
+			$db = JFactory::getDbo();
 
-			return false;
+			// Check if JBSM can be found from the database
+			$table = $db->getPrefix() . 'bsms_storage';
+			$db->setQuery("SHOW TABLES LIKE {$db->quote($table)}");
+
+			if ($db->loadResult() != $table)
+			{
+				$db->setQuery('DROP TABLE IF EXISTS `#__bsms_storage`;');
+				$db->execute();
+				$db->setQuery('CREATE TABLE `#__bsms_storage` (
+							  `key` VARCHAR(255) NOT NULL,
+							  `value` LONGTEXT NOT NULL,
+							  PRIMARY KEY (`key`)
+							) ENGINE=InnoDB DEFAULT CHARSET=utf8;');
+				$db->execute();
+			}
 		}
-		JHTML::stylesheet('media/com_biblestudy/css/general.css');
+		$this->loadStack();
+
+		if ($this->state)
+		{
+			if ($this->totalSteps > 0)
+			{
+				$percent = round($this->doneSteps / $this->totalSteps * 100);
+			}
+			else
+			{
+				$percent = 0;
+			}
+
+			$more = true;
+		}
+		else
+		{
+			$percent = 100;
+			$more    = false;
+		}
+
+		$this->more = &$more;
+		$this->setLayout($layout);
+
+		$this->percentage = &$percent;
+
+		if ($more)
+		{
+			$script = "window.addEvent( 'domready' ,  function() {\n";
+			$script .= "document.forms.adminForm.submit();\n";
+			$script .= "});\n";
+			JFactory::getDocument()->addScriptDeclaration($script);
+		}
+
+		JToolbarHelper::title(JText::_('JBS_MIG_TITLE'), 'administration');
+		$document = JFactory::getDocument();
+		$document->setTitle(JText::_('JBS_MIG_TITLE'));
 
 		// Install systems setup files
 		$this->installsetup();
-
-		// Remove old files
-		$installer = new Com_BiblestudyInstallerScript;
-		$installer->deleteUnexistingFiles();
 
 		$this->addToolbar();
 
@@ -86,6 +146,54 @@ class BiblestudyViewInstall extends JViewLegacy
 
 		// Display the template
 		return parent::display($tpl);
+	}
+
+	/**
+	 * Loads the Versions/SQL/After stack from the session
+	 *
+	 * @return void
+	 */
+	private function loadStack()
+	{
+		$db    = JFactory::getDbo();
+		$query = $db->getQuery(true)
+			->select(array($db->quoteName('value')))
+			->from($db->quoteName('#__bsms_storage'))
+			->where($db->quoteName('key') . ' = ' . $db->quote('migration_stack'));
+		$db->setQuery($query);
+		$stack = $db->loadResult();
+
+		if (empty($stack))
+		{
+			$this->_versionStack = array();
+			$this->_allupdates   = array();
+			$this->_finish       = array();
+			$this->_install      = array();
+			$this->_isimport     = 0;
+			$this->callstack     = array();
+			$this->totalSteps    = 0;
+			$this->doneSteps     = 0;
+			$this->running       = JText::_('JBS_MIG_STARTING');
+			$this->type          = null;
+
+			return;
+		}
+
+		$stack = json_decode($stack, true);
+
+		$this->_versionStack = $stack['version'];
+		$this->_allupdates   = $stack['allupdates'];
+		$this->_finish       = $stack['finish'];
+		$this->_install      = $stack['install'];
+		$this->_isimport     = $stack['isimport'];
+		$this->callstack     = $stack['callstack'];
+		$this->totalSteps    = $stack['total'];
+		$this->doneSteps     = $stack['done'];
+		$this->running       = $stack['run'];
+		$this->type          = $stack['type'];
+
+		return;
+
 	}
 
 	/**
@@ -98,8 +206,8 @@ class BiblestudyViewInstall extends JViewLegacy
 	protected function addToolbar()
 	{
 		JFactory::getApplication()->input->set('hidemainmenu', true);
-		JToolBarHelper::help('biblestudy', true);
-		JToolBarHelper::title(JText::_('JBS_CMN_INSTALL'), 'administration');
+		JToolbarHelper::help('biblestudy', true);
+		JToolbarHelper::title(JText::_('JBS_CMN_INSTALL'), 'administration');
 	}
 
 	/**
@@ -112,7 +220,7 @@ class BiblestudyViewInstall extends JViewLegacy
 	protected function setDocument()
 	{
 		$document = JFactory::getDocument();
-		$document->setTitle(JText::sprintf('JBS_TITLE_INSTALL', $this->jbstype, $this->jbsname));
+		$document->setTitle(JText::sprintf('JBS_TITLE_INSTALL', $this->percentage . '%', $this->running));
 	}
 
 	/**
@@ -149,9 +257,8 @@ class BiblestudyViewInstall extends JViewLegacy
 		);
 
 		// -- General settings
-
 		jimport('joomla.installer.installer');
-		$db                    = JFactory::getDBO();
+		$db                    = JFactory::getDbo();
 		$this->status          = new JObject;
 		$this->status->modules = array();
 		$this->status->plugins = array();

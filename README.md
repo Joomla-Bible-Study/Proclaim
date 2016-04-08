@@ -1,5 +1,8 @@
 Joomla-Bible-Study
 ==================
+
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Joomla-Bible-Study/Joomla-Bible-Study?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Status
 -----------
 <table>
@@ -13,23 +16,16 @@ Status
     <tr>
         <td><a href="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study" target="_blank"><img src="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=development"/></a></td>
         <td>Development</td>
-        <td>9.0.x</td>
-        <td>Jan 1, 2015</td>
-        <td align="center">3.3.x</td>
+        <td>9.0.0-beta5</td>
+        <td>March 25, 2016</td>
+        <td align="center">3.4+</td>
     </tr>
     <tr>
         <td><a href="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study" target="_blank"><img src="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=master"/></a></td>
         <td>Master</td>
-        <td>8.0.8</td>
-        <td>Sep 13, 2014</td>
-        <td align="center">2.5.x</td>
-    </tr>
-    <tr>
-        <td></td>
-        <td>8.x for Joomla 2.5</td>
-        <td>8.0.8</td>
-        <td>Sep 13, 2014</td>
-        <td align="center">2.5.x</td>
+        <td>9.0.0-beta4</td>
+        <td>March 6, 2016</td>
+        <td align="center">3.4+</td>
     </tr>
 </table>
 
@@ -41,17 +37,21 @@ Bible Study is a Joomla!® component written by a team of webservants to further
 
 Embed YouTube videos, play audio, show study notes - even create your own html display pages. You can have multiple locations, series, podcasting, and sharing with social media sites. Please see the example pages for just some of what Bible Study can do for your church - and the best part is the component is completely free. Support is top notch, and also free. Bottom line: we want to help you spread the gospel.
 
-<a href="https://github.com/Joomla-Bible-Study/Joomla-Bible-Study/wiki">Contributing</a>
+Contributing
 ------------
 We appreciate contributions in varioius capacities, below are some ways that you can contribute to this project
 
-###<a href="https://github.com/Joomla-Bible-Study/Joomla-Bible-Study/wiki/Setting-up-your-development-environment">Development</a>
+###Setup
 1. [Fork this repository.][fork]
-2. [Create a topic branch.][branch]
-3. Implement your feature or bug fix.
-4. If you implemented a new feature or added an extra functionality, create/update unit tests for that feature
-4. Run `phing build` (requires [Phing][phing] to be installed)
-5. If not building sucessfully, go back to step **3**
+2. Load dev dependencies with [Composer][composer]: `php composer.phar install --dev`
+3. [Set up your dev environment][setup]
+
+###Development
+1. [Create a topic branch.][branch]
+2. Implement your feature or bug fix.
+3. If you implemented a new feature or added an extra functionality, create/update unit tests for that feature
+4. Run `bin/phing build`
+5. If not building sucessfully, go back to step **1**
 6. Add your files to repositiory: `git add .`
 7. Commit your files: `git commit -m "Implemented feature [x]"`
 8. Push your changes: `git push`
@@ -61,17 +61,18 @@ Please **make sure to make specific contributions** when submitting pull request
 
 
 
-###Translation
+###Translation 
 The language files periodically need to be updated as the component matures. To submit changes ot add new languages, follow the same procedures as above in order to submit a [pull][pr] request.
 
 ###Testing
 For every major release, we prefer to have an approximate 2 week testing window. If you would like to help in testing and giving us feedback on the most recent versions of the component, let us know
 
-[fork]: //help.github.com/fork-a-repo/
-[branch]: //learn.github.com/p/branching.html
-[pr]: //help.github.com/send-pull-requests/
-[phing]: //www.phing.info/
-
+[fork]: http://help.github.com/fork-a-repo/
+[branch]: http://learn.github.com/p/branching.html
+[pr]: http://help.github.com/send-pull-requests/
+[phing]: http://www.phing.info/
+[setup]: https://github.com/Joomla-Bible-Study/Joomla-Bible-Study/wiki/Setting-up-your-development-environment
+[composer]: https://getcomposer.org/download/
 
 Reporting Issues and requesting features
 ----------------------------------------

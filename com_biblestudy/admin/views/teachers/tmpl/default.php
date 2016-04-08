@@ -3,24 +3,17 @@
  * Default
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-if (BIBLESTUDY_CHECKREL)
-{
-	JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-	JHtml::_('bootstrap.tooltip');
-	JHtml::_('dropdown.init');
-	JHtml::_('formbehavior.chosen', 'select');
-}
-else
-{
-	JHtml::_('behavior.tooltip');
-}
+JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+JHtml::_('bootstrap.tooltip');
+JHtml::_('dropdown.init');
+JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.multiselect');
 
 $app = JFactory::getApplication();
@@ -32,7 +25,7 @@ $archived = $this->state->get('filter.published') == 2 ? true : false;
 $trashed = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder == 'teacher.ordering';
 $sortFields = $this->getSortFields();
-if ($saveOrder && BIBLESTUDY_CHECKREL)
+if ($saveOrder)
 {
 	$saveOrderingUrl = 'index.php?option=com_biblestudy&task=teachers.saveOrderAjax&tmpl=component';
 	JHtml::_('sortablelist.sortable', 'teachers', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
@@ -57,6 +50,7 @@ if ($saveOrder && BIBLESTUDY_CHECKREL)
 <?php if (!empty($this->sidebar)): ?>
 <div id="j-sidebar-container" class="span2">
 	<?php echo $this->sidebar; ?>
+	<hr/>
 </div>
 <div id="j-main-container" class="span10">
 <?php else : ?>
@@ -79,7 +73,7 @@ if ($saveOrder && BIBLESTUDY_CHECKREL)
 	</div>
 	<div class="btn-group pull-right hidden-phone">
 		<label for="limit"
-		       class="element-invisible"><?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC'); ?></label>
+		       class="element-invisible"><?php echo JText::_('JGLOBAL_DISPLAY_NUM'); ?></label>
 		<?php echo $this->pagination->getLimitBox(); ?>
 	</div>
 	<div class="btn-group pull-right hidden-phone">
@@ -99,18 +93,6 @@ if ($saveOrder && BIBLESTUDY_CHECKREL)
 			<?php echo JHtml::_('select.options', $sortFields, 'value', 'text', $listOrder); ?>
 		</select>
 	</div>
-	<?php if (!BIBLESTUDY_CHECKREL): ?>
-		<div class="clearfix"></div>
-		<div class="btn-group pull-right">
-			<label for="filter_published" id="filter_published"
-			       class="element-invisible"><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></label>
-			<select name="filter_published" class="input-medium" onchange="this.form.submit()">
-				<option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
-				<?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true); ?>
-			</select>
-		</div>
-
-	<?php endif; ?>
 </div>
 <div class="clearfix"></div>
 
@@ -171,7 +153,7 @@ if ($saveOrder && BIBLESTUDY_CHECKREL)
 					      title="<?php echo $disabledLabel ?>">
 								<i class="icon-menu"></i>
 							</span>
-					<input type="text" style="display:none" name="order[]" size="5"
+					<input type="text" style="display:none;" name="order[]" size="5"
 					       value="<?php echo $item->ordering; ?>" class="width-20 text-area-order "/>
 				<?php else : ?>
 					<span class="sortable-handler inactive">
@@ -203,8 +185,6 @@ if ($saveOrder && BIBLESTUDY_CHECKREL)
 				</div>
 				<div class="pull-left">
 					<?php
-					if (BIBLESTUDY_CHECKREL)
-					{
 						// Create dropdown items
 						JHtml::_('dropdown.edit', $item->id, 'teacher.');
 						JHtml::_('dropdown.divider');
@@ -230,7 +210,6 @@ if ($saveOrder && BIBLESTUDY_CHECKREL)
 
 						// Render dropdown list
 						echo JHtml::_('dropdown.render');
-					}
 					?>
 				</div>
 			</td>

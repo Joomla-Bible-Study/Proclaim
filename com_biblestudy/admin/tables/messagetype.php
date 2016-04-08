@@ -3,12 +3,14 @@
  * Joomla BibleStudy Package
  *
  * @package    BibleStudy
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
+use Joomla\Registry\Registry;
 
 /**
  * MessageType table class
@@ -27,25 +29,35 @@ class TableMessagetype extends JTable
 	public $id = null;
 
 	/**
-	 * Published
-	 *
-	 * @var int
-	 */
-	public $published = 1;
-
-	/**
 	 * Message Type
 	 *
 	 * @var string
 	 */
 	public $message_type = null;
 
+	public $alias;
+
+	/**
+	 * Published
+	 *
+	 * @var int
+	 */
+	public $published = 1;
+
+	public $asset_id;
+
+	public $access;
+
+	public $ordering;
+
+	public $landing_show;
+
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver &$db  Database connector object
+	 * @param   JDatabaseDriver  &$db  Database connector object
 	 */
-	public function Tablemessagetype(& $db)
+	public function __construct(&$db)
 	{
 		parent::__construct('#__bsms_message_type', 'id', $db);
 	}
@@ -55,8 +67,8 @@ class TableMessagetype extends JTable
 	 * method only binds properties that are publicly accessible and optionally
 	 * takes an array of properties to ignore when binding.
 	 *
-	 * @param   mixed $array   An associative array or object to bind to the JTable instance.
-	 * @param   mixed $ignore  An optional array or space separated list of properties to ignore while binding.
+	 * @param   mixed  $array   An associative array or object to bind to the JTable instance.
+	 * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -67,7 +79,7 @@ class TableMessagetype extends JTable
 	{
 		if (isset($array['params']) && is_array($array['params']))
 		{
-			$registry = new JRegistry;
+			$registry = new Registry;
 			$registry->loadArray($array['params']);
 			$array['params'] = (string) $registry;
 		}
@@ -80,6 +92,30 @@ class TableMessagetype extends JTable
 		}
 
 		return parent::bind($array, $ignore);
+	}
+
+	/**
+	 * Method to store a row in the database from the JTable instance properties.
+	 * If a primary key value is set the row with that primary key value will be
+	 * updated with the instance property values.  If no primary key value is set
+	 * a new row will be inserted into the database with the properties from the
+	 * JTable instance.
+	 *
+	 * @param   boolean  $updateNulls  True to update fields even if they are null.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @link    https://docs.joomla.org/JTable/store
+	 * @since   11.1
+	 */
+	public function store($updateNulls = false)
+	{
+		if (!$this->_rules)
+		{
+			$this->setRules('{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}');
+		}
+
+		return parent::store($updateNulls);
 	}
 
 	/**
@@ -118,8 +154,8 @@ class TableMessagetype extends JTable
 	 * The extended class can define a table and id to lookup.  If the
 	 * asset does not exist it will be created.
 	 *
-	 * @param   JTable  $table  A JTable object for the asset parent.
-	 * @param   integer $id     Id to look up
+	 * @param   JTable   $table  A JTable object for the asset parent.
+	 * @param   integer  $id     Id to look up
 	 *
 	 * @return  integer
 	 *
@@ -127,6 +163,7 @@ class TableMessagetype extends JTable
 	 */
 	protected function _getAssetParentId(JTable $table = null, $id = null)
 	{
+		/** @type JTableAsset $asset */
 		$asset = JTable::getInstance('Asset');
 		$asset->loadByName('com_biblestudy');
 

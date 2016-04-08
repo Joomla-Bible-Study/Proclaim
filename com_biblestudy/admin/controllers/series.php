@@ -3,14 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.controlleradmin');
+use Joomla\Utilities\ArrayHelper;
 
 /**
  * Series list controller class.
@@ -34,24 +34,6 @@ class BiblestudyControllerSeries extends JControllerAdmin
 	}
 
 	/**
-	 * Proxy for getModel
-	 *
-	 * @param   string  $name    The model name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return JModel
-	 *
-	 * @since 7.0.0
-	 */
-	public function getModel($name = 'Serie', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
-	{
-		$model = parent::getModel($name, $prefix, $config);
-
-		return $model;
-	}
-
-	/**
 	 * Method to save the submitted ordering values for records via AJAX.
 	 *
 	 * @return    void
@@ -64,8 +46,8 @@ class BiblestudyControllerSeries extends JControllerAdmin
 		$order = $this->input->post->get('ordering', array(), 'array');
 
 		// Sanitize the input
-		JArrayHelper::toInteger($pks);
-		JArrayHelper::toInteger($order);
+		ArrayHelper::toInteger($pks);
+		ArrayHelper::toInteger($order);
 
 		// Get the model
 		$model = $this->getModel();
@@ -80,6 +62,24 @@ class BiblestudyControllerSeries extends JControllerAdmin
 
 		// Close the application
 		JFactory::getApplication()->close();
+	}
+
+	/**
+	 * Proxy for getModel
+	 *
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 *
+	 * @return BiblestudyModelSerie
+	 *
+	 * @since 7.0.0
+	 */
+	public function getModel($name = 'Serie', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
+	{
+		$model = parent::getModel($name, $prefix, $config);
+
+		return $model;
 	}
 
 }

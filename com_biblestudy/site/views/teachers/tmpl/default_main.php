@@ -3,66 +3,39 @@
  * Teachers view subset main
  *
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
+$listing = new JBSMListing;
+$classelement = $listing->createelement($this->params->get('teachers_element'));
 ?>
-<div id="biblestudy" class="noRefTagger">
-	<table class="table table-striped" id="bsm_teachertable_list">
-		<tbody>
-		<tr class="titlerow">
-			<td style="text-align: center" colspan="3" class="title">
-				<?php echo $this->params->get('teacher_title', JText::_('JBS_TCH_OUR_TEACHERS')); ?>
-			</td>
-		</tr>
-		<?php
-		$class1 = 'bsodd';
-		$class2 = 'bseven';
-		$oddeven = $class1;
-
-		foreach ($this->items as $item)
-		{
-			$teacherdisplay = $item->teachername;
-
-			if ($item->title)
-				$teacherdisplay .= ' - ' . $item->title;
-
-			//Alternate the row color
-			$oddeven = ($oddeven == $class1) ? $class2 : $class1;
+<div class="container-fluid">
+    <div class="hero-unit" style="padding-top:30px; padding-bottom:20px;"> <!-- This div is the header container -->
+		<<?php echo $classelement; ?> class="componentheading">
+	    <?php echo $this->params->get('teacher_title', JText::_('JBS_TCH_OUR_TEACHERS')); ?>
+        </<?php echo $classelement; ?>>
+	</div>
+	<div class="row-fluid">
+		<div class="span12">
+			<?php
+			if ($this->params->get('teacher_headercode'))
+			{
+				echo JHtml::_('content.prepare', $this->params->get('teacher_headercode'), '', 'com_biblestudy.teachers');
+			}
 			?>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span12">
+			<?php
+				echo $listing->getFluidListing($this->items, $this->params, $this->template, $type = 'teachers');
+			?>
+		</div>
+	</div>
 
-			<tr class="<?php echo $oddeven; ?> ">
-				<td class="bsm_teacherthumbnail_list">
-					<?php if ($item->thumb || $item->teacher_thumbnail)
-					{
-						echo $item->image;
-					}
-					?>
-				</td>
-				<td class="bsm_teachername">
-					<table class="table table-striped">
-						<tr>
-							<td>
-								<a href="<?php echo $item->teacherlink; ?>"><?php echo $teacherdisplay; ?></a>
-							</td>
-						</tr>
-						<tr>
-							<td style="text-align: left" class="bsm_short">
-								<?php echo $item->short; ?>
-							</td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-		<?php
-		} // End of foreach
-		?>
-		</tbody>
-	</table>
 	<div class="listingfooter">
 		<?php
 		echo $this->page->pagelinks;

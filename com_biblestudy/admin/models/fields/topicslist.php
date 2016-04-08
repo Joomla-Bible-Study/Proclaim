@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -12,9 +12,10 @@ defined('_JEXEC') or die;
 
 // Import the list field type
 jimport('joomla.form.helper');
+
+// For some reason the autoloader is not finding this file so this is a temporary workaround
+include_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/translated.php');
 JFormHelper::loadFieldClass('list');
-require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/biblestudy.defines.php';
-JLoader::register('JBSMTranslated', BIBLESTUDY_PATH_ADMIN_HELPERS . '/translated.php');
 
 /**
  * Topics List Form Field class for the Joomla Bible Study component
@@ -40,9 +41,12 @@ class JFormFieldTopicslist extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
-		$query->select('id, topic_text, params AS topic_params')->from('#__bsms_topics')->where('published = ' . 1)->order('topic_text asc');
+		$query->select('id, topic_text, params AS topic_params')
+			->from('#__bsms_topics')
+			->where('published = ' . 1)
+			->order('topic_text asc');
 		$db->setQuery((string) $query);
 		$topics  = $db->loadObjectList();
 		$options = array();

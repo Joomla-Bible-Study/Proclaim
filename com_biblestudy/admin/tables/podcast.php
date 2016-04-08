@@ -3,12 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
+use Joomla\Registry\Registry;
 
 /**
  * Podcast table class
@@ -152,40 +154,51 @@ class TablePodcast extends JTable
 	 */
 	public $episodetitle = null;
 
-    /**
-     * Custom
-     *
-     * @var string
-     */
-    public $custom = null;
+	/**
+	 * Custom
+	 *
+	 * @var string
+	 */
+	public $custom = null;
 
-    /**
-     * Details template ID
-     *
-     * @var string
-     */
-    public $episodesubtitle = null;
+	/**
+	 * Details template ID
+	 *
+	 * @var string
+	 */
+	public $episodesubtitle = null;
 
-    /**
-     * Custom
-     *
-     * @var string
-     */
-    public $customsubtitle = null;
+	/**
+	 * Custom
+	 *
+	 * @var string
+	 */
+	public $customsubtitle = null;
 
-    /**
-     * Details template ID
-     *
-     * @var string
-     */
+	/**
+	 * Details template ID
+	 *
+	 * @var string
+	 */
 	public $detailstemplateid = null;
+
+	/**
+	 * Type of link to use for podcast.
+	 *
+	 * 0 = Default is to episode.
+	 * 1 = Direct Link.
+	 * 2 = Popup Player Window with default player as internal.
+	 *
+	 * @var string
+	 */
+	public $linktype = null;
 
 	/**
 	 * Constructor
 	 *
 	 * @param   JDatabaseDriver  &$db  Database connector object
 	 */
-	public function Tablepodcast(& $db)
+	public function __construct(&$db)
 	{
 		parent::__construct('#__bsms_podcast', 'id', $db);
 	}
@@ -207,7 +220,7 @@ class TablePodcast extends JTable
 	{
 		if (isset($array['params']) && is_array($array['params']))
 		{
-			$registry = new JRegistry;
+			$registry = new Registry;
 			$registry->loadArray($array['params']);
 			$array['params'] = (string) $registry;
 		}
@@ -220,6 +233,30 @@ class TablePodcast extends JTable
 		}
 
 		return parent::bind($array, $ignore);
+	}
+
+	/**
+	 * Method to store a row in the database from the JTable instance properties.
+	 * If a primary key value is set the row with that primary key value will be
+	 * updated with the instance property values.  If no primary key value is set
+	 * a new row will be inserted into the database with the properties from the
+	 * JTable instance.
+	 *
+	 * @param   boolean  $updateNulls  True to update fields even if they are null.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @link    https://docs.joomla.org/JTable/store
+	 * @since   11.1
+	 */
+	public function store($updateNulls = false)
+	{
+		if (!$this->_rules)
+		{
+			$this->setRules('{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}');
+		}
+
+		return parent::store($updateNulls);
 	}
 
 	/**
@@ -267,6 +304,7 @@ class TablePodcast extends JTable
 	 */
 	protected function _getAssetParentId(JTable $table = null, $id = null)
 	{
+		/** @type JTableAsset $asset */
 		$asset = JTable::getInstance('Asset');
 		$asset->loadByName('com_biblestudy');
 

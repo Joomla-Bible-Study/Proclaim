@@ -21,8 +21,9 @@
                                     API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a>Packages</a></li>
 <li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
-<li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
-<li><a href="../packages/Joomla.html"><i class="icon-folder-open"></i> Joomla</a></li>
+<li><a href="../packages/BibleStudy.Admin.html"><i class="icon-folder-open"></i> BibleStudy.Admin</a></li>
+<li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
 <li><a href="../packages/LiveUpdate.html"><i class="icon-folder-open"></i> LiveUpdate</a></li>
 <li><a href="../packages/SefExt.html"><i class="icon-folder-open"></i> SefExt</a></li>
 </ul>
@@ -35,18 +36,11 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">2</span></a></li>
+                <span class="label label-info">3</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
-                <ul>
-<li>todo 
-                <span class="label label-info">38</span>
-</li>
-<li>fixme 
-                <span class="label label-info">1</span>
-</li>
-</ul></a></li>
+                <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
-                <span class="label label-info">12</span></a></li>
+                <span class="label label-info">18</span></a></li>
 </ul>
 </li>
 </ul></div>
@@ -67,18 +61,18 @@
 <li class="nav-header">
 <i class="icon-custom icon-method"></i> Methods
                     <ul>
-<li class="method public "><a href="#method_get" title="get :: Get"><span class="description">Get</span><pre>get()</pre></a></li>
-<li class="method public "><a href="#method_getInstance" title="getInstance :: Instance"><span class="description">Instance</span><pre>getInstance()</pre></a></li>
-<li class="method public "><a href="#method_getRegistry" title="getRegistry :: Returns the internally used registry"><span class="description">Returns the internally used registry</span><pre>getRegistry()</pre></a></li>
-<li class="method public "><a href="#method_load" title="load :: Load"><span class="description">Load</span><pre>load()</pre></a></li>
-<li class="method public "><a href="#method_save" title="save :: Save"><span class="description">Save</span><pre>save()</pre></a></li>
-<li class="method public "><a href="#method_set" title="set :: Set"><span class="description">Set</span><pre>set()</pre></a></li>
-<li class="method public "><a href="#method_setRegistry" title="setRegistry :: Replaces the internally used registry with the one supplied"><span class="description">Replaces the internally used registry with the one supplied</span><pre>setRegistry()</pre></a></li>
+<li class="method public "><a href="#method_get" title="get() :: Get"><span class="description">Get</span><pre>get()</pre></a></li>
+<li class="method public "><a href="#method_getInstance" title="getInstance() :: Instance"><span class="description">Instance</span><pre>getInstance()</pre></a></li>
+<li class="method public "><a href="#method_getRegistry" title="getRegistry() :: Returns the internally used registry"><span class="description">Returns the internally used registry</span><pre>getRegistry()</pre></a></li>
+<li class="method public "><a href="#method_load" title="load() :: Load"><span class="description">Load</span><pre>load()</pre></a></li>
+<li class="method public "><a href="#method_save" title="save() :: Save"><span class="description">Save</span><pre>save()</pre></a></li>
+<li class="method public "><a href="#method_set" title="set() :: Set"><span class="description">Set</span><pre>set()</pre></a></li>
+<li class="method public "><a href="#method_setRegistry" title="setRegistry() :: Replaces the internally used registry with the one supplied"><span class="description">Replaces the internally used registry with the one supplied</span><pre>setRegistry()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header">
 <i class="icon-custom icon-property"></i> Properties
-                    <ul><li class="property public "><a href="#property_registry" title="$registry :: The update data registry"><span class="description"></span><pre>$registry</pre></a></li></ul>
+                    <ul><li class="property public "><a href="#property_registry" title="$registry() :: The update data registry"><span class="description"></span><pre>$registry</pre></a></li></ul>
 </li>
 </ul>
 </div>
@@ -87,7 +81,6 @@
 <li>
 <a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
 </li>
-<li><a href="../namespaces/global.html">global</a></li>
 <li class="active">
 <span class="divider">\</span><a href="../classes/LiveUpdateStorage.html">LiveUpdateStorage</a>
 </li>
@@ -115,7 +108,7 @@
 </tr>
 <tr>
 <th>since</th>
-<td>8.0.0</td>
+<td></td>
 </tr>
 </table>
 <h3>
@@ -141,7 +134,7 @@
 </div>
 <a id="method_getInstance"></a><div class="element clickable method public method_getInstance" data-toggle="collapse" data-target=".method_getInstance .collapse">
 <h2>Instance</h2>
-<pre>getInstance(string $type, array $config) : <a href="../classes/LiveUpdateStorage.html">\LiveUpdateStorage</a></pre>
+<pre>getInstance(string $type, array $config) : \LiveUpdateStorage</pre>
 <div class="labels"><span class="label">Static</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -155,17 +148,17 @@
 <code>array</code><p>?</p>
 </div>
 <h3>Returns</h3>
-<div class="subelement response"><code><a href="../classes/LiveUpdateStorage.html">\LiveUpdateStorage</a></code></div>
+<div class="subelement response"><code>\LiveUpdateStorage</code></div>
 </div></div>
 </div>
 <a id="method_getRegistry"></a><div class="element clickable method public method_getRegistry" data-toggle="collapse" data-target=".method_getRegistry .collapse">
 <h2>Returns the internally used registry</h2>
-<pre>getRegistry() : \JRegistry</pre>
+<pre>getRegistry() : \Registry</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
 <h3>Returns</h3>
-<div class="subelement response"><code>\JRegistry</code></div>
+<div class="subelement response"><code>\Registry</code></div>
 </div></div>
 </div>
 <a id="method_load"></a><div class="element clickable method public method_load" data-toggle="collapse" data-target=".method_load .collapse">
@@ -206,23 +199,23 @@
 </div>
 <a id="method_setRegistry"></a><div class="element clickable method public method_setRegistry" data-toggle="collapse" data-target=".method_setRegistry .collapse">
 <h2>Replaces the internally used registry with the one supplied</h2>
-<pre>setRegistry(\JRegistry $registry) : void</pre>
+<pre>setRegistry(\Registry $registry) : void</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$registry</h4>
-<code>\JRegistry</code><p>?</p>
+<code>\Registry</code><p>?</p>
 </div>
 </div></div>
 </div>
 <h3>
 <i class="icon-custom icon-property"></i> Properties</h3>
 <a id="property_registry"> </a><div class="element clickable property public property_registry" data-toggle="collapse" data-target=".property_registry .collapse">
-<h2></h2>
-<pre>$registry : \JRegistry</pre>
-<div class="labels"></div>
+<h2>The update data registry</h2>
+<pre>$registry : \Registry</pre>
+<div class="labels"><span class="label">Static</span></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
 </div>
@@ -231,8 +224,9 @@
 </div>
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
-            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
-            generated on 2013-06-22T20:25:34-05:00.<br></footer></div>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.1
+</a> and<br>
+            generated on 2013-10-17T22:45:25-05:00.<br></footer></div>
 </div>
 </body>
 </html>

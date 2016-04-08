@@ -21,10 +21,9 @@
                                     API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a>Packages</a></li>
 <li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
-<li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
-<li><a href="../packages/Joomla.html"><i class="icon-folder-open"></i> Joomla</a></li>
-<li><a href="../packages/LiveUpdate.html"><i class="icon-folder-open"></i> LiveUpdate</a></li>
-<li><a href="../packages/SefExt.html"><i class="icon-folder-open"></i> SefExt</a></li>
+<li><a href="../packages/BibleStudy.Admin.html"><i class="icon-folder-open"></i> BibleStudy.Admin</a></li>
+<li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
 </ul>
 </li>
 <li class="dropdown" id="charts-menu">
@@ -35,18 +34,11 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">2</span></a></li>
+                <span class="label label-info">151</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
-                <ul>
-<li>todo 
-                <span class="label label-info">38</span>
-</li>
-<li>fixme 
-                <span class="label label-info">1</span>
-</li>
-</ul></a></li>
+                <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
-                <span class="label label-info">12</span></a></li>
+                <span class="label label-info">20</span></a></li>
 </ul>
 </li>
 </ul></div>
@@ -60,44 +52,48 @@
                         </div></noscript>
 <div class="row">
 <div class="span4">
-<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
+<div xmlns:php="http://php.net/xsl" class="btn-toolbar">
+<div class="btn-group visibility" data-toggle="buttons-checkbox">
+<button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button>
+</div>
+<div class="btn-group view pull-right" data-toggle="buttons-radio">
 <button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
 </div>
-<ul class="side-nav nav nav-list">
+</div>
+<ul xmlns:php="http://php.net/xsl" class="side-nav nav nav-list">
 <li class="nav-header">
-<i class="icon-custom icon-method"></i> Methods
+<i title="Methods" class="icon-custom icon-method"></i> Methods
                     <ul>
-<li class="method public "><a href="#method_getImagePath" title="getImagePath :: Get Image Path"><span class="description">Get Image Path</span><pre>getImagePath()</pre></a></li>
-<li class="method public "><a href="#method_getMediaImage" title="getMediaImage :: Get Media Image"><span class="description">Get Media Image</span><pre>getMediaImage()</pre></a></li>
-<li class="method public "><a href="#method_getSeriesThumbnail" title="getSeriesThumbnail :: Get Series Thumbnail"><span class="description">Get Series Thumbnail</span><pre>getSeriesThumbnail()</pre></a></li>
-<li class="method public "><a href="#method_getShowHide" title="getShowHide :: Get Show Hide"><span class="description">Get Show Hide</span><pre>getShowHide()</pre></a></li>
-<li class="method public "><a href="#method_getStudyThumbnail" title="getStudyThumbnail :: Get Study Thumbnail"><span class="description">Get Study Thumbnail</span><pre>getStudyThumbnail()</pre></a></li>
-<li class="method public "><a href="#method_getTeacherImage" title="getTeacherImage :: Get Teacher Image"><span class="description">Get Teacher Image</span><pre>getTeacherImage()</pre></a></li>
-<li class="method public "><a href="#method_getTeacherThumbnail" title="getTeacherThumbnail :: Get Teacher Thumbnail"><span class="description">Get Teacher Thumbnail</span><pre>getTeacherThumbnail()</pre></a></li>
-<li class="method public "><a href="#method_mainStudyImage" title="mainStudyImage :: Main Study Image"><span class="description">Main Study Image</span><pre>mainStudyImage()</pre></a></li>
+<li class="method public "><a href="#method_getImagePath" title="getImagePath() :: Get Image Path"><span class="description">Get Image Path</span><pre>getImagePath()</pre></a></li>
+<li class="method public "><a href="#method_getMediaImage" title="getMediaImage() :: Get Media Image"><span class="description">Get Media Image</span><pre>getMediaImage()</pre></a></li>
+<li class="method public "><a href="#method_getSeriesThumbnail" title="getSeriesThumbnail() :: Get Series Thumbnail"><span class="description">Get Series Thumbnail</span><pre>getSeriesThumbnail()</pre></a></li>
+<li class="method public "><a href="#method_getShowHide" title="getShowHide() :: Get Show Hide"><span class="description">Get Show Hide</span><pre>getShowHide()</pre></a></li>
+<li class="method public "><a href="#method_getStudyThumbnail" title="getStudyThumbnail() :: Get Study Thumbnail"><span class="description">Get Study Thumbnail</span><pre>getStudyThumbnail()</pre></a></li>
+<li class="method public "><a href="#method_getTeacherImage" title="getTeacherImage() :: Get Teacher Image"><span class="description">Get Teacher Image</span><pre>getTeacherImage()</pre></a></li>
+<li class="method public "><a href="#method_getTeacherThumbnail" title="getTeacherThumbnail() :: Get Teacher Thumbnail"><span class="description">Get Teacher Thumbnail</span><pre>getTeacherThumbnail()</pre></a></li>
+<li class="method public "><a href="#method_mainStudyImage" title="mainStudyImage() :: Main Study Image"><span class="description">Main Study Image</span><pre>mainStudyImage()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header private">» Private
                     <ul>
-<li class="method private "><a href="#method_getMediaImageFolder" title="getMediaImageFolder :: Get MediaImage Folder"><span class="description">Get MediaImage Folder</span><pre>getMediaImageFolder()</pre></a></li>
-<li class="method private "><a href="#method_getSeriesImageFolder" title="getSeriesImageFolder :: Get SeriesImage Folder"><span class="description">Get SeriesImage Folder</span><pre>getSeriesImageFolder()</pre></a></li>
-<li class="method private "><a href="#method_getStudiesImageFolder" title="getStudiesImageFolder :: Get StudiesImage Folder"><span class="description">Get StudiesImage Folder</span><pre>getStudiesImageFolder()</pre></a></li>
-<li class="method private "><a href="#method_getTeacherImageFolder" title="getTeacherImageFolder :: Get TeacherImage Folder"><span class="description">Get TeacherImage Folder</span><pre>getTeacherImageFolder()</pre></a></li>
+<li class="method private "><a href="#method_getMediaImageFolder" title="getMediaImageFolder() :: Get MediaImage Folder"><span class="description">Get MediaImage Folder</span><pre>getMediaImageFolder()</pre></a></li>
+<li class="method private "><a href="#method_getSeriesImageFolder" title="getSeriesImageFolder() :: Get SeriesImage Folder"><span class="description">Get SeriesImage Folder</span><pre>getSeriesImageFolder()</pre></a></li>
+<li class="method private "><a href="#method_getStudiesImageFolder" title="getStudiesImageFolder() :: Get StudiesImage Folder"><span class="description">Get StudiesImage Folder</span><pre>getStudiesImageFolder()</pre></a></li>
+<li class="method private "><a href="#method_getTeacherImageFolder" title="getTeacherImageFolder() :: Get TeacherImage Folder"><span class="description">Get TeacherImage Folder</span><pre>getTeacherImageFolder()</pre></a></li>
 </ul>
 </li>
 </ul>
 </div>
 <div class="span8">
-<a id="\JBSMImages"></a><ul class="breadcrumb">
+<a xmlns:php="http://php.net/xsl" id="\JBSMImages"></a><ul xmlns:php="http://php.net/xsl" class="breadcrumb">
 <li>
-<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+<a href="../index.html"><i title="Classes" class="icon-custom icon-class"></i></a><span class="divider">\</span>
 </li>
-<li><a href="../namespaces/global.html">global</a></li>
 <li class="active">
 <span class="divider">\</span><a href="../classes/JBSMImages.html">JBSMImages</a>
 </li>
 </ul>
-<div class="element class">
+<div xmlns:php="http://php.net/xsl" class="element class">
 <p class="short_description">BibleStudy images class</p>
 <div class="details">
 <div class="long_description"></div>
@@ -112,8 +108,8 @@
 </tr>
 </table>
 <h3>
-<i class="icon-custom icon-method"></i> Methods</h3>
-<a id="method_getImagePath"></a><div class="element clickable method public method_getImagePath" data-toggle="collapse" data-target=".method_getImagePath .collapse">
+<i title="Methods" class="icon-custom icon-method"></i> Methods</h3>
+<a id="method_getImagePath"></a><div class="element clickable method public method_getImagePath " data-toggle="collapse" data-target=".method_getImagePath .collapse" title="public">
 <h2>Get Image Path</h2>
 <pre>getImagePath(string $path) : object</pre>
 <div class="labels"><span class="label">Static</span></div>
@@ -122,47 +118,43 @@
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$path</h4>
-<code>string</code><p>?</p>
-</div>
+<code>string</code><p>?</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code>object</code></div>
 </div></div>
 </div>
-<a id="method_getMediaImage"></a><div class="element clickable method public method_getMediaImage" data-toggle="collapse" data-target=".method_getMediaImage .collapse">
+<a id="method_getMediaImage"></a><div class="element clickable method public method_getMediaImage " data-toggle="collapse" data-target=".method_getMediaImage .collapse" title="public">
 <h2>Get Media Image</h2>
-<pre>getMediaImage(string $media1, string $media2) : object</pre>
+<pre>getMediaImage(string $media1<code> = null</code>, string $media2<code> = null</code>) : object</pre>
 <div class="labels"><span class="label">Static</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$media1</h4>
-<code>string</code><p>?</p>
-</div>
+<code>string</code><p>?</p></div>
 <div class="subelement argument">
 <h4>$media2</h4>
-<code>string</code><p>?</p>
-</div>
+<code>string</code><p>?</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code>object</code></div>
 </div></div>
 </div>
-<a id="method_getSeriesThumbnail"></a><div class="element clickable method public method_getSeriesThumbnail" data-toggle="collapse" data-target=".method_getSeriesThumbnail .collapse">
+<a id="method_getSeriesThumbnail"></a><div class="element clickable method public method_getSeriesThumbnail " data-toggle="collapse" data-target=".method_getSeriesThumbnail .collapse" title="public">
 <h2>Get Series Thumbnail</h2>
-<pre>getSeriesThumbnail(string $image) : object</pre>
+<pre>getSeriesThumbnail(string $image<code> = 'openbible.png'</code>) : object</pre>
 <div class="labels"><span class="label">Static</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$image</h4>
-<code>string</code><p>?</p>
-</div>
+<code>string</code><p>?</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code>object</code></div>
 </div></div>
 </div>
-<a id="method_getShowHide"></a><div class="element clickable method public method_getShowHide" data-toggle="collapse" data-target=".method_getShowHide .collapse">
+<a id="method_getShowHide"></a><div class="element clickable method public method_getShowHide " data-toggle="collapse" data-target=".method_getShowHide .collapse" title="public">
 <h2>Get Show Hide</h2>
 <pre>getShowHide() : object</pre>
 <div class="labels"><span class="label">Static</span></div>
@@ -172,60 +164,55 @@
 <div class="subelement response"><code>object</code></div>
 </div></div>
 </div>
-<a id="method_getStudyThumbnail"></a><div class="element clickable method public method_getStudyThumbnail" data-toggle="collapse" data-target=".method_getStudyThumbnail .collapse">
+<a id="method_getStudyThumbnail"></a><div class="element clickable method public method_getStudyThumbnail " data-toggle="collapse" data-target=".method_getStudyThumbnail .collapse" title="public">
 <h2>Get Study Thumbnail</h2>
-<pre>getStudyThumbnail(string $image) : object</pre>
+<pre>getStudyThumbnail(string $image<code> = 'openbible.png'</code>) : object</pre>
 <div class="labels"><span class="label">Static</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$image</h4>
-<code>string</code><p>?</p>
-</div>
+<code>string</code><p>?</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code>object</code></div>
 </div></div>
 </div>
-<a id="method_getTeacherImage"></a><div class="element clickable method public method_getTeacherImage" data-toggle="collapse" data-target=".method_getTeacherImage .collapse">
+<a id="method_getTeacherImage"></a><div class="element clickable method public method_getTeacherImage " data-toggle="collapse" data-target=".method_getTeacherImage .collapse" title="public">
 <h2>Get Teacher Image</h2>
-<pre>getTeacherImage(string $image1, string $image2) : object</pre>
+<pre>getTeacherImage(string $image1<code> = null</code>, string $image2<code> = null</code>) : object</pre>
 <div class="labels"><span class="label">Static</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$image1</h4>
-<code>string</code><p>?</p>
-</div>
+<code>string</code><p>?</p></div>
 <div class="subelement argument">
 <h4>$image2</h4>
-<code>string</code><p>?</p>
-</div>
+<code>string</code><p>?</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code>object</code></div>
 </div></div>
 </div>
-<a id="method_getTeacherThumbnail"></a><div class="element clickable method public method_getTeacherThumbnail" data-toggle="collapse" data-target=".method_getTeacherThumbnail .collapse">
+<a id="method_getTeacherThumbnail"></a><div class="element clickable method public method_getTeacherThumbnail " data-toggle="collapse" data-target=".method_getTeacherThumbnail .collapse" title="public">
 <h2>Get Teacher Thumbnail</h2>
-<pre>getTeacherThumbnail(string $image1, string $image2) : object</pre>
+<pre>getTeacherThumbnail(string $image1<code> = null</code>, string $image2<code> = null</code>) : object</pre>
 <div class="labels"><span class="label">Static</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$image1</h4>
-<code>string</code><p>?</p>
-</div>
+<code>string</code><p>?</p></div>
 <div class="subelement argument">
 <h4>$image2</h4>
-<code>string</code><p>?</p>
-</div>
+<code>string</code><p>?</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code>object</code></div>
 </div></div>
 </div>
-<a id="method_mainStudyImage"></a><div class="element clickable method public method_mainStudyImage" data-toggle="collapse" data-target=".method_mainStudyImage .collapse">
+<a id="method_mainStudyImage"></a><div class="element clickable method public method_mainStudyImage " data-toggle="collapse" data-target=".method_mainStudyImage .collapse" title="public">
 <h2>Main Study Image</h2>
 <pre>mainStudyImage() : object</pre>
 <div class="labels"><span class="label">Static</span></div>
@@ -235,7 +222,7 @@
 <div class="subelement response"><code>object</code></div>
 </div></div>
 </div>
-<a id="method_getMediaImageFolder"></a><div class="element clickable method private method_getMediaImageFolder" data-toggle="collapse" data-target=".method_getMediaImageFolder .collapse">
+<a id="method_getMediaImageFolder"></a><div class="element clickable method private method_getMediaImageFolder " data-toggle="collapse" data-target=".method_getMediaImageFolder .collapse" title="private">
 <h2>Get MediaImage Folder</h2>
 <pre>getMediaImageFolder() : string</pre>
 <div class="labels"><span class="label">Static</span></div>
@@ -245,7 +232,7 @@
 <div class="subelement response"><code>string</code></div>
 </div></div>
 </div>
-<a id="method_getSeriesImageFolder"></a><div class="element clickable method private method_getSeriesImageFolder" data-toggle="collapse" data-target=".method_getSeriesImageFolder .collapse">
+<a id="method_getSeriesImageFolder"></a><div class="element clickable method private method_getSeriesImageFolder " data-toggle="collapse" data-target=".method_getSeriesImageFolder .collapse" title="private">
 <h2>Get SeriesImage Folder</h2>
 <pre>getSeriesImageFolder() : string</pre>
 <div class="labels"><span class="label">Static</span></div>
@@ -255,7 +242,7 @@
 <div class="subelement response"><code>string</code></div>
 </div></div>
 </div>
-<a id="method_getStudiesImageFolder"></a><div class="element clickable method private method_getStudiesImageFolder" data-toggle="collapse" data-target=".method_getStudiesImageFolder .collapse">
+<a id="method_getStudiesImageFolder"></a><div class="element clickable method private method_getStudiesImageFolder " data-toggle="collapse" data-target=".method_getStudiesImageFolder .collapse" title="private">
 <h2>Get StudiesImage Folder</h2>
 <pre>getStudiesImageFolder() : string</pre>
 <div class="labels"><span class="label">Static</span></div>
@@ -265,7 +252,7 @@
 <div class="subelement response"><code>string</code></div>
 </div></div>
 </div>
-<a id="method_getTeacherImageFolder"></a><div class="element clickable method private method_getTeacherImageFolder" data-toggle="collapse" data-target=".method_getTeacherImageFolder .collapse">
+<a id="method_getTeacherImageFolder"></a><div class="element clickable method private method_getTeacherImageFolder " data-toggle="collapse" data-target=".method_getTeacherImageFolder .collapse" title="private">
 <h2>Get TeacherImage Folder</h2>
 <pre>getTeacherImageFolder() : string</pre>
 <div class="labels"><span class="label">Static</span></div>
@@ -281,8 +268,8 @@
 </div>
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
-            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
-            generated on 2013-06-22T20:25:40-05:00.<br></footer></div>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
+            generated on 2016-04-06T22:36:06-05:00.<br></footer></div>
 </div>
 </body>
 </html>

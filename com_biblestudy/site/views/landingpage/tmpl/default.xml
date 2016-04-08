@@ -8,7 +8,7 @@
     </layout>
     <state>
         <name>JBS_MNU_LANDING_PAGE_LAYOUT</name>
-        <params addpath="/components/com_biblestudy/elements">
+        <params addpath="/administrator/components/com_biblestudy/helpers/html">
             <param name="type" type="hidden" default="landingpage"/>
             <param name="templatemenuid" type="t" default="" label="JBS_MNU_SELECT_TEMPLATE"
                    description="JBS_MNU_SELECT_TEMPLATE_DESC"/>
@@ -31,62 +31,6 @@
     <fields name="params">
         <fieldset name="basic"
                   label="JBS_MNU_LANDING_PAGE_LAYOUT">
-            <field name="series_order"
-                   type="list"
-                   label="JBS_CMN_SERIES_ORDERING"
-                   description="JBS_CMN_ORDERING_DESC"
-                   default="2">
-                <option value="1">JBS_CMN_DESCENDING</option>
-                <option value="2">JBS_CMN_ASCENDING</option>
-            </field>
-            <field name="books_order"
-                   type="list"
-                   label="JBS_CMN_BOOKS_ORDERING"
-                   description="JBS_CMN_ORDERING_DESC"
-                   default="2">
-                <option value="1">JBS_CMN_DESCENDING</option>
-                <option value="2">JBS_CMN_ASCENDING</option>
-            </field>
-            <field name="teachers_order"
-                   type="list"
-                   label="JBS_CMN_TEACHERS_ORDERING"
-                   description="JBS_CMN_TEACHER_ORDERING_DESC"
-                   default="2">
-                <option value="1">JBS_CMN_DESCENDING</option>
-                <option value="2">JBS_CMN_ASCENDING</option>
-            </field>
-            <field name="years_order"
-                   type="list"
-                   label="JBS_CMN_YEARS_ORDERING"
-                   description="JBS_CMN_ORDERING_DESC"
-                   default="1">
-                <option value="1">JBS_CMN_DESCENDING</option>
-                <option value="2">JBS_CMN_ASCENDING</option>
-            </field>
-            <field name="topics_order"
-                   type="list"
-                   label="JBS_CMN_TOPICS_ORDERING"
-                   description="JBS_CMN_ORDERING_DESC"
-                   default="2">
-                <option value="1">JBS_CMN_DESCENDING</option>
-                <option value="2">JBS_CMN_ASCENDING</option>
-            </field>
-            <field name="locations_order"
-                   type="list"
-                   label="JBS_CMN_LOCATIONS_ORDERING"
-                   description="JBS_CMN_ORDERING_DESC"
-                   default="2">
-                <option value="1">JBS_CMN_DESCENDING</option>
-                <option value="2">JBS_CMN_ASCENDING</option>
-            </field>
-            <field name="messagetypes_order"
-                   type="list"
-                   label="JBS_CMN_MESSAGETYPES_ORDERING"
-                   description="JBS_CMN_ORDERING_DESC"
-                   default="2">
-                <option value="1">JBS_CMN_DESCENDING</option>
-                <option value="2">JBS_CMN_ASCENDING</option>
-            </field>
             <field name="metakey"
                    type="text"
                    class="inputbox"

@@ -21,10 +21,9 @@
                                     API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a>Packages</a></li>
 <li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
-<li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
-<li><a href="../packages/Joomla.html"><i class="icon-folder-open"></i> Joomla</a></li>
-<li><a href="../packages/LiveUpdate.html"><i class="icon-folder-open"></i> LiveUpdate</a></li>
-<li><a href="../packages/SefExt.html"><i class="icon-folder-open"></i> SefExt</a></li>
+<li><a href="../packages/BibleStudy.Admin.html"><i class="icon-folder-open"></i> BibleStudy.Admin</a></li>
+<li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
 </ul>
 </li>
 <li class="dropdown" id="charts-menu">
@@ -35,18 +34,11 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">2</span></a></li>
+                <span class="label label-info">151</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
-                <ul>
-<li>todo 
-                <span class="label label-info">38</span>
-</li>
-<li>fixme 
-                <span class="label label-info">1</span>
-</li>
-</ul></a></li>
+                <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
-                <span class="label label-info">12</span></a></li>
+                <span class="label label-info">20</span></a></li>
 </ul>
 </li>
 </ul></div>
@@ -60,69 +52,75 @@
                         </div></noscript>
 <div class="row">
 <div class="span4">
-<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
+<div xmlns:php="http://php.net/xsl" class="btn-toolbar">
+<div class="btn-group visibility" data-toggle="buttons-checkbox">
+<button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button>
+</div>
+<div class="btn-group view pull-right" data-toggle="buttons-radio">
 <button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
 </div>
-<ul class="side-nav nav nav-list">
+</div>
+<ul xmlns:php="http://php.net/xsl" class="side-nav nav nav-list">
 <li class="nav-header">
-<i class="icon-custom icon-method"></i> Methods
+<i title="Methods" class="icon-custom icon-method"></i> Methods
                     <ul>
-<li class="method public "><a href="#method_Tablepodcast" title="Tablepodcast :: Constructor"><span class="description">Constructor</span><pre>Tablepodcast()</pre></a></li>
-<li class="method public "><a href="#method_bind" title="bind :: Method to bind an associative array or object to the JTable instance.This
+<li class="method public "><a href="#method___construct" title="__construct() :: Constructor"><span class="description">Constructor</span><pre>__construct()</pre></a></li>
+<li class="method public "><a href="#method_bind" title="bind() :: Method to bind an associative array or object to the JTable instance.This
 method only binds properties that are publicly accessible and optionally
 takes an array of properties to ignore when binding."><span class="description">Method to bind an associative array or object to the JTable instance.This
 method only binds properties that are publicly accessible and optionally
 takes an array of properties to ignore when binding.</span><pre>bind()</pre></a></li>
+<li class="method public "><a href="#method_store" title="store() :: Method to store a row in the database from the JTable instance properties."><span class="description">Method to store a row in the database from the JTable instance properties.</span><pre>store()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header protected">» Protected
                     <ul>
-<li class="method protected "><a href="#method__getAssetName" title="_getAssetName :: Method to compute the default name of the asset."><span class="description">Method to compute the default name of the asset.</span><pre>_getAssetName()</pre></a></li>
-<li class="method protected "><a href="#method__getAssetParentId" title="_getAssetParentId :: Method to get the parent asset under which to register this one."><span class="description">Method to get the parent asset under which to register this one.</span><pre>_getAssetParentId()</pre></a></li>
-<li class="method protected "><a href="#method__getAssetTitle" title="_getAssetTitle :: Method to return the title to use for the asset table."><span class="description">Method to return the title to use for the asset table.</span><pre>_getAssetTitle()</pre></a></li>
+<li class="method protected "><a href="#method__getAssetName" title="_getAssetName() :: Method to compute the default name of the asset."><span class="description">Method to compute the default name of the asset.</span><pre>_getAssetName()</pre></a></li>
+<li class="method protected "><a href="#method__getAssetParentId" title="_getAssetParentId() :: Method to get the parent asset under which to register this one."><span class="description">Method to get the parent asset under which to register this one.</span><pre>_getAssetParentId()</pre></a></li>
+<li class="method protected "><a href="#method__getAssetTitle" title="_getAssetTitle() :: Method to return the title to use for the asset table."><span class="description">Method to return the title to use for the asset table.</span><pre>_getAssetTitle()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header">
-<i class="icon-custom icon-property"></i> Properties
+<i title="Properties" class="icon-custom icon-property"></i> Properties
                     <ul>
-<li class="property public "><a href="#property_author" title="$author :: Author"><span class="description"></span><pre>$author</pre></a></li>
-<li class="property public "><a href="#property_custom" title="$custom :: Custom"><span class="description"></span><pre>$custom</pre></a></li>
-<li class="property public "><a href="#property_customsubtitle" title="$customsubtitle :: Custom"><span class="description"></span><pre>$customsubtitle</pre></a></li>
-<li class="property public "><a href="#property_description" title="$description :: Description"><span class="description"></span><pre>$description</pre></a></li>
-<li class="property public "><a href="#property_detailstemplateid" title="$detailstemplateid :: Details template ID"><span class="description"></span><pre>$detailstemplateid</pre></a></li>
-<li class="property public "><a href="#property_editor_email" title="$editor_email :: Editor Email Address"><span class="description"></span><pre>$editor_email</pre></a></li>
-<li class="property public "><a href="#property_editor_name" title="$editor_name :: Editor Name"><span class="description"></span><pre>$editor_name</pre></a></li>
-<li class="property public "><a href="#property_episodesubtitle" title="$episodesubtitle :: Details template ID"><span class="description"></span><pre>$episodesubtitle</pre></a></li>
-<li class="property public "><a href="#property_episodetitle" title="$episodetitle :: Episode Title"><span class="description"></span><pre>$episodetitle</pre></a></li>
-<li class="property public "><a href="#property_filename" title="$filename :: File Name"><span class="description"></span><pre>$filename</pre></a></li>
-<li class="property public "><a href="#property_id" title="$id :: Primary Key"><span class="description"></span><pre>$id</pre></a></li>
-<li class="property public "><a href="#property_image" title="$image :: Image"><span class="description"></span><pre>$image</pre></a></li>
-<li class="property public "><a href="#property_imageh" title="$imageh :: Image Height"><span class="description"></span><pre>$imageh</pre></a></li>
-<li class="property public "><a href="#property_imagew" title="$imagew :: Image Width"><span class="description"></span><pre>$imagew</pre></a></li>
-<li class="property public "><a href="#property_language" title="$language :: Language of Podcast"><span class="description"></span><pre>$language</pre></a></li>
-<li class="property public "><a href="#property_podcastimage" title="$podcastimage :: Podcast Image"><span class="description"></span><pre>$podcastimage</pre></a></li>
-<li class="property public "><a href="#property_podcastlimit" title="$podcastlimit :: Limit of the episodes in the podcast"><span class="description"></span><pre>$podcastlimit</pre></a></li>
-<li class="property public "><a href="#property_podcastname" title="$podcastname :: Podcast name"><span class="description"></span><pre>$podcastname</pre></a></li>
-<li class="property public "><a href="#property_podcastsearch" title="$podcastsearch :: Podcast Search Words"><span class="description"></span><pre>$podcastsearch</pre></a></li>
-<li class="property public "><a href="#property_podcastsummary" title="$podcastsummary :: Podcast Summary"><span class="description"></span><pre>$podcastsummary</pre></a></li>
-<li class="property public "><a href="#property_published" title="$published :: Published"><span class="description"></span><pre>$published</pre></a></li>
-<li class="property public "><a href="#property_title" title="$title :: Title"><span class="description"></span><pre>$title</pre></a></li>
-<li class="property public "><a href="#property_website" title="$website :: Website Address"><span class="description"></span><pre>$website</pre></a></li>
+<li class="property public "><a href="#property_author" title="$author() :: Author"><span class="description"></span><pre>$author</pre></a></li>
+<li class="property public "><a href="#property_custom" title="$custom() :: Custom"><span class="description"></span><pre>$custom</pre></a></li>
+<li class="property public "><a href="#property_customsubtitle" title="$customsubtitle() :: Custom"><span class="description"></span><pre>$customsubtitle</pre></a></li>
+<li class="property public "><a href="#property_description" title="$description() :: Description"><span class="description"></span><pre>$description</pre></a></li>
+<li class="property public "><a href="#property_detailstemplateid" title="$detailstemplateid() :: Details template ID"><span class="description"></span><pre>$detailstemplateid</pre></a></li>
+<li class="property public "><a href="#property_editor_email" title="$editor_email() :: Editor Email Address"><span class="description"></span><pre>$editor_email</pre></a></li>
+<li class="property public "><a href="#property_editor_name" title="$editor_name() :: Editor Name"><span class="description"></span><pre>$editor_name</pre></a></li>
+<li class="property public "><a href="#property_episodesubtitle" title="$episodesubtitle() :: Details template ID"><span class="description"></span><pre>$episodesubtitle</pre></a></li>
+<li class="property public "><a href="#property_episodetitle" title="$episodetitle() :: Episode Title"><span class="description"></span><pre>$episodetitle</pre></a></li>
+<li class="property public "><a href="#property_filename" title="$filename() :: File Name"><span class="description"></span><pre>$filename</pre></a></li>
+<li class="property public "><a href="#property_id" title="$id() :: Primary Key"><span class="description"></span><pre>$id</pre></a></li>
+<li class="property public "><a href="#property_image" title="$image() :: Image"><span class="description"></span><pre>$image</pre></a></li>
+<li class="property public "><a href="#property_imageh" title="$imageh() :: Image Height"><span class="description"></span><pre>$imageh</pre></a></li>
+<li class="property public "><a href="#property_imagew" title="$imagew() :: Image Width"><span class="description"></span><pre>$imagew</pre></a></li>
+<li class="property public "><a href="#property_language" title="$language() :: Language of Podcast"><span class="description"></span><pre>$language</pre></a></li>
+<li class="property public "><a href="#property_linktype" title="$linktype() :: Type of link to use for podcast."><span class="description"></span><pre>$linktype</pre></a></li>
+<li class="property public "><a href="#property_podcastimage" title="$podcastimage() :: Podcast Image"><span class="description"></span><pre>$podcastimage</pre></a></li>
+<li class="property public "><a href="#property_podcastlimit" title="$podcastlimit() :: Limit of the episodes in the podcast"><span class="description"></span><pre>$podcastlimit</pre></a></li>
+<li class="property public "><a href="#property_podcastname" title="$podcastname() :: Podcast name"><span class="description"></span><pre>$podcastname</pre></a></li>
+<li class="property public "><a href="#property_podcastsearch" title="$podcastsearch() :: Podcast Search Words"><span class="description"></span><pre>$podcastsearch</pre></a></li>
+<li class="property public "><a href="#property_podcastsummary" title="$podcastsummary() :: Podcast Summary"><span class="description"></span><pre>$podcastsummary</pre></a></li>
+<li class="property public "><a href="#property_published" title="$published() :: Published"><span class="description"></span><pre>$published</pre></a></li>
+<li class="property public "><a href="#property_title" title="$title() :: Title"><span class="description"></span><pre>$title</pre></a></li>
+<li class="property public "><a href="#property_website" title="$website() :: Website Address"><span class="description"></span><pre>$website</pre></a></li>
 </ul>
 </li>
 </ul>
 </div>
 <div class="span8">
-<a id="\TablePodcast"></a><ul class="breadcrumb">
+<a xmlns:php="http://php.net/xsl" id="\TablePodcast"></a><ul xmlns:php="http://php.net/xsl" class="breadcrumb">
 <li>
-<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+<a href="../index.html"><i title="Classes" class="icon-custom icon-class"></i></a><span class="divider">\</span>
 </li>
-<li><a href="../namespaces/global.html">global</a></li>
 <li class="active">
 <span class="divider">\</span><a href="../classes/TablePodcast.html">TablePodcast</a>
 </li>
 </ul>
-<div class="element class">
+<div xmlns:php="http://php.net/xsl" class="element class">
 <p class="short_description">Podcast table class</p>
 <div class="details">
 <div class="long_description"></div>
@@ -137,25 +135,22 @@ takes an array of properties to ignore when binding.</span><pre>bind()</pre></a>
 </tr>
 </table>
 <h3>
-<i class="icon-custom icon-method"></i> Methods</h3>
-<a id="method_Tablepodcast"></a><div class="element clickable method public method_Tablepodcast" data-toggle="collapse" data-target=".method_Tablepodcast .collapse">
+<i title="Methods" class="icon-custom icon-method"></i> Methods</h3>
+<a id="method___construct"></a><div class="element clickable method public method___construct " data-toggle="collapse" data-target=".method___construct .collapse" title="public">
 <h2>Constructor</h2>
-<pre>Tablepodcast(\JDatabaseDriver $db) </pre>
+<pre>__construct($db) </pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
 <h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$db</h4>
-<code>\JDatabaseDriver</code><p>&$db  Database connector object</p>
-</div>
+<div class="subelement argument"><h4>$db</h4></div>
 </div></div>
 </div>
-<a id="method_bind"></a><div class="element clickable method public method_bind" data-toggle="collapse" data-target=".method_bind .collapse">
+<a id="method_bind"></a><div class="element clickable method public method_bind " data-toggle="collapse" data-target=".method_bind .collapse" title="public">
 <h2>Method to bind an associative array or object to the JTable instance.This
 method only binds properties that are publicly accessible and optionally
 takes an array of properties to ignore when binding.</h2>
-<pre>bind(mixed $array, mixed $ignore) : boolean</pre>
+<pre>bind(mixed $array, mixed $ignore<code> = ''</code>) : boolean</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -181,7 +176,35 @@ takes an array of properties to ignore when binding.</h2>
 <code>boolean</code>True on success.</div>
 </div></div>
 </div>
-<a id="method__getAssetName"></a><div class="element clickable method protected method__getAssetName" data-toggle="collapse" data-target=".method__getAssetName .collapse">
+<a id="method_store"></a><div class="element clickable method public method_store " data-toggle="collapse" data-target=".method_store .collapse" title="public">
+<h2>Method to store a row in the database from the JTable instance properties.</h2>
+<pre>store(boolean $updateNulls<code> = false</code>) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>If a primary key value is set the row with that primary key value will be
+updated with the instance property values.  If no primary key value is set
+a new row will be inserted into the database with the properties from the
+JTable instance.</p></div>
+<table class="table table-bordered">
+<tr>
+<th>link</th>
+<td><a href="https://docs.joomla.org/JTable/store">https://docs.joomla.org/JTable/store</a></td>
+</tr>
+<tr>
+<th>since</th>
+<td>11.1</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$updateNulls</h4>
+<code>boolean</code><p>True to update fields even if they are null.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>boolean</code>True on success.</div>
+</div></div>
+</div>
+<a id="method__getAssetName"></a><div class="element clickable method protected method__getAssetName " data-toggle="collapse" data-target=".method__getAssetName .collapse" title="protected">
 <h2>Method to compute the default name of the asset.</h2>
 <pre>_getAssetName() : string</pre>
 <div class="labels"></div>
@@ -196,9 +219,9 @@ where id is the value of the primary key of the table.</p></div>
 <div class="subelement response"><code>string</code></div>
 </div></div>
 </div>
-<a id="method__getAssetParentId"></a><div class="element clickable method protected method__getAssetParentId" data-toggle="collapse" data-target=".method__getAssetParentId .collapse">
+<a id="method__getAssetParentId"></a><div class="element clickable method protected method__getAssetParentId " data-toggle="collapse" data-target=".method__getAssetParentId .collapse" title="protected">
 <h2>Method to get the parent asset under which to register this one.</h2>
-<pre>_getAssetParentId(\JTable $table, integer $id) : integer</pre>
+<pre>_getAssetParentId(\JTable $table<code> = null</code>, integer $id<code> = null</code>) : integer</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"><p>By default, all assets are registered to the ROOT node with ID 1.
@@ -219,7 +242,7 @@ asset does not exist it will be created.</p></div>
 <div class="subelement response"><code>integer</code></div>
 </div></div>
 </div>
-<a id="method__getAssetTitle"></a><div class="element clickable method protected method__getAssetTitle" data-toggle="collapse" data-target=".method__getAssetTitle .collapse">
+<a id="method__getAssetTitle"></a><div class="element clickable method protected method__getAssetTitle " data-toggle="collapse" data-target=".method__getAssetTitle .collapse" title="protected">
 <h2>Method to return the title to use for the asset table.</h2>
 <pre>_getAssetTitle() : string</pre>
 <div class="labels"></div>
@@ -234,142 +257,246 @@ asset does not exist it will be created.</p></div>
 </div></div>
 </div>
 <h3>
-<i class="icon-custom icon-property"></i> Properties</h3>
-<a id="property_author"> </a><div class="element clickable property public property_author" data-toggle="collapse" data-target=".property_author .collapse">
-<h2></h2>
+<i title="Properties" class="icon-custom icon-property"></i> Properties</h3>
+<a id="property_author"> </a><div class="element clickable property public property_author" data-toggle="collapse" data-target=".property_author .collapse" title="public">
+<h2>Author</h2>
 <pre>$author : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
-<a id="property_custom"> </a><div class="element clickable property public property_custom" data-toggle="collapse" data-target=".property_custom .collapse">
-<h2></h2>
+<a id="property_custom"> </a><div class="element clickable property public property_custom" data-toggle="collapse" data-target=".property_custom .collapse" title="public">
+<h2>Custom</h2>
 <pre>$custom : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
-<a id="property_customsubtitle"> </a><div class="element clickable property public property_customsubtitle" data-toggle="collapse" data-target=".property_customsubtitle .collapse">
-<h2></h2>
+<a id="property_customsubtitle"> </a><div class="element clickable property public property_customsubtitle" data-toggle="collapse" data-target=".property_customsubtitle .collapse" title="public">
+<h2>Custom</h2>
 <pre>$customsubtitle : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
-<a id="property_description"> </a><div class="element clickable property public property_description" data-toggle="collapse" data-target=".property_description .collapse">
-<h2></h2>
+<a id="property_description"> </a><div class="element clickable property public property_description" data-toggle="collapse" data-target=".property_description .collapse" title="public">
+<h2>Description</h2>
 <pre>$description : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
-<a id="property_detailstemplateid"> </a><div class="element clickable property public property_detailstemplateid" data-toggle="collapse" data-target=".property_detailstemplateid .collapse">
-<h2></h2>
+<a id="property_detailstemplateid"> </a><div class="element clickable property public property_detailstemplateid" data-toggle="collapse" data-target=".property_detailstemplateid .collapse" title="public">
+<h2>Details template ID</h2>
 <pre>$detailstemplateid : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
-<a id="property_editor_email"> </a><div class="element clickable property public property_editor_email" data-toggle="collapse" data-target=".property_editor_email .collapse">
-<h2></h2>
+<a id="property_editor_email"> </a><div class="element clickable property public property_editor_email" data-toggle="collapse" data-target=".property_editor_email .collapse" title="public">
+<h2>Editor Email Address</h2>
 <pre>$editor_email : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
-<a id="property_editor_name"> </a><div class="element clickable property public property_editor_name" data-toggle="collapse" data-target=".property_editor_name .collapse">
-<h2></h2>
+<a id="property_editor_name"> </a><div class="element clickable property public property_editor_name" data-toggle="collapse" data-target=".property_editor_name .collapse" title="public">
+<h2>Editor Name</h2>
 <pre>$editor_name : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
-<a id="property_episodesubtitle"> </a><div class="element clickable property public property_episodesubtitle" data-toggle="collapse" data-target=".property_episodesubtitle .collapse">
-<h2></h2>
+<a id="property_episodesubtitle"> </a><div class="element clickable property public property_episodesubtitle" data-toggle="collapse" data-target=".property_episodesubtitle .collapse" title="public">
+<h2>Details template ID</h2>
 <pre>$episodesubtitle : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
-<a id="property_episodetitle"> </a><div class="element clickable property public property_episodetitle" data-toggle="collapse" data-target=".property_episodetitle .collapse">
-<h2></h2>
+<a id="property_episodetitle"> </a><div class="element clickable property public property_episodetitle" data-toggle="collapse" data-target=".property_episodetitle .collapse" title="public">
+<h2>Episode Title</h2>
 <pre>$episodetitle : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
-<a id="property_filename"> </a><div class="element clickable property public property_filename" data-toggle="collapse" data-target=".property_filename .collapse">
-<h2></h2>
+<a id="property_filename"> </a><div class="element clickable property public property_filename" data-toggle="collapse" data-target=".property_filename .collapse" title="public">
+<h2>File Name</h2>
 <pre>$filename : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
-<a id="property_id"> </a><div class="element clickable property public property_id" data-toggle="collapse" data-target=".property_id .collapse">
-<h2></h2>
-<pre>$id : int</pre>
+<a id="property_id"> </a><div class="element clickable property public property_id" data-toggle="collapse" data-target=".property_id .collapse" title="public">
+<h2>Primary Key</h2>
+<pre>$id : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
-<a id="property_image"> </a><div class="element clickable property public property_image" data-toggle="collapse" data-target=".property_image .collapse">
-<h2></h2>
+<a id="property_image"> </a><div class="element clickable property public property_image" data-toggle="collapse" data-target=".property_image .collapse" title="public">
+<h2>Image</h2>
 <pre>$image : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
-<a id="property_imageh"> </a><div class="element clickable property public property_imageh" data-toggle="collapse" data-target=".property_imageh .collapse">
-<h2></h2>
-<pre>$imageh : int</pre>
+<a id="property_imageh"> </a><div class="element clickable property public property_imageh" data-toggle="collapse" data-target=".property_imageh .collapse" title="public">
+<h2>Image Height</h2>
+<pre>$imageh : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
-<a id="property_imagew"> </a><div class="element clickable property public property_imagew" data-toggle="collapse" data-target=".property_imagew .collapse">
-<h2></h2>
-<pre>$imagew : int</pre>
+<a id="property_imagew"> </a><div class="element clickable property public property_imagew" data-toggle="collapse" data-target=".property_imagew .collapse" title="public">
+<h2>Image Width</h2>
+<pre>$imagew : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
-<a id="property_language"> </a><div class="element clickable property public property_language" data-toggle="collapse" data-target=".property_language .collapse">
-<h2></h2>
+<a id="property_language"> </a><div class="element clickable property public property_language" data-toggle="collapse" data-target=".property_language .collapse" title="public">
+<h2>Language of Podcast</h2>
 <pre>$language : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
-<a id="property_podcastimage"> </a><div class="element clickable property public property_podcastimage" data-toggle="collapse" data-target=".property_podcastimage .collapse">
-<h2></h2>
+<a id="property_linktype"> </a><div class="element clickable property public property_linktype" data-toggle="collapse" data-target=".property_linktype .collapse" title="public">
+<h2>Type of link to use for podcast.</h2>
+<pre>$linktype : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"><p>0 = Default is to episode.
+1 = Direct Link.
+2 = Popup Player Window with default player as internal.</p></div></div></div>
+</div>
+<a id="property_podcastimage"> </a><div class="element clickable property public property_podcastimage" data-toggle="collapse" data-target=".property_podcastimage .collapse" title="public">
+<h2>Podcast Image</h2>
 <pre>$podcastimage : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
-<a id="property_podcastlimit"> </a><div class="element clickable property public property_podcastlimit" data-toggle="collapse" data-target=".property_podcastlimit .collapse">
-<h2></h2>
+<a id="property_podcastlimit"> </a><div class="element clickable property public property_podcastlimit" data-toggle="collapse" data-target=".property_podcastlimit .collapse" title="public">
+<h2>Limit of the episodes in the podcast</h2>
 <pre>$podcastlimit : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
-<a id="property_podcastname"> </a><div class="element clickable property public property_podcastname" data-toggle="collapse" data-target=".property_podcastname .collapse">
-<h2></h2>
+<a id="property_podcastname"> </a><div class="element clickable property public property_podcastname" data-toggle="collapse" data-target=".property_podcastname .collapse" title="public">
+<h2>Podcast name</h2>
 <pre>$podcastname : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
-<a id="property_podcastsearch"> </a><div class="element clickable property public property_podcastsearch" data-toggle="collapse" data-target=".property_podcastsearch .collapse">
-<h2></h2>
+<a id="property_podcastsearch"> </a><div class="element clickable property public property_podcastsearch" data-toggle="collapse" data-target=".property_podcastsearch .collapse" title="public">
+<h2>Podcast Search Words</h2>
 <pre>$podcastsearch : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
-<a id="property_podcastsummary"> </a><div class="element clickable property public property_podcastsummary" data-toggle="collapse" data-target=".property_podcastsummary .collapse">
-<h2></h2>
+<a id="property_podcastsummary"> </a><div class="element clickable property public property_podcastsummary" data-toggle="collapse" data-target=".property_podcastsummary .collapse" title="public">
+<h2>Podcast Summary</h2>
 <pre>$podcastsummary : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
-<a id="property_published"> </a><div class="element clickable property public property_published" data-toggle="collapse" data-target=".property_published .collapse">
-<h2></h2>
-<pre>$published : int</pre>
+<a id="property_published"> </a><div class="element clickable property public property_published" data-toggle="collapse" data-target=".property_published .collapse" title="public">
+<h2>Published</h2>
+<pre>$published : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>1</code></div>
+</div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
-<a id="property_title"> </a><div class="element clickable property public property_title" data-toggle="collapse" data-target=".property_title .collapse">
-<h2></h2>
+<a id="property_title"> </a><div class="element clickable property public property_title" data-toggle="collapse" data-target=".property_title .collapse" title="public">
+<h2>Title</h2>
 <pre>$title : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
-<a id="property_website"> </a><div class="element clickable property public property_website" data-toggle="collapse" data-target=".property_website .collapse">
-<h2></h2>
+<a id="property_website"> </a><div class="element clickable property public property_website" data-toggle="collapse" data-target=".property_website .collapse" title="public">
+<h2>Website Address</h2>
 <pre>$website : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
@@ -379,8 +506,8 @@ asset does not exist it will be created.</p></div>
 </div>
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
-            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
-            generated on 2013-06-22T20:25:38-05:00.<br></footer></div>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
+            generated on 2016-04-06T22:36:25-05:00.<br></footer></div>
 </div>
 </body>
 </html>

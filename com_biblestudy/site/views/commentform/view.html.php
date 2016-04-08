@@ -3,14 +3,12 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-JLoader::register('JBSMBibleStudyHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php');
 
 /**
  * View class for Comment
@@ -33,7 +31,7 @@ class BiblestudyViewCommentform extends JViewLegacy
 	/**
 	 * Item
 	 *
-	 * @var array
+	 * @var Object
 	 */
 	protected $item;
 
@@ -52,16 +50,9 @@ class BiblestudyViewCommentform extends JViewLegacy
 	protected $state;
 
 	/**
-	 * Admin
-	 *
-	 * @var array
-	 */
-	protected $admin;
-
-	/**
 	 * Display the view
 	 *
-	 * @param   string $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @throws Exception
 	 *
@@ -69,10 +60,6 @@ class BiblestudyViewCommentform extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-
-		$app  = JFactory::getApplication();
-		$user = JFactory::getUser();
-
 		// Get model data.
 		$this->state       = $this->get('State');
 		$this->item        = $this->get('Item');
@@ -80,13 +67,16 @@ class BiblestudyViewCommentform extends JViewLegacy
 		$this->return_page = $this->get('ReturnPage');
 
 		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'comment');
-		$document    = JFactory::getDocument();
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
 			throw new Exception(implode("\n", $errors), 500);
 		}
+
+		$language = JFactory::getLanguage();
+		$language->load('', JPATH_ADMINISTRATOR, null, true);
+
 		// Check permissions to enter comments
 		if (!$this->canDo->get('core.edit'))
 		{

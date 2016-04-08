@@ -3,7 +3,7 @@
  * Default FooterLink
  *
  * @package    BibleStudy.Site
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 ?>
 <div class="listingfooter">
 	<?php
-	$input     = new JInput;
+	$input = new JInput;
 	$link_text = $this->item->params->get('link_text');
 
 	if (!$link_text)
@@ -43,6 +43,6 @@ defined('_JEXEC') or die;
 			$link = JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $t);
 		}
 		?>
-        <a href="<?php echo $link; ?>"> <?php echo $link_text; ?> </a> <?php } // End of if view_link not 0 ?>
+		<a href="<?php echo $link; ?>"> <?php echo $link_text; ?> </a> <?php } // End of if view_link not 0 ?>
 </div><!--end of footer div-->
 

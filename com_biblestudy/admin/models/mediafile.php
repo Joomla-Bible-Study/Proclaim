@@ -3,15 +3,15 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
-defined('_JEXEC')
-	or die;
+defined('_JEXEC') or die;
 
-jimport('joomla.application.component.modeladmin');
+use Joomla\Registry\Registry;
+use Joomla\Utilities\ArrayHelper;
 
 /**
  * MediaFile model class
@@ -23,42 +23,18 @@ jimport('joomla.application.component.modeladmin');
 class BiblestudyModelMediafile extends JModelAdmin
 {
 	/**
-	 * Admin
-	 *
-	 * @var string
-	 */
-	private $_admin;
-
-	/**
 	 * @var    string  The prefix to use with controller messages.
 	 * @since  1.6
 	 */
 	protected $text_prefix = 'COM_BIBLESTUDY';
 
-    /**
-     * Method to test whether a record can be deleted.
-     *
-     * @param   object $record  A record object.
-     *
-     * @return    boolean    True if allowed to delete the record. Defaults to the permission set in the component.
-     *
-     * @since    1.6
-     */
-    protected function canDelete($record)
-    {
-        if (!empty($record->id))
-        {
-            if ($record->published != -2)
-            {
-                return false;
-            }
-            $user = JFactory::getUser();
-
-            return $user->authorise('core.delete', 'com_biblestudy.mediafile.' . (int) $record->id);
-        }
-
-        return false;
-    }
+	/**
+	 * Data
+	 *
+	 * @var
+	 * @since   9.0.0
+	 */
+	private $data;
 
 	/**
 	 * Method to move a mediafile listing
@@ -68,7 +44,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 * @access    public
 	 * @return    boolean    True on success
 	 *
-	 * @since    1.5
+	 * @since     1.5
 	 */
 	public function move($direction)
 	{
@@ -92,6 +68,20 @@ class BiblestudyModelMediafile extends JModelAdmin
 	}
 
 	/**
+	 * Returns a Table object, always creating it.
+	 *
+	 * @param   string  $type    The table type to instantiate
+	 * @param   string  $prefix  A prefix for the table class name. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 *
+	 * @return    TableMediafile    A database object
+	 */
+	public function getTable($type = 'Mediafile', $prefix = 'Table', $config = array())
+	{
+		return JTable::getInstance($type, $prefix, $config);
+	}
+
+	/**
 	 * Overrides the JModelAdmin save routine in order to implode the podcast_id
 	 *
 	 * @param   array  $data  The form data.
@@ -102,61 +92,114 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 */
 	public function save($data)
 	{
-		if (parent::save($data))
+		if ($data)
 		{
 			// Implode only if they selected at least one podcast. Otherwise just clear the podcast_id field
-			$data['podcast_id'] = empty($data['podcast_id']) ? '' : implode(',', $data['podcast_id']);
+			$data['podcast_id'] = empty($data['podcast_id']) ? '' : implode(",", $data['podcast_id']);
 
-			/* This code could be uncommented and would remove spaces from filename
-			// $data['filename'] = str_replace(' ','_',$data['filename']);
-			// Remove starting and trailing spaces */
-			$data['filename'] = trim($data['filename']);
+			$params = new Registry;
+			$params->loadArray($data['params']);
 
-			return true;
+			if (isset($params->toObject()->size) && $params->get('size') == 0)
+			{
+				$table = new TableServer(JFactory::getDbo());
+				$table->load($data['server_id']);
+
+				$path = new Registry;
+				$path->loadString($table->params);
+
+				$set_path = '';
+				if ($path->get('path'))
+				{
+					$set_path = $path->get('path') . '/';
+				}
+				if (!$path->get('protocal') && $set_path)
+				{
+					$path->set('protocal', 'http://');
+				}
+				else
+				{
+					$path->set('protocal', rtrim(JUri::root(), '/'));
+				}
+
+				if ($table->type == 'legacy')
+				{
+					$params->set('size', JBSMHelper::getRemoteFileSize($path->get('protocol') . $set_path . $params->get('filename')));
+					$data['params'] = $params->toArray();
+				}
+			}
+			if (parent::save($data))
+			{
+				return true;
+			}
 		}
 
 		return false;
 	}
 
 	/**
-	 * Method to check-out a row for editing.
+	 * Get the media form
 	 *
-	 * @param   integer  $pk  The numeric id of the primary key.
+	 * @return bool|mixed
 	 *
-	 * @return  boolean  False on failure or error, true otherwise.
+	 * @throws Exception
 	 *
-	 * @since   11.1
+	 * @since   9.0.0
 	 */
-	public function checkout($pk = null)
+	public function getMediaForm()
 	{
-		return $pk;
-	}
+		// Needed for site view
+		JModelLegacy::addIncludePath(BIBLESTUDY_PATH_ADMIN_MODELS);
 
-	/**
-	 * Prepare and sanitise the table prior to saving.
-	 *
-	 * @param   JTable  $table  A reference to a JTable object.
-	 *
-	 * @return    void
-	 *
-	 * @since    1.6
-	 */
-	protected function prepareTable($table)
-	{
-	}
+		// If user hasn't selected a server yet, just return an empty form
+		$server_id = $this->data->server_id;
+		if (empty($server_id))
+		{
+			/** @var Joomla\Registry\Registry $admin */
+			$admin                 = JBSMParams::getAdmin()->params;
+			$server_id             = $admin->get('server');
+			$this->data->server_id = $server_id;
+			if (empty($server_id))
+			{
+				// @TODO This may not be optimal, seems like a hack
+				return new JForm("No Default Server");
+			}
+		}
+		// Reverse lookup server_id to server type
+		/** @type BiblestudyModelServer $model */
+		$model       = JModelLegacy::getInstance('Server', 'BibleStudyModel');
+		$server_type = $model->getType($server_id, true);
+		$s_item = $model->getItem($server_id);
 
-	/**
-	 * Returns a Table object, always creating it.
-	 *
-	 * @param   string  $type    The table type to instantiate
-	 * @param   string  $prefix  A prefix for the table class name. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return    JTable    A database object
-	 */
-	public function getTable($type = 'Mediafile', $prefix = 'Table', $config = array())
-	{
-		return JTable::getInstance($type, $prefix, $config);
+		$reg = new Registry;
+		$reg->loadArray($s_item->params);
+
+		$reg1 = new Registry;
+		$reg1->loadArray($s_item->media);
+		$reg1->merge($reg);
+
+		$path = JPath::clean(JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/' . $server_type);
+
+		JForm::addFormPath($path);
+		JForm::addFieldPath($path . '/fields');
+
+		// Add language files
+		$lang = JFactory::getLanguage();
+		if (!$lang->load('jbs_addon_' . $server_type, JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/' . $server_type))
+		{
+			throw new Exception(JText::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'));
+		}
+
+		$form = $this->loadForm('com_biblestudy.mediafile.media', "media", array('control' => 'jform', 'load_data' => true), true, "/media");
+
+		if (empty($form))
+		{
+			return false;
+		}
+
+		$form->s_params = $reg1->toArray();
+
+		return $form;
 	}
 
 	/**
@@ -171,14 +214,21 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
+		if (empty($data))
+		{
+			$this->getItem();
+		}
+
 		// Get the form.
-		$array = array('control' => 'jform', 'load_data' => $loadData);
-		$form  = $this->loadForm('com_biblestudy.mediafile', 'mediafile', $array);
+		// @TODO Rename the form to "media" instead of mediafile
+		$form = $this->loadForm('com_biblestudy.mediafile', 'mediafile', array('control' => 'jform', 'load_data' => $loadData));
 
 		if (empty($form))
 		{
 			return false;
 		}
+
+		// @TODO Maybe this needs to be removed from here? (Separation of concerns)
 		$jinput = JFactory::getApplication()->input;
 
 		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
@@ -197,8 +247,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
 		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_biblestudy.mediafile.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy'))
-		)
+			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy')))
 		{
 			// Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');
@@ -215,233 +264,61 @@ class BiblestudyModelMediafile extends JModelAdmin
 	}
 
 	/**
-	 * Batch Player changes for a group of mediafiles.
+	 * Method to get media item
 	 *
-	 * @param   string  $value     The new value matching a player.
-	 * @param   array   $pks       An array of row IDs.
-	 * @param   array   $contexts  An array of item contexts.
+	 * @param   int  $pk  int
 	 *
-	 * @return  boolean  True if successful, false otherwise and internal error is set.
+	 * @return  mixed|void
 	 *
-	 * @since   2.5
+	 * @since   9.0.0
 	 */
-	protected function batchPlayer($value, $pks, $contexts)
+	public function getItem($pk = null)
 	{
-		// Set the variables
-		$user  = JFactory::getUser();
-		$table = $this->getTable();
+		$jinput = JFactory::getApplication()->input;
 
-		foreach ($pks as $pk)
+		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
+		if ($jinput->get('a_id'))
 		{
-			if ($user->authorise('core.edit', $contexts[$pk]))
-			{
-				$table->reset();
-				$table->load($pk);
-				$table->player = (int) $value;
+			$pk = $jinput->get('a_id', 0);
 
-				if (!$table->store())
-				{
-					$this->setError($table->getError());
-
-					return false;
-				}
-			}
-			else
-			{
-				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
-
-				return false;
-			}
+		} // The back end uses id so we use that the rest of the time and set it to 0 by default.
+		else
+		{
+			$pk = $jinput->get('id', 0);
 		}
 
-		// Clean the cache
-		$this->cleanCache();
-
-		return true;
-	}
-
-	/**
-	 * Batch popup changes for a group of media files.
-	 *
-	 * @param   string  $value     The new value matching a client.
-	 * @param   array   $pks       An array of row IDs.
-	 * @param   array   $contexts  An array of item contexts.
-	 *
-	 * @return  boolean  True if successful, false otherwise and internal error is set.
-	 *
-	 * @since   2.5
-	 */
-	protected function batchPopup($value, $pks, $contexts)
-	{
-		// Set the variables
-		$user  = JFactory::getUser();
-		$table = $this->getTable();
-
-		foreach ($pks as $pk)
+		if (!empty($this->data))
 		{
-			if ($user->authorise('core.edit', $contexts[$pk]))
-			{
-				$table->reset();
-				$table->load($pk);
-				$table->popup = (int) $value;
-
-				if (!$table->store())
-				{
-					$this->setError($table->getError());
-
-					return false;
-				}
-			}
-			else
-			{
-				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
-
-				return false;
-			}
+			return $this->data;
 		}
 
-		// Clean the cache
-		$this->cleanCache();
+		$this->data = parent::getItem($pk);
 
-		return true;
-	}
-
-	/**
-	 * Batch popup changes for a group of media files.
-	 *
-	 * @param   string  $value     The new value matching a client.
-	 * @param   array   $pks       An array of row IDs.
-	 * @param   array   $contexts  An array of item contexts.
-	 *
-	 * @return  boolean  True if successful, false otherwise and internal error is set.
-	 *
-	 * @since   2.5
-	 */
-	protected function batchMediatype($value, $pks, $contexts)
-	{
-		// Set the variables
-		$user  = JFactory::getUser();
-		$table = $this->getTable();
-
-		foreach ($pks as $pk)
+		if (!empty($this->data))
 		{
-			if ($user->authorise('core.edit', $contexts[$pk]))
+			// Make Podcast Id to be array for view
+			if (!empty($this->data->podcast_id))
 			{
-				$table->reset();
-				$table->load($pk);
-				$table->media_image = (int) $value;
-
-				if (!$table->store())
-				{
-					$this->setError($table->getError());
-
-					return false;
-				}
+				$this->data->podcast_id = explode(',', $this->data->podcast_id);
 			}
-			else
-			{
-				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
 
-				return false;
-			}
+			// Convert metadata field to array
+			$registry             = new Registry($this->data->metadata);
+			$this->data->metadata = $registry->toArray();
+
+			// Set the server_id from session if available or fall back on the db value
+			$server_id             = $this->getState('mediafile.server_id');
+			$this->data->server_id = empty($server_id) ? $this->data->server_id : $server_id;
+
+			$study_id             = $this->getState('mediafile.study_id');
+			$this->data->study_id = empty($study_id) ? $this->data->study_id : $study_id;
+
+			$createdate             = $this->getState('mediafile.createdate');
+			$this->data->createdate = empty($createdate) ? $this->data->createdate : $createdate;
+
 		}
 
-		// Clean the cache
-		$this->cleanCache();
-
-		return true;
-	}
-
-	/**
-	 * Batch popup changes for a group of media files.
-	 *
-	 * @param   string  $value     The new value matching a client.
-	 * @param   array   $pks       An array of row IDs.
-	 * @param   array   $contexts  An array of item contexts.
-	 *
-	 * @return  boolean  True if successful, false otherwise and internal error is set.
-	 *
-	 * @since   2.5
-	 */
-	protected function batchlink_type($value, $pks, $contexts)
-	{
-		// Set the variables
-		$user  = JFactory::getUser();
-		$table = $this->getTable();
-
-		foreach ($pks as $pk)
-		{
-			if ($user->authorise('core.edit', $contexts[$pk]))
-			{
-				$table->reset();
-				$table->load($pk);
-				$table->link_type = (int) $value;
-
-				if (!$table->store())
-				{
-					$this->setError($table->getError());
-
-					return false;
-				}
-			}
-			else
-			{
-				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
-
-				return false;
-			}
-		}
-
-		// Clean the cache
-		$this->cleanCache();
-
-		return true;
-	}
-
-	/**
-	 * Batch popup changes for a group of media files.
-	 *
-	 * @param   string  $value     The new value matching a client.
-	 * @param   array   $pks       An array of row IDs.
-	 * @param   array   $contexts  An array of item contexts.
-	 *
-	 * @return  boolean  True if successful, false otherwise and internal error is set.
-	 *
-	 * @since   2.5
-	 */
-	protected function batchMimetype($value, $pks, $contexts)
-	{
-		// Set the variables
-		$user  = JFactory::getUser();
-		$table = $this->getTable();
-
-		foreach ($pks as $pk)
-		{
-			if ($user->authorise('core.edit', $contexts[$pk]))
-			{
-				$table->reset();
-				$table->load($pk);
-				$table->mime_type = (int) $value;
-
-				if (!$table->store())
-				{
-					$this->setError($table->getError());
-
-					return false;
-				}
-			}
-			else
-			{
-				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
-
-				return false;
-			}
-		}
-
-		// Clean the cache
-		$this->cleanCache();
-
-		return true;
+		return $this->data;
 	}
 
 	/**
@@ -459,7 +336,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	{
 		// Sanitize user ids.
 		$pks = array_unique($pks);
-		JArrayHelper::toInteger($pks);
+		ArrayHelper::toInteger($pks);
 
 		// Remove any values of zero.
 		if (array_search(0, $pks, true))
@@ -537,38 +414,50 @@ class BiblestudyModelMediafile extends JModelAdmin
 	}
 
 	/**
-	 * Load Form Data
+	 * Batch Player changes for a group of mediafiles.
 	 *
-	 * @return array
+	 * @param   string  $value     The new value matching a player.
+	 * @param   array   $pks       An array of row IDs.
+	 * @param   array   $contexts  An array of item contexts.
 	 *
-	 * @since   7.0
+	 * @return  boolean  True if successful, false otherwise and internal error is set.
+	 *
+	 * @since   2.5
 	 */
-	protected function loadFormData()
+	protected function batchPlayer($value, $pks, $contexts)
 	{
-		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.mediafile.data', array());
+		// Set the variables
+		$user  = JFactory::getUser();
+		/** @type TableMediafile $table */
+		$table = $this->getTable();
 
-		if (empty($data))
+		foreach ($pks as $pk)
 		{
-			$data             = $this->getItem();
-			$data->podcast_id = explode(',', $data->podcast_id);
+			if ($user->authorise('core.edit', $contexts[$pk]))
+			{
+				$table->reset();
+				$table->load($pk);
+				$table->player = (int) $value;
 
+				if (!$table->store())
+				{
+					$this->setError($table->getError());
+
+					return false;
+				}
+			}
+			else
+			{
+				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+
+				return false;
+			}
 		}
 
-		return $data;
-	}
+		// Clean the cache
+		$this->cleanCache();
 
-	/**
-	 * Auto-populate the model state.
-	 *
-	 * @param   JForm   $form   A JForm object.
-	 * @param   mixed   $data   The data expected for the form.
-	 * @param   string  $group  The name of the plugin group to import (defaults to "content").
-	 *
-	 * @return  void
-	 */
-	protected function preprocessForm(JForm $form, $data, $group = 'content')
-	{
-		parent::preprocessForm($form, $data, $group);
+		return true;
 	}
 
 	/**
@@ -586,6 +475,276 @@ class BiblestudyModelMediafile extends JModelAdmin
 	}
 
 	/**
+	 * Batch popup changes for a group of media files.
+	 *
+	 * @param   string  $value     The new value matching a client.
+	 * @param   array   $pks       An array of row IDs.
+	 * @param   array   $contexts  An array of item contexts.
+	 *
+	 * @return  boolean  True if successful, false otherwise and internal error is set.
+	 *
+	 * @since   2.5
+	 */
+	protected function batchlink_type($value, $pks, $contexts)
+	{
+		// Set the variables
+		$user  = JFactory::getUser();
+		/** @type TableMediafile $table */
+		$table = $this->getTable();
+
+		foreach ($pks as $pk)
+		{
+			if ($user->authorise('core.edit', $contexts[$pk]))
+			{
+				$table->reset();
+				$table->load($pk);
+				$reg = new Registry;
+				$reg->loadString($table->params);
+				$reg->set('link_type', (int) $value);
+				$table->params = $reg->toString();
+
+				if (!$table->store())
+				{
+					$this->setError($table->getError());
+
+					return false;
+				}
+			}
+			else
+			{
+				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+
+				return false;
+			}
+		}
+
+		// Clean the cache
+		$this->cleanCache();
+
+		return true;
+	}
+
+	/**
+	 * Batch popup changes for a group of media files.
+	 *
+	 * @param   string  $value     The new value matching a client.
+	 * @param   array   $pks       An array of row IDs.
+	 * @param   array   $contexts  An array of item contexts.
+	 *
+	 * @return  boolean  True if successful, false otherwise and internal error is set.
+	 *
+	 * @since   2.5
+	 */
+	protected function batchMimetype($value, $pks, $contexts)
+	{
+		// Set the variables
+		$user  = JFactory::getUser();
+		/** @type TableMediafile $table */
+		$table = $this->getTable();
+
+		foreach ($pks as $pk)
+		{
+			if ($user->authorise('core.edit', $contexts[$pk]))
+			{
+				$table->reset();
+				$table->load($pk);
+				$reg = new Registry;
+				$reg->loadString($table->params);
+				$reg->set('mime_type', (int) $value);
+				$table->params = $reg->toString();
+
+				if (!$table->store())
+				{
+					$this->setError($table->getError());
+
+					return false;
+				}
+			}
+			else
+			{
+				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+
+				return false;
+			}
+		}
+
+		// Clean the cache
+		$this->cleanCache();
+
+		return true;
+	}
+
+	/**
+	 * Batch popup changes for a group of media files.
+	 *
+	 * @param   string  $value     The new value matching a client.
+	 * @param   array   $pks       An array of row IDs.
+	 * @param   array   $contexts  An array of item contexts.
+	 *
+	 * @return  boolean  True if successful, false otherwise and internal error is set.
+	 *
+	 * @since   2.5
+	 */
+	protected function batchMediatype($value, $pks, $contexts)
+	{
+		// Set the variables
+		$user  = JFactory::getUser();
+		$table = $this->getTable();
+
+		foreach ($pks as $pk)
+		{
+			if ($user->authorise('core.edit', $contexts[$pk]))
+			{
+				$table->reset();
+				$table->load($pk);
+				$reg = new Registry;
+				$reg->loadString($table->params);
+				$reg->set('media_image', (int) $value);
+				$table->params = $reg->toString();
+
+				if (!$table->store())
+				{
+					$this->setError($table->getError());
+
+					return false;
+				}
+			}
+			else
+			{
+				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+
+				return false;
+			}
+		}
+
+		// Clean the cache
+		$this->cleanCache();
+
+		return true;
+	}
+
+	/**
+	 * Batch popup changes for a group of media files.
+	 *
+	 * @param   string  $value     The new value matching a client.
+	 * @param   array   $pks       An array of row IDs.
+	 * @param   array   $contexts  An array of item contexts.
+	 *
+	 * @return  boolean  True if successful, false otherwise and internal error is set.
+	 *
+	 * @since   2.5
+	 */
+	protected function batchPopup($value, $pks, $contexts)
+	{
+		// Set the variables
+		$user  = JFactory::getUser();
+		$table = $this->getTable();
+
+		foreach ($pks as $pk)
+		{
+			if ($user->authorise('core.edit', $contexts[$pk]))
+			{
+				$table->reset();
+				$table->load($pk);
+				$reg = new Registry;
+				$reg->loadString($table->params);
+				$reg->set('popup', (int) $value);
+				$table->params = $reg->toString();
+
+				if (!$table->store())
+				{
+					$this->setError($table->getError());
+
+					return false;
+				}
+			}
+			else
+			{
+				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+
+				return false;
+			}
+		}
+
+		// Clean the cache
+		$this->cleanCache();
+
+		return true;
+	}
+
+	/**
+	 * Method to test whether a record can be deleted.
+	 *
+	 * @param   object  $record  A record object.
+	 *
+	 * @return    boolean    True if allowed to delete the record. Defaults to the permission set in the component.
+	 *
+	 * @since    1.6
+	 */
+	protected function canDelete($record)
+	{
+		if (!empty($record->id))
+		{
+			if ($record->state != -2)
+			{
+				return false;
+			}
+			$user = JFactory::getUser();
+
+			return $user->authorise('core.delete', 'com_biblestudy.mediafile.' . (int) $record->id);
+		}
+
+		return false;
+	}
+
+	/**
+	 * Load Form Data
+	 *
+	 * @return array
+	 *
+	 * @since   7.0
+	 */
+	protected function loadFormData()
+	{
+		$session = JFactory::getApplication()->getUserState('com_biblestudy.mediafile.edit.data', array());
+
+		$data = empty($session) ? $this->data : $session;
+
+		return $data;
+	}
+
+	/**
+	 * Auto-populate the model state
+	 *
+	 * @return  void
+	 *
+	 * @since   9.0.0
+	 */
+	protected function populateState()
+	{
+		$app   = JFactory::getApplication('administrator');
+		$input = $app->input;
+
+		// Load the Admin settings
+		$admin = JBSMParams::getAdmin();
+		$registry    = new Registry;
+		$registry->loadString($admin->params);
+		$this->setState('admin', $registry);
+
+		$pk = $input->get('id', null, 'INTEGER');
+		$this->setState('mediafile.id', $pk);
+
+		$server_id = $app->getUserState('com_biblestudy.edit.mediafile.server_id');
+		$this->setState('mediafile.server_id', $server_id);
+
+		$study_id = $app->getUserState('com_biblestudy.edit.mediafile.study_id');
+		$this->setState('mediafile.study_id', $study_id);
+
+		$createdate = $app->getUserState('com_biblestudy.edit.mediafile.createdate');
+		$this->setState('mediafile.createdate', $createdate);
+	}
+
+	/**
 	 * A protected method to get a set of ordering conditions.
 	 *
 	 * @param   object  $table  A record object.
@@ -600,5 +759,51 @@ class BiblestudyModelMediafile extends JModelAdmin
 		$condition[] = 'study_id = ' . (int) $table->study_id;
 
 		return $condition;
+	}
+
+	/**
+	 * Method override to check-in a record or an array of record
+	 *
+	 * @param   mixed  $pks  The ID of the primary key or an array of IDs
+	 *
+	 * @return  mixed  Boolean false if there is an error, otherwise the count of records checked in.
+	 *
+	 * @since   12.2
+	 */
+	public function checkin($pks = array())
+	{
+		$pks   = (array) $pks;
+		$table = $this->getTable();
+		$count = 0;
+
+		if (empty($pks))
+		{
+			$pks = array((int) $this->getState('mediafile.id'));
+		}
+
+		// Check in all items.
+		foreach ($pks as $pk)
+		{
+			if ($table->load($pk))
+			{
+				if ($table->checked_out > 0)
+				{
+					if (!parent::checkin($pk))
+					{
+						return false;
+					}
+
+					$count++;
+				}
+			}
+			else
+			{
+				$this->setError($table->getError());
+
+				return false;
+			}
+		}
+
+		return $count;
 	}
 }

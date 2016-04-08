@@ -3,14 +3,12 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No direct access
 defined('_JEXEC') or die;
-
-jimport('joomla.application.component.helper');
 
 /**
  * Biblestudy Component Route Helper
@@ -30,10 +28,10 @@ abstract class JBSMHelperRoute
 	protected static $lookup;
 
 	/**
-	 * Get Article Route
+	 * Get Article Rout
 	 *
-	 * @param   int $id        The route of the study item
-	 * @param   int $language  The route of the study item
+	 * @param   int  $id        The route of the study item
+	 * @param   int  $language  The state of language
 	 *
 	 * @return string
 	 */
@@ -48,7 +46,7 @@ abstract class JBSMHelperRoute
 
 		if ($language && $language != "*" && JLanguageMultilang::isEnabled())
 		{
-			$db    = JFactory::getDBO();
+			$db    = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query->select('a.sef AS sef');
 			$query->select('a.lang_code AS lang_code');
@@ -80,47 +78,9 @@ abstract class JBSMHelperRoute
 	}
 
 	/**
-	 * Get Teacher Route
-	 *
-	 * @param   int $id  The route of the teacher item
-	 *
-	 * @return string
-	 */
-	public static function getTeacherRoute($id)
-	{
-		$needles = array(
-			'article' => array((int) $id)
-		);
-
-		// Create the link
-		$link = 'index.php?option=com_biblestudy&view=teacher&id=' . $id;
-
-		return $link;
-	}
-
-	/**
-	 * Get Series Route
-	 *
-	 * @param   int $id  ID
-	 *
-	 * @return string
-	 */
-	public static function getSeriesRoute($id)
-	{
-		$needles = array(
-			'article' => array((int) $id)
-		);
-
-		// Create the link
-		$link = 'index.php?option=com_biblestudy&view=seriesdisplay&id=' . $id;
-
-		return $link;
-	}
-
-	/**
 	 * Find Item
 	 *
-	 * @param   string $needles  ?
+	 * @param   string  $needles  ?
 	 *
 	 * @return mixed
 	 */
@@ -182,6 +142,56 @@ abstract class JBSMHelperRoute
 		}
 
 		return false;
+	}
+
+	/**
+	 * Get Teacher Route
+	 *
+	 * @param   int  $id  The route of the teacher item
+	 *
+	 * @return string
+	 */
+	public static function getTeacherRoute($id)
+	{
+		// Create the link
+		$link = 'index.php?option=com_biblestudy&view=teacher&id=' . $id;
+
+		return $link;
+	}
+
+	/**
+	 * Get Series Route
+	 *
+	 * @param   int  $id  ID
+	 *
+	 * @return string
+	 */
+	public static function getSeriesRoute($id)
+	{
+		// Create the link
+		$link = 'index.php?option=com_biblestudy&view=seriesdisplay&id=' . $id;
+
+		return $link;
+	}
+
+	/**
+	 * Add Scheme to url
+	 *
+	 * @param   string  $url     URL of website
+	 * @param   string  $scheme  Scheme that need to lead with.
+	 *
+	 * @return string  The fixed URL
+	 *
+	 * @deprecate 8.0.7
+	 */
+	public static function addScheme($url, $scheme = 'http://')
+	{
+		if (parse_url($url, PHP_URL_SCHEME) === null)
+		{
+			return $scheme . $url;
+		}
+
+		return $url;
 	}
 
 }

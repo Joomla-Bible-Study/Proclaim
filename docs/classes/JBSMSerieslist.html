@@ -21,10 +21,9 @@
                                     API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a>Packages</a></li>
 <li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
-<li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
-<li><a href="../packages/Joomla.html"><i class="icon-folder-open"></i> Joomla</a></li>
-<li><a href="../packages/LiveUpdate.html"><i class="icon-folder-open"></i> LiveUpdate</a></li>
-<li><a href="../packages/SefExt.html"><i class="icon-folder-open"></i> SefExt</a></li>
+<li><a href="../packages/BibleStudy.Admin.html"><i class="icon-folder-open"></i> BibleStudy.Admin</a></li>
+<li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
 </ul>
 </li>
 <li class="dropdown" id="charts-menu">
@@ -35,18 +34,11 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">2</span></a></li>
+                <span class="label label-info">151</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
-                <ul>
-<li>todo 
-                <span class="label label-info">38</span>
-</li>
-<li>fixme 
-                <span class="label label-info">1</span>
-</li>
-</ul></a></li>
+                <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
-                <span class="label label-info">12</span></a></li>
+                <span class="label label-info">20</span></a></li>
 </ul>
 </li>
 </ul></div>
@@ -60,74 +52,68 @@
                         </div></noscript>
 <div class="row">
 <div class="span4">
-<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
+<div xmlns:php="http://php.net/xsl" class="btn-toolbar">
+<div class="btn-group visibility" data-toggle="buttons-checkbox">
+<button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button>
+</div>
+<div class="btn-group view pull-right" data-toggle="buttons-radio">
 <button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
 </div>
-<ul class="side-nav nav nav-list">
+</div>
+<ul xmlns:php="http://php.net/xsl" class="side-nav nav nav-list">
 <li class="nav-header">
-<i class="icon-custom icon-method"></i> Methods
+<i title="Methods" class="icon-custom icon-method"></i> Methods
                     <ul>
-<li class="method public inherited"><a href="#method_body_only" title="body_only :: Only Return the Body of a html doc."><span class="description">Only Return the Body of a html doc.</span><pre>body_only()</pre></a></li>
-<li class="method public inherited"><a href="#method_getArticle" title="getArticle :: Get Article"><span class="description">Get Article</span><pre>getArticle()</pre></a></li>
-<li class="method public inherited"><a href="#method_getDocman" title="getDocman :: Get Docman"><span class="description">Get Docman</span><pre>getDocman()</pre></a></li>
-<li class="method public inherited"><a href="#method_getDuration" title="getDuration :: Get Duration"><span class="description">Get Duration</span><pre>getDuration()</pre></a></li>
-<li class="method public inherited"><a href="#method_getElementid" title="getElementid :: Get Elementid"><span class="description">Get Elementid</span><pre>getElementid()</pre></a></li>
-<li class="method public inherited"><a href="#method_getFilepath" title="getFilepath :: Get File Path"><span class="description">Get File Path</span><pre>getFilepath()</pre></a></li>
-<li class="method public inherited"><a href="#method_getFilesize" title="getFilesize :: Function to get File Size"><span class="description">Function to get File Size</span><pre>getFilesize()</pre></a></li>
-<li class="method public inherited"><a href="#method_getHeader" title="getHeader :: Get Header"><span class="description">Get Header</span><pre>getHeader()</pre></a></li>
-<li class="method public inherited"><a href="#method_getListing" title="getListing :: Get listing"><span class="description">Get listing</span><pre>getListing()</pre></a></li>
-<li class="method public inherited"><a href="#method_getListingExp" title="getListingExp :: Get Listing Exp"><span class="description">Get Listing Exp</span><pre>getListingExp()</pre></a></li>
-<li class="method public inherited"><a href="#method_getMediaRows" title="getMediaRows :: Get MediaRows"><span class="description">Get MediaRows</span><pre>getMediaRows()</pre></a></li>
-<li class="method public inherited"><a href="#method_getOtherlinks" title="getOtherlinks :: Get Other Links"><span class="description">Get Other Links</span><pre>getOtherlinks()</pre></a></li>
-<li class="method public inherited"><a href="#method_getPassage" title="getPassage :: Get Passage"><span class="description">Get Passage</span><pre>getPassage()</pre></a></li>
-<li class="method public inherited"><a href="#method_getScripture" title="getScripture :: Get Scripture"><span class="description">Get Scripture</span><pre>getScripture()</pre></a></li>
-<li class="method public "><a href="#method_getSeriesDetailsExp" title="getSeriesDetailsExp :: Get Series Details EXP"><span class="description">Get Series Details EXP</span><pre>getSeriesDetailsExp()</pre></a></li>
-<li class="method public "><a href="#method_getSeriesFooter" title="getSeriesFooter :: Get Series Footer"><span class="description">Get Series Footer</span><pre>getSeriesFooter()</pre></a></li>
-<li class="method public "><a href="#method_getSerieslink" title="getSerieslink :: Get SeriesLink"><span class="description">Get SeriesLink</span><pre>getSerieslink()</pre></a></li>
-<li class="method public "><a href="#method_getSerieslist" title="getSerieslist :: Get SeriesList"><span class="description">Get SeriesList</span><pre>getSerieslist()</pre></a></li>
-<li class="method public "><a href="#method_getSerieslistExp" title="getSerieslistExp :: Get Serieslist Exp"><span class="description">Get Serieslist Exp</span><pre>getSerieslistExp()</pre></a></li>
-<li class="method public "><a href="#method_getSeriesstudies" title="getSeriesstudies :: Get SeriesStudies"><span class="description">Get SeriesStudies</span><pre>getSeriesstudies()</pre></a></li>
-<li class="method public "><a href="#method_getSeriesstudiesDBO" title="getSeriesstudiesDBO :: Get SeriesStudies DBO"><span class="description">Get SeriesStudies DBO</span><pre>getSeriesstudiesDBO()</pre></a></li>
-<li class="method public "><a href="#method_getSeriesstudiesExp" title="getSeriesstudiesExp :: Get Series Studies Exp"><span class="description">Get Series Studies Exp</span><pre>getSeriesstudiesExp()</pre></a></li>
-<li class="method public inherited"><a href="#method_getShare" title="getShare :: Share Helper file"><span class="description">Share Helper file</span><pre>getShare()</pre></a></li>
-<li class="method public "><a href="#method_getStudieslink" title="getStudieslink :: Get StudiesLink"><span class="description">Get StudiesLink</span><pre>getStudieslink()</pre></a></li>
-<li class="method public inherited"><a href="#method_getStudyExp" title="getStudyExp :: Get Study Exp"><span class="description">Get Study Exp</span><pre>getStudyExp()</pre></a></li>
-<li class="method public inherited"><a href="#method_getTextlink" title="getTextlink :: Get Textlink"><span class="description">Get Textlink</span><pre>getTextlink()</pre></a></li>
-<li class="method public inherited"><a href="#method_getTitle" title="getTitle :: Get Title"><span class="description">Get Title</span><pre>getTitle()</pre></a></li>
-<li class="method public inherited"><a href="#method_getVirtuemart" title="getVirtuemart :: Get Virtuart"><span class="description">Get Virtuart</span><pre>getVirtuemart()</pre></a></li>
-<li class="method public "><a href="#method_getseriesElementnumber" title="getseriesElementnumber :: Get Series ElementNumber"><span class="description">Get Series ElementNumber</span><pre>getseriesElementnumber()</pre></a></li>
-<li class="method public inherited"><a href="#method_getstudyDate" title="getstudyDate :: Get StudyDate"><span class="description">Get StudyDate</span><pre>getstudyDate()</pre></a></li>
-<li class="method public "><a href="#method_seriesGetcustom" title="seriesGetcustom :: Series Get Custom"><span class="description">Series Get Custom</span><pre>seriesGetcustom()</pre></a></li>
-<li class="method public "><a href="#method_seriesGetelement" title="seriesGetelement :: Series Get Element"><span class="description">Series Get Element</span><pre>seriesGetelement()</pre></a></li>
+<li class="method public inherited"><a href="#method_createelement" title="createelement() :: Create a Element"><span class="description">Create a Element</span><pre>createelement()</pre></a></li>
+<li class="method public inherited"><a href="#method_getDuration" title="getDuration() :: Get Duration"><span class="description">Get Duration</span><pre>getDuration()</pre></a></li>
+<li class="method public inherited"><a href="#method_getElement" title="getElement() :: Get Element"><span class="description">Get Element</span><pre>getElement()</pre></a></li>
+<li class="method public inherited"><a href="#method_getFilepath" title="getFilepath() :: Get File Path"><span class="description">Get File Path</span><pre>getFilepath()</pre></a></li>
+<li class="method public inherited"><a href="#method_getFluidCustom" title="getFluidCustom() :: Get Fluid Custom"><span class="description">Get Fluid Custom</span><pre>getFluidCustom()</pre></a></li>
+<li class="method public inherited"><a href="#method_getFluidData" title="getFluidData() :: Get Fluid Date"><span class="description">Get Fluid Date</span><pre>getFluidData()</pre></a></li>
+<li class="method public inherited"><a href="#method_getFluidListing" title="getFluidListing() :: Get Fluid Listing"><span class="description">Get Fluid Listing</span><pre>getFluidListing()</pre></a></li>
+<li class="method public inherited"><a href="#method_getFluidMediaFiles" title="getFluidMediaFiles() :: Get Fluid Media Files"><span class="description">Get Fluid Media Files</span><pre>getFluidMediaFiles()</pre></a></li>
+<li class="method public inherited"><a href="#method_getFluidMediaids" title="getFluidMediaids() :: Get Fluid Media Id's"><span class="description">Get Fluid Media Id's</span><pre>getFluidMediaids()</pre></a></li>
+<li class="method public inherited"><a href="#method_getFluidRow" title="getFluidRow() :: Get Fluid Row"><span class="description">Get Fluid Row</span><pre>getFluidRow()</pre></a></li>
+<li class="method public inherited"><a href="#method_getListParamsArray" title="getListParamsArray() :: Get list Params Array"><span class="description">Get list Params Array</span><pre>getListParamsArray()</pre></a></li>
+<li class="method public inherited"><a href="#method_getListingExp" title="getListingExp() :: Get Listing Exp"><span class="description">Get Listing Exp</span><pre>getListingExp()</pre></a></li>
+<li class="method public inherited"><a href="#method_getMediaFiles" title="getMediaFiles() :: Get Media Files"><span class="description">Get Media Files</span><pre>getMediaFiles()</pre></a></li>
+<li class="method public inherited"><a href="#method_getOtherlinks" title="getOtherlinks() :: Get Other Links"><span class="description">Get Other Links</span><pre>getOtherlinks()</pre></a></li>
+<li class="method public inherited"><a href="#method_getPassage" title="getPassage() :: Get Passage"><span class="description">Get Passage</span><pre>getPassage()</pre></a></li>
+<li class="method public inherited"><a href="#method_getScripture" title="getScripture() :: Get Scripture"><span class="description">Get Scripture</span><pre>getScripture()</pre></a></li>
+<li class="method public "><a href="#method_getSeriesDetailsExp" title="getSeriesDetailsExp() :: Get Series Details EXP"><span class="description">Get Series Details EXP</span><pre>getSeriesDetailsExp()</pre></a></li>
+<li class="method public "><a href="#method_getSerieslistExp" title="getSerieslistExp() :: Get Serieslist Exp"><span class="description">Get Serieslist Exp</span><pre>getSerieslistExp()</pre></a></li>
+<li class="method public "><a href="#method_getSeriesstudiesDBO" title="getSeriesstudiesDBO() :: Get SeriesStudies DBO"><span class="description">Get SeriesStudies DBO</span><pre>getSeriesstudiesDBO()</pre></a></li>
+<li class="method public "><a href="#method_getSeriesstudiesExp" title="getSeriesstudiesExp() :: Get Series Studies Exp"><span class="description">Get Series Studies Exp</span><pre>getSeriesstudiesExp()</pre></a></li>
+<li class="method public inherited"><a href="#method_getShare" title="getShare() :: Share Helper file"><span class="description">Share Helper file</span><pre>getShare()</pre></a></li>
+<li class="method public inherited"><a href="#method_getStudyDate" title="getStudyDate() :: Get StudyDate"><span class="description">Get StudyDate</span><pre>getStudyDate()</pre></a></li>
+<li class="method public inherited"><a href="#method_getStudyExp" title="getStudyExp() :: Get Study Exp"><span class="description">Get Study Exp</span><pre>getStudyExp()</pre></a></li>
+<li class="method public "><a href="#method_getseriesElementnumber" title="getseriesElementnumber() :: Get Series ElementNumber"><span class="description">Get Series ElementNumber</span><pre>getseriesElementnumber()</pre></a></li>
+<li class="method public inherited"><a href="#method_sortArrayofObjectByProperty" title="sortArrayofObjectByProperty() :: Sort Array of Object by Property"><span class="description">Sort Array of Object by Property</span><pre>sortArrayofObjectByProperty()</pre></a></li>
+<li class="method public inherited"><a href="#method_useJImage" title="useJImage() :: Use JImage Class"><span class="description">Use JImage Class</span><pre>useJImage()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header private">» Private
                     <ul>
-<li class="method private inherited"><a href="#method_getCell" title="getCell :: Get Cell"><span class="description">Get Cell</span><pre>getCell()</pre></a></li>
-<li class="method private inherited"><a href="#method_getCustomhead" title="getCustomhead :: Get CustomHead"><span class="description">Get CustomHead</span><pre>getCustomhead()</pre></a></li>
-<li class="method private inherited"><a href="#method_getHeadercell" title="getHeadercell :: Get Header Cell"><span class="description">Get Header Cell</span><pre>getHeadercell()</pre></a></li>
-<li class="method private inherited"><a href="#method_getLink" title="getLink :: Get Link"><span class="description">Get Link</span><pre>getLink()</pre></a></li>
-<li class="method private inherited"><a href="#method_getStore" title="getStore :: Get Store"><span class="description">Get Store</span><pre>getStore()</pre></a></li>
-<li class="method private inherited"><a href="#method_make_bitly_url" title="make_bitly_url :: make a URL small"><span class="description">make a URL small</span><pre>make_bitly_url()</pre></a></li>
+<li class="method private inherited"><a href="#method_getLink" title="getLink() :: Get Link"><span class="description">Get Link</span><pre>getLink()</pre></a></li>
+<li class="method private inherited"><a href="#method_make_bitly_url" title="make_bitly_url() :: make a URL small"><span class="description">make a URL small</span><pre>make_bitly_url()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header">
-<i class="icon-custom icon-property"></i> Properties
-                    <ul><li class="property public inherited"><a href="#property_extension" title="$extension :: Extension Name"><span class="description"></span><pre>$extension</pre></a></li></ul>
+<i title="Properties" class="icon-custom icon-property"></i> Properties
+                    <ul><li class="property public "><a href="#property_params" title="$params() :: "><span class="description"></span><pre>$params</pre></a></li></ul>
 </li>
 </ul>
 </div>
 <div class="span8">
-<a id="\JBSMSerieslist"></a><ul class="breadcrumb">
+<a xmlns:php="http://php.net/xsl" id="\JBSMSerieslist"></a><ul xmlns:php="http://php.net/xsl" class="breadcrumb">
 <li>
-<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+<a href="../index.html"><i title="Classes" class="icon-custom icon-class"></i></a><span class="divider">\</span>
 </li>
-<li><a href="../namespaces/global.html">global</a></li>
 <li class="active">
 <span class="divider">\</span><a href="../classes/JBSMSerieslist.html">JBSMSerieslist</a>
 </li>
 </ul>
-<div class="element class">
+<div xmlns:php="http://php.net/xsl" class="element class">
 <p class="short_description">Class for Series List</p>
 <div class="details">
 <div class="long_description"></div>
@@ -141,198 +127,83 @@
 <td>8.0.0</td>
 </tr>
 <tr>
-<th>todo</th>
-<td>Still need to fix up. Lots of Unused verbals. BCC TOM</td>
+<th>inherited_from</th>
+<td>\JBSMListing</td>
 </tr>
 </table>
 <h3>
-<i class="icon-custom icon-method"></i> Methods</h3>
-<a id="method_body_only"></a><div class="element clickable method public method_body_only" data-toggle="collapse" data-target=".method_body_only .collapse">
-<h2>Only Return the Body of a html doc.</h2>
-<pre>body_only(string $html) : string</pre>
+<i title="Methods" class="icon-custom icon-method"></i> Methods</h3>
+<a id="method_createelement"></a><div class="element clickable method public method_createelement inherited" data-toggle="collapse" data-target=".method_createelement .collapse" title="public">
+<h2>Create a Element</h2>
+<pre>createelement(string $element) : string</pre>
 <div class="labels"><span class="label">Inherited</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
-<table class="table table-bordered">
-<tr>
-<th>since</th>
-<td>8.0.0</td>
-</tr>
-<tr>
-<th>inherited_from</th>
-<td>\JBSMElements::body_only()</td>
-</tr>
-<tr>
-<th>inherited_from</th>
-<td>\JBSMListing::body_only()</td>
-</tr>
-</table>
 <h3>Parameters</h3>
 <div class="subelement argument">
-<h4>$html</h4>
-<code>string</code><p>Html document</p></div>
+<h4>$element</h4>
+<code>string</code><p>Case that will chose the element</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code>string</code></div>
 </div></div>
 </div>
-<a id="method_getArticle"></a><div class="element clickable method public method_getArticle" data-toggle="collapse" data-target=".method_getArticle .collapse">
-<h2>Get Article</h2>
-<pre>getArticle(object $media, int $width, int $height, string $src) : string</pre>
-<div class="labels"><span class="label">Inherited</span></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered">
-<tr>
-<th>inherited_from</th>
-<td>\JBSMElements::getArticle()</td>
-</tr>
-<tr>
-<th>inherited_from</th>
-<td>\JBSMListing::getArticle()</td>
-</tr>
-</table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$media</h4>
-<code>object</code><p>Media</p></div>
-<div class="subelement argument">
-<h4>$width</h4>
-<code>int</code><p>Width</p></div>
-<div class="subelement argument">
-<h4>$height</h4>
-<code>int</code><p>Height</p></div>
-<div class="subelement argument">
-<h4>$src</h4>
-<code>string</code><p>URL of image</p></div>
-<h3>Returns</h3>
-<div class="subelement response"><code>string</code></div>
-</div></div>
-</div>
-<a id="method_getDocman"></a><div class="element clickable method public method_getDocman" data-toggle="collapse" data-target=".method_getDocman .collapse">
-<h2>Get Docman</h2>
-<pre>getDocman(object $media, int $width, int $height, string $src, string $duration, int $filesize) : string</pre>
-<div class="labels"><span class="label">Inherited</span></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered">
-<tr>
-<th>inherited_from</th>
-<td>\JBSMElements::getDocman()</td>
-</tr>
-<tr>
-<th>inherited_from</th>
-<td>\JBSMListing::getDocman()</td>
-</tr>
-</table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$media</h4>
-<code>object</code><p>Media</p></div>
-<div class="subelement argument">
-<h4>$width</h4>
-<code>int</code><p>Width</p></div>
-<div class="subelement argument">
-<h4>$height</h4>
-<code>int</code><p>Height</p></div>
-<div class="subelement argument">
-<h4>$src</h4>
-<code>string</code><p>Sorce of Image</p></div>
-<div class="subelement argument">
-<h4>$duration</h4>
-<code>string</code><p>Duration</p></div>
-<div class="subelement argument">
-<h4>$filesize</h4>
-<code>int</code><p>File Size of Doc</p></div>
-<h3>Returns</h3>
-<div class="subelement response"><code>string</code></div>
-</div></div>
-</div>
-<a id="method_getDuration"></a><div class="element clickable method public method_getDuration" data-toggle="collapse" data-target=".method_getDuration .collapse">
+<a id="method_getDuration"></a><div class="element clickable method public method_getDuration inherited" data-toggle="collapse" data-target=".method_getDuration .collapse" title="public">
 <h2>Get Duration</h2>
-<pre>getDuration(object $params, object $row) : null | string</pre>
+<pre>getDuration(\Joomla\Registry\Registry $params, Object $row) : null | string</pre>
 <div class="labels"><span class="label">Inherited</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
-<table class="table table-bordered">
-<tr>
-<th>inherited_from</th>
-<td>\JBSMElements::getDuration()</td>
-</tr>
-<tr>
-<th>inherited_from</th>
-<td>\JBSMListing::getDuration()</td>
-</tr>
-</table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>object</code><p>Item Params</p></div>
+<code>\Joomla\Registry\Registry</code><p>Item Params</p></div>
 <div class="subelement argument">
 <h4>$row</h4>
-<code>object</code><p>Row info</p></div>
+<code>Object</code><p>Row info</p></div>
 <h3>Returns</h3>
 <div class="subelement response">
 <code>null</code><code>string</code>
 </div>
 </div></div>
 </div>
-<a id="method_getElementid"></a><div class="element clickable method public method_getElementid" data-toggle="collapse" data-target=".method_getElementid .collapse">
-<h2>Get Elementid</h2>
-<pre>getElementid(int $rowid, \JTable $row, \JRegistry $params, \JRegistry $admin_params, int $template) : object</pre>
+<a id="method_getElement"></a><div class="element clickable method public method_getElement inherited" data-toggle="collapse" data-target=".method_getElement .collapse" title="public">
+<h2>Get Element</h2>
+<pre>getElement(String $custom, Object $row, \Joomla\Registry\Registry $params, \TableTemplate $template, String $type) : mixed | null | string</pre>
 <div class="labels"><span class="label">Inherited</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
-<table class="table table-bordered">
-<tr>
-<th>inherited_from</th>
-<td>\JBSMElements::getElementid()</td>
-</tr>
-<tr>
-<th>inherited_from</th>
-<td>\JBSMListing::getElementid()</td>
-</tr>
-</table>
 <h3>Parameters</h3>
 <div class="subelement argument">
-<h4>$rowid</h4>
-<code>int</code><p>ID</p></div>
+<h4>$custom</h4>
+<code>String</code><p>?</p></div>
 <div class="subelement argument">
 <h4>$row</h4>
-<code>\JTable</code><p>Table info</p></div>
+<code>Object</code><p>?</p></div>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>\JRegistry</code><p>Component / System Params</p>
-</div>
-<div class="subelement argument">
-<h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin Settings</p></div>
+<code>\Joomla\Registry\Registry</code><p>?</p></div>
 <div class="subelement argument">
 <h4>$template</h4>
-<code>int</code><p>Template ID</p></div>
+<code>\TableTemplate</code><p>?</p></div>
+<div class="subelement argument">
+<h4>$type</h4>
+<code>String</code><p>?</p></div>
 <h3>Returns</h3>
-<div class="subelement response"><code>object</code></div>
+<div class="subelement response">
+<code>mixed</code><code>null</code><code>string</code>
+</div>
 </div></div>
 </div>
-<a id="method_getFilepath"></a><div class="element clickable method public method_getFilepath" data-toggle="collapse" data-target=".method_getFilepath .collapse">
+<a id="method_getFilepath"></a><div class="element clickable method public method_getFilepath inherited" data-toggle="collapse" data-target=".method_getFilepath .collapse" title="public">
 <h2>Get File Path</h2>
-<pre>getFilepath(string $id3, string $idfield, string $mime) : string</pre>
+<pre>getFilepath(string $id3, string $idfield, string $mime<code> = null</code>) : string</pre>
 <div class="labels"><span class="label">Inherited</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
-<table class="table table-bordered">
-<tr>
-<th>FIXME</th>
-<td>look like the last where is not right, TOM</td>
-</tr>
-<tr>
-<th>inherited_from</th>
-<td>\JBSMElements::getFilepath()</td>
-</tr>
-<tr>
-<th>inherited_from</th>
-<td>\JBSMListing::getFilepath()</td>
-</tr>
-</table>
+<table class="table table-bordered"><tr>
+<th>deprecated</th>
+<td>8.1.3</td>
+</tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$id3</h4>
@@ -342,194 +213,240 @@
 <code>string</code><p>ID Filed</p></div>
 <div class="subelement argument">
 <h4>$mime</h4>
-<code>string</code><p>MimeType info</p></div>
+<code>string</code><p>MimeType ID</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code>string</code></div>
 </div></div>
 </div>
-<a id="method_getFilesize"></a><div class="element clickable method public method_getFilesize" data-toggle="collapse" data-target=".method_getFilesize .collapse">
-<h2>Function to get File Size</h2>
-<pre>getFilesize(string $file_size) : null | string</pre>
+<a id="method_getFluidCustom"></a><div class="element clickable method public method_getFluidCustom inherited" data-toggle="collapse" data-target=".method_getFluidCustom .collapse" title="public">
+<h2>Get Fluid Custom</h2>
+<pre>getFluidCustom(String $custom, Object $item, \Joomla\Registry\Registry $params, \TableTemplate $template, String $type) : mixed</pre>
 <div class="labels"><span class="label">Inherited</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
-<table class="table table-bordered">
-<tr>
-<th>inherited_from</th>
-<td>\JBSMElements::getFilesize()</td>
-</tr>
-<tr>
-<th>inherited_from</th>
-<td>\JBSMListing::getFilesize()</td>
-</tr>
-</table>
 <h3>Parameters</h3>
 <div class="subelement argument">
-<h4>$file_size</h4>
-<code>string</code><p>Size in bytes</p></div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>null</code><code>string</code>
-</div>
-</div></div>
-</div>
-<a id="method_getHeader"></a><div class="element clickable method public method_getHeader" data-toggle="collapse" data-target=".method_getHeader .collapse">
-<h2>Get Header</h2>
-<pre>getHeader(object $row, \JRegistry $params, \JRegistry $admin_params, int $template, int $showheader, int $ismodule) : string</pre>
-<div class="labels"><span class="label">Inherited</span></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>inherited_from</th>
-<td>\JBSMListing::getHeader()</td>
-</tr></table>
-<h3>Parameters</h3>
+<h4>$custom</h4>
+<code>String</code><p>?</p></div>
 <div class="subelement argument">
-<h4>$row</h4>
-<code>object</code><p>JTable</p></div>
+<h4>$item</h4>
+<code>Object</code><p>?</p></div>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>\JRegistry</code><p>Item Params</p></div>
-<div class="subelement argument">
-<h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin Params</p></div>
+<code>\Joomla\Registry\Registry</code><p>?</p></div>
 <div class="subelement argument">
 <h4>$template</h4>
-<code>int</code><p>Template ID</p></div>
+<code>\TableTemplate</code><p>?</p></div>
 <div class="subelement argument">
-<h4>$showheader</h4>
-<code>int</code><p>Show Hide item</p></div>
-<div class="subelement argument">
-<h4>$ismodule</h4>
-<code>int</code><p>?</p>
+<h4>$type</h4>
+<code>String</code><p>?</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>mixed</code></div>
+</div></div>
 </div>
+<a id="method_getFluidData"></a><div class="element clickable method public method_getFluidData inherited" data-toggle="collapse" data-target=".method_getFluidData .collapse" title="public">
+<h2>Get Fluid Date</h2>
+<pre>getFluidData(Object $item, Object $row, \Joomla\Registry\Registry $params, \TableTemplate $template, string $header, string $type) : string</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$item</h4>
+<code>Object</code><p>?</p></div>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>Object</code><p>?</p></div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>\Joomla\Registry\Registry</code><p>?</p></div>
+<div class="subelement argument">
+<h4>$template</h4>
+<code>\TableTemplate</code><p>?</p></div>
+<div class="subelement argument">
+<h4>$header</h4>
+<code>string</code><p>?</p></div>
+<div class="subelement argument">
+<h4>$type</h4>
+<code>string</code><p>?</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code>string</code></div>
 </div></div>
 </div>
-<a id="method_getListing"></a><div class="element clickable method public method_getListing" data-toggle="collapse" data-target=".method_getListing .collapse">
-<h2>Get listing</h2>
-<pre>getListing(object $row, \JRegistry $params, string $oddeven, object $admin_params, int $template, string $ismodule) : string</pre>
+<a id="method_getFluidListing"></a><div class="element clickable method public method_getFluidListing inherited" data-toggle="collapse" data-target=".method_getFluidListing .collapse" title="public">
+<h2>Get Fluid Listing</h2>
+<pre>getFluidListing(Object $items, \Joomla\Registry\Registry $params, \TableTemplate $template, String $type) : string</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$items</h4>
+<code>Object</code><p>Items</p></div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>\Joomla\Registry\Registry</code><p>Page Params</p></div>
+<div class="subelement argument">
+<h4>$template</h4>
+<code>\TableTemplate</code><p>Template name</p></div>
+<div class="subelement argument">
+<h4>$type</h4>
+<code>String</code><p>Type of Listing</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_getFluidMediaFiles"></a><div class="element clickable method public method_getFluidMediaFiles inherited" data-toggle="collapse" data-target=".method_getFluidMediaFiles .collapse" title="public">
+<h2>Get Fluid Media Files</h2>
+<pre>getFluidMediaFiles(Object $item, \Joomla\Registry\Registry $params, \TableTemplate $template) : string</pre>
 <div class="labels"><span class="label">Inherited</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
-<th>inherited_from</th>
-<td>\JBSMListing::getListing()</td>
+<th>since</th>
+<td>9.0.0</td>
 </tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
-<h4>$row</h4>
-<code>object</code><p>Item Info</p></div>
+<h4>$item</h4>
+<code>Object</code><p>?</p></div>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>\JRegistry</code><p>Item Params</p></div>
+<code>\Joomla\Registry\Registry</code><p>?</p></div>
+<div class="subelement argument">
+<h4>$template</h4>
+<code>\TableTemplate</code><p>?</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_getFluidMediaids"></a><div class="element clickable method public method_getFluidMediaids inherited" data-toggle="collapse" data-target=".method_getFluidMediaids .collapse" title="public">
+<h2>Get Fluid Media Id's</h2>
+<pre>getFluidMediaids(Object $item) : array</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$item</h4>
+<code>Object</code><p>Items info</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>array</code></div>
+</div></div>
+</div>
+<a id="method_getFluidRow"></a><div class="element clickable method public method_getFluidRow inherited" data-toggle="collapse" data-target=".method_getFluidRow .collapse" title="public">
+<h2>Get Fluid Row</h2>
+<pre>getFluidRow(array $listrows, array $listsorts, Object $item, \Joomla\Registry\Registry $params, \TableTemplate $template, string $oddeven, string $header, string $type) : string</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$listrows</h4>
+<code>array</code><p>?</p></div>
+<div class="subelement argument">
+<h4>$listsorts</h4>
+<code>array</code><p>?</p></div>
+<div class="subelement argument">
+<h4>$item</h4>
+<code>Object</code><p>?</p></div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>\Joomla\Registry\Registry</code><p>Item Params</p></div>
+<div class="subelement argument">
+<h4>$template</h4>
+<code>\TableTemplate</code><p>Template info</p></div>
 <div class="subelement argument">
 <h4>$oddeven</h4>
-<code>string</code><p>?Number patten?</p>
-</div>
+<code>string</code><p>?</p></div>
 <div class="subelement argument">
-<h4>$admin_params</h4>
-<code>object</code><p>Admin info</p></div>
+<h4>$header</h4>
+<code>string</code><p>?</p></div>
 <div class="subelement argument">
-<h4>$template</h4>
-<code>int</code><p>Template ID</p></div>
-<div class="subelement argument">
-<h4>$ismodule</h4>
-<code>string</code><p>If coming form a Module</p></div>
+<h4>$type</h4>
+<code>string</code><p>?</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code>string</code></div>
 </div></div>
 </div>
-<a id="method_getListingExp"></a><div class="element clickable method public method_getListingExp" data-toggle="collapse" data-target=".method_getListingExp .collapse">
-<h2>Get Listing Exp</h2>
-<pre>getListingExp(object $row, \JRegistry $params, \JRegistry $admin_params, object $template) : object</pre>
+<a id="method_getListParamsArray"></a><div class="element clickable method public method_getListParamsArray inherited" data-toggle="collapse" data-target=".method_getListParamsArray .collapse" title="public">
+<h2>Get list Params Array</h2>
+<pre>getListParamsArray(string $paramtext) : \stdClass</pre>
 <div class="labels"><span class="label">Inherited</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>inherited_from</th>
-<td>\JBSMListing::getListingExp()</td>
-</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$paramtext</h4>
+<code>string</code><p>Param Text</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>\stdClass</code></div>
+</div></div>
+</div>
+<a id="method_getListingExp"></a><div class="element clickable method public method_getListingExp inherited" data-toggle="collapse" data-target=".method_getListingExp .collapse" title="public">
+<h2>Get Listing Exp</h2>
+<pre>getListingExp(object $row, \Joomla\Registry\Registry $params, \TableTemplate $template) : object</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$row</h4>
 <code>object</code><p>Item Info</p></div>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>\JRegistry</code><p>Item Params</p></div>
-<div class="subelement argument">
-<h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin Params</p></div>
+<code>\Joomla\Registry\Registry</code><p>Item Params</p></div>
 <div class="subelement argument">
 <h4>$template</h4>
-<code>object</code><p>Template</p></div>
+<code>\TableTemplate</code><p>Template</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code>object</code></div>
 </div></div>
 </div>
-<a id="method_getMediaRows"></a><div class="element clickable method public method_getMediaRows" data-toggle="collapse" data-target=".method_getMediaRows .collapse">
-<h2>Get MediaRows</h2>
-<pre>getMediaRows(int $study_id) : object</pre>
+<a id="method_getMediaFiles"></a><div class="element clickable method public method_getMediaFiles inherited" data-toggle="collapse" data-target=".method_getMediaFiles .collapse" title="public">
+<h2>Get Media Files</h2>
+<pre>getMediaFiles(array $medias) : mixed</pre>
 <div class="labels"><span class="label">Inherited</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
-<table class="table table-bordered">
-<tr>
-<th>inherited_from</th>
-<td>\JBSMElements::getMediaRows()</td>
-</tr>
-<tr>
-<th>inherited_from</th>
-<td>\JBSMListing::getMediaRows()</td>
-</tr>
-</table>
 <h3>Parameters</h3>
 <div class="subelement argument">
-<h4>$study_id</h4>
-<code>int</code><p>ID</p></div>
+<h4>$medias</h4>
+<code>array</code><p>Media files</p></div>
 <h3>Returns</h3>
-<div class="subelement response"><code>object</code></div>
+<div class="subelement response"><code>mixed</code></div>
 </div></div>
 </div>
-<a id="method_getOtherlinks"></a><div class="element clickable method public method_getOtherlinks" data-toggle="collapse" data-target=".method_getOtherlinks .collapse">
+<a id="method_getOtherlinks"></a><div class="element clickable method public method_getOtherlinks inherited" data-toggle="collapse" data-target=".method_getOtherlinks .collapse" title="public">
 <h2>Get Other Links</h2>
-<pre>getOtherlinks(int $id3, string $islink, object $params) : string</pre>
+<pre>getOtherlinks(integer $id3, string $islink, \Joomla\Registry\Registry $params) : string</pre>
 <div class="labels"><span class="label">Inherited</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>inherited_from</th>
-<td>\JBSMListing::getOtherlinks()</td>
-</tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$id3</h4>
-<code>int</code><p>Study ID ID</p></div>
+<code>integer</code><p>Study ID ID</p></div>
 <div class="subelement argument">
 <h4>$islink</h4>
 <code>string</code><p>Is a Link</p></div>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>object</code><p>Item Params</p></div>
+<code>\Joomla\Registry\Registry</code><p>Item Params</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code>string</code></div>
 </div></div>
 </div>
-<a id="method_getPassage"></a><div class="element clickable method public method_getPassage" data-toggle="collapse" data-target=".method_getPassage .collapse">
+<a id="method_getPassage"></a><div class="element clickable method public method_getPassage inherited" data-toggle="collapse" data-target=".method_getPassage .collapse" title="public">
 <h2>Get Passage</h2>
-<pre>getPassage(object $params, object $row) : string</pre>
+<pre>getPassage(\Joomla\Registry\Registry $params, object $row) : string</pre>
 <div class="labels"><span class="label">Inherited</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>inherited_from</th>
-<td>\JBSMListing::getPassage()</td>
-</tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>object</code><p>Item Params</p></div>
+<code>\Joomla\Registry\Registry</code><p>Item Params</p></div>
 <div class="subelement argument">
 <h4>$row</h4>
 <code>object</code><p>Item Info</p></div>
@@ -537,22 +454,12 @@
 <div class="subelement response"><code>string</code></div>
 </div></div>
 </div>
-<a id="method_getScripture"></a><div class="element clickable method public method_getScripture" data-toggle="collapse" data-target=".method_getScripture .collapse">
+<a id="method_getScripture"></a><div class="element clickable method public method_getScripture inherited" data-toggle="collapse" data-target=".method_getScripture .collapse" title="public">
 <h2>Get Scripture</h2>
 <pre>getScripture(object $params, object $row, string $esv, string $scripturerow) : string</pre>
 <div class="labels"><span class="label">Inherited</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
-<table class="table table-bordered">
-<tr>
-<th>inherited_from</th>
-<td>\JBSMElements::getScripture()</td>
-</tr>
-<tr>
-<th>inherited_from</th>
-<td>\JBSMListing::getScripture()</td>
-</tr>
-</table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$params</h4>
@@ -570,9 +477,9 @@
 <div class="subelement response"><code>string</code></div>
 </div></div>
 </div>
-<a id="method_getSeriesDetailsExp"></a><div class="element clickable method public method_getSeriesDetailsExp" data-toggle="collapse" data-target=".method_getSeriesDetailsExp .collapse">
+<a id="method_getSeriesDetailsExp"></a><div class="element clickable method public method_getSeriesDetailsExp " data-toggle="collapse" data-target=".method_getSeriesDetailsExp .collapse" title="public">
 <h2>Get Series Details EXP</h2>
-<pre>getSeriesDetailsExp(object $row, \JRegistry $params, \JRegistry $admin_params, object $template) : object</pre>
+<pre>getSeriesDetailsExp(object $row, \Joomla\Registry\Registry $params, object $template) : object</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -582,10 +489,7 @@
 <code>object</code><p>JTable</p></div>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>\JRegistry</code><p>Item Params</p></div>
-<div class="subelement argument">
-<h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin Params</p></div>
+<code>\Joomla\Registry\Registry</code><p>Item Params</p></div>
 <div class="subelement argument">
 <h4>$template</h4>
 <code>object</code><p>Template</p></div>
@@ -593,85 +497,9 @@
 <div class="subelement response"><code>object</code></div>
 </div></div>
 </div>
-<a id="method_getSeriesFooter"></a><div class="element clickable method public method_getSeriesFooter" data-toggle="collapse" data-target=".method_getSeriesFooter .collapse">
-<h2>Get Series Footer</h2>
-<pre>getSeriesFooter(object $template, int $id) : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>deprecated</th>
-<td>since version 7.1.0</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$template</h4>
-<code>object</code><p>Template</p></div>
-<div class="subelement argument">
-<h4>$id</h4>
-<code>int</code><p>ID</p></div>
-<h3>Returns</h3>
-<div class="subelement response"><code>string</code></div>
-</div></div>
-</div>
-<a id="method_getSerieslink"></a><div class="element clickable method public method_getSerieslink" data-toggle="collapse" data-target=".method_getSerieslink .collapse">
-<h2>Get SeriesLink</h2>
-<pre>getSerieslink(string $islink, object $row, string $element, \JRegistry $params, \JRegistry $admin_params) : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$islink</h4>
-<code>string</code><p>Is a link</p></div>
-<div class="subelement argument">
-<h4>$row</h4>
-<code>object</code><p>Row Info</p></div>
-<div class="subelement argument">
-<h4>$element</h4>
-<code>string</code><p>Element</p></div>
-<div class="subelement argument">
-<h4>$params</h4>
-<code>\JRegistry</code><p>Item Params</p></div>
-<div class="subelement argument">
-<h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin Params</p></div>
-<h3>Returns</h3>
-<div class="subelement response"><code>string</code></div>
-</div></div>
-</div>
-<a id="method_getSerieslist"></a><div class="element clickable method public method_getSerieslist" data-toggle="collapse" data-target=".method_getSerieslist .collapse">
-<h2>Get SeriesList</h2>
-<pre>getSerieslist(object $row, \JRegistry $params, string $oddeven, \JRegistry $admin_params, object $template, string $view) : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$row</h4>
-<code>object</code><p>JTable</p></div>
-<div class="subelement argument">
-<h4>$params</h4>
-<code>\JRegistry</code><p>Item Params</p></div>
-<div class="subelement argument">
-<h4>$oddeven</h4>
-<code>string</code><p>Odd Even</p></div>
-<div class="subelement argument">
-<h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin Params</p></div>
-<div class="subelement argument">
-<h4>$template</h4>
-<code>object</code><p>Template</p></div>
-<div class="subelement argument">
-<h4>$view</h4>
-<code>string</code><p>View</p></div>
-<h3>Returns</h3>
-<div class="subelement response"><code>string</code></div>
-</div></div>
-</div>
-<a id="method_getSerieslistExp"></a><div class="element clickable method public method_getSerieslistExp" data-toggle="collapse" data-target=".method_getSerieslistExp .collapse">
+<a id="method_getSerieslistExp"></a><div class="element clickable method public method_getSerieslistExp " data-toggle="collapse" data-target=".method_getSerieslistExp .collapse" title="public">
 <h2>Get Serieslist Exp</h2>
-<pre>getSerieslistExp(object $row, \JRegistry $params, \JRegistry $admin_params, object $template) : object</pre>
+<pre>getSerieslistExp(object $row, \Joomla\Registry\Registry $params, object $template) : object</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -681,10 +509,7 @@
 <code>object</code><p>JTable</p></div>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>\JRegistry</code><p>Item Params</p></div>
-<div class="subelement argument">
-<h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin Params</p></div>
+<code>\Joomla\Registry\Registry</code><p>Item Params</p></div>
 <div class="subelement argument">
 <h4>$template</h4>
 <code>object</code><p>Template</p></div>
@@ -692,42 +517,19 @@
 <div class="subelement response"><code>object</code></div>
 </div></div>
 </div>
-<a id="method_getSeriesstudies"></a><div class="element clickable method public method_getSeriesstudies" data-toggle="collapse" data-target=".method_getSeriesstudies .collapse">
-<h2>Get SeriesStudies</h2>
-<pre>getSeriesstudies(int $id, \JRegistry $params, \JRegistry $admin_params, int $template) : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$id</h4>
-<code>int</code><p>ID</p></div>
-<div class="subelement argument">
-<h4>$params</h4>
-<code>\JRegistry</code><p>Item Params</p></div>
-<div class="subelement argument">
-<h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin Params</p></div>
-<div class="subelement argument">
-<h4>$template</h4>
-<code>int</code><p>Template ID</p></div>
-<h3>Returns</h3>
-<div class="subelement response"><code>string</code></div>
-</div></div>
-</div>
-<a id="method_getSeriesstudiesDBO"></a><div class="element clickable method public method_getSeriesstudiesDBO" data-toggle="collapse" data-target=".method_getSeriesstudiesDBO .collapse">
+<a id="method_getSeriesstudiesDBO"></a><div class="element clickable method public method_getSeriesstudiesDBO " data-toggle="collapse" data-target=".method_getSeriesstudiesDBO .collapse" title="public">
 <h2>Get SeriesStudies DBO</h2>
-<pre>getSeriesstudiesDBO(int $id, \JRegistry $params, string $limit) : array</pre>
+<pre>getSeriesstudiesDBO(integer $id, \Joomla\Registry\Registry $params, string $limit<code> = null</code>) : array</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$id</h4>
-<code>int</code><p>ID</p></div>
+<code>integer</code><p>ID</p></div>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>\JRegistry</code><p>Item Params</p></div>
+<code>\Joomla\Registry\Registry</code><p>Item Params</p></div>
 <div class="subelement argument">
 <h4>$limit</h4>
 <code>string</code><p>Limit of Records</p></div>
@@ -735,22 +537,19 @@
 <div class="subelement response"><code>array</code></div>
 </div></div>
 </div>
-<a id="method_getSeriesstudiesExp"></a><div class="element clickable method public method_getSeriesstudiesExp" data-toggle="collapse" data-target=".method_getSeriesstudiesExp .collapse">
+<a id="method_getSeriesstudiesExp"></a><div class="element clickable method public method_getSeriesstudiesExp " data-toggle="collapse" data-target=".method_getSeriesstudiesExp .collapse" title="public">
 <h2>Get Series Studies Exp</h2>
-<pre>getSeriesstudiesExp(int $id, \JRegistry $params, \JRegistry $admin_params, object $template) : string</pre>
+<pre>getSeriesstudiesExp(integer $id, \Joomla\Registry\Registry $params, object $template) : string</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$id</h4>
-<code>int</code><p>ID</p></div>
+<code>integer</code><p>ID</p></div>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>\JRegistry</code><p>Item Params</p></div>
-<div class="subelement argument">
-<h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin Params</p></div>
+<code>\Joomla\Registry\Registry</code><p>Item Params</p></div>
 <div class="subelement argument">
 <h4>$template</h4>
 <code>object</code><p>Template</p></div>
@@ -758,16 +557,12 @@
 <div class="subelement response"><code>string</code></div>
 </div></div>
 </div>
-<a id="method_getShare"></a><div class="element clickable method public method_getShare" data-toggle="collapse" data-target=".method_getShare .collapse">
+<a id="method_getShare"></a><div class="element clickable method public method_getShare inherited" data-toggle="collapse" data-target=".method_getShare .collapse" title="public">
 <h2>Share Helper file</h2>
-<pre>getShare(string $link, object $row, \JRegistry $params, \JRegistry $admin_params) : null | string</pre>
+<pre>getShare(string $link, object $row, \Joomla\Registry\Registry $params) : null | string</pre>
 <div class="labels"><span class="label">Inherited</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>inherited_from</th>
-<td>\JBSMListing::getShare()</td>
-</tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$link</h4>
@@ -777,202 +572,23 @@
 <code>object</code><p>Item Info</p></div>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>\JRegistry</code><p>Item Params</p></div>
-<div class="subelement argument">
-<h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin Params</p></div>
+<code>\Joomla\Registry\Registry</code><p>Item Params</p></div>
 <h3>Returns</h3>
 <div class="subelement response">
-<code>null</code><code>string</code>FIXME Look like this is missing the $template var</div>
+<code>null</code><code>string</code>
+</div>
 </div></div>
 </div>
-<a id="method_getStudieslink"></a><div class="element clickable method public method_getStudieslink" data-toggle="collapse" data-target=".method_getStudieslink .collapse">
-<h2>Get StudiesLink</h2>
-<pre>getStudieslink(string $islink, object $row, object $element, \JRegistry $params, \JRegistry $admin_params) : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$islink</h4>
-<code>string</code><p>Is a Link</p></div>
-<div class="subelement argument">
-<h4>$row</h4>
-<code>object</code><p>JTable</p></div>
-<div class="subelement argument">
-<h4>$element</h4>
-<code>object</code><p>Element</p></div>
-<div class="subelement argument">
-<h4>$params</h4>
-<code>\JRegistry</code><p>Item Params</p></div>
-<div class="subelement argument">
-<h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin Params</p></div>
-<h3>Returns</h3>
-<div class="subelement response"><code>string</code></div>
-</div></div>
-</div>
-<a id="method_getStudyExp"></a><div class="element clickable method public method_getStudyExp" data-toggle="collapse" data-target=".method_getStudyExp .collapse">
-<h2>Get Study Exp</h2>
-<pre>getStudyExp(object $row, \JRegistry $params, \JRegistry $admin_params, object $template) : object</pre>
-<div class="labels"><span class="label">Inherited</span></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>inherited_from</th>
-<td>\JBSMListing::getStudyExp()</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$row</h4>
-<code>object</code><p>Item Info</p></div>
-<div class="subelement argument">
-<h4>$params</h4>
-<code>\JRegistry</code><p>Item Params</p></div>
-<div class="subelement argument">
-<h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin Params</p></div>
-<div class="subelement argument">
-<h4>$template</h4>
-<code>object</code><p>Template</p></div>
-<h3>Returns</h3>
-<div class="subelement response"><code>object</code></div>
-</div></div>
-</div>
-<a id="method_getTextlink"></a><div class="element clickable method public method_getTextlink" data-toggle="collapse" data-target=".method_getTextlink .collapse">
-<h2>Get Textlink</h2>
-<pre>getTextlink(\JRegistry $params, object $row, string $textorpdf, \JRegistry $admin_params, int $template) : string</pre>
-<div class="labels"><span class="label">Inherited</span></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered">
-<tr>
-<th>inherited_from</th>
-<td>\JBSMElements::getTextlink()</td>
-</tr>
-<tr>
-<th>inherited_from</th>
-<td>\JBSMListing::getTextlink()</td>
-</tr>
-</table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$params</h4>
-<code>\JRegistry</code><p>Item Params</p></div>
-<div class="subelement argument">
-<h4>$row</h4>
-<code>object</code><p>JTable</p></div>
-<div class="subelement argument">
-<h4>$textorpdf</h4>
-<code>string</code><p>Text Or PDF location</p></div>
-<div class="subelement argument">
-<h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin info</p></div>
-<div class="subelement argument">
-<h4>$template</h4>
-<code>int</code><p>Template ID</p></div>
-<h3>Returns</h3>
-<div class="subelement response"><code>string</code></div>
-</div></div>
-</div>
-<a id="method_getTitle"></a><div class="element clickable method public method_getTitle" data-toggle="collapse" data-target=".method_getTitle .collapse">
-<h2>Get Title</h2>
-<pre>getTitle(\JRegistry $params, object $row, \JRegistry $admin_params, int $template) : string</pre>
-<div class="labels"><span class="label">Inherited</span></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>inherited_from</th>
-<td>\JBSMListing::getTitle()</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$params</h4>
-<code>\JRegistry</code><p>System Params</p></div>
-<div class="subelement argument">
-<h4>$row</h4>
-<code>object</code><p>Item info</p></div>
-<div class="subelement argument">
-<h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin Params</p></div>
-<div class="subelement argument">
-<h4>$template</h4>
-<code>int</code><p>Template</p></div>
-<h3>Returns</h3>
-<div class="subelement response"><code>string</code></div>
-</div></div>
-</div>
-<a id="method_getVirtuemart"></a><div class="element clickable method public method_getVirtuemart" data-toggle="collapse" data-target=".method_getVirtuemart .collapse">
-<h2>Get Virtuart</h2>
-<pre>getVirtuemart(object $media, int $width, int $height, string $src, object $params) : string</pre>
-<div class="labels"><span class="label">Inherited</span></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered">
-<tr>
-<th>inherited_from</th>
-<td>\JBSMElements::getVirtuemart()</td>
-</tr>
-<tr>
-<th>inherited_from</th>
-<td>\JBSMListing::getVirtuemart()</td>
-</tr>
-</table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$media</h4>
-<code>object</code><p>Media info</p></div>
-<div class="subelement argument">
-<h4>$width</h4>
-<code>int</code><p>Width</p></div>
-<div class="subelement argument">
-<h4>$height</h4>
-<code>int</code><p>Height</p></div>
-<div class="subelement argument">
-<h4>$src</h4>
-<code>string</code><p>Source</p></div>
-<div class="subelement argument">
-<h4>$params</h4>
-<code>object</code><p>Item Params</p></div>
-<h3>Returns</h3>
-<div class="subelement response"><code>string</code></div>
-</div></div>
-</div>
-<a id="method_getseriesElementnumber"></a><div class="element clickable method public method_getseriesElementnumber" data-toggle="collapse" data-target=".method_getseriesElementnumber .collapse">
-<h2>Get Series ElementNumber</h2>
-<pre>getseriesElementnumber(string $subcustom) : int</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$subcustom</h4>
-<code>string</code><p>?</p>
-</div>
-<h3>Returns</h3>
-<div class="subelement response"><code>int</code></div>
-</div></div>
-</div>
-<a id="method_getstudyDate"></a><div class="element clickable method public method_getstudyDate" data-toggle="collapse" data-target=".method_getstudyDate .collapse">
+<a id="method_getStudyDate"></a><div class="element clickable method public method_getStudyDate inherited" data-toggle="collapse" data-target=".method_getStudyDate .collapse" title="public">
 <h2>Get StudyDate</h2>
-<pre>getstudyDate(object $params, string $studydate) : string</pre>
+<pre>getStudyDate(\Joomla\Registry\Registry $params, string $studydate) : string</pre>
 <div class="labels"><span class="label">Inherited</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
-<table class="table table-bordered">
-<tr>
-<th>inherited_from</th>
-<td>\JBSMElements::getstudyDate()</td>
-</tr>
-<tr>
-<th>inherited_from</th>
-<td>\JBSMListing::getstudyDate()</td>
-</tr>
-</table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$params</h4>
-<code>object</code><p>Item Params</p></div>
+<code>\Joomla\Registry\Registry</code><p>Item Params</p></div>
 <div class="subelement argument">
 <h4>$studydate</h4>
 <code>string</code><p>Study Date</p></div>
@@ -980,290 +596,125 @@
 <div class="subelement response"><code>string</code></div>
 </div></div>
 </div>
-<a id="method_seriesGetcustom"></a><div class="element clickable method public method_seriesGetcustom" data-toggle="collapse" data-target=".method_seriesGetcustom .collapse">
-<h2>Series Get Custom</h2>
-<pre>seriesGetcustom(string $r, object $row, object $customelement, string $custom, string $islink, \JRegistry $admin_params, \JRegistry $params) : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$r</h4>
-<code>string</code><p>?</p>
-</div>
-<div class="subelement argument">
-<h4>$row</h4>
-<code>object</code><p>JTable</p></div>
-<div class="subelement argument">
-<h4>$customelement</h4>
-<code>object</code><p>?</p>
-</div>
-<div class="subelement argument">
-<h4>$custom</h4>
-<code>string</code><p>?</p>
-</div>
-<div class="subelement argument">
-<h4>$islink</h4>
-<code>string</code><p>Is a Link</p></div>
-<div class="subelement argument">
-<h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin Params</p></div>
-<div class="subelement argument">
-<h4>$params</h4>
-<code>\JRegistry</code><p>Item Params</p></div>
-<h3>Returns</h3>
-<div class="subelement response"><code>string</code></div>
-</div></div>
-</div>
-<a id="method_seriesGetelement"></a><div class="element clickable method public method_seriesGetelement" data-toggle="collapse" data-target=".method_seriesGetelement .collapse">
-<h2>Series Get Element</h2>
-<pre>seriesGetelement(string $r, object $row, int $listelementid, string $custom, string $islink, \JRegistry $admin_params, \JRegistry $params, string $view) : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$r</h4>
-<code>string</code><p>?</p>
-</div>
-<div class="subelement argument">
-<h4>$row</h4>
-<code>object</code><p>JTable</p></div>
-<div class="subelement argument">
-<h4>$listelementid</h4>
-<code>int</code><p>Elemint ID</p></div>
-<div class="subelement argument">
-<h4>$custom</h4>
-<code>string</code><p>Costum</p></div>
-<div class="subelement argument">
-<h4>$islink</h4>
-<code>string</code><p>Is a Link</p></div>
-<div class="subelement argument">
-<h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin Params</p></div>
-<div class="subelement argument">
-<h4>$params</h4>
-<code>\JRegistry</code><p>Item Params</p></div>
-<div class="subelement argument">
-<h4>$view</h4>
-<code>string</code><p>View</p></div>
-<h3>Returns</h3>
-<div class="subelement response"><code>string</code></div>
-</div></div>
-</div>
-<a id="method_getCell"></a><div class="element clickable method private method_getCell" data-toggle="collapse" data-target=".method_getCell .collapse">
-<h2>Get Cell</h2>
-<pre>getCell(int $elementid, string $element, int $rowcolid, string $colspan, string $rowspan, string $lastcol, string $islink, string $id3, int $tid, string $smenu, string $tmenu, string $entry_access, string $allow_entry, \JRegistry $params, \JRegistry $admin_params, object $row, int $template) : string</pre>
+<a id="method_getStudyExp"></a><div class="element clickable method public method_getStudyExp inherited" data-toggle="collapse" data-target=".method_getStudyExp .collapse" title="public">
+<h2>Get Study Exp</h2>
+<pre>getStudyExp(object $row, \Joomla\Registry\Registry $params) : object</pre>
 <div class="labels"><span class="label">Inherited</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
-<th>inherited_from</th>
-<td>\JBSMListing::getCell()</td>
+<th>deprecated</th>
+<td>9.0.0</td>
 </tr></table>
 <h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$elementid</h4>
-<code>int</code><p>Element ID</p></div>
-<div class="subelement argument">
-<h4>$element</h4>
-<code>string</code><p>Element</p></div>
-<div class="subelement argument">
-<h4>$rowcolid</h4>
-<code>int</code><p>Row Column ID</p></div>
-<div class="subelement argument">
-<h4>$colspan</h4>
-<code>string</code><p>Column Span</p></div>
-<div class="subelement argument">
-<h4>$rowspan</h4>
-<code>string</code><p>Row Span</p></div>
-<div class="subelement argument">
-<h4>$lastcol</h4>
-<code>string</code><p>Last Column</p></div>
-<div class="subelement argument">
-<h4>$islink</h4>
-<code>string</code><p>is a Link</p></div>
-<div class="subelement argument">
-<h4>$id3</h4>
-<code>string</code><p>ID3</p></div>
-<div class="subelement argument">
-<h4>$tid</h4>
-<code>int</code><p>Template ID</p></div>
-<div class="subelement argument">
-<h4>$smenu</h4>
-<code>string</code><p>Sermon Menu</p></div>
-<div class="subelement argument">
-<h4>$tmenu</h4>
-<code>string</code><p>Template Menu</p></div>
-<div class="subelement argument">
-<h4>$entry_access</h4>
-<code>string</code><p>Access Entry</p></div>
-<div class="subelement argument">
-<h4>$allow_entry</h4>
-<code>string</code><p>Allow Entry</p></div>
-<div class="subelement argument">
-<h4>$params</h4>
-<code>\JRegistry</code><p>Itom Params</p></div>
-<div class="subelement argument">
-<h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin Params</p></div>
-<div class="subelement argument">
-<h4>$row</h4>
-<code>object</code><p>Row info</p></div>
-<div class="subelement argument">
-<h4>$template</h4>
-<code>int</code><p>Template ID</p></div>
-<h3>Returns</h3>
-<div class="subelement response"><code>string</code></div>
-</div></div>
-</div>
-<a id="method_getCustomhead"></a><div class="element clickable method private method_getCustomhead" data-toggle="collapse" data-target=".method_getCustomhead .collapse">
-<h2>Get CustomHead</h2>
-<pre>getCustomhead(int $rowcolid, \JRegistry $params) : string</pre>
-<div class="labels"><span class="label">Inherited</span></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>inherited_from</th>
-<td>\JBSMListing::getCustomhead()</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$rowcolid</h4>
-<code>int</code><p>Row ID Column</p></div>
-<div class="subelement argument">
-<h4>$params</h4>
-<code>\JRegistry</code><p>Item Params</p></div>
-<h3>Returns</h3>
-<div class="subelement response"><code>string</code></div>
-</div></div>
-</div>
-<a id="method_getHeadercell"></a><div class="element clickable method private method_getHeadercell" data-toggle="collapse" data-target=".method_getHeadercell .collapse">
-<h2>Get Header Cell</h2>
-<pre>getHeadercell(int $rowid, object $row, \JRegistry $params, int $lastcol, int $colspan, int $rowspan, int $rowcolid, string $nh, \JRegistry $admin_params, int $template) : string</pre>
-<div class="labels"><span class="label">Inherited</span></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>inherited_from</th>
-<td>\JBSMListing::getHeadercell()</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$rowid</h4>
-<code>int</code><p>Table Row ID</p></div>
-<div class="subelement argument">
-<h4>$row</h4>
-<code>object</code><p>Item info</p></div>
-<div class="subelement argument">
-<h4>$params</h4>
-<code>\JRegistry</code><p>Item Params</p></div>
-<div class="subelement argument">
-<h4>$lastcol</h4>
-<code>int</code><p>Last Column</p></div>
-<div class="subelement argument">
-<h4>$colspan</h4>
-<code>int</code><p>Column Span</p></div>
-<div class="subelement argument">
-<h4>$rowspan</h4>
-<code>int</code><p>Row Span</p></div>
-<div class="subelement argument">
-<h4>$rowcolid</h4>
-<code>int</code><p>RowCol Id</p></div>
-<div class="subelement argument">
-<h4>$nh</h4>
-<code>string</code><p>?</p>
-</div>
-<div class="subelement argument">
-<h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin Params</p></div>
-<div class="subelement argument">
-<h4>$template</h4>
-<code>int</code><p>Template ID</p></div>
-<h3>Returns</h3>
-<div class="subelement response"><code>string</code></div>
-</div></div>
-</div>
-<a id="method_getLink"></a><div class="element clickable method private method_getLink" data-toggle="collapse" data-target=".method_getLink .collapse">
-<h2>Get Link</h2>
-<pre>getLink(string $islink, string $id3, int $tid, string $smenu, string $tmenu, \JRegistry $params, \JRegistry $admin_params, object $row, int $template) : string</pre>
-<div class="labels"><span class="label">Inherited</span></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>inherited_from</th>
-<td>\JBSMListing::getLink()</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$islink</h4>
-<code>string</code><p>IS A Link</p></div>
-<div class="subelement argument">
-<h4>$id3</h4>
-<code>string</code><p>ID3</p></div>
-<div class="subelement argument">
-<h4>$tid</h4>
-<code>int</code><p>Template Id</p></div>
-<div class="subelement argument">
-<h4>$smenu</h4>
-<code>string</code><p>Sermon Menu</p></div>
-<div class="subelement argument">
-<h4>$tmenu</h4>
-<code>string</code><p>Teacher Menu</p></div>
-<div class="subelement argument">
-<h4>$params</h4>
-<code>\JRegistry</code><p>Item Params</p></div>
-<div class="subelement argument">
-<h4>$admin_params</h4>
-<code>\JRegistry</code><p>Admin Params</p></div>
 <div class="subelement argument">
 <h4>$row</h4>
 <code>object</code><p>Item Info</p></div>
 <div class="subelement argument">
-<h4>$template</h4>
-<code>int</code><p>Template</p></div>
+<h4>$params</h4>
+<code>\Joomla\Registry\Registry</code><p>Item Params</p></div>
 <h3>Returns</h3>
-<div class="subelement response"><code>string</code></div>
+<div class="subelement response"><code>object</code></div>
 </div></div>
 </div>
-<a id="method_getStore"></a><div class="element clickable method private method_getStore" data-toggle="collapse" data-target=".method_getStore .collapse">
-<h2>Get Store</h2>
-<pre>getStore(object $params, object $row) : string</pre>
+<a id="method_getseriesElementnumber"></a><div class="element clickable method public method_getseriesElementnumber " data-toggle="collapse" data-target=".method_getseriesElementnumber .collapse" title="public">
+<h2>Get Series ElementNumber</h2>
+<pre>getseriesElementnumber(string $subcustom) : integer</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$subcustom</h4>
+<code>string</code><p>?</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>integer</code></div>
+</div></div>
+</div>
+<a id="method_sortArrayofObjectByProperty"></a><div class="element clickable method public method_sortArrayofObjectByProperty inherited" data-toggle="collapse" data-target=".method_sortArrayofObjectByProperty .collapse" title="public">
+<h2>Sort Array of Object by Property</h2>
+<pre>sortArrayofObjectByProperty(array $array, string $property, string $order<code> = "ASC"</code>) : array</pre>
 <div class="labels"><span class="label">Inherited</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
-<table class="table table-bordered">
-<tr>
-<th>inherited_from</th>
-<td>\JBSMElements::getStore()</td>
-</tr>
-<tr>
-<th>inherited_from</th>
-<td>\JBSMListing::getStore()</td>
-</tr>
-</table>
 <h3>Parameters</h3>
 <div class="subelement argument">
-<h4>$params</h4>
-<code>object</code><p>Params</p></div>
+<h4>$array</h4>
+<code>array</code><p>?</p></div>
 <div class="subelement argument">
-<h4>$row</h4>
-<code>object</code><p>Row info</p></div>
+<h4>$property</h4>
+<code>string</code><p>?</p></div>
+<div class="subelement argument">
+<h4>$order</h4>
+<code>string</code><p>?</p></div>
 <h3>Returns</h3>
-<div class="subelement response">
-<code>string</code>Fixme look like this has missing info for the width and height. TOM</div>
+<div class="subelement response"><code>array</code></div>
 </div></div>
 </div>
-<a id="method_make_bitly_url"></a><div class="element clickable method private method_make_bitly_url" data-toggle="collapse" data-target=".method_make_bitly_url .collapse">
-<h2>make a URL small</h2>
-<pre>make_bitly_url(string $url, string $login, string $appkey, string $format, string $version) : string</pre>
+<a id="method_useJImage"></a><div class="element clickable method public method_useJImage inherited" data-toggle="collapse" data-target=".method_useJImage .collapse" title="public">
+<h2>Use JImage Class</h2>
+<pre>useJImage(String $path, String $alt<code> = null</code>) : boolean | \stdClass</pre>
 <div class="labels"><span class="label">Inherited</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
-<th>inherited_from</th>
-<td>\JBSMListing::make_bitly_url()</td>
+<th>since</th>
+<td>9.0.0</td>
 </tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$path</h4>
+<code>String</code><p>Path to File</p></div>
+<div class="subelement argument">
+<h4>$alt</h4>
+<code>String</code><p>Alternate Text</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>boolean</code><code>\stdClass</code>
+</div>
+</div></div>
+</div>
+<a id="method_getLink"></a><div class="element clickable method private method_getLink inherited" data-toggle="collapse" data-target=".method_getLink .collapse" title="private">
+<h2>Get Link</h2>
+<pre>getLink(boolean $islink, string $id3, integer $tid, object $smenu, object $tmenu, \Joomla\Registry\Registry $params, object $row, \TableTemplate $templateid) : string</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$islink</h4>
+<code>boolean</code><p>?</p></div>
+<div class="subelement argument">
+<h4>$id3</h4>
+<code>string</code><p>?</p></div>
+<div class="subelement argument">
+<h4>$tid</h4>
+<code>integer</code><p>?</p></div>
+<div class="subelement argument">
+<h4>$smenu</h4>
+<code>object</code><p>?</p></div>
+<div class="subelement argument">
+<h4>$tmenu</h4>
+<code>object</code><p>?</p></div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>\Joomla\Registry\Registry</code><p>?</p></div>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>object</code><p>?</p></div>
+<div class="subelement argument">
+<h4>$templateid</h4>
+<code>\TableTemplate</code><p>?</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_make_bitly_url"></a><div class="element clickable method private method_make_bitly_url inherited" data-toggle="collapse" data-target=".method_make_bitly_url .collapse" title="private">
+<h2>make a URL small</h2>
+<pre>make_bitly_url(string $url, string $login, string $appkey, string $format<code> = 'xml'</code>, string $version<code> = '2.0.1'</code>) : string</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$url</h4>
@@ -1285,24 +736,16 @@
 </div></div>
 </div>
 <h3>
-<i class="icon-custom icon-property"></i> Properties</h3>
-<a id="property_extension"> </a><div class="element clickable property public property_extension" data-toggle="collapse" data-target=".property_extension .collapse">
-<h2></h2>
-<pre>$extension : string</pre>
-<div class="labels"><span class="label">Inherited</span></div>
+<i title="Properties" class="icon-custom icon-property"></i> Properties</h3>
+<a id="property_params"> </a><div class="element clickable property public property_params" data-toggle="collapse" data-target=".property_params .collapse" title="public">
+<h2>$params</h2>
+<pre>$params : \Joomla\Registry\Registry</pre>
 <div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered">
-<tr>
-<th>inherited_from</th>
-<td>\JBSMElements::$$extension</td>
-</tr>
-<tr>
-<th>inherited_from</th>
-<td>\JBSMListing::$$extension</td>
-</tr>
-</table>
+<h3>Default</h3>
+<div class="subelement argument"></div>
 </div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
 </div>
 </div>
@@ -1310,8 +753,8 @@
 </div>
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
-            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
-            generated on 2013-06-22T20:25:40-05:00.<br></footer></div>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
+            generated on 2016-04-06T22:36:23-05:00.<br></footer></div>
 </div>
 </body>
 </html>

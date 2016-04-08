@@ -1,147 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-    <fieldset>
-        <field name="published"
-                type="list"
-                class="span12 small"
-                id="published"
-                label="JSTATUS"
-                description="JFIELD_PUBLISHED_DESC"
-                size="1"
-                default="1"
-                filter="integer">
-            <option value="1">
-                JPUBLISHED
-            </option>
-            <option value="0">
-                JUNPUBLISHED
-            </option>
-            <option value="-2">
-                JTRASHED
-            </option>
-        </field>
-        <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
-               description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"
-               class="readonly span12 small"/>
-        <field name="createdate" type="calendar" label="JBS_CMN_CREATE_DATE"
-               description="JBS_MED_CREATE_DATE_DESC" class="inputbox" size="22"
-               format="%Y-%m-%d %H:%M:%S" filter="user_utc" required="true"/>
-        <field name="study_id" type="Modal_Study" label="JBS_CMN_STUDY"
-               description="JBS_MED_CHOOSE_STUDY_DESC" class="inputbox" required="true"/>
-        <field name="podcast_id"  size="15" type="sql" label="JBS_MED_CHOOSE_PODCAST"
-               description="JBS_MED_CHOOSE_PODCAST_DESC"
-               query="SELECT id, title FROM #__bsms_podcast WHERE published = 1 ORDER BY title ASC"
-               key_field="id" value_field="title" multiple="true" default="-1">
-            <option value="-1">JBS_CMN_SELECT_PODCAST</option>
-        </field>
-        <field name="link_type" type="list" extension="com_biblestudy"
-               label="JBS_MED_SHOW_DOWNLOAD_ICON" description="JBS_MED_SHOW_DOWNLOAD_ICON_DESC"
-               class="inputbox" size="1" default="0">
-            <option value="0">JBS_MED_NO_DOWNLOAD_ICON</option>
-            <option value="1">JBS_MED_SHOW_DOWNLOAD_ICON</option>
-            <option value="2">JBS_MED_SHOW_ONLY_DOWNLOAD_ICON</option>
-        </field>
-        <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
-               description="COM_CONTACT_FIELD_LANGUAGE_DESC" class="inputbox span12 small">
-            <option value="*">JALL</option>
-        </field>
-    </fieldset>
-    <field name="plays" type="text" class="readonly span12 small" label="JBS_CMN_PLAYS"
-           description="JBS_MED_PLAYS_DESC" size="10" default="N/A" readonly="true"/>
-    <field name="downloads" type="text" class="readonly span12 small" label="JBS_CMN_DOWNLOADS"
-           description="JBS_MED_DOWNLOADS_DESC" size="10" default="N/A" readonly="true"/>
-    <field name="spacer" type="spacer" hr="true"/>
+	<field name="id" type="text" readonly="readonly" class="inputbox"/>
+	<field name="createdate" type="calendar" label="JBS_CMN_CREATE_DATE"
+	       description="JBS_MED_CREATE_DATE_DESC" class="inputbox" size="22"
+	       format="%Y-%m-%d %H:%M:%S" filter="user_utc" required="true"/>
+	<field name="study_id" type="Modal_Study" label="JBS_CMN_STUDY"
+	       description="JBS_MED_CHOOSE_STUDY_DESC" class="inputbox" required="true"/>
+	<field name="comment" type="textarea" rows="4" label="JBS_CMN_COMMENT"
+	       description="JBS_MED_APPEARS_UNDER_FILE_OR_TOOLTIP" class="inputbox"/>
+	<field name="server_id" type="server" label="JBS_CMN_SERVER"
+	       description="JBS_MED_SERVER_DESC" required="true"/>
+	<field name="podcast_id" size="15" type="sql" label="JBS_MED_CHOOSE_PODCAST"
+	       description="JBS_MED_CHOOSE_PODCAST_DESC"
+	       query="SELECT id, title FROM #__bsms_podcast WHERE published = 1 ORDER BY title ASC"
+	       key_field="id" value_field="title" multiple="true" default="">
+	</field>
+	<field name="published"
+	       type="list"
+	       id="published"
+	       label="JSTATUS"
+	       description="JFIELD_PUBLISHED_DESC"
+	       class="chzn-color-state"
+	       size="1"
+	       default="1"
+	       filter="intval">
+		<option value="1">
+			JPUBLISHED
+		</option>
+		<option value="0">
+			JUNPUBLISHED
+		</option>
+		<option value="-2">
+			JTRASHED
+		</option>
+	</field>
+	<field name="language"
+	       type="contentlanguage"
+	       label="JFIELD_LANGUAGE_LABEL"
+	       description="JBS_CMN_SELECT_LANGUAGE_DESC"
+	       class="chzn-color-state">
+		<option value="*">JALL</option>
+	</field>
+	<field name="asset_id" type="hidden" filter="unset"/>
+	<field name="rules" type="rules" label="JFIELD_RULES_LABEL"
+	       translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"
+	       section="mediafile" validate="rules"/>
 
-    <field name="comment" type="text" size="50" label="JBS_CMN_COMMENT"
-           description="JBS_MED_APPEARS_UNDER_FILE_OR_TOOLTIP" class="inputbox"/>
-    <field name="docMan_id" type="docman" extension="com_biblestudy"
-           label="JBS_MED_USE_DOCMAN" description="JBS_MED_USE_DOCMAN_DESC"
-           class="inputbox" required="false"/>
-    <field name="server" type="sql" extension="com_biblestudy" label="JBS_CMN_SERVER"
-           description="JBS_MED_SERVER_DESC" class="inputbox" default="-1"
-           query="SELECT id, server_name FROM #__bsms_servers WHERE published=1 ORDER BY server_name ASC"
-           key_field="id" value_field="server_name">
-        <option value="-1">JBS_CMN_SELECT_SERVER</option>
-    </field>
-    <field name="path" type="sql" extension="com_biblestudy" label="JBS_MED_PATH_OR_FOLDER"
-           description="JBS_MED_PATH_OR_FOLDER_DESC" class="inputbox" default="-1"
-           query="SELECT id, foldername FROM #__bsms_folders WHERE published=1 ORDER BY foldername ASC"
-           key_field="id" value_field="foldername">
-        <option value="-1">JBS_CMN_SELECT_FOLDER</option>
-    </field>
-    <field name="media_image" type="sql" extension="com_biblestudy"
-           label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
-           class="inputbox"
-           query="SELECT id, media_image_name FROM #__bsms_media WHERE published=1 ORDER BY media_image_name ASC"
-           key_field="id" value_field="media_image_name" required="true">
-        <option value="-1">JBS_MED_SELECT_MEDIA_TYPE</option>
-    </field>
-    <field name="mime_type" type="sql" extension="com_biblestudy"
-           label="JBS_MED_CHOOSE_MIME_TYPE" description="JBS_MED_CHOOSE_MIME_TYPE_DESC"
-           class="inputbox"
-           query="SELECT id, mimetext FROM #__bsms_mimetype WHERE published = 1 ORDER BY mimetext ASC"
-           key_field="id" value_field="mimetext">
-        <option value="-1">JBS_CMN_SELECT_MIME_TYPE</option>
-    </field>
-    <field name="filename" type="text" label="JBS_MED_FILENAME"
-           description="JBS_MED_USE_FILENAME_AS_PATH" class="inputbox" size="26"/>
-    <field name="size" type="filesize" label="JBS_CMN_FILESIZE"
-           description="JBS_MED_FILESIZE_DESC" class="inputbox" size="15"/>
-    <field name="special" type="text" label="JBS_MED_TARGET"
-           description="JBS_MED_TARGET_FOR_LINK" class="inputbox" size="15"/>
-    <field name="article_id" type="Modal_Article" extension="com_content"
-           label="JBS_MED_USE_ARTICLE" class="inputbox"
-           required="false" default="-1"/>
-    <field name="player" type="list" label="JBS_MED_PLAYER"
-           description="JBS_MED_PLAYER_DESC" class="inputbox" size="1" default="100">
-        <option value="100">JBS_CMN_USE_GLOBAL</option>
-        <option value="0">JBS_CMN_DIRECT_LINK</option>
-        <option value="1">JBS_CMN_USE_INTERNAL_PLAYER</option>
-        <option value="3">JBS_CMN_USE_AV</option>
-        <option value="7">JBS_CMN_USE_LEGACY_PLAYER</option>
-        <option value="8">JBS_CMN_USE_EMBED_CODE</option>
-    </field>
-    <field name="popup" type="list" label="JBS_MED_INTERNAL_POPUP"
-           description="JBS_MED_INTERNAL_POPUP_DESC" class="inputbox" size="1"
-           default="100">
-        <option value="3">JBS_CMN_USE_GLOBAL</option>
-        <option value="1">JBS_CMN_POPUP</option>
-        <option value="2">JBS_CMN_INLINE</option>
-    </field>
-    <field name="mediacode" type="textarea" label="JBS_CMN_AVR"
-           description="JBS_MED_AVRELOADED_DESC" class="inputbox" cols="64" rows="5"
-           filter="raw"/>
-    <field name="virtueMart_id" type="virtuemart" label="JBS_MED_VIRTUEMART_ITEM"
-           description="JBS_MED_VIRTUEMART_ITEM_DESC"
-           default="-1">
-        <option value="-1">JBS_MED_SELECT_VM_ITEM</option>
-    </field>
-    <field name="docMan_id" type="docman" label="JBS_MED_DOCMAN_ITEM" description="JBS_MED_DOCMAN_ITEM_DESC"
-           default="-1">
-        <option value="-1">JBS_MED_SELECT_DOCMAN</option>
-    </field>
-    <field name="rules" type="rules" label="JFIELD_RULES_LABEL"
-           translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"
-           section="mediafile" validate="rules"/>
-    <field name="asset_id" type="hidden" filter="unset"/>
-    <fields name="params">
-        <fieldset name="params">
-            <field name="playerwidth" default="" type="text" label="JBS_MED_PLAYERWIDTH"
-                   description="JBS_MED_PLAYERWIDTH_DESC"/>
-            <field name="playerheight" default="" type="text"
-                   label="JBS_MED_PLAYERHIGHT" description="JBS_MED_PLAYERHIGHT_DESC"/>
-            <field name="itempopuptitle" type="textarea" cols="54" rows="10" default="" filter="raw"
-                   label="JBS_MED_MEDIA_POPUPTITLE" description="JBS_MED_MEDIA_POPUPTITLE_FOOTER_DESC"/>
-            <field name="itempopupfooter" type="textarea" cols="54" rows="10" default="" filter="raw"
-                   label="JBS_MED_MEDIA_POPUPFOOTER" description="JBS_MED_MEDIA_POPUPTITLE_FOOTER_DESC"/>
-            <field name="popupmargin" type="text" default="50"
-                   label="JBS_MED_MEDIA_POPUPMARGIN" description="JBS_MED_MEDIA_POPUPMARGIN_DESC"/>
-            <field name="autostart" type="list"
-                   label="JBS_TPL_MEDIA_AUTOSTART" description="JBS_TPL_MEDIA_AUTOSTART_DESC">
-                <option value="">JBS_CMN_USE_GLOBAL</option>
-                <option value="1">JYES</option>
-                <option value="2">JNO</option>
-            </field>
-        </fieldset>
-    </fields>
+	<!--Server media specific fields-->
+	<field name="params"/>
 </form>

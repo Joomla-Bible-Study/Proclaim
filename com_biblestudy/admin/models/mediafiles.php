@@ -3,14 +3,14 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  (C) 2007 - 2013 Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.modellist');
+use Joomla\Registry\Registry;
 
 /**
  * MediaFiles model class
@@ -21,6 +21,13 @@ jimport('joomla.application.component.modellist');
 class BiblestudyModelMediafiles extends JModelList
 {
 	/**
+	 * Model context string.
+	 *
+	 * @var        string
+	 */
+	public $_context = 'com_biblestudy.mediafiles';
+
+	/**
 	 * Number of Deletions
 	 *
 	 * @var int
@@ -30,7 +37,7 @@ class BiblestudyModelMediafiles extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param   array $config  An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 */
 	public function __construct($config = array())
 	{
@@ -40,17 +47,70 @@ class BiblestudyModelMediafiles extends JModelList
 				'id', 'mediafile.id',
 				'published', 'mediafile.published',
 				'ordering', 'mediafile.ordering',
-				'filenam', 'mediafile.filename',
 				'studytitle', 'study.studytitle',
-				'media_text', 'mediatype.media_text',
 				'createdate', 'mediafile.createdate',
-				'plays', 'mediafile.plays',
-				'downloads', 'mediafile.downloads',
 				'language', 'mediafile.language'
 			);
 		}
 
 		parent::__construct($config);
+	}
+
+	/**
+	 * Manually joins items and returns and nested object array
+	 *
+	 * @return mixed  Array  Media files array
+	 *
+	 * @since 9.0.0
+	 */
+	public function getItems()
+	{
+		// Needed for site view
+		JModelLegacy::addIncludePath(BIBLESTUDY_PATH_ADMIN_MODELS);
+
+		$serverModel = JModelLegacy::getInstance('Server', 'BibleStudyModel');
+
+		$items = parent::getItems();
+		if (!$items)
+		{
+			return false;
+		}
+
+		if (JFactory::getApplication()->isSite())
+		{
+			$user   = JFactory::getUser();
+			$groups = $user->getAuthorisedViewLevels();
+
+			for ($x = 0, $count = count($items); $x < $count; $x++)
+			{
+				// Check the access level. Remove articles the user shouldn't see
+				if (!in_array($items[$x]->access, $groups))
+				{
+					unset($items[$x]);
+				}
+			}
+		}
+
+		foreach ($items as $item)
+		{
+
+			if (empty($item->serverType))
+			{
+				$item->serverType = 'legacy';
+			}
+			$item->serverConfig = $serverModel->getConfig($item->serverType);
+
+			// Convert all JSON strings to Arrays
+			$registry = new Registry;
+			$registry->loadString($item->params);
+			$item->params = $registry;
+
+			$registry2 = new Registry;
+			$registry2->loadString($item->metadata);
+			$item->metadata = $registry2;
+		}
+
+		return $items;
 	}
 
 	/**
@@ -62,7 +122,7 @@ class BiblestudyModelMediafiles extends JModelList
 	{
 		if (empty($this->_deletes))
 		{
-			$query          = 'SELECT allow_deletes'
+			$query = 'SELECT allow_deletes'
 				. ' FROM #__bsms_admin'
 				. ' WHERE id = 1';
 			$this->_deletes = $this->_getList($query);
@@ -80,8 +140,8 @@ class BiblestudyModelMediafiles extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @param   string $ordering   An optional ordering field.
-	 * @param   string $direction  An optional direction (asc|desc).
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return  void
 	 *
@@ -89,10 +149,7 @@ class BiblestudyModelMediafiles extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-
-		// Initialise variables.
-		$app     = JFactory::getApplication();
-		$session = JFactory::getSession();
+		$app = JFactory::getApplication();
 
 		// Adjust the context to support modal layouts.
 		$input  = new JInput;
@@ -109,17 +166,8 @@ class BiblestudyModelMediafiles extends JModelList
 		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
 
-		$filename = $this->getUserStateFromRequest($this->context . '.filter.filename', 'filter_filename');
-		$this->setState('filter.filename', $filename);
-
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
-
-		$study = $this->getUserStateFromRequest($this->context . '.filter.study_id', 'filter_study_id');
-		$this->setState('filter.study_id', $study);
-
-		$mediaType = $this->getUserStateFromRequest($this->context . '.filter.mediaType', 'filter_mediaType');
-		$this->setState('filter.mediaType', $mediaType);
 
 		$mediaYears = $this->getUserStateFromRequest($this->context . '.filter.mediaYears', 'filter_mediaYears');
 		$this->setState('filter.mediaYears', $mediaYears);
@@ -127,45 +175,22 @@ class BiblestudyModelMediafiles extends JModelList
 		$language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $language);
 
-		$download = $this->getUserStateFromRequest($this->context . '.filter.download', 'filter_download', '');
-		$this->setState('filter.download', $download);
-
-		$player = $this->getUserStateFromRequest($this->context . '.filter.player', 'filter_player', '');
-		$this->setState('filter.player', $player);
-
-		$popup = $this->getUserStateFromRequest($this->context . '.filter.popup', 'filter_popup', '');
-		$this->setState('filter.popup', $popup);
-
 		parent::populateState('mediafile.createdate', 'DESC');
-	}
 
-	/**
-	 * Builds a list of mediatypes (Used for the filter combo box)
-	 *
-	 * @return array Array of Objects
-	 *
-	 * @since 7.0
-	 */
-	public function getMediatypes()
-	{
-		$db    = $this->getDbo();
-		$query = $db->getQuery(true);
+		// Force a language
+		$forcedLanguage = $app->input->get('forcedLanguage');
 
-		$query->select('media.id AS value, media.media_text AS text');
-		$query->from('#__bsms_media AS media');
-		$query->join('INNER', '#__bsms_mediafiles AS mediafile ON mediafile.media_image = media.id');
-		$query->group('media.id');
-		$query->order('media.media_text');
-
-		$db->setQuery($query->__toString());
-
-		return $db->loadObjectList();
+		if (!empty($forcedLanguage))
+		{
+			$this->setState('filter.language', $forcedLanguage);
+			$this->setState('filter.forcedLanguage', $forcedLanguage);
+		}
 	}
 
 	/**
 	 * Get Stored ID
 	 *
-	 * @param   string $id  An identifier string to generate the store id.
+	 * @param   string  $id  An identifier string to generate the store id.
 	 *
 	 * @return  string  A store id.
 	 *
@@ -175,11 +200,9 @@ class BiblestudyModelMediafiles extends JModelList
 	{
 
 		// Compile the store id.
-		$id .= ':' . $this->getState('filter.filename');
 		$id .= ':' . $this->getState('filter.search');
 		$id .= ':' . $this->getState('filter.published');
 		$id .= ':' . $this->getState('filter.study_id');
-		$id .= ':' . $this->getState('filter.mediaType');
 		$id .= ':' . $this->getState('filter.language');
 
 		return parent::getStoreId($id);
@@ -196,14 +219,14 @@ class BiblestudyModelMediafiles extends JModelList
 	{
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
+		$user = JFactory::getUser();
 
 		$query->select(
 			$this->getState(
-				'list.select', 'mediafile.id, mediafile.published, mediafile.ordering, mediafile.filename, mediafile.player, mediafile.popup, mediafile.player,
-                        mediafile.createdate, mediafile.plays, mediafile.link_type, mediafile.downloads, mediafile.language, mediafile.study_id ')
+				'list.select', 'mediafile.* ')
 		);
 
-		$query->from($db->quoteName('#__bsms_mediafiles') . ' AS mediafile');
+		$query->from('#__bsms_mediafiles AS mediafile');
 
 		// Join over the language
 		$query->select('l.title AS language_title');
@@ -213,13 +236,17 @@ class BiblestudyModelMediafiles extends JModelList
 		$query->select('study.studytitle AS studytitle');
 		$query->join('LEFT', '#__bsms_studies AS study ON study.id = mediafile.study_id');
 
-		// Join over the mediatypes
-		$query->select('mediatype.media_text AS mediaType, mediatype.media_image_path, mediatype.path2');
-		$query->join('LEFT', '`#__bsms_media` AS mediatype ON mediatype.id = mediafile.media_image');
+		// Join over servers
+		$query->select('server.type as serverType');
+		$query->join('LEFT', '#__bsms_servers as server ON server.id = mediafile.server_id');
 
 		// Join over the asset groups.
 		$query->select('ag.title AS access_level');
 		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = mediafile.access');
+
+		// Join over the users for the checked out user.
+		$query->select('uc.name AS editor')
+			->join('LEFT', '#__users AS uc ON uc.id=mediafile.checked_out');
 
 		// Filter by published state
 		$published = $this->getState('filter.published');
@@ -232,6 +259,7 @@ class BiblestudyModelMediafiles extends JModelList
 		{
 			$query->where('(mediafile.published = 0 OR mediafile.published = 1)');
 		}
+
 		// Filter by access level.
 		$access = $this->getState('filter.access');
 
@@ -240,43 +268,19 @@ class BiblestudyModelMediafiles extends JModelList
 			$query->where('mediafile.access = ' . (int) $access);
 		}
 
+		// Implement View Level Access
+		if (!$user->authorise('core.admin'))
+		{
+			$groups = implode(',', $user->getAuthorisedViewLevels());
+			$query->where('mediafile.access IN (' . $groups . ')');
+		}
+
 		// Filter by study title
 		$study = $this->getState('filter.study_id');
 
 		if (!empty($study))
 		{
-			$query->where('study.id LIKE "%' . $study . '%"');
-		}
-
-		// Filter by media type
-		$mediaType = $this->getState('filter.mediaType');
-
-		if (!empty($mediaType))
-		{
-			$query->where('mediafile.media_image = ' . (int) $mediaType);
-		}
-
-		// Filter by popup
-		$popup = $this->getState('filter.popup');
-
-		if (!empty($popup))
-		{
-			$query->where('mediafile.popup = ' . (int) $popup);
-		}
-		// Filter by download
-		$download = $this->getState('filter.download');
-
-		if (!empty($download))
-		{
-			$query->where('mediafile.link_type = ' . (int) $download);
-		}
-
-		// Filter by player
-		$player = $this->getState('filter.player');
-
-		if (!empty($player))
-		{
-			$query->where('mediafile.player = ' . (int) $player);
+			$query->where('mediafile.study_id LIKE "%' . $study . '%"');
 		}
 
 		// Filter by media years
@@ -286,7 +290,8 @@ class BiblestudyModelMediafiles extends JModelList
 		{
 			$query->where('YEAR(mediafile.createdate) = ' . (int) $mediaYears);
 		}
-		// Filter by search in filename or study title
+
+		// Filter by search in title.
 		$search = $this->getState('filter.search');
 
 		if (!empty($search))
@@ -297,26 +302,25 @@ class BiblestudyModelMediafiles extends JModelList
 			}
 			else
 			{
-				$search = $db->Quote('%' . $db->escape($search, true) . '%');
-				$query->where('(mediafile.filename LIKE ' . $search . ' OR study.studytitle LIKE ' . $search . ')');
+				$search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
+				$query->where('study.studytitle LIKE ' . $search . ' OR study.alias LIKE ' . $search);
 			}
 		}
+
+		// Filter on the language.
+		if ($language = $this->getState('filter.language'))
+		{
+			$query->where('mediafile.language = ' . $db->quote($language));
+		}
+
 		// Add the list ordering clause
-		$orderCol  = $this->state->get('list.ordering', 'ordering');
+		$orderCol  = $this->state->get('list.ordering', 'mediafile.createdate');
 		$orderDirn = $this->state->get('list.direction', 'desc');
 
 		// Sqlsrv change
 		if ($orderCol == 'study_id')
 		{
 			$orderCol = 'mediafile.study_id';
-		}
-		if ($orderCol == 'mediaType')
-		{
-			$orderCol = 'mediafile.media_image';
-		}
-		if ($orderCol == 'filename')
-		{
-			$orderCol = 'mediafile.filename';
 		}
 		if ($orderCol == 'ordering')
 		{
