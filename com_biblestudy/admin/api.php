@@ -22,9 +22,8 @@ define('JBSM_PROFILER', 0);
 define("COM_BIBLESTUDY_DEBUG", false);
 
 // Version information
-define('BIBLESTUDY_VERSION', '9.0.0');
-define('BIBLESTUDY_VERSION_DATE', '2015-05-15');
-define('BIBLESTUDY_VERSION_BUILD', '4000');
+define('BIBLESTUDY_VERSION', '9.0.1');
+define('BIBLESTUDY_VERSION_DATE', '2016-04-15');
 define('BIBLESTUDY_VERSION_UPDATEFILE', 'JBS Version ' . BIBLESTUDY_VERSION);
 
 // Default values

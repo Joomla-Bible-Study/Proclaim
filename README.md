@@ -1,8 +1,6 @@
 Joomla-Bible-Study
 ==================
 
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Joomla-Bible-Study/Joomla-Bible-Study?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 Status
 -----------
 <table>
@@ -24,7 +22,7 @@ Status
         <td><a href="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study" target="_blank"><img src="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=master"/></a></td>
         <td>Master</td>
         <td>9.0.1</td>
-        <td>April 8, 2016</td>
+        <td>April 15, 2016</td>
         <td align="center">3.4+</td>
     </tr>
 </table>
@@ -58,7 +56,6 @@ We appreciate contributions in varioius capacities, below are some ways that you
 9. [Submit a pull request][pr]
 
 Please **make sure to make specific contributions** when submitting pull requests. For example, if fixing bugs across multiple features of the component, create a branch for each fix, and submit a separate pull request for each fix separately, instead of fixing everything in `master`, and then just trying to pull your `master` branch into `Joomla-Bible-Study:master`.
-
 
 
 ###Translation 

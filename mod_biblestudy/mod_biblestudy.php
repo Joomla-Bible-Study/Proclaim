@@ -19,6 +19,10 @@ if (file_exists($api))
 {
 	require_once $api;
 }
+else
+{
+	return;
+}
 
 // Need for inline player
 $document = JFactory::getDocument();
