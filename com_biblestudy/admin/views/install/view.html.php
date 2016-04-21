@@ -104,7 +104,7 @@ class BiblestudyViewInstall extends JViewLegacy
 		{
 			if ($this->totalSteps > 0)
 			{
-				$percent = round($this->doneSteps / $this->totalSteps * 100);
+				$percent = min(max(round(100 * $this->doneSteps / $this->totalSteps), 1), 100);
 			}
 			else
 			{
@@ -119,10 +119,10 @@ class BiblestudyViewInstall extends JViewLegacy
 			$more    = false;
 		}
 
-		$this->more = &$more;
+		$this->more = $more;
 		$this->setLayout($layout);
 
-		$this->percentage = &$percent;
+		$this->percentage = $percent;
 
 		if ($more)
 		{

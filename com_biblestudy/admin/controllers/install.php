@@ -73,7 +73,7 @@ class BiblestudyControllerInstall extends JControllerForm
 	}
 
 	/**
-	 * Constructor.
+	 * Start of installer display hook.
 	 *
 	 * @return void
 	 */
@@ -90,7 +90,7 @@ class BiblestudyControllerInstall extends JControllerForm
 	}
 
 	/**
-	 * Run Function
+	 * Run function loop
 	 *
 	 * @return void
 	 *

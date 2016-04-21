@@ -85,6 +85,12 @@ class Com_BiblestudyInstallerScript
 			$this->deleteFolder($sitePath, $ignoreSite);
 		}
 
+		// Remove all old install files before install/upgrade
+		if (JFolder::exists(JPATH_ADMINISTRATOR . '/components/com_biblestudy/install'))
+		{
+			JFolder::delete(JPATH_ADMINISTRATOR . '/components/com_biblestudy/install');
+		}
+
 		return true;
 	}
 
