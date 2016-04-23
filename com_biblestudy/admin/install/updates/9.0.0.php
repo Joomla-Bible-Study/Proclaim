@@ -17,14 +17,22 @@ use \Joomla\Registry\Registry;
  */
 class Migration900
 {
+
+	/** @type array Steps to go through */
+	public $steps = array('build', 'servers', 'media', 'up');
+
+	/** @type array Array of queries to preform */
+	public $query = array();
+
 	/**
 	 * Call Script for Updates of 9.0.0
 	 *
-	 * @param   JDatabaseDriver  $db  Joomla Data bass driver
+	 * @param   JDatabaseDriver  $db     Joomla Data bass driver
+	 * @param   string           $query  Query passed to be worked through.
 	 *
 	 * @return bool
 	 */
-	public function up($db)
+	public function up($db, $query = null)
 	{
 		/**
 		 * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
@@ -34,13 +42,113 @@ class Migration900
 			set_time_limit(3000);
 		}
 		$registry = new Registry;
+
+
+
+
+
+
+
+		// Delete unused columns
+		$columns = array('media_image', 'special', 'filename', 'size', 'mime_type', 'mediacode', 'link_type',
+			'docMan_id', 'article_id', 'virtueMart_id', 'player', 'popup', 'server', 'internal_viewer', 'path');
+		$this->deleteColumns('#__bsms_mediafiles', $columns, $db);
+
+		// Delete unused columns
+		$columns = array('ftphost', 'ftpuser', 'ftppassword', 'ftpport', 'server_path', 'aws_key', 'aws_secret',
+			'server_type', 'ftp_username', 'ftp_password');
+		$this->deleteColumns('#__bsms_servers', $columns, $db);
+
+		// Modify admin table to add thumbnail default parameters
+		/** @type TableAdmin $admin */
+		$query = $db->getQuery(true);
+		$query->select('*')
+			->from('#__bsms_admin')
+			->where('id = 1');
+		$db->setQuery($query);
+		$admin    = $db->loadObject();
+		$registry = new Registry;
+		$registry->loadString($admin->params);
+		$registry->set('server', $newServer->id);
+		$admin->params = $registry->toString();
+		$query         = $db->getQuery(true);
+		$query->update('#__bsms_admin')->set('params = ' . $db->q($admin->params))->where('id = 1');
+		$db->setQuery($query);
+		$db->execute();
+
+		$this->deleteTable('#__bsms_folders', $db);
+		$this->deleteTable('#__bsms_media', $db);
+		$this->deleteTable('#__bsms_mimetype', $db);
+
+		$this->migratetemplatelists($db);
+		$this->updatetemplates($db);
+		$this->css900();
+		$this->deleteUnexistingFiles();
+		$this->removeexpert($db);
+		$message                     = new stdClass;
+		$message->title_key          = 'JBS_POSTINSTALL_TITLE_TEMPLATE';
+		$message->description_key    = 'JBS_POSTINSTALL_BODY_TEMPLATE';
+		$message->action_key         = 'JBS_POSTINSTALL_ACTION_TEMPLATE';
+		$message->language_extension = 'com_biblestudy';
+		$message->language_client_id = 1;
+		$message->type               = 'action';
+		$message->action_file        = 'admin://components/com_biblestudy/postinstall/template.php';
+		$message->action             = 'admin_postinstall_template_action';
+		$message->condition_file     = "admin://components/com_biblestudy/postinstall/template.php";
+		$message->condition_method   = 'admin_postinstall_template_condition';
+		$message->version_introduced = '9.0.0';
+		$message->enabled            = 1;
+
+		// Import filesystem libraries. Perhaps not necessary, but does not hurt
+		jimport('joomla.filesystem.file');
+
+		if (!JFile::exists(JPATH_SITE . '/images/biblestudy/logo.png'))
+		{
+			// Copy the images to the new folder
+			JFolder::copy('/media/com_biblestudy/images', 'images/biblestudy/', JPATH_SITE, true);
+		}
+
+		$script = new BibleStudyModelInstall;
+		$script->postinstall_messages($message);
+
+		return true;
+	}
+
+	/**
+	 * Migrate Template Lists
+	 *
+	 * @param   JDatabaseDriver  $db       DB driver
+	 * @param   string           $version  Version working on.
+	 *
+	 * @return  array
+	 */
+	public function build($db, $version = null)
+	{
+
 		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_biblestudy/tables');
 
-		// Migrate servers
+		// Build Migrate servers array
 		$query = $db->getQuery(true)->select('*')->from('#__bsms_servers');
 		$db->setQuery($query);
+		$servers = $db->loadObjectList();
 
-		foreach ($db->loadObjectList() as $server)
+		// Build Migrate media files Array
+		$query = $db->getQuery(true)->select('*')
+			->from('#__bsms_mediafiles')
+			->where('server <= ' . 0, 'OR')
+			->where('server IS NULL');
+		$db->setQuery($query);
+		$mediaFiles = $db->loadObjectList();
+
+		return array('servers' => $servers, 'media' => $mediaFiles);
+	}
+
+	/**
+	 * @param $db
+	 */
+	public function servers($db)
+	{
+		foreach ($queries as $server)
 		{
 			/** @var TableServer $newServer */
 			$newServer = JTable::getInstance('Server', 'Table', array('dbo' => $db));
@@ -200,15 +308,18 @@ class Migration900
 		$newServer->params      = '{"path":""}';
 		$newServer->id          = null;
 		$newServer->store();
+	}
 
-		// Migrate media files
-		$query = $db->getQuery(true)->select('*')
-			->from('#__bsms_mediafiles')
-			->where('server <= ' . 0, 'OR')
-			->where('server IS NULL');
-		$db->setQuery($query);
-
-		foreach ($db->loadObjectList() as $mediaFile)
+	/**
+	 * Media not connected to a server
+	 *
+	 * @param $db
+	 *
+	 * @return  bool
+	 */
+	public function media($db)
+	{
+		foreach ($db as $mediaFile)
 		{
 
 			/** @var TableMediafile $newMediaFile */
@@ -286,79 +397,15 @@ class Migration900
 			$newMediaFile->id        = null;
 			$newMediaFile->store();
 
-			// Delete old mediafile
+			// Delete old mediafile table id
 			JTable::getInstance('Mediafile', 'Table', array('dbo' => $db))->delete($mediaFile->id);
 		}
-
-		// Delete unused columns
-		$columns = array('media_image', 'special', 'filename', 'size', 'mime_type', 'mediacode', 'link_type',
-			'docMan_id', 'article_id', 'virtueMart_id', 'player', 'popup', 'server', 'internal_viewer', 'path');
-		$this->deleteColumns('#__bsms_mediafiles', $columns, $db);
-
-		// Delete unused columns
-		$columns = array('ftphost', 'ftpuser', 'ftppassword', 'ftpport', 'server_path', 'aws_key', 'aws_secret',
-			'server_type', 'ftp_username', 'ftp_password');
-		$this->deleteColumns('#__bsms_servers', $columns, $db);
-
-		// Modify admin table to add thumbnail default parameters
-		/** @type TableAdmin $admin */
-		$query = $db->getQuery(true);
-		$query->select('*')
-			->from('#__bsms_admin')
-			->where('id = 1');
-		$db->setQuery($query);
-		$admin    = $db->loadObject();
-		$registry = new Registry;
-		$registry->loadString($admin->params);
-		$registry->set('server', $newServer->id);
-		$admin->params = $registry->toString();
-		$query         = $db->getQuery(true);
-		$query->update('#__bsms_admin')->set('params = ' . $db->q($admin->params))->where('id = 1');
-		$db->setQuery($query);
-		$db->execute();
-
-		$this->deleteTable('#__bsms_folders', $db);
-		$this->deleteTable('#__bsms_media', $db);
-		$this->deleteTable('#__bsms_mimetype', $db);
-
-		$this->migratetemplatelists($db);
-		$this->updatetemplates($db);
-		$this->css900();
-		$this->deleteUnexistingFiles();
-		$this->removeexpert($db);
-		$message                     = new stdClass;
-		$message->title_key          = 'JBS_POSTINSTALL_TITLE_TEMPLATE';
-		$message->description_key    = 'JBS_POSTINSTALL_BODY_TEMPLATE';
-		$message->action_key         = 'JBS_POSTINSTALL_ACTION_TEMPLATE';
-		$message->language_extension = 'com_biblestudy';
-		$message->language_client_id = 1;
-		$message->type               = 'action';
-		$message->action_file        = 'admin://components/com_biblestudy/postinstall/template.php';
-		$message->action             = 'admin_postinstall_template_action';
-		$message->condition_file     = "admin://components/com_biblestudy/postinstall/template.php";
-		$message->condition_method   = 'admin_postinstall_template_condition';
-		$message->version_introduced = '9.0.0';
-		$message->enabled            = 1;
-
-		// Import filesystem libraries. Perhaps not necessary, but does not hurt
-		jimport('joomla.filesystem.file');
-
-		if (!JFile::exists(JPATH_SITE . '/images/biblestudy/logo.png'))
-		{
-			// Copy the images to the new folder
-			JFolder::copy('/media/com_biblestudy/images', 'images/biblestudy/', JPATH_SITE, true);
-		}
-
-		$script = new BibleStudyModelInstall;
-		$script->postinstall_messages($message);
-
-		return true;
 	}
 
 	/**
 	 * Migrate Template Lists
 	 *
-	 * @param   JDatabaseDriver  $db  ?
+	 * @param   JDatabaseDriver  $db  DB Driver
 	 *
 	 * @return void
 	 */

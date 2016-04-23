@@ -74,6 +74,12 @@ class BibleStudyModelInstall extends JModelLegacy
 	/** @var array Array of Finish Task */
 	private $_finish = array();
 
+	/** @var string Version number to be running */
+	private $version = "0.0.0";
+
+	/** @var array Array of Sub Query of php files queries Task */
+	private $_subQuery = array();
+
 	/** @var array Array of Install Task */
 	private $_install = array();
 
@@ -634,7 +640,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		$now     = $this->microtime_float();
 		$elapsed = abs($now - $this->_startTime);
 
-		return $elapsed < 4;
+		return $elapsed < 2;
 	}
 
 	/**
@@ -678,7 +684,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			}
 		}
 
-		if (!empty($this->_allupdates) && $this->haveEnoughTime())
+		if (!empty($this->_allupdates) && $this->haveEnoughTime() && empty($this->_subrun))
 		{
 			$percent = 100;
 			ksort($this->_allupdates);
@@ -1107,13 +1113,20 @@ class BibleStudyModelInstall extends JModelLegacy
 		{
 			require_once $migration_file;
 			$migrationClass = "Migration" . str_ireplace(".", '', $value);
-			$migration      = new $migrationClass;
-			$this->doneSteps++;
-			if (!$migration->up($this->_db))
+			if (class_exists($migrationClass))
 			{
-				JLog::add(JText::sprintf('Data Migration failed'), JLog::WARNING, 'com_biblestudy');
+				$migration = new $migrationClass;
+				$this->doneSteps++;
+				if (function_exists($migration->build) && empty($this->_subQuery))
+				{
+					$this->_subQuery = $migration->build($this->_db);
+				}
+				if (!$migration->up($this->_db, $this->_subQuery))
+				{
+					JLog::add(JText::sprintf('Data Migration failed'), JLog::WARNING, 'com_biblestudy');
 
-				return false;
+					return false;
+				}
 			}
 
 			return true;
