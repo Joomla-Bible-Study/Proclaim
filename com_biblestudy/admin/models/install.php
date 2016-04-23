@@ -77,7 +77,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	/** @var array Array of Install Task */
 	private $_install = array();
 
-	/** @var int If was inported */
+	/** @var int If was imported */
 	private $_isimport = 0;
 
 	/** @type string Type of process */
@@ -634,7 +634,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		$now     = $this->microtime_float();
 		$elapsed = abs($now - $this->_startTime);
 
-		return $elapsed < 4;
+		return $elapsed < 2;
 	}
 
 	/**

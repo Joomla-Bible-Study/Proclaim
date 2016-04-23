@@ -17,10 +17,66 @@ use \Joomla\Registry\Registry;
  */
 class Migration900
 {
+	public $steps = array('build', 'servers', 'media' ,'cleanup', 'migrateTemplateLists',
+			'updateTemplates', 'removeExpert', 'deleteUnexactingFiles', 'up');
+
+	public $query = array();
+	
+	public $count = 0;
+
+	private $_mediaFiles = array();
+
+	/**
+	 * Build steps and query
+	 *
+	 * @param   JDatabaseDriver  $db  Joomla DateBase Driver
+	 *
+	 * @return  null
+	 */
+	public function build($db)
+	{
+		// Get servers to migrate
+		$query = $db->getQuery(true)->select('*')->from('#__bsms_servers');
+		$db->setQuery($query);
+		$servers = $db->loadObjectList();
+
+		foreach ($servers as $server)
+		{
+			// Migrate media files to new converted server.
+			$query = $db->getQuery(true)->select('*')
+					->from('#__bsms_mediafiles')
+					->where('server = ' . $server->id);
+			$db->setQuery($query);
+			$mediaFiles   = $db->loadObjectList();
+			$this->count += count($mediaFiles);
+
+			$this->_mediaFiles += array_merge($this->_mediaFiles, array($server->id => $mediaFiles));
+		}
+
+		/** @var TableServer $newServer This is the new default server for all media */
+		$newServer              = JTable::getInstance('Server', 'Table', array('dbo' => $db));
+		$newServer->server_name = 'Default';
+		$newServer->type        = 'legacy';
+		$newServer->params      = '{"path":""}';
+		$newServer->id          = null;
+		$newServer->store();
+
+		// None Server related media files to migrate.
+		$query = $db->getQuery(true)->select('*')
+				->from('#__bsms_mediafiles')
+				->where('server <= ' . 0, 'OR')
+				->where('server IS NULL');
+		$db->setQuery($query);
+		$mediaFiles2  = $db->loadObjectList();
+		$this->count += count($mediaFiles2);
+
+		$this->_mediaFiles += array_merge($this->_mediaFiles, array($newServer->id => $mediaFiles2));
+	}
+
 	/**
 	 * Call Script for Updates of 9.0.0
 	 *
-	 * @param   JDatabaseDriver  $db  Joomla Data bass driver
+	 * @param   JDatabaseDriver  $db  Joomla Database driver
 	 *
 	 * @return bool
 	 */
@@ -193,14 +249,6 @@ class Migration900
 			}
 		}
 
-		/** @var TableServer $newServer */
-		$newServer              = JTable::getInstance('Server', 'Table', array('dbo' => $db));
-		$newServer->server_name = 'Default';
-		$newServer->type        = 'legacy';
-		$newServer->params      = '{"path":""}';
-		$newServer->id          = null;
-		$newServer->store();
-
 		// Migrate media files
 		$query = $db->getQuery(true)->select('*')
 			->from('#__bsms_mediafiles')
@@ -321,11 +369,11 @@ class Migration900
 		$this->deleteTable('#__bsms_media', $db);
 		$this->deleteTable('#__bsms_mimetype', $db);
 
-		$this->migratetemplatelists($db);
-		$this->updatetemplates($db);
+		$this->migrateTemplateLists($db);
+		$this->updateTemplates($db);
 		$this->css900();
 		$this->deleteUnexistingFiles();
-		$this->removeexpert($db);
+		$this->removeExpert($db);
 		$message                     = new stdClass;
 		$message->title_key          = 'JBS_POSTINSTALL_TITLE_TEMPLATE';
 		$message->description_key    = 'JBS_POSTINSTALL_BODY_TEMPLATE';
@@ -358,11 +406,11 @@ class Migration900
 	/**
 	 * Migrate Template Lists
 	 *
-	 * @param   JDatabaseDriver  $db  ?
+	 * @param   JDatabaseDriver  $db  Joomla Database driver
 	 *
-	 * @return void
+	 * @return bool
 	 */
-	private function migratetemplatelists($db)
+	private function migrateTemplateLists($db)
 	{
 
 		$query = $db->getQuery(true);
@@ -378,112 +426,112 @@ class Migration900
 			{
 				$row      = 1;
 				$col      = 1;
-				$return   = $this->changesetting($row, $col, $registry);
+				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
 			if ($registry->get('row1col2') > 0)
 			{
 				$row      = 1;
 				$col      = 2;
-				$return   = $this->changesetting($row, $col, $registry);
+				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
 			if ($registry->get('row1col3') > 0)
 			{
 				$row      = 1;
 				$col      = 3;
-				$return   = $this->changesetting($row, $col, $registry);
+				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
 			if ($registry->get('row1col4') > 0)
 			{
 				$row      = 1;
 				$col      = 4;
-				$return   = $this->changesetting($row, $col, $registry);
+				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
 			if ($registry->get('row2col1') > 0)
 			{
 				$row      = 2;
 				$col      = 1;
-				$return   = $this->changesetting($row, $col, $registry);
+				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
 			if ($registry->get('row2col2') > 0)
 			{
 				$row      = 2;
 				$col      = 2;
-				$return   = $this->changesetting($row, $col, $registry);
+				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
 			if ($registry->get('row2col3') > 0)
 			{
 				$row      = 2;
 				$col      = 3;
-				$return   = $this->changesetting($row, $col, $registry);
+				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
 			if ($registry->get('row2col4') > 0)
 			{
 				$row      = 2;
 				$col      = 4;
-				$return   = $this->changesetting($row, $col, $registry);
+				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
 			if ($registry->get('row3col1') > 0)
 			{
 				$row      = 3;
 				$col      = 1;
-				$return   = $this->changesetting($row, $col, $registry);
+				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
 			if ($registry->get('row3col2') > 0)
 			{
 				$row      = 3;
 				$col      = 2;
-				$return   = $this->changesetting($row, $col, $registry);
+				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
 			if ($registry->get('row3col3') > 0)
 			{
 				$row      = 3;
 				$col      = 3;
-				$return   = $this->changesetting($row, $col, $registry);
+				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
 			if ($registry->get('row3col4') > 0)
 			{
 				$row      = 3;
 				$col      = 4;
-				$return   = $this->changesetting($row, $col, $registry);
+				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
 			if ($registry->get('row4col1') > 0)
 			{
 				$row      = 4;
 				$col      = 1;
-				$return   = $this->changesetting($row, $col, $registry);
+				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
 			if ($registry->get('row4col2') > 0)
 			{
 				$row      = 4;
 				$col      = 2;
-				$return   = $this->changesetting($row, $col, $registry);
+				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
 			if ($registry->get('row4col3') > 0)
 			{
 				$row      = 4;
 				$col      = 3;
-				$return   = $this->changesetting($row, $col, $registry);
+				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
 			if ($registry->get('row4col4') > 0)
 			{
 				$row      = 4;
 				$col      = 4;
-				$return   = $this->changesetting($row, $col, $registry);
+				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
 			if ($registry->get('serieselement1') > 0)
@@ -539,24 +587,24 @@ class Migration900
 	 *
 	 * @return bool|string
 	 */
-	private function tsettingmigration($element)
+	private function testingMigration($element)
 	{
-		$elementtext = $this->element($element);
+		$elementText = $this->element($element);
 
-		return $elementtext;
+		return $elementText;
 
 	}
 
 	/**
 	 * Elements workings
 	 *
-	 * @param   int  $elementnumber  Number to stirng
+	 * @param   int  $elementNumber  Number to stirng
 	 *
 	 * @return bool|string
 	 */
-	private function element($elementnumber)
+	private function element($elementNumber)
 	{
-		switch ($elementnumber)
+		switch ($elementNumber)
 		{
 			case 1:
 				$element = 'scripture1';
@@ -679,10 +727,10 @@ class Migration900
 	 *
 	 * @return bool
 	 */
-	private function changesetting($row, $col, $registry)
+	private function changeSetting($row, $col, $registry)
 	{
 		$element = $registry->get('row' . $row . 'col' . $col);
-		$return  = $this->tsettingmigration($element);
+		$return  = $this->testingMigration($element);
 		$registry->set($return . 'row', $row);
 		$registry->set($return . 'col', $col);
 		$registry->set($return . 'colspan', $registry->get('r' . $row . 'c' . $col . 'span'));
@@ -694,11 +742,11 @@ class Migration900
 	/**
 	 * Remove Export function to TemplateFiles
 	 *
-	 * @param   JDatabaseDriver  $db  ?
+	 * @param   JDatabaseDriver  $db  Joomla Database driver
 	 *
 	 * @return bool
 	 */
-	private function removeexpert($db)
+	private function removeExpert($db)
 	{
 		jimport('joomla.client.helper');
 		jimport('joomla.filesystem.file');
@@ -716,8 +764,8 @@ class Migration900
 			{
 				$dataheaderlist = $registry->get('headercode');
 				$dataitemlist   = $registry->get('templatecode');
-				$dataheaderlist = $this->itemreplace($dataheaderlist);
-				$dataitemlist   = $this->itemreplace($dataitemlist);
+				$dataheaderlist = $this->itemReplace($dataheaderlist);
+				$dataitemlist   = $this->itemReplace($dataitemlist);
 				$filecontent    = '<?php defined(\'_JEXEC\') or die; ?>' . $dataheaderlist . '<?php foreach ($this->items as $study){ ?>' .
 					$dataitemlist . '<?php } ?>';
 				$filename       = 'default_listtemplate' . $filenumber;
@@ -735,7 +783,7 @@ class Migration900
 			if ($registry->get('useexpert_details') > 0)
 			{
 				$dataitemlist = $registry->get('study_detailtemplate');
-				$dataitemlist = $this->itemreplace($dataitemlist);
+				$dataitemlist = $this->itemReplace($dataitemlist);
 				$filecontent  = '<?php defined(\'_JEXEC\') or die; $study = $this->item; ?>' . $dataitemlist;
 				$filename     = 'default_sermontemplate' . $filenumber;
 				$file         = JPATH_ROOT . '/components/com_biblestudy/views/sermon/tmpl/' . $filename . '.php';
@@ -753,7 +801,7 @@ class Migration900
 			{
 				$dataheaderlist = $registry->get('teacher_headercode');
 				$dataitemlist   = $registry->get('teacher_templatecode');
-				$dataheaderlist = $this->itemreplace($dataheaderlist);
+				$dataheaderlist = $this->itemReplace($dataheaderlist);
 				$dataitemlist   = str_replace('{{title}}', '{{teachertitlelist}}', $dataitemlist);
 				$dataitemlist   = str_replace('{{teacher}}', '{{teachernamelist}}', $dataitemlist);
 				$dataitemlist   = str_replace('{{phone}}', '{{teacherphonelist}}', $dataitemlist);
@@ -762,7 +810,7 @@ class Migration900
 				$dataitemlist   = str_replace('{{image}}', '{{teacherimagelist}}', $dataitemlist);
 				$dataitemlist   = str_replace('{{thumbnail}}', '{{teacherthumbnaillist}}', $dataitemlist);
 				$dataitemlist   = str_replace('{{short}}', '{{teachershortlist}}', $dataitemlist);
-				$dataitemlist   = $this->itemreplace($dataitemlist);
+				$dataitemlist   = $this->itemReplace($dataitemlist);
 				$filecontent    = '<?php defined(\'_JEXEC\') or die; ?>' . $dataheaderlist . '<?php foreach ($this->items as $teacher){ ?>' .
 					$dataitemlist . '<?php } ?>';
 				$filename       = 'default_teacherstemplate' . $filenumber;
@@ -782,7 +830,7 @@ class Migration900
 				$dataitemlist = $registry->get('teacher_detailtemplate');
 				$dataitemlist = str_replace('{{title}}', '{{teachertitle}}', $dataitemlist);
 				$dataitemlist = str_replace('{{teacher}}', '{{teachername}}', $dataitemlist);
-				$dataitemlist = $this->itemreplace($dataitemlist);
+				$dataitemlist = $this->itemReplace($dataitemlist);
 				$filecontent  = '<?php defined(\'_JEXEC\') or die; ?>' . $dataitemlist;
 				$filename     = 'default_teachertemplate' . $filenumber;
 				$file         = JPATH_ROOT . '/components/com_biblestudy/views/teacher/tmpl/' . $filename . '.php';
@@ -808,13 +856,13 @@ class Migration900
 	}
 
 	/**
-	 * Replace Strings to actueal code
+	 * Replace Strings to actual code
 	 *
 	 * @param   string  $item  ?
 	 *
 	 * @return mixed
 	 */
-	private function itemreplace($item)
+	private function itemReplace($item)
 	{
 		$item = str_replace('{{teacher}}', '<?php echo $study->teachername; ?>', $item);
 		$item = str_replace('{{teachertitle}}', '<?php echo $this->item->title; ?>', $item);
@@ -885,7 +933,7 @@ class Migration900
 	 * Delete Table
 	 *
 	 * @param   string           $table  Table
-	 * @param   JDatabaseDriver  $db     Data bass driver
+	 * @param   JDatabaseDriver  $db     Joomla Database driver
 	 *
 	 * @return void
 	 */
@@ -898,11 +946,11 @@ class Migration900
 	/**
 	 * Update Templates to work with 9.0.0 that cannot be don doing normal sql file.
 	 *
-	 * @param   JDatabaseDriver  $db  Data bass driver
+	 * @param   JDatabaseDriver  $db  Joomla Database driver
 	 *
 	 * @return void
 	 */
-	private function updatetemplates($db)
+	private function updateTemplates($db)
 	{
 		$query = $db->getQuery(true);
 		$query->select('*')
@@ -1007,7 +1055,7 @@ class Migration900
 	 *
 	 * @return   void
 	 */
-	protected function deleteUnexistingFiles()
+	protected function deleteUnexactingFiles()
 	{
 		$files = array(
 			'/media/com_biblestudy/css/biblestudy.css.dist',
