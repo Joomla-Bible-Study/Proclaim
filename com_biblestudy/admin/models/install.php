@@ -83,7 +83,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	/** @var array Array of Install Task */
 	private $_install = array();
 
-	/** @var int If was inported */
+	/** @var int If was imported */
 	private $_isimport = 0;
 
 	/** @type string Type of process */
