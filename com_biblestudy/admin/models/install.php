@@ -77,8 +77,14 @@ class BibleStudyModelInstall extends JModelLegacy
 	/** @var string Version number to be running */
 	private $version = "0.0.0";
 
-	/** @var array Array of Sub Query of php files queries Task */
+	/** @type array PHP file steps for migrations */
+	private $subSteps = array();
+
+	/** @var array Array of Sub Query from php files queries Task */
 	private $_subQuery = array();
+
+	/** @type array list of php files to work through */
+	private $_subFiles = array();
 
 	/** @var array Array of Install Task */
 	private $_install = array();
@@ -177,7 +183,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		$this->_finish = array('updateversion', 'fixassets', 'fixmenus', 'fixemptyaccess', 'fixemptylanguage', 'rmoldurl', 'setupdateurl', 'finish');
 		$this->totalSteps += count($this->_finish);
 
-		// Check to see if this is not a migration before proceding.
+		// Check to see if this is not a migration before preceding.
 		if ($this->type != 'migration')
 		{
 			$this->type     = 'install';
@@ -384,8 +390,8 @@ class BibleStudyModelInstall extends JModelLegacy
 				}
 				elseif ($files)
 				{
-					$this->totalSteps    = count($files);
-					$this->_versionStack = $files;
+					$this->totalSteps    += count($files);
+					$this->_versionStack  = $files;
 				}
 				else
 				{
@@ -401,9 +407,12 @@ class BibleStudyModelInstall extends JModelLegacy
 				{
 					unset($php[$i]);
 				}
+				elseif ($php)
+				{
+					$this->totalSteps += count($files);
+					$this->_subFiles   = $php;
+				}
 			}
-
-			$this->totalSteps += count($php);
 		}
 		$this->_isimport = JFactory::getApplication()->input->getInt('jbsmalt', 0);
 		$this->totalSteps += 1;
@@ -543,6 +552,9 @@ class BibleStudyModelInstall extends JModelLegacy
 				'allupdates' => $this->_allupdates,
 				'finish'     => $this->_finish,
 				'install'    => $this->_install,
+				'subFiles'   => $this->_subFiles,
+				'subQuery'   => $this->_subQuery,
+				'subSteps'   => $this->subSteps,
 				'isimport'   => $this->_isimport,
 				'callstack'  => $this->callstack,
 				'total'      => $this->totalSteps,
@@ -574,6 +586,9 @@ class BibleStudyModelInstall extends JModelLegacy
 		$this->_allupdates   = array();
 		$this->_finish       = array();
 		$this->_install      = array();
+		$this->_subFiles     = array();
+		$this->_subQuery     = array();
+		$this->subSteps      = array();
 		$this->_isimport     = 0;
 		$this->callstack     = array();
 		$this->totalSteps    = 0;
@@ -603,6 +618,9 @@ class BibleStudyModelInstall extends JModelLegacy
 			$this->_allupdates   = array();
 			$this->_finish       = array();
 			$this->_install      = array();
+			$this->_subFiles     = array();
+			$this->_subQuery     = array();
+			$this->subSteps      = array();
 			$this->_isimport     = 0;
 			$this->callstack     = array();
 			$this->totalSteps    = 0;
@@ -619,6 +637,9 @@ class BibleStudyModelInstall extends JModelLegacy
 		$this->_allupdates   = $stack['allupdates'];
 		$this->_finish       = $stack['finish'];
 		$this->_install      = $stack['install'];
+		$this->_subFiles     = $stack['subFiles'];
+		$this->_subQuery     = $stack['subQuery'];
+		$this->subSteps      = $stack['subSteps'];
 		$this->_isimport     = $stack['isimport'];
 		$this->callstack     = $stack['callstack'];
 		$this->totalSteps    = $stack['total'];
@@ -684,23 +705,22 @@ class BibleStudyModelInstall extends JModelLegacy
 			}
 		}
 
-		if (!empty($this->_allupdates) && $this->haveEnoughTime() && empty($this->_subrun))
+		if (!empty($this->_allupdates) && $this->haveEnoughTime())
 		{
-			$percent = 100;
+			$run = true;
 			ksort($this->_allupdates);
-			while (!empty($this->_allupdates))
+			while (!empty($this->_allupdates) || !empty($this->_subFiles))
 			{
-				if ($this->totalSteps > 0)
+				if ($this->version !== key($this->_allupdates))
 				{
-					$percent = round($this->doneSteps / $this->totalSteps * 100);
+					$this->version = key($this->_allupdates);
+					$string        = array_shift($this->_allupdates);
+					$this->running = $this->version;
+					$run           = $this->runUpdates($string);
 				}
-				$key  = key($this->_allupdates);
-				$string = array_shift($this->_allupdates);
-				$this->running = $key . ', ' . $percent . '%';
-				$run           = $this->runUpdates($string);
-				if ($run && $this->type == 'migration')
+				elseif (in_array($this->version, $this->_subFiles))
 				{
-					$run = $this->updatePHP($key);
+					$run = $this->updatePHP($this->version);
 				}
 
 				if ($run == false)
@@ -1047,6 +1067,33 @@ class BibleStudyModelInstall extends JModelLegacy
 
 		$this->_allupdates = array_merge($this->_allupdates, array($value => $queries));
 
+		// Build php steps now.
+		$migration_file = JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/updates/' . $value . '.php';
+
+		if (JFile::exists($migration_file))
+		{
+			require_once $migration_file;
+			$migrationClass = "Migration" . str_ireplace(".", '', $value);
+			if (class_exists($migrationClass))
+			{
+				$migration       = new $migrationClass;
+				if (isset($migration->steps))
+				{
+					$steps = $migration->steps;
+					$this->totalSteps += count($steps);
+
+					// If Steps build is mandatory.
+					$migration->build($this->_db);
+					$this->subSteps  = array_merge($this->subSteps, array($value => $steps));
+					$this->_subQuery = array_merge($this->_subQuery, array($value => $migration->_query));
+				}
+				else
+				{
+					$this->subSteps = array_merge($this->subSteps, array($value => array('up')));
+				}
+			}
+		}
+
 		return true;
 	}
 
@@ -1113,30 +1160,47 @@ class BibleStudyModelInstall extends JModelLegacy
 		{
 			require_once $migration_file;
 			$migrationClass = "Migration" . str_ireplace(".", '', $value);
-			if (class_exists($migrationClass))
+			$migration = new $migrationClass;
+			if (!class_exists($migrationClass))
 			{
-				$migration = new $migrationClass;
-				$this->doneSteps++;
-				if (function_exists($migration->build) && empty($this->_subQuery))
-				{
-					$this->_subQuery = $migration->build($this->_db);
-				}
-				if (!$migration->up($this->_db, $this->_subQuery))
-				{
-					JLog::add(JText::sprintf('Data Migration failed'), JLog::WARNING, 'com_biblestudy');
-
-					return false;
-				}
+				return false;
 			}
 
-			return true;
+			if (!empty($this->subSteps) && !empty($this->_subFiles))
+			{
+				if (array_key_exists($value, $this->_subFiles))
+				{
+					foreach ($this->subSteps[$value] as $step)
+					{
+						// Pass only the queries for this Migration php class
+						$migration->query = $this->_subQuery[$value];
+						if (!$migration->$step($this->_db))
+						{
+							JLog::add(JText::sprintf('Data Migration failed'), JLog::WARNING, 'com_biblestudy');
+
+							return false;
+						}
+						array_diff($this->subSteps[$value], array($step));
+					}
+					if (!array_key_exists($value, $this->subSteps))
+					{
+						unset($this->_subFiles[$value]);
+					}
+					elseif (empty($this->subSteps[$value]))
+					{
+						unset($this->subSteps[$value]);
+					}
+				}
+				$this->doneSteps++;
+
+			}
 		}
 
 		return true;
 	}
 
 	/**
-	 * Cleanup postinstall before migration
+	 * Cleanup postInstall before migration
 	 *
 	 * @return void
 	 */

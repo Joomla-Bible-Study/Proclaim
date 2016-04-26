@@ -169,6 +169,9 @@ class BiblestudyViewInstall extends JViewLegacy
 			$this->_allupdates   = array();
 			$this->_finish       = array();
 			$this->_install      = array();
+			$this->_subFiles     = array();
+			$this->_subQuery     = array();
+			$this->subSteps      = array();
 			$this->_isimport     = 0;
 			$this->callstack     = array();
 			$this->totalSteps    = 0;
@@ -185,6 +188,9 @@ class BiblestudyViewInstall extends JViewLegacy
 		$this->_allupdates   = $stack['allupdates'];
 		$this->_finish       = $stack['finish'];
 		$this->_install      = $stack['install'];
+		$this->_subFiles     = $stack['subFiles'];
+		$this->_subQuery     = $stack['subQuery'];
+		$this->subSteps      = $stack['subSteps'];
 		$this->_isimport     = $stack['isimport'];
 		$this->callstack     = $stack['callstack'];
 		$this->totalSteps    = $stack['total'];
