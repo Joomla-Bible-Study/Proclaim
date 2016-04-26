@@ -272,7 +272,7 @@ class Migration900
 		$this->deleteTable('#__bsms_folders', $db);
 		$this->deleteTable('#__bsms_media', $db);
 		$this->deleteTable('#__bsms_mimetype', $db);
-		
+
 		$message                     = new stdClass;
 		$message->title_key          = 'JBS_POSTINSTALL_TITLE_TEMPLATE';
 		$message->description_key    = 'JBS_POSTINSTALL_BODY_TEMPLATE';
