@@ -52,14 +52,6 @@ class Migration900
 			$this->_media = array_merge($this->_media, array($server->id => $mediaFiles));
 		}
 
-		/** @var TableServer $newServer This is the new default server for all media */
-		$newServer              = JTable::getInstance('Server', 'Table', array('dbo' => $db));
-		$newServer->server_name = 'Default';
-		$newServer->type        = 'legacy';
-		$newServer->params      = '{"path":""}';
-		$newServer->id          = null;
-		$newServer->store();
-
 		// None Server related media files to migrate.
 		$query = $db->getQuery(true)->select('*')
 				->from('#__bsms_mediafiles')
@@ -68,9 +60,9 @@ class Migration900
 		$db->setQuery($query);
 		$mediaFiles2  = $db->loadObjectList();
 
-		$this->_media = array_merge($this->_media, array($newServer->id => $mediaFiles2));
+		$this->_media = array_merge($this->_media, array('nonserver' => $mediaFiles2));
 
-		$this->query = array_merge(array('servers' => $this->_servers), array('media' => $this->_media, 'newserver' => $newServer));
+		$this->query = array_merge(array('servers' => $this->_servers), array('media' => $this->_media));
 	}
 
 	/**
@@ -142,6 +134,21 @@ class Migration900
 	{
 		$registry = new Registry;
 		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_biblestudy/tables');
+
+		$query = "SELECT COUNT(*) FROM " . $db->qn('#__bsms_servers') . " WHERE " . $db->qn('type') . " = " . $db->q('legacy');
+		$db->setQuery($query);
+		$newServer = $db->loadResult();
+
+		if ($newServer !== null)
+		{
+			/** @var TableServer $newServer This is the new default server for all media */
+			$newServer              = JTable::getInstance('Server', 'Table', array('dbo' => $db));
+			$newServer->server_name = 'Default';
+			$newServer->type        = 'legacy';
+			$newServer->params      = '{"path":""}';
+			$newServer->id          = null;
+			$newServer->store();
+		}
 
 		// Foreach only the Media out of the array;
 		foreach ($this->query['media'] as $medias)

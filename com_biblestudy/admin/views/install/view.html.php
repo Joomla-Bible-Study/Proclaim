@@ -157,9 +157,9 @@ class BiblestudyViewInstall extends JViewLegacy
 	{
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true)
-			->select(array($db->quoteName('value')))
-			->from($db->quoteName('#__bsms_storage'))
-			->where($db->quoteName('key') . ' = ' . $db->quote('migration_stack'));
+			->select(array($db->qn('value')))
+			->from($db->qn('#__bsms_storage'))
+			->where($db->qn('key') . ' = ' . $db->q('migration_stack'));
 		$db->setQuery($query);
 		$stack = $db->loadResult();
 

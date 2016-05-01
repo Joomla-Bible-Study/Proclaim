@@ -709,8 +709,10 @@ class BibleStudyModelInstall extends JModelLegacy
 		{
 			$run = true;
 			ksort($this->_allupdates);
+
 			while (!empty($this->_allupdates) || !empty($this->_subFiles))
 			{
+
 				if ($this->version !== key($this->_allupdates))
 				{
 					$this->version = key($this->_allupdates);
@@ -1085,7 +1087,7 @@ class BibleStudyModelInstall extends JModelLegacy
 					// If Steps build is mandatory.
 					$migration->build($this->_db);
 					$this->subSteps  = array_merge($this->subSteps, array($value => $steps));
-					$this->_subQuery = array_merge($this->_subQuery, array($value => $migration->_query));
+					$this->_subQuery = array_merge($this->_subQuery, array($value => $migration->query));
 				}
 				else
 				{
