@@ -661,7 +661,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		$now     = $this->microtime_float();
 		$elapsed = abs($now - $this->_startTime);
 
-		return $elapsed < 2;
+		return $elapsed < 4;
 	}
 
 	/**
@@ -705,24 +705,37 @@ class BibleStudyModelInstall extends JModelLegacy
 			}
 		}
 
-		if (!empty($this->_allupdates) && $this->haveEnoughTime())
+		if ((!empty($this->_allupdates) || !empty($this->_subFiles)) && empty($this->_versionStack) && $this->haveEnoughTime())
 		{
 			$run = true;
+			$c = 0;
 			ksort($this->_allupdates);
 
 			while (!empty($this->_allupdates) || !empty($this->_subFiles))
 			{
 
-				if ($this->version !== key($this->_allupdates))
+				if ($c == 0)
 				{
 					$this->version = key($this->_allupdates);
 					$string        = array_shift($this->_allupdates);
 					$this->running = $this->version;
 					$run           = $this->runUpdates($string);
+					if ($run)
+					{
+						$c = 1;
+					}
 				}
-				elseif (in_array($this->version, $this->_subFiles))
+				elseif (in_array($this->version, $this->_subFiles) && isset($this->_subQuery[$this->version]))
 				{
 					$run = $this->updatePHP($this->version);
+					if (isset($this->_subQuery[$this->version]))
+					{
+						$c = 0;
+					}
+				}
+				else
+				{
+					$c = 0;
 				}
 
 				if ($run == false)
@@ -736,7 +749,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			}
 		}
 
-		if (!empty($this->_finish) && empty($this->_versionStack) && empty($this->_allupdates) && $this->haveEnoughTime())
+		if (!empty($this->_finish) && empty($this->_versionStack) && empty($this->_allupdates) && empty($this->_subFiles) && $this->haveEnoughTime())
 		{
 			while (!empty($this->_finish))
 			{
@@ -747,7 +760,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			}
 		}
 
-		if (empty($this->_install) && empty($this->_versionStack) && empty($this->_allupdates) && empty($this->_finish))
+		if (empty($this->_install) && empty($this->_versionStack) && empty($this->_allupdates) && empty($this->_subFiles) && empty($this->_finish))
 		{
 			// Just finished
 			$this->resetStack();

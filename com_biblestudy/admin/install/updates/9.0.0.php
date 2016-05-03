@@ -226,7 +226,17 @@ class Migration900
 
 				$registry->loadObject($params);
 
-				$newMediaFile->server_id = $this->query['old-' . $i]->id;
+				// Check to see if a server is set for this media or fall back to default server.
+				if (array_key_exists('old-' . $i, $this->query))
+				{
+					// Use old server ID to find new server ID.
+					$newMediaFile->server_id = $this->query['old-' . $i]->id;
+				}
+				else
+				{
+					// Use default server ID.
+					$newMediaFile->server_id = $newServer->id;
+				}
 				$newMediaFile->params    = $registry->toString();
 				$newMediaFile->metadata  = json_encode($metadata);
 				$newMediaFile->id        = null;

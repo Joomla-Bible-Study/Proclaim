@@ -33,6 +33,12 @@ class BiblestudyViewInstall extends JViewLegacy
 	/** @var array Call stack for the Visioning System. */
 	public $callstack = array();
 
+	public $subSteps;
+
+	public $_subQuery;
+
+	public $_subFiles;
+
 	/** @var string More */
 	protected $more;
 
@@ -49,13 +55,13 @@ class BiblestudyViewInstall extends JViewLegacy
 	private $_versionStack = array();
 
 	/** @var array The pre versions sub sql array to process */
-	private $_allupdates = array();
+	public $_allupdates = array();
 
 	/** @var array Array of Finish Task */
 	private $_finish = array();
 
 	/** @var array Array of Install Task */
-	private $_install = array();
+	public $_install = array();
 
 	/** @var int If was inported */
 	private $_isimport = 0;

@@ -105,6 +105,10 @@ else
 	?>
 </div>
 
-<div id="error-panel" style="display: none;">
-
+<div id="error-panel" style="display: block;">
+	<?php echo 'Install: '; var_dump($this->_install); ?>
+	<?php echo 'All Updates: '; var_dump($this->_allupdates); ?>
+	<?php echo 'Sub Steps: '; var_dump($this->subSteps); ?>
+	<?php echo 'Call Stack: '; var_dump($this->callstack); ?>
+	<?php echo 'Sub Query: '; var_dump($this->_subQuery); ?>
 </div>
