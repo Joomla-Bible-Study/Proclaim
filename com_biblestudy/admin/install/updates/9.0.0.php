@@ -70,57 +70,57 @@ class Migration900
 	 *
 	 * @param   JDatabaseDriver  $db  Joomla database driver
 	 *
-	 * @return null
+	 * @return bool
 	 */
 	public function servers($db)
 	{
 		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_biblestudy/tables');
 
 		// Foreach only the Servers section.
-		foreach ($this->query['servers'] as $servers)
+		foreach ($this->query['servers'] as $i => $servers)
 		{
-			// Here is the array('id of server', 'Server Table').
-			foreach ($servers as $server)
+			$server = (object) $servers;
+
+			/** @var TableServer $newServer */
+			$newServer = JTable::getInstance('Server', 'Table', array('dbo' => $db));
+			$newServer->load($server->id);
+			$params = array();
+
+			if (!empty($server->ftphost))
 			{
-				/** @var TableServer $newServer */
-				$newServer = JTable::getInstance('Server', 'Table', array('dbo' => $db));
-				$newServer->load($server->id);
-				$params = array();
-
-				if (!empty($server->ftphost))
-				{
-					// Migrate FTP server type
-					$newServer->type       = "ftp";
-					$params['ftphost']     = $server->ftp_username;
-					$params['ftpuser']     = $server->ftp_password;
-					$params['ftppassword'] = $server->ftp_password;
-					$params['ftpport']     = $server->ftp_password;
-				}
-				elseif (!empty($server->aws_key))
-				{
-					// Migrate AWS server type
-					$newServer->type      = "aws";
-					$params['aws_key']    = $server->aws_key;
-					$params['aws_secret'] = $server->aws_secret;
-				}
-				else
-				{
-					// Migrate to a default legacy server type
-					$newServer->type = "legacy";
-					$params['path']  = $server->server_path;
-				}
-
-				$newServer->params = json_encode($params);
-				$newServer->id     = null;
-				$newServer->store();
-
-				// Delete old server
-				JTable::getInstance('Server', 'Table', array('dbo' => $db))->delete($server->id);
-
-				$this->query = array_merge($this->query, array('old-' . $server->id => $newServer));
+				// Migrate FTP server type
+				$newServer->type       = "ftp";
+				$params['ftphost']     = $server->ftp_username;
+				$params['ftpuser']     = $server->ftp_password;
+				$params['ftppassword'] = $server->ftp_password;
+				$params['ftpport']     = $server->ftp_password;
 			}
+			elseif (!empty($server->aws_key))
+			{
+				// Migrate AWS server type
+				$newServer->type      = "aws";
+				$params['aws_key']    = $server->aws_key;
+				$params['aws_secret'] = $server->aws_secret;
+			}
+			else
+			{
+				// Migrate to a default legacy server type
+				$newServer->type = "legacy";
+				$params['path']  = $server->server_path;
+			}
+
+			$newServer->params = json_encode($params);
+			$newServer->id     = null;
+			$newServer->store();
+
+			// Delete old server
+			JTable::getInstance('Server', 'Table', array('dbo' => $db))->delete($server->id);
+
+			unset($this->query['servers'][$i]);
+			$this->query = array_merge($this->query, array('old-' . $server->id => $newServer));
 		}
-		return;
+
+		return true;
 	}
 
 	/**
@@ -128,18 +128,22 @@ class Migration900
 	 *
 	 * @param   JDatabaseDriver  $db  Joomla database driver
 	 *
-	 * @return null
+	 * @return bool
 	 */
 	public function media($db)
 	{
 		$registry = new Registry;
 		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_biblestudy/tables');
 
-		$query = "SELECT COUNT(*) FROM " . $db->qn('#__bsms_servers') . " WHERE " . $db->qn('type') . " = " . $db->q('legacy');
+		$query = $db->getQuery(true);
+		$query->select('*')
+			->from($db->qn('#__bsms_servers'))
+			->where($db->qn('type') . " = " . $db->q('legacy'))
+			->where($db->qn('server_name') . " = " . $db->q('Default'));
 		$db->setQuery($query);
-		$newServer = $db->loadResult();
+		$newServer = $db->loadObject();
 
-		if ($newServer !== null)
+		if ($newServer === null)
 		{
 			/** @var TableServer $newServer This is the new default server for all media */
 			$newServer              = JTable::getInstance('Server', 'Table', array('dbo' => $db));
@@ -151,11 +155,11 @@ class Migration900
 		}
 
 		// Foreach only the Media out of the array;
-		foreach ($this->query['media'] as $medias)
+		foreach ($this->query['media'] as $m => $media)
 		{
-			// Here is the array('Old Server ID', 'MediaFiles Table').
-			foreach ($medias as $i => $mediaFile)
+			foreach ($media as $i => $medias)
 			{
+				$mediaFile = (object) $medias;
 
 				/** @var TableMediafile $newMediaFile */
 				$newMediaFile = JTable::getInstance('Mediafile', 'Table', array('dbo' => $db));
@@ -227,26 +231,29 @@ class Migration900
 				$registry->loadObject($params);
 
 				// Check to see if a server is set for this media or fall back to default server.
-				if (array_key_exists('old-' . $i, $this->query))
+				if (array_key_exists('old-' . $mediaFile->server, $this->query))
 				{
 					// Use old server ID to find new server ID.
-					$newMediaFile->server_id = $this->query['old-' . $i]->id;
+					$newMediaFile->server_id = $this->query['old-' . $mediaFile->server]->id;
 				}
 				else
 				{
 					// Use default server ID.
 					$newMediaFile->server_id = $newServer->id;
 				}
-				$newMediaFile->params    = $registry->toString();
-				$newMediaFile->metadata  = json_encode($metadata);
-				$newMediaFile->id        = null;
+				$newMediaFile->params   = $registry->toString();
+				$newMediaFile->metadata = json_encode($metadata);
+				$newMediaFile->id       = null;
 				$newMediaFile->store();
+
+				unset($this->query['media'][$i]);
 
 				// Delete old mediafile
 				JTable::getInstance('Mediafile', 'Table', array('dbo' => $db))->delete($mediaFile->id);
 			}
 		}
-		return;
+
+		return true;
 	}
 
 	/**

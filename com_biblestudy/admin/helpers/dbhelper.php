@@ -275,31 +275,6 @@ class JBSMDbHelper
 	}
 
 	/**
-	 * Get State of install for Main Admin Controller
-	 *
-	 * @return Registry
-	 *
-	 * @since 7.1.0
-	 */
-	public static function setInstallState()
-	{
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true);
-		$query->update('#__bsms_admin')
-			->set('installstate = NULL')
-			->where('id = 1');
-
-		if (!self::performDB($query, null))
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
-	}
-
-	/**
 	 * Fix up css.
 	 *
 	 * @param   string   $filename  Name of css file

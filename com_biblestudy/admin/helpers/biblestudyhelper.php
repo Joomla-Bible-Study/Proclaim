@@ -657,4 +657,23 @@ class JBSMBibleStudyHelper
 
 		array_multisort($sort_col, $dir, $arr);
 	}
+
+	/**
+	 * Debug stop
+	 * 
+	 * @param   string  $msg  Message to sent.
+	 *
+	 * @throws \Exception
+	 */
+	public static function stop($msg = '')
+	{
+		echo $msg;
+		$mainframe = JFactory::getApplication();
+		$mainframe->close();
+		/*
+	  Alternative:
+	  echo $msg;
+	  jexit();
+	  */
+	}
 }

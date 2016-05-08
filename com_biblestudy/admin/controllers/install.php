@@ -65,7 +65,7 @@ class BiblestudyControllerInstall extends JControllerForm
 	 */
 	public function execute($task)
 	{
-		if ($task != 'run')
+		if ($task != 'run' && $task != 'clear')
 		{
 			$task = 'browse';
 		}
@@ -80,12 +80,40 @@ class BiblestudyControllerInstall extends JControllerForm
 	public function browse()
 	{
 		$app = JFactory::getApplication();
+		$session = JFactory::getSession();
+		$stack = $session->get('migration_stack', '', 'JBSM');
+		if (empty($stack))
+		{
+			/** @var BibleStudyModelInstall $model */
+			$model = $this->getModel('install');
+			$state = $model->startScanning();
+			$app->input->set('scanstate', $state);
+			$app->input->set('view', 'install');
+
+			$this->display(false);
+		}
+		else
+		{
+			$this->run();
+		}
+	}
+
+	/**
+	 * Start of installer display hook.
+	 *
+	 * @return void
+	 */
+	public function clear()
+	{
+		$app = JFactory::getApplication();
+		$session = JFactory::getSession();
+		$session->set('migration_stack', '', 'JBSM');
 		/** @var BibleStudyModelInstall $model */
 		$model = $this->getModel('install');
 		$state = $model->startScanning();
 		$app->input->set('scanstate', $state);
-		$app->input->set('view', 'install');
 
+		$app->input->set('view', 'install');
 		$this->display(false);
 	}
 
@@ -99,6 +127,7 @@ class BiblestudyControllerInstall extends JControllerForm
 	public function run()
 	{
 		$app   = JFactory::getApplication();
+		/** @var BibleStudyModelInstall $model */
 		$model = $this->getModel('install');
 		$state = $model->run();
 		$app->input->set('scanstate', $state);

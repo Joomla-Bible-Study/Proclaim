@@ -70,7 +70,7 @@ else
 	<form action="index.php" name="adminForm" id="adminForm" method="get">
 		<input type="hidden" name="option" value="com_biblestudy"/>
 		<input type="hidden" name="view" value="install"/>
-		<?php if ($this->state == 'start')
+		<?php if ($this->state === 'start')
 		{ ?>
 			<input type="hidden" name="task" value="install.browse"/>
 		<?php }
@@ -105,10 +105,5 @@ else
 	?>
 </div>
 
-<div id="error-panel" style="display: block;">
-	<?php echo 'Install: '; var_dump($this->_install); ?>
-	<?php echo 'All Updates: '; var_dump($this->_allupdates); ?>
-	<?php echo 'Sub Steps: '; var_dump($this->subSteps); ?>
-	<?php echo 'Call Stack: '; var_dump($this->callstack); ?>
-	<?php echo 'Sub Query: '; var_dump($this->_subQuery); ?>
+<div id="error-panel" style="display: none;">
 </div>
