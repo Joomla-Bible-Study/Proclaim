@@ -17,7 +17,7 @@ use \Joomla\Registry\Registry;
  */
 class Migration900
 {
-	public $steps = array('servers', 'media' ,'cleanup', 'migrateTemplateLists',
+	public $steps = array('servers', 'media' , 'migrateTemplateLists',
 			'updateTemplates', 'removeExpert', 'deleteUnexactingFiles', 'up');
 
 	public $query = array();
@@ -25,6 +25,8 @@ class Migration900
 	private $_media = array();
 
 	private $_servers = array();
+
+	public $count = 0;
 
 	/**
 	 * Build steps and query
@@ -39,7 +41,7 @@ class Migration900
 		$query = $db->getQuery(true)->select('*')->from('#__bsms_servers');
 		$db->setQuery($query);
 		$servers = $db->loadObjectList();
-
+		$this->_servers = array_merge($this->_servers, $servers);
 		foreach ($servers as $server)
 		{
 			// Find media files for server.
@@ -48,8 +50,7 @@ class Migration900
 					->where('server = ' . $server->id);
 			$db->setQuery($query);
 			$mediaFiles   = $db->loadObjectList();
-			$this->_servers = array_merge($this->_servers, array($server->id => $server));
-			$this->_media = array_merge($this->_media, array($server->id => $mediaFiles));
+			$this->_media = array_merge($this->_media, $mediaFiles);
 		}
 
 		// None Server related media files to migrate.
@@ -60,7 +61,9 @@ class Migration900
 		$db->setQuery($query);
 		$mediaFiles2  = $db->loadObjectList();
 
-		$this->_media = array_merge($this->_media, array('nonserver' => $mediaFiles2));
+		$this->_media = array_merge($this->_media, $mediaFiles2);
+		$this->count = count($this->_media);
+		$this->count += count($this->_servers);
 
 		$this->query = array_merge(array('servers' => $this->_servers), array('media' => $this->_media));
 	}
@@ -68,57 +71,58 @@ class Migration900
 	/**
 	 * Update Servers
 	 *
-	 * @param   JDatabaseDriver  $db  Joomla database driver
+	 * @param   JDatabaseDriver  $db      Joomla database driver
+	 * @param   array            $server  Server to proses
 	 *
 	 * @return bool
 	 */
-	public function servers($db)
+	public function servers($db, $server)
 	{
 		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_biblestudy/tables');
-
-		// Foreach only the Servers section.
-		foreach ($this->query['servers'] as $i => $servers)
+		$server = (object) $server;
+		if (!isset($server->id))
 		{
-			$server = (object) $servers;
-
-			/** @var TableServer $newServer */
-			$newServer = JTable::getInstance('Server', 'Table', array('dbo' => $db));
-			$newServer->load($server->id);
-			$params = array();
-
-			if (!empty($server->ftphost))
-			{
-				// Migrate FTP server type
-				$newServer->type       = "ftp";
-				$params['ftphost']     = $server->ftp_username;
-				$params['ftpuser']     = $server->ftp_password;
-				$params['ftppassword'] = $server->ftp_password;
-				$params['ftpport']     = $server->ftp_password;
-			}
-			elseif (!empty($server->aws_key))
-			{
-				// Migrate AWS server type
-				$newServer->type      = "aws";
-				$params['aws_key']    = $server->aws_key;
-				$params['aws_secret'] = $server->aws_secret;
-			}
-			else
-			{
-				// Migrate to a default legacy server type
-				$newServer->type = "legacy";
-				$params['path']  = $server->server_path;
-			}
-
-			$newServer->params = json_encode($params);
-			$newServer->id     = null;
-			$newServer->store();
-
-			// Delete old server
-			JTable::getInstance('Server', 'Table', array('dbo' => $db))->delete($server->id);
-
-			unset($this->query['servers'][$i]);
-			$this->query = array_merge($this->query, array('old-' . $server->id => $newServer));
+			return true;
 		}
+
+		JLog::add('Server on: ' . $server->id, JLog::INFO, 'com_biblestudy');
+
+		/** @var TableServer $newServer */
+		$newServer = JTable::getInstance('Server', 'Table', array('dbo' => $db));
+		$newServer->load($server->id);
+		$params = array();
+
+		if (!empty($server->ftphost))
+		{
+			// Migrate FTP server type
+			$newServer->type       = "ftp";
+			$params['ftphost']     = $server->ftp_username;
+			$params['ftpuser']     = $server->ftp_password;
+			$params['ftppassword'] = $server->ftp_password;
+			$params['ftpport']     = $server->ftp_password;
+		}
+		elseif (!empty($server->aws_key))
+		{
+			// Migrate AWS server type
+			$newServer->type      = "aws";
+			$params['aws_key']    = $server->aws_key;
+			$params['aws_secret'] = $server->aws_secret;
+		}
+		else
+		{
+			// Migrate to a default legacy server type
+			$newServer->type = "legacy";
+			$params['path']  = $server->server_path;
+		}
+
+		$newServer->params = json_encode($params);
+		$newServer->id     = null;
+		$newServer->store();
+
+		// Delete old server
+		JTable::getInstance('Server', 'Table', array('dbo' => $db))->delete($server->id);
+
+		$this->query = array_merge($this->query, array('old-' . $server->id => $newServer));
 
 		return true;
 	}
@@ -126,12 +130,18 @@ class Migration900
 	/**
 	 * Update Media
 	 *
-	 * @param   JDatabaseDriver  $db  Joomla database driver
+	 * @param   JDatabaseDriver  $db     Joomla database driver
+	 * @param   array            $media  Media to proses.
 	 *
 	 * @return bool
 	 */
-	public function media($db)
+	public function media($db, $media)
 	{
+		if (!isset($media['id']))
+		{
+			return true;
+		}
+		$mediaFile = (object) $media;
 		$registry = new Registry;
 		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_biblestudy/tables');
 
@@ -152,107 +162,113 @@ class Migration900
 			$newServer->params      = '{"path":""}';
 			$newServer->id          = null;
 			$newServer->store();
+
+			// Modify admin table to add thumbnail default parameters
+			/** @type TableAdmin $admin */
+			$query = $db->getQuery(true);
+			$query->select('*')
+				->from('#__bsms_admin')
+				->where('id = 1');
+			$db->setQuery($query);
+			$admin    = $db->loadObject();
+			$registry = new Registry;
+			$registry->loadString($admin->params);
+			$registry->set('server', $newServer->id);
+			$admin->params = $registry->toString();
+			$query         = $db->getQuery(true);
+			$query->update('#__bsms_admin')->set('params = ' . $db->q($admin->params))->where('id = 1');
+			$db->setQuery($query);
+			$db->execute();
 		}
 
-		// Foreach only the Media out of the array;
-		foreach ($this->query['media'] as $m => $media)
+		JLog::add('Media working on: ' . $mediaFile->id, JLog::INFO, 'com_biblestudy');
+		/** @var TableMediafile $newMediaFile */
+		$newMediaFile = JTable::getInstance('Mediafile', 'Table', array('dbo' => $db));
+		$newMediaFile->load($mediaFile->id);
+		$metadata = array();
+
+		$query = $db->getQuery(true);
+		$query->select('*')->from('#__bsms_media')->where('id = ' . $mediaFile->media_image);
+		$db->setQuery($query);
+
+		$mediaImage = $db->loadObject();
+
+		$query = $db->getQuery(true);
+		$query->select('*')->from('#__bsms_mimetype')->where('id = ' . $mediaFile->mime_type);
+		$db->setQuery($query);
+
+		$mimtype = $db->loadObject();
+
+		$mimage = null;
+
+		// Some people do not have logos set to there media so we have this.
+		if (!$mediaImage)
 		{
-			foreach ($media as $i => $medias)
+			$mediaImage                = new stdClass;
+			$mediaImage->media_alttext = '';
+		}
+		else
+		{
+			if ($mediaImage->media_image_path)
 			{
-				$mediaFile = (object) $medias;
-
-				/** @var TableMediafile $newMediaFile */
-				$newMediaFile = JTable::getInstance('Mediafile', 'Table', array('dbo' => $db));
-				$newMediaFile->load($mediaFile->id);
-				$metadata = array();
-
-				$query = $db->getQuery(true);
-				$query->select('*')->from('#__bsms_media')->where('id = ' . $mediaFile->media_image);
-				$db->setQuery($query);
-
-				$mediaImage = $db->loadObject();
-
-				$query = $db->getQuery(true);
-				$query->select('*')->from('#__bsms_mimetype')->where('id = ' . $mediaFile->mime_type);
-				$db->setQuery($query);
-
-				$mimtype = $db->loadObject();
-
-				$mimage = null;
-
-				// Some people do not have logos set to there media so we have this.
-				if (!$mediaImage)
-				{
-					$mediaImage                = new stdClass;
-					$mediaImage->media_alttext = '';
-				}
-				else
-				{
-					if ($mediaImage->media_image_path)
-					{
-						$mimage = $mediaImage->media_image_path;
-					}
-					else
-					{
-						$mimage = 'images/biblestudy/' . $mediaImage->path2;
-					}
-				}
-				$registry->loadString($mediaFile->params);
-				$params = $registry->toObject();
-
-				$params->media_image = $mimage;
-				$params->media_text  = $mediaImage->media_alttext;
-				if (!empty($mimtype))
-				{
-					$params->mime_type = $mimtype->mimetype;
-				}
-				$params->special = $mediaFile->special;
-				if (!empty($mediaFile->filename))
-				{
-					$params->filename = $mediaFile->filename;
-				}
-				else
-				{
-					$params->filename = '';
-				}
-				if ($mediaFile->player == '100')
-				{
-					$mediaFile->player = '';
-				}
-				$params->player        = $mediaFile->player;
-				$params->size          = $mediaFile->size;
-				$params->mediacode     = $mediaFile->mediacode;
-				$params->link_type     = $mediaFile->link_type;
-				$params->docMan_id     = $mediaFile->docMan_id;
-				$params->article_id    = $mediaFile->article_id;
-				$params->virtueMart_id = $mediaFile->virtueMart_id;
-				$params->popup         = $mediaFile->popup;
-
-				$registry->loadObject($params);
-
-				// Check to see if a server is set for this media or fall back to default server.
-				if (array_key_exists('old-' . $mediaFile->server, $this->query))
-				{
-					// Use old server ID to find new server ID.
-					$newMediaFile->server_id = $this->query['old-' . $mediaFile->server]->id;
-				}
-				else
-				{
-					// Use default server ID.
-					$newMediaFile->server_id = $newServer->id;
-				}
-				$newMediaFile->params   = $registry->toString();
-				$newMediaFile->metadata = json_encode($metadata);
-				$newMediaFile->id       = null;
-				$newMediaFile->store();
-
-				unset($this->query['media'][$i]);
-
-				// Delete old mediafile
-				JTable::getInstance('Mediafile', 'Table', array('dbo' => $db))->delete($mediaFile->id);
+				$mimage = $mediaImage->media_image_path;
+			}
+			else
+			{
+				$mimage = 'images/biblestudy/' . $mediaImage->path2;
 			}
 		}
+		$registry->loadString($mediaFile->params);
+		$params = $registry->toObject();
 
+		$params->media_image = $mimage;
+		$params->media_text  = $mediaImage->media_alttext;
+		if (!empty($mimtype))
+		{
+			$params->mime_type = $mimtype->mimetype;
+		}
+		$params->special = $mediaFile->special;
+		if (!empty($mediaFile->filename))
+		{
+			$params->filename = $mediaFile->filename;
+		}
+		else
+		{
+			$params->filename = '';
+		}
+		if ($mediaFile->player == '100')
+		{
+			$mediaFile->player = '';
+		}
+		$params->player        = $mediaFile->player;
+		$params->size          = $mediaFile->size;
+		$params->mediacode     = $mediaFile->mediacode;
+		$params->link_type     = $mediaFile->link_type;
+		$params->docMan_id     = $mediaFile->docMan_id;
+		$params->article_id    = $mediaFile->article_id;
+		$params->virtueMart_id = $mediaFile->virtueMart_id;
+		$params->popup         = $mediaFile->popup;
+
+		$registry->loadObject($params);
+
+		// Check to see if a server is set for this media or fall back to default server.
+		if (array_key_exists('old-' . $mediaFile->server, $this->query))
+		{
+			// Use old server ID to find new server ID.
+			$newMediaFile->server_id = $this->query['old-' . $mediaFile->server]->id;
+		}
+		else
+		{
+			// Use default server ID.
+			$newMediaFile->server_id = $newServer->id;
+		}
+		$newMediaFile->params   = $registry->toString();
+		$newMediaFile->metadata = json_encode($metadata);
+		$newMediaFile->id       = null;
+		$newMediaFile->store();
+
+		// Delete old mediaFile
+		JTable::getInstance('Mediafile', 'Table', array('dbo' => $db))->delete($mediaFile->id);
 		return true;
 	}
 
@@ -275,23 +291,6 @@ class Migration900
 		$columns = array('ftphost', 'ftpuser', 'ftppassword', 'ftpport', 'server_path', 'aws_key', 'aws_secret',
 			'server_type', 'ftp_username', 'ftp_password');
 		$this->deleteColumns('#__bsms_servers', $columns, $db);
-
-		// Modify admin table to add thumbnail default parameters
-		/** @type TableAdmin $admin */
-		$query = $db->getQuery(true);
-		$query->select('*')
-			->from('#__bsms_admin')
-			->where('id = 1');
-		$db->setQuery($query);
-		$admin    = $db->loadObject();
-		$registry = new Registry;
-		$registry->loadString($admin->params);
-		$registry->set('server', $this->query['newserver']->id);
-		$admin->params = $registry->toString();
-		$query         = $db->getQuery(true);
-		$query->update('#__bsms_admin')->set('params = ' . $db->q($admin->params))->where('id = 1');
-		$db->setQuery($query);
-		$db->execute();
 
 		$this->deleteTable('#__bsms_folders', $db);
 		$this->deleteTable('#__bsms_media', $db);
@@ -862,7 +861,7 @@ class Migration900
 	 */
 	private function deleteTable($table, $db)
 	{
-		$db->setQuery('DROP TABLE ' . $db->qn($table));
+		$db->setQuery('DROP TABLE IF EXISTS ' . $db->qn($table));
 		$db->execute();
 	}
 

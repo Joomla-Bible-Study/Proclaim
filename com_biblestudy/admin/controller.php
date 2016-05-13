@@ -59,7 +59,7 @@ class BiblestudyController extends JControllerLegacy
 
 		if ($jbsstate)
 		{
-			$cache = new JCache(array('defaultgroup' => 'default'));
+			$cache = new JCache(array('defaultgroup' => 'com_biblestudy'));
 			$cache->clean();
 			$app->input->set('view', 'install');
 			$app->input->set('scanstate', 'start');

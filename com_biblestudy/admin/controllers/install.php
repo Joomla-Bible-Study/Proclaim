@@ -99,22 +99,17 @@ class BiblestudyControllerInstall extends JControllerForm
 	}
 
 	/**
-	 * Start of installer display hook.
+	 * Clear and start of installer display hook.
 	 *
 	 * @return void
 	 */
 	public function clear()
 	{
-		$app = JFactory::getApplication();
+		$cache = new JCache(array('defaultgroup' => 'com_biblestudy'));
+		$cache->clean();
 		$session = JFactory::getSession();
 		$session->set('migration_stack', '', 'JBSM');
-		/** @var BibleStudyModelInstall $model */
-		$model = $this->getModel('install');
-		$state = $model->startScanning();
-		$app->input->set('scanstate', $state);
-
-		$app->input->set('view', 'install');
-		$this->display(false);
+		$this->browse();
 	}
 
 	/**

@@ -56,6 +56,9 @@ class BiblestudyViewInstall extends JViewLegacy
 	/** @var array The pre versions to process */
 	private $_versionStack = array();
 
+	/** @var array The pre versions to process */
+	private $_versionSwitch = null;
+
 	/** @var array The pre versions sub sql array to process */
 	public $_allupdates = array();
 
@@ -159,21 +162,21 @@ class BiblestudyViewInstall extends JViewLegacy
 
 		$stack = json_decode($stack, true);
 
-		var_dump($stack);
-		$this->version       = $stack['aversion'];
-		$this->_versionStack = $stack['version'];
-		$this->_allupdates   = $stack['allupdates'];
-		$this->_finish       = $stack['finish'];
-		$this->_install      = $stack['install'];
-		$this->_subFiles     = $stack['subFiles'];
-		$this->_subQuery     = $stack['subQuery'];
-		$this->subSteps      = $stack['subSteps'];
-		$this->_isimport     = $stack['isimport'];
-		$this->callstack     = $stack['callstack'];
-		$this->totalSteps    = $stack['total'];
-		$this->doneSteps     = $stack['done'];
-		$this->running       = $stack['run'];
-		$this->type          = $stack['type'];
+		$this->version        = $stack['aversion'];
+		$this->_versionStack  = $stack['version'];
+		$this->_versionSwitch = $stack['switch'];
+		$this->_allupdates    = $stack['allupdates'];
+		$this->_finish        = $stack['finish'];
+		$this->_install       = $stack['install'];
+		$this->_subFiles      = $stack['subFiles'];
+		$this->_subQuery      = $stack['subQuery'];
+		$this->subSteps       = $stack['subSteps'];
+		$this->_isimport      = $stack['isimport'];
+		$this->callstack      = $stack['callstack'];
+		$this->totalSteps     = $stack['total'];
+		$this->doneSteps      = $stack['done'];
+		$this->running        = $stack['run'];
+		$this->type           = $stack['type'];
 
 		return true;
 
