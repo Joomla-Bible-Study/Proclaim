@@ -707,12 +707,12 @@ class BibleStudyModelInstall extends JModelLegacy
 			while (!empty($this->_versionStack) && $this->haveEnoughTime())
 			{
 				$version           = array_pop($this->_versionStack);
-				$this->running .= ', ' . $version;
+				$this->running = $version;
 				$this->doneSteps++;
 				$run = $this->allUpdate($version);
 				if (!$run)
 				{
-					JFactory::getApplication()->enqueueMessage('error updateing updates', 'error');
+					JFactory::getApplication()->enqueueMessage('error updating updates', 'error');
 				}
 			}
 		}
@@ -768,7 +768,10 @@ class BibleStudyModelInstall extends JModelLegacy
 							if (!isset($this->_subQuery[$this->version][$step]) && !empty($this->subSteps[$this->version]))
 							{
 								$step = $this->_versionSwitch = array_shift($this->subSteps[$this->version]);
-								JLog::add('change step : ' . $step, JLog::INFO, 'com_biblestudy');
+								if (JBSMDEBUG)
+								{
+									JLog::add('change step : ' . $step, JLog::INFO, 'com_biblestudy');
+								}
 							}
 
 							if (isset($this->_subQuery[$this->version][$step]) && !empty($this->_subQuery[$this->version][$step]))
@@ -780,19 +783,24 @@ class BibleStudyModelInstall extends JModelLegacy
 							{
 								unset($this->_subQuery[$this->version][$step]);
 								$this->_versionSwitch = null;
-								JLog::add('Uset Sub Query if empty : ' . $step . ' ' . $this->version, JLog::INFO, 'com_biblestudy');
+								if (JBSMDEBUG)
+								{
+									JLog::add('Uset Sub Query if empty : ' . $step . ' ' . $this->version, JLog::INFO, 'com_biblestudy');
+								}
 							}
 
 							if (empty($step) && empty($query))
 							{
 								unset($this->_subFiles[$this->version]);
 								unset($this->subSteps[$this->version]);
-
-								JLog::add('Uset Version in All updates : ' . $this->version, JLog::INFO, 'com_biblestudy');
+								if (JBSMDEBUG)
+								{
+									JLog::add('Uset Version in All updates : ' . $this->version, JLog::INFO, 'com_biblestudy');
+								}
 							}
 							else
 							{
-								$this->running = 'PHP Sub Prosses: ' . $this->version . ' - ' . $step;
+								$this->running = 'PHP Sub Proses: ' . $this->version . ' - ' . $step;
 								$migration->$step(JFactory::getDbo(), $query);
 
 								// Pull back the Query form PHP file if any.
@@ -808,7 +816,10 @@ class BibleStudyModelInstall extends JModelLegacy
 									$queryString = str_replace(array("\r", "\n"), array('', ' '), substr($queryString, 0, 80));
 									$queryString = ' ID:' . $queryString . ' Query count: ' . count($this->_subQuery[$this->version][$step]);
 								}
-								JLog::add('Doing Step in ' . $migrationClass . ' Step: ' . $step . $queryString, JLog::INFO, 'com_biblestudy');
+								if (JBSMDEBUG)
+								{
+									JLog::add('Doing Step in ' . $migrationClass . ' Step: ' . $step . $queryString, JLog::INFO, 'com_biblestudy');
+								}
 								$this->doneSteps++;
 							}
 						}
@@ -818,7 +829,10 @@ class BibleStudyModelInstall extends JModelLegacy
 				else
 				{
 					unset($this->_allupdates[$this->version]);
-					JLog::add('Uset Verstion if no steps : ' . $this->version, JLog::INFO, 'com_biblestudy');
+					if (JBSMDEBUG)
+					{
+						JLog::add('Unset Version if no steps : ' . $this->version, JLog::INFO, 'com_biblestudy');
+					}
 				}
 
 				if ($run == false)
@@ -1233,22 +1247,6 @@ class BibleStudyModelInstall extends JModelLegacy
 
 			}
 		}
-
-		return true;
-	}
-
-	/**
-	 * Function to update db using the version number on php files.
-	 *
-	 * @param   string  $migration_file  File path.
-	 * @param   string  $value           The File name.
-	 *
-	 * @return boolean
-	 *
-	 * @since 9.0.0
-	 */
-	private function updatePHP($migration_file, $value)
-	{
 
 		return true;
 	}

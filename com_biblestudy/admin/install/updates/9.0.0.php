@@ -17,15 +17,20 @@ use \Joomla\Registry\Registry;
  */
 class Migration900
 {
+	// List the functions to go through in order for this migration.
 	public $steps = array('servers', 'media' , 'migrateTemplateLists',
 			'updateTemplates', 'removeExpert', 'deleteUnexactingFiles', 'up');
 
+	// This is the query holder to pass back a forth between the install and the migration.
 	public $query = array();
 
+	// Internal holder
 	private $_media = array();
 
+	// Internal holder
 	private $_servers = array();
 
+	// Count of processes.
 	public $count = 0;
 
 	/**
@@ -62,7 +67,7 @@ class Migration900
 		$mediaFiles2  = $db->loadObjectList();
 
 		$this->_media = array_merge($this->_media, $mediaFiles2);
-		$this->count = count($this->_media);
+		$this->count  = count($this->_media);
 		$this->count += count($this->_servers);
 
 		$this->query = array_merge(array('servers' => $this->_servers), array('media' => $this->_media));
@@ -84,8 +89,10 @@ class Migration900
 		{
 			return true;
 		}
-
-		JLog::add('Server on: ' . $server->id, JLog::INFO, 'com_biblestudy');
+		if (JBSMDEBUG)
+		{
+			JLog::add('Server on: ' . $server->id, JLog::INFO, 'com_biblestudy');
+		}
 
 		/** @var TableServer $newServer */
 		$newServer = JTable::getInstance('Server', 'Table', array('dbo' => $db));
@@ -180,8 +187,11 @@ class Migration900
 			$db->setQuery($query);
 			$db->execute();
 		}
+		if (JBSMDEBUG)
+		{
+			JLog::add('Media working on: ' . $mediaFile->id, JLog::INFO, 'com_biblestudy');
+		}
 
-		JLog::add('Media working on: ' . $mediaFile->id, JLog::INFO, 'com_biblestudy');
 		/** @var TableMediafile $newMediaFile */
 		$newMediaFile = JTable::getInstance('Mediafile', 'Table', array('dbo' => $db));
 		$newMediaFile->load($mediaFile->id);
@@ -780,7 +790,7 @@ class Migration900
 	/**
 	 * Replace Strings to actual code
 	 *
-	 * @param   string  $item  ?
+	 * @param   string  $item  String to replace
 	 *
 	 * @return mixed
 	 */
@@ -895,85 +905,9 @@ class Migration900
 	}
 
 	/**
-	 * Update CSS for 9.0.0
-	 *
-	 * @return boolean
-	 */
-	public function css900()
-	{
-		// Import filesystem libraries. Perhaps not necessary, but does not hurt
-		jimport('joomla.filesystem.file');
-		jimport('joomla.filesystem.folder');
-
-		$path = array(
-			BIBLESTUDY_PATH_ADMIN . '/models/style.php',
-			BIBLESTUDY_PATH_ADMIN . '/models/styles.php',
-			BIBLESTUDY_PATH_ADMIN . '/tables/style.php',
-			BIBLESTUDY_PATH_ADMIN . '/controllers/style.php',
-			BIBLESTUDY_PATH_ADMIN . '/controllers/styles.php',
-			BIBLESTUDY_PATH_ADMIN . '/views/style/index.html',
-			BIBLESTUDY_PATH_ADMIN . '/views/style/view.html.php',
-			BIBLESTUDY_PATH_ADMIN . '/views/style/tmpl/index.html',
-			BIBLESTUDY_PATH_ADMIN . '/views/style/view.html.php',
-			BIBLESTUDY_PATH_ADMIN . '/views/style/tmpl/edit.php',
-			BIBLESTUDY_PATH_ADMIN . '/views/styles/index.html',
-			BIBLESTUDY_PATH_ADMIN . '/views/styles/view.html.php',
-			BIBLESTUDY_PATH_ADMIN . '/views/styles/tmpl/index.html',
-			BIBLESTUDY_PATH_ADMIN . '/views/styles/view.html.php',
-			BIBLESTUDY_PATH_ADMIN . '/views/styles/tmpl/default.php',
-			BIBLESTUDY_PATH_ADMIN . '/models/share.php',
-			BIBLESTUDY_PATH_ADMIN . '/models/shares.php',
-			BIBLESTUDY_PATH_ADMIN . '/tables/share.php',
-			BIBLESTUDY_PATH_ADMIN . '/controllers/share.php',
-			BIBLESTUDY_PATH_ADMIN . '/controllers/shares.php',
-			BIBLESTUDY_PATH_ADMIN . '/views/share/index.html',
-			BIBLESTUDY_PATH_ADMIN . '/views/share/view.html.php',
-			BIBLESTUDY_PATH_ADMIN . '/views/share/tmpl/index.html',
-			BIBLESTUDY_PATH_ADMIN . '/views/share/view.html.php',
-			BIBLESTUDY_PATH_ADMIN . '/views/share/tmpl/edit.php',
-			BIBLESTUDY_PATH_ADMIN . '/views/shares/index.html',
-			BIBLESTUDY_PATH_ADMIN . '/views/shares/view.html.php',
-			BIBLESTUDY_PATH_ADMIN . '/views/shares/tmpl/index.html',
-			BIBLESTUDY_PATH_ADMIN . '/views/shares/view.html.php',
-			BIBLESTUDY_PATH_ADMIN . '/views/shares/tmpl/default.php',
-			BIBLESTUDY_PATH_ADMIN . '/moduels/migration.php',
-			BIBLESTUDY_PATH_ADMIN . '/controllers/migration.php',
-			BIBLESTUDY_PATH . '/views/sermons/tmpl/default_custom.php',
-			BIBLESTUDY_PATH . '/views/sermon/tmpl/default_custom.php',
-			BIBLESTUDY_PATH . '/views/teachers/tmpl/default_custom.php',
-			BIBLESTUDY_PATH . '/views/teacher/tmpl/default_custom.php'
-		);
-
-		foreach ($path as $file)
-		{
-			if (JFile::exists($file))
-			{
-				JFile::delete($file);
-			}
-		}
-
-		$folders = array(
-			BIBLESTUDY_PATH_ADMIN . '/views/styles',
-			BIBLESTUDY_PATH_ADMIN . '/views/style',
-			BIBLESTUDY_PATH_ADMIN . '/views/shares',
-			BIBLESTUDY_PATH_ADMIN . '/views/share',
-			BIBLESTUDY_PATH_ADMIN . '/views/migration');
-
-		foreach ($folders as $folder)
-		{
-			if (JFolder::exists($folder))
-			{
-				JFolder::delete($folder);
-			}
-		}
-
-		return true;
-	}
-
-	/**
 	 * Remove Old Files and Folders
 	 *
-	 * @since      7.1.0
+	 * @since      9.0.1
 	 *
 	 * @return   void
 	 */
@@ -1225,6 +1159,42 @@ class Migration900
 			'/administrator/components/com_biblestudy/views/template/tmpl/form.php',
 			'/administrator/components/com_biblestudy/views/templatecode/tmpl/form.php',
 			'/administrator/components/com_biblestudy/views/topic/tmpl/form.php',
+				BIBLESTUDY_PATH_ADMIN . '/models/style.php',
+				BIBLESTUDY_PATH_ADMIN . '/models/styles.php',
+				BIBLESTUDY_PATH_ADMIN . '/tables/style.php',
+				BIBLESTUDY_PATH_ADMIN . '/controllers/style.php',
+				BIBLESTUDY_PATH_ADMIN . '/controllers/styles.php',
+				BIBLESTUDY_PATH_ADMIN . '/views/style/index.html',
+				BIBLESTUDY_PATH_ADMIN . '/views/style/view.html.php',
+				BIBLESTUDY_PATH_ADMIN . '/views/style/tmpl/index.html',
+				BIBLESTUDY_PATH_ADMIN . '/views/style/view.html.php',
+				BIBLESTUDY_PATH_ADMIN . '/views/style/tmpl/edit.php',
+				BIBLESTUDY_PATH_ADMIN . '/views/styles/index.html',
+				BIBLESTUDY_PATH_ADMIN . '/views/styles/view.html.php',
+				BIBLESTUDY_PATH_ADMIN . '/views/styles/tmpl/index.html',
+				BIBLESTUDY_PATH_ADMIN . '/views/styles/view.html.php',
+				BIBLESTUDY_PATH_ADMIN . '/views/styles/tmpl/default.php',
+				BIBLESTUDY_PATH_ADMIN . '/models/share.php',
+				BIBLESTUDY_PATH_ADMIN . '/models/shares.php',
+				BIBLESTUDY_PATH_ADMIN . '/tables/share.php',
+				BIBLESTUDY_PATH_ADMIN . '/controllers/share.php',
+				BIBLESTUDY_PATH_ADMIN . '/controllers/shares.php',
+				BIBLESTUDY_PATH_ADMIN . '/views/share/index.html',
+				BIBLESTUDY_PATH_ADMIN . '/views/share/view.html.php',
+				BIBLESTUDY_PATH_ADMIN . '/views/share/tmpl/index.html',
+				BIBLESTUDY_PATH_ADMIN . '/views/share/view.html.php',
+				BIBLESTUDY_PATH_ADMIN . '/views/share/tmpl/edit.php',
+				BIBLESTUDY_PATH_ADMIN . '/views/shares/index.html',
+				BIBLESTUDY_PATH_ADMIN . '/views/shares/view.html.php',
+				BIBLESTUDY_PATH_ADMIN . '/views/shares/tmpl/index.html',
+				BIBLESTUDY_PATH_ADMIN . '/views/shares/view.html.php',
+				BIBLESTUDY_PATH_ADMIN . '/views/shares/tmpl/default.php',
+				BIBLESTUDY_PATH_ADMIN . '/moduels/migration.php',
+				BIBLESTUDY_PATH_ADMIN . '/controllers/migration.php',
+				BIBLESTUDY_PATH . '/views/sermons/tmpl/default_custom.php',
+				BIBLESTUDY_PATH . '/views/sermon/tmpl/default_custom.php',
+				BIBLESTUDY_PATH . '/views/teachers/tmpl/default_custom.php',
+				BIBLESTUDY_PATH . '/views/teacher/tmpl/default_custom.php'
 		);
 
 		$folders = array(
@@ -1286,6 +1256,11 @@ class Migration900
 			'/components/com_biblestudy/views/mediafile',
 			'/components/com_biblestudy/views/commentslist',
 			'/components/com_biblestudy/views/commentsedit',
+				BIBLESTUDY_PATH_ADMIN . '/views/styles',
+				BIBLESTUDY_PATH_ADMIN . '/views/style',
+				BIBLESTUDY_PATH_ADMIN . '/views/shares',
+				BIBLESTUDY_PATH_ADMIN . '/views/share',
+				BIBLESTUDY_PATH_ADMIN . '/views/migration'
 		);
 
 		foreach ($files as $file)

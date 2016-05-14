@@ -663,6 +663,8 @@ class JBSMBibleStudyHelper
 	 * 
 	 * @param   string  $msg  Message to sent.
 	 *
+	 * @return void
+	 *
 	 * @throws \Exception
 	 */
 	public static function stop($msg = '')
@@ -670,10 +672,5 @@ class JBSMBibleStudyHelper
 		echo $msg;
 		$mainframe = JFactory::getApplication();
 		$mainframe->close();
-		/*
-	  Alternative:
-	  echo $msg;
-	  jexit();
-	  */
 	}
 }

@@ -38,7 +38,7 @@ class BiblestudyControllerUpload extends JControllerLegacy
 		@set_time_limit(5 * 60);
 
 		// Enable valid json response when debugging is disabled
-		if (!COM_BIBLESTUDY_DEBUG)
+		if (!JBSMDEBUG)
 		{
 			error_reporting(0);
 		}

@@ -18,9 +18,6 @@ if (defined('JBSM_LOADED'))
 // Manually enable code profiling by setting value to 1
 define('JBSM_PROFILER', 0);
 
-// Component debugging
-define("COM_BIBLESTUDY_DEBUG", false);
-
 // Version information
 define('BIBLESTUDY_VERSION', '9.0.1');
 define('BIBLESTUDY_VERSION_DATE', '2016-04-15');
@@ -89,6 +86,8 @@ $language = JFactory::getLanguage();
 $language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
 $language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, null, true);
 
+
+// Component debugging
 if (JBSMBibleStudyHelper::debug() === '1')
 {
 	define('JBSMDEBUG', 1);
