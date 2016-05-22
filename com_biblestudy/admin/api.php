@@ -20,7 +20,7 @@ define('JBSM_PROFILER', 0);
 
 // Version information
 define('BIBLESTUDY_VERSION', '9.0.1');
-define('BIBLESTUDY_VERSION_DATE', '2016-04-15');
+define('BIBLESTUDY_VERSION_DATE', '2016-05-23');
 define('BIBLESTUDY_VERSION_UPDATEFILE', 'JBS Version ' . BIBLESTUDY_VERSION);
 
 // Default values
@@ -63,8 +63,8 @@ define('BIBLESTUDY_FILE_INSTALL', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 
 define('BIBLESTUDY_PATH_MOD', BIBLESTUDY_ROOT_PATH . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'mod_biblestudy');
 
 // Minimum version requirements
-DEFINE('BIBLESTUDY_MIN_PHP', '5.3.10');
-DEFINE('BIBLESTUDY_MIN_MYSQL', '5.1');
+define('BIBLESTUDY_MIN_PHP', '5.3.10');
+define('BIBLESTUDY_MIN_MYSQL', '5.1');
 
 // Time related
 define('BIBLESTUDY_SECONDS_IN_HOUR', 3600);
@@ -88,7 +88,7 @@ $language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, null, true);
 
 
 // Component debugging
-if (JBSMBibleStudyHelper::debug() === '1')
+if (JBSMBibleStudyHelper::debug() === '1' || JFactory::getApplication()->input->getInt('jbsmdbg', '0') === '1')
 {
 	define('JBSMDEBUG', 1);
 }

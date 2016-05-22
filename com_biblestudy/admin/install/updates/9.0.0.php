@@ -262,10 +262,13 @@ class Migration900
 		$registry->loadObject($params);
 
 		// Check to see if a server is set for this media or fall back to default server.
-		if (array_key_exists('old-' . $mediaFile->server, $this->query))
+		if (array_key_exists('old-' . $mediaFile->server, $this->query)
+			&& $mediaFile->server <= '0'
+			&& !empty($mediaFile->server)
+			&& $mediaFile->server != '-1')
 		{
 			// Use old server ID to find new server ID.
-			$newMediaFile->server_id = $this->query['old-' . $mediaFile->server]->id;
+			$newMediaFile->server_id = (int) $this->query['old-' . $mediaFile->server]->id;
 		}
 		else
 		{
@@ -279,6 +282,7 @@ class Migration900
 
 		// Delete old mediaFile
 		JTable::getInstance('Mediafile', 'Table', array('dbo' => $db))->delete($mediaFile->id);
+
 		return true;
 	}
 
@@ -913,6 +917,10 @@ class Migration900
 	 */
 	public function deleteUnexactingFiles()
 	{
+		// Import filesystem libraries. Perhaps not necessary, but does not hurt
+		jimport('joomla.filesystem.file');
+		jimport('joomla.filesystem.folder');
+
 		$files = array(
 			'/media/com_biblestudy/css/biblestudy.css.dist',
 			'/images/textfile24.png',
@@ -1278,6 +1286,8 @@ class Migration900
 				echo JText::sprintf('FILES_JOOMLA_ERROR_FILE_FOLDER', $folder) . '<br />';
 			}
 		}
+
+		return;
 	}
 
 }

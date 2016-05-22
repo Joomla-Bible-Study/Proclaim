@@ -770,7 +770,22 @@ class BibleStudyModelInstall extends JModelLegacy
 								$step = $this->_versionSwitch = array_shift($this->subSteps[$this->version]);
 								if (JBSMDEBUG)
 								{
-									JLog::add('change step : ' . $step, JLog::INFO, 'com_biblestudy');
+									JLog::add('Change step : ' . $step, JLog::INFO, 'com_biblestudy');
+								}
+							}
+							elseif(empty($this->subSteps[$this->version]))
+							{
+								if (JBSMDEBUG)
+								{
+									JLog::add('Unset Last Step : ' . $step, JLog::INFO, 'com_biblestudy');
+								}
+								$step = $this->_versionSwitch = null;
+								unset($this->subSteps[$this->version]);
+								unset($this->_subQuery[$this->version]);
+								unset($this->_allupdates[$this->version]);
+								if (($key = array_search($this->version, $this->_subFiles)) !== false)
+								{
+									unset($this->_subFiles[$key]);
 								}
 							}
 

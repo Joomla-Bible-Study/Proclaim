@@ -14,15 +14,15 @@ defined('_JEXEC') or die;
 // Use default translations if none are available
 if (!defined('_BIBLESTUDY_INSTALLED_VERSION'))
 {
-	DEFINE('_BIBLESTUDY_INSTALLED_VERSION', 'Installed version');
+	define('_BIBLESTUDY_INSTALLED_VERSION', 'Installed version');
 }
 if (!defined('_BIBLESTUDY_COPYRIGHT'))
 {
-	DEFINE('_BIBLESTUDY_COPYRIGHT', 'Copyright');
+	define('_BIBLESTUDY_COPYRIGHT', 'Copyright');
 }
 if (!defined('_BIBLESTUDY_LICENSE'))
 {
-	DEFINE('_BIBLESTUDY_LICENSE', 'License');
+	define('_BIBLESTUDY_LICENSE', 'License');
 }
 
 /**
