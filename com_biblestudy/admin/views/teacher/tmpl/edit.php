@@ -39,9 +39,7 @@ else
 		} else {
 			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
 		}
-	}
-</script>
-<script type="text/javascript">
+	};
 	function jInsertFieldValue(value, id) {
 		var old_id = document.id(id).value;
 		if (old_id != id) {
@@ -55,7 +53,7 @@ else
       method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
 	<div class="row-fluid">
 		<!-- Begin Content -->
-		<div class="span10 form-horizontal">
+		<div class="span8 form-horizontal">
 			<fieldset>
 				<ul class="nav nav-tabs">
 					<li class="active"><a href="#general"
@@ -260,7 +258,7 @@ else
 		</div>
 
 		<!-- Begin Sidebar -->
-		<div class="span2 form-vertical">
+		<div class="span4 form-vertical">
 			<div class="control-group">
 				<div class="control-label">
 					<?php if ($this->item->teacher_thumbnail) : ?>

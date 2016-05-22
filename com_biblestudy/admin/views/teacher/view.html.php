@@ -24,35 +24,35 @@ class BiblestudyViewTeacher extends JViewLegacy
 	 *
 	 * @var object
 	 */
-	protected $form;
+	public $form;
 
 	/**
 	 * Item
 	 *
 	 * @var object
 	 */
-	protected $item;
+	public $item;
 
 	/**
 	 * State
 	 *
 	 * @var object
 	 */
-	protected $state;
+	public $state;
 
 	/**
 	 * Admin
 	 *
 	 * @var object
 	 */
-	protected $admin;
+	public $admin;
 
 	/**
 	 * Can Do
 	 *
 	 * @var object
 	 */
-	protected $canDo;
+	public $canDo;
 
 	/**
 	 * Execute and display a template script.

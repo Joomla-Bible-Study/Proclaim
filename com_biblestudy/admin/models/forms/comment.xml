@@ -42,7 +42,7 @@
 	       translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"
 	       section="comment" validate="rules"/>
 	<field name="asset_id" type="hidden" filter="unset"/>
-	<field name="id" type="text" class="readonly" label="JGLOBAL_FIELD_ID_LABEL"
+	<field name="id" type="text" class="readonly span12" label="JGLOBAL_FIELD_ID_LABEL"
 	       description="JGLOBAL_FIELD_ID_DESC" size="10" default="0"
 	       readonly="true"/>
 </form>
