@@ -7,7 +7,7 @@
 		       key_field="id" value_field="server_name">
 			<option value="-1">JBS_CMN_SELECT_SERVER</option>
 		</field>
-		<field name="id" type="text" class="readonly" label="JGLOBAL_FIELD_ID_LABEL"
+		<field name="id" type="text" class="readonly span12" label="JGLOBAL_FIELD_ID_LABEL"
 		       description="JGLOBAL_FIELD_ID_DESC" size="10" default="0"
 		       readonly="true"/>
 		<field name="published"
