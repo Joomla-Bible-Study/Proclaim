@@ -26,6 +26,8 @@ class JBSMDbHelper
 	 */
 	public static $extension = 'com_biblestudy';
 
+	public static $install_state = null;
+
 	/**
 	 * System to Check if Table Exists
 	 *
@@ -260,18 +262,25 @@ class JBSMDbHelper
 	 */
 	public static function getInstallState()
 	{
-		$db    = JFactory::getDbo();
-
-		// Check if JBSM can be found from the database
-		$table = $db->getPrefix() . 'bsms_admin';
-		$db->setQuery("SHOW TABLES LIKE {$db->quote($table)}");
-
-		if ($db->loadResult() != $table)
+		if (!is_bool(self::$install_state))
 		{
-			return true;
+			$db = JFactory::getDbo();
+
+			// Check if JBSM can be found from the database
+			$table = $db->getPrefix() . 'bsms_admin';
+			$db->setQuery("SHOW TABLES LIKE {$db->quote($table)}");
+
+			if ($db->loadResult() != $table)
+			{
+				self::$install_state = true;
+			}
+			else
+			{
+				self::$install_state = false;
+			}
 		}
 
-		return false;
+		return self::$install_state;
 	}
 
 	/**
