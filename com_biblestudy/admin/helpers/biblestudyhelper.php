@@ -18,6 +18,7 @@ defined('_JEXEC') or die;
  */
 class JBSMBibleStudyHelper
 {
+	public static $admin_params = null;
 
 	/**
 	 * Set extension
@@ -365,15 +366,15 @@ class JBSMBibleStudyHelper
 	{
 		if (!JBSMDbHelper::getInstallState())
 		{
-			$admin_params = JBSMParams::getAdmin();
+			self::$admin_params = JBSMParams::getAdmin();
 
-			if (!isset($admin_params->debug))
+			if (!isset(self::$admin_params->debug))
 			{
-				$admin_params        = new stdClass;
-				$admin_params->debug = 1;
+				self::$admin_params        = new stdClass;
+				self::$admin_paramss->debug = 1;
 			}
 
-			return $admin_params->debug;
+			return self::$admin_params->debug;
 		}
 
 		return 0;
@@ -660,7 +661,7 @@ class JBSMBibleStudyHelper
 
 	/**
 	 * Debug stop
-	 * 
+	 *
 	 * @param   string  $msg  Message to sent.
 	 *
 	 * @return void
