@@ -815,7 +815,7 @@ class BibleStudyModelInstall extends JModelLegacy
 							}
 							else
 							{
-								$this->running = 'PHP Sub Proses: ' . $this->version . ' - ' . $step;
+								$this->running = 'PHP Sub Process: ' . $this->version . ' - ' . $step;
 								$migration->$step(JFactory::getDbo(), $query);
 
 								// Pull back the Query form PHP file if any.
