@@ -84,6 +84,10 @@ class BiblestudyControllerInstall extends JControllerForm
 		$stack = $session->get('migration_stack', '', 'JBSM');
 		if (empty($stack))
 		{
+			$cache = new JCache(array('defaultgroup' => 'com_biblestudy'));
+			$cache->clean();
+			$session->set('migration_stack', '', 'JBSM');
+
 			/** @var BibleStudyModelInstall $model */
 			$model = $this->getModel('install');
 			$state = $model->startScanning();

@@ -180,7 +180,10 @@ class Com_BiblestudyInstallerScript
 
 		// An redirect to a new location after the install is completed.
 		$controller = JControllerLegacy::getInstance('Biblestudy');
-		$controller->setRedirect(JUri::base() . 'index.php?option=com_biblestudy&view=install&scanstate=start&' . JSession::getFormToken() . '=1');
+		$controller->setRedirect(
+			JUri::base() .
+			'index.php?option=com_biblestudy&view=install&task=install.browse&scanstate=start&' .
+			JSession::getFormToken() . '=1');
 		$controller->redirect();
 	}
 

@@ -3,7 +3,7 @@
 	<name>Package Joomla Bible Study</name>
 	<packagename>biblestudy_package</packagename>
 	<description>
-		<![CDATA[Joomla Bible Study is one of the most popular Bible Study System available today. <a href='index.php?option=com_biblestudy'>Next to Finish install</a>]]></description>
+		<![CDATA[Joomla Bible Study is one of the most popular Bible Study System available today. <a href='index.php?option=com_biblestudy&view=install&task=install.browse&scanstate=start'>Next to Finish install</a>]]></description>
 	<author>Joomla Bible Study Team</author>
 	<authorEmail>info@joomlabiblestudy.org</authorEmail>
 	<authorUrl>http://www.joomlabiblestudy.org</authorUrl>
@@ -13,6 +13,9 @@
 	<license>http://www.gnu.org/licenses/gpl.html</license>
 	<packager>Tom Fuller</packager>
 	<packagerurl>http://www.joomlabiblestudy.org</packagerurl>
+
+	<!-- Runs on install/uninstall/update; New in 2.5 -->
+	<scriptfile>script.php</scriptfile>
 	<updateservers>
 		<server type="collection"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=all&format=xml]]></server>
 		<server type="extension" priority="2" name="Joomla Bible Study Package"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=12]]></server>
