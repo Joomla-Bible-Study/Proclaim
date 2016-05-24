@@ -82,7 +82,6 @@ class PlgSystemJBSPodcastInstallerScript
 		JFactory::getDbo()->setQuery('DROP TABLE IF EXISTS `#__jbspodcast_update`')->execute();
 	}
 
-
 	/**
 	 * Install DB if needed
 	 *
