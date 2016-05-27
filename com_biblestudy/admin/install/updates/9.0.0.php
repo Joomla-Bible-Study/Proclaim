@@ -77,7 +77,7 @@ class Migration900
 	 * Update Servers
 	 *
 	 * @param   JDatabaseDriver  $db      Joomla database driver
-	 * @param   array            $server  Server to proses
+	 * @param   array            $server  Server to process
 	 *
 	 * @return bool
 	 */
@@ -138,7 +138,7 @@ class Migration900
 	 * Update Media
 	 *
 	 * @param   JDatabaseDriver  $db     Joomla database driver
-	 * @param   array            $media  Media to proses.
+	 * @param   array            $media  Media to process.
 	 *
 	 * @return bool
 	 */

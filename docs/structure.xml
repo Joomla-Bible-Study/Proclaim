@@ -40979,7 +40979,7 @@ some idiot's advice. Apparently there's no shortage of idiots giving terribly ba
         <docblock line="867">
           <description>Finish the system</description>
           <long-description></long-description>
-          <tag name="param" line="867" description="&lt;p&gt;Step to prossess&lt;/p&gt;" type="string" variable="$step">
+          <tag name="param" line="867" description="&lt;p&gt;Step to process&lt;/p&gt;" type="string" variable="$step">
             <type>string</type>
           </tag>
           <tag name="return" line="867" description="" type="boolean">
@@ -41059,7 +41059,7 @@ some idiot's advice. Apparently there's no shortage of idiots giving terribly ba
         <docblock line="1054">
           <description>Run updates SQL</description>
           <long-description></long-description>
-          <tag name="param" line="1054" description="&lt;p&gt;String or Array of SQL to proses.&lt;/p&gt;" type="string|array" variable="$mix">
+          <tag name="param" line="1054" description="&lt;p&gt;String or Array of SQL to process.&lt;/p&gt;" type="string|array" variable="$mix">
             <type>string</type>
             <type>array</type>
           </tag>

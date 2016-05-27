@@ -1013,7 +1013,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	/**
 	 * Finish the system
 	 *
-	 * @param   string  $step  Step to prossess
+	 * @param   string  $step  Step to process
 	 *
 	 * @return boolean
 	 */
@@ -1232,7 +1232,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	/**
 	 * Run updates SQL
 	 *
-	 * @param   string  $string  String of SQL to proses.
+	 * @param   string  $string  String of SQL to process.
 	 *
 	 * @return bool
 	 */
