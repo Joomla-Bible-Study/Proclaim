@@ -34,7 +34,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">151</span></a></li>
+                <span class="label label-info">164</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -64,25 +64,39 @@
 <li class="nav-header">
 <i title="Methods" class="icon-custom icon-method"></i> Methods
                     <ul>
-<li class="method public "><a href="#method_css900" title="css900() :: Update CSS for 9.0.0"><span class="description">Update CSS for 9.0.0</span><pre>css900()</pre></a></li>
+<li class="method public "><a href="#method_build" title="build() :: Build steps and query"><span class="description">Build steps and query</span><pre>build()</pre></a></li>
+<li class="method public "><a href="#method_deleteUnexactingFiles" title="deleteUnexactingFiles() :: Remove Old Files and Folders"><span class="description">Remove Old Files and Folders</span><pre>deleteUnexactingFiles()</pre></a></li>
+<li class="method public "><a href="#method_media" title="media() :: Update Media"><span class="description">Update Media</span><pre>media()</pre></a></li>
+<li class="method public "><a href="#method_migrateTemplateLists" title="migrateTemplateLists() :: Migrate Template Lists"><span class="description">Migrate Template Lists</span><pre>migrateTemplateLists()</pre></a></li>
+<li class="method public "><a href="#method_removeExpert" title="removeExpert() :: Remove Export function to TemplateFiles"><span class="description">Remove Export function to TemplateFiles</span><pre>removeExpert()</pre></a></li>
+<li class="method public "><a href="#method_servers" title="servers() :: Update Servers"><span class="description">Update Servers</span><pre>servers()</pre></a></li>
+<li class="method public "><a href="#method_testingMigration" title="testingMigration() :: T Settings Migration"><span class="description">T Settings Migration</span><pre>testingMigration()</pre></a></li>
 <li class="method public "><a href="#method_up" title="up() :: Call Script for Updates of 9.0.0"><span class="description">Call Script for Updates of 9.0.0</span><pre>up()</pre></a></li>
+<li class="method public "><a href="#method_updateTemplates" title="updateTemplates() :: Update Templates to work with 9.0.0 that cannot be don doing normal sql file."><span class="description">Update Templates to work with 9.0.0 that cannot be don doing normal sql file.</span><pre>updateTemplates()</pre></a></li>
 </ul>
-</li>
-<li class="nav-header protected">» Protected
-                    <ul><li class="method protected "><a href="#method_deleteUnexistingFiles" title="deleteUnexistingFiles() :: Remove Old Files and Folders"><span class="description">Remove Old Files and Folders</span><pre>deleteUnexistingFiles()</pre></a></li></ul>
 </li>
 <li class="nav-header private">» Private
                     <ul>
-<li class="method private "><a href="#method_changesetting" title="changesetting() :: Change Settings"><span class="description">Change Settings</span><pre>changesetting()</pre></a></li>
+<li class="method private "><a href="#method_changeSetting" title="changeSetting() :: Change Settings"><span class="description">Change Settings</span><pre>changeSetting()</pre></a></li>
 <li class="method private "><a href="#method_deleteColumns" title="deleteColumns() :: Set del columns"><span class="description">Set del columns</span><pre>deleteColumns()</pre></a></li>
 <li class="method private "><a href="#method_deleteTable" title="deleteTable() :: Delete Table"><span class="description">Delete Table</span><pre>deleteTable()</pre></a></li>
 <li class="method private "><a href="#method_element" title="element() :: Elements workings"><span class="description">Elements workings</span><pre>element()</pre></a></li>
-<li class="method private "><a href="#method_itemreplace" title="itemreplace() :: Replace Strings to actueal code"><span class="description">Replace Strings to actueal code</span><pre>itemreplace()</pre></a></li>
-<li class="method private "><a href="#method_migratetemplatelists" title="migratetemplatelists() :: Migrate Template Lists"><span class="description">Migrate Template Lists</span><pre>migratetemplatelists()</pre></a></li>
-<li class="method private "><a href="#method_removeexpert" title="removeexpert() :: Remove Export function to TemplateFiles"><span class="description">Remove Export function to TemplateFiles</span><pre>removeexpert()</pre></a></li>
+<li class="method private "><a href="#method_itemReplace" title="itemReplace() :: Replace Strings to actual code"><span class="description">Replace Strings to actual code</span><pre>itemReplace()</pre></a></li>
 <li class="method private "><a href="#method_serieselement" title="serieselement() :: Seriese Elements"><span class="description">Seriese Elements</span><pre>serieselement()</pre></a></li>
-<li class="method private "><a href="#method_tsettingmigration" title="tsettingmigration() :: T Settings Migration"><span class="description">T Settings Migration</span><pre>tsettingmigration()</pre></a></li>
-<li class="method private "><a href="#method_updatetemplates" title="updatetemplates() :: Update Templates to work with 9.0.0 that cannot be don doing normal sql file."><span class="description">Update Templates to work with 9.0.0 that cannot be don doing normal sql file.</span><pre>updatetemplates()</pre></a></li>
+</ul>
+</li>
+<li class="nav-header">
+<i title="Properties" class="icon-custom icon-property"></i> Properties
+                    <ul>
+<li class="property public "><a href="#property_count" title="$count() :: "><span class="description"></span><pre>$count</pre></a></li>
+<li class="property public "><a href="#property_query" title="$query() :: "><span class="description"></span><pre>$query</pre></a></li>
+<li class="property public "><a href="#property_steps" title="$steps() :: "><span class="description"></span><pre>$steps</pre></a></li>
+</ul>
+</li>
+<li class="nav-header private">» Private
+                    <ul>
+<li class="property private "><a href="#property__media" title="$_media() :: "><span class="description"></span><pre>$_media</pre></a></li>
+<li class="property private "><a href="#property__servers" title="$_servers() :: "><span class="description"></span><pre>$_servers</pre></a></li>
 </ul>
 </li>
 </ul>
@@ -112,14 +126,108 @@
 </table>
 <h3>
 <i title="Methods" class="icon-custom icon-method"></i> Methods</h3>
-<a id="method_css900"></a><div class="element clickable method public method_css900 " data-toggle="collapse" data-target=".method_css900 .collapse" title="public">
-<h2>Update CSS for 9.0.0</h2>
-<pre>css900() : boolean</pre>
+<a id="method_build"></a><div class="element clickable method public method_build " data-toggle="collapse" data-target=".method_build .collapse" title="public">
+<h2>Build steps and query</h2>
+<pre>build(\JDatabaseDriver $db) : null</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$db</h4>
+<code>\JDatabaseDriver</code><p>Joomla DateBase Driver</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>null</code></div>
+</div></div>
+</div>
+<a id="method_deleteUnexactingFiles"></a><div class="element clickable method public method_deleteUnexactingFiles " data-toggle="collapse" data-target=".method_deleteUnexactingFiles .collapse" title="public">
+<h2>Remove Old Files and Folders</h2>
+<pre>deleteUnexactingFiles() : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.1</td>
+</tr></table>
+</div></div>
+</div>
+<a id="method_media"></a><div class="element clickable method public method_media " data-toggle="collapse" data-target=".method_media .collapse" title="public">
+<h2>Update Media</h2>
+<pre>media(\JDatabaseDriver $db, array $media) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$db</h4>
+<code>\JDatabaseDriver</code><p>Joomla database driver</p></div>
+<div class="subelement argument">
+<h4>$media</h4>
+<code>array</code><p>Media to process.</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method_migrateTemplateLists"></a><div class="element clickable method public method_migrateTemplateLists " data-toggle="collapse" data-target=".method_migrateTemplateLists .collapse" title="public">
+<h2>Migrate Template Lists</h2>
+<pre>migrateTemplateLists(\JDatabaseDriver $db) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$db</h4>
+<code>\JDatabaseDriver</code><p>Joomla Database driver</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method_removeExpert"></a><div class="element clickable method public method_removeExpert " data-toggle="collapse" data-target=".method_removeExpert .collapse" title="public">
+<h2>Remove Export function to TemplateFiles</h2>
+<pre>removeExpert(\JDatabaseDriver $db) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$db</h4>
+<code>\JDatabaseDriver</code><p>Joomla Database driver</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method_servers"></a><div class="element clickable method public method_servers " data-toggle="collapse" data-target=".method_servers .collapse" title="public">
+<h2>Update Servers</h2>
+<pre>servers(\JDatabaseDriver $db, array $server) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$db</h4>
+<code>\JDatabaseDriver</code><p>Joomla database driver</p></div>
+<div class="subelement argument">
+<h4>$server</h4>
+<code>array</code><p>Server to process</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method_testingMigration"></a><div class="element clickable method public method_testingMigration " data-toggle="collapse" data-target=".method_testingMigration .collapse" title="public">
+<h2>T Settings Migration</h2>
+<pre>testingMigration(integer $element) : boolean | string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$element</h4>
+<code>integer</code><p>?</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>boolean</code><code>string</code>
+</div>
 </div></div>
 </div>
 <a id="method_up"></a><div class="element clickable method public method_up " data-toggle="collapse" data-target=".method_up .collapse" title="public">
@@ -131,26 +239,26 @@
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$db</h4>
-<code>\JDatabaseDriver</code><p>Joomla Data bass driver</p></div>
+<code>\JDatabaseDriver</code><p>Joomla Database driver</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code>boolean</code></div>
 </div></div>
 </div>
-<a id="method_deleteUnexistingFiles"></a><div class="element clickable method protected method_deleteUnexistingFiles " data-toggle="collapse" data-target=".method_deleteUnexistingFiles .collapse" title="protected">
-<h2>Remove Old Files and Folders</h2>
-<pre>deleteUnexistingFiles() : void</pre>
+<a id="method_updateTemplates"></a><div class="element clickable method public method_updateTemplates " data-toggle="collapse" data-target=".method_updateTemplates .collapse" title="public">
+<h2>Update Templates to work with 9.0.0 that cannot be don doing normal sql file.</h2>
+<pre>updateTemplates(\JDatabaseDriver $db) : void</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>7.1.0</td>
-</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$db</h4>
+<code>\JDatabaseDriver</code><p>Joomla Database driver</p></div>
 </div></div>
 </div>
-<a id="method_changesetting"></a><div class="element clickable method private method_changesetting " data-toggle="collapse" data-target=".method_changesetting .collapse" title="private">
+<a id="method_changeSetting"></a><div class="element clickable method private method_changeSetting " data-toggle="collapse" data-target=".method_changeSetting .collapse" title="private">
 <h2>Change Settings</h2>
-<pre>changesetting(integer $row, integer $col, \Joomla\Registry\Registry $registry) : boolean</pre>
+<pre>changeSetting(integer $row, integer $col, \Joomla\Registry\Registry $registry) : boolean</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -198,18 +306,18 @@
 <code>string</code><p>Table</p></div>
 <div class="subelement argument">
 <h4>$db</h4>
-<code>\JDatabaseDriver</code><p>Data bass driver</p></div>
+<code>\JDatabaseDriver</code><p>Joomla Database driver</p></div>
 </div></div>
 </div>
 <a id="method_element"></a><div class="element clickable method private method_element " data-toggle="collapse" data-target=".method_element .collapse" title="private">
 <h2>Elements workings</h2>
-<pre>element(integer $elementnumber) : boolean | string</pre>
+<pre>element(integer $elementNumber) : boolean | string</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
 <h3>Parameters</h3>
 <div class="subelement argument">
-<h4>$elementnumber</h4>
+<h4>$elementNumber</h4>
 <code>integer</code><p>Number to stirng</p></div>
 <h3>Returns</h3>
 <div class="subelement response">
@@ -217,44 +325,18 @@
 </div>
 </div></div>
 </div>
-<a id="method_itemreplace"></a><div class="element clickable method private method_itemreplace " data-toggle="collapse" data-target=".method_itemreplace .collapse" title="private">
-<h2>Replace Strings to actueal code</h2>
-<pre>itemreplace(string $item) : mixed</pre>
+<a id="method_itemReplace"></a><div class="element clickable method private method_itemReplace " data-toggle="collapse" data-target=".method_itemReplace .collapse" title="private">
+<h2>Replace Strings to actual code</h2>
+<pre>itemReplace(string $item) : mixed</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$item</h4>
-<code>string</code><p>?</p></div>
+<code>string</code><p>String to replace</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code>mixed</code></div>
-</div></div>
-</div>
-<a id="method_migratetemplatelists"></a><div class="element clickable method private method_migratetemplatelists " data-toggle="collapse" data-target=".method_migratetemplatelists .collapse" title="private">
-<h2>Migrate Template Lists</h2>
-<pre>migratetemplatelists(\JDatabaseDriver $db) : void</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$db</h4>
-<code>\JDatabaseDriver</code><p>?</p></div>
-</div></div>
-</div>
-<a id="method_removeexpert"></a><div class="element clickable method private method_removeexpert " data-toggle="collapse" data-target=".method_removeexpert .collapse" title="private">
-<h2>Remove Export function to TemplateFiles</h2>
-<pre>removeexpert(\JDatabaseDriver $db) : boolean</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$db</h4>
-<code>\JDatabaseDriver</code><p>?</p></div>
-<h3>Returns</h3>
-<div class="subelement response"><code>boolean</code></div>
 </div></div>
 </div>
 <a id="method_serieselement"></a><div class="element clickable method private method_serieselement " data-toggle="collapse" data-target=".method_serieselement .collapse" title="private">
@@ -271,33 +353,57 @@
 <div class="subelement response"><code>string</code></div>
 </div></div>
 </div>
-<a id="method_tsettingmigration"></a><div class="element clickable method private method_tsettingmigration " data-toggle="collapse" data-target=".method_tsettingmigration .collapse" title="private">
-<h2>T Settings Migration</h2>
-<pre>tsettingmigration(integer $element) : boolean | string</pre>
-<div class="labels"></div>
+<h3>
+<i title="Properties" class="icon-custom icon-property"></i> Properties</h3>
+<a id="property_count"> </a><div class="element clickable property public property_count" data-toggle="collapse" data-target=".property_count .collapse" title="public">
+<h2>$count</h2>
+<pre>$count </pre>
 <div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$element</h4>
-<code>integer</code><p>?</p></div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>boolean</code><code>string</code>
-</div>
+<h3>Default</h3>
+<div class="subelement argument"><code>0</code></div>
 </div></div>
-</div>
-<a id="method_updatetemplates"></a><div class="element clickable method private method_updatetemplates " data-toggle="collapse" data-target=".method_updatetemplates .collapse" title="private">
-<h2>Update Templates to work with 9.0.0 that cannot be don doing normal sql file.</h2>
-<pre>updatetemplates(\JDatabaseDriver $db) : void</pre>
 <div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_query"> </a><div class="element clickable property public property_query" data-toggle="collapse" data-target=".property_query .collapse" title="public">
+<h2>$query</h2>
+<pre>$query </pre>
 <div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$db</h4>
-<code>\JDatabaseDriver</code><p>Data bass driver</p></div>
+<h3>Default</h3>
+<div class="subelement argument"><code>array()</code></div>
 </div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_steps"> </a><div class="element clickable property public property_steps" data-toggle="collapse" data-target=".property_steps .collapse" title="public">
+<h2>$steps</h2>
+<pre>$steps </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>array('servers', 'media', 'migrateTemplateLists', 'updateTemplates', 'removeExpert', 'deleteUnexactingFiles', 'up')</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property__media"> </a><div class="element clickable property private property__media" data-toggle="collapse" data-target=".property__media .collapse" title="private">
+<h2>$_media</h2>
+<pre>$_media </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>array()</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property__servers"> </a><div class="element clickable property private property__servers" data-toggle="collapse" data-target=".property__servers .collapse" title="private">
+<h2>$_servers</h2>
+<pre>$_servers </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>array()</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
 </div>
 </div>
@@ -306,7 +412,7 @@
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2016-04-06T22:36:29-05:00.<br></footer></div>
+            generated on 2016-05-27T18:27:17-05:00.<br></footer></div>
 </div>
 </body>
 </html>

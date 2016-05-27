@@ -245,7 +245,7 @@ class Migration900
 		$params->special = $mediaFile->special;
 		if (!empty($mediaFile->filename))
 		{
-			$params->filename = $path->folderpath.$mediaFile->filename;
+			$params->filename = $path->folderpath . $mediaFile->filename;
 		}
 		else
 		{

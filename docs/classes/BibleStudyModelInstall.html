@@ -34,7 +34,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">151</span></a></li>
+                <span class="label label-info">164</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -88,13 +88,12 @@
 <li class="method private "><a href="#method_install" title="install() :: Install step system"><span class="description">Install step system</span><pre>install()</pre></a></li>
 <li class="method private "><a href="#method_loadStack" title="loadStack() :: Loads the Versions/SQL/After stack from the session"><span class="description">Loads the Versions/SQL/After stack from the session</span><pre>loadStack()</pre></a></li>
 <li class="method private "><a href="#method_microtime_float" title="microtime_float() :: Returns the current timestamps in decimal seconds"><span class="description">Returns the current timestamps in decimal seconds</span><pre>microtime_float()</pre></a></li>
-<li class="method private "><a href="#method_postinstallclenup" title="postinstallclenup() :: Cleanup postinstall before migration"><span class="description">Cleanup postinstall before migration</span><pre>postinstallclenup()</pre></a></li>
+<li class="method private "><a href="#method_postinstallclenup" title="postinstallclenup() :: Cleanup postInstall before migration"><span class="description">Cleanup postInstall before migration</span><pre>postinstallclenup()</pre></a></li>
 <li class="method private "><a href="#method_resetStack" title="resetStack() :: Resets the Versions/SQL/After stack saved in the session"><span class="description">Resets the Versions/SQL/After stack saved in the session</span><pre>resetStack()</pre></a></li>
 <li class="method private "><a href="#method_resetTimer" title="resetTimer() :: Starts or resets the internal timer"><span class="description">Starts or resets the internal timer</span><pre>resetTimer()</pre></a></li>
 <li class="method private "><a href="#method_runUpdates" title="runUpdates() :: Run updates SQL"><span class="description">Run updates SQL</span><pre>runUpdates()</pre></a></li>
 <li class="method private "><a href="#method_saveStack" title="saveStack() :: Saves the Versions/SQL/After stack in the session"><span class="description">Saves the Versions/SQL/After stack in the session</span><pre>saveStack()</pre></a></li>
 <li class="method private "><a href="#method_setSchemaVersion" title="setSchemaVersion() :: Set the schema version for an extension by looking at its latest update"><span class="description">Set the schema version for an extension by looking at its latest update</span><pre>setSchemaVersion()</pre></a></li>
-<li class="method private "><a href="#method_updatePHP" title="updatePHP() :: Function to update db using the version number on php files."><span class="description">Function to update db using the version number on php files.</span><pre>updatePHP()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header">
@@ -119,10 +118,14 @@
 <li class="property private "><a href="#property__biblestudyEid" title="$_biblestudyEid() :: "><span class="description">Id of Extinction Table</span><pre>$_biblestudyEid</pre></a></li>
 <li class="property private "><a href="#property__finish" title="$_finish() :: "><span class="description">Array of Finish Task</span><pre>$_finish</pre></a></li>
 <li class="property private "><a href="#property__install" title="$_install() :: "><span class="description">Array of Install Task</span><pre>$_install</pre></a></li>
-<li class="property private "><a href="#property__isimport" title="$_isimport() :: "><span class="description">If was inported</span><pre>$_isimport</pre></a></li>
+<li class="property private "><a href="#property__isimport" title="$_isimport() :: "><span class="description">If was imported</span><pre>$_isimport</pre></a></li>
 <li class="property private "><a href="#property__startTime" title="$_startTime() :: "><span class="description">The time the process started</span><pre>$_startTime</pre></a></li>
+<li class="property private "><a href="#property__subFiles" title="$_subFiles() :: "><span class="description"></span><pre>$_subFiles</pre></a></li>
+<li class="property private "><a href="#property__subQuery" title="$_subQuery() :: "><span class="description">Array of Sub Query from php files queries Task</span><pre>$_subQuery</pre></a></li>
 <li class="property private "><a href="#property__versionStack" title="$_versionStack() :: "><span class="description">The pre versions to process</span><pre>$_versionStack</pre></a></li>
 <li class="property private "><a href="#property__versionSwitch" title="$_versionSwitch() :: "><span class="description">Version of BibleStudy</span><pre>$_versionSwitch</pre></a></li>
+<li class="property private "><a href="#property_subSteps" title="$subSteps() :: "><span class="description"></span><pre>$subSteps</pre></a></li>
+<li class="property private "><a href="#property_version" title="$version() :: "><span class="description">Version number to be running</span><pre>$version</pre></a></li>
 </ul>
 </li>
 </ul>
@@ -391,7 +394,7 @@
 </div></div>
 </div>
 <a id="method_postinstallclenup"></a><div class="element clickable method private method_postinstallclenup " data-toggle="collapse" data-target=".method_postinstallclenup .collapse" title="private">
-<h2>Cleanup postinstall before migration</h2>
+<h2>Cleanup postInstall before migration</h2>
 <pre>postinstallclenup() : void</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
@@ -410,14 +413,14 @@
 </div>
 <a id="method_runUpdates"></a><div class="element clickable method private method_runUpdates " data-toggle="collapse" data-target=".method_runUpdates .collapse" title="private">
 <h2>Run updates SQL</h2>
-<pre>runUpdates(string|array $mix) : boolean</pre>
+<pre>runUpdates(string $string) : boolean</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
 <h3>Parameters</h3>
 <div class="subelement argument">
-<h4>$mix</h4>
-<code>string</code><code>array</code><p>String or Array of SQL to process.</p></div>
+<h4>$string</h4>
+<code>string</code><p>String of SQL to process.</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code>boolean</code></div>
 </div></div>
@@ -445,24 +448,6 @@
 <div class="subelement argument">
 <h4>$eid</h4>
 <code>integer</code><p>Extension ID</p></div>
-<h3>Returns</h3>
-<div class="subelement response"><code>boolean</code></div>
-</div></div>
-</div>
-<a id="method_updatePHP"></a><div class="element clickable method private method_updatePHP " data-toggle="collapse" data-target=".method_updatePHP .collapse" title="private">
-<h2>Function to update db using the version number on php files.</h2>
-<pre>updatePHP(string $value) : boolean</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>9.0.0</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$value</h4>
-<code>string</code><p>The File name.</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code>boolean</code></div>
 </div></div>
@@ -586,7 +571,7 @@
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
 <a id="property__isimport"> </a><div class="element clickable property private property__isimport" data-toggle="collapse" data-target=".property__isimport .collapse" title="private">
-<h2>If was inported</h2>
+<h2>If was imported</h2>
 <pre>$_isimport : integer</pre>
 <div class="row collapse"><div class="detail-description">
 <h3>Default</h3>
@@ -601,6 +586,32 @@
 <div class="row collapse"><div class="detail-description">
 <h3>Default</h3>
 <div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property__subFiles"> </a><div class="element clickable property private property__subFiles" data-toggle="collapse" data-target=".property__subFiles .collapse" title="private">
+<h2>$_subFiles</h2>
+<pre>$_subFiles </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>array()</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>type</th>
+<td>array list of php files to work through</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property__subQuery"> </a><div class="element clickable property private property__subQuery" data-toggle="collapse" data-target=".property__subQuery .collapse" title="private">
+<h2>Array of Sub Query from php files queries Task</h2>
+<pre>$_subQuery : array</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>array()</code></div>
 </div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
@@ -625,6 +636,32 @@
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
+<a id="property_subSteps"> </a><div class="element clickable property private property_subSteps" data-toggle="collapse" data-target=".property_subSteps .collapse" title="private">
+<h2>$subSteps</h2>
+<pre>$subSteps </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>array()</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>type</th>
+<td>array PHP file steps for migrations</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_version"> </a><div class="element clickable property private property_version" data-toggle="collapse" data-target=".property_version .collapse" title="private">
+<h2>Version number to be running</h2>
+<pre>$version : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>"0.0.0"</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
 </div>
 </div>
 </div>
@@ -632,7 +669,7 @@
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2016-04-06T22:36:31-05:00.<br></footer></div>
+            generated on 2016-05-27T18:27:17-05:00.<br></footer></div>
 </div>
 </body>
 </html>

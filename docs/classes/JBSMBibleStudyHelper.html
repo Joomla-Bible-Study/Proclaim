@@ -34,7 +34,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">151</span></a></li>
+                <span class="label label-info">164</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -78,11 +78,15 @@
 <li class="method public "><a href="#method_getStudyYears" title="getStudyYears() :: Study Years"><span class="description">Study Years</span><pre>getStudyYears()</pre></a></li>
 <li class="method public "><a href="#method_getTeachers" title="getTeachers() :: Teachers"><span class="description">Teachers</span><pre>getTeachers()</pre></a></li>
 <li class="method public "><a href="#method_rendermenu" title="rendermenu() :: Rendering Menu based on Joomla! Version."><span class="description">Rendering Menu based on Joomla! Version.</span><pre>rendermenu()</pre></a></li>
+<li class="method public "><a href="#method_stop" title="stop() :: Debug stop"><span class="description">Debug stop</span><pre>stop()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header">
 <i title="Properties" class="icon-custom icon-property"></i> Properties
-                    <ul><li class="property public "><a href="#property_extension" title="$extension() :: Set extension"><span class="description"></span><pre>$extension</pre></a></li></ul>
+                    <ul>
+<li class="property public "><a href="#property_admin_params" title="$admin_params() :: "><span class="description"></span><pre>$admin_params</pre></a></li>
+<li class="property public "><a href="#property_extension" title="$extension() :: Set extension"><span class="description"></span><pre>$extension</pre></a></li>
+</ul>
 </li>
 </ul>
 </div>
@@ -336,8 +340,35 @@
 <code>string</code><p>Name of view</p></div>
 </div></div>
 </div>
+<a id="method_stop"></a><div class="element clickable method public method_stop " data-toggle="collapse" data-target=".method_stop .collapse" title="public">
+<h2>Debug stop</h2>
+<pre>stop(string $msg<code> = ''</code>) : void</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$msg</h4>
+<code>string</code><p>Message to sent.</p></div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code>\Exception</code></th>
+<td></td>
+</tr></table>
+</div></div>
+</div>
 <h3>
 <i title="Properties" class="icon-custom icon-property"></i> Properties</h3>
+<a id="property_admin_params"> </a><div class="element clickable property public property_admin_params" data-toggle="collapse" data-target=".property_admin_params .collapse" title="public">
+<h2>$admin_params</h2>
+<pre>$admin_params </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
 <a id="property_extension"> </a><div class="element clickable property public property_extension" data-toggle="collapse" data-target=".property_extension .collapse" title="public">
 <h2>Set extension</h2>
 <pre>$extension : string</pre>
@@ -355,7 +386,7 @@
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2016-04-06T22:36:14-05:00.<br></footer></div>
+            generated on 2016-05-27T18:27:17-05:00.<br></footer></div>
 </div>
 </body>
 </html>
