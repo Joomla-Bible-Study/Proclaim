@@ -209,6 +209,11 @@ class Migration900
 
 		$mimtype = $db->loadObject();
 
+		$query = $db->getQuery(true);
+		$query->select('*')->from('#__bsms_folders')->where('id = ' . $mediaFile->path);
+		$db->setQuery($query);
+
+		$path = $db->loadObject();
 		$mimage = null;
 
 		// Some people do not have logos set to there media so we have this.
@@ -240,7 +245,7 @@ class Migration900
 		$params->special = $mediaFile->special;
 		if (!empty($mediaFile->filename))
 		{
-			$params->filename = $mediaFile->filename;
+			$params->filename = $path->folderpath.$mediaFile->filename;
 		}
 		else
 		{
@@ -261,13 +266,9 @@ class Migration900
 
 		$registry->loadObject($params);
 
-		// Check to see if a server is set for this media or fall back to default server.
-		if (array_key_exists('old-' . $mediaFile->server, $this->query)
-			&& $mediaFile->server <= '0'
-			&& !empty($mediaFile->server)
-			&& $mediaFile->server != '-1')
+		// Use old server ID to find new server ID.
+		if (isset($this->query['old-' . $mediaFile->server]->id))
 		{
-			// Use old server ID to find new server ID.
 			$newMediaFile->server_id = (int) $this->query['old-' . $mediaFile->server]->id;
 		}
 		else
