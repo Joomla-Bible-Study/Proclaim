@@ -97,5 +97,15 @@ else
 	define('JBSMDEBUG', 0);
 }
 
+// Include the JLog class.
+jimport('joomla.log.log');
+JLog::addLogger(
+	array(
+		'text_file' => 'com_biblestudy.errors.php'
+	),
+	JLog::ALL,
+	'com_biblestudy'
+);
+
 // JBSM has been initialized
 define('JBSM_LOADED', 1);

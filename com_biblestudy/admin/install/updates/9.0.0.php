@@ -89,10 +89,6 @@ class Migration900
 		{
 			return true;
 		}
-		if (JBSMDEBUG)
-		{
-			JLog::add('Server on: ' . $server->id, JLog::INFO, 'com_biblestudy');
-		}
 
 		/** @var TableServer $newServer */
 		$newServer = JTable::getInstance('Server', 'Table', array('dbo' => $db));
@@ -128,6 +124,7 @@ class Migration900
 
 		// Delete old server
 		JTable::getInstance('Server', 'Table', array('dbo' => $db))->delete($server->id);
+		JLog::add('Server on: ' . $server->id . ', New ID: ' . $newServer->id, JLog::INFO, 'com_biblestudy');
 
 		$this->query = array_merge($this->query, array('old-' . $server->id => $newServer));
 
@@ -187,10 +184,8 @@ class Migration900
 			$db->setQuery($query);
 			$db->execute();
 		}
-		if (JBSMDEBUG)
-		{
-			JLog::add('Media working on: ' . $mediaFile->id, JLog::INFO, 'com_biblestudy');
-		}
+
+		JLog::add('Media working on: ' . $mediaFile->id, JLog::INFO, 'com_biblestudy');
 
 		/** @var TableMediafile $newMediaFile */
 		$newMediaFile = JTable::getInstance('Mediafile', 'Table', array('dbo' => $db));
@@ -266,6 +261,8 @@ class Migration900
 
 		$registry->loadObject($params);
 
+		JLog::add('Server ID status: ' . isset($this->query['old-' . $mediaFile->server]->id), JLog::NOTICE, 'com_biblestudy');
+
 		// Use old server ID to find new server ID.
 		if (isset($this->query['old-' . $mediaFile->server]->id))
 		{
@@ -274,7 +271,7 @@ class Migration900
 		else
 		{
 			// Use default server ID.
-			$newMediaFile->server_id = $newServer->id;
+			$newMediaFile->server_id = (int) $newServer->id;
 		}
 		$newMediaFile->params   = $registry->toString();
 		$newMediaFile->metadata = json_encode($metadata);

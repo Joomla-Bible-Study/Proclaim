@@ -10,15 +10,6 @@
 
 defined('_JEXEC') or die;
 
-// Include the JLog class.
-jimport('joomla.log.log');
-JLog::addLogger(
-	array(
-		'text_file' => 'com_biblestudy.errors.php'
-	),
-	JLog::ALL,
-	'com_biblestudy'
-);
 JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.script.php');
 JLoader::register('JBSMFreshInstall', JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/biblestudy.install.special.php');
 
@@ -768,17 +759,12 @@ class BibleStudyModelInstall extends JModelLegacy
 							if (!isset($this->_subQuery[$this->version][$step]) && !empty($this->subSteps[$this->version]))
 							{
 								$step = $this->_versionSwitch = array_shift($this->subSteps[$this->version]);
-								if (JBSMDEBUG)
-								{
-									JLog::add('Change step : ' . $step, JLog::INFO, 'com_biblestudy');
-								}
+								JLog::add('Change step : ' . $step, JLog::INFO, 'com_biblestudy');
 							}
 							elseif(empty($this->subSteps[$this->version]))
 							{
-								if (JBSMDEBUG)
-								{
-									JLog::add('Unset Last Step : ' . $step, JLog::INFO, 'com_biblestudy');
-								}
+								JLog::add('Unset Last Step : ' . $step, JLog::INFO, 'com_biblestudy');
+
 								$step = $this->_versionSwitch = null;
 								unset($this->subSteps[$this->version]);
 								unset($this->_subQuery[$this->version]);
@@ -798,20 +784,14 @@ class BibleStudyModelInstall extends JModelLegacy
 							{
 								unset($this->_subQuery[$this->version][$step]);
 								$this->_versionSwitch = null;
-								if (JBSMDEBUG)
-								{
-									JLog::add('Uset Sub Query if empty : ' . $step . ' ' . $this->version, JLog::INFO, 'com_biblestudy');
-								}
+								JLog::add('Uset Sub Query if empty : ' . $step . ' ' . $this->version, JLog::INFO, 'com_biblestudy');
 							}
 
 							if (empty($step) && empty($query))
 							{
 								unset($this->_subFiles[$this->version]);
 								unset($this->subSteps[$this->version]);
-								if (JBSMDEBUG)
-								{
-									JLog::add('Uset Version in All updates : ' . $this->version, JLog::INFO, 'com_biblestudy');
-								}
+								JLog::add('Uset Version in All updates : ' . $this->version, JLog::INFO, 'com_biblestudy');
 							}
 							else
 							{
@@ -831,10 +811,8 @@ class BibleStudyModelInstall extends JModelLegacy
 									$queryString = str_replace(array("\r", "\n"), array('', ' '), substr($queryString, 0, 80));
 									$queryString = ' ID:' . $queryString . ' Query count: ' . count($this->_subQuery[$this->version][$step]);
 								}
-								if (JBSMDEBUG)
-								{
-									JLog::add('Doing Step in ' . $migrationClass . ' Step: ' . $step . $queryString, JLog::INFO, 'com_biblestudy');
-								}
+								JLog::add('Doing Step in ' . $migrationClass . ' Step: ' . $step . $queryString, JLog::INFO, 'com_biblestudy');
+
 								$this->doneSteps++;
 							}
 						}
@@ -844,10 +822,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				else
 				{
 					unset($this->_allupdates[$this->version]);
-					if (JBSMDEBUG)
-					{
-						JLog::add('Unset Version if no steps : ' . $this->version, JLog::INFO, 'com_biblestudy');
-					}
+					JLog::add('Unset Version if no steps : ' . $this->version, JLog::INFO, 'com_biblestudy');
 				}
 
 				if ($run == false)

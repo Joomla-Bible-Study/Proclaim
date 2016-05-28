@@ -391,7 +391,7 @@ class JBSMBibleStudyHelper
 	 */
 	public static function getMediaTypes()
 	{
-		JLog::add('getMediaTypes is nologer supported');
+		JLog::add('getMediaTypes is nologer supported', JLog::NOTICE, 'com_biblestudy');
 		throw new Exception('Bad function getMediaTypes is nologer supported');
 	}
 

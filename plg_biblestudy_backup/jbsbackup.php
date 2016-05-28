@@ -317,7 +317,7 @@ class PlgSystemJBSBackup extends JPlugin
 		}
 		if (!$mail->Send())
 		{
-			JLog::add('JBSM Bakup Plugin email faild.', 404, 'JBSM', DateTime::W3C);
+			JLog::add('JBSM Bakup Plugin email faild.', JLog::ERROR, 'com_biblestudy', DateTime::W3C);
 		}
 	}
 
