@@ -58,7 +58,7 @@ class Migration900
 			$this->_media = array_merge($this->_media, $mediaFiles);
 		}
 
-		// None Server related media files to migrate.
+		// No Server related media files to migrate.
 		$query = $db->getQuery(true)->select('*')
 				->from('#__bsms_mediafiles')
 				->where('server <= ' . 0, 'OR')
@@ -203,15 +203,19 @@ class Migration900
 		$db->setQuery($query);
 
 		$mimtype = $db->loadObject();
-
-		$query = $db->getQuery(true);
-		$query->select('*')->from('#__bsms_folders')->where('id = ' . $mediaFile->path);
-		$db->setQuery($query);
-
-		$path = $db->loadObject();
 		$mimage = null;
 
-		// Some people do not have logos set to there media so we have this.
+		$folderpath = '';
+		if (isset($mediaFile->path))
+		{
+			$query = $db->getQuery(true);
+			$query->select('*')->from('#__bsms_folders')->where('id = ' . $mediaFile->path);
+			$db->setQuery($query);
+			$path = $db->loadObject();
+			$folderpath = $path->folderpath;
+		}
+
+		// Some people do not have images set to their media so we have this.
 		if (!$mediaImage)
 		{
 			$mediaImage                = new stdClass;
@@ -240,7 +244,7 @@ class Migration900
 		$params->special = $mediaFile->special;
 		if (!empty($mediaFile->filename))
 		{
-			$params->filename = $path->folderpath . $mediaFile->filename;
+			$params->filename = $folderpath . $mediaFile->filename;
 		}
 		else
 		{
