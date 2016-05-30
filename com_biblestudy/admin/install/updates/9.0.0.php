@@ -206,7 +206,7 @@ class Migration900
 		$mimage = null;
 
 		$folderpath = '';
-		if (isset($media['path']))
+		if (isset($mediaFile->path))
 		{
 			$query = $db->getQuery(true);
 			$query->select('*')->from('#__bsms_folders')->where('id = ' . $mediaFile->path);
@@ -268,9 +268,9 @@ class Migration900
 		JLog::add('Server ID status: ' . isset($this->query['old-' . $mediaFile->server]->id), JLog::NOTICE, 'com_biblestudy');
 
 		// Use old server ID to find new server ID.
-		if (isset($this->query['old-' . $mediaFile->server]->id))
+		if (isset($this->query['old-' . $mediaFile->server]['id']))
 		{
-			$newMediaFile->server_id = (int) $this->query['old-' . $mediaFile->server]->id;
+			$newMediaFile->server_id = (int) $this->query['old-' . $mediaFile->server]['id'];
 		}
 		else
 		{

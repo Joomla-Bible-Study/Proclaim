@@ -22,9 +22,10 @@ class Migration901
 	 *
 	 * @return bool
 	 */
-	public function up ($db)
+	public function up($db)
 	{
 		$this->deleteUnexistingFiles();
+
 		return true;
 	}
 
@@ -112,13 +113,13 @@ class Migration901
 			BIBLESTUDY_PATH_MOD . '/tmpl/default_custom.php'
 		);
 
-			foreach ($path as $file)
+		foreach ($path as $file)
+		{
+			if (JFile::exists($file))
 			{
-				if (JFile::exists($file))
-				{
-					JFile::delete($file);
-				}
+				JFile::delete($file);
 			}
+		}
 
 		$folders = array(
 			BIBLESTUDY_PATH_ADMIN . '/views/styles',
