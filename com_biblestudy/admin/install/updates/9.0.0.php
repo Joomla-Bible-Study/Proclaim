@@ -206,7 +206,7 @@ class Migration900
 		$mimage = null;
 
 		$folderpath = '';
-		if (isset($mediaFile->path))
+		if (isset($media['path']))
 		{
 			$query = $db->getQuery(true);
 			$query->select('*')->from('#__bsms_folders')->where('id = ' . $mediaFile->path);
