@@ -138,6 +138,8 @@ class Migration900
 	 * @param   array            $media  Media to process.
 	 *
 	 * @return bool
+	 *
+	 * @throws string If problem with media save.
 	 */
 	public function media($db, $media)
 	{
@@ -265,22 +267,28 @@ class Migration900
 
 		$registry->loadObject($params);
 
-		JLog::add('Server ID status: ' . isset($this->query['old-' . $mediaFile->server]->id), JLog::NOTICE, 'com_biblestudy');
-
 		// Use old server ID to find new server ID.
-		if (isset($this->query['old-' . $mediaFile->server]['id']))
+		if (isset($this->query['old-' . $mediaFile->server]) && $mediaFile->server > '0')
 		{
-			$newMediaFile->server_id = (int) $this->query['old-' . $mediaFile->server]['id'];
+			// Cast server query to be object and not array.
+			$oldserver = (Object) $this->query['old-' . $mediaFile->server];
+			JLog::add('New Server ID status: ' . $oldserver->id, JLog::NOTICE, 'com_biblestudy');
+			$newMediaFile->server_id = (int) $oldserver->id;
 		}
 		else
 		{
 			// Use default server ID.
 			$newMediaFile->server_id = (int) $newServer->id;
+			JLog::add('New Lag Server ID status: ' . $newServer->id, JLog::NOTICE, 'com_biblestudy');
 		}
+
 		$newMediaFile->params   = $registry->toString();
 		$newMediaFile->metadata = json_encode($metadata);
 		$newMediaFile->id       = null;
-		$newMediaFile->store();
+		if (!$newMediaFile->store())
+		{
+			throw new Exception('Bad update of media');
+		}
 
 		// Delete old mediaFile
 		JTable::getInstance('Mediafile', 'Table', array('dbo' => $db))->delete($mediaFile->id);
