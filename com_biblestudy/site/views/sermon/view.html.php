@@ -398,6 +398,7 @@ class BiblestudyViewSermon extends JViewLegacy
 	protected function _displayPagebreak($tpl)
 	{
 		$this->document->setTitle(JText::_('JBS_CMN_READ_MORE'));
+		$this->document->addStylesheet('http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css');
 		parent::display($tpl);
 	}
 

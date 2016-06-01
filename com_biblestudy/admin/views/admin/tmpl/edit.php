@@ -164,7 +164,7 @@ $input = $app->input;
 									   title="<?php echo JText::_('JBS_ADM_MIGRATE'); ?>" class="btn"> <i
 											class="icon-big icon-share-alt"></i>
 										<span><br/> <?php echo JText::_('JBS_ADM_MIGRATE'); ?> </span></a>
-									<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=backup'); ?>
+									<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=backup'); ?>"
 									   title="<?php echo JText::_('JBS_ADM_BACKUP_RESTORE'); ?>" class="btn"> <i
 											class="icon-big icon-database"></i>
 										<span><br/> <?php echo JText::_('JBS_ADM_BACKUP_RESTORE'); ?> </span></a>

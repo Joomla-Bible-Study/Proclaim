@@ -488,6 +488,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		{
 			$this->document->setMetadata('robots', $this->params->get('robots'));
 		}
+		$this->document->addStylesheet('http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css');
 
 		JHtml::_('behavior.framework');
 		JHtml::_('biblestudy.framework');

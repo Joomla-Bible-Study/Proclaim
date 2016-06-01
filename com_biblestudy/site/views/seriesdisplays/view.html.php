@@ -69,7 +69,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		$this->template = $this->state->get('template');
 
 		$document = JFactory::getDocument();
-
+		$document->addStylesheet('http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css');
 		/** @var $itemparams Registry */
 		$itemparams = $mainframe->getPageParameters();
 

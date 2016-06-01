@@ -233,6 +233,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 		{
 			$this->document->setMetaData('robots', $this->params->get('robots'));
 		}
+		$this->document->addStylesheet('http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css');
 	}
 
 }
