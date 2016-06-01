@@ -62,8 +62,10 @@ class JBSMDownload
 		$db->setQuery($query, 0, 1);
 
 		$media = $db->loadObject();
+
 		if ($media)
 		{
+
 			$reg = new Registry;
 			$reg->loadString($media->sparams);
 			$sparams = $reg->toObject();
@@ -85,7 +87,7 @@ class JBSMDownload
 
 		$filename      = $params->get('filename');
 		$download_file = $protocol . $media->spath . $filename;
-
+		//var_dump($download_file); jexit();
 		/** @var $download_file object */
 		$getsize = JBSMHelper::getRemoteFileSize($download_file);
 
@@ -99,9 +101,11 @@ class JBSMDownload
 
 		$fh = fopen($download_file, "rb");
 
-		if ($fh === false)
+		if (is_bool($fh))
 		{
 			echo "Unable to open file";
+			fclose($fh);
+			exit;
 		}
 
 		// Clean the output buffer, Added to fix ZIP file corruption

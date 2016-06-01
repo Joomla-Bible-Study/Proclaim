@@ -287,7 +287,6 @@ class BiblestudyControllerSermon extends JControllerForm
 		$input = new JInput;
 		$task  = $input->get('task');
 		$mid   = $input->getInt('id');
-
 		if ($task == 'download')
 		{
 			$downloader = new JBSMDownload;

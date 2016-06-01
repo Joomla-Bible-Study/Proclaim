@@ -207,8 +207,8 @@ class JBSMMedia
 
 			if ($compat_mode == 0)
 			{
-				$downloadlink = '<a href="index.php?option=com_biblestudy&amp;mid=' .
-					$media->id . '&amp;view=sermons&amp;task=download">';
+				$downloadlink = '<a href="index.php?option=com_biblestudy&amp;view=sermon&amp;mid=' .
+					$media->id . '&amp;task=download">';
 			}
 			else
 			{

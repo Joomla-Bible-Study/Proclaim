@@ -2303,8 +2303,8 @@ class JBSMListing
 
 			case 9 :
 				// Case 9 is a link to download
-				$column .= '<a href="index.php?option=com_biblestudy&amp;mid=' .
-					$row->download_id . '&amp;view=sermons&amp;task=download">';
+				$column .= '<a href="index.php?option=com_biblestudy&amp;view=sermon&amp;mid=' .
+					$row->download_id . '&amp;task=download">';
 		}
 
 		return $column;

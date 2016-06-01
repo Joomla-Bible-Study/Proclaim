@@ -36,8 +36,9 @@ $input = $app->input;
 		jQuery('[name=task]').val('admin.mediaimages');
 		jQuery("#item-admin").submit();
 	};
+
 	Joomla.submitbutton = function (task) {
-		if (task === 'admin.cancel' || task === 'admin.resetHits' || task === 'admin.resetDownloads' || task === 'admin.resetPlays') {
+		if (task === 'admin.cancel' || task === 'admin.resetHits' || task === 'admin.resetDownloads' || task === 'admin.resetPlays' || task === 'admin.aliasfix'){
 			Joomla.submitform(task, document.getElementById('item-admin'));
 		} else if (document.formvalidator.isValid(document.id('item-admin'))) {
 			if (task === 'admin.save' || task === 'admin.apply') {
