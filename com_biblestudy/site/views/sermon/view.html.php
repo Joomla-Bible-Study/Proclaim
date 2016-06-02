@@ -227,6 +227,8 @@ class BiblestudyViewSermon extends JViewLegacy
 		$this->related = $relatedstudies->getRelated($this->item, $this->item->params);
 
 		JHtml::_('biblestudy.framework');
+		JHtml::_('biblestudy.loadCss', null, null, 'font-awesome');
+
 
 		// Only load pagebuilder if the default template is NOT being used
 		if ($this->item->params->get('useexpert_details') > 0 || is_string($this->params->get('sermontemplate')))
@@ -398,7 +400,6 @@ class BiblestudyViewSermon extends JViewLegacy
 	protected function _displayPagebreak($tpl)
 	{
 		$this->document->setTitle(JText::_('JBS_CMN_READ_MORE'));
-		$this->document->addStylesheet('http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css');
 		parent::display($tpl);
 	}
 

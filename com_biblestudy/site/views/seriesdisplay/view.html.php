@@ -92,7 +92,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		$mainframe = JFactory::getApplication();
 		$input     = new JInput;
 		$document = JFactory::getDocument();
-		$document->addStylesheet('http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css');
+
 		// Get the menu item object
 		// Load the Admin settings and params from the template
 		$items              = $this->get('Item');
@@ -115,6 +115,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 			. $teacherimage->width . '" alt="" />';
 
 		JHtml::_('biblestudy.framework');
+		JHtml::_('biblestudy.loadCss', null, null, 'font-awesome');
 
 		$items->slug = $items->alias ? ($items->id . ':' . $items->alias) : str_replace(' ', '-', htmlspecialchars_decode($items->series_text, ENT_QUOTES))
 			. ':' . $items->id;

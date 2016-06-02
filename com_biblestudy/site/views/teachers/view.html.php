@@ -113,6 +113,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 		$uri                = new JUri;
 
 		JHtml::_('biblestudy.framework');
+		JHtml::_('biblestudy.loadCss', null, null, 'font-awesome');
 
 		$images = new JBSMImages;
 		if ($params->get('useexpert_teacherdetail') > 0 || is_string($params->get('teacherstemplate')))
@@ -233,7 +234,6 @@ class BiblestudyViewTeachers extends JViewLegacy
 		{
 			$this->document->setMetaData('robots', $this->params->get('robots'));
 		}
-		$this->document->addStylesheet('http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css');
 	}
 
 }

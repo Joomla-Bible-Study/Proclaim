@@ -65,6 +65,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$params = $this->state->template->params;
 
 		JHtml::_('biblestudy.framework');
+		JHtml::_('biblestudy.loadCss', null, null, 'font-awesome');
 
 		$input = new JInput;
 
@@ -211,7 +212,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$this->params   = $params;
 		$this->template = $this->state->template;
 		$this->document = JFactory::getDocument();
-		$this->document->addStylesheet('http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css');
+
 		$this->_prepareDocument();
 
 		parent::display($tpl);

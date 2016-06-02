@@ -69,7 +69,6 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		$this->template = $this->state->get('template');
 
 		$document = JFactory::getDocument();
-		$document->addStylesheet('http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css');
 		/** @var $itemparams Registry */
 		$itemparams = $mainframe->getPageParameters();
 
@@ -93,6 +92,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		}
 
 		JHtml::_('biblestudy.framework');
+		JHtml::_('biblestudy.loadCss', null, null, 'font-awesome');
 
 		$uri            = new JUri;
 		$filter_series  = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');
