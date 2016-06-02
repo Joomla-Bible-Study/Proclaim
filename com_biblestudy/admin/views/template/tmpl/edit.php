@@ -138,11 +138,6 @@ $input  = $app->input;
 								</a>
 							</li>
 							<li class="">
-								<a href="#list-4" data-toggle="tab">
-									<?php echo JText::_('JBS_TPL_TOOLTIP_ITEMS'); ?>
-								</a>
-							</li>
-							<li class="">
 								<a href="#list-10" data-toggle="tab">
 									<?php echo JText::_('JBS_TPL_DISPLAY_ITEMS1'); ?>
 								</a>
@@ -172,10 +167,6 @@ $input  = $app->input;
 									<?php echo JText::_('JBS_TPL_DISPLAY_ITEMS6'); ?>
 								</a>
 							</li
-							<li class="">
-								<a href="#list-9" data-toggle="tab">
-									<?php echo JText::_('JBS_TPL_STUDY_LIST_CUSTOM'); ?></a>
-							</li>
 						</ul>
 						<div class="tab-content">
 							<div class="tab-pane active" id="list-1">
