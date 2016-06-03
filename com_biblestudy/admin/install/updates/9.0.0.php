@@ -232,6 +232,10 @@ class Migration900
 			else
 			{
 				$mimage = 'images/biblestudy/' . $mediaImage->path2;
+				if (substr_count('/',$mediaImage->path2) > 0)
+				{
+					$mimage = $mediaImage->path2;
+				}
 			}
 		}
 		$registry->loadString($mediaFile->params);
