@@ -232,7 +232,7 @@ class Migration900
 			else
 			{
 				$mimage = 'images/biblestudy/' . $mediaImage->path2;
-				if (substr_count('/',$mediaImage->path2) > 0)
+				if (strpos($mediaImage->path2, '/') !== false)
 				{
 					$mimage = $mediaImage->path2;
 				}
