@@ -23,7 +23,6 @@
 <li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
 <li><a href="../packages/BibleStudy.Admin.html"><i class="icon-folder-open"></i> BibleStudy.Admin</a></li>
 <li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
-<li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
 </ul>
 </li>
 <li class="dropdown" id="charts-menu">
@@ -34,7 +33,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">164</span></a></li>
+                <span class="label label-info">175</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -74,16 +73,24 @@
 <li class="nav-header">
 <i title="Properties" class="icon-custom icon-property"></i> Properties
                     <ul>
-<li class="property public "><a href="#property_assets" title="$assets() :: Assets"><span class="description"></span><pre>$assets</pre></a></li>
-<li class="property public "><a href="#property_canDo" title="$canDo() :: Can Do"><span class="description"></span><pre>$canDo</pre></a></li>
+<li class="property public "><a href="#property_assets" title="$assets() :: "><span class="description"></span><pre>$assets</pre></a></li>
+<li class="property public "><a href="#property_callstack" title="$callstack() :: "><span class="description">Call stack for the Visioning System.</span><pre>$callstack</pre></a></li>
+<li class="property public "><a href="#property_doneSteps" title="$doneSteps() :: "><span class="description">Numbers of Steps already processed</span><pre>$doneSteps</pre></a></li>
+<li class="property public "><a href="#property_state" title="$state() :: "><span class="description">Starte of install</span><pre>$state</pre></a></li>
+<li class="property public "><a href="#property_status" title="$status() :: "><span class="description">Status</span><pre>$status</pre></a></li>
+<li class="property public "><a href="#property_step" title="$step() :: "><span class="description"></span><pre>$step</pre></a></li>
+<li class="property public "><a href="#property_totalSteps" title="$totalSteps() :: "><span class="description">Total numbers of Steps</span><pre>$totalSteps</pre></a></li>
+<li class="property public "><a href="#property_version" title="$version() :: "><span class="description"></span><pre>$version</pre></a></li>
 </ul>
 </li>
 <li class="nav-header protected">» Protected
                     <ul>
-<li class="property protected "><a href="#property_form" title="$form() :: Form"><span class="description"></span><pre>$form</pre></a></li>
-<li class="property protected "><a href="#property_item" title="$item() :: Item"><span class="description"></span><pre>$item</pre></a></li>
-<li class="property protected "><a href="#property_state" title="$state() :: State"><span class="description"></span><pre>$state</pre></a></li>
+<li class="property protected "><a href="#property_more" title="$more() :: "><span class="description">More</span><pre>$more</pre></a></li>
+<li class="property protected "><a href="#property_percentage" title="$percentage() :: "><span class="description">Percentage</span><pre>$percentage</pre></a></li>
 </ul>
+</li>
+<li class="nav-header private">» Private
+                    <ul><li class="property private "><a href="#property__versionStack" title="$_versionStack() :: "><span class="description">The pre versions to process</span><pre>$_versionStack</pre></a></li></ul>
 </li>
 </ul>
 </div>
@@ -168,8 +175,8 @@
 <h3>
 <i title="Properties" class="icon-custom icon-property"></i> Properties</h3>
 <a id="property_assets"> </a><div class="element clickable property public property_assets" data-toggle="collapse" data-target=".property_assets .collapse" title="public">
-<h2>Assets</h2>
-<pre>$assets : string</pre>
+<h2>$assets</h2>
+<pre>$assets </pre>
 <div class="row collapse"><div class="detail-description">
 <h3>Default</h3>
 <div class="subelement argument"></div>
@@ -177,9 +184,29 @@
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
-<a id="property_canDo"> </a><div class="element clickable property public property_canDo" data-toggle="collapse" data-target=".property_canDo .collapse" title="public">
-<h2>Can Do</h2>
-<pre>$canDo : string</pre>
+<a id="property_callstack"> </a><div class="element clickable property public property_callstack" data-toggle="collapse" data-target=".property_callstack .collapse" title="public">
+<h2>Call stack for the Visioning System.</h2>
+<pre>$callstack : array</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>array()</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_doneSteps"> </a><div class="element clickable property public property_doneSteps" data-toggle="collapse" data-target=".property_doneSteps .collapse" title="public">
+<h2>Numbers of Steps already processed</h2>
+<pre>$doneSteps : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>0</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_state"> </a><div class="element clickable property public property_state" data-toggle="collapse" data-target=".property_state .collapse" title="public">
+<h2>Starte of install</h2>
+<pre>$state : string</pre>
 <div class="row collapse"><div class="detail-description">
 <h3>Default</h3>
 <div class="subelement argument"></div>
@@ -187,9 +214,9 @@
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
-<a id="property_form"> </a><div class="element clickable property protected property_form" data-toggle="collapse" data-target=".property_form .collapse" title="protected">
-<h2>Form</h2>
-<pre>$form : array</pre>
+<a id="property_status"> </a><div class="element clickable property public property_status" data-toggle="collapse" data-target=".property_status .collapse" title="public">
+<h2>Status</h2>
+<pre>$status : \JObject</pre>
 <div class="row collapse"><div class="detail-description">
 <h3>Default</h3>
 <div class="subelement argument"></div>
@@ -197,9 +224,9 @@
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
-<a id="property_item"> </a><div class="element clickable property protected property_item" data-toggle="collapse" data-target=".property_item .collapse" title="protected">
-<h2>Item</h2>
-<pre>$item : array</pre>
+<a id="property_step"> </a><div class="element clickable property public property_step" data-toggle="collapse" data-target=".property_step .collapse" title="public">
+<h2>$step</h2>
+<pre>$step </pre>
 <div class="row collapse"><div class="detail-description">
 <h3>Default</h3>
 <div class="subelement argument"></div>
@@ -207,12 +234,52 @@
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
-<a id="property_state"> </a><div class="element clickable property protected property_state" data-toggle="collapse" data-target=".property_state .collapse" title="protected">
-<h2>State</h2>
-<pre>$state : array</pre>
+<a id="property_totalSteps"> </a><div class="element clickable property public property_totalSteps" data-toggle="collapse" data-target=".property_totalSteps .collapse" title="public">
+<h2>Total numbers of Steps</h2>
+<pre>$totalSteps : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>0</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_version"> </a><div class="element clickable property public property_version" data-toggle="collapse" data-target=".property_version .collapse" title="public">
+<h2>$version</h2>
+<pre>$version </pre>
 <div class="row collapse"><div class="detail-description">
 <h3>Default</h3>
 <div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_more"> </a><div class="element clickable property protected property_more" data-toggle="collapse" data-target=".property_more .collapse" title="protected">
+<h2>More</h2>
+<pre>$more : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_percentage"> </a><div class="element clickable property protected property_percentage" data-toggle="collapse" data-target=".property_percentage .collapse" title="protected">
+<h2>Percentage</h2>
+<pre>$percentage : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property__versionStack"> </a><div class="element clickable property private property__versionStack" data-toggle="collapse" data-target=".property__versionStack .collapse" title="private">
+<h2>The pre versions to process</h2>
+<pre>$_versionStack : array</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>array()</code></div>
 </div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
@@ -224,7 +291,7 @@
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2016-05-27T18:27:14-05:00.<br></footer></div>
+            generated on 2016-06-04T13:51:22-05:00.<br></footer></div>
 </div>
 </body>
 </html>

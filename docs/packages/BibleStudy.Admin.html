@@ -23,7 +23,6 @@
 <li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
 <li><a href="../packages/BibleStudy.Admin.html"><i class="icon-folder-open"></i> BibleStudy.Admin</a></li>
 <li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
-<li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
 </ul>
 </li>
 <li class="dropdown" id="charts-menu">
@@ -34,7 +33,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">164</span></a></li>
+                <span class="label label-info">175</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -169,6 +168,7 @@ Displays a topics list of ALL published topics">JFormFieldTopicslist</a></li>
 <li><a href="#JFormFieldFilesize" title="Form Field class for the FileSize">JFormFieldFilesize</a></li>
 <li><a href="#BiblestudyModelSerie" title="Serie admin model">BiblestudyModelSerie</a></li>
 <li><a href="#JBSMRestore" title="Restore class">JBSMRestore</a></li>
+<li><a href="#BiblestudyViewArchive" title="View class for Archive">BiblestudyViewArchive</a></li>
 <li><a href="#BiblestudyControllerTeacher" title="Controller for Teacher">BiblestudyControllerTeacher</a></li>
 <li><a href="#BiblestudyModelTemplate" title="Template model class">BiblestudyModelTemplate</a></li>
 <li><a href="#JBSMDbHelper" title="Database Helper class for version 7.1.0">JBSMDbHelper</a></li>
@@ -192,6 +192,7 @@ Displays a topics list of ALL published topics">JFormFieldTopicslist</a></li>
 <li><a href="#BiblestudyControllerSerie" title="Controller for a Serie">BiblestudyControllerSerie</a></li>
 <li><a href="#BiblestudyModelComment" title="Comment model class">BiblestudyModelComment</a></li>
 <li><a href="#JHtmlBiblestudy" title="Biblestudy HTML class.">JHtmlBiblestudy</a></li>
+<li><a href="#BiblestudyModelArchive" title="Controller for Archive">BiblestudyModelArchive</a></li>
 <li><a href="#JBSMAlias" title="Class for updating the alias in certain tables">JBSMAlias</a></li>
 <li><a href="#JFormFieldSpanOptions" title="Books List Form Field class for the Joomla Bible Study component">JFormFieldSpanOptions</a></li>
 <li><a href="#Migration611" title="Update for 6.1.1 class">Migration611</a></li>
@@ -218,6 +219,7 @@ Displays a topics list of ALL published topics">JFormFieldTopicslist</a></li>
 <li><a href="#BiblestudyControllerCommentform" title="Controller for a Comment">BiblestudyControllerCommentform</a></li>
 <li><a href="#BiblestudyControllerPodcasts" title="Controller for Podcasts">BiblestudyControllerPodcasts</a></li>
 <li><a href="#BiblestudyViewLocations" title="View class for Locations">BiblestudyViewLocations</a></li>
+<li><a href="#BiblestudyControllerAssets" title="Controller for Assets">BiblestudyControllerAssets</a></li>
 <li><a href="#BiblestudyControllerTemplate" title="Template controller class">BiblestudyControllerTemplate</a></li>
 <li><a href="#BiblestudyViewComments" title="View class for Comments">BiblestudyViewComments</a></li>
 <li><a href="#JHtmlbsMedia" title="Utility class for bPopup JavaScript behaviors">JHtmlbsMedia</a></li>
@@ -270,13 +272,12 @@ params.">JBSMImageLib</a></li>
 <li><a href="#BiblestudyControllerLocation" title="Location controller class">BiblestudyControllerLocation</a></li>
 <li><a href="#BiblestudyControllerMessages" title="Messages list controller class.">BiblestudyControllerMessages</a></li>
 <li><a href="#BiblestudyViewPodcast" title="View class for Podcast">BiblestudyViewPodcast</a></li>
+<li><a href="#BibleStudyModelAssets" title="class Assets model">BibleStudyModelAssets</a></li>
 <li><a href="#JFormFieldFilesize" title="Form Field class for the FileSize">JFormFieldFilesize</a></li>
 <li><a href="#BiblestudyViewMessage" title="View class for Message">BiblestudyViewMessage</a></li>
 <li><a href="#BiblestudyViewTemplate" title="View class for Template">BiblestudyViewTemplate</a></li>
 <li><a href="#BiblestudyModelMessages" title="Message model class">BiblestudyModelMessages</a></li>
 <li><a href="#BiblestudyControllerTemplatecodes" title="TemplateCodes list controller class.">BiblestudyControllerTemplatecodes</a></li>
-<li><a href="#BiblestudyModelArchive" title="Controller for Archive">BiblestudyModelArchive</a></li>
-<li><a href="#BiblestudyViewArchive" title="View class for Archive">BiblestudyViewArchive</a></li>
 <li class="nav-header">
 <i title="Constants" class="icon-custom icon-constant"></i> Constants</li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_COMPONENT_NAME" title="BIBLESTUDY_COMPONENT_NAME() :: "><span class="description">BIBLESTUDY_COMPONENT_NAME</span><pre>BIBLESTUDY_COMPONENT_NAME</pre></a></li>
@@ -311,6 +312,7 @@ params.">JBSMImageLib</a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN_LIB" title="BIBLESTUDY_PATH_ADMIN_LIB() :: "><span class="description">BIBLESTUDY_PATH_ADMIN_LIB</span><pre>BIBLESTUDY_PATH_ADMIN_LIB</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN_MODELS" title="BIBLESTUDY_PATH_ADMIN_MODELS() :: "><span class="description">BIBLESTUDY_PATH_ADMIN_MODELS</span><pre>BIBLESTUDY_PATH_ADMIN_MODELS</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN_MODELS" title="BIBLESTUDY_PATH_ADMIN_MODELS() :: "><span class="description">BIBLESTUDY_PATH_ADMIN_MODELS</span><pre>BIBLESTUDY_PATH_ADMIN_MODELS</pre></a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN_TABLES" title="BIBLESTUDY_PATH_ADMIN_TABLES() :: "><span class="description">BIBLESTUDY_PATH_ADMIN_TABLES</span><pre>BIBLESTUDY_PATH_ADMIN_TABLES</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH_HELPERS" title="BIBLESTUDY_PATH_HELPERS() :: "><span class="description">BIBLESTUDY_PATH_HELPERS</span><pre>BIBLESTUDY_PATH_HELPERS</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH_HELPERS" title="BIBLESTUDY_PATH_HELPERS() :: "><span class="description">BIBLESTUDY_PATH_HELPERS</span><pre>BIBLESTUDY_PATH_HELPERS</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH_IMAGES" title="BIBLESTUDY_PATH_IMAGES() :: "><span class="description">BIBLESTUDY_PATH_IMAGES</span><pre>BIBLESTUDY_PATH_IMAGES</pre></a></li>
@@ -320,6 +322,7 @@ params.">JBSMImageLib</a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH_MOD" title="BIBLESTUDY_PATH_MOD() :: "><span class="description">BIBLESTUDY_PATH_MOD</span><pre>BIBLESTUDY_PATH_MOD</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH_MOD" title="BIBLESTUDY_PATH_MOD() :: "><span class="description">BIBLESTUDY_PATH_MOD</span><pre>BIBLESTUDY_PATH_MOD</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH_MODELS" title="BIBLESTUDY_PATH_MODELS() :: "><span class="description">BIBLESTUDY_PATH_MODELS</span><pre>BIBLESTUDY_PATH_MODELS</pre></a></li>
+<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_TABLES" title="BIBLESTUDY_PATH_TABLES() :: "><span class="description">BIBLESTUDY_PATH_TABLES</span><pre>BIBLESTUDY_PATH_TABLES</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH_TEMPLATE" title="BIBLESTUDY_PATH_TEMPLATE() :: "><span class="description">BIBLESTUDY_PATH_TEMPLATE</span><pre>BIBLESTUDY_PATH_TEMPLATE</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH_TEMPLATE" title="BIBLESTUDY_PATH_TEMPLATE() :: "><span class="description">BIBLESTUDY_PATH_TEMPLATE</span><pre>BIBLESTUDY_PATH_TEMPLATE</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH_TEMPLATE_DEFAULT" title="BIBLESTUDY_PATH_TEMPLATE_DEFAULT() :: "><span class="description">BIBLESTUDY_PATH_TEMPLATE_DEFAULT</span><pre>BIBLESTUDY_PATH_TEMPLATE_DEFAULT</pre></a></li>
@@ -453,6 +456,13 @@ that the message concerning it should be displayed.</p></div>
 </div>
 <h3>
 <i title="Classes" class="icon-custom icon-class"></i> Classes, interfaces, and traits</h3>
+<div xmlns:php="http://php.net/xsl" id="BibleStudyModelAssets" class="element ajax clickable class">
+<h1>BibleStudyModelAssets<a href="../classes/BibleStudyModelAssets.html">¶</a>
+</h1>
+<p class="short_description">class Assets model</p>
+<div class="details collapse"></div>
+<a href="../classes/BibleStudyModelAssets.html" class="more">« More »</a>
+</div>
 <div xmlns:php="http://php.net/xsl" id="BibleStudyModelCpanel" class="element ajax clickable class">
 <h1>BibleStudyModelCpanel<a href="../classes/BibleStudyModelCpanel.html">¶</a>
 </h1>
@@ -480,6 +490,13 @@ that the message concerning it should be displayed.</p></div>
 <p class="short_description">Controller for Admin</p>
 <div class="details collapse"></div>
 <a href="../classes/BiblestudyControllerAdmin.html" class="more">« More »</a>
+</div>
+<div xmlns:php="http://php.net/xsl" id="BiblestudyControllerAssets" class="element ajax clickable class">
+<h1>BiblestudyControllerAssets<a href="../classes/BiblestudyControllerAssets.html">¶</a>
+</h1>
+<p class="short_description">Controller for Assets</p>
+<div class="details collapse"></div>
+<a href="../classes/BiblestudyControllerAssets.html" class="more">« More »</a>
 </div>
 <div xmlns:php="http://php.net/xsl" id="BiblestudyControllerComment" class="element ajax clickable class">
 <h1>BiblestudyControllerComment<a href="../classes/BiblestudyControllerComment.html">¶</a>
@@ -2256,6 +2273,18 @@ Displays a topics list of ALL published topics</p>
 </tr></table>
 </div></div>
 </div>
+<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_PATH_ADMIN_TABLES"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_PATH_ADMIN_TABLES" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_ADMIN_TABLES .collapse" title="">
+<h2>BIBLESTUDY_PATH_ADMIN_TABLES</h2>
+<pre>BIBLESTUDY_PATH_ADMIN_TABLES = BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'tables' </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>package</th>
+<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+</tr></table>
+</div></div>
+</div>
 <a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_PATH_HELPERS"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_PATH_HELPERS" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_HELPERS .collapse" title="">
 <h2>BIBLESTUDY_PATH_HELPERS</h2>
 <pre>BIBLESTUDY_PATH_HELPERS = BIBLESTUDY_PATH . DIRECTORY_SEPARATOR . 'helpers' </pre>
@@ -2355,6 +2384,18 @@ Displays a topics list of ALL published topics</p>
 <a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_PATH_MODELS"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_PATH_MODELS" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_MODELS .collapse" title="">
 <h2>BIBLESTUDY_PATH_MODELS</h2>
 <pre>BIBLESTUDY_PATH_MODELS = BIBLESTUDY_PATH . DIRECTORY_SEPARATOR . 'models' </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>package</th>
+<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+</tr></table>
+</div></div>
+</div>
+<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_PATH_TABLES"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_PATH_TABLES" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_TABLES .collapse" title="">
+<h2>BIBLESTUDY_PATH_TABLES</h2>
+<pre>BIBLESTUDY_PATH_TABLES = BIBLESTUDY_PATH . DIRECTORY_SEPARATOR . 'tables' </pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -2759,7 +2800,7 @@ Displays a topics list of ALL published topics</p>
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2016-05-27T18:27:08-05:00.<br></footer></div>
+            generated on 2016-06-04T13:51:17-05:00.<br></footer></div>
 </div>
 </body>
 </html>

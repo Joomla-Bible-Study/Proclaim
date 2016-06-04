@@ -424,7 +424,7 @@ class JBSMMedia
 		{
 			/* In this case the item has a player set for it, so we use that instead. We also need to change the old player
 					type of 3 to 2 for all videos reloaded which we don't support */
-			if($media->params->get('player', null) !== null)
+			if ($media->params->get('player', null) !== null)
 			{
 				$player->player = $media->params->get('player');
 			}
