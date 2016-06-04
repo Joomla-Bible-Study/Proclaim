@@ -38,7 +38,7 @@ $input = $app->input;
 	};
 
 	Joomla.submitbutton = function (task) {
-		if (task === 'admin.cancel' || task === 'admin.resetHits' || task === 'admin.resetDownloads' || task === 'admin.resetPlays' || task === 'admin.aliasfix'){
+		if (task === 'admin.cancel' || task === 'admin.resetHits' || task === 'admin.resetDownloads' || task === 'admin.resetPlays' || task === 'admin.aliasUpdate'){
 			Joomla.submitform(task, document.getElementById('item-admin'));
 		} else if (document.formvalidator.isValid(document.id('item-admin'))) {
 			if (task === 'admin.save' || task === 'admin.apply') {
@@ -172,10 +172,10 @@ $input = $app->input;
 									   title="<?php echo JText::_('JBS_ADM_ARCHIVE'); ?>" class="btn"> <i
 											class="icon-archive icon-big"></i>
 										<span><br/> <?php echo JText::_('JBS_ADM_ARCHIVE'); ?> </span></a>
-									<button  onclick="Joomla::submitbutton('admin.alaisfix')"
+									<a  href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets&task=admin.aliasUpdate&' . JSession::getFormToken() . '=1') ?>"
 									   title="<?php echo JText::_('JBS_ADM_RESET_ALIAS'); ?>" class="btn"> <i
 											class="icon-big icon-tree-2"></i>
-										<span><br/> <?php echo JText::_('JBS_ADM_RESET_ALIAS'); ?> </span></button>
+										<span><br/> <?php echo JText::_('JBS_ADM_RESET_ALIAS'); ?> </span></a>
 									</div>
 								</div>
 							</div>

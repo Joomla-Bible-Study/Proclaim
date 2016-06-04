@@ -548,8 +548,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		if (in_array('8', $user->groups))
 		{
 			JBSMDbHelper::resetdb();
-			self::fixAssets(true);
-			$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=cpanel', false));
+			$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=assats&task=assets.browse&' . JSession::getFormToken() . '=1', false));
 		}
 		else
 		{
@@ -569,7 +568,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	public function aliasUpdate()
 	{
 		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		JSession::checkToken('get') or jexit(JText::_('JINVALID_TOKEN'));
 
 		$alias  = new JBSMAlias;
 		$update = $alias->updateAlias();
