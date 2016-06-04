@@ -27,12 +27,12 @@ services:
   - redis-server
 
 before_script:
+  phpenv config-rm xdebug.ini
   # Make sure all dev dependencies are installed
   - composer install
   # Set up Apache
   # - ./build/travis/php-apache.sh
   # Enable additional PHP extensions
-# Enable additional PHP extensions
   - if [ "$INSTALL_MEMCACHED" == "yes" ]; then phpenv config-add build/travis/phpenv/memcached.ini; fi
   - if [ "$INSTALL_APC" == "yes" ]; then phpenv config-add build/travis/phpenv/apc-$TRAVIS_PHP_VERSION.ini; fi
   - if [ "$INSTALL_APCU" == "yes" ]; then printf "\n" | pecl install apcu-4.0.10; fi

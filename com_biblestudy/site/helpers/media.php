@@ -62,7 +62,7 @@ class JBSMMedia
 			}
 			if ($imageparams->get('media_use_button_icon') >= 1)
 			{
-				$image = $this->mediaButton($media, $imageparams);
+				$image = $this->mediaButton($imageparams);
 			}
 			else
 			{
@@ -232,12 +232,11 @@ class JBSMMedia
 	/**
 	 * Used to obtain the button and/or icon for the image
 	 *
-	 * @param   object    $media        ?
 	 * @param   Registry  $imageparams  ?
 	 *
 	 * @return mixed
 	 */
-	public function mediaButton($media, $imageparams)
+	public function mediaButton($imageparams)
 	{
 		$mediaimage = null;
 		$button = $imageparams->get('media_button_type', 'btn-link');

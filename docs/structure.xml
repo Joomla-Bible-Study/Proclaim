@@ -9396,7 +9396,7 @@ ordering requirements.</long-description>
     </parse_markers>
     <source>eJzFVl1v2zYUfbZ+xYVQVHIQSWmBrZsTO3XzhRpbmqEJMGAoAlqkZSYUSZBUEqPIf98lJTtO0rjBXuYHRbpfPOfw8jJ7+3quo2JrK4ItOCPGgZrBRKlaEPjEp4J9dQ1doKe8JhXDIB/3UbefgL+HoHxMay6Dv1R6YXg1dwDvd3Y+QIZ/3v0K6UH/UW1oi58zUsNYCAgpFgyzzNwwGkoJXjJpw1Jz5/SgKG5vb/NKNrkyVeEXEmzmikqLfO5qASenF8XJ2R9drryG9reW2yJYw42FfPhWERUFnCo45IaVDsZlyayNKJtxyWiaXE6O/j46SPqgDFDOdqPoitdaGZcmV6FkABAeSX/3mXOmTB0eM84E9RFL2Q8EsRYmx+g79r4z0WihCH2m9g+1tlyWQZ7f8518J/I0yhcKArtzTNJ1V/Q9inq6maLM8MYtNIMhJMv4BDH2PMgeLnTCHHyWunH+K1g+GuYaI8E6w2XlTQXWMsqheozCrJGl40pCxVxITPtR73vU66HKn2UpGspghUzwqSGGM4v+N1SVTc2kQyyTY1I6ZRaDAVY57OwpircWlo0IpV9Lw7VLJxeGDwZGKQyCHBLideKIkGAVbBfcE4kp1r9eTr2e1utZYAUlbREaz9hCsIqUi4K3MG1xZQvdQc1njRA5Vs2vbPJ/AGlND6vfcHb7VKmx1rijxMuf9rMR9/JnI3SkiQ9/Gfchw+YxbWKCMb2rvxpmFukytJ8bRugiXW4ukvNb2uu14jCTW+a+6OCKGyPibYi5pOwuxzmzr4Jj+JjyW0fs9TBBkVoqKFZ+NzdvvWXyFY8gpgRSvmnP1TWTraLDd3Ggsbb2FJdK408Mjxm7CEZc/xnUH2KtG+G4xgF4iQ9SW0zsontzIqlgZgBxAOnm3GYjJpjX45+488bfPKZ4u8vRxM0xoeA1nlxbrG1wzSgnRdzG3XcM7p8ywV7p2rzzhYGBe9ae7eFTGEmwJ99gHxII78OANm0PZ//FeA86gQEkSVs/DFGcAXuU3ywLlUo6o0RWGdXoeBTBC7/1nLbliNY4cDalhDjwk2cYO5xPMWhBSjZXAmUYxkfSMQMEZlwwSWoWQ9iDVgXEDt44XN8YbwisgNPg8Bp2Pk5bzw0RTZfl+VrNSk5EOSfGpl1oCNmGo9Pzy4Mvf56Nz7chuTg/zn5L+m2N4mVSK1oewXJLM0/hCbuDuVJ4txEITRFIxhuqWoeX3TCeKuPr+XtvADu70H0bQnljvSVeboLVRH6IH6lLuSXYi3QjehKQT53McDC0wLuKaANvx1uR4InZsLOdDqt+wCbKcIbaeLRX8J+kjSmFY1x1E8aCvJJCuwErTZYMbBPu99cp8pxKV/UVZC66y/y/Udkr8FD95Mg9tFmG129lAq2uWZAdttxiABLvm12oiam4zJzSA/hF3z20yjIRli+Znxwa73G8VvgNe+WxnxKzWvqWUz8EsR9HLYsNXFpXsrsaQTnOoEeR7Xzq/uUIMRh8H91H/wKIwRrp</source>
   </file>
-  <file path="com_biblestudy/site/helpers/media.php" generated-path="com_biblestudy.site.helpers.media.html" hash="ac70387387b75a763850c7e068a28675" package="BibleStudy.Admin">
+  <file path="com_biblestudy/site/helpers/media.php" generated-path="com_biblestudy.site.helpers.media.html" hash="04900474a3051bbfd91b366d169c0f2b" package="BibleStudy.Admin">
     <docblock line="0">
       <description>Part of Joomla BibleStudy Package</description>
       <long-description></long-description>
@@ -9496,43 +9496,35 @@ ordering requirements.</long-description>
           <type>\TableTemplate</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="240" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="239" package="BibleStudy.Admin">
         <name>mediaButton</name>
         <full_name>\JBSMMedia::mediaButton()</full_name>
-        <docblock line="240">
+        <docblock line="239">
           <description>Used to obtain the button and/or icon for the image</description>
           <long-description></long-description>
-          <tag name="param" line="240" description="&lt;p&gt;?&lt;/p&gt;" type="object" variable="$media">
-            <type>object</type>
-          </tag>
-          <tag name="param" line="240" description="&lt;p&gt;?&lt;/p&gt;" type="\Joomla\Registry\Registry" variable="$imageparams">
+          <tag name="param" line="239" description="&lt;p&gt;?&lt;/p&gt;" type="\Joomla\Registry\Registry" variable="$imageparams">
             <type>\Joomla\Registry\Registry</type>
           </tag>
-          <tag name="return" line="240" description="" type="mixed">
+          <tag name="return" line="239" description="" type="mixed">
             <type>mixed</type>
           </tag>
         </docblock>
-        <argument line="0" by_reference="false">
-          <name>$media</name>
-          <default></default>
-          <type>object</type>
-        </argument>
         <argument line="0" by_reference="false">
           <name>$imageparams</name>
           <default></default>
           <type>\Joomla\Registry\Registry</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="296" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="295" package="BibleStudy.Admin">
         <name>downloadButton</name>
         <full_name>\JBSMMedia::downloadButton()</full_name>
-        <docblock line="296">
+        <docblock line="295">
           <description>Used to obtain the button and/or icon for the image</description>
           <long-description></long-description>
-          <tag name="param" line="296" description="&lt;p&gt;?&lt;/p&gt;" type="\Joomla\Registry\Registry" variable="$download">
+          <tag name="param" line="295" description="&lt;p&gt;?&lt;/p&gt;" type="\Joomla\Registry\Registry" variable="$download">
             <type>\Joomla\Registry\Registry</type>
           </tag>
-          <tag name="return" line="296" description="" type="mixed">
+          <tag name="return" line="295" description="" type="mixed">
             <type>mixed</type>
           </tag>
         </docblock>
@@ -9542,23 +9534,23 @@ ordering requirements.</long-description>
           <type>\Joomla\Registry\Registry</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="355" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="354" package="BibleStudy.Admin">
         <name>useJImage</name>
         <full_name>\JBSMMedia::useJImage()</full_name>
-        <docblock line="355">
+        <docblock line="354">
           <description>Use JImage to create images</description>
           <long-description></long-description>
-          <tag name="param" line="355" description="&lt;p&gt;Path to file&lt;/p&gt;" type="string" variable="$path">
+          <tag name="param" line="354" description="&lt;p&gt;Path to file&lt;/p&gt;" type="string" variable="$path">
             <type>string</type>
           </tag>
-          <tag name="param" line="355" description="&lt;p&gt;Accessibility string&lt;/p&gt;" type="string" variable="$alt">
+          <tag name="param" line="354" description="&lt;p&gt;Accessibility string&lt;/p&gt;" type="string" variable="$alt">
             <type>string</type>
           </tag>
-          <tag name="return" line="355" description="" type="boolean|string">
+          <tag name="return" line="354" description="" type="boolean|string">
             <type>boolean</type>
             <type>string</type>
           </tag>
-          <tag name="since" line="355" description="9.0.0"/>
+          <tag name="since" line="354" description="9.0.0"/>
         </docblock>
         <argument line="0" by_reference="false">
           <name>$path</name>
@@ -9571,19 +9563,19 @@ ordering requirements.</long-description>
           <type>string</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="385" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="384" package="BibleStudy.Admin">
         <name>getPlayerAttributes</name>
         <full_name>\JBSMMedia::getPlayerAttributes()</full_name>
-        <docblock line="385">
+        <docblock line="384">
           <description>Set up Player Attributes</description>
           <long-description></long-description>
-          <tag name="param" line="385" description="&lt;p&gt;Params&lt;/p&gt;" type="\Joomla\Registry\Registry" variable="$params">
+          <tag name="param" line="384" description="&lt;p&gt;Params&lt;/p&gt;" type="\Joomla\Registry\Registry" variable="$params">
             <type>\Joomla\Registry\Registry</type>
           </tag>
-          <tag name="param" line="385" description="&lt;p&gt;Media info&lt;/p&gt;" type="object" variable="$media">
+          <tag name="param" line="384" description="&lt;p&gt;Media info&lt;/p&gt;" type="object" variable="$media">
             <type>object</type>
           </tag>
-          <tag name="return" line="385" description="" type="object">
+          <tag name="return" line="384" description="" type="object">
             <type>object</type>
           </tag>
         </docblock>
@@ -9598,25 +9590,25 @@ ordering requirements.</long-description>
           <type>object</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="502" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="501" package="BibleStudy.Admin">
         <name>getPlayerCode</name>
         <full_name>\JBSMMedia::getPlayerCode()</full_name>
-        <docblock line="502">
+        <docblock line="501">
           <description>Setup Player Code.</description>
           <long-description></long-description>
-          <tag name="param" line="502" description="&lt;p&gt;Params are the merged of system and items.&lt;/p&gt;" type="\Joomla\Registry\Registry" variable="$params">
+          <tag name="param" line="501" description="&lt;p&gt;Params are the merged of system and items.&lt;/p&gt;" type="\Joomla\Registry\Registry" variable="$params">
             <type>\Joomla\Registry\Registry</type>
           </tag>
-          <tag name="param" line="502" description="&lt;p&gt;Player code&lt;/p&gt;" type="object" variable="$player">
+          <tag name="param" line="501" description="&lt;p&gt;Player code&lt;/p&gt;" type="object" variable="$player">
             <type>object</type>
           </tag>
-          <tag name="param" line="502" description="&lt;p&gt;Image info&lt;/p&gt;" type="String" variable="$image">
+          <tag name="param" line="501" description="&lt;p&gt;Image info&lt;/p&gt;" type="String" variable="$image">
             <type>String</type>
           </tag>
-          <tag name="param" line="502" description="&lt;p&gt;Media&lt;/p&gt;" type="object" variable="$media">
+          <tag name="param" line="501" description="&lt;p&gt;Media&lt;/p&gt;" type="object" variable="$media">
             <type>object</type>
           </tag>
-          <tag name="return" line="502" description="" type="string">
+          <tag name="return" line="501" description="" type="string">
             <type>string</type>
           </tag>
         </docblock>
@@ -9641,19 +9633,19 @@ ordering requirements.</long-description>
           <type>object</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="649" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="648" package="BibleStudy.Admin">
         <name>getFluidFilesize</name>
         <full_name>\JBSMMedia::getFluidFilesize()</full_name>
-        <docblock line="649">
+        <docblock line="648">
           <description>return $table</description>
           <long-description></long-description>
-          <tag name="param" line="649" description="&lt;p&gt;Media info&lt;/p&gt;" type="Object" variable="$media">
+          <tag name="param" line="648" description="&lt;p&gt;Media info&lt;/p&gt;" type="Object" variable="$media">
             <type>Object</type>
           </tag>
-          <tag name="param" line="649" description="&lt;p&gt;Params&lt;/p&gt;" type="\Joomla\Registry\Registry" variable="$params">
+          <tag name="param" line="648" description="&lt;p&gt;Params&lt;/p&gt;" type="\Joomla\Registry\Registry" variable="$params">
             <type>\Joomla\Registry\Registry</type>
           </tag>
-          <tag name="return" line="649" description="" type="null|string">
+          <tag name="return" line="648" description="" type="null|string">
             <type>null</type>
             <type>string</type>
           </tag>
@@ -9669,19 +9661,19 @@ ordering requirements.</long-description>
           <type>\Joomla\Registry\Registry</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="719" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="718" package="BibleStudy.Admin">
         <name>getFluidDuration</name>
         <full_name>\JBSMMedia::getFluidDuration()</full_name>
-        <docblock line="719">
+        <docblock line="718">
           <description>Get duration</description>
           <long-description></long-description>
-          <tag name="param" line="719" description="&lt;p&gt;Table Row info&lt;/p&gt;" type="Object" variable="$row">
+          <tag name="param" line="718" description="&lt;p&gt;Table Row info&lt;/p&gt;" type="Object" variable="$row">
             <type>Object</type>
           </tag>
-          <tag name="param" line="719" description="&lt;p&gt;Params&lt;/p&gt;" type="\Joomla\Registry\Registry" variable="$params">
+          <tag name="param" line="718" description="&lt;p&gt;Params&lt;/p&gt;" type="\Joomla\Registry\Registry" variable="$params">
             <type>\Joomla\Registry\Registry</type>
           </tag>
-          <tag name="return" line="719" description="" type="null|string">
+          <tag name="return" line="718" description="" type="null|string">
             <type>null</type>
             <type>string</type>
           </tag>
@@ -9697,16 +9689,16 @@ ordering requirements.</long-description>
           <type>\Joomla\Registry\Registry</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="771" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="770" package="BibleStudy.Admin">
         <name>hitPlay</name>
         <full_name>\JBSMMedia::hitPlay()</full_name>
-        <docblock line="771">
+        <docblock line="770">
           <description>Update Hit count for plays.</description>
           <long-description></long-description>
-          <tag name="param" line="771" description="&lt;p&gt;ID to apply the hit to.&lt;/p&gt;" type="integer" variable="$id">
+          <tag name="param" line="770" description="&lt;p&gt;ID to apply the hit to.&lt;/p&gt;" type="integer" variable="$id">
             <type>integer</type>
           </tag>
-          <tag name="return" line="771" description="" type="boolean">
+          <tag name="return" line="770" description="" type="boolean">
             <type>boolean</type>
           </tag>
         </docblock>
@@ -9716,16 +9708,16 @@ ordering requirements.</long-description>
           <type>integer</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="795" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="794" package="BibleStudy.Admin">
         <name>getMediaRows2</name>
         <full_name>\JBSMMedia::getMediaRows2()</full_name>
-        <docblock line="795">
+        <docblock line="794">
           <description>Get Media info Row2</description>
           <long-description></long-description>
-          <tag name="param" line="795" description="&lt;p&gt;ID of Row&lt;/p&gt;" type="integer" variable="$id">
+          <tag name="param" line="794" description="&lt;p&gt;ID of Row&lt;/p&gt;" type="integer" variable="$id">
             <type>integer</type>
           </tag>
-          <tag name="return" line="795" description="" type="object|boolean">
+          <tag name="return" line="794" description="" type="object|boolean">
             <type>object</type>
             <type>boolean</type>
           </tag>
@@ -9736,19 +9728,19 @@ ordering requirements.</long-description>
           <type>integer</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="846" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="845" package="BibleStudy.Admin">
         <name>getAVmediacode</name>
         <full_name>\JBSMMedia::getAVmediacode()</full_name>
-        <docblock line="846">
+        <docblock line="845">
           <description>Return AVMedia Code.</description>
           <long-description></long-description>
-          <tag name="param" line="846" description="&lt;p&gt;Media string&lt;/p&gt;" type="string" variable="$mediacode">
+          <tag name="param" line="845" description="&lt;p&gt;Media string&lt;/p&gt;" type="string" variable="$mediacode">
             <type>string</type>
           </tag>
-          <tag name="param" line="846" description="&lt;p&gt;Media info&lt;/p&gt;" type="object" variable="$media">
+          <tag name="param" line="845" description="&lt;p&gt;Media info&lt;/p&gt;" type="object" variable="$media">
             <type>object</type>
           </tag>
-          <tag name="return" line="846" description="" type="string">
+          <tag name="return" line="845" description="" type="string">
             <type>string</type>
           </tag>
         </docblock>
@@ -9763,19 +9755,19 @@ ordering requirements.</long-description>
           <type>object</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="873" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="872" package="BibleStudy.Admin">
         <name>getDocman</name>
         <full_name>\JBSMMedia::getDocman()</full_name>
-        <docblock line="873">
+        <docblock line="872">
           <description>Return Docman Media</description>
           <long-description></long-description>
-          <tag name="param" line="873" description="&lt;p&gt;Media&lt;/p&gt;" type="object" variable="$media">
+          <tag name="param" line="872" description="&lt;p&gt;Media&lt;/p&gt;" type="object" variable="$media">
             <type>object</type>
           </tag>
-          <tag name="param" line="873" description="&lt;p&gt;Image&lt;/p&gt;" type="string" variable="$image">
+          <tag name="param" line="872" description="&lt;p&gt;Image&lt;/p&gt;" type="string" variable="$image">
             <type>string</type>
           </tag>
-          <tag name="return" line="873" description="" type="string">
+          <tag name="return" line="872" description="" type="string">
             <type>string</type>
           </tag>
         </docblock>
@@ -9790,19 +9782,19 @@ ordering requirements.</long-description>
           <type>string</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="895" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="894" package="BibleStudy.Admin">
         <name>getArticle</name>
         <full_name>\JBSMMedia::getArticle()</full_name>
-        <docblock line="895">
+        <docblock line="894">
           <description>Return Articles.</description>
           <long-description></long-description>
-          <tag name="param" line="895" description="&lt;p&gt;Media&lt;/p&gt;" type="object" variable="$media">
+          <tag name="param" line="894" description="&lt;p&gt;Media&lt;/p&gt;" type="object" variable="$media">
             <type>object</type>
           </tag>
-          <tag name="param" line="895" description="&lt;p&gt;Image&lt;/p&gt;" type="string" variable="$image">
+          <tag name="param" line="894" description="&lt;p&gt;Image&lt;/p&gt;" type="string" variable="$image">
             <type>string</type>
           </tag>
-          <tag name="return" line="895" description="" type="string">
+          <tag name="return" line="894" description="" type="string">
             <type>string</type>
           </tag>
         </docblock>
@@ -9817,22 +9809,22 @@ ordering requirements.</long-description>
           <type>string</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="912" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="911" package="BibleStudy.Admin">
         <name>getVirtuemart</name>
         <full_name>\JBSMMedia::getVirtuemart()</full_name>
-        <docblock line="912">
+        <docblock line="911">
           <description>Set up Virtumart if Vertumart is installed.</description>
           <long-description></long-description>
-          <tag name="param" line="912" description="&lt;p&gt;Media&lt;/p&gt;" type="object" variable="$media">
+          <tag name="param" line="911" description="&lt;p&gt;Media&lt;/p&gt;" type="object" variable="$media">
             <type>object</type>
           </tag>
-          <tag name="param" line="912" description="&lt;p&gt;Item Params&lt;/p&gt;" type="\Joomla\Registry\Registry" variable="$params">
+          <tag name="param" line="911" description="&lt;p&gt;Item Params&lt;/p&gt;" type="\Joomla\Registry\Registry" variable="$params">
             <type>\Joomla\Registry\Registry</type>
           </tag>
-          <tag name="param" line="912" description="&lt;p&gt;Image&lt;/p&gt;" type="string" variable="$image">
+          <tag name="param" line="911" description="&lt;p&gt;Image&lt;/p&gt;" type="string" variable="$image">
             <type>string</type>
           </tag>
-          <tag name="return" line="912" description="" type="string">
+          <tag name="return" line="911" description="" type="string">
             <type>string</type>
           </tag>
         </docblock>
@@ -9856,7 +9848,7 @@ ordering requirements.</long-description>
     <parse_markers>
       <error line="24" code="PPC:ERR-50007">No summary for property $fsize</error>
     </parse_markers>
-    <source>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</source>
+    <source>eJzVPGlz20ayn8VfMeG6AsqhqMOK7aVMZeU4cawXJ17Lcd6rchULBIYiYhBgAFCy1vF/f33MhYuHtXYSJWUCc/T0dPd09/T04NE3i9mis3/3bkfcFS/8rBDpVJyn6Tz2xeNoEsuLYhneQE3w1r+U0Ajb/WvBrwL+bKPBWTiPEqoP0sVNFl3OCiGODg4eiD34Obwvet/ulmALBv5K+nNxFseCuuQik7nMrmRIoOIokElOQ82KYjHc37++vh5cJstBml3u40CxnBb7l4t4MCvmsXj60y/7T1/8qPombwX/OX0ZAwdvAITN7+539vfFT6l4EmUyKMRZEMg874RyGiUy7Hnj8+/+97tvvV2RZiKM5EmnswS8GNqbl/IyyovsxjxAtaIqt/iiNOXnMox8EcR+ng80UfMoCWCeDwYHg4MOYkPV4vzxxXNq3nnf6ewATPGv4mYhRZQU4vsIIUb/kdh8Z5FFV34hxZ1pjkUjcXDCPTo7AP+lLJZZIr6Pl1Goxs/Sa6yiauBpBmwQ4ufJbzj7hr87c+qFf9w/SqZpuXMbNaAzNcmx8wt6Knd85QNxXsn5IsYZlEYtTKmpp9YW9YynBgNFySUWITGWExAdMV0mQRGlibiUBU2dMO/xVPoaq74dZbez876zs8MNpkjfkUiWcXyChfhOtDWFUApCc8GU8TMpipkU/JbLogB8cjEFgZF+MBMk1hkCyoguKRAGAMlrYaXGrdw7jVM/vKBpKZT3TnP63T0xSOoiAGW7asyY1gazKAmjqyhc+rFQ/EDkLM40YZD+NAtviSaDL6GpRmxC82JRxpMpxTjKQmb5bYnWgE7ehs9ONBWVeeydgvz0PCobw7IfT5ZFkSbjKEgT0Aijkdg73MWuKDswRDQH9Wjhl/iEOOx8wH9knMu1nbjAdiLknKZrUDsdiTpmCL6YRdCXuj2mHiWou61YUg8DpQ0RKvcYih6U/szIgOr5MyzvOSDNiiwBK+S7wuuL81fwOxyOex7oxPHz756Mn/z8608//nz2xNvd1Qgjg2Eh34D08HC5jKfDIUB7QaVnBUgGkEjmPbv4nSXFfYM0lPW+30Kp04ub9hURymDC9DpBOWQT5EAiJfRE1f4Itat0EYljqzQi7DHaAph+R/HnjimsiVC9F2KKLFYcbgeQq982AIRiaZR8ll6PtbpEMRQH4ssvRZSDVlSz2cUCZ7hH4oinwTKDncfKkDVOhCD3hXegxQyx+ML2I6lXUlsGhyb1BxkvZEYseSnnaSHRlqIprUxkkaVFGqQxzGEgKqpDN/GLWam6VIsDJ6DFPCWivKh28uuoAJPQa8E38NHncbB+JA4Pjo7FkKvL8/Hgv4HwHt+AVHsnqsUkk/7bEwdaBdjxw68f3G+G57zs07AnTa2S5XwiszEYkLlfOPPoi4Pdxg7Oy0Dj/D+PN0b4wb0Hx4cP22iwGc63ndnh5jN7vtnMTj/rzD7j/J82zp+E38j+KpXhGC2i2eGQFYMLjSqOhg1LXC/FIJ3PZVKcNHe9p7q6Klb14NWol+MmwD9UxyBj5DiNsFAfgeZARxU2LaPuNE2KPawZioPBfTk/CaMcbcowSkArypPuKRCyqgyBso/2Ecqpx9q349DTKFNjD2iaB0PHdCuf1jF0jL/C23Q6HBqlWrJmZbXaApLQBFdTT7Uys0WaR+iVDzMJdi66UnMVZbM5EJZ2NG0AeOq5SlS7JuvQcftU53nURBwXjxJ5FMXVjsN2gpoP9c2WBiMQzm22Wn/KLuvZk4/bYm3q3fBOC7x/NMBX0lILFY/4v3RZLCeSSJcP9O4LLWmbQ2At7YnySfLlBDAeB+kyUXoM68FnuGHgYLX/+EOsbjWYuP6VooNnF19ZZkeqqu4R6WbNPvqR9eBMw4qrrsu1t+446tqJaxhVTv1lXIzLQF2H0Rlno54nK5F0vHpVt8Zvb/RBLVjeAeyDph1PMH6SY/hkn2rzfY3EYJFcep8Er7+R+207gq9tEQLKgX86nvOGpsxip87bdba+pT4jhqa3f1Vpf+SLWSano26UhPLdYDFbfJMuUB2Myjz70p8vTq4ieT2Cvf08Teh9HoUjbePMvjwKUdtTfeHnb0d6xK7S/U2b0lasVNzvN9KYFhsKHmawvGVGKOOir2PSol0MemiZRl6b4692PtDYYo7/gsL7diaDt6JIYVsoBZC8mMkbce0nBZZhVNEXi3SxXBiOlABDA8B7nvO2SjGnlQ4URRx1gZl+3N2WVzQOswKUNjZbpAm4PFQE5hUoOCLIVODIzchjUgJtXGnSlFOMF0085wptJXRdV4CvMOq+n/lJGMPGTbzxoilGh97AHpCdqPfvhuL+8UFf3AzF8cODDx9KElPxLRwjr3QFuRi+41ZpI19xBlw7/0suQ+RZOin8KKHQFat2AWjup5lADW9ibDRO3Q1wzLcbAhLf1MzvPHonwxbr2xrJcQOaWiuaiKbCdkUkR5kq0jhgEydFsoeEYO2j+mOAZhMYHMfxzpZhlCoAWKbd6tZgUqA6j/We/+jYGvl1o8LmPc1cHU0FuDqUczrxg7eXoAyScI+qhiSAm0FFqTnpeo2q3Ixjqo2jvnH8ruzIK58cNAgzWqRJfOO4r8Zqku8tkGcwPWra1YoAGEgbNM163LAVUYGEcIqJo7TsqJCnAu+nDW1Kjrnd/rjetcUY1gUtCru5WM11MnRohbxDr7z1oKW1QmqCZV6AWmM6rtw1rINkMQHRm/pi6u/h3qIM9VYc6G7DAt5EKmDGaKlprAVW23wqdauWIbRZvIPtmNpkruLtPcPbZ4Eri9tw9fBvxdMK4cUnIXmV2PUNJyFEluiTGSKzF9vSClU3KfpdWyH9vsIQ6SbVfdM2hmgdjDWGqK37GkO0ZtSPNESbQf1IQ9QGfI0hqql1a4iqHGZN+BcwRffWm6LVfF9vitr6b6+21mMCwocvTVrrdiz4W9qi41W2aEO2ttiivyxT/3xrVMKpZpAER1zQLAXQvVB2J68bHg4rUviymGHoEv6FXrjlbmnoxxg35RSdaBLFUXHjBCdL5mqSpvEf1TpOtvkn5do0WzInYoRY9WlMZcb4pBGLq4HBqQ/M11rWHLZjtgIDoygLmFijm1U/7amQaFBLPI98kaULmRURH1bDaBpy4JP6/u5dIGkDL+7IKiaIrg1SEnAzlvcoml+KPAtYRM5/yaLhcALrqEfHmMQFkhWAoaQICW4VAEPaO/XNaTopb5QWRzycQSv75gtZiOVC8LG6sGfyddHYINbdFOlO14fWyzlMJZHh3u1h7rWpBMrbcRIR7B+LQ16E3+LSdZIO9k759zoKcRVUo3VcOaZab7eh30xSyl1LP671nJyChla6kfVRthjCjtCWFeDMr30Mnn7zEM7kSa5JnohzocwDJU+52BPTLJ2bk4wht/k+yvJCXEsRVMJvymE2RyD4Ass/EzM/xzQuHZXjDKpCZgnmTzFv0aX245jDLwPxahblIgC9PJEivZJZFoWhhLcbESF4JamIDQX4VKD3eiYBNiyE1y9FPkuXcYj9r6MEFCymG8ZI2En6TvQ4/BUiyv5VJvBwa5fhacTGBNgBGnI6I+4BKrjboajPPsqlHZTP6hTpkJw2RUwRVIE5gMF4kL44hGc9TF8cwRvMqS/u0YN4AD+xvPSDmxouPeLY+eMLcX9wNDhqntQBQUe0eCQq5WEu43QC0HTSHXVnGE+RgcC5ipgN1+Mtekkq4jS5RFotF4s0K2S422ewNCVg/OsolGmOBDt/oRKCjqHqSRrM/aQvvoZnH1R4EAPO9+HldZQVSzmHsr5LD51M9BCK5HwCLEbe8lAGcxKXRiK4vEPM0Pw+ZZJc6DxEJrGJCiLkZwmR+x6vCh9mGirYAOOI2uzXFQ0psQPSQCjVYxIMVdVy7MG1Svs0R8BphWhxiMzCOzw4gPVczPwCBNBPclqJFW6DrEdgD4N0DoaIZnnHLDWORtTQHCFgo4IwU7I0MAFhqdGAalSoqigOLKiZ2sSk6nZsn8hesKLQWgWnjtrGN2sTkcBVCGKSp8gf1kBAhijJC+mHA/GrBNUDlYnkzT9zkACmsK4ZEvugJDnpFGQD2h0ZrXXFwptJ9OIACNPxGs9iE6/QQs9C0H4SZqaMu/ld8cWI9/XusVGddKulZKf5nGcNBwwiBxaEtUSVviNxr80EofCXDwArR7nBcx82xqGHk3VP22pgjtuNodIKDOZ0JZSv26FckTp5DsA2AXTfeoQlnQKrQa9MsmDwP0qRWmYmDZekEkyPSRF4wnkdrtpl9NQy0AeZJZTLSt3xSL6o9XWmUod6aP1sXN4rRqwOVIf25Zfii2aR5K51mpYGckA1RmCqnVaMVM/qqcyuHIlRUY2N0GpPfqn0PlqZEtQgOu1bRG5bd/+t949ZtYNbOP5O2n2G9gu0XH6To0KlAA885IONNwfawCnc2Aa7fS/UDrShr85y5l1v/XLEpnuSrbNutslO7vBZMSz050AunIo1vUxOWJ6ps/oHZk1jVnoA7pAxiie2CjPJM5PL7aT/0/JMFks9b70ZxiIVd7XpSLgLxgq1IihGe0hBkaSwvsMPsKdEGwVtxDzNmNSYqojk8Cfpkv29BSnYZexnjufaKSfkldOyv1cV1aQlldK9zHiIWja3qmjuxiENUd/PuelKWgG6+dFAUth0Y1zG0T6VmlJQlyCUk5k4cuEN9/c9SrdursZaR8GpjOe6FtWp0KrLiVLMzvx01/Wp0vhUTV1agbxrCHh3uDF8V5WWDWI1S1KAcPHlL06nqHXT6recpn1EHX8yDnhHxUBLVwlsSopXDrGkSQDr+e2oy50H6UImvTfexikaZDY4/SJOczk65AQLOidysmuq+TVvvP4bD5Yij0pvtLkegVvcF7yVp+e5TJYTPxslKTiihV8sc3yM04BkHp+LNI1VizzI0hhfsNEbEBGhVFiRLeWJG5esYmUkGuNIe8JNDlFptia12K5EKtGQKumiMJgPGqkwBHdTcxYyiPzYZOeY8/5SEkg5zFxJGVYGETn/gvamK3jf1bx/0/3HG8vxNyWWb8RxBjvqujMqUs4j7e0aR89Qd6fbJCgFAzCadyC6JaHpVjNzug0pQKgFjPx4fSU9XWfsxrgOAOsr6eJZNMWXoJEjOxRTfdM97bps6iKbug1s4iQrvih5BbrfZYUKH/N2puKitGdCPxh2ygx/phzYbZTEPep58ftSyv9IDOUgTxT25z8U85gSEad+EtxA7YBSm67T7C2QGdcO/2uy71s2NA9U1rpJW2+N3x0faFAftlNXKB547EriUU/hMgdLeiZCP4x/u+YRumKhZMWrC4ASEo0+wFtoaWlobcQFQ9XLIgX9lDUueFMJ5CRxWr/y26SjJB8lC/BMB8zKPD1X817H0zIDqL/uOhxmErRDZj0MQ/Syt9GMnqOmVBt4PQtDAcYzkBQMWLTqsIaodEP5V+Lo4KS5oxMzbir/qmmvNvfRN0UV87W53lWmkBtP/0T6tYSttTKfTaUKrVMdC7depa5e+X8tzcrrxomivlSBqOr2dkMly4JOEYzLVOZCbWRYuB2F+6nMc0UolDTda5YQzaj/pu1dLyCtsnRLAalpQ+ICguZQEkUa7ZkCcYGmyavZJOqDDjh7bSrsVkiXlK7ZtqhNUrsBnnknxWCRYfoXHq3b8aq6cnPp3kq8j3lHQScBnTqudsbcxGp3orTKyN94tK95MXFUceVwqs0tx7tP49njjJVD2mYNN4I+aviHNPx37lHJ517YD1ct7D9jWf8XFvUmPCiH+HTKgxvg0wCK8oc6trj4dosvjNh8gFIUDY8k/tjoAltrHEgd67s3OjnjYevb6g131Tm88Vnuqa+6oG7PPOrYtVxaZxO85sr62hvr1cu5q+6rb3Spedvb6ltcVl+Da/VC9/bo3nJOhxvP6fkmc2q6pP6J5vTZJv60YeLsA3zs9XQ7bm3YFhIfNXX6FDfXN7m4btIWTdde82R2y/1c8qnzODb7U7cnU8FaDaewZDkwW0PH97YyHFl6TQ90x1m8hLc/x3jY0wDAqGY6nEMErFeO7XiWLrOcEuts2TxKVGKdW5pLcGzD3NoQDdG50WvHMB+psimbqtKcneqCcePJaakW7NcRH2owvnYHXpsLtdIzaGql6qidmlNjOzPfjpu17mLVeEWKaUOolLN6XQZYCnsCnnOOLmtssBSe89VfHHDhaS56Ap96+a4KY28/TPMtqm0nNXQH2n4Wwyr2rfAsuurWuDoo/miw1tn/QF5+Egpmfin72Ipy6U7mIkQ3/IeoEHSQxPEt3Ig2nDLjV/TACQ6FePYEwwX+YhHf0IZ1FmH60aCmCTCdWPpJixaAXnga2wOQZslP0JX73g/wA2PkyD2ZpD1eR78vJX3ODBrRgvs3vvdMWJDr906XNKWe94/xeJLP87H57ETOFxHA09PpL3hIy79fiUNdez2TGXSHaY7UCQoM9zshqc42JwSCh+dRnWwJrJXvZAAM69U+hUAnOxtsCVCxW6ceFfTRGnakU2zVkpz7x2o+AC1pMACQHzncAGH6VadSRfbrdzZCJCYy8LEe2J/JOAIRTZPKF/K8XACKIHyYXlnMfK6n3eIYKqaRjEM8iL6Siv+k1W4nArmM8YynQQQGd/tCl/J38/KBsmZnF0JtAfp0TEa6ZkCIAqUzPNEbOErbvqrViQUAEogA83JBlHRzX8Ok0z3zhiKLLwV++xC8NYxV5wNg21t23/AtmPmLAuomYIgTt0Am1BonI1WtMzwXU5tCw+dvdpjXcTGDURI/it1ClQsBBViLD6YEGOfnomAs+SXnF4deFgep2xB5qKHUtMJzzNK7RkWvR8wuXLWa8ZOm52mU2DaKseLnn0Svymxa1g1ywfVA990VcGFuKOMoKQR8BTgl3yugKTITuILAFQzOlYJV2BC9mKwKGyN+lHYxcLorpdaAqdFzPeDaruDVv7oL6Y98JnXPw7U9Yj+5XHKij+hZpbqELXqvtNR/VA3xfBZeX/mXoETR7vUdVezd5cNoM7s0w/Mej34w9ujngbdKV+twqtYkGEfX58KVzwhaTzGTl6L+LU0qX/sZTScpiNvbc2iqLqUq6qsyOo/Twiun+uusjabkz161l+cmipYuyDbl4DVc0Gn4YtPZa7ZRLUlp5v6RE7rmDnZvUE/4cr7mtOrWybrtRT0uXgqIK3djkvnBW1ks0pysDgCFx1J774O+M8tNQY+2Nn2PcXMLUkmgn8/0J7xa+u019YtyvJeHvXm8UrZPCcG99262pu1XSYTSn+lkQJkExyco08ZTH4BxT6pzdZqt36fVd/MFqNJMdXCh9LElt8HWyH0EQg7L9sShRalTWQEqZtsg4XzWUM00bBNZ06xhDah8x2fly+QbCnPzkYeS4WWG2Wf4faJxSO1UlBX6YTpSzZs6A6894oSkntaFyfIZJjWCclG9SPs+hweliLE6548g6eg7Duycyt/BJhEvDgMR4/e8CpiQQqz9ChK3tAcJ8L6c66/o5PHyUqdpaYabBHOhv4rDmPCncRRWlQt6W+RR4VDV/CgjipQZtSI7wt2A0byaxUydMTXtuT6bjLWccykhU/n369mnThIt/1RPKqh8yMgm9RMJO7U41UcxrJbN9jHcUqidNN7EpPM5PJ7DyzivpXnJ6baJH8cyXMHJdec4W0fhaOk23evMN0y/3lpWNjigVHJzNV8vMlcGmnN8mKXhMihCWcBOIFflutlY1Y4r8lS63tEsUn+eRF3NSZg+dP4f/qneww==</source>
   </file>
   <file path="com_biblestudy/admin/controllers/message.php" generated-path="com_biblestudy.admin.controllers.message.html" hash="195c26875ff631f03d08b83ee207309f" package="BibleStudy.Admin">
     <docblock line="0">
