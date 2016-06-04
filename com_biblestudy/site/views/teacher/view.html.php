@@ -65,7 +65,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$params = $this->state->template->params;
 
 		JHtml::_('biblestudy.framework');
-		JHtml::_('biblestudy.loadCss', null, null, 'font-awesome');
+		JHtml::_('biblestudy.loadCss', $params, null, 'font-awesome');
 
 		$input = new JInput;
 

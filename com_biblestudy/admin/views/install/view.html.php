@@ -33,16 +33,18 @@ class BiblestudyViewInstall extends JViewLegacy
 	/** @var array Call stack for the Visioning System. */
 	public $callstack = array();
 
-	public $subSteps;
+	public $subSteps = null;
 
-	public $_subQuery;
+	public $_subQuery = array();
 
-	public $_subFiles;
+	public $_subFiles = array();
 
-	public $version;
+	public $version = '0.0.0';
+
+	public $query = array();
 
 	/** @var string More */
-	protected $more;
+	protected $more = null;
 
 	/** @var  string Percentage */
 	protected $percentage;
@@ -177,6 +179,7 @@ class BiblestudyViewInstall extends JViewLegacy
 		$this->doneSteps      = $stack['done'];
 		$this->running        = $stack['run'];
 		$this->type           = $stack['type'];
+		$this->query          = $stack['query'];
 
 		return true;
 

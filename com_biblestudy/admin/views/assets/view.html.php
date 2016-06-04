@@ -18,40 +18,36 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewAssets extends JViewLegacy
 {
-	/**
-	 * Can Do
-	 *
-	 * @var string
-	 */
-	public $canDo;
 
-	/**
-	 * Assets
-	 *
-	 * @var string
-	 */
+	/** @var int Total numbers of Steps */
+	public $totalSteps = 0;
+
+	/** @var int Numbers of Steps already processed */
+	public $doneSteps = 0;
+
+	/** @var array Call stack for the Visioning System. */
+	public $callstack = array();
+
+	public $version;
+
+	public $step;
+
 	public $assets;
 
-	/**
-	 * Form
-	 *
-	 * @var array
-	 */
-	protected $form;
+	/** @var string More */
+	protected $more;
 
-	/**
-	 * Item
-	 *
-	 * @var array
-	 */
-	protected $item;
+	/** @var  string Percentage */
+	protected $percentage;
 
-	/**
-	 * State
-	 *
-	 * @var array
-	 */
-	protected $state;
+	/** @var string Starte of install */
+	public $state;
+
+	/** @var JObject Status */
+	public $status;
+
+	/** @var array The pre versions to process */
+	private $_versionStack = array();
 
 	/**
 	 * Execute and display a template script.
@@ -65,20 +61,81 @@ class BiblestudyViewAssets extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$model = JModelLegacy::getInstance('Admin', 'BiblestudyModel');
-		$this->setModel($model, true);
+		$app         = JFactory::getApplication();
+		$this->state = $app->input->getBool('scanstate', false);
+		$layout      = $app->input->get('layout', 'edit');
+		$task        = $app->input->get('task', 'checkassets');
 
-		$language = JFactory::getLanguage();
-		$language->load('com_installer');
+		$session      = JFactory::getSession();
+		$this->assets = $session->get('checkassets', null, 'JBSM');
+		$stack        = $session->get('asset_stack', '', 'JBSM');
+
+		if (empty($stack))
+		{
+			$this->_versionStack  = array();
+			$this->step           = null;
+			$this->totalSteps     = 0;
+			$this->doneSteps      = 0;
+		}
+		else
+		{
+			if (function_exists('base64_encode') && function_exists('base64_decode'))
+			{
+				$stack = base64_decode($stack);
+				if (function_exists('gzdeflate') && function_exists('gzinflate'))
+				{
+					$stack = gzinflate($stack);
+				}
+			}
+
+			$stack = json_decode($stack, true);
+
+			$this->_versionStack  = $stack['version'];
+			$this->step           = $stack['step'];
+			$this->totalSteps     = $stack['total'];
+			$this->doneSteps      = $stack['done'];
+		}
+
+		$percent = 0;
+
+		if ($this->state)
+		{
+			if ($this->totalSteps > 0)
+			{
+				$percent = min(max(round(100 * $this->doneSteps / $this->totalSteps), 1), 100);
+			}
+			$more = true;
+		}
+		else
+		{
+			$percent = 100;
+			$more    = false;
+		}
+
+		$this->more = $more;
+		$this->setLayout($layout);
+
+		$this->percentage = $percent;
+
+		if ($more)
+		{
+			$script = "window.addEvent( 'domready' ,  function() {\n";
+			$script .= "document.forms.adminForm.submit();\n";
+			$script .= "});\n";
+			JFactory::getDocument()->addScriptDeclaration($script);
+		}
+
+		if ($task == 'browse' || $task == 'run')
+		{
+			$this->setLayout('fix');
+		}
+		else
+		{
+			$this->setLayout('edit');
+		}
 
 		// Get data from the model
-		$this->form   = $this->get("Form");
-		$this->item   = $this->get("Item");
 		$this->state  = $this->get("State");
-		$this->canDo  = JBSMBibleStudyHelper::getActions($this->item->id);
-		$this->assets = JFactory::getApplication()->input->get('checkassets', null, 'get');
-
-		$this->setLayout('edit');
 
 		// Set the toolbar
 		$this->addToolbar();
@@ -99,13 +156,8 @@ class BiblestudyViewAssets extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JFactory::getApplication()->input->set('hidemainmenu', true);
-
 		JToolbarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
-		JToolbarHelper::preferences('com_biblestudy', '600', '800', 'JBS_ADM_PERMISSIONS');
-		JToolbarHelper::divider();
 		JToolbarHelper::custom('admin.back', 'back', 'back', 'JTOOLBAR_BACK', false);
-		JToolbarHelper::divider();
 		JToolbarHelper::help('biblestudy', true);
 	}
 

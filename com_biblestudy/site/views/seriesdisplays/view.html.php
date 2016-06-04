@@ -92,7 +92,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		}
 
 		JHtml::_('biblestudy.framework');
-		JHtml::_('biblestudy.loadCss', null, null, 'font-awesome');
+		JHtml::_('biblestudy.loadCss', $params, null, 'font-awesome');
 
 		$uri            = new JUri;
 		$filter_series  = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');

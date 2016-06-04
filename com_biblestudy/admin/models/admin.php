@@ -182,9 +182,9 @@ class BiblestudyModelAdmin extends JModelAdmin
 	}
 
 	/**
-	 * Gets the changeset object
+	 * Gets the ChangeSet object
 	 *
-	 * @return string JSchema  Changeset
+	 * @return string JSchema  ChangeSet
 	 */
 	public function getItems()
 	{

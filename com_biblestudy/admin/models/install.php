@@ -86,6 +86,9 @@ class BibleStudyModelInstall extends JModelLegacy
 	/** @type string Type of process */
 	protected $type = null;
 
+	/** @type array Array of assets to fix */
+	public $query = array();
+
 	/**
 	 * Constructor.
 	 *
@@ -550,6 +553,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				'done'       => $this->doneSteps,
 				'run'        => $this->running,
 				'type'       => $this->type,
+				'query'      => $this->query,
 		);
 		$stack = json_encode($stack);
 		if (function_exists('base64_encode') && function_exists('base64_decode'))
@@ -589,6 +593,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		$this->doneSteps      = 0;
 		$this->running        = JText::_('JBS_MIG_STARTING');
 		$this->type           = null;
+		$this->query          = array();
 	}
 
 	/**
@@ -618,6 +623,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			$this->doneSteps      = 0;
 			$this->running        = JText::_('JBS_MIG_STARTING');
 			$this->type           = null;
+			$this->query          = array();
 
 			return false;
 		}
@@ -648,6 +654,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		$this->doneSteps      = $stack['done'];
 		$this->running        = $stack['run'];
 		$this->type           = $stack['type'];
+		$this->query          = $stack['query'];
 
 		return true;
 
@@ -847,7 +854,38 @@ class BibleStudyModelInstall extends JModelLegacy
 			}
 		}
 
-		if (empty($this->_install) && empty($this->_versionStack) && empty($this->_allupdates) && empty($this->_subFiles) && empty($this->_finish))
+		if (!empty($this->query)
+			&& empty($this->_finish)
+			&& empty($this->_versionStack)
+			&& empty($this->_allupdates)
+			&& empty($this->_subFiles)
+			&& empty($this->_install) )
+		{
+			krsort($this->query);
+			while (!empty($this->query) && $this->haveEnoughTime())
+			{
+				$this->_versionSwitch = key($this->query);
+				if (isset($this->query[$this->_versionSwitch]) && @!empty($this->query[$this->_versionSwitch]))
+				{
+					$version = array_pop($this->query[$this->_versionSwitch]);
+					$this->doneSteps++;
+					$this->running = 'Fix Assets';
+					$asset = new JBSMAssets;
+					$asset->fixAssets($this->_versionSwitch, $version);
+				}
+				else
+				{
+					unset($this->query[$this->_versionSwitch]);
+				}
+			}
+		}
+
+		if (empty($this->query)
+			&& empty($this->_finish)
+			&& empty($this->_versionStack)
+			&& empty($this->_allupdates)
+			&& empty($this->_subFiles)
+			&& empty($this->_install))
 		{
 			// Just finished
 			$this->resetStack();
@@ -1007,9 +1045,10 @@ class BibleStudyModelInstall extends JModelLegacy
 				break;
 			case 'fixassets':
 				// Final step is to fix assets
-				$assets        = new JBSMAssets;
-				$run           = $assets->fixAssets();
-				$this->running = 'Fix Assets';
+				$assets = new JBSMAssets;
+				$assets->build();
+				$this->query = $assets->query;
+				$this->totalSteps += $assets->count;
 				break;
 			case 'fixmenus':
 				$run           = $this->fixMenus();

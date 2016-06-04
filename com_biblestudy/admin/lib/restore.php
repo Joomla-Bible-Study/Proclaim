@@ -193,12 +193,12 @@ class JBSMRestore
 			}
 			if (($parent !== true) && $result)
 			{
-				$fix = new JBSMAssets;
-				$fix->fixAssets();
+				$controlser = JControllerLegacy::getInstance('Biblestudy');
+				$controlser->setRedirect('index.php?option=com_biblestudy&task=admin.fixasset');
+				$controlser->redirect();
 			}
 		}
 
-		// Todo: delete uploaded files or have a option to do this??
 		return $result;
 	}
 

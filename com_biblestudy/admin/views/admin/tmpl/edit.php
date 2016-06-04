@@ -156,7 +156,7 @@ $input = $app->input;
 						<div class="span12">
 							<div class="well well-small">
 								<div id="dashboard-icons" class="btn-group" style="white-space: normal;">
-									<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets'); ?>"
+									<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets&task=assets.checkassets&' . JSession::getFormToken() . '=1'); ?>"
 									   title="<?php echo JText::_('JBS_ADM_ASSET_CHECK'); ?>" class="btn"> <i
 											class="icon-big icon-list"> </i>
 										<span><br/> <?php echo JText::_('JBS_ADM_ASSET_CHECK'); ?> </span></a>

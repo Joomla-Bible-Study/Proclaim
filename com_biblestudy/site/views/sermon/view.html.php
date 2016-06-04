@@ -227,8 +227,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		$this->related = $relatedstudies->getRelated($this->item, $this->item->params);
 
 		JHtml::_('biblestudy.framework');
-		JHtml::_('biblestudy.loadCss', null, null, 'font-awesome');
-
+		JHtml::_('biblestudy.loadCss', $this->params, null, 'font-awesome');
 
 		// Only load pagebuilder if the default template is NOT being used
 		if ($this->item->params->get('useexpert_details') > 0 || is_string($this->params->get('sermontemplate')))

@@ -71,14 +71,17 @@ abstract class JHtmlBiblestudy
 	public static function loadCss($params, $url = null, $font = null)
 	{
 		JHtml::stylesheet('media/com_biblestudy/css/general.css');
+
 		// Import Stylesheets
-		if ($params) {
-
+		if ($params)
+		{
 			$css = $params->get('css');
-
-			if ($css <= "-1") {
+			if ($css <= "-1")
+			{
 				JHtml::stylesheet('media/com_biblestudy/css/biblestudy.css');
-			} else {
+			}
+			else
+			{
 				JHtml::stylesheet('media/com_biblestudy/css/site/' . $css);
 			}
 		}
