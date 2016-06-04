@@ -87,7 +87,7 @@ class JBSMDownload
 
 		$filename      = $params->get('filename');
 		$download_file = $protocol . $media->spath . $filename;
-		//var_dump($download_file); jexit();
+
 		/** @var $download_file object */
 		$getsize = JBSMHelper::getRemoteFileSize($download_file);
 

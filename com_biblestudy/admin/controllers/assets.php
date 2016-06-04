@@ -82,7 +82,6 @@ class BiblestudyControllerAssets extends JControllerForm
 		// Check for request forgeries.
 		JSession::checkToken('get') or JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-
 		/** @var BibleStudyModelAssets $model */
 		$model = $this->getModel('assets');
 		$checkassets = $model->checkAssets();

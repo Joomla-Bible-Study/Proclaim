@@ -67,7 +67,7 @@ class JBSMMedia
 			else
 			{
 				$mediaimage = $imageparams->get('media_image');
-				$image      = $this->useJImage($mediaimage, $params->get('media_text'));
+				$image      = $this->useJImage($mediaimage, $params->get('media_text', JText::_('JBS_MED_DOWNLOAD')));
 			}
 
 		$player     = self::getPlayerAttributes($params, $media);
@@ -352,7 +352,7 @@ class JBSMMedia
 	 *
 	 * @since 9.0.0
 	 */
-	public function useJImage($path, $alt = 'link')
+	public function useJImage($path, $alt)
 	{
 		if (!$path)
 		{
@@ -424,8 +424,14 @@ class JBSMMedia
 		{
 			/* In this case the item has a player set for it, so we use that instead. We also need to change the old player
 					type of 3 to 2 for all videos reloaded which we don't support */
-
-			$player->player = ($media->params->get('player')) ? $media->params->get('player') : $params->get('player', 0);
+			if($media->params->get('player', null) !== null)
+			{
+				$player->player = $media->params->get('player');
+			}
+			else
+			{
+				$player->player = $params->get('player', 0);
+			}
 		}
 		if ($player->player == 3)
 		{
@@ -524,7 +530,6 @@ class JBSMMedia
 
 		switch ($player->player)
 		{
-
 			case 0: // Direct
 
 				switch ($player->type)
@@ -534,7 +539,6 @@ class JBSMMedia
 							$media->id . '\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\'); return true;" title="' .
 							$media->malttext . ' - ' . $media->comment . ' ' . $duration . ' '
 							. $filesize . '" target="' . $params->get('special') . '">' . $image . '</a>';
-						return $playercode;
 						break;
 					case 3:
 					case 1: // Popup window
@@ -545,7 +549,6 @@ class JBSMMedia
 				}
 
 				/** @var $playercode string */
-
 				return $playercode;
 				break;
 
@@ -581,7 +584,6 @@ class JBSMMedia
 				}
 
 				/** @var $playercode string */
-
 				return $playercode;
 				break;
 
