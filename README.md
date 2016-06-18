@@ -22,7 +22,7 @@ Status
         <td><a href="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study" target="_blank"><img src="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=master"/></a></td>
         <td>Master</td>
         <td>9.0.1</td>
-        <td>May 23, 2016</td>
+        <td>June 19, 2016</td>
         <td align="center">3.4+</td>
     </tr>
 </table>
