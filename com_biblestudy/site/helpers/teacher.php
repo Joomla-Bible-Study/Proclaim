@@ -55,7 +55,7 @@ class JBSMTeacher extends JBSMListing
 		}
 		foreach ($teacherids as $teach)
 		{
-			$database = JFactory::getDBO();
+			$database = JFactory::getDbo();
 			$query    = $database->getQuery(true);
 			$query->select('*')->from('#__bsms_teachers')->where('id = ' . $teach);
 			$database->setQuery($query);
@@ -137,7 +137,7 @@ class JBSMTeacher extends JBSMListing
 		}
 		foreach ($teacherids as $teachers)
 		{
-			$database = JFactory::getDBO();
+			$database = JFactory::getDbo();
 			$query    = $database->getQuery(true);
 			$query->select('*')->from('#__bsms_teachers')->where('id = ' . $teachers);
 			$database->setQuery($query);
@@ -173,7 +173,7 @@ class JBSMTeacher extends JBSMListing
 		}
 		if ($params->get('intro_show') == 2 && $viewtype == 'sermons')
 		{
-			$teacher .= '<td><div id="listintro"><table class="table" id="listintro"><tr><td><p>';
+			$teacher .= '<td><div id="listintrodiv"><table class="table" id="listintrotable"><tr><td><p>';
 			$teacher .= $params->get('list_intro') . '</p></td></tr></table> </div></td>';
 		}
 		$teacher .= '</tr></table>';
@@ -281,7 +281,7 @@ class JBSMTeacher extends JBSMListing
 		{
 			$limit = '';
 		}
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('#__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
 			. ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'

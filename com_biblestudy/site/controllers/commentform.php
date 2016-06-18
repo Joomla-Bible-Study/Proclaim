@@ -78,7 +78,7 @@ class BiblestudyControllerCommentform extends JControllerForm
 
 		if (empty($return) || !JUri::isInternal(base64_decode($return)))
 		{
-			return JURI::base() . 'index.php?option=com_biblestudy&view=commentlist';
+			return JUri::base() . 'index.php?option=com_biblestudy&view=commentlist';
 		}
 		else
 		{

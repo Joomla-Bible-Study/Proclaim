@@ -16,7 +16,7 @@ defined('_JEXEC') or die();
         </tbody>
     </table>
 </form>
-<?php if(COM_BIBLESTUDY_DEBUG) : ?>
+<?php if(JBSMDEBUG) : ?>
 BREADCRUMBS
 <?php var_dump($this->breadcrumbs); ?>
 FOLDERS

@@ -236,7 +236,7 @@ class BiblestudyModelSeries extends JModelList
 			}
 			else
 			{
-				$search = $db->Quote('%' . $db->escape($search, true) . '%');
+				$search = $db->quote('%' . $db->escape($search, true) . '%');
 				$query->where('(series.series_text LIKE ' . $search . ' OR series.alias LIKE ' . $search . ')');
 			}
 		}

@@ -1,3 +1,5 @@
+/tests/test.html
+/bin
 /tests/test.css
 # System files #
 .gitignore
@@ -34,18 +36,11 @@ com_biblestudy/admin/views/test/tmpl/index.html
 
 tests/unit/.joomla-cms/
 
-/vendor/
-/bin/phing
-/bin/pdepend
-/bin/phpcpd
-/bin/phploc
-/bin/phpmd
-/bin/phpunit
-/bin/phpcs
+/vendor
 /composer.phar
 
 tests/.joomla-cms
 
-*.phar
-
 tests/test.php
+
+*.html

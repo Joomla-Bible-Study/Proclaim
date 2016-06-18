@@ -18,6 +18,7 @@ defined('_JEXEC') or die;
  */
 class BiblestudyControllerInstall extends JControllerForm
 {
+	public $modelName;
 
 	/**
 	 * The context for storing internal data, e.g. record.
@@ -64,7 +65,7 @@ class BiblestudyControllerInstall extends JControllerForm
 	 */
 	public function execute($task)
 	{
-		if ($task != 'run')
+		if ($task != 'run' && $task != 'clear')
 		{
 			$task = 'browse';
 		}
@@ -72,24 +73,51 @@ class BiblestudyControllerInstall extends JControllerForm
 	}
 
 	/**
-	 * Constructor.
+	 * Start of installer display hook.
 	 *
 	 * @return void
 	 */
 	public function browse()
 	{
 		$app = JFactory::getApplication();
-		/** @var BibleStudyModelInstall $model */
-		$model = $this->getModel('install');
-		$state = $model->startScanning();
-		$app->input->set('scanstate', $state);
-		$app->input->set('view', 'install');
+		$session = JFactory::getSession();
+		$stack = $session->get('migration_stack', '', 'JBSM');
+		if (empty($stack))
+		{
+			$cache = new JCache(array('defaultgroup' => 'com_biblestudy'));
+			$cache->clean();
+			$session->set('migration_stack', '', 'JBSM');
 
-		$this->display(false);
+			/** @var BibleStudyModelInstall $model */
+			$model = $this->getModel('install');
+			$state = $model->startScanning();
+			$app->input->set('scanstate', $state);
+			$app->input->set('view', 'install');
+
+			$this->display(false);
+		}
+		else
+		{
+			$this->run();
+		}
 	}
 
 	/**
-	 * Run Function
+	 * Clear and start of installer display hook.
+	 *
+	 * @return void
+	 */
+	public function clear()
+	{
+		$cache = new JCache(array('defaultgroup' => 'com_biblestudy'));
+		$cache->clean();
+		$session = JFactory::getSession();
+		$session->set('migration_stack', '', 'JBSM');
+		$this->browse();
+	}
+
+	/**
+	 * Run function loop
 	 *
 	 * @return void
 	 *
@@ -98,6 +126,7 @@ class BiblestudyControllerInstall extends JControllerForm
 	public function run()
 	{
 		$app   = JFactory::getApplication();
+		/** @var BibleStudyModelInstall $model */
 		$model = $this->getModel('install');
 		$state = $model->run();
 		$app->input->set('scanstate', $state);

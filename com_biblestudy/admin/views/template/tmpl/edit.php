@@ -138,11 +138,6 @@ $input  = $app->input;
 								</a>
 							</li>
 							<li class="">
-								<a href="#list-4" data-toggle="tab">
-									<?php echo JText::_('JBS_TPL_TOOLTIP_ITEMS'); ?>
-								</a>
-							</li>
-							<li class="">
 								<a href="#list-10" data-toggle="tab">
 									<?php echo JText::_('JBS_TPL_DISPLAY_ITEMS1'); ?>
 								</a>
@@ -172,10 +167,6 @@ $input  = $app->input;
 									<?php echo JText::_('JBS_TPL_DISPLAY_ITEMS6'); ?>
 								</a>
 							</li
-							<li class="">
-								<a href="#list-9" data-toggle="tab">
-									<?php echo JText::_('JBS_TPL_STUDY_LIST_CUSTOM'); ?></a>
-							</li>
 						</ul>
 						<div class="tab-content">
 							<div class="tab-pane active" id="list-1">
@@ -295,18 +286,6 @@ $input  = $app->input;
 							</div>
 							<div class="tab-pane" id="list-15">
 								<?php foreach ($this->form->getFieldset('DISPLAYELEMENTS6') as $field): ?>
-									<div class="control-group">
-										<div class="control-label">
-											<?php echo $field->label; ?>
-										</div>
-										<div class="controls">
-											<?php echo $field->input; ?>
-										</div>
-									</div>
-								<?php endforeach; ?>
-							</div>
-							<div class="tab-pane" id="list-9">
-								<?php foreach ($this->form->getFieldset('STUDIESVIEW') as $field): ?>
 									<div class="control-group">
 										<div class="control-label">
 											<?php echo $field->label; ?>

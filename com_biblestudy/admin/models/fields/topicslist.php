@@ -41,7 +41,7 @@ class JFormFieldTopicslist extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('id, topic_text, params AS topic_params')
 			->from('#__bsms_topics')

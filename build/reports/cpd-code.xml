@@ -252,7 +252,7 @@
     <file path="/Users/Tom/Documents/JBS/Joomla-Bible-Study/com_biblestudy/admin/models/fields/locationslist.php" line="38"/>
     <codefragment>    protected function getOptions()
     {
-        $db    = JFactory::getDBO();
+        $db    = JFactory::getDbo();
         $query = $db-&gt;getQuery(true);
         $query-&gt;select('id,location_text');
         $query-&gt;from('#__bsms_locations');
@@ -3258,7 +3258,7 @@ class Com_BiblestudyInstallerScript
         $this-&gt;_release = $parent-&gt;get("manifest")-&gt;version;
 
         // Start DB factory
-        $db = JFactory::getDBO();
+        $db = JFactory::getDbo();
 
         // Set the #__schemas version_id to the correct number so the update will occur if out of sequence.
         $query = $db-&gt;getQuery(true);
@@ -3323,7 +3323,7 @@ class Com_BiblestudyInstallerScript
      */
     public function install($parent)
     {
-        $db     = JFactory::getDBO();
+        $db     = JFactory::getDbo();
         $buffer = file_get_contents(JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/sql/install-defaults.sql');
 
         if ($buffer === false)
@@ -3368,7 +3368,7 @@ class Com_BiblestudyInstallerScript
 
         if ($dbhelper-&gt;checkIfTable('#__bsms_admin'))
         {
-            $db    = JFactory::getDBO();
+            $db    = JFactory::getDbo();
             $query = $db-&gt;getQuery(true);
             $query-&gt;select('*')
                 -&gt;from('#__bsms_admin')
@@ -3381,7 +3381,7 @@ class Com_BiblestudyInstallerScript
             if ($drop_tables &gt; 0)
             {
                 // We must remove the assets manually each time
-                $db    = JFactory::getDBO();
+                $db    = JFactory::getDbo();
                 $query = $db-&gt;getQuery(true);
                 $query-&gt;select('id')
                     -&gt;from('#__assets')
@@ -3464,7 +3464,7 @@ class Com_BiblestudyInstallerScript
     public function postflight($type, $parent)
     {
         // Set the #__schemas version_id to the correct number for error from 7.0.0
-        $db    = JFactory::getDBO();
+        $db    = JFactory::getDbo();
         $query = $db-&gt;getQuery(true);
         $query-&gt;select('extension_id')
             -&gt;from('#__extensions')
@@ -3509,7 +3509,7 @@ class Com_BiblestudyInstallerScript
         $db-&gt;execute();
 
         // An redirect to a new location after the install is completed.
-        $parent-&gt;getParent()-&gt;set('redirect_url', JURI::base() . 'index.php?option=com_biblestudy');
+        $parent-&gt;getParent()-&gt;set('redirect_url', JUri::base() . 'index.php?option=com_biblestudy');
     }
 
     /**
@@ -3891,7 +3891,7 @@ class Com_BiblestudyInstallerScript
      */
     public function fixMenus()
     {
-        $db    = JFactory::getDBO();
+        $db    = JFactory::getDbo();
         $query = $db-&gt;getQuery(true);
         $query-&gt;select('*')
             -&gt;from('#__menu')
@@ -3926,7 +3926,7 @@ class Com_BiblestudyInstallerScript
      */
     public function fixImagePaths()
     {
-        $db    = JFactory::getDBO();
+        $db    = JFactory::getDbo();
         $query = $db-&gt;getQuery(true);
         $query-&gt;select('*')
             -&gt;from('#__bsms_media');
@@ -3994,7 +3994,7 @@ class Com_BiblestudyInstallerScript
         // Correct blank records
         foreach ($tables as $table)
         {
-            $db    = JFactory::getDBO();
+            $db    = JFactory::getDbo();
             $query = $db-&gt;getQuery(true);
             $query-&gt;update($table['table'])
                 -&gt;set('language = ' . $db-&gt;q('*'))
@@ -4031,7 +4031,7 @@ class Com_BiblestudyInstallerScript
         );
 
         // Get Public id
-        $db    = JFactory::getDBO();
+        $db    = JFactory::getDbo();
         $query = $db-&gt;getQuery(true);
         $query-&gt;select('id')
             -&gt;from('#__viewlevels')
@@ -4343,7 +4343,7 @@ class BiblestudyControllerTeachers extends JControllerLegacy
         {
             if ($cd-&gt;mid &gt; 0)
             {
-                $src = JURI::base() . $cd-&gt;media_image_path;
+                $src = JUri::base() . $cd-&gt;media_image_path;
 
                 if ($imagew)
                 {
@@ -4365,7 +4365,7 @@ class BiblestudyControllerTeachers extends JControllerLegacy
         {
             $i_path    = 'media/com_biblestudy/images/textfile24.png';
             $textimage = $images-&gt;getImagePath($i_path);
-            $src       = JURI::base() . $textimage-&gt;path;
+            $src       = JUri::base() . $textimage-&gt;path;
             $height    = $textimage-&gt;height;
 </codefragment>
   </duplication>
@@ -4517,7 +4517,7 @@ class BiblestudyControllerTeachers extends JControllerLegacy
 
                     case 2: // This plays the video inline
                         $mediacode  = $this-&gt;getAVmediacode($media-&gt;mediacode, $media);
-                        $playercode = JHTML::_('content.prepare', $mediacode);
+                        $playercode = JHtml::_('content.prepare', $mediacode);
                         break;
                 }
 
@@ -4585,7 +4585,7 @@ class BiblestudyControllerTeachers extends JControllerLegacy
      */
     public function hitPlay($id)
     {
-        $db    = JFactory::getDBO();
+        $db    = JFactory::getDbo();
         $query = $db-&gt;getQuery(true);
         $query-&gt;update('#__bsms_mediafiles')
             -&gt;set('plays = plays + 1')
@@ -4621,7 +4621,7 @@ class BiblestudyControllerTeachers extends JControllerLegacy
         $downloadlink = null;
 
         // Here we get the administration row from the component, and determine the download image to use
-        $db    = JFactory::getDBO();
+        $db    = JFactory::getDbo();
         $query = $db-&gt;getQuery(true);
         $query-&gt;select('*')-&gt;from('#__bsms_admin');
         $db-&gt;setQuery($query);
@@ -4734,7 +4734,7 @@ class BiblestudyControllerTeachers extends JControllerLegacy
      */
     public function getMediaid($id)
     {
-        $db    = JFactory::getDBO();
+        $db    = JFactory::getDbo();
         $query = $db-&gt;getQuery(true);
         $query-&gt;select('m.id as mid, m.study_id, s.id as sid')
             -&gt;from('#__bsms_mediafiles AS m')
@@ -4758,7 +4758,7 @@ class BiblestudyControllerTeachers extends JControllerLegacy
         {
             return false;
         }
-        $db    = JFactory::getDBO();
+        $db    = JFactory::getDbo();
         $query = $db-&gt;getQuery(true);
         $query-&gt;select('#__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath, #__bsms_folders.id AS fid,'
             . ' #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, '
@@ -4807,7 +4807,7 @@ class BiblestudyControllerTeachers extends JControllerLegacy
     public function getMediaRows2($id)
     {
         // We use this for the popup view because it relies on the media file's id rather than the study_id field above
-        $db    = JFactory::getDBO();
+        $db    = JFactory::getDbo();
         $query = $db-&gt;getQuery(true);
         $query-&gt;select('#__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath, #__bsms_folders.id AS fid,'
             . ' #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath,'
@@ -4990,25 +4990,25 @@ class BiblestudyControllerTeachers extends JControllerLegacy
     <codefragment>function getstudyDate($params, $studydate) {&#13;
     switch ($params-&gt;get('date_format')) {&#13;
         case 0:&#13;
-            $date = JHTML::_('date', $studydate, "M j, Y");&#13;
+            $date = JHtml::_('date', $studydate, "M j, Y");&#13;
             break;&#13;
         case 1:&#13;
-            $date = JHTML::_('date', $studydate, "M J");&#13;
+            $date = JHtml::_('date', $studydate, "M J");&#13;
             break;&#13;
         case 2:&#13;
-            $date = JHTML::_('date', $studydate, "n/j/Y");&#13;
+            $date = JHtml::_('date', $studydate, "n/j/Y");&#13;
             break;&#13;
         case 3:&#13;
-            $date = JHTML::_('date', $studydate, "n/j");&#13;
+            $date = JHtml::_('date', $studydate, "n/j");&#13;
             break;&#13;
         case 4:&#13;
-            $date = JHTML::_('date', $studydate, "l, F j, Y");&#13;
+            $date = JHtml::_('date', $studydate, "l, F j, Y");&#13;
             break;&#13;
         case 5:&#13;
-            $date = JHTML::_('date', $studydate, "F j, Y");&#13;
+            $date = JHtml::_('date', $studydate, "F j, Y");&#13;
             break;&#13;
         case 6:&#13;
-            $date = JHTML::_('date', $studydate, "j F Y");&#13;
+            $date = JHtml::_('date', $studydate, "j F Y");&#13;
             break;&#13;
 </codefragment>
   </duplication>
@@ -5154,7 +5154,7 @@ class JFormFieldFilesize extends JFormField
     <file path="/Users/Tom/Documents/JBS/Joomla-Bible-Study/com_biblestudy/site/models/fields/topicslist.php" line="39"/>
     <codefragment>    protected function getOptions()
     {
-        $db    = JFactory::getDBO();
+        $db    = JFactory::getDbo();
         $query = $db-&gt;getQuery(true);
         $query-&gt;select('id, topic_text, params AS topic_params')-&gt;from('#__bsms_topics')-&gt;where('published = ' . 1)-&gt;order('topic_text asc');
         $db-&gt;setQuery((string) $query);
@@ -5221,7 +5221,7 @@ class JFormFieldVirtuemart extends JFormFieldList
         {
             return JText::_('JBS_CMN_VIRTUEMART_NOT_INSTALLED');
         }
-        $db    = JFactory::getDBO();
+        $db    = JFactory::getDbo();
         $query = $db-&gt;getQuery(true);
         $query-&gt;select('v.virtuemart_product_id, v.product_name');
         $query-&gt;from('#__virtuemart_products_' . VMLANG . ' AS v');
@@ -5757,8 +5757,8 @@ $published = $this-&gt;state-&gt;get('filter.published');
     <file path="/Users/Tom/Documents/JBS/Joomla-Bible-Study/com_biblestudy/site/views/commentsedit/view.html.php" line="57"/>
     <file path="/Users/Tom/Documents/JBS/Joomla-Bible-Study/com_biblestudy/site/views/commentslist/view.html.php" line="58"/>
     <codefragment>        $document = JFactory::getDocument();&#13;
-        $document-&gt;addStyleSheet(JURI::base() . 'administrator/templates/system/css/system.css');&#13;
-        $document-&gt;addStyleSheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');&#13;
+        $document-&gt;addStyleSheet(JUri::base() . 'administrator/templates/system/css/system.css');&#13;
+        $document-&gt;addStyleSheet(JUri::base() . 'administrator/templates/bluestork/css/template.css');&#13;
         //Load the Admin settings&#13;
         $this-&gt;loadHelper('params');&#13;
         $this-&gt;admin = BsmHelper::getAdmin($issite = true);&#13;
@@ -6313,8 +6313,8 @@ else
         ;&#13;
         $db-&gt;setQuery($query);&#13;
         $options = $db-&gt;loadObjectList();&#13;
-        array_unshift($options, JHTML::_('select.option', '0', '- ' . JText::_('Select a Menu Item') . ' -', 'id', 'text'));&#13;
-        return JHTML::_('select.genericlist', $options, '' . $control_name . '[' . $name . ']', 'class="inputbox"', 'id', 'text', $value, $control_name . $name);&#13;
+        array_unshift($options, JHtml::_('select.option', '0', '- ' . JText::_('Select a Menu Item') . ' -', 'id', 'text'));&#13;
+        return JHtml::_('select.genericlist', $options, '' . $control_name . '[' . $name . ']', 'class="inputbox"', 'id', 'text', $value, $control_name . $name);&#13;
 </codefragment>
   </duplication>
   <duplication lines="64" tokens="173">

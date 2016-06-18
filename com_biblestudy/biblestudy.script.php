@@ -85,6 +85,12 @@ class Com_BiblestudyInstallerScript
 			$this->deleteFolder($sitePath, $ignoreSite);
 		}
 
+		// Remove all old install files before install/upgrade
+		if (JFolder::exists(JPATH_ADMINISTRATOR . '/components/com_biblestudy/install'))
+		{
+			JFolder::delete(JPATH_ADMINISTRATOR . '/components/com_biblestudy/install');
+		}
+
 		return true;
 	}
 
@@ -174,7 +180,10 @@ class Com_BiblestudyInstallerScript
 
 		// An redirect to a new location after the install is completed.
 		$controller = JControllerLegacy::getInstance('Biblestudy');
-		$controller->setRedirect(JUri::base() . 'index.php?option=com_biblestudy&view=install&scanstate=start&' . JSession::getFormToken() . '=1');
+		$controller->setRedirect(
+			JUri::base() .
+			'index.php?option=com_biblestudy&view=install&task=install.browse&scanstate=start&' .
+			JSession::getFormToken() . '=1');
 		$controller->redirect();
 	}
 
@@ -314,7 +323,7 @@ class Com_BiblestudyInstallerScript
 			require_once $api;
 		}
 
-		$db = JFactory::getDBO();
+		$db = JFactory::getDbo();
 
 		// Check if JBSM can be found from the database
 		$table = $db->getPrefix() . 'bsms_update';

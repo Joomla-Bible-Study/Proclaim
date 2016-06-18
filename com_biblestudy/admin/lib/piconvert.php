@@ -148,7 +148,7 @@ class JBSMPIconvert
 		$madd                = 0;
 		$newid               = 0;
 		$oldid               = 0;
-		$db                  = JFactory::getDBO();
+		$db                  = JFactory::getDbo();
 		$query               = $db->getQuery(true);
 		$query->select('*')->from('#__picomments');
 		$db->setQuery($query);
@@ -758,7 +758,7 @@ class JBSMPIconvert
 	 */
 	public function insertMedia ($pi, $type, $newid, $oldid)
 	{
-		$db          = JFactory::getDBO();
+		$db          = JFactory::getDbo();
 		$podcast_id  = '-1';
 		$study_id    = $newid;
 		$media_image = '';
@@ -1007,7 +1007,7 @@ class JBSMPIconvert
 		}
 		else
 		{
-			$db = JFactory::getDBO();
+			$db = JFactory::getDbo();
 
 			foreach ($this->picomments AS $pi)
 			{

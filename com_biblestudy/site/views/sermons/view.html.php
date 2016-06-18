@@ -137,10 +137,10 @@ class BiblestudyViewSermons extends JViewLegacy
 		$images     = new JBSMImages;
 		$this->main = $images->mainStudyImage();
 
-		// Only load pagebuilder if the default template is NOT being used
-		if ($params->get('useexpert_list') > 0 || is_string($params->get('sermonstemplate')) == true)
+		// Only load PageBuilder if the default template is NOT being used
+		if ($params->get('useexpert_list') > 0 || (is_string($params->get('sermonstemplate')) == true && $params->get('sermonstemplate') != '0'))
 		{
-			$page_builder = new JBSMPagebuilder;
+			$page_builder = new JBSMPageBuilder;
 
 			for ($i = 0, $n = count($items); $i < $n; $i++)
 			{
@@ -208,7 +208,7 @@ class BiblestudyViewSermons extends JViewLegacy
 			}
 		}
 		// Get the podcast subscription
-		JHtml::styleSheet('media/css/podcast.css');
+		JHtml::stylesheet('media/css/podcast.css');
 		$podcast         = new JBSMPodcastSubscribe;
 		$this->subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
 
@@ -298,9 +298,9 @@ class BiblestudyViewSermons extends JViewLegacy
 			);
 			$lang[]   = $langtemp;
 		}
-		$langdropdown[]        = JHTML::_('select.option', '0', JTEXT::_('JOPTION_SELECT_LANGUAGE'));
+		$langdropdown[]        = JHtml::_('select.option', '0', JText::_('JOPTION_SELECT_LANGUAGE'));
 		$langdropdown          = array_merge($langdropdown, $lang);
-		$this->page->languages = JHTML::_('select.genericlist', $langdropdown, 'filter_languages', 'class="inputbox"  '
+		$this->page->languages = JHtml::_('select.genericlist', $langdropdown, 'filter_languages', 'class="inputbox"  '
 			. $go, 'value', 'text', "$filter_languages"
 		);
 		if ($params->get('listlanguage') == 1)
@@ -309,9 +309,9 @@ class BiblestudyViewSermons extends JViewLegacy
 		}
 
 		// Build the teacher dropdown
-		$types[]              = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_TEACHER'));
+		$types[]              = JHtml::_('select.option', '0', JText::_('JBS_CMN_SELECT_TEACHER'));
 		$types                = array_merge($types, $this->teachers);
-		$this->page->teachers = JHTML::_('select.genericlist', $types, 'filter_teacher', 'class="inputbox"  '
+		$this->page->teachers = JHtml::_('select.genericlist', $types, 'filter_teacher', 'class="inputbox"  '
 			. $go, 'value', 'text', "$filter_teacher"
 		);
 		if (($params->get('show_teacher_search') > 0 && ($teacher_menu == -1)) || $params->get('show_teacher_search') > 1)
@@ -320,9 +320,9 @@ class BiblestudyViewSermons extends JViewLegacy
 		}
 
 		// Build Series List for drop down menu
-		$types3[]           = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_SERIES'));
+		$types3[]           = JHtml::_('select.option', '0', JText::_('JBS_CMN_SELECT_SERIES'));
 		$types3             = array_merge($types3, $this->series);
-		$this->page->series = JHTML::_('select.genericlist', $types3, 'filter_series', 'class="inputbox"  '
+		$this->page->series = JHtml::_('select.genericlist', $types3, 'filter_series', 'class="inputbox"  '
 			. $go, 'value', 'text', "$filter_series"
 		);
 		if (($params->get('show_series_search') > 0 && ($series_menu == -1)) || $params->get('show_series_search') > 1)
@@ -331,9 +331,9 @@ class BiblestudyViewSermons extends JViewLegacy
 		}
 
 		// Build message types
-		$types4[]                 = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_MESSAGETYPE'));
+		$types4[]                 = JHtml::_('select.option', '0', JText::_('JBS_CMN_SELECT_MESSAGETYPE'));
 		$types4                   = array_merge($types4, $this->messageTypes);
-		$this->page->messagetypes = JHTML::_('select.genericlist', $types4, 'filter_messagetype', 'class="inputbox"  '
+		$this->page->messagetypes = JHtml::_('select.genericlist', $types4, 'filter_messagetype', 'class="inputbox"  '
 			. $go, 'value', 'text', "$filter_messagetype"
 		);
 		if (($params->get('show_type_search') > 0 && ($messagetype_menu == -1)) || $params->get('show_type_search') > 1)
@@ -341,17 +341,17 @@ class BiblestudyViewSermons extends JViewLegacy
 			$dropdowns[] = array('order' => $params->get('ddmessagetype'), 'item' => $this->page->messagetypes);
 		}
 		// Build study years
-		$years[]           = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_YEAR'));
+		$years[]           = JHtml::_('select.option', '0', JText::_('JBS_CMN_SELECT_YEAR'));
 		$years             = array_merge($years, $this->years);
-		$this->page->years = JHTML::_('select.genericlist', $years, 'filter_year', 'class="inputbox"  ' . $go, 'value', 'text', "$filter_year");
+		$this->page->years = JHtml::_('select.genericlist', $years, 'filter_year', 'class="inputbox"  ' . $go, 'value', 'text', "$filter_year");
 		if ($params->get('show_year_search') > 0)
 		{
 			$dropdowns[] = array('order' => $params->get('ddyears'), 'item' => $this->page->years);
 		}
 		// Build locations
-		$loc[]                 = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_LOCATION'));
+		$loc[]                 = JHtml::_('select.option', '0', JText::_('JBS_CMN_SELECT_LOCATION'));
 		$loc                   = array_merge($loc, $this->locations);
-		$this->page->locations = JHTML::_(
+		$this->page->locations = JHtml::_(
 			'select.genericlist', $loc, 'filter_location', 'class="inputbox" size="1" '
 			. $go, 'value', 'text', "$filter_location"
 		);
@@ -360,20 +360,20 @@ class BiblestudyViewSermons extends JViewLegacy
 			$dropdowns[] = array('order' => $params->get('ddlocations'), 'item' => $this->page->locations);
 		}
 		// Build Topics
-		$top[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_TOPIC'));
+		$top[] = JHtml::_('select.option', '0', JText::_('JBS_CMN_SELECT_TOPIC'));
 		if ($top && $this->topics)
 		{
 			$top = array_merge($top, $this->topics);
 		}
-		$this->page->topics = JHTML::_('select.genericlist', $top, 'filter_topic', 'class="inputbox" ' . $go, 'value', 'text', "$filter_topic");
+		$this->page->topics = JHtml::_('select.genericlist', $top, 'filter_topic', 'class="inputbox" ' . $go, 'value', 'text', "$filter_topic");
 		if (($params->get('show_topic_search') > 0 && ($topic_menu == -1)) || $params->get('show_topic_search') > 1)
 		{
 			$dropdowns[] = array('order' => $params->get('ddtopics'), 'item' => $this->page->topics);
 		}
 		// Build Books
-		$boo[]             = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_BOOK'));
+		$boo[]             = JHtml::_('select.option', '0', JText::_('JBS_CMN_SELECT_BOOK'));
 		$boo               = array_merge($boo, $this->books);
-		$this->page->books = JHTML::_('select.genericlist', $boo, 'filter_book', 'class="inputbox"  ' . $go, 'value', 'text', "$filter_book");
+		$this->page->books = JHtml::_('select.genericlist', $boo, 'filter_book', 'class="inputbox"  ' . $go, 'value', 'text', "$filter_book");
 		if (($params->get('show_book_search') > 0 && $book_menu == -1) || $params->get('show_book_search') > 1)
 		{
 			$dropdowns[] = array('order' => $params->get('ddbooks'), 'item' => $this->page->books);
@@ -390,9 +390,9 @@ class BiblestudyViewSermons extends JViewLegacy
 				'text'  => JText::_("JBS_CMN_ASCENDING")
 			)
 		);
-		$ord[]             = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_ORDER'));
+		$ord[]             = JHtml::_('select.option', '0', JText::_('JBS_CMN_SELECT_ORDER'));
 		$ord               = array_merge($ord, $ordervalues);
-		$this->page->order = JHTML::_('select.genericlist', $ord, 'filter_orders', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_orders");
+		$this->page->order = JHtml::_('select.genericlist', $ord, 'filter_orders', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_orders");
 
 		if ($params->get('show_order_search') > 0)
 		{
@@ -460,7 +460,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		}
 		$this->document->setTitle($title);
 
-		$pathway = $app->getPathWay();
+		$pathway = $app->getPathway();
 		$pathway->addItem($title, '');
 
 		// Prepare meta information (under development)
@@ -489,8 +489,8 @@ class BiblestudyViewSermons extends JViewLegacy
 			$this->document->setMetadata('robots', $this->params->get('robots'));
 		}
 
-		JHtml::_('behavior.framework');
 		JHtml::_('biblestudy.framework');
+		JHtml::_('biblestudy.loadCss', $this->params, null, 'font-awesome');
 
 	}
 

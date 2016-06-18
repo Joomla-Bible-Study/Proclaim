@@ -96,25 +96,25 @@ class BiblestudyViewSerie extends JViewLegacy
 		JFactory::getApplication()->input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolBarHelper::title(JText::_('JBS_CMN_SERIES') . ': <small><small>[' . $title . ']</small></small>', 'tree tree');
+		JToolbarHelper::title(JText::_('JBS_CMN_SERIES') . ': <small><small>[' . $title . ']</small></small>', 'tree tree');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_biblestudy'))
 		{
-			JToolBarHelper::apply('serie.apply');
-			JToolBarHelper::save('serie.save');
-			JToolBarHelper::cancel('serie.cancel');
+			JToolbarHelper::apply('serie.apply');
+			JToolbarHelper::save('serie.save');
+			JToolbarHelper::cancel('serie.cancel');
 		}
 		else
 		{
 			if ($this->canDo->get('core.edit', 'com_biblestudy'))
 			{
-				JToolBarHelper::apply('serie.apply');
-				JToolBarHelper::save('serie.save');
+				JToolbarHelper::apply('serie.apply');
+				JToolbarHelper::save('serie.save');
 			}
-			JToolBarHelper::cancel('serie.cancel', 'JTOOLBAR_CLOSE');
+			JToolbarHelper::cancel('serie.cancel', 'JTOOLBAR_CLOSE');
 		}
-		JToolBarHelper::divider();
-		JToolBarHelper::help('biblestudy', true);
+		JToolbarHelper::divider();
+		JToolbarHelper::help('biblestudy', true);
 	}
 
 	/**

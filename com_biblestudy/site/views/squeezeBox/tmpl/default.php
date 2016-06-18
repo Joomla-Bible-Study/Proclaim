@@ -10,7 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JHTML::_('behavior.framework');
+JHtml::_('behavior.framework');
 JHtml::_('behavior.modal');
 ?>
 

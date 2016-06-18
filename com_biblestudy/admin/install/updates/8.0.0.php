@@ -74,6 +74,7 @@ class Migration800
 				{
 					// Load Topic table
 					JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_biblestudy/tables/');
+					/** @type TableTopic $table */
 					$table = JTable::getInstance('Topic', "Table");
 
 					$new_topic           = clone $topic;
@@ -112,7 +113,7 @@ class Migration800
 	/**
 	 * Update studies to reference newly created topics
 	 *
-	 * @param   Object           $topic_table   Object containing the saved topic record
+	 * @param   TableTopic       $topic_table   Object containing the saved topic record
 	 * @param   String           $old_topic_id  Reference to the old topic id
 	 * @param   JDatabaseDriver  $db            Joomla Data bass driver
 	 *

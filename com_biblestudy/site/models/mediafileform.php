@@ -61,6 +61,7 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 	 */
 	protected function populateState()
 	{
+		/** @type JApplicationSite $app */
 		$app   = JFactory::getApplication('site');
 		$input = $app->input;
 

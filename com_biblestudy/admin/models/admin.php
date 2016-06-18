@@ -172,8 +172,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 		$changeSet->fix();
 		$this->fixSchemaVersion();
 		$this->fixUpdateVersion();
-		$installer = new Com_BiblestudyInstallerScript;
-		$installer->deleteUnexistingFiles();
+		$installer = new BiblestudyModelInstall;
 		$installer->fixMenus();
 		$installer->fixemptyaccess();
 		$installer->fixemptylanguage();
@@ -183,9 +182,9 @@ class BiblestudyModelAdmin extends JModelAdmin
 	}
 
 	/**
-	 * Gets the changeset object
+	 * Gets the ChangeSet object
 	 *
-	 * @return string JSchema  Changeset
+	 * @return string JSchema  ChangeSet
 	 */
 	public function getItems()
 	{
@@ -324,6 +323,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 */
 	public function fixUpdateVersion()
 	{
+		/** @type JTableExtension $table */
 		$table = JTable::getInstance('Extension');
 		$table->load($this->getExtentionId());
 		$cache         = new Registry($table->manifest_cache);
@@ -356,6 +356,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 */
 	public function fixDefaultTextFilters()
 	{
+		/** @type JTableExtension $table */
 		$table = JTable::getInstance('Extension');
 		$table->load($table->find(array('name' => 'com_biblestudy')));
 
@@ -396,6 +397,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 */
 	public function getUpdateVersion()
 	{
+		/** @type JTableExtension $table */
 		$table = JTable::getInstance('Extension');
 		$table->load($this->getExtentionId());
 		$cache = new Registry($table->manifest_cache);
@@ -410,6 +412,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 */
 	public function getDefaultTextFilters()
 	{
+		/** @type JTableExtension $table */
 		$table = JTable::getInstance('Extension');
 		$table->load($table->find(array('name' => 'com_biblestudy')));
 
@@ -423,7 +426,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 */
 	public function getSSorPI()
 	{
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('extension_id, name, element')->from('#__extensions');
 		$db->setQuery($query);
@@ -450,13 +453,13 @@ class BiblestudyModelAdmin extends JModelAdmin
 		$this->setState('extension_message', $app->getUserState('com_biblestudy.extension_message'));
 		$app->setUserState('com_biblestudy.message', '');
 		$app->setUserState('com_biblestudy.extension_message', '');
-		parent::populateState('name', 'asc');
+		parent::populateState();
 	}
 
 	/**
 	 * Prepare and sanitise the table data prior to saving.
 	 *
-	 * @param   JTable  $table  A JTable object.
+	 * @param   TableAdmin  $table  A JTable object.
 	 *
 	 * @return   void
 	 *

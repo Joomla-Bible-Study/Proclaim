@@ -26,7 +26,7 @@ class JBSMSSConvert
 	 */
 	public function convertSS()
 	{
-		$db = JFactory::getDBO();
+		$db = JFactory::getDbo();
 		$query       = $db->getQuery(true);
 		$query->select('*')
 			->from('#__sermon_sermons');
@@ -44,7 +44,7 @@ class JBSMSSConvert
 		$result_table = '<table><tr><td><strong>' . JText::_('JBS_IBM_NOTE_ERRORS') . '</strong></td></tr>';
 
 		// Make a server record
-		$base              = JURI::base();
+		$base              = JUri::base();
 		$site              = str_replace('/administrator/', '', $base);
 		$data              = new stdClass;
 		$data->server_name = $site;
@@ -228,8 +228,8 @@ class JBSMSSConvert
 	/**
 	 * New Studies Carnation
 	 *
-	 * @param   Object  $sermon          Test of Sermons
-	 * @param   Array   $seriesspeakers  Array of Series
+	 * @param   object  $sermon          Test of Sermons
+	 * @param   array   $seriesspeakers  Array of Series
 	 *
 	 * @return void
 	 */

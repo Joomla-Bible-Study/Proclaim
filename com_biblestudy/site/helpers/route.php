@@ -46,7 +46,7 @@ abstract class JBSMHelperRoute
 
 		if ($language && $language != "*" && JLanguageMultilang::isEnabled())
 		{
-			$db    = JFactory::getDBO();
+			$db    = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query->select('a.sef AS sef');
 			$query->select('a.lang_code AS lang_code');

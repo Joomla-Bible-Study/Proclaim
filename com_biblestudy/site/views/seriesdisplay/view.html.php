@@ -115,6 +115,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 			. $teacherimage->width . '" alt="" />';
 
 		JHtml::_('biblestudy.framework');
+		JHtml::_('biblestudy.loadCss', $params, null, 'font-awesome');
 
 		$items->slug = $items->alias ? ($items->id . ':' . $items->alias) : str_replace(' ', '-', htmlspecialchars_decode($items->series_text, ENT_QUOTES))
 			. ':' . $items->id;
@@ -122,7 +123,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		if ($params->get('useexpert_list') > 0 || is_string($params->get('seriesdisplaytemplate')) == true )
 		{
 			// Get studies associated with the series
-			$pagebuilder = new JBSMPagebuilder;
+			$pagebuilder = new JBSMPageBuilder;
 			$whereitem   = $items->id;
 			$wherefield  = 'study.series_id';
 
@@ -187,7 +188,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		// Prepare meta information (under development)
 		if ($params->get('metakey'))
 		{
-			$document->setMetadata('keywords', $params->get('metakey'));
+			$document->setMetaData('keywords', $params->get('metakey'));
 		}
 
 		if ($params->get('metadesc'))

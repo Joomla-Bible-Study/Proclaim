@@ -117,7 +117,7 @@ class BiblestudyModelServers extends JModelList
 					$o              = new stdClass;
 					$o->type        = (string) $xml['type'];
 					$o->name        = (string) $server;
-					$o->image_url   = JURI::base() . '/components/com_biblestudy/addons/servers/' . $server . '/' . $server . '.png';
+					$o->image_url   = JUri::base() . '/components/com_biblestudy/addons/servers/' . $server . '/' . $server . '.png';
 					$o->title       = (string) $xml->name;
 					$o->description = (string) $xml->description;
 					$o->path        = $path . '/' . $server . '/';

@@ -104,26 +104,26 @@ class BiblestudyViewTopic extends JViewLegacy
 		$input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolBarHelper::title(JText::_('JBS_CMN_TOPICS') . ': <small><small>[' . $title . ']</small></small>', 'tag tag');
+		JToolbarHelper::title(JText::_('JBS_CMN_TOPICS') . ': <small><small>[' . $title . ']</small></small>', 'tag tag');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_biblestudy'))
 		{
-			JToolBarHelper::apply('topic.apply');
-			JToolBarHelper::save('topic.save');
-			JToolBarHelper::cancel('topic.cancel');
+			JToolbarHelper::apply('topic.apply');
+			JToolbarHelper::save('topic.save');
+			JToolbarHelper::cancel('topic.cancel');
 		}
 		else
 		{
 			if ($this->canDo->get('core.edit', 'com_biblestudy'))
 			{
-				JToolBarHelper::apply('topic.apply');
-				JToolBarHelper::save('topic.save');
+				JToolbarHelper::apply('topic.apply');
+				JToolbarHelper::save('topic.save');
 			}
-			JToolBarHelper::cancel('topic.cancel', 'JTOOLBAR_CLOSE');
+			JToolbarHelper::cancel('topic.cancel', 'JTOOLBAR_CLOSE');
 		}
 
-		JToolBarHelper::divider();
-		JToolBarHelper::help('biblestudy', true);
+		JToolbarHelper::divider();
+		JToolbarHelper::help('biblestudy', true);
 	}
 
 	/**

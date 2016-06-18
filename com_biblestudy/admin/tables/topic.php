@@ -29,13 +29,6 @@ class TableTopic extends JTable
 	public $id = null;
 
 	/**
-	 * Published
-	 *
-	 * @var int
-	 */
-	public $published = 1;
-
-	/**
 	 * Topic text
 	 *
 	 * @var string
@@ -43,11 +36,24 @@ class TableTopic extends JTable
 	public $topic_text = null;
 
 	/**
+	 * Published
+	 *
+	 * @var int
+	 */
+	public $published = 1;
+
+	/**
 	 * Params
 	 *
 	 * @var string
 	 */
 	public $params = null;
+
+	public $asset_id;
+
+	public $language;
+
+	public $access;
 
 	/**
 	 * Constructor
@@ -243,6 +249,7 @@ class TableTopic extends JTable
 	 */
 	protected function _getAssetParentId(JTable $table = null, $id = null)
 	{
+		/** @type JTableAsset $asset */
 		$asset = JTable::getInstance('Asset');
 		$asset->loadByName('com_biblestudy');
 

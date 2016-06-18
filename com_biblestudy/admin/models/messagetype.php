@@ -117,7 +117,7 @@ class BiblestudyModelMessagetype extends JModelAdmin
 	/**
 	 * Prepare and sanitise the table prior to saving.
 	 *
-	 * @param   JTable  $table  A reference to a JTable object.
+	 * @param   TableMessagetype  $table  A reference to a JTable object.
 	 *
 	 * @return  void
 	 *

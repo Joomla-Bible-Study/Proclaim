@@ -18,13 +18,9 @@ if (defined('JBSM_LOADED'))
 // Manually enable code profiling by setting value to 1
 define('JBSM_PROFILER', 0);
 
-// Component debugging
-define("COM_BIBLESTUDY_DEBUG", false);
-
 // Version information
-define('BIBLESTUDY_VERSION', '9.0.0');
-define('BIBLESTUDY_VERSION_DATE', '2015-05-15');
-define('BIBLESTUDY_VERSION_BUILD', '4000');
+define('BIBLESTUDY_VERSION', '9.0.1');
+define('BIBLESTUDY_VERSION_DATE', '2016-05-23');
 define('BIBLESTUDY_VERSION_UPDATEFILE', 'JBS Version ' . BIBLESTUDY_VERSION);
 
 // Default values
@@ -47,6 +43,8 @@ define('BIBLESTUDY_PATH_LIB', BIBLESTUDY_PATH . DIRECTORY_SEPARATOR . 'lib');
 define('BIBLESTUDY_PATH_TEMPLATE', BIBLESTUDY_PATH . DIRECTORY_SEPARATOR . 'template');
 define('BIBLESTUDY_PATH_TEMPLATE_DEFAULT', BIBLESTUDY_PATH_TEMPLATE . DIRECTORY_SEPARATOR . BIBLESTUDY_TEMPLATE_DEFAULT);
 define('BIBLESTUDY_PATH_HELPERS', BIBLESTUDY_PATH . DIRECTORY_SEPARATOR . 'helpers');
+define('BIBLESTUDY_PATH_MODELS', BIBLESTUDY_PATH . DIRECTORY_SEPARATOR . 'models');
+define('BIBLESTUDY_PATH_TABLES', BIBLESTUDY_PATH . DIRECTORY_SEPARATOR . 'tables');
 
 // Admin Component paths
 define('BIBLESTUDY_PATH_ADMIN', BIBLESTUDY_ROOT_PATH_ADMIN . DIRECTORY_SEPARATOR . BIBLESTUDY_COMPONENT_RELPATH);
@@ -56,6 +54,7 @@ define('BIBLESTUDY_PATH_ADMIN_LANGUAGE', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPAR
 define('BIBLESTUDY_PATH_ADMIN_INSTALL', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'install');
 define('BIBLESTUDY_PATH_ADMIN_IMAGES', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'images');
 define('BIBLESTUDY_PATH_ADMIN_MODELS', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'models');
+define('BIBLESTUDY_PATH_ADMIN_TABLES', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'tables');
 
 // Addons paths
 define('BIBLESTUDY_PATH_ADMIN_ADDON', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'addons');
@@ -66,8 +65,8 @@ define('BIBLESTUDY_FILE_INSTALL', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 
 define('BIBLESTUDY_PATH_MOD', BIBLESTUDY_ROOT_PATH . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'mod_biblestudy');
 
 // Minimum version requirements
-DEFINE('BIBLESTUDY_MIN_PHP', '5.3.10');
-DEFINE('BIBLESTUDY_MIN_MYSQL', '5.1');
+define('BIBLESTUDY_MIN_PHP', '5.3.10');
+define('BIBLESTUDY_MIN_MYSQL', '5.1');
 
 // Time related
 define('BIBLESTUDY_SECONDS_IN_HOUR', 3600);
@@ -80,8 +79,10 @@ define('BIBLESTUDY_DB_MISSING_COLUMN', 1054);
 JLoader::discover('JBSM', BIBLESTUDY_PATH_LIB, 'true', 'true');
 JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_LIB, 'true', 'true');
 JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS, 'false', 'true');
+JLoader::discover('Table', BIBLESTUDY_PATH_TABLES, 'false', 'true');
 JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS, 'false', 'true');
 JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_ADDON, 'false', 'true');
+JLoader::discover('Table', BIBLESTUDY_PATH_ADMIN_TABLES, 'false', 'true');
 JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html/');
 
 // If phrase is not found in specific language file, load english language file:
@@ -89,7 +90,9 @@ $language = JFactory::getLanguage();
 $language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
 $language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, null, true);
 
-if (JBSMBibleStudyHelper::debug() === '1')
+
+// Component debugging
+if (JBSMBibleStudyHelper::debug() === '1' || JFactory::getApplication()->input->getInt('jbsmdbg', '0') === '1')
 {
 	define('JBSMDEBUG', 1);
 }
@@ -97,6 +100,16 @@ else
 {
 	define('JBSMDEBUG', 0);
 }
+
+// Include the JLog class.
+jimport('joomla.log.log');
+JLog::addLogger(
+	array(
+		'text_file' => 'com_biblestudy.errors.php'
+	),
+	JLog::ALL,
+	'com_biblestudy'
+);
 
 // JBSM has been initialized
 define('JBSM_LOADED', 1);

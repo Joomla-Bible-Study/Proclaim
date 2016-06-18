@@ -26,6 +26,8 @@ class JBSMDbHelper
 	 */
 	public static $extension = 'com_biblestudy';
 
+	public static $install_state = null;
+
 	/**
 	 * System to Check if Table Exists
 	 *
@@ -254,49 +256,31 @@ class JBSMDbHelper
 	/**
 	 * Get State of install for Main Admin Controller
 	 *
-	 * @return Registry|bool
+	 * @return  bool false if table exists | true if dos not
 	 *
 	 * @since 7.1.0
 	 */
 	public static function getInstallState()
 	{
-		$db    = JFactory::getDbo();
-
-		// Check if JBSM can be found from the database
-		$table = $db->getPrefix() . 'bsms_admin';
-		$db->setQuery("SHOW TABLES LIKE {$db->quote($table)}");
-
-		if ($db->loadResult() != $table)
+		if (!is_bool(self::$install_state))
 		{
-			return true;
+			$db = JFactory::getDbo();
+
+			// Check if JBSM can be found from the database
+			$table = $db->getPrefix() . 'bsms_admin';
+			$db->setQuery("SHOW TABLES LIKE {$db->quote($table)}");
+
+			if ($db->loadResult() != $table)
+			{
+				self::$install_state = true;
+			}
+			else
+			{
+				self::$install_state = false;
+			}
 		}
 
-		return false;
-	}
-
-	/**
-	 * Get State of install for Main Admin Controller
-	 *
-	 * @return Registry
-	 *
-	 * @since 7.1.0
-	 */
-	public static function setInstallState()
-	{
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true);
-		$query->update('#__bsms_admin')
-			->set('installstate = NULL')
-			->where('id = 1');
-
-		if (!self::performDB($query, null))
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
+		return self::$install_state;
 	}
 
 	/**

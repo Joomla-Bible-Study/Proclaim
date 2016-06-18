@@ -124,14 +124,14 @@ class BiblestudyViewMediafile extends JViewLegacy
 		$isNew      = ($this->item->id == 0);
 		$checkedOut = !($this->item->checked_out == 0 || $this->item->checked_out == $userId);
 		$title      = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolBarHelper::title(JText::_('JBS_CMN_MEDIA_FILES') . ': <small><small>[' . $title . ']</small></small>', 'video video');
+		JToolbarHelper::title(JText::_('JBS_CMN_MEDIA_FILES') . ': <small><small>[' . $title . ']</small></small>', 'video video');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_biblestudy'))
 		{
-			JToolBarHelper::apply('mediafile.apply');
-			JToolBarHelper::save('mediafile.save');
-			JToolBarHelper::save2new('mediafile.save2new');
-			JToolBarHelper::cancel('mediafile.cancel');
+			JToolbarHelper::apply('mediafile.apply');
+			JToolbarHelper::save('mediafile.save');
+			JToolbarHelper::save2new('mediafile.save2new');
+			JToolbarHelper::cancel('mediafile.cancel');
 			JToolbarHelper::checkin('mediafile.checkin');
 		}
 		else
@@ -141,12 +141,12 @@ class BiblestudyViewMediafile extends JViewLegacy
 			{
 				if ($this->canDo->get('core.edit', 'com_biblestudy'))
 				{
-					JToolBarHelper::apply('mediafile.apply');
-					JToolBarHelper::save('mediafile.save');
+					JToolbarHelper::apply('mediafile.apply');
+					JToolbarHelper::save('mediafile.save');
 
 					if ($this->canDo->get('core.create', 'com_biblestudy'))
 					{
-						JToolBarHelper::save2new('mediafile.save2new');
+						JToolbarHelper::save2new('mediafile.save2new');
 					}
 				}
 			}
@@ -154,13 +154,13 @@ class BiblestudyViewMediafile extends JViewLegacy
 			// If checked out, we can still save
 			if ($this->canDo->get('core.create', 'com_biblestudy'))
 			{
-				JToolBarHelper::save2copy('mediafile.save2copy');
+				JToolbarHelper::save2copy('mediafile.save2copy');
 			}
-			JToolBarHelper::cancel('mediafile.cancel', 'JTOOLBAR_CLOSE');
+			JToolbarHelper::cancel('mediafile.cancel', 'JTOOLBAR_CLOSE');
 		}
 
-		JToolBarHelper::divider();
-		JToolBarHelper::help('biblestudy', true);
+		JToolbarHelper::divider();
+		JToolbarHelper::help('biblestudy', true);
 	}
 
 	/**

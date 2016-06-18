@@ -308,3 +308,6 @@ table.fbstat .col2 {
   display: block;
   text-align: center;
 }
+#dashboard-icons > .btn + .btn {
+  float: left;
+}

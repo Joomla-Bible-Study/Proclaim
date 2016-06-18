@@ -130,40 +130,40 @@ class BiblestudyViewLocations extends JViewLegacy
 
 		// Get the toolbar object instance
 		$bar = JToolBar::getInstance('toolbar');
-		JToolBarHelper::title(JText::_('JBS_CMN_LOCATIONS'), 'home home');
+		JToolbarHelper::title(JText::_('JBS_CMN_LOCATIONS'), 'home home');
 
 		if ($this->canDo->get('core.create'))
 		{
-			JToolBarHelper::addNew('location.add');
+			JToolbarHelper::addNew('location.add');
 		}
 
 		if ($this->canDo->get('core.edit'))
 		{
-			JToolBarHelper::editList('location.edit');
+			JToolbarHelper::editList('location.edit');
 		}
 
 		if ($this->canDo->get('core.edit.state'))
 		{
-			JToolBarHelper::divider();
-			JToolBarHelper::publishList('locations.publish');
-			JToolBarHelper::unpublishList('locations.unpublish');
-			JToolBarHelper::divider();
-			JToolBarHelper::archiveList('locations.archive');
+			JToolbarHelper::divider();
+			JToolbarHelper::publishList('locations.publish');
+			JToolbarHelper::unpublishList('locations.unpublish');
+			JToolbarHelper::divider();
+			JToolbarHelper::archiveList('locations.archive');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
-			JToolBarHelper::deleteList('', 'locations.delete', 'JTOOLBAR_EMPTY_TRASH');
+			JToolbarHelper::deleteList('', 'locations.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
 		elseif ($this->canDo->get('core.delete'))
 		{
-			JToolBarHelper::trash('locations.trash');
+			JToolbarHelper::trash('locations.trash');
 		}
 
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
-			JToolBarHelper::divider();
+			JToolbarHelper::divider();
 			JHtml::_('bootstrap.modal', 'collapseModal');
 
 			$title = JText::_('JBS_CMN_BATCH_LABLE');

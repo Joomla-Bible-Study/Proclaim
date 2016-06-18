@@ -11,8 +11,8 @@
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
+use Joomla\Utilities\ArrayHelper;
 
-JLoader::register('TableServer', BIBLESTUDY_PATH_ADMIN . '/tables/server.php');
 /**
  * MediaFile model class
  *
@@ -169,6 +169,14 @@ class BiblestudyModelMediafile extends JModelAdmin
 		/** @type BiblestudyModelServer $model */
 		$model       = JModelLegacy::getInstance('Server', 'BibleStudyModel');
 		$server_type = $model->getType($server_id, true);
+		$s_item = $model->getItem($server_id);
+
+		$reg = new Registry;
+		$reg->loadArray($s_item->params);
+
+		$reg1 = new Registry;
+		$reg1->loadArray($s_item->media);
+		$reg1->merge($reg);
 
 		$path = JPath::clean(JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/' . $server_type);
 
@@ -188,6 +196,8 @@ class BiblestudyModelMediafile extends JModelAdmin
 		{
 			return false;
 		}
+
+		$form->s_params = $reg1->toArray();
 
 		return $form;
 	}
@@ -326,7 +336,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	{
 		// Sanitize user ids.
 		$pks = array_unique($pks);
-		JArrayHelper::toInteger($pks);
+		ArrayHelper::toInteger($pks);
 
 		// Remove any values of zero.
 		if (array_search(0, $pks, true))
@@ -418,6 +428,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	{
 		// Set the variables
 		$user  = JFactory::getUser();
+		/** @type TableMediafile $table */
 		$table = $this->getTable();
 
 		foreach ($pks as $pk)
@@ -478,6 +489,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	{
 		// Set the variables
 		$user  = JFactory::getUser();
+		/** @type TableMediafile $table */
 		$table = $this->getTable();
 
 		foreach ($pks as $pk)
@@ -486,7 +498,10 @@ class BiblestudyModelMediafile extends JModelAdmin
 			{
 				$table->reset();
 				$table->load($pk);
-				$table->link_type = (int) $value;
+				$reg = new Registry;
+				$reg->loadString($table->params);
+				$reg->set('link_type', (int) $value);
+				$table->params = $reg->toString();
 
 				if (!$table->store())
 				{
@@ -524,6 +539,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	{
 		// Set the variables
 		$user  = JFactory::getUser();
+		/** @type TableMediafile $table */
 		$table = $this->getTable();
 
 		foreach ($pks as $pk)
@@ -532,7 +548,10 @@ class BiblestudyModelMediafile extends JModelAdmin
 			{
 				$table->reset();
 				$table->load($pk);
-				$table->mime_type = (int) $value;
+				$reg = new Registry;
+				$reg->loadString($table->params);
+				$reg->set('mime_type', (int) $value);
+				$table->params = $reg->toString();
 
 				if (!$table->store())
 				{
@@ -578,7 +597,10 @@ class BiblestudyModelMediafile extends JModelAdmin
 			{
 				$table->reset();
 				$table->load($pk);
-				$table->media_image = (int) $value;
+				$reg = new Registry;
+				$reg->loadString($table->params);
+				$reg->set('media_image', (int) $value);
+				$table->params = $reg->toString();
 
 				if (!$table->store())
 				{
@@ -624,7 +646,10 @@ class BiblestudyModelMediafile extends JModelAdmin
 			{
 				$table->reset();
 				$table->load($pk);
-				$table->popup = (int) $value;
+				$reg = new Registry;
+				$reg->loadString($table->params);
+				$reg->set('popup', (int) $value);
+				$table->params = $reg->toString();
 
 				if (!$table->store())
 				{

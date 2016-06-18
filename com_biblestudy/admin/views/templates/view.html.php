@@ -86,9 +86,9 @@ class BiblestudyViewTemplates extends JViewLegacy
 
 		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'template');
 		$templates        = $this->get('templates');
-		$types[]          = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_TEMPLATE'));
+		$types[]          = JHtml::_('select.option', '0', JText::_('JBS_CMN_SELECT_TEMPLATE'));
 		$types            = array_merge($types, $templates);
-		$this->templates  = JHTML::_('select.genericlist', $types, 'template_export', 'class="inputbox" size="1" ', 'value', 'text', "$");
+		$this->templates  = JHtml::_('select.genericlist', $types, 'template_export', 'class="inputbox" size="1" ', 'value', 'text', "$");
 
 		// Levels filter.
 		$options   = array();
@@ -133,35 +133,35 @@ class BiblestudyViewTemplates extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JToolBarHelper::title(JText::_('JBS_CMN_TEMPLATES'), 'grid grid');
+		JToolbarHelper::title(JText::_('JBS_CMN_TEMPLATES'), 'grid grid');
 
 		if ($this->canDo->get('core.create'))
 		{
-			JToolBarHelper::addNew('template.add');
+			JToolbarHelper::addNew('template.add');
 		}
 
 		if ($this->canDo->get('core.edit'))
 		{
-			JToolBarHelper::editList('template.edit');
+			JToolbarHelper::editList('template.edit');
 		}
 
 		if ($this->canDo->get('core.edit.state'))
 		{
-			JToolBarHelper::divider();
-			JToolBarHelper::publishList('templates.publish');
-			JToolBarHelper::unpublishList('templates.unpublish');
+			JToolbarHelper::divider();
+			JToolbarHelper::publishList('templates.publish');
+			JToolbarHelper::unpublishList('templates.unpublish');
 		}
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
-			JToolBarHelper::divider();
-			JToolBarHelper::deleteList('', 'templates.delete', 'JTOOLBAR_EMPTY_TRASH');
+			JToolbarHelper::divider();
+			JToolbarHelper::deleteList('', 'templates.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
 		elseif ($this->canDo->get('core.delete'))
 		{
-			JToolBarHelper::divider();
-			JToolBarHelper::trash('templates.trash');
+			JToolbarHelper::divider();
+			JToolbarHelper::trash('templates.trash');
 		}
-		JToolBarHelper::divider();
+		JToolbarHelper::divider();
 
 		JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=templates');
 

@@ -82,7 +82,7 @@ else
 	foreach ($this->comments as $comment)
 	{
 
-		$comment_date_display = JHTML::_('date', $comment->comment_date, JText::_('DATE_FORMAT_LC3'));
+		$comment_date_display = JHtml::_('date', $comment->comment_date, JText::_('DATE_FORMAT_LC3'));
 		?>
                     <div class="row-fluid">
                         <div class="span6"><strong><?php echo $comment->full_name ?></strong> <i>

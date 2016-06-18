@@ -18,6 +18,7 @@ defined('_JEXEC') or die;
  */
 class JBSMBibleStudyHelper
 {
+	public static $admin_params = null;
 
 	/**
 	 * Set extension
@@ -363,17 +364,17 @@ class JBSMBibleStudyHelper
 	 */
 	public static function debug()
 	{
-		if (JBSMDbHelper::getInstallState())
+		if (!JBSMDbHelper::getInstallState())
 		{
-			$admin_params = JBSMParams::getAdmin();
+			self::$admin_params = JBSMParams::getAdmin();
 
-			if (!isset($admin_params->debug))
+			if (!isset(self::$admin_params->debug))
 			{
-				$admin_params        = new stdClass;
-				$admin_params->debug = 1;
+				self::$admin_params        = new stdClass;
+				self::$admin_paramss->debug = 1;
 			}
 
-			return $admin_params->debug;
+			return self::$admin_params->debug;
 		}
 
 		return 0;
@@ -390,7 +391,7 @@ class JBSMBibleStudyHelper
 	 */
 	public static function getMediaTypes()
 	{
-		JLog::add('getMediaTypes is nologer supported');
+		JLog::add('getMediaTypes is nologer supported', JLog::NOTICE, 'com_biblestudy');
 		throw new Exception('Bad function getMediaTypes is nologer supported');
 	}
 
@@ -639,9 +640,9 @@ class JBSMBibleStudyHelper
 	}
 
 	/**
-	 * Sorting the Array a Column
+	 * Sorting the array a Column
 	 *
-	 * @param   Array   &$arr  Array to sort
+	 * @param   array   &$arr  Array to sort
 	 * @param   string  $col   Sort column
 	 * @param   int     $dir   Direction to sort
 	 *
@@ -656,5 +657,21 @@ class JBSMBibleStudyHelper
 		}
 
 		array_multisort($sort_col, $dir, $arr);
+	}
+
+	/**
+	 * Debug stop
+	 *
+	 * @param   string  $msg  Message to sent.
+	 *
+	 * @return void
+	 *
+	 * @throws \Exception
+	 */
+	public static function stop($msg = '')
+	{
+		echo $msg;
+		$mainframe = JFactory::getApplication();
+		$mainframe->close();
 	}
 }

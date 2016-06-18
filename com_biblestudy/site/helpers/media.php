@@ -62,17 +62,17 @@ class JBSMMedia
 			}
 			if ($imageparams->get('media_use_button_icon') >= 1)
 			{
-				$image = $this->mediaButton($media, $imageparams);
+				$image = $this->mediaButton($imageparams);
 			}
 			else
 			{
 				$mediaimage = $imageparams->get('media_image');
-				$image      = $this->useJImage($mediaimage, $params->get('media_text'));
+				$image      = $this->useJImage($mediaimage, $params->get('media_text', JText::_('JBS_MED_DOWNLOAD')));
 			}
 
 		$player     = self::getPlayerAttributes($params, $media);
 		$playercode = self::getPlayerCode($params, $player, $image, $media);
-		$downloadlink  = self::getFluidDownloadLink($media, $params, $template, $playercode);
+		$downloadlink  = self::getFluidDownloadLink($media, $params, $template);
 
 		if ($media->params->get('link_type'))
 		{
@@ -207,8 +207,8 @@ class JBSMMedia
 
 			if ($compat_mode == 0)
 			{
-				$downloadlink = '<a href="index.php?option=com_biblestudy&amp;mid=' .
-					$media->id . '&amp;view=sermons&amp;task=download">';
+				$downloadlink = '<a href="index.php?option=com_biblestudy&amp;view=sermon&amp;mid=' .
+					$media->id . '&amp;task=download">';
 			}
 			else
 			{
@@ -232,12 +232,11 @@ class JBSMMedia
 	/**
 	 * Used to obtain the button and/or icon for the image
 	 *
-	 * @param   object    $media        ?
 	 * @param   Registry  $imageparams  ?
 	 *
 	 * @return mixed
 	 */
-	public function mediaButton($media, $imageparams)
+	public function mediaButton($imageparams)
 	{
 		$mediaimage = null;
 		$button = $imageparams->get('media_button_type', 'btn-link');
@@ -352,7 +351,7 @@ class JBSMMedia
 	 *
 	 * @since 9.0.0
 	 */
-	public function useJImage($path, $alt = 'link')
+	public function useJImage($path, $alt)
 	{
 		if (!$path)
 		{
@@ -424,8 +423,14 @@ class JBSMMedia
 		{
 			/* In this case the item has a player set for it, so we use that instead. We also need to change the old player
 					type of 3 to 2 for all videos reloaded which we don't support */
-
-			$player->player = ($media->params->get('player')) ? $media->params->get('player') : $params->get('player', 0);
+			if ($media->params->get('player', null) !== null)
+			{
+				$player->player = $media->params->get('player');
+			}
+			else
+			{
+				$player->player = $params->get('player', 0);
+			}
 		}
 		if ($player->player == 3)
 		{
@@ -524,7 +529,6 @@ class JBSMMedia
 
 		switch ($player->player)
 		{
-
 			case 0: // Direct
 
 				switch ($player->type)
@@ -534,7 +538,6 @@ class JBSMMedia
 							$media->id . '\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\'); return true;" title="' .
 							$media->malttext . ' - ' . $media->comment . ' ' . $duration . ' '
 							. $filesize . '" target="' . $params->get('special') . '">' . $image . '</a>';
-						return $playercode;
 						break;
 					case 3:
 					case 1: // Popup window
@@ -545,7 +548,6 @@ class JBSMMedia
 				}
 
 				/** @var $playercode string */
-
 				return $playercode;
 				break;
 
@@ -581,7 +583,6 @@ class JBSMMedia
 				}
 
 				/** @var $playercode string */
-
 				return $playercode;
 				break;
 

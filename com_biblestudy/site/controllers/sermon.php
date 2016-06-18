@@ -66,7 +66,7 @@ class BiblestudyControllerSermon extends JControllerForm
 
 		if (empty($return) || !JUri::isInternal(base64_decode($return)))
 		{
-			return JURI::base() . 'index.php?option=com_biblestudy&view=messagelist';
+			return JUri::base() . 'index.php?option=com_biblestudy&view=messagelist';
 		}
 		else
 		{
@@ -242,8 +242,8 @@ class BiblestudyControllerSermon extends JControllerForm
 		$config            = JFactory::getConfig();
 		$comment_mailfrom  = $config->get('mailfrom');
 
-		$comment_livesite = JURI::root();
-		$db               = JFactory::getDBO();
+		$comment_livesite = JUri::root();
+		$db               = JFactory::getDbo();
 		$query            = $db->getQuery(true);
 		$query->select('id, studytitle, studydate')->from('#__bsms_studies')->where('id = ' . (int) $comment_study_id);
 		$db->setQuery($query);
@@ -287,7 +287,6 @@ class BiblestudyControllerSermon extends JControllerForm
 		$input = new JInput;
 		$task  = $input->get('task');
 		$mid   = $input->getInt('id');
-
 		if ($task == 'download')
 		{
 			$downloader = new JBSMDownload;

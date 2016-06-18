@@ -79,7 +79,6 @@ JFactory::getDocument()->addScriptDeclaration('
 						<th width="1%" class="hidden-phone">
 							<?php echo JHtml::_('grid.checkall'); ?>
 						</th>
-
 						<th width="1%" style="min-width:55px;" class="nowrap center">
 							<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'study.published', $listDirn, $listOrder); ?>
 						</th>
@@ -104,7 +103,6 @@ JFactory::getDocument()->addScriptDeclaration('
 						<th class="nowrap center hidden-phone hidden-tablet">
 							<?php echo JText::_('JBS_CPL_STATISTIC'); ?>
 						</th>
-						</th>
 						<th width="5%" class="nowrap hidden-phone hidden-tablet">
 							<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
 						</th>
@@ -116,11 +114,11 @@ JFactory::getDocument()->addScriptDeclaration('
 					<tbody>
 					<?php foreach ($this->items as $i => $item) :
 						$item->max_ordering = 0;
-						$ordering           = ($listOrder == 'study.ordering');
-						$canCreate          = $user->authorise('core.create');
-						$canEdit            = $user->authorise('core.edit', 'com_biblestudy.message.' . $item->id);
-						$canEditOwn         = $user->authorise('core.edit.own', 'com_biblestudy.message.' . $item->id);
-						$canChange          = $user->authorise('core.edit.state', 'com_biblestudy.message.' . $item->id);
+						$ordering = ($listOrder == 'study.ordering');
+						$canCreate = $user->authorise('core.create');
+						$canEdit = $user->authorise('core.edit', 'com_biblestudy.message.' . $item->id);
+						$canEditOwn = $user->authorise('core.edit.own', 'com_biblestudy.message.' . $item->id);
+						$canChange = $user->authorise('core.edit.state', 'com_biblestudy.message.' . $item->id);
 						?>
 						<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->series_id; ?>">
 							<td class="order nowrap center hidden-phone">
@@ -168,15 +166,15 @@ JFactory::getDocument()->addScriptDeclaration('
 								<div class="pull-left">
 									<?php if ($canEdit || $canEditOwn) : ?>
 										<a href="<?php echo JRoute::_(
-											'index.php?option=com_biblestudy&task=message.edit&id=' . (int) $item->id
+												'index.php?option=com_biblestudy&task=message.edit&id=' . (int) $item->id
 										); ?>">
 											<?php echo($this->escape($item->studytitle) ? $this->escape(
-												$item->studytitle
+													$item->studytitle
 											) : 'ID: ' . $this->escape($item->id)); ?>
 										</a>
 									<?php else : ?>
 										<?php echo($this->escape($item->studytitle) ? $this->escape(
-											$item->studytitle
+												$item->studytitle
 										) : 'ID: ' . $this->escape($item->id)); ?>
 									<?php endif; ?>
 									<?php if ($item->alias) : ?>
@@ -203,11 +201,14 @@ JFactory::getDocument()->addScriptDeclaration('
 								<?php echo $this->escape($item->series_text); ?>
 							</td>
 							<td class="center hidden-phone hidden-tablet">
-								<button type="button" class="btn btn-mini btn-info hasTooltip" data-placement="top" title="<?php echo $this->escape($item->hits); ?>"><?php echo JText::_('JBS_CMN_HITS'); ?></button>
+								<button type="button" class="btn btn-mini btn-info hasTooltip" data-placement="top"
+								        title="<?php echo $this->escape($item->hits); ?>"><?php echo JText::_('JBS_CMN_HITS'); ?></button>
 								<br/>
-								<button type="button" class="btn btn-mini btn-info hasTooltip" data-placement="top" title="<?php echo $this->escape($item->totalplays); ?>"><?php echo JText::_('JBS_CMN_PLAYS'); ?></button>
+								<button type="button" class="btn btn-mini btn-info hasTooltip" data-placement="top"
+								        title="<?php echo $this->escape($item->totalplays); ?>"><?php echo JText::_('JBS_CMN_PLAYS'); ?></button>
 								<br/>
-								<button type="button" class="btn btn-mini btn-info hasTooltip" data-placement="top" title="<?php echo $this->escape($item->totaldownloads); ?>"><?php echo JText::_('JBS_CMN_DOWNLOADS'); ?></button>
+								<button type="button" class="btn btn-mini btn-info hasTooltip" data-placement="top"
+								        title="<?php echo $this->escape($item->totaldownloads); ?>"><?php echo JText::_('JBS_CMN_DOWNLOADS'); ?></button>
 							</td>
 							<td class="small hidden-phone hidden-tablet">
 								<?php if ($item->language == '*'): ?>
@@ -230,7 +231,7 @@ JFactory::getDocument()->addScriptDeclaration('
 			<?php echo $this->loadTemplate('batch'); ?>
 
 			<input type="hidden" name="task" value=""/>
-			<input type="hidden" name="boxchecked" value="0" />
+			<input type="hidden" name="boxchecked" value="0"/>
 			<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
 			<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
 			<?php echo JHtml::_('form.token'); ?>

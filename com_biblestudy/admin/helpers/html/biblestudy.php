@@ -70,18 +70,20 @@ abstract class JHtmlBiblestudy
 	 */
 	public static function loadCss($params, $url = null, $font = null)
 	{
+		JHtml::stylesheet('media/com_biblestudy/css/general.css');
 
 		// Import Stylesheets
-		JHtml::stylesheet('media/com_biblestudy/css/general.css');
-		$css = $params->get('css');
-
-		if ($css <= "-1")
+		if ($params)
 		{
-			JHtml::styleSheet('media/com_biblestudy/css/biblestudy.css');
-		}
-		else
-		{
-			JHtml::styleSheet('media/com_biblestudy/css/site/' . $css);
+			$css = $params->get('css');
+			if ($css <= "-1")
+			{
+				JHtml::stylesheet('media/com_biblestudy/css/biblestudy.css');
+			}
+			else
+			{
+				JHtml::stylesheet('media/com_biblestudy/css/site/' . $css);
+			}
 		}
 		if ($url)
 		{

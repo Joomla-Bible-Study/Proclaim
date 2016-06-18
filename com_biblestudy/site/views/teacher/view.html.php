@@ -56,7 +56,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$pagebuilder = new JBSMPagebuilder;
+		$pagebuilder = new JBSMPageBuilder;
 
 		$images        = new JBSMImages;
 		$this->state   = $this->get('state');
@@ -65,6 +65,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$params = $this->state->template->params;
 
 		JHtml::_('biblestudy.framework');
+		JHtml::_('biblestudy.loadCss', $params, null, 'font-awesome');
 
 		$input = new JInput;
 
@@ -211,6 +212,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$this->params   = $params;
 		$this->template = $this->state->template;
 		$this->document = JFactory::getDocument();
+
 		$this->_prepareDocument();
 
 		parent::display($tpl);

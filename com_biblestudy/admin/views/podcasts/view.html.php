@@ -107,40 +107,40 @@ class BiblestudyViewPodcasts extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JToolBarHelper::title(JText::_('JBS_CMN_PODCASTS'), 'feed feed');
+		JToolbarHelper::title(JText::_('JBS_CMN_PODCASTS'), 'feed feed');
 
 		if ($this->canDo->get('core.create'))
 		{
-			JToolBarHelper::addNew('podcast.add');
+			JToolbarHelper::addNew('podcast.add');
 		}
 
 		if ($this->canDo->get('core.edit'))
 		{
-			JToolBarHelper::editList('podcast.edit');
+			JToolbarHelper::editList('podcast.edit');
 		}
 
 		if ($this->canDo->get('core.edit.state'))
 		{
-			JToolBarHelper::divider();
-			JToolBarHelper::publishList('podcasts.publish');
-			JToolBarHelper::unpublishList('podcasts.unpublish');
-			JToolBarHelper::divider();
-			JToolBarHelper::archiveList('podcasts.archive');
+			JToolbarHelper::divider();
+			JToolbarHelper::publishList('podcasts.publish');
+			JToolbarHelper::unpublishList('podcasts.unpublish');
+			JToolbarHelper::divider();
+			JToolbarHelper::archiveList('podcasts.archive');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
-			JToolBarHelper::deleteList('', 'podcasts.delete', 'JTOOLBAR_EMPTY_TRASH');
+			JToolbarHelper::deleteList('', 'podcasts.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
 		elseif ($this->canDo->get('core.delete'))
 		{
-			JToolBarHelper::trash('podcasts.trash');
+			JToolbarHelper::trash('podcasts.trash');
 		}
 
 		if ($this->canDo->get('core.create'))
 		{
-			JToolBarHelper::divider();
-			JToolBarHelper::custom('writeXMLFile', 'xml.png', '', 'JBS_PDC_WRITE_XML_FILES', false);
+			JToolbarHelper::divider();
+			JToolbarHelper::custom('writeXMLFile', 'xml.png', '', 'JBS_PDC_WRITE_XML_FILES', false);
 		}
 	}
 

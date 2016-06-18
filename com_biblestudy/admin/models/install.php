@@ -10,15 +10,6 @@
 
 defined('_JEXEC') or die;
 
-// Include the JLog class.
-jimport('joomla.log.log');
-JLog::addLogger(
-	array(
-		'text_file' => 'com_biblestudy.errors.php'
-	),
-	JLog::ALL,
-	'com_biblestudy'
-);
 JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.script.php');
 JLoader::register('JBSMFreshInstall', JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/biblestudy.install.special.php');
 
@@ -74,14 +65,29 @@ class BibleStudyModelInstall extends JModelLegacy
 	/** @var array Array of Finish Task */
 	private $_finish = array();
 
+	/** @var string Version number to be running */
+	private $version = "0.0.0";
+
+	/** @type array PHP file steps for migrations */
+	private $subSteps = array();
+
+	/** @var array Array of Sub Query from php files queries Task */
+	private $_subQuery = array();
+
+	/** @type array list of php files to work through */
+	private $_subFiles = array();
+
 	/** @var array Array of Install Task */
 	private $_install = array();
 
-	/** @var int If was inported */
+	/** @var int If was imported */
 	private $_isimport = 0;
 
 	/** @type string Type of process */
 	protected $type = null;
+
+	/** @type array Array of assets to fix */
+	public $query = array();
 
 	/**
 	 * Constructor.
@@ -171,7 +177,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		$this->_finish = array('updateversion', 'fixassets', 'fixmenus', 'fixemptyaccess', 'fixemptylanguage', 'rmoldurl', 'setupdateurl', 'finish');
 		$this->totalSteps += count($this->_finish);
 
-		// Check to see if this is not a migration before proceding.
+		// Check to see if this is not a migration before preceding.
 		if ($this->type != 'migration')
 		{
 			$this->type     = 'install';
@@ -378,8 +384,8 @@ class BibleStudyModelInstall extends JModelLegacy
 				}
 				elseif ($files)
 				{
-					$this->totalSteps    = count($files);
-					$this->_versionStack = $files;
+					$this->totalSteps    += count($files);
+					$this->_versionStack  = $files;
 				}
 				else
 				{
@@ -395,9 +401,12 @@ class BibleStudyModelInstall extends JModelLegacy
 				{
 					unset($php[$i]);
 				}
+				elseif ($php)
+				{
+					$this->totalSteps += count($files);
+					$this->_subFiles   = $php;
+				}
 			}
-
-			$this->totalSteps += count($php);
 		}
 		$this->_isimport = JFactory::getApplication()->input->getInt('jbsmalt', 0);
 		$this->totalSteps += 1;
@@ -417,7 +426,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		$query->select('*')
 			->from('#__bsms_update');
 		$this->_db->setQuery($query);
-		$updates = $this->_db->loadObjectlist();
+		$updates = $this->_db->loadObjectList();
 
 		foreach ($updates AS $value)
 		{
@@ -473,7 +482,13 @@ class BibleStudyModelInstall extends JModelLegacy
 				$query->columns(array($this->_db->quoteName('extension_id'), $this->_db->quoteName('version_id')));
 				$query->values($eid . ', ' . $this->_db->quote($version));
 				$this->_db->setQuery($query);
-				$this->_db->execute();
+
+				if (!$this->_db->execute())
+				{
+					$app->enqueueMessage('Error instering ID', 'Error');
+
+					return false;
+				}
 
 				return true;
 			}
@@ -522,31 +537,35 @@ class BibleStudyModelInstall extends JModelLegacy
 	 */
 	private function saveStack()
 	{
-		$db    = $this->getDbo();
-		$query = $db->getQuery(true)
-			->delete($db->quoteName('#__bsms_storage'))
-			->where($db->quoteName('key') . ' = ' . $db->quote('migration_stack'));
-		$db->setQuery($query);
-		$db->execute();
-
-		$object = (object) array(
-			'key'   => 'migration_stack',
-			'value' => json_encode(
-				array(
+		$stack = array(
+				'aversion'   => $this->version,
 				'version'    => $this->_versionStack,
+				'switch'     => $this->_versionSwitch,
 				'allupdates' => $this->_allupdates,
 				'finish'     => $this->_finish,
 				'install'    => $this->_install,
+				'subFiles'   => $this->_subFiles,
+				'subQuery'   => $this->_subQuery,
+				'subSteps'   => $this->subSteps,
 				'isimport'   => $this->_isimport,
 				'callstack'  => $this->callstack,
 				'total'      => $this->totalSteps,
 				'done'       => $this->doneSteps,
 				'run'        => $this->running,
 				'type'       => $this->type,
-				)
-			)
+				'query'      => $this->query,
 		);
-		$db->insertObject('#__bsms_storage', $object);
+		$stack = json_encode($stack);
+		if (function_exists('base64_encode') && function_exists('base64_decode'))
+		{
+			if (function_exists('gzdeflate') && function_exists('gzinflate'))
+			{
+				$stack = gzdeflate($stack, 9);
+			}
+			$stack = base64_encode($stack);
+		}
+		$session = JFactory::getSession();
+		$session->set('migration_stack', $stack, 'JBSM');
 
 	}
 
@@ -557,23 +576,24 @@ class BibleStudyModelInstall extends JModelLegacy
 	 */
 	private function resetStack()
 	{
-		$db    = $this->getDbo();
-		$query = $db->getQuery(true)
-			->delete($db->quoteName('#__bsms_storage'))
-			->where($db->quoteName('key') . ' = ' . $db->quote('migration_stack'));
-		$db->setQuery($query);
-		$db->execute();
-
-		$this->_versionStack = array();
-		$this->_allupdates   = array();
-		$this->_finish       = array();
-		$this->_install      = array();
-		$this->_isimport     = 0;
-		$this->callstack     = array();
-		$this->totalSteps    = 0;
-		$this->doneSteps     = 0;
-		$this->running       = JText::_('JBS_MIG_STARTING');
-		$this->type          = null;
+		$session = JFactory::getSession();
+		$session->set('migration_stack', '', 'JBSM');
+		$this->version        = '0.0.0';
+		$this->_versionStack  = array();
+		$this->_versionSwitch = null;
+		$this->_allupdates    = array();
+		$this->_finish        = array();
+		$this->_install       = array();
+		$this->_subFiles      = array();
+		$this->_subQuery      = array();
+		$this->subSteps       = array();
+		$this->_isimport      = 0;
+		$this->callstack      = array();
+		$this->totalSteps     = 0;
+		$this->doneSteps      = 0;
+		$this->running        = JText::_('JBS_MIG_STARTING');
+		$this->type           = null;
+		$this->query          = array();
 	}
 
 	/**
@@ -583,42 +603,58 @@ class BibleStudyModelInstall extends JModelLegacy
 	 */
 	private function loadStack()
 	{
-		$db    = $this->getDbo();
-		$query = $db->getQuery(true)
-			->select(array($db->quoteName('value')))
-			->from($db->quoteName('#__bsms_storage'))
-			->where($db->quoteName('key') . ' = ' . $db->quote('migration_stack'));
-		$db->setQuery($query);
-		$stack = $db->loadResult();
+		$session = JFactory::getSession();
+		$stack = $session->get('migration_stack', '', 'JBSM');
 
 		if (empty($stack))
 		{
-			$this->_versionStack = array();
-			$this->_allupdates   = array();
-			$this->_finish       = array();
-			$this->_install      = array();
-			$this->_isimport     = 0;
-			$this->callstack     = array();
-			$this->totalSteps    = 0;
-			$this->doneSteps     = 0;
-			$this->running       = JText::_('JBS_MIG_STARTING');
-			$this->type          = null;
+			$this->version        = '0.0.0';
+			$this->_versionStack  = array();
+			$this->_versionSwitch = null;
+			$this->_allupdates    = array();
+			$this->_finish        = array();
+			$this->_install       = array();
+			$this->_subFiles      = array();
+			$this->_subQuery      = array();
+			$this->subSteps       = array();
+			$this->_isimport      = 0;
+			$this->callstack      = array();
+			$this->totalSteps     = 0;
+			$this->doneSteps      = 0;
+			$this->running        = JText::_('JBS_MIG_STARTING');
+			$this->type           = null;
+			$this->query          = array();
 
 			return false;
 		}
 
+		if (function_exists('base64_encode') && function_exists('base64_decode'))
+		{
+			$stack = base64_decode($stack);
+			if (function_exists('gzdeflate') && function_exists('gzinflate'))
+			{
+				$stack = gzinflate($stack);
+			}
+		}
+
 		$stack = json_decode($stack, true);
 
-		$this->_versionStack = $stack['version'];
-		$this->_allupdates   = $stack['allupdates'];
-		$this->_finish       = $stack['finish'];
-		$this->_install      = $stack['install'];
-		$this->_isimport     = $stack['isimport'];
-		$this->callstack     = $stack['callstack'];
-		$this->totalSteps    = $stack['total'];
-		$this->doneSteps     = $stack['done'];
-		$this->running       = $stack['run'];
-		$this->type          = $stack['type'];
+		$this->version        = $stack['aversion'];
+		$this->_versionStack  = $stack['version'];
+		$this->_versionSwitch = $stack['switch'];
+		$this->_allupdates    = $stack['allupdates'];
+		$this->_finish        = $stack['finish'];
+		$this->_install       = $stack['install'];
+		$this->_subFiles      = $stack['subFiles'];
+		$this->_subQuery      = $stack['subQuery'];
+		$this->subSteps       = $stack['subSteps'];
+		$this->_isimport      = $stack['isimport'];
+		$this->callstack      = $stack['callstack'];
+		$this->totalSteps     = $stack['total'];
+		$this->doneSteps      = $stack['done'];
+		$this->running        = $stack['run'];
+		$this->type           = $stack['type'];
+		$this->query          = $stack['query'];
 
 		return true;
 
@@ -634,7 +670,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		$now     = $this->microtime_float();
 		$elapsed = abs($now - $this->_startTime);
 
-		return $elapsed < 4;
+		return $elapsed < 2;
 	}
 
 	/**
@@ -645,6 +681,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	private function RealRun()
 	{
 		$app = JFactory::getApplication();
+		$run = true;
 
 		if (!empty($this->_install))
 		{
@@ -662,36 +699,137 @@ class BibleStudyModelInstall extends JModelLegacy
 			$this->doneSteps++;
 		}
 
-		if (!empty($this->_versionStack) && $this->haveEnoughTime())
+		if (!empty($this->_versionStack) && empty($this->_install))
 		{
 			krsort($this->_versionStack);
-			while (!empty($this->_versionStack))
+			while (!empty($this->_versionStack) && $this->haveEnoughTime())
 			{
 				$version           = array_pop($this->_versionStack);
-				$this->_allupdates = array();
-				$this->running .= ', ' . $version;
+				$this->running = $version;
 				$this->doneSteps++;
-				$this->allUpdate($version);
+				$run = $this->allUpdate($version);
+				if (!$run)
+				{
+					JFactory::getApplication()->enqueueMessage('error updating updates', 'error');
+				}
 			}
 		}
 
-		if (!empty($this->_allupdates) && $this->haveEnoughTime())
+		if ((!empty($this->_allupdates) || !empty($this->_subFiles)) && empty($this->_versionStack) && empty($this->_install))
 		{
-			$percent = 100;
-			krsort($this->_allupdates);
-			while (!empty($this->_allupdates))
+			ksort($this->_allupdates);
+
+			while ((!empty($this->_allupdates) || !empty($this->_subFiles)) && $this->haveEnoughTime())
 			{
-				if ($this->totalSteps > 0)
+				$this->version = key($this->_allupdates);
+
+				if (isset($this->_allupdates[$this->version]) && @!empty($this->_allupdates[$this->version]))
 				{
-					$percent = round($this->doneSteps / $this->totalSteps * 100);
+					if (strpos($this->running, $this->version))
+					{
+						$this->totalSteps += count($this->_allupdates[$this->version]);
+					}
+
+					// Used for Install array.
+					if (!is_array($this->_allupdates[$this->version]))
+					{
+						$this->_allupdates[$this->version] = array($this->_allupdates[$this->version]);
+					}
+					$string = array_shift($this->_allupdates[$this->version]);
+
+					$this->running = $this->version . ' String: ' . $string;
+					$run    = $this->runUpdates($string);
+					$this->doneSteps++;
 				}
-				$key           = key($this->_allupdates);
-				$string        = array_pop($this->_allupdates);
-				$this->running = $key . ', ' . $percent . '%';
-				$run           = $this->runUpdates($string);
-				if ($run && $this->type == 'migration')
+				elseif (in_array($this->version, $this->_subFiles) && @empty($this->_allupdates[$this->version]))
 				{
-					$run = $this->updatePHP($key);
+					// Check for corresponding PHP file and run migration
+					$migration_file = JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/updates/' . $this->version . '.php';
+
+					require_once $migration_file;
+					$migrationClass = "Migration" . str_ireplace(".", '', $this->version);
+					$migration      = new $migrationClass;
+
+					if (!class_exists($migrationClass))
+					{
+						JLog::add('Missing Class' . $migrationClass, JLog::WARNING, 'com_biblestudy');
+
+						return true;
+					}
+
+					if (!empty($this->subSteps) && !empty($this->_subFiles))
+					{
+						while (!empty($this->_subFiles) && $this->haveEnoughTime())
+						{
+							$query = array();
+							$step  = $this->_versionSwitch;
+							if (!isset($this->_subQuery[$this->version][$step]) && !empty($this->subSteps[$this->version]))
+							{
+								$step = $this->_versionSwitch = array_shift($this->subSteps[$this->version]);
+								JLog::add('Change step : ' . $step, JLog::INFO, 'com_biblestudy');
+							}
+							elseif(empty($this->subSteps[$this->version]))
+							{
+								JLog::add('Unset Last Step : ' . $step, JLog::INFO, 'com_biblestudy');
+
+								$step = $this->_versionSwitch = null;
+								unset($this->subSteps[$this->version]);
+								unset($this->_subQuery[$this->version]);
+								unset($this->_allupdates[$this->version]);
+								if (($key = array_search($this->version, $this->_subFiles)) !== false)
+								{
+									unset($this->_subFiles[$key]);
+								}
+							}
+
+							if (isset($this->_subQuery[$this->version][$step]) && !empty($this->_subQuery[$this->version][$step]))
+							{
+								$query = array_shift($this->_subQuery[$this->version][$step]);
+								$migration->query = $this->_subQuery[$this->version];
+							}
+							elseif (isset($this->_subQuery[$this->version][$step]) && empty($this->_subQuery[$this->version][$step]))
+							{
+								unset($this->_subQuery[$this->version][$step]);
+								$this->_versionSwitch = null;
+								JLog::add('Uset Sub Query if empty : ' . $step . ' ' . $this->version, JLog::INFO, 'com_biblestudy');
+							}
+
+							if (empty($step) && empty($query))
+							{
+								unset($this->_subFiles[$this->version]);
+								unset($this->subSteps[$this->version]);
+								JLog::add('Uset Version in All updates : ' . $this->version, JLog::INFO, 'com_biblestudy');
+							}
+							else
+							{
+								$this->running = 'PHP Sub Process: ' . $this->version . ' - ' . $step;
+								$migration->$step(JFactory::getDbo(), $query);
+
+								// Pull back the Query form PHP file if any.
+								if (isset($migration->query) && !empty($migration->query))
+								{
+									$this->_subQuery[$this->version] = $migration->query;
+								}
+								$queryString = null;
+								if (!empty($query) && is_array($query))
+								{
+
+									$queryString = (string) $query['id'];
+									$queryString = str_replace(array("\r", "\n"), array('', ' '), substr($queryString, 0, 80));
+									$queryString = ' ID:' . $queryString . ' Query count: ' . count($this->_subQuery[$this->version][$step]);
+								}
+								JLog::add('Doing Step in ' . $migrationClass . ' Step: ' . $step . $queryString, JLog::INFO, 'com_biblestudy');
+
+								$this->doneSteps++;
+							}
+						}
+
+					}
+				}
+				else
+				{
+					unset($this->_allupdates[$this->version]);
+					JLog::add('Unset Version if no steps : ' . $this->version, JLog::INFO, 'com_biblestudy');
 				}
 
 				if ($run == false)
@@ -705,9 +843,9 @@ class BibleStudyModelInstall extends JModelLegacy
 			}
 		}
 
-		if (!empty($this->_finish) && empty($this->_versionStack) && empty($this->_allupdates) && $this->haveEnoughTime())
+		if (!empty($this->_finish) && empty($this->_versionStack) && empty($this->_allupdates) && empty($this->_subFiles) && empty($this->_install))
 		{
-			while (!empty($this->_finish))
+			while (!empty($this->_finish) && $this->haveEnoughTime())
 			{
 				$finish = array_pop($this->_finish);
 				$this->doneSteps++;
@@ -716,7 +854,38 @@ class BibleStudyModelInstall extends JModelLegacy
 			}
 		}
 
-		if (empty($this->_install) && empty($this->_versionStack) && empty($this->_allupdates) && empty($this->_finish))
+		if (!empty($this->query)
+			&& empty($this->_finish)
+			&& empty($this->_versionStack)
+			&& empty($this->_allupdates)
+			&& empty($this->_subFiles)
+			&& empty($this->_install) )
+		{
+			krsort($this->query);
+			while (!empty($this->query) && $this->haveEnoughTime())
+			{
+				$this->_versionSwitch = key($this->query);
+				if (isset($this->query[$this->_versionSwitch]) && @!empty($this->query[$this->_versionSwitch]))
+				{
+					$version = array_pop($this->query[$this->_versionSwitch]);
+					$this->doneSteps++;
+					$this->running = 'Fix Assets';
+					$asset = new JBSMAssets;
+					$asset->fixAssets($this->_versionSwitch, $version);
+				}
+				else
+				{
+					unset($this->query[$this->_versionSwitch]);
+				}
+			}
+		}
+
+		if (empty($this->query)
+			&& empty($this->_finish)
+			&& empty($this->_versionStack)
+			&& empty($this->_allupdates)
+			&& empty($this->_subFiles)
+			&& empty($this->_install))
 		{
 			// Just finished
 			$this->resetStack();
@@ -857,7 +1026,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	/**
 	 * Finish the system
 	 *
-	 * @param   string  $step  Step to prossess
+	 * @param   string  $step  Step to process
 	 *
 	 * @return boolean
 	 */
@@ -876,9 +1045,10 @@ class BibleStudyModelInstall extends JModelLegacy
 				break;
 			case 'fixassets':
 				// Final step is to fix assets
-				$assets        = new JBSMAssets;
-				$run           = $assets->fixAssets();
-				$this->running = 'Fix Assets';
+				$assets = new JBSMAssets;
+				$assets->build();
+				$this->query = $assets->query;
+				$this->totalSteps += $assets->count;
 				break;
 			case 'fixmenus':
 				$run           = $this->fixMenus();
@@ -910,11 +1080,6 @@ class BibleStudyModelInstall extends JModelLegacy
 				$updateurl->enabled  = '1';
 				$this->_db->insertObject('#__update_sites', $updateurl);
 				$this->running = 'Set New Update URL';
-				break;
-			case 'deleteUnexistingFiles':
-				// @todo this deleteUnexistingFiles should be moved to migration path and not trigerd unless.
-				$this->deleteUnexistingFiles();
-				$this->running = 'Cleanup Old files';
 				break;
 			default:
 				$app->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . JText::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE'), 'message');
@@ -1036,11 +1201,44 @@ class BibleStudyModelInstall extends JModelLegacy
 		if (count($queries) == 0)
 		{
 			// No queries to process
+			JFactory::getApplication()->enqueueMessage('No Queries', 'error');
 			return false;
 		}
 		$this->totalSteps += count($queries);
 
 		$this->_allupdates = array_merge($this->_allupdates, array($value => $queries));
+
+		// Build php steps now.
+		$migration_file = JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/updates/' . $value . '.php';
+
+		if (JFile::exists($migration_file))
+		{
+			require_once $migration_file;
+			$migrationClass = "Migration" . str_ireplace(".", '', $value);
+			if (class_exists($migrationClass))
+			{
+				$migration       = new $migrationClass;
+				if (isset($migration->steps))
+				{
+					$steps = $migration->steps;
+					$this->totalSteps += count($steps);
+
+					// If Steps build is mandatory.
+					$migration->build($this->_db);
+					if (isset($migration->count))
+					{
+						$this->totalSteps += (int) $migration->count;
+					}
+					$this->subSteps  = array_merge($this->subSteps, array($value => $steps));
+					$this->_subQuery = array_merge($this->_subQuery, array($value => $migration->query));
+				}
+				else
+				{
+					$this->subSteps = array_merge($this->subSteps, array($value => array('up')));
+					$this->totalSteps += 1;
+				}
+			}
+		}
 
 		return true;
 	}
@@ -1048,82 +1246,42 @@ class BibleStudyModelInstall extends JModelLegacy
 	/**
 	 * Run updates SQL
 	 *
-	 * @param   string|array  $mix  String or Array of SQL to proses.
+	 * @param   string  $string  String of SQL to process.
 	 *
 	 * @return bool
 	 */
-	private function runUpdates($mix)
+	private function runUpdates($string)
 	{
 		$app = JFactory::getApplication();
 
-		if (!is_array($mix))
+		// Process each query in the $queries array (split out of sql file).
+		$string = trim($string);
+
+		if ($string != '' && $string{0} != '#')
 		{
-			$mix = array($mix);
-		}
-
-		foreach ($mix as $string)
-		{
-			// Process each query in the $queries array (split out of sql file).
-			$string = trim($string);
-
-			if ($string != '' && $string{0} != '#')
-			{
-				$this->_db->setQuery($string);
-				$this->doneSteps++;
-
-				if (!$this->_db->execute())
-				{
-					$app->enqueueMessage($this->_db->stderr(true), 'warning');
-
-					return false;
-				}
-				else
-				{
-					$queryString = (string) $string;
-					$queryString = str_replace(array("\r", "\n"), array('', ' '), substr($queryString, 0, 80));
-					JLog::add(JText::sprintf('JLIB_INSTALLER_UPDATE_LOG_QUERY', $this->running, $queryString), JLog::INFO, 'com_biblestudy');
-
-				}
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * Function to update db using the version number on php files.
-	 *
-	 * @param   string  $value  The File name.
-	 *
-	 * @return boolean
-	 *
-	 * @since 9.0.0
-	 */
-	private function updatePHP($value)
-	{
-		// Check for corresponding PHP file and run migration
-		$migration_file = JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/updates/' . $value . '.php';
-		if (JFile::exists($migration_file))
-		{
-			require_once $migration_file;
-			$migrationClass = "Migration" . str_ireplace(".", '', $value);
-			$migration      = new $migrationClass;
+			$this->_db->setQuery($string);
 			$this->doneSteps++;
-			if (!$migration->up($this->_db))
+
+			if (!$this->_db->execute())
 			{
-				JLog::add(JText::sprintf('Data Migration failed'), JLog::WARNING, 'com_biblestudy');
+				$app->enqueueMessage($this->_db->stderr(true), 'warning');
 
 				return false;
 			}
+			else
+			{
+				$queryString = (string) $string;
+				$queryString = str_replace(array("\r", "\n"), array('', ' '), substr($queryString, 0, 80));
+				JLog::add(JText::sprintf('JLIB_INSTALLER_UPDATE_LOG_QUERY', $this->running, $queryString), JLog::INFO, 'com_biblestudy');
 
-			return true;
+			}
 		}
 
 		return true;
 	}
 
 	/**
-	 * Cleanup postinstall before migration
+	 * Cleanup postInstall before migration
 	 *
 	 * @return void
 	 */
@@ -1135,350 +1293,6 @@ class BibleStudyModelInstall extends JModelLegacy
 			->where($this->_db->qn('language_extension') . ' = ' . $this->_db->q('com_biblestudy'));
 		$this->_db->setQuery($query);
 		$this->_db->execute();
-	}
-
-	/**
-	 * Remove Old Files and Folders
-	 *
-	 * @since      7.1.0
-	 *
-	 * @return   void
-	 */
-	protected function deleteUnexistingFiles()
-	{
-		$files = array(
-			'/media/com_biblestudy/css/biblestudy.css.dist',
-			'/images/textfile24.png',
-			'/components/com_biblestudy/biblestudy.css',
-			'/components/com_biblestudy/class.biblestudydownload.php',
-			'/components/language/en-GB/en-GB.com_biblestudy.ini',
-			'/administrator/language/en-GB/en-GB.com_biblestudy.ini',
-			'/administrator/language/en-GB/en-GB.com_biblestudy.sys.ini',
-			'/administrator/components/com_biblestudy/Snoopy.class.php',
-			'/administrator/components/com_biblestudy/admin.biblestudy.php',
-			'/components/com_biblestudy/helpers/updatesef.php',
-			'/components/com_biblestudy/helpers/image.php',
-			'/components/com_biblestudy/helpers/helper.php',
-			'/components/com_biblestudy/views/messages/tmpl/modal16.php',
-			'/components/com_biblestudy/controllers/teacherlist.php',
-			'/components/com_biblestudy/controllers/teacherdisplay.php',
-			'/components/com_biblestudy/controllers/studydetails.php',
-			'/components/com_biblestudy/controllers/studieslist.php',
-			'/components/com_biblestudy/controllers/serieslist.php',
-			'/components/com_biblestudy/controllers/seriesdetail.php',
-			'/components/com_biblestudy/models/teacherlist.php',
-			'/components/com_biblestudy/models/teacherdisplay.php',
-			'/components/com_biblestudy/models/studydetails.php',
-			'/components/com_biblestudy/models/studieslist.php',
-			'/components/com_biblestudy/models/seriesdetail.php',
-			'/components/com_biblestudy/models/serieslist.php',
-			'/components/com_biblestudy/views/mediafile/tmpl/form.php',
-			'/components/com_biblestudy/views/mediafile/tmpl/form.xml',
-			'/language/en-GB/en-GB.com_biblestudy.ini',
-			'/language/cs-CZ/cs-CZ.com_biblestudy.ini',
-			'/language/de-DE/de-DE.com_biblestudy.ini',
-			'/language/es-ES/es-ES.com_biblestudy.ini',
-			'/language/hu-HU/hu-HU.com_biblestudy.ini',
-			'/language/nl-NL/nl-NL.com_biblestudy.ini',
-			'/language/no-NO/no-NO.com_biblestudy.ini',
-			'/language/en-GB/en-GB.mod_biblestudy.ini',
-			'/language/en-GB/en-GB.mod_biblestudy.sys.ini',
-			'/administrator/components/com_biblestudy/install/biblestudy.assets.php',
-			'/administrator/components/com_biblestudy/install/sql/jbs7.0.0.sql',
-			'/administrator/components/com_biblestudy/install/sql/updates/mysql/20100101.sql',
-			'/administrator/components/com_biblestudy/lib/biblestudy.podcast.class.php',
-			'/administrator/components/com_biblestudy/controllers/commentsedit.php',
-			'/administrator/components/com_biblestudy/controllers/commentslist.php',
-			'/administrator/components/com_biblestudy/controllers/cssedit.php',
-			'/administrator/components/com_biblestudy/controllers/folderslist.php',
-			'/administrator/components/com_biblestudy/controllers/foldersedit.php',
-			'/administrator/components/com_biblestudy/controllers/folder.php',
-			'/administrator/components/com_biblestudy/controllers/folders.php',
-			'/administrator/components/com_biblestudy/controllers/locationslist.php',
-			'/administrator/components/com_biblestudy/controllers/locationsedit.php',
-			'/administrator/components/com_biblestudy/controllers/mediaedit.php',
-			'/administrator/components/com_biblestudy/controllers/mediafilesedit.php',
-			'/administrator/components/com_biblestudy/controllers/mediafileslist.php',
-			'/administrator/components/com_biblestudy/controllers/mediaimage.php',
-			'/administrator/components/com_biblestudy/controllers/mediaimages.php',
-			'/administrator/components/com_biblestudy/controllers/medialist.php',
-			'/administrator/components/com_biblestudy/controllers/messagetypelist.php',
-			'/administrator/components/com_biblestudy/controllers/messagetypeedit.php',
-			'/administrator/components/com_biblestudy/controllers/mimetypelist.php',
-			'/administrator/components/com_biblestudy/controllers/mimetypeedit.php',
-			'/administrator/components/com_biblestudy/controllers/mimetype.php',
-			'/administrator/components/com_biblestudy/controllers/mimetypes.php',
-			'/administrator/components/com_biblestudy/controllers/podcastlist.php',
-			'/administrator/components/com_biblestudy/controllers/podcastedit.php',
-			'/administrator/components/com_biblestudy/controllers/serieslist.php',
-			'/administrator/components/com_biblestudy/controllers/seriesedit.php',
-			'/administrator/components/com_biblestudy/controllers/serverslist.php',
-			'/administrator/components/com_biblestudy/controllers/serversedit.php',
-			'/administrator/components/com_biblestudy/controllers/sharelist.php',
-			'/administrator/components/com_biblestudy/controllers/shareedit.php',
-			'/administrator/components/com_biblestudy/controllers/studieslist.php',
-			'/administrator/components/com_biblestudy/controllers/studiesedit.php',
-			'/administrator/components/com_biblestudy/controllers/teacherlist.php',
-			'/administrator/components/com_biblestudy/controllers/teacheredit.php',
-			'/administrator/components/com_biblestudy/controllers/templateedit.php',
-			'/administrator/components/com_biblestudy/controllers/templateslist.php',
-			'/administrator/components/com_biblestudy/controllers/topicslist.php',
-			'/administrator/components/com_biblestudy/controllers/topicsedit.php',
-			'/administrator/components/com_biblestudy/models/forms/commentsedit.xml',
-			'/administrator/components/com_biblestudy/models/forms/foldersedit.xml',
-			'/administrator/components/com_biblestudy/models/forms/folder.xml',
-			'/administrator/components/com_biblestudy/models/forms/locationsedit.xml',
-			'/administrator/components/com_biblestudy/models/forms/mediaedit.xml',
-			'/administrator/components/com_biblestudy/models/forms/mediafilesedit.xml',
-			'/administrator/components/com_biblestudy/models/forms/mediaimage.xml',
-			'/administrator/components/com_biblestudy/models/forms/messagetypeedit.xml',
-			'/administrator/components/com_biblestudy/models/forms/mimetypeedit.xml',
-			'/administrator/components/com_biblestudy/models/forms/mimetype.xml',
-			'/administrator/components/com_biblestudy/models/forms/podcastedit.xml',
-			'/administrator/components/com_biblestudy/models/forms/seriesedit.xml',
-			'/administrator/components/com_biblestudy/models/forms/serversedit.xml',
-			'/administrator/components/com_biblestudy/models/forms/shareedit.xml',
-			'/administrator/components/com_biblestudy/models/forms/studiesedit.xml',
-			'/administrator/components/com_biblestudy/models/forms/teacheredit.xml',
-			'/administrator/components/com_biblestudy/models/forms/templateedit.xml',
-			'/administrator/components/com_biblestudy/models/forms/topicsedit.xml',
-			'/administrator/components/com_biblestudy/models/episodelist.php',
-			'/administrator/components/com_biblestudy/models/commentsedit.php',
-			'/administrator/components/com_biblestudy/models/commentslist.php',
-			'/administrator/components/com_biblestudy/models/cssedit.php',
-			'/administrator/components/com_biblestudy/models/folderslist.php',
-			'/administrator/components/com_biblestudy/models/foldersedit.php',
-			'/administrator/components/com_biblestudy/models/folder.php',
-			'/administrator/components/com_biblestudy/models/folders.php',
-			'/administrator/components/com_biblestudy/models/locationslist.php',
-			'/administrator/components/com_biblestudy/models/locationsedit.php',
-			'/administrator/components/com_biblestudy/models/mediaedit.php',
-			'/administrator/components/com_biblestudy/models/mediafilesedit.php',
-			'/administrator/components/com_biblestudy/models/mediafileslist.php',
-			'/administrator/components/com_biblestudy/models/mediaimage.php',
-			'/administrator/components/com_biblestudy/models/mediaimages.php',
-			'/administrator/components/com_biblestudy/models/medialist.php',
-			'/administrator/components/com_biblestudy/models/messagetypelist.php',
-			'/administrator/components/com_biblestudy/models/messagetypeedit.php',
-			'/administrator/components/com_biblestudy/models/mimetypelist.php',
-			'/administrator/components/com_biblestudy/models/mimetypeedit.php',
-			'/administrator/components/com_biblestudy/models/mimetype.php',
-			'/administrator/components/com_biblestudy/models/mimetypes.php',
-			'/administrator/components/com_biblestudy/models/podcastlist.php',
-			'/administrator/components/com_biblestudy/models/podcastedit.php',
-			'/administrator/components/com_biblestudy/models/serieslist.php',
-			'/administrator/components/com_biblestudy/models/seriesedit.php',
-			'/administrator/components/com_biblestudy/models/serverslist.php',
-			'/administrator/components/com_biblestudy/models/serversedit.php',
-			'/administrator/components/com_biblestudy/models/sharelist.php',
-			'/administrator/components/com_biblestudy/models/shareedit.php',
-			'/administrator/components/com_biblestudy/models/studieslist.php',
-			'/administrator/components/com_biblestudy/models/studiesedit.php',
-			'/administrator/components/com_biblestudy/models/teacherlist.php',
-			'/administrator/components/com_biblestudy/models/teacheredit.php',
-			'/administrator/components/com_biblestudy/models/templateedit.php',
-			'/administrator/components/com_biblestudy/models/templateslist.php',
-			'/administrator/components/com_biblestudy/models/topicslist.php',
-			'/administrator/components/com_biblestudy/models/topicsedit.php',
-			'/administrator/components/com_biblestudy/tables/biblestudy.php',
-			'/administrator/components/com_biblestudy/tables/booksedit.php',
-			'/administrator/components/com_biblestudy/tables/commentsedit.php',
-			'/administrator/components/com_biblestudy/tables/foldersedit.php',
-			'/administrator/components/com_biblestudy/tables/locationsedit.php',
-			'/administrator/components/com_biblestudy/tables/mediaedit.php',
-			'/administrator/components/com_biblestudy/tables/mediafilesedit.php',
-			'/administrator/components/com_biblestudy/tables/messagetypeedit.php',
-			'/administrator/components/com_biblestudy/tables/mimetypeedit.php',
-			'/administrator/components/com_biblestudy/tables/podcastedit.php',
-			'/administrator/components/com_biblestudy/tables/seriesedit.php',
-			'/administrator/components/com_biblestudy/tables/serversedit.php',
-			'/administrator/components/com_biblestudy/tables/shareedit.php',
-			'/administrator/components/com_biblestudy/tables/studiesedit.php',
-			'/administrator/components/com_biblestudy/tables/teacheredit.php',
-			'/administrator/components/com_biblestudy/tables/topicsedit.php',
-			'/administrator/components/com_biblestudy/tables/templateedit.php',
-			'/administrator/components/com_biblestudy/helpers/version.php',
-			'/administrator/language/en-GB/en-GB.com_biblestudy.ini',
-			'/administrator/language/en-GB/en-GB.com_biblestudy.sys.ini',
-			'/administrator/language/cs-CZ/cs-CZ.com_biblestudy.ini',
-			'/administrator/language/cs-CZ/cs-CZ.com_biblestudy.sys.ini',
-			'/administrator/language/de-DE/de-DE.com_biblestudy.ini',
-			'/administrator/language/de-DE/de-DE.com_biblestudy.sys.ini',
-			'/administrator/language/es-ES/es-ES.com_biblestudy.ini',
-			'/administrator/language/es-ES/es-ES.com_biblestudy.sys.ini',
-			'/administrator/language/hu-HU/hu-HU.com_biblestudy.ini',
-			'/administrator/language/hu-HU/hu-HU.com_biblestudy.sys.ini',
-			'/administrator/language/nl-NL/nl-NL.com_biblestudy.ini',
-			'/administrator/language/nl-NL/no-NO.com_biblestudy.ini',
-			'/administrator/language/no-NO/no-NO.com_biblestudy.sys.ini',
-			// JBSM 8.0.0
-			// Site:
-			'/components/com_biblestudy/controllers/commentsedit.php',
-			'/components/com_biblestudy/controllers/commentslist.php',
-			'/components/com_biblestudy/controllers/mediafile.php',
-			'/components/com_biblestudy/controllers/mediafiles.php',
-			'/components/com_biblestudy/controllers/message.php',
-			'/components/com_biblestudy/controllers/messages.php',
-			'/components/com_biblestudy/helpers/book.php',
-			'/components/com_biblestudy/helpers/date.php',
-			'/components/com_biblestudy/helpers/duration.php',
-			'/components/com_biblestudy/helpers/editlink.php',
-			'/components/com_biblestudy/helpers/editlisting.php',
-			'/components/com_biblestudy/helpers/filepath.php',
-			'/components/com_biblestudy/helpers/filesize.php',
-			'/components/com_biblestudy/helpers/header.php',
-			'/components/com_biblestudy/helpers/listing.php',
-			'/components/com_biblestudy/helpers/location.php',
-			'/components/com_biblestudy/helpers/mediatable.php',
-			'/components/com_biblestudy/helpers/messagetype.php',
-			'/components/com_biblestudy/helpers/params.php',
-			'/components/com_biblestudy/helpers/passage.php',
-			'/components/com_biblestudy/helpers/scripture.php',
-			'/components/com_biblestudy/helpers/share.php',
-			'/components/com_biblestudy/helpers/store.php',
-			'/components/com_biblestudy/helpers/textlink.php',
-			'/components/com_biblestudy/helpers/title.php',
-			'/components/com_biblestudy/helpers/toolbar.php',
-			'/components/com_biblestudy/helpers/topics.php',
-			'/components/com_biblestudy/helpers/year.php',
-			'/components/com_biblestudy/lib/biblestudy.admin.class.php',
-			'/components/com_biblestudy/lib/biblestudy.defines.php',
-			'/components/com_biblestudy/lib/biblestudy.stats.class.php',
-			'/components/com_biblestudy/models/forms/commentsedit.xml',
-			'/components/com_biblestudy/models/commentsedit.php',
-			'/components/com_biblestudy/models/commentslist.php',
-			'/components/com_biblestudy/models/mediafile.php',
-			'/components/com_biblestudy/models/mediafiles.php',
-			'/components/com_biblestudy/models/message.php',
-			'/components/com_biblestudy/models/messages.php',
-			// Admin:
-			'/administrator/components/com_biblestudy/controllers/ajax.php',
-			'/administrator/components/com_biblestudy/helpers/cleanurl.php',
-			'/administrator/components/com_biblestudy/helpers/toolbar.php',
-			'/administrator/components/com_biblestudy/lib/biblestudy.admin.class.php',
-			'/administrator/components/com_biblestudy/lib/biblestudy.migrate.php',
-			'/administrator/components/com_biblestudy/migration/biblestudy.611.upgrade.php',
-			'/administrator/components/com_biblestudy/migration/biblestudy.612.upgrade.php',
-			'/administrator/components/com_biblestudy/migration/biblestudy.613.upgrade.php',
-			'/administrator/components/com_biblestudy/migration/biblestudy.614.upgrade.php',
-			'/administrator/components/com_biblestudy/migration/biblestudy.622.upgrade.php',
-			'/administrator/components/com_biblestudy/migration/biblestudy.623.upgrade.php',
-			'/administrator/components/com_biblestudy/migration/biblestudy.700.upgrade.php',
-			'/administrator/components/com_biblestudy/migration/update701.php',
-			'/administrator/components/com_biblestudy/models/fields/locationordering.php',
-			'/administrator/components/com_biblestudy/models/fields/mediaordering.php',
-			'/administrator/components/com_biblestudy/models/fields/messagetypeordering.php',
-			'/administrator/components/com_biblestudy/models/fields/shareordering.php',
-			'/administrator/components/com_biblestudy/models/fields/teacherordering.php',
-			'/administrator/components/com_biblestudy/views/admin/tmpl/form.php',
-			'/administrator/components/com_biblestudy/views/admin/tmpl/form_assets.php',
-			'/administrator/components/com_biblestudy/views/admin/tmpl/form_backup.php',
-			'/administrator/components/com_biblestudy/views/admin/tmpl/form_database.php',
-			'/administrator/components/com_biblestudy/views/admin/tmpl/form_migrate.php',
-			'/administrator/components/com_biblestudy/views/comment/tmpl/form.php',
-			'/administrator/components/com_biblestudy/views/folder/tmpl/form.php',
-			'/administrator/components/com_biblestudy/views/folders/tmpl/index.html',
-			'/administrator/components/com_biblestudy/views/location/tmpl/form.php',
-			'/administrator/components/com_biblestudy/views/mediaimage/tmpl/form.php',
-			'/administrator/components/com_biblestudy/views/message/tmpl/form.php',
-			'/administrator/components/com_biblestudy/views/messagetype/tmpl/form.php',
-			'/administrator/components/com_biblestudy/views/mimetype/tmpl/form.php',
-			'/administrator/components/com_biblestudy/views/podcast/tmpl/form.php',
-			'/administrator/components/com_biblestudy/views/serie/tmpl/form.php',
-			'/administrator/components/com_biblestudy/views/server/tmpl/form.php',
-			'/administrator/components/com_biblestudy/views/server/tmpl/index.html',
-			'/administrator/components/com_biblestudy/views/share/tmpl/form.php',
-			'/administrator/components/com_biblestudy/views/teacher/tmpl/form.php',
-			'/administrator/components/com_biblestudy/views/template/tmpl/form.php',
-			'/administrator/components/com_biblestudy/views/templatecode/tmpl/form.php',
-			'/administrator/components/com_biblestudy/views/topic/tmpl/form.php',
-		);
-
-		$folders = array(
-			'/components/com_biblestudy/assets',
-			'/components/com_biblestudy/images',
-			'/components/com_biblestudy/views/teacherlist',
-			'/components/com_biblestudy/views/teacherdisplay',
-			'/components/com_biblestudy/views/studieslist',
-			'/components/com_biblestudy/views/studydetails',
-			'/components/com_biblestudy/views/serieslist',
-			'/components/com_biblestudy/views/seriesdetail',
-			'/administrator/media',
-			'/administrator/components/com_biblestudy/migration',
-			'/administrator/components/com_biblestudy/assets',
-			'/administrator/components/com_biblestudy/images',
-			'/administrator/components/com_biblestudy/css',
-			'/administrator/components/com_biblestudy/js',
-			'/administrator/components/com_biblestudy/views/commentsedit',
-			'/administrator/components/com_biblestudy/views/commentslist',
-			'/administrator/components/com_biblestudy/views/cssedit',
-			'/administrator/components/com_biblestudy/views/folderslist',
-			'/administrator/components/com_biblestudy/views/foldersedit',
-			'/administrator/components/com_biblestudy/views/folder',
-			'/administrator/components/com_biblestudy/views/folders',
-			'/administrator/components/com_biblestudy/views/locationslist',
-			'/administrator/components/com_biblestudy/views/locationsedit',
-			'/administrator/components/com_biblestudy/views/mediaedit',
-			'/administrator/components/com_biblestudy/views/mediafilesedit',
-			'/administrator/components/com_biblestudy/views/mediafileslist',
-			'/administrator/components/com_biblestudy/views/mediaimage',
-			'/administrator/components/com_biblestudy/views/mediaimages',
-			'/administrator/components/com_biblestudy/views/medialist',
-			'/administrator/components/com_biblestudy/views/messagetypelist',
-			'/administrator/components/com_biblestudy/views/messagetypeedit',
-			'/administrator/components/com_biblestudy/views/mimetypelist',
-			'/administrator/components/com_biblestudy/views/mimetypeedit',
-			'/administrator/components/com_biblestudy/views/mimetype',
-			'/administrator/components/com_biblestudy/views/mimetypes',
-			'/administrator/components/com_biblestudy/views/podcastlist',
-			'/administrator/components/com_biblestudy/views/podcastedit',
-			'/administrator/components/com_biblestudy/views/serieslist',
-			'/administrator/components/com_biblestudy/views/seriesedit',
-			'/administrator/components/com_biblestudy/views/serverslist',
-			'/administrator/components/com_biblestudy/views/serversedit',
-			'/administrator/components/com_biblestudy/views/sharelist',
-			'/administrator/components/com_biblestudy/views/shareedit',
-			'/administrator/components/com_biblestudy/views/studieslist',
-			'/administrator/components/com_biblestudy/views/studiesedit',
-			'/administrator/components/com_biblestudy/views/teacherlist',
-			'/administrator/components/com_biblestudy/views/teacheredit',
-			'/administrator/components/com_biblestudy/views/templateedit',
-			'/administrator/components/com_biblestudy/views/templateslist',
-			'/administrator/components/com_biblestudy/views/topicslist',
-			'/administrator/components/com_biblestudy/views/topicsedit',
-			// JBSM 8.0.0
-			'/components/com_biblestudy/views/messages',
-			'/components/com_biblestudy/views/message',
-			'/components/com_biblestudy/views/mediafiles',
-			'/components/com_biblestudy/views/mediafile',
-			'/components/com_biblestudy/views/commentslist',
-			'/components/com_biblestudy/views/commentsedit',
-			// JBS 9.0.0
-			'/administrator/componets/com_biblestudy/views/share',
-			'/administrator/componets/com_biblestudy/views/shares',
-			'/administrator/componets/com_biblestudy/models/forms/share.xml',
-			'/administrator/componets/com_biblestudy/models/share.php',
-			'/administrator/componets/com_biblestudy/models/shares.php',
-			'/administrator/componets/com_biblestudy/tables/share.php',
-			'/administrator/componets/com_biblestudy/controllers/shares.php',
-			'/administrator/componets/com_biblestudy/controllers/share.php'
-		);
-
-		foreach ($files as $file)
-		{
-			if (JFile::exists(JPATH_ROOT . $file) && !JFile::delete(JPATH_ROOT . $file))
-			{
-				echo JText::sprintf('FILES_JOOMLA_ERROR_FILE_FOLDER', $file) . '<br />';
-			}
-		}
-
-		foreach ($folders as $folder)
-		{
-			if (JFolder::exists(JPATH_ROOT . $folder) && !JFolder::delete(JPATH_ROOT . $folder))
-			{
-				echo JText::sprintf('FILES_JOOMLA_ERROR_FILE_FOLDER', $folder) . '<br />';
-			}
-		}
 	}
 
 	/**

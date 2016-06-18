@@ -14,6 +14,7 @@ defined('_JEXEC') or die;
 JLoader::register('BiblestudyModelMessage', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/message.php');
 
 use Joomla\Registry\Registry;
+use Joomla\Utilities\ArrayHelper;
 
 /**
  * Model class for Message
@@ -61,7 +62,7 @@ class BiblestudyModelMessageform extends BiblestudyModelMessage
 		}
 
 		$properties = $table->getProperties(1);
-		$value      = JArrayHelper::toObject($properties, 'JObject');
+		$value      = ArrayHelper::toObject($properties, 'JObject');
 
 		// Convert params field to Registry.
 		$registry = new Registry;
@@ -94,6 +95,7 @@ class BiblestudyModelMessageform extends BiblestudyModelMessage
 	 */
 	protected function populateState()
 	{
+		/** @type JApplicationSite $app */
 		$app = JFactory::getApplication();
 
 		// Load state from the request.

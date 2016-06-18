@@ -40,7 +40,7 @@ class Migration622
 				$query = "UPDATE `#__bsms_mediafiles` SET `params` = " . $db->quote($new_params) . " WHERE `id` = " .
 					(int) $db->quote($result->id);
 
-				if (!JBSMDbHelper::performdb($query, "Build 622: "))
+				if (!JBSMDbHelper::performDB($query, "Build 622: "))
 				{
 					return false;
 				}
@@ -56,7 +56,7 @@ class Migration622
 								`versionname` VARCHAR(40) NULL,
 								PRIMARY KEY(`id`)) DEFAULT CHARSET=utf8;";
 
-		if (!JBSMDbHelper::performdb($query, "Build 622: "))
+		if (!JBSMDbHelper::performDB($query, "Build 622: "))
 		{
 			return false;
 		}
@@ -64,7 +64,7 @@ class Migration622
 		$query = "INSERT INTO `#__bsms_version` SET `version` = '6.2.2', `installdate`='2010-10-25', `build`='622', " .
 			"`versionname`='Judges', `versiondate`='2010-10-25'";
 
-		if (!JBSMDbHelper::performdb($query, "Build 622: "))
+		if (!JBSMDbHelper::performDB($query, "Build 622: "))
 		{
 			return false;
 		}

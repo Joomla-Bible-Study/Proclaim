@@ -19,9 +19,6 @@ defined('_JEXEC') or die;
  */
 class PlgSystemJBSBackupInstallerScript
 {
-	/** @var  string If it is 7.0.0 code */
-	public $is700;
-
 	/**
 	 * method to install the component
 	 *
@@ -31,7 +28,7 @@ class PlgSystemJBSBackupInstallerScript
 	 */
 	public function install($parent)
 	{
-
+		$this->dbupdate();
 	}
 
 	/**
@@ -56,39 +53,7 @@ class PlgSystemJBSBackupInstallerScript
 	 */
 	public function update($parent)
 	{
-		// $parent is the class calling this method
-		// check to see if we are dealing with version 7.0.0 and create the update table if needed
-		$db = JFactory::getDBO();
-
-		// First see if there is an update table
-		$tables      = $db->getTableList();
-		$prefix      = $db->getPrefix();
-		$updatetable = $prefix . 'jbsbackup_timeset';
-		$updatefound = false;
-		$this->is700 = false;
-
-		foreach ($tables as $table)
-		{
-			if ($table == $updatetable)
-			{
-				$updatefound = true;
-			}
-		}
-		if (!$updatefound)
-		{
-			// Do the query here to create the table. This will tell Joomla to update the db from this version on
-			$query = "CREATE TABLE IF NOT EXISTS `#__jbsbackup_timeset` (
-					`timeset` varchar(14) NOT NULL DEFAULT '',
-					`backup` varchar(14) DEFAULT NULL,
-					PRIMARY KEY (`timeset`)
-					) ENGINE=InnoDB DEFAULT CHARSET=utf8";
-			$db->setQuery($query);
-			$db->execute();
-			$data          = new stdClass;
-			$data->timeset = 1281646339;
-			$data->backup  = 1281646339;
-			$db->insertObject('#__jbsbackup_timeset', $data);
-		}
+		$this->dbupdate();
 		echo '<p>' . JText::_('JBS_PLG_BACKUP_UPDATE_TEXT') . '</p>';
 	}
 
@@ -114,6 +79,49 @@ class PlgSystemJBSBackupInstallerScript
 	 */
 	public function postflight($type, $parent)
 	{
+		JFactory::getDbo()->setQuery('DROP TABLE IF EXISTS `#__jbsbackup_update`')->execute();
 	}
 
+	/**
+	 * Update the DB
+	 *
+	 * @return void
+	 */
+	public function dbupdate()
+	{
+		// $parent is the class calling this method
+		// check to see if we are dealing with version 7.0.0 and create the update table if needed
+		$db = JFactory::getDbo();
+
+		// First see if there is an update table
+		$tables      = $db->getTableList();
+		$prefix      = $db->getPrefix();
+		$updatetable = $prefix . 'jbsbackup_timeset';
+		$updatefound = false;
+
+		foreach ($tables as $table)
+		{
+			if ($table == $updatetable)
+			{
+				$updatefound = true;
+			}
+		}
+		if (!$updatefound)
+		{
+			// Do the query here to create the table. This will tell Joomla to update the db from this version on
+			$query = "CREATE TABLE IF NOT EXISTS `#__jbsbackup_timeset` (
+					`timeset` varchar(14) NOT NULL DEFAULT '',
+					`backup` varchar(14) DEFAULT NULL,
+					PRIMARY KEY (`timeset`)
+					) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+			$db->setQuery($query);
+			$db->execute();
+			$data          = new stdClass;
+			$data->timeset = 1281646339;
+			$data->backup  = 1281646339;
+			$db->insertObject('#__jbsbackup_timeset', $data);
+		}
+
+		return;
+	}
 }

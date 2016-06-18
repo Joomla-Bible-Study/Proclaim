@@ -87,7 +87,7 @@ abstract class JHtmlIcon
 		$base     = $uri->toString(array('scheme', 'host', 'port'));
 		$template = JFactory::getApplication()->getTemplate();
 		$link     = $base . JRoute::_(JBSMHelperRoute::getArticleRoute($article->id, $article->language), false);
-		$url      = 'index.php?option=com_mailto&tmpl=component&template=' . $template . '&link=' . MailToHelper::addLink($link);
+		$url      = 'index.php?option=com_mailto&tmpl=component&template=' . $template . '&link=' . MailtoHelper::addLink($link);
 
 		$status = 'width=400,height=350,menubar=yes,resizable=yes';
 

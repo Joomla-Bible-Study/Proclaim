@@ -32,11 +32,13 @@ class BiblestudyControllerUpload extends JControllerLegacy
 		// Check for request forgeries.
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
+		$contentType = null;
+
 		// 5 minutes execution time
 		@set_time_limit(5 * 60);
 
 		// Enable valid json response when debugging is disabled
-		if (!COM_BIBLESTUDY_DEBUG)
+		if (!JBSMDEBUG)
 		{
 			error_reporting(0);
 		}
@@ -92,7 +94,7 @@ class BiblestudyControllerUpload extends JControllerLegacy
 		}
 
 		// Directory check
-		if (!file_exists($targetDir) && !is_dir($targetDir) && strpos(JURI::base(), $targetDir) !== false)
+		if (!file_exists($targetDir) && !is_dir($targetDir) && strpos(JUri::base(), $targetDir) !== false)
 		{
 			$this->_setResponse(100, JText::_('JBS_ERROR_UPLOAD_INVALID_PATH'));
 		}
@@ -103,7 +105,7 @@ class BiblestudyControllerUpload extends JControllerLegacy
 			$this->_setResponse(100, JText::_('JBS_ERROR_UPLOAD_INVALID_FILE_EXTENSION'));
 		}
 
-		// Make sure the fileName is unique but only if chunking is disabled
+		// Make sure the fileName is unique but only if chunk is disabled
 		if ($chunks < 2 && file_exists($targetDir . '/' . $fileName))
 		{
 			$ext        = strrpos($fileName, '.');

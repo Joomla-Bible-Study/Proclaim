@@ -44,7 +44,7 @@ class Migration710
 	 */
 	public static function setemptytemplates()
 	{
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('id')->from('#__bsms_templates');
 		$db->setQuery($query);
@@ -66,7 +66,7 @@ class Migration710
 			}
 			catch (Exception $e)
 			{
-				JLog::add(JText::sprintf('Caught exception: ', $e->getMessage()), JLog::WARNING, 'jerror');
+				JLog::add(JText::sprintf('Caught exception: ', $e->getMessage()), JLog::WARNING, 'com_biblestudy');
 			}
 		}
 	}

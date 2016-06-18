@@ -41,7 +41,7 @@ class BiblestudyViewUpload extends JViewLegacy
 		JHtml::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/helpers/html/');
 		JHtml::_('jquery.framework', 'false');
 		JHtml::_('behavior.tooltip');
-		$mediaDir      = JURI::root() . "media/com_biblestudy/plupload/";
+		$mediaDir      = JUri::root() . "media/com_biblestudy/plupload/";
 		$document      = JFactory::getDocument();
 		$params        = JComponentHelper::getParams('com_biblestudy');
 		$UploadScript  = new UploadScript($params, $mediaDir);
@@ -92,6 +92,6 @@ class BiblestudyViewUpload extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JToolBarHelper::title(JText::_('JBS_TITLE_UPLOAD_FORM'), 'mp3.png');
+		JToolbarHelper::title(JText::_('JBS_TITLE_UPLOAD_FORM'), 'mp3.png');
 	}
 }

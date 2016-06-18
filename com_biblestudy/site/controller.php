@@ -92,7 +92,7 @@ class BiblestudyController extends JControllerLegacy
 		}
 
 		// Attempt to change mysql for error in large select
-		$db = JFactory::getDBO();
+		$db = JFactory::getDbo();
 		$db->setQuery('SET SQL_BIG_SELECTS=1');
 		$db->execute();
 		$t = $this->input->get('t', '', 'int');
@@ -226,8 +226,8 @@ class BiblestudyController extends JControllerLegacy
 		$config            = JFactory::getConfig();
 		$comment_mailfrom  = $config->get('config.mailfrom');
 		$comment_fromname  = $config->get('config.fromname');
-		$comment_livesite  = JURI::root();
-		$db                = JFactory::getDBO();
+		$comment_livesite  = JUri::root();
+		$db                = JFactory::getDbo();
 		$query             = $db->getQuery(true);
 		$query->select('id, studytitle, studydate')->from('#__bsms_studies')->where('id = ' . $comment_study_id);
 		$db->setQuery($query);

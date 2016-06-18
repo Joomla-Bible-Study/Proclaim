@@ -149,6 +149,17 @@ JFactory::getDocument()->addScriptDeclaration("
 									<?php echo $field->label; ?>
 								</div>
 								<div class="controls">
+									<?php
+									// Way to set defaults on new media
+									if ($new)
+									{
+										$s_name = $field->fieldname;
+										if (isset($this->media_form->s_params[$s_name]))
+										{
+											$field->setValue($this->media_form->s_params[$s_name]);
+										}
+									}
+									?>
 									<?php echo $field->input; ?>
 								</div>
 							</div>

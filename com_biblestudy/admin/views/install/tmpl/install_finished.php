@@ -9,6 +9,10 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
+// Clear Session after finish
+$session = JFactory::getSession();
+$session->set('migration_stack', '', 'JBSM');
 ?>
 <?php if (!empty($errors)): ?>
 	<!--suppress HtmlUnknownTarget -->

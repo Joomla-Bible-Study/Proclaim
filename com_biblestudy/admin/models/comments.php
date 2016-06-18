@@ -175,7 +175,7 @@ class BiblestudyModelComments extends JModelList
 			}
 			else
 			{
-				$search = $db->Quote('%' . $db->escape($search, true) . '%');
+				$search = $db->quote('%' . $db->escape($search, true) . '%');
 				$query->where('(study.studytitle LIKE ' . $search . ' OR book.bookname LIKE ' . $search . ')');
 			}
 		}

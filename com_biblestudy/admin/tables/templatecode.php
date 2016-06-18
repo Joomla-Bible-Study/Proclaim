@@ -86,8 +86,6 @@ class TableTemplatecode extends JTable
 	 */
 	public function store($updateNulls = false)
 	{
-		$table = JTable::getInstance('Templatecode', 'Table');
-
 		if ($this->filename == 'main' || $this->filename == 'custom' || $this->filename == 'formheader' || $this->filename == 'formfooter')
 		{
 			$this->setError(JText::_('JBS_STYLE_RESTRICED_FILE_NAME'));
@@ -133,8 +131,6 @@ class TableTemplatecode extends JTable
 				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'modules/mod_biblestudy/tmpl' . DIRECTORY_SEPARATOR . $filename;
 				break;
 		}
-		JClientHelper::setCredentialsFromRequest('ftp');
-		$ftp = JClientHelper::getCredentials('ftp');
 
 		$filecontent = $this->templatecode;
 
@@ -174,8 +170,6 @@ class TableTemplatecode extends JTable
 	{
 		jimport('joomla.client.helper');
 		jimport('joomla.filesystem.file');
-		JClientHelper::setCredentialsFromRequest('ftp');
-		$ftp          = JClientHelper::getCredentials('ftp');
 		$filename     = 'default_' . $this->filename . '.php';
 		$templatetype = $this->type;
 		$file         = null;
@@ -270,6 +264,7 @@ class TableTemplatecode extends JTable
 	 */
 	protected function _getAssetParentId(JTable $table = null, $id = null)
 	{
+		/** @type JTableAsset $asset */
 		$asset = JTable::getInstance('Asset');
 		$asset->loadByName('com_biblestudy');
 

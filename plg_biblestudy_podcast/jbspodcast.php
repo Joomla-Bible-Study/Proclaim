@@ -102,7 +102,7 @@ class PlgSystemJBSPodcast extends JPlugin
 	{
 
 		$now   = time();
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('timeset')
 			->from('#__jbspodcast_timeset');
@@ -137,7 +137,7 @@ class PlgSystemJBSPodcast extends JPlugin
 		$offset    = $config->get('config.offset');
 
 		$now   = time();
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('timeset')
 			->from('#__jbspodcast_timeset');
@@ -251,7 +251,7 @@ class PlgSystemJBSPodcast extends JPlugin
 	public function updatetime()
 	{
 		$time  = time();
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->update('#__jbspodcast_timeset')
 			->set('timeset = ' . $time);
@@ -280,11 +280,11 @@ class PlgSystemJBSPodcast extends JPlugin
 	public function doEmail($params, $dopodcast)
 	{
 
-		$livesite = JURI::root();
+		$livesite = JUri::root();
 		jimport('joomla.filesystem.file');
 
 		$mail = JFactory::getMailer();
-		$mail->IsHTML(true);
+		$mail->isHtml(true);
 		jimport('joomla.utilities.date');
 		$date = date('r');
 		$Body = $params->get('body') . '<br />';

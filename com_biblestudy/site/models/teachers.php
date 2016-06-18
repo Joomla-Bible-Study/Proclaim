@@ -66,6 +66,7 @@ class BiblestudyModelTeachers extends JModelList
 	 */
 	protected function populateState($ordering = 'teachers.ordering', $direction = 'asc')
 	{
+		/** @type JApplicationSite $app */
 		$app = JFactory::getApplication('site');
 
 		// Load state from the request.

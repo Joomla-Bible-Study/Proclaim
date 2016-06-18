@@ -501,7 +501,7 @@ class JBSMListing
 		$subquery .= ')';
 		$query->where($subquery);
 		$query->where('#__bsms_mediafiles.published = 1');
-		$query->where('#__bsms_mediafiles.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
+		$query->where('#__bsms_mediafiles.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
 		$query->order('ordering ASC');
 		$db->setQuery($query);
 
@@ -663,21 +663,21 @@ class JBSMListing
 			switch ($rowspanitem)
 			{
 				case 1:
-					(isset($item->thumb) ? $span = '<img src="' . JURI::base() . $item->thumb . '" class="' . $params->get('rowspanitemimage') .
+					(isset($item->thumb) ? $span = '<img src="' . JUri::base() . $item->thumb . '" class="' . $params->get('rowspanitemimage') .
 						'" alt="' . JText::_('JBS_CMN_TEACHER') . '">' : $span = '');
-					(isset($item->teacher_thumbnail) ? $span = '<img src="' . JURI::base() . $item->teacher_thumbnail . '" class="' .
+					(isset($item->teacher_thumbnail) ? $span = '<img src="' . JUri::base() . $item->teacher_thumbnail . '" class="' .
 						$params->get('rowspanitemimage') . '" alt="' . JText::_('JBS_CMN_TEACHER') . '">' : $span = '');
 					break;
 				case 2:
-					(isset($item->thumbm) ? $span = '<img src="' . JURI::base() . $item->thumbm . '" class="' . $params->get('rowspanitemimage') .
+					(isset($item->thumbm) ? $span = '<img src="' . JUri::base() . $item->thumbm . '" class="' . $params->get('rowspanitemimage') .
 						'" alt="' . JText::_('JBS_CMN_THUMBNAIL') . '">' : $span = '');
 					break;
 				case 3:
-					(isset($item->series_thumbnail) ? $span = '<img src="' . JURI::base() . $item->series_thumbnail . '" class="' .
+					(isset($item->series_thumbnail) ? $span = '<img src="' . JUri::base() . $item->series_thumbnail . '" class="' .
 						$params->get('rowspanitemimage') . '" alt="' . JText::_('JBS_CMN_SERIES') . '">' : $span = '');
 					break;
 				case 4:
-					(isset($item->teacher_image) ? $span = '<img src="' . JURI::base() . $item->teacher_image . '" class="' .
+					(isset($item->teacher_image) ? $span = '<img src="' . JUri::base() . $item->teacher_image . '" class="' .
 						$params->get('rowspanitemimage') . '" alt="' .
 						JText::_('JBS_CMN_TEACHER') . '">' : $span = '');
 					break;
@@ -944,18 +944,18 @@ class JBSMListing
 
 			case $extra . 'teacherallinone':
 				($item->email ? $data = '<a href="mailto:' . $item->email . '"><img height="24" width="24" alt="' . JText::_('JBS_TCH_EMAIL') . '"  src="' .
-					JURI::base() . 'media/com_biblestudy/images/email.png" /></a>' : $data = '');
+					JUri::base() . 'media/com_biblestudy/images/email.png" /></a>' : $data = '');
 				if ($item->website)
 				{
 					if (substr_count($item->website, 'http://', 0))
 					{
-						$data .= '<a href="' . $item->website . '" target="_blank"><img height="24" width="24" alt="' . $item->website . '"  src="' . JURI::base() .
+						$data .= '<a href="' . $item->website . '" target="_blank"><img height="24" width="24" alt="' . $item->website . '"  src="' . JUri::base() .
 							'media/com_biblestudy/images/web.png" /></a>';
 					}
 					else
 					{
 						$data .= '<a href="http://' . $item->website . '" target="_blank"><img height="24" width="24" alt="' . $item->website . '" src="' .
-							JURI::base() . 'media/com_biblestudy/images/web.png" /></a>';
+							JUri::base() . 'media/com_biblestudy/images/web.png" /></a>';
 					}
 				}
 				if ($item->facebooklink)
@@ -963,12 +963,12 @@ class JBSMListing
 					if (substr_count($item->facebooklink, 'http://', 0))
 					{
 						$data .= '<a href="' . $item->facebooklink . '" target="_blank"><img height="24" width="24" alt="' . $item->facebooklink . '"  src="' .
-							JURI::base() . 'media/com_biblestudy/images/facebook.png" /></a>';
+							JUri::base() . 'media/com_biblestudy/images/facebook.png" /></a>';
 					}
 					else
 					{
 						$data .= '<a href="http://' . $item->facebooklink . '" target="_blank"><img height="24" width="24" alt="' . $item->facebooklink . '" src="' .
-							JURI::base() . 'media/com_biblestudy/images/facebook.png" /></a>';
+							JUri::base() . 'media/com_biblestudy/images/facebook.png" /></a>';
 					}
 				}
 				if ($item->twitterlink)
@@ -976,12 +976,12 @@ class JBSMListing
 					if (substr_count($item->twitterlink, 'http://', 0))
 					{
 						$data .= '<a href="' . $item->twitterlink . '" target="_blank"><img height="24" width="24" alt="' . $item->twitterlink . '" src="' .
-							JURI::base() . 'media/com_biblestudy/images/twitter.png" /></a>';
+							JUri::base() . 'media/com_biblestudy/images/twitter.png" /></a>';
 					}
 					else
 					{
 						$data .= '<a href="http://' . $item->twitterlink . '" target="_blank"><img height="24" width="24" alt="' . $item->twitterlink . '"  src="' .
-							JURI::base() . 'media/com_biblestudy/images/twitter.png" /></a>';
+							JUri::base() . 'media/com_biblestudy/images/twitter.png" /></a>';
 					}
 				}
 				if ($item->bloglink)
@@ -989,12 +989,12 @@ class JBSMListing
 					if (substr_count($item->bloglink, 'http://', 0, 7))
 					{
 						$data .= '<a href="' . $item->bloglink . '" target="_blank"><img height="24" width="24" alt="' . $item->bloglink . '" target="_blank" src="' .
-							JURI::base() . 'media/com_biblestudy/images/blog.png" /></a>';
+							JUri::base() . 'media/com_biblestudy/images/blog.png" /></a>';
 					}
 					else
 					{
 						$data .= '<a href="http://' . $item->bloglink . '" target="_blank"><img height="24" width="24" alt="' . $item->bloglink .
-							'" target="_blank" src="' . JURI::base() . 'media/com_biblestudy/images/blog.png" /></a>';
+							'" target="_blank" src="' . JUri::base() . 'media/com_biblestudy/images/blog.png" /></a>';
 					}
 				}
 				if ($item->link1)
@@ -1124,7 +1124,7 @@ class JBSMListing
 				else
 				{
 					($item->email ? $data = '<a href="mailto:' . $item->email . '"><img height="24" width="24" alt="' . JText::_('JBS_TCH_EMAIL') . '"  src="' .
-						JURI::base() . 'media/com_biblestudy/images/email.png" /></a>' : $data = '');
+						JUri::base() . 'media/com_biblestudy/images/email.png" /></a>' : $data = '');
 				}
 				break;
 
@@ -1140,12 +1140,12 @@ class JBSMListing
 						if (substr_count($item->website, 'http://', 0))
 						{
 							$data = '<a href="' . $item->website . '" target="_blank"><img height="24" width="24" alt="' . $item->website . '"  src="' .
-								JURI::base() . 'media/com_biblestudy/images/web.png" /></a>';
+								JUri::base() . 'media/com_biblestudy/images/web.png" /></a>';
 						}
 						else
 						{
 							$data = '<a href="http://' . $item->website . '" target="_blank"><img height="24" width="24" alt="' . $item->website . '" src="' .
-								JURI::base() . 'media/com_biblestudy/images/web.png" /></a>';
+								JUri::base() . 'media/com_biblestudy/images/web.png" /></a>';
 						}
 					}
 				}
@@ -1175,12 +1175,12 @@ class JBSMListing
 						if (substr_count($item->facebooklink, 'http://', 0))
 						{
 							$data = '<a href="' . $item->facebooklink . '" target="_blank"><img height="24" width="24" alt="' . $item->facebooklink .
-								'"  src="' . JURI::base() . 'media/com_biblestudy/images/facebook.png" /></a>';
+								'"  src="' . JUri::base() . 'media/com_biblestudy/images/facebook.png" /></a>';
 						}
 						else
 						{
 							$data = '<a href="http://' . $item->facebooklink . '" target="_blank"><img height="24" width="24" alt="' . $item->facebooklink .
-								'" src="' . JURI::base() . 'media/com_biblestudy/images/facebook.png" /></a>';
+								'" src="' . JUri::base() . 'media/com_biblestudy/images/facebook.png" /></a>';
 						}
 					}
 				}
@@ -1198,12 +1198,12 @@ class JBSMListing
 						if (substr_count($item->twitterlink, 'http://', 0))
 						{
 							$data = '<a href="' . $item->twitterlink . '" target="_blank"><img height="24" width="24" alt="' . $item->twitterlink . '" src="' .
-								JURI::base() . 'media/com_biblestudy/images/twitter.png" /></a>';
+								JUri::base() . 'media/com_biblestudy/images/twitter.png" /></a>';
 						}
 						else
 						{
 							$data = '<a href="http://' . $item->twitterlink . '" target="_blank"><img height="24" width="24" alt="' . $item->twitterlink .
-								'"  src="' . JURI::base() . 'media/com_biblestudy/images/twitter.png" /></a>';
+								'"  src="' . JUri::base() . 'media/com_biblestudy/images/twitter.png" /></a>';
 						}
 					}
 				}
@@ -1222,12 +1222,12 @@ class JBSMListing
 						if (substr_count($item->bloglink, 'http://', 0, 7))
 						{
 							$data = '<a href="' . $item->bloglink . '" target="_blank"><img height="24" width="24" alt="' . $item->bloglink .
-								'" target="_blank" src="' . JURI::base() . 'media/com_biblestudy/images/blog.png" /></a>';
+								'" target="_blank" src="' . JUri::base() . 'media/com_biblestudy/images/blog.png" /></a>';
 						}
 						else
 						{
 							$data = '<a href="http://' . $item->bloglink . '" target="_blank"><img height="24" width="24" alt="' . $item->bloglink .
-								'" target="_blank" src="' . JURI::base() . 'media/com_biblestudy/images/blog.png" /></a>';
+								'" target="_blank" src="' . JUri::base() . 'media/com_biblestudy/images/blog.png" /></a>';
 						}
 					}
 				}
@@ -1296,7 +1296,7 @@ class JBSMListing
 				}
 				else
 				{
-					(isset($item->studydate) ? $data = $this->getstudyDate($params, $item->studydate) : $data = '');
+					(isset($item->studydate) ? $data = $this->getStudyDate($params, $item->studydate) : $data = '');
 				}
 				break;
 			case $extra . 'teacher':
@@ -1378,7 +1378,7 @@ class JBSMListing
 				}
 				else
 				{
-					(isset($item->teacher_image) ? $data = '<img src="' . JURI::base() . $item->teacher_image . '" alt="' . JText::_('JBS_CMN_THUMBNAIL') .
+					(isset($item->teacher_image) ? $data = '<img src="' . JUri::base() . $item->teacher_image . '" alt="' . JText::_('JBS_CMN_THUMBNAIL') .
 						'" />' : $data = '');
 				}
 				break;
@@ -1720,7 +1720,7 @@ class JBSMListing
 			case 'series_thumbnail':
 				if ($row->series_thumbnail)
 				{
-					$element = '<img src="' . JURI::base() . $row->series_thumbnail . '" alt="' . $row->series_text . '" />';
+					$element = '<img src="' . JUri::base() . $row->series_thumbnail . '" alt="' . $row->series_text . '" />';
 				}
 				else
 				{
@@ -1740,7 +1740,7 @@ class JBSMListing
 			case 'teacherimage':
 				if (isset($row->teacher_thumbnail))
 				{
-					$element = '<img src="' . JURI::base() . $row->teacher_thumbnail . '" alt="' . $row->teachername . '" />';
+					$element = '<img src="' . JUri::base() . $row->teacher_thumbnail . '" alt="' . $row->teachername . '" />';
 				}
 				else
 				{
@@ -1772,7 +1772,7 @@ class JBSMListing
 				break;
 			case 'thumbnail':
 				// Assume study thumbnail
-				$element = '<img src="' . JURI::base() . $row->thumbnailm . '" alt="' . $row->studytitle . '" />';
+				$element = '<img src="' . JUri::base() . $row->thumbnailm . '" alt="' . $row->studytitle . '" />';
 				break;
 			case 'studytitle':
 				(isset($row->studytitle) ? $element = $row->studytitle : $element = '');
@@ -1830,7 +1830,7 @@ class JBSMListing
 			case 'date':
 				if (isset($row->studydate))
 				{
-					$element = self::getstudyDate($params, $row->studydate);
+					$element = self::getStudyDate($params, $row->studydate);
 				}
 				else
 				{
@@ -2139,37 +2139,37 @@ class JBSMListing
 		switch ($params->get('date_format'))
 		{
 			case 0:
-				$date = JHTML::_('date', $studydate, "M j, Y");
+				$date = JHtml::_('date', $studydate, "M j, Y");
 				break;
 			case 1:
-				$date = JHTML::_('date', $studydate, "M J");
+				$date = JHtml::_('date', $studydate, "M J");
 				break;
 			case 2:
-				$date = JHTML::_('date', $studydate, "n/j/Y");
+				$date = JHtml::_('date', $studydate, "n/j/Y");
 				break;
 			case 3:
-				$date = JHTML::_('date', $studydate, "n/j");
+				$date = JHtml::_('date', $studydate, "n/j");
 				break;
 			case 4:
-				$date = JHTML::_('date', $studydate, "l, F j, Y");
+				$date = JHtml::_('date', $studydate, "l, F j, Y");
 				break;
 			case 5:
-				$date = JHTML::_('date', $studydate, "F j, Y");
+				$date = JHtml::_('date', $studydate, "F j, Y");
 				break;
 			case 6:
-				$date = JHTML::_('date', $studydate, "j F Y");
+				$date = JHtml::_('date', $studydate, "j F Y");
 				break;
 			case 7:
-				$date = JHTML::_('date', $studydate, "j/n/Y");
+				$date = JHtml::_('date', $studydate, "j/n/Y");
 				break;
 			case 8:
-				$date = JHTML::_('date', $studydate, JText::_('DATE_FORMAT_LC'));
+				$date = JHtml::_('date', $studydate, JText::_('DATE_FORMAT_LC'));
 				break;
 			case 9:
-				$date = JHTML::_('date', $studydate, "Y/M/D");
+				$date = JHtml::_('date', $studydate, "Y/M/D");
 				break;
 			default:
-				$date = JHTML::_('date', $studydate, "n/j");
+				$date = JHtml::_('date', $studydate, "n/j");
 				break;
 		}
 
@@ -2177,7 +2177,7 @@ class JBSMListing
 
 		if ($customDate != '')
 		{
-			$date = JHTML::_('date', $studydate, $customDate);
+			$date = JHtml::_('date', $studydate, $customDate);
 		}
 
 		return $date;
@@ -2205,7 +2205,7 @@ class JBSMListing
 		{
 			$return = false;
 		}
-		$imagereturn = '<img src="' . JURI::base() . $path . '" alt="' . $alt . '" ' . $return->attributes . ' />';
+		$imagereturn = '<img src="' . JUri::base() . $path . '" alt="' . $alt . '" ' . $return->attributes . ' />';
 
 		return $imagereturn;
 	}
@@ -2303,8 +2303,8 @@ class JBSMListing
 
 			case 9 :
 				// Case 9 is a link to download
-				$column .= '<a href="index.php?option=com_biblestudy&amp;mid=' .
-					$row->download_id . '&amp;view=sermons&amp;task=download">';
+				$column .= '<a href="index.php?option=com_biblestudy&amp;view=sermon&amp;mid=' .
+					$row->download_id . '&amp;task=download">';
 		}
 
 		return $column;
@@ -2403,7 +2403,7 @@ class JBSMListing
 		$label  = $params->get('templatecode');
 		$label  = str_replace('{{teacher}}', $row->teachername, $label);
 		$label  = str_replace('{{title}}', $row->studytitle, $label);
-		$label  = str_replace('{{date}}', $this->getStudydate($params, $row->studydate), $label);
+		$label  = str_replace('{{date}}', $this->getStudyDate($params, $row->studydate), $label);
 		$label  = str_replace('{{studyintro}}', $row->studyintro, $label);
 		$label  = str_replace('{{scripture}}', $this->getScripture($params, $row, 0, 1), $label);
 		$label  = str_replace('{{topics}}', $row->topic_text, $label);
@@ -2448,7 +2448,7 @@ class JBSMListing
 		$label  = $params->get('study_detailtemplate');
 		$label  = str_replace('{{teacher}}', $row->teachername, $label);
 		$label  = str_replace('{{title}}', $row->studytitle, $label);
-		$label  = str_replace('{{date}}', $this->getStudydate($params, $row->studydate), $label);
+		$label  = str_replace('{{date}}', $this->getStudyDate($params, $row->studydate), $label);
 		$label  = str_replace('{{studyintro}}', $row->studyintro, $label);
 		$label  = str_replace('{{scripture}}', $this->getScripture($params, $row, 0, 1), $label);
 		$label  = str_replace('{{topics}}', $row->topic_text, $label);
@@ -2479,7 +2479,7 @@ class JBSMListing
 
 		// Share
 		// Prepares a link string for use in social networking
-		$u           = JURI::getInstance();
+		$u           = JUri::getInstance();
 		$detailslink = htmlspecialchars($u->toString());
 		$detailslink = JRoute::_($detailslink);
 
@@ -2488,7 +2488,7 @@ class JBSMListing
 		$label = str_replace('{{share}}', $share, $label);
 
 		// PrintableView
-		$printview = JHTML::_('image.site', 'printButton.png', '/images/M_images/', null, null, JText::_('JBS_CMN_PRINT'));
+		$printview = JHtml::_('image.site', 'printButton.png', '/images/M_images/', null, null, JText::_('JBS_CMN_PRINT'));
 		$printview = '<a href="#&tmpl=component" onclick="window.print();return false;">' . $printview . '</a>';
 
 		$label = str_replace('{{printview}}', $printview, $label);
@@ -2496,13 +2496,13 @@ class JBSMListing
 		// PDF View
 		$url                = 'index.php?option=com_biblestudy&view=sermon&id=' . $row->id . '&format=pdf';
 		$status             = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';
-		$text               = JHTML::_(
+		$text               = JHtml::_(
 			'image.site', 'pdf24.png', '/media/com_biblestudy/images/', null, null, JText::_('JBS_MED_PDF'), JText::_('JBS_MED_PDF')
 		);
 		$attribs['title']   = JText::_('JBS_MED_PDF');
 		$attribs['onclick'] = "window.open(this.href,'win2','" . $status . "'); return false;";
 		$attribs['rel']     = 'nofollow';
-		$link               = JHTML::_('link', JRoute::_($url), $text, $attribs);
+		$link               = JHtml::_('link', JRoute::_($url), $text, $attribs);
 
 		$label = str_replace('{{pdfview}}', $link, $label);
 

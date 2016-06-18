@@ -44,11 +44,11 @@ function biblestudyBuildRoute(&$query)
 		unset($query['id']);
 	}
 
-	if (isset($query['mid']))
+	/*if (isset($query['mid']))
 	{
 		$segments[] = $query['mid'];
 		unset($query['mid']);
-	}
+	}*/
 
 	if (isset($query['t']))
 	{

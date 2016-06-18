@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
-
+use Joomla\Utilities\ArrayHelper;
 
 /**
  * Message model class
@@ -429,7 +429,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	{
 		// Sanitize user ids.
 		$pks = array_unique($pks);
-		JArrayHelper::toInteger($pks);
+		ArrayHelper::toInteger($pks);
 
 		// Remove any values of zero.
 		if (array_search(0, $pks, true))

@@ -19,6 +19,10 @@ if (file_exists($api))
 {
 	require_once $api;
 }
+else
+{
+	return;
+}
 
 // Need for inline player
 $document = JFactory::getDocument();
@@ -26,7 +30,7 @@ $document = JFactory::getDocument();
 /** @var $params Registry */
 $templatemenuid = $params->get('t');
 $template = JBSMParams::getTemplateparams($templatemenuid);
-$pagebuilder = new JBSMPagebuilder;
+$pagebuilder = new JBSMPageBuilder;
 
 $admin = JBSMParams::getAdmin();
 $admin_params = new Registry($admin->params);
@@ -120,11 +124,7 @@ if ($url)
 }
 $pageclass_sfx = $params->get('pageclass_sfx');
 
-if ($params->get('useexpert_module') > 0)
-{
-	$template = 'default_custom';
-}
-elseif ($params->get('moduletemplate'))
+if ($params->get('moduletemplate'))
 {
 	$template = 'default_' . $params->get('moduletemplate');
 }

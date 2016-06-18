@@ -1,0 +1,359 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>Joomla Bible Study API » \UploadScript</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">Joomla Bible Study API</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a>Packages</a></li>
+<li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
+<li><a href="../packages/BibleStudy.Admin.html"><i class="icon-folder-open"></i> BibleStudy.Admin</a></li>
+<li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+</ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">175</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul></ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">20</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<div xmlns:php="http://php.net/xsl" class="btn-toolbar">
+<div class="btn-group visibility" data-toggle="buttons-checkbox">
+<button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button>
+</div>
+<div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+</div>
+<ul xmlns:php="http://php.net/xsl" class="side-nav nav nav-list">
+<li class="nav-header">
+<i title="Methods" class="icon-custom icon-method"></i> Methods
+                    <ul>
+<li class="method public "><a href="#method_UIScript" title="UIScript() :: UI Script"><span class="description">UI Script</span><pre>UIScript()</pre></a></li>
+<li class="method public "><a href="#method___construct" title="__construct() :: Construct"><span class="description">Construct</span><pre>__construct()</pre></a></li>
+<li class="method public "><a href="#method_getScript" title="getScript() :: Get the dependency Script"><span class="description">Get the dependency Script</span><pre>getScript()</pre></a></li>
+</ul>
+</li>
+<li class="nav-header private">» Private
+                    <ul>
+<li class="method private "><a href="#method__buildScript" title="_buildScript() :: Sets up the JavaScript code with component parameters"><span class="description">Sets up the JavaScript code with component parameters</span><pre>_buildScript()</pre></a></li>
+<li class="method private "><a href="#method__cleanOption" title="_cleanOption() :: Clean Comma Separated Option"><span class="description">Clean Comma Separated Option</span><pre>_cleanOption()</pre></a></li>
+<li class="method private "><a href="#method__setParams" title="_setParams() :: Properly set component parameters for JavaScript usage"><span class="description">Properly set component parameters for JavaScript usage</span><pre>_setParams()</pre></a></li>
+</ul>
+</li>
+<li class="nav-header">
+<i title="Properties" class="icon-custom icon-property"></i> Properties
+                    <ul>
+<li class="property public "><a href="#property_mediaRoot" title="$mediaRoot() :: "><span class="description"></span><pre>$mediaRoot</pre></a></li>
+<li class="property public "><a href="#property_runtime" title="$runtime() :: "><span class="description"></span><pre>$runtime</pre></a></li>
+<li class="property public "><a href="#property_runtimeScript" title="$runtimeScript() :: "><span class="description"></span><pre>$runtimeScript</pre></a></li>
+</ul>
+</li>
+<li class="nav-header private">» Private
+                    <ul>
+<li class="property private "><a href="#property__SCRIPT" title="$_SCRIPT() :: "><span class="description"></span><pre>$_SCRIPT</pre></a></li>
+<li class="property private "><a href="#property__chunkSize" title="$_chunkSize() :: "><span class="description"></span><pre>$_chunkSize</pre></a></li>
+<li class="property private "><a href="#property__chunkUnit" title="$_chunkUnit() :: "><span class="description"></span><pre>$_chunkUnit</pre></a></li>
+<li class="property private "><a href="#property__imageFilter" title="$_imageFilter() :: "><span class="description"></span><pre>$_imageFilter</pre></a></li>
+<li class="property private "><a href="#property__maxFileSize" title="$_maxFileSize() :: "><span class="description"></span><pre>$_maxFileSize</pre></a></li>
+<li class="property private "><a href="#property__otherFilesFilter" title="$_otherFilesFilter() :: "><span class="description"></span><pre>$_otherFilesFilter</pre></a></li>
+<li class="property private "><a href="#property__rename" title="$_rename() :: "><span class="description"></span><pre>$_rename</pre></a></li>
+<li class="property private "><a href="#property__resize" title="$_resize() :: "><span class="description"></span><pre>$_resize</pre></a></li>
+<li class="property private "><a href="#property__resizeHeight" title="$_resizeHeight() :: "><span class="description"></span><pre>$_resizeHeight</pre></a></li>
+<li class="property private "><a href="#property__resizeQuality" title="$_resizeQuality() :: "><span class="description"></span><pre>$_resizeQuality</pre></a></li>
+<li class="property private "><a href="#property__resizeWidth" title="$_resizeWidth() :: "><span class="description"></span><pre>$_resizeWidth</pre></a></li>
+<li class="property private "><a href="#property__uniqueNames" title="$_uniqueNames() :: "><span class="description"></span><pre>$_uniqueNames</pre></a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="span8">
+<a xmlns:php="http://php.net/xsl" id="\UploadScript"></a><ul xmlns:php="http://php.net/xsl" class="breadcrumb">
+<li>
+<a href="../index.html"><i title="Classes" class="icon-custom icon-class"></i></a><span class="divider">\</span>
+</li>
+<li class="active">
+<span class="divider">\</span><a href="../classes/UploadScript.html">UploadScript</a>
+</li>
+</ul>
+<div xmlns:php="http://php.net/xsl" class="element class">
+<p class="short_description">Class UploadScript</p>
+<div class="details">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>package</th>
+<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+</tr>
+<tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr>
+</table>
+<h3>
+<i title="Methods" class="icon-custom icon-method"></i> Methods</h3>
+<a id="method_UIScript"></a><div class="element clickable method public method_UIScript " data-toggle="collapse" data-target=".method_UIScript .collapse" title="public">
+<h2>UI Script</h2>
+<pre>UIScript() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method___construct"></a><div class="element clickable method public method___construct " data-toggle="collapse" data-target=".method___construct .collapse" title="public">
+<h2>Construct</h2>
+<pre>__construct(object $params, string $mediaRoot) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code><p>Component parameters</p></div>
+<div class="subelement argument">
+<h4>$mediaRoot</h4>
+<code>string</code><p>Media folder</p></div>
+</div></div>
+</div>
+<a id="method_getScript"></a><div class="element clickable method public method_getScript " data-toggle="collapse" data-target=".method_getScript .collapse" title="public">
+<h2>Get the dependency Script</h2>
+<pre>getScript() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code>JavaScript code</div>
+</div></div>
+</div>
+<a id="method__buildScript"></a><div class="element clickable method private method__buildScript " data-toggle="collapse" data-target=".method__buildScript .collapse" title="private">
+<h2>Sets up the JavaScript code with component parameters</h2>
+<pre>_buildScript() : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="method__cleanOption"></a><div class="element clickable method private method__cleanOption " data-toggle="collapse" data-target=".method__cleanOption .collapse" title="private">
+<h2>Clean Comma Separated Option</h2>
+<pre>_cleanOption(string $string) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$string</h4>
+<code>string</code><p>Option to be cleaned</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method__setParams"></a><div class="element clickable method private method__setParams " data-toggle="collapse" data-target=".method__setParams .collapse" title="private">
+<h2>Properly set component parameters for JavaScript usage</h2>
+<pre>_setParams(object $params) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code><p>Component parameters</p></div>
+</div></div>
+</div>
+<h3>
+<i title="Properties" class="icon-custom icon-property"></i> Properties</h3>
+<a id="property_mediaRoot"> </a><div class="element clickable property public property_mediaRoot" data-toggle="collapse" data-target=".property_mediaRoot .collapse" title="public">
+<h2>$mediaRoot</h2>
+<pre>$mediaRoot </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_runtime"> </a><div class="element clickable property public property_runtime" data-toggle="collapse" data-target=".property_runtime .collapse" title="public">
+<h2>$runtime</h2>
+<pre>$runtime </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_runtimeScript"> </a><div class="element clickable property public property_runtimeScript" data-toggle="collapse" data-target=".property_runtimeScript .collapse" title="public">
+<h2>$runtimeScript</h2>
+<pre>$runtimeScript </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property__SCRIPT"> </a><div class="element clickable property private property__SCRIPT" data-toggle="collapse" data-target=".property__SCRIPT .collapse" title="private">
+<h2>$_SCRIPT</h2>
+<pre>$_SCRIPT </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property__chunkSize"> </a><div class="element clickable property private property__chunkSize" data-toggle="collapse" data-target=".property__chunkSize .collapse" title="private">
+<h2>$_chunkSize</h2>
+<pre>$_chunkSize </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property__chunkUnit"> </a><div class="element clickable property private property__chunkUnit" data-toggle="collapse" data-target=".property__chunkUnit .collapse" title="private">
+<h2>$_chunkUnit</h2>
+<pre>$_chunkUnit </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property__imageFilter"> </a><div class="element clickable property private property__imageFilter" data-toggle="collapse" data-target=".property__imageFilter .collapse" title="private">
+<h2>$_imageFilter</h2>
+<pre>$_imageFilter </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property__maxFileSize"> </a><div class="element clickable property private property__maxFileSize" data-toggle="collapse" data-target=".property__maxFileSize .collapse" title="private">
+<h2>$_maxFileSize</h2>
+<pre>$_maxFileSize </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property__otherFilesFilter"> </a><div class="element clickable property private property__otherFilesFilter" data-toggle="collapse" data-target=".property__otherFilesFilter .collapse" title="private">
+<h2>$_otherFilesFilter</h2>
+<pre>$_otherFilesFilter </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property__rename"> </a><div class="element clickable property private property__rename" data-toggle="collapse" data-target=".property__rename .collapse" title="private">
+<h2>$_rename</h2>
+<pre>$_rename : boolean</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property__resize"> </a><div class="element clickable property private property__resize" data-toggle="collapse" data-target=".property__resize .collapse" title="private">
+<h2>$_resize</h2>
+<pre>$_resize : boolean</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property__resizeHeight"> </a><div class="element clickable property private property__resizeHeight" data-toggle="collapse" data-target=".property__resizeHeight .collapse" title="private">
+<h2>$_resizeHeight</h2>
+<pre>$_resizeHeight </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property__resizeQuality"> </a><div class="element clickable property private property__resizeQuality" data-toggle="collapse" data-target=".property__resizeQuality .collapse" title="private">
+<h2>$_resizeQuality</h2>
+<pre>$_resizeQuality </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property__resizeWidth"> </a><div class="element clickable property private property__resizeWidth" data-toggle="collapse" data-target=".property__resizeWidth .collapse" title="private">
+<h2>$_resizeWidth</h2>
+<pre>$_resizeWidth </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property__uniqueNames"> </a><div class="element clickable property private property__uniqueNames" data-toggle="collapse" data-target=".property__uniqueNames .collapse" title="private">
+<h2>$_uniqueNames</h2>
+<pre>$_uniqueNames : boolean</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
+            generated on 2016-06-04T14:02:36-05:00.<br></footer></div>
+</div>
+</body>
+</html>

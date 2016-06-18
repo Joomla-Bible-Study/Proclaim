@@ -488,19 +488,6 @@ class BiblestudyControllerAdmin extends JControllerForm
 	}
 
 	/**
-	 * Check Assets
-	 *
-	 * @return void
-	 */
-	public function checkassets()
-	{
-		$asset       = new JBSMAssets;
-		$checkassets = $asset->checkAssets();
-		JFactory::getApplication()->input->set('checkassets', $checkassets);
-		parent::display();
-	}
-
-	/**
 	 * Convert SermonSpeaker to BibleStudy
 	 *
 	 * @return void
@@ -561,8 +548,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		if (in_array('8', $user->groups))
 		{
 			JBSMDbHelper::resetdb();
-			self::fixAssets(true);
-			$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=cpanel', false));
+			$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=assats&task=assets.browse&' . JSession::getFormToken() . '=1', false));
 		}
 		else
 		{
@@ -570,39 +556,6 @@ class BiblestudyControllerAdmin extends JControllerForm
 			$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=cpanel', false));
 		}
 
-	}
-
-	/**
-	 * Fix Assets
-	 *
-	 * @param   bool  $dbReset  To check if this is coming from dbReset
-	 *
-	 * @return void
-	 */
-	public function fixAssets($dbReset = false)
-	{
-		// Check for request forgeries.
-		if (!$dbReset)
-		{
-			JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-		}
-
-		$app   = JFactory::getApplication();
-		$asset = new JBSMAssets;
-		$dofix = $asset->fixassets();
-
-		if (!$dofix)
-		{
-			$app->enqueueMessage(JText::_('JBS_ADM_ASSET_FIX_ERROR'), 'notice');
-		}
-		else
-		{
-			$app->enqueueMessage(JText::_('JBS_ADM_ASSET_FIXED'), 'notice');
-		}
-		if (!$dbReset)
-		{
-			$this->setRedirect('index.php?option=com_biblestudy&view=assets&task=admin.checkassets');
-		}
 	}
 
 	/**
@@ -615,7 +568,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	public function aliasUpdate()
 	{
 		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		JSession::checkToken('get') or jexit(JText::_('JINVALID_TOKEN'));
 
 		$alias  = new JBSMAlias;
 		$update = $alias->updateAlias();
@@ -846,4 +799,21 @@ class BiblestudyControllerAdmin extends JControllerForm
 
 		JFactory::getApplication()->close();
 	}
+
+	/**
+	 * Archive Old Message and Media
+	 *
+	 * @return void
+	 *
+	 * @since 9.0.1
+	 */
+	public function doArchive()
+	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		$model = $this->getModel('archive');
+		$msg = $model->doArchive();
+		$this->setRedirect('index.php?option=com_biblestudy&view=cpanel', $msg);
+	}
+
 }

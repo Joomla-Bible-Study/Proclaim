@@ -63,8 +63,8 @@ JFactory::getDocument()->addScriptDeclaration('
 ?>
 
 <form
-	action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=message&layout=edit&id=' . (int) $this->item->id); ?>"
-	method="post" name="adminForm" id="message-form" class="form-validate" enctype="multipart/form-data">
+		action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=message&layout=edit&id=' . (int) $this->item->id); ?>"
+		method="post" name="adminForm" id="message-form" class="form-validate" enctype="multipart/form-data">
 	<div class="row-fluid">
 		<!-- Begin Content -->
 		<div class="span10 form-horizontal">
@@ -134,9 +134,9 @@ JFactory::getDocument()->addScriptDeclaration('
 						</div>
 						<div class="controls">
 							<?php echo $this->form->getInput(
-								'booknumber',
-								null,
-								$booknumber
+									'booknumber',
+									null,
+									$booknumber
 							); ?>
 						</div>
 					</div>
@@ -261,9 +261,9 @@ JFactory::getDocument()->addScriptDeclaration('
 						</div>
 						<div class="controls">
 							<?php echo $this->form->getInput(
-								'teacher_id',
-								null,
-								$teacher_id
+									'teacher_id',
+									null,
+									$teacher_id
 							); ?>
 						</div>
 					</div>
@@ -273,9 +273,9 @@ JFactory::getDocument()->addScriptDeclaration('
 						</div>
 						<div class="controls">
 							<?php echo $this->form->getInput(
-								'location_id',
-								null,
-								$location_id
+									'location_id',
+									null,
+									$location_id
 							); ?>
 						</div>
 					</div>
@@ -285,9 +285,9 @@ JFactory::getDocument()->addScriptDeclaration('
 						</div>
 						<div class="controls">
 							<?php echo $this->form->getInput(
-								'series_id',
-								null,
-								$series_id
+									'series_id',
+									null,
+									$series_id
 							); ?>
 						</div>
 					</div>
@@ -306,9 +306,9 @@ JFactory::getDocument()->addScriptDeclaration('
 						</div>
 						<div class="controls">
 							<?php echo $this->form->getInput(
-								'messagetype',
-								null,
-								$messagetype
+									'messagetype',
+									null,
+									$messagetype
 							) ?>
 						</div>
 					</div>
@@ -318,9 +318,9 @@ JFactory::getDocument()->addScriptDeclaration('
 						</div>
 						<div class="controls">
 							<?php echo $this->form->getInput(
-								'thumbnailm',
-								null,
-								$thumbnailm
+									'thumbnailm',
+									null,
+									$thumbnailm
 							); ?>
 						</div>
 					</div>
@@ -382,27 +382,28 @@ JFactory::getDocument()->addScriptDeclaration('
 				<?php endif; ?>
 				<?php
 				foreach ($params as $name => $fieldSet): ?>
-				<div class="tab-pane" id="metadata">
-					<?php
-					if (isset($fieldset->description) && trim($fieldSet->description)):
-						?>
-						<p class="tip">
-							<?php echo $this->escape(JText::_($fieldSet->description)); ?>
-						</p>
-					<?php endif; ?>
+					<div class="tab-pane" id="metadata">
+						<?php
+						if (isset($fieldset->description) && trim($fieldSet->description)):
+							?>
+							<p class="tip">
+								<?php echo $this->escape(JText::_($fieldSet->description)); ?>
+							</p>
+						<?php endif; ?>
 
-					<?php foreach ($this->form->getFieldSet($name) as $field) : ?>
-						<div class="control-group">
-							<div class="control-label">
-								<?php echo $field->label; ?>
+						<?php foreach ($this->form->getFieldSet($name) as $field) : ?>
+							<div class="control-group">
+								<div class="control-label">
+									<?php echo $field->label; ?>
+								</div>
+								<div class="controls">
+									<?php echo $field->input; ?>
+								</div>
 							</div>
-							<div class="controls">
-								<?php echo $field->input; ?>
-							</div>
-						</div>
-					<?php endforeach; ?>
-					<?php endforeach; ?>
-				</div>
+						<?php endforeach; ?>
+					</div>
+				<?php endforeach; ?>
+
 				<div class="tab-pane" id="media">
 					<table class="adminlist table table-striped">
 						<thead>
@@ -423,7 +424,7 @@ JFactory::getDocument()->addScriptDeclaration('
 								<tr class="row<?php echo $i % 2; ?>">
 									<td>
 										<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id='
-											. (int) $item->id . '&amp;return=' . $return . '&amp;options=' . $options; ?>
+												. (int) $item->id . '&amp;return=' . $return . '&amp;options=' . $options; ?>
 										<a class="btn btn-primary" href="<?php echo $link; ?>"
 										   title="<?php echo $this->escape($item->params->get('filename')) ? $this->escape($item->params->get('filename')) : $this->escape($item->params->get('media_image_name')); ?>">
 											<?php echo($this->escape($item->params->get('filename')) ? $this->escape($item->params->get('filename')) : $this->escape($item->params->get('media_image_name'))); ?>
@@ -443,7 +444,7 @@ JFactory::getDocument()->addScriptDeclaration('
 									</td>
 
 								</tr>
-							<?php
+								<?php
 							endforeach;
 						else:
 							?>
@@ -457,7 +458,7 @@ JFactory::getDocument()->addScriptDeclaration('
 						<tr>
 							<td colspan="5">
 								<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;sid='
-									. $this->form->getValue('id') . '&amp;options=' . $options . '&amp;return=' . $return; ?>
+										. $this->form->getValue('id') . '&amp;options=' . $options . '&amp;return=' . $return; ?>
 								<?php
 								if (empty($this->item->id))
 								{
@@ -467,7 +468,8 @@ JFactory::getDocument()->addScriptDeclaration('
 								else
 								{
 									?>
-									<a class="btn btn-primary" href="<?php echo $link; ?>" title="<?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?>">
+									<a class="btn btn-primary" href="<?php echo $link; ?>"
+									   title="<?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?>">
 										<?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?></a> <?php
 								}
 								?>
@@ -489,6 +491,11 @@ JFactory::getDocument()->addScriptDeclaration('
 		<div class="span2 form-vertical">
 			<h4><?php echo JText::_('JDETAILS'); ?></h4>
 			<hr/>
+			<div class="control-group">
+				<div class="controls span10 small">
+					<?php echo $this->form->getInput('id'); ?>
+				</div>
+			</div>
 			<div class="control-group">
 				<div class="control-label">
 					<?php echo JText::_('JBS_STY_HITS'); ?>
@@ -540,7 +547,6 @@ JFactory::getDocument()->addScriptDeclaration('
 		</div>
 		<!-- End Sidebar -->
 		<?php echo $this->form->getInput('thumbnailm'); ?>
-		<?php echo $this->form->getInput('id'); ?>
 		<input type="hidden" name="task" value=""/>
 		<?php echo JHtml::_('form.token'); ?>
 	</div>

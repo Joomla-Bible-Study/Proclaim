@@ -58,11 +58,11 @@ class BiblestudyViewLandingpage extends JViewLegacy
 		// Prepare meta information (under development)
 		if ($itemparams->get('metakey'))
 		{
-			$document->setMetadata('keywords', $itemparams->get('metakey'));
+			$document->setMetaData('keywords', $itemparams->get('metakey'));
 		}
 		elseif (!$itemparams->get('metakey'))
 		{
-			$document->setMetadata('keywords', $this->params->get('metakey'));
+			$document->setMetaData('keywords', $this->params->get('metakey'));
 		}
 
 		if ($itemparams->get('metadesc'))
@@ -76,7 +76,7 @@ class BiblestudyViewLandingpage extends JViewLegacy
 		JHtml::_('biblestudy.framework');
 
 		$images   = new JBSMImages;
-		$images->getShowhide();
+		$images->getShowHide();
 
 		// Get the main study list image
 		$this->main  = $images->mainStudyImage();

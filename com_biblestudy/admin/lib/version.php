@@ -14,15 +14,15 @@ defined('_JEXEC') or die;
 // Use default translations if none are available
 if (!defined('_BIBLESTUDY_INSTALLED_VERSION'))
 {
-	DEFINE('_BIBLESTUDY_INSTALLED_VERSION', 'Installed version');
+	define('_BIBLESTUDY_INSTALLED_VERSION', 'Installed version');
 }
 if (!defined('_BIBLESTUDY_COPYRIGHT'))
 {
-	DEFINE('_BIBLESTUDY_COPYRIGHT', 'Copyright');
+	define('_BIBLESTUDY_COPYRIGHT', 'Copyright');
 }
 if (!defined('_BIBLESTUDY_LICENSE'))
 {
-	DEFINE('_BIBLESTUDY_LICENSE', 'License');
+	define('_BIBLESTUDY_LICENSE', 'License');
 }
 
 /**
@@ -74,7 +74,7 @@ class JBSMBiblestudyVersion
 	public function versionObject()
 	{
 		static $biblestudyversion;
-		$db    = JFactory::getDBO();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('*')->from('#__extensions')->where('element = ' . $db->q('com_biblestudy'));
 		$db->setQuery($query, 0, 1);
@@ -97,7 +97,7 @@ class JBSMBiblestudyVersion
 
 		if (!$mysqlversion)
 		{
-			$biblestudy_db = JFactory::getDBO();
+			$biblestudy_db = JFactory::getDbo();
 			$biblestudy_db->setQuery("SELECT VERSION() AS mysql_version");
 			$mysqlversion = $biblestudy_db->loadResult();
 

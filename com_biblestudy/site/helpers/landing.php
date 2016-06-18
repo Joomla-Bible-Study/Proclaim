@@ -32,7 +32,7 @@ class JBSMLanding
 	{
 		$mainframe   = JFactory::getApplication();
 		$user        = JFactory::getUser();
-		$db          = JFactory::getDBO();
+		$db          = JFactory::getDbo();
 		$location    = null;
 		$teacherid   = null;
 		$template    = $params->get('studieslisttemplateid', 1);
@@ -219,7 +219,7 @@ class JBSMLanding
 	public function getTeacherLandingPage($params, $id = 0)
 	{
 		$mainframe = JFactory::getApplication();
-		$db        = JFactory::getDBO();
+		$db        = JFactory::getDbo();
 		$user      = JFactory::getUser();
 		$langlink  = JLanguageMultilang::isEnabled();
 		$order     = null;
@@ -433,7 +433,7 @@ class JBSMLanding
 	{
 		$mainframe = JFactory::getApplication();
 		$user      = JFactory::getUser();
-		$db        = JFactory::getDBO();
+		$db        = JFactory::getDbo();
 		$order     = 'ASC';
 		$series    = null;
 		$seriesid  = null;
@@ -645,7 +645,7 @@ class JBSMLanding
 	public function getYearsLandingPage($params, $id = 0)
 	{
 		$mainframe = JFactory::getApplication();
-		$db        = JFactory::getDBO();
+		$db        = JFactory::getDbo();
 		$user      = JFactory::getUser();
 		$order     = 'ASC';
 		$year      = null;
@@ -777,7 +777,7 @@ class JBSMLanding
 	{
 		$mainframe = JFactory::getApplication();
 		$user      = JFactory::getUser();
-		$db        = JFactory::getDBO();
+		$db        = JFactory::getDbo();
 		$input     = $mainframe->input;
 		$order     = 'ASC';
 		$topic     = null;
@@ -908,7 +908,7 @@ class JBSMLanding
 	public function getMessageTypesLandingPage($params, $id = 0)
 	{
 		$mainframe   = JFactory::getApplication();
-		$db          = JFactory::getDBO();
+		$db          = JFactory::getDbo();
 		$user        = JFactory::getUser();
 		$messagetype = null;
 		$order       = 'ASC';
@@ -1095,7 +1095,7 @@ class JBSMLanding
 	{
 
 		$user     = JFactory::getUser();
-		$db       = JFactory::getDBO();
+		$db       = JFactory::getDbo();
 		$order    = 'ASC';
 		$book     = null;
 		$template = $params->get('studieslisttemplateid');

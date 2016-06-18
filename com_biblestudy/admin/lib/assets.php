@@ -20,25 +20,18 @@ class JBSMAssets
 
 	public static $parent_id = null;
 
+	public $query = array();
+
+	public $count = 0;
+
 	/**
-	 * Fix Assets function.
+	 * Build functions
 	 *
 	 * @return boolean
 	 */
-	public static function fixAssets ()
+	public function build ()
 	{
 		$db = JFactory::getDbo();
-
-		/**
-		 * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
-		 */
-		if (!ini_get('safe_mode'))
-		{
-			set_time_limit(3000);
-		}
-
-		// First get the new parent_id
-		self::parentid();
 
 		// Get the names of the JBS tables
 		$objects = self::getassetObjects();
@@ -46,31 +39,50 @@ class JBSMAssets
 		// Run through each table
 		foreach ($objects as $object)
 		{
-
 			// Put the table into the return array
 			// Get the total number of rows and collect the table into a query
 			$query = $db->getQuery(true);
 			$query->select('j.id, j.asset_id, a.id as aid, a.parent_id, a.rules')
-					->from($db->qn($object['name']) . ' as j')
-					->leftJoin('#__assets as a ON (a.id = j.asset_id)');
+				->from($db->qn($object['name']) . ' as j')
+				->leftJoin('#__assets as a ON (a.id = j.asset_id)');
 			$db->setQuery($query);
 			$results = $db->loadObjectList();
+			$this->count += count($results);
+			$this->query = array_merge((array) $this->query, array($object['assetname'] => $results));
+		}
+		JLog::add('Build fixAsset', JLog::INFO, 'com_biblestudy');
 
-			// Now go through each record to test it for asset id
-			foreach ($results as $result)
+		return true;
+	}
+
+	/**
+	 * Fix Assets function.
+	 *
+	 * @param   string  $key     Asset name to affect
+	 * @param   object  $result  Assets to look at.
+	 *
+	 * @return boolean
+	 */
+	public static function fixAssets ($key, $result)
+	{
+		$result = (Object) $result;
+		self::parentid();
+
+		// If there is no jasset_id it means that this has not been set and should be
+		if (!$result->asset_id)
+		{
+			self::setasset($result, $key);
+			JLog::add('Set Asset Under Key: ' . $key, JLog::NOTICE, 'com_biblestudy');
+		}
+
+		// If there is a jasset_id but no match to the parent_id then a mismatch has occured
+		if ((self::$parent_id != $result->parent_id || $result->rules === "") && $result->asset_id)
+		{
+			JLog::add('Reset Asset ID: ' . $result->asset_id, JLog::NOTICE, 'com_biblstudy');
+			$deletasset = self::deleteasset($result);
+			if ($deletasset)
 			{
-				// If there is no jasset_id it means that this has not been set and should be
-				if (!$result->asset_id)
-				{
-					self::setasset($result, $object['assetname']);
-				}
-
-				// If there is a jasset_id but no match to the parent_id then a mismatch has occured
-				if ((self::$parent_id != $result->parent_id || $result->rules === "") && $result->asset_id)
-				{
-					self::deleteasset($result);
-					self::setasset($result, $object['assetname']);
-				}
+				self::setasset($result, $key);
 			}
 		}
 
@@ -80,19 +92,24 @@ class JBSMAssets
 	/**
 	 * Set Parent ID
 	 *
-	 * @return void
+	 * @return int Parent ID
 	 */
 	public static function parentid ()
 	{
-		$db = JFactory::getDbo();
+		if (!self::$parent_id)
+		{
+			$db = JFactory::getDbo();
 
-		// First get the new parent_id
-		$query = $db->getQuery(true);
-		$query->select('id')
+			// First get the new parent_id
+			$query = $db->getQuery(true);
+			$query->select('id')
 				->from('#__assets')
 				->where('name = ' . $db->q('com_biblestudy'));
-		$db->setQuery($query);
-		self::$parent_id = $db->loadResult();
+			$db->setQuery($query);
+			self::$parent_id = $db->loadResult();
+		}
+
+		return self::$parent_id;
 	}
 
 	/**
@@ -190,20 +207,20 @@ class JBSMAssets
 	 * Set Asset
 	 *
 	 * @param   object  $data       Data
-	 * @param   string  $assetname  Asset Name
+	 * @param   string  $assetName  Asset Name
 	 *
 	 * @return boolean
 	 */
-	private static function setasset ($data, $assetname)
+	private static function setasset ($data, $assetName)
 	{
 		JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
-		$table = JTable::getInstance($assetname, 'Table');
+		$table = JTable::getInstance($assetName, 'Table');
 
 		if ($data->id)
 		{
 			try
 			{
-				if ($assetname == 'mediafile')
+				if ($assetName == 'mediafile')
 				{
 					$columns = array('media_image', 'special', 'filename', 'size', 'mime_type', 'mediacode', 'link_type',
 							'docMan_id', 'article_id', 'virtueMart_id', 'player', 'popup', 'server', 'internal_viewer', 'path');
@@ -237,13 +254,13 @@ class JBSMAssets
 	{
 		$db = JFactory::getDbo();
 
-		if (isset($data->jasset_id))
+		if (isset($data->asset_id))
 		{
-			if ($data->jasset_id >= 2 && $data->jasset_id != self::$parent_id)
+			if ($data->asset_id >= 2 && $data->asset_id != self::$parent_id)
 			{
 				$query = $db->getQuery(true);
 				$query->delete('#__assets')
-						->where('id = ' . $db->quote($data->jasset_id));
+						->where('id = ' . $db->quote($data->asset_id));
 				$db->setQuery($query);
 				$db->execute();
 			}

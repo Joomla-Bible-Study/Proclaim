@@ -113,11 +113,12 @@ class BiblestudyViewTeachers extends JViewLegacy
 		$uri                = new JUri;
 
 		JHtml::_('biblestudy.framework');
+		JHtml::_('biblestudy.loadCss', $params, null, 'font-awesome');
 
 		$images = new JBSMImages;
 		if ($params->get('useexpert_teacherdetail') > 0 || is_string($params->get('teacherstemplate')))
 		{
-			$pagebuilder = new JBSMPagebuilder;
+			$pagebuilder = new JBSMPageBuilder;
 
 			foreach ($items as $i => $item)
 			{
@@ -205,15 +206,15 @@ class BiblestudyViewTeachers extends JViewLegacy
 		// Prepare meta information (under development)
 		if ($itemparams->get('metakey'))
 		{
-			$this->document->setMetadata('keywords', $itemparams->get('metakey'));
+			$this->document->setMetaData('keywords', $itemparams->get('metakey'));
 		}
 		elseif ($this->params->get('menu-meta_keywords'))
 		{
-			$this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
+			$this->document->setMetaData('keywords', $this->params->get('menu-meta_keywords'));
 		}
 		else
 		{
-			$this->document->setMetadata('keywords', $this->admin->params->get('metakey'));
+			$this->document->setMetaData('keywords', $this->admin->params->get('metakey'));
 		}
 
 		if ($itemparams->get('metadesc'))
@@ -231,7 +232,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 
 		if ($this->params->get('robots'))
 		{
-			$this->document->setMetadata('robots', $this->params->get('robots'));
+			$this->document->setMetaData('robots', $this->params->get('robots'));
 		}
 	}
 

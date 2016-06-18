@@ -319,6 +319,7 @@ class BiblestudyModelSermon extends JModelItem
 	 */
 	protected function populateState()
 	{
+		/** @type JApplicationSite $app */
 		$app = JFactory::getApplication('site');
 
 		// Load state from the request.

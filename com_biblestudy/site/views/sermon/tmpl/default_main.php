@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers');
-JHTML::_('behavior.tooltip');
+JHtml::_('behavior.tooltip');
 JHtml::_('behavior.caption');
 
 // Create shortcuts to some parameters.

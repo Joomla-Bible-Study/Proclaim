@@ -29,11 +29,11 @@ class TableMessage extends JTable
 	public $id = null;
 
 	/**
-	 * Published
+	 * Study Date
 	 *
-	 * @var int
+	 * @var string
 	 */
-	public $published = 1;
+	public $studydate = null;
 
 	/**
 	 * Teacher id
@@ -41,13 +41,6 @@ class TableMessage extends JTable
 	 * @var int
 	 */
 	public $teacher_id = null;
-
-	/**
-	 * Study Date
-	 *
-	 * @var string
-	 */
-	public $studydate = null;
 
 	/**
 	 * Study Number
@@ -64,25 +57,11 @@ class TableMessage extends JTable
 	public $booknumber = null;
 
 	/**
-	 * Scripture
-	 *
-	 * @var string
-	 */
-	public $scripture = null;
-
-	/**
 	 * Chapter Begin
 	 *
 	 * @var int
 	 */
 	public $chapter_begin = null;
-
-	/**
-	 * Chapter End
-	 *
-	 * @var int
-	 */
-	public $chapter_end = null;
 
 	/**
 	 * Verse Begin
@@ -92,6 +71,13 @@ class TableMessage extends JTable
 	public $verse_begin = null;
 
 	/**
+	 * Chapter End
+	 *
+	 * @var int
+	 */
+	public $chapter_end = null;
+
+	/**
 	 * Verse End
 	 *
 	 * @var int
@@ -99,74 +85,11 @@ class TableMessage extends JTable
 	public $verse_end = null;
 
 	/**
-	 * Study Title
-	 *
-	 * @var string
-	 */
-	public $studytitle = null;
-
-	/**
-	 * Study Intro
-	 *
-	 * @var string
-	 */
-	public $studyintro = null;
-
-	/**
-	 * MessageType
-	 *
-	 * @var string
-	 */
-	public $messagetype = null;
-
-	/**
-	 * Series ID
-	 *
-	 * @var int
-	 */
-	public $series_id = null;
-
-	/**
-	 * Study Text
-	 *
-	 * @var string
-	 */
-	public $studytext = null;
-
-	/**
-	 * Topics ID
-	 *
-	 * @var int
-	 */
-	public $topics_id = null;
-
-	/**
 	 * Secondary Reference
 	 *
 	 * @var string
 	 */
 	public $secondary_reference = null;
-
-	/**
-	 * Media Hours
-	 *
-	 * @var int
-	 */
-	public $media_hours = null;
-
-	/**
-	 * Media Minutes
-	 *
-	 * @var int
-	 */
-	public $media_minutes = null;
-
-	/**
-	 * Media seconds
-	 *
-	 * @var int
-	 */
-	public $media_seconds = null;
 
 	/**
 	 * Book Number 2
@@ -183,13 +106,6 @@ class TableMessage extends JTable
 	public $chapter_begin2 = null;
 
 	/**
-	 * Chapter End2
-	 *
-	 * @var int
-	 */
-	public $chapter_end2 = null;
-
-	/**
 	 * Verse Begin2
 	 *
 	 * @var int
@@ -197,11 +113,32 @@ class TableMessage extends JTable
 	public $verse_begin2 = null;
 
 	/**
+	 * Chapter End2
+	 *
+	 * @var int
+	 */
+	public $chapter_end2 = null;
+
+	/**
 	 * Verse End2
 	 *
 	 * @var int
 	 */
 	public $verse_end2 = null;
+
+	public $prod_dvd;
+
+	public $prod_cd;
+
+	public $server_cd;
+
+	public $server_dvd;
+
+	public $image_cd;
+
+	public $image_dvd;
+
+	public $studytext2;
 
 	/**
 	 * Comments
@@ -246,6 +183,69 @@ class TableMessage extends JTable
 	public $location_id = null;
 
 	/**
+	 * Study Title
+	 *
+	 * @var string
+	 */
+	public $studytitle = null;
+
+	/**
+	 * Alias
+	 *
+	 * @var string
+	 */
+	public $alias = null;
+
+	/**
+	 * Study Intro
+	 *
+	 * @var string
+	 */
+	public $studyintro = null;
+
+	/**
+	 * Media Hours
+	 *
+	 * @var int
+	 */
+	public $media_hours = null;
+
+	/**
+	 * Media Minutes
+	 *
+	 * @var int
+	 */
+	public $media_minutes = null;
+
+	/**
+	 * Media seconds
+	 *
+	 * @var int
+	 */
+	public $media_seconds = null;
+
+	/**
+	 * MessageType
+	 *
+	 * @var string
+	 */
+	public $messagetype = null;
+
+	/**
+	 * Series ID
+	 *
+	 * @var int
+	 */
+	public $series_id = null;
+
+	/**
+	 * Study Text
+	 *
+	 * @var string
+	 */
+	public $studytext = null;
+
+	/**
 	 * ThumbNail Media
 	 *
 	 * @var string
@@ -273,12 +273,30 @@ class TableMessage extends JTable
 	 */
 	public $params = null;
 
+	public $checked_out;
+
+	public $checked_out_time;
+
 	/**
-	 * Alias
+	 * Published
 	 *
-	 * @var string
+	 * @var int
 	 */
-	public $alias = null;
+	public $published = 1;
+
+	/** @var string Publish Up */
+	public $publish_up = '0000-00-00 00:00:00';
+
+	/** @var string Publish Down */
+	public $publish_down = '0000-00-00 00:00:00';
+
+	public $modified;
+
+	public $modified_by;
+
+	public $asset_id;
+
+	public $access;
 
 	/**
 	 * Ordering
@@ -287,11 +305,9 @@ class TableMessage extends JTable
 	 */
 	public $ordering = null;
 
-	/** @var string Publish Up */
-	public $publish_up = '0000-00-00 00:00:00';
+	public $language;
 
-	/** @var string Publish Down */
-	public $publish_down = '0000-00-00 00:00:00';
+	public $download_id;
 
 	/**
 	 * Constructor.
@@ -414,6 +430,7 @@ class TableMessage extends JTable
 	 */
 	protected function _getAssetParentId(JTable $table = null, $id = null)
 	{
+		/** @type JTableAsset $asset */
 		$asset = JTable::getInstance('Asset');
 		$asset->loadByName('com_biblestudy');
 

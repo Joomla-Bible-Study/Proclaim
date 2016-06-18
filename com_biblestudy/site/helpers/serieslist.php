@@ -24,39 +24,6 @@ class JBSMSerieslist extends JBSMListing
 {
 
 	/**
-	 * Series Get Custom
-	 *
-	 * @param   string    $r              ?
-	 * @param   object    $row            JTable
-	 * @param   object    $customelement  ?
-	 * @param   string    $custom         ?
-	 * @param   string    $islink         Is a Link
-	 * @param   Registry  $params         Item Params
-	 *
-	 * @return string
-	 */
-	public function seriesGetcustom($r, $row, $customelement, $custom, $islink, $params)
-	{
-		$countbraces = substr_count($custom, '{');
-		$braceend    = 0;
-
-		while ($countbraces > 0)
-		{
-			$bracebegin    = strpos($custom, '{');
-			$braceend      = strpos($custom, '}');
-			$subcustom     = substr($custom, ($bracebegin + 1), (($braceend - $bracebegin) - 1));
-			$customelement = $this->getseriesElementnumber($subcustom);
-
-			// @Fixme Need to find working replacement for this function.
-			$element       = $this->seriesGetelement($r, $row, $customelement, $custom, $islink, $params, $view = null);
-			$custom        = substr_replace($custom, $element, $bracebegin, (($braceend - $bracebegin) + 1));
-			$countbraces--;
-		}
-
-		return $custom;
-	}
-
-	/**
 	 * Get Series ElementNumber
 	 *
 	 * @param   string  $subcustom  ?
@@ -112,7 +79,6 @@ class JBSMSerieslist extends JBSMListing
 	 */
 	public function getSerieslistExp($row, $params, $template)
 	{
-		$t      = $params->get('serieslisttemplateid');
 		$images = new JBSMImages;
 		$image  = $images->getSeriesThumbnail($row->series_thumbnail);
 
@@ -177,7 +143,6 @@ class JBSMSerieslist extends JBSMListing
 		}
 		// Fixme Need to find working replacement for this function.
 		$items   = $this->getSeriesstudiesDBO($id, $params, $limit);
-		$numrows = count($items);
 
 		$studies = '';
 
@@ -215,7 +180,6 @@ class JBSMSerieslist extends JBSMListing
 		}
 		foreach ($items AS $row)
 		{
-			$oddeven = 0;
 			$studies .= $this->getListingExp($row, $params, $params->get('seriesdetailtemplateid'));
 		}
 
@@ -236,6 +200,66 @@ class JBSMSerieslist extends JBSMListing
 		echo $params->get('series_headercode');
 
 		return $studies;
+	}
+	/**
+	 * Get SeriesStudies DBO
+	 *
+	 * @param   int       $id      ID
+	 * @param   Registry  $params  Item Params
+	 * @param   string    $limit   Limit of Records
+	 *
+	 * @return array
+	 */
+	public function getSeriesstudiesDBO($id, $params, $limit = null)
+	{
+		$app       = JFactory::getApplication();
+		$db        = JFactory::getDbo();
+		$user      = JFactory::getUser();
+		$language  = $language = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
+		$set_limit = null;
+
+		if ($limit)
+		{
+			preg_match_all('!\d+!', $limit, $set_limit);
+			$set_limit = implode(' ', $set_limit[0]);
+		}
+
+		// Compute view access permissions.
+		$groups = implode(',', $user->getAuthorisedViewLevels());
+		$query  = $db->getQuery(true);
+		$query->select('s.*, se.id AS seid, t.id AS tid, t.teachername, t.title AS teachertitle, t.thumb, t.thumbh, t.thumbw, '
+			. ' t.teacher_thumbnail, se.series_text, se.description AS sdescription, '
+			. ' se.series_thumbnail, #__bsms_message_type.id AS mid,'
+			. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
+			. ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ")'
+			. ' as topic_text, group_concat(#__bsms_topics.params separator ", ") as topic_params, '
+			. ' #__bsms_locations.id AS lid, #__bsms_locations.location_text ')
+			->from('#__bsms_studies AS s')
+			->leftJoin('#__bsms_series AS se ON (s.series_id = se.id)')
+			->leftJoin('#__bsms_teachers AS t ON (s.teacher_id = t.id)')
+			->leftJoin('#__bsms_books ON (s.booknumber = #__bsms_books.booknumber)')
+			->leftJoin('#__bsms_message_type ON (s.messagetype = #__bsms_message_type.id)')
+			->leftJoin('#__bsms_studytopics ON (#__bsms_studytopics.study_id = s.id)')
+			->leftJoin('#__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)')
+			->leftJoin('#__bsms_locations ON (s.location_id = #__bsms_locations.id)')
+			->where('s.series_id = ' . $id)
+			->where('s.published = ' . 1)
+			->where('s.language in (' . $language . ')')
+			->where('s.access IN (' . $groups . ')')
+			->group('s.id')
+			->group($params->get('series_detail_sort', 'studydate') . ' ' . $params->get('series_detail_order', 'desc'));
+		$db->setQuery($query, 0, $set_limit);
+		$results = $db->loadObjectList();
+		$items   = $results;
+
+		foreach ($items as $item)
+		{
+			// Concat topic_text and concat topic_params do not fit, so translate individually
+			$topics_text       = JBSMTranslated::getConcatTopicItemTranslated($item);
+			$item->topics_text = $topics_text;
+		}
+
+		return $items;
 	}
 
 }

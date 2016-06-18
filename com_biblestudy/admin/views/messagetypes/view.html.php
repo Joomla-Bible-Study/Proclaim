@@ -131,40 +131,40 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 		// Get the toolbar object instance
 		$bar = JToolBar::getInstance('toolbar');
 
-		JToolBarHelper::title(JText::_('JBS_CMN_MESSAGETYPES'), 'list-2 list-2');
+		JToolbarHelper::title(JText::_('JBS_CMN_MESSAGETYPES'), 'list-2 list-2');
 
 		if ($this->canDo->get('core.create'))
 		{
-			JToolBarHelper::addNew('messagetype.add');
+			JToolbarHelper::addNew('messagetype.add');
 		}
 
 		if ($this->canDo->get('core.edit'))
 		{
-			JToolBarHelper::editList('messagetype.edit');
+			JToolbarHelper::editList('messagetype.edit');
 		}
 
 		if ($this->canDo->get('core.edit.state'))
 		{
-			JToolBarHelper::divider();
-			JToolBarHelper::publishList('messagetypes.publish');
-			JToolBarHelper::unpublishList('messagetypes.unpublish');
-			JToolBarHelper::divider();
-			JToolBarHelper::archiveList('messagetypes.archive');
+			JToolbarHelper::divider();
+			JToolbarHelper::publishList('messagetypes.publish');
+			JToolbarHelper::unpublishList('messagetypes.unpublish');
+			JToolbarHelper::divider();
+			JToolbarHelper::archiveList('messagetypes.archive');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
-			JToolBarHelper::deleteList('', 'messagetypes.delete', 'JTOOLBAR_EMPTY_TRASH');
+			JToolbarHelper::deleteList('', 'messagetypes.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
 		elseif ($this->canDo->get('core.delete'))
 		{
-			JToolBarHelper::trash('messagetypes.trash');
+			JToolbarHelper::trash('messagetypes.trash');
 		}
 
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
-			JToolBarHelper::divider();
+			JToolbarHelper::divider();
 			JHtml::_('bootstrap.modal', 'collapseModal');
 
 			$title = JText::_('JBS_CMN_BATCH_LABLE');

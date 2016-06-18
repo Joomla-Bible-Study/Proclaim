@@ -175,7 +175,7 @@ class BiblestudyViewMediafileform extends JViewLegacy
 		}
 		$this->document->setTitle($title);
 
-		$pathway = $app->getPathWay();
+		$pathway = $app->getPathway();
 		$pathway->addItem($title, '');
 
 		if ($this->params->get('menu-meta_description'))

@@ -27,11 +27,11 @@ if (!JComponentHelper::isEnabled('com_biblestudy'))
 }
 else
 {
-	$templateparams = JBSMParams::getTemplateParams($params);
+	$templateparams = JBSMParams::getTemplateparams($params);
 }
 
 JHtml::_('biblestudy.framework');
-JHtml::styleSheet('media/css/podcast.css');
+JHtml::stylesheet('media/css/podcast.css');
 $podcast   = new JBSMPodcastSubscribe;
 $subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
 

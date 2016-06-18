@@ -17,7 +17,7 @@ $input = new JInput;
 $option = $input->get('option', '', 'cmd');
 $JViewLegacy = new JViewLegacy;
 $JBSMSerieslist = new JBSMSerieslist;
-JHTML::_('behavior.tooltip');
+JHtml::_('behavior.tooltip');
 $series_menu = $this->params->get('series_id', 1);
 
 $params = $this->params;
@@ -31,15 +31,13 @@ if ($url)
 }
 ?>
 <div class="container-fluid">
-
 	<form action="<?php echo str_replace("&", "&amp;", $this->request_url); ?>" method="post" name="adminForm">
         <div class="hero-unit" style="padding-top:30px; padding-bottom:20px;"> <!-- This div is the header container -->
-
-			<<?php echo $classelement; ?> class="componentheading">
+			<div <?php echo $classelement; ?> class="componentheading">
 				<?php
 				if ($this->params->get('show_page_image_series'))
 				{
-					echo '<img src="' . JURI::base() . $this->params->get('show_page_image_series') . '" alt="' . $this->params->get('show_series_title') . '" />';
+					echo '<img src="' . JUri::base() . $this->params->get('show_page_image_series') . '" alt="' . $this->params->get('show_series_title') . '" />';
 
 					// End of column for logo
 				}
@@ -50,8 +48,8 @@ if ($url)
 					echo $this->params->get('series_title');
 				}
 				?>
-			</<?php echo $classelement; ?>>
-		</div>
+			</<?php echo $classelement; ?> </div>
+		</div></div>
 		<!--header-->
 
 		<div id="bsdropdownmenu">

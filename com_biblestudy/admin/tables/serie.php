@@ -27,25 +27,20 @@ class TableSerie extends JTable
 	public $id = null;
 
 	/**
-	 * Publish state
-	 *
-	 * @var int
-	 */
-	public $published = 1;
-
-	/**
 	 * Series Text
 	 *
 	 * @var string
 	 */
 	public $series_text = null;
 
+	public $alias;
+
 	/**
-	 * Series Thumbnail
+	 * Teacher
 	 *
 	 * @var string
 	 */
-	public $series_thumbnail = null;
+	public $teacher = null;
 
 	/**
 	 * Description
@@ -55,11 +50,28 @@ class TableSerie extends JTable
 	public $description = null;
 
 	/**
-	 * Teacher
+	 * Series Thumbnail
 	 *
 	 * @var string
 	 */
-	public $teacher = null;
+	public $series_thumbnail = null;
+
+	/**
+	 * Publish state
+	 *
+	 * @var int
+	 */
+	public $published = 1;
+
+	public $asset_id;
+
+	public $ordering;
+
+	public $access;
+
+	public $language;
+
+	public $landing_show;
 
 	/**
 	 * Constructor
@@ -140,6 +152,7 @@ class TableSerie extends JTable
 	 */
 	protected function _getAssetParentId(JTable $table = null, $id = null)
 	{
+		/** @type JTableAsset $asset */
 		$asset = JTable::getInstance('Asset');
 		$asset->loadByName('com_biblestudy');
 

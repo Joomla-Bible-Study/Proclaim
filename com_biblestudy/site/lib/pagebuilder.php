@@ -85,7 +85,7 @@ class JBSMPageBuilder
 
 		// Duration
 		$page->duration  = $JBSMElements->getDuration($params, $item);
-		$page->studydate = $JBSMElements->getstudyDate($params, $item->studydate);
+		$page->studydate = $JBSMElements->getStudyDate($params, $item->studydate);
 
 		// @todo need to look at why we have to do this here.
 		$item->topics_text = JBSMTranslated::getConcatTopicItemTranslated($item);
@@ -107,7 +107,7 @@ class JBSMPageBuilder
 		if ($item->thumbnailm)
 		{
 			$image                 = $images->getStudyThumbnail($item->thumbnailm);
-			$page->study_thumbnail = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height
+			$page->study_thumbnail = '<img src="' . JUri::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height
 				. '" alt="' . $item->studytitle . '" />';
 		}
 		else
@@ -117,7 +117,7 @@ class JBSMPageBuilder
 		if ($item->series_thumbnail)
 		{
 			$image                  = $images->getSeriesThumbnail($item->series_thumbnail);
-			$page->series_thumbnail = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height
+			$page->series_thumbnail = '<img src="' . JUri::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height
 				. '" alt="' . $item->series_text . '" />';
 		}
 		else
@@ -139,7 +139,7 @@ class JBSMPageBuilder
 		if ($item->image || $item->thumb)
 		{
 			$image              = $images->getTeacherImage($item->image, $item->thumb);
-			$page->teacherimage = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="'
+			$page->teacherimage = '<img src="' . JUri::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="'
 				. $item->teachername . '" />';
 		}
 		else
@@ -223,7 +223,7 @@ class JBSMPageBuilder
 	{
 		$listing          = new JBSMListing;
 		$mediaids         = $listing->getFluidMediaids($item);
-		$media            = $listing->getMediafiles($mediaids);
+		$media            = $listing->getMediaFiles($mediaids);
 		$item->mediafiles = $media;
 		$mediafiles       = $listing->getFluidMediaFiles($item, $params, $template);
 
@@ -299,7 +299,7 @@ class JBSMPageBuilder
 	public function studyBuilder($whereitem = null, $wherefield = null, $params = null, $limit = 10, $order = 'DESC', $template = null)
 	{
 		$app  = JFactory::getApplication();
-		$db   = JFactory::getDBO();
+		$db   = JFactory::getDbo();
 		$menu = $app->getMenu();
 		$item = $menu->getActive();
 
@@ -415,11 +415,11 @@ class JBSMPageBuilder
 
 		if ($language == '*')
 		{
-			$query->where('study.language in (' . $db->Quote($language) . ',' . $db->Quote('*') . ')');
+			$query->where('study.language in (' . $db->quote($language) . ',' . $db->quote('*') . ')');
 		}
 		elseif ($language != '*')
 		{
-			$query->where('study.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
+			$query->where('study.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
 		}
 		$query->order('studydate ' . $order);
 

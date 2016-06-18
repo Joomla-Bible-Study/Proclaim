@@ -259,38 +259,6 @@
 				<option value="1">JBS_CMN_YES</option>
 			</field>
 		</fieldset>
-		<fieldset name="STUDIESVIEW">
-			<field name="useexpert_list" type="list" default="0"
-			       label="JBS_TPL_CUSTOM_VIEW" description="JBS_TPL_CUSTOM_VIEW_DESC">
-				<option value="0">JBS_CMN_DONT_USE</option>
-				<option value="1">JBS_TPL_USE_CUSTOM_VIEW</option>
-			</field>
-			<field name="headercode" type="textarea" rows="10" cols="100"
-			       label="JBS_TPL_HEADERCODE" description="JBS_TPL_HEADERCODE_DESC">
-			</field>
-			<field name="templatecode" type="textarea" rows="10" cols="100"
-			       default="&lt;table width=&quot;100%&quot; border=&quot;0&quot; style=&quot;margin-bottom:3px;&quot;&gt;
-          &lt;tbody&gt;
-          &lt;tr&gt;
-            &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;
-            &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{title}}&lt;/td&gt;
-            &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{date}}&lt;/td&gt;
-          &lt;/tr&gt;
-          &lt;tr&gt;
-            &lt;td colspan=&quot;2&quot; valign=&quot;top&quot;&gt;{{studyintro}}&lt;/td&gt;
-            &lt;td valign=&quot;top&quot;&gt;{{scripture}}&lt;/td&gt;
-          &lt;/tr&gt;
-          &lt;/tbody&gt;
-        &lt;/table&gt;"
-			       label="JBS_TPL_TEMPLATECODE" description="JBS_TPL_STUDIESVIEW_TEMPLATECODE_DESC"
-			       filter="raw"/>
-			<field name="wrapcode" type="radio" default="0" class="btn-group"
-			       label="JBS_TPL_TABLE_OR_DIV">
-				<option value="0">JBS_CMN_NO</option>
-				<option value="T">JBS_TPL_TABLE</option>
-				<option value="D">JBS_TPL_DIV</option>
-			</field>
-		</fieldset>
 		<fieldset name="LISTITEMS">
 			<field name="default_order" type="list" default="DESC"
 			       label="JBS_TPL_FILTERS_DEFAULTORDER" description="JBS_TPL_FILTERS_DEFAULTORDER_DESC">
@@ -479,7 +447,7 @@
 				<option value="pull-right">JBS_TPL_PULLRIGHT</option>
 			</field>
 			<field type="spacer" name="myspacera" hr="true"/>
-			<field name="scripture1row" type="rowoptions" default="1" label="JBS_CMN_SCRIPTURE" description="JBS_TPL_ROW_DESC"/>
+			<field name="scripture1row" type="rowoptions" default="0" label="JBS_CMN_SCRIPTURE" description="JBS_TPL_ROW_DESC"/>
 			<field name="scripture1col" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
 			<field name="scripture1colspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
 			<field name="scripture1element" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
@@ -501,19 +469,19 @@
 			<field name="secondarylinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 			<field type="spacer" name="myspacer3" hr="true"/>
 			<field name="jbsmediarow" type="rowoptions" size="1" default="1" label="JBS_CMN_MEDIA" description="JBS_TPL_ROW_DESC"/>
-			<field name="jbsmediacol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
-			<field name="jbsmediacolspan" type="spanoptions" default="1" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
+			<field name="jbsmediacol" type="spanoptions" default="3" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
+			<field name="jbsmediacolspan" type="spanoptions" default="4" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
 			<field name="jbsmediaelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 			<field name="jbsmediacustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
 			<field name="jbsmedialinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 		</fieldset>
 		<fieldset name="DISPLAYELEMENTS2" addfieldpath="/administrator/components/com_biblestudy/models/fields">
 			<field name="titlerow" type="rowoptions" size="1" default="1" label="JBS_CMN_TITLE" description="JBS_TPL_ROW_DESC"/>
-			<field name="titlecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
-			<field name="titlecolspan" type="spanoptions" default="2" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
+			<field name="titlecol" type="spanoptions" default="2" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
+			<field name="titlecolspan" type="spanoptions" default="4" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
 			<field name="titleelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 			<field name="titlecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
-			<field name="titlelinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+			<field name="titlelinktype" type="linkoptions" default="1" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 			<field type="spacer" name="myspacer4" hr="true"/>
 			<field name="daterow" type="rowoptions" size="1" default="1" label="JBS_CMN_DATE" description="JBS_TPL_ROW_DESC"/>
 			<field name="datecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
@@ -551,7 +519,7 @@
 			<field name="durationcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
 			<field name="durationlinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 			<field type="spacer" name="myspacer8" hr="true"/>
-			<field name="studyintrorow" type="rowoptions" size="1" default="2" label="JBS_CMN_STUDY_INTRO" description="JBS_TPL_ROW_DESC"/>
+			<field name="studyintrorow" type="rowoptions" size="1" default="0" label="JBS_CMN_STUDY_INTRO" description="JBS_TPL_ROW_DESC"/>
 			<field name="studyintrocol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
 			<field name="studyintrocolspan" type="spanoptions" default="6" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
 			<field name="studyintroelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
@@ -638,7 +606,7 @@
 			<field name="thumbnailcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
 			<field name="thumbnaillinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 			<field type="spacer" name="myspacer17" hr="true"/>
-			<field name="customrow" type="rowoptions" size="1" default="" label="JBS_TPL_CUSTOM_TEXT" description="JBS_TPL_ROW_DESC"/>
+			<field name="customrow" type="rowoptions" size="1" default="0" label="JBS_TPL_CUSTOM_TEXT" description="JBS_TPL_ROW_DESC"/>
 			<field name="customcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
 			<field name="customcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
 			<field name="customelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
@@ -823,24 +791,11 @@
 			       size="40" label="JBS_TPL_DETAILS_SUBJECT"/>
 			<field name="body" type="text" default="Comments entered."
 			       size="40" label="JBS_TPL_DETAILS_BODY"/>
-			<field name="useexpert_details" type="list" default="0"
-			       label="JBS_TPL_CUSTOM_VIEW" description="JBS_TPL_CUSTOM_VIEW_DESC">
-				<option value="0">JBS_CMN_DONT_USE</option>
-				<option value="1">JBS_TPL_USE_CUSTOM_VIEW</option>
-			</field>
-			<field name="study_detailtemplate" type="textarea" rows="10"
-			       cols="100" label="JBS_TPL_DETAILS_STUDY_DETAILTEMPLATE"
-			       description="JBS_TPL_DETAILS_TEMPLATECODE_DESC" filter="raw"/>
 		</fieldset>
 		<fieldset name="TEACHER" addfieldpath="/administrator/components/com_biblestudy/models/fields">
 			<field name="teacher_title" type="text" default="Our Teachers"
 			       label="JBS_TPL_TEACHER_TEACHER_TITLE" description="JBS_TPL_TEACHER_TEACHER_TITLE_DESC"/>
 			<field name="teachers_element" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-			<field name="useexpert_teacherlist" type="list" default="0"
-			       label="JBS_TPL_CUSTOM_VIEW_TEACHERLIST" description="JBS_TPL_CUSTOM_VIEW_DESC">
-				<option value="0">JBS_CMN_DONT_USE</option>
-				<option value="1">JBS_TPL_USE_CUSTOM_VIEW</option>
-			</field>
 			<field name="tsrowspanitem" type="list" default="0" label="JBS_TPL_ROWSPANITEM" description="JBS_TPL_ROWSPANITEM_DESC">
 				<option value="0">JBS_TPL_NO_ITEM</option>
 				<option value="1">JBS_TPL_TEACHERAIMGE</option>
@@ -938,34 +893,6 @@
 			<field name="tsteacherallinonecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
 			<field name="tsteacherallinoneelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 			<field name="tsteacherallinonecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
-
-			<field name="teacher_headercode" type="editor" height="300" width="500"
-			       label="JBS_TPL_HEADERCODE" description="JBS_TPL_HEADERCODE_DESC" filter="raw"
-			       buttons="true"/>
-
-			<field name="teacher_templatecode" type="textarea" rows="10"
-			       cols="100"
-			       default="&lt;table width=&quot;100%&quot; border=&quot;0&quot; style=&quot;margin-bottom:3px;&quot;&gt;
-							  &lt;tbody&gt;
-							  &lt;tr&gt;
-							    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;
-							    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{title}}&lt;/td&gt;
-							    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;
-							  &lt;/tr&gt;
-							  &lt;tr&gt;
-							    &lt;td colspan=&quot;2&quot; valign=&quot;top&quot;&gt;{{short}}&lt;/td&gt;
-							    &lt;td valign=&quot;top&quot;&gt;{{information}}&lt;/td&gt;
-							  &lt;/tr&gt;
-							  &lt;/tbody&gt;
-							&lt;/table&gt;"
-			       label="JBS_TPL_TEACHERLIST_TEMPLATECODE" description="JBS_TPL_TEACHER_TEMPLATECODE_DESC"
-			       filter="raw"/>
-			<field name="teacher_wrapcode" type="radio" default="0" class="btn-group"
-			       label="JBS_TPL_TABLE_OR_DIV">
-				<option value="0">JBS_CMN_NO</option>
-				<option value="T">JBS_TPL_TABLE</option>
-				<option value="D">JBS_TPL_DIV</option>
-			</field>
 
 		</fieldset>
 		<fieldset name="TEACHERDETAILS" addfilepath="/administrator/components/com_biblestudy/models/fields">
@@ -1117,29 +1044,6 @@
 			<field name="tdteacherallinonecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
 			<field name="tdteacherallinoneelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 			<field name="tdteacherallinonecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
-
-			<field name="useexpert_teacherdetail" type="list" default="0"
-			       label="JBS_TPL_CUSTOM_VIEW_TEACHERDETAIL" description="JBS_TPL_CUSTOM_VIEW_DESC">
-				<option value="0">JBS_CMN_DONT_USE</option>
-				<option value="1">JBS_TPL_USE_CUSTOM_VIEW</option>
-			</field>
-			<field name="teacher_detailtemplate" type="textarea" rows="10"
-			       cols="100"
-			       default="&lt;table width=&quot;100%&quot; border=&quot;0&quot; style=&quot;margin-bottom:3px;&quot;&gt;
-							  &lt;tbody&gt;
-							  &lt;tr&gt;
-							    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;
-							    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{title}}&lt;/td&gt;
-							    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;
-							  &lt;/tr&gt;
-							  &lt;tr&gt;
-							    &lt;td colspan=&quot;2&quot; valign=&quot;top&quot;&gt;{{short}}&lt;/td&gt;
-							    &lt;td valign=&quot;top&quot;&gt;{{information}}&lt;/td&gt;
-							  &lt;/tr&gt;
-							  &lt;/tbody&gt;
-							&lt;/table&gt;"
-			       label="JBS_TPL_TEACHERDETAIL_TEMPLATECODE" description="JBS_TPL_TEACHER_TEMPLATECODE_DESC"
-			       filter="raw"/>
 		</fieldset>
 		<fieldset name="SERIES" addfieldpath="/administrator/components/com_biblestudy/models/fields">
 			<field name="slistcolor1" type="color" default="" label="JBS_TPL_LISTCOLOR1" description="JBS_TPL_LISTCOLOR_DESC"/>
@@ -1222,9 +1126,9 @@
 			<field name="sseriescolspan" type="spanoptions" default="6" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
 			<field name="sserieselement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 			<field name="sseriescustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
-			<field name="sserieslinktype" type="serieslinkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+			<field name="sserieslinktype" type="serieslinkoptions" default="1" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 			<field type="spacer" name="myspacer17" hr="true"/>
-			<field name="sseriesthumbnailrow" type="rowoptions" default="1" label="JBS_SERIES_LIST_THUMBNAIL" description="JBS_SERIES_LIST_THUMBNAIL_DESC"/>
+			<field name="sseriesthumbnailrow" type="rowoptions" default="0" label="JBS_SERIES_LIST_THUMBNAIL" description="JBS_SERIES_LIST_THUMBNAIL_DESC"/>
 			<field name="sseriesthumbnailcol" type="spanoptions" default="2" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
 			<field name="sseriesthumbnailcolspan" type="spanoptions" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
 			<field name="sseriesthumbnailelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
@@ -1320,7 +1224,7 @@
 			<field name="sdseriescustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
 			<field name="sdserieslinktype" type="serieslinkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 			<field type="spacer" name="myspacer25" hr="true"/>
-			<field name="sdseriesthumbnailrow" type="rowoptions" default="1" label="JBS_SERIES_LIST_THUMBNAIL" description="JBS_SERIES_LIST_THUMBNAIL_DESC"/>
+			<field name="sdseriesthumbnailrow" type="rowoptions" default="0" label="JBS_SERIES_LIST_THUMBNAIL" description="JBS_SERIES_LIST_THUMBNAIL_DESC"/>
 			<field name="sdseriesthumbnailcol" type="spanoptions" default="2" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
 			<field name="sdseriesthumbnailcolspan" type="spanoptions" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
 			<field name="sdseriesthumbnailelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>

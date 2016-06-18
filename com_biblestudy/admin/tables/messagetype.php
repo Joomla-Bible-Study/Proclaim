@@ -29,18 +29,28 @@ class TableMessagetype extends JTable
 	public $id = null;
 
 	/**
+	 * Message Type
+	 *
+	 * @var string
+	 */
+	public $message_type = null;
+
+	public $alias;
+
+	/**
 	 * Published
 	 *
 	 * @var int
 	 */
 	public $published = 1;
 
-	/**
-	 * Message Type
-	 *
-	 * @var string
-	 */
-	public $message_type = null;
+	public $asset_id;
+
+	public $access;
+
+	public $ordering;
+
+	public $landing_show;
 
 	/**
 	 * Constructor
@@ -153,6 +163,7 @@ class TableMessagetype extends JTable
 	 */
 	protected function _getAssetParentId(JTable $table = null, $id = null)
 	{
+		/** @type JTableAsset $asset */
 		$asset = JTable::getInstance('Asset');
 		$asset->loadByName('com_biblestudy');
 

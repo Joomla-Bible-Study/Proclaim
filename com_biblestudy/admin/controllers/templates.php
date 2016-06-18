@@ -48,6 +48,15 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		// Check for request forgeries.
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
+		// Set Variables.
+		$sermonstemplate = null;
+		$sermontemplate = null;
+		$teacherstemplate = null;
+		$teachertemplate = null;
+		$seriesdisplaystemplate = null;
+		$seriesdisplaytemplate = null;
+		$moduletemplate = null;
+
 		/**
 		 * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
 		 */
@@ -111,37 +120,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 					// Check for duplicate names and change
 					if (substr_count($querie, '#__bsms_styles'))
 					{
-
-						// Start to insert new Record
-						$this->performDB($querie);
-
-						// Get new  record insert to change name
-						$query = $db->getQuery(true);
-						$query->select('filename, id')
-							->from('#__bsms_styles')
-							->order('id DESC');
-						$db->setQuery($query, 0, 1);
-						$data  = $db->loadObject();
-						$query = $db->getQuery(true);
-						$query->update('#__bsms_styles')
-							->set($db->qn('filename') . ' = ' . $db->q($data->filename . '_copy' . $data->id))
-							->where($db->qn('id') . ' = ' . (int) $data->id);
-						$db->setQuery($query);
-						$db->execute();
-
-						// Store new Recorded so it can be seen.
-						JTable::addIncludePath(JPATH_COMPONENT . '/tables');
-						$table = JTable::getInstance('Style', 'Table', array('dbo' => $db));
-
-						try
-						{
-							$table->load($data->id);
-							$table->store();
-						}
-						catch (Exception $e)
-						{
-							echo 'Caught exception: ', $e->getMessage(), "\n";
-						}
+						// Defecating this as we nologer support style in DB
 					}
 					elseif (substr_count($querie, '#__bsms_templatecode'))
 					{
@@ -200,15 +179,6 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 			}
 		}
 
-		// Get Last Style record
-		$query = $db->getQuery(true);
-		$query->select('filename, id')
-			->from('#__bsms_styles')
-			->order($db->q('id') . ' DESC');
-		$db->setQuery($query, 0, 1);
-		$data = $db->loadObject();
-		$css  = $data->filename . ".css";
-
 		// Get new  record insert to change name
 		$query = $db->getQuery(true);
 		$query->select('id, type, filename')
@@ -219,7 +189,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 
 		foreach ($data AS $tpcode):
 
-			// Preloaded variables for templates
+			// Preload variables for templates
 			$type = $tpcode->type;
 
 			switch ($type)
@@ -271,6 +241,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 
 		// Load Table Data.
 		JTable::addIncludePath(JPATH_COMPONENT . '/tables');
+		/** @type TableTemplate $table */
 		$table = JTable::getInstance('Template', 'Table', array('dbo' => $db));
 
 		try
@@ -286,7 +257,6 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		$registry = new Registry;
 		$registry->loadString($table->params);
 		$params = $registry;
-		$params->set('css', $css);
 		$params->set('sermonstemplate', $sermonstemplate);
 		$params->set('sermontemplate', $sermontemplate);
 		$params->set('teacherstemplate', $teacherstemplate);

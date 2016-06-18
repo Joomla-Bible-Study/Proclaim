@@ -35,7 +35,7 @@ class BiblestudyModelTemplates extends JModelList
 	{
 		if (empty($this->_templates))
 		{
-			$query            = 'SELECT id as value, title as text FROM #__bsms_templates WHERE published = 1 ORDER BY id ASC';
+			$query            = 'SELECT id as value, title as text FROM `#__bsms_templates` WHERE published = 1 ORDER BY id ASC';
 			$this->_templates = $this->_getList($query);
 		}
 
@@ -138,7 +138,7 @@ class BiblestudyModelTemplates extends JModelList
 			}
 			else
 			{
-				$search = $db->Quote('%' . $db->escape($search, true) . '%');
+				$search = $db->quote('%' . $db->escape($search, true) . '%');
 				$query->where('(template.title LIKE ' . $search . ' OR template.params LIKE ' . $search . ')');
 			}
 		}

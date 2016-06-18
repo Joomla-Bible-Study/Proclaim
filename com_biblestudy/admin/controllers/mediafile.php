@@ -136,6 +136,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 	 */
 	public function batch($model = null)
 	{
+		/** @type BiblestudyModelMediafile $model */
 		$model = $this->getModel('Mediafile', 'BiblestudyModel', array());
 
 		// Preset the redirect
@@ -159,6 +160,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 
 		$app     = JFactory::getApplication();
 		$model   = $this->getModel();
+		/** @type TableMediafile $table */
 		$table   = $model->getTable();
 		$checkin = property_exists($table, 'checked_out');
 

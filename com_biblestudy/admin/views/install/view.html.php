@@ -33,8 +33,18 @@ class BiblestudyViewInstall extends JViewLegacy
 	/** @var array Call stack for the Visioning System. */
 	public $callstack = array();
 
+	public $subSteps = null;
+
+	public $_subQuery = array();
+
+	public $_subFiles = array();
+
+	public $version = '0.0.0';
+
+	public $query = array();
+
 	/** @var string More */
-	protected $more;
+	protected $more = null;
 
 	/** @var  string Percentage */
 	protected $percentage;
@@ -48,14 +58,17 @@ class BiblestudyViewInstall extends JViewLegacy
 	/** @var array The pre versions to process */
 	private $_versionStack = array();
 
+	/** @var array The pre versions to process */
+	private $_versionSwitch = null;
+
 	/** @var array The pre versions sub sql array to process */
-	private $_allupdates = array();
+	public $_allupdates = array();
 
 	/** @var array Array of Finish Task */
 	private $_finish = array();
 
 	/** @var array Array of Install Task */
-	private $_install = array();
+	public $_install = array();
 
 	/** @var int If was inported */
 	private $_isimport = 0;
@@ -78,51 +91,28 @@ class BiblestudyViewInstall extends JViewLegacy
 		$this->state = $app->input->getBool('scanstate', false);
 		$layout = $app->input->get('layout', 'default');
 
-		if ($this->state == 'start')
-		{
-			$db = JFactory::getDbo();
+		$load = $this->loadStack();
+		$more = true;
+		$percent = 0;
 
-			// Check if JBSM can be found from the database
-			$table = $db->getPrefix() . 'bsms_storage';
-			$db->setQuery("SHOW TABLES LIKE {$db->quote($table)}");
-
-			if ($db->loadResult() != $table)
-			{
-				$db->setQuery('DROP TABLE IF EXISTS `#__bsms_storage`;');
-				$db->execute();
-				$db->setQuery('CREATE TABLE `#__bsms_storage` (
-							  `key` VARCHAR(255) NOT NULL,
-							  `value` LONGTEXT NOT NULL,
-							  PRIMARY KEY (`key`)
-							) ENGINE=InnoDB DEFAULT CHARSET=utf8;');
-				$db->execute();
-			}
-		}
-		$this->loadStack();
-
-		if ($this->state)
+		if ($this->state && $load)
 		{
 			if ($this->totalSteps > 0)
 			{
-				$percent = round($this->doneSteps / $this->totalSteps * 100);
+				$percent = min(max(round(100 * $this->doneSteps / $this->totalSteps), 1), 100);
 			}
-			else
-			{
-				$percent = 0;
-			}
-
 			$more = true;
 		}
-		else
+		elseif ($load)
 		{
 			$percent = 100;
 			$more    = false;
 		}
 
-		$this->more = &$more;
+		$this->more = $more;
 		$this->setLayout($layout);
 
-		$this->percentage = &$percent;
+		$this->percentage = $percent;
 
 		if ($more)
 		{
@@ -132,7 +122,7 @@ class BiblestudyViewInstall extends JViewLegacy
 			JFactory::getDocument()->addScriptDeclaration($script);
 		}
 
-		JToolBarHelper::title(JText::_('JBS_MIG_TITLE'), 'administration');
+		JToolbarHelper::title(JText::_('JBS_MIG_TITLE'), 'administration');
 		$document = JFactory::getDocument();
 		$document->setTitle(JText::_('JBS_MIG_TITLE'));
 
@@ -151,48 +141,47 @@ class BiblestudyViewInstall extends JViewLegacy
 	/**
 	 * Loads the Versions/SQL/After stack from the session
 	 *
-	 * @return void
+	 * @return bool
 	 */
 	private function loadStack()
 	{
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true)
-			->select(array($db->quoteName('value')))
-			->from($db->quoteName('#__bsms_storage'))
-			->where($db->quoteName('key') . ' = ' . $db->quote('migration_stack'));
-		$db->setQuery($query);
-		$stack = $db->loadResult();
+		$session = JFactory::getSession();
+		$stack   = $session->get('migration_stack', '', 'JBSM');
 
 		if (empty($stack))
 		{
-			$this->_versionStack = array();
-			$this->_allupdates   = array();
-			$this->_finish       = array();
-			$this->_install      = array();
-			$this->_isimport     = 0;
-			$this->callstack     = array();
-			$this->totalSteps    = 0;
-			$this->doneSteps     = 0;
-			$this->running       = JText::_('JBS_MIG_STARTING');
-			$this->type          = null;
+			return false;
+		}
 
-			return;
+		if (function_exists('base64_encode') && function_exists('base64_decode'))
+		{
+			$stack = base64_decode($stack);
+			if (function_exists('gzdeflate') && function_exists('gzinflate'))
+			{
+				$stack = gzinflate($stack);
+			}
 		}
 
 		$stack = json_decode($stack, true);
 
-		$this->_versionStack = $stack['version'];
-		$this->_allupdates   = $stack['allupdates'];
-		$this->_finish       = $stack['finish'];
-		$this->_install      = $stack['install'];
-		$this->_isimport     = $stack['isimport'];
-		$this->callstack     = $stack['callstack'];
-		$this->totalSteps    = $stack['total'];
-		$this->doneSteps     = $stack['done'];
-		$this->running       = $stack['run'];
-		$this->type          = $stack['type'];
+		$this->version        = $stack['aversion'];
+		$this->_versionStack  = $stack['version'];
+		$this->_versionSwitch = $stack['switch'];
+		$this->_allupdates    = $stack['allupdates'];
+		$this->_finish        = $stack['finish'];
+		$this->_install       = $stack['install'];
+		$this->_subFiles      = $stack['subFiles'];
+		$this->_subQuery      = $stack['subQuery'];
+		$this->subSteps       = $stack['subSteps'];
+		$this->_isimport      = $stack['isimport'];
+		$this->callstack      = $stack['callstack'];
+		$this->totalSteps     = $stack['total'];
+		$this->doneSteps      = $stack['done'];
+		$this->running        = $stack['run'];
+		$this->type           = $stack['type'];
+		$this->query          = $stack['query'];
 
-		return;
+		return true;
 
 	}
 
@@ -206,8 +195,8 @@ class BiblestudyViewInstall extends JViewLegacy
 	protected function addToolbar()
 	{
 		JFactory::getApplication()->input->set('hidemainmenu', true);
-		JToolBarHelper::help('biblestudy', true);
-		JToolBarHelper::title(JText::_('JBS_CMN_INSTALL'), 'administration');
+		JToolbarHelper::help('biblestudy', true);
+		JToolbarHelper::title(JText::_('JBS_CMN_INSTALL'), 'administration');
 	}
 
 	/**
@@ -258,7 +247,7 @@ class BiblestudyViewInstall extends JViewLegacy
 
 		// -- General settings
 		jimport('joomla.installer.installer');
-		$db                    = JFactory::getDBO();
+		$db                    = JFactory::getDbo();
 		$this->status          = new JObject;
 		$this->status->modules = array();
 		$this->status->plugins = array();

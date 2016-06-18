@@ -56,7 +56,7 @@ class BiblestudyViewComments extends JViewLegacy
 
 	public $filterForm;
 
-	protected $activeFilters;
+	public $activeFilters;
 
 	/**
 	 * Execute and display a template script.
@@ -127,42 +127,42 @@ class BiblestudyViewComments extends JViewLegacy
 		$user = JFactory::getUser();
 
 		// Get the toolbar object instance
-		$bar   = JToolBar::getInstance('toolbar');
+		$bar   = JToolbar::getInstance('toolbar');
 		$canDo = JBSMBibleStudyHelper::getActions('', 'comment');
-		JToolBarHelper::title(JText::_('JBS_CMN_COMMENTS'), 'comments-2 comments-2');
+		JToolbarHelper::title(JText::_('JBS_CMN_COMMENTS'), 'comments-2 comments-2');
 
 		if ($canDo->get('core.create'))
 		{
-			JToolBarHelper::addNew('comment.add');
+			JToolbarHelper::addNew('comment.add');
 		}
 
 		if ($canDo->get('core.edit'))
 		{
-			JToolBarHelper::editList('comment.edit');
+			JToolbarHelper::editList('comment.edit');
 		}
 
 		if ($canDo->get('core.edit.state'))
 		{
-			JToolBarHelper::divider();
-			JToolBarHelper::publishList('comments.publish');
-			JToolBarHelper::unpublishList('comments.unpublish');
+			JToolbarHelper::divider();
+			JToolbarHelper::publishList('comments.publish');
+			JToolbarHelper::unpublishList('comments.unpublish');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete'))
 		{
-			JToolBarHelper::divider();
-			JToolBarHelper::deleteList('', 'comments.delete', 'JTOOLBAR_EMPTY_TRASH');
+			JToolbarHelper::divider();
+			JToolbarHelper::deleteList('', 'comments.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
 		elseif ($canDo->get('core.delete'))
 		{
-			JToolBarHelper::divider();
-			JToolBarHelper::trash('comments.trash');
+			JToolbarHelper::divider();
+			JToolbarHelper::trash('comments.trash');
 		}
 
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
-			JToolBarHelper::divider();
+			JToolbarHelper::divider();
 			JHtml::_('bootstrap.modal', 'collapseModal');
 
 			$title = JText::_('JBS_CMN_BATCH_LABLE');

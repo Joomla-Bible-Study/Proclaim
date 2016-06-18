@@ -95,25 +95,25 @@ class BiblestudyViewMessagetype extends JViewLegacy
 		$input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolBarHelper::title(JText::_('JBS_CMN_MESSAGETYPES') . ': <small><small>[' . $title . ']</small></small>', 'menu menu');
+		JToolbarHelper::title(JText::_('JBS_CMN_MESSAGETYPES') . ': <small><small>[' . $title . ']</small></small>', 'menu menu');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_biblestudy'))
 		{
-			JToolBarHelper::apply('messagetype.apply');
-			JToolBarHelper::save('messagetype.save');
-			JToolBarHelper::cancel('messagetype.cancel');
+			JToolbarHelper::apply('messagetype.apply');
+			JToolbarHelper::save('messagetype.save');
+			JToolbarHelper::cancel('messagetype.cancel');
 		}
 		else
 		{
 			if ($this->canDo->get('core.edit', 'com_biblestudy'))
 			{
-				JToolBarHelper::apply('messagetype.apply');
-				JToolBarHelper::save('messagetype.save');
+				JToolbarHelper::apply('messagetype.apply');
+				JToolbarHelper::save('messagetype.save');
 			}
-			JToolBarHelper::cancel('messagetype.cancel', 'JTOOLBAR_CLOSE');
+			JToolbarHelper::cancel('messagetype.cancel', 'JTOOLBAR_CLOSE');
 		}
-		JToolBarHelper::divider();
-		JToolBarHelper::help('biblestudy', true);
+		JToolbarHelper::divider();
+		JToolbarHelper::help('biblestudy', true);
 	}
 
 	/**

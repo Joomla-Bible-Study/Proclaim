@@ -41,7 +41,7 @@ class Migration613
 					  PRIMARY KEY (`id`)
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8";
 
-		if (!JBSMDbHelper::performdb($query, "Build 613: "))
+		if (!JBSMDbHelper::performDB($query, "Build 613: "))
 		{
 			return false;
 		}
@@ -58,7 +58,7 @@ class Migration613
 				  PRIMARY KEY (`id`)
 				  ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20";
 
-		if (!JBSMDbHelper::performdb($query, "Build 613: "))
+		if (!JBSMDbHelper::performDB($query, "Build 613: "))
 		{
 			return false;
 		}
@@ -69,7 +69,7 @@ class Migration613
 			"location_id= teacher_id= series_id= booknumber= topic_id= messagetype= avr=0 download= target= server= path= " .
 			"podcast=0 mime=0 allow_entry_study=0 entry_access=23 study_publish=0 socialnetworking=1')";
 
-		if (!JBSMDbHelper::performdb($query, "Build 613: "))
+		if (!JBSMDbHelper::performDB($query, "Build 613: "))
 		{
 			return false;
 		}
@@ -104,84 +104,84 @@ class Migration613
 			"series_detail_islink2=0\n series_detail_3=10\n series_detail_islink3=0\n series_detail_4=20\n series_detail_islink4=0', " .
 			"'Default', 'textfile24.png', 'pdf24.png')";
 
-		if (!JBSMDbHelper::performdb($query, "Build 613: "))
+		if (!JBSMDbHelper::performDB($query, "Build 613: "))
 		{
 			return false;
 		}
 
 		$query = "ALTER TABLE `#__bsms_studies` ADD COLUMN thumbnailm TEXT NULL AFTER studytext";
 
-		if (!JBSMDbHelper::performdb($query, "Build 613: "))
+		if (!JBSMDbHelper::performDB($query, "Build 613: "))
 		{
 			return false;
 		}
 
 		$query = "ALTER TABLE `#__bsms_studies` ADD COLUMN thumbhm INT NULL AFTER thumbnailm";
 
-		if (!JBSMDbHelper::performdb($query, "Build 613: "))
+		if (!JBSMDbHelper::performDB($query, "Build 613: "))
 		{
 			return false;
 		}
 
 		$query = "ALTER TABLE `#__bsms_studies` ADD COLUMN thumbwm INT NULL AFTER thumbhm";
 
-		if (!JBSMDbHelper::performdb($query, "Build 613: "))
+		if (!JBSMDbHelper::performDB($query, "Build 613: "))
 		{
 			return false;
 		}
 
 		$query = "ALTER TABLE `#__bsms_studies` ADD COLUMN params TEXT NULL AFTER thumbwm";
 
-		if (!JBSMDbHelper::performdb($query, "Build 613: "))
+		if (!JBSMDbHelper::performDB($query, "Build 613: "))
 		{
 			return false;
 		}
 
 		$query = "ALTER TABLE `#__bsms_podcast` ADD COLUMN episodetitle INT NULL AFTER published";
 
-		if (!JBSMDbHelper::performdb($query, "Build 613: "))
+		if (!JBSMDbHelper::performDB($query, "Build 613: "))
 		{
 			return false;
 		}
 
 		$query = "ALTER TABLE `#__bsms_podcast` ADD COLUMN custom VARCHAR( 200 ) NULL AFTER episodetitle";
 
-		if (!JBSMDbHelper::performdb($query, "Build 613: "))
+		if (!JBSMDbHelper::performDB($query, "Build 613: "))
 		{
 			return false;
 		}
 
 		$query = "ALTER TABLE `#__bsms_podcast` ADD COLUMN detailstemplateid INT NULL AFTER custom";
 
-		if (!JBSMDbHelper::performdb($query, "Build 613: "))
+		if (!JBSMDbHelper::performDB($query, "Build 613: "))
 		{
 			return false;
 		}
 
 		$query = "ALTER TABLE `#__bsms_series` ADD COLUMN series_thumbnail VARCHAR(150) NULL AFTER series_text";
 
-		if (!JBSMDbHelper::performdb($query, "Build 613: "))
+		if (!JBSMDbHelper::performDB($query, "Build 613: "))
 		{
 			return false;
 		}
 
 		$query = "ALTER TABLE `#__bsms_series` ADD COLUMN description TEXT NULL AFTER series_text";
 
-		if (!JBSMDbHelper::performdb($query, "Build 613: "))
+		if (!JBSMDbHelper::performDB($query, "Build 613: "))
 		{
 			return false;
 		}
 
 		$query = "ALTER TABLE `#__bsms_series` ADD COLUMN teacher INT(3) NULL AFTER series_text";
 
-		if (!JBSMDbHelper::performdb($query, "Build 613: "))
+		if (!JBSMDbHelper::performDB($query, "Build 613: "))
 		{
 			return false;
 		}
 
 		$query = "ALTER TABLE `#__bsms_media` ADD COLUMN path2 VARCHAR(150) NOT NULL AFTER media_image_path";
 
-		if (!JBSMDbHelper::performdb($query, "Build 613: "))
+		if (!JBSMDbHelper::performDB($query, "Build 613: "))
 		{
 			return false;
 		}
@@ -189,7 +189,7 @@ class Migration613
 		$query = "INSERT INTO `#__bsms_media` SET `media_text` = 'Article',`media_image_name` = 'Article',`path2` = " .
 			"'textfile24.png', `media_alttext` = 'Article',`published` = '1'";
 
-		if (!JBSMDbHelper::performdb($query, "Build 613: "))
+		if (!JBSMDbHelper::performDB($query, "Build 613: "))
 		{
 			return false;
 		}
@@ -197,63 +197,63 @@ class Migration613
 		$query = "INSERT INTO `#__bsms_media` SET `media_text` = 'Download',`media_image_name` = 'Download',`path2` = " .
 			"'download.png', `media_alttext` = 'Download',`published` = '1'";
 
-		if (!JBSMDbHelper::performdb($query, "Build 613: "))
+		if (!JBSMDbHelper::performDB($query, "Build 613: "))
 		{
 			return false;
 		}
 
 		$query = "ALTER TABLE `#__bsms_teachers` ADD COLUMN teacher_thumbnail TEXT NULL AFTER id";
 
-		if (!JBSMDbHelper::performdb($query, "Build 613: "))
+		if (!JBSMDbHelper::performDB($query, "Build 613: "))
 		{
 			return false;
 		}
 
 		$query = "ALTER TABLE `#__bsms_teachers` ADD COLUMN teacher_image TEXT NULL AFTER id";
 
-		if (!JBSMDbHelper::performdb($query, "Build 613: "))
+		if (!JBSMDbHelper::performDB($query, "Build 613: "))
 		{
 			return false;
 		}
 
 		$query = "ALTER TABLE `#__bsms_mediafiles` ADD COLUMN docMan_id INT NULL AFTER published";
 
-		if (!JBSMDbHelper::performdb($query, "Build 613: "))
+		if (!JBSMDbHelper::performDB($query, "Build 613: "))
 		{
 			return false;
 		}
 
 		$query = "ALTER TABLE `#__bsms_mediafiles` ADD COLUMN article_id INT NULL AFTER docMan_id";
 
-		if (!JBSMDbHelper::performdb($query, "Build 613: "))
+		if (!JBSMDbHelper::performDB($query, "Build 613: "))
 		{
 			return false;
 		}
 
 		$query = "ALTER TABLE `#__bsms_mediafiles` ADD COLUMN comment TEXT NULL AFTER article_id";
 
-		if (!JBSMDbHelper::performdb($query, "Build 613: "))
+		if (!JBSMDbHelper::performDB($query, "Build 613: "))
 		{
 			return false;
 		}
 
 		$query = "ALTER TABLE `#__bsms_mediafiles` ADD COLUMN virtueMart_id INT NULL AFTER comment";
 
-		if (!JBSMDbHelper::performdb($query, "Build 613: "))
+		if (!JBSMDbHelper::performDB($query, "Build 613: "))
 		{
 			return false;
 		}
 
 		$query = "ALTER TABLE `#__bsms_mediafiles` ADD COLUMN params TEXT NULL AFTER virtueMart_id";
 
-		if (!JBSMDbHelper::performdb($query, "Build 613: "))
+		if (!JBSMDbHelper::performDB($query, "Build 613: "))
 		{
 			return false;
 		}
 
 		$query = "UPDATE `#__bsms_mediafiles` SET params = 'player=2', internal_viewer = '0' WHERE internal_viewer = '1' AND params IS NULL";
 
-		if (!JBSMDbHelper::performdb($query, "Build 613: "))
+		if (!JBSMDbHelper::performDB($query, "Build 613: "))
 		{
 			return false;
 		}
@@ -267,7 +267,7 @@ class Migration613
 								`versionname` VARCHAR(40) NULL,
 								PRIMARY KEY(`id`)) DEFAULT CHARSET=utf8;";
 
-		if (!JBSMDbHelper::performdb($query, "Build 613: "))
+		if (!JBSMDbHelper::performDB($query, "Build 613: "))
 		{
 			return false;
 		}
@@ -275,7 +275,7 @@ class Migration613
 		$query = "INSERT INTO `#__bsms_version` SET `version` = '6.1.0', `installdate`='2009-11-30', " .
 			"`build`='613', `versionname`='Numbers', `versiondate`='2009-11-30'";
 
-		if (!JBSMDbHelper::performdb($query, "Build 613: "))
+		if (!JBSMDbHelper::performDB($query, "Build 613: "))
 		{
 			return false;
 		}

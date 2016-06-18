@@ -24,6 +24,7 @@ defined('_JEXEC') or die;
  */
 class BiblestudyModelSermons extends JModelList
 {
+	public $input;
 
 	/**
 	 * Constructor.
@@ -96,7 +97,7 @@ class BiblestudyModelSermons extends JModelList
 	{
 		if (empty($this->_Topics))
 		{
-			$db    = $this->getDBO();
+			$db    = $this->getDbo();
 			$query = $db->getQuery(true);
 			$query->select('DISTINCT #__bsms_topics.id, #__bsms_topics.topic_text, #__bsms_topics.params as topic_params')
 				->from('#__bsms_studies')
@@ -264,7 +265,7 @@ class BiblestudyModelSermons extends JModelList
 	 */
 	public function getYears()
 	{
-		$db    = $this->getDBO();
+		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
 
 		$query->select('DISTINCT YEAR(studydate) as value, YEAR(studydate) as text');
@@ -287,7 +288,7 @@ class BiblestudyModelSermons extends JModelList
 	 */
 	public function getPlays($id)
 	{
-		$db    = $this->getDBO();
+		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
 
 		$query->select('SUM(plays) AS totalPlays');
@@ -310,7 +311,7 @@ class BiblestudyModelSermons extends JModelList
 	{
 		if (empty($this->_Locations))
 		{
-			$db    = $this->getDBO();
+			$db    = $this->getDbo();
 			$query = $db->getQuery(true);
 			$query->select('id AS value, location_text as text, published');
 			$query->from('#__bsms_locations');
@@ -367,7 +368,7 @@ class BiblestudyModelSermons extends JModelList
 	public function getFiles()
 	{
 		$mediaFiles = null;
-		$db         = JFactory::getDBO();
+		$db         = JFactory::getDbo();
 		$i          = 0;
 
 		foreach ($this->_data as $sermon)
@@ -405,6 +406,7 @@ class BiblestudyModelSermons extends JModelList
 	 */
 	protected function populateState($ordering = 'study.studydate', $direction = 'DESC')
 	{
+		/** @type JApplicationSite $app */
 		$app = JFactory::getApplication();
 
 		// Load the parameters.
@@ -1061,11 +1063,11 @@ class BiblestudyModelSermons extends JModelList
 
 		if ($this->getState('filter.languages'))
 		{
-			$query->where('study.language in (' . $db->Quote($this->getState('filter.languages')) . ',' . $db->Quote('*') . ')');
+			$query->where('study.language in (' . $db->quote($this->getState('filter.languages')) . ',' . $db->quote('*') . ')');
 		}
 		elseif ($this->getState('filter.language') || $language != '*')
 		{
-			$query->where('study.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
+			$query->where('study.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
 		}
 
 		// Order by order filter

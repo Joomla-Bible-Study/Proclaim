@@ -76,7 +76,7 @@
 	</target>
 
 	<!-- Creates API documentation -->
-	<target name="apidoc" depends="init" description="Generate project API documentation">
+	<target name="phpdoc" depends="init" description="Generate project API documentation">
 		<phpdoc2 title="${project.name} API" destdir="${basedir}/docs" template="responsive">
 			<fileset refid="distributed_files"/>
 		</phpdoc2>
@@ -117,6 +117,7 @@
 		<copy todir="${basedir}/build/packages/_tmp">
 			<fileset dir="${basedir}/build">
 				<include name="pkg_biblestudy_package.xml"/>
+				<include name="script.php"/>
 			</fileset>
 		</copy>
 
