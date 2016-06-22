@@ -1039,7 +1039,7 @@ class JBSMListing
 				}
 				else
 				{
-					($item->long ? $data = JHtml::_('content.prepare', $item->long, '', 'com_biblestudy.' . $type) : $data = '');
+					($item->information ? $data = JHtml::_('content.prepare', $item->information, '', 'com_biblestudy.' . $type) : $data = '');
 				}
 				break;
 
@@ -1124,7 +1124,7 @@ class JBSMListing
 				else
 				{
 					($item->email ? $data = '<a href="mailto:' . $item->email . '"><img height="24" width="24" alt="' . JText::_('JBS_TCH_EMAIL') . '"  src="' .
-						JUri::base() . 'media/com_biblestudy/images/email.png" /></a>' : $data = '');
+						JUri::base() . 'media/com_biblestudy/images/email.png"></a>' : $data = '');
 				}
 				break;
 
