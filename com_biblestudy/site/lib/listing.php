@@ -943,58 +943,49 @@ class JBSMListing
 				break;
 
 			case $extra . 'teacherallinone':
-				($item->email ? $data = '<a href="mailto:' . $item->email . '"><img height="24" width="24" alt="' . JText::_('JBS_TCH_EMAIL') . '"  src="' .
-					JUri::base() . 'media/com_biblestudy/images/email.png" /></a>' : $data = '');
+				($item->email ? $data = '<a href="mailto:' . $item->email . '"><span class="fa fa-globe" style="font-size:20px;" title="Website"></span></a>' : $data = '');
 				if ($item->website)
 				{
 					if (substr_count($item->website, 'http://', 0))
 					{
-						$data .= '<a href="' . $item->website . '" target="_blank"><img height="24" width="24" alt="' . $item->website . '"  src="' . JUri::base() .
-							'media/com_biblestudy/images/web.png" /></a>';
+						$data .= '<a href="' . $item->website . '" target="_blank"><span class="fa fa-globe" style="font-size:20px;" title="Website"></span></a>';
 					}
 					else
 					{
-						$data .= '<a href="http://' . $item->website . '" target="_blank"><img height="24" width="24" alt="' . $item->website . '" src="' .
-							JUri::base() . 'media/com_biblestudy/images/web.png" /></a>';
+						$data .= '<a href="http://' . $item->website . '" target="_blank"><span class="fa fa-globe" style="font-size:20px;" title="Website"></span></a>';
 					}
 				}
 				if ($item->facebooklink)
 				{
 					if (substr_count($item->facebooklink, 'http://', 0))
 					{
-						$data .= '<a href="' . $item->facebooklink . '" target="_blank"><img height="24" width="24" alt="' . $item->facebooklink . '"  src="' .
-							JUri::base() . 'media/com_biblestudy/images/facebook.png" /></a>';
+						$data .= '<a href="' . $item->facebooklink . '" target="_blank"><span class="fa fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
 					}
 					else
 					{
-						$data .= '<a href="http://' . $item->facebooklink . '" target="_blank"><img height="24" width="24" alt="' . $item->facebooklink . '" src="' .
-							JUri::base() . 'media/com_biblestudy/images/facebook.png" /></a>';
+						$data .= '<a href="http://' . $item->facebooklink . '" target="_blank"><span class="fa fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
 					}
 				}
 				if ($item->twitterlink)
 				{
 					if (substr_count($item->twitterlink, 'http://', 0))
 					{
-						$data .= '<a href="' . $item->twitterlink . '" target="_blank"><img height="24" width="24" alt="' . $item->twitterlink . '" src="' .
-							JUri::base() . 'media/com_biblestudy/images/twitter.png" /></a>';
+						$data .= '<a href="' . $item->twitterlink . '" target="_blank"><span class="fa fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
 					}
 					else
 					{
-						$data .= '<a href="http://' . $item->twitterlink . '" target="_blank"><img height="24" width="24" alt="' . $item->twitterlink . '"  src="' .
-							JUri::base() . 'media/com_biblestudy/images/twitter.png" /></a>';
+						$data .= '<a href="http://' . $item->twitterlink . '" target="_blank"><span class="fa fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
 					}
 				}
 				if ($item->bloglink)
 				{
 					if (substr_count($item->bloglink, 'http://', 0, 7))
 					{
-						$data .= '<a href="' . $item->bloglink . '" target="_blank"><img height="24" width="24" alt="' . $item->bloglink . '" target="_blank" src="' .
-							JUri::base() . 'media/com_biblestudy/images/blog.png" /></a>';
+						$data .= '<a href="' . $item->bloglink . '" target="_blank"><span class="fa fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
 					}
 					else
 					{
-						$data .= '<a href="http://' . $item->bloglink . '" target="_blank"><img height="24" width="24" alt="' . $item->bloglink .
-							'" target="_blank" src="' . JUri::base() . 'media/com_biblestudy/images/blog.png" /></a>';
+						$data .= '<a href="http://' . $item->bloglink . '" target="_blank"><span class="fa fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
 					}
 				}
 				if ($item->link1)
@@ -1123,8 +1114,7 @@ class JBSMListing
 				}
 				else
 				{
-					($item->email ? $data = '<a href="mailto:' . $item->email . '"><img height="24" width="24" alt="' . JText::_('JBS_TCH_EMAIL') . '"  src="' .
-						JUri::base() . 'media/com_biblestudy/images/email.png"></a>' : $data = '');
+					($item->email ? $data = '<a href="mailto:' . $item->email . '"><span class="fa fa-envelope" style="font-size:20px;" title="Email"></span></a>' : $data = '');
 				}
 				break;
 
@@ -1139,13 +1129,11 @@ class JBSMListing
 					{
 						if (substr_count($item->website, 'http://', 0))
 						{
-							$data = '<a href="' . $item->website . '" target="_blank"><img height="24" width="24" alt="' . $item->website . '"  src="' .
-								JUri::base() . 'media/com_biblestudy/images/web.png" /></a>';
+							$data = '<a href="' . $item->website . '" target="_blank"><span class="fa fa-globe" style="font-size:20px;" title="Website"></span></a>';
 						}
 						else
 						{
-							$data = '<a href="http://' . $item->website . '" target="_blank"><img height="24" width="24" alt="' . $item->website . '" src="' .
-								JUri::base() . 'media/com_biblestudy/images/web.png" /></a>';
+							$data = '<a href="http://' . $item->website . '" target="_blank"><span class="fa fa-globe" style="font-size:20px;" title="Website"></span></a>';
 						}
 					}
 				}
@@ -1174,13 +1162,11 @@ class JBSMListing
 					{
 						if (substr_count($item->facebooklink, 'http://', 0))
 						{
-							$data = '<a href="' . $item->facebooklink . '" target="_blank"><img height="24" width="24" alt="' . $item->facebooklink .
-								'"  src="' . JUri::base() . 'media/com_biblestudy/images/facebook.png" /></a>';
+							$data = '<a href="' . $item->facebooklink . '" target="_blank"><span class="fa fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
 						}
 						else
 						{
-							$data = '<a href="http://' . $item->facebooklink . '" target="_blank"><img height="24" width="24" alt="' . $item->facebooklink .
-								'" src="' . JUri::base() . 'media/com_biblestudy/images/facebook.png" /></a>';
+							$data = '<a href="http://' . $item->facebooklink . '" target="_blank"><span class="fa fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
 						}
 					}
 				}
@@ -1197,13 +1183,11 @@ class JBSMListing
 					{
 						if (substr_count($item->twitterlink, 'http://', 0))
 						{
-							$data = '<a href="' . $item->twitterlink . '" target="_blank"><img height="24" width="24" alt="' . $item->twitterlink . '" src="' .
-								JUri::base() . 'media/com_biblestudy/images/twitter.png" /></a>';
+							$data = '<a href="' . $item->twitterlink . '" target="_blank"><span class="fa fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
 						}
 						else
 						{
-							$data = '<a href="http://' . $item->twitterlink . '" target="_blank"><img height="24" width="24" alt="' . $item->twitterlink .
-								'"  src="' . JUri::base() . 'media/com_biblestudy/images/twitter.png" /></a>';
+							$data = '<a href="http://' . $item->twitterlink . '" target="_blank"><span class="fa fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
 						}
 					}
 				}
@@ -1221,13 +1205,11 @@ class JBSMListing
 					{
 						if (substr_count($item->bloglink, 'http://', 0, 7))
 						{
-							$data = '<a href="' . $item->bloglink . '" target="_blank"><img height="24" width="24" alt="' . $item->bloglink .
-								'" target="_blank" src="' . JUri::base() . 'media/com_biblestudy/images/blog.png" /></a>';
+							$data = '<a href="' . $item->bloglink . '" target="_blank"><span class="fa fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
 						}
 						else
 						{
-							$data = '<a href="http://' . $item->bloglink . '" target="_blank"><img height="24" width="24" alt="' . $item->bloglink .
-								'" target="_blank" src="' . JUri::base() . 'media/com_biblestudy/images/blog.png" /></a>';
+							$data = '<a href="http://' . $item->bloglink . '" target="_blank"><span class="fa fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
 						}
 					}
 				}
