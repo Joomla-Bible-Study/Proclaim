@@ -943,49 +943,58 @@ class JBSMListing
 				break;
 
 			case $extra . 'teacherallinone':
-				($item->email ? $data = '<a href="mailto:' . $item->email . '"><span class="fa fa-globe" style="font-size:20px;" title="Website"></span></a>' : $data = '');
+				($item->email ? $data = '<a href="mailto:' . $item->email . '">
+				<span class="fa fa-globe" style="font-size:20px;" title="Website"></span></a>' : $data = '');
 				if ($item->website)
 				{
 					if (substr_count($item->website, 'http://', 0))
 					{
-						$data .= '<a href="' . $item->website . '" target="_blank"><span class="fa fa-globe" style="font-size:20px;" title="Website"></span></a>';
+						$data .= '<a href="' . $item->website . '" target="_blank">
+						<span class="fa fa-globe" style="font-size:20px;" title="Website"></span></a>';
 					}
 					else
 					{
-						$data .= '<a href="http://' . $item->website . '" target="_blank"><span class="fa fa-globe" style="font-size:20px;" title="Website"></span></a>';
+						$data .= '<a href="http://' . $item->website . '" target="_blank">
+						<span class="fa fa-globe" style="font-size:20px;" title="Website"></span></a>';
 					}
 				}
 				if ($item->facebooklink)
 				{
 					if (substr_count($item->facebooklink, 'http://', 0))
 					{
-						$data .= '<a href="' . $item->facebooklink . '" target="_blank"><span class="fa fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
+						$data .= '<a href="' . $item->facebooklink . '" target="_blank">
+						<span class="fa fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
 					}
 					else
 					{
-						$data .= '<a href="http://' . $item->facebooklink . '" target="_blank"><span class="fa fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
+						$data .= '<a href="http://' . $item->facebooklink . '" target="_blank">
+						<span class="fa fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
 					}
 				}
 				if ($item->twitterlink)
 				{
 					if (substr_count($item->twitterlink, 'http://', 0))
 					{
-						$data .= '<a href="' . $item->twitterlink . '" target="_blank"><span class="fa fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
+						$data .= '<a href="' . $item->twitterlink . '" target="_blank">
+						<span class="fa fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
 					}
 					else
 					{
-						$data .= '<a href="http://' . $item->twitterlink . '" target="_blank"><span class="fa fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
+						$data .= '<a href="http://' . $item->twitterlink . '" target="_blank">
+						<span class="fa fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
 					}
 				}
 				if ($item->bloglink)
 				{
 					if (substr_count($item->bloglink, 'http://', 0, 7))
 					{
-						$data .= '<a href="' . $item->bloglink . '" target="_blank"><span class="fa fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
+						$data .= '<a href="' . $item->bloglink . '" target="_blank">
+						<span class="fa fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
 					}
 					else
 					{
-						$data .= '<a href="http://' . $item->bloglink . '" target="_blank"><span class="fa fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
+						$data .= '<a href="http://' . $item->bloglink . '" target="_blank">
+						<span class="fa fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
 					}
 				}
 				if ($item->link1)
@@ -1056,11 +1065,11 @@ class JBSMListing
 					{
 						if (substr_count($item->link1, 'http://', 0))
 						{
-							$data = '<a href="' . $item->link1 . '" target="_blank">' . $item->link1label . '</a>';
+							$data = '<a href="' . $item->link1 . '" target="_blank">' . $item->linklabel1 . '</a>';
 						}
 						else
 						{
-							$data = '<a href="http://' . $item->link1 . '" target="_blank">' . $item->link1label . '</a>';
+							$data = '<a href="http://' . $item->link1 . '" target="_blank">' . $item->linklabel1 . '</a>';
 						}
 					}
 				}
@@ -1077,11 +1086,11 @@ class JBSMListing
 					{
 						if (substr_count($item->link2, 'http://', 0))
 						{
-							$data = '<a href="' . $item->link2 . '" target="_blank">' . $item->link2label . '</a>';
+							$data = '<a href="' . $item->link2 . '" target="_blank">' . $item->linklabel2 . '</a>';
 						}
 						else
 						{
-							$data = '<a href="http://' . $item->link2 . '" target="_blank">' . $item->link2label . '</a>';
+							$data = '<a href="http://' . $item->link2 . '" target="_blank">' . $item->linklabel2 . '</a>';
 						}
 					}
 				}
@@ -1098,11 +1107,11 @@ class JBSMListing
 					{
 						if (substr_count($item->link3, 'http://', 0))
 						{
-							$data = '<a href="' . $item->link3 . '" target="_blank">' . $item->link3label . '</a>';
+							$data = '<a href="' . $item->link3 . '" target="_blank">' . $item->linklabel3 . '</a>';
 						}
 						else
 						{
-							$data = '<a href="http://' . $item->link3 . '" target="_blank">' . $item->link3label . '</a>';
+							$data = '<a href="http://' . $item->link3 . '" target="_blank">' . $item->linklabel3 . '</a>';
 						}
 					}
 				}
