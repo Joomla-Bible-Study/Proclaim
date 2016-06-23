@@ -124,6 +124,11 @@ class BiblestudyModelSerie extends JModelAdmin
 		// If no image uploaded, just save data as usual
 		if (empty($data['image']) || strpos($data['image'], 'thumb_') !== false)
 		{
+			if (empty($data['image']))
+			{
+				// Modify model data if no image is set.
+				$data['series_thumbnail'] = "";
+			}
 			return parent::save($data);
 		}
 
