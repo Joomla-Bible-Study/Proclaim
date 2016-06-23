@@ -164,9 +164,12 @@ class BiblestudyModelTeacher extends JModelAdmin
 		// If no image uploaded, just save data as usual
 		if (empty($data['image']) || strpos($data['image'], 'thumb_') !== false)
 		{
-			// Modify model data
-			$data['teacher_image']     = "";
-			$data['teacher_thumbnail'] = "";
+			if (empty($data['image']))
+			{
+				// Modify model data if no image is set.
+				$data['teacher_image']     = "";
+				$data['teacher_thumbnail'] = "";
+			}
 			return parent::save($data);
 		}
 

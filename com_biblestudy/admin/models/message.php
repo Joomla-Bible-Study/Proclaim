@@ -221,6 +221,11 @@ class BiblestudyModelMessage extends JModelAdmin
 		// If no image uploaded, just save data as usual
 		if (empty($data['image']) || strpos($data['image'], 'thumb_') !== false)
 		{
+			if (empty($data['image']))
+			{
+				// Modify model data if no image is set.
+				$data['thumbnailm']     = "";
+			}
 			return parent::save($data);
 		}
 		JBSMThumbnail::create($data['image'], $path, $params->get('thumbnail_study_size', 100));
