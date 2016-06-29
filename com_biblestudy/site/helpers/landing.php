@@ -500,7 +500,8 @@ class JBSMLanding
 		if ($count != 0)
 		{
 			switch ($seriesuselimit)
-			{ //use landing page limit
+			{
+				//use landing page limit
 				case 0:
 					$series = '';
 					$t = 0;
