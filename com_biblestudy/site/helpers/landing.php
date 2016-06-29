@@ -501,7 +501,7 @@ class JBSMLanding
 		{
 			switch ($seriesuselimit)
 			{
-				//use landing page limit
+				// use landing page limit
 				case 0:
 					$series = '';
 					$t = 0;
@@ -565,7 +565,7 @@ class JBSMLanding
 					break;
 
 				case 1:
-					//use limit in each record 0 = do not show, 1 = show above More button, 2 = show below more button
+					// use limit in each record 0 = do not show, 1 = show above More button, 2 = show below more button
 					$series = '<div class="landingtable" style="display:inline;">';
 
 					foreach ($items as $b)
