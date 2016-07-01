@@ -501,6 +501,7 @@ class JBSMLanding
 		{
 			switch ($seriesuselimit)
 			{
+				// Use landing page limit
 				case 0:
 					$series = '';
 					$t = 0;
@@ -531,6 +532,7 @@ class JBSMLanding
 						}
 						else
 						{
+							$series .= '<div class="span4">';
 							$series .= '<a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=seriesdisplay&amp;id=' .
 									$b->id . '&amp;t=' . $template . '">';
 						}
@@ -563,6 +565,7 @@ class JBSMLanding
 					break;
 
 				case 1:
+					// Use limit in each record 0 = do not show, 1 = show above More button, 2 = show below more button
 					$series = '<div class="landingtable" style="display:inline;">';
 
 					foreach ($items as $b)
