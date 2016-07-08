@@ -327,7 +327,7 @@ class Com_BiblestudyInstallerScript
 
 		// Check if JBSM can be found from the database
 		$table = $db->getPrefix() . 'bsms_update';
-		$db->setQuery("SHOW TABLES LIKE {$db->quote($table)}");
+		$db->setQuery("SHOW TABLES LIKE {$db->q($table)}");
 
 		if ($db->loadResult() != $table)
 		{
@@ -335,7 +335,7 @@ class Com_BiblestudyInstallerScript
 		}
 
 		// Get installed JBSM version
-		$db->setQuery("SELECT version FROM {$db->quoteName($table)} ORDER BY `id` DESC", 0, 1);
+		$db->setQuery("SELECT version FROM {$db->qn($table)} ORDER BY `id` DESC", 0, 1);
 		$installed = $db->loadResult();
 
 		if (!$installed)

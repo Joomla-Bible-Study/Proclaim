@@ -263,7 +263,7 @@ class BiblestudyViewInstall extends JViewLegacy
 					{
 						// Was the module already installed?
 						$sql = $db->getQuery(true);
-						$sql->select('COUNT(*)')->from('#__modules')->where('module=' . $db->Quote('mod_' . $module));
+						$sql->select('COUNT(*)')->from('#__modules')->where('module=' . $db->q('mod_' . $module));
 						$db->setQuery($sql);
 						$result                  = $db->loadResult();
 						$this->status->modules[] = array(

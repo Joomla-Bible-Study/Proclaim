@@ -15,6 +15,8 @@ JHtml::_('behavior.tooltip');
 JHtml::_('behavior.caption');
 
 // Create shortcuts to some parameters.
+
+/** @type Joomla\Registry\Registry $params */
 $params = $this->item->params;
 $user = JFactory::getUser();
 $canEdit = $params->get('access-edit');

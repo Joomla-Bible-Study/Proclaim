@@ -15,7 +15,7 @@ defined('_JEXEC') or die;
  *
  * @package     BibleStudy
  * @subpackage  Package.JBSPodcast
- * @since       9.0.1
+ * @since       9.0.2
  */
 class Pkg_Biblestudy_PackageInstallerScript
 {

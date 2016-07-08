@@ -18,6 +18,11 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewServersList extends JViewLegacy
 {
+	public $activeFilters;
+
+	public $filterForm;
+
+	public $types;
 
 	/**
 	 * Items

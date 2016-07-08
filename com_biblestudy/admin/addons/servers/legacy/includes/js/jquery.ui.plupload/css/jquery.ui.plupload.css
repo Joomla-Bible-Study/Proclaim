@@ -330,7 +330,7 @@
 	display: block;
 }
 
-.plupload_buttons, .plupload_upload_status {float: left}
+.plupload_buttons, .plupload_upload_status {float: left;}
 
 .plupload_message {
 	position: absolute;

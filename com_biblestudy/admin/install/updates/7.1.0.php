@@ -10,7 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-use \Joomla\Registry\Registry;
+use Joomla\Registry\Registry;
 
 /**
  * Update for 7.1.0 class

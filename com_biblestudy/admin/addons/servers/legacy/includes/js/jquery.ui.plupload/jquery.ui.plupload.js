@@ -169,7 +169,7 @@ Dispatched when file is uploaded.
 @event uploaded
 @param {plupload.Uploader} uploader Uploader instance sending the event.
 @param {plupload.File} file File that was uploaded.
-	@param {Enum} status Status constant matching the plupload states QUEUED, UPLOADING, FAILED, DONE.
+ @param {Enum} status Status constant matching the plupload states QUEUED, UPLOADING, FAILED, DONE.
 */
 
 /**

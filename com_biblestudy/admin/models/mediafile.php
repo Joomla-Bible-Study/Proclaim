@@ -437,6 +437,8 @@ class BiblestudyModelMediafile extends JModelAdmin
 			{
 				$table->reset();
 				$table->load($pk);
+
+				// Todo Need to move to params BCC
 				$table->player = (int) $value;
 
 				if (!$table->store())
