@@ -42,7 +42,6 @@ before_script:
 script:
   #- libraries/vendor/bin/phpunit --configuration travisci-phpunit.xml
   - sh -c "if [ '$TRAVIS_PHP_VERSION' != '7.0' ]; then bin/phpcs --report=full --extensions=php -p --standard=build/phpcs/Joomla .; fi"
-  - bin/phing -f build.xml phpdoc
 
 branches:
   except:
