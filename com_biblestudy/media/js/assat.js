@@ -31,7 +31,7 @@ function assetinstall(event) {
         }
     }).request();
 
-};
+}
 
 /**
  * Show done message
@@ -51,4 +51,4 @@ function done(event) {
         }
     }).request();
 
-};
+}

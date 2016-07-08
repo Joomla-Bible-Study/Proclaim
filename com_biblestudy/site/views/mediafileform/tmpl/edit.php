@@ -16,6 +16,7 @@ JHtml::_('behavior.calendar');
 JHtml::_('behavior.formvalidator');
 JHtml::_('formbehavior.chosen', 'select');
 
+/** @type Joomla\Registry\Registry $params */
 $params = $this->state->get('params');
 
 // Set up defaults

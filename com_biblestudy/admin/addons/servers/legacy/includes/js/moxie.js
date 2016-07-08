@@ -10922,7 +10922,7 @@ define("moxie/runtime/html4/xhr/XMLHttpRequest", [
 					;
 
 					// IE 6 won't be able to set the name using setAttribute or iframe.name
-					temp.innerHTML = '<iframe id="' + uid + '_iframe" name="' + uid + '_iframe" src="javascript:&quot;&quot;" style="display:none"></iframe>';
+					temp.innerHTML = '<iframe id="' + uid + '_iframe" name="' + uid + '_iframe" src="javascript:&quot;&quot;" style="display:none;"></iframe>';
 					_iframe = temp.firstChild;
 					container.appendChild(_iframe);
 
@@ -10961,7 +10961,7 @@ define("moxie/runtime/html4/xhr/XMLHttpRequest", [
 							}
 						} catch (ex) {
 							if (Url.hasSameOrigin(meta.url)) {
-								// if response is sent with error code, iframe in IE gets redirected to res://ieframe.dll/http_x.htm
+								// if response is sent with error code, iframe in IE gets redirected to res://iframe.dll/http_x.htm
 								// which obviously results to cross domain error (wtf?)
 								_status = 404;
 							} else {

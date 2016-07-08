@@ -113,7 +113,7 @@ class BiblestudyViewTemplates extends JViewLegacy
 			$this->sidebar = JHtmlSidebar::render();
 		}
 
-		$bar = JToolBar::getInstance('toolbar');
+		$bar = JToolbar::getInstance('toolbar');
 		$url = JRoute::_('index.php?option=com_biblestudy&view=templates&layout=default_export');
 		$bar->appendButton('Link', 'export', 'JBS_TPL_IMPORT_EXPORT_TEMPLATE', $url);
 

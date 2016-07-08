@@ -9,7 +9,7 @@
  * */
 defined('_JEXEC') or die;
 
-use \Joomla\Registry\Registry;
+use Joomla\Registry\Registry;
 
 /**
  * Database Helper class for version 7.1.0

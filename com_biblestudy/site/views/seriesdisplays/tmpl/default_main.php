@@ -20,6 +20,7 @@ $JBSMSerieslist = new JBSMSerieslist;
 JHtml::_('behavior.tooltip');
 $series_menu = $this->params->get('series_id', 1);
 
+/** @type Joomla\Registry\Registry $params */
 $params = $this->params;
 $url = $params->get('stylesheet');
 $listing = new JBSMListing;

@@ -21,6 +21,12 @@ JLoader::register('UploadScript', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/uplo
  */
 class BiblestudyViewUpload extends JViewLegacy
 {
+	public $enableLog;
+
+	public $runtime;
+
+	public $currentDir;
+
 	/**
 	 * Form
 	 *

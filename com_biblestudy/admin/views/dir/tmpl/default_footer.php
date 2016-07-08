@@ -23,6 +23,4 @@ FOLDERS
 <?php var_dump($this->folders); ?>
 Files
 <?php var_dump($this->files); ?>
-<?php endif; ?>
-
-
+<?php endif;

@@ -45,6 +45,10 @@ class BiblestudyViewMessagelist extends JViewLegacy
 	/** @var  JDocument Document */
 	public $document;
 
+	public $filterForm;
+
+	public $activeFilters;
+
 	/**
 	 * Items
 	 *
