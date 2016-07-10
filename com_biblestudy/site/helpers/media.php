@@ -517,6 +517,15 @@ class JBSMMedia
 		{
 			$media->malttext = '';
 		}
+
+		// Check to make sure a '/' is in between the server url and path.
+		if (!JBSMBibleStudyHelper::endsWith($media->sparams->get('path'), '/')
+			&& !JBSMBibleStudyHelper::startsWith($path, '/')
+			&& !substr_count($path, '://')
+			&& !substr_count($path, '//'))
+		{
+			$path = '/' . $path;
+		}
 		if (!substr_count($path, '://') && !substr_count($path, '//'))
 		{
 			$protocol = $params->get('protocol', '//');

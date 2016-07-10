@@ -674,4 +674,32 @@ class JBSMBibleStudyHelper
 		$mainframe = JFactory::getApplication();
 		$mainframe->close();
 	}
+
+	/**
+	 * String Starts With
+	 *
+	 * @param   string  $haystack  String to search.
+	 * @param   string  $needle    What to search for.
+	 *
+	 * @return bool
+	 */
+	public static function startsWith($haystack, $needle)
+	{
+		// Search backwards starting from haystack length characters from the end
+		return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== false;
+	}
+
+	/**
+	 * String Ends with.
+	 *
+	 * @param   string  $haystack  String to search.
+	 * @param   string  $needle    What to search for.
+	 *
+	 * @return bool
+	 */
+	public static function endsWith($haystack, $needle)
+	{
+		// Search forward starting from end minus needle length characters
+		return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== false);
+	}
 }
