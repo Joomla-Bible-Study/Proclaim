@@ -100,7 +100,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 			$params = new Registry;
 			$params->loadArray($data['params']);
 
-			if (isset($params->toObject()->size) && $params->get('size') == 0)
+			if (isset($params->toObject()->size) && $params->get('size', '0') == '0')
 			{
 				$table = new TableServer(JFactory::getDbo());
 				$table->load($data['server_id']);
@@ -122,7 +122,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 					$path->set('protocal', rtrim(JUri::root(), '/'));
 				}
 
-				if ($table->type == 'legacy')
+				if ($table->type == 'legacy' || $table->type == 'local')
 				{
 					$params->set('size', JBSMHelper::getRemoteFileSize($path->get('protocol') . $set_path . $params->get('filename')));
 					$data['params'] = $params->toArray();
