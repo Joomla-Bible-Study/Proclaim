@@ -40,7 +40,8 @@ class BiblestudyModelTeachers extends JModelList
 				'ordering', 'teacher.ordering',
 				'teahername', 'teacher.teachername',
 				'alias', 'teacher.alias',
-				'language', 'teacher.language'
+				'language', 'teacher.language',
+				'access', 'teacher.access', 'access_level'
 			);
 		}
 
@@ -80,6 +81,9 @@ class BiblestudyModelTeachers extends JModelList
 		$language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $language);
 
+		$access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
+		$this->setState('filter.access', $access);
+
 		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
 
@@ -104,6 +108,7 @@ class BiblestudyModelTeachers extends JModelList
 	{
 
 		// Compile the store id.
+		$id .= ':' . $this->getState('filter.search');
 		$id .= ':' . $this->getState('filter.published');
 		$id .= ':' . $this->getState('filter.language');
 
@@ -121,6 +126,7 @@ class BiblestudyModelTeachers extends JModelList
 	{
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
+		$user  = JFactory::getUser();
 
 		$query->select($this->getState('list.select', 'teacher.*'));
 		$query->from('#__bsms_teachers AS teacher');
@@ -132,6 +138,19 @@ class BiblestudyModelTeachers extends JModelList
 		// Join over the asset groups.
 		$query->select('ag.title AS access_level');
 		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = teacher.access');
+
+		// Filter by access level.
+		if ($access = $this->getState('filter.access'))
+		{
+			$query->where('teacher.access = ' . (int) $access);
+		}
+
+		// Implement View Level Access
+		if (!$user->authorise('core.admin'))
+		{
+			$groups = implode(',', $user->getAuthorisedViewLevels());
+			$query->where('teacher.access IN (' . $groups . ')');
+		}
 
 		// Filter by published state
 		$published = $this->getState('filter.published');
