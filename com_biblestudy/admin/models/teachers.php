@@ -80,6 +80,9 @@ class BiblestudyModelTeachers extends JModelList
 		$language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $language);
 
+		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+		$this->setState('filter.search', $search);
+
 		// List state information.
 		parent::populateState('teacher.teachername', 'asc');
 	}
@@ -142,8 +145,24 @@ class BiblestudyModelTeachers extends JModelList
 			$query->where('(teacher.published = 0 OR teacher.published = 1)');
 		}
 
+		// Filter by search in title.
+		$search = $this->getState('filter.search');
+
+		if (!empty($search))
+		{
+			if (stripos($search, 'id:') === 0)
+			{
+				$query->where('teacher.id = ' . (int) substr($search, 3));
+			}
+			else
+			{
+				$search = $db->quote('%' . $db->escape($search, true) . '%');
+				$query->where('(teacher.teachername LIKE ' . $search . ' OR teacher.alias LIKE ' . $search . ')');
+			}
+		}
+
 		// Add the list ordering clause
-		$orderCol  = $this->state->get('list.ordering', 'teacher.ordering');
+		$orderCol  = $this->state->get('list.ordering', 'teacher.teachername');
 		$orderDirn = $this->state->get('list.direction', 'asc');
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
