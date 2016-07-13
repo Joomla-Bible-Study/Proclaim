@@ -37,6 +37,8 @@ class TableTeacher extends JTable
 	 * Constructor
 	 *
 	 * @param   JDatabaseDriver  &$db  Database connector object
+	 *
+	 * @since  7.0.0
 	 */
 	public function __construct(&$db)
 	{
