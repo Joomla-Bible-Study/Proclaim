@@ -20,6 +20,28 @@ class BiblestudyModelTemplates extends JModelList
 {
 
 	/**
+	 * Constructor.
+	 *
+	 * @param   array  $config  An optional associative array of configuration settings.
+	 *
+	 * @see     JController
+	 * @since   11.1
+	 */
+	public function __construct($config = array())
+	{
+		if (empty($config['filter_fields']))
+		{
+			$config['filter_fields'] = array(
+					'id', 'template.id',
+					'published', 'template.published',
+					'title', 'template.title'
+			);
+		}
+
+		parent::__construct($config);
+	}
+
+	/**
 	 * Templates
 	 *
 	 * @var object
@@ -139,7 +161,7 @@ class BiblestudyModelTemplates extends JModelList
 			else
 			{
 				$search = $db->quote('%' . $db->escape($search, true) . '%');
-				$query->where('(template.title LIKE ' . $search . ' OR template.params LIKE ' . $search . ')');
+				$query->where('template.title LIKE ' . $search);
 			}
 		}
 
