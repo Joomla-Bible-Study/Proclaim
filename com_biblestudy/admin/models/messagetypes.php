@@ -151,7 +151,7 @@ class BiblestudyModelMessagetypes extends JModelList
 
 		$query->select(
 			$this->getState(
-				'list.select', 'messagetype.id, messagetype.published, messagetype.message_type,' .
+				'list.select', 'messagetype.id, messagetype.published, messagetype.message_type, ' .
 				'messagetype.ordering, messagetype.access, messagetype.alias')
 		);
 
