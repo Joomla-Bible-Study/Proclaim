@@ -29,6 +29,8 @@ class BiblestudyModelLocations extends JModelList
 	 * Constructor.
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
+	 *
+	 * @since 7.0.0
 	 */
 	public function __construct($config = array())
 	{
@@ -108,6 +110,8 @@ class BiblestudyModelLocations extends JModelList
 	 * Get List Query
 	 *
 	 * @return  JDatabaseQuery   A JDatabaseQuery object to retrieve the data set.
+	 *
+	 * @since   12.2
 	 */
 	protected function getListQuery()
 	{
