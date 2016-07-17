@@ -62,6 +62,7 @@ function addCSS()
 	{
 		JHtml::stylesheet('media/com_biblestudy/css/biblestudy-debug.css');
 	}
+
 	JHtml::stylesheet('media/com_biblestudy/css/general.css');
 	JHtml::stylesheet('media/com_biblestudy/css/icons.css');
 }
