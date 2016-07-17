@@ -77,6 +77,8 @@ class BiblestudyViewLocations extends JViewLegacy
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
 
+		$this->filterForm = $this->get('FilterForm');
+		$this->activeFilters = $this->get('ActiveFilters');
 		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'location');
 
 		// Check for errors
@@ -106,7 +108,6 @@ class BiblestudyViewLocations extends JViewLegacy
 		if ($this->getLayout() !== 'modal')
 		{
 			$this->addToolbar();
-
 			$this->sidebar = JHtmlSidebar::render();
 		}
 
@@ -172,18 +173,6 @@ class BiblestudyViewLocations extends JViewLegacy
 						$title</button>";
 			$bar->appendButton('Custom', $dhtml, 'batch');
 		}
-
-		JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=locations');
-
-		JHtmlSidebar::addFilter(
-			JText::_('JOPTION_SELECT_PUBLISHED'), 'filter_published',
-			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
-		);
-
-		JHtmlSidebar::addFilter(
-			JText::_('JOPTION_SELECT_ACCESS'), 'filter_access',
-			JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
-		);
 	}
 
 	/**

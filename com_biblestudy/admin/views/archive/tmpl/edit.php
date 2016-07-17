@@ -44,9 +44,10 @@ JFactory::getDocument()->addScriptDeclaration("
 			<div class="control-group">
 				<input class="btn btn-primary" type="submit" value="<?php echo JText::_('JBS_CMN_SUBMIT'); ?>"
 				       name="submit"/>
-				<a href="#">
-					<button type="button" class="btn btn-default"><?php echo JText::_('JTOOLBAR_BACK'); ?></button>
-				</a>
+				<button onclick="Joomla.submitbutton('admin.back')" class="btn btn-default">
+					<span class="icon-back"></span>
+					Back
+				</button>
 			</div>
 		</div>
 	</div>

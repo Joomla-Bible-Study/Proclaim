@@ -9,36 +9,27 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 JHtml::_('bootstrap.tooltip');
-JHtml::_('dropdown.init');
-JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.multiselect');
+JHtml::_('formbehavior.chosen', 'select');
 
-$app = JFactory::getApplication();
-$user = JFactory::getUser();
-$userId = $user->get('id');
-$listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn = $this->escape($this->state->get('list.direction'));
-$archived = $this->state->get('filter.published') == 2 ? true : false;
-$trashed = $this->state->get('filter.published') == -2 ? true : false;
+$app       = JFactory::getApplication();
+$user      = JFactory::getUser();
+$userId    = $user->get('id');
+$listOrder = $this->escape($this->state->get('list.ordering', 'location.locations_text'));
+$listDirn  = $this->escape($this->state->get('list.direction', 'asc'));
+$archived  = $this->state->get('filter.published') == 2 ? true : false;
+$trashed   = $this->state->get('filter.published') == -2 ? true : false;
+$saveOrder = $listOrder == 'location.ordering';
 
-$sortFields = $this->getSortFields();
+if ($saveOrder)
+{
+	$saveOrderingUrl = 'index.php?option=com_biblestudy&task=location.saveOrderAjax&tmpl=component';
+	JHtml::_('sortablelist.sortable', 'articleList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+}
 ?>
-<script type="text/javascript">
-	Joomla.orderTable = function () {
-		var table = document.getElementById("sortTable");
-		var direction = document.getElementById("directionTable");
-		var order = table.options[table.selectedIndex].value;
-		var dirn;
-		if (order != '<?php echo $listOrder; ?>') {
-			dirn = 'asc';
-		} else {
-			dirn = direction.options[direction.selectedIndex].value;
-		}
-		Joomla.tableOrdering(order, dirn, '');
-	}
-</script>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=locations'); ?>" method="post" name="adminForm"
       id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
@@ -50,106 +41,67 @@ $sortFields = $this->getSortFields();
 		<?php else : ?>
 		<div id="j-main-container">
 			<?php endif; ?>
-			<div id="filter-bar" class="btn-toolbar">
-				<div class="filter-search btn-group pull-left">
-					<label for="filter_search"
-					       class="element-invisible"><?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?></label>
-					<input type="text" name="filter_search"
-					       placeholder="<?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?>"
-					       id="filter_search" value="<?php echo $this->escape($this->state->get('filter.search')); ?>"
-					       title="<?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?>"/>
+			<?php
+			// Search tools bar
+			echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+			?>
+			<?php if (empty($this->items)) : ?>
+				<div class="alert alert-no-items">
+					<?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
 				</div>
-				<div class="btn-group pull-left hidden-phone">
-					<button class="btn tip hasTooltip" type="submit"
-					        title="<?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?>"><i
-							class="icon-search"></i></button>
-					<button class="btn tip hasTooltip" type="button"
-					        onclick="document.id('filter_search').value='';this.form.submit();"
-					        title="<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>"><i class="icon-remove"></i></button>
-				</div>
-				<div class="btn-group pull-right hidden-phone">
-					<label for="limit"
-					       class="element-invisible"><?php echo JText::_('JGLOBAL_DISPLAY_NUM'); ?></label>
-					<?php echo $this->pagination->getLimitBox(); ?>
-				</div>
-				<div class="btn-group pull-right hidden-phone">
-					<label for="directionTable"
-					       class="element-invisible"><?php echo JText::_('JFIELD_ORDERING_DESC'); ?></label>
-					<select name="directionTable" id="directionTable" class="input-medium"
-					        onchange="Joomla.orderTable()">
-						<option value=""><?php echo JText::_('JFIELD_ORDERING_DESC'); ?></option>
-						<option
-							value="asc" <?php if ($listDirn == 'asc') echo 'selected="selected"'; ?>><?php echo JText::_('JBS_CMN_ASCENDING'); ?></option>
-						<option
-							value="desc" <?php if ($listDirn == 'desc') echo 'selected="selected"'; ?>><?php echo JText::_('JBS_CMN_DESCENDING'); ?></option>
-					</select>
-				</div>
-				<div class="btn-group pull-right">
-					<label for="sortTable"
-					       class="element-invisible"><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></label>
-					<select name="sortTable" id="sortTable" class="input-medium" onchange="Joomla.orderTable()">
-						<option value=""><?php echo JText::_('JBS_CMN_SELECT_BY'); ?></option>
-						<?php echo JHtml::_('select.options', $sortFields, 'value', 'text', $listOrder); ?>
-					</select>
-				</div>
-			</div>
-			<div class="clearfix"></div>
-
-			<table class="table table-striped adminlist" id="locations">
-				<thead>
-				<tr>
-
-					<th width="1%">
-						<input type="checkbox" name="checkall-toggle" value=""
-						       title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
-					</th>
-					<th width="1%" style="min-width:55px;" class="nowrap center">
-						<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'locations.published', $listDirn, $listOrder); ?>
-					</th>
-					<th>
-						<?php echo JHtml::_('grid.sort', 'JBS_CMN_LOCATIONS', 'locations.locations_text', $listDirn, $listOrder); ?>
-					</th>
-					<th width="10%" class="nowrap hidden-phone">
-						<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ACCESS', 'access_level', $listDirn, $listOrder); ?>
-					</th>
-					<th width="1%" class="nowrap hidden-phone">
-						<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'locations.id', $listDirn, $listOrder); ?>
-					</th>
-				</tr>
-				</thead>
-				<tbody>
-				<?php
-				foreach ($this->items as $i => $item) :
-					$item->max_ordering = 0;
-					$canCreate          = $user->authorise('core.create');
-					$canEdit            = $user->authorise('core.edit', 'com_biblestudy.location.' . $item->id);
-					$canEditOwn         = $user->authorise('core.edit.own', 'com_biblestudy.location.' . $item->id);
-					$canChange          = $user->authorise('core.edit.state', 'com_biblestudy.location.' . $item->id);
-					?>
-					<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo '1' ?>">
-
-						<td class="center hidden-phone">
-							<?php echo JHtml::_('grid.id', $i, $item->id); ?>
-						</td>
-						<td class="center">
-							<div class="btn-group">
-								<?php echo JHtml::_('jgrid.published', $item->published, $i, 'locations.', $canChange, 'cb', '', ''); ?>
-							</div>
-						</td>
-						<td class="nowrap has-context">
-							<div class="pull-left">
-
-								<?php if ($canEdit || $canEditOwn) : ?>
-									<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=location.edit&id=' . (int) $item->id); ?>"
-									   title="<?php echo JText::_('JACTION_EDIT'); ?>">
-										<?php echo $this->escape($item->location_text); ?></a>
-								<?php else : ?>
-									<span
-										title="<?php echo JText::sprintf('JFIELD_ALIAS_LABEL', $this->escape($item->location_text)); ?>"><?php echo $this->escape($item->location_text); ?></span>
-								<?php endif; ?>
-							</div>
-							<div class="pull-left">
-								<?php
+			<?php else : ?>
+				<table class="table table-striped" id="articleList">
+					<thead>
+					<tr>
+						<th width="1%" class="hidden-phone">
+							<?php echo JHtml::_('grid.checkall'); ?>
+						</th>
+						<th width="1%" style="min-width:55px;" class="nowrap center">
+							<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'locations.published', $listDirn, $listOrder); ?>
+						</th>
+						<th>
+							<?php echo JHtml::_('grid.sort', 'JBS_CMN_LOCATIONS', 'locations.locations_text', $listDirn, $listOrder); ?>
+						</th>
+						<th width="10%" class="nowrap hidden-phone">
+							<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ACCESS', 'access_level', $listDirn, $listOrder); ?>
+						</th>
+						<th width="1%" class="nowrap center hidden-phone">
+							<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'locations.id', $listDirn, $listOrder); ?>
+						</th>
+					</tr>
+					</thead>
+					<tbody>
+					<?php
+					foreach ($this->items as $i => $item) :
+						$item->max_ordering = 0;
+						$ordering = ($listOrder == 'location.ordering');
+						$canCreate = $user->authorise('core.create');
+						$canEdit = $user->authorise('core.edit', 'com_biblestudy.location.' . $item->id);
+						$canEditOwn = $user->authorise('core.edit.own', 'com_biblestudy.location.' . $item->id);
+						$canChange = $user->authorise('core.edit.state', 'com_biblestudy.location.' . $item->id);
+						?>
+						<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo '1' ?>">
+							<td class="center hidden-phone">
+								<?php echo JHtml::_('grid.id', $i, $item->id); ?>
+							</td>
+							<td class="center">
+								<div class="btn-group">
+									<?php echo JHtml::_('jgrid.published', $item->published, $i, 'locations.', $canChange, 'cb', '', ''); ?>
+								</div>
+							</td>
+							<td class="nowrap has-context">
+								<div class="pull-left">
+									<?php if ($canEdit || $canEditOwn) : ?>
+										<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=location.edit&id=' . (int) $item->id); ?>"
+										   title="<?php echo JText::_('JACTION_EDIT'); ?>">
+											<?php echo $this->escape($item->location_text); ?></a>
+									<?php else : ?>
+										<span
+												title="<?php echo JText::sprintf('JFIELD_ALIAS_LABEL', $this->escape($item->location_text)); ?>"><?php echo $this->escape($item->location_text); ?></span>
+									<?php endif; ?>
+								</div>
+								<div class="pull-left">
+									<?php
 									// Create dropdown items
 									JHtml::_('dropdown.edit', $item->id, 'location.');
 									JHtml::_('dropdown.divider');
@@ -175,19 +127,20 @@ $sortFields = $this->getSortFields();
 
 									// Render dropdown list
 									echo JHtml::_('dropdown.render');
-								?>
-							</div>
-						</td>
-						<td class="small hidden-phone">
-							<?php echo $this->escape($item->access_level); ?>
-						</td>
-						<td class="center hidden-phone">
-							<?php echo (int) $item->id; ?>
-						</td>
-					</tr>
-				<?php endforeach; ?>
-				</tbody>
-			</table>
+									?>
+								</div>
+							</td>
+							<td class="small hidden-phone">
+								<?php echo $this->escape($item->access_level); ?>
+							</td>
+							<td class="center hidden-phone">
+								<?php echo (int) $item->id; ?>
+							</td>
+						</tr>
+					<?php endforeach; ?>
+					</tbody>
+				</table>
+			<?php endif; ?>
 			<?php echo $this->pagination->getListFooter(); ?>
 			<?php //Load the batch processing form. ?>
 			<?php echo $this->loadTemplate('batch'); ?>

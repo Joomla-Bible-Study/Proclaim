@@ -245,6 +245,7 @@ class BiblestudyViewMessages extends JViewLegacy
 			'study.id'                 => JText::_('JGRID_HEADING_ID'),
 			'access_level'             => JText::_('JGRID_HEADING_ACCESS'),
 			'study.language'           => JText::_('JGRID_HEADING_LANGUAGE'),
+			'locations.location_text'  => JText::_('JBS_CMN_LOCATIONS'),
 			'messageType.message_type' => JText::_('JBS_CMN_MESSAGETYPE')
 		);
 	}

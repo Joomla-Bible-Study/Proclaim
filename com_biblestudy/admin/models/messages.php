@@ -120,15 +120,16 @@ class BiblestudyModelMessages extends JModelList
 	{
 
 		// Compile the store id.
-		$id .= ':' . $this->getState('filter.search');
-		$id .= ':' . $this->getState('filter.studytitle');
+		$id .= ':' . $this->getState('filter.published');
+		$id .= ':' . $this->getState('filter.year');
 		$id .= ':' . $this->getState('filter.book');
 		$id .= ':' . $this->getState('filter.teacher');
 		$id .= ':' . $this->getState('filter.series');
 		$id .= ':' . $this->getState('filter.messagetype');
-		$id .= ':' . $this->getState('filter.year');
-		$id .= ':' . $this->getState('filter.published');
+		$id .= ':' . $this->getState('filter.location');
+		$id .= ':' . $this->getState('filter.access');
 		$id .= ':' . $this->getState('filter.language');
+		$id .= ':' . $this->getState('filter.search');
 
 		return parent::getStoreId($id);
 	}

@@ -20,11 +20,11 @@ use Joomla\Registry\Registry;
  */
 class BiblestudyViewAdmin extends JViewLegacy
 {
-
 	/**
 	 * Version
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $version;
 
@@ -32,6 +32,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 * Can Do
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $canDo;
 
@@ -39,6 +40,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 * Change Set
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $changeSet;
 
@@ -46,6 +48,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 * Errors
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $errors;
 
@@ -53,6 +56,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 * Results
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $results;
 
@@ -60,6 +64,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 * Schema Version
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $schemaVersion;
 
@@ -67,6 +72,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 * Update Version
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $updateVersion;
 
@@ -74,6 +80,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 * Filter Params
 	 *
 	 * @var Registry
+	 * @since    7.0.0
 	 */
 	public $filterParams;
 
@@ -81,6 +88,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 * Pagination
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $pagination;
 
@@ -88,6 +96,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 * Error Count
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $errorCount;
 
@@ -95,6 +104,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 * Joomla BibleStudy Version
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $jversion;
 
@@ -102,6 +112,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 * Temp Destination
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $tmp_dest;
 
@@ -109,6 +120,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 * Player Stats
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $playerstats;
 
@@ -116,6 +128,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 * Assets
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $assets;
 
@@ -123,6 +136,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 * Popups
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $popups;
 
@@ -130,6 +144,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 * SS
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $ss;
 
@@ -137,6 +152,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 * Lists
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $lists;
 
@@ -144,6 +160,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 * PI
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $pi;
 
@@ -151,6 +168,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 * Form
 	 *
 	 * @var array
+	 * @since    7.0.0
 	 */
 	protected $form;
 
@@ -158,6 +176,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 * Item
 	 *
 	 * @var array
+	 * @since    7.0.0
 	 */
 	protected $item;
 
@@ -165,6 +184,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 * State
 	 *
 	 * @var array
+	 * @since    7.0.0
 	 */
 	protected $state;
 
@@ -262,10 +282,12 @@ class BiblestudyViewAdmin extends JViewLegacy
 		{
 			$this->errorCount++;
 		}
+
 		if (!$this->filterParams)
 		{
 			$this->errorCount++;
 		}
+
 		if (($this->updateVersion != $this->version))
 		{
 			$this->errorCount++;
@@ -360,7 +382,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 				}
 				break;
 		}
+
 		return false;
 	}
-
 }

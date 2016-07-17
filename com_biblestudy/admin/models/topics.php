@@ -23,6 +23,8 @@ class BiblestudyModelTopics extends JModelList
 	 * Constructor.
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
+	 *
+	 * @since 7.0.0
 	 */
 	public function __construct($config = array())
 	{
@@ -149,8 +151,8 @@ class BiblestudyModelTopics extends JModelList
 		}
 
 		// Add the list ordering clause
-		$orderCol  = $this->state->get('list.ordering');
-		$orderDirn = $this->state->get('list.direction');
+		$orderCol  = $this->state->get('list.ordering', 'topic.topic_text');
+		$orderDirn = $this->state->get('list.direction', 'asc');
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
 		return $query;

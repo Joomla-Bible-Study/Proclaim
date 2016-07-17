@@ -29,6 +29,8 @@ class BiblestudyModelLocations extends JModelList
 	 * Constructor.
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
+	 *
+	 * @since 7.0.0
 	 */
 	public function __construct($config = array())
 	{
@@ -39,11 +41,11 @@ class BiblestudyModelLocations extends JModelList
 				'published', 'location.published',
 				'mesage_type', 'location.message_type,',
 				'ordering', 'location.ordering',
-				'access', 'location.access',
+				'access', 'location.access', 'access_level'
 			);
 		}
 
-		parent::__construct();
+		parent::__construct($config);
 	}
 
 	/**
@@ -95,6 +97,12 @@ class BiblestudyModelLocations extends JModelList
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
 
+		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+		$this->setState('filter.search', $search);
+
+		$access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
+		$this->setState('filter.access', $access);
+
 		parent::populateState('location.location_text', 'ASC');
 	}
 
@@ -102,21 +110,53 @@ class BiblestudyModelLocations extends JModelList
 	 * Get List Query
 	 *
 	 * @return  JDatabaseQuery   A JDatabaseQuery object to retrieve the data set.
+	 *
+	 * @since   12.2
 	 */
 	protected function getListQuery()
 	{
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
+		$user  = JFactory::getUser();
 
 		$query->select(
 			$this->getState(
-				'list.select', 'location.id, location.published, location.location_text')
+				'list.select', 'location.id, location.published, location.access, location.location_text')
 		);
 		$query->from('`#__bsms_locations` AS location');
 
 		// Join over the asset groups.
 		$query->select('ag.title AS access_level');
 		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = location.access');
+
+		// Filter by access level.
+		if ($access = $this->getState('filter.access'))
+		{
+			$query->where('location.access = ' . (int) $access);
+		}
+
+		// Implement View Level Access
+		if (!$user->authorise('core.admin'))
+		{
+			$groups = implode(',', $user->getAuthorisedViewLevels());
+			$query->where('location.access IN (' . $groups . ')');
+		}
+
+		// Filter by search in title.
+		$search = $this->getState('filter.search');
+
+		if (!empty($search))
+		{
+			if (stripos($search, 'id:') === 0)
+			{
+				$query->where('location.id = ' . (int) substr($search, 3));
+			}
+			else
+			{
+				$search = $db->quote('%' . $db->escape($search, true) . '%');
+				$query->where('location.location_text LIKE ' . $search);
+			}
+		}
 
 		// Filter by published state
 		$published = $this->getState('filter.published');
@@ -129,6 +169,11 @@ class BiblestudyModelLocations extends JModelList
 		{
 			$query->where('(location.published = 0 OR location.published = 1)');
 		}
+
+		// Add the list ordering clause
+		$orderCol  = $this->state->get('list.ordering', 'location.location_text');
+		$orderDirn = $this->state->get('list.direction', 'acs');
+		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
 		return $query;
 	}
