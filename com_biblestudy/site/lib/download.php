@@ -65,10 +65,10 @@ class JBSMDownload
 
 		if ($media)
 		{
-
 			$reg = new Registry;
 			$reg->loadString($media->sparams);
 			$sparams = $reg->toObject();
+
 			if ($sparams->path)
 			{
 				$media->spath = $sparams->path;
@@ -78,6 +78,7 @@ class JBSMDownload
 				($media->spath = '');
 			}
 		}
+
 		$jweb  = new JApplicationWeb;
 		$jweb->clearHeaders();
 
@@ -86,7 +87,9 @@ class JBSMDownload
 		$params->merge($registry);
 
 		$filename      = $params->get('filename');
-		$download_file = $protocol . $media->spath . $filename;
+		$filename      = ltrim($filename, '/');
+		$media->spath  = rtrim($media->spath, '/');
+		$download_file = $protocol . $media->spath . '/' . $filename;
 
 		/** @var $download_file object */
 		$getsize = JBSMHelper::getRemoteFileSize($download_file);
@@ -129,6 +132,7 @@ class JBSMDownload
 			@ob_flush();
 			@flush();
 		}
+
 		fclose($fh);
 		exit;
 	}
@@ -155,7 +159,7 @@ class JBSMDownload
 		{
 			return false;
 		}
+
 		return true;
 	}
-
 }
