@@ -45,6 +45,8 @@ class JBSMPodcast
 	 * Make Podcasts
 	 *
 	 * @return boolean|string
+	 *
+	 * @since 8.0.0
 	 */
 	public function makePodcasts()
 	{
@@ -99,15 +101,18 @@ class JBSMPodcast
 					$description = $this->escapeHTML($podinfo->description);
 					$detailstemplateid = $podinfo->detailstemplateid;
 					$podcastimage      = $this->jimage($podinfo->image);
+
 					if (!$detailstemplateid)
 					{
 						$detailstemplateid = 1;
 					}
+
 					if ((int) $podcastimage[0] < "144")
 					{
 						$podcastimage[0] = 144;
 						$podcastimage[1] = (int) $podcastimage[1] - ((int) $podcastimage[0] - 144);
 					}
+
 					$detailstemplateid = '&amp;t=' . $detailstemplateid;
 					$podhead           = '<?xml version="1.0" encoding="utf-8"?>
                 <rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/"
@@ -156,6 +161,7 @@ class JBSMPodcast
 					{
 						$limit = '';
 					}
+
 					$episodes        = $this->getEpisodes($podinfo->id, $limit);
 					$registry        = new Registry;
 					$registry->loadString(JBSMParams::getAdmin()->params);
@@ -167,11 +173,11 @@ class JBSMPodcast
 					{
 						return false;
 					}
+
 					$episodedetail = '';
 
 					foreach ($episodes as $episode)
 					{
-
 						$episodedate = date("r", strtotime($episode->createdate));
 						$hours       = $episode->media_hours;
 
@@ -185,6 +191,7 @@ class JBSMPodcast
 							$episode->media_minutes = 35;
 							$episode->media_seconds = 00;
 						}
+
 						$esv          = 0;
 						$scripturerow = 1;
 						$episode->id  = $episode->study_id;
@@ -200,6 +207,7 @@ class JBSMPodcast
 						{
 							$episode->size = '30000000';
 						}
+
 						switch ($pod_title)
 						{
 							case 0:
@@ -248,6 +256,7 @@ class JBSMPodcast
 								{
 									$title .= ' - ' . $scripture;
 								}
+
 								if ($episode->studytitle)
 								{
 									$title .= ' - ' . $episode->studytitle;
@@ -259,6 +268,7 @@ class JBSMPodcast
 									$this->template   = JBSMParams::getTemplateparams($detailstemplateid);
 									$this->templateid = $detailstemplateid;
 								}
+
 								$element = $custom->getCustom(
 									$rowid = '24',
 									$podinfo->custom,
@@ -280,7 +290,9 @@ class JBSMPodcast
 								$title    = $bookname . ' ' . $episode->chapter_begin;
 								break;
 						}
+
 						$subtitle = null;
+
 						switch ($pod_subtitle)
 						{
 							case 0:
@@ -325,6 +337,7 @@ class JBSMPodcast
 									$this->template   = JBSMParams::getTemplateparams($detailstemplateid);
 									$this->templateid = $detailstemplateid;
 								}
+
 								$element = $custom->getCustom(
 									$rowid = '24',
 									$podinfo->episodesubtitle,
@@ -346,12 +359,15 @@ class JBSMPodcast
 								$subtitle = $bookname . ' ' . $episode->chapter_begin;
 								break;
 						}
+
 						$title       = $this->escapeHTML($title);
 						$description = $this->escapeHTML($episode->studyintro);
 
 						$episodedetailtemp = '
                         	   <item>
                         		<title>' . $title . '</title>';
+						$path = JBSMHelper::MediaBuildUrl($episode->server_path, str_replace(' ', "%20", $episode->filename), $params);
+
 						/*
 						 * Default is to episode
 						 * 1 = Direct Link.
@@ -359,7 +375,7 @@ class JBSMPodcast
 						 */
 						if ($podinfo->linktype == '1')
 						{
-							$episodedetailtemp .= '<link>http://' . $episode->server_path . $episode->folderpath . str_replace(' ', "%20", $episode->filename) . '</link>';
+							$episodedetailtemp .= '<link>http://' . $path . '</link>';
 						}
 						elseif ($podinfo->linktype == '2')
 						{
@@ -400,6 +416,7 @@ class JBSMPodcast
 								'/index.php?option=com_content&amp;view=article&amp;id=' .
 								$episode->params->get('article_id') . '</guid>';
 						}
+
 						if ($episode->params->get('docMan_id') > 1)
 						{
 							$episodedetailtemp .=
@@ -416,18 +433,12 @@ class JBSMPodcast
 						{
 							$episodedetailtemp .=
 								'
-								<enclosure url="http://' . $episode->srparams->get('path') . str_replace(
-									' ',
-									"%20",
-									$episode->params->get('filename')
-								) . '" length="' . $episode->params->get('size', '100') . '" type="'
+								<enclosure url="http://' . $path .
+								'" length="' . $episode->params->get('size', '100') . '" type="'
 								. $episode->params->get('mimetype', 'audio/mpeg3') . '" />
-                        			<guid>http://' . $episode->srparams->get('path') . str_replace(
-									' ',
-									"%20",
-									$episode->params->get('filename')
-								) . '</guid>';
+                        			<guid>http://' . $path . '</guid>';
 						}
+
 						$episodedetailtemp .= '
                         		<itunes:explicit>no</itunes:explicit>
                         	       </item>';
@@ -462,12 +473,14 @@ class JBSMPodcast
 			}
 			// End foreach podids as podinfo
 		}
+
 		$message = '';
 
 		foreach ($msg as $m)
 		{
 			$message .= $m . '<br />';
 		}
+
 		if (!$message)
 		{
 			$message = 'No message';
@@ -482,11 +495,14 @@ class JBSMPodcast
 	 * @param   string  $html  HTML string to make safe
 	 *
 	 * @return mixed|string
+	 *
+	 * @since 9.0.0
 	 */
 	protected function escapeHTML($html)
 	{
 		$string = str_replace(' & ', " and ", $html);
 		$string = trim(html_entity_decode($string));
+
 		if (!empty($string))
 		{
 			$string = '<![CDATA[' . $string . ']]>';
@@ -505,6 +521,8 @@ class JBSMPodcast
 	 * @param   string  $path  Path of Image
 	 *
 	 * @return array|bool
+	 *
+	 * @since 9.0.0
 	 */
 	public function jimage($path)
 	{
@@ -512,6 +530,7 @@ class JBSMPodcast
 		{
 			return false;
 		}
+
 		$return = @getimagesize(JUri::root() . $path);
 
 		return $return;
@@ -523,7 +542,9 @@ class JBSMPodcast
 	 * @param   int     $id     Id for Episode
 	 * @param   string  $limit  Limit of records
 	 *
-	 * @return object
+	 * @return array
+	 *
+	 * @since 8.0.0
 	 */
 	public function getEpisodes($id, $limit)
 	{
@@ -557,6 +578,7 @@ class JBSMPodcast
 
 		// Go through each and remove the -1 strings and retest
 		$epis = array();
+
 		foreach ($episodes as $e)
 		{
 			$registry = new Registry;
@@ -568,6 +590,7 @@ class JBSMPodcast
 			$e->srparams = $registry;
 
 			$e->podcast_id = str_replace('-1', '', $e->podcast_id);
+
 			if (substr_count($e->podcast_id, $id))
 			{
 				$epis[] = $e;
@@ -584,10 +607,11 @@ class JBSMPodcast
 	 * @param   string  $filecontent  File Content
 	 *
 	 * @return boolean|string
+	 *
+	 * @since 7.0.0
 	 */
 	public function writeFile($file, $filecontent)
 	{
-
 		// Set FTP credentials, if given
 		$files[]        = $file;
 		$podcastresults = '';
@@ -608,6 +632,7 @@ class JBSMPodcast
 		{
 			return true;
 		}
+
 		if (!$fileit)
 		{
 			$app = JFactory::getApplication();

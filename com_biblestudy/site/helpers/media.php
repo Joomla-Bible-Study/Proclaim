@@ -31,6 +31,8 @@ class JBSMMedia
 	 * @param   TableTemplate             $template  Template Table
 	 *
 	 * @return string
+	 *
+	 * @since 9.0.0
 	 */
 	public function getFluidMedia($media, $params, $template)
 	{
@@ -60,6 +62,7 @@ class JBSMMedia
 			{
 				$imageparams = $media->params;
 			}
+
 			if ($imageparams->get('media_use_button_icon') >= 1)
 			{
 				$image = $this->mediaButton($imageparams);
@@ -82,14 +85,18 @@ class JBSMMedia
 		{
 			$link_type = $media->smedia->get('link_type');
 		}
+
 		if ($params->get('show_filesize') > 0 && isset($media) && $link_type < 2)
 		{
-
 				$file_size = $media->params->get('size', '0');
+
 				if (!$file_size)
 				{
-					$file_size = JBSMHelper::getRemoteFileSize($params->get('protocol') . $media->sparams->get('path') . $media->params->get('filename'));
+					$file_size = JBSMHelper::getRemoteFileSize(
+						JBSMHelper::MediaBuildUrl($media->sparams->get('path'), $media->params->get('filename'), $params, true)
+					);
 				}
+
 				switch ($file_size)
 				{
 					case  $file_size < 1024 :
@@ -114,6 +121,7 @@ class JBSMMedia
 						$file_size = $file_size . ' ' . 'GB';
 						break;
 				}
+
 			switch ($params->get('show_filesize'))
 			{
 				case 1:
@@ -167,17 +175,21 @@ class JBSMMedia
 	 * @param   TableTemplate             $template  Template ID
 	 *
 	 * @return string
+	 *
+	 * @since 9.0.0
 	 */
 	public function getFluidDownloadLink($media, $params, $template)
 	{
 		// Remove download form Youtube links.
 		$filename = $media->params->get('filename');
+
 		if (substr_count($filename, 'youtube') || substr_count($filename, 'youtu.be'))
 		{
 			return '';
 		}
 
 		$downloadlink = '';
+
 		if ($params->get('download_use_button_icon') >= 2)
 		{
 			$download_image = $this->downloadButton($params);
@@ -201,6 +213,7 @@ class JBSMMedia
 		{
 			$link_type = $media->smedia->get('link_type');
 		}
+
 		if ($link_type > 0)
 		{
 			$compat_mode = $params->get('compat_mode');
@@ -217,12 +230,13 @@ class JBSMMedia
 			}
 
 			// Check to see if they want to use a popup
+
 			if ($params->get('useterms') > 0)
 			{
-
 				$downloadlink = '<a class="modal" href="index.php?option=com_biblestudy&amp;view=terms&amp;tmpl=component&amp;layout=modal&amp;compat_mode='
 					. $compat_mode . '&amp;mid=' . $media->id . '&amp;t=' . $template->id . '" rel="{handler: \'iframe\', size: {x: 640, y: 480}}">';
 			}
+
 			$downloadlink .= $download_image . '</a>';
 		}
 
@@ -235,6 +249,8 @@ class JBSMMedia
 	 * @param   Registry  $imageparams  ?
 	 *
 	 * @return mixed
+	 *
+	 * @since 9.0.0
 	 */
 	public function mediaButton($imageparams)
 	{
@@ -242,6 +258,7 @@ class JBSMMedia
 		$button = $imageparams->get('media_button_type', 'btn-link');
 		$buttontext = $imageparams->get('media_button_text', 'Audio');
 		$textsize = $imageparams->get('media_icon_text_size', '24');
+
 		if ($imageparams->get('media_button_color'))
 		{
 			$color = 'style="background-color:' . $imageparams->get('media_button_color') . ';"';
@@ -250,6 +267,7 @@ class JBSMMedia
 		{
 			$color = '';
 		}
+
 		switch ($imageparams->get('media_use_button_icon'))
 		{
 			case 1:
@@ -266,6 +284,7 @@ class JBSMMedia
 				{
 					$icon = $imageparams->get('media_icon_type', 'fa fa-play');
 				}
+
 				$mediaimage = '<div  type="button" class="btn ' . $button . '" title="' . $buttontext . '" ' . $color . '><span class="' .
 						$icon . '" title="' . $buttontext . '" style="font-size:' . $textsize . 'px;"></span></div>';
 				break;
@@ -279,18 +298,22 @@ class JBSMMedia
 				{
 					$icon = $imageparams->get('media_icon_type', 'fa fa-play');
 				}
+
 				$mediaimage = '<span class="' . $icon . '" title="' . $buttontext . '" style="font-size:' . $textsize . 'px;"></span>';
 				break;
 		}
 
 		return $mediaimage;
 	}
+
 	/**
 	 * Used to obtain the button and/or icon for the image
 	 *
 	 * @param   Registry  $download  ?
 	 *
 	 * @return mixed
+	 *
+	 * @since 9.0.0
 	 */
 	public function downloadButton($download)
 	{
@@ -298,6 +321,7 @@ class JBSMMedia
 		$button = $download->get('download_button_type', 'btn-link');
 		$buttontext = $download->get('download_button_text', 'Audio');
 		$textsize = $download->get('download_icon_text_size', '24');
+
 		if ($download->get('download_button_color'))
 		{
 			$color = 'style="background-color:' . $download->get('download_button_color') . ';"';
@@ -306,6 +330,7 @@ class JBSMMedia
 		{
 			$color = '';
 		}
+
 		switch ($download->get('download_use_button_icon'))
 		{
 			case 2:
@@ -322,6 +347,7 @@ class JBSMMedia
 				{
 					$icon = $download->get('download_icon_type', 'icon-play');
 				}
+
 				$downloadimage = '<div type="button" class="btn ' . $button . '" title="' . $buttontext . '" ' . $color . '><span class="' .
 						$icon . '" title="' . $buttontext . '" style="font-size:' . $textsize . 'px;"></span></div>';
 				break;
@@ -335,12 +361,14 @@ class JBSMMedia
 				{
 					$icon = $download->get('download_icon_type', 'icon-play');
 				}
+
 				$downloadimage = '<span class="' . $icon . '" title="' . $buttontext . '" style="font-size:' . $textsize . 'px;"></span>';
 				break;
 		}
 
 		return $downloadimage;
 	}
+
 	/**
 	 * Use JImage to create images
 	 *
@@ -357,6 +385,7 @@ class JBSMMedia
 		{
 			return false;
 		}
+
 		$image = new JImage;
 
 		try
@@ -380,6 +409,8 @@ class JBSMMedia
 	 * @param   object                    $media   Media info
 	 *
 	 * @return object
+	 *
+	 * @since 9.0.0
 	 */
 	public function getPlayerAttributes($params, $media)
 	{
@@ -391,6 +422,7 @@ class JBSMMedia
 		{
 			$player->playerheight = $params->get('playerheight');
 		}
+
 		if ($params->get('playerwidth'))
 		{
 			$player->playerwidth = $params->get('playerwidth');
@@ -432,6 +464,7 @@ class JBSMMedia
 				$player->player = $params->get('player', 0);
 			}
 		}
+
 		if ($player->player == 3)
 		{
 			$player->player = 2;
@@ -441,10 +474,12 @@ class JBSMMedia
 		{
 			$player->player = 4;
 		}
+
 		if ($params->get('article_id') > 0)
 		{
 			$player->player = 5;
 		}
+
 		if ($params->get('virtueMart_id') > 0)
 		{
 			$player->player = 6;
@@ -459,6 +494,7 @@ class JBSMMedia
 		{
 			$param_playertype = 1;
 		}
+
 		$item_playertype = $params->get('popup');
 
 		if ($param_playertype && !$media->params->get('popup'))
@@ -497,44 +533,28 @@ class JBSMMedia
 	 * @param   object                    $media   Media
 	 *
 	 * @return string
+	 *
+	 * @since 9.0.0
 	 */
 	public function getPlayerCode($params, $player, $image, $media)
 	{
-
 		// Merging the item params into the global.
 		$params = clone $params;
 		$params->merge($media->params);
 
 		$input       = new JInput;
-		$template    = $input->get('t', '1', 'int');
+		$template    = $input->getInt('t', '1');
 
 		// Here we get more information about the particular media file
 		$filesize = self::getFluidFilesize($media, $params);
 		$duration = self::getFluidDuration($media, $params);
-		$path     = $params->get('filename');
 
 		if (!isset($media->malttext))
 		{
 			$media->malttext = '';
 		}
 
-		// Check to make sure a '/' is in between the server url and path.
-		if (!JBSMBibleStudyHelper::endsWith($media->sparams->get('path'), '/')
-			&& !JBSMBibleStudyHelper::startsWith($path, '/')
-			&& !substr_count($path, '://')
-			&& !substr_count($path, '//'))
-		{
-			$path = '/' . $path;
-		}
-		if (!substr_count($path, '://') && !substr_count($path, '//'))
-		{
-			$protocol = $params->get('protocol', '//');
-			$path     = $protocol . $media->sparams->get('path') . $path;
-		}
-		elseif (!substr_count($path, '://'))
-		{
-			$path = $media->sparams->get('path') . $path;
-		}
+		$path = JBSMHelper::MediaBuildUrl($media->sparams->get('path'), $params->get('filename'), $params, true);
 
 		switch ($player->player)
 		{
@@ -566,18 +586,21 @@ class JBSMMedia
 				{
 					case 3: // Squeezebox view
 						JHtml::_('fancybox.framework', true, true);
+
 						if ($player->player == 7)
 						{
 							$player->playerheight = 40;
 						}
+
 						$playercode = '<a href="' . $path . '" id="linkmedia' . $media->id . '" class="fancybox fancybox_jwplayer" pwidth="' . $player->playerwidth .
 							'" pheight="' . $player->playerheight . '" autostart="' . $params->get('autostart', false) . '">' . $image . '</a>';
+
 						return $playercode;
 						break;
 
 					case 2: // Inline
 						JHtml::_('Jwplayer.framework', true, true);
-						$playercode = JHtmlJwplayer::render($media, $media->id, $params);
+						$playercode = JHtmlJwplayer::render($media, $params, false, $player, $template);
 						break;
 
 					case 1: // Popup
@@ -629,7 +652,7 @@ class JBSMMedia
 				break;
 
 			case 6: // Virtuemart
-				$playercode = $this->getVirtuemart($media, $params, $image);
+				$playercode = $this->getVirtuemart($media, $image);
 
 				return $playercode;
 				break;
@@ -653,15 +676,18 @@ class JBSMMedia
 	 * @param   Joomla\Registry\Registry  $params  Params
 	 *
 	 * @return null|string
+	 *
+	 * @since 9.0.0
 	 */
 	public function getFluidFilesize($media, $params)
 	{
 		$filesize = '';
 
 		$file_size = $media->params->get('size', '0');
+
 		if (!$file_size)
 		{
-			$file_size = JBSMHelper::getRemoteFileSize($params->get('protocol') . $media->sparams->get('path') . $params->get('filename'));
+			$file_size = JBSMHelper::getRemoteFileSize(JBSMHelper::MediaBuildUrl($media->sparams->get('path'), $params->get('filename'), $params, true));
 		}
 
 		if ($file_size)
@@ -711,6 +737,7 @@ class JBSMMedia
 					break;
 			}
 		}
+
 		$this->fsize = $filesize;
 
 		return $filesize;
@@ -723,16 +750,20 @@ class JBSMMedia
 	 * @param   Joomla\Registry\Registry  $params  Params
 	 *
 	 * @return null|string
+	 *
+	 * @since 9.0.0
 	 */
 	public function getFluidDuration($row, $params)
 	{
 		$duration = $row->media_hours . $row->media_minutes . $row->media_seconds;
+
 		if (!$duration)
 		{
 			$duration = null;
 
 			return $duration;
 		}
+
 		$duration_type = $params->get('duration_type', 2);
 		$hours         = $row->media_hours;
 		$minutes       = $row->media_minutes;
@@ -775,6 +806,8 @@ class JBSMMedia
 	 * @param   int  $id  ID to apply the hit to.
 	 *
 	 * @return boolean
+	 *
+	 * @since 9.0.0
 	 */
 	public function hitPlay($id)
 	{
@@ -799,6 +832,8 @@ class JBSMMedia
 	 * @param   int  $id  ID of Row
 	 *
 	 * @return object|boolean
+	 *
+	 * @since 9.0.0
 	 */
 	public function getMediaRows2($id)
 	{
@@ -827,6 +862,7 @@ class JBSMMedia
 			$reg = new Registry;
 			$reg->loadString($media->sparams);
 			$params = $reg->toObject();
+
 			if ($params->path)
 			{
 				$media->spath = $params->path;
@@ -835,6 +871,7 @@ class JBSMMedia
 			{
 				($media->spath = '');
 			}
+
 			return $media;
 		}
 		else
@@ -850,6 +887,8 @@ class JBSMMedia
 	 * @param   object  $media      Media info
 	 *
 	 * @return string
+	 *
+	 * @since 9.0.0
 	 */
 	public function getAVmediacode($mediacode, $media)
 	{
@@ -860,11 +899,11 @@ class JBSMMedia
 
 		if ($isonlydash)
 		{
-			$mediacode = substr_replace($mediacode, 'http://' . $media->spath . $media->fpath . $media->filename, $dashposition, 1);
+			$mediacode = substr_replace($mediacode, 'http://' . JBSMHelper::MediaBuildUrl($media->spath, $media->filename, null), $dashposition, 1);
 		}
 		elseif ($dashposition)
 		{
-			$mediacode = substr_replace($mediacode, $media->spath . $media->fpath . $media->filename, $bracketend - 1, 1);
+			$mediacode = substr_replace($mediacode, JBSMHelper::MediaBuildUrl($media->spath, $media->filename, null), $bracketend - 1, 1);
 		}
 
 		return $mediacode;
@@ -877,6 +916,8 @@ class JBSMMedia
 	 * @param   string  $image  Image
 	 *
 	 * @return string
+	 *
+	 * @since 9.0.0
 	 */
 	public function getDocman($media, $image)
 	{
@@ -899,6 +940,8 @@ class JBSMMedia
 	 * @param   string  $image  Image
 	 *
 	 * @return string
+	 *
+	 * @since 9.0.0
 	 */
 	public function getArticle($media, $image)
 	{
@@ -911,13 +954,14 @@ class JBSMMedia
 	/**
 	 * Set up Virtumart if Vertumart is installed.
 	 *
-	 * @param   object                    $media   Media
-	 * @param   Joomla\Registry\Registry  $params  Item Params
-	 * @param   string                    $image   Image
+	 * @param   object  $media  Media
+	 * @param   string  $image  Image
 	 *
 	 * @return string
+	 *
+	 * @since 9.0.0
 	 */
-	public function getVirtuemart($media, $params, $image)
+	public function getVirtuemart($media, $image)
 	{
 		$vm = '<a href="index.php?option=com_virtuemart&amp;view=productdetails&amp;virtuemart_product_id=' . $media->virtueMart_id . '"
                 alt="' . $media->malttext . ' - ' . $media->comment . '" target="' . $media->special . '">' . $image . '</a>';
