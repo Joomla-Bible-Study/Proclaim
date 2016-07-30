@@ -18,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyControllerSerie extends JControllerForm
 {
-
 	/**
 	 * Class constructor.
 	 *
@@ -99,5 +98,4 @@ class BiblestudyControllerSerie extends JControllerForm
 		// Since there is no asset tracking, revert to the component permissions.
 		return parent::allowEdit($data, $key);
 	}
-
 }

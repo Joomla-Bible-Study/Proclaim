@@ -48,6 +48,8 @@ class BiblestudyControllerInstall extends JControllerForm
 	 * Constructor.
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
+	 *
+	 * @since 1.5
 	 */
 	public function __construct($config = array())
 	{
@@ -62,6 +64,8 @@ class BiblestudyControllerInstall extends JControllerForm
 	 * @param   string  $task  An optional associative array of configuration settings.
 	 *
 	 * @return void
+	 *
+	 * @since 9.0.0
 	 */
 	public function execute($task)
 	{
@@ -69,6 +73,7 @@ class BiblestudyControllerInstall extends JControllerForm
 		{
 			$task = 'browse';
 		}
+
 		parent::execute($task);
 	}
 
@@ -76,6 +81,8 @@ class BiblestudyControllerInstall extends JControllerForm
 	 * Start of installer display hook.
 	 *
 	 * @return void
+	 *
+	 * @since 9.0.0
 	 */
 	public function browse()
 	{
@@ -106,6 +113,8 @@ class BiblestudyControllerInstall extends JControllerForm
 	 * Clear and start of installer display hook.
 	 *
 	 * @return void
+	 *
+	 * @since 9.0.0
 	 */
 	public function clear()
 	{
@@ -121,7 +130,7 @@ class BiblestudyControllerInstall extends JControllerForm
 	 *
 	 * @return void
 	 *
-	 * @since 8.0.0
+	 * @since 9.0.0
 	 */
 	public function run()
 	{

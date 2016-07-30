@@ -22,6 +22,8 @@ class JBSMTags
 	 * Extension Name
 	 *
 	 * @var string
+	 *
+	 * @since 1.5
 	 */
 	public static $extension = 'com_biblestudy';
 
@@ -32,10 +34,13 @@ class JBSMTags
 	 * @param   int  $topic_id  ?
 	 *
 	 * @return boolean
+	 *
+	 * @since 7.0
 	 */
 	public static function isDuplicate($study_id, $topic_id)
 	{
 		JFactory::getApplication()->enqueueMessage('Need to update this function', 'error');
+
 		return true;
 	}
 }

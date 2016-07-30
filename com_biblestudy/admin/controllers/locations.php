@@ -20,7 +20,6 @@ use Joomla\Utilities\ArrayHelper;
  */
 class BiblestudyControllerLocations extends JControllerAdmin
 {
-
 	/**
 	 * Constructor.
 	 *
@@ -82,5 +81,4 @@ class BiblestudyControllerLocations extends JControllerAdmin
 
 		return $model;
 	}
-
 }

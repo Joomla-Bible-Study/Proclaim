@@ -18,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyControllerPodcasts extends JControllerAdmin
 {
-
 	/**
 	 * Constructor.
 	 *
@@ -50,5 +49,4 @@ class BiblestudyControllerPodcasts extends JControllerAdmin
 
 		return $model;
 	}
-
 }

@@ -81,5 +81,4 @@ class BiblestudyControllerSeries extends JControllerAdmin
 
 		return $model;
 	}
-
 }

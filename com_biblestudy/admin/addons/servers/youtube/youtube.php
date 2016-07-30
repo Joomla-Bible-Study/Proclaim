@@ -24,6 +24,8 @@ class JBSMAddonYouTube extends JBSMAddon
 	 * Construct
 	 *
 	 * @param   array  $config  Array of Options
+	 *
+	 * @since 9.0.0
 	 */
 	public function __construct($config = array())
 	{
@@ -33,9 +35,11 @@ class JBSMAddonYouTube extends JBSMAddon
 	/**
 	 * Upload
 	 *
-	 * @param   JInput  $data  Data to upload
+	 * @param   JInput|array  $data  Data to upload
 	 *
 	 * @return array
+	 *
+	 * @since 9.0.0
 	 */
 	public function upload($data)
 	{

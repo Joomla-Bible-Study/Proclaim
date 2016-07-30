@@ -23,11 +23,12 @@ JFormHelper::loadFieldClass('list');
  */
 class JFormFieldVirtuemart extends JFormFieldList
 {
-
 	/**
 	 * The field type.
 	 *
 	 * @var         string
+	 *
+	 * @since 7.0.4
 	 */
 	protected $type = 'Virtuemart';
 
@@ -35,6 +36,8 @@ class JFormFieldVirtuemart extends JFormFieldList
 	 * Method to get a list of options for a list input.
 	 *
 	 * @return      array           An array of JHtml options.
+	 *
+	 * @since 1.5
 	 */
 	protected function getOptions()
 	{
@@ -52,6 +55,7 @@ class JFormFieldVirtuemart extends JFormFieldList
 		{
 			return JText::_('JBS_CMN_VIRTUEMART_NOT_INSTALLED');
 		}
+
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('v.virtuemart_product_id, v.product_name');
@@ -70,9 +74,9 @@ class JFormFieldVirtuemart extends JFormFieldList
 				$options[] = JHtml::_('select.option', $product->virtuemart_product_id, $product->product_name . ' (' . $product->product_sku . ')');
 			}
 		}
+
 		$options = array_merge(parent::getOptions(), $options);
 
 		return $options;
 	}
-
 }

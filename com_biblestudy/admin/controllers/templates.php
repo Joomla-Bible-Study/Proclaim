@@ -20,7 +20,6 @@ use \Joomla\Registry\Registry;
  */
 class BiblestudyControllerTemplates extends JControllerAdmin
 {
-
 	/**
 	 * Proxy for getModel
 	 *
@@ -42,6 +41,8 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	 * Import Template
 	 *
 	 * @return boolean
+	 *
+	 * @since 8.0
 	 */
 	public function template_import()
 	{
@@ -64,6 +65,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		{
 			set_time_limit(300);
 		}
+
 		$input    = new JInputFiles;
 		$userfile = $input->get('template_import');
 		$app      = JFactory::getApplication();
@@ -109,6 +111,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 			// No queries to process
 			return 0;
 		}
+
 		foreach ($queries as $querie)
 		{
 			$querie = trim($querie);
@@ -124,7 +127,6 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 					}
 					elseif (substr_count($querie, '#__bsms_templatecode'))
 					{
-
 						// Start to insert new Record
 						$this->performDB($querie);
 
@@ -188,7 +190,6 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		$data = $db->loadObjectList();
 
 		foreach ($data AS $tpcode):
-
 			// Preload variables for templates
 			$type = $tpcode->type;
 
@@ -281,6 +282,8 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	 * @param   string  $query  Query
 	 *
 	 * @return boolean
+	 *
+	 * @since 8.0
 	 */
 	private function performDB($query)
 	{
@@ -299,6 +302,8 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	 * Export the Template
 	 *
 	 * @return boolean
+	 *
+	 * @since 8.0
 	 */
 	public function template_export()
 	{
@@ -314,6 +319,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 			$message = JText::_('JBS_TPL_NO_FILE_SELECTED');
 			$this->setRedirect('index.php?option=com_biblestudy&view=templates', $message);
 		}
+
 		jimport('joomla.filesystem.file');
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
@@ -331,6 +337,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		{
 			return false;
 		}
+
 		$xport = new JBSMBackup;
 		$xport->output_file($filepath, $filename, 'text/x-sql');
 		JFile::delete($filepath);
@@ -345,6 +352,8 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	 * @param   object  $result  ?
 	 *
 	 * @return string
+	 *
+	 * @since 8.0
 	 */
 	private function getExportSetting($result)
 	{
@@ -379,6 +388,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 			$objects .= "\n--\n-- Sermons\n--";
 			$objects .= $this->getTemplate($sermons);
 		}
+
 		$sermon = $params->get('sermontemplate');
 
 		if ($sermon)
@@ -386,6 +396,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 			$objects .= "\n--\n-- Sermon\n--";
 			$objects .= $this->getTemplate($sermon);
 		}
+
 		$teachers = $params->get('teacherstemplate');
 
 		if ($teachers)
@@ -393,6 +404,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 			$objects .= "\n--\n-- Teachers\n--";
 			$objects .= $this->getTemplate($teachers);
 		}
+
 		$teacher = $params->get('teachertemplate');
 
 		if ($teacher)
@@ -400,6 +412,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 			$objects .= "\n--\n-- Teacher\n--";
 			$objects .= $this->getTemplate($teacher);
 		}
+
 		$seriesdisplays = $params->get('seriesdisplaystemplate');
 
 		if ($seriesdisplays)
@@ -407,6 +420,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 			$objects .= "\n--\n-- Seriesdisplays\n--";
 			$objects .= $this->getTemplate($seriesdisplays);
 		}
+
 		$seriesdisplay = $params->get('seriesdisplaytemplate');
 
 		if ($seriesdisplay)
@@ -434,6 +448,8 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	 * @param   array  $template  ?
 	 *
 	 * @return boolean|string
+	 *
+	 * @since 8.0
 	 */
 	public function getTemplate($template)
 	{
@@ -448,6 +464,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		{
 			return false;
 		}
+
 		$templatereturn = '
                         INSERT INTO `#__bsms_templatecode` SET `type` = "' . $db->escape($object->type) . '",
                         `templatecode` = "' . $db->escape($object->templatecode) . '",
@@ -457,5 +474,4 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 
 		return $templatereturn;
 	}
-
 }

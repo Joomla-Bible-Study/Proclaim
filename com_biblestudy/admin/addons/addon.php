@@ -17,14 +17,13 @@ defined('_JEXEC') or die;
  */
 abstract class JBSMAddon
 {
-
 	/**
 	 * Addon configuration
 	 *
 	 * @var     object
 	 * @since   9.0.0
 	 */
-	protected $_xml = null;
+	protected $xml = null;
 
 	protected $name = null;
 
@@ -46,10 +45,11 @@ abstract class JBSMAddon
 	 * @param   array  $config  Array of Obtains
 	 *
 	 * @throws \Exception
+	 *
+	 * @since 9.0.0
 	 */
 	public function __construct($config = array())
 	{
-
 		if (empty($this->type))
 		{
 			if (array_key_exists('type', $config))
@@ -61,15 +61,16 @@ abstract class JBSMAddon
 				$this->type = $this->getType();
 			}
 		}
-		if (empty($this->_xml))
-		{
-			$this->_xml = $this->getXml();
 
-			if ($this->_xml)
+		if (empty($this->xml))
+		{
+			$this->xml = $this->getXml();
+
+			if ($this->xml)
 			{
-				$this->name        = $this->_xml->name->__toString();
-				$this->description = $this->_xml->description->__toString();
-				$this->config      = $this->_xml->config;
+				$this->name        = $this->xml->name->__toString();
+				$this->description = $this->xml->description->__toString();
+				$this->config      = $this->xml->config;
 			}
 		}
 	}
@@ -87,11 +88,13 @@ abstract class JBSMAddon
 		if (empty($this->type))
 		{
 			$r = null;
+
 			if (!preg_match('/JBSMAddon(.*)/i', get_class($this), $r))
 			{
 				// @TODO Changed to a localized exception
 				throw new Exception(JText::sprintf('CANT ADDON CLASS NAME'), 500);
 			}
+
 			$this->type = strtolower($r[1]);
 		}
 
@@ -109,6 +112,7 @@ abstract class JBSMAddon
 	public function getXml()
 	{
 		$path = JPath::find(BIBLESTUDY_PATH_ADMIN . '/addons/servers/' . $this->type, $this->type . '.xml');
+
 		if ($path)
 		{
 			$xml = simplexml_load_file($path);
@@ -168,7 +172,8 @@ abstract class JBSMAddon
 	 * @param   JInput  $target  URL
 	 *
 	 * @return mixed
+	 *
+	 * @since 9.0.0
 	 */
 	abstract protected function upload($target);
-
 }

@@ -18,11 +18,12 @@ defined('_JEXEC') or die;
  */
 class BiblestudyControllerTeacher extends JControllerForm
 {
-
 	/**
 	 * constructor (registers additional tasks to methods)
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
+	 *
+	 * @since 1.5
 	 */
 	public function __construct($config = array())
 	{

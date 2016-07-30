@@ -24,6 +24,8 @@ class JBSMBibleStudyHelper
 	 * Set extension
 	 *
 	 * @var string
+	 *
+	 * @since 1.5
 	 */
 	public static $extension = 'com_biblestudy';
 
@@ -34,6 +36,8 @@ class JBSMBibleStudyHelper
 	 * @param   string  $type    Type
 	 *
 	 * @return JObject
+	 *
+	 * @since 1.5
 	 */
 	public static function getActions($Itemid = 0, $type = '')
 	{
@@ -114,6 +118,7 @@ class JBSMBibleStudyHelper
 					break;
 			}
 		}
+
 		$actions = array(
 			'core.admin',
 			'core.manage',
@@ -197,6 +202,8 @@ class JBSMBibleStudyHelper
 	 * @param   string  $vName  Name of view
 	 *
 	 * @return void
+	 *
+	 * @since 1.5
 	 */
 	public static function rendermenu($text, $url, $vName)
 	{
@@ -209,6 +216,8 @@ class JBSMBibleStudyHelper
 	 * @param   string  $text  The string to filter
 	 *
 	 * @return string The filtered string
+	 *
+	 * @since 1.5
 	 */
 	public static function filterText($text)
 	{
@@ -341,10 +350,10 @@ class JBSMBibleStudyHelper
 				{
 					// Turn off xss auto clean
 					$filter = JFilterInput::getInstance($whiteListTags, $whiteListAttributes, 0, 0, 0);
-
-				} // No HTML takes last place.
+				}
 				else
 				{
+					// No HTML takes last place.
 					$filter = JFilterInput::getInstance();
 				}
 			}
@@ -647,10 +656,13 @@ class JBSMBibleStudyHelper
 	 * @param   int     $dir   Direction to sort
 	 *
 	 * @return void applied back to the array
+	 *
+	 * @since 1.5
 	 */
 	public static function array_sort_by_column(&$arr, $col, $dir = SORT_ASC)
 	{
 		$sort_col = array();
+
 		foreach ($arr as $key => $row)
 		{
 			$sort_col[$key] = $row[$col];
@@ -667,6 +679,8 @@ class JBSMBibleStudyHelper
 	 * @return void
 	 *
 	 * @throws \Exception
+	 *
+	 * @since 1.5
 	 */
 	public static function stop($msg = '')
 	{
@@ -682,6 +696,8 @@ class JBSMBibleStudyHelper
 	 * @param   string  $needle    What to search for.
 	 *
 	 * @return bool
+	 *
+	 * @since 1.5
 	 */
 	public static function startsWith($haystack, $needle)
 	{
@@ -696,6 +712,8 @@ class JBSMBibleStudyHelper
 	 * @param   string  $needle    What to search for.
 	 *
 	 * @return bool
+	 *
+	 * @since 1.5
 	 */
 	public static function endsWith($haystack, $needle)
 	{

@@ -19,13 +19,14 @@ defined('_JEXEC') or die;
  */
 class JBSMImageLib
 {
-
 	// Public abstract static function resize($img);
 
 	/**
 	 * Extension Name
 	 *
 	 * @var string
+	 *
+	 * @since 1.5
 	 */
 	public static $extension = 'com_biblestudy';
 
@@ -43,6 +44,8 @@ class ImageMagickLib extends ImageLib
 	 * Extension Name
 	 *
 	 * @var string
+	 *
+	 * @since 1.5
 	 */
 	public static $extension = 'com_biblestudy';
 
@@ -52,6 +55,8 @@ class ImageMagickLib extends ImageLib
 	 * @param   string  $image  Image Path
 	 *
 	 * @return void
+	 *
+	 * @since 1.5
 	 *
 	 * @todo look like this is not working yet. bcc
 	 */
@@ -70,7 +75,6 @@ class ImageMagickLib extends ImageLib
 			echo $e->getMessage();
 		}
 	}
-
 }
 
 /**
@@ -85,11 +89,15 @@ class GDLib extends ImageLib
 	 * Extension Name
 	 *
 	 * @var string
+	 *
+	 * @since 1.5
 	 */
 	public static $extension = 'com_biblestudy';
 
 	/**
 	 * Construct System.
+	 *
+	 * @since 1.5
 	 */
 	public function __construct()
 	{
@@ -99,5 +107,4 @@ class GDLib extends ImageLib
 			die("GD is not found");
 		}
 	}
-
 }

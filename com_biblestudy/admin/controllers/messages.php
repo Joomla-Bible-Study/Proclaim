@@ -20,7 +20,6 @@ use Joomla\Utilities\ArrayHelper;
  */
 class BiblestudyControllerMessages extends JControllerAdmin
 {
-
 	/**
 	 * Constructor.
 	 *

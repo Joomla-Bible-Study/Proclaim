@@ -23,6 +23,8 @@ class JBSMImage
 	 * Extension Name
 	 *
 	 * @var string
+	 *
+	 * @since 1.5
 	 */
 	public static $extension = 'com_biblestudy';
 
@@ -32,6 +34,8 @@ class JBSMImage
 	 * @param   string  $path  Path to file
 	 *
 	 * @return object
+	 *
+	 * @since 7.0
 	 */
 	public static function getImage($path)
 	{
@@ -65,6 +69,7 @@ class JBSMImage
 					{
 						$tmp->width = 0;
 					}
+
 					if (!$tmp->height)
 					{
 						$tmp->height = 0;
@@ -74,5 +79,4 @@ class JBSMImage
 
 		return $tmp;
 	}
-
 }

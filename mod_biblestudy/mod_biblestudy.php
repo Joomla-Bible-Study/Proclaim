@@ -29,10 +29,10 @@ $document = JFactory::getDocument();
 
 /** @var $params Registry */
 $templatemenuid = $params->get('t');
-$template = JBSMParams::getTemplateparams($templatemenuid);
-$pagebuilder = new JBSMPageBuilder;
+$template       = JBSMParams::getTemplateparams($templatemenuid);
+$pagebuilder    = new JBSMPageBuilder;
 
-$admin = JBSMParams::getAdmin();
+$admin        = JBSMParams::getAdmin();
 $admin_params = new Registry($admin->params);
 $params->merge($admin_params);
 $template->params->merge($params);
@@ -49,7 +49,6 @@ $count  = count($items);
 
 if ($params->get('useexpert_module') > 0 || is_string($params->get('moduletemplate')) == true)
 {
-
 	foreach ($items AS $item)
 	{
 		$item->slug       = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
@@ -76,6 +75,7 @@ if ($params->get('useexpert_module') > 0 || is_string($params->get('moduletempla
 		{
 			$item->studydate = null;
 		}
+
 		$item->topics = $pelements->topics;
 
 		if (isset($pelements->study_thumbnail))
@@ -95,9 +95,11 @@ if ($params->get('useexpert_module') > 0 || is_string($params->get('moduletempla
 		{
 			$item->series_thumbnail = null;
 		}
+
 		$item->detailslink = $pelements->detailslink;
 	}
 }
+
 $list      = $items;
 $link_text = $params->get('pagetext');
 $jinput    = new JInput;
@@ -106,6 +108,7 @@ if (!$templatemenuid)
 {
 	$templatemenuid = $jinput->getInt('templatemenuid', 1);
 }
+
 $linkurl  = JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $templatemenuid);
 $link     = '<a href="' . $linkurl . '"><button class="btn">' . $link_text . ' --></button></a>';
 $document = JFactory::getDocument();
@@ -122,6 +125,7 @@ if ($url)
 {
 	$document->addStyleSheet($url);
 }
+
 $pageclass_sfx = $params->get('pageclass_sfx');
 
 if ($params->get('moduletemplate'))
@@ -132,4 +136,5 @@ else
 {
 	$template = 'default_main';
 }
+
 require JModuleHelper::getLayoutPath('mod_biblestudy', $template);

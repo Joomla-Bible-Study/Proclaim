@@ -50,7 +50,6 @@ class JBSMPodcast
 	 */
 	public function makePodcasts()
 	{
-		$admin_params = JBSMParams::getAdmin();
 		$msg          = array();
 		$db           = JFactory::getDbo();
 		jimport('joomla.utilities.date');

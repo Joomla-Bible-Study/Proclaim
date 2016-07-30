@@ -24,6 +24,8 @@ class JBSMAddonLegacy extends JBSMAddon
 	 * Construct
 	 *
 	 * @param   array  $config  Array of Options
+	 *
+	 * @since 9.0.0
 	 */
 	public function __construct($config = array())
 	{
@@ -33,9 +35,11 @@ class JBSMAddonLegacy extends JBSMAddon
 	/**
 	 * Upload
 	 *
-	 * @param   JInput  $data  Data to upload
+	 * @param   JInput|array  $data  Data to upload
 	 *
 	 * @return array
+	 *
+	 * @since 9.0.0
 	 */
 	public function upload($data)
 	{
@@ -50,6 +54,7 @@ class JBSMAddonLegacy extends JBSMAddon
 
 		// Make filename safe and move it to correct folder
 		$destFile = JApplicationHelper::stringURLSafe($_FILES["file"]["name"]);
+
 		if (!JFile::upload($_FILES['file']['tmp_name'], JPATH_ROOT . $matches[0] . $destFile))
 		{
 			die('false');

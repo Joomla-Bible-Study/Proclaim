@@ -20,7 +20,6 @@ use Joomla\Utilities\ArrayHelper;
  */
 class BiblestudyControllerTeachers extends JControllerAdmin
 {
-
 	/**
 	 * Method to save the submitted ordering values for records via AJAX.
 	 *

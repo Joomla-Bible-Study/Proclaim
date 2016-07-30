@@ -29,5 +29,4 @@ class BiblestudyControllerCpanel extends JControllerForm
 	{
 		parent::__construct($config);
 	}
-
 }

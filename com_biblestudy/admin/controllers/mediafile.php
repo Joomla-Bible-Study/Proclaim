@@ -197,9 +197,12 @@ class BiblestudyControllerMediafile extends JControllerForm
 		if ($this->input->getCmd('return') && parent::cancel($key))
 		{
 			$this->setRedirect(base64_decode($this->input->getCmd('return')));
+
 			return true;
 		}
+
 		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
+
 		return false;
 	}
 
@@ -246,11 +249,13 @@ class BiblestudyControllerMediafile extends JControllerForm
 	{
 		$return = $this->input->getCmd('return');
 		$task   = $this->input->get('task');
+
 		if ($return && $task != 'apply')
 		{
 			JFactory::getApplication()->enqueueMessage(JText::_('JBS_MED_SAVE'), 'message');
 			$this->setRedirect(base64_decode($return));
 		}
+
 		return;
 	}
 

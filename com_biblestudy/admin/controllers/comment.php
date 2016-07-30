@@ -18,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyControllerComment extends JControllerForm
 {
-
 	/**
 	 * Class constructor.
 	 *
@@ -108,5 +107,4 @@ class BiblestudyControllerComment extends JControllerForm
 
 		return $model;
 	}
-
 }

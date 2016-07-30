@@ -18,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyControllerServers extends JControllerAdmin
 {
-
 	/**
 	 * Proxy for getModel
 	 *
@@ -36,5 +35,4 @@ class BiblestudyControllerServers extends JControllerAdmin
 
 		return $model;
 	}
-
 }

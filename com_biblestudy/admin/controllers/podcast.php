@@ -18,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyControllerPodcast extends JControllerForm
 {
-
 	/**
 	 * Class constructor.
 	 *
@@ -30,5 +29,4 @@ class BiblestudyControllerPodcast extends JControllerForm
 	{
 		parent::__construct($config);
 	}
-
 }

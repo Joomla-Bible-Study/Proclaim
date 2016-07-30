@@ -18,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyControllerLocation extends JControllerForm
 {
-
 	/**
 	 * Class constructor.
 	 *

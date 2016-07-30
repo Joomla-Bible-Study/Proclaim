@@ -20,7 +20,6 @@ use Joomla\Utilities\ArrayHelper;
  */
 class BiblestudyControllerTemplate extends JControllerForm
 {
-
 	/**
 	 * Class constructor.
 	 *
@@ -37,6 +36,8 @@ class BiblestudyControllerTemplate extends JControllerForm
 	 * Copy Template
 	 *
 	 * @return void
+	 *
+	 * @since 7.0
 	 */
 	public function copy()
 	{
@@ -61,6 +62,8 @@ class BiblestudyControllerTemplate extends JControllerForm
 	 * Make Template Default
 	 *
 	 * @return void
+	 *
+	 * @since 7.0
 	 */
 	public function makeDefault()
 	{
@@ -90,6 +93,8 @@ class BiblestudyControllerTemplate extends JControllerForm
 	 *
 	 * @return boolean|string
 	 *
+	 * @since 7.0
+	 *
 	 * @deprecated 8.0.0 Not used in scope bcc
 	 */
 	public function getTemplate($template)
@@ -105,6 +110,7 @@ class BiblestudyControllerTemplate extends JControllerForm
 		{
 			return false;
 		}
+
 		$templatereturn = '
                         INSERT INTO `#__bsms_templatecode` SET `type` = ' . $db->q($object->type) . ',
                         `templatecode` = ' . $db->q($object->templatecode) . ',
@@ -113,5 +119,4 @@ class BiblestudyControllerTemplate extends JControllerForm
 
 		return $templatereturn;
 	}
-
 }

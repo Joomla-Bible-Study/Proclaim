@@ -19,7 +19,6 @@ require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
  */
 class PlgSearchBiblestudysearch extends JPlugin
 {
-
 	/**
 	 * Constructor
 	 *
@@ -27,6 +26,8 @@ class PlgSearchBiblestudysearch extends JPlugin
 	 * @param   array   $config    An optional associative array of configuration settings.
 	 *                             Recognized key values include 'name', 'group', 'params', 'language'
 	 *                             (this list is not meant to be comprehensive).
+	 *
+	 * @since   1.5
 	 */
 	public function __construct(& $subject, $config)
 	{
@@ -38,6 +39,8 @@ class PlgSearchBiblestudysearch extends JPlugin
 	 * Content Search Areas
 	 *
 	 * @return array An array of search areas
+	 *
+	 * @since   1.5
 	 */
 	public function onContentSearchAreas()
 	{
@@ -60,6 +63,8 @@ class PlgSearchBiblestudysearch extends JPlugin
 	 * @param   mixed   $areas     An array if the search it to be restricted to areas, null if search all
 	 *
 	 * @return array
+	 *
+	 * @since   1.5
 	 */
 	public function onContentSearch($text, $phrase = '', $ordering = '', $areas = null)
 	{
@@ -86,6 +91,7 @@ class PlgSearchBiblestudysearch extends JPlugin
 		{
 			$state[] = 1;
 		}
+
 		if ($sArchived)
 		{
 			$state[] = 2;
@@ -130,6 +136,7 @@ class PlgSearchBiblestudysearch extends JPlugin
 					$wheres2[] = 't.topic_text LIKE ' . $word;
 					$wheres[]  = implode(' OR ', $wheres2);
 				}
+
 				$where = '(' . implode(($phrase == 'all' ? ') AND (' : ') OR ('), $wheres) . ')';
 				break;
 		}
@@ -147,6 +154,7 @@ class PlgSearchBiblestudysearch extends JPlugin
 				$order = 'a.studydate DESC';
 				break;
 		}
+
 		if (!empty($state))
 		{
 			// Load language files (english language file as fallback)
@@ -202,6 +210,7 @@ class PlgSearchBiblestudysearch extends JPlugin
 					}
 					break;
 			}
+
 			$query->from(' #__bsms_studies as a');
 			$query->select('st.topic_id');
 			$query->join('LEFT', '#__bsms_studytopics AS st ON a.id = st.study_id');
@@ -241,5 +250,4 @@ class PlgSearchBiblestudysearch extends JPlugin
 
 		return $rows;
 	}
-
 }
