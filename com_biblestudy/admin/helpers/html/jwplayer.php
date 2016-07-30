@@ -47,6 +47,7 @@ abstract class JHtmlJwplayer
 		$params = JBSMParams::getAdmin()->params;
 		$key    = $params->get('jwplayer_key', '8eJ+ik6aOUabfOisJzomcM2Z3h1VZ9+6cufBXQ==');
 		$cdn    = $params->get('jwplayer_cdn', '');
+
 		if ($cdn)
 		{
 			$doc->addScriptDeclaration('jwplayer.key="' . $key . '";');
@@ -64,20 +65,28 @@ abstract class JHtmlJwplayer
 	}
 
 	/**
-	 * Render JS for media
+	 * Render html for media presentation for JW Player
 	 *
 	 * @param   object    $media   Media info
-	 * @param   int       $id      ID of media
 	 * @param   Registry  $params  Params from media have to be in object for do to protection.
 	 * @param   bool      $popup   If from a popup
-	 * @param   bool      $player  To make player for audio like (MP3, M4A, etc..)
+	 * @param   object    $player  To make player for audio like (MP3, M4A, etc..)
+	 * @param   int       $t       Template id.
 	 *
 	 * @return  string
+	 *
+	 * @since 9.0.0
 	 */
-	public static function render($media, $id, $params, $popup = false, $player = false)
+	public static function render($media, $params, $popup = false, $player = null, $t = null)
 	{
+		if ($popup == false)
+		{
+			var_dump($media);
+			var_dump($params);
+		}
+
 		// Used to set for MP3 and audio player look
-		if ($player == true)
+		if (isset($player->mp3) && $player->mp3 == true)
 		{
 			$media->playerheight = 30;
 		}
@@ -108,6 +117,7 @@ abstract class JHtmlJwplayer
 
 		// Fall back check to see if JWplayer can play the media. if not will try and return a link to the file.
 		$acceptedFormats = array('aac', 'm4a', 'f4a', 'mp3', 'ogg', 'oga', 'mp4', 'm4v', 'f4v', 'mov', 'flv', 'webm', 'm3u8', 'mpd', 'DVR');
+
 		if (!in_array(pathinfo($media->path1, PATHINFO_EXTENSION), $acceptedFormats)
 			&& !strpos($media->path1, 'youtube.com')
 			&& !strpos($media->path1, 'youtu.be')
@@ -115,6 +125,7 @@ abstract class JHtmlJwplayer
 		{
 			return '<a href="' . $media->path1 . '" ><img src="' . JUri::root() . $params->get('media_image') . '"/></a>';
 		}
+
 		$media->playerwidth  = $params->get('player_width');
 		$media->playerheight = $params->get('player_height');
 
@@ -126,18 +137,22 @@ abstract class JHtmlJwplayer
 		{
 			$media->playerheight = $params->get('playerheight');
 		}
+
 		if ($params->get('playerwidth'))
 		{
 			$media->playerwidth = $params->get('playerwidth');
 		}
+
 		if ($params->get('playervars'))
 		{
 			$media->extraparams = $params->get('playervars');
 		}
+
 		if ($params->get('altflashvars'))
 		{
 			$media->flashvars = $params->get('altflashvars');
 		}
+
 		$media->backcolor   = $params->get('backcolor', '0x287585');
 		$media->frontcolor  = $params->get('frontcolor', '0xFFFFFF');
 		$media->lightcolor  = $params->get('lightcolor', '0x000000');
@@ -151,6 +166,7 @@ abstract class JHtmlJwplayer
 		{
 			$media->autostart = 'false';
 		}
+
 		if ($params->get('playeridlehide'))
 		{
 			$media->playeridlehide = 'true';
@@ -159,6 +175,7 @@ abstract class JHtmlJwplayer
 		{
 			$media->playeridlehide = 'false';
 		}
+
 		if ($params->get('autostart') == 1)
 		{
 			$media->autostart = 'true';
@@ -167,7 +184,9 @@ abstract class JHtmlJwplayer
 		{
 			$media->autostart = 'false';
 		}
+
 		$render = "";
+
 		if ($popup)
 		{
 			if ($params->get('playerresponsive') != 0)
@@ -180,15 +199,29 @@ abstract class JHtmlJwplayer
 				$render .= "<div class='playeralign' style=\"margin-left: auto; margin-right: auto; width:" . $media->playerwidth . "px;\">";
 			}
 		}
-		$render .= " <div id='placeholder" . $id . "'></div>";
+
+		$render .= " <div id='placeholder" . $media->id . "'></div>";
+
 		if ($popup)
 		{
 			$render .= "</div>";
 		}
+		else
+		{
+			// Add space for popup window
+			$player->playerwidth  = $player->playerwidth + 20;
+			$player->playerheight = $player->playerheight + $params->get('popupmargin', '50');
+			$render .= "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=" . $player->player
+				. "&amp;view=popup&amp;t=" . $t . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width="
+				. $player->playerwidth . ",height=" .
+				$player->playerheight . "'); return false\">" . JText::_('Pop Out') . "</a>";
+		}
+
 		$render .= "<script language=\"javascript\" type=\"text/javascript\">
-						jwplayer('placeholder" . $id . "').setup({
+						jwplayer('placeholder" . $media->id . "').setup({
 							'file': '" . $media->path1 . "',
 						";
+
 		if ($params->get('playerresponsive') == 0)
 		{
 			$render .= "'height': '" . $media->playerheight . "',
@@ -199,6 +232,7 @@ abstract class JHtmlJwplayer
 			$render .= "'aspectratio': '16:9',
 			";
 		}
+
 		if (isset($media->headertext))
 		{
 			$header = $media->headertext;
@@ -207,6 +241,7 @@ abstract class JHtmlJwplayer
 		{
 			$header = $params->get('popuptitle', '');
 		}
+
 		$render .= "'width': '" . $media->playerwidth . "',
 						'displaytitle': '" . $header . "',
 						'image': '" . $params->get('popupimage', 'images/biblestudy/speaker24.png') . "',
@@ -221,6 +256,5 @@ abstract class JHtmlJwplayer
 				</script>";
 
 		return $render;
-
 	}
 }

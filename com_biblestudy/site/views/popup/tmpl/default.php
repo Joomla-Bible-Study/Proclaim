@@ -28,15 +28,17 @@ $doc->addStyleDeclaration($style);
 	// Legacy Player (since JBS 6.2.2) is now deprecated and will be rendered with JWPlayer.
 	if ($this->params->get('player') == 1 || $this->player == 1 || $this->player == 7)
 	{
-		$player = ($this->player == '7' ? true : false);
+		$player = new stdClass;
+		$player->mp3 = ($this->player == '7' ? true : false);
 		JHtml::_('jwplayer.framework');
-		echo JHtml::_('jwplayer.render', $this, $this->media->id, $this->params, true, $player);
+		echo JHtml::_('jwplayer.render', $this->media, $this->params, true, $player);
 	}
 
 	if ($this->player == 8)
 	{
 		echo stripslashes($this->params->get('mediacode'));
 	}
+
 	if ($this->player == 0)
 	{
 		echo '<a href="' . JRoute::_($this->path1) . '"> Link to: ' .

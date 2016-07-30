@@ -133,6 +133,10 @@ class BiblestudyViewPopup extends JViewLegacy
 		$this->template->params->merge($registry);
 
 		$registry = new Registry;
+		$registry->loadString($this->media->sparams);
+		$this->media->sparams = $registry;
+
+		$registry = new Registry;
 		$registry->loadString($this->template->params);
 		$this->params->merge($registry);
 
