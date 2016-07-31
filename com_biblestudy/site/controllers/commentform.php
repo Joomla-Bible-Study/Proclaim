@@ -18,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyControllerCommentform extends JControllerForm
 {
-
 	/**
 	 * View item
 	 *

@@ -21,7 +21,6 @@ JLoader::register('BiblestudyModelComments', JPATH_ADMINISTRATOR . '/components/
  */
 class BiblestudyModelCommentlist extends BiblestudyModelComments
 {
-
 	/**
 	 * Populate State
 	 *

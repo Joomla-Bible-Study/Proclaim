@@ -74,7 +74,6 @@ class BiblestudyModelSerie extends JModelAdmin
 			// The controller has already verified this is an article you can edit.
 			$form->setFieldAttribute('ordering', 'filter', 'unset');
 			$form->setFieldAttribute('published', 'filter', 'unset');
-
 		}
 
 		return $form;

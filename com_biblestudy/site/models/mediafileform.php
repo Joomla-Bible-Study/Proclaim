@@ -91,5 +91,4 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 		$server_id = $app->getUserState('com_biblestudy.edit.mediafile.server_id');
 		$this->setState('mediafile.server_id', $server_id);
 	}
-
 }

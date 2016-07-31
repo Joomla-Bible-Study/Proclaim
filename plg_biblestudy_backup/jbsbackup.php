@@ -25,7 +25,6 @@ if (file_exists($api))
  */
 class PlgSystemJBSBackup extends JPlugin
 {
-
 	/**
 	 * Constructor
 	 *

@@ -147,6 +147,7 @@ class BiblestudyViewTerms extends JViewLegacy
 		{
 			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
+
 		$this->document->setTitle($title);
 
 		// Prepare meta information (under development)
