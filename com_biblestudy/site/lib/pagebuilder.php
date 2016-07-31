@@ -19,11 +19,14 @@ use Joomla\Registry\Registry;
  */
 class JBSMPageBuilder
 {
-
-	/** @var string Extension Name */
+	/** @var string Extension Name
+	 *
+	 * @since  7.0.1 */
 	public $extension = 'com_biblestudy';
 
-	/** @var  string Event */
+	/** @var  string Event
+	 *
+	 * @since  7.0.1 */
 	public $event;
 
 	/**
@@ -34,6 +37,8 @@ class JBSMPageBuilder
 	 * @param   TableTemplate             $template  Template data
 	 *
 	 * @return object
+	 *
+	 * @since  7.0.1
 	 */
 	public function buildPage($item, $params, $template)
 	{
@@ -66,6 +71,7 @@ class JBSMPageBuilder
 		{
 			$page->scripture1 = '';
 		}
+
 		if (!$item->secondary_reference)
 		{
 			$item->secondary_reference = '';
@@ -98,12 +104,14 @@ class JBSMPageBuilder
 			{
 				$topics[$key] = JText::_($value);
 			}
+
 			$page->topics = implode(', ', $topics);
 		}
 		else
 		{
 			$page->topics = JText::_($item->topics_text);
 		}
+
 		if ($item->thumbnailm)
 		{
 			$image                 = $images->getStudyThumbnail($item->thumbnailm);
@@ -114,6 +122,7 @@ class JBSMPageBuilder
 		{
 			$page->study_thumbnail = '';
 		}
+
 		if ($item->series_thumbnail)
 		{
 			$image                  = $images->getSeriesThumbnail($item->series_thumbnail);
@@ -124,6 +133,7 @@ class JBSMPageBuilder
 		{
 			$page->series_thumnail = '';
 		}
+
 		$page->detailslink = JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $item->slug . '&t=' . $params->get('detailstemplateid'));
 
 		if (!isset($item->image))
@@ -152,14 +162,17 @@ class JBSMPageBuilder
 		{
 			$item->studytext = '';
 		}
+
 		if (!isset($item->secondary_reference))
 		{
 			$item->secondary_reference = '';
 		}
+
 		if (!isset($item->sdescription))
 		{
 			$item->sdescription = '';
 		}
+
 		if ($params->get('show_scripture_link') == 0)
 		{
 			return $page;
@@ -173,30 +186,35 @@ class JBSMPageBuilder
 				$item             = self::runContentPlugins($item, $params);
 				$page->scripture1 = $item->text;
 			}
+
 			if ($page->scripture2)
 			{
 				$item->text       = $page->scripture2;
 				$item             = self::runContentPlugins($item, $params);
 				$page->scripture2 = $item->text;
 			}
+
 			if ($item->studyintro)
 			{
 				$item->text       = $item->studyintro;
 				$item             = self::runContentPlugins($item, $params);
 				$page->studyintro = $item->text;
 			}
+
 			if ($item->studytext)
 			{
 				$item->text      = $item->studytext;
 				$item            = self::runContentPlugins($item, $params);
 				$page->studytext = $item->text;
 			}
+
 			if ($item->secondary_reference)
 			{
 				$item->text                = $item->secondary_reference;
 				$item                      = self::runContentPlugins($item, $params);
 				$page->secondary_reference = $item->text;
 			}
+
 			if ($item->sdescription)
 			{
 				$item->text         = $item->sdescription;
@@ -206,7 +224,6 @@ class JBSMPageBuilder
 
 			return $page;
 		}
-
 	}
 
 	/**
@@ -218,6 +235,8 @@ class JBSMPageBuilder
 	 * @param   object                    $item      Item Params
 	 *
 	 * @return string
+	 *
+	 * @since  7.0.1
 	 */
 	private function mediaBuilder($mediaids, $params, $template, $item)
 	{
@@ -228,7 +247,6 @@ class JBSMPageBuilder
 		$mediafiles       = $listing->getFluidMediaFiles($item, $params, $template);
 
 		return $mediafiles;
-
 	}
 
 	/**
@@ -238,6 +256,8 @@ class JBSMPageBuilder
 	 * @param   object  $params  Item params
 	 *
 	 * @return object
+	 *
+	 * @since  7.0.1
 	 */
 	public function runContentPlugins($item, $params)
 	{
@@ -295,13 +315,13 @@ class JBSMPageBuilder
 	 * @param   TableTemplate             $template    Template Data
 	 *
 	 * @return array
+	 *
+	 * @since  7.0.1
 	 */
 	public function studyBuilder($whereitem = null, $wherefield = null, $params = null, $limit = 10, $order = 'DESC', $template = null)
 	{
 		$app  = JFactory::getApplication();
 		$db   = JFactory::getDbo();
-		$menu = $app->getMenu();
-		$item = $menu->getActive();
 
 		$teacher          = $params->get('teacher_id');
 		$topic            = $params->get('topic_id');
@@ -312,16 +332,12 @@ class JBSMPageBuilder
 		$messagetype_menu = $params->get('messagetype');
 		$year             = $params->get('year');
 		$orderparam       = $params->get('order', '1');
-		$language         = $params->get('language', $item->language);
 
 		if ($orderparam == 2)
 		{
 			$order = "ASC";
 		}
-		else
-		{
-			$order = "DESC";
-		}
+
 		if ($condition > 0)
 		{
 			$condition = ' AND ';
@@ -329,15 +345,6 @@ class JBSMPageBuilder
 		else
 		{
 			$condition = ' OR ';
-		}
-
-		if ($language)
-		{
-			$language = $db->quote($language) . ',' . $db->quote('*');
-		}
-		else
-		{
-			$language = $db->quote('*');
 		}
 
 		// Compute view access permissions.
@@ -404,7 +411,8 @@ class JBSMPageBuilder
 
 		// Select only published studies
 		$query->where('study.published = 1');
-		$query->where('series.published = 1 OR study.series_id <= 0');
+		$query->where('(series.published = 1 OR study.series_id <= 0)');
+
 		if ($wherefield && $whereitem)
 		{
 			$query->where($wherefield . ' = ' . $whereitem);
@@ -421,6 +429,7 @@ class JBSMPageBuilder
 		{
 			$query->where('study.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
 		}
+
 		$query->order('studydate ' . $order);
 
 		// Filter only for authorized view
