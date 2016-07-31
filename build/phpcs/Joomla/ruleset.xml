@@ -12,6 +12,14 @@
 	<exclude-pattern type="relative">bin/*</exclude-pattern>
 	<exclude-pattern type="relative">.joomla-dev/*</exclude-pattern>
 
+	<!-- Exclude folders not containing production code -->
+	<exclude-pattern type="relative">build/*</exclude-pattern>
+	<exclude-pattern type="relative">docs/*</exclude-pattern>
+	<exclude-pattern type="relative">tests/*</exclude-pattern>
+	<exclude-pattern type="relative">cache/*</exclude-pattern>
+	<exclude-pattern type="relative">tmp/*</exclude-pattern>
+	<exclude-pattern type="relative">logs/*</exclude-pattern>
+
 	<!-- Include all sniffs in an external standard directory -->
 
 	<!-- Include some additional sniffs from the Generic standard -->
