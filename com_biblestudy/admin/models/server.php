@@ -93,10 +93,12 @@ class BiblestudyModelServer extends JModelAdmin
 			$this->data->server_name = empty($server_name) ? $this->data->server_name : $server_name;
 
 			$type = null;
+
 			if (!$ext)
 			{
 				$type = $this->getState('server.type');
 			}
+
 			$this->data->type        = empty($type) ? $this->data->type : $type;
 
 			// Load server type configuration if available
@@ -140,11 +142,13 @@ class BiblestudyModelServer extends JModelAdmin
 	{
 		// If user hasn't selected a server type yet, just return an empty form
 		$type = $this->data->type;
+
 		if (empty($type))
 		{
 			// @TODO This may not be optimal, seems like a hack
 			return new JForm("No-op");
 		}
+
 		$path = JPath::clean(JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/' . $type);
 
 		JForm::addFormPath($path);
@@ -152,6 +156,7 @@ class BiblestudyModelServer extends JModelAdmin
 
 		// Add language files
 		$lang = JFactory::getLanguage();
+
 		if (!$lang->load('jbs_addon_' . $type, $path))
 		{
 			throw new Exception(JText::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'));
@@ -165,7 +170,6 @@ class BiblestudyModelServer extends JModelAdmin
 		}
 
 		return $form;
-
 	}
 
 	/**

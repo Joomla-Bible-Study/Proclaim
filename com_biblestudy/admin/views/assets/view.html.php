@@ -18,14 +18,19 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewAssets extends JViewLegacy
 {
-
-	/** @var int Total numbers of Steps */
+	/** @var int Total numbers of Steps
+	 *
+	 * @since 9.0.0 */
 	public $totalSteps = 0;
 
-	/** @var int Numbers of Steps already processed */
+	/** @var int Numbers of Steps already processed
+	 *
+	 * @since 9.0.0 */
 	public $doneSteps = 0;
 
-	/** @var array Call stack for the Visioning System. */
+	/** @var array Call stack for the Visioning System.
+	 *
+	 * @since 9.0.0 */
 	public $callstack = array();
 
 	public $version;
@@ -34,20 +39,30 @@ class BiblestudyViewAssets extends JViewLegacy
 
 	public $assets;
 
-	/** @var string More */
+	/** @var string More
+	 *
+	 * @since 9.0.0 */
 	protected $more;
 
-	/** @var  string Percentage */
+	/** @var  string Percentage
+	 *
+	 * @since 9.0.0 */
 	protected $percentage;
 
-	/** @var string Starte of install */
+	/** @var string Starte of install
+	 *
+	 * @since 9.0.0 */
 	public $state;
 
-	/** @var JObject Status */
+	/** @var JObject Status
+	 *
+	 * @since 9.0.0 */
 	public $status;
 
-	/** @var array The pre versions to process */
-	private $_versionStack = array();
+	/** @var array The pre versions to process
+	 *
+	 * @since 9.0.0 */
+	private $versionStack = array();
 
 	/**
 	 * Execute and display a template script.
@@ -72,7 +87,7 @@ class BiblestudyViewAssets extends JViewLegacy
 
 		if (empty($stack))
 		{
-			$this->_versionStack  = array();
+			$this->versionStack   = array();
 			$this->step           = null;
 			$this->totalSteps     = 0;
 			$this->doneSteps      = 0;
@@ -82,6 +97,7 @@ class BiblestudyViewAssets extends JViewLegacy
 			if (function_exists('base64_encode') && function_exists('base64_decode'))
 			{
 				$stack = base64_decode($stack);
+
 				if (function_exists('gzdeflate') && function_exists('gzinflate'))
 				{
 					$stack = gzinflate($stack);
@@ -90,7 +106,7 @@ class BiblestudyViewAssets extends JViewLegacy
 
 			$stack = json_decode($stack, true);
 
-			$this->_versionStack  = $stack['version'];
+			$this->versionStack   = $stack['version'];
 			$this->step           = $stack['step'];
 			$this->totalSteps     = $stack['total'];
 			$this->doneSteps      = $stack['done'];
@@ -104,6 +120,7 @@ class BiblestudyViewAssets extends JViewLegacy
 			{
 				$percent = min(max(round(100 * $this->doneSteps / $this->totalSteps), 1), 100);
 			}
+
 			$more = true;
 		}
 		else
@@ -173,5 +190,4 @@ class BiblestudyViewAssets extends JViewLegacy
 		$document = JFactory::getDocument();
 		$document->setTitle(JText::_('JBS_TITLE_ADMINISTRATION'));
 	}
-
 }

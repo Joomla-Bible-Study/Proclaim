@@ -24,6 +24,8 @@ class Migration623
 	 * @param   JDatabaseDriver  $db  Data bass driver
 	 *
 	 * @return bool
+	 *
+	 * @since 9.0.0
 	 */
 	public function up($db)
 	{
@@ -63,6 +65,7 @@ class Migration623
 				}
 			}
 		}
+
 		$data              = new stdClass;
 		$data->version     = '6.2.3';
 		$data->installdate = '2010-11-03';

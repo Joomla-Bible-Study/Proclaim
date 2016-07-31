@@ -6,7 +6,7 @@
  * @category  Classes
  * @package   Joomla.CodeSniffer
  * @author    Nikolai Plath
- * @license   GNU General Public License version 2 or later
+ * @version   CVS: $Id: InstantiateNewClassesSniff.php 508 2011-08-29 08:53:08Z elkuku $
  */
 
 /**
@@ -72,6 +72,7 @@ class Joomla_Sniffs_Classes_InstantiateNewClassesSniff implements PHP_CodeSniffe
                     case T_LNUMBER :
                     case T_CONSTANT_ENCAPSED_STRING :
                     case T_DOUBLE_QUOTED_STRING :
+                    case T_ARRAY :
                         if($started)
                         {
                             $valid = true;

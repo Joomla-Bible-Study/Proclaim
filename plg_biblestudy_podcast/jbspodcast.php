@@ -17,7 +17,6 @@ defined('_JEXEC') or die;
  */
 class PlgSystemJBSPodcast extends JPlugin
 {
-
 	/**
 	 * Constructor
 	 *
@@ -25,10 +24,11 @@ class PlgSystemJBSPodcast extends JPlugin
 	 * @param   array   $config    An optional associative array of configuration settings.
 	 *                             Recognized key values include 'name', 'group', 'params', 'language'
 	 *                             (this list is not meant to be comprehensive).
+	 *
+	 * @since   1.5
 	 */
 	public function __construct(& $subject, $config)
 	{
-
 		parent::__construct($subject, $config);
 
 		$this->loadLanguage();
@@ -46,6 +46,8 @@ class PlgSystemJBSPodcast extends JPlugin
 	 * After Initialise system
 	 *
 	 * @return void
+	 *
+	 * @since   1.5
 	 */
 	public function onAfterInitialise()
 	{
@@ -97,10 +99,11 @@ class PlgSystemJBSPodcast extends JPlugin
 	 * @param   object  $params  Plugin params
 	 *
 	 * @return boolean   True if Time is difference. False if not grater then now.
+	 *
+	 * @since   7.0.5
 	 */
 	public function checktime($params)
 	{
-
 		$now   = time();
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
@@ -129,6 +132,8 @@ class PlgSystemJBSPodcast extends JPlugin
 	 * @param   Joomla\Registry\Registry  $params  Plugin params
 	 *
 	 * @return boolean Check to see if to day is right.
+	 *
+	 * @since   7.0.5
 	 */
 	public function checkdays($params)
 	{
@@ -162,6 +167,7 @@ class PlgSystemJBSPodcast extends JPlugin
 		{
 			$checkdays = true;
 		}
+
 		if ($params->get('day2') == $day)
 		{
 			if ($params->get('hour2') == $hour && $difference > 3600)
@@ -169,6 +175,7 @@ class PlgSystemJBSPodcast extends JPlugin
 				$checkdays = true;
 			}
 		}
+
 		if ($params->get('day3') == $day)
 		{
 			if ($params->get('hour3') == $hour && $difference > 3600)
@@ -176,6 +183,7 @@ class PlgSystemJBSPodcast extends JPlugin
 				$checkdays = true;
 			}
 		}
+
 		if ($params->get('day4') == $day)
 		{
 			if ($params->get('hour4') == $hour && $difference > 3600)
@@ -183,6 +191,7 @@ class PlgSystemJBSPodcast extends JPlugin
 				$checkdays = true;
 			}
 		}
+
 		if ($params->get('day5') == $day)
 		{
 			if ($params->get('hour5') == $hour && $difference > 3600)
@@ -190,6 +199,7 @@ class PlgSystemJBSPodcast extends JPlugin
 				$checkdays = true;
 			}
 		}
+
 		if ($params->get('day6') == $day)
 		{
 			if ($params->get('hour6') == $hour && $difference > 3600)
@@ -197,6 +207,7 @@ class PlgSystemJBSPodcast extends JPlugin
 				$checkdays = true;
 			}
 		}
+
 		if ($params->get('day7') == $day)
 		{
 			if ($params->get('hour7') == $hour && $difference > 3600)
@@ -204,6 +215,7 @@ class PlgSystemJBSPodcast extends JPlugin
 				$checkdays = true;
 			}
 		}
+
 		if ($params->get('day8') == $day)
 		{
 			if ($params->get('hour8') == $hour && $difference > 3600)
@@ -211,6 +223,7 @@ class PlgSystemJBSPodcast extends JPlugin
 				$checkdays = true;
 			}
 		}
+
 		if ($params->get('day9') == $day)
 		{
 			if ($params->get('hour9') == $hour && $difference > 3600)
@@ -218,6 +231,7 @@ class PlgSystemJBSPodcast extends JPlugin
 				$checkdays = true;
 			}
 		}
+
 		if ($params->get('day10') == $day)
 		{
 			if ($params->get('hour10') == $hour && $difference > 3600)
@@ -232,7 +246,9 @@ class PlgSystemJBSPodcast extends JPlugin
 	/**
 	 * Do Podcast
 	 *
-	 * @return object
+	 * @return boolean|string
+	 *
+	 * @since   7.0.5
 	 */
 	public function doPodcast()
 	{
@@ -247,6 +263,8 @@ class PlgSystemJBSPodcast extends JPlugin
 	 * Update Time
 	 *
 	 * @return boolean
+	 *
+	 * @since 7.0.0
 	 */
 	public function updatetime()
 	{
@@ -273,13 +291,14 @@ class PlgSystemJBSPodcast extends JPlugin
 	 * Send the Email
 	 *
 	 * @param   Joomla\Registry\Registry  $params     Plugin params
-	 * @param   object                    $dopodcast  ?
+	 * @param   bool|string               $dopodcast  Podcast rendering to send in email.
 	 *
 	 * @return void
+	 *
+	 * @since 7.0.0
 	 */
 	public function doEmail($params, $dopodcast)
 	{
-
 		$livesite = JUri::root();
 		jimport('joomla.filesystem.file');
 
@@ -303,5 +322,4 @@ class PlgSystemJBSPodcast extends JPlugin
 			$mail->Send();
 		}
 	}
-
 }

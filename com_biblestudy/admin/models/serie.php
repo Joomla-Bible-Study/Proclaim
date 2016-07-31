@@ -18,14 +18,13 @@ defined('_JEXEC') or die;
  */
 class BiblestudyModelSerie extends JModelAdmin
 {
-
 	/**
 	 * @var  string    The prefix to use with controller messages.
 	 * @since    1.6
 	 */
 	protected $text_prefix = 'COM_BIBLESTUDY';
 
-	protected $_teacher;
+	protected $teacher;
 
 	/**
 	 * Abstract method for getting the form from the model.
@@ -46,16 +45,17 @@ class BiblestudyModelSerie extends JModelAdmin
 		{
 			return false;
 		}
+
 		$jinput = JFactory::getApplication()->input;
 
 		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
 		if ($jinput->get('a_id'))
 		{
 			$id = $jinput->get('a_id', 0);
-
-		} // The back end uses id so we use that the rest of the time and set it to 0 by default.
+		}
 		else
 		{
+			// The back end uses id so we use that the rest of the time and set it to 0 by default.
 			$id = $jinput->get('id', 0);
 		}
 
@@ -74,7 +74,6 @@ class BiblestudyModelSerie extends JModelAdmin
 			// The controller has already verified this is an article you can edit.
 			$form->setFieldAttribute('ordering', 'filter', 'unset');
 			$form->setFieldAttribute('published', 'filter', 'unset');
-
 		}
 
 		return $form;
@@ -84,18 +83,20 @@ class BiblestudyModelSerie extends JModelAdmin
 	 * Get Teacher data
 	 *
 	 * @return object
+	 *
+	 * @since 7.0
 	 */
 	public function getTeacher()
 	{
-		if (empty($this->_teacher))
+		if (empty($this->teacher))
 		{
-			$query          = 'SELECT id AS value, teachername AS text'
+			$query = 'SELECT id AS value, teachername AS text'
 				. ' FROM #__bsms_teachers'
 				. ' WHERE published = 1';
-			$this->_teacher = $this->_getList($query);
+			$this->teacher = $this->_getList($query);
 		}
 
-		return $this->_teacher;
+		return $this->teacher;
 	}
 
 	/**
@@ -129,6 +130,7 @@ class BiblestudyModelSerie extends JModelAdmin
 				// Modify model data if no image is set.
 				$data['series_thumbnail'] = "";
 			}
+
 			return parent::save($data);
 		}
 
@@ -257,6 +259,8 @@ class BiblestudyModelSerie extends JModelAdmin
 	 * @param   array   $options  Configuration array for model. Optional.
 	 *
 	 * @return  JTable  A JTable object
+	 *
+	 * @since 7.0
 	 */
 	public function getTable($name = 'Serie', $prefix = 'Table', $options = array())
 	{
@@ -281,14 +285,14 @@ class BiblestudyModelSerie extends JModelAdmin
 	}
 
 	/**
-     * Method to test whether a record can be deleted.
-     *
-     * @param   object  $record  A record object.
-     *
-     * @return    boolean    True if allowed to delete the record. Defaults to the permission set in the component.
-     *
-     * @since    1.6
-     */
+	 * Method to test whether a record can be deleted.
+	 *
+	 * @param   object  $record  A record object.
+	 *
+	 * @return  boolean  True if allowed to delete the record. Defaults to the permission for the component.
+	 *
+	 * @since   12.2
+	 */
 	protected function canDelete($record)
 	{
 		if (!empty($record->id))
@@ -297,6 +301,7 @@ class BiblestudyModelSerie extends JModelAdmin
 			{
 				return false;
 			}
+
 			$user = JFactory::getUser();
 
 			return $user->authorise('core.delete', 'com_biblestudy.serie.' . (int) $record->id);
@@ -363,6 +368,7 @@ class BiblestudyModelSerie extends JModelAdmin
 				$table->ordering = $max + 1;
 			}
 		}
+
 		if ($table->ordering == 0)
 		{
 			$table->ordering = 1;
@@ -397,6 +403,8 @@ class BiblestudyModelSerie extends JModelAdmin
 	 * @param   int  $pk  The id of the primary key.
 	 *
 	 * @return    mixed    Object on success, false on failure.
+	 *
+	 * @since 7.0
 	 */
 	public function getItem($pk = null)
 	{
@@ -423,21 +431,4 @@ class BiblestudyModelSerie extends JModelAdmin
 	{
 		return array();
 	}
-
-	/**
-	 * Method to allow derived classes to prepossess the form.
-	 *
-	 * @param   JForm   $form   A JForm object.
-	 * @param   mixed   $data   The data expected for the form.
-	 * @param   string  $group  The name of the plugin group to import (defaults to "content").
-	 *
-	 * @return  void
-	 *
-	 * @since    3.0
-	 */
-	protected function preprocessForm(JForm $form, $data, $group = 'content')
-	{
-		parent::preprocessForm($form, $data, $group);
-	}
-
 }

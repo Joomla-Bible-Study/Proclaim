@@ -22,11 +22,12 @@ JFormHelper::loadFieldClass('list');
  */
 class JFormFieldMessagetypelist extends JFormFieldList
 {
-
 	/**
 	 * The field type.
 	 *
 	 * @var         string
+	 *
+	 * @since 7.0
 	 */
 	protected $type = 'Messagetypes';
 
@@ -34,6 +35,8 @@ class JFormFieldMessagetypelist extends JFormFieldList
 	 * Method to get a list of options for a list input.
 	 *
 	 * @return      array           An array of JHtml options.
+	 *
+	 * @since 7.0
 	 */
 	protected function getOptions()
 	{
@@ -53,9 +56,9 @@ class JFormFieldMessagetypelist extends JFormFieldList
 				$options[] = JHtml::_('select.option', $message->id, $message->message_type);
 			}
 		}
+
 		$options = array_merge(parent::getOptions(), $options);
 
 		return $options;
 	}
-
 }

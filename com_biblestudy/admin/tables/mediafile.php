@@ -20,11 +20,11 @@ use Joomla\Registry\Registry;
  */
 class TableMediafile extends JTable
 {
-
 	/**
 	 * Primary Key
 	 *
 	 * @var int
+	 * @since    7.0.0
 	 */
 	public $id = null;
 
@@ -32,20 +32,23 @@ class TableMediafile extends JTable
 	 * Study id
 	 *
 	 * @var int
+	 * @since    7.0.0
 	 */
 	public $study_id = null;
 
 	/**
-     * Server id
-     *
-     * @var int
-     */
+	 * Server id
+	 *
+	 * @var int
+	 * @since    7.0.0
+	 */
 	public $server_id = null;
 
 	/**
 	 * Podcast ID
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $podcast_id = null;
 
@@ -53,6 +56,7 @@ class TableMediafile extends JTable
 	 * Hold transitive data (i.e statistics)
 	 *
 	 * @var null
+	 * @since    7.0.0
 	 */
 	public $metadata = null;
 
@@ -60,6 +64,7 @@ class TableMediafile extends JTable
 	 * Ordering
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $ordering = null;
 
@@ -67,6 +72,7 @@ class TableMediafile extends JTable
 	 * Create Date
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $createdate = null;
 
@@ -76,6 +82,7 @@ class TableMediafile extends JTable
 	 * Published
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $published = 1;
 
@@ -83,6 +90,7 @@ class TableMediafile extends JTable
 	 * Comment Text
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $comment = null;
 
@@ -94,6 +102,7 @@ class TableMediafile extends JTable
 	 * Media configuration
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $params = null;
 
@@ -119,6 +128,8 @@ class TableMediafile extends JTable
 	 * Constructor
 	 *
 	 * @param   JDatabaseDriver  &$db  Database connector object
+	 *
+	 * @since    7.0.0
 	 */
 	public function __construct(&$db)
 	{
@@ -134,6 +145,8 @@ class TableMediafile extends JTable
 	 * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
 	 *
 	 * @return  boolean  True on success.
+	 *
+	 * @since    7.0.0
 	 */
 	public function bind($array, $ignore = '')
 	{

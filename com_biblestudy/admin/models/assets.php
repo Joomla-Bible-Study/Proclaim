@@ -26,35 +26,42 @@ if (file_exists($api))
  */
 class BibleStudyModelAssets extends JModelLegacy
 {
-
 	public $parent_id = null;
 
-	/** @var int Total numbers of Versions */
+	/** @var int Total numbers of Versions
+	 * @since 7.0 */
 	public $totalSteps = 0;
 
-	/** @var int Numbers of Versions already processed */
+	/** @var int Numbers of Versions already processed
+	 * @since 7.0 */
 	public $doneSteps = 0;
 
 	public $step = null;
 
 	public $assets = array();
 
-	/** @var float The time the process started */
-	private $_startTime = null;
+	/** @var float The time the process started
+	 * @since 7.0 */
+	private $startTime = null;
 
-	/** @var array The pre versions to process */
-	private $_versionStack = array();
+	/** @var array The pre versions to process
+	 * @since 7.0 */
+	private $versionStack = array();
 
-	/** @var array The pre versions sub sql array to process */
-	private $_allupdates = array();
+	/** @var array The pre versions sub sql array to process
+	 * @since 7.0 */
+	private $allupdates = array();
 
-	/** @var string Version of BibleStudy */
-	private $_versionSwitch = null;
+	/** @var string Version of BibleStudy
+	 * @since 7.0 */
+	private $versionSwitch = null;
 
 	/**
 	 * Constructor.
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
+	 *
+	 * @since 7.0
 	 */
 	public function __construct($config = array())
 	{
@@ -67,6 +74,8 @@ class BibleStudyModelAssets extends JModelLegacy
 	 * Start Looking though the Versions
 	 *
 	 * @return bool
+	 *
+	 * @since 7.0
 	 */
 	public function startScanning()
 	{
@@ -74,11 +83,12 @@ class BibleStudyModelAssets extends JModelLegacy
 		$this->resetTimer();
 		$this->getSteps();
 
-		if (empty($this->_versionStack))
+		if (empty($this->versionStack))
 		{
-			$this->_versionStack = array();
+			$this->versionStack = array();
 		}
-		ksort($this->_versionStack);
+
+		ksort($this->versionStack);
 
 		$this->saveStack();
 
@@ -96,16 +106,20 @@ class BibleStudyModelAssets extends JModelLegacy
 	 * Starts or resets the internal timer
 	 *
 	 * @return void
+	 *
+	 * @since 7.0
 	 */
 	private function resetTimer()
 	{
-		$this->_startTime = $this->microtime_float();
+		$this->startTime = $this->microtime_float();
 	}
 
 	/**
 	 * Returns the current timestamps in decimal seconds
 	 *
 	 * @return string
+	 *
+	 * @since 7.0
 	 */
 	private function microtime_float()
 	{
@@ -118,13 +132,16 @@ class BibleStudyModelAssets extends JModelLegacy
 	 * Get migrate versions of DB after import/copy has finished.
 	 *
 	 * @return boolean
+	 *
+	 * @since 7.0
 	 */
 	private function getSteps()
 	{
 		$fix = new JBSMAssets;
 		$fix->build();
-		$this->_versionStack = $fix->query;
+		$this->versionStack = $fix->query;
 		$this->totalSteps = $fix->count;
+
 		return true;
 	}
 
@@ -134,6 +151,8 @@ class BibleStudyModelAssets extends JModelLegacy
 	 * @param   bool  $resetTimer  If the time must be reset
 	 *
 	 * @return bool
+	 *
+	 * @since 7.0
 	 */
 	public function run($resetTimer = true)
 	{
@@ -145,6 +164,7 @@ class BibleStudyModelAssets extends JModelLegacy
 		$this->loadStack();
 
 		$result = true;
+
 		while ($result && $this->haveEnoughTime())
 		{
 			$result = $this->RealRun();
@@ -159,43 +179,49 @@ class BibleStudyModelAssets extends JModelLegacy
 	 * Saves the Versions/SQL/After stack in the session
 	 *
 	 * @return void
+	 *
+	 * @since 7.0
 	 */
 	private function saveStack()
 	{
 		$stack = array(
-				'version'    => $this->_versionStack,
+				'version'    => $this->versionStack,
 				'step'       => $this->step,
-				'switch'     => $this->_versionSwitch,
-				'allupdates' => $this->_allupdates,
+				'switch'     => $this->versionSwitch,
+				'allupdates' => $this->allupdates,
 				'total'      => $this->totalSteps,
 				'done'       => $this->doneSteps,
 		);
 		$stack = json_encode($stack);
+
 		if (function_exists('base64_encode') && function_exists('base64_decode'))
 		{
 			if (function_exists('gzdeflate') && function_exists('gzinflate'))
 			{
 				$stack = gzdeflate($stack, 9);
 			}
+
 			$stack = base64_encode($stack);
 		}
+
 		$session = JFactory::getSession();
 		$session->set('asset_stack', $stack, 'JBSM');
-
 	}
 
 	/**
 	 * Resets the Versions/SQL/After stack saved in the session
 	 *
 	 * @return void
+	 *
+	 * @since 7.0
 	 */
 	private function resetStack()
 	{
 		$session = JFactory::getSession();
 		$session->set('asset_stack', '', 'JBSM');
-		$this->_versionStack  = array();
-		$this->_versionSwitch = null;
-		$this->_allupdates    = array();
+		$this->versionStack   = array();
+		$this->versionSwitch  = null;
+		$this->allupdates     = array();
 		$this->step           = null;
 		$this->totalSteps     = 0;
 		$this->doneSteps      = 0;
@@ -205,6 +231,8 @@ class BibleStudyModelAssets extends JModelLegacy
 	 * Loads the Versions/SQL/After stack from the session
 	 *
 	 * @return bool
+	 *
+	 * @since 7.0
 	 */
 	private function loadStack()
 	{
@@ -213,9 +241,9 @@ class BibleStudyModelAssets extends JModelLegacy
 
 		if (empty($stack))
 		{
-			$this->_versionStack  = array();
-			$this->_versionSwitch = null;
-			$this->_allupdates    = array();
+			$this->versionStack   = array();
+			$this->versionSwitch  = null;
+			$this->allupdates     = array();
 			$this->step           = null;
 			$this->totalSteps     = 0;
 			$this->doneSteps      = 0;
@@ -226,6 +254,7 @@ class BibleStudyModelAssets extends JModelLegacy
 		if (function_exists('base64_encode') && function_exists('base64_decode'))
 		{
 			$stack = base64_decode($stack);
+
 			if (function_exists('gzdeflate') && function_exists('gzinflate'))
 			{
 				$stack = gzinflate($stack);
@@ -234,26 +263,27 @@ class BibleStudyModelAssets extends JModelLegacy
 
 		$stack = json_decode($stack, true);
 
-		$this->_versionStack  = $stack['version'];
-		$this->_versionSwitch = $stack['switch'];
-		$this->_allupdates    = $stack['allupdates'];
+		$this->versionStack   = $stack['version'];
+		$this->versionSwitch  = $stack['switch'];
+		$this->allupdates     = $stack['allupdates'];
 		$this->step           = $stack['step'];
 		$this->totalSteps     = $stack['total'];
 		$this->doneSteps      = $stack['done'];
 
 		return true;
-
 	}
 
 	/**
 	 * Makes sure that no more than 5 seconds since the start of the timer have elapsed
 	 *
 	 * @return bool
+	 *
+	 * @since 7.0
 	 */
 	private function haveEnoughTime()
 	{
 		$now     = $this->microtime_float();
-		$elapsed = abs($now - $this->_startTime);
+		$elapsed = abs($now - $this->startTime);
 
 		return $elapsed < 2;
 	}
@@ -262,30 +292,34 @@ class BibleStudyModelAssets extends JModelLegacy
 	 * Start the Run through the Pre Versions then SQL files then After PHP functions.
 	 *
 	 * @return bool
+	 *
+	 * @since 7.0
 	 */
 	private function RealRun()
 	{
-		if (!empty($this->_versionStack))
+		if (!empty($this->versionStack))
 		{
-			krsort($this->_versionStack);
-			while (!empty($this->_versionStack) && $this->haveEnoughTime())
+			krsort($this->versionStack);
+
+			while (!empty($this->versionStack) && $this->haveEnoughTime())
 			{
-				$this->step = key($this->_versionStack);
-				if (isset($this->_versionStack[$this->step]) && @!empty($this->_versionStack[$this->step]))
+				$this->step = key($this->versionStack);
+
+				if (isset($this->versionStack[$this->step]) && @!empty($this->versionStack[$this->step]))
 				{
-					$version = array_pop($this->_versionStack[$this->step]);
+					$version = array_pop($this->versionStack[$this->step]);
 					$this->doneSteps++;
 					$asset = new JBSMAssets;
 					$asset->fixAssets($this->step, $version);
 				}
 				else
 				{
-					unset($this->_versionStack[$this->step]);
+					unset($this->versionStack[$this->step]);
 				}
 			}
 		}
 
-		if (empty($this->_versionStack))
+		if (empty($this->versionStack))
 		{
 			// Just finished
 			$this->resetStack();
@@ -301,6 +335,8 @@ class BibleStudyModelAssets extends JModelLegacy
 	 * Set Parent ID
 	 *
 	 * @return void
+	 *
+	 * @since 7.0
 	 */
 	public function parentid()
 	{
@@ -312,6 +348,8 @@ class BibleStudyModelAssets extends JModelLegacy
 	 * Table list Array.
 	 *
 	 * @return array
+	 *
+	 * @since 7.0
 	 */
 	protected function getassetObjects()
 	{
@@ -403,6 +441,8 @@ class BibleStudyModelAssets extends JModelLegacy
 	 * Check Assets
 	 *
 	 * @return array
+	 *
+	 * @since 7.0
 	 */
 	public function checkAssets()
 	{
@@ -460,6 +500,7 @@ class BibleStudyModelAssets extends JModelLegacy
 					$arulesrows++;
 				}
 			}
+
 			$return[] = array(
 				'realname'         => $object['realname'],
 				'numrows'          => $numrows,

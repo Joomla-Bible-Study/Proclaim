@@ -19,7 +19,6 @@ defined('_JEXEC') or die;
  */
 class JFormFieldModal_Studydetails extends JFormField
 {
-
 	/**
 	 * The form field type.
 	 *
@@ -37,7 +36,6 @@ class JFormFieldModal_Studydetails extends JFormField
 	 */
 	protected function getInput()
 	{
-
 		// Load the modal behavior script.
 		JHtml::_('behavior.modal', 'a.modal');
 
@@ -108,6 +106,7 @@ class JFormFieldModal_Studydetails extends JFormField
 
 		// Class='required' for client side validation
 		$class = '';
+
 		if ($this->required)
 		{
 			$class = ' class="required modal-value"';
@@ -117,5 +116,4 @@ class JFormFieldModal_Studydetails extends JFormField
 
 		return $html;
 	}
-
 }

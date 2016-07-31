@@ -264,6 +264,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 			{
 				$this->ss = JText::_('JBS_IBM_NO_SERMON_SPEAKER_FOUND');
 			}
+
 			if ($extension->element == 'com_preachit')
 			{
 				$this->pi = '<a href="index.php?option=com_biblestudy&view=admin&layout=edit&id=1&task=admin.convertPreachIt">'

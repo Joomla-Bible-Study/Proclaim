@@ -18,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyControllerTeachers extends JControllerLegacy
 {
-
 	/**
 	 * Proxy for getModel
 	 *
@@ -36,5 +35,4 @@ class BiblestudyControllerTeachers extends JControllerLegacy
 
 		return $model;
 	}
-
 }

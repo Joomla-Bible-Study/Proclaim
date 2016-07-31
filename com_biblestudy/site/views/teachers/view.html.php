@@ -18,11 +18,12 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewTeachers extends JViewLegacy
 {
-
 	/**
 	 * Document
 	 *
 	 * @var JDocument
+	 *
+	 * @since 7.0
 	 */
 	public $document;
 
@@ -30,6 +31,8 @@ class BiblestudyViewTeachers extends JViewLegacy
 	 * Template Table
 	 *
 	 * @var TableTemplate
+	 *
+	 * @since 7.0
 	 */
 	public $template;
 
@@ -37,6 +40,8 @@ class BiblestudyViewTeachers extends JViewLegacy
 	 * Items
 	 *
 	 * @var object
+	 *
+	 * @since 7.0
 	 */
 	protected $items = null;
 
@@ -44,6 +49,8 @@ class BiblestudyViewTeachers extends JViewLegacy
 	 * Pagination
 	 *
 	 * @var object
+	 *
+	 * @since 7.0
 	 */
 	protected $pagination;
 
@@ -51,6 +58,8 @@ class BiblestudyViewTeachers extends JViewLegacy
 	 * State
 	 *
 	 * @var Joomla\Registry\Registry
+	 *
+	 * @since 7.0
 	 */
 	protected $state = null;
 
@@ -58,6 +67,8 @@ class BiblestudyViewTeachers extends JViewLegacy
 	 * Params
 	 *
 	 * @var Joomla\Registry\Registry
+	 *
+	 * @since 7.0
 	 */
 	protected $params = null;
 
@@ -65,6 +76,8 @@ class BiblestudyViewTeachers extends JViewLegacy
 	 * Admin
 	 *
 	 * @var object
+	 *
+	 * @since 7.0
 	 */
 	protected $admin;
 
@@ -72,6 +85,8 @@ class BiblestudyViewTeachers extends JViewLegacy
 	 * Page
 	 *
 	 * @var object
+	 *
+	 * @since 7.0
 	 */
 	protected $page;
 
@@ -79,6 +94,8 @@ class BiblestudyViewTeachers extends JViewLegacy
 	 * Request Url
 	 *
 	 * @var string
+	 *
+	 * @since 7.0
 	 */
 	protected $request_url;
 
@@ -88,10 +105,11 @@ class BiblestudyViewTeachers extends JViewLegacy
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return void
+	 *
+	 * @since 7.0
 	 */
 	public function display($tpl = null)
 	{
-
 		$state  = $this->get('State');
 		$items  = $this->get('Items');
 
@@ -116,6 +134,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 		JHtml::_('biblestudy.loadCss', $params, null, 'font-awesome');
 
 		$images = new JBSMImages;
+
 		if ($params->get('useexpert_teacherdetail') > 0 || is_string($params->get('teacherstemplate')))
 		{
 			$pagebuilder = new JBSMPageBuilder;
@@ -137,6 +156,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 						$information            = $pagebuilder->runContentPlugins($items[$i], $params);
 						$items[$i]->information = $information->text;
 					}
+
 					if (isset($items[$i]->short))
 					{
 						$items[$i]->text  = $items[$i]->short;
@@ -144,9 +164,9 @@ class BiblestudyViewTeachers extends JViewLegacy
 						$items[$i]->short = $short->text;
 					}
 				}
-
 			}
 		}
+
 		$pagination            = $this->get('Pagination');
 		$this->page            = new stdClass;
 		$this->page->pagelinks = $pagination->getPagesLinks();
@@ -166,6 +186,8 @@ class BiblestudyViewTeachers extends JViewLegacy
 	 * Prepares the document;
 	 *
 	 * @return void
+	 *
+	 * @since 7.0
 	 */
 	protected function _prepareDocument()
 	{
@@ -188,7 +210,9 @@ class BiblestudyViewTeachers extends JViewLegacy
 		{
 			$this->params->def('page_heading', JText::_('JGLOBAL_ARTICLES'));
 		}
+
 		$title = $this->params->get('page_title', '');
+
 		if (empty($title))
 		{
 			$title = $app->get('sitename');
@@ -201,6 +225,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 		{
 			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
+
 		$this->document->setTitle($title);
 
 		// Prepare meta information (under development)
@@ -235,5 +260,4 @@ class BiblestudyViewTeachers extends JViewLegacy
 			$this->document->setMetaData('robots', $this->params->get('robots'));
 		}
 	}
-
 }

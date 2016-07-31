@@ -19,11 +19,12 @@ defined('_JEXEC') or die;
  */
 abstract class JBSMHelperRoute
 {
-
 	/**
 	 * Lookup
 	 *
 	 * @var string
+	 *
+	 * @since    7.2
 	 */
 	protected static $lookup;
 
@@ -34,6 +35,8 @@ abstract class JBSMHelperRoute
 	 * @param   int  $language  The state of language
 	 *
 	 * @return string
+	 *
+	 * @since    7.2
 	 */
 	public static function getArticleRoute($id, $language = 0)
 	{
@@ -83,6 +86,8 @@ abstract class JBSMHelperRoute
 	 * @param   string  $needles  ?
 	 *
 	 * @return mixed
+	 *
+	 * @since    7.2
 	 */
 	protected static function _findItem($needles = null)
 	{
@@ -107,6 +112,7 @@ abstract class JBSMHelperRoute
 					{
 						self::$lookup[$view] = array();
 					}
+
 					if (isset($item->query['id']))
 					{
 						self::$lookup[$view][$item->query['id']] = $item->id;
@@ -150,6 +156,8 @@ abstract class JBSMHelperRoute
 	 * @param   int  $id  The route of the teacher item
 	 *
 	 * @return string
+	 *
+	 * @since    7.2
 	 */
 	public static function getTeacherRoute($id)
 	{
@@ -165,6 +173,8 @@ abstract class JBSMHelperRoute
 	 * @param   int  $id  ID
 	 *
 	 * @return string
+	 *
+	 * @since    7.2
 	 */
 	public static function getSeriesRoute($id)
 	{
@@ -182,6 +192,7 @@ abstract class JBSMHelperRoute
 	 *
 	 * @return string  The fixed URL
 	 *
+	 * @since    7.2
 	 * @deprecate 8.0.7
 	 */
 	public static function addScheme($url, $scheme = 'http://')
@@ -193,5 +204,4 @@ abstract class JBSMHelperRoute
 
 		return $url;
 	}
-
 }

@@ -19,7 +19,6 @@ jimport('joomla.filesystem.folder');
  */
 class BiblestudyModelServers extends JModelList
 {
-
 	/**
 	 * A reverse lookup of the Endpoint id to Endpoint name
 	 *
@@ -32,7 +31,7 @@ class BiblestudyModelServers extends JModelList
 	 * A reverse lookup of the Endpoint type to Endpoint name
 	 *
 	 * @var     array
-	 * @sine    9.0.0
+	 * @since    9.0.0
 	 */
 	protected $rlu_type = array();
 
@@ -48,6 +47,7 @@ class BiblestudyModelServers extends JModelList
 		if (empty($this->rlu_id))
 		{
 			$_rlu = array();
+
 			foreach ($this->getItems() as $server)
 			{
 				$_rlu[$server->id] = array(
@@ -55,8 +55,8 @@ class BiblestudyModelServers extends JModelList
 					'type' => $server->type
 				);
 			}
-			$this->rlu_id = $_rlu;
 
+			$this->rlu_id = $_rlu;
 		}
 
 		return $this->rlu_id;
@@ -88,7 +88,6 @@ class BiblestudyModelServers extends JModelList
 	 */
 	public function getServerOptions()
 	{
-
 		$options = array();
 
 		// Path to endpoints
@@ -182,10 +181,12 @@ class BiblestudyModelServers extends JModelList
 
 		// Filter by published state
 		$published = $this->getState('filter.published');
+
 		if (JFactory::getApplication()->input->get('layout') == 'modal' && $published === '')
 		{
 			$published = 1;
 		}
+
 		if (is_numeric($published))
 		{
 			$query->where('server.published = ' . (int) $published);

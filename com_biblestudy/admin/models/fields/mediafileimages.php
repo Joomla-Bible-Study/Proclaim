@@ -22,11 +22,12 @@ JFormHelper::loadFieldClass('list');
  */
 class JFormFieldMediafileImages extends JFormFieldList
 {
-
 	/**
 	 * The field type.
 	 *
 	 * @var         string
+	 *
+	 * @since 7.0
 	 */
 	protected $type = 'Mediafileimages';
 
@@ -34,10 +35,11 @@ class JFormFieldMediafileImages extends JFormFieldList
 	 * Method to get a list of options for a list input.
 	 *
 	 * @return   array  An array of JHtml options.
+	 *
+	 * @since 7.0
 	 */
 	protected function getOptions ()
 	{
-
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('*');
@@ -53,12 +55,12 @@ class JFormFieldMediafileImages extends JFormFieldList
 				$reg = new Registry;
 				$reg->loadString($media->params);
 				$media->params = $reg;
+
 				if ($media->params->get('media_use_button_icon') >= 1)
 				{
 					switch ($media->params->get('media_use_button_icon'))
 					{
 						case 1:
-
 							$button             = $this->getButton($media);
 							$media->media_image = JText::_('JBS_MED_BUTTON') . ': ' . $button . ' - ' . JText::_('JBS_MED_TEXT') .
 									': ' . $media->params->get('media_button_text');
@@ -69,7 +71,6 @@ class JFormFieldMediafileImages extends JFormFieldList
 							);
 							break;
 						case 2:
-
 							$button             = $this->getButton($media);
 							$icon               = $this->getIcon($media);
 							$media->media_image = JText::_('JBS_MED_BUTTON') . ': ' . $button . ' - ' . JText::_('JBS_MED_ICON') . ': ' . $icon;
@@ -80,7 +81,6 @@ class JFormFieldMediafileImages extends JFormFieldList
 							);
 							break;
 						case 3:
-
 							$icon               = $this->getIcon($media);
 							$media->media_image = JText::_('JBS_MED_ICON') . ': ' . $icon;
 							$options[]          = JHtml::_('select.option', '{"media_use_button_icon":"' . $media->params->get('media_use_button_icon') .
@@ -104,14 +104,12 @@ class JFormFieldMediafileImages extends JFormFieldList
 							'","media_icon_text_size":"' . $media->params->get('media_icon_text_size') . '","media_image":"' .
 							$media->params->get('media_image') . '"}', $media->media_image
 					);
-
 				}
-
 			}
-
 		}
 
 		$tmp = array();
+
 		foreach ($options as $k => $v)
 		{
 			$tmp[$k] = $v->text;
@@ -142,6 +140,7 @@ class JFormFieldMediafileImages extends JFormFieldList
 				}
 			}
 		}
+
 		$options = array_merge(parent::getOptions(), $options);
 
 		return $options;
@@ -153,10 +152,13 @@ class JFormFieldMediafileImages extends JFormFieldList
 	 * @param   Object  $media  Media table.
 	 *
 	 * @return string
+	 *
+	 * @since 7.0
 	 */
 	public function getButton ($media)
 	{
 		$button = null;
+
 		switch ($media->params->get('media_button_type'))
 		{
 			case 'btn-link':
@@ -178,10 +180,12 @@ class JFormFieldMediafileImages extends JFormFieldList
 				$button = JText::_('JBS_MED_DANGER');
 				break;
 		}
+
 		if ($media->params->get('media_button_color'))
 		{
 			$button = $media->params->get('media_button_color');
 		}
+
 		return $button;
 	}
 
@@ -191,10 +195,13 @@ class JFormFieldMediafileImages extends JFormFieldList
 	 * @param   Object  $media  Media Table
 	 *
 	 * @return string
+	 *
+	 * @since 7.0
 	 */
 	public function getIcon ($media)
 	{
 		$icon = null;
+
 		switch ($media->params->get('media_icon_type'))
 		{
 			case 'fa fa-play':

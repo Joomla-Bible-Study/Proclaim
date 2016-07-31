@@ -19,11 +19,13 @@ jimport('joomla.filesystem.file');
  */
 class Com_BiblestudyInstallerScript
 {
-
-	/** @var string The component's name */
+	/** @var string The component's name
+	 * @since 1.5 */
 	protected $biblestudy_extension = 'com_biblestudy';
 
-	/** @var string Path to Mysql files */
+	/** @var string Path to Mysql files
+	 * @since 1.5
+	 */
 	public $filePath = '/components/com_biblestudy/install/sql/updates/mysql';
 
 	protected $versions = array(
@@ -55,6 +57,8 @@ class Com_BiblestudyInstallerScript
 	 * @param   JInstallerFile  $parent  Where it is coming from
 	 *
 	 * @return boolean
+	 *
+	 * @since 1.5
 	 */
 	public function preflight($type, $parent)
 	{
@@ -74,12 +78,14 @@ class Com_BiblestudyInstallerScript
 		{
 			// JBSM 8.0 or older release found, clean up the directories.
 			static $ignoreAdmin = array('index.html', 'biblestudy.xml', 'archive');
+
 			if (is_file($adminPath . '/install.script.php'))
 			{
 				// JBSM 6.2 or older release..
 				$ignoreAdmin[] = 'install.script.php';
 				$ignoreAdmin[] = 'admin.biblestudy.php';
 			}
+
 			static $ignoreSite = array('index.html', 'biblestudy.php', 'router.php', 'COPYRIGHT.php', 'CHANGELOG.php');
 			$this->deleteFolder($adminPath, $ignoreAdmin);
 			$this->deleteFolder($sitePath, $ignoreSite);
@@ -100,15 +106,19 @@ class Com_BiblestudyInstallerScript
 	 * @param   JInstallerFile  $parent  Where call is coming from
 	 *
 	 * @return  bool
+	 *
+	 * @since 1.5
 	 */
 	public function install($parent)
 	{
 		// Delete all cached files.
 		$cacheDir = JPATH_CACHE . '/biblestudy';
+
 		if (is_dir($cacheDir))
 		{
 			JFolder::delete($cacheDir);
 		}
+
 		JFolder::create($cacheDir);
 
 		return true;
@@ -120,6 +130,8 @@ class Com_BiblestudyInstallerScript
 	 * @param   JInstallerFile  $parent  ?
 	 *
 	 * @return bool
+	 *
+	 * @since 1.5
 	 */
 	public function discover_install($parent)
 	{
@@ -132,6 +144,8 @@ class Com_BiblestudyInstallerScript
 	 * @param   JInstallerFile  $parent  ?
 	 *
 	 * @return bool
+	 *
+	 * @since 1.5
 	 */
 	public function update($parent)
 	{
@@ -144,14 +158,17 @@ class Com_BiblestudyInstallerScript
 	 * @param   JInstallerFile  $parent  ?
 	 *
 	 * @return bool
+	 *
+	 * @since 1.5
 	 */
 	public function uninstall($parent)
 	{
 		$adminpath = $parent->getParent()->getPath('extension_administrator');
 		$model     = "{$adminpath}/models/install.php";
+
 		if (file_exists($model))
 		{
-			require_once($model);
+			require_once $model;
 			$installer = new BibleStudyModelInstall;
 			$installer->uninstall();
 		}
@@ -166,6 +183,8 @@ class Com_BiblestudyInstallerScript
 	 * @param   JInstallerFile  $parent  Where it is coming from
 	 *
 	 * @return   void
+	 *
+	 * @since 1.5
 	 */
 	public function postflight($type, $parent)
 	{
@@ -193,6 +212,8 @@ class Com_BiblestudyInstallerScript
 	 * @param   string  $version  JBSM version to check for.
 	 *
 	 * @return bool
+	 *
+	 * @since 7.1.0
 	 */
 	public function checkRequirements($version)
 	{
@@ -218,6 +239,8 @@ class Com_BiblestudyInstallerScript
 	 * @return bool
 	 *
 	 * @throws \Exception
+	 *
+	 * @since 7.1.0
 	 */
 	protected function checkDbo($name, $types)
 	{
@@ -241,12 +264,14 @@ class Com_BiblestudyInstallerScript
 	 * @return int
 	 *
 	 * @throws \Exception
+	 *
+	 * @since 7.1.0
 	 */
 	protected function checkExtensions($extensions)
 	{
-		$app = JFactory::getApplication();
-
+		$app  = JFactory::getApplication();
 		$pass = 1;
+
 		foreach ($extensions as $name)
 		{
 			if (!extension_loaded($name))
@@ -268,12 +293,14 @@ class Com_BiblestudyInstallerScript
 	 * @return bool
 	 *
 	 * @throws \Exception
+	 *
+	 * @since 7.1.0
 	 */
 	protected function checkVersion($name, $version)
 	{
-		$app = JFactory::getApplication();
-
+		$app   = JFactory::getApplication();
 		$major = $minor = 0;
+
 		foreach ($this->versions[$name] as $major => $minor)
 		{
 			if (!$major || version_compare($version, $major, '<'))
@@ -288,10 +315,12 @@ class Com_BiblestudyInstallerScript
 
 			break;
 		}
+
 		if (!$major)
 		{
 			$minor = reset($this->versions[$name]);
 		}
+
 		$recommended = end($this->versions[$name]);
 		$app->enqueueMessage(
 			sprintf("%s %s is not supported. Minimum required version is %s %s, but it is higly recommended to use %s %s or later.",
@@ -310,6 +339,8 @@ class Com_BiblestudyInstallerScript
 	 * @return bool
 	 *
 	 * @throws \Exception
+	 *
+	 * @since 7.1.0
 	 */
 	protected function checkJBSM($version)
 	{
@@ -361,6 +392,8 @@ class Com_BiblestudyInstallerScript
 	 * @param   array   $ignore  Array of files to Ignore
 	 *
 	 * @return void
+	 *
+	 * @since 7.1.0
 	 */
 	public function deleteFiles($path, $ignore = array())
 	{
@@ -385,6 +418,8 @@ class Com_BiblestudyInstallerScript
 	 * @param   array  $ignore  Ingnore array of files
 	 *
 	 * @return void;
+	 *
+	 * @since 7.1.0
 	 */
 	public function deleteFolders($path, $ignore = array())
 	{
@@ -409,6 +444,8 @@ class Com_BiblestudyInstallerScript
 	 * @param   array   $ignore  Ignore list
 	 *
 	 * @return void
+	 *
+	 * @since 7.1.0
 	 */
 	public function deleteFolder($path, $ignore = array())
 	{

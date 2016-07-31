@@ -20,11 +20,12 @@ use \Joomla\Registry\Registry;
  */
 class TableTopic extends JTable
 {
-
 	/**
 	 * Primary Key
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $id = null;
 
@@ -32,6 +33,8 @@ class TableTopic extends JTable
 	 * Topic text
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $topic_text = null;
 
@@ -39,6 +42,8 @@ class TableTopic extends JTable
 	 * Published
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $published = 1;
 
@@ -46,6 +51,8 @@ class TableTopic extends JTable
 	 * Params
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $params = null;
 
@@ -59,6 +66,8 @@ class TableTopic extends JTable
 	 * Constructor
 	 *
 	 * @param   JDatabaseDriver  &$db  Database connector object
+	 *
+	 * @since 9.0.0
 	 */
 	public function __construct(& $db)
 	{
@@ -137,6 +146,8 @@ class TableTopic extends JTable
 	 * @return  boolean  True if successful. False if row not found.
 	 *
 	 * @see JTable:load
+	 *
+	 * @since 9.0.0
 	 */
 	public function load($keys = null, $reset = true)
 	{
@@ -161,7 +172,9 @@ class TableTopic extends JTable
 	 * @param   array  $data      Data of record
 	 * @param   int    $recordId  id
 	 *
-	 * @return      boolean true on success
+	 * @return  bool|array ?
+	 *
+	 * @since 9.0.0
 	 *
 	 * @todo this look like it is not used. (Neither Tom nor Brent wrote this one)
 	 */
@@ -255,5 +268,4 @@ class TableTopic extends JTable
 
 		return $asset->id;
 	}
-
 }

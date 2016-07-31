@@ -20,11 +20,12 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewCommentform extends JViewLegacy
 {
-
 	/**
 	 * Form
 	 *
 	 * @var array
+	 *
+	 * @since 7.0
 	 */
 	protected $form;
 
@@ -32,6 +33,8 @@ class BiblestudyViewCommentform extends JViewLegacy
 	 * Item
 	 *
 	 * @var Object
+	 *
+	 * @since 7.0
 	 */
 	protected $item;
 
@@ -39,6 +42,8 @@ class BiblestudyViewCommentform extends JViewLegacy
 	 * Return Page
 	 *
 	 * @var string
+	 *
+	 * @since 7.0
 	 */
 	protected $return_page;
 
@@ -46,6 +51,8 @@ class BiblestudyViewCommentform extends JViewLegacy
 	 * State
 	 *
 	 * @var array
+	 *
+	 * @since 7.0
 	 */
 	protected $state;
 
@@ -57,6 +64,8 @@ class BiblestudyViewCommentform extends JViewLegacy
 	 * @throws Exception
 	 *
 	 * @return  void
+	 *
+	 * @since 7.0
 	 */
 	public function display($tpl = null)
 	{
@@ -108,5 +117,4 @@ class BiblestudyViewCommentform extends JViewLegacy
 		$document = JFactory::getDocument();
 		$document->setTitle($isNew ? JText::_('JBS_TITLE_COMMENT_CREATING') : JText::sprintf('JBS_TITLE_COMMENT_EDITING', $this->item->id));
 	}
-
 }

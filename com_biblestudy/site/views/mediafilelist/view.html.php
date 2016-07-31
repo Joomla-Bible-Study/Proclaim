@@ -21,29 +21,44 @@ use Joomla\Registry\Registry;
  */
 class BiblestudyViewMediafilelist extends JViewLegacy
 {
-
-	/** @var  string Can Do */
+	/** @var  string Can Do
+	 *
+	 * @since 7.0 */
 	public $canDo;
 
-	/** @var  string Media Types */
+	/** @var  string Media Types
+	 *
+	 * @since 7.0 */
 	public $mediatypes;
 
-	/** @var  string Page Class SFX */
+	/** @var  string Page Class SFX
+	 *
+	 * @since 7.0 */
 	public $pageclass_sfx;
 
-	/** @var  string New Link */
+	/** @var  string New Link
+	 *
+	 * @since 7.0 */
 	public $newlink;
 
-	/** Items @var JObject */
+	/** Items @var JObject
+	 *
+	 * @since 7.0 */
 	protected $items;
 
-	/** Pagination @var array */
+	/** Pagination @var array
+	 *
+	 * @since 7.0 */
 	protected $pagination;
 
-	/** State @var object */
+	/** State @var object
+	 *
+	 * @since 7.0 */
 	protected $state;
 
-	/** @var  Registry */
+	/** @var  Registry
+	 *
+	 * @since 7.0 */
 	protected $params;
 
 	/**
@@ -52,6 +67,8 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
+	 *
+	 * @since 7.0
 	 */
 	public function display($tpl = null)
 	{
@@ -103,6 +120,8 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 	 * Prepares the document
 	 *
 	 * @return void
+	 *
+	 * @since 7.0
 	 */
 	protected function _prepareDocument()
 	{
@@ -134,6 +153,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 		{
 			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
+
 		$this->document->setTitle($title);
 
 		$pathway = $app->getPathway();

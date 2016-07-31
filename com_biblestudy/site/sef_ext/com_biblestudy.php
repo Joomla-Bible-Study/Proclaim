@@ -22,6 +22,7 @@ $shLangIso      = '';
 $title          = array();
 $shItemidString = '';
 $dosef          = shInitializePlugin($lang, $shLangName, $shLangIso, $option);
+
 if ($dosef == false)
 {
 	return;
@@ -30,19 +31,21 @@ if ($dosef == false)
 // remove common URL from GET vars list, so that they don't show up as query string in the URL
 shRemoveFromGETVarsList('option');
 shRemoveFromGETVarsList('lang');
+
 if (!empty($Itemid))
 {
 	shRemoveFromGETVarsList('Itemid');
 }
+
 if (!empty($limit))
 {
 	shRemoveFromGETVarsList('limit');
 }
+
 if (isset($limitstart))
 {
 	shRemoveFromGETVarsList('limitstart');
-
-} // Limitstart can be zero
+}
 
 // All urls will start with Biblestudy.  The "B" need to be uppercase
 $title[] = "Biblestudy";

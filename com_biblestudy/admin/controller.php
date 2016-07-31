@@ -26,11 +26,12 @@ if (file_exists($api))
  */
 class BiblestudyController extends JControllerLegacy
 {
-
 	/**
 	 * Default view var.
 	 *
 	 * @var string
+	 *
+	 * @since 7.0.0
 	 */
 	protected $default_view = 'cpanel';
 
@@ -40,11 +41,12 @@ class BiblestudyController extends JControllerLegacy
 	 * @param   boolean  $cachable   Cachable system
 	 * @param   boolean  $urlparams  Url params
 	 *
-	 * @return  JController        This object to support chaining.
+	 * @return  JControllerLegacy  his object to support chaining.
+	 *
+	 * @since 1.5
 	 */
 	public function display($cachable = false, $urlparams = false)
 	{
-
 		$app = JFactory::getApplication();
 
 		$view   = $app->input->getCmd('view', 'cpanel');
@@ -69,6 +71,7 @@ class BiblestudyController extends JControllerLegacy
 		{
 			$app->input->set('view ', 'cpanel');
 		}
+
 		if ($view == 'admin')
 		{
 			$tool = $app->input->get('tooltype', '', 'post');
@@ -99,6 +102,8 @@ class BiblestudyController extends JControllerLegacy
 	 * @return string
 	 *
 	 * @todo need to update this to new JBSM
+	 *
+	 * @since 7.0.0
 	 */
 	public function changePlayers()
 	{
@@ -125,6 +130,7 @@ class BiblestudyController extends JControllerLegacy
 					->where($db->qn('player') . ' = ' . $db->q($from));
 				break;
 		}
+
 		$db->setQuery($query);
 
 		if (!$db->execute())
@@ -146,6 +152,8 @@ class BiblestudyController extends JControllerLegacy
 	 * @return string
 	 *
 	 * @todo need to update this for new JBSM
+	 *
+	 * @since 7.0.0
 	 */
 	public function changePopup()
 	{
@@ -179,6 +187,8 @@ class BiblestudyController extends JControllerLegacy
 	 * Write the XML file
 	 *
 	 * @return null
+	 *
+	 * @since 9.0.0
 	 */
 	public function writeXMLFile()
 	{
@@ -191,6 +201,8 @@ class BiblestudyController extends JControllerLegacy
 	 * Resets the hits
 	 *
 	 * @return null
+	 *
+	 * @since 7.0.0
 	 */
 	public function resetHits()
 	{
@@ -212,6 +224,7 @@ class BiblestudyController extends JControllerLegacy
 			$updated = $db->getAffectedRows();
 			$msg     = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
 		}
+
 		$this->setRedirect('index.php?option=com_biblestudy&view=message&layout=edit&id=' . $id . '&' . JSession::getFormToken() . '=1', $msg);
 	}
 
@@ -219,6 +232,8 @@ class BiblestudyController extends JControllerLegacy
 	 * Resets Downloads
 	 *
 	 * @return null
+	 *
+	 * @since 7.0.0
 	 */
 	public function resetDownloads()
 	{
@@ -240,6 +255,7 @@ class BiblestudyController extends JControllerLegacy
 			$updated = $db->getAffectedRows();
 			$msg     = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
 		}
+
 		$this->setRedirect('index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . $id . '&' . JSession::getFormToken() . '=1', $msg);
 	}
 
@@ -247,6 +263,8 @@ class BiblestudyController extends JControllerLegacy
 	 * Resets Plays
 	 *
 	 * @return null
+	 *
+	 * @since 7.0.0
 	 */
 	public function resetPlays()
 	{
@@ -269,6 +287,7 @@ class BiblestudyController extends JControllerLegacy
 			$updated = $db->getAffectedRows();
 			$msg     = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
 		}
+
 		$this->setRedirect('index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . $id . '&' . JSession::getFormToken() . '=1', $msg);
 	}
 
@@ -314,6 +333,7 @@ class BiblestudyController extends JControllerLegacy
 		{
 			$url = 'index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid . '&' . JSession::getFormToken() . '=1';
 		}
+
 		$path = JBSMUpload::getpath($url, $tempfile);
 
 		// Check filetype is allowed
@@ -362,6 +382,8 @@ class BiblestudyController extends JControllerLegacy
 	 * Upload function
 	 *
 	 * @return null
+	 *
+	 * @since 8.0.0
 	 */
 	public function upload()
 	{
@@ -370,7 +392,6 @@ class BiblestudyController extends JControllerLegacy
 		$jinput    = $app->input;
 		$option    = $jinput->getCmd('option');
 		$uploadmsg = '';
-		$size      = 0;
 		$serverid  = $jinput->getInt('upload_server', '');
 		$folderid  = $jinput->getInt('upload_folder', '');
 		$form      = $jinput->get('jform', array(), 'post', 'array');
@@ -417,5 +438,4 @@ class BiblestudyController extends JControllerLegacy
 
 		return;
 	}
-
 }

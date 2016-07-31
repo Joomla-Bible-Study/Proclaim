@@ -20,7 +20,6 @@ use Joomla\Registry\Registry;
  */
 class BiblestudyModelLandingpage extends JModelList
 {
-
 	/**
 	 * Constructor.
 	 *
@@ -116,6 +115,7 @@ class BiblestudyModelLandingpage extends JModelList
 		{
 			$menuparams->loadString($menu->params);
 		}
+
 		$query->select("'list.select', 's.id'");
 		$query->from('#__bsms_studies as s');
 		$query->select('t.id as tid, t.teachername, t.title as teachertitle, t.language');
@@ -143,6 +143,7 @@ class BiblestudyModelLandingpage extends JModelList
 		{
 			$orderparam = $t_params->get('default_order', '1');
 		}
+
 		if ($orderparam == 2)
 		{
 			$order = "ASC";
@@ -151,6 +152,7 @@ class BiblestudyModelLandingpage extends JModelList
 		{
 			$order = "DESC";
 		}
+
 		$orderstate = $this->getState('filter.order');
 
 		if (!empty($orderstate))
@@ -162,5 +164,4 @@ class BiblestudyModelLandingpage extends JModelList
 
 		return $query;
 	}
-
 }

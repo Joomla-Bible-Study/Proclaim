@@ -26,6 +26,8 @@ class BiblestudyControllerUpload extends JControllerLegacy
 	 * Controller adapted from COM_MEDIAMU
 	 *
 	 * @return string JSON response
+	 *
+	 * @since 9.0
 	 */
 	public function upload()
 	{
@@ -113,6 +115,7 @@ class BiblestudyControllerUpload extends JControllerLegacy
 			$fileName_b = substr($fileName, $ext);
 
 			$count = 1;
+
 			while (file_exists($targetDir . '/' . $fileName_a . '_' . $count . $fileName_b))
 			{
 				$count++;
@@ -162,6 +165,7 @@ class BiblestudyControllerUpload extends JControllerLegacy
 			{
 				// Open temp file
 				$out = fopen("{$filePath}.part", $chunk == 0 ? "wb" : "ab");
+
 				if ($out)
 				{
 					// Read binary input stream and append it to temp file
@@ -232,7 +236,6 @@ class BiblestudyControllerUpload extends JControllerLegacy
 		}
 
 		$this->_setResponse(0, null, false);
-
 	}
 
 	/**
@@ -243,10 +246,11 @@ class BiblestudyControllerUpload extends JControllerLegacy
 	 * @param   bool    $error  ?
 	 *
 	 * @return void
+	 *
+	 * @since 9.0
 	 */
 	private function _setResponse($code, $msg = null, $error = true)
 	{
-
 		if ($error)
 		{
 			$jsonrpc = array(
@@ -265,7 +269,5 @@ class BiblestudyControllerUpload extends JControllerLegacy
 		}
 
 		die(json_encode($jsonrpc));
-
 	}
-
 }

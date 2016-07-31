@@ -18,19 +18,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyControllerSerie extends JControllerForm
 {
-
-	/**
-	 * Class constructor.
-	 *
-	 * @param   array  $config  A named array of configuration variables.
-	 *
-	 * @since    7.0,0
-	 */
-	public function __construct($config = array())
-	{
-		parent::__construct($config);
-	}
-
 	/**
 	 * Method to run batch operations.
 	 *
@@ -99,5 +86,4 @@ class BiblestudyControllerSerie extends JControllerForm
 		// Since there is no asset tracking, revert to the component permissions.
 		return parent::allowEdit($data, $key);
 	}
-
 }

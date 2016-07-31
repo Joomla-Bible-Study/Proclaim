@@ -22,13 +22,14 @@ use Joomla\Registry\Registry;
  */
 class ModJBSMHelper
 {
-
 	/**
 	 * Get Latest
 	 *
 	 * @param   Registry  $params  Item Params
 	 *
 	 * @return array
+	 *
+	 * @since 7.1.0
 	 */
 	public static function getLatest($params)
 	{
@@ -58,6 +59,7 @@ class ModJBSMHelper
 		{
 			$order = "DESC";
 		}
+
 		if ($condition > 0)
 		{
 			$condition = ' AND ';
@@ -136,6 +138,7 @@ class ModJBSMHelper
 			{
 				$where2[] = 'study.teacher_id = ' . (int) $filter;
 			}
+
 			$subquery .= implode(' OR ', $where2);
 			$subquery .= ')';
 
@@ -164,6 +167,7 @@ class ModJBSMHelper
 			{
 				$where2[] = 'study.location_id = ' . (int) $filter;
 			}
+
 			$subquery .= implode(' OR ', $where2);
 			$subquery .= ')';
 
@@ -192,6 +196,7 @@ class ModJBSMHelper
 			{
 				$where2[] = 'study.booknumber = ' . (int) $filter;
 			}
+
 			$subquery .= implode(' OR ', $where2);
 			$subquery .= ')';
 
@@ -207,6 +212,7 @@ class ModJBSMHelper
 				}
 			}
 		}
+
 		$filters = $series;
 
 		if (count($filters) > 1)
@@ -218,6 +224,7 @@ class ModJBSMHelper
 			{
 				$where2[] = 'study.series_id = ' . (int) $filter;
 			}
+
 			$subquery .= implode(' OR ', $where2);
 			$subquery .= ')';
 
@@ -233,6 +240,7 @@ class ModJBSMHelper
 				}
 			}
 		}
+
 		$filters = $topic;
 
 		if (count($filters) > 1)
@@ -244,6 +252,7 @@ class ModJBSMHelper
 			{
 				$where2[] = 'study.topics_id = ' . (int) $filter;
 			}
+
 			$subquery .= implode(' OR ', $where2);
 			$subquery .= ')';
 
@@ -279,6 +288,7 @@ class ModJBSMHelper
 			{
 				$where2[] = 'study.messagetype = ' . (int) $filter;
 			}
+
 			$subquery .= implode(' OR ', $where2);
 			$subquery .= ')';
 
@@ -294,6 +304,7 @@ class ModJBSMHelper
 				}
 			}
 		}
+
 		$filters = $year;
 
 		if (count($filters) > 1)
@@ -305,6 +316,7 @@ class ModJBSMHelper
 			{
 				$where2[] = 'YEAR(study.studydate) = ' . (int) $filter;
 			}
+
 			$subquery .= implode(' OR ', $where2);
 			$subquery .= ')';
 
@@ -334,5 +346,4 @@ class ModJBSMHelper
 
 		return $rows;
 	}
-
 }

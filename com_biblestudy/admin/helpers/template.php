@@ -25,6 +25,8 @@ class JBSMTemplate
 	 * Extension Deceleration
 	 *
 	 * @var string
+	 *
+	 * @since 1.5
 	 */
 	public static $extension = 'com_biblestudy';
 
@@ -32,6 +34,8 @@ class JBSMTemplate
 	 * Template types
 	 *
 	 * @var array
+	 *
+	 * @since 1.5
 	 */
 	protected $tmplTypes = array(
 		'tmplList'       => 'List', 'tmplListItem' => 'List Item', 'tmplSingleItem' => 'Single Item',
@@ -41,23 +45,29 @@ class JBSMTemplate
 	/**
 	 * Tags
 	 *
-	 * @var string
+	 * @var array
+	 *
+	 * @since 1.5
 	 */
-	private $_tags;
+	private $tags;
 
 	/**
 	 *  DBO
 	 *
-	 * @var string
+	 * @var JDatabaseDriver
+	 *
+	 * @since 1.5
 	 */
-	private $_DBO;
+	private $DBO;
 
 	/**
 	 * Builds arrays of all the possible tags.
+	 *
+	 * @since 1.5
 	 */
 	public function __construct()
 	{
-		include_once JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'tagDefinitions.helper.php';
+		include_once JPATH_COMPONENT_ADMINISTRATOR . '/helpers/tagDefinitions.helper.php';
 
 		// Creates array of all the tags and their associated field names
 		$tagsStudy       = array(
@@ -95,11 +105,11 @@ class JBSMTemplate
 		);
 
 		// Creates an associative array of all the category tags and makes it available to the class
-		$this->_tags = array(
+		$this->tags = array(
 			'tagsStudy'       => $tagsStudy, 'tagsStudyList' => $tagsStudyList, 'tagsTeacher' => $tagsTeacher,
 			'tagsTeacherList' => $tagsTeacherList
 		);
-		$this->_DBO  = JFactory::getDbo();
+		$this->DBO  = JFactory::getDbo();
 	}
 
 	/**
@@ -107,6 +117,8 @@ class JBSMTemplate
 	 *
 	 * @staticvar bibleStudyTemplate $instance
 	 * @return \JBSMTemplate
+	 *
+	 * @since 1.5
 	 */
 	public function &getInstance()
 	{
@@ -128,6 +140,8 @@ class JBSMTemplate
 	 * @param   boolean  $fieldNames  Boolean  Default False. Set to True of you want to load the db fieldnames that correspond to the tags
 	 *
 	 * @return array
+	 *
+	 * @since 1.5
 	 */
 	public function loadTagList($itemTmpl = null, $id = null, $fieldNames = false)
 	{
@@ -138,7 +152,8 @@ class JBSMTemplate
 			$itemTmpl = $this->queryTemplate($id);
 			$itemTmpl = $itemTmpl->tmpl;
 		}
-		foreach ($this->_tags as $tagCategory)
+
+		foreach ($this->tags as $tagCategory)
 		{
 			foreach ($tagCategory as $tag)
 			{
@@ -150,6 +165,7 @@ class JBSMTemplate
 				{
 					$tagSearch = key($tagCategory);
 				}
+
 				if (stristr($itemTmpl, $tagSearch))
 				{
 					if ($fieldNames)
@@ -161,6 +177,7 @@ class JBSMTemplate
 						$tagArray[] = $tagSearch;
 					}
 				}
+
 				next($tagCategory);
 			}
 		}
@@ -174,16 +191,18 @@ class JBSMTemplate
 	 * @param   int  $id  The id of the template to query
 	 *
 	 * @return Object  Row Object list
+	 *
+	 * @since 1.5
 	 */
 	public function queryTemplate($id)
 	{
-		$query = $this->_DBO->getQuery(true);
+		$query = $this->DBO->getQuery(true);
 		$query->select('*')
 			->from('#__bsms_templates')
 			->from('id = ' . (int) $id);
-		$this->_DBO->setQuery($query);
+		$this->DBO->setQuery($query);
 
-		return $this->_DBO->loadObject();
+		return $this->DBO->loadObject();
 	}
 
 	/**
@@ -193,6 +212,8 @@ class JBSMTemplate
 	 * @param   string  $DefaultSelected  Defines the default item
 	 *
 	 * @return  string  HTML Dropdown box
+	 *
+	 * @since 1.5
 	 */
 	public function loadTmplTypesOption($DefaultSelected)
 	{
@@ -214,6 +235,8 @@ class JBSMTemplate
 	 * @param   array  $fields  The fields to include in the SELECT
 	 *
 	 * @return String
+	 *
+	 * @since 1.5
 	 */
 	public function buildSqlSELECT($fields)
 	{
@@ -238,10 +261,11 @@ class JBSMTemplate
 	 * Study Date string.
 	 *
 	 * @return string
+	 *
+	 * @since 1.5
 	 */
 	public function studyDate()
 	{
 		return 'Some date';
 	}
-
 }

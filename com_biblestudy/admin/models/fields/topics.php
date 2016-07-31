@@ -22,11 +22,12 @@ jimport('joomla.form.formfield');
  */
 class JFormFieldTopics extends JFormField
 {
-
 	/**
 	 * Set type to topics
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $type = 'Topics';
 
@@ -34,10 +35,11 @@ class JFormFieldTopics extends JFormField
 	 * Get input form form
 	 *
 	 * @return string
+	 *
+	 * @since 9.0.0
 	 */
 	protected function getInput()
 	{
 		return '<input type="hidden" id="topics" name="jform[topics]"/>';
 	}
-
 }

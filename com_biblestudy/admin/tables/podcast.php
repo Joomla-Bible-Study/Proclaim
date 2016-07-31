@@ -20,11 +20,12 @@ use Joomla\Registry\Registry;
  */
 class TablePodcast extends JTable
 {
-
 	/**
 	 * Primary Key
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $id = null;
 
@@ -32,6 +33,8 @@ class TablePodcast extends JTable
 	 * Published
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $published = 1;
 
@@ -39,6 +42,8 @@ class TablePodcast extends JTable
 	 * Title
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $title = null;
 
@@ -46,6 +51,8 @@ class TablePodcast extends JTable
 	 * Website Address
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $website = null;
 
@@ -53,6 +60,8 @@ class TablePodcast extends JTable
 	 * Description
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $description = null;
 
@@ -60,6 +69,8 @@ class TablePodcast extends JTable
 	 * Image
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $image = null;
 
@@ -67,6 +78,8 @@ class TablePodcast extends JTable
 	 * Image Height
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $imageh = null;
 
@@ -74,6 +87,8 @@ class TablePodcast extends JTable
 	 * Image Width
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $imagew = null;
 
@@ -81,6 +96,8 @@ class TablePodcast extends JTable
 	 * Author
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $author = null;
 
@@ -88,6 +105,8 @@ class TablePodcast extends JTable
 	 * Podcast Image
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $podcastimage = null;
 
@@ -95,6 +114,8 @@ class TablePodcast extends JTable
 	 * Podcast Summary
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $podcastsummary = null;
 
@@ -102,6 +123,8 @@ class TablePodcast extends JTable
 	 * Podcast Search Words
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $podcastsearch = null;
 
@@ -109,6 +132,8 @@ class TablePodcast extends JTable
 	 * File Name
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $filename = null;
 
@@ -116,6 +141,8 @@ class TablePodcast extends JTable
 	 * Language of Podcast
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $language = null;
 
@@ -123,6 +150,8 @@ class TablePodcast extends JTable
 	 * Podcast name
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $podcastname = null;
 
@@ -130,6 +159,8 @@ class TablePodcast extends JTable
 	 * Editor Name
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $editor_name = null;
 
@@ -137,6 +168,8 @@ class TablePodcast extends JTable
 	 * Editor Email Address
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $editor_email = null;
 
@@ -144,6 +177,8 @@ class TablePodcast extends JTable
 	 * Limit of the episodes in the podcast
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $podcastlimit = null;
 
@@ -151,6 +186,8 @@ class TablePodcast extends JTable
 	 * Episode Title
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $episodetitle = null;
 
@@ -158,6 +195,8 @@ class TablePodcast extends JTable
 	 * Custom
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $custom = null;
 
@@ -165,6 +204,8 @@ class TablePodcast extends JTable
 	 * Details template ID
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $episodesubtitle = null;
 
@@ -172,6 +213,8 @@ class TablePodcast extends JTable
 	 * Custom
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $customsubtitle = null;
 
@@ -179,6 +222,8 @@ class TablePodcast extends JTable
 	 * Details template ID
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $detailstemplateid = null;
 
@@ -190,6 +235,8 @@ class TablePodcast extends JTable
 	 * 2 = Popup Player Window with default player as internal.
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $linktype = null;
 
@@ -197,6 +244,8 @@ class TablePodcast extends JTable
 	 * Constructor
 	 *
 	 * @param   JDatabaseDriver  &$db  Database connector object
+	 *
+	 * @since 9.0.0
 	 */
 	public function __construct(&$db)
 	{
@@ -310,5 +359,4 @@ class TablePodcast extends JTable
 
 		return $asset->id;
 	}
-
 }

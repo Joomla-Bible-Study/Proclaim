@@ -18,11 +18,12 @@ defined('_JEXEC') or die;
  */
 class TableStudyTopics extends JTable
 {
-
 	/**
 	 * ID
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $id = null;
 
@@ -30,6 +31,8 @@ class TableStudyTopics extends JTable
 	 * Study ID
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $study_id = null;
 
@@ -37,6 +40,8 @@ class TableStudyTopics extends JTable
 	 * Topic ID
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $topic_id = null;
 
@@ -133,5 +138,4 @@ class TableStudyTopics extends JTable
 
 		return $asset->id;
 	}
-
 }

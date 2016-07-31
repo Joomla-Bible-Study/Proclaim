@@ -18,25 +18,27 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewServer extends JViewLegacy
 {
-
 	/**
 	 * Form
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $form;
 
 	/**
-     * Server form
-     *
-     * @var
-     */
+	 * Server form
+	 *
+	 * @var string
+	 * @since    7.0.0
+	 */
 	protected $server_form;
 
 	/**
 	 * Item
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $item;
 
@@ -44,6 +46,7 @@ class BiblestudyViewServer extends JViewLegacy
 	 * State
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $state;
 
@@ -51,6 +54,7 @@ class BiblestudyViewServer extends JViewLegacy
 	 * Admin
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $admin;
 
@@ -58,6 +62,7 @@ class BiblestudyViewServer extends JViewLegacy
 	 * Can Do
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $canDo;
 
@@ -132,8 +137,10 @@ class BiblestudyViewServer extends JViewLegacy
 			{
 				JToolbarHelper::save2copy('server.save2copy');
 			}
+
 			JToolbarHelper::cancel('server.cancel', 'JTOOLBAR_CLOSE');
 		}
+
 		JToolbarHelper::divider();
 		JToolbarHelper::help('biblestudy', true);
 	}
@@ -151,5 +158,4 @@ class BiblestudyViewServer extends JViewLegacy
 		$document = JFactory::getDocument();
 		$document->setTitle($isNew ? JText::_('JBS_TITLE_SERVERS_CREATING') : JText::sprintf('JBS_TITLE_SERVERS_EDITING', $this->item->server_name));
 	}
-
 }

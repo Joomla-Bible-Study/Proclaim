@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
 jimport('joomla.form.helper');
 
 // For some reason the autoloader is not finding this file so this is a temporary workaround
-include_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/translated.php');
+include_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/translated.php';
 JFormHelper::loadFieldClass('list');
 
 /**
@@ -26,18 +26,21 @@ JFormHelper::loadFieldClass('list');
  */
 class JFormFieldTopicslist extends JFormFieldList
 {
-
 	/**
 	 * The field type.
 	 *
-	 * @var         string
+	 * @var  string
+	 *
+	 * @since 9.0.0
 	 */
 	protected $type = 'Topics';
 
 	/**
 	 * Method to get a list of options for a list input.
 	 *
-	 * @return      array           An array of JHtml options.
+	 * @return  array  An array of JHtml options.
+	 *
+	 * @since 9.0.0
 	 */
 	protected function getOptions()
 	{
@@ -59,9 +62,9 @@ class JFormFieldTopicslist extends JFormFieldList
 				$options[] = JHtml::_('select.option', $topic->id, $text);
 			}
 		}
+
 		$options = array_merge(parent::getOptions(), $options);
 
 		return $options;
 	}
-
 }

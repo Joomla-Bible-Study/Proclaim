@@ -28,7 +28,8 @@ if (file_exists($api))
  */
 class BiblestudyController extends JControllerLegacy
 {
-	/** @var  string Media Code */
+	/** @var  string Media Code
+	 * @since    7.0.0 */
 	public $mediaCode;
 
 	/**
@@ -37,6 +38,8 @@ class BiblestudyController extends JControllerLegacy
 	 * @param   array  $config  An optional associative array of configuration settings.
 	 *                          Recognized key values include 'name', 'default_task', 'model_path', and
 	 * 'view_path' (this list is not meant to be comprehensive).
+	 *
+	 * @since    7.0.0
 	 */
 	public function __construct($config = array())
 	{
@@ -66,7 +69,9 @@ class BiblestudyController extends JControllerLegacy
 	 * @param   boolean  $cachable   If true, the view output will be cached
 	 * @param   array    $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
 	 *
-	 * @return  JControllerLegacy  A JControllerLegacy object to support chaining.
+	 * @return  JControllerLegacy|bool  A JControllerLegacy object to support chaining.
+	 *
+	 * @since    7.0.0
 	 */
 	public function display($cachable = false, $urlparams = array())
 	{
@@ -101,6 +106,7 @@ class BiblestudyController extends JControllerLegacy
 		{
 			$t = 1;
 		}
+
 		$this->input->set('t', $t);
 
 		$safeurlparams = array(
@@ -138,6 +144,8 @@ class BiblestudyController extends JControllerLegacy
 	 * Comments
 	 *
 	 * @return boolean|void
+	 *
+	 * @since    7.0.0
 	 */
 	public function comment()
 	{
@@ -150,6 +158,7 @@ class BiblestudyController extends JControllerLegacy
 		{
 			$t = 1;
 		}
+
 		$this->input->set('t', $t);
 
 		// Convert parameter fields to objects.
@@ -163,6 +172,7 @@ class BiblestudyController extends JControllerLegacy
 			JPluginHelper::importPlugin('captcha');
 			$dispatcher = JEventDispatcher::getInstance();
 			$res        = $dispatcher->trigger('onCheckAnswer', $_POST['recaptcha_response_field']);
+
 			if (!$res[0])
 			{
 				// What happens when the CAPTCHA was entered incorrectly
@@ -186,6 +196,7 @@ class BiblestudyController extends JControllerLegacy
 			{
 				$msg = JText::_('JBS_STY_COMMENT_SUBMITTED');
 			}
+
 			if (!$model->storecomment())
 			{
 				$msg = JText::_('JBS_STY_ERROR_SUBMITTING_COMMENT');
@@ -195,11 +206,11 @@ class BiblestudyController extends JControllerLegacy
 			{
 				$this->commentsEmail($params);
 			}
+
 			$study_detail_id = $this->input->get('study_detail_id', 0, 'INT');
 
 			$mainframe->redirect('index.php?option=com_biblestudy&id=' . $study_detail_id . '&view=sermon&t=' . $t, $msg);
-
-		} // End of $cap
+		}
 	}
 
 	/**
@@ -208,6 +219,8 @@ class BiblestudyController extends JControllerLegacy
 	 * @param   Registry  $params  To pass to the email
 	 *
 	 * @return void
+	 *
+	 * @since    7.0.0
 	 */
 	public function commentsEmail($params)
 	{
@@ -219,6 +232,7 @@ class BiblestudyController extends JControllerLegacy
 			$menu       = $mainframe->getMenu();
 			$menuparams = $menu->getParams($menuitemid);
 		}
+
 		$comment_author    = $this->input->get('full_name', 'Anonymous', 'WORD');
 		$comment_study_id  = $this->input->get('study_detail_id', 0, 'INT');
 		$comment_published = $this->input->get('published', 0, 'INT');
@@ -243,6 +257,7 @@ class BiblestudyController extends JControllerLegacy
 		{
 			$ToEmail = $comment_mailfrom;
 		}
+
 		$Body = $comment_author . ' ' . JText::_('JBS_STY_HAS_ENTERED_COMMENT') . ': ' . $comment_title .
 			' - ' . $comment_study_date . ' '
 			. JText::_('JBS_STY_ON') . ': ' . $comment_date;
@@ -255,6 +270,7 @@ class BiblestudyController extends JControllerLegacy
 		{
 			$Body = $Body . ' ' . JText::_('JBS_STY_COMMENT_NOT_PUBLISHED');
 		}
+
 		$Body = $Body . ' ' . JText::_('JBS_STY_REVIEW_COMMENTS_LOGIN') . ': ' . $comment_livesite;
 		$mail->addRecipient($ToEmail);
 		$mail->setSubject($Subject . ' ' . $comment_livesite);
@@ -266,6 +282,8 @@ class BiblestudyController extends JControllerLegacy
 	 * Download
 	 *
 	 * @return void
+	 *
+	 * @since    7.0.0
 	 */
 	public function download()
 	{
@@ -285,6 +303,8 @@ class BiblestudyController extends JControllerLegacy
 	 * AV Player
 	 *
 	 * @return void
+	 *
+	 * @since    7.0.0
 	 */
 	public function avplayer()
 	{
@@ -304,6 +324,8 @@ class BiblestudyController extends JControllerLegacy
 	 * Play Hit
 	 *
 	 * @return void
+	 *
+	 * @since    7.0.0
 	 */
 	public function playHit()
 	{
@@ -317,6 +339,8 @@ class BiblestudyController extends JControllerLegacy
 	 * from the sermons view "default.php". It has not been implemented yet, so its not used.
 	 *
 	 * @return void
+	 *
+	 * @since    7.0.0
 	 */
 	public function inlinePlayer()
 	{
@@ -361,6 +385,7 @@ class BiblestudyController extends JControllerLegacy
 		{
 			$url = 'index.php?option=' . $option . '&view=mediafileform&task=edit&a_id=' . $returnid;
 		}
+
 		$path = JBSMUpload::getpath($url, $tempfile);
 
 		// Check file type is allowed
@@ -401,6 +426,8 @@ class BiblestudyController extends JControllerLegacy
 	 * Upload function
 	 *
 	 * @return void
+	 *
+	 * @since    7.0.0
 	 */
 	public function upload()
 	{
@@ -431,6 +458,7 @@ class BiblestudyController extends JControllerLegacy
 				$uploadmsg = JText::_('JBS_MED_FILE_UPLOADED');
 			}
 		}
+
 		$app = JFactory::getApplication();
 		$app->setUserState($option . 'fname', $file['name']);
 		$app->setUserState($option . 'size', $file['size']);
@@ -446,5 +474,4 @@ class BiblestudyController extends JControllerLegacy
 			$this->setRedirect('index.php?option=' . $option . '&view=mediafileform&task=edit&a_id=' . $returnid, $uploadmsg);
 		}
 	}
-
 }

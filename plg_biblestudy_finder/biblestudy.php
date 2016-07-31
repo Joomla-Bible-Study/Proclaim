@@ -25,7 +25,6 @@ require_once JPATH_ADMINISTRATOR . '/components/com_finder/helpers/indexer/adapt
  */
 class PlgFinderBiblestudy extends FinderIndexerAdapter
 {
-
 	/**
 	 * The plugin identifier.
 	 *
@@ -143,7 +142,6 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 	 */
 	public function onFinderAfterSave($context, $row, $isNew)
 	{
-
 		if ($context == 'com_biblestudy.message' || $context == 'com_biblestudy.messageform')
 		{
 			// Check if the access levels are different
@@ -373,5 +371,4 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 
 		return $sql;
 	}
-
 }

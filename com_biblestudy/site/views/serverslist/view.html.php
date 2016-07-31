@@ -28,6 +28,8 @@ class BiblestudyViewServersList extends JViewLegacy
 	 * Items
 	 *
 	 * @var object
+	 *
+	 * @since 7.0
 	 */
 	protected $items;
 
@@ -35,6 +37,8 @@ class BiblestudyViewServersList extends JViewLegacy
 	 * Pagination
 	 *
 	 * @var object
+	 *
+	 * @since 7.0
 	 */
 	protected $pagination;
 
@@ -42,6 +46,8 @@ class BiblestudyViewServersList extends JViewLegacy
 	 * State
 	 *
 	 * @var object
+	 *
+	 * @since 7.0
 	 */
 	protected $state;
 
@@ -49,13 +55,19 @@ class BiblestudyViewServersList extends JViewLegacy
 	 * Can Do
 	 *
 	 * @var object
+	 *
+	 * @since 7.0
 	 */
 	protected $canDo;
 
-	/** @var  array Filter Levels */
+	/** @var  array Filter Levels
+	 *
+	 * @since 7.0 */
 	protected $f_levels;
 
-	/** @var  object Side Bar */
+	/** @var  object Side Bar
+	 *
+	 * @since 7.0 */
 	protected $sidebar;
 
 	/**

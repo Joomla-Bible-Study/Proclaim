@@ -20,11 +20,12 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewCommentlist extends JViewLegacy
 {
-
 	/**
 	 * Items
 	 *
 	 * @var array
+	 *
+	 * @since 7.0
 	 */
 	protected $items;
 
@@ -32,6 +33,8 @@ class BiblestudyViewCommentlist extends JViewLegacy
 	 * Pagination
 	 *
 	 * @var array
+	 *
+	 * @since 7.0
 	 */
 	protected $pagination;
 
@@ -39,6 +42,8 @@ class BiblestudyViewCommentlist extends JViewLegacy
 	 * State
 	 *
 	 * @var array
+	 *
+	 * @since 7.0
 	 */
 	protected $state;
 
@@ -46,6 +51,8 @@ class BiblestudyViewCommentlist extends JViewLegacy
 	 * State
 	 *
 	 * @var array
+	 *
+	 * @since 7.0
 	 */
 	protected $params;
 
@@ -55,6 +62,8 @@ class BiblestudyViewCommentlist extends JViewLegacy
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
+	 *
+	 * @since 7.0
 	 */
 	public function display($tpl = null)
 	{
@@ -143,5 +152,4 @@ class BiblestudyViewCommentlist extends JViewLegacy
 			'comment.id'        => JText::_('JGRID_HEADING_ID')
 		);
 	}
-
 }

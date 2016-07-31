@@ -48,6 +48,8 @@ class BiblestudyControllerAssets extends JControllerForm
 	 * Constructor.
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
+	 *
+	 * @since 1.5
 	 */
 	public function __construct($config = array())
 	{
@@ -62,6 +64,8 @@ class BiblestudyControllerAssets extends JControllerForm
 	 * @param   string  $task  An optional associative array of configuration settings.
 	 *
 	 * @return void
+	 *
+	 * @since 1.5
 	 */
 	public function execute($task)
 	{
@@ -69,6 +73,7 @@ class BiblestudyControllerAssets extends JControllerForm
 		{
 			$task = 'browse';
 		}
+
 		parent::execute($task);
 	}
 
@@ -76,6 +81,8 @@ class BiblestudyControllerAssets extends JControllerForm
 	 * Check Assets
 	 *
 	 * @return void
+	 *
+	 * @since 8.0.0
 	 */
 	public function checkassets()
 	{
@@ -95,6 +102,8 @@ class BiblestudyControllerAssets extends JControllerForm
 	 * Start of installer display hook.
 	 *
 	 * @return void
+	 *
+	 * @since 8.0.0
 	 */
 	public function browse()
 	{
@@ -104,6 +113,7 @@ class BiblestudyControllerAssets extends JControllerForm
 		$app = JFactory::getApplication();
 		$session = JFactory::getSession();
 		$stack = $session->get('asset_stack', '', 'JBSM');
+
 		if (empty($stack))
 		{
 			$cache = new JCache(array('defaultgroup' => 'com_biblestudy'));
@@ -128,6 +138,8 @@ class BiblestudyControllerAssets extends JControllerForm
 	 * Clear and start of installer display hook.
 	 *
 	 * @return void
+	 *
+	 * @since 9.0.2
 	 */
 	public function clear()
 	{

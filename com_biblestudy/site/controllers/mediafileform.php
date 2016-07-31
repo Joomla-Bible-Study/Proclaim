@@ -18,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyControllerMediafileform extends JControllerForm
 {
-
 	/**
 	 * View item
 	 *
@@ -38,20 +37,6 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	 * @since    1.6
 	 */
 	protected $text_prefix = 'COM_BIBLESTUDY';
-
-	/**
-	 * Constructor.
-	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
-	 *
-	 * @see     JControllerForm
-	 * @since   12.2
-	 * @throws  Exception
-	 */
-	public function __construct($config = array())
-	{
-		parent::__construct($config);
-	}
 
 	/**
 	 * Handles XHR requests (i.e. File uploads)
@@ -143,6 +128,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	public function cancel($key = 'a_id')
 	{
 		parent::cancel($key);
+
 		if ($this->input->getCmd('return') && parent::cancel($key))
 		{
 			$this->setRedirect(base64_decode($this->input->getCmd('return')));
@@ -232,6 +218,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	{
 		$return = $this->input->getCmd('return');
 		$task   = $this->input->get('task');
+
 		if ($return && $task != 'apply')
 		{
 			JFactory::getApplication()->enqueueMessage(JText::_('JBS_MED_SAVE'), 'message');

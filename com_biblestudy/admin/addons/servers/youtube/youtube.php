@@ -21,21 +21,13 @@ class JBSMAddonYouTube extends JBSMAddon
 	protected $config;
 
 	/**
-	 * Construct
-	 *
-	 * @param   array  $config  Array of Options
-	 */
-	public function __construct($config = array())
-	{
-		parent::__construct($config);
-	}
-
-	/**
 	 * Upload
 	 *
-	 * @param   JInput  $data  Data to upload
+	 * @param   JInput|array  $data  Data to upload
 	 *
 	 * @return array
+	 *
+	 * @since 9.0.0
 	 */
 	public function upload($data)
 	{

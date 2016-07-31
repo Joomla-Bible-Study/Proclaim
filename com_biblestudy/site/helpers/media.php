@@ -19,8 +19,9 @@ use Joomla\Registry\Registry;
  */
 class JBSMMedia
 {
-
-	/** @type int File Size */
+	/** @type int File Size
+	 *
+	 * @since    7.0 */
 	private $fsize = 0;
 
 	/**
@@ -794,8 +795,7 @@ class JBSMMedia
 			default:
 				$duration = $hours . ':' . $minutes . ':' . $seconds;
 				break;
-
-		} // End switch
+		}
 
 		return $duration;
 	}

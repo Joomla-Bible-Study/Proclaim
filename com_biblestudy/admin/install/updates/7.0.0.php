@@ -26,6 +26,8 @@ class Migration700
 	 * @param   JDatabaseDriver  $db  Data bass driver
 	 *
 	 * @return bool
+	 *
+	 * @since 9.0.0
 	 */
 	public function up($db)
 	{
@@ -427,36 +429,42 @@ class Migration700
 		{
 			return false;
 		}
+
 		$query = "UPDATE `#__bsms_studies` SET `access` = '2' WHERE `show_level` = '18'";
 
 		if (!JBSMDbHelper::performDB($query, "Build 700: "))
 		{
 			return false;
 		}
+
 		$query = "UPDATE `#__bsms_studies` SET `access` = '2' WHERE `show_level` = '19'";
 
 		if (!JBSMDbHelper::performDB($query, "Build 700: "))
 		{
 			return false;
 		}
+
 		$query = "UPDATE `#__bsms_studies` SET `access` = '2' WHERE `show_level` = '20'";
 
 		if (!JBSMDbHelper::performDB($query, "Build 700: "))
 		{
 			return false;
 		}
+
 		$query = "UPDATE `#__bsms_studies` SET `access` = '3' WHERE `show_level` = '22'";
 
 		if (!JBSMDbHelper::performDB($query, "Build 700: "))
 		{
 			return false;
 		}
+
 		$query = "UPDATE `#__bsms_studies` SET `access` = '3' WHERE `show_level` = '23'";
 
 		if (!JBSMDbHelper::performDB($query, "Build 700: "))
 		{
 			return false;
 		}
+
 		$query = "UPDATE `#__bsms_studies` SET `access` = '3' WHERE `show_level` = '24'";
 
 		if (!JBSMDbHelper::performDB($query, "Build 700: "))
@@ -478,6 +486,7 @@ class Migration700
 
 				// Fix incorrect params string literal
 				$params = array();
+
 				foreach (explode('\n', $result->params) as $param)
 				{
 					$param = explode('=',  str_replace('\n', '', trim($param)));
@@ -501,6 +510,7 @@ class Migration700
 					{
 						$player = 1;
 					}
+
 					$query = "UPDATE `#__bsms_mediafiles` SET `player` = " . $db->quote($player) . " WHERE `id` = " .
 						$db->quote($result->id) . " LIMIT 1";
 
@@ -509,6 +519,7 @@ class Migration700
 						return false;
 					}
 				}
+
 				if ($popup)
 				{
 					$query = "UPDATE `#__bsms_mediafiles` SET `popup` = " . $db->quote($popup) . " WHERE `id` = " .
@@ -519,6 +530,7 @@ class Migration700
 						return false;
 					}
 				}
+
 				if ($podcasts)
 				{
 					$podcasts = str_replace('|', ',', $podcasts);
@@ -642,6 +654,7 @@ class Migration700
 		{
 			return false;
 		}
+
 		$query = "SHOW INDEX FROM #__bsms_timeset WHERE Key_name = 'idx_state'";
 		$db->setQuery($query);
 
@@ -720,6 +733,7 @@ class Migration700
 				{
 					// Fix incorrect params string literal
 					$params = array();
+
 					foreach (explode('\n', $result->params) as $param)
 					{
 						$param             = explode('=', str_replace('\n', '', trim($param)));
@@ -757,6 +771,7 @@ class Migration700
 				{
 					// Fix incorrect params string literal
 					$params = array();
+
 					foreach (explode('\n', $result->params) as $param)
 					{
 						$param             = explode('=', str_replace('\n', '', trim($param)));
@@ -787,6 +802,8 @@ class Migration700
 	 * @param   array  $table  Table name to affect
 	 *
 	 * @return boolean
+	 *
+	 * @since 9.0.0
 	 */
 	protected function addAssetColumn($table)
 	{
@@ -796,6 +813,7 @@ class Migration700
 		{
 			return false;
 		}
+
 		if (JBSMDbHelper::checkTables($table, 'asset_id') !== true)
 		{
 			$array = array(
@@ -810,6 +828,7 @@ class Migration700
 				return false;
 			}
 		}
+
 		if (JBSMDbHelper::checkTables($table, 'access') !== true)
 		{
 			$array = array(

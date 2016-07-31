@@ -22,6 +22,7 @@ class BiblestudyViewCpanel extends JViewLegacy
 	 * Data from Model
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $data;
 
@@ -29,6 +30,7 @@ class BiblestudyViewCpanel extends JViewLegacy
 	 * Total Messages
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $total_messages;
 
@@ -36,6 +38,7 @@ class BiblestudyViewCpanel extends JViewLegacy
 	 * Side Bar
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $sidebar;
 
@@ -43,6 +46,7 @@ class BiblestudyViewCpanel extends JViewLegacy
 	 * State
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	protected $state;
 
@@ -56,10 +60,11 @@ class BiblestudyViewCpanel extends JViewLegacy
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a Error object.
+	 *
+	 * @since    7.0.0
 	 */
 	public function display($tpl = null)
 	{
-
 		$this->state = $this->get('State');
 		$this->data  = $this->get('Data');
 		$model       = $this->getModel();
@@ -105,5 +110,4 @@ class BiblestudyViewCpanel extends JViewLegacy
 		$document = JFactory::getDocument();
 		$document->setTitle(JText::_('JBS_TITLE_CONTROL_PANEL'));
 	}
-
 }

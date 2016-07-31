@@ -20,13 +20,11 @@ use Joomla\Registry\Registry;
 class JBSMPageBuilder
 {
 	/** @var string Extension Name
-	 *
-	 * @since  7.0.1 */
+	 * @since 7.0 */
 	public $extension = 'com_biblestudy';
 
 	/** @var  string Event
-	 *
-	 * @since  7.0.1 */
+	 * @since 7.0 */
 	public $event;
 
 	/**
@@ -38,7 +36,7 @@ class JBSMPageBuilder
 	 *
 	 * @return object
 	 *
-	 * @since  7.0.1
+	 * @since 7.0
 	 */
 	public function buildPage($item, $params, $template)
 	{
@@ -236,7 +234,7 @@ class JBSMPageBuilder
 	 *
 	 * @return string
 	 *
-	 * @since  7.0.1
+	 * @since 7.0
 	 */
 	private function mediaBuilder($mediaids, $params, $template, $item)
 	{
@@ -257,7 +255,7 @@ class JBSMPageBuilder
 	 *
 	 * @return object
 	 *
-	 * @since  7.0.1
+	 * @since 7.0
 	 */
 	public function runContentPlugins($item, $params)
 	{
@@ -316,7 +314,7 @@ class JBSMPageBuilder
 	 *
 	 * @return array
 	 *
-	 * @since  7.0.1
+	 * @since 7.0
 	 */
 	public function studyBuilder($whereitem = null, $wherefield = null, $params = null, $limit = 10, $order = 'DESC', $template = null)
 	{

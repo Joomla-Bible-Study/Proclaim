@@ -22,6 +22,8 @@ class JBSMAlias
 	 * Extension Name
 	 *
 	 * @var string
+	 *
+	 * @since 1.5
 	 */
 	public static $extension = 'com_biblestudy';
 
@@ -72,6 +74,8 @@ class JBSMAlias
 	 * Get Object's for tables
 	 *
 	 * @return array
+	 *
+	 * @since 1.5
 	 */
 	private static function getObjects()
 	{
@@ -92,6 +96,8 @@ class JBSMAlias
 	 * @param   string  $title  Title
 	 *
 	 * @return boolean|array
+	 *
+	 * @since 1.5
 	 */
 	private static function getTableQuery($table, $title)
 	{
@@ -101,6 +107,7 @@ class JBSMAlias
 		{
 			return false;
 		}
+
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('id, alias, ' . $title)
@@ -124,5 +131,4 @@ class JBSMAlias
 
 		return $data;
 	}
-
 }

@@ -18,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyModelMessages extends JModelList
 {
-
 	/**
 	 * Constructor.
 	 *
@@ -57,7 +56,7 @@ class BiblestudyModelMessages extends JModelList
 	 * @param   array  $items  Items for entries
 	 *
 	 * @since 7.0
-	 * @return object
+	 * @return array
 	 */
 	public function getTranslated($items = array())
 	{
@@ -118,7 +117,6 @@ class BiblestudyModelMessages extends JModelList
 	 */
 	protected function getStoreId($id = '')
 	{
-
 		// Compile the store id.
 		$id .= ':' . $this->getState('filter.published');
 		$id .= ':' . $this->getState('filter.year');
@@ -353,5 +351,4 @@ class BiblestudyModelMessages extends JModelList
 
 		return $query;
 	}
-
 }

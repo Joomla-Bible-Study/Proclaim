@@ -19,7 +19,9 @@ use Joomla\Registry\Registry;
  */
 class JBSMRelatedStudies
 {
-	/** @var  string Score */
+	/** @var  string Score
+	 *
+	 * @since    7.2 */
 	public $score;
 
 	/**
@@ -30,6 +32,7 @@ class JBSMRelatedStudies
 	 *
 	 * @return boolean
 	 *
+	 * @since    7.2
 	 * @todo need to look if all is needed. @TOM Look to me this need to me this need to be updated?
 	 */
 	public function getRelated($row, $params)
@@ -47,7 +50,6 @@ class JBSMRelatedStudies
 		{
 			if ($row->studyintro)
 			{
-				$introkeys = $this->removeCommonWords($row->studyintro);
 				$keygo     = true;
 			}
 			else
@@ -60,10 +62,12 @@ class JBSMRelatedStudies
 		{
 			$topicsgo = false;
 		}
+
 		if (!$keygo && !$topicsgo)
 		{
 			return false;
 		}
+
 		$studies = $this->getStudies();
 
 		foreach ($studies as $study)
@@ -89,6 +93,7 @@ class JBSMRelatedStudies
 		{
 			return false;
 		}
+
 		$related = $this->getRelatedLinks();
 
 		return $related;
@@ -98,6 +103,8 @@ class JBSMRelatedStudies
 	 * Get Topics for rendering.
 	 *
 	 * @return string
+	 *
+	 * @since    7.2
 	 */
 	public function getTopics()
 	{
@@ -117,6 +124,7 @@ class JBSMRelatedStudies
 				$topicslist[] = $v;
 			}
 		}
+
 		$returntopics = implode(',', $topicslist);
 
 		return $returntopics;
@@ -128,10 +136,11 @@ class JBSMRelatedStudies
 	 * @param   string  $input  Home
 	 *
 	 * @return array
+	 *
+	 * @since    7.2
 	 */
 	public function removeCommonWords($input)
 	{
-
 		$commonWords  = array(
 			'a',
 			'able',
@@ -809,6 +818,8 @@ class JBSMRelatedStudies
 	 * Get Studies
 	 *
 	 * @return JObject
+	 *
+	 * @since    7.2
 	 */
 	public function getStudies()
 	{
@@ -831,7 +842,6 @@ class JBSMRelatedStudies
 
 		for ($i = 0; $i < $count; $i++)
 		{
-
 			if ($studies[$i]->access > 1)
 			{
 				if (!in_array($studies[$i]->access, $groups))
@@ -852,6 +862,8 @@ class JBSMRelatedStudies
 	 * @param   int     $id       ?
 	 *
 	 * @return boolean
+	 *
+	 * @since    7.2
 	 */
 	public function parseKeys($source, $compare, $id)
 	{
@@ -865,11 +877,13 @@ class JBSMRelatedStudies
 			$sourcearray   = explode(',', $source);
 			$sourceisarray = true;
 		}
+
 		if (substr_count($compare, ','))
 		{
 			$comparearray   = explode(',', $compare);
 			$compareisarray = true;
 		}
+
 		if ($sourceisarray && $compareisarray)
 		{
 			foreach ($sourcearray as $sarray)
@@ -880,6 +894,7 @@ class JBSMRelatedStudies
 				}
 			}
 		}
+
 		if ($sourceisarray && !$compareisarray)
 		{
 			if (in_array($compare, $sourcearray))
@@ -911,21 +926,22 @@ class JBSMRelatedStudies
 	 * Look for Related Links.
 	 *
 	 * @return string
+	 *
+	 * @since    7.2
 	 */
 	public function getRelatedLinks()
 	{
 		$db           = JFactory::getDbo();
 		$scored       = array_count_values($this->score);
-		$sorted       = arsort($scored);
 		$output       = array_slice($scored, 0, 20, true);
 		$links        = array();
 		$studyrecords = array();
-		$studyrecord  = '';
 
 		foreach ($output as $key => $value)
 		{
 			$links[] = $key;
 		}
+
 		foreach ($links as $link)
 		{
 			$query = $db->getQuery('true');
@@ -948,11 +964,11 @@ class JBSMRelatedStudies
 				. '">' . $studyrecord->studytitle . ' - ' . JText::_($studyrecord->bookname)
 				. ' ' . $studyrecord->chapter_begin . '</option>';
 		}
+
 		$related .= '</select>';
 
 		$relatedlinks = '<div class="related"><form action="#">' . $related . '</form></div>';
 
 		return $relatedlinks;
 	}
-
 }

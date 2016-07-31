@@ -21,37 +21,56 @@ use Joomla\Registry\Registry;
  */
 class BiblestudyViewMediafileform extends JViewLegacy
 {
-
-	/** @var  string Upload Folder */
+	/** @var  string Upload Folder
+	 *
+	 * @since 7.0 */
 	public $upload_folder;
 
-	/** @var  string Upload Folder */
+	/** @var  string Upload Folder
+	 *
+	 * @since 7.0 */
 	public $upload_server;
 
 	public $pageclass_sfx;
 
-	/** @var JForm Form */
+	/** @var JForm Form
+	 *
+	 * @since 7.0 */
 	protected $form;
 
-	/** @var object Item */
+	/** @var object Item
+	 *
+	 * @since 7.0 */
 	protected $item;
 
-	/** @var string Return Page */
+	/** @var string Return Page
+	 *
+	 * @since 7.0 */
 	protected $return_page;
 
-	/** @var array State */
+	/** @var array State
+	 *
+	 * @since 7.0 */
 	protected $state;
 
-	/** @var  Registry Params */
+	/** @var  Registry Params
+	 *
+	 * @since 7.0 */
 	protected $params;
 
-	/** @var  object Media Form */
+	/** @var  object Media Form
+	 *
+	 * @since 7.0 */
 	protected $media_form;
 
-	/** @var  string Can Do */
+	/** @var  string Can Do
+	 *
+	 * @since 7.0 */
 	protected $canDo;
 
-	/** @var object */
+	/** @var object
+	 *
+	 * @since 7.0 */
 	protected $options;
 
 	/**
@@ -60,10 +79,11 @@ class BiblestudyViewMediafileform extends JViewLegacy
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
+	 *
+	 * @since 7.0
 	 */
 	public function display($tpl = null)
 	{
-
 		$app              = JFactory::getApplication();
 		$this->form       = $this->get("Form");
 		$this->media_form = $this->get("MediaForm");
@@ -89,16 +109,20 @@ class BiblestudyViewMediafileform extends JViewLegacy
 
 		$this->options->study_id   = null;
 		$this->options->createdate = null;
+
 		if ($options)
 		{
 			$options = explode('&', base64_decode($app->input->get('options')));
+
 			foreach ($options as $option_st)
 			{
 				$option_st = explode('=', $option_st);
+
 				if ($option_st[0] == 'study_id')
 				{
 					$this->options->study_id = $option_st[1];
 				}
+
 				if ($option_st[0] == 'createdate')
 				{
 					$this->options->createdate = $option_st[1];
@@ -155,6 +179,7 @@ class BiblestudyViewMediafileform extends JViewLegacy
 		{
 			$this->params->def('page_heading', JText::_('JBS_FORM_EDIT_ARTICLE'));
 		}
+
 		if (JBSPAGETITLE)
 		{
 			$title = $this->params->def('page_title', '');
@@ -163,6 +188,7 @@ class BiblestudyViewMediafileform extends JViewLegacy
 		{
 			$title = JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY');
 		}
+
 		$isNew = ($this->item->id == 0);
 		$state = $isNew ? JText::_('JBS_CMN_NEW') : JText::sprintf('JBS_CMN_EDIT', $this->form->getValue('studytitle'));
 		$title .= ' : ' . $state;
@@ -175,6 +201,7 @@ class BiblestudyViewMediafileform extends JViewLegacy
 		{
 			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
+
 		$this->document->setTitle($title);
 
 		$pathway = $app->getPathway();
@@ -195,5 +222,4 @@ class BiblestudyViewMediafileform extends JViewLegacy
 			$this->document->setMetadata('robots', $this->params->get('robots'));
 		}
 	}
-
 }

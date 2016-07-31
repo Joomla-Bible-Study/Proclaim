@@ -18,12 +18,13 @@ defined('_JEXEC') or die;
  */
 class BiblestudyModelMessagetype extends JModelAdmin
 {
-
 	/**
 	 * Method to store a record
 	 *
 	 * @access    public
 	 * @return    boolean    True on success
+	 *
+	 * @since    7.0.0
 	 */
 	public function store()
 	{
@@ -166,5 +167,4 @@ class BiblestudyModelMessagetype extends JModelAdmin
 		parent::cleanCache('com_biblestudy');
 		parent::cleanCache('mod_biblestudy');
 	}
-
 }

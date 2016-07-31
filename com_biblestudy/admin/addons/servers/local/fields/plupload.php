@@ -8,7 +8,7 @@
  * @link       http://www.JoomlaBibleStudy.org
  * */
 // No Direct Access
-defined('_JEXEC') or die;
+defined('JPATH_PLATFORM') or die;
 
 jimport('joomla.html.html');
 jimport('joomla.form.formfield');
@@ -21,13 +21,14 @@ jimport('joomla.form.formfield');
  */
 class JFormFieldPlupload extends JFormField
 {
-
 	public $type = 'Plupload';
 
 	/**
 	 * Get Input
 	 *
 	 * @return string
+	 *
+	 * @since 9.0.0
 	 */
 	protected function getInput()
 	{

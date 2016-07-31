@@ -2,12 +2,11 @@
 /**
  * upload.php
  *
- * Copyright 2013, Moxiecode Systems AB
- * Released under GPL License.
- *
- * License: http://www.plupload.com/license
- * Contributing: http://www.plupload.com/contributing
- */
+ * @package    BibleStudy.Site
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
+ * */
 
 // Make sure file is not cached (as it happens for example on iOS devices)
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
@@ -33,8 +32,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 
 // Settings
 $targetDir = ini_get("upload_tmp_dir");
-$cleanupTargetDir = true; // Remove old files
-$maxFileAge       = 5 * 3600; // Temp file age in seconds
+
+// Remove old files
+$cleanupTargetDir = true;
+
+// Temp file age in seconds
+$maxFileAge       = 5 * 3600;
 
 
 // Create target dir
@@ -63,7 +66,7 @@ $filePath = $targetDir . DIRECTORY_SEPARATOR . $fileName;
 $chunk  = isset($_REQUEST["chunk"]) ? intval($_REQUEST["chunk"]) : 0;
 $chunks = isset($_REQUEST["chunks"]) ? intval($_REQUEST["chunks"]) : 0;
 
-// Remove old temp files	
+// Remove old temp files
 if ($cleanupTargetDir)
 {
 	if (!is_dir($targetDir) || !$dir = opendir($targetDir))
@@ -87,6 +90,7 @@ if ($cleanupTargetDir)
 			@unlink($tmpfilePath);
 		}
 	}
+
 	closedir($dir);
 }
 

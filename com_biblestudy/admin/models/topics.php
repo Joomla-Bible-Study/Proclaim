@@ -18,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyModelTopics extends JModelList
 {
-
 	/**
 	 * Constructor.
 	 *
@@ -46,7 +45,7 @@ class BiblestudyModelTopics extends JModelList
 	 *
 	 * @param   array  $items  Items for entries
 	 *
-	 * @return object
+	 * @return array
 	 *
 	 * @since 7.0
 	 */
@@ -82,6 +81,7 @@ class BiblestudyModelTopics extends JModelList
 		{
 			$this->context .= '.' . $layout;
 		}
+
 		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
 

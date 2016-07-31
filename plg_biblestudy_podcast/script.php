@@ -25,6 +25,8 @@ class PlgSystemJBSPodcastInstallerScript
 	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
+	 *
+	 * @since   1.5
 	 */
 	public function install($parent)
 	{
@@ -37,6 +39,8 @@ class PlgSystemJBSPodcastInstallerScript
 	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
+	 *
+	 * @since   1.5
 	 */
 	public function uninstall($parent)
 	{
@@ -50,6 +54,8 @@ class PlgSystemJBSPodcastInstallerScript
 	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
+	 *
+	 * @since   1.5
 	 */
 	public function update($parent)
 	{
@@ -64,6 +70,8 @@ class PlgSystemJBSPodcastInstallerScript
 	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
+	 *
+	 * @since   1.5
 	 */
 	public function preflight($type, $parent)
 	{
@@ -76,6 +84,8 @@ class PlgSystemJBSPodcastInstallerScript
 	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
+	 *
+	 * @since   1.5
 	 */
 	public function postflight($type, $parent)
 	{
@@ -86,6 +96,8 @@ class PlgSystemJBSPodcastInstallerScript
 	 * Install DB if needed
 	 *
 	 * @return void
+	 *
+	 * @since   1.5
 	 */
 	public function dbupdate()
 	{
@@ -106,6 +118,7 @@ class PlgSystemJBSPodcastInstallerScript
 				$updatefound = true;
 			}
 		}
+
 		if (!$updatefound)
 		{
 			// Do the query here to create the table. This will tell Joomla to update the db from this version on

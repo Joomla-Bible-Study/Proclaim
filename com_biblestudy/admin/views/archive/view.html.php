@@ -32,7 +32,6 @@ class BiblestudyViewArchive extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-
 		$this->form = $this->get("Form");
 
 		$this->setLayout('edit');
@@ -60,5 +59,4 @@ class BiblestudyViewArchive extends JViewLegacy
 		JToolbarHelper::custom('admin.back', 'back', 'back', 'JTOOLBAR_BACK', false);
 		JToolbarHelper::help('biblestudy', true);
 	}
-
 }

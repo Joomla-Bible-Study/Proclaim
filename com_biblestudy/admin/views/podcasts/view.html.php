@@ -18,24 +18,27 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewPodcasts extends JViewLegacy
 {
-
 	/**
 	 * Can Do
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	public $canDo;
 
-	/** @var  array Filter Levels */
+	/** @var  array Filter Levels
+	 * @since    7.0.0 */
 	public $f_levels;
 
-	/** @var  array Side Bar */
+	/** @var  array Side Bar
+	 * @since    7.0.0 */
 	public $sidebar;
 
 	/**
 	 * Items
 	 *
 	 * @var array
+	 * @since    7.0.0
 	 */
 	protected $items;
 
@@ -43,6 +46,7 @@ class BiblestudyViewPodcasts extends JViewLegacy
 	 * Pagination
 	 *
 	 * @var array
+	 * @since    7.0.0
 	 */
 	protected $pagination;
 
@@ -50,6 +54,7 @@ class BiblestudyViewPodcasts extends JViewLegacy
 	 * State
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $state;
 

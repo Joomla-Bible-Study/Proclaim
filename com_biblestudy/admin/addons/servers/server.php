@@ -19,7 +19,6 @@ jimport('joomla.filesystem.folder');
  */
 abstract class JBSServer
 {
-
 	/**
 	 * The type of server
 	 *
@@ -53,7 +52,6 @@ abstract class JBSServer
 
 		foreach ($types as $type)
 		{
-
 			// Derive the class name from the type.
 			$class = 'JBSServer' . ucfirst(trim($type));
 
@@ -92,6 +90,8 @@ abstract class JBSServer
 	 * @param   array  $options  ?
 	 *
 	 * @return mixed
+	 *
+	 * @since 9.0.0
 	 */
 	public static function getInstance($options = array())
 	{
@@ -104,9 +104,11 @@ abstract class JBSServer
 		if (empty(self::$instances[$signature]))
 		{
 			$class = 'JBSServer' . ucfirst($options['type']);
+
 			if (!class_exists($class))
 			{
 				$path = dirname(__FILE__) . '/' . $options['type'] . '/' . $options['type'] . '.php';
+
 				if (file_exists($path))
 				{
 					JLoader::register($class, $path);
@@ -135,7 +137,8 @@ abstract class JBSServer
 	 * @param   bool    $overwrite  ?
 	 *
 	 * @return mixed
+	 *
+	 * @since 9.0.0
 	 */
 	abstract protected function upload($target, $overwrite = true);
-
 }

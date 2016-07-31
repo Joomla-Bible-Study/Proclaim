@@ -18,11 +18,11 @@ defined('_JEXEC') or die;
  */
 class TableComment extends JTable
 {
-
 	/**
 	 * Primary Key
 	 *
 	 * @var int
+	 * @since    7.0.0
 	 */
 	public $id = null;
 
@@ -30,6 +30,7 @@ class TableComment extends JTable
 	 * Published
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $published = 1;
 
@@ -37,6 +38,7 @@ class TableComment extends JTable
 	 * Study ID
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $study_id = null;
 
@@ -44,6 +46,7 @@ class TableComment extends JTable
 	 * User ID
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $user_id = null;
 
@@ -51,6 +54,7 @@ class TableComment extends JTable
 	 * Full Name
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $full_name = null;
 
@@ -58,6 +62,7 @@ class TableComment extends JTable
 	 * User Email
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $user_email = null;
 
@@ -65,6 +70,7 @@ class TableComment extends JTable
 	 * Comment Date
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $comment_date = null;
 
@@ -72,6 +78,7 @@ class TableComment extends JTable
 	 * Comment Text
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $comment_text = null;
 
@@ -85,6 +92,8 @@ class TableComment extends JTable
 	 * Constructor
 	 *
 	 * @param   JDatabaseDriver  &$db  Database connector object
+	 *
+	 * @since    7.0.0
 	 */
 	public function __construct(&$db)
 	{
@@ -166,5 +175,4 @@ class TableComment extends JTable
 
 		return $asset->id;
 	}
-
 }

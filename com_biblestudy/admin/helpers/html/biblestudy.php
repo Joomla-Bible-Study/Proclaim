@@ -48,6 +48,7 @@ abstract class JHtmlBiblestudy
 			$config = JFactory::getConfig();
 			$debug  = (boolean) $config->get('debug');
 		}
+
 		JHtml::_('bootstrap.framework', $debug);
 		JHtml::_('bootstrap.loadCss');
 		JHtml::script('media/com_biblestudy/js/biblestudy.js');
@@ -76,6 +77,7 @@ abstract class JHtmlBiblestudy
 		if ($params)
 		{
 			$css = $params->get('css');
+
 			if ($css <= "-1")
 			{
 				JHtml::stylesheet('media/com_biblestudy/css/biblestudy.css');
@@ -85,10 +87,12 @@ abstract class JHtmlBiblestudy
 				JHtml::stylesheet('media/com_biblestudy/css/site/' . $css);
 			}
 		}
+
 		if ($url)
 		{
 			JHtml::stylesheet($url);
 		}
+
 		if ($font == 'font-awesome')
 		{
 			JHtml::stylesheet('https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css');
@@ -119,7 +123,7 @@ abstract class JHtmlBiblestudy
 	/**
 	 * Method to get the field options.
 	 *
-	 * @return    array    The field option objects.
+	 * @return    object    The field option objects.
 	 *
 	 * @since    1.6
 	 */
@@ -213,7 +217,7 @@ abstract class JHtmlBiblestudy
 	/**
 	 * Method to get the field options.
 	 *
-	 * @return    array    The field option objects.
+	 * @return    object    The field option objects.
 	 *
 	 * @since    1.6
 	 */

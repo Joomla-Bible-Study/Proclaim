@@ -18,7 +18,8 @@ defined('_JEXEC') or die;
  */
 class JBSMShowScripture
 {
-	/** @var  string Link */
+	/** @var  string Link
+	 * @since 7.1 */
 	public $link;
 
 	/**
@@ -28,6 +29,8 @@ class JBSMShowScripture
 	 * @param   Joomla\Registry\Registry  $params  Item Params
 	 *
 	 * @return boolean
+	 *
+	 * @since    7.1
 	 */
 	public function buildPassage($row, $params)
 	{
@@ -35,6 +38,7 @@ class JBSMShowScripture
 		{
 			return false;
 		}
+
 		$reference  = $this->formReference($row);
 		$version    = $params->get('bible_version', '77');
 		$this->link = $this->getBiblegateway($reference, $version);
@@ -80,6 +84,8 @@ class JBSMShowScripture
 	 * @param   object  $row  ?
 	 *
 	 * @return string
+	 *
+	 * @since    7.1
 	 */
 	public function formReference($row)
 	{
@@ -92,10 +98,12 @@ class JBSMShowScripture
 		{
 			$reference .= ':' . $row->verse_begin;
 		}
+
 		if ($row->chapter_end && $row->verse_end)
 		{
 			$reference .= '-' . $row->chapter_end . ':' . $row->verse_end;
 		}
+
 		if ($row->verse_end && !$row->chapter_end)
 		{
 			$reference .= '-' . $row->verse_end;
@@ -111,6 +119,8 @@ class JBSMShowScripture
 	 * @param   string  $version    Bible Version
 	 *
 	 * @return string
+	 *
+	 * @since    7.1
 	 */
 	public function getBiblegateway($reference, $version)
 	{
@@ -123,6 +133,8 @@ class JBSMShowScripture
 	 * Get HideShow
 	 *
 	 * @return string
+	 *
+	 * @since    7.1
 	 */
 	public function getHideShow()
 	{
@@ -155,6 +167,8 @@ class JBSMShowScripture
 	 * Get Show
 	 *
 	 * @return string
+	 *
+	 * @since    7.1
 	 */
 	public function getShow()
 	{
@@ -168,6 +182,8 @@ class JBSMShowScripture
 	 * Get Link
 	 *
 	 * @return string
+	 *
+	 * @since    7.1
 	 */
 	public function getLink()
 	{
@@ -185,5 +201,4 @@ class JBSMShowScripture
 
 		return $passage;
 	}
-
 }

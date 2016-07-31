@@ -36,7 +36,6 @@ JLoader::register('JBSMListing', JPATH_SITE . '/components/com_biblestudy/lib/li
  */
 class JBSMPodcast
 {
-
 	private $templateid = 0;
 
 	private $template = null;
@@ -50,7 +49,6 @@ class JBSMPodcast
 	 */
 	public function makePodcasts()
 	{
-		$admin_params = JBSMParams::getAdmin();
 		$msg          = array();
 		$db           = JFactory::getDbo();
 		jimport('joomla.utilities.date');

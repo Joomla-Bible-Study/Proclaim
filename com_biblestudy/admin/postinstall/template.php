@@ -29,7 +29,7 @@ if (file_exists($api))
  *
  * @since   3.2
  */
-function admin_postinstall_template_condition()
+function Admin_Postinstall_Template_condition()
 {
 	$results = null;
 
@@ -72,7 +72,7 @@ function admin_postinstall_template_condition()
  *
  * @since   3.2
  */
-function admin_postinstall_template_action()
+function Admin_Postinstall_Template_action()
 {
 	$url = 'index.php?option=com_biblestudy&view=templates';
 	JFactory::getApplication()->redirect($url);

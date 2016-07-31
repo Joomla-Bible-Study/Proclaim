@@ -21,38 +21,59 @@ use Joomla\Registry\Registry;
  */
 class BiblestudyViewMessageform extends JViewLegacy
 {
-
-	/** @var  string Media Files */
+	/** @var  string Media Files
+	 *
+	 * @since 7.0 */
 	public $mediafiles;
 
-	/** @var  string Can Do */
+	/** @var  string Can Do
+	 *
+	 * @since 7.0 */
 	public $canDo;
 
-	/** @var  Registry Params */
+	/** @var  Registry Params
+	 *
+	 * @since 7.0 */
 	public $params;
 
-	/** @var  string User */
+	/** @var  string User
+	 *
+	 * @since 7.0 */
 	public $user;
 
-	/** @var  string Page Class SFX */
+	/** @var  string Page Class SFX
+	 *
+	 * @since 7.0 */
 	public $pageclass_sfx;
 
-	/**  Form @var JForm */
+	/**  Form @var JForm
+	 *
+	 * @since 7.0 */
 	protected $form;
 
-	/** Item @var object */
+	/** Item @var object
+	 *
+	 * @since 7.0 */
 	protected $item;
 
-	/** Return Page @var string */
+	/** Return Page @var string
+	 *
+	 * @since 7.0 */
 	protected $return_page;
 
-	/** Return Page Item @var string */
+	/** Return Page Item @var string
+	 *
+	 * @since 7.0 */
 	protected $return_page_item;
 
-	/** State @var array */
+	/** State @var array
+	 *
+	 * @since 7.0 */
 	protected $state;
 
-	/** Admin @var array */
+	/** Admin @var array
+	 *
+	 * @since 7.0 */
 	protected $admin;
 
 	/**
@@ -142,6 +163,8 @@ class BiblestudyViewMessageform extends JViewLegacy
 	 * Prepares the document
 	 *
 	 * @return void
+	 *
+	 * @since 7.0
 	 */
 	protected function _prepareDocument()
 	{
@@ -161,6 +184,7 @@ class BiblestudyViewMessageform extends JViewLegacy
 		{
 			$this->params->def('page_heading', JText::_('JBS_FORM_EDIT_ARTICLE'));
 		}
+
 		$title = $this->params->def('page_title', '');
 		$isNew = ($this->item->id == 0);
 		$state = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
@@ -174,6 +198,7 @@ class BiblestudyViewMessageform extends JViewLegacy
 		{
 			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
+
 		$this->document->setTitle($title);
 
 		$pathway = $app->getPathway();
@@ -194,5 +219,4 @@ class BiblestudyViewMessageform extends JViewLegacy
 			$this->document->setMetadata('robots', $this->params->get('robots'));
 		}
 	}
-
 }

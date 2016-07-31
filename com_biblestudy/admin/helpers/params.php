@@ -26,22 +26,32 @@ class JBSMParams
 	 * Extension Name
 	 *
 	 * @var string
+	 *
+	 * @since 1.5
 	 */
 	public static $extension = 'com_biblestudy';
 
-	/** @var  Object Admin Table */
+	/** @var  Object Admin Table
+	 *
+	 * @since 1.5 */
 	public static $admin;
 
-	/** @var  Object Template Table */
+	/** @var  Object Template Table
+	 *
+	 * @since 1.5 */
 	public static $template_table;
 
-	/** @var int Default template id and used to check if changed form from last query */
+	/** @var int Default template id and used to check if changed form from last query
+	 *
+	 * @since 1.5 */
 	public static $t_id = 1;
 
 	/**
 	 * Gets the settings from Admin
 	 *
 	 * @return mixed Return Admin table
+	 *
+	 * @since 7.0
 	 */
 	public static function getAdmin()
 	{
@@ -74,14 +84,18 @@ class JBSMParams
 	 * @param   int  $pk  Id of Template to look for
 	 *
 	 * @return TableTemplate Return active template info
+	 *
+	 * @since 7.0
 	 */
 	public static function getTemplateparams($pk = null)
 	{
 		$db = JFactory::getDbo();
+
 		if (!$pk)
 		{
 			$pk = JFactory::getApplication()->input->getInt('t', '1');
 		}
+
 		if (self::$t_id != $pk || !self::$template_table)
 		{
 			self::$t_id = $pk;
@@ -99,10 +113,10 @@ class JBSMParams
 				$registry->loadString($template->params);
 				$template->params = $registry;
 			}
+
 			self::$template_table = $template;
 		}
 
 		return self::$template_table;
 	}
-
 }

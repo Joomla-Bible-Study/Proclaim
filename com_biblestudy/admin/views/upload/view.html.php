@@ -31,6 +31,7 @@ class BiblestudyViewUpload extends JViewLegacy
 	 * Form
 	 *
 	 * @var object
+	 * @since 7.0
 	 */
 	protected $form;
 
@@ -40,6 +41,8 @@ class BiblestudyViewUpload extends JViewLegacy
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return void
+	 *
+	 * @since 7.0
 	 */
 	public function display($tpl = null)
 	{
@@ -95,6 +98,8 @@ class BiblestudyViewUpload extends JViewLegacy
 	 * Add Toolbar
 	 *
 	 * @return void
+	 *
+	 * @since 7.0
 	 */
 	protected function addToolbar()
 	{

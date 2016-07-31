@@ -27,6 +27,8 @@ class JBSMLanding
 	 * @param   int                       $id      Item ID
 	 *
 	 * @return string
+	 *
+	 * @since    8.0.0
 	 */
 	public function getLocationsLandingPage($params, $id = 0)
 	{
@@ -43,6 +45,7 @@ class JBSMLanding
 		{
 			$limit = 10000;
 		}
+
 		$locationuselimit = $params->get('landinglocationsuselimit', 0);
 		$menu             = $mainframe->getMenu();
 		$item             = $menu->getActive();
@@ -60,6 +63,7 @@ class JBSMLanding
 			$language   = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
 			$menu_order = null;
 		}
+
 		if ($language == '*' || !$language)
 		{
 			$langlink = '';
@@ -68,6 +72,7 @@ class JBSMLanding
 		{
 			$langlink = '&amp;filter.languages=' . $item->language;
 		}
+
 		if ($menu_order)
 		{
 			switch ($menu_order)
@@ -116,7 +121,6 @@ class JBSMLanding
 
 					foreach ($tresult as $b)
 					{
-
 						if ($t >= $limit)
 						{
 							if ($showdiv < 1)
@@ -127,6 +131,7 @@ class JBSMLanding
 								$showdiv = 1;
 							}
 						}
+
 						$location .= '<div class="span4">';
 						$location .= '<a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;filter_location_landing='
 							. $b->id . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
@@ -151,10 +156,10 @@ class JBSMLanding
 
 					if ($showdiv == 1)
 					{
-
 						$location .= "\n\t" . '</div> <!-- close show/hide locations div-->';
 						$showdiv = 2;
 					}
+
 					$location .= '<div class="landing_separator"></div>';
 					break;
 
@@ -204,7 +209,9 @@ class JBSMLanding
 		{
 			$location = '<div class="landing_separator"></div>';
 		}
+
 		$location .= '<div style="clear:both;"></div>';
+
 		return $location;
 	}
 
@@ -215,6 +222,8 @@ class JBSMLanding
 	 * @param   int                       $id      Item ID
 	 *
 	 * @return string
+	 *
+	 * @since    8.0.0
 	 */
 	public function getTeacherLandingPage($params, $id = 0)
 	{
@@ -245,6 +254,7 @@ class JBSMLanding
 			$language   = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
 			$menu_order = null;
 		}
+
 		if ($language == '*' || !$language)
 		{
 			$langlink = '';
@@ -253,6 +263,7 @@ class JBSMLanding
 		{
 			$langlink = '&amp;filter.languages=' . $item->language;
 		}
+
 		if ($menu_order)
 		{
 			switch ($menu_order)
@@ -300,7 +311,6 @@ class JBSMLanding
 				case 0:
 					foreach ($tresult as $b)
 					{
-
 						if ($t >= $limit)
 						{
 							if ($showdiv < 1)
@@ -324,6 +334,7 @@ class JBSMLanding
 							$teacher .= '<div class="span4">';
 							$teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&id=' . $b->id . $langlink . '&t=' . $template) . '">';
 						}
+
 						$teacher .= $b->teachername;
 
 						$teacher .= '</a></div>';
@@ -343,10 +354,10 @@ class JBSMLanding
 
 					if ($showdiv == 1)
 					{
-
 						$teacher .= "\n\t" . '</div> <!-- close show/hide teacher div-->';
 						$showdiv = 2;
 					}
+
 					$teacher .= '<div class="landing_separator"></div>';
 					break;
 
@@ -356,7 +367,6 @@ class JBSMLanding
 					{
 						if ($b->landing_show == 1)
 						{
-
 							if ($params->get('linkto') == 0)
 							{
 								$teacher .= '<div class="span4"> <a '
@@ -366,12 +376,11 @@ class JBSMLanding
 							}
 							else
 							{
-
 								$teacher .= '<div class="span4"><a href="'
 									. JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&amp;id=' . $b->id . '&amp;t=' . $template) . '">';
 							}
-							$teacher .= $b->teachername;
 
+							$teacher .= $b->teachername;
 							$teacher .= '</a></div>';
 						}
 					}
@@ -380,10 +389,8 @@ class JBSMLanding
 
 					foreach ($tresult as $b)
 					{
-
 						if ($b->landing_show == 2)
 						{
-
 							if ($params->get('linkto') == 0)
 							{
 								$teacher .= '<div class="span4"><a href="'
@@ -393,14 +400,13 @@ class JBSMLanding
 							}
 							else
 							{
-
 								$teacher .= '<div class="span4"><a href="'
 									. JRoute::_('index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=teacher_landing&amp;id=' .
 												$b->id . '&amp;t=' . $template
 										) . '">';
 							}
-							$teacher .= $b->teachername;
 
+							$teacher .= $b->teachername;
 							$teacher .= '</a></div>';
 						}
 					}
@@ -416,6 +422,7 @@ class JBSMLanding
 		}
 
 		$teacher .= '<div style="clear:both;"></div>';
+
 		return $teacher;
 	}
 
@@ -427,6 +434,7 @@ class JBSMLanding
 	 *
 	 * @return string
 	 *
+	 * @since    8.0.0
 	 * @todo look like $numRows was not defined not sure if needed. TOM
 	 */
 	public function getSeriesLandingPage($params, $id = 0)
@@ -446,6 +454,7 @@ class JBSMLanding
 		{
 			$limit = 10000;
 		}
+
 		$seriesuselimit = $params->get('landingseriesuselimit', 0);
 		$menu           = $mainframe->getMenu();
 		$item           = $menu->getActive();
@@ -463,6 +472,7 @@ class JBSMLanding
 			$language   = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
 			$menu_order = null;
 		}
+
 		if ($menu_order)
 		{
 			switch ($menu_order)
@@ -560,6 +570,7 @@ class JBSMLanding
 						$series .= "\n\t" . '</div> <!-- close show/hide series div-->';
 						$showdiv = 2;
 					}
+
 					$series .= '<div class="landing_separator"></div>';
 
 					break;
@@ -593,12 +604,12 @@ class JBSMLanding
 							$series .= '</a></div></div>';
 						}
 					}
+
 					$series .= '</div>';
 					$series .= '<div id="showhideseries" style="display:none;">';
 
 					foreach ($items as $b)
 					{
-
 						if ($b->landing_show == 2)
 						{
 							$series .= '<div class="landingrow">';
@@ -633,7 +644,9 @@ class JBSMLanding
 		{
 			$series = '<div class="landing_separator"></div>';
 		}
+
 		$series .= '<div style="clear:both;">';
+
 		return $series;
 	}
 
@@ -644,6 +657,8 @@ class JBSMLanding
 	 * @param   int                       $id      Item ID
 	 *
 	 * @return string
+	 *
+	 * @since    8.0.0
 	 */
 	public function getYearsLandingPage($params, $id = 0)
 	{
@@ -660,6 +675,7 @@ class JBSMLanding
 		{
 			$limit = 10000;
 		}
+
 		$menu     = $mainframe->getMenu();
 		$item     = $menu->getActive();
 		$registry = new Registry;
@@ -676,6 +692,7 @@ class JBSMLanding
 			$language   = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
 			$menu_order = null;
 		}
+
 		if ($menu_order)
 		{
 			switch ($menu_order)
@@ -727,6 +744,7 @@ class JBSMLanding
 						$showdiv = 1;
 					}
 				}
+
 				$year .= '<div class="span2">';
 				$year .= '<a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;filter_year_landing='
 					. $b->theYear . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;'
@@ -752,16 +770,15 @@ class JBSMLanding
 
 			if ($showdiv == 1)
 			{
-
 				$year .= "\n\t" . '</div> <!-- close show/hide years div-->';
 				$showdiv = 2;
 			}
+
 			$year .= '<div class="landing_separator"></div>';
 			$year .= '<div style="clear:both;"></div>';
 		}
 		else
 		{
-
 			$year = '';
 		}
 
@@ -775,6 +792,8 @@ class JBSMLanding
 	 * @param   int                       $id      ID
 	 *
 	 * @return string
+	 *
+	 * @since    8.0.0
 	 */
 	public function getTopicsLandingPage($params, $id = 0)
 	{
@@ -792,6 +811,7 @@ class JBSMLanding
 		{
 			$limit = 10000;
 		}
+
 		$menu     = $mainframe->getMenu();
 		$item     = $menu->getActive();
 		$registry = new Registry;
@@ -808,6 +828,7 @@ class JBSMLanding
 			$language   = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
 			$menu_order = null;
 		}
+
 		if ($menu_order)
 		{
 			switch ($menu_order)
@@ -862,6 +883,7 @@ class JBSMLanding
 						$showdiv = 1;
 					}
 				}
+
 				$topic .= '<div class="span2">';
 				$topic .= '<a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;filter_topic_landing=' .
 						$b->id . '&amp;filter_teacher=0'
@@ -886,10 +908,10 @@ class JBSMLanding
 
 			if ($showdiv == 1)
 			{
-
 				$topic .= "\n\t" . '</div> <!-- close show/hide topics div-->';
 				$showdiv = 2;
 			}
+
 			$topic .= '<div style="clear:both;"></div>';
 		}
 		else
@@ -907,6 +929,8 @@ class JBSMLanding
 	 * @param   int                       $id      ID
 	 *
 	 * @return string
+	 *
+	 * @since    8.0.0
 	 */
 	public function getMessageTypesLandingPage($params, $id = 0)
 	{
@@ -923,6 +947,7 @@ class JBSMLanding
 		{
 			$limit = 10000;
 		}
+
 		$messagetypeuselimit = $params->get('landingmessagetypeuselimit', 0);
 		$menu                = $mainframe->getMenu();
 		$item                = $menu->getActive();
@@ -940,6 +965,7 @@ class JBSMLanding
 			$language   = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
 			$menu_order = null;
 		}
+
 		if ($language == '*' || !$language)
 		{
 			$langlink = '';
@@ -948,6 +974,7 @@ class JBSMLanding
 		{
 			$langlink = '&amp;filter.languages=' . $item->language;
 		}
+
 		if ($menu_order)
 		{
 			switch ($menu_order)
@@ -1004,6 +1031,7 @@ class JBSMLanding
 								$showdiv = 1;
 							}
 						}
+
 						$messagetype .= '<div class="span2">';
 						$messagetype .= '<a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;filter_messagetype_landing=' .
 								$b->id
@@ -1030,10 +1058,10 @@ class JBSMLanding
 
 					if ($showdiv == 1)
 					{
-
 						$messagetype .= "\n\t" . '</div> <!-- close show/hide messagetype div-->';
 						$showdiv = 2;
 					}
+
 					$messagetype .= '<div class="landing_separator"></div>';
 					break;
 
@@ -1082,7 +1110,9 @@ class JBSMLanding
 		{
 			$messagetype = '<div class="landing_separator"></div>';
 		}
+
 		$messagetype .= '<div style="clear:both;"></div>';
+
 		return $messagetype;
 	}
 
@@ -1093,10 +1123,11 @@ class JBSMLanding
 	 * @param   int                       $id      ID
 	 *
 	 * @return string
+	 *
+	 * @since    8.0.0
 	 */
 	public function getBooksLandingPage($params, $id = 0)
 	{
-
 		$user     = JFactory::getUser();
 		$db       = JFactory::getDbo();
 		$order    = 'ASC';
@@ -1108,6 +1139,7 @@ class JBSMLanding
 		{
 			$limit = 10000;
 		}
+
 		$app      = JFactory::getApplication();
 		$menu     = $app->getMenu();
 		$item     = $menu->getActive();
@@ -1125,6 +1157,7 @@ class JBSMLanding
 			$language   = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
 			$menu_order = null;
 		}
+
 		if ($language == '*' || !$language)
 		{
 			$langlink = '';
@@ -1133,6 +1166,7 @@ class JBSMLanding
 		{
 			$langlink = '&amp;filter.languages=' . $item->language;
 		}
+
 		if ($menu_order)
 		{
 			switch ($menu_order)
@@ -1186,6 +1220,7 @@ class JBSMLanding
 						$showdiv = 1;
 					}
 				}
+
 				$book .= '<div class="span2">';
 				$book .= '<a href="index.php?option=com_biblestudy&amp;sendingview=landing&amp;view=sermons&amp;filter_book_landing=' . $b->booknumber
 					. '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
@@ -1212,13 +1247,16 @@ class JBSMLanding
 			{
 				$book .= "\n\t" . '</div> <!-- close show/hide books div-->';
 			}
+
 			$book .= '<div class="landing_separator"></div>';
 		}
 		else
 		{
 			$book = '<div class="landing_separator"></div>';
 		}
+
 		$book .= '<div style="clear:both;"></div>';
+
 		return $book;
 	}
 }

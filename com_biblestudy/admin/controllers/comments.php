@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Controller for Comments
  *
@@ -19,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyControllerComments extends JControllerAdmin
 {
-
 	/**
 	 * Proxy for getModel
 	 *
@@ -37,5 +35,4 @@ class BiblestudyControllerComments extends JControllerAdmin
 
 		return $model;
 	}
-
 }

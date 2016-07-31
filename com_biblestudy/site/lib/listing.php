@@ -27,7 +27,8 @@ use Joomla\Registry\Registry;
  */
 class JBSMListing
 {
-	/** @var  Registry */
+	/** @var  Registry
+	 * @since 7.0 */
 	public $params;
 
 	/**
@@ -39,6 +40,8 @@ class JBSMListing
 	 * @param   String                    $type      Type of Listing
 	 *
 	 * @return string
+	 *
+	 * @since 7.0
 	 */
 	public function getFluidListing($items, $params, $template, $type)
 	{
@@ -57,6 +60,7 @@ class JBSMListing
 				}
 			}
 		}
+
 		if ($type == 'sermon')
 		{
 			$medias = $this->getFluidMediaids($items);
@@ -99,158 +103,197 @@ class JBSMListing
 		}
 
 		$listparams = array();
+
 		if ($params->get($extra . 'scripture1row') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'scripture1');
 		}
+
 		if ($params->get($extra . 'scripture2row') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'scripture2');
 		}
+
 		if ($params->get($extra . 'secondaryrow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'secondary');
 		}
+
 		if ($params->get($extra . 'titlerow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'title');
 		}
+
 		if ($params->get($extra . 'daterow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'date');
 		}
+
 		if ($params->get($extra . 'teacherrow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'teacher');
 		}
+
 		if ($params->get($extra . 'teacher-titlerow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'teacher-title');
 		}
+
 		if ($params->get($extra . 'durationrow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'duration');
 		}
+
 		if ($params->get($extra . 'studyintrorow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'studyintro');
 		}
+
 		if ($params->get($extra . 'seriesrow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'series');
 		}
+
 		if ($params->get($extra . 'descriptionrow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'description');
 		}
+
 		if ($params->get($extra . 'seriesthumbnailrow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'seriesthumbnail');
 		}
+
 		if ($params->get($extra . 'submittedrow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'submitted');
 		}
+
 		if ($params->get($extra . 'hitsrow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'hits');
 		}
+
 		if ($params->get($extra . 'downloadsrow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'downloads');
 		}
+
 		if ($params->get($extra . 'studynumberrow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'studynumber');
 		}
+
 		if ($params->get($extra . 'topicrow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'topic');
 		}
+
 		if ($params->get($extra . 'locationsrow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'locations');
 		}
+
 		if ($params->get($extra . 'jbsmediarow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'jbsmedia');
 		}
+
 		if ($params->get($extra . 'messagetyperow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'messagetype');
 		}
+
 		if ($params->get($extra . 'thumbnailrow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'thumbnail');
 		}
+
 		if ($params->get($extra . 'teacherimagerrow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'teacherimage');
 		}
+
 		if ($params->get($extra . 'seriesdescriptionrow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'description');
 		}
+
 		if ($params->get($extra . 'teacheremailrow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'teacheremail');
 		}
+
 		if ($params->get($extra . 'teacherwebrow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'teacherweb');
 		}
+
 		if ($params->get($extra . 'teacherphonerow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'teacherphone');
 		}
+
 		if ($params->get($extra . 'teacherfbrow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'teacherfb');
 		}
+
 		if ($params->get($extra . 'teachertwrow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'teachertw');
 		}
+
 		if ($params->get($extra . 'teacherblogrow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'teacherblog');
 		}
+
 		if ($params->get($extra . 'teachershortrow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'teachershort');
 		}
+
 		if ($params->get($extra . 'teacherlongrow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'teacherlong');
 		}
+
 		if ($params->get($extra . 'teacheraddressrow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'teacheraddress');
 		}
+
 		if ($params->get($extra . 'teacherlink1row') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'teacherlink1');
 		}
+
 		if ($params->get($extra . 'teacherlink2row') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'teacherlink2');
 		}
+
 		if ($params->get($extra . 'teacherlink3row') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'teacherlink3');
 		}
+
 		if ($params->get($extra . 'teacherlargeimagerow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'teacherlargeimage');
 		}
+
 		if ($params->get($extra . 'teacherallinonerow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'teacherallinone');
 		}
+
 		if ($params->get($extra . 'customrow'))
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'custom');
 		}
+
 		$row1       = array();
 		$row2       = array();
 		$row3       = array();
@@ -271,51 +314,63 @@ class JBSMListing
 			{
 				$row1[] = $listing;
 			}
+
 			if ($listing->row == 2)
 			{
 				$row2[] = $listing;
 			}
+
 			if ($listing->row == 3)
 			{
 				$row3[] = $listing;
 			}
+
 			if ($listing->row == 4)
 			{
 				$row4[] = $listing;
 			}
+
 			if ($listing->row == 5)
 			{
 				$row5[] = $listing;
 			}
+
 			if ($listing->row == 6)
 			{
 				$row6[] = $listing;
 			}
 		}
+
 		if (count($row1))
 		{
 			$row1sorted = $this->sortArrayofObjectByProperty($row1, 'col', $order = "ASC");
 		}
+
 		if (count($row2))
 		{
 			$row2sorted = $this->sortArrayofObjectByProperty($row2, 'col', $order = "ASC");
 		}
+
 		if (count($row3))
 		{
 			$row3sorted = $this->sortArrayofObjectByProperty($row3, 'col', $order = "ASC");
 		}
+
 		if (count($row4))
 		{
 			$row4sorted = $this->sortArrayofObjectByProperty($row4, 'col', $order = "ASC");
 		}
+
 		if (count($row5))
 		{
 			$row5sorted = $this->sortArrayofObjectByProperty($row5, 'col', $order = "ASC");
 		}
+
 		if (count($row6))
 		{
 			$row6sorted = $this->sortArrayofObjectByProperty($row6, 'col', $order = "ASC");
 		}
+
 		$listrows    = array_merge($row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted);
 		$listsorts   = array();
 		$listsorts[] = $row1sorted;
@@ -328,6 +383,7 @@ class JBSMListing
 		$class1  = $params->get($extra . 'listcolor1', '');
 		$class2  = $params->get($extra . 'listcolor2', '');
 		$oddeven = $class1;
+
 		if ($type == 'sermons')
 		{
 			if ($params->get('use_headers_list') > 0)
@@ -335,6 +391,7 @@ class JBSMListing
 				$list .= $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header = 1, $type);
 			}
 		}
+
 		if ($type == 'sermon')
 		{
 			if ($params->get('use_headers_view') > 0)
@@ -342,6 +399,7 @@ class JBSMListing
 				$list .= $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header = 1, $type);
 			}
 		}
+
 		if ($type == 'seriesdisplays')
 		{
 			if ($params->get('use_headers_series') > 0 && is_object($items))
@@ -349,6 +407,7 @@ class JBSMListing
 				$list .= $this->getFluidRow($listrows, $listsorts, $items[0], $params, $template, $oddeven, $header = 1, $type);
 			}
 		}
+
 		if ($type == 'seriesdisplay')
 		{
 			if ($params->get('use_header_seriesdisplay') > 0)
@@ -356,8 +415,10 @@ class JBSMListing
 				$oddeven = $params->get('seriesdisplay_color');
 				$list .= $this->getFluidRow($listrows, $listsorts, $items, $params, $template, $oddeven, $header = 1, $type);
 			}
+
 			$list .= $this->getFluidRow($listrows, $listsorts, $items, $params, $template, $oddeven, $header = 0, $type);
 		}
+
 		if ($type == 'teacher')
 		{
 			if ($params->get('use_headers_teacher_details') > 0)
@@ -365,15 +426,16 @@ class JBSMListing
 				$oddeven = $params->get('teacherdisplay_color', 'white');
 				$list .= $this->getFluidRow($listrows, $listsorts, $items, $params, $template, $oddeven, $header = 1, $type);
 			}
+
 			$list .= $this->getFluidRow($listrows, $listsorts, $items, $params, $template, $oddeven, $header = 0, $type);
 		}
+
 		if ($type == 'teachers')
 		{
 			if ($params->get('use_headers_teacher_list') > 0)
 			{
 				$list .= $this->getFluidRow($listrows, $listsorts, $items, $params, $template, $oddeven, $header = 1, $type);
 			}
-
 		}
 
 		// Go through and attach the media files as an array to their study
@@ -383,6 +445,7 @@ class JBSMListing
 			{
 				$oddeven    = ($oddeven == $class1) ? $class2 : $class1;
 				$studymedia = array();
+
 				if (isset($mediafiles))
 				{
 					foreach ($mediafiles as $mediafile)
@@ -393,17 +456,21 @@ class JBSMListing
 						}
 					}
 				}
+
 				if (isset($studymedia))
 				{
 					$item->mediafiles = $studymedia;
 				}
+
 				$row[] = $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header = 0, $type);
 			}
 		}
+
 		if ($type == 'sermon')
 		{
 			$oddeven    = ($oddeven == $class1) ? $class2 : $class1;
 			$studymedia = array();
+
 			if (isset($mediafiles))
 			{
 				foreach ($mediafiles as $mediafile)
@@ -414,12 +481,15 @@ class JBSMListing
 					}
 				}
 			}
+
 			if (isset($studymedia))
 			{
 				$item->mediafiles = $studymedia;
 			}
+
 			$row[] = $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header = 0, $type);
 		}
+
 		if ($type == 'seriesdisplays')
 		{
 			foreach ($items as $item)
@@ -428,6 +498,7 @@ class JBSMListing
 				$row[]   = $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header = 0, $type);
 			}
 		}
+
 		if ($type == 'teachers')
 		{
 			foreach ($items as $item)
@@ -436,6 +507,7 @@ class JBSMListing
 				$row[]   = $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header = 0, $type);
 			}
 		}
+
 		foreach ($row as $value)
 		{
 			$list .= "\n\t" . $value;
@@ -450,11 +522,14 @@ class JBSMListing
 	 * @param   Object  $item  Items info
 	 *
 	 * @return array
+	 *
+	 * @since 7.0
 	 */
 	public function getFluidMediaids($item)
 	{
 		$medias    = array();
 		$mediatemp = explode(',', $item->mids);
+
 		foreach ($mediatemp as $mtemp)
 		{
 			$medias[] = $mtemp;
@@ -469,6 +544,8 @@ class JBSMListing
 	 * @param   array  $medias  Media files
 	 *
 	 * @return mixed
+	 *
+	 * @since 7.0
 	 */
 	public function getMediaFiles($medias)
 	{
@@ -483,6 +560,7 @@ class JBSMListing
 		$query->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)');
 		$where2   = array();
 		$subquery = '(';
+
 		foreach ($medias as $media)
 		{
 			if (is_array($media))
@@ -497,6 +575,7 @@ class JBSMListing
 				$where2[] = '#__bsms_mediafiles.id = ' . (int) $media;
 			}
 		}
+
 		$subquery .= implode(' OR ', $where2);
 		$subquery .= ')';
 		$query->where($subquery);
@@ -514,6 +593,8 @@ class JBSMListing
 	 * @param   string  $paramtext  Param Text
 	 *
 	 * @return stdClass
+	 *
+	 * @since 7.0
 	 */
 	public function getListParamsArray($paramtext)
 	{
@@ -538,6 +619,8 @@ class JBSMListing
 	 * @param   string  $order     ?
 	 *
 	 * @return array
+	 *
+	 * @since 7.0
 	 */
 	public function sortArrayofObjectByProperty($array, $property, $order = "ASC")
 	{
@@ -581,8 +664,8 @@ class JBSMListing
 						$i++;
 						$j--;
 					}
-
 				}
+
 				while ($i <= $j);
 
 				if ($i < $r)
@@ -591,12 +674,13 @@ class JBSMListing
 					$stack[$cur]['l'] = $i;
 					$stack[$cur]['r'] = $r;
 				}
+
 				$r = $j;
-
 			}
-			while ($l < $r);
 
+			while ($l < $r);
 		}
+
 		while ($cur != 0);
 
 		// Added ordering.
@@ -621,16 +705,21 @@ class JBSMListing
 	 * @param   string                    $type       ?
 	 *
 	 * @return string
+	 *
+	 * @since 7.0
 	 */
 	public function getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header, $type)
 	{
 		$span        = '';
 		$headerstyle = '';
+
 		if ($header == 1)
 		{
 			$headerstyle = "style=visibility:hidden;";
 		}
+
 		$extra = '';
+
 		switch ($type)
 		{
 			case 'sermon':
@@ -658,6 +747,7 @@ class JBSMListing
 
 		$pull        = $params->get($extra . 'rowspanitempull');
 		$rowspanitem = $params->get($extra . 'rowspanitem');
+
 		if ($rowspanitem)
 		{
 			switch ($rowspanitem)
@@ -700,12 +790,14 @@ class JBSMListing
 		$row4count2 = 0;
 		$row5count2 = 0;
 		$row6count2 = 0;
+
 		if ($span)
 		{
 			$frow .= '<div class="row-fluid" about="' . $type . '">';
 			$frow .= '<div class="span' . $rowspanitemspan . ' ' . $pull . '"><div ' . $headerstyle . '>' . $span . '</div></div>';
 			$frow .= '<div class="span' . $rowspanbalance . '" about="' . $type . '">';
 		}
+
 		foreach ($listsorts as $sort)
 		{
 			if (count($sort))
@@ -717,26 +809,31 @@ class JBSMListing
 						$row1count++;
 						$row1count2++;
 					}
+
 					if ($s->row == 2)
 					{
 						$row2count++;
 						$row2count2++;
 					}
+
 					if ($s->row == 3)
 					{
 						$row3count++;
 						$row3count2++;
 					}
+
 					if ($s->row == 4)
 					{
 						$row4count++;
 						$row4count2++;
 					}
+
 					if ($s->row == 5)
 					{
 						$row5count++;
 						$row5count2++;
 					}
+
 					if ($s->row == 6)
 					{
 						$row6count++;
@@ -744,18 +841,17 @@ class JBSMListing
 					}
 				}
 			}
-
 		}
 
 		foreach ($listrows as $row)
 		{
 			if ($row->row == 1)
 			{
-
 				if ($row1count == $row1count2)
 				{
 					$frow .= '<div class="row-fluid JBSM" about="row1-' . $row1count . '">';
 				}
+
 				if ($header == 1)
 				{
 					$frow .= '<b>' . $this->getFluidData($item, $row, $params, $template, $header = 1, $type) . '</b>';
@@ -764,19 +860,22 @@ class JBSMListing
 				{
 					$frow .= $this->getFluidData($item, $row, $params, $template, $header = 0, $type);
 				}
+
 				$row1count--;
+
 				if ($row1count == 0)
 				{
 					$frow .= '</div>';
 				}
 			}
+
 			if ($row->row == 2)
 			{
-
 				if ($row2count == $row2count2)
 				{
 					$frow .= '<div class="row-fluid JBSM" about="row2-' . $row2count . '">';
 				}
+
 				if ($header == 1)
 				{
 					$frow .= '<b>' . $this->getFluidData($item, $row, $params, $template, $header = 1, $type) . '</b>';
@@ -785,19 +884,22 @@ class JBSMListing
 				{
 					$frow .= $this->getFluidData($item, $row, $params, $template, $header = 0, $type);
 				}
+
 				$row2count--;
+
 				if ($row2count == 0)
 				{
 					$frow .= '</div>';
 				}
 			}
+
 			if ($row->row == 3)
 			{
-
 				if ($row3count == $row3count2)
 				{
 					$frow .= '<div class="row-fluid JBSM" about="row3-' . $row3count . '">';
 				}
+
 				if ($header == 1)
 				{
 					$frow .= '<b>' . $this->getFluidData($item, $row, $params, $template, $header = 1, $type) . '</b>';
@@ -806,19 +908,22 @@ class JBSMListing
 				{
 					$frow .= $this->getFluidData($item, $row, $params, $template, $header = 0, $type);
 				}
+
 				$row3count--;
+
 				if ($row3count == 0)
 				{
 					$frow .= '</div>';
 				}
 			}
+
 			if ($row->row == 4)
 			{
-
 				if ($row4count == $row4count2)
 				{
 					$frow .= '<div class="row-fluid JBSM" about="row4-' . $row4count . '">';
 				}
+
 				if ($header == 1)
 				{
 					$frow .= '<b>' . $this->getFluidData($item, $row, $params, $template, $header = 1, $type) . '</b>';
@@ -827,19 +932,22 @@ class JBSMListing
 				{
 					$frow .= $this->getFluidData($item, $row, $params, $template, $header = 0, $type);
 				}
+
 				$row4count--;
+
 				if ($row4count == 0)
 				{
 					$frow .= '</div>';
 				}
 			}
+
 			if ($row->row == 5)
 			{
-
 				if ($row5count == $row5count2)
 				{
 					$frow .= '<div class="row-fluid JBSM" about="row5-' . $row5count . '">';
 				}
+
 				if ($header == 1)
 				{
 					$frow .= '<b>' . $this->getFluidData($item, $row, $params, $template, $header = 1, $type) . '</b>';
@@ -848,19 +956,22 @@ class JBSMListing
 				{
 					$frow .= $this->getFluidData($item, $row, $params, $template, $header = 0, $type);
 				}
+
 				$row5count--;
+
 				if ($row5count == 0)
 				{
 					$frow .= '</div>';
 				}
 			}
+
 			if ($row->row == 6)
 			{
-
 				if ($row6count == $row6count2)
 				{
 					$frow .= '<div class="row-fluid JBSM" about="row5-' . $row5count . '">';
 				}
+
 				if ($header == 1)
 				{
 					$frow .= '<b>' . $this->getFluidData($item, $row, $params, $template, $header = 1, $type) . '</b>';
@@ -869,7 +980,9 @@ class JBSMListing
 				{
 					$frow .= $this->getFluidData($item, $row, $params, $template, $header = 0, $type);
 				}
+
 				$row6count--;
+
 				if ($row6count == 0)
 				{
 					$frow .= '</div>';
@@ -899,6 +1012,8 @@ class JBSMListing
 	 * @param   string                    $type      ?
 	 *
 	 * @return string
+	 *
+	 * @since 7.0
 	 */
 	public function getFluidData($item, $row, $params, $template, $header, $type)
 	{
@@ -909,6 +1024,7 @@ class JBSMListing
 
 		// Match the data in $item to a row/col in $row->name
 		$extra = '';
+
 		switch ($type)
 		{
 			case 'sermon':
@@ -945,6 +1061,7 @@ class JBSMListing
 			case $extra . 'teacherallinone':
 				($item->email ? $data = '<a href="mailto:' . $item->email . '">
 				<span class="fa fa-globe" style="font-size:20px;" title="Website"></span></a>' : $data = '');
+
 				if ($item->website)
 				{
 					if (substr_count($item->website, 'http://', 0))
@@ -958,6 +1075,7 @@ class JBSMListing
 						<span class="fa fa-globe" style="font-size:20px;" title="Website"></span></a>';
 					}
 				}
+
 				if ($item->facebooklink)
 				{
 					if (substr_count($item->facebooklink, 'http://', 0))
@@ -971,6 +1089,7 @@ class JBSMListing
 						<span class="fa fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
 					}
 				}
+
 				if ($item->twitterlink)
 				{
 					if (substr_count($item->twitterlink, 'http://', 0))
@@ -984,6 +1103,7 @@ class JBSMListing
 						<span class="fa fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
 					}
 				}
+
 				if ($item->bloglink)
 				{
 					if (substr_count($item->bloglink, 'http://', 0, 7))
@@ -997,6 +1117,7 @@ class JBSMListing
 						<span class="fa fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
 					}
 				}
+
 				if ($item->link1)
 				{
 					if (substr_count($item->link1, 'http://', 0))
@@ -1008,6 +1129,7 @@ class JBSMListing
 						$data .= '<a href="http://' . $item->link1 . '" target="_blank">' . $item->link1label . '</a>';
 					}
 				}
+
 				if ($item->link2)
 				{
 					if (substr_count($item->link2, 'http://', 0))
@@ -1019,6 +1141,7 @@ class JBSMListing
 						$data .= '<a href="http://' . $item->link2 . '" target="_blank">' . $item->link2label . '</a>';
 					}
 				}
+
 				if ($item->link3)
 				{
 					if (substr_count($item->link3, 'http://', 0))
@@ -1248,6 +1371,7 @@ class JBSMListing
 			case $extra . 'scripture1':
 				$esv          = 0;
 				$scripturerow = 1;
+
 				if ($header == 1)
 				{
 					$data = JText::_('JBS_CMN_SCRIPTURE');
@@ -1260,6 +1384,7 @@ class JBSMListing
 			case $extra . 'scripture2':
 				$esv          = 0;
 				$scripturerow = 2;
+
 				if ($header == 1)
 				{
 					$data = JText::_('JBS_CMN_SCRIPTURE');
@@ -1391,6 +1516,7 @@ class JBSMListing
 				{
 					(isset($item->sdescription) ? $data = JHtml::_('content.prepare', $item->sdescription, '', 'com_biblestudy.' . $type) : $data = '');
 				}
+
 				if ($type == 'seriesdisplays' && !$header)
 				{
 					(isset($item->description) ? $data = stripslashes($item->description) : $data = '');
@@ -1451,6 +1577,7 @@ class JBSMListing
 						{
 							$topics[$key] = JText::_($value);
 						}
+
 						$data = implode(', ', $topics);
 					}
 					else
@@ -1531,6 +1658,7 @@ class JBSMListing
 
 		$style        = '';
 		$customclass  = '';
+
 		if (isset($row->custom))
 		{
 			if (strpos($row->custom, 'style=') !== false)
@@ -1542,6 +1670,7 @@ class JBSMListing
 				$customclass = $row->custom;
 			}
 		}
+
 		$classelement = $this->createelement($row->element);
 
 		if ($header == 1)
@@ -1549,6 +1678,7 @@ class JBSMListing
 			$classelement = '';
 			$style        = 'style="font-weight:bold;"';
 		}
+
 		if ($classelement)
 		{
 			$classopen  = '<' . $classelement . ' ' . $style . '>';
@@ -1571,23 +1701,30 @@ class JBSMListing
 				{
 					$item->teacher_id = $item->teacher;
 				}
+
 				if ($type == 'teachers')
 				{
 					$item->teacher_id = $item->id;
 				}
+
 				$link = $this->getLink($row->linktype, $item->id, $item->teacher_id, $smenu, $tmenu, $params, $item, $template);
 			}
 		}
+
 		$frow = '<div class="span' . $row->colspan;
+
 			if ($customclass)
 			{
 				$frow .= ' ' . $customclass;
 			}
+
 		$frow .= '" about="' . $row->name . '">' . $classopen;
+
 			if ($link)
 			{
 				$frow .= $link;
 			}
+
 			if ($data)
 			{
 				$frow .= $data;
@@ -1613,6 +1750,8 @@ class JBSMListing
 	 * @param   String                    $type      ?
 	 *
 	 * @return mixed
+	 *
+	 * @since 7.0
 	 */
 	public function getFluidCustom($custom, $item, $params, $template, $type)
 	{
@@ -1642,10 +1781,13 @@ class JBSMListing
 	 * @param   String                    $type      ?
 	 *
 	 * @return mixed|null|string
+	 *
+	 * @since 7.0
 	 */
 	public function getElement($custom, $row, $params, $template, $type)
 	{
 		$element = null;
+
 		switch ($custom)
 		{
 			case 'scripture1':
@@ -1799,6 +1941,7 @@ class JBSMListing
 						{
 							$topics[$key] = JText::_($value);
 						}
+
 						$element = implode(', ', $topics);
 					}
 					else
@@ -1879,6 +2022,8 @@ class JBSMListing
 	 * @param   string  $scripturerow  Scripture Row
 	 *
 	 * @return string
+	 *
+	 * @since 7.0
 	 */
 	public function getScripture($params, $row, $esv, $scripturerow)
 	{
@@ -1916,6 +2061,7 @@ class JBSMListing
 			$ch_e       = $row->chapter_end;
 			$v_b        = $row->verse_begin;
 			$v_e        = $row->verse_end;
+
 			if (isset($row->bookname))
 			{
 				$book = JText::_($row->bookname);
@@ -1926,6 +2072,7 @@ class JBSMListing
 		{
 			return $scripture;
 		}
+
 		$show_verses = $params->get('show_verses');
 
 		if (!isset($row->bookname))
@@ -1951,6 +2098,7 @@ class JBSMListing
 				$ch_e = '';
 				$b2a  = '';
 			}
+
 			if ($ch_e == $ch_b && $v_b == $v_e)
 			{
 				$b3   = '';
@@ -1958,6 +2106,7 @@ class JBSMListing
 				$b2a  = '';
 				$v_e  = '';
 			}
+
 			if ($v_b == 0)
 			{
 				$v_b = '';
@@ -1965,11 +2114,13 @@ class JBSMListing
 				$b2a = '';
 				$b2  = '';
 			}
+
 			if ($v_e == 0)
 			{
 				$v_e = '';
 				$b2a = '';
 			}
+
 			if ($ch_e == 0)
 			{
 				$b2a  = '';
@@ -1980,6 +2131,7 @@ class JBSMListing
 					$b3 = '';
 				}
 			}
+
 			$scripture = $book . $b1 . $ch_b . $b2 . $v_b . $b3 . $ch_e . $b2a . $v_e;
 		}
 		// Else
@@ -1996,6 +2148,7 @@ class JBSMListing
 				$scripture = $book . $b1 . $ch_b;
 			}
 		}
+
 		if ($esv == 1)
 		{
 			/** @var $ch_b string */
@@ -2007,6 +2160,7 @@ class JBSMListing
 				$ch_e = '';
 				$b2a  = '';
 			}
+
 			if ($v_b == 0)
 			{
 				$v_b = '';
@@ -2014,11 +2168,13 @@ class JBSMListing
 				$b2a = '';
 				$b2  = '';
 			}
+
 			if ($v_e == 0)
 			{
 				$v_e = '';
 				$b2a = '';
 			}
+
 			if ($ch_e == 0)
 			{
 				$b2a  = '';
@@ -2029,6 +2185,7 @@ class JBSMListing
 					$b3 = '';
 				}
 			}
+
 			$scripture = $book . $b1 . $ch_b . $b2 . $v_b . $b3 . $ch_e . $b2a . $v_e;
 		}
 
@@ -2052,10 +2209,11 @@ class JBSMListing
 	 * @param   Object                    $row     Row info
 	 *
 	 * @return  null|string
+	 *
+	 * @since 7.0
 	 */
 	public function getDuration($params, $row)
 	{
-
 		$duration = $row->media_hours . $row->media_minutes . $row->media_seconds;
 
 		if (!$duration)
@@ -2064,6 +2222,7 @@ class JBSMListing
 
 			return $duration;
 		}
+
 		$duration_type = $params->get('duration_type', 2);
 		$hours         = $row->media_hours;
 		$minutes       = $row->media_minutes;
@@ -2094,8 +2253,7 @@ class JBSMListing
 			default:
 				$duration = $hours . ':' . $minutes . ':' . $seconds;
 				break;
-
-		} // End switch
+		}
 
 		return $duration;
 	}
@@ -2116,11 +2274,13 @@ class JBSMListing
 		$med      = new JBSMMedia;
 
 		$mediarow = '<div class="bsms_media_contaner" style="display: inline-block;">';
+
 		foreach ($item->mediafiles as $media)
 		{
 			$mediarow .= '<div id="bsms_media_file' . $media->id . '" class="bsms_media_file" style="display:inline; padding-right:1px;">' .
 				$med->getFluidMedia($media, $params, $template) . '</div>';
 		}
+
 		$mediarow .= '</div>';
 
 		return $mediarow;
@@ -2133,6 +2293,8 @@ class JBSMListing
 	 * @param   string                    $studydate  Study Date
 	 *
 	 * @return string
+	 *
+	 * @since 7.0
 	 */
 	public function getStudyDate($params, $studydate)
 	{
@@ -2223,6 +2385,8 @@ class JBSMListing
 	 * @param   TableTemplate             $templateid  ?
 	 *
 	 * @return string
+	 *
+	 * @since 7.0
 	 */
 	private function getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $row, $templateid)
 	{
@@ -2254,6 +2418,7 @@ class JBSMListing
 						$link = JRoute::_('index.php?option=com_biblestudy&view=seriesdisplay&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
 					}
 				}
+
 				$column = '<a href="' . $link . '">';
 				break;
 
@@ -2264,6 +2429,7 @@ class JBSMListing
 				{
 					$link .= '&Itemid=' . $tmenu;
 				}
+
 				$column .= '<a href="' . $link . '">';
 				break;
 
@@ -2277,6 +2443,7 @@ class JBSMListing
 				{
 					$link = JRoute::_(JBSMHelperRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
 				}
+
 				$column = JBSMHelper::getTooltip($row, $params, $templateid);
 				$column .= '<a href="' . $link . '">';
 
@@ -2319,6 +2486,7 @@ class JBSMListing
 	 *
 	 * @return string
 	 *
+	 * @since 7.0
 	 * @deprecated 8.1.3
 	 */
 	public function getFilepath($id3, $idfield, $mime = null)
@@ -2336,6 +2504,8 @@ class JBSMListing
 	 * @param   Joomla\Registry\Registry  $params  Item Params
 	 *
 	 * @return string
+	 *
+	 * @since 7.0
 	 */
 	public function getOtherlinks($id3, $islink, $params)
 	{
@@ -2394,6 +2564,8 @@ class JBSMListing
 	 * @param   TableTemplate             $template  Template
 	 *
 	 * @return object
+	 *
+	 * @since 7.0
 	 */
 	public function getListingExp($row, $params, $template)
 	{
@@ -2438,6 +2610,7 @@ class JBSMListing
 	 *
 	 * @return object
 	 *
+	 * @since 7.0
 	 * @deprecated 9.0.0
 	 */
 	public function getStudyExp($row, $params)
@@ -2518,6 +2691,8 @@ class JBSMListing
 	 * @param   object                    $row     Item Info
 	 *
 	 * @return string
+	 *
+	 * @since 7.0
 	 */
 	public function getPassage($params, $row)
 	{
@@ -2537,20 +2712,20 @@ class JBSMListing
 			$p = (get_extension_funcs("curl"));
 
 			if ($p)
-			{ // If curl is installed then we go on
+			{
+				// If curl is installed then we go on
 
 				// This will return false if curl is not enabled
 				$ch = curl_init($url);
 
 				if ($ch)
-				{ // This will return false if curl is not enabled
+				{
+					// This will return false if curl is not enabled
 					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 					$response .= curl_exec($ch);
 					curl_close($ch);
-
-				} // End of if ($ch)
-
-			} // End if ($p)
+				}
+			}
 		}
 		else
 		{
@@ -2568,12 +2743,15 @@ class JBSMListing
 	 * @param   Joomla\Registry\Registry  $params  Item Params
 	 *
 	 * @return null|string
+	 *
+	 * @since 7.0
 	 */
 	public function getShare($link, $row, $params)
 	{
 		$sharetype = $params->get('socialnetworking', 1);
 
 		$shareit = '<div class="row-fluid">';
+
 		if ($sharetype == 1)
 		{
 			$shareit .= '<div class="span2 pull-right">
@@ -2586,6 +2764,7 @@ class JBSMListing
 						<!-- AddThis Button END -->
 						</div>';
 		}
+
 		$shareit .= '</div>';
 
 		return $shareit;
@@ -2601,6 +2780,8 @@ class JBSMListing
 	 * @param   string  $version  Version
 	 *
 	 * @return string
+	 *
+	 * @since 7.0
 	 */
 	private function make_bitly_url($url, $login, $appkey, $format = 'xml', $version = '2.0.1')
 	{
@@ -2619,7 +2800,8 @@ class JBSMListing
 			$short = $json['results'][$url]['shortUrl'];
 		}
 		else
-		{ // Xml
+		{
+			// Xml
 			$xml   = simplexml_load_string($response);
 			$short = 'http://bit.ly/' . $xml->results->nodeKeyVal->hash;
 		}
@@ -2633,10 +2815,13 @@ class JBSMListing
 	 * @param   string  $element  Case that will chose the element
 	 *
 	 * @return string
+	 *
+	 * @since 7.0
 	 */
 	public function createelement($element)
 	{
 		$classelement = '';
+
 		switch ($element)
 		{
 			case 0:

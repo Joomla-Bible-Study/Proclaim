@@ -18,11 +18,11 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewPodcast extends JViewLegacy
 {
-
 	/**
 	 * Form
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $form;
 
@@ -30,6 +30,7 @@ class BiblestudyViewPodcast extends JViewLegacy
 	 * Item
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $item;
 
@@ -37,6 +38,7 @@ class BiblestudyViewPodcast extends JViewLegacy
 	 * State
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $state;
 
@@ -44,6 +46,7 @@ class BiblestudyViewPodcast extends JViewLegacy
 	 * Defaults
 	 *
 	 * @var array
+	 * @since    7.0.0
 	 */
 	protected $defaults;
 
@@ -51,6 +54,7 @@ class BiblestudyViewPodcast extends JViewLegacy
 	 * Can Do
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $canDo;
 
@@ -120,8 +124,10 @@ class BiblestudyViewPodcast extends JViewLegacy
 			{
 				JToolbarHelper::save2copy('podcast.save2copy');
 			}
+
 			JToolbarHelper::cancel('podcast.cancel', 'JTOOLBAR_CLOSE');
 		}
+
 		JToolbarHelper::divider();
 		JToolbarHelper::help('biblestudy', true);
 	}
@@ -139,5 +145,4 @@ class BiblestudyViewPodcast extends JViewLegacy
 		$document = JFactory::getDocument();
 		$document->setTitle($isNew ? JText::_('JBS_TITLE_PODCAST_CREATING') : JText::sprintf('JBS_TITLE_PODCAST_EDITING', $this->item->title));
 	}
-
 }
