@@ -18,7 +18,6 @@ defined("_JEXEC") or die();
  */
 class UploadScript
 {
-
 	public $mediaRoot;
 
 	public $runtime;

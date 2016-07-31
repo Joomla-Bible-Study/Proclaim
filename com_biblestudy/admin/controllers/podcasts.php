@@ -19,21 +19,6 @@ defined('_JEXEC') or die;
 class BiblestudyControllerPodcasts extends JControllerAdmin
 {
 	/**
-	 * Constructor.
-	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
-	 *
-	 * @see        JController
-	 * @since      7.0.0
-	 */
-	public function __construct($config = array())
-	{
-		parent::__construct($config);
-
-		// Register Extra tasks
-	}
-
-	/**
 	 * Proxy for getModel
 	 *
 	 * @param   string  $name    The name of the model

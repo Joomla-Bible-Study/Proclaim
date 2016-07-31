@@ -192,7 +192,6 @@ class JBSMSSConvert
 					}
 				}
 			} // End foreach $series as $single
-
 		}
 		// Get all the sermons and loop through them, creating new ones in JBS
 
@@ -318,7 +317,6 @@ class JBSMSSConvert
 			$data2->plays       = 0;
 
 			$db->insertObject('#__bsms_mediafiles', $data2, 'id');
-
 		}
 	}
 

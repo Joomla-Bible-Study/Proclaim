@@ -31,18 +31,6 @@ class BiblestudyControllerAdmin extends JControllerForm
 	protected $view_list = 'cpanel';
 
 	/**
-	 * Class constructor.
-	 *
-	 * @param   array  $config  A named array of configuration variables.
-	 *
-	 * @since    1.6
-	 */
-	public function __construct($config = array())
-	{
-		parent::__construct($config);
-	}
-
-	/**
 	 * Tools to change player or popup
 	 *
 	 * @return void
@@ -142,7 +130,6 @@ class BiblestudyControllerAdmin extends JControllerForm
 						': ' . $added . ' ' . JText::_('JBS_SUCCESS');
 				$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
 				break;
-
 			case 2:
 				$buttontype = $decoded->media_button_type;
 				$icontype = $decoded->media_icon_type;
@@ -177,7 +164,6 @@ class BiblestudyControllerAdmin extends JControllerForm
 							$db->execute();
 							$rows = $db->getAffectedRows();
 							$added = $added + $rows;
-
 						}
 						catch (RuntimeException $e)
 						{
@@ -191,7 +177,6 @@ class BiblestudyControllerAdmin extends JControllerForm
 						': ' . $added . ' ' . JText::_('JBS_SUCCESS');
 				$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
 				break;
-
 			case 3:
 				// Icon only
 				$icontype = $decoded->media_icon_type;
@@ -245,7 +230,6 @@ class BiblestudyControllerAdmin extends JControllerForm
 						': ' . $added . ' ' . JText::_('JBS_SUCCESS');
 				$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
 				break;
-
 			case 0:
 				// It's an image
 				$mediaimage = $decoded->media_image;
@@ -286,7 +270,6 @@ class BiblestudyControllerAdmin extends JControllerForm
 							$db->execute();
 							$rows = $db->getAffectedRows();
 							$added = $added + $rows;
-
 						}
 						catch (RuntimeException $e)
 						{
@@ -300,7 +283,6 @@ class BiblestudyControllerAdmin extends JControllerForm
 						': ' . $added . ' ' . JText::_('JBS_SUCCESS');
 				$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
 				break;
-
 			default:
 				$msg = JText::_('JBS_NOTHING_MATCHED');
 				$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
@@ -339,6 +321,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 			{
 				$reg = new Registry;
 				$reg->loadString($media->params);
+
 				if ($reg->get('player', 0) == $from)
 				{
 					$reg->set('player', $to);
@@ -410,6 +393,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 				}
 			}
 		}
+
 		$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
 	}
 
@@ -520,7 +504,6 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function back()
 	{
-
 		$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1');
 	}
 
@@ -596,7 +579,6 @@ class BiblestudyControllerAdmin extends JControllerForm
 			JFactory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'eroor');
 			$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=cpanel', false));
 		}
-
 	}
 
 	/**

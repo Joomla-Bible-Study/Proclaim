@@ -21,7 +21,6 @@ jimport('joomla.form.formfield');
  */
 class JFormFieldPlupload extends JFormField
 {
-
 	public $type = 'Plupload';
 
 	/**

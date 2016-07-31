@@ -21,26 +21,26 @@ use Joomla\Registry\Registry;
  */
 class Migration710
 {
-
 	/**
 	 * Method to Update to 7.1.0
 	 *
 	 * @param   JDatabaseDriver  $db  Joomla Data bass driver
 	 *
 	 * @return boolean
+	 *
+	 * @since 7.0
 	 */
 	public function up($db)
 	{
-
 		return true;
-
-		// End if no new css file
 	}
 
 	/**
 	 *  Set Empty templates
 	 *
 	 * @return void
+	 *
+	 * @since 7.0
 	 */
 	public static function setemptytemplates()
 	{
@@ -70,5 +70,4 @@ class Migration710
 			}
 		}
 	}
-
 }

@@ -145,6 +145,7 @@ abstract class JBSMAddon
 		{
 			jimport('joomla.filesystem.path');
 			$path = JPath::find(BIBLESTUDY_PATH_ADMIN . '/addons/servers/' . $type . '/', $type . '.php');
+
 			if ($path)
 			{
 				require_once $path;

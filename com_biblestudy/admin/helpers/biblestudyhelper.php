@@ -191,7 +191,6 @@ class JBSMBibleStudyHelper
 		self::rendermenu(
 			JText::_('JBS_CMN_TEMPLATECODE'), 'index.php?option=com_biblestudy&view=templatecodes', $vName == 'templatecodes'
 		);
-
 	}
 
 	/**
@@ -324,10 +323,10 @@ class JBSMBibleStudyHelper
 		if ($unfiltered)
 		{
 			$filter = JFilterInput::getInstance(array(), array(), 1, 1, 0);
-
-		} // Black lists take second precedence.
+		}
 		else
 		{
+			// Black lists take second precedence.
 			if ($blackList)
 			{
 				// Remove the white-listed attributes from the black-list.
@@ -342,10 +341,10 @@ class JBSMBibleStudyHelper
 					// Blacklist attributes
 					1
 				);
-
-			} // White lists take third precedence.
+			}
 			else
 			{
+				// White lists take third precedence.
 				if ($whiteList)
 				{
 					// Turn off xss auto clean

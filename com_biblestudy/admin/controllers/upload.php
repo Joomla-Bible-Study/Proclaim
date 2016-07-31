@@ -165,6 +165,7 @@ class BiblestudyControllerUpload extends JControllerLegacy
 			{
 				// Open temp file
 				$out = fopen("{$filePath}.part", $chunk == 0 ? "wb" : "ab");
+
 				if ($out)
 				{
 					// Read binary input stream and append it to temp file
@@ -235,7 +236,6 @@ class BiblestudyControllerUpload extends JControllerLegacy
 		}
 
 		$this->_setResponse(0, null, false);
-
 	}
 
 	/**

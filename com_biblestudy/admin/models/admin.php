@@ -23,19 +23,11 @@ use \Joomla\Registry\Registry;
  */
 class BiblestudyModelAdmin extends JModelAdmin
 {
-
 	/**
 	 * @var        string    The prefix to use with controller messages.
 	 * @since    1.6
 	 */
 	protected $text_prefix = 'COM_BIBLESTUDY';
-
-	/**
-	 * Context
-	 *
-	 * @var string
-	 */
-	protected $_context = 'com_biblestudy.discover';
 
 	/**
 	 * Returns a reference to the a Table object, always creating it.
@@ -60,6 +52,8 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  mixed  A JForm object on success, false on failure
+	 *
+	 * @since 7.0
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
@@ -85,10 +79,8 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 */
 	public function save($data)
 	{
-
 		if (parent::save($data))
 		{
-
 			return true;
 		}
 
@@ -110,32 +102,11 @@ class BiblestudyModelAdmin extends JModelAdmin
 	}
 
 	/**
-	 * Get Media Image
-	 *
-	 * @todo may not be used
-	 *
-	 * @return void
-	public function getMediaImages()
-	{
-		$mediafiles = $this->getMediaFiles();
-
-		$images = new stdClass;
-
-		foreach ($mediafiles as $mediafile)
-		{
-			$reg = new Registry;
-			$reg->loadString($mediafile->params);
-			$image = $mediafile->params->get('media_image');
-			$imagecount = substr_count($image,'png');
-		}
-	}
-	 *
-	 */
-
-	/**
 	 * Get Media Files
 	 *
 	 * @return mixed
+	 *
+	 * @since 7.0
 	 *
 	 * @todo not sure if this should be here.
 	 */
@@ -162,6 +133,8 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 * Fixes database problems
 	 *
 	 * @return boolean
+	 *
+	 * @since 7.0
 	 */
 	public function fix()
 	{
@@ -169,6 +142,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 		{
 			return false;
 		}
+
 		$changeSet->fix();
 		$this->fixSchemaVersion();
 		$this->fixUpdateVersion();
@@ -185,6 +159,8 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 * Gets the ChangeSet object
 	 *
 	 * @return string JSchema  ChangeSet
+	 *
+	 * @since 7.0
 	 */
 	public function getItems()
 	{
@@ -208,6 +184,8 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 * Fix schema version if wrong
 	 *
 	 * @return   mixed  string schema version if success, false if fail
+	 *
+	 * @since 7.0
 	 */
 	public function fixSchemaVersion()
 	{
@@ -301,6 +279,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 *
 	 * @return  mixed  the return value from the query, or null if the query fails
 	 *
+	 * @since 7.0
 	 * @throws Exception
 	 */
 	public function getSchemaVersion()
@@ -320,6 +299,8 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 * Fix Joomla version in #__extensions table if wrong (doesn't equal JVersion short version)
 	 *
 	 * @return   mixed  string update version if success, false if fail
+	 *
+	 * @since 7.0
 	 */
 	public function fixUpdateVersion()
 	{
@@ -353,6 +334,8 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 * Check if com_biblestudy parameters are blank. If so, populate with com_content text filters.
 	 *
 	 * @return  mixed  boolean true if params are updated, null otherwise
+	 *
+	 * @since 7.0
 	 */
 	public function fixDefaultTextFilters()
 	{
@@ -384,6 +367,8 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 * Get Pagination state but is hard coded to be true right now.
 	 *
 	 * @return boolean
+	 *
+	 * @since 7.0
 	 */
 	public function getPagination()
 	{
@@ -394,6 +379,8 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 * Get current version from #__extensions table
 	 *
 	 * @return  mixed   version if successful, false if fail
+	 *
+	 * @since 7.0
 	 */
 	public function getUpdateVersion()
 	{
@@ -409,6 +396,8 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 * Check if com_biblestudy parameters are blank.
 	 *
 	 * @return  string  default text filters (if any)
+	 *
+	 * @since 7.0
 	 */
 	public function getDefaultTextFilters()
 	{
@@ -423,6 +412,8 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 * Check for SermonSpeaker and PreachIt
 	 *
 	 * @return object
+	 *
+	 * @since 7.0
 	 */
 	public function getSSorPI()
 	{
@@ -467,7 +458,6 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 */
 	protected function prepareTable($table)
 	{
-
 		// Reorder the articles within the category so the new article is first
 		if (empty($table->id))
 		{
@@ -479,6 +469,8 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 * Load Form Date
 	 *
 	 * @return object
+	 *
+	 * @since 7.0
 	 */
 	protected function loadFormData()
 	{
@@ -507,5 +499,4 @@ class BiblestudyModelAdmin extends JModelAdmin
 		parent::cleanCache('com_biblestudy');
 		parent::cleanCache('mod_biblestudy');
 	}
-
 }

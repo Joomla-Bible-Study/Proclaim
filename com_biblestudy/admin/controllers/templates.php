@@ -199,27 +199,22 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 					// Sermonlist
 					$sermonstemplate = $tpcode->filename;
 					break;
-
 				case 2:
 					// Sermon
 					$sermontemplate = $tpcode->filename;
 					break;
-
 				case 3:
 					// Teachers
 					$teacherstemplate = $tpcode->filename;
 					break;
-
 				case 4:
 					// Teacher
 					$teachertemplate = $tpcode->filename;
 					break;
-
 				case 5:
 					// Serieslist
 					$seriesdisplaystemplate = $tpcode->filename;
 					break;
-
 				case 6:
 					// Series
 					$seriesdisplaytemplate = $tpcode->filename;
@@ -228,6 +223,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 					// Module
 					$moduletemplate = $tpcode->filename;
 					break;
+
 			}
 
 		endforeach;

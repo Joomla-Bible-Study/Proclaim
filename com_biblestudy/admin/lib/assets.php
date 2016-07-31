@@ -17,7 +17,6 @@ defined('_JEXEC') or die;
  */
 class JBSMAssets
 {
-
 	public static $parent_id = null;
 
 	public $query = array();

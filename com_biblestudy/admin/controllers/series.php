@@ -21,19 +21,6 @@ use Joomla\Utilities\ArrayHelper;
 class BiblestudyControllerSeries extends JControllerAdmin
 {
 	/**
-	 * Constructor.
-	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
-	 *
-	 * @see        JController
-	 * @since      1.6
-	 */
-	public function __construct($config = array())
-	{
-		parent::__construct($config);
-	}
-
-	/**
 	 * Method to save the submitted ordering values for records via AJAX.
 	 *
 	 * @return    void

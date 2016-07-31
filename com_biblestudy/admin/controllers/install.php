@@ -89,6 +89,7 @@ class BiblestudyControllerInstall extends JControllerForm
 		$app = JFactory::getApplication();
 		$session = JFactory::getSession();
 		$stack = $session->get('migration_stack', '', 'JBSM');
+
 		if (empty($stack))
 		{
 			$cache = new JCache(array('defaultgroup' => 'com_biblestudy'));

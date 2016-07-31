@@ -21,18 +21,6 @@ use Joomla\Utilities\ArrayHelper;
 class BiblestudyControllerMediafiles extends JControllerAdmin
 {
 	/**
-	 * Constructor.
-	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
-	 *
-	 * @since 1.5
-	 */
-	public function __construct($config = array())
-	{
-		parent::__construct($config);
-	}
-
-	/**
 	 * Check in of one or more records.
 	 *
 	 * @return  boolean  True on success

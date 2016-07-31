@@ -29,7 +29,6 @@ class JBSMImageLib
 	 * @since 1.5
 	 */
 	public static $extension = 'com_biblestudy';
-
 }
 
 /**

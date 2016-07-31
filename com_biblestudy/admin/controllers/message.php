@@ -26,18 +26,6 @@ class BiblestudyControllerMessage extends JControllerForm
 	protected $view_list = 'messages';
 
 	/**
-	 * Class constructor.
-	 *
-	 * @param   array  $config  A named array of configuration variables.
-	 *
-	 * @since    7.0.0
-	 */
-	public function __construct($config = array())
-	{
-		parent::__construct($config);
-	}
-
-	/**
 	 * Method override to check if you can edit an existing record.
 	 *
 	 * @param   array   $data  An array of input data.

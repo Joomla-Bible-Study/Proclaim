@@ -215,6 +215,7 @@ class JBSMPIconvert
 					$oldid              = $pi->id;
 					$this->serversids[] = array('newid' => $newid, 'oldid' => $oldid);
 				}
+
 				$datafolders             = new stdClass;
 				$datafolders->id         = null;
 				$datafolders->foldername = $pi->name;
@@ -671,6 +672,7 @@ class JBSMPIconvert
 						$madd++;
 					}
 				}
+
 				if ($pi->notes_link)
 				{
 					if (!$notes = $this->insertMedia($pi, $type = 'notes', $newid, $oldid))
@@ -684,8 +686,8 @@ class JBSMPIconvert
 				}
 
 				$comments = $this->insertComments($oldid, $newid);
-
-			} // Endforeach study
+			}
+			// Endforeach study
 		}
 
 		$piconversion = '<table><tr><td><h3>' . JText::_('JBS_IBM_PREACHIT_RESULTS') . '</h3></td></tr>'

@@ -21,18 +21,6 @@ class JBSMAddonLegacy extends JBSMAddon
 	protected $config;
 
 	/**
-	 * Construct
-	 *
-	 * @param   array  $config  Array of Options
-	 *
-	 * @since 9.0.0
-	 */
-	public function __construct($config = array())
-	{
-		parent::__construct($config);
-	}
-
-	/**
 	 * Upload
 	 *
 	 * @param   JInput|array  $data  Data to upload
