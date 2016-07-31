@@ -20,11 +20,11 @@ use Joomla\Registry\Registry;
  */
 class TableAdmin extends JTable
 {
-
 	/**
 	 * Primary Key
 	 *
 	 * @var int
+	 * @since    7.0.0
 	 */
 	public $id = null;
 
@@ -32,6 +32,7 @@ class TableAdmin extends JTable
 	 * Drop Tables
 	 *
 	 * @var int
+	 * @since    7.0.0
 	 */
 	public $drop_tables = 0;
 
@@ -39,6 +40,7 @@ class TableAdmin extends JTable
 	 * Params
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $params = null;
 
@@ -46,6 +48,7 @@ class TableAdmin extends JTable
 	 * Asset ID
 	 *
 	 * @var int
+	 * @since    7.0.0
 	 */
 	public $asset_id = 0;
 
@@ -53,6 +56,7 @@ class TableAdmin extends JTable
 	 * Access Level
 	 *
 	 * @var int
+	 * @since    7.0.0
 	 */
 	public $access = 0;
 
@@ -60,6 +64,7 @@ class TableAdmin extends JTable
 	 * Install State
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $installstate = null;
 
@@ -67,6 +72,7 @@ class TableAdmin extends JTable
 	 * Debug settings
 	 *
 	 * @var int
+	 * @since    7.0.0
 	 */
 	public $debug = null;
 
@@ -74,6 +80,8 @@ class TableAdmin extends JTable
 	 * Constructor
 	 *
 	 * @param   JDatabaseDriver  &$db  Database connector object
+	 *
+	 * @since    7.0.0
 	 */
 	public function __construct(&$db)
 	{
@@ -209,5 +217,4 @@ class TableAdmin extends JTable
 
 		return $asset->id;
 	}
-
 }
