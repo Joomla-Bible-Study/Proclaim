@@ -725,7 +725,6 @@ class BibleStudyModelInstall extends JModelLegacy
 		$this->query          = $stack['query'];
 
 		return true;
-
 	}
 
 	/**
@@ -1019,7 +1018,6 @@ class BibleStudyModelInstall extends JModelLegacy
 
 			$this->totalSteps += count($queries);
 			$this->allupdates = array_merge($this->allupdates, $queries);
-
 		}
 
 		return true;

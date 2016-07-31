@@ -22,11 +22,11 @@ JFormHelper::loadFieldClass('list');
  */
 class JFormFieldSeriesList extends JFormFieldList
 {
-
 	/**
 	 * The field type.
 	 *
 	 * @var         string
+	 * @since    7.0.4
 	 */
 	protected $type = 'SeriesList';
 
@@ -34,10 +34,11 @@ class JFormFieldSeriesList extends JFormFieldList
 	 * Method to get a list of options for a list input.
 	 *
 	 * @return      array           An array of JHtml options.
+	 *
+	 * @since    7.0.4
 	 */
 	protected function getOptions()
 	{
-
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('id,series_text');
@@ -54,9 +55,9 @@ class JFormFieldSeriesList extends JFormFieldList
 				$options[] = JHtml::_('select.option', $message->id, $message->series_text);
 			}
 		}
+
 		$options = array_merge(parent::getOptions(), $options);
 
 		return $options;
 	}
-
 }
