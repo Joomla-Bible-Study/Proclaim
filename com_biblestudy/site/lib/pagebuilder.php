@@ -320,8 +320,6 @@ class JBSMPageBuilder
 	{
 		$app  = JFactory::getApplication();
 		$db   = JFactory::getDbo();
-		$menu = $app->getMenu();
-		$item = $menu->getActive();
 
 		$teacher          = $params->get('teacher_id');
 		$topic            = $params->get('topic_id');
@@ -332,15 +330,10 @@ class JBSMPageBuilder
 		$messagetype_menu = $params->get('messagetype');
 		$year             = $params->get('year');
 		$orderparam       = $params->get('order', '1');
-		$language         = $params->get('language', $item->language);
 
 		if ($orderparam == 2)
 		{
 			$order = "ASC";
-		}
-		else
-		{
-			$order = "DESC";
 		}
 
 		if ($condition > 0)
@@ -350,15 +343,6 @@ class JBSMPageBuilder
 		else
 		{
 			$condition = ' OR ';
-		}
-
-		if ($language)
-		{
-			$language = $db->quote($language) . ',' . $db->quote('*');
-		}
-		else
-		{
-			$language = $db->quote('*');
 		}
 
 		// Compute view access permissions.
@@ -425,7 +409,7 @@ class JBSMPageBuilder
 
 		// Select only published studies
 		$query->where('study.published = 1');
-		$query->where('series.published = 1 OR study.series_id <= 0');
+		$query->where('(series.published = 1 OR study.series_id <= 0)');
 
 		if ($wherefield && $whereitem)
 		{
