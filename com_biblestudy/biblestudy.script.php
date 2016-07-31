@@ -168,7 +168,7 @@ class Com_BiblestudyInstallerScript
 
 		if (file_exists($model))
 		{
-			require_once($model);
+			require_once $model;
 			$installer = new BibleStudyModelInstall;
 			$installer->uninstall();
 		}

@@ -117,5 +117,4 @@ class BiblestudyModelMessagelist extends BiblestudyModelMessages
 
 		parent::populateState('study.studydate', 'DESC');
 	}
-
 }

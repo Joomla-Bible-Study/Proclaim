@@ -18,17 +18,17 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewLatest extends JViewLegacy
 {
-
 	/**
 	 * Execute and display a template script.
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
+	 *
+	 * @since 7.0
 	 */
 	public function display($tpl = null)
 	{
-
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery('true');
 		$query->select('id')
@@ -45,5 +45,4 @@ class BiblestudyViewLatest extends JViewLegacy
 
 		$app->redirect($link);
 	}
-
 }

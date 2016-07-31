@@ -20,25 +20,14 @@ use Joomla\Registry\Registry;
  */
 class BiblestudyModelSermon extends JModelItem
 {
-
 	/**
 	 * Model context string.
 	 *
 	 * @var        string
-	 */
-	protected $_context = 'com_biblestudy.sermon';
-
-	/**
-	 * Constructor
 	 *
-	 * @param   array  $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
-	 *
-	 * @since   11.1
+	 * @since 7.0
 	 */
-	public function __construct($config = array())
-	{
-		parent::__construct($config);
-	}
+	protected $context = 'com_biblestudy.sermon';
 
 	/**
 	 * Method to increment the hit counter for the study
@@ -87,7 +76,6 @@ class BiblestudyModelSermon extends JModelItem
 
 		if (!isset($this->_item[$pk]))
 		{
-
 			try
 			{
 				$db    = $this->getDbo();
@@ -167,6 +155,7 @@ class BiblestudyModelSermon extends JModelItem
 				if (empty($data))
 				{
 					JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_STUDY_NOT_FOUND', 'error'));
+
 					return $data;
 				}
 
@@ -175,6 +164,7 @@ class BiblestudyModelSermon extends JModelItem
 				{
 					JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_ITEM_NOT_PUBLISHED'), 'error');
 					$data = null;
+
 					return $data;
 				}
 
@@ -262,6 +252,8 @@ class BiblestudyModelSermon extends JModelItem
 	 *
 	 * @access  public
 	 * @return object
+	 *
+	 * @since 7.0
 	 */
 	public function getComments()
 	{
@@ -282,6 +274,8 @@ class BiblestudyModelSermon extends JModelItem
 	 *
 	 * @access    public
 	 * @return    boolean    True on success
+	 *
+	 * @since 7.0
 	 */
 	public function storecomment()
 	{

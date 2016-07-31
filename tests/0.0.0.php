@@ -21,10 +21,13 @@ class Migration000
 	 * @param   JDatabaseDriver  $db  Joomla Data bass driver
 	 *
 	 * @return bool
+	 *
+	 * @since 0.0.0
 	 */
 	public function up ($db)
 	{
 		$this->deleteUnexistingFiles();
+
 		return true;
 	}
 
@@ -64,5 +67,4 @@ class Migration000
 			}
 		}
 	}
-
 }

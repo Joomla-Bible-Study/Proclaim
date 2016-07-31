@@ -26,6 +26,8 @@ class JFormFieldServer extends JFormField
 	 * Get input form form
 	 *
 	 * @return array
+	 *
+	 * @since 7.0
 	 */
 	protected function getInput()
 	{
@@ -51,6 +53,7 @@ class JFormFieldServer extends JFormField
 
 		// Setup variables for display.
 		$html = array();
+
 		if ($view == 'mediafileform')
 		{
 			$sview = 'mediafileform.setServer';
@@ -105,6 +108,7 @@ class JFormFieldServer extends JFormField
 
 		// Setup variables for display.
 		$html = array();
+
 		if ($view == 'mediafileform')
 		{
 			$sview = 'serverslist';
@@ -113,6 +117,7 @@ class JFormFieldServer extends JFormField
 		{
 			$sview = 'servers';
 		}
+
 		$link = 'index.php?option=com_biblestudy&amp;view=' . $sview . '&amp;layout=modal&amp;tmpl=component&amp;function=jSelectServer_' . $this->id;
 
 		if (isset($this->element['language']))
@@ -192,6 +197,7 @@ class JFormFieldServer extends JFormField
 				. '<span class="icon-remove"></span>' . JText::_('JCLEAR')
 				. '</button>';
 		}
+
 		$html[] = '</span>';
 
 		// Note: class='required' for client side validation.
@@ -206,5 +212,4 @@ class JFormFieldServer extends JFormField
 
 		return implode("\n", $html);
 	}
-
 }

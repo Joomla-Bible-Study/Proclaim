@@ -22,7 +22,6 @@ jimport('joomla.form.formfield');
  */
 class JFormFieldFilesize extends JFormField
 {
-
 	/**
 	 *  Set Naming of type
 	 *

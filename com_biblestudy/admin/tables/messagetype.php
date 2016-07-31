@@ -176,5 +176,4 @@ class TableMessagetype extends JTable
 
 		return $asset->id;
 	}
-
 }

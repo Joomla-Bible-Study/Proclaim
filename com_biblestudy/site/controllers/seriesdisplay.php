@@ -18,19 +18,5 @@ defined('_JEXEC') or die;
  */
 class BiblestudyControllerSeriesdisplay extends JControllerLegacy
 {
-
-	/**
-	 * Constructor.
-	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
-	 *                          Recognized key values include 'name', 'default_task', 'model_path', and
-	 *                             'view_path' (this list is not meant to be comprehensive).
-	 *
-	 * @see JControllerLagacy
-	 */
-	public function __construct($config = array())
-	{
-		parent::__construct($config);
-	}
-
+	// Holder.
 }

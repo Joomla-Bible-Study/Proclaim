@@ -202,7 +202,6 @@ class BiblestudyViewInstall extends JViewLegacy
 		$this->query          = $stack['query'];
 
 		return true;
-
 	}
 
 	/**

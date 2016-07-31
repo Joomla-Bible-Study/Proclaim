@@ -114,7 +114,6 @@ class BiblestudyViewComments extends JViewLegacy
 		{
 			$this->addToolbar();
 			$this->sidebar = JHtmlSidebar::render();
-
 		}
 
 		// Set the document

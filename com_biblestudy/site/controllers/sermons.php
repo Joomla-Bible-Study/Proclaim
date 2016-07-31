@@ -18,34 +18,27 @@ defined('_JEXEC') or die;
  */
 class BiblestudyControllerSermons extends JControllerLegacy
 {
-
 	/**
 	 * Media Code
 	 *
 	 * @var string
+	 * @since 7.0
 	 */
 	public $mediaCode;
-
-	/**
-	 * Method to display the view
-	 *
-	 * @access public
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-	}
 
 	/**
 	 * Download?
 	 *
 	 * @return void
+	 *
+	 * @since 7.0
 	 */
 	public function download()
 	{
 		$input = new JInput;
 		$task  = $input->get('task');
 		$mid   = $input->getInt('id');
+
 		if ($task == 'download')
 		{
 			$downloader = new JBSMDownload;
@@ -57,6 +50,8 @@ class BiblestudyControllerSermons extends JControllerLegacy
 	 * Avplayer
 	 *
 	 * @return void
+	 *
+	 * @since 7.0
 	 */
 	public function avplayer()
 	{
@@ -74,6 +69,8 @@ class BiblestudyControllerSermons extends JControllerLegacy
 	 * Add hits to the play count.
 	 *
 	 * @return null
+	 *
+	 * @since 7.0
 	 */
 	public function playHit()
 	{
@@ -88,11 +85,11 @@ class BiblestudyControllerSermons extends JControllerLegacy
 	 *
 	 * @return null
 	 *
+	 * @since 7.0
 	 * @deprecated since version 7.0.4
 	 */
 	public function inlinePlayer()
 	{
 		echo('{m4vremote}http://www.livingwatersweb.com/video/John_14_15-31.m4v{/m4vremote}');
 	}
-
 }

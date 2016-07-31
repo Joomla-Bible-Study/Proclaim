@@ -19,80 +19,129 @@ use Joomla\Registry\Registry;
  */
 class BiblestudyViewSermons extends JViewLegacy
 {
-
-	/** @var object */
+	/** @var object
+	 *
+	 * @since 7.0 */
 	public $document;
 
-	/** @var object */
+	/** @var object
+	 *
+	 * @since 7.0 */
 	protected $items;
 
-	/** @var object */
+	/** @var object
+	 *
+	 * @since 7.0 */
 	protected $pagination;
 
-	/** @var Registry */
+	/** @var Registry
+	 *
+	 * @since 7.0 */
 	protected $state;
 
-	/** @var string */
+	/** @var string
+	 *
+	 * @since 7.0 */
 	protected $pagelinks;
 
-	/** @var string */
+	/** @var string
+	 *
+	 * @since 7.0 */
 	protected $limitbox;
 
-	/** @var JObject */
+	/** @var JObject
+	 *
+	 * @since 7.0 */
 	protected $admin;
 
-	/** @var Registry */
+	/** @var Registry
+	 *
+	 * @since 7.0 */
 	protected $params;
 
-	/** @var object */
+	/** @var object
+	 *
+	 * @since 7.0 */
 	protected $study;
 
-	/** @var string */
+	/** @var string
+	 *
+	 * @since 7.0 */
 	protected $subscribe;
 
-	/** @var string */
+	/** @var string
+	 *
+	 * @since 7.0 */
 	protected $series;
 
-	/** @var string */
+	/** @var string
+	 *
+	 * @since 7.0 */
 	protected $teachers;
 
-	/** @var string */
+	/** @var string
+	 *
+	 * @since 7.0 */
 	protected $messageTypes;
 
-	/** @var string */
+	/** @var string
+	 *
+	 * @since 7.0 */
 	protected $years;
 
-	/** @var string */
+	/** @var string
+	 *
+	 * @since 7.0 */
 	protected $locations;
 
-	/** @var string */
+	/** @var string
+	 *
+	 * @since 7.0 */
 	protected $topics;
 
-	/** @var string */
+	/** @var string
+	 *
+	 * @since 7.0 */
 	protected $orders;
 
-	/** @var string */
+	/** @var string
+	 *
+	 * @since 7.0 */
 	protected $books;
 
-	/** @var object */
+	/** @var object
+	 *
+	 * @since 7.0 */
 	protected $template;
 
-	/** @var string */
+	/** @var string
+	 *
+	 * @since 7.0 */
 	protected $order;
 
-	/** @var array */
+	/** @var array
+	 *
+	 * @since 7.0 */
 	protected $topic;
 
-	/** @var object */
+	/** @var object
+	 *
+	 * @since 7.0 */
 	protected $main;
 
-	/** @var object */
+	/** @var object
+	 *
+	 * @since 7.0 */
 	protected $page;
 
-	/** @var string */
+	/** @var string
+	 *
+	 * @since 7.0 */
 	protected $request_url;
 
-	/** @var int */
+	/** @var int
+	 *
+	 * @since 7.0 */
 	protected $limitstart;
 
 	/**
@@ -107,7 +156,6 @@ class BiblestudyViewSermons extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-
 		$input      = new JInput;
 		$limitstart = $input->get('limitstart', '', 'int');
 		$input->set('start', $limitstart);
@@ -144,7 +192,6 @@ class BiblestudyViewSermons extends JViewLegacy
 
 			for ($i = 0, $n = count($items); $i < $n; $i++)
 			{
-
 				$item = &$items[$i];
 
 				if ($item->access > 1 && !in_array($item->access, $groups))
@@ -162,6 +209,7 @@ class BiblestudyViewSermons extends JViewLegacy
 					$item->duration   = $pelements->duration;
 					$item->studydate  = $pelements->studydate;
 					$item->topics     = $pelements->topics;
+
 					if (isset($pelements->study_thumbnail))
 					{
 						$item->study_thumbnail = $pelements->study_thumbnail;
@@ -173,13 +221,13 @@ class BiblestudyViewSermons extends JViewLegacy
 
 					if (isset($pelements->series_thumbnail))
 					{
-
 						$item->series_thumbnail = $pelements->series_thumbnail;
 					}
 					else
 					{
 						$item->series_thumbnail = null;
 					}
+
 					$item->detailslink = $pelements->detailslink;
 
 					if (!isset($item->studyintro))
@@ -195,6 +243,7 @@ class BiblestudyViewSermons extends JViewLegacy
 					{
 						$item->secondary_reference = '';
 					}
+
 					if (isset($pelements->sdescription))
 					{
 						$item->sdescription = $pelements->sdescription;
@@ -204,7 +253,6 @@ class BiblestudyViewSermons extends JViewLegacy
 						$item->sdescription = '';
 					}
 				}
-
 			}
 		}
 		// Get the podcast subscription
@@ -264,6 +312,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		// Get the Popular stats
 		$stats               = new JBSMStats;
 		$this->page->popular = $stats->top_score_site();
+
 		if ($params->get('show_popular') > 0)
 		{
 			$dropdowns[] = array('order' => $params->get('ddpopular'), 'item' => $this->page->popular);
@@ -298,11 +347,13 @@ class BiblestudyViewSermons extends JViewLegacy
 			);
 			$lang[]   = $langtemp;
 		}
+
 		$langdropdown[]        = JHtml::_('select.option', '0', JText::_('JOPTION_SELECT_LANGUAGE'));
 		$langdropdown          = array_merge($langdropdown, $lang);
 		$this->page->languages = JHtml::_('select.genericlist', $langdropdown, 'filter_languages', 'class="inputbox"  '
 			. $go, 'value', 'text', "$filter_languages"
 		);
+
 		if ($params->get('listlanguage') == 1)
 		{
 			$dropdowns[] = array('order' => $params->get('ddlanguage'), 'item' => $this->page->languages);
@@ -314,6 +365,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		$this->page->teachers = JHtml::_('select.genericlist', $types, 'filter_teacher', 'class="inputbox"  '
 			. $go, 'value', 'text', "$filter_teacher"
 		);
+
 		if (($params->get('show_teacher_search') > 0 && ($teacher_menu == -1)) || $params->get('show_teacher_search') > 1)
 		{
 			$dropdowns[] = array('order' => $params->get('ddteachers'), 'item' => $this->page->teachers);
@@ -325,6 +377,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		$this->page->series = JHtml::_('select.genericlist', $types3, 'filter_series', 'class="inputbox"  '
 			. $go, 'value', 'text', "$filter_series"
 		);
+
 		if (($params->get('show_series_search') > 0 && ($series_menu == -1)) || $params->get('show_series_search') > 1)
 		{
 			$dropdowns[] = array('order' => $params->get('ddseries'), 'item' => $this->page->series);
@@ -336,6 +389,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		$this->page->messagetypes = JHtml::_('select.genericlist', $types4, 'filter_messagetype', 'class="inputbox"  '
 			. $go, 'value', 'text', "$filter_messagetype"
 		);
+
 		if (($params->get('show_type_search') > 0 && ($messagetype_menu == -1)) || $params->get('show_type_search') > 1)
 		{
 			$dropdowns[] = array('order' => $params->get('ddmessagetype'), 'item' => $this->page->messagetypes);
@@ -344,6 +398,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		$years[]           = JHtml::_('select.option', '0', JText::_('JBS_CMN_SELECT_YEAR'));
 		$years             = array_merge($years, $this->years);
 		$this->page->years = JHtml::_('select.genericlist', $years, 'filter_year', 'class="inputbox"  ' . $go, 'value', 'text', "$filter_year");
+
 		if ($params->get('show_year_search') > 0)
 		{
 			$dropdowns[] = array('order' => $params->get('ddyears'), 'item' => $this->page->years);
@@ -355,17 +410,21 @@ class BiblestudyViewSermons extends JViewLegacy
 			'select.genericlist', $loc, 'filter_location', 'class="inputbox" size="1" '
 			. $go, 'value', 'text', "$filter_location"
 		);
+
 		if (($params->get('show_locations_search') > 0 && ($location_menu == -1)) || $params->get('show_locations_search') > 1)
 		{
 			$dropdowns[] = array('order' => $params->get('ddlocations'), 'item' => $this->page->locations);
 		}
 		// Build Topics
 		$top[] = JHtml::_('select.option', '0', JText::_('JBS_CMN_SELECT_TOPIC'));
+
 		if ($top && $this->topics)
 		{
 			$top = array_merge($top, $this->topics);
 		}
+
 		$this->page->topics = JHtml::_('select.genericlist', $top, 'filter_topic', 'class="inputbox" ' . $go, 'value', 'text', "$filter_topic");
+
 		if (($params->get('show_topic_search') > 0 && ($topic_menu == -1)) || $params->get('show_topic_search') > 1)
 		{
 			$dropdowns[] = array('order' => $params->get('ddtopics'), 'item' => $this->page->topics);
@@ -374,6 +433,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		$boo[]             = JHtml::_('select.option', '0', JText::_('JBS_CMN_SELECT_BOOK'));
 		$boo               = array_merge($boo, $this->books);
 		$this->page->books = JHtml::_('select.genericlist', $boo, 'filter_book', 'class="inputbox"  ' . $go, 'value', 'text', "$filter_book");
+
 		if (($params->get('show_book_search') > 0 && $book_menu == -1) || $params->get('show_book_search') > 1)
 		{
 			$dropdowns[] = array('order' => $params->get('ddbooks'), 'item' => $this->page->books);
@@ -398,16 +458,20 @@ class BiblestudyViewSermons extends JViewLegacy
 		{
 			$dropdowns[] = array('order' => $params->get('ddorder'), 'item' => $this->page->order);
 		}
+
 		if ($params->get('show_pagination') == 1)
 		{
 			$this->page->limits = '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM') . $this->pagination->getLimitBox() . '</span>';
 			$dropdowns[]        = array('order' => '0', 'item' => $this->page->limits);
 		}
+
 		JBSMBibleStudyHelper::array_sort_by_column($dropdowns, 'order');
+
 		foreach ($dropdowns as $dmenus)
 		{
 			$this->page->dropdowns .= $dmenus['item'];
 		}
+
 		$this->items       = $items;
 		$stringuri         = $uri->toString();
 		$this->request_url = $stringuri;
@@ -424,6 +488,8 @@ class BiblestudyViewSermons extends JViewLegacy
 	 * Prepares the document
 	 *
 	 * @return void
+	 *
+	 * @since 7.0
 	 */
 	protected function _prepareDocument()
 	{
@@ -458,6 +524,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		{
 			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
+
 		$this->document->setTitle($title);
 
 		$pathway = $app->getPathway();
@@ -491,7 +558,5 @@ class BiblestudyViewSermons extends JViewLegacy
 
 		JHtml::_('biblestudy.framework');
 		JHtml::_('biblestudy.loadCss', $this->params, null, 'font-awesome');
-
 	}
-
 }

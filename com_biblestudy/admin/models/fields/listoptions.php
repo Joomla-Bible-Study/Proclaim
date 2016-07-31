@@ -27,6 +27,8 @@ class JFormFieldListoptions extends JFormFieldList
 	 * The field type.
 	 *
 	 * @var         string
+	 *
+	 * @since 7.0
 	 */
 	protected $type = 'Listoptions';
 
@@ -34,10 +36,11 @@ class JFormFieldListoptions extends JFormFieldList
 	 * Method to get a list of options for a list input.
 	 *
 	 * @return      array           An array of JHtml options.
+	 *
+	 * @since 7.0
 	 */
 	protected function getOptions()
 	{
-
 		$options[] = JHtml::_('select.option', '0', JText::_('JBS_CMN_NOTHING'));
 		$options[] = JHtml::_('select.option', '1', JText::_('JBS_TPL_SCRIPTURE1_BRACE'));
 		$options[] = JHtml::_('select.option', '2', JText::_('JBS_TPL_SCRIPTURE2_BRACE'));

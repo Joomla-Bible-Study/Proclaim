@@ -21,7 +21,6 @@ JLoader::register('BiblestudyControllerMessage', JPATH_ADMINISTRATOR . '/compone
  */
 class BiblestudyControllerMessageform extends BiblestudyControllerMessage
 {
-
 	/**
 	 * View item
 	 *
@@ -197,5 +196,4 @@ class BiblestudyControllerMessageform extends BiblestudyControllerMessage
 	{
 		return true;
 	}
-
 }

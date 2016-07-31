@@ -23,46 +23,74 @@ use Joomla\Registry\Registry;
  */
 class BiblestudyViewSermon extends JViewLegacy
 {
-	/** @var object Item */
+	/** @var object Item
+	 *
+	 * @since 7.0 */
 	protected $item;
 
-	/** @var Registry Params */
+	/** @var Registry Params
+	 *
+	 * @since 7.0 */
 	protected $params;
 
-	/** @var  string Print */
+	/** @var  string Print
+	 *
+	 * @since 7.0 */
 	protected $print;
 
-	/** @var Registry State */
+	/** @var Registry State
+	 *
+	 * @since 7.0 */
 	protected $state;
 
-	/** @var  string User */
+	/** @var  string User
+	 *
+	 * @since 7.0 */
 	protected $user;
 
-	/** @var  string Passage */
+	/** @var  string Passage
+	 *
+	 * @since 7.0 */
 	protected $passage;
 
-	/** @var  string Related */
+	/** @var  string Related
+	 *
+	 * @since 7.0 */
 	protected $related;
 
-	/** @var  string Subscribe */
+	/** @var  string Subscribe
+	 *
+	 * @since 7.0 */
 	protected $subscribe;
 
-	/** @var  int Menu ID */
+	/** @var  int Menu ID
+	 *
+	 * @since 7.0 */
 	protected $menuid;
 
-	/** @var  string Details Link */
+	/** @var  string Details Link
+	 *
+	 * @since 7.0 */
 	protected $detailslink;
 
-	/** @var  string Page */
+	/** @var  string Page
+	 *
+	 * @since 7.0 */
 	protected $page;
 
-	/** @var  string Template */
+	/** @var  string Template
+	 *
+	 * @since 7.0 */
 	protected $template;
 
-	/** @var  string Article */
+	/** @var  string Article
+	 *
+	 * @since 7.0 */
 	protected $article;
 
-	/** @var  array Article */
+	/** @var  array Article
+	 *
+	 * @since 7.0 */
 	protected $comments;
 
 	/**
@@ -71,6 +99,8 @@ class BiblestudyViewSermon extends JViewLegacy
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
+	 *
+	 * @since 7.0
 	 */
 	public function display($tpl = null)
 	{
@@ -120,7 +150,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		// Otherwise, article params override menu item params
 		$this->params = $this->state->template->params;
 		$active       = $app->getMenu()->getActive();
-		$temp         = clone ($this->params);
+		$temp         = clone $this->params;
 
 		// Check to see which parameters should take priority
 		if ($active)
@@ -195,21 +225,19 @@ class BiblestudyViewSermon extends JViewLegacy
 				}
 			}
 		}
+
 		$offset = $this->state->get('list.offset');
 
 		// Check the view access to the article (the model has already computed the values).
 		if ($item->params->get('access-view') != true && (($item->params->get('show_noauth') != true && $user->get('guest'))))
 		{
-
 			JFactory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
-
 		}
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 		$groups = $user->getAuthorisedViewLevels();
 
 		if ($this->item->access > 1)
 		{
-
 			if (!in_array($this->item->access, $groups))
 			{
 				JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_ACCESS_FORBIDDEN'), 'error');
@@ -248,6 +276,7 @@ class BiblestudyViewSermon extends JViewLegacy
 			{
 				$this->item->secondary_reference = '';
 			}
+
 			if (isset($pelements->topics))
 			{
 				$this->item->topics = $pelements->topics;
@@ -256,6 +285,7 @@ class BiblestudyViewSermon extends JViewLegacy
 			{
 				$this->item->topics = '';
 			}
+
 			if (isset($pelements->study_thumbnail))
 			{
 				$this->item->study_thumbnail = $pelements->study_thumbnail;
@@ -264,6 +294,7 @@ class BiblestudyViewSermon extends JViewLegacy
 			{
 				$this->item->study_thumbnail = null;
 			}
+
 			if (isset($pelements->series_thumbnail))
 			{
 				$this->item->series_thumbnail = $pelements->series_thumbnail;
@@ -272,6 +303,7 @@ class BiblestudyViewSermon extends JViewLegacy
 			{
 				$this->item->series_thumbnail = null;
 			}
+
 			$this->item->detailslink = $pelements->detailslink;
 
 			if (isset($pelements->teacherimage))
@@ -283,6 +315,7 @@ class BiblestudyViewSermon extends JViewLegacy
 				$this->item->teacherimage = null;
 			}
 		}
+
 		$article       = new stdClass;
 		$article->text = $this->item->scripture1;
 		$dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $this->item->params, $limitstart = null));
@@ -353,12 +386,12 @@ class BiblestudyViewSermon extends JViewLegacy
 					JPluginHelper::importPlugin('content', 'scripturelinks');
 					break;
 			}
+
 			$limitstart = $app->input->get('limitstart', 'int');
 			$dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermon', & $article, & $this->item->params, $limitstart));
 			$article->studytext    = $article->text;
 			$this->item->studytext = $article->text;
-
-		} // End if $linkit
+		}
 
 		$Biblepassage  = new JBSMShowScripture;
 		$this->passage = $Biblepassage->buildPassage($this->item, $this->item->params);
@@ -395,6 +428,8 @@ class BiblestudyViewSermon extends JViewLegacy
 	 * @param   string  $tpl  ?
 	 *
 	 * @return void
+	 *
+	 * @since 7.0
 	 */
 	protected function _displayPagebreak($tpl)
 	{
@@ -406,6 +441,8 @@ class BiblestudyViewSermon extends JViewLegacy
 	 * Prepares the document
 	 *
 	 * @return void
+	 *
+	 * @since 7.0
 	 */
 	protected function _prepareDocument()
 	{
@@ -442,6 +479,7 @@ class BiblestudyViewSermon extends JViewLegacy
 			{
 				$title = $this->item->studytitle;
 			}
+
 			$path = array(array('studytitle' => $this->item->studytitle, 'link' => '')
 			);
 
@@ -466,10 +504,12 @@ class BiblestudyViewSermon extends JViewLegacy
 		{
 			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
+
 		if (empty($title))
 		{
 			$title = $this->item->studytitle;
 		}
+
 		$this->document->setTitle($title);
 
 		if ($this->item->params->get('metadesc'))
@@ -504,6 +544,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		{
 			$this->document->setMetadata('keywords', $this->item->topic_text . ',' . $this->item->studytitle);
 		}
+
 		if ($app->get('MetaAuthor') == '1')
 		{
 			$this->document->setMetaData('author', $this->item->teachername);
@@ -524,5 +565,4 @@ class BiblestudyViewSermon extends JViewLegacy
 			$this->document->setMetaData('robots', 'noindex, nofollow');
 		}
 	}
-
 }

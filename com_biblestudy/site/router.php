@@ -15,6 +15,8 @@ defined('_JEXEC') or die;
  * @param   array  &$query  Info to Query
  *
  * @return string
+ *
+ * @since 7.0
  */
 function biblestudyBuildRoute(&$query)
 {
@@ -26,14 +28,17 @@ function biblestudyBuildRoute(&$query)
 		{
 			return $segments;
 		}
+
 		if ($query['view'] == 'comment')
 		{
 			return $segments;
 		}
+
 		if ($query['view'] == 'comments')
 		{
 			return $segments;
 		}
+
 		$segments[] = $query['view'];
 		unset($query['view']);
 	}
@@ -64,7 +69,9 @@ function biblestudyBuildRoute(&$query)
  *
  * @param   array  $segments  Parse Route Info
  *
- * @return object
+ * @return array
+ *
+ * @since 7.0
  */
 function biblestudyParseRoute($segments)
 {

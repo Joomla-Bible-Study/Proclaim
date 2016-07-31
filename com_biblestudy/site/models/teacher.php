@@ -17,13 +17,14 @@ defined('_JEXEC') or die;
  */
 class BiblestudyModelTeacher extends JModelItem
 {
-
 	/**
 	 *  Model context string.
 	 *
 	 * @var  string
+	 *
+	 * @since 7.0
 	 */
-	protected $_context = 'com_biblestudy.teacher';
+	protected $context = 'com_biblestudy.teacher';
 
 	/**
 	 * Method to get study data.
@@ -43,7 +44,6 @@ class BiblestudyModelTeacher extends JModelItem
 
 		if (!isset($this->_item[$pk]))
 		{
-
 			try
 			{
 				$db    = $this->getDbo();

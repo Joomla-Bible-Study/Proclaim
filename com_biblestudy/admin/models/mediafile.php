@@ -242,10 +242,10 @@ class BiblestudyModelMediafile extends JModelAdmin
 		if ($jinput->get('a_id'))
 		{
 			$id = $jinput->get('a_id', 0);
-
-		} // The back end uses id so we use that the rest of the time and set it to 0 by default.
+		}
 		else
 		{
+			// The back end uses id so we use that the rest of the time and set it to 0 by default.
 			$id = $jinput->get('id', 0);
 		}
 
@@ -264,7 +264,6 @@ class BiblestudyModelMediafile extends JModelAdmin
 			// The controller has already verified this is an article you can edit.
 			$form->setFieldAttribute('ordering', 'filter', 'unset');
 			$form->setFieldAttribute('state', 'filter', 'unset');
-
 		}
 
 		return $form;
@@ -287,10 +286,10 @@ class BiblestudyModelMediafile extends JModelAdmin
 		if ($jinput->get('a_id'))
 		{
 			$pk = $jinput->get('a_id', 0);
-
-		} // The back end uses id so we use that the rest of the time and set it to 0 by default.
+		}
 		else
 		{
+			// The back end uses id so we use that the rest of the time and set it to 0 by default.
 			$pk = $jinput->get('id', 0);
 		}
 
@@ -322,7 +321,6 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 			$createdate             = $this->getState('mediafile.createdate');
 			$this->data->createdate = empty($createdate) ? $this->data->createdate : $createdate;
-
 		}
 
 		return $this->data;
@@ -369,6 +367,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 			$done = true;
 		}
+
 		if (strlen($commands['link_type']) > 0)
 		{
 			if (!$this->batchlink_type($commands['link_type'], $pks, $contexts))
@@ -378,6 +377,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 			$done = true;
 		}
+
 		if (strlen($commands['mimetype']) > 0)
 		{
 			if (!$this->batchMimetype($commands['mimetype'], $pks, $contexts))
@@ -397,6 +397,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 			$done = true;
 		}
+
 		if (strlen($commands['popup']) > 0)
 		{
 			if (!$this->batchPopup($commands['popup'], $pks, $contexts))
@@ -698,6 +699,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 			{
 				return false;
 			}
+
 			$user = JFactory::getUser();
 
 			return $user->authorise('core.delete', 'com_biblestudy.mediafile.' . (int) $record->id);

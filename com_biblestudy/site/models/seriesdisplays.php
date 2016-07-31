@@ -20,7 +20,6 @@ use Joomla\Registry\Registry;
  */
 class BiblestudyModelSeriesdisplays extends JModelList
 {
-
 	/**
 	 * Method to auto-populate the model state.
 	 *
@@ -125,6 +124,7 @@ class BiblestudyModelSeriesdisplays extends JModelList
 		{
 			$menuparams->loadString($menu->params);
 		}
+
 		$query = $db->getQuery(true);
 		$query->select('se.*,CASE WHEN CHAR_LENGTH(se.alias) THEN CONCAT_WS(\':\', se.id, se.alias) ELSE se.id END as slug');
 		$query->from('#__bsms_series as se');
@@ -143,6 +143,7 @@ class BiblestudyModelSeriesdisplays extends JModelList
 		{
 			$query->where('se.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
 		}
+
 		$orderDir = $t_params->get('series_list_order', 'DESC');
 		$orderCol = $t_params->get('series_order_field', 'series_text');
 		$query->order($orderCol . ' ' . $orderDir);
@@ -154,6 +155,8 @@ class BiblestudyModelSeriesdisplays extends JModelList
 	 * Build Content of series
 	 *
 	 * @return string
+	 *
+	 * @since 7.0
 	 */
 	public function _buildContentWhere()
 	{
@@ -171,14 +174,17 @@ class BiblestudyModelSeriesdisplays extends JModelList
 		{
 			$where[] = ' se.id = ' . (int) $filter_series;
 		}
+
 		if ($filter_teacher > 0)
 		{
 			$where[] = ' se.teacher = ' . (int) $filter_teacher;
 		}
+
 		if ($filter_year > 0)
 		{
 			$where[] = ' YEAR(s.studydate) = ' . (int) $filter_year;
 		}
+
 		$where = (count($where) ? implode(' AND ', $where) : '');
 
 		$where2   = array();
@@ -186,7 +192,6 @@ class BiblestudyModelSeriesdisplays extends JModelList
 
 		if ($params->get('series_id') && !$filter_series)
 		{
-
 			$filters = $params->get('series_id');
 
 			switch ($filters)
@@ -198,6 +203,7 @@ class BiblestudyModelSeriesdisplays extends JModelList
 						{
 							break;
 						}
+						else
 						{
 							$continue = 1;
 							$where2[] = 'se.id = ' . (int) $filter;
@@ -214,6 +220,7 @@ class BiblestudyModelSeriesdisplays extends JModelList
 					break;
 			}
 		}
+
 		$where2 = (count($where2) ? ' ' . implode(' OR ', $where2) : '');
 
 		if ($continue > 0)
@@ -298,7 +305,6 @@ class BiblestudyModelSeriesdisplays extends JModelList
 		{
 			for ($i = 0; $i < $count; $i++)
 			{
-
 				if ($items[$i]->access > 1)
 				{
 					if (!in_array($items[$i]->access, $groups))
@@ -311,5 +317,4 @@ class BiblestudyModelSeriesdisplays extends JModelList
 
 		return $items;
 	}
-
 }

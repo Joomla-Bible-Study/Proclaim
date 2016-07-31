@@ -21,5 +21,5 @@ JLoader::register('BiblestudyModelServers', JPATH_ADMINISTRATOR . '/components/c
  */
 class BiblestudyModelServerslist extends BiblestudyModelServers
 {
-
+	// Holder.
 }

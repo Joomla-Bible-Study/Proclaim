@@ -16,11 +16,12 @@ use \Joomla\Registry\Registry;
  */
 class BibleStudyModelCpanel extends JModelLegacy
 {
-
 	/**
 	 * Get Data
 	 *
 	 * @return object
+	 *
+	 * @since 7.0
 	 */
 	public function getData()
 	{
@@ -35,7 +36,6 @@ class BibleStudyModelCpanel extends JModelLegacy
 
 		try
 		{
-
 			$data = $db->loadObject();
 
 			// Convert parameter fields to objects.
@@ -64,6 +64,8 @@ class BibleStudyModelCpanel extends JModelLegacy
 	 * some idiot's advice. Apparently there's no shortage of idiots giving terribly bad advice to Joomla! users.
 	 *
 	 * @return bool|null
+	 *
+	 * @since 7.0
 	 */
 	public function hasPostInstallMessages()
 	{
@@ -127,5 +129,4 @@ class BibleStudyModelCpanel extends JModelLegacy
 
 		return ($result);
 	}
-
 }

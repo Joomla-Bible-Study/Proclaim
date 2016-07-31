@@ -172,6 +172,7 @@ class BiblestudyController extends JControllerLegacy
 			JPluginHelper::importPlugin('captcha');
 			$dispatcher = JEventDispatcher::getInstance();
 			$res        = $dispatcher->trigger('onCheckAnswer', $_POST['recaptcha_response_field']);
+
 			if (!$res[0])
 			{
 				// What happens when the CAPTCHA was entered incorrectly
@@ -209,8 +210,7 @@ class BiblestudyController extends JControllerLegacy
 			$study_detail_id = $this->input->get('study_detail_id', 0, 'INT');
 
 			$mainframe->redirect('index.php?option=com_biblestudy&id=' . $study_detail_id . '&view=sermon&t=' . $t, $msg);
-
-		} // End of $cap
+		}
 	}
 
 	/**

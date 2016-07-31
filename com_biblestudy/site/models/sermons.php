@@ -69,7 +69,7 @@ class BiblestudyModelSermons extends JModelList
 	 *
 	 * @param   array  $items  Books
 	 *
-	 * @return object
+	 * @return array
 	 *
 	 * @since 7.0
 	 */
@@ -89,7 +89,7 @@ class BiblestudyModelSermons extends JModelList
 	/**
 	 * Returns the topics
 	 *
-	 * @return array
+	 * @return array|bool
 	 *
 	 * @since 7.0.2
 	 */
@@ -138,11 +138,14 @@ class BiblestudyModelSermons extends JModelList
 	 * @param   object  $b  End.
 	 *
 	 * @return int Used to place in new sort.
+	 *
+	 * @since 7.0
 	 */
 	private function order_new($a, $b)
 	{
 		$a = (array) $a;
 		$b = (array) $b;
+
 		return strcmp($a["text"], $b["text"]);
 	}
 
@@ -167,6 +170,7 @@ class BiblestudyModelSermons extends JModelList
 		{
 			$query->join('INNER', '#__bsms_studies AS study ON study.booknumber = book.booknumber');
 		}
+
 		$query->group('book.id');
 		$query->order('book.booknumber');
 
@@ -328,6 +332,8 @@ class BiblestudyModelSermons extends JModelList
 	 * Get Start 2
 	 *
 	 * @return string
+	 *
+	 * @since 7.0
 	 */
 	public function getStart2()
 	{
@@ -341,6 +347,7 @@ class BiblestudyModelSermons extends JModelList
 	 *
 	 * @return string
 	 *
+	 * @since 7.0
 	 * @todo Need to see if we can use this out of a helper to reduce code.
 	 */
 	public function getDownloads($id)
@@ -364,6 +371,8 @@ class BiblestudyModelSermons extends JModelList
 	 * It then adds to the dataObject the mediafiles associated with the sermon.
 	 *
 	 * @return string
+	 *
+	 * @since 7.0
 	 */
 	public function getFiles()
 	{
@@ -383,6 +392,7 @@ class BiblestudyModelSermons extends JModelList
 			$db->setQuery($query);
 			$mediaFiles[$sermon->id] = $db->loadAssocList();
 		}
+
 		$this->_files = $mediaFiles;
 
 		return $this->_files;
@@ -421,20 +431,22 @@ class BiblestudyModelSermons extends JModelList
 		$this->setState('params', $params);
 		$t = $params->get('sermonsid');
 		$input = new JInput;
+
 		if (!$t)
 		{
 			$t     = $input->get('t', 1, 'int');
 		}
+
 		$landing = 0;
 		$this->landing = 0;
 		$landingcheck = $input->get->get('sendingview');
+
 		if ($landingcheck == 'landing')
 		{
 			$landing = 1;
 			$this->landing = 1;
 			$this->setState('sendingview', '');
 			$input->set('sendingview', '');
-
 		}
 		else
 		{
@@ -475,6 +487,7 @@ class BiblestudyModelSermons extends JModelList
 		{
 			$book = $this->getUserStateFromRequest($this->context . '.filter.book', 'filter_book');
 		}
+
 		$this->setState('filter.book', $book);
 		$this->setState('filter.landingbook', $book);
 
@@ -486,6 +499,7 @@ class BiblestudyModelSermons extends JModelList
 		{
 			$teacher = $this->getUserStateFromRequest($this->context . '.filter.teacher', 'filter_teacher');
 		}
+
 		$this->setState('filter.teacher', $teacher);
 		$this->setState('filter.landingteacher', $teacher);
 
@@ -497,6 +511,7 @@ class BiblestudyModelSermons extends JModelList
 		{
 			$series = $this->getUserStateFromRequest($this->context . '.filter.series', 'filter_series');
 		}
+
 		$this->setState('filter.series', $series);
 		$this->setState('filter.landingseries', $series);
 
@@ -508,6 +523,7 @@ class BiblestudyModelSermons extends JModelList
 		{
 			$messageType = $this->getUserStateFromRequest($this->context . '.filter.messageType', 'filter_messagetype');
 		}
+
 		$this->setState('filter.messageType', $messageType);
 		$this->setState('filter.landingmessagetype', $messageType);
 
@@ -519,6 +535,7 @@ class BiblestudyModelSermons extends JModelList
 		{
 			$year = $this->getUserStateFromRequest($this->context . '.filter.year', 'filter_year');
 		}
+
 		$this->setState('filter.year', $year);
 		$this->setState('filter.landingyear', $year);
 
@@ -530,6 +547,7 @@ class BiblestudyModelSermons extends JModelList
 		{
 			$order = $this->getUserStateFromRequest($this->context . '.filter.orders', 'filter_orders');
 		}
+
 		$this->setState('filter.orders', $order);
 
 		if ($landing == 1)
@@ -540,6 +558,7 @@ class BiblestudyModelSermons extends JModelList
 		{
 			$topic = $this->getUserStateFromRequest($this->context . '.filter.topic', 'filter_topic');
 		}
+
 		$this->setState('filter.topic', $topic);
 		$this->setState('filter.landingtopic', $topic);
 
@@ -551,6 +570,7 @@ class BiblestudyModelSermons extends JModelList
 		{
 			$location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location');
 		}
+
 		$this->setState('filter.location', $location);
 		$this->setState('filter.landinglocation', $location);
 
@@ -720,6 +740,7 @@ class BiblestudyModelSermons extends JModelList
 					{
 						$where2[] = 'study.teacher_id = ' . (int) $filter;
 					}
+
 					$subquery .= implode(' OR ', $where2);
 					$subquery .= ')';
 
@@ -751,6 +772,7 @@ class BiblestudyModelSermons extends JModelList
 					{
 						$where2[] = 'study.location_id = ' . (int) $filter;
 					}
+
 					$subquery .= implode(' OR ', $where2);
 					$subquery .= ')';
 
@@ -782,6 +804,7 @@ class BiblestudyModelSermons extends JModelList
 					{
 						$where2[] = 'study.booknumber = ' . (int) $filter;
 					}
+
 					$subquery .= implode(' OR ', $where2);
 					$subquery .= ')';
 
@@ -798,6 +821,7 @@ class BiblestudyModelSermons extends JModelList
 					}
 				}
 			}
+
 			$filters = $series;
 
 			if ($filters)
@@ -811,6 +835,7 @@ class BiblestudyModelSermons extends JModelList
 					{
 						$where2[] = 'study.series_id = ' . (int) $filter;
 					}
+
 					$subquery .= implode(' OR ', $where2);
 					$subquery .= ')';
 
@@ -827,6 +852,7 @@ class BiblestudyModelSermons extends JModelList
 					}
 				}
 			}
+
 			$filters = $topics;
 
 			if ($filters)
@@ -840,6 +866,7 @@ class BiblestudyModelSermons extends JModelList
 					{
 						$where2[] = 'st.topic_id = ' . (int) $filter;
 					}
+
 					$subquery .= implode(' OR ', $where2);
 					$subquery .= ')';
 
@@ -856,6 +883,7 @@ class BiblestudyModelSermons extends JModelList
 					}
 				}
 			}
+
 			$filters = $messagetype;
 
 			if ($filters)
@@ -869,6 +897,7 @@ class BiblestudyModelSermons extends JModelList
 					{
 						$where2[] = 'study.messagetype = ' . (int) $filter;
 					}
+
 					$subquery .= implode(' OR ', $where2);
 					$subquery .= ')';
 
@@ -885,6 +914,7 @@ class BiblestudyModelSermons extends JModelList
 					}
 				}
 			}
+
 			$filters = $years;
 
 			if ($filters)
@@ -898,6 +928,7 @@ class BiblestudyModelSermons extends JModelList
 					{
 						$where2[] = 'YEAR(study.studydate) = ' . (int) $filter;
 					}
+
 					$subquery .= implode(' OR ', $where2);
 					$subquery .= ')';
 
@@ -926,11 +957,13 @@ class BiblestudyModelSermons extends JModelList
 
 		// Filter by book
 		$book = $this->getState('filter.book');
+
 		if ($this->landing == 1)
 		{
 			$book = $this->getState('filter.landingbook');
 			$this->landing = 0;
 		}
+
 		if (!empty($book))
 		{
 			$input = new JInput;
@@ -939,6 +972,7 @@ class BiblestudyModelSermons extends JModelList
 
 			// Set the secondary order
 			$this->setState('secondaryorderstate', 1);
+
 			if ($chb && $che)
 			{
 				$query->where('(study.booknumber = ' . (int) $book .
@@ -969,11 +1003,13 @@ class BiblestudyModelSermons extends JModelList
 
 		// Filter by teacher
 		$teacher = $this->getState('filter.teacher');
+
 		if ($this->landing == 1)
 		{
 			$teacher = $this->getState('filter.landingteacher');
 			$this->landing = 0;
 		}
+
 		if ($teacher >= 1)
 		{
 			$query->where('study.teacher_id = ' . (int) $teacher);
@@ -984,6 +1020,7 @@ class BiblestudyModelSermons extends JModelList
 
 		// Filter by series
 		$series = $this->getState('filter.series');
+
 		if ($this->landing == 1)
 		{
 			$series = $this->getState('filter.landingseries');
@@ -1000,11 +1037,13 @@ class BiblestudyModelSermons extends JModelList
 
 		// Filter by message type
 		$messageType = $this->getState('filter.messageType');
+
 		if ($this->landing == 1)
 		{
 			$messageType = $this->getState('filter.landingmessagetype');
 			$this->landing = 0;
 		}
+
 		if ($messageType >= 1)
 		{
 			$query->where('study.messageType = ' . (int) $messageType);
@@ -1015,11 +1054,13 @@ class BiblestudyModelSermons extends JModelList
 
 		// Filter by Year
 		$year = $this->getState('filter.year');
+
 		if ($this->landing == 1)
 		{
 			$year = $this->getState('filter.landingyear');
 			$this->landing = 0;
 		}
+
 		if ($year >= 1)
 		{
 			$query->where('YEAR(study.studydate) = ' . (int) $year);
@@ -1030,11 +1071,13 @@ class BiblestudyModelSermons extends JModelList
 
 		// Filter by topic
 		$topic = $this->getState('filter.topic');
+
 		if ($this->landing == 1)
 		{
 			$topic = $this->getState('filter.landingtopic');
 			$this->landing = 0;
 		}
+
 		if (!empty($topic))
 		{
 			$query->where('st.topic_id LIKE "%' . $topic . '%"');
@@ -1045,11 +1088,13 @@ class BiblestudyModelSermons extends JModelList
 
 		// Filter by location
 		$location = $this->getState('filter.location');
+
 		if ($this->landing == 1)
 		{
 			$location = $this->getState('filter.landinglocation');
 			$this->landing = 0;
 		}
+
 		if ($location >= 1)
 		{
 			$query->where('study.location_id = ' . (int) $location);
@@ -1074,16 +1119,19 @@ class BiblestudyModelSermons extends JModelList
 		$order = $params->get('default_order', 'DESC');
 
 		$secondaryorderstate = $this->getState('secondaryorderstate');
+
 		if (!empty($secondaryorderstate))
 		{
 			$order = $params->get('default_order_secondary');
 		}
+
 		$orderstate = $this->getState('filter.orders');
 
 		if (!empty($orderstate))
 		{
 			$order = $orderstate;
 		}
+
 		$query->order('studydate ' . $order);
 
 		return $query;

@@ -18,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyModelTemplates extends JModelList
 {
-
 	/**
 	 * Constructor.
 	 *
@@ -45,23 +44,26 @@ class BiblestudyModelTemplates extends JModelList
 	 * Templates
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
-	private $_templates;
+	private $templates;
 
 	/**
 	 * Get Templates
 	 *
 	 * @return object
+	 *
+	 * @since    7.0.0
 	 */
 	public function getTemplates()
 	{
-		if (empty($this->_templates))
+		if (empty($this->templates))
 		{
 			$query            = 'SELECT id as value, title as text FROM `#__bsms_templates` WHERE published = 1 ORDER BY id ASC';
-			$this->_templates = $this->_getList($query);
+			$this->templates = $this->_getList($query);
 		}
 
-		return $this->_templates;
+		return $this->templates;
 	}
 
 	/**
@@ -172,5 +174,4 @@ class BiblestudyModelTemplates extends JModelList
 
 		return $query;
 	}
-
 }

@@ -21,7 +21,6 @@ use Joomla\Utilities\ArrayHelper;
  */
 class BiblestudyModelMessage extends JModelAdmin
 {
-
 	/**
 	 * @var    string  The prefix to use with controller messages.
 	 * @since  1.6
@@ -59,6 +58,8 @@ class BiblestudyModelMessage extends JModelAdmin
 	 * @param   int  $topic_id  Topic ID
 	 *
 	 * @return boolean
+	 *
+	 * @since 7.0
 	 */
 	public function isDuplicate($study_id, $topic_id)
 	{
@@ -94,6 +95,7 @@ class BiblestudyModelMessage extends JModelAdmin
 		$input          = new JInput;
 		$translatedList = array();
 		$id = $input->get('a_id', 0, 'int');
+
 		if (!$id)
 		{
 			$id = $input->get('id', 0, 'int');
@@ -211,6 +213,7 @@ class BiblestudyModelMessage extends JModelAdmin
 		/** @var Joomla\Registry\Registry $params */
 		$params = JBSMParams::getAdmin()->params;
 		$input  = JFactory::getApplication()->input;
+
 		if ($input->get('a_id'))
 		{
 			$data['id'] = $input->get('a_id');
@@ -226,8 +229,10 @@ class BiblestudyModelMessage extends JModelAdmin
 				// Modify model data if no image is set.
 				$data['thumbnailm']     = "";
 			}
+
 			return parent::save($data);
 		}
+
 		JBSMThumbnail::create($data['image'], $path, $params->get('thumbnail_study_size', 100));
 
 		// Modify model data
@@ -250,10 +255,12 @@ class BiblestudyModelMessage extends JModelAdmin
 	{
 		// Get the form.
 		$form = $this->loadForm('com_biblestudy.message', 'message', array('control' => 'jform', 'load_data' => $loadData));
+
 		if (empty($form))
 		{
 			return false;
 		}
+
 		$jinput = JFactory::getApplication()->input;
 
 		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
@@ -282,7 +289,6 @@ class BiblestudyModelMessage extends JModelAdmin
 			// The controller has already verified this is an article you can edit.
 			$form->setFieldAttribute('ordering', 'filter', 'unset');
 			$form->setFieldAttribute('state', 'filter', 'unset');
-
 		}
 
 		return $form;
@@ -305,10 +311,10 @@ class BiblestudyModelMessage extends JModelAdmin
 		if ($jinput->get('a_id'))
 		{
 			$pk = $jinput->get('a_id', 0);
-
-		} // The back end uses id so we use that the rest of the time and set it to 0 by default.
+		}
 		else
 		{
+			// The back end uses id so we use that the rest of the time and set it to 0 by default.
 			$pk = $jinput->get('id', 0);
 		}
 
@@ -670,7 +676,6 @@ class BiblestudyModelMessage extends JModelAdmin
 
 		if (empty($table->id))
 		{
-
 			// Set ordering to the last item if not set
 			if (empty($table->ordering))
 			{
@@ -691,5 +696,4 @@ class BiblestudyModelMessage extends JModelAdmin
 			$table->modified_by = $user->get('id');
 		}
 	}
-
 }

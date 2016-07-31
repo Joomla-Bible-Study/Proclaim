@@ -62,7 +62,6 @@ class Migration710
 
 				// This is a Joomla bug for currentAssetId being missing in table.php. When fixed in Joomla should be removed
 				@$table->store();
-
 			}
 			catch (Exception $e)
 			{

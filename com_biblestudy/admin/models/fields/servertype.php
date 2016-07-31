@@ -25,6 +25,8 @@ class JFormFieldServerType extends JFormFieldList
 	 * Get Input
 	 *
 	 * @return string
+	 *
+	 * @since 7.0
 	 */
 	protected function getInput()
 	{

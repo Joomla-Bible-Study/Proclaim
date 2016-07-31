@@ -18,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyModelPodcast extends JModelAdmin
 {
-
 	/**
 	 * Protect prefix
 	 *
@@ -112,11 +111,6 @@ class BiblestudyModelPodcast extends JModelAdmin
 	{
 		$item = parent::getItem($pk);
 
-		if ($item)
-		{
-
-		}
-
 		return $item;
 	}
 
@@ -135,5 +129,4 @@ class BiblestudyModelPodcast extends JModelAdmin
 		parent::cleanCache('com_biblestudy');
 		parent::cleanCache('mod_biblestudy');
 	}
-
 }

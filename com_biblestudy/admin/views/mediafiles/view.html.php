@@ -20,7 +20,6 @@ use Joomla\Registry\Registry;
  */
 class BiblestudyViewMediafiles extends JViewLegacy
 {
-
 	/**
 	 * Media Types
 	 *

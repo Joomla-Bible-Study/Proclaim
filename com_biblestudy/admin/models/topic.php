@@ -18,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyModelTopic extends JModelAdmin
 {
-
 	/**
 	 * Get Table
 	 *
@@ -27,6 +26,8 @@ class BiblestudyModelTopic extends JModelAdmin
 	 * @param   array   $options  Configuration array for model. Optional.
 	 *
 	 * @return  JTable  A JTable object
+	 *
+	 * @since    7.0.0
 	 */
 	public function getTable($name = 'topic', $prefix = 'Table', $options = array())
 	{
@@ -117,5 +118,4 @@ class BiblestudyModelTopic extends JModelAdmin
 		parent::cleanCache('com_biblestudy');
 		parent::cleanCache('mod_biblestudy');
 	}
-
 }

@@ -58,5 +58,4 @@ class BiblestudyControllerMessagelist extends BiblestudyControllerMessages
 
 		return $model;
 	}
-
 }

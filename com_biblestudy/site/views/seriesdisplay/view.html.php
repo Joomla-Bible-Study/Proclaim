@@ -20,11 +20,12 @@ use Joomla\Registry\Registry;
  */
 class BiblestudyViewSeriesdisplay extends JViewLegacy
 {
-
 	/**
 	 * State
 	 *
 	 * @var array
+	 *
+	 * @since 7.0
 	 */
 	protected $state = null;
 
@@ -32,6 +33,8 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 	 * Item
 	 *
 	 * @var array
+	 *
+	 * @since 7.0
 	 */
 	protected $item = null;
 
@@ -39,6 +42,8 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 	 * Items
 	 *
 	 * @var array
+	 *
+	 * @since 7.0
 	 */
 	protected $items = null;
 
@@ -46,37 +51,59 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 	 * Pagination
 	 *
 	 * @var array
+	 *
+	 * @since 7.0
 	 */
 	protected $pagination = null;
 
-	/** @var  object Admin */
+	/** @var  object Admin
+	 *
+	 * @since 7.0 */
 	protected $admin;
 
-	/** @var  Registry Admin Params */
+	/** @var  Registry Admin Params
+	 *
+	 * @since 7.0 */
 	protected $admin_params;
 
-	/** @var  object Page */
+	/** @var  object Page
+	 *
+	 * @since 7.0 */
 	protected $page;
 
-	/** @var  object Series Studies */
+	/** @var  object Series Studies
+	 *
+	 * @since 7.0 */
 	protected $seriesstudies;
 
-	/** @var  TableTemplate Template */
+	/** @var  TableTemplate Template
+	 *
+	 * @since 7.0 */
 	protected $template;
 
-	/** @var  Registry Params */
+	/** @var  Registry Params
+	 *
+	 * @since 7.0 */
 	protected $params;
 
-	/** @var  string Article */
+	/** @var  string Article
+	 *
+	 * @since 7.0 */
 	protected $article;
 
-	/** @var  string Passage Link */
+	/** @var  string Passage Link
+	 *
+	 * @since 7.0 */
 	protected $passage_link;
 
-	/** @var  object Studies */
+	/** @var  object Studies
+	 *
+	 * @since 7.0 */
 	protected $studies;
 
-	/** @var  string Request URL */
+	/** @var  string Request URL
+	 *
+	 * @since 7.0 */
 	protected $request_url;
 
 	/**
@@ -85,10 +112,11 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
+	 *
+	 * @since 7.0
 	 */
 	public function display($tpl = null)
 	{
-
 		$mainframe = JFactory::getApplication();
 		$input     = new JInput;
 		$document = JFactory::getDocument();
@@ -158,6 +186,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 				{
 					$studies[$i]->series_thumbnail = null;
 				}
+
 				$studies[$i]->detailslink = $pelements->detailslink;
 
 				if (isset($pelements->studyintro))
@@ -173,6 +202,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 				{
 					$studies[$i]->secondary_reference = '';
 				}
+
 				if (isset($pelements->sdescription))
 				{
 					$studies[$i]->sdescription = $pelements->sdescription;
@@ -181,8 +211,8 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 				{
 					$studies[$i]->sdescription = '';
 				}
-
 			}
+
 			$this->page          = $items;
 		}
 		// Prepare meta information (under development)
@@ -231,5 +261,4 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 
 		parent::display($tpl);
 	}
-
 }

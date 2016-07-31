@@ -30,12 +30,15 @@ class JBSMCustom
 	 * @param   TableTemplate  $template  Template ID
 	 *
 	 * @return object
+	 *
+	 * @since    8.0.0
 	 */
 	public function getCustom($rowid, $custom, $row, $params, $template)
 	{
 		$isCustom = ($rowid == 24) ? true : false;
 		$countbraces = substr_count($custom, '{');
 		$JBSMElements = new JBSMListing;
+
 		while ($countbraces > 0)
 		{
 			$bracebegin = strpos($custom, '{');
@@ -46,10 +49,12 @@ class JBSMCustom
 			{
 				$rowid = $this->getElementnumber($subcustom);
 			}
+
 			$elementid = $JBSMElements->getElement($rowid, $row, $params, $template, $type = 0);
 			$custom    = substr_replace($custom, $elementid, $bracebegin, (($braceend - $bracebegin) + 1));
 			$countbraces--;
 		}
+
 		$elementid = $custom;
 		$elementid->id      = 'custom';
 
@@ -62,6 +67,8 @@ class JBSMCustom
 	 * @param   int  $rowid  Row ID
 	 *
 	 * @return int
+	 *
+	 * @since    8.0.0
 	 */
 	public static function getElementnumber($rowid)
 	{
@@ -155,5 +162,4 @@ class JBSMCustom
 
 		return $rowid;
 	}
-
 }

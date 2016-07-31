@@ -25,24 +25,13 @@ use Joomla\Utilities\ArrayHelper;
 class BiblestudyModelMessageform extends BiblestudyModelMessage
 {
 	/**
-	 * Constructor.
-	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
-	 *
-	 * @see     JController
-	 * @since   11.1
-	 */
-	public function __construct($config = array())
-	{
-		parent::__construct($config);
-	}
-
-	/**
 	 * Method to get article data.
 	 *
 	 * @param   int  $pk  The id of the article.
 	 *
 	 * @return    mixed    Content item data object on success, false on failure.
+	 *
+	 * @since 7.0
 	 */
 	public function getItem($pk = null)
 	{
@@ -129,5 +118,4 @@ class BiblestudyModelMessageform extends BiblestudyModelMessage
 
 		$this->setState('layout', $app->input->get('layout'));
 	}
-
 }

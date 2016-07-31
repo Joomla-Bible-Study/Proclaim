@@ -25,6 +25,8 @@ class JBSMTeacher extends JBSMListing
 	 * @param   Joomla\Registry\Registry  $params  ?
 	 *
 	 * @return array
+	 *
+	 * @since    8.0.0
 	 */
 	public function getTeachersFluid($params)
 	{
@@ -34,16 +36,19 @@ class JBSMTeacher extends JBSMListing
 		$teacherid  = null;
 		$teacherids = new stdClass;
 		$t          = $params->get('teachertemplateid');
+
 		if (!$t)
 		{
 			$t = $input->get('t', 1, 'int');
 		}
+
 		$viewtype = $input->get('view');
 
 		if ($viewtype == 'sermons')
 		{
 			$teacherids = $params->get('listteachers');
 		}
+
 		if ($viewtype == 'sermon' && $id != 0)
 		{
 			$teacherids->id = $id;
@@ -53,6 +58,7 @@ class JBSMTeacher extends JBSMListing
 		{
 			return $teachers;
 		}
+
 		foreach ($teacherids as $teach)
 		{
 			$database = JFactory::getDbo();
@@ -72,6 +78,7 @@ class JBSMTeacher extends JBSMListing
 				$result->title       = $this->contact->con_position;
 				$result->teachername = $this->contact->name;
 			}
+
 			if ($result->teacher_thumbnail)
 			{
 				$image = $result->teacher_thumbnail;
@@ -80,6 +87,7 @@ class JBSMTeacher extends JBSMListing
 			{
 				$image = $result->thumb;
 			}
+
 			if ($result->title)
 			{
 				$teachername = $result->title . ' ' . $result->teachername;
@@ -88,8 +96,8 @@ class JBSMTeacher extends JBSMListing
 			{
 				$teachername = $result->teachername;
 			}
-			$teachers[] = array('name' => $teachername, 'image' => $image, 't' => $t, 'id' => $result->id);
 
+			$teachers[] = array('name' => $teachername, 'image' => $image, 't' => $t, 'id' => $result->id);
 		}
 
 		return $teachers;
@@ -103,6 +111,7 @@ class JBSMTeacher extends JBSMListing
 	 *
 	 * @return string
 	 *
+	 * @since    8.0.0
 	 * @todo need to redo to bootstrap
 	 */
 	public function getTeacher($params, $id)
@@ -119,22 +128,26 @@ class JBSMTeacher extends JBSMListing
 		{
 			$t = $input->get('t', 1, 'int');
 		}
+
 		$viewtype = $input->get('view');
 
 		if ($viewtype == 'sermons')
 		{
 			$teacherids = explode(",", $params->get('listteachers'));
 		}
+
 		if ($viewtype == 'sermon' && $id != 0)
 		{
 			$teacherids->id = $id;
 		}
+
 		$teacher = '<table class="table" id="teacher"><tr>';
 
 		if (!isset($teacherids))
 		{
 			return $teacher;
 		}
+
 		foreach ($teacherids as $teachers)
 		{
 			$database = JFactory::getDbo();
@@ -154,6 +167,7 @@ class JBSMTeacher extends JBSMListing
 				$image->width  = 0;
 				$image->height = 0;
 			}
+
 			$teacher .= '<td><table class="table cellspacing"><tr><td><img src="' . $image->path . '" border="1" width="' . $image->width
 				. '" height="' . $image->height . '" alt="" /></td></tr>';
 
@@ -163,19 +177,23 @@ class JBSMTeacher extends JBSMListing
 			{
 				$teacher .= '<a href="' . JRoute::_('index.php?option=com_biblestudy&amp;view=teacher&amp;id=' . $tresult->id . '&amp;t=' . $t) . '">';
 			}
+
 			$teacher .= $tresult->teachername;
 
 			if ($params->get('teacherlink') > 0)
 			{
 				$teacher .= '</a>';
 			}
+
 			$teacher .= '</td></tr></table></td>';
 		}
+
 		if ($params->get('intro_show') == 2 && $viewtype == 'sermons')
 		{
 			$teacher .= '<td><div id="listintrodiv"><table class="table" id="listintrotable"><tr><td><p>';
 			$teacher .= $params->get('list_intro') . '</p></td></tr></table> </div></td>';
 		}
+
 		$teacher .= '</tr></table>';
 
 		return $teacher;
@@ -190,6 +208,8 @@ class JBSMTeacher extends JBSMListing
 	 * @param   TableTemplate  $template  Template
 	 *
 	 * @return object
+	 *
+	 * @since    8.0.0
 	 */
 	public function getTeacherListExp($row, $params, $oddeven, $template)
 	{
@@ -228,6 +248,8 @@ class JBSMTeacher extends JBSMListing
 	 * @param   Joomla\Registry\Registry  $params  Item Params
 	 *
 	 * @return object
+	 *
+	 * @since    8.0.0
 	 */
 	public function getTeacherDetailsExp($row, $params)
 	{
@@ -266,6 +288,8 @@ class JBSMTeacher extends JBSMListing
 	 * @param   Joomla\Registry\Registry  $params  Item Params
 	 *
 	 * @return string
+	 *
+	 * @since    8.0.0
 	 */
 	public function getTeacherStudiesExp($id, $params)
 	{
@@ -277,10 +301,12 @@ class JBSMTeacher extends JBSMListing
 		{
 			$limit = $params->get('series_detail_limit');
 		}
+
 		if ($nolimit == 1)
 		{
 			$limit = '';
 		}
+
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('#__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
@@ -308,7 +334,6 @@ class JBSMTeacher extends JBSMListing
 
 		for ($i = 0; $i < $count; $i++)
 		{
-
 			if ($items[$i]->access > 1)
 			{
 				if (!in_array($items[$i]->access, $groups))
@@ -346,6 +371,7 @@ class JBSMTeacher extends JBSMListing
 			{
 				break;
 			}
+
 			$studies .= $this->getListingExp($row, $params, $params->get('studieslisttemplateid'));
 			$j++;
 		}

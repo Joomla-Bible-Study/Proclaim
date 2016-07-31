@@ -20,13 +20,17 @@ use Joomla\Registry\Registry;
  */
 class BiblestudyViewLandingpage extends JViewLegacy
 {
-	/** @var  string Request URL */
+	/** @var  string Request URL
+	 *
+	 * @since 7.0 */
 	public $request_url;
 
 	/**
 	 * Params
 	 *
 	 * @var Registry
+	 *
+	 * @since 7.0
 	 */
 	public $params;
 
@@ -34,6 +38,8 @@ class BiblestudyViewLandingpage extends JViewLegacy
 	 * Params
 	 *
 	 * @var Registry
+	 *
+	 * @since 7.0
 	 */
 	public $state;
 
@@ -45,6 +51,8 @@ class BiblestudyViewLandingpage extends JViewLegacy
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
+	 *
+	 * @since 7.0
 	 */
 	public function display($tpl = null)
 	{
@@ -73,6 +81,7 @@ class BiblestudyViewLandingpage extends JViewLegacy
 		{
 			$document->setDescription($this->params->get('metadesc'));
 		}
+
 		JHtml::_('biblestudy.framework');
 
 		$images   = new JBSMImages;
@@ -87,5 +96,4 @@ class BiblestudyViewLandingpage extends JViewLegacy
 
 		parent::display($tpl);
 	}
-
 }

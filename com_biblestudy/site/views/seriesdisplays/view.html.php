@@ -20,31 +20,49 @@ use Joomla\Registry\Registry;
  */
 class BiblestudyViewSeriesdisplays extends JViewLegacy
 {
-	/** @var object Admin Info */
+	/** @var object Admin Info
+	 *
+	 * @since 7.0 */
 	protected $admin;
 
-	/** @var  JObject Items */
+	/** @var  JObject Items
+	 *
+	 * @since 7.0 */
 	protected $items;
 
-	/** @var  JObject Template */
+	/** @var  JObject Template
+	 *
+	 * @since 7.0 */
 	protected $template;
 
-	/** @var  JObject Pagination */
+	/** @var  JObject Pagination
+	 *
+	 * @since 7.0 */
 	protected $pagination;
 
-	/** @var  string Request Url */
+	/** @var  string Request Url
+	 *
+	 * @since 7.0 */
 	protected $request_url;
 
-	/** @var  Registry Params */
+	/** @var  Registry Params
+	 *
+	 * @since 7.0 */
 	protected $params;
 
-	/** @var  String Page */
+	/** @var  String Page
+	 *
+	 * @since 7.0 */
 	protected $page;
 
-	/** @var Registry State */
+	/** @var Registry State
+	 *
+	 * @since 7.0 */
 	protected $state;
 
-	/** @var string State */
+	/** @var string State
+	 *
+	 * @since 7.0 */
 	protected $go;
 
 	/**
@@ -163,24 +181,30 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 			'value', 'text', "$filter_teacher"
 		);
 		$go                   = 0;
+
 		if ($params->get('series_list_years') > 0)
 		{
 			$go++;
 		}
+
 		if ($params->get('series_list_teachers') > 0)
 		{
 			$go++;
 		}
+
 		if ($params->get('search_series') > 0)
 		{
 			$go++;
 		}
+
 		$this->go = $go;
+
 		if ($params->get('series_list_show_pagination') == 1)
 		{
 			$this->page->limits = '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM') . $this->pagination->getLimitBox() . '</span>';
 			$dropdowns[]        = array('order' => '0', 'item' => $this->page->limits);
 		}
+
 		$uri_tostring = $uri->toString();
 
 		// $this->lists = $lists;
@@ -189,5 +213,4 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 
 		parent::display($tpl);
 	}
-
 }

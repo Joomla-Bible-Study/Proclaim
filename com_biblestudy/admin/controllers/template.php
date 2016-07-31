@@ -43,6 +43,7 @@ class BiblestudyControllerTemplate extends JControllerForm
 		{
 			$msg = $model->getError();
 		}
+
 		$this->setRedirect('index.php?option=com_biblestudy&view=templates', $msg);
 	}
 

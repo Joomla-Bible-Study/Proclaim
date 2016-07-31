@@ -24,6 +24,9 @@ class JBSMUpload
 	 * Method to get temp file name from database
 	 *
 	 * @return    string
+	 *
+	 * @since     7.0
+	 * @deprecate 9.0.0 No longer used.
 	 */
 	public static function gettempfile()
 	{
@@ -41,6 +44,9 @@ class JBSMUpload
 	 * @param   string  $front     Front info
 	 *
 	 * @return    string
+	 *
+	 * @since 7.0
+	 * @deprecate 9.0.0 No longer used.
 	 */
 	public static function getpath($url, $tempfile, $front = '')
 	{
@@ -57,6 +63,7 @@ class JBSMUpload
 			{
 				JFile::delete($tempfile);
 			}
+
 			$msg = JText::_('JBS_MED_UPLOAD_FAILED_NO_FOLDER');
 
 			if ($front)
@@ -68,6 +75,7 @@ class JBSMUpload
 				$jclagacy->setRedirect($url, $msg);
 			}
 		}
+
 		$returnpath = $server . $path;
 
 		return $returnpath;
@@ -79,6 +87,9 @@ class JBSMUpload
 	 * @param   string  $tempfile  Temp file path.
 	 *
 	 * @return    boolean
+	 *
+	 * @since 7.0
+	 * @deprecate 9.0.0 No longer used.
 	 */
 	public static function deletetempfile($tempfile)
 	{
@@ -96,6 +107,9 @@ class JBSMUpload
 	 * @param   array  $file  File info
 	 *
 	 * @return    boolean
+	 *
+	 * @since 7.0
+	 * @deprecate 9.0.0 No longer used.
 	 */
 	public static function checkfile($file)
 	{
@@ -120,6 +134,9 @@ class JBSMUpload
 	 * @param   object  $filename  File info
 	 *
 	 * @return    string
+	 *
+	 * @sicne 7.0
+	 * @deprecate 9.0.0 No longer used.
 	 */
 	public static function processflashfile($tempfile, $filename)
 	{
@@ -163,10 +180,12 @@ class JBSMUpload
 	 * @param   int     $admin     Sets whether call is from Joomla admin or site.
 	 *
 	 * @return  boolean
+	 *
+	 * @since 7.0
+	 * @deprecate 9.0.0 No longer used.
 	 */
 	public static function ftp($file, $filename, $admin = 0)
 	{
-
 		$app         = JFactory::getApplication();
 		$ftpsuccess  = true;
 		$ftpsuccess1 = true;
@@ -191,6 +210,7 @@ class JBSMUpload
 			{
 				$app->enqueueMessage(JText::_('JBS_MED_FTP_NO_CONNECT'), 'error');
 			}
+
 			$ftpsuccess1 = false;
 		}
 
@@ -201,6 +221,7 @@ class JBSMUpload
 			{
 				$app->enqueueMessage(JText::_('JBS_MED_FTP_NO_LOGIN'), 'error');
 			}
+
 			$ftpsuccess2 = false;
 		}
 
@@ -215,6 +236,7 @@ class JBSMUpload
 			{
 				$app->enqueueMessage(JText::_('JBS_MED_FTP_NO_UPLOAD'), 'error');
 			}
+
 			$ftpsuccess3 = false;
 		}
 
@@ -227,6 +249,7 @@ class JBSMUpload
 			{
 				$app->enqueueMessage(JText::_('JBS_MED_FTP_NO_CHMOD'), 'error');
 			}
+
 			$ftpsuccess4 = false;
 		}
 
@@ -249,6 +272,9 @@ class JBSMUpload
 	 * @param   int     $admin     Admin
 	 *
 	 * @return boolean
+	 *
+	 * @since 7.0
+	 * @deprecate 9.0.0 No longer used.
 	 */
 	public static function aws($file, $filename, $admin = 0)
 	{
@@ -283,7 +309,6 @@ class JBSMUpload
 		}
 		else
 		{
-
 			if (!$file_type)
 			{
 				$file_type = 'binary/octet-stream';
@@ -302,6 +327,7 @@ class JBSMUpload
 			{
 				$app->enqueueMessage(JText::_('JBS_MED_AWS_SECRET_WRONG_LENGTH'), 'error');
 			}
+
 			$awssuccess1 = false;
 		}
 		else
@@ -314,11 +340,11 @@ class JBSMUpload
 				{
 					$app->enqueueMessage(JText::_('JBS_MED_AWS_FAILED_READ_FILE'), 'error');
 				}
+
 				$awssuccess2 = false;
 			}
 			else
 			{
-
 				// Opening HTTP connection to Amazon S3
 				$fp = fsockopen("s3.amazonaws.com", 80, $errno, $errstr, 30);
 
@@ -328,11 +354,11 @@ class JBSMUpload
 					{
 						$app->enqueueMessage(JText::_('JBW_MED_AWS_NOT_OPEN_SOCKET'), 'error');
 					}
+
 					$awssuccess3 = false;
 				}
 				else
 				{
-
 					// Creating or updating bucket
 
 					// GMT based timestamp
@@ -360,6 +386,7 @@ class JBSMUpload
 						{
 							$app->enqueueMessage(JText::_('JBS_MED_AWS_CANNOT_CREATE_BUCKET'), 'error');
 						}
+
 						$awssuccess4 = false;
 					}
 					else
@@ -397,6 +424,7 @@ class JBSMUpload
 							{
 								$app->enqueueMessage(JText::_('JBS_MED_AWS_CANNOT_CREATE_FILE'), 'error');
 							}
+
 							$awssuccess5 = false;
 						}
 
@@ -421,6 +449,9 @@ class JBSMUpload
 	 * @param   string  $aws_secret    Secret
 	 *
 	 * @return string
+	 *
+	 * @since 7.0
+	 * @deprecate 9.0.0 No longer used.
 	 */
 	public static function amazon_hmac($stringToSign, $aws_secret)
 	{
@@ -443,12 +474,14 @@ class JBSMUpload
 	 * @param   string  $d  String to hash
 	 *
 	 * @return string
+	 *
+	 * @since 7.0
+	 * @deprecate 9.0.0 No longer used.
 	 */
 	public static function binsha1($d)
 	{
 		if (version_compare(phpversion(), "5.0.0", ">="))
 		{
-
 			return sha1($d, true);
 		}
 		else
@@ -465,6 +498,9 @@ class JBSMUpload
 	 * @param   boolean   $debug  debug
 	 *
 	 * @return string
+	 *
+	 * @since 7.0
+	 * @deprecate 9.0.0 No longer used.
 	 */
 	public static function sendREST($fp, $q, $debug = false)
 	{
@@ -485,6 +521,7 @@ class JBSMUpload
 			{
 				echo "\nRESPONSE<<{$tr}>>";
 			}
+
 			$r .= $tr;
 
 			if (($check_header) && (strpos($r, "\r\n\r\n") !== false))
@@ -514,6 +551,9 @@ class JBSMUpload
 	 * @param   object  $filename  File info
 	 *
 	 * @return    string
+	 *
+	 * @since 7.0
+	 * @deprecate 9.0.0 No longer used.
 	 */
 	public static function processuploadfile($file, $filename)
 	{
@@ -558,7 +598,6 @@ class JBSMUpload
 		}
 		else
 		{
-
 			if (!JFile::upload($file['tmp_name'], $filename->path))
 			{
 				$uploadmsg = JText::_('JBS_MED_UPLOAD_FAILED_CHECK_PATH');
@@ -572,6 +611,9 @@ class JBSMUpload
 	 * Method to build temp folder
 	 *
 	 * @return    string
+	 *
+	 * @since 7.0
+	 * @deprecate 9.0.0 No longer used.
 	 */
 	public static function gettempfolder()
 	{
@@ -588,6 +630,9 @@ class JBSMUpload
 	 * @param   array   $file      Source File details.
 	 *
 	 * @return    string
+	 *
+	 * @since 7.0
+	 * @deprecate 9.0.0 No longer used.
 	 */
 	public static function uploadftp($filename, $file)
 	{
@@ -609,6 +654,9 @@ class JBSMUpload
 	 * @param   array   $file      Source File details.
 	 *
 	 * @return    string
+	 *
+	 * @since 7.0
+	 * @deprecate 9.0.0 No longer used.
 	 */
 	public static function upload($filename, $file)
 	{
@@ -634,6 +682,9 @@ class JBSMUpload
 	 * @param   int     $flash     Sets whether this is a flash upload or normal php upload and chooses right path through function.
 	 *
 	 * @return    object
+	 *
+	 * @since 7.0
+	 * @deprecate 9.0.0 No longer used.
 	 */
 	public static function buildpath($file, $type, $serverid, $folderid, $path, $flash = 0)
 	{
@@ -697,6 +748,7 @@ class JBSMUpload
 			$file           = str_replace($badchars, '_', $file);
 			$filename->file = JFile::makeSafe($file);
 		}
+
 		if ($filename->type == 2)
 		{
 			$filename->path = $filename->file;
@@ -716,6 +768,9 @@ class JBSMUpload
 	 * @param   string  $admin  String to add to url
 	 *
 	 * @return    string
+	 *
+	 * @since 7.0
+	 * @deprecate 9.0.0 No longer used.
 	 */
 	public function Uploadjs($host, $admin)
 	{
@@ -739,6 +794,7 @@ class JBSMUpload
 				$val *= 1024;
 				break;
 		}
+
 		$valk            = $val / 1024;
 		$valm            = $valk / 1024;
 		$maxupload       = $valm . ' MB';
@@ -804,5 +860,4 @@ class JBSMUpload
 
 		return $swfUploadHeadJs;
 	}
-
 }

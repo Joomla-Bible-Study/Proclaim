@@ -18,11 +18,12 @@ defined('_JEXEC') or die;
  */
 class BiblestudyModelSeries extends JModelList
 {
-
 	/**
 	 * Constructor.
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
+	 *
+	 * @since 7.0
 	 */
 	public function __construct($config = array())
 	{
@@ -258,13 +259,14 @@ class BiblestudyModelSeries extends JModelList
 		{
 			$orderCol = 'l.title';
 		}
+
 		if ($orderCol == 'access_level')
 		{
 			$orderCol = 'ag.title';
 		}
+
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
 		return $query;
 	}
-
 }

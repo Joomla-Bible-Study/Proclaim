@@ -19,13 +19,14 @@ defined('_JEXEC') or die;
  */
 class JBSMPodcastSubscribe
 {
-
 	/**
 	 * Build Subscribe Table
 	 *
 	 * @param   string  $introtext  Intro Text
 	 *
 	 * @return string
+	 *
+	 * @since    7.1
 	 */
 	public function buildSubscribeTable($introtext = 'Our Podcasts')
 	{
@@ -35,13 +36,11 @@ class JBSMPodcastSubscribe
 
 		if ($podcasts)
 		{
-
 			$subscribe .= '<div class="podcastheader" ><h3>' . $introtext . '</h3></div>';
 			$subscribe .= '<div class="prow row-fluid">';
 
 			foreach ($podcasts AS $podcast)
 			{
-
 				$podcastshow = $podcast->podcast_subscribe_show;
 
 				if (!$podcastshow)
@@ -89,6 +88,8 @@ class JBSMPodcastSubscribe
 	 * Get Podcasts
 	 *
 	 * @return object Object List of Podcasts
+	 *
+	 * @since    7.1
 	 */
 	public function getPodcasts()
 	{
@@ -112,6 +113,8 @@ class JBSMPodcastSubscribe
 	 * @param   object  $podcast  Podcast Info
 	 *
 	 * @return string
+	 *
+	 * @since    7.1
 	 */
 	public function buildStandardPodcast($podcast)
 	{
@@ -132,6 +135,7 @@ class JBSMPodcastSubscribe
 		{
 			$name = $podcast->podcast_subscribe_desc;
 		}
+
 		$subscribe .= '<div class="text"><a href="' . JUri::base() . $podcast->filename . '">' . $name . '</a></div>';
 
 		return $subscribe;
@@ -144,6 +148,8 @@ class JBSMPodcastSubscribe
 	 * @param   array  $words               Alt podcast image text
 	 *
 	 * @return string
+	 *
+	 * @since    7.1
 	 */
 	public function buildPodcastImage($podcastimagefromdb = null, $words = null)
 	{
@@ -168,6 +174,8 @@ class JBSMPodcastSubscribe
 	 * @param   object  $podcast  Podcast info
 	 *
 	 * @return string
+	 *
+	 * @since    7.1
 	 */
 	public function buildAlternatePodcast($podcast)
 	{
@@ -179,9 +187,9 @@ class JBSMPodcastSubscribe
 			$link  = '<div class="image"><a href="' . $podcast->alternatelink . '">' . $image . '</a></div><div class="clearfix"></div>';
 			$subscribe .= $link;
 		}
+
 		$subscribe .= '<div class="text"><a href="' . $podcast->alternatelink . '">' . $podcast->alternatewords . '</a></div>';
 
 		return $subscribe;
 	}
-
 }

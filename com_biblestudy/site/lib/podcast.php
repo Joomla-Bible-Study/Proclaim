@@ -36,7 +36,6 @@ JLoader::register('JBSMListing', JPATH_SITE . '/components/com_biblestudy/lib/li
  */
 class JBSMPodcast
 {
-
 	private $templateid = 0;
 
 	private $template = null;

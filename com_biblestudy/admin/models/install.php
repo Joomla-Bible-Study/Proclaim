@@ -29,70 +29,112 @@ if (file_exists($api))
  */
 class BibleStudyModelInstall extends JModelLegacy
 {
-	/** @var int Total numbers of Versions */
+	/** @var int Total numbers of Versions
+	 *
+	 * @since 7.1 */
 	public $totalSteps = 0;
 
-	/** @var int Numbers of Versions already processed */
+	/** @var int Numbers of Versions already processed
+	 *
+	 * @since 7.1 */
 	public $doneSteps = 0;
 
-	/** @var string Running Now */
+	/** @var string Running Now
+	 *
+	 * @since 7.1 */
 	public $running = null;
 
-	/** @var array Call stack for the Visioning System. */
+	/** @var array Call stack for the Visioning System.
+	 *
+	 * @since 7.1 */
 	public $callstack = array();
 
-	/** @var string Path to Mysql files */
+	/** @var string Path to Mysql files
+	 *
+	 * @since 7.1 */
 	protected $filePath = '/components/com_biblestudy/install/sql/updates/mysql';
 
-	/** @var string Path to PHP Version files */
+	/** @var string Path to PHP Version files
+	 *
+	 * @since 7.1 */
 	protected $phpPath = '/components/com_biblestudy/install/updates/';
 
-	/** @var float The time the process started */
-	private $_startTime = null;
+	/** @var float The time the process started
+	 *
+	 * @since 7.1 */
+	private $startTime = null;
 
-	/** @var array The pre versions to process */
-	private $_versionStack = array();
+	/** @var array The pre versions to process
+	 *
+	 * @since 7.1 */
+	private $versionStack = array();
 
-	/** @var array The pre versions sub sql array to process */
-	private $_allupdates = array();
+	/** @var array The pre versions sub sql array to process
+	 *
+	 * @since 7.1 */
+	private $allupdates = array();
 
-	/** @var string Version of BibleStudy */
-	private $_versionSwitch = null;
+	/** @var string Version of BibleStudy
+	 *
+	 * @since 7.1 */
+	private $versionSwitch = null;
 
-	/** @var int Id of Extinction Table */
-	private $_biblestudyEid = 0;
+	/** @var int Id of Extinction Table
+	 *
+	 * @since 7.1 */
+	private $biblestudyEid = 0;
 
-	/** @var array Array of Finish Task */
-	private $_finish = array();
+	/** @var array Array of Finish Task
+	 *
+	 * @since 7.1 */
+	private $finish = array();
 
-	/** @var string Version number to be running */
+	/** @var string Version number to be running
+	 *
+	 * @since 7.1 */
 	private $version = "0.0.0";
 
-	/** @type array PHP file steps for migrations */
+	/** @type array PHP file steps for migrations
+	 *
+	 * @since 7.1 */
 	private $subSteps = array();
 
-	/** @var array Array of Sub Query from php files queries Task */
-	private $_subQuery = array();
+	/** @var array Array of Sub Query from php files queries Task
+	 *
+	 * @since 7.1 */
+	private $subQuery = array();
 
-	/** @type array list of php files to work through */
-	private $_subFiles = array();
+	/** @type array list of php files to work through
+	 *
+	 * @since 7.1 */
+	private $subFiles = array();
 
-	/** @var array Array of Install Task */
-	private $_install = array();
+	/** @var array Array of Install Task
+	 *
+	 * @since 7.1 */
+	private $install = array();
 
-	/** @var int If was imported */
-	private $_isimport = 0;
+	/** @var int If was imported
+	 *
+	 * @since 7.1 */
+	private $isimport = 0;
 
-	/** @type string Type of process */
+	/** @type string Type of process
+	 *
+	 * @since 7.1 */
 	protected $type = null;
 
-	/** @type array Array of assets to fix */
+	/** @type array Array of assets to fix
+	 *
+	 * @since 7.1 */
 	public $query = array();
 
 	/**
 	 * Constructor.
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
+	 *
+	 * @since 7.1
 	 */
 	public function __construct($config = array())
 	{
@@ -105,6 +147,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * Start Looking though the Versions
 	 *
 	 * @return bool
+	 *
+	 * @since 7.1
 	 */
 	public function startScanning()
 	{
@@ -113,11 +157,12 @@ class BibleStudyModelInstall extends JModelLegacy
 		$this->getSteps();
 		$this->postinstallclenup();
 
-		if (empty($this->_versionStack))
+		if (empty($this->versionStack))
 		{
-			$this->_versionStack = array();
+			$this->versionStack = array();
 		}
-		ksort($this->_versionStack);
+
+		ksort($this->versionStack);
 
 		$this->saveStack();
 
@@ -135,16 +180,20 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * Starts or resets the internal timer
 	 *
 	 * @return void
+	 *
+	 * @since 7.1
 	 */
 	private function resetTimer()
 	{
-		$this->_startTime = $this->microtime_float();
+		$this->startTime = $this->microtime_float();
 	}
 
 	/**
 	 * Returns the current timestamps in decimal seconds
 	 *
 	 * @return string
+	 *
+	 * @since 7.1
 	 */
 	private function microtime_float()
 	{
@@ -157,6 +206,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * Get migrate versions of DB after import/copy has finished.
 	 *
 	 * @return boolean
+	 *
+	 * @since 7.1`
 	 */
 	private function getSteps()
 	{
@@ -174,18 +225,17 @@ class BibleStudyModelInstall extends JModelLegacy
 		}
 
 		// Set Finishing Steps
-		$this->_finish = array('updateversion', 'fixassets', 'fixmenus', 'fixemptyaccess', 'fixemptylanguage', 'rmoldurl', 'setupdateurl', 'finish');
-		$this->totalSteps += count($this->_finish);
+		$this->finish = array('updateversion', 'fixassets', 'fixmenus', 'fixemptyaccess', 'fixemptylanguage', 'rmoldurl', 'setupdateurl', 'finish');
+		$this->totalSteps += count($this->finish);
 
 		// Check to see if this is not a migration before preceding.
 		if ($this->type != 'migration')
 		{
 			$this->type     = 'install';
-			$this->_install = array('install', 'install-defaults');
-			$this->totalSteps += count($this->_install);
+			$this->install = array('install', 'install-defaults');
+			$this->totalSteps += count($this->install);
 
 			return true;
-
 		}
 
 		// First we check to see if there is a current version database installed. This will have a #__bsms_version table so we check for it's existence.
@@ -209,6 +259,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				$versiontype    = 1;
 			}
 		}
+
 		if ($versiontype !== 1)
 		{
 			foreach ($tables as $table)
@@ -242,6 +293,7 @@ class BibleStudyModelInstall extends JModelLegacy
 					$versiontype      = 3;
 				}
 			}
+
 			if (!$oldversion)
 			{
 				foreach ($tables as $table)
@@ -271,6 +323,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				{
 					$versiontype = 5;
 				}
+
 				if ($jbsexists > 0)
 				{
 					$versiontype = 4;
@@ -293,7 +346,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				$this->_db->setQuery($query);
 				$updates              = $this->_db->loadObject();
 				$version              = $updates->version;
-				$this->_versionSwitch = $version;
+				$this->versionSwitch = $version;
 
 				$this->callstack['subversiontype_version'] = $version;
 				break;
@@ -307,7 +360,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				$this->_db->execute();
 				$version = $this->_db->loadObject();
 
-				$this->_versionSwitch = implode('.', preg_split('//', $version->build, -1, PREG_SPLIT_NO_EMPTY));
+				$this->versionSwitch = implode('.', preg_split('//', $version->build, -1, PREG_SPLIT_NO_EMPTY));
 
 				$this->callstack['subversiontype_version'] = $version->build;
 				break;
@@ -324,10 +377,11 @@ class BibleStudyModelInstall extends JModelLegacy
 				{
 					$query->select('schemaVersion')->from('#__bsms_schemaversion');
 				}
+
 				$this->_db->setQuery($query);
 				$schema = $this->_db->loadResult();
 
-				$this->_versionSwitch = implode('.', preg_split('//', $schema, -1, PREG_SPLIT_NO_EMPTY));
+				$this->versionSwitch = implode('.', preg_split('//', $schema, -1, PREG_SPLIT_NO_EMPTY));
 
 				$this->callstack['subversiontype_version'] = $schema;
 				break;
@@ -344,7 +398,6 @@ class BibleStudyModelInstall extends JModelLegacy
 
 		if ($this->callstack['subversiontype_version'] > 000)
 		{
-
 			// Start of Building the All state build.
 			jimport('joomla.filesystem.folder');
 			jimport('joomla.filesystem.file');
@@ -362,11 +415,11 @@ class BibleStudyModelInstall extends JModelLegacy
 				->where('`name` = "com_biblestudy"');
 			$this->_db->setQuery($query);
 			$eid                  = $this->_db->loadResult();
-			$this->_biblestudyEid = $eid;
+			$this->biblestudyEid = $eid;
 
 			foreach ($files as $i => $value)
 			{
-				$update = $this->_versionSwitch;
+				$update = $this->versionSwitch;
 
 				if ($update && $eid)
 				{
@@ -385,7 +438,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				elseif ($files)
 				{
 					$this->totalSteps    += count($files);
-					$this->_versionStack  = $files;
+					$this->versionStack  = $files;
 				}
 				else
 				{
@@ -397,18 +450,19 @@ class BibleStudyModelInstall extends JModelLegacy
 
 			foreach ($php as $i => $value)
 			{
-				if (version_compare($value, $this->_versionSwitch) <= 0)
+				if (version_compare($value, $this->versionSwitch) <= 0)
 				{
 					unset($php[$i]);
 				}
 				elseif ($php)
 				{
 					$this->totalSteps += count($files);
-					$this->_subFiles   = $php;
+					$this->subFiles   = $php;
 				}
 			}
 		}
-		$this->_isimport = JFactory::getApplication()->input->getInt('jbsmalt', 0);
+
+		$this->isimport = JFactory::getApplication()->input->getInt('jbsmalt', 0);
 		$this->totalSteps += 1;
 
 		return true;
@@ -418,6 +472,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * Correct problem in are update table under 7.0.2 systems
 	 *
 	 * @return boolean
+	 *
+	 * @since 7.1
 	 */
 	private function correctVersions()
 	{
@@ -509,6 +565,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * @param   bool  $resetTimer  If the time must be reset
 	 *
 	 * @return bool
+	 *
+	 * @since 7.1
 	 */
 	public function run($resetTimer = true)
 	{
@@ -520,6 +578,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		$this->loadStack();
 
 		$result = true;
+
 		while ($result && $this->haveEnoughTime())
 		{
 			$result = $this->RealRun();
@@ -534,20 +593,22 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * Saves the Versions/SQL/After stack in the session
 	 *
 	 * @return void
+	 *
+	 * @since 7.1
 	 */
 	private function saveStack()
 	{
 		$stack = array(
 				'aversion'   => $this->version,
-				'version'    => $this->_versionStack,
-				'switch'     => $this->_versionSwitch,
-				'allupdates' => $this->_allupdates,
-				'finish'     => $this->_finish,
-				'install'    => $this->_install,
-				'subFiles'   => $this->_subFiles,
-				'subQuery'   => $this->_subQuery,
+				'version'    => $this->versionStack,
+				'switch'     => $this->versionSwitch,
+				'allupdates' => $this->allupdates,
+				'finish'     => $this->finish,
+				'install'    => $this->install,
+				'subFiles'   => $this->subFiles,
+				'subQuery'   => $this->subQuery,
 				'subSteps'   => $this->subSteps,
-				'isimport'   => $this->_isimport,
+				'isimport'   => $this->isimport,
 				'callstack'  => $this->callstack,
 				'total'      => $this->totalSteps,
 				'done'       => $this->doneSteps,
@@ -556,38 +617,42 @@ class BibleStudyModelInstall extends JModelLegacy
 				'query'      => $this->query,
 		);
 		$stack = json_encode($stack);
+
 		if (function_exists('base64_encode') && function_exists('base64_decode'))
 		{
 			if (function_exists('gzdeflate') && function_exists('gzinflate'))
 			{
 				$stack = gzdeflate($stack, 9);
 			}
+
 			$stack = base64_encode($stack);
 		}
+
 		$session = JFactory::getSession();
 		$session->set('migration_stack', $stack, 'JBSM');
-
 	}
 
 	/**
 	 * Resets the Versions/SQL/After stack saved in the session
 	 *
 	 * @return void
+	 *
+	 * @since 7.1
 	 */
 	private function resetStack()
 	{
 		$session = JFactory::getSession();
 		$session->set('migration_stack', '', 'JBSM');
 		$this->version        = '0.0.0';
-		$this->_versionStack  = array();
-		$this->_versionSwitch = null;
-		$this->_allupdates    = array();
-		$this->_finish        = array();
-		$this->_install       = array();
-		$this->_subFiles      = array();
-		$this->_subQuery      = array();
+		$this->versionStack  = array();
+		$this->versionSwitch = null;
+		$this->allupdates    = array();
+		$this->finish        = array();
+		$this->install       = array();
+		$this->subFiles      = array();
+		$this->subQuery      = array();
 		$this->subSteps       = array();
-		$this->_isimport      = 0;
+		$this->isimport      = 0;
 		$this->callstack      = array();
 		$this->totalSteps     = 0;
 		$this->doneSteps      = 0;
@@ -600,6 +665,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * Loads the Versions/SQL/After stack from the session
 	 *
 	 * @return bool
+	 *
+	 * @since 7.1
 	 */
 	private function loadStack()
 	{
@@ -609,15 +676,15 @@ class BibleStudyModelInstall extends JModelLegacy
 		if (empty($stack))
 		{
 			$this->version        = '0.0.0';
-			$this->_versionStack  = array();
-			$this->_versionSwitch = null;
-			$this->_allupdates    = array();
-			$this->_finish        = array();
-			$this->_install       = array();
-			$this->_subFiles      = array();
-			$this->_subQuery      = array();
+			$this->versionStack  = array();
+			$this->versionSwitch = null;
+			$this->allupdates    = array();
+			$this->finish        = array();
+			$this->install       = array();
+			$this->subFiles      = array();
+			$this->subQuery      = array();
 			$this->subSteps       = array();
-			$this->_isimport      = 0;
+			$this->isimport      = 0;
 			$this->callstack      = array();
 			$this->totalSteps     = 0;
 			$this->doneSteps      = 0;
@@ -631,6 +698,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		if (function_exists('base64_encode') && function_exists('base64_decode'))
 		{
 			$stack = base64_decode($stack);
+
 			if (function_exists('gzdeflate') && function_exists('gzinflate'))
 			{
 				$stack = gzinflate($stack);
@@ -640,15 +708,15 @@ class BibleStudyModelInstall extends JModelLegacy
 		$stack = json_decode($stack, true);
 
 		$this->version        = $stack['aversion'];
-		$this->_versionStack  = $stack['version'];
-		$this->_versionSwitch = $stack['switch'];
-		$this->_allupdates    = $stack['allupdates'];
-		$this->_finish        = $stack['finish'];
-		$this->_install       = $stack['install'];
-		$this->_subFiles      = $stack['subFiles'];
-		$this->_subQuery      = $stack['subQuery'];
+		$this->versionStack  = $stack['version'];
+		$this->versionSwitch = $stack['switch'];
+		$this->allupdates    = $stack['allupdates'];
+		$this->finish        = $stack['finish'];
+		$this->install       = $stack['install'];
+		$this->subFiles      = $stack['subFiles'];
+		$this->subQuery      = $stack['subQuery'];
 		$this->subSteps       = $stack['subSteps'];
-		$this->_isimport      = $stack['isimport'];
+		$this->isimport      = $stack['isimport'];
 		$this->callstack      = $stack['callstack'];
 		$this->totalSteps     = $stack['total'];
 		$this->doneSteps      = $stack['done'];
@@ -664,11 +732,13 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * Makes sure that no more than 5 seconds since the start of the timer have elapsed
 	 *
 	 * @return bool
+	 *
+	 * @since 7.1
 	 */
 	private function haveEnoughTime()
 	{
 		$now     = $this->microtime_float();
-		$elapsed = abs($now - $this->_startTime);
+		$elapsed = abs($now - $this->startTime);
 
 		return $elapsed < 2;
 	}
@@ -677,37 +747,41 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * Start the Run through the Pre Versions then SQL files then After PHP functions.
 	 *
 	 * @return bool
+	 *
+	 * @since 7.1
 	 */
 	private function RealRun()
 	{
 		$app = JFactory::getApplication();
 		$run = true;
 
-		if (!empty($this->_install))
+		if (!empty($this->install))
 		{
 			$this->running = 'Install steps';
 			$this->doneSteps++;
-			$this->install($this->_install);
-			$this->_install = array();
+			$this->install($this->install);
+			$this->install = array();
 		}
 
-		if ($this->_isimport)
+		if ($this->isimport)
 		{
 			$this->fiximport();
 			$this->running   = 'Fixing Imported Params';
-			$this->_isimport = 0;
+			$this->isimport = 0;
 			$this->doneSteps++;
 		}
 
-		if (!empty($this->_versionStack) && empty($this->_install))
+		if (!empty($this->versionStack) && empty($this->install))
 		{
-			krsort($this->_versionStack);
-			while (!empty($this->_versionStack) && $this->haveEnoughTime())
+			krsort($this->versionStack);
+
+			while (!empty($this->versionStack) && $this->haveEnoughTime())
 			{
-				$version           = array_pop($this->_versionStack);
+				$version           = array_pop($this->versionStack);
 				$this->running = $version;
 				$this->doneSteps++;
 				$run = $this->allUpdate($version);
+
 				if (!$run)
 				{
 					JFactory::getApplication()->enqueueMessage('error updating updates', 'error');
@@ -715,33 +789,34 @@ class BibleStudyModelInstall extends JModelLegacy
 			}
 		}
 
-		if ((!empty($this->_allupdates) || !empty($this->_subFiles)) && empty($this->_versionStack) && empty($this->_install))
+		if ((!empty($this->allupdates) || !empty($this->subFiles)) && empty($this->versionStack) && empty($this->install))
 		{
-			ksort($this->_allupdates);
+			ksort($this->allupdates);
 
-			while ((!empty($this->_allupdates) || !empty($this->_subFiles)) && $this->haveEnoughTime())
+			while ((!empty($this->allupdates) || !empty($this->subFiles)) && $this->haveEnoughTime())
 			{
-				$this->version = key($this->_allupdates);
+				$this->version = key($this->allupdates);
 
-				if (isset($this->_allupdates[$this->version]) && @!empty($this->_allupdates[$this->version]))
+				if (isset($this->allupdates[$this->version]) && @!empty($this->allupdates[$this->version]))
 				{
 					if (strpos($this->running, $this->version))
 					{
-						$this->totalSteps += count($this->_allupdates[$this->version]);
+						$this->totalSteps += count($this->allupdates[$this->version]);
 					}
 
 					// Used for Install array.
-					if (!is_array($this->_allupdates[$this->version]))
+					if (!is_array($this->allupdates[$this->version]))
 					{
-						$this->_allupdates[$this->version] = array($this->_allupdates[$this->version]);
+						$this->allupdates[$this->version] = array($this->allupdates[$this->version]);
 					}
-					$string = array_shift($this->_allupdates[$this->version]);
+
+					$string = array_shift($this->allupdates[$this->version]);
 
 					$this->running = $this->version . ' String: ' . $string;
 					$run    = $this->runUpdates($string);
 					$this->doneSteps++;
 				}
-				elseif (in_array($this->version, $this->_subFiles) && @empty($this->_allupdates[$this->version]))
+				elseif (in_array($this->version, $this->subFiles) && @empty($this->allupdates[$this->version]))
 				{
 					// Check for corresponding PHP file and run migration
 					$migration_file = JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/updates/' . $this->version . '.php';
@@ -757,46 +832,48 @@ class BibleStudyModelInstall extends JModelLegacy
 						return true;
 					}
 
-					if (!empty($this->subSteps) && !empty($this->_subFiles))
+					if (!empty($this->subSteps) && !empty($this->subFiles))
 					{
-						while (!empty($this->_subFiles) && $this->haveEnoughTime())
+						while (!empty($this->subFiles) && $this->haveEnoughTime())
 						{
 							$query = array();
-							$step  = $this->_versionSwitch;
-							if (!isset($this->_subQuery[$this->version][$step]) && !empty($this->subSteps[$this->version]))
+							$step  = $this->versionSwitch;
+
+							if (!isset($this->subQuery[$this->version][$step]) && !empty($this->subSteps[$this->version]))
 							{
-								$step = $this->_versionSwitch = array_shift($this->subSteps[$this->version]);
+								$step = $this->versionSwitch = array_shift($this->subSteps[$this->version]);
 								JLog::add('Change step : ' . $step, JLog::INFO, 'com_biblestudy');
 							}
 							elseif(empty($this->subSteps[$this->version]))
 							{
 								JLog::add('Unset Last Step : ' . $step, JLog::INFO, 'com_biblestudy');
 
-								$step = $this->_versionSwitch = null;
+								$step = $this->versionSwitch = null;
 								unset($this->subSteps[$this->version]);
-								unset($this->_subQuery[$this->version]);
-								unset($this->_allupdates[$this->version]);
-								if (($key = array_search($this->version, $this->_subFiles)) !== false)
+								unset($this->subQuery[$this->version]);
+								unset($this->allupdates[$this->version]);
+
+								if (($key = array_search($this->version, $this->subFiles)) !== false)
 								{
-									unset($this->_subFiles[$key]);
+									unset($this->subFiles[$key]);
 								}
 							}
 
-							if (isset($this->_subQuery[$this->version][$step]) && !empty($this->_subQuery[$this->version][$step]))
+							if (isset($this->subQuery[$this->version][$step]) && !empty($this->subQuery[$this->version][$step]))
 							{
-								$query = array_shift($this->_subQuery[$this->version][$step]);
-								$migration->query = $this->_subQuery[$this->version];
+								$query = array_shift($this->subQuery[$this->version][$step]);
+								$migration->query = $this->subQuery[$this->version];
 							}
-							elseif (isset($this->_subQuery[$this->version][$step]) && empty($this->_subQuery[$this->version][$step]))
+							elseif (isset($this->subQuery[$this->version][$step]) && empty($this->subQuery[$this->version][$step]))
 							{
-								unset($this->_subQuery[$this->version][$step]);
-								$this->_versionSwitch = null;
+								unset($this->subQuery[$this->version][$step]);
+								$this->versionSwitch = null;
 								JLog::add('Uset Sub Query if empty : ' . $step . ' ' . $this->version, JLog::INFO, 'com_biblestudy');
 							}
 
 							if (empty($step) && empty($query))
 							{
-								unset($this->_subFiles[$this->version]);
+								unset($this->subFiles[$this->version]);
 								unset($this->subSteps[$this->version]);
 								JLog::add('Uset Version in All updates : ' . $this->version, JLog::INFO, 'com_biblestudy');
 							}
@@ -808,27 +885,28 @@ class BibleStudyModelInstall extends JModelLegacy
 								// Pull back the Query form PHP file if any.
 								if (isset($migration->query) && !empty($migration->query))
 								{
-									$this->_subQuery[$this->version] = $migration->query;
+									$this->subQuery[$this->version] = $migration->query;
 								}
+
 								$queryString = null;
+
 								if (!empty($query) && is_array($query))
 								{
-
 									$queryString = (string) $query['id'];
 									$queryString = str_replace(array("\r", "\n"), array('', ' '), substr($queryString, 0, 80));
-									$queryString = ' ID:' . $queryString . ' Query count: ' . count($this->_subQuery[$this->version][$step]);
+									$queryString = ' ID:' . $queryString . ' Query count: ' . count($this->subQuery[$this->version][$step]);
 								}
+
 								JLog::add('Doing Step in ' . $migrationClass . ' Step: ' . $step . $queryString, JLog::INFO, 'com_biblestudy');
 
 								$this->doneSteps++;
 							}
 						}
-
 					}
 				}
 				else
 				{
-					unset($this->_allupdates[$this->version]);
+					unset($this->allupdates[$this->version]);
 					JLog::add('Unset Version if no steps : ' . $this->version, JLog::INFO, 'com_biblestudy');
 				}
 
@@ -843,11 +921,11 @@ class BibleStudyModelInstall extends JModelLegacy
 			}
 		}
 
-		if (!empty($this->_finish) && empty($this->_versionStack) && empty($this->_allupdates) && empty($this->_subFiles) && empty($this->_install))
+		if (!empty($this->finish) && empty($this->versionStack) && empty($this->allupdates) && empty($this->subFiles) && empty($this->install))
 		{
-			while (!empty($this->_finish) && $this->haveEnoughTime())
+			while (!empty($this->finish) && $this->haveEnoughTime())
 			{
-				$finish = array_pop($this->_finish);
+				$finish = array_pop($this->finish);
 				$this->doneSteps++;
 				$this->running = $finish;
 				$this->finish($finish);
@@ -855,41 +933,43 @@ class BibleStudyModelInstall extends JModelLegacy
 		}
 
 		if (!empty($this->query)
-			&& empty($this->_finish)
-			&& empty($this->_versionStack)
-			&& empty($this->_allupdates)
-			&& empty($this->_subFiles)
-			&& empty($this->_install) )
+			&& empty($this->finish)
+			&& empty($this->versionStack)
+			&& empty($this->allupdates)
+			&& empty($this->subFiles)
+			&& empty($this->install) )
 		{
 			krsort($this->query);
+
 			while (!empty($this->query) && $this->haveEnoughTime())
 			{
-				$this->_versionSwitch = key($this->query);
-				if (isset($this->query[$this->_versionSwitch]) && @!empty($this->query[$this->_versionSwitch]))
+				$this->versionSwitch = key($this->query);
+
+				if (isset($this->query[$this->versionSwitch]) && @!empty($this->query[$this->versionSwitch]))
 				{
-					$version = array_pop($this->query[$this->_versionSwitch]);
+					$version = array_pop($this->query[$this->versionSwitch]);
 					$this->doneSteps++;
 					$this->running = 'Fix Assets';
 					$asset = new JBSMAssets;
-					$asset->fixAssets($this->_versionSwitch, $version);
+					$asset->fixAssets($this->versionSwitch, $version);
 				}
 				else
 				{
-					unset($this->query[$this->_versionSwitch]);
+					unset($this->query[$this->versionSwitch]);
 				}
 			}
 		}
 
 		if (empty($this->query)
-			&& empty($this->_finish)
-			&& empty($this->_versionStack)
-			&& empty($this->_allupdates)
-			&& empty($this->_subFiles)
-			&& empty($this->_install))
+			&& empty($this->finish)
+			&& empty($this->versionStack)
+			&& empty($this->allupdates)
+			&& empty($this->subFiles)
+			&& empty($this->install))
 		{
 			// Just finished
 			$this->resetStack();
-			$this->running = JText::_('JBS_MIG_FINISHED');
+			$this->running = JText::_('JBS_MIGfinishED');
 
 			return false;
 		}
@@ -904,6 +984,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * @param   array  $files  List of installs to install
 	 *
 	 * @return bool
+	 *
+	 * @since 7.1
 	 */
 	private function install($files = array('install', 'install-defaults'))
 	{
@@ -934,8 +1016,9 @@ class BibleStudyModelInstall extends JModelLegacy
 				// No queries to process
 				return 0;
 			}
+
 			$this->totalSteps += count($queries);
-			$this->_allupdates = array_merge($this->_allupdates, $queries);
+			$this->allupdates = array_merge($this->allupdates, $queries);
 
 		}
 
@@ -946,6 +1029,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * Uninstall of JBSM
 	 *
 	 * @return bool
+	 *
+	 * @since 7.1
 	 */
 	public function uninstall()
 	{
@@ -953,6 +1038,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		$table = $this->_db->getPrefix() . 'bsms_admin';
 		$this->_db->setQuery("SHOW TABLES LIKE {$this->_db->quote($table)}");
 		$drop_result = '';
+
 		if ($this->_db->loadResult())
 		{
 			$query = $this->_db->getQuery(true);
@@ -962,6 +1048,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			$this->_db->setQuery($query);
 			$adminsettings = $this->_db->loadObject();
 			$drop_tables   = $adminsettings->drop_tables;
+
 			if ($drop_tables > 0)
 			{
 				// We must remove the assets manually each time
@@ -972,6 +1059,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				$this->_db->setQuery($query);
 				$parent_id = $this->_db->loadResult();
 				$query     = $this->_db->getQuery(true);
+
 				if ($parent_id != '0')
 				{
 					$query->delete()
@@ -981,6 +1069,7 @@ class BibleStudyModelInstall extends JModelLegacy
 					$this->_db->setQuery($query);
 					$this->_db->execute();
 				}
+
 				$query = $this->_db->getQuery(true);
 				$query->delete()
 					->from('#__assets')
@@ -995,10 +1084,13 @@ class BibleStudyModelInstall extends JModelLegacy
 				{
 					die('no uninstall-dbtables.sql');
 				}
+
 				$queries = $this->_db->splitSql($buffer);
+
 				foreach ($queries as $querie)
 				{
 					$querie = trim($querie);
+
 					if ($querie != '' && $querie{0} != '#' && $querie != '`')
 					{
 						$this->_db->setQuery($querie);
@@ -1029,6 +1121,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * @param   string  $step  Step to process
 	 *
 	 * @return boolean
+	 *
+	 * @since 7.1
 	 */
 	private function finish($step)
 	{
@@ -1040,7 +1134,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			case 'updateversion':
 				$update = $this->getUpdateVersion();
 				/* Set new Schema Version */
-				$run           = $this->setSchemaVersion($update, $this->_biblestudyEid);
+				$run           = $this->setSchemaVersion($update, $this->biblestudyEid);
 				$this->running = 'Update Version';
 				break;
 			case 'fixassets':
@@ -1095,6 +1189,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * @param   object  $message  Install object
 	 *
 	 * @return void
+	 *
+	 * @since 7.1
 	 */
 	public function postinstall_messages($message)
 	{
@@ -1106,8 +1202,8 @@ class BibleStudyModelInstall extends JModelLegacy
 			->where('`name` = "com_biblestudy"');
 		$this->_db->setQuery($query);
 		$eid                   = $this->_db->loadResult();
-		$this->_biblestudyEid  = $eid;
-		$message->extension_id = $this->_biblestudyEid;
+		$this->biblestudyEid  = $eid;
+		$message->extension_id = $this->biblestudyEid;
 		$this->_db->insertObject('#__postinstall_messages', $message);
 	}
 
@@ -1115,6 +1211,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * Returns Update Version form Table
 	 *
 	 * @return string Returns the Last Version in the #_bsms_update table
+	 *
+	 * @since 7.1
 	 */
 	private function getUpdateVersion()
 	{
@@ -1134,20 +1232,23 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * Fix Import problem
 	 *
 	 * @return bool True if fix complete, False if failure
+	 *
+	 * @since 7.1
 	 */
 	private function fiximport()
 	{
 		$tables = JBSMDbHelper::getObjects();
 		$set    = false;
+
 		foreach ($tables as $table)
 		{
 			if (strpos($table['name'], '_bsms_timeset') == false)
 			{
-
 				$query = $this->_db->getQuery(true);
 				$query->select('*')->from($table);
 				$this->_db->setQuery($query);
 				$data = $this->_db->loadObjectList();
+
 				foreach ($data as $row)
 				{
 					if (isset($row->params))
@@ -1155,16 +1256,19 @@ class BibleStudyModelInstall extends JModelLegacy
 						$row->params = stripslashes($row->params);
 						$set         = true;
 					}
+
 					if (isset($row->metadata))
 					{
 						$row->metadata = stripslashes($row->metadata);
 						$set           = true;
 					}
+
 					if (isset($row->stylecode))
 					{
 						$row->stylecode = stripslashes($row->stylecode);
 						$set            = true;
 					}
+
 					if ($set)
 					{
 						$this->_db->updateObject($table['name'], $row, 'id');
@@ -1181,7 +1285,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	 *
 	 * @return boolean
 	 *
-	 * @since 7.0.4
+	 * @since 7.1.4
 	 */
 	private function allUpdate($value)
 	{
@@ -1190,7 +1294,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		// Graceful exit and rollback if read not successful
 		if ($buffer === false)
 		{
-			JFactory::getApplication()->enqueueMessage(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_READBUFFER'), 'WARNING');
+			JFactory::getApplication()->enqueueMessage(JText::sprintf('JLIBinstallER_ERROR_SQL_READBUFFER'), 'WARNING');
 
 			return false;
 		}
@@ -1202,11 +1306,13 @@ class BibleStudyModelInstall extends JModelLegacy
 		{
 			// No queries to process
 			JFactory::getApplication()->enqueueMessage('No Queries', 'error');
+
 			return false;
 		}
+
 		$this->totalSteps += count($queries);
 
-		$this->_allupdates = array_merge($this->_allupdates, array($value => $queries));
+		$this->allupdates = array_merge($this->allupdates, array($value => $queries));
 
 		// Build php steps now.
 		$migration_file = JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/updates/' . $value . '.php';
@@ -1215,9 +1321,11 @@ class BibleStudyModelInstall extends JModelLegacy
 		{
 			require_once $migration_file;
 			$migrationClass = "Migration" . str_ireplace(".", '', $value);
+
 			if (class_exists($migrationClass))
 			{
 				$migration       = new $migrationClass;
+
 				if (isset($migration->steps))
 				{
 					$steps = $migration->steps;
@@ -1225,12 +1333,14 @@ class BibleStudyModelInstall extends JModelLegacy
 
 					// If Steps build is mandatory.
 					$migration->build($this->_db);
+
 					if (isset($migration->count))
 					{
 						$this->totalSteps += (int) $migration->count;
 					}
+
 					$this->subSteps  = array_merge($this->subSteps, array($value => $steps));
-					$this->_subQuery = array_merge($this->_subQuery, array($value => $migration->query));
+					$this->subQuery = array_merge($this->subQuery, array($value => $migration->query));
 				}
 				else
 				{
@@ -1249,6 +1359,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * @param   string  $string  String of SQL to process.
 	 *
 	 * @return bool
+	 *
+	 * @since 7.1
 	 */
 	private function runUpdates($string)
 	{
@@ -1272,8 +1384,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			{
 				$queryString = (string) $string;
 				$queryString = str_replace(array("\r", "\n"), array('', ' '), substr($queryString, 0, 80));
-				JLog::add(JText::sprintf('JLIB_INSTALLER_UPDATE_LOG_QUERY', $this->running, $queryString), JLog::INFO, 'com_biblestudy');
-
+				JLog::add(JText::sprintf('JLIBinstallER_UPDATE_LOG_QUERY', $this->running, $queryString), JLog::INFO, 'com_biblestudy');
 			}
 		}
 
@@ -1284,6 +1395,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * Cleanup postInstall before migration
 	 *
 	 * @return void
+	 *
+	 * @since 7.1
 	 */
 	private function postinstallclenup()
 	{
@@ -1408,6 +1521,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * Old Update URL's
 	 *
 	 * @return array
+	 *
+	 * @since 7.1
 	 */
 	public function rmoldurl()
 	{

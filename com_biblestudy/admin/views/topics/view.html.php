@@ -92,6 +92,7 @@ class BiblestudyViewTopics extends JViewLegacy
 
 			return false;
 		}
+
 		$modelView   = $this->getModel();
 		$this->items = $modelView->getTranslated($items);
 

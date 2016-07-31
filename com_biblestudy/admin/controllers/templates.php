@@ -189,7 +189,8 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		$db->setQuery($query, 0, $tc);
 		$data = $db->loadObjectList();
 
-		foreach ($data AS $tpcode):
+		foreach ($data AS $tpcode)
+		{
 			// Preload variables for templates
 			$type = $tpcode->type;
 
@@ -223,10 +224,8 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 					// Module
 					$moduletemplate = $tpcode->filename;
 					break;
-
 			}
-
-		endforeach;
+		}
 
 		// Get new record insert to change name
 		$query = $db->getQuery(true);

@@ -22,13 +22,14 @@ use Joomla\Registry\Registry;
  */
 class JBSMSerieslist extends JBSMListing
 {
-
 	/**
 	 * Get Series ElementNumber
 	 *
 	 * @param   string  $subcustom  ?
 	 *
 	 * @return int
+	 *
+	 * @since    8.0
 	 */
 	public function getseriesElementnumber($subcustom)
 	{
@@ -76,6 +77,8 @@ class JBSMSerieslist extends JBSMListing
 	 * @param   object                    $template  Template
 	 *
 	 * @return object
+	 *
+	 * @since    8.0
 	 */
 	public function getSerieslistExp($row, $params, $template)
 	{
@@ -101,6 +104,8 @@ class JBSMSerieslist extends JBSMListing
 	 * @param   object                    $template  Template
 	 *
 	 * @return object
+	 *
+	 * @since    8.0
 	 */
 	public function getSeriesDetailsExp($row, $params, $template)
 	{
@@ -126,6 +131,8 @@ class JBSMSerieslist extends JBSMListing
 	 * @param   object                    $template  Template
 	 *
 	 * @return string
+	 *
+	 * @since    8.0
 	 */
 	public function getSeriesstudiesExp($id, $params, $template)
 	{
@@ -137,6 +144,7 @@ class JBSMSerieslist extends JBSMListing
 		{
 			$limit = ' LIMIT ' . $params->get('series_detail_limit');
 		}
+
 		if ($nolimit == 1)
 		{
 			$limit = '';
@@ -160,6 +168,7 @@ class JBSMSerieslist extends JBSMListing
 				$studies .= '<div>';
 				break;
 		}
+
 		echo $params->get('series_headercode');
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
@@ -169,7 +178,6 @@ class JBSMSerieslist extends JBSMListing
 
 		for ($i = 0; $i < $count; $i++)
 		{
-
 			if ($items[$i]->access > 1)
 			{
 				if (!in_array($items[$i]->access, $groups))
@@ -178,6 +186,7 @@ class JBSMSerieslist extends JBSMListing
 				}
 			}
 		}
+
 		foreach ($items AS $row)
 		{
 			$studies .= $this->getListingExp($row, $params, $params->get('seriesdetailtemplateid'));
@@ -197,10 +206,12 @@ class JBSMSerieslist extends JBSMListing
 				$studies .= '</div>';
 				break;
 		}
+
 		echo $params->get('series_headercode');
 
 		return $studies;
 	}
+
 	/**
 	 * Get SeriesStudies DBO
 	 *
@@ -209,6 +220,8 @@ class JBSMSerieslist extends JBSMListing
 	 * @param   string    $limit   Limit of Records
 	 *
 	 * @return array
+	 *
+	 * @since    8.0
 	 */
 	public function getSeriesstudiesDBO($id, $params, $limit = null)
 	{
@@ -261,5 +274,4 @@ class JBSMSerieslist extends JBSMListing
 
 		return $items;
 	}
-
 }

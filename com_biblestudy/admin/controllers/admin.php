@@ -216,7 +216,6 @@ class BiblestudyControllerAdmin extends JControllerForm
 							$db->execute();
 							$rows = $db->getAffectedRows();
 							$added = $added + $rows;
-
 						}
 						catch (RuntimeException $e)
 						{

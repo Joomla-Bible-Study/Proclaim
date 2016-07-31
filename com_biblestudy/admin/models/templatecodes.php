@@ -18,11 +18,12 @@ defined('_JEXEC') or die;
  */
 class BiblestudyModelTemplatecodes extends JModelList
 {
-
 	/**
 	 * Constructor.
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
+	 *
+	 * @since 7.1
 	 */
 	public function __construct($config = array())
 	{
@@ -51,7 +52,6 @@ class BiblestudyModelTemplatecodes extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-
 		// Adjust the context to support modal layouts.
 		$input  = new JInput;
 		$layout = $input->get('layout');
@@ -74,10 +74,11 @@ class BiblestudyModelTemplatecodes extends JModelList
 	 * Get list query
 	 *
 	 * @return array
+	 *
+	 * @since 7.1
 	 */
 	protected function getListQuery()
 	{
-
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
 
@@ -116,5 +117,4 @@ class BiblestudyModelTemplatecodes extends JModelList
 
 		return $query;
 	}
-
 }

@@ -20,7 +20,6 @@ use Joomla\Registry\Registry;
  */
 class JBSMDownload
 {
-
 	/**
 	 * Method to send file to browser
 	 *
