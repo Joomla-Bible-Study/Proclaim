@@ -20,11 +20,11 @@ use Joomla\Registry\Registry;
  */
 class TableLocation extends JTable
 {
-
 	/**
 	 * Primary Key
 	 *
 	 * @var int
+	 * @since    7.0.0
 	 */
 	public $id = null;
 
@@ -32,6 +32,7 @@ class TableLocation extends JTable
 	 * Published
 	 *
 	 * @var int
+	 * @since    7.0.0
 	 */
 	public $published = 1;
 
@@ -39,6 +40,7 @@ class TableLocation extends JTable
 	 * Location Text
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $location_text = null;
 
@@ -46,6 +48,8 @@ class TableLocation extends JTable
 	 * Constructor
 	 *
 	 * @param   JDatabaseDriver  &$db  Database connector object
+	 *
+	 * @since    7.0.0
 	 */
 	public function __construct(&$db)
 	{
@@ -159,5 +163,4 @@ class TableLocation extends JTable
 
 		return $asset->id;
 	}
-
 }
