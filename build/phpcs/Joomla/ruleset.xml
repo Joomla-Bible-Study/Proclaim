@@ -2,6 +2,16 @@
 <ruleset name="Joomla">
 	<description>The Joomla coding standard.</description>
 
+	<!-- Used for JBSM Exlutions of libraries -->
+	<exclude-pattern type="relative">com_biblestudy/test/*</exclude-pattern>
+	<exclude-pattern type="relative">com_biblestudy/admin/addons/servers/amazonS3/S3.class.php</exclude-pattern>
+	<exclude-pattern type="relative">*/tmpl/*</exclude-pattern>
+	<exclude-pattern type="relative">*/plupload/*</exclude-pattern>
+	<exclude-pattern type="relative">*/build/*</exclude-pattern>
+	<exclude-pattern type="relative">vendor/*</exclude-pattern>
+	<exclude-pattern type="relative">bin/*</exclude-pattern>
+	<exclude-pattern type="relative">.joomla-dev/*</exclude-pattern>
+
 	<!-- Include all sniffs in an external standard directory -->
 
 	<!-- Include some additional sniffs from the Generic standard -->
@@ -42,14 +52,14 @@
 
 	<!-- Include some additional sniffs from the Zend standard -->
 	<rule ref="Zend.Files.ClosingTag" />
-	
+
 	<!-- Use Unix newlines -->
 	<rule ref="Generic.Files.LineEndings">
 		<properties>
 			<property name="eolChar" value="\n" />
 		</properties>
 	</rule>
-	
+
 	<!-- Lines can be 150 chars long, but never show errors -->
 	<rule ref="Generic.Files.LineLength">
 		<properties>
