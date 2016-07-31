@@ -20,7 +20,6 @@ use Joomla\Registry\Registry;
  */
 class JBSMDownload
 {
-
 	/**
 	 * Method to send file to browser
 	 *
@@ -52,7 +51,6 @@ class JBSMDownload
 		$registry->loadString($template->params);
 		$params = $registry;
 
-		$protocol = $params->get('protocol', 'http://');
 		$query    = $db->getQuery(true);
 		$query->select('#__bsms_mediafiles.*,'
 			. ' #__bsms_servers.id AS ssid, #__bsms_servers.params AS sparams')
@@ -79,17 +77,14 @@ class JBSMDownload
 			}
 		}
 
-		$jweb  = new JApplicationWeb;
+		$jweb = new JApplicationWeb;
 		$jweb->clearHeaders();
 
-		$registry      = new Registry;
+		$registry = new Registry;
 		$registry->loadString($media->params);
 		$params->merge($registry);
 
-		$filename      = $params->get('filename');
-		$filename      = ltrim($filename, '/');
-		$media->spath  = rtrim($media->spath, '/');
-		$download_file = $protocol . $media->spath . '/' . $filename;
+		$download_file = JBSMHelper::MediaBuildUrl($media->spath, $params->get('filename'), $params, true);
 
 		/** @var $download_file object */
 		$getsize = JBSMHelper::getRemoteFileSize($download_file);
@@ -117,7 +112,7 @@ class JBSMDownload
 
 		header('Content-Description: File Transfer');
 		header('Content-Type: application/octet-stream');
-		header('Content-Disposition: attachment; filename="' . basename($filename) . '"');
+		header('Content-Disposition: attachment; filename="' . basename($params->get('filename')) . '"');
 		header('Expires: 0');
 		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 		header("Cache-Control: private", false);

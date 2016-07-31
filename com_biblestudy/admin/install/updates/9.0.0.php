@@ -25,10 +25,10 @@ class Migration900
 	public $query = array();
 
 	// Internal holder
-	private $_media = array();
+	private $media = array();
 
 	// Internal holder
-	private $_servers = array();
+	private $servers = array();
 
 	// Count of processes.
 	public $count = 0;
@@ -39,6 +39,8 @@ class Migration900
 	 * @param   JDatabaseDriver  $db  Joomla DateBase Driver
 	 *
 	 * @return  null
+	 *
+	 * @since 9.0.0
 	 */
 	public function build($db)
 	{
@@ -46,7 +48,8 @@ class Migration900
 		$query = $db->getQuery(true)->select('*')->from('#__bsms_servers');
 		$db->setQuery($query);
 		$servers = $db->loadObjectList();
-		$this->_servers = array_merge($this->_servers, $servers);
+		$this->servers = array_merge($this->servers, $servers);
+
 		foreach ($servers as $server)
 		{
 			// Find media files for server.
@@ -55,7 +58,7 @@ class Migration900
 					->where('server = ' . $server->id);
 			$db->setQuery($query);
 			$mediaFiles   = $db->loadObjectList();
-			$this->_media = array_merge($this->_media, $mediaFiles);
+			$this->media = array_merge($this->media, $mediaFiles);
 		}
 
 		// No Server related media files to migrate.
@@ -66,11 +69,11 @@ class Migration900
 		$db->setQuery($query);
 		$mediaFiles2  = $db->loadObjectList();
 
-		$this->_media = array_merge($this->_media, $mediaFiles2);
-		$this->count  = count($this->_media);
-		$this->count += count($this->_servers);
+		$this->media = array_merge($this->media, $mediaFiles2);
+		$this->count  = count($this->media);
+		$this->count += count($this->servers);
 
-		$this->query = array_merge(array('servers' => $this->_servers), array('media' => $this->_media));
+		$this->query = array_merge(array('servers' => $this->servers), array('media' => $this->media));
 	}
 
 	/**
@@ -80,11 +83,14 @@ class Migration900
 	 * @param   array            $server  Server to process
 	 *
 	 * @return bool
+	 *
+	 * @since 9.0.0
 	 */
 	public function servers($db, $server)
 	{
 		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_biblestudy/tables');
 		$server = (object) $server;
+
 		if (!isset($server->id))
 		{
 			return true;
@@ -140,6 +146,8 @@ class Migration900
 	 * @return bool
 	 *
 	 * @throws string If problem with media save.
+	 *
+	 * @since 9.0.0
 	 */
 	public function media($db, $media)
 	{
@@ -147,6 +155,7 @@ class Migration900
 		{
 			return true;
 		}
+
 		$mediaFile = (object) $media;
 		$registry = new Registry;
 		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_biblestudy/tables');
@@ -208,6 +217,7 @@ class Migration900
 		$mimage = null;
 
 		$folderpath = '';
+
 		if ($mediaFile->path > 0)
 		{
 			$query = $db->getQuery(true);
@@ -232,22 +242,27 @@ class Migration900
 			else
 			{
 				$mimage = 'images/biblestudy/' . $mediaImage->path2;
+
 				if (strpos($mediaImage->path2, '/') !== false)
 				{
 					$mimage = $mediaImage->path2;
 				}
 			}
 		}
+
 		$registry->loadString($mediaFile->params);
 		$params = $registry->toObject();
 
 		$params->media_image = $mimage;
 		$params->media_text  = $mediaImage->media_alttext;
+
 		if (!empty($mimtype))
 		{
 			$params->mime_type = $mimtype->mimetype;
 		}
+
 		$params->special = $mediaFile->special;
+
 		if (!empty($mediaFile->filename))
 		{
 			$params->filename = $folderpath . $mediaFile->filename;
@@ -256,10 +271,12 @@ class Migration900
 		{
 			$params->filename = '';
 		}
+
 		if ($mediaFile->player == '100')
 		{
 			$mediaFile->player = '';
 		}
+
 		$params->player        = $mediaFile->player;
 		$params->size          = $mediaFile->size;
 		$params->mediacode     = $mediaFile->mediacode;
@@ -289,6 +306,7 @@ class Migration900
 		$newMediaFile->params   = $registry->toString();
 		$newMediaFile->metadata = json_encode($metadata);
 		$newMediaFile->id       = null;
+
 		if (!$newMediaFile->store())
 		{
 			throw new Exception('Bad update of media');
@@ -306,10 +324,11 @@ class Migration900
 	 * @param   JDatabaseDriver  $db  Joomla Database driver
 	 *
 	 * @return bool
+	 *
+	 * @since 9.0.0
 	 */
 	public function up($db)
 	{
-
 		// Delete unused columns
 		$columns = array('media_image', 'special', 'filename', 'size', 'mime_type', 'mediacode', 'link_type',
 			'docMan_id', 'article_id', 'virtueMart_id', 'player', 'popup', 'server', 'internal_viewer', 'path');
@@ -359,19 +378,22 @@ class Migration900
 	 * @param   JDatabaseDriver  $db  Joomla Database driver
 	 *
 	 * @return bool
+	 *
+	 * @since 9.0.0
 	 */
 	public function migrateTemplateLists($db)
 	{
-
 		$query = $db->getQuery(true);
 		$query->select('*')
 			->from('#__bsms_templates');
 		$db->setQuery($query);
 		$data = $db->loadObjectList();
+
 		foreach ($data as $d)
 		{
 			$registry = new Registry;
 			$registry->loadString($d->params);
+
 			if ($registry->get('row1col1') > 0)
 			{
 				$row      = 1;
@@ -379,6 +401,7 @@ class Migration900
 				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
+
 			if ($registry->get('row1col2') > 0)
 			{
 				$row      = 1;
@@ -386,6 +409,7 @@ class Migration900
 				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
+
 			if ($registry->get('row1col3') > 0)
 			{
 				$row      = 1;
@@ -393,6 +417,7 @@ class Migration900
 				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
+
 			if ($registry->get('row1col4') > 0)
 			{
 				$row      = 1;
@@ -400,6 +425,7 @@ class Migration900
 				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
+
 			if ($registry->get('row2col1') > 0)
 			{
 				$row      = 2;
@@ -407,6 +433,7 @@ class Migration900
 				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
+
 			if ($registry->get('row2col2') > 0)
 			{
 				$row      = 2;
@@ -414,6 +441,7 @@ class Migration900
 				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
+
 			if ($registry->get('row2col3') > 0)
 			{
 				$row      = 2;
@@ -421,6 +449,7 @@ class Migration900
 				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
+
 			if ($registry->get('row2col4') > 0)
 			{
 				$row      = 2;
@@ -428,6 +457,7 @@ class Migration900
 				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
+
 			if ($registry->get('row3col1') > 0)
 			{
 				$row      = 3;
@@ -435,6 +465,7 @@ class Migration900
 				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
+
 			if ($registry->get('row3col2') > 0)
 			{
 				$row      = 3;
@@ -442,6 +473,7 @@ class Migration900
 				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
+
 			if ($registry->get('row3col3') > 0)
 			{
 				$row      = 3;
@@ -449,6 +481,7 @@ class Migration900
 				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
+
 			if ($registry->get('row3col4') > 0)
 			{
 				$row      = 3;
@@ -456,6 +489,7 @@ class Migration900
 				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
+
 			if ($registry->get('row4col1') > 0)
 			{
 				$row      = 4;
@@ -463,6 +497,7 @@ class Migration900
 				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
+
 			if ($registry->get('row4col2') > 0)
 			{
 				$row      = 4;
@@ -470,6 +505,7 @@ class Migration900
 				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
+
 			if ($registry->get('row4col3') > 0)
 			{
 				$row      = 4;
@@ -477,6 +513,7 @@ class Migration900
 				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
+
 			if ($registry->get('row4col4') > 0)
 			{
 				$row      = 4;
@@ -484,6 +521,7 @@ class Migration900
 				$return   = $this->changeSetting($row, $col, $registry);
 				$registry = $return;
 			}
+
 			if ($registry->get('serieselement1') > 0)
 			{
 				$element     = $registry->get('serieselement1');
@@ -493,6 +531,7 @@ class Migration900
 				$registry->set($elementname . 'colspan', 6);
 				$registry->set($elementname . 'linktype', $registry->get('serieslink1'));
 			}
+
 			if ($registry->get('serieselement2') > 0)
 			{
 				$element     = $registry->get('serieselement2');
@@ -502,6 +541,7 @@ class Migration900
 				$registry->set($elementname . 'colspan', 6);
 				$registry->set($elementname . 'linktype', $registry->get('serieslink2'));
 			}
+
 			if ($registry->get('serieselement3') > 0)
 			{
 				$element     = $registry->get('serieselement3');
@@ -511,6 +551,7 @@ class Migration900
 				$registry->set($elementname . 'colspan', 6);
 				$registry->set($elementname . 'linktype', $registry->get('serieslink3'));
 			}
+
 			if ($registry->get('serieselement4') > 0)
 			{
 				$element     = $registry->get('serieselement4');
@@ -520,13 +561,14 @@ class Migration900
 				$registry->set($elementname . 'colspan', 6);
 				$registry->set($elementname . 'linktype', $registry->get('serieslink4'));
 			}
+
 			JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
 			$table = JTable::getInstance('template', 'Table');
 			$table->load($d->id, false);
 			$table->bind(array('params' => $registry->toString()));
 			$table->store();
-
 		}
+
 		return true;
 	}
 
@@ -536,13 +578,14 @@ class Migration900
 	 * @param   int  $element  ?
 	 *
 	 * @return bool|string
+	 *
+	 * @since 9.0.0
 	 */
 	public function testingMigration($element)
 	{
 		$elementText = $this->element($element);
 
 		return $elementText;
-
 	}
 
 	/**
@@ -551,6 +594,8 @@ class Migration900
 	 * @param   int  $elementNumber  Number to stirng
 	 *
 	 * @return bool|string
+	 *
+	 * @since 9.0.0
 	 */
 	private function element($elementNumber)
 	{
@@ -620,6 +665,7 @@ class Migration900
 				$element = 'customtext';
 				break;
 		}
+
 		if (isset($element))
 		{
 			return $element;
@@ -636,10 +682,13 @@ class Migration900
 	 * @param   int  $element  ID
 	 *
 	 * @return string
+	 *
+	 * @since 9.0.0
 	 */
 	private function serieselement($element)
 	{
 		$return = null;
+
 		switch ($element)
 		{
 			case 1:
@@ -675,7 +724,9 @@ class Migration900
 	 * @param   int       $col       ID
 	 * @param   Registry  $registry  Strings for Registry
 	 *
-	 * @return bool
+	 * @return Registry
+	 *
+	 * @since 9.0.0
 	 */
 	private function changeSetting($row, $col, $registry)
 	{
@@ -695,6 +746,8 @@ class Migration900
 	 * @param   JDatabaseDriver  $db  Joomla Database driver
 	 *
 	 * @return bool
+	 *
+	 * @since 9.0.0
 	 */
 	public function removeExpert($db)
 	{
@@ -706,10 +759,12 @@ class Migration900
 		$db->setQuery($query);
 		$data       = $db->loadObjectList();
 		$filenumber = 1;
+
 		foreach ($data as $d)
 		{
 			$registry = new Registry;
 			$registry->loadString($d->params);
+
 			if ($registry->get('useexpert_list') > 0)
 			{
 				$dataheaderlist = $registry->get('headercode');
@@ -730,6 +785,7 @@ class Migration900
 				$db->insertObject('#__bsms_templatecode', $profile);
 				$registry->set('sermonstemplate', $filename);
 			}
+
 			if ($registry->get('useexpert_details') > 0)
 			{
 				$dataitemlist = $registry->get('study_detailtemplate');
@@ -747,6 +803,7 @@ class Migration900
 				$db->insertObject('#__bsms_templatecode', $profile);
 				$registry->set('sermontemplate', $filename);
 			}
+
 			if ($registry->get('useexpert_teacherlist') > 0)
 			{
 				$dataheaderlist = $registry->get('teacher_headercode');
@@ -775,6 +832,7 @@ class Migration900
 				$db->insertObject('#__bsms_templatecode', $profile);
 				$registry->set('teacherstemplate', $filename);
 			}
+
 			if ($registry->get('useexpert_teacherdetail') > 0)
 			{
 				$dataitemlist = $registry->get('teacher_detailtemplate');
@@ -794,6 +852,7 @@ class Migration900
 				$db->insertObject('#__bsms_templatecode', $profile);
 				$registry->set('teachertemplate', $filename);
 			}
+
 			JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
 			$table = JTable::getInstance('template', 'Table');
 			$table->load($d->id, false);
@@ -811,6 +870,8 @@ class Migration900
 	 * @param   string  $item  String to replace
 	 *
 	 * @return mixed
+	 *
+	 * @since 9.0.0
 	 */
 	private function itemReplace($item)
 	{
@@ -865,10 +926,13 @@ class Migration900
 	 * @param   JDatabaseDriver  $db       Data bass driver
 	 *
 	 * @return void
+	 *
+	 * @since 9.0.0
 	 */
 	private function deleteColumns($table, $columns, $db)
 	{
 		$columns2 = $db->getTableColumns($table);
+
 		foreach ($columns as $column)
 		{
 			if (isset($columns2[$column]))
@@ -886,6 +950,8 @@ class Migration900
 	 * @param   JDatabaseDriver  $db     Joomla Database driver
 	 *
 	 * @return void
+	 *
+	 * @since 9.0.0
 	 */
 	private function deleteTable($table, $db)
 	{
@@ -899,6 +965,8 @@ class Migration900
 	 * @param   JDatabaseDriver  $db  Joomla Database driver
 	 *
 	 * @return void
+	 *
+	 * @since 9.0.0
 	 */
 	public function updateTemplates($db)
 	{
@@ -907,6 +975,7 @@ class Migration900
 			->from('#__bsms_templates');
 		$db->setQuery($query);
 		$data = $db->loadObjectList();
+
 		foreach ($data as $d)
 		{
 			$registry = new Registry;
@@ -1303,5 +1372,4 @@ class Migration900
 
 		return;
 	}
-
 }

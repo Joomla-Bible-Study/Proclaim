@@ -22,8 +22,10 @@ class BiblestudyModelLocations extends JModelList
 	 * Number of Deletes
 	 *
 	 * @var int
+	 *
+	 * @since 7.0
 	 */
-	private $_deletes;
+	private $deletes;
 
 	/**
 	 * Constructor.
@@ -52,18 +54,20 @@ class BiblestudyModelLocations extends JModelList
 	 * Get Deletes
 	 *
 	 * @return object
+	 *
+	 * @since 7.0
 	 */
 	public function getDeletes()
 	{
-		if (empty($this->_deletes))
+		if (empty($this->deletes))
 		{
-			$query          = 'SELECT allow_deletes'
+			$query = 'SELECT allow_deletes'
 				. ' FROM #__bsms_admin'
 				. ' WHERE id = 1';
-			$this->_deletes = $this->_getList($query);
+			$this->deletes = $this->_getList($query);
 		}
 
-		return $this->_deletes;
+		return $this->deletes;
 	}
 
 	/**
@@ -84,7 +88,6 @@ class BiblestudyModelLocations extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-
 		// Adjust the context to support modal layouts.
 		$input  = new JInput;
 		$layout = $input->get('layout');
@@ -177,5 +180,4 @@ class BiblestudyModelLocations extends JModelList
 
 		return $query;
 	}
-
 }

@@ -10,6 +10,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
+
 /**
  * Core Bible Study Helper
  *
@@ -22,6 +24,8 @@ class JBSMHelper
 	 * Extension Name
 	 *
 	 * @var string
+	 *
+	 * @since 8.0.0
 	 */
 	public static $extension = 'com_biblestudy';
 
@@ -33,6 +37,8 @@ class JBSMHelper
 	 * @param   TableTemplate             $template  ID
 	 *
 	 * @return string
+	 *
+	 * @since  9.0.0
 	 */
 	public static function getTooltip($row, $params, $template)
 	{
@@ -63,6 +69,8 @@ class JBSMHelper
 	 * @return string
 	 *
 	 * @deprecated 7.1.8
+	 *
+	 * @since 8.2.0
 	 */
 	public static function getShowhide()
 	{
@@ -88,6 +96,8 @@ class JBSMHelper
 	 * @param   string  $url  URL
 	 *
 	 * @return  int|boolean  Return size or false read.
+	 *
+	 * @since 9.0.0
 	 */
 	public static function getRemoteFileSize($url)
 	{
@@ -99,6 +109,7 @@ class JBSMHelper
 		{
 			$fp = @fsockopen($host, 80, $errno, $errstr, 20);
 		}
+
 		if (!$fp)
 		{
 			return false;
@@ -115,6 +126,7 @@ class JBSMHelper
 				$headers .= @fgets($fp, 128);
 			}
 		}
+
 		@fclose($fp);
 		$return      = false;
 		$arr_headers = explode("\n", $headers);
@@ -136,4 +148,41 @@ class JBSMHelper
 		return (int) $return;
 	}
 
+	/**
+	 * Media Build URL Fix up for '/' and protical.
+	 *
+	 * @param   string    $spath        Server Path
+	 * @param   string    $path         File
+	 * @param   Registry  $params       Paramitors.
+	 * @param   bool      $setProtical  True add protical els no
+	 *
+	 * @return string Completed path.
+	 *
+	 * @since 9.0.3
+	 */
+	public static function MediaBuildUrl ($spath, $path, $params, $setProtical = false)
+	{
+		$spath = rtrim($spath, '/');
+
+		// Check to make sure a '/' is not in the start of the path.
+		if (!JBSMBibleStudyHelper::endsWith($spath, '/')
+			&& !JBSMBibleStudyHelper::startsWith($path, '/')
+			&& !substr_count($path, '://')
+			&& !substr_count($path, '//'))
+		{
+			$path  = ltrim($path, '/');
+		}
+
+		if (!substr_count($path, '://') && !substr_count($path, '//') && $setProtical)
+		{
+			$protocol = $params->get('protocol', '//');
+			$path     = $protocol . $spath . '/' . $path;
+		}
+		elseif (!substr_count($path, '://'))
+		{
+			$path = $spath . '/' . $path;
+		}
+
+		return $path;
+	}
 }

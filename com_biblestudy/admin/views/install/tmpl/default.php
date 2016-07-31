@@ -39,7 +39,7 @@ else
 <script type="text/javascript" language="javascript">
 	if (typeof jQuery == 'function') {
 		if (typeof jQuery.ui == 'object') {
-			jQuery('#nojquerywarning'). css('display', 'none');
+			jQuery('#nojquerywarning').css('display', 'none');
 		}
 	}
 </script>
@@ -60,7 +60,8 @@ else
 		<input type="hidden" name="task" value="install.browse"/>
 	<?php }
 	else
-	{ ?>
+	{
+		?>
 		<input type="hidden" name="task" value="install.run"/>
 	<?php } ?>
 	<input type="hidden" name="<?php echo JFactory::getSession()->getFormToken() ?>" value="1"/>

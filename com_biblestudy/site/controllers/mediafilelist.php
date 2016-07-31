@@ -18,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyControllerMediafilelist extends JControllerAdmin
 {
-
 	/**
 	 * View item
 	 *
@@ -59,5 +58,4 @@ class BiblestudyControllerMediafilelist extends JControllerAdmin
 
 		return $model;
 	}
-
 }

@@ -18,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyModelComment extends JModelAdmin
 {
-
 	/**
 	 * @var        string    The prefix to use with controller messages.
 	 * @since    1.6
@@ -77,16 +76,17 @@ class BiblestudyModelComment extends JModelAdmin
 		{
 			return false;
 		}
+
 		$jinput = JFactory::getApplication()->input;
 
 		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
 		if ($jinput->get('a_id'))
 		{
 			$id = $jinput->get('a_id', 0);
-
-		} // The back end uses id so we use that the rest of the time and set it to 0 by default.
+		}
 		else
 		{
+			// The back end uses id so we use that the rest of the time and set it to 0 by default.
 			$id = $jinput->get('id', 0);
 		}
 
@@ -105,7 +105,6 @@ class BiblestudyModelComment extends JModelAdmin
 			// The controller has already verified this is an article you can edit.
 			$form->setFieldAttribute('ordering', 'filter', 'unset');
 			$form->setFieldAttribute('state', 'filter', 'unset');
-
 		}
 
 		return $form;
@@ -212,6 +211,8 @@ class BiblestudyModelComment extends JModelAdmin
 	 * @param   array   $options  Configuration array for model. Optional.
 	 *
 	 * @return  JTable  A JTable object
+	 *
+	 * @since 7.0
 	 */
 	public function getTable($name = 'Comment', $prefix = 'Table', $options = array())
 	{
@@ -251,6 +252,7 @@ class BiblestudyModelComment extends JModelAdmin
 			{
 				return false;
 			}
+
 			$user = JFactory::getUser();
 
 			return $user->authorise('core.delete', 'com_biblestudy.comment.' . (int) $record->id);
@@ -293,6 +295,7 @@ class BiblestudyModelComment extends JModelAdmin
 	 */
 	protected function prepareTable($table)
 	{
+		// Holder.
 	}
 
 	/**
@@ -313,21 +316,4 @@ class BiblestudyModelComment extends JModelAdmin
 
 		return $data;
 	}
-
-	/**
-	 * Method to allow derived classes to prepossess the form.
-	 *
-	 * @param   JForm   $form   A JForm object.
-	 * @param   mixed   $data   The data expected for the form.
-	 * @param   string  $group  The name of the plugin group to import (defaults to "content").
-	 *
-	 * @return  void
-	 *
-	 * @since    3.0
-	 */
-	protected function preprocessForm(JForm $form, $data, $group = 'content')
-	{
-		parent::preprocessForm($form, $data, $group);
-	}
-
 }

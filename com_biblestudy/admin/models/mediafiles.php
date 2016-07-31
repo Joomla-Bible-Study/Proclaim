@@ -24,20 +24,26 @@ class BiblestudyModelMediafiles extends JModelList
 	 * Model context string.
 	 *
 	 * @var        string
+	 *
+	 * @since 7.0
 	 */
-	public $_context = 'com_biblestudy.mediafiles';
+	public $context = 'com_biblestudy.mediafiles';
 
 	/**
 	 * Number of Deletions
 	 *
 	 * @var int
+	 *
+	 * @since 7.0
 	 */
-	private $_deletes;
+	private $deletes;
 
 	/**
 	 * Constructor.
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
+	 *
+	 * @since 7.0
 	 */
 	public function __construct($config = array())
 	{
@@ -71,6 +77,7 @@ class BiblestudyModelMediafiles extends JModelList
 		$serverModel = JModelLegacy::getInstance('Server', 'BibleStudyModel');
 
 		$items = parent::getItems();
+
 		if (!$items)
 		{
 			return false;
@@ -93,11 +100,11 @@ class BiblestudyModelMediafiles extends JModelList
 
 		foreach ($items as $item)
 		{
-
 			if (empty($item->serverType))
 			{
 				$item->serverType = 'legacy';
 			}
+
 			$item->serverConfig = $serverModel->getConfig($item->serverType);
 
 			// Convert all JSON strings to Arrays
@@ -117,18 +124,20 @@ class BiblestudyModelMediafiles extends JModelList
 	 * Get Deletes
 	 *
 	 * @return object
+	 *
+	 * @since 7.0
 	 */
 	public function getDeletes()
 	{
-		if (empty($this->_deletes))
+		if (empty($this->deletes))
 		{
 			$query = 'SELECT allow_deletes'
 				. ' FROM #__bsms_admin'
 				. ' WHERE id = 1';
-			$this->_deletes = $this->_getList($query);
+			$this->deletes = $this->_getList($query);
 		}
 
-		return $this->_deletes;
+		return $this->deletes;
 	}
 
 	/**
@@ -198,7 +207,6 @@ class BiblestudyModelMediafiles extends JModelList
 	 */
 	protected function getStoreId($id = '')
 	{
-
 		// Compile the store id.
 		$id .= ':' . $this->getState('filter.search');
 		$id .= ':' . $this->getState('filter.published');
@@ -322,25 +330,29 @@ class BiblestudyModelMediafiles extends JModelList
 		{
 			$orderCol = 'mediafile.study_id';
 		}
+
 		if ($orderCol == 'ordering')
 		{
 			$orderCol = 'mediafile.study_id, mediafile.ordering';
 		}
+
 		if ($orderCol == 'published')
 		{
 			$orderCol = 'mediafile.published';
 		}
+
 		if ($orderCol == 'id')
 		{
 			$orderCol = 'mediafile.id';
 		}
+
 		if ($orderCol == 'mediafile.ordering')
 		{
 			$orderCol = 'mediafile.study_id ' . $orderDirn . ', mediafile.ordering';
 		}
+
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
 		return $query;
 	}
-
 }

@@ -18,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyModelTemplatecode extends JModelAdmin
 {
-
 	/**
 	 * Controller Prefix
 	 *
@@ -68,6 +67,8 @@ class BiblestudyModelTemplatecode extends JModelAdmin
 	 * Get Type Language String
 	 *
 	 * @return string|Null
+	 *
+	 * @since 7.0
 	 */
 	public function getType()
 	{
@@ -124,11 +125,6 @@ class BiblestudyModelTemplatecode extends JModelAdmin
 	{
 		$item = parent::getItem($pk);
 
-		if ($item)
-		{
-
-		}
-
 		return $item;
 	}
 
@@ -143,7 +139,6 @@ class BiblestudyModelTemplatecode extends JModelAdmin
 	 */
 	protected function populateState()
 	{
-
 		$app = JFactory::getApplication('administrator');
 
 		// Save the syntax for later use
@@ -198,5 +193,4 @@ class BiblestudyModelTemplatecode extends JModelAdmin
 
 		return $data;
 	}
-
 }

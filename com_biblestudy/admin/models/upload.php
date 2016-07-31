@@ -48,5 +48,4 @@ class BiblestudyModelUpload extends JModelAdmin
 
 		return $form;
 	}
-
 }

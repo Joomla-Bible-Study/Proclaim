@@ -36,6 +36,8 @@ Class JBSMDebug
 	 * @return void
 	 *
 	 * @deprecated  9.0.0 JBSM
+	 *
+	 * @since       7.0.0
 	 */
 	public function Debug_Assert_callback($script, $line, $message)
 	{
@@ -57,6 +59,8 @@ Class JBSMDebug
 	 * @return void
 	 *
 	 * @deprecated  9.0.0 JBSM
+	 *
+	 * @since       7.0.0
 	 */
 	public function Trigger_Db_error($text = '', $back = 0)
 	{
@@ -93,6 +97,8 @@ Class JBSMDebug
 	 * @return void
 	 *
 	 * @deprecated  9.0.0 JBSM
+	 *
+	 * @since       7.0.0
 	 */
 	public function Check_Db_error($text = '', $back = 0)
 	{
@@ -106,6 +112,8 @@ Class JBSMDebug
 	 * @return void
 	 *
 	 * @deprecated  9.0.0 JBSM
+	 *
+	 * @since       7.0.0
 	 */
 	public function Check_Db_warning($text = '')
 	{
@@ -119,6 +127,8 @@ Class JBSMDebug
 	 * @return void
 	 *
 	 * @deprecated  9.0.0 JBSM
+	 *
+	 * @since       7.0.0
 	 */
 	public function Trigger_Db_warning($text = '')
 	{
@@ -132,6 +142,8 @@ Class JBSMDebug
 	 * @return string
 	 *
 	 * @deprecated  9.0.0 JBSM
+	 *
+	 * @since       7.0.0
 	 */
 	public function Debug_vars($varlist)
 	{
@@ -139,7 +151,6 @@ Class JBSMDebug
 
 		foreach ($varlist as $key => $value)
 		{
-
 			if (is_array($value))
 			{
 				$output .= '<tr><td>$' . $key . '</td><td>';
@@ -150,7 +161,6 @@ Class JBSMDebug
 
 					foreach ($value as $skey => $svalue)
 					{
-
 						if (is_array($svalue))
 						{
 							$output .= '<tr><td>[' . $skey . ']</td><td>Nested Array</td></tr>';
@@ -170,12 +180,14 @@ Class JBSMDebug
 							}
 						}
 					}
+
 					$output .= '</table>"';
 				}
 				else
 				{
 					$output .= 'EMPTY';
 				}
+
 				$output .= '</td></tr>';
 			}
 			else
@@ -193,6 +205,7 @@ Class JBSMDebug
 				}
 			}
 		}
+
 		$output .= '</table>';
 
 		return $output;
@@ -206,6 +219,8 @@ Class JBSMDebug
 	 * @return object
 	 *
 	 * @deprecated  9.0.0 JBSM
+	 *
+	 * @since       7.0.0
 	 */
 	public function Debug_Call_Stack_info($back = 1)
 	{
@@ -224,6 +239,8 @@ Class JBSMDebug
 	 * @return void
 	 *
 	 * @deprecated  9.0.0 JBSM
+	 *
+	 * @since       7.0.0
 	 */
 	public function Biblestudy_error($message, $level = E_USER_NOTICE, $back = 1)
 	{

@@ -18,11 +18,11 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewLocation extends JViewLegacy
 {
-
 	/**
 	 * Form
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $form;
 
@@ -30,6 +30,7 @@ class BiblestudyViewLocation extends JViewLegacy
 	 * Item
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $item;
 
@@ -37,6 +38,7 @@ class BiblestudyViewLocation extends JViewLegacy
 	 * State
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $state;
 
@@ -44,6 +46,7 @@ class BiblestudyViewLocation extends JViewLegacy
 	 * Defaults
 	 *
 	 * @var array
+	 * @since    7.0.0
 	 */
 	protected $defaults;
 
@@ -51,6 +54,7 @@ class BiblestudyViewLocation extends JViewLegacy
 	 * Can Do
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $canDo;
 
@@ -126,6 +130,7 @@ class BiblestudyViewLocation extends JViewLegacy
 
 			JToolbarHelper::cancel('location.cancel', 'JTOOLBAR_CLOSE');
 		}
+
 		JToolbarHelper::divider();
 		JToolbarHelper::help('biblestudy', true);
 	}
@@ -143,5 +148,4 @@ class BiblestudyViewLocation extends JViewLegacy
 		$document = JFactory::getDocument();
 		$document->setTitle($isNew ? JText::_('JBS_TITLE_LOCATIONS_CREATING') : JText::sprintf('JBS_TITLE_LOCATIONS_EDITING', $this->item->location_text));
 	}
-
 }

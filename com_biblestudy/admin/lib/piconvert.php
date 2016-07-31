@@ -18,11 +18,12 @@ defined('_JEXEC') or die;
  */
 class JBSMPIconvert
 {
-
 	/**
 	 * Array of Comments Id's
 	 *
 	 * @var array
+	 *
+	 * @since 9.0.0
 	 */
 	public $commentsids;
 
@@ -30,6 +31,8 @@ class JBSMPIconvert
 	 * Array of Servers Id's
 	 *
 	 * @var array
+	 *
+	 * @since 9.0.0
 	 */
 	public $serversids;
 
@@ -37,6 +40,8 @@ class JBSMPIconvert
 	 * Array of Folders Id's
 	 *
 	 * @var array
+	 *
+	 * @since 9.0.0
 	 */
 	public $foldersids;
 
@@ -44,6 +49,8 @@ class JBSMPIconvert
 	 * Array of Studies Id's
 	 *
 	 * @var array
+	 *
+	 * @since 9.0.0
 	 */
 	public $studiesids;
 
@@ -51,6 +58,8 @@ class JBSMPIconvert
 	 * Array of Media-Files Id's
 	 *
 	 * @var array
+	 *
+	 * @since 9.0.0
 	 */
 	public $mediafilesids;
 
@@ -58,6 +67,8 @@ class JBSMPIconvert
 	 * Array of Teachers Id's
 	 *
 	 * @var array
+	 *
+	 * @since 9.0.0
 	 */
 	public $teachersids;
 
@@ -65,6 +76,8 @@ class JBSMPIconvert
 	 * Array of Series Id's
 	 *
 	 * @var array
+	 *
+	 * @since 9.0.0
 	 */
 	public $seriesids;
 
@@ -72,6 +85,8 @@ class JBSMPIconvert
 	 * Array of Podcasts Id's
 	 *
 	 * @var array
+	 *
+	 * @since 9.0.0
 	 */
 	public $podcastids;
 
@@ -79,6 +94,8 @@ class JBSMPIconvert
 	 * Array of Locations
 	 *
 	 * @var array
+	 *
+	 * @since 9.0.0
 	 */
 	public $locations;
 
@@ -86,6 +103,8 @@ class JBSMPIconvert
 	 * ???
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $cnoadd;
 
@@ -93,6 +112,8 @@ class JBSMPIconvert
 	 * Can Add switch
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $cadd;
 
@@ -100,6 +121,8 @@ class JBSMPIconvert
 	 * Comment object
 	 *
 	 * @var object
+	 *
+	 * @since 9.0.0
 	 */
 	public $picomments;
 
@@ -107,6 +130,8 @@ class JBSMPIconvert
 	 * Number of Podcasts
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $podcasts;
 
@@ -190,6 +215,7 @@ class JBSMPIconvert
 					$oldid              = $pi->id;
 					$this->serversids[] = array('newid' => $newid, 'oldid' => $oldid);
 				}
+
 				$datafolders             = new stdClass;
 				$datafolders->id         = null;
 				$datafolders->foldername = $pi->name;
@@ -222,6 +248,7 @@ class JBSMPIconvert
 					{
 						$foldersmall = $folder['newid'];
 					}
+
 					if ($folder['oldid'] == $folderlarge)
 					{
 						$folderlarge = $folder['newid'];
@@ -325,7 +352,6 @@ class JBSMPIconvert
 		{
 			foreach ($series AS $pi)
 			{
-
 				// Map new folder for images to old one
 				$foldersmall = $pi->image_folder;
 				$folderlarge = $pi->image_folderlrg;
@@ -336,6 +362,7 @@ class JBSMPIconvert
 					{
 						$foldersmall = $folder['newid'];
 					}
+
 					if ($folder['oldid'] == $folderlarge)
 					{
 						$folderlarge = $folder['newid'];
@@ -457,6 +484,7 @@ class JBSMPIconvert
 						$teacher_id = '1';
 					}
 				}
+
 				$studynumber = $pi->id;
 				$booknumber  = null;
 				$booknumber2 = null;
@@ -471,11 +499,13 @@ class JBSMPIconvert
 					{
 						$booknumber = '101';
 					}
+
 					if ($book['id'] == $pi->study_book2)
 					{
 						$booknumber2 = $book['jbs'];
 					}
 				}
+
 				$chapter_begin  = $pi->ref_ch_beg;
 				$chapter_end    = $pi->ref_ch_end;
 				$verse_begin    = $pi->ref_vs_beg;
@@ -497,6 +527,7 @@ class JBSMPIconvert
 						$location_id = $location['newid'];
 					}
 				}
+
 				$alias         = $pi->study_alias;
 				$studyintro    = $pi->study_description;
 				$media_hours   = $pi->dur_hrs;
@@ -511,6 +542,7 @@ class JBSMPIconvert
 						$series_id = $series['newid'];
 					}
 				}
+
 				$studytext   = $db->escape($pi->study_text);
 				$imagefolder = 0;
 				$newfolder   = 0;
@@ -524,17 +556,20 @@ class JBSMPIconvert
 						$imagefolder = $folder['newid'];
 						$image       = $pi->imagesm;
 					}
+
 					if ($folder['oldid'] == $pi->image_foldermed)
 					{
 						$imagefolder = $folder['newid'];
 						$image       = $pi->imagemed;
 					}
+
 					if ($folder['oldid'] == $pi->image_folderlrg)
 					{
 						$imagefolder = $folder['newid'];
 						$image       = $pi->imagelrg;
 					}
 				}
+
 				if ($imagefolder)
 				{
 					$query = $db->getQuery(true);
@@ -544,6 +579,7 @@ class JBSMPIconvert
 					$newfolder  = $object->folderpath;
 					$thumbnailm = $newfolder . $image;
 				}
+
 				$published = $pi->published;
 				$params    = '{"metakey":"' . $pi->tags . '","metadesc":""}';
 				$params    = $db->escape($params);
@@ -612,6 +648,7 @@ class JBSMPIconvert
 						$madd++;
 					}
 				}
+
 				if ($pi->video_link)
 				{
 					if (!$video = $this->insertMedia($pi, $type = 'video', $newid, $oldid))
@@ -623,6 +660,7 @@ class JBSMPIconvert
 						$madd++;
 					}
 				}
+
 				if ($pi->slides_link)
 				{
 					if (!$slides = $this->insertMedia($pi, $type = 'slides', $newid, $oldid))
@@ -634,6 +672,7 @@ class JBSMPIconvert
 						$madd++;
 					}
 				}
+
 				if ($pi->notes_link)
 				{
 					if (!$notes = $this->insertMedia($pi, $type = 'notes', $newid, $oldid))
@@ -645,9 +684,10 @@ class JBSMPIconvert
 						$madd++;
 					}
 				}
-				$comments = $this->insertComments($oldid, $newid);
 
-			} // Endforeach study
+				$comments = $this->insertComments($oldid, $newid);
+			}
+			// Endforeach study
 		}
 
 		$piconversion = '<table><tr><td><h3>' . JText::_('JBS_IBM_PREACHIT_RESULTS') . '</h3></td></tr>'
@@ -669,6 +709,8 @@ class JBSMPIconvert
 	 * Get Books
 	 *
 	 * @return array
+	 *
+	 * @since 9.0.0
 	 */
 	private function getBooks ()
 	{
@@ -754,6 +796,8 @@ class JBSMPIconvert
 	 *
 	 * @return boolean
 	 *
+	 * @since 9.0.0
+	 *
 	 * @FIXME look like the $pod is missing.
 	 */
 	public function insertMedia ($pi, $type, $newid, $oldid)
@@ -802,6 +846,7 @@ class JBSMPIconvert
 				}
 			}
 		}
+
 		if ($type == 'video')
 		{
 			if ($podcasts)
@@ -819,6 +864,7 @@ class JBSMPIconvert
 					}
 				}
 			}
+
 			$filesize = $pi->videofs;
 
 			switch ($pi->video_type)
@@ -849,6 +895,7 @@ class JBSMPIconvert
 							$filename = $path . $pi->video_link;
 						}
 					}
+
 					$player      = '1';
 					$media_image = '5';
 					$mime_type   = '15';
@@ -870,6 +917,7 @@ class JBSMPIconvert
 							$filename = $path . $pi->video_link;
 						}
 					}
+
 					$player      = '1';
 					$media_image = '5';
 					$mime_type   = '15';
@@ -900,12 +948,14 @@ class JBSMPIconvert
 					break;
 			}
 		}
+
 		$createdate = $pi->study_date;
 
 		if ($type == 'audio')
 		{
 			$link_type = $pi->audio_download;
 		}
+
 		if ($type == 'video')
 		{
 			$link_type = $pi->video_download;
@@ -933,6 +983,7 @@ class JBSMPIconvert
 				}
 			}
 		}
+
 		$hits      = $pi->hits;
 		$downloads = $pi->downloads;
 		$published = $pi->published;
@@ -964,6 +1015,7 @@ class JBSMPIconvert
 				}
 			}
 		}
+
 		$mediafiles              = new stdClass;
 		$mediafiles->id          = null;
 		$mediafiles->published   = $published;
@@ -998,6 +1050,8 @@ class JBSMPIconvert
 	 * @param   int  $newid  ?
 	 *
 	 * @return boolean
+	 *
+	 * @since 9.0.0
 	 */
 	private function insertComments ($oldid, $newid)
 	{
@@ -1036,5 +1090,4 @@ class JBSMPIconvert
 
 		return true;
 	}
-
 }

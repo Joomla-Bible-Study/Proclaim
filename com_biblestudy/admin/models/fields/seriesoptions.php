@@ -22,11 +22,12 @@ JFormHelper::loadFieldClass('list');
  */
 class JFormFieldSeriesoptions extends JFormFieldList
 {
-
 	/**
 	 * The field type.
 	 *
 	 * @var         string
+	 *
+	 * @since 7.0
 	 */
 	protected $type = 'Seriesoptions';
 
@@ -34,6 +35,8 @@ class JFormFieldSeriesoptions extends JFormFieldList
 	 * Method to get a list of options for a list input.
 	 *
 	 * @return      array           An array of JHtml options.
+	 *
+	 * @since 7.0
 	 */
 	protected function getOptions()
 	{
@@ -64,5 +67,4 @@ class JFormFieldSeriesoptions extends JFormFieldList
 
 		return $options;
 	}
-
 }

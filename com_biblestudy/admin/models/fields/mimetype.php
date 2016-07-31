@@ -22,11 +22,12 @@ JFormHelper::loadFieldClass('list');
  */
 class JFormFieldMimetype extends JFormFieldList
 {
-
 	/**
 	 * The field type.
 	 *
 	 * @var         string
+	 *
+	 * @since 7.0
 	 */
 	protected $type = 'Mimetype';
 
@@ -34,10 +35,11 @@ class JFormFieldMimetype extends JFormFieldList
 	 * Method to get a list of options for a list input.
 	 *
 	 * @return      array           An array of JHtml options.
+	 *
+	 * @since 7.0
 	 */
 	protected function getOptions()
 	{
-
 		$mimetypes = $this->getMimetypes();
 
 		$options = array();
@@ -56,6 +58,8 @@ class JFormFieldMimetype extends JFormFieldList
 	 * list of MimeTypes Supported
 	 *
 	 * @return array
+	 *
+	 * @since 7.0
 	 */
 	protected function getMimetypes()
 	{
@@ -161,7 +165,7 @@ class JFormFieldMimetype extends JFormFieldList
 			'numbers'                      => 'application/vnd.apple.numbers',
 			'pages'                        => 'application/vnd.apple.pages',
 		);
+
 		return $mimetype;
 	}
-
 }

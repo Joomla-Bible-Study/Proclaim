@@ -18,11 +18,11 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewTemplatecode extends JViewLegacy
 {
-
 	/**
 	 * Default Code for the Edit if content is null
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $defaultcode;
 
@@ -30,6 +30,7 @@ class BiblestudyViewTemplatecode extends JViewLegacy
 	 * Type
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $type;
 
@@ -37,6 +38,7 @@ class BiblestudyViewTemplatecode extends JViewLegacy
 	 * Can Do
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	public $canDo;
 
@@ -44,6 +46,7 @@ class BiblestudyViewTemplatecode extends JViewLegacy
 	 * Form
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $form;
 
@@ -51,6 +54,7 @@ class BiblestudyViewTemplatecode extends JViewLegacy
 	 * Item
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $item;
 
@@ -58,6 +62,7 @@ class BiblestudyViewTemplatecode extends JViewLegacy
 	 * State
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $state;
 
@@ -65,6 +70,7 @@ class BiblestudyViewTemplatecode extends JViewLegacy
 	 * Defaults
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $defaults;
 
@@ -92,12 +98,14 @@ class BiblestudyViewTemplatecode extends JViewLegacy
 			$file              = JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/defaulttemplatecode.php';
 			$this->defaultcode = file_get_contents($file);
 		}
+
 		$this->type = null;
 
 		if ($item->id !== 0)
 		{
 			$this->type = $this->get('Type');
 		}
+
 		$this->item  = $item;
 		$this->state = $this->get("State");
 		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'templatecode');
@@ -138,8 +146,10 @@ class BiblestudyViewTemplatecode extends JViewLegacy
 				JToolbarHelper::save('templatecode.save');
 				JToolbarHelper::save2copy('templatecode.save2copy');
 			}
+
 			JToolbarHelper::cancel('templatecode.cancel', 'JTOOLBAR_CLOSE');
 		}
+
 		JToolbarHelper::divider();
 		JToolbarHelper::help('templatecodehelp', true);
 	}
@@ -160,5 +170,4 @@ class BiblestudyViewTemplatecode extends JViewLegacy
 				: JText::sprintf('JBS_TITLE_TEMPLATECODES_EDITING', $this->item->topic_text)
 		);
 	}
-
 }

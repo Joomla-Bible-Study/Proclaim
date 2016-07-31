@@ -20,11 +20,11 @@ use Joomla\Registry\Registry;
  */
 class BiblestudyViewMigrate extends JViewLegacy
 {
-
 	/**
 	 * Version
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $version;
 
@@ -32,6 +32,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 * Can Do
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $canDo;
 
@@ -39,6 +40,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 * Change Set
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $changeSet;
 
@@ -46,6 +48,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 * Errors
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $errors;
 
@@ -53,6 +56,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 * Results
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $results;
 
@@ -60,6 +64,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 * Schema Version
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $schemaVersion;
 
@@ -74,6 +79,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 * Filter Params
 	 *
 	 * @var Registry
+	 * @since    7.0.0
 	 */
 	public $filterParams;
 
@@ -81,6 +87,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 * Pagination
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $pagination;
 
@@ -88,6 +95,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 * Error Count
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $errorCount;
 
@@ -95,6 +103,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 * Joomla BibleStudy Version
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $jversion;
 
@@ -102,6 +111,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 * Temp Destination
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $tmp_dest;
 
@@ -109,6 +119,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 * Player Stats
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $playerstats;
 
@@ -116,6 +127,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 * Assets
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $assets;
 
@@ -123,6 +135,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 * Popups
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $popups;
 
@@ -130,6 +143,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 * SS
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $ss;
 
@@ -137,6 +151,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 * Lists
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $lists;
 
@@ -144,6 +159,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 * PI
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $pi;
 
@@ -151,6 +167,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 * Form
 	 *
 	 * @var array
+	 * @since    7.0.0
 	 */
 	protected $form;
 
@@ -158,6 +175,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 * Item
 	 *
 	 * @var array
+	 * @since    7.0.0
 	 */
 	protected $item;
 
@@ -165,6 +183,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 * State
 	 *
 	 * @var array
+	 * @since    7.0.0
 	 */
 	protected $state;
 
@@ -240,6 +259,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 			{
 				$this->ss = JText::_('JBS_IBM_NO_SERMON_SPEAKER_FOUND');
 			}
+
 			if ($extension->element == 'com_preachit')
 			{
 				$this->pi = '<a href="index.php?option=com_biblestudy&view=admin&layout=edit&id=1&task=admin.convertPreachIt">'
@@ -258,10 +278,12 @@ class BiblestudyViewMigrate extends JViewLegacy
 		{
 			$this->errorCount++;
 		}
+
 		if (!$this->filterParams)
 		{
 			$this->errorCount++;
 		}
+
 		if (($this->updateVersion != $this->version))
 		{
 			$this->errorCount++;
@@ -351,5 +373,4 @@ class BiblestudyViewMigrate extends JViewLegacy
 
 		return false;
 	}
-
 }

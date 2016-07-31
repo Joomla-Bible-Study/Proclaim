@@ -18,11 +18,11 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewTeacher extends JViewLegacy
 {
-
 	/**
 	 * Form
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	public $form;
 
@@ -30,6 +30,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 	 * Item
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	public $item;
 
@@ -37,6 +38,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 	 * State
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	public $state;
 
@@ -44,6 +46,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 	 * Admin
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	public $admin;
 
@@ -51,6 +54,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 	 * Can Do
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	public $canDo;
 
@@ -117,8 +121,10 @@ class BiblestudyViewTeacher extends JViewLegacy
 				JToolbarHelper::apply('teacher.apply');
 				JToolbarHelper::save('teacher.save');
 			}
+
 			JToolbarHelper::cancel('teacher.cancel', 'JTOOLBAR_CLOSE');
 		}
+
 		JToolbarHelper::divider();
 		JToolbarHelper::help('biblestudy', true);
 	}
@@ -136,5 +142,4 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$document = JFactory::getDocument();
 		$document->setTitle($isNew ? JText::_('JBS_TITLE_TEACHER_CREATING') : JText::sprintf('JBS_TITLE_TEACHER_EDITING', $this->item->teachername));
 	}
-
 }

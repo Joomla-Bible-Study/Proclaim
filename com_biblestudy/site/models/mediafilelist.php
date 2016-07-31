@@ -22,7 +22,6 @@ JLoader::register('BiblestudyModelMediafiles', JPATH_ADMINISTRATOR . '/component
  */
 class BiblestudyModelMediafilelist extends BiblestudyModelMediafiles
 {
-
 	/**
 	 * Method to auto-populate the model state.
 	 *
@@ -81,5 +80,4 @@ class BiblestudyModelMediafilelist extends BiblestudyModelMediafiles
 
 		parent::populateState('mediafile.createdate', 'DESC');
 	}
-
 }

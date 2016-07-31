@@ -19,7 +19,6 @@ use Joomla\Registry\Registry;
  */
 class BiblestudyModelPopup extends JModelLegacy
 {
-
 	/**
 	 * Method to auto-populate the model state.
 	 *
@@ -59,5 +58,4 @@ class BiblestudyModelPopup extends JModelLegacy
 
 		$this->setState('layout', $app->input->get('layout'));
 	}
-
 }

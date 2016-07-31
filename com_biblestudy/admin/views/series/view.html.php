@@ -18,11 +18,11 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewSeries extends JViewLegacy
 {
-
 	/**
 	 * Can Do
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	public $canDo;
 
@@ -30,6 +30,7 @@ class BiblestudyViewSeries extends JViewLegacy
 	 * Filter Levels
 	 *
 	 * @var array
+	 * @since    7.0.0
 	 */
 	public $f_levels;
 
@@ -37,6 +38,7 @@ class BiblestudyViewSeries extends JViewLegacy
 	 * Side Bar
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $sidebar;
 
@@ -44,6 +46,7 @@ class BiblestudyViewSeries extends JViewLegacy
 	 * Items
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $items;
 
@@ -51,6 +54,7 @@ class BiblestudyViewSeries extends JViewLegacy
 	 * Pagination
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $pagination;
 
@@ -58,6 +62,7 @@ class BiblestudyViewSeries extends JViewLegacy
 	 * State
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $state;
 
@@ -73,7 +78,6 @@ class BiblestudyViewSeries extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-
 		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');

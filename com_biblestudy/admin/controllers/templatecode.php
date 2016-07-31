@@ -18,11 +18,12 @@ defined('_JEXEC') or die();
  */
 class BiblestudyControllerTemplatecode extends JControllerForm
 {
-
 	/**
 	 * Protect the view
 	 *
 	 * @var string
+	 *
+	 * @since 1.5
 	 */
 	protected $view_list = 'templatecodes';
 
@@ -43,5 +44,4 @@ class BiblestudyControllerTemplatecode extends JControllerForm
 
 		return $model;
 	}
-
 }

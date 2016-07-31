@@ -18,25 +18,12 @@ defined('_JEXEC') or die;
  */
 class BiblestudyControllerMessage extends JControllerForm
 {
-
 	/**
 	 * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
 	 *
 	 * @since 7.0
 	 */
 	protected $view_list = 'messages';
-
-	/**
-	 * Class constructor.
-	 *
-	 * @param   array  $config  A named array of configuration variables.
-	 *
-	 * @since    7.0.0
-	 */
-	public function __construct($config = array())
-	{
-		parent::__construct($config);
-	}
 
 	/**
 	 * Method override to check if you can edit an existing record.
@@ -66,6 +53,7 @@ class BiblestudyControllerMessage extends JControllerForm
 		{
 			// Now test the owner is the user.
 			$ownerId = (int) isset($data['created_by']) ? $data['created_by'] : 0;
+
 			if (empty($ownerId) && $recordId)
 			{
 				// Need to do a lookup from the model.
@@ -94,6 +82,8 @@ class BiblestudyControllerMessage extends JControllerForm
 	 * Reset Hits
 	 *
 	 * @return void
+	 *
+	 * @since 1.5
 	 */
 	public function resetHits()
 	{
@@ -166,6 +156,8 @@ class BiblestudyControllerMessage extends JControllerForm
 	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
 	 *
 	 * @return  boolean  True if successful, false otherwise.
+	 *
+	 * @since 1.5
 	 */
 	public function save($key = null, $urlVar = null)
 	{
@@ -188,6 +180,7 @@ class BiblestudyControllerMessage extends JControllerForm
 		$qurey->delete('#__bsms_studytopics')
 			->where('study_id =' . $data['id']);
 		$db->setQuery($qurey);
+
 		if (!$db->execute())
 		{
 			$app->enqueueMessage('error deleting topics', 'error');
@@ -204,9 +197,11 @@ class BiblestudyControllerMessage extends JControllerForm
 					$tagRow = JTable::getInstance('studytopics', 'Table');
 					$tagRow->study_id = $data['id'];
 					$tagRow->topic_id = $aTag;
+
 					if (!$tagRow->store())
 					{
 						$app->enqueueMessage('Error Storing Tags with Message', 'error');
+
 						return false;
 					}
 				}
@@ -223,9 +218,11 @@ class BiblestudyControllerMessage extends JControllerForm
 					$tagRow           = JTable::getInstance('studytopics', 'Table');
 					$tagRow->study_id = $data['id'];
 					$tagRow->topic_id = $model->getState('topic.id');
+
 					if (!$tagRow->store())
 					{
 						$app->enqueueMessage('Error Storing New Tags', 'error');
+
 						return false;
 					}
 				}

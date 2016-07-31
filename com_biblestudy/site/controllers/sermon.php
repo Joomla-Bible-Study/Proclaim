@@ -20,7 +20,6 @@ use Joomla\Registry\Registry;
  */
 class BiblestudyControllerSermon extends JControllerForm
 {
-
 	/**
 	 * View item
 	 *
@@ -135,10 +134,11 @@ class BiblestudyControllerSermon extends JControllerForm
 	 * Comment
 	 *
 	 * @return void
+	 *
+	 * @since 7.0
 	 */
 	public function comment()
 	{
-
 		$mainframe = JFactory::getApplication();
 		$input     = new JInput;
 		$model     = $this->getModel('sermon');
@@ -148,6 +148,7 @@ class BiblestudyControllerSermon extends JControllerForm
 		{
 			$t = 1;
 		}
+
 		$input->set('t', $t);
 
 		// Convert parameter fields to objects.
@@ -192,18 +193,17 @@ class BiblestudyControllerSermon extends JControllerForm
 
 			if ($params->get('email_comments') > 0)
 			{
-
 				$this->commentsEmail($params);
 			}
+
 			$study_detail_id = $input->get('study_detail_id', 0, 'int');
 
 			$mainframe->redirect(
 				'index.php?option=com_biblestudy&id=' . $study_detail_id . '&view=sermon&t=' . $t . '&msg=' . $msg,
 				'Comment Added'
 			);
-
-		} // End of $cap
-
+		}
+		// End of $cap
 	}
 
 	/**
@@ -230,6 +230,8 @@ class BiblestudyControllerSermon extends JControllerForm
 	 * @param   Joomla\Registry\Registry  $params  Params of to parse
 	 *
 	 * @return null
+	 *
+	 * @since 7.0
 	 */
 	public function commentsEmail($params)
 	{
@@ -258,6 +260,7 @@ class BiblestudyControllerSermon extends JControllerForm
 		{
 			$ToEmail = $comment_mailfrom;
 		}
+
 		$Body = $comment_author . ' ' . JText::_(
 				'JBS_STY_HAS_ENTERED_COMMENT'
 			) . ': ' . $comment_title . ' - ' . $comment_study_date . ' ' . JText::_('JBS_STY_ON') . ': ' . $comment_date;
@@ -270,6 +273,7 @@ class BiblestudyControllerSermon extends JControllerForm
 		{
 			$Body = $Body . ' ' . JText::_('JBS_STY_COMMENT_NOT_PUBLISHED');
 		}
+
 		$Body = $Body . ' ' . JText::_('JBS_STY_REVIEW_COMMENTS_LOGIN') . ': ' . $comment_livesite;
 		$mail->addRecipient($ToEmail);
 		$mail->setSubject($Subject . ' ' . $comment_livesite);
@@ -281,12 +285,15 @@ class BiblestudyControllerSermon extends JControllerForm
 	 * Download system
 	 *
 	 * @return null
+	 *
+	 * @since 7.0
 	 */
 	public function download()
 	{
 		$input = new JInput;
 		$task  = $input->get('task');
 		$mid   = $input->getInt('id');
+
 		if ($task == 'download')
 		{
 			$downloader = new JBSMDownload;
@@ -386,5 +393,4 @@ class BiblestudyControllerSermon extends JControllerForm
 
 		return $append;
 	}
-
 }

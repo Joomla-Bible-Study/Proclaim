@@ -24,6 +24,8 @@ class Mod_BiblestudyInstallerScript
 	 * @param   JInstallerFile  $parent  Where it is coming from
 	 *
 	 * @return void
+	 *
+	 * @since    7.0.0
 	 */
 	public function install($parent)
 	{
@@ -37,6 +39,8 @@ class Mod_BiblestudyInstallerScript
 	 * @param   JInstallerFile  $parent  Where it is coming from
 	 *
 	 * @return void
+	 *
+	 * @since    7.0.0
 	 */
 	public function uninstall($parent)
 	{
@@ -50,6 +54,8 @@ class Mod_BiblestudyInstallerScript
 	 * @param   JInstallerFile  $parent  Where it is coming from
 	 *
 	 * @return void
+	 *
+	 * @since    7.0.0
 	 */
 	public function update($parent)
 	{
@@ -61,10 +67,12 @@ class Mod_BiblestudyInstallerScript
 		$db->setQuery($query);
 		$data       = $db->loadObjectList();
 		$filenumber = 1;
+
 		foreach ($data as $d)
 		{
 			$registry = new Registry;
 			$registry->loadString($d->params);
+
 			if ($registry->get('useexpert_module') > 0)
 			{
 				$dataheaderlist        = $registry->get('module_headercode');
@@ -85,6 +93,7 @@ class Mod_BiblestudyInstallerScript
 				$db->insertObject('#__bsms_templatecode', $profile);
 				$registry->set('moduletemplate', $filename);
 			}
+
 			$d->params = $registry->toString();
 			$db->updateObject('#__modules', $d, 'id');
 			$filenumber++;
@@ -102,6 +111,8 @@ class Mod_BiblestudyInstallerScript
 	 * @param   JInstallerFile  $parent  Where it is coming from
 	 *
 	 * @return void
+	 *
+	 * @since    7.0.0
 	 */
 	public function preflight($type, $parent)
 	{
@@ -117,6 +128,8 @@ class Mod_BiblestudyInstallerScript
 	 * @param   JInstallerFile  $parent  Where it is coming from
 	 *
 	 * @return void
+	 *
+	 * @since    7.0.0
 	 */
 	public function postflight($type, $parent)
 	{
@@ -129,6 +142,8 @@ class Mod_BiblestudyInstallerScript
 	 * @param   string  $item  ?
 	 *
 	 * @return mixed
+	 *
+	 * @since    7.0.0
 	 */
 	private function itemreplace($item)
 	{

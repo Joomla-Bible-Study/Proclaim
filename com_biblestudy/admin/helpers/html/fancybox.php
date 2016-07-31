@@ -50,7 +50,6 @@ abstract class JHtmlFancybox
 		if ($mouseweel)
 		{
 			JHtml::script('media/com_biblestudy/js/jquery.mousewheel-3.0.6.pack.js');
-
 		}
 
 		if ($option)
@@ -59,6 +58,7 @@ abstract class JHtmlFancybox
 			JHtml::script('media/com_biblestudy/fancybox/helpers/jquery.fancybox-media.js');
 			JHtml::script('media/com_biblestudy/fancybox/helpers/jquery.fancybox-thumbs.js');
 		}
+
 		self::loadCss($option);
 
 		self::$loaded[__METHOD__] = true;

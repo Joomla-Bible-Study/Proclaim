@@ -18,11 +18,11 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewMessagetypes extends JViewLegacy
 {
-
 	/**
 	 * Filter Levels
 	 *
 	 * @var array
+	 * @since    7.0.0
 	 */
 	public $f_levels;
 
@@ -30,6 +30,7 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 	 * Side Bar
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	public $sidebar;
 
@@ -37,6 +38,7 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 	 * Items
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $items;
 
@@ -44,6 +46,7 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 	 * Pagination
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $pagination;
 
@@ -51,6 +54,7 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 	 * State
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $state;
 
@@ -58,6 +62,7 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 	 * Can Do
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $canDo;
 

@@ -18,7 +18,8 @@ $JBSMListing = new JBSMListing;
 ?>
 <div class="container-fluid">
 	<?php if (($params->get('pageheader')))
-	{ ?>
+	{
+		?>
 		<div class="row-fluid">
 			<div class="span12">
 				<?php echo JHtml::_('content.prepare', $params->get('pageheader'), '', 'com_biblestudy.module'); ?>

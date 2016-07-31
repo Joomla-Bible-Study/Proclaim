@@ -19,32 +19,49 @@ use Joomla\Registry\Registry;
  */
 class BiblestudyViewTeacher extends JViewLegacy
 {
-
-	/** @var  object Item */
+	/** @var  object Item
+	 *
+	 * @since 7.0 */
 	protected $item;
 
-	/** @var  object Contact */
+	/** @var  object Contact
+	 *
+	 * @since 7.0 */
 	protected $contact;
 
-	/** @var  Registry Admin */
+	/** @var  Registry Admin
+	 *
+	 * @since 7.0 */
 	protected $state;
 
-	/** @var  Registry Params */
+	/** @var  Registry Params
+	 *
+	 * @since 7.0 */
 	protected $params;
 
-	/** @var  TableTemplate Template Info */
+	/** @var  TableTemplate Template Info
+	 *
+	 * @since 7.0 */
 	protected $template;
 
-	/** @var  JObject Template Studies */
+	/** @var  JObject Template Studies
+	 *
+	 * @since 7.0 */
 	protected $teacherstudies;
 
-	/** @var  JObject Print */
+	/** @var  JObject Print
+	 *
+	 * @since 7.0 */
 	protected $print;
 
-	/** @var  JDocument Print */
+	/** @var  JDocument Print
+	 *
+	 * @since 7.0 */
 	public $document;
 
-	/** @var  JObject Studies */
+	/** @var  JObject Studies
+	 *
+	 * @since 7.0 */
 	protected $studies;
 
 	/**
@@ -53,6 +70,8 @@ class BiblestudyViewTeacher extends JViewLegacy
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
+	 *
+	 * @since 7.0
 	 */
 	public function display($tpl = null)
 	{
@@ -175,12 +194,14 @@ class BiblestudyViewTeacher extends JViewLegacy
 				{
 					$studies[$i]->series_thumbnail = null;
 				}
+
 				$studies[$i]->detailslink = $pelements->detailslink;
 
 				if (!isset($pelements->studyintro))
 				{
 					$pelements->studyintro = '';
 				}
+
 				$studies[$i]->studyintro = $pelements->studyintro;
 
 				if (isset($pelements->secondary_reference))
@@ -191,6 +212,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 				{
 					$studies[$i]->secondary_reference = '';
 				}
+
 				if (isset($pelements->sdescription))
 				{
 					$studies[$i]->sdescription = $pelements->sdescription;
@@ -200,6 +222,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 					$studies[$i]->sdescription = '';
 				}
 			}
+
 			$this->teacherstudies = $studies;
 			$this->studies = $studies;
 		}
@@ -222,6 +245,8 @@ class BiblestudyViewTeacher extends JViewLegacy
 	 * Prepares the document;
 	 *
 	 * @return void
+	 *
+	 * @since 7.0
 	 */
 	protected function _prepareDocument()
 	{
@@ -244,6 +269,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 		{
 			$this->params->def('page_heading', JText::_('JGLOBAL_ARTICLES'));
 		}
+
 		$title = $this->params->get('page_title', '');
 		$title .= ' : ' . $this->item->teachername . ' - ' . $this->item->title;
 
@@ -259,6 +285,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 		{
 			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
+
 		$this->document->setTitle($title);
 
 		// Prepare meta information (under development)
@@ -293,5 +320,4 @@ class BiblestudyViewTeacher extends JViewLegacy
 			$this->document->setMetaData('robots', $this->params->get('robots'));
 		}
 	}
-
 }

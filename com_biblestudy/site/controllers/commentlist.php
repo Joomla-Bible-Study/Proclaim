@@ -58,5 +58,4 @@ class BiblestudyControllerCommentlist extends BiblestudyControllerComments
 
 		return $model;
 	}
-
 }

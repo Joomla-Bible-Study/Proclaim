@@ -18,11 +18,12 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewComment extends JViewLegacy
 {
-
 	/**
 	 * Can Do
 	 *
 	 * @var object
+	 *
+	 * @since 9.0.0
 	 */
 	public $canDo;
 
@@ -30,6 +31,8 @@ class BiblestudyViewComment extends JViewLegacy
 	 * Form Data
 	 *
 	 * @var object
+	 *
+	 * @since 9.0.0
 	 */
 	protected $form;
 
@@ -37,6 +40,8 @@ class BiblestudyViewComment extends JViewLegacy
 	 * Item
 	 *
 	 * @var object
+	 *
+	 * @since 9.0.0
 	 */
 	protected $item;
 
@@ -44,6 +49,8 @@ class BiblestudyViewComment extends JViewLegacy
 	 * State
 	 *
 	 * @var object
+	 *
+	 * @since 9.0.0
 	 */
 	protected $state;
 
@@ -53,6 +60,8 @@ class BiblestudyViewComment extends JViewLegacy
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a Error object.
+	 *
+	 * @since 9.0.0
 	 */
 	public function display($tpl = null)
 	{
@@ -106,8 +115,10 @@ class BiblestudyViewComment extends JViewLegacy
 				JToolbarHelper::apply('comment.apply');
 				JToolbarHelper::save('comment.save');
 			}
+
 			JToolbarHelper::cancel('comment.cancel', 'JTOOLBAR_CLOSE');
 		}
+
 		JToolbarHelper::divider();
 		JToolbarHelper::help('biblestudy', true);
 	}
@@ -125,5 +136,4 @@ class BiblestudyViewComment extends JViewLegacy
 		$document = JFactory::getDocument();
 		$document->setTitle($isNew ? JText::_('JBS_TITLE_COMMENT_CREATING') : JText::sprintf('JBS_TITLE_COMMENT_EDITING', $this->item->id));
 	}
-
 }

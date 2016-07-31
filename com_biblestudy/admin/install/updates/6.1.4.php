@@ -24,6 +24,8 @@ class Migration614
 	 * @param   JDatabaseDriver  $db  Data bass driver
 	 *
 	 * @return bool
+	 *
+	 * @since 9.0.0
 	 */
 	public function up($db)
 	{
@@ -50,24 +52,28 @@ class Migration614
 		{
 			return false;
 		}
+
 		$query = "ALTER TABLE `#__bsms_teachers` MODIFY `title` VARCHAR(250)";
 
 		if (!JBSMDbHelper::performDB($query, "Build 614: "))
 		{
 			return false;
 		}
+
 		$query = "ALTER TABLE `#__bsms_mediafiles` ADD COLUMN downloads INT(10) DEFAULT 0";
 
 		if (!JBSMDbHelper::performDB($query, "Build 614: "))
 		{
 			return false;
 		}
+
 		$query = "ALTER TABLE `#__bsms_mediafiles` ADD COLUMN plays INT(10) DEFAULT 0";
 
 		if (!JBSMDbHelper::performDB($query, "Build 614: "))
 		{
 			return false;
 		}
+
 		$query = $db->getQuery(true);
 		$query->insert('#__bsms_timeset')->set('timeset = ' . 1281646339);
 

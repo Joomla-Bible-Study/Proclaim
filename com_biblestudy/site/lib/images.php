@@ -20,11 +20,12 @@ use Joomla\Registry\Registry;
  */
 class JBSMImages
 {
-
 	/**
 	 * Main Study Image
 	 *
 	 * @return object
+	 *
+	 * @since 7.0
 	 */
 	public static function mainStudyImage()
 	{
@@ -61,6 +62,8 @@ class JBSMImages
 	 * @param   string  $path  ?
 	 *
 	 * @return object
+	 *
+	 * @since 7.0
 	 */
 	public static function getImagePath($path)
 	{
@@ -120,6 +123,8 @@ class JBSMImages
 	 * @param   string  $image  ?
 	 *
 	 * @return object
+	 *
+	 * @since 7.0
 	 */
 	public static function getStudyThumbnail($image = 'openbible.png')
 	{
@@ -130,6 +135,7 @@ class JBSMImages
 		{
 			$path = $image;
 		}
+
 		$imagepath = self::getImagePath($path);
 
 		return $imagepath;
@@ -139,10 +145,11 @@ class JBSMImages
 	 * Get StudiesImage Folder
 	 *
 	 * @return string
+	 *
+	 * @since 7.0
 	 */
 	private static function getStudiesImageFolder()
 	{
-
 		$studiesimagefolder = 'images';
 
 		return $studiesimagefolder;
@@ -154,6 +161,8 @@ class JBSMImages
 	 * @param   string  $image  ?
 	 *
 	 * @return object
+	 *
+	 * @since 7.0
 	 */
 	public static function getSeriesThumbnail($image = 'openbible.png')
 	{
@@ -164,6 +173,7 @@ class JBSMImages
 		{
 			$path = $image;
 		}
+
 		$imagepath = self::getImagePath($path);
 
 		return $imagepath;
@@ -173,10 +183,11 @@ class JBSMImages
 	 * Get SeriesImage Folder
 	 *
 	 * @return string
+	 *
+	 * @since 7.0
 	 */
 	private static function getSeriesImageFolder()
 	{
-
 		$seriesimagefolder = 'images';
 
 		return $seriesimagefolder;
@@ -189,6 +200,8 @@ class JBSMImages
 	 * @param   string  $image2  ?
 	 *
 	 * @return object
+	 *
+	 * @since 7.0
 	 */
 	public static function getTeacherThumbnail($image1 = null, $image2 = null)
 	{
@@ -222,10 +235,11 @@ class JBSMImages
 	 * Get TeacherImage Folder
 	 *
 	 * @return string
+	 *
+	 * @since 7.0
 	 */
 	private static function getTeacherImageFolder()
 	{
-
 		$teacherimagefolder = 'images';
 
 		return $teacherimagefolder;
@@ -238,6 +252,8 @@ class JBSMImages
 	 * @param   string  $image2  ?
 	 *
 	 * @return object
+	 *
+	 * @since 7.0
 	 */
 	public static function getTeacherImage($image1 = null, $image2 = null)
 	{
@@ -262,6 +278,7 @@ class JBSMImages
 				$path = $image1;
 			}
 		}
+
 		$imagepath = self::getImagePath($path);
 
 		return $imagepath;
@@ -274,6 +291,8 @@ class JBSMImages
 	 * @param   string  $media2  ?
 	 *
 	 * @return object
+	 *
+	 * @since 7.0
 	 */
 	public static function getMediaImage($media1 = null, $media2 = null)
 	{
@@ -308,10 +327,11 @@ class JBSMImages
 	 * Get MediaImage Folder
 	 *
 	 * @return string
+	 *
+	 * @since 7.0
 	 */
 	private static function getMediaImageFolder()
 	{
-
 		$mediaimagefolder = 'media/com_biblestudy/images';
 
 		return $mediaimagefolder;
@@ -321,6 +341,8 @@ class JBSMImages
 	 * Get Show Hide
 	 *
 	 * @return object
+	 *
+	 * @since 7.0
 	 */
 	public static function getShowHide()
 	{
@@ -339,5 +361,4 @@ class JBSMImages
 
 		return $imagepath;
 	}
-
 }

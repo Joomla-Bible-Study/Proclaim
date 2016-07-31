@@ -22,11 +22,11 @@ jimport('joomla.form.formfield');
  */
 class JFormFieldFilesize extends JFormField
 {
-
 	/**
 	 *  Set Naming of type
 	 *
 	 * @var string
+	 * @since 9.0.0
 	 */
 	public $type = 'Filesize';
 
@@ -34,6 +34,8 @@ class JFormFieldFilesize extends JFormField
 	 * Get impute of form
 	 *
 	 * @return string
+	 *
+	 * @since 9.0.0
 	 */
 	protected function getInput()
 	{
@@ -56,6 +58,8 @@ class JFormFieldFilesize extends JFormField
 	 * Returns converted size
 	 *
 	 * @return string
+	 *
+	 * @since 9.0.0
 	 */
 	private function sizeConverter()
 	{
@@ -63,5 +67,4 @@ class JFormFieldFilesize extends JFormField
 
 		return '<a style="float: left; margin-top: 6px;" href="javascript:openConverter1();">' . JText::_('JBS_MED_FILESIZE_CONVERTER') . '</a>';
 	}
-
 }

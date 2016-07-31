@@ -17,11 +17,12 @@ defined('_JEXEC') or die;
  */
 class JBSMRestore
 {
-
 	/**
 	 * Alter tables for Blob
 	 *
 	 * @return boolean
+	 *
+	 * @since 7.0.0
 	 */
 	protected static function TablestoBlob()
 	{
@@ -31,7 +32,6 @@ class JBSMRestore
 
 		foreach ($backuptables AS $backuptable)
 		{
-
 			if (substr_count($backuptable['name'], 'studies'))
 			{
 				$query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext BLOB';
@@ -42,18 +42,21 @@ class JBSMRestore
 				$db->setQuery($query);
 				$db->execute();
 			}
+
 			if (substr_count($backuptable['name'], 'podcast'))
 			{
 				$query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description BLOB';
 				$db->setQuery($query);
 				$db->execute();
 			}
+
 			if (substr_count($backuptable['name'], 'series'))
 			{
 				$query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description BLOB';
 				$db->setQuery($query);
 				$db->execute();
 			}
+
 			if (substr_count($backuptable['name'], 'teachers'))
 			{
 				$query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY information BLOB';
@@ -69,6 +72,8 @@ class JBSMRestore
 	 * Get Objects for tables
 	 *
 	 * @return array
+	 *
+	 * @since 7.0.0
 	 */
 	protected static function getObjects()
 	{
@@ -95,6 +100,8 @@ class JBSMRestore
 	 * Modify tables to Text
 	 *
 	 * @return boolean
+	 *
+	 * @since 9.0.0
 	 */
 	protected static function TablestoText()
 	{
@@ -104,7 +111,6 @@ class JBSMRestore
 
 		foreach ($backuptables AS $backuptable)
 		{
-
 			if (substr_count($backuptable['name'], 'studies'))
 			{
 				$query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext TEXT';
@@ -115,18 +121,21 @@ class JBSMRestore
 				$db->setQuery($query);
 				$db->execute();
 			}
+
 			if (substr_count($backuptable['name'], 'podcast'))
 			{
 				$query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description TEXT';
 				$db->setQuery($query);
 				$db->execute();
 			}
+
 			if (substr_count($backuptable['name'], 'series'))
 			{
 				$query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description TEXT';
 				$db->setQuery($query);
 				$db->execute();
 			}
+
 			if (substr_count($backuptable['name'], 'teachers'))
 			{
 				$query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY information TEXT';
@@ -144,6 +153,8 @@ class JBSMRestore
 	 * @param   boolean  $parent  Switch to see if it is coming from migration or restore.
 	 *
 	 * @return boolean
+	 *
+	 * @since 9.0.0
 	 */
 	public function importdb($parent)
 	{
@@ -155,6 +166,7 @@ class JBSMRestore
 		{
 			set_time_limit(3000);
 		}
+
 		$input         = new JInput;
 		$installtype   = $input->getPath('install_directory');
 		$backuprestore = $input->getWord('backuprestore', '');
@@ -170,6 +182,7 @@ class JBSMRestore
 				return $result;
 			}
 		}
+
 		if (substr_count($installtype, 'sql'))
 		{
 			$uploadresults = self::_getPackageFromFolder();
@@ -191,6 +204,7 @@ class JBSMRestore
 			{
 				unlink(JPATH_SITE . '/tmp/' . $userfile['name']);
 			}
+
 			if (($parent !== true) && $result)
 			{
 				$controlser = JControllerLegacy::getInstance('Biblestudy');
@@ -208,6 +222,8 @@ class JBSMRestore
 	 * @param   string  $backuprestore  file name to restore
 	 *
 	 * @return boolean See if the restore worked.
+	 *
+	 * @since 9.0.0
 	 */
 	public static function restoreDB($backuprestore)
 	{
@@ -220,6 +236,7 @@ class JBSMRestore
 		{
 			set_time_limit(3000);
 		}
+
 		$query = file_get_contents(JPATH_SITE . '/media/com_biblestudy/backup/' . $backuprestore);
 
 		// Check to see if this is a backup from an old db and not a migration
@@ -268,6 +285,8 @@ class JBSMRestore
 	 * Get Package from Folder
 	 *
 	 * @return boolean
+	 *
+	 * @since 9.0.0
 	 */
 	private static function _getPackageFromFolder()
 	{
@@ -281,6 +300,8 @@ class JBSMRestore
 	 * Get Package form Upload
 	 *
 	 * @return boolean
+	 *
+	 * @since 9.0.0
 	 */
 	public function _getPackageFromUpload()
 	{
@@ -358,6 +379,8 @@ class JBSMRestore
 	 * @param   boolean  $parent   To tell if coming from migration
 	 *
 	 * @return boolean if db installed correctly.
+	 *
+	 * @since 9.0.0
 	 */
 	protected static function installdb($tmp_src, $parent = true)
 	{
@@ -369,6 +392,7 @@ class JBSMRestore
 		{
 			set_time_limit(3000);
 		}
+
 		$app = JFactory::getApplication();
 		$db  = JFactory::getDbo();
 
@@ -399,7 +423,8 @@ class JBSMRestore
 			return false;
 		}
 		elseif (($iscernt === 0) && ($parent !== true))
-		{ // Way to check to see if file came from restore and is current.
+		{
+			// Way to check to see if file came from restore and is current.
 			$app->enqueueMessage(JText::_('JBS_IBM_NOT_CURENT_DB'), 'waring');
 
 			return false;
@@ -446,5 +471,4 @@ class JBSMRestore
 
 		return true;
 	}
-
 }

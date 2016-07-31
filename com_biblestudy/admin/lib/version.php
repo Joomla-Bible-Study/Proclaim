@@ -16,10 +16,12 @@ if (!defined('_BIBLESTUDY_INSTALLED_VERSION'))
 {
 	define('_BIBLESTUDY_INSTALLED_VERSION', 'Installed version');
 }
+
 if (!defined('_BIBLESTUDY_COPYRIGHT'))
 {
 	define('_BIBLESTUDY_COPYRIGHT', 'Copyright');
 }
+
 if (!defined('_BIBLESTUDY_LICENSE'))
 {
 	define('_BIBLESTUDY_LICENSE', 'License');
@@ -35,11 +37,12 @@ if (!defined('_BIBLESTUDY_LICENSE'))
  */
 class JBSMBiblestudyVersion
 {
-
 	/**
 	 * Retrieve Bible Study version from manifest.xml
 	 *
 	 * @return string version
+	 *
+	 * @since 9.0.0
 	 */
 	public function versionXML()
 	{
@@ -57,6 +60,8 @@ class JBSMBiblestudyVersion
 	 * Retrieve installed Bible Study version as string.
 	 *
 	 * @return string "X.Y.Z | YYYY-MM-DD | BUILDNUMBER [versionname]"
+	 *
+	 * @since 9.0.0
 	 */
 	public function version()
 	{
@@ -70,6 +75,8 @@ class JBSMBiblestudyVersion
 	 * Retrieve installed Biblestudy version as array.
 	 *
 	 * @return object Contains fields: version, versiondate, build, versionname
+	 *
+	 * @since 9.0.0
 	 */
 	public function versionObject()
 	{
@@ -90,6 +97,8 @@ class JBSMBiblestudyVersion
 	 * Retrieve MySQL Server version.
 	 *
 	 * @return string MySQL version
+	 *
+	 * @since 9.0.0
 	 */
 	public function MySQLVersion()
 	{
@@ -114,10 +123,11 @@ class JBSMBiblestudyVersion
 	 * Retrieve PHP Server version.
 	 *
 	 * @return string PHP version
+	 *
+	 * @since 9.0.0
 	 */
 	public function PHPVersion()
 	{
 		return phpversion();
 	}
-
 }

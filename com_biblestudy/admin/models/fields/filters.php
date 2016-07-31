@@ -22,7 +22,6 @@ jimport('joomla.form.formfield');
  */
 class JFormFieldFilters extends JFormField
 {
-
 	/**
 	 * The form field type.
 	 *
@@ -79,6 +78,7 @@ class JFormFieldFilters extends JFormField
 			{
 				$this->value[$group->value] = array('filter_type' => 'BL', 'filter_tags' => '', 'filter_attributes' => '');
 			}
+
 			$group_filter = $this->value[$group->value];
 
 			$html[] = '	<tr>';
@@ -109,6 +109,7 @@ class JFormFieldFilters extends JFormField
 			$html[] = '		</td>';
 			$html[] = '	</tr>';
 		}
+
 		$html[] = '	</tbody>';
 
 		// Close the table.
@@ -141,5 +142,4 @@ class JFormFieldFilters extends JFormField
 
 		return $options;
 	}
-
 }

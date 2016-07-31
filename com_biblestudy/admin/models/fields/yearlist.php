@@ -22,18 +22,21 @@ JFormHelper::loadFieldClass('list');
  */
 class JFormFieldYearlist extends JFormFieldList
 {
-
 	/**
 	 * The field type.
 	 *
-	 * @var         string
+	 * @var  string
+	 *
+	 * @since 9.0.0
 	 */
 	protected $type = 'Yearlist';
 
 	/**
 	 * Method to get a list of options for a list input.
 	 *
-	 * @return      array           An array of JHtml options.
+	 * @return  array  An array of JHtml options.
+	 *
+	 * @since 9.0.0
 	 */
 	protected function getOptions()
 	{
@@ -41,5 +44,4 @@ class JFormFieldYearlist extends JFormFieldList
 
 		return $options;
 	}
-
 }

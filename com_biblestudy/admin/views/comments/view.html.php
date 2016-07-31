@@ -18,11 +18,12 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewComments extends JViewLegacy
 {
-
 	/**
 	 * Side Bar
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $sidebar;
 
@@ -30,6 +31,8 @@ class BiblestudyViewComments extends JViewLegacy
 	 * Items
 	 *
 	 * @var array
+	 *
+	 * @since 9.0.0
 	 */
 	protected $items;
 
@@ -37,6 +40,8 @@ class BiblestudyViewComments extends JViewLegacy
 	 * Pagination
 	 *
 	 * @var object
+	 *
+	 * @since 9.0.0
 	 */
 	protected $pagination;
 
@@ -44,6 +49,8 @@ class BiblestudyViewComments extends JViewLegacy
 	 * State
 	 *
 	 * @var object
+	 *
+	 * @since 9.0.0
 	 */
 	protected $state;
 
@@ -51,6 +58,8 @@ class BiblestudyViewComments extends JViewLegacy
 	 * Filter Levels
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	protected $f_levels;
 
@@ -105,7 +114,6 @@ class BiblestudyViewComments extends JViewLegacy
 		{
 			$this->addToolbar();
 			$this->sidebar = JHtmlSidebar::render();
-
 		}
 
 		// Set the document
@@ -171,6 +179,7 @@ class BiblestudyViewComments extends JViewLegacy
 						$title</button>";
 			$bar->appendButton('Custom', $dhtml, 'batch');
 		}
+
 		JHtmlSidebar::setAction('index.php?option=com_biblestudy&view=comments');
 
 		JHtmlSidebar::addFilter(
@@ -215,5 +224,4 @@ class BiblestudyViewComments extends JViewLegacy
 			'comment.id'        => JText::_('JGRID_HEADING_ID')
 		);
 	}
-
 }

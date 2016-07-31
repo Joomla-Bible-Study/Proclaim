@@ -20,25 +20,14 @@ use Joomla\Registry\Registry;
  */
 class BiblestudyModelSeriesdisplay extends JModelItem
 {
-
 	/**
 	 * Model context string.
 	 *
 	 * @var        string
-	 */
-	protected $_context = 'com_biblestudy.seriesdisplay';
-
-	/**
-	 * Constructor
 	 *
-	 * @param   array  $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
-	 *
-	 * @since   11.1
+	 * @since 7.0
 	 */
-	public function __construct($config = array())
-	{
-		parent::__construct($config);
-	}
+	protected $context = 'com_biblestudy.seriesdisplay';
 
 	/**
 	 * Method to auto-populate the model state.
@@ -148,6 +137,8 @@ class BiblestudyModelSeriesdisplay extends JModelItem
 	 * Get Studies
 	 *
 	 * @return bool|mixed
+	 *
+	 * @since 7.0
 	 */
 	public function getStudies()
 	{
@@ -238,6 +229,7 @@ class BiblestudyModelSeriesdisplay extends JModelItem
 		{
 			$orderparam = $t_params->get('series_detail_order', '1');
 		}
+
 		if ($orderparam == 2)
 		{
 			$order = "ASC";
@@ -250,6 +242,7 @@ class BiblestudyModelSeriesdisplay extends JModelItem
 		$query->order('studydate ' . $order);
 		$db->setQuery($query, 0, $t_params->get('series_detail_limit', 20));
 		$studies = $db->loadObjectList();
+
 		if (count($studies) < 1)
 		{
 			return false;

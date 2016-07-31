@@ -23,6 +23,8 @@ class JBSMDbHelper
 	 * Extension Name
 	 *
 	 * @var string
+	 *
+	 * @since 1.5
 	 */
 	public static $extension = 'com_biblestudy';
 
@@ -34,10 +36,11 @@ class JBSMDbHelper
 	 * @param   string  $cktable  Table to check for exp:"#__bsms_admin
 	 *
 	 * @return bool  If table is there True else False if not.
+	 *
+	 * @since 7.0
 	 */
 	public static function checkIfTable($cktable)
 	{
-
 		$db     = JFactory::getDbo();
 		$tables = $db->getTableList();
 		$prefix = $db->getPrefix();
@@ -53,7 +56,6 @@ class JBSMDbHelper
 		}
 
 		return false;
-
 	}
 
 	/**
@@ -64,10 +66,13 @@ class JBSMDbHelper
 	 * @param   string  $from    Where the query is coming from for msg
 	 *
 	 * @return boolean
+	 *
+	 * @since 7.0
 	 */
 	public static function alterDB($tables, $from = null)
 	{
 		$db = JFactory::getDbo();
+
 		foreach ($tables as $t)
 		{
 			$type    = strtolower($t['type']);
@@ -100,6 +105,7 @@ class JBSMDbHelper
 					{
 						break;
 					}
+
 					if (self::checkTables($table, $field) !== true)
 					{
 						$query = 'ALTER TABLE ' . $db->qn($table) . ' ADD ' . $db->qn($field) . ' ' . $command;
@@ -116,6 +122,7 @@ class JBSMDbHelper
 					{
 						break;
 					}
+
 					if (self::checkTables($table, $field) === true)
 					{
 						$query = 'ALTER TABLE ' . $db->qn($table) . ' MODIFY ' . $db->qn($field) . ' ' . $command;
@@ -132,6 +139,7 @@ class JBSMDbHelper
 					{
 						break;
 					}
+
 					if (self::checkTables($table, $field) === true)
 					{
 						$query = 'ALTER TABLE ' . $db->qn($table) . ' CHANGE ' . $db->qn($field) . ' ' . $command;
@@ -154,6 +162,8 @@ class JBSMDbHelper
 	 * @param   string  $field  Checking against.
 	 *
 	 * @return boolean false equals field does not exist
+	 *
+	 * @since 7.0
 	 */
 	public static function checkTables($table, $field)
 	{
@@ -179,6 +189,8 @@ class JBSMDbHelper
 	 * @param   int     $limit  Set the Limit of the query
 	 *
 	 * @return boolean true if success, or error string if failed
+	 *
+	 * @since 7.0
 	 */
 	public static function performDB($query, $from = null, $limit = null)
 	{
@@ -186,6 +198,7 @@ class JBSMDbHelper
 		{
 			return false;
 		}
+
 		$db = JFactory::getDbo();
 		$db->setQuery($query, 0, $limit);
 
@@ -208,6 +221,8 @@ class JBSMDbHelper
 	 * @param   string  $field  field you are checking
 	 *
 	 * @return boolean
+	 *
+	 * @since 7.0
 	 */
 	public static function checkDB($table, $field)
 	{
@@ -230,6 +245,8 @@ class JBSMDbHelper
 	 * Get Objects for tables
 	 *
 	 * @return array
+	 *
+	 * @since 7.0
 	 */
 	public static function getObjects()
 	{
@@ -242,7 +259,6 @@ class JBSMDbHelper
 
 		foreach ($tables as $table)
 		{
-
 			if (strstr($table, $prefix) && strstr($table, $bsms))
 			{
 				$table     = substr_replace($table, '#__', 0, $prelength);
@@ -311,6 +327,7 @@ class JBSMDbHelper
 		{
 			$query->where($db->qn('id') . ' = ' . (int) $id);
 		}
+
 		$db->setQuery($query);
 		$result = $db->loadObject();
 		$oldcss = $result->stylecode;
@@ -348,6 +365,7 @@ class JBSMDbHelper
 		{
 			$query->where($db->qn('id') . ' = ' . (int) $id);
 		}
+
 		$db->setQuery($query);
 
 		if (!$db->execute())
@@ -376,6 +394,8 @@ class JBSMDbHelper
 	 * @return boolean
 	 *
 	 * @throws Exception
+	 *
+	 * @since 7.0
 	 */
 	public static function reloadtable($result, $table = 'Style')
 	{
@@ -406,6 +426,8 @@ class JBSMDbHelper
 	 * @param   bool  $install  If coming from the installer true|false not form installer
 	 *
 	 * @return boolean|int
+	 *
+	 * @since 7.0
 	 */
 	public static function resetdb($install = false)
 	{
@@ -494,13 +516,13 @@ class JBSMDbHelper
 	 */
 	public static function CleanStudyTopics()
 	{
-
 		$app   = JFactory::getApplication();
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('id')->from('#__bsms_studies');
 		$db->setQuery($query);
 		$results = $db->loadObjectList();
+
 		foreach ($results AS $result)
 		{
 			$query = $db->getQuery(true);
@@ -508,9 +530,11 @@ class JBSMDbHelper
 			$db->setQuery($query);
 			$resulta = $db->loadObjectList();
 			$c       = count($resulta);
+
 			if ($resulta && $c > 1)
 			{
 				$t = 1;
+
 				foreach ($resulta AS $study_topics)
 				{
 					$query = $db->getQuery(true);
@@ -542,14 +566,13 @@ class JBSMDbHelper
 								{
 									$app->enqueueMessage('Removed Duplicat topic Record ' . $id->id, 'notice');
 								}
+
 								$t++;
 							}
 						}
-
 					}
 				}
 			}
 		}
 	}
-
 }

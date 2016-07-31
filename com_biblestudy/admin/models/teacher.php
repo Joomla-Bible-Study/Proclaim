@@ -18,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyModelTeacher extends JModelAdmin
 {
-
 	/**
 	 * Controller Prefix
 	 *
@@ -55,7 +54,6 @@ class BiblestudyModelTeacher extends JModelAdmin
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
-
 		JForm::addFieldPath('JPATH_ADMINISTRATOR/components/com_users/models/fields');
 
 		// Get the form.
@@ -109,20 +107,20 @@ class BiblestudyModelTeacher extends JModelAdmin
 				->where('published != ' . $db->q('-2'));
 			$db->setQuery($query);
 			$studies = $db->loadObjectList();
+
 			if (!$studies && $canDoState)
 			{
 				return true;
 			}
+
 			if ($record->published == '-2' || $record->published == '0')
 			{
-
 				foreach ($studies as $studie)
 				{
 					$text .= ' ' . $studie->id . '-"' . $studie->studytitle . '",';
 				}
 
 				JFactory::getApplication()->enqueueMessage(JText::_('JBS_TCH_CAN_NOT_DELETE') . $text);
-
 			}
 
 			return false;
@@ -170,6 +168,7 @@ class BiblestudyModelTeacher extends JModelAdmin
 				$data['teacher_image']     = "";
 				$data['teacher_thumbnail'] = "";
 			}
+
 			return parent::save($data);
 		}
 
@@ -247,7 +246,6 @@ class BiblestudyModelTeacher extends JModelAdmin
 
 		if (empty($table->id))
 		{
-
 			// Set ordering to the last item if not set
 			if (empty($table->ordering))
 			{

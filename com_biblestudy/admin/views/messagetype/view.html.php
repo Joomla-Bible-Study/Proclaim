@@ -18,11 +18,11 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewMessagetype extends JViewLegacy
 {
-
 	/**
 	 * Form
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $form;
 
@@ -30,6 +30,7 @@ class BiblestudyViewMessagetype extends JViewLegacy
 	 * Item
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $item;
 
@@ -37,6 +38,7 @@ class BiblestudyViewMessagetype extends JViewLegacy
 	 * State
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $state;
 
@@ -44,6 +46,7 @@ class BiblestudyViewMessagetype extends JViewLegacy
 	 * Defaults
 	 *
 	 * @var array
+	 * @since    7.0.0
 	 */
 	protected $defaults;
 
@@ -51,6 +54,7 @@ class BiblestudyViewMessagetype extends JViewLegacy
 	 * Can Do
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $canDo;
 
@@ -110,8 +114,10 @@ class BiblestudyViewMessagetype extends JViewLegacy
 				JToolbarHelper::apply('messagetype.apply');
 				JToolbarHelper::save('messagetype.save');
 			}
+
 			JToolbarHelper::cancel('messagetype.cancel', 'JTOOLBAR_CLOSE');
 		}
+
 		JToolbarHelper::divider();
 		JToolbarHelper::help('biblestudy', true);
 	}
@@ -132,5 +138,4 @@ class BiblestudyViewMessagetype extends JViewLegacy
 				: JText::sprintf('JBS_TITLE_MESSAGETYPES_EDITING', $this->item->message_type)
 		);
 	}
-
 }

@@ -17,7 +17,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyModelArchive extends JModelAdmin
 {
-
 	/**
 	 * @var        string    The prefix to use with controller messages.
 	 * @since    1.6
@@ -31,6 +30,8 @@ class BiblestudyModelArchive extends JModelAdmin
 	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
 	 * @return  mixed  A JForm object on success, false on failure
+	 *
+	 * @since 7.0
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
@@ -106,5 +107,4 @@ class BiblestudyModelArchive extends JModelAdmin
 
 		return JText::sprintf('JBS_ARCHIVE_DB_CHANGE', $studies, $mediafiles, $frame);
 	}
-
 }

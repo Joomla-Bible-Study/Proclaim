@@ -22,13 +22,14 @@ jimport('joomla.filesystem.file');
  */
 class BiblestudyModelDir extends JModelItem
 {
-
 	/**
 	 * Save current directory in session for file upload
 	 *
 	 * @param   string  $directoryPath  ?
 	 *
 	 * @return void
+	 *
+	 * @since 7.0
 	 */
 	private function _setDirectoryState($directoryPath)
 	{
@@ -47,13 +48,14 @@ class BiblestudyModelDir extends JModelItem
 		{
 			$session->set('current_dir', $currentDirBase64, 'com_biblestudy');
 		}
-
 	}
 
 	/**
 	 * Get folder names and their links
 	 *
 	 * @return array Filled with object with: name, link properties
+	 *
+	 * @since 7.0
 	 */
 	public function getBreadcrumbs()
 	{
@@ -84,13 +86,14 @@ class BiblestudyModelDir extends JModelItem
 		array_unshift($bc, $firstBC);
 
 		return $bc;
-
 	}
 
 	/**
 	 * Folders in current directory
 	 *
 	 * @return array
+	 *
+	 * @since 7.0
 	 */
 	public function getFolders()
 	{
@@ -109,6 +112,8 @@ class BiblestudyModelDir extends JModelItem
 	 * Files in current directory
 	 *
 	 * @return array
+	 *
+	 * @since 7.0
 	 */
 	public function getFiles()
 	{
@@ -127,6 +132,8 @@ class BiblestudyModelDir extends JModelItem
 	 * @param   string  $separator  ?
 	 *
 	 * @return string
+	 *
+	 * @since 7.0
 	 */
 	private function _getCurrentDir($fullPath = false, $separator = '/')
 	{
@@ -167,9 +174,7 @@ class BiblestudyModelDir extends JModelItem
 			{
 				return $defaultDirVar;
 			}
-
 		}
-
 	}
 
 	/**
@@ -178,6 +183,8 @@ class BiblestudyModelDir extends JModelItem
 	 * @param   array  $filePaths  ?
 	 *
 	 * @return array
+	 *
+	 * @since 7.0
 	 */
 	private function _setFileInfo($filePaths)
 	{
@@ -205,21 +212,25 @@ class BiblestudyModelDir extends JModelItem
 			// File size
 			$size = @filesize($path); /* B */
 			$unit = ' B';
+
 			if ($size > 1024)
 			{
 				$size = $size / 1024;
 				$unit = 'KB';
 			}
+
 			if ($size > 1024)
 			{
 				$size = $size / 1024;
 				$unit = 'MB';
 			}
+
 			if ($size > 1024)
 			{
 				$size = $size / 1024;
 				$unit = 'GB';
 			}
+
 			$size             = round($size, 2) . " " . $unit;
 			$OFiles[$i]->size = $size;
 
@@ -237,6 +248,8 @@ class BiblestudyModelDir extends JModelItem
 	 * @param   array  $folderPaths  ?
 	 *
 	 * @return array
+	 *
+	 * @since 7.0
 	 */
 	private function _setFolderInfo($folderPaths)
 	{
@@ -267,6 +280,5 @@ class BiblestudyModelDir extends JModelItem
 		}
 
 		return $OFolders;
-
 	}
 }

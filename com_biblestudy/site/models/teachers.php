@@ -18,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyModelTeachers extends JModelList
 {
-
 	/**
 	 * Build an SQL query to load the list data
 	 *
@@ -43,6 +42,7 @@ class BiblestudyModelTeachers extends JModelList
 		{
 			$language = $db->quote('*');
 		}
+
 		$query = $db->getQuery(true);
 		$query->select('teachers.*,CASE WHEN CHAR_LENGTH(teachers.alias) THEN CONCAT_WS(\':\', teachers.id, teachers.alias) ELSE teachers.id END as slug');
 		$query->from('#__bsms_teachers as teachers');
@@ -63,6 +63,8 @@ class BiblestudyModelTeachers extends JModelList
 	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
 	 * @return void
+	 *
+	 * @since 7.0
 	 */
 	protected function populateState($ordering = 'teachers.ordering', $direction = 'asc')
 	{

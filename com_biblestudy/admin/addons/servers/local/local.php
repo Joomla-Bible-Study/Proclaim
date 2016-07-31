@@ -21,21 +21,13 @@ class JBSMAddonLocal extends JBSMAddon
 	protected $config;
 
 	/**
-	 * Construct
-	 *
-	 * @param   array  $config  Array of Options
-	 */
-	public function __construct($config = array())
-	{
-		parent::__construct($config);
-	}
-
-	/**
 	 * Upload
 	 *
-	 * @param   JInput  $data  Data to upload
+	 * @param   JInput|array  $data  Data to upload
 	 *
 	 * @return array
+	 *
+	 * @since 9.0.0
 	 */
 	public function upload($data)
 	{
@@ -50,6 +42,7 @@ class JBSMAddonLocal extends JBSMAddon
 
 		// Make filename safe and move it to correct folder
 		$destFile = JApplicationHelper::stringURLSafe($_FILES["file"]["name"]);
+
 		if (!JFile::upload($_FILES['file']['tmp_name'], JPATH_ROOT . $matches[0] . $destFile))
 		{
 			die('false');

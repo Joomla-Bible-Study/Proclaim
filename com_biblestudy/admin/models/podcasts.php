@@ -18,11 +18,12 @@ defined('_JEXEC') or die;
  */
 class BiblestudyModelPodcasts extends JModelList
 {
-
 	/**
 	 * Constructor.
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
+	 *
+	 * @since 7.0
 	 */
 	public function __construct($config = array())
 	{
@@ -54,7 +55,6 @@ class BiblestudyModelPodcasts extends JModelList
 	 */
 	protected function getStoreId($id = '')
 	{
-
 		// Compile the store id.
 		$id .= ':' . $this->getState('filter.search');
 		$id .= ':' . $this->getState('filter.access');
@@ -187,5 +187,4 @@ class BiblestudyModelPodcasts extends JModelList
 
 		return $query;
 	}
-
 }

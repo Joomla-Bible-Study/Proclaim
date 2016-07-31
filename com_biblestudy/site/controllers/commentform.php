@@ -18,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyControllerCommentform extends JControllerForm
 {
-
 	/**
 	 * View item
 	 *
@@ -97,7 +96,6 @@ class BiblestudyControllerCommentform extends JControllerForm
 	 */
 	public function batch($model = null)
 	{
-
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
 		// Set the model

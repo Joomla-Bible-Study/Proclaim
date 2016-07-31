@@ -34,18 +34,6 @@ class BiblestudyControllerMediafile extends JControllerForm
 	protected $option = 'com_biblestudy';
 
 	/**
-	 * Class constructor.
-	 *
-	 * @param   array  $config  A named array of configuration variables.
-	 *
-	 * @since    7.0.0
-	 */
-	public function __construct($config = array())
-	{
-		parent::__construct($config);
-	}
-
-	/**
 	 * Method to add a new record.
 	 *
 	 * @return  mixed  True if the record can be added, a error object if not.
@@ -197,9 +185,12 @@ class BiblestudyControllerMediafile extends JControllerForm
 		if ($this->input->getCmd('return') && parent::cancel($key))
 		{
 			$this->setRedirect(base64_decode($this->input->getCmd('return')));
+
 			return true;
 		}
+
 		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
+
 		return false;
 	}
 
@@ -246,11 +237,13 @@ class BiblestudyControllerMediafile extends JControllerForm
 	{
 		$return = $this->input->getCmd('return');
 		$task   = $this->input->get('task');
+
 		if ($return && $task != 'apply')
 		{
 			JFactory::getApplication()->enqueueMessage(JText::_('JBS_MED_SAVE'), 'message');
 			$this->setRedirect(base64_decode($return));
 		}
+
 		return;
 	}
 

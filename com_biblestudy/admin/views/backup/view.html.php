@@ -18,22 +18,34 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewBackup extends JViewLegacy
 {
-	/** @var string CanDo function */
+	/** @var string CanDo function
+	 *
+	 * @since 9.0.0 */
 	public $canDo;
 
-	/** @var string Temp Destination */
+	/** @var string Temp Destination
+	 *
+	 * @since 9.0.0 */
 	public $tmp_dest;
 
-	/** @var string Lists */
+	/** @var string Lists
+	 *
+	 * @since 9.0.0 */
 	public $lists;
 
-	/** @var array Form */
+	/** @var array Form
+	 *
+	 * @since 9.0.0 */
 	protected $form;
 
-	/** @var array Item */
+	/** @var array Item
+	 *
+	 * @since 9.0.0 */
 	protected $item;
 
-	/** @var array State */
+	/** @var array State
+	 *
+	 * @since 9.0.0 */
 	protected $state;
 
 	/**
@@ -172,5 +184,4 @@ class BiblestudyViewBackup extends JViewLegacy
 
 		return false;
 	}
-
 }

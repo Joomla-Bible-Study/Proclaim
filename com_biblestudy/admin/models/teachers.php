@@ -18,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyModelTeachers extends JModelList
 {
-
 	/**
 	 * Constructor.
 	 *
@@ -106,7 +105,6 @@ class BiblestudyModelTeachers extends JModelList
 	 */
 	protected function getStoreId($id = '')
 	{
-
 		// Compile the store id.
 		$id .= ':' . $this->getState('filter.search');
 		$id .= ':' . $this->getState('filter.published');
@@ -187,5 +185,4 @@ class BiblestudyModelTeachers extends JModelList
 
 		return $query;
 	}
-
 }

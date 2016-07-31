@@ -17,11 +17,12 @@ defined('_JEXEC') or die;
  */
 class BiblestudyModelComments extends JModelList
 {
-
 	/**
 	 * Constructor.
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
+	 *
+	 * @since 7.0
 	 */
 	public function __construct($config = array())
 	{
@@ -118,7 +119,6 @@ class BiblestudyModelComments extends JModelList
 	 */
 	protected function getStoreId($id = '')
 	{
-
 		// Compile the store id.
 		$id .= ':' . $this->getState('filter.search');
 		$id .= ':' . $this->getState('filter.published');
@@ -199,5 +199,4 @@ class BiblestudyModelComments extends JModelList
 
 		return $query;
 	}
-
 }

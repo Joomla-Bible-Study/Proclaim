@@ -22,11 +22,12 @@ JFormHelper::loadFieldClass('list');
  */
 class JFormFieldDocman extends JFormFieldList
 {
-
 	/**
 	 * The field type.
 	 *
 	 * @var         string
+	 *
+	 * @since 9.0.0
 	 */
 	protected $type = 'Docman';
 
@@ -34,12 +35,11 @@ class JFormFieldDocman extends JFormFieldList
 	 * Method to get a list of options for a list input.
 	 *
 	 * @return      array           An array of JHtml options.
+	 *
+	 * @since 9.0.0
 	 */
 	protected function getOptions()
 	{
-		/*
-
-		*/
 		// Check to see if Docman is installed
 		jimport('joomla.filesystem.folder');
 
@@ -66,9 +66,9 @@ class JFormFieldDocman extends JFormFieldList
 				$options[] = JHtml::_('select.option', $doc->id, $doc->title);
 			}
 		}
+
 		$options = array_merge(parent::getOptions(), $options);
 
 		return $options;
 	}
-
 }

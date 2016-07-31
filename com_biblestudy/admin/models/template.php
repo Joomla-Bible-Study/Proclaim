@@ -18,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class BiblestudyModelTemplate extends JModelAdmin
 {
-
 	/**
 	 * Method to save the form data.
 	 *
@@ -34,6 +33,7 @@ class BiblestudyModelTemplate extends JModelAdmin
 		if ($data['id'] == '1' && $data['published'] != '1')
 		{
 			JFactory::getApplication()->enqueueMessage(JText::_('JBS_TPL_DEFAULT_ERROR'), 'error');
+
 			return false;
 		}
 
@@ -46,6 +46,8 @@ class BiblestudyModelTemplate extends JModelAdmin
 	 * @param   array  $cid  ID of template
 	 *
 	 * @return boolean
+	 *
+	 * @since 7.0
 	 */
 	public function copy($cid)
 	{
@@ -89,6 +91,7 @@ class BiblestudyModelTemplate extends JModelAdmin
 				unset($pks[$i]);
 			}
 		}
+
 		return parent::publish($pks, $value);
 	}
 
@@ -165,18 +168,6 @@ class BiblestudyModelTemplate extends JModelAdmin
 	}
 
 	/**
-	 * Get Items
-	 *
-	 * @param   integer  $pk  The id of the primary key.
-	 *
-	 * @return  mixed    Object on success, false on failure.
-	 */
-	public function getItem($pk = null)
-	{
-		return parent::getItem($pk);
-	}
-
-	/**
 	 * Custom clean the cache of com_biblestudy and biblestudy modules
 	 *
 	 * @param   string   $group      The cache group
@@ -191,5 +182,4 @@ class BiblestudyModelTemplate extends JModelAdmin
 		parent::cleanCache('com_biblestudy');
 		parent::cleanCache('mod_biblestudy');
 	}
-
 }

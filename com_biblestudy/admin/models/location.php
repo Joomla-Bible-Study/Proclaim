@@ -18,12 +18,13 @@ defined('_JEXEC') or die;
  */
 class BiblestudyModelLocation extends JModelAdmin
 {
-
 	/**
 	 * Method to store a record
 	 *
 	 * @access    public
 	 * @return    boolean    True on success
+	 *
+	 * @since 7.0
 	 */
 	public function store()
 	{
@@ -129,5 +130,4 @@ class BiblestudyModelLocation extends JModelAdmin
 		parent::cleanCache('com_biblestudy');
 		parent::cleanCache('mod_biblestudy');
 	}
-
 }

@@ -6,9 +6,6 @@
         <media_resource>filename</media_resource>
     </config>
     <fields name="media">
-        <fieldset name="params" label="JBS_ADDON_LOCAL_PARAMETERS">
-            <field name="baseurl" type="text" label="JBS_ADDON_LOCAL_BASE" description="JBS_ADDON_LOCAL_BASE" required="true"/>
-        </fieldset>
         <fieldset name="details" label="JBS_ADDON_LEGACY_DETAILS">
             <field name="link_type" type="list" extension="com_biblestudy"
                    label="JBS_MED_SHOW_DOWNLOAD_ICON" description="JBS_MED_SHOW_DOWNLOAD_ICON_DESC"
@@ -34,9 +31,6 @@
                 <option value="2">JBS_CMN_INLINE</option>
                 <option value="3">JBS_CMN_SQUEEZEBOX</option>
             </field>
-            <field name="mediacode" type="textarea" label="JBS_CMN_AVR"
-                   description="JBS_MED_AVRELOADED_DESC" class="inputbox" cols="64" rows="5"
-                   filter="raw"/>
         </fieldset>
         <fieldset name="media_type" label="JBS_ADDON_LEGACY_MEDIA_TYPE">
             <field name="media_image" type="media" directory="biblestudy"

@@ -75,6 +75,8 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 * @param   array   $config  Configuration array for model. Optional.
 	 *
 	 * @return    TableMediafile    A database object
+	 *
+	 * @since 7.0.0
 	 */
 	public function getTable($type = 'Mediafile', $prefix = 'Table', $config = array())
 	{
@@ -107,12 +109,13 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 				$path = new Registry;
 				$path->loadString($table->params);
-
 				$set_path = '';
+
 				if ($path->get('path'))
 				{
 					$set_path = $path->get('path') . '/';
 				}
+
 				if (!$path->get('protocal') && $set_path)
 				{
 					$path->set('protocal', 'http://');
@@ -128,6 +131,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 					$data['params'] = $params->toArray();
 				}
 			}
+
 			if (parent::save($data))
 			{
 				return true;
@@ -153,12 +157,14 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 		// If user hasn't selected a server yet, just return an empty form
 		$server_id = $this->data->server_id;
+
 		if (empty($server_id))
 		{
 			/** @var Joomla\Registry\Registry $admin */
 			$admin                 = JBSMParams::getAdmin()->params;
 			$server_id             = $admin->get('server');
 			$this->data->server_id = $server_id;
+
 			if (empty($server_id))
 			{
 				// @TODO This may not be optimal, seems like a hack
@@ -185,6 +191,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 		// Add language files
 		$lang = JFactory::getLanguage();
+
 		if (!$lang->load('jbs_addon_' . $server_type, JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/' . $server_type))
 		{
 			throw new Exception(JText::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'));
@@ -235,10 +242,10 @@ class BiblestudyModelMediafile extends JModelAdmin
 		if ($jinput->get('a_id'))
 		{
 			$id = $jinput->get('a_id', 0);
-
-		} // The back end uses id so we use that the rest of the time and set it to 0 by default.
+		}
 		else
 		{
+			// The back end uses id so we use that the rest of the time and set it to 0 by default.
 			$id = $jinput->get('id', 0);
 		}
 
@@ -257,7 +264,6 @@ class BiblestudyModelMediafile extends JModelAdmin
 			// The controller has already verified this is an article you can edit.
 			$form->setFieldAttribute('ordering', 'filter', 'unset');
 			$form->setFieldAttribute('state', 'filter', 'unset');
-
 		}
 
 		return $form;
@@ -280,10 +286,10 @@ class BiblestudyModelMediafile extends JModelAdmin
 		if ($jinput->get('a_id'))
 		{
 			$pk = $jinput->get('a_id', 0);
-
-		} // The back end uses id so we use that the rest of the time and set it to 0 by default.
+		}
 		else
 		{
+			// The back end uses id so we use that the rest of the time and set it to 0 by default.
 			$pk = $jinput->get('id', 0);
 		}
 
@@ -315,7 +321,6 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 			$createdate             = $this->getState('mediafile.createdate');
 			$this->data->createdate = empty($createdate) ? $this->data->createdate : $createdate;
-
 		}
 
 		return $this->data;
@@ -362,6 +367,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 			$done = true;
 		}
+
 		if (strlen($commands['link_type']) > 0)
 		{
 			if (!$this->batchlink_type($commands['link_type'], $pks, $contexts))
@@ -371,6 +377,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 			$done = true;
 		}
+
 		if (strlen($commands['mimetype']) > 0)
 		{
 			if (!$this->batchMimetype($commands['mimetype'], $pks, $contexts))
@@ -390,6 +397,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 			$done = true;
 		}
+
 		if (strlen($commands['popup']) > 0)
 		{
 			if (!$this->batchPopup($commands['popup'], $pks, $contexts))
@@ -691,6 +699,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 			{
 				return false;
 			}
+
 			$user = JFactory::getUser();
 
 			return $user->authorise('core.delete', 'com_biblestudy.mediafile.' . (int) $record->id);

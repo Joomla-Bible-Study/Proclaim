@@ -25,7 +25,6 @@ if (file_exists($api))
  */
 class PlgSystemJBSBackup extends JPlugin
 {
-
 	/**
 	 * Constructor
 	 *
@@ -33,6 +32,8 @@ class PlgSystemJBSBackup extends JPlugin
 	 * @param   array   $config    An optional associative array of configuration settings.
 	 *                             Recognized key values include 'name', 'group', 'params', 'language'
 	 *                             (this list is not meant to be comprehensive).
+	 *
+	 * @since 1.5
 	 */
 	public function __construct(& $subject, $config)
 	{
@@ -45,10 +46,11 @@ class PlgSystemJBSBackup extends JPlugin
 	 * After Initialise system
 	 *
 	 * @return void
+	 *
+	 * @since 1.5
 	 */
 	public function onAfterInitialise()
 	{
-
 		$params = $this->params;
 
 		// First check to see what method of updating the backup we are using
@@ -76,7 +78,6 @@ class PlgSystemJBSBackup extends JPlugin
 			{
 				$this->doEmail($params, $dobackup);
 			}
-
 		}
 	}
 
@@ -86,10 +87,11 @@ class PlgSystemJBSBackup extends JPlugin
 	 * @param   Joomla\Registry\Registry  $params  ?
 	 *
 	 * @return boolean
+	 *
+	 * @since 7.1.0
 	 */
 	public function checktime($params)
 	{
-
 		$now   = time();
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
@@ -117,6 +119,8 @@ class PlgSystemJBSBackup extends JPlugin
 	 * @param   Joomla\Registry\Registry  $params  ?
 	 *
 	 * @return boolean
+	 *
+	 * @since 7.1.0
 	 */
 	public function checkdays($params)
 	{
@@ -149,6 +153,7 @@ class PlgSystemJBSBackup extends JPlugin
 		{
 			$checkdays = true;
 		}
+
 		if ($params->get('day2') == $day)
 		{
 			if ($params->get('hour2') == $hour && $difference > 3600)
@@ -156,6 +161,7 @@ class PlgSystemJBSBackup extends JPlugin
 				$checkdays = true;
 			}
 		}
+
 		if ($params->get('day3') == $day)
 		{
 			if ($params->get('hour3') == $hour && $difference > 3600)
@@ -163,6 +169,7 @@ class PlgSystemJBSBackup extends JPlugin
 				$checkdays = true;
 			}
 		}
+
 		if ($params->get('day4') == $day)
 		{
 			if ($params->get('hour4') == $hour && $difference > 3600)
@@ -170,6 +177,7 @@ class PlgSystemJBSBackup extends JPlugin
 				$checkdays = true;
 			}
 		}
+
 		if ($params->get('day5') == $day)
 		{
 			if ($params->get('hour5') == $hour && $difference > 3600)
@@ -177,6 +185,7 @@ class PlgSystemJBSBackup extends JPlugin
 				$checkdays = true;
 			}
 		}
+
 		if ($params->get('day6') == $day)
 		{
 			if ($params->get('hour6') == $hour && $difference > 3600)
@@ -184,6 +193,7 @@ class PlgSystemJBSBackup extends JPlugin
 				$checkdays = true;
 			}
 		}
+
 		if ($params->get('day7') == $day)
 		{
 			if ($params->get('hour7') == $hour && $difference > 3600)
@@ -191,6 +201,7 @@ class PlgSystemJBSBackup extends JPlugin
 				$checkdays = true;
 			}
 		}
+
 		if ($params->get('day8') == $day)
 		{
 			if ($params->get('hour8') == $hour && $difference > 3600)
@@ -198,6 +209,7 @@ class PlgSystemJBSBackup extends JPlugin
 				$checkdays = true;
 			}
 		}
+
 		if ($params->get('day9') == $day)
 		{
 			if ($params->get('hour9') == $hour && $difference > 3600)
@@ -205,6 +217,7 @@ class PlgSystemJBSBackup extends JPlugin
 				$checkdays = true;
 			}
 		}
+
 		if ($params->get('day10') == $day)
 		{
 			if ($params->get('hour10') == $hour && $difference > 3600)
@@ -220,6 +233,8 @@ class PlgSystemJBSBackup extends JPlugin
 	 * Do the backup
 	 *
 	 * @return boolean
+	 *
+	 * @since 7.1.0
 	 */
 	public function doBackup()
 	{
@@ -233,6 +248,8 @@ class PlgSystemJBSBackup extends JPlugin
 	 * Update Time
 	 *
 	 * @return boolean
+	 *
+	 * @since 7.1.0
 	 */
 	public function updatetime()
 	{
@@ -261,6 +278,8 @@ class PlgSystemJBSBackup extends JPlugin
 	 * @param   string                    $dobackup  File of Backup
 	 *
 	 * @return void
+	 *
+	 * @since 7.1.0
 	 */
 	public function doEmail($params, $dobackup)
 	{
@@ -281,11 +300,12 @@ class PlgSystemJBSBackup extends JPlugin
 		{
 			$msg = JText::_('JBS_PLG_BACKUP_EMAIL_MSG_SUCCESS');
 		}
+
 		if ($params->def('fromname', $fromname))
 		{
-
 			$fromname = $params->def('fromname', $fromname);
 		}
+
 		$mail = JFactory::getMailer();
 		$mail->isHtml(true);
 		jimport('joomla.utilities.date');
@@ -306,6 +326,7 @@ class PlgSystemJBSBackup extends JPlugin
 			$recipients = array(
 				$config->get('config.mailfrom'));
 		}
+
 		$mail->addRecipient($recipients);
 
 		$mail->setSubject($Subject . ' ' . $livesite);
@@ -315,6 +336,7 @@ class PlgSystemJBSBackup extends JPlugin
 		{
 			$mail->addAttachment($dobackup);
 		}
+
 		if (!$mail->Send())
 		{
 			JLog::add('JBSM Bakup Plugin email faild.', JLog::ERROR, 'com_biblestudy', DateTime::W3C);
@@ -327,6 +349,8 @@ class PlgSystemJBSBackup extends JPlugin
 	 * @param   Joomla\Registry\Registry  $params  JBSM Params
 	 *
 	 * @return void
+	 *
+	 * @since 7.1.0
 	 */
 	public function updatefiles($params)
 	{
@@ -345,10 +369,10 @@ class PlgSystemJBSBackup extends JPlugin
 		{
 			$parts[] = array_pop($files);
 		}
+
 		foreach ($parts as $part)
 		{
 			JFile::delete($part);
 		}
 	}
-
 }

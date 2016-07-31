@@ -20,11 +20,12 @@ use \Joomla\Registry\Registry;
  */
 class TableTemplate extends JTable
 {
-
 	/**
 	 * Id
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $id = null;
 
@@ -32,6 +33,8 @@ class TableTemplate extends JTable
 	 * Type
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $type = null;
 
@@ -39,6 +42,8 @@ class TableTemplate extends JTable
 	 * Template
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $tmpl = null;
 
@@ -46,6 +51,8 @@ class TableTemplate extends JTable
 	 * Published
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $published = 1;
 
@@ -53,6 +60,8 @@ class TableTemplate extends JTable
 	 * Params
 	 *
 	 * @var Registry
+	 *
+	 * @since 9.0.0
 	 */
 	public $params = null;
 
@@ -60,6 +69,8 @@ class TableTemplate extends JTable
 	 * Title
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $title = null;
 
@@ -67,6 +78,8 @@ class TableTemplate extends JTable
 	 * Text
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $text = null;
 
@@ -74,6 +87,8 @@ class TableTemplate extends JTable
 	 * PDF file
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $pdf = null;
 
@@ -81,6 +96,8 @@ class TableTemplate extends JTable
 	 * Contractor
 	 *
 	 * @param   JDatabaseDriver  &$db  Database connector object
+	 *
+	 * @since 9.0.0
 	 */
 	public function __construct(&$db)
 	{
@@ -142,6 +159,7 @@ class TableTemplate extends JTable
 		{
 			$this->setError($oldrow->getError());
 		}
+
 		if (!$this->_rules)
 		{
 			$this->setRules('{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}');
@@ -201,5 +219,4 @@ class TableTemplate extends JTable
 
 		return $asset->id;
 	}
-
 }

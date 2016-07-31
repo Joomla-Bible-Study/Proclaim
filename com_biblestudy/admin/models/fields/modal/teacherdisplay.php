@@ -1,5 +1,4 @@
 <?php
-
 /**
  * TeacherDisplay field modal
  *
@@ -19,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class JFormFieldModal_Teacherdisplay extends JFormField
 {
-
 	/**
 	 * The form field type.
 	 *
@@ -108,6 +106,7 @@ class JFormFieldModal_Teacherdisplay extends JFormField
 
 		// Class='required' for client side validation
 		$class = '';
+
 		if ($this->required)
 		{
 			$class = ' class="required modal-value"';
@@ -117,5 +116,4 @@ class JFormFieldModal_Teacherdisplay extends JFormField
 
 		return $html;
 	}
-
 }

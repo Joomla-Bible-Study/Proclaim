@@ -25,6 +25,8 @@ class BiblestudyViewTerms extends JViewLegacy
 	 * Media
 	 *
 	 * @var Object
+	 *
+	 * @since 7.0
 	 */
 	public $media;
 
@@ -32,6 +34,8 @@ class BiblestudyViewTerms extends JViewLegacy
 	 * Params
 	 *
 	 * @var Registry
+	 *
+	 * @since 7.0
 	 */
 	protected $params;
 
@@ -39,6 +43,8 @@ class BiblestudyViewTerms extends JViewLegacy
 	 * Document
 	 *
 	 * @var JDocument
+	 *
+	 * @since 7.0
 	 */
 	public $document;
 
@@ -48,6 +54,8 @@ class BiblestudyViewTerms extends JViewLegacy
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
+	 *
+	 * @since 7.0.0
 	 */
 	public function display($tpl = null)
 	{
@@ -80,7 +88,8 @@ class BiblestudyViewTerms extends JViewLegacy
 			<?php
 			if ($compat_mode == 1)
 			{
-				echo '<a href="http://joomlabiblestudy.org/router.php?file=' . $this->media->spath . $this->media->fpath . $this->media->filename
+				echo '<a href="http://joomlabiblestudy.org/router.php?file=' .
+						JBSMHelper::MediaBuildUrl($this->media->spath, $this->media->filename, $this->params)
 					. '&size=' . $this->media->size . '">' . JText::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a>';
 			}
 			else
@@ -99,6 +108,8 @@ class BiblestudyViewTerms extends JViewLegacy
 	 * Prepares the document;
 	 *
 	 * @return void
+	 *
+	 * @since 7.0.0
 	 */
 	protected function _prepareDocument()
 	{
@@ -120,6 +131,7 @@ class BiblestudyViewTerms extends JViewLegacy
 		{
 			$this->params->def('page_heading', JText::_('JGLOBAL_ARTICLES'));
 		}
+
 		$title = $this->params->get('page_title', '');
 		$title .= ' : ' . $this->media->params->get('filename');
 
@@ -135,6 +147,7 @@ class BiblestudyViewTerms extends JViewLegacy
 		{
 			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
+
 		$this->document->setTitle($title);
 
 		// Prepare meta information (under development)
@@ -161,5 +174,4 @@ class BiblestudyViewTerms extends JViewLegacy
 			$this->document->setMetaData('robots', $this->params->get('robots'));
 		}
 	}
-
 }

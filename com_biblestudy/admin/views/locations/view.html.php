@@ -18,11 +18,11 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewLocations extends JViewLegacy
 {
-
 	/**
 	 * Items
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $items;
 
@@ -30,6 +30,7 @@ class BiblestudyViewLocations extends JViewLegacy
 	 * Pagination
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $pagination;
 
@@ -37,6 +38,7 @@ class BiblestudyViewLocations extends JViewLegacy
 	 * State
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $state;
 
@@ -44,6 +46,7 @@ class BiblestudyViewLocations extends JViewLegacy
 	 * Can Do
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $canDo;
 
@@ -51,6 +54,7 @@ class BiblestudyViewLocations extends JViewLegacy
 	 * Filter Levels
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $f_levels;
 

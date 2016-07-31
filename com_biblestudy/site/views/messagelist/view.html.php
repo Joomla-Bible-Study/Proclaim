@@ -20,29 +20,44 @@ use Joomla\Registry\Registry;
  */
 class BiblestudyViewMessagelist extends JViewLegacy
 {
-
-	/** @var  string Can Do */
+	/** @var  string Can Do
+	 *
+	 * @since 7.0 */
 	public $canDo;
 
-	/** @var  string Books */
+	/** @var  string Books
+	 *
+	 * @since 7.0 */
 	public $books;
 
-	/** @var  Registry Teachers */
+	/** @var  Registry Teachers
+	 *
+	 * @since 7.0 */
 	public $teachers;
 
-	/** @var  string Series */
+	/** @var  string Series
+	 *
+	 * @since 7.0 */
 	public $series;
 
-	/** @var  string Message Types */
+	/** @var  string Message Types
+	 *
+	 * @since 7.0 */
 	public $messageTypes;
 
-	/** @var  string Years */
+	/** @var  string Years
+	 *
+	 * @since 7.0 */
 	public $years;
 
-	/** @var  string New Link */
+	/** @var  string New Link
+	 *
+	 * @since 7.0 */
 	public $newlink;
 
-	/** @var  JDocument Document */
+	/** @var  JDocument Document
+	 *
+	 * @since 7.0 */
 	public $document;
 
 	public $filterForm;
@@ -53,6 +68,8 @@ class BiblestudyViewMessagelist extends JViewLegacy
 	 * Items
 	 *
 	 * @var array
+	 *
+	 * @since 7.0
 	 */
 	protected $items;
 
@@ -60,6 +77,8 @@ class BiblestudyViewMessagelist extends JViewLegacy
 	 * Pagination
 	 *
 	 * @var array
+	 *
+	 * @since 7.0
 	 */
 	protected $pagination;
 
@@ -67,15 +86,21 @@ class BiblestudyViewMessagelist extends JViewLegacy
 	 * State
 	 *
 	 * @var array
+	 *
+	 * @since 7.0
 	 */
 	protected $state;
 
 	/**
 	 * @var object
+	 *
+	 * @since 7.0
 	 */
 	protected $admin;
 
-	/** @var Registry Params */
+	/** @var Registry Params
+	 *
+	 * @since 7.0 */
 	protected $params;
 
 	/**
@@ -84,6 +109,8 @@ class BiblestudyViewMessagelist extends JViewLegacy
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
+	 *
+	 * @since 7.0
 	 */
 	public function display($tpl = null)
 	{
@@ -130,6 +157,8 @@ class BiblestudyViewMessagelist extends JViewLegacy
 	 * Prepares the document
 	 *
 	 * @return void
+	 *
+	 * @since 7.0
 	 */
 	protected function _prepareDocument()
 	{
@@ -151,6 +180,7 @@ class BiblestudyViewMessagelist extends JViewLegacy
 		}
 
 		$title = $this->params->def('page_title', '');
+
 		if (empty($title))
 		{
 			$title = $app->get('sitename');
@@ -163,6 +193,7 @@ class BiblestudyViewMessagelist extends JViewLegacy
 		{
 			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
+
 		$this->document->setTitle($title);
 
 		$pathway = $app->getPathway();
@@ -183,5 +214,4 @@ class BiblestudyViewMessagelist extends JViewLegacy
 			$this->document->setMetaData('robots', $this->params->get('robots'));
 		}
 	}
-
 }

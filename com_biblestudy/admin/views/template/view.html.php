@@ -18,11 +18,11 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewTemplate extends JViewLegacy
 {
-
 	/**
 	 * Pagination
 	 *
 	 * @var array
+	 * @since    7.0.0
 	 */
 	protected $pagination;
 
@@ -30,6 +30,7 @@ class BiblestudyViewTemplate extends JViewLegacy
 	 * State
 	 *
 	 * @var array
+	 * @since    7.0.0
 	 */
 	protected $state;
 
@@ -37,6 +38,7 @@ class BiblestudyViewTemplate extends JViewLegacy
 	 * Item
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $item;
 
@@ -44,6 +46,7 @@ class BiblestudyViewTemplate extends JViewLegacy
 	 * Types
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $types;
 
@@ -51,6 +54,7 @@ class BiblestudyViewTemplate extends JViewLegacy
 	 * Form
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $form;
 
@@ -58,6 +62,7 @@ class BiblestudyViewTemplate extends JViewLegacy
 	 * Can Do
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $canDo;
 
@@ -132,6 +137,7 @@ class BiblestudyViewTemplate extends JViewLegacy
 			{
 				JToolbarHelper::save2copy('template.save2copy');
 			}
+
 			JToolbarHelper::cancel('template.cancel', 'JTOOLBAR_CLOSE');
 		}
 
@@ -152,5 +158,4 @@ class BiblestudyViewTemplate extends JViewLegacy
 		$document = JFactory::getDocument();
 		$document->setTitle($isNew ? JText::_('JBS_TITLE_TEMPLATES_CREATING') : JText::sprintf('JBS_TITLE_TEMPLATES_EDITING', $this->item->title));
 	}
-
 }

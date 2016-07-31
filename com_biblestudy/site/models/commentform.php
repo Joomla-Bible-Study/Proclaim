@@ -21,13 +21,14 @@ use Joomla\Utilities\ArrayHelper;
  */
 class BiblestudyModelCommentform extends BiblestudyModelComment
 {
-
 	/**
 	 * Method to get a single record.
 	 *
 	 * @param   integer  $pk  The id of the primary key.
 	 *
 	 * @return  mixed    Object on success, false on failure.
+	 *
+	 * @since    7.0.0
 	 */
 	public function getItem($pk = null)
 	{
@@ -114,5 +115,4 @@ class BiblestudyModelCommentform extends BiblestudyModelComment
 
 		$this->setState('layout', $app->input->get('layout'));
 	}
-
 }
