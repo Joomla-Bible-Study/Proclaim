@@ -17,12 +17,14 @@ defined('_JEXEC') or die();
  */
 class JBSMSSConvert
 {
-
 	private $serverid;
+
 	/**
 	 * function to convert SermonSpeaker
 	 *
 	 * @return string Table for results
+	 *
+	 * @since 9.0.0
 	 */
 	public function convertSS()
 	{
@@ -58,6 +60,7 @@ class JBSMSSConvert
 		{
 			$result_table .= '<tr><td>' . JText::_('JBS_IBM_SERVER_RECORD_ADDED') . '</td></tr>';
 		}
+
 		$query = $db->getQuery(true);
 		$query->select('*')
 			->from('#__bsms_servers')
@@ -74,6 +77,7 @@ class JBSMSSConvert
 		$db->setQuery($query);
 
 		$teachers = $db->loadObjectList();
+
 		if (!$teachers)
 		{
 			$result_table .= '<tr><td><span style="color: red;">' . JText::_('JBS_IBM_NO_TEACHERS_FOUND_SS') . '</span></td></tr>';
@@ -81,7 +85,6 @@ class JBSMSSConvert
 
 		foreach ($teachers AS $teacher)
 		{
-
 			$data = new stdClass;
 			$teachername       = $teacher->name;
 			$data->teachername = $teachername;
@@ -114,7 +117,6 @@ class JBSMSSConvert
 					$speakers->newid = $lastteacher;
 				}
 			}
-
 		} // End teachers foreach
 
 		// Series Records
@@ -123,6 +125,7 @@ class JBSMSSConvert
 			->from('#__sermon_series');
 		$db->setQuery($query);
 		$series = $db->loadObjectList();
+
 		if (!$series)
 		{
 			$result_table .= '<tr><td><span style="color: red;">' . JText::_('JBS_IBM_NO_SERIES_FOUND_SS') . '</span>';
@@ -135,20 +138,24 @@ class JBSMSSConvert
 				$series_text = $single->series_title;
 				$description = $single->series_description;
 				$published   = $single->state;
+
 				if (!$published)
 				{
 					$published = $single->published;
 				}
+
 				if (!$published)
 				{
 					$published = 1;
 				}
+
 				$series_thumbnail       = $single->avatar;
 				$data                   = new stdClass;
 				$data->series_text      = $series_text;
 				$data->description      = $description;
 				$data->published        = $published;
 				$data->series_thumbnail = $series_thumbnail;
+
 				foreach ($seriesspeakers as $speakers)
 				{
 					if ($speakers->series_id == $single->id)
@@ -163,6 +170,7 @@ class JBSMSSConvert
 
 				$data->alias    = $single->alias;
 				$data->ordering = $single->ordering;
+
 				if (!$db->insertObject('#__bsms_series', $data))
 				{
 					$result_table .= '<tr><td>' . JText::_('JBS_IBM_ERROR_OCCURED_SS_SERIES') . '</td></tr>';
@@ -183,7 +191,6 @@ class JBSMSSConvert
 						}
 					}
 				}
-
 			} // End foreach $series as $single
 
 		}
@@ -222,7 +229,6 @@ class JBSMSSConvert
 		$result_table .= '</table>';
 
 		return $result_table;
-
 	}
 
 	/**
@@ -232,17 +238,21 @@ class JBSMSSConvert
 	 * @param   array   $seriesspeakers  Array of Series
 	 *
 	 * @return void
+	 *
+	 * @since 9.0.0
 	 */
 	public function newStudies($sermon, $seriesspeakers)
 	{
 		$db   = JFactory::getDbo();
 		$data = new stdClass;
+
 		foreach ($seriesspeakers as $speakers)
 		{
 			if ($speakers->speaker_id == $sermon->speaker_id)
 			{
 				$data->teacher_id = $speakers->newid;
 			}
+
 			if ($speakers->series_id == $sermon->series_id)
 			{
 				$data->series_id = $speakers->newseriesid;
@@ -273,6 +283,7 @@ class JBSMSSConvert
 		{
 			$data->hits = 0;
 		}
+
 		$data->published = $sermon->state;
 		$data->alias     = $sermon->alias;
 
@@ -309,7 +320,6 @@ class JBSMSSConvert
 			$db->insertObject('#__bsms_mediafiles', $data2, 'id');
 
 		}
-
 	}
 
 	/**
@@ -318,6 +328,8 @@ class JBSMSSConvert
 	 * @param   string  $sermon  Book of the Bible.
 	 *
 	 * @return object Version of the Books
+	 *
+	 * @since 9.0.0
 	 */
 	public function getVerses($sermon)
 	{
@@ -332,396 +344,462 @@ class JBSMSSConvert
 			$sermonscripture->verse_begin   = '';
 			$sermonscripture->verse_end     = '';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'genesis');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '101';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'exodus');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '102';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'leviticus');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '103';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'numbers');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '104';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'deuteronomy');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '105';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'joshua');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '106';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'judges');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '107';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'ruth');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '108';
 		}
+
 		$bookname = substr_count(strtolower($sermon), '1 samuel');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '109';
 		}
+
 		$bookname = substr_count(strtolower($sermon), '2 samuel');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '110';
 		}
+
 		$bookname = substr_count(strtolower($sermon), '1 kings');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '111';
 		}
+
 		$bookname = substr_count(strtolower($sermon), '2 kings');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '112';
 		}
+
 		$bookname = substr_count(strtolower($sermon), '1 chronicles');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '113';
 		}
+
 		$bookname = substr_count(strtolower($sermon), '2 chronicles');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '114';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'ezra');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '115';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'nehemiah');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '116';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'esther');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '117';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'job');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '118';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'psalm');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '119';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'proverbs');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '120';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'ecclesiastes');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '121';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'song of solomon');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '122';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'isaiah');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '123';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'jeremiah');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '124';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'lamentations');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '125';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'ezekiel');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '126';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'daniel');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '127';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'hosea');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '128';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'joel');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '129';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'amos');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '130';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'obadiah');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '131';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'jonah');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '132';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'micah');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '133';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'nahum');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '134';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'habakkuk');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '135';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'zephaniah');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '136';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'haggai');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '137';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'zechariah');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '138';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'malachi');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '139';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'matthew');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '140';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'mark');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '141';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'luke');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '142';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'john');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '143';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'acts');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '144';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'romans');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '145';
 		}
+
 		$bookname = substr_count(strtolower($sermon), '1 corinthians');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '146';
 		}
+
 		$bookname = substr_count(strtolower($sermon), '2 corinthians');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '147';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'galatians');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '148';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'ephesians');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '149';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'philippians');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '150';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'colossians');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '151';
 		}
+
 		$bookname = substr_count(strtolower($sermon), '1 thessalonians');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '152';
 		}
+
 		$bookname = substr_count(strtolower($sermon), '2 thessalonians');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '153';
 		}
+
 		$bookname = substr_count(strtolower($sermon), '1 timothy');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '154';
 		}
+
 		$bookname = substr_count(strtolower($sermon), '2 timothy');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '155';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'titus');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '156';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'philemon');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '157';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'hebrews');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '158';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'james');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '159';
 		}
+
 		$bookname = substr_count(strtolower($sermon), '1 peter');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '160';
 		}
+
 		$bookname = substr_count(strtolower($sermon), '2 peter');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '161';
 		}
+
 		$bookname = substr_count(strtolower($sermon), '1 john');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '162';
 		}
+
 		$bookname = substr_count(strtolower($sermon), '2 john');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '163';
 		}
+
 		$bookname = substr_count(strtolower($sermon), '3 john');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '164';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'jude');
 
 		if ($bookname > 0)
 		{
 			$sermonscripture->booknumber = '165';
 		}
+
 		$bookname = substr_count(strtolower($sermon), 'revelation');
 
 		if ($bookname > 0)
@@ -739,6 +817,7 @@ class JBSMSSConvert
 		{
 			$secondcolon = strpos($sermon, ':', $firstcolon + 1);
 		}
+
 		$sermonscripture->chapter_begin = substr($sermon, $firstspace + 1, ($firstcolon - $firstspace) - 1);
 
 		if (!$firstdash)
@@ -749,6 +828,7 @@ class JBSMSSConvert
 		{
 			$sermonscripture->verse_begin = substr($sermon, $firstcolon + 1, $firstdash - ($firstcolon + 1));
 		}
+
 		if (!$issecondcolon)
 		{
 			$sermonscripture->chapter_end = '';
@@ -758,6 +838,7 @@ class JBSMSSConvert
 			$sermonscripture->chapter_end = substr($sermon, $firstdash + 1, ($secondcolon - $firstdash) - 1);
 			$sermonscripture->verse_end   = substr($sermon, $secondcolon + 1);
 		}
+
 		if (!$issecondcolon && $firstdash)
 		{
 			$sermonscripture->verse_end = substr($sermon, $firstdash + 1);
@@ -772,10 +853,11 @@ class JBSMSSConvert
 	 * @param   string  $time  Time to be formatted out.
 	 *
 	 * @return object
+	 *
+	 * @since 9.0.0
 	 */
 	public function getTime($time)
 	{
-
 		$firstcolon  = strpos($time, ':');
 		$secondcolon = strpos($time, ':', $firstcolon + 1);
 		$sermontime  = new stdClass;
@@ -796,11 +878,11 @@ class JBSMSSConvert
 			{
 				$minuteslength = '2';
 			}
+
 			$sermontime->media_seconds = substr($time, $firstcolon + 1, 2);
 			$sermontime->media_minutes = substr($time, 0, $minuteslength);
 		}
 
 		return $sermontime;
 	}
-
 }

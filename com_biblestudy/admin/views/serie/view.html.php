@@ -20,11 +20,11 @@ use Joomla\Registry\Registry;
  */
 class BiblestudyViewSerie extends JViewLegacy
 {
-
 	/**
 	 * Can Do
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	public $canDo;
 
@@ -32,6 +32,7 @@ class BiblestudyViewSerie extends JViewLegacy
 	 * Form
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $form;
 
@@ -39,6 +40,7 @@ class BiblestudyViewSerie extends JViewLegacy
 	 * Item
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $item;
 
@@ -46,6 +48,7 @@ class BiblestudyViewSerie extends JViewLegacy
 	 * Admin
 	 *
 	 * @var Registry
+	 * @since    7.0.0
 	 */
 	protected $admin_params;
 
@@ -55,6 +58,8 @@ class BiblestudyViewSerie extends JViewLegacy
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
+	 *
+	 * @since    7.0.0
 	 */
 	public function display($tpl = null)
 	{
@@ -111,8 +116,10 @@ class BiblestudyViewSerie extends JViewLegacy
 				JToolbarHelper::apply('serie.apply');
 				JToolbarHelper::save('serie.save');
 			}
+
 			JToolbarHelper::cancel('serie.cancel', 'JTOOLBAR_CLOSE');
 		}
+
 		JToolbarHelper::divider();
 		JToolbarHelper::help('biblestudy', true);
 	}
@@ -130,5 +137,4 @@ class BiblestudyViewSerie extends JViewLegacy
 		$document = JFactory::getDocument();
 		$document->setTitle($isNew ? JText::_('JBS_TITLE_SERIES_CREATING') : JText::sprintf('JBS_TITLE_SERIES_EDITING', $this->item->series_text));
 	}
-
 }

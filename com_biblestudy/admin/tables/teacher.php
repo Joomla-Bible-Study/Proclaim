@@ -24,13 +24,19 @@ class TableTeacher extends JTable
 	 * Teacher Name
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $teachername;
 
-	/** @var string Alias */
+	/** @var string Alias
+	 *
+	 * @since 9.0.0 */
 	public $alias;
 
-	/** @var string Ordering */
+	/** @var string Ordering
+	 *
+	 * @since 9.0.0 */
 	public $ordering;
 
 	/**
@@ -152,5 +158,4 @@ class TableTeacher extends JTable
 
 		return $asset->id;
 	}
-
 }

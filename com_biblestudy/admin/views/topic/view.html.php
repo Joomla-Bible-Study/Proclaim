@@ -10,7 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-
 /**
  * View class for Topic
  *
@@ -19,11 +18,11 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewTopic extends JViewLegacy
 {
-
 	/**
 	 * Form
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $form;
 
@@ -31,6 +30,7 @@ class BiblestudyViewTopic extends JViewLegacy
 	 * Item
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $item;
 
@@ -38,6 +38,7 @@ class BiblestudyViewTopic extends JViewLegacy
 	 * State
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $state;
 
@@ -45,6 +46,7 @@ class BiblestudyViewTopic extends JViewLegacy
 	 * Defaults
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $defaults;
 
@@ -52,6 +54,7 @@ class BiblestudyViewTopic extends JViewLegacy
 	 * Can Do
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $canDo;
 
@@ -79,6 +82,7 @@ class BiblestudyViewTopic extends JViewLegacy
 
 			return false;
 		}
+
 		$this->setLayout("edit");
 
 		// Set the toolbar
@@ -119,6 +123,7 @@ class BiblestudyViewTopic extends JViewLegacy
 				JToolbarHelper::apply('topic.apply');
 				JToolbarHelper::save('topic.save');
 			}
+
 			JToolbarHelper::cancel('topic.cancel', 'JTOOLBAR_CLOSE');
 		}
 
@@ -139,5 +144,4 @@ class BiblestudyViewTopic extends JViewLegacy
 		$document = JFactory::getDocument();
 		$document->setTitle($isNew ? JText::_('JBS_TITLE_TOPICS_CREATING') : JText::sprintf('JBS_TITLE_TOPICS_EDITING', $this->item->topic_text));
 	}
-
 }

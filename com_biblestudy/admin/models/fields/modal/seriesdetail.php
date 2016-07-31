@@ -18,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class JFormFieldModal_Seriesdetail extends JFormField
 {
-
 	/**
 	 * The form field type.
 	 *
@@ -106,6 +105,7 @@ class JFormFieldModal_Seriesdetail extends JFormField
 
 		// Class='required' for client side validation
 		$class = '';
+
 		if ($this->required)
 		{
 			$class = ' class="required modal-value"';
@@ -115,5 +115,4 @@ class JFormFieldModal_Seriesdetail extends JFormField
 
 		return $html;
 	}
-
 }

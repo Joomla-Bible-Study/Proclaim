@@ -18,11 +18,12 @@ defined('_JEXEC') or die;
  */
 class TableSerie extends JTable
 {
-
 	/**
 	 * Primary Key
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $id = null;
 
@@ -30,6 +31,8 @@ class TableSerie extends JTable
 	 * Series Text
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $series_text = null;
 
@@ -39,6 +42,8 @@ class TableSerie extends JTable
 	 * Teacher
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $teacher = null;
 
@@ -46,6 +51,8 @@ class TableSerie extends JTable
 	 * Description
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $description = null;
 
@@ -53,6 +60,8 @@ class TableSerie extends JTable
 	 * Series Thumbnail
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $series_thumbnail = null;
 
@@ -60,6 +69,8 @@ class TableSerie extends JTable
 	 * Publish state
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $published = 1;
 
@@ -77,6 +88,8 @@ class TableSerie extends JTable
 	 * Constructor
 	 *
 	 * @param   JDatabaseDriver  &$db  Database connector object
+	 *
+	 * @since 9.0.0
 	 */
 	public function __construct(&$db)
 	{
@@ -158,5 +171,4 @@ class TableSerie extends JTable
 
 		return $asset->id;
 	}
-
 }

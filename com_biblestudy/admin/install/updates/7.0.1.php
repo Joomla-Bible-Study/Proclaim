@@ -24,6 +24,8 @@ class Migration701
 	 * @param   JDatabaseDriver  $db  Data bass driver
 	 *
 	 * @return bool
+	 *
+	 * @since 9.0.0
 	 */
 	public function up($db)
 	{
@@ -51,9 +53,9 @@ class Migration701
 			{
 				$paramstag = true;
 			}
+
 			if (!$languagetag && !$paramstag)
 			{
-
 				$addfield = array(array(
 					'table'   => '#__bsms_topics', 'field' => 'params', 'type' => 'ADD',
 					'command' => 'varchar(511) NULL'
@@ -65,9 +67,7 @@ class Migration701
 
 					return false;
 				}
-
 			}
-
 		}
 		else
 		{
@@ -75,6 +75,7 @@ class Migration701
 
 			return false;
 		}
+
 		$fixtopics = $this->updatetopics();
 
 		if (!$fixtopics)
@@ -89,6 +90,8 @@ class Migration701
 	 * Update the Topics
 	 *
 	 * @return boolean
+	 *
+	 * @since 9.0.0
 	 */
 	public function updatetopics()
 	{
@@ -109,5 +112,4 @@ class Migration701
 
 		return true;
 	}
-
 }

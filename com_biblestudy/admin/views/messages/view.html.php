@@ -18,11 +18,11 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewMessages extends JViewLegacy
 {
-
 	/**
 	 * Can Do
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	public $canDo;
 
@@ -30,6 +30,7 @@ class BiblestudyViewMessages extends JViewLegacy
 	 * Books
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	public $books;
 
@@ -37,6 +38,7 @@ class BiblestudyViewMessages extends JViewLegacy
 	 * Teachers
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	public $teachers;
 
@@ -44,6 +46,7 @@ class BiblestudyViewMessages extends JViewLegacy
 	 * Series
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	public $series;
 
@@ -51,6 +54,7 @@ class BiblestudyViewMessages extends JViewLegacy
 	 * Message Types
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	public $messageTypes;
 
@@ -58,6 +62,7 @@ class BiblestudyViewMessages extends JViewLegacy
 	 * Years
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	public $years;
 
@@ -65,6 +70,7 @@ class BiblestudyViewMessages extends JViewLegacy
 	 * Filter Levels
 	 *
 	 * @var array
+	 * @since    7.0.0
 	 */
 	public $f_levels;
 
@@ -72,6 +78,7 @@ class BiblestudyViewMessages extends JViewLegacy
 	 * Side Bar
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	public $sidebar;
 
@@ -79,6 +86,7 @@ class BiblestudyViewMessages extends JViewLegacy
 	 * Items
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $items;
 
@@ -86,6 +94,7 @@ class BiblestudyViewMessages extends JViewLegacy
 	 * Pagination
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $pagination;
 
@@ -93,6 +102,7 @@ class BiblestudyViewMessages extends JViewLegacy
 	 * State
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $state;
 

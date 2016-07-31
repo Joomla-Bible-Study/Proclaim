@@ -21,6 +21,8 @@ class Migration901
 	 * @param   JDatabaseDriver  $db  Joomla Data bass driver
 	 *
 	 * @return bool
+	 *
+	 * @since 9.0.1
 	 */
 	public function up($db)
 	{
@@ -141,5 +143,4 @@ class Migration901
 			}
 		}
 	}
-
 }

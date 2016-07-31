@@ -24,6 +24,8 @@ class Migration613
 	 * @param   JDatabaseDriver  $db  Data bass driver
 	 *
 	 * @return bool
+	 *
+	 * @since 9.0.0
 	 */
 	public function up($db)
 	{

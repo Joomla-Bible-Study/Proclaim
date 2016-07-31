@@ -20,13 +20,14 @@ use \Joomla\Registry\Registry;
  */
 class Migration800
 {
-
 	/**
 	 * Method to Update to 8.0.0
 	 *
 	 * @param   JDatabaseDriver  $db  Joomla Data bass driver
 	 *
 	 * @return boolean
+	 *
+	 * @since 9.0.0
 	 */
 	public function up($db)
 	{
@@ -42,6 +43,8 @@ class Migration800
 	 * @param   JDatabaseDriver  $db  Joomla Data bass driver
 	 *
 	 * @return bool
+	 *
+	 * @since 9.0.0
 	 */
 	private function migrate_topics($db)
 	{
@@ -86,6 +89,7 @@ class Migration800
 					{
 						$new_topic->language = '*';
 					}
+
 					$new_topic->topic_text = $value;
 					$table->save($new_topic);
 					$this->update_studies($table, $topic->id, $db);
@@ -99,7 +103,6 @@ class Migration800
 
 				if (!$db->execute())
 				{
-
 					JFactory::getApplication()->enqueueMessage('Failed to delete old topic id: ' . $topic->id, 'warning');
 
 					return false;
@@ -118,6 +121,8 @@ class Migration800
 	 * @param   JDatabaseDriver  $db            Joomla Data bass driver
 	 *
 	 * @return void
+	 *
+	 * @since 9.0.0
 	 */
 	private function update_studies($topic_table, $old_topic_id, $db)
 	{
@@ -158,6 +163,8 @@ class Migration800
 	 * @param   JDatabaseDriver  $db  Joomla Data bass driver
 	 *
 	 * @return mixed
+	 *
+	 * @since 9.0.0
 	 */
 	public function fix_mediafile_params($db)
 	{
@@ -183,8 +190,8 @@ class Migration800
 			else
 			{
 				$new_params->playerwidth = '';
-
 			}
+
 			if (isset($new_params->playerheight))
 			{
 				$new_params->playerheight = $old_params->playerheight;
@@ -192,8 +199,8 @@ class Migration800
 			else
 			{
 				$new_params->playerheight = '';
-
 			}
+
 			if (isset($new_params->itempopuptitle))
 			{
 				$new_params->itempopuptitle = $old_params->itempopuptitle;
@@ -201,8 +208,8 @@ class Migration800
 			else
 			{
 				$new_params->itempopuptitle = '';
-
 			}
+
 			if (isset($new_params->itempopupfooter))
 			{
 				$new_params->itempopupfooter = $old_params->itempopupfooter;
@@ -210,8 +217,8 @@ class Migration800
 			else
 			{
 				$new_params->itempopupfooter = '';
-
 			}
+
 			if (isset($new_params->popupmargin))
 			{
 				$new_params->popupmargin = $old_params->popupmargin;
@@ -219,8 +226,8 @@ class Migration800
 			else
 			{
 				$new_params->popupmargin = 50;
-
 			}
+
 			if (isset($new_params->autostart))
 			{
 				$new_params->autostart = $old_params->autostart;
@@ -228,7 +235,6 @@ class Migration800
 			else
 			{
 				$new_params->autostart = 0;
-
 			}
 
 			// Pars thought the records and correct the params for the player upgrade errors.

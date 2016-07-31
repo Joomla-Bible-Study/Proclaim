@@ -20,13 +20,19 @@ use \Joomla\Registry\Registry;
  */
 class JBSMStats
 {
-	/** @var int used to store query of messages */
+	/** @var int used to store query of messages
+	 *
+	 * @since 9.0.0 */
 	private static $total_messages = 0;
 
-	/** @var string Start Date */
+	/** @var string Start Date
+	 *
+	 * @since 9.0.0 */
 	private static $total_messages_start = '';
 
-	/** @var string End Date */
+	/** @var string End Date
+	 *
+	 * @since 9.0.0 */
 	private static $total_messages_end   = '';
 
 	/**
@@ -35,6 +41,8 @@ class JBSMStats
 	 * @param   int  $id  Id number of study
 	 *
 	 * @return int Total plays form the media
+	 *
+	 * @since 9.0.0
 	 */
 	public static function total_plays($id)
 	{
@@ -57,6 +65,8 @@ class JBSMStats
 	 * @param   string  $end    ?
 	 *
 	 * @return int Total Messages
+	 *
+	 * @since 9.0.0
 	 */
 	public static function get_total_messages($start = '', $end = '')
 	{
@@ -72,10 +82,12 @@ class JBSMStats
 			{
 				$where[] = 'time > UNIX_TIMESTAMP(\'' . $start . '\')';
 			}
+
 			if (!empty($end))
 			{
 				$where[] = 'time < UNIX_TIMESTAMP(\'' . $end . '\')';
 			}
+
 			$query = $db->getQuery(true);
 			$query
 				->select('COUNT(*)')
@@ -86,6 +98,7 @@ class JBSMStats
 			{
 				$query->where(implode(' AND ', $where));
 			}
+
 			$db->setQuery($query);
 			self::$total_messages = intval($db->loadResult());
 		}
@@ -100,6 +113,8 @@ class JBSMStats
 	 * @param   string  $end    ?
 	 *
 	 * @return int  Total Topics
+	 *
+	 * @since 9.0.0
 	 */
 	public static function get_total_topics($start = '', $end = '')
 	{
@@ -116,10 +131,12 @@ class JBSMStats
 		{
 			$query->where('time > UNIX_TIMESTAMP(\'' . $start . '\')');
 		}
+
 		if (!empty($end))
 		{
 			$query->where('time < UNIX_TIMESTAMP(\'' . $end . '\')');
 		}
+
 		$db->setQuery($query);
 
 		return intval($db->loadResult());
@@ -129,6 +146,8 @@ class JBSMStats
 	 * Get top studies
 	 *
 	 * @return array
+	 *
+	 * @since 9.0.0
 	 */
 	public static function get_top_studies()
 	{
@@ -158,6 +177,8 @@ class JBSMStats
 	 * Total media files in Bible Study
 	 *
 	 * @return int
+	 *
+	 * @since 9.0.0
 	 */
 	public static function get_total_categories()
 	{
@@ -178,6 +199,8 @@ class JBSMStats
 	 * @return object
 	 *
 	 * @deprecated Not used as of 8.0.0
+	 *
+	 * @since      9.0.0
 	 */
 	public static function get_top_books()
 	{
@@ -221,6 +244,8 @@ class JBSMStats
 	 * Total comments
 	 *
 	 * @return int
+	 *
+	 * @since 9.0.0
 	 */
 	public static function get_total_comments()
 	{
@@ -239,6 +264,8 @@ class JBSMStats
 	 * Get top thirty days
 	 *
 	 * @return string
+	 *
+	 * @since 9.0.0
 	 */
 	public static function get_top_thirty_days()
 	{
@@ -275,9 +302,11 @@ class JBSMStats
 	}
 
 	/**
-	 * Get Total Meida Files
+	 * Get Total Media Files
 	 *
-	 * @return array Don't know
+	 * @return int Number of Records under MediaFiles that are published.
+	 *
+	 * @since 9.0.0
 	 */
 	public static function total_media_files()
 	{
@@ -296,6 +325,8 @@ class JBSMStats
 	 * Get Top Downloads
 	 *
 	 * @return string List of links to the downloads
+	 *
+	 * @since 9.0.0
 	 */
 	public static function get_top_downloads()
 	{
@@ -329,7 +360,9 @@ class JBSMStats
 	/**
 	 * Get Downloads ninety
 	 *
-	 * @return array list of download links
+	 * @return  array list of download links
+	 *
+	 * @since 9.0.0
 	 */
 	public static function get_downloads_ninety()
 	{
@@ -371,7 +404,9 @@ class JBSMStats
 	/**
 	 * Total Downloads
 	 *
-	 * @return array
+	 * @return  int Number of Mediafiles Published and have downloads
+	 *
+	 * @since 9.0.0
 	 */
 	public static function total_downloads()
 	{
@@ -393,6 +428,8 @@ class JBSMStats
 	 * @var   Registry  $admin_params  Admin Prams
 	 *
 	 * @return int number of scores
+	 *
+	 * @since 9.0.0
 	 */
 	public static function top_score()
 	{
@@ -410,6 +447,7 @@ class JBSMStats
 		$db->setQuery($query);
 		$results = $db->loadAssocList();
 		array_splice($results, 5);
+
 		foreach ($results as $key => $result)
 		{
 			$query = $db->getQuery(true);
@@ -429,11 +467,13 @@ class JBSMStats
 			{
 				$total = $result->added;
 			}
+
 			$link    = ' <a href="index.php?option=com_biblestudy&amp;task=message.edit&amp;id=' . $hits->id . '">' .
 				$hits->studytitle . '</a> ' . date('Y-m-d', strtotime($hits->studydate)) . '<br>';
 			$final2  = array('total' => $total, 'link' => $link);
 			$final[] = $final2;
 		}
+
 		rsort($final);
 		array_splice($final, 5);
 		$top_score_table = '';
@@ -453,6 +493,8 @@ class JBSMStats
 	 * Returns a System of Player
 	 *
 	 * @return string
+	 *
+	 * @since 9.0.0
 	 */
 	public static function players()
 	{
@@ -522,6 +564,8 @@ class JBSMStats
 	 * Popups for media files
 	 *
 	 * @return string
+	 *
+	 * @since 9.0.0
 	 */
 	public static function popups()
 	{
@@ -580,6 +624,8 @@ class JBSMStats
 	 * Top Score Site
 	 *
 	 * @return string
+	 *
+	 * @since 9.0.0
 	 */
 	public function top_score_site()
 	{
@@ -629,10 +675,12 @@ class JBSMStats
 				->where('#__bsms_mediafiles.study_id = ' . (int) $result->study_id);
 			$db->setQuery($query);
 			$hits = $db->loadObject();
+
 			if (!$hits)
 			{
 				return false;
 			}
+
 			if (!$hits->studytitle)
 			{
 				$name = $hits->id;
@@ -641,6 +689,7 @@ class JBSMStats
 			{
 				$name = $hits->studytitle;
 			}
+
 			if ($format < 1)
 			{
 				$total = $result->added + $hits->hits;
@@ -649,6 +698,7 @@ class JBSMStats
 			{
 				$total = $result->added;
 			}
+
 			$selectvalue   = JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $hits->id . '&t=' . $t);
 			$selectdisplay = $name . ' - ' . JText::_('JBS_CMN_SCORE') . ': ' . $total;
 			$final2        = array(
@@ -658,17 +708,17 @@ class JBSMStats
 			);
 			$final[]       = $final2;
 		}
+
 		rsort($final);
 		array_splice($final, $limit);
 
 		foreach ($final as $topscore)
 		{
-
 			$top .= '<option value="' . $topscore['select'] . '">' . $topscore['display'] . '</option>';
 		}
+
 		$top .= '</select>';
 
 		return $top;
 	}
-
 }

@@ -101,8 +101,10 @@ abstract class JHtmlbsMedia
 			{
 				JHtml::_('stylesheet', 'media/com_biblestudy/css/site/' . $cssName, $attribs, true);
 			}
+
 			JHtml::_('stylesheet', 'media/com_biblestudy/css/general.css', $attribs, true);
 		}
+
 		if ($cssSet == 'lytebox')
 		{
 			JHtml::_('stylesheet', 'media/com_biblestudy/lytebox/lytebox.css', $attribs, true);

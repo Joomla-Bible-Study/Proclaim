@@ -1,12 +1,12 @@
 <?php
 /**
-* Part of Joomla BibleStudy Package
-*
-* @package    BibleStudy.Admin
-* @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
-* @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
-* @link       http://www.JoomlaBibleStudy.org
-* */
+ * Part of Joomla BibleStudy Package
+ *
+ * @package    BibleStudy.Admin
+ * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       http://www.JoomlaBibleStudy.org
+ */
 // No Direct Access
 
 use Joomla\Registry\Registry;
@@ -27,6 +27,8 @@ abstract class JHtmlIcon
 	 * @param   boolean   $legacy    True to use legacy images, false to use icomoon based graphic
 	 *
 	 * @return  string  The HTML markup for the create item link
+	 *
+	 * @since 7.0
 	 */
 	public static function create($category, $params, $attribs = array(), $legacy = false)
 	{
@@ -78,6 +80,8 @@ abstract class JHtmlIcon
 	 * @param   boolean   $legacy   True to use legacy images, false to use icomoon based graphic
 	 *
 	 * @return  string  The HTML markup for the email item link
+	 *
+	 * @since 7.0
 	 */
 	public static function email($article, $params, $attribs = array(), $legacy = false)
 	{
@@ -217,6 +221,8 @@ abstract class JHtmlIcon
 	 * @param   boolean   $legacy   True to use legacy images, false to use icomoon based graphic
 	 *
 	 * @return  string  The HTML markup for the popup link
+	 *
+	 * @since 7.0
 	 */
 	public static function print_popup($article, $params, $attribs = array(), $legacy = false)
 	{
@@ -225,7 +231,7 @@ abstract class JHtmlIcon
 		$request = $input->request;
 
 		$url  = JBSMHelperRoute::getArticleRoute($article->id, $article->language);
-		$url .= '&tmpl=component&print=1&layout=default&page=' . @ $request->limitstart;
+		$url .= '&tmpl=component&print=1&layout=default&page=' . @$request->limitstart;
 
 		$status = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';
 
@@ -262,6 +268,8 @@ abstract class JHtmlIcon
 	 * @param   boolean   $legacy   True to use legacy images, false to use icomoon based graphic
 	 *
 	 * @return  string  The HTML markup for the popup link
+	 *
+	 * @since 7.0
 	 */
 	public static function print_screen($article, $params, $attribs = array(), $legacy = false)
 	{

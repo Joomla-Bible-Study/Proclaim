@@ -20,11 +20,12 @@ use Joomla\Registry\Registry;
  */
 class TableMessage extends JTable
 {
-
 	/**
 	 * Primary Key
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $id = null;
 
@@ -32,6 +33,8 @@ class TableMessage extends JTable
 	 * Study Date
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $studydate = null;
 
@@ -39,6 +42,8 @@ class TableMessage extends JTable
 	 * Teacher id
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $teacher_id = null;
 
@@ -46,6 +51,8 @@ class TableMessage extends JTable
 	 * Study Number
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $studynumber = null;
 
@@ -53,6 +60,8 @@ class TableMessage extends JTable
 	 * Book Number
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $booknumber = null;
 
@@ -60,6 +69,8 @@ class TableMessage extends JTable
 	 * Chapter Begin
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $chapter_begin = null;
 
@@ -67,6 +78,8 @@ class TableMessage extends JTable
 	 * Verse Begin
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $verse_begin = null;
 
@@ -74,6 +87,8 @@ class TableMessage extends JTable
 	 * Chapter End
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $chapter_end = null;
 
@@ -81,6 +96,8 @@ class TableMessage extends JTable
 	 * Verse End
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $verse_end = null;
 
@@ -88,6 +105,8 @@ class TableMessage extends JTable
 	 * Secondary Reference
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $secondary_reference = null;
 
@@ -95,6 +114,8 @@ class TableMessage extends JTable
 	 * Book Number 2
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $booknumber2 = null;
 
@@ -102,6 +123,8 @@ class TableMessage extends JTable
 	 * Chapter Begin2
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $chapter_begin2 = null;
 
@@ -109,6 +132,8 @@ class TableMessage extends JTable
 	 * Verse Begin2
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $verse_begin2 = null;
 
@@ -116,6 +141,8 @@ class TableMessage extends JTable
 	 * Chapter End2
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $chapter_end2 = null;
 
@@ -123,6 +150,8 @@ class TableMessage extends JTable
 	 * Verse End2
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $verse_end2 = null;
 
@@ -144,6 +173,8 @@ class TableMessage extends JTable
 	 * Comments
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $comments = 1;
 
@@ -151,6 +182,8 @@ class TableMessage extends JTable
 	 * Hits
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $hits = 0;
 
@@ -158,6 +191,8 @@ class TableMessage extends JTable
 	 * User ID
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $user_id = null;
 
@@ -165,6 +200,8 @@ class TableMessage extends JTable
 	 * User Name
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $user_name = null;
 
@@ -172,6 +209,8 @@ class TableMessage extends JTable
 	 * Show Level
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $show_level = null;
 
@@ -179,6 +218,8 @@ class TableMessage extends JTable
 	 * Location ID
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $location_id = null;
 
@@ -186,6 +227,8 @@ class TableMessage extends JTable
 	 * Study Title
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $studytitle = null;
 
@@ -193,6 +236,8 @@ class TableMessage extends JTable
 	 * Alias
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $alias = null;
 
@@ -200,6 +245,8 @@ class TableMessage extends JTable
 	 * Study Intro
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $studyintro = null;
 
@@ -207,6 +254,8 @@ class TableMessage extends JTable
 	 * Media Hours
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $media_hours = null;
 
@@ -214,6 +263,8 @@ class TableMessage extends JTable
 	 * Media Minutes
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $media_minutes = null;
 
@@ -221,6 +272,8 @@ class TableMessage extends JTable
 	 * Media seconds
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $media_seconds = null;
 
@@ -228,6 +281,8 @@ class TableMessage extends JTable
 	 * MessageType
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $messagetype = null;
 
@@ -235,6 +290,8 @@ class TableMessage extends JTable
 	 * Series ID
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $series_id = null;
 
@@ -242,6 +299,8 @@ class TableMessage extends JTable
 	 * Study Text
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $studytext = null;
 
@@ -249,6 +308,8 @@ class TableMessage extends JTable
 	 * ThumbNail Media
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $thumbnailm = null;
 
@@ -256,6 +317,8 @@ class TableMessage extends JTable
 	 * ThumbNail Height
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $thumbhm = null;
 
@@ -263,6 +326,8 @@ class TableMessage extends JTable
 	 * ThumbNail Width
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $thumbwm = null;
 
@@ -270,6 +335,8 @@ class TableMessage extends JTable
 	 * Params
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $params = null;
 
@@ -281,13 +348,19 @@ class TableMessage extends JTable
 	 * Published
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $published = 1;
 
-	/** @var string Publish Up */
+	/** @var string Publish Up
+	 *
+	 * @since 9.0.0 */
 	public $publish_up = '0000-00-00 00:00:00';
 
-	/** @var string Publish Down */
+	/** @var string Publish Down
+	 *
+	 * @since 9.0.0 */
 	public $publish_down = '0000-00-00 00:00:00';
 
 	public $modified;
@@ -302,6 +375,8 @@ class TableMessage extends JTable
 	 * Ordering
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $ordering = null;
 
@@ -313,6 +388,8 @@ class TableMessage extends JTable
 	 * Constructor.
 	 *
 	 * @param   JDatabaseDriver  &$db  Database connector object
+	 *
+	 * @since 9.0.0
 	 */
 	public function __construct(&$db)
 	{
@@ -379,10 +456,12 @@ class TableMessage extends JTable
 	 * Ordering.
 	 *
 	 * @return void
+	 *
+	 * @since 9.0.0
 	 */
 	public function ordering()
 	{
-
+		// No Data
 	}
 
 	/**
@@ -436,5 +515,4 @@ class TableMessage extends JTable
 
 		return $asset->id;
 	}
-
 }

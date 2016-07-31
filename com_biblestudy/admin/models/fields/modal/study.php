@@ -20,11 +20,12 @@ defined('_JEXEC') or die;
  */
 class JFormFieldModal_Study extends JFormField
 {
-
 	/**
 	 * Set Modal_Study
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	protected $type = 'Modal_Study';
 
@@ -32,6 +33,8 @@ class JFormFieldModal_Study extends JFormField
 	 * Get input form form
 	 *
 	 * @return array
+	 *
+	 * @since 9.0.0
 	 */
 	protected function getInput()
 	{
@@ -53,6 +56,7 @@ class JFormFieldModal_Study extends JFormField
 
 		// Setup variables for display.
 		$html = array();
+
 		if ($view == 'mediafileform')
 		{
 			$sview = 'messagelist';
@@ -61,6 +65,7 @@ class JFormFieldModal_Study extends JFormField
 		{
 			$sview = 'messages';
 		}
+
 		$link = 'index.php?option=com_biblestudy&amp;view=' . $sview . '&amp;layout=modal&amp;tmpl=component&amp;function=jSelectStudy_' . $this->id;
 
 		$db = JFactory::getDbo();
@@ -80,6 +85,7 @@ class JFormFieldModal_Study extends JFormField
 		{
 			$title = JText::_('JBS_CMN_STUDY_SELECT');
 		}
+
 		$title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
 
 		// The current user display field.
@@ -103,6 +109,7 @@ class JFormFieldModal_Study extends JFormField
 
 		// Class='required' for client side validation
 		$class = '';
+
 		if ($this->required)
 		{
 			$class = ' class="required modal-value"';
@@ -112,5 +119,4 @@ class JFormFieldModal_Study extends JFormField
 
 		return implode("\n", $html);
 	}
-
 }

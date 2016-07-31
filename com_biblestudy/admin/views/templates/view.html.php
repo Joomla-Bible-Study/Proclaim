@@ -18,11 +18,11 @@ defined('_JEXEC') or die;
  */
 class BiblestudyViewTemplates extends JViewLegacy
 {
-
 	/**
 	 * State
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	public $canDo;
 
@@ -30,6 +30,7 @@ class BiblestudyViewTemplates extends JViewLegacy
 	 * State
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	public $templates;
 
@@ -37,6 +38,7 @@ class BiblestudyViewTemplates extends JViewLegacy
 	 * State
 	 *
 	 * @var array
+	 * @since    7.0.0
 	 */
 	public $f_levels;
 
@@ -44,6 +46,7 @@ class BiblestudyViewTemplates extends JViewLegacy
 	 * State
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	public $sidebar;
 
@@ -51,6 +54,7 @@ class BiblestudyViewTemplates extends JViewLegacy
 	 * Items
 	 *
 	 * @var array
+	 * @since    7.0.0
 	 */
 	protected $items;
 
@@ -58,6 +62,7 @@ class BiblestudyViewTemplates extends JViewLegacy
 	 * Pagination
 	 *
 	 * @var array
+	 * @since    7.0.0
 	 */
 	protected $pagination;
 
@@ -65,6 +70,7 @@ class BiblestudyViewTemplates extends JViewLegacy
 	 * State
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $state;
 
@@ -152,6 +158,7 @@ class BiblestudyViewTemplates extends JViewLegacy
 			JToolbarHelper::publishList('templates.publish');
 			JToolbarHelper::unpublishList('templates.unpublish');
 		}
+
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
 			JToolbarHelper::divider();

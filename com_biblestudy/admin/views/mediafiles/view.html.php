@@ -25,6 +25,7 @@ class BiblestudyViewMediafiles extends JViewLegacy
 	 * Media Types
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $mediatypes;
 
@@ -32,6 +33,7 @@ class BiblestudyViewMediafiles extends JViewLegacy
 	 * Can Do
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	public $canDo;
 
@@ -39,6 +41,7 @@ class BiblestudyViewMediafiles extends JViewLegacy
 	 * Filter Levers
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $f_levels;
 
@@ -46,6 +49,7 @@ class BiblestudyViewMediafiles extends JViewLegacy
 	 * Side Bare
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	public $sidebar;
 
@@ -53,6 +57,7 @@ class BiblestudyViewMediafiles extends JViewLegacy
 	 * Items
 	 *
 	 * @var array
+	 * @since    7.0.0
 	 */
 	protected $items;
 
@@ -60,6 +65,7 @@ class BiblestudyViewMediafiles extends JViewLegacy
 	 * Pagination
 	 *
 	 * @var array
+	 * @since    7.0.0
 	 */
 	protected $pagination;
 
@@ -67,6 +73,7 @@ class BiblestudyViewMediafiles extends JViewLegacy
 	 * State
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $state;
 

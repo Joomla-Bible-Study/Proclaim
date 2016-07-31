@@ -20,11 +20,11 @@ use Joomla\Registry\Registry;
  */
 class BiblestudyViewMessage extends JViewLegacy
 {
-
 	/**
 	 * Form
 	 *
 	 * @var JForm
+	 * @since    7.0.0
 	 */
 	protected $form;
 
@@ -32,6 +32,7 @@ class BiblestudyViewMessage extends JViewLegacy
 	 * Item
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $item;
 
@@ -39,6 +40,7 @@ class BiblestudyViewMessage extends JViewLegacy
 	 * Admin
 	 *
 	 * @var array
+	 * @since    7.0.0
 	 */
 	protected $admin;
 
@@ -46,6 +48,7 @@ class BiblestudyViewMessage extends JViewLegacy
 	 * Can Do
 	 *
 	 * @var object
+	 * @since    7.0.0
 	 */
 	protected $canDo;
 
@@ -53,6 +56,7 @@ class BiblestudyViewMessage extends JViewLegacy
 	 * Media Files
 	 *
 	 * @var string
+	 * @since    7.0.0
 	 */
 	protected $mediafiles;
 
@@ -60,6 +64,7 @@ class BiblestudyViewMessage extends JViewLegacy
 	 * Admin Params
 	 *
 	 * @var Registry
+	 * @since    7.0.0
 	 */
 	protected $admin_params;
 
@@ -167,14 +172,16 @@ class BiblestudyViewMessage extends JViewLegacy
 			{
 				JToolbarHelper::save2copy('message.save2copy');
 			}
+
 			JToolbarHelper::cancel('message.cancel', 'JTOOLBAR_CLOSE');
 
 			if ($this->canDo->get('core.edit', 'com_biblestudy'))
 			{
 				JToolbarHelper::divider();
-				JToolbarHelper::custom('resetHits', 'reset.png', 'Reset Hits', 'JBS_STY_RESET_HITS', false, false);
+				JToolbarHelper::custom('resetHits', 'reset.png', 'Reset Hits', 'JBS_STY_RESET_HITS', false);
 			}
 		}
+
 		JToolbarHelper::divider();
 		JToolbarHelper::help('biblestudy', true);
 	}
@@ -192,5 +199,4 @@ class BiblestudyViewMessage extends JViewLegacy
 		$document = JFactory::getDocument();
 		$document->setTitle($isNew ? JText::_('JBS_TITLE_STUDIES_CREATING') : JText::sprintf('JBS_TITLE_STUDIES_EDITING', $this->item->studytitle));
 	}
-
 }

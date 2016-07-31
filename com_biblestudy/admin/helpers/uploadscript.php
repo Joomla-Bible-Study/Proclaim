@@ -25,38 +25,37 @@ class UploadScript
 
 	public $runtimeScript;
 
-	private $_maxFileSize;
+	private $maxFileSize;
 
-	private $_chunkSize;
+	private $chunkSize;
 
-	private $_chunkUnit;
+	private $chunkUnit;
 
-	/** @var  bool */
-	private $_rename;
+	private $rename;
 
-	/** @var  bool */
-	private $_uniqueNames;
+	private $uniqueNames;
 
-	private $_imageFilter;
+	private $imageFilter;
 
-	private $_otherFilesFilter;
+	private $otherFilesFilter;
 
-	/** @var  bool */
-	private $_resize;
+	private $resize;
 
-	private $_resizeWidth;
+	private $resizeWidth;
 
-	private $_resizeHeight;
+	private $resizeHeight;
 
-	private $_resizeQuality;
+	private $resizeQuality;
 
-	private $_SCRIPT;
+	private $SCRIPT;
 
 	/**
 	 * Construct
 	 *
 	 * @param   object  $params     Component parameters
 	 * @param   string  $mediaRoot  Media folder
+	 *
+	 * @since 7.0
 	 */
 	public function __construct($params, $mediaRoot)
 	{
@@ -71,6 +70,8 @@ class UploadScript
 	 * @param   object  $params  Component parameters
 	 *
 	 * @return void
+	 *
+	 * @since 7.0
 	 */
 	private function _setParams($params)
 	{
@@ -80,30 +81,30 @@ class UploadScript
 		$this->runtime       = $this->runtimeScript == 'full' ? $allRuntimes : $this->runtimeScript;
 
 		// Default 1MB
-		$this->_maxFileSize = '1000';
+		$this->maxFileSize = '1000';
 
 		// Chunk upload
-		$this->_chunkSize = '1';
-		$this->_chunkUnit = 'mb';
-		$this->_chunkUnit = strtolower($this->_chunkUnit);
+		$this->chunkSize = '1';
+		$this->chunkUnit = 'mb';
+		$this->chunkUnit = strtolower($this->chunkUnit);
 
 		// File rename
-		$this->_rename = 'false';
+		$this->rename = 'false';
 
 		// File filters
 		$imageFilter             = 'jpg,png,gif';
-		$this->_imageFilter      = $this->_cleanOption($imageFilter);
+		$this->imageFilter      = $this->_cleanOption($imageFilter);
 		$otherFilesFilter        = '*,doc,txt';
-		$this->_otherFilesFilter = $this->_cleanOption($otherFilesFilter);
+		$this->otherFilesFilter = $this->_cleanOption($otherFilesFilter);
 
 		// Generate unique names for files
-		$this->_uniqueNames = 'true';
+		$this->uniqueNames = 'true';
 
 		// Image resizing
-		$this->_resize        = false;
-		$this->_resizeWidth   = '640';
-		$this->_resizeHeight  = '480';
-		$this->_resizeQuality = '90';
+		$this->resize        = false;
+		$this->resizeWidth   = '640';
+		$this->resizeHeight  = '480';
+		$this->resizeQuality = '90';
 	}
 
 	/**
@@ -112,6 +113,8 @@ class UploadScript
 	 * @param   string  $string  Option to be cleaned
 	 *
 	 * @return string
+	 *
+	 * @since 7.0
 	 */
 	private function _cleanOption($string)
 	{
@@ -122,20 +125,22 @@ class UploadScript
 	 * Sets up the JavaScript code with component parameters
 	 *
 	 * @return void
+	 *
+	 * @since 7.0
 	 */
 	private function _buildScript()
 	{
-		$l_resize          = ""; /* Script resize line */
-		$l_chunk           = ""; /* Script chuk_size line */
+		$l_resize = ""; /* Script resize line */
+		$l_chunk  = ""; /* Script chuk_size line */
 
-		if ($this->_resize)
+		if ($this->resize)
 		{
-			$l_resize = "resize : {width : " . $this->_resizeWidth . ", height : " . $this->_resizeHeight . ", quality : " . $this->_resizeQuality . "},";
+			$l_resize = "resize : {width : " . $this->resizeWidth . ", height : " . $this->resizeHeight . ", quality : " . $this->resizeQuality . "},";
 		}
 
-		if ($this->_chunkSize !== 0 || $this->_chunkSize !== "")
+		if ($this->chunkSize !== 0 || $this->chunkSize !== "")
 		{
-			$l_chunk = "chunk_size : '" . $this->_chunkSize . $this->_chunkUnit . "',";
+			$l_chunk = "chunk_size : '" . $this->chunkSize . $this->chunkUnit . "',";
 		}
 
 		ob_start();
@@ -206,38 +211,38 @@ class UploadScript
 		if(response.error == 1) {
 		msgHTML+= '
 		<dl id="system-message">';
-			msgHTML+= '
+		                        msgHTML+= '
 			<dt class="error">Error</dt>
-			';
-			msgHTML+= '
+		                        ';
+		                        msgHTML+= '
 			<dd class="error message">';
-				msgHTML+= '
+			                          msgHTML+= '
 				<ul>
 					<li>' + response.msg + '</li>
 				</ul>
-				';
-				msgHTML+= '
+			                          ';
+			                          msgHTML+= '
 			</dd>
-			';
-			msgHTML+= '
+		                        ';
+		                        msgHTML+= '
 		</dl>';
 		} else {
 		msgHTML+= '
 		<dl id="system-message">';
-			msgHTML+= '
+		                        msgHTML+= '
 			<dt class="message">Error</dt>
-			';
-			msgHTML+= '
+		                        ';
+		                        msgHTML+= '
 			<dd class="message message">';
-				msgHTML+= '
+			                            msgHTML+= '
 				<ul>
 					<li>' + response.msg + '</li>
 				</ul>
-				';
-				msgHTML+= '
+			                            ';
+			                            msgHTML+= '
 			</dd>
-			';
-			msgHTML+= '
+		                        ';
+		                        msgHTML+= '
 		</dl>';
 		}
 		window.frames[0].location.reload();
@@ -267,16 +272,16 @@ class UploadScript
 		// General settings
 		runtimes : '<?php echo $this->runtime ?>',
 		url : 'index.php?option=com_biblestudy&view=upload&no_html=1&task=upload.upload&<?php echo JSession::getFormToken() ?>=1',
-		max_file_size : '<?php echo $this->_maxFileSize ?>mb',
+		max_file_size : '<?php echo $this->maxFileSize ?>mb',
 		<?php echo $l_chunk ?>
-		rename : <?php echo $this->_rename ?>,
-		unique_names : <?php echo $this->_uniqueNames ?>,
+		rename : <?php echo $this->rename ?>,
+		unique_names : <?php echo $this->uniqueNames ?>,
 		<?php echo $l_resize ?>
-        flash_swf_url : '<?php echo $this->mediaRoot; ?>js/Moxie.swf',
-        silverlight_xap_url : '<?php echo $this->mediaRoot; ?>js/Moxie.xap'
+		flash_swf_url : '<?php echo $this->mediaRoot; ?>js/Moxie.swf',
+		silverlight_xap_url : '<?php echo $this->mediaRoot; ?>js/Moxie.xap'
 		filters : [
-		{title : "Image files", extensions : "<?php echo $this->_imageFilter ?>"},
-		{title : "Other files", extensions : "<?php echo $this->_otherFilesFilter ?>"}
+		{title : "Image files", extensions : "<?php echo $this->imageFilter ?>"},
+		{title : "Other files", extensions : "<?php echo $this->otherFilesFilter ?>"}
 		],
 
 		preinit : {
@@ -454,23 +459,27 @@ class UploadScript
 		<?php
 		$script = ob_get_contents();
 		ob_clean();
-		$this->_SCRIPT = $script;
+		$this->SCRIPT = $script;
 	}
 
 	/**
 	 * Get the dependency Script
 	 *
 	 * @return string JavaScript code
+	 *
+	 * @since 7.0
 	 */
 	public function getScript()
 	{
-		return $this->_SCRIPT;
+		return $this->SCRIPT;
 	}
 
 	/**
 	 * UI Script
 	 *
 	 * @return string
+	 *
+	 * @since 7.0
 	 */
 	public function UIScript()
 	{
@@ -511,6 +520,5 @@ class UploadScript
 		ob_clean();
 
 		return $script;
-
 	}
 }

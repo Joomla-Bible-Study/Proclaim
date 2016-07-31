@@ -20,29 +20,36 @@ use Joomla\Registry\Registry;
  */
 class BiblestudyViewMediafile extends JViewLegacy
 {
-
-	/** @var object */
+	/** @var object
+	 * @since    7.0.0 */
 	public $canDo;
 
-	/** @var Registry */
+	/** @var Registry
+	 * @since    7.0.0 */
 	public $admin_params;
 
-	/** @var object */
+	/** @var object
+	 * @since    7.0.0 */
 	protected $form;
 
-	/** @var object */
+	/** @var object
+	 * @since    7.0.0 */
 	protected $media_form;
 
-	/** @var object */
+	/** @var object
+	 * @since    7.0.0 */
 	protected $item;
 
-	/** @var Registry */
+	/** @var Registry
+	 * @since    7.0.0 */
 	protected $state;
 
-	/** @var object */
+	/** @var object
+	 * @since    7.0.0 */
 	protected $admin;
 
-	/** @var object */
+	/** @var object
+	 * @since    7.0.0 */
 	protected $options;
 
 	/**
@@ -70,16 +77,20 @@ class BiblestudyViewMediafile extends JViewLegacy
 
 		$this->options->study_id   = null;
 		$this->options->createdate = null;
+
 		if ($options)
 		{
 			$options = explode('&', base64_decode($app->input->get('options')));
+
 			foreach ($options as $option_st)
 			{
 				$option_st = explode('=', $option_st);
+
 				if ($option_st[0] == 'study_id')
 				{
 					$this->options->study_id = $option_st[1];
 				}
+
 				if ($option_st[0] == 'createdate')
 				{
 					$this->options->createdate = $option_st[1];
@@ -156,6 +167,7 @@ class BiblestudyViewMediafile extends JViewLegacy
 			{
 				JToolbarHelper::save2copy('mediafile.save2copy');
 			}
+
 			JToolbarHelper::cancel('mediafile.cancel', 'JTOOLBAR_CLOSE');
 		}
 
@@ -175,7 +187,5 @@ class BiblestudyViewMediafile extends JViewLegacy
 		$isNew    = ($this->item->id < 1);
 		$document = JFactory::getDocument();
 		$document->setTitle($isNew ? JText::_('JBS_TITLE_MEDIA_FILES_CREATING') : JText::_('JBS_TITLE_MEDIA_FILES_EDITING'));
-
 	}
-
 }

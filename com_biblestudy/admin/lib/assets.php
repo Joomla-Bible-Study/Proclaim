@@ -28,6 +28,8 @@ class JBSMAssets
 	 * Build functions
 	 *
 	 * @return boolean
+	 *
+	 * @since 9.0.0
 	 */
 	public function build ()
 	{
@@ -50,6 +52,7 @@ class JBSMAssets
 			$this->count += count($results);
 			$this->query = array_merge((array) $this->query, array($object['assetname'] => $results));
 		}
+
 		JLog::add('Build fixAsset', JLog::INFO, 'com_biblestudy');
 
 		return true;
@@ -62,6 +65,8 @@ class JBSMAssets
 	 * @param   object  $result  Assets to look at.
 	 *
 	 * @return boolean
+	 *
+	 * @since 9.0.0
 	 */
 	public static function fixAssets ($key, $result)
 	{
@@ -80,6 +85,7 @@ class JBSMAssets
 		{
 			JLog::add('Reset Asset ID: ' . $result->asset_id, JLog::NOTICE, 'com_biblstudy');
 			$deletasset = self::deleteasset($result);
+
 			if ($deletasset)
 			{
 				self::setasset($result, $key);
@@ -93,6 +99,8 @@ class JBSMAssets
 	 * Set Parent ID
 	 *
 	 * @return int Parent ID
+	 *
+	 * @since 9.0.0
 	 */
 	public static function parentid ()
 	{
@@ -116,6 +124,8 @@ class JBSMAssets
 	 * Table list Array.
 	 *
 	 * @return array
+	 *
+	 * @since 9.0.0
 	 */
 	protected static function getassetObjects ()
 	{
@@ -210,6 +220,8 @@ class JBSMAssets
 	 * @param   string  $assetName  Asset Name
 	 *
 	 * @return boolean
+	 *
+	 * @since 9.0.0
 	 */
 	private static function setasset ($data, $assetName)
 	{
@@ -224,11 +236,13 @@ class JBSMAssets
 				{
 					$columns = array('media_image', 'special', 'filename', 'size', 'mime_type', 'mediacode', 'link_type',
 							'docMan_id', 'article_id', 'virtueMart_id', 'player', 'popup', 'server', 'internal_viewer', 'path');
+
 					foreach ($columns as $col)
 					{
 						unset($table->$col);
 					}
 				}
+
 				$table->load($data->id, false);
 			}
 			catch (Exception $e)
@@ -249,6 +263,8 @@ class JBSMAssets
 	 * @param   object  $data  Data
 	 *
 	 * @return boolean
+	 *
+	 * @since 9.0.0
 	 */
 	private static function deleteasset ($data)
 	{
@@ -277,6 +293,8 @@ class JBSMAssets
 	 * Check Assets
 	 *
 	 * @return array
+	 *
+	 * @since 9.0.0
 	 */
 	public static function checkAssets ()
 	{
@@ -334,6 +352,7 @@ class JBSMAssets
 					$arulesrows++;
 				}
 			}
+
 			$return[] = array(
 					'realname'         => $object['realname'],
 					'numrows'          => $numrows,
@@ -350,5 +369,4 @@ class JBSMAssets
 
 		return $return;
 	}
-
 }

@@ -46,7 +46,7 @@ class BiblestudyModelTopics extends JModelList
 	 *
 	 * @param   array  $items  Items for entries
 	 *
-	 * @return array
+	 * @return object
 	 *
 	 * @since 7.0
 	 */

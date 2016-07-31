@@ -22,6 +22,8 @@ class TableTemplatecode extends JTable
 	 * File Name
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $filename;
 
@@ -29,6 +31,8 @@ class TableTemplatecode extends JTable
 	 * Type
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $type;
 
@@ -36,6 +40,8 @@ class TableTemplatecode extends JTable
 	 * Template Code
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $templatecode;
 
@@ -43,6 +49,8 @@ class TableTemplatecode extends JTable
 	 * Constructor
 	 *
 	 * @param   JDatabaseDriver  &$db  Database connector object
+	 *
+	 * @since 9.0.0
 	 */
 	public function __construct(&$db)
 	{
@@ -64,7 +72,6 @@ class TableTemplatecode extends JTable
 	 */
 	public function bind($array, $ignore = '')
 	{
-
 		// Bind the rules.
 		if (isset($array['rules']) && is_array($array['rules']))
 		{
@@ -142,12 +149,14 @@ class TableTemplatecode extends JTable
 		{
 			$filecontent = $requiredtext . $filecontent;
 		}
+
 		if (!$return = JFile::write($file, $filecontent))
 		{
 			$this->setError(JText::_('JBS_STYLE_FILENAME_NOT_UNIQUE'));
 
 			return false;
 		}
+
 		if (!$this->_rules)
 		{
 			$this->setRules('{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}');
@@ -270,5 +279,4 @@ class TableTemplatecode extends JTable
 
 		return $asset->id;
 	}
-
 }

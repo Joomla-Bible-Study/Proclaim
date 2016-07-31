@@ -23,20 +23,32 @@ class JBSMBackup
 	**********************************************************************
 	 */
 
-	/** @var string Absolute path to dump file; must be writable (optional; if left blank it is automatically calculated) */
+	/** @var string Absolute path to dump file; must be writable (optional; if left blank it is automatically calculated)
+	 *
+	 * @since 9.0.0 */
 	protected $dumpFile = '';
 
-	/** @var string Data cache, used to cache data before being written to disk */
+	/** @var string Data cache, used to cache data before being written to disk
+	 *
+	 * @since 9.0.0 */
 	protected $data_cache = '';
 
-	/** @var string Absolute path to the temp file */
+	/** @var string Absolute path to the temp file
+	 *
+	 * @since 9.0.0
+	 * */
 	protected $tempFile = '';
 
-	/** @var string Relative path of how the file should be saved in the archive */
+	/** @var string Relative path of how the file should be saved in the archive
+	 *
+	 * @since 9.0.0
+	 */
 	protected $saveAsName = '';
 
-	/** @var resource Filepointer to the current dump part */
-	private $_fp = null;
+	/** @var resource Filepointer to the current dump part
+	 *
+	 * @since 9.0.0 */
+	private $fp = null;
 
 	/**
 	 * Export DB//
@@ -44,6 +56,8 @@ class JBSMBackup
 	 * @param   int  $run  ID
 	 *
 	 * @return boolean
+	 *
+	 * @since 9.0.0
 	 */
 	public function exportdb($run)
 	{
@@ -95,6 +109,8 @@ class JBSMBackup
 	 * @param   string  $table  Table name
 	 *
 	 * @return boolean|string
+	 *
+	 * @since 9.0.0
 	 */
 	public function getExportTable($table)
 	{
@@ -102,6 +118,7 @@ class JBSMBackup
 		{
 			return false;
 		}
+
 		/**
 		 * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
 		 */
@@ -141,6 +158,7 @@ class JBSMBackup
 				$export = str_replace('TYPE=', 'ENGINE=', $export);
 			}
 		}
+
 		$export .= "\n\n--\n-- Dumping data for table " . $db->qn($table) . "\n--\n\n";
 
 		// Get the table rows and create insert statements from them
@@ -168,10 +186,12 @@ class JBSMBackup
 						$data[] = $db->qn($key) . "=" . $db->q(trim(str_replace(array("\r\n", "\r"), "\n", $value)));
 					}
 				}
+
 				$export .= implode(',', $data);
 				$export .= ";\n";
 			}
 		}
+
 		$export .= "\n-- --------------------------------------------------------\n\n";
 
 		$this->data_cache .= $export;
@@ -186,16 +206,18 @@ class JBSMBackup
 	 * @param   string  &$fileData  Data to write. Set to null to close the file handle.
 	 *
 	 * @return boolean TRUE is saving to the file succeeded
+	 *
+	 * @since 9.0.0
 	 */
 	protected function writeline(&$fileData)
 	{
 		$app = JFactory::getApplication();
 
-		if (!$this->_fp)
+		if (!$this->fp)
 		{
 			$this->_fp = @fopen($this->dumpFile, 'a');
 
-			if ($this->_fp === false)
+			if ($this->fp === false)
 			{
 				$app->enqueueMessage('Could not open ' . $this->dumpFile . ' for append, in DB dump.', 'error');
 
@@ -205,19 +227,20 @@ class JBSMBackup
 
 		if (is_null($fileData))
 		{
-			if (is_resource($this->_fp))
+			if (is_resource($this->fp))
 			{
-				@fclose($this->_fp);
+				@fclose($this->p);
 			}
+
 			$this->_fp = null;
 
 			return true;
 		}
 		else
 		{
-			if ($this->_fp)
+			if ($this->fp)
 			{
-				$ret = fwrite($this->_fp, $fileData);
+				$ret = fwrite($this->fp, $fileData);
 				@clearstatcache();
 
 				// Make sure that all data was written to disk
@@ -238,6 +261,8 @@ class JBSMBackup
 	 * @param   string  $mime_type  Meme_Type
 	 *
 	 * @return void
+	 *
+	 * @since 9.0.0
 	 */
 	public function output_file($file, $name, $mime_type = '')
 	{
@@ -381,6 +406,7 @@ class JBSMBackup
 				}
 			}
 		}
+
 		header('Content-Length: ' . $resultLenght);
 		header('Content-Range: bytes ' . $resultRange . '/' . $size);
 
@@ -398,14 +424,15 @@ class JBSMBackup
 			{
 				echo fread($fp, 8192);
 			}
+
 			fclose($fp);
 		}
 		else
 		{
 			@readfile($file);
 		}
+
 		flush();
 		exit;
 	}
-
 }

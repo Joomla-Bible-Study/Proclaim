@@ -21,13 +21,14 @@ jimport('joomla.form.formfield');
  */
 class JFormFieldUpload extends JFormField
 {
-
 	public $type = 'upload';
 
 	/**
 	 * Get Input
 	 *
 	 * @return string
+	 *
+	 * @since 9.0.0
 	 */
 	protected function getInput()
 	{

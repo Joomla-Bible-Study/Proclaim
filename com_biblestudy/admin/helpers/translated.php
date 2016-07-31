@@ -33,8 +33,6 @@ class JBSMTranslated
 	 * @param   array  $topicItems  array of stdClass containing topic_text and topic_params
 	 *
 	 * @return  array  list of topicItems containing translated strings in topic_text
-	 *
-	 * @since    7.0.0
 	 */
 	public static function getTopicItemsTranslated($topicItems = array())
 	{
@@ -56,8 +54,6 @@ class JBSMTranslated
 	 * @param   object  $topicItem  stdClass containing topic_text and topic_params
 	 *
 	 * @return string|NULL  translated string or null if topicItem is not initialised
-	 *
-	 * @since 9.0.0
 	 */
 	public static function getTopicItemTranslated($topicItem)
 	{
@@ -111,8 +107,6 @@ class JBSMTranslated
 	 * @param   object  $topicItem  stdClass containing the studies id and tp_id (i.e. concatenated topic ids)
 	 *
 	 * @return string:null  translated string with format '<text>[, <text>[, <text>]]' or null if topicItem is not initialised
-	 *
-	 * @since 9.0.0
 	 */
 	public static function getConcatTopicItemTranslated($topicItem)
 	{
@@ -139,7 +133,6 @@ class JBSMTranslated
 					{
 						$output .= ', ';
 					}
-
 					$output .= self::getTopicItemTranslated($results[$i]);
 				}
 
@@ -149,4 +142,5 @@ class JBSMTranslated
 
 		return null;
 	}
+
 }

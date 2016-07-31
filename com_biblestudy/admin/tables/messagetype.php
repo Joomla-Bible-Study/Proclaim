@@ -20,11 +20,12 @@ use Joomla\Registry\Registry;
  */
 class TableMessagetype extends JTable
 {
-
 	/**
 	 * Primary Key
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $id = null;
 
@@ -32,6 +33,8 @@ class TableMessagetype extends JTable
 	 * Message Type
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $message_type = null;
 
@@ -41,6 +44,8 @@ class TableMessagetype extends JTable
 	 * Published
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $published = 1;
 
@@ -56,6 +61,8 @@ class TableMessagetype extends JTable
 	 * Constructor
 	 *
 	 * @param   JDatabaseDriver  &$db  Database connector object
+	 *
+	 * @since 9.0.0
 	 */
 	public function __construct(&$db)
 	{

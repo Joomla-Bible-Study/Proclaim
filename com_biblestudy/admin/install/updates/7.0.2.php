@@ -23,10 +23,11 @@ class Migration702
 	 * @param   JDatabaseDriver  $db  Joomla Data bass driver
 	 *
 	 * @return boolean
+	 *
+	 * @since 9.0.0
 	 */
 	public function up($db)
 	{
-
 		return true;
 	}
 }

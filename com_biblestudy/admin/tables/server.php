@@ -24,6 +24,8 @@ class TableServer extends JTable
 	 * Primary Key
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $id = null;
 
@@ -31,6 +33,8 @@ class TableServer extends JTable
 	 * Server Name
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $server_name = null;
 
@@ -38,6 +42,8 @@ class TableServer extends JTable
 	 * Published
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $published = 1;
 
@@ -45,6 +51,8 @@ class TableServer extends JTable
 	 * Asset ID
 	 *
 	 * @var int
+	 *
+	 * @since 9.0.0
 	 */
 	public $assset_id = null;
 
@@ -54,6 +62,8 @@ class TableServer extends JTable
 	 * Server Type
 	 *
 	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	public $type = null;
 
@@ -65,6 +75,8 @@ class TableServer extends JTable
 	 * Constructor
 	 *
 	 * @param   JDatabaseDriver  &$db  Database connector object
+	 *
+	 * @since 9.0.0
 	 */
 	public function __construct(&$db)
 	{
@@ -185,5 +197,4 @@ class TableServer extends JTable
 
 		return $asset->id;
 	}
-
 }

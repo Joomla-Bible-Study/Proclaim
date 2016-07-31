@@ -22,18 +22,21 @@ JFormHelper::loadFieldClass('list');
  */
 class JFormFieldTeacherlist extends JFormFieldList
 {
-
 	/**
 	 * The field type.
 	 *
-	 * @var         string
+	 * @var  string
+	 *
+	 * @since 9.0.0
 	 */
 	protected $type = 'Teachers';
 
 	/**
 	 * Method to get a list of options for a list input.
 	 *
-	 * @return      array           An array of JHtml options.
+	 * @return  array  An array of JHtml options.
+	 *
+	 * @since 9.0.0
 	 */
 	protected function getOptions()
 	{
@@ -52,9 +55,9 @@ class JFormFieldTeacherlist extends JFormFieldList
 				$options[] = JHtml::_('select.option', $message->id, $message->teachername);
 			}
 		}
+
 		$options = array_merge(parent::getOptions(), $options);
 
 		return $options;
 	}
-
 }

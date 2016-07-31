@@ -60,8 +60,6 @@ class JBSMThumbnail
 	 * @param   int     $new_size  New image size
 	 *
 	 * @return null
-	 *
-	 * @since 9.0.0
 	 */
 	public static function resize($path, $new_size)
 	{
@@ -69,7 +67,6 @@ class JBSMThumbnail
 
 		// Delete existing thumbnail
 		$old_thumbs = JFolder::files(dirname($path), 'thumb_', true, true);
-
 		foreach ($old_thumbs as $thumb)
 		{
 			JFile::delete($thumb);
@@ -88,8 +85,6 @@ class JBSMThumbnail
 	 * @param   string  $file  file to check
 	 *
 	 * @return null
-	 *
-	 * @since 9.0.0
 	 */
 	public static function check($path, $file = null)
 	{
