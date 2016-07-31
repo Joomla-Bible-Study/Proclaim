@@ -25,6 +25,8 @@ class Pkg_Biblestudy_PackageInstallerScript
 	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
+	 *
+	 * @since 9.0.2
 	 */
 	public function install($parent)
 	{
@@ -36,6 +38,8 @@ class Pkg_Biblestudy_PackageInstallerScript
 	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
+	 *
+	 * @since 9.0.2
 	 */
 	public function uninstall($parent)
 	{
@@ -47,6 +51,8 @@ class Pkg_Biblestudy_PackageInstallerScript
 	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
+	 *
+	 * @since 9.0.2
 	 */
 	public function update($parent)
 	{
@@ -59,6 +65,8 @@ class Pkg_Biblestudy_PackageInstallerScript
 	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
+	 *
+	 * @since 9.0.2
 	 */
 	public function preflight($type, $parent)
 	{
@@ -71,6 +79,8 @@ class Pkg_Biblestudy_PackageInstallerScript
 	 * @param   string  $parent  is the class calling this method
 	 *
 	 * @return void
+	 *
+	 * @since 9.0.2
 	 */
 	public function postflight($type, $parent)
 	{

@@ -11,16 +11,18 @@ $file = $_GET['file'];
 $size = $_GET['size'];
 
 // Check url for "http://" prefix, and add it if it doesn't exist
-
 if (!preg_match('/^http(s)?:\/\//', $file))
 {
 	$file = 'http://' . $file;
 }
+
 $new_size = getRemoteFileSize($file);
+
 if ($size != $new_size)
 {
 	$size = $new_size;
 }
+
 header("Content-Length: " . $size);
 header("Cache-Control: public");
 header("Content-Description: File Transfer");
@@ -35,6 +37,8 @@ readfile($file);
  * @param   string  $url  URL
  *
  * @return  boolean
+ *
+ * @since 7.0
  */
 function getRemoteFileSize($url)
 {
@@ -46,6 +50,7 @@ function getRemoteFileSize($url)
 	{
 		$fp = @fsockopen($host, 80, $errno, $errstr, 20);
 	}
+
 	if (!$fp)
 	{
 		return false;
@@ -62,6 +67,7 @@ function getRemoteFileSize($url)
 			$headers .= @fgets($fp, 128);
 		}
 	}
+
 	@fclose($fp);
 	$return      = false;
 	$arr_headers = explode("\n", $headers);
