@@ -75,6 +75,8 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 * @param   array   $config  Configuration array for model. Optional.
 	 *
 	 * @return    TableMediafile    A database object
+	 *
+	 * @since 7.0.0
 	 */
 	public function getTable($type = 'Mediafile', $prefix = 'Table', $config = array())
 	{
@@ -107,12 +109,13 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 				$path = new Registry;
 				$path->loadString($table->params);
-
 				$set_path = '';
+
 				if ($path->get('path'))
 				{
 					$set_path = $path->get('path') . '/';
 				}
+
 				if (!$path->get('protocal') && $set_path)
 				{
 					$path->set('protocal', 'http://');
@@ -128,6 +131,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 					$data['params'] = $params->toArray();
 				}
 			}
+
 			if (parent::save($data))
 			{
 				return true;
@@ -153,12 +157,14 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 		// If user hasn't selected a server yet, just return an empty form
 		$server_id = $this->data->server_id;
+
 		if (empty($server_id))
 		{
 			/** @var Joomla\Registry\Registry $admin */
 			$admin                 = JBSMParams::getAdmin()->params;
 			$server_id             = $admin->get('server');
 			$this->data->server_id = $server_id;
+
 			if (empty($server_id))
 			{
 				// @TODO This may not be optimal, seems like a hack
@@ -185,6 +191,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 		// Add language files
 		$lang = JFactory::getLanguage();
+
 		if (!$lang->load('jbs_addon_' . $server_type, JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/' . $server_type))
 		{
 			throw new Exception(JText::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'));
