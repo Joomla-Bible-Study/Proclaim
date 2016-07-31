@@ -91,7 +91,7 @@ class BiblestudyModelSerie extends JModelAdmin
 		if (empty($this->teacher))
 		{
 			$query = 'SELECT id AS value, teachername AS text'
-				. ' FROM #__bsmsteachers'
+				. ' FROM #__bsms_teachers'
 				. ' WHERE published = 1';
 			$this->teacher = $this->_getList($query);
 		}

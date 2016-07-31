@@ -69,7 +69,7 @@ class Migration900
 		$db->setQuery($query);
 		$mediaFiles2  = $db->loadObjectList();
 
-		$this->_media = array_merge($this->media, $mediaFiles2);
+		$this->media = array_merge($this->media, $mediaFiles2);
 		$this->count  = count($this->media);
 		$this->count += count($this->servers);
 

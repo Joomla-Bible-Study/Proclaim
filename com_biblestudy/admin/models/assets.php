@@ -83,12 +83,12 @@ class BibleStudyModelAssets extends JModelLegacy
 		$this->resetTimer();
 		$this->getSteps();
 
-		if (empty($this->_versionStack))
+		if (empty($this->versionStack))
 		{
 			$this->versionStack = array();
 		}
 
-		ksort($this->_versionStack);
+		ksort($this->versionStack);
 
 		$this->saveStack();
 

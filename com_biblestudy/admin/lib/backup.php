@@ -215,7 +215,7 @@ class JBSMBackup
 
 		if (!$this->fp)
 		{
-			$this->_fp = @fopen($this->dumpFile, 'a');
+			$this->fp = @fopen($this->dumpFile, 'a');
 
 			if ($this->fp === false)
 			{
@@ -229,10 +229,10 @@ class JBSMBackup
 		{
 			if (is_resource($this->fp))
 			{
-				@fclose($this->p);
+				@fclose($this->fp);
 			}
 
-			$this->_fp = null;
+			$this->fp = null;
 
 			return true;
 		}

@@ -59,7 +59,7 @@ class BiblestudyModelLocations extends JModelList
 	 */
 	public function getDeletes()
 	{
-		if (empty($this->_deletes))
+		if (empty($this->deletes))
 		{
 			$query = 'SELECT allow_deletes'
 				. ' FROM #__bsms_admin'
