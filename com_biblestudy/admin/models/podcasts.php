@@ -31,6 +31,7 @@ class BiblestudyModelPodcasts extends JModelList
 		{
 			$config['filter_fields'] = array(
 				'id', 'podcast.id',
+				'filename', 'podcast.filename',
 				'published', 'podcast.published',
 				'ordering', 'podcast.ordering',
 				'language', 'podcast.language'
@@ -121,13 +122,13 @@ class BiblestudyModelPodcasts extends JModelList
 
 		$query->select(
 			$this->getState(
-				'list.select', 'podcast.id, podcast.published, podcast.title, podcast.description, podcast.language, podcast.access')
+				'list.select', 'podcast.id, podcast.published, podcast.title, podcast.description, podcast.filename, podcast.language, podcast.access')
 		);
 		$query->from('#__bsms_podcast AS podcast');
 
 		// Join over the language
 		$query->select('l.title AS language_title');
-		$query->join('LEFT', $db->quoteName('#__languages') . ' AS l ON l.lang_code = podcast.language');
+		$query->join('LEFT', $db->qn('#__languages') . ' AS l ON l.lang_code = podcast.language');
 
 		// Join over the asset groups.
 		$query->select('ag.title AS access_level')
