@@ -49,7 +49,7 @@ abstract class JHtmlFancybox
 
 		if ($mouseweel)
 		{
-			JHtml::script('media/com_biblestudy/js/jquery.mousewheel-3.0.6.pack.js');
+			JHtml::script('media/com_biblestudy/js/jquery.mousewheel.pack.js');
 		}
 
 		if ($option)
