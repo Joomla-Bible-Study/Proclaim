@@ -15,7 +15,7 @@ Status
         <td><a href="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study" target="_blank"><img src="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=development"/></a></td>
         <td>Development</td>
         <td>9.0.3</td>
-        <td>July 29, 2016</td>
+        <td>Aug 12, 2016</td>
         <td align="center">3.4+</td>
     </tr>
     <tr>
