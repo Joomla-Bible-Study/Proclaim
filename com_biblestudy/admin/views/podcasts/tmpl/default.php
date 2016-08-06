@@ -59,7 +59,6 @@ $sortFields = $this->getSortFields();
 					<?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
 				</div>
 			<?php else : ?>
-
 			<table class="table table-striped adminlist" id="podcasts">
 				<thead>
 				<tr>
@@ -73,11 +72,13 @@ $sortFields = $this->getSortFields();
 					<th align="center">
 						<?php echo JHtml::_('grid.sort', 'JBS_CMN_PODCAST', 'podcast.title', $listDirn, $listOrder); ?>
 					</th>
-
+					<th class="center nowrap"
+					    <?php echo JHtml::_('grid.sort', 'JBS_PDC_XML_TTITLE', 'podcast.filename', $listDirn, $listOrder); ?>
+					</th>
 					<th width="5%">
 						<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
 					</th>
-					<th width="1%" class="nowrap">
+					<th width="1%" class="nowrap hidden-phone">
 						<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'podcast.id', $listDirn, $listOrder); ?>
 					</th>
 				</tr>
@@ -143,7 +144,11 @@ $sortFields = $this->getSortFields();
 								?>
 							</div>
 						</td>
-
+						<td class="center nowrap hidden-phone">
+							<a href="<?php echo JRoute::_(JUri::root() . $this->escape($item->filename)); ?>" target="_blank">
+								<?php echo JText::_('JBS_PDC_XML'); ?>
+							</a>
+						</td>
 						<td class="nowrap has-context">
 							<div class="pull-left">
 								<?php if ($item->language == '*'): ?>
