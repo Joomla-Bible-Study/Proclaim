@@ -38,7 +38,7 @@ $input  = $app->input;
       method="post" name="adminForm" id="item-form" class="form-validate form-horizontal">
 <div class="row-fluid">
 <!-- Begin Content -->
-<div class="span10 form-horizontal">
+<div class="span9 form-horizontal">
     <ul class="nav nav-tabs">
         <li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a></li>
         <li><a href="#images" data-toggle="tab"><?php echo JText::_('JBS_PDC_PODCAST_IMAGES'); ?></a></li>
@@ -212,7 +212,7 @@ $input  = $app->input;
     <!-- End Content -->
 </div>
 <!-- Begin Sidebar -->
-<div class="span2 form-vertical">
+<div class="span3 form-vertical">
     <h4><?php echo JText::_('JDETAILS');?></h4>
     <hr/>
     <div class="tab-pane" id="publishing">
