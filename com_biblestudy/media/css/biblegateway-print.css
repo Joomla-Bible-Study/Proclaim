@@ -2,161 +2,161 @@
 .passage {
 	padding-top: 10px;
 	padding-bottom: 10px;
-	}
+}
 
 .scripture, #a9g-leader, #passage_heading, #embed, #delivery-options, #purchase-bible, .symtio-ads {
 	display: none;
-	}
+}
 
 .scripture, #a9g-skyscraper {
 	display: none;
-	}
+}
 
 .scripture, #plans_links {
 	display: none;
-	}
+}
 
 .scripture, #rp-header {
 	display: none;
-	}
+}
 
 .scripture, #sig {
 	display: none;
-	}
+}
 
 .scripture, #passage-options {
 	display: none;
-	}
+}
 
 .scripture, .spacer {
 	display: none;
-	}
+}
 
 .scripture, #site-options {
 	display: none;
-	}
+}
 
 .scripture, #page-options {
 	display: none;
-	}
+}
 
 .scripture, #navigation {
 	display: none;
-	}
+}
 
 .scripture, #intersite {
 	display: none;
-	}
+}
 
 .scripture, #brand {
 	background: none repeat scroll 0 0 transparent !important;
-	}
+}
 
 .scripture, #brand img {
 	display: inline;
 	height: 52px;
 	text-decoration: none;
 	width: 300px;
-	}
+}
 
 .scripture, #betasitenotice {
 	display: none;
-	}
+}
 
 .scripture, #sig table {
 	display: none;
-	}
+}
 
 .scripture, #sponshoutout {
 	display: none;
-	}
+}
 
 .scripture, #rotate-link {
 	display: none;
-	}
+}
 
 .scripture, .store-ads {
 	display: none;
-	}
+}
 
 .scripture, #home_picks {
 	display: none;
-	}
+}
 
 .scripture, #updateresultsform {
 	display: none;
-	}
+}
 
 .scripture, #letterindex {
 	display: none;
-	}
+}
 
 .scripture, #othersearches {
 	display: none;
-	}
+}
 
 .scripture, #updatedisplayform {
 	display: none;
-	}
+}
 
 .scripture, #main ul, .result-options1 ul li {
 	display: none;
-	}
+}
 
 .scripture, .result-options {
 	display: none;
-	}
+}
 
 .scripture, #result-options-info {
 	display: none;
-	}
+}
 
 .scripture, #result-options-info2 {
 	display: none;
-	}
+}
 
 .scripture, .keywordresultextras {
 	display: none;
-	}
+}
 
 .scripture, #content {
 	left: 0;
 	margin-top: 10px;
-	}
+}
 
 .scripture, body, td, th, input, select, option {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
-	}
+}
 
 .scripture, body #spacer {
 	display: none;
-	}
+}
 
 .scripture, th, td {
 	vertical-align: top;
-	}
+}
 
 .scripture, .sup {
 	font-size: 0.65em;
 	font-weight: bold;
 	vertical-align: text-top;
-	}
+}
 
 .scripture, .result-text-style-normal {
-	}
+}
 
 .scripture, .result-text-style-serif {
-	}
+}
 
 .scripture, .result-text-style-rtl {
 	direction: rtl;
-	}
+}
 
 .scripture, .result-text-style-rtl-serif {
 	direction: rtl;
 	font-family: serif;
-	}
+}
 
 .scripture, .result-text-style-normal, .result-text-style-serif, .result-text-style-rtl, .result-text-style-rtl-serif {
 	font-family: "Charis SIL", charis, Verdana, Arial, Helvetica, sans-serif;
-	}
+}
