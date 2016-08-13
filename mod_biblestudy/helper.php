@@ -148,7 +148,7 @@ class ModJBSMHelper
 		{
 			foreach ($filters as $filter)
 			{
-				if ($filter != -1)
+				if ($filter != -1 && $filter != 0)
 				{
 					$query->where('study.teacher_id = ' . (int) $filter, $condition);
 				}
@@ -177,7 +177,7 @@ class ModJBSMHelper
 		{
 			foreach ($filters AS $filter)
 			{
-				if ($filter != -1)
+				if ($filter != -1 && $filter != 0)
 				{
 					$query->where('study.location_id = ' . (int) $filter, $condition);
 				}
@@ -206,7 +206,7 @@ class ModJBSMHelper
 		{
 			foreach ($filters AS $filter)
 			{
-				if ($filter != -1)
+				if ($filter != -1 && $filter != 0)
 				{
 					$query->where('study.booknumber = ' . (int) $filter, $condition);
 				}
@@ -234,37 +234,9 @@ class ModJBSMHelper
 		{
 			foreach ($filters AS $filter)
 			{
-				if ($filter != -1)
+				if ($filter != -1 && $filter != 0)
 				{
 					$query->where('study.series_id = ' . (int) $filter, $condition);
-				}
-			}
-		}
-
-		$filters = $topic;
-
-		if (count($filters) > 1)
-		{
-			$where2   = array();
-			$subquery = '(';
-
-			foreach ($filters as $filter)
-			{
-				$where2[] = 'study.topics_id = ' . (int) $filter;
-			}
-
-			$subquery .= implode(' OR ', $where2);
-			$subquery .= ')';
-
-			$query->where($subquery);
-		}
-		else
-		{
-			foreach ($filters AS $filter)
-			{
-				if ($filter != -1)
-				{
-					$query->where('study.topics_id = ' . (int) $filter, $condition);
 				}
 			}
 		}
@@ -298,7 +270,7 @@ class ModJBSMHelper
 		{
 			foreach ($filters AS $filter)
 			{
-				if ($filter != -1)
+				if ($filter != -1 && $filter != 0)
 				{
 					$query->where('study.messagetype = ' . (int) $filter, $condition);
 				}
@@ -328,7 +300,7 @@ class ModJBSMHelper
 			{
 				foreach ($filters AS $filter)
 				{
-					if ($filter != -1)
+					if ($filter != -1 && $filter != 0)
 					{
 						$query->where('YEAR(study.studydate) = ' . (int) $filter, $condition);
 					}
