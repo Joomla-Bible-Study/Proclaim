@@ -146,6 +146,11 @@ class ModJBSMHelper
 		}
 		else
 		{
+			if (!is_array($filters))
+			{
+				$filters = array($filters);
+			}
+
 			foreach ($filters as $filter)
 			{
 				if ($filter != -1 && $filter != 0)
@@ -175,6 +180,11 @@ class ModJBSMHelper
 		}
 		else
 		{
+			if (!is_array($filters))
+			{
+				$filters = array($filters);
+			}
+
 			foreach ($filters AS $filter)
 			{
 				if ($filter != -1 && $filter != 0)
@@ -204,6 +214,11 @@ class ModJBSMHelper
 		}
 		else
 		{
+			if (!is_array($filters))
+			{
+				$filters = array($filters);
+			}
+
 			foreach ($filters AS $filter)
 			{
 				if ($filter != -1 && $filter != 0)
@@ -232,11 +247,48 @@ class ModJBSMHelper
 		}
 		else
 		{
+			if (!is_array($filters))
+			{
+				$filters = array($filters);
+			}
+
 			foreach ($filters AS $filter)
 			{
 				if ($filter != -1 && $filter != 0)
 				{
 					$query->where('study.series_id = ' . (int) $filter, $condition);
+				}
+			}
+		}
+
+		$filters = $topic;
+
+		if (count($filters) > 1)
+		{
+			$where2   = array();
+			$subquery = '(';
+
+			foreach ($filters as $filter)
+			{
+				$where2[] = 'st.topic_id = ' . (int) $filter;
+			}
+
+			$subquery .= implode(' OR ', $where2);
+			$subquery .= ')';
+			$query->where($subquery);
+		}
+		else
+		{
+			if (!is_array($filters))
+			{
+				$filters = array($filters);
+			}
+
+			foreach ($filters AS $filter)
+			{
+				if ($filter != -1 && $filter != 0)
+				{
+					$query->where('st.topic_id = ' . (int) $filter, $condition);
 				}
 			}
 		}
@@ -268,6 +320,11 @@ class ModJBSMHelper
 		}
 		else
 		{
+			if (!is_array($filters))
+			{
+				$filters = array($filters);
+			}
+
 			foreach ($filters AS $filter)
 			{
 				if ($filter != -1 && $filter != 0)
@@ -296,6 +353,11 @@ class ModJBSMHelper
 		}
 		else
 		{
+			if (!is_array($filters))
+			{
+				$filters = array($filters);
+			}
+
 			if ($filters !== null)
 			{
 				foreach ($filters AS $filter)
