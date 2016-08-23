@@ -56,19 +56,26 @@ else
 	<input type="hidden" name="option" value="com_biblestudy"/>
 	<input type="hidden" name="view" value="install"/>
 	<?php if ($this->state === 'start')
-	{ ?>
+	{
+		?>
 		<input type="hidden" name="task" value="install.browse"/>
-	<?php }
+	<?php
+}
 	else
 	{
 		?>
 		<input type="hidden" name="task" value="install.run"/>
-	<?php } ?>
+	<?php
+	}
+	?>
 	<input type="hidden" name="<?php echo JFactory::getSession()->getFormToken() ?>" value="1"/>
 </form>
 
 <div id="backup-complete">
-	<?php if (!$this->more): ?>
+	<?php
+	if (!$this->more)
+		:
+		?>
 		<div class="alert alert-info">
 			<p><?php echo JText::_('JBS_LBL_REDIRECT_IN_3S'); ?></p>
 		</div>
@@ -78,5 +85,7 @@ else
 				window.location.replace("index.php?option=com_biblestudy&view=install&layout=install_finished&<?php echo JSession::getFormToken() ?>=1");
 			}
 		</script>
-	<?php endif; ?>
+	<?php
+	endif;
+	?>
 </div>

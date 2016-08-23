@@ -33,7 +33,7 @@ $template       = JBSMParams::getTemplateparams($templatemenuid);
 $pagebuilder    = new JBSMPageBuilder;
 
 $admin        = JBSMParams::getAdmin();
-$admin_params = new Registry($admin->params);
+$admin_params = $admin->params;
 $params->merge($admin_params);
 $template->params->merge($params);
 $params = $template->params;

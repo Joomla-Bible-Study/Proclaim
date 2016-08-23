@@ -243,7 +243,7 @@ class BibleStudyModelInstall extends JModelLegacy
 
 		$tables         = $this->_db->getTableList();
 		$prefix         = $this->_db->getPrefix();
-		$versiontype    = '';
+		$versiontype    = 0;
 		$currentversion = false;
 		$oldversion     = false;
 
@@ -576,7 +576,6 @@ class BibleStudyModelInstall extends JModelLegacy
 		}
 
 		$this->loadStack();
-
 		$result = true;
 
 		while ($result && $this->haveEnoughTime())

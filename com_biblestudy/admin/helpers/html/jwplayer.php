@@ -79,12 +79,6 @@ abstract class JHtmlJwplayer
 	 */
 	public static function render($media, $params, $popup = false, $player = null, $t = null)
 	{
-		if ($popup == false)
-		{
-			var_dump($media);
-			var_dump($params);
-		}
-
 		// Used to set for MP3 and audio player look
 		if (isset($player->mp3) && $player->mp3 == true)
 		{

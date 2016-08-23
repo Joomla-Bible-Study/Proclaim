@@ -104,7 +104,7 @@ class BiblestudyViewInstall extends JViewLegacy
 		$input = new JInput;
 		$input->set('hidemainmenu', true);
 		$app   = JFactory::getApplication();
-		$this->state = $app->input->getBool('scanstate', false);
+		$this->state = $app->input->get('scanstate', false);
 		$layout = $app->input->get('layout', 'default');
 
 		$load = $this->loadStack();

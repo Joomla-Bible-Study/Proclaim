@@ -387,11 +387,9 @@ class JBSMMedia
 			return false;
 		}
 
-		$image = new JImage;
-
 		try
 		{
-			$return = $image->getImageFileProperties($path);
+			$return = JImage::getImageFileProperties($path);
 		}
 		catch (Exception $e)
 		{
@@ -593,7 +591,8 @@ class JBSMMedia
 							$player->playerheight = 40;
 						}
 
-						$playercode = '<a href="' . $path . '" id="linkmedia' . $media->id . '" class="fancybox fancybox_jwplayer" pwidth="' . $player->playerwidth .
+						$playercode = '<a href="' . $path . '" id="linkmedia' . $media->id . '" title="' . $params->get('filename') .
+								'" class="fancybox fancybox_jwplayer" pwidth="' . $player->playerwidth .
 							'" pheight="' . $player->playerheight . '" autostart="' . $params->get('autostart', false) . '">' . $image . '</a>';
 
 						return $playercode;

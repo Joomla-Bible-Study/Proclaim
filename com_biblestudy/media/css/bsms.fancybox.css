@@ -1,20 +1,20 @@
 .fancybox-type-iframe .fancybox-nav {
-    width: 60px;
+	width: 60px;
 }
 
 .fancybox-type-iframe .fancybox-nav span {
-    visibility: visible;
-    opacity: 0.5;
+	visibility: visible;
+	opacity: 0.5;
 }
 
 .fancybox-type-iframe .fancybox-nav:hover span {
-    opacity: 1;
+	opacity: 1;
 }
 
 .fancybox-type-iframe .fancybox-next {
-    right: -60px;
+	right: -60px;
 }
 
 .fancybox-type-iframe .fancybox-prev {
-    left: -60px;
+	left: -60px;
 }

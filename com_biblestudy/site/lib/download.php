@@ -97,14 +97,7 @@ class JBSMDownload
 		// Bytes per chunk (10 MB)
 		$chunk = 10 * 1024 * 1024;
 
-		$fh = fopen($download_file, "rb");
-
-		if (is_bool($fh))
-		{
-			echo "Unable to open file";
-			fclose($fh);
-			exit;
-		}
+		$fh = @fopen($download_file, "rb") or jexit("Unable to open file");
 
 		// Clean the output buffer, Added to fix ZIP file corruption
 		@ob_end_clean();
