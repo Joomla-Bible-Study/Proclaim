@@ -12,17 +12,17 @@ Status
         <th>Joomla Version</th>
     </tr>
     <tr>
-        <td><a href="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study" target="_blank"><img src="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=development"/></a></td>
-        <td>Development</td>
-        <td>9.0.3</td>
-        <td>Aug 12, 2016</td>
+        <td align="center"><a href="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study" target="_blank"><img src="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=development"/></a></td>
+        <td align="center">Development</td>
+        <td align="center">9.0.4</td>
+        <td align="center">TBD</td>
         <td align="center">3.4+</td>
     </tr>
     <tr>
-        <td><a href="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study" target="_blank"><img src="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=master"/></a></td>
-        <td>Master</td>
-        <td>9.0.2</td>
-        <td>July 8, 2016</td>
+        <td align="center"><a href="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study" target="_blank"><img src="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=master"/></a></td>
+        <td align="center">Master</td>
+        <td align="center">9.0.3</td>
+        <td align="center">Aug 22, 2016</td>
         <td align="center">3.4+</td>
     </tr>
 </table>
