@@ -33,10 +33,11 @@ $template       = JBSMParams::getTemplateparams($templatemenuid);
 $pagebuilder    = new JBSMPageBuilder;
 
 $admin        = JBSMParams::getAdmin();
+/** @var Registry $admin_params */
 $admin_params = $admin->params;
-$params->merge($admin_params);
-$template->params->merge($params);
-$params = $template->params;
+$admin_params->merge($template->params);
+$admin_params->merge($params);
+$params = $admin_params;
 
 require_once dirname(__FILE__) . '/helper.php';
 
