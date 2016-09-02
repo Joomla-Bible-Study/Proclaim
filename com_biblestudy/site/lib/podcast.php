@@ -364,7 +364,7 @@ class JBSMPodcast
 						$episodedetailtemp = '
                         	   <item>
                         		<title>' . $title . '</title>';
-						$path = JBSMHelper::MediaBuildUrl($episode->server_path, str_replace(' ', "%20", $episode->filename), $params);
+						$path = JBSMHelper::MediaBuildUrl($episode->srparams->get('path'), str_replace(' ', "%20", $episode->params->get('filename')), $params);
 
 						/*
 						 * Default is to episode
