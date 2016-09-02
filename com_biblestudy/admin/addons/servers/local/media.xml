@@ -38,10 +38,6 @@
 			       description="JBS_MED_USE_FILENAME_AS_PATH"
 			       class="inputbox required"
 			       required="true"/>
-			<field name="filemedia"
-			       type="filelist"
-			       label="Select a folder"
-			       directory="images/biblestudy/media" filter="" exclude="" stripext=""/>
 			<field name="size" type="filesize" label="JBS_CMN_FILESIZE"
 			       description="JBS_MED_FILESIZE_DESC" class="inputbox" size="15"/>
 			<field name="special" type="list" label="JBS_MED_LINK_TARGET"
