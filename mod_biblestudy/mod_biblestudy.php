@@ -35,7 +35,6 @@ $pagebuilder    = new JBSMPageBuilder;
 $admin        = JBSMParams::getAdmin();
 /** @var Registry $admin_params */
 $admin_params = $admin->params;
-
 $admin_params->merge($template->params);
 $admin_params->merge($params);
 $params = $admin_params;
