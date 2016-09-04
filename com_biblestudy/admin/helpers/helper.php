@@ -186,4 +186,40 @@ class JBSMHelper
 
 		return $path;
 	}
+
+	/**
+	 * Clear Cache of JBSM
+	 *
+	 * @param   string  $state  Where to clean the cache from. Site or Admin.
+	 *
+	 * @since 9.0.4
+	 * @return void
+	 */
+	public static function clearcache($state = 'site')
+	{
+		$conf = JFactory::getConfig();
+		$options = array();
+
+		if ($state == 'admin')
+		{
+			$options = array(
+				'defaultgroup' => 'com_biblestudy',
+				'storage'      => $conf->get('cache_handler', ''),
+				'caching'      => true,
+				'cachebase'    => $conf->get('cache_path', JPATH_ADMINISTRATOR . '/cache')
+			);
+		}
+		elseif ($state == 'site')
+		{
+			$options = array(
+				'defaultgroup' => 'com_biblestudy',
+				'storage'      => $conf->get('cache_handler', ''),
+				'caching'      => true,
+				'cachebase'    => $conf->get('cache_path', JPATH_SITE . '/cache')
+			);
+		}
+
+		$cache = JCache::getInstance('', $options);
+		$cache->clean();
+	}
 }
