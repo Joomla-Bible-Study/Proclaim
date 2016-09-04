@@ -15,15 +15,16 @@ JHtml::_('dropdown.init');
 JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.multiselect');
 
-$app       = JFactory::getApplication();
-$user      = JFactory::getUser();
-$userId    = $user->get('id');
-$listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn  = $this->escape($this->state->get('list.direction'));
-$archived  = $this->state->get('filter.published') == 2 ? true : false;
-$trashed   = $this->state->get('filter.published') == -2 ? true : false;
-
+$app        = JFactory::getApplication();
+$user       = JFactory::getUser();
+$userId     = $user->get('id');
+$listOrder  = $this->escape($this->state->get('list.ordering'));
+$listDirn   = $this->escape($this->state->get('list.direction'));
+$archived   = $this->state->get('filter.published') == 2 ? true : false;
+$trashed    = $this->state->get('filter.published') == -2 ? true : false;
 $sortFields = $this->getSortFields();
+$columns    = 4;
+
 ?>
 <script type="text/javascript">
 	Joomla.orderTable = function () {
@@ -78,6 +79,12 @@ $sortFields = $this->getSortFields();
 						</th>
 					</tr>
 					</thead>
+					<tfoot>
+					<tr>
+						<td colspan="<?php echo $columns; ?>">
+						</td>
+					</tr>
+					</tfoot>
 					<tbody>
 					<?php
 					foreach ($this->items as $i => $item) :
@@ -105,7 +112,7 @@ $sortFields = $this->getSortFields();
 
 									<?php else : ?>
 										<span
-												title="<?php echo $this->escape($item->title); ?>"><?php echo $this->escape($item->title); ?></span>
+											title="<?php echo $this->escape($item->title); ?>"><?php echo $this->escape($item->title); ?></span>
 									<?php endif; ?>
 								</div>
 								<div class="pull-left">

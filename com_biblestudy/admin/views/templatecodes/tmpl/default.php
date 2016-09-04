@@ -24,6 +24,8 @@ $archived   = $this->state->get('filter.published') == 2 ? true : false;
 $trashed    = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder  = $listOrder == 'ordering';
 $sortFields = $this->getSortFields();
+$columns    = 5;
+
 ?>
 <script type="text/javascript">
 	Joomla.orderTable = function () {
@@ -62,13 +64,11 @@ $sortFields = $this->getSortFields();
 				<table class="table table-striped adminlist" id="templatecodes">
 					<thead>
 					<tr>
-
 						<th width="1%">
 							<input type="checkbox" name="checkall-toggle" value=""
 							       title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>"
 							       onclick="Joomla.checkAll(this)"/>
 						</th>
-
 						<th width="8%">
 							<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'templatecode.published', $listDirn, $listOrder); ?>
 						</th>
@@ -83,6 +83,12 @@ $sortFields = $this->getSortFields();
 						</th>
 					</tr>
 					</thead>
+					<tfoot>
+					<tr>
+						<td colspan="<?php echo $columns; ?>">
+						</td>
+					</tr>
+					</tfoot>
 					<tbody>
 					<?php
 					foreach ($this->items as $i => $item) :
@@ -163,8 +169,6 @@ $sortFields = $this->getSortFields();
 				</table>
 			<?php endif; ?>
 			<?php echo $this->pagination->getListFooter(); ?>
-			<?php //Load the batch processing form. ?>
-			<?php //echo $this->loadTemplate('batch'); ?>
 			<input type="hidden" name="task" value=""/>
 			<input type="hidden" name="boxchecked" value="0"/>
 			<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
