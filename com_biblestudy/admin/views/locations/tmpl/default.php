@@ -23,6 +23,7 @@ $listDirn  = $this->escape($this->state->get('list.direction', 'asc'));
 $archived  = $this->state->get('filter.published') == 2 ? true : false;
 $trashed   = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder == 'location.ordering';
+$columns   = 5;
 
 if ($saveOrder)
 {
@@ -70,6 +71,12 @@ if ($saveOrder)
 						</th>
 					</tr>
 					</thead>
+					<tfoot>
+					<tr>
+						<td colspan="<?php echo $columns; ?>">
+						</td>
+					</tr>
+					</tfoot>
 					<tbody>
 					<?php
 					foreach ($this->items as $i => $item) :
@@ -97,7 +104,7 @@ if ($saveOrder)
 											<?php echo $this->escape($item->location_text); ?></a>
 									<?php else : ?>
 										<span
-												title="<?php echo JText::sprintf('JFIELD_ALIAS_LABEL', $this->escape($item->location_text)); ?>"><?php echo $this->escape($item->location_text); ?></span>
+											title="<?php echo JText::sprintf('JFIELD_ALIAS_LABEL', $this->escape($item->location_text)); ?>"><?php echo $this->escape($item->location_text); ?></span>
 									<?php endif; ?>
 								</div>
 								<div class="pull-left">

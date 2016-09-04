@@ -79,6 +79,8 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 */
 	public function save($data)
 	{
+		$this->cleanCache();
+
 		if (parent::save($data))
 		{
 			return true;

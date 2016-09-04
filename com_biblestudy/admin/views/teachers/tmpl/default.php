@@ -25,6 +25,8 @@ $archived   = $this->state->get('filter.published') == 2 ? true : false;
 $trashed    = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder  = $listOrder == 'teacher.ordering';
 $sortFields = $this->getSortFields();
+$columns    = 9;
+
 if ($saveOrder)
 {
 	$saveOrderingUrl = 'index.php?option=com_biblestudy&task=teachers.saveOrderAjax&tmpl=component';
@@ -100,6 +102,12 @@ if ($saveOrder)
 						</th>
 					</tr>
 					</thead>
+					<tfoot>
+					<tr>
+						<td colspan="<?php echo $columns; ?>">
+						</td>
+					</tr>
+					</tfoot>
 					<tbody>
 					<?php
 					foreach ($this->items as $i => $item) :

@@ -22,6 +22,7 @@ $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 $archived  = $this->state->get('filter.published') == 2 ? true : false;
 $trashed   = $this->state->get('filter.published') == -2 ? true : false;
+$columns   = 4;
 
 $sortFields = $this->getSortFields();
 ?>
@@ -78,6 +79,12 @@ $sortFields = $this->getSortFields();
 						</th>
 					</tr>
 					</thead>
+					<tfoot>
+					<tr>
+						<td colspan="<?php echo $columns; ?>">
+						</td>
+					</tr>
+					</tfoot>
 					<tbody>
 					<?php
 					foreach ($this->items as $i => $item) :
@@ -109,7 +116,7 @@ $sortFields = $this->getSortFields();
 
 									<?php else : ?>
 										<span
-												title="<?php echo $this->escape($item->topic_text); ?>"><?php echo $this->escape($item->topic_text); ?></span>
+											title="<?php echo $this->escape($item->topic_text); ?>"><?php echo $this->escape($item->topic_text); ?></span>
 									<?php endif; ?>
 								</div>
 								<div class="pull-left">

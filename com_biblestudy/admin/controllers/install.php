@@ -92,8 +92,8 @@ class BiblestudyControllerInstall extends JControllerForm
 
 		if (empty($stack))
 		{
-			$cache = new JCache(array('defaultgroup' => 'com_biblestudy'));
-			$cache->clean();
+			JBSMHelper::clearcache('site');
+			JBSMHelper::clearcache('admin');
 			$session->set('migration_stack', '', 'JBSM');
 
 			/** @var BibleStudyModelInstall $model */
@@ -119,8 +119,8 @@ class BiblestudyControllerInstall extends JControllerForm
 	 */
 	public function clear()
 	{
-		$cache = new JCache(array('defaultgroup' => 'com_biblestudy'));
-		$cache->clean();
+		JBSMHelper::clearcache('site');
+		JBSMHelper::clearcache('admin');
 		$session = JFactory::getSession();
 		$session->set('migration_stack', '', 'JBSM');
 		$this->browse();

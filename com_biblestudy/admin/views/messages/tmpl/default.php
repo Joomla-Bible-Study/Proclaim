@@ -23,6 +23,8 @@ $listDirn  = $this->escape($this->state->get('list.direction', 'desc'));
 $archived  = $this->state->get('filter.published') == 2 ? true : false;
 $trashed   = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder == 'study.ordering';
+$columns   = 12;
+
 
 if ($saveOrder)
 {
@@ -91,6 +93,12 @@ if ($saveOrder)
 						</th>
 					</tr>
 					</thead>
+					<tfoot>
+					<tr>
+						<td colspan="<?php echo $columns; ?>">
+						</td>
+					</tr>
+					</tfoot>
 					<tbody>
 					<?php foreach ($this->items as $i => $item) :
 						$item->max_ordering = 0;
@@ -146,15 +154,15 @@ if ($saveOrder)
 								<div class="pull-left">
 									<?php if ($canEdit || $canEditOwn) : ?>
 										<a href="<?php echo JRoute::_(
-												'index.php?option=com_biblestudy&task=message.edit&id=' . (int) $item->id
+											'index.php?option=com_biblestudy&task=message.edit&id=' . (int) $item->id
 										); ?>">
 											<?php echo($this->escape($item->studytitle) ? $this->escape(
-													$item->studytitle
+												$item->studytitle
 											) : 'ID: ' . $this->escape($item->id)); ?>
 										</a>
 									<?php else : ?>
 										<?php echo($this->escape($item->studytitle) ? $this->escape(
-												$item->studytitle
+											$item->studytitle
 										) : 'ID: ' . $this->escape($item->id)); ?>
 									<?php endif; ?>
 									<?php if ($item->alias) : ?>
