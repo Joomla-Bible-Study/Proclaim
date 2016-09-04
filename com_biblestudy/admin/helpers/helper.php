@@ -163,6 +163,7 @@ class JBSMHelper
 	public static function MediaBuildUrl ($spath, $path, $params, $setProtical = false)
 	{
 		$spath = rtrim($spath, '/');
+		$path = ltrim($path, '/');
 
 		// Check to make sure a '/' is not in the start of the path.
 		if (!JBSMBibleStudyHelper::endsWith($spath, '/')

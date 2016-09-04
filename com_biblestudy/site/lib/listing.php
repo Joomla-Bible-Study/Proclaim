@@ -2298,46 +2298,48 @@ class JBSMListing
 	 */
 	public function getStudyDate($params, $studydate)
 	{
-		switch ($params->get('date_format'))
-		{
-			case 0:
-				$date = JHtml::_('date', $studydate, "M j, Y");
-				break;
-			case 1:
-				$date = JHtml::_('date', $studydate, "M J");
-				break;
-			case 2:
-				$date = JHtml::_('date', $studydate, "n/j/Y");
-				break;
-			case 3:
-				$date = JHtml::_('date', $studydate, "n/j");
-				break;
-			case 4:
-				$date = JHtml::_('date', $studydate, "l, F j, Y");
-				break;
-			case 5:
-				$date = JHtml::_('date', $studydate, "F j, Y");
-				break;
-			case 6:
-				$date = JHtml::_('date', $studydate, "j F Y");
-				break;
-			case 7:
-				$date = JHtml::_('date', $studydate, "j/n/Y");
-				break;
-			case 8:
-				$date = JHtml::_('date', $studydate, JText::_('DATE_FORMAT_LC'));
-				break;
-			case 9:
-				$date = JHtml::_('date', $studydate, "Y/M/D");
-				break;
-			default:
-				$date = JHtml::_('date', $studydate, "n/j");
-				break;
-		}
-
 		$customDate = $params->get('custom_date_format');
 
-		if ($customDate != '')
+		if ($customDate == '')
+		{
+			switch ($params->get('date_format'))
+			{
+				case 0:
+					$date = JHtml::_('date', $studydate, "M j, Y");
+					break;
+				case 1:
+					$date = JHtml::_('date', $studydate, "M J");
+					break;
+				case 2:
+					$date = JHtml::_('date', $studydate, "n/j/Y");
+					break;
+				case 3:
+					$date = JHtml::_('date', $studydate, "n/j");
+					break;
+				case 4:
+					$date = JHtml::_('date', $studydate, "l, F j, Y");
+					break;
+				case 5:
+					$date = JHtml::_('date', $studydate, "F j, Y");
+					break;
+				case 6:
+					$date = JHtml::_('date', $studydate, "j F Y");
+					break;
+				case 7:
+					$date = date("j/n/Y", strtotime($studydate));
+					break;
+				case 8:
+					$date = JHtml::_('date', $studydate, JText::_('DATE_FORMAT_LC'));
+					break;
+				case 9:
+					$date = JHtml::_('date', $studydate, "Y/M/D");
+					break;
+				default:
+					$date = JHtml::_('date', $studydate, "n/j");
+					break;
+			}
+		}
+		else
 		{
 			$date = JHtml::_('date', $studydate, $customDate);
 		}

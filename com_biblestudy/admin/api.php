@@ -19,8 +19,8 @@ if (defined('JBSM_LOADED'))
 define('JBSM_PROFILER', 0);
 
 // Version information
-define('BIBLESTUDY_VERSION', '9.0.2');
-define('BIBLESTUDY_VERSION_DATE', '2016-05-23');
+define('BIBLESTUDY_VERSION', '9.0.3');
+define('BIBLESTUDY_VERSION_DATE', '2016-08-22');
 define('BIBLESTUDY_VERSION_UPDATEFILE', 'JBS Version ' . BIBLESTUDY_VERSION);
 
 // Default values
