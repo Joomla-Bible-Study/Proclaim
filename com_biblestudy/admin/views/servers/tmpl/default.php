@@ -16,13 +16,14 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('formbehavior.chosen', 'select');
 
-$app = JFactory::getApplication();
-$user = JFactory::getUser();
-$userId = $user->get('id');
+$app       = JFactory::getApplication();
+$user      = JFactory::getUser();
+$userId    = $user->get('id');
 $listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn = $this->escape($this->state->get('list.direction'));
-$archived = $this->state->get('filter.published') == 2 ? true : false;
-$trashed = $this->state->get('filter.published') == -2 ? true : false;
+$listDirn  = $this->escape($this->state->get('list.direction'));
+$archived  = $this->state->get('filter.published') == 2 ? true : false;
+$trashed   = $this->state->get('filter.published') == -2 ? true : false;
+$columns   = 4;
 
 $sortFields = $this->getSortFields();
 ?>
@@ -62,14 +63,20 @@ $sortFields = $this->getSortFields();
 					</th>
 				</tr>
 				</thead>
+				<tfoot>
+				<tr>
+					<td colspan="<?php echo $columns; ?>">
+					</td>
+				</tr>
+				</tfoot>
 				<tbody>
 				<?php
 				foreach ($this->items as $i => $item) :
 					$item->max_ordering = 0;
-					$canCreate          = $user->authorise('core.create');
-					$canEdit            = $user->authorise('core.edit', 'com_biblestudy.server.' . $item->id);
-					$canEditOwn         = $user->authorise('core.edit.own', 'com_biblestudy.server.' . $item->id);
-					$canChange          = $user->authorise('core.edit.state', 'com_biblestudy.server.' . $item->id);
+					$canCreate = $user->authorise('core.create');
+					$canEdit = $user->authorise('core.edit', 'com_biblestudy.server.' . $item->id);
+					$canEditOwn = $user->authorise('core.edit.own', 'com_biblestudy.server.' . $item->id);
+					$canChange = $user->authorise('core.edit.state', 'com_biblestudy.server.' . $item->id);
 					?>
 					<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->id ?>">
 
@@ -95,31 +102,31 @@ $sortFields = $this->getSortFields();
 							</div>
 							<div class="pull-left">
 								<?php
-									// Create dropdown items
-									JHtml::_('dropdown.edit', $item->id, 'server.');
-									JHtml::_('dropdown.divider');
-									if ($item->published) :
-										JHtml::_('dropdown.unpublish', 'cb' . $i, 'servers.');
-									else :
-										JHtml::_('dropdown.publish', 'cb' . $i, 'servers.');
-									endif;
+								// Create dropdown items
+								JHtml::_('dropdown.edit', $item->id, 'server.');
+								JHtml::_('dropdown.divider');
+								if ($item->published) :
+									JHtml::_('dropdown.unpublish', 'cb' . $i, 'servers.');
+								else :
+									JHtml::_('dropdown.publish', 'cb' . $i, 'servers.');
+								endif;
 
-									JHtml::_('dropdown.divider');
+								JHtml::_('dropdown.divider');
 
-									if ($archived) :
-										JHtml::_('dropdown.unarchive', 'cb' . $i, 'servers.');
-									else :
-										JHtml::_('dropdown.archive', 'cb' . $i, 'servers.');
-									endif;
+								if ($archived) :
+									JHtml::_('dropdown.unarchive', 'cb' . $i, 'servers.');
+								else :
+									JHtml::_('dropdown.archive', 'cb' . $i, 'servers.');
+								endif;
 
-									if ($trashed) :
-										JHtml::_('dropdown.untrash', 'cb' . $i, 'servers.');
-									else :
-										JHtml::_('dropdown.trash', 'cb' . $i, 'servers.');
-									endif;
+								if ($trashed) :
+									JHtml::_('dropdown.untrash', 'cb' . $i, 'servers.');
+								else :
+									JHtml::_('dropdown.trash', 'cb' . $i, 'servers.');
+								endif;
 
-									// Render dropdown list
-									echo JHtml::_('dropdown.render');
+								// Render dropdown list
+								echo JHtml::_('dropdown.render');
 								?>
 							</div>
 						</td>

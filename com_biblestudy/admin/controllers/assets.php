@@ -116,8 +116,8 @@ class BiblestudyControllerAssets extends JControllerForm
 
 		if (empty($stack))
 		{
-			$cache = new JCache(array('defaultgroup' => 'com_biblestudy'));
-			$cache->clean();
+			JBSMHelper::clearcache('site');
+			JBSMHelper::clearcache('admin');
 			$session->set('asset_stack', '', 'JBSM');
 
 			/** @var BibleStudyModelAssets $model */
@@ -146,8 +146,8 @@ class BiblestudyControllerAssets extends JControllerForm
 		// Check for request forgeries.
 		JSession::checkToken('get') or jexit(JText::_('JINVALID_TOKEN'));
 
-		$cache = new JCache(array('defaultgroup' => 'com_biblestudy'));
-		$cache->clean();
+		JBSMHelper::clearcache('admin');
+		JBSMHelper::clearcache('site');
 		$session = JFactory::getSession();
 		$session->set('assat_stack', '', 'JBSM');
 		$app = JFactory::getApplication();

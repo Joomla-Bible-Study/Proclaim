@@ -214,6 +214,8 @@ class BiblestudyModelMessage extends JModelAdmin
 		$params = JBSMParams::getAdmin()->params;
 		$input  = JFactory::getApplication()->input;
 
+		$this->cleanCache();
+
 		if ($input->get('a_id'))
 		{
 			$data['id'] = $input->get('a_id');

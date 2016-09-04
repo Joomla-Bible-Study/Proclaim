@@ -41,8 +41,8 @@ $controller = JControllerLegacy::getInstance('Biblestudy');
 
 if ($jbsstate && $type == 'install')
 {
-	$cache = new JCache(array('defaultgroup' => 'default'));
-	$cache->clean();
+	JBSMHelper::clearcache('admin');
+	JBSMHelper::clearcache('site');
 	$app->input->set('task', 'browse');
 }
 
