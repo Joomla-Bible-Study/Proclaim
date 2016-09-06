@@ -2305,37 +2305,37 @@ class JBSMListing
 			switch ($params->get('date_format'))
 			{
 				case 0:
-					$date = JHtml::_('date', $studydate, "M j, Y");
+					$date = JHtml::_('date', $studydate, "M j, Y", null);
 					break;
 				case 1:
-					$date = JHtml::_('date', $studydate, "M J");
+					$date = JHtml::_('date', $studydate, "M J", null);
 					break;
 				case 2:
-					$date = JHtml::_('date', $studydate, "n/j/Y");
+					$date = JHtml::_('date', $studydate, "n/j/Y", null);
 					break;
 				case 3:
-					$date = JHtml::_('date', $studydate, "n/j");
+					$date = JHtml::_('date', $studydate, "n/j", null);
 					break;
 				case 4:
-					$date = JHtml::_('date', $studydate, "l, F j, Y");
+					$date = JHtml::_('date', $studydate, "l, F j, Y", null);
 					break;
 				case 5:
-					$date = JHtml::_('date', $studydate, "F j, Y");
+					$date = JHtml::_('date', $studydate, "F j, Y", null);
 					break;
 				case 6:
-					$date = JHtml::_('date', $studydate, "j F Y");
+					$date = JHtml::_('date', $studydate, "j F Y", null);
 					break;
 				case 7:
 					$date = date("j/n/Y", strtotime($studydate));
 					break;
 				case 8:
-					$date = JHtml::_('date', $studydate, JText::_('DATE_FORMAT_LC'));
+					$date = JHtml::_('date', $studydate, JText::_('DATE_FORMAT_LC'), null);
 					break;
 				case 9:
-					$date = JHtml::_('date', $studydate, "Y/M/D");
+					$date = JHtml::_('date', $studydate, "Y/M/D", null);
 					break;
 				default:
-					$date = JHtml::_('date', $studydate, "n/j");
+					$date = JHtml::_('date', $studydate, "n/j", null);
 					break;
 			}
 		}
