@@ -89,25 +89,7 @@ abstract class JHtmlJwplayer
 			$media->playerheight = $params->get('player_hight');
 		}
 
-		// Check to see if file name is for youtube and helps with old converted file names.
-		if (!isset($media->path1))
-		{
-			$media->path1 = $media->sparams->get('path') . $params->get('filename');
-
-			if (!substr_count($media->path1, '://') && !substr_count($media->path1, '//'))
-			{
-				$protocol     = $params->get('protocol', 'http://');
-				$media->path1 = $protocol . $media->path1;
-			}
-		}
-		elseif (strpos($media->path1, 'youtube.com') !== false)
-		{
-			$media->path1 = 'https://' . strstr($media->path1, 'youtube.com');
-		}
-		elseif (strpos($media->path1, 'youtu.be') !== false)
-		{
-			$media->path1 = 'https://' . strstr($media->path1, 'youtu.be');
-		}
+		$media->path1 = JBSMHelper::MediaBuildUrl($media->sparams->get('path'), $params->get('filename'), $params, true);
 
 		// Fall back check to see if JWplayer can play the media. if not will try and return a link to the file.
 		$acceptedFormats = array('aac', 'm4a', 'f4a', 'mp3', 'ogg', 'oga', 'mp4', 'm4v', 'f4v', 'mov', 'flv', 'webm', 'm3u8', 'mpd', 'DVR');
@@ -121,13 +103,12 @@ abstract class JHtmlJwplayer
 		}
 
 		$media->playerwidth  = $params->get('player_width');
-		$media->playerheight = $params->get('player_height');
 
-		if ($params->get('playerheight') < 55 && $params->get('playerheight'))
+		if ($params->get('playerheight') < 55 && $params->get('playerheight') && !isset($player->mp3))
 		{
 			$media->playerheight = 55;
 		}
-		elseif ($params->get('playerheight'))
+		elseif ($params->get('playerheight') && !isset($player->mp3))
 		{
 			$media->playerheight = $params->get('playerheight');
 		}
@@ -216,7 +197,7 @@ abstract class JHtmlJwplayer
 							'file': '" . $media->path1 . "',
 						";
 
-		if ($params->get('playerresponsive') == 0)
+		if ($params->get('playerresponsive') == 0 && $media->playerheight)
 		{
 			$render .= "'height': '" . $media->playerheight . "',
 			";

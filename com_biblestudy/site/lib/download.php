@@ -67,13 +67,13 @@ class JBSMDownload
 			$reg->loadString($media->sparams);
 			$sparams = $reg->toObject();
 
-			if ($sparams->path)
+			if (isset($sparams->path))
 			{
 				$media->spath = $sparams->path;
 			}
 			else
 			{
-				($media->spath = '');
+				$media->spath = '';
 			}
 		}
 

@@ -9,7 +9,7 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-$style = 'body { background-color:' . $this->params->get('popupbackground', 'black') . ' !important;}
+$style = 'body { background-color:' . $this->params->get('popupbackground', 'black') . ' !important; padding:0 !important;}
 	#all{background-color:' . $this->params->get('popupbackground', 'black') . ' !important;}';
 $doc = JFactory::getDocument();
 $doc->addStyleDeclaration($style);
