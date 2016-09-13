@@ -862,13 +862,13 @@ class JBSMMedia
 			$reg->loadString($media->sparams);
 			$params = $reg->toObject();
 
-			if ($params->path)
+			if (isset($params->path))
 			{
 				$media->spath = $params->path;
 			}
 			else
 			{
-				($media->spath = '');
+				$media->spath = '';
 			}
 
 			return $media;

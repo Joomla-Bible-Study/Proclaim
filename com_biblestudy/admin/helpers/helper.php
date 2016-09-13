@@ -153,14 +153,14 @@ class JBSMHelper
 	 *
 	 * @param   string    $spath        Server Path
 	 * @param   string    $path         File
-	 * @param   Registry  $params       Paramitors.
-	 * @param   bool      $setProtical  True add protical els no
+	 * @param   Registry  $params       Parameters.
+	 * @param   bool      $setProtocol  True add protocol els no
 	 *
 	 * @return string Completed path.
 	 *
 	 * @since 9.0.3
 	 */
-	public static function MediaBuildUrl ($spath, $path, $params, $setProtical = false)
+	public static function MediaBuildUrl ($spath, $path, $params, $setProtocol = false)
 	{
 		$spath = rtrim($spath, '/');
 		$path = ltrim($path, '/');
@@ -174,8 +174,15 @@ class JBSMHelper
 			$path  = ltrim($path, '/');
 		}
 
-		if (!substr_count($path, '://') && !substr_count($path, '//') && $setProtical)
+		if (!substr_count($path, '://') && !substr_count($path, '//') && $setProtocol)
 		{
+			if (empty($spath))
+			{
+				$spath = JUri::base();
+
+				return $spath . $path;
+			}
+
 			$protocol = $params->get('protocol', '//');
 			$path     = $protocol . $spath . '/' . $path;
 		}
