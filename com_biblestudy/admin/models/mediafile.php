@@ -127,7 +127,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 				if ($table->type == 'legacy' || $table->type == 'local')
 				{
-					$params->set('size', JBSMHelper::getRemoteFileSize($path->get('protocol') . $set_path . $params->get('filename')));
+					$params->set('size', JBSMHelper::getRemoteFileSize(JBSMHelper::MediaBuildUrl($set_path, $params->get('filename'), $params, true)));
 					$data['params'] = $params->toArray();
 				}
 			}

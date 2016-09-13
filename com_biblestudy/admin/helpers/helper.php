@@ -171,7 +171,7 @@ class JBSMHelper
 			&& !substr_count($path, '://')
 			&& !substr_count($path, '//'))
 		{
-			$path  = ltrim($path, '/');
+			// $path  = ltrim($path, '/');
 		}
 
 		if (!substr_count($path, '://') && !substr_count($path, '//') && $setProtocol)
@@ -182,11 +182,15 @@ class JBSMHelper
 
 				return $spath . $path;
 			}
+			elseif (substr_count($spath, '://') || substr_count($spath, '//') && !empty($spath))
+			{
+				return $spath . '/' . $path;
+			}
 
 			$protocol = $params->get('protocol', '//');
 			$path     = $protocol . $spath . '/' . $path;
 		}
-		elseif (!substr_count($path, '://'))
+		elseif (!substr_count($spath, '://') && !substr_count($spath, '//') && !empty($spath))
 		{
 			$path = $spath . '/' . $path;
 		}

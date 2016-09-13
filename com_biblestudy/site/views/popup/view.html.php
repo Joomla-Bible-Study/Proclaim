@@ -213,13 +213,7 @@ class BiblestudyViewPopup extends JViewLegacy
 		$this->teacherimage     = '<img src="' . JUri::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height
 			. '" alt="' . $this->media->teachername . '" />';
 
-		$this->path1 = $this->media->spath . $this->params->get('filename');
-
-		if (!substr_count($this->path1, '://') && !substr_count($this->path1, '//'))
-		{
-			$protocol    = $this->params->get('protocol', 'http://');
-			$this->path1 = $protocol . $this->path1;
-		}
+		$this->path1 = JBSMHelper::MediaBuildUrl($this->media->spath, $this->params->get('filename'), $this->params, true);
 
 		$this->playerwidth  = $this->params->get('player_width');
 		$this->playerheight = $this->params->get('player_height');

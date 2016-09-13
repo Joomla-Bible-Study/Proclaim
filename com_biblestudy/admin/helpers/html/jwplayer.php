@@ -103,13 +103,12 @@ abstract class JHtmlJwplayer
 		}
 
 		$media->playerwidth  = $params->get('player_width');
-		$media->playerheight = $params->get('player_height');
 
-		if ($params->get('playerheight') < 55 && $params->get('playerheight'))
+		if ($params->get('playerheight') < 55 && $params->get('playerheight') && !isset($player->mp3))
 		{
 			$media->playerheight = 55;
 		}
-		elseif ($params->get('playerheight'))
+		elseif ($params->get('playerheight') && !isset($player->mp3))
 		{
 			$media->playerheight = $params->get('playerheight');
 		}
@@ -198,7 +197,7 @@ abstract class JHtmlJwplayer
 							'file': '" . $media->path1 . "',
 						";
 
-		if ($params->get('playerresponsive') == 0)
+		if ($params->get('playerresponsive') == 0 && $media->playerheight)
 		{
 			$render .= "'height': '" . $media->playerheight . "',
 			";
