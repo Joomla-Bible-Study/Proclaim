@@ -53,7 +53,7 @@ jQuery(document).ready(function () {
 	 * @title Templating Procedures
 	 */
 
-		//Determine the type of template, and route to that function
+	//Determine the type of template, and route to that function
 	jQuery('#type').change(function () {
 		eval(jQuery('#type').find('option:selected').attr('value') + '()');
 	});
