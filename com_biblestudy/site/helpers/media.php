@@ -852,7 +852,7 @@ class JBSMMedia
 			->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server_id)')
 			->leftJoin('#__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)')
 			->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)')
-			->leftJoin('#__bsms_series as se ON (s.series_id = se.id)')
+			->leftJoin('#__bsms_series AS se ON (s.series_id = se.id)')
 			->where('#__bsms_mediafiles.id = ' . (int) $id)
 			->where('#__bsms_mediafiles.published = ' . 1)
 			->where('#__bsms_mediafiles.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->q('*') . ')')

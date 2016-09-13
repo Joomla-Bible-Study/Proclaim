@@ -170,24 +170,21 @@ class BiblestudyViewPopup extends JViewLegacy
 		$this->getMedia = new JBSMMedia;
 		$this->media    = $this->getMedia->getMediaRows2($mediaid);
 		$this->state    = $this->get('state');
-
-		/** @var Registry params */
-		$this->params   = $this->state->template->params;
 		$this->template = $this->state->get('template');
 
 		/*
 		 *  Convert parameter fields to objects.
 		 */
 		$registry = new Registry;
-		$registry->loadString($this->media->params);
-		$this->template->params->merge($registry);
+		$registry->loadString($this->template->params);
+		$this->params = $registry;
 
 		$registry = new Registry;
 		$registry->loadString($this->media->sparams);
+		$this->params->merge($registry);
 		$this->media->sparams = $registry;
-
 		$registry = new Registry;
-		$registry->loadString($this->template->params);
+		$registry->loadString($this->media->params);
 		$this->params->merge($registry);
 
 		JHtml::_('biblestudy.framework');
