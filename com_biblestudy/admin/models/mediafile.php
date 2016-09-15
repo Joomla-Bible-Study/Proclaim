@@ -31,7 +31,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * Data
 	 *
-	 * @var
+	 * @var TableMediafile
 	 * @since   9.0.0
 	 */
 	private $data;
@@ -74,7 +74,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 * @param   string  $prefix  A prefix for the table class name. Optional.
 	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return    TableMediafile    A database object
+	 * @return    bool|JTable    A database object
 	 *
 	 * @since 7.0.0
 	 */
@@ -488,6 +488,8 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 * @param   integer  $client_id  The ID of the client
 	 *
 	 * @return  void
+	 *
+	 * @since 7.0.0
 	 */
 	protected function cleanCache($group = null, $client_id = 0)
 	{
