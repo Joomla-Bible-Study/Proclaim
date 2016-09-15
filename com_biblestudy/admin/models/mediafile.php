@@ -163,14 +163,17 @@ class BiblestudyModelMediafile extends JModelAdmin
 			/** @var Joomla\Registry\Registry $admin */
 			$admin                 = JBSMParams::getAdmin()->params;
 			$server_id             = $admin->get('server');
-			$this->data->server_id = $server_id;
 
-			if (empty($server_id))
+			if ($server_id != '-1')
 			{
-				// @TODO This may not be optimal, seems like a hack
-				return new JForm("No Default Server");
+				$this->data->server_id = $server_id;
+			}
+			else
+			{
+				$server_id = null;
 			}
 		}
+
 		// Reverse lookup server_id to server type
 		/** @type BiblestudyModelServer $model */
 		$model       = JModelLegacy::getInstance('Server', 'BibleStudyModel');
@@ -184,20 +187,28 @@ class BiblestudyModelMediafile extends JModelAdmin
 		$reg1->loadArray($s_item->media);
 		$reg1->merge($reg);
 
-		$path = JPath::clean(JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/' . $server_type);
-
-		JForm::addFormPath($path);
-		JForm::addFieldPath($path . '/fields');
-
-		// Add language files
-		$lang = JFactory::getLanguage();
-
-		if (!$lang->load('jbs_addon_' . $server_type, JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/' . $server_type))
+		if ($server_type)
 		{
-			throw new Exception(JText::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'));
-		}
+			$path = JPath::clean(JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/' . $server_type);
 
-		$form = $this->loadForm('com_biblestudy.mediafile.media', "media", array('control' => 'jform', 'load_data' => true), true, "/media");
+			JForm::addFormPath($path);
+			JForm::addFieldPath($path . '/fields');
+
+			// Add language files
+			$lang = JFactory::getLanguage();
+
+			if (!$lang->load('jbs_addon_' . $server_type, JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/' . $server_type) && !$server_type)
+			{
+				JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'), 'error');
+			}
+
+			$form = $this->loadForm('com_biblestudy.mediafile.media', "media", array('control' => 'jform', 'load_data' => true), true, "/media");
+		}
+		else
+		{
+			JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'), 'warning');
+			$form = $this->getForm();
+		}
 
 		if (empty($form))
 		{
