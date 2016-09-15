@@ -74,13 +74,16 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 * @param   string  $prefix  A prefix for the table class name. Optional.
 	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return    bool|JTable    A database object
+	 * @return    TableMediafile  A database object
 	 *
 	 * @since 7.0.0
 	 */
 	public function getTable($type = 'Mediafile', $prefix = 'Table', $config = array())
 	{
-		return JTable::getInstance($type, $prefix, $config);
+		/** @var TableMediafile $table */
+		$table = JTable::getInstance($type, $prefix, $config);
+
+		return $table;
 	}
 
 	/**
