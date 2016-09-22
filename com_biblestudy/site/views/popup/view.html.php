@@ -170,24 +170,21 @@ class BiblestudyViewPopup extends JViewLegacy
 		$this->getMedia = new JBSMMedia;
 		$this->media    = $this->getMedia->getMediaRows2($mediaid);
 		$this->state    = $this->get('state');
-
-		/** @var Registry params */
-		$this->params   = $this->state->template->params;
 		$this->template = $this->state->get('template');
 
 		/*
 		 *  Convert parameter fields to objects.
 		 */
 		$registry = new Registry;
-		$registry->loadString($this->media->params);
-		$this->template->params->merge($registry);
+		$registry->loadString($this->template->params);
+		$this->params = $registry;
 
 		$registry = new Registry;
 		$registry->loadString($this->media->sparams);
+		$this->params->merge($registry);
 		$this->media->sparams = $registry;
-
 		$registry = new Registry;
-		$registry->loadString($this->template->params);
+		$registry->loadString($this->media->params);
 		$this->params->merge($registry);
 
 		JHtml::_('biblestudy.framework');
@@ -213,13 +210,7 @@ class BiblestudyViewPopup extends JViewLegacy
 		$this->teacherimage     = '<img src="' . JUri::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height
 			. '" alt="' . $this->media->teachername . '" />';
 
-		$this->path1 = $this->media->spath . $this->params->get('filename');
-
-		if (!substr_count($this->path1, '://') && !substr_count($this->path1, '//'))
-		{
-			$protocol    = $this->params->get('protocol', 'http://');
-			$this->path1 = $protocol . $this->path1;
-		}
+		$this->path1 = JBSMHelper::MediaBuildUrl($this->media->spath, $this->params->get('filename'), $this->params, true);
 
 		$this->playerwidth  = $this->params->get('player_width');
 		$this->playerheight = $this->params->get('player_height');

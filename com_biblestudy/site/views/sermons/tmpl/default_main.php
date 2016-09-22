@@ -54,7 +54,7 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 							if ($this->params->get('teacherlink') > 0)
 							{
 								echo '<div class="caption"><p><a href="index.php?option=com_biblestudy&view=teacher&id=' .
-										$teacher['id'] . '&t=' . $teacher['t'] . '">' . $teacher['name'] . '</a></p>';
+										$teacher['id'] . '&t=' . $teacher['t'] . '">' . $teacher['name'] . '</a></p></div>';
 							}
 							else
 							{
@@ -76,6 +76,7 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 					    "><?php echo $this->params->get('list_page_title'); ?></<?php echo $classelement; ?>><?php } ?>
 				<?php if ($this->params->get('list_intro'))
 				{ ?><p><?php echo $this->params->get('list_intro'); ?></p><?php } ?>
+
 			</div>
 		</div>
 	<?php } ?>

@@ -38,21 +38,25 @@
 			var contentPanelId = $(this).attr("id");
 			var id = $("#" + contentPanelId);
 			var player = $(".fancybox_jwplayer");
+			var bheight = id.attr('bheight');
 			var height = id.attr('pheight');
 			var width = id.attr('pwidth');
+			var ptype = id.attr('ptype');
+			var potext = id.attr('potext');
 			var autostart = id.attr('autostart');
 			$.fancybox({
 				fitToView: false,
 				width: width,
-				height: height,
+				height: bheight,
 				autoSize: false,
 				closeClick: false,
 				openEffect: 'none',
 				closeEffect: 'none',
-				content: '<div id="video_container">Loading the player ... </div> ',
+				content: '<div id="video_container">Loading the player ... </div>' +
+				'<a href="index.php?option=com_biblestudy&amp;player=' + ptype + '&amp;view=popup&amp;mediaid=' + contentPanelId +
+				'&amp;tmpl=component" target="_blank">' + potext + '</a>',
 				afterShow: function () {
 					jwplayer("video_container").setup({
-						//flashplayer: "media/com_biblestudy/player/jwplayer.flash.swf",
 						file: myVideo,
 						width: width,
 						height: height,

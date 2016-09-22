@@ -585,15 +585,18 @@ class JBSMMedia
 				{
 					case 3: // Squeezebox view
 						JHtml::_('fancybox.framework', true, true);
+						$player->boxplayerheight = $player->playerheight + 20;
 
 						if ($player->player == 7)
 						{
-							$player->playerheight = 40;
+							$player->playerheight = '40';
+							$player->boxplayerheight = '40';
 						}
 
 						$playercode = '<a href="' . $path . '" id="linkmedia' . $media->id . '" title="' . $params->get('filename') .
-								'" class="fancybox fancybox_jwplayer" pwidth="' . $player->playerwidth .
-							'" pheight="' . $player->playerheight . '" autostart="' . $params->get('autostart', false) . '">' . $image . '</a>';
+								'" class="fancybox fancybox_jwplayer" potext="' . JText::_('JBS_CMN_POPOUT') . '" ptype="' . $player->player .
+							'" pwidth="' . $player->playerwidth . '" bheight="' . $player->boxplayerheight . '" pheight="' .
+							$player->playerheight . '" autostart="' . $params->get('autostart', false) . '">' . $image . '</a>';
 
 						return $playercode;
 						break;
@@ -605,11 +608,12 @@ class JBSMMedia
 
 					case 1: // Popup
 						// Add space for popup window
-						$player->playerwidth  = $player->playerwidth + 20;
+						$diff = $params->get('player_width') - $params->get('playerwidth');
+						$player->playerwidth  = $player->playerwidth + abs($diff) + 10;
 						$player->playerheight = $player->playerheight + $params->get('popupmargin', '50');
 						$playercode           = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=" . $player->player
 							. "&amp;view=popup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width="
-							. $player->playerwidth . ",height=" .
+							. $player->playerwidth . ", height=" .
 							$player->playerheight . "'); return false\">" . $image . "</a>";
 						break;
 				}
@@ -848,7 +852,7 @@ class JBSMMedia
 			->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server_id)')
 			->leftJoin('#__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)')
 			->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)')
-			->leftJoin('#__bsms_series as se ON (s.series_id = se.id)')
+			->leftJoin('#__bsms_series AS se ON (s.series_id = se.id)')
 			->where('#__bsms_mediafiles.id = ' . (int) $id)
 			->where('#__bsms_mediafiles.published = ' . 1)
 			->where('#__bsms_mediafiles.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->q('*') . ')')
@@ -862,13 +866,13 @@ class JBSMMedia
 			$reg->loadString($media->sparams);
 			$params = $reg->toObject();
 
-			if ($params->path)
+			if (isset($params->path))
 			{
 				$media->spath = $params->path;
 			}
 			else
 			{
-				($media->spath = '');
+				$media->spath = '';
 			}
 
 			return $media;
