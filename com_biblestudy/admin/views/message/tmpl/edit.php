@@ -12,12 +12,9 @@ defined('_JEXEC') or die;
 
 // Load the tooltip behavior.
 
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.tooltip');
-JHtml::_('behavior.formvalidation');
+JHtml::_('behavior.formvalidator');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
-JHtml::_('behavior.framework');
 
 $params = $this->form->getFieldsets('params');
 $app    = JFactory::getApplication();
@@ -63,8 +60,8 @@ JFactory::getDocument()->addScriptDeclaration('
 ?>
 
 <form
-		action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=message&layout=edit&id=' . (int) $this->item->id); ?>"
-		method="post" name="adminForm" id="message-form" class="form-validate" enctype="multipart/form-data">
+	action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=message&layout=edit&id=' . (int) $this->item->id); ?>"
+	method="post" name="adminForm" id="message-form" class="form-validate" enctype="multipart/form-data">
 	<div class="row-fluid">
 		<!-- Begin Content -->
 		<div class="span10 form-horizontal">
@@ -134,9 +131,9 @@ JFactory::getDocument()->addScriptDeclaration('
 						</div>
 						<div class="controls">
 							<?php echo $this->form->getInput(
-									'booknumber',
-									null,
-									$booknumber
+								'booknumber',
+								null,
+								$booknumber
 							); ?>
 						</div>
 					</div>
@@ -261,9 +258,9 @@ JFactory::getDocument()->addScriptDeclaration('
 						</div>
 						<div class="controls">
 							<?php echo $this->form->getInput(
-									'teacher_id',
-									null,
-									$teacher_id
+								'teacher_id',
+								null,
+								$teacher_id
 							); ?>
 						</div>
 					</div>
@@ -273,9 +270,9 @@ JFactory::getDocument()->addScriptDeclaration('
 						</div>
 						<div class="controls">
 							<?php echo $this->form->getInput(
-									'location_id',
-									null,
-									$location_id
+								'location_id',
+								null,
+								$location_id
 							); ?>
 						</div>
 					</div>
@@ -285,9 +282,9 @@ JFactory::getDocument()->addScriptDeclaration('
 						</div>
 						<div class="controls">
 							<?php echo $this->form->getInput(
-									'series_id',
-									null,
-									$series_id
+								'series_id',
+								null,
+								$series_id
 							); ?>
 						</div>
 					</div>
@@ -306,9 +303,9 @@ JFactory::getDocument()->addScriptDeclaration('
 						</div>
 						<div class="controls">
 							<?php echo $this->form->getInput(
-									'messagetype',
-									null,
-									$messagetype
+								'messagetype',
+								null,
+								$messagetype
 							) ?>
 						</div>
 					</div>
@@ -318,9 +315,9 @@ JFactory::getDocument()->addScriptDeclaration('
 						</div>
 						<div class="controls">
 							<?php echo $this->form->getInput(
-									'thumbnailm',
-									null,
-									$thumbnailm
+								'thumbnailm',
+								null,
+								$thumbnailm
 							); ?>
 						</div>
 					</div>
@@ -409,6 +406,7 @@ JFactory::getDocument()->addScriptDeclaration('
 						<thead>
 						<tr>
 							<th class="center"><?php echo JText::_('JBS_CMN_EDIT_MEDIA_FILE'); ?></th>
+							<th class="center"><?php echo JText::_('JSTATUS'); ?></th>
 							<th class="center"><?php echo JText::_('JBS_CMN_MEDIA_CREATE_DATE'); ?></th>
 							<th class="center hidden-phone">Language</th>
 							<th class="center hidden-phone">Access</th>
@@ -424,11 +422,14 @@ JFactory::getDocument()->addScriptDeclaration('
 								<tr class="row<?php echo $i % 2; ?>">
 									<td>
 										<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id='
-												. (int) $item->id . '&amp;return=' . $return . '&amp;options=' . $options; ?>
+											. (int) $item->id . '&amp;return=' . $return . '&amp;options=' . $options; ?>
 										<a class="btn btn-primary" href="<?php echo $link; ?>"
 										   title="<?php echo $this->escape($item->params->get('filename')) ? $this->escape($item->params->get('filename')) : $this->escape($item->params->get('media_image_name')); ?>">
 											<?php echo($this->escape($item->params->get('filename')) ? $this->escape($item->params->get('filename')) : $this->escape($item->params->get('media_image_name'))); ?>
 										</a>
+									</td>
+									<td class="center">
+										<?php echo JHtml::_('jgrid.published', $item->published, $i, 'message.', true, 'cb', '', ''); ?>
 									</td>
 									<td class="center">
 										<?php echo JHtml::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
@@ -458,7 +459,7 @@ JFactory::getDocument()->addScriptDeclaration('
 						<tr>
 							<td colspan="5">
 								<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;sid='
-										. $this->form->getValue('id') . '&amp;options=' . $options . '&amp;return=' . $return; ?>
+									. $this->form->getValue('id') . '&amp;options=' . $options . '&amp;return=' . $return; ?>
 								<?php
 								if (empty($this->item->id))
 								{
@@ -492,7 +493,7 @@ JFactory::getDocument()->addScriptDeclaration('
 			<h4><?php echo JText::_('JDETAILS'); ?></h4>
 			<hr/>
 			<div class="control-group">
-				<div class="controls span10 small">
+				<div class="controls small">
 					<?php echo $this->form->getInput('id'); ?>
 				</div>
 			</div>
@@ -500,7 +501,7 @@ JFactory::getDocument()->addScriptDeclaration('
 				<div class="control-label">
 					<?php echo JText::_('JBS_STY_HITS'); ?>
 				</div>
-				<div class="controls span12 small">
+				<div class="controls small">
 					<?php echo $this->item->hits; ?>
 				</div>
 			</div>

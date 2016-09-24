@@ -9,8 +9,8 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
+JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('formbehavior.chosen', 'select');
@@ -29,8 +29,26 @@ $columns   = 12;
 if ($saveOrder)
 {
 	$saveOrderingUrl = 'index.php?option=com_biblestudy&task=message.saveOrderAjax&tmpl=component';
-	JHtml::_('sortablelist.sortable', 'articleList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+	JHtml::_('sortablelist.sortable', 'messagesList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 }
+
+JFactory::getDocument()->addScriptDeclaration('
+	Joomla.orderTable = function()
+	{
+		table = document.getElementById("sortTable");
+		direction = document.getElementById("directionTable");
+		order = table.options[table.selectedIndex].value;
+		if (order != "' . $listOrder . '")
+		{
+			dirn = "decs";
+		}
+		else
+		{
+			dirn = direction.options[direction.selectedIndex].value;
+		}
+		Joomla.tableOrdering(order, dirn, "");
+	};
+');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messages'); ?>" method="post" name="adminForm"
       id="adminForm">
@@ -52,7 +70,7 @@ if ($saveOrder)
 					<?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
 				</div>
 			<?php else : ?>
-				<table class="table table-striped" id="articleList">
+				<table class="table table-striped adminlist" id="messagesList">
 					<thead>
 					<tr>
 						<th width="1%" class="nowrap center hidden-phone">
@@ -212,12 +230,23 @@ if ($saveOrder)
 					<?php endforeach; ?>
 					</tbody>
 				</table>
+				<?php // Load the batch processing form. ?>
+				<?php if ($user->authorise('core.create', 'com_biblestudy')
+					&& $user->authorise('core.edit', 'com_biblestudy')
+					&& $user->authorise('core.edit.state', 'com_biblestudy')
+				) : ?>
+					<?php echo JHtml::_(
+						'bootstrap.renderModal',
+						'collapseModal',
+						array(
+							'title'  => JText::_('JBS_CMN_BATCH_OPTIONS'),
+							'footer' => $this->loadTemplate('batch_footer')
+						),
+						$this->loadTemplate('batch_body')
+					); ?>
+				<?php endif; ?>
 			<?php endif; ?>
-
 			<?php echo $this->pagination->getListFooter(); ?>
-			<?php //Load the batch processing form. ?>
-			<?php echo $this->loadTemplate('batch'); ?>
-
 			<input type="hidden" name="task" value=""/>
 			<input type="hidden" name="boxchecked" value="0"/>
 			<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>

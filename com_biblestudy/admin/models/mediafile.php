@@ -130,7 +130,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 				if ($table->type == 'legacy' || $table->type == 'local')
 				{
-					$params->set('size', JBSMHelper::getRemoteFileSize(JBSMHelper::MediaBuildUrl($set_path, $params->get('filename'), $params, true, ture)));
+					$params->set('size', JBSMHelper::getRemoteFileSize(JBSMHelper::MediaBuildUrl($set_path, $params->get('filename'), $params, true, true)));
 					$data['params'] = $params->toArray();
 				}
 			}
@@ -249,7 +249,6 @@ class BiblestudyModelMediafile extends JModelAdmin
 			return false;
 		}
 
-		// @TODO Maybe this needs to be removed from here? (Separation of concerns)
 		$jinput = JFactory::getApplication()->input;
 
 		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
@@ -316,7 +315,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 		if (!empty($this->data))
 		{
-			// Make Podcast Id to be array for view
+			// Make PodCast Id to be array for view
 			if (!empty($this->data->podcast_id))
 			{
 				$this->data->podcast_id = explode(',', $this->data->podcast_id);
