@@ -133,7 +133,7 @@ class ModJBSMHelper
 
 		// Define null and now dates
 		$nullDate = $db->quote($db->getNullDate());
-		$nowDate  = $db->quote(JFactory::getDate()->toSql());
+		$nowDate  = $db->quote(JFactory::getDate()->toSql(true));
 
 		// Filter by start and end dates.
 		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
