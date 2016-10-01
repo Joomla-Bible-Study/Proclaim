@@ -698,6 +698,17 @@ class BiblestudyModelSermons extends JModelList
 		$query->where('study.published = 1');
 		$query->where('(series.published = 1 or study.series_id <= 0)');
 
+		// Define null and now dates
+		$nullDate = $db->quote($db->getNullDate());
+		$nowDate  = $db->quote(JFactory::getDate()->toSql());
+
+		// Filter by start and end dates.
+		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
+		{
+			$query->where('(study.publish_up = ' . $nullDate . ' OR study.publish_up <= ' . $nowDate . ')')
+				->where('(study.publish_down = ' . $nullDate . ' OR study.publish_down >= ' . $nowDate . ')');
+		}
+
 		// Begin the filters for menu items
 		$params      = $this->getState('params');
 
