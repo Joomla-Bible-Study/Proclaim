@@ -23,6 +23,7 @@
 <li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
 <li><a href="../packages/BibleStudy.Admin.html"><i class="icon-folder-open"></i> BibleStudy.Admin</a></li>
 <li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
 </ul>
 </li>
 <li class="dropdown" id="charts-menu">
@@ -33,7 +34,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">175</span></a></li>
+                <span class="label label-info">184</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -80,7 +81,6 @@
 <li class="method protected "><a href="#method_getReorderConditions" title="getReorderConditions() :: A protected method to get a set of ordering conditions."><span class="description">A protected method to get a set of ordering conditions.</span><pre>getReorderConditions()</pre></a></li>
 <li class="method protected "><a href="#method_loadFormData" title="loadFormData() :: Method to get the data that should be injected in the form."><span class="description">Method to get the data that should be injected in the form.</span><pre>loadFormData()</pre></a></li>
 <li class="method protected "><a href="#method_prepareTable" title="prepareTable() :: Prepare and sanitise the table data prior to saving."><span class="description">Prepare and sanitise the table data prior to saving.</span><pre>prepareTable()</pre></a></li>
-<li class="method protected "><a href="#method_preprocessForm" title="preprocessForm() :: Method to allow derived classes to prepossess the form."><span class="description">Method to allow derived classes to prepossess the form.</span><pre>preprocessForm()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header">
@@ -89,7 +89,7 @@
 </li>
 <li class="nav-header protected">» Protected
                     <ul>
-<li class="property protected "><a href="#property__teacher" title="$_teacher() :: "><span class="description"></span><pre>$_teacher</pre></a></li>
+<li class="property protected "><a href="#property_teacher" title="$teacher() :: "><span class="description"></span><pre>$teacher</pre></a></li>
 <li class="property protected "><a href="#property_text_prefix" title="$text_prefix() :: "><span class="description">The prefix to use with controller messages.</span><pre>$text_prefix</pre></a></li>
 </ul>
 </li>
@@ -167,6 +167,10 @@
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0</td>
+</tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$pk</h4>
@@ -182,6 +186,10 @@
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0</td>
+</tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$name</h4>
@@ -203,6 +211,10 @@
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0</td>
+</tr></table>
 <h3>Returns</h3>
 <div class="subelement response"><code>object</code></div>
 </div></div>
@@ -259,7 +271,7 @@
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>since</th>
-<td>1.6</td>
+<td>12.2</td>
 </tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
@@ -267,7 +279,7 @@
 <code>object</code><p>A record object.</p></div>
 <h3>Returns</h3>
 <div class="subelement response">
-<code>boolean</code>True if allowed to delete the record. Defaults to the permission set in the component.</div>
+<code>boolean</code>True if allowed to delete the record. Defaults to the permission for the component.</div>
 </div></div>
 </div>
 <a id="method_canEditState"></a><div class="element clickable method protected method_canEditState " data-toggle="collapse" data-target=".method_canEditState .collapse" title="protected">
@@ -358,33 +370,11 @@
 <code>\TableSerie</code><p>A reference to a JTable object.</p></div>
 </div></div>
 </div>
-<a id="method_preprocessForm"></a><div class="element clickable method protected method_preprocessForm " data-toggle="collapse" data-target=".method_preprocessForm .collapse" title="protected">
-<h2>Method to allow derived classes to prepossess the form.</h2>
-<pre>preprocessForm(\JForm $form, mixed $data, string $group<code> = 'content'</code>) : void</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>3.0</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$form</h4>
-<code>\JForm</code><p>A JForm object.</p></div>
-<div class="subelement argument">
-<h4>$data</h4>
-<code>mixed</code><p>The data expected for the form.</p></div>
-<div class="subelement argument">
-<h4>$group</h4>
-<code>string</code><p>The name of the plugin group to import (defaults to "content").</p></div>
-</div></div>
-</div>
 <h3>
 <i title="Properties" class="icon-custom icon-property"></i> Properties</h3>
-<a id="property__teacher"> </a><div class="element clickable property protected property__teacher" data-toggle="collapse" data-target=".property__teacher .collapse" title="protected">
-<h2>$_teacher</h2>
-<pre>$_teacher </pre>
+<a id="property_teacher"> </a><div class="element clickable property protected property_teacher" data-toggle="collapse" data-target=".property_teacher .collapse" title="protected">
+<h2>$teacher</h2>
+<pre>$teacher </pre>
 <div class="row collapse"><div class="detail-description">
 <h3>Default</h3>
 <div class="subelement argument"></div>
@@ -415,7 +405,7 @@
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2016-06-04T14:02:30-05:00.<br></footer></div>
+            generated on 2016-10-17T19:38:04-05:00.<br></footer></div>
 </div>
 </body>
 </html>

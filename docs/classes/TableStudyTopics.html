@@ -23,6 +23,7 @@
 <li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
 <li><a href="../packages/BibleStudy.Admin.html"><i class="icon-folder-open"></i> BibleStudy.Admin</a></li>
 <li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
 </ul>
 </li>
 <li class="dropdown" id="charts-menu">
@@ -33,7 +34,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">175</span></a></li>
+                <span class="label label-info">184</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -119,7 +120,7 @@ for a particular database table.</span><pre>__construct()</pre></a></li>
 <h2>Object constructor to set table and key fields.  In most cases this will
 be overridden by child classes to explicitly set the table and key fields
 for a particular database table.</h2>
-<pre>__construct($db) </pre>
+<pre>__construct(\JDatabaseDriver $db) </pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -128,7 +129,9 @@ for a particular database table.</h2>
 <td>11.1</td>
 </tr></table>
 <h3>Parameters</h3>
-<div class="subelement argument"><h4>$db</h4></div>
+<div class="subelement argument">
+<h4>$db</h4>
+<code>\JDatabaseDriver</code><p>&$db  JDatabase connector object.</p></div>
 </div></div>
 </div>
 <a id="method_store"></a><div class="element clickable method public method_store " data-toggle="collapse" data-target=".method_store .collapse" title="public">
@@ -241,7 +244,13 @@ asset does not exist it will be created.</p></div>
 <div class="subelement argument"><code>null</code></div>
 </div></div>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
 </div>
 <a id="property_study_id"> </a><div class="element clickable property public property_study_id" data-toggle="collapse" data-target=".property_study_id .collapse" title="public">
 <h2>Study ID</h2>
@@ -251,7 +260,13 @@ asset does not exist it will be created.</p></div>
 <div class="subelement argument"><code>null</code></div>
 </div></div>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
 </div>
 <a id="property_topic_id"> </a><div class="element clickable property public property_topic_id" data-toggle="collapse" data-target=".property_topic_id .collapse" title="public">
 <h2>Topic ID</h2>
@@ -261,7 +276,13 @@ asset does not exist it will be created.</p></div>
 <div class="subelement argument"><code>null</code></div>
 </div></div>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
 </div>
 </div>
 </div>
@@ -270,7 +291,7 @@ asset does not exist it will be created.</p></div>
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2016-06-04T14:02:32-05:00.<br></footer></div>
+            generated on 2016-10-17T19:38:06-05:00.<br></footer></div>
 </div>
 </body>
 </html>

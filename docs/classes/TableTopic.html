@@ -23,6 +23,7 @@
 <li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
 <li><a href="../packages/BibleStudy.Admin.html"><i class="icon-folder-open"></i> BibleStudy.Admin</a></li>
 <li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
 </ul>
 </li>
 <li class="dropdown" id="charts-menu">
@@ -33,7 +34,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">175</span></a></li>
+                <span class="label label-info">184</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -122,12 +123,18 @@ takes an array of properties to ignore when binding.</span><pre>bind()</pre></a>
 <i title="Methods" class="icon-custom icon-method"></i> Methods</h3>
 <a id="method___construct"></a><div class="element clickable method public method___construct " data-toggle="collapse" data-target=".method___construct .collapse" title="public">
 <h2>Constructor</h2>
-<pre>__construct($db) </pre>
+<pre>__construct(\JDatabaseDriver $db) </pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
 <h3>Parameters</h3>
-<div class="subelement argument"><h4>$db</h4></div>
+<div class="subelement argument">
+<h4>$db</h4>
+<code>\JDatabaseDriver</code><p>&$db  Database connector object</p></div>
 </div></div>
 </div>
 <a id="method_bind"></a><div class="element clickable method public method_bind " data-toggle="collapse" data-target=".method_bind .collapse" title="public">
@@ -166,14 +173,20 @@ takes an array of properties to ignore when binding.</h2>
 </div>
 <a id="method_checkAlias"></a><div class="element clickable method public method_checkAlias " data-toggle="collapse" data-target=".method_checkAlias .collapse" title="public">
 <h2>check and (re-)construct the alias before storing the topic</h2>
-<pre>checkAlias(array $data<code> = array()</code>, integer $recordId<code> = null</code>) : boolean</pre>
+<pre>checkAlias(array $data<code> = array()</code>, integer $recordId<code> = null</code>) : boolean | array</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
-<table class="table table-bordered"><tr>
+<table class="table table-bordered">
+<tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr>
+<tr>
 <th>todo</th>
 <td>this look like it is not used. (Neither Tom nor Brent wrote this one)</td>
-</tr></table>
+</tr>
+</table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$data</h4>
@@ -183,7 +196,7 @@ takes an array of properties to ignore when binding.</h2>
 <code>integer</code><p>id</p></div>
 <h3>Returns</h3>
 <div class="subelement response">
-<code>boolean</code>true on success</div>
+<code>boolean</code><code>array</code>?</div>
 </div></div>
 </div>
 <a id="method_load"></a><div class="element clickable method public method_load " data-toggle="collapse" data-target=".method_load .collapse" title="public">
@@ -192,10 +205,16 @@ takes an array of properties to ignore when binding.</h2>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
-<table class="table table-bordered"><tr>
+<table class="table table-bordered">
+<tr>
 <th>see</th>
 <td><a href="%5CJTable:load"></a></td>
-</tr></table>
+</tr>
+<tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr>
+</table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$keys</h4>
@@ -319,7 +338,13 @@ asset does not exist it will be created.</p></div>
 <div class="subelement argument"><code>null</code></div>
 </div></div>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
 </div>
 <a id="property_language"> </a><div class="element clickable property public property_language" data-toggle="collapse" data-target=".property_language .collapse" title="public">
 <h2>$language</h2>
@@ -339,7 +364,13 @@ asset does not exist it will be created.</p></div>
 <div class="subelement argument"><code>null</code></div>
 </div></div>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
 </div>
 <a id="property_published"> </a><div class="element clickable property public property_published" data-toggle="collapse" data-target=".property_published .collapse" title="public">
 <h2>Published</h2>
@@ -349,7 +380,13 @@ asset does not exist it will be created.</p></div>
 <div class="subelement argument"><code>1</code></div>
 </div></div>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
 </div>
 <a id="property_topic_text"> </a><div class="element clickable property public property_topic_text" data-toggle="collapse" data-target=".property_topic_text .collapse" title="public">
 <h2>Topic text</h2>
@@ -359,7 +396,13 @@ asset does not exist it will be created.</p></div>
 <div class="subelement argument"><code>null</code></div>
 </div></div>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
 </div>
 </div>
 </div>
@@ -368,7 +411,7 @@ asset does not exist it will be created.</p></div>
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2016-06-04T14:02:33-05:00.<br></footer></div>
+            generated on 2016-10-17T19:38:06-05:00.<br></footer></div>
 </div>
 </body>
 </html>

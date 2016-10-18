@@ -23,6 +23,7 @@
 <li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
 <li><a href="../packages/BibleStudy.Admin.html"><i class="icon-folder-open"></i> BibleStudy.Admin</a></li>
 <li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
 </ul>
 </li>
 <li class="dropdown" id="charts-menu">
@@ -33,7 +34,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">175</span></a></li>
+                <span class="label label-info">184</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -64,9 +65,9 @@
 </li>
 <li class="nav-header">
 <i title="Functions" class="icon-custom icon-function"></i> Functions</li>
+<li class="function  "><a href="#function_Admin_Postinstall_Template_action" title="Admin_Postinstall_Template_action() :: Redirect the view to the Templates view"><span class="description">Redirect the view to the Templates view</span><pre>Admin_Postinstall_Template_action</pre></a></li>
+<li class="function  "><a href="#function_Admin_Postinstall_Template_condition" title="Admin_Postinstall_Template_condition() :: Checks if the template is setup right."><span class="description">Checks if the template is setup right.</span><pre>Admin_Postinstall_Template_condition</pre></a></li>
 <li class="function  "><a href="#function_addCSS" title="addCSS() :: Global css"><span class="description">Global css</span><pre>addCSS</pre></a></li>
-<li class="function  "><a href="#function_admin_postinstall_template_action" title="admin_postinstall_template_action() :: Redirect the view to the Templates view"><span class="description">Redirect the view to the Templates view</span><pre>admin_postinstall_template_action</pre></a></li>
-<li class="function  "><a href="#function_admin_postinstall_template_condition" title="admin_postinstall_template_condition() :: Checks if the template is setup right."><span class="description">Checks if the template is setup right.</span><pre>admin_postinstall_template_condition</pre></a></li>
 <li class="function  "><a href="#function_biblestudyBuildRoute" title="biblestudyBuildRoute() :: BibleStudy Build Route"><span class="description">BibleStudy Build Route</span><pre>biblestudyBuildRoute</pre></a></li>
 <li class="function  "><a href="#function_biblestudyParseRoute" title="biblestudyParseRoute() :: BibleStudy Parse Route"><span class="description">BibleStudy Parse Route</span><pre>biblestudyParseRoute</pre></a></li>
 <li class="nav-header">
@@ -281,73 +282,40 @@ params.">JBSMImageLib</a></li>
 <li class="nav-header">
 <i title="Constants" class="icon-custom icon-constant"></i> Constants</li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_COMPONENT_NAME" title="BIBLESTUDY_COMPONENT_NAME() :: "><span class="description">BIBLESTUDY_COMPONENT_NAME</span><pre>BIBLESTUDY_COMPONENT_NAME</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_COMPONENT_NAME" title="BIBLESTUDY_COMPONENT_NAME() :: "><span class="description">BIBLESTUDY_COMPONENT_NAME</span><pre>BIBLESTUDY_COMPONENT_NAME</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_COMPONENT_RELPATH" title="BIBLESTUDY_COMPONENT_RELPATH() :: "><span class="description">BIBLESTUDY_COMPONENT_RELPATH</span><pre>BIBLESTUDY_COMPONENT_RELPATH</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_COMPONENT_RELPATH" title="BIBLESTUDY_COMPONENT_RELPATH() :: "><span class="description">BIBLESTUDY_COMPONENT_RELPATH</span><pre>BIBLESTUDY_COMPONENT_RELPATH</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_DB_MISSING_COLUMN" title="BIBLESTUDY_DB_MISSING_COLUMN() :: "><span class="description">BIBLESTUDY_DB_MISSING_COLUMN</span><pre>BIBLESTUDY_DB_MISSING_COLUMN</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_DB_MISSING_COLUMN" title="BIBLESTUDY_DB_MISSING_COLUMN() :: "><span class="description">BIBLESTUDY_DB_MISSING_COLUMN</span><pre>BIBLESTUDY_DB_MISSING_COLUMN</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_FILE_INSTALL" title="BIBLESTUDY_FILE_INSTALL() :: "><span class="description">BIBLESTUDY_FILE_INSTALL</span><pre>BIBLESTUDY_FILE_INSTALL</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_FILE_INSTALL" title="BIBLESTUDY_FILE_INSTALL() :: "><span class="description">BIBLESTUDY_FILE_INSTALL</span><pre>BIBLESTUDY_FILE_INSTALL</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_LANGUAGE_DEFAULT" title="BIBLESTUDY_LANGUAGE_DEFAULT() :: "><span class="description">BIBLESTUDY_LANGUAGE_DEFAULT</span><pre>BIBLESTUDY_LANGUAGE_DEFAULT</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_LANGUAGE_DEFAULT" title="BIBLESTUDY_LANGUAGE_DEFAULT() :: "><span class="description">BIBLESTUDY_LANGUAGE_DEFAULT</span><pre>BIBLESTUDY_LANGUAGE_DEFAULT</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_MEDIA_PATH" title="BIBLESTUDY_MEDIA_PATH() :: "><span class="description">BIBLESTUDY_MEDIA_PATH</span><pre>BIBLESTUDY_MEDIA_PATH</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_MEDIA_PATH" title="BIBLESTUDY_MEDIA_PATH() :: "><span class="description">BIBLESTUDY_MEDIA_PATH</span><pre>BIBLESTUDY_MEDIA_PATH</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_MIN_MYSQL" title="BIBLESTUDY_MIN_MYSQL() :: "><span class="description">BIBLESTUDY_MIN_MYSQL</span><pre>BIBLESTUDY_MIN_MYSQL</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_MIN_PHP" title="BIBLESTUDY_MIN_PHP() :: "><span class="description">BIBLESTUDY_MIN_PHP</span><pre>BIBLESTUDY_MIN_PHP</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH" title="BIBLESTUDY_PATH() :: "><span class="description">BIBLESTUDY_PATH</span><pre>BIBLESTUDY_PATH</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_PATH" title="BIBLESTUDY_PATH() :: "><span class="description">BIBLESTUDY_PATH</span><pre>BIBLESTUDY_PATH</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN" title="BIBLESTUDY_PATH_ADMIN() :: "><span class="description">BIBLESTUDY_PATH_ADMIN</span><pre>BIBLESTUDY_PATH_ADMIN</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN" title="BIBLESTUDY_PATH_ADMIN() :: "><span class="description">BIBLESTUDY_PATH_ADMIN</span><pre>BIBLESTUDY_PATH_ADMIN</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN_ADDON" title="BIBLESTUDY_PATH_ADMIN_ADDON() :: "><span class="description">BIBLESTUDY_PATH_ADMIN_ADDON</span><pre>BIBLESTUDY_PATH_ADMIN_ADDON</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN_ADDON" title="BIBLESTUDY_PATH_ADMIN_ADDON() :: "><span class="description">BIBLESTUDY_PATH_ADMIN_ADDON</span><pre>BIBLESTUDY_PATH_ADMIN_ADDON</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN_HELPERS" title="BIBLESTUDY_PATH_ADMIN_HELPERS() :: "><span class="description">BIBLESTUDY_PATH_ADMIN_HELPERS</span><pre>BIBLESTUDY_PATH_ADMIN_HELPERS</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN_HELPERS" title="BIBLESTUDY_PATH_ADMIN_HELPERS() :: "><span class="description">BIBLESTUDY_PATH_ADMIN_HELPERS</span><pre>BIBLESTUDY_PATH_ADMIN_HELPERS</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN_IMAGES" title="BIBLESTUDY_PATH_ADMIN_IMAGES() :: "><span class="description">BIBLESTUDY_PATH_ADMIN_IMAGES</span><pre>BIBLESTUDY_PATH_ADMIN_IMAGES</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN_IMAGES" title="BIBLESTUDY_PATH_ADMIN_IMAGES() :: "><span class="description">BIBLESTUDY_PATH_ADMIN_IMAGES</span><pre>BIBLESTUDY_PATH_ADMIN_IMAGES</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN_INSTALL" title="BIBLESTUDY_PATH_ADMIN_INSTALL() :: "><span class="description">BIBLESTUDY_PATH_ADMIN_INSTALL</span><pre>BIBLESTUDY_PATH_ADMIN_INSTALL</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN_INSTALL" title="BIBLESTUDY_PATH_ADMIN_INSTALL() :: "><span class="description">BIBLESTUDY_PATH_ADMIN_INSTALL</span><pre>BIBLESTUDY_PATH_ADMIN_INSTALL</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN_LANGUAGE" title="BIBLESTUDY_PATH_ADMIN_LANGUAGE() :: "><span class="description">BIBLESTUDY_PATH_ADMIN_LANGUAGE</span><pre>BIBLESTUDY_PATH_ADMIN_LANGUAGE</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN_LANGUAGE" title="BIBLESTUDY_PATH_ADMIN_LANGUAGE() :: "><span class="description">BIBLESTUDY_PATH_ADMIN_LANGUAGE</span><pre>BIBLESTUDY_PATH_ADMIN_LANGUAGE</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN_LIB" title="BIBLESTUDY_PATH_ADMIN_LIB() :: "><span class="description">BIBLESTUDY_PATH_ADMIN_LIB</span><pre>BIBLESTUDY_PATH_ADMIN_LIB</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN_LIB" title="BIBLESTUDY_PATH_ADMIN_LIB() :: "><span class="description">BIBLESTUDY_PATH_ADMIN_LIB</span><pre>BIBLESTUDY_PATH_ADMIN_LIB</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN_MODELS" title="BIBLESTUDY_PATH_ADMIN_MODELS() :: "><span class="description">BIBLESTUDY_PATH_ADMIN_MODELS</span><pre>BIBLESTUDY_PATH_ADMIN_MODELS</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN_MODELS" title="BIBLESTUDY_PATH_ADMIN_MODELS() :: "><span class="description">BIBLESTUDY_PATH_ADMIN_MODELS</span><pre>BIBLESTUDY_PATH_ADMIN_MODELS</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH_ADMIN_TABLES" title="BIBLESTUDY_PATH_ADMIN_TABLES() :: "><span class="description">BIBLESTUDY_PATH_ADMIN_TABLES</span><pre>BIBLESTUDY_PATH_ADMIN_TABLES</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH_HELPERS" title="BIBLESTUDY_PATH_HELPERS() :: "><span class="description">BIBLESTUDY_PATH_HELPERS</span><pre>BIBLESTUDY_PATH_HELPERS</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_HELPERS" title="BIBLESTUDY_PATH_HELPERS() :: "><span class="description">BIBLESTUDY_PATH_HELPERS</span><pre>BIBLESTUDY_PATH_HELPERS</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_IMAGES" title="BIBLESTUDY_PATH_IMAGES() :: "><span class="description">BIBLESTUDY_PATH_IMAGES</span><pre>BIBLESTUDY_PATH_IMAGES</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH_IMAGES" title="BIBLESTUDY_PATH_IMAGES() :: "><span class="description">BIBLESTUDY_PATH_IMAGES</span><pre>BIBLESTUDY_PATH_IMAGES</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH_LIB" title="BIBLESTUDY_PATH_LIB() :: "><span class="description">BIBLESTUDY_PATH_LIB</span><pre>BIBLESTUDY_PATH_LIB</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_LIB" title="BIBLESTUDY_PATH_LIB() :: "><span class="description">BIBLESTUDY_PATH_LIB</span><pre>BIBLESTUDY_PATH_LIB</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_MOD" title="BIBLESTUDY_PATH_MOD() :: "><span class="description">BIBLESTUDY_PATH_MOD</span><pre>BIBLESTUDY_PATH_MOD</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH_MOD" title="BIBLESTUDY_PATH_MOD() :: "><span class="description">BIBLESTUDY_PATH_MOD</span><pre>BIBLESTUDY_PATH_MOD</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH_MODELS" title="BIBLESTUDY_PATH_MODELS() :: "><span class="description">BIBLESTUDY_PATH_MODELS</span><pre>BIBLESTUDY_PATH_MODELS</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH_TABLES" title="BIBLESTUDY_PATH_TABLES() :: "><span class="description">BIBLESTUDY_PATH_TABLES</span><pre>BIBLESTUDY_PATH_TABLES</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH_TEMPLATE" title="BIBLESTUDY_PATH_TEMPLATE() :: "><span class="description">BIBLESTUDY_PATH_TEMPLATE</span><pre>BIBLESTUDY_PATH_TEMPLATE</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_TEMPLATE" title="BIBLESTUDY_PATH_TEMPLATE() :: "><span class="description">BIBLESTUDY_PATH_TEMPLATE</span><pre>BIBLESTUDY_PATH_TEMPLATE</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_PATH_TEMPLATE_DEFAULT" title="BIBLESTUDY_PATH_TEMPLATE_DEFAULT() :: "><span class="description">BIBLESTUDY_PATH_TEMPLATE_DEFAULT</span><pre>BIBLESTUDY_PATH_TEMPLATE_DEFAULT</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_PATH_TEMPLATE_DEFAULT" title="BIBLESTUDY_PATH_TEMPLATE_DEFAULT() :: "><span class="description">BIBLESTUDY_PATH_TEMPLATE_DEFAULT</span><pre>BIBLESTUDY_PATH_TEMPLATE_DEFAULT</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_ROOT_PATH" title="BIBLESTUDY_ROOT_PATH() :: "><span class="description">BIBLESTUDY_ROOT_PATH</span><pre>BIBLESTUDY_ROOT_PATH</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_ROOT_PATH" title="BIBLESTUDY_ROOT_PATH() :: "><span class="description">BIBLESTUDY_ROOT_PATH</span><pre>BIBLESTUDY_ROOT_PATH</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_ROOT_PATH_ADMIN" title="BIBLESTUDY_ROOT_PATH_ADMIN() :: "><span class="description">BIBLESTUDY_ROOT_PATH_ADMIN</span><pre>BIBLESTUDY_ROOT_PATH_ADMIN</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_ROOT_PATH_ADMIN" title="BIBLESTUDY_ROOT_PATH_ADMIN() :: "><span class="description">BIBLESTUDY_ROOT_PATH_ADMIN</span><pre>BIBLESTUDY_ROOT_PATH_ADMIN</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_SECONDS_IN_HOUR" title="BIBLESTUDY_SECONDS_IN_HOUR() :: "><span class="description">BIBLESTUDY_SECONDS_IN_HOUR</span><pre>BIBLESTUDY_SECONDS_IN_HOUR</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_SECONDS_IN_HOUR" title="BIBLESTUDY_SECONDS_IN_HOUR() :: "><span class="description">BIBLESTUDY_SECONDS_IN_HOUR</span><pre>BIBLESTUDY_SECONDS_IN_HOUR</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_SECONDS_IN_YEAR" title="BIBLESTUDY_SECONDS_IN_YEAR() :: "><span class="description">BIBLESTUDY_SECONDS_IN_YEAR</span><pre>BIBLESTUDY_SECONDS_IN_YEAR</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_SECONDS_IN_YEAR" title="BIBLESTUDY_SECONDS_IN_YEAR() :: "><span class="description">BIBLESTUDY_SECONDS_IN_YEAR</span><pre>BIBLESTUDY_SECONDS_IN_YEAR</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_TEMPLATE_DEFAULT" title="BIBLESTUDY_TEMPLATE_DEFAULT() :: "><span class="description">BIBLESTUDY_TEMPLATE_DEFAULT</span><pre>BIBLESTUDY_TEMPLATE_DEFAULT</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_TEMPLATE_DEFAULT" title="BIBLESTUDY_TEMPLATE_DEFAULT() :: "><span class="description">BIBLESTUDY_TEMPLATE_DEFAULT</span><pre>BIBLESTUDY_TEMPLATE_DEFAULT</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_VERSION" title="BIBLESTUDY_VERSION() :: "><span class="description">BIBLESTUDY_VERSION</span><pre>BIBLESTUDY_VERSION</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_VERSION" title="BIBLESTUDY_VERSION() :: "><span class="description">BIBLESTUDY_VERSION</span><pre>BIBLESTUDY_VERSION</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_VERSION_BUILD" title="BIBLESTUDY_VERSION_BUILD() :: "><span class="description">BIBLESTUDY_VERSION_BUILD</span><pre>BIBLESTUDY_VERSION_BUILD</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_VERSION_DATE" title="BIBLESTUDY_VERSION_DATE() :: "><span class="description">BIBLESTUDY_VERSION_DATE</span><pre>BIBLESTUDY_VERSION_DATE</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_VERSION_DATE" title="BIBLESTUDY_VERSION_DATE() :: "><span class="description">BIBLESTUDY_VERSION_DATE</span><pre>BIBLESTUDY_VERSION_DATE</pre></a></li>
-<li class="constant  "><a href="#constant_BIBLESTUDY_VERSION_UPDATEFILE" title="BIBLESTUDY_VERSION_UPDATEFILE() :: "><span class="description">BIBLESTUDY_VERSION_UPDATEFILE</span><pre>BIBLESTUDY_VERSION_UPDATEFILE</pre></a></li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_VERSION_UPDATEFILE" title="BIBLESTUDY_VERSION_UPDATEFILE() :: "><span class="description">BIBLESTUDY_VERSION_UPDATEFILE</span><pre>BIBLESTUDY_VERSION_UPDATEFILE</pre></a></li>
 <li class="constant  "><a href="#constant_JBSMDEBUG" title="JBSMDEBUG() :: "><span class="description">JBSMDEBUG</span><pre>JBSMDEBUG</pre></a></li>
 <li class="constant  "><a href="#constant_JBSM_LOADED" title="JBSM_LOADED() :: "><span class="description">JBSM_LOADED</span><pre>JBSM_LOADED</pre></a></li>
-<li class="constant  "><a href="#constant_JBSM_LOADED" title="JBSM_LOADED() :: "><span class="description">JBSM_LOADED</span><pre>JBSM_LOADED</pre></a></li>
-<li class="constant  "><a href="#constant_JBSM_PROFILER" title="JBSM_PROFILER() :: "><span class="description">JBSM_PROFILER</span><pre>JBSM_PROFILER</pre></a></li>
 <li class="constant  "><a href="#constant_JBSM_PROFILER" title="JBSM_PROFILER() :: "><span class="description">JBSM_PROFILER</span><pre>JBSM_PROFILER</pre></a></li>
 <li class="constant  "><a href="#constant_JBSPAGETITLE" title="JBSPAGETITLE() :: "><span class="description">JBSPAGETITLE</span><pre>JBSPAGETITLE</pre></a></li>
 <li class="constant  "><a href="#constant_VMLANG" title="VMLANG() :: "><span class="description">VMLANG</span><pre>VMLANG</pre></a></li>
@@ -363,27 +331,9 @@ params.">JBSMImageLib</a></li>
 <div class="package-indent">
 <h3>
 <i title="Functions" class="icon-custom icon-function"></i> Functions</h3>
-<a xmlns:php="http://php.net/xsl" id="function_addCSS"></a><div xmlns:php="http://php.net/xsl" class="element clickable function  function_addCSS " data-toggle="collapse" data-target=".function_addCSS .collapse" title="">
-<h2>Global css</h2>
-<pre>addCSS() : void</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered">
-<tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr>
-<tr>
-<th>since</th>
-<td>7.0</td>
-</tr>
-</table>
-</div></div>
-</div>
-<a xmlns:php="http://php.net/xsl" id="function_admin_postinstall_template_action"></a><div xmlns:php="http://php.net/xsl" class="element clickable function  function_admin_postinstall_template_action " data-toggle="collapse" data-target=".function_admin_postinstall_template_action .collapse" title="">
+<a xmlns:php="http://php.net/xsl" id="function_Admin_Postinstall_Template_action"></a><div xmlns:php="http://php.net/xsl" class="element clickable function  function_Admin_Postinstall_Template_action " data-toggle="collapse" data-target=".function_Admin_Postinstall_Template_action .collapse" title="">
 <h2>Redirect the view to the Templates view</h2>
-<pre>admin_postinstall_template_action() : void</pre>
+<pre>Admin_Postinstall_Template_action() : void</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -399,9 +349,9 @@ params.">JBSMImageLib</a></li>
 </table>
 </div></div>
 </div>
-<a xmlns:php="http://php.net/xsl" id="function_admin_postinstall_template_condition"></a><div xmlns:php="http://php.net/xsl" class="element clickable function  function_admin_postinstall_template_condition " data-toggle="collapse" data-target=".function_admin_postinstall_template_condition .collapse" title="">
+<a xmlns:php="http://php.net/xsl" id="function_Admin_Postinstall_Template_condition"></a><div xmlns:php="http://php.net/xsl" class="element clickable function  function_Admin_Postinstall_Template_condition " data-toggle="collapse" data-target=".function_Admin_Postinstall_Template_condition .collapse" title="">
 <h2>Checks if the template is setup right.</h2>
-<pre>admin_postinstall_template_condition() : integer</pre>
+<pre>Admin_Postinstall_Template_condition() : integer</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"><p>This check returns true Templates is not setup yet, meaning
@@ -420,38 +370,70 @@ that the message concerning it should be displayed.</p></div>
 <div class="subelement response"><code>integer</code></div>
 </div></div>
 </div>
-<a xmlns:php="http://php.net/xsl" id="function_biblestudyBuildRoute"></a><div xmlns:php="http://php.net/xsl" class="element clickable function  function_biblestudyBuildRoute " data-toggle="collapse" data-target=".function_biblestudyBuildRoute .collapse" title="">
-<h2>BibleStudy Build Route</h2>
-<pre>biblestudyBuildRoute($query) : string</pre>
+<a xmlns:php="http://php.net/xsl" id="function_addCSS"></a><div xmlns:php="http://php.net/xsl" class="element clickable function  function_addCSS " data-toggle="collapse" data-target=".function_addCSS .collapse" title="">
+<h2>Global css</h2>
+<pre>addCSS() : void</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
-<table class="table table-bordered"><tr>
+<table class="table table-bordered">
+<tr>
 <th>package</th>
 <td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
+</tr>
+<tr>
+<th>since</th>
+<td>7.0</td>
+</tr>
+</table>
+</div></div>
+</div>
+<a xmlns:php="http://php.net/xsl" id="function_biblestudyBuildRoute"></a><div xmlns:php="http://php.net/xsl" class="element clickable function  function_biblestudyBuildRoute " data-toggle="collapse" data-target=".function_biblestudyBuildRoute .collapse" title="">
+<h2>BibleStudy Build Route</h2>
+<pre>biblestudyBuildRoute(array $query) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>package</th>
+<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+</tr>
+<tr>
+<th>since</th>
+<td>7.0</td>
+</tr>
+</table>
 <h3>Parameters</h3>
-<div class="subelement argument"><h4>$query</h4></div>
+<div class="subelement argument">
+<h4>$query</h4>
+<code>array</code><p>&$query  Info to Query</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code>string</code></div>
 </div></div>
 </div>
 <a xmlns:php="http://php.net/xsl" id="function_biblestudyParseRoute"></a><div xmlns:php="http://php.net/xsl" class="element clickable function  function_biblestudyParseRoute " data-toggle="collapse" data-target=".function_biblestudyParseRoute .collapse" title="">
 <h2>BibleStudy Parse Route</h2>
-<pre>biblestudyParseRoute(array $segments) : object</pre>
+<pre>biblestudyParseRoute(array $segments) : array</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
-<table class="table table-bordered"><tr>
+<table class="table table-bordered">
+<tr>
 <th>package</th>
 <td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
+</tr>
+<tr>
+<th>since</th>
+<td>7.0</td>
+</tr>
+</table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$segments</h4>
 <code>array</code><p>Parse Route Info</p></div>
 <h3>Returns</h3>
-<div class="subelement response"><code>object</code></div>
+<div class="subelement response"><code>array</code></div>
 </div></div>
 </div>
 <h3>
@@ -1901,45 +1883,9 @@ Displays a topics list of ALL published topics</p>
 </tr></table>
 </div></div>
 </div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_COMPONENT_NAME"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_COMPONENT_NAME" data-toggle="collapse" data-target=".constant_BIBLESTUDY_COMPONENT_NAME .collapse" title="">
-<h2>BIBLESTUDY_COMPONENT_NAME</h2>
-<pre>BIBLESTUDY_COMPONENT_NAME = 'com_biblestudy' </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
 <a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_COMPONENT_RELPATH"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_COMPONENT_RELPATH" data-toggle="collapse" data-target=".constant_BIBLESTUDY_COMPONENT_RELPATH .collapse" title="">
 <h2>BIBLESTUDY_COMPONENT_RELPATH</h2>
 <pre>BIBLESTUDY_COMPONENT_RELPATH = 'components' . DIRECTORY_SEPARATOR . BIBLESTUDY_COMPONENT_NAME </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_COMPONENT_RELPATH"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_COMPONENT_RELPATH" data-toggle="collapse" data-target=".constant_BIBLESTUDY_COMPONENT_RELPATH .collapse" title="">
-<h2>BIBLESTUDY_COMPONENT_RELPATH</h2>
-<pre>BIBLESTUDY_COMPONENT_RELPATH = 'components' . DIRECTORY_SEPARATOR . BIBLESTUDY_COMPONENT_NAME </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_DB_MISSING_COLUMN"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_DB_MISSING_COLUMN" data-toggle="collapse" data-target=".constant_BIBLESTUDY_DB_MISSING_COLUMN .collapse" title="">
-<h2>BIBLESTUDY_DB_MISSING_COLUMN</h2>
-<pre>BIBLESTUDY_DB_MISSING_COLUMN = 1054 </pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -1973,45 +1919,9 @@ Displays a topics list of ALL published topics</p>
 </tr></table>
 </div></div>
 </div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_FILE_INSTALL"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_FILE_INSTALL" data-toggle="collapse" data-target=".constant_BIBLESTUDY_FILE_INSTALL .collapse" title="">
-<h2>BIBLESTUDY_FILE_INSTALL</h2>
-<pre>BIBLESTUDY_FILE_INSTALL = BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'biblestudy.xml' </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
 <a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_LANGUAGE_DEFAULT"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_LANGUAGE_DEFAULT" data-toggle="collapse" data-target=".constant_BIBLESTUDY_LANGUAGE_DEFAULT .collapse" title="">
 <h2>BIBLESTUDY_LANGUAGE_DEFAULT</h2>
 <pre>BIBLESTUDY_LANGUAGE_DEFAULT = 'english' </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_LANGUAGE_DEFAULT"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_LANGUAGE_DEFAULT" data-toggle="collapse" data-target=".constant_BIBLESTUDY_LANGUAGE_DEFAULT .collapse" title="">
-<h2>BIBLESTUDY_LANGUAGE_DEFAULT</h2>
-<pre>BIBLESTUDY_LANGUAGE_DEFAULT = 'english' </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_MEDIA_PATH"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_MEDIA_PATH" data-toggle="collapse" data-target=".constant_BIBLESTUDY_MEDIA_PATH .collapse" title="">
-<h2>BIBLESTUDY_MEDIA_PATH</h2>
-<pre>BIBLESTUDY_MEDIA_PATH = JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' </pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -2069,45 +1979,9 @@ Displays a topics list of ALL published topics</p>
 </tr></table>
 </div></div>
 </div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_PATH"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_PATH" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH .collapse" title="">
-<h2>BIBLESTUDY_PATH</h2>
-<pre>BIBLESTUDY_PATH = JPATH_SITE . DIRECTORY_SEPARATOR . BIBLESTUDY_COMPONENT_RELPATH </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
 <a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_PATH_ADMIN"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_PATH_ADMIN" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_ADMIN .collapse" title="">
 <h2>BIBLESTUDY_PATH_ADMIN</h2>
 <pre>BIBLESTUDY_PATH_ADMIN = BIBLESTUDY_ROOT_PATH_ADMIN . DIRECTORY_SEPARATOR . BIBLESTUDY_COMPONENT_RELPATH </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_PATH_ADMIN"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_PATH_ADMIN" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_ADMIN .collapse" title="">
-<h2>BIBLESTUDY_PATH_ADMIN</h2>
-<pre>BIBLESTUDY_PATH_ADMIN = BIBLESTUDY_ROOT_PATH_ADMIN . DIRECTORY_SEPARATOR . BIBLESTUDY_COMPONENT_RELPATH </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_PATH_ADMIN_ADDON"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_PATH_ADMIN_ADDON" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_ADMIN_ADDON .collapse" title="">
-<h2>BIBLESTUDY_PATH_ADMIN_ADDON</h2>
-<pre>BIBLESTUDY_PATH_ADMIN_ADDON = BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'addons' </pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -2141,45 +2015,9 @@ Displays a topics list of ALL published topics</p>
 </tr></table>
 </div></div>
 </div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_PATH_ADMIN_HELPERS"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_PATH_ADMIN_HELPERS" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_ADMIN_HELPERS .collapse" title="">
-<h2>BIBLESTUDY_PATH_ADMIN_HELPERS</h2>
-<pre>BIBLESTUDY_PATH_ADMIN_HELPERS = BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'helpers' </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
 <a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_PATH_ADMIN_IMAGES"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_PATH_ADMIN_IMAGES" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_ADMIN_IMAGES .collapse" title="">
 <h2>BIBLESTUDY_PATH_ADMIN_IMAGES</h2>
 <pre>BIBLESTUDY_PATH_ADMIN_IMAGES = BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'images' </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_PATH_ADMIN_IMAGES"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_PATH_ADMIN_IMAGES" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_ADMIN_IMAGES .collapse" title="">
-<h2>BIBLESTUDY_PATH_ADMIN_IMAGES</h2>
-<pre>BIBLESTUDY_PATH_ADMIN_IMAGES = BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'images' </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_PATH_ADMIN_INSTALL"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_PATH_ADMIN_INSTALL" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_ADMIN_INSTALL .collapse" title="">
-<h2>BIBLESTUDY_PATH_ADMIN_INSTALL</h2>
-<pre>BIBLESTUDY_PATH_ADMIN_INSTALL = BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'install' </pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -2213,45 +2051,9 @@ Displays a topics list of ALL published topics</p>
 </tr></table>
 </div></div>
 </div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_PATH_ADMIN_LANGUAGE"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_PATH_ADMIN_LANGUAGE" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_ADMIN_LANGUAGE .collapse" title="">
-<h2>BIBLESTUDY_PATH_ADMIN_LANGUAGE</h2>
-<pre>BIBLESTUDY_PATH_ADMIN_LANGUAGE = BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'language' </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
 <a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_PATH_ADMIN_LIB"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_PATH_ADMIN_LIB" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_ADMIN_LIB .collapse" title="">
 <h2>BIBLESTUDY_PATH_ADMIN_LIB</h2>
 <pre>BIBLESTUDY_PATH_ADMIN_LIB = BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'lib' </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_PATH_ADMIN_LIB"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_PATH_ADMIN_LIB" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_ADMIN_LIB .collapse" title="">
-<h2>BIBLESTUDY_PATH_ADMIN_LIB</h2>
-<pre>BIBLESTUDY_PATH_ADMIN_LIB = BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'lib' </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_PATH_ADMIN_MODELS"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_PATH_ADMIN_MODELS" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_ADMIN_MODELS .collapse" title="">
-<h2>BIBLESTUDY_PATH_ADMIN_MODELS</h2>
-<pre>BIBLESTUDY_PATH_ADMIN_MODELS = BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'models' </pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -2297,30 +2099,6 @@ Displays a topics list of ALL published topics</p>
 </tr></table>
 </div></div>
 </div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_PATH_HELPERS"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_PATH_HELPERS" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_HELPERS .collapse" title="">
-<h2>BIBLESTUDY_PATH_HELPERS</h2>
-<pre>BIBLESTUDY_PATH_HELPERS = BIBLESTUDY_PATH . DIRECTORY_SEPARATOR . 'helpers' </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_PATH_IMAGES"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_PATH_IMAGES" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_IMAGES .collapse" title="">
-<h2>BIBLESTUDY_PATH_IMAGES</h2>
-<pre>BIBLESTUDY_PATH_IMAGES = BIBLESTUDY_MEDIA_PATH . DIRECTORY_SEPARATOR . 'images' </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
 <a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_PATH_IMAGES"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_PATH_IMAGES" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_IMAGES .collapse" title="">
 <h2>BIBLESTUDY_PATH_IMAGES</h2>
 <pre>BIBLESTUDY_PATH_IMAGES = BIBLESTUDY_MEDIA_PATH . DIRECTORY_SEPARATOR . 'images' </pre>
@@ -2336,30 +2114,6 @@ Displays a topics list of ALL published topics</p>
 <a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_PATH_LIB"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_PATH_LIB" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_LIB .collapse" title="">
 <h2>BIBLESTUDY_PATH_LIB</h2>
 <pre>BIBLESTUDY_PATH_LIB = BIBLESTUDY_PATH . DIRECTORY_SEPARATOR . 'lib' </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_PATH_LIB"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_PATH_LIB" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_LIB .collapse" title="">
-<h2>BIBLESTUDY_PATH_LIB</h2>
-<pre>BIBLESTUDY_PATH_LIB = BIBLESTUDY_PATH . DIRECTORY_SEPARATOR . 'lib' </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_PATH_MOD"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_PATH_MOD" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_MOD .collapse" title="">
-<h2>BIBLESTUDY_PATH_MOD</h2>
-<pre>BIBLESTUDY_PATH_MOD = BIBLESTUDY_ROOT_PATH . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'mod_biblestudy' </pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -2417,45 +2171,9 @@ Displays a topics list of ALL published topics</p>
 </tr></table>
 </div></div>
 </div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_PATH_TEMPLATE"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_PATH_TEMPLATE" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_TEMPLATE .collapse" title="">
-<h2>BIBLESTUDY_PATH_TEMPLATE</h2>
-<pre>BIBLESTUDY_PATH_TEMPLATE = BIBLESTUDY_PATH . DIRECTORY_SEPARATOR . 'template' </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
 <a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_PATH_TEMPLATE_DEFAULT"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_PATH_TEMPLATE_DEFAULT" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_TEMPLATE_DEFAULT .collapse" title="">
 <h2>BIBLESTUDY_PATH_TEMPLATE_DEFAULT</h2>
 <pre>BIBLESTUDY_PATH_TEMPLATE_DEFAULT = BIBLESTUDY_PATH_TEMPLATE . DIRECTORY_SEPARATOR . BIBLESTUDY_TEMPLATE_DEFAULT </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_PATH_TEMPLATE_DEFAULT"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_PATH_TEMPLATE_DEFAULT" data-toggle="collapse" data-target=".constant_BIBLESTUDY_PATH_TEMPLATE_DEFAULT .collapse" title="">
-<h2>BIBLESTUDY_PATH_TEMPLATE_DEFAULT</h2>
-<pre>BIBLESTUDY_PATH_TEMPLATE_DEFAULT = BIBLESTUDY_PATH_TEMPLATE . DIRECTORY_SEPARATOR . BIBLESTUDY_TEMPLATE_DEFAULT </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_ROOT_PATH"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_ROOT_PATH" data-toggle="collapse" data-target=".constant_BIBLESTUDY_ROOT_PATH .collapse" title="">
-<h2>BIBLESTUDY_ROOT_PATH</h2>
-<pre>BIBLESTUDY_ROOT_PATH = JPATH_ROOT </pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -2489,45 +2207,9 @@ Displays a topics list of ALL published topics</p>
 </tr></table>
 </div></div>
 </div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_ROOT_PATH_ADMIN"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_ROOT_PATH_ADMIN" data-toggle="collapse" data-target=".constant_BIBLESTUDY_ROOT_PATH_ADMIN .collapse" title="">
-<h2>BIBLESTUDY_ROOT_PATH_ADMIN</h2>
-<pre>BIBLESTUDY_ROOT_PATH_ADMIN = JPATH_ADMINISTRATOR </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
 <a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_SECONDS_IN_HOUR"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_SECONDS_IN_HOUR" data-toggle="collapse" data-target=".constant_BIBLESTUDY_SECONDS_IN_HOUR .collapse" title="">
 <h2>BIBLESTUDY_SECONDS_IN_HOUR</h2>
 <pre>BIBLESTUDY_SECONDS_IN_HOUR = 3600 </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_SECONDS_IN_HOUR"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_SECONDS_IN_HOUR" data-toggle="collapse" data-target=".constant_BIBLESTUDY_SECONDS_IN_HOUR .collapse" title="">
-<h2>BIBLESTUDY_SECONDS_IN_HOUR</h2>
-<pre>BIBLESTUDY_SECONDS_IN_HOUR = 3600 </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_SECONDS_IN_YEAR"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_SECONDS_IN_YEAR" data-toggle="collapse" data-target=".constant_BIBLESTUDY_SECONDS_IN_YEAR .collapse" title="">
-<h2>BIBLESTUDY_SECONDS_IN_YEAR</h2>
-<pre>BIBLESTUDY_SECONDS_IN_YEAR = 31536000 </pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -2561,81 +2243,9 @@ Displays a topics list of ALL published topics</p>
 </tr></table>
 </div></div>
 </div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_TEMPLATE_DEFAULT"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_TEMPLATE_DEFAULT" data-toggle="collapse" data-target=".constant_BIBLESTUDY_TEMPLATE_DEFAULT .collapse" title="">
-<h2>BIBLESTUDY_TEMPLATE_DEFAULT</h2>
-<pre>BIBLESTUDY_TEMPLATE_DEFAULT = 'default' </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
 <a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_VERSION"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_VERSION" data-toggle="collapse" data-target=".constant_BIBLESTUDY_VERSION .collapse" title="">
 <h2>BIBLESTUDY_VERSION</h2>
-<pre>BIBLESTUDY_VERSION = '9.0.1' </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_VERSION"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_VERSION" data-toggle="collapse" data-target=".constant_BIBLESTUDY_VERSION .collapse" title="">
-<h2>BIBLESTUDY_VERSION</h2>
-<pre>BIBLESTUDY_VERSION = '9.0.0' </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_VERSION_BUILD"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_VERSION_BUILD" data-toggle="collapse" data-target=".constant_BIBLESTUDY_VERSION_BUILD .collapse" title="">
-<h2>BIBLESTUDY_VERSION_BUILD</h2>
-<pre>BIBLESTUDY_VERSION_BUILD = '4000' </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_VERSION_DATE"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_VERSION_DATE" data-toggle="collapse" data-target=".constant_BIBLESTUDY_VERSION_DATE .collapse" title="">
-<h2>BIBLESTUDY_VERSION_DATE</h2>
-<pre>BIBLESTUDY_VERSION_DATE = '2016-05-23' </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_VERSION_DATE"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_VERSION_DATE" data-toggle="collapse" data-target=".constant_BIBLESTUDY_VERSION_DATE .collapse" title="">
-<h2>BIBLESTUDY_VERSION_DATE</h2>
-<pre>BIBLESTUDY_VERSION_DATE = '2015-05-15' </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
-<a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_VERSION_UPDATEFILE"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_VERSION_UPDATEFILE" data-toggle="collapse" data-target=".constant_BIBLESTUDY_VERSION_UPDATEFILE .collapse" title="">
-<h2>BIBLESTUDY_VERSION_UPDATEFILE</h2>
-<pre>BIBLESTUDY_VERSION_UPDATEFILE = 'JBS Version ' . BIBLESTUDY_VERSION </pre>
+<pre>BIBLESTUDY_VERSION = '9.0.5' </pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -2672,30 +2282,6 @@ Displays a topics list of ALL published topics</p>
 <a xmlns:php="http://php.net/xsl" id="constant_JBSM_LOADED"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_JBSM_LOADED" data-toggle="collapse" data-target=".constant_JBSM_LOADED .collapse" title="">
 <h2>JBSM_LOADED</h2>
 <pre>JBSM_LOADED = 1 </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
-<a xmlns:php="http://php.net/xsl" id="constant_JBSM_LOADED"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_JBSM_LOADED" data-toggle="collapse" data-target=".constant_JBSM_LOADED .collapse" title="">
-<h2>JBSM_LOADED</h2>
-<pre>JBSM_LOADED = 1 </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
-</tr></table>
-</div></div>
-</div>
-<a xmlns:php="http://php.net/xsl" id="constant_JBSM_PROFILER"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_JBSM_PROFILER" data-toggle="collapse" data-target=".constant_JBSM_PROFILER .collapse" title="">
-<h2>JBSM_PROFILER</h2>
-<pre>JBSM_PROFILER = 0 </pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -2800,7 +2386,7 @@ Displays a topics list of ALL published topics</p>
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2016-06-04T14:02:22-05:00.<br></footer></div>
+            generated on 2016-10-17T19:38:00-05:00.<br></footer></div>
 </div>
 </body>
 </html>
