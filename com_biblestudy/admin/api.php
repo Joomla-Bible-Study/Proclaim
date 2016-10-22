@@ -84,6 +84,9 @@ JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_ADDON, 'false', 'true');
 JLoader::discover('Table', BIBLESTUDY_PATH_ADMIN_TABLES, 'false', 'true');
 JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html/');
 
+// Fixes Router overrider.
+JLoader::register('JBSMHelperRoute', BIBLESTUDY_PATH_HELPERS . '/route.php', true);
+
 // If phrase is not found in specific language file, load english language file:
 $language = JFactory::getLanguage();
 $language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
