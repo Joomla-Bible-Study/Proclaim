@@ -41,7 +41,8 @@ class JBSMAddonLocal extends JBSMAddon
 		preg_match('/\/+.+/', $path, $matches);
 
 		// Make filename safe and move it to correct folder
-		$destFile = JApplicationHelper::stringURLSafe($_FILES["file"]["name"]);
+		$destFile = JFile::makeSafe($_FILES["file"]["name"]);
+		$destFile = str_replace(' ', '_', $destFile);
 
 		if (!JFile::upload($_FILES['file']['tmp_name'], JPATH_ROOT . $matches[0] . $destFile))
 		{
