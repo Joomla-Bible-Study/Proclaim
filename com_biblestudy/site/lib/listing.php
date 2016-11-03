@@ -1613,7 +1613,7 @@ class JBSMListing
 				}
 				else
 				{
-					(isset($item->messaget_type) ? $data = $item->message_type : $data = '');
+					(isset($item->message_type) ? $data = $item->message_type : $data = '');
 				}
 				break;
 			case $extra . 'thumbnail':
