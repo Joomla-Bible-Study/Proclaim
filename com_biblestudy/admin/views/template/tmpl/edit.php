@@ -167,7 +167,7 @@ $input  = $app->input;
 									<a href="#list-15" data-toggle="tab">
 										<?php echo JText::_('JBS_TPL_DISPLAY_ITEMS6'); ?>
 									</a>
-								</li
+								</li>
 							</ul>
 						</div>
 						<div class="tab-content span10">
