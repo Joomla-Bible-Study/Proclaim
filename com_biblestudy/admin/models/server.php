@@ -23,7 +23,7 @@ class BiblestudyModelServer extends JModelAdmin
 	/**
 	 * Data
 	 *
-	 * @var
+	 * @var Object
 	 * @since   9.0.0
 	 */
 	private $data;
@@ -55,6 +55,8 @@ class BiblestudyModelServer extends JModelAdmin
 	 * @param   bool  $ext  If comfing from externl
 	 *
 	 * @return String
+	 *
+	 * @since 9.0.0
 	 */
 	public function getType($pk, $ext = false)
 	{
@@ -129,16 +131,46 @@ class BiblestudyModelServer extends JModelAdmin
 	}
 
 	/**
+	 * Method to save the form data.
+	 *
+	 * @param   array  $data  The form data.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   1.6
+	 */
+	public function save($data)
+	{
+		if (isset($data['params']['path']))
+		{
+			if (strpos($data['params']['path'], '//'))
+			{
+				$data['params']['path'] = substr($data['params']['path'], strpos($data['params']['path'], '//'));
+			}
+			elseif (strpos($data['params']['path'], '//') === false)
+			{
+				$data['params']['path'] = '//' . $data['params']['path'];
+			}
+		}
+
+		if (parent::save($data))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Get the server form
 	 *
-	 * @TODO    Rename this to getAddonServerForm() to make it clearer that this is the addon form
 	 * @return bool|mixed
 	 *
 	 * @throws Exception
 	 *
 	 * @since   9.0.0
 	 */
-	public function getServerForm()
+	public function getAddonServerForm()
 	{
 		// If user hasn't selected a server type yet, just return an empty form
 		$type = $this->data->type;
