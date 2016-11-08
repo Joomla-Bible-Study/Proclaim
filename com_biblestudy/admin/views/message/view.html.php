@@ -86,6 +86,7 @@ class BiblestudyViewMessage extends JViewLegacy
 		$input            = new JInput;
 		$option           = $input->get('option', '', 'cmd');
 		$this->mediafiles = $this->get('MediaFiles');
+		$this->state      = $this->get('State');
 
 		// Set some variables for use by the modal mediafile entry form from a study
 		$app = JFactory::getApplication();

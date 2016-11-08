@@ -21,10 +21,10 @@ class BiblestudyViewCpanel extends JViewLegacy
 	/**
 	 * Data from Model
 	 *
-	 * @var string
+	 * @var object
 	 * @since    7.0.0
 	 */
-	public $data;
+	public $xml;
 
 	/**
 	 * Total Messages
@@ -66,8 +66,13 @@ class BiblestudyViewCpanel extends JViewLegacy
 	public function display($tpl = null)
 	{
 		$this->state = $this->get('State');
-		$this->data  = $this->get('Data');
 		$model       = $this->getModel();
+		$component = JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.xml';
+
+		if (file_exists($component))
+		{
+			$this->xml = simplexml_load_file($component);
+		}
 
 		$this->total_messages = JBSMStats::get_total_messages();
 
@@ -79,11 +84,11 @@ class BiblestudyViewCpanel extends JViewLegacy
 		$this->hasPostInstallationMessages = $model->hasPostInstallMessages();
 		$this->extension_id                = $this->state->get('extension_id', 0, 'int');
 
-		// Display the template
-		parent::display($tpl);
-
 		// Set the document
 		$this->setDocument();
+
+		// Display the template
+		return parent::display($tpl);
 	}
 
 	/**

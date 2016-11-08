@@ -23,6 +23,7 @@
 <li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
 <li><a href="../packages/BibleStudy.Admin.html"><i class="icon-folder-open"></i> BibleStudy.Admin</a></li>
 <li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
 </ul>
 </li>
 <li class="dropdown" id="charts-menu">
@@ -33,7 +34,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">175</span></a></li>
+                <span class="label label-info">184</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -63,7 +64,6 @@
 <li class="nav-header">
 <i title="Methods" class="icon-custom icon-method"></i> Methods
                     <ul>
-<li class="method public "><a href="#method___construct" title="__construct() :: Construct"><span class="description">Construct</span><pre>__construct()</pre></a></li>
 <li class="method public inherited"><a href="#method___construct" title="__construct() :: Construct"><span class="description">Construct</span><pre>__construct()</pre></a></li>
 <li class="method public inherited"><a href="#method_getInstance" title="getInstance() :: Returns a Addon object, always creating it"><span class="description">Returns a Addon object, always creating it</span><pre>getInstance()</pre></a></li>
 <li class="method public inherited"><a href="#method_getType" title="getType() :: Gets the type of addon loaded based on the class name"><span class="description">Gets the type of addon loaded based on the class name</span><pre>getType()</pre></a></li>
@@ -80,12 +80,12 @@
 </li>
 <li class="nav-header protected">» Protected
                     <ul>
-<li class="property protected "><a href="#property__xml" title="$_xml() :: Addon configuration"><span class="description"></span><pre>$_xml</pre></a></li>
 <li class="property protected "><a href="#property_config" title="$config() :: "><span class="description"></span><pre>$config</pre></a></li>
 <li class="property protected "><a href="#property_config" title="$config() :: "><span class="description"></span><pre>$config</pre></a></li>
 <li class="property protected "><a href="#property_description" title="$description() :: "><span class="description"></span><pre>$description</pre></a></li>
 <li class="property protected "><a href="#property_name" title="$name() :: "><span class="description"></span><pre>$name</pre></a></li>
 <li class="property protected "><a href="#property_type" title="$type() :: The type of server"><span class="description"></span><pre>$type</pre></a></li>
+<li class="property protected "><a href="#property_xml" title="$xml() :: Addon configuration"><span class="description"></span><pre>$xml</pre></a></li>
 </ul>
 </li>
 </ul>
@@ -119,28 +119,16 @@
 </table>
 <h3>
 <i title="Methods" class="icon-custom icon-method"></i> Methods</h3>
-<a id="method___construct"></a><div class="element clickable method public method___construct " data-toggle="collapse" data-target=".method___construct .collapse" title="public">
-<h2>Construct</h2>
-<pre>__construct(array $config<code> = array()</code>) </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>inherited_from</th>
-<td>\JBSMAddon::__construct()</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$config</h4>
-<code>array</code><p>Array of Options</p></div>
-</div></div>
-</div>
 <a id="method___construct"></a><div class="element clickable method public method___construct inherited" data-toggle="collapse" data-target=".method___construct .collapse" title="public">
 <h2>Construct</h2>
 <pre>__construct(array $config<code> = array()</code>) </pre>
 <div class="labels"><span class="label">Inherited</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$config</h4>
@@ -217,18 +205,24 @@
 </div>
 <a id="method_upload"></a><div class="element clickable method public method_upload " data-toggle="collapse" data-target=".method_upload .collapse" title="public">
 <h2>Upload</h2>
-<pre>upload(\JInput $data) : array</pre>
+<pre>upload(\JInput|array $data) : array</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
-<table class="table table-bordered"><tr>
+<table class="table table-bordered">
+<tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr>
+<tr>
 <th>inherited_from</th>
 <td>\JBSMAddon::upload()</td>
-</tr></table>
+</tr>
+</table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$data</h4>
-<code>\JInput</code><p>Data to upload</p></div>
+<code>\JInput</code><code>array</code><p>Data to upload</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code>array</code></div>
 </div></div>
@@ -239,6 +233,10 @@
 <div class="labels"><span class="label">Inherited</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$target</h4>
@@ -249,22 +247,6 @@
 </div>
 <h3>
 <i title="Properties" class="icon-custom icon-property"></i> Properties</h3>
-<a id="property__xml"> </a><div class="element clickable property protected property__xml" data-toggle="collapse" data-target=".property__xml .collapse" title="protected">
-<h2>Addon configuration</h2>
-<pre>$_xml : object</pre>
-<div class="row collapse"><div class="detail-description">
-<h3>Default</h3>
-<div class="subelement argument"><code>null</code></div>
-</div></div>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>9.0.0</td>
-</tr></table>
-</div></div>
-</div>
 <a id="property_config"> </a><div class="element clickable property protected property_config" data-toggle="collapse" data-target=".property_config .collapse" title="protected">
 <h2>$config</h2>
 <pre>$config </pre>
@@ -327,6 +309,22 @@
 </tr></table>
 </div></div>
 </div>
+<a id="property_xml"> </a><div class="element clickable property protected property_xml" data-toggle="collapse" data-target=".property_xml .collapse" title="protected">
+<h2>Addon configuration</h2>
+<pre>$xml : object</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
 </div>
 </div>
 </div>
@@ -334,7 +332,7 @@
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2016-06-04T14:02:35-05:00.<br></footer></div>
+            generated on 2016-10-17T19:38:08-05:00.<br></footer></div>
 </div>
 </body>
 </html>

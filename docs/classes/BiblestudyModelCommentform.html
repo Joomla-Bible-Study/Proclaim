@@ -23,6 +23,7 @@
 <li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
 <li><a href="../packages/BibleStudy.Admin.html"><i class="icon-folder-open"></i> BibleStudy.Admin</a></li>
 <li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
 </ul>
 </li>
 <li class="dropdown" id="charts-menu">
@@ -33,7 +34,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">175</span></a></li>
+                <span class="label label-info">184</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -80,7 +81,6 @@
 <li class="method protected inherited"><a href="#method_loadFormData" title="loadFormData() :: Load Form Data"><span class="description">Load Form Data</span><pre>loadFormData()</pre></a></li>
 <li class="method protected "><a href="#method_populateState" title="populateState() :: Method to auto-populate the model state."><span class="description">Method to auto-populate the model state.</span><pre>populateState()</pre></a></li>
 <li class="method protected inherited"><a href="#method_prepareTable" title="prepareTable() :: Prepare and sanitise the table prior to saving."><span class="description">Prepare and sanitise the table prior to saving.</span><pre>prepareTable()</pre></a></li>
-<li class="method protected inherited"><a href="#method_preprocessForm" title="preprocessForm() :: Method to allow derived classes to prepossess the form."><span class="description">Method to allow derived classes to prepossess the form.</span><pre>preprocessForm()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header">
@@ -168,6 +168,10 @@
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$pk</h4>
@@ -198,6 +202,10 @@
 <div class="labels"><span class="label">Inherited</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0</td>
+</tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$name</h4>
@@ -356,28 +364,6 @@
 <code>\JTable</code><p>A reference to a JTable object.</p></div>
 </div></div>
 </div>
-<a id="method_preprocessForm"></a><div class="element clickable method protected method_preprocessForm inherited" data-toggle="collapse" data-target=".method_preprocessForm .collapse" title="protected">
-<h2>Method to allow derived classes to prepossess the form.</h2>
-<pre>preprocessForm(\JForm $form, mixed $data, string $group<code> = 'content'</code>) : void</pre>
-<div class="labels"><span class="label">Inherited</span></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>3.0</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$form</h4>
-<code>\JForm</code><p>A JForm object.</p></div>
-<div class="subelement argument">
-<h4>$data</h4>
-<code>mixed</code><p>The data expected for the form.</p></div>
-<div class="subelement argument">
-<h4>$group</h4>
-<code>string</code><p>The name of the plugin group to import (defaults to "content").</p></div>
-</div></div>
-</div>
 <h3>
 <i title="Properties" class="icon-custom icon-property"></i> Properties</h3>
 <a id="property_text_prefix"> </a><div class="element clickable property protected property_text_prefix" data-toggle="collapse" data-target=".property_text_prefix .collapse" title="protected">
@@ -403,7 +389,7 @@
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2016-06-04T14:02:36-05:00.<br></footer></div>
+            generated on 2016-10-17T19:38:09-05:00.<br></footer></div>
 </div>
 </body>
 </html>

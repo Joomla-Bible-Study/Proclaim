@@ -23,6 +23,7 @@
 <li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
 <li><a href="../packages/BibleStudy.Admin.html"><i class="icon-folder-open"></i> BibleStudy.Admin</a></li>
 <li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
 </ul>
 </li>
 <li class="dropdown" id="charts-menu">
@@ -33,7 +34,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">175</span></a></li>
+                <span class="label label-info">184</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -145,6 +146,10 @@ from the sermons view "default.php". It has not been implemented yet, so its not
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$config</h4>
@@ -157,7 +162,13 @@ Recognized key values include 'name', 'default_task', 'model_path', and
 <h2>AV Player</h2>
 <pre>avplayer() : void</pre>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
+</div></div>
 </div>
 <a id="method_comment"></a><div class="element clickable method public method_comment " data-toggle="collapse" data-target=".method_comment .collapse" title="public">
 <h2>Comments</h2>
@@ -165,6 +176,10 @@ Recognized key values include 'name', 'default_task', 'model_path', and
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
 <h3>Returns</h3>
 <div class="subelement response">
 <code>boolean</code><code>void</code>
@@ -177,6 +192,10 @@ Recognized key values include 'name', 'default_task', 'model_path', and
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$params</h4>
@@ -185,11 +204,15 @@ Recognized key values include 'name', 'default_task', 'model_path', and
 </div>
 <a id="method_display"></a><div class="element clickable method public method_display " data-toggle="collapse" data-target=".method_display .collapse" title="public">
 <h2>Display</h2>
-<pre>display(boolean $cachable<code> = false</code>, array $urlparams<code> = array()</code>) : \JControllerLegacy</pre>
+<pre>display(boolean $cachable<code> = false</code>, array $urlparams<code> = array()</code>) : \JControllerLegacy | boolean</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"><p>This function is provide as a default implementation, in most cases
 you will need to override it in your own controllers.</p></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$cachable</h4>
@@ -199,33 +222,57 @@ you will need to override it in your own controllers.</p></div>
 <code>array</code><p>An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.</p></div>
 <h3>Returns</h3>
 <div class="subelement response">
-<code>\JControllerLegacy</code>A JControllerLegacy object to support chaining.</div>
+<code>\JControllerLegacy</code><code>boolean</code>A JControllerLegacy object to support chaining.</div>
 </div></div>
 </div>
 <a id="method_download"></a><div class="element clickable method public method_download " data-toggle="collapse" data-target=".method_download .collapse" title="public">
 <h2>Download</h2>
 <pre>download() : void</pre>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
+</div></div>
 </div>
 <a id="method_inlinePlayer"></a><div class="element clickable method public method_inlinePlayer " data-toggle="collapse" data-target=".method_inlinePlayer .collapse" title="public">
 <h2>This function is supposed to generate the Media Player that is requested via AJAX
 from the sermons view "default.php". It has not been implemented yet, so its not used.</h2>
 <pre>inlinePlayer() : void</pre>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
+</div></div>
 </div>
 <a id="method_playHit"></a><div class="element clickable method public method_playHit " data-toggle="collapse" data-target=".method_playHit .collapse" title="public">
 <h2>Play Hit</h2>
 <pre>playHit() : void</pre>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
+</div></div>
 </div>
 <a id="method_upload"></a><div class="element clickable method public method_upload " data-toggle="collapse" data-target=".method_upload .collapse" title="public">
 <h2>Upload function</h2>
 <pre>upload() : void</pre>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
+</div></div>
 </div>
 <a id="method_uploadflash"></a><div class="element clickable method public method_uploadflash " data-toggle="collapse" data-target=".method_uploadflash .collapse" title="public">
 <h2>Adds the ability to uploade with flash</h2>
@@ -249,7 +296,13 @@ from the sermons view "default.php". It has not been implemented yet, so its not
 <div class="subelement argument"></div>
 </div></div>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
+</div></div>
 </div>
 </div>
 </div>
@@ -283,10 +336,16 @@ from the sermons view "default.php". It has not been implemented yet, so its not
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
-<table class="table table-bordered"><tr>
+<table class="table table-bordered">
+<tr>
 <th>todo</th>
 <td>need to update this to new JBSM</td>
-</tr></table>
+</tr>
+<tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr>
+</table>
 <h3>Returns</h3>
 <div class="subelement response"><code>string</code></div>
 </div></div>
@@ -297,20 +356,30 @@ from the sermons view "default.php". It has not been implemented yet, so its not
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
-<table class="table table-bordered"><tr>
+<table class="table table-bordered">
+<tr>
 <th>todo</th>
 <td>need to update this for new JBSM</td>
-</tr></table>
+</tr>
+<tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr>
+</table>
 <h3>Returns</h3>
 <div class="subelement response"><code>string</code></div>
 </div></div>
 </div>
 <a id="method_display"></a><div class="element clickable method public method_display " data-toggle="collapse" data-target=".method_display .collapse" title="public">
 <h2>Core Display</h2>
-<pre>display(boolean $cachable<code> = false</code>, boolean $urlparams<code> = false</code>) : \JController</pre>
+<pre>display(boolean $cachable<code> = false</code>, boolean $urlparams<code> = false</code>) : \JControllerLegacy</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.5</td>
+</tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$cachable</h4>
@@ -320,7 +389,7 @@ from the sermons view "default.php". It has not been implemented yet, so its not
 <code>boolean</code><p>Url params</p></div>
 <h3>Returns</h3>
 <div class="subelement response">
-<code>\JController</code>This object to support chaining.</div>
+<code>\JControllerLegacy</code>his object to support chaining.</div>
 </div></div>
 </div>
 <a id="method_resetDownloads"></a><div class="element clickable method public method_resetDownloads " data-toggle="collapse" data-target=".method_resetDownloads .collapse" title="public">
@@ -329,6 +398,10 @@ from the sermons view "default.php". It has not been implemented yet, so its not
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
 <h3>Returns</h3>
 <div class="subelement response"><code>null</code></div>
 </div></div>
@@ -339,6 +412,10 @@ from the sermons view "default.php". It has not been implemented yet, so its not
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
 <h3>Returns</h3>
 <div class="subelement response"><code>null</code></div>
 </div></div>
@@ -349,6 +426,10 @@ from the sermons view "default.php". It has not been implemented yet, so its not
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
 <h3>Returns</h3>
 <div class="subelement response"><code>null</code></div>
 </div></div>
@@ -359,6 +440,10 @@ from the sermons view "default.php". It has not been implemented yet, so its not
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>8.0.0</td>
+</tr></table>
 <h3>Returns</h3>
 <div class="subelement response"><code>null</code></div>
 </div></div>
@@ -383,6 +468,10 @@ from the sermons view "default.php". It has not been implemented yet, so its not
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
 <h3>Returns</h3>
 <div class="subelement response"><code>null</code></div>
 </div></div>
@@ -397,7 +486,13 @@ from the sermons view "default.php". It has not been implemented yet, so its not
 <div class="subelement argument"><code>'cpanel'</code></div>
 </div></div>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
+</div></div>
 </div>
 </div>
 </div>
@@ -406,7 +501,7 @@ from the sermons view "default.php". It has not been implemented yet, so its not
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2016-06-04T14:02:36-05:00.<br></footer></div>
+            generated on 2016-10-17T19:38:09-05:00.<br></footer></div>
 </div>
 </body>
 </html>

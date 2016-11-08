@@ -23,6 +23,7 @@
 <li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
 <li><a href="../packages/BibleStudy.Admin.html"><i class="icon-folder-open"></i> BibleStudy.Admin</a></li>
 <li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
 </ul>
 </li>
 <li class="dropdown" id="charts-menu">
@@ -33,7 +34,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">175</span></a></li>
+                <span class="label label-info">184</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -63,6 +64,7 @@
 <li class="nav-header">
 <i title="Methods" class="icon-custom icon-method"></i> Methods
                     <ul>
+<li class="method public "><a href="#method___construct" title="__construct() :: Constructor."><span class="description">Constructor.</span><pre>__construct()</pre></a></li>
 <li class="method public "><a href="#method_getTemplates" title="getTemplates() :: Get Templates"><span class="description">Get Templates</span><pre>getTemplates()</pre></a></li>
 <li class="method public "><a href="#method_getTypes" title="getTypes() :: Gets a list of templates types for the filter dropdown"><span class="description">Gets a list of templates types for the filter dropdown</span><pre>getTypes()</pre></a></li>
 </ul>
@@ -78,7 +80,7 @@
                     <ul></ul>
 </li>
 <li class="nav-header private">» Private
-                    <ul><li class="property private "><a href="#property__templates" title="$_templates() :: Templates"><span class="description"></span><pre>$_templates</pre></a></li></ul>
+                    <ul><li class="property private "><a href="#property_templates" title="$templates() :: Templates"><span class="description"></span><pre>$templates</pre></a></li></ul>
 </li>
 </ul>
 </div>
@@ -107,12 +109,38 @@
 </table>
 <h3>
 <i title="Methods" class="icon-custom icon-method"></i> Methods</h3>
+<a id="method___construct"></a><div class="element clickable method public method___construct " data-toggle="collapse" data-target=".method___construct .collapse" title="public">
+<h2>Constructor.</h2>
+<pre>__construct(array $config<code> = array()</code>) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>see</th>
+<td><a href="%5CJController"></a></td>
+</tr>
+<tr>
+<th>since</th>
+<td>11.1</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$config</h4>
+<code>array</code><p>An optional associative array of configuration settings.</p></div>
+</div></div>
+</div>
 <a id="method_getTemplates"></a><div class="element clickable method public method_getTemplates " data-toggle="collapse" data-target=".method_getTemplates .collapse" title="public">
 <h2>Get Templates</h2>
 <pre>getTemplates() : object</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
 <h3>Returns</h3>
 <div class="subelement response"><code>object</code></div>
 </div></div>
@@ -167,15 +195,21 @@
 </div>
 <h3>
 <i title="Properties" class="icon-custom icon-property"></i> Properties</h3>
-<a id="property__templates"> </a><div class="element clickable property private property__templates" data-toggle="collapse" data-target=".property__templates .collapse" title="private">
+<a id="property_templates"> </a><div class="element clickable property private property_templates" data-toggle="collapse" data-target=".property_templates .collapse" title="private">
 <h2>Templates</h2>
-<pre>$_templates : object</pre>
+<pre>$templates : object</pre>
 <div class="row collapse"><div class="detail-description">
 <h3>Default</h3>
 <div class="subelement argument"></div>
 </div></div>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
+</div></div>
 </div>
 </div>
 </div>
@@ -184,7 +218,7 @@
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2016-06-04T14:02:26-05:00.<br></footer></div>
+            generated on 2016-10-17T19:38:02-05:00.<br></footer></div>
 </div>
 </body>
 </html>

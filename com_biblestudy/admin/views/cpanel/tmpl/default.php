@@ -39,7 +39,7 @@ if ($msg)
 			<div id="fbmenu">
 				<strong><?php echo JText::_('JBS_CPL_VERSION_INFORMATION'); ?></strong>
 
-				<div class="fbmainmenu"><?php echo $this->data->version . ' (' . $this->data->versiondate . ')'; ?></div>
+				<div class="fbmainmenu"><?php echo $this->xml->version . ' (' . $this->xml->creationDate . ')'; ?></div>
 			</div>
 
 			<div id="jbspaypal">

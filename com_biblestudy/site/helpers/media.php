@@ -139,7 +139,7 @@ class JBSMMedia
 					break;
 			}
 
-			$filesize = '<span style="font-size: 0.6em;display:inline;">' .
+			$filesize = '<span style="font-size: 0.6em;display:inline;padding-left: 5px;">' .
 				$file_size . '</span>';
 		}
 

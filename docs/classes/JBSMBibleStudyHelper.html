@@ -23,6 +23,7 @@
 <li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
 <li><a href="../packages/BibleStudy.Admin.html"><i class="icon-folder-open"></i> BibleStudy.Admin</a></li>
 <li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
 </ul>
 </li>
 <li class="dropdown" id="charts-menu">
@@ -33,7 +34,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">175</span></a></li>
+                <span class="label label-info">184</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -66,6 +67,7 @@
 <li class="method public "><a href="#method_addSubmenu" title="addSubmenu() :: Configure the Linkbar."><span class="description">Configure the Linkbar.</span><pre>addSubmenu()</pre></a></li>
 <li class="method public "><a href="#method_array_sort_by_column" title="array_sort_by_column() :: Sorting the array a Column"><span class="description">Sorting the array a Column</span><pre>array_sort_by_column()</pre></a></li>
 <li class="method public "><a href="#method_debug" title="debug() :: Debug switch state form Admin Settings page"><span class="description">Debug switch state form Admin Settings page</span><pre>debug()</pre></a></li>
+<li class="method public "><a href="#method_endsWith" title="endsWith() :: String Ends with."><span class="description">String Ends with.</span><pre>endsWith()</pre></a></li>
 <li class="method public "><a href="#method_filterText" title="filterText() :: Applies the content tag filters to arbitrary text as per settings for current user group"><span class="description">Applies the content tag filters to arbitrary text as per settings for current user group</span><pre>filterText()</pre></a></li>
 <li class="method public "><a href="#method_getActions" title="getActions() :: Get Actions"><span class="description">Get Actions</span><pre>getActions()</pre></a></li>
 <li class="method public "><a href="#method_getMediaTypes" title="getMediaTypes() :: Media Types"><span class="description">Media Types</span><pre>getMediaTypes()</pre></a></li>
@@ -77,6 +79,7 @@
 <li class="method public "><a href="#method_getStudyYears" title="getStudyYears() :: Study Years"><span class="description">Study Years</span><pre>getStudyYears()</pre></a></li>
 <li class="method public "><a href="#method_getTeachers" title="getTeachers() :: Teachers"><span class="description">Teachers</span><pre>getTeachers()</pre></a></li>
 <li class="method public "><a href="#method_rendermenu" title="rendermenu() :: Rendering Menu based on Joomla! Version."><span class="description">Rendering Menu based on Joomla! Version.</span><pre>rendermenu()</pre></a></li>
+<li class="method public "><a href="#method_startsWith" title="startsWith() :: String Starts With"><span class="description">String Starts With</span><pre>startsWith()</pre></a></li>
 <li class="method public "><a href="#method_stop" title="stop() :: Debug stop"><span class="description">Debug stop</span><pre>stop()</pre></a></li>
 </ul>
 </li>
@@ -132,12 +135,18 @@
 </div>
 <a id="method_array_sort_by_column"></a><div class="element clickable method public method_array_sort_by_column " data-toggle="collapse" data-target=".method_array_sort_by_column .collapse" title="public">
 <h2>Sorting the array a Column</h2>
-<pre>array_sort_by_column($arr, string $col, integer $dir<code> = SORT_ASC</code>) : void</pre>
+<pre>array_sort_by_column(array $arr, string $col, integer $dir<code> = SORT_ASC</code>) : void</pre>
 <div class="labels"><span class="label">Static</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.5</td>
+</tr></table>
 <h3>Parameters</h3>
-<div class="subelement argument"><h4>$arr</h4></div>
+<div class="subelement argument">
+<h4>$arr</h4>
+<code>array</code><p>&$arr  Array to sort</p></div>
 <div class="subelement argument">
 <h4>$col</h4>
 <code>string</code><p>Sort column</p></div>
@@ -161,12 +170,37 @@
 <code>integer</code>'1' is on '0' is off</div>
 </div></div>
 </div>
+<a id="method_endsWith"></a><div class="element clickable method public method_endsWith " data-toggle="collapse" data-target=".method_endsWith .collapse" title="public">
+<h2>String Ends with.</h2>
+<pre>endsWith(string $haystack, string $needle) : boolean</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.5</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$haystack</h4>
+<code>string</code><p>String to search.</p></div>
+<div class="subelement argument">
+<h4>$needle</h4>
+<code>string</code><p>What to search for.</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
 <a id="method_filterText"></a><div class="element clickable method public method_filterText " data-toggle="collapse" data-target=".method_filterText .collapse" title="public">
 <h2>Applies the content tag filters to arbitrary text as per settings for current user group</h2>
 <pre>filterText(string $text) : string</pre>
 <div class="labels"><span class="label">Static</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.5</td>
+</tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$text</h4>
@@ -182,6 +216,10 @@
 <div class="labels"><span class="label">Static</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.5</td>
+</tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$Itemid</h4>
@@ -327,6 +365,10 @@
 <div class="labels"><span class="label">Static</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.5</td>
+</tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$text</h4>
@@ -339,12 +381,37 @@
 <code>string</code><p>Name of view</p></div>
 </div></div>
 </div>
+<a id="method_startsWith"></a><div class="element clickable method public method_startsWith " data-toggle="collapse" data-target=".method_startsWith .collapse" title="public">
+<h2>String Starts With</h2>
+<pre>startsWith(string $haystack, string $needle) : boolean</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.5</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$haystack</h4>
+<code>string</code><p>String to search.</p></div>
+<div class="subelement argument">
+<h4>$needle</h4>
+<code>string</code><p>What to search for.</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
 <a id="method_stop"></a><div class="element clickable method public method_stop " data-toggle="collapse" data-target=".method_stop .collapse" title="public">
 <h2>Debug stop</h2>
 <pre>stop(string $msg<code> = ''</code>) : void</pre>
 <div class="labels"><span class="label">Static</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.5</td>
+</tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$msg</h4>
@@ -376,7 +443,13 @@
 <div class="subelement argument"><code>'com_biblestudy'</code></div>
 </div></div>
 <div class="labels"><span class="label">Static</span></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.5</td>
+</tr></table>
+</div></div>
 </div>
 </div>
 </div>
@@ -385,7 +458,7 @@
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2016-06-04T14:02:32-05:00.<br></footer></div>
+            generated on 2016-10-17T19:38:05-05:00.<br></footer></div>
 </div>
 </body>
 </html>

@@ -115,6 +115,7 @@ JFactory::getDocument()->addScriptDeclaration('
 					<tbody>
 					<?php
 					foreach ($this->items as $i => $item) :
+						$item->max_ordering = 0;
 						$ordering = ($listOrder == 'mediafile.ordering');
 						$canCreate = $user->authorise('core.create');
 						$canEdit = $user->authorise('core.edit', 'com_biblestudy.mediafile.' . $item->id);

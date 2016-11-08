@@ -416,6 +416,17 @@ class JBSMPageBuilder
 			$query->where($wherefield . ' = ' . $whereitem);
 		}
 
+		// Define null and now dates
+		$nullDate = $db->quote($db->getNullDate());
+		$nowDate  = $db->quote(JFactory::getDate()->toSql());
+
+		// Filter by start and end dates.
+		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
+		{
+			$query->where('(study.publish_up = ' . $nullDate . ' OR study.publish_up <= ' . $nowDate . ')')
+				->where('(study.publish_down = ' . $nullDate . ' OR study.publish_down >= ' . $nowDate . ')');
+		}
+
 		// Filter by language
 		$language = $params->get('language', '*');
 

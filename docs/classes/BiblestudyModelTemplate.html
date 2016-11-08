@@ -23,6 +23,7 @@
 <li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
 <li><a href="../packages/BibleStudy.Admin.html"><i class="icon-folder-open"></i> BibleStudy.Admin</a></li>
 <li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
 </ul>
 </li>
 <li class="dropdown" id="charts-menu">
@@ -33,7 +34,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">175</span></a></li>
+                <span class="label label-info">184</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -66,7 +67,6 @@
 <li class="method public "><a href="#method_checkout" title="checkout() :: Method to check-out a row for editing."><span class="description">Method to check-out a row for editing.</span><pre>checkout()</pre></a></li>
 <li class="method public "><a href="#method_copy" title="copy() :: Copy Template"><span class="description">Copy Template</span><pre>copy()</pre></a></li>
 <li class="method public "><a href="#method_getForm" title="getForm() :: Get the form data"><span class="description">Get the form data</span><pre>getForm()</pre></a></li>
-<li class="method public "><a href="#method_getItem" title="getItem() :: Get Items"><span class="description">Get Items</span><pre>getItem()</pre></a></li>
 <li class="method public "><a href="#method_getTable" title="getTable() :: Method to get a table object, load it if necessary."><span class="description">Method to get a table object, load it if necessary.</span><pre>getTable()</pre></a></li>
 <li class="method public "><a href="#method_publish" title="publish() :: Method to change the published state of one or more records."><span class="description">Method to change the published state of one or more records.</span><pre>publish()</pre></a></li>
 <li class="method public "><a href="#method_save" title="save() :: Method to save the form data."><span class="description">Method to save the form data.</span><pre>save()</pre></a></li>
@@ -130,6 +130,10 @@
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0</td>
+</tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$cid</h4>
@@ -160,21 +164,6 @@
 <code>mixed</code>A JForm object on success, false on failure</div>
 </div></div>
 </div>
-<a id="method_getItem"></a><div class="element clickable method public method_getItem " data-toggle="collapse" data-target=".method_getItem .collapse" title="public">
-<h2>Get Items</h2>
-<pre>getItem(integer $pk<code> = null</code>) : mixed</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$pk</h4>
-<code>integer</code><p>The id of the primary key.</p></div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>mixed</code>Object on success, false on failure.</div>
-</div></div>
-</div>
 <a id="method_getTable"></a><div class="element clickable method public method_getTable " data-toggle="collapse" data-target=".method_getTable .collapse" title="public">
 <h2>Method to get a table object, load it if necessary.</h2>
 <pre>getTable(string $name<code> = 'template'</code>, string $prefix<code> = 'Table'</code>, array $options<code> = array()</code>) : \JTable</pre>
@@ -202,7 +191,7 @@
 </div>
 <a id="method_publish"></a><div class="element clickable method public method_publish " data-toggle="collapse" data-target=".method_publish .collapse" title="public">
 <h2>Method to change the published state of one or more records.</h2>
-<pre>publish($pks, integer $value<code> = 1</code>) : boolean</pre>
+<pre>publish(array $pks, integer $value<code> = 1</code>) : boolean</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -211,7 +200,9 @@
 <td>12.2</td>
 </tr></table>
 <h3>Parameters</h3>
-<div class="subelement argument"><h4>$pks</h4></div>
+<div class="subelement argument">
+<h4>$pks</h4>
+<code>array</code><p>&$pks   A list of the primary keys to change.</p></div>
 <div class="subelement argument">
 <h4>$value</h4>
 <code>integer</code><p>The value of the published state.</p></div>
@@ -280,7 +271,7 @@
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2016-06-04T14:02:31-05:00.<br></footer></div>
+            generated on 2016-10-17T19:38:04-05:00.<br></footer></div>
 </div>
 </body>
 </html>

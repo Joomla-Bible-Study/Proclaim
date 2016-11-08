@@ -23,6 +23,7 @@
 <li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
 <li><a href="../packages/BibleStudy.Admin.html"><i class="icon-folder-open"></i> BibleStudy.Admin</a></li>
 <li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
 </ul>
 </li>
 <li class="dropdown" id="charts-menu">
@@ -33,7 +34,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">175</span></a></li>
+                <span class="label label-info">184</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -77,16 +78,16 @@
 <li class="nav-header">
 <i title="Properties" class="icon-custom icon-property"></i> Properties
                     <ul>
-<li class="property public "><a href="#property__allupdates" title="$_allupdates() :: "><span class="description">The pre versions sub sql array to process</span><pre>$_allupdates</pre></a></li>
-<li class="property public "><a href="#property__install" title="$_install() :: "><span class="description">Array of Install Task</span><pre>$_install</pre></a></li>
-<li class="property public "><a href="#property__subFiles" title="$_subFiles() :: "><span class="description"></span><pre>$_subFiles</pre></a></li>
-<li class="property public "><a href="#property__subQuery" title="$_subQuery() :: "><span class="description"></span><pre>$_subQuery</pre></a></li>
+<li class="property public "><a href="#property_allupdates" title="$allupdates() :: "><span class="description">The pre versions sub sql array to process</span><pre>$allupdates</pre></a></li>
 <li class="property public "><a href="#property_callstack" title="$callstack() :: "><span class="description">Call stack for the Visioning System.</span><pre>$callstack</pre></a></li>
 <li class="property public "><a href="#property_doneSteps" title="$doneSteps() :: "><span class="description">Numbers of Steps already processed</span><pre>$doneSteps</pre></a></li>
+<li class="property public "><a href="#property_install" title="$install() :: "><span class="description">Array of Install Task</span><pre>$install</pre></a></li>
 <li class="property public "><a href="#property_query" title="$query() :: "><span class="description"></span><pre>$query</pre></a></li>
 <li class="property public "><a href="#property_running" title="$running() :: "><span class="description">Running Now</span><pre>$running</pre></a></li>
 <li class="property public "><a href="#property_state" title="$state() :: "><span class="description">Starte of install</span><pre>$state</pre></a></li>
 <li class="property public "><a href="#property_status" title="$status() :: "><span class="description">Status</span><pre>$status</pre></a></li>
+<li class="property public "><a href="#property_subFiles" title="$subFiles() :: "><span class="description"></span><pre>$subFiles</pre></a></li>
+<li class="property public "><a href="#property_subQuery" title="$subQuery() :: "><span class="description"></span><pre>$subQuery</pre></a></li>
 <li class="property public "><a href="#property_subSteps" title="$subSteps() :: "><span class="description"></span><pre>$subSteps</pre></a></li>
 <li class="property public "><a href="#property_totalSteps" title="$totalSteps() :: "><span class="description">Total numbers of Steps</span><pre>$totalSteps</pre></a></li>
 <li class="property public "><a href="#property_version" title="$version() :: "><span class="description"></span><pre>$version</pre></a></li>
@@ -101,10 +102,10 @@
 </li>
 <li class="nav-header private">» Private
                     <ul>
-<li class="property private "><a href="#property__finish" title="$_finish() :: "><span class="description">Array of Finish Task</span><pre>$_finish</pre></a></li>
-<li class="property private "><a href="#property__isimport" title="$_isimport() :: "><span class="description">If was inported</span><pre>$_isimport</pre></a></li>
-<li class="property private "><a href="#property__versionStack" title="$_versionStack() :: "><span class="description">The pre versions to process</span><pre>$_versionStack</pre></a></li>
-<li class="property private "><a href="#property__versionSwitch" title="$_versionSwitch() :: "><span class="description">The pre versions to process</span><pre>$_versionSwitch</pre></a></li>
+<li class="property private "><a href="#property_finish" title="$finish() :: "><span class="description">Array of Finish Task</span><pre>$finish</pre></a></li>
+<li class="property private "><a href="#property_isimport" title="$isimport() :: "><span class="description">If was inported</span><pre>$isimport</pre></a></li>
+<li class="property private "><a href="#property_versionStack" title="$versionStack() :: "><span class="description">The pre versions to process</span><pre>$versionStack</pre></a></li>
+<li class="property private "><a href="#property_versionSwitch" title="$versionSwitch() :: "><span class="description">The pre versions to process</span><pre>$versionSwitch</pre></a></li>
 </ul>
 </li>
 </ul>
@@ -140,6 +141,10 @@
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$tpl</h4>
@@ -198,51 +203,31 @@
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
 <h3>Returns</h3>
 <div class="subelement response"><code>boolean</code></div>
 </div></div>
 </div>
 <h3>
 <i title="Properties" class="icon-custom icon-property"></i> Properties</h3>
-<a id="property__allupdates"> </a><div class="element clickable property public property__allupdates" data-toggle="collapse" data-target=".property__allupdates .collapse" title="public">
+<a id="property_allupdates"> </a><div class="element clickable property public property_allupdates" data-toggle="collapse" data-target=".property_allupdates .collapse" title="public">
 <h2>The pre versions sub sql array to process</h2>
-<pre>$_allupdates : array</pre>
+<pre>$allupdates : array</pre>
 <div class="row collapse"><div class="detail-description">
 <h3>Default</h3>
 <div class="subelement argument"><code>array()</code></div>
 </div></div>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
-</div>
-<a id="property__install"> </a><div class="element clickable property public property__install" data-toggle="collapse" data-target=".property__install .collapse" title="public">
-<h2>Array of Install Task</h2>
-<pre>$_install : array</pre>
 <div class="row collapse"><div class="detail-description">
-<h3>Default</h3>
-<div class="subelement argument"><code>array()</code></div>
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
 </div></div>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
-</div>
-<a id="property__subFiles"> </a><div class="element clickable property public property__subFiles" data-toggle="collapse" data-target=".property__subFiles .collapse" title="public">
-<h2>$_subFiles</h2>
-<pre>$_subFiles </pre>
-<div class="row collapse"><div class="detail-description">
-<h3>Default</h3>
-<div class="subelement argument"><code>array()</code></div>
-</div></div>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
-</div>
-<a id="property__subQuery"> </a><div class="element clickable property public property__subQuery" data-toggle="collapse" data-target=".property__subQuery .collapse" title="public">
-<h2>$_subQuery</h2>
-<pre>$_subQuery </pre>
-<div class="row collapse"><div class="detail-description">
-<h3>Default</h3>
-<div class="subelement argument"><code>array()</code></div>
-</div></div>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
 <a id="property_callstack"> </a><div class="element clickable property public property_callstack" data-toggle="collapse" data-target=".property_callstack .collapse" title="public">
 <h2>Call stack for the Visioning System.</h2>
@@ -252,7 +237,13 @@
 <div class="subelement argument"><code>array()</code></div>
 </div></div>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
+</div></div>
 </div>
 <a id="property_doneSteps"> </a><div class="element clickable property public property_doneSteps" data-toggle="collapse" data-target=".property_doneSteps .collapse" title="public">
 <h2>Numbers of Steps already processed</h2>
@@ -262,7 +253,29 @@
 <div class="subelement argument"><code>0</code></div>
 </div></div>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_install"> </a><div class="element clickable property public property_install" data-toggle="collapse" data-target=".property_install .collapse" title="public">
+<h2>Array of Install Task</h2>
+<pre>$install : array</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>array()</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
+</div></div>
 </div>
 <a id="property_query"> </a><div class="element clickable property public property_query" data-toggle="collapse" data-target=".property_query .collapse" title="public">
 <h2>$query</h2>
@@ -282,7 +295,13 @@
 <div class="subelement argument"></div>
 </div></div>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
+</div></div>
 </div>
 <a id="property_state"> </a><div class="element clickable property public property_state" data-toggle="collapse" data-target=".property_state .collapse" title="public">
 <h2>Starte of install</h2>
@@ -292,7 +311,13 @@
 <div class="subelement argument"></div>
 </div></div>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
+</div></div>
 </div>
 <a id="property_status"> </a><div class="element clickable property public property_status" data-toggle="collapse" data-target=".property_status .collapse" title="public">
 <h2>Status</h2>
@@ -300,6 +325,32 @@
 <div class="row collapse"><div class="detail-description">
 <h3>Default</h3>
 <div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_subFiles"> </a><div class="element clickable property public property_subFiles" data-toggle="collapse" data-target=".property_subFiles .collapse" title="public">
+<h2>$subFiles</h2>
+<pre>$subFiles </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>array()</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_subQuery"> </a><div class="element clickable property public property_subQuery" data-toggle="collapse" data-target=".property_subQuery .collapse" title="public">
+<h2>$subQuery</h2>
+<pre>$subQuery </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>array()</code></div>
 </div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
@@ -322,7 +373,13 @@
 <div class="subelement argument"><code>0</code></div>
 </div></div>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
+</div></div>
 </div>
 <a id="property_version"> </a><div class="element clickable property public property_version" data-toggle="collapse" data-target=".property_version .collapse" title="public">
 <h2>$version</h2>
@@ -342,7 +399,13 @@
 <div class="subelement argument"><code>null</code></div>
 </div></div>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
+</div></div>
 </div>
 <a id="property_percentage"> </a><div class="element clickable property protected property_percentage" data-toggle="collapse" data-target=".property_percentage .collapse" title="protected">
 <h2>Percentage</h2>
@@ -352,7 +415,13 @@
 <div class="subelement argument"></div>
 </div></div>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
+</div></div>
 </div>
 <a id="property_type"> </a><div class="element clickable property protected property_type" data-toggle="collapse" data-target=".property_type .collapse" title="protected">
 <h2>$type</h2>
@@ -364,51 +433,81 @@
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
-<table class="table table-bordered"><tr>
+<table class="table table-bordered">
+<tr>
 <th>type</th>
 <td>string Type of process</td>
-</tr></table>
+</tr>
+<tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr>
+</table>
 </div></div>
 </div>
-<a id="property__finish"> </a><div class="element clickable property private property__finish" data-toggle="collapse" data-target=".property__finish .collapse" title="private">
+<a id="property_finish"> </a><div class="element clickable property private property_finish" data-toggle="collapse" data-target=".property_finish .collapse" title="private">
 <h2>Array of Finish Task</h2>
-<pre>$_finish : array</pre>
+<pre>$finish : array</pre>
 <div class="row collapse"><div class="detail-description">
 <h3>Default</h3>
 <div class="subelement argument"><code>array()</code></div>
 </div></div>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
+</div></div>
 </div>
-<a id="property__isimport"> </a><div class="element clickable property private property__isimport" data-toggle="collapse" data-target=".property__isimport .collapse" title="private">
+<a id="property_isimport"> </a><div class="element clickable property private property_isimport" data-toggle="collapse" data-target=".property_isimport .collapse" title="private">
 <h2>If was inported</h2>
-<pre>$_isimport : integer</pre>
+<pre>$isimport : integer</pre>
 <div class="row collapse"><div class="detail-description">
 <h3>Default</h3>
 <div class="subelement argument"><code>0</code></div>
 </div></div>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
+</div></div>
 </div>
-<a id="property__versionStack"> </a><div class="element clickable property private property__versionStack" data-toggle="collapse" data-target=".property__versionStack .collapse" title="private">
+<a id="property_versionStack"> </a><div class="element clickable property private property_versionStack" data-toggle="collapse" data-target=".property_versionStack .collapse" title="private">
 <h2>The pre versions to process</h2>
-<pre>$_versionStack : array</pre>
+<pre>$versionStack : array</pre>
 <div class="row collapse"><div class="detail-description">
 <h3>Default</h3>
 <div class="subelement argument"><code>array()</code></div>
 </div></div>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
+</div></div>
 </div>
-<a id="property__versionSwitch"> </a><div class="element clickable property private property__versionSwitch" data-toggle="collapse" data-target=".property__versionSwitch .collapse" title="private">
+<a id="property_versionSwitch"> </a><div class="element clickable property private property_versionSwitch" data-toggle="collapse" data-target=".property_versionSwitch .collapse" title="private">
 <h2>The pre versions to process</h2>
-<pre>$_versionSwitch : array</pre>
+<pre>$versionSwitch : array</pre>
 <div class="row collapse"><div class="detail-description">
 <h3>Default</h3>
 <div class="subelement argument"><code>null</code></div>
 </div></div>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr></table>
+</div></div>
 </div>
 </div>
 </div>
@@ -417,7 +516,7 @@
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2016-06-04T14:02:35-05:00.<br></footer></div>
+            generated on 2016-10-17T19:38:08-05:00.<br></footer></div>
 </div>
 </body>
 </html>

@@ -23,6 +23,7 @@
 <li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
 <li><a href="../packages/BibleStudy.Admin.html"><i class="icon-folder-open"></i> BibleStudy.Admin</a></li>
 <li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
 </ul>
 </li>
 <li class="dropdown" id="charts-menu">
@@ -33,7 +34,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">175</span></a></li>
+                <span class="label label-info">184</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -85,8 +86,8 @@ generate the dropdown box of template types.</span><pre>loadTmplTypesOption()</p
 </li>
 <li class="nav-header private">» Private
                     <ul>
-<li class="property private "><a href="#property__DBO" title="$_DBO() :: DBO"><span class="description"></span><pre>$_DBO</pre></a></li>
-<li class="property private "><a href="#property__tags" title="$_tags() :: Tags"><span class="description"></span><pre>$_tags</pre></a></li>
+<li class="property private "><a href="#property_DBO" title="$DBO() :: DBO"><span class="description"></span><pre>$DBO</pre></a></li>
+<li class="property private "><a href="#property_tags" title="$tags() :: Tags"><span class="description"></span><pre>$tags</pre></a></li>
 </ul>
 </li>
 </ul>
@@ -124,7 +125,13 @@ generate the dropdown box of template types.</span><pre>loadTmplTypesOption()</p
 <h2>Builds arrays of all the possible tags.</h2>
 <pre>__construct() </pre>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.5</td>
+</tr></table>
+</div></div>
 </div>
 <a id="method_buildSqlSELECT"></a><div class="element clickable method public method_buildSqlSELECT " data-toggle="collapse" data-target=".method_buildSqlSELECT .collapse" title="public">
 <h2>Builds list of fields to be used in the SELECT statement, so only the fields required
@@ -133,6 +140,10 @@ by the template are selected</h2>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.5</td>
+</tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$fields</h4>
@@ -147,10 +158,16 @@ by the template are selected</h2>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
-<table class="table table-bordered"><tr>
+<table class="table table-bordered">
+<tr>
 <th>staticvar</th>
 <td>bibleStudyTemplate $instance</td>
-</tr></table>
+</tr>
+<tr>
+<th>since</th>
+<td>1.5</td>
+</tr>
+</table>
 <h3>Returns</h3>
 <div class="subelement response"><code>\JBSMTemplate</code></div>
 </div></div>
@@ -161,6 +178,10 @@ by the template are selected</h2>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.5</td>
+</tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$itemTmpl</h4>
@@ -182,6 +203,10 @@ generate the dropdown box of template types.</h2>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.5</td>
+</tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$DefaultSelected</h4>
@@ -197,6 +222,10 @@ generate the dropdown box of template types.</h2>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.5</td>
+</tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$id</h4>
@@ -212,6 +241,10 @@ generate the dropdown box of template types.</h2>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.5</td>
+</tr></table>
 <h3>Returns</h3>
 <div class="subelement response"><code>string</code></div>
 </div></div>
@@ -226,7 +259,13 @@ generate the dropdown box of template types.</h2>
 <div class="subelement argument"><code>'com_biblestudy'</code></div>
 </div></div>
 <div class="labels"><span class="label">Static</span></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.5</td>
+</tr></table>
+</div></div>
 </div>
 <a id="property_tmplTypes"> </a><div class="element clickable property protected property_tmplTypes" data-toggle="collapse" data-target=".property_tmplTypes .collapse" title="protected">
 <h2>Template types</h2>
@@ -236,27 +275,45 @@ generate the dropdown box of template types.</h2>
 <div class="subelement argument"><code>array('tmplList' => 'List', 'tmplListItem' => 'List Item', 'tmplSingleItem' => 'Single Item', 'tmplModuleList' => 'Module List', 'tmplModuleItem' => 'Module List Item', 'tmplPopup' => 'Popup Media Player')</code></div>
 </div></div>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.5</td>
+</tr></table>
+</div></div>
 </div>
-<a id="property__DBO"> </a><div class="element clickable property private property__DBO" data-toggle="collapse" data-target=".property__DBO .collapse" title="private">
+<a id="property_DBO"> </a><div class="element clickable property private property_DBO" data-toggle="collapse" data-target=".property_DBO .collapse" title="private">
 <h2>DBO</h2>
-<pre>$_DBO : string</pre>
+<pre>$DBO : \JDatabaseDriver</pre>
 <div class="row collapse"><div class="detail-description">
 <h3>Default</h3>
 <div class="subelement argument"></div>
 </div></div>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.5</td>
+</tr></table>
+</div></div>
 </div>
-<a id="property__tags"> </a><div class="element clickable property private property__tags" data-toggle="collapse" data-target=".property__tags .collapse" title="private">
+<a id="property_tags"> </a><div class="element clickable property private property_tags" data-toggle="collapse" data-target=".property_tags .collapse" title="private">
 <h2>Tags</h2>
-<pre>$_tags : string</pre>
+<pre>$tags : array</pre>
 <div class="row collapse"><div class="detail-description">
 <h3>Default</h3>
 <div class="subelement argument"></div>
 </div></div>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.5</td>
+</tr></table>
+</div></div>
 </div>
 </div>
 </div>
@@ -265,7 +322,7 @@ generate the dropdown box of template types.</h2>
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2016-06-04T14:02:34-05:00.<br></footer></div>
+            generated on 2016-10-17T19:38:07-05:00.<br></footer></div>
 </div>
 </body>
 </html>

@@ -120,55 +120,57 @@ $input  = $app->input;
 					<?php endforeach; ?>
 				</div>
 				<div class="tab-pane" id="list">
-					<div id="list-sliders" class="tabbable tabs-left">
-						<ul class="nav nav-tabs">
-							<li class="active">
-								<a href="#list-1" data-toggle="tab">
-									<?php echo JText::_('JBS_TPL_VERSES_DATES_CSS'); ?>
-								</a>
-							</li>
-							<li class="">
-								<a href="#list-2" data-toggle="tab">
-									<?php echo JText::_('JBS_TPL_LIST_ITEMS'); ?>
-								</a>
-							</li>
-							<li class="">
-								<a href="#list-3" data-toggle="tab">
-									<?php echo JText::_('JBS_TPL_FILTERS'); ?>
-								</a>
-							</li>
-							<li class="">
-								<a href="#list-10" data-toggle="tab">
-									<?php echo JText::_('JBS_TPL_DISPLAY_ITEMS1'); ?>
-								</a>
-							</li>
-							<li class="">
-								<a href="#list-11" data-toggle="tab">
-									<?php echo JText::_('JBS_TPL_DISPLAY_ITEMS2'); ?>
-								</a>
-							</li>
-							<li class="">
-								<a href="#list-12" data-toggle="tab">
-									<?php echo JText::_('JBS_TPL_DISPLAY_ITEMS3'); ?>
-								</a>
-							</li>
-							<li class="">
-								<a href="#list-13" data-toggle="tab">
-									<?php echo JText::_('JBS_TPL_DISPLAY_ITEMS4'); ?>
-								</a>
-							</li>
-							<li class="">
-								<a href="#list-14" data-toggle="tab">
-									<?php echo JText::_('JBS_TPL_DISPLAY_ITEMS5'); ?>
-								</a>
-							</li>
-							<li class="">
-								<a href="#list-15" data-toggle="tab">
-									<?php echo JText::_('JBS_TPL_DISPLAY_ITEMS6'); ?>
-								</a>
-							</li
-						</ul>
-						<div class="tab-content">
+					<div id="list-sliders">
+						<div class="span2">
+							<ul class="nav nav-pills nav-stacked">
+								<li class="active">
+									<a href="#list-1" data-toggle="tab">
+										<?php echo JText::_('JBS_TPL_VERSES_DATES_CSS'); ?>
+									</a>
+								</li>
+								<li class="">
+									<a href="#list-2" data-toggle="tab">
+										<?php echo JText::_('JBS_TPL_LIST_ITEMS'); ?>
+									</a>
+								</li>
+								<li class="">
+									<a href="#list-3" data-toggle="tab">
+										<?php echo JText::_('JBS_TPL_FILTERS'); ?>
+									</a>
+								</li>
+								<li class="">
+									<a href="#list-10" data-toggle="tab">
+										<?php echo JText::_('JBS_TPL_DISPLAY_ITEMS1'); ?>
+									</a>
+								</li>
+								<li class="">
+									<a href="#list-11" data-toggle="tab">
+										<?php echo JText::_('JBS_TPL_DISPLAY_ITEMS2'); ?>
+									</a>
+								</li>
+								<li class="">
+									<a href="#list-12" data-toggle="tab">
+										<?php echo JText::_('JBS_TPL_DISPLAY_ITEMS3'); ?>
+									</a>
+								</li>
+								<li class="">
+									<a href="#list-13" data-toggle="tab">
+										<?php echo JText::_('JBS_TPL_DISPLAY_ITEMS4'); ?>
+									</a>
+								</li>
+								<li class="">
+									<a href="#list-14" data-toggle="tab">
+										<?php echo JText::_('JBS_TPL_DISPLAY_ITEMS5'); ?>
+									</a>
+								</li>
+								<li class="">
+									<a href="#list-15" data-toggle="tab">
+										<?php echo JText::_('JBS_TPL_DISPLAY_ITEMS6'); ?>
+									</a>
+								</li>
+							</ul>
+						</div>
+						<div class="tab-content span10">
 							<div class="tab-pane active" id="list-1">
 								<?php foreach ($this->form->getFieldset('VERSES') as $field): ?>
 									<div class="control-group">
@@ -300,45 +302,47 @@ $input  = $app->input;
 					</div>
 				</div>
 				<div class="tab-pane" id="details">
-					<div id="details-sliders" class="tabbable tabs-left">
-						<ul class="nav nav-tabs">
-							<li class="active">
-								<a href="#details-1" data-toggle="tab">
-									<?php echo JText::_('JBS_TPL_DETAILS_VIEW'); ?>
-								</a>
-							</li>
-							<li class="">
-								<a href="#details-2" data-toggle="tab">
-									<?php echo JText::_('JBS_TPL_DISPLAY_ITEMS1'); ?>
-								</a>
-							</li>
-							<li class="">
-								<a href="#details-3" data-toggle="tab">
-									<?php echo JText::_('JBS_TPL_DISPLAY_ITEMS2'); ?>
-								</a>
-							</li>
-							<li class="">
-								<a href="#details-4" data-toggle="tab">
-									<?php echo JText::_('JBS_TPL_DISPLAY_ITEMS3'); ?>
-								</a>
-							</li>
-							<li class="">
-								<a href="#details-5" data-toggle="tab">
-									<?php echo JText::_('JBS_TPL_DISPLAY_ITEMS4'); ?>
-								</a>
-							</li>
-							<li class="">
-								<a href="#details-6" data-toggle="tab">
-									<?php echo JText::_('JBS_TPL_DISPLAY_ITEMS5'); ?>
-								</a>
-							</li>
-							<li class="">
-								<a href="#details-7" data-toggle="tab">
-									<?php echo JText::_('JBS_TPL_DISPLAY_ITEMS6'); ?>
-								</a>
-							</li>
-						</ul>
-						<div class="tab-content">
+					<div id="details-sliders">
+						<div class="span2">
+							<ul class="nav nav-pills nav-stacked">
+								<li class="active">
+									<a href="#details-1" data-toggle="tab">
+										<?php echo JText::_('JBS_TPL_DETAILS_VIEW'); ?>
+									</a>
+								</li>
+								<li class="">
+									<a href="#details-2" data-toggle="tab">
+										<?php echo JText::_('JBS_TPL_DISPLAY_ITEMS1'); ?>
+									</a>
+								</li>
+								<li class="">
+									<a href="#details-3" data-toggle="tab">
+										<?php echo JText::_('JBS_TPL_DISPLAY_ITEMS2'); ?>
+									</a>
+								</li>
+								<li class="">
+									<a href="#details-4" data-toggle="tab">
+										<?php echo JText::_('JBS_TPL_DISPLAY_ITEMS3'); ?>
+									</a>
+								</li>
+								<li class="">
+									<a href="#details-5" data-toggle="tab">
+										<?php echo JText::_('JBS_TPL_DISPLAY_ITEMS4'); ?>
+									</a>
+								</li>
+								<li class="">
+									<a href="#details-6" data-toggle="tab">
+										<?php echo JText::_('JBS_TPL_DISPLAY_ITEMS5'); ?>
+									</a>
+								</li>
+								<li class="">
+									<a href="#details-7" data-toggle="tab">
+										<?php echo JText::_('JBS_TPL_DISPLAY_ITEMS6'); ?>
+									</a>
+								</li>
+							</ul>
+						</div>
+						<div class="tab-content span10">
 							<div class="tab-pane active" id="details-1">
 								<?php foreach ($this->form->getFieldset('DETAILS') as $field): ?>
 									<div class="control-group">
@@ -451,20 +455,22 @@ $input  = $app->input;
 					<?php endforeach; ?>
 				</div>
 				<div class="tab-pane" id="series">
-					<div id="details-sliders" class="tabbable tabs-left">
-						<ul class="nav nav-tabs">
-							<li class="active">
-								<a href="#serieslist" data-toggle="tab">
-									<?php echo JText::_('JBS_TPL_SERIESLIST'); ?>
-								</a>
-							</li>
-							<li class="">
-								<a href="#seriesdetails" data-toggle="tab">
-									<?php echo JText::_('JBS_TPL_SERIESDETAILS'); ?>
-								</a>
-							</li>
-						</ul>
-						<div class="tab-content">
+					<div id="details-sliders">
+						<div class="span2">
+							<ul class="nav nav-pills nav-stacked">
+								<li class="active">
+									<a href="#serieslist" data-toggle="tab">
+										<?php echo JText::_('JBS_TPL_SERIESLIST'); ?>
+									</a>
+								</li>
+								<li class="">
+									<a href="#seriesdetails" data-toggle="tab">
+										<?php echo JText::_('JBS_TPL_SERIESDETAILS'); ?>
+									</a>
+								</li>
+							</ul>
+						</div>
+						<div class="tab-content span10">
 							<div class="tab-pane active" id="serieslist">
 								<?php foreach ($this->form->getFieldset('SERIES') as $field): ?>
 									<div class="control-group">

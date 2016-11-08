@@ -1613,7 +1613,7 @@ class JBSMListing
 				}
 				else
 				{
-					(isset($item->messaget_type) ? $data = $item->message_type : $data = '');
+					(isset($item->message_type) ? $data = $item->message_type : $data = '');
 				}
 				break;
 			case $extra . 'thumbnail':
@@ -2756,7 +2756,7 @@ class JBSMListing
 
 		if ($sharetype == 1)
 		{
-			$shareit .= '<div class="span2 pull-right">
+			$shareit .= '<div class="pull-right">
 						<!-- AddThis Button BEGIN -->
 						<a class="addthis_button" href="//www.addthis.com/bookmark.php?v=250">
 						<img src="//s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" border="0" alt="Share" />

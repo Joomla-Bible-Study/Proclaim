@@ -149,46 +149,52 @@ class JBSMHelper
 	}
 
 	/**
-	 * Media Build URL Fix up for '/' and protical.
+	 * Media Build URL Fix up for '/' and protocol.
 	 *
 	 * @param   string    $spath        Server Path
 	 * @param   string    $path         File
 	 * @param   Registry  $params       Parameters.
 	 * @param   bool      $setProtocol  True add protocol els no
+	 * @param   bool      $local        Local server
 	 *
 	 * @return string Completed path.
 	 *
 	 * @since 9.0.3
 	 */
-	public static function MediaBuildUrl ($spath, $path, $params, $setProtocol = false)
+	public static function MediaBuildUrl($spath, $path, $params, $setProtocol = false, $local = false)
 	{
-		$spath = rtrim($spath, '/');
-		$path = ltrim($path, '/');
+		$spath    = rtrim($spath, '/');
+		$path     = ltrim($path, '/');
+		$host     = $_SERVER['HTTP_HOST'];
+		$protocol = JUri::root();
 
-		// Check to make sure a '/' is not in the start of the path.
-		if (!JBSMBibleStudyHelper::endsWith($spath, '/')
-			&& !JBSMBibleStudyHelper::startsWith($path, '/')
-			&& !substr_count($path, '://')
-			&& !substr_count($path, '//'))
+		// To see if the server is local
+		if (strpos($spath, $host) !== false)
 		{
-			// $path  = ltrim($path, '/');
+			$local = true;
 		}
 
 		if (!substr_count($path, '://') && !substr_count($path, '//') && $setProtocol)
 		{
 			if (empty($spath))
 			{
-				$spath = JUri::base();
-
-				return $spath . $path;
+				return $protocol . $path;
 			}
 			elseif (substr_count($spath, '://') || substr_count($spath, '//') && !empty($spath))
 			{
 				return $spath . '/' . $path;
 			}
 
-			$protocol = $params->get('protocol', '//');
-			$path     = $protocol . $spath . '/' . $path;
+			// Set Protocol based on server status
+			if (!$local)
+			{
+				$protocol = $params->get('protocol', '//');
+				$path     = $protocol . $spath . '/' . $path;
+			}
+			else
+			{
+				$path = $protocol . $path;
+			}
 		}
 		elseif (!substr_count($spath, '://') && !substr_count($spath, '//') && !empty($spath))
 		{
