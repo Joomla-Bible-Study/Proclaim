@@ -18,7 +18,3 @@
 .fancybox-type-iframe .fancybox-prev {
     left: -60px;
 }
-
-[class^="fancybox-"] {
-    display: block !important;
-}
