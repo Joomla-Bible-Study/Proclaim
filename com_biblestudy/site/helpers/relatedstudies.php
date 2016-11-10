@@ -74,17 +74,19 @@ class JBSMRelatedStudies
 		{
 			foreach ($studies as $study)
 			{
-				if (isset($study->params) && is_string($study->params))
+				if (is_string($study->params) && !empty($study->params))
 				{
-					$registry      = new Registry;
-					$study->params = str_replace('\"', '"', $study->params);
+					$registry = new Registry;
+					$errors = ['\\"', '\"', "\'"];
+					$correct = ['"', '"', "'"];
+					$study->params = str_replace($errors, $correct, $study->params);
 					$registry->loadString($study->params);
 					$sparams = $registry;
 					$compare = $sparams->get('metakey');
 				}
 				else
 				{
-					$compare = '';
+					$compare = null;
 				}
 
 				if ($compare)
