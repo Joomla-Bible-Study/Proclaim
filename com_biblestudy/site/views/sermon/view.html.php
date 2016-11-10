@@ -252,7 +252,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		$relatedstudies     = new JBSMRelatedStudies;
 
 		$template      = $this->get('template');
-		$this->related = $relatedstudies->getRelated($this->item, $this->item->params);
+		$this->related = $relatedstudies->getRelated($this->item, $item->params);
 
 		JHtml::_('biblestudy.framework');
 		JHtml::_('biblestudy.loadCss', $this->params, null, 'font-awesome');
