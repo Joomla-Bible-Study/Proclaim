@@ -213,6 +213,7 @@ class BiblestudyModelMessage extends JModelAdmin
 		/** @var Joomla\Registry\Registry $params */
 		$params = JBSMParams::getAdmin()->params;
 		$input  = JFactory::getApplication()->input;
+		$path   = 'images/biblestudy/studies/' . $data['id'];
 
 		$this->cleanCache();
 
@@ -221,8 +222,6 @@ class BiblestudyModelMessage extends JModelAdmin
 			$data['id'] = $input->get('a_id');
 		}
 
-		$path = 'images/biblestudy/studies/' . $data['id'];
-
 		// If no image uploaded, just save data as usual
 		if (empty($data['image']) || strpos($data['image'], 'thumb_') !== false)
 		{
@@ -230,6 +229,11 @@ class BiblestudyModelMessage extends JModelAdmin
 			{
 				// Modify model data if no image is set.
 				$data['thumbnailm']     = "";
+			}
+			else
+			{
+				// Modify model data
+				$data['thumbnailm'] = $path . '/thumb_' . basename($data['image']);
 			}
 
 			return parent::save($data);
