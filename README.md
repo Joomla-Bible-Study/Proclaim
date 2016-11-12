@@ -14,7 +14,7 @@ Status
     <tr>
         <td align="center"><a href="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study" target="_blank"><img src="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=development"/></a></td>
         <td align="center">Development</td>
-        <td align="center">9.0.7</td>
+        <td align="center">9.0.8</td>
         <td align="center">TBD</td>
         <td align="center">3.4+</td>
     </tr>
