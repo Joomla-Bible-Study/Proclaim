@@ -179,7 +179,7 @@ class BiblestudyModelMessage extends JModelAdmin
 		$query->select('m.id, m.language, m.published, m.createdate, m.params');
 		$query->from('#__bsms_mediafiles AS m');
 		$query->where('m.study_id = ' . (int) $this->getItem()->id);
-		$query->where('m.published = 0 OR m.published = 1');
+		$query->where('("m.published = 0 OR m.published = 1")');
 		$query->order('m.createdate DESC');
 
 		// Join over the asset groups.
