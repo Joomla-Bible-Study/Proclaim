@@ -70,22 +70,39 @@ class JBSMRelatedStudies
 
 		$studies = $this->getStudies();
 
-		foreach ($studies as $study)
+		if (!empty($studies))
 		{
-			$registry = new Registry;
-			$registry->loadString($study->params);
-			$sparams = $registry;
-			$compare = $sparams->get('metakey');
-
-			if ($compare)
+			foreach ($studies as $study)
 			{
-				$this->parseKeys($keywords, $compare, $study->id);
-			}
+				if (is_string($study->params) && !empty($study->params))
+				{
+					$registry = new Registry;
+					$errors = ['\\"', '\"', "\'"];
+					$correct = ['"', '"', "'"];
+					$study->params = str_replace($errors, $correct, $study->params);
+					$registry->loadString($study->params);
+					$sparams = $registry;
+					$compare = $sparams->get('metakey');
+				}
+				else
+				{
+					$compare = null;
+				}
 
-			if ($study->tp_id)
-			{
-				$this->parseKeys($topicslist, $study->tp_id, $study->id);
+				if ($compare)
+				{
+					$this->parseKeys($keywords, $compare, $study->id);
+				}
+
+				if ($study->tp_id)
+				{
+					$this->parseKeys($topicslist, $study->tp_id, $study->id);
+				}
 			}
+		}
+		else
+		{
+			return false;
 		}
 
 		// Only one item in score here

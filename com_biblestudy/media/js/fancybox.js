@@ -54,7 +54,7 @@
 				closeEffect: 'none',
 				content: '<div id="video_container">Loading the player ... </div>' +
 				'<a href="index.php?option=com_biblestudy&amp;player=' + ptype + '&amp;view=popup&amp;mediaid=' + contentPanelId +
-				'&amp;tmpl=component" target="_blank">' + potext + '</a>',
+				'&amp;tmpl=component" onclick="parent.jQuery.fancybox.close()" target="_blank">' + potext + '</a>',
 				afterShow: function () {
 					jwplayer("video_container").setup({
 						file: myVideo,

@@ -113,6 +113,7 @@ class BiblestudyModelSerie extends JModelAdmin
 		/** @var Joomla\Registry\Registry $params */
 		$params = JBSMParams::getAdmin()->params;
 		$app    = JFactory::getApplication();
+		$path   = 'images/biblestudy/series/' . $data['id'];
 
 		// Alter the title for save as copy
 		if ($app->input->get('task') == 'save2copy')
@@ -130,11 +131,15 @@ class BiblestudyModelSerie extends JModelAdmin
 				// Modify model data if no image is set.
 				$data['series_thumbnail'] = "";
 			}
+			else
+			{
+				// Modify model data
+				$data['series_thumbnail'] = $path . '/thumb_' . basename($data['image']);
+			}
 
 			return parent::save($data);
 		}
 
-		$path = 'images/biblestudy/series/' . $data['id'];
 		JBSMThumbnail::create($data['image'], $path, $params->get('thumbnail_series_size', 100));
 
 		// Modify model data

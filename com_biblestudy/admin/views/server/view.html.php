@@ -79,7 +79,7 @@ class BiblestudyViewServer extends JViewLegacy
 	public function display($tpl = null)
 	{
 		$this->form        = $this->get("form");
-		$this->server_form = $this->get('ServerForm');
+		$this->server_form = $this->get('AddonServerForm');
 
 		$this->item  = $this->get("Item");
 		$this->state = $this->get("State");

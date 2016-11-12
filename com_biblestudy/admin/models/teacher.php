@@ -158,6 +158,7 @@ class BiblestudyModelTeacher extends JModelAdmin
 	{
 		/** @var Joomla\Registry\Registry $params */
 		$params = JBSMParams::getAdmin()->params;
+		$path   = 'images/biblestudy/teachers/' . $data['id'];
 
 		// If no image uploaded, just save data as usual
 		if (empty($data['image']) || strpos($data['image'], 'thumb_') !== false)
@@ -168,11 +169,16 @@ class BiblestudyModelTeacher extends JModelAdmin
 				$data['teacher_image']     = "";
 				$data['teacher_thumbnail'] = "";
 			}
+			else
+			{
+				// Modify model data
+				$data['teacher_image']     = JPATH_ROOT . '/' . $data['image'];
+				$data['teacher_thumbnail'] = $path . '/thumb_' . basename($data['image']);
+			}
 
 			return parent::save($data);
 		}
 
-		$path = 'images/biblestudy/teachers/' . $data['id'];
 		JBSMThumbnail::create($data['image'], $path, $params->get('thumbnail_teacher_size', 100));
 
 		// Modify model data
