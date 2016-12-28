@@ -77,8 +77,8 @@ class JBSMRelatedStudies
 				if (is_string($study->params) && !empty($study->params))
 				{
 					$registry = new Registry;
-					$errors = ['\\"', '\"', "\'"];
-					$correct = ['"', '"', "'"];
+					$errors  = ['{\\"', '{\"', ',\\"', '\",', ',\"', '\":', ':\"\"', ':\"', '\"}"', '\"}', "\'"];
+					$correct = [  '{"',  '{"',   ',"',  '",',  ',"',  '":',   ':""',  ':"',  '"}"',  '"}', "'"];
 					$study->params = str_replace($errors, $correct, $study->params);
 					$registry->loadString($study->params);
 					$sparams = $registry;
