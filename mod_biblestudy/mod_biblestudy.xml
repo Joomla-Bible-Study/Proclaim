@@ -34,13 +34,14 @@
 				</field>
 				<field name="moduleitems" label="JBS_MDL_ITEMS"
 				       description="JBS_MDL_ITEMS_DESC" default="5" type="text" size="10"/>
-				<field name="use_headers_list" type="radio" default="" label="JBS_MDL_USE_LIST_HEADER"
-				       description="JBS_MDL_USE_LIST_HEADER_DESC">
+				<field name="use_headers_list" type="radio" class="btn-group" default="" label="JBS_MDL_USE_LIST_HEADER"
+				       description="JBS_MDL_USE_LIST_HEADER_DESC" labelclass="control-label">
 					<option value="1">JYES</option>
 					<option value="0">JNO</option>
 				</field>
-				<field name="show_link" type="radio" default=""
-				       label="JBS_MDL_SHOW_COMPONENT" description="JBS_MDL_SHOW_COMPONENT_DESC">
+				<field name="show_link" type="radio" class="btn-group" default=""
+				       label="JBS_MDL_SHOW_COMPONENT" description="JBS_MDL_SHOW_COMPONENT_DESC"
+				       labelclass="control-label">
 					<option value="1">JSHOW</option>
 					<option value="0">JHIDE</option>
 				</field>
@@ -196,6 +197,12 @@
 				       label="JBS_TPL_MEDIA_PROTOCOL" description="JBS_TPL_MEDIA_PROTOCOL_DESC"/>
 			</fieldset>
 			<fieldset name="JBS_MDL_MORE_SETTINGS" label="JBS_MDL_MORE_SETTINGS">
+				<field name="use_headers_module" type="list" default=""
+				       label="JBS_TPL_LISTITEMS_USE_HEADERS_LIST" description="JBS_TPL_LISTITEMS_USE_HEADERS_LIST_DESC">
+					<option value="">JGLOBAL_USE_GLOBAL</option>
+					<option value="0">JBS_TPL_NO_HEADER_ROW</option>
+					<option value="1">JBS_TPL_USE_HEADER_ROW</option>
+				</field>
 				<field name="pageheader" filter="raw" type="editor" rows="10" buttons="true"
 				       cols="75" label="JBS_MDL_HEADER_TEXT" description="JBS_MDL_HEADER_TEXT_DESC"/>
 				<field name="store_page" type="text" default="flypage.tpl"
@@ -229,12 +236,6 @@
 			</fieldset>
 			<fieldset name="JBS_TPL_DISPLAY_ITEMS1" label="JBS_TPL_DISPLAY_ITEMS1"
 			          addfieldpath="/administrator/components/com_biblestudy/models/fields">
-				<field name="use_headers_module" type="list" default=""
-				       label="JBS_TPL_LISTITEMS_USE_HEADERS_LIST" description="JBS_TPL_LISTITEMS_USE_HEADERS_LIST_DESC">
-					<option value="">JGLOBAL_USE_GLOBAL</option>
-					<option value="0">JBS_TPL_NO_HEADER_ROW</option>
-					<option value="1">JBS_TPL_USE_HEADER_ROW</option>
-				</field>
 				<field name="listcolor1" type="color" default="" label="JBS_TPL_LISTCOLOR1" description="JBS_TPL_LISTCOLOR_DESC"/>
 				<field name="listcolor2" type="color" default="" label="JBS_TPL_LISTCOLOR2" description="JBS_TPL_LISTCOLOR_DESC"/>
 
