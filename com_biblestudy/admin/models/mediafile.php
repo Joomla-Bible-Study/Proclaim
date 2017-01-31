@@ -107,7 +107,8 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 			if (isset($params->toObject()->size) && $params->get('size', '0') == '0')
 			{
-				$table = new TableServer(JFactory::getDbo());
+				$jdb   = JFactory::getDbo();
+				$table = new TableServer($jdb);
 				$table->load($data['server_id']);
 
 				$path = new Registry;
