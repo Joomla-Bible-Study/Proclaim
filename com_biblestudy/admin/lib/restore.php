@@ -308,14 +308,7 @@ class JBSMRestore
 		$app = JFactory::getApplication();
 
 		// Get the uploaded file information
-		if (JBSMDEBUG)
-		{
-			$userfile = $_FILES['importdb'];
-		}
-		else
-		{
-			$userfile = $app->input->files->get('importdb');
-		}
+		$userfile = $_FILES['importdb'];
 
 		// Make sure that file uploads are enabled in php
 		if (!(bool) ini_get('file_uploads'))
