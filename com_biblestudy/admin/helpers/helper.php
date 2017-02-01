@@ -101,6 +101,23 @@ class JBSMHelper
 	 */
 	public static function getRemoteFileSize($url)
 	{
+		if (empty($url))
+		{
+			return 0;
+		}
+
+		if (!substr_count($url, 'http://') && !substr_count($url, 'https://'))
+		{
+			if (substr_count($url, '//'))
+			{
+				$url = 'http:' . $url;
+			}
+			elseif (!substr_count($url, '//'))
+			{
+				$url = 'http://' . $url;
+			}
+		}
+
 		$parsed = parse_url($url);
 		$host   = $parsed["host"];
 		$fp     = null;
@@ -130,6 +147,7 @@ class JBSMHelper
 		@fclose($fp);
 		$return      = false;
 		$arr_headers = explode("\n", $headers);
+		var_dump($arr_headers);
 
 		if (strpos($arr_headers[0], '200'))
 		{
@@ -161,17 +179,35 @@ class JBSMHelper
 	 *
 	 * @since 9.0.3
 	 */
-	public static function MediaBuildUrl($spath, $path, $params, $setProtocol = false, $local = false)
+	public static function MediaBuildUrl($spath, $path, $params, $setProtocol = false, $local = false, $podcast = false)
 	{
 		$spath    = rtrim($spath, '/');
 		$path     = ltrim($path, '/');
 		$host     = $_SERVER['HTTP_HOST'];
 		$protocol = JUri::root();
 
+		if (empty($path))
+		{
+			return false;
+		}
+
 		// To see if the server is local
 		if (strpos($spath, $host) !== false)
 		{
 			$local = true;
+		}
+
+		if (substr_count($path, 'http://') && $podcast)
+		{
+			return str_replace('http://', "", $path);
+		}
+		elseif (substr_count($path, 'https://') && $podcast)
+		{
+			return str_replace('https://', "", $path);
+		}
+		elseif (!empty($spath) && $podcast)
+		{
+			return str_replace('//', "", $spath) . $path;
 		}
 
 		if (!substr_count($path, '://') && !substr_count($path, '//') && $setProtocol)
@@ -196,7 +232,7 @@ class JBSMHelper
 				$path = $protocol . $path;
 			}
 		}
-		elseif (!substr_count($spath, '://') && !substr_count($spath, '//') && !empty($spath))
+		elseif (!substr_count($spath, '://') || !substr_count($spath, '//') && !empty($spath))
 		{
 			$path = $spath . '/' . $path;
 		}

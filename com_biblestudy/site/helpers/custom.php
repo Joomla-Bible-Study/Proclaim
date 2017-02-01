@@ -32,6 +32,8 @@ class JBSMCustom
 	 * @return object
 	 *
 	 * @since    8.0.0
+	 *
+	 * @todo Need to fix output as it is not formated to a object. $custom is a string not a object.
 	 */
 	public function getCustom($rowid, $custom, $row, $params, $template)
 	{
