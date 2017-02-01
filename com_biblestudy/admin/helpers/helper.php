@@ -174,6 +174,7 @@ class JBSMHelper
 	 * @param   Registry  $params       Parameters.
 	 * @param   bool      $setProtocol  True add protocol els no
 	 * @param   bool      $local        Local server
+	 * @param   bool      $podcast      True if from a precast
 	 *
 	 * @return string Completed path.
 	 *
