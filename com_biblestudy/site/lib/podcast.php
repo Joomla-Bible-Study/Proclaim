@@ -23,11 +23,6 @@ if (file_exists($api))
 	require_once $api;
 }
 
-//JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
-//JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
-//JLoader::register('JBSMCustom', JPATH_SITE . '/components/com_biblestudy/helpers/custom.php');
-//JLoader::register('JBSMListing', JPATH_SITE . '/components/com_biblestudy/lib/listing.php');
-
 /**
  * BibleStudy Podcast Class
  *
