@@ -168,8 +168,8 @@ class BiblestudyModelTemplates extends JModelList
 		}
 
 		// Add the list ordering clause
-		$orderCol  = $this->state->get('list.ordering');
-		$orderDirn = $this->state->get('list.direction');
+		$orderCol  = $this->state->get('list.ordering', 'template.id');
+		$orderDirn = $this->state->get('list.direction', 'ACS');
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
 		return $query;
