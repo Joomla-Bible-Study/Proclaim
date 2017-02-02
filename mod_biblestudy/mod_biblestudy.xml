@@ -34,12 +34,12 @@
 				</field>
 				<field name="moduleitems" label="JBS_MDL_ITEMS"
 				       description="JBS_MDL_ITEMS_DESC" default="5" type="text" size="10"/>
-				<field name="use_headers_list" type="radio" class="btn-group" default="" label="JBS_MDL_USE_LIST_HEADER"
+				<field name="use_headers_list" type="radio" class="btn-group" default="1" label="JBS_MDL_USE_LIST_HEADER"
 				       description="JBS_MDL_USE_LIST_HEADER_DESC" labelclass="control-label">
 					<option value="1">JYES</option>
 					<option value="0">JNO</option>
 				</field>
-				<field name="show_link" type="radio" class="btn-group" default=""
+				<field name="show_link" type="radio" class="btn-group" default="1"
 				       label="JBS_MDL_SHOW_COMPONENT" description="JBS_MDL_SHOW_COMPONENT_DESC"
 				       labelclass="control-label">
 					<option value="1">JSHOW</option>
@@ -47,7 +47,7 @@
 				</field>
 				<field name="pagetext" type="text" size="50" default="More Bible Studies"
 				       label="JBS_MDL_LINK_TEXT" description="JBS_MDL_LINK_TEXT_DESC"/>
-				<field name="show_verses" type="list" default=""
+				<field name="show_verses" type="list" default="0"
 				       label="JBS_TPL_VERSES_SHOW_VERSES" description="JBS_TPL_VERSES_SHOW_VERSES_DESC">
 					<option value="0">JBS_TPL_SHOW_ONLY_CHAPTERS</option>
 					<option value="1">JBS_TPL_SHOW_VERSES_AND_CHAPTERS</option>
