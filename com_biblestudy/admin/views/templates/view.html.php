@@ -92,10 +92,6 @@ class BiblestudyViewTemplates extends JViewLegacy
 
 		$this->filterForm = $this->get('FilterForm');
 		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'template');
-		$templates        = $this->get('templates');
-		$types[]          = JHtml::_('select.option', '0', JText::_('JBS_CMN_SELECT_TEMPLATE'));
-		$types            = array_merge($types, $templates);
-		$this->templates  = JHtml::_('select.genericlist', $types, 'template_export', 'class="inputbox" size="1" ', 'value', 'text', "$");
 
 		// Levels filter.
 		$options   = array();
