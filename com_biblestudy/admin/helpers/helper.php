@@ -147,7 +147,6 @@ class JBSMHelper
 		@fclose($fp);
 		$return      = false;
 		$arr_headers = explode("\n", $headers);
-		var_dump($arr_headers);
 
 		if (strpos($arr_headers[0], '200'))
 		{
