@@ -207,7 +207,7 @@ class JBSMHelper
 		}
 		elseif (!empty($spath) && $podcast)
 		{
-			return str_replace('//', "", $spath) . $path;
+			return str_replace('//', "", $spath) . '/' . $path;
 		}
 
 		if (!substr_count($path, '://') && !substr_count($path, '//') && $setProtocol)
