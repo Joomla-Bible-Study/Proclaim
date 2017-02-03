@@ -95,7 +95,7 @@ abstract class JHtmlBiblestudy
 
 		if ($font == 'font-awesome')
 		{
-			JHtml::stylesheet('https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css');
+			JHtml::script('https://use.fontawesome.com/ac3aa5180f.js');
 		}
 	}
 

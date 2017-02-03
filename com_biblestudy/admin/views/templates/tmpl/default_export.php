@@ -13,6 +13,13 @@ defined('_JEXEC') or die;
 JHtml::_('bootstrap.framework');
 JHtml::_('behavior.multiselect');
 JHtml::_('formbehavior.chosen', 'select');
+
+// $templates is used to generate export list.
+$templates        = $this->get('templates');
+$types[]          = JHtml::_('select.option', '0', JText::_('JBS_CMN_SELECT_TEMPLATE'));
+$types            = array_merge($types, $templates);
+$this->templates  = JHtml::_('select.genericlist', $types, 'template_export', 'class="inputbox" size="1" ', 'value', 'text', "$");
+
 /**
  * View class for Templates
  *
