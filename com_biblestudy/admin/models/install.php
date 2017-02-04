@@ -5,7 +5,7 @@
  * @package    BibleStudy.Admin
  * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @link       https://www.joomlabiblestudy.org
  * */
 
 defined('_JEXEC') or die;
@@ -1167,7 +1167,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				$updateurl           = new stdClass;
 				$updateurl->name     = 'Joomla Bible Study Package';
 				$updateurl->type     = 'collection';
-				$updateurl->location = 'http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=all&format=xml';
+				$updateurl->location = 'https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=all&format=xml';
 				$updateurl->enabled  = '1';
 				$this->_db->insertObject('#__update_sites', $updateurl);
 				$this->running = 'Set New Update URL';
@@ -1525,17 +1525,17 @@ class BibleStudyModelInstall extends JModelLegacy
 	{
 		$urls = array(
 			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=3&dummy=extension.xml'),
+			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=3&dummy=extension.xml'),
 			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=14&dummy=extension.xml'),
+			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=14&dummy=extension.xml'),
 			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=13&dummy=extension.xml'),
+			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=13&dummy=extension.xml'),
 			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=4&dummy=extension.xml'),
+			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=4&dummy=extension.xml'),
 			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=8&dummy=extension.xml'),
+			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=8&dummy=extension.xml'),
 			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=5&dummy=extension.xml'));
+			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=5&dummy=extension.xml'));
 
 		return $urls;
 	}
