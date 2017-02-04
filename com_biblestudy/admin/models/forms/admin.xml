@@ -208,7 +208,7 @@
 		</fieldset>
 		<fieldset name="jwplayer_pro_standard" label="JBS_ADM_PLAYER_ADMIN_LABLE"
 		          description="JBS_ADM_PLAYER_ADMIN_DESC">
-			<field name="jwplayer_image" type="file" label="JBS_ADM_JWPLAYER_IMAGE"
+			<field name="jwplayer_image" type="media" label="JBS_ADM_JWPLAYER_IMAGE"
 			       description="JBS_ADM_JWPLAYER_IMAGE_DESC"/>
 			<field name="jwplayer_skin" type="skin"
 			       label="JBS_ADM_JWPLAYER_SKIN"
