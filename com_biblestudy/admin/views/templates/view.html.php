@@ -5,7 +5,7 @@
  * @package    BibleStudy.Admin
  * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @link       https://www.joomlabiblestudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -92,10 +92,6 @@ class BiblestudyViewTemplates extends JViewLegacy
 
 		$this->filterForm = $this->get('FilterForm');
 		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'template');
-		$templates        = $this->get('templates');
-		$types[]          = JHtml::_('select.option', '0', JText::_('JBS_CMN_SELECT_TEMPLATE'));
-		$types            = array_merge($types, $templates);
-		$this->templates  = JHtml::_('select.genericlist', $types, 'template_export', 'class="inputbox" size="1" ', 'value', 'text', "$");
 
 		// Levels filter.
 		$options   = array();

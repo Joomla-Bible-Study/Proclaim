@@ -5,7 +5,7 @@
  * @package    BibleStudy.Admin
  * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @link       https://www.joomlabiblestudy.org
  * */
 
 defined('_JEXEC') or die;
@@ -22,11 +22,6 @@ if (file_exists($api))
 {
 	require_once $api;
 }
-
-JLoader::register('JBSMParams', BIBLESTUDY_PATH_ADMIN_HELPERS . '/params.php');
-JLoader::register('JBSMDbHelper', JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
-JLoader::register('JBSMCustom', JPATH_SITE . '/components/com_biblestudy/helpers/custom.php');
-JLoader::register('JBSMListing', JPATH_SITE . '/components/com_biblestudy/lib/listing.php');
 
 /**
  * BibleStudy Podcast Class
@@ -364,7 +359,8 @@ class JBSMPodcast
 						$episodedetailtemp = '
                         	   <item>
                         		<title>' . $title . '</title>';
-						$path = JBSMHelper::MediaBuildUrl($episode->srparams->get('path'), str_replace(' ', "%20", $episode->params->get('filename')), $params);
+						$file = str_replace(' ', "%20", $episode->params->get('filename'));
+						$path = JBSMHelper::MediaBuildUrl($episode->srparams->get('path'), $file, $params, false, false, true);
 
 						/*
 						 * Default is to episode

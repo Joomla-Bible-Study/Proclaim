@@ -5,7 +5,7 @@
  * @package    BibleStudy.Admin
  * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @link       https://www.joomlabiblestudy.org
  * */
 defined('JPATH_BASE') or die;
 
@@ -95,7 +95,7 @@ abstract class JHtmlBiblestudy
 
 		if ($font == 'font-awesome')
 		{
-			JHtml::stylesheet('https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css');
+			JHtml::script('https://use.fontawesome.com/ac3aa5180f.js');
 		}
 	}
 

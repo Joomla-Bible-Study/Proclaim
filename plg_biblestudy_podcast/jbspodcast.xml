@@ -3,10 +3,10 @@
     <name>JBS_PLG_PODCAST</name>
     <author>Joomla Bible Study Team</author>
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
-    <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
+    <authorUrl>https://www.joomlabiblestudy.org</authorUrl>
     <copyright>(C) 2007 - 2016 Joomla Bible Study All rights reserved.</copyright>
-    <version>9.0.8</version>
-    <creationDate>November 13, 2016</creationDate>
+    <version>9.0.10</version>
+    <creationDate>February 2, 2017</creationDate>
     <license>http://www.gnu.org/licenses/gpl.html</license>
     <description>JBS_PLG_PODCAST_XML_DESCRIPTION</description>
 
@@ -459,7 +459,7 @@
     <!-- UPDATESERVER DEFINITION -->
     <updateservers>
         <!-- Note: No spaces or linebreaks allowed between the server tags -->
-        <server type="extension" priority="1" name="Joomla Bible Study Podcast Plg"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=8]]></server>
+        <server type="extension" priority="1" name="Joomla Bible Study Podcast Plg"><![CDATA[https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=8]]></server>
     </updateservers>
     <!-- Tables -->
     <!-- These are used for backups to determine which tables to backup; ones

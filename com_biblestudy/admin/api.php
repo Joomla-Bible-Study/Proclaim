@@ -5,7 +5,7 @@
  * @package    BibleStudy.Admin
  * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @link       https://www.joomlabiblestudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -19,7 +19,7 @@ if (defined('JBSM_LOADED'))
 define('JBSM_PROFILER', 0);
 
 // Version information
-define('BIBLESTUDY_VERSION', '9.0.8');
+define('BIBLESTUDY_VERSION', '9.0.10');
 define('BIBLESTUDY_VERSION_UPDATEFILE', 'JBS Version ' . BIBLESTUDY_VERSION);
 
 // Default values

@@ -5,7 +5,7 @@
  * @package    BibleStudy.Admin
  * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @link       https://www.joomlabiblestudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -25,12 +25,13 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	 *
 	 * @param   string  $name    The name of the model
 	 * @param   string  $prefix  The prefix for the PHP class name
+	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return JModel
+	 * @return bool|JModelLegacy
 	 *
 	 * @since 7.0.0
 	 */
-	public function getModel($name = 'Template', $prefix = 'BiblestudyModel')
+	public function getModel($name = 'Template', $prefix = 'BiblestudyModel', $config = array())
 	{
 		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
 
@@ -40,7 +41,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	/**
 	 * Import Template
 	 *
-	 * @return boolean
+	 * @return bool|JControllerLegacy
 	 *
 	 * @since 8.0
 	 */
@@ -296,7 +297,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	/**
 	 * Export the Template
 	 *
-	 * @return boolean
+	 * @return bool|JControllerLegacy
 	 *
 	 * @since 8.0
 	 */
