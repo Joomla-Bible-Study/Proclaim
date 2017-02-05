@@ -21,4 +21,21 @@ JLoader::register('BiblestudyModelMessages', JPATH_ADMINISTRATOR . '/components/
  */
 class BiblestudyModelPodcastlist extends JModelList
 {
+
+	/**
+	 * Build an SQL query to load the list data
+	 *
+	 * @return  JDatabaseQuery
+	 *
+	 * @since   7.0
+	 */
+	protected function getListQuery()
+	{
+		$user            = JFactory::getUser();
+		$groups          = implode(',', $user->getAuthorisedViewLevels());
+		$db              = $this->getDbo();
+		$query           = parent::getListQuery();
+
+		return $query;
+	}
 }
