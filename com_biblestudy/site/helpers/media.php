@@ -593,8 +593,17 @@ class JBSMMedia
 							$player->boxplayerheight = '40';
 						}
 
+						if ($params->get('media_popout_yes', true))
+						{
+							$popout = $params->get('media_popout_text', JText::_('JBS_CMN_POPOUT'));
+						}
+						else
+						{
+							$popout = '';
+						}
+
 						$playercode = '<a href="' . $path . '" id="linkmedia' . $media->id . '" title="' . $params->get('filename') .
-								'" class="fancybox fancybox_jwplayer" potext="' . JText::_('JBS_CMN_POPOUT') . '" ptype="' . $player->player .
+								'" class="fancybox fancybox_jwplayer" potext="' . $popout . '" ptype="' . $player->player .
 							'" pwidth="' . $player->playerwidth . '" bheight="' . $player->boxplayerheight . '" pheight="' .
 							$player->playerheight . '" autostart="' . $params->get('autostart', false) . '">' . $image . '</a>';
 

@@ -185,6 +185,14 @@
 				<field name="popupimage" type="text" size="150"
 				       default="media/com_biblestudy/images/speaker24.png" label="JBS_TPL_MEDIA_POPUPIMAGE"
 				       description="JBS_TPL_MEDIA_POPUPIMAGE_DESC"/>
+				<field name="media_popout_yes" type="radio" default="" class="btn-group"
+				       label="JBS_MED_MEDIA_POPOUT_YES" description="JBS_MED_MEDIA_POPOUT_YES_DESC" >
+					<option value="">JGLOBAL_USE_GLOBAL</option>
+					<option value="false">JNO</option>
+					<option value="true">JYES</option>
+				</field>
+				<field name="media_popout_text" type="text" default="" placeholder="Text to use for pop out button"
+				       label="JBS_MED_MEDIA_POPOUT_TEXT" description="JBS_MED_MEDIA_POPOUT_TEXT_DESC" />
 				<field name="show_filesize" type="list" default=""
 				       label="JBS_TPL_MEDIA_SHOW_FILESIZE" description="JBS_TPL_MEDIA_SHOW_FILESIZE_DESC">
 					<option value="">JGLOBAL_USE_GLOBAL</option>

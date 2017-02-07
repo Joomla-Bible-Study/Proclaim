@@ -173,6 +173,10 @@ and open the template in the editor.
     <table class="sample">
         <th colspan="2">Sermon List Codes</th>
         <tr>
+            <td>List Introduction</td>
+            <td><input type="text" size="75" onClick="this.select();" value="echo $this->params->get('list_intro');"/></td>
+        </tr>
+        <tr>
             <td>Popular Study Drop Down</td>
             <td><input type="text" size="75" onClick="this.select();" value="echo $this->page->popular;"/></td>
         </tr>
