@@ -5,7 +5,7 @@
  * @package    BibleStudy.Admin
  * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @link       https://www.joomlabiblestudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -593,8 +593,17 @@ class JBSMMedia
 							$player->boxplayerheight = '40';
 						}
 
+						if ($params->get('media_popout_yes', true))
+						{
+							$popout = $params->get('media_popout_text', JText::_('JBS_CMN_POPOUT'));
+						}
+						else
+						{
+							$popout = '';
+						}
+
 						$playercode = '<a href="' . $path . '" id="linkmedia' . $media->id . '" title="' . $params->get('filename') .
-								'" class="fancybox fancybox_jwplayer" potext="' . JText::_('JBS_CMN_POPOUT') . '" ptype="' . $player->player .
+								'" class="fancybox fancybox_jwplayer" potext="' . $popout . '" ptype="' . $player->player .
 							'" pwidth="' . $player->playerwidth . '" bheight="' . $player->boxplayerheight . '" pheight="' .
 							$player->playerheight . '" autostart="' . $params->get('autostart', false) . '">' . $image . '</a>';
 

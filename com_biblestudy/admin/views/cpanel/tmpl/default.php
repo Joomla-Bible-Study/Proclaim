@@ -5,7 +5,7 @@
  * @package    BibleStudy.Admin
  * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @link       https://www.joomlabiblestudy.org
  */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -79,7 +79,7 @@ if ($msg)
 						<p>
 							<?php echo JText::_('JBS_CPL_PIM_ERROR_DESC'); ?>
 						</p>
-						<a href="http://www.joomlabiblestudy.org/jbs-documentation.html"
+						<a href="https://www.joomlabiblestudy.org/jbs-documentation.html"
 						   class="btn btn-primary btn-large">
 							<?php echo JText::_('JBS_CPL_PIM_ERROR_BUTTON'); ?>
 						</a>
@@ -89,9 +89,9 @@ if ($msg)
 					<h3><?php echo JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY'); ?></h3>
 
 					<p><?php echo JText::_('JBS_CPL_INTRO'); ?> - <a
-								href="http://www.joomlabiblestudy.org/jbs-documentation.html" target="_blank">
+								href="https://www.joomlabiblestudy.org/jbs-documentation.html" target="_blank">
 							<?php echo JText::_('JBS_CPL_ONLINE_DOCUMENTATION'); ?></a> - <a
-								href="http://www.joomlabiblestudy.org/forum/" target="_blank">
+								href="https://www.joomlabiblestudy.org/forum/" target="_blank">
 							<?php echo JText::_('JBS_CPL_VISIT_FAQ'); ?></a></p>
 				</div>
 				<div style="border:1px solid #ddd; background:#FBFBFB;" class="visible-desktop">
