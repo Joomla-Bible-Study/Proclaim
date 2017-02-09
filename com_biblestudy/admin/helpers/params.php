@@ -107,11 +107,28 @@ class JBSMParams
 			$db->setQuery($query);
 			$template = $db->loadObject();
 
+			if (!$template)
+			{
+				self::$t_id = 1;
+				$query = $db->getQuery(true);
+				$query->select('*')
+					->from('#__bsms_templates')
+					->where('published = ' . (int) 1)
+					->where('id = ' . (int) self::$t_id);
+				$db->setQuery($query);
+				$template = $db->loadObject();
+			}
+
 			if ($template)
 			{
 				$registry = new Registry;
 				$registry->loadString($template->params);
 				$template->params = $registry;
+			}
+			else
+			{
+				$template = new stdClass;
+				$template->params = new Registry;
 			}
 
 			self::$template_table = $template;
