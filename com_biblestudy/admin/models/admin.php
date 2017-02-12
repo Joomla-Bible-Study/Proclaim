@@ -446,11 +446,20 @@ class BiblestudyModelAdmin extends JModelAdmin
 		$reg->loadArray($post['params']);
 		$from   = $reg->get('mtFrom', 'x');
 		$to     = $reg->get('mtTo', 'x');
-		$search = false;
+		$account  = 0;
+		$count  = 0;
 
 		$MediaHelper = new JBSMMedia;
 		$mimetypes = $MediaHelper->getMimetypes();
-		$key = array_search($from, $mimetypes);
+
+		if ($from !== 'x')
+		{
+			$key = array_search($from, $mimetypes);
+		}
+		else
+		{
+			return 'No Selection Made';
+		}
 
 		$query = $db->getQuery(true);
 		$query->select('id, params')
@@ -459,18 +468,53 @@ class BiblestudyModelAdmin extends JModelAdmin
 
 		foreach ($db->loadObjectList() as $media)
 		{
+			$count++;
+			$search = false;
+			$isfrom = '';
 			$reg = new Registry;
 			$reg->loadString($media->params);
-			$filename = $reg->get('filename');
+			$filename = $reg->get('filename', '');
+			$mediacode = $reg->get('mediacode');
+
 			$extension   = substr($filename, strrpos($filename, '.') + 1);
 
-			if (strpos($key, $extension) !== false)
+			if (strpos($filename, 'http') !== false && $from == 'http')
 			{
+				$reg->set('mime_type', ' ');
+				$isfrom = 'http';
 				$search = true;
 			}
 
-			if ($reg->get('mime_type', 0) == $from || $search)
+			if (!empty($mediacode) && $from == 'mediacode')
 			{
+				$reg->set('mime_type', ' ');
+				$isfrom = 'mediacode';
+				$search = true;
+			}
+
+			if (strpos($key, $extension) !== false || $reg->get('mime_type', 0) == $from)
+			{
+				$reg->set('mime_type', $from);
+				$isfrom = 'Extenstion';
+				$search = true;
+			}
+
+			if ($search && !empty($isfrom))
+			{
+				$account++;
+
+				if (JBSMDEBUG)
+				{
+					$msg .= ' From: ' . $isfrom . '<br />';
+
+					if ($reg->get('mime_type', 0) == $from)
+					{
+						$msg .= ' MimeType: ' . $reg->get('mime_type') . '<br />';
+					}
+
+					$msg .= ' Search found FileName: ' . $filename . '<br />';
+				}
+
 				$reg->set('player', $to);
 
 				$query = $db->getQuery(true);
@@ -486,7 +530,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 			}
 		}
 
-		return $msg;
+		return $msg . ' ' . $account;
 	}
 
 	/**

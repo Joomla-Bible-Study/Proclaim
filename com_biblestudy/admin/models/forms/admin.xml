@@ -188,6 +188,7 @@
 		<field name="mtFrom" type="Mimetype" label="JBS_ADM_CHANGE_PLAYERS" description="JBS_ADM_MEDIATYPES_DESC" labelclass="control-label">
 			<option value="x">JBS_ADM_SELECT_NEW_OPTION</option>
 			<option value="http">URL</option>
+			<option value="mediacode">MediaCode</option>
 		</field>
 		<field name="mtTo" type="list" label="" labelclass="control-label">
 			<option value="x">JBS_ADM_SELECT_NEW_PLAYER</option>
