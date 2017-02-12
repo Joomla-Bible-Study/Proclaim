@@ -79,6 +79,8 @@ abstract class JHtmlJwplayer
 	 */
 	public static function render($media, $params, $popup = false, $player = null, $t = null)
 	{
+		$popupmarg = 0;
+
 		// Used to set for MP3 and audio player look
 		if (isset($player->mp3) && $player->mp3 == true)
 		{
@@ -173,6 +175,8 @@ abstract class JHtmlJwplayer
 			{
 				$render .= "<div class='playeralign' style=\"margin-left: auto; margin-right: auto; width:" . $media->playerwidth . "px;\">";
 			}
+
+			$popupmarg = $params->get('popupmargin', '50');
 		}
 
 		$render .= " <div id='placeholder" . $media->id . "'></div>";
@@ -185,7 +189,7 @@ abstract class JHtmlJwplayer
 		{
 			// Add space for popup window
 			$player->playerwidth  = $player->playerwidth + 20;
-			$player->playerheight = $player->playerheight + $params->get('popupmargin', '50');
+			$player->playerheight = $player->playerheight + $popupmarg;
 			$render .= "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=" . $player->player
 				. "&amp;view=popup&amp;t=" . $t . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width="
 				. $player->playerwidth . ",height=" .

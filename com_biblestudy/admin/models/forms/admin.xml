@@ -185,6 +185,20 @@
 			<option value="1">JBS_CMN_POPUP_NEW_WINDOW</option>
 			<option value="3">JBS_CMN_USE_GLOBAL</option>
 		</field>
+		<field name="mtFrom" type="Mimetype" label="JBS_ADM_CHANGE_PLAYERS" description="JBS_ADM_MEDIATYPES_DESC" labelclass="control-label">
+			<option value="x">JBS_ADM_SELECT_NEW_OPTION</option>
+			<option value="http">URL</option>
+			<option value="mediacode">MediaCode</option>
+		</field>
+		<field name="mtTo" type="list" label="" labelclass="control-label">
+			<option value="x">JBS_ADM_SELECT_NEW_PLAYER</option>
+			<option value="0">JBS_CMN_DIRECT_LINK</option>
+			<option value="1">JBS_CMN_INTERNAL_PLAYER</option>
+			<option value="3">JBS_CMN_AVPLUGIN</option>
+			<option value="7">JBS_CMN_LEGACY_PLAYER</option>
+			<option value="8">JBS_CMN_EMBED_CODE</option>
+			<option value="100">JBS_CMN_USE_GLOBAL</option>
+		</field>
 
 		<!-- JWplayer -->
 		<fieldset name="jwplayer" label="JBS_ADM_PLAYER_ADMIN_LABLE"
@@ -208,7 +222,7 @@
 		</fieldset>
 		<fieldset name="jwplayer_pro_standard" label="JBS_ADM_PLAYER_ADMIN_LABLE"
 		          description="JBS_ADM_PLAYER_ADMIN_DESC">
-			<field name="jwplayer_image" type="file" label="JBS_ADM_JWPLAYER_IMAGE"
+			<field name="jwplayer_image" type="media" label="JBS_ADM_JWPLAYER_IMAGE"
 			       description="JBS_ADM_JWPLAYER_IMAGE_DESC"/>
 			<field name="jwplayer_skin" type="skin"
 			       label="JBS_ADM_JWPLAYER_SKIN"

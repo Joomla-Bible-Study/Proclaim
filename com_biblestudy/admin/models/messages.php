@@ -345,8 +345,8 @@ class BiblestudyModelMessages extends JModelList
 		}
 
 		// Add the list ordering clause
-		$orderCol  = $this->state->get('list.ordering', 'study.id');
-		$orderDirn = $this->state->get('list.direction', 'desc');
+		$orderCol  = $this->state->get('list.ordering', 'study.studydate');
+		$orderDirn = $this->state->get('list.direction', 'DESC');
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
 		return $query;

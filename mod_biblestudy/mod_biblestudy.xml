@@ -5,8 +5,8 @@
 	<authorEmail>info@joomlabiblestudy.org</authorEmail>
 	<authorUrl>https://www.joomlabiblestudy.org</authorUrl>
 	<copyright>(C) 2007 - 2016 Joomla Bible Study All rights reserved.</copyright>
-	<version>9.0.10</version>
-	<creationDate>February 2, 2017</creationDate>
+	<version>9.0.11</version>
+	<creationDate>February 7, 2017</creationDate>
 	<license>http://www.gnu.org/licenses/gpl.html</license>
 	<description>JBS_MDL_DESCRIPTION</description>
 	<files>
@@ -185,11 +185,11 @@
 				<field name="popupimage" type="text" size="150"
 				       default="media/com_biblestudy/images/speaker24.png" label="JBS_TPL_MEDIA_POPUPIMAGE"
 				       description="JBS_TPL_MEDIA_POPUPIMAGE_DESC"/>
-				<field name="media_popout_yes" type="radio" default="" class="btn-group"
+				<field name="media_popout_yes" type="radio" default="1" class="btn-group"
 				       label="JBS_MED_MEDIA_POPOUT_YES" description="JBS_MED_MEDIA_POPOUT_YES_DESC" >
 					<option value="">JGLOBAL_USE_GLOBAL</option>
-					<option value="false">JNO</option>
-					<option value="true">JYES</option>
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
 				</field>
 				<field name="media_popout_text" type="text" default="" placeholder="Text to use for pop out button"
 				       label="JBS_MED_MEDIA_POPOUT_TEXT" description="JBS_MED_MEDIA_POPOUT_TEXT_DESC" />
