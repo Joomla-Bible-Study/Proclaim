@@ -36,6 +36,11 @@ $input = $app->input;
 		jQuery('[name=task]').val('admin.mediaimages');
 		jQuery("#item-admin").submit();
 	};
+	jQuery.submitbutton6 = function () {
+		jQuery('[name=tooltype]').val('playerbymediatype');
+		jQuery('[name=task]').val('admin.tools');
+		jQuery("#item-admin").submit();
+	};
 
 	Joomla.submitbutton = function (task) {
 		if (task === 'admin.cancel' || task === 'admin.resetHits' || task === 'admin.resetDownloads' || task === 'admin.resetPlays' || task === 'admin.aliasUpdate'){
@@ -423,7 +428,7 @@ $input = $app->input;
 					</div>
 				</div>
 				<div class="tab-pane" id="playersettings">
-					<div class="span6">
+					<div class="span4">
 						<strong><p class="tab-description"><?php echo JText::_('JBS_CMN_MEDIA_FILES'); ?></p></strong>
 
 						<div class="control-group">
@@ -451,7 +456,7 @@ $input = $app->input;
 							</button>
 						</div>
 					</div>
-					<div class="span6">
+					<div class="span4">
 						<strong><p class="tab-description"><?php echo JText::_('JBS_ADM_POPUP_OPTIONS'); ?></p></strong>
 
 						<div class="control-group">
@@ -479,6 +484,26 @@ $input = $app->input;
 							</button>
 						</div>
 					</div>
+                    <div class="span4">
+                        <strong><p class="tab-description"><?php echo JText::_('JBS_ADM_MEDIATYPES_OPTIONS'); ?></p></strong>
+                        <div class="control-group">
+							<?php echo $this->form->getLabel('mtFrom', 'params'); ?>
+                            <div class="controls">
+								<?php echo $this->form->getInput('mtFrom', 'params'); ?>
+                            </div>
+                        </div>
+                        <div class="control-group">
+							<?php echo $this->form->getLabel('mtTo', 'params'); ?>
+                            <div class="controls">
+								<?php echo $this->form->getInput('mtTo', 'params'); ?>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <button type="button" class="btn btn-primary" onclick="jQuery.submitbutton6(task)">
+                                <i class="icon-user icon-white"></i> <?php echo JText::_('JBS_CMN_SUBMIT'); ?>
+                            </button>
+                        </div>
+                    </div>
 				</div>
 				<div class="tab-pane" id="jwplayer">
 					<?php echo $this->loadTemplate('jwplayer'); ?>
