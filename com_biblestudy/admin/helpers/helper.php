@@ -244,7 +244,7 @@ class JBSMHelper
 				$path = $protocol . $path;
 			}
 		}
-		elseif (!substr_count($spath, '://') || !substr_count($spath, '//') && !empty($spath))
+		elseif ((!substr_count($spath, '://') || !substr_count($spath, '//')) && !empty($spath))
 		{
 			$path = $spath . '/' . $path;
 		}
