@@ -34,6 +34,7 @@ class BiblestudyViewPodcastlist extends JViewLegacy
 	public function display($tpl = null)
 	{
 		$this->state      = $this->get('State');
+		$this->items      = $this->get('items');
 		parent::display($tpl);
 	}
 

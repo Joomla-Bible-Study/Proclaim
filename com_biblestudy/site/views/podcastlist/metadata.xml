@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-    <view title="JBS_MNU_STUDIES_LIST_EDIT_LAYOUT">
+    <view title="JBS_MNU_PODCAST_LIST_EDIT_LAYOUT">
         <message>
-            <![CDATA[JBS_MNU_STUDIES_LIST_EDIT_LAYOUT_DESC]]>
+            <![CDATA[JBS_MNU_PODCAST_LIST_EDIT_LAYOUT_DESC]]>
         </message>
     </view>
 </metadata>

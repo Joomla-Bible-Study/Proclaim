@@ -26,9 +26,17 @@ $archived = $this->state->get('filter.published') == 2 ? true : false;
 $trashed = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder == 'ordering';
 ?>
-<h2><?php echo JText::_('JBS_CMN_MESSAGES_LIST'); ?></h2>
+<h2><?php echo JText::_('JBS_CMN_PODCASTS_LIST'); ?></h2>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=podcastlist'); ?>" method="post"
       name="adminForm" id="adminForm">
+    <?php foreach ($this->items as $item) { ?>
+    <div>
+        <p><?php echo $item->id . ' : ' . stripslashes($item->series_text); ?></p>
+        <?php foreach ($item->messages as $message) { ?>
+            <div><?php echo $message->id; ?></div>
+        <?php } ?>
+    </div>
+    <?php } ?>
 		<input type="hidden" name="task" value=""/>
 		<input type="hidden" name="boxchecked" value="0"/>
 		<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>

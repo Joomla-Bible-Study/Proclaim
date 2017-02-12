@@ -32,10 +32,106 @@ class BiblestudyModelPodcastlist extends JModelList
 	protected function getListQuery()
 	{
 		$user            = JFactory::getUser();
-		$groups          = implode(',', $user->getAuthorisedViewLevels());
-		$db              = $this->getDbo();
 		$query           = parent::getListQuery();
 
+		$query->select(
+			$this->getState(
+				'list.select', '*')
+		);
+		$query->from('#__bsms_series');
+
 		return $query;
+	}
+
+	/**
+	 * Method to get a list of sermons.
+	 * Overridden to add a check for access levels.
+	 *
+	 * @return  mixed  An array of data items on success, false on failure.
+	 *
+	 * @since   9.0.0
+	 */
+	public function getItems()
+	{
+		$user   = JFactory::getUser();
+		$groups = $user->getAuthorisedViewLevels();
+
+		$query = $this->_db->getQuery(true);
+		$query->select(
+			$this->getState(
+				'list.select', '*')
+		);
+
+		$query->from('#__bsms_series');
+		$this->_db->setQuery($query);
+
+		$items   = $this->_db->loadObjectList();
+		$listing = new JBSMListing;
+
+		foreach ($items as $t => $item)
+		{
+			// Check the access level. Remove articles the user shouldn't see
+			if (!in_array($items[$t]->access, $groups))
+			{
+				unset($items[$t]);
+			}
+
+			$query = $this->_db->getQuery(true);
+			$query->select('s.*');
+			$query->from('#__bsms_studies as s');
+			$query->where('s.published = ' . 1);
+			$query->where('s.series_id = ' . (int) $item->id);
+			$query->order('s.studydate DESC');
+			$this->_db->setQuery($query);
+
+			$messages = $this->_db->loadObjectList();
+
+			foreach ($messages as $m => $message)
+			{
+				// Check the access level. Remove articles the user shouldn't see
+				if (!in_array($messages[$m]->access, $groups))
+				{
+					unset($messages[$m]);
+				}
+
+				$query = $this->_db->getQuery(true);
+				$query->select('m.id, m.params')
+					->from('#__bsms_mediafiles as m')
+					->where('m.published = ' . 1)
+					->where('m.study_id = ' . $message->id);
+				$this->_db->setQuery($query);
+				$mediafiles = $this->_db->loadObjectList();
+
+				foreach ($mediafiles as $mf => $med)
+				{
+					// Get the media files in one query
+					if (isset($med->id))
+					{
+						$mediafiles[$mf] = $listing->getMediaFiles((array) $med->id);
+					}
+				}
+
+				$messages[$m]->mediafiles = $mediafiles;
+			}
+
+			$items[$t]->messages = $messages;
+		}
+
+		if (JFactory::getApplication()->isSite())
+		{
+			$user   = JFactory::getUser();
+			$groups = $user->getAuthorisedViewLevels();
+
+			for ($x = 0, $count = count($items); $x < $count; $x++)
+			{
+				// Check the access level. Remove articles the user shouldn't see
+				if (!in_array($items[$x]->access, $groups))
+				{
+					unset($items[$x]);
+				}
+			}
+		}
+
+		return $items;
 	}
 }
