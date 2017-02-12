@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 JHtml::_('bootstrap.tooltip');
+JHtml::_('dropdown.init');
 JHtml::_('behavior.multiselect');
 JHtml::_('formbehavior.chosen', 'select');
 
@@ -31,6 +32,8 @@ if ($saveOrder)
 	$saveOrderingUrl = 'index.php?option=com_biblestudy&task=message.saveOrderAjax&tmpl=component';
 	JHtml::_('sortablelist.sortable', 'messagesList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 }
+
+$sortFields = $this->getSortFields();
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messages'); ?>" method="post" name="adminForm"
       id="adminForm">
@@ -58,7 +61,7 @@ if ($saveOrder)
                         <th width="1%" class="nowrap center hidden-phone">
 							<?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'study.ordering', $listDirn, $listOrder, null, 'desc', 'JGRID_HEADING_ORDERING'); ?>
                         </th>
-                        <th width="1%" class="hidden-phone">
+                        <th width="1%">
 							<?php echo JHtml::_('grid.checkall'); ?>
                         </th>
                         <th width="1%" style="min-width:55px;" class="nowrap center">

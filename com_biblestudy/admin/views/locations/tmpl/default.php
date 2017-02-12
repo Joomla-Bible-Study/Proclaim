@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 JHtml::_('bootstrap.tooltip');
+JHtml::_('dropdown.init');
 JHtml::_('behavior.multiselect');
 JHtml::_('formbehavior.chosen', 'select');
 
@@ -31,6 +32,8 @@ if ($saveOrder)
 	$saveOrderingUrl = 'index.php?option=com_biblestudy&task=location.saveOrderAjax&tmpl=component';
 	JHtml::_('sortablelist.sortable', 'locationsList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 }
+
+$sortFields = $this->getSortFields();
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=locations'); ?>" method="post" name="adminForm"
       id="adminForm">
