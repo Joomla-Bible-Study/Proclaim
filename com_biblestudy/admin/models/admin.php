@@ -463,7 +463,8 @@ class BiblestudyModelAdmin extends JModelAdmin
 
 		$query = $db->getQuery(true);
 		$query->select('id, params')
-			->from('#__bsms_mediafiles');
+			->from('#__bsms_mediafiles')
+			->where('published = ' . $db->q('1'));
 		$db->setQuery($query);
 
 		foreach ($db->loadObjectList() as $media)
