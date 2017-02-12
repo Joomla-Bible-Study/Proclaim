@@ -562,15 +562,10 @@ class JBSMMedia
 							$media->malttext . ' - ' . $media->comment . ' ' . $duration . ' '
 							. $filesize . '" target="' . $params->get('special') . '">' . $image . '</a>';
 						break;
+
 					case 3: // Squeezebox view
 						JHtml::_('fancybox.framework', true, true);
 						$player->boxplayerheight = $player->playerheight + 20;
-
-						if ($player->player == 7)
-						{
-							$player->playerheight = '40';
-							$player->boxplayerheight = '40';
-						}
 
 						if ($params->get('media_popout_yes', true))
 						{
@@ -588,6 +583,7 @@ class JBSMMedia
 
 						return $playercode;
 						break;
+
 					case 1: // Popup window
 						$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=" . $params->toObject()->player .
 								"&amp;view=popup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" .
@@ -1000,7 +996,6 @@ class JBSMMedia
 
 		return $vm;
 	}
-
 
 	/**
 	 * List of MimeTypes Supported
