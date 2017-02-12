@@ -628,6 +628,14 @@ class JBSMMedia
 
 					case 2: // Inline
 						JHtml::_('Jwplayer.framework', true, true);
+
+						if ($player->player == 7)
+						{
+							$player->playerheight = '40';
+							$player->boxplayerheight = '40';
+							$player->mp3 = true;
+						}
+
 						$playercode = JHtmlJwplayer::render($media, $params, false, $player, $template);
 						break;
 

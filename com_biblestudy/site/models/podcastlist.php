@@ -12,6 +12,7 @@ defined('_JEXEC') or die;
 
 // Base this model on the backend version.
 JLoader::register('BiblestudyModelMessages', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/messages.php');
+use \Joomla\Registry\Registry;
 
 /**
  * Model class for MessageList
@@ -21,6 +22,102 @@ JLoader::register('BiblestudyModelMessages', JPATH_ADMINISTRATOR . '/components/
  */
 class BiblestudyModelPodcastlist extends JModelList
 {
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
+	 *
+	 * @return    void
+	 *
+	 * @since    1.6
+	 */
+	protected function populateState($ordering = null, $direction = null)
+	{
+		/** @type JApplicationSite $app */
+		$app = JFactory::getApplication();
+
+		$return = $app->input->get('return', null, 'base64');
+		$this->setState('return_page', base64_decode($return));
+
+		// Load the parameters.
+		$params   = $app->getParams();
+		$this->setState('params', $params);
+		$template = JBSMParams::getTemplateparams();
+		$admin    = JBSMParams::getAdmin();
+
+		$template->params->merge($params);
+		$template->params->merge($admin->params);
+		$params = $template->params;
+
+		$t = $params->get('messageid');
+
+		if (!$t)
+		{
+			$input = new JInput;
+			$t     = $input->get('t', 1, 'int');
+		}
+
+		$template->id = $t;
+
+		$this->setState('template', $template);
+		$this->setState('admin', $admin);
+
+		// Adjust the context to support modal layouts.
+		$input  = $app->input;
+		$layout = $input->get('layout');
+
+		if ($layout)
+		{
+			$this->context .= '.' . $layout;
+		}
+
+		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+		$this->setState('filter.search', $search);
+
+		$studytitle = $this->getUserStateFromRequest($this->context . '.filter.studytitle', 'filter_studytitle');
+		$this->setState('filter.studytitle', $studytitle);
+
+		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
+		$this->setState('filter.published', $published);
+
+		$book = $this->getUserStateFromRequest($this->context . '.filter.book', 'filter_book');
+		$this->setState('filter.book', $book);
+
+		$teacher = $this->getUserStateFromRequest($this->context . '.filter.teacher', 'filter_teacher');
+		$this->setState('filter.teacher', $teacher);
+
+		$series = $this->getUserStateFromRequest($this->context . '.filter.series', 'filter_series');
+		$this->setState('filter.series', $series);
+
+		$messageType = $this->getUserStateFromRequest($this->context . '.filter.messagetype', 'filter_messagetype');
+		$this->setState('filter.messagetype', $messageType);
+
+		$year = $this->getUserStateFromRequest($this->context . '.filter.year', 'filter_year');
+		$this->setState('filter.year', $year);
+
+		$language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
+		$this->setState('filter.language', $language);
+
+		$access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
+		$this->setState('filter.access', $access);
+
+		$location = $this->getUserStateFromRequest($this->context . 'filter.location', 'filter_location');
+		$this->setState('filter.location', $location);
+
+		// Force a language
+		$forcedLanguage = $app->input->get('forcedLanguage');
+
+		if (!empty($forcedLanguage))
+		{
+			$this->setState('filter.language', $forcedLanguage);
+			$this->setState('filter.forcedLanguage', $forcedLanguage);
+		}
+
+		parent::populateState('study.studydate', 'DESC');
+	}
 
 	/**
 	 * Build an SQL query to load the list data
@@ -79,6 +176,7 @@ class BiblestudyModelPodcastlist extends JModelList
 			$query = $this->_db->getQuery(true);
 			$query->select('s.*');
 			$query->from('#__bsms_studies as s');
+			$query->where('s.id = 577');
 			$query->where('s.published = ' . 1);
 			$query->where('s.series_id = ' . (int) $item->id);
 			$query->order('s.studydate DESC');
@@ -95,23 +193,50 @@ class BiblestudyModelPodcastlist extends JModelList
 				}
 
 				$query = $this->_db->getQuery(true);
-				$query->select('m.id, m.params')
-					->from('#__bsms_mediafiles as m')
-					->where('m.published = ' . 1)
-					->where('m.study_id = ' . $message->id);
+				$query->select('#__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.params AS sparams, #__bsms_servers.media AS smedia,'
+					. ' s.studytitle, s.studydate, s.studyintro, s.media_hours, s.media_minutes, s.media_seconds, s.teacher_id,'
+					. ' s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin, s.verse_end, t.teachername, t.id as tid, s.id as sid, s.studyintro');
+				$query->from('#__bsms_mediafiles');
+				$query->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server_id)');
+				$query->leftJoin('#__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)');
+				$query->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)');
+
+				$query->where('#__bsms_mediafiles.study_id = ' . (int) $message->id);
+				$query->where('#__bsms_mediafiles.published = 1');
+				$query->where('#__bsms_mediafiles.language in (' . $this->_db->quote(JFactory::getLanguage()->getTag()) . ',' . $this->_db->quote('*') . ')');
+				$query->order('ordering ASC');
 				$this->_db->setQuery($query);
 				$mediafiles = $this->_db->loadObjectList();
 
 				foreach ($mediafiles as $mf => $med)
 				{
+					$reg = new Registry;
+					$reg->loadString($med->params);
+					$filename   = $reg->get('filename', '');
+					$extension  = substr($filename, strrpos($filename, '.') + 1);
+
 					// Get the media files in one query
-					if (isset($med->id))
+					if ($extension !== 'mp3')
 					{
-						$mediafiles[$mf] = $listing->getMediaFiles((array) $med->id);
+						unset($mediafiles[$mf]);
+					}
+
+					if (isset($mediafiles[$mf]))
+					{
+							$reg = new Registry;
+							$reg->loadString($mediafiles[$mf]->params);
+							$mediafiles[$mf]->params = $reg;
 					}
 				}
 
-				$messages[$m]->mediafiles = $mediafiles;
+				if (!empty($mediafiles))
+				{
+					$messages[$m]->mediafiles = $mediafiles;
+				}
+				else
+				{
+					unset($messages[$m]);
+				}
 			}
 
 			$items[$t]->messages = $messages;
