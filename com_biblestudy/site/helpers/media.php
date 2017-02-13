@@ -78,7 +78,7 @@ class JBSMMedia
 		$playercode = self::getPlayerCode($params, $player, $image, $media);
 		$downloadlink  = self::getFluidDownloadLink($media, $params, $template);
 
-		if ($media->params->get('link_type'))
+		if ($media->params->get('link_type') == 0 || $media->params->get('link_type'))
 		{
 			$link_type = $media->params->get('link_type');
 		}
