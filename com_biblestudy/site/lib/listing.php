@@ -755,8 +755,9 @@ class JBSMListing
 				case 1:
 					(isset($item->thumb) ? $span = '<img src="' . JUri::base() . $item->thumb . '" class="' . $params->get('rowspanitemimage') .
 						'" alt="' . JText::_('JBS_CMN_TEACHER') . '">' : $span = '');
+					if (is_null($span)){
 					(isset($item->teacher_thumbnail) ? $span = '<img src="' . JUri::base() . $item->teacher_thumbnail . '" class="' .
-						$params->get('rowspanitemimage') . '" alt="' . JText::_('JBS_CMN_TEACHER') . '">' : $span = '');
+						$params->get('rowspanitemimage') . '" alt="' . JText::_('JBS_CMN_TEACHER') . '">' : $span = '');}
 					break;
 				case 2:
 					(isset($item->thumbm) ? $span = '<img src="' . JUri::base() . $item->thumbm . '" class="' . $params->get('rowspanitemimage') .
