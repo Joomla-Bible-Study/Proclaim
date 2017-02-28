@@ -100,7 +100,6 @@ class BiblestudyViewPodcastdisplay extends JViewLegacy
 		$params->set('show_filesize', 0);
 		$params->set('mp3', true);
 
-
 		// Prepare meta information (under development)
 		if ($params->get('metakey'))
 		{
@@ -151,10 +150,22 @@ class BiblestudyViewPodcastdisplay extends JViewLegacy
 		$title   = null;
 	}
 
+	/**
+	 * Find Ends With
+	 *
+	 * @param   string  $haystack  Search string
+	 * @param   string  $needle    What to search for.
+	 *
+	 * @return bool
+	 *
+	 * @since version
+	 */
 	private function endsWith($haystack, $needle)
 	{
 		$length = strlen($needle);
-		if ($length == 0) {
+
+		if ($length == 0)
+		{
 			return true;
 		}
 

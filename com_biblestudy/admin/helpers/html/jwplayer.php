@@ -181,7 +181,6 @@ abstract class JHtmlJwplayer
 
 		$render .= " <div id='placeholder" . $media->id . "'></div>";
 
-
 		if ($params->get('media_popout_yes', true))
 		{
 			$popouttext = $params->get('media_popout_text', JText::_('JBS_CMN_POPOUT'));

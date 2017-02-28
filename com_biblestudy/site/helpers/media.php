@@ -82,7 +82,6 @@ class JBSMMedia
 		$playercode = self::getPlayerCode($params, $player, $image, $media);
 		$downloadlink  = self::getFluidDownloadLink($media, $params, $template);
 
-
 		if ($params->get('pcplaylist'))
 		{
 			$link_type = 0;
