@@ -210,7 +210,7 @@ class JBSMMedia
 		{
 			$link_type = $media->params->get('link_type');
 		}
-		else
+		if ($media->sparams->get('link_type') && $media->params->get('link_type'))
 		{
 			$link_type = $media->smedia->get('link_type');
 		}
