@@ -27,34 +27,26 @@ $trashed   = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder == 'ordering';
 
 $jbsmedia = new JBSMMedia;
+
 ?>
 <h2><?php echo JText::_('JBS_CMN_PODCASTS_LIST'); ?></h2>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=podcastlist'); ?>" method="post"
       name="adminForm" id="adminForm">
     <div id="effect-1" class="effects">
-		<?php foreach ($this->items as $item)
+	    <?php echo $this->items->image ?>
+        <div style="clear: both;"></div>
+	    <?php echo $jbsmedia->getFluidMedia($this->media[0], $this->params, $this->template); ?>
+
+		<?php foreach ($this->media as $item)
 		{ ?>
-            <div class="jbsmimg">
-				<?php echo JHtml::image($item->series_thumbnail, $item->id . ' : ' . stripslashes($item->series_text), $this->attribs); ?>
-                <div class="overlay">
-                    <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=podcastdisplay&id=' . $item->id); ?>" class="expand">+</a>
-                    <p class="expand"><?php echo stripslashes($item->series_text); ?></p>
-                    <a class="jbsmclose-overlay hidden">x</a>
-                </div>
-            </div>
+            <?php $jbsmedia->getFluidMedia($item, $this->params, $this->template); ?>
+            <li><a href="javascript:loadVideo('<?php echo $item->path1; ?>', '<?php echo $item->series_thumbnail; ?>')">
+                    <?php echo stripslashes($item->studytitle); ?>
+                </a>
+            </li>
 		<?php } ?>
     </div>
     <div style="clear: both"></div>
-	<?php if ($this->params->get('show_pagination', 2)) : ?>
-        <div class="pagination">
-			<?php if ($this->params->def('show_pagination_results', 1)) : ?>
-                <p class="counter" style="padding-top: 10px">
-					<?php echo $this->pagination->getPagesCounter(); ?>
-                </p>
-			<?php endif; ?>
-			<?php echo $this->pagination->getPagesLinks(); ?>
-        </div>
-	<?php endif; ?>
     <input type="hidden" name="task" value=""/>
     <input type="hidden" name="boxchecked" value="0"/>
     <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>

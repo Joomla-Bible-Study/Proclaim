@@ -22,6 +22,13 @@ class BiblestudyViewPodcastlist extends JViewLegacy
 {
 	protected $state;
 
+	protected $items;
+
+	protected $template;
+
+	/** @var  Registry */
+	protected $params;
+
 	/**
 	 * Execute and display a template script.
 	 *
@@ -35,10 +42,21 @@ class BiblestudyViewPodcastlist extends JViewLegacy
 	{
 		$this->state      = $this->get('State');
 		$this->items      = $this->get('items');
+		$this->pagination = $this->get('Pagination');
 
 		$this->template   = $this->state->template;
-		$this->admin      = $this->state->admin;
+		$this->params     = $this->state->params;
 
+		JHtml::_('biblestudy.framework', '', 'modernizr');
+		JHtml::_('biblestudy.loadcss', $this->params);
+
+		$attribs = array(
+			'class' => "jbsmimg"
+		);
+
+		$this->attribs = $attribs;
+
+		$this->_prepareDocument();
 
 		parent::display($tpl);
 	}
@@ -53,7 +71,9 @@ class BiblestudyViewPodcastlist extends JViewLegacy
 	protected function _prepareDocument()
 	{
 		$app     = JFactory::getApplication('site');
-		$menus   = $app->getMenu();
+		$menus   = $app->getMenu()->getActive();
+		$this->params->merge($menus->params);
+
 		$title   = null;
 	}
 }

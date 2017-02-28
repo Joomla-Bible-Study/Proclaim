@@ -40,10 +40,13 @@ class JBSMMedia
 		$mediafile = null;
 		$filesize  = null;
 
-		// Smedia are the media settings for each server
-		$registory = new Registry;
-		$registory->loadString($media->smedia);
-		$media->smedia = $registory;
+		if (isset($media->smedia))
+		{
+			// Smedia are the media settings for each server
+			$registory = new Registry;
+			$registory->loadString($media->smedia);
+			$media->smedia = $registory;
+		}
 
 		// Params are the individual params for the media file record
 		$registory = new Registry;
@@ -55,30 +58,36 @@ class JBSMMedia
 		$registory->loadString($media->sparams);
 		$media->sparams = $registory;
 
-			if ($media->params->get('media_use_button_icon') == -1)
-			{
-				$imageparams = $media->smedia;
-			}
-			else
-			{
-				$imageparams = $media->params;
-			}
+		if ($media->params->get('media_use_button_icon') == -1)
+		{
+			$imageparams = $media->smedia;
+		}
+		else
+		{
+			$imageparams = $media->params;
+		}
 
-			if ($imageparams->get('media_use_button_icon') >= 1)
-			{
-				$image = $this->mediaButton($imageparams);
-			}
-			else
-			{
-				$mediaimage = $imageparams->get('media_image');
-				$image      = $this->useJImage($mediaimage, $params->get('media_text', JText::_('JBS_MED_DOWNLOAD')));
-			}
+		if ($imageparams->get('media_use_button_icon') >= 1)
+		{
+			$image = $this->mediaButton($imageparams);
+		}
+		else
+		{
+			$mediaimage = $imageparams->get('media_image');
+			$image      = $this->useJImage($mediaimage, $params->get('media_text', JText::_('JBS_MED_DOWNLOAD')));
+		}
 
+		// New Podcast Playlist cast Player code override option.
 		$player     = self::getPlayerAttributes($params, $media);
 		$playercode = self::getPlayerCode($params, $player, $image, $media);
 		$downloadlink  = self::getFluidDownloadLink($media, $params, $template);
 
-		if ($media->params->get('link_type') == 0 || $media->params->get('link_type'))
+
+		if ($params->get('pcplaylist'))
+		{
+			$link_type = 0;
+		}
+		elseif ($media->params->get('link_type') == 0 || $media->params->get('link_type'))
 		{
 			$link_type = $media->params->get('link_type');
 		}
@@ -139,7 +148,7 @@ class JBSMMedia
 					break;
 			}
 
-			$filesize = '<span style="font-size: 0.6em;display:inline;padding-left: 5px;">' .
+			$filesize = '<span class="JBSMFilesize" style="font-size: 0.6em;display:inline;padding-left: 5px;">' .
 				$file_size . '</span>';
 		}
 
@@ -454,7 +463,11 @@ class JBSMMedia
 		{
 			/* In this case the item has a player set for it, so we use that instead. We also need to change the old player
 					type of 3 to 2 for all videos reloaded which we don't support */
-			if ($media->params->get('player', null) !== null)
+			if ($params->get('pcplaylist'))
+			{
+				$player->player = 7;
+			}
+			elseif ($media->params->get('player', null) !== null)
 			{
 				$player->player = $media->params->get('player');
 			}
@@ -489,9 +502,16 @@ class JBSMMedia
 		// This is the global parameter set in Template Display settings
 		$param_playertype = $params->get('internal_popup', 1);
 
-		$item_playertype = $params->get('popup');
+		if ($params->get('pcplaylist', false))
+		{
+			$item_playertype = 2;
+		}
+		else
+		{
+			$item_playertype = $params->get('popup');
+		}
 
-		if ($param_playertype && !$media->params->get('popup'))
+		if ($param_playertype && !$media->params->get('popup') && !$params->get('pcplaylist', false))
 		{
 			$player->type = $param_playertype;
 		}
@@ -560,7 +580,7 @@ class JBSMMedia
 						$playercode = '<a href="' . $path . '" onclick="window.open(\'index.php?option=com_biblestudy&amp;view=popup&amp;close=1&amp;mediaid=' .
 							$media->id . '\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\'); return true;" title="' .
 							$media->malttext . ' - ' . $media->comment . ' ' . $duration . ' '
-							. $filesize . '" target="' . $params->get('special') . '">' . $image . '</a>';
+							. $filesize . '" target="' . $params->get('special') . '" class="jbsmplayerlink">' . $image . '</a>';
 						break;
 
 					case 3: // Squeezebox view
@@ -579,7 +599,7 @@ class JBSMMedia
 						$playercode = '<a href="' . $path . '" id="linkmedia' . $media->id . '" title="' . $params->get('filename') .
 							'" class="fancybox" potext="' . $popout . '" ptype="' . $player->player .
 							'" pwidth="' . $player->playerwidth . '" bheight="' . $player->boxplayerheight . '" pheight="' .
-							$player->playerheight . '" autostart="' . $params->get('autostart', false) . '">' . $image . '</a>';
+							$player->playerheight . '" autostart="' . $params->get('autostart', false) . '" class="jbsmplayerlink">' . $image . '</a>';
 
 						return $playercode;
 						break;
@@ -587,7 +607,7 @@ class JBSMMedia
 					case 1: // Popup window
 						$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=" . $params->toObject()->player .
 								"&amp;view=popup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" .
-								$player->playerwidth . ",height=" . $player->playerheight . "'); return false\">" . $image . "</a>";
+								$player->playerwidth . ",height=" . $player->playerheight . "'); return false\"  class=\"jbsmplayerlink\">" . $image . "</a>";
 						break;
 				}
 
@@ -621,7 +641,7 @@ class JBSMMedia
 						$playercode = '<a href="' . $path . '" id="linkmedia' . $media->id . '" title="' . $params->get('filename') .
 								'" class="fancybox fancybox_jwplayer" potext="' . $popout . '" ptype="' . $player->player .
 							'" pwidth="' . $player->playerwidth . '" bheight="' . $player->boxplayerheight . '" pheight="' .
-							$player->playerheight . '" autostart="' . $params->get('autostart', false) . '">' . $image . '</a>';
+							$player->playerheight . '" autostart="' . $params->get('autostart', false) . '" class="jbsmplayerlink">' . $image . '</a>';
 
 						return $playercode;
 						break;
@@ -647,7 +667,7 @@ class JBSMMedia
 						$playercode           = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=" . $player->player
 							. "&amp;view=popup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width="
 							. $player->playerwidth . ", height=" .
-							$player->playerheight . "'); return false\">" . $image . "</a>";
+							$player->playerheight . "'); return false\" class=\"jbsmplayerlink\">" . $image . "</a>";
 						break;
 				}
 
@@ -662,7 +682,7 @@ class JBSMMedia
 					case 1: // This goes to the popup view
 						$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;view=popup&amp;player=3&amp;t=" . $template .
 							"&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
-							. $player->playerheight . "'); return false\">" . $image . "</a>";
+							. $player->playerheight . "'); return false\"  class=\"jbsmplayerlink\">" . $image . "</a>";
 						break;
 
 					case 2: // This plays the video inline

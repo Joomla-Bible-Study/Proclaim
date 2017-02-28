@@ -10,8 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-// Base this model on the backend version.
-JLoader::register('BiblestudyModelMessages', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/messages.php');
 use \Joomla\Registry\Registry;
 
 /**
@@ -39,12 +37,59 @@ class BiblestudyModelPodcastlist extends JModelList
 		/** @type JApplicationSite $app */
 		$app = JFactory::getApplication();
 
-		$return = $app->input->get('return', null, 'base64');
-		$this->setState('return_page', base64_decode($return));
+		// List state information
+		$value = $app->input->get('limit', $app->get('list_limit', 0), 'uint');
+		$this->setState('list.limit', $value);
 
-		// Load the parameters.
-		$params   = $app->getParams();
+		$value = $app->input->get('limitstart', 0, 'uint');
+		$this->setState('list.start', $value);
+
+		$value = $app->input->get('filter_tag', 0, 'uint');
+		$this->setState('filter.tag', $value);
+
+		$value = $app->input->get('filter_pc_show', '');
+		$this->setState('filter.pc_show', $value);
+
+		$orderCol = $app->input->get('filter_order', 'a.ordering');
+
+		if (!in_array($orderCol, $this->filter_fields))
+		{
+			$orderCol = 'a.id';
+		}
+
+		$this->setState('list.ordering', $orderCol);
+
+		$listOrder = $app->input->get('filter_order_Dir', 'ASC');
+
+		if (!in_array(strtoupper($listOrder), array('ASC', 'DESC', '')))
+		{
+			$listOrder = 'ASC';
+		}
+
+		$this->setState('list.direction', $listOrder);
+
+		$params = $app->getParams();
 		$this->setState('params', $params);
+		$user = JFactory::getUser();
+
+		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
+		{
+			// Filter on published for those who do not have edit or edit.state rights.
+			$this->setState('filter.published', 1);
+		}
+
+		$this->setState('filter.language', JLanguageMultilang::isEnabled());
+
+		// Process show_noauth parameter
+		if (!$params->get('show_noauth'))
+		{
+			$this->setState('filter.access', true);
+		}
+		else
+		{
+			$this->setState('filter.access', false);
+		}
+
 		$template = JBSMParams::getTemplateparams();
 		$admin    = JBSMParams::getAdmin();
 
@@ -63,60 +108,7 @@ class BiblestudyModelPodcastlist extends JModelList
 		$template->id = $t;
 
 		$this->setState('template', $template);
-		$this->setState('admin', $admin);
-
-		// Adjust the context to support modal layouts.
-		$input  = $app->input;
-		$layout = $input->get('layout');
-
-		if ($layout)
-		{
-			$this->context .= '.' . $layout;
-		}
-
-		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
-		$this->setState('filter.search', $search);
-
-		$studytitle = $this->getUserStateFromRequest($this->context . '.filter.studytitle', 'filter_studytitle');
-		$this->setState('filter.studytitle', $studytitle);
-
-		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
-		$this->setState('filter.published', $published);
-
-		$book = $this->getUserStateFromRequest($this->context . '.filter.book', 'filter_book');
-		$this->setState('filter.book', $book);
-
-		$teacher = $this->getUserStateFromRequest($this->context . '.filter.teacher', 'filter_teacher');
-		$this->setState('filter.teacher', $teacher);
-
-		$series = $this->getUserStateFromRequest($this->context . '.filter.series', 'filter_series');
-		$this->setState('filter.series', $series);
-
-		$messageType = $this->getUserStateFromRequest($this->context . '.filter.messagetype', 'filter_messagetype');
-		$this->setState('filter.messagetype', $messageType);
-
-		$year = $this->getUserStateFromRequest($this->context . '.filter.year', 'filter_year');
-		$this->setState('filter.year', $year);
-
-		$language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
-		$this->setState('filter.language', $language);
-
-		$access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
-		$this->setState('filter.access', $access);
-
-		$location = $this->getUserStateFromRequest($this->context . 'filter.location', 'filter_location');
-		$this->setState('filter.location', $location);
-
-		// Force a language
-		$forcedLanguage = $app->input->get('forcedLanguage');
-
-		if (!empty($forcedLanguage))
-		{
-			$this->setState('filter.language', $forcedLanguage);
-			$this->setState('filter.forcedLanguage', $forcedLanguage);
-		}
-
-		parent::populateState('study.studydate', 'DESC');
+		$this->setState('params', $params);
 	}
 
 	/**
@@ -128,14 +120,54 @@ class BiblestudyModelPodcastlist extends JModelList
 	 */
 	protected function getListQuery()
 	{
-		$user            = JFactory::getUser();
-		$query           = parent::getListQuery();
+		// Get the current user for authorisation checks
+		$user = JFactory::getUser();
+
+		// Create a new query object.
+		$db = $this->getDbo();
+		$query = $db->getQuery(true);
 
 		$query->select(
 			$this->getState(
 				'list.select', '*')
 		);
-		$query->from('#__bsms_series');
+
+		// Filter by state
+		$state = $this->getState('filter.published');
+
+		if (is_numeric($state))
+		{
+			$query->where('a.published = ' . (int) $state);
+		}
+		else
+		{
+			$query->where('(a.published IN (0,1,2))');
+		}
+
+		// Filter by access level.
+		if ($access = $this->getState('filter.access'))
+		{
+			$groups = implode(',', $user->getAuthorisedViewLevels());
+			$query->where('a.access IN (' . $groups . ')');
+		}
+
+		$pc_show = $this->getState('filter.pc_show');
+
+		if (is_numeric($pc_show))
+		{
+			$query->where('pc_show = ' . $pc_show);
+		}
+
+		// Filter by language
+		if ($this->getState('filter.language'))
+		{
+			$query->where('a.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
+		}
+
+		$query->from('#__bsms_series as a');
+
+		// Add the list ordering clause.
+		$query->order($this->getState('list.ordering', 'a.id') . ' ' . $this->getState('list.direction', 'ASC'));
 
 		return $query;
 	}
@@ -150,110 +182,65 @@ class BiblestudyModelPodcastlist extends JModelList
 	 */
 	public function getItems()
 	{
-		$user   = JFactory::getUser();
+		$items = parent::getItems();
+		$user = JFactory::getUser();
+		$userId = $user->get('id');
+		$guest = $user->get('guest');
 		$groups = $user->getAuthorisedViewLevels();
 
-		$query = $this->_db->getQuery(true);
-		$query->select(
-			$this->getState(
-				'list.select', '*')
-		);
-
-		$query->from('#__bsms_series');
-		$this->_db->setQuery($query);
-
-		$items   = $this->_db->loadObjectList();
-		$listing = new JBSMListing;
-
-		foreach ($items as $t => $item)
+		// Convert the parameter fields into objects.
+		foreach ($items as &$item)
 		{
-			// Check the access level. Remove articles the user shouldn't see
-			if (!in_array($items[$t]->access, $groups))
+			$item->params = clone $this->getState('params');
+
+			// Compute the asset access permissions.
+			// Technically guest could edit an article, but lets not check that to improve performance a little.
+			if (!$guest)
 			{
-				unset($items[$t]);
+				$asset = 'com_biblestudy.series.' . $item->id;
+
+				// Check general edit permission first.
+				if ($user->authorise('core.edit', $asset))
+				{
+					$item->params->set('access-edit', true);
+				}
+
+				// Now check if edit.own is available.
+				elseif (!empty($userId) && $user->authorise('core.edit.own', $asset))
+				{
+					// Check for a valid user and that they are the owner.
+					if ($userId == $item->created_by)
+					{
+						$item->params->set('access-edit', true);
+					}
+				}
 			}
 
-			$query = $this->_db->getQuery(true);
-			$query->select('s.*');
-			$query->from('#__bsms_studies as s');
-			$query->where('s.id = 577');
-			$query->where('s.published = ' . 1);
-			$query->where('s.series_id = ' . (int) $item->id);
-			$query->order('s.studydate DESC');
-			$this->_db->setQuery($query);
+			$access = $this->getState('filter.access');
 
-			$messages = $this->_db->loadObjectList();
-
-			foreach ($messages as $m => $message)
+			if ($access)
 			{
-				// Check the access level. Remove articles the user shouldn't see
-				if (!in_array($messages[$m]->access, $groups))
+				// If the access filter has been set, we already have only the articles this user can view.
+				$item->params->set('access-view', true);
+			}
+			else
+			{
+				// If no access filter is set, the layout takes some responsibility for display of limited information.
+				if ($item->catid == 0 || $item->category_access === null)
 				{
-					unset($messages[$m]);
-				}
-
-				$query = $this->_db->getQuery(true);
-				$query->select('#__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.params AS sparams, #__bsms_servers.media AS smedia,'
-					. ' s.studytitle, s.studydate, s.studyintro, s.media_hours, s.media_minutes, s.media_seconds, s.teacher_id,'
-					. ' s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin, s.verse_end, t.teachername, t.id as tid, s.id as sid, s.studyintro');
-				$query->from('#__bsms_mediafiles');
-				$query->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server_id)');
-				$query->leftJoin('#__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)');
-				$query->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)');
-
-				$query->where('#__bsms_mediafiles.study_id = ' . (int) $message->id);
-				$query->where('#__bsms_mediafiles.published = 1');
-				$query->where('#__bsms_mediafiles.language in (' . $this->_db->quote(JFactory::getLanguage()->getTag()) . ',' . $this->_db->quote('*') . ')');
-				$query->order('ordering ASC');
-				$this->_db->setQuery($query);
-				$mediafiles = $this->_db->loadObjectList();
-
-				foreach ($mediafiles as $mf => $med)
-				{
-					$reg = new Registry;
-					$reg->loadString($med->params);
-					$filename   = $reg->get('filename', '');
-					$extension  = substr($filename, strrpos($filename, '.') + 1);
-
-					// Get the media files in one query
-					if ($extension !== 'mp3')
-					{
-						unset($mediafiles[$mf]);
-					}
-
-					if (isset($mediafiles[$mf]))
-					{
-							$reg = new Registry;
-							$reg->loadString($mediafiles[$mf]->params);
-							$mediafiles[$mf]->params = $reg;
-					}
-				}
-
-				if (!empty($mediafiles))
-				{
-					$messages[$m]->mediafiles = $mediafiles;
+					$item->params->set('access-view', in_array($item->access, $groups));
 				}
 				else
 				{
-					unset($messages[$m]);
+					$item->params->set('access-view', in_array($item->access, $groups) && in_array($item->category_access, $groups));
 				}
 			}
 
-			$items[$t]->messages = $messages;
-		}
-
-		if (JFactory::getApplication()->isSite())
-		{
-			$user   = JFactory::getUser();
-			$groups = $user->getAuthorisedViewLevels();
-
-			for ($x = 0, $count = count($items); $x < $count; $x++)
+			// Get the tags
+			if ($item->params->get('show_tags'))
 			{
-				// Check the access level. Remove articles the user shouldn't see
-				if (!in_array($items[$x]->access, $groups))
-				{
-					unset($items[$x]);
-				}
+				$item->tags = new JHelperTags;
+				$item->tags->getItemTags('com_biblestudy.series', $item->id);
 			}
 		}
 

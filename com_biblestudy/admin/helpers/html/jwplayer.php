@@ -191,7 +191,7 @@ abstract class JHtmlJwplayer
 			$popouttext = '';
 		}
 
-		if ($popup)
+		if ($popup || $params->get('pcplaylist'))
 		{
 			$render .= "</div>";
 		}
@@ -206,8 +206,9 @@ abstract class JHtmlJwplayer
 				$player->playerheight . "'); return false\">" . $popouttext . "</a>";
 		}
 
-		$render .= "<script language=\"javascript\" type=\"text/javascript\">
-						jwplayer('placeholder" . $media->id . "').setup({
+		$render .= "<script type=\"text/javascript\">
+					var playerInstance" . $media->id . " = jwplayer('placeholder" . $media->id . "');
+						playerInstance" . $media->id . ".setup({
 							'file': '" . $media->path1 . "',
 						";
 
@@ -226,13 +227,17 @@ abstract class JHtmlJwplayer
 		{
 			$header = $media->headertext;
 		}
+		elseif ($params->get('pcplaylist'))
+		{
+			$header = $media->studytitle;
+		}
 		else
 		{
 			$header = $params->get('popuptitle', '');
 		}
 
 		$render .= "'width': '" . $media->playerwidth . "',
-						'displaytitle': '" . $header . "',
+						'title': '" . $header . "',
 						'image': '" . $params->get('popupimage', 'images/biblestudy/speaker24.png') . "',
 						'autostart': '" . $media->autostart . "',
 						'backcolor': '" . $media->backcolor . "',
@@ -241,7 +246,18 @@ abstract class JHtmlJwplayer
 						'screencolor': '" . $media->screencolor . "',
 						'controlbar.position': '" . $params->get('playerposition') . "',
 						'controlbar.idlehide': '" . $params->get('playeridlehide') . "'
-					});
+					});";
+
+		$render .= "</script>";
+
+		$render .= "<script>
+				  function loadVideo(myFile,myImage) { 
+				    playerInstance" . $media->id . ".load([{
+				      file: myFile,
+				      image: myImage
+				    }]);
+				    playerInstance" . $media->id . ".play();
+				  };
 				</script>";
 
 		return $render;
