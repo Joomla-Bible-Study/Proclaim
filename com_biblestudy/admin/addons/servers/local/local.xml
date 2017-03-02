@@ -9,7 +9,8 @@
 		<fieldset name="details" label="JBS_ADDON_LEGACY_DETAILS">
 			<field name="link_type" type="list" extension="com_biblestudy"
 			       label="JBS_MED_SHOW_DOWNLOAD_ICON" description="JBS_MED_SHOW_DOWNLOAD_ICON_DESC"
-			       class="inputbox" default="1">
+			       class="inputbox" default="">
+				<option value="">JGLOBAL_USE_GLOBAL</option>
 				<option value="0">JBS_MED_NO_DOWNLOAD_ICON</option>
 				<option value="1">JBS_MED_SHOW_DOWNLOAD_ICON</option>
 				<option value="2">JBS_MED_SHOW_ONLY_DOWNLOAD_ICON</option>
@@ -17,7 +18,8 @@
 		</fieldset>
 		<fieldset name="files_settings" label="JBS_ADDON_LEGACY_FILE_SETTINGS">
 			<field name="player" type="list" label="JBS_MED_PLAYER"
-			       description="JBS_MED_PLAYER_DESC" class="inputbox" default="2">
+			       description="JBS_MED_PLAYER_DESC" class="inputbox" default="">
+				<option value="">JGLOBAL_USE_GLOBAL</option>
 				<option value="0">JBS_CMN_DIRECT_LINK</option>
 				<option value="1">JBS_CMN_USE_INTERNAL_PLAYER</option>
 				<option value="3">JBS_CMN_USE_AV</option>
@@ -26,7 +28,8 @@
 			</field>
 			<field name="popup" type="list" label="JBS_MED_INTERNAL_POPUP"
 			       description="JBS_MED_INTERNAL_POPUP_DESC" class="inputbox"
-			       default="3">
+			       default="">
+				<option value="">JGLOBAL_USE_GLOBAL</option>
 				<option value="1">JBS_CMN_POPUP</option>
 				<option value="2">JBS_CMN_INLINE</option>
 				<option value="3">JBS_CMN_SQUEEZEBOX</option>
