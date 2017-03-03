@@ -5,7 +5,6 @@
 			<field name="link_type" type="list" extension="com_biblestudy"
 			       label="JBS_MED_SHOW_DOWNLOAD_ICON" description="JBS_MED_SHOW_DOWNLOAD_ICON_DESC"
 			       class="inputbox" readonly="readonly" size="1" default="0">
-				<option value="">JGLOBAL_USE_GLOBAL</option>
 				<option value="0">JBS_MED_NO_DOWNLOAD_ICON</option>
 			</field>
 		</fieldset>
