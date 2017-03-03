@@ -198,7 +198,7 @@ class JBSMMedia
 		elseif ($params->get('default_download_image'))
 		{
 			$d_image = $params->get('default_download_image');
-			$download_image = $this->useJImage($d_image, JText::_('JBS_MED_DOWNLOAD'));
+		    	$download_image = $this->useJImage($d_image, JText::_('JBS_MED_DOWNLOAD'));
 		}
 		else
 		{
@@ -211,9 +211,9 @@ class JBSMMedia
 			$link_type = $media->params->get('link_type');
 		}
 
-		if ($media->sparams->get('link_type') && $media->params->get('link_type'))
+		if ($media->params->get('download_show') && (!$media->params->get('link_type')))
 		{
-			$link_type = $media->smedia->get('link_type');
+			$link_type = 2;
 		}
 
 		if ($link_type > 0)

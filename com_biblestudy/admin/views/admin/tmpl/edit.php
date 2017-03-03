@@ -348,6 +348,12 @@ $input = $app->input;
 									<?php echo $this->form->getInput('default_teacher_image', 'params'); ?>
 								</div>
 							</div>
+                            <div class="control-group">
+                                <?php echo $this->form->getLabel('download_show', 'params'); ?>
+                                <div class="controls">
+                                    <?php echo $this->form->getInput('download_show', 'params'); ?>
+                                </div>
+                            </div>
 							<div class="control-group">
 								<?php echo $this->form->getLabel('download_use_button_icon', 'params'); ?>
 								<div class="controls">

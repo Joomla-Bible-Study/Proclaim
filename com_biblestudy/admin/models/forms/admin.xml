@@ -47,6 +47,11 @@
 
 		<!-- Download image/button/icon-->
 
+		<field name="download_show" label="JBS_SHOW_DOWNLOAD_BUTTON"
+			   description="JBS_SHOW_DOWNLOAD_BUTTON_DESC" class="inputbox" type="list" size="15" default="" labelclass="control-label">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
 		<field name="download_use_button_icon" label="JBS_ADDON_LEGACY_DOWNLOAD_USE_BUTTON"
 		       description="JBS_ADDON_LEGACY_DOWNLOAD_USE_BUTTON_DESC" class="inputbox" type="list" size="15" default="" labelclass="control-label">
 			<option value="">JBS_CMN_DEFAULT_DOWNLOAD</option>
