@@ -288,7 +288,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 *
 	 * @param   int  $pk  int
 	 *
-	 * @return  mixed|void
+	 * @return  mixed
 	 *
 	 * @since   9.0.0
 	 */

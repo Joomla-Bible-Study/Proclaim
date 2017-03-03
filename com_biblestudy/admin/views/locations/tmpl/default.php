@@ -9,17 +9,19 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 JHtml::_('bootstrap.tooltip');
+JHtml::_('dropdown.init');
 JHtml::_('behavior.multiselect');
 JHtml::_('formbehavior.chosen', 'select');
 
 $app       = JFactory::getApplication();
 $user      = JFactory::getUser();
 $userId    = $user->get('id');
-$listOrder = $this->escape($this->state->get('list.ordering', 'location.locations_text'));
-$listDirn  = $this->escape($this->state->get('list.direction', 'asc'));
+$listOrder = $this->escape($this->state->get('list.ordering', 'location.id'));
+$listDirn  = $this->escape($this->state->get('list.direction', 'desc'));
 $archived  = $this->state->get('filter.published') == 2 ? true : false;
 $trashed   = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder == 'location.ordering';
@@ -28,8 +30,10 @@ $columns   = 5;
 if ($saveOrder)
 {
 	$saveOrderingUrl = 'index.php?option=com_biblestudy&task=location.saveOrderAjax&tmpl=component';
-	JHtml::_('sortablelist.sortable', 'articleList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+	JHtml::_('sortablelist.sortable', 'locationsList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 }
+
+$sortFields = $this->getSortFields();
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=locations'); ?>" method="post" name="adminForm"
       id="adminForm">
@@ -51,23 +55,23 @@ if ($saveOrder)
 					<?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
 				</div>
 			<?php else : ?>
-				<table class="table table-striped adminlist" id="articleList">
+				<table class="table table-striped adminlist" id="locationsList">
 					<thead>
 					<tr>
 						<th width="1%" class="hidden-phone">
 							<?php echo JHtml::_('grid.checkall'); ?>
 						</th>
 						<th width="1%" style="min-width:55px;" class="nowrap center">
-							<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'locations.published', $listDirn, $listOrder); ?>
+							<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'location.published', $listDirn, $listOrder); ?>
 						</th>
 						<th>
-							<?php echo JHtml::_('grid.sort', 'JBS_CMN_LOCATIONS', 'locations.locations_text', $listDirn, $listOrder); ?>
+							<?php echo JHtml::_('grid.sort', 'JBS_CMN_LOCATIONS', 'location.locations_text', $listDirn, $listOrder); ?>
 						</th>
 						<th width="10%" class="nowrap hidden-phone">
 							<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ACCESS', 'access_level', $listDirn, $listOrder); ?>
 						</th>
 						<th width="1%" class="nowrap center hidden-phone">
-							<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'locations.id', $listDirn, $listOrder); ?>
+							<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'location.id', $listDirn, $listOrder); ?>
 						</th>
 					</tr>
 					</thead>

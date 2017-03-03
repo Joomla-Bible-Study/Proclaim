@@ -106,6 +106,12 @@ class JBSMHelper
 			return 0;
 		}
 
+		// Removes a bad url problem in some DB's
+		if (substr_count($url, '/http'))
+		{
+			$url = ltrim($url, '/');
+		}
+
 		if (!substr_count($url, 'http://') && !substr_count($url, 'https://'))
 		{
 			if (substr_count($url, '//'))
@@ -119,7 +125,7 @@ class JBSMHelper
 		}
 
 		$parsed = parse_url($url);
-		$host   = $parsed["host"];
+		$host   = @$parsed["host"];
 		$fp     = null;
 
 		if (function_exists('fsockopen'))
@@ -216,9 +222,15 @@ class JBSMHelper
 			{
 				return $protocol . $path;
 			}
-			elseif (substr_count($spath, '://') || substr_count($spath, '//') && !empty($spath))
+			elseif ((substr_count($spath, '://') || substr_count($spath, '//')) && !empty($spath))
 			{
-				return $spath . '/' . $path;
+				if (substr_count($spath, '//'))
+				{
+					$spath = substr($spath, 2);
+					$protocol = $params->get('protocol', 'http://');
+				}
+
+				return $protocol . $spath . '/' . $path;
 			}
 
 			// Set Protocol based on server status
@@ -232,7 +244,7 @@ class JBSMHelper
 				$path = $protocol . $path;
 			}
 		}
-		elseif (!substr_count($spath, '://') || !substr_count($spath, '//') && !empty($spath))
+		elseif ((!substr_count($spath, '://') || !substr_count($spath, '//')) && !empty($spath))
 		{
 			$path = $spath . '/' . $path;
 		}

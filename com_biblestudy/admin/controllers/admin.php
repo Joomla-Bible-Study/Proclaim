@@ -41,6 +41,9 @@ class BiblestudyControllerAdmin extends JControllerForm
 	{
 		$tool = JFactory::getApplication()->input->get('tooltype', '', 'post');
 
+		/** @var BiblestudyModelAdmin $model */
+		$model = $this->getModel();
+
 		switch ($tool)
 		{
 			case 'players':
@@ -49,6 +52,11 @@ class BiblestudyControllerAdmin extends JControllerForm
 
 			case 'popups':
 				$this->changePopup();
+				break;
+
+			case 'playerbymediatype':
+				$msg = $model->playerByMediaType();
+				$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
 				break;
 		}
 	}
@@ -306,8 +314,8 @@ class BiblestudyControllerAdmin extends JControllerForm
 		$post = $_POST['jform'];
 		$reg  = new Registry;
 		$reg->loadArray($post['params']);
-		$from = $reg->get('from');
-		$to   = $reg->get('to');
+		$from = $reg->get('from', 'x');
+		$to   = $reg->get('to', 'x');
 
 		if ($from != 'x' && $to != 'x')
 		{
@@ -359,11 +367,13 @@ class BiblestudyControllerAdmin extends JControllerForm
 		// Check for request forgeries.
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-		$jinput = JFactory::getApplication()->input;
 		$db     = JFactory::getDbo();
 		$msg    = null;
-		$from   = $jinput->getInt('pfrom', '');
-		$to     = $jinput->getInt('pto', '');
+		$post = $_POST['jform'];
+		$reg  = new Registry;
+		$reg->loadArray($post['params']);
+		$from = $reg->get('pFrom', 'x');
+		$to   = $reg->get('pTo', 'x');
 		$msg    = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
 		$query  = $db->getQuery(true);
 		$query->select('id, params')
@@ -552,6 +562,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		// Check for request forgeries.
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
+		/** @var BiblestudyModelAdmin $model */
 		$model = $this->getModel('admin');
 		$model->fix();
 		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=database', false));
@@ -849,6 +860,8 @@ class BiblestudyControllerAdmin extends JControllerForm
 	{
 		// Check for request forgeries.
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
+		/** @var BiblestudyModelArchive $model */
 		$model = $this->getModel('archive');
 		$msg = $model->doArchive();
 		$this->setRedirect('index.php?option=com_biblestudy&view=cpanel', $msg);

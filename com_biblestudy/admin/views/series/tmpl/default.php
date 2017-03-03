@@ -66,7 +66,7 @@ $sortFields = $this->getSortFields();
 					<?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
 				</div>
 			<?php else : ?>
-				<table class="table table-striped adminlist" id="series">
+				<table class="table table-striped adminlist" id="seriesList">
 					<thead>
 					<tr>
 						<th width="1%" class="nowrap center hidden-phone">

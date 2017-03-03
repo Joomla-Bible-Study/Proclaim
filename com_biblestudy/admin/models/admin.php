@@ -428,6 +428,113 @@ class BiblestudyModelAdmin extends JModelAdmin
 	}
 
 	/**
+	 * Change Player based off MimeType or Extension of File Name
+	 *
+	 * @return string
+	 *
+	 * @since 9.0.12
+	 */
+	public function playerByMediaType()
+	{
+		// Check for request forgeries.
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
+		$db     = JFactory::getDbo();
+		$msg    = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
+		$post   = $_POST['jform'];
+		$reg    = new Registry;
+		$reg->loadArray($post['params']);
+		$from   = $reg->get('mtFrom', 'x');
+		$to     = $reg->get('mtTo', 'x');
+		$account  = 0;
+		$count  = 0;
+
+		$MediaHelper = new JBSMMedia;
+		$mimetypes = $MediaHelper->getMimetypes();
+
+		if ($from !== 'x')
+		{
+			$key = array_search($from, $mimetypes);
+		}
+		else
+		{
+			return 'No Selection Made';
+		}
+
+		$query = $db->getQuery(true);
+		$query->select('id, params')
+			->from('#__bsms_mediafiles')
+			->where('published = ' . $db->q('1'));
+		$db->setQuery($query);
+
+		foreach ($db->loadObjectList() as $media)
+		{
+			$count++;
+			$search = false;
+			$isfrom = '';
+			$reg = new Registry;
+			$reg->loadString($media->params);
+			$filename = $reg->get('filename', '');
+			$mediacode = $reg->get('mediacode');
+
+			$extension   = substr($filename, strrpos($filename, '.') + 1);
+
+			if (strpos($filename, 'http') !== false && $from == 'http')
+			{
+				$reg->set('mime_type', ' ');
+				$isfrom = 'http';
+				$search = true;
+			}
+
+			if (!empty($mediacode) && $from == 'mediacode')
+			{
+				$reg->set('mime_type', ' ');
+				$isfrom = 'mediacode';
+				$search = true;
+			}
+
+			if (strpos($key, $extension) !== false || $reg->get('mime_type', 0) == $from)
+			{
+				$reg->set('mime_type', $from);
+				$isfrom = 'Extenstion';
+				$search = true;
+			}
+
+			if ($search && !empty($isfrom))
+			{
+				$account++;
+
+				if (JBSMDEBUG)
+				{
+					$msg .= ' From: ' . $isfrom . '<br />';
+
+					if ($reg->get('mime_type', 0) == $from)
+					{
+						$msg .= ' MimeType: ' . $reg->get('mime_type') . '<br />';
+					}
+
+					$msg .= ' Search found FileName: ' . $filename . '<br />';
+				}
+
+				$reg->set('player', $to);
+
+				$query = $db->getQuery(true);
+				$query->update('#__bsms_mediafiles')
+					->set('params = ' . $db->q($reg->toString()))
+					->where('id = ' . (int) $media->id);
+				$db->setQuery($query);
+
+				if (!$db->execute())
+				{
+					return JText::_('JBS_ADM_ERROR_OCCURED');
+				}
+			}
+		}
+
+		return $msg . ' ' . $account;
+	}
+
+	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
