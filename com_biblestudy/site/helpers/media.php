@@ -198,7 +198,7 @@ class JBSMMedia
 		elseif ($params->get('default_download_image'))
 		{
 			$d_image = $params->get('default_download_image');
-		    	$download_image = $this->useJImage($d_image, JText::_('JBS_MED_DOWNLOAD'));
+			$download_image = $this->useJImage($d_image, JText::_('JBS_MED_DOWNLOAD'));
 		}
 		else
 		{
