@@ -181,6 +181,15 @@ abstract class JHtmlJwplayer
 
 		$render .= " <div id='placeholder" . $media->id . "'></div>";
 
+		if ($params->get('media_popout_yes', true))
+		{
+			$popouttext = $params->get('media_popout_text', JText::_('JBS_CMN_POPOUT'));
+		}
+		else
+		{
+			$popouttext = '';
+		}
+
 		if ($popup)
 		{
 			$render .= "</div>";
@@ -193,7 +202,7 @@ abstract class JHtmlJwplayer
 			$render .= "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=" . $player->player
 				. "&amp;view=popup&amp;t=" . $t . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width="
 				. $player->playerwidth . ",height=" .
-				$player->playerheight . "'); return false\">" . JText::_('Pop Out') . "</a>";
+				$player->playerheight . "'); return false\">" . $popouttext . "</a>";
 		}
 
 		$render .= "<script language=\"javascript\" type=\"text/javascript\">

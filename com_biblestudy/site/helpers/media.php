@@ -183,6 +183,7 @@ class JBSMMedia
 	{
 		// Remove download form Youtube links.
 		$filename = $media->params->get('filename');
+		$link_type = 0;
 
 		if (substr_count($filename, 'youtube') || substr_count($filename, 'youtu.be'))
 		{
@@ -629,6 +630,14 @@ class JBSMMedia
 
 					case 2: // Inline
 						JHtml::_('Jwplayer.framework', true, true);
+
+						if ($player->player == 7)
+						{
+							$player->playerheight = '40';
+							$player->boxplayerheight = '40';
+							$player->mp3 = true;
+						}
+
 						$playercode = JHtmlJwplayer::render($media, $params, false, $player, $template);
 						break;
 

@@ -11,7 +11,7 @@ CREATE TABLE `#__bsms_update` (
 
 INSERT INTO `#__bsms_update` (`id`, `version`)
 VALUES
-  (1, '9.0.12');
+  (1, '9.0.13');
 
 -- --------------------------------------------------------
 
