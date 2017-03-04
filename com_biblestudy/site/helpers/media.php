@@ -191,6 +191,7 @@ class JBSMMedia
 	{
 		// Remove download form Youtube links.
 		$filename = $media->params->get('filename');
+		$link_type = 0;
 
 		if (substr_count($filename, 'youtube') || substr_count($filename, 'youtu.be'))
 		{
