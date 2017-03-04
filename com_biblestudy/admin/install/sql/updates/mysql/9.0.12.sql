@@ -8,4 +8,4 @@ INSERT INTO `#__bsms_update` (id, version) VALUES ('25', '9.0.12')
 ON DUPLICATE KEY UPDATE version = '9.0.12';
 
 
-ALTER TABLE `#__bsms_series` ADD COLUMN `pc_show` INT(3) NOT NULL DEFAULT '1' COMMENT 'For displaying on podcasts page' AFTER 'landing_show';
+ALTER TABLE `#__bsms_series` ADD COLUMN `pc_show` INT(3) NOT NULL DEFAULT '1' COMMENT 'For displaying on podcasts page' AFTER `landing_show`;
