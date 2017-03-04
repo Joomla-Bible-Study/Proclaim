@@ -27,45 +27,56 @@ $trashed   = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder == 'ordering';
 
 $jbsmedia = new JBSMMedia;
-
 ?>
 <div class="container-fluid">
-    <h2><?php echo JText::_('JBS_CMN_PODCASTS_LIST'); ?></h2>
-    <div class="span2">
-	<?php echo $this->items->image ?></div>
-    <div class="span9">
-	<?php echo $jbsmedia->getFluidMedia($this->media[0], $this->params, $this->template); ?>
+    <div class="span4">
+		<?php echo $this->item->image; ?>
+        <h2><?php echo JText::_($this->item->series_text); ?></h2>
     </div>
 
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>
-                Title
-            </th>
-            <th>
-                Date
-            </th>
-            <th>
+	<?php if (!empty($this->media))
+	{
+		?>
+        <div class="span7">
+			<?php echo $jbsmedia->getFluidMedia($this->media[0], $this->params, $this->template); ?>
+        </div>
 
-            </th>
-        </tr>
-        </thead>
-		<?php foreach ($this->media as $item)
-		{ ?>
+        <table class="table table-striped">
+            <thead>
             <tr>
-				<?php $jbsmedia->getFluidMedia($item, $this->params, $this->template); ?>
-                <td>
-					<?php echo stripslashes($item->studytitle); ?>
-                </td>
-                <td>
-					<?php echo JHtml::Date($item->createdate); ?>
-                </td>
-                <td class="row"><a
-                            href="javascript:loadVideo('<?php echo $item->path1; ?>', '<?php echo $item->series_thumbnail; ?>')">
-                        Listen
-                    </a>
-                </td>
+                <th>
+					<?php echo JText::_('JBS_CMN_TITLE'); ?>
+                </th>
+                <th>
+					<?php echo JText::_('JBS_CPL_DATE'); ?>
+                </th>
+                <th>
+
+                </th>
             </tr>
-		<?php } ?></table>
+            </thead>
+			<?php foreach ($this->media as $item)
+			{ ?>
+                <tr>
+					<?php $jbsmedia->getFluidMedia($item, $this->params, $this->template); ?>
+                    <td>
+						<?php echo stripslashes($item->studytitle); ?>
+                    </td>
+                    <td>
+						<?php echo JHtml::Date($item->createdate); ?>
+                    </td>
+                    <td class="row"><a
+                                href="javascript:loadVideo('<?php echo $item->path1; ?>', '<?php echo $item->series_thumbnail; ?>')">
+                            Listen
+                        </a>
+                    </td>
+                </tr>
+			<?php } ?></table>
+	<?php }
+	else
+	{ ?>
+        <div style="clear: both"></div>
+        <p><?php echo JText::_('JBS_CMN_NO_PODCASTS'); ?></p>
+		<?php
+	} ?>
 </div>

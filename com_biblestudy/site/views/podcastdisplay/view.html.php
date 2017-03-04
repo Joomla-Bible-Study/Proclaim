@@ -22,12 +22,16 @@ class BiblestudyViewPodcastdisplay extends JViewLegacy
 {
 	protected $state;
 
-	protected $items;
+	protected $item;
 
 	protected $template;
 
+	protected $media;
+
 	/** @var  Registry */
 	protected $params;
+
+	private $studies;
 
 	/**
 	 * Execute and display a template script.
@@ -46,7 +50,7 @@ class BiblestudyViewPodcastdisplay extends JViewLegacy
 
 		// Get the menu item object
 		// Load the Admin settings and params from the template
-		$items              = $this->get('Item');
+		$item               = $this->get('Item');
 		$this->state        = $this->get('State');
 
 		/** @var Registry $params */
@@ -54,15 +58,15 @@ class BiblestudyViewPodcastdisplay extends JViewLegacy
 		$this->template     = $this->state->get('template');
 
 		// Get studies associated with this series
-		$mainframe->setUserState('sid', $items->id);
+		$mainframe->setUserState('sid', $item->id);
 		$this->studies = $this->get('Studies');
 
 		// Get the series image
 		$images              = new JBSMImages;
-		$image               = $images->getSeriesThumbnail($items->series_thumbnail);
-		$items->image        = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="" />';
-		$teacherimage        = $images->getTeacherThumbnail($items->thumb, $image2 = null);
-		$items->teacherimage = '<img src="' . $teacherimage->path . '" height="' . $teacherimage->height . '" width="'
+		$image               = $images->getSeriesThumbnail($item->series_thumbnail);
+		$item->image         = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="" />';
+		$teacherimage        = $images->getTeacherThumbnail($item->thumb, $image2 = null);
+		$item->teacherimage = '<img src="' . $teacherimage->path . '" height="' . $teacherimage->height . '" width="'
 			. $teacherimage->width . '" alt="" />';
 
 		JHtml::_('biblestudy.framework');
@@ -70,24 +74,27 @@ class BiblestudyViewPodcastdisplay extends JViewLegacy
 
 		$media = [];
 
-		foreach ($this->studies as $s => $stude)
+		if ($this->studies)
 		{
-			$exmedias = explode(',', $stude->mids);
-			$jbsmedia = new JBSMMedia;
-
-			foreach ($exmedias as $i => $exmedia)
+			foreach ($this->studies as $s => $stude)
 			{
-				$rmedia = $jbsmedia->getMediaRows2($exmedia);
+				$exmedias = explode(',', $stude->mids);
+				$jbsmedia = new JBSMMedia;
 
-				if ($rmedia)
+				foreach ($exmedias as $i => $exmedia)
 				{
-					$reg = new Registry;
-					$reg->loadString($rmedia->params);
-					$rparams = $reg;
+					$rmedia = $jbsmedia->getMediaRows2($exmedia);
 
-					if ($this->endsWith($rparams->get('filename'), '.mp3') === true)
+					if ($rmedia)
 					{
-						$media[] = $rmedia;
+						$reg = new Registry;
+						$reg->loadString($rmedia->params);
+						$rparams = $reg;
+
+						if ($this->endsWith($rparams->get('filename'), '.mp3') === true)
+						{
+							$media[] = $rmedia;
+						}
 					}
 				}
 			}
@@ -115,18 +122,18 @@ class BiblestudyViewPodcastdisplay extends JViewLegacy
 		$user   = JFactory::getUser();
 		$groups = $user->getAuthorisedViewLevels();
 
-		if (!in_array($items->access, $groups) && $items->access)
+		if (!in_array($item->access, $groups) && $item->access)
 		{
 			$mainframe->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
 
 			return;
 		}
 
-		$input->set('returnid', $items->id);
+		$input->set('returnid', $item->id);
 
 		// End process prepare content plugins
 		$this->params      = & $params;
-		$this->items       = $items;
+		$this->item        = $item;
 		$uri               = new JUri;
 		$stringuri         = $uri->toString();
 		$this->request_url = $stringuri;
