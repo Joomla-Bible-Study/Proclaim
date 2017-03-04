@@ -43,10 +43,8 @@
            description="JBS_CMN_SELECT_LANGUAGE_DESC" class="inputbox span12">
         <option value="*">JALL</option>
     </field>
-    <field name="detailstemplateid" type="sql"
-           label="JBS_PDC_TEMPLATE_FOR_DETAILS_VIEW_LINK"
-           query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY title ASC"
-           key_field="id" value_field="title"/>
+    <field name="detailstemplateid" type="templatelist"
+           label="JBS_PDC_TEMPLATE_FOR_DETAILS_VIEW_LINK"/>
     <field name="image" type="media" label="JBS_PDC_IMAGE"
            description="JBS_PDC_IMAGE_DESC"/>
     <field name="podcastimage" type="media" label="JBS_PDC_PODCAST_LOGO"

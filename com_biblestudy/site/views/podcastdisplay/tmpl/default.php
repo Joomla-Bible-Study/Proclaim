@@ -29,27 +29,43 @@ $saveOrder = $listOrder == 'ordering';
 $jbsmedia = new JBSMMedia;
 
 ?>
-<h2><?php echo JText::_('JBS_CMN_PODCASTS_LIST'); ?></h2>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=podcastlist'); ?>" method="post"
-      name="adminForm" id="adminForm">
-    <div id="effect-1" class="effects">
-	    <?php echo $this->items->image ?>
-        <div style="clear: both;"></div>
-	    <?php echo $jbsmedia->getFluidMedia($this->media[0], $this->params, $this->template); ?>
+<div class="container-fluid">
+    <h2><?php echo JText::_('JBS_CMN_PODCASTS_LIST'); ?></h2>
+    <div class="span2">
+	<?php echo $this->items->image ?></div>
+    <div class="span9">
+	<?php echo $jbsmedia->getFluidMedia($this->media[0], $this->params, $this->template); ?>
+    </div>
 
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>
+                Title
+            </th>
+            <th>
+                Date
+            </th>
+            <th>
+
+            </th>
+        </tr>
+        </thead>
 		<?php foreach ($this->media as $item)
 		{ ?>
-            <?php $jbsmedia->getFluidMedia($item, $this->params, $this->template); ?>
-            <li><a href="javascript:loadVideo('<?php echo $item->path1; ?>', '<?php echo $item->series_thumbnail; ?>')">
-                    <?php echo stripslashes($item->studytitle); ?>
-                </a>
-            </li>
-		<?php } ?>
-    </div>
-    <div style="clear: both"></div>
-    <input type="hidden" name="task" value=""/>
-    <input type="hidden" name="boxchecked" value="0"/>
-    <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
-    <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
-	<?php echo JHtml::_('form.token'); ?>
-</form>
+            <tr>
+				<?php $jbsmedia->getFluidMedia($item, $this->params, $this->template); ?>
+                <td>
+					<?php echo stripslashes($item->studytitle); ?>
+                </td>
+                <td>
+					<?php echo JHtml::Date($item->createdate); ?>
+                </td>
+                <td class="row"><a
+                            href="javascript:loadVideo('<?php echo $item->path1; ?>', '<?php echo $item->series_thumbnail; ?>')">
+                        Listen
+                    </a>
+                </td>
+            </tr>
+		<?php } ?></table>
+</div>
