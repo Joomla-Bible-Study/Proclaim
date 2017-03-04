@@ -15,7 +15,8 @@
 			</field>
 			<field name="popup" type="list" label="JBS_MED_INTERNAL_POPUP"
 			       description="JBS_MED_INTERNAL_POPUP_DESC" class="inputbox"
-			       default="3">
+			       default="">
+				<option value="">JGLOBAL_USE_GLOBAL</option>
 				<option value="1">JBS_CMN_POPUP</option>
 				<option value="2">JBS_CMN_INLINE</option>
 				<option value="3">JBS_CMN_SQUEEZEBOX</option>

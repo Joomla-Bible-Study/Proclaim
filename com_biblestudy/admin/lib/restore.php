@@ -5,7 +5,7 @@
  * @package    BibleStudy.Admin
  * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @link       https://www.joomlabiblestudy.org
  * */
 defined('_JEXEC') or die;
 
@@ -308,14 +308,7 @@ class JBSMRestore
 		$app = JFactory::getApplication();
 
 		// Get the uploaded file information
-		if (JBSMDEBUG)
-		{
-			$userfile = $_FILES['importdb'];
-		}
-		else
-		{
-			$userfile = $app->input->files->get('importdb');
-		}
+		$userfile = $_FILES['importdb'];
 
 		// Make sure that file uploads are enabled in php
 		if (!(bool) ini_get('file_uploads'))

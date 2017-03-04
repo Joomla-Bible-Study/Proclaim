@@ -3,7 +3,7 @@
  * @package    BibleStudy.Admin
  * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @link       https://www.joomlabiblestudy.org
  */
 
 defined('JPATH_PLATFORM') or die;
@@ -46,7 +46,7 @@ abstract class JHtmlJwplayer
 		/** @var Joomla\Registry\Registry $params */
 		$params = JBSMParams::getAdmin()->params;
 		$key    = $params->get('jwplayer_key', '8eJ+ik6aOUabfOisJzomcM2Z3h1VZ9+6cufBXQ==');
-		$cdn    = $params->get('jwplayer_cdn', '');
+		$cdn    = $params->get('jwplayer_cdn', 'https://content.jwplatform.com/libraries/HPyI6990.js');
 
 		if ($cdn)
 		{
@@ -79,6 +79,8 @@ abstract class JHtmlJwplayer
 	 */
 	public static function render($media, $params, $popup = false, $player = null, $t = null)
 	{
+		$popupmarg = 0;
+
 		// Used to set for MP3 and audio player look
 		if (isset($player->mp3) && $player->mp3 == true)
 		{
@@ -173,6 +175,8 @@ abstract class JHtmlJwplayer
 			{
 				$render .= "<div class='playeralign' style=\"margin-left: auto; margin-right: auto; width:" . $media->playerwidth . "px;\">";
 			}
+
+			$popupmarg = $params->get('popupmargin', '50');
 		}
 
 		$render .= " <div id='placeholder" . $media->id . "'></div>";
@@ -185,7 +189,7 @@ abstract class JHtmlJwplayer
 		{
 			// Add space for popup window
 			$player->playerwidth  = $player->playerwidth + 20;
-			$player->playerheight = $player->playerheight + $params->get('popupmargin', '50');
+			$player->playerheight = $player->playerheight + $popupmarg;
 			$render .= "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=" . $player->player
 				. "&amp;view=popup&amp;t=" . $t . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width="
 				. $player->playerwidth . ",height=" .

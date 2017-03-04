@@ -5,7 +5,7 @@
  * @package    BibleStudy.Admin
  * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @link       https://www.joomlabiblestudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -48,7 +48,7 @@ class BiblestudyViewLocations extends JViewLegacy
 	 * @var object
 	 * @since    7.0.0
 	 */
-	protected $canDo;
+	public $canDo;
 
 	/**
 	 * Filter Levels
@@ -56,14 +56,14 @@ class BiblestudyViewLocations extends JViewLegacy
 	 * @var object
 	 * @since    7.0.0
 	 */
-	protected $f_levels;
+	public $f_levels;
 
 	/**
 	 * Side Bar
 	 *
 	 * @var string
 	 */
-	protected $sidebar;
+	public $sidebar;
 
 	/**
 	 * Execute and display a template script.
@@ -203,9 +203,10 @@ class BiblestudyViewLocations extends JViewLegacy
 	protected function getSortFields()
 	{
 		return array(
-			'locations.location_text' => JText::_('JGRID_HEADING_ORDERING'),
-			'locations.published'     => JText::_('JSTATUS'),
-			'locations.id'            => JText::_('JGRID_HEADING_ID')
+			'location.location_text' => JText::_('JGRID_HEADING_ORDERING'),
+			'location.published'     => JText::_('JSTATUS'),
+			'access_level'            => JText::_('JGRID_HEADING_ACCESS'),
+			'location.id'            => JText::_('JGRID_HEADING_ID')
 		);
 	}
 }

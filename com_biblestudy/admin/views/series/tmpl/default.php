@@ -5,7 +5,7 @@
  * @package    BibleStudy.Admin
  * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @link       https://www.joomlabiblestudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -66,7 +66,7 @@ $sortFields = $this->getSortFields();
 					<?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
 				</div>
 			<?php else : ?>
-				<table class="table table-striped adminlist" id="series">
+				<table class="table table-striped adminlist" id="seriesList">
 					<thead>
 					<tr>
 						<th width="1%" class="nowrap center hidden-phone">

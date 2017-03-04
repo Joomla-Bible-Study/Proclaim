@@ -4054,12 +4054,12 @@ class Com_BiblestudyInstallerScript
     public function rmoldurl()
     {
 
-        $urls = array("http://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=3&amp;dummy=extension.xml /extension.xml",
-            "http://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=14&amp;dummy=extension.xml /extension.xml, ",
-            "http://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=13&amp;dummy=extension.xml /extension.xml, ",
-            "http://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=4&amp;dummy=extension.xml /extension.xml, ",
-            "http://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=8&amp;dummy=extension.xml /extension.xml ",
-            "http://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=5&amp;dummy=extension.xml /extension.xml");
+        $urls = array("https://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=3&amp;dummy=extension.xml /extension.xml",
+            "https://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=14&amp;dummy=extension.xml /extension.xml, ",
+            "https://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=13&amp;dummy=extension.xml /extension.xml, ",
+            "https://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=4&amp;dummy=extension.xml /extension.xml, ",
+            "https://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=8&amp;dummy=extension.xml /extension.xml ",
+            "https://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=5&amp;dummy=extension.xml /extension.xml");
 
         return $urls;
 </codefragment>

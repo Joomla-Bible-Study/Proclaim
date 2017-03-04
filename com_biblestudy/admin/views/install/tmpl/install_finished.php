@@ -5,7 +5,7 @@
  * @package    BibleStudy.Admin
  * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @link       https://www.joomlabiblestudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -110,16 +110,16 @@ $session->set('migration_stack', '', 'JBSM');
 
 	<tr>
 		<td>
-			<p><a href="http://www.joomlabiblestudy.org/forum.html"
+			<p><a href="https://www.joomlabiblestudy.org/forum.html"
 			      target="_blank"><?php echo JText::_('JBS_INS_VISIT_FORUM'); ?></a></p>
 
-			<p><a href="http://www.joomlabiblestudy.org"
+			<p><a href="https://www.joomlabiblestudy.org"
 			      target="_blank"><?php echo JText::_('JBS_INS_GET_MORE_HELP'); ?></a></p>
 
-			<p><a href="http://www.joomlabiblestudy.org/jbs-documentation.html"
+			<p><a href="https://www.joomlabiblestudy.org/jbs-documentation.html"
 			      target="_blank"><?php echo JText::_('JBS_INS_VISIT_DOCUMENTATION'); ?></a></p>
 
-			<p><?php echo JText::_('JBS_INS_TITLE'); ?> &copy; by <a href="http://www.JoomlaBibleStudy.org"
+			<p><?php echo JText::_('JBS_INS_TITLE'); ?> &copy; by <a href="https://www.joomlabiblestudy.org"
 			                                                         target="_blank">www.JoomlaBibleStudy.org</a>
 				All rights reserved.</p>
 

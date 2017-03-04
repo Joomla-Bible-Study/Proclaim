@@ -5,7 +5,7 @@
  * @package    BibleStudy.Admin
  * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @link       https://www.joomlabiblestudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -71,6 +71,60 @@ class BiblestudyModelLocations extends JModelList
 	}
 
 	/**
+	 * Method to get a list of articles.
+	 * Overridden to add a check for access levels.
+	 *
+	 * @return    mixed    An array of data items on success, false on failure.
+	 *
+	 * @since    1.6.1
+	 */
+	public function getItems()
+	{
+		$items = parent::getItems();
+		$app   = JFactory::getApplication();
+
+		if ($app->isSite())
+		{
+			$user   = JFactory::getUser();
+			$groups = $user->getAuthorisedViewLevels();
+
+			for ($x = 0, $count = count($items); $x < $count; $x++)
+			{
+				// Check the access level. Remove articles the user shouldn't see
+				if (!in_array($items[$x]->access, $groups))
+				{
+					unset($items[$x]);
+				}
+			}
+		}
+
+		return $items;
+	}
+
+	/**
+	 * Method to get a store id based on model configuration state.
+	 *
+	 * This is necessary because the model is used by the component and
+	 * different modules that might need different sets of data or different
+	 * ordering requirements.
+	 *
+	 * @param   string  $id  A prefix for the store id.
+	 *
+	 * @return  string  A store id.
+	 *
+	 * @since   7.1.0
+	 */
+	protected function getStoreId($id = '')
+	{
+		// Compile the store id.
+		$id .= ':' . $this->getState('filter.published');
+		$id .= ':' . $this->getState('filter.access');
+		$id .= ':' . $this->getState('filter.search');
+
+		return parent::getStoreId($id);
+	}
+
+	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * This method should only be called once per instantiation and is designed
@@ -88,14 +142,19 @@ class BiblestudyModelLocations extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
+		$app = JFactory::getApplication('administrator');
+
 		// Adjust the context to support modal layouts.
-		$input  = new JInput;
-		$layout = $input->get('layout');
+		$layout = $app->input->get('layout');
 
 		if ($layout)
 		{
 			$this->context .= '.' . $layout;
 		}
+
+		// Load the parameters.
+		$params = JComponentHelper::getParams('com_biblestudy');
+		$this->setState('params', $params);
 
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
@@ -106,7 +165,7 @@ class BiblestudyModelLocations extends JModelList
 		$access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
 		$this->setState('filter.access', $access);
 
-		parent::populateState('location.location_text', 'ASC');
+		parent::populateState('location.id', 'desc');
 	}
 
 	/**
@@ -174,8 +233,8 @@ class BiblestudyModelLocations extends JModelList
 		}
 
 		// Add the list ordering clause
-		$orderCol  = $this->state->get('list.ordering', 'location.location_text');
-		$orderDirn = $this->state->get('list.direction', 'acs');
+		$orderCol  = $this->state->get('list.ordering', 'location.id');
+		$orderDirn = $this->state->get('list.direction', 'desc');
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
 		return $query;

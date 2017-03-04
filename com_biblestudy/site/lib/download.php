@@ -5,7 +5,7 @@
  * @package    BibleStudy.Site
  * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @link       https://www.joomlabiblestudy.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -97,7 +97,17 @@ class JBSMDownload
 		// Bytes per chunk (10 MB)
 		$chunk = 10 * 1024 * 1024;
 
-		$fh = @fopen($download_file, "rb") or jexit("Unable to open file");
+		$fh = @fopen($download_file, "rb");
+
+		if (!$fh)
+		{
+			if (JBSMDEBUG)
+			{
+				var_dump($download_file);
+			}
+
+			jexit("Unable to open file");
+		}
 
 		// Clean the output buffer, Added to fix ZIP file corruption
 		@ob_end_clean();
