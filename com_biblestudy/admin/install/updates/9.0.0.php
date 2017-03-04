@@ -343,6 +343,11 @@ class Migration900
 		$this->deleteTable('#__bsms_media', $db);
 		$this->deleteTable('#__bsms_mimetype', $db);
 
+		$db->setQuery("ALTER TABLE `#__bsms_servers` MODIFY COLUMN `type` CHAR(255) NOT NULL");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__bsms_mediafiles` MODIFY COLUMN `hits` INT (10) DEFAULT '0'");
+		$db->execute();
+
 		$message                     = new stdClass;
 		$message->title_key          = 'JBS_POSTINSTALL_TITLE_TEMPLATE';
 		$message->description_key    = 'JBS_POSTINSTALL_BODY_TEMPLATE';

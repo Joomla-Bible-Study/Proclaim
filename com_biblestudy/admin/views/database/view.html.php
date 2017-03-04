@@ -200,6 +200,9 @@ class BiblestudyViewDataBase extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
+		// Set variables
+		$app = JFactory::getApplication();
+
 		$model = JModelLegacy::getInstance('Admin', 'BiblestudyModel');
 		$this->setModel($model, true);
 
@@ -208,9 +211,7 @@ class BiblestudyViewDataBase extends JViewLegacy
 
 		// Get data from the model
 		$this->form  = $this->get("Form");
-		$this->item  = $this->get("Item");
 		$this->state = $this->get("State");
-		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id);
 
 		// Get data from the model for database
 		$this->changeSet     = $this->get('Items');
@@ -241,6 +242,15 @@ class BiblestudyViewDataBase extends JViewLegacy
 		if (($this->updateVersion != $this->version))
 		{
 			$this->errorCount++;
+		}
+
+		if ($this->errorCount === 0)
+		{
+			$app->enqueueMessage(JText::_('COM_INSTALLER_MSG_DATABASE_OK'), 'notice');
+		}
+		else
+		{
+			$app->enqueueMessage(JText::_('COM_INSTALLER_MSG_DATABASE_ERRORS'), 'warning');
 		}
 
 		$this->setLayout('edit');
