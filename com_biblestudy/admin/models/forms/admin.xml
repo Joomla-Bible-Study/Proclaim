@@ -47,8 +47,15 @@
 
 		<!-- Download image/button/icon-->
 
+		<field name="download_show" label="JBS_SHOW_DOWNLOAD_BUTTON"
+		       description="JBS_SHOW_DOWNLOAD_BUTTON_DESC" class="inputbox" type="list" size="15" default=""
+		       labelclass="control-label">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
 		<field name="download_use_button_icon" label="JBS_ADDON_LEGACY_DOWNLOAD_USE_BUTTON"
-		       description="JBS_ADDON_LEGACY_DOWNLOAD_USE_BUTTON_DESC" class="inputbox" type="list" size="15" default="" labelclass="control-label">
+		       description="JBS_ADDON_LEGACY_DOWNLOAD_USE_BUTTON_DESC" class="inputbox" type="list" size="15" default=""
+		       labelclass="control-label">
 			<option value="">JBS_CMN_DEFAULT_DOWNLOAD</option>
 			<option value="1">JBS_MED_NONE</option>
 			<option value="2">JBS_MED_BUTTON_ONLY</option>
@@ -56,8 +63,10 @@
 			<option value="4">JBS_MED_ICON_ONLY</option>
 		</field>
 
-		<field name="download_button_text" type="text" default="Audio" label="JBS_ADDON_LEGACY_BUTTON_TEXT" description="JBS_ADDON_LEGACY_BUTTON_TEXT_DESC"/>
-		<field name="download_button_type" type="list" class="inputbox" size="15" default="" label="JBS_ADDON_LEGACY_BUTTON_TYPE"
+		<field name="download_button_text" type="text" default="Audio" label="JBS_ADDON_LEGACY_BUTTON_TEXT"
+		       description="JBS_ADDON_LEGACY_BUTTON_TEXT_DESC"/>
+		<field name="download_button_type" type="list" class="inputbox" size="15" default=""
+		       label="JBS_ADDON_LEGACY_BUTTON_TYPE"
 		       description="JBS_ADDON_LEGACY_BUTTON_TYPE_DESC" labelclass="control-label">
 			<option value="btn-link">JBS_MED_NO_COLOR</option>
 			<option value="btn-primary">JBS_MED_PRIMARY</option>
@@ -66,8 +75,10 @@
 			<option value="btn-warning">JBS_MED_WARNING</option>
 			<option value="btn-danger">JBS_MED_DANGER</option>
 		</field>
-		<field name="download_button_color" type="color" description="JBS_ADDON_LEGACY_BUTTON_COLOR_DESC" label="JBS_ADDON_LEGACY_BUTTON_COLOR"/>
-		<field name="download_icon_type" type="list" class="inputbox" size="15" default="" label="JBS_ADDON_LEGACY_ICON_TYPE"
+		<field name="download_button_color" type="color" description="JBS_ADDON_LEGACY_BUTTON_COLOR_DESC"
+		       label="JBS_ADDON_LEGACY_BUTTON_COLOR"/>
+		<field name="download_icon_type" type="list" class="inputbox" size="15" default=""
+		       label="JBS_ADDON_LEGACY_ICON_TYPE"
 		       description="JBS_ADDON_LEGACY_ICON_TYPE_DESC" labelclass="control-label">
 			<option value="fa fa-download">JBS_DOWNLOAD_1</option>
 			<option value="fa fa-arrow-down">JBS_DOWNLOAD_2</option>
@@ -75,8 +86,10 @@
 			<option value="fa fa-long-arrow-down">JBS_DOWNLOAD_4</option>
 			<option value="1">JBS_MED_CUSTOM</option>
 		</field>
-		<field name="download_custom_icon" type="text" default="" label="JBS_ADDON_LEGACY_CUSTOM_ICON" description="JBS_ADDON_LEGACY_CUSTOM_ICON_DESC" labelclass="control-label"/>
-		<field name="download_icon_text_size" type="text" default="24" label="JBS_ADDON_LEGACY_FONT_SIZE" description="JBS_ADDON_LEGACY_FONT_SIZE_DESC" labelclass="control-label"/>
+		<field name="download_custom_icon" type="text" default="" label="JBS_ADDON_LEGACY_CUSTOM_ICON"
+		       description="JBS_ADDON_LEGACY_CUSTOM_ICON_DESC" labelclass="control-label"/>
+		<field name="download_icon_text_size" type="text" default="24" label="JBS_ADDON_LEGACY_FONT_SIZE"
+		       description="JBS_ADDON_LEGACY_FONT_SIZE_DESC" labelclass="control-label"/>
 		<field name="default_download_image" type="media" size="50" label="JBS_ADM_DOWNLOAD_IMAGE"
 		       description="JBS_ADM_DOWNLOAD_IMAGE_DESC" labelclass="control-label"/>
 
@@ -86,9 +99,12 @@
 			<option>JBS_CMN_DEFAULT_IMAGE</option>
 		</field>
 		<!--Thumbnail sizes-->
-		<field name="thumbnail_teacher_size" default="100" type="int" size="5" label="JBS_ADM_THUMBNAIL_TEACHER_SIZE" description="JBS_ADM_THUMBNAIL_TEACHER_SIZE_DESC" labelclass="control-label" class="span2"/>
-		<field name="thumbnail_series_size" default="100" type="int" size="5" label="JBS_ADM_THUMBNAIL_SERIES_SIZE" description="JBS_ADM_THUMBNAIL_SERIES_SIZE_DESC" labelclass="control-label" class="span2"/>
-		<field name="thumbnail_study_size" default="100" type="int" size="5" label="JBS_ADM_THUMBNAIL_STUDY_SIZE" description="JBS_ADM_THUMBNAIL_STUDY_SIZE_DESC" labelclass="control-label" class="span2"/>
+		<field name="thumbnail_teacher_size" default="100" type="int" size="5" label="JBS_ADM_THUMBNAIL_TEACHER_SIZE"
+		       description="JBS_ADM_THUMBNAIL_TEACHER_SIZE_DESC" labelclass="control-label" class="span2"/>
+		<field name="thumbnail_series_size" default="100" type="int" size="5" label="JBS_ADM_THUMBNAIL_SERIES_SIZE"
+		       description="JBS_ADM_THUMBNAIL_SERIES_SIZE_DESC" labelclass="control-label" class="span2"/>
+		<field name="thumbnail_study_size" default="100" type="int" size="5" label="JBS_ADM_THUMBNAIL_STUDY_SIZE"
+		       description="JBS_ADM_THUMBNAIL_STUDY_SIZE_DESC" labelclass="control-label" class="span2"/>
 
 		<field name="location_id" type="sql" extension="com_biblestudy" label="JBS_CMN_LOCATION"
 		       description="JBS_ADM_FILLIN_STUDY_DESC" class="inputbox"
@@ -185,7 +201,8 @@
 			<option value="1">JBS_CMN_POPUP_NEW_WINDOW</option>
 			<option value="3">JBS_CMN_USE_GLOBAL</option>
 		</field>
-		<field name="mtFrom" type="Mimetype" label="JBS_ADM_CHANGE_PLAYERS" description="JBS_ADM_MEDIATYPES_DESC" labelclass="control-label">
+		<field name="mtFrom" type="Mimetype" label="JBS_ADM_CHANGE_PLAYERS" description="JBS_ADM_MEDIATYPES_DESC"
+		       labelclass="control-label">
 			<option value="x">JBS_ADM_SELECT_NEW_OPTION</option>
 			<option value="http">URL</option>
 			<option value="mediacode">MediaCode</option>
@@ -325,7 +342,8 @@
 		</field>
 	</fieldset>
 	<fieldset addfieldpath="/administrator/components/com_biblestudy/models/fields">
-		<field name="mediaimage" type="mediafileimages" class="inputbox" labelclass="control-label" label="JBS_ADM_MEDIA_IMAGES" size="20">
+		<field name="mediaimage" type="mediafileimages" class="inputbox" labelclass="control-label"
+		       label="JBS_ADM_MEDIA_IMAGES" size="20">
 			<option value="-1">JBS_SELECT_IMAGE</option>
 		</field>
 		<field name="media_use_button_icon" label="JBS_ADDON_LEGACY_MEDIA_USE_BUTTON"
@@ -335,8 +353,10 @@
 			<option value="2">JBS_MED_BUTTON_AND_ICON</option>
 			<option value="3">JBS_MED_ICON_ONLY</option>
 		</field>
-		<field name="media_button_text" type="text" default="Audio" label="JBS_ADDON_LEGACY_BUTTON_TEXT" description="JBS_ADDON_LEGACY_BUTTON_TEXT_DESC"/>
-		<field name="media_button_type" type="list" class="inputbox" size="15" default="" label="JBS_ADDON_LEGACY_BUTTON_TYPE"
+		<field name="media_button_text" type="text" default="Audio" label="JBS_ADDON_LEGACY_BUTTON_TEXT"
+		       description="JBS_ADDON_LEGACY_BUTTON_TEXT_DESC"/>
+		<field name="media_button_type" type="list" class="inputbox" size="15" default=""
+		       label="JBS_ADDON_LEGACY_BUTTON_TYPE"
 		       description="JBS_ADDON_LEGACY_BUTTON_TYPE_DESC">
 			<option value="btn-link">JBS_MED_NO_COLOR</option>
 			<option value="btn-primary">JBS_MED_PRIMARY</option>
@@ -345,8 +365,10 @@
 			<option value="btn-warning">JBS_MED_WARNING</option>
 			<option value="btn-danger">JBS_MED_DANGER</option>
 		</field>
-		<field name="media_button_color" type="color" description="JBS_ADDON_LEGACY_BUTTON_COLOR_DESC" label="JBS_ADDON_LEGACY_BUTTON_COLOR"/>
-		<field name="media_icon_type" type="list" class="inputbox" size="15" default="" label="JBS_ADDON_LEGACY_ICON_TYPE"
+		<field name="media_button_color" type="color" description="JBS_ADDON_LEGACY_BUTTON_COLOR_DESC"
+		       label="JBS_ADDON_LEGACY_BUTTON_COLOR"/>
+		<field name="media_icon_type" type="list" class="inputbox" size="15" default=""
+		       label="JBS_ADDON_LEGACY_ICON_TYPE"
 		       description="JBS_ADDON_LEGACY_ICON_TYPE_DESC">
 			<option value="fa fa-play">JBS_MED_PLAY</option>
 			<option value="fa fa-youtube">JBS_MED_YOUTUBE</option>
@@ -356,8 +378,10 @@
 			<option value="fa fa-vimeo">JBS_MED_VIMEO</option>
 			<option value="1">JBS_MED_CUSTOM</option>
 		</field>
-		<field name="media_custom_icon" type="text" default="" label="JBS_ADDON_LEGACY_CUSTOM_ICON" description="JBS_ADDON_LEGACY_CUSTOM_ICON_DESC"/>
-		<field name="media_icon_text_size" type="text" default="24" label="JBS_ADDON_LEGACY_FONT_SIZE" description="JBS_ADDON_LEGACY_FONT_SIZE_DESC"/>
+		<field name="media_custom_icon" type="text" default="" label="JBS_ADDON_LEGACY_CUSTOM_ICON"
+		       description="JBS_ADDON_LEGACY_CUSTOM_ICON_DESC"/>
+		<field name="media_icon_text_size" type="text" default="24" label="JBS_ADDON_LEGACY_FONT_SIZE"
+		       description="JBS_ADDON_LEGACY_FONT_SIZE_DESC"/>
 		<field name="media_image" type="media" directory="biblestudy"
 		       label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
 		       class="inputbox span6">

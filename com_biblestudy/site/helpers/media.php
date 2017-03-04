@@ -218,9 +218,10 @@ class JBSMMedia
 		{
 			$link_type = $media->params->get('link_type');
 		}
-		else
+
+		if ($media->params->get('download_show') && (!$media->params->get('link_type')))
 		{
-			$link_type = $media->smedia->get('link_type');
+			$link_type = 2;
 		}
 
 		if ($link_type > 0)
