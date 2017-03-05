@@ -1,10 +1,10 @@
 <?php
 /**
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.JoomlaBibleStudy.org
- * @since      9.0.13
+ * @since      9.0.14
  * */
 
 defined('_JEXEC') or die;
@@ -19,7 +19,7 @@ JLoader::register('BiblestudyInstallerScript', JPATH_COMPONENT_ADMINISTRATOR . '
  * Database Manage Model
  *
  * @package  BibleStudy.Admin
- * @since    9.0.13
+ * @since    9.0.14
  */
 class BiblestudyModelDatabase extends InstallerModel
 {
@@ -27,7 +27,7 @@ class BiblestudyModelDatabase extends InstallerModel
 	 * Context of model
 	 *
 	 * @var string
-	 * @since    9.0.13
+	 * @since    9.0.14
 	 */
 	protected $context = 'com_biblestudy.discover';
 
@@ -39,7 +39,7 @@ class BiblestudyModelDatabase extends InstallerModel
 	 * @param   string  $ordering   Ordering
 	 * @param   string  $direction  Direction of the list
 	 *
-	 * @since    9.0.13
+	 * @since    9.0.14
 	 * @return void
 	 */
 	protected function populateState($ordering = null, $direction = null)
@@ -57,7 +57,7 @@ class BiblestudyModelDatabase extends InstallerModel
 	 *
 	 * @return void
 	 *
-	 * @since    9.0.13
+	 * @since    9.0.14
 	 */
 	public function fix()
 	{
@@ -73,7 +73,7 @@ class BiblestudyModelDatabase extends InstallerModel
 	 *
 	 * @return  JSchemaChangeset
 	 *
-	 * @since    9.0.13
+	 * @since    9.0.14
 	 */
 	public function getItems()
 	{
@@ -88,7 +88,7 @@ class BiblestudyModelDatabase extends InstallerModel
 	 *
 	 * @return boolean
 	 *
-	 * @since    9.0.13
+	 * @since    9.0.14
 	 */
 	public function getPagination()
 	{
@@ -101,7 +101,7 @@ class BiblestudyModelDatabase extends InstallerModel
 	 * @return  mixed  the return value from the query, or null if the query fails
 	 *
 	 * @throws Exception
-	 * @since    9.0.13
+	 * @since    9.0.14
 	 */
 	public function getSchemaVersion()
 	{
@@ -123,7 +123,7 @@ class BiblestudyModelDatabase extends InstallerModel
 	 *
 	 * @return   mixed  string schema version if success, false if fail
 	 *
-	 * @since    9.0.13
+	 * @since    9.0.14
 	 */
 	public function fixSchemaVersion($changeSet)
 	{
@@ -170,7 +170,7 @@ class BiblestudyModelDatabase extends InstallerModel
 	 *
 	 * @return  mixed   version if successful, false if fail
 	 *
-	 * @since    9.0.13
+	 * @since    9.0.14
 	 */
 	public function getUpdateVersion()
 	{
@@ -187,7 +187,7 @@ class BiblestudyModelDatabase extends InstallerModel
 	 *
 	 * @return   mixed  string update version if success, false if fail
 	 *
-	 * @since    9.0.13
+	 * @since    9.0.14
 	 */
 	public function fixUpdateVersion()
 	{
@@ -222,7 +222,7 @@ class BiblestudyModelDatabase extends InstallerModel
 	 *
 	 * @return  string  default text filters (if any)
 	 *
-	 * @since    1.7.0
+	 * @since    9.0.14
 	 */
 	public function getDefaultTextFilters()
 	{
@@ -238,7 +238,7 @@ class BiblestudyModelDatabase extends InstallerModel
 	 *
 	 * @return  mixed  boolean true if params are updated, null otherwise
 	 *
-	 * @since    1.7.0
+	 * @since    9.0.14
 	 */
 	public function fixDefaultTextFilters()
 	{
@@ -271,7 +271,7 @@ class BiblestudyModelDatabase extends InstallerModel
 	 *
 	 * @return int
 	 *
-	 * @since 7.1.0
+	 * @since 9.0.14
 	 * @throws Exception
 	 */
 	public function getExtentionId()
@@ -291,7 +291,7 @@ class BiblestudyModelDatabase extends InstallerModel
 	 *
 	 * @return string Version of component
 	 *
-	 * @since 1.7.3
+	 * @since 9.0.14
 	 */
 	public function getCompVersion()
 	{

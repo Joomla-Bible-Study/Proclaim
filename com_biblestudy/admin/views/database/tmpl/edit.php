@@ -1,11 +1,12 @@
 <?php
 /**
- * @package     Joomla.Administrator
- * @subpackage  com_installer
+ * DataBase html
  *
- * @copyright   Copyright (C) 2005 - 2017 Open Source Matters, Inc. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
- */
+ * @package    BibleStudy.Admin
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       https://www.joomlabiblestudy.org
+ * */
 
 defined('_JEXEC') or die;
 
