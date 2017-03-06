@@ -114,6 +114,11 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * @since 7.1 */
 	private $install = array();
 
+	/** @var array Array of Install Task
+	 *
+	 * @since 9.0.14 */
+	private $start = array();
+
 	/** @var int If was imported
 	 *
 	 * @since 7.1 */
@@ -604,6 +609,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				'allupdates' => $this->allupdates,
 				'finish'     => $this->finish,
 				'install'    => $this->install,
+				'start'      => $this->start,
 				'subFiles'   => $this->subFiles,
 				'subQuery'   => $this->subQuery,
 				'subSteps'   => $this->subSteps,
@@ -642,22 +648,23 @@ class BibleStudyModelInstall extends JModelLegacy
 	{
 		$session = JFactory::getSession();
 		$session->set('migration_stack', '', 'JBSM');
-		$this->version        = '0.0.0';
+		$this->version       = '0.0.0';
 		$this->versionStack  = array();
 		$this->versionSwitch = null;
 		$this->allupdates    = array();
 		$this->finish        = array();
 		$this->install       = array();
+		$this->start         = array();
 		$this->subFiles      = array();
 		$this->subQuery      = array();
-		$this->subSteps       = array();
+		$this->subSteps      = array();
 		$this->isimport      = 0;
-		$this->callstack      = array();
-		$this->totalSteps     = 0;
-		$this->doneSteps      = 0;
-		$this->running        = JText::_('JBS_MIG_STARTING');
-		$this->type           = null;
-		$this->query          = array();
+		$this->callstack     = array();
+		$this->totalSteps    = 0;
+		$this->doneSteps     = 0;
+		$this->running       = JText::_('JBS_MIG_STARTING');
+		$this->type          = null;
+		$this->query         = array();
 	}
 
 	/**
@@ -674,22 +681,23 @@ class BibleStudyModelInstall extends JModelLegacy
 
 		if (empty($stack))
 		{
-			$this->version        = '0.0.0';
+			$this->version       = '0.0.0';
 			$this->versionStack  = array();
 			$this->versionSwitch = null;
 			$this->allupdates    = array();
 			$this->finish        = array();
 			$this->install       = array();
+			$this->start         = array();
 			$this->subFiles      = array();
 			$this->subQuery      = array();
-			$this->subSteps       = array();
+			$this->subSteps      = array();
 			$this->isimport      = 0;
-			$this->callstack      = array();
-			$this->totalSteps     = 0;
-			$this->doneSteps      = 0;
-			$this->running        = JText::_('JBS_MIG_STARTING');
-			$this->type           = null;
-			$this->query          = array();
+			$this->callstack     = array();
+			$this->totalSteps    = 0;
+			$this->doneSteps     = 0;
+			$this->running       = JText::_('JBS_MIG_STARTING');
+			$this->type          = null;
+			$this->query         = array();
 
 			return false;
 		}
@@ -706,22 +714,23 @@ class BibleStudyModelInstall extends JModelLegacy
 
 		$stack = json_decode($stack, true);
 
-		$this->version        = $stack['aversion'];
+		$this->version       = $stack['aversion'];
 		$this->versionStack  = $stack['version'];
 		$this->versionSwitch = $stack['switch'];
 		$this->allupdates    = $stack['allupdates'];
 		$this->finish        = $stack['finish'];
 		$this->install       = $stack['install'];
+		$this->start         = $stack['start'];
 		$this->subFiles      = $stack['subFiles'];
 		$this->subQuery      = $stack['subQuery'];
-		$this->subSteps       = $stack['subSteps'];
+		$this->subSteps      = $stack['subSteps'];
 		$this->isimport      = $stack['isimport'];
-		$this->callstack      = $stack['callstack'];
-		$this->totalSteps     = $stack['total'];
-		$this->doneSteps      = $stack['done'];
-		$this->running        = $stack['run'];
-		$this->type           = $stack['type'];
-		$this->query          = $stack['query'];
+		$this->callstack     = $stack['callstack'];
+		$this->totalSteps    = $stack['total'];
+		$this->doneSteps     = $stack['done'];
+		$this->running       = $stack['run'];
+		$this->type          = $stack['type'];
+		$this->query         = $stack['query'];
 
 		return true;
 	}
@@ -753,11 +762,21 @@ class BibleStudyModelInstall extends JModelLegacy
 		$app = JFactory::getApplication();
 		$run = true;
 
+		if (!empty($this->start))
+		{
+			$this->running = 'Backup DB';
+			$this->doneSteps++;
+			$export = new JBSMBackup;
+			$export->exportdb(2);
+			$this->start = array();
+		}
+
 		if (!empty($this->install))
 		{
 			$this->running = 'Install steps';
 			$this->doneSteps++;
 			$this->install($this->install);
+			$this->doneSteps++;
 			$this->install = array();
 		}
 

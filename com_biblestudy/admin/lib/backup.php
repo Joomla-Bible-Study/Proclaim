@@ -62,7 +62,8 @@ class JBSMBackup
 	public function exportdb($run)
 	{
 		$date             = date('Y_F_j');
-		$this->saveAsName = 'jbs-db-backup_' . $date . '_' . time() . '.sql';
+		$site             = JUri::root(true);
+		$this->saveAsName = $site . '_jbs-db-backup_' . $date . '_' . time() . '.sql';
 		$objects          = JBSMDbHelper::getObjects();
 		$tables           = null;
 
@@ -74,7 +75,7 @@ class JBSMBackup
 		switch ($run)
 		{
 			case 1:
-				$this->dumpFile = JPATH_SITE . '/tmp/' . 'jbs-db-backup_' . $date . '_' . time() . '.sql';
+				$this->dumpFile = JPATH_SITE . '/tmp/' . $this->saveAsName;
 
 				if (!$this->writeline($this->data_cache))
 				{
@@ -96,7 +97,10 @@ class JBSMBackup
 					return false;
 				}
 
-				return $this->dumpFile;
+				JFactory::getApplication()
+					->enqueueMessage('Backup File Storded at:' . JPATH_SITE . '/tmp/jbs-db-backup_' . $date . '_' . time() . '.sql', 'notice');
+
+				return true;
 				break;
 		}
 

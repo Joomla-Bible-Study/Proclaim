@@ -152,7 +152,7 @@ class BiblestudyViewInstall extends JViewLegacy
 		$this->setDocument();
 
 		// Display the template
-		return parent::display($tpl);
+		parent::display($tpl);
 	}
 
 	/**
@@ -190,6 +190,7 @@ class BiblestudyViewInstall extends JViewLegacy
 		$this->allupdates     = $stack['allupdates'];
 		$this->finish         = $stack['finish'];
 		$this->install        = $stack['install'];
+		$this->start          = $stack['start'];
 		$this->subFiles       = $stack['subFiles'];
 		$this->subQuery       = $stack['subQuery'];
 		$this->subSteps       = $stack['subSteps'];
@@ -223,7 +224,7 @@ class BiblestudyViewInstall extends JViewLegacy
 	 *
 	 * @since    7.1.0
 	 *
-	 * @return null
+	 * @return void
 	 */
 	protected function setDocument()
 	{
@@ -236,7 +237,7 @@ class BiblestudyViewInstall extends JViewLegacy
 	 *
 	 * @since 7.0.0
 	 *
-	 * @return null
+	 * @return void
 	 */
 	protected function installsetup()
 	{
