@@ -62,7 +62,8 @@
 					}); // jwplayer setup
 				} // afterShow
 			}); // fancybox
-			return false; // prevents default
+
+			event.preventDefault(); // prevents default
 		}); // on
 	}); // ready
 }(window, document, jQuery));
