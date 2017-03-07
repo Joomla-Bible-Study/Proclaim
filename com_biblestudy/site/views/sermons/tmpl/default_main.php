@@ -93,9 +93,12 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 		<?php
 		if ($this->params->get('show_pagination') == 2)
 		{
-			echo '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM') . $this->pagination->getLimitBox() . '</span>';
+			echo $this->pagination->getListFooter();
 		}
-		echo $this->pagination->getPageslinks();
+		else
+		{
+			echo $this->pagination->getPagesLinks();
+		}
 		?>
 	</div>
 	<?php

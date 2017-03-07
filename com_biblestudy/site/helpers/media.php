@@ -604,6 +604,11 @@ class JBSMMedia
 						{
 							$player->playerheight = '40';
 							$player->boxplayerheight = '40';
+
+							if ($player->playerwidth <= '259')
+							{
+								$player->playerwidth = '260';
+							}
 						}
 
 						if ($params->get('media_popout_yes', true))
@@ -631,6 +636,11 @@ class JBSMMedia
 							$player->playerheight = '40';
 							$player->boxplayerheight = '40';
 							$player->mp3 = true;
+
+							if ($player->playerwidth <= '259')
+							{
+								$player->playerwidth = '260';
+							}
 						}
 
 						$playercode = JHtmlJwplayer::render($media, $params, false, $player, $template);
