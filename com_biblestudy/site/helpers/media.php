@@ -67,15 +67,15 @@ class JBSMMedia
 			$imageparams = $media->params;
 		}
 
-		if ($imageparams->get('media_use_button_icon') >= 1)
-		{
-			$image = $this->mediaButton($imageparams);
-		}
-		else
-		{
-			$mediaimage = $imageparams->get('media_image');
-			$image      = $this->useJImage($mediaimage, $params->get('media_text', JText::_('JBS_MED_DOWNLOAD')));
-		}
+			if ($imageparams->get('media_use_button_icon') >= 1)
+			{
+				$image = $this->mediaButton($imageparams);
+			}
+			else
+			{
+				$mediaimage = $imageparams->get('media_image');
+				$image      = $this->useJImage($mediaimage, $media->params->get('media_button_text', $params->get('download_button_text', 'Audio')));
+			}
 
 		// New Podcast Playlist cast Player code override option.
 		$player     = self::getPlayerAttributes($params, $media);
@@ -564,11 +564,6 @@ class JBSMMedia
 		$filesize = self::getFluidFilesize($media, $params);
 		$duration = self::getFluidDuration($media, $params);
 
-		if (!isset($media->malttext))
-		{
-			$media->malttext = '';
-		}
-
 		$path = JBSMHelper::MediaBuildUrl($media->sparams->get('path'), $params->get('filename'), $params, true);
 
 		switch ($player->player)
@@ -580,7 +575,7 @@ class JBSMMedia
 					case 2: // New window
 						$playercode = '<a href="' . $path . '" onclick="window.open(\'index.php?option=com_biblestudy&amp;view=popup&amp;close=1&amp;mediaid=' .
 							$media->id . '\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\'); return true;" title="' .
-							$media->malttext . ' - ' . $media->comment . ' ' . $duration . ' '
+							$media->params->get("media_button_text") . ' - ' . $media->comment . ' ' . $duration . ' '
 							. $filesize . '" target="' . $params->get('special') . '" class="jbsmplayerlink">' . $image . '</a>';
 						break;
 
@@ -597,7 +592,7 @@ class JBSMMedia
 							$popout = '';
 						}
 
-						$playercode = '<a href="' . $path . '" id="linkmedia' . $media->id . '" title="' . $params->get('filename') .
+						$playercode = '<a href="' . $path . '" id="linkmedia' . $media->id . '" title="' . $params->get('media_button_text') .
 							'" class="fancybox" potext="' . $popout . '" ptype="' . $player->player .
 							'" pwidth="' . $player->playerwidth . '" bheight="' . $player->boxplayerheight . '" pheight="' .
 							$player->playerheight . '" autostart="' . $params->get('autostart', false) . '" class="jbsmplayerlink">' . $image . '</a>';
@@ -628,6 +623,11 @@ class JBSMMedia
 						{
 							$player->playerheight = '40';
 							$player->boxplayerheight = '40';
+
+							if ($player->playerwidth <= '259')
+							{
+								$player->playerwidth = '260';
+							}
 						}
 
 						if ($params->get('media_popout_yes', true))
@@ -639,7 +639,7 @@ class JBSMMedia
 							$popout = '';
 						}
 
-						$playercode = '<a href="' . $path . '" id="linkmedia' . $media->id . '" title="' . $params->get('filename') .
+						$playercode = '<a href="' . $path . '" id="linkmedia' . $media->id . '" title="' . $params->get('media_button_text') .
 								'" class="fancybox fancybox_jwplayer" potext="' . $popout . '" ptype="' . $player->player .
 							'" pwidth="' . $player->playerwidth . '" bheight="' . $player->boxplayerheight . '" pheight="' .
 							$player->playerheight . '" autostart="' . $params->get('autostart', false) . '" class="jbsmplayerlink">' . $image . '</a>';
@@ -655,6 +655,11 @@ class JBSMMedia
 							$player->playerheight = '40';
 							$player->boxplayerheight = '40';
 							$player->mp3 = true;
+
+							if ($player->playerwidth <= '259')
+							{
+								$player->playerwidth = '260';
+							}
 						}
 
 						$playercode = JHtmlJwplayer::render($media, $params, false, $player, $template);
