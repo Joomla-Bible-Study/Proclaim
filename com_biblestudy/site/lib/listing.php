@@ -715,7 +715,7 @@ class JBSMListing
 
 		if ($header == 1)
 		{
-			$headerstyle = "style=visibility:hidden;";
+			$headerstyle = "style=\"display: none;\"";
 		}
 
 		$extra = '';
@@ -754,12 +754,12 @@ class JBSMListing
 			{
 				case 1:
 					(isset($item->thumb) ? $span = '<img src="' . JUri::base() . $item->thumb . '" class="' . $params->get('rowspanitemimage') .
-						'" alt="' . JText::_('JBS_CMN_TEACHER') . '">' : $span = '');
+						'" alt="' . $item->teachername . '">' : $span = '');
 
 					if (is_null($span))
 					{
 						(isset($item->teacher_thumbnail) ? $span = '<img src="' . JUri::base() . $item->teacher_thumbnail . '" class="' .
-							$params->get('rowspanitemimage') . '" alt="' . JText::_('JBS_CMN_TEACHER') . '">' : $span = '');
+							$params->get('rowspanitemimage') . '" alt="' . $item->teachername . '">' : $span = '');
 					}
 					break;
 				case 2:
@@ -773,7 +773,7 @@ class JBSMListing
 				case 4:
 					(isset($item->teacher_image) ? $span = '<img src="' . JUri::base() . $item->teacher_image . '" class="' .
 						$params->get('rowspanitemimage') . '" alt="' .
-						JText::_('JBS_CMN_TEACHER') . '">' : $span = '');
+						$item->teachername . '">' : $span = '');
 					break;
 			}
 		}
