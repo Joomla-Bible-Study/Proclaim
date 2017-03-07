@@ -71,7 +71,7 @@ class JBSMMedia
 			else
 			{
 				$mediaimage = $imageparams->get('media_image');
-				$image      = $this->useJImage($mediaimage, $params->get('media_text', JText::_('JBS_MED_DOWNLOAD')));
+				$image      = $this->useJImage($mediaimage, $media->params->get('media_button_text', $params->get('download_button_text', 'Audio')));
 			}
 
 		$player     = self::getPlayerAttributes($params, $media);
@@ -545,11 +545,6 @@ class JBSMMedia
 		$filesize = self::getFluidFilesize($media, $params);
 		$duration = self::getFluidDuration($media, $params);
 
-		if (!isset($media->malttext))
-		{
-			$media->malttext = '';
-		}
-
 		$path = JBSMHelper::MediaBuildUrl($media->sparams->get('path'), $params->get('filename'), $params, true);
 
 		switch ($player->player)
@@ -561,7 +556,7 @@ class JBSMMedia
 					case 2: // New window
 						$playercode = '<a href="' . $path . '" onclick="window.open(\'index.php?option=com_biblestudy&amp;view=popup&amp;close=1&amp;mediaid=' .
 							$media->id . '\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\'); return true;" title="' .
-							$media->malttext . ' - ' . $media->comment . ' ' . $duration . ' '
+							$media->params->get("media_button_text") . ' - ' . $media->comment . ' ' . $duration . ' '
 							. $filesize . '" target="' . $params->get('special') . '">' . $image . '</a>';
 						break;
 
@@ -578,7 +573,7 @@ class JBSMMedia
 							$popout = '';
 						}
 
-						$playercode = '<a href="' . $path . '" id="linkmedia' . $media->id . '" title="' . $params->get('filename') .
+						$playercode = '<a href="' . $path . '" id="linkmedia' . $media->id . '" title="' . $params->get('media_button_text') .
 							'" class="fancybox" potext="' . $popout . '" ptype="' . $player->player .
 							'" pwidth="' . $player->playerwidth . '" bheight="' . $player->boxplayerheight . '" pheight="' .
 							$player->playerheight . '" autostart="' . $params->get('autostart', false) . '">' . $image . '</a>';
@@ -620,7 +615,7 @@ class JBSMMedia
 							$popout = '';
 						}
 
-						$playercode = '<a href="' . $path . '" id="linkmedia' . $media->id . '" title="' . $params->get('filename') .
+						$playercode = '<a href="' . $path . '" id="linkmedia' . $media->id . '" title="' . $params->get('media_button_text') .
 								'" class="fancybox fancybox_jwplayer" potext="' . $popout . '" ptype="' . $player->player .
 							'" pwidth="' . $player->playerwidth . '" bheight="' . $player->boxplayerheight . '" pheight="' .
 							$player->playerheight . '" autostart="' . $params->get('autostart', false) . '">' . $image . '</a>';
