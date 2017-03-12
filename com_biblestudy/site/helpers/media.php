@@ -566,24 +566,8 @@ class JBSMMedia
 						break;
 
 					case 3: // Squeezebox view
-						JHtml::_('fancybox.framework', true, true);
-						$player->boxplayerheight = $player->playerheight + 20;
 
-						if ($params->get('media_popout_yes', true))
-						{
-							$popout = $params->get('media_popout_text', JText::_('JBS_CMN_POPOUT'));
-						}
-						else
-						{
-							$popout = '';
-						}
-
-						$playercode = '<a href="' . $path . '" id="linkmedia' . $media->id . '" title="' . $params->get('filename') .
-							'" class="fancybox" potext="' . $popout . '" ptype="' . $player->player .
-							'" pwidth="' . $player->playerwidth . '" bheight="' . $player->boxplayerheight . '" pheight="' .
-							$player->playerheight . '" autostart="' . $params->get('autostart', false) . '">' . $image . '</a>';
-
-						return $playercode;
+						return $this->rendersb($media, $params, $player, $image, $path, true);
 						break;
 
 					case 1: // Popup window
@@ -602,30 +586,8 @@ class JBSMMedia
 				switch ($player->type)
 				{
 					case 3: // Squeezebox view
-						JHtml::_('fancybox.framework', true, true);
-						$player->boxplayerheight = $player->playerheight + 20;
 
-						if ($player->player == 7)
-						{
-							$player->playerheight = '40';
-							$player->boxplayerheight = '40';
-						}
-
-						if ($params->get('media_popout_yes', true))
-						{
-							$popout = $params->get('media_popout_text', JText::_('JBS_CMN_POPOUT'));
-						}
-						else
-						{
-							$popout = '';
-						}
-
-						$playercode = '<a href="' . $path . '" id="linkmedia' . $media->id . '" title="' . $params->get('filename') .
-								'" class="fancybox fancybox_jwplayer" potext="' . $popout . '" ptype="' . $player->player .
-							'" pwidth="' . $player->playerwidth . '" bheight="' . $player->boxplayerheight . '" pheight="' .
-							$player->playerheight . '" autostart="' . $params->get('autostart', false) . '">' . $image . '</a>';
-
-						return $playercode;
+						return $this->rendersb($media, $params, $player, $image, $path);
 						break;
 
 					case 2: // Inline
@@ -706,6 +668,50 @@ class JBSMMedia
 		}
 
 		return false;
+	}
+
+	/**
+	 * Render Sqeezbox
+	 *
+	 * @param   object    $media   Media
+	 * @param   Registry  $params  Params.
+	 * @param   object    $player  Player settings
+	 * @param   string    $image   The image
+	 * @param   string    $path    The path to the media
+	 * @param   bool      $direct  If coming from Direct
+	 *
+	 * @return string
+	 *
+	 * @since version
+	 */
+	public function rendersb($media, $params, $player, $image, $path, $direct = false)
+	{
+		JHtml::_('fancybox.framework', true, true);
+
+		if ($player->player == 7 && !$direct)
+		{
+			$player->playerheight = '40';
+		}
+
+		if ($params->get('media_popout_yes', true))
+		{
+			$popout = $params->get('media_popout_text', JText::_('JBS_CMN_POPOUT'));
+		}
+		else
+		{
+			$popout = '';
+		}
+
+		$playercode = '<a data-src="' . $path . '" id="linkmedia' . $media->id . '" title="' . $params->get('filename') .
+			'" class="fancybox fancybox_jwplayer" potext="' . $popout . '" ptype="' . $player->player .
+			'" pwidth="' . $player->playerwidth . '" pheight="' .
+			$player->playerheight . '" autostart="' . $params->get('autostart', false) . '" controls="' .
+			$params->get('controls') . '"" data-image="' . $params->get('jwplayer_image') . '" data-mute="' .
+			$params->get('jwplayer_mute') . '" data-logo="' . $params->get('jwplayer_logo') . '" data-logolink="' .
+			$params->get('jwplayer_logolink', JUri::base()) . '">' .
+			$image . '</a>';
+
+		return $playercode;
 	}
 
 	/**

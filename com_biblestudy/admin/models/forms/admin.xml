@@ -252,6 +252,13 @@
 				<option value="false">JBS_CMN_NO</option>
 				<option value="true">JBS_CMN_YES</option>
 			</field>
+			<field name="jwplayer_playerresponsive" type="radio"
+			               label="JBS_CMN_MEDIA_RESPONSIVE"
+			               description="JBS_ADM_JWPLAYER_RESPONSIVE_DESC"
+			               class="btn-group" default="true">
+				<option value="false">JBS_CMN_NO</option>
+				<option value="true">JBS_CMN_YES</option>
+			</field>
 			<field name="jwplayer_fallback" type="radio"
 			       label="JBS_ADM_JWPLAYER_FALLBACK"
 			       description="JBS_ADM_JWPLAYER_FALLBACK_DESC"

@@ -18,3 +18,11 @@
 .fancybox-type-iframe .fancybox-prev {
     left: -60px;
 }
+
+.jwplayer {
+    color: #000000;
+}
+
+#video_container {
+    display: inline-block !important;
+}

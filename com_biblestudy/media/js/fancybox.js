@@ -7,65 +7,55 @@
  */
 ;
 (function (window, document, $) {
-
-	$(document).ready(function () {
-		$(".fancybox").fancybox();
-	});
-	$(".fancybox")
-		.attr('rel', 'gallery')
-		.fancybox({
-			openEffect: 'none',
-			closeEffect: 'none',
-			nextEffect: 'none',
-			prevEffect: 'none',
-			padding: 0,
-			margin: [20, 60, 20, 60] // Increase left/right margin
-		});
-	$(document).ready(function () {
-		$('.fancybox-media').fancybox({
-			openEffect: 'none',
-			closeEffect: 'none',
-			helpers: {
-				media: {}
-			}
-		});
-	});
-
 	$(document).ready(function () {
 		$(".fancybox_jwplayer").on("click", function () {
 			var tarGet;
-			var myVideo = this.href;
 			var contentPanelId = $(this).attr("id");
 			var id = $("#" + contentPanelId);
-			var player = $(".fancybox_jwplayer");
-			var bheight = id.attr('bheight');
+			var myVideo = id.attr('data-src');
+			var title = id.attr('title');
 			var height = id.attr('pheight');
 			var width = id.attr('pwidth');
 			var ptype = id.attr('ptype');
 			var potext = id.attr('potext');
 			var autostart = id.attr('autostart');
-			$.fancybox({
-				fitToView: false,
+			var controls = id.attr('data-controls') || true;
+			var logo = id.attr('data-logo');
+			var logolink = id.attr('data-logolink') || '#';
+			var image = id.attr('data-image');
+			var mute = id.attr('data-mute') || false;
+			$.fancybox.open({
+				content: '<div id="video_container"></div>',
+				type: 'html',
 				width: width,
-				height: bheight,
-				autoSize: false,
-				closeClick: false,
-				openEffect: 'none',
-				closeEffect: 'none',
-				content: '<div id="video_container">Loading the player ... </div>' +
-				'<a href="index.php?option=com_biblestudy&amp;player=' + ptype + '&amp;view=popup&amp;mediaid=' + contentPanelId +
-				'&amp;tmpl=component" onclick="parent.jQuery.fancybox.close()" target="_blank">' + potext + '</a>',
-				afterShow: function () {
-					jwplayer("video_container").setup({
-						file: myVideo,
-						width: width,
-						height: height,
-						autostart: autostart,
-						controls: 'true'
-					}); // jwplayer setup
-				} // afterShow
-			}); // fancybox
-			return false; // prevents default
+				height: height,
+				opts: {
+					smallBtn: false,
+					onComplete: function () {
+						var playerInstance = jwplayer("video_container");
+						playerInstance.setup({
+							title: title,
+							logo: {
+								file: logo,
+								link: logolink
+							},
+							image: image,
+							abouttext: "Direct Link",
+							aboutlink: myVideo,
+							mediaid: contentPanelId,
+							file: myVideo,
+							width: width,
+							height: height,
+							mute: mute,
+							autostart: autostart,
+							controls: controls
+						});
+						console.log(height);
+					},
+					caption: '<button data-fancybox-close onclick="window.open(\'index.php?option=com_biblestudy&amp;player=' + ptype + '&amp;view=popup&amp;mediaid=' + contentPanelId +
+					'&amp;tmpl=component\',\'_blank\',\'resizable=yes\')">' + potext + '</button>'
+				}
+			});
 		}); // on
 	}); // ready
 }(window, document, jQuery));
