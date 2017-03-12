@@ -71,7 +71,7 @@ class JBSMMedia
 			else
 			{
 				$mediaimage = $imageparams->get('media_image');
-				$image      = $this->useJImage($mediaimage, $params->get('media_text', JText::_('JBS_MED_DOWNLOAD')));
+				$image      = $this->useJImage($mediaimage, $media->params->get('media_button_text', $params->get('download_button_text', 'Audio')));
 			}
 
 		$player     = self::getPlayerAttributes($params, $media);
@@ -545,11 +545,6 @@ class JBSMMedia
 		$filesize = self::getFluidFilesize($media, $params);
 		$duration = self::getFluidDuration($media, $params);
 
-		if (!isset($media->malttext))
-		{
-			$media->malttext = '';
-		}
-
 		$path = JBSMHelper::MediaBuildUrl($media->sparams->get('path'), $params->get('filename'), $params, true);
 
 		switch ($player->player)
@@ -561,7 +556,7 @@ class JBSMMedia
 					case 2: // New window
 						$playercode = '<a href="' . $path . '" onclick="window.open(\'index.php?option=com_biblestudy&amp;view=popup&amp;close=1&amp;mediaid=' .
 							$media->id . '\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\'); return true;" title="' .
-							$media->malttext . ' - ' . $media->comment . ' ' . $duration . ' '
+							$media->params->get("media_button_text") . ' - ' . $media->comment . ' ' . $duration . ' '
 							. $filesize . '" target="' . $params->get('special') . '">' . $image . '</a>';
 						break;
 
@@ -598,6 +593,11 @@ class JBSMMedia
 							$player->playerheight = '40';
 							$player->boxplayerheight = '40';
 							$player->mp3 = true;
+
+							if ($player->playerwidth <= '259')
+							{
+								$player->playerwidth = '260';
+							}
 						}
 
 						$playercode = JHtmlJwplayer::render($media, $params, false, $player, $template);

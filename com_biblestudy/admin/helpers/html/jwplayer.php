@@ -104,7 +104,7 @@ abstract class JHtmlJwplayer
 			return '<a href="' . $media->path1 . '" ><img src="' . JUri::root() . $params->get('media_image') . '"/></a>';
 		}
 
-		$media->playerwidth  = $params->get('player_width');
+		//
 
 		if ($params->get('playerheight') < 55 && $params->get('playerheight') && !isset($player->mp3))
 		{
@@ -115,9 +115,17 @@ abstract class JHtmlJwplayer
 			$media->playerheight = $params->get('playerheight');
 		}
 
-		if ($params->get('playerwidth'))
+		if ($params->get('playerwidth') && !isset($player->mp3))
 		{
 			$media->playerwidth = $params->get('playerwidth');
+		}
+		elseif (isset($player->mp3))
+		{
+			$media->playerwidth = $player->playerwidth;
+		}
+		else
+		{
+			$media->playerwidth  = $params->get('player_width');
 		}
 
 		if ($params->get('playervars'))
