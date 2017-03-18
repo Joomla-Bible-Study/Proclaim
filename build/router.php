@@ -5,12 +5,13 @@
  * @package    BibleStudy.Site
  * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       https://www.joomlabiblestudy.org
+ * @link       http://www.JoomlaBibleStudy.org
  * */
 $file = $_GET['file'];
 $size = $_GET['size'];
 
 // Check url for "http://" prefix, and add it if it doesn't exist
+
 if (!preg_match('/^http(s)?:\/\//', $file))
 {
 	$file = 'http://' . $file;
@@ -23,12 +24,15 @@ if ($size != $new_size)
 	$size = $new_size;
 }
 
-header("Content-Length: " . $size);
-header("Cache-Control: public");
-header("Content-Description: File Transfer");
-header("Content-Disposition: attachment; filename=" . basename($file));
-header("Content-Type: application/mp3");
+header('Content-Description: File Transfer');
+header('Content-Type: application/octet-stream');
+header('Content-Disposition: attachment; filename="' . basename($file) . '"');
+header('Expires: 0');
+header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+header("Cache-Control: private", false);
+header('Pragma: public');
 header("Content-Transfer-Encoding: binary");
+header('Content-Length: ' . $size);
 readfile($file);
 
 /**
@@ -38,50 +42,41 @@ readfile($file);
  *
  * @return  boolean
  *
- * @since 7.0
+ * @since 8.0.0
  */
 function getRemoteFileSize($url)
 {
-	$parsed = parse_url($url);
-	$host   = $parsed["host"];
-	$fp     = null;
-
-	if (function_exists('fsockopen'))
+	if (empty($url))
 	{
-		$fp = @fsockopen($host, 80, $errno, $errstr, 20);
+		return 0;
 	}
 
-	if (!$fp)
+	// Removes a bad url problem in some DB's
+	if (substr_count($url, '/http'))
 	{
-		return false;
+		$url = ltrim($url, '/');
+	}
+
+	if (!substr_count($url, 'http://') && !substr_count($url, 'https://'))
+	{
+		if (substr_count($url, '//'))
+		{
+			$url = 'http:' . $url;
+		}
+		elseif (!substr_count($url, '//'))
+		{
+			$url = 'http://' . $url;
+		}
+	}
+
+	$head = array_change_key_case(get_headers($url, true));
+
+	if (isset($head['content-length']))
+	{
+		return $head['content-length'];
 	}
 	else
 	{
-		@fputs($fp, "HEAD $url HTTP/1.1\r\n");
-		@fputs($fp, "HOST: $host\r\n");
-		@fputs($fp, "Connection: close\r\n\r\n");
-		$headers = "";
-
-		while (!@feof($fp))
-		{
-			$headers .= @fgets($fp, 128);
-		}
+		return 0;
 	}
-
-	@fclose($fp);
-	$return      = false;
-	$arr_headers = explode("\n", $headers);
-
-	foreach ($arr_headers as $header)
-	{
-		$s = "Content-Length: ";
-
-		if (substr(strtolower($header), 0, strlen($s)) == strtolower($s))
-		{
-			$return = trim(substr($header, strlen($s)));
-			break;
-		}
-	}
-
-	return $return;
 }
