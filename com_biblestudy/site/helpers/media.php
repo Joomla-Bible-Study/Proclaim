@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  * */
@@ -228,8 +228,19 @@ class JBSMMedia
 			}
 			else
 			{
+				$url = JBSMHelper::MediaBuildUrl($media->sparams->get('path'), $media->params->get('filename'), $params, true);
+
+				if ($media->params->get('size') !== '0')
+				{
+					$size = JBSMHelper::getRemoteFileSize($url);
+				}
+				else
+				{
+					$size = $media->params->get('size');
+				}
+
 				$downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' .
-					$media->params->get('filename') . '&amp;size=' . $media->params->get('size') . '">';
+					$url . '&amp;size=' . $size . '">';
 			}
 
 			// Check to see if they want to use a popup

@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  * */
@@ -124,21 +124,16 @@ class JBSMHelper
 			}
 		}
 
-		stream_context_set_default(array('http' => array('method' => 'HEAD')));
+		$head = array_change_key_case(get_headers($url, true));
 
-		$head = array_change_key_case(get_headers($url, 1));
-
-		// Content-length of download (in bytes), read from Content-Length: field
-		$clen = isset($head['content-length']) ? $head['content-length'] : 0;
-
-		// Cannot retrieve file size, return "-1"
-		if (!$clen)
+		if (isset($head['content-length']))
 		{
-			return -1;
+			return $head['content-length'];
 		}
-
-		// Return size in bytes
-		return (int) $clen;
+		else
+		{
+			return 0;
+		}
 	}
 
 	/**

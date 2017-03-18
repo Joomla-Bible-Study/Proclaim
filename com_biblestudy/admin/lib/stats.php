@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  * */
@@ -522,7 +522,7 @@ class JBSMStats
 
 			foreach ($params as $param)
 			{
-				$registry->loadString(json_encode($param->params));
+				$registry->loadString($param->params);
 
 				switch ($registry->get('player', 0))
 				{
@@ -571,6 +571,7 @@ class JBSMStats
 	{
 		$no_player    = 0;
 		$pop_count    = 0;
+		$sq_count     = 0;
 		$inline_count = 0;
 		$global_count = 0;
 		$db           = JFactory::getDbo();
@@ -589,12 +590,13 @@ class JBSMStats
 			foreach ($popups as $popup)
 			{
 				$registry = new Registry;
-				$registry->loadString(json_encode($popup->params));
+				$registry->loadString($popup->params);
 				$popup = $registry->get('popup', null);
 
 				switch ($popup)
 				{
 					case null:
+					case 100:
 					case 0:
 						$no_player++;
 						break;
@@ -605,7 +607,7 @@ class JBSMStats
 						$inline_count++;
 						break;
 					case 3:
-						$global_count++;
+						$sq_count++;
 						break;
 				}
 			}
@@ -613,7 +615,7 @@ class JBSMStats
 			$popups = '<br /><strong>' . JText::_('JBS_CMN_TOTAL_MEDIAFILES') . ': ' . $total_media_files . '</strong>' .
 				'<br /><strong>' . JText::_('JBS_CMN_INLINE') . ': </strong>' . $inline_count . '<br /><strong>' .
 				JText::_('JBS_CMN_POPUP') . ': </strong>' . $pop_count . '<br /><strong>' .
-				JText::_('JBS_CMN_GLOBAL_SETTINGS') . ': </strong>' . $global_count . '<br /><strong>' .
+				JText::_('JBS_CMN_SQUEEZEBOX') . ': </strong>' . $sq_count . '<br /><strong>' .
 				JText::_('JBS_CMN_NO_OPTION_TREATED_GLOBAL') . ': </strong>' . $no_player;
 		}
 
