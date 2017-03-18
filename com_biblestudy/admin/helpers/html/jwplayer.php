@@ -119,7 +119,7 @@ abstract class JHtmlJwplayer
 		{
 			$media->playerwidth = $params->get('playerwidth');
 		}
-		elseif (isset($player->mp3))
+		elseif (isset($player->mp3) && isset($player->playerwidth))
 		{
 			$media->playerwidth = $player->playerwidth;
 		}
