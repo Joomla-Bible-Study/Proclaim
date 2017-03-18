@@ -190,16 +190,17 @@
 		</field>
 		<field name="pFrom" type="list" label="JBS_ADM_CHANGE_POPUP" labelclass="control-label">
 			<option value="x">JBS_ADM_SELECT_EXISTING_OPTION</option>
+			<option value="1">JBS_CMN_POPUP</option>
 			<option value="2">JBS_CMN_INLINE</option>
-			<option value="1">JBS_CMN_POPUP_NEW_WINDOW</option>
-			<option value="3">JBS_CMN_USE_GLOBAL</option>
+			<option value="3">JBS_CMN_SQUEEZEBOX</option>
 			<option value="100">JBS_ADM_NO_OPTION_LISTED</option>
 		</field>
 		<field name="pTo" type="list" label="" labelclass="control-label">
 			<option value="x">JBS_ADM_SELECT_NEW_OPTION</option>
+			<option value="1">JBS_CMN_POPUP</option>
 			<option value="2">JBS_CMN_INLINE</option>
-			<option value="1">JBS_CMN_POPUP_NEW_WINDOW</option>
-			<option value="3">JBS_CMN_USE_GLOBAL</option>
+			<option value="3">JBS_CMN_SQUEEZEBOX</option>
+			<option value="100">JBS_CMN_USE_GLOBAL</option>
 		</field>
 		<field name="mtFrom" type="Mimetype" label="JBS_ADM_CHANGE_PLAYERS" description="JBS_ADM_MEDIATYPES_DESC"
 		       labelclass="control-label">
