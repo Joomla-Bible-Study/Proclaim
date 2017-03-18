@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  * */
@@ -114,7 +114,7 @@ class BiblestudyControllerAssets extends JControllerForm
 		$session = JFactory::getSession();
 		$stack = $session->get('asset_stack', '', 'JBSM');
 
-		if (empty($stack))
+		if (empty($stack) || !is_array($stack))
 		{
 			JBSMHelper::clearcache('site');
 			JBSMHelper::clearcache('admin');

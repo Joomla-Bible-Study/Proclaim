@@ -3,7 +3,7 @@
  * BibleStudy Download Class
  *
  * @package    BibleStudy.Site
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  * */
@@ -85,9 +85,7 @@ class JBSMDownload
 		$params->merge($registry);
 
 		$download_file = JBSMHelper::MediaBuildUrl($media->spath, $params->get('filename'), $params, true);
-
-		/** @var $download_file object */
-		$getsize = JBSMHelper::getRemoteFileSize($download_file);
+		$getsize       = JBSMHelper::getRemoteFileSize($download_file);
 
 		@set_time_limit(0);
 		ignore_user_abort(false);
