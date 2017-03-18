@@ -145,7 +145,7 @@ class JBSMStats
 	/**
 	 * Get top studies
 	 *
-	 * @return array
+	 * @return string
 	 *
 	 * @since 9.0.0
 	 */
@@ -360,7 +360,7 @@ class JBSMStats
 	/**
 	 * Get Downloads ninety
 	 *
-	 * @return  array list of download links
+	 * @return  string list of download links
 	 *
 	 * @since 9.0.0
 	 */
@@ -522,7 +522,7 @@ class JBSMStats
 
 			foreach ($params as $param)
 			{
-				$registry->loadString($param->params);
+				$registry->loadString(json_encode($param->params));
 
 				switch ($registry->get('player', 0))
 				{
@@ -589,7 +589,7 @@ class JBSMStats
 			foreach ($popups as $popup)
 			{
 				$registry = new Registry;
-				$registry->loadString($popup->params);
+				$registry->loadString(json_encode($popup->params));
 				$popup = $registry->get('popup', null);
 
 				switch ($popup)
