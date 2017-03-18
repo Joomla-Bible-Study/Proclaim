@@ -250,7 +250,7 @@ class Migration900
 			}
 		}
 
-		$registry->loadString($mediaFile->params);
+		$registry->loadString(json_encode($mediaFile->params));
 		$params = $registry->toObject();
 
 		$params->media_image = $mimage;
