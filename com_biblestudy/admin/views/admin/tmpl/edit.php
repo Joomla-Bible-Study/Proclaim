@@ -182,6 +182,10 @@ $input = $app->input;
                                        title="<?php echo JText::_('JBS_ADM_RESET_ALIAS'); ?>" class="btn"> <i
                                                 class="icon-big icon-tree-2"></i>
                                         <span><br/> <?php echo JText::_('JBS_ADM_RESET_ALIAS'); ?> </span></a>
+                                    <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=database'); ?>"
+                                       title="<?php echo JText::_('JBS_ADM_DATABASE'); ?>" class="btn"> <i
+                                                class="icon-database icon-big"></i>
+                                        <span><br/> <?php echo JText::_('JBS_ADM_DATABASE'); ?> </span></a>
                                 </div>
                             </div>
                         </div>
