@@ -124,51 +124,16 @@ class JBSMHelper
 			}
 		}
 
-		$parsed = parse_url($url);
-		$host   = @$parsed["host"];
-		$fp     = null;
+		$head = array_change_key_case(get_headers($url, true));
 
-		if (function_exists('fsockopen'))
+		if (isset($head['content-length']))
 		{
-			$fp = @fsockopen($host, 80, $errno, $errstr, 20);
-		}
-
-		if (!$fp)
-		{
-			return false;
+			return $head['content-length'];
 		}
 		else
 		{
-			@fputs($fp, "HEAD $url HTTP/1.1\r\n");
-			@fputs($fp, "HOST: $host\r\n");
-			@fputs($fp, "Connection: close\r\n\r\n");
-			$headers = "";
-
-			while (!@feof($fp))
-			{
-				$headers .= @fgets($fp, 128);
-			}
+			return 0;
 		}
-
-		@fclose($fp);
-		$return      = false;
-		$arr_headers = explode("\n", $headers);
-
-		if (strpos($arr_headers[0], '200'))
-		{
-			foreach ($arr_headers as $header)
-			{
-				$s = "Content-Length: ";
-
-				if (substr(strtolower($header), 0, strlen($s)) == strtolower($s))
-				{
-					$return = trim(substr($header, strlen($s)));
-					break;
-				}
-			}
-		}
-
-		return (int) $return;
 	}
 
 	/**

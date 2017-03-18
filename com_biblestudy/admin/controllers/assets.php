@@ -114,7 +114,7 @@ class BiblestudyControllerAssets extends JControllerForm
 		$session = JFactory::getSession();
 		$stack = $session->get('asset_stack', '', 'JBSM');
 
-		if (empty($stack))
+		if (empty($stack) || !is_array($stack))
 		{
 			JBSMHelper::clearcache('site');
 			JBSMHelper::clearcache('admin');

@@ -230,6 +230,7 @@ class JBSMDbHelper
 
 		if (!$done)
 		{
+			/** @var BiblestudyModelAdmin $admin */
 			$admin = JModelLegacy::getInstance('Admin', 'BiblestudyModel');
 			$admin->fix();
 

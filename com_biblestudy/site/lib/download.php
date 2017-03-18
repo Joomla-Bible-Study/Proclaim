@@ -85,9 +85,7 @@ class JBSMDownload
 		$params->merge($registry);
 
 		$download_file = JBSMHelper::MediaBuildUrl($media->spath, $params->get('filename'), $params, true);
-
-		/** @var $download_file object */
-		$getsize = JBSMHelper::getRemoteFileSize($download_file);
+		$getsize       = JBSMHelper::getRemoteFileSize($download_file);
 
 		@set_time_limit(0);
 		ignore_user_abort(false);

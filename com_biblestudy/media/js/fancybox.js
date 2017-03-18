@@ -7,6 +7,7 @@
  */
 ;
 (function (window, document, $) {
+
 	$(document).ready(function () {
 		$(".fancybox").fancybox();
 	});
@@ -29,18 +30,20 @@
 			}
 		});
 	});
+
 	$(document).ready(function () {
 		$(".fancybox_jwplayer").on("click", function () {
 			var tarGet;
 			var myVideo = this.href;
 			var contentPanelId = $(this).attr("id");
-			var $id = $("#" + contentPanelId);
-			var bheight = $id.attr('bheight');
-			var height = $id.attr('pheight');
-			var width = $id.attr('pwidth');
-			var ptype = $id.attr('ptype');
-			var potext = $id.attr('potext');
-			var autostart = $id.attr('autostart');
+			var id = $("#" + contentPanelId);
+			var player = $(".fancybox_jwplayer");
+			var bheight = id.attr('bheight');
+			var height = id.attr('pheight');
+			var width = id.attr('pwidth');
+			var ptype = id.attr('ptype');
+			var potext = id.attr('potext');
+			var autostart = id.attr('autostart');
 			$.fancybox({
 				fitToView: false,
 				width: width,
@@ -62,8 +65,7 @@
 					}); // jwplayer setup
 				} // afterShow
 			}); // fancybox
-
-			event.preventDefault(); // prevents default
+			return false; // prevents default
 		}); // on
 	}); // ready
 }(window, document, jQuery));

@@ -228,8 +228,19 @@ class JBSMMedia
 			}
 			else
 			{
+				$url = JBSMHelper::MediaBuildUrl($media->sparams->get('path'), $media->params->get('filename'), $params, true);
+
+				if ($media->params->get('size') !== '0')
+				{
+					$size = JBSMHelper::getRemoteFileSize($url);
+				}
+				else
+				{
+					$size = $media->params->get('size');
+				}
+
 				$downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' .
-					$media->params->get('filename') . '&amp;size=' . $media->params->get('size') . '">';
+					$url . '&amp;size=' . $size . '">';
 			}
 
 			// Check to see if they want to use a popup
