@@ -124,51 +124,21 @@ class JBSMHelper
 			}
 		}
 
-		$parsed = parse_url($url);
-		$host   = @$parsed["host"];
-		$fp     = null;
+		stream_context_set_default(array('http' => array('method' => 'HEAD')));
 
-		if (function_exists('fsockopen'))
+		$head = array_change_key_case(get_headers($url, 1));
+
+		// Content-length of download (in bytes), read from Content-Length: field
+		$clen = isset($head['content-length']) ? $head['content-length'] : 0;
+
+		// Cannot retrieve file size, return "-1"
+		if (!$clen)
 		{
-			$fp = @fsockopen($host, 80, $errno, $errstr, 20);
+			return -1;
 		}
 
-		if (!$fp)
-		{
-			return false;
-		}
-		else
-		{
-			@fputs($fp, "HEAD $url HTTP/1.1\r\n");
-			@fputs($fp, "HOST: $host\r\n");
-			@fputs($fp, "Connection: close\r\n\r\n");
-			$headers = "";
-
-			while (!@feof($fp))
-			{
-				$headers .= @fgets($fp, 128);
-			}
-		}
-
-		@fclose($fp);
-		$return      = false;
-		$arr_headers = explode("\n", $headers);
-
-		if (strpos($arr_headers[0], '200'))
-		{
-			foreach ($arr_headers as $header)
-			{
-				$s = "Content-Length: ";
-
-				if (substr(strtolower($header), 0, strlen($s)) == strtolower($s))
-				{
-					$return = trim(substr($header, strlen($s)));
-					break;
-				}
-			}
-		}
-
-		return (int) $return;
+		// Return size in bytes
+		return (int) $clen;
 	}
 
 	/**
