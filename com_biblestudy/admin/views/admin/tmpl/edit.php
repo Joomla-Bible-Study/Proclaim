@@ -439,7 +439,7 @@ $input = $app->input;
                     </div>
                 </div>
                 <div class="tab-pane" id="playersettings">
-                    <div class="span4">
+                    <div class="span4" style="border: ridge; padding: 3px">
                         <strong><p class="tab-description"><?php echo JText::_('JBS_CMN_MEDIA_FILES'); ?></p></strong>
 
                         <div class="control-group">
@@ -466,7 +466,7 @@ $input = $app->input;
                             </button>
                         </div>
                     </div>
-                    <div class="span4">
+                    <div class="span4" style="border: ridge; padding: 3px">
                         <strong><p class="tab-description"><?php echo JText::_('JBS_ADM_POPUP_OPTIONS'); ?></p></strong>
 
                         <div class="control-group">
@@ -493,7 +493,7 @@ $input = $app->input;
                             </button>
                         </div>
                     </div>
-                    <div class="span4">
+                    <div class="span4" style="border: ridge; padding: 3px">
                         <strong><p class="tab-description"><?php echo JText::_('JBS_ADM_MEDIATYPES_OPTIONS'); ?></p>
                         </strong>
                         <div class="control-group">
