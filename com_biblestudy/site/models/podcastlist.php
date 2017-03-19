@@ -47,7 +47,7 @@ class BiblestudyModelPodcastlist extends JModelList
 		$value = $app->input->get('filter_tag', 0, 'uint');
 		$this->setState('filter.tag', $value);
 
-		$value = $app->input->get('filter_pc_show', '');
+		$value = $app->input->get('filter_pc_show', 1, 'uint');
 		$this->setState('filter.pc_show', $value);
 
 		$orderCol = $app->input->get('filter_order', 'a.ordering');

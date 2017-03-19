@@ -169,7 +169,7 @@ class BiblestudyModelTeacher extends JModelAdmin
 				$data['teacher_image']     = "";
 				$data['teacher_thumbnail'] = "";
 			}
-			else
+			elseif (!JBSMBibleStudyHelper::startsWith(basename($data['image']), 'thumb_'))
 			{
 				// Modify model data
 				$data['teacher_image']     = JPATH_ROOT . '/' . $data['image'];

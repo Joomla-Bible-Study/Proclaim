@@ -230,7 +230,7 @@ class BiblestudyModelMessage extends JModelAdmin
 				// Modify model data if no image is set.
 				$data['thumbnailm']     = "";
 			}
-			else
+			elseif (!JBSMBibleStudyHelper::startsWith(basename($data['image']), 'thumb_'))
 			{
 				// Modify model data
 				$data['thumbnailm'] = $path . '/thumb_' . basename($data['image']);
