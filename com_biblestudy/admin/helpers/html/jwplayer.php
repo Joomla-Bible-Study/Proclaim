@@ -119,7 +119,7 @@ abstract class JHtmlJwplayer
 		{
 			$media->playerwidth = $params->get('playerwidth');
 		}
-		elseif (isset($player->mp3))
+		elseif (isset($player->mp3) && isset($player->playerwidth))
 		{
 			$media->playerwidth = $player->playerwidth;
 		}
@@ -187,7 +187,7 @@ abstract class JHtmlJwplayer
 			$popupmarg = $params->get('popupmargin', '50');
 		}
 
-		$render .= " <div id='placeholder" . $media->id . "'></div>";
+		$render .= " <div id='placeholder" . $media->id . "'  class=\"jbsmplayer\"></div>";
 
 		if ($params->get('media_popout_yes', true))
 		{
@@ -219,7 +219,7 @@ abstract class JHtmlJwplayer
 							'file': '" . $media->path1 . "',
 						";
 
-		if ($params->get('playerresponsive') == 0 && $media->playerheight)
+		if ($params->get('jwplayer_playerresponsive') == false && $media->playerheight)
 		{
 			$render .= "'height': '" . $media->playerheight . "',
 			";
@@ -244,8 +244,14 @@ abstract class JHtmlJwplayer
 		}
 
 		$render .= "'width': '" . $media->playerwidth . "',
+						'logo': {
+							file: '" . $params->get('jwplayer_logo') . "',
+							link: '" . $params->get('jwplayer_logolink', JUri::base()) . "',
+						 },
 						'title': '" . $header . "',
 						'image': '" . $params->get('popupimage', 'images/biblestudy/speaker24.png') . "',
+						'abouttext': 'Direct Link',
+						'aboutlink': '" . $media->path1 . "',
 						'autostart': '" . $media->autostart . "',
 						'backcolor': '" . $media->backcolor . "',
 						'frontcolor': '" . $media->frontcolor . "',
