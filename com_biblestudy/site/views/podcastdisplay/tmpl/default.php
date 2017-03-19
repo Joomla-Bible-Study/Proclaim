@@ -29,15 +29,16 @@ $saveOrder = $listOrder == 'ordering';
 $jbsmedia = new JBSMMedia;
 ?>
 <div class="container-fluid">
-    <div class="span4">
+    <div class="span6">
 		<?php echo $this->item->image; ?>
         <h2><?php echo JText::_($this->item->series_text); ?></h2>
+        <p class="description"><?php echo $this->item->description; ?></p>
     </div>
 
 	<?php if (!empty($this->media))
 	{
 		?>
-        <div class="span5">
+        <div class="span6">
             <?php $this->params->set('player_width', ''); ?>
 			<?php echo $jbsmedia->getFluidMedia($this->media[0], $this->params, $this->template); ?>
         </div>
@@ -59,14 +60,14 @@ $jbsmedia = new JBSMMedia;
 			<?php foreach ($this->media as $item)
 			{
 				// Sparams are the server parameters
-				$registory = new Joomla\Registry\Registry;
-				$registory->loadString($item->sparams);
-				$item->sparams = $registory;
+				$reg = new Joomla\Registry\Registry;
+				$reg->loadString($item->sparams);
+				$item->sparams = $reg;
 
 				// Params are the individual params for the media file record
-				$registory = new Joomla\Registry\Registry;
-				$registory->loadString($item->params);
-				$item->params = $registory;
+				$reg = new Joomla\Registry\Registry;
+				$reg->loadString($item->params);
+				$item->params = $reg;
 				?>
                 <tr>
 					<?php $path1 = JBSMHelper::MediaBuildUrl($item->sparams->get('path'), $item->params->get('filename'), $item->params, true);?>
@@ -78,7 +79,7 @@ $jbsmedia = new JBSMMedia;
                     </td>
                     <td class="row">
                         <a href="javascript:loadVideo('<?php echo $path1; ?>', '<?php echo $item->series_thumbnail; ?>')">
-                            Listen
+                            <?php echo JText::_('JBS_CMN_LISTEN'); ?>
                         </a>
                     </td>
                 </tr>
