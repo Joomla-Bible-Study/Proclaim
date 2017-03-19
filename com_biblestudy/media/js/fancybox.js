@@ -50,7 +50,6 @@
 							autostart: autostart,
 							controls: controls
 						});
-						console.log(height);
 					},
 					caption: '<button data-fancybox-close onclick="window.open(\'index.php?option=com_biblestudy&amp;player=' + ptype + '&amp;view=popup&amp;mediaid=' + contentPanelId +
 					'&amp;tmpl=component\',\'_blank\',\'resizable=yes\')">' + potext + '</button>'
