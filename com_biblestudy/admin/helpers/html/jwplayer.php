@@ -218,17 +218,8 @@ abstract class JHtmlJwplayer
 						playerInstance" . $media->id . ".setup({
 							'file': '" . $media->path1 . "',
 						";
-
-		if ($params->get('jwplayer_playerresponsive') == false && $media->playerheight)
-		{
-			$render .= "'height': '" . $media->playerheight . "',
-			";
-		}
-		else
-		{
-			$render .= "'aspectratio': '16:9',
-			";
-		}
+		$render .= "'height': '" . $media->playerheight . "',
+		";
 
 		if (isset($media->headertext))
 		{
@@ -270,7 +261,7 @@ abstract class JHtmlJwplayer
 				      image: myImage
 				    }]);
 				    playerInstance" . $media->id . ".play();
-				  };
+				  }
 				</script>";
 
 		return $render;

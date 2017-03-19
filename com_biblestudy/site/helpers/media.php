@@ -78,8 +78,8 @@ class JBSMMedia
 			}
 
 		// New Podcast Playlist cast Player code override option.
-		$player     = self::getPlayerAttributes($params, $media);
-		$playercode = self::getPlayerCode($params, $player, $image, $media);
+		$player        = self::getPlayerAttributes($params, $media);
+		$playercode    = self::getPlayerCode($params, $player, $image, $media);
 		$downloadlink  = self::getFluidDownloadLink($media, $params, $template);
 
 		if ($params->get('pcplaylist'))
@@ -626,7 +626,7 @@ class JBSMMedia
 
 							if ($player->playerwidth <= '259')
 							{
-								$player->playerwidth = '260';
+								$player->playerwidth = null;
 							}
 						}
 

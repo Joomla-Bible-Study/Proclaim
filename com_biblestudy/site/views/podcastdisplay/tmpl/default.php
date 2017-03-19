@@ -37,7 +37,8 @@ $jbsmedia = new JBSMMedia;
 	<?php if (!empty($this->media))
 	{
 		?>
-        <div class="span7">
+        <div class="span5">
+            <?php $this->params->set('player_width', ''); ?>
 			<?php echo $jbsmedia->getFluidMedia($this->media[0], $this->params, $this->template); ?>
         </div>
 
@@ -56,17 +57,27 @@ $jbsmedia = new JBSMMedia;
             </tr>
             </thead>
 			<?php foreach ($this->media as $item)
-			{ ?>
+			{
+				// Sparams are the server parameters
+				$registory = new Joomla\Registry\Registry;
+				$registory->loadString($item->sparams);
+				$item->sparams = $registory;
+
+				// Params are the individual params for the media file record
+				$registory = new Joomla\Registry\Registry;
+				$registory->loadString($item->params);
+				$item->params = $registory;
+				?>
                 <tr>
-					<?php $jbsmedia->getFluidMedia($item, $this->params, $this->template); ?>
+					<?php $path1 = JBSMHelper::MediaBuildUrl($item->sparams->get('path'), $item->params->get('filename'), $item->params, true);?>
                     <td>
 						<?php echo stripslashes($item->studytitle); ?>
                     </td>
                     <td>
 						<?php echo JHtml::Date($item->createdate); ?>
                     </td>
-                    <td class="row"><a
-                                href="javascript:loadVideo('<?php echo $item->path1; ?>', '<?php echo $item->series_thumbnail; ?>')">
+                    <td class="row">
+                        <a href="javascript:loadVideo('<?php echo $path1; ?>', '<?php echo $item->series_thumbnail; ?>')">
                             Listen
                         </a>
                     </td>
