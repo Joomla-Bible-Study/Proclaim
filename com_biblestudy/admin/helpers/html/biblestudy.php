@@ -29,12 +29,13 @@ abstract class JHtmlBiblestudy
 	 * If debugging mode is on an uncompressed version of jQuery is included for easier debugging.
 	 *
 	 * @param   mixed  $debug  Is debugging mode on? [optional]
+	 * @param   mixed  $extra  Option to load extra js [optional]
 	 *
 	 * @return  void
 	 *
 	 * @since   9.0.0
 	 */
-	public static function framework($debug = null)
+	public static function framework($debug = null, $extra = null)
 	{
 		// Only load once
 		if (!empty(self::$loaded[__METHOD__]))
@@ -52,6 +53,7 @@ abstract class JHtmlBiblestudy
 		JHtml::_('bootstrap.framework', $debug);
 		JHtml::_('bootstrap.loadCss');
 		JHtml::script('media/com_biblestudy/js/biblestudy.js');
+		JHtml::script('media/com_biblestudy/js/modernizr.js');
 
 		self::$loaded[__METHOD__] = true;
 
@@ -63,13 +65,13 @@ abstract class JHtmlBiblestudy
 	 *
 	 * @param   Joomla\Registry\Registry  $params  Params for css
 	 * @param   string                    $url     Url of a css file to load
-	 * @param   string                    $font    Url of a css file to load
+	 * @param   string                    $extra   Url of a css file to load
 	 *
 	 * @return  void
 	 *
 	 * @since   3.0
 	 */
-	public static function loadCss($params, $url = null, $font = null)
+	public static function loadCss($params, $url = null, $extra = null)
 	{
 		JHtml::stylesheet('media/com_biblestudy/css/general.css');
 
@@ -93,7 +95,7 @@ abstract class JHtmlBiblestudy
 			JHtml::stylesheet($url);
 		}
 
-		if ($font == 'font-awesome')
+		if ($extra == 'font-awesome')
 		{
 			JHtml::script('https://use.fontawesome.com/ac3aa5180f.js');
 		}
