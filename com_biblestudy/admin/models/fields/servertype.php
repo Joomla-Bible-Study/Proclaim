@@ -37,6 +37,7 @@ class JFormFieldServerType extends JFormFieldList
 		$class    = ($v = $this->element['class']) ? ' class="' . $v . '"' : 'class="text_area"';
 
 		// Get a reverse lookup of the endpoint type to endpoint name
+		/** @var BiblestudyModelServers $model */
 		$model    = JModelLegacy::getInstance('servers', 'BibleStudyModel');
 		$rlu_type = $model->getTypeReverseLookup();
 

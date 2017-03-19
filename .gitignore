@@ -1,5 +1,3 @@
-/tests/test.html
-/bin
 /tests/test.css
 # System files #
 .gitignore
@@ -28,8 +26,6 @@ com_biblestudy/admin/views/test/tmpl/default.php
 
 com_biblestudy/admin/views/test/view.html.php
 
-com_biblestudy/media/css/site/biblestudy.css
-
 com_biblestudy/admin/views/test/index.html
 
 com_biblestudy/admin/views/test/tmpl/index.html
@@ -43,4 +39,10 @@ tests/.joomla-cms
 
 tests/test.php
 
+com_biblestudy/admin/help/
+com_biblestudy/media/css/site/
+com_biblestudy/media/google/
+docs/namespaces/
+docs/packages/
 *.html
+/bin/
