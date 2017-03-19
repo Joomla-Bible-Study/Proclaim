@@ -573,6 +573,9 @@ class BiblestudyControllerAdmin extends JControllerForm
 		// Check for request forgeries.
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
+		// Needed for DB fixer
+		JLoader::register('BiblestudyModelInstall', BIBLESTUDY_PATH_ADMIN_MODELS . '/install.php');
+
 		/** @var BiblestudyModelAdmin $model */
 		$model = $this->getModel('admin');
 		$model->fix();
