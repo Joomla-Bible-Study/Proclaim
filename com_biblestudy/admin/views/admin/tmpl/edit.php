@@ -162,7 +162,8 @@ $input = $app->input;
                         <div class="span12">
                             <div class="well well-small">
                                 <div id="dashboard-icons" class="btn-group" style="white-space: normal;">
-                                    <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets&task=assets.checkassets&' . JSession::getFormToken() . '=1'); ?>"
+                                    <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets&task=assets.checkassets&' .
+                                        JSession::getFormToken() . '=1'); ?>"
                                        title="<?php echo JText::_('JBS_ADM_ASSET_CHECK'); ?>" class="btn"> <i
                                                 class="icon-big icon-list"> </i>
                                         <span><br/> <?php echo JText::_('JBS_ADM_ASSET_CHECK'); ?> </span></a>
@@ -178,7 +179,8 @@ $input = $app->input;
                                        title="<?php echo JText::_('JBS_ADM_ARCHIVE'); ?>" class="btn"> <i
                                                 class="icon-archive icon-big"></i>
                                         <span><br/> <?php echo JText::_('JBS_ADM_ARCHIVE'); ?> </span></a>
-                                    <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets&task=admin.aliasUpdate&' . JSession::getFormToken() . '=1') ?>"
+                                    <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets&task=admin.aliasUpdate&' .
+                                        JSession::getFormToken() . '=1') ?>"
                                        title="<?php echo JText::_('JBS_ADM_RESET_ALIAS'); ?>" class="btn"> <i
                                                 class="icon-big icon-tree-2"></i>
                                         <span><br/> <?php echo JText::_('JBS_ADM_RESET_ALIAS'); ?> </span></a>

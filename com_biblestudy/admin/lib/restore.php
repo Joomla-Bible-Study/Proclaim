@@ -159,6 +159,7 @@ class JBSMRestore
 	public function importdb($parent)
 	{
 		jimport('joomla.filesystem.file');
+
 		/**
 		 * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
 		 */
@@ -171,6 +172,7 @@ class JBSMRestore
 		$installtype   = $input->getPath('install_directory');
 		$backuprestore = $input->getWord('backuprestore', '');
 
+		// Restore form prior backup files located on the server.
 		if (substr_count($backuprestore, '.sql'))
 		{
 			$restored = self::restoreDB($backuprestore);
@@ -183,7 +185,8 @@ class JBSMRestore
 			}
 		}
 
-		if (substr_count($installtype, 'sql'))
+		// Start finding how to restore files.
+		if (!empty($installtype) && $installtype !== '/')
 		{
 			$uploadresults = self::_getPackageFromFolder();
 			$result        = $uploadresults;
@@ -196,14 +199,29 @@ class JBSMRestore
 
 		if ($result)
 		{
-			$result     = self::installdb($uploadresults, $parent);
-			$inputfiles = new JInputFiles;
-			$userfile   = $inputfiles->get('importdb');
-
-			if (JFile::exists(JPATH_SITE . '/tmp/' . $userfile['name']))
+			switch ($result['type'])
 			{
-				unlink(JPATH_SITE . '/tmp/' . $userfile['name']);
+				case 'dir':
+					$src = JFolder::files($result['dir'], '.', true, true);
+					$tmp_src = $src[0];
+					break;
+				case 'file':
+					$tmp_src = $result['dir'];
+					break;
+				default:
+					throw new InvalidArgumentException('Unknown Archive Type');
 			}
+
+			$result     = self::installdb($tmp_src, $parent);
+
+			// Cleanup the install files.
+			if (!is_file($uploadresults['packagefile']))
+			{
+				$config = JFactory::getConfig();
+				$package['packagefile'] = $config->get('tmp_path') . '/' . $uploadresults['packagefile'];
+			}
+
+			JInstallerHelper::cleanupInstall($uploadresults['packagefile'], $uploadresults['extractdir']);
 
 			if (($parent !== true) && $result)
 			{
@@ -290,10 +308,26 @@ class JBSMRestore
 	 */
 	private static function _getPackageFromFolder()
 	{
-		$input = new JInput;
-		$p_dir = $input->getPath('install_directory');
+		$input = JFactory::getApplication()->input;
 
-		return $p_dir;
+		// Get the path to the package to install.
+		$p_dir = $input->getString('install_directory');
+		$p_dir = JPath::clean($p_dir);
+
+		// Did you give us a valid directory?
+		if (!is_dir($p_dir))
+		{
+			JError::raiseWarning('', JText::_('COM_INSTALLER_MSG_INSTALL_PLEASE_ENTER_A_PACKAGE_DIRECTORY'));
+
+			return false;
+		}
+
+		$package['packagefile'] = null;
+		$package['extractdir'] = null;
+		$package['dir'] = $p_dir;
+		$package['type'] = 'dir';
+
+		return $package;
 	}
 
 	/**
@@ -306,14 +340,23 @@ class JBSMRestore
 	public function _getPackageFromUpload()
 	{
 		$app = JFactory::getApplication();
+		$input = $app->input;
 
 		// Get the uploaded file information
-		$userfile = $_FILES['importdb'];
+		$userfile = $input->files->get('importdb', null, 'raw');
 
 		// Make sure that file uploads are enabled in php
 		if (!(bool) ini_get('file_uploads'))
 		{
 			$app->enqueueMessage(JText::_('JBS_IBM_ERROR_PHP_UPLOAD_NOT_ENABLED'), 'warning');
+
+			return false;
+		}
+
+		// Make sure that zlib is loaded so that the package can be unpacked.
+		if (!extension_loaded('zlib'))
+		{
+			JError::raiseWarning('', JText::_('JBS_IBM_ERROR_UPLOAD_FAILED_ZLIB'));
 
 			return false;
 		}
@@ -326,6 +369,28 @@ class JBSMRestore
 			return false;
 		}
 
+		// Is the PHP tmp directory missing?
+		if ($userfile['error'] && ($userfile['error'] == UPLOAD_ERR_NO_TMP_DIR))
+		{
+			JError::raiseWarning(
+				'',
+				JText::_('JBS_IBM_ERROR_UPLOAD_FAILED') . '<br />' . JText::_('JBS_IBM_ERROR_UPLOAD_FAILED_PHPUPLOADNOTSET')
+			);
+
+			return false;
+		}
+
+		// Is the max upload size too small in php.ini?
+		if ($userfile['error'] && ($userfile['error'] == UPLOAD_ERR_INI_SIZE))
+		{
+			JError::raiseWarning(
+				'',
+				JText::_('JBS_IBM_ERROR_UPLOAD_FAILED') . '<br />' . JText::_('JBS_IBM_ERROR_UPLOAD_FAILED_SMALLUPLOADSIZE')
+			);
+
+			return false;
+		}
+
 		// Check if there was a problem uploading the file.
 		if ($userfile['error'] || $userfile['size'] < 1)
 		{
@@ -333,36 +398,31 @@ class JBSMRestore
 
 			return false;
 		}
-		// Build the appropriate paths
-		$tmp_dest = JPATH_SITE . '/tmp/' . $userfile['name'];
 
+		// Build the appropriate paths
+		$config   = JFactory::getConfig();
+		$tmp_dest = $config->get('tmp_path') . '/' . $userfile['name'];
 		$tmp_src = $userfile['tmp_name'];
 
-		// Move uploaded file
+		// Move uploaded file.
 		jimport('joomla.filesystem.file');
-		$uploaded = 0;
+		JFile::upload($tmp_src, $tmp_dest, false, true);
 
-		if (JFile::exists($tmp_src))
+		if (!JBSMBibleStudyHelper::endsWith($tmp_dest, 'sql'))
 		{
-			if (!JFile::exists($tmp_dest))
-			{
-				$uploaded = move_uploaded_file($tmp_src, $tmp_dest);
-			}
-			else
-			{
-				JFile::delete($tmp_dest);
-				$uploaded = move_uploaded_file($tmp_src, $tmp_dest);
-			}
-		}
-
-		if ($uploaded)
-		{
-			return $tmp_dest;
+			// Unpack the downloaded package file.
+			$package = JInstallerHelper::unpack($tmp_dest, true);
+			$package['type'] = 'dir';
 		}
 		else
 		{
-			return false;
+			$package['packagefile'] = null;
+			$package['extractdir'] = null;
+			$package['dir'] = $tmp_dest;
+			$package['type'] = 'file';
 		}
+
+		return $package;
 	}
 
 	/**

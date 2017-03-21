@@ -66,6 +66,9 @@ class JBSMBackup
 		$this->saveAsName = $site . '_jbs-db-backup_' . $date . '_' . time() . '.sql';
 		$objects          = JBSMDbHelper::getObjects();
 		$tables           = null;
+		$config           = JFactory::getConfig();
+		$path             = $config->get('tmp_path') . $this->saveAsName;
+		$path1            = '';
 
 		foreach ($objects as $object)
 		{
@@ -75,7 +78,7 @@ class JBSMBackup
 		switch ($run)
 		{
 			case 1:
-				$this->dumpFile = JPATH_SITE . '/tmp/' . $this->saveAsName;
+				$this->dumpFile = $path;
 
 				if (!$this->writeline($this->data_cache))
 				{
@@ -83,22 +86,57 @@ class JBSMBackup
 				}
 				else
 				{
-					$this->output_file($this->dumpFile, $this->saveAsName, $mime_type = 'text/x-sql');
+					$mime_type = 'text/x-sql';
+
+					if (JFactory::getApplication()->input->getInt('jbs_compress', 1))
+					{
+						$mime_type = 'application/zip';
+						$files = (array) $this->dumpFile;
+						$path1 = $path . '.zip';
+						$zip = new ZipArchive;
+						$zip->open($path1, ZipArchive::CREATE);
+
+						foreach ($files as $file)
+						{
+							$zip->addFile($file, basename($file));
+						}
+
+						$zip->close();
+						JFile::delete($path);
+					}
+
+					$this->output_file($path1, basename($path1), $mime_type);
 
 					return true;
 				}
 				break;
 
 			case 2:
-				$this->dumpFile = JPATH_SITE . '/media/com_biblestudy/backup/' . $this->saveAsName;
+				$this->dumpFile = JPATH_SITE . '/media/com_biblestudy/backup' . $this->saveAsName;
 
 				if (!$this->writeline($this->data_cache))
 				{
 					return false;
 				}
 
+				if (JFactory::getApplication()->input->getInt('jbs_compress', 1))
+				{
+					$files = (array) $this->dumpFile;
+					$path1 = $this->dumpFile . '.zip';
+					$zip = new ZipArchive;
+					$zip->open($path1, ZipArchive::CREATE);
+
+					foreach ($files as $file)
+					{
+						$zip->addFile($file, basename($file));
+					}
+
+					$zip->close();
+					JFile::delete($this->dumpFile);
+				}
+
 				JFactory::getApplication()
-					->enqueueMessage('Backup File Storded at:' . JPATH_SITE . '/tmp/jbs-db-backup_' . $date . '_' . time() . '.sql', 'notice');
+					->enqueueMessage('Backup File Stored at: ' . $path1, 'notice');
 
 				return true;
 				break;
