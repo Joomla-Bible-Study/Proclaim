@@ -7,9 +7,6 @@ env:
   global:
     - RUN_PHPCS="yes"
     - RUN_UNIT_TESTS="no"
-    - INSTALL_MEMCACHE="yes"
-    - INSTALL_MEMCACHED="yes"
-    - INSTALL_REDIS="yes"
 
 matrix:
   fast_finish: true
@@ -21,14 +18,9 @@ matrix:
 #    - php: 7.0
 
 services:
-  - memcache
-  - memcached
-  - redis-server
 
 before_script:
   - phpenv config-rm xdebug.ini
-  # Make sure all dev dependencies are installed
-  - composer install
 
 script:
   #- libraries/vendor/bin/phpunit --configuration travisci-phpunit.xml
