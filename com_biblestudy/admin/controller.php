@@ -120,7 +120,9 @@ class BiblestudyController extends JControllerLegacy
 				$query = $db->getQuery(true);
 				$query->update('#__bsms_mediafiles')
 					->set($db->qn('player') . ' = ' . $db->q($to))
-					->where($db->qn('player') . ' = ' . (int) 0 . ' OR ' . $db->qn('player') . ' = ' . (int) 100 . ' OR ' . $db->qn('player') . ' IS NULL');
+					->where($db->qn('player') . ' = ' . (int) 0 . ' OR ' . $db->qn('player') . ' = ' .
+						(int) 100 . ' OR ' . $db->qn('player') . ' IS NULL'
+					);
 				break;
 
 			default:
@@ -139,8 +141,9 @@ class BiblestudyController extends JControllerLegacy
 		}
 		else
 		{
-			$num_rows = $db->getAffectedRows();
-			$msg      = JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . '<br /> ' . JText::_('JBS_ADM_AFFECTED_ROWS') . ': ' . $num_rows;
+			$numRows = $db->getAffectedRows();
+			$msg      = JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . '<br /> ' . JText::_('JBS_ADM_AFFECTED_ROWS') .
+				': ' . $numRows;
 		}
 
 		return $msg;
