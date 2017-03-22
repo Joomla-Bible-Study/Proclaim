@@ -21,6 +21,8 @@ services:
 
 before_script:
   - phpenv config-rm xdebug.ini
+  # Make sure all dev dependencies are installed
+  - composer install
 
 script:
   #- libraries/vendor/bin/phpunit --configuration travisci-phpunit.xml
