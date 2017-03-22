@@ -220,6 +220,12 @@ $input = $app->input;
                         </div>
                     </div>
                     <div class="control-group">
+		                <?php echo $this->form->getLabel('filestokeep'); ?>
+                        <div class="controls">
+			                <?php echo $this->form->getInput('filestokeep'); ?>
+                        </div>
+                    </div>
+                    <div class="control-group">
 						<?php echo $this->form->getLabel('studylistlimit', 'params'); ?>
                         <div class="controls">
 							<?php echo $this->form->getInput('studylistlimit', 'params'); ?>

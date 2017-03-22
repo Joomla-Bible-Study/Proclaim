@@ -78,6 +78,9 @@ class PlgSystemJBSBackup extends JPlugin
 			{
 				$this->doEmail($params, $dobackup);
 			}
+
+			// Clean up files after update. (Default 5 files)
+			$this->updatefiles($params);
 		}
 	}
 
@@ -357,9 +360,9 @@ class PlgSystemJBSBackup extends JPlugin
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');
 		$path          = JPATH_SITE . '/media/com_biblestudy/database';
-		$exclude = array('.git', '.svn', 'CVS', '.DS_Store', '__MACOSX');
+		$exclude = array('.git', '.svn', 'CVS', '.DS_Store', '__MACOSX', '.html');
 		$excludefilter = array('^\..*', '.*~');
-		$files         = JFolder::files($path, '.sql', 'false', 'true', $exclude, $excludefilter);
+		$files         = JFolder::files($path, '.', 'false', 'true', $exclude, $excludefilter);
 		arsort($files, SORT_STRING);
 		$parts       = array();
 		$numfiles    = count($files);

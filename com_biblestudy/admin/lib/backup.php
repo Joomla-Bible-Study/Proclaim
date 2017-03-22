@@ -142,6 +142,9 @@ class JBSMBackup
 				break;
 		}
 
+		// Clean up files for only set amount. filestokeep (Default 5)
+		$this->updatefiles(JBSMParams::getAdmin()->params);
+
 		return true;
 	}
 
@@ -476,5 +479,38 @@ class JBSMBackup
 
 		flush();
 		exit;
+	}
+
+	/**
+	 * Update files
+	 *
+	 * @param   Joomla\Registry\Registry  $params  JBSM Params
+	 *
+	 * @return void
+	 *
+	 * @since 7.1.0
+	 */
+	public function updatefiles($params)
+	{
+		jimport('joomla.filesystem.folder');
+		jimport('joomla.filesystem.file');
+		$path          = JPATH_SITE . '/media/com_biblestudy/database';
+		$exclude = array('.git', '.svn', 'CVS', '.DS_Store', '__MACOSX', '.html');
+		$excludefilter = array('^\..*', '.*~');
+		$files         = JFolder::files($path, '.', 'false', 'true', $exclude, $excludefilter);
+		arsort($files, SORT_STRING);
+		$parts       = array();
+		$numfiles    = count($files);
+		$totalnumber = $params->get('filestokeep', '5');
+
+		for ($counter = $numfiles; $counter > $totalnumber; $counter--)
+		{
+			$parts[] = array_pop($files);
+		}
+
+		foreach ($parts as $part)
+		{
+			JFile::delete($part);
+		}
 	}
 }
