@@ -120,7 +120,8 @@ class BiblestudyController extends JControllerLegacy
 				$query = $db->getQuery(true);
 				$query->update('#__bsms_mediafiles')
 					->set($db->qn('player') . ' = ' . $db->q($to))
-					->where($db->qn('player') . ' = ' . (int) 0 . ' OR ' . $db->qn('player') . ' = ' .
+					->where(
+						$db->qn('player') . ' = ' . (int) 0 . ' OR ' . $db->qn('player') . ' = ' .
 						(int) 100 . ' OR ' . $db->qn('player') . ' IS NULL'
 					);
 				break;
