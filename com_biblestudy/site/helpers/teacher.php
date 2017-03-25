@@ -19,6 +19,7 @@ defined('_JEXEC') or die;
 class JBSMTeacher extends JBSMListing
 {
 	private $contact;
+
 	/**
 	 * Get Teacher for Fluid layout
 	 *
@@ -71,6 +72,8 @@ class JBSMTeacher extends JBSMListing
 			if ($result->contact)
 			{
 				require_once JPATH_ROOT . '/components/com_contact/models/contact.php';
+
+				/** @var contactModelcontact $contactmodel */
 				$contactmodel  = JModelLegacy::getInstance('contact', 'contactModel');
 				$this->contact = $contactmodel->getItem($pk = $result->contact);
 

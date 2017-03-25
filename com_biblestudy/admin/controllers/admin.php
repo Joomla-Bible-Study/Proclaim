@@ -485,7 +485,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	/**
 	 * Reset Players
 	 *
-	 * @return null
+	 * @return void
 	 *
 	 * @since 7.0.0
 	 */
