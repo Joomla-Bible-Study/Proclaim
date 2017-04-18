@@ -202,7 +202,7 @@ abstract class JHtmlJwplayer
 		{
 			$render .= "</div>";
 		}
-		else
+		elseif ($popouttext)
 		{
 			// Add space for popup window
 			$player->playerwidth  = $player->playerwidth + 20;
