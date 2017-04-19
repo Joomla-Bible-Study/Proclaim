@@ -34,7 +34,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">184</span></a></li>
+                <span class="label label-info">195</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -66,11 +66,13 @@
                     <ul>
 <li class="method public "><a href="#method___construct" title="__construct() :: Constructor."><span class="description">Constructor.</span><pre>__construct()</pre></a></li>
 <li class="method public "><a href="#method_getDeletes" title="getDeletes() :: Get Deletes"><span class="description">Get Deletes</span><pre>getDeletes()</pre></a></li>
+<li class="method public "><a href="#method_getItems" title="getItems() :: Method to get a list of articles."><span class="description">Method to get a list of articles.</span><pre>getItems()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header protected">» Protected
                     <ul>
 <li class="method protected "><a href="#method_getListQuery" title="getListQuery() :: Get List Query"><span class="description">Get List Query</span><pre>getListQuery()</pre></a></li>
+<li class="method protected "><a href="#method_getStoreId" title="getStoreId() :: Method to get a store id based on model configuration state."><span class="description">Method to get a store id based on model configuration state.</span><pre>getStoreId()</pre></a></li>
 <li class="method protected "><a href="#method_populateState" title="populateState() :: Method to auto-populate the model state."><span class="description">Method to auto-populate the model state.</span><pre>populateState()</pre></a></li>
 </ul>
 </li>
@@ -138,6 +140,21 @@
 <div class="subelement response"><code>object</code></div>
 </div></div>
 </div>
+<a id="method_getItems"></a><div class="element clickable method public method_getItems " data-toggle="collapse" data-target=".method_getItems .collapse" title="public">
+<h2>Method to get a list of articles.</h2>
+<pre>getItems() : mixed</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Overridden to add a check for access levels.</p></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.6.1</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>mixed</code>An array of data items on success, false on failure.</div>
+</div></div>
+</div>
 <a id="method_getListQuery"></a><div class="element clickable method protected method_getListQuery " data-toggle="collapse" data-target=".method_getListQuery .collapse" title="protected">
 <h2>Get List Query</h2>
 <pre>getListQuery() : \JDatabaseQuery</pre>
@@ -151,6 +168,27 @@
 <h3>Returns</h3>
 <div class="subelement response">
 <code>\JDatabaseQuery</code>A JDatabaseQuery object to retrieve the data set.</div>
+</div></div>
+</div>
+<a id="method_getStoreId"></a><div class="element clickable method protected method_getStoreId " data-toggle="collapse" data-target=".method_getStoreId .collapse" title="protected">
+<h2>Method to get a store id based on model configuration state.</h2>
+<pre>getStoreId(string $id<code> = ''</code>) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>This is necessary because the model is used by the component and
+different modules that might need different sets of data or different
+ordering requirements.</p></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.1.0</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$id</h4>
+<code>string</code><p>A prefix for the store id.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code>A store id.</div>
 </div></div>
 </div>
 <a id="method_populateState"></a><div class="element clickable method protected method_populateState " data-toggle="collapse" data-target=".method_populateState .collapse" title="protected">
@@ -200,7 +238,7 @@ configuration flag to ignore the request is set.</p>
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2016-10-17T19:38:03-05:00.<br></footer></div>
+            generated on 2017-04-19T17:22:59-05:00.<br></footer></div>
 </div>
 </body>
 </html>
