@@ -812,7 +812,17 @@ class JBSMListing
 
 		$rowspanitemspan = $params->get($extra . 'rowspanitemspan');
 		$rowspanbalance  = 12 - $rowspanitemspan;
-		$frow            = '<div class="row-fluid" style="background-color:' . $oddeven . '; padding:5px;" about="' . $type . '">';
+
+		if (!empty($oddeven))
+		{
+			$background = "background-color:'" . $oddeven . "';";
+		}
+		else
+		{
+			$background = "";
+		}
+
+		$frow            = '<div class="row-fluid" style="' . $background . ' padding:5px;" about="' . $type . '">';
 
 		$row1count  = 0;
 		$row2count  = 0;
