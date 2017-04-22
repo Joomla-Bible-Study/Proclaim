@@ -159,9 +159,10 @@ class BiblestudyModelTeacher extends JModelAdmin
 		/** @var Joomla\Registry\Registry $params */
 		$params = JBSMParams::getAdmin()->params;
 		$path   = 'images/biblestudy/teachers/' . $data['id'];
+		$prefix = 'thumb_';
 
 		// If no image uploaded, just save data as usual
-		if (empty($data['image']) || strpos($data['image'], 'thumb_') !== false)
+		if (empty($data['image']) || strpos($data['image'], $prefix) !== false)
 		{
 			if (empty($data['image']))
 			{
@@ -169,11 +170,36 @@ class BiblestudyModelTeacher extends JModelAdmin
 				$data['teacher_image']     = "";
 				$data['teacher_thumbnail'] = "";
 			}
-			elseif (!JBSMBibleStudyHelper::startsWith(basename($data['image']), 'thumb_'))
+			elseif (!JBSMBibleStudyHelper::startsWith(basename($data['image']), $prefix))
 			{
 				// Modify model data
-				$data['teacher_image']     = JPATH_ROOT . '/' . $data['image'];
+				$data['teacher_image']     = $data['image'];
 				$data['teacher_thumbnail'] = $path . '/thumb_' . basename($data['image']);
+			}
+			elseif (substr_count(basename($data['image']), $prefix) > 1)
+			{
+				// Out Fix removing redundent 'thumb_' in path.
+				$x = substr_count(basename($data['image']), $prefix);
+
+				while ($x > 1)
+				{
+					if (substr(basename($data['image']), 0, strlen($prefix)) == $prefix)
+					{
+						$str = substr(basename($data['image']), strlen($prefix));
+						$data['teacher_image']     = $path . '/' . $str;
+						$data['teacher_thumbnail'] = $path . '/' . $str;
+						$data['image'] = $path . '/' . $str;
+					}
+
+					$x--;
+				}
+			}
+
+			// Fix Save of update file to match path.
+			if ($data['teacher_image'] != $data['image'])
+			{
+				$data['teacher_thumbnail'] = $data['image'];
+				$data['teacher_image'] = $data['image'];
 			}
 
 			return parent::save($data);
@@ -182,7 +208,7 @@ class BiblestudyModelTeacher extends JModelAdmin
 		JBSMThumbnail::create($data['image'], $path, $params->get('thumbnail_teacher_size', 100));
 
 		// Modify model data
-		$data['teacher_image']     = JPATH_ROOT . '/' . $data['image'];
+		$data['teacher_image']     = $data['image'];
 		$data['teacher_thumbnail'] = $path . '/thumb_' . basename($data['image']);
 
 		return parent::save($data);

@@ -114,6 +114,7 @@ class BiblestudyModelSerie extends JModelAdmin
 		$params = JBSMParams::getAdmin()->params;
 		$app    = JFactory::getApplication();
 		$path   = 'images/biblestudy/series/' . $data['id'];
+		$prefix = 'thumb_';
 
 		// Alter the title for save as copy
 		if ($app->input->get('task') == 'save2copy')
@@ -124,17 +125,33 @@ class BiblestudyModelSerie extends JModelAdmin
 		}
 
 		// If no image uploaded, just save data as usual
-		if (empty($data['image']) || strpos($data['image'], 'thumb_') !== false)
+		if (empty($data['image']) || strpos($data['image'], $prefix) !== false)
 		{
 			if (empty($data['image']))
 			{
 				// Modify model data if no image is set.
 				$data['series_thumbnail'] = "";
 			}
-			elseif (!JBSMBibleStudyHelper::startsWith(basename($data['image']), 'thumb_'))
+			elseif (!JBSMBibleStudyHelper::startsWith(basename($data['image']), $prefix))
 			{
 				// Modify model data
 				$data['series_thumbnail'] = $path . '/thumb_' . basename($data['image']);
+			}
+			elseif (substr_count(basename($data['image']), $prefix) > 1)
+			{
+				$x = substr_count(basename($data['image']), $prefix);
+
+				while ($x > 1)
+				{
+					if (substr(basename($data['image']), 0, strlen($prefix)) == $prefix)
+					{
+						$str = substr(basename($data['image']), strlen($prefix));
+						$data['series_thumbnail'] = $path . '/' . $str;
+						$data['image'] = $path . '/' . $str;
+					}
+
+					$x--;
+				}
 			}
 
 			return parent::save($data);
