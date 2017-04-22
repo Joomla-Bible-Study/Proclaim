@@ -753,27 +753,59 @@ class JBSMListing
 			switch ($rowspanitem)
 			{
 				case 1:
-					(isset($item->thumb) ? $span = '<img src="' . JUri::base() . $item->thumb . '" class="' . $params->get('rowspanitemimage') .
-						'" alt="' . $item->teachername . '">' : $span = '');
+					if (isset($item->thumb) && !empty($item->thumb))
+					{
+						$span = '<img src="' . JUri::base() . $item->thumb . '" class="' . $params->get('rowspanitemimage') .
+							'" alt="' . $item->teachername . '">';
+					}
+					else
+					{
+						$span = null;
+					}
 
-					if (is_null($span))
+					if (is_null($span) && !empty($item->teacher_thumbnail))
 					{
 						(isset($item->teacher_thumbnail) ? $span = '<img src="' . JUri::base() . $item->teacher_thumbnail . '" class="' .
 							$params->get('rowspanitemimage') . '" alt="' . $item->teachername . '">' : $span = '');
 					}
+					else
+					{
+						$span = '';
+					}
 					break;
 				case 2:
-					(isset($item->thumbm) ? $span = '<img src="' . JUri::base() . $item->thumbm . '" class="' . $params->get('rowspanitemimage') .
-						'" alt="' . JText::_('JBS_CMN_THUMBNAIL') . '">' : $span = '');
+					if (isset($item->thumbm) && !empty($item->thumbm))
+					{
+						$span = '<img src="' . JUri::base() . $item->thumbm . '" class="' . $params->get('rowspanitemimage') .
+							'" alt="' . JText::_('JBS_CMN_THUMBNAIL') . '">';
+					}
+					else
+					{
+						$span = '';
+					}
 					break;
 				case 3:
-					(isset($item->series_thumbnail) ? $span = '<img src="' . JUri::base() . $item->series_thumbnail . '" class="' .
-						$params->get('rowspanitemimage') . '" alt="' . JText::_('JBS_CMN_SERIES') . '">' : $span = '');
+					if (isset($item->series_thumbnail) && !empty($item->series_thumbnail))
+					{
+						$span = '<img src="' . JUri::base() . $item->series_thumbnail . '" class="' .
+							$params->get('rowspanitemimage') . '" alt="' . JText::_('JBS_CMN_SERIES') . '">';
+					}
+					else
+					{
+						$span = '';
+					}
 					break;
 				case 4:
-					(isset($item->teacher_image) ? $span = '<img src="' . JUri::base() . $item->teacher_image . '" class="' .
-						$params->get('rowspanitemimage') . '" alt="' .
-						$item->teachername . '">' : $span = '');
+					if (isset($item->teacher_image) && !empty($item->teacher_image))
+					{
+						$span = '<img src="' . JUri::base() . $item->teacher_image . '" class="' .
+							$params->get('rowspanitemimage') . '" alt="' .
+							$item->teachername . '">';
+					}
+					else
+					{
+						$span = '';
+					}
 					break;
 			}
 		}
