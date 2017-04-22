@@ -262,7 +262,7 @@ else
 			<div class="control-group">
 				<div class="control-label">
 					<?php if ($this->item->teacher_thumbnail) : ?>
-						<img src="<?php echo JUri::root() . '/' . $this->item->teacher_thumbnail; ?>"
+						<img src="<?php echo JUri::root() . $this->item->teacher_thumbnail; ?>"
 						     alt="<?php echo $this->form->getValue('teachername'); ?>"
 						     class="thumbnail center"/>
 					<?php endif; ?>
