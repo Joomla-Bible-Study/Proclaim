@@ -18,7 +18,7 @@ use Joomla\Registry\Registry;
  * @package  BibleStudy.Admin
  * @since    9.0.14
  */
-class BiblestudyViewDataBase extends JViewLegacy
+class BiblestudyViewDatabase extends JViewLegacy
 {
 	/**
 	 * Version
@@ -188,6 +188,8 @@ class BiblestudyViewDataBase extends JViewLegacy
 	 */
 	protected $state;
 
+	protected $updateJBSMVersion;
+
 	/**
 	 * Execute and display a template script.
 	 *
@@ -226,10 +228,12 @@ class BiblestudyViewDataBase extends JViewLegacy
 		$this->errorCount    = count($this->errors);
 		$this->jversion      = $this->get('CompVersion');
 
+		$this->updateJBSMVersion = $this->get('UpdateJBSMVersion');
+
 		$jbsversion    = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.xml');
 		$this->version = $jbsversion['version'];
 
-		if (!(strncmp($this->schemaVersion, $this->version, 5) === 0))
+		if ($this->schemaVersion != $this->changeSet->getSchema())
 		{
 			$this->errorCount++;
 		}
@@ -239,7 +243,12 @@ class BiblestudyViewDataBase extends JViewLegacy
 			$this->errorCount++;
 		}
 
-		if (($this->updateVersion != $this->version))
+		if (version_compare($this->updateVersion, $this->version) != 0)
+		{
+			$this->errorCount++;
+		}
+
+		if (version_compare($this->updateJBSMVersion, $this->version) != 0)
 		{
 			$this->errorCount++;
 		}

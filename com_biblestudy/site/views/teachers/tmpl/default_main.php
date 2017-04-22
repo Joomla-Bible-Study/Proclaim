@@ -35,7 +35,6 @@ $classelement = $listing->createelement($this->params->get('teachers_element'));
 <div class="row-fluid">
 	<div class="span12">
 		<?php
-		var_dump($this->template->params->toObject());
 		echo $listing->getFluidListing($this->items, $this->params, $this->template, $type = 'teachers');
 		?>
 	</div>

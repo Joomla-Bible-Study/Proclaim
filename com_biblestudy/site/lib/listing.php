@@ -891,7 +891,6 @@ class JBSMListing
 
 		foreach ($listrows as $row)
 		{
-			var_dump($row);
 			if ($row->row == 1)
 			{
 				if ($row1count == $row1count2)
@@ -1091,7 +1090,6 @@ class JBSMListing
 				break;
 		}
 
-		var_dump($row->name);
 		switch ($row->name)
 		{
 			case $extra . 'custom':

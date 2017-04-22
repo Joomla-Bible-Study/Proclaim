@@ -10,6 +10,8 @@
 
 defined('_JEXEC') or die;
 
+/** @var BiblestudyViewDataBase $this */
+
 ?>
 <div id="installer-database" class="clearfix">
     <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=database'); ?>" method="post" name="adminForm" id="adminForm">
@@ -34,12 +36,26 @@ defined('_JEXEC') or die;
 							<?php endif; ?>
 
 							<?php if ($this->schemaVersion != $this->changeSet->getSchema()) : ?>
-                                <li><?php echo JText::sprintf('COM_INSTALLER_MSG_DATABASE_SCHEMA_ERROR', $this->schemaVersion, $this->changeSet->getSchema()); ?></li>
+                                <li><?php echo JText::sprintf('JBS_ADM_MSG_DATABASE_SCHEMA_ERROR',
+		                                $this->schemaVersion, $this->changeSet->getSchema()
+	                                ); ?></li>
 							<?php endif; ?>
 
-							<?php if (version_compare($this->updateVersion, JVERSION) != 0) : ?>
-                                <li><?php echo JText::sprintf('COM_INSTALLER_MSG_DATABASE_UPDATEVERSION_ERROR', $this->updateVersion, $this->jversion); ?></li>
+							<?php if (version_compare($this->updateVersion, $this->version) != 0) : ?>
+                                <li>
+	                                <?php echo JText::sprintf('JBS_ADM_MSG_DATABASE_UPDATEVERSION_ERROR',
+		                                $this->updateVersion, $this->version
+	                                ); ?>
+                                </li>
 							<?php endif; ?>
+
+	                        <?php if (version_compare($this->updateJBSMVersion, $this->version) != 0) : ?>
+		                        <li>
+			                        <?php echo JText::sprintf('JBS_ADM_MSG_DATABASE_UPDATEJBSMVERSION_ERROR',
+				                        $this->updateJBSMVersion, $this->version
+			                        ); ?>
+		                        </li>
+	                        <?php endif; ?>
 
 							<?php foreach ($this->errors as $line => $error) : ?>
 								<?php $key = 'COM_INSTALLER_MSG_DATABASE_' . $error->queryType;
@@ -61,6 +77,7 @@ defined('_JEXEC') or die;
                         <ul>
                             <li><?php echo JText::sprintf('COM_INSTALLER_MSG_DATABASE_SCHEMA_VERSION', $this->schemaVersion); ?></li>
                             <li><?php echo JText::sprintf('COM_INSTALLER_MSG_DATABASE_UPDATE_VERSION', $this->updateVersion); ?></li>
+	                        <li><?php echo JText::sprintf('JBS_ADM__MSG_DATABASE_UPDATE_VERSION', $this->updateJBSMVersion); ?></li>
                             <li><?php echo JText::sprintf('COM_INSTALLER_MSG_DATABASE_DRIVER', JFactory::getDbo()->name); ?></li>
                             <li><?php echo JText::sprintf('COM_INSTALLER_MSG_DATABASE_CHECKED_OK', count($this->results['ok'])); ?></li>
                             <li><?php echo JText::sprintf('COM_INSTALLER_MSG_DATABASE_SKIPPED', count($this->results['skipped'])); ?></li>
