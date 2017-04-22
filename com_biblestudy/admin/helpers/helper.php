@@ -105,6 +105,14 @@ class JBSMHelper
 		{
 			return 0;
 		}
+		elseif (substr_count($url, 'youtu.be') > 0)
+		{
+			return 0;
+		}
+		elseif (substr_count($url, 'youtube.com') > 0)
+		{
+			return 0;
+		}
 
 		// Removes a bad url problem in some DB's
 		if (substr_count($url, '/http'))
@@ -124,7 +132,16 @@ class JBSMHelper
 			}
 		}
 
-		$head = array_change_key_case(get_headers($url, true));
+		$headers = get_headers($url, true);
+
+		if (is_array($headers))
+		{
+			$head = array_change_key_case($headers);
+		}
+		else
+		{
+			return 0;
+		}
 
 		if (isset($head['content-length']))
 		{
@@ -134,6 +151,38 @@ class JBSMHelper
 		{
 			return 0;
 		}
+	}
+
+	/**
+	 * Set File Size for MediaFile
+	 *
+	 * @param   int  $id    ID of MediaFile
+	 * @param   int  $size  Size of file in bits
+	 *
+	 * @return void
+	 *
+	 * @since 9.0.14
+	 */
+	public static function SetFileSize($id, $size)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select('id, params')
+			->from('#__bsms_mediafiles')
+			->where('id = ' . (int) $id);
+
+		$db->setQuery($query);
+		$media = $db->loadObject();
+
+		$reg = new Joomla\Registry\Registry;
+		$reg->loadString($media->params);
+		$reg->set('size', $size);
+
+		$update = new stdClass;
+		$update->id = $id;
+		$update->params = $reg->toString();
+
+		$db->updateObject('#__bsms_mediafiles', $update, 'id');
 	}
 
 	/**
