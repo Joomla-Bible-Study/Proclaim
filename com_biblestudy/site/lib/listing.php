@@ -209,7 +209,7 @@ class JBSMListing
 			$listparams[] = $this->getListParamsArray($extra . 'thumbnail');
 		}
 
-		if ($params->get($extra . 'teacherimagerrow') > 0)
+		if ($params->get($extra . 'teacherimagerow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'teacherimage');
 		}
@@ -891,6 +891,7 @@ class JBSMListing
 
 		foreach ($listrows as $row)
 		{
+			var_dump($row);
 			if ($row->row == 1)
 			{
 				if ($row1count == $row1count2)
@@ -1090,6 +1091,7 @@ class JBSMListing
 				break;
 		}
 
+		var_dump($row->name);
 		switch ($row->name)
 		{
 			case $extra . 'custom':
@@ -2419,19 +2421,24 @@ class JBSMListing
 	 */
 	public function useJImage($path, $alt = null)
 	{
-		$image = new JImage;
+		$image  = new JImage;
+		$return = false;
 
 		try
 		{
-			$return = $image->getImageFileProperties($path);
+			$image = $image->getImageFileProperties($path);
 		}
 		catch (Exception $e)
 		{
 			$return = false;
 		}
-		$imagereturn = '<img src="' . JUri::base() . $path . '" alt="' . $alt . '" ' . $return->attributes . ' />';
 
-		return $imagereturn;
+		if (!empty($path) && isset($image->attributes))
+		{
+			$return = '<img src="' . JUri::base() . $path . '" alt="' . $alt . '" ' . $image->attributes . ' />';
+		}
+
+		return $return;
 	}
 
 	/**

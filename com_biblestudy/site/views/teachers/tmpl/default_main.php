@@ -9,38 +9,43 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-$listing = new JBSMListing;
+$listing      = new JBSMListing;
 $classelement = $listing->createelement($this->params->get('teachers_element'));
 ?>
 <div class="container-fluid">
-    <div class="hero-unit" style="padding-top:30px; padding-bottom:20px;"> <!-- This div is the header container -->
-		<<?php echo $classelement; ?> class="componentheading">
-	    <?php echo $this->params->get('teacher_title', JText::_('JBS_TCH_OUR_TEACHERS')); ?>
-        </<?php echo $classelement; ?> >
-	</div>
-	<div class="row-fluid">
-		<div class="span12">
-			<?php
-			if ($this->params->get('teacher_headercode'))
-			{
-				echo JHtml::_('content.prepare', $this->params->get('teacher_headercode'), '', 'com_biblestudy.teachers');
-			}
-			?>
-		</div>
-	</div>
-	<div class="row-fluid">
-		<div class="span12">
-			<?php
-				echo $listing->getFluidListing($this->items, $this->params, $this->template, $type = 'teachers');
-			?>
-		</div>
-	</div>
-
-	<div class="listingfooter">
+	<div class="hero-unit" style="padding-top:30px; padding-bottom:20px;"> <!-- This div is the header container -->
+		<?php if ($classelement) : ?>
+			<<?php echo $classelement; ?> class="componentheading">
+		<?php endif; ?>
+		<?php echo $this->params->get('teacher_title', JText::_('JBS_TCH_OUR_TEACHERS')); ?>
+		<?php if ($classelement) : ?>
+	</<?php echo $classelement; ?> >
+	<?php endif; ?>
+</div>
+<div class="row-fluid">
+	<div class="span12">
 		<?php
-		echo $this->page->pagelinks;
-		echo $this->page->counter;
+		if ($this->params->get('teacher_headercode'))
+		{
+			echo JHtml::_('content.prepare', $this->params->get('teacher_headercode'), '', 'com_biblestudy.teachers');
+		}
 		?>
 	</div>
-	<!--end of bsfooter div-->
+</div>
+<div class="row-fluid">
+	<div class="span12">
+		<?php
+		var_dump($this->template->params->toObject());
+		echo $listing->getFluidListing($this->items, $this->params, $this->template, $type = 'teachers');
+		?>
+	</div>
+</div>
+
+<div class="listingfooter">
+	<?php
+	echo $this->page->pagelinks;
+	echo $this->page->counter;
+	?>
+</div>
+<!--end of bsfooter div-->
 </div>
