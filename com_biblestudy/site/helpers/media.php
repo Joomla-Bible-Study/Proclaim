@@ -239,9 +239,10 @@ class JBSMMedia
 			{
 				$url = JBSMHelper::MediaBuildUrl($media->sparams->get('path'), $media->params->get('filename'), $params, true);
 
-				if ($media->params->get('size') !== '0')
+				if ($media->params->get('size') == '0')
 				{
 					$size = JBSMHelper::getRemoteFileSize($url);
+					JBSMHelper::SetFilesize($media->id, $size);
 				}
 				else
 				{
@@ -764,6 +765,7 @@ class JBSMMedia
 		if (!$file_size)
 		{
 			$file_size = JBSMHelper::getRemoteFileSize(JBSMHelper::MediaBuildUrl($media->sparams->get('path'), $params->get('filename'), $params, true));
+			JBSMHelper::SetFilesize($media->id, $file_size);
 		}
 
 		if ($file_size)
