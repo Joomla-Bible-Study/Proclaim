@@ -1106,7 +1106,7 @@ class JBSMListing
 
 			case $extra . 'teacherallinone':
 				($item->email ? $data = '<a href="mailto:' . $item->email . '">
-				<span class="fa fa-globe" style="font-size:20px;" title="Website"></span></a>' : $data = '');
+				<span class="fa fa-envelope-o" style="font-size:20px;" title="Website"></span></a>' : $data = '');
 
 				if ($item->website)
 				{
@@ -1486,9 +1486,9 @@ class JBSMListing
 				{
 					$data = JText::_('JBS_CMN_TEACHER');
 				}
-				elseif (isset($item->teachertitle) && isset($item->teachername))
+				elseif (isset($item->title) && isset($item->teachername))
 				{
-					$data = $item->teachertitle . ' ' . $item->teachername;
+					$data = $item->title . ' ' . $item->teachername;
 				}
 				else
 				{
