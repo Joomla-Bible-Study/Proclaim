@@ -815,7 +815,7 @@ class JBSMListing
 
 		if (!empty($oddeven))
 		{
-			$background = "background-color:'" . $oddeven . "';";
+			$background = "background-color: " . $oddeven . ";";
 		}
 		else
 		{
