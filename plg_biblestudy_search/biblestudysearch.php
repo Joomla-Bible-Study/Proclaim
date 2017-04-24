@@ -9,7 +9,6 @@
  */
 defined('_JEXEC') or die;
 
-require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
 /**
  * Plugin class for BibleStudy Search
  *
@@ -32,7 +31,17 @@ class PlgSearchBiblestudysearch extends JPlugin
 	public function __construct(& $subject, $config)
 	{
 		parent::__construct($subject, $config);
-		$this->loadLanguage();
+
+		// Always load JBSM API if it exists.
+		$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+
+		if (file_exists($api))
+		{
+			require_once $api;
+		}
+
+		// Set Auto Load Language files
+		$this->autoloadLanguage = true;
 	}
 
 	/**
