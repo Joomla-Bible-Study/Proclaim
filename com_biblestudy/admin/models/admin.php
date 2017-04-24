@@ -348,7 +348,6 @@ class BiblestudyModelAdmin extends JModelAdmin
 		return false;
 	}
 
-
 	/**
 	 * Get current version from #__bsms_update table.
 	 *
