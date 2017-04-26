@@ -440,14 +440,14 @@ class JBSMMedia
 		$player->playerwidth  = $params->get('player_width');
 		$player->playerheight = $params->get('player_height');
 
-		if ($params->get('playerheight'))
+		if ($media->params->get('playerheight'))
 		{
-			$player->playerheight = $params->get('playerheight');
+			$player->playerheight = $media->params->get('playerheight');
 		}
 
-		if ($params->get('playerwidth'))
+		if ($media->params->get('playerwidth'))
 		{
-			$player->playerwidth = $params->get('playerwidth');
+			$player->playerwidth = $media->params->get('playerwidth');
 		}
 
 		/**
