@@ -97,6 +97,12 @@ class Com_BiblestudyInstallerScript
 			JFolder::delete(JPATH_ADMINISTRATOR . '/components/com_biblestudy/install');
 		}
 
+		// Remove old BibleStudy Helper. @since 9.0.14
+		if (JFile::exists(JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php'))
+		{
+			JFile::delete(JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php');
+		}
+
 		return true;
 	}
 

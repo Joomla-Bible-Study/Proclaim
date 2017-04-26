@@ -8,14 +8,6 @@
  * */
 defined('_JEXEC') or die;
 
-// Always load JBSM API if it exists.
-$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
-
-if (file_exists($api))
-{
-	require_once $api;
-}
-
 /**
  * JBSBackup jPlugin class
  *
@@ -38,6 +30,14 @@ class PlgSystemJBSBackup extends JPlugin
 	public function __construct(& $subject, $config)
 	{
 		parent::__construct($subject, $config);
+
+		// Always load JBSM API if it exists.
+		$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+
+		if (file_exists($api))
+		{
+			require_once $api;
+		}
 
 		$this->loadLanguage();
 	}
