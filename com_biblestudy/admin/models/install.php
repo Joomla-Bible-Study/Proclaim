@@ -984,6 +984,11 @@ class BibleStudyModelInstall extends JModelLegacy
 			&& empty($this->subFiles)
 			&& empty($this->install))
 		{
+			// Fix any problem with db versions after migration.
+			JLoader::register('BiblestudyModelAdmin', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/admin.php');
+			$admin = new BiblestudyModelAdmin;
+			$admin->fix();
+
 			// Just finished
 			$this->resetStack();
 			$this->running = JText::_('JBS_MIGfinishED');
@@ -1320,9 +1325,6 @@ class BibleStudyModelInstall extends JModelLegacy
 
 		if (count($queries) == 0)
 		{
-			// No queries to process
-			JFactory::getApplication()->enqueueMessage('No Queries', 'error');
-
 			return false;
 		}
 

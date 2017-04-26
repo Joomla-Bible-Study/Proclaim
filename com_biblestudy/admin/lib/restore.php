@@ -186,7 +186,7 @@ class JBSMRestore
 		}
 
 		// Start finding how to restore files.
-		if (!empty($installtype) && $installtype !== '/')
+		if (!empty($installtype) && $installtype !== '/' && $installtype != JFactory::getConfig()->get('tmp_path') . '/')
 		{
 			$uploadresults = self::_getPackageFromFolder();
 			$result        = $uploadresults;
@@ -276,6 +276,7 @@ class JBSMRestore
 		}
 		elseif (!$iscernt)
 		{
+			$app->enqueueMessage(basename($backuprestore), 'warning');
 			$app->enqueueMessage(JText::_('JBS_IBM_NOT_CURENT_DB'), 'warning');
 
 			return false;
@@ -471,6 +472,7 @@ class JBSMRestore
 		}
 		elseif ($isnot === 0)
 		{
+			$app->enqueueMessage('Extracted file: ' . basename($tmp_src), 'warning');
 			$app->enqueueMessage(JText::_('JBS_IBM_NOT_DB'), 'warning');
 
 			return false;
@@ -478,7 +480,7 @@ class JBSMRestore
 		elseif (($iscernt === 0) && ($parent !== true))
 		{
 			// Way to check to see if file came from restore and is current.
-			$app->enqueueMessage(JText::_('JBS_IBM_NOT_CURENT_DB'), 'waring');
+			$app->enqueueMessage(JText::_('JBS_IBM_NOT_CURENT_DB'), 'warning');
 
 			return false;
 		}
