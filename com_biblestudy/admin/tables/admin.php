@@ -111,6 +111,13 @@ class TableAdmin extends JTable
 			$array['params'] = (string) $parameter;
 		}
 
+		// Bind the rules.
+		if (isset($array['rules']) && is_array($array['rules']))
+		{
+			$rules = new JAccessRules($array['rules']);
+			$this->setRules($rules);
+		}
+
 		return parent::bind($array, $ignore);
 	}
 
@@ -136,34 +143,6 @@ class TableAdmin extends JTable
 		}
 
 		return parent::store($updateNulls);
-	}
-
-	/**
-	 * Method to load a row from the database by primary key and bind the fields
-	 * to the JTable instance properties.
-	 *
-	 * @param   mixed    $keys   An optional primary key value to load the row by, or an array of fields to match.  If not
-	 *                           et the instance property value is used.
-	 * @param   boolean  $reset  True to reset the default values before loading the new row.
-	 *
-	 * @return  boolean  True if successful. False if row not found.
-	 *
-	 * @link    http://docs.joomla.org/JTable/load
-	 * @since   11.1
-	 */
-	public function load($keys = null, $reset = true)
-	{
-		if (parent::load($keys, $reset))
-		{
-			// Convert the params field to a registry.
-			$params = new Registry;
-			$params->loadString($this->params);
-			$this->params = $params;
-
-			return true;
-		}
-
-		return false;
 	}
 
 	/**
