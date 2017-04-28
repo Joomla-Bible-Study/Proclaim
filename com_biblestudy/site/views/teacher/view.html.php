@@ -123,6 +123,8 @@ class BiblestudyViewTeacher extends JViewLegacy
 			$language = JFactory::getLanguage();
 			$language->load('com_contact', JPATH_SITE);
 			require_once JPATH_ROOT . '/components/com_contact/models/contact.php';
+
+			/** @var \ContactModelContact $contactmodel */
 			$contactmodel  = JModelLegacy::getInstance('contact', 'contactModel');
 			$this->contact = $contactmodel->getItem($pk = $item->contact);
 

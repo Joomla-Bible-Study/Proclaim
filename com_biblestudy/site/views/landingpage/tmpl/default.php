@@ -57,7 +57,6 @@ $params = $this->params;
 
 			switch ($showIt)
 			{
-
 				case 'teachers':
 					$heading       = $JBSMLanding->getTeacherLandingPage($params, $id = 0);
 					$showIt_phrase = JText::_('JBS_CMN_TEACHERS');

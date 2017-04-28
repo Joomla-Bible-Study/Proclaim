@@ -170,7 +170,13 @@ abstract class JHtmlJwplayer
 			$media->autostart = 'false';
 		}
 
+		// Calculate Height base off width for a 16:9 ratio.
 		$render = "";
+		$rat1 = 16;
+		$rat2 = 9;
+
+		$ratio = $media->playerwidth / $rat1;
+		$height = $ratio * $rat2;
 
 		if ($popup)
 		{
@@ -181,7 +187,8 @@ abstract class JHtmlJwplayer
 			}
 			else
 			{
-				$render .= "<div class='playeralign' style=\"margin-left: auto; margin-right: auto; width:" . $media->playerwidth . "px;\">";
+				$render .= "<div class='playeralign' style=\"margin-left: auto; margin-right: auto; width:" .
+					$media->playerwidth . "px; height:" . $height . "px;\">";
 			}
 
 			$popupmarg = $params->get('popupmargin', '50');
@@ -232,6 +239,7 @@ abstract class JHtmlJwplayer
 		else
 		{
 			$header = $params->get('popuptitle', '');
+			$header = str_replace('{{title}}', $media->studytitle, $header);
 		}
 
 		$render .= "'width': '" . $media->playerwidth . "',
