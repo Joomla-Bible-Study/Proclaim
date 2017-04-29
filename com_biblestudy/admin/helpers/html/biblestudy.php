@@ -51,6 +51,14 @@ abstract class JHtmlBiblestudy
 		}
 
 		JHtml::_('bootstrap.framework', $debug);
+		$app = JFactory::getApplication();
+		$menu = $app->getMenu();
+
+		if ($menu->getActive() !== null)
+		{
+			JHtml::_('bootstrap.loadCss');
+		}
+
 		JHtml::script('media/com_biblestudy/js/biblestudy.js');
 		JHtml::script('media/com_biblestudy/js/modernizr.js');
 
