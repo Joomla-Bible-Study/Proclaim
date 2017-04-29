@@ -51,7 +51,6 @@ abstract class JHtmlBiblestudy
 		}
 
 		JHtml::_('bootstrap.framework', $debug);
-		JHtml::_('bootstrap.loadCss');
 		JHtml::script('media/com_biblestudy/js/biblestudy.js');
 		JHtml::script('media/com_biblestudy/js/modernizr.js');
 
