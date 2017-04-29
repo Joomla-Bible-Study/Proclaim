@@ -755,8 +755,7 @@ class JBSMListing
 				case 1:
 					if (isset($item->thumb) && !empty($item->thumb))
 					{
-						$span = '<img src="' . JUri::base() . $item->thumb . '" class="' . $params->get('rowspanitemimage') .
-							'" alt="' . $item->teachername . '">';
+						$span = $this->useJImage($item->thumb, $item->teachername, '', '', '', $params->get('rowspanitemimage'));
 					}
 					else
 					{
@@ -765,8 +764,14 @@ class JBSMListing
 
 					if (is_null($span) && !empty($item->teacher_thumbnail))
 					{
-						(isset($item->teacher_thumbnail) ? $span = '<img src="' . JUri::base() . $item->teacher_thumbnail . '" class="' .
-							$params->get('rowspanitemimage') . '" alt="' . $item->teachername . '">' : $span = '');
+						if (isset($item->teacher_thumbnail))
+						{
+							$span = $this->useJImage($item->teacher_thumbnail, $item->teachername, '', '', '', $params->get('rowspanitemimage'));
+						}
+						else
+						{
+							$span = '';
+						}
 					}
 					else
 					{
@@ -776,8 +781,7 @@ class JBSMListing
 				case 2:
 					if (isset($item->thumbm) && !empty($item->thumbm))
 					{
-						$span = '<img src="' . JUri::base() . $item->thumbm . '" class="' . $params->get('rowspanitemimage') .
-							'" alt="' . JText::_('JBS_CMN_THUMBNAIL') . '">';
+						$span = $this->useJImage($item->thumb, JText::_('JBS_CMN_THUMBNAIL'), '', '', '', $params->get('rowspanitemimage'));
 					}
 					else
 					{
@@ -787,8 +791,7 @@ class JBSMListing
 				case 3:
 					if (isset($item->series_thumbnail) && !empty($item->series_thumbnail))
 					{
-						$span = '<img src="' . JUri::base() . $item->series_thumbnail . '" class="' .
-							$params->get('rowspanitemimage') . '" alt="' . JText::_('JBS_CMN_SERIES') . '">';
+						$span = $this->useJImage($item->series_thumbnail, JText::_('JBS_CMN_SERIES'), '', '', '', $params->get('rowspanitemimage'));
 					}
 					else
 					{
@@ -798,9 +801,7 @@ class JBSMListing
 				case 4:
 					if (isset($item->teacher_image) && !empty($item->teacher_image))
 					{
-						$span = '<img src="' . JUri::base() . $item->teacher_image . '" class="' .
-							$params->get('rowspanitemimage') . '" alt="' .
-							$item->teachername . '">';
+						$span = $this->useJImage($item->teacher_image, $item->teachername, '', '', '', $params->get('rowspanitemimage'));
 					}
 					else
 					{
@@ -1549,8 +1550,14 @@ class JBSMListing
 				}
 				else
 				{
-					(isset($item->teacher_image) ? $data = '<img src="' . JUri::base() . $item->teacher_image . '" alt="' . JText::_('JBS_CMN_THUMBNAIL') .
-						'" />' : $data = '');
+					if (isset($item->teacher_image) && !empty($item->teacher_image))
+					{
+						$data = $this->useJImage($item->teacher_image, JText::_('JBS_CMN_THUMBNAIL'));
+					}
+					else
+					{
+						$data = '';
+					}
 				}
 				break;
 			case $extra . 'description':
@@ -1908,7 +1915,7 @@ class JBSMListing
 			case 'series_thumbnail':
 				if ($row->series_thumbnail)
 				{
-					$element = '<img src="' . JUri::base() . $row->series_thumbnail . '" alt="' . $row->series_text . '" />';
+					$element = $this->useJImage($row->series_thumbnail, $row->series_text);
 				}
 				else
 				{
@@ -1928,7 +1935,7 @@ class JBSMListing
 			case 'teacherimage':
 				if (isset($row->teacher_thumbnail))
 				{
-					$element = '<img src="' . JUri::base() . $row->teacher_thumbnail . '" alt="' . $row->teachername . '" />';
+					$element = $this->useJImage($row->teacher_thumbnail, $row->teachername);
 				}
 				else
 				{
@@ -1960,7 +1967,7 @@ class JBSMListing
 				break;
 			case 'thumbnail':
 				// Assume study thumbnail
-				$element = '<img src="' . JUri::base() . $row->thumbnailm . '" alt="' . $row->studytitle . '" />';
+				$element = $this->useJImage($row->thumbnailm, $row->studytitle);
 				break;
 			case 'studytitle':
 				(isset($row->studytitle) ? $element = $row->studytitle : $element = '');
@@ -2410,14 +2417,18 @@ class JBSMListing
 	/**
 	 * Use JImage Class
 	 *
-	 * @param   String  $path  Path to File
-	 * @param   String  $alt   Alternate Text
+	 * @param   String  $path    Path to File
+	 * @param   String  $alt     Alternate Text
+	 * @param   String  $id      CSS ID for the image
+	 * @param   int     $width   Width
+	 * @param   int     $height  Height
+	 * @param   string  $class   CSS Class
 	 *
 	 * @return bool|stdClass
 	 *
 	 * @since 9.0.0
 	 */
-	public function useJImage($path, $alt = null)
+	public function useJImage($path, $alt = null, $id = null, $width = null, $height = null, $class = null)
 	{
 		$image  = new JImage;
 		$return = false;
@@ -2431,9 +2442,30 @@ class JBSMListing
 			$return = false;
 		}
 
+		if ($id)
+		{
+			$id = ' id="' . $id . '" ';
+		}
+
+		if ($width)
+		{
+			$width = ' width="' . $width . '" ';
+		}
+
+		if ($height)
+		{
+			$height = ' height="' . $height . '" ';
+		}
+
+		if ($class)
+		{
+			$class = ' class="' . $class . '" ';
+		}
+
 		if (!empty($path) && isset($image->attributes))
 		{
-			$return = '<img src="' . JUri::base() . $path . '" alt="' . $alt . '" ' . $image->attributes . ' />';
+			$return = '<img src="' . JUri::base() . $path . '"' . $id . $width . $height
+				. 'alt="' . $alt . '" ' . $class . $image->attributes . ' />';
 		}
 
 		return $return;
@@ -2648,9 +2680,7 @@ class JBSMListing
 		$label  = str_replace('{{topics}}', $row->topic_text, $label);
 		$label  = str_replace('{{url}}', JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $row->id . '&t=' . $template->id), $label);
 		$label  = str_replace('{{mediatime}}', $this->getDuration($params, $row), $label);
-		$label  = str_replace('{{thumbnail}}', '<img src="' . $image->path . '" width="' . $image->width . '" height="'
-			. $image->height . '" id="bsms_studyThumbnail' . $row->id . '" alt="" />', $label
-		);
+		$label  = str_replace('{{thumbnail}}', $this->useJImage($image->path, "", "bsms_studyThumbnail" . $row->id, $image->width, $image->height), $label);
 		$label  = str_replace('{{seriestext}}', $row->series_text, $label);
 		$label  = str_replace('{{messagetype}}', $row->message_type, $label);
 		$label  = str_replace('{{bookname}}', $row->bookname, $label);
@@ -2693,9 +2723,7 @@ class JBSMListing
 		$label  = str_replace('{{scripture}}', $this->getScripture($params, $row, 0, 1), $label);
 		$label  = str_replace('{{topics}}', $row->topic_text, $label);
 		$label  = str_replace('{{mediatime}}', $this->getDuration($params, $row), $label);
-		$label  = str_replace('{{thumbnail}}', '<img src="' . $image->path . '" width="' . $image->width . '" height="'
-			. $image->height . '" id="bsms_studyThumbnail' . $row->id . '" alt=""/>', $label
-		);
+		$label  = str_replace('{{thumbnail}}', $this->useJImage($image->path, "", "bsms_studyThumbnail" . $row->id, $image->width, $image->height), $label);
 		$label  = str_replace('{{seriestext}}', $row->seriestext, $label);
 		$label  = str_replace('{{messagetype}}', $row->message_type, $label);
 		$label  = str_replace('{{bookname}}', $row->bname, $label);
