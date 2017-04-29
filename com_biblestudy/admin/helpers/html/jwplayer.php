@@ -241,7 +241,7 @@ abstract class JHtmlJwplayer
 			$header = $params->get('popuptitle', '');
 			$header = str_replace('{{title}}', $media->studytitle, $header);
 		}
-
+var_dump($media);
 		$render .= "'width': '" . $media->playerwidth . "',
 						'logo': {
 							file: '" . $params->get('jwplayer_logo') . "',
@@ -251,7 +251,7 @@ abstract class JHtmlJwplayer
 						'image': '" . $params->get('popupimage', 'images/biblestudy/speaker24.png') . "',
 						'abouttext': 'Direct Link',
 						'aboutlink': '" . $media->path1 . "',
-						'autostart': '" . $media->autostart . "',
+						'autostart': '" . $params->get('autostart') . "',
 						'backcolor': '" . $media->backcolor . "',
 						'frontcolor': '" . $media->frontcolor . "',
 						'lightcolor': '" . $media->lightcolor . "',

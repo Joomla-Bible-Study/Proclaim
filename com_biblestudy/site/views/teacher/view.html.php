@@ -101,8 +101,16 @@ class BiblestudyViewTeacher extends JViewLegacy
 
 		$image            = $images->getTeacherThumbnail($item->teacher_thumbnail, $item->thumb);
 		$largeimage       = $images->getTeacherImage($item->image, $item->teacher_image);
-		$item->image      = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="" />';
-		$item->largeimage = '<img src="' . $largeimage->path . '" height="' . $largeimage->height . '" width="' . $largeimage->width . '" alt="" />';
+
+		if ($image)
+		{
+			$item->image = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="" />';
+		}
+
+		if ($largeimage)
+		{
+			$item->largeimage = '<img src="' . $largeimage->path . '" height="' . $largeimage->height . '" width="' . $largeimage->width . '" alt="" />';
+		}
 
 		if (isset($item->information))
 		{
