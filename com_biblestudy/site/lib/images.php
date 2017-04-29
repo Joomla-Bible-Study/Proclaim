@@ -269,7 +269,7 @@ class JBSMImages
 				$path = $folder . '/' . $image2;
 			}
 		}
-		else
+		elseif ($image1)
 		{
 			$path = $folder . '/' . $image1;
 
