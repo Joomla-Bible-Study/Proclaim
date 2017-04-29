@@ -96,7 +96,6 @@ class BiblestudyViewMessage extends JViewLegacy
 		$registry    = new Registry;
 		$registry->loadString($this->admin->params);
 		$this->admin_params = $registry;
-		$this->canDo        = JBSMBibleStudyHelper::getActions($type = 'message', $Itemid = $this->item->id);
 		$document           = JFactory::getDocument();
 
 		JHtml::stylesheet('media/com_biblestudy/css/token-input-jbs.css');
@@ -118,7 +117,6 @@ class BiblestudyViewMessage extends JViewLegacy
             });
              ";
 
-		// JHtml::script($script);
 		$document->addScriptDeclaration($script);
 
 		JHtml::script('media/com_biblestudy/js/plugins/jquery.tokeninput.js');

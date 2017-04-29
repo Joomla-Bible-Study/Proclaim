@@ -187,8 +187,8 @@ abstract class JHtmlJwplayer
 			}
 			else
 			{
-				$render .= "<div class='playeralign' style=\"margin-left: auto; margin-right: auto; width:" .
-					$media->playerwidth . "px; height:" . $height . "px;\">";
+				$render .= "<div class='playeralign' style=\"margin-left: auto; margin-right: auto; width:"
+					. $media->playerwidth . "px; height:" . $height . "px;\">";
 			}
 
 			$popupmarg = $params->get('popupmargin', '50');
