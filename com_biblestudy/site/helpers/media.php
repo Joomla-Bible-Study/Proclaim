@@ -407,7 +407,7 @@ class JBSMMedia
 	{
 		if (!$path)
 		{
-			return false;
+			return $alt;
 		}
 
 		try
