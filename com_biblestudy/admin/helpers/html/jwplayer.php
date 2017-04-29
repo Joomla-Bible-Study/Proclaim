@@ -241,7 +241,7 @@ abstract class JHtmlJwplayer
 			$header = $params->get('popuptitle', '');
 			$header = str_replace('{{title}}', $media->studytitle, $header);
 		}
-var_dump($media);
+
 		$render .= "'width': '" . $media->playerwidth . "',
 						'logo': {
 							file: '" . $params->get('jwplayer_logo') . "',
