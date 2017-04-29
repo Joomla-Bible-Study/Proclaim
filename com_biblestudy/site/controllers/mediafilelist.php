@@ -45,7 +45,7 @@ class BiblestudyControllerMediafilelist extends JControllerAdmin
 	 * @param   string  $prefix  The prefix for the PHP class name
 	 * @param   array   $config  Set ignore request
 	 *
-	 * @return JModel
+	 * @return \JModelLegacy
 	 *
 	 * @since 7.0
 	 */

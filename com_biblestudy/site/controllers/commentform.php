@@ -99,11 +99,11 @@ class BiblestudyControllerCommentform extends JControllerForm
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
 		// Set the model
-		$model = $this->getModel('Comment', '', array());
+		$model = $this->getModel('Commentlist', 'BiblestudyModel', array());
 
 		// Preset the redirect
 		$this->setRedirect(
-			JRoute::_('index.php?option=com_biblestudy&view=comments' . $this->getRedirectToListAppend(), false)
+			JRoute::_('index.php?option=com_biblestudy&view=commentlist' . $this->getRedirectToListAppend(), false)
 		);
 
 		/** @var $model JModelLegacy */
@@ -118,7 +118,7 @@ class BiblestudyControllerCommentform extends JControllerForm
 	 * @param   string  $prefix  The class prefix. Optional.
 	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return    object    The model.
+	 * @return    \JModelLegacy    The model.
 	 *
 	 * @since    1.5
 	 */
@@ -144,6 +144,8 @@ class BiblestudyControllerCommentform extends JControllerForm
 
 		// Redirect to the return page.
 		$this->setRedirect($this->getReturnPage());
+
+		return true;
 	}
 
 	/**

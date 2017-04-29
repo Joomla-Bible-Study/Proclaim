@@ -19,7 +19,7 @@ defined('_JEXEC') or die;
 class BiblestudyControllerTeacher extends JControllerLegacy
 {
 	/**
-	 * display the edit form
+	 * Display the edit form
 	 *
 	 * @return void
 	 *

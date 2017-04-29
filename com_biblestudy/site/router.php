@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
  *
  * @param   array  &$query  Info to Query
  *
- * @return string
+ * @return array
  *
  * @since 7.0
  */

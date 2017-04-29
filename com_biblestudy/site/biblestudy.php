@@ -27,5 +27,5 @@ if (version_compare(PHP_VERSION, BIBLESTUDY_MIN_PHP, '<'))
 }
 
 $controller = JControllerLegacy::getInstance('Biblestudy');
-$controller->execute(JFactory::getApplication()->input->get('task', '', 'cmd'));
+$controller->execute(JFactory::getApplication()->input->get('task'));
 $controller->redirect();
