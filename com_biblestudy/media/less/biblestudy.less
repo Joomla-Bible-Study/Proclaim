@@ -649,11 +649,18 @@ p.expand {
   color: @color_1;
   }
 
-.jw-controls, .jw-media, .jw-overlays, .jw-preview {
+.jw-media, .jw-overlays, .jw-preview {
   position: relative !important;
   }
-.jwplayer {
-  block-size: inherit !important;
+
+.popupwindow {
+  .jwplayer {
+	block-size: inherit !important;
+	}
+  }
+
+.jw_controls{
+  position: absolute !important;
   }
 
 #effect-1 {
