@@ -34,7 +34,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">195</span></a></li>
+                <span class="label label-info">196</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -106,6 +106,7 @@
 <li><a href="#JBSMPIconvert" title="Convert Class
 PreachIT Converter system">JBSMPIconvert</a></li>
 <li><a href="#JFormFieldMediafile" title="Location List Form Field class for the Joomla Bible Study component">JFormFieldMediafile</a></li>
+<li><a href="#JFormFieldTemplatelist" title="Teachers List Form Field class for the Joomla Bible Study component">JFormFieldTemplatelist</a></li>
 <li><a href="#BiblestudyViewTeacher" title="View class for Teacher">BiblestudyViewTeacher</a></li>
 <li><a href="#JFormFieldPlupload" title="Class JFormFieldPlupload">JFormFieldPlupload</a></li>
 <li><a href="#JBSMHelper" title="Core Bible Study Helper">JBSMHelper</a></li>
@@ -180,6 +181,7 @@ Displays a topics list of ALL published topics">JFormFieldTopicslist</a></li>
 <li><a href="#BiblestudyControllerUpload" title="Class BiblestudyControllerUpload">BiblestudyControllerUpload</a></li>
 <li><a href="#JFormFieldLoadLanguageFile" title="This is a dummy form element to load the components language file">JFormFieldLoadLanguageFile</a></li>
 <li><a href="#JFormFieldDocman" title="Virtuemart Category List Form Field class for the Joomla Bible Study component">JFormFieldDocman</a></li>
+<li><a href="#JFormFieldTeacherlist" title="Teachers List Form Field class for the Joomla Bible Study component">JFormFieldTeacherlist</a></li>
 <li><a href="#BiblestudyViewMessages" title="View class for a list of Messages.">BiblestudyViewMessages</a></li>
 <li><a href="#JBSMAssets" title="Asset Fix class">JBSMAssets</a></li>
 <li><a href="#JBSMTags" title="Tags Helper">JBSMTags</a></li>
@@ -253,7 +255,7 @@ params.">JBSMImageLib</a></li>
 <li><a href="#TableLocation" title="Location table class">TableLocation</a></li>
 <li><a href="#JFormFieldYearlist" title="Location List Form Field class for the Joomla Bible Study component">JFormFieldYearlist</a></li>
 <li><a href="#JBSMAddonLocal" title="Class JBSMAddonLocal">JBSMAddonLocal</a></li>
-<li><a href="#BiblestudyViewDataBase" title="View class for Admin">BiblestudyViewDataBase</a></li>
+<li><a href="#BiblestudyViewDatabase" title="View class for Admin">BiblestudyViewDatabase</a></li>
 <li><a href="#BiblestudyViewInstall" title="JView class for Install">BiblestudyViewInstall</a></li>
 <li><a href="#BiblestudyViewCpanel" title="JView class for Cpanel">BiblestudyViewCpanel</a></li>
 <li><a href="#BiblestudyViewTemplates" title="View class for Templates">BiblestudyViewTemplates</a></li>
@@ -279,9 +281,6 @@ params.">JBSMImageLib</a></li>
 <li><a href="#BiblestudyViewTemplate" title="View class for Template">BiblestudyViewTemplate</a></li>
 <li><a href="#BiblestudyModelMessages" title="Message model class">BiblestudyModelMessages</a></li>
 <li><a href="#BiblestudyControllerTemplatecodes" title="TemplateCodes list controller class.">BiblestudyControllerTemplatecodes</a></li>
-<li><a href="#BiblestudyModelDatabase" title="Database Manage Model">BiblestudyModelDatabase</a></li>
-<li><a href="#JFormFieldTeacherlist" title="Teachers List Form Field class for the Joomla Bible Study component">JFormFieldTeacherlist</a></li>
-<li><a href="#JFormFieldTemplatelist" title="Teachers List Form Field class for the Joomla Bible Study component">JFormFieldTemplatelist</a></li>
 <li class="nav-header">
 <i title="Constants" class="icon-custom icon-constant"></i> Constants</li>
 <li class="constant  "><a href="#constant_BIBLESTUDY_COMPONENT_NAME" title="BIBLESTUDY_COMPONENT_NAME() :: "><span class="description">BIBLESTUDY_COMPONENT_NAME</span><pre>BIBLESTUDY_COMPONENT_NAME</pre></a></li>
@@ -393,7 +392,7 @@ that the message concerning it should be displayed.</p></div>
 </div>
 <a xmlns:php="http://php.net/xsl" id="function_biblestudyBuildRoute"></a><div xmlns:php="http://php.net/xsl" class="element clickable function  function_biblestudyBuildRoute " data-toggle="collapse" data-target=".function_biblestudyBuildRoute .collapse" title="">
 <h2>BibleStudy Build Route</h2>
-<pre>biblestudyBuildRoute(array $query) : string</pre>
+<pre>biblestudyBuildRoute(array $query) : array</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -412,7 +411,7 @@ that the message concerning it should be displayed.</p></div>
 <h4>$query</h4>
 <code>array</code><p>&$query  Info to Query</p></div>
 <h3>Returns</h3>
-<div class="subelement response"><code>string</code></div>
+<div class="subelement response"><code>array</code></div>
 </div></div>
 </div>
 <a xmlns:php="http://php.net/xsl" id="function_biblestudyParseRoute"></a><div xmlns:php="http://php.net/xsl" class="element clickable function  function_biblestudyParseRoute " data-toggle="collapse" data-target=".function_biblestudyParseRoute .collapse" title="">
@@ -728,13 +727,6 @@ that the message concerning it should be displayed.</p></div>
 <div class="details collapse"></div>
 <a href="../classes/BiblestudyModelComments.html" class="more">« More »</a>
 </div>
-<div xmlns:php="http://php.net/xsl" id="BiblestudyModelDatabase" class="element ajax clickable class">
-<h1>BiblestudyModelDatabase<a href="../classes/BiblestudyModelDatabase.html">¶</a>
-</h1>
-<p class="short_description">Database Manage Model</p>
-<div class="details collapse"></div>
-<a href="../classes/BiblestudyModelDatabase.html" class="more">« More »</a>
-</div>
 <div xmlns:php="http://php.net/xsl" id="BiblestudyModelDir" class="element ajax clickable class">
 <h1>BiblestudyModelDir<a href="../classes/BiblestudyModelDir.html">¶</a>
 </h1>
@@ -987,12 +979,12 @@ that the message concerning it should be displayed.</p></div>
 <div class="details collapse"></div>
 <a href="../classes/BiblestudyViewCpanel.html" class="more">« More »</a>
 </div>
-<div xmlns:php="http://php.net/xsl" id="BiblestudyViewDataBase" class="element ajax clickable class">
-<h1>BiblestudyViewDataBase<a href="../classes/BiblestudyViewDataBase.html">¶</a>
+<div xmlns:php="http://php.net/xsl" id="BiblestudyViewDatabase" class="element ajax clickable class">
+<h1>BiblestudyViewDatabase<a href="../classes/BiblestudyViewDatabase.html">¶</a>
 </h1>
 <p class="short_description">View class for Admin</p>
 <div class="details collapse"></div>
-<a href="../classes/BiblestudyViewDataBase.html" class="more">« More »</a>
+<a href="../classes/BiblestudyViewDatabase.html" class="more">« More »</a>
 </div>
 <div xmlns:php="http://php.net/xsl" id="BiblestudyViewDir" class="element ajax clickable class">
 <h1>BiblestudyViewDir<a href="../classes/BiblestudyViewDir.html">¶</a>
@@ -2269,7 +2261,7 @@ Displays a topics list of ALL published topics</p>
 </div>
 <a xmlns:php="http://php.net/xsl" id="constant_BIBLESTUDY_VERSION"> </a><div xmlns:php="http://php.net/xsl" class="element clickable constant  constant_BIBLESTUDY_VERSION" data-toggle="collapse" data-target=".constant_BIBLESTUDY_VERSION .collapse" title="">
 <h2>BIBLESTUDY_VERSION</h2>
-<pre>BIBLESTUDY_VERSION = '9.0.13' </pre>
+<pre>BIBLESTUDY_VERSION = '9.0.13-2017-04-22' </pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -2410,7 +2402,7 @@ Displays a topics list of ALL published topics</p>
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2017-04-19T17:22:53-05:00.<br></footer></div>
+            generated on 2017-04-29T09:36:03-05:00.<br></footer></div>
 </div>
 </body>
 </html>
