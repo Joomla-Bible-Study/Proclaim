@@ -227,7 +227,7 @@ class Com_BiblestudyInstallerScript
 		$pass = $this->checkVersion('PHP', phpversion());
 		$pass &= $this->checkVersion('Joomla!', JVERSION);
 		$pass &= $this->checkVersion('MySQL', $db->getVersion());
-		$pass &= $this->checkDbo($db->name, array('mysql', 'mysqli'));
+		$pass &= $this->checkDbo($db->name, array('mysql', 'mysqli', 'pdo'));
 		$pass &= $this->checkExtensions($this->extensions);
 		$pass &= $this->checkJBSM($version);
 
