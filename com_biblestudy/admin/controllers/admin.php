@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  * */
@@ -369,11 +369,12 @@ class BiblestudyControllerAdmin extends JControllerForm
 
 		$db     = JFactory::getDbo();
 		$msg    = null;
-		$post = $_POST['jform'];
-		$reg  = new Registry;
+		$post   = $_POST['jform'];
+		$reg    = new Registry;
 		$reg->loadArray($post['params']);
-		$from = $reg->get('pFrom', 'x');
-		$to   = $reg->get('pTo', 'x');
+		$from   = $reg->get('pFrom', 'x');
+		$form2  = '';
+		$to     = $reg->get('pTo', 'x');
 		$msg    = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
 		$query  = $db->getQuery(true);
 		$query->select('id, params')
@@ -385,7 +386,17 @@ class BiblestudyControllerAdmin extends JControllerForm
 			$reg = new Registry;
 			$reg->loadString($media->params);
 
-			if ($reg->get('popup', 0) == $from)
+			if ($from == '100')
+			{
+				$from  = '0';
+				$form2 = '100';
+			}
+			elseif ($to == '100')
+			{
+				$to = '';
+			}
+
+			if ($reg->get('popup', 0) == $from || $reg->get('popup', 0) == $form2)
 			{
 				$reg->set('popup', $to);
 
@@ -474,7 +485,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	/**
 	 * Reset Players
 	 *
-	 * @return null
+	 * @return void
 	 *
 	 * @since 7.0.0
 	 */
@@ -561,6 +572,9 @@ class BiblestudyControllerAdmin extends JControllerForm
 	{
 		// Check for request forgeries.
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
+		// Needed for DB fixer
+		JLoader::register('BiblestudyModelInstall', BIBLESTUDY_PATH_ADMIN_MODELS . '/install.php');
 
 		/** @var BiblestudyModelAdmin $model */
 		$model = $this->getModel('admin');
@@ -761,8 +775,8 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function export()
 	{
-		// Check for request forgeries. ToDo:  Need to find a solution for this.
-		// JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		// Check for request forgeries.
+		JSession::checkToken('get') or JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
 		$input  = new JInput;
 		$run    = $input->get('run', '', 'int');

@@ -2,14 +2,13 @@
 /**
  * @package     BibleStudy
  * @subpackage  Search.BibleStudy
- * @copyright   2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright   2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        https://www.joomlabiblestudy.org
  *
  */
 defined('_JEXEC') or die;
 
-require_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/defines.php';
 /**
  * Plugin class for BibleStudy Search
  *
@@ -32,7 +31,17 @@ class PlgSearchBiblestudysearch extends JPlugin
 	public function __construct(& $subject, $config)
 	{
 		parent::__construct($subject, $config);
-		$this->loadLanguage();
+
+		// Always load JBSM API if it exists.
+		$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+
+		if (file_exists($api))
+		{
+			require_once $api;
+		}
+
+		// Set Auto Load Language files
+		$this->autoloadLanguage = true;
 	}
 
 	/**

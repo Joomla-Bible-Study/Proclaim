@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  * */
@@ -25,6 +25,10 @@ defined('_JEXEC') or die;
 class BiblestudyModelSermons extends JModelList
 {
 	public $input;
+
+	/** @var string Needed for context for Populate State
+	 * @since 9.0.14 */
+	public $context = 'com_biblestudy.list';
 
 	/**
 	 * Constructor.
@@ -414,8 +418,10 @@ class BiblestudyModelSermons extends JModelList
 	 *
 	 * @since   11.1
 	 */
-	protected function populateState($ordering = 'study.studydate', $direction = 'DESC')
+	protected function populateState($ordering = null, $direction = null)
 	{
+		parent::populateState($ordering, $direction);
+
 		/** @type JApplicationSite $app */
 		$app = JFactory::getApplication();
 
@@ -479,11 +485,20 @@ class BiblestudyModelSermons extends JModelList
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
 
-		if ($landing == 1)
+		$book = 0;
+		$teacher = 0;
+		$series = 0;
+		$messageType = 0;
+		$year = 0;
+		$order = 0;
+		$topic = 0;
+		$location = 0;
+
+		if ($landing == 1 && $input->getInt('filter_book') !== 0)
 		{
 			$book = $this->getUserStateFromRequest($this->context . '.filter.landingbook', 'filter_book_landing');
 		}
-		else
+		elseif ($input->getInt('filter_book'))
 		{
 			$book = $this->getUserStateFromRequest($this->context . '.filter.book', 'filter_book');
 		}
@@ -491,11 +506,11 @@ class BiblestudyModelSermons extends JModelList
 		$this->setState('filter.book', $book);
 		$this->setState('filter.landingbook', $book);
 
-		if ($landing == 1)
+		if ($landing == 1 && $input->getInt('filter_teacher') !== 0)
 		{
 			$teacher = $this->getUserStateFromRequest($this->context . '.filter.landingteacher', 'filter_teacher_landing');
 		}
-		else
+		elseif ($input->getInt('filter_teacher'))
 		{
 			$teacher = $this->getUserStateFromRequest($this->context . '.filter.teacher', 'filter_teacher');
 		}
@@ -503,11 +518,11 @@ class BiblestudyModelSermons extends JModelList
 		$this->setState('filter.teacher', $teacher);
 		$this->setState('filter.landingteacher', $teacher);
 
-		if ($landing == 1)
+		if ($landing == 1 && $input->getInt('filter_series') !== 0)
 		{
 			$series = $this->getUserStateFromRequest($this->context . '.filter.landingseries', 'filter_series_landing');
 		}
-		else
+		elseif ($input->getInt('filter_series'))
 		{
 			$series = $this->getUserStateFromRequest($this->context . '.filter.series', 'filter_series');
 		}
@@ -515,11 +530,11 @@ class BiblestudyModelSermons extends JModelList
 		$this->setState('filter.series', $series);
 		$this->setState('filter.landingseries', $series);
 
-		if ($landing == 1)
+		if ($landing == 1 && $input->getInt('filter_messagetype') !== 0)
 		{
 			$messageType = $this->getUserStateFromRequest($this->context . '.filter.landingmessagetype', 'filter_messagetype_landing');
 		}
-		else
+		elseif ($input->getInt('filter_messagetype'))
 		{
 			$messageType = $this->getUserStateFromRequest($this->context . '.filter.messageType', 'filter_messagetype');
 		}
@@ -527,11 +542,11 @@ class BiblestudyModelSermons extends JModelList
 		$this->setState('filter.messageType', $messageType);
 		$this->setState('filter.landingmessagetype', $messageType);
 
-		if ($landing == 1)
+		if ($landing == 1 && $input->getInt('filter_year') !== 0)
 		{
 			$year = $this->getUserStateFromRequest($this->context . '.filter.landingyear', 'filter_year_landing');
 		}
-		else
+		elseif ($input->getInt('filter_year'))
 		{
 			$year = $this->getUserStateFromRequest($this->context . '.filter.year', 'filter_year');
 		}
@@ -539,22 +554,23 @@ class BiblestudyModelSermons extends JModelList
 		$this->setState('filter.year', $year);
 		$this->setState('filter.landingyear', $year);
 
-		if ($landing == 1)
+		if ($landing == 1 && $input->getInt('filter_orders') !== 0)
 		{
 			$order = $this->getUserStateFromRequest($this->context . '.filter.landingorder', 'filter_order_landing');
 		}
-		else
+		elseif ($input->getInt('filter_orders')
+			|| ($landing == 0 && $this->getUserStateFromRequest($this->context . '.filter.orders', 'filter_orders') !== 0))
 		{
 			$order = $this->getUserStateFromRequest($this->context . '.filter.orders', 'filter_orders');
 		}
 
 		$this->setState('filter.orders', $order);
 
-		if ($landing == 1)
+		if ($landing == 1 && $input->getInt('filter_topic') !== 0)
 		{
 			$topic = $this->getUserStateFromRequest($this->context . '.filter.landingtopic', 'filter_topic_landing');
 		}
-		else
+		elseif ($input->getInt('filter_topic'))
 		{
 			$topic = $this->getUserStateFromRequest($this->context . '.filter.topic', 'filter_topic');
 		}
@@ -562,11 +578,11 @@ class BiblestudyModelSermons extends JModelList
 		$this->setState('filter.topic', $topic);
 		$this->setState('filter.landingtopic', $topic);
 
-		if ($landing == 1)
+		if ($landing == 1 && $input->getInt('filter_location') !== 0)
 		{
 			$location = $this->getUserStateFromRequest($this->context . '.filter.landinglocation', 'filter_location_landing');
 		}
-		else
+		elseif ($input->getInt('filter_location'))
 		{
 			$location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location');
 		}
@@ -581,7 +597,6 @@ class BiblestudyModelSermons extends JModelList
 		 * @todo We need to figure out how to properly use the populate state so that
 		 * @todo limitstart works with and without SEF, Tom need to know what to do with this todo
 		 */
-		parent::populateState('study.studydate', 'DESC');
 		$value = $this->input->get('start', '', 'int');
 		$this->setState('list.start', $value);
 	}

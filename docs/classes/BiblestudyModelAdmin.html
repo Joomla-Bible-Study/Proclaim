@@ -34,7 +34,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">184</span></a></li>
+                <span class="label label-info">196</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -67,7 +67,8 @@
 <li class="method public "><a href="#method_checkout" title="checkout() :: Method to check-out a row for editing."><span class="description">Method to check-out a row for editing.</span><pre>checkout()</pre></a></li>
 <li class="method public "><a href="#method_fix" title="fix() :: Fixes database problems"><span class="description">Fixes database problems</span><pre>fix()</pre></a></li>
 <li class="method public "><a href="#method_fixDefaultTextFilters" title="fixDefaultTextFilters() :: Check if com_biblestudy parameters are blank. If so, populate with com_content text filters."><span class="description">Check if com_biblestudy parameters are blank. If so, populate with com_content text filters.</span><pre>fixDefaultTextFilters()</pre></a></li>
-<li class="method public "><a href="#method_fixSchemaVersion" title="fixSchemaVersion() :: Fix schema version if wrong"><span class="description">Fix schema version if wrong</span><pre>fixSchemaVersion()</pre></a></li>
+<li class="method public "><a href="#method_fixSchemaVersion" title="fixSchemaVersion() :: Fix schema version if wrong."><span class="description">Fix schema version if wrong.</span><pre>fixSchemaVersion()</pre></a></li>
+<li class="method public "><a href="#method_fixUpdateJBSMVersion" title="fixUpdateJBSMVersion() :: Fix Joomla version in #__bsms_updae table if wrong (doesn't equal JVersion short version)."><span class="description">Fix Joomla version in #__bsms_updae table if wrong (doesn't equal JVersion short version).</span><pre>fixUpdateJBSMVersion()</pre></a></li>
 <li class="method public "><a href="#method_fixUpdateVersion" title="fixUpdateVersion() :: Fix Joomla version in #__extensions table if wrong (doesn't equal JVersion short version)"><span class="description">Fix Joomla version in #__extensions table if wrong (doesn't equal JVersion short version)</span><pre>fixUpdateVersion()</pre></a></li>
 <li class="method public "><a href="#method_getCompVersion" title="getCompVersion() :: To retrieve component version"><span class="description">To retrieve component version</span><pre>getCompVersion()</pre></a></li>
 <li class="method public "><a href="#method_getDefaultTextFilters" title="getDefaultTextFilters() :: Check if com_biblestudy parameters are blank."><span class="description">Check if com_biblestudy parameters are blank.</span><pre>getDefaultTextFilters()</pre></a></li>
@@ -79,7 +80,9 @@
 <li class="method public "><a href="#method_getSSorPI" title="getSSorPI() :: Check for SermonSpeaker and PreachIt"><span class="description">Check for SermonSpeaker and PreachIt</span><pre>getSSorPI()</pre></a></li>
 <li class="method public "><a href="#method_getSchemaVersion" title="getSchemaVersion() :: Get version from #__schemas table"><span class="description">Get version from #__schemas table</span><pre>getSchemaVersion()</pre></a></li>
 <li class="method public "><a href="#method_getTable" title="getTable() :: Returns a reference to the a Table object, always creating it."><span class="description">Returns a reference to the a Table object, always creating it.</span><pre>getTable()</pre></a></li>
+<li class="method public "><a href="#method_getUpdateJBSMVersion" title="getUpdateJBSMVersion() :: Get current version from #__bsms_update table."><span class="description">Get current version from #__bsms_update table.</span><pre>getUpdateJBSMVersion()</pre></a></li>
 <li class="method public "><a href="#method_getUpdateVersion" title="getUpdateVersion() :: Get current version from #__extensions table"><span class="description">Get current version from #__extensions table</span><pre>getUpdateVersion()</pre></a></li>
+<li class="method public "><a href="#method_playerByMediaType" title="playerByMediaType() :: Change Player based off MimeType or Extension of File Name"><span class="description">Change Player based off MimeType or Extension of File Name</span><pre>playerByMediaType()</pre></a></li>
 <li class="method public "><a href="#method_save" title="save() :: Method to save the form data."><span class="description">Method to save the form data.</span><pre>save()</pre></a></li>
 </ul>
 </li>
@@ -96,7 +99,10 @@
                     <ul></ul>
 </li>
 <li class="nav-header protected">» Protected
-                    <ul><li class="property protected "><a href="#property_text_prefix" title="$text_prefix() :: "><span class="description">The prefix to use with controller messages.</span><pre>$text_prefix</pre></a></li></ul>
+                    <ul>
+<li class="property protected "><a href="#property_changeSet" title="$changeSet() :: "><span class="description"></span><pre>$changeSet</pre></a></li>
+<li class="property protected "><a href="#property_text_prefix" title="$text_prefix() :: "><span class="description">The prefix to use with controller messages.</span><pre>$text_prefix</pre></a></li>
+</ul>
 </li>
 </ul>
 </div>
@@ -174,8 +180,8 @@
 </div></div>
 </div>
 <a id="method_fixSchemaVersion"></a><div class="element clickable method public method_fixSchemaVersion " data-toggle="collapse" data-target=".method_fixSchemaVersion .collapse" title="public">
-<h2>Fix schema version if wrong</h2>
-<pre>fixSchemaVersion() : mixed</pre>
+<h2>Fix schema version if wrong.</h2>
+<pre>fixSchemaVersion(\JSchemaChangeSet $changeSet) : mixed</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -183,9 +189,28 @@
 <th>since</th>
 <td>7.0</td>
 </tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$changeSet</h4>
+<code>\JSchemaChangeSet</code><p>Schema change set.</p></div>
 <h3>Returns</h3>
 <div class="subelement response">
 <code>mixed</code>string schema version if success, false if fail</div>
+</div></div>
+</div>
+<a id="method_fixUpdateJBSMVersion"></a><div class="element clickable method public method_fixUpdateJBSMVersion " data-toggle="collapse" data-target=".method_fixUpdateJBSMVersion .collapse" title="public">
+<h2>Fix Joomla version in #__bsms_updae table if wrong (doesn't equal JVersion short version).</h2>
+<pre>fixUpdateJBSMVersion() : mixed</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.14</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>mixed</code>string update version if success, false if fail.</div>
 </div></div>
 </div>
 <a id="method_fixUpdateVersion"></a><div class="element clickable method public method_fixUpdateVersion " data-toggle="collapse" data-target=".method_fixUpdateVersion .collapse" title="public">
@@ -383,6 +408,21 @@
 <code>\JTable</code>A JTable object</div>
 </div></div>
 </div>
+<a id="method_getUpdateJBSMVersion"></a><div class="element clickable method public method_getUpdateJBSMVersion " data-toggle="collapse" data-target=".method_getUpdateJBSMVersion .collapse" title="public">
+<h2>Get current version from #__bsms_update table.</h2>
+<pre>getUpdateJBSMVersion() : mixed</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.14</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>mixed</code>version if successful, false if fail.</div>
+</div></div>
+</div>
 <a id="method_getUpdateVersion"></a><div class="element clickable method public method_getUpdateVersion " data-toggle="collapse" data-target=".method_getUpdateVersion .collapse" title="public">
 <h2>Get current version from #__extensions table</h2>
 <pre>getUpdateVersion() : mixed</pre>
@@ -396,6 +436,20 @@
 <h3>Returns</h3>
 <div class="subelement response">
 <code>mixed</code>version if successful, false if fail</div>
+</div></div>
+</div>
+<a id="method_playerByMediaType"></a><div class="element clickable method public method_playerByMediaType " data-toggle="collapse" data-target=".method_playerByMediaType .collapse" title="public">
+<h2>Change Player based off MimeType or Extension of File Name</h2>
+<pre>playerByMediaType() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.12</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
 </div></div>
 </div>
 <a id="method_save"></a><div class="element clickable method public method_save " data-toggle="collapse" data-target=".method_save .collapse" title="public">
@@ -487,6 +541,16 @@
 </div>
 <h3>
 <i title="Properties" class="icon-custom icon-property"></i> Properties</h3>
+<a id="property_changeSet"> </a><div class="element clickable property protected property_changeSet" data-toggle="collapse" data-target=".property_changeSet .collapse" title="protected">
+<h2>$changeSet</h2>
+<pre>$changeSet </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
 <a id="property_text_prefix"> </a><div class="element clickable property protected property_text_prefix" data-toggle="collapse" data-target=".property_text_prefix .collapse" title="protected">
 <h2>The prefix to use with controller messages.</h2>
 <pre>$text_prefix : string</pre>
@@ -510,7 +574,7 @@
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2016-10-17T19:38:05-05:00.<br></footer></div>
+            generated on 2017-04-29T09:36:13-05:00.<br></footer></div>
 </div>
 </body>
 </html>

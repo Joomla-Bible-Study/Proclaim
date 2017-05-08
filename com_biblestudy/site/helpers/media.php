@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  * */
@@ -40,10 +40,13 @@ class JBSMMedia
 		$mediafile = null;
 		$filesize  = null;
 
-		// Smedia are the media settings for each server
-		$registory = new Registry;
-		$registory->loadString($media->smedia);
-		$media->smedia = $registory;
+		if (isset($media->smedia))
+		{
+			// Smedia are the media settings for each server
+			$registory = new Registry;
+			$registory->loadString($media->smedia);
+			$media->smedia = $registory;
+		}
 
 		// Params are the individual params for the media file record
 		$registory = new Registry;
@@ -55,14 +58,14 @@ class JBSMMedia
 		$registory->loadString($media->sparams);
 		$media->sparams = $registory;
 
-			if ($media->params->get('media_use_button_icon') == -1)
-			{
-				$imageparams = $media->smedia;
-			}
-			else
-			{
-				$imageparams = $media->params;
-			}
+		if ($media->params->get('media_use_button_icon') == -1)
+		{
+			$imageparams = $media->smedia;
+		}
+		else
+		{
+			$imageparams = $media->params;
+		}
 
 			if ($imageparams->get('media_use_button_icon') >= 1)
 			{
@@ -71,14 +74,19 @@ class JBSMMedia
 			else
 			{
 				$mediaimage = $imageparams->get('media_image');
-				$image      = $this->useJImage($mediaimage, $params->get('media_text', JText::_('JBS_MED_DOWNLOAD')));
+				$image      = $this->useJImage($mediaimage, $media->params->get('media_button_text', $params->get('download_button_text', 'Audio')));
 			}
 
-		$player     = self::getPlayerAttributes($params, $media);
-		$playercode = self::getPlayerCode($params, $player, $image, $media);
+		// New Podcast Playlist cast Player code override option.
+		$player        = self::getPlayerAttributes($params, $media);
+		$playercode    = self::getPlayerCode($params, $player, $image, $media);
 		$downloadlink  = self::getFluidDownloadLink($media, $params, $template);
 
-		if ($media->params->get('link_type'))
+		if ($params->get('pcplaylist'))
+		{
+			$link_type = 0;
+		}
+		elseif ($media->params->get('link_type') == 0 || $media->params->get('link_type'))
 		{
 			$link_type = $media->params->get('link_type');
 		}
@@ -96,6 +104,7 @@ class JBSMMedia
 					$file_size = JBSMHelper::getRemoteFileSize(
 						JBSMHelper::MediaBuildUrl($media->sparams->get('path'), $media->params->get('filename'), $params, true)
 					);
+					JBSMHelper::SetFilesize($media->id, $file_size);
 				}
 
 				switch ($file_size)
@@ -139,7 +148,7 @@ class JBSMMedia
 					break;
 			}
 
-			$filesize = '<span style="font-size: 0.6em;display:inline;padding-left: 5px;">' .
+			$filesize = '<span class="JBSMFilesize" style="font-size: 0.6em;display:inline;padding-left: 5px;">' .
 				$file_size . '</span>';
 		}
 
@@ -228,8 +237,20 @@ class JBSMMedia
 			}
 			else
 			{
+				$url = JBSMHelper::MediaBuildUrl($media->sparams->get('path'), $media->params->get('filename'), $params, true);
+
+				if ($media->params->get('size') == '0')
+				{
+					$size = JBSMHelper::getRemoteFileSize($url);
+					JBSMHelper::SetFilesize($media->id, $size);
+				}
+				else
+				{
+					$size = $media->params->get('size');
+				}
+
 				$downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' .
-					$media->params->get('filename') . '&amp;size=' . $media->params->get('size') . '">';
+					$url . '&amp;size=' . $size . '">';
 			}
 
 			// Check to see if they want to use a popup
@@ -386,7 +407,7 @@ class JBSMMedia
 	{
 		if (!$path)
 		{
-			return false;
+			return $alt;
 		}
 
 		try
@@ -419,14 +440,14 @@ class JBSMMedia
 		$player->playerwidth  = $params->get('player_width');
 		$player->playerheight = $params->get('player_height');
 
-		if ($params->get('playerheight'))
+		if ($media->params->get('playerheight'))
 		{
-			$player->playerheight = $params->get('playerheight');
+			$player->playerheight = $media->params->get('playerheight');
 		}
 
-		if ($params->get('playerwidth'))
+		if ($media->params->get('playerwidth'))
 		{
-			$player->playerwidth = $params->get('playerwidth');
+			$player->playerwidth = $media->params->get('playerwidth');
 		}
 
 		/**
@@ -456,7 +477,11 @@ class JBSMMedia
 		{
 			/* In this case the item has a player set for it, so we use that instead. We also need to change the old player
 					type of 3 to 2 for all videos reloaded which we don't support */
-			if ($media->params->get('player', null) !== null)
+			if ($params->get('pcplaylist'))
+			{
+				$player->player = 7;
+			}
+			elseif ($media->params->get('player', null) !== null)
 			{
 				$player->player = $media->params->get('player');
 			}
@@ -491,9 +516,16 @@ class JBSMMedia
 		// This is the global parameter set in Template Display settings
 		$param_playertype = $params->get('internal_popup', 1);
 
-		$item_playertype = $params->get('popup');
+		if ($params->get('pcplaylist', false))
+		{
+			$item_playertype = 2;
+		}
+		else
+		{
+			$item_playertype = $params->get('popup');
+		}
 
-		if ($param_playertype && !$media->params->get('popup'))
+		if ($param_playertype && !$media->params->get('popup') && !$params->get('pcplaylist', false))
 		{
 			$player->type = $param_playertype;
 		}
@@ -545,11 +577,6 @@ class JBSMMedia
 		$filesize = self::getFluidFilesize($media, $params);
 		$duration = self::getFluidDuration($media, $params);
 
-		if (!isset($media->malttext))
-		{
-			$media->malttext = '';
-		}
-
 		$path = JBSMHelper::MediaBuildUrl($media->sparams->get('path'), $params->get('filename'), $params, true);
 
 		switch ($player->player)
@@ -561,35 +588,19 @@ class JBSMMedia
 					case 2: // New window
 						$playercode = '<a href="' . $path . '" onclick="window.open(\'index.php?option=com_biblestudy&amp;view=popup&amp;close=1&amp;mediaid=' .
 							$media->id . '\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\'); return true;" title="' .
-							$media->malttext . ' - ' . $media->comment . ' ' . $duration . ' '
-							. $filesize . '" target="' . $params->get('special') . '">' . $image . '</a>';
+							$media->params->get("media_button_text") . ' - ' . $media->comment . ' ' . $duration . ' '
+							. $filesize . '" target="' . $params->get('special') . '" class="jbsmplayerlink">' . $image . '</a>';
 						break;
 
 					case 3: // Squeezebox view
-						JHtml::_('fancybox.framework', true, true);
-						$player->boxplayerheight = $player->playerheight + 20;
 
-						if ($params->get('media_popout_yes', true))
-						{
-							$popout = $params->get('media_popout_text', JText::_('JBS_CMN_POPOUT'));
-						}
-						else
-						{
-							$popout = '';
-						}
-
-						$playercode = '<a href="' . $path . '" id="linkmedia' . $media->id . '" title="' . $params->get('filename') .
-							'" class="fancybox" potext="' . $popout . '" ptype="' . $player->player .
-							'" pwidth="' . $player->playerwidth . '" bheight="' . $player->boxplayerheight . '" pheight="' .
-							$player->playerheight . '" autostart="' . $params->get('autostart', false) . '">' . $image . '</a>';
-
-						return $playercode;
+						return $this->rendersb($media, $params, $player, $image, $path, true);
 						break;
 
 					case 1: // Popup window
 						$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=" . $params->toObject()->player .
 								"&amp;view=popup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" .
-								$player->playerwidth . ",height=" . $player->playerheight . "'); return false\">" . $image . "</a>";
+								$player->playerwidth . ",height=" . $player->playerheight . "'); return false\"  class=\"jbsmplayerlink\">" . $image . "</a>";
 						break;
 				}
 
@@ -602,30 +613,8 @@ class JBSMMedia
 				switch ($player->type)
 				{
 					case 3: // Squeezebox view
-						JHtml::_('fancybox.framework', true, true);
-						$player->boxplayerheight = $player->playerheight + 20;
 
-						if ($player->player == 7)
-						{
-							$player->playerheight = '40';
-							$player->boxplayerheight = '40';
-						}
-
-						if ($params->get('media_popout_yes', true))
-						{
-							$popout = $params->get('media_popout_text', JText::_('JBS_CMN_POPOUT'));
-						}
-						else
-						{
-							$popout = '';
-						}
-
-						$playercode = '<a href="' . $path . '" id="linkmedia' . $media->id . '" title="' . $params->get('filename') .
-								'" class="fancybox fancybox_jwplayer" potext="' . $popout . '" ptype="' . $player->player .
-							'" pwidth="' . $player->playerwidth . '" bheight="' . $player->boxplayerheight . '" pheight="' .
-							$player->playerheight . '" autostart="' . $params->get('autostart', false) . '">' . $image . '</a>';
-
-						return $playercode;
+						return $this->rendersb($media, $params, $player, $image, $path);
 						break;
 
 					case 2: // Inline
@@ -636,6 +625,11 @@ class JBSMMedia
 							$player->playerheight = '40';
 							$player->boxplayerheight = '40';
 							$player->mp3 = true;
+
+							if ($player->playerwidth <= '259')
+							{
+								$player->playerwidth = null;
+							}
 						}
 
 						$playercode = JHtmlJwplayer::render($media, $params, false, $player, $template);
@@ -649,7 +643,7 @@ class JBSMMedia
 						$playercode           = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=" . $player->player
 							. "&amp;view=popup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width="
 							. $player->playerwidth . ", height=" .
-							$player->playerheight . "'); return false\">" . $image . "</a>";
+							$player->playerheight . "'); return false\" class=\"jbsmplayerlink\">" . $image . "</a>";
 						break;
 				}
 
@@ -664,7 +658,7 @@ class JBSMMedia
 					case 1: // This goes to the popup view
 						$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;view=popup&amp;player=3&amp;t=" . $template .
 							"&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
-							. $player->playerheight . "'); return false\">" . $image . "</a>";
+							. $player->playerheight . "'); return false\"  class=\"jbsmplayerlink\">" . $image . "</a>";
 						break;
 
 					case 2: // This plays the video inline
@@ -709,6 +703,50 @@ class JBSMMedia
 	}
 
 	/**
+	 * Render Sqeezbox
+	 *
+	 * @param   object    $media   Media
+	 * @param   Registry  $params  Params.
+	 * @param   object    $player  Player settings
+	 * @param   string    $image   The image
+	 * @param   string    $path    The path to the media
+	 * @param   bool      $direct  If coming from Direct
+	 *
+	 * @return string
+	 *
+	 * @since version
+	 */
+	public function rendersb($media, $params, $player, $image, $path, $direct = false)
+	{
+		JHtml::_('fancybox.framework', true, true);
+
+		if ($player->player == 7 && !$direct)
+		{
+			$player->playerheight = '40';
+		}
+
+		if ($params->get('media_popout_yes', true))
+		{
+			$popout = $params->get('media_popout_text', JText::_('JBS_CMN_POPOUT'));
+		}
+		else
+		{
+			$popout = '';
+		}
+
+		$playercode = '<a data-src="' . $path . '" id="linkmedia' . $media->id . '" title="' . $params->get('filename') .
+			'" class="fancybox fancybox_jwplayer" potext="' . $popout . '" ptype="' . $player->player .
+			'" pwidth="' . $player->playerwidth . '" pheight="' .
+			$player->playerheight . '" autostart="' . $params->get('autostart', false) . '" controls="' .
+			$params->get('controls') . '"" data-image="' . $params->get('jwplayer_image') . '" data-mute="' .
+			$params->get('jwplayer_mute') . '" data-logo="' . $params->get('jwplayer_logo') . '" data-logolink="' .
+			$params->get('jwplayer_logolink', JUri::base()) . '">' .
+			$image . '</a>';
+
+		return $playercode;
+	}
+
+	/**
 	 * return $table
 	 *
 	 * @param   Object                    $media   Media info
@@ -727,6 +765,7 @@ class JBSMMedia
 		if (!$file_size)
 		{
 			$file_size = JBSMHelper::getRemoteFileSize(JBSMHelper::MediaBuildUrl($media->sparams->get('path'), $params->get('filename'), $params, true));
+			JBSMHelper::SetFilesize($media->id, $file_size);
 		}
 
 		if ($file_size)

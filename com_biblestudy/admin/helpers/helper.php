@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  * */
@@ -105,6 +105,14 @@ class JBSMHelper
 		{
 			return 0;
 		}
+		elseif (substr_count($url, 'youtu.be') > 0)
+		{
+			return 0;
+		}
+		elseif (substr_count($url, 'youtube.com') > 0)
+		{
+			return 0;
+		}
 
 		// Removes a bad url problem in some DB's
 		if (substr_count($url, '/http'))
@@ -124,51 +132,57 @@ class JBSMHelper
 			}
 		}
 
-		$parsed = parse_url($url);
-		$host   = @$parsed["host"];
-		$fp     = null;
+		$headers = get_headers($url, true);
 
-		if (function_exists('fsockopen'))
+		if (is_array($headers))
 		{
-			$fp = @fsockopen($host, 80, $errno, $errstr, 20);
-		}
-
-		if (!$fp)
-		{
-			return false;
+			$head = array_change_key_case($headers);
 		}
 		else
 		{
-			@fputs($fp, "HEAD $url HTTP/1.1\r\n");
-			@fputs($fp, "HOST: $host\r\n");
-			@fputs($fp, "Connection: close\r\n\r\n");
-			$headers = "";
-
-			while (!@feof($fp))
-			{
-				$headers .= @fgets($fp, 128);
-			}
+			return 0;
 		}
 
-		@fclose($fp);
-		$return      = false;
-		$arr_headers = explode("\n", $headers);
-
-		if (strpos($arr_headers[0], '200'))
+		if (isset($head['content-length']))
 		{
-			foreach ($arr_headers as $header)
-			{
-				$s = "Content-Length: ";
-
-				if (substr(strtolower($header), 0, strlen($s)) == strtolower($s))
-				{
-					$return = trim(substr($header, strlen($s)));
-					break;
-				}
-			}
+			return $head['content-length'];
 		}
+		else
+		{
+			return 0;
+		}
+	}
 
-		return (int) $return;
+	/**
+	 * Set File Size for MediaFile
+	 *
+	 * @param   int  $id    ID of MediaFile
+	 * @param   int  $size  Size of file in bits
+	 *
+	 * @return void
+	 *
+	 * @since 9.0.14
+	 */
+	public static function SetFileSize($id, $size)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select('id, params')
+			->from('#__bsms_mediafiles')
+			->where('id = ' . (int) $id);
+
+		$db->setQuery($query);
+		$media = $db->loadObject();
+
+		$reg = new Joomla\Registry\Registry;
+		$reg->loadString($media->params);
+		$reg->set('size', $size);
+
+		$update = new stdClass;
+		$update->id = $id;
+		$update->params = $reg->toString();
+
+		$db->updateObject('#__bsms_mediafiles', $update, 'id');
 	}
 
 	/**

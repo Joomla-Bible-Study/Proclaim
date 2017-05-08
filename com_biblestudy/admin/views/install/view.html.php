@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  * */
@@ -152,7 +152,7 @@ class BiblestudyViewInstall extends JViewLegacy
 		$this->setDocument();
 
 		// Display the template
-		return parent::display($tpl);
+		parent::display($tpl);
 	}
 
 	/**
@@ -190,6 +190,7 @@ class BiblestudyViewInstall extends JViewLegacy
 		$this->allupdates     = $stack['allupdates'];
 		$this->finish         = $stack['finish'];
 		$this->install        = $stack['install'];
+		$this->start          = $stack['start'];
 		$this->subFiles       = $stack['subFiles'];
 		$this->subQuery       = $stack['subQuery'];
 		$this->subSteps       = $stack['subSteps'];
@@ -223,7 +224,7 @@ class BiblestudyViewInstall extends JViewLegacy
 	 *
 	 * @since    7.1.0
 	 *
-	 * @return null
+	 * @return void
 	 */
 	protected function setDocument()
 	{
@@ -236,7 +237,7 @@ class BiblestudyViewInstall extends JViewLegacy
 	 *
 	 * @since 7.0.0
 	 *
-	 * @return null
+	 * @return void
 	 */
 	protected function installsetup()
 	{

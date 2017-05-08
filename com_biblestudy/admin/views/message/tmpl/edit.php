@@ -3,7 +3,7 @@
  * Form
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  * */
@@ -50,7 +50,7 @@ else
 JFactory::getDocument()->addScriptDeclaration('
 	Joomla.submitbutton = function (task)
 	{
-		if (task == "message.cancel" || document.formvalidator.isValid(document.id("message-form")))
+		if (task == "message.cancel" || document.formvalidator.isValid(document.getElementById("message-form")))
 		{
 			Joomla.submitform(task, document.getElementById("message-form"));
 		}
@@ -381,7 +381,7 @@ JFactory::getDocument()->addScriptDeclaration('
 				foreach ($params as $name => $fieldSet): ?>
 					<div class="tab-pane" id="metadata">
 						<?php
-						if (isset($fieldset->description) && trim($fieldSet->description)):
+						if (isset($fieldSet->description) && trim($fieldSet->description)):
 							?>
 							<p class="tip">
 								<?php echo $this->escape(JText::_($fieldSet->description)); ?>
@@ -424,8 +424,12 @@ JFactory::getDocument()->addScriptDeclaration('
 										<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id='
 											. (int) $item->id . '&amp;return=' . $return . '&amp;options=' . $options; ?>
 										<a class="btn btn-primary" href="<?php echo $link; ?>"
-										   title="<?php echo $this->escape($item->params->get('filename')) ? $this->escape($item->params->get('filename')) : $this->escape($item->params->get('media_image_name')); ?>">
-											<?php echo($this->escape($item->params->get('filename')) ? $this->escape($item->params->get('filename')) : $this->escape($item->params->get('media_image_name'))); ?>
+										   title="<?php echo $this->escape($item->params->get('filename'))
+											   ? $this->escape($item->params->get('filename'))
+											   : $this->escape($item->params->get('media_image_name')); ?>">
+											<?php echo($this->escape($item->params->get('filename'))
+												? $this->escape($item->params->get('filename'))
+												: $this->escape($item->params->get('media_image_name'))); ?>
 										</a>
 									</td>
 									<td class="center">

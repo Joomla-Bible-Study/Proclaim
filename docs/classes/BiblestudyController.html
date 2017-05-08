@@ -34,7 +34,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">184</span></a></li>
+                <span class="label label-info">196</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -74,8 +74,6 @@
 from the sermons view "default.php". It has not been implemented yet, so its not used.'><span class="description">This function is supposed to generate the Media Player that is requested via AJAX
 from the sermons view "default.php". It has not been implemented yet, so its not used.</span><pre>inlinePlayer()</pre></a></li>
 <li class="method public "><a href="#method_playHit" title="playHit() :: Play Hit"><span class="description">Play Hit</span><pre>playHit()</pre></a></li>
-<li class="method public "><a href="#method_upload" title="upload() :: Upload function"><span class="description">Upload function</span><pre>upload()</pre></a></li>
-<li class="method public "><a href="#method_uploadflash" title="uploadflash() :: Adds the ability to uploade with flash"><span class="description">Adds the ability to uploade with flash</span><pre>uploadflash()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header">
@@ -95,15 +93,8 @@ from the sermons view "default.php". It has not been implemented yet, so its not
 <li class="nav-header">
 <i title="Methods" class="icon-custom icon-method"></i> Methods
                     <ul>
-<li class="method public "><a href="#method_changePlayers" title="changePlayers() :: Change Players"><span class="description">Change Players</span><pre>changePlayers()</pre></a></li>
-<li class="method public "><a href="#method_changePopup" title="changePopup() :: Change Popup"><span class="description">Change Popup</span><pre>changePopup()</pre></a></li>
 <li class="method public "><a href="#method_display" title="display() :: Core Display"><span class="description">Core Display</span><pre>display()</pre></a></li>
-<li class="method public "><a href="#method_resetDownloads" title="resetDownloads() :: Resets Downloads"><span class="description">Resets Downloads</span><pre>resetDownloads()</pre></a></li>
-<li class="method public "><a href="#method_resetHits" title="resetHits() :: Resets the hits"><span class="description">Resets the hits</span><pre>resetHits()</pre></a></li>
-<li class="method public "><a href="#method_resetPlays" title="resetPlays() :: Resets Plays"><span class="description">Resets Plays</span><pre>resetPlays()</pre></a></li>
-<li class="method public "><a href="#method_upload" title="upload() :: Upload function"><span class="description">Upload function</span><pre>upload()</pre></a></li>
-<li class="method public "><a href="#method_uploadflash" title="uploadflash() :: Adds the ability to upload with flash"><span class="description">Adds the ability to upload with flash</span><pre>uploadflash()</pre></a></li>
-<li class="method public "><a href="#method_writeXMLFile" title="writeXMLFile() :: Write the XML file"><span class="description">Write the XML file</span><pre>writeXMLFile()</pre></a></li>
+<li class="method public "><a href="#method_writeXMLFile" title="writeXMLFile() :: Write the XML file Called from admin podcast list page."><span class="description">Write the XML file Called from admin podcast list page.</span><pre>writeXMLFile()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header">
@@ -262,30 +253,6 @@ from the sermons view "default.php". It has not been implemented yet, so its not
 </tr></table>
 </div></div>
 </div>
-<a id="method_upload"></a><div class="element clickable method public method_upload " data-toggle="collapse" data-target=".method_upload .collapse" title="public">
-<h2>Upload function</h2>
-<pre>upload() : void</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>7.0.0</td>
-</tr></table>
-</div></div>
-</div>
-<a id="method_uploadflash"></a><div class="element clickable method public method_uploadflash " data-toggle="collapse" data-target=".method_uploadflash .collapse" title="public">
-<h2>Adds the ability to uploade with flash</h2>
-<pre>uploadflash() : void</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>7.1.0</td>
-</tr></table>
-</div></div>
-</div>
 <h3>
 <i title="Properties" class="icon-custom icon-property"></i> Properties</h3>
 <a id="property_mediaCode"> </a><div class="element clickable property public property_mediaCode" data-toggle="collapse" data-target=".property_mediaCode .collapse" title="public">
@@ -330,46 +297,6 @@ from the sermons view "default.php". It has not been implemented yet, so its not
 </table>
 <h3>
 <i title="Methods" class="icon-custom icon-method"></i> Methods</h3>
-<a id="method_changePlayers"></a><div class="element clickable method public method_changePlayers " data-toggle="collapse" data-target=".method_changePlayers .collapse" title="public">
-<h2>Change Players</h2>
-<pre>changePlayers() : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered">
-<tr>
-<th>todo</th>
-<td>need to update this to new JBSM</td>
-</tr>
-<tr>
-<th>since</th>
-<td>7.0.0</td>
-</tr>
-</table>
-<h3>Returns</h3>
-<div class="subelement response"><code>string</code></div>
-</div></div>
-</div>
-<a id="method_changePopup"></a><div class="element clickable method public method_changePopup " data-toggle="collapse" data-target=".method_changePopup .collapse" title="public">
-<h2>Change Popup</h2>
-<pre>changePopup() : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered">
-<tr>
-<th>todo</th>
-<td>need to update this for new JBSM</td>
-</tr>
-<tr>
-<th>since</th>
-<td>7.0.0</td>
-</tr>
-</table>
-<h3>Returns</h3>
-<div class="subelement response"><code>string</code></div>
-</div></div>
-</div>
 <a id="method_display"></a><div class="element clickable method public method_display " data-toggle="collapse" data-target=".method_display .collapse" title="public">
 <h2>Core Display</h2>
 <pre>display(boolean $cachable<code> = false</code>, boolean $urlparams<code> = false</code>) : \JControllerLegacy</pre>
@@ -392,79 +319,9 @@ from the sermons view "default.php". It has not been implemented yet, so its not
 <code>\JControllerLegacy</code>his object to support chaining.</div>
 </div></div>
 </div>
-<a id="method_resetDownloads"></a><div class="element clickable method public method_resetDownloads " data-toggle="collapse" data-target=".method_resetDownloads .collapse" title="public">
-<h2>Resets Downloads</h2>
-<pre>resetDownloads() : null</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>7.0.0</td>
-</tr></table>
-<h3>Returns</h3>
-<div class="subelement response"><code>null</code></div>
-</div></div>
-</div>
-<a id="method_resetHits"></a><div class="element clickable method public method_resetHits " data-toggle="collapse" data-target=".method_resetHits .collapse" title="public">
-<h2>Resets the hits</h2>
-<pre>resetHits() : null</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>7.0.0</td>
-</tr></table>
-<h3>Returns</h3>
-<div class="subelement response"><code>null</code></div>
-</div></div>
-</div>
-<a id="method_resetPlays"></a><div class="element clickable method public method_resetPlays " data-toggle="collapse" data-target=".method_resetPlays .collapse" title="public">
-<h2>Resets Plays</h2>
-<pre>resetPlays() : null</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>7.0.0</td>
-</tr></table>
-<h3>Returns</h3>
-<div class="subelement response"><code>null</code></div>
-</div></div>
-</div>
-<a id="method_upload"></a><div class="element clickable method public method_upload " data-toggle="collapse" data-target=".method_upload .collapse" title="public">
-<h2>Upload function</h2>
-<pre>upload() : null</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>8.0.0</td>
-</tr></table>
-<h3>Returns</h3>
-<div class="subelement response"><code>null</code></div>
-</div></div>
-</div>
-<a id="method_uploadflash"></a><div class="element clickable method public method_uploadflash " data-toggle="collapse" data-target=".method_uploadflash .collapse" title="public">
-<h2>Adds the ability to upload with flash</h2>
-<pre>uploadflash() : null</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>7.1.0 Note: This function is not used in 7.1.0 since it caused problems with the session and closing the media form</td>
-</tr></table>
-<h3>Returns</h3>
-<div class="subelement response"><code>null</code></div>
-</div></div>
-</div>
 <a id="method_writeXMLFile"></a><div class="element clickable method public method_writeXMLFile " data-toggle="collapse" data-target=".method_writeXMLFile .collapse" title="public">
-<h2>Write the XML file</h2>
-<pre>writeXMLFile() : null</pre>
+<h2>Write the XML file Called from admin podcast list page.</h2>
+<pre>writeXMLFile() : void</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -472,8 +329,6 @@ from the sermons view "default.php". It has not been implemented yet, so its not
 <th>since</th>
 <td>9.0.0</td>
 </tr></table>
-<h3>Returns</h3>
-<div class="subelement response"><code>null</code></div>
 </div></div>
 </div>
 <h3>
@@ -501,7 +356,7 @@ from the sermons view "default.php". It has not been implemented yet, so its not
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2016-10-17T19:38:09-05:00.<br></footer></div>
+            generated on 2017-04-29T09:36:16-05:00.<br></footer></div>
 </div>
 </body>
 </html>

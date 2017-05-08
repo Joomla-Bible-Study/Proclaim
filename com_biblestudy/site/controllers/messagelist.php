@@ -3,7 +3,7 @@
  * Controller Messages
  *
  * @package    BibleStudy.Site
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  * */
@@ -48,7 +48,7 @@ class BiblestudyControllerMessagelist extends BiblestudyControllerMessages
 	 * @param   string  $prefix  The prefix for the PHP class name
 	 * @param   array   $config  Set ignore request
 	 *
-	 * @return JModel
+	 * @return \JModelLegacy
 	 *
 	 * @since 7.0
 	 */

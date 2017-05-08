@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  * */
@@ -19,6 +19,7 @@ defined('_JEXEC') or die;
 class JBSMTeacher extends JBSMListing
 {
 	private $contact;
+
 	/**
 	 * Get Teacher for Fluid layout
 	 *
@@ -71,6 +72,8 @@ class JBSMTeacher extends JBSMListing
 			if ($result->contact)
 			{
 				require_once JPATH_ROOT . '/components/com_contact/models/contact.php';
+
+				/** @var contactModelcontact $contactmodel */
 				$contactmodel  = JModelLegacy::getInstance('contact', 'contactModel');
 				$this->contact = $contactmodel->getItem($pk = $result->contact);
 

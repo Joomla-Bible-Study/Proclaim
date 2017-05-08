@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  */
@@ -250,7 +250,7 @@ class Migration900
 			}
 		}
 
-		$registry->loadString($mediaFile->params);
+		$registry->loadString(json_encode($mediaFile->params));
 		$params = $registry->toObject();
 
 		$params->media_image = $mimage;
@@ -342,6 +342,11 @@ class Migration900
 		$this->deleteTable('#__bsms_folders', $db);
 		$this->deleteTable('#__bsms_media', $db);
 		$this->deleteTable('#__bsms_mimetype', $db);
+
+		$db->setQuery("ALTER TABLE `#__bsms_servers` MODIFY COLUMN `type` CHAR(255) NOT NULL");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__bsms_mediafiles` MODIFY COLUMN `hits` INT (10) DEFAULT '0'");
+		$db->execute();
 
 		$message                     = new stdClass;
 		$message->title_key          = 'JBS_POSTINSTALL_TITLE_TEMPLATE';

@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  * */
@@ -113,6 +113,11 @@ class BibleStudyModelInstall extends JModelLegacy
 	 *
 	 * @since 7.1 */
 	private $install = array();
+
+	/** @var array Array of Install Task
+	 *
+	 * @since 9.0.14 */
+	private $start = array();
 
 	/** @var int If was imported
 	 *
@@ -604,6 +609,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				'allupdates' => $this->allupdates,
 				'finish'     => $this->finish,
 				'install'    => $this->install,
+				'start'      => $this->start,
 				'subFiles'   => $this->subFiles,
 				'subQuery'   => $this->subQuery,
 				'subSteps'   => $this->subSteps,
@@ -642,22 +648,23 @@ class BibleStudyModelInstall extends JModelLegacy
 	{
 		$session = JFactory::getSession();
 		$session->set('migration_stack', '', 'JBSM');
-		$this->version        = '0.0.0';
+		$this->version       = '0.0.0';
 		$this->versionStack  = array();
 		$this->versionSwitch = null;
 		$this->allupdates    = array();
 		$this->finish        = array();
 		$this->install       = array();
+		$this->start         = array();
 		$this->subFiles      = array();
 		$this->subQuery      = array();
-		$this->subSteps       = array();
+		$this->subSteps      = array();
 		$this->isimport      = 0;
-		$this->callstack      = array();
-		$this->totalSteps     = 0;
-		$this->doneSteps      = 0;
-		$this->running        = JText::_('JBS_MIG_STARTING');
-		$this->type           = null;
-		$this->query          = array();
+		$this->callstack     = array();
+		$this->totalSteps    = 0;
+		$this->doneSteps     = 0;
+		$this->running       = JText::_('JBS_MIG_STARTING');
+		$this->type          = null;
+		$this->query         = array();
 	}
 
 	/**
@@ -674,22 +681,23 @@ class BibleStudyModelInstall extends JModelLegacy
 
 		if (empty($stack))
 		{
-			$this->version        = '0.0.0';
+			$this->version       = '0.0.0';
 			$this->versionStack  = array();
 			$this->versionSwitch = null;
 			$this->allupdates    = array();
 			$this->finish        = array();
 			$this->install       = array();
+			$this->start         = array();
 			$this->subFiles      = array();
 			$this->subQuery      = array();
-			$this->subSteps       = array();
+			$this->subSteps      = array();
 			$this->isimport      = 0;
-			$this->callstack      = array();
-			$this->totalSteps     = 0;
-			$this->doneSteps      = 0;
-			$this->running        = JText::_('JBS_MIG_STARTING');
-			$this->type           = null;
-			$this->query          = array();
+			$this->callstack     = array();
+			$this->totalSteps    = 0;
+			$this->doneSteps     = 0;
+			$this->running       = JText::_('JBS_MIG_STARTING');
+			$this->type          = null;
+			$this->query         = array();
 
 			return false;
 		}
@@ -706,22 +714,23 @@ class BibleStudyModelInstall extends JModelLegacy
 
 		$stack = json_decode($stack, true);
 
-		$this->version        = $stack['aversion'];
+		$this->version       = $stack['aversion'];
 		$this->versionStack  = $stack['version'];
 		$this->versionSwitch = $stack['switch'];
 		$this->allupdates    = $stack['allupdates'];
 		$this->finish        = $stack['finish'];
 		$this->install       = $stack['install'];
+		$this->start         = $stack['start'];
 		$this->subFiles      = $stack['subFiles'];
 		$this->subQuery      = $stack['subQuery'];
-		$this->subSteps       = $stack['subSteps'];
+		$this->subSteps      = $stack['subSteps'];
 		$this->isimport      = $stack['isimport'];
-		$this->callstack      = $stack['callstack'];
-		$this->totalSteps     = $stack['total'];
-		$this->doneSteps      = $stack['done'];
-		$this->running        = $stack['run'];
-		$this->type           = $stack['type'];
-		$this->query          = $stack['query'];
+		$this->callstack     = $stack['callstack'];
+		$this->totalSteps    = $stack['total'];
+		$this->doneSteps     = $stack['done'];
+		$this->running       = $stack['run'];
+		$this->type          = $stack['type'];
+		$this->query         = $stack['query'];
 
 		return true;
 	}
@@ -753,11 +762,21 @@ class BibleStudyModelInstall extends JModelLegacy
 		$app = JFactory::getApplication();
 		$run = true;
 
+		if (!empty($this->start))
+		{
+			$this->running = 'Backup DB';
+			$this->doneSteps++;
+			$export = new JBSMBackup;
+			$export->exportdb(2);
+			$this->start = array();
+		}
+
 		if (!empty($this->install))
 		{
 			$this->running = 'Install steps';
 			$this->doneSteps++;
 			$this->install($this->install);
+			$this->doneSteps++;
 			$this->install = array();
 		}
 
@@ -965,6 +984,11 @@ class BibleStudyModelInstall extends JModelLegacy
 			&& empty($this->subFiles)
 			&& empty($this->install))
 		{
+			// Fix any problem with db versions after migration.
+			JLoader::register('BiblestudyModelAdmin', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/admin.php');
+			$admin = new BiblestudyModelAdmin;
+			$admin->fix();
+
 			// Just finished
 			$this->resetStack();
 			$this->running = JText::_('JBS_MIGfinishED');
@@ -1301,9 +1325,6 @@ class BibleStudyModelInstall extends JModelLegacy
 
 		if (count($queries) == 0)
 		{
-			// No queries to process
-			JFactory::getApplication()->enqueueMessage('No Queries', 'error');
-
 			return false;
 		}
 

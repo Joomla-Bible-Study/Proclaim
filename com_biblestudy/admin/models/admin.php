@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  * */
@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 // Import library dependencies for database
 JLoader::register('InstallerModel', JPATH_ADMINISTRATOR . '/components/com_installer/models/extension.php');
 JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.script.php');
+JLoader::register('JoomlaInstallerScript', JPATH_ADMINISTRATOR . '/components/com_admin/script.php');
 use \Joomla\Registry\Registry;
 
 /**
@@ -28,6 +29,8 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 * @since    1.6
 	 */
 	protected $text_prefix = 'COM_BIBLESTUDY';
+
+	protected $changeSet = null;
 
 	/**
 	 * Returns a reference to the a Table object, always creating it.
@@ -145,14 +148,28 @@ class BiblestudyModelAdmin extends JModelAdmin
 			return false;
 		}
 
+		var_dump('tst');
 		$changeSet->fix();
-		$this->fixSchemaVersion();
+		$this->fixSchemaVersion($changeSet);
 		$this->fixUpdateVersion();
+		$this->fixUpdateJBSMVersion();
 		$installer = new BiblestudyModelInstall;
 		$installer->fixMenus();
 		$installer->fixemptyaccess();
 		$installer->fixemptylanguage();
 		$this->fixDefaultTextFilters();
+
+		/*
+		 * Finally, if the schema updates succeeded, make sure the database is
+		 * converted to utf8mb4 or, if not suported by the server, compatible to it.
+		 */
+		$installerJoomla = new JoomlaInstallerScript;
+		$statusArray = $changeSet->getStatus();
+
+		if (count($statusArray['error']) == 0)
+		{
+			$installerJoomla->convertTablesToUtf8mb4(false);
+		}
 
 		return true;
 	}
@@ -168,9 +185,14 @@ class BiblestudyModelAdmin extends JModelAdmin
 	{
 		$folder = JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/sql/updates/';
 
+		if ($this->changeSet !== null)
+		{
+			return $this->changeSet;
+		}
+
 		try
 		{
-			$changeSet = JSchemaChangeset::getInstance(JFactory::getDbo(), $folder);
+			$this->changeSet = JSchemaChangeset::getInstance(JFactory::getDbo(), $folder);
 		}
 		catch (RuntimeException $e)
 		{
@@ -179,54 +201,54 @@ class BiblestudyModelAdmin extends JModelAdmin
 			return false;
 		}
 
-		return $changeSet;
+		return $this->changeSet;
 	}
 
 	/**
-	 * Fix schema version if wrong
+	 * Fix schema version if wrong.
+	 *
+	 * @param   JSchemaChangeSet  $changeSet  Schema change set.
 	 *
 	 * @return   mixed  string schema version if success, false if fail
 	 *
 	 * @since 7.0
 	 */
-	public function fixSchemaVersion()
+	public function fixSchemaVersion($changeSet)
 	{
-		// Get correct schema version -- last file in array
-		$schema          = $this->getCompVersion();
-		$db              = JFactory::getDbo();
-		$result          = false;
+		// Get correct schema version -- last file in array.
+		$schema = $changeSet->getSchema();
 		$extensionresult = $this->getExtentionId();
 
-		// Check value. If ok, don't do update
-		$version = $this->getSchemaVersion();
-
-		if ($version == $schema)
+		if ($schema == $this->getSchemaVersion())
 		{
-			$result = $version;
+			return $schema;
 		}
-		else
+
+		// Delete old row
+		$db = $this->getDbo();
+		$query = $db->getQuery(true)
+			->delete($db->qn('#__schemas'))
+			->where($db->qn('extension_id') . ' = ' . $db->q($extensionresult));
+		$db->setQuery($query);
+		$db->execute();
+
+		// Add new row
+		$query->clear()
+			->insert($db->qn('#__schemas'))
+			->columns($db->quoteName('extension_id') . ',' . $db->quoteName('version_id'))
+			->values($db->quote($extensionresult) . ', ' . $db->quote($schema));
+		$db->setQuery($query);
+
+		try
 		{
-			// Delete old row
-			$query = $db->getQuery(true);
-			$query->delete($db->qn('#__schemas'));
-			$query->where($db->qn('extension_id') . ' = ' . $db->q($extensionresult));
-			$db->setQuery($query);
 			$db->execute();
-
-			// Add new row
-			$query = $db->getQuery(true);
-			$query->insert($db->qn('#__schemas'));
-			$query->set($db->qn('extension_id') . '= ' . $db->q($extensionresult));
-			$query->set($db->qn('version_id') . '= ' . $db->q($schema));
-			$db->setQuery($query);
-
-			if ($db->execute())
-			{
-				$result = $schema;
-			}
+		}
+		catch (JDatabaseExceptionExecuting $e)
+		{
+			return false;
 		}
 
-		return $result;
+		return $schema;
 	}
 
 	/**
@@ -239,7 +261,6 @@ class BiblestudyModelAdmin extends JModelAdmin
 	public function getCompVersion()
 	{
 		$jversion = null;
-		$xml      = null;
 		$file     = JPATH_COMPONENT_ADMINISTRATOR . '/biblestudy.xml';
 		$xml      = simplexml_load_file($file, 'JXMLElement');
 
@@ -316,20 +337,78 @@ class BiblestudyModelAdmin extends JModelAdmin
 		{
 			return $updateVersion;
 		}
-		else
-		{
-			$cache->set('version', $this->getCompVersion());
-			$table->manifest_cache = $cache->toString();
 
-			if ($table->store())
-			{
-				return $this->getCompVersion();
-			}
-			else
-			{
-				return false;
-			}
+		$cache->set('version', $this->getCompVersion());
+		$table->manifest_cache = $cache->toString();
+
+		if ($table->store())
+		{
+			return $this->getCompVersion();
 		}
+
+		return false;
+	}
+
+	/**
+	 * Get current version from #__bsms_update table.
+	 *
+	 * @return  mixed   version if successful, false if fail.
+	 *
+	 * @since 9.0.14
+	 */
+	public function getUpdateJBSMVersion()
+	{
+		$db = $this->getDbo();
+		$query = $db->getQuery(true);
+		$query->select('version')
+			->from('#__bsms_update')
+			->order('id DESC');
+		$db->setQuery($query, 0, 1);
+
+		return $db->loadResult();
+	}
+
+	/**
+	 * Fix Joomla version in #__bsms_updae table if wrong (doesn't equal JVersion short version).
+	 *
+	 * @return   mixed  string update version if success, false if fail.
+	 *
+	 * @since 9.0.14
+	 */
+	public function fixUpdateJBSMVersion()
+	{
+		$db = $this->getDbo();
+		$query = $db->getQuery(true);
+		$query->select('id, version')
+			->from('#__bsms_update')
+			->order('id DESC');
+		$db->setQuery($query, 0, 1);
+
+		$results = $db->loadObject();
+
+		if ($results->version == $this->getCompVersion())
+		{
+			return $results->version;
+		}
+
+		$newid = $results->id + 1;
+
+		$query->clear()
+			->insert($db->qn('#__bsms_update'))
+			->columns($db->qn('id') . ',' . $db->qn('version'))
+			->values($db->q($newid) . ', ' . $db->q($this->getCompVersion()));
+		$db->setQuery($query);
+
+		try
+		{
+			$db->execute();
+		}
+		catch (JDatabaseExceptionExecuting $e)
+		{
+			return false;
+		}
+
+		return $results->version;
 	}
 
 	/**

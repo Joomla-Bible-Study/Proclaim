@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  * */
@@ -96,7 +96,6 @@ class BiblestudyViewMessage extends JViewLegacy
 		$registry    = new Registry;
 		$registry->loadString($this->admin->params);
 		$this->admin_params = $registry;
-		$this->canDo        = JBSMBibleStudyHelper::getActions($type = 'message', $Itemid = $this->item->id);
 		$document           = JFactory::getDocument();
 
 		JHtml::stylesheet('media/com_biblestudy/css/token-input-jbs.css');
@@ -118,7 +117,6 @@ class BiblestudyViewMessage extends JViewLegacy
             });
              ";
 
-		// JHtml::script($script);
 		$document->addScriptDeclaration($script);
 
 		JHtml::script('media/com_biblestudy/js/plugins/jquery.tokeninput.js');

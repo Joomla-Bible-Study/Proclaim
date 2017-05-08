@@ -2,19 +2,11 @@
 /**
  * @package     BibleStudy
  * @subpackage  Plugin.JBSBackup
- * @copyright   2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright   2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        https://www.joomlabiblestudy.org
  * */
 defined('_JEXEC') or die;
-
-// Always load JBSM API if it exists.
-$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
-
-if (file_exists($api))
-{
-	require_once $api;
-}
 
 /**
  * JBSBackup jPlugin class
@@ -38,6 +30,14 @@ class PlgSystemJBSBackup extends JPlugin
 	public function __construct(& $subject, $config)
 	{
 		parent::__construct($subject, $config);
+
+		// Always load JBSM API if it exists.
+		$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+
+		if (file_exists($api))
+		{
+			require_once $api;
+		}
 
 		$this->loadLanguage();
 	}
@@ -78,6 +78,9 @@ class PlgSystemJBSBackup extends JPlugin
 			{
 				$this->doEmail($params, $dobackup);
 			}
+
+			// Clean up files after update. (Default 5 files)
+			$this->updatefiles($params);
 		}
 	}
 
@@ -357,9 +360,9 @@ class PlgSystemJBSBackup extends JPlugin
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');
 		$path          = JPATH_SITE . '/media/com_biblestudy/database';
-		$exclude = array('.git', '.svn', 'CVS', '.DS_Store', '__MACOSX');
+		$exclude = array('.git', '.svn', 'CVS', '.DS_Store', '__MACOSX', '.html');
 		$excludefilter = array('^\..*', '.*~');
-		$files         = JFolder::files($path, '.sql', 'false', 'true', $exclude, $excludefilter);
+		$files         = JFolder::files($path, '.', 'false', 'true', $exclude, $excludefilter);
 		arsort($files, SORT_STRING);
 		$parts       = array();
 		$numfiles    = count($files);

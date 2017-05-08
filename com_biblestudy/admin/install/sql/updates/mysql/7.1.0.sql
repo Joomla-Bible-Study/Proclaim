@@ -30,9 +30,9 @@ ALTER TABLE `#__bsms_locations` ADD COLUMN `landing_show` INT(3) DEFAULT '1';
 --
 -- Media Table
 --
+
 --
 -- MediaFiles Table
-
 ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `language` CHAR(3) NOT NULL DEFAULT '';
 ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `created_by` INT(10) UNSIGNED NOT NULL DEFAULT '0';
 ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `created_by_alias` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
@@ -44,9 +44,7 @@ UPDATE `#__bsms_mediafiles` SET `language` = '*' WHERE `#__bsms_mediafiles`.`lan
 -- Message Type Table
 --
 ALTER TABLE `#__bsms_message_type` ADD COLUMN `landing_show` INT(3) DEFAULT '1';
---
--- MimType Table
---
+
 --
 -- Podcast Table
 --
@@ -74,13 +72,7 @@ ALTER TABLE `#__bsms_series` ADD COLUMN `landing_show` INT(3) DEFAULT '1';
 --
 -- Servers Table
 --
-ALTER TABLE `#__bsms_servers` ADD COLUMN `type` TINYINT(3) NOT NULL;
-ALTER TABLE `#__bsms_servers` ADD COLUMN `ftphost` VARCHAR(100) NOT NULL;
-ALTER TABLE `#__bsms_servers` ADD COLUMN `ftpuser` VARCHAR(250) NOT NULL;
-ALTER TABLE `#__bsms_servers` ADD COLUMN `ftppassword` VARCHAR(250) NOT NULL;
-ALTER TABLE `#__bsms_servers` ADD COLUMN `ftpport` VARCHAR(10) NOT NULL;
-ALTER TABLE `#__bsms_servers` ADD COLUMN `aws_key` VARCHAR(100) NOT NULL;
-ALTER TABLE `#__bsms_servers` ADD COLUMN `aws_secret` VARCHAR(100) NOT NULL;
+-- Moved to PHP Builder
 
 --
 -- Studies Table

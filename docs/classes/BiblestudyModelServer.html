@@ -34,7 +34,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">184</span></a></li>
+                <span class="label label-info">196</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -65,11 +65,12 @@
 <i title="Methods" class="icon-custom icon-method"></i> Methods
                     <ul>
 <li class="method public "><a href="#method___construct" title="__construct() :: Constructor"><span class="description">Constructor</span><pre>__construct()</pre></a></li>
+<li class="method public "><a href="#method_getAddonServerForm" title="getAddonServerForm() :: Get the server form"><span class="description">Get the server form</span><pre>getAddonServerForm()</pre></a></li>
 <li class="method public "><a href="#method_getConfig" title="getConfig() :: Return the configuration xml of a server"><span class="description">Return the configuration xml of a server</span><pre>getConfig()</pre></a></li>
 <li class="method public "><a href="#method_getForm" title="getForm() :: Abstract method for getting the form from the model."><span class="description">Abstract method for getting the form from the model.</span><pre>getForm()</pre></a></li>
 <li class="method public "><a href="#method_getItem" title="getItem() :: Method to get a server item."><span class="description">Method to get a server item.</span><pre>getItem()</pre></a></li>
-<li class="method public "><a href="#method_getServerForm" title="getServerForm() :: Get the server form"><span class="description">Get the server form</span><pre>getServerForm()</pre></a></li>
 <li class="method public "><a href="#method_getType" title="getType() :: Reverse look up of id to server_type"><span class="description">Reverse look up of id to server_type</span><pre>getType()</pre></a></li>
+<li class="method public "><a href="#method_save" title="save() :: Method to save the form data."><span class="description">Method to save the form data.</span><pre>save()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header protected">» Protected
@@ -139,6 +140,27 @@
 </tr></table>
 </div></div>
 </div>
+<a id="method_getAddonServerForm"></a><div class="element clickable method public method_getAddonServerForm " data-toggle="collapse" data-target=".method_getAddonServerForm .collapse" title="public">
+<h2>Get the server form</h2>
+<pre>getAddonServerForm() : boolean | mixed</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code>\Exception</code></th>
+<td></td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>boolean</code><code>mixed</code>
+</div>
+</div></div>
+</div>
 <a id="method_getConfig"></a><div class="element clickable method public method_getConfig " data-toggle="collapse" data-target=".method_getConfig .collapse" title="public">
 <h2>Return the configuration xml of a server</h2>
 <pre>getConfig(string $addon) : \SimpleXMLElement</pre>
@@ -201,39 +223,16 @@
 <code>mixed</code>Server Server data object, false on failure</div>
 </div></div>
 </div>
-<a id="method_getServerForm"></a><div class="element clickable method public method_getServerForm " data-toggle="collapse" data-target=".method_getServerForm .collapse" title="public">
-<h2>Get the server form</h2>
-<pre>getServerForm() : boolean | mixed</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered">
-<tr>
-<th>TODO</th>
-<td>Rename this to getAddonServerForm() to make it clearer that this is the addon form</td>
-</tr>
-<tr>
-<th>since</th>
-<td>9.0.0</td>
-</tr>
-</table>
-<h3>Exceptions</h3>
-<table class="table table-bordered"><tr>
-<th><code>\Exception</code></th>
-<td></td>
-</tr></table>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>boolean</code><code>mixed</code>
-</div>
-</div></div>
-</div>
 <a id="method_getType"></a><div class="element clickable method public method_getType " data-toggle="collapse" data-target=".method_getType .collapse" title="public">
 <h2>Reverse look up of id to server_type</h2>
 <pre>getType(integer $pk, boolean $ext<code> = false</code>) : String</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$pk</h4>
@@ -243,6 +242,25 @@
 <code>boolean</code><p>If comfing from externl</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code>String</code></div>
+</div></div>
+</div>
+<a id="method_save"></a><div class="element clickable method public method_save " data-toggle="collapse" data-target=".method_save .collapse" title="public">
+<h2>Method to save the form data.</h2>
+<pre>save(array $data) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.6</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$data</h4>
+<code>array</code><p>The form data.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>boolean</code>True on success.</div>
 </div></div>
 </div>
 <a id="method_canDelete"></a><div class="element clickable method protected method_canDelete " data-toggle="collapse" data-target=".method_canDelete .collapse" title="protected">
@@ -342,7 +360,7 @@
 <i title="Properties" class="icon-custom icon-property"></i> Properties</h3>
 <a id="property_data"> </a><div class="element clickable property private property_data" data-toggle="collapse" data-target=".property_data .collapse" title="private">
 <h2>Data</h2>
-<pre>$data : </pre>
+<pre>$data : Object</pre>
 <div class="row collapse"><div class="detail-description">
 <h3>Default</h3>
 <div class="subelement argument"></div>
@@ -373,7 +391,7 @@
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2016-10-17T19:38:05-05:00.<br></footer></div>
+            generated on 2017-04-29T09:36:12-05:00.<br></footer></div>
 </div>
 </body>
 </html>

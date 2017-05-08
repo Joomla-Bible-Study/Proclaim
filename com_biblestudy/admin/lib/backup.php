@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  * */
@@ -62,9 +62,13 @@ class JBSMBackup
 	public function exportdb($run)
 	{
 		$date             = date('Y_F_j');
-		$this->saveAsName = 'jbs-db-backup_' . $date . '_' . time() . '.sql';
+		$site             = JUri::root(true);
+		$this->saveAsName = $site . '_jbs-db-backup_' . $date . '_' . time() . '.sql';
 		$objects          = JBSMDbHelper::getObjects();
 		$tables           = null;
+		$config           = JFactory::getConfig();
+		$path             = $config->get('tmp_path') . $this->saveAsName;
+		$path1            = '';
 
 		foreach ($objects as $object)
 		{
@@ -74,7 +78,7 @@ class JBSMBackup
 		switch ($run)
 		{
 			case 1:
-				$this->dumpFile = JPATH_SITE . '/tmp/' . 'jbs-db-backup_' . $date . '_' . time() . '.sql';
+				$this->dumpFile = $path;
 
 				if (!$this->writeline($this->data_cache))
 				{
@@ -82,23 +86,64 @@ class JBSMBackup
 				}
 				else
 				{
-					$this->output_file($this->dumpFile, $this->saveAsName, $mime_type = 'text/x-sql');
+					$mime_type = 'text/x-sql';
+
+					if (JFactory::getApplication()->input->getInt('jbs_compress', 1))
+					{
+						$mime_type = 'application/zip';
+						$files = (array) $this->dumpFile;
+						$path1 = $path . '.zip';
+						$zip = new ZipArchive;
+						$zip->open($path1, ZipArchive::CREATE);
+
+						foreach ($files as $file)
+						{
+							$zip->addFile($file, basename($file));
+						}
+
+						$zip->close();
+						JFile::delete($path);
+					}
+
+					$this->output_file($path1, basename($path1), $mime_type);
 
 					return true;
 				}
 				break;
 
 			case 2:
-				$this->dumpFile = JPATH_SITE . '/media/com_biblestudy/backup/' . $this->saveAsName;
+				$this->dumpFile = JPATH_SITE . '/media/com_biblestudy/backup' . $this->saveAsName;
 
 				if (!$this->writeline($this->data_cache))
 				{
 					return false;
 				}
 
-				return $this->dumpFile;
+				if (JFactory::getApplication()->input->getInt('jbs_compress', 1))
+				{
+					$files = (array) $this->dumpFile;
+					$path1 = $this->dumpFile . '.zip';
+					$zip = new ZipArchive;
+					$zip->open($path1, ZipArchive::CREATE);
+
+					foreach ($files as $file)
+					{
+						$zip->addFile($file, basename($file));
+					}
+
+					$zip->close();
+					JFile::delete($this->dumpFile);
+				}
+
+				JFactory::getApplication()
+					->enqueueMessage('Backup File Stored at: ' . $path1, 'notice');
+
+				return true;
 				break;
 		}
+
+		// Clean up files for only set amount. filestokeep (Default 5)
+		$this->updatefiles(JBSMParams::getAdmin()->params);
 
 		return true;
 	}
@@ -434,5 +479,38 @@ class JBSMBackup
 
 		flush();
 		exit;
+	}
+
+	/**
+	 * Update files
+	 *
+	 * @param   Joomla\Registry\Registry  $params  JBSM Params
+	 *
+	 * @return void
+	 *
+	 * @since 7.1.0
+	 */
+	public function updatefiles($params)
+	{
+		jimport('joomla.filesystem.folder');
+		jimport('joomla.filesystem.file');
+		$path          = JPATH_SITE . '/media/com_biblestudy/database';
+		$exclude = array('.git', '.svn', 'CVS', '.DS_Store', '__MACOSX', '.html');
+		$excludefilter = array('^\..*', '.*~');
+		$files         = JFolder::files($path, '.', 'false', 'true', $exclude, $excludefilter);
+		arsort($files, SORT_STRING);
+		$parts       = array();
+		$numfiles    = count($files);
+		$totalnumber = $params->get('filestokeep', '5');
+
+		for ($counter = $numfiles; $counter > $totalnumber; $counter--)
+		{
+			$parts[] = array_pop($files);
+		}
+
+		foreach ($parts as $part)
+		{
+			JFile::delete($part);
+		}
 	}
 }

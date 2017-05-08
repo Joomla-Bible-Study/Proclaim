@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  * */
@@ -95,6 +95,12 @@ class Com_BiblestudyInstallerScript
 		if (JFolder::exists(JPATH_ADMINISTRATOR . '/components/com_biblestudy/install'))
 		{
 			JFolder::delete(JPATH_ADMINISTRATOR . '/components/com_biblestudy/install');
+		}
+
+		// Remove old BibleStudy Helper. @since 9.0.14
+		if (JFile::exists(JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php'))
+		{
+			JFile::delete(JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php');
 		}
 
 		return true;
@@ -221,7 +227,7 @@ class Com_BiblestudyInstallerScript
 		$pass = $this->checkVersion('PHP', phpversion());
 		$pass &= $this->checkVersion('Joomla!', JVERSION);
 		$pass &= $this->checkVersion('MySQL', $db->getVersion());
-		$pass &= $this->checkDbo($db->name, array('mysql', 'mysqli'));
+		$pass &= $this->checkDbo($db->name, array('mysql', 'mysqli', 'pdo'));
 		$pass &= $this->checkExtensions($this->extensions);
 		$pass &= $this->checkJBSM($version);
 

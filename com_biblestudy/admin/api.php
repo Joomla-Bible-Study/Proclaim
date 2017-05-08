@@ -3,7 +3,7 @@
  * Core Admin BibleStudy file
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  * */
@@ -19,7 +19,7 @@ if (defined('JBSM_LOADED'))
 define('JBSM_PROFILER', 0);
 
 // Version information
-define('BIBLESTUDY_VERSION', '9.0.13');
+define('BIBLESTUDY_VERSION', '9.0.14');
 define('BIBLESTUDY_VERSION_UPDATEFILE', 'JBS Version ' . BIBLESTUDY_VERSION);
 
 // Default values

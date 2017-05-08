@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  */
@@ -104,7 +104,7 @@ abstract class JHtmlJwplayer
 			return '<a href="' . $media->path1 . '" ><img src="' . JUri::root() . $params->get('media_image') . '"/></a>';
 		}
 
-		$media->playerwidth  = $params->get('player_width');
+		//
 
 		if ($params->get('playerheight') < 55 && $params->get('playerheight') && !isset($player->mp3))
 		{
@@ -115,9 +115,17 @@ abstract class JHtmlJwplayer
 			$media->playerheight = $params->get('playerheight');
 		}
 
-		if ($params->get('playerwidth'))
+		if ($params->get('playerwidth') && !isset($player->mp3))
 		{
 			$media->playerwidth = $params->get('playerwidth');
+		}
+		elseif (isset($player->mp3) && isset($player->playerwidth))
+		{
+			$media->playerwidth = $player->playerwidth;
+		}
+		else
+		{
+			$media->playerwidth  = $params->get('player_width');
 		}
 
 		if ($params->get('playervars'))
@@ -162,7 +170,13 @@ abstract class JHtmlJwplayer
 			$media->autostart = 'false';
 		}
 
+		// Calculate Height base off width for a 16:9 ratio.
 		$render = "";
+		$rat1 = 16;
+		$rat2 = 9;
+
+		$ratio = $media->playerwidth / $rat1;
+		$height = $ratio * $rat2;
 
 		if ($popup)
 		{
@@ -173,13 +187,14 @@ abstract class JHtmlJwplayer
 			}
 			else
 			{
-				$render .= "<div class='playeralign' style=\"margin-left: auto; margin-right: auto; width:" . $media->playerwidth . "px;\">";
+				$render .= "<div class='playeralign' style=\"margin-left: auto; margin-right: auto; width:"
+					. $media->playerwidth . "px; height:" . $height . "px;\">";
 			}
 
 			$popupmarg = $params->get('popupmargin', '50');
 		}
 
-		$render .= " <div id='placeholder" . $media->id . "'></div>";
+		$render .= " <div id='placeholder" . $media->id . "'  class=\"jbsmplayer\"></div>";
 
 		if ($params->get('media_popout_yes', true))
 		{
@@ -190,11 +205,11 @@ abstract class JHtmlJwplayer
 			$popouttext = '';
 		}
 
-		if ($popup)
+		if ($popup || $params->get('pcplaylist'))
 		{
 			$render .= "</div>";
 		}
-		else
+		elseif ($popouttext)
 		{
 			// Add space for popup window
 			$player->playerwidth  = $player->playerwidth + 20;
@@ -205,42 +220,56 @@ abstract class JHtmlJwplayer
 				$player->playerheight . "'); return false\">" . $popouttext . "</a>";
 		}
 
-		$render .= "<script language=\"javascript\" type=\"text/javascript\">
-						jwplayer('placeholder" . $media->id . "').setup({
+		$render .= "<script type=\"text/javascript\">
+					var playerInstance" . $media->id . " = jwplayer('placeholder" . $media->id . "');
+						playerInstance" . $media->id . ".setup({
 							'file': '" . $media->path1 . "',
 						";
-
-		if ($params->get('playerresponsive') == 0 && $media->playerheight)
-		{
-			$render .= "'height': '" . $media->playerheight . "',
-			";
-		}
-		else
-		{
-			$render .= "'aspectratio': '16:9',
-			";
-		}
+		$render .= "'height': '" . $media->playerheight . "',
+		";
 
 		if (isset($media->headertext))
 		{
 			$header = $media->headertext;
 		}
+		elseif ($params->get('pcplaylist'))
+		{
+			$header = $media->studytitle;
+		}
 		else
 		{
 			$header = $params->get('popuptitle', '');
+			$header = str_replace('{{title}}', $media->studytitle, $header);
 		}
 
 		$render .= "'width': '" . $media->playerwidth . "',
-						'displaytitle': '" . $header . "',
+						'logo': {
+							file: '" . $params->get('jwplayer_logo') . "',
+							link: '" . $params->get('jwplayer_logolink', JUri::base()) . "',
+						 },
+						'title': '" . $header . "',
 						'image': '" . $params->get('popupimage', 'images/biblestudy/speaker24.png') . "',
-						'autostart': '" . $media->autostart . "',
+						'abouttext': 'Direct Link',
+						'aboutlink': '" . $media->path1 . "',
+						'autostart': '" . $params->get('autostart') . "',
 						'backcolor': '" . $media->backcolor . "',
 						'frontcolor': '" . $media->frontcolor . "',
 						'lightcolor': '" . $media->lightcolor . "',
 						'screencolor': '" . $media->screencolor . "',
 						'controlbar.position': '" . $params->get('playerposition') . "',
 						'controlbar.idlehide': '" . $params->get('playeridlehide') . "'
-					});
+					});";
+
+		$render .= "</script>";
+
+		$render .= "<script>
+				  function loadVideo(myFile,myImage) { 
+				    playerInstance" . $media->id . ".load([{
+				      file: myFile,
+				      image: myImage
+				    }]);
+				    playerInstance" . $media->id . ".play();
+				  }
 				</script>";
 
 		return $render;

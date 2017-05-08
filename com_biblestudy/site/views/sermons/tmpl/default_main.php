@@ -3,7 +3,7 @@
  * Default for sermons
  *
  * @package    BibleStudy.Site
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  * */
@@ -93,9 +93,12 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 		<?php
 		if ($this->params->get('show_pagination') == 2)
 		{
-			echo '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM') . $this->pagination->getLimitBox() . '</span>';
+			echo $this->pagination->getListFooter();
 		}
-		echo $this->pagination->getPageslinks();
+		else
+		{
+			echo $this->pagination->getPagesLinks();
+		}
 		?>
 	</div>
 	<?php

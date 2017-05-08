@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  * */
@@ -19,7 +19,7 @@ use Joomla\Registry\Registry;
  */
 class JBSMRelatedStudies
 {
-	/** @var  string Score
+	/** @var  array Score
 	 *
 	 * @since    7.2 */
 	public $score;
@@ -33,7 +33,7 @@ class JBSMRelatedStudies
 	 * @return boolean
 	 *
 	 * @since    7.2
-	 * @todo need to look if all is needed. @TOM Look to me this need to me this need to be updated?
+	 * @todo need to look if all is needed. @TOM Looks to me that this needs to be updated?
 	 */
 	public function getRelated($row, $params)
 	{

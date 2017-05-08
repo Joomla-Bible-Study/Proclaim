@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  * */
@@ -93,6 +93,14 @@ else
 									<?php echo $this->form->getInput('landing_show'); ?>
 								</div>
 							</div>
+                            <div class="control-group">
+                                <div class="control-label">
+									<?php echo $this->form->getLabel('pc_show'); ?>
+                                </div>
+                                <div class="controls">
+									<?php echo $this->form->getInput('pc_show'); ?>
+                                </div>
+                            </div>
 							<div class="control-group">
 								<div class="control-label">
 									<?php echo $this->form->getLabel('image'); ?>

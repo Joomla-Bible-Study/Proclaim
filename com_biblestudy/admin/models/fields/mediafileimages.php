@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  * */
@@ -53,7 +53,7 @@ class JFormFieldMediafileImages extends JFormFieldList
 			foreach ($mediafiles as $media)
 			{
 				$reg = new Registry;
-				$reg->loadString($media->params);
+				$reg->loadString(json_encode($media->params));
 				$media->params = $reg;
 
 				if ($media->params->get('media_use_button_icon') >= 1)

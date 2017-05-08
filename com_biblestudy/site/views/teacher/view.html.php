@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  * */
@@ -101,8 +101,16 @@ class BiblestudyViewTeacher extends JViewLegacy
 
 		$image            = $images->getTeacherThumbnail($item->teacher_thumbnail, $item->thumb);
 		$largeimage       = $images->getTeacherImage($item->image, $item->teacher_image);
-		$item->image      = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="" />';
-		$item->largeimage = '<img src="' . $largeimage->path . '" height="' . $largeimage->height . '" width="' . $largeimage->width . '" alt="" />';
+
+		if ($image)
+		{
+			$item->image = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="" />';
+		}
+
+		if ($largeimage)
+		{
+			$item->largeimage = '<img src="' . $largeimage->path . '" height="' . $largeimage->height . '" width="' . $largeimage->width . '" alt="" />';
+		}
 
 		if (isset($item->information))
 		{
@@ -123,6 +131,8 @@ class BiblestudyViewTeacher extends JViewLegacy
 			$language = JFactory::getLanguage();
 			$language->load('com_contact', JPATH_SITE);
 			require_once JPATH_ROOT . '/components/com_contact/models/contact.php';
+
+			/** @var \ContactModelContact $contactmodel */
 			$contactmodel  = JModelLegacy::getInstance('contact', 'contactModel');
 			$this->contact = $contactmodel->getItem($pk = $item->contact);
 

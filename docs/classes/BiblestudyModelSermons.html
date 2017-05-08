@@ -34,7 +34,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">184</span></a></li>
+                <span class="label label-info">196</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -99,6 +99,7 @@
 <li class="property public "><a href="#property_" title="() :: _files"><span class="description"></span><pre></pre></a></li>
 <li class="property public "><a href="#property_" title="() :: _Locations"><span class="description"></span><pre></pre></a></li>
 <li class="property public "><a href="#property_" title="() :: landing"><span class="description"></span><pre></pre></a></li>
+<li class="property public "><a href="#property_context" title="$context() :: "><span class="description">Needed for context for Populate State</span><pre>$context</pre></a></li>
 <li class="property public "><a href="#property_input" title="$input() :: "><span class="description"></span><pre>$input</pre></a></li>
 </ul>
 </li>
@@ -391,7 +392,7 @@ ordering requirements.</p></div>
 </div>
 <a id="method_populateState"></a><div class="element clickable method protected method_populateState " data-toggle="collapse" data-target=".method_populateState .collapse" title="protected">
 <h2>Method to auto-populate the model state.</h2>
-<pre>populateState(string $ordering<code> = 'study.studydate'</code>, string $direction<code> = 'DESC'</code>) : void</pre>
+<pre>populateState(string $ordering<code> = null</code>, string $direction<code> = null</code>) : void</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"><p>This method should only be called once per instantiation and is designed
@@ -567,6 +568,22 @@ configuration flag to ignore the request is set.</p>
 </table>
 </div></div>
 </div>
+<a id="property_context"> </a><div class="element clickable property public property_context" data-toggle="collapse" data-target=".property_context .collapse" title="public">
+<h2>Needed for context for Populate State</h2>
+<pre>$context : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>'com_biblestudy.list'</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.14</td>
+</tr></table>
+</div></div>
+</div>
 <a id="property_input"> </a><div class="element clickable property public property_input" data-toggle="collapse" data-target=".property_input .collapse" title="public">
 <h2>$input</h2>
 <pre>$input </pre>
@@ -584,7 +601,7 @@ configuration flag to ignore the request is set.</p>
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2016-10-17T19:38:03-05:00.<br></footer></div>
+            generated on 2017-04-29T09:36:09-05:00.<br></footer></div>
 </div>
 </body>
 </html>

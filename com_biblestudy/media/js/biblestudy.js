@@ -11,6 +11,34 @@ jQuery(document).ready(function () {
 		return false;
 	});
 
+	if (Modernizr.touch) {
+		// show the close overlay button
+		jQuery(".jbsmclose-overlay").removeClass("hidden");
+		// handle the adding of hover class when clicked
+		jQuery(".jbsmimg").click(function (e) {
+			if (!jQuery(this).hasClass("hover")) {
+				jQuery(this).addClass("hover");
+			}
+		});
+		// handle the closing of the overlay
+		jQuery(".jbsmclose-overlay").click(function (e) {
+			e.preventDefault();
+			e.stopPropagation();
+			if (jQuery(this).closest(".jbsmimg").hasClass("hover")) {
+				jQuery(this).closest(".jbsmimg").removeClass("hover");
+			}
+		});
+	} else {
+		// handle the mouseenter functionality
+		jQuery(".jbsmimg").mouseenter(function () {
+			jQuery(this).addClass("hover");
+		})
+		// handle the mouseleave functionality
+			.mouseleave(function () {
+				jQuery(this).removeClass("hover");
+			});
+	}
+
 	/**
 	 * @title Add Study
 	 */

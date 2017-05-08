@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  * */
@@ -37,6 +37,7 @@ class JFormFieldServerType extends JFormFieldList
 		$class    = ($v = $this->element['class']) ? ' class="' . $v . '"' : 'class="text_area"';
 
 		// Get a reverse lookup of the endpoint type to endpoint name
+		/** @var BiblestudyModelServers $model */
 		$model    = JModelLegacy::getInstance('servers', 'BibleStudyModel');
 		$rlu_type = $model->getTypeReverseLookup();
 

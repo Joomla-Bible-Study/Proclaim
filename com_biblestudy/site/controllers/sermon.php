@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  * */
@@ -25,14 +25,14 @@ class BiblestudyControllerSermon extends JControllerForm
 	 *
 	 * @since    1.6
 	 */
-	protected $view_item = 'messageform';
+	protected $view_item = 'sermon';
 
 	/**
 	 * View list
 	 *
 	 * @since    1.6
 	 */
-	protected $view_list = 'messagelist';
+	protected $view_list = 'sermons';
 
 	/**
 	 * Method to add a new record.
@@ -65,7 +65,7 @@ class BiblestudyControllerSermon extends JControllerForm
 
 		if (empty($return) || !JUri::isInternal(base64_decode($return)))
 		{
-			return JUri::base() . 'index.php?option=com_biblestudy&view=messagelist';
+			return JUri::base() . 'index.php?option=com_biblestudy&view=sermon';
 		}
 		else
 		{
@@ -217,7 +217,7 @@ class BiblestudyControllerSermon extends JControllerForm
 	 *
 	 * @since    1.5
 	 */
-	public function getModel($name = 'Messageform', $prefix = '', $config = array('ignore_request' => true))
+	public function getModel($name = 'Sermon', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
 	{
 		$model = parent::getModel($name, $prefix, $config);
 

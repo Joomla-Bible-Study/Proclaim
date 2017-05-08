@@ -43,30 +43,24 @@
 		</fieldset>
 		<fieldset name="TEMPLATES">
 
-			<field name="studieslisttemplateid" type="sql" default=""
-			       label="JBS_TPL_TEMPLATE_STUDIES_LIST" description="JBS_TPL_TEMPLATE_STUDIES_LIST_DESC"
-			       query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
-			       key_field="id" value_field="title" required="true"/>
+			<field name="studieslisttemplateid" type="templatelist" default=""
+			       label="JBS_TPL_TEMPLATE_STUDIES_LIST" description="JBS_TPL_TEMPLATE_STUDIES_LIST_DESC" required="true"/>
 			<field name="sermonstemplate" type="sql" label="JBS_TPL_SERMONS_TEMPLATE"
-			       description="JBS_TPL_SERMONS_TEMPLATE_DESC" hide_none="true"
+			       description="JBS_TPL_SERMONS_TEMPLATE_DESC" hide_none="true" filter="type=1"
 			       query="SELECT id, type, filename FROM #__bsms_templatecode WHERE type=1 AND published =1 ORDER BY filename ASC"
 			       key_field="filename" value_field="filename">
 				<option value="0">JBS_CMN_USE_DEFAULT</option>
 			</field>
-			<field name="detailstemplateid" type="sql" default=""
-			       label="JBS_TPL_TEMPLATE_STUDY_DETAIL" description="JBS_TPL_TEMPLATE_STUDY_DETAIL_DESC"
-			       query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
-			       key_field="id" value_field="title" required="true"/>
+			<field name="detailstemplateid" type="templatelist" default=""
+			       label="JBS_TPL_TEMPLATE_STUDY_DETAIL" description="JBS_TPL_TEMPLATE_STUDY_DETAIL_DESC" required="true"/>
 			<field name="sermontemplate" type="sql" label="JBS_TPL_SERMON_TEMPLATE"
 			       description="JBS_TPL_SERMONS_TEMPLATE_DESC" hide_none="true"
 			       query="SELECT id, type, filename FROM #__bsms_templatecode WHERE type=2 AND published =1 ORDER BY filename ASC"
 			       key_field="filename" value_field="filename">
 				<option value="0">JBS_CMN_USE_DEFAULT</option>
 			</field>
-			<field name="teachertemplateid" type="sql" default=""
-			       label="JBS_TPL_TEMPLATE_TEACHER" description="JBS_TPL_TEMPLATE_TEACHER_DESC"
-			       query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
-			       key_field="id" value_field="title" required="true"/>
+			<field name="teachertemplateid" type="templatelist" default=""
+			       label="JBS_TPL_TEMPLATE_TEACHER" description="JBS_TPL_TEMPLATE_TEACHER_DESC" required="true"/>
 			<field name="teachertemplate" type="sql" label="JBS_TPL_TEACHER_TEMPLATE"
 			       description="JBS_TPL_SERMONS_TEMPLATE_DESC" hide_none="true"
 			       query="SELECT id, type, filename FROM #__bsms_templatecode WHERE type=4 AND published =1 ORDER BY filename ASC"
@@ -79,28 +73,27 @@
 			       key_field="filename" value_field="filename">
 				<option value="0">JBS_CMN_USE_DEFAULT</option>
 			</field>
-			<field name="serieslisttemplateid" type="sql" default=""
-			       label="JBS_TPL_TEMPLATE_SERIES_LIST" description="JBS_TPL_TEMPLATE_SERIES_LIST_DESC"
-			       query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
-			       key_field="id" value_field="title" required="true"/>
+			<field name="serieslisttemplateid" type="templatelist" default=""
+			       label="JBS_TPL_TEMPLATE_SERIES_LIST" description="JBS_TPL_TEMPLATE_SERIES_LIST_DESC" required="true"/>
 			<field name="seriesdisplaystemplate" type="sql" label="JBS_TPL_SERIES_LIST_TEMPLATE"
 			       description="JBS_TPL_SERMONS_TEMPLATE_DESC" hide_none="true"
 			       query="SELECT id, type, filename FROM #__bsms_templatecode WHERE type=5 AND published =1 ORDER BY filename ASC"
 			       key_field="filename" value_field="filename">
 				<option value="0">JBS_CMN_USE_DEFAULT</option>
 			</field>
-			<field name="seriesdetailtemplateid" type="sql" default=""
-			       label="JBS_TPL_TEMPLATE_SERIES_DETAIL" description="JBS_TPL_SERMONS_TEMPLATE_DESC"
-			       query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
-			       key_field="id" value_field="title" required="true"/>
+			<field name="seriesdetailtemplateid" type="templatelist" default=""
+			       label="JBS_TPL_TEMPLATE_SERIES_DETAIL" description="JBS_TPL_SERMONS_TEMPLATE_DESC" required="true"/>
 			<field name="seriesdisplaytemplate" type="sql" label="JBS_TPL_SERIES_TEMPLATE"
 			       description="JBS_TPL_SERMONS_TEMPLATE_DESC" hide_none="true"
 			       query="SELECT id, type, filename FROM #__bsms_templatecode WHERE type=6 AND published =1 ORDER BY filename ASC"
 			       key_field="filename" value_field="filename">
 				<option value="0">JBS_CMN_USE_DEFAULT</option>
 			</field>
-			<field name="offset" type="text" size="10" default="false"
-			       label="JBS_TPL_TIME_OFFSET" description="JBS_TPL_TIME_OFFSET_DESC"/>
+			<field name="offset" type="radio" class="btn-group" size="10" default="false"
+			       label="JBS_TPL_TIME_OFFSET" description="JBS_TPL_TIME_OFFSET_DESC">
+				<option value="false">JNO</option>
+				<option value="true">JYES</option>
+			</field>
 		</fieldset>
 		<fieldset name="FILTERS">
 
@@ -832,7 +825,7 @@
 			<field name="tsteachercustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
 			<field name="tsteacherlinktype" type="teacherlinkoptions" default="1" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 			<field type="spacer" name="myspacer31" hr="true"/>
-			<field name="tsteacherimagerrow" type="rowoptions" size="1" default="0" label="JBS_CMN_TEACHER_IMAGE" description="JBS_TPL_ROW_DESC"/>
+			<field name="tsteacherimagerow" type="rowoptions" size="1" default="0" label="JBS_CMN_TEACHER_IMAGE" description="JBS_TPL_ROW_DESC"/>
 			<field name="tsteacherimagecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
 			<field name="tsteacherimagecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
 			<field name="tsteacherimageelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>

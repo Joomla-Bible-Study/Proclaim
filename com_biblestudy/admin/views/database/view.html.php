@@ -3,7 +3,7 @@
  * DataBase html
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  * */
@@ -16,15 +16,15 @@ use Joomla\Registry\Registry;
  * View class for Admin
  *
  * @package  BibleStudy.Admin
- * @since    7.0.0
+ * @since    9.0.14
  */
-class BiblestudyViewDataBase extends JViewLegacy
+class BiblestudyViewDatabase extends JViewLegacy
 {
 	/**
 	 * Version
 	 *
 	 * @var string
-	 * @since    7.0.0
+	 * @since    9.0.14
 	 */
 	public $version;
 
@@ -32,7 +32,7 @@ class BiblestudyViewDataBase extends JViewLegacy
 	 * Can Do
 	 *
 	 * @var string
-	 * @since    7.0.0
+	 * @since    9.0.14
 	 */
 	public $canDo;
 
@@ -40,7 +40,7 @@ class BiblestudyViewDataBase extends JViewLegacy
 	 * Change Set
 	 *
 	 * @var string
-	 * @since    7.0.0
+	 * @since    9.0.14
 	 */
 	public $changeSet;
 
@@ -48,7 +48,7 @@ class BiblestudyViewDataBase extends JViewLegacy
 	 * Errors
 	 *
 	 * @var string
-	 * @since    7.0.0
+	 * @since    9.0.14
 	 */
 	public $errors;
 
@@ -56,7 +56,7 @@ class BiblestudyViewDataBase extends JViewLegacy
 	 * Results
 	 *
 	 * @var string
-	 * @since    7.0.0
+	 * @since    9.0.14
 	 */
 	public $results;
 
@@ -64,7 +64,7 @@ class BiblestudyViewDataBase extends JViewLegacy
 	 * Schema Version
 	 *
 	 * @var string
-	 * @since    7.0.0
+	 * @since    9.0.14
 	 */
 	public $schemaVersion;
 
@@ -72,7 +72,7 @@ class BiblestudyViewDataBase extends JViewLegacy
 	 * Update Version
 	 *
 	 * @var string
-	 * @since    7.0.0
+	 * @since    9.0.14
 	 */
 	public $updateVersion;
 
@@ -80,7 +80,7 @@ class BiblestudyViewDataBase extends JViewLegacy
 	 * Filter Params
 	 *
 	 * @var Registry
-	 * @since    7.0.0
+	 * @since    9.0.14
 	 */
 	public $filterParams;
 
@@ -88,7 +88,7 @@ class BiblestudyViewDataBase extends JViewLegacy
 	 * Pagination
 	 *
 	 * @var string
-	 * @since    7.0.0
+	 * @since    9.0.14
 	 */
 	public $pagination;
 
@@ -96,7 +96,7 @@ class BiblestudyViewDataBase extends JViewLegacy
 	 * Error Count
 	 *
 	 * @var string
-	 * @since    7.0.0
+	 * @since    9.0.14
 	 */
 	public $errorCount;
 
@@ -104,7 +104,7 @@ class BiblestudyViewDataBase extends JViewLegacy
 	 * Joomla BibleStudy Version
 	 *
 	 * @var string
-	 * @since    7.0.0
+	 * @since    9.0.14
 	 */
 	public $jversion;
 
@@ -112,7 +112,7 @@ class BiblestudyViewDataBase extends JViewLegacy
 	 * Temp Destination
 	 *
 	 * @var string
-	 * @since    7.0.0
+	 * @since    9.0.14
 	 */
 	public $tmp_dest;
 
@@ -120,7 +120,7 @@ class BiblestudyViewDataBase extends JViewLegacy
 	 * Player Stats
 	 *
 	 * @var string
-	 * @since    7.0.0
+	 * @since    9.0.14
 	 */
 	public $playerstats;
 
@@ -128,7 +128,7 @@ class BiblestudyViewDataBase extends JViewLegacy
 	 * Assets
 	 *
 	 * @var string
-	 * @since    7.0.0
+	 * @since    9.0.14
 	 */
 	public $assets;
 
@@ -136,7 +136,7 @@ class BiblestudyViewDataBase extends JViewLegacy
 	 * Popups
 	 *
 	 * @var string
-	 * @since    7.0.0
+	 * @since    9.0.14
 	 */
 	public $popups;
 
@@ -144,7 +144,7 @@ class BiblestudyViewDataBase extends JViewLegacy
 	 * SS
 	 *
 	 * @var string
-	 * @since    7.0.0
+	 * @since    9.0.14
 	 */
 	public $ss;
 
@@ -152,7 +152,7 @@ class BiblestudyViewDataBase extends JViewLegacy
 	 * Lists
 	 *
 	 * @var string
-	 * @since    7.0.0
+	 * @since    9.0.14
 	 */
 	public $lists;
 
@@ -160,7 +160,7 @@ class BiblestudyViewDataBase extends JViewLegacy
 	 * PI
 	 *
 	 * @var string
-	 * @since    7.0.0
+	 * @since    9.0.14
 	 */
 	public $pi;
 
@@ -168,7 +168,7 @@ class BiblestudyViewDataBase extends JViewLegacy
 	 * Form
 	 *
 	 * @var array
-	 * @since    7.0.0
+	 * @since    9.0.14
 	 */
 	protected $form;
 
@@ -176,7 +176,7 @@ class BiblestudyViewDataBase extends JViewLegacy
 	 * Item
 	 *
 	 * @var array
-	 * @since    7.0.0
+	 * @since    9.0.14
 	 */
 	protected $item;
 
@@ -184,9 +184,11 @@ class BiblestudyViewDataBase extends JViewLegacy
 	 * State
 	 *
 	 * @var array
-	 * @since    7.0.0
+	 * @since    9.0.14
 	 */
 	protected $state;
+
+	protected $updateJBSMVersion;
 
 	/**
 	 * Execute and display a template script.
@@ -196,10 +198,13 @@ class BiblestudyViewDataBase extends JViewLegacy
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
 	 * @see     fetch()
-	 * @since   11.1
+	 * @since   9.0.14
 	 */
 	public function display($tpl = null)
 	{
+		// Set variables
+		$app = JFactory::getApplication();
+
 		$model = JModelLegacy::getInstance('Admin', 'BiblestudyModel');
 		$this->setModel($model, true);
 
@@ -208,9 +213,7 @@ class BiblestudyViewDataBase extends JViewLegacy
 
 		// Get data from the model
 		$this->form  = $this->get("Form");
-		$this->item  = $this->get("Item");
 		$this->state = $this->get("State");
-		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id);
 
 		// Get data from the model for database
 		$this->changeSet     = $this->get('Items');
@@ -225,10 +228,12 @@ class BiblestudyViewDataBase extends JViewLegacy
 		$this->errorCount    = count($this->errors);
 		$this->jversion      = $this->get('CompVersion');
 
+		$this->updateJBSMVersion = $this->get('UpdateJBSMVersion');
+
 		$jbsversion    = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.xml');
 		$this->version = $jbsversion['version'];
 
-		if (!(strncmp($this->schemaVersion, $this->version, 5) === 0))
+		if ($this->schemaVersion != $this->changeSet->getSchema())
 		{
 			$this->errorCount++;
 		}
@@ -238,9 +243,23 @@ class BiblestudyViewDataBase extends JViewLegacy
 			$this->errorCount++;
 		}
 
-		if (($this->updateVersion != $this->version))
+		if (version_compare($this->updateVersion, $this->version) != 0)
 		{
 			$this->errorCount++;
+		}
+
+		if (version_compare($this->updateJBSMVersion, $this->version) != 0)
+		{
+			$this->errorCount++;
+		}
+
+		if ($this->errorCount === 0)
+		{
+			$app->enqueueMessage(JText::_('COM_INSTALLER_MSG_DATABASE_OK'), 'notice');
+		}
+		else
+		{
+			$app->enqueueMessage(JText::_('COM_INSTALLER_MSG_DATABASE_ERRORS'), 'warning');
 		}
 
 		$this->setLayout('edit');
@@ -258,9 +277,9 @@ class BiblestudyViewDataBase extends JViewLegacy
 	/**
 	 * Add Toolbar
 	 *
-	 * @return null
+	 * @return void
 	 *
-	 * @since 7.0.0
+	 * @since 9.0.14
 	 */
 	protected function addToolbar()
 	{
@@ -279,9 +298,9 @@ class BiblestudyViewDataBase extends JViewLegacy
 	/**
 	 * Add the page title to browser.
 	 *
-	 * @return null
+	 * @return void
 	 *
-	 * @since    7.1.0
+	 * @since    9.0.14
 	 */
 	protected function setDocument()
 	{

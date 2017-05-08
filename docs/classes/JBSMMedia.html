@@ -34,7 +34,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">184</span></a></li>
+                <span class="label label-info">196</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -73,11 +73,13 @@
 <li class="method public "><a href="#method_getFluidFilesize" title="getFluidFilesize() :: return $table"><span class="description">return $table</span><pre>getFluidFilesize()</pre></a></li>
 <li class="method public "><a href="#method_getFluidMedia" title="getFluidMedia() :: Return Fluid Media row"><span class="description">Return Fluid Media row</span><pre>getFluidMedia()</pre></a></li>
 <li class="method public "><a href="#method_getMediaRows2" title="getMediaRows2() :: Get Media info Row2"><span class="description">Get Media info Row2</span><pre>getMediaRows2()</pre></a></li>
+<li class="method public "><a href="#method_getMimetypes" title="getMimetypes() :: List of MimeTypes Supported"><span class="description">List of MimeTypes Supported</span><pre>getMimetypes()</pre></a></li>
 <li class="method public "><a href="#method_getPlayerAttributes" title="getPlayerAttributes() :: Set up Player Attributes"><span class="description">Set up Player Attributes</span><pre>getPlayerAttributes()</pre></a></li>
 <li class="method public "><a href="#method_getPlayerCode" title="getPlayerCode() :: Setup Player Code."><span class="description">Setup Player Code.</span><pre>getPlayerCode()</pre></a></li>
 <li class="method public "><a href="#method_getVirtuemart" title="getVirtuemart() :: Set up Virtumart if Vertumart is installed."><span class="description">Set up Virtumart if Vertumart is installed.</span><pre>getVirtuemart()</pre></a></li>
 <li class="method public "><a href="#method_hitPlay" title="hitPlay() :: Update Hit count for plays."><span class="description">Update Hit count for plays.</span><pre>hitPlay()</pre></a></li>
 <li class="method public "><a href="#method_mediaButton" title="mediaButton() :: Used to obtain the button and/or icon for the image"><span class="description">Used to obtain the button and/or icon for the image</span><pre>mediaButton()</pre></a></li>
+<li class="method public "><a href="#method_rendersb" title="rendersb() :: Render Sqeezbox"><span class="description">Render Sqeezbox</span><pre>rendersb()</pre></a></li>
 <li class="method public "><a href="#method_useJImage" title="useJImage() :: Use JImage to create images"><span class="description">Use JImage to create images</span><pre>useJImage()</pre></a></li>
 </ul>
 </li>
@@ -310,6 +312,20 @@
 </div>
 </div></div>
 </div>
+<a id="method_getMimetypes"></a><div class="element clickable method public method_getMimetypes " data-toggle="collapse" data-target=".method_getMimetypes .collapse" title="public">
+<h2>List of MimeTypes Supported</h2>
+<pre>getMimetypes() : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.12</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>array</code></div>
+</div></div>
+</div>
 <a id="method_getPlayerAttributes"></a><div class="element clickable method public method_getPlayerAttributes " data-toggle="collapse" data-target=".method_getPlayerAttributes .collapse" title="public">
 <h2>Set up Player Attributes</h2>
 <pre>getPlayerAttributes(\Joomla\Registry\Registry $params, object $media) : object</pre>
@@ -415,6 +431,39 @@
 <div class="subelement response"><code>mixed</code></div>
 </div></div>
 </div>
+<a id="method_rendersb"></a><div class="element clickable method public method_rendersb " data-toggle="collapse" data-target=".method_rendersb .collapse" title="public">
+<h2>Render Sqeezbox</h2>
+<pre>rendersb(object $media, \Joomla\Registry\Registry $params, object $player, string $image, string $path, boolean $direct<code> = false</code>) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>version</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$media</h4>
+<code>object</code><p>Media</p></div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>\Joomla\Registry\Registry</code><p>Params.</p></div>
+<div class="subelement argument">
+<h4>$player</h4>
+<code>object</code><p>Player settings</p></div>
+<div class="subelement argument">
+<h4>$image</h4>
+<code>string</code><p>The image</p></div>
+<div class="subelement argument">
+<h4>$path</h4>
+<code>string</code><p>The path to the media</p></div>
+<div class="subelement argument">
+<h4>$direct</h4>
+<code>boolean</code><p>If coming from Direct</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
 <a id="method_useJImage"></a><div class="element clickable method public method_useJImage " data-toggle="collapse" data-target=".method_useJImage .collapse" title="public">
 <h2>Use JImage to create images</h2>
 <pre>useJImage(string $path, string $alt) : boolean | string</pre>
@@ -469,7 +518,7 @@
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2016-10-17T19:38:02-05:00.<br></footer></div>
+            generated on 2017-04-29T09:36:08-05:00.<br></footer></div>
 </div>
 </body>
 </html>

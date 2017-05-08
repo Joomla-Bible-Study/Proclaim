@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  */
@@ -24,7 +24,7 @@ class JBSMThumbnail
 	 * Creates a thumbnail for an uploaded image
 	 *
 	 * @param   string  $file  File name
-	 * @param   array   $path  Path to file
+	 * @param   string  $path  Path to file
 	 * @param   int     $size  Size of image with default of 100
 	 *
 	 * @return null
@@ -50,6 +50,8 @@ class JBSMThumbnail
 		$image     = new JImage($original);
 		$thumbnail = $image->resize($size, $size, true);
 		$thumbnail->toFile($thumb, IMAGETYPE_JPEG);
+
+		return;
 	}
 
 	/**
@@ -78,6 +80,8 @@ class JBSMThumbnail
 		$image     = new JImage($path);
 		$thumbnail = $image->resize($new_size, $new_size);
 		$thumbnail->toFile(dirname($path) . '/thumb_' . $filename, IMAGETYPE_PNG);
+
+		return;
 	}
 
 	/**
@@ -86,7 +90,7 @@ class JBSMThumbnail
 	 * @param   string  $path  Path to file
 	 * @param   string  $file  file to check
 	 *
-	 * @return null
+	 * @return bool
 	 *
 	 * @since 9.0
 	 */

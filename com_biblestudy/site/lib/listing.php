@@ -3,7 +3,7 @@
  * Part of Joomla BibleStudy Package
  *
  * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.joomlabiblestudy.org
  * */
@@ -209,7 +209,7 @@ class JBSMListing
 			$listparams[] = $this->getListParamsArray($extra . 'thumbnail');
 		}
 
-		if ($params->get($extra . 'teacherimagerrow') > 0)
+		if ($params->get($extra . 'teacherimagerow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'teacherimage');
 		}
@@ -715,7 +715,7 @@ class JBSMListing
 
 		if ($header == 1)
 		{
-			$headerstyle = "style=visibility:hidden;";
+			$headerstyle = "style=\"display: none;\"";
 		}
 
 		$extra = '';
@@ -753,34 +753,77 @@ class JBSMListing
 			switch ($rowspanitem)
 			{
 				case 1:
-					(isset($item->thumb) ? $span = '<img src="' . JUri::base() . $item->thumb . '" class="' . $params->get('rowspanitemimage') .
-						'" alt="' . JText::_('JBS_CMN_TEACHER') . '">' : $span = '');
-
-					if (is_null($span))
+					if (isset($item->thumb) && !empty($item->thumb))
 					{
-						(isset($item->teacher_thumbnail) ? $span = '<img src="' . JUri::base() . $item->teacher_thumbnail . '" class="' .
-							$params->get('rowspanitemimage') . '" alt="' . JText::_('JBS_CMN_TEACHER') . '">' : $span = '');
+						$span = $this->useJImage($item->thumb, $item->teachername, '', '', '', $params->get('rowspanitemimage'));
+					}
+					else
+					{
+						$span = null;
+					}
+
+					if (is_null($span) && !empty($item->teacher_thumbnail))
+					{
+						if (isset($item->teacher_thumbnail))
+						{
+							$span = $this->useJImage($item->teacher_thumbnail, $item->teachername, '', '', '', $params->get('rowspanitemimage'));
+						}
+						else
+						{
+							$span = '';
+						}
+					}
+					else
+					{
+						$span = '';
 					}
 					break;
 				case 2:
-					(isset($item->thumbm) ? $span = '<img src="' . JUri::base() . $item->thumbm . '" class="' . $params->get('rowspanitemimage') .
-						'" alt="' . JText::_('JBS_CMN_THUMBNAIL') . '">' : $span = '');
+					if (isset($item->thumbm) && !empty($item->thumbm))
+					{
+						$span = $this->useJImage($item->thumb, JText::_('JBS_CMN_THUMBNAIL'), '', '', '', $params->get('rowspanitemimage'));
+					}
+					else
+					{
+						$span = '';
+					}
 					break;
 				case 3:
-					(isset($item->series_thumbnail) ? $span = '<img src="' . JUri::base() . $item->series_thumbnail . '" class="' .
-						$params->get('rowspanitemimage') . '" alt="' . JText::_('JBS_CMN_SERIES') . '">' : $span = '');
+					if (isset($item->series_thumbnail) && !empty($item->series_thumbnail))
+					{
+						$span = $this->useJImage($item->series_thumbnail, JText::_('JBS_CMN_SERIES'), '', '', '', $params->get('rowspanitemimage'));
+					}
+					else
+					{
+						$span = '';
+					}
 					break;
 				case 4:
-					(isset($item->teacher_image) ? $span = '<img src="' . JUri::base() . $item->teacher_image . '" class="' .
-						$params->get('rowspanitemimage') . '" alt="' .
-						JText::_('JBS_CMN_TEACHER') . '">' : $span = '');
+					if (isset($item->teacher_image) && !empty($item->teacher_image))
+					{
+						$span = $this->useJImage($item->teacher_image, $item->teachername, '', '', '', $params->get('rowspanitemimage'));
+					}
+					else
+					{
+						$span = '';
+					}
 					break;
 			}
 		}
 
 		$rowspanitemspan = $params->get($extra . 'rowspanitemspan');
 		$rowspanbalance  = 12 - $rowspanitemspan;
-		$frow            = '<div class="row-fluid" style="background-color:' . $oddeven . '; padding:5px;" about="' . $type . '">';
+
+		if (!empty($oddeven))
+		{
+			$background = "background-color: " . $oddeven . ";";
+		}
+		else
+		{
+			$background = "";
+		}
+
+		$frow            = '<div class="row-fluid" style="' . $background . ' padding:5px;" about="' . $type . '">';
 
 		$row1count  = 0;
 		$row2count  = 0;
@@ -1064,7 +1107,7 @@ class JBSMListing
 
 			case $extra . 'teacherallinone':
 				($item->email ? $data = '<a href="mailto:' . $item->email . '">
-				<span class="fa fa-globe" style="font-size:20px;" title="Website"></span></a>' : $data = '');
+				<span class="fa fa-envelope-o" style="font-size:20px;" title="Website"></span></a>' : $data = '');
 
 				if ($item->website)
 				{
@@ -1444,9 +1487,9 @@ class JBSMListing
 				{
 					$data = JText::_('JBS_CMN_TEACHER');
 				}
-				elseif (isset($item->teachertitle) && isset($item->teachername))
+				elseif (isset($item->title) && isset($item->teachername))
 				{
-					$data = $item->teachertitle . ' ' . $item->teachername;
+					$data = $item->title . ' ' . $item->teachername;
 				}
 				else
 				{
@@ -1507,8 +1550,14 @@ class JBSMListing
 				}
 				else
 				{
-					(isset($item->teacher_image) ? $data = '<img src="' . JUri::base() . $item->teacher_image . '" alt="' . JText::_('JBS_CMN_THUMBNAIL') .
-						'" />' : $data = '');
+					if (isset($item->teacher_image) && !empty($item->teacher_image))
+					{
+						$data = $this->useJImage($item->teacher_image, JText::_('JBS_CMN_THUMBNAIL'));
+					}
+					else
+					{
+						$data = '';
+					}
 				}
 				break;
 			case $extra . 'description':
@@ -1866,7 +1915,7 @@ class JBSMListing
 			case 'series_thumbnail':
 				if ($row->series_thumbnail)
 				{
-					$element = '<img src="' . JUri::base() . $row->series_thumbnail . '" alt="' . $row->series_text . '" />';
+					$element = $this->useJImage($row->series_thumbnail, $row->series_text);
 				}
 				else
 				{
@@ -1886,7 +1935,7 @@ class JBSMListing
 			case 'teacherimage':
 				if (isset($row->teacher_thumbnail))
 				{
-					$element = '<img src="' . JUri::base() . $row->teacher_thumbnail . '" alt="' . $row->teachername . '" />';
+					$element = $this->useJImage($row->teacher_thumbnail, $row->teachername);
 				}
 				else
 				{
@@ -1918,7 +1967,7 @@ class JBSMListing
 				break;
 			case 'thumbnail':
 				// Assume study thumbnail
-				$element = '<img src="' . JUri::base() . $row->thumbnailm . '" alt="' . $row->studytitle . '" />';
+				$element = $this->useJImage($row->thumbnailm, $row->studytitle);
 				break;
 			case 'studytitle':
 				(isset($row->studytitle) ? $element = $row->studytitle : $element = '');
@@ -2306,46 +2355,60 @@ class JBSMListing
 
 		if ($customDate == '')
 		{
-			switch ($params->get('date_format'))
+			try
 			{
-				case 0:
-					$date = JHtml::_('date', $studydate, "M j, Y", null);
-					break;
-				case 1:
-					$date = JHtml::_('date', $studydate, "M J", null);
-					break;
-				case 2:
-					$date = JHtml::_('date', $studydate, "n/j/Y", null);
-					break;
-				case 3:
-					$date = JHtml::_('date', $studydate, "n/j", null);
-					break;
-				case 4:
-					$date = JHtml::_('date', $studydate, "l, F j, Y", null);
-					break;
-				case 5:
-					$date = JHtml::_('date', $studydate, "F j, Y", null);
-					break;
-				case 6:
-					$date = JHtml::_('date', $studydate, "j F Y", null);
-					break;
-				case 7:
-					$date = date("j/n/Y", strtotime($studydate));
-					break;
-				case 8:
-					$date = JHtml::_('date', $studydate, JText::_('DATE_FORMAT_LC'), null);
-					break;
-				case 9:
-					$date = JHtml::_('date', $studydate, "Y/M/D", null);
-					break;
-				default:
-					$date = JHtml::_('date', $studydate, "n/j", null);
-					break;
+				switch ($params->get('date_format'))
+				{
+					case 0:
+						$date = JHtml::_('date', $studydate, "M j, Y", null);
+						break;
+					case 1:
+						$date = JHtml::_('date', $studydate, "M J", null);
+						break;
+					case 2:
+						$date = JHtml::_('date', $studydate, "n/j/Y", null);
+						break;
+					case 3:
+						$date = JHtml::_('date', $studydate, "n/j", null);
+						break;
+					case 4:
+						$date = JHtml::_('date', $studydate, "l, F j, Y", null);
+						break;
+					case 5:
+						$date = JHtml::_('date', $studydate, "F j, Y", null);
+						break;
+					case 6:
+						$date = JHtml::_('date', $studydate, "j F Y", null);
+						break;
+					case 7:
+						$date = date("j/n/Y", strtotime($studydate));
+						break;
+					case 8:
+						$date = JHtml::_('date', $studydate, JText::_('DATE_FORMAT_LC'), null);
+						break;
+					case 9:
+						$date = JHtml::_('date', $studydate, "Y/M/D", null);
+						break;
+					default:
+						$date = JHtml::_('date', $studydate, "n/j", null);
+						break;
+				}
+			}
+			catch ( Exception $e )
+			{
+				return $studydate;
 			}
 		}
 		else
 		{
-			$date = JHtml::_('date', $studydate, $customDate);
+			try
+			{
+				$date = JHtml::_('date', $studydate, $customDate);
+			}
+			catch ( Exception $e)
+			{
+				return $studydate;
+			}
 		}
 
 		return $date;
@@ -2354,28 +2417,58 @@ class JBSMListing
 	/**
 	 * Use JImage Class
 	 *
-	 * @param   String  $path  Path to File
-	 * @param   String  $alt   Alternate Text
+	 * @param   String  $path    Path to File
+	 * @param   String  $alt     Alternate Text
+	 * @param   String  $id      CSS ID for the image
+	 * @param   int     $width   Width
+	 * @param   int     $height  Height
+	 * @param   string  $class   CSS Class
 	 *
 	 * @return bool|stdClass
 	 *
 	 * @since 9.0.0
 	 */
-	public function useJImage($path, $alt = null)
+	public function useJImage($path, $alt = null, $id = null, $width = null, $height = null, $class = null)
 	{
-		$image = new JImage;
+		$image  = new JImage;
+		$return = false;
 
 		try
 		{
-			$return = $image->getImageFileProperties($path);
+			$image = $image->getImageFileProperties($path);
 		}
 		catch (Exception $e)
 		{
 			$return = false;
 		}
-		$imagereturn = '<img src="' . JUri::base() . $path . '" alt="' . $alt . '" ' . $return->attributes . ' />';
 
-		return $imagereturn;
+		if ($id)
+		{
+			$id = ' id="' . $id . '" ';
+		}
+
+		if ($width)
+		{
+			$width = ' width="' . $width . '" ';
+		}
+
+		if ($height)
+		{
+			$height = ' height="' . $height . '" ';
+		}
+
+		if ($class)
+		{
+			$class = ' class="' . $class . '" ';
+		}
+
+		if (!empty($path) && isset($image->attributes))
+		{
+			$return = '<img src="' . JUri::base() . $path . '"' . $id . $width . $height
+				. 'alt="' . $alt . '" ' . $class . $image->attributes . ' />';
+		}
+
+		return $return;
 	}
 
 	/**
@@ -2587,9 +2680,7 @@ class JBSMListing
 		$label  = str_replace('{{topics}}', $row->topic_text, $label);
 		$label  = str_replace('{{url}}', JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $row->id . '&t=' . $template->id), $label);
 		$label  = str_replace('{{mediatime}}', $this->getDuration($params, $row), $label);
-		$label  = str_replace('{{thumbnail}}', '<img src="' . $image->path . '" width="' . $image->width . '" height="'
-			. $image->height . '" id="bsms_studyThumbnail' . $row->id . '" alt="" />', $label
-		);
+		$label  = str_replace('{{thumbnail}}', $this->useJImage($image->path, "", "bsms_studyThumbnail" . $row->id, $image->width, $image->height), $label);
 		$label  = str_replace('{{seriestext}}', $row->series_text, $label);
 		$label  = str_replace('{{messagetype}}', $row->message_type, $label);
 		$label  = str_replace('{{bookname}}', $row->bookname, $label);
@@ -2632,9 +2723,7 @@ class JBSMListing
 		$label  = str_replace('{{scripture}}', $this->getScripture($params, $row, 0, 1), $label);
 		$label  = str_replace('{{topics}}', $row->topic_text, $label);
 		$label  = str_replace('{{mediatime}}', $this->getDuration($params, $row), $label);
-		$label  = str_replace('{{thumbnail}}', '<img src="' . $image->path . '" width="' . $image->width . '" height="'
-			. $image->height . '" id="bsms_studyThumbnail' . $row->id . '" alt=""/>', $label
-		);
+		$label  = str_replace('{{thumbnail}}', $this->useJImage($image->path, "", "bsms_studyThumbnail" . $row->id, $image->width, $image->height), $label);
 		$label  = str_replace('{{seriestext}}', $row->seriestext, $label);
 		$label  = str_replace('{{messagetype}}', $row->message_type, $label);
 		$label  = str_replace('{{bookname}}', $row->bname, $label);
