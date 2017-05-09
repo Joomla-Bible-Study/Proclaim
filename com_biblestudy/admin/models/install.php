@@ -794,7 +794,7 @@ class BibleStudyModelInstall extends JModelLegacy
 
 			while (!empty($this->versionStack) && $this->haveEnoughTime())
 			{
-				$version           = array_pop($this->versionStack);
+				$version       = array_shift($this->versionStack);
 				$this->running = $version;
 				$this->doneSteps++;
 				$run = $this->allUpdate($version);
