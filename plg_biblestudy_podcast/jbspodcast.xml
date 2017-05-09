@@ -12,21 +12,11 @@
 
     <!-- Runs on install/uninstall/update; New in 1.7 -->
     <scriptfile>script.php</scriptfile>
-
-    <install> <!-- Runs on install -->
-        <sql>
-        </sql>
-    </install>
     <uninstall> <!-- Runs on uninstall -->
         <sql>
             <file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
         </sql>
     </uninstall>
-    <update> <!-- Runs on update; New in 1.6 -->
-        <schemas>
-            <schemapath type="mysql">sql/updates/mysql</schemapath>
-        </schemas>
-    </update>
     <files>
         <filename plugin="jbspodcast">jbspodcast.php</filename>
         <filename>script.php</filename>
