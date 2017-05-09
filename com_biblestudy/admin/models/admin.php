@@ -148,7 +148,6 @@ class BiblestudyModelAdmin extends JModelAdmin
 			return false;
 		}
 
-		var_dump('tst');
 		$changeSet->fix();
 		$this->fixSchemaVersion($changeSet);
 		$this->fixUpdateVersion();
