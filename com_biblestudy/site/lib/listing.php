@@ -209,7 +209,7 @@ class JBSMListing
 			$listparams[] = $this->getListParamsArray($extra . 'thumbnail');
 		}
 
-		if ($params->get($extra . 'teacherimagerow') > 0)
+		if ($params->get($extra . 'teacherimagerow') > 0 || $params->get($extra . 'teacherimagerrow') > 0)
 		{
 			$listparams[] = $this->getListParamsArray($extra . 'teacherimage');
 		}
@@ -599,7 +599,23 @@ class JBSMListing
 	public function getListParamsArray($paramtext)
 	{
 		$l             = new stdClass;
-		$l->row        = $this->params->get($paramtext . 'row');
+
+		if ($paramtext == 'tdteacherimage')
+		{
+			if ($this->params->get($paramtext . 'rrow'))
+			{
+				$l->row = $this->params->get($paramtext . 'rrow');
+			}
+			else
+			{
+				$l->row = $this->params->get($paramtext . 'row');
+			}
+		}
+		else
+		{
+			$l->row = $this->params->get($paramtext . 'row');
+		}
+
 		$l->col        = $this->params->get($paramtext . 'col');
 		$l->colspan    = $this->params->get($paramtext . 'colspan');
 		$l->element    = $this->params->get($paramtext . 'element');
@@ -1319,7 +1335,6 @@ class JBSMListing
 						}
 					}
 				}
-
 				break;
 
 			case $extra . 'teacherphone':
@@ -1684,26 +1699,33 @@ class JBSMListing
 				}
 				break;
 			case $extra . 'teacherimage':
-				if ($type == 'seriesdisplays' || $type == 'seriesdisplay' || $type == 'teachers')
+				if ($header == 1)
 				{
-					if (isset($item->teacher_thumbnail) && !empty($item->teacher_thumbnail))
-					{
-						$data = $this->useJImage($item->teacher_thumbnail, JText::_('JBS_CMN_THUMBNAIL'));
-					}
-					else
-					{
-						$data = '';
-					}
+					$data = JText::_('JBS_TCH_TEACHER_IMAGE');
 				}
 				else
 				{
-					if ($item->thumb)
+					if ($type == 'seriesdisplays' || $type == 'seriesdisplay' || $type == 'teachers' || $type = 'teacher')
 					{
-						$data = $this->useJImage($item->thumb, JText::_('JBS_CMN_THUMBNAIL'));
+						if (isset($item->teacher_thumbnail) && !empty($item->teacher_thumbnail))
+						{
+							$data = $this->useJImage($item->teacher_thumbnail, JText::_('JBS_CMN_THUMBNAIL'));
+						}
+						else
+						{
+							$data = '';
+						}
 					}
 					else
 					{
-						$data = '';
+						if ($item->thumb)
+						{
+							$data = $this->useJImage($item->thumb, JText::_('JBS_CMN_THUMBNAIL'));
+						}
+						else
+						{
+							$data = '';
+						}
 					}
 				}
 				break;

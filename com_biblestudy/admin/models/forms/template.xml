@@ -497,7 +497,7 @@
 			<field name="teachercustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
 			<field name="teacherlinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 			<field type="spacer" name="myspacer6" hr="true"/>
-			<field name="teacherimagerrow" type="rowoptions" size="1" default="0" label="JBS_CMN_TEACHER_IMAGE" description="JBS_TPL_ROW_DESC"/>
+			<field name="teacherimagerow" type="rowoptions" size="1" default="0" label="JBS_CMN_TEACHER_IMAGE" description="JBS_TPL_ROW_DESC"/>
 			<field name="teacherimagecol" type="spanoptions" default="4" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
 			<field name="teacherimagecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
 			<field name="teacherimageelement" type="elementoptions" default="0" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
@@ -941,7 +941,7 @@
 			<field name="tdteachercustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
 
 			<field type="spacer" name="myspacer41" hr="true"/>
-			<field name="tdteacherimagerrow" type="rowoptions" size="1" default="0" label="JBS_CMN_TEACHER_IMAGE" description="JBS_TPL_ROW_DESC"/>
+			<field name="tdteacherimagerow" type="rowoptions" size="1" default="0" label="JBS_CMN_TEACHER_IMAGE" description="JBS_TPL_ROW_DESC"/>
 			<field name="tdteacherimagecol" type="spanoptions" default="4" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
 			<field name="tdteacherimagecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
 			<field name="tdteacherimageelement" type="elementoptions" default="0" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
@@ -1458,7 +1458,7 @@
 			<field name="dteachercustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
 			<field name="dteacherlinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 			<field type="spacer" name="myspacer6" hr="true"/>
-			<field name="dteacherimagerrow" type="rowoptions" size="1" default="0" label="JBS_CMN_TEACHER_IMAGE" description="JBS_TPL_ROW_DESC"/>
+			<field name="dteacherimagerow" type="rowoptions" size="1" default="0" label="JBS_CMN_TEACHER_IMAGE" description="JBS_TPL_ROW_DESC"/>
 			<field name="dteacherimagecol" type="spanoptions" default="4" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
 			<field name="dteacherimagecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
 			<field name="dteacherimageelement" type="elementoptions" default="0" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
