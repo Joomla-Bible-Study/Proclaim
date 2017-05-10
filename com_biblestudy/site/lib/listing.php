@@ -1686,7 +1686,7 @@ class JBSMListing
 			case $extra . 'teacherimage':
 				if ($type == 'seriesdisplays' || $type == 'seriesdisplay' || $type == 'teachers')
 				{
-					if ($item->teacher_thumbnail)
+					if (isset($item->teacher_thumbnail) && !empty($item->teacher_thumbnail))
 					{
 						$data = $this->useJImage($item->teacher_thumbnail, JText::_('JBS_CMN_THUMBNAIL'));
 					}
