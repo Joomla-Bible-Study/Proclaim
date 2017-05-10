@@ -12857,7 +12857,7 @@ asset does not exist it will be created.</long-description>
     </class>
     <source>eJztVVtv2jAUfia/4qibxEUrCd0D2jptoySt0kLoSpDaJ3BiE7wmcWQ7bdHU/74TA4KpTO3Uhz1skRDGx9/F5zsin74Ui8KyWy0LWnBJpAYxh3MhspTACY9SNtYlXWIlviUJw0PVua/F6ifgsz3U7tGM56Yei2IpebLQAEeO04VD/Op0odFv/sINK/KQkQx6aQoGokAyxeQdo4Yq5THLlZFaaF18tO37+/t2kpdtIRO7EkrZXNtJkbYXOkvhLJjYZ5eDNTa/hdVTYdUa/N1YiCoHyhhHpup8y7Yom/Oc0UZ9eu5de/16E4QEytmxtemRj2YkmlQiYxArBbGgDLSAOX+AgiQ8J5qLHAopkD8DklMgFD+gSQJzpNMLBJJCxwtSNTsWWcZyrZ70dm9nFc9j04xu22kfWZXnOCVoY8gTaZS7zpH1w6pVdmuImBSUaAb98diIr2BYMEUUk9h7gHOXaBIRxVzJ75gEeEsj2GRV1SCqRKipbuGS6VLmEAmRMpJv91cuP6CWU23YVq0oI0wS5mUem/aURQMlmlYNrdZwdfhZMf2tZHLZOOgNQu8Kwt7JwIPZm+k0UpmazkVKmVQz6Lku+IHrXcOM04ep0ni9GTRgZiTUgtEZNI+tPyIhccyUMiybZfOdNRy5/ukNbin0NuXI6wdhAzoONGESjP2zwHMhGIUQTAYDcL3T3mQQQt2pQ380HHoBrk8vqtGoEkcLhkfhHGCu7foO/1ryhexb4M6NQz+4Mfj3CH+K6uygnrtIbxKOpn7Qv/KqOxwfYDM3GbEHFpeaNXa2noktY5ST14W2n+JvRPa8wf5oMBkGMBMS54znyUa/szcV518ZAp4xvSzYK+fgdyz7RuFFHK9I6/9fwt5pWL8QtCzxlVl7tB6tn74FczU=</source>
   </file>
-  <file path="com_biblestudy/admin/api.php" generated-path="com_biblestudy.admin.api.html" hash="f4afaefcec8bc113b7e202ce54842d74" package="BibleStudy.Admin">
+  <file path="com_biblestudy/admin/api.php" generated-path="com_biblestudy.admin.api.html" hash="f5028b77d68c7602a2c6fdac0bf93017" package="BibleStudy.Admin">
     <docblock line="0">
       <description>Core Admin BibleStudy file</description>
       <long-description></long-description>
@@ -12879,7 +12879,7 @@ asset does not exist it will be created.</long-description>
     <constant namespace="" line="22" package="BibleStudy.Admin">
       <name>BIBLESTUDY_VERSION</name>
       <full_name>\BIBLESTUDY_VERSION</full_name>
-      <value>'9.0.13-2017-04-22'</value>
+      <value>'9.0.15'</value>
       <docblock line="22">
         <description></description>
         <long-description></long-description>
@@ -13226,7 +13226,7 @@ asset does not exist it will be created.</long-description>
         <tag name="package" line="116" description="BibleStudy.Admin"/>
       </docblock>
     </constant>
-    <source>eJytWG1zm0YQ/mx+xX3oDJInQlISN1OldosElvGglwqUqT9pEJzQJcdL4YijNv3v3TvQmwNISqoZGyR2n2d3b29vl19/i9ex1L6+ltA1GkQJRqoXkBD1yZJii2XeBq0IxfCUC/weO+4nx8cIPnsJRaiI524UbxLirxlCrzudd6gFl+471Bg00WMUBdTJ1VCObGMnQCqlSKikKMEpTj5jT0BR4uIwFVRrxuJeu/38/Kz4YaZEid/mRBSvWNuPqbJmAUXD8bw9nJqFbvgJ5R+umxbKH4UJS25BKgwHJC5/3ZbabTSOkEYS7DKkui5OU8nDKxJiryEvHvU/9YHcRFGCPILfSxJZocbu8WPfGi3MiarpmtxsSv9IVwlmWRK+l/6VOPDICTOH0g3CocOddyMPoziJILAk9NFyg1LMGL/97NAMIxahbkFegE9nk3vD1GfyK9RpvhegH3CSkihEJFxFSeAwuN/p9I2+qVv2XHtafNBnljEZg6L8i9JRum9afEFanbet169lgKpWWcynmmrrnJdrgx07Thkp6FuFwjANr5yMstyXtIxgMBlNJ2N9bC/G6kiAu1Gw2C9LhV2mOh7O1aG+0PR7dW7aXBGHPiXpukLD1kdTE3w41PBy8+TC2ntIbpRuUoYDFDtsfcLgmW5OVfuhsDmOQhyylIdDM2b6wJ7MnhaWPlVnKtweB+nY6YJ9FkXsJPtsMrEXBesjv4pfyj3eyS5UbWSMdxrim2HZwrBy1ZGuGeq3PJW+yQH2iFPt+3mLKniMESyrBbSl5lQzkABqUbpdSoswDCWsWJXqeB65aBm2ftnyFSlQ445p9I99qfeCkmVdcLZJfAkk5FNMHYbPwT3YHFUi5wToJVwN8wNEEErGJQ6tMY2h+NT5M5pounkRaAB1mNZi2ir/flHkeYXfpWR+lp6Zk7stW72f/+9MFaDl+XqC8FTW5siVK30K/Yz1LmwvDoXvcMAJ/Qzqx2kOY2zZqmleTkHClMHBfwZDSQE8i2BXAOvxq/bGKfzTOyTHr9onp/Bf7hYvCtNzNgn81ybjy/kcwSD4SvB5q/P9i33QVn4J6NanUeTlLa94Ule8KjZ+7eJkPHq1Ei9OYGESCUmQBehz0c0l+K8M+t6AtzKljQHEe/ow5T3PjfJW6VSkg8izJ+sPMxfsbulsEmDg4MeRV6Zn6YPJWLMWvFxM5rzFffNzp1POcSD7pKtCtnvDxbddseZASjkwNeTKpf5ofbDVsozxEGqlOR/xPOp2bt4WEGbkeIh33WhAHZgCHvkPOOn1PJK6EQQt78lLEgTqKLjOkgzL2ytgnq+/q8Y/hFLUXNBdOTQ9BWLzHVh29IsdfSZIrT+X2VMLJXb9Dzp2WLBKoR5gmOz1oFIYoUszD0+hHDVqXeNbrc1n0PZ+qviCU+juM4YTxO1JCJin7O1MsE+g6y8cfhCnnRCvXlDBknAZBUZ2kOMWF3zGCsXrhOc9SVEIM8UqykIPZkOUxtglK+Ki7XEnxvlXiPIsL6an42c96afd91v0eO+4LEo2vZ6PmVn83gDanVDrjmM1Xrb7FZEXM1tr2N/b/91AYUbpURT2fZaHl5nvw0QtBnUe4v3bijzYkCpcptFEt7e3SO7K6OvXY2fVOKbEFYN1o9m6I2GcsdYdPDBC1pA/LtPAW/o8c6AgbkHE8H84uWt6fz7k9aXJXwbAWYqrJDrN7euCIu8QW2MECeMjl9chRfpIwL2Ec4vXGAqNfP5X5L8vchauPmSVdOUkibOB6xXMAl/Ygi+sjG7vXk5lCqRmlKQio6Sr5ivpKoeCExDuXy6FVARaVMe1k6IlxvwNBGHEoeTvg/p++Eok9/4/hiyBbA==</source>
+    <source>eJytWG1zm0YQ/mx+xX3oDJInRlIbN1OldosEltGglwqUqT9pEJzQJcdL4bCjNv3v3TvQmwNISqoZGyR2n2d3b29vl19/i9ex1Lq+ltA16kcJRqoXkBD1yJJii2XeBq0IxfCUC/weO+4nx8cIPnsJRaiI524UbxLirxlCP7bb79ANXDrvUKPfRMMoCqiTq6Ec2cZOgFRKkVBJUYJTnDxjT0BR4uIwFVRrxuJuq/Xy8qL4YaZEid/iRBSvWMuPqbJmAUWD8bw1mJqFbvgJ5R+umxbKH4UJS25BKgwHJC5/3ZJaLTSOkEYS7DKkui5OU8nDKxJiryEvhvqfel9uoihBHsHvJYmsUGP3eNizRgtzomq6Jjeb0j/SVYJZloTvpX8lDjxywsyhdINw6HDn3cjDKE4iCCwJfbTcoBQzxm+fHZphxCLUKcgL8Ols8mCY+kx+g9rN9wL0A05SEoWIhKsoCRwG9zudntEzdcuea0+LD/rMMiZjUJR/UdpK51YG/Wq5xXyqqbbOybgKkO+IZKSgrxUKazS8cjLKcgfSMoL+ZDSdjPWxvRirIwHuRsFivxYVdpnqeDBXB/pC0x/UuWlzRRz6lKTrCg1bH01N8OFQw8vNkwtrHyCjUbpJGQ5Q7LD1CYNnujlV7cfC5jgKcchSHg7NmOl9ezJ7Wlj6VJ2pcHscpGOnC/ZZFLGT7LPJxF4UrEN+Fb+Ue7yTXajayBjvNMQ3w7KFYeWqI10z1K95Kn2TA+wRp9r38xZV8BgjWFYLaEvNqWYgARSgdLuUFmEY6laxKtXxPHLRMmz9suUrUqDGHdPoHftS7wUly7rgbJP4EkjIp5g6DJ+De7A5qkTOCdBruBrmR4gglIxLHFpjGkPxqfNnNNF08yLQAIovrcW0Vf79osjzsr5LyfwAPTMnd1u2ej//35kqQMvz9QThqazNkStX+hT6Getd2F4cCt/ggBP6GdSP0xzG2LJV07ycgoQpg9P+DIaSAngWwa4A1uNX7Y1T+Kd3SI5ftU9O4b/eLV4UpudsEvivTcaX8zmCQfCV4PNW59sX+6CX/BzQrU+jyMv7XPGkrnhVbPzaxcl49GolXp3AwiQSkiAL0HPRzSX4rwya3YC3MqWNAcR7+jjlPc+t8lZpV6SDyLMn6w8zF+xs6WwSYODgx5FXpmfp/clYsxa8XEzmvK/96ed2u5zjQPZJV4Vs55aLb1thzYGUcmBUyJVL/dF6YKtlGeMB1EpzPuJ51Gnfvi0gzMjxEG+1UZ860PoP+Q846XY9kroRBC1vxEsSBOoouM6SDMvbK2Cer7+rxt+FUtRc0F05ND0FYvMdWHb0ix19JkitP5fZUwsldv13OnZYsEqhHmGC7HahUhihSzMPT6EcNWpd41utxQfP1n6q+IxT6O4zhhPE7UkImKfs7UywT6DrLxx+FKedEK9eUMGScBkF5nSQ4xYXfMYKxeuE5z1JUQgzxSrKQg8GQpTG2CUr4qLtcSdm+DeI8iwvpqfjZ13ph933OzR8cFwWJZtu18fMLH5vAO1O6OaeYzVet/sVkRcz282gt7f/m4HCjNKjKOz7LA8vM9+HMVpM5zzE+1cUebAhVbhMo4nu7u6Q3JHRly/HzqpxTIkrpulG8+aehHHGbu7hgRGyhvxxmQbe0ueZAwVxCyIm/sNxXdN78wGvL03+BgDOUlwl0W5u3xEUeYfYGiNIGB+5vA4p0kcC7iWcW7y7UGjk878i/32Rs3D1IaukKydJnA1cr2AW+MwWfGFldHf/eipTIDWjJBUZJV0130hXORScgHD/eimkItCiOq6dFC0x5q8dCCMOJX8f1PfD9yC59/8Bhxd/VQ==</source>
   </file>
   <file path="com_biblestudy/admin/views/assets/view.html.php" generated-path="com_biblestudy.admin.views.assets.view.html.html" hash="af6b171a9cc5109e7945fdf1f68de477" package="BibleStudy.Admin">
     <docblock line="0">
@@ -26655,7 +26655,7 @@ ordering requirements.</long-description>
     </class>
     <source>eJxlkU9P3DAQxc/xp5hDpWRXJV56WWnpH5YFIVYIIdFKvVVZe5IYHNuyJ6Sriu9eO9myRfgS2e/Nm99MPn9zrWN8Pmcwh/vKE9gattZ2uoILtdP4QL3cR0U8VQ1GU/Kdu+kK8RxN5Vp2yoy6sG7vVdMSwKfFYgkn8XO6hGIze5MNU/h3rDpYaw1jSQCPAf0zyjFKK4EmjK1aIrfifBiGsjF9aX3DUyONNfHG6bKlTsP13Q9+fX97qDVPMJ1UGw7FjyPCLhGEETwmJf+cM87hzsKl8igI1kJgCExirQzKIv+1vfp5tclnYD1IhWfs39421pC3WqMHoasQoI6OOJVo0b9b2X8Le1CEoxiUEeOIy3JRLlgimYIuXiGPPQ7BgL8JjQywPUq32FRiz/6wLJFlMfpSBaerPVCLgFJRQuuSMqrnHqn3Bp6tksfHiSaipCtnmet38S9A3RtByka3wqGYsSy2yT4o43qCL2BwgO1Nupy9Pp98DUhFnvz5R8hpAs9n7xyR0PaUPHHZVa8peaLJVR4NrVZymqJIlS/shf0FWC3Uaw==</source>
   </file>
-  <file path="com_biblestudy/admin/models/admin.php" generated-path="com_biblestudy.admin.models.admin.html" hash="1a6f89d04e5414c0bd64c90bd9471895" package="BibleStudy.Admin">
+  <file path="com_biblestudy/admin/models/admin.php" generated-path="com_biblestudy.admin.models.admin.html" hash="bb831401729aa534c5fad4a7983c84d0" package="BibleStudy.Admin">
     <docblock line="0">
       <description>Part of Joomla BibleStudy Package</description>
       <long-description></long-description>
@@ -26826,31 +26826,31 @@ ordering requirements.</long-description>
           <tag name="since" line="144" description="7.0"/>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="184" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="183" package="BibleStudy.Admin">
         <name>getItems</name>
         <full_name>\BiblestudyModelAdmin::getItems()</full_name>
-        <docblock line="184">
+        <docblock line="183">
           <description>Gets the ChangeSet object</description>
           <long-description></long-description>
-          <tag name="return" line="184" description="JSchema  ChangeSet" type="string">
+          <tag name="return" line="183" description="JSchema  ChangeSet" type="string">
             <type>string</type>
           </tag>
-          <tag name="since" line="184" description="7.0"/>
+          <tag name="since" line="183" description="7.0"/>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="216" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="215" package="BibleStudy.Admin">
         <name>fixSchemaVersion</name>
         <full_name>\BiblestudyModelAdmin::fixSchemaVersion()</full_name>
-        <docblock line="216">
+        <docblock line="215">
           <description>Fix schema version if wrong.</description>
           <long-description></long-description>
-          <tag name="param" line="216" description="&lt;p&gt;Schema change set.&lt;/p&gt;" type="\JSchemaChangeSet" variable="$changeSet">
+          <tag name="param" line="215" description="&lt;p&gt;Schema change set.&lt;/p&gt;" type="\JSchemaChangeSet" variable="$changeSet">
             <type>\JSchemaChangeSet</type>
           </tag>
-          <tag name="return" line="216" description="string schema version if success, false if fail" type="mixed">
+          <tag name="return" line="215" description="string schema version if success, false if fail" type="mixed">
             <type>mixed</type>
           </tag>
-          <tag name="since" line="216" description="7.0"/>
+          <tag name="since" line="215" description="7.0"/>
         </docblock>
         <argument line="0" by_reference="false">
           <name>$changeSet</name>
@@ -26858,172 +26858,172 @@ ordering requirements.</long-description>
           <type>\JSchemaChangeSet</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="261" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="260" package="BibleStudy.Admin">
         <name>getCompVersion</name>
         <full_name>\BiblestudyModelAdmin::getCompVersion()</full_name>
-        <docblock line="261">
+        <docblock line="260">
           <description>To retrieve component version</description>
           <long-description></long-description>
-          <tag name="return" line="261" description="Version of component" type="string">
+          <tag name="return" line="260" description="Version of component" type="string">
             <type>string</type>
           </tag>
-          <tag name="since" line="261" description="1.7.3"/>
+          <tag name="since" line="260" description="1.7.3"/>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="283" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="282" package="BibleStudy.Admin">
         <name>getExtentionId</name>
         <full_name>\BiblestudyModelAdmin::getExtentionId()</full_name>
-        <docblock line="283">
+        <docblock line="282">
           <description>To retrieve component extension_id</description>
           <long-description></long-description>
-          <tag name="return" line="283" description="extension_id" type="string">
+          <tag name="return" line="282" description="extension_id" type="string">
             <type>string</type>
           </tag>
-          <tag name="since" line="283" description="7.1.0"/>
-          <tag name="throws" line="283" description="" type="\Exception">
+          <tag name="since" line="282" description="7.1.0"/>
+          <tag name="throws" line="282" description="" type="\Exception">
             <type>\Exception</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="308" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="307" package="BibleStudy.Admin">
         <name>getSchemaVersion</name>
         <full_name>\BiblestudyModelAdmin::getSchemaVersion()</full_name>
-        <docblock line="308">
+        <docblock line="307">
           <description>Get version from #__schemas table</description>
           <long-description></long-description>
-          <tag name="return" line="308" description="the return value from the query, or null if the query fails" type="mixed">
+          <tag name="return" line="307" description="the return value from the query, or null if the query fails" type="mixed">
             <type>mixed</type>
           </tag>
-          <tag name="since" line="308" description="7.0"/>
-          <tag name="throws" line="308" description="" type="\Exception">
+          <tag name="since" line="307" description="7.0"/>
+          <tag name="throws" line="307" description="" type="\Exception">
             <type>\Exception</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="328" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="327" package="BibleStudy.Admin">
         <name>fixUpdateVersion</name>
         <full_name>\BiblestudyModelAdmin::fixUpdateVersion()</full_name>
-        <docblock line="328">
+        <docblock line="327">
           <description>Fix Joomla version in #__extensions table if wrong (doesn't equal JVersion short version)</description>
           <long-description></long-description>
-          <tag name="return" line="328" description="string update version if success, false if fail" type="mixed">
+          <tag name="return" line="327" description="string update version if success, false if fail" type="mixed">
             <type>mixed</type>
           </tag>
-          <tag name="since" line="328" description="7.0"/>
+          <tag name="since" line="327" description="7.0"/>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="359" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="358" package="BibleStudy.Admin">
         <name>getUpdateJBSMVersion</name>
         <full_name>\BiblestudyModelAdmin::getUpdateJBSMVersion()</full_name>
-        <docblock line="359">
+        <docblock line="358">
           <description>Get current version from #__bsms_update table.</description>
           <long-description></long-description>
-          <tag name="return" line="359" description="version if successful, false if fail." type="mixed">
+          <tag name="return" line="358" description="version if successful, false if fail." type="mixed">
             <type>mixed</type>
           </tag>
-          <tag name="since" line="359" description="9.0.14"/>
+          <tag name="since" line="358" description="9.0.14"/>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="378" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="377" package="BibleStudy.Admin">
         <name>fixUpdateJBSMVersion</name>
         <full_name>\BiblestudyModelAdmin::fixUpdateJBSMVersion()</full_name>
-        <docblock line="378">
+        <docblock line="377">
           <description>Fix Joomla version in #__bsms_updae table if wrong (doesn't equal JVersion short version).</description>
           <long-description></long-description>
-          <tag name="return" line="378" description="string update version if success, false if fail." type="mixed">
+          <tag name="return" line="377" description="string update version if success, false if fail." type="mixed">
             <type>mixed</type>
           </tag>
-          <tag name="since" line="378" description="9.0.14"/>
+          <tag name="since" line="377" description="9.0.14"/>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="421" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="420" package="BibleStudy.Admin">
         <name>fixDefaultTextFilters</name>
         <full_name>\BiblestudyModelAdmin::fixDefaultTextFilters()</full_name>
-        <docblock line="421">
+        <docblock line="420">
           <description>Check if com_biblestudy parameters are blank. If so, populate with com_content text filters.</description>
           <long-description></long-description>
-          <tag name="return" line="421" description="boolean true if params are updated, null otherwise" type="mixed">
+          <tag name="return" line="420" description="boolean true if params are updated, null otherwise" type="mixed">
             <type>mixed</type>
           </tag>
-          <tag name="since" line="421" description="7.0"/>
+          <tag name="since" line="420" description="7.0"/>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="454" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="453" package="BibleStudy.Admin">
         <name>getPagination</name>
         <full_name>\BiblestudyModelAdmin::getPagination()</full_name>
-        <docblock line="454">
+        <docblock line="453">
           <description>Get Pagination state but is hard coded to be true right now.</description>
           <long-description></long-description>
-          <tag name="return" line="454" description="" type="boolean">
+          <tag name="return" line="453" description="" type="boolean">
             <type>boolean</type>
           </tag>
-          <tag name="since" line="454" description="7.0"/>
+          <tag name="since" line="453" description="7.0"/>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="466" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="465" package="BibleStudy.Admin">
         <name>getUpdateVersion</name>
         <full_name>\BiblestudyModelAdmin::getUpdateVersion()</full_name>
-        <docblock line="466">
+        <docblock line="465">
           <description>Get current version from #__extensions table</description>
           <long-description></long-description>
-          <tag name="return" line="466" description="version if successful, false if fail" type="mixed">
+          <tag name="return" line="465" description="version if successful, false if fail" type="mixed">
             <type>mixed</type>
           </tag>
-          <tag name="since" line="466" description="7.0"/>
+          <tag name="since" line="465" description="7.0"/>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="483" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="482" package="BibleStudy.Admin">
         <name>getDefaultTextFilters</name>
         <full_name>\BiblestudyModelAdmin::getDefaultTextFilters()</full_name>
-        <docblock line="483">
+        <docblock line="482">
           <description>Check if com_biblestudy parameters are blank.</description>
           <long-description></long-description>
-          <tag name="return" line="483" description="default text filters (if any)" type="string">
+          <tag name="return" line="482" description="default text filters (if any)" type="string">
             <type>string</type>
           </tag>
-          <tag name="since" line="483" description="7.0"/>
+          <tag name="since" line="482" description="7.0"/>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="499" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="498" package="BibleStudy.Admin">
         <name>getSSorPI</name>
         <full_name>\BiblestudyModelAdmin::getSSorPI()</full_name>
-        <docblock line="499">
+        <docblock line="498">
           <description>Check for SermonSpeaker and PreachIt</description>
           <long-description></long-description>
-          <tag name="return" line="499" description="" type="object">
+          <tag name="return" line="498" description="" type="object">
             <type>object</type>
           </tag>
-          <tag name="since" line="499" description="7.0"/>
+          <tag name="since" line="498" description="7.0"/>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="516" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="515" package="BibleStudy.Admin">
         <name>playerByMediaType</name>
         <full_name>\BiblestudyModelAdmin::playerByMediaType()</full_name>
-        <docblock line="516">
+        <docblock line="515">
           <description>Change Player based off MimeType or Extension of File Name</description>
           <long-description></long-description>
-          <tag name="return" line="516" description="" type="string">
+          <tag name="return" line="515" description="" type="string">
             <type>string</type>
           </tag>
-          <tag name="since" line="516" description="9.0.12"/>
+          <tag name="since" line="515" description="9.0.12"/>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="protected" namespace="" line="628" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="" line="627" package="BibleStudy.Admin">
         <name>populateState</name>
         <full_name>\BiblestudyModelAdmin::populateState()</full_name>
-        <docblock line="628">
+        <docblock line="627">
           <description>Method to auto-populate the model state.</description>
           <long-description>Note. Calling getState in this method will result in recursion.</long-description>
-          <tag name="param" line="628" description="&lt;p&gt;?&lt;/p&gt;" type="string" variable="$ordering">
+          <tag name="param" line="627" description="&lt;p&gt;?&lt;/p&gt;" type="string" variable="$ordering">
             <type>string</type>
           </tag>
-          <tag name="param" line="628" description="&lt;p&gt;?&lt;/p&gt;" type="string" variable="$direction">
+          <tag name="param" line="627" description="&lt;p&gt;?&lt;/p&gt;" type="string" variable="$direction">
             <type>string</type>
           </tag>
-          <tag name="return" line="628" description="" type="void">
+          <tag name="return" line="627" description="" type="void">
             <type>void</type>
           </tag>
-          <tag name="since" line="628" description="1.7.2"/>
+          <tag name="since" line="627" description="1.7.2"/>
         </docblock>
         <argument line="0" by_reference="false">
           <name>$ordering</name>
@@ -27036,19 +27036,19 @@ ordering requirements.</long-description>
           <type>string</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="protected" namespace="" line="647" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="" line="646" package="BibleStudy.Admin">
         <name>prepareTable</name>
         <full_name>\BiblestudyModelAdmin::prepareTable()</full_name>
-        <docblock line="647">
+        <docblock line="646">
           <description>Prepare and sanitise the table data prior to saving.</description>
           <long-description></long-description>
-          <tag name="param" line="647" description="&lt;p&gt;A JTable object.&lt;/p&gt;" type="\TableAdmin" variable="$table">
+          <tag name="param" line="646" description="&lt;p&gt;A JTable object.&lt;/p&gt;" type="\TableAdmin" variable="$table">
             <type>\TableAdmin</type>
           </tag>
-          <tag name="return" line="647" description="" type="void">
+          <tag name="return" line="646" description="" type="void">
             <type>void</type>
           </tag>
-          <tag name="since" line="647" description="1.6"/>
+          <tag name="since" line="646" description="1.6"/>
         </docblock>
         <argument line="0" by_reference="false">
           <name>$table</name>
@@ -27056,34 +27056,34 @@ ordering requirements.</long-description>
           <type>\TableAdmin</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="protected" namespace="" line="663" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="" line="662" package="BibleStudy.Admin">
         <name>loadFormData</name>
         <full_name>\BiblestudyModelAdmin::loadFormData()</full_name>
-        <docblock line="663">
+        <docblock line="662">
           <description>Load Form Date</description>
           <long-description></long-description>
-          <tag name="return" line="663" description="" type="object">
+          <tag name="return" line="662" description="" type="object">
             <type>object</type>
           </tag>
-          <tag name="since" line="663" description="7.0"/>
+          <tag name="since" line="662" description="7.0"/>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="protected" namespace="" line="685" package="BibleStudy.Admin">
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="" line="684" package="BibleStudy.Admin">
         <name>cleanCache</name>
         <full_name>\BiblestudyModelAdmin::cleanCache()</full_name>
-        <docblock line="685">
+        <docblock line="684">
           <description>Custom clean the cache of com_biblestudy and biblestudy modules</description>
           <long-description></long-description>
-          <tag name="param" line="685" description="&lt;p&gt;The cache group&lt;/p&gt;" type="string" variable="$group">
+          <tag name="param" line="684" description="&lt;p&gt;The cache group&lt;/p&gt;" type="string" variable="$group">
             <type>string</type>
           </tag>
-          <tag name="param" line="685" description="&lt;p&gt;The ID of the client&lt;/p&gt;" type="integer" variable="$client_id">
+          <tag name="param" line="684" description="&lt;p&gt;The ID of the client&lt;/p&gt;" type="integer" variable="$client_id">
             <type>integer</type>
           </tag>
-          <tag name="return" line="685" description="" type="void">
+          <tag name="return" line="684" description="" type="void">
             <type>void</type>
           </tag>
-          <tag name="since" line="685" description="1.6"/>
+          <tag name="since" line="684" description="1.6"/>
         </docblock>
         <argument line="0" by_reference="false">
           <name>$group</name>
@@ -27103,7 +27103,7 @@ ordering requirements.</long-description>
     <parse_markers>
       <error line="33" code="PPC:ERR-50007">No summary for property $changeSet</error>
     </parse_markers>
-    <source>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</source>
+    <source>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</source>
   </file>
   <file path="com_biblestudy/admin/helpers/translated.php" generated-path="com_biblestudy.admin.helpers.translated.html" hash="fed79ab13cd8829395d83c3140c71261" package="BibleStudy.Admin">
     <docblock line="0">
@@ -28339,7 +28339,7 @@ ordering requirements.</long-description>
     </class>
     <source>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</source>
   </file>
-  <file path="com_biblestudy/admin/models/install.php" generated-path="com_biblestudy.admin.models.install.html" hash="b1bbb13b2d9bfbe8d8936c5b3eab2be2" package="BibleStudy.Admin">
+  <file path="com_biblestudy/admin/models/install.php" generated-path="com_biblestudy.admin.models.install.html" hash="99202683e09b9f541e05216222c52cda" package="BibleStudy.Admin">
     <docblock line="0">
       <description>Part of Joomla BibleStudy Package</description>
       <long-description></long-description>
@@ -29011,7 +29011,7 @@ ordering requirements.</long-description>
       <error line="130" code="PPC:ERR-50007">No summary for property $type</error>
       <error line="135" code="PPC:ERR-50007">No summary for property $query</error>
     </parse_markers>
-    <source>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</source>
+    <source>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</source>
   </file>
   <file path="com_biblestudy/admin/tables/studytopics.php" generated-path="com_biblestudy.admin.tables.studytopics.html" hash="399e045e020541bb77f86e40b7dcac7a" package="BibleStudy">
     <docblock line="0">
@@ -38033,7 +38033,7 @@ asset does not exist it will be created.</long-description>
     </docblock>
     <source>eJyVVVtv4jgUfia/woq6TaiWpDMvI1ECy3TpdFGnRaU72jdkYkNcnNiyDSz/fs9xEijT2dUOEvhy7uf7jhmMdKGD9OoqIFdkRo0jakWmSpWSks9iKfncbdkBJPmGrjkood5vuj4S+JyUkjErReXludIHI9aFI+Tj9fUn0oPlwycS33bPfJPa+QunJRlLSbyJJYZbbnaceVdS5LyyPlThnO6n6X6/T9bVNlFmnWIgyVcuXWuZFK6U5Mvjn+mX2UNjW21I/UFb2xi/+hSWmIH1iYMn1L9KgzQlj4r8LgzPHRnnObc2YHwlKs7iaDGd/DW5jbpEGcIEvwmC6T2E7PcpY39UudwyPqOuiKez8cv94vbp6+zpcfL4QhISpQWXmhubYo5R92S6iKOlUs46Q3XilJJOaJS/EfOC7oQyycrQku+V2US/Eme2/ExrpUx51MwLZXkFapHlEirxAS9EpbfONyMj0zuaO2UO/f6au7HW0GXqhKribm/o9W6Ci9W2yvEO9Wvj3hC0b0toRSvDGK9zH2SOmBkMdSGFdU+GcYOWrhC2N+Q2p5rHzck66rj3FkeoDAiAtqjWUbe1BwzqyP/LnnnEMCF0MBoGA2xI0KH+MgsHSHPCoTFk+qy2jvumiYrxvxOQjJT2erkqFydeXO4E32eei8ZeSnoAw6xUjMpLV2qJ2lpVvHKXbTuyCMA+Nq57Q0bDMOiU3BWKZaFW1oWkAhSzkOKs3EGOIRHs7JhLam0WYv49UQGFeTgMOr6AoAP8nHNq8oIgVyxZUhN06rIefH73nmf9vuFQm4mjmuuJ9UbeJgE+0610AB01hh7iCMuMSDase40N7IwwpKM4o00+9cH/9oCtQnPWnHIFoWBEGeYJVgWnrN4ZXPDGr523IByJuzaCJVYZzCeafp4v5t+eF/PJ87fJ8+Jx/HWC1yVngq6E5Ak2D26ODGm2nmy+3T5gWkeE1TTrKacVTNt5dozk0BZNgSYfwneZNozTdC0qPyKedg8Q9A48QYvfhmXfhT0FWyp28DvvGcDlFEBs+SwcLy2hFubM44Dnbr/160wLglH7t6kJ8gv56EnWpI211JrwaEJyzX1nQElh+CoLX+mO2hzQc/2dEiy+7oa1BrwKCp4wkW+yUKxIvIfZUPtEUyCS65KzY/K+Pe14nlE/js6ShZqgUoYSBPW9rJ60BWLcKsG32kp5rh7+xNxe4nThUH4fvvHcvWl79APQ26repXfEHFGmTfMb+E/41/4q1qDd2IC4IQPscICGAWzrx9kdNLwNhWAwUO1L4ajdhGRH5RYOYTr8T2UYEoB94Z/To9Hbwo7T4mnzE94WMG7/6hFH8eTwR2OOzxn8v23gb6lu3iDFq2HwD+Q+q1M=</source>
   </file>
-  <file path="com_biblestudy/biblestudy.script.php" generated-path="com_biblestudy.biblestudy.script.html" hash="e85974ca60f6e3f7e37bf018301df710" package="BibleStudy.Admin">
+  <file path="com_biblestudy/biblestudy.script.php" generated-path="com_biblestudy.biblestudy.script.html" hash="d8a0b48193e939d905a4b80c4e4ff540" package="BibleStudy.Admin">
     <docblock line="0">
       <description></description>
       <long-description></long-description>
@@ -38452,7 +38452,7 @@ If preflight returns false, Joomla will abort the update and undo everything alr
       <error line="31" code="PPC:ERR-50007">No summary for property $versions</error>
       <error line="48" code="PPC:ERR-50007">No summary for property $extensions</error>
     </parse_markers>
-    <source>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</source>
+    <source>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</source>
   </file>
   <file path="com_biblestudy/admin/views/mediafiles/tmpl/default_batch_body.php" generated-path="com_biblestudy.admin.views.mediafiles.tmpl.default_batch_body.html" hash="90a32dafb41d4fe2b4ed075153af5719" package="BibleStudy.Admin">
     <docblock line="0">

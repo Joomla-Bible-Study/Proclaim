@@ -5,8 +5,8 @@
 	<authorEmail>info@joomlabiblestudy.org</authorEmail>
 	<authorUrl>https://www.joomlabiblestudy.org</authorUrl>
 	<copyright>(C) 2007 - 2017 Joomla Bible Study All rights reserved.</copyright>
-	<version>9.0.14</version>
-	<creationDate>May 7, 2017</creationDate>
+	<version>9.0.15</version>
+	<creationDate>May 9, 2017</creationDate>
 	<license>http://www.gnu.org/licenses/gpl.html</license>
 	<description>JBS_PLG_BACKUP_XML_DESCRIPTION</description>
 
@@ -18,11 +18,6 @@
 			<file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
 		</sql>
 	</uninstall>
-	<update> <!-- Runs on update; New in 1.6 -->
-		<schemas>
-			<schemapath type="mysql">sql/updates/mysql</schemapath>
-		</schemas>
-	</update>
 	<files>
 		<filename plugin="jbsbackup">jbsbackup.php</filename>
 		<folder>language</folder>
