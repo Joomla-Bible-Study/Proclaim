@@ -247,7 +247,7 @@ abstract class JHtmlJwplayer
 							file: '" . $params->get('jwplayer_logo') . "',
 							link: '" . $params->get('jwplayer_logolink', JUri::base()) . "',
 						 },
-						'title': '" . $header . "',
+						'title': '" . htmlspecialchars($header, ENT_QUOTES) . "',
 						'image': '" . $params->get('popupimage', 'images/biblestudy/speaker24.png') . "',
 						'abouttext': 'Direct Link',
 						'aboutlink': '" . $media->path1 . "',
