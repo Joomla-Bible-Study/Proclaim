@@ -167,7 +167,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			$this->versionStack = array();
 		}
 
-		ksort($this->versionStack);
+		asort($this->versionStack);
 
 		$this->saveStack();
 
@@ -345,13 +345,13 @@ class BibleStudyModelInstall extends JModelLegacy
 				self::correctVersions();
 				/* Find Last updated Version in Update table */
 				$query = $this->_db->getQuery(true);
-				$query->select('*')
+				$query->select('version')
 					->from('#__bsms_update')
-					->order($this->_db->qn('version') . ' desc');
-				$this->_db->setQuery($query);
+					->order($this->_db->qn('id') . ' DESC');
+				$this->_db->setQuery($query, 0, 1);
 				$updates              = $this->_db->loadObject();
 				$version              = $updates->version;
-				$this->versionSwitch = $version;
+				$this->versionSwitch  = $version;
 
 				$this->callstack['subversiontype_version'] = $version;
 				break;
@@ -794,7 +794,7 @@ class BibleStudyModelInstall extends JModelLegacy
 
 			while (!empty($this->versionStack) && $this->haveEnoughTime())
 			{
-				$version       = array_shift($this->versionStack);
+				$version       = array_pop($this->versionStack);
 				$this->running = $version;
 				$this->doneSteps++;
 				$run = $this->allUpdate($version);
