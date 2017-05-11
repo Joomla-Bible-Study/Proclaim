@@ -89,9 +89,9 @@ class BiblestudyControllerInstall extends JControllerForm
 		$app = JFactory::getApplication();
 		$session = JFactory::getSession();
 		$stack = $session->get('migration_stack', '', 'JBSM');
-
-		if (empty($stack))
-		{
+//
+//		if (empty($stack))
+//		{
 			JBSMHelper::clearcache('site');
 			JBSMHelper::clearcache('admin');
 			$session->set('migration_stack', '', 'JBSM');
@@ -103,11 +103,11 @@ class BiblestudyControllerInstall extends JControllerForm
 			$app->input->set('view', 'install');
 
 			$this->display(false);
-		}
-		else
-		{
-			$this->run();
-		}
+//		}
+//		else
+//		{
+//			$this->run();
+//		}
 	}
 
 	/**
