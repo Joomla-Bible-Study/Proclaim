@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="component" version="3.3" method="upgrade">
+<extension type="component" version="3.4" method="upgrade">
 	<!-- Generic Metadata -->
 	<name>COM_BIBLESTUDY</name>
 	<author>Joomla Bible Study Team</author>
 	<authorEmail>info@joomlabiblestudy.org</authorEmail>
 	<authorUrl>https://www.joomlabiblestudy.org</authorUrl>
 	<copyright>(C) 2007 - 2017 Joomla Bible Study All rights reserved.</copyright>
-	<version>9.0.16</version>
+	<version>9.0.17</version>
 	<creationDate>May 11, 2017</creationDate>
 	<license>http://www.gnu.org/licenses/gpl.html</license>
 	<description>JBS_INS_XML_DESCRIPTION</description>
 
 	<!-- Installer Hooks -->
 	<scriptfile>biblestudy.script.php</scriptfile>
+
+	<updateservers>
+		<server type="extension" priority="1" name="Joomla Bible Study Package">https://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;id=2&amp;format=xml</server>
+	</updateservers>
 
 	<files folder="site">
 		<filename>biblestudy.php</filename>
@@ -81,7 +85,4 @@
 			<folder>views</folder>
 		</files>
 	</administration>
-	<updateservers>
-		<server type="extension" priority="1" name="Joomla Bible Study"><![CDATA[https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=2]]></server>
-	</updateservers>
 </extension>
