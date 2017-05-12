@@ -1588,7 +1588,8 @@ class BibleStudyModelInstall extends JModelLegacy
 			$this->_db->qn('location') . ' = ' .
 			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=13'),
 			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=4&dummy=extension.xml'),
+			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;' .
+				'format=xml&amp;id=4&dummy=extension.xml'),
 			$this->_db->qn('location') . ' = ' .
 			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=8'),
 			$this->_db->qn('location') . ' = ' .
