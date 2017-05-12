@@ -446,11 +446,6 @@
             </fieldset>
         </fields>
     </config>
-    <!-- UPDATESERVER DEFINITION -->
-    <updateservers>
-        <!-- Note: No spaces or linebreaks allowed between the server tags -->
-        <server type="extension" priority="1" name="Joomla Bible Study Podcast Plg"><![CDATA[https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=8]]></server>
-    </updateservers>
     <!-- Tables -->
     <!-- These are used for backups to determine which tables to backup; ones
   		marked optional are only backed up if they exist -->
