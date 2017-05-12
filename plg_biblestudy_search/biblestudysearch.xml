@@ -45,9 +45,4 @@
 			</fieldset>
 		</fields>
 	</config>
-	<!-- UPDATESERVER DEFINITION -->
-	<updateservers>
-		<!-- Note: No spaces or linebreaks allowed between the server tags -->
-		<server type="extension" priority="1" name="Joomla Bible Study Search Plg"><![CDATA[https://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=4&dummy=extension.xml]]></server>
-	</updateservers>
 </extension>

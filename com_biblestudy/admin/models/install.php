@@ -1191,9 +1191,9 @@ class BibleStudyModelInstall extends JModelLegacy
 				/* Find Extension ID of component */
 				$query = $this->_db->getQuery(true);
 				$query
-					->select($this->_db->q('extension_id'))
-					->from($this->_db->qn('#__extensions'))
-					->where($this->_db->qn('name') . ' = ' . $this->_db->q('com_biblestudy'));
+					->select('extension_id')
+					->from('#__extensions')
+					->where('`name` = "com_biblestudy"');
 				$this->_db->setQuery($query);
 				$eid                   = $this->_db->loadResult();
 
@@ -1579,6 +1579,18 @@ class BibleStudyModelInstall extends JModelLegacy
 	public function rmoldurl()
 	{
 		$urls = array(
+			$this->_db->qn('location') . ' = ' .
+			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=3'),
+			$this->_db->qn('location') . ' = ' .
+			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=14&dummy=extension.xml'),
+			$this->_db->qn('location') . ' = ' .
+			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=5&dummy=extension.xml'),
+			$this->_db->qn('location') . ' = ' .
+			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=13'),
+			$this->_db->qn('location') . ' = ' .
+			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=4&dummy=extension.xml'),
+			$this->_db->qn('location') . ' = ' .
+			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=8'),
 			$this->_db->qn('location') . ' = ' .
 			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=3&dummy=extension.xml'),
 			$this->_db->qn('location') . ' = ' .

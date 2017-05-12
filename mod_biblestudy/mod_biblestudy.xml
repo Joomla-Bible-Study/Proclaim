@@ -462,10 +462,5 @@
 			</fieldset>
 		</fields>
 	</config>
-	<!-- UPDATESERVER DEFINITION -->
-	<updateservers>
-		<!-- Note: No spaces or linebreaks allowed between the server tags -->
-		<server type="extension" priority="1" name="Joomla Bible Study Module"><![CDATA[https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=3]]></server>
-	</updateservers>
 	<scriptfile>script.php</scriptfile>
 </extension>
