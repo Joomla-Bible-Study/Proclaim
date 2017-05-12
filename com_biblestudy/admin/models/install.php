@@ -1188,12 +1188,46 @@ class BibleStudyModelInstall extends JModelLegacy
 				$this->running = 'Remove Old Update URL\'s';
 				break;
 			case 'setupdateurl':
+				/* Find Extension ID of component */
+				$query = $this->_db->getQuery(true);
+				$query
+					->select($this->_db->q('extension_id'))
+					->from($this->_db->qn('#__extensions'))
+					->where($this->_db->qn('name') . ' = ' . $this->_db->q('com_biblestudy'));
+				$this->_db->setQuery($query);
+				$eid                   = $this->_db->loadResult();
+
+				$conditions = array(
+					$this->_db->qn('name') . ' = ' .
+					$this->_db->q('Joomla Bible Study Package'),
+				);
+				$query      = $this->_db->getQuery(true);
+				$query->delete($this->_db->qn('#__update_sites'));
+				$query->where($conditions, 'OR');
+				$this->_db->setQuery($query);
+				$this->_db->execute();
+
+				$conditions = array(
+					$this->_db->qn('extension_id') . ' = ' .
+					$this->_db->q($eid),
+				);
+				$query      = $this->_db->getQuery(true);
+				$query->delete($this->_db->qn('#__update_sites_extensions'));
+				$query->where($conditions, 'OR');
+				$this->_db->setQuery($query);
+				$this->_db->execute();
+
 				$updateurl           = new stdClass;
 				$updateurl->name     = 'Joomla Bible Study Package';
-				$updateurl->type     = 'collection';
-				$updateurl->location = 'https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=all&format=xml';
+				$updateurl->type     = 'extension';
+				$updateurl->location = 'https://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;id=2&amp;format=xml';
 				$updateurl->enabled  = '1';
 				$this->_db->insertObject('#__update_sites', $updateurl);
+				$lastid = $this->_db->insertid();
+				$updateurl1 = new stdClass;
+				$updateurl1->update_site_id = $lastid;
+				$updateurl1->extension_id   = $eid;
+				$this->_db->insertObject('#__update_sites_extensions', $updateurl1);
 				$this->running = 'Set New Update URL';
 				break;
 			default:
@@ -1223,7 +1257,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			->where('`name` = "com_biblestudy"');
 		$this->_db->setQuery($query);
 		$eid                   = $this->_db->loadResult();
-		$this->biblestudyEid  = $eid;
+		$this->biblestudyEid   = $eid;
 		$message->extension_id = $this->biblestudyEid;
 		$this->_db->insertObject('#__postinstall_messages', $message);
 	}

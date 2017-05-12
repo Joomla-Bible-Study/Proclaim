@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<extension type="package" version="3.3" method="upgrade">
+<extension type="package" version="3.4" method="upgrade">
 	<name>Package Joomla Bible Study</name>
 	<packagename>biblestudy_package</packagename>
 	<description>
@@ -8,7 +8,7 @@
 	<authorEmail>info@joomlabiblestudy.org</authorEmail>
 	<authorUrl>https://www.joomlabiblestudy.org</authorUrl>
 	<copyright>(C) 2007 - 2017 Joomla Bible Study All rights reserved.</copyright>
-	<version>9.0.16</version>
+	<version>9.0.17</version>
 	<creationDate>May 11, 2017</creationDate>
 	<license>http://www.gnu.org/licenses/gpl.html</license>
 	<packager>Tom Fuller</packager>
@@ -16,10 +16,7 @@
 
 	<!-- Runs on install/uninstall/update; New in 2.5 -->
 	<scriptfile>script.php</scriptfile>
-	<updateservers>
-		<server type="collection"><![CDATA[https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=all&format=xml]]></server>
-		<server type="extension" priority="2" name="Joomla Bible Study Package"><![CDATA[https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=12]]></server>
-	</updateservers>
+
 	<files folder="packages">
 		<file type="module" id="mod_biblestudy" client="site">mod_biblestudy.zip</file>
 		<file type="module" id="mod_biblestudy_podcast" client="site">mod_biblestudy_podcast.zip</file>
