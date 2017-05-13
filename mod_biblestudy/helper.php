@@ -80,13 +80,9 @@ class ModJBSMHelper
 				'study.publish_down,
 		                study.media_seconds, study.series_id, study.download_id, study.thumbnailm, study.thumbhm, study.thumbwm,
 		                study.access, study.user_name, study.user_id, study.studynumber, study.chapter_begin2, study.chapter_end2,
-		                study.verse_end2, study.verse_begin2, ' . ' ' . $query->length('study.studytext') . ' AS readmore' . ','
+		                study.verse_end2, study.verse_begin2, ' . $query->length('study.studytext') . ' AS readmore' . ','
 			. ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug ');
 		$query->from('#__bsms_studies AS study');
-
-		// Join over mediafile ids
-		$query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
-		$query->join('LEFT', '#__bsms_mediafiles as m ON study.id = m.study_id');
 
 		// Join over Message Types
 		$query->select('messageType.message_type AS messageType');
@@ -108,8 +104,9 @@ class ModJBSMHelper
 		$query->select('book.bookname');
 		$query->join('LEFT', '#__bsms_books AS book ON book.booknumber = study.booknumber');
 
-		// Join over Plays/Downloads
-		$query->select('SUM(mediafile.plays) AS totalplays, SUM(mediafile.downloads) as totaldownloads, mediafile.study_id');
+		// Join over MediaFiles and Plays/Downloads
+		$query->select('GROUP_CONCAT(DISTINCT mediafile.id) as mids, SUM(mediafile.plays) AS totalplays,' .
+			' SUM(mediafile.downloads) as totaldownloads, mediafile.study_id');
 		$query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
 		$query->group('study.id');
 
