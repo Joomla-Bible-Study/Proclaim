@@ -107,11 +107,11 @@ class JBSMHelper
 		}
 		elseif (substr_count($url, 'youtu.be') > 0)
 		{
-			return 0;
+			return 1;
 		}
 		elseif (substr_count($url, 'youtube.com') > 0)
 		{
-			return 0;
+			return 1;
 		}
 
 		// Removes a bad url problem in some DB's
@@ -132,7 +132,14 @@ class JBSMHelper
 			}
 		}
 
-		$headers = get_headers($url, true);
+		try
+		{
+			$headers = get_headers($url, true);
+		}
+		catch (Exception $e)
+		{
+			return 0;
+		}
 
 		if (is_array($headers))
 		{

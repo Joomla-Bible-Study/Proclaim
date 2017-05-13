@@ -762,13 +762,13 @@ class JBSMMedia
 
 		$file_size = $media->params->get('size', '0');
 
-		if (!$file_size)
+		if ($file_size == 0)
 		{
 			$file_size = JBSMHelper::getRemoteFileSize(JBSMHelper::MediaBuildUrl($media->sparams->get('path'), $params->get('filename'), $params, true));
 			JBSMHelper::SetFilesize($media->id, $file_size);
 		}
 
-		if ($file_size)
+		if ($file_size != 0)
 		{
 			switch ($file_size)
 			{
