@@ -89,11 +89,8 @@ class ModJBSMHelper
 		$query->join('LEFT', '#__bsms_message_type AS messageType ON messageType.id = study.messagetype');
 
 		// Join over Teachers
-		$query->select('teacher.title AS title, teacher.image, teacher.imagew, teacher.imageh,' .
-			'teacher.teacher_image, teacher.teacher_thumbnail, teacher.phone, teacher.email, teacher.website, teacher.information,' .
-			'teacher.facebooklink, teacher.twitterlink, teacher.bloglink, teacher.link1, teacher.linklabel1, teacher.link2,' .
-			'teacher.linklabel2, teacher.link3, teacher.linklabel3, teacher.contact, teacher.address, teacher.address1,' .
-			'teacher.teacher_thumbnail as thumb, teacher.thumbw, teacher.thumbh, teacher.teachername AS teachername, teacher.id AS tid');
+		$query->select('teacher.teachername AS teachername, teacher.title as title, teacher.teacher_thumbnail as thumb,
+			teacher.thumbh, teacher.thumbw');
 		$query->join('LEFT', '#__bsms_teachers AS teacher ON teacher.id = study.teacher_id');
 
 		// Join over Series

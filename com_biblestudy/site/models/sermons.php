@@ -667,7 +667,7 @@ class BiblestudyModelSermons extends JModelList
 		$query->join('LEFT', '#__bsms_message_type AS messageType ON messageType.id = study.messagetype');
 
 		// Join over Teachers
-		$query->select('teacher.teachername AS teachername, teacher.title as teachertitle, teacher.teacher_thumbnail as thumb,
+		$query->select('teacher.teachername AS teachername, teacher.title as title, teacher.teacher_thumbnail as thumb,
 			teacher.thumbh, teacher.thumbw');
 		$query->join('LEFT', '#__bsms_teachers AS teacher ON teacher.id = study.teacher_id');
 
