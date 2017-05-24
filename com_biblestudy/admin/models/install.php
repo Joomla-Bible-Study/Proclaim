@@ -1579,31 +1579,20 @@ class BibleStudyModelInstall extends JModelLegacy
 	public function rmoldurl()
 	{
 		$urls = array(
-			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=3'),
-			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=14&dummy=extension.xml'),
-			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=5&dummy=extension.xml'),
-			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=13'),
-			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;' .
-				'format=xml&amp;id=4&dummy=extension.xml'),
-			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=8'),
-			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=3&dummy=extension.xml'),
-			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=14&dummy=extension.xml'),
-			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=13&dummy=extension.xml'),
-			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=4&dummy=extension.xml'),
-			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=8&dummy=extension.xml'),
-			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=5&dummy=extension.xml'));
+			$this->_db->qn('name') . ' = ' .
+			$this->_db->q('Joomla Bible Study Module'),
+			$this->_db->qn('name') . ' = ' .
+			$this->_db->q('Joomla Bible Study Podcast Module'),
+			$this->_db->qn('name') . ' = ' .
+			$this->_db->q('Joomla Bible Study Finder Plg'),
+			$this->_db->qn('name') . ' = ' .
+			$this->_db->q('Joomla Bible Study Search Plg'),
+			$this->_db->qn('name') . ' = ' .
+			$this->_db->q('Joomla Bible Study Backup Plg'),
+			$this->_db->qn('name') . ' = ' .
+			$this->_db->q('Joomla Bible Study Podcast Plg'),
+			$this->_db->qn('name') . ' = ' .
+			$this->_db->q('Joomla Bible Study'));
 
 		return $urls;
 	}

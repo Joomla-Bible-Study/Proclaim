@@ -45,6 +45,29 @@ class Com_BiblestudyInstallerScript
 		)
 	);
 
+	protected $status;
+
+	/**
+	 * The list of extra modules and plugins to install
+	 *
+	 * @author Nicholas K. Dionysopoulos
+	 * @var   array $_installation_queue Array of Items to install
+	 * @since 9.0.18
+	 */
+	private $installation_queue = [
+		// -- modules => { (folder) => { (module) => { (position), (published) } }* }*
+		'modules' => [
+			'admin' => [],
+			'site'  => ['biblestudy' => 0, 'biblestudy_podcast' => 0,],
+		],
+		// -- plugins => { (folder) => { (element) => (published) }* }*
+		'plugins' => [
+			'finder' => ['biblestudy' => 1,],
+			'search' => ['biblestudysearch' => 0,],
+			'system' => ['jbspodcast' => 0, 'jbsbackup' => '0'],
+		],
+	];
+
 	protected $extensions = array('dom', 'gd', 'json', 'pcre', 'SimpleXML');
 
 	/**
@@ -169,15 +192,8 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function uninstall($parent)
 	{
-		$adminpath = $parent->getParent()->getPath('extension_administrator');
-		$model     = "{$adminpath}/models/install.php";
-
-		if (file_exists($model))
-		{
-			require_once $model;
-			$installer = new BibleStudyModelInstall;
-			$installer->uninstall();
-		}
+		// Uninstall subextensions
+		$this->_uninstallSubextensions($parent);
 
 		return true;
 	}
@@ -457,5 +473,91 @@ class Com_BiblestudyInstallerScript
 	{
 		$this->deleteFiles($path, $ignore);
 		$this->deleteFolders($path, $ignore);
+	}
+
+	/**
+	 * Uninstalls subextensions (modules, plugins) bundled with the main extension
+	 *
+	 * @param   JInstallerAdapter  $parent  is the class calling this method.
+	 *
+	 * @return void
+	 *
+	 * @since 9.0.18
+	 */
+	private function _uninstallSubextensions($parent)
+	{
+		jimport('joomla.installer.installer');
+
+		$db = JFactory::getDbo();
+
+		// Modules uninstalling
+		if (count($this->installation_queue['modules']))
+		{
+			foreach ($this->installation_queue['modules'] as $folder => $modules)
+			{
+				if (count($modules))
+				{
+					foreach ($modules as $module => $modulePreferences)
+					{
+						// Find the module ID
+						$sql = $db->getQuery(true)
+							->select($db->qn('extension_id'))
+							->from($db->qn('#__extensions'))
+							->where($db->qn('element') . ' = ' . $db->q('mod_' . $module))
+							->where($db->qn('type') . ' = ' . $db->q('module'));
+						$db->setQuery($sql);
+						$id = $db->loadResult();
+
+						// Uninstall the module
+						if ($id)
+						{
+							$installer         = new JInstaller;
+							$result            = $installer->uninstall('module', $id, 1);
+							$this->status->modules[] = [
+								'name'   => 'mod_' . $module,
+								'client' => $folder,
+								'result' => $result
+							];
+						}
+					}
+				}
+			}
+		}
+
+		// Plugins uninstalling
+		if (count($this->installation_queue['plugins']))
+		{
+			foreach ($this->installation_queue['plugins'] as $folder => $plugins)
+			{
+				if (count($plugins))
+				{
+					foreach ($plugins as $plugin => $published)
+					{
+						$sql = $db->getQuery(true)
+							->select($db->qn('extension_id'))
+							->from($db->qn('#__extensions'))
+							->where($db->qn('type') . ' = ' . $db->q('plugin'))
+							->where($db->qn('element') . ' = ' . $db->q($plugin))
+							->where($db->qn('folder') . ' = ' . $db->q($folder));
+						$db->setQuery($sql);
+
+						$id = $db->loadResult();
+
+						if ($id)
+						{
+							$installer         = new JInstaller;
+							$result            = $installer->uninstall('plugin', $id, 1);
+							$this->status->plugins[] = [
+								'name'   => 'plg_' . $plugin,
+								'group'  => $folder,
+								'result' => $result
+							];
+						}
+					}
+				}
+			}
+		}
+
+		return;
 	}
 }
