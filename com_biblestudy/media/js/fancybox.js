@@ -29,7 +29,6 @@
 				type: 'html',
 				width: width,
 				height: height,
-				maxwidth: width,
 				opts: {
 					smallBtn: false,
 					afterLoad: function () {
