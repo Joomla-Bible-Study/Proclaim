@@ -29,9 +29,10 @@
 				type: 'html',
 				width: width,
 				height: height,
+				maxwidth: width,
 				opts: {
 					smallBtn: false,
-					onComplete: function () {
+					afterLoad: function () {
 						var playerInstance = jwplayer("video_container");
 						playerInstance.setup({
 							title: title,
