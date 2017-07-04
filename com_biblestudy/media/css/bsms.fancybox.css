@@ -25,5 +25,8 @@
 
 #video_container {
 	display: inline-block !important;
-	vertical-align: middle !important;
+	vertical-align: middle;
+	/** Needed for Android devices */
+	margin-top:50%;
+	bottom: 50%;
 	}

@@ -101,17 +101,19 @@ class JBSMHelper
 	 */
 	public static function getRemoteFileSize($url)
 	{
-		if (empty($url))
+		if ($url != '')
 		{
 			return 0;
 		}
-		elseif (substr_count($url, 'youtu.be') > 0)
+
+		if (substr_count($url, 'youtu.be') > 0)
 		{
-			return 1;
+			return 0;
 		}
-		elseif (substr_count($url, 'youtube.com') > 0)
+
+		if (substr_count($url, 'youtube.com') > 0)
 		{
-			return 1;
+			return 0;
 		}
 
 		// Removes a bad url problem in some DB's

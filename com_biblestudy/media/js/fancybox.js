@@ -46,7 +46,7 @@
 							file: myVideo,
 							width: width,
 							height: height,
-							mute: mute,
+							mute: false,
 							autostart: autostart,
 							controls: controls
 						});
