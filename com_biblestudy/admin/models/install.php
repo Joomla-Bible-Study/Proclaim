@@ -1437,7 +1437,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				$this->_db->execute();
 			}
 			catch (RuntimeException $e)
-            {
+			{
 				$app->enqueueMessage($e->getMessage(), 'warning');
 
 				return false;
