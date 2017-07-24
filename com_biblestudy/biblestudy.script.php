@@ -48,8 +48,8 @@ class Com_BiblestudyInstallerScript
 			'0'   => '5.5.3' // Preferred version
 		),
 		'Joomla!' => array(
-			'3.7' => '3.7.3',
-			'3.6' => '3.6.5',
+			'3.6' => '3.6.3',
+			'3.7' => '3.7.0',
 			'0'   => '3.7.3' // Preferred version
 		)
 	);
