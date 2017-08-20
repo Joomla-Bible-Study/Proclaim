@@ -97,6 +97,16 @@ class Com_BiblestudyInstallerScript
 		$parent   = $parent->getParent();
 		$manifest = $parent->getManifest();
 
+		// Include the JLog class.
+		jimport('joomla.log.log');
+		JLog::addLogger(
+			array(
+				'text_file' => 'com_biblestudy.errors.php'
+			),
+			JLog::ALL,
+			'com_biblestudy'
+		);
+
 		// Prevent installation if requirements are not met.
 		if (!$this->checkRequirements($manifest->version))
 		{

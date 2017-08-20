@@ -419,7 +419,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			$query
 				->select('extension_id')
 				->from('#__extensions')
-				->where('`name` = "com_biblestudy"');
+				->where($this->_db->qn('name') . ' = ' . $this->_db->qn('com_biblestudy'));
 			$this->_db->setQuery($query);
 			$eid                  = $this->_db->loadResult();
 			$this->biblestudyEid = $eid;
@@ -1138,7 +1138,8 @@ class BibleStudyModelInstall extends JModelLegacy
 			->where($this->_db->qn('language_extension') . ' = ' . $this->_db->q('com_biblestudy'));
 		$this->_db->setQuery($query);
 		$this->_db->execute();
-		echo '<h2>' . JText::_('JBS_INS_UNINSTALLED') . ' ' . BIBLESTUDY_VERSION . '</h2> <div>' . $drop_result . '</div>';
+		JFactory::getApplication()->enqueueMessage('<h2>' . JText::_('JBS_INS_UNINSTALLED') . ' ' .
+			BIBLESTUDY_VERSION . '</h2> <div>' . $drop_result . '</div>');
 
 		return true;
 	}
@@ -1200,7 +1201,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				$query
 					->select('extension_id')
 					->from('#__extensions')
-					->where('`name` = "com_biblestudy"');
+					->where($this->_db->qn('name') . ' = ' . $this->_db->qn('com_biblestudy'));
 				$this->_db->setQuery($query);
 				$eid                   = $this->_db->loadResult();
 
@@ -1261,7 +1262,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		$query
 			->select('extension_id')
 			->from('#__extensions')
-			->where('`name` = "com_biblestudy"');
+			->where($this->_db->qn('name') . ' = ' . $this->_db->qn('com_biblestudy'));
 		$this->_db->setQuery($query);
 		$eid                   = $this->_db->loadResult();
 		$this->biblestudyEid   = $eid;
@@ -1333,7 +1334,7 @@ class BibleStudyModelInstall extends JModelLegacy
 
 					if ($set)
 					{
-						$this->_db->updateObject($table['name'], $row, 'id');
+						$this->_db->updateObject($table['name'], $row, ['id']);
 					}
 				}
 			}
