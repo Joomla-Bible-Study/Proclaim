@@ -1440,7 +1440,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			}
 			catch (RuntimeException $e)
 			{
-				JLog::add($e->getMessage(), JLog::WARNING, 'jerror');
+				JLog::add($e->getMessage(), JLog::WARNING,  'com_biblestudy');
 
 				return false;
 			}
