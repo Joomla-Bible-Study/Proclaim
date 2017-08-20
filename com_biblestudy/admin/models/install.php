@@ -134,6 +134,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * @since 7.1 */
 	public $query = array();
 
+	private $name;
+
 	/**
 	 * Constructor.
 	 *
@@ -1429,7 +1431,7 @@ class BibleStudyModelInstall extends JModelLegacy
 
 		if ($string != '' && $string{0} != '#')
 		{
-			$this->_db->setQuery($string);
+			$this->_db->setQuery($this->_db->convertUtf8mb4QueryToUtf8($string));
 			$this->doneSteps++;
 
 			try
@@ -1438,7 +1440,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			}
 			catch (RuntimeException $e)
 			{
-				$app->enqueueMessage($e->getMessage(), 'warning');
+				JLog::add($e->getMessage(), JLog::WARNING, 'jerror');
 
 				return false;
 			}
