@@ -84,7 +84,8 @@ class BiblestudyModelMessages extends JModelList
 		$items = parent::getItems();
 		$app   = JFactory::getApplication();
 
-		if ($app->isClient('site'))
+		// Support for 3.2 and newer. isSite().
+		if ($app->isSite())
 		{
 			$user   = JFactory::getUser();
 			$groups = $user->getAuthorisedViewLevels();
