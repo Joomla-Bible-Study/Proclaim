@@ -204,6 +204,7 @@ class BiblestudyModelSermons extends JModelList
 
 		$query->select('teacher.id AS value, teacher.teachername AS text');
 		$query->from('#__bsms_teachers AS teacher');
+		$query->where('teacher.published = 1');
 		$query->join('INNER', '#__bsms_studies AS study ON study.teacher_id = teacher.id');
 		$query->group('teacher.id');
 		$query->order('teacher.teachername');
