@@ -318,7 +318,7 @@ class JBSMHelper
 	 *
 	 * @return mixed
 	 *
-	 * @since 9.0.14
+	 * @since 9.0.17
 	 */
 	public static function remove_http($url)
 	{

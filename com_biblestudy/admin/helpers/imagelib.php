@@ -38,7 +38,7 @@ class JBSMImageLib
 	 *
 	 * @return string
 	 *
-	 * @since 9.0.14
+	 * @since 9.0.17
 	 */
 	public static function getSeriesPodcast($img, $new)
 	{
@@ -93,7 +93,7 @@ class ImageMagickLib extends JBSMImageLib
 	 *
 	 * @return void
 	 *
-	 * @since 1.5
+	 * @since 9.0.17
 	 */
 	public static function resize_image(
 		$targetFile,
@@ -159,7 +159,7 @@ class GDLib extends JBSMImageLib
 	 * @return void
 	 *
 	 * @throws \Exception
-	 * @since 9.0.14
+	 * @since 9.0.17
 	 */
 	public static function resize_image(
 		$targetFile,
