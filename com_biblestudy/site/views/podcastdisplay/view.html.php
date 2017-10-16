@@ -57,6 +57,11 @@ class BiblestudyViewPodcastdisplay extends JViewLegacy
 		$params             = $this->state->template->params;
 		$this->template     = $this->state->get('template');
 
+		if (!$item)
+		{
+			return;
+		}
+
 		// Get studies associated with this series
 		$mainframe->setUserState('sid', $item->id);
 		$this->studies = $this->get('Studies');

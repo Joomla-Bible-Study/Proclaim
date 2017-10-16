@@ -90,8 +90,16 @@ function biblestudyParseRoute($segments)
 	}
 	elseif ($count == 2)
 	{
-		$vars['view'] = $segments[0];
-		$vars['t']    = $segments[$count - 1];
+		if ($segments[0] == 'podcastdisplay')
+		{
+			$vars['view'] = $segments[0];
+			$vars['id']   = (int) $segments[1];
+		}
+		else
+		{
+			$vars['view'] = $segments[0];
+			$vars['t']    = $segments[$count - 1];
+		}
 
 		return $vars;
 	}

@@ -30,11 +30,26 @@ $jbsmedia = new JBSMMedia;
       name="adminForm" id="adminForm">
     <div id="effect-1" class="effects">
 		<?php foreach ($this->items as $item)
-		{ ?>
+		{
+			$img_base      = pathinfo($item->series_thumbnail);
+			$originalFile = $item->series_thumbnail;
+
+			if (file_exists(JPATH_ROOT . '/' . $originalFile) && $img_base['basename'])
+			{
+				$array    = explode('.', $img_base['basename']);
+				$NewfileName = $img_base['dirname'] . '/' . $array[0] . '-200.' . $array[1];
+				$img = JBSMImageLib::getSeriesPodcast($originalFile, $NewfileName);
+			}
+			else
+			{
+				$img = null;
+			}
+			?>
             <div class="jbsmimg">
-				<?php echo JHtml::image($item->series_thumbnail, $item->id . ' : ' . stripslashes($item->series_text), $this->attribs); ?>
+				<?php echo JHtml::image($img, $item->id . ' : ' . stripslashes($item->series_text), $this->attribs); ?>
                 <div class="overlay">
-                    <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=podcastdisplay&id=' . $item->id); ?>" class="expand">+</a>
+                    <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=podcastdisplay&id=' .
+	                    $item->id . ':' . $item->alias); ?>" class="expand">+</a>
                     <p class="expand"><?php echo stripslashes($item->series_text); ?></p>
                     <a class="jbsmclose-overlay hidden">x</a>
                 </div>

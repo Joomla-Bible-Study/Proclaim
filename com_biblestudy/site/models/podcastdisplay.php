@@ -214,7 +214,7 @@ class BiblestudyModelPodcastdisplay extends JModelItem
 		// Select only published studies
 		$query->where('study.published = 1');
 		$query->where('(series.published = 1 OR study.series_id <= 0)');
-		$query->where('study.series_id = ' . $sid);
+		$query->where('study.series_id = ' . (int) $sid);
 
 		// Order by order filter
 		$orderparam = $params->get('default_order');

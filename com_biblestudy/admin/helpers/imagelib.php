@@ -29,6 +29,40 @@ class JBSMImageLib
 	 * @since 1.5
 	 */
 	public static $extension = 'com_biblestudy';
+
+	/**
+	 * Get Series Podcast File
+	 *
+	 * @param   string  $img  Org Image File
+	 * @param   string  $new  New Image File
+	 *
+	 * @return string
+	 *
+	 * @since 9.0.14
+	 */
+	public static function getSeriesPodcast($img, $new)
+	{
+		// Prep files
+		$new_sub = JPATH_ROOT . '/' . $new;
+		$img_sub = JPATH_ROOT . '/' . $img;
+		$return  = $img;
+
+		if (file_exists($img_sub))
+		{
+			if (extension_loaded('gd') && function_exists('gd_info'))
+			{
+				GDLib::resize_image($new_sub, $img_sub);
+
+				$return = $new;
+			}
+			else
+			{
+				$return = $img;
+			}
+		}
+
+		return $return;
+	}
 }
 
 /**
@@ -37,7 +71,7 @@ class JBSMImageLib
  * @package  BibleStudy.Admin
  * @since    7.0.0
  */
-class ImageMagickLib extends ImageLib
+class ImageMagickLib extends JBSMImageLib
 {
 	/**
 	 * Extension Name
@@ -51,28 +85,27 @@ class ImageMagickLib extends ImageLib
 	/**
 	 * Resize Image
 	 *
-	 * @param   string  $image  Image Path
+	 * @param   string  $newWidth      Image New Width
+	 * @param   string  $targetFile    Target File Path
+	 * @param   string  $originalFile  File
 	 *
 	 * @return void
 	 *
 	 * @since 1.5
-	 *
-	 * @todo look like this is not working yet. bcc
 	 */
-	public static function resize($image)
+	public static function resize_image($newWidth, $targetFile, $originalFile)
 	{
 		try
 		{
-			/* ** a file that does not exist ** */
-			$image = '$image';
-
-			/* * * a new imagick object ** */
-			$im = new Imagick($image);
+			// Need to make
+			return;
 		}
 		catch (Exception $e)
 		{
 			echo $e->getMessage();
 		}
+
+		return null;
 	}
 }
 
@@ -82,7 +115,7 @@ class ImageMagickLib extends ImageLib
  * @package  BibleStudy.Admin
  * @since    7.0.0
  */
-class GDLib extends ImageLib
+class GDLib extends JBSMImageLib
 {
 	/**
 	 * Extension Name
@@ -105,5 +138,64 @@ class GDLib extends ImageLib
 		{
 			die("GD is not found");
 		}
+	}
+
+	/**
+	 * Resize Image
+	 *
+	 * @param   string  $targetFile    Target File Path
+	 * @param   string  $originalFile  File
+	 * @param   int     $newWidth      Image New Width
+	 * @param   int     $canv_width    Image Canvas Width
+	 * @param   int     $canv_height   Image Canvas Height
+	 *
+	 * @return void
+	 *
+	 * @throws \Exception
+	 * @since 9.0.14
+	 */
+	public static function resize_image($targetFile, $originalFile, $newWidth = 200, $canv_width = 200, $canv_height =
+	200)
+	{
+		$info = getimagesize($originalFile);
+		$mime = $info['mime'];
+
+		switch ($mime)
+		{
+			case 'image/jpeg':
+				$image_create_func = 'imagecreatefromjpeg';
+				$image_save_func = 'imagejpeg';
+				$new_image_ext = 'jpg';
+				break;
+
+			case 'image/png':
+				$image_create_func = 'imagecreatefrompng';
+				$image_save_func = 'imagepng';
+				$new_image_ext = 'png';
+				break;
+
+			case 'image/gif':
+				$image_create_func = 'imagecreatefromgif';
+				$image_save_func = 'imagegif';
+				$new_image_ext = 'gif';
+				break;
+
+			default:
+				throw new Exception('Unknown image type.');
+		}
+
+		$img = $image_create_func($originalFile);
+		list($width, $height) = getimagesize($originalFile);
+
+		$newHeight = ($height / $width) * $newWidth;
+		$tmp = imagecreatetruecolor($canv_width, $canv_height);
+		imagecopyresampled($tmp, $img, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+
+		if (file_exists($targetFile))
+		{
+			unlink($targetFile);
+		}
+
+		$image_save_func($tmp, "$targetFile");
 	}
 }
