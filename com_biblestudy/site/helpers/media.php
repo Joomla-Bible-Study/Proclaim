@@ -249,6 +249,8 @@ class JBSMMedia
 					$size = $media->params->get('size');
 				}
 
+				$url = JBSMHelper::remove_http($url);
+
 				$downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' .
 					$url . '&amp;size=' . $size . '">';
 			}

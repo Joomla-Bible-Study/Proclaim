@@ -310,4 +310,28 @@ class JBSMHelper
 		$cache = JCache::getInstance('', $options);
 		$cache->clean();
 	}
+
+	/**
+	 * Remove Http
+	 *
+	 * @param   string  $url  Url
+	 *
+	 * @return mixed
+	 *
+	 * @since 9.0.14
+	 */
+	public static function remove_http($url)
+	{
+		$disallowed = array('http://', 'https://');
+
+		foreach ($disallowed as $d)
+		{
+			if (strpos($url, $d) === 0)
+			{
+				return str_replace($d, '', $url);
+			}
+		}
+
+		return $url;
+	}
 }
