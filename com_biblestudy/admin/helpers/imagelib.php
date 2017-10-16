@@ -85,15 +85,22 @@ class ImageMagickLib extends JBSMImageLib
 	/**
 	 * Resize Image
 	 *
-	 * @param   string  $newWidth      Image New Width
 	 * @param   string  $targetFile    Target File Path
 	 * @param   string  $originalFile  File
+	 * @param   int     $newWidth      Image New Width
+	 * @param   int     $canv_width    Image Canvas Width
+	 * @param   int     $canv_height   Image Canvas Height
 	 *
 	 * @return void
 	 *
 	 * @since 1.5
 	 */
-	public static function resize_image($newWidth, $targetFile, $originalFile)
+	public static function resize_image(
+		$targetFile,
+		$originalFile,
+		$newWidth = 200,
+		$canv_width = 200,
+		$canv_height = 200)
 	{
 		try
 		{
@@ -154,8 +161,12 @@ class GDLib extends JBSMImageLib
 	 * @throws \Exception
 	 * @since 9.0.14
 	 */
-	public static function resize_image($targetFile, $originalFile, $newWidth = 200, $canv_width = 200, $canv_height =
-	200)
+	public static function resize_image(
+		$targetFile,
+		$originalFile,
+		$newWidth = 200,
+		$canv_width = 200,
+		$canv_height = 200)
 	{
 		$info = getimagesize($originalFile);
 		$mime = $info['mime'];
