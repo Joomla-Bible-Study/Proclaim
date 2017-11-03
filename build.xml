@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="biblestudy" default="build" basedir=".">
+<project name="proclaim" default="build" basedir=".">
 	<php expression="include('vendor/autoload.php')"/>
 
 	<property name="basedir" value="${project.basedir}"/>
-	<property name="project.name" value="Joomla Bible Study"/>
+	<property name="project.name" value="Proclaim"/>
 
 	<!-- Joomla version to run the unit tests against -->
 	<property name="joomla.version" value="3.3.6"/>
@@ -116,45 +116,45 @@
 		</copy>
 		<copy todir="${basedir}/build/packages/_tmp">
 			<fileset dir="${basedir}/build">
-				<include name="pkg_biblestudy_package.xml"/>
+				<include name="pkg_proclaim_package.xml"/>
 				<include name="script.php"/>
 			</fileset>
 		</copy>
 
 		<!-- Create the archive -->
-		<delete file="${basedir}/build/packages/pkg_biblestudy.zip"/>
-		<zip destfile="${basedir}/build/packages/pkg_biblestudy.zip" basedir="${basedir}/build/packages/_tmp"/>
+		<delete file="${basedir}/build/packages/pkg_proclaim.zip"/>
+		<zip destfile="${basedir}/build/packages/pkg_proclaim.zip" basedir="${basedir}/build/packages/_tmp"/>
 
 		<!-- Remove the staged packages -->
 		<delete dir="${basedir}/build/packages/_tmp"/>
 	</target>
 
-	<!-- Create com_biblestudy.zip -->
+	<!-- Create com_proclaim.zip -->
 	<target name="package.component" depends="init,dev.clean" description="Builds the component">
-		<delete file="${basedir}/build/packages/component/com_biblestudy.zip"/>
-		<zip destfile="${basedir}/build/packages/component/com_biblestudy.zip" basedir="${basedir}/com_biblestudy"/>
+		<delete file="${basedir}/build/packages/component/com_proclaim.zip"/>
+		<zip destfile="${basedir}/build/packages/component/com_proclaim.zip" basedir="${basedir}/com_biblestudy"/>
 		<!--Reset back to a development state-->
 		<phingcall target="dev.init"/>
 	</target>
 
-	<!-- Create mod_biblestudy.zip and mod_biblestudy_podcast.zip -->
+	<!-- Create mod_proclaim.zip and mod_proclaim_podcast.zip -->
 	<target name="package.modules" depends="init" description="Builds the modules">
-		<delete file="${basedir}/build/packages/modules/mod_biblestudy.zip"/>
-		<delete file="${basedir}/build/packages/modules/mod_biblestudy_podcast.zip"/>
-		<zip destfile="${basedir}/build/packages/modules/mod_biblestudy.zip" basedir="${basedir}/mod_biblestudy"/>
-		<zip destfile="${basedir}/build/packages/modules/mod_biblestudy_podcast.zip" basedir="${basedir}/mod_biblestudy_podcast"/>
+		<delete file="${basedir}/build/packages/modules/mod_proclaim.zip"/>
+		<delete file="${basedir}/build/packages/modules/mod_proclaim_podcast.zip"/>
+		<zip destfile="${basedir}/build/packages/modules/mod_proclaim.zip" basedir="${basedir}/mod_biblestudy"/>
+		<zip destfile="${basedir}/build/packages/modules/mod_proclaim_podcast.zip" basedir="${basedir}/mod_biblestudy_podcast"/>
 	</target>
 
-	<!-- Create plg_biblestudy_finder.zip, plg_biblestudy_search.zip, plg_biblestudy_podcast.zip, and plg_biblestudy_backup.zip -->
+	<!-- Create plg_proclaim_finder.zip, plg_proclaim_search.zip, plg_proclaim_podcast.zip, and plg_proclaim_backup.zip -->
 	<target name="package.plugins" depends="init" description="Builds the plugins">
-		<delete file="${basedir}/build/packages/plugins/plg_biblestudy_finder.zip"/>
-		<delete file="${basedir}/build/packages/plugins/plg_biblestudy_search.zip"/>
-		<delete file="${basedir}/build/packages/plugins/plg_biblestudy_podcast.zip"/>
-		<delete file="${basedir}/build/packages/plugins/plg_biblestudy_backup.zip"/>
-		<zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_finder.zip" basedir="${basedir}/plg_biblestudy_finder"/>
-		<zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_search.zip" basedir="${basedir}/plg_biblestudy_search"/>
-		<zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_podcast.zip" basedir="${basedir}/plg_biblestudy_podcast"/>
-		<zip destfile="${basedir}/build/packages/plugins/plg_biblestudy_backup.zip" basedir="${basedir}/plg_biblestudy_backup"/>
+		<delete file="${basedir}/build/packages/plugins/plg_proclaim_finder.zip"/>
+		<delete file="${basedir}/build/packages/plugins/plg_proclaim_search.zip"/>
+		<delete file="${basedir}/build/packages/plugins/plg_proclaim_podcast.zip"/>
+		<delete file="${basedir}/build/packages/plugins/plg_proclaim_backup.zip"/>
+		<zip destfile="${basedir}/build/packages/plugins/plg_proclaim_finder.zip" basedir="${basedir}/plg_biblestudy_finder"/>
+		<zip destfile="${basedir}/build/packages/plugins/plg_proclaim_search.zip" basedir="${basedir}/plg_biblestudy_search"/>
+		<zip destfile="${basedir}/build/packages/plugins/plg_proclaim_podcast.zip" basedir="${basedir}/plg_biblestudy_podcast"/>
+		<zip destfile="${basedir}/build/packages/plugins/plg_proclaim_backup.zip" basedir="${basedir}/plg_biblestudy_backup"/>
 	</target>
 
 	<!-- Setup config file for running the Selenium Webdriver tests -->

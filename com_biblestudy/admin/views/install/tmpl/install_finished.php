@@ -2,10 +2,10 @@
 /**
  * View html
  *
- * @package    BibleStudy.Admin
- * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
+ * @package    Proclaim.Admin
+ * @copyright  2007 - 2017 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       https://www.joomlabiblestudy.org
+ * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -56,7 +56,7 @@ $session->set('migration_stack', '', 'JBSM');
 	</tfoot>
 	<tbody>
 	<tr class="row0">
-		<td class="key" colspan="2">Joomla Bible Study Component</td>
+		<td class="key" colspan="2">Proclaim Component</td>
 		<td><strong>Installed</strong></td>
 	</tr>
 	<?php if (count($this->status->modules)) : ?>

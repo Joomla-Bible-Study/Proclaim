@@ -1,9 +1,9 @@
 <?php
 /**
- * @package    BibleStudy.Admin
- * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
+ * @package    Proclaim.Admin
+ * @copyright  2007 - 2017 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       https://www.joomlabiblestudy.org
+ * @link       https://www.christianwebministries.org
  * */
 defined('_JEXEC') or die;
 
@@ -12,9 +12,9 @@ jimport('joomla.filesystem.file');
 
 
 /**
- * BibleStudy Install Script
+ * Proclaim Install Script
  *
- * @package  BibleStudy.Admin
+ * @package  Proclaim.Admin
  * @since    7.0.0
  */
 class Com_BiblestudyInstallerScript
@@ -31,7 +31,7 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * This is Minimum requirements for: PHP, MySQL, Joomla
 	 *
-	 * @var array Requiremnets
+	 * @var array Requirements
 	 * @since 9.0.9
 	 */
 	protected $versions = array(
@@ -59,7 +59,7 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * The list of extra modules and plugins to install
 	 *
-	 * @author Nicholas K. Dionysopoulos
+	 * @author CWM Team
 	 * @var   array $_installation_queue Array of Items to install
 	 * @since 9.0.18
 	 */
