@@ -1,9 +1,9 @@
 ------------------------------------------------------
-Joomla Bible Study
+Proclaim
 
-Copyright (C) 2016 Joomla Bible Study Team All rights reserved.
+Copyright (C) 2016 CWM Team All rights reserved.
 
-Joomla Bible Study is free software: you can redistribute it and/or modify
+Proclaim is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
@@ -16,7 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-Joomla Bible Study includes or is derivative work of other software licensed
+Proclaim includes or is derivative work of other software licensed
 under the GNU General Public License or other free or open source
 software licenses.
 

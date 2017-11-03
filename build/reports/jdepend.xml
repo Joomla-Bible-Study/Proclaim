@@ -33,7 +33,7 @@
       </DependsUpon>
       <UsedBy>
         <Package>BibleStudy</Package>
-        <Package>BibleStudy.Admin</Package>
+        <Package>Proclaim.Admin</Package>
         <Package>BibleStudy.Site</Package>
         <Package>BibleStudy.Site\Form</Package>
         <Package>BibleStudy\Finder.BibleStudy</Package>
@@ -49,7 +49,7 @@
         <Package>SefExt\Pugin.BibleStudy</Package>
       </UsedBy>
     </Package>
-    <Package name="BibleStudy.Admin">
+    <Package name="Proclaim.Admin">
       <Stats>
         <TotalClasses>196</TotalClasses>
         <ConcreteClasses>193</ConcreteClasses>
@@ -311,7 +311,7 @@
       <AbstractClasses/>
       <DependsUpon>
         <Package>+global</Package>
-        <Package>BibleStudy.Admin</Package>
+        <Package>Proclaim.Admin</Package>
       </DependsUpon>
       <UsedBy/>
     </Package>
@@ -458,10 +458,10 @@
       <DependsUpon>
         <Package>+core</Package>
         <Package>+global</Package>
-        <Package>BibleStudy.Admin</Package>
+        <Package>Proclaim.Admin</Package>
       </DependsUpon>
       <UsedBy>
-        <Package>BibleStudy.Admin</Package>
+        <Package>Proclaim.Admin</Package>
         <Package>BibleStudy\Finder.BibleStudy</Package>
         <Package>BibleStudy\Plugin.JBSPodcast</Package>
       </UsedBy>
@@ -507,7 +507,7 @@
         <Package>+global</Package>
       </DependsUpon>
       <UsedBy>
-        <Package>BibleStudy.Admin</Package>
+        <Package>Proclaim.Admin</Package>
         <Package>BibleStudy\Plugin.JBSBackup</Package>
       </UsedBy>
     </Package>
@@ -697,8 +697,8 @@
       <Package>LiveUpdate</Package>
       <Package>+global</Package>
     </Package>
-    <Package Name="BibleStudy.Admin">
-      <Package>BibleStudy.Admin</Package>
+    <Package Name="Proclaim.Admin">
+      <Package>Proclaim.Admin</Package>
       <Package>+global</Package>
       <Package>LiveUpdate</Package>
       <Package>+global</Package>

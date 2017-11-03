@@ -2,10 +2,10 @@
 /**
  * sh404SEF support for com_biblestudy component.
  *
- * @package     BibleStudy.Site
+ * @package     Proclaim.Site
  * @subpackage  sh404SEF.BibleStudy
  * @author      Nick Fossen <nfossen@gmail.com>
- * @copyright   2016 (C) Joomla Bible Study
+ * @copyright   2016 (C) Proclaim
  * @url         http://www.newhorizoncf.org
  * @license     GPL v2
  * {shSourceVersionTag: Version 6.2 - 2010-07-06}
