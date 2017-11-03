@@ -1,11 +1,11 @@
 <?php
 /**
- * Part of Joomla BibleStudy Package
+ * Part of Proclaim Package
  *
- * @package    BibleStudy.Admin
- * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
+ * @package    Proclaim.Admin
+ * @copyright  2007 - 2017 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       https://www.joomlabiblestudy.org
+ * @link       https://www.christianwebministries.org
  * */
 
 defined('_JEXEC') or die;
@@ -24,7 +24,7 @@ if (file_exists($api))
 /**
  * class Migration model
  *
- * @package  BibleStudy.Admin
+ * @package  Proclaim.Admin
  * @since    7.1.0
  */
 class BibleStudyModelInstall extends JModelLegacy
@@ -417,7 +417,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			$query
 				->select('extension_id')
 				->from('#__extensions')
-				->where($this->_db->qn('name') . ' = ' . $this->_db->qn('com_biblestudy'));
+				->where($this->_db->qn('name') . ' = ' . $this->_db->q('com_biblestudy'));
 			$this->_db->setQuery($query);
 			$eid                  = $this->_db->loadResult();
 			$this->biblestudyEid = $eid;
@@ -1205,7 +1205,7 @@ class BibleStudyModelInstall extends JModelLegacy
 
 				$conditions = array(
 					$this->_db->qn('name') . ' = ' .
-					$this->_db->q('Joomla Bible Study Package'),
+					$this->_db->q('Proclaim Package'),
 				);
 				$query      = $this->_db->getQuery(true);
 				$query->delete($this->_db->qn('#__update_sites'));
@@ -1224,7 +1224,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				$this->_db->execute();
 
 				$updateurl           = new stdClass;
-				$updateurl->name     = 'Joomla Bible Study Package';
+				$updateurl->name     = 'Proclaim Package';
 				$updateurl->type     = 'extension';
 				$updateurl->location = 'https://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;id=2&amp;format=xml';
 				$updateurl->enabled  = '1';
@@ -1260,7 +1260,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		$query
 			->select('extension_id')
 			->from('#__extensions')
-			->where($this->_db->qn('name') . ' = ' . $this->_db->qn('com_biblestudy'));
+			->where($this->_db->qn('name') . ' = ' . $this->_db->q('com_biblestudy'));
 		$this->_db->setQuery($query);
 		$eid                   = $this->_db->loadResult();
 		$this->biblestudyEid   = $eid;
@@ -1590,19 +1590,19 @@ class BibleStudyModelInstall extends JModelLegacy
 	{
 		$urls = array(
 			$this->_db->qn('name') . ' = ' .
-			$this->_db->q('Joomla Bible Study Module'),
+			$this->_db->q('Proclaim Module'),
 			$this->_db->qn('name') . ' = ' .
-			$this->_db->q('Joomla Bible Study Podcast Module'),
+			$this->_db->q('Proclaim Podcast Module'),
 			$this->_db->qn('name') . ' = ' .
-			$this->_db->q('Joomla Bible Study Finder Plg'),
+			$this->_db->q('Proclaim Finder Plg'),
 			$this->_db->qn('name') . ' = ' .
-			$this->_db->q('Joomla Bible Study Search Plg'),
+			$this->_db->q('Proclaim Search Plg'),
 			$this->_db->qn('name') . ' = ' .
-			$this->_db->q('Joomla Bible Study Backup Plg'),
+			$this->_db->q('Proclaim Backup Plg'),
 			$this->_db->qn('name') . ' = ' .
-			$this->_db->q('Joomla Bible Study Podcast Plg'),
+			$this->_db->q('Proclaim Podcast Plg'),
 			$this->_db->qn('name') . ' = ' .
-			$this->_db->q('Joomla Bible Study'));
+			$this->_db->q('Proclaim'));
 
 		return $urls;
 	}
