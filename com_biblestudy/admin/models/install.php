@@ -134,8 +134,6 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * @since 7.1 */
 	public $query = array();
 
-	private $name;
-
 	/**
 	 * Constructor.
 	 *
@@ -1201,7 +1199,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				$query
 					->select('extension_id')
 					->from('#__extensions')
-					->where($this->_db->qn('name') . ' = ' . $this->_db->qn('com_biblestudy'));
+					->where($this->_db->qn('name') . ' = ' . $this->_db->q('com_biblestudy'));
 				$this->_db->setQuery($query);
 				$eid                   = $this->_db->loadResult();
 
