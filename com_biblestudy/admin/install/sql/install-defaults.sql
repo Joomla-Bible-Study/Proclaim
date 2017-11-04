@@ -130,9 +130,9 @@ VALUES
 -- Dump of table #__bsms_series
 -- ------------------------------------------------------------
 
-INSERT INTO `#__bsms_series` (`id`, `series_text`, `alias`, `teacher`, `description`, `series_thumbnail`, `published`, `asset_id`, `ordering`, `access`, `language`, `landing_show`)
+INSERT INTO `#__bsms_series` (`id`, `series_text`, `alias`, `teacher`, `description`, `series_thumbnail`, `published`, `asset_id`, `ordering`, `access`, `language`, `landing_show`, `pc_show`)
 VALUES
-  (1, 'Worship Series', X'776F72736869702D736572696573', -1, '', '', 1, 7484, 1, 1, '*', NULL);
+  (1, 'Worship Series', X'776F72736869702D736572696573', -1, '', '', 1, 7484, 1, 1, '*', NULL, 1);
 
 -- Dump of table #__bsms_servers
 -- ------------------------------------------------------------
