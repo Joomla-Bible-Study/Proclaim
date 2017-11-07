@@ -1,9 +1,9 @@
 <?php
 /**
- * @package    BibleStudy.Admin
- * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
+ * @package    Proclaim.Admin
+ * @copyright  2007 - 2017 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       https://www.joomlabiblestudy.org
+ * @link       https://www.christianwebministries.org
  */
 
 defined('JPATH_PLATFORM') or die;
@@ -11,7 +11,7 @@ defined('JPATH_PLATFORM') or die;
 /**
  * Utility class for Fancybox JavaScript behaviors
  *
- * @package  BibleStudy.Admin
+ * @package  Proclaim.Admin
  * @since    9.0.0
  */
 abstract class JHtmlFancybox
@@ -44,7 +44,7 @@ abstract class JHtmlFancybox
 
 		JHtml::_('jquery.framework');
 		JHtml::_('jwplayer.framework');
-		JHtml::script('media/com_biblestudy/fancybox/jquery.fancybox.min.js');
+		JHtml::script('https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.1.20/jquery.fancybox.min.js');
 		JHtml::script('media/com_biblestudy/js/fancybox.js');
 
 		if ($mouseweel)
@@ -70,7 +70,7 @@ abstract class JHtmlFancybox
 	 */
 	public static function loadCss ($option = false)
 	{
-		JHtml::stylesheet('media/com_biblestudy/fancybox/jquery.fancybox.min.css');
+		JHtml::stylesheet('https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.1.20/jquery.fancybox.min.css');
 		JHtml::stylesheet('media/com_biblestudy/css/bsms.fancybox.css');
 	}
 }

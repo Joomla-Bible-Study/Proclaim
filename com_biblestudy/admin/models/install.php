@@ -1,11 +1,11 @@
 <?php
 /**
- * Part of Joomla BibleStudy Package
+ * Part of Proclaim Package
  *
- * @package    BibleStudy.Admin
- * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
+ * @package    Proclaim.Admin
+ * @copyright  2007 - 2017 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       https://www.joomlabiblestudy.org
+ * @link       https://www.christianwebministries.org
  * */
 
 defined('_JEXEC') or die;
@@ -24,7 +24,7 @@ if (file_exists($api))
 /**
  * class Migration model
  *
- * @package  BibleStudy.Admin
+ * @package  Proclaim.Admin
  * @since    7.1.0
  */
 class BibleStudyModelInstall extends JModelLegacy
@@ -417,7 +417,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			$query
 				->select('extension_id')
 				->from('#__extensions')
-				->where('`name` = "com_biblestudy"');
+				->where($this->_db->qn('name') . ' = ' . $this->_db->q('com_biblestudy'));
 			$this->_db->setQuery($query);
 			$eid                  = $this->_db->loadResult();
 			$this->biblestudyEid = $eid;
@@ -768,15 +768,17 @@ class BibleStudyModelInstall extends JModelLegacy
 			$this->doneSteps++;
 			$export = new JBSMBackup;
 			$export->exportdb(2);
+			JLog::add('Backup DB', JLog::INFO, 'com_biblestudy');
 			$this->start = array();
 		}
 
 		if (!empty($this->install))
 		{
-			$this->running = 'Install steps';
+			$this->running = 'Install Steps';
 			$this->doneSteps++;
 			$this->install($this->install);
 			$this->doneSteps++;
+			JLog::add('Fresh Install Steps', JLog::INFO, 'com_biblestudy');
 			$this->install = array();
 		}
 
@@ -785,6 +787,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			$this->fiximport();
 			$this->running   = 'Fixing Imported Params';
 			$this->isimport = 0;
+			JLog::add('Fixing Imported Params', JLog::INFO, 'com_biblestudy');
 			$this->doneSteps++;
 		}
 
@@ -801,7 +804,8 @@ class BibleStudyModelInstall extends JModelLegacy
 
 				if (!$run)
 				{
-					JFactory::getApplication()->enqueueMessage('error updating updates', 'error');
+					JFactory::getApplication()->enqueueMessage('Error Updating Update version ' . (string) $version, 'error');
+					JLog::add('Error Updating Update version ' . (string) $version, JLog::ERROR, 'com_biblestudy');
 				}
 			}
 		}
@@ -949,6 +953,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			}
 		}
 
+		/** We are going to walk thought the assets that need to be fixed that were found form the finish lookup. */
 		if (!empty($this->query)
 			&& empty($this->finish)
 			&& empty($this->versionStack)
@@ -966,7 +971,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				{
 					$version = array_pop($this->query[$this->versionSwitch]);
 					$this->doneSteps++;
-					$this->running = 'Fix Assets';
+					$this->running = 'Fixing Assets that are not right';
 					$asset = new JBSMAssets;
 					$asset->fixAssets($this->versionSwitch, $version);
 				}
@@ -1131,7 +1136,8 @@ class BibleStudyModelInstall extends JModelLegacy
 			->where($this->_db->qn('language_extension') . ' = ' . $this->_db->q('com_biblestudy'));
 		$this->_db->setQuery($query);
 		$this->_db->execute();
-		echo '<h2>' . JText::_('JBS_INS_UNINSTALLED') . ' ' . BIBLESTUDY_VERSION . '</h2> <div>' . $drop_result . '</div>';
+		JFactory::getApplication()->enqueueMessage('<h2>' . JText::_('JBS_INS_UNINSTALLED') . ' ' .
+			BIBLESTUDY_VERSION . '</h2> <div>' . $drop_result . '</div>');
 
 		return true;
 	}
@@ -1159,7 +1165,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				$this->running = 'Update Version';
 				break;
 			case 'fixassets':
-				// Final step is to fix assets
+				// Final step is to fix assets by building what need to be fixed.
 				$assets = new JBSMAssets;
 				$assets->build();
 				$this->query = $assets->query;
@@ -1182,7 +1188,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				$conditions = $this->rmoldurl();
 				$query      = $this->_db->getQuery(true);
 				$query->delete($this->_db->qn('#__update_sites'));
-				$query->where($conditions, 'OR');
+				$query->where($conditions, $glue = 'OR');
 				$this->_db->setQuery($query);
 				$this->_db->execute();
 				$this->running = 'Remove Old Update URL\'s';
@@ -1193,17 +1199,17 @@ class BibleStudyModelInstall extends JModelLegacy
 				$query
 					->select('extension_id')
 					->from('#__extensions')
-					->where('`name` = "com_biblestudy"');
+					->where($this->_db->qn('name') . ' = ' . $this->_db->q('com_biblestudy'));
 				$this->_db->setQuery($query);
 				$eid                   = $this->_db->loadResult();
 
 				$conditions = array(
 					$this->_db->qn('name') . ' = ' .
-					$this->_db->q('Joomla Bible Study Package'),
+					$this->_db->q('Proclaim Package'),
 				);
 				$query      = $this->_db->getQuery(true);
 				$query->delete($this->_db->qn('#__update_sites'));
-				$query->where($conditions, 'OR');
+				$query->where($conditions, $glue = 'OR');
 				$this->_db->setQuery($query);
 				$this->_db->execute();
 
@@ -1213,12 +1219,12 @@ class BibleStudyModelInstall extends JModelLegacy
 				);
 				$query      = $this->_db->getQuery(true);
 				$query->delete($this->_db->qn('#__update_sites_extensions'));
-				$query->where($conditions, 'OR');
+				$query->where($conditions,  $glue = 'OR');
 				$this->_db->setQuery($query);
 				$this->_db->execute();
 
 				$updateurl           = new stdClass;
-				$updateurl->name     = 'Joomla Bible Study Package';
+				$updateurl->name     = 'Proclaim Package';
 				$updateurl->type     = 'extension';
 				$updateurl->location = 'https://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;id=2&amp;format=xml';
 				$updateurl->enabled  = '1';
@@ -1254,7 +1260,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		$query
 			->select('extension_id')
 			->from('#__extensions')
-			->where('`name` = "com_biblestudy"');
+			->where($this->_db->qn('name') . ' = ' . $this->_db->q('com_biblestudy'));
 		$this->_db->setQuery($query);
 		$eid                   = $this->_db->loadResult();
 		$this->biblestudyEid   = $eid;
@@ -1326,7 +1332,7 @@ class BibleStudyModelInstall extends JModelLegacy
 
 					if ($set)
 					{
-						$this->_db->updateObject($table['name'], $row, 'id');
+						$this->_db->updateObject($table['name'], $row, ['id']);
 					}
 				}
 			}
@@ -1350,6 +1356,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		if ($buffer === false)
 		{
 			JFactory::getApplication()->enqueueMessage(JText::sprintf('JLIBinstallER_ERROR_SQL_READBUFFER'), 'WARNING');
+			JLog::add(JText::sprintf('JLIBinstallER_ERROR_SQL_READBUFFER'), JLog::WARNING, 'com_biblestudy');
 
 			return false;
 		}
@@ -1423,21 +1430,23 @@ class BibleStudyModelInstall extends JModelLegacy
 
 		if ($string != '' && $string{0} != '#')
 		{
-			$this->_db->setQuery($string);
+			$this->_db->setQuery($this->_db->convertUtf8mb4QueryToUtf8($string));
 			$this->doneSteps++;
 
-			if (!$this->_db->execute())
+			try
 			{
-				$app->enqueueMessage($this->_db->stderr(true), 'warning');
+				$this->_db->execute();
+			}
+			catch (RuntimeException $e)
+			{
+				JLog::add($e->getMessage(), JLog::WARNING,  'com_biblestudy');
 
 				return false;
 			}
-			else
-			{
-				$queryString = (string) $string;
-				$queryString = str_replace(array("\r", "\n"), array('', ' '), substr($queryString, 0, 80));
-				JLog::add(JText::sprintf('JLIBinstallER_UPDATE_LOG_QUERY', $this->running, $queryString), JLog::INFO, 'com_biblestudy');
-			}
+
+			$queryString = (string) $string;
+			$queryString = str_replace(array("\r", "\n"), array('', ' '), substr($queryString, 0, 80));
+			JLog::add(JText::sprintf('JLIBinstallER_UPDATE_LOG_QUERY', $this->running, $queryString), JLog::INFO, 'com_biblestudy');
 		}
 
 		return true;
@@ -1561,7 +1570,8 @@ class BibleStudyModelInstall extends JModelLegacy
 			$query = $this->_db->getQuery(true);
 			$query->update($table['table'])
 				->set('access = ' . $id)
-				->where("access = " . $this->_db->q('0'), 'OR')->where("access = " . $this->_db->q(' '));
+				->where("access = " . $this->_db->q('0'),  $glue = 'OR')
+				->where("access = " . $this->_db->q(' '));
 			$this->_db->setQuery($query);
 			$this->_db->execute();
 		}
@@ -1579,31 +1589,20 @@ class BibleStudyModelInstall extends JModelLegacy
 	public function rmoldurl()
 	{
 		$urls = array(
-			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=3'),
-			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=14&dummy=extension.xml'),
-			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=5&dummy=extension.xml'),
-			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=13'),
-			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;' .
-				'format=xml&amp;id=4&dummy=extension.xml'),
-			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=8'),
-			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=3&dummy=extension.xml'),
-			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=14&dummy=extension.xml'),
-			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=13&dummy=extension.xml'),
-			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=4&dummy=extension.xml'),
-			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=8&dummy=extension.xml'),
-			$this->_db->qn('location') . ' = ' .
-			$this->_db->q('https://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=5&dummy=extension.xml'));
+			$this->_db->qn('name') . ' = ' .
+			$this->_db->q('Proclaim Module'),
+			$this->_db->qn('name') . ' = ' .
+			$this->_db->q('Proclaim Podcast Module'),
+			$this->_db->qn('name') . ' = ' .
+			$this->_db->q('Proclaim Finder Plg'),
+			$this->_db->qn('name') . ' = ' .
+			$this->_db->q('Proclaim Search Plg'),
+			$this->_db->qn('name') . ' = ' .
+			$this->_db->q('Proclaim Backup Plg'),
+			$this->_db->qn('name') . ' = ' .
+			$this->_db->q('Proclaim Podcast Plg'),
+			$this->_db->qn('name') . ' = ' .
+			$this->_db->q('Proclaim'));
 
 		return $urls;
 	}

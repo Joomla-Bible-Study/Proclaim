@@ -1,11 +1,11 @@
 <?php
 /**
- * Part of Joomla BibleStudy Package
+ * Part of Proclaim Package
  *
- * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @package    Proclaim.Admin
+ * @copyright  2007 - 2016 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       https://www.joomlabiblestudy.org
+ * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -214,7 +214,7 @@ class BiblestudyModelPodcastdisplay extends JModelItem
 		// Select only published studies
 		$query->where('study.published = 1');
 		$query->where('(series.published = 1 OR study.series_id <= 0)');
-		$query->where('study.series_id = ' . $sid);
+		$query->where('study.series_id = ' . (int) $sid);
 
 		// Order by order filter
 		$orderparam = $params->get('default_order');

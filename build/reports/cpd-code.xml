@@ -3201,7 +3201,7 @@ jimport('joomla.filesystem.file');
 /**
  * BibleStudy Install Script
  *
- * @package  BibleStudy.Admin
+ * @package  Proclaim.Admin
  * @since    7.0.0
  */
 class Com_BiblestudyInstallerScript
@@ -3306,7 +3306,7 @@ class Com_BiblestudyInstallerScript
         }
         else
         {
-            JFactory::$application-&gt;enqueueMessage('Your host needs to use PHP ' . $this-&gt;_minimum_php . ' or higher to run Joomla Bible Study');
+            JFactory::$application-&gt;enqueueMessage('Your host needs to use PHP ' . $this-&gt;_minimum_php . ' or higher to run Proclaim');
             $install_good = false;
         }
 
@@ -5035,7 +5035,7 @@ jimport('joomla.form.formfield');
 /**
  * Form Field class for the FileSize
  *
- * @package  BibleStudy.Admin
+ * @package  Proclaim.Admin
  * @since    7.0.0
  */
 class JFormFieldFilesize extends JFormField
@@ -5185,9 +5185,9 @@ jimport('joomla.form.helper');
 JFormHelper::loadFieldClass('list');
 
 /**
- * Virtuemart Category List Form Field class for the Joomla Bible Study component
+ * Virtuemart Category List Form Field class for the Proclaim component
  *
- * @package  BibleStudy.Admin
+ * @package  Proclaim.Admin
  * @since    7.0.4
  */
 class JFormFieldVirtuemart extends JFormFieldList

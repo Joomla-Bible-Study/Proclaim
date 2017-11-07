@@ -31,7 +31,7 @@
 				height: height,
 				opts: {
 					smallBtn: false,
-					onComplete: function () {
+					afterLoad: function () {
 						var playerInstance = jwplayer("video_container");
 						playerInstance.setup({
 							title: title,
@@ -46,7 +46,7 @@
 							file: myVideo,
 							width: width,
 							height: height,
-							mute: mute,
+							mute: false,
 							autostart: autostart,
 							controls: controls
 						});

@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
 <meta charset="utf-8">
-<title>Joomla Bible Study API » BibleStudy.Admin</title>
+<title>Proclaim API » Proclaim.Admin</title>
 <meta name="author" content="Mike van Riel">
 <meta name="description" content="">
 <link href="../css/template.css" rel="stylesheet" media="all">
@@ -15,13 +15,13 @@
 <body>
 <div class="navbar navbar-fixed-top">
 <div class="navbar-inner"><div class="container">
-<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">Joomla Bible Study API</a><div class="nav-collapse"><ul class="nav">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">Proclaim API</a><div class="nav-collapse"><ul class="nav">
 <li class="dropdown">
 <a href="#api" class="dropdown-toggle" data-toggle="dropdown">
                                     API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a>Packages</a></li>
 <li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
-<li><a href="../packages/BibleStudy.Admin.html"><i class="icon-folder-open"></i> BibleStudy.Admin</a></li>
+<li><a href="../packages/Proclaim.Admin.html"><i class="icon-folder-open"></i> Proclaim.Admin</a></li>
 <li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
 <li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
 </ul>
@@ -59,8 +59,8 @@
 <li class="nav-header">
 <i class="icon-map-marker"></i> Packages</li>
 <li>
-<a href="../packages/BibleStudy.Admin.html" title="BibleStudy.Admin"><i class="icon-folder-open"></i>BibleStudy.Admin</a><ul class="nav nav-list nav-packages"><li>
-<a href="../packages/BibleStudy.Admin.HTML.html" title="HTML"><i class="icon-folder-open"></i>HTML</a><ul class="nav nav-list nav-packages"></ul>
+<a href="../packages/Proclaim.Admin.html" title="Proclaim.Admin"><i class="icon-folder-open"></i>Proclaim.Admin</a><ul class="nav nav-list nav-packages"><li>
+<a href="../packages/Proclaim.Admin.HTML.html" title="HTML"><i class="icon-folder-open"></i>HTML</a><ul class="nav nav-list nav-packages"></ul>
 </li></ul>
 </li>
 <li class="nav-header">
@@ -85,11 +85,11 @@
 <li><a href="#BiblestudyViewSeries" title="View class for Series">BiblestudyViewSeries</a></li>
 <li><a href="#BiblestudyControllerServers" title="Servers list controller class.">BiblestudyControllerServers</a></li>
 <li><a href="#BiblestudyModelUpload" title="Upload model class">BiblestudyModelUpload</a></li>
-<li><a href="#JFormFieldSeriesoptions" title="Books List Form Field class for the Joomla Bible Study component">JFormFieldSeriesoptions</a></li>
-<li><a href="#JFormFieldListoptions" title="Books List Form Field class for the Joomla Bible Study component">JFormFieldListoptions</a></li>
+<li><a href="#JFormFieldSeriesoptions" title="Books List Form Field class for the Proclaim component">JFormFieldSeriesoptions</a></li>
+<li><a href="#JFormFieldListoptions" title="Books List Form Field class for the Proclaim component">JFormFieldListoptions</a></li>
 <li><a href="#JFormFieldServerType" title="ServerType Field class">JFormFieldServerType</a></li>
 <li><a href="#BiblestudyModelTopic" title="Topic Model class">BiblestudyModelTopic</a></li>
-<li><a href="#JFormFieldMimetype" title="Mime Type List Form Field class for the Joomla Bible Study component">JFormFieldMimetype</a></li>
+<li><a href="#JFormFieldMimetype" title="Mime Type List Form Field class for the Proclaim component">JFormFieldMimetype</a></li>
 <li><a href="#BiblestudyViewTeachers" title="View class for Teachers">BiblestudyViewTeachers</a></li>
 <li><a href="#Migration623" title="Update for 6.2.3 class">Migration623</a></li>
 <li><a href="#BiblestudyModelCommentlist" title="Comments model class">BiblestudyModelCommentlist</a></li>
@@ -100,30 +100,30 @@
 <li><a href="#JBSMParams" title="This is for Retrieving Admin and Template db">JBSMParams</a></li>
 <li><a href="#BiblestudyModelMediafiles" title="MediaFiles model class">BiblestudyModelMediafiles</a></li>
 <li><a href="#BiblestudyViewMessagetypes" title="View class for Messagetype">BiblestudyViewMessagetypes</a></li>
-<li><a href="#JFormFieldLinkoptions" title="Books List Form Field class for the Joomla Bible Study component">JFormFieldLinkoptions</a></li>
+<li><a href="#JFormFieldLinkoptions" title="Books List Form Field class for the Proclaim component">JFormFieldLinkoptions</a></li>
 <li><a href="#BiblestudyModelServers" title="Servers model class">BiblestudyModelServers</a></li>
-<li><a href="#JFormFieldTeacherLinkoptions" title="Books List Form Field class for the Joomla Bible Study component">JFormFieldTeacherLinkoptions</a></li>
+<li><a href="#JFormFieldTeacherLinkoptions" title="Books List Form Field class for the Proclaim component">JFormFieldTeacherLinkoptions</a></li>
 <li><a href="#JBSMPIconvert" title="Convert Class
 PreachIT Converter system">JBSMPIconvert</a></li>
-<li><a href="#JFormFieldMediafile" title="Location List Form Field class for the Joomla Bible Study component">JFormFieldMediafile</a></li>
-<li><a href="#JFormFieldTemplatelist" title="Teachers List Form Field class for the Joomla Bible Study component">JFormFieldTemplatelist</a></li>
+<li><a href="#JFormFieldMediafile" title="Location List Form Field class for the Proclaim component">JFormFieldMediafile</a></li>
+<li><a href="#JFormFieldTemplatelist" title="Teachers List Form Field class for the Proclaim component">JFormFieldTemplatelist</a></li>
 <li><a href="#BiblestudyViewTeacher" title="View class for Teacher">BiblestudyViewTeacher</a></li>
 <li><a href="#JFormFieldPlupload" title="Class JFormFieldPlupload">JFormFieldPlupload</a></li>
 <li><a href="#JBSMHelper" title="Core Bible Study Helper">JBSMHelper</a></li>
 <li><a href="#JFormFieldModal_Study" title="Field class for Modal_Study">JFormFieldModal_Study</a></li>
 <li><a href="#JHtmlFancybox" title="Utility class for Fancybox JavaScript behaviors">JHtmlFancybox</a></li>
-<li><a href="#JBSMSSConvert" title="Class script to convert SermonSpeaker 5.2 to Joomla Bible Study">JBSMSSConvert</a></li>
+<li><a href="#JBSMSSConvert" title="Class script to convert SermonSpeaker 5.2 to Proclaim">JBSMSSConvert</a></li>
 <li><a href="#JBSMThumbnail" title="Thumbnail helper class">JBSMThumbnail</a></li>
 <li><a href="#BiblestudyModelPodcast" title="Podcast model class">BiblestudyModelPodcast</a></li>
 <li><a href="#BiblestudyModelSeries" title="Series model class">BiblestudyModelSeries</a></li>
-<li><a href="#JFormFieldSeriesLinkoptions" title="Books List Form Field class for the Joomla Bible Study component">JFormFieldSeriesLinkoptions</a></li>
+<li><a href="#JFormFieldSeriesLinkoptions" title="Books List Form Field class for the Proclaim component">JFormFieldSeriesLinkoptions</a></li>
 <li><a href="#JBSMListing" title="BibleStudy listing class">JBSMListing</a></li>
-<li><a href="#JFormFieldLocationslist" title="Location List Form Field class for the Joomla Bible Study component">JFormFieldLocationslist</a></li>
+<li><a href="#JFormFieldLocationslist" title="Location List Form Field class for the Proclaim component">JFormFieldLocationslist</a></li>
 <li><a href="#BiblestudyModelTemplates" title="Templates model class">BiblestudyModelTemplates</a></li>
 <li><a href="#BiblestudyControllerCommentlist" title="Controller for Comments">BiblestudyControllerCommentlist</a></li>
 <li><a href="#JFormFieldUpload" title="Upload Field class">JFormFieldUpload</a></li>
 <li><a href="#TableMediafile" title="Table class for MediaFile">TableMediafile</a></li>
-<li><a href="#JFormFieldRowOptions" title="Books List Form Field class for the Joomla Bible Study component">JFormFieldRowOptions</a></li>
+<li><a href="#JFormFieldRowOptions" title="Books List Form Field class for the Proclaim component">JFormFieldRowOptions</a></li>
 <li><a href="#JBSMAddonLegacy" title="Class JBSMAddonLegacy">JBSMAddonLegacy</a></li>
 <li><a href="#TableTemplate" title="Table class for Template">TableTemplate</a></li>
 <li><a href="#BiblestudyModelTeachers" title="Teachers model class">BiblestudyModelTeachers</a></li>
@@ -134,7 +134,7 @@ PreachIT Converter system">JBSMPIconvert</a></li>
 <li><a href="#BiblestudyControllerMessage" title="Controller for Message">BiblestudyControllerMessage</a></li>
 <li><a href="#BiblestudyModelTemplatecodes" title="Template codes model class">BiblestudyModelTemplatecodes</a></li>
 <li><a href="#Migration700" title="Update for 7.0.0 class">Migration700</a></li>
-<li><a href="#JFormFieldTopicslist" title="Topics List Form Field class for the Joomla Bible Study component
+<li><a href="#JFormFieldTopicslist" title="Topics List Form Field class for the Proclaim component
 Displays a topics list of ALL published topics">JFormFieldTopicslist</a></li>
 <li><a href="#JBSServer" title="Abstract Server class">JBSServer</a></li>
 <li><a href="#TableSerie" title="Seris JTable class">TableSerie</a></li>
@@ -146,15 +146,15 @@ Displays a topics list of ALL published topics">JFormFieldTopicslist</a></li>
 <li><a href="#BiblestudyModelComments" title="Comments model class">BiblestudyModelComments</a></li>
 <li><a href="#BiblestudyControllerTeachers" title="Teachers list controller class.">BiblestudyControllerTeachers</a></li>
 <li><a href="#BiblestudyViewSerie" title="JView class for Serie">BiblestudyViewSerie</a></li>
-<li><a href="#JFormFieldSeriesList" title="Series List Form Field class for the Joomla Bible Study component">JFormFieldSeriesList</a></li>
-<li><a href="#JFormFieldBooklist" title="Location List Form Field class for the Joomla Bible Study component">JFormFieldBooklist</a></li>
+<li><a href="#JFormFieldSeriesList" title="Series List Form Field class for the Proclaim component">JFormFieldSeriesList</a></li>
+<li><a href="#JFormFieldBooklist" title="Location List Form Field class for the Proclaim component">JFormFieldBooklist</a></li>
 <li><a href="#BiblestudyModelTemplatecode" title="HelloWorld Model">BiblestudyModelTemplatecode</a></li>
 <li><a href="#JBSMStats" title="Bible Study stats support class">JBSMStats</a></li>
 <li><a href="#JBSMAddonYouTube" title="Class JBSMAddonYouTube">JBSMAddonYouTube</a></li>
 <li><a href="#JBSMBackup" title="JBS Export class">JBSMBackup</a></li>
-<li><a href="#JFormFieldLocationlist" title="Location List Form Field class for the Joomla Bible Study component">JFormFieldLocationlist</a></li>
+<li><a href="#JFormFieldLocationlist" title="Location List Form Field class for the Proclaim component">JFormFieldLocationlist</a></li>
 <li><a href="#BiblestudyViewMessagetype" title="View class for Messagetype">BiblestudyViewMessagetype</a></li>
-<li><a href="#JFormFieldElementOptions" title="Books List Form Field class for the Joomla Bible Study component">JFormFieldElementOptions</a></li>
+<li><a href="#JFormFieldElementOptions" title="Books List Form Field class for the Proclaim component">JFormFieldElementOptions</a></li>
 <li><a href="#BiblestudyModelLocations" title="Locations model class">BiblestudyModelLocations</a></li>
 <li><a href="#Mod_BiblestudyInstallerScript" title="Script file of HelloWorld module">Mod_BiblestudyInstallerScript</a></li>
 <li><a href="#BiblestudyControllerMessagetypes" title="MessageType list controller class.">BiblestudyControllerMessagetypes</a></li>
@@ -180,15 +180,15 @@ Displays a topics list of ALL published topics">JFormFieldTopicslist</a></li>
 <li><a href="#BiblestudyViewTopic" title="View class for Topic">BiblestudyViewTopic</a></li>
 <li><a href="#BiblestudyControllerUpload" title="Class BiblestudyControllerUpload">BiblestudyControllerUpload</a></li>
 <li><a href="#JFormFieldLoadLanguageFile" title="This is a dummy form element to load the components language file">JFormFieldLoadLanguageFile</a></li>
-<li><a href="#JFormFieldDocman" title="Virtuemart Category List Form Field class for the Joomla Bible Study component">JFormFieldDocman</a></li>
-<li><a href="#JFormFieldTeacherlist" title="Teachers List Form Field class for the Joomla Bible Study component">JFormFieldTeacherlist</a></li>
+<li><a href="#JFormFieldDocman" title="Virtuemart Category List Form Field class for the Proclaim component">JFormFieldDocman</a></li>
+<li><a href="#JFormFieldTeacherlist" title="Teachers List Form Field class for the Proclaim component">JFormFieldTeacherlist</a></li>
 <li><a href="#BiblestudyViewMessages" title="View class for a list of Messages.">BiblestudyViewMessages</a></li>
 <li><a href="#JBSMAssets" title="Asset Fix class">JBSMAssets</a></li>
 <li><a href="#JBSMTags" title="Tags Helper">JBSMTags</a></li>
 <li><a href="#BiblestudyControllerMediafiles" title="MediaFiles list controller class">BiblestudyControllerMediafiles</a></li>
 <li><a href="#BiblestudyViewBackup" title="View class for Admin">BiblestudyViewBackup</a></li>
 <li><a href="#BiblestudyModelServer" title="Server admin model">BiblestudyModelServer</a></li>
-<li><a href="#JFormFieldTeacherlist" title="Teachers List Form Field class for the Joomla Bible Study component">JFormFieldTeacherlist</a></li>
+<li><a href="#JFormFieldTeacherlist" title="Teachers List Form Field class for the Proclaim component">JFormFieldTeacherlist</a></li>
 <li><a href="#BiblestudyControllerMessagetype" title="Controller for MessageType">BiblestudyControllerMessagetype</a></li>
 <li><a href="#BiblestudyControllerPodcast" title="Podcast form class">BiblestudyControllerPodcast</a></li>
 <li><a href="#BiblestudyControllerTemplates" title="Controller for Templates">BiblestudyControllerTemplates</a></li>
@@ -197,7 +197,7 @@ Displays a topics list of ALL published topics">JFormFieldTopicslist</a></li>
 <li><a href="#JHtmlBiblestudy" title="Biblestudy HTML class.">JHtmlBiblestudy</a></li>
 <li><a href="#BiblestudyModelArchive" title="Controller for Archive">BiblestudyModelArchive</a></li>
 <li><a href="#JBSMAlias" title="Class for updating the alias in certain tables">JBSMAlias</a></li>
-<li><a href="#JFormFieldSpanOptions" title="Books List Form Field class for the Joomla Bible Study component">JFormFieldSpanOptions</a></li>
+<li><a href="#JFormFieldSpanOptions" title="Books List Form Field class for the Proclaim component">JFormFieldSpanOptions</a></li>
 <li><a href="#Migration611" title="Update for 6.1.1 class">Migration611</a></li>
 <li><a href="#Migration900" title="Update for 9.0.0 class">Migration900</a></li>
 <li><a href="#JBSMBibleStudyHelper" title="BibleStudy Helper class">JBSMBibleStudyHelper</a></li>
@@ -209,14 +209,14 @@ Displays a topics list of ALL published topics">JFormFieldTopicslist</a></li>
 <li><a href="#Migration901" title="Update for 9.0.1 class">Migration901</a></li>
 <li><a href="#TableTopic" title="Topic table class">TableTopic</a></li>
 <li><a href="#BiblestudyControllerTemplatecode" title="Template Code controller class">BiblestudyControllerTemplatecode</a></li>
-<li><a href="#JFormFieldMessagetypelist" title="Message Type List Form Field class for the Joomla Bible Study component">JFormFieldMessagetypelist</a></li>
+<li><a href="#JFormFieldMessagetypelist" title="Message Type List Form Field class for the Proclaim component">JFormFieldMessagetypelist</a></li>
 <li><a href="#BiblestudyViewAdmin" title="View class for Admin">BiblestudyViewAdmin</a></li>
 <li><a href="#TableServer" title="Table class for Server">TableServer</a></li>
 <li><a href="#JFormFieldModal_Teacherdisplay" title="Supports a modal study picker.">JFormFieldModal_Teacherdisplay</a></li>
 <li><a href="#BiblestudyModelDir" title="Description of dir">BiblestudyModelDir</a></li>
 <li><a href="#BiblestudyModelMessagetypes" title="MessageType model class">BiblestudyModelMessagetypes</a></li>
 <li><a href="#TableTemplatecode" title="TemplateCode table class">TableTemplatecode</a></li>
-<li><a href="#JFormFieldVirtuemart" title="Virtuemart Category List Form Field class for the Joomla Bible Study component">JFormFieldVirtuemart</a></li>
+<li><a href="#JFormFieldVirtuemart" title="Virtuemart Category List Form Field class for the Proclaim component">JFormFieldVirtuemart</a></li>
 <li><a href="#BiblestudyViewPodcasts" title="View class for Podcasts">BiblestudyViewPodcasts</a></li>
 <li><a href="#BiblestudyModelTeacher" title="Teacher model class">BiblestudyModelTeacher</a></li>
 <li><a href="#BiblestudyControllerCommentform" title="Controller for a Comment">BiblestudyControllerCommentform</a></li>
@@ -248,12 +248,12 @@ params.">JBSMImageLib</a></li>
 <li><a href="#JBSMImage" title="Class for Joomla! Bible Study Image">JBSMImage</a></li>
 <li><a href="#BiblestudyControllerAdmin" title="Controller for Admin">BiblestudyControllerAdmin</a></li>
 <li><a href="#BiblestudyViewDir" title="Directory View">BiblestudyViewDir</a></li>
-<li><a href="#JFormFieldMediafileImages" title="Location List Form Field class for the Joomla Bible Study component">JFormFieldMediafileImages</a></li>
+<li><a href="#JFormFieldMediafileImages" title="Location List Form Field class for the Proclaim component">JFormFieldMediafileImages</a></li>
 <li><a href="#BiblestudyControllerServer" title="Controller for Server">BiblestudyControllerServer</a></li>
 <li><a href="#Com_BiblestudyInstallerScript" title="BibleStudy Install Script">Com_BiblestudyInstallerScript</a></li>
-<li><a href="#JFormFieldMediafile" title="Location List Form Field class for the Joomla Bible Study component">JFormFieldMediafile</a></li>
+<li><a href="#JFormFieldMediafile" title="Location List Form Field class for the Proclaim component">JFormFieldMediafile</a></li>
 <li><a href="#TableLocation" title="Location table class">TableLocation</a></li>
-<li><a href="#JFormFieldYearlist" title="Location List Form Field class for the Joomla Bible Study component">JFormFieldYearlist</a></li>
+<li><a href="#JFormFieldYearlist" title="Location List Form Field class for the Proclaim component">JFormFieldYearlist</a></li>
 <li><a href="#JBSMAddonLocal" title="Class JBSMAddonLocal">JBSMAddonLocal</a></li>
 <li><a href="#BiblestudyViewDatabase" title="View class for Admin">BiblestudyViewDatabase</a></li>
 <li><a href="#BiblestudyViewInstall" title="JView class for Install">BiblestudyViewInstall</a></li>
@@ -328,7 +328,7 @@ params.">JBSMImageLib</a></li>
 </div>
 <div class="span8 package-contents">
 <ul class="breadcrumb"><li>
-<a href="../index.html"><i class="icon-folder-open"></i></a><span class="divider">\</span><li class="active"><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></li>
+<a href="../index.html"><i class="icon-folder-open"></i></a><span class="divider">\</span><li class="active"><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></li>
 </li></ul>
 <div class="package-indent">
 <h3>
@@ -342,7 +342,7 @@ params.">JBSMImageLib</a></li>
 <table class="table table-bordered">
 <tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr>
 <tr>
 <th>since</th>
@@ -361,7 +361,7 @@ that the message concerning it should be displayed.</p></div>
 <table class="table table-bordered">
 <tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr>
 <tr>
 <th>since</th>
@@ -381,7 +381,7 @@ that the message concerning it should be displayed.</p></div>
 <table class="table table-bordered">
 <tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr>
 <tr>
 <th>since</th>
@@ -399,7 +399,7 @@ that the message concerning it should be displayed.</p></div>
 <table class="table table-bordered">
 <tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr>
 <tr>
 <th>since</th>
@@ -423,7 +423,7 @@ that the message concerning it should be displayed.</p></div>
 <table class="table table-bordered">
 <tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr>
 <tr>
 <th>since</th>
@@ -1341,7 +1341,7 @@ PreachIT Converter system</p>
 <div xmlns:php="http://php.net/xsl" id="JBSMSSConvert" class="element ajax clickable class">
 <h1>JBSMSSConvert<a href="../classes/JBSMSSConvert.html">¶</a>
 </h1>
-<p class="short_description">Class script to convert SermonSpeaker 5.2 to Joomla Bible Study</p>
+<p class="short_description">Class script to convert SermonSpeaker 5.2 to Proclaim</p>
 <div class="details collapse"></div>
 <a href="../classes/JBSMSSConvert.html" class="more">« More »</a>
 </div>
@@ -1390,21 +1390,21 @@ PreachIT Converter system</p>
 <div xmlns:php="http://php.net/xsl" id="JFormFieldBooklist" class="element ajax clickable class">
 <h1>JFormFieldBooklist<a href="../classes/JFormFieldBooklist.html">¶</a>
 </h1>
-<p class="short_description">Location List Form Field class for the Joomla Bible Study component</p>
+<p class="short_description">Location List Form Field class for the Proclaim component</p>
 <div class="details collapse"></div>
 <a href="../classes/JFormFieldBooklist.html" class="more">« More »</a>
 </div>
 <div xmlns:php="http://php.net/xsl" id="JFormFieldDocman" class="element ajax clickable class">
 <h1>JFormFieldDocman<a href="../classes/JFormFieldDocman.html">¶</a>
 </h1>
-<p class="short_description">Virtuemart Category List Form Field class for the Joomla Bible Study component</p>
+<p class="short_description">Virtuemart Category List Form Field class for the Proclaim component</p>
 <div class="details collapse"></div>
 <a href="../classes/JFormFieldDocman.html" class="more">« More »</a>
 </div>
 <div xmlns:php="http://php.net/xsl" id="JFormFieldElementOptions" class="element ajax clickable class">
 <h1>JFormFieldElementOptions<a href="../classes/JFormFieldElementOptions.html">¶</a>
 </h1>
-<p class="short_description">Books List Form Field class for the Joomla Bible Study component</p>
+<p class="short_description">Books List Form Field class for the Proclaim component</p>
 <div class="details collapse"></div>
 <a href="../classes/JFormFieldElementOptions.html" class="more">« More »</a>
 </div>
@@ -1432,14 +1432,14 @@ PreachIT Converter system</p>
 <div xmlns:php="http://php.net/xsl" id="JFormFieldLinkoptions" class="element ajax clickable class">
 <h1>JFormFieldLinkoptions<a href="../classes/JFormFieldLinkoptions.html">¶</a>
 </h1>
-<p class="short_description">Books List Form Field class for the Joomla Bible Study component</p>
+<p class="short_description">Books List Form Field class for the Proclaim component</p>
 <div class="details collapse"></div>
 <a href="../classes/JFormFieldLinkoptions.html" class="more">« More »</a>
 </div>
 <div xmlns:php="http://php.net/xsl" id="JFormFieldListoptions" class="element ajax clickable class">
 <h1>JFormFieldListoptions<a href="../classes/JFormFieldListoptions.html">¶</a>
 </h1>
-<p class="short_description">Books List Form Field class for the Joomla Bible Study component</p>
+<p class="short_description">Books List Form Field class for the Proclaim component</p>
 <div class="details collapse"></div>
 <a href="../classes/JFormFieldListoptions.html" class="more">« More »</a>
 </div>
@@ -1453,49 +1453,49 @@ PreachIT Converter system</p>
 <div xmlns:php="http://php.net/xsl" id="JFormFieldLocationlist" class="element ajax clickable class">
 <h1>JFormFieldLocationlist<a href="../classes/JFormFieldLocationlist.html">¶</a>
 </h1>
-<p class="short_description">Location List Form Field class for the Joomla Bible Study component</p>
+<p class="short_description">Location List Form Field class for the Proclaim component</p>
 <div class="details collapse"></div>
 <a href="../classes/JFormFieldLocationlist.html" class="more">« More »</a>
 </div>
 <div xmlns:php="http://php.net/xsl" id="JFormFieldLocationslist" class="element ajax clickable class">
 <h1>JFormFieldLocationslist<a href="../classes/JFormFieldLocationslist.html">¶</a>
 </h1>
-<p class="short_description">Location List Form Field class for the Joomla Bible Study component</p>
+<p class="short_description">Location List Form Field class for the Proclaim component</p>
 <div class="details collapse"></div>
 <a href="../classes/JFormFieldLocationslist.html" class="more">« More »</a>
 </div>
 <div xmlns:php="http://php.net/xsl" id="JFormFieldMediafile" class="element ajax clickable class">
 <h1>JFormFieldMediafile<a href="../classes/JFormFieldMediafile.html">¶</a>
 </h1>
-<p class="short_description">Location List Form Field class for the Joomla Bible Study component</p>
+<p class="short_description">Location List Form Field class for the Proclaim component</p>
 <div class="details collapse"></div>
 <a href="../classes/JFormFieldMediafile.html" class="more">« More »</a>
 </div>
 <div xmlns:php="http://php.net/xsl" id="JFormFieldMediafile" class="element ajax clickable class">
 <h1>JFormFieldMediafile<a href="../classes/JFormFieldMediafile.html">¶</a>
 </h1>
-<p class="short_description">Location List Form Field class for the Joomla Bible Study component</p>
+<p class="short_description">Location List Form Field class for the Proclaim component</p>
 <div class="details collapse"></div>
 <a href="../classes/JFormFieldMediafile.html" class="more">« More »</a>
 </div>
 <div xmlns:php="http://php.net/xsl" id="JFormFieldMediafileImages" class="element ajax clickable class">
 <h1>JFormFieldMediafileImages<a href="../classes/JFormFieldMediafileImages.html">¶</a>
 </h1>
-<p class="short_description">Location List Form Field class for the Joomla Bible Study component</p>
+<p class="short_description">Location List Form Field class for the Proclaim component</p>
 <div class="details collapse"></div>
 <a href="../classes/JFormFieldMediafileImages.html" class="more">« More »</a>
 </div>
 <div xmlns:php="http://php.net/xsl" id="JFormFieldMessagetypelist" class="element ajax clickable class">
 <h1>JFormFieldMessagetypelist<a href="../classes/JFormFieldMessagetypelist.html">¶</a>
 </h1>
-<p class="short_description">Message Type List Form Field class for the Joomla Bible Study component</p>
+<p class="short_description">Message Type List Form Field class for the Proclaim component</p>
 <div class="details collapse"></div>
 <a href="../classes/JFormFieldMessagetypelist.html" class="more">« More »</a>
 </div>
 <div xmlns:php="http://php.net/xsl" id="JFormFieldMimetype" class="element ajax clickable class">
 <h1>JFormFieldMimetype<a href="../classes/JFormFieldMimetype.html">¶</a>
 </h1>
-<p class="short_description">Mime Type List Form Field class for the Joomla Bible Study component</p>
+<p class="short_description">Mime Type List Form Field class for the Proclaim component</p>
 <div class="details collapse"></div>
 <a href="../classes/JFormFieldMimetype.html" class="more">« More »</a>
 </div>
@@ -1544,28 +1544,28 @@ PreachIT Converter system</p>
 <div xmlns:php="http://php.net/xsl" id="JFormFieldRowOptions" class="element ajax clickable class">
 <h1>JFormFieldRowOptions<a href="../classes/JFormFieldRowOptions.html">¶</a>
 </h1>
-<p class="short_description">Books List Form Field class for the Joomla Bible Study component</p>
+<p class="short_description">Books List Form Field class for the Proclaim component</p>
 <div class="details collapse"></div>
 <a href="../classes/JFormFieldRowOptions.html" class="more">« More »</a>
 </div>
 <div xmlns:php="http://php.net/xsl" id="JFormFieldSeriesLinkoptions" class="element ajax clickable class">
 <h1>JFormFieldSeriesLinkoptions<a href="../classes/JFormFieldSeriesLinkoptions.html">¶</a>
 </h1>
-<p class="short_description">Books List Form Field class for the Joomla Bible Study component</p>
+<p class="short_description">Books List Form Field class for the Proclaim component</p>
 <div class="details collapse"></div>
 <a href="../classes/JFormFieldSeriesLinkoptions.html" class="more">« More »</a>
 </div>
 <div xmlns:php="http://php.net/xsl" id="JFormFieldSeriesList" class="element ajax clickable class">
 <h1>JFormFieldSeriesList<a href="../classes/JFormFieldSeriesList.html">¶</a>
 </h1>
-<p class="short_description">Series List Form Field class for the Joomla Bible Study component</p>
+<p class="short_description">Series List Form Field class for the Proclaim component</p>
 <div class="details collapse"></div>
 <a href="../classes/JFormFieldSeriesList.html" class="more">« More »</a>
 </div>
 <div xmlns:php="http://php.net/xsl" id="JFormFieldSeriesoptions" class="element ajax clickable class">
 <h1>JFormFieldSeriesoptions<a href="../classes/JFormFieldSeriesoptions.html">¶</a>
 </h1>
-<p class="short_description">Books List Form Field class for the Joomla Bible Study component</p>
+<p class="short_description">Books List Form Field class for the Proclaim component</p>
 <div class="details collapse"></div>
 <a href="../classes/JFormFieldSeriesoptions.html" class="more">« More »</a>
 </div>
@@ -1586,35 +1586,35 @@ PreachIT Converter system</p>
 <div xmlns:php="http://php.net/xsl" id="JFormFieldSpanOptions" class="element ajax clickable class">
 <h1>JFormFieldSpanOptions<a href="../classes/JFormFieldSpanOptions.html">¶</a>
 </h1>
-<p class="short_description">Books List Form Field class for the Joomla Bible Study component</p>
+<p class="short_description">Books List Form Field class for the Proclaim component</p>
 <div class="details collapse"></div>
 <a href="../classes/JFormFieldSpanOptions.html" class="more">« More »</a>
 </div>
 <div xmlns:php="http://php.net/xsl" id="JFormFieldTeacherLinkoptions" class="element ajax clickable class">
 <h1>JFormFieldTeacherLinkoptions<a href="../classes/JFormFieldTeacherLinkoptions.html">¶</a>
 </h1>
-<p class="short_description">Books List Form Field class for the Joomla Bible Study component</p>
+<p class="short_description">Books List Form Field class for the Proclaim component</p>
 <div class="details collapse"></div>
 <a href="../classes/JFormFieldTeacherLinkoptions.html" class="more">« More »</a>
 </div>
 <div xmlns:php="http://php.net/xsl" id="JFormFieldTeacherlist" class="element ajax clickable class">
 <h1>JFormFieldTeacherlist<a href="../classes/JFormFieldTeacherlist.html">¶</a>
 </h1>
-<p class="short_description">Teachers List Form Field class for the Joomla Bible Study component</p>
+<p class="short_description">Teachers List Form Field class for the Proclaim component</p>
 <div class="details collapse"></div>
 <a href="../classes/JFormFieldTeacherlist.html" class="more">« More »</a>
 </div>
 <div xmlns:php="http://php.net/xsl" id="JFormFieldTeacherlist" class="element ajax clickable class">
 <h1>JFormFieldTeacherlist<a href="../classes/JFormFieldTeacherlist.html">¶</a>
 </h1>
-<p class="short_description">Teachers List Form Field class for the Joomla Bible Study component</p>
+<p class="short_description">Teachers List Form Field class for the Proclaim component</p>
 <div class="details collapse"></div>
 <a href="../classes/JFormFieldTeacherlist.html" class="more">« More »</a>
 </div>
 <div xmlns:php="http://php.net/xsl" id="JFormFieldTemplatelist" class="element ajax clickable class">
 <h1>JFormFieldTemplatelist<a href="../classes/JFormFieldTemplatelist.html">¶</a>
 </h1>
-<p class="short_description">Teachers List Form Field class for the Joomla Bible Study component</p>
+<p class="short_description">Teachers List Form Field class for the Proclaim component</p>
 <div class="details collapse"></div>
 <a href="../classes/JFormFieldTemplatelist.html" class="more">« More »</a>
 </div>
@@ -1628,7 +1628,7 @@ PreachIT Converter system</p>
 <div xmlns:php="http://php.net/xsl" id="JFormFieldTopicslist" class="element ajax clickable class">
 <h1>JFormFieldTopicslist<a href="../classes/JFormFieldTopicslist.html">¶</a>
 </h1>
-<p class="short_description">Topics List Form Field class for the Joomla Bible Study component
+<p class="short_description">Topics List Form Field class for the Proclaim component
 Displays a topics list of ALL published topics</p>
 <div class="details collapse"></div>
 <a href="../classes/JFormFieldTopicslist.html" class="more">« More »</a>
@@ -1643,14 +1643,14 @@ Displays a topics list of ALL published topics</p>
 <div xmlns:php="http://php.net/xsl" id="JFormFieldVirtuemart" class="element ajax clickable class">
 <h1>JFormFieldVirtuemart<a href="../classes/JFormFieldVirtuemart.html">¶</a>
 </h1>
-<p class="short_description">Virtuemart Category List Form Field class for the Joomla Bible Study component</p>
+<p class="short_description">Virtuemart Category List Form Field class for the Proclaim component</p>
 <div class="details collapse"></div>
 <a href="../classes/JFormFieldVirtuemart.html" class="more">« More »</a>
 </div>
 <div xmlns:php="http://php.net/xsl" id="JFormFieldYearlist" class="element ajax clickable class">
 <h1>JFormFieldYearlist<a href="../classes/JFormFieldYearlist.html">¶</a>
 </h1>
-<p class="short_description">Location List Form Field class for the Joomla Bible Study component</p>
+<p class="short_description">Location List Form Field class for the Proclaim component</p>
 <div class="details collapse"></div>
 <a href="../classes/JFormFieldYearlist.html" class="more">« More »</a>
 </div>
@@ -1895,7 +1895,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -1907,7 +1907,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -1919,7 +1919,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -1931,7 +1931,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -1943,7 +1943,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -1955,7 +1955,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -1967,7 +1967,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -1979,7 +1979,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -1991,7 +1991,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2003,7 +2003,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2015,7 +2015,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2027,7 +2027,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2039,7 +2039,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2051,7 +2051,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2063,7 +2063,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2075,7 +2075,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2087,7 +2087,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2099,7 +2099,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2111,7 +2111,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2123,7 +2123,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2135,7 +2135,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2147,7 +2147,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2159,7 +2159,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2171,7 +2171,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2183,7 +2183,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2195,7 +2195,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2207,7 +2207,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2219,7 +2219,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2231,7 +2231,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2243,7 +2243,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2255,7 +2255,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2267,7 +2267,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2279,7 +2279,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2291,7 +2291,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2303,7 +2303,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2315,7 +2315,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2327,7 +2327,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2339,7 +2339,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2351,7 +2351,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2363,7 +2363,7 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
@@ -2375,14 +2375,14 @@ Displays a topics list of ALL published topics</p>
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>package</th>
-<td><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></td>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
 </tr></table>
 </div></div>
 </div>
 <ul class="breadcrumb"><li>
-<a href="../index.html"><i class="icon-folder-open"></i></a><span class="divider">\</span><li><a href="../packages/BibleStudy.Admin.html">BibleStudy.Admin</a></li>
+<a href="../index.html"><i class="icon-folder-open"></i></a><span class="divider">\</span><li><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></li>
 <li class="active">
-<span class="divider">\</span><a href="../packages/BibleStudy.Admin.HTML.html">HTML</a>
+<span class="divider">\</span><a href="../packages/Proclaim.Admin.HTML.html">HTML</a>
 </li>
 </li></ul>
 <div class="package-indent">

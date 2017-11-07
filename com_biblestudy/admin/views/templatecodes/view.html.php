@@ -3,9 +3,9 @@
  * TemplateCode html
  *
  * @package    BibleStudy
- * @copyright  (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
+ * @copyright  (C) 2007 - 2012 CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       https://www.joomlabiblestudy.org
+ * @link       https://www.christianwebministries.org
  * @since      7.1.0
  * */
 // No Direct Access
@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
 /**
  * View class for TemplateCodes
  *
- * @package  BibleStudy.Admin
+ * @package  Proclaim.Admin
  * @since    7.1.0
  */
 class BiblestudyViewTemplatecodes extends JViewLegacy

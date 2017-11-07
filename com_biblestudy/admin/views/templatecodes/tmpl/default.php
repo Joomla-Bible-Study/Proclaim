@@ -2,8 +2,8 @@
 /**
  * Default
  *
- * @package        BibleStudy.Admin
- * @copyright  (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
+ * @package        Proclaim.Admin
+ * @copyright  (C) 2007 - 2012 CWM Team All rights reserved
  * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link           https://www.joomlabiblestudy.org
  * */

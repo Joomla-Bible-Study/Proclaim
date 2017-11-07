@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<extension type="package" version="3.4" method="upgrade">
+	<name>Package Proclaim</name>
+	<packagename>proclaim_package</packagename>
+	<description>
+		<![CDATA[Proclaim is one of the most popular Bible Study System available today. <a href='index.php?option=com_biblestudy&view=install&task=install.browse&scanstate=start'>Next to Finish install</a>]]></description>
+	<author>CWM Team</author>
+	<authorEmail>info@joomlabiblestudy.org</authorEmail>
+	<authorUrl>https://www.christianwebministries.org</authorUrl>
+	<copyright>(C) 2007 - 2017 Proclaim All rights reserved.</copyright>
+	<version>9.1.0</version>
+	<creationDate>Nov 3, 2017</creationDate>
+	<license>http://www.gnu.org/licenses/gpl.html</license>
+	<packager>CWM Team</packager>
+	<packagerurl>https://www.christianwebministries.org</packagerurl>
+
+	<!-- Runs on install/uninstall/update; New in 2.5 -->
+	<scriptfile>script.php</scriptfile>
+
+	<files folder="packages">
+		<file type="module" id="mod_biblestudy" client="site">mod_proclaim.zip</file>
+		<file type="module" id="mod_biblestudy_podcast" client="site">mod_proclaim_podcast.zip</file>
+		<file type="plugin" id="biblestudy" group="finder">plg_proclaim_finder.zip</file>
+		<file type="plugin" id="biblestudysearch" group="search">plg_proclaim_search.zip</file>
+		<file type="plugin" id="jbspodcast" group="system">plg_proclaim_podcast.zip</file>
+		<file type="plugin" id="jbsbackup" group="system">plg_proclaim_backup.zip</file>
+		<file type="component" id="com_biblestudy">com_proclaim.zip</file>
+	</files>
+</extension>

@@ -3,9 +3,9 @@
  * Router for Remote website that have treble with downloader.
  *
  * @package    BibleStudy.Site
- * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
+ * @copyright  2007 - 2017 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @link       http://www.christianwebministries.org
  * */
 $file = $_GET['file'];
 $size = $_GET['size'];

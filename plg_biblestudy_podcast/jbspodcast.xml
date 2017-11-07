@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension version="3.2" type="plugin" group="system" method="upgrade">
     <name>JBS_PLG_PODCAST</name>
-    <author>Joomla Bible Study Team</author>
+    <author>CWM Team</author>
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
-    <authorUrl>https://www.joomlabiblestudy.org</authorUrl>
-    <copyright>(C) 2007 - 2017 Joomla Bible Study All rights reserved.</copyright>
-    <version>9.0.17</version>
-    <creationDate>May 11, 2017</creationDate>
+    <authorUrl>https://www.christianwebministries.org</authorUrl>
+    <copyright>(C) 2007 - 2017 Proclaim All rights reserved.</copyright>
+    <version>9.1.0</version>
+    <creationDate>Nov 3, 2017</creationDate>
     <license>http://www.gnu.org/licenses/gpl.html</license>
     <description>JBS_PLG_PODCAST_XML_DESCRIPTION</description>
 
@@ -37,7 +37,7 @@
                 <field name="recipients" type="text" default="" size="80"
                        label="JBS_PLG_PODCASTBACKUP_EMAIL_TO" description="JBS_PLG_PODCASTBACKUP_EMAIL_TO_DESC"/>
                 <field name="subject" type="text"
-                       default="Joomla Bible Study Podcast(s) Published" size="60"
+                       default="Proclaim Podcast(s) Published" size="60"
                        label="JBS_PLG_PODCASTBACKUP_EMAIL_SUBJECT" description=""/>
                 <field name="body" type="text" default="Podcast(s) publishing status:"
                        size="60" label="JBS_PLG_PODCASTBACKUP_EMAIL_BODY" description=""/>

@@ -1,9 +1,9 @@
 <?php
 /**
- * @package    BibleStudy.Admin
- * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
+ * @package    Proclaim.Admin
+ * @copyright  2007 - 2017 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       https://www.joomlabiblestudy.org
+ * @link       https://www.christianwebministries.org
  * */
 defined('_JEXEC') or die;
 
@@ -12,9 +12,9 @@ jimport('joomla.filesystem.file');
 
 
 /**
- * BibleStudy Install Script
+ * Proclaim Install Script
  *
- * @package  BibleStudy.Admin
+ * @package  Proclaim.Admin
  * @since    7.0.0
  */
 class Com_BiblestudyInstallerScript
@@ -28,22 +28,54 @@ class Com_BiblestudyInstallerScript
 	 */
 	public $filePath = '/components/com_biblestudy/install/sql/updates/mysql';
 
+	/**
+	 * This is Minimum requirements for: PHP, MySQL, Joomla
+	 *
+	 * @var array Requirements
+	 * @since 9.0.9
+	 */
 	protected $versions = array(
 		'PHP'     => array(
-			'5.3' => '5.3.1',
-			'0'   => '5.4.23' // Preferred version
+			'5.5' => '5.5.3',
+			'5.6' => '5.6.30',
+			'7.0' => '7.0.13',
+			'7.1' => '7.1.0',
+			'0'   => '7.0.13' // Preferred version
 		),
 		'MySQL'   => array(
 			'5.1' => '5.1',
-			'0'   => '5.5' // Preferred version
+			'5.5' => '5.5.3',
+			'0'   => '5.5.3' // Preferred version
 		),
 		'Joomla!' => array(
-			'3.4' => '3.4.1',
-			'3.3' => '3.3.6',
-			'2.5' => '2.5.28',
-			'0'   => '3.4.1' // Preferred version
+			'3.6' => '3.6.3',
+			'3.7' => '3.7.0',
+			'0'   => '3.7.3' // Preferred version
 		)
 	);
+
+	protected $status;
+
+	/**
+	 * The list of extra modules and plugins to install
+	 *
+	 * @author CWM Team
+	 * @var   array $_installation_queue Array of Items to install
+	 * @since 9.0.18
+	 */
+	private $installation_queue = [
+		// -- modules => { (folder) => { (module) => { (position), (published) } }* }*
+		'modules' => [
+			'admin' => [],
+			'site'  => ['biblestudy' => 0, 'biblestudy_podcast' => 0,],
+		],
+		// -- plugins => { (folder) => { (element) => (published) }* }*
+		'plugins' => [
+			'finder' => ['biblestudy' => 1,],
+			'search' => ['biblestudysearch' => 0,],
+			'system' => ['jbspodcast' => 0, 'jbsbackup' => '0'],
+		],
+	];
 
 	protected $extensions = array('dom', 'gd', 'json', 'pcre', 'SimpleXML');
 
@@ -64,6 +96,16 @@ class Com_BiblestudyInstallerScript
 	{
 		$parent   = $parent->getParent();
 		$manifest = $parent->getManifest();
+
+		// Include the JLog class.
+		jimport('joomla.log.log');
+		JLog::addLogger(
+			array(
+				'text_file' => 'com_biblestudy.errors.php'
+			),
+			JLog::ALL,
+			'com_biblestudy'
+		);
 
 		// Prevent installation if requirements are not met.
 		if (!$this->checkRequirements($manifest->version))
@@ -169,15 +211,8 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function uninstall($parent)
 	{
-		$adminpath = $parent->getParent()->getPath('extension_administrator');
-		$model     = "{$adminpath}/models/install.php";
-
-		if (file_exists($model))
-		{
-			require_once $model;
-			$installer = new BibleStudyModelInstall;
-			$installer->uninstall();
-		}
+		// Uninstall sub-extensions
+		$this->_uninstallSubextensions($parent);
 
 		return true;
 	}
@@ -223,6 +258,16 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function checkRequirements($version)
 	{
+		// Include the JLog class.
+		jimport('joomla.log.log');
+		JLog::addLogger(
+			array(
+				'text_file' => 'com_biblestudy.errors.php'
+			),
+			JLog::ALL,
+			'com_biblestudy'
+		);
+
 		$db   = JFactory::getDbo();
 		$pass = $this->checkVersion('PHP', phpversion());
 		$pass &= $this->checkVersion('Joomla!', JVERSION);
@@ -258,6 +303,11 @@ class Com_BiblestudyInstallerScript
 		}
 
 		$app->enqueueMessage(sprintf("Database driver '%s' is not supported. Please use MySQL instead.", $name), 'notice');
+		JLog::add(
+			sprintf("Database driver '%s' is not supported. Please use MySQL instead.", $name),
+			JLog::NOTICE,
+			$this->biblestudy_extension
+		);
 
 		return false;
 	}
@@ -284,6 +334,11 @@ class Com_BiblestudyInstallerScript
 			{
 				$pass = 0;
 				$app->enqueueMessage(sprintf("Required PHP extension '%s' is missing. Please install it into your system.", $name), 'notice');
+				JLog::add(
+					sprintf("Required PHP extension '%s' is missing. Please install it into your system.", $name),
+					JLog::NOTICE,
+					$this->biblestudy_extension
+				);
 			}
 		}
 
@@ -291,7 +346,7 @@ class Com_BiblestudyInstallerScript
 	}
 
 	/**
-	 * Check Verions of JBSM
+	 * Check Versions of JBSM
 	 *
 	 * @param   string  $name     Name of version
 	 * @param   string  $version  Version to look for
@@ -334,13 +389,18 @@ class Com_BiblestudyInstallerScript
 			), 'notice'
 		);
 
+		JLog::add(
+			sprintf("%s %s is not supported. Minimum required version is %s %s, but it is higly recommended to use %s %s or later.",
+			$name, $version, $name, $minor, $name, $recommended
+		), JLog::ERROR, 'com_biblestudy');
+
 		return false;
 	}
 
 	/**
-	 * Check the installed version of JBSM
+	 * Check the installed version of Proclaim
 	 *
-	 * @param   string  $version  JBSM Verstion to check for
+	 * @param   string  $version  Proclaim Version to check for
 	 *
 	 * @return bool
 	 *
@@ -351,14 +411,6 @@ class Com_BiblestudyInstallerScript
 	protected function checkJBSM($version)
 	{
 		$app = JFactory::getApplication();
-
-		// Allways load JBSM API if it exists.
-		$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
-
-		if (file_exists($api))
-		{
-			require_once $api;
-		}
 
 		$db = JFactory::getDbo();
 
@@ -372,11 +424,17 @@ class Com_BiblestudyInstallerScript
 		}
 
 		// Get installed JBSM version
-		$db->setQuery("SELECT version FROM {$db->qn($table)} ORDER BY `id` DESC", 0, 1);
+		$query = $db->getQuery(true);
+		$query->select('version')
+			->from($db->qn($table))
+			->order('id DESC');
+		$db->setQuery($query, 0, 1);
 		$installed = $db->loadResult();
 
 		if (!$installed)
 		{
+			JLog::add('Found No installd version.', JLog::NOTICE, $this->biblestudy_extension);
+
 			return true;
 		}
 
@@ -386,7 +444,13 @@ class Com_BiblestudyInstallerScript
 			return true;
 		}
 
+		// @todo need to move to language string.
 		$app->enqueueMessage(sprintf('Sorry, it is not possible to downgrade BibleStudy %s to version %s.', $installed, $version), 'notice');
+		JLog::add(
+			sprintf('Sorry, it is not possible to downgrade BibleStudy %s to version %s.', $installed, $version),
+			JLog::NOTICE,
+			$this->biblestudy_extension
+		);
 
 		return false;
 	}
@@ -420,8 +484,8 @@ class Com_BiblestudyInstallerScript
 	/**
 	 * Delete Folders
 	 *
-	 * @param   array  $path    Path to folders
-	 * @param   array  $ignore  Ingnore array of files
+	 * @param   string  $path    Path to folders
+	 * @param   array   $ignore  Ingnore array of files
 	 *
 	 * @return void;
 	 *
@@ -457,5 +521,91 @@ class Com_BiblestudyInstallerScript
 	{
 		$this->deleteFiles($path, $ignore);
 		$this->deleteFolders($path, $ignore);
+	}
+
+	/**
+	 * Uninstalls subextensions (modules, plugins) bundled with the main extension
+	 *
+	 * @param   JInstallerAdapter  $parent  is the class calling this method.
+	 *
+	 * @return void
+	 *
+	 * @since 9.0.18
+	 */
+	private function _uninstallSubextensions($parent)
+	{
+		jimport('joomla.installer.installer');
+
+		$db = JFactory::getDbo();
+
+		// Modules uninstalling
+		if (count($this->installation_queue['modules']))
+		{
+			foreach ($this->installation_queue['modules'] as $folder => $modules)
+			{
+				if (count($modules))
+				{
+					foreach ($modules as $module => $modulePreferences)
+					{
+						// Find the module ID
+						$sql = $db->getQuery(true)
+							->select($db->qn('extension_id'))
+							->from($db->qn('#__extensions'))
+							->where($db->qn('element') . ' = ' . $db->q('mod_' . $module))
+							->where($db->qn('type') . ' = ' . $db->q('module'));
+						$db->setQuery($sql);
+						$id = $db->loadResult();
+
+						// Uninstall the module
+						if ($id)
+						{
+							$installer         = new JInstaller;
+							$result            = $installer->uninstall('module', $id, 1);
+							$this->status->modules[] = [
+								'name'   => 'mod_' . $module,
+								'client' => $folder,
+								'result' => $result
+							];
+						}
+					}
+				}
+			}
+		}
+
+		// Plugins uninstalling
+		if (count($this->installation_queue['plugins']))
+		{
+			foreach ($this->installation_queue['plugins'] as $folder => $plugins)
+			{
+				if (count($plugins))
+				{
+					foreach ($plugins as $plugin => $published)
+					{
+						$sql = $db->getQuery(true)
+							->select($db->qn('extension_id'))
+							->from($db->qn('#__extensions'))
+							->where($db->qn('type') . ' = ' . $db->q('plugin'))
+							->where($db->qn('element') . ' = ' . $db->q($plugin))
+							->where($db->qn('folder') . ' = ' . $db->q($folder));
+						$db->setQuery($sql);
+
+						$id = $db->loadResult();
+
+						if ($id)
+						{
+							$installer         = new JInstaller;
+							$result            = $installer->uninstall('plugin', $id, 1);
+							$this->status->plugins[] = [
+								'name'   => 'plg_' . $plugin,
+								'group'  => $folder,
+								'result' => $result
+							];
+						}
+					}
+				}
+			}
+		}
+
+		return;
 	}
 }

@@ -3,9 +3,9 @@
 /**
  * Helper for mod_biblestudy.php
  *
- * @package     BibleStudy
+ * @package     Proclaim
  * @subpackage  Model.BibleStudy
- * @copyright   2007 - 2017 (C) Joomla Bible Study Team All rights reserved
+ * @copyright   2007 - 2017 (C) CWM Team All rights reserved
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        https://www.joomlabiblestudy.org
  * */
@@ -16,7 +16,7 @@ use Joomla\Registry\Registry;
 /**
  * BibleStudy mod helper
  *
- * @package     BibleStudy
+ * @package     Proclaim
  * @subpackage  Model.BibleStudy
  * @since       7.1.0
  */
@@ -80,20 +80,17 @@ class ModJBSMHelper
 				'study.publish_down,
 		                study.media_seconds, study.series_id, study.download_id, study.thumbnailm, study.thumbhm, study.thumbwm,
 		                study.access, study.user_name, study.user_id, study.studynumber, study.chapter_begin2, study.chapter_end2,
-		                study.verse_end2, study.verse_begin2, ' . ' ' . $query->length('study.studytext') . ' AS readmore' . ','
+		                study.verse_end2, study.verse_begin2, ' . $query->length('study.studytext') . ' AS readmore' . ','
 			. ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug ');
 		$query->from('#__bsms_studies AS study');
-
-		// Join over mediafile ids
-		$query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
-		$query->join('LEFT', '#__bsms_mediafiles as m ON study.id = m.study_id');
 
 		// Join over Message Types
 		$query->select('messageType.message_type AS messageType');
 		$query->join('LEFT', '#__bsms_message_type AS messageType ON messageType.id = study.messagetype');
 
 		// Join over Teachers
-		$query->select('teacher.teachername AS teachername, teacher.id AS tid');
+		$query->select('teacher.teachername AS teachername, teacher.title as title, teacher.teacher_thumbnail as thumb,
+			teacher.thumbh, teacher.thumbw');
 		$query->join('LEFT', '#__bsms_teachers AS teacher ON teacher.id = study.teacher_id');
 
 		// Join over Series
@@ -104,8 +101,9 @@ class ModJBSMHelper
 		$query->select('book.bookname');
 		$query->join('LEFT', '#__bsms_books AS book ON book.booknumber = study.booknumber');
 
-		// Join over Plays/Downloads
-		$query->select('SUM(mediafile.plays) AS totalplays, SUM(mediafile.downloads) as totaldownloads, mediafile.study_id');
+		// Join over MediaFiles and Plays/Downloads
+		$query->select('GROUP_CONCAT(DISTINCT mediafile.id) as mids, SUM(mediafile.plays) AS totalplays,' .
+			' SUM(mediafile.downloads) as totaldownloads, mediafile.study_id');
 		$query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
 		$query->group('study.id');
 

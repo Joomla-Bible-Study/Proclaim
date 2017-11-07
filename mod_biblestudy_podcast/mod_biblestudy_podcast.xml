@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="module" version="3.3" method="upgrade" client="site">
 	<name>JBS_MDL_PODCAST</name>
-	<author>Joomla Bible Study Team</author>
+	<author>CWM Team</author>
 	<authorEmail>info@joomlabiblestudy.org</authorEmail>
-	<authorUrl>https://www.joomlabiblestudy.org</authorUrl>
-	<copyright>(C) 2007 - 2017 Joomla Bible Study All rights reserved.</copyright>
-	<version>9.0.17</version>
-	<creationDate>May 11, 2017</creationDate>
+	<authorUrl>https://www.christianwebministries.org</authorUrl>
+	<copyright>(C) 2007 - 2017 Proclaim All rights reserved.</copyright>
+	<version>9.1.0</version>
+	<creationDate>Nov 3, 2017</creationDate>
 	<license>http://www.gnu.org/licenses/gpl.html</license>
 	<description>JBS_MDL_PODCAST_XML_DESCRIPTION</description>
 	<files>

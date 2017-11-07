@@ -1,11 +1,11 @@
 <?php
 /**
- * Part of Joomla BibleStudy Package
+ * Part of Proclaim Package
  *
- * @package    BibleStudy.Admin
- * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
+ * @package    Proclaim.Admin
+ * @copyright  2007 - 2017 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       https://www.joomlabiblestudy.org
+ * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -169,6 +169,7 @@ class BiblestudyModelSermons extends JModelList
 
 		$query->select('book.booknumber AS value, book.bookname AS text, book.id');
 		$query->from('#__bsms_books AS book');
+		$query->where('book.published = 1');
 
 		if ($params->get('booklist') == 1)
 		{
@@ -204,6 +205,7 @@ class BiblestudyModelSermons extends JModelList
 
 		$query->select('teacher.id AS value, teacher.teachername AS text');
 		$query->from('#__bsms_teachers AS teacher');
+		$query->where('teacher.published = 1');
 		$query->join('INNER', '#__bsms_studies AS study ON study.teacher_id = teacher.id');
 		$query->group('teacher.id');
 		$query->order('teacher.teachername');
@@ -231,6 +233,7 @@ class BiblestudyModelSermons extends JModelList
 		$query->from('#__bsms_series AS series');
 		$query->join('INNER', '#__bsms_studies AS study ON study.series_id = series.id');
 		$query->group('series.id');
+		$query->where('series.published = 1');
 
 		// Filter only for authorized view
 		$query->where('series.access IN (' . $groups . ')');
@@ -258,6 +261,7 @@ class BiblestudyModelSermons extends JModelList
 		$query->join('INNER', '#__bsms_studies AS study ON study.messagetype = messageType.id');
 		$query->group('messageType.id');
 		$query->order('messageType.message_type');
+		$query->where('messageType.published = 1');
 
 		$db->setQuery($query->__toString());
 
@@ -667,7 +671,7 @@ class BiblestudyModelSermons extends JModelList
 		$query->join('LEFT', '#__bsms_message_type AS messageType ON messageType.id = study.messagetype');
 
 		// Join over Teachers
-		$query->select('teacher.teachername AS teachername, teacher.title as teachertitle, teacher.teacher_thumbnail as thumb,
+		$query->select('teacher.teachername AS teachername, teacher.title as title, teacher.teacher_thumbnail as thumb,
 			teacher.thumbh, teacher.thumbw');
 		$query->join('LEFT', '#__bsms_teachers AS teacher ON teacher.id = study.teacher_id');
 

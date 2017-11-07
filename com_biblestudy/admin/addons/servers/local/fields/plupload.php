@@ -1,11 +1,11 @@
 <?php
 /**
- * Part of Joomla BibleStudy Package
+ * Part of Proclaim Package
  *
- * @package    BibleStudy.Admin
- * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
+ * @package    Proclaim.Admin
+ * @copyright  2007 - 2017 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       https://www.joomlabiblestudy.org
+ * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
 defined('JPATH_PLATFORM') or die;
@@ -16,7 +16,7 @@ jimport('joomla.form.formfield');
 /**
  * Class JFormFieldPlupload
  *
- * @package  BibleStudy.Admin
+ * @package  Proclaim.Admin
  * @since    9.0.0
  */
 class JFormFieldPlupload extends JFormField

@@ -1,11 +1,11 @@
 <?php
 /**
- * Part of Joomla BibleStudy Package
+ * Part of Proclaim Package
  *
- * @package    BibleStudy.Admin
- * @copyright  2007 - 2016 (C) Joomla Bible Study Team All rights reserved
+ * @package    Proclaim.Admin
+ * @copyright  2007 - 2016 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.JoomlaBibleStudy.org
+ * @link       http://www.christianwebministries.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -56,6 +56,11 @@ class BiblestudyViewPodcastdisplay extends JViewLegacy
 		/** @var Registry $params */
 		$params             = $this->state->template->params;
 		$this->template     = $this->state->get('template');
+
+		if (!$item)
+		{
+			return;
+		}
 
 		// Get studies associated with this series
 		$mainframe->setUserState('sid', $item->id);

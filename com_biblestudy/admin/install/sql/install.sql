@@ -11,7 +11,7 @@ CREATE TABLE `#__bsms_update` (
 
 INSERT INTO `#__bsms_update` (`id`, `version`)
 VALUES
-  (1, '9.0.17');
+  (1, '9.1.0');
 
 -- --------------------------------------------------------
 
@@ -242,6 +242,8 @@ CREATE TABLE `#__bsms_series` (
   `access`           INT(10) UNSIGNED                                 NOT NULL DEFAULT '1',
   `language`         CHAR(7)                                          NOT NULL COMMENT 'The language code for the Series.',
   `landing_show`     INT(3)                                                    DEFAULT NULL,
+  `pc_show`          INT(3)                                           NOT NULL DEFAULT '1' COMMENT 'For displaying on
+   podcasts page',
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
   KEY `idx_access` (`access`)

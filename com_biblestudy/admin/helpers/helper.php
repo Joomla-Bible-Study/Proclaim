@@ -1,11 +1,11 @@
 <?php
 /**
- * Part of Joomla BibleStudy Package
+ * Part of Proclaim Package
  *
- * @package    BibleStudy.Admin
- * @copyright  2007 - 2017 (C) Joomla Bible Study Team All rights reserved
+ * @package    Proclaim.Admin
+ * @copyright  2007 - 2017 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       https://www.joomlabiblestudy.org
+ * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
@@ -15,7 +15,7 @@ use Joomla\Registry\Registry;
 /**
  * Core Bible Study Helper
  *
- * @package  BibleStudy.Admin
+ * @package  Proclaim.Admin
  * @since    7.1.0
  * */
 class JBSMHelper
@@ -101,15 +101,17 @@ class JBSMHelper
 	 */
 	public static function getRemoteFileSize($url)
 	{
-		if (empty($url))
+		if ($url != '')
 		{
 			return 0;
 		}
-		elseif (substr_count($url, 'youtu.be') > 0)
+
+		if (substr_count($url, 'youtu.be') > 0)
 		{
 			return 0;
 		}
-		elseif (substr_count($url, 'youtube.com') > 0)
+
+		if (substr_count($url, 'youtube.com') > 0)
 		{
 			return 0;
 		}
@@ -132,7 +134,14 @@ class JBSMHelper
 			}
 		}
 
-		$headers = get_headers($url, true);
+		try
+		{
+			$headers = get_headers($url, true);
+		}
+		catch (Exception $e)
+		{
+			return 0;
+		}
 
 		if (is_array($headers))
 		{
@@ -300,5 +309,29 @@ class JBSMHelper
 
 		$cache = JCache::getInstance('', $options);
 		$cache->clean();
+	}
+
+	/**
+	 * Remove Http
+	 *
+	 * @param   string  $url  Url
+	 *
+	 * @return mixed
+	 *
+	 * @since 9.0.18
+	 */
+	public static function remove_http($url)
+	{
+		$disallowed = array('http://', 'https://');
+
+		foreach ($disallowed as $d)
+		{
+			if (strpos($url, $d) === 0)
+			{
+				return str_replace($d, '', $url);
+			}
+		}
+
+		return $url;
 	}
 }
