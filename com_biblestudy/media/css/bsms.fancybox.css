@@ -30,3 +30,7 @@
 	margin-top:50%;
 	bottom: 50%;
 	}
+
+.fancybox-caption a, .fancybox-caption button, .fancybox-caption select {
+	color: #000000;
+	}
