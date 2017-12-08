@@ -55,6 +55,7 @@ else
 <form action="index.php" name="adminForm" id="adminForm" method="get">
 	<input type="hidden" name="option" value="com_biblestudy"/>
 	<input type="hidden" name="view" value="install"/>
+	<?php ?>
 	<?php if ($this->state === 'start')
 	{
 		?>

@@ -1446,7 +1446,8 @@ class BibleStudyModelInstall extends JModelLegacy
 
 			$queryString = (string) $string;
 			$queryString = str_replace(array("\r", "\n"), array('', ' '), substr($queryString, 0, 80));
-			JLog::add(JText::sprintf('JLIBinstallER_UPDATE_LOG_QUERY', $this->running, $queryString), JLog::INFO, 'com_biblestudy');
+			JLog::add(JText::sprintf('JLIBINSTALLER_UPDATE_LOG_QUERY', $this->running, $queryString),
+				JLog::INFO,	'com_biblestudy');
 		}
 
 		return true;
@@ -1467,6 +1468,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			->where($this->_db->qn('language_extension') . ' = ' . $this->_db->q('com_biblestudy'));
 		$this->_db->setQuery($query);
 		$this->_db->execute();
+		JLog::add('PostInstallCleanup', JLog::INFO,  'com_biblestudy');
 	}
 
 	/**

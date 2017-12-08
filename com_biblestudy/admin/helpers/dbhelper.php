@@ -100,6 +100,21 @@ class JBSMDbHelper
 					}
 					break;
 
+				case 'index':
+					if (!$table || !$field)
+					{
+						break;
+					}
+
+					$query = 'ALTER TABLE ' . $db->qn($table) . ' ADD INDEX ' . $db->qn($field) . ' ' . $command;
+
+					if (!self::performDB($query, $from))
+					{
+						return false;
+					}
+
+					break;
+
 				case 'add':
 					if (!$table || !$field)
 					{
@@ -109,6 +124,23 @@ class JBSMDbHelper
 					if (self::checkTables($table, $field) !== true)
 					{
 						$query = 'ALTER TABLE ' . $db->qn($table) . ' ADD ' . $db->qn($field) . ' ' . $command;
+
+						if (!self::performDB($query, $from))
+						{
+							return false;
+						}
+					}
+					break;
+
+				case 'column':
+					if (!$table || !$field)
+					{
+						break;
+					}
+
+					if (self::checkTables($table, $field) !== true)
+					{
+						$query = 'ALTER TABLE ' . $db->qn($table) . ' ADD COLUMN' . $db->qn($field) . ' ' . $command;
 
 						if (!self::performDB($query, $from))
 						{
@@ -210,6 +242,7 @@ class JBSMDbHelper
 		}
 		else
 		{
+			JLog::add($from . $query, JLog::INFO, 'com_biblestudy');
 			return true;
 		}
 	}

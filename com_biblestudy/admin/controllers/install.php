@@ -69,7 +69,7 @@ class BiblestudyControllerInstall extends JControllerForm
 	 */
 	public function execute($task)
 	{
-		if ($task != 'run' && $task != 'clear')
+		if ($task != 'run' && $task != 'clear' && $task != 'browse')
 		{
 			$task = 'browse';
 		}
@@ -106,7 +106,7 @@ class BiblestudyControllerInstall extends JControllerForm
 		}
 		else
 		{
-			$this->run();
+			$this->clear();
 		}
 	}
 

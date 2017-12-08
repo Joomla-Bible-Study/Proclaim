@@ -32,15 +32,32 @@ class Migration710
 	 */
 	public function up($db)
 	{
-		$db->setQuery("ALTER TABLE `#__bsms_servers` ADD COLUMN `type` TINYINT(3) NOT NULL;
-ALTER TABLE `#__bsms_servers` ADD COLUMN `ftphost` VARCHAR(100) NOT NULL;
-ALTER TABLE `#__bsms_servers` ADD COLUMN `ftpuser` VARCHAR(250) NOT NULL;
-ALTER TABLE `#__bsms_servers` ADD COLUMN `ftppassword` VARCHAR(250) NOT NULL;
-ALTER TABLE `#__bsms_servers` ADD COLUMN `ftpport` VARCHAR(10) NOT NULL;
-ALTER TABLE `#__bsms_servers` ADD COLUMN `aws_key` VARCHAR(100) NOT NULL;
-ALTER TABLE `#__bsms_servers` ADD COLUMN `aws_secret` VARCHAR(100) NOT NULL;");
+		/**
+		 * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
+		 */
+		if (!ini_get('safe_mode'))
+		{
+			set_time_limit(3000);
+		}
 
-		$db->execute();
+		$dbhelper = new JBSMDbHelper;
+
+		$tables = [
+			['table' => '#__bsms_servers', 'field' => 'type', 'type' => 'COLUMN', 'command' => 'TINYINT(3) NOT NULL'],
+			['table' => '#__bsms_servers', 'field' => 'ftphost', 'type' => 'COLUMN', 'command' => 'VARCHAR(100) NOT NULL'],
+			['table' => '#__bsms_servers', 'field' => 'ftpuser', 'type' => 'COLUMN', 'command' => 'VARCHAR(250) NOT NULL'],
+			['table' => '#__bsms_servers', 'field' => 'ftppassword', 'type' => 'COLUMN', 'command' => 'VARCHAR(250) NOT NULL'],
+			['table' => '#__bsms_servers', 'field' => 'ftpport', 'type' => 'COLUMN', 'command' => 'VARCHAR(10) NOT NULL'],
+			['table' => '#__bsms_servers', 'field' => 'aws_key', 'type' => 'COLUMN', 'command' => 'VARCHAR(100) NOT NULL'],
+			['table' => '#__bsms_servers', 'field' => 'aws_secret', 'type' => 'COLUMN', 'command' => 'VARCHAR(100) NOT NULL'],
+			];
+
+		if (!$dbhelper->alterDB($tables, "Build 700: "))
+		{
+			return false;
+		}
+
+		self::setemptytemplates();
 
 		return true;
 	}
