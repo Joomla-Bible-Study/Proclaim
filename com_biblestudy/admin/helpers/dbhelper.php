@@ -243,6 +243,7 @@ class JBSMDbHelper
 		else
 		{
 			JLog::add($from . $query, JLog::INFO, 'com_biblestudy');
+
 			return true;
 		}
 	}

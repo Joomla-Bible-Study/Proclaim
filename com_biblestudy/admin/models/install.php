@@ -1446,8 +1446,10 @@ class BibleStudyModelInstall extends JModelLegacy
 
 			$queryString = (string) $string;
 			$queryString = str_replace(array("\r", "\n"), array('', ' '), substr($queryString, 0, 80));
-			JLog::add(JText::sprintf('JLIBINSTALLER_UPDATE_LOG_QUERY', $this->running, $queryString),
-				JLog::INFO,	'com_biblestudy');
+			JLog::add(
+				JText::sprintf('JLIBINSTALLER_UPDATE_LOG_QUERY', $this->running, $queryString),
+				JLog::INFO,	'com_biblestudy'
+			);
 		}
 
 		return true;

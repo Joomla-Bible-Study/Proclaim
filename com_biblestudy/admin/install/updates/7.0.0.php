@@ -23,7 +23,7 @@ class Migration700
 	/**
 	 * Start of upgrade
 	 *
-	 * @param   JDatabaseDriver $db Data bass driver
+	 * @param   JDatabaseDriver  $db  Data bass driver
 	 *
 	 * @return bool
 	 *
@@ -799,7 +799,7 @@ class Migration700
 	/**
 	 * Add Asset Column
 	 *
-	 * @param   array $table Table name to affect
+	 * @param   array  $table  Table name to affect
 	 *
 	 * @return boolean
 	 *
