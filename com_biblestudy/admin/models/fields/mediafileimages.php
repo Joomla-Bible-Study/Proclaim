@@ -53,7 +53,7 @@ class JFormFieldMediafileImages extends JFormFieldList
 			foreach ($mediafiles as $media)
 			{
 				$reg = new Registry;
-				$reg->loadString(json_encode($media->params));
+				$reg->loadString($media->params);
 				$media->params = $reg;
 
 				if ($media->params->get('media_use_button_icon') >= 1)
