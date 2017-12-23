@@ -9,8 +9,6 @@
  * */
 defined('_JEXEC') or die;
 
-use Joomla\Registry\Registry;
-
 /**
  * Database Helper class for version 7.1.0
  *
@@ -67,7 +65,8 @@ class JBSMDbHelper
 	 *
 	 * @return boolean
 	 *
-	 * @since 7.0
+	 * @since   7.0
+	 * @throws  \Exception
 	 */
 	public static function alterDB($tables, $from = null)
 	{
@@ -200,6 +199,7 @@ class JBSMDbHelper
 	public static function checkTables($table, $field)
 	{
 		$db     = JFactory::getDbo();
+
 		$fields = $db->getTableColumns($table, 'false');
 
 		if ($fields)
@@ -222,7 +222,8 @@ class JBSMDbHelper
 	 *
 	 * @return boolean true if success, or error string if failed
 	 *
-	 * @since 7.0
+	 * @since   7.0
+	 * @throws  Exception
 	 */
 	public static function performDB($query, $from = null, $limit = null)
 	{
@@ -344,7 +345,8 @@ class JBSMDbHelper
 	 *
 	 * @return boolean
 	 *
-	 * @since 7.1.0
+	 * @since   7.1.0
+	 * @throws  \Exception
 	 */
 	public static function fixupcss($filename, $parent, $newcss, $id = null)
 	{
@@ -462,7 +464,8 @@ class JBSMDbHelper
 	 *
 	 * @return boolean|int
 	 *
-	 * @since 7.0
+	 * @since  7.0
+	 * @throws \Exception
 	 */
 	public static function resetdb($install = false)
 	{
@@ -547,7 +550,9 @@ class JBSMDbHelper
 	 *
 	 * @since 8.0.0
 	 *
-	 * @return void
+	 * @return  void
+	 *
+	 * @throws  \Exception
 	 */
 	public static function CleanStudyTopics()
 	{

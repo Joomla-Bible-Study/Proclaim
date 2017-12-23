@@ -50,7 +50,7 @@ class Com_BiblestudyInstallerScript
 		'Joomla!' => array(
 			'3.6' => '3.6.3',
 			'3.7' => '3.7.0',
-			'0'   => '3.7.3' // Preferred version
+			'0'   => '3.8.3' // Preferred version
 		)
 	);
 
@@ -90,7 +90,8 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @return boolean
 	 *
-	 * @since 1.5
+	 * @since   1.5
+	 * @throws  \Exception
 	 */
 	public function preflight($type, $parent)
 	{
@@ -225,7 +226,8 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @return   void
 	 *
-	 * @since 1.5
+	 * @since   1.5
+	 * @throws  \Exception
 	 */
 	public function postflight($type, $parent)
 	{
@@ -255,6 +257,7 @@ class Com_BiblestudyInstallerScript
 	 * @return bool
 	 *
 	 * @since 7.1.0
+	 * @throws  \Exception
 	 */
 	public function checkRequirements($version)
 	{

@@ -139,7 +139,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
-	 * @since 7.1
+	 * @since   7.1
+	 * @throws  \Exception
 	 */
 	public function __construct($config = array())
 	{
@@ -153,7 +154,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 *
 	 * @return bool
 	 *
-	 * @since 7.1
+	 * @since   7.1
+	 * @throws  \Exception
 	 */
 	public function startScanning()
 	{
@@ -212,7 +214,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 *
 	 * @return boolean
 	 *
-	 * @since 7.1`
+	 * @since   7.1
+	 * @throws  \Exception
 	 */
 	private function getSteps()
 	{
@@ -478,7 +481,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 *
 	 * @return boolean
 	 *
-	 * @since 7.1
+	 * @since   7.1
+	 * @throws  \Exception
 	 */
 	private function correctVersions()
 	{
@@ -521,6 +525,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * @return  bool
 	 *
 	 * @since   7.1.0
+	 * @throws  \Exception
 	 */
 	private function setSchemaVersion($version, $eid)
 	{
@@ -755,7 +760,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 *
 	 * @return bool
 	 *
-	 * @since 7.1
+	 * @since   7.1
+	 * @throws  \Exception
 	 */
 	private function RealRun()
 	{
@@ -1012,7 +1018,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 *
 	 * @return bool
 	 *
-	 * @since 7.1
+	 * @since   7.1
+	 * @throws  \Exception
 	 */
 	private function install($files = array('install', 'install-defaults'))
 	{
@@ -1056,7 +1063,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 *
 	 * @return bool
 	 *
-	 * @since 7.1
+	 * @since   7.1
+	 * @throws  \Exception
 	 */
 	public function uninstall()
 	{
@@ -1149,7 +1157,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 *
 	 * @return boolean
 	 *
-	 * @since 7.1
+	 * @since   7.1
+	 * @throws  \Exception
 	 */
 	private function finish($step)
 	{
@@ -1337,6 +1346,8 @@ class BibleStudyModelInstall extends JModelLegacy
 				}
 			}
 		}
+
+		return true;
 	}
 
 	/**
@@ -1346,7 +1357,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 *
 	 * @return boolean
 	 *
-	 * @since 7.1.4
+	 * @since   7.1.4
+	 * @throws  \Exception
 	 */
 	private function allUpdate($value)
 	{
@@ -1419,12 +1431,11 @@ class BibleStudyModelInstall extends JModelLegacy
 	 *
 	 * @return bool
 	 *
-	 * @since 7.1
+	 * @since   7.1
+	 * @throws  \Exception
 	 */
 	private function runUpdates($string)
 	{
-		$app = JFactory::getApplication();
-
 		// Process each query in the $queries array (split out of sql file).
 		$string = trim($string);
 

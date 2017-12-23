@@ -27,7 +27,8 @@ class Migration700
 	 *
 	 * @return bool
 	 *
-	 * @since 9.0.0
+	 * @since   9.0.0
+	 * @throws  Exception
 	 */
 	public function up($db)
 	{
@@ -799,7 +800,7 @@ class Migration700
 	/**
 	 * Add Asset Column
 	 *
-	 * @param   array  $table  Table name to affect
+	 * @param   string  $table  Table name to affect
 	 *
 	 * @return boolean
 	 *
