@@ -91,7 +91,7 @@ class JBSMPageBuilder
 		$page->duration  = $JBSMElements->getDuration($params, $item);
 		$page->studydate = $JBSMElements->getStudyDate($params, $item->studydate);
 
-		// @todo need to look at why we have to do this here.
+		// Translate Topics.
 		$item->topics_text = JBSMTranslated::getConcatTopicItemTranslated($item);
 
 		if (isset($item->topics_text) && (substr_count($item->topics_text, ',') > 0))

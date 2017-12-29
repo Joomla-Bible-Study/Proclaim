@@ -101,6 +101,7 @@ class BiblestudyViewSermon extends JViewLegacy
 	 * @return  void
 	 *
 	 * @since 7.0
+	 * @throws \Exception
 	 */
 	public function display($tpl = null)
 	{
@@ -443,6 +444,7 @@ class BiblestudyViewSermon extends JViewLegacy
 	 * @return void
 	 *
 	 * @since 7.0
+	 * @throws \Exception
 	 */
 	protected function _prepareDocument()
 	{

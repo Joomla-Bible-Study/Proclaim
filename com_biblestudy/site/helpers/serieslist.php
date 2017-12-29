@@ -150,7 +150,7 @@ class JBSMSerieslist extends JBSMListing
 		{
 			$limit = '';
 		}
-		// Fixme Need to find working replacement for this function.
+
 		$items   = $this->getSeriesstudiesDBO($id, $params, $limit);
 
 		$studies = '';
@@ -227,7 +227,6 @@ class JBSMSerieslist extends JBSMListing
 	 */
 	public function getSeriesstudiesDBO($id, $params, $limit = null)
 	{
-		$app       = JFactory::getApplication();
 		$db        = JFactory::getDbo();
 		$user      = JFactory::getUser();
 		$language  = $language = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');

@@ -33,7 +33,6 @@ class JBSMRelatedStudies
 	 * @return boolean
 	 *
 	 * @since    7.2
-	 * @todo need to look if all is needed. @TOM Looks to me that this needs to be updated?
 	 */
 	public function getRelated($row, $params)
 	{
