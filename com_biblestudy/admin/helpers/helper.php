@@ -101,7 +101,7 @@ class JBSMHelper
 	 */
 	public static function getRemoteFileSize($url)
 	{
-		if ($url != '')
+		if ($url == '')
 		{
 			return 0;
 		}
