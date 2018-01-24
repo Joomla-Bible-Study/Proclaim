@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2017 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2018 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -33,7 +33,6 @@ class JBSMRelatedStudies
 	 * @return boolean
 	 *
 	 * @since    7.2
-	 * @todo need to look if all is needed. @TOM Looks to me that this needs to be updated?
 	 */
 	public function getRelated($row, $params)
 	{

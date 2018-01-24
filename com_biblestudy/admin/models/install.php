@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2017 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2018 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -139,7 +139,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
-	 * @since 7.1
+	 * @since   7.1
+	 * @throws  \Exception
 	 */
 	public function __construct($config = array())
 	{
@@ -153,7 +154,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 *
 	 * @return bool
 	 *
-	 * @since 7.1
+	 * @since   7.1
+	 * @throws  \Exception
 	 */
 	public function startScanning()
 	{
@@ -212,7 +214,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 *
 	 * @return boolean
 	 *
-	 * @since 7.1`
+	 * @since   7.1
+	 * @throws  \Exception
 	 */
 	private function getSteps()
 	{
@@ -478,7 +481,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 *
 	 * @return boolean
 	 *
-	 * @since 7.1
+	 * @since   7.1
+	 * @throws  \Exception
 	 */
 	private function correctVersions()
 	{
@@ -521,6 +525,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * @return  bool
 	 *
 	 * @since   7.1.0
+	 * @throws  \Exception
 	 */
 	private function setSchemaVersion($version, $eid)
 	{
@@ -755,7 +760,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 *
 	 * @return bool
 	 *
-	 * @since 7.1
+	 * @since   7.1
+	 * @throws  \Exception
 	 */
 	private function RealRun()
 	{
@@ -1012,7 +1018,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 *
 	 * @return bool
 	 *
-	 * @since 7.1
+	 * @since   7.1
+	 * @throws  \Exception
 	 */
 	private function install($files = array('install', 'install-defaults'))
 	{
@@ -1056,7 +1063,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 *
 	 * @return bool
 	 *
-	 * @since 7.1
+	 * @since   7.1
+	 * @throws  \Exception
 	 */
 	public function uninstall()
 	{
@@ -1149,7 +1157,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 *
 	 * @return boolean
 	 *
-	 * @since 7.1
+	 * @since   7.1
+	 * @throws  \Exception
 	 */
 	private function finish($step)
 	{
@@ -1337,6 +1346,8 @@ class BibleStudyModelInstall extends JModelLegacy
 				}
 			}
 		}
+
+		return true;
 	}
 
 	/**
@@ -1346,7 +1357,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 *
 	 * @return boolean
 	 *
-	 * @since 7.1.4
+	 * @since   7.1.4
+	 * @throws  \Exception
 	 */
 	private function allUpdate($value)
 	{
@@ -1419,12 +1431,11 @@ class BibleStudyModelInstall extends JModelLegacy
 	 *
 	 * @return bool
 	 *
-	 * @since 7.1
+	 * @since   7.1
+	 * @throws  \Exception
 	 */
 	private function runUpdates($string)
 	{
-		$app = JFactory::getApplication();
-
 		// Process each query in the $queries array (split out of sql file).
 		$string = trim($string);
 
@@ -1446,7 +1457,10 @@ class BibleStudyModelInstall extends JModelLegacy
 
 			$queryString = (string) $string;
 			$queryString = str_replace(array("\r", "\n"), array('', ' '), substr($queryString, 0, 80));
-			JLog::add(JText::sprintf('JLIBinstallER_UPDATE_LOG_QUERY', $this->running, $queryString), JLog::INFO, 'com_biblestudy');
+			JLog::add(
+				JText::sprintf('JLIBINSTALLER_UPDATE_LOG_QUERY', $this->running, $queryString),
+				JLog::INFO,	'com_biblestudy'
+			);
 		}
 
 		return true;
@@ -1467,6 +1481,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			->where($this->_db->qn('language_extension') . ' = ' . $this->_db->q('com_biblestudy'));
 		$this->_db->setQuery($query);
 		$this->_db->execute();
+		JLog::add('PostInstallCleanup', JLog::INFO,  'com_biblestudy');
 	}
 
 	/**

@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2017 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2018 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -101,7 +101,7 @@ class JBSMHelper
 	 */
 	public static function getRemoteFileSize($url)
 	{
-		if ($url != '')
+		if ($url == '')
 		{
 			return 0;
 		}

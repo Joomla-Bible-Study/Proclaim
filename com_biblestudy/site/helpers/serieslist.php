@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2017 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2018 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -133,6 +133,7 @@ class JBSMSerieslist extends JBSMListing
 	 * @return string
 	 *
 	 * @since    8.0
+	 * @throws  \Exception
 	 */
 	public function getSeriesstudiesExp($id, $params, $template)
 	{
@@ -149,7 +150,7 @@ class JBSMSerieslist extends JBSMListing
 		{
 			$limit = '';
 		}
-		// Fixme Need to find working replacement for this function.
+
 		$items   = $this->getSeriesstudiesDBO($id, $params, $limit);
 
 		$studies = '';
@@ -222,10 +223,10 @@ class JBSMSerieslist extends JBSMListing
 	 * @return array
 	 *
 	 * @since    8.0
+	 * @throws  \Exception
 	 */
 	public function getSeriesstudiesDBO($id, $params, $limit = null)
 	{
-		$app       = JFactory::getApplication();
 		$db        = JFactory::getDbo();
 		$user      = JFactory::getUser();
 		$language  = $language = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');

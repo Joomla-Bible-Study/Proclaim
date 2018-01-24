@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2017 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2018 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -91,7 +91,7 @@ class JBSMPageBuilder
 		$page->duration  = $JBSMElements->getDuration($params, $item);
 		$page->studydate = $JBSMElements->getStudyDate($params, $item->studydate);
 
-		// @todo need to look at why we have to do this here.
+		// Translate Topics.
 		$item->topics_text = JBSMTranslated::getConcatTopicItemTranslated($item);
 
 		if (isset($item->topics_text) && (substr_count($item->topics_text, ',') > 0))

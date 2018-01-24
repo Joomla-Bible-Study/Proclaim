@@ -3,13 +3,11 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2017 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2018 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
 defined('_JEXEC') or die;
-
-use Joomla\Registry\Registry;
 
 /**
  * Database Helper class for version 7.1.0
@@ -67,7 +65,8 @@ class JBSMDbHelper
 	 *
 	 * @return boolean
 	 *
-	 * @since 7.0
+	 * @since   7.0
+	 * @throws  \Exception
 	 */
 	public static function alterDB($tables, $from = null)
 	{
@@ -100,6 +99,21 @@ class JBSMDbHelper
 					}
 					break;
 
+				case 'index':
+					if (!$table || !$field)
+					{
+						break;
+					}
+
+					$query = 'ALTER TABLE ' . $db->qn($table) . ' ADD INDEX ' . $db->qn($field) . ' ' . $command;
+
+					if (!self::performDB($query, $from))
+					{
+						return false;
+					}
+
+					break;
+
 				case 'add':
 					if (!$table || !$field)
 					{
@@ -109,6 +123,23 @@ class JBSMDbHelper
 					if (self::checkTables($table, $field) !== true)
 					{
 						$query = 'ALTER TABLE ' . $db->qn($table) . ' ADD ' . $db->qn($field) . ' ' . $command;
+
+						if (!self::performDB($query, $from))
+						{
+							return false;
+						}
+					}
+					break;
+
+				case 'column':
+					if (!$table || !$field)
+					{
+						break;
+					}
+
+					if (self::checkTables($table, $field) !== true)
+					{
+						$query = 'ALTER TABLE ' . $db->qn($table) . ' ADD COLUMN' . $db->qn($field) . ' ' . $command;
 
 						if (!self::performDB($query, $from))
 						{
@@ -168,6 +199,7 @@ class JBSMDbHelper
 	public static function checkTables($table, $field)
 	{
 		$db     = JFactory::getDbo();
+
 		$fields = $db->getTableColumns($table, 'false');
 
 		if ($fields)
@@ -190,7 +222,8 @@ class JBSMDbHelper
 	 *
 	 * @return boolean true if success, or error string if failed
 	 *
-	 * @since 7.0
+	 * @since   7.0
+	 * @throws  Exception
 	 */
 	public static function performDB($query, $from = null, $limit = null)
 	{
@@ -210,6 +243,8 @@ class JBSMDbHelper
 		}
 		else
 		{
+			JLog::add($from . $query, JLog::INFO, 'com_biblestudy');
+
 			return true;
 		}
 	}
@@ -310,7 +345,8 @@ class JBSMDbHelper
 	 *
 	 * @return boolean
 	 *
-	 * @since 7.1.0
+	 * @since   7.1.0
+	 * @throws  \Exception
 	 */
 	public static function fixupcss($filename, $parent, $newcss, $id = null)
 	{
@@ -428,7 +464,8 @@ class JBSMDbHelper
 	 *
 	 * @return boolean|int
 	 *
-	 * @since 7.0
+	 * @since  7.0
+	 * @throws \Exception
 	 */
 	public static function resetdb($install = false)
 	{
@@ -513,7 +550,9 @@ class JBSMDbHelper
 	 *
 	 * @since 8.0.0
 	 *
-	 * @return void
+	 * @return  void
+	 *
+	 * @throws  \Exception
 	 */
 	public static function CleanStudyTopics()
 	{

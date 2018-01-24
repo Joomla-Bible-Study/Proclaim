@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2017 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2018 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -53,7 +53,7 @@ class JFormFieldMediafileImages extends JFormFieldList
 			foreach ($mediafiles as $media)
 			{
 				$reg = new Registry;
-				$reg->loadString(json_encode($media->params));
+				$reg->loadString($media->params);
 				$media->params = $reg;
 
 				if ($media->params->get('media_use_button_icon') >= 1)

@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2017 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2018 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -40,6 +40,7 @@ class BiblestudyController extends JControllerLegacy
 	 * 'view_path' (this list is not meant to be comprehensive).
 	 *
 	 * @since    7.0.0
+	 * @throws  \Exception
 	 */
 	public function __construct($config = array())
 	{
@@ -71,7 +72,8 @@ class BiblestudyController extends JControllerLegacy
 	 *
 	 * @return  JControllerLegacy|bool  A JControllerLegacy object to support chaining.
 	 *
-	 * @since    7.0.0
+	 * @since   7.0.0
+	 * @throws  \Exception
 	 */
 	public function display($cachable = false, $urlparams = array())
 	{
@@ -146,6 +148,7 @@ class BiblestudyController extends JControllerLegacy
 	 * @return boolean|void
 	 *
 	 * @since    7.0.0
+	 * @throws   \Exception
 	 */
 	public function comment()
 	{
@@ -221,6 +224,7 @@ class BiblestudyController extends JControllerLegacy
 	 * @return void
 	 *
 	 * @since    7.0.0
+	 * @throws   \Exception
 	 */
 	public function commentsEmail($params)
 	{

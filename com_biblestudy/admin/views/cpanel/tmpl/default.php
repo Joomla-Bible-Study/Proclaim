@@ -3,7 +3,7 @@
  * Default
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2017 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2018 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  */
@@ -32,7 +32,7 @@ if ($msg)
 		<div id="j-sidebar-container" class="span2">
 			<div id="fbheader">
 				<a href="index.php?option=com_biblestudy&view=cpanel"><img
-							src="../media/com_biblestudy/images/bible2015.png"
+							src="../media/com_biblestudy/images/proclaim.jpg"
 							border="0"
 							alt="<?php echo JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY'); ?>"/></a>
 			</div>

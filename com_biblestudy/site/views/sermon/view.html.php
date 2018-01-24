@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2017 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2018 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -101,6 +101,7 @@ class BiblestudyViewSermon extends JViewLegacy
 	 * @return  void
 	 *
 	 * @since 7.0
+	 * @throws \Exception
 	 */
 	public function display($tpl = null)
 	{
@@ -443,6 +444,7 @@ class BiblestudyViewSermon extends JViewLegacy
 	 * @return void
 	 *
 	 * @since 7.0
+	 * @throws \Exception
 	 */
 	protected function _prepareDocument()
 	{

@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2017 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2018 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -32,8 +32,6 @@ class JBSMCustom
 	 * @return object
 	 *
 	 * @since    8.0.0
-	 *
-	 * @todo Need to fix output as it is not formated to a object. $custom is a string not a object.
 	 */
 	public function getCustom($rowid, $custom, $row, $params, $template)
 	{

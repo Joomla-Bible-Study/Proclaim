@@ -3,7 +3,7 @@
  * Default
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2017 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2018 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -55,6 +55,7 @@ else
 <form action="index.php" name="adminForm" id="adminForm" method="get">
 	<input type="hidden" name="option" value="com_biblestudy"/>
 	<input type="hidden" name="view" value="install"/>
+	<?php ?>
 	<?php if ($this->state === 'start')
 	{
 		?>

@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2017 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2018 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -29,6 +29,7 @@ class JBSMLanding
 	 * @return string
 	 *
 	 * @since    8.0.0
+	 * @throws   \Exception
 	 */
 	public function getLocationsLandingPage($params, $id = 0)
 	{
@@ -224,6 +225,7 @@ class JBSMLanding
 	 * @return string
 	 *
 	 * @since    8.0.0
+	 * @throws   \Exception
 	 */
 	public function getTeacherLandingPage($params, $id = 0)
 	{
@@ -362,7 +364,6 @@ class JBSMLanding
 					break;
 
 				case 1:
-
 					foreach ($tresult as $b)
 					{
 						if ($b->landing_show == 1)
@@ -435,7 +436,7 @@ class JBSMLanding
 	 * @return string
 	 *
 	 * @since    8.0.0
-	 * @todo look like $numRows was not defined not sure if needed. TOM
+	 * @throws   \Exception
 	 */
 	public function getSeriesLandingPage($params, $id = 0)
 	{
@@ -463,7 +464,6 @@ class JBSMLanding
 		if (isset($item->params))
 		{
 			$registry->loadString($item->params);
-			$m_params   = $registry;
 			$language   = $db->quote($item->language) . ',' . $db->quote('*');
 			$menu_order = $params->get('series_order');
 		}
@@ -659,6 +659,7 @@ class JBSMLanding
 	 * @return string
 	 *
 	 * @since    8.0.0
+	 * @throws   \Exception
 	 */
 	public function getYearsLandingPage($params, $id = 0)
 	{
@@ -794,6 +795,7 @@ class JBSMLanding
 	 * @return string
 	 *
 	 * @since    8.0.0
+	 * @throws   \Exception
 	 */
 	public function getTopicsLandingPage($params, $id = 0)
 	{
@@ -931,6 +933,7 @@ class JBSMLanding
 	 * @return string
 	 *
 	 * @since    8.0.0
+	 * @throws   \Exception
 	 */
 	public function getMessageTypesLandingPage($params, $id = 0)
 	{
@@ -1125,6 +1128,7 @@ class JBSMLanding
 	 * @return string
 	 *
 	 * @since    8.0.0
+	 * @throws   \Exception
 	 */
 	public function getBooksLandingPage($params, $id = 0)
 	{
