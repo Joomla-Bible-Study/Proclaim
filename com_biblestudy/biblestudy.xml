@@ -5,7 +5,7 @@
 	<author>CWM Team</author>
 	<authorEmail>info@joomlabiblestudy.org</authorEmail>
 	<authorUrl>https://www.christianwebministries.org</authorUrl>
-	<copyright>(C) 2007 - 2018 Proclaim All rights reserved.</copyright>
+	<copyright>(C) 2007 - 2017 Proclaim All rights reserved.</copyright>
 	<version>9.1.1</version>
 	<creationDate>Jan 25, 2018</creationDate>
 	<license>http://www.gnu.org/licenses/gpl.html</license>
@@ -15,7 +15,8 @@
 	<scriptfile>biblestudy.script.php</scriptfile>
 
 	<updateservers>
-		<server type="extension" priority="1" name="Proclaim Package">https://www.christianwebministries.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=1</server>
+		<server type="extension" priority="1"
+		        name="Proclaim Package">https://www.christianwebministries.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=1</server>
 	</updateservers>
 
 	<files folder="site">
