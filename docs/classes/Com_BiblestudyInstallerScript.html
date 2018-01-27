@@ -20,10 +20,11 @@
 <a href="#api" class="dropdown-toggle" data-toggle="dropdown">
                                     API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a>Packages</a></li>
-<li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
-<li><a href="../packages/Proclaim.Admin.html"><i class="icon-folder-open"></i> Proclaim.Admin</a></li>
 <li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
 <li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
+<li><a href="../packages/Proclaim.html"><i class="icon-folder-open"></i> Proclaim</a></li>
+<li><a href="../packages/Proclaim.Admin.html"><i class="icon-folder-open"></i> Proclaim.Admin</a></li>
+<li><a href="../packages/Proclaim.Site.html"><i class="icon-folder-open"></i> Proclaim.Site</a></li>
 </ul>
 </li>
 <li class="dropdown" id="charts-menu">
@@ -80,9 +81,12 @@
                     <ul>
 <li class="method protected "><a href="#method_checkDbo" title="checkDbo() :: Check Database Driver"><span class="description">Check Database Driver</span><pre>checkDbo()</pre></a></li>
 <li class="method protected "><a href="#method_checkExtensions" title="checkExtensions() :: Check PHP Extension Requirement"><span class="description">Check PHP Extension Requirement</span><pre>checkExtensions()</pre></a></li>
-<li class="method protected "><a href="#method_checkJBSM" title="checkJBSM() :: Check the installed version of JBSM"><span class="description">Check the installed version of JBSM</span><pre>checkJBSM()</pre></a></li>
-<li class="method protected "><a href="#method_checkVersion" title="checkVersion() :: Check Verions of JBSM"><span class="description">Check Verions of JBSM</span><pre>checkVersion()</pre></a></li>
+<li class="method protected "><a href="#method_checkJBSM" title="checkJBSM() :: Check the installed version of Proclaim"><span class="description">Check the installed version of Proclaim</span><pre>checkJBSM()</pre></a></li>
+<li class="method protected "><a href="#method_checkVersion" title="checkVersion() :: Check Versions of JBSM"><span class="description">Check Versions of JBSM</span><pre>checkVersion()</pre></a></li>
 </ul>
+</li>
+<li class="nav-header private">» Private
+                    <ul><li class="method private "><a href="#method__uninstallSubextensions" title="_uninstallSubextensions() :: Uninstalls subextensions (modules, plugins) bundled with the main extension"><span class="description">Uninstalls subextensions (modules, plugins) bundled with the main extension</span><pre>_uninstallSubextensions()</pre></a></li></ul>
 </li>
 <li class="nav-header">
 <i title="Properties" class="icon-custom icon-property"></i> Properties
@@ -92,8 +96,12 @@
                     <ul>
 <li class="property protected "><a href="#property_biblestudy_extension" title="$biblestudy_extension() :: "><span class="description">The component's name</span><pre>$biblestudy_extension</pre></a></li>
 <li class="property protected "><a href="#property_extensions" title="$extensions() :: "><span class="description"></span><pre>$extensions</pre></a></li>
-<li class="property protected "><a href="#property_versions" title="$versions() :: "><span class="description"></span><pre>$versions</pre></a></li>
+<li class="property protected "><a href="#property_status" title="$status() :: "><span class="description"></span><pre>$status</pre></a></li>
+<li class="property protected "><a href="#property_versions" title="$versions() :: This is Minimum requirements for: PHP, MySQL, Joomla"><span class="description"></span><pre>$versions</pre></a></li>
 </ul>
+</li>
+<li class="nav-header private">» Private
+                    <ul><li class="property private "><a href="#property_installation_queue" title="$installation_queue() :: The list of extra modules and plugins to install"><span class="description"></span><pre>$installation_queue</pre></a></li></ul>
 </li>
 </ul>
 </div>
@@ -107,7 +115,7 @@
 </li>
 </ul>
 <div xmlns:php="http://php.net/xsl" class="element class">
-<p class="short_description">BibleStudy Install Script</p>
+<p class="short_description">Proclaim Install Script</p>
 <div class="details">
 <div class="long_description"></div>
 <table class="table table-bordered">
@@ -136,6 +144,11 @@
 <div class="subelement argument">
 <h4>$version</h4>
 <code>string</code><p>JBSM version to check for.</p></div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code>\Exception</code></th>
+<td></td>
+</tr></table>
 <h3>Returns</h3>
 <div class="subelement response"><code>boolean</code></div>
 </div></div>
@@ -180,7 +193,7 @@
 </div>
 <a id="method_deleteFolders"></a><div class="element clickable method public method_deleteFolders " data-toggle="collapse" data-target=".method_deleteFolders .collapse" title="public">
 <h2>Delete Folders</h2>
-<pre>deleteFolders(array $path, array $ignore<code> = array()</code>) : \void;</pre>
+<pre>deleteFolders(string $path, array $ignore<code> = array()</code>) : \void;</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -191,7 +204,7 @@
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$path</h4>
-<code>array</code><p>Path to folders</p></div>
+<code>string</code><p>Path to folders</p></div>
 <div class="subelement argument">
 <h4>$ignore</h4>
 <code>array</code><p>Ingnore array of files</p></div>
@@ -252,6 +265,11 @@
 <div class="subelement argument">
 <h4>$parent</h4>
 <code>\JInstallerFile</code><p>Where it is coming from</p></div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code>\Exception</code></th>
+<td></td>
+</tr></table>
 </div></div>
 </div>
 <a id="method_preflight"></a><div class="element clickable method public method_preflight " data-toggle="collapse" data-target=".method_preflight .collapse" title="public">
@@ -273,6 +291,11 @@ If preflight returns false, Joomla will abort the update and undo everything alr
 <div class="subelement argument">
 <h4>$parent</h4>
 <code>\JInstallerFile</code><p>Where it is coming from</p></div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code>\Exception</code></th>
+<td></td>
+</tr></table>
 <h3>Returns</h3>
 <div class="subelement response"><code>boolean</code></div>
 </div></div>
@@ -363,7 +386,7 @@ If preflight returns false, Joomla will abort the update and undo everything alr
 </div></div>
 </div>
 <a id="method_checkJBSM"></a><div class="element clickable method protected method_checkJBSM " data-toggle="collapse" data-target=".method_checkJBSM .collapse" title="protected">
-<h2>Check the installed version of JBSM</h2>
+<h2>Check the installed version of Proclaim</h2>
 <pre>checkJBSM(string $version) : boolean</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
@@ -375,7 +398,7 @@ If preflight returns false, Joomla will abort the update and undo everything alr
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$version</h4>
-<code>string</code><p>JBSM Verstion to check for</p></div>
+<code>string</code><p>Proclaim Version to check for</p></div>
 <h3>Exceptions</h3>
 <table class="table table-bordered"><tr>
 <th><code>\Exception</code></th>
@@ -386,7 +409,7 @@ If preflight returns false, Joomla will abort the update and undo everything alr
 </div></div>
 </div>
 <a id="method_checkVersion"></a><div class="element clickable method protected method_checkVersion " data-toggle="collapse" data-target=".method_checkVersion .collapse" title="protected">
-<h2>Check Verions of JBSM</h2>
+<h2>Check Versions of JBSM</h2>
 <pre>checkVersion(string $name, string $version) : boolean</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
@@ -409,6 +432,22 @@ If preflight returns false, Joomla will abort the update and undo everything alr
 </tr></table>
 <h3>Returns</h3>
 <div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method__uninstallSubextensions"></a><div class="element clickable method private method__uninstallSubextensions " data-toggle="collapse" data-target=".method__uninstallSubextensions .collapse" title="private">
+<h2>Uninstalls subextensions (modules, plugins) bundled with the main extension</h2>
+<pre>_uninstallSubextensions(\JInstallerAdapter $parent) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.18</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$parent</h4>
+<code>\JInstallerAdapter</code><p>is the class calling this method.</p></div>
 </div></div>
 </div>
 <h3>
@@ -455,15 +494,53 @@ If preflight returns false, Joomla will abort the update and undo everything alr
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
-<a id="property_versions"> </a><div class="element clickable property protected property_versions" data-toggle="collapse" data-target=".property_versions .collapse" title="protected">
-<h2>$versions</h2>
-<pre>$versions </pre>
+<a id="property_status"> </a><div class="element clickable property protected property_status" data-toggle="collapse" data-target=".property_status .collapse" title="protected">
+<h2>$status</h2>
+<pre>$status </pre>
 <div class="row collapse"><div class="detail-description">
 <h3>Default</h3>
-<div class="subelement argument"><code>array('PHP' => array('5.3' => '5.3.1', '0' => '5.4.23'), 'MySQL' => array('5.1' => '5.1', '0' => '5.5'), 'Joomla!' => array('3.4' => '3.4.1', '3.3' => '3.3.6', '2.5' => '2.5.28', '0' => '3.4.1'))</code></div>
+<div class="subelement argument"></div>
 </div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_versions"> </a><div class="element clickable property protected property_versions" data-toggle="collapse" data-target=".property_versions .collapse" title="protected">
+<h2>This is Minimum requirements for: PHP, MySQL, Joomla</h2>
+<pre>$versions : array</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>array('PHP' => array('5.5' => '5.5.3', '5.6' => '5.6.30', '7.0' => '7.0.13', '7.1' => '7.1.0', '0' => '7.0.13'), 'MySQL' => array('5.1' => '5.1', '5.5' => '5.5.3', '0' => '5.5.3'), 'Joomla!' => array('3.6' => '3.6.3', '3.7' => '3.7.0', '0' => '3.8.3'))</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.9</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_installation_queue"> </a><div class="element clickable property private property_installation_queue" data-toggle="collapse" data-target=".property_installation_queue .collapse" title="private">
+<h2>The list of extra modules and plugins to install</h2>
+<pre>$installation_queue : array</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>array('modules' => array('admin' => array(), 'site' => array('biblestudy' => 0, 'biblestudy_podcast' => 0)), 'plugins' => array('finder' => array('biblestudy' => 1), 'search' => array('biblestudysearch' => 0), 'system' => array('jbspodcast' => 0, 'jbsbackup' => '0')))</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>author</th>
+<td><a href="">CWM Team</a></td>
+</tr>
+<tr>
+<th>since</th>
+<td>9.0.18</td>
+</tr>
+</table>
+</div></div>
 </div>
 </div>
 </div>
@@ -472,7 +549,7 @@ If preflight returns false, Joomla will abort the update and undo everything alr
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2017-05-11T22:20:35-05:00.<br></footer></div>
+            generated on 2018-01-26T22:10:40-06:00.<br></footer></div>
 </div>
 </body>
 </html>
