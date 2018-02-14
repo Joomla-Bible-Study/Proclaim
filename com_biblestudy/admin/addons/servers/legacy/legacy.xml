@@ -16,7 +16,7 @@
 		</fieldset>
 	</fields>
 	<fields name="media">
-		<fieldset name="details" label="JBS_ADDON_LEGACY_DETAILS">
+		<fieldset name="details" label="JBS_ADDON_LEGACY_MEDIA_TYPE_DEF">
 			<field name="link_type" type="list" extension="com_biblestudy"
 			       label="JBS_MED_SHOW_DOWNLOAD_ICON" description="JBS_MED_SHOW_DOWNLOAD_ICON_DESC"
 			       class="inputbox" default="">

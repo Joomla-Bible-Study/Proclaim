@@ -157,6 +157,7 @@ JFactory::getDocument()->addScriptDeclaration('
 									if ($new)
 									{
 										$s_name = $field->fieldname;
+
 										if (isset($this->media_form->s_params[$s_name]))
 										{
 											$field->setValue($this->media_form->s_params[$s_name]);

@@ -35,7 +35,7 @@
 				<option value="3">JBS_CMN_SQUEEZEBOX</option>
 			</field>
 		</fieldset>
-		<fieldset name="media_type" label="JBS_ADDON_LEGACY_MEDIA_TYPE">
+		<fieldset name="media_type" label="JBS_ADDON_LEGACY_MEDIA_TYPE_DEF">
 			<field name="media_image" type="media" directory="biblestudy"
 			       label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
 			       class="inputbox"/>

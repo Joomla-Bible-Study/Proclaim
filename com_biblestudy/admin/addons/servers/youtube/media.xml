@@ -1,19 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <media>
 	<fields name="params">
-		<fieldset name="details" label="JBS_ADDON_LEGACY_DETAILS">
-			<field name="link_type" type="list" extension="com_biblestudy"
-			       label="JBS_MED_SHOW_DOWNLOAD_ICON" description="JBS_MED_SHOW_DOWNLOAD_ICON_DESC"
-			       class="inputbox" readonly="readonly" size="1" default="0">
-				<option value="0">JBS_MED_NO_DOWNLOAD_ICON</option>
-			</field>
-		</fieldset>
-		<fieldset name="files_settings" label="JBS_ADDON_LEGACY_FILE_SETTINGS">
-			<field name="player" type="list" label="JBS_MED_PLAYER"
-			       description="JBS_MED_PLAYER_DESC" class="inputbox" size="1" default="">
-				<option value="">JGLOBAL_USE_GLOBAL</option>
-				<option value="1">JBS_CMN_USE_INTERNAL_PLAYER</option>
-			</field>
+		<fieldset name="details" label="JBS_ADDON_YOUTUBE_MEDIA_FILES"
+		          addfieldpath="/administrator/components/com_biblestudy/addons/servers/youtube/fields">
 			<field name="popup" type="list" label="JBS_MED_INTERNAL_POPUP"
 			       description="JBS_MED_INTERNAL_POPUP_DESC" class="inputbox" size="1"
 			       default="">
@@ -22,14 +11,21 @@
 				<option value="2">JBS_CMN_INLINE</option>
 				<option value="3">JBS_CMN_SQUEEZEBOX</option>
 			</field>
-		</fieldset>
-		<fieldset name="media_files" label="JBS_ADDON_LEGACY_MEDIA_FILES"
-		          addfieldpath="/administrator/components/com_biblestudy/addons/servers/youtube/fields">
 			<field name="filename"
 			       type="text"
 			       label="JBS_ADDON_YOUTUBE_URL"
 			       description="JBS_ADDON_YOUTUBE_URL_DISC"
 			       class="inputbox"/>
+			<field name="link_type" type="hidden" extension="com_biblestudy"
+			       label="JBS_MED_SHOW_DOWNLOAD_ICON" description="JBS_MED_SHOW_DOWNLOAD_ICON_DESC"
+			       class="inputbox" readonly="readonly" size="1" default="0">
+				<option value="0">JBS_MED_NO_DOWNLOAD_ICON</option>
+			</field>
+			<field name="player" type="hidden" label="JBS_MED_PLAYER"
+			       description="JBS_MED_PLAYER_DESC" class="inputbox" size="1" default="">
+				<option value="">JGLOBAL_USE_GLOBAL</option>
+				<option value="1">JBS_CMN_USE_INTERNAL_PLAYER</option>
+			</field>
 		</fieldset>
 		<fieldset name="media_type" label="JBS_ADDON_LEGACY_MEDIA_TYPE">
 			<field name="media_image" type="media" directory="biblestudy"
