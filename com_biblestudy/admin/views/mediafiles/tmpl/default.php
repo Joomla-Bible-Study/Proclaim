@@ -31,24 +31,6 @@ if ($saveOrder)
 	JHtml::_('sortablelist.sortable', 'mediafileList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 }
 $sortFields = $this->getSortFields();
-
-JFactory::getDocument()->addScriptDeclaration('
-	Joomla.orderTable = function()
-	{
-		table = document.getElementById("sortTable");
-		direction = document.getElementById("directionTable");
-		order = table.options[table.selectedIndex].value;
-		if (order != "' . $listOrder . '")
-		{
-			dirn = "decs";
-		}
-		else
-		{
-			dirn = direction.options[direction.selectedIndex].value;
-		}
-		Joomla.tableOrdering(order, dirn, "");
-	};
-');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafiles'); ?>" method="post"
       name="adminForm" id="adminForm">
@@ -74,41 +56,40 @@ JFactory::getDocument()->addScriptDeclaration('
 					<thead>
 					<tr>
 						<th width="1%" class="nowrap center hidden-phone">
-							<?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'mediafile.ordering', $listDirn, $listOrder, null, 'desc', 'JGRID_HEADING_ORDERING'); ?>
+							<?php echo JHtml::_('searchtools.sort', '', 'mediafile.ordering', $listDirn,
+								$listOrder, null, 'desc', 'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
 						</th>
 						<th width="1%" class="center">
 							<?php echo JHtml::_('grid.checkall'); ?>
 						</th>
 
 						<th class="nowrap center">
-							<?php echo JHtml::_('grid.sort', 'JSTATUS', 'mediafile.published', $listDirn, $listOrder); ?>
+							<?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'mediafile.published', $listDirn, $listOrder); ?>
 						</th>
 						<th>
 							<?php echo JText::_('JBS_MED_RESOURCE_NAME'); ?>
 						</th>
 						<th class="nowrap center">
-							<?php echo JHtml::_('grid.sort', 'JBS_CMN_STUDY_TITLE', 'study.studytitle', $listDirn, $listOrder); ?>
+							<?php echo JHtml::_('searchtools.sort', 'JBS_CMN_STUDY_TITLE', 'study.studytitle', $listDirn, $listOrder); ?>
 						</th>
 						<th>
-							<?php echo JHtml::_('grid.sort', 'JBS_MED_MEDIA_TYPE', 'mediafile.params', $listDirn, $listOrder); ?>
+							<?php echo JText::_('JBS_MED_MEDIA_TYPE'); ?>
 						</th>
 						<th>
-							<?php echo JHtml::_('grid.sort', 'JBS_MED_CREATE_DATE', 'mediafile.createdate', $listDirn, $listOrder); ?>
-						</th>
-						<th>
-							<?php echo JHtml::_('grid.sort', 'JBS_CMN_MODIFIED', 'mediafile.modified', $listDirn, $listOrder); ?>
+							<?php echo JHtml::_('searchtools.sort', 'JBS_MED_CREATE_DATE', 'mediafile.createdate', $listDirn, $listOrder); ?>
 						</th>
 						<th width="10%" class="nowrap center hidden-phone">
-							<?php echo JHtml::_('grid.sort', 'JBS_MED_ACCESS', 'mediafile.plays', $listDirn, $listOrder); ?>
+							<?php echo JHtml::_('searchtools.sort', 'JBS_MED_ACCESS', 'mediafile.plays', $listDirn, $listOrder); ?>
 						</th>
 						<th colspan="2" width="5%" class="nowrap center hidden-phone">
-							<?php echo JHtml::_('grid.sort', 'JBS_MED_MEDIA_FILES_STATS', 'mediafile.plays', $listDirn, $listOrder); ?>
+							<?php echo JHtml::_('searchtools.sort', 'JBS_MED_MEDIA_FILES_STATS', 'mediafile.plays', $listDirn, $listOrder); ?>
 						</th>
 					</tr>
 					</thead>
 					<tfoot>
 					<tr>
 						<td colspan="<?php echo $columns; ?>">
+							<?php echo $this->pagination->getListFooter(); ?>
 						</td>
 					</tr>
 					</tfoot>
@@ -202,12 +183,6 @@ JFactory::getDocument()->addScriptDeclaration('
 							<td class="nowrap small hidden-phone">
 								<?php echo JHtml::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
 							</td>
-							<td class="nowrap small hidden-phone">
-								<?php if ($item->modified != '0000-00-00 00:00:00'):
-									echo JHtml::_('date', $item->modified, JText::_('DATE_FORMAT_LC4'));
-								endif;
-								?>
-							</td>
 							<td class="center hidden-phone">
 								<?php echo $this->escape($item->access_level); ?>
 							</td>
@@ -237,11 +212,8 @@ JFactory::getDocument()->addScriptDeclaration('
 					); ?>
 				<?php endif; ?>
 			<?php endif; ?>
-			<?php echo $this->pagination->getListFooter(); ?>
 			<input type="hidden" name="task" value=""/>
 			<input type="hidden" name="boxchecked" value="0"/>
-			<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
-			<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
 			<?php echo JHtml::_('form.token'); ?>
 		</div>
 </form>
