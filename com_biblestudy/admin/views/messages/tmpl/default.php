@@ -156,6 +156,7 @@ if ($saveOrder)
 									<?php else : ?>
 										<?php echo $this->escape($item->studytitle); ?>
 									<?php endif; ?>
+									<br />
 									<span class="small">
 										<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
 									</span>
