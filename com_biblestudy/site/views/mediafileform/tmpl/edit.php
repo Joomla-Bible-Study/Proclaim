@@ -18,6 +18,7 @@ JHtml::_('formbehavior.chosen', 'select');
 
 /** @type Joomla\Registry\Registry $params */
 $params = $this->state->get('params');
+$new = ($this->item->id == 0);
 
 // Set up defaults
 if (JFactory::getApplication()->input->getInt('id'))
