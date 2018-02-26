@@ -66,9 +66,10 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  void
+	 * @return  mixed
 	 *
 	 * @since 7.0
+	 * @throws \Exception
 	 */
 	public function display($tpl = null)
 	{
@@ -92,9 +93,10 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 
 		if (!$this->canDo->get('core.edit'))
 		{
-			$app->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
+			JFactory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
+			$app->setHeader('status', 403, true);
 
-			return;
+			return false;
 		}
 
 		// Create a shortcut to the parameters.
@@ -122,6 +124,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 	 * @return void
 	 *
 	 * @since 7.0
+	 * @throws \Exception
 	 */
 	protected function _prepareDocument()
 	{

@@ -81,7 +81,10 @@ class BiblestudyViewMessageform extends JViewLegacy
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  void
+	 * @return  mixed
+	 *
+	 * @since   9.0.0
+	 * @throws  \Exception
 	 */
 	public function display($tpl = null)
 	{
@@ -116,13 +119,12 @@ class BiblestudyViewMessageform extends JViewLegacy
 			define('JBSPAGETITLE', 0);
 		}
 
-		$canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'sermon');
-
-		if (!$canDo->get('core.edit'))
+		if (!$this->canDo->get('core.edit'))
 		{
 			JFactory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
+			$app->setHeader('status', 403, true);
 
-			return;
+			return false;
 		}
 
 		// Escape strings for HTML output
@@ -165,6 +167,7 @@ class BiblestudyViewMessageform extends JViewLegacy
 	 * @return void
 	 *
 	 * @since 7.0
+	 * @throws \Exception
 	 */
 	protected function _prepareDocument()
 	{
