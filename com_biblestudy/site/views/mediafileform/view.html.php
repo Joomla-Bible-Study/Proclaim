@@ -78,7 +78,7 @@ class BiblestudyViewMediafileform extends JViewLegacy
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  void
+	 * @return  mixed
 	 *
 	 * @since 7.0
 	 */
@@ -95,13 +95,12 @@ class BiblestudyViewMediafileform extends JViewLegacy
 		$language = JFactory::getLanguage();
 		$language->load('', JPATH_ADMINISTRATOR, null, true);
 
-		if (!$this->params->def('page_title', ''))
+		if (!$this->canDo->get('core.edit'))
 		{
-			define('JBSPAGETITLE', 0);
-		}
-		else
-		{
-			define('JBSPAGETITLE', 1);
+			JFactory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
+			$app->setHeader('status', 403, true);
+
+			return false;
 		}
 
 		$options       = $app->input->get('options');

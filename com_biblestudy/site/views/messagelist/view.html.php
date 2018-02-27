@@ -108,12 +108,14 @@ class BiblestudyViewMessagelist extends JViewLegacy
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  void
+	 * @return  mixed
 	 *
 	 * @since 7.0
+	 * @throws \Exception
 	 */
 	public function display($tpl = null)
 	{
+		$app              = JFactory::getApplication();
 		$items            = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
@@ -137,8 +139,9 @@ class BiblestudyViewMessagelist extends JViewLegacy
 		if (!$this->canDo->get('core.edit'))
 		{
 			JFactory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
+			$app->setHeader('status', 403, true);
 
-			return;
+			return false;
 		}
 
 		// Puts a new record link at the top of the form

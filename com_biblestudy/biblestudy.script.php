@@ -146,6 +146,12 @@ class Com_BiblestudyInstallerScript
 			JFile::delete(JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php');
 		}
 
+		// Remove Variability plupload folder from media not use. 9.1.2
+		if (JFolder::exists(JPATH_ROOT . '/media/com_biblestudy/plupload'))
+		{
+			JFolder::delete(JPATH_ROOT . '/media/com_biblestudy/plupload');
+		}
+
 		return true;
 	}
 
