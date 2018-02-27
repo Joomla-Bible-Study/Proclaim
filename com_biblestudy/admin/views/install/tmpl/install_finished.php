@@ -110,17 +110,17 @@ $session->set('migration_stack', '', 'JBSM');
 
 	<tr>
 		<td>
-			<p><a href="https://www.joomlabiblestudy.org/forum.html"
+			<p><a href="https://www.christianwebministries.org/support/user-help-forum.html"
 			      target="_blank"><?php echo JText::_('JBS_INS_VISIT_FORUM'); ?></a></p>
 
-			<p><a href="https://www.joomlabiblestudy.org"
+			<p><a href="https://www.christianwebministries.org"
 			      target="_blank"><?php echo JText::_('JBS_INS_GET_MORE_HELP'); ?></a></p>
 
-			<p><a href="https://www.joomlabiblestudy.org/jbs-documentation.html"
+			<p><a href="https://www.christianwebministries.org/documentation.html"
 			      target="_blank"><?php echo JText::_('JBS_INS_VISIT_DOCUMENTATION'); ?></a></p>
 
-			<p><?php echo JText::_('JBS_INS_TITLE'); ?> &copy; by <a href="https://www.joomlabiblestudy.org"
-			                                                         target="_blank">www.JoomlaBibleStudy.org</a>
+			<p><?php echo JText::_('JBS_INS_TITLE'); ?> &copy; by <a href="https://www.christianwebministries.org"
+			                                                         target="_blank">www.ChristianWebMinistries.org</a>
 				All rights reserved.</p>
 
 		</td>
