@@ -29,6 +29,7 @@ class JFormFieldPlupload extends JFormField
 	 * @return string
 	 *
 	 * @since 1.5
+	 * @throws \Exception
 	 */
 	protected function getInput()
 	{
