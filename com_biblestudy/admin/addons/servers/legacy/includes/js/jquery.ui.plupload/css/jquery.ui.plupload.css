@@ -19,13 +19,13 @@
 }
 
 .plupload_container {
-	height: 300px;
+	_height: 300px;
 	min-height: 300px;
 	position: relative;
 }
 
-.plupload_filelist_footer {border-width: 1px 0 0 0;}
-.plupload_file {border-width: 0 0 1px 0;}
+.plupload_filelist_footer {border-width: 1px 0 0 0}
+.plupload_file {border-width: 0 0 1px 0}
 .plupload_container .plupload_header {border-width: 0 0 1px 0; position: relative;}
 
 .plupload_delete .ui-icon,
@@ -330,7 +330,11 @@
 	display: block;
 }
 
-.plupload_buttons, .plupload_upload_status {float: left;}
+.plupload_files_queued .plupload_droptext {
+	display: none;
+}
+
+.plupload_buttons, .plupload_upload_status {float: left}
 
 .plupload_message {
 	position: absolute;
