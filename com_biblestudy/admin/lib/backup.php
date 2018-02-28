@@ -112,7 +112,7 @@ class JBSMBackup
 				break;
 
 			case 2:
-				$this->dumpFile = JPATH_SITE . '/media/com_biblestudy/backup' . $this->saveAsName;
+				$this->dumpFile = JPATH_SITE . '/media/com_biblestudy/backup/' . $this->saveAsName;
 
 				if (!$this->writeline($this->data_cache))
 				{
