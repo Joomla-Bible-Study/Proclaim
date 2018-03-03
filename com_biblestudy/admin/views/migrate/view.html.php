@@ -72,6 +72,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 * Update Version
 	 *
 	 * @var string
+	 * @since 9.0.0
 	 */
 	public $updateVersion;
 
@@ -196,6 +197,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 *
 	 * @see     fetch()
 	 * @since   11.1
+	 * @throws  \Exception
 	 */
 	public function display($tpl = null)
 	{
@@ -307,6 +309,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 * @return null
 	 *
 	 * @since 7.0.0
+	 * @throws \Exception
 	 */
 	protected function addToolbar()
 	{

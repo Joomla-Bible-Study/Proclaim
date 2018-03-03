@@ -62,6 +62,7 @@ class BiblestudyViewLocations extends JViewLegacy
 	 * Side Bar
 	 *
 	 * @var string
+	 * @since 9.0.0
 	 */
 	public $sidebar;
 
@@ -74,6 +75,8 @@ class BiblestudyViewLocations extends JViewLegacy
 	 *
 	 * @see     fetch()
 	 * @since   11.1
+	 *
+	 * @throws \Exception
 	 */
 	public function display($tpl = null)
 	{

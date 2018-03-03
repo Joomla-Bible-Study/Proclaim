@@ -67,6 +67,7 @@ class BiblestudyViewServers extends JViewLegacy
 	 *
 	 * @see     fetch()
 	 * @since   11.1
+	 * @throws  \Exception
 	 */
 	public function display($tpl = null)
 	{

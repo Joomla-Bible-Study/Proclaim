@@ -59,7 +59,8 @@ class BiblestudyViewSerie extends JViewLegacy
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
-	 * @since    7.0.0
+	 * @since   7.0.0
+	 * @throws  \Exception
 	 */
 	public function display($tpl = null)
 	{
@@ -95,6 +96,7 @@ class BiblestudyViewSerie extends JViewLegacy
 	 * @return void
 	 *
 	 * @since 7.0.0
+	 * @throws \Exception
 	 */
 	protected function addToolbar()
 	{

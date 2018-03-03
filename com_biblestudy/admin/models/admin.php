@@ -140,6 +140,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 * @return boolean
 	 *
 	 * @since 7.0
+	 * @throws \Exception
 	 */
 	public function fix()
 	{
@@ -179,6 +180,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 * @return string JSchema  ChangeSet
 	 *
 	 * @since 7.0
+	 * @throws \Exception
 	 */
 	public function getItems()
 	{
@@ -211,6 +213,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 * @return   mixed  string schema version if success, false if fail
 	 *
 	 * @since 7.0
+	 * @throws \Exception
 	 */
 	public function fixSchemaVersion($changeSet)
 	{
@@ -323,6 +326,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 * @return   mixed  string update version if success, false if fail
 	 *
 	 * @since 7.0
+	 * @throws \Exception
 	 */
 	public function fixUpdateVersion()
 	{
@@ -461,6 +465,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 * @return  mixed   version if successful, false if fail
 	 *
 	 * @since 7.0
+	 * @throws \Exception
 	 */
 	public function getUpdateVersion()
 	{
@@ -623,6 +628,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 * @return  void
 	 *
 	 * @since    1.7.2
+	 * @throws \Exception
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
@@ -658,6 +664,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 * @return object
 	 *
 	 * @since 7.0
+	 * @throws \Exception
 	 */
 	protected function loadFormData()
 	{
