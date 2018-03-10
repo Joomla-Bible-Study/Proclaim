@@ -39,6 +39,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 	 * @return  mixed  True if the record can be added, a error object if not.
 	 *
 	 * @since   12.2
+	 * @throws  \Exception
 	 */
 	public function add()
 	{
@@ -65,6 +66,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 	 * @return  bool
 	 *
 	 * @since   9.0.0
+	 * @throws  \Exception
 	 */
 	public function edit($key = null, $urlVar = null)
 	{
@@ -141,6 +143,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 	 * @return  boolean  True if access level checks pass, false otherwise.
 	 *
 	 * @since   12.2
+	 * @throws  \Exception
 	 */
 	public function cancel($key = null)
 	{
@@ -200,6 +203,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 	 * @return  void
 	 *
 	 * @since   9.0.0
+	 * @throws  \Exception
 	 */
 	public function setServer()
 	{
@@ -232,6 +236,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 	 * @return    void
 	 *
 	 * @since    3.1
+	 * @throws   \Exception
 	 */
 	protected function postSaveHook(JModelLegacy $model, $validData = array())
 	{

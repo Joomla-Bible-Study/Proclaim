@@ -25,9 +25,10 @@ class JFormFieldServer extends JFormField
 	/**
 	 * Get input form form
 	 *
-	 * @return array
+	 * @return string
 	 *
 	 * @since 7.0
+	 * @throws \Exception
 	 */
 	protected function getInput()
 	{
@@ -51,9 +52,6 @@ class JFormFieldServer extends JFormField
 		// Build the script.
 		$script = array();
 
-		// Setup variables for display.
-		$html = array();
-
 		if ($view == 'mediafileform')
 		{
 			$sview = 'mediafileform.setServer';
@@ -66,7 +64,7 @@ class JFormFieldServer extends JFormField
 		$script[] = '       jSelectServer_jform_server_id = function(server_id) {
         window.parent.Joomla.submitbutton(\'' . $sview . '\', server_id);
         window.parent.SqueezeBox.close();
-    }';
+        }';
 		$script[] = '	function jSelectServer_' . $this->id . '(id, name, object) {';
 		$script[] = '		document.getElementById("' . $this->id . '").value = id;';
 		$script[] = '		document.getElementById("' . $this->id . '_name").value = name;';
@@ -124,34 +122,6 @@ class JFormFieldServer extends JFormField
 		{
 			$link .= '&amp;forcedLanguage=' . $this->element['language'];
 		}
-
-		// Get the title of the linked chart
-		if ((int) $this->value > 0)
-		{
-			$db    = JFactory::getDbo();
-			$query = $db->getQuery(true)
-				->select($db->quoteName('server_name'))
-				->from($db->quoteName('#__bsms_servers'))
-				->where('id = ' . (int) $this->value)
-				->where('published = ' . 1);
-			$db->setQuery($query);
-
-			try
-			{
-				$title = $db->loadResult();
-			}
-			catch (RuntimeException $e)
-			{
-				JError::raiseWarning(500, $e->getMessage());
-			}
-		}
-
-		if (empty($title))
-		{
-			$title = JText::_('JBS_SVR_SERVER_NAME');
-		}
-
-		$title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
 
 		// The active server id field.
 		if (0 == (int) $this->value)

@@ -1,4 +1,4 @@
-/* 
+/*
    Plupload
 ------------------------------------------------------------------- */
 
@@ -96,13 +96,13 @@
 	padding: 8px 8px;
 	color: #42454A;
 }
-.plupload_filelist_header {	
+.plupload_filelist_header {
 	border-top: 1px solid #EEE;
 	border-bottom: 1px solid #CDCDCD;
 }
 
 .plupload_filelist_footer {border-top: 1px solid #FFF; height: 22px; line-height: 20px; vertical-align: middle;}
-.plupload_file_name {float: left; overflow: hidden}
+.plupload_file_name {float: left; overflow: hidden;}
 .plupload_file_status {color: #777;}
 .plupload_file_status span {color: #42454A;}
 .plupload_file_size, .plupload_file_status, .plupload_progress {
@@ -131,7 +131,7 @@
 }
 
 li.plupload_uploading {background: #ECF3DC url('../img/backgrounds.gif') repeat-x 0 -238px;}
-li.plupload_done {color:#AAA}
+li.plupload_done {color:#AAA;}
 
 li.plupload_delete a {
 	background: url('../img/delete.gif');
@@ -158,7 +158,7 @@ li.plupload_done a {
 	padding: 1px;
 }
 .plupload_progress_bar {
-	width: 0px;
+	width: 0;
 	height: 7px;
 	background: #CDEB8B;
 }
@@ -173,7 +173,7 @@ li.plupload_done a {
 .plupload_clearer, .plupload_progress_bar {
 	display: block;
 	font-size: 0;
-	line-height: 0;	
+	line-height: 0;
 }
 
 li.plupload_droptext {

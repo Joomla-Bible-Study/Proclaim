@@ -337,6 +337,12 @@ $input = $app->input;
 									<?php echo $this->form->getInput('podcast', 'params'); ?>
                                 </div>
                             </div>
+	                        <div class="control-group">
+		                        <?php echo $this->form->getLabel('uploadpath', 'params'); ?>
+		                        <div class="controls">
+			                        <?php echo $this->form->getInput('uploadpath', 'params'); ?>
+		                        </div>
+	                        </div>
                         </div>
                     </div>
                     <div class="row-fluid">
