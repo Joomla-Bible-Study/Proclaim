@@ -89,9 +89,9 @@ if ($msg)
 					<h3><?php echo JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY'); ?></h3>
 
 					<p><?php echo JText::_('JBS_CPL_INTRO'); ?> - <a
-								href="https://www.joomlabiblestudy.org/jbs-documentation.html" target="_blank">
+								href="https://www.christianwebministries.org/documentation/8-proclaim.html" target="_blank">
 							<?php echo JText::_('JBS_CPL_ONLINE_DOCUMENTATION'); ?></a> - <a
-								href="https://www.joomlabiblestudy.org/forum/" target="_blank">
+								href="https://www.christianwebministries.org/support/user-help-forum.html" target="_blank">
 							<?php echo JText::_('JBS_CPL_VISIT_FAQ'); ?></a></p>
 				</div>
 				<div style="border:1px solid #ddd; background:#FBFBFB;" class="visible-desktop">

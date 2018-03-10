@@ -13,6 +13,8 @@
 				<option value="http://">http://</option>
 				<option value="https://">https://</option>
 			</field>
+			<field name="uploadpath" type="text" default="/images/biblestudy/media/" label="JBS_ADM_UPLOAD_PATH" description="JBS_ADM_UPLOAD_PATH_DESC"
+			       class="inputbox" size="35"/>
 		</fieldset>
 	</fields>
 	<fields name="media">

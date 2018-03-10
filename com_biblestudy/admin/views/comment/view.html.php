@@ -62,6 +62,7 @@ class BiblestudyViewComment extends JViewLegacy
 	 * @return  mixed  A string if successful, otherwise a Error object.
 	 *
 	 * @since 9.0.0
+	 * @throws \Exception
 	 */
 	public function display($tpl = null)
 	{
@@ -93,6 +94,7 @@ class BiblestudyViewComment extends JViewLegacy
 	 * @return void
 	 *
 	 * @since 7.0
+	 * @throws \Exception
 	 */
 	protected function addToolbar()
 	{

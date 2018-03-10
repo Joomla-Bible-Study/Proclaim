@@ -197,6 +197,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 *
 	 * @see     fetch()
 	 * @since   11.1
+	 * @throws  \Exception
 	 */
 	public function display($tpl = null)
 	{
@@ -315,7 +316,6 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JFactory::getApplication()->input->set('hidemainmenu', true);
 		/** @noinspection PhpMethodOrClassCallIsNotCaseSensitiveInspection */
 		JToolbarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'options options');
 		JToolbarHelper::preferences('com_biblestudy', '600', '800', 'JBS_ADM_PERMISSIONS');

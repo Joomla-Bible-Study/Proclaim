@@ -199,6 +199,7 @@ class BiblestudyViewDatabase extends JViewLegacy
 	 *
 	 * @see     fetch()
 	 * @since   9.0.14
+	 * @throws  \Exception
 	 */
 	public function display($tpl = null)
 	{
@@ -280,6 +281,7 @@ class BiblestudyViewDatabase extends JViewLegacy
 	 * @return void
 	 *
 	 * @since 9.0.14
+	 * @throws \Exception
 	 */
 	protected function addToolbar()
 	{

@@ -118,6 +118,7 @@ class BiblestudyViewBackup extends JViewLegacy
 	 * @return null
 	 *
 	 * @since 7.0.0
+	 * @throws \Exception
 	 */
 	protected function addToolbar()
 	{

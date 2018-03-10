@@ -35,16 +35,28 @@ class JFormFieldPlupload extends JFormField
 	{
 		// Include Plupload libraries
 		$document = JFactory::getDocument();
+		$app = JFactory::getApplication();
 		$document->addScript(JUri::root() . 'administrator/components/com_biblestudy/addons/servers/legacy/includes/js/plupload.full.min.js');
 		$document->addScript(JUri::root() . 'administrator/components/com_biblestudy/addons/servers/legacy/includes/js/legacy.js');
-		$view = JFactory::getApplication()->input->get('view');
+		$view = $app->input->get('view');
+		$admin = JBSMParams::getAdmin();
+
+		if (isset($this->form->s_params['uploadpath']))
+		{
+			$upload = $this->form->s_params['uploadpath'];
+		}
+		else
+		{
+			$upload = $admin->params->get('uploadpath', '/images/biblestudy/media/');
+		}
+
 		$document->addScriptDeclaration('
 			jQuery(document).ready(function() {
 				uploader.setOption("url", "index.php?option=com_biblestudy&task=' . $view . '.xhr&' . JSession::getFormToken() . '=1");
 				uploader.bind("BeforeUpload", function() {
 					uploader.setOption("multipart_params", {
 						handler: "' . $this->element["handler"] . '",
-						path: "/images/biblestudy/media/"
+						path: "' . $upload . '"
 					});
 				});
 				uploader.init();
@@ -59,16 +71,17 @@ class JFormFieldPlupload extends JFormField
 			$this->id . '" value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '" />
                           <input id="uploader-file" placeholder="Choose a media file"
                           style="border-left: 0; border-radius: 0;" class="span7" type="text" disabled>
-                          <a id="btn-add-file" class="btn btn-default">
+                          <a id="btn-add-file" href="javascript:;" class="btn btn-default">
                              <i class="icon-plus"></i>
                              Add File
                           </a>
-                          <a id="btn-upload" class="btn btn-success" disabled>
+                          <a id="btn-upload" href="javascript:;" class="btn btn-success" disabled>
                              <i class="icon-upload"></i>
                              Upload
                           </a>
                         </div>
-                        <div id="upload-progress" style="display: none; margin-top: 5px;" class="progress progress-striped active">
+                        <div id="upload-progress" style="display: none; margin-top: 5px; margin-bottom: 0;" 
+                        class="progress progress-striped active">
                         <div class="bar" style="width: 0;"></div></div>
                     </div>';
 		$html .= '
