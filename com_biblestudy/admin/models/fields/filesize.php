@@ -64,8 +64,8 @@ class JFormFieldFilesize extends JFormField
 	 */
 	private function sizeConverter()
 	{
-		return "<button data-toggle=\"modal\" onclick=\"jQuery( '#collapseModal' ).modal('show'); return true;\" class=\"btn btn-small\">
-	<span class=\"icon-checkbox-partial\" aria-hidden=\"true\"></span>
-	Batch</button>";
+		return "<button data-toggle=\"modal\" onclick=\"jQuery( '#collapseModal' ).modal('show'); return true;\" class=\"btn btn-primary\">
+	<span class=\"icon-checkbox-partial\" aria-hidden=\"true\"></span>" . JText::_('JBS_MED_FILESIZE_CONVERTER') .
+			"</button>";
 	}
 }
