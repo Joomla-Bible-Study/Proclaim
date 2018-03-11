@@ -10,6 +10,7 @@
 
 defined('_JEXEC') or die;
 
+JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidation');
@@ -173,6 +174,16 @@ JFactory::getDocument()->addScriptDeclaration('
 				<div class="tab-pane" id="rules">
 					<?php echo $this->form->getInput('rules'); ?>
 				</div>
+				<?php // Load the batch processing form. ?>
+					<?php echo JHtml::_(
+						'bootstrap.renderModal',
+						'collapseModal',
+						array(
+							'title'  => JText::_('JBS_CMN_BATCH_OPTIONS'),
+							'footer' => $this->loadTemplate('converter_footer')
+						),
+						$this->loadTemplate('converter_body')
+					); ?>
 			</div>
 		</div>
 	</div>
