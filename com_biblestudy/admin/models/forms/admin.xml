@@ -380,16 +380,9 @@
 		</field>
 		<field name="media_button_color" type="color" description="JBS_ADDON_LEGACY_BUTTON_COLOR_DESC"
 		       label="JBS_ADDON_LEGACY_BUTTON_COLOR" class="inputbox" labelclass="control-label"/>
-		<field name="media_icon_type" type="list" class="inputbox" labelclass="control-label" size="15" default=""
+		<field name="media_icon_type" type="icontype" class="inputbox" labelclass="control-label" size="15" default=""
 		       label="JBS_ADDON_LEGACY_ICON_TYPE"
 		       description="JBS_ADDON_LEGACY_ICON_TYPE_DESC">
-			<option value="fa fa-play">JBS_MED_PLAY</option>
-			<option value="fa fa-youtube">JBS_MED_YOUTUBE</option>
-			<option value="fa fa-video-camera">JBS_MED_VIDEO</option>
-			<option value="fa fa-television">JBS_MED_BROADCAST</option>
-			<option value="fa fa-file">JBS_MED_FILE</option>
-			<option value="fa fa-vimeo">JBS_MED_VIMEO</option>
-			<option value="1">JBS_MED_CUSTOM</option>
 		</field>
 		<field name="media_custom_icon" type="text" default="" label="JBS_ADDON_LEGACY_CUSTOM_ICON"
 		       description="JBS_ADDON_LEGACY_CUSTOM_ICON_DESC" class="inputbox" labelclass="control-label"/>

@@ -1162,4 +1162,27 @@ class JBSMMedia
 
 		return $mimetype;
 	}
+
+	/**
+	 * List of Icons Supported
+	 *
+	 * @return array
+	 *
+	 * @since 9.1.3
+	 */
+	public function getIcons()
+	{
+		$icons = [
+			'JBS_MED_PLAY'       => 'fa fa-play',
+			'JBS_MED_YOUTUBE'    => 'fa fa-youtube',
+			'JBS_MED_VIDEO'      => 'fa fa-video-camera',
+			'JBS_MED_BROADCAST'  => 'fa fa fa-television',
+			'JBS_MED_FILE'       => 'fa fa-file',
+			'JBS_MED_FILE_PDF'   => 'fa fa-file-pdf',
+			'JBS_MED_VIMEO'      => 'fa fa-vimeo',
+			'JBS_MED_CUSTOM'     => '1'
+			];
+
+		return $icons;
+	}
 }

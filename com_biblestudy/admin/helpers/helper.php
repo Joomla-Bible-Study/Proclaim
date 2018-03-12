@@ -136,7 +136,7 @@ class JBSMHelper
 
 		try
 		{
-			$headers = get_headers($url, true);
+			$headers = @get_headers($url, true);
 		}
 		catch (Exception $e)
 		{
