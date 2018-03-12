@@ -600,7 +600,7 @@ class JBSMMedia
 						break;
 
 					case 1: // Popup window
-						$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=" . $params->toObject()->player .
+						$playercode = "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=" . $params->toObject()->player .
 								"&amp;view=popup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" .
 								$player->playerwidth . ",height=" . $player->playerheight . "'); return false\"  class=\"jbsmplayerlink\">" . $image . "</a>";
 						break;
@@ -642,7 +642,7 @@ class JBSMMedia
 						$diff = $params->get('player_width') - $params->get('playerwidth');
 						$player->playerwidth  = $player->playerwidth + abs($diff) + 10;
 						$player->playerheight = $player->playerheight + $params->get('popupmargin', '50');
-						$playercode           = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=" . $player->player
+						$playercode           = "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=" . $player->player
 							. "&amp;view=popup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width="
 							. $player->playerwidth . ", height=" .
 							$player->playerheight . "'); return false\" class=\"jbsmplayerlink\">" . $image . "</a>";
@@ -658,7 +658,7 @@ class JBSMMedia
 				switch ($player->type)
 				{
 					case 1: // This goes to the popup view
-						$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;view=popup&amp;player=3&amp;t=" . $template .
+						$playercode = "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_biblestudy&amp;view=popup&amp;player=3&amp;t=" . $template .
 							"&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
 							. $player->playerheight . "'); return false\"  class=\"jbsmplayerlink\">" . $image . "</a>";
 						break;
@@ -693,7 +693,7 @@ class JBSMMedia
 				break;
 
 			case 8: // Embed code
-				$playercode = "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;view=popup&amp;player=8&amp;t=" . $template .
+				$playercode = "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_biblestudy&amp;view=popup&amp;player=8&amp;t=" . $template .
 					"&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
 					. $player->playerheight . "'); return false\">" . $image . "</a>";
 
@@ -736,7 +736,7 @@ class JBSMMedia
 			$popout = '';
 		}
 
-		$playercode = '<a data-src="' . $path . '" id="linkmedia' . $media->id . '" title="' . $params->get('filename') .
+		$playercode = '<a href="javascript:;" data-src="' . $path . '" id="linkmedia' . $media->id . '" title="' . $params->get('filename') .
 			'" class="fancybox fancybox_jwplayer" potext="' . $popout . '" ptype="' . $player->player .
 			'" pwidth="' . $player->playerwidth . '" pheight="' .
 			$player->playerheight . '" autostart="' . $params->get('autostart', false) . '" controls="' .
