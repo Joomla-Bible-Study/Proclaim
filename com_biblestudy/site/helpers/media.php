@@ -588,14 +588,14 @@ class JBSMMedia
 				switch ($player->type)
 				{
 					case 2: // New window
-						$playercode = '<a href="' . $path . '" onclick="window.open(\'index.php?option=com_biblestudy&amp;view=popup&amp;close=1&amp;mediaid=' .
-							$media->id . '\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\'); return true;" title="' .
+						$return = base64_encode($path);
+						$playercode = '<a href="javascript:;" onclick="window.open(\'index.php?option=com_biblestudy&amp;task=playHit&amp;return=' .
+							$return . '&amp;' . JSession::getFormToken() . '=1\')" title="' .
 							$media->params->get("media_button_text") . ' - ' . $media->comment . ' ' . $duration . ' '
-							. $filesize . '" target="' . $params->get('special') . '" class="jbsmplayerlink">' . $image . '</a>';
+							. $filesize . '">' . $image . '</a>';
 						break;
 
 					case 3: // Squeezebox view
-
 						return $this->rendersb($media, $params, $player, $image, $path, true);
 						break;
 
