@@ -30,6 +30,57 @@ class JFormFieldIcontype extends JFormFieldList
 	protected $type = 'Icontype';
 
 	/**
+	 * Method to get the field input markup for a generic list.
+	 * Use the multiple attribute to enable multiselect.
+	 *
+	 * @return  string  The field input markup.
+	 *
+	 * @since   9.1.3
+	 */
+	protected function getInput()
+	{
+		$attr = '';
+
+		// Initialize some field attributes.
+		$attr .= !empty($this->class) ? ' class="' . $this->class . '"' : '';
+		$attr .= !empty($this->size) ? ' size="' . $this->size . '"' : '';
+		$attr .= $this->multiple ? ' multiple' : '';
+		$attr .= $this->required ? ' required aria-required="true"' : '';
+		$attr .= $this->autofocus ? ' autofocus' : '';
+
+		// To avoid user's confusion, readonly="true" should imply disabled="true".
+		if ((string) $this->readonly == '1' || (string) $this->readonly == 'true' || (string) $this->disabled == '1'|| (string) $this->disabled == 'true')
+		{
+			$attr .= ' disabled="disabled"';
+		}
+
+		$options = $this->getOptions();
+
+		$convert = [
+			'fa fa-play'          => 'fas fa-play',
+			'fa fa-youtube'       => 'fab fa-youtube',
+			'fa fa-video-camera'  => 'fas fa-video',
+			'fa fa fa-television' => 'fas fa-tv',
+			'fa fa-file'          => 'fas fa-file',
+			'fa fa-file-pdf'      => 'fas fa-file-pdf',
+			'fa fa-vimeo'         => 'fab fa-vimeo'
+		];
+
+		if (isset($convert[$this->value]))
+		{
+			$this->value = $convert[$this->value];
+		}
+
+		// Initialize JavaScript field attributes.
+		$attr .= $this->onchange ? ' onchange="' . $this->onchange . '"' : '';
+		$html[] = JHtml::_('select.genericlist', $options, $this->name, trim($attr), 'value', 'text', $this->value,
+			$this->id
+		);
+
+		return implode($html);
+	}
+
+	/**
 	 * Method to get a list of options for a list input.
 	 *
 	 * @return      array           An array of JHtml options.
@@ -39,11 +90,11 @@ class JFormFieldIcontype extends JFormFieldList
 	protected function getOptions()
 	{
 		$MediaHelper = new JBSMMedia;
-		$mimetypes = $MediaHelper->getIcons();
+		$icontypes = $MediaHelper->getIcons();
 
 		$options = array();
 
-		foreach ($mimetypes as $key => $message)
+		foreach ($icontypes as $key => $message)
 		{
 			$key = JText::_($key);
 			$options[] = JHtml::_('select.option', $message, $key);

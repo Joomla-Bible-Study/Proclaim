@@ -1173,13 +1173,13 @@ class JBSMMedia
 	public function getIcons()
 	{
 		$icons = [
-			'JBS_MED_PLAY'       => 'fa fa-play',
-			'JBS_MED_YOUTUBE'    => 'fa fa-youtube',
-			'JBS_MED_VIDEO'      => 'fa fa-video-camera',
-			'JBS_MED_BROADCAST'  => 'fa fa fa-television',
-			'JBS_MED_FILE'       => 'fa fa-file',
-			'JBS_MED_FILE_PDF'   => 'fa fa-file-pdf',
-			'JBS_MED_VIMEO'      => 'fa fa-vimeo',
+			'JBS_MED_PLAY'       => 'fas fa-play',
+			'JBS_MED_YOUTUBE'    => 'fab fa-youtube',
+			'JBS_MED_VIDEO'      => 'fas fa-video',
+			'JBS_MED_BROADCAST'  => 'fas fa-tv',
+			'JBS_MED_FILE'       => 'fas fa-file',
+			'JBS_MED_FILE_PDF'   => 'fas fa-file-pdf',
+			'JBS_MED_VIMEO'      => 'fab fa-vimeo',
 			'JBS_MED_CUSTOM'     => '1'
 			];
 
