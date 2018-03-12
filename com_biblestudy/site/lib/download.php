@@ -118,8 +118,6 @@ class JBSMDownload
 		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 		header("Cache-Control: private", false);
 		header('Pragma: public');
-		// IE fix (for HTTPS only) header('Cache-Control: private');
-		header('Pragma: private');
 		header("Content-Transfer-Encoding: binary");
 		header('Content-Length: ' . $getsize);
 
