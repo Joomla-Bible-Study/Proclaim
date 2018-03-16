@@ -217,6 +217,8 @@
 			<option value="8">JBS_CMN_EMBED_CODE</option>
 			<option value="100">JBS_CMN_USE_GLOBAL</option>
 		</field>
+		<field name="uploadpath" type="text" default="/images/biblestudy/media/" label="JBS_ADM_UPLOAD_PATH"
+		       description="JBS_ADM_UPLOAD_PATH_DESC" labelclass="control-label"/>
 
 		<!-- JWplayer -->
 		<fieldset name="jwplayer" label="JBS_ADM_PLAYER_ADMIN_LABLE"
