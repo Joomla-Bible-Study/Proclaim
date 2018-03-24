@@ -1207,7 +1207,6 @@ class JBSMMedia
 		);
 	}
 
-
 	/**
 	 * Vimeo url to embed.
 	 *
