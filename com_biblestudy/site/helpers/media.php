@@ -566,6 +566,7 @@ class JBSMMedia
 	 * @return string
 	 *
 	 * @since 9.0.0
+	 * @throws Exception
 	 */
 	public function getPlayerCode($params, $player, $image, $media)
 	{
@@ -637,12 +638,14 @@ class JBSMMedia
 
 						if (preg_match('(youtube.com|youtu.be)', $path) === 1)
 						{
-							$playercode = '<iframe width="' . $player->playerwidth . '" height="' . $player->playerheight . '" src="' .
-								$this->convertYoutube($path) . '" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+							$playercode = '<iframe class="playhit" data-id="' . $media->id . '" width="' . $player->playerwidth . '" height="' .
+								$player->playerheight . '" src="' . $this->convertYoutube($path) .
+								'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
 						}
 						elseif (preg_match('(vimeo.com)', $path) === 1)
 						{
-							$playercode = '<iframe src="' . $this->convertVimeo($path) . '" width="' . $player->playerwidth . '" height="' . $player->playerheight .
+							$playercode = '<iframe class="playhit" data-id="' . $media->id . '" src="' . $this->convertVimeo($path) .
+								'" width="' . $player->playerwidth . '" height="' . $player->playerheight .
 								'" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
 						}
 						else
@@ -753,13 +756,14 @@ class JBSMMedia
 
 		if (preg_match('(youtube.com|youtu.be|vimeo.com)', $path) === 1)
 		{
-			return '<a data-fancybox data-options=\'{"src" : "' . $path . '", "autoplay" : "' . (int) $params->get('autostart', false) .
-				'", "controls" : "' . (int) $params->get('controls') . '", "caption" : "' . $media->studytitle . ' - ' .
+			return '<a data-fancybox class="playhit" data-id="' . $media->id . '" data-options=\'{"src" : "' . $path . '", "autoplay" : "' .
+				(int) $params->get('autostart', false) . '", "controls" : "' . (int) $params->get('controls') .
+				'", "caption" : "' . $media->studytitle . ' - ' .
 				$media->teachername . '"}\'  href="javascript:;">' . $image . '</a>';
 		}
 
-		return '<a data-src="' . $path . '" id="linkmedia' . $media->id . '" title="' . $params->get('filename') .
-			'" class="fancybox fancybox_jwplayer" potext="' . $popout . '" ptype="' . $player->player .
+		return '<a data-src="' . $path . '" data-id="' . $media->id . '" id="linkmedia' . $media->id . '" title="' . $params->get('filename') .
+			'" class="fancybox fancybox_jwplayer hitplay" potext="' . $popout . '" ptype="' . $player->player .
 			'" pwidth="' . $player->playerwidth . '" pheight="' .
 			$player->playerheight . '" autostart="' . $params->get('autostart', false) . '" controls="' .
 			$params->get('controls') . '"" data-image="' . $params->get('jwplayer_image') . '" data-mute="' .
@@ -1026,7 +1030,7 @@ class JBSMMedia
 		$getmenu  = JFactory::getApplication();
 		$menuItem = $getmenu->getMenu()->getItems('component', $url, true);
 		$Itemid   = $menuItem->id;
-		$docman   = '<a href="index.php?option=com_docman&amp;view=document&amp;slug=' .
+		$docman   = '<a class="playhit" data-ip="' . $media->id . '" href="index.php?option=com_docman&amp;view=document&amp;slug=' .
 			$media->docMan_id . '&amp;Itemid=' . $Itemid . '" alt="' . $media->malttext . ' - ' . $media->comment .
 			'" target="' . $media->special . '">' . $image . '</a>';
 
@@ -1045,8 +1049,8 @@ class JBSMMedia
 	 */
 	public function getArticle($media, $image)
 	{
-		$article = '<a href="index.php?option=com_content&amp;view=article&amp;id=' . $media->article_id . '"
-                 alt="' . $media->malttext . ' - ' . $media->comment . '" target="' . $media->special . '">' . $image . '</a>';
+		$article = '<a class="playhit" data-id="' . $media->id . '" href="index.php?option=com_content&amp;view=article&amp;id=' . $media->article_id . '"
+                 target="' . $media->special . '">' . $image . '</a>';
 
 		return $article;
 	}
@@ -1063,8 +1067,9 @@ class JBSMMedia
 	 */
 	public function getVirtuemart($media, $image)
 	{
-		$vm = '<a href="index.php?option=com_virtuemart&amp;view=productdetails&amp;virtuemart_product_id=' . $media->virtueMart_id . '"
-                alt="' . $media->malttext . ' - ' . $media->comment . '" target="' . $media->special . '">' . $image . '</a>';
+		$vm = '<a class="playhit" data-id="' . $media->id . '" href="index.php?option=com_virtuemart&amp;view=productdetails&amp;virtuemart_product_id=' .
+			$media->virtueMart_id . '" target="' . $media->special .
+			'">' . $image . '</a>';
 
 		return $vm;
 	}
