@@ -44,7 +44,7 @@ abstract class JHtmlFancybox
 
 		JHtml::_('jquery.framework');
 		JHtml::_('jwplayer.framework');
-		JHtml::script('https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.1.20/jquery.fancybox.min.js');
+		JHtml::script('https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js');
 		JHtml::script('media/com_biblestudy/js/fancybox.js');
 
 		if ($mouseweel)
@@ -70,7 +70,7 @@ abstract class JHtmlFancybox
 	 */
 	public static function loadCss ($option = false)
 	{
-		JHtml::stylesheet('https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.1.20/jquery.fancybox.min.css');
+		JHtml::stylesheet('https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css');
 		JHtml::stylesheet('media/com_biblestudy/css/bsms.fancybox.css');
 	}
 }
