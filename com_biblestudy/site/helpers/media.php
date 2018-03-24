@@ -34,6 +34,7 @@ class JBSMMedia
 	 * @return string
 	 *
 	 * @since 9.0.0
+	 * @throws Exception
 	 */
 	public function getFluidMedia($media, $params, $template)
 	{
@@ -565,6 +566,7 @@ class JBSMMedia
 	 * @return string
 	 *
 	 * @since 9.0.0
+	 * @throws Exception
 	 */
 	public function getPlayerCode($params, $player, $image, $media)
 	{
@@ -634,7 +636,21 @@ class JBSMMedia
 							}
 						}
 
-						$playercode = JHtmlJwplayer::render($media, $params, false, $player, $template);
+						if (preg_match('(youtube.com|youtu.be)', $path) === 1)
+						{
+							$playercode = '<iframe width="' . $player->playerwidth . '" height="' . $player->playerheight . '" src="' .
+								$this->convertYoutube($path) . '" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+						}
+						elseif (preg_match('(vimeo.com)', $path) === 1)
+						{
+							$playercode = '<iframe src="' . $this->convertVimeo($path) . '" width="' . $player->playerwidth . '" height="' . $player->playerheight .
+								'" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
+						}
+						else
+						{
+							$playercode = JHtmlJwplayer::render($media, $params, false, $player, $template);
+						}
+
 						break;
 
 					case 1: // Popup
@@ -716,12 +732,10 @@ class JBSMMedia
 	 *
 	 * @return string
 	 *
-	 * @since version
+	 * @since 9.1.2
 	 */
 	public function rendersb($media, $params, $player, $image, $path, $direct = false)
 	{
-		JHtml::_('fancybox.framework', true, true);
-
 		if ($player->player == 7 && !$direct)
 		{
 			$player->playerheight = '40';
@@ -736,7 +750,16 @@ class JBSMMedia
 			$popout = '';
 		}
 
-		$playercode = '<a data-src="' . $path . '" id="linkmedia' . $media->id . '" title="' . $params->get('filename') .
+		if (preg_match('(youtube.com|youtu.be|vimeo.com)', $path) === 1)
+		{
+			return '<a data-fancybox data-options=\'{"src" : "' . $path . '", "autoplay" : "' . (int) $params->get('autostart', false) .
+				'", "controls" : "' . (int) $params->get('controls') . '", "caption" : "' . $media->studytitle . ' - ' .
+				$media->teachername . '"}\'  href="javascript:;">' . $image . '</a>';
+		}
+
+		JHtml::_('fancybox.framework', true, true);
+
+		return '<a data-src="' . $path . '" id="linkmedia' . $media->id . '" title="' . $params->get('filename') .
 			'" class="fancybox fancybox_jwplayer" potext="' . $popout . '" ptype="' . $player->player .
 			'" pwidth="' . $player->playerwidth . '" pheight="' .
 			$player->playerheight . '" autostart="' . $params->get('autostart', false) . '" controls="' .
@@ -744,8 +767,6 @@ class JBSMMedia
 			$params->get('jwplayer_mute') . '" data-logo="' . $params->get('jwplayer_logo') . '" data-logolink="' .
 			$params->get('jwplayer_logolink', JUri::base()) . '">' .
 			$image . '</a>';
-
-		return $playercode;
 	}
 
 	/**
@@ -997,6 +1018,7 @@ class JBSMMedia
 	 * @return string
 	 *
 	 * @since 9.0.0
+	 * @throws Exception
 	 */
 	public function getDocman($media, $image)
 	{
@@ -1161,5 +1183,42 @@ class JBSMMedia
 		);
 
 		return $mimetype;
+	}
+
+	/**
+	 * Youtube url to embed.
+	 *
+	 * @param   string  $string  Youtube url to transformm.
+	 *
+	 * @return null|string|string[]
+	 *
+	 * @since 9.1.3
+	 */
+	public function convertYoutube($string)
+	{
+		return preg_replace(
+			"/\s*[a-zA-Z\/\/:\.]*youtu(be.com\/watch\?v=|.be\/)([a-zA-Z0-9\-_]+)([a-zA-Z0-9\/\*\-\_\?\&\;\%\=\.]*)/i",
+			"//www.youtube.com/embed/$2",
+			$string
+		);
+	}
+
+
+	/**
+	 * Vimeo url to embed.
+	 *
+	 * @param   string  $string  Vimeo url to transformed.
+	 *
+	 * @return null|string|string[]
+	 *
+	 * @since 9.1.3
+	 */
+	public function convertVimeo($string)
+	{
+		return preg_replace(
+			"/\s*[a-zA-Z\/\/:\.]*viemo.com\/([a-zA-Z0-9\-_]+)([a-zA-Z0-9\/\*\-\_\?\&\;\%\=\.]*)/i",
+			"//player.vimeo.com/video/$2",
+			$string
+		);
 	}
 }
