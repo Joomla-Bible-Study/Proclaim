@@ -736,6 +736,8 @@ class JBSMMedia
 	 */
 	public function rendersb($media, $params, $player, $image, $path, $direct = false)
 	{
+		JHtml::_('fancybox.framework', true, true);
+
 		if ($player->player == 7 && !$direct)
 		{
 			$player->playerheight = '40';
@@ -756,8 +758,6 @@ class JBSMMedia
 				'", "controls" : "' . (int) $params->get('controls') . '", "caption" : "' . $media->studytitle . ' - ' .
 				$media->teachername . '"}\'  href="javascript:;">' . $image . '</a>';
 		}
-
-		JHtml::_('fancybox.framework', true, true);
 
 		return '<a data-src="' . $path . '" id="linkmedia' . $media->id . '" title="' . $params->get('filename') .
 			'" class="fancybox fancybox_jwplayer" potext="' . $popout . '" ptype="' . $player->player .
