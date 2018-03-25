@@ -7,7 +7,7 @@
 		       key_field="id" value_field="server_name">
 			<option value="-1">JBS_CMN_SELECT_SERVER</option>
 		</field>
-		<field name="id" type="text" class="readonly span12" label="JGLOBAL_FIELD_ID_LABEL"
+		<field name="id" type="text" class="readonly" label="JGLOBAL_FIELD_ID_LABEL"
 		       description="JGLOBAL_FIELD_ID_DESC" size="10" default="0"
 		       readonly="true"/>
 		<field name="published"
@@ -33,24 +33,26 @@
 			</option>
 		</field>
 		<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
-		       description="JBS_CMN_SELECT_LANGUAGE_DESC" class="inputbox span12 small">
+		       description="JBS_CMN_SELECT_LANGUAGE_DESC">
 			<option value="*">JALL</option>
 		</field>
 
-		<field name="download_id" type="mediafile" label="JBS_STY_DOWNLOAD_LINK" description="JBS_STY_DOWNLOAD_LINK_DESC" default="0">
+		<field name="download_id" type="mediafile" label="JBS_STY_DOWNLOAD_LINK"
+		       description="JBS_STY_DOWNLOAD_LINK_DESC" default="0">
 			<option value="-1">JBS_STY_SELECT_DOWNLOAD_LINK</option>
 		</field>
 		<field name="studydate" type="calendar" label="JBS_CMN_STUDY_DATE"
-		       description="JBS_STY_CREATE_DATE_DESC" class="inputbox span12 small"
+		       description="JBS_STY_CREATE_DATE_DESC"
 		       format="%Y-%m-%d %H:%M:%S" filter="user_utc" required="true" labelclass="control-label"/>
 
-		<field name="comments" type="list" class="span12 small" label="JBS_CMN_COMMENTS" description="JBS_STY_COMMENTS_DESC"
+		<field name="comments" type="list" label="JBS_CMN_COMMENTS"
+		       description="JBS_STY_COMMENTS_DESC"
 		       default="0">
 			<option value="0">JBS_CMN_NO</option>
 			<option value="1">JBS_CMN_YES</option>
 		</field>
 
-		<field name="user_id" type="user" label="JBS_CMN_SUBMITTED_BY" class="span12 small"/>
+		<field name="user_id" type="user" label="JBS_CMN_SUBMITTED_BY"/>
 
 		<field name="studytitle" type="text" class="inputbox" size="60" label="JBS_CMN_TITLE" required="true"/>
 		<field name="alias"
@@ -61,42 +63,47 @@
 		       size="30"
 		/>
 
-		<field name="studyintro" type="editor" class="inputbox" label="JBS_CMN_DESCRIPTION"
+		<field name="studyintro" type="editor" label="JBS_CMN_DESCRIPTION"
+		       filter="JBSMBibleStudyHelper::filterText" buttons="true"/>
+		<field name="studytext" type="editor" label="JBS_STY_STUDY_TEXT"
 		       filter="JBSMBibleStudyHelper::filterText" buttons="true"/>
 
 		<field name="studynumber" type="text" class="inputbox" size="15" label="JBS_CMN_STUDYNUMBER"/>
 
-		<field name="booknumber" type="SQL" class="inputbox" label="JBS_CMN_BOOK" translate="true"
-		       query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC"
-		       key_field="booknumber" value_field="bookname">
-			<option value="-1">JBS_CMN_SELECT_BOOK</option>
-		</field>
+		<fieldset name="scripture" label="COM_CONTENT_FIELD_IMAGE_OPTIONS">
+			<field name="booknumber" type="SQL" class="inputbox" label="JBS_CMN_BOOK" translate="true"
+			       query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC"
+			       key_field="booknumber" value_field="bookname">
+				<option value="-1">JBS_CMN_SELECT_BOOK</option>
+			</field>
 
-		<field name="chapter_begin" type="text" class="inputbox" size="5" label="JBS_STY_CHAPTER_BEGIN"
-		       description="JBS_STY_SCRIPTURE_DESC"/>
-		<field name="verse_begin" type="text" class="inputbox" size="5" label="JBS_STY_VERSE_BEGIN"
-		       description="JBS_STY_SCRIPTURE_DESC"/>
-		<field name="chapter_end" type="text" class="inputbox" size="5" label="JBS_STY_CHAPTER_END"
-		       description="JBS_STY_SCRIPTURE_DESC"/>
-		<field name="verse_end" type="text" class="inputbox" size="5" label="JBS_STY_VERSE_END"
-		       description="JBS_STY_SCRIPTURE_DESC"/>
+			<field name="chapter_begin" type="text" class="jbsscript" size="5" label="JBS_STY_CHAPTER_BEGIN"
+			       description="JBS_STY_SCRIPTURE_DESC"/>
+			<field name="verse_begin" type="text" class="inputbox" size="5" label="JBS_STY_VERSE_BEGIN"
+			       description="JBS_STY_SCRIPTURE_DESC"/>
+			<field name="chapter_end" type="text" class="inputbox" size="5" label="JBS_STY_CHAPTER_END"
+			       description="JBS_STY_SCRIPTURE_DESC"/>
+			<field name="verse_end" type="text" class="inputbox" size="5" label="JBS_STY_VERSE_END"
+			       description="JBS_STY_SCRIPTURE_DESC"/>
 
-		<field name="booknumber2" type="SQL" class="inputbox" label="JBS_STY_BOOK2" translate="true"
-		       query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC"
-		       key_field="booknumber" value_field="bookname">
-			<option value="-1">JBS_CMN_SELECT_BOOK</option>
-		</field>
-		<field name="chapter_begin2" type="text" class="inputbox" size="5" label="JBS_STY_CHAPTER_BEGIN2"
-		       description="JBS_STY_SCRIPTURE_DESC"/>
-		<field name="verse_begin2" type="text" class="inputbox" size="5" label="JBS_STY_VERSE_BEGIN2"
-		       description="JBS_STY_SCRIPTURE_DESC"/>
-		<field name="chapter_end2" type="text" class="inputbox" size="5" label="JBS_STY_CHAPTER_END2"
-		       description="JBS_STY_SCRIPTURE_DESC"/>
-		<field name="verse_end2" type="text" class="inputbox" size="5" label="JBS_STY_VERSE_END2"
-		       description="JBS_STY_SCRIPTURE_DESC"/>
+			<field name="booknumber2" type="SQL" class="inputbox" label="JBS_STY_BOOK2" translate="true"
+			       query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC"
+			       key_field="booknumber" value_field="bookname">
+				<option value="-1">JBS_CMN_SELECT_BOOK</option>
+			</field>
+			<field name="chapter_begin2" type="text" class="inputbox" size="5" label="JBS_STY_CHAPTER_BEGIN2"
+			       description="JBS_STY_SCRIPTURE_DESC"/>
+			<field name="verse_begin2" type="text" class="inputbox" size="5" label="JBS_STY_VERSE_BEGIN2"
+			       description="JBS_STY_SCRIPTURE_DESC"/>
+			<field name="chapter_end2" type="text" class="inputbox" size="5" label="JBS_STY_CHAPTER_END2"
+			       description="JBS_STY_SCRIPTURE_DESC"/>
+			<field name="verse_end2" type="text" class="inputbox" size="5" label="JBS_STY_VERSE_END2"
+			       description="JBS_STY_SCRIPTURE_DESC"/>
 
-		<field name="secondary_reference" type="text" class="inputbox" size="100" label="JBS_CMN_SECONDARY_REFERENCES"
-		       description="JBS_STY_SECONDARY_REFERENCES_DESC"/>
+			<field name="secondary_reference" type="text" class="inputbox" size="100"
+			       label="JBS_CMN_SECONDARY_REFERENCES"
+			       description="JBS_STY_SECONDARY_REFERENCES_DESC"/>
+		</fieldset>
 
 		<field name="media_hours" type="text" class="inputbox" size="5" label="JBS_CMN_HOURS"/>
 		<field name="media_minutes" type="text" class="inputbox" size="5" label="JBS_CMN_MINUTES"/>
@@ -134,9 +141,8 @@
 			<option value="-1">JBS_CMN_SELECT_MESSAGETYPE</option>
 		</field>
 		<field name="thumbnailm" type="hidden"/>
-		<field name="image" type="media" label="JBS_STY_STUDY_IMAGE" class="span12" accept="image/*"/>
-		<field name="studytext" type="editor" class="inputbox" label="JBS_STY_STUDY_TEXT"
-		       filter="JBSMBibleStudyHelper::filterText" buttons="true"/>
+		<field name="image" type="media" label="JBS_STY_STUDY_IMAGE" accept="image/*"/>
+
 		<field name="rules" type="rules" label="JFIELD_RULES_LABEL"
 		       translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"
 		       section="message" validate="rules"/>
@@ -174,7 +180,7 @@
 		       filter="user_utc"/>
 
 		<field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL"
-		       description="JFIELD_ACCESS_DESC" class="inputbox span12 small"/>
+		       description="JFIELD_ACCESS_DESC"/>
 		<field name="asset_id" type="hidden" filter="unset"/>
 	</fieldset>
 
