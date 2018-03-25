@@ -28,7 +28,7 @@ class BiblestudyModelSermons extends JModelList
 
 	/** @var string Needed for context for Populate State
 	 * @since 9.0.14 */
-	public $context = 'com_biblestudy.list';
+	public $context = 'com_biblestudy.sermons.list';
 
 	/**
 	 * Constructor.
@@ -421,6 +421,7 @@ class BiblestudyModelSermons extends JModelList
 	 * @return  void
 	 *
 	 * @since   11.1
+	 * @throws  Exception
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
@@ -451,31 +452,31 @@ class BiblestudyModelSermons extends JModelList
 		$this->landing = 0;
 		$landingcheck = $input->get->get('sendingview');
 
-		if ($landingcheck == 'landing')
-		{
-			$landing = 1;
-			$this->landing = 1;
-			$this->setState('sendingview', '');
-			$input->set('sendingview', '');
-		}
-		else
-		{
-			$this->setState('filter.book', 0);
-			$this->setState('filter.teacher', 0);
-			$this->setState('filter.series', 0);
-			$this->setState('filter.messageType', 0);
-			$this->setState('filter.year', 0);
-			$this->setState('filter.topic', 0);
-			$this->setState('filter.location', 0);
-			$this->setState('filter.landingbook', 0);
-			$this->setState('filter.landingteacher', 0);
-			$this->setState('filter.landingseries', 0);
-			$this->setState('filter.landingmessageType', 0);
-			$this->setState('filter.landingyear', 0);
-			$this->setState('filter.landingtopic', 0);
-			$this->setState('filter.landinglocation', 0);
-			$this->landing = 0;
-		}
+//		if ($landingcheck == 'landing')
+//		{
+//			$landing = 1;
+//			$this->landing = 1;
+//			$this->setState('sendingview', '');
+//			$input->set('sendingview', '');
+//		}
+//		else
+//		{
+//			$this->setState('filter.book', 0);
+//			$this->setState('filter.teacher', 0);
+//			$this->setState('filter.series', 0);
+//			$this->setState('filter.messageType', 0);
+//			$this->setState('filter.year', 0);
+//			$this->setState('filter.topic', 0);
+//			$this->setState('filter.location', 0);
+//			$this->setState('filter.landingbook', 0);
+//			$this->setState('filter.landingteacher', 0);
+//			$this->setState('filter.landingseries', 0);
+//			$this->setState('filter.landingmessageType', 0);
+//			$this->setState('filter.landingyear', 0);
+//			$this->setState('filter.landingtopic', 0);
+//			$this->setState('filter.landinglocation', 0);
+//			$this->landing = 0;
+//		}
 
 		$template->id = $t;
 		$this->setState('template', $template);
@@ -498,11 +499,13 @@ class BiblestudyModelSermons extends JModelList
 		$topic = 0;
 		$location = 0;
 
-		if ($landing == 1 && $input->getInt('filter_book') !== 0)
+		$books = $app->input->getInt('filter_book');
+
+		if ($landing == 1 && $books !== 0)
 		{
 			$book = $this->getUserStateFromRequest($this->context . '.filter.landingbook', 'filter_book_landing');
 		}
-		elseif ($input->getInt('filter_book'))
+		elseif ($books)
 		{
 			$book = $this->getUserStateFromRequest($this->context . '.filter.book', 'filter_book');
 		}
@@ -642,6 +645,7 @@ class BiblestudyModelSermons extends JModelList
 	 * @return  JDatabaseQuery
 	 *
 	 * @since   7.0
+	 * @throws  Exception
 	 */
 	protected function getListQuery()
 	{
@@ -1006,8 +1010,8 @@ class BiblestudyModelSermons extends JModelList
 			if ($chb && $che)
 			{
 				$query->where('(study.booknumber = ' . (int) $book .
-					' AND study.chapter_begin >= ' . $chb .
-					' AND study.chapter_end <= ' . $che . ')' .
+					' AND study.chapter_begin >= ' . (int) $chb .
+					' AND study.chapter_end <= ' . (int) $che . ')' .
 					'OR study.booknumber2 = ' . (int) $book
 				);
 			}
@@ -1015,7 +1019,7 @@ class BiblestudyModelSermons extends JModelList
 			{
 				if ($chb)
 				{
-					$query->where('(study.booknumber = ' . (int) $book . ' AND study.chapter_begin > = ' . $chb . ') OR study.booknumber2 = ' . (int) $book);
+					$query->where('(study.booknumber = ' . (int) $book . ' AND study.chapter_begin > = ' . (int) $chb . ') OR study.booknumber2 = ' . (int) $book);
 				}
 				else
 				{
@@ -1174,6 +1178,7 @@ class BiblestudyModelSermons extends JModelList
 	 * @return  mixed  An array of data items on success, false on failure.
 	 *
 	 * @since   9.0.0
+	 * @throws  Exception
 	 */
 	public function getItems()
 	{

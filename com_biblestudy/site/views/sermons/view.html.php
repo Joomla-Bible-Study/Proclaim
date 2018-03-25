@@ -162,6 +162,8 @@ class BiblestudyViewSermons extends JViewLegacy
 		$this->state      = $this->get('State');
 		$this->template   = $this->state->get('template');
 		$items            = $this->get('Items');
+		$this->filterForm    = $this->get('FilterForm');
+		$this->activeFilters = $this->get('ActiveFilters');
 
 		$this->limitstart = $input->get('start', '', 'int');
 		$pagination       = $this->get('Pagination');
