@@ -452,31 +452,31 @@ class BiblestudyModelSermons extends JModelList
 		$this->landing = 0;
 		$landingcheck = $input->get->get('sendingview');
 
-//		if ($landingcheck == 'landing')
-//		{
-//			$landing = 1;
-//			$this->landing = 1;
-//			$this->setState('sendingview', '');
-//			$input->set('sendingview', '');
-//		}
-//		else
-//		{
-//			$this->setState('filter.book', 0);
-//			$this->setState('filter.teacher', 0);
-//			$this->setState('filter.series', 0);
-//			$this->setState('filter.messageType', 0);
-//			$this->setState('filter.year', 0);
-//			$this->setState('filter.topic', 0);
-//			$this->setState('filter.location', 0);
-//			$this->setState('filter.landingbook', 0);
-//			$this->setState('filter.landingteacher', 0);
-//			$this->setState('filter.landingseries', 0);
-//			$this->setState('filter.landingmessageType', 0);
-//			$this->setState('filter.landingyear', 0);
-//			$this->setState('filter.landingtopic', 0);
-//			$this->setState('filter.landinglocation', 0);
-//			$this->landing = 0;
-//		}
+		if ($landingcheck == 'landing')
+		{
+			$landing = 1;
+			$this->landing = 1;
+			$this->setState('sendingview', '');
+			$input->set('sendingview', '');
+		}
+		else
+		{
+			$this->setState('filter.book', 0);
+			$this->setState('filter.teacher', 0);
+			$this->setState('filter.series', 0);
+			$this->setState('filter.messageType', 0);
+			$this->setState('filter.year', 0);
+			$this->setState('filter.topic', 0);
+			$this->setState('filter.location', 0);
+			$this->setState('filter.landingbook', 0);
+			$this->setState('filter.landingteacher', 0);
+			$this->setState('filter.landingseries', 0);
+			$this->setState('filter.landingmessageType', 0);
+			$this->setState('filter.landingyear', 0);
+			$this->setState('filter.landingtopic', 0);
+			$this->setState('filter.landinglocation', 0);
+			$this->landing = 0;
+		}
 
 		$template->id = $t;
 		$this->setState('template', $template);
@@ -490,109 +490,86 @@ class BiblestudyModelSermons extends JModelList
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
 
-		$book = 0;
-		$teacher = 0;
-		$series = 0;
-		$messageType = 0;
-		$year = 0;
-		$order = 0;
-		$topic = 0;
-		$location = 0;
-
-		$books = $app->input->getInt('filter_book');
+		$books = $book = $this->getUserStateFromRequest($this->context . '.filter.book', 'filter_book');
 
 		if ($landing == 1 && $books !== 0)
 		{
 			$book = $this->getUserStateFromRequest($this->context . '.filter.landingbook', 'filter_book_landing');
 		}
-		elseif ($books)
-		{
-			$book = $this->getUserStateFromRequest($this->context . '.filter.book', 'filter_book');
-		}
 
 		$this->setState('filter.book', $book);
 		$this->setState('filter.landingbook', $book);
 
-		if ($landing == 1 && $input->getInt('filter_teacher') !== 0)
+		$teacher = $this->getUserStateFromRequest($this->context . '.filter.teacher', 'filter_teacher');
+
+		if ($landing == 1 && $teacher !== 0)
 		{
 			$teacher = $this->getUserStateFromRequest($this->context . '.filter.landingteacher', 'filter_teacher_landing');
-		}
-		elseif ($input->getInt('filter_teacher'))
-		{
-			$teacher = $this->getUserStateFromRequest($this->context . '.filter.teacher', 'filter_teacher');
 		}
 
 		$this->setState('filter.teacher', $teacher);
 		$this->setState('filter.landingteacher', $teacher);
 
-		if ($landing == 1 && $input->getInt('filter_series') !== 0)
+		$series = $this->getUserStateFromRequest($this->context . '.filter.series', 'filter_series');
+
+		if ($landing == 1 && $series !== 0)
 		{
 			$series = $this->getUserStateFromRequest($this->context . '.filter.landingseries', 'filter_series_landing');
-		}
-		elseif ($input->getInt('filter_series'))
-		{
-			$series = $this->getUserStateFromRequest($this->context . '.filter.series', 'filter_series');
 		}
 
 		$this->setState('filter.series', $series);
 		$this->setState('filter.landingseries', $series);
 
-		if ($landing == 1 && $input->getInt('filter_messagetype') !== 0)
+		$messageType = $this->getUserStateFromRequest($this->context . '.filter.messageType', 'filter_messagetype');
+
+		if ($landing == 1 && $messageType !== 0)
 		{
 			$messageType = $this->getUserStateFromRequest($this->context . '.filter.landingmessagetype', 'filter_messagetype_landing');
-		}
-		elseif ($input->getInt('filter_messagetype'))
-		{
-			$messageType = $this->getUserStateFromRequest($this->context . '.filter.messageType', 'filter_messagetype');
 		}
 
 		$this->setState('filter.messageType', $messageType);
 		$this->setState('filter.landingmessagetype', $messageType);
 
-		if ($landing == 1 && $input->getInt('filter_year') !== 0)
+		$year = $this->getUserStateFromRequest($this->context . '.filter.year', 'filter_year');
+
+		if ($landing == 1 && $year !== 0)
 		{
 			$year = $this->getUserStateFromRequest($this->context . '.filter.landingyear', 'filter_year_landing');
-		}
-		elseif ($input->getInt('filter_year'))
-		{
-			$year = $this->getUserStateFromRequest($this->context . '.filter.year', 'filter_year');
 		}
 
 		$this->setState('filter.year', $year);
 		$this->setState('filter.landingyear', $year);
 
-		if ($landing == 1 && $input->getInt('filter_orders') !== 0)
-		{
-			$order = $this->getUserStateFromRequest($this->context . '.filter.landingorder', 'filter_order_landing');
-		}
-		elseif ($input->getInt('filter_orders')
-			|| ($landing == 0 && $this->getUserStateFromRequest($this->context . '.filter.orders', 'filter_orders') !== 0))
-		{
-			$order = $this->getUserStateFromRequest($this->context . '.filter.orders', 'filter_orders');
-		}
+		$topic = $this->getUserStateFromRequest($this->context . '.filter.topic', 'filter_topic');
 
-		$this->setState('filter.orders', $order);
-
-		if ($landing == 1 && $input->getInt('filter_topic') !== 0)
+		if ($landing == 1 && $topic !== 0)
 		{
 			$topic = $this->getUserStateFromRequest($this->context . '.filter.landingtopic', 'filter_topic_landing');
-		}
-		elseif ($input->getInt('filter_topic'))
-		{
-			$topic = $this->getUserStateFromRequest($this->context . '.filter.topic', 'filter_topic');
 		}
 
 		$this->setState('filter.topic', $topic);
 		$this->setState('filter.landingtopic', $topic);
 
-		if ($landing == 1 && $input->getInt('filter_location') !== 0)
+		$location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location');
+
+		if ($landing == 1 && $location !== 0)
 		{
 			$location = $this->getUserStateFromRequest($this->context . '.filter.landinglocation', 'filter_location_landing');
 		}
-		elseif ($input->getInt('filter_location'))
+
+		$orderCol = $app->input->get('filter_order', 'study.ordering');
+
+		if (!in_array($orderCol, $this->filter_fields))
 		{
-			$location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location');
+			$orderCol = 'study.ordering';
 		}
+
+		if ($landing == 1 && $orderCol !== 0)
+		{
+			$orderCol = $this->getUserStateFromRequest($this->context . '.filter.landingorder', 'filter_order_landing');
+		}
+
+		$this->setState('list.ordering', $orderCol);
 
 		$this->setState('filter.location', $location);
 		$this->setState('filter.landinglocation', $location);
@@ -600,11 +577,11 @@ class BiblestudyModelSermons extends JModelList
 		$languages = $this->getUserStateFromRequest($this->context . '.filter.languages', 'filter_languages');
 		$this->setState('filter.languages', $languages);
 
-		/**
-		 * @todo We need to figure out how to properly use the populate state so that
-		 * @todo limitstart works with and without SEF, Tom need to know what to do with this todo
-		 */
-		$value = $this->input->get('start', '', 'int');
+		// List state information
+		$value = $app->input->get('limit', $app->get('list_limit', 0), 'uint');
+		$this->setState('list.limit', $value);
+
+		$value = $app->input->get('limitstart', 0, 'uint');
 		$this->setState('list.start', $value);
 	}
 
