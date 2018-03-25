@@ -119,7 +119,8 @@ class JBSMAddonLocal extends JBSMAddon
 
 		$html .= '<div class="row-fluid">';
 
-			foreach ($media_form->getFieldsets('params') as $name => $fieldset):
+			foreach ($media_form->getFieldsets('params') as $name => $fieldset)
+			{
 				if ($name !== 'general')
 				{
 					$html .= '<div class="span6">';
@@ -149,8 +150,7 @@ class JBSMAddonLocal extends JBSMAddon
 
 					$html .= '</div>';
 				}
-
-			endforeach;
+			}
 
 		$html .= '</div>';
 		$html .= JHtml::_('bootstrap.endTab');
