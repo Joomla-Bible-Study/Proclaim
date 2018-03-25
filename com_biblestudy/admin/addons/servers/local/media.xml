@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <media>
 	<fields name="params">
-		<fieldset name="media" label="JBS_ADDON_LOCAL_MEDIA"
-		          addfieldpath="/administrator/components/com_biblestudy/addons/servers/legacy/fields">
+		<fieldset name="general" addfieldpath="/administrator/components/com_biblestudy/addons/servers/legacy/fields">
 			<field name="filename"
 			       type="plupload"
 			       handler="upload"
@@ -12,6 +11,8 @@
 			       required="true"/>
 			<field name="size" type="filesize" label="JBS_CMN_FILESIZE"
 			       description="JBS_MED_FILESIZE_DESC" class="inputbox" size="15"/>
+		</fieldset>
+		<fieldset name="parameters1">
 			<field name="special" type="list" label="JBS_MED_LINK_TARGET"
 			       description="JBS_MED_LINK_TARGET_DESC" class="inputbox" size="15" default="">
 				<option value="">JGLOBAL_USE_GLOBAL</option>
@@ -46,7 +47,7 @@
 				<option value="3">JBS_CMN_SQUEEZEBOX</option>
 			</field>
 		</fieldset>
-		<fieldset name="parameters" label="JBS_ADDON_LOCAL_MEDIA_PARAMETERS">
+		<fieldset name="parameters2" label="JBS_ADDON_LOCAL_MEDIA_PARAMETERS">
 			<field name="media_image" type="media" directory="biblestudy"
 			       label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
 			       class="inputbox span6">
