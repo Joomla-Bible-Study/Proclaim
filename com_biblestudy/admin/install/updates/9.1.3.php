@@ -15,20 +15,10 @@ use \Joomla\Registry\Registry;
  * @package  Proclaim.Admin
  * @since    9.0.1
  */
-class Migration901
+class Migration913
 {
 	// List the functions to go through in order for this migration.
-	public $steps = array('servers', 'media' , 'migrateTemplateLists',
-		'updateTemplates', 'removeExpert', 'deleteUnexactingFiles', 'up');
-
-	// This is the query holder to pass back a forth between the install and the migration.
-	public $query = array();
-
-	// Internal holder
-	private $media = array();
-
-	// Internal holder
-	private $servers = array();
+	public $steps = array('up');
 
 	// Count of processes.
 	public $count = 0;
@@ -44,36 +34,9 @@ class Migration901
 	 */
 	public function build($db)
 	{
-		// Get servers to migrate
-		$query = $db->getQuery(true)->select('*')->from('#__bsms_servers');
-		$db->setQuery($query);
-		$servers = $db->loadObjectList();
-		$this->servers = array_merge($this->servers, $servers);
+		// Work on this. may need this?
 
-		foreach ($servers as $server)
-		{
-			// Find media files for server.
-			$query = $db->getQuery(true)->select('*')
-				->from('#__bsms_mediafiles')
-				->where('server = ' . $server->id);
-			$db->setQuery($query);
-			$mediaFiles   = $db->loadObjectList();
-			$this->media = array_merge($this->media, $mediaFiles);
-		}
-
-		// No Server related media files to migrate.
-		$query = $db->getQuery(true)->select('*')
-			->from('#__bsms_mediafiles')
-			->where('server <= ' . 0, 'OR')
-			->where('server IS NULL');
-		$db->setQuery($query);
-		$mediaFiles2  = $db->loadObjectList();
-
-		$this->media = array_merge($this->media, $mediaFiles2);
-		$this->count  = count($this->media);
-		$this->count += count($this->servers);
-
-		$this->query = array_merge(array('servers' => $this->servers), array('media' => $this->media));
+		return;
 	}
 
 	/**
@@ -126,6 +89,7 @@ class Migration901
 		$path = array(
 			BIBLESTUDY_PATH_ADMIN . '/addons/servers/legacy/fields/filesize.php',
 			BIBLESTUDY_PATH_ADMIN . '/addons/servers/local/fields/filesize.php',
+			BIBLESTUDY_PATH_ADMIN . '/models/upload.php',
 			BIBLESTUDY_PATH_ADMIN . '/convert1.htm',
 			BIBLESTUDY_PATH . '/convert1.htm',
 		);
@@ -150,7 +114,7 @@ class Migration901
 	 */
 	protected function updateFA()
 	{
-		// Convert Font Awesome files
+		// Convert Font Awesome deceleration in the DB to new version.
 
 		return;
 	}
