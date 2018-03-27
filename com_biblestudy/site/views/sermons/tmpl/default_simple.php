@@ -26,4 +26,46 @@ $archived  = $this->state->get('filter.published') == 2 ? true : false;
 $trashed   = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder == 'study.ordering';
 $columns   = 12;
-echo 'this is simple';
+
+
+
+?>
+<style>img{border-radius:4px;}</style>
+
+
+  <div class="row-fluid span12">
+    <h2>
+      Teachings
+    </h2>
+  </div>
+
+
+
+  <div class="row-fluid span12" style="margin-bottom:24px;">
+    <?php
+    echo $this->page->books;
+    echo $this->page->teachers;
+    $oddeven = '';
+	$class1 = '#d3d3d3';
+    $class2 = '';?>
+</div>
+<?php foreach ($this->items as $study)
+{
+
+	$oddeven = ($oddeven == $class1) ? $class2 : $class1;
+	?>
+	<div style="width:100%;">
+		<div class="span3"><div style="padding:12px 8px;line-height:22px;height:333px;">
+				<?php if ($study->study_thumbnail) {echo $study->study_thumbnail; echo '<br />';} ?>
+				<strong><?php echo $study->studytitle;?></strong><br />
+				<span style="color:#9b9b9b;"><?php echo $study->scripture1;?> | <?php echo $study->studydate;?></span><br />
+				<div style="font-size:85%;margin-top:12px;margin-bottom:-17px;max-height:122px;overflow:hidden;"><?php echo $study->teachername;?></div><br /><div style="background: rgba(0, 0, 0, 0) linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, white 100%) repeat scroll 0 0;bottom: 0;height: 32px;margin-top: -32px; position: relative;width: 100%;"></div>
+				<?php echo $study->media;?>
+			</div></div>
+
+
+	</div>
+<?php }?>
+<div class="row-fluid span12 pagination">
+	<?php echo $this->pagination->getPageslinks();?>
+</div>
