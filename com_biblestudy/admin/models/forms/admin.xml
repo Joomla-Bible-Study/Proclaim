@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
 	<fields name="params">
+		<field name="simple_mode" type="radio" class="btn-group" default="1" label="JBS_ADM_SIMPLE_MODE"
+			   description="JBS_ADM_SIMPLE_MODE_DESC" labelclass="control-label">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
 		<field name="metakey" type="text" class="inputbox" size="30" rows="3" label="JBS_STY_METAKEYWORDS"
 		       description="JBS_STY_METAKEYWORDS_DESC" labelclass="control-label"/>
 		<field name="metadesc" type="textarea" class="inputbox" cols="30" rows="3" label="JBS_STY_METADESCRIPTION"
