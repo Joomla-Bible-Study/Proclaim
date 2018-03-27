@@ -11,14 +11,21 @@
 defined('_JEXEC') or die;
 JHtml::_('behavior.modal');
 
-echo $this->loadTemplate('formheader');
-
-if ($this->params->get('sermonstemplate'))
+if ($this->params->get('simple_mode') == 1)
 {
-	echo $this->loadTemplate($this->params->get('sermonstemplate'));
+	echo $this->loadTemplate('simple');
 }
 else
 {
-	echo $this->loadTemplate('main');
+	echo $this->loadTemplate('formheader');
+
+	if ($this->params->get('sermonstemplate'))
+	{
+		echo $this->loadTemplate($this->params->get('sermonstemplate'));
+	}
+	else
+	{
+		echo $this->loadTemplate('main');
+	}
+	echo $this->loadTemplate('formfooter');
 }
-echo $this->loadTemplate('formfooter');
