@@ -40,7 +40,7 @@ class JBSMMedia
 	{
 		$mediafile = null;
 		$filesize  = null;
-
+		$this->params = $params;
 		if (isset($media->smedia))
 		{
 			// Smedia are the media settings for each server
@@ -329,7 +329,10 @@ class JBSMMedia
 				$mediaimage = '<span class="' . $icon . '" title="' . $buttontext . '" style="font-size:' . $textsize . 'px;"></span>';
 				break;
 		}
-
+		if ($this->params->get('simple_mode') == 1)
+		{
+			$mediaimage = '<span class="' . 'fa fa-play' . '" title="play" style="font-size:' . '24' . 'px;"></span>';
+		}
 		return $mediaimage;
 	}
 
