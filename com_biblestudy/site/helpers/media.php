@@ -40,7 +40,6 @@ class JBSMMedia
 	{
 		$mediafile = null;
 		$filesize  = null;
-		$this->params = $params;
 		if (isset($media->smedia))
 		{
 			// Smedia are the media settings for each server
@@ -68,9 +67,9 @@ class JBSMMedia
 			$imageparams = $media->params;
 		}
 
-			if ($imageparams->get('media_use_button_icon') >= 1)
+			if ($imageparams->get('media_use_button_icon') >= 1 || $params->get('simple_mode') == 1)
 			{
-				$image = $this->mediaButton($imageparams);
+				$image = $this->mediaButton($imageparams, $params);
 			}
 			else
 			{
@@ -279,7 +278,7 @@ class JBSMMedia
 	 *
 	 * @since 9.0.0
 	 */
-	public function mediaButton($imageparams)
+	public function mediaButton($imageparams, $params)
 	{
 		$mediaimage = null;
 		$button = $imageparams->get('media_button_type', 'btn-link');
@@ -329,7 +328,7 @@ class JBSMMedia
 				$mediaimage = '<span class="' . $icon . '" title="' . $buttontext . '" style="font-size:' . $textsize . 'px;"></span>';
 				break;
 		}
-		if ($this->params->get('simple_mode') == 1)
+		if ($params->get('simple_mode') == 1)
 		{
 			$mediaimage = '<span class="' . 'fa fa-play' . '" title="play" style="font-size:' . '24' . 'px;"></span>';
 		}

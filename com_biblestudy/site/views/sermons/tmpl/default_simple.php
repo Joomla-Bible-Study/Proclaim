@@ -60,7 +60,7 @@ $columns   = 12;
 				<strong><?php echo $study->studytitle;?></strong><br />
 				<span style="color:#9b9b9b;"><?php echo $study->scripture1;?> | <?php echo $study->studydate;?></span><br />
 				<div style="font-size:85%;margin-top:12px;margin-bottom:-17px;max-height:122px;overflow:hidden;"><?php echo $study->teachername;?></div><br /><div style="background: rgba(0, 0, 0, 0) linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, white 100%) repeat scroll 0 0;bottom: 0;height: 32px;margin-top: -32px; position: relative;width: 100%;"></div>
-				<?php echo $study->media;?>
+				<?php echo $study->media; ?>
 			</div></div>
 
 
