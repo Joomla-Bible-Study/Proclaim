@@ -319,7 +319,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		}
 
 		// Get whether "Go" Button is used then turn off onchange if it is
-		if ($params->get('use_go_button', 0) == 0)
+		if ($params->get('use_go_button', 0) == 0 || $params->get('simple_mode') ==1)
 		{
 			$go = 'onchange="this.form.submit()"';
 		}

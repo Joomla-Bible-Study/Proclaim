@@ -41,10 +41,12 @@ $columns   = 12;
 
 
 
-  <div class="row-fluid span12" style="margin-bottom:24px;">
+  <div class="row-fluid span12" style="background-color:#A9A9A9; margin:0 -5px; padding:8px 8px; border:1px solid #C5C1BE; position:relative; -webkit-border-radius:10px;">
+
     <?php
     echo $this->page->books;
     echo $this->page->teachers;
+    echo $this->page->series;
     $oddeven = '';
 	$class1 = '#d3d3d3';
     $class2 = '';?>
@@ -59,7 +61,7 @@ $columns   = 12;
 				<?php if ($study->study_thumbnail) {echo $study->study_thumbnail; echo '<br />';} ?>
 				<strong><?php echo $study->studytitle;?></strong><br />
 				<span style="color:#9b9b9b;"><?php echo $study->scripture1;?> | <?php echo $study->studydate;?></span><br />
-				<div style="font-size:85%;margin-top:12px;margin-bottom:-17px;max-height:122px;overflow:hidden;"><?php echo $study->teachername;?></div><br /><div style="background: rgba(0, 0, 0, 0) linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, white 100%) repeat scroll 0 0;bottom: 0;height: 32px;margin-top: -32px; position: relative;width: 100%;"></div>
+				<div style="font-size:85%;margin-bottom:-17px;max-height:122px;overflow:hidden;"><?php echo $study->teachername;?></div><br /><div style="background: rgba(0, 0, 0, 0) linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, white 100%) repeat scroll 0 0;bottom: 0;height: 32px;margin-top: -32px; position: relative;width: 100%;"></div>
 				<?php echo $study->media; ?>
 			</div></div>
 

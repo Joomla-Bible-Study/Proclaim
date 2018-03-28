@@ -151,7 +151,10 @@ class JBSMMedia
 			$filesize = '<span class="JBSMFilesize" style="font-size: 0.6em;display:inline;padding-left: 5px;">' .
 				$file_size . '</span>';
 		}
-
+		if ($params->get('simple_mode') == 1)
+		{
+			$link_type = 3;
+		}
 		switch ($link_type)
 		{
 			case 0:
@@ -171,6 +174,10 @@ class JBSMMedia
 
 			case 2:
 				$mediafile = $downloadlink;
+				break;
+
+			case 3:
+				$mediafile = $playercode . $downloadlink;
 				break;
 		}
 
@@ -201,7 +208,7 @@ class JBSMMedia
 
 		$downloadlink = '';
 
-		if ($params->get('download_use_button_icon') >= 2)
+		if ($params->get('download_use_button_icon') >= 2 || $params->get('simple_mode') == 1)
 		{
 			$download_image = $this->downloadButton($params);
 		}
@@ -221,7 +228,7 @@ class JBSMMedia
 			$link_type = $media->params->get('link_type');
 		}
 
-		if ($media->params->get('download_show') && (!$media->params->get('link_type')))
+		if ($media->params->get('download_show') && (!$media->params->get('link_type')) || $params->get('simple_mode') ==1)
 		{
 			$link_type = 2;
 		}
@@ -330,7 +337,7 @@ class JBSMMedia
 		}
 		if ($params->get('simple_mode') == 1)
 		{
-			$mediaimage = '<span class="' . 'fa fa-play' . '" title="play" style="font-size:' . '24' . 'px;"></span>';
+			$mediaimage = '<span class="' . 'fa fa-play-circle-o' . '" title="play" style="font-size:' . '24' . 'px;"></span>';
 		}
 		return $mediaimage;
 	}
@@ -394,7 +401,10 @@ class JBSMMedia
 				$downloadimage = '<span class="' . $icon . '" title="' . $buttontext . '" style="font-size:' . $textsize . 'px;"></span>';
 				break;
 		}
-
+		if ($download->get('simple_mode') == 1)
+		{
+			$downloadimage = '<span class="fas fa-chevron-circle-down" title="download" style="font-size: 24px;"></span>';
+		}
 		return $downloadimage;
 	}
 
