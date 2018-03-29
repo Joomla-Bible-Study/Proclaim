@@ -69,7 +69,7 @@ class JBSMMedia
 
 			if ($imageparams->get('media_use_button_icon') >= 1 || $params->get('simple_mode') == 1)
 			{
-				$image = $this->mediaButton($imageparams, $params);
+				$image = $this->mediaButton($imageparams, $params, $media->params);
 			}
 			else
 			{
@@ -285,7 +285,7 @@ class JBSMMedia
 	 *
 	 * @since 9.0.0
 	 */
-	public function mediaButton($imageparams, $params)
+	public function mediaButton($imageparams, $params, $media)
 	{
 		$mediaimage = null;
 		$button = $imageparams->get('media_button_type', 'btn-link');
@@ -337,7 +337,19 @@ class JBSMMedia
 		}
 		if ($params->get('simple_mode') == 1)
 		{
-			$mediaimage = '<span class="' . 'fa fa-play-circle-o' . '" title="play" style="font-size:' . '24' . 'px;"></span>';
+			$filename = $media->get('filename');
+			if ((preg_match('(youtube.com|youtu.be)', $filename) === 1))
+			{
+				$mediaimage = '<span class="' . 'fab fa-youtube' . '" title="play" style="font-size:' . '24' . 'px;"></span>';
+			}
+			elseif ((preg_match('(pdf|PDF)', $filename) === 1))
+			{
+				$mediaimage = '<span class="' . 'fa fa-file-pdf-o' . '" title="play" style="font-size:' . '24' . 'px;"></span>';
+			}
+			else
+			{
+				$mediaimage = '<span class="' . 'fa fa-play-circle-o' . '" title="play" style="font-size:' . '24' . 'px;"></span>';
+			}
 		}
 		return $mediaimage;
 	}
