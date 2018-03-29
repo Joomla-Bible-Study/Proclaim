@@ -11,12 +11,12 @@
   "license": "GPL-2.0+",
   "config": {
 	"platform": {
-	  "php": "5.3.10"
+	  "php": "5.6.34"
 	},
 	"bin-dir": "bin"
   },
   "require": {
-	"php": ">=5.3.10",
+	"php": ">=5.6.34",
 	"phpdocumentor/phpdocumentor": "2.*",
 	"ircmaxell/password-compat": "1.*",
 	"leafo/lessphp": "0.5.0",
