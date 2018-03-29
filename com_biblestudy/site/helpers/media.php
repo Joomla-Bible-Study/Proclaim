@@ -1030,7 +1030,7 @@ class JBSMMedia
 		$getmenu  = JFactory::getApplication();
 		$menuItem = $getmenu->getMenu()->getItems('component', $url, true);
 		$Itemid   = $menuItem->id;
-		$docman   = '<a class="playhit" data-ip="' . $media->id . '" href="index.php?option=com_docman&amp;view=document&amp;slug=' .
+		$docman   = '<a href="index.php?option=com_docman&amp;view=document&amp;slug=' .
 			$media->docMan_id . '&amp;Itemid=' . $Itemid . '" alt="' . $media->malttext . ' - ' . $media->comment .
 			'" target="' . $media->special . '">' . $image . '</a>';
 
@@ -1049,8 +1049,8 @@ class JBSMMedia
 	 */
 	public function getArticle($media, $image)
 	{
-		$article = '<a class="playhit" data-id="' . $media->id . '" href="index.php?option=com_content&amp;view=article&amp;id=' . $media->article_id . '"
-                 target="' . $media->special . '">' . $image . '</a>';
+		$article = '<a href="index.php?option=com_content&amp;view=article&amp;id=' . $media->article_id . '"
+		target="' . $media->special . '">' . $image . '</a>';
 
 		return $article;
 	}
