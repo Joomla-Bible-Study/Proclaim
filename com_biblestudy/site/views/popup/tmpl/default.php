@@ -13,7 +13,8 @@ $style = 'body { background-color:' . $this->params->get('popupbackground', 'bla
 	#all{background-color:' . $this->params->get('popupbackground', 'black') . ' !important;}';
 $doc = JFactory::getDocument();
 $doc->addStyleDeclaration($style);
-$jbsmedia = new JBSMMedia();
+$jbsmedia = new JBSMMedia;
+
 ?>
 <div id="popupwindow" class="popupwindow">
 	<div class="popuptitle"><p class="popuptitle"><?php echo $this->headertext ?>
