@@ -40,7 +40,6 @@ class JBSMMedia
 	{
 		$mediafile = null;
 		$filesize  = null;
-
 		if (isset($media->smedia))
 		{
 			// Smedia are the media settings for each server
@@ -68,9 +67,9 @@ class JBSMMedia
 			$imageparams = $media->params;
 		}
 
-			if ($imageparams->get('media_use_button_icon') >= 1)
+			if ($imageparams->get('media_use_button_icon') >= 1 || $params->get('simple_mode') == 1)
 			{
-				$image = $this->mediaButton($imageparams);
+				$image = $this->mediaButton($imageparams, $params, $media->params);
 			}
 			else
 			{
@@ -152,7 +151,10 @@ class JBSMMedia
 			$filesize = '<span class="JBSMFilesize" style="font-size: 0.6em;display:inline;padding-left: 5px;">' .
 				$file_size . '</span>';
 		}
-
+		if ($params->get('simple_mode') == 1)
+		{
+			$link_type = 3;
+		}
 		switch ($link_type)
 		{
 			case 0:
@@ -172,6 +174,10 @@ class JBSMMedia
 
 			case 2:
 				$mediafile = $downloadlink;
+				break;
+
+			case 3:
+				$mediafile = $playercode . $downloadlink;
 				break;
 		}
 
@@ -202,7 +208,7 @@ class JBSMMedia
 
 		$downloadlink = '';
 
-		if ($params->get('download_use_button_icon') >= 2)
+		if ($params->get('download_use_button_icon') >= 2 || $params->get('simple_mode') == 1)
 		{
 			$download_image = $this->downloadButton($params);
 		}
@@ -222,7 +228,7 @@ class JBSMMedia
 			$link_type = $media->params->get('link_type');
 		}
 
-		if ($media->params->get('download_show') && (!$media->params->get('link_type')))
+		if ($media->params->get('download_show') && (!$media->params->get('link_type')) || $params->get('simple_mode') ==1)
 		{
 			$link_type = 2;
 		}
@@ -279,7 +285,7 @@ class JBSMMedia
 	 *
 	 * @since 9.0.0
 	 */
-	public function mediaButton($imageparams)
+	public function mediaButton($imageparams, $params, $media)
 	{
 		$mediaimage = null;
 		$button = $imageparams->get('media_button_type', 'btn-link');
@@ -329,7 +335,22 @@ class JBSMMedia
 				$mediaimage = '<span class="' . $icon . '" title="' . $buttontext . '" style="font-size:' . $textsize . 'px;"></span>';
 				break;
 		}
-
+		if ($params->get('simple_mode') == 1)
+		{
+			$filename = $media->get('filename');
+			if ((preg_match('(youtube.com|youtu.be)', $filename) === 1))
+			{
+				$mediaimage = '<span class="' . 'fab fa-youtube' . '" title="play" style="font-size:' . '24' . 'px;"></span>';
+			}
+			elseif ((preg_match('(pdf|PDF)', $filename) === 1))
+			{
+				$mediaimage = '<span class="' . 'fa fa-file-pdf-o' . '" title="play" style="font-size:' . '24' . 'px;"></span>';
+			}
+			else
+			{
+				$mediaimage = '<span class="' . 'fa fa-play-circle-o' . '" title="play" style="font-size:' . '24' . 'px;"></span>';
+			}
+		}
 		return $mediaimage;
 	}
 
@@ -392,7 +413,10 @@ class JBSMMedia
 				$downloadimage = '<span class="' . $icon . '" title="' . $buttontext . '" style="font-size:' . $textsize . 'px;"></span>';
 				break;
 		}
-
+		if ($download->get('simple_mode') == 1)
+		{
+			$downloadimage = '<span class="fas fa-chevron-circle-down" title="download" style="font-size: 24px;"></span>';
+		}
 		return $downloadimage;
 	}
 

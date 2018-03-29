@@ -196,6 +196,12 @@ $input = $app->input;
 				<div class="tab-pane" id="admin">
 					<h3 class="tab-description"><?php echo JText::_('JBS_ADM_COMPONENT_SETTINGS'); ?></h3>
 					<div class="control-group">
+                        <div class="control-group">
+							<?php echo $this->form->getLabel('simple_mode', 'params'); ?>
+                            <div class="controls">
+								<?php echo $this->form->getInput('simple_mode', 'params'); ?>
+                            </div>
+                        </div>
 						<?php echo $this->form->getLabel('metakey', 'params'); ?>
 						<div class="controls">
 							<?php echo $this->form->getInput('metakey', 'params'); ?>
