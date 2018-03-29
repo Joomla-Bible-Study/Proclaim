@@ -32,6 +32,8 @@ $jbsmedia = new JBSMMedia();
 		$player = new stdClass;
 		$player->mp3 = ($this->player == '7' ? true : false);
 		JHtml::_('jwplayer.framework');
+		$path = JBSMHelper::MediaBuildUrl($this->media->sparams->get('path'), $this->params->get('filename'), $this->params, true);
+
 		if (preg_match('(youtube.com|youtu.be)', $path) === 1)
 +		{
 +			echo JHtml::_('<iframe width="' . $player->playerwidth . '" height="' . $player->playerheight . '" src="' .
