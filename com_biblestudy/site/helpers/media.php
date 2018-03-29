@@ -1028,8 +1028,7 @@ class JBSMMedia
 		$menuItem = $getmenu->getMenu()->getItems('component', $url, true);
 		$Itemid   = $menuItem->id;
 		$docman   = '<a href="index.php?option=com_docman&amp;view=document&amp;slug=' .
-			$media->docMan_id . '&amp;Itemid=' . $Itemid . '" alt="' . $media->malttext . ' - ' . $media->comment .
-			'" target="' . $media->special . '">' . $image . '</a>';
+			$media->docMan_id . '&amp;Itemid=' . $Itemid . '" target="' . $media->special . '">' . $image . '</a>';
 
 		return $docman;
 	}
@@ -1047,7 +1046,7 @@ class JBSMMedia
 	public function getArticle($media, $image)
 	{
 		$article = '<a href="index.php?option=com_content&amp;view=article&amp;id=' . $media->article_id . '"
-                 alt="' . $media->malttext . ' - ' . $media->comment . '" target="' . $media->special . '">' . $image . '</a>';
+		target="' . $media->special . '">' . $image . '</a>';
 
 		return $article;
 	}

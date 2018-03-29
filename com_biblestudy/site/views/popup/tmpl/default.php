@@ -35,19 +35,19 @@ $jbsmedia = new JBSMMedia();
 		$path = JBSMHelper::MediaBuildUrl($this->media->sparams->get('path'), $this->params->get('filename'), $this->params, true);
 
 		if (preg_match('(youtube.com|youtu.be)', $path) === 1)
-+		{
-+			echo JHtml::_('<iframe width="' . $player->playerwidth . '" height="' . $player->playerheight . '" src="' .
-+			$jbsmedia->convertYoutube($path) . '" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>');
-+		}
-+		elseif (preg_match('(vimeo.com)', $path) === 1)
-+		{
-+			echo JHtml::_('<iframe src="' . $jbsmedia->convertVimeo($path) . '" width="' . $player->playerwidth . '" height="' . $player->playerheight .
-+			'" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>');
-+		}
-+		else
-+		{
-+			echo JHtml::_('jwplayer.render', $this->media, $this->params, true, $player);
-+		}
+		{
+		    echo JHtml::_('<iframe width="' . $player->playerwidth . '" height="' . $player->playerheight . '" src="' .
+                $jbsmedia->convertYoutube($path) . '" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>');
+		}
+		elseif (preg_match('(vimeo.com)', $path) === 1)
+		{
+			echo JHtml::_('<iframe src="' . $jbsmedia->convertVimeo($path) . '" width="' . $player->playerwidth . '" height="' . $player->playerheight .
+			'" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>');
+		}
+		else
+		{
+			echo JHtml::_('jwplayer.render', $this->media, $this->params, true, $player);
+		}
 	}
 
 	if ($this->player == 8)
