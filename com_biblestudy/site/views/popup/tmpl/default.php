@@ -13,6 +13,7 @@ $style = 'body { background-color:' . $this->params->get('popupbackground', 'bla
 	#all{background-color:' . $this->params->get('popupbackground', 'black') . ' !important;}';
 $doc = JFactory::getDocument();
 $doc->addStyleDeclaration($style);
+$jbsmedia = new JBSMMedia();
 ?>
 <div id="popupwindow" class="popupwindow">
 	<div class="popuptitle"><p class="popuptitle"><?php echo $this->headertext ?>
@@ -31,7 +32,20 @@ $doc->addStyleDeclaration($style);
 		$player = new stdClass;
 		$player->mp3 = ($this->player == '7' ? true : false);
 		JHtml::_('jwplayer.framework');
-		echo JHtml::_('jwplayer.render', $this->media, $this->params, true, $player);
+		if (preg_match('(youtube.com|youtu.be)', $path) === 1)
++		{
++			echo JHtml::_('<iframe width="' . $player->playerwidth . '" height="' . $player->playerheight . '" src="' .
++			$jbsmedia->convertYoutube($path) . '" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>');
++		}
++		elseif (preg_match('(vimeo.com)', $path) === 1)
++		{
++			echo JHtml::_('<iframe src="' . $jbsmedia->convertVimeo($path) . '" width="' . $player->playerwidth . '" height="' . $player->playerheight .
++			'" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>');
++		}
++		else
++		{
++			echo JHtml::_('jwplayer.render', $this->media, $this->params, true, $player);
++		}
 	}
 
 	if ($this->player == 8)
