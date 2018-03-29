@@ -37,13 +37,13 @@ $jbsmedia = new JBSMMedia;
 
 		if (preg_match('(youtube.com|youtu.be)', $path) === 1)
 		{
-		    echo JHtml::_('<iframe width="' . $player->playerwidth . '" height="' . $player->playerheight . '" src="' .
-                $jbsmedia->convertYoutube($path) . '" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>');
+		    echo '<iframe width="' . $this->params->get('player_width') . '" height="' . $this->params->get('player_height') . '" src="' .
+                $jbsmedia->convertYoutube($path) . '" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
 		}
 		elseif (preg_match('(vimeo.com)', $path) === 1)
 		{
-			echo JHtml::_('<iframe src="' . $jbsmedia->convertVimeo($path) . '" width="' . $player->playerwidth . '" height="' . $player->playerheight .
-			'" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>');
+			echo '<iframe src="' . $jbsmedia->convertVimeo($path) . '" width="' . $this->params->get('player_width') . '" height="' .
+                $this->params->get('player_height') . '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
 		}
 		else
 		{
