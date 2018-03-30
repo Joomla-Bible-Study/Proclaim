@@ -16,6 +16,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
+JFormHelper::loadFieldClass('list');
 class JFormFieldTemplatelist extends JFormFieldList
 {
 	/**
