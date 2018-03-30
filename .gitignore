@@ -46,3 +46,5 @@ docs/namespaces/
 docs/packages/
 *.html
 /bin/
+/package-lock.json
+/node_modules/

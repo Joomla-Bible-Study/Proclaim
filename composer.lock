@@ -3621,7 +3621,7 @@
             "keywords": [
                 "exception"
             ],
-            "time": "2015-02-10T20:07:52+00:00"
+            "time": "2015-02-10 20:07:52"
         },
         {
             "name": "pear/versioncontrol_git",
@@ -3665,7 +3665,7 @@
                 }
             ],
             "description": "VersionControl_Git is a library that provides OO interface to handle Git repository.",
-            "time": "2018-01-29T21:14:27+00:00"
+            "time": "2018-01-29 21:14:27"
         },
         {
             "name": "phing/phing",
