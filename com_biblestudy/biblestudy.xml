@@ -41,7 +41,6 @@
 		<folder>js</folder>
 		<folder>less</folder>
 		<folder>player</folder>
-		<folder>plupload</folder>
 	</media>
 
 	<administration>
@@ -75,7 +74,6 @@
 			<filename>convert1.htm</filename>
 			<folder>addons</folder>
 			<folder>controllers</folder>
-			<folder>help</folder>
 			<folder>helpers</folder>
 			<folder>install</folder>
 			<folder>language</folder>
