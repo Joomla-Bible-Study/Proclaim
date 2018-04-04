@@ -38,7 +38,7 @@ class Migration900
 	 *
 	 * @param   JDatabaseDriver  $db  Joomla DateBase Driver
 	 *
-	 * @return  null
+	 * @return  void
 	 *
 	 * @since 9.0.0
 	 */
@@ -204,13 +204,13 @@ class Migration900
 		$metadata = array();
 
 		$query = $db->getQuery(true);
-		$query->select('*')->from('#__bsms_media')->where('id = ' . $mediaFile->media_image);
+		$query->select('*')->from('#__bsms_media')->where('id = ' . (int) $mediaFile->media_image);
 		$db->setQuery($query);
 
 		$mediaImage = $db->loadObject();
 
 		$query = $db->getQuery(true);
-		$query->select('*')->from('#__bsms_mimetype')->where('id = ' . $mediaFile->mime_type);
+		$query->select('*')->from('#__bsms_mimetype')->where('id = ' . (int) $mediaFile->mime_type);
 		$db->setQuery($query);
 
 		$mimtype = $db->loadObject();
@@ -221,7 +221,7 @@ class Migration900
 		if ($mediaFile->path > 0)
 		{
 			$query = $db->getQuery(true);
-			$query->select('*')->from('#__bsms_folders')->where('id = ' . $mediaFile->path);
+			$query->select('*')->from('#__bsms_folders')->where('id = ' . (int) $mediaFile->path);
 			$db->setQuery($query);
 			$path = $db->loadObject();
 			$folderpath = $path->folderpath;
@@ -313,7 +313,7 @@ class Migration900
 		}
 
 		// Delete old mediaFile
-		JTable::getInstance('Mediafile', 'Table', array('dbo' => $db))->delete($mediaFile->id);
+		JTable::getInstance('Mediafile', 'Table', array('dbo' => $db))->delete((int) $mediaFile->id);
 
 		return true;
 	}

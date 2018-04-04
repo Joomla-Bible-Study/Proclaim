@@ -215,9 +215,20 @@ class Com_BiblestudyInstallerScript
 	 * @return bool
 	 *
 	 * @since 1.5
+	 * @throws Exception
 	 */
 	public function uninstall($parent)
 	{
+		$adminpath = $parent->getParent()->getPath('extension_administrator');
+		$model     = "{$adminpath}/models/install.php";
+
+		if (file_exists($model))
+		{
+			require_once $model;
+			$installer = new BibleStudyModelInstall;
+			$installer->uninstall();
+		}
+
 		// Uninstall sub-extensions
 		$this->_uninstallSubextensions($parent);
 

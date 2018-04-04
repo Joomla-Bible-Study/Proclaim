@@ -44,6 +44,7 @@ class BiblestudyController extends JControllerLegacy
 	 * @return  JControllerLegacy  his object to support chaining.
 	 *
 	 * @since 1.5
+	 * @throws \Exception
 	 */
 	public function display($cachable = false, $urlparams = false)
 	{

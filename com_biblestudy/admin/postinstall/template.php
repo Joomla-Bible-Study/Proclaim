@@ -70,7 +70,8 @@ function Admin_Postinstall_Template_condition()
  *
  * @return  void
  *
- * @since   3.2
+ * @since  3.2
+ * @throws \Exception
  */
 function Admin_Postinstall_Template_action()
 {

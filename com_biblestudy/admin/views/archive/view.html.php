@@ -29,6 +29,7 @@ class BiblestudyViewArchive extends JViewLegacy
 	 *
 	 * @see     JViewLegacy::loadTemplate()
 	 * @since   11.1
+	 * @throws \Exception
 	 */
 	public function display($tpl = null)
 	{
@@ -49,6 +50,7 @@ class BiblestudyViewArchive extends JViewLegacy
 	 * @return null
 	 *
 	 * @since 7.0.0
+	 * @throws \Exception
 	 */
 	protected function addToolbar()
 	{
