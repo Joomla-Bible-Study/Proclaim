@@ -10,12 +10,12 @@ defined('_JEXEC') or die;
 use \Joomla\Registry\Registry;
 
 /**
- * Update for 9.0.1 class
+ * Update for 9.1.4 class
  *
  * @package  Proclaim.Admin
- * @since    9.0.1
+ * @since    9.1.4
  */
-class Migration913
+class Migration914
 {
 	// List the functions to go through in order for this migration.
 	public $steps = array('up');
@@ -47,6 +47,7 @@ class Migration913
 	 * @return bool
 	 *
 	 * @since 9.0.1
+	 * @throws Exception
 	 */
 	public function up($db)
 	{
