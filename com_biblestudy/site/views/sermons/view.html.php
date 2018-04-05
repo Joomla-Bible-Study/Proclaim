@@ -153,6 +153,7 @@ class BiblestudyViewSermons extends JViewLegacy
 	 *
 	 * @see     fetch()
 	 * @since   11.1
+	 * @throws  Exception
 	 */
 	public function display($tpl = null)
 	{
@@ -186,7 +187,9 @@ class BiblestudyViewSermons extends JViewLegacy
 		$this->main = $images->mainStudyImage();
 
 		// Only load PageBuilder if the default template is NOT being used
-		if ($params->get('useexpert_list') > 0 || ($params->get('simple_mode') == 1) || (is_string($params->get('sermonstemplate')) == true && $params->get('sermonstemplate') != '0'))
+		if ($params->get('useexpert_list') > 0
+			|| ($params->get('simple_mode') == 1)
+			|| (is_string($params->get('sermonstemplate')) == true && $params->get('sermonstemplate') != '0'))
 		{
 			$page_builder = new JBSMPageBuilder;
 
@@ -319,7 +322,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		}
 
 		// Get whether "Go" Button is used then turn off onchange if it is
-		if ($params->get('use_go_button', 0) == 0 || $params->get('simple_mode') ==1)
+		if ($params->get('use_go_button', 0) == 0 || $params->get('simple_mode') == 1)
 		{
 			$go = 'onchange="this.form.submit()"';
 		}
@@ -490,6 +493,7 @@ class BiblestudyViewSermons extends JViewLegacy
 	 * @return void
 	 *
 	 * @since 7.0
+	 * @throws Exception
 	 */
 	protected function _prepareDocument()
 	{
