@@ -168,6 +168,7 @@ class JBSMBibleStudyHelper
 		self::rendermenu(
 			JText::_('JBS_CMN_SERIES'), 'index.php?option=com_biblestudy&view=series', $vName == 'series'
 		);
+
 		if (!$simple)
 		{
 			self::rendermenu(
@@ -183,12 +184,14 @@ class JBSMBibleStudyHelper
 				JText::_('JBS_CMN_COMMENTS'), 'index.php?option=com_biblestudy&view=comments', $vName == 'comments'
 			);
 		}
+
 		self::rendermenu(
 			JText::_('JBS_CMN_SERVERS'), 'index.php?option=com_biblestudy&view=servers', $vName == 'servers'
 		);
 		self::rendermenu(
 			JText::_('JBS_CMN_PODCASTS'), 'index.php?option=com_biblestudy&view=podcasts', $vName == 'podcasts'
 		);
+
 		if (!$simple)
 		{
 			self::rendermenu(
