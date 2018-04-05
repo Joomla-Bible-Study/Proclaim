@@ -40,6 +40,7 @@ class JBSMMedia
 	{
 		$mediafile = null;
 		$filesize  = null;
+
 		if (isset($media->smedia))
 		{
 			// Smedia are the media settings for each server
@@ -151,10 +152,12 @@ class JBSMMedia
 			$filesize = '<span class="JBSMFilesize" style="font-size: 0.6em;display:inline;padding-left: 5px;">' .
 				$file_size . '</span>';
 		}
+
 		if ($params->get('simple_mode') == 1)
 		{
 			$link_type = 3;
 		}
+
 		switch ($link_type)
 		{
 			case 0:
@@ -228,7 +231,7 @@ class JBSMMedia
 			$link_type = $media->params->get('link_type');
 		}
 
-		if ($media->params->get('download_show') && (!$media->params->get('link_type')) || $params->get('simple_mode') ==1)
+		if ($media->params->get('download_show') && (!$media->params->get('link_type')) || $params->get('simple_mode') == 1)
 		{
 			$link_type = 2;
 		}
@@ -280,6 +283,8 @@ class JBSMMedia
 	 * Used to obtain the button and/or icon for the image
 	 *
 	 * @param   Registry  $imageparams  ?
+	 * @param   Registry  $params       ?
+	 * @param   object    $media        Media Object
 	 *
 	 * @return mixed
 	 *
@@ -335,9 +340,11 @@ class JBSMMedia
 				$mediaimage = '<span class="' . $icon . '" title="' . $buttontext . '" style="font-size:' . $textsize . 'px;"></span>';
 				break;
 		}
+
 		if ($params->get('simple_mode') == 1)
 		{
 			$filename = $media->get('filename');
+
 			if ((preg_match('(youtube.com|youtu.be)', $filename) === 1))
 			{
 				$mediaimage = '<span class="' . 'fab fa-youtube' . '" title="play" style="font-size:' . '24' . 'px;"></span>';
@@ -351,6 +358,7 @@ class JBSMMedia
 				$mediaimage = '<span class="' . 'fa fa-play-circle-o' . '" title="play" style="font-size:' . '24' . 'px;"></span>';
 			}
 		}
+
 		return $mediaimage;
 	}
 
@@ -413,10 +421,12 @@ class JBSMMedia
 				$downloadimage = '<span class="' . $icon . '" title="' . $buttontext . '" style="font-size:' . $textsize . 'px;"></span>';
 				break;
 		}
+
 		if ($download->get('simple_mode') == 1)
 		{
 			$downloadimage = '<span class="fas fa-chevron-circle-down" title="download" style="font-size: 24px;"></span>';
 		}
+
 		return $downloadimage;
 	}
 
