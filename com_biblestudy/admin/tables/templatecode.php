@@ -93,7 +93,11 @@ class TableTemplatecode extends JTable
 	 */
 	public function store($updateNulls = false)
 	{
-		if ($this->filename == 'main' || $this->filename == 'simple' || $this->filename == 'custom' || $this->filename == 'formheader' || $this->filename == 'formfooter')
+		if ($this->filename == 'main'
+			|| $this->filename == 'simple'
+			|| $this->filename == 'custom'
+			|| $this->filename == 'formheader'
+			|| $this->filename == 'formfooter')
 		{
 			$this->setError(JText::_('JBS_STYLE_RESTRICED_FILE_NAME'));
 
