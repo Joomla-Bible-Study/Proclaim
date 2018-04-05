@@ -22,9 +22,9 @@ $this->ignore_fieldsets = array('jmetadata', 'item_associations');
 
 // Create shortcut to parameters.
 $params = $this->form->getFieldsets('params');
-$simple = $this->admin_params->get('simple_mode', false);
-$app    = JFactory::getApplication();
-$input  = $app->input;
+$simple = $this->admin_params->get('simple_mode');
+$app   = JFactory::getApplication();
+$input = $app->input;
 
 $return  = base64_encode('index.php?option=com_biblestudy&task=message.edit&id=' . (int) $this->item->id);
 $options = base64_encode('study_id=' . $this->item->id . '&createdate=' . $this->item->studydate);
@@ -197,8 +197,8 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
         <!-- Begin Content -->
 		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'general', JText::_('JBS_STY_DETAILS')); ?>
         <div class="row-fluid">
-			<?php if (!$simple) { ?>
-                <div class="span7">
+			<?php if (!$simple){ ?>
+                <div class="span9">
                     <div class="control-group">
 						<?php echo $this->form->getLabel('studyintro'); ?>
 						<?php echo $this->form->getInput('studyintro'); ?>
@@ -208,11 +208,8 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
 						<?php echo $this->form->getInput('studytext'); ?>
                     </div>
                 </div>
-
-				<?php echo "<div class=\"span5\">";
-			} else { ?>
-            <div>
-				<?php } ?>
+			<?php } ?>
+            <div class="span6 ">
                 <div class="control-group">
                     <div class="control-label">
 						<?php echo $this->form->getLabel('published'); ?>
@@ -286,13 +283,14 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
 						); ?>
                     </div>
                 </div>
-                <div class="control-group">
+                <div class="span6">
 					<?php echo $this->form->renderFieldset('scripture'); ?>
                 </div>
+
             </div>
         </div>
 		<?php echo JHtml::_('bootstrap.endTab'); ?>
-		<?php if (!$simple) { ?>
+		<?php if (!$simple){ ?>
 			<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'info', JText::_('JBS_CMN_INFO')); ?>
             <div class="row-fluid">
                 <div class="span6">
@@ -374,6 +372,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
                         </div>
                     </div>
                 </div>
+
             </div>
 			<?php echo JHtml::_('bootstrap.endTab'); ?>
 			<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'publish', JText::_('JBS_STY_PUBLISH')); ?>
@@ -404,6 +403,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
                 </div>
             </div>
 			<?php echo JHtml::_('bootstrap.endTab'); ?>
+
 		<?php } ?>
 
 		<?php if ($this->canDo->get('core.admin')): ?>
@@ -419,6 +419,5 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
 		<?php echo $this->form->getInput('thumbnailm'); ?>
         <input type="hidden" name="task" value=""/>
 		<?php echo JHtml::_('form.token'); ?>
-    </div>
     </div>
 </form>
