@@ -45,6 +45,15 @@
 			<option value="">JBS_CMN_SELECT_TEACHER</option>
 		</field>
 		<field
+				name="series"
+				type="Searieslist"
+				label="JBS_CMN_SELECT_SEARIES"
+				description="JBS_CMN_SELECT_SEARIES_DESC"
+				onchange="this.form.submit();"
+		>
+			<option value="">JBS_CMN_SELECT_TEACHER</option>
+		</field>
+		<field
 				name="messagetype"
 				type="Messagetypelist"
 				label="JBS_CMN_SELECT_MESSAGETYPE"
