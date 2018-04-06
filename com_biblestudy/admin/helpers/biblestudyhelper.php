@@ -148,8 +148,14 @@ class JBSMBibleStudyHelper
 	 */
 	public static function addSubmenu($vName)
 	{
+		$simple_view = 0;
 		$admin = JBSMParams::getAdmin();
-		$simple = $admin->params->get('simple_mode', '0');
+		$adminusers = $admin->params->get('users');
+		$user = JFactory::getUser();
+		foreach($adminusers as $users)
+		{
+			if ($users == $user->id) {$simple_view = 1;}
+		}
 		self::rendermenu(
 			JText::_('JBS_CMN_CONTROL_PANEL'), 'index.php?option=com_biblestudy&view=cpanel', $vName == 'cpanel'
 		);
@@ -169,7 +175,7 @@ class JBSMBibleStudyHelper
 			JText::_('JBS_CMN_SERIES'), 'index.php?option=com_biblestudy&view=series', $vName == 'series'
 		);
 
-		if (!$simple)
+		if (!$simple_view)
 		{
 			self::rendermenu(
 				JText::_('JBS_CMN_MESSAGETYPES'), 'index.php?option=com_biblestudy&view=messagetypes', $vName == 'messagetypes'
@@ -192,7 +198,7 @@ class JBSMBibleStudyHelper
 			JText::_('JBS_CMN_PODCASTS'), 'index.php?option=com_biblestudy&view=podcasts', $vName == 'podcasts'
 		);
 
-		if (!$simple)
+		if (!$simple_view)
 		{
 			self::rendermenu(
 				JText::_('JBS_CMN_TEMPLATES'), 'index.php?option=com_biblestudy&view=templates', $vName == 'templates'
@@ -728,5 +734,39 @@ class JBSMBibleStudyHelper
 	{
 		// Search forward starting from end minus needle length characters
 		return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== false);
+	}
+
+	/**
+	 * get user ids in an object
+	 * @param object $options ID of users
+	 *
+	 * @return object
+	 *
+	 * since 9.1.4
+	 */
+	public static function getUsers()
+	{
+		$options = array();
+
+		$db    = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('id AS value, username AS text');
+		$query->from('#__users');
+		$query->order('id');
+
+		// Get the options.
+		$db->setQuery($query);
+
+		try
+		{
+			$options = $db->loadObjectList();
+		}
+		catch (RuntimeException $e)
+		{
+			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'worning');
+		}
+
+		return $options;
 	}
 }

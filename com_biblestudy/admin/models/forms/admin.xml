@@ -103,6 +103,14 @@
 		       description="JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE_DESC" labelclass="control-label">
 			<option>JBS_CMN_DEFAULT_IMAGE</option>
 		</field>
+		<!--Users for simple_view-->
+		<field name="users" type="sql" extension="com_biblestudy" label="JBS_USERS"
+			   description="JBS_USERS_DESC" class="list" multiple="multiple"
+			   query="SELECT id, username FROM #__users ORDER BY id ASC"
+			   key_field="id"
+			   value_field="username" labelclass="username">
+			<option value="-1">JBS_CMN_SELECT_USER</option>
+		</field>
 		<!--Thumbnail sizes-->
 		<field name="thumbnail_teacher_size" default="100" type="int" size="5" label="JBS_ADM_THUMBNAIL_TEACHER_SIZE"
 		       description="JBS_ADM_THUMBNAIL_TEACHER_SIZE_DESC" labelclass="control-label" class="span2"/>

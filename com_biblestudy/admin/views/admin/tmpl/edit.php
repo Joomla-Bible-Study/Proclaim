@@ -202,6 +202,12 @@ $input = $app->input;
 								<?php echo $this->form->getInput('simple_mode', 'params'); ?>
                             </div>
                         </div>
+                        <div class="control-group">
+							<?php echo $this->form->getLabel('users', 'params'); ?>
+                            <div class="controls">
+								<?php echo $this->form->getInput('users', 'params'); ?>
+                            </div>
+                        </div>
 						<?php echo $this->form->getLabel('metakey', 'params'); ?>
 						<div class="controls">
 							<?php echo $this->form->getInput('metakey', 'params'); ?>
