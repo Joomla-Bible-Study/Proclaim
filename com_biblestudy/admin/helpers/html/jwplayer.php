@@ -45,8 +45,8 @@ abstract class JHtmlJwplayer
 		$doc = JFactory::getDocument();
 		/** @var Joomla\Registry\Registry $params */
 		$params = JBSMParams::getAdmin()->params;
-		$key    = $params->get('jwplayer_key');
-		$cdn    = $params->get('jwplayer_cdn');
+		$key    = $params->get('jwplayer_key', '8eJ+ik6aOUabfOisJzomcM2Z3h1VZ9+6cufBXQ==');
+		$cdn    = $params->get('jwplayer_cdn', 'https://content.jwplatform.com/libraries/HPyI6990.js');
 
 		if ($cdn)
 		{
