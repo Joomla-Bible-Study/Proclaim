@@ -95,7 +95,14 @@ class BiblestudyViewMessage extends JViewLegacy
 			throw new Exception(implode("\n", $errors), 500);
 		}
 		// get users and check against list of simple_view
-
+		$this->simple_view = 0;
+		$admin = JBSMParams::getAdmin();
+		$adminusers = $admin->params->get('users');
+		$user = JFactory::getUser();
+		foreach($adminusers as $users)
+		{
+			if ($users == $user->id) {$this->simple_view = 1;}
+		}
 		// Set some variables for use by the modal mediafile entry form from a study
 		$app = JFactory::getApplication();
 		$app->setUserState($option . 'sid', $this->item->id);
@@ -104,13 +111,6 @@ class BiblestudyViewMessage extends JViewLegacy
 		$registry    = new Registry;
 		$registry->loadString($this->admin->params);
 		$this->admin_params = $registry;
-		//Simple view
-		$this->simple_view = 0;
-		$user = JFactory::getUser();
-		foreach($this->admin_params->get('users') as $users)
-		{
-			if (in_array($users, $user->id)) {$this->simple_view = 1;}
-		}
 		$document           = JFactory::getDocument();
 
 		JHtml::stylesheet('media/com_biblestudy/css/token-input-jbs.css');

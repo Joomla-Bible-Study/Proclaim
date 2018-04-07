@@ -22,7 +22,7 @@ $this->ignore_fieldsets = array('jmetadata', 'item_associations');
 
 // Create shortcut to parameters.
 $params = $this->form->getFieldsets('params');
-$simple = $this->admin_params->get('simple_mode');
+
 $app   = JFactory::getApplication();
 $input = $app->input;
 
@@ -196,9 +196,9 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
 
         <!-- Begin Content -->
 		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'general', JText::_('JBS_STY_DETAILS')); ?>
-        <div class="row-fluid">
-			<?php if (!$simple){ ?>
-                <div class="span9">
+        <div class="row-fluid form-horizontal-desktop">
+			<?php if (!$this->simple_view){ ?>
+                <div class="span6">
                     <div class="control-group">
 						<?php echo $this->form->getLabel('studyintro'); ?>
 						<?php echo $this->form->getInput('studyintro'); ?>
@@ -290,7 +290,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
             </div>
         </div>
 		<?php echo JHtml::_('bootstrap.endTab'); ?>
-		<?php if (!$simple){ ?>
+		<?php if (!$this->simple_view){ ?>
 			<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'info', JText::_('JBS_CMN_INFO')); ?>
             <div class="row-fluid">
                 <div class="span6">
