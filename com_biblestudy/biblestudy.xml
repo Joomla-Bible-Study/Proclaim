@@ -6,8 +6,8 @@
 	<authorEmail>info@joomlabiblestudy.org</authorEmail>
 	<authorUrl>https://www.christianwebministries.org</authorUrl>
 	<copyright>(C) 2007 - 2017 Proclaim All rights reserved.</copyright>
-	<version>9.1.2</version>
-	<creationDate>Feb 26, 2018</creationDate>
+	<version>9.1.3</version>
+	<creationDate>April 5, 2018</creationDate>
 	<license>http://www.gnu.org/licenses/gpl.html</license>
 	<description>JBS_INS_XML_DESCRIPTION</description>
 
@@ -41,7 +41,6 @@
 		<folder>js</folder>
 		<folder>less</folder>
 		<folder>player</folder>
-		<folder>plupload</folder>
 	</media>
 
 	<administration>
@@ -75,7 +74,6 @@
 			<filename>convert1.htm</filename>
 			<folder>addons</folder>
 			<folder>controllers</folder>
-			<folder>help</folder>
 			<folder>helpers</folder>
 			<folder>install</folder>
 			<folder>language</folder>
