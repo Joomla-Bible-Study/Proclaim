@@ -27,27 +27,17 @@ class BiblestudyViewSermons extends JViewLegacy
 	/** @var object
 	 *
 	 * @since 7.0 */
-	protected $items;
+	protected $items = null;
 
 	/** @var object
 	 *
 	 * @since 7.0 */
-	protected $pagination;
+	protected $pagination = null;
 
 	/** @var Registry
 	 *
 	 * @since 7.0 */
-	protected $state;
-
-	/** @var string
-	 *
-	 * @since 7.0 */
-	protected $pagelinks;
-
-	/** @var string
-	 *
-	 * @since 7.0 */
-	protected $limitbox;
+	protected $state = null;
 
 	/** @var JObject
 	 *
@@ -114,11 +104,6 @@ class BiblestudyViewSermons extends JViewLegacy
 	 * @since 7.0 */
 	protected $template;
 
-	/** @var string
-	 *
-	 * @since 7.0 */
-	protected $order;
-
 	/** @var array
 	 *
 	 * @since 7.0 */
@@ -139,10 +124,29 @@ class BiblestudyViewSermons extends JViewLegacy
 	 * @since 7.0 */
 	protected $request_url;
 
-	/** @var int
+	/**
+	 * Form object for search filters
 	 *
-	 * @since 7.0 */
-	protected $limitstart;
+	 * @var  JForm
+	 * @since 9.1.4
+	 */
+	public $filterForm;
+
+	/**
+	 * The active search filters
+	 *
+	 * @var  array
+	 * @since 9.1.4
+	 */
+	public $activeFilters;
+
+	/**
+	 * The sidebar markup
+	 *
+	 * @var  string
+	 * @since 9.1.4
+	 */
+	protected $sidebar;
 
 	/**
 	 * Execute and display a template script.
@@ -153,29 +157,17 @@ class BiblestudyViewSermons extends JViewLegacy
 	 *
 	 * @see     fetch()
 	 * @since   11.1
+	 * @throws  Exception
 	 */
 	public function display($tpl = null)
 	{
-		$input      = new JInput;
-		$limitstart = $input->get('limitstart', '', 'int');
-		$input->set('start', $limitstart);
 		$this->state         = $this->get('State');
 		$this->template      = $this->state->get('template');
 		$items               = $this->get('Items');
 		$this->filterForm    = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');
 
-		$this->limitstart = $input->get('start', '', 'int');
 		$pagination       = $this->get('Pagination');
-		$pagelinks        = $pagination->getPagesLinks();
-
-		if ($pagelinks !== '')
-		{
-			$this->pagelinks = $pagelinks;
-		}
-
-		$this->limitbox   = '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM') . $pagination->getLimitBox() . '</span>';
-		$this->pagination = $pagination;
 		$this->admin      = $this->state->get('admin');
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
@@ -187,6 +179,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		$images     = new JBSMImages;
 		$this->main = $images->mainStudyImage();
 
+		// @todo need to look at this as this can make the Pagination not to work right. Size of array changes.
 		// Only load PageBuilder if the default template is NOT being used
 		if ($params->get('useexpert_list') > 0 || (is_string($params->get('sermonstemplate')) == true && $params->get('sermonstemplate') != '0'))
 		{
@@ -265,57 +258,21 @@ class BiblestudyViewSermons extends JViewLegacy
 
 		$uri = new JUri;
 
-		$this->teachers     = $this->get('Teachers');
-		$this->series       = $this->get('Series');
-		$this->messageTypes = $this->get('MessageTypes');
-		$this->years        = $this->get('Years');
-		$this->locations    = $this->get('Locations');
-		$this->topics       = $this->get('Topics');
-		$this->orders       = $this->get('Orders');
-		$this->books        = $this->get('Books');
-
 		// End scripture helper
 		// Get the data for the drop down boxes
 
-		$this->pagination = $pagination;
-		$this->order      = $this->orders;
-		$this->topic      = $this->topics;
+		$this->pagination = &$pagination;
 
-		// Get the template options for showing the dropdowns
-//		$teacher_menu1     = $params->get('mteacher_id');
-//		$teacher_menu      = $teacher_menu1[0];
-//		$topic_menu1       = $params->get('mtopic_id');
-//		$topic_menu        = $topic_menu1[0];
-//		$book_menu1        = $params->get('mbooknumber');
-//		$book_menu         = $book_menu1[0];
-//		$location_menu1    = $params->get('mlocations');
-//		$location_menu     = $location_menu1[0];
-//		$series_menu1      = $params->get('mseries_id');
-//		$series_menu       = $series_menu1[0];
-//		$messagetype_menu1 = $params->get('mmessagetype');
-//		$messagetype_menu  = $messagetype_menu1[0];
-
-		// Initialize the page
-		$this->page            = new stdClass;
-		$this->page->dropdowns = '';
-
-		// Build drop down menus for search filters
-		$dropdowns = array();
-
-		// Get the Popular stats
-		$stats               = new JBSMStats;
-		$this->page->popular = $stats->top_score_site();
-
-		$this->items       = $items;
+		$this->items       = &$items;
 		$stringuri         = $uri->toString();
 		$this->request_url = $stringuri;
-		$this->params      = $params;
+		$this->params      = &$params;
 
 		$this->_prepareDocument();
 
 		// Get the drop down menus
 
-		parent::display($tpl);
+		return parent::display($tpl);
 	}
 
 	/**
@@ -324,6 +281,7 @@ class BiblestudyViewSermons extends JViewLegacy
 	 * @return void
 	 *
 	 * @since 7.0
+	 * @throws Exception
 	 */
 	protected function _prepareDocument()
 	{

@@ -11,6 +11,7 @@
 defined('_JEXEC') or die;
 
 JHtml::_('bootstrap.framework');
+JHtml::_('bootstrap.tooltip');
 JHtml::_('formbehavior.chosen', 'select');
 
 $JBSMTeacher  = new JBSMTeacher;
@@ -88,8 +89,12 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 	echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 	?>
 	<hr/>
-	<?php echo $listing->getFluidListing($this->items, $this->params, $this->template, $type = 'sermons'); ?>
-
+	<?php
+    if ($this->items)
+    {
+	    echo $listing->getFluidListing($this->items, $this->params, $this->template, $type = 'sermons');
+    }
+    ?>
 	<?php // Add pagination links ?>
 	<?php if (!empty($this->items)) : ?>
 		<?php if (($this->params->def('show_pagination', 2) == 1
