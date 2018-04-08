@@ -283,7 +283,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
 						); ?>
                     </div>
                 </div>
-                <div class="span6">
+                <div class="control-group">
 					<?php echo $this->form->renderFieldset('scripture'); ?>
                 </div>
 
