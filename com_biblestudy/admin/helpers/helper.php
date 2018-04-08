@@ -338,7 +338,7 @@ class JBSMHelper
 	/**
 	 * Get Simple View Sate
 	 *
-	 * @param   Registry  $params      Component+ parametors
+	 * @param   Registry  $params      AdminTable + parametors
 	 * @param   JUser     $ActiveUser  User ID
 	 *
 	 * @return int
@@ -357,7 +357,7 @@ class JBSMHelper
 			$params = JBSMParams::getAdmin();
 		}
 
-		$users = $params->get('users');
+		$users = $params->params->get('users');
 
 		if ($users)
 		{
