@@ -86,6 +86,7 @@ class JBSMParams
 	 * @return TableTemplate Return active template info
 	 *
 	 * @since 7.0
+	 * @throws Exception
 	 */
 	public static function getTemplateparams($pk = null)
 	{

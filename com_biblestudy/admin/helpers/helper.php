@@ -334,4 +334,42 @@ class JBSMHelper
 
 		return $url;
 	}
+
+	/**
+	 * Get Simple View Sate
+	 *
+	 * @param   Registry  $params      Component+ parametors
+	 * @param   JUser     $ActiveUser  User ID
+	 *
+	 * @return int
+	 *
+	 * @since 9.1.4
+	 */
+	public static function getSimpleView($params = null, $ActiveUser = null)
+	{
+		if (is_null($ActiveUser))
+		{
+			$ActiveUser = JFactory::getUser();
+		}
+
+		if (is_null($params))
+		{
+			$params = JBSMParams::getAdmin();
+		}
+
+		$users = $params->get('users');
+
+		if ($users)
+		{
+			foreach ($users as $user)
+			{
+				if ($user == $ActiveUser->id)
+				{
+					return 1;
+				}
+			}
+		}
+
+		return 0;
+	}
 }
