@@ -152,10 +152,18 @@ class JBSMBibleStudyHelper
 		$admin = JBSMParams::getAdmin();
 		$adminusers = $admin->params->get('users');
 		$user = JFactory::getUser();
-		foreach($adminusers as $users)
+
+		if ($adminusers)
 		{
-			if ($users == $user->id) {$simple_view = 1;}
+			foreach ($adminusers as $users)
+			{
+				if ($users == $user->id)
+				{
+					$simple_view = 1;
+				}
+			}
 		}
+
 		self::rendermenu(
 			JText::_('JBS_CMN_CONTROL_PANEL'), 'index.php?option=com_biblestudy&view=cpanel', $vName == 'cpanel'
 		);
