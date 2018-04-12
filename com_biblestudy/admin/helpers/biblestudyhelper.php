@@ -148,21 +148,7 @@ class JBSMBibleStudyHelper
 	 */
 	public static function addSubmenu($vName)
 	{
-		$simple_view = 0;
-		$admin = JBSMParams::getAdmin();
-		$adminusers = $admin->params->get('users');
-		$user = JFactory::getUser();
-
-		if ($adminusers)
-		{
-			foreach ($adminusers as $users)
-			{
-				if ($users == $user->id)
-				{
-					$simple_view = 1;
-				}
-			}
-		}
+		$simple_view = JBSMHelper::getSimpleView();
 
 		self::rendermenu(
 			JText::_('JBS_CMN_CONTROL_PANEL'), 'index.php?option=com_biblestudy&view=cpanel', $vName == 'cpanel'
