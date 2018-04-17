@@ -51,7 +51,9 @@ jQuery(document).ready(function () {
 
 			UploadComplete: function () {
 				jQuery('#btn-upload').removeAttr('disabled');
-				jQuery('#upload-progress').addClass('progress-success').removeClass('active').removeClass('progress-striped');
+				var uprogress = jQuery('#upload-progress');
+				uprogress.addClass('progress-success').removeClass('active').removeClass('progress-striped');
+				uprogress.text('Uploaded');
 			},
 
 			Error: function (up, err) {

@@ -63,12 +63,10 @@ class JFormFieldPlupload extends JFormField
 			});
 		');
 
-		$class = $this->element['class'] ? ' class="' . (string) $this->element['class'] . '"' : '';
+		$class = $this->element['class'] ? ' class="' . (string) $this->element['class'] . ' span12"' : '';
 
-		$html = '<div class="control-group">
-                        <div class="input-append">
-                        <input type="text" placeholder="Enter a filename" ' . $class . ' name="' . $this->name . '" id="' .
-			$this->id . '" value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '" />
+		$html = ' <input type="text" placeholder="Enter a filename" ' . $class . ' name="' . $this->name . '" id="' .
+			$this->id . '" value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"/><br />
                           <input id="uploader-file" placeholder="Choose a media file"
                           style="border-left: 0; border-radius: 0;" class="span7" type="text" disabled>
                           <a id="btn-add-file" href="javascript:;" class="btn btn-default">
@@ -79,11 +77,9 @@ class JFormFieldPlupload extends JFormField
                              <i class="icon-upload"></i>
                              Upload
                           </a>
-                        </div>
                         <div id="upload-progress" style="display: none; margin-top: 5px; margin-bottom: 0;" 
                         class="progress progress-striped active">
-                        <div class="bar" style="width: 0;"></div></div>
-                    </div>';
+                        <div class="bar" style="width: 0;"></div></div>';
 		$html .= '
             ';
 
