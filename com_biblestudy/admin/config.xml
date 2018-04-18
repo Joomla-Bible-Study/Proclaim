@@ -7,7 +7,7 @@
 				name="upload_extensions"
 				type="text"
 				size="50"
-				default="key,pps,pptx,docx,aac,m4a,f4a,mp3,ogg,oga,mp4,m4v,f4v,mov,flv,webm,m3u8,mpd,DVR,bmp,csv,doc,gif,ico,jpg,jpeg,odg,odp,ods,odt,pdf,png,ppt,swf,txt,xcf,xls,BMP,CSV,DOC,GIF,ICO,JPG,JPEG,ODG,ODP,ODS,ODT,PDF,PNG,PPT,SWF,TXT,XCF,XLS"
+				default="key,pps,pptx,docx,aac,m4a,f4a,mp3,ogg,oga,mp4,m4v,f4v,mov,flv,webm,m3u8,mpd,DVR,bmp,csv,doc,gif,ico,jpg,jpeg,odg,odp,ods,odt,pdf,png,ppt,txt,xcf,xls,BMP,CSV,DOC,GIF,ICO,JPG,JPEG,ODG,ODP,ODS,ODT,PDF,PNG,PPT,TXT,XCF,XLS"
 				label="JBS_ADM_FIELD_LEGAL_EXTENSIONS_LABEL"
 				description="JBS_ADM_FIELD_LEGAL_EXTENSIONS_DESC"/>
 
