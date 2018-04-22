@@ -41,6 +41,7 @@ class JBSMPodcast
 	 * @return boolean|string
 	 *
 	 * @since 8.0.0
+	 * @throws Exception
 	 */
 	public function makePodcasts()
 	{
@@ -172,18 +173,6 @@ class JBSMPodcast
 					foreach ($episodes as $episode)
 					{
 						$episodedate = date("r", strtotime($episode->createdate));
-						$hours       = $episode->media_hours;
-
-						if (!$hours || $hours < 1)
-						{
-							$hours = '00';
-						}
-						// If there is no length set, we default to 35 mints
-						if (!$episode->media_minutes && !$episode->media_seconds)
-						{
-							$episode->media_minutes = 35;
-							$episode->media_seconds = 00;
-						}
 
 						$esv          = 0;
 						$scripturerow = 1;
@@ -553,7 +542,6 @@ class JBSMPodcast
 		. ' mf.published AS mfpub, mf.createdate, mf.params,'
 		. ' s.id AS sid, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.verse_begin,'
 		. ' s.chapter_end, s.verse_end, s.studytitle, s.studyintro, s.published AS spub,'
-		. ' s.media_hours, s.media_minutes, s.media_seconds,'
 		. ' se.series_text,'
 		. ' sr.id AS srid, sr.params as srparams,'
 		. ' t.id AS tid, t.teachername,'
@@ -603,6 +591,7 @@ class JBSMPodcast
 	 * @return boolean|string
 	 *
 	 * @since 7.0.0
+	 * @throws Exception
 	 */
 	public function writeFile($file, $filecontent)
 	{

@@ -530,9 +530,6 @@ class JBSMPIconvert
 
 				$alias         = $pi->study_alias;
 				$studyintro    = $pi->study_description;
-				$media_hours   = $pi->dur_hrs;
-				$media_minutes = $pi->dur_mins;
-				$media_seconds = $pi->dur_secs;
 				$series_id     = null;
 
 				foreach ($this->seriesids as $series)
@@ -610,9 +607,6 @@ class JBSMPIconvert
 				$datastudies->location_id    = $location_id;
 				$datastudies->alias          = $alias;
 				$datastudies->studyintro     = $studyintro;
-				$datastudies->media_hours    = $media_hours;
-				$datastudies->media_minutes  = $media_minutes;
-				$datastudies->media_seconds  = $media_seconds;
 				$datastudies->series_id      = $series_id;
 				$datastudies->studytext      = $studytext;
 				$datastudies->thumbnailm     = $thumbnailm;

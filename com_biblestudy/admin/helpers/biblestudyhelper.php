@@ -419,6 +419,7 @@ class JBSMBibleStudyHelper
 	 * @return array        Returns list of years of media files based on createdate
 	 *
 	 * @since 8.0.0
+	 * @throws Exception
 	 */
 	public static function getMediaYears()
 	{
@@ -452,6 +453,7 @@ class JBSMBibleStudyHelper
 	 * @return array  Returns list of message types
 	 *
 	 * @since 8.0.0
+	 * @throws Exception
 	 */
 	public static function getMessageTypes()
 	{
@@ -487,6 +489,7 @@ class JBSMBibleStudyHelper
 	 * @return array Returns list of years of studies based on studydate
 	 *
 	 * @since 8.0.0
+	 * @throws Exception
 	 */
 	public static function getStudyYears()
 	{
@@ -520,6 +523,7 @@ class JBSMBibleStudyHelper
 	 * @return array       Returns list of Teachers
 	 *
 	 * @since 8.0.0
+	 * @throws Exception
 	 */
 	public static function getTeachers()
 	{
@@ -555,6 +559,7 @@ class JBSMBibleStudyHelper
 	 * @return array Returns list of books
 	 *
 	 * @since 8.0.0
+	 * @throws Exception
 	 */
 	public static function getStudyBooks()
 	{
@@ -595,6 +600,7 @@ class JBSMBibleStudyHelper
 	 * @return array       Returns list of books
 	 *
 	 * @since 8.0.0
+	 * @throws Exception
 	 */
 	public static function getStudyMediaTypes()
 	{
@@ -630,6 +636,7 @@ class JBSMBibleStudyHelper
 	 * @return array       Returns list of books
 	 *
 	 * @since 8.0.0
+	 * @throws Exception
 	 */
 	public static function getStudyLocations()
 	{
@@ -733,7 +740,7 @@ class JBSMBibleStudyHelper
 	/**
 	 * Get user ids in an object
 	 *
-	 * @return object
+	 * @return array
 	 *
 	 * @since 9.1.4
 	 * @throws Exception
@@ -759,6 +766,8 @@ class JBSMBibleStudyHelper
 		catch (RuntimeException $e)
 		{
 			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'worning');
+
+			return $options;
 		}
 
 		return $options;

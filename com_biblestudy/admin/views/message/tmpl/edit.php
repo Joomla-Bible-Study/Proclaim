@@ -236,30 +236,6 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
                 </div>
                 <div class="control-group">
                     <div class="control-label">
-						<?php echo $this->form->getLabel('media_hours'); ?>
-                    </div>
-                    <div class="controls">
-						<?php echo $this->form->getInput('media_hours'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-						<?php echo $this->form->getLabel('media_minutes'); ?>
-                    </div>
-                    <div class="controls">
-						<?php echo $this->form->getInput('media_minutes'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-						<?php echo $this->form->getLabel('media_seconds'); ?>
-                    </div>
-                    <div class="controls">
-						<?php echo $this->form->getInput('media_seconds'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
 						<?php echo $this->form->getLabel('teacher_id'); ?>
                     </div>
                     <div class="controls">
@@ -375,36 +351,36 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
 
             </div>
 			<?php echo JHtml::_('bootstrap.endTab'); ?>
-			<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'publish', JText::_('JBS_STY_PUBLISH')); ?>
-            <div class="row-fluid form-horizontal-desktop">
-                <div class="span6">
-					<?php echo JLayoutHelper::render('joomla.edit.publishingdata', $this); ?>
-                </div>
-                <div class="span6">
-                    <div class="control-group">
-                        <div class="control-label">
-							<?php echo $this->form->getLabel('metakey', 'params'); ?>
-                        </div>
-                        <div class="clr"></div>
-                        <div class="controls">
-							<?php echo $this->form->getInput('metakey', 'params'); ?>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <div class="control-label">
-							<?php echo $this->form->getLabel('metadesc', 'params'); ?>
-                        </div>
-                        <div class="clr"></div>
-                        <div class="controls">
-							<?php echo $this->form->getInput('metadesc', 'params'); ?>
-                        </div>
-                    </div>
-					<?php echo JLayoutHelper::render('joomla.edit.metadata', $this); ?>
-                </div>
-            </div>
-			<?php echo JHtml::_('bootstrap.endTab'); ?>
-
 		<?php } ?>
+
+	    <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'publish', JText::_('JBS_STY_PUBLISH')); ?>
+        <div class="row-fluid form-horizontal-desktop">
+            <div class="span6">
+			    <?php echo JLayoutHelper::render('joomla.edit.publishingdata', $this); ?>
+            </div>
+            <div class="span6">
+                <div class="control-group">
+                    <div class="control-label">
+					    <?php echo $this->form->getLabel('metakey', 'params'); ?>
+                    </div>
+                    <div class="clr"></div>
+                    <div class="controls">
+					    <?php echo $this->form->getInput('metakey', 'params'); ?>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label">
+					    <?php echo $this->form->getLabel('metadesc', 'params'); ?>
+                    </div>
+                    <div class="clr"></div>
+                    <div class="controls">
+					    <?php echo $this->form->getInput('metadesc', 'params'); ?>
+                    </div>
+                </div>
+			    <?php echo JLayoutHelper::render('joomla.edit.metadata', $this); ?>
+            </div>
+        </div>
+	    <?php echo JHtml::_('bootstrap.endTab'); ?>
 
 		<?php if ($this->canDo->get('core.admin')): ?>
 			<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'permissions', JText::_('JBS_CMN_FIELDSET_RULES')); ?>
