@@ -18,8 +18,6 @@ defined('_JEXEC') or die;
  */
 class JBSMAddonLocal extends JBSMAddon
 {
-	protected $config;
-
 	/**
 	 * Upload
 	 *
@@ -31,30 +29,9 @@ class JBSMAddonLocal extends JBSMAddon
 	 */
 	public function upload($data)
 	{
-		// Convert back slashes to forward slashes
-		$file  = str_replace('\\', '/', $data->get('path', null, 'STRING'));
-		$slash = strrpos($file, '/');
+		$upload = new JBSMUploadScript;
 
-		$path = substr($file, 0, $slash + 1);
-
-		// Remove domain from path
-		preg_match('/\/+.+/', $path, $matches);
-
-		// Make filename safe and move it to correct folder
-		$destFile = JFile::makeSafe($_FILES["file"]["name"]);
-		$destFile = str_replace(' ', '_', $destFile);
-
-		if (!JFile::upload($_FILES['file']['tmp_name'], JPATH_ROOT . $matches[0] . $destFile))
-		{
-			die('false');
-		}
-
-		return array(
-			'data' => array(
-				'filename' => $matches[0] . $destFile,
-				'size'     => $_FILES['file']['size']
-			)
-		);
+		return $upload->upload($data);
 	}
 
 	/**
