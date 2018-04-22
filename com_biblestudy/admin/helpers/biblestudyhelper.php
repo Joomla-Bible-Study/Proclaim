@@ -731,12 +731,12 @@ class JBSMBibleStudyHelper
 	}
 
 	/**
-	 * get user ids in an object
-	 * @param object $options ID of users
+	 * Get user ids in an object
 	 *
 	 * @return object
 	 *
-	 * since 9.1.4
+	 * @since 9.1.4
+	 * @throws Exception
 	 */
 	public static function getUsers()
 	{
