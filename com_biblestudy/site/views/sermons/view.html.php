@@ -27,27 +27,17 @@ class BiblestudyViewSermons extends JViewLegacy
 	/** @var object
 	 *
 	 * @since 7.0 */
-	protected $items;
+	protected $items = null;
 
 	/** @var object
 	 *
 	 * @since 7.0 */
-	protected $pagination;
+	protected $pagination = null;
 
 	/** @var Registry
 	 *
 	 * @since 7.0 */
-	protected $state;
-
-	/** @var string
-	 *
-	 * @since 7.0 */
-	protected $pagelinks;
-
-	/** @var string
-	 *
-	 * @since 7.0 */
-	protected $limitbox;
+	protected $state = null;
 
 	/** @var JObject
 	 *
@@ -114,11 +104,6 @@ class BiblestudyViewSermons extends JViewLegacy
 	 * @since 7.0 */
 	protected $template;
 
-	/** @var string
-	 *
-	 * @since 7.0 */
-	protected $order;
-
 	/** @var array
 	 *
 	 * @since 7.0 */
@@ -139,10 +124,29 @@ class BiblestudyViewSermons extends JViewLegacy
 	 * @since 7.0 */
 	protected $request_url;
 
-	/** @var int
+	/**
+	 * Form object for search filters
 	 *
-	 * @since 7.0 */
-	protected $limitstart;
+	 * @var  JForm
+	 * @since 9.1.4
+	 */
+	public $filterForm;
+
+	/**
+	 * The active search filters
+	 *
+	 * @var  array
+	 * @since 9.1.4
+	 */
+	public $activeFilters;
+
+	/**
+	 * The sidebar markup
+	 *
+	 * @var  string
+	 * @since 9.1.4
+	 */
+	protected $sidebar;
 
 	/**
 	 * Execute and display a template script.
@@ -153,27 +157,17 @@ class BiblestudyViewSermons extends JViewLegacy
 	 *
 	 * @see     fetch()
 	 * @since   11.1
+	 * @throws  Exception
 	 */
 	public function display($tpl = null)
 	{
-		$input      = new JInput;
-		$limitstart = $input->get('limitstart', '', 'int');
-		$input->set('start', $limitstart);
-		$this->state      = $this->get('State');
-		$this->template   = $this->state->get('template');
-		$items            = $this->get('Items');
+		$this->state         = $this->get('State');
+		$this->template      = $this->state->get('template');
+		$items               = $this->get('Items');
+		$this->filterForm    = $this->get('FilterForm');
+		$this->activeFilters = $this->get('ActiveFilters');
 
-		$this->limitstart = $input->get('start', '', 'int');
 		$pagination       = $this->get('Pagination');
-		$pagelinks        = $pagination->getPagesLinks();
-
-		if ($pagelinks !== '')
-		{
-			$this->pagelinks = $pagelinks;
-		}
-
-		$this->limitbox   = '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM') . $pagination->getLimitBox() . '</span>';
-		$this->pagination = $pagination;
 		$this->admin      = $this->state->get('admin');
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
@@ -185,6 +179,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		$images     = new JBSMImages;
 		$this->main = $images->mainStudyImage();
 
+		// @todo need to look at this as this can make the Pagination not to work right. Size of array changes.
 		// Only load PageBuilder if the default template is NOT being used
 		if ($params->get('useexpert_list') > 0 || (is_string($params->get('sermonstemplate')) == true && $params->get('sermonstemplate') != '0'))
 		{
@@ -255,6 +250,7 @@ class BiblestudyViewSermons extends JViewLegacy
 				}
 			}
 		}
+
 		// Get the podcast subscription
 		JHtml::stylesheet('media/css/podcast.css');
 		$podcast         = new JBSMPodcastSubscribe;
@@ -262,226 +258,21 @@ class BiblestudyViewSermons extends JViewLegacy
 
 		$uri = new JUri;
 
-		$filter_topic       = $this->state->get('filter.topic');
-		$filter_book        = $this->state->get('filter.book');
-		$filter_teacher     = $this->state->get('filter.teacher');
-		$filter_series      = $this->state->get('filter.series');
-		$filter_messagetype = $this->state->get('filter.messageType');
-		$filter_year        = $this->state->get('filter.year');
-		$filter_location    = $this->state->get('filter.location');
-		$filter_orders      = $this->state->get('filter.orders');
-		$filter_languages   = $this->state->get('filter.languages');
-
-		$this->teachers     = $this->get('Teachers');
-		$this->series       = $this->get('Series');
-		$this->messageTypes = $this->get('MessageTypes');
-		$this->years        = $this->get('Years');
-		$this->locations    = $this->get('Locations');
-		$this->topics       = $this->get('Topics');
-		$this->orders       = $this->get('Orders');
-		$this->books        = $this->get('Books');
-
 		// End scripture helper
 		// Get the data for the drop down boxes
 
-		$this->pagination = $pagination;
-		$this->order      = $this->orders;
-		$this->topic      = $this->topics;
+		$this->pagination = &$pagination;
 
-		// Get the template options for showing the dropdowns
-		$teacher_menu1     = $params->get('mteacher_id');
-		$teacher_menu      = $teacher_menu1[0];
-		$topic_menu1       = $params->get('mtopic_id');
-		$topic_menu        = $topic_menu1[0];
-		$book_menu1        = $params->get('mbooknumber');
-		$book_menu         = $book_menu1[0];
-		$location_menu1    = $params->get('mlocations');
-		$location_menu     = $location_menu1[0];
-		$series_menu1      = $params->get('mseries_id');
-		$series_menu       = $series_menu1[0];
-		$messagetype_menu1 = $params->get('mmessagetype');
-		$messagetype_menu  = $messagetype_menu1[0];
-
-		// Initialize the page
-		$this->page            = new stdClass;
-		$this->page->dropdowns = '';
-
-		// Build drop down menus for search filters
-		$dropdowns = array();
-
-		// Get the Popular stats
-		$stats               = new JBSMStats;
-		$this->page->popular = $stats->top_score_site();
-
-		if ($params->get('show_popular') > 0)
-		{
-			$dropdowns[] = array('order' => $params->get('ddpopular'), 'item' => $this->page->popular);
-		}
-
-		// Get whether "Go" Button is used then turn off onchange if it is
-		if ($params->get('use_go_button', 0) == 0)
-		{
-			$go = 'onchange="this.form.submit()"';
-		}
-		else
-		{
-			$go = null;
-		}
-		// Build go button
-		$this->page->gobutton = '<input class="btn btn-primary pull-right" type="submit" value="' . JText::_('JBS_STY_GO_BUTTON') . '">';
-
-		if ($params->get('use_go_button') > 0)
-		{
-			$dropdowns[] = array('order' => $params->get('ddgobutton'), 'item' => $this->page->gobutton);
-		}
-
-		// Build language drop down
-		$used = JLanguageHelper::getLanguages();
-		$lang = array();
-
-		foreach ($used as $use)
-		{
-			$langtemp = array(
-				'text'  => $use->title_native,
-				'value' => $use->lang_code
-			);
-			$lang[]   = $langtemp;
-		}
-
-		$langdropdown[]        = JHtml::_('select.option', '0', JText::_('JOPTION_SELECT_LANGUAGE'));
-		$langdropdown          = array_merge($langdropdown, $lang);
-		$this->page->languages = JHtml::_('select.genericlist', $langdropdown, 'filter_languages', 'class="inputbox"  '
-			. $go, 'value', 'text', "$filter_languages"
-		);
-
-		if ($params->get('listlanguage') == 1)
-		{
-			$dropdowns[] = array('order' => $params->get('ddlanguage'), 'item' => $this->page->languages);
-		}
-
-		// Build the teacher dropdown
-		$types[]              = JHtml::_('select.option', '0', JText::_('JBS_CMN_SELECT_TEACHER'));
-		$types                = array_merge($types, $this->teachers);
-		$this->page->teachers = JHtml::_('select.genericlist', $types, 'filter_teacher', 'class="inputbox"  '
-			. $go, 'value', 'text', "$filter_teacher"
-		);
-
-		if (($params->get('show_teacher_search') > 0 && ($teacher_menu == -1)) || $params->get('show_teacher_search') > 1)
-		{
-			$dropdowns[] = array('order' => $params->get('ddteachers'), 'item' => $this->page->teachers);
-		}
-
-		// Build Series List for drop down menu
-		$types3[]           = JHtml::_('select.option', '0', JText::_('JBS_CMN_SELECT_SERIES'));
-		$types3             = array_merge($types3, $this->series);
-		$this->page->series = JHtml::_('select.genericlist', $types3, 'filter_series', 'class="inputbox"  '
-			. $go, 'value', 'text', "$filter_series"
-		);
-
-		if (($params->get('show_series_search') > 0 && ($series_menu == -1)) || $params->get('show_series_search') > 1)
-		{
-			$dropdowns[] = array('order' => $params->get('ddseries'), 'item' => $this->page->series);
-		}
-
-		// Build message types
-		$types4[]                 = JHtml::_('select.option', '0', JText::_('JBS_CMN_SELECT_MESSAGETYPE'));
-		$types4                   = array_merge($types4, $this->messageTypes);
-		$this->page->messagetypes = JHtml::_('select.genericlist', $types4, 'filter_messagetype', 'class="inputbox"  '
-			. $go, 'value', 'text', "$filter_messagetype"
-		);
-
-		if (($params->get('show_type_search') > 0 && ($messagetype_menu == -1)) || $params->get('show_type_search') > 1)
-		{
-			$dropdowns[] = array('order' => $params->get('ddmessagetype'), 'item' => $this->page->messagetypes);
-		}
-		// Build study years
-		$years[]           = JHtml::_('select.option', '0', JText::_('JBS_CMN_SELECT_YEAR'));
-		$years             = array_merge($years, $this->years);
-		$this->page->years = JHtml::_('select.genericlist', $years, 'filter_year', 'class="inputbox"  ' . $go, 'value', 'text', "$filter_year");
-
-		if ($params->get('show_year_search') > 0)
-		{
-			$dropdowns[] = array('order' => $params->get('ddyears'), 'item' => $this->page->years);
-		}
-		// Build locations
-		$loc[]                 = JHtml::_('select.option', '0', JText::_('JBS_CMN_SELECT_LOCATION'));
-		$loc                   = array_merge($loc, $this->locations);
-		$this->page->locations = JHtml::_(
-			'select.genericlist', $loc, 'filter_location', 'class="inputbox" size="1" '
-			. $go, 'value', 'text', "$filter_location"
-		);
-
-		if (($params->get('show_locations_search') > 0 && ($location_menu == -1)) || $params->get('show_locations_search') > 1)
-		{
-			$dropdowns[] = array('order' => $params->get('ddlocations'), 'item' => $this->page->locations);
-		}
-		// Build Topics
-		$top[] = JHtml::_('select.option', '0', JText::_('JBS_CMN_SELECT_TOPIC'));
-
-		if ($top && $this->topics)
-		{
-			$top = array_merge($top, $this->topics);
-		}
-
-		$this->page->topics = JHtml::_('select.genericlist', $top, 'filter_topic', 'class="inputbox" ' . $go, 'value', 'text', "$filter_topic");
-
-		if (($params->get('show_topic_search') > 0 && ($topic_menu == -1)) || $params->get('show_topic_search') > 1)
-		{
-			$dropdowns[] = array('order' => $params->get('ddtopics'), 'item' => $this->page->topics);
-		}
-		// Build Books
-		$boo[]             = JHtml::_('select.option', '0', JText::_('JBS_CMN_SELECT_BOOK'));
-		$boo               = array_merge($boo, $this->books);
-		$this->page->books = JHtml::_('select.genericlist', $boo, 'filter_book', 'class="inputbox"  ' . $go, 'value', 'text', "$filter_book");
-
-		if (($params->get('show_book_search') > 0 && $book_menu == -1) || $params->get('show_book_search') > 1)
-		{
-			$dropdowns[] = array('order' => $params->get('ddbooks'), 'item' => $this->page->books);
-		}
-
-		// Build order
-		$ordervalues       = array(
-			array(
-				'value' => "DESC",
-				'text'  => JText::_("JBS_CMN_DESCENDING")
-			),
-			array(
-				'value' => "ASC",
-				'text'  => JText::_("JBS_CMN_ASCENDING")
-			)
-		);
-		$ord[]             = JHtml::_('select.option', '0', JText::_('JBS_CMN_SELECT_ORDER'));
-		$ord               = array_merge($ord, $ordervalues);
-		$this->page->order = JHtml::_('select.genericlist', $ord, 'filter_orders', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_orders");
-
-		if ($params->get('show_order_search') > 0)
-		{
-			$dropdowns[] = array('order' => $params->get('ddorder'), 'item' => $this->page->order);
-		}
-
-		if ($params->get('show_pagination') == 1)
-		{
-			$this->page->limits = '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM') . $this->pagination->getLimitBox() . '</span>';
-			$dropdowns[]        = array('order' => '0', 'item' => $this->page->limits);
-		}
-
-		JBSMBibleStudyHelper::array_sort_by_column($dropdowns, 'order');
-
-		foreach ($dropdowns as $dmenus)
-		{
-			$this->page->dropdowns .= $dmenus['item'];
-		}
-
-		$this->items       = $items;
+		$this->items       = &$items;
 		$stringuri         = $uri->toString();
 		$this->request_url = $stringuri;
-		$this->params      = $params;
+		$this->params      = &$params;
 
 		$this->_prepareDocument();
 
 		// Get the drop down menus
 
-		parent::display($tpl);
+		return parent::display($tpl);
 	}
 
 	/**
@@ -490,6 +281,7 @@ class BiblestudyViewSermons extends JViewLegacy
 	 * @return void
 	 *
 	 * @since 7.0
+	 * @throws Exception
 	 */
 	protected function _prepareDocument()
 	{

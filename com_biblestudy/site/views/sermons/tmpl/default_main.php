@@ -11,6 +11,7 @@
 defined('_JEXEC') or die;
 
 JHtml::_('bootstrap.framework');
+JHtml::_('bootstrap.tooltip');
 JHtml::_('formbehavior.chosen', 'select');
 
 $JBSMTeacher  = new JBSMTeacher;
@@ -83,24 +84,33 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 </div>
 
 <div class="container-fluid">
-	<?php echo $this->page->dropdowns; ?>
+	<?php
+	// Search tools bar
+	echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+	?>
 	<hr/>
 	<?php
-	$list = $listing->getFluidListing($this->items, $this->params, $this->template, $type = 'sermons');
-	echo $list;
-	?>
-	<div class="listingfooter pagination">
-		<?php
-		if ($this->params->get('show_pagination') == 2)
-		{
-			echo $this->pagination->getListFooter();
-		}
-		else
-		{
-			echo $this->pagination->getPagesLinks();
-		}
-		?>
-	</div>
+    if ($this->items)
+    {
+	    echo $listing->getFluidListing($this->items, $this->params, $this->template, $type = 'sermons');
+    }
+    ?>
+	<?php // Add pagination links ?>
+	<?php if (!empty($this->items)) : ?>
+		<?php if (($this->params->def('show_pagination', 2) == 1
+                || ($this->params->get('show_pagination') == 2))
+            && ($this->pagination->pagesTotal > 1)) : ?>
+            <div class="pagination">
+				<?php if ($this->params->def('show_pagination_results', 1)) : ?>
+                    <p class="counter pull-right">
+						<?php echo $this->pagination->getPagesCounter(); ?>
+                    </p>
+				<?php endif; ?>
+
+				<?php echo $this->pagination->getPagesLinks(); ?>
+            </div>
+		<?php endif; ?>
+	<?php endif; ?>
 	<?php
 	if ($this->params->get('showpodcastsubscribelist') == 2)
 	{
