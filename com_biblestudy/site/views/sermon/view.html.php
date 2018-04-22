@@ -226,10 +226,9 @@ class BiblestudyViewSermon extends JViewLegacy
 				}
 			}
 		}
-		//check for simple view
-		$adminparams = JBSMParams::getAdmin();
 
-		if ($adminparams->params->get('simple_mode') == 1){$this->simple_mode = 1;}
+		$this->simple_mode = JBSMHelper::getSimpleView();
+
 		$offset = $this->state->get('list.offset');
 
 		// Check the view access to the article (the model has already computed the values).
