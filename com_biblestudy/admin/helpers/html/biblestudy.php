@@ -34,6 +34,7 @@ abstract class JHtmlBiblestudy
 	 * @return  void
 	 *
 	 * @since   9.0.0
+	 * @throws  Exception
 	 */
 	public static function framework($debug = null, $extra = null)
 	{
@@ -275,6 +276,7 @@ abstract class JHtmlBiblestudy
 	 * @return    array    The field option objects.
 	 *
 	 * @since    1.6
+	 * @throws   Exception
 	 */
 	public static function Mediatypelist()
 	{
@@ -307,6 +309,7 @@ abstract class JHtmlBiblestudy
 	 * @return  string  The necessary HTML for the widget.
 	 *
 	 * @since   2.5
+	 * @throws  Exception
 	 */
 	public static function Teacher()
 	{
@@ -329,6 +332,7 @@ abstract class JHtmlBiblestudy
 	 * @return    array    The field option objects.
 	 *
 	 * @since    1.6
+	 * @throws   Exception
 	 */
 	public static function Teacherlist()
 	{
@@ -361,6 +365,7 @@ abstract class JHtmlBiblestudy
 	 * @return  string  The necessary HTML for the widget.
 	 *
 	 * @since   2.5
+	 * @throws  Exception
 	 */
 	public static function Messagetype()
 	{
@@ -383,6 +388,7 @@ abstract class JHtmlBiblestudy
 	 * @return    array    The field option objects.
 	 *
 	 * @since    1.6
+	 * @throws   Exception
 	 */
 	public static function Messagetypelist()
 	{
@@ -415,6 +421,7 @@ abstract class JHtmlBiblestudy
 	 * @return  string  The necessary HTML for the widget.
 	 *
 	 * @since   2.5
+	 * @throws  Exception
 	 */
 	public static function Series()
 	{
@@ -437,6 +444,7 @@ abstract class JHtmlBiblestudy
 	 * @return    array    The field option objects.
 	 *
 	 * @since    1.6
+	 * @throws   Exception
 	 */
 	public static function Serieslist()
 	{

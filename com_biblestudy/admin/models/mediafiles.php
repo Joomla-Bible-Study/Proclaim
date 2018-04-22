@@ -68,56 +68,77 @@ class BiblestudyModelMediafiles extends JModelList
 	 * @return mixed  Array  Media files array
 	 *
 	 * @since 9.0.0
+	 * @throws Exception
 	 */
 	public function getItems()
 	{
-		// Needed for site view
-		JModelLegacy::addIncludePath(BIBLESTUDY_PATH_ADMIN_MODELS);
+		// Get a storage key.
+		$store = $this->getStoreId();
 
-		$serverModel = JModelLegacy::getInstance('Server', 'BibleStudyModel');
-
-		$items = parent::getItems();
-
-		if (!$items)
+		// Try to load the data from internal storage.
+		if (isset($this->cache[$store]))
 		{
+			return $this->cache[$store];
+		}
+
+		try
+		{
+			// Needed for site view
+			JModelLegacy::addIncludePath(BIBLESTUDY_PATH_ADMIN_MODELS);
+
+			$serverModel = JModelLegacy::getInstance('Server', 'BibleStudyModel');
+
+			$items = parent::getItems();
+
+			if (!$items)
+			{
+				return false;
+			}
+
+			if (JFactory::getApplication()->isSite())
+			{
+				$user   = JFactory::getUser();
+				$groups = $user->getAuthorisedViewLevels();
+
+				for ($x = 0, $count = count($items); $x < $count; $x++)
+				{
+					// Check the access level. Remove articles the user shouldn't see
+					if (!in_array($items[$x]->access, $groups))
+					{
+						unset($items[$x]);
+					}
+				}
+			}
+
+			foreach ($items as $item)
+			{
+				if (empty($item->serverType))
+				{
+					$item->serverType = 'legacy';
+				}
+
+				$item->serverConfig = $serverModel->getConfig($item->serverType);
+
+				// Convert all JSON strings to Arrays
+				$registry = new Registry;
+				$registry->loadString($item->params);
+				$item->params = $registry;
+
+				$registry2 = new Registry;
+				$registry2->loadString($item->metadata);
+				$item->metadata = $registry2;
+			}
+
+			$this->cache[$store] = $items;
+		}
+		catch (RuntimeException $e)
+		{
+			$this->setError($e->getMessage());
+
 			return false;
 		}
 
-		if (JFactory::getApplication()->isSite())
-		{
-			$user   = JFactory::getUser();
-			$groups = $user->getAuthorisedViewLevels();
-
-			for ($x = 0, $count = count($items); $x < $count; $x++)
-			{
-				// Check the access level. Remove articles the user shouldn't see
-				if (!in_array($items[$x]->access, $groups))
-				{
-					unset($items[$x]);
-				}
-			}
-		}
-
-		foreach ($items as $item)
-		{
-			if (empty($item->serverType))
-			{
-				$item->serverType = 'legacy';
-			}
-
-			$item->serverConfig = $serverModel->getConfig($item->serverType);
-
-			// Convert all JSON strings to Arrays
-			$registry = new Registry;
-			$registry->loadString($item->params);
-			$item->params = $registry;
-
-			$registry2 = new Registry;
-			$registry2->loadString($item->metadata);
-			$item->metadata = $registry2;
-		}
-
-		return $items;
+		return $this->cache[$store];
 	}
 
 	/**
@@ -155,6 +176,7 @@ class BiblestudyModelMediafiles extends JModelList
 	 * @return  void
 	 *
 	 * @since   7.0
+	 * @throws  Exception
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
