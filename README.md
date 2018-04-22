@@ -1,4 +1,4 @@
-Proclaim
+Joomla-Bible-Study
 ==================
 
 Status
@@ -14,15 +14,15 @@ Status
     <tr>
         <td align="center"><a href="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study" target="_blank"><img src="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=development"/></a></td>
         <td align="center">Development</td>
-        <td align="center">9.1.4</td>
+        <td align="center">9.1.5</td>
         <td align="center">TBD</td>
         <td align="center">3.8+</td>
     </tr>
     <tr>
         <td align="center"><a href="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study" target="_blank"><img src="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=master"/></a></td>
         <td align="center">Master</td>
-        <td align="center">9.1.3</td>
-        <td align="center">Aprel 5, 2018</td>
+        <td align="center">9.1.4</td>
+        <td align="center">Aprel 7, 2018</td>
         <td align="center">3.8+</td>
     </tr>
 </table>

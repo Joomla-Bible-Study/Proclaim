@@ -169,6 +169,7 @@ class BiblestudyModelServers extends JModelList
 	 * @return  JDatabaseQuery   A JDatabaseQuery object to retrieve the data set.
 	 *
 	 * @since   7.0.0
+	 * @throws  Exception
 	 */
 	protected function getListQuery()
 	{

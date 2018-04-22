@@ -73,7 +73,7 @@ class BiblestudyModelTemplatecodes extends JModelList
 	/**
 	 * Get list query
 	 *
-	 * @return array
+	 * @return JDatabaseQuery
 	 *
 	 * @since 7.1
 	 */

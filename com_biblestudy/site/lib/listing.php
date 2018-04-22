@@ -2937,12 +2937,10 @@ class JBSMListing
 	 */
 	public function createelement($element)
 	{
-		$classelement = '';
-
 		switch ($element)
 		{
 			case 0:
-				$classelement = '';
+				$classelement = 'span';
 				break;
 			case 1:
 				$classelement = 'p';
@@ -2964,6 +2962,10 @@ class JBSMListing
 				break;
 			case 7:
 				$classelement = 'blockquote';
+				break;
+			default:
+				$classelement = 'span';
+				break;
 		}
 
 		return $classelement;

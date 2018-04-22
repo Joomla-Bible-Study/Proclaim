@@ -113,7 +113,7 @@ class BiblestudyModelTopics extends JModelList
 	 * Get List Query
 	 *
 	 * @since   7.0
-	 * @return array
+	 * @return JDatabaseQuery
 	 */
 	protected function getListQuery()
 	{
