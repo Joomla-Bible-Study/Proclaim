@@ -79,7 +79,8 @@ class JFormFieldPlupload extends JFormField
                           </a>
                         <div id="upload-progress" style="display: none; margin-top: 5px; margin-bottom: 0;" 
                         class="progress progress-striped active">
-                        <div class="bar" style="width: 0;"></div></div>';
+                        <div class="bar" style="width: 0;"></div></div><br />
+						<pre id="console" class="hidden"></pre>';
 		$html .= '
             ';
 

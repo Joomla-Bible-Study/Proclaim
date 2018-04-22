@@ -54,7 +54,7 @@ class JBSMUploadScript
 		if (($postMaxSize > 0 && $contentLength > $postMaxSize)
 			|| ($memoryLimit != -1 && $contentLength > $memoryLimit))
 		{
-			return false;
+			return ['data' => '', 'error' => ''];
 		}
 
 		$uploadMaxSize     = $params->get('upload_maxsize', 0) * 1024 * 1024;
@@ -69,13 +69,13 @@ class JBSMUploadScript
 			|| ($uploadMaxFileSize > 0 && $file['size'] > $uploadMaxFileSize))
 		{
 			// File size exceed either 'upload_max_filesize' or 'upload_maxsize'.
-			return false;
+			return ['data' => '', 'error' => 'File size exceed either \'upload_max_filesize\' or \'upload_maxsize\''];
 		}
 
 		if (!isset($file['name']))
 		{
 			// No filename (after the name was cleaned by JFile::makeSafe)
-			return false;
+			return ['data' => '', 'error' => 'No filename'];
 		}
 
 		// Set FTP credentials, if given
@@ -86,7 +86,7 @@ class JBSMUploadScript
 		if (!$mediaHelper->canUpload($file, 'com_biblestudy'))
 		{
 			// The file can't be uploaded
-			return false;
+			return ['data' => '', 'error' => 'The file can\'t be uploaded by types allowed'];
 		}
 
 		// Trigger the onContentBeforeSave event.
@@ -96,17 +96,18 @@ class JBSMUploadScript
 		if (in_array(false, $result, true))
 		{
 			// There are some errors in the plugins
-			return false;
+			return ['data' => '', 'error' => 'Plugin errors on upload'];
 		}
 
 		if (!JFile::upload($object_file->tmp_name, $object_file->filepath))
 		{
-			return false;
+			return ['data' => '', 'error' => 'Could not upload'];
 		}
 
 		// Trigger the onContentAfterSave event.
 		$dispatcher->trigger('onContentAfterSave', array('com_biblestudy.file', &$object_file, true));
 
+		// Return Success
 		return array(
 			'data' => array(
 				'filename' => $object_file->filepath,
