@@ -86,7 +86,6 @@ class JBSMTemplate
 			'[studyComments]'         => array('fieldName' => 'comments'), '[studyHits]' => array('fieldName' => 'hits'),
 			'[studyUserAdded]'        => array('fieldName' => 'user_id'),
 			'[studyLocation]'         => array('fieldName' => 'location_id'),
-			'[studyMediaDuration]'    => array('fieldName' => array('media_hours', 'media_minutes', 'media_seconds')),
 			'[studyMessageType]'      => array('fieldName' => 'messagetype'),
 			'[studySeries]'           => array('fieldName' => 'series_id'), '[studyTopic]' => array('fieldName' => 'topic_id'),
 			'[studyText]'             => array('fieldName' => 'studytext'), '[studyMedia]'
