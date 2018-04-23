@@ -258,6 +258,7 @@ class JBSMDbHelper
 	 * @return boolean
 	 *
 	 * @since 7.0
+	 * @throws Exception
 	 */
 	public static function checkDB($table, $field)
 	{
