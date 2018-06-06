@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_update` (
   PRIMARY KEY (id)
 ) DEFAULT CHARSET=utf8;
 
-INSERT INTO `#__bsms_update` (id, version) VALUES ('32', '9.1.5')
+INSERT INTO `#__bsms_update` (version) VALUES ('9.1.5')
 ON DUPLICATE KEY UPDATE version = '9.1.5';
 
 INSERT INTO `#__bsms_templatecode` (`published`, `type`, `filename`, `asset_id`, `templatecode`) VALUES
