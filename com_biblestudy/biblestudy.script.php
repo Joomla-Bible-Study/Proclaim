@@ -166,15 +166,7 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function install($parent)
 	{
-		$adminpath = $parent->getParent()->getPath('extension_administrator');
-		$model     = "{$adminpath}/models/install.php";
 
-		if (file_exists($model))
-		{
-			require_once $model;
-			$installer = new BibleStudyModelInstall;
-			$installer->install();
-		}
 		// Delete all cached files.
 		$cacheDir = JPATH_CACHE . '/biblestudy';
 
@@ -185,35 +177,6 @@ class Com_BiblestudyInstallerScript
 
 		JFolder::create($cacheDir);
 
-		$db = JFactory::getDbo();
-		$query = 'INSERT INTO '. $db->quoteName('#__postinstall_messages') .
-			' (  `title_key`, 
-                  `description_key`, 
-                  `action_key`, 
-                  `language_extension`, 
-                  `language_client_id`, 
-                  `type`, 
-                  `action_file`, 
-                  `action`, 
-                  `condition_file`, 
-                  `condition_method`, 
-                  `version_introduced`, 
-                  `enabled`) VALUES '
-			.'( "SIMPLEMODEMESSAGE_TITLE", 
-               "SIMPLEMODEMESSAGE__BODY", 
-               "SIMPLEMODEMESSAGE__ACTION",
-               "com_biblestudy",
-                1,
-               "action", 
-               "",
-               "", 
-               "", 
-               "", 
-               "9.1.5", 
-               1)';
-
-		$db->setQuery($query);
-		$db->execute();
 		return true;
 	}
 

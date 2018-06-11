@@ -1246,7 +1246,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				$this->running = 'Set New Update URL';
 				break;
 			default:
-				$app->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . JText::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE'), 'message');
+				$app->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . JText::_('SIMPLEMODEMESSAGE_BODY') . JText::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE'), 'message');
 				break;
 		}
 
