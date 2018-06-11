@@ -166,6 +166,15 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function install($parent)
 	{
+		$adminpath = $parent->getParent()->getPath('extension_administrator');
+		$model     = "{$adminpath}/models/install.php";
+
+		if (file_exists($model))
+		{
+			require_once $model;
+			$installer = new BibleStudyModelInstall;
+			$installer->install();
+		}
 		// Delete all cached files.
 		$cacheDir = JPATH_CACHE . '/biblestudy';
 
