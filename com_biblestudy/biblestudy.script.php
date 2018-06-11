@@ -166,7 +166,6 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function install($parent)
 	{
-
 		// Delete all cached files.
 		$cacheDir = JPATH_CACHE . '/biblestudy';
 
