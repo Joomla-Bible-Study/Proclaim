@@ -78,3 +78,38 @@ function Admin_Postinstall_Template_action()
 	$url = 'index.php?option=com_biblestudy&view=templates';
 	JFactory::getApplication()->redirect($url);
 }
+
+function post_install_message()
+{
+	$db = JFactory::getDbo();
+	$query = 'INSERT INTO '. $db->quoteName('#__postinstall_messages') .
+		' ( `extension_id`, 
+                  `title_key`, 
+                  `description_key`, 
+                  `action_key`, 
+                  `language_extension`, 
+                  `language_client_id`, 
+                  `type`, 
+                  `action_file`, 
+                  `action`, 
+                  `condition_file`, 
+                  `condition_method`, 
+                  `version_introduced`, 
+                  `enabled`) VALUES '
+		.'( 700,
+               "SIMPLEMODEMESSAGE_TITLE", 
+               "SIMPLEMODEMESSAGE__BODY", 
+               "SIMPLEMODEMESSAGE__ACTION",
+               "com_biblestudy",
+                1,
+               "action", 
+               "",
+               "", 
+               "", 
+               "", 
+               "9.1.5", 
+               1)';
+
+	$db->setQuery($query);
+	$db->execute();
+}
