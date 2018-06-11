@@ -55,8 +55,8 @@ class Migration915
 
 
 		$message                     = new stdClass;
-		$message->title_key          = 'JBS_POSTINSTALL_TITLE_FONTAWESOME';
-		$message->description_key    = 'JBS_POSTINSTALL_BODY_FONTAWESOME';
+		$message->title_key          = 'SIMPLEMODEMESSAGE_TITLE';
+		$message->description_key    = 'SIMPLEMODEMESSAGE_BODY';
 		$message->action_key         = '';
 		$message->language_extension = 'com_biblestudy';
 		$message->language_client_id = 1;
