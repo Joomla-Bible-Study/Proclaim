@@ -81,6 +81,7 @@ class Pkg_Biblestudy_PackageInstallerScript
 	 * @return void
 	 *
 	 * @since 9.0.2
+	 * @throws Exception
 	 */
 	public function postflight($type, $parent)
 	{
