@@ -53,7 +53,6 @@ class Migration915
 	{
 		$this->deleteUnexistingFiles();
 
-
 		$message                     = new stdClass;
 		$message->title_key          = 'SIMPLEMODEMESSAGE_TITLE';
 		$message->description_key    = 'SIMPLEMODEMESSAGE_BODY';
@@ -98,6 +97,4 @@ class Migration915
 			}
 		}
 	}
-
-
 }
