@@ -176,7 +176,6 @@ class Com_BiblestudyInstallerScript
 
 		JFolder::create($cacheDir);
 
-
 		return true;
 	}
 
