@@ -258,32 +258,6 @@ class Com_BiblestudyInstallerScript
 			JFolder::copy('/media/com_biblestudy/images', 'images/biblestudy/', JPATH_SITE, true);
 		}
 
-		//set post install messages
-		$message                     = new stdClass;
-		$message->title_key          = 'SIMPLEMODEMESSAGE_TITLE';
-		$message->description_key    = 'SIMPLEMODEMESSAGE_BODY';
-		$message->action_key         = '';
-		$message->language_extension = 'com_biblestudy';
-		$message->language_client_id = 1;
-		$message->type               = 'message';
-		$message->action_file        = '';
-		$message->action             = '';
-		$message->condition_file     = '';
-		$message->condition_method   = '';
-		$message->version_introduced = '9.1.5';
-		$message->enabled            = 1;
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true);
-		$query
-			->select('extension_id')
-			->from('#__extensions')
-			->where($db->qn('name') . ' = ' . $db->q('com_biblestudy'));
-		$db->setQuery($query);
-		$eid                   = $db->loadResult();
-		$this->biblestudyEid   = $eid;
-		$message->extension_id = $this->biblestudyEid;
-		$db->insertObject('#__postinstall_messages', $message);
-
 		// An redirect to a new location after the install is completed.
 		$controller = JControllerLegacy::getInstance('Biblestudy');
 		$controller->setRedirect(

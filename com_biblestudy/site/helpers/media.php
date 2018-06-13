@@ -231,7 +231,10 @@ class JBSMMedia
 			$link_type = $media->params->get('link_type');
 		}
 
-		if ($media->params->get('download_show') && (!$media->params->get('link_type')) || $params->get('simple_mode') == 1 || $params->get('sermonstemplate') == 'easy')
+		if ($media->params->get('download_show')
+			&& (!$media->params->get('link_type'))
+			|| $params->get('simple_mode') == 1
+			|| $params->get('sermonstemplate') == 'easy')
 		{
 			$link_type = 2;
 		}
