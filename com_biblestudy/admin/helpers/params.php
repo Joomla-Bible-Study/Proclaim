@@ -64,13 +64,17 @@ class JBSMParams
 				->where($db->qn('id') . ' = ' . (int) 1);
 			$db->setQuery($query);
 			$admin    = $db->loadObject();
-			$registry = new Registry;
-			$registry->loadString($admin->params);
-			$admin->params = $registry;
 
-			// Add the current user id
-			$user           = JFactory::getUser();
-			$admin->user_id = $user->id;
+			if (isset($admin->params))
+			{
+				$registry = new Registry;
+				$registry->loadString($admin->params);
+				$admin->params = $registry;
+
+				// Add the current user id
+				$user           = JFactory::getUser();
+				$admin->user_id = $user->id;
+			}
 
 			self::$admin = $admin;
 		}

@@ -63,6 +63,11 @@
 			<!-- Instead of link you can specify individual link attributes -->
 		</submenu>
 
+		<!-- Used for Post Install messages -->
+		<languages>
+			<language tag="en-GB">langfiles/en-GB/en-GB.com_biblestudy.ini</language>
+		</languages>
+
 		<!-- Administration Main File Copy Section -->
 		<files folder="admin">
 			<filename>access.xml</filename>

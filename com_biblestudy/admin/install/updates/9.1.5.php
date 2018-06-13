@@ -53,22 +53,7 @@ class Migration915
 	{
 		$this->deleteUnexistingFiles();
 
-		$message                     = new stdClass;
-		$message->title_key          = 'SIMPLEMODEMESSAGE_TITLE';
-		$message->description_key    = 'SIMPLEMODEMESSAGE_BODY';
-		$message->action_key         = '';
-		$message->language_extension = 'com_biblestudy';
-		$message->language_client_id = 1;
-		$message->type               = 'message';
-		$message->action_file        = '';
-		$message->action             = '';
-		$message->condition_file     = '';
-		$message->condition_method   = '';
-		$message->version_introduced = '9.1.5';
-		$message->enabled            = 1;
-
-		$script = new BibleStudyModelInstall;
-		$script->postinstall_messages($message);
+		$this->postinstall_messages();
 
 		return true;
 	}
@@ -96,5 +81,33 @@ class Migration915
 				JFile::delete($file);
 			}
 		}
+	}
+
+	/**
+	 * Post Message Creation.
+	 *
+	 * @return  void;
+	 *
+	 * @since 9.1.5
+	 * @throws Exception
+	 */
+	public function postinstall_messages()
+	{
+		$message                     = new stdClass;
+		$message->title_key          = 'SIMPLEMODEMESSAGE_TITLE';
+		$message->description_key    = 'SIMPLEMODEMESSAGE_BODY';
+		$message->action_key         = '';
+		$message->language_extension = 'com_biblestudy';
+		$message->language_client_id = 1;
+		$message->type               = 'message';
+		$message->action_file        = '';
+		$message->action             = '';
+		$message->condition_file     = '';
+		$message->condition_method   = '';
+		$message->version_introduced = '9.1.5';
+		$message->enabled            = 1;
+
+		$script = new BibleStudyModelInstall;
+		$script->postinstall_messages($message);
 	}
 }
