@@ -147,7 +147,7 @@ class BiblestudyViewMessagelist extends JViewLegacy
 		// Puts a new record link at the top of the form
 		if ($this->canDo->get('core.create'))
 		{
-			$this->newlink = '<a href="' . JRoute::_('index.php?option=com_biblestudy&view=sermons&task=sermon.edit') . '" class="btn btn-primary">'
+			$this->newlink = '<a href="' . JRoute::_('index.php?option=com_biblestudy&task=messageform.edit') . '" class="btn btn-primary">'
 				. JText::_('JBS_CMN_NEW') . ' <i class="icon-plus"></i></a>';
 		}
 
