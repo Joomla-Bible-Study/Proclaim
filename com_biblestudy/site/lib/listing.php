@@ -1701,7 +1701,6 @@ class JBSMListing
 				}
 				else
 				{
-					jexit('$item->teacher_thumbnail');
 					if ($type == 'seriesdisplays' || $type == 'seriesdisplay' || $type == 'teachers' || $type = 'teacher')
 					{
 						if (isset($item->teacher_thumbnail) && !empty($item->teacher_thumbnail))
