@@ -36,14 +36,15 @@ class BiblestudyModelMessages extends JModelList
 				'studydate', 'study.studydate',
 				'studytitle', 'study.studytitle',
 				'ordering', 'study.ordering',
-				'bookname', 'book.bookname',
-				'teachername', 'teacher.teachername',
-				'message_type', 'messageType.message_type',
-				'series_text', 'series.series_text',
+				'year',
+				'book', 'bookname', 'book.bookname',
+				'teacher', 'teachername', 'teacher.teachername',
+				'messagetype', 'message_type', 'messageType.message_type',
+				'series', 'series_text', 'series.series_text',
 				'study.series_id',
-				'hits', 'study.hits',
 				'access', 'series.access', 'access_level',
-				'locations', 'locations.location_text'
+				'location', 'location.location_text',
+				'language'
 			);
 		}
 
@@ -65,38 +66,6 @@ class BiblestudyModelMessages extends JModelList
 			foreach ($items as $item)
 			{
 				$item->bookname = JText::_($item->bookname);
-			}
-		}
-
-		return $items;
-	}
-
-	/**
-	 * Method to get a list of articles.
-	 * Overridden to add a check for access levels.
-	 *
-	 * @return    mixed    An array of data items on success, false on failure.
-	 *
-	 * @since    1.6.1
-	 */
-	public function getItems()
-	{
-		$items = parent::getItems();
-		$app   = JFactory::getApplication();
-
-		// Support for 3.2 and newer. isSite().
-		if ($app->isSite())
-		{
-			$user   = JFactory::getUser();
-			$groups = $user->getAuthorisedViewLevels();
-
-			for ($x = 0, $count = count($items); $x < $count; $x++)
-			{
-				// Check the access level. Remove articles the user shouldn't see
-				if (!in_array($items[$x]->access, $groups))
-				{
-					unset($items[$x]);
-				}
 			}
 		}
 
@@ -144,6 +113,7 @@ class BiblestudyModelMessages extends JModelList
 	 * @return    void
 	 *
 	 * @since 7.1.0
+	 * @throws Exception
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{

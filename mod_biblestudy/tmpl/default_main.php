@@ -16,7 +16,7 @@ JLoader::register('JBSMHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . 'helper.php');
 JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/listing.php');
 $JBSMListing = new JBSMListing;
 ?>
-<div class="container-fluid">
+<div class="container-fluid JBSM">
 	<?php if (($params->get('pageheader')))
 	{
 		?>
