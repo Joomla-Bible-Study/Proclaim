@@ -141,4 +141,43 @@ class JBSMParams
 
 		return self::$template_table;
 	}
+
+	/**
+	 * Update Component Params
+	 *
+	 * @param   array  $param_array  Array ('name' => 'params')
+	 *
+	 * @return void
+	 *
+	 * @since 9.1.5
+	 */
+	public static function setCompParams($param_array)
+	{
+		if (count($param_array) > 0)
+		{
+			// Read the existing component value(s)
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query->select('params')
+				->from('#__extensions')
+				->where('name = ' . $db->q('com_biblestudy'));
+			$db->setQuery($query);
+			$params = json_decode($db->loadResult(), true);
+
+			// Add the new variable(s) to the existing one(s)
+			foreach ( $param_array as $name => $value )
+			{
+				$params[(string) $name] = (string) $value;
+			}
+
+			// Store the combined new and existing values back as a JSON string
+			$paramsString = json_encode($params);
+			$query->clear();
+			$query->update('#__extensions')
+				->set('params = ' . $db->q($paramsString))
+				->where('name = ' . $db->q('com_biblestudy'));
+			$db->setQuery($query);
+			$db->execute();
+		}
+	}
 }

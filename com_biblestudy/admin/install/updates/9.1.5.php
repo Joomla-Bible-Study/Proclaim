@@ -7,8 +7,6 @@
  */
 defined('_JEXEC') or die;
 
-use \Joomla\Registry\Registry;
-
 /**
  * Update for 9.1.5 class
  *
@@ -17,97 +15,51 @@ use \Joomla\Registry\Registry;
  */
 class Migration915
 {
-	// List the functions to go through in order for this migration.
-	public $steps = array('up');
-
-	// Count of processes.
-	public $count = 0;
-
 	/**
-	 * Build steps and query
-	 *
-	 * @param   JDatabaseDriver  $db  Joomla DateBase Driver
-	 *
-	 * @return  void
-	 *
-	 * @since 9.0.0
-	 */
-	public function build($db)
-	{
-		// Work on this. may need this?
-
-		return;
-	}
-
-	/**
-	 * Call Script for Updates of 9.1.5
+	 * Call Script for Updates of 9.0.1
 	 *
 	 * @param   JDatabaseDriver  $db  Joomla Data bass driver
 	 *
 	 * @return bool
 	 *
 	 * @since 9.0.1
-	 * @throws Exception
 	 */
 	public function up($db)
 	{
-		$this->deleteUnexistingFiles();
-
-		$this->postinstall_messages();
+		$this->newCompParams();
 
 		return true;
 	}
 
 	/**
-	 * Remove Old Files and Folders
-	 *
-	 * @since      9.0.1
-	 *
-	 * @return   void
-	 */
-	protected function deleteUnexistingFiles()
-	{
-		// Import filesystem libraries. Perhaps not necessary, but does not hurt
-		jimport('joomla.filesystem.file');
-
-		$path = array(
-
-		);
-
-		foreach ($path as $file)
-		{
-			if (JFile::exists($file))
-			{
-				JFile::delete($file);
-			}
-		}
-	}
-
-	/**
-	 * Post Message Creation.
-	 *
-	 * @return  void;
+	 * Update Component Params
 	 *
 	 * @since 9.1.5
-	 * @throws Exception
+	 *
+	 * @return void;
 	 */
-	public function postinstall_messages()
+	protected function newCompParams()
 	{
-		$message                     = new stdClass;
-		$message->title_key          = 'SIMPLEMODEMESSAGE_TITLE';
-		$message->description_key    = 'SIMPLEMODEMESSAGE_BODY';
-		$message->action_key         = '';
-		$message->language_extension = 'com_biblestudy';
-		$message->language_client_id = 1;
-		$message->type               = 'message';
-		$message->action_file        = '';
-		$message->action             = '';
-		$message->condition_file     = '';
-		$message->condition_method   = '';
-		$message->version_introduced = '9.1.5';
-		$message->enabled            = 1;
-
-		$script = new BibleStudyModelInstall;
-		$script->postinstall_messages($message);
+		JBSMParams::setCompParams(
+			[
+				'upload_extensions' => 'key,pps,pptx,docx,aac,m4a,f4a,mp3,ogg,oga,mp4,m4v,f4v,mov,flv,webm,m3u8,mpd,DVR,' .
+					'bmp,csv,doc,gif,ico,jpg,jpeg,odg,odp,ods,odt,pdf,png,ppt,txt,xcf,xls,BMP,CSV,DOC,GIF,ICO,JPG,JPEG,ODG,ODP,ODS,ODT,PDF,PNG,PPT,TXT,XCF,XLS',
+				'upload_maxsize' => '10',
+				'restrict_uploads' => '1',
+				'check_mime' => '1',
+				'image_extensions' => 'mp3,mp4,m4v,mov,bmp,gif,jpg,png',
+				'ignore_extensions' => '',
+				'upload_mime' => 'application/x-iwork-keynote-sffkey,application/vnd.openxmlformats-officedocument.presentationml.presentation,' .
+					'application/vnd.openxmlformats-officedocument.wordprocessingml.document,audio/aac,audio/mp4,audio/ogg,audio/mpeg,' .
+					'audio/x-wav,application/annodex,application/mp4,application/ogg,application/vnd.rn-realmedia,application/x-matroska,' .
+					'video/3gpp,video/3gpp2,video/annodex,video/divx,video/flv,video/h264,video/mp4,video/mp4v-es,video/mpeg,video/mpeg-2,' .
+					'video/mpeg4,video/ogg,video/ogm,video/quicktime,video/ty,video/vdo,video/vivo,video/vnd.rn-realvideo,video/vnd.vivo,' .
+					'video/webm,video/x-bin,video/x-cdg,video/x-divx,video/x-dv,video/x-flv,video/x-la-asf,video/x-m4v,video/x-matroska,' .
+					'video/x-motion-jpeg,video/x-ms-asf,video/x-ms-dvr,video/x-ms-wm,video/x-ms-wmv,video/x-msvideo,video/x-sgi-movie,video/x-tivo,' .
+					'video/avi,video/x-ms-asx,video/x-ms-wvx,video/x-ms-wmx,,image/jpeg,image/gif,image/png,image/bmp,application/x-shockwave-flash,' .
+					'application/msword,application/excel,application/pdf,application/powerpoint,text/plain,application/x-zip',
+				'upload_mime_illegal' => 'text/html'
+			]
+		);
 	}
 }

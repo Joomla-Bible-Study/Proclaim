@@ -111,7 +111,7 @@ if (!$templatemenuid)
 }
 
 $linkurl  = JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $templatemenuid);
-$link     = '<a href="' . $linkurl . '"><button class="btn">' . $link_text . ' --></button></a>';
+$link     = '<a href="' . $linkurl . '"><button class="btn">' . $link_text . '</button></a>';
 $document = JFactory::getDocument();
 
 JHtml::_('biblestudy.framework');

@@ -58,8 +58,8 @@ $jbsmedia = new JBSMMedia;
 
 	if ($this->player == 0)
 	{
-		echo '<a href="' . JRoute::_($this->path1) . '"> Link to: ' .
-			$this->media->studytitle . '</a>';
+		$app =& JFactory::getApplication();
+		$app->redirect(JRoute::_($this->path1));
 	}
 	?>
 	<div class="popupfooter">

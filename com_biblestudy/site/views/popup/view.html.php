@@ -233,6 +233,11 @@ class BiblestudyViewPopup extends JViewLegacy
 			$this->flashvars = $this->params->get('altflashvars');
 		}
 
+		if ($this->player == '100')
+		{
+			$this->player = $this->template->params->get('player', 0);
+		}
+
 		$this->backcolor   = $this->params->get('backcolor', '0x287585');
 		$this->frontcolor  = $this->params->get('frontcolor', '0xFFFFFF');
 		$this->lightcolor  = $this->params->get('lightcolor', '0x000000');

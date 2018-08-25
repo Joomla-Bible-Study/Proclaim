@@ -3,11 +3,11 @@
 	<!-- Generic Metadata -->
 	<name>COM_BIBLESTUDY</name>
 	<author>CWM Team</author>
-	<authorEmail>info@christianwebministries.org</authorEmail>
+	<authorEmail>info@joomlabiblestudy.org</authorEmail>
 	<authorUrl>https://www.christianwebministries.org</authorUrl>
-	<copyright>(C) 2007 - 2018 Proclaim! All rights reserved.</copyright>
+	<copyright>(C) 2007 - 2017 Proclaim All rights reserved.</copyright>
 	<version>9.1.5</version>
-	<creationDate>June 15, 2018</creationDate>
+	<creationDate>July 17, 2018</creationDate>
 	<license>http://www.gnu.org/licenses/gpl.html</license>
 	<description>JBS_INS_XML_DESCRIPTION</description>
 
@@ -16,12 +16,13 @@
 
 	<updateservers>
 		<server type="extension" priority="1"
-		        name="Proclaim Package">https://www.christianwebministries.org/index.php?option=com_ars&amp;amp;view=update&amp;amp;task=stream&amp;amp;format=xml&amp;amp;id=1</server>
+		        name="Proclaim Package">https://www.christianwebministries.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=1</server>
 	</updateservers>
 
 	<files folder="site">
 		<filename>biblestudy.php</filename>
 		<filename>controller.php</filename>
+		<filename>convert1.htm</filename>
 		<filename>router.php</filename>
 		<folder>controllers</folder>
 		<folder>helpers</folder>
@@ -63,11 +64,6 @@
 			<!-- Instead of link you can specify individual link attributes -->
 		</submenu>
 
-		<!-- Used for Post Install messages -->
-		<languages>
-			<language tag="en-GB">langfiles/en-GB/en-GB.com_biblestudy.ini</language>
-		</languages>
-
 		<!-- Administration Main File Copy Section -->
 		<files folder="admin">
 			<filename>access.xml</filename>
@@ -75,6 +71,7 @@
 			<filename>biblestudy.php</filename>
 			<filename>config.xml</filename>
 			<filename>controller.php</filename>
+			<filename>convert1.htm</filename>
 			<folder>addons</folder>
 			<folder>controllers</folder>
 			<folder>helpers</folder>
