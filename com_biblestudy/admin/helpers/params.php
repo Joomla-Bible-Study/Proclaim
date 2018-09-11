@@ -52,6 +52,7 @@ class JBSMParams
 	 * @return mixed Return Admin table
 	 *
 	 * @since 7.0
+	 * @throws Exception
 	 */
 	public static function getAdmin()
 	{
@@ -68,7 +69,17 @@ class JBSMParams
 			if (isset($admin->params))
 			{
 				$registry = new Registry;
-				$registry->loadString($admin->params);
+
+				// Used to Catch Jason Error's
+				try
+				{
+					$registry->loadString($admin->params);
+				}
+				catch (Exception $e)
+				{
+					$msg = $e->getMessage();
+					JFactory::getApplication()->enqueueMessage('Can\'t load Admin Params - ' . $msg, 'error');
+				}
 				$admin->params = $registry;
 
 				// Add the current user id
