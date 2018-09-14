@@ -568,6 +568,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 * @return void
 	 *
 	 * @since    7.1.0
+	 * @throws \Exception
 	 */
 	public function fix()
 	{
