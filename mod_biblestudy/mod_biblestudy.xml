@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="module" version="3.3" method="upgrade" client="site">
+<extension type="module" version="3.1" method="upgrade" client="site">
 	<name>mod_biblestudy</name>
 	<author>CWM Team</author>
 	<authorEmail>info@joomlabiblestudy.org</authorEmail>
 	<authorUrl>https://www.christianwebministries.org</authorUrl>
-	<copyright>(C) 2007 - 2018 Proclaim All rights reserved.</copyright>
+	<copyright>Copyright (C) 2007 - 2018 Proclaim All rights reserved.</copyright>
 	<version>9.1.5</version>
-	<creationDate>July 17, 2018</creationDate>
-	<license>http://www.gnu.org/licenses/gpl.html</license>
+	<creationDate>July 2018</creationDate>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<description>JBS_MDL_DESCRIPTION</description>
+	<scriptfile>script.php</scriptfile>
 	<files>
 		<filename module="mod_biblestudy">mod_biblestudy.php</filename>
 		<filename>helper.php</filename>
 		<folder>tmpl</folder>
 		<folder>language</folder>
-		<filename>mod_biblestudy.xml</filename>
 	</files>
 	<config>
 		<fields name="params">
@@ -437,28 +437,45 @@
 						name="layout"
 						type="modulelayout"
 						label="JFIELD_ALT_LAYOUT_LABEL"
-						description="JFIELD_ALT_MODULE_LAYOUT_DESC"/>
+						description="JFIELD_ALT_MODULE_LAYOUT_DESC"
+				/>
+
+				<field
+						name="moduleclass_sfx"
+						type="textarea"
+						label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
+						description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC"
+						rows="3"
+				/>
 
 				<field
 						name="cache"
 						type="list"
-						default="1"
 						label="COM_MODULES_FIELD_CACHING_LABEL"
-						description="COM_MODULES_FIELD_CACHING_LABEL">
-					<option
-							value="1">JGLOBAL_USE_GLOBAL
-					</option>
-					<option
-							value="0">COM_MODULES_FIELD_VALUE_NOCACHING
-					</option>
+						description="COM_MODULES_FIELD_CACHING_DESC"
+						default="1"
+						filter="integer"
+				>
+					<option value="1">JGLOBAL_USE_GLOBAL</option>
+					<option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
 				</field>
 
 				<field
 						name="cache_time"
-						type="text"
-						default="900"
+						type="number"
 						label="COM_MODULES_FIELD_CACHE_TIME_LABEL"
-						description="COM_MODULES_FIELD_CACHE_TIME_LABEL"/>
+						description="COM_MODULES_FIELD_CACHE_TIME_DESC"
+						default="900"
+						filter="integer"
+				/>
+
+				<field
+						name="cachemode"
+						type="hidden"
+						default="itemid"
+				>
+					<option value="itemid"></option>
+				</field>
 			</fieldset>
 		</fields>
 	</config>
