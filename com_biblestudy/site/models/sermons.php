@@ -168,6 +168,8 @@ class BiblestudyModelSermons extends JModelList
 		/** @type JApplicationSite $app */
 		$app = JFactory::getApplication();
 
+		$forcedLanguage = $app->input->get('forcedLanguage', '', 'cmd');
+
 		// Load the parameters.
 		$params   = $app->getParams();
 
@@ -194,7 +196,6 @@ class BiblestudyModelSermons extends JModelList
 			$landing = 1;
 			$this->landing = 1;
 			$this->setState('sendingview', '');
-			$this->input->set('sendingview', '');
 		}
 		else
 		{
@@ -226,6 +227,9 @@ class BiblestudyModelSermons extends JModelList
 
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
+
+		$level = $this->getUserStateFromRequest($this->context . '.filter.level', 'filter_level');
+		$this->setState('filter.level', $level);
 
 		$books = $book = $this->getUserStateFromRequest($this->context . '.filter.book', 'filter_book');
 
@@ -318,6 +322,13 @@ class BiblestudyModelSermons extends JModelList
 		$this->setState('filter.landinglocation', $location);
 
 		parent::populateState($ordering, $direction);
+
+		// Force a language
+		if (!empty($forcedLanguage))
+		{
+			$this->setState('filter.language', $forcedLanguage);
+			$this->setState('filter.forcedLanguage', $forcedLanguage);
+		}
 	}
 
 	/**
@@ -706,7 +717,6 @@ class BiblestudyModelSermons extends JModelList
 		if ($this->landing == 1)
 		{
 			$book = $this->getState('filter.landingbook');
-			$this->landing = 0;
 		}
 
 		if (!empty($book))
@@ -751,7 +761,6 @@ class BiblestudyModelSermons extends JModelList
 		if ($this->landing == 1)
 		{
 			$teacher = $this->getState('filter.landingteacher');
-			$this->landing = 0;
 		}
 
 		if ($teacher >= 1)
@@ -768,7 +777,6 @@ class BiblestudyModelSermons extends JModelList
 		if ($this->landing == 1)
 		{
 			$series = $this->getState('filter.landingseries');
-			$this->landing = 0;
 		}
 
 		if ($series >= 1)
@@ -785,7 +793,6 @@ class BiblestudyModelSermons extends JModelList
 		if ($this->landing == 1)
 		{
 			$messageType = $this->getState('filter.landingmessagetype');
-			$this->landing = 0;
 		}
 
 		if ($messageType >= 1)
@@ -802,7 +809,6 @@ class BiblestudyModelSermons extends JModelList
 		if ($this->landing == 1)
 		{
 			$year = $this->getState('filter.landingyear');
-			$this->landing = 0;
 		}
 
 		if ($year >= 1)
@@ -819,7 +825,6 @@ class BiblestudyModelSermons extends JModelList
 		if ($this->landing == 1)
 		{
 			$topic = $this->getState('filter.landingtopic');
-			$this->landing = 0;
 		}
 
 		if (!empty($topic))
@@ -836,7 +841,6 @@ class BiblestudyModelSermons extends JModelList
 		if ($this->landing == 1)
 		{
 			$location = $this->getState('filter.landinglocation');
-			$this->landing = 0;
 		}
 
 		if (is_numeric($location))
