@@ -268,7 +268,6 @@ class BiblestudyViewSermon extends JViewLegacy
 			$this->item->scripture1 = $pelements->scripture1;
 			$this->item->scripture2 = $pelements->scripture2;
 			$this->item->media      = $pelements->media;
-			$this->item->duration   = $pelements->duration;
 			$this->item->studydate  = $pelements->studydate;
 
 			if (isset($pelements->secondary_reference))
