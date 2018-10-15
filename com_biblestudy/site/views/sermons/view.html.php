@@ -268,6 +268,8 @@ class BiblestudyViewSermons extends JViewLegacy
 		$this->request_url = $stringuri;
 		$this->params      = &$params;
 
+		$this->updateFilters();
+
 		$this->_prepareDocument();
 
 		// Get the drop down menus
@@ -350,5 +352,52 @@ class BiblestudyViewSermons extends JViewLegacy
 
 		JHtml::_('biblestudy.framework');
 		JHtml::_('biblestudy.loadCss', $this->params, null, 'font-awesome');
+	}
+
+	/**
+	 * Update Filters per landing page call and Hide filters per the template settings.
+	 *
+	 * @return  void
+	 *
+	 * @since 9.1.6
+	 * @throws Exception
+	 */
+	private function updateFilters()
+	{
+		$input   = JFactory::getApplication()->input;
+		$filters = ['search', 'book', 'teacher', 'series', 'messagetype', 'year', 'topic', 'location', 'language'];
+		$lists   = ['fullordering', 'limit'];
+		$landing = false;
+
+		if (JFactory::getApplication()->input->get('sendingview') !== 'landing')
+		{
+			$landing = true;
+		}
+
+		foreach ($filters as $filter)
+		{
+			$set = $input->getInt('filter_' . $filter);
+
+			// Update value from landing page call.
+			if ($set !== 0 && $landing)
+			{
+				$this->filterForm->setValue($filter, 'filter', $set);
+			}
+
+			// Remove from view if set to hid in template.
+			if ((int) $this->params->get('show_' . $filter . '_search', 1) == 0)
+			{
+				$this->filterForm->removeField($filter, 'filter');
+			}
+		}
+
+		foreach ($lists as $list)
+		{
+			// Remove from view if set to hid in template.
+			if ((int) $this->params->get('show_' . $list . '_search', 1) == 0)
+			{
+				$this->filterForm->removeField($list, 'list');
+			}
+		}
 	}
 }

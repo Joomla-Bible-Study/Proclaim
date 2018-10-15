@@ -334,10 +334,8 @@
 			<field name="show_book_search" type="list" default="1"
 			       label="JBS_TPL_LISTITEMS_SHOW_BOOK_SEARCH" description="JBS_TPL_LISTITEMS_SHOW_BOOK_SEARCH_DESC">
 				<option value="0">JBS_CMN_HIDE</option>
-				<option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
-				<option value="2">JBS_TPL_SHOW_ALWAYS</option>
+				<option value="1">JBS_TPL_SHOW_ALWAYS</option>
 			</field>
-			<field name="ddbooks" type="spanoptions" default="1" label="JBS_TPL_ORDER_BOOK" description="JBS_TPL_ORDER_DESC"/>
 
 			<field name="booklist" type="list" default="0"
 			       label="JBS_TPL_LISTITEMS_BOOKLIST" description="JBS_TPL_LISTITEMS_BOOKLIST_DESC">
@@ -349,77 +347,70 @@
 				<option value="0">JBS_CMN_DONT_USE</option>
 				<option value="1">JBS_TPL_LISTITEMS_USE_GO_BUTTON</option>
 			</field>
-			<field name="ddgobutton" type="spanoptions" default="2" label="JBS_TPL_ORDER_GO" description="JBS_TPL_ORDER_DESC"/>
 
 			<field name="show_teacher_search" type="list" default="1"
 			       label="JBS_TPL_LISTITEMS_SHOW_TEACHER_SEARCH"
 			       description="JBS_TPL_LISTITEMS_SHOW_TEACHER_SEARCH_DESC">
 				<option value="0">JBS_CMN_HIDE</option>
-				<option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
-				<option value="2">JBS_TPL_SHOW_ALWAYS</option>
+				<option value="1">JBS_TPL_SHOW_ALWAYS</option>
 			</field>
-			<field name="ddteachers" type="spanoptions" default="3" label="JBS_TPL_ORDER_TEACHER" description="JBS_TPL_ORDER_DESC"/>
+
+			<field name="show_fullordering_search" type="list" default="1"
+			       label="JBS_TPL_LISTITEMS_SHOW_SORTBY_SEARCH"
+			       description="JBS_TPL_LISTITEMS_SHOW_SORTBY_SEARCH_DESC">
+				<option value="0">JBS_CMN_HIDE</option>
+				<option value="1">JBS_TPL_SHOW_ALWAYS</option>
+			</field>
 
 			<field name="show_series_search" type="list" default="1"
 			       label="JBS_TPL_LISTITEMS_SHOW_SERIES_SEARCH" description="JBS_TPL_LISTITEMS_SHOW_SERIES_SEARCH_DESC">
 				<option value="0">JBS_CMN_HIDE</option>
-				<option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
-				<option value="2">JBS_TPL_SHOW_ALWAYS</option>
+				<option value="1">JBS_TPL_SHOW_ALWAYS</option>
 			</field>
-			<field name="ddseries" type="spanoptions" default="4" label="JBS_TPL_ORDER_SERIES" description="JBS_TPL_ORDER_DESC"/>
 
 			<field name="show_type_search" type="list" default="1"
 			       label="JBS_TPL_LISTITEMS_SHOW_TYPE_SEARCH" description="JBS_TPL_LISTITEMS_SHOW_TYPE_SEARCH_DESC">
 				<option value="0">JBS_CMN_HIDE</option>
-				<option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
-				<option value="2">JBS_TPL_SHOW_ALWAYS</option>
+				<option value="1">JBS_TPL_SHOW_ALWAYS</option>
 			</field>
-			<field name="ddmessagetype" type="spanoptions" default="5" label="JBS_TPL_ORDER_MESSAGETYPE" description="JBS_TPL_ORDER_DESC"/>
 
 			<field name="show_year_search" type="list" default="1"
 			       label="JBS_TPL_LISTITEMS_SHOW_YEAR_SEARCH" description="JBS_TPL_LISTITEMS_SHOW_YEAR_SEARCH_DESC">
 				<option value="0">JBS_CMN_HIDE</option>
 				<option value="1">JBS_CMN_SHOW</option>
 			</field>
-			<field name="ddyears" type="spanoptions" default="6" label="JBS_TPL_ORDER_YEARS" description="JBS_TPL_ORDER_DESC"/>
 
 			<field name="show_order_search" type="list" default="1"
 			       label="JBS_TPL_LISTITEMS_SHOW_ORDER_SEARCH" description="JBS_TPL_LISTITEMS_SHOW_ORDER_SEARCH_DESC">
 				<option value="0">JBS_CMN_HIDE</option>
 				<option value="1">JBS_CMN_SHOW</option>
 			</field>
-			<field name="ddorder" type="spanoptions" default="7" label="JBS_TPL_ORDER_ORDER" description="JBS_TPL_ORDER_DESC"/>
 
 			<field name="show_topic_search" type="list" default="1"
 			       label="JBS_TPL_LISTITEMS_SHOW_TOPIC_SEARCH" description="JBS_TPL_LISTITEMS_SHOW_TOPIC_SEARCH_DESC">
 				<option value="0">JBS_CMN_HIDE</option>
-				<option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
-				<option value="2">JBS_TPL_SHOW_ALWAYS</option>
+				<option value="1">JBS_TPL_SHOW_ALWAYS</option>
 			</field>
-			<field name="ddtopics" type="spanoptions" default="8" label="JBS_TPL_ORDER_TOPICS" description="JBS_TPL_ORDER_DESC"/>
 
 			<field name="show_locations_search" type="list" default="1"
 			       label="JBS_TPL_LISTITEMS_SHOW_LOCATIONS_SEARCH"
 			       description="JBS_TPL_LISTITEMS_SHOW_LOCATIONS_SEARCH_DESC">
 				<option value="0">JBS_CMN_HIDE</option>
-				<option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
-				<option value="2">JBS_TPL_SHOW_ALWAYS</option>
+				<option value="1">JBS_TPL_SHOW_ALWAYS</option>
 			</field>
-			<field name="ddlocations" type="spanoptions" default="9" label="JBS_TPL_ORDER_LOCATIONS" description="JBS_TPL_ORDER_DESC"/>
 
-			<field name="show_popular" type="list" default="1"
-			       label="JBS_TPL_LISTITEMS_SHOW_POPULAR" description="JBS_TPL_LISTITEMS_SHOW_POPULAR_DESC">
+			<field name="show_limit_search" type="list" default="1"
+			       label="JBS_TPL_LISTITEMS_SHOW_LIMIT_SEARCH"
+			       description="JBS_TPL_LISTITEMS_SHOW_LIMIT_SEARCH_DESC">
 				<option value="0">JBS_CMN_HIDE</option>
-				<option value="1">JBS_CMN_SHOW</option>
+				<option value="1">JBS_TPL_SHOW_ALWAYS</option>
 			</field>
-			<field name="ddpopular" type="spanoptions" default="10" label="JBS_TPL_ORDER_POPULAR" description="JBS_TPL_ORDER_DESC"/>
 
 			<field name="listlanguage" type="list" size="1" label="JBS_CMN_USE_LANGUAGE_LIST"
 			       description="JBS_CMN_USE_LANGUAGE_LIST_DESC">
 				<option value="0">JNO</option>
 				<option value="1">JYES</option>
 			</field>
-			<field name="ddlanguage" type="spanoptions" default="11" label="JBS_TPL_ORDER_LANGUAGE" description="JBS_TPL_ORDER_DESC"/>
 
 			<field name="show_pagination" type="list" default="1"
 			       label="JBS_TPL_LISTITEMS_SHOW_PAGINATION" description="JBS_TPL_LISTITEMS_SHOW_PAGINATION_DESC">

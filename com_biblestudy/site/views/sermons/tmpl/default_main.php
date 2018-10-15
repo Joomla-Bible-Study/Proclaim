@@ -11,6 +11,7 @@
 defined('_JEXEC') or die;
 
 JHtml::_('bootstrap.framework');
+JHtml::_('dropdown.init');
 JHtml::_('bootstrap.tooltip');
 JHtml::_('formbehavior.chosen', 'select');
 
@@ -85,7 +86,7 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 				}
 				if ($this->params->get('list_intro'))
 				{
-				    ?>
+					?>
                     <p>
 						<?php echo $this->params->get('list_intro'); ?>
                     </p>
