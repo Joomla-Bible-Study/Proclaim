@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="module" version="3.1" method="upgrade" client="site">
+<extension type="module" version="3.3" method="upgrade" client="site">
 	<name>JBS_MDL_PODCAST</name>
 	<author>CWM Team</author>
 	<authorEmail>info@joomlabiblestudy.org</authorEmail>
 	<authorUrl>https://www.christianwebministries.org</authorUrl>
-	<copyright>Copyright (C) 2007 - 2018 Proclaim All rights reserved.</copyright>
-	<version>9.1.5</version>
-	<creationDate>July 2018</creationDate>
-	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<copyright>(C) 2007 - 2018 Proclaim All rights reserved.</copyright>
+	<version>9.1.6</version>
+	<creationDate>Oct 14, 2018</creationDate>
+	<license>http://www.gnu.org/licenses/gpl.html</license>
 	<description>JBS_MDL_PODCAST_XML_DESCRIPTION</description>
 	<files>
 		<filename module="mod_biblestudy_podcast">mod_biblestudy_podcast.php</filename>
@@ -18,67 +18,42 @@
 		<fields name="params">
 			<fieldset name="basic"
 			          addfieldpath="/administrator/components/com_biblestudy/models/fields">
-				<field
-						name="dummy"
-						type="loadlanguagefile"
-						default=""
-				/>   <!-- load common language file -->
-				<field
-						name="t"
-						type="sql"
-						default="1"
-						label="JBS_MDL_SELECT_TEMPLATE"
-						description="JBS_MDL_SELECT_TEMPLATE_DESC"
-						query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
-						key_field="id" value_field="title" required="true"
-				/>
+				<field name="dummy" type="loadlanguagefile" default=""/>   <!-- load common language file -->
+				<field name="t" type="sql" default="1"
+				       label="JBS_MDL_SELECT_TEMPLATE" description="JBS_MDL_SELECT_TEMPLATE_DESC"
+				       query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
+				       key_field="id" value_field="title" required="true"/>
 
-				<field
-						name="subscribeintro"
-						type="text"
-						default="Our Podcasts"
-						label="JBS_MDL_HEADER_TEXT"
-						description="JBS_MDL_HEADER_TEXT_DESC"
-						filter="safehtml"
-						size="50"
-				/>
+				<field name="subscribeintro" type="text" default="Our Podcasts" size="50"
+				       label="JBS_MDL_HEADER_TEXT" description="JBS_MDL_HEADER_TEXT_DESC"/>
 			</fieldset>
 			<fieldset name="advanced">
 				<field
 						name="layout"
 						type="modulelayout"
 						label="JFIELD_ALT_LAYOUT_LABEL"
-						description="JFIELD_ALT_MODULE_LAYOUT_DESC"
-				/>
-
-				<field
-						name="moduleclass_sfx"
-						type="textarea"
-						label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
-						description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC"
-						rows="3"
-				/>
+						description="JFIELD_ALT_MODULE_LAYOUT_DESC"/>
 
 				<field
 						name="cache"
 						type="list"
-						label="COM_MODULES_FIELD_CACHING_LABEL"
-						description="COM_MODULES_FIELD_CACHING_LABEL"
 						default="1"
-						filter="interger"
-				>
-					<option value="1">JGLOBAL_USE_GLOBAL</option>
-					<option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
+						label="COM_MODULES_FIELD_CACHING_LABEL"
+						description="COM_MODULES_FIELD_CACHING_LABEL">
+					<option
+							value="1">JGLOBAL_USE_GLOBAL
+					</option>
+					<option
+							value="0">COM_MODULES_FIELD_VALUE_NOCACHING
+					</option>
 				</field>
 
 				<field
 						name="cache_time"
-						type="number"
-						label="COM_MODULES_FIELD_CACHE_TIME_LABEL"
-						description="COM_MODULES_FIELD_CACHE_TIME_LABEL"
+						type="text"
 						default="900"
-						filter="integer"
-				/>
+						label="COM_MODULES_FIELD_CACHE_TIME_LABEL"
+						description="COM_MODULES_FIELD_CACHE_TIME_LABEL"/>
 			</fieldset>
 		</fields>
 	</config>
