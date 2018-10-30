@@ -109,7 +109,10 @@ abstract class JHtmlBiblestudy
 				[],
 				['integrity' => 'sha384-kW+oWsYx3YpxvjtZjFXqazFpA7UP/MbiY4jvs+RWZo2+N94PFZ36T6TFkc9O3qoB', 'crossorigin' => 'anonymous', 'defer' => 'defer']
 			);
-		}
+			JHtml::script('https://use.fontawesome.com/releases/v5.4.2/js/v4-shims.js',
+				[],
+				['integrity' => 'sha384-kW+oWsYx3YpxvjtZjFXqazFpA7UP/MbiY4jvs+RWZo2+N94PFZ36T6TFkc9O3qoB', 'crossorigin' => 'anonymous', 'defer' => 'defer']
+			);}
 	}
 
 	/**
