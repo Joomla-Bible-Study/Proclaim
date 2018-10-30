@@ -339,35 +339,25 @@ class JBSMHelper
 	 * Get Simple View Sate
 	 *
 	 * @param   Registry  $params      AdminTable + parametors
-	 * @param   JUser     $ActiveUser  User ID
+	 *
 	 *
 	 * @return int
 	 *
-	 * @since 9.1.4
+	 * @since 9.1.6
 	 */
-	public static function getSimpleView($params = null, $ActiveUser = null)
+	public static function getSimpleView($params = null, $simple = null)
 	{
-		if (is_null($ActiveUser))
-		{
-			$ActiveUser = JFactory::getUser();
-		}
 
 		if (is_null($params))
 		{
 			$params = JBSMParams::getAdmin();
 		}
 
-		$users = $params->params->get('users');
+		$simple = $params->params->get('simple_mode');
 
-		if ($users)
+		if ($simple)
 		{
-			foreach ($users as $user)
-			{
-				if ($user == $ActiveUser->id)
-				{
 					return 1;
-				}
-			}
 		}
 
 		return 0;
