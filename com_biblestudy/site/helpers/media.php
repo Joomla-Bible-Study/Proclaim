@@ -354,11 +354,11 @@ class JBSMMedia
 			}
 			elseif ((preg_match('(pdf|PDF)', $filename) === 1))
 			{
-				$mediaimage = '<span class="' . 'fa fa-file-pdf-o' . '" title="play" style="font-size:' . '24' . 'px;"></span>';
+				$mediaimage = '<span class="' . 'fas fa-file-pdf' . '" title="play" style="font-size:' . '24' . 'px;"></span>';
 			}
 			else
 			{
-				$mediaimage = '<span class="' . 'fa fa-play-circle-o' . '" title="play" style="font-size:' . '24' . 'px;"></span>';
+				$mediaimage = '<span class="' . 'fas fa-play-circle' . '" title="play" style="font-size:' . '24' . 'px;"></span>';
 			}
 		}
 
