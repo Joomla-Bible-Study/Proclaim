@@ -789,13 +789,9 @@ class JBSMListing
 							$span = '';
 						}
 					}
-					else
-					{
-						$span = '';
-					}
 					break;
 				case 2:
-					if (isset($item->thumbm) && !empty($item->thumbm))
+					if ((isset($item->thumbm) && !empty($item->thumbm)) || isset($item->thumb))
 					{
 						$span = $this->useJImage($item->thumb, JText::_('JBS_CMN_THUMBNAIL'), '', '', '', $params->get('rowspanitemimage'));
 					}
@@ -1473,7 +1469,7 @@ class JBSMListing
 				}
 				else
 				{
-					(isset($item->studytitle) ? $data = stripslashes($item->studytitle) : $data = '');
+					isset($item->studytitle) ? $data = stripslashes($item->studytitle) : $data = '';
 				}
 				break;
 			case $extra . 'date':
@@ -1483,7 +1479,7 @@ class JBSMListing
 				}
 				else
 				{
-					(isset($item->studydate) ? $data = $this->getStudyDate($params, $item->studydate) : $data = '');
+					isset($item->studydate) ? $data = $this->getStudyDate($params, $item->studydate) : $data = '';
 				}
 				break;
 			case $extra . 'teacher':
@@ -1528,7 +1524,7 @@ class JBSMListing
 				}
 				else
 				{
-					(isset($item->studyintro) ? $data = JHtml::_('content.prepare', $item->studyintro, '', 'com_biblestudy.' . $type) : $data = '');
+					isset($item->studyintro) ? $data = JHtml::_('content.prepare', $item->studyintro, '', 'com_biblestudy.' . $type) : $data = '';
 				}
 				break;
 			case $extra . 'series':
@@ -1756,7 +1752,12 @@ class JBSMListing
 
 		if ($classelement)
 		{
-			$classopen  = '<' . $classelement . ' ' . $style . '>';
+			if (isset($style))
+			{
+				$style = ' ' . $style;
+			}
+
+			$classopen  = '<' . $classelement . $style . '>';
 			$classclose = '</' . $classelement . '>';
 		}
 		else
@@ -2937,12 +2938,10 @@ class JBSMListing
 	 */
 	public function createelement($element)
 	{
-		$classelement = '';
-
 		switch ($element)
 		{
 			case 0:
-				$classelement = '';
+				$classelement = 'span';
 				break;
 			case 1:
 				$classelement = 'p';
@@ -2964,6 +2963,10 @@ class JBSMListing
 				break;
 			case 7:
 				$classelement = 'blockquote';
+				break;
+			default:
+				$classelement = 'span';
+				break;
 		}
 
 		return $classelement;

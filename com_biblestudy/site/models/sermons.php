@@ -28,7 +28,7 @@ class BiblestudyModelSermons extends JModelList
 
 	/** @var string Needed for context for Populate State
 	 * @since 9.0.14 */
-	public $context = 'com_biblestudy.list';
+	public $context = 'com_biblestudy.sermons.list';
 
 	/**
 	 * Constructor.
@@ -43,23 +43,21 @@ class BiblestudyModelSermons extends JModelList
 		if (empty($config['filter_fields']))
 		{
 			$config['filter_fields'] = array(
-				'id',
-				'study.id',
-				'study.published',
-				'study.studydate',
-				'study.studytitle',
-				'book.bookname',
-				'book.bookname2',
-				'teacher.teachername',
-				'messageType.message_type',
-				'series.series_text',
-				'study.hits',
-				'mediafile.plays',
-				'mediafile.downloads',
-				'study.chapter_begin',
-				'study.language',
-				'study.location_id',
-				'study.chapter_end'
+				'id', 'study.id',
+				'published', 'study.published',
+				'studydate', 'study.studydate',
+				'studytitle', 'study.studytitle',
+				'ordering', 'study.ordering',
+				'bookname', 'book.bookname',
+				'teachername', 'teacher.teachername',
+				'message_type', 'messageType.message_type',
+				'series_text', 'series.series_text',
+				'seriesid', 'study.series_id',
+				'hits', 'study.hits',
+				'access', 'series.access', 'access_level',
+				'location', 'location.location_text',
+				'bookname2', 'book.bookname2',
+				'language', 'study.language'
 			);
 		}
 
@@ -88,264 +86,6 @@ class BiblestudyModelSermons extends JModelList
 		}
 
 		return $items;
-	}
-
-	/**
-	 * Returns the topics
-	 *
-	 * @return array|bool
-	 *
-	 * @since 7.0.2
-	 */
-	public function getTopics()
-	{
-		if (empty($this->_Topics))
-		{
-			$db    = $this->getDbo();
-			$query = $db->getQuery(true);
-			$query->select('DISTINCT #__bsms_topics.id, #__bsms_topics.topic_text, #__bsms_topics.params as topic_params')
-				->from('#__bsms_studies')
-				->leftJoin('#__bsms_studytopics ON #__bsms_studies.id = #__bsms_studytopics.study_id')
-				->leftJoin('#__bsms_topics ON #__bsms_topics.id = #__bsms_studytopics.topic_id')
-				->where('#__bsms_topics.published = 1')
-				->order('#__bsms_topics.topic_text ASC');
-			$db->setQuery($query);
-			$db_result = $db->loadObjectList();
-
-			if (empty($db_result))
-			{
-				return false;
-			}
-
-			$output = array();
-
-			foreach ($db_result as $value)
-			{
-				$value->text = JBSMTranslated::getTopicItemTranslated($value);
-
-				$value->value = $value->id;
-				$output[]     = $value;
-			}
-
-			// Sort the Topics after Translation to Alphabetically
-			usort($output, array($this, "order_new"));
-			$this->_Topics = $output;
-		}
-
-		return $this->_Topics;
-	}
-
-	/**
-	 * Order New using strcmp
-	 *
-	 * @param   object  $a  Start.
-	 * @param   object  $b  End.
-	 *
-	 * @return int Used to place in new sort.
-	 *
-	 * @since 7.0
-	 */
-	private function order_new($a, $b)
-	{
-		$a = (array) $a;
-		$b = (array) $b;
-
-		return strcmp($a["text"], $b["text"]);
-	}
-
-	/**
-	 * Get a list of all used books
-	 *
-	 * @return mixed
-	 *
-	 * @since 7.0
-	 */
-	public function getBooks()
-	{
-		$params = $this->getState('params');
-
-		$db    = $this->getDbo();
-		$query = $db->getQuery(true);
-
-		$query->select('book.booknumber AS value, book.bookname AS text, book.id');
-		$query->from('#__bsms_books AS book');
-		$query->where('book.published = 1');
-
-		if ($params->get('booklist') == 1)
-		{
-			$query->join('INNER', '#__bsms_studies AS study ON study.booknumber = book.booknumber');
-		}
-
-		$query->group('book.id');
-		$query->order('book.booknumber');
-
-		$db->setQuery($query->__toString());
-
-		$db_result = $db->loadAssocList();
-
-		foreach ($db_result as $i => $value)
-		{
-			$db_result[$i]['text'] = JText::_($value['text']);
-		}
-
-		return $db_result;
-	}
-
-	/**
-	 * Get a list of all used teachers
-	 *
-	 * @return object
-	 *
-	 * @since 7.0
-	 */
-	public function getTeachers()
-	{
-		$db    = $this->getDbo();
-		$query = $db->getQuery(true);
-
-		$query->select('teacher.id AS value, teacher.teachername AS text');
-		$query->from('#__bsms_teachers AS teacher');
-		$query->where('teacher.published = 1');
-		$query->join('INNER', '#__bsms_studies AS study ON study.teacher_id = teacher.id');
-		$query->group('teacher.id');
-		$query->order('teacher.teachername');
-
-		$db->setQuery($query->__toString());
-
-		return $db->loadObjectList();
-	}
-
-	/**
-	 * Get a list of all used series
-	 *
-	 * @since 7.0
-	 * @return Object
-	 */
-	public function getSeries()
-	{
-		$db     = $this->getDbo();
-		$user   = JFactory::getUser();
-		$groups = implode(',', $user->getAuthorisedViewLevels());
-
-		$query = $db->getQuery(true);
-
-		$query->select('series.id AS value, series.series_text AS text, series.access');
-		$query->from('#__bsms_series AS series');
-		$query->join('INNER', '#__bsms_studies AS study ON study.series_id = series.id');
-		$query->group('series.id');
-		$query->where('series.published = 1');
-
-		// Filter only for authorized view
-		$query->where('series.access IN (' . $groups . ')');
-		$query->order('series.series_text');
-
-		$db->setQuery($query->__toString());
-
-		return $db->loadObjectList();
-	}
-
-	/**
-	 * Get a list of all used message types
-	 *
-	 * @return object
-	 *
-	 * @since 7.0
-	 */
-	public function getMessageTypes()
-	{
-		$db    = $this->getDbo();
-		$query = $db->getQuery(true);
-
-		$query->select('messageType.id AS value, messageType.message_type AS text');
-		$query->from('#__bsms_message_type AS messageType');
-		$query->join('INNER', '#__bsms_studies AS study ON study.messagetype = messageType.id');
-		$query->group('messageType.id');
-		$query->order('messageType.message_type');
-		$query->where('messageType.published = 1');
-
-		$db->setQuery($query->__toString());
-
-		return $db->loadObjectList();
-	}
-
-	/**
-	 * Get a list of all used years
-	 *
-	 * @return object
-	 *
-	 * @since 7.0
-	 */
-	public function getYears()
-	{
-		$db    = $this->getDbo();
-		$query = $db->getQuery(true);
-
-		$query->select('DISTINCT YEAR(studydate) as value, YEAR(studydate) as text');
-		$query->from('#__bsms_studies');
-		$query->order('value');
-
-		$db->setQuery($query->__toString());
-
-		return $db->loadObjectList();
-	}
-
-	/**
-	 * Get the number of plays of this study
-	 *
-	 * @param   int  $id  ID
-	 *
-	 * @return array
-	 *
-	 * @since 7.0
-	 */
-	public function getPlays($id)
-	{
-		$db    = $this->getDbo();
-		$query = $db->getQuery(true);
-
-		$query->select('SUM(plays) AS totalPlays');
-		$query->from('#__bsms_mediafiles');
-		$query->group('study_id');
-		$query->where('study_id = ' . $id);
-		$db->setQuery($query->__toString());
-
-		return $db->loadResult();
-	}
-
-	/**
-	 * Returns the locations
-	 *
-	 * @return JObject
-	 *
-	 * @since 7.0.2
-	 */
-	public function getLocations()
-	{
-		if (empty($this->_Locations))
-		{
-			$db    = $this->getDbo();
-			$query = $db->getQuery(true);
-			$query->select('id AS value, location_text as text, published');
-			$query->from('#__bsms_locations');
-			$query->where('published = 1');
-			$query->order('location_text ASC');
-			$db->setQuery($query->__toString());
-			$this->_Locations = $db->loadObjectList();
-		}
-
-		return $this->_Locations;
-	}
-
-	/**
-	 * Get Start 2
-	 *
-	 * @return string
-	 *
-	 * @since 7.0
-	 */
-	public function getStart2()
-	{
-		return $this->getState('list.start');
 	}
 
 	/**
@@ -421,13 +161,14 @@ class BiblestudyModelSermons extends JModelList
 	 * @return  void
 	 *
 	 * @since   11.1
+	 * @throws  Exception
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		parent::populateState($ordering, $direction);
-
 		/** @type JApplicationSite $app */
 		$app = JFactory::getApplication();
+
+		$forcedLanguage = $app->input->get('forcedLanguage', '', 'cmd');
 
 		// Load the parameters.
 		$params   = $app->getParams();
@@ -440,23 +181,21 @@ class BiblestudyModelSermons extends JModelList
 		$params = $template->params;
 		$this->setState('params', $params);
 		$t = $params->get('sermonsid');
-		$input = new JInput;
 
 		if (!$t)
 		{
-			$t     = $input->get('t', 1, 'int');
+			$t     = $this->input->get('t', 1, 'int');
 		}
 
 		$landing = 0;
 		$this->landing = 0;
-		$landingcheck = $input->get->get('sendingview');
+		$landingcheck = $this->input->get->get('sendingview');
 
 		if ($landingcheck == 'landing')
 		{
 			$landing = 1;
 			$this->landing = 1;
 			$this->setState('sendingview', '');
-			$input->set('sendingview', '');
 		}
 		else
 		{
@@ -489,120 +228,107 @@ class BiblestudyModelSermons extends JModelList
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
 
-		$book = 0;
-		$teacher = 0;
-		$series = 0;
-		$messageType = 0;
-		$year = 0;
-		$order = 0;
-		$topic = 0;
-		$location = 0;
+		$level = $this->getUserStateFromRequest($this->context . '.filter.level', 'filter_level');
+		$this->setState('filter.level', $level);
 
-		if ($landing == 1 && $input->getInt('filter_book') !== 0)
+		$books = $book = $this->getUserStateFromRequest($this->context . '.filter.book', 'filter_book');
+
+		if ($landing == 1 && $books !== 0)
 		{
 			$book = $this->getUserStateFromRequest($this->context . '.filter.landingbook', 'filter_book_landing');
-		}
-		elseif ($input->getInt('filter_book'))
-		{
-			$book = $this->getUserStateFromRequest($this->context . '.filter.book', 'filter_book');
 		}
 
 		$this->setState('filter.book', $book);
 		$this->setState('filter.landingbook', $book);
 
-		if ($landing == 1 && $input->getInt('filter_teacher') !== 0)
+		$teacher = $this->getUserStateFromRequest($this->context . '.filter.teacher', 'filter_teacher');
+
+		if ($landing == 1 && $teacher !== 0)
 		{
 			$teacher = $this->getUserStateFromRequest($this->context . '.filter.landingteacher', 'filter_teacher_landing');
-		}
-		elseif ($input->getInt('filter_teacher'))
-		{
-			$teacher = $this->getUserStateFromRequest($this->context . '.filter.teacher', 'filter_teacher');
 		}
 
 		$this->setState('filter.teacher', $teacher);
 		$this->setState('filter.landingteacher', $teacher);
 
-		if ($landing == 1 && $input->getInt('filter_series') !== 0)
+		$series = $this->getUserStateFromRequest($this->context . '.filter.series', 'filter_series');
+
+		if ($landing == 1 && $series !== 0)
 		{
 			$series = $this->getUserStateFromRequest($this->context . '.filter.landingseries', 'filter_series_landing');
-		}
-		elseif ($input->getInt('filter_series'))
-		{
-			$series = $this->getUserStateFromRequest($this->context . '.filter.series', 'filter_series');
 		}
 
 		$this->setState('filter.series', $series);
 		$this->setState('filter.landingseries', $series);
 
-		if ($landing == 1 && $input->getInt('filter_messagetype') !== 0)
+		$messageType = $this->getUserStateFromRequest($this->context . '.filter.messageType', 'filter_messagetype');
+
+		if ($landing == 1 && $messageType !== 0)
 		{
 			$messageType = $this->getUserStateFromRequest($this->context . '.filter.landingmessagetype', 'filter_messagetype_landing');
-		}
-		elseif ($input->getInt('filter_messagetype'))
-		{
-			$messageType = $this->getUserStateFromRequest($this->context . '.filter.messageType', 'filter_messagetype');
 		}
 
 		$this->setState('filter.messageType', $messageType);
 		$this->setState('filter.landingmessagetype', $messageType);
 
-		if ($landing == 1 && $input->getInt('filter_year') !== 0)
+		$year = $this->getUserStateFromRequest($this->context . '.filter.year', 'filter_year');
+
+		if ($landing == 1 && $year !== 0)
 		{
 			$year = $this->getUserStateFromRequest($this->context . '.filter.landingyear', 'filter_year_landing');
-		}
-		elseif ($input->getInt('filter_year'))
-		{
-			$year = $this->getUserStateFromRequest($this->context . '.filter.year', 'filter_year');
 		}
 
 		$this->setState('filter.year', $year);
 		$this->setState('filter.landingyear', $year);
 
-		if ($landing == 1 && $input->getInt('filter_orders') !== 0)
-		{
-			$order = $this->getUserStateFromRequest($this->context . '.filter.landingorder', 'filter_order_landing');
-		}
-		elseif ($input->getInt('filter_orders')
-			|| ($landing == 0 && $this->getUserStateFromRequest($this->context . '.filter.orders', 'filter_orders') !== 0))
-		{
-			$order = $this->getUserStateFromRequest($this->context . '.filter.orders', 'filter_orders');
-		}
+		$topic = $this->getUserStateFromRequest($this->context . '.filter.topic', 'filter_topic');
 
-		$this->setState('filter.orders', $order);
-
-		if ($landing == 1 && $input->getInt('filter_topic') !== 0)
+		if ($landing == 1 && $topic !== 0)
 		{
 			$topic = $this->getUserStateFromRequest($this->context . '.filter.landingtopic', 'filter_topic_landing');
-		}
-		elseif ($input->getInt('filter_topic'))
-		{
-			$topic = $this->getUserStateFromRequest($this->context . '.filter.topic', 'filter_topic');
 		}
 
 		$this->setState('filter.topic', $topic);
 		$this->setState('filter.landingtopic', $topic);
 
-		if ($landing == 1 && $input->getInt('filter_location') !== 0)
+		$location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location');
+
+		if ($landing == 1 && $location !== 0)
 		{
 			$location = $this->getUserStateFromRequest($this->context . '.filter.landinglocation', 'filter_location_landing');
 		}
-		elseif ($input->getInt('filter_location'))
+
+		$orderCol = $app->input->get('filter_order');
+
+		if (!in_array($orderCol, $this->filter_fields) && !empty($orderCol))
 		{
-			$location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location');
+			$orderCol = 'study.studydate';
 		}
+
+		$this->setState('list.ordering', $orderCol);
+
+		$listOrder = $app->input->get('filter_order_Dir');
+
+		if (!in_array(strtoupper($listOrder), array('ASC', 'DESC', '')) && !empty($listOrder))
+		{
+			$listOrder = 'DESC';
+		}
+
+		$this->setState('list.direction', $listOrder);
+
+		$this->setState('list.direction', $listOrder);
 
 		$this->setState('filter.location', $location);
 		$this->setState('filter.landinglocation', $location);
 
-		$languages = $this->getUserStateFromRequest($this->context . '.filter.languages', 'filter_languages');
-		$this->setState('filter.languages', $languages);
+		parent::populateState($ordering, $direction);
 
-		/**
-		 * @todo We need to figure out how to properly use the populate state so that
-		 * @todo limitstart works with and without SEF, Tom need to know what to do with this todo
-		 */
-		$value = $this->input->get('start', '', 'int');
-		$this->setState('list.start', $value);
+		// Force a language
+		if (!empty($forcedLanguage))
+		{
+			$this->setState('filter.language', $forcedLanguage);
+			$this->setState('filter.forcedLanguage', $forcedLanguage);
+		}
 	}
 
 	/**
@@ -622,16 +348,15 @@ class BiblestudyModelSermons extends JModelList
 	{
 		// Compile the store id.
 		$id .= ':' . serialize($this->getState('filter.published'));
-		$id .= ':' . $this->getState('filter.studytitle');
+		$id .= ':' . $this->getState('filter.year');
 		$id .= ':' . $this->getState('filter.book');
 		$id .= ':' . $this->getState('filter.teacher');
 		$id .= ':' . $this->getState('filter.series');
-		$id .= ':' . $this->getState('filter.messageType');
-		$id .= ':' . $this->getState('filter.year');
-		$id .= ':' . $this->getState('filter.order');
-		$id .= ':' . $this->getState('filter.topic');
+		$id .= ':' . $this->getState('filter.messagetype');
 		$id .= ':' . $this->getState('filter.location');
-		$id .= ':' . $this->getState('list.start');
+		$id .= ':' . $this->getState('filter.access');
+		$id .= ':' . $this->getState('filter.language');
+		$id .= ':' . $this->getState('filter.search');
 
 		return parent::getStoreId($id);
 	}
@@ -642,6 +367,7 @@ class BiblestudyModelSermons extends JModelList
 	 * @return  JDatabaseQuery
 	 *
 	 * @since   7.0
+	 * @throws  Exception
 	 */
 	protected function getListQuery()
 	{
@@ -991,14 +717,12 @@ class BiblestudyModelSermons extends JModelList
 		if ($this->landing == 1)
 		{
 			$book = $this->getState('filter.landingbook');
-			$this->landing = 0;
 		}
 
 		if (!empty($book))
 		{
-			$input = new JInput;
-			$chb   = $input->get('minChapt', '', 'int');
-			$che   = $input->get('maxChapt', '', 'int');
+			$chb   = $this->input->get('minChapt', '', 'int');
+			$che   = $this->input->get('maxChapt', '', 'int');
 
 			// Set the secondary order
 			$this->setState('secondaryorderstate', 1);
@@ -1006,8 +730,8 @@ class BiblestudyModelSermons extends JModelList
 			if ($chb && $che)
 			{
 				$query->where('(study.booknumber = ' . (int) $book .
-					' AND study.chapter_begin >= ' . $chb .
-					' AND study.chapter_end <= ' . $che . ')' .
+					' AND study.chapter_begin >= ' . (int) $chb .
+					' AND study.chapter_end <= ' . (int) $che . ')' .
 					'OR study.booknumber2 = ' . (int) $book
 				);
 			}
@@ -1015,7 +739,7 @@ class BiblestudyModelSermons extends JModelList
 			{
 				if ($chb)
 				{
-					$query->where('(study.booknumber = ' . (int) $book . ' AND study.chapter_begin > = ' . $chb . ') OR study.booknumber2 = ' . (int) $book);
+					$query->where('(study.booknumber = ' . (int) $book . ' AND study.chapter_begin > = ' . (int) $chb . ') OR study.booknumber2 = ' . (int) $book);
 				}
 				else
 				{
@@ -1037,7 +761,6 @@ class BiblestudyModelSermons extends JModelList
 		if ($this->landing == 1)
 		{
 			$teacher = $this->getState('filter.landingteacher');
-			$this->landing = 0;
 		}
 
 		if ($teacher >= 1)
@@ -1054,7 +777,6 @@ class BiblestudyModelSermons extends JModelList
 		if ($this->landing == 1)
 		{
 			$series = $this->getState('filter.landingseries');
-			$this->landing = 0;
 		}
 
 		if ($series >= 1)
@@ -1071,7 +793,6 @@ class BiblestudyModelSermons extends JModelList
 		if ($this->landing == 1)
 		{
 			$messageType = $this->getState('filter.landingmessagetype');
-			$this->landing = 0;
 		}
 
 		if ($messageType >= 1)
@@ -1088,7 +809,6 @@ class BiblestudyModelSermons extends JModelList
 		if ($this->landing == 1)
 		{
 			$year = $this->getState('filter.landingyear');
-			$this->landing = 0;
 		}
 
 		if ($year >= 1)
@@ -1105,7 +825,6 @@ class BiblestudyModelSermons extends JModelList
 		if ($this->landing == 1)
 		{
 			$topic = $this->getState('filter.landingtopic');
-			$this->landing = 0;
 		}
 
 		if (!empty($topic))
@@ -1122,10 +841,9 @@ class BiblestudyModelSermons extends JModelList
 		if ($this->landing == 1)
 		{
 			$location = $this->getState('filter.landinglocation');
-			$this->landing = 0;
 		}
 
-		if ($location >= 1)
+		if (is_numeric($location))
 		{
 			$query->where('study.location_id = ' . (int) $location);
 
@@ -1145,55 +863,37 @@ class BiblestudyModelSermons extends JModelList
 			$query->where('study.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
 		}
 
-		// Order by order filter
-		$order = $params->get('default_order', 'DESC');
+		// Add the list ordering clause.
+		$orderCol  = $this->state->get('list.fullordering');
+		$orderDirn = '';
 
-		$secondaryorderstate = $this->getState('secondaryorderstate');
-
-		if (!empty($secondaryorderstate))
+		if (empty($orderCol) || $orderCol == " ")
 		{
-			$order = $params->get('default_order_secondary');
+			$orderCol  = $this->state->get('list.ordering', 'study.studydate');
+			$orderDirn = $this->state->get('list.direction', 'DESC');
+
+			$secondaryorderstate = $this->getState('secondaryorderstate');
+
+			if (!empty($secondaryorderstate))
+			{
+				$orderDirn = $params->get('default_order_secondary');
+			}
 		}
 
-		$orderstate = $this->getState('filter.orders');
-
-		if (!empty($orderstate))
-		{
-			$order = $orderstate;
-		}
-
-		$query->order('studydate ' . $order);
+		$query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
 
 		return $query;
 	}
 
 	/**
-	 * Method to get a list of sermons.
-	 * Overridden to add a check for access levels.
+	 * Method to get the starting number of items for the data set.
 	 *
-	 * @return  mixed  An array of data items on success, false on failure.
+	 * @return  integer  The starting number of items available in the data set.
 	 *
-	 * @since   9.0.0
+	 * @since   12.2
 	 */
-	public function getItems()
+	public function getStart()
 	{
-		$items = parent::getItems();
-
-		if (JFactory::getApplication()->isSite())
-		{
-			$user   = JFactory::getUser();
-			$groups = $user->getAuthorisedViewLevels();
-
-			for ($x = 0, $count = count($items); $x < $count; $x++)
-			{
-				// Check the access level. Remove articles the user shouldn't see
-				if (!in_array($items[$x]->access, $groups))
-				{
-					unset($items[$x]);
-				}
-			}
-		}
-
-		return $items;
+		return $this->getState('list.start');
 	}
 }

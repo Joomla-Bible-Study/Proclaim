@@ -71,37 +71,6 @@ class BiblestudyModelLocations extends JModelList
 	}
 
 	/**
-	 * Method to get a list of articles.
-	 * Overridden to add a check for access levels.
-	 *
-	 * @return    mixed    An array of data items on success, false on failure.
-	 *
-	 * @since    1.6.1
-	 */
-	public function getItems()
-	{
-		$items = parent::getItems();
-		$app   = JFactory::getApplication();
-
-		if ($app->isSite())
-		{
-			$user   = JFactory::getUser();
-			$groups = $user->getAuthorisedViewLevels();
-
-			for ($x = 0, $count = count($items); $x < $count; $x++)
-			{
-				// Check the access level. Remove articles the user shouldn't see
-				if (!in_array($items[$x]->access, $groups))
-				{
-					unset($items[$x]);
-				}
-			}
-		}
-
-		return $items;
-	}
-
-	/**
 	 * Method to get a store id based on model configuration state.
 	 *
 	 * This is necessary because the model is used by the component and
@@ -139,6 +108,7 @@ class BiblestudyModelLocations extends JModelList
 	 * @return  void
 	 *
 	 * @since   7.0
+	 * @throws  Exception
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{

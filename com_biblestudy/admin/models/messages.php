@@ -38,14 +38,15 @@ class BiblestudyModelMessages extends JModelList
 				'studydate', 'study.studydate',
 				'studytitle', 'study.studytitle',
 				'ordering', 'study.ordering',
-				'bookname', 'book.bookname',
-				'teachername', 'teacher.teachername',
-				'message_type', 'messageType.message_type',
-				'series_text', 'series.series_text',
+				'year',
+				'book', 'bookname', 'book.bookname',
+				'teacher', 'teachername', 'teacher.teachername',
+				'messagetype', 'message_type', 'messageType.message_type',
+				'series', 'series_text', 'series.series_text',
 				'study.series_id',
-				'hits', 'study.hits',
 				'access', 'series.access', 'access_level',
-				'locations', 'locations.location_text'
+				'location', 'location.location_text',
+				'language'
 			);
 		}
 

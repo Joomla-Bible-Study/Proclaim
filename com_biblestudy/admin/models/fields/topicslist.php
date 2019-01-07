@@ -42,12 +42,14 @@ class JFormFieldTopicslist extends JFormFieldList
 	{
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
-		$query->select('id, topic_text, params AS topic_params')
-			->from('#__bsms_topics')
-			->where('published = ' . 1)
-			->order('topic_text asc');
-		$db->setQuery((string) $query);
-		$topics  = $db->loadObjectList();
+		$query->select('DISTINCT #__bsms_topics.id, #__bsms_topics.topic_text, #__bsms_topics.params as topic_params')
+			->from('#__bsms_studies')
+			->leftJoin('#__bsms_studytopics ON #__bsms_studies.id = #__bsms_studytopics.study_id')
+			->leftJoin('#__bsms_topics ON #__bsms_topics.id = #__bsms_studytopics.topic_id')
+			->where('#__bsms_topics.published = 1')
+			->order('#__bsms_topics.topic_text ASC');
+		$db->setQuery($query);
+		$topics = $db->loadObjectList();
 		$options = array();
 
 		if ($topics)
@@ -59,8 +61,28 @@ class JFormFieldTopicslist extends JFormFieldList
 			}
 		}
 
+		// Sort the Topics after Translation to Alphabetically
+		usort($options, array($this, "order_new"));
 		$options = array_merge(parent::getOptions(), $options);
 
 		return $options;
+	}
+
+	/**
+	 * Order New using strcmp
+	 *
+	 * @param   object  $a  Start.
+	 * @param   object  $b  End.
+	 *
+	 * @return int Used to place in new sort.
+	 *
+	 * @since 7.0
+	 */
+	private function order_new($a, $b)
+	{
+		$a = (array) $a;
+		$b = (array) $b;
+
+		return strcmp($a["text"], $b["text"]);
 	}
 }

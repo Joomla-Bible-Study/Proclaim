@@ -48,6 +48,6 @@ docs/packages/
 /bin/
 com_biblestudy/media/css/biblestudy.css.map
 com_biblestudy/media/css/general.css.map
+node_modules/yui-compressor/
 package-lock.json
 /node_modules/
-build/helpers/
