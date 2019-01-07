@@ -36,10 +36,10 @@ class Com_BiblestudyInstallerScript
 	 */
 	protected $versions = array(
 		'PHP'     => array(
-			'5.5' => '5.5.3',
 			'5.6' => '5.6.30',
 			'7.0' => '7.0.13',
 			'7.1' => '7.1.0',
+			'7.2' => '7.2.1',
 			'0'   => '7.0.13' // Preferred version
 		),
 		'MySQL'   => array(

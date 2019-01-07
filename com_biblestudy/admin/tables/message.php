@@ -251,33 +251,6 @@ class TableMessage extends JTable
 	public $studyintro = null;
 
 	/**
-	 * Media Hours
-	 *
-	 * @var int
-	 *
-	 * @since 9.0.0
-	 */
-	public $media_hours = null;
-
-	/**
-	 * Media Minutes
-	 *
-	 * @var int
-	 *
-	 * @since 9.0.0
-	 */
-	public $media_minutes = null;
-
-	/**
-	 * Media seconds
-	 *
-	 * @var int
-	 *
-	 * @since 9.0.0
-	 */
-	public $media_seconds = null;
-
-	/**
 	 * MessageType
 	 *
 	 * @var string

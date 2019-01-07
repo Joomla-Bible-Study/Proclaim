@@ -105,10 +105,6 @@
 			       description="JBS_STY_SECONDARY_REFERENCES_DESC"/>
 		</fieldset>
 
-		<field name="media_hours" type="text" class="inputbox" size="5" label="JBS_CMN_HOURS"/>
-		<field name="media_minutes" type="text" class="inputbox" size="5" label="JBS_CMN_MINUTES"/>
-		<field name="media_seconds" type="text" class="inputbox" size="5" label="JBS_CMN_SECONDS"/>
-
 		<field name="teacher_id" type="sql" extension="com_biblestudy" label="JBS_CMN_TEACHER"
 		       class="inputbox"
 		       query="SELECT id, teachername FROM #__bsms_teachers WHERE published = 1 ORDER by teachername ASC"

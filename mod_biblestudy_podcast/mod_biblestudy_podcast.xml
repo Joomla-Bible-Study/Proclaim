@@ -13,7 +13,6 @@
 		<filename module="mod_biblestudy_podcast">mod_biblestudy_podcast.php</filename>
 		<folder>language</folder>
 		<folder>tmpl</folder>
-		<filename>mod_biblestudy_podcast.xml</filename>
 	</files>
 	<config>
 		<fields name="params">

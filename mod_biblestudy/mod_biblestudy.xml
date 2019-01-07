@@ -14,14 +14,12 @@
 		<filename>helper.php</filename>
 		<folder>tmpl</folder>
 		<folder>language</folder>
-		<filename>mod_biblestudy.xml</filename>
 	</files>
 	<config>
 		<fields name="params">
 			<fieldset name="basic"
 			          addfieldpath="/administrator/components/com_biblestudy/models/fields">
 				<field name="dummy" type="loadlanguagefile" default=""/>
-				<!-- load common language file -->
 				<field name="t" type="sql" label="JBS_MDL_SELECT_TEMPLATE"
 				       description="JBS_MDL_SELECT_TEMPLATE_DESC" default="1"
 				       query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"

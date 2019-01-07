@@ -334,4 +334,32 @@ class JBSMHelper
 
 		return $url;
 	}
+
+	/**
+	 * Get Simple View Sate
+	 *
+	 * @param   Registry  $params      AdminTable + parametors
+	 *
+	 *
+	 * @return int
+	 *
+	 * @since 9.1.6
+	 */
+	public static function getSimpleView($params = null, $simple = null)
+	{
+
+		if (is_null($params))
+		{
+			$params = JBSMParams::getAdmin();
+		}
+
+		$simple = $params->params->get('simple_mode');
+
+		if ($simple)
+		{
+					return 1;
+		}
+
+		return 0;
+	}
 }

@@ -105,11 +105,14 @@ abstract class JHtmlBiblestudy
 
 		if ($extra == 'font-awesome')
 		{
-			JHtml::script('https://use.fontawesome.com/releases/v5.5.0/js/all.js',
+			JHtml::script('https://use.fontawesome.com/releases/v5.3.1/js/all.js',
 				[],
-				['integrity' => 'sha384-GqVMZRt5Gn7tB9D9q7ONtcp4gtHIUEW/yG7h98J7IpE3kpi+srfFyyB/04OV6pG0', 'crossorigin' => 'anonymous', 'defer' => 'defer']
+				['integrity' => 'sha384-kW+oWsYx3YpxvjtZjFXqazFpA7UP/MbiY4jvs+RWZo2+N94PFZ36T6TFkc9O3qoB', 'crossorigin' => 'anonymous', 'defer' => 'defer']
 			);
-			JHtml::script('https://use.fontawesome.com/releases/v5.5.0/js/v4-shims.js');
+			JHtml::script('https://use.fontawesome.com/releases/v5.4.2/js/v4-shims.js',
+				[],
+				['integrity' => 'sha384-kW+oWsYx3YpxvjtZjFXqazFpA7UP/MbiY4jvs+RWZo2+N94PFZ36T6TFkc9O3qoB', 'crossorigin' => 'anonymous', 'defer' => 'defer']
+			);
 		}
 	}
 
@@ -280,7 +283,7 @@ abstract class JHtmlBiblestudy
 	 * @return    array    The field option objects.
 	 *
 	 * @since    1.6
-	 * @throws   \Exception
+	 * @throws   Exception
 	 */
 	public static function Mediatypelist()
 	{
@@ -313,7 +316,7 @@ abstract class JHtmlBiblestudy
 	 * @return  string  The necessary HTML for the widget.
 	 *
 	 * @since   2.5
-	 * @throws  \Exception
+	 * @throws  Exception
 	 */
 	public static function Teacher()
 	{
@@ -336,7 +339,7 @@ abstract class JHtmlBiblestudy
 	 * @return    array    The field option objects.
 	 *
 	 * @since    1.6
-	 * @throws   \Exception
+	 * @throws   Exception
 	 */
 	public static function Teacherlist()
 	{
@@ -369,7 +372,7 @@ abstract class JHtmlBiblestudy
 	 * @return  string  The necessary HTML for the widget.
 	 *
 	 * @since   2.5
-	 * @throws  \Exception
+	 * @throws  Exception
 	 */
 	public static function Messagetype()
 	{
@@ -392,7 +395,7 @@ abstract class JHtmlBiblestudy
 	 * @return    array    The field option objects.
 	 *
 	 * @since    1.6
-	 * @throws   \Exception
+	 * @throws   Exception
 	 */
 	public static function Messagetypelist()
 	{
@@ -425,7 +428,7 @@ abstract class JHtmlBiblestudy
 	 * @return  string  The necessary HTML for the widget.
 	 *
 	 * @since   2.5
-	 * @throws  \Exception
+	 * @throws  Exception
 	 */
 	public static function Series()
 	{
@@ -448,7 +451,7 @@ abstract class JHtmlBiblestudy
 	 * @return    array    The field option objects.
 	 *
 	 * @since    1.6
-	 * @throws   \Exception
+	 * @throws   Exception
 	 */
 	public static function Serieslist()
 	{

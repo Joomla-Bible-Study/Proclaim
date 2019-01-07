@@ -115,7 +115,7 @@ class BiblestudyModelMessages extends JModelList
 	 * @return    void
 	 *
 	 * @since 7.1.0
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
@@ -315,54 +315,11 @@ class BiblestudyModelMessages extends JModelList
 			$query->where('study.location_id = ' . (int) $location);
 		}
 
-		// Filter on the language.
-		if ($language = $this->getState('filter.language'))
-		{
-			$query->where('study.language = ' . $db->quote($language));
-		}
-
-		// Add the list ordering clause.
-		$orderCol  = $this->state->get('list.fullordering', 'study.studydate');
-		$orderDirn = '';
-
-		if (empty($orderCol))
-		{
-			$orderCol  = $this->state->get('list.ordering', 'study.studydate');
-			$orderDirn = $this->state->get('list.direction', 'DESC');
-		}
-
-		$query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
+		// Add the list ordering clause
+		$orderCol  = $this->state->get('list.ordering', 'study.studydate');
+		$orderDirn = $this->state->get('list.direction', 'DESC');
+		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
 		return $query;
-	}
-
-	/**
-	 * Method to get a list of messages.
-	 * Overridden to add a check for access levels.
-	 *
-	 * @return  mixed  An array of data items on success, false on failure.
-	 *
-	 * @since   9.1.4
-	 * @throws  \Exception
-	 */
-	public function getItems()
-	{
-		$items = parent::getItems();
-
-		if (JFactory::getApplication()->isClient('site'))
-		{
-			$groups = JFactory::getUser()->getAuthorisedViewLevels();
-
-			for ($x = 0, $count = count($items); $x < $count; $x++)
-			{
-				// Check the access level. Remove articles the user shouldn't see
-				if (!in_array($items[$x]->access, $groups))
-				{
-					unset($items[$x]);
-				}
-			}
-		}
-
-		return $items;
 	}
 }

@@ -227,6 +227,8 @@ class BiblestudyViewSermon extends JViewLegacy
 			}
 		}
 
+		$this->simple_mode = JBSMHelper::getSimpleView();
+
 		$offset = $this->state->get('list.offset');
 
 		// Check the view access to the article (the model has already computed the values).

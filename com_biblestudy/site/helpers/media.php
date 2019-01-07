@@ -68,7 +68,7 @@ class JBSMMedia
 			$imageparams = $media->params;
 		}
 
-			if ($imageparams->get('media_use_button_icon') >= 1 || $params->get('simple_mode') == 1)
+			if ($imageparams->get('media_use_button_icon') >= 1 || $params->get('simple_mode') == 1 || $params->get('sermonstemplate') == 'easy')
 			{
 				$image = $this->mediaButton($imageparams, $params, $media->params);
 			}
@@ -153,7 +153,7 @@ class JBSMMedia
 				$file_size . '</span>';
 		}
 
-		if ($params->get('simple_mode') == 1)
+		if ($params->get('simple_mode') == 1 || $params->get('sermonstemplate') == 'easy')
 		{
 			$link_type = 3;
 		}
@@ -211,7 +211,7 @@ class JBSMMedia
 
 		$downloadlink = '';
 
-		if ($params->get('download_use_button_icon') >= 2 || $params->get('simple_mode') == 1)
+		if ($params->get('download_use_button_icon') >= 2 || $params->get('simple_mode') == 1 || $params->get('sermonstemplate') == 'easy')
 		{
 			$download_image = $this->downloadButton($params);
 		}
@@ -231,7 +231,10 @@ class JBSMMedia
 			$link_type = $media->params->get('link_type');
 		}
 
-		if ($media->params->get('download_show') && (!$media->params->get('link_type')) || $params->get('simple_mode') == 1)
+		if ($media->params->get('download_show')
+			&& (!$media->params->get('link_type'))
+			|| $params->get('simple_mode') == 1
+			|| $params->get('sermonstemplate') == 'easy')
 		{
 			$link_type = 2;
 		}
@@ -341,7 +344,7 @@ class JBSMMedia
 				break;
 		}
 
-		if ($params->get('simple_mode') == 1)
+		if ($params->get('simple_mode') == 1 || $params->get('sermonstemplate') == 'easy')
 		{
 			$filename = $media->get('filename');
 
@@ -351,11 +354,11 @@ class JBSMMedia
 			}
 			elseif ((preg_match('(pdf|PDF)', $filename) === 1))
 			{
-				$mediaimage = '<span class="' . 'fa fa-file-pdf-o' . '" title="play" style="font-size:' . '24' . 'px;"></span>';
+				$mediaimage = '<span class="' . 'fas fa-file-pdf' . '" title="play" style="font-size:' . '24' . 'px;"></span>';
 			}
 			else
 			{
-				$mediaimage = '<span class="' . 'fa fa-play-circle-o' . '" title="play" style="font-size:' . '24' . 'px;"></span>';
+				$mediaimage = '<span class="' . 'fas fa-play-circle' . '" title="play" style="font-size:' . '24' . 'px;"></span>';
 			}
 		}
 
@@ -422,7 +425,7 @@ class JBSMMedia
 				break;
 		}
 
-		if ($download->get('simple_mode') == 1)
+		if ($download->get('simple_mode') == 1 || $download->get('sermonstemplate') == 'easy')
 		{
 			$downloadimage = '<span class="fas fa-chevron-circle-down" title="download" style="font-size: 24px;"></span>';
 		}
@@ -613,7 +616,6 @@ class JBSMMedia
 
 		// Here we get more information about the particular media file
 		$filesize = self::getFluidFilesize($media, $params);
-		$duration = self::getFluidDuration($media, $params);
 
 		$path = JBSMHelper::MediaBuildUrl($media->sparams->get('path'), $params->get('filename'), $params, true);
 
@@ -627,7 +629,7 @@ class JBSMMedia
 						$return = base64_encode($path);
 						$playercode = '<a href="javascript:;" onclick="window.open(\'index.php?option=com_biblestudy&amp;task=playHit&amp;return=' .
 							$return . '&amp;' . JSession::getFormToken() . '=1\')" title="' .
-							$media->params->get("media_button_text") . ' - ' . $media->comment . ' ' . $duration . ' '
+							$media->params->get("media_button_text") . ' - ' . $media->comment . ' '
 							. $filesize . '">' . $image . '</a>';
 						break;
 
@@ -893,48 +895,6 @@ class JBSMMedia
 	 */
 	public function getFluidDuration($row, $params)
 	{
-		$duration = $row->media_hours . $row->media_minutes . $row->media_seconds;
-
-		if (!$duration)
-		{
-			$duration = null;
-
-			return $duration;
-		}
-
-		$duration_type = $params->get('duration_type', 2);
-		$hours         = $row->media_hours;
-		$minutes       = $row->media_minutes;
-		$seconds       = $row->media_seconds;
-
-		switch ($duration_type)
-		{
-			case 1:
-				if (!$hours)
-				{
-					$duration = $minutes . ' mins ' . $seconds . ' secs';
-				}
-				else
-				{
-					$duration = $hours . ' hour(s) ' . $minutes . ' mins ' . $seconds . ' secs';
-				}
-				break;
-			case 2:
-				if (!$hours)
-				{
-					$duration = $minutes . ':' . $seconds;
-				}
-				else
-				{
-					$duration = $hours . ':' . $minutes . ':' . $seconds;
-				}
-				break;
-			default:
-				$duration = $hours . ':' . $minutes . ':' . $seconds;
-				break;
-		}
-
-		return $duration;
 	}
 
 	/**
@@ -978,8 +938,7 @@ class JBSMMedia
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('#__bsms_mediafiles.*, #__bsms_servers.params AS sparams,'
-			. ' s.studyintro, s.media_hours, s.media_minutes, s.series_id,'
-			. ' s.media_seconds, s.studytitle, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin,'
+			. ' s.studyintro, s.series_id, s.studytitle, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin,'
 			. ' s.verse_end, t.teachername, t.teacher_thumbnail, t.teacher_image, t.thumb, t.image, t.id as tid, s.id as sid, s.studyintro,'
 			. ' se.id as seriesid, se.series_text, se.series_thumbnail')
 			->from('#__bsms_mediafiles')
