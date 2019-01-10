@@ -1391,7 +1391,7 @@
 				<option value="pull-right">JBS_TPL_PULLRIGHT</option>
 			</field>
 			<field type="spacer" name="myspacera" hr="true"/>
-			<field name="dscripture1row" type="rowoptions" default="1" label="JBS_CMN_SCRIPTURE" description="JBS_TPL_ROW_DESC" labelclass=""/>
+			<field name="dscripture1row" type="rowoptions" default="1" label="JBS_CMN_SCRIPTURE" description="JBS_TPL_ROW_DESC"/>
 			<field name="dscripture1col" type="spanoptions" default="0" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
 			<field name="dscripture1colspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
 			<field name="dscripture1element" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>

@@ -230,7 +230,7 @@ $input  = $app->input;
 								<?php foreach ($this->form->getFieldset('DISPLAYELEMENTS1') as $field): ?>
 									<div class="control-group">
 										<div class="control-label">
-											<?php echo $field->label; ?>
+											<?php //echo $field->label; ?>
 										</div>
 										<div class="controls">
 											<?php echo $field->input; ?>
@@ -357,74 +357,146 @@ $input  = $app->input;
 							</div>
 							<div class="tab-pane" id="details-2">
 								<?php foreach ($this->form->getFieldset('DDISPLAYELEMENTS1') as $field): ?>
-									<div class="control-group">
-										<div class="control-label">
+                                <?php if ($field->type != "Spacer"): ?>
+									<div class="pull-left">
+                                        <div>
 											<?php echo $field->label; ?>
-										</div>
-										<div class="controls">
+                                        </div>
+                                        <div>
 											<?php echo $field->input; ?>
-										</div>
+                                        </div>
 									</div>
+                                <?php else: ?>
+                                    <div class="clearfix"></div>
+                                    <div class="control-group">
+                                        <div class="control-label">
+											<?php echo $field->label; ?>
+                                        </div>
+                                        <div class="controls">
+											<?php echo $field->input; ?>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
 								<?php endforeach; ?>
 							</div>
 							<div class="tab-pane" id="details-3">
 								<?php foreach ($this->form->getFieldset('DDISPLAYELEMENTS2') as $field): ?>
-									<div class="control-group">
-										<div class="control-label">
-											<?php echo $field->label; ?>
-										</div>
-										<div class="controls">
-											<?php echo $field->input; ?>
-										</div>
-									</div>
+									<?php if ($field->type != "Spacer"): ?>
+                                        <div class="pull-left">
+                                            <div>
+												<?php echo $field->label; ?>
+                                            </div>
+                                            <div>
+												<?php echo $field->input; ?>
+                                            </div>
+                                        </div>
+									<?php else: ?>
+                                        <div class="clearfix"></div>
+                                        <div class="control-group">
+                                            <div class="control-label">
+												<?php echo $field->label; ?>
+                                            </div>
+                                            <div class="controls">
+												<?php echo $field->input; ?>
+                                            </div>
+                                        </div>
+									<?php endif; ?>
 								<?php endforeach; ?>
 							</div>
 							<div class="tab-pane" id="details-4">
 								<?php foreach ($this->form->getFieldset('DDISPLAYELEMENTS3') as $field): ?>
-									<div class="control-group">
-										<div class="control-label">
-											<?php echo $field->label; ?>
-										</div>
-										<div class="controls">
-											<?php echo $field->input; ?>
-										</div>
-									</div>
+									<?php if ($field->type != "Spacer"): ?>
+                                        <div class="pull-left">
+                                            <div>
+												<?php echo $field->label; ?>
+                                            </div>
+                                            <div>
+												<?php echo $field->input; ?>
+                                            </div>
+                                        </div>
+									<?php else: ?>
+                                        <div class="clearfix"></div>
+                                        <div class="control-group">
+                                            <div class="control-label">
+												<?php echo $field->label; ?>
+                                            </div>
+                                            <div class="controls">
+												<?php echo $field->input; ?>
+                                            </div>
+                                        </div>
+									<?php endif; ?>
 								<?php endforeach; ?>
 							</div>
 							<div class="tab-pane" id="details-5">
 								<?php foreach ($this->form->getFieldset('DDISPLAYELEMENTS4') as $field): ?>
-									<div class="control-group">
-										<div class="control-label">
-											<?php echo $field->label; ?>
-										</div>
-										<div class="controls">
-											<?php echo $field->input; ?>
-										</div>
-									</div>
+									<?php if ($field->type != "Spacer"): ?>
+                                        <div class="pull-left">
+                                            <div>
+												<?php echo $field->label; ?>
+                                            </div>
+                                            <div>
+												<?php echo $field->input; ?>
+                                            </div>
+                                        </div>
+									<?php else: ?>
+                                        <div class="clearfix"></div>
+                                        <div class="control-group">
+                                            <div class="control-label">
+												<?php echo $field->label; ?>
+                                            </div>
+                                            <div class="controls">
+												<?php echo $field->input; ?>
+                                            </div>
+                                        </div>
+									<?php endif; ?>
 								<?php endforeach; ?>
 							</div>
 							<div class="tab-pane" id="details-6">
 								<?php foreach ($this->form->getFieldset('DDISPLAYELEMENTS5') as $field): ?>
-									<div class="control-group">
-										<div class="control-label">
-											<?php echo $field->label; ?>
-										</div>
-										<div class="controls">
-											<?php echo $field->input; ?>
-										</div>
-									</div>
+									<?php if ($field->type != "Spacer"): ?>
+                                        <div class="pull-left">
+                                            <div>
+												<?php echo $field->label; ?>
+                                            </div>
+                                            <div>
+												<?php echo $field->input; ?>
+                                            </div>
+                                        </div>
+									<?php else: ?>
+                                        <div class="clearfix"></div>
+                                        <div class="control-group">
+                                            <div class="control-label">
+												<?php echo $field->label; ?>
+                                            </div>
+                                            <div class="controls">
+												<?php echo $field->input; ?>
+                                            </div>
+                                        </div>
+									<?php endif; ?>
 								<?php endforeach; ?>
 							</div>
 							<div class="tab-pane" id="details-7">
 								<?php foreach ($this->form->getFieldset('DDISPLAYELEMENTS6') as $field): ?>
-									<div class="control-group">
-										<div class="control-label">
-											<?php echo $field->label; ?>
-										</div>
-										<div class="controls">
-											<?php echo $field->input; ?>
-										</div>
-									</div>
+									<?php if ($field->type != "Spacer"): ?>
+                                        <div class="pull-left">
+                                            <div>
+												<?php echo $field->label; ?>
+                                            </div>
+                                            <div>
+												<?php echo $field->input; ?>
+                                            </div>
+                                        </div>
+									<?php else: ?>
+                                        <div class="clearfix"></div>
+                                        <div class="control-group">
+                                            <div class="control-label">
+												<?php echo $field->label; ?>
+                                            </div>
+                                            <div class="controls">
+												<?php echo $field->input; ?>
+                                            </div>
+                                        </div>
+									<?php endif; ?>
 								<?php endforeach; ?>
 							</div>
 						</div>
