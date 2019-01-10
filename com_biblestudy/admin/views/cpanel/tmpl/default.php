@@ -24,6 +24,8 @@ if ($msg)
 {
 	echo $msg;
 }
+
+$simple_view = JBSMHelper::getSimpleView();
 ?>
 <!-- Header -->
 <form action="index.php" method="post" name="adminForm" id="adminForm">
@@ -55,7 +57,7 @@ if ($msg)
 		<div id="j-main-container" class="span10">
 			<?php else : ?>
 			<div id="j-main-container">
-				<?php endif; ?>
+                <?php endif; ?>
 				<?php if ($this->hasPostInstallationMessages): ?>
 					<div class="alert alert-info">
 						<h3>
@@ -122,6 +124,7 @@ if ($msg)
 									   title="<?php echo JText::_('JBS_CMN_SERIES'); ?>" class="btn"> <i
 												class="icon-big icon-tree-2"></i>
 										<span><br/> <?php echo JText::_('JBS_CMN_SERIES'); ?> </span></a>
+									<?php if (!$simple_view): ?>
 									<a href="index.php?option=com_biblestudy&amp;view=messagetypes"
 									   title="<?php echo JText::_('JBS_CMN_MESSAGETYPES'); ?>" class="btn"> <i
 												class="icon-big icon-list-2"></i><br/>
@@ -138,6 +141,7 @@ if ($msg)
 									   title="<?php echo JText::_('JBS_CMN_COMMENTS'); ?>" class="btn"> <span
 												class="icon-big icon-comments-2"></span><br/>
 										<span> <?php echo JText::_('JBS_CMN_COMMENTS'); ?> </span></a>
+                                    <?php endif; ?>
 									<a href="index.php?option=com_biblestudy&amp;view=servers"
 									   title="<?php echo JText::_('JBS_CMN_SERVERS'); ?>" class="btn"> <span
 												class="icon-big icon-database"></span>
@@ -146,6 +150,8 @@ if ($msg)
 									   title="<?php echo JText::_('JBS_CMN_PODCASTS'); ?>" class="btn"> <span
 												class="icon-big icon-stack"></span>
 										<span><br/> <?php echo JText::_('JBS_CMN_PODCASTS'); ?> </span></a>
+
+									<?php if (!$simple_view): ?>
 									<a href="index.php?option=com_biblestudy&amp;view=templates"
 									   title="<?php echo JText::_('JBS_CMN_TEMPLATES'); ?>" class="btn"> <span
 												class="icon-big icon-grid"></span>
@@ -154,6 +160,7 @@ if ($msg)
 									   title="<?php echo JText::_('JBS_CMN_TEMPLATECODE'); ?>" class="btn"> <span
 												class="icon-big icon-stack"></span>
 										<span><br/> <?php echo JText::_('JBS_CMN_TEMPLATECODE'); ?> </span></a>
+                                    <?php endif; ?>
 								</div>
 							</div>
 						</div>
