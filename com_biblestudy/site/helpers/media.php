@@ -89,7 +89,7 @@ class JBSMMedia
 		}
 		elseif ($media->params->get('link_type') == 0 || $media->params->get('link_type'))
 		{
-			$link_type = $media->params->get('link_type');
+			$link_type = $media->params->get('link_type', 3);
 		}
 		else
 		{
@@ -157,7 +157,7 @@ class JBSMMedia
 		{
 			$link_type = 3;
 		}
-
+var_dump($link_type);
 		switch ($link_type)
 		{
 			case 0:
@@ -231,7 +231,7 @@ class JBSMMedia
 			$link_type = $media->params->get('link_type');
 		}
 
-		if ($media->params->get('download_show')
+		if ($params->get('download_show')
 			&& (!$media->params->get('link_type'))
 			|| $params->get('simple_mode') == 1
 			|| $params->get('sermonstemplate') == 'easy')
