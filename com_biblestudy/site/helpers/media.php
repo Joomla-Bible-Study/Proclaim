@@ -157,7 +157,7 @@ class JBSMMedia
 		{
 			$link_type = 3;
 		}
-var_dump($link_type);
+
 		switch ($link_type)
 		{
 			case 0:
