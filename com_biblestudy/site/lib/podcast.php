@@ -281,15 +281,15 @@ class JBSMPodcast
 								$subtitle = $episode->teachername;
 								break;
 							case 1:
-								if ($scripture && $episode->studytitle)
+								if ($scripture && $episode->teachername)
 								{
-									$subtitle = $scripture . ' - ' . $episode->studytitle;
+									$subtitle = $scripture . ' - ' . $episode->teachername;
 								}
 								elseif (!$scripture)
 								{
-									$subtitle = $episode->studytitle;
+									$subtitle = $episode->teachername;
 								}
-								elseif (!$episode->studytitle)
+								elseif (!$episode->teachername)
 								{
 									$subtitle = $scripture;
 								}
@@ -303,7 +303,7 @@ class JBSMPodcast
 							case 4:
 								$subtitle = $episodedate;
 
-								if (!$episode->studytitle)
+								if (!$episodedate)
 								{
 									$subtitle = $scripture;
 								}
@@ -312,8 +312,20 @@ class JBSMPodcast
 									$subtitle .= ' - ' . $scripture;
 								}
 								break;
-							case 7:
 							case 5:
+								$subtitle = $scripture . ' - '.$episode->studytitle;
+								break;
+							case 6:
+								$query = $db->getQuery('true');
+								$query->select('*');
+								$query->from('#__bsms_books');
+								$query->where('booknumber = ' . $episode->booknumber);
+								$db->setQuery($query);
+								$book     = $db->loadObject();
+								$bookname = JText::_($book->bookname);
+								$subtitle = $bookname . ' ' . $episode->chapter_begin;
+								break;
+							case 7:
 								if ($this->templateid !== $detailstemplateid || is_null($this->template))
 								{
 									$this->template   = JBSMParams::getTemplateparams($detailstemplateid);
@@ -329,16 +341,6 @@ class JBSMPodcast
 								);
 
 								$subtitle = $element->element;
-								break;
-							case 6:
-								$query = $db->getQuery('true');
-								$query->select('*');
-								$query->from('#__bsms_books');
-								$query->where('booknumber = ' . $episode->booknumber);
-								$db->setQuery($query);
-								$book     = $db->loadObject();
-								$bookname = JText::_($book->bookname);
-								$subtitle = $bookname . ' ' . $episode->chapter_begin;
 								break;
 						}
 
