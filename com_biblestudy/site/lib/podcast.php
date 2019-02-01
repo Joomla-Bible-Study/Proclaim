@@ -251,15 +251,15 @@ class JBSMPodcast
 									$this->templateid = $detailstemplateid;
 								}
 
-								$element = $custom->getCustom(
-									$rowid = '24',
+								$element = $JBSMlisting->getFluidCustom(
 									$podinfo->custom,
 									$episode,
 									$params,
-									$this->template
+									$this->template,
+									$rowid = '24'
 								);
 
-								$title = $element->element;
+								$title = $element;
 								break;
 							case 6:
 								$query = $db->getQuery('true');
@@ -332,15 +332,15 @@ class JBSMPodcast
 									$this->templateid = $detailstemplateid;
 								}
 
-								$element = $custom->getCustom(
-									$rowid = '24',
-									$podinfo->episodesubtitle,
+								$element = $JBSMlisting->getFluidCustom(
+									$podinfo->custom,
 									$episode,
 									$params,
-									$this->template
-								);
+									$this->template,
+									$rowid = '24'
 
-								$subtitle = $element->element;
+								);
+								$subtitle = $element;
 								break;
 						}
 
