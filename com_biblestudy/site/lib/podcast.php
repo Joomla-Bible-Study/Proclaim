@@ -381,9 +381,9 @@ class JBSMPodcast
                         		<content:encoded>' . $description . '</content:encoded>
                         		<pubDate>' . $episodedate . '</pubDate>
                         		<itunes:subtitle>' . $this->escapeHTML($subtitle) . '</itunes:subtitle>
-                        		<itunes:summary>' . strip_tags($podinfo->description) . '</itunes:summary>
+                        		<itunes:summary>' . $description . '</itunes:summary>
                         		<itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>
-                        		<itunes:duration>' . $hours . ':' . sprintf(
+                        		<itunes:duration>' . $episode->media_hours . ':' . sprintf(
 								"%02d",
 								$episode->media_minutes
 							) . ':' . sprintf("%02d", $episode->media_seconds) . '</itunes:duration>';
@@ -543,7 +543,7 @@ class JBSMPodcast
 			. ' mf.id AS mfid, mf.study_id, mf.server_id, mf.podcast_id,'
 		. ' mf.published AS mfpub, mf.createdate, mf.params,'
 		. ' s.id AS sid, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.verse_begin,'
-		. ' s.chapter_end, s.verse_end, s.studytitle, s.studyintro, s.published AS spub,'
+		. ' s.chapter_end, s.verse_end, s.studytitle, s.studyintro, s.published AS spub, s.media_hours, s.media_minutes, s.media_seconds,'
 		. ' se.series_text,'
 		. ' sr.id AS srid, sr.params as srparams,'
 		. ' t.id AS tid, t.teachername,'
