@@ -148,7 +148,7 @@ class JBSMBibleStudyHelper
 	 */
 	public static function addSubmenu($vName)
 	{
-		$simple_view = JBSMHelper::getSimpleView(); print_r($simple_view);
+		$simple_view = JBSMHelper::getSimpleView();
 
 		self::rendermenu(
 			JText::_('JBS_CMN_CONTROL_PANEL'), 'index.php?option=com_biblestudy&view=cpanel', $vName == 'cpanel'
