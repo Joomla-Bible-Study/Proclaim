@@ -145,6 +145,7 @@ class JBSMBibleStudyHelper
 	 * @return void
 	 *
 	 * @since    1.6
+	 * @throws Exception
 	 */
 	public static function addSubmenu($vName)
 	{
@@ -379,6 +380,7 @@ class JBSMBibleStudyHelper
 	 * @return int '1' is on '0' is off
 	 *
 	 * @since 7.1.0
+	 * @throws Exception
 	 */
 	public static function debug()
 	{
@@ -771,5 +773,25 @@ class JBSMBibleStudyHelper
 		}
 
 		return $options;
+	}
+
+	/**
+	 * Get haf of array count
+	 *
+	 * @param   array|object  $array  Array or Object to count
+	 *
+	 * @return object
+	 *
+	 * @since 9.1.7
+	 */
+	public static function halfarray($array)
+	{
+		$count = count($array);
+
+		$return = new stdClass;
+		$return->half = floor($count / 2);
+		$return->count = $count;
+
+		return $return;
 	}
 }

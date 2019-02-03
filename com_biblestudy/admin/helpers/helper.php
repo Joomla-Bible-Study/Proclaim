@@ -39,6 +39,7 @@ class JBSMHelper
 	 * @return string
 	 *
 	 * @since  9.0.0
+	 * @throws Exception
 	 */
 	public static function getTooltip($row, $params, $template)
 	{
@@ -338,16 +339,16 @@ class JBSMHelper
 	/**
 	 * Get Simple View Sate
 	 *
-	 * @param   Registry  $params      AdminTable + parametors
-	 *
+	 * @param   Registry  $params  AdminTable + parametors
+	 * @param   string    $simple  Not Used right now
 	 *
 	 * @return int
 	 *
 	 * @since 9.1.6
+	 * @throws Exception
 	 */
 	public static function getSimpleView($params = null, $simple = null)
 	{
-
 		if (is_null($params))
 		{
 			$params = JBSMParams::getAdmin();
