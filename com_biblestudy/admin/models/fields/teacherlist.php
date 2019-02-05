@@ -9,6 +9,8 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+jimport('joomla.form.helper');
+JFormHelper::loadFieldClass('list');
 
 /**
  * Teachers List Form Field class for the Proclaim component
