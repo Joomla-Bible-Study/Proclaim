@@ -313,7 +313,7 @@ class JBSMPodcast
 								}
 								break;
 							case 5:
-								$subtitle = $scripture . ' - '.$episode->studytitle;
+								$subtitle = $scripture . ' - ' . $episode->studytitle;
 								break;
 							case 6:
 								$query = $db->getQuery('true');
