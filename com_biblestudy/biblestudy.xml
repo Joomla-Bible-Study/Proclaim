@@ -22,7 +22,6 @@
 	<files folder="site">
 		<filename>biblestudy.php</filename>
 		<filename>controller.php</filename>
-		<filename>convert1.htm</filename>
 		<filename>router.php</filename>
 		<folder>controllers</folder>
 		<folder>helpers</folder>
@@ -71,7 +70,6 @@
 			<filename>biblestudy.php</filename>
 			<filename>config.xml</filename>
 			<filename>controller.php</filename>
-			<filename>convert1.htm</filename>
 			<folder>addons</folder>
 			<folder>controllers</folder>
 			<folder>helpers</folder>

@@ -92,7 +92,7 @@ abstract class JBSMAddon
 			if (!preg_match('/JBSMAddon(.*)/i', get_class($this), $r))
 			{
 				// @TODO Changed to a localized exception
-				throw new Exception(JText::sprintf('CANT ADDON CLASS NAME'), 500);
+				throw new Exception(JText::sprintf('JBS_CMN_CANT_ADDON_CLASS_NAME', $this->type), 500);
 			}
 
 			$this->type = strtolower($r[1]);
@@ -119,8 +119,7 @@ abstract class JBSMAddon
 		}
 		else
 		{
-			// @TODO Need to properly translate this string
-			throw new Exception(JText::sprintf('COULD NOT LOAD ADDON CONFIGURATION'), 404);
+			throw new Exception(JText::_('JBS_CMN_COULD_NOT_LOAD_ADDON_CONFIGURATION'), 404);
 		}
 
 		return $xml;
@@ -152,8 +151,7 @@ abstract class JBSMAddon
 
 				if (!class_exists($addonClass))
 				{
-					// @TODO Need to properly translate this string
-					JLog::add(JText::sprintf('COULD NOT LOAD ADDON CLASS', $addonClass), JLog::WARNING, 'jerror');
+					JLog::add(JText::sprintf('JBS_CMN_CANT_ADDON_LOAD_CLASS_NAME', $addonClass), JLog::WARNING, 'jerror');
 
 					return false;
 				}
@@ -166,6 +164,30 @@ abstract class JBSMAddon
 
 		return new $addonClass($config);
 	}
+
+	/**
+	 * Render Fields for general view.
+	 *
+	 * @param   object  $media_form  Media files form
+	 * @param   bool    $new         If media is new
+	 *
+	 * @return string
+	 *
+	 * @since 9.1.3
+	 */
+	abstract protected function renderGeneral($media_form, $new);
+
+	/**
+	 * Render Layout and fields
+	 *
+	 * @param   object  $media_form  Media files form
+	 * @param   bool    $new         If media is new
+	 *
+	 * @return string
+	 *
+	 * @since 9.1.3
+	 */
+	abstract protected function render($media_form, $new);
 
 	/**
 	 * Upload

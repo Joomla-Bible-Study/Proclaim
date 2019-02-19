@@ -18,6 +18,7 @@ JHtml::_('formbehavior.chosen', 'select');
 
 /** @type Joomla\Registry\Registry $params */
 $params = $this->state->get('params');
+$new = ($this->item->id == 0);
 
 // Set up defaults
 if (JFactory::getApplication()->input->getInt('id'))
@@ -170,6 +171,16 @@ JFactory::getDocument()->addScriptDeclaration("
 				<div class="tab-pane" id="rules">
 					<?php echo $this->form->getInput('rules'); ?>
 				</div>
+				<?php // Load the batch processing form. ?>
+				<?php echo JHtml::_(
+					'bootstrap.renderModal',
+					'collapseModal',
+					array(
+						'title'  => JText::_('JBS_CMN_BATCH_OPTIONS'),
+						'footer' => $this->loadTemplate('converter_footer')
+					),
+					$this->loadTemplate('converter_body')
+				); ?>
 			</div>
 			<?php echo $this->form->getInput('asset_id'); ?>
 			<?php echo $this->form->getInput('id'); ?>

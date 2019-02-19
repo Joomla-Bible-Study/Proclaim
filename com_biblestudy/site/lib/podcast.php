@@ -41,6 +41,7 @@ class JBSMPodcast
 	 * @return boolean|string
 	 *
 	 * @since 8.0.0
+	 * @throws Exception
 	 */
 	public function makePodcasts()
 	{
@@ -172,18 +173,6 @@ class JBSMPodcast
 					foreach ($episodes as $episode)
 					{
 						$episodedate = date("r", strtotime($episode->createdate));
-						$hours       = $episode->media_hours;
-
-						if (!$hours || $hours < 1)
-						{
-							$hours = '00';
-						}
-						// If there is no length set, we default to 35 mints
-						if (!$episode->media_minutes && !$episode->media_seconds)
-						{
-							$episode->media_minutes = 35;
-							$episode->media_seconds = 00;
-						}
 
 						$esv          = 0;
 						$scripturerow = 1;
@@ -262,15 +251,15 @@ class JBSMPodcast
 									$this->templateid = $detailstemplateid;
 								}
 
-								$element = $custom->getCustom(
-									$rowid = '24',
+								$element = $JBSMlisting->getFluidCustom(
 									$podinfo->custom,
 									$episode,
 									$params,
-									$this->template
+									$this->template,
+									$rowid = '24'
 								);
 
-								$title = $element->element;
+								$title = $element;
 								break;
 							case 6:
 								$query = $db->getQuery('true');
@@ -292,15 +281,15 @@ class JBSMPodcast
 								$subtitle = $episode->teachername;
 								break;
 							case 1:
-								if ($scripture && $episode->studytitle)
+								if ($scripture && $episode->teachername)
 								{
-									$subtitle = $scripture . ' - ' . $episode->studytitle;
+									$subtitle = $scripture . ' - ' . $episode->teachername;
 								}
 								elseif (!$scripture)
 								{
-									$subtitle = $episode->studytitle;
+									$subtitle = $episode->teachername;
 								}
-								elseif (!$episode->studytitle)
+								elseif (!$episode->teachername)
 								{
 									$subtitle = $scripture;
 								}
@@ -314,7 +303,7 @@ class JBSMPodcast
 							case 4:
 								$subtitle = $episodedate;
 
-								if (!$episode->studytitle)
+								if (!$episodedate)
 								{
 									$subtitle = $scripture;
 								}
@@ -323,23 +312,8 @@ class JBSMPodcast
 									$subtitle .= ' - ' . $scripture;
 								}
 								break;
-							case 7:
 							case 5:
-								if ($this->templateid !== $detailstemplateid || is_null($this->template))
-								{
-									$this->template   = JBSMParams::getTemplateparams($detailstemplateid);
-									$this->templateid = $detailstemplateid;
-								}
-
-								$element = $custom->getCustom(
-									$rowid = '24',
-									$podinfo->episodesubtitle,
-									$episode,
-									$params,
-									$this->template
-								);
-
-								$subtitle = $element->element;
+								$subtitle = $scripture . ' - ' . $episode->studytitle;
 								break;
 							case 6:
 								$query = $db->getQuery('true');
@@ -350,6 +324,23 @@ class JBSMPodcast
 								$book     = $db->loadObject();
 								$bookname = JText::_($book->bookname);
 								$subtitle = $bookname . ' ' . $episode->chapter_begin;
+								break;
+							case 7:
+								if ($this->templateid !== $detailstemplateid || is_null($this->template))
+								{
+									$this->template   = JBSMParams::getTemplateparams($detailstemplateid);
+									$this->templateid = $detailstemplateid;
+								}
+
+								$element = $JBSMlisting->getFluidCustom(
+									$podinfo->custom,
+									$episode,
+									$params,
+									$this->template,
+									$rowid = '24'
+
+								);
+								$subtitle = $element;
 								break;
 						}
 
@@ -390,9 +381,9 @@ class JBSMPodcast
                         		<content:encoded>' . $description . '</content:encoded>
                         		<pubDate>' . $episodedate . '</pubDate>
                         		<itunes:subtitle>' . $this->escapeHTML($subtitle) . '</itunes:subtitle>
-                        		<itunes:summary>' . strip_tags($podinfo->description) . '</itunes:summary>
+                        		<itunes:summary>' . $description . '</itunes:summary>
                         		<itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>
-                        		<itunes:duration>' . $hours . ':' . sprintf(
+                        		<itunes:duration>' . $episode->media_hours . ':' . sprintf(
 								"%02d",
 								$episode->media_minutes
 							) . ':' . sprintf("%02d", $episode->media_seconds) . '</itunes:duration>';
@@ -552,8 +543,7 @@ class JBSMPodcast
 			. ' mf.id AS mfid, mf.study_id, mf.server_id, mf.podcast_id,'
 		. ' mf.published AS mfpub, mf.createdate, mf.params,'
 		. ' s.id AS sid, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.verse_begin,'
-		. ' s.chapter_end, s.verse_end, s.studytitle, s.studyintro, s.published AS spub,'
-		. ' s.media_hours, s.media_minutes, s.media_seconds,'
+		. ' s.chapter_end, s.verse_end, s.studytitle, s.studyintro, s.published AS spub, s.media_hours, s.media_minutes, s.media_seconds,'
 		. ' se.series_text,'
 		. ' sr.id AS srid, sr.params as srparams,'
 		. ' t.id AS tid, t.teachername,'
@@ -603,6 +593,7 @@ class JBSMPodcast
 	 * @return boolean|string
 	 *
 	 * @since 7.0.0
+	 * @throws Exception
 	 */
 	public function writeFile($file, $filecontent)
 	{

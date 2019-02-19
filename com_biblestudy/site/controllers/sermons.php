@@ -78,18 +78,4 @@ class BiblestudyControllerSermons extends JControllerLegacy
 		$input    = new JInput;
 		$getMedia->hitPlay($input->get('id', '', 'int'));
 	}
-
-	/**
-	 * This function is supposed to generate the Media Player that is requested via AJAX
-	 * from the studiesList view "default.php". It has not been implemented yet, so its not used.
-	 *
-	 * @return null
-	 *
-	 * @since 7.0
-	 * @deprecated since version 7.0.4
-	 */
-	public function inlinePlayer()
-	{
-		echo('{m4vremote}http://www.livingwatersweb.com/video/John_14_15-31.m4v{/m4vremote}');
-	}
 }
