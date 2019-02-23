@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    Proclaim.Admin
- * @copyright  2007 - 2018 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -40,7 +40,7 @@ class Com_BiblestudyInstallerScript
 			'7.0' => '7.0.13',
 			'7.1' => '7.1.0',
 			'7.2' => '7.2.1',
-			'0'   => '7.0.13' // Preferred version
+			'0'   => '7.2.11' // Preferred version
 		),
 		'MySQL'   => array(
 			'5.1' => '5.1',
