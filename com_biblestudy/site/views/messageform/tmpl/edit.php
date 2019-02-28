@@ -3,7 +3,7 @@
  * Form
  *
  * @package    BibleStudy.Site
- * @copyright  2007 - 2018 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -237,30 +237,6 @@ else
 							</div>
 							<div class="controls">
 								<?php echo $this->form->getInput('image', null, $thumbnailm); ?>
-							</div>
-						</div>
-						<div class="control-group">
-							<div class="control-label">
-								<?php echo $this->form->getLabel('media_hours'); ?>
-							</div>
-							<div class="controls">
-								<?php echo $this->form->getInput('media_hours'); ?>
-							</div>
-						</div>
-						<div class="control-group">
-							<div class="control-label">
-								<?php echo $this->form->getLabel('media_minutes'); ?>
-							</div>
-							<div class="controls">
-								<?php echo $this->form->getInput('media_minutes'); ?>
-							</div>
-						</div>
-						<div class="control-group">
-							<div class="control-label">
-								<?php echo $this->form->getLabel('media_seconds'); ?>
-							</div>
-							<div class="controls">
-								<?php echo $this->form->getInput('media_seconds'); ?>
 							</div>
 						</div>
 						<div class="control-group">

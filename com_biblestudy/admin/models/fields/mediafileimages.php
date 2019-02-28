@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2018 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -200,33 +200,14 @@ class JFormFieldMediafileImages extends JFormFieldList
 	 */
 	public function getIcon ($media)
 	{
-		$icon = null;
+		$MediaHelper = new JBSMMedia;
+		$mimetypes = $MediaHelper->getIcons();
 
-		switch ($media->params->get('media_icon_type'))
+		if ($media->params->get('media_icon_type') !== '1')
 		{
-			case 'fa fa-play':
-				$icon = JText::_('JBS_MED_PLAY');
-				break;
-			case 'fa fa-youtube':
-				$icon = JText::_('JBS_MED_YOUTUBE');
-				break;
-			case 'fa fa-video-camera':
-				$icon = JText::_('JBS_MED_VIDEO');
-				break;
-			case 'fa fa-television':
-				$icon = JText::_('JBS_MED_BROADCAST');
-				break;
-			case 'fa fa-file':
-				$icon = JText::_('JBS_MED_FILE');
-				break;
-			case 'fa fa-vimeo':
-				$icon = JText::_('JBS_MED_VIMEO');
-				break;
-			case '1':
-				$icon = $media->params->get('media_custom_icon');
-				break;
+			return JText::_($mimetypes[$media->params->get('media_icon_type')]);
 		}
 
-		return $icon;
+		return $media->params->get('media_custom_icon');
 	}
 }

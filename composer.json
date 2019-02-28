@@ -1,7 +1,7 @@
 {
   "name": "joomla-bible-study/joomla-bible-study",
   "type": "project",
-  "description": "Joomla-Bible-Study",
+  "description": "CWM Proclaim",
   "keywords": [
 	"bible",
 	"biblestudy",
@@ -25,7 +25,8 @@
 	"symfony/polyfill-php55": "~1.2",
 	"symfony/polyfill-php56": "~1.0",
 	"symfony/yaml": "2.*",
-	"simplepie/simplepie": "1.3.1"
+	"simplepie/simplepie": "1.3.1",
+	"ext-json": "*"
   },
   "require-dev": {
 	"phing/phing": "2.*",

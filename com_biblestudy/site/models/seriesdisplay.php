@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2018 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -37,6 +37,7 @@ class BiblestudyModelSeriesdisplay extends JModelItem
 	 * @return void
 	 *
 	 * @since    1.6
+	 * @throws Exception
 	 */
 	protected function populateState()
 	{
@@ -139,6 +140,7 @@ class BiblestudyModelSeriesdisplay extends JModelItem
 	 * @return bool|mixed
 	 *
 	 * @since 7.0
+	 * @throws Exception
 	 */
 	public function getStudies()
 	{
@@ -157,14 +159,14 @@ class BiblestudyModelSeriesdisplay extends JModelItem
 		$query->select(
 			$this->getState('list.select', 'study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
 		                study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.studyintro,
-		                study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, study.media_hours, study.media_minutes, ' .
+		                study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, ' .
 				// Use created if modified is 0
 				'CASE WHEN study.modified = ' . $db->quote($db->getNullDate()) . ' THEN study.studydate ELSE study.modified END AS modified, ' .
 				'study.modified_by, user_name AS modified_by_name,' .
 				// Use created if publish_up is 0
 				'CASE WHEN study.publish_up = ' . $db->quote($db->getNullDate()) . ' THEN study.studydate ELSE study.publish_up END AS publish_up,' .
 				'study.publish_down,
-		                study.media_seconds, study.series_id, study.download_id, study.thumbnailm, study.thumbhm, study.thumbwm,
+		                study.series_id, study.download_id, study.thumbnailm, study.thumbhm, study.thumbwm,
 		                study.access, study.user_name, study.user_id, study.studynumber, study.chapter_begin2, study.chapter_end2,
 		                study.verse_end2, study.verse_begin2,' . ' ' . $query->length('study.studytext') . ' AS readmore' . ',')
 			. ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END AS slug ');

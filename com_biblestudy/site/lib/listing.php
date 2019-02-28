@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2018 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -42,6 +42,7 @@ class JBSMListing
 	 * @return string
 	 *
 	 * @since 7.0
+	 * @throws Exception
 	 */
 	public function getFluidListing($items, $params, $template, $type)
 	{
@@ -552,7 +553,7 @@ class JBSMListing
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('#__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.params AS sparams, #__bsms_servers.media AS smedia,'
-			. ' s.studytitle, s.studydate, s.studyintro, s.media_hours, s.media_minutes, s.media_seconds, s.teacher_id,'
+			. ' s.studytitle, s.studydate, s.studyintro, s.teacher_id,'
 			. ' s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin, s.verse_end, t.teachername, t.id as tid, s.id as sid, s.studyintro');
 		$query->from('#__bsms_mediafiles');
 		$query->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server_id)');
@@ -723,6 +724,7 @@ class JBSMListing
 	 * @return string
 	 *
 	 * @since 7.0
+	 * @throws Exception
 	 */
 	public function getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header, $type)
 	{
@@ -1073,6 +1075,7 @@ class JBSMListing
 	 * @return string
 	 *
 	 * @since 7.0
+	 * @throws Exception
 	 */
 	public function getFluidData($item, $row, $params, $template, $header, $type)
 	{
@@ -1507,16 +1510,6 @@ class JBSMListing
 					$data = $item->teachername;
 				}
 				break;
-			case $extra . 'duration':
-				if ($header == 1)
-				{
-					$data = JText::_('JBS_CMN_DURATION');
-				}
-				else
-				{
-					(isset($item->media_minutes) ? $data = $this->getDuration($params, $item) : $data = '');
-				}
-				break;
 			case $extra . 'studyintro':
 				if ($header == 1)
 				{
@@ -1828,6 +1821,7 @@ class JBSMListing
 	 * @return mixed
 	 *
 	 * @since 7.0
+	 * @throws Exception
 	 */
 	public function getFluidCustom($custom, $item, $params, $template, $type)
 	{
@@ -1859,6 +1853,7 @@ class JBSMListing
 	 * @return mixed|null|string
 	 *
 	 * @since 7.0
+	 * @throws Exception
 	 */
 	public function getElement($custom, $row, $params, $template, $type)
 	{
@@ -1878,10 +1873,6 @@ class JBSMListing
 				break;
 			case 'secondary':
 				$element = $row->secondary_reference;
-				break;
-
-			case 'duration':
-				$element = self::getDuration($params, $row);
 				break;
 			case 'title':
 				if (isset($row->studytitle))
@@ -2279,62 +2270,6 @@ class JBSMListing
 	}
 
 	/**
-	 * Get Duration
-	 *
-	 * @param   Joomla\Registry\Registry  $params  Item Params
-	 * @param   Object                    $row     Row info
-	 *
-	 * @return  null|string
-	 *
-	 * @since 7.0
-	 */
-	public function getDuration($params, $row)
-	{
-		$duration = $row->media_hours . $row->media_minutes . $row->media_seconds;
-
-		if (!$duration)
-		{
-			$duration = null;
-
-			return $duration;
-		}
-
-		$duration_type = $params->get('duration_type', 2);
-		$hours         = $row->media_hours;
-		$minutes       = $row->media_minutes;
-		$seconds       = $row->media_seconds;
-
-		switch ($duration_type)
-		{
-			case 1:
-				if (!$hours)
-				{
-					$duration = $minutes . ' mins ' . $seconds . ' secs';
-				}
-				else
-				{
-					$duration = $hours . ' hour(s) ' . $minutes . ' mins ' . $seconds . ' secs';
-				}
-				break;
-			case 2:
-				if (!$hours)
-				{
-					$duration = $minutes . ':' . $seconds;
-				}
-				else
-				{
-					$duration = $hours . ':' . $minutes . ':' . $seconds;
-				}
-				break;
-			default:
-				$duration = $hours . ':' . $minutes . ':' . $seconds;
-				break;
-		}
-
-		return $duration;
-	}
-
-	/**
 	 * Get Fluid Media Files
 	 *
 	 * @param   Object                    $item      ?
@@ -2344,6 +2279,7 @@ class JBSMListing
 	 * @return string
 	 *
 	 * @since 9.0.0
+	 * @throws Exception
 	 */
 	public function getFluidMediaFiles($item, $params, $template)
 	{
@@ -2600,25 +2536,6 @@ class JBSMListing
 	}
 
 	/**
-	 * Get File Path
-	 *
-	 * @param   string  $id3      ID
-	 * @param   string  $idfield  ID Filed
-	 * @param   string  $mime     MimeType ID
-	 *
-	 * @return string
-	 *
-	 * @since 7.0
-	 * @deprecated 8.1.3
-	 */
-	public function getFilepath($id3, $idfield, $mime = null)
-	{
-		JFactory::getApplication()->enqueueMessage('must remove fuction getFilepath');
-
-		return false;
-	}
-
-	/**
 	 * Get Other Links
 	 *
 	 * @param   int                       $id3     Study ID ID
@@ -2688,6 +2605,7 @@ class JBSMListing
 	 * @return object
 	 *
 	 * @since 7.0
+	 * @throws Exception
 	 */
 	public function getListingExp($row, $params, $template)
 	{
@@ -2702,7 +2620,6 @@ class JBSMListing
 		$label  = str_replace('{{scripture}}', $this->getScripture($params, $row, 0, 1), $label);
 		$label  = str_replace('{{topics}}', $row->topic_text, $label);
 		$label  = str_replace('{{url}}', JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $row->id . '&t=' . $template->id), $label);
-		$label  = str_replace('{{mediatime}}', $this->getDuration($params, $row), $label);
 		$label  = str_replace('{{thumbnail}}', $this->useJImage($image->path, "", "bsms_studyThumbnail" . $row->id, $image->width, $image->height), $label);
 		$label  = str_replace('{{seriestext}}', $row->series_text, $label);
 		$label  = str_replace('{{messagetype}}', $row->message_type, $label);
@@ -2718,86 +2635,6 @@ class JBSMListing
 		$label      = str_replace('{{media}}', $mediaTable, $label);
 
 		// Need to add template items for media...
-
-		return $label;
-	}
-
-	/**
-	 * Get Study Exp
-	 *
-	 * @param   object                    $row     Item Info
-	 * @param   Joomla\Registry\Registry  $params  Item Params
-	 *
-	 * @return object
-	 *
-	 * @since 7.0
-	 * @deprecated 9.0.0
-	 */
-	public function getStudyExp($row, $params)
-	{
-		$Media  = new JBSMMedia;
-		$images = new JBSMImages;
-		$image  = $images->getStudyThumbnail($row->thumbnailm);
-		$label  = $params->get('study_detailtemplate');
-		$label  = str_replace('{{teacher}}', $row->teachername, $label);
-		$label  = str_replace('{{title}}', $row->studytitle, $label);
-		$label  = str_replace('{{date}}', $this->getStudyDate($params, $row->studydate), $label);
-		$label  = str_replace('{{studyintro}}', $row->studyintro, $label);
-		$label  = str_replace('{{scripture}}', $this->getScripture($params, $row, 0, 1), $label);
-		$label  = str_replace('{{topics}}', $row->topic_text, $label);
-		$label  = str_replace('{{mediatime}}', $this->getDuration($params, $row), $label);
-		$label  = str_replace('{{thumbnail}}', $this->useJImage($image->path, "", "bsms_studyThumbnail" . $row->id, $image->width, $image->height), $label);
-		$label  = str_replace('{{seriestext}}', $row->seriestext, $label);
-		$label  = str_replace('{{messagetype}}', $row->message_type, $label);
-		$label  = str_replace('{{bookname}}', $row->bname, $label);
-		$label  = str_replace('{{studytext}}', $row->studytext, $label);
-		$label  = str_replace('{{hits}}', $row->hits, $label);
-		$label  = str_replace('{{location}}', $row->location_text, $label);
-
-		// Passage
-		$link = '<strong><a class="heading" href="javascript:ReverseDisplay(\'bsms_scripture\')">' . JText::_('JBS_CMN_SHOW_HIDE_SCRIPTURE') .
-			'</a></strong>';
-		$link .= '<div id="bsms_scripture" style="display:none;">';
-		$response = $this->getPassage($params, $row);
-		$link .= $response;
-		$link .= '</div>';
-		$label = str_replace('{{scripturelink}}', $link, $label);
-		$label = str_replace('{{plays}}', $row->totalplays, $label);
-		$label = str_replace('{{downloads}}', $row->totaldownloads, $label);
-
-		$mediaTable = $Media->getFluidMedia($row, $params, new TableTemplate(JFactory::getDbo()));
-		$label      = str_replace('{{media}}', $mediaTable, $label);
-
-		// Share
-		// Prepares a link string for use in social networking
-		$u           = JUri::getInstance();
-		$detailslink = htmlspecialchars($u->toString());
-		$detailslink = JRoute::_($detailslink);
-
-		// End social networking
-		$share = $this->getShare($detailslink, $row, $params);
-		$label = str_replace('{{share}}', $share, $label);
-
-		// PrintableView
-		$printview = JHtml::_('image.site', 'printButton.png', '/images/M_images/', null, null, JText::_('JBS_CMN_PRINT'));
-		$printview = '<a href="#&tmpl=component" onclick="window.print();return false;">' . $printview . '</a>';
-
-		$label = str_replace('{{printview}}', $printview, $label);
-
-		// PDF View
-		$url                = 'index.php?option=com_biblestudy&view=sermon&id=' . $row->id . '&format=pdf';
-		$status             = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';
-		$text               = JHtml::_(
-			'image.site', 'pdf24.png', '/media/com_biblestudy/images/', null, null, JText::_('JBS_MED_PDF'), JText::_('JBS_MED_PDF')
-		);
-		$attribs['title']   = JText::_('JBS_MED_PDF');
-		$attribs['onclick'] = "window.open(this.href,'win2','" . $status . "'); return false;";
-		$attribs['rel']     = 'nofollow';
-		$link               = JHtml::_('link', JRoute::_($url), $text, $attribs);
-
-		$label = str_replace('{{pdfview}}', $link, $label);
-
-		// Comments
 
 		return $label;
 	}

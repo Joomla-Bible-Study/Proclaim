@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2018 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -81,6 +81,7 @@ class Pkg_Biblestudy_PackageInstallerScript
 	 * @return void
 	 *
 	 * @since 9.0.2
+	 * @throws Exception
 	 */
 	public function postflight($type, $parent)
 	{

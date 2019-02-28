@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2018 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -270,10 +270,6 @@ class JBSMSSConvert
 
 		$data->studydate = $sermon->sermon_date;
 
-		$time                = $this->getTime($sermon->sermon_time);
-		$data->media_hours   = $time->media_hours;
-		$data->media_minutes = $time->media_minutes;
-		$data->media_seconds = $time->media_seconds;
 		$data->studytext     = $sermon->notes;
 		$data->user_id       = $sermon->created_by;
 		$data->hits          = $sermon->hits;
@@ -843,44 +839,5 @@ class JBSMSSConvert
 		}
 
 		return $sermonscripture;
-	}
-
-	/**
-	 * Get Time
-	 *
-	 * @param   string  $time  Time to be formatted out.
-	 *
-	 * @return object
-	 *
-	 * @since 9.0.0
-	 */
-	public function getTime($time)
-	{
-		$firstcolon  = strpos($time, ':');
-		$secondcolon = strpos($time, ':', $firstcolon + 1);
-		$sermontime  = new stdClass;
-
-		if ($secondcolon)
-		{
-			$sermontime->media_hours   = substr($time, 0, $firstcolon);
-			$sermontime->media_seconds = substr($time, $secondcolon + 1, 2);
-			$sermontime->media_minutes = substr($time, $firstcolon + 1, 2);
-		}
-		else
-		{
-			if ($firstcolon == 1)
-			{
-				$minuteslength = '1';
-			}
-			else
-			{
-				$minuteslength = '2';
-			}
-
-			$sermontime->media_seconds = substr($time, $firstcolon + 1, 2);
-			$sermontime->media_minutes = substr($time, 0, $minuteslength);
-		}
-
-		return $sermontime;
 	}
 }

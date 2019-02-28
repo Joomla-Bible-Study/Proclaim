@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2018 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -220,6 +220,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 		}
 
 		$form->s_params = $reg1->toArray();
+		$form->type     = $server_type;
 
 		return $form;
 	}
@@ -233,6 +234,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 * @return boolean|object
 	 *
 	 * @since 7.0
+	 * @throws Exception
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
@@ -291,6 +293,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 * @return  mixed
 	 *
 	 * @since   9.0.0
+	 * @throws  Exception
 	 */
 	public function getItem($pk = null)
 	{
@@ -730,6 +733,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 * @return array
 	 *
 	 * @since   7.0
+	 * @throws  Exception
 	 */
 	protected function loadFormData()
 	{
@@ -746,6 +750,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 * @return  void
 	 *
 	 * @since   9.0.0
+	 * @throws  Exception
 	 */
 	protected function populateState()
 	{
