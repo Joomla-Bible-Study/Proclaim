@@ -3,7 +3,7 @@
  * Router for Remote website that have treble with downloader.
  *
  * @package    BibleStudy.Site
- * @copyright  2007 - 2018 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.christianwebministries.org
  * */
