@@ -8,8 +8,6 @@
  * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
-use Joomla\Registry\Registry;
-
 defined('_JEXEC') or die;
 
 // Load the tooltip behavior.
@@ -19,7 +17,7 @@ JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 
 // Create shortcut to parameters.
-/** @type Registry $params */
+/** @type \Joomla\Registry\Registry $params */
 $params = $this->state->get('params');
 $params = $params->toArray();
 $app    = JFactory::getApplication();
