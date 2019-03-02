@@ -1,0 +1,453 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>Proclaim API » \JBSMElements</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">Proclaim API</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a>Packages</a></li>
+<li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
+<li><a href="../packages/Proclaim.Admin.html"><i class="icon-folder-open"></i> Proclaim.Admin</a></li>
+<li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
+<li><a href="../packages/LiveUpdate.html"><i class="icon-folder-open"></i> LiveUpdate</a></li>
+<li><a href="../packages/SefExt.html"><i class="icon-folder-open"></i> SefExt</a></li>
+</ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">3</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul></ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">18</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+<ul class="side-nav nav nav-list">
+<li class="nav-header">
+<i class="icon-custom icon-method"></i> Methods
+                    <ul>
+<li class="method public "><a href="#method_MyCheckDate" title="MyCheckDate() :: Check whether date is valid YYYY-MM-DD format"><span class="description">Check whether date is valid YYYY-MM-DD format</span><pre>MyCheckDate()</pre></a></li>
+<li class="method public "><a href="#method_body_only" title="body_only() :: Only Return the Body of a html doc."><span class="description">Only Return the Body of a html doc.</span><pre>body_only()</pre></a></li>
+<li class="method public "><a href="#method_getArticle" title="getArticle() :: Get Article"><span class="description">Get Article</span><pre>getArticle()</pre></a></li>
+<li class="method public "><a href="#method_getDocman" title="getDocman() :: Get Docman"><span class="description">Get Docman</span><pre>getDocman()</pre></a></li>
+<li class="method public "><a href="#method_getDuration" title="getDuration() :: Get Duration"><span class="description">Get Duration</span><pre>getDuration()</pre></a></li>
+<li class="method public "><a href="#method_getElementid" title="getElementid() :: Get Elementid"><span class="description">Get Elementid</span><pre>getElementid()</pre></a></li>
+<li class="method public "><a href="#method_getFilepath" title="getFilepath() :: Get File Path"><span class="description">Get File Path</span><pre>getFilepath()</pre></a></li>
+<li class="method public "><a href="#method_getFilesize" title="getFilesize() :: Function to get File Size"><span class="description">Function to get File Size</span><pre>getFilesize()</pre></a></li>
+<li class="method public "><a href="#method_getMediaRows" title="getMediaRows() :: Get MediaRows"><span class="description">Get MediaRows</span><pre>getMediaRows()</pre></a></li>
+<li class="method public "><a href="#method_getMediatable" title="getMediatable() :: Get MediaTable"><span class="description">Get MediaTable</span><pre>getMediatable()</pre></a></li>
+<li class="method public "><a href="#method_getScripture" title="getScripture() :: Get Scripture"><span class="description">Get Scripture</span><pre>getScripture()</pre></a></li>
+<li class="method public "><a href="#method_getTextlink" title="getTextlink() :: Get Textlink"><span class="description">Get Textlink</span><pre>getTextlink()</pre></a></li>
+<li class="method public "><a href="#method_getVirtuemart" title="getVirtuemart() :: Get Virtuart"><span class="description">Get Virtuart</span><pre>getVirtuemart()</pre></a></li>
+<li class="method public "><a href="#method_getstudyDate" title="getstudyDate() :: Get StudyDate"><span class="description">Get StudyDate</span><pre>getstudyDate()</pre></a></li>
+</ul>
+</li>
+<li class="nav-header private">» Private
+                    <ul><li class="method private "><a href="#method_getStore" title="getStore() :: Get Store"><span class="description">Get Store</span><pre>getStore()</pre></a></li></ul>
+</li>
+<li class="nav-header">
+<i class="icon-custom icon-property"></i> Properties
+                    <ul><li class="property public "><a href="#property_extension" title="$extension() :: Extension Name"><span class="description"></span><pre>$extension</pre></a></li></ul>
+</li>
+</ul>
+</div>
+<div class="span8">
+<a id="\JBSMElements"></a><ul class="breadcrumb">
+<li>
+<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+</li>
+<li class="active">
+<span class="divider">\</span><a href="../classes/JBSMElements.html">JBSMElements</a>
+</li>
+</ul>
+<div class="element class">
+<p class="short_description">Class for Elements</p>
+<div class="details">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>package</th>
+<td><a href="../packages/BibleStudy.Site.html">BibleStudy.Site</a></td>
+</tr>
+<tr>
+<th>since</th>
+<td></td>
+</tr>
+</table>
+<h3>
+<i class="icon-custom icon-method"></i> Methods</h3>
+<a id="method_MyCheckDate"></a><div class="element clickable method public method_MyCheckDate" data-toggle="collapse" data-target=".method_MyCheckDate .collapse">
+<h2>Check whether date is valid YYYY-MM-DD format</h2>
+<pre>MyCheckDate(string $datein) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$datein</h4>
+<code>string</code><p>Study Date</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method_body_only"></a><div class="element clickable method public method_body_only" data-toggle="collapse" data-target=".method_body_only .collapse">
+<h2>Only Return the Body of a html doc.</h2>
+<pre>body_only(string $html) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td></td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$html</h4>
+<code>string</code><p>Html document</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_getArticle"></a><div class="element clickable method public method_getArticle" data-toggle="collapse" data-target=".method_getArticle .collapse">
+<h2>Get Article</h2>
+<pre>getArticle(object $media, int $width, int $height, string $src) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$media</h4>
+<code>object</code><p>Media</p></div>
+<div class="subelement argument">
+<h4>$width</h4>
+<code>int</code><p>Width</p></div>
+<div class="subelement argument">
+<h4>$height</h4>
+<code>int</code><p>Height</p></div>
+<div class="subelement argument">
+<h4>$src</h4>
+<code>string</code><p>URL of image</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_getDocman"></a><div class="element clickable method public method_getDocman" data-toggle="collapse" data-target=".method_getDocman .collapse">
+<h2>Get Docman</h2>
+<pre>getDocman(object $media, int $width, int $height, string $src, string $duration, int $filesize) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$media</h4>
+<code>object</code><p>Media</p></div>
+<div class="subelement argument">
+<h4>$width</h4>
+<code>int</code><p>Width</p></div>
+<div class="subelement argument">
+<h4>$height</h4>
+<code>int</code><p>Height</p></div>
+<div class="subelement argument">
+<h4>$src</h4>
+<code>string</code><p>Source of Image</p></div>
+<div class="subelement argument">
+<h4>$duration</h4>
+<code>string</code><p>Duration</p></div>
+<div class="subelement argument">
+<h4>$filesize</h4>
+<code>int</code><p>File Size of Doc</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_getDuration"></a><div class="element clickable method public method_getDuration" data-toggle="collapse" data-target=".method_getDuration .collapse">
+<h2>Get Duration</h2>
+<pre>getDuration(object $params, object $row) : null | string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code><p>Item Params</p></div>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>object</code><p>Row info</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>null</code><code>string</code>
+</div>
+</div></div>
+</div>
+<a id="method_getElementid"></a><div class="element clickable method public method_getElementid" data-toggle="collapse" data-target=".method_getElementid .collapse">
+<h2>Get Elementid</h2>
+<pre>getElementid(int $rowid, \JTable $row, \Registry $params, \Registry $admin_params, int $template) : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>todo</th>
+<td>Redo to MVC Standers under a class</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$rowid</h4>
+<code>int</code><p>ID</p></div>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>\JTable</code><p>Table info</p></div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>\Registry</code><p>Component / System Params</p>
+</div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>\Registry</code><p>Admin Settings</p></div>
+<div class="subelement argument">
+<h4>$template</h4>
+<code>int</code><p>Template ID</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a id="method_getFilepath"></a><div class="element clickable method public method_getFilepath" data-toggle="collapse" data-target=".method_getFilepath .collapse">
+<h2>Get File Path</h2>
+<pre>getFilepath(string $id3, string $idfield, string $mime) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>FIXME</th>
+<td>look like the last where is not right, TOM</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$id3</h4>
+<code>string</code><p>ID</p></div>
+<div class="subelement argument">
+<h4>$idfield</h4>
+<code>string</code><p>ID Filed</p></div>
+<div class="subelement argument">
+<h4>$mime</h4>
+<code>string</code><p>MimeType info</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_getFilesize"></a><div class="element clickable method public method_getFilesize" data-toggle="collapse" data-target=".method_getFilesize .collapse">
+<h2>Function to get File Size</h2>
+<pre>getFilesize(string $file_size) : null | string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$file_size</h4>
+<code>string</code><p>Size in bytes</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>null</code><code>string</code>
+</div>
+</div></div>
+</div>
+<a id="method_getMediaRows"></a><div class="element clickable method public method_getMediaRows" data-toggle="collapse" data-target=".method_getMediaRows .collapse">
+<h2>Get MediaRows</h2>
+<pre>getMediaRows(int $study_id) : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$study_id</h4>
+<code>int</code><p>ID</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a id="method_getMediatable"></a><div class="element clickable method public method_getMediatable" data-toggle="collapse" data-target=".method_getMediatable .collapse">
+<h2>Get MediaTable</h2>
+<pre>getMediatable(object $params, object $row, object $admin_params) : boolean | null | string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code><p>Item Params</p></div>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>object</code><p>JTable</p></div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>object</code><p>Admin Info</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>boolean</code><code>null</code><code>string</code>
+</div>
+</div></div>
+</div>
+<a id="method_getScripture"></a><div class="element clickable method public method_getScripture" data-toggle="collapse" data-target=".method_getScripture .collapse">
+<h2>Get Scripture</h2>
+<pre>getScripture(object $params, object $row, string $esv, string $scripturerow) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code><p>Item Params</p></div>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>object</code><p>Row Info</p></div>
+<div class="subelement argument">
+<h4>$esv</h4>
+<code>string</code><p>ESV String</p></div>
+<div class="subelement argument">
+<h4>$scripturerow</h4>
+<code>string</code><p>Scripture Row</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_getTextlink"></a><div class="element clickable method public method_getTextlink" data-toggle="collapse" data-target=".method_getTextlink .collapse">
+<h2>Get Textlink</h2>
+<pre>getTextlink(\Registry $params, object $row, string $textorpdf, \Registry $admin_params, int $template) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>\Registry</code><p>Item Params</p></div>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>object</code><p>JTable</p></div>
+<div class="subelement argument">
+<h4>$textorpdf</h4>
+<code>string</code><p>Text Or PDF location</p></div>
+<div class="subelement argument">
+<h4>$admin_params</h4>
+<code>\Registry</code><p>Admin info</p></div>
+<div class="subelement argument">
+<h4>$template</h4>
+<code>int</code><p>Template ID</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_getVirtuemart"></a><div class="element clickable method public method_getVirtuemart" data-toggle="collapse" data-target=".method_getVirtuemart .collapse">
+<h2>Get Virtuart</h2>
+<pre>getVirtuemart(object $media, int $width, int $height, string $src, object $params) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$media</h4>
+<code>object</code><p>Media info</p></div>
+<div class="subelement argument">
+<h4>$width</h4>
+<code>int</code><p>Width</p></div>
+<div class="subelement argument">
+<h4>$height</h4>
+<code>int</code><p>Height</p></div>
+<div class="subelement argument">
+<h4>$src</h4>
+<code>string</code><p>Source</p></div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code><p>Item Params</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_getstudyDate"></a><div class="element clickable method public method_getstudyDate" data-toggle="collapse" data-target=".method_getstudyDate .collapse">
+<h2>Get StudyDate</h2>
+<pre>getstudyDate(object $params, string $studydate) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code><p>Item Params</p></div>
+<div class="subelement argument">
+<h4>$studydate</h4>
+<code>string</code><p>Study Date</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_getStore"></a><div class="element clickable method private method_getStore" data-toggle="collapse" data-target=".method_getStore .collapse">
+<h2>Get Store</h2>
+<pre>getStore(object $params, object $row) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>object</code><p>Params</p></div>
+<div class="subelement argument">
+<h4>$row</h4>
+<code>object</code><p>Row info</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code>Fixme look like this has missing info for the width and height. TOM</div>
+</div></div>
+</div>
+<h3>
+<i class="icon-custom icon-property"></i> Properties</h3>
+<a id="property_extension"> </a><div class="element clickable property public property_extension" data-toggle="collapse" data-target=".property_extension .collapse">
+<h2>Extension Name</h2>
+<pre>$extension : string</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.1
+</a> and<br>
+            generated on 2013-10-17T22:45:24-05:00.<br></footer></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,617 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>Proclaim API » \BiblestudyModelAdmin</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">Proclaim API</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a>Packages</a></li>
+<li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Administrator.html"><i class="icon-folder-open"></i> Joomla.Administrator</a></li>
+<li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
+<li><a href="../packages/Proclaim.html"><i class="icon-folder-open"></i> Proclaim</a></li>
+<li><a href="../packages/Proclaim.Admin.html"><i class="icon-folder-open"></i> Proclaim.Admin</a></li>
+<li><a href="../packages/Proclaim.Site.html"><i class="icon-folder-open"></i> Proclaim.Site</a></li>
+</ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">181</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul></ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">13</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<div class="btn-toolbar">
+<div class="btn-group visibility" data-toggle="buttons-checkbox">
+<button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button>
+</div>
+<div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+</div>
+<ul class="side-nav nav nav-list">
+<li class="nav-header">
+<i title="Methods" class="icon-custom icon-method"></i> Methods
+                    <ul>
+<li class="method public "><a href="#method_checkout" title="checkout() :: Method to check-out a row for editing."><span class="description">Method to check-out a row for editing.</span><pre>checkout()</pre></a></li>
+<li class="method public "><a href="#method_fix" title="fix() :: Fixes database problems"><span class="description">Fixes database problems</span><pre>fix()</pre></a></li>
+<li class="method public "><a href="#method_fixDefaultTextFilters" title="fixDefaultTextFilters() :: Check if com_biblestudy parameters are blank. If so, populate with com_content text filters."><span class="description">Check if com_biblestudy parameters are blank. If so, populate with com_content text filters.</span><pre>fixDefaultTextFilters()</pre></a></li>
+<li class="method public "><a href="#method_fixSchemaVersion" title="fixSchemaVersion() :: Fix schema version if wrong."><span class="description">Fix schema version if wrong.</span><pre>fixSchemaVersion()</pre></a></li>
+<li class="method public "><a href="#method_fixUpdateJBSMVersion" title="fixUpdateJBSMVersion() :: Fix Joomla version in #__bsms_updae table if wrong (doesn't equal JVersion short version)."><span class="description">Fix Joomla version in #__bsms_updae table if wrong (doesn't equal JVersion short version).</span><pre>fixUpdateJBSMVersion()</pre></a></li>
+<li class="method public "><a href="#method_fixUpdateVersion" title="fixUpdateVersion() :: Fix Joomla version in #__extensions table if wrong (doesn't equal JVersion short version)"><span class="description">Fix Joomla version in #__extensions table if wrong (doesn't equal JVersion short version)</span><pre>fixUpdateVersion()</pre></a></li>
+<li class="method public "><a href="#method_getCompVersion" title="getCompVersion() :: To retrieve component version"><span class="description">To retrieve component version</span><pre>getCompVersion()</pre></a></li>
+<li class="method public "><a href="#method_getDefaultTextFilters" title="getDefaultTextFilters() :: Check if com_biblestudy parameters are blank."><span class="description">Check if com_biblestudy parameters are blank.</span><pre>getDefaultTextFilters()</pre></a></li>
+<li class="method public "><a href="#method_getExtentionId" title="getExtentionId() :: To retrieve component extension_id"><span class="description">To retrieve component extension_id</span><pre>getExtentionId()</pre></a></li>
+<li class="method public "><a href="#method_getForm" title="getForm() :: Gets the form from the XML file."><span class="description">Gets the form from the XML file.</span><pre>getForm()</pre></a></li>
+<li class="method public "><a href="#method_getItems" title="getItems() :: Gets the ChangeSet object"><span class="description">Gets the ChangeSet object</span><pre>getItems()</pre></a></li>
+<li class="method public "><a href="#method_getMediaFiles" title="getMediaFiles() :: Get Media Files"><span class="description">Get Media Files</span><pre>getMediaFiles()</pre></a></li>
+<li class="method public "><a href="#method_getPagination" title="getPagination() :: Get Pagination state but is hard coded to be true right now."><span class="description">Get Pagination state but is hard coded to be true right now.</span><pre>getPagination()</pre></a></li>
+<li class="method public "><a href="#method_getSSorPI" title="getSSorPI() :: Check for SermonSpeaker and PreachIt"><span class="description">Check for SermonSpeaker and PreachIt</span><pre>getSSorPI()</pre></a></li>
+<li class="method public "><a href="#method_getSchemaVersion" title="getSchemaVersion() :: Get version from #__schemas table"><span class="description">Get version from #__schemas table</span><pre>getSchemaVersion()</pre></a></li>
+<li class="method public "><a href="#method_getTable" title="getTable() :: Returns a reference to the a Table object, always creating it."><span class="description">Returns a reference to the a Table object, always creating it.</span><pre>getTable()</pre></a></li>
+<li class="method public "><a href="#method_getUpdateJBSMVersion" title="getUpdateJBSMVersion() :: Get current version from #__bsms_update table."><span class="description">Get current version from #__bsms_update table.</span><pre>getUpdateJBSMVersion()</pre></a></li>
+<li class="method public "><a href="#method_getUpdateVersion" title="getUpdateVersion() :: Get current version from #__extensions table"><span class="description">Get current version from #__extensions table</span><pre>getUpdateVersion()</pre></a></li>
+<li class="method public "><a href="#method_playerByMediaType" title="playerByMediaType() :: Change Player based off MimeType or Extension of File Name"><span class="description">Change Player based off MimeType or Extension of File Name</span><pre>playerByMediaType()</pre></a></li>
+<li class="method public "><a href="#method_save" title="save() :: Method to save the form data."><span class="description">Method to save the form data.</span><pre>save()</pre></a></li>
+</ul>
+</li>
+<li class="nav-header protected">» Protected
+                    <ul>
+<li class="method protected "><a href="#method_cleanCache" title="cleanCache() :: Custom clean the cache of com_biblestudy and biblestudy modules"><span class="description">Custom clean the cache of com_biblestudy and biblestudy modules</span><pre>cleanCache()</pre></a></li>
+<li class="method protected "><a href="#method_loadFormData" title="loadFormData() :: Load Form Date"><span class="description">Load Form Date</span><pre>loadFormData()</pre></a></li>
+<li class="method protected "><a href="#method_populateState" title="populateState() :: Method to auto-populate the model state."><span class="description">Method to auto-populate the model state.</span><pre>populateState()</pre></a></li>
+<li class="method protected "><a href="#method_prepareTable" title="prepareTable() :: Prepare and sanitise the table data prior to saving."><span class="description">Prepare and sanitise the table data prior to saving.</span><pre>prepareTable()</pre></a></li>
+</ul>
+</li>
+<li class="nav-header">
+<i title="Properties" class="icon-custom icon-property"></i> Properties
+                    <ul></ul>
+</li>
+<li class="nav-header protected">» Protected
+                    <ul>
+<li class="property protected "><a href="#property_changeSet" title="$changeSet() :: "><span class="description"></span><pre>$changeSet</pre></a></li>
+<li class="property protected "><a href="#property_text_prefix" title="$text_prefix() :: "><span class="description">The prefix to use with controller messages.</span><pre>$text_prefix</pre></a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="span8">
+<a id="\BiblestudyModelAdmin"></a><ul class="breadcrumb">
+<li>
+<a href="../index.html"><i title="Classes" class="icon-custom icon-class"></i></a><span class="divider">\</span>
+</li>
+<li class="active">
+<span class="divider">\</span><a href="../classes/BiblestudyModelAdmin.html">BiblestudyModelAdmin</a>
+</li>
+</ul>
+    <div class="element class">
+<p class="short_description">Admin admin model class</p>
+<div class="details">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>package</th>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
+</tr>
+<tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr>
+</table>
+<h3>
+<i title="Methods" class="icon-custom icon-method"></i> Methods</h3>
+<a id="method_checkout"></a><div class="element clickable method public method_checkout " data-toggle="collapse" data-target=".method_checkout .collapse" title="public">
+<h2>Method to check-out a row for editing.</h2>
+<pre>checkout(integer $pk<code> = null</code>) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>11.1</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$pk</h4>
+<code>integer</code><p>The numeric id of the primary key.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>boolean</code>False on failure or error, true otherwise.</div>
+</div></div>
+</div>
+<a id="method_fix"></a><div class="element clickable method public method_fix " data-toggle="collapse" data-target=".method_fix .collapse" title="public">
+<h2>Fixes database problems</h2>
+<pre>fix() : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0</td>
+</tr></table>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code>\Exception</code></th>
+<td></td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method_fixDefaultTextFilters"></a><div class="element clickable method public method_fixDefaultTextFilters " data-toggle="collapse" data-target=".method_fixDefaultTextFilters .collapse" title="public">
+<h2>Check if com_biblestudy parameters are blank. If so, populate with com_content text filters.</h2>
+<pre>fixDefaultTextFilters() : mixed</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>mixed</code>boolean true if params are updated, null otherwise</div>
+</div></div>
+</div>
+<a id="method_fixSchemaVersion"></a><div class="element clickable method public method_fixSchemaVersion " data-toggle="collapse" data-target=".method_fixSchemaVersion .collapse" title="public">
+<h2>Fix schema version if wrong.</h2>
+<pre>fixSchemaVersion(\JSchemaChangeSet $changeSet) : mixed</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$changeSet</h4>
+<code>\JSchemaChangeSet</code><p>Schema change set.</p></div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code>\Exception</code></th>
+<td></td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>mixed</code>string schema version if success, false if fail</div>
+</div></div>
+</div>
+<a id="method_fixUpdateJBSMVersion"></a><div class="element clickable method public method_fixUpdateJBSMVersion " data-toggle="collapse" data-target=".method_fixUpdateJBSMVersion .collapse" title="public">
+<h2>Fix Joomla version in #__bsms_updae table if wrong (doesn't equal JVersion short version).</h2>
+<pre>fixUpdateJBSMVersion() : mixed</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.14</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>mixed</code>string update version if success, false if fail.</div>
+</div></div>
+</div>
+<a id="method_fixUpdateVersion"></a><div class="element clickable method public method_fixUpdateVersion " data-toggle="collapse" data-target=".method_fixUpdateVersion .collapse" title="public">
+<h2>Fix Joomla version in #__extensions table if wrong (doesn't equal JVersion short version)</h2>
+<pre>fixUpdateVersion() : mixed</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0</td>
+</tr></table>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code>\Exception</code></th>
+<td></td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>mixed</code>string update version if success, false if fail</div>
+</div></div>
+</div>
+<a id="method_getCompVersion"></a><div class="element clickable method public method_getCompVersion " data-toggle="collapse" data-target=".method_getCompVersion .collapse" title="public">
+<h2>To retrieve component version</h2>
+<pre>getCompVersion() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.7.3</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code>Version of component</div>
+</div></div>
+</div>
+<a id="method_getDefaultTextFilters"></a><div class="element clickable method public method_getDefaultTextFilters " data-toggle="collapse" data-target=".method_getDefaultTextFilters .collapse" title="public">
+<h2>Check if com_biblestudy parameters are blank.</h2>
+<pre>getDefaultTextFilters() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code>default text filters (if any)</div>
+</div></div>
+</div>
+<a id="method_getExtentionId"></a><div class="element clickable method public method_getExtentionId " data-toggle="collapse" data-target=".method_getExtentionId .collapse" title="public">
+<h2>To retrieve component extension_id</h2>
+<pre>getExtentionId() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.1.0</td>
+</tr></table>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code>\Exception</code></th>
+<td></td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code>extension_id</div>
+</div></div>
+</div>
+<a id="method_getForm"></a><div class="element clickable method public method_getForm " data-toggle="collapse" data-target=".method_getForm .collapse" title="public">
+<h2>Gets the form from the XML file.</h2>
+<pre>getForm(array $data<code> = array()</code>, boolean $loadData<code> = true</code>) : mixed</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$data</h4>
+<code>array</code><p>Data for the form.</p></div>
+<div class="subelement argument">
+<h4>$loadData</h4>
+<code>boolean</code><p>True if the form is to load its own data (default case), false if not.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>mixed</code>A JForm object on success, false on failure</div>
+</div></div>
+</div>
+<a id="method_getItems"></a><div class="element clickable method public method_getItems " data-toggle="collapse" data-target=".method_getItems .collapse" title="public">
+<h2>Gets the ChangeSet object</h2>
+<pre>getItems() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0</td>
+</tr></table>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code>\Exception</code></th>
+<td></td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code>JSchema  ChangeSet</div>
+</div></div>
+</div>
+<a id="method_getMediaFiles"></a><div class="element clickable method public method_getMediaFiles " data-toggle="collapse" data-target=".method_getMediaFiles .collapse" title="public">
+<h2>Get Media Files</h2>
+<pre>getMediaFiles() : mixed</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>since</th>
+<td>7.0</td>
+</tr>
+<tr>
+<th>todo</th>
+<td>not sure if this should be here.</td>
+</tr>
+</table>
+<h3>Returns</h3>
+<div class="subelement response"><code>mixed</code></div>
+</div></div>
+</div>
+<a id="method_getPagination"></a><div class="element clickable method public method_getPagination " data-toggle="collapse" data-target=".method_getPagination .collapse" title="public">
+<h2>Get Pagination state but is hard coded to be true right now.</h2>
+<pre>getPagination() : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method_getSSorPI"></a><div class="element clickable method public method_getSSorPI " data-toggle="collapse" data-target=".method_getSSorPI .collapse" title="public">
+<h2>Check for SermonSpeaker and PreachIt</h2>
+<pre>getSSorPI() : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a id="method_getSchemaVersion"></a><div class="element clickable method public method_getSchemaVersion " data-toggle="collapse" data-target=".method_getSchemaVersion .collapse" title="public">
+<h2>Get version from #__schemas table</h2>
+<pre>getSchemaVersion() : mixed</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0</td>
+</tr></table>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code>\Exception</code></th>
+<td></td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>mixed</code>the return value from the query, or null if the query fails</div>
+</div></div>
+</div>
+<a id="method_getTable"></a><div class="element clickable method public method_getTable " data-toggle="collapse" data-target=".method_getTable .collapse" title="public">
+<h2>Returns a reference to the a Table object, always creating it.</h2>
+<pre>getTable(string $name<code> = 'Admin'</code>, string $prefix<code> = 'Table'</code>, array $options<code> = array()</code>) : \JTable</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.6</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$name</h4>
+<code>string</code><p>The table name. Optional.</p></div>
+<div class="subelement argument">
+<h4>$prefix</h4>
+<code>string</code><p>The class prefix. Optional.</p></div>
+<div class="subelement argument">
+<h4>$options</h4>
+<code>array</code><p>Configuration array for model. Optional.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>\JTable</code>A JTable object</div>
+</div></div>
+</div>
+<a id="method_getUpdateJBSMVersion"></a><div class="element clickable method public method_getUpdateJBSMVersion " data-toggle="collapse" data-target=".method_getUpdateJBSMVersion .collapse" title="public">
+<h2>Get current version from #__bsms_update table.</h2>
+<pre>getUpdateJBSMVersion() : mixed</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.14</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>mixed</code>version if successful, false if fail.</div>
+</div></div>
+</div>
+<a id="method_getUpdateVersion"></a><div class="element clickable method public method_getUpdateVersion " data-toggle="collapse" data-target=".method_getUpdateVersion .collapse" title="public">
+<h2>Get current version from #__extensions table</h2>
+<pre>getUpdateVersion() : mixed</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0</td>
+</tr></table>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code>\Exception</code></th>
+<td></td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>mixed</code>version if successful, false if fail</div>
+</div></div>
+</div>
+<a id="method_playerByMediaType"></a><div class="element clickable method public method_playerByMediaType " data-toggle="collapse" data-target=".method_playerByMediaType .collapse" title="public">
+<h2>Change Player based off MimeType or Extension of File Name</h2>
+<pre>playerByMediaType() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.12</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_save"></a><div class="element clickable method public method_save " data-toggle="collapse" data-target=".method_save .collapse" title="public">
+<h2>Method to save the form data.</h2>
+<pre>save(array $data) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.6</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$data</h4>
+<code>array</code><p>The form data.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>boolean</code>True on success.</div>
+</div></div>
+</div>
+<a id="method_cleanCache"></a><div class="element clickable method protected method_cleanCache " data-toggle="collapse" data-target=".method_cleanCache .collapse" title="protected">
+<h2>Custom clean the cache of com_biblestudy and biblestudy modules</h2>
+<pre>cleanCache(string $group<code> = null</code>, integer $client_id<code> = 0</code>) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.6</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$group</h4>
+<code>string</code><p>The cache group</p></div>
+<div class="subelement argument">
+<h4>$client_id</h4>
+<code>integer</code><p>The ID of the client</p></div>
+</div></div>
+</div>
+<a id="method_loadFormData"></a><div class="element clickable method protected method_loadFormData " data-toggle="collapse" data-target=".method_loadFormData .collapse" title="protected">
+<h2>Load Form Date</h2>
+<pre>loadFormData() : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.0</td>
+</tr></table>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code>\Exception</code></th>
+<td></td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a id="method_populateState"></a><div class="element clickable method protected method_populateState " data-toggle="collapse" data-target=".method_populateState .collapse" title="protected">
+<h2>Method to auto-populate the model state.</h2>
+<pre>populateState(string $ordering<code> = null</code>, string $direction<code> = null</code>) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Note. Calling getState in this method will result in recursion.</p></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.7.2</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$ordering</h4>
+<code>string</code><p>?</p></div>
+<div class="subelement argument">
+<h4>$direction</h4>
+<code>string</code><p>?</p></div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code>\Exception</code></th>
+<td></td>
+</tr></table>
+</div></div>
+</div>
+<a id="method_prepareTable"></a><div class="element clickable method protected method_prepareTable " data-toggle="collapse" data-target=".method_prepareTable .collapse" title="protected">
+<h2>Prepare and sanitise the table data prior to saving.</h2>
+<pre>prepareTable(\TableAdmin $table) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.6</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$table</h4>
+<code>\TableAdmin</code><p>A JTable object.</p></div>
+</div></div>
+</div>
+<h3>
+<i title="Properties" class="icon-custom icon-property"></i> Properties</h3>
+<a id="property_changeSet"> </a><div class="element clickable property protected property_changeSet" data-toggle="collapse" data-target=".property_changeSet .collapse" title="protected">
+<h2>$changeSet</h2>
+<pre>$changeSet </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_text_prefix"> </a><div class="element clickable property protected property_text_prefix" data-toggle="collapse" data-target=".property_text_prefix .collapse" title="protected">
+<h2>The prefix to use with controller messages.</h2>
+<pre>$text_prefix : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>'COM_BIBLESTUDY'</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.6</td>
+</tr></table>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
+            generated on 2019-02-23T17:32:07-06:00.<br></footer></div>
+</div>
+</body>
+</html>

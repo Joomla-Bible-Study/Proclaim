@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>API Documentation</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <script type="text/javascript">
+    function loadExternalCodeSnippets() {
+        Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+            var src = pre.getAttribute('data-src');
+            var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+            var language = 'php';
+
+            var code = document.createElement('code');
+            code.className = 'language-' + language;
+
+            pre.textContent = '';
+
+            code.textContent = 'Loading…';
+
+            pre.appendChild(code);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', src, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status < 400 && xhr.responseText) {
+                        code.textContent = xhr.responseText;
+
+                        Prism.highlightElement(code);
+                    }
+                    else if (xhr.status >= 400) {
+                        code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                    }
+                    else {
+                        code.textContent = '✖ Error: File does not exist or is empty';
+                    }
+                }
+            };
+
+            xhr.send(null);
+        });
+    }
+
+    $(document).ready(function(){
+        loadExternalCodeSnippets();
+    });
+    $('#source-view').on('shown', function () {
+        loadExternalCodeSnippets();
+    })
+</script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">API Documentation</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown">
+                        <a href="../index.html" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                                                        <li><a href="../namespaces/SeleniumClient.html">\SeleniumClient</a></li>
+                                                    </ul>
+                    </li>
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">2061</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">23</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">25</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-833915040"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-833915040" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-572806824"></a>
+                                <a href="../namespaces/SeleniumClient.html" style="margin-left: 30px; padding-left: 0">SeleniumClient</a>
+            </div>
+            <div id="namespace-572806824" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1265130003"></a>
+                                <a href="../namespaces/SeleniumClient.Http.html" style="margin-left: 30px; padding-left: 0">Http</a>
+            </div>
+            <div id="namespace-1265130003" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/SeleniumClient.Http.HttpClient.html">HttpClient</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.Http.HttpFactory.html">HttpFactory</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.Http.SeleniumAdapter.html">SeleniumAdapter</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.Http.SeleniumElementIsNotSelectableException.html">SeleniumElementIsNotSelectableException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.Http.SeleniumElementNotVisibleException.html">SeleniumElementNotVisibleException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.Http.SeleniumFailedCommandException.html">SeleniumFailedCommandException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.Http.SeleniumIMEEngineActivationFailedException.html">SeleniumIMEEngineActivationFailedException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.Http.SeleniumIMENotAvailableException.html">SeleniumIMENotAvailableException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.Http.SeleniumInvalidCommandMethodException.html">SeleniumInvalidCommandMethodException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.Http.SeleniumInvalidCookieDomainException.html">SeleniumInvalidCookieDomainException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.Http.SeleniumInvalidElementCoordinatesException.html">SeleniumInvalidElementCoordinatesException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.Http.SeleniumInvalidElementStateException.html">SeleniumInvalidElementStateException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.Http.SeleniumInvalidRequestException.html">SeleniumInvalidRequestException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.Http.SeleniumInvalidSelectorException.html">SeleniumInvalidSelectorException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.Http.SeleniumJavaScriptErrorException.html">SeleniumJavaScriptErrorException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.Http.SeleniumMissingCommandParametersException.html">SeleniumMissingCommandParametersException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.Http.SeleniumNoAlertOpenErrorException.html">SeleniumNoAlertOpenErrorException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.Http.SeleniumNoSuchElementException.html">SeleniumNoSuchElementException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.Http.SeleniumNoSuchFrameException.html">SeleniumNoSuchFrameException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.Http.SeleniumNoSuchWindowException.html">SeleniumNoSuchWindowException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.Http.SeleniumScriptTimeoutException.html">SeleniumScriptTimeoutException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.Http.SeleniumStaleElementReferenceException.html">SeleniumStaleElementReferenceException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.Http.SeleniumTimeoutException.html">SeleniumTimeoutException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.Http.SeleniumUnableToSetCookieException.html">SeleniumUnableToSetCookieException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.Http.SeleniumUnexpectedAlertOpenException.html">SeleniumUnexpectedAlertOpenException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.Http.SeleniumUnimplementedCommandException.html">SeleniumUnimplementedCommandException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.Http.SeleniumUnknownCommandException.html">SeleniumUnknownCommandException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.Http.SeleniumUnknownErrorException.html">SeleniumUnknownErrorException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.Http.SeleniumXPathLookupErrorException.html">SeleniumXPathLookupErrorException</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/SeleniumClient.Alert.html">Alert</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.BrowserType.html">BrowserType</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.By.html">By</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.CapabilityType.html">CapabilityType</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.Cookie.html">Cookie</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.DesiredCapabilities.html">DesiredCapabilities</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.DirectoryNotFoundException.html">DirectoryNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.EmptyValueException.html">EmptyValueException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.FileNotFoundException.html">FileNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.NotBooleanException.html">NotBooleanException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.NotIntException.html">NotIntException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.NotStringException.html">NotStringException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.PlatformType.html">PlatformType</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.SelectElement.html">SelectElement</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.TargetLocator.html">TargetLocator</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.WebDriver.html">WebDriver</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.WebDriverWait.html">WebDriverWait</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.WebDriverWaitTimeoutException.html">WebDriverWaitTimeoutException</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClient.WebElement.html">WebElement</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/AdminEditPage.html">AdminEditPage</a></li>
+                                                    <li class="class"><a href="../classes/AdminLoginPage.html">AdminLoginPage</a></li>
+                                                    <li class="class"><a href="../classes/AdminManagerPage.html">AdminManagerPage</a></li>
+                                                    <li class="class"><a href="../classes/AdminPage.html">AdminPage</a></li>
+                                                    <li class="class"><a href="../classes/AlertTest.html">AlertTest</a></li>
+                                                    <li class="class"><a href="../classes/AlertTest.html">AlertTest</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyController.html">BiblestudyController</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyController.html">BiblestudyController</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerAdmin.html">BiblestudyControllerAdmin</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerComment.html">BiblestudyControllerComment</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerCommentform.html">BiblestudyControllerCommentform</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerCommentlist.html">BiblestudyControllerCommentlist</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerComments.html">BiblestudyControllerComments</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerCpanel.html">BiblestudyControllerCpanel</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerInstall.html">BiblestudyControllerInstall</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerLocation.html">BiblestudyControllerLocation</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerLocations.html">BiblestudyControllerLocations</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerMediafile.html">BiblestudyControllerMediafile</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerMediafileform.html">BiblestudyControllerMediafileform</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerMediafilelist.html">BiblestudyControllerMediafilelist</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerMediafiles.html">BiblestudyControllerMediafiles</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerMessage.html">BiblestudyControllerMessage</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerMessagelist.html">BiblestudyControllerMessagelist</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerMessages.html">BiblestudyControllerMessages</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerMessagetype.html">BiblestudyControllerMessagetype</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerMessagetypes.html">BiblestudyControllerMessagetypes</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerMigration.html">BiblestudyControllerMigration</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerPodcast.html">BiblestudyControllerPodcast</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerPodcasts.html">BiblestudyControllerPodcasts</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerSerie.html">BiblestudyControllerSerie</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerSeries.html">BiblestudyControllerSeries</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerSeriesdisplay.html">BiblestudyControllerSeriesdisplay</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerSermon.html">BiblestudyControllerSermon</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerSermons.html">BiblestudyControllerSermons</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerServer.html">BiblestudyControllerServer</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerServers.html">BiblestudyControllerServers</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerShare.html">BiblestudyControllerShare</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerShares.html">BiblestudyControllerShares</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerStyle.html">BiblestudyControllerStyle</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerStyles.html">BiblestudyControllerStyles</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerTeacher.html">BiblestudyControllerTeacher</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerTeacher.html">BiblestudyControllerTeacher</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerTeachers.html">BiblestudyControllerTeachers</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerTeachers.html">BiblestudyControllerTeachers</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerTeachers.html">BiblestudyControllerTeachers</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerTemplate.html">BiblestudyControllerTemplate</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerTemplatecode.html">BiblestudyControllerTemplatecode</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerTemplatecodes.html">BiblestudyControllerTemplatecodes</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerTemplates.html">BiblestudyControllerTemplates</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerTopic.html">BiblestudyControllerTopic</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerTopics.html">BiblestudyControllerTopics</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyControllerUpload.html">BiblestudyControllerUpload</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelAdmin.html">BiblestudyModelAdmin</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelComment.html">BiblestudyModelComment</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelCommentform.html">BiblestudyModelCommentform</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelCommentlist.html">BiblestudyModelCommentlist</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelComments.html">BiblestudyModelComments</a></li>
+                                                    <li class="class"><a href="../classes/BibleStudyModelCpanel.html">BibleStudyModelCpanel</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelDir.html">BiblestudyModelDir</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelLandingpage.html">BiblestudyModelLandingpage</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelLocation.html">BiblestudyModelLocation</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelLocations.html">BiblestudyModelLocations</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelMediafile.html">BiblestudyModelMediafile</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelMediafileform.html">BiblestudyModelMediafileform</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelMediafilelist.html">BiblestudyModelMediafilelist</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelMediafiles.html">BiblestudyModelMediafiles</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelMessage.html">BiblestudyModelMessage</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelMessageform.html">BiblestudyModelMessageform</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelMessagelist.html">BiblestudyModelMessagelist</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelMessages.html">BiblestudyModelMessages</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelMessagetype.html">BiblestudyModelMessagetype</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelMessagetypes.html">BiblestudyModelMessagetypes</a></li>
+                                                    <li class="class"><a href="../classes/BibleStudyModelMigration.html">BibleStudyModelMigration</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelPodcast.html">BiblestudyModelPodcast</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelPodcasts.html">BiblestudyModelPodcasts</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelPopup.html">BiblestudyModelPopup</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelSerie.html">BiblestudyModelSerie</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelSeries.html">BiblestudyModelSeries</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelSeriesdisplay.html">BiblestudyModelSeriesdisplay</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelSeriesdisplays.html">BiblestudyModelSeriesdisplays</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelSermon.html">BiblestudyModelSermon</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelSermons.html">BiblestudyModelSermons</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelServer.html">BiblestudyModelServer</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelServers.html">BiblestudyModelServers</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelShare.html">BiblestudyModelShare</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelShares.html">BiblestudyModelShares</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelStyle.html">BiblestudyModelStyle</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelstyles.html">BiblestudyModelstyles</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelTeacher.html">BiblestudyModelTeacher</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelTeacher.html">BiblestudyModelTeacher</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelTeachers.html">BiblestudyModelTeachers</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelTeachers.html">BiblestudyModelTeachers</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelTemplate.html">BiblestudyModelTemplate</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelTemplatecode.html">BiblestudyModelTemplatecode</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelTemplatecodes.html">BiblestudyModelTemplatecodes</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelTemplates.html">BiblestudyModelTemplates</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelTopic.html">BiblestudyModelTopic</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelTopics.html">BiblestudyModelTopics</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyModelUpload.html">BiblestudyModelUpload</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewAdmin.html">BiblestudyViewAdmin</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewAssets.html">BiblestudyViewAssets</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewBackup.html">BiblestudyViewBackup</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewComment.html">BiblestudyViewComment</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewCommentform.html">BiblestudyViewCommentform</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewCommentlist.html">BiblestudyViewCommentlist</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewComments.html">BiblestudyViewComments</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewCpanel.html">BiblestudyViewCpanel</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewDataBase.html">BiblestudyViewDataBase</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewDir.html">BiblestudyViewDir</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewInstall.html">BiblestudyViewInstall</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewLandingpage.html">BiblestudyViewLandingpage</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewLatest.html">BiblestudyViewLatest</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewLocation.html">BiblestudyViewLocation</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewLocations.html">BiblestudyViewLocations</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewMediafile.html">BiblestudyViewMediafile</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewMediafileform.html">BiblestudyViewMediafileform</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewMediafilelist.html">BiblestudyViewMediafilelist</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewMediafiles.html">BiblestudyViewMediafiles</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewMessage.html">BiblestudyViewMessage</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewMessageform.html">BiblestudyViewMessageform</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewMessagelist.html">BiblestudyViewMessagelist</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewMessages.html">BiblestudyViewMessages</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewMessagetype.html">BiblestudyViewMessagetype</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewMessagetypes.html">BiblestudyViewMessagetypes</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewMigrate.html">BiblestudyViewMigrate</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewMigration.html">BiblestudyViewMigration</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewPodcast.html">BiblestudyViewPodcast</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewPodcasts.html">BiblestudyViewPodcasts</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewPopup.html">BiblestudyViewPopup</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewSerie.html">BiblestudyViewSerie</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewSeries.html">BiblestudyViewSeries</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewSeriesdisplay.html">BiblestudyViewSeriesdisplay</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewSeriesdisplays.html">BiblestudyViewSeriesdisplays</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewSermon.html">BiblestudyViewSermon</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewSermons.html">BiblestudyViewSermons</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewServer.html">BiblestudyViewServer</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewServers.html">BiblestudyViewServers</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewShare.html">BiblestudyViewShare</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewShares.html">BiblestudyViewShares</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewSqueezeBox.html">BiblestudyViewSqueezeBox</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewStyle.html">BiblestudyViewStyle</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewStyles.html">BiblestudyViewStyles</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewTeacher.html">BiblestudyViewTeacher</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewTeacher.html">BiblestudyViewTeacher</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewTeachers.html">BiblestudyViewTeachers</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewTeachers.html">BiblestudyViewTeachers</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewTemplate.html">BiblestudyViewTemplate</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewTemplatecode.html">BiblestudyViewTemplatecode</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewTemplatecodes.html">BiblestudyViewTemplatecodes</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewTemplates.html">BiblestudyViewTemplates</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewTerms.html">BiblestudyViewTerms</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewTopic.html">BiblestudyViewTopic</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewTopics.html">BiblestudyViewTopics</a></li>
+                                                    <li class="class"><a href="../classes/BiblestudyViewUpload.html">BiblestudyViewUpload</a></li>
+                                                    <li class="class"><a href="../classes/Com_BiblestudyInstallerScript.html">Com_BiblestudyInstallerScript</a></li>
+                                                    <li class="class"><a href="../classes/ControlPanel0001Test.html">ControlPanel0001Test</a></li>
+                                                    <li class="class"><a href="../classes/ControlPanelPage.html">ControlPanelPage</a></li>
+                                                    <li class="class"><a href="../classes/FirstTest.html">FirstTest</a></li>
+                                                    <li class="class"><a href="../classes/GDLib.html">GDLib</a></li>
+                                                    <li class="class"><a href="../classes/GenericAdminPage.html">GenericAdminPage</a></li>
+                                                    <li class="class"><a href="../classes/GlobalConfiguration0001Test.html">GlobalConfiguration0001Test</a></li>
+                                                    <li class="class"><a href="../classes/GlobalConfigurationPage.html">GlobalConfigurationPage</a></li>
+                                                    <li class="class"><a href="../classes/GroupEditPage.html">GroupEditPage</a></li>
+                                                    <li class="class"><a href="../classes/GroupManager0001Test.html">GroupManager0001Test</a></li>
+                                                    <li class="class"><a href="../classes/GroupManagerPage.html">GroupManagerPage</a></li>
+                                                    <li class="class"><a href="../classes/ImageMagickLib.html">ImageMagickLib</a></li>
+                                                    <li class="class"><a href="../classes/InstallationPage.html">InstallationPage</a></li>
+                                                    <li class="class"><a href="../classes/InstallTest.html">InstallTest</a></li>
+                                                    <li class="class"><a href="../classes/JAdministratorHelperTest.html">JAdministratorHelperTest</a></li>
+                                                    <li class="class"><a href="../classes/JBSMAddon.html">JBSMAddon</a></li>
+                                                    <li class="class"><a href="../classes/JBSMAddonLegacy.html">JBSMAddonLegacy</a></li>
+                                                    <li class="class"><a href="../classes/JBSMAddonLocal.html">JBSMAddonLocal</a></li>
+                                                    <li class="class"><a href="../classes/JBSMAlias.html">JBSMAlias</a></li>
+                                                    <li class="class"><a href="../classes/JBSMAssets.html">JBSMAssets</a></li>
+                                                    <li class="class"><a href="../classes/JBSMBackup.html">JBSMBackup</a></li>
+                                                    <li class="class"><a href="../classes/JBSMBibleStudyHelper.html">JBSMBibleStudyHelper</a></li>
+                                                    <li class="class"><a href="../classes/JBSMBiblestudyVersion.html">JBSMBiblestudyVersion</a></li>
+                                                    <li class="class"><a href="../classes/JBSMCustom.html">JBSMCustom</a></li>
+                                                    <li class="class"><a href="../classes/JBSMDbHelper.html">JBSMDbHelper</a></li>
+                                                    <li class="class"><a href="../classes/JBSMDebug.html">JBSMDebug</a></li>
+                                                    <li class="class"><a href="../classes/JBSMDownload.html">JBSMDownload</a></li>
+                                                    <li class="class"><a href="../classes/JBSMFreshInstall.html">JBSMFreshInstall</a></li>
+                                                    <li class="class"><a href="../classes/JBSMHelper.html">JBSMHelper</a></li>
+                                                    <li class="class"><a href="../classes/JBSMHelperRoute.html">JBSMHelperRoute</a></li>
+                                                    <li class="class"><a href="../classes/JBSMImage.html">JBSMImage</a></li>
+                                                    <li class="class"><a href="../classes/JBSMImageLib.html">JBSMImageLib</a></li>
+                                                    <li class="class"><a href="../classes/JBSMImages.html">JBSMImages</a></li>
+                                                    <li class="class"><a href="../classes/JBSMLanding.html">JBSMLanding</a></li>
+                                                    <li class="class"><a href="../classes/JBSMListing.html">JBSMListing</a></li>
+                                                    <li class="class"><a href="../classes/JBSMMedia.html">JBSMMedia</a></li>
+                                                    <li class="class"><a href="../classes/JBSMPageBuilder.html">JBSMPageBuilder</a></li>
+                                                    <li class="class"><a href="../classes/JBSMParams.html">JBSMParams</a></li>
+                                                    <li class="class"><a href="../classes/JBSMPIconvert.html">JBSMPIconvert</a></li>
+                                                    <li class="class"><a href="../classes/JBSMPodcast.html">JBSMPodcast</a></li>
+                                                    <li class="class"><a href="../classes/JBSMPodcastSubscribe.html">JBSMPodcastSubscribe</a></li>
+                                                    <li class="class"><a href="../classes/JBSMRelatedStudies.html">JBSMRelatedStudies</a></li>
+                                                    <li class="class"><a href="../classes/JBSMRestore.html">JBSMRestore</a></li>
+                                                    <li class="class"><a href="../classes/JBSMSerieslist.html">JBSMSerieslist</a></li>
+                                                    <li class="class"><a href="../classes/JBSMShowScripture.html">JBSMShowScripture</a></li>
+                                                    <li class="class"><a href="../classes/JBSMSSConvert.html">JBSMSSConvert</a></li>
+                                                    <li class="class"><a href="../classes/JBSMStats.html">JBSMStats</a></li>
+                                                    <li class="class"><a href="../classes/JBSMTags.html">JBSMTags</a></li>
+                                                    <li class="class"><a href="../classes/JBSMTeacher.html">JBSMTeacher</a></li>
+                                                    <li class="class"><a href="../classes/JBSMTemplate.html">JBSMTemplate</a></li>
+                                                    <li class="class"><a href="../classes/JBSMThumbnail.html">JBSMThumbnail</a></li>
+                                                    <li class="class"><a href="../classes/JBSMTranslated.html">JBSMTranslated</a></li>
+                                                    <li class="class"><a href="../classes/JBSMUpload.html">JBSMUpload</a></li>
+                                                    <li class="class"><a href="../classes/JBSServer.html">JBSServer</a></li>
+                                                    <li class="class"><a href="../classes/JBSServerAmazonS3.html">JBSServerAmazonS3</a></li>
+                                                    <li class="class"><a href="../classes/JBSServerAmazonS3.html">JBSServerAmazonS3</a></li>
+                                                    <li class="class"><a href="../classes/JBSServerFtp.html">JBSServerFtp</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldDocman.html">JFormFieldDocman</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldElementOptions.html">JFormFieldElementOptions</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldFilesize.html">JFormFieldFilesize</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldFilters.html">JFormFieldFilters</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldFolders.html">JFormFieldFolders</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldLinkoptions.html">JFormFieldLinkoptions</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldListoptions.html">JFormFieldListoptions</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldLoadLanguageFile.html">JFormFieldLoadLanguageFile</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldLocationslist.html">JFormFieldLocationslist</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldMediafile.html">JFormFieldMediafile</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldMediafile.html">JFormFieldMediafile</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldMessagetypelist.html">JFormFieldMessagetypelist</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldModal_Seriesdetail.html">JFormFieldModal_Seriesdetail</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldModal_Study.html">JFormFieldModal_Study</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldModal_Studydetails.html">JFormFieldModal_Studydetails</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldModal_Teacherdisplay.html">JFormFieldModal_Teacherdisplay</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldPlupload.html">JFormFieldPlupload</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldRowOptions.html">JFormFieldRowOptions</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldSeriesLinkoptions.html">JFormFieldSeriesLinkoptions</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldSerieslist.html">JFormFieldSerieslist</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldSeriesoptions.html">JFormFieldSeriesoptions</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldServer.html">JFormFieldServer</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldServerType.html">JFormFieldServerType</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldSharelist.html">JFormFieldSharelist</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldSpanOptions.html">JFormFieldSpanOptions</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldTeacherLinkoptions.html">JFormFieldTeacherLinkoptions</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldTeacherlist.html">JFormFieldTeacherlist</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldTopics.html">JFormFieldTopics</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldTopicslist.html">JFormFieldTopicslist</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldUpload.html">JFormFieldUpload</a></li>
+                                                    <li class="class"><a href="../classes/JFormFieldVirtuemart.html">JFormFieldVirtuemart</a></li>
+                                                    <li class="class"><a href="../classes/JHtmlBiblestudy.html">JHtmlBiblestudy</a></li>
+                                                    <li class="class"><a href="../classes/JHtmlbsMedia.html">JHtmlbsMedia</a></li>
+                                                    <li class="class"><a href="../classes/JHtmlFancybox.html">JHtmlFancybox</a></li>
+                                                    <li class="class"><a href="../classes/JHtmlJwplayer.html">JHtmlJwplayer</a></li>
+                                                    <li class="class"><a href="../classes/Joomla_Sniffs_Classes_InstantiateNewClassesSniff.html">Joomla_Sniffs_Classes_InstantiateNewClassesSniff</a></li>
+                                                    <li class="class"><a href="../classes/Joomla_Sniffs_Classes_MemberVarScopeSniff.html">Joomla_Sniffs_Classes_MemberVarScopeSniff</a></li>
+                                                    <li class="class"><a href="../classes/Joomla_Sniffs_Classes_MethodScopeSniff.html">Joomla_Sniffs_Classes_MethodScopeSniff</a></li>
+                                                    <li class="class"><a href="../classes/Joomla_Sniffs_Commenting_ClassCommentSniff.html">Joomla_Sniffs_Commenting_ClassCommentSniff</a></li>
+                                                    <li class="class"><a href="../classes/Joomla_Sniffs_Commenting_FileCommentSniff.html">Joomla_Sniffs_Commenting_FileCommentSniff</a></li>
+                                                    <li class="class"><a href="../classes/Joomla_Sniffs_Commenting_FunctionCommentSniff.html">Joomla_Sniffs_Commenting_FunctionCommentSniff</a></li>
+                                                    <li class="class"><a href="../classes/Joomla_Sniffs_Commenting_SingleCommentSniff.html">Joomla_Sniffs_Commenting_SingleCommentSniff</a></li>
+                                                    <li class="class"><a href="../classes/Joomla_Sniffs_ControlStructures_ControlSignatureSniff.html">Joomla_Sniffs_ControlStructures_ControlSignatureSniff</a></li>
+                                                    <li class="class"><a href="../classes/Joomla_Sniffs_ControlStructures_ElseIfDeclarationSniff.html">Joomla_Sniffs_ControlStructures_ElseIfDeclarationSniff</a></li>
+                                                    <li class="class"><a href="../classes/Joomla_Sniffs_ControlStructures_InlineControlStructureSniff.html">Joomla_Sniffs_ControlStructures_InlineControlStructureSniff</a></li>
+                                                    <li class="class"><a href="../classes/Joomla_Sniffs_ControlStructures_MultiLineConditionSniff.html">Joomla_Sniffs_ControlStructures_MultiLineConditionSniff</a></li>
+                                                    <li class="class"><a href="../classes/Joomla_Sniffs_Functions_FunctionCallSignatureSniff.html">Joomla_Sniffs_Functions_FunctionCallSignatureSniff</a></li>
+                                                    <li class="class"><a href="../classes/Joomla_Sniffs_Functions_FunctionDeclarationSniff.html">Joomla_Sniffs_Functions_FunctionDeclarationSniff</a></li>
+                                                    <li class="class"><a href="../classes/Joomla_Sniffs_PHP_LowerCaseConstantSniff.html">Joomla_Sniffs_PHP_LowerCaseConstantSniff</a></li>
+                                                    <li class="class"><a href="../classes/Joomla_Sniffs_WhiteSpace_CastSpacingSniff.html">Joomla_Sniffs_WhiteSpace_CastSpacingSniff</a></li>
+                                                    <li class="class"><a href="../classes/Joomla_Sniffs_WhiteSpace_ConcatenationSpacingSniff.html">Joomla_Sniffs_WhiteSpace_ConcatenationSpacingSniff</a></li>
+                                                    <li class="class"><a href="../classes/Joomla_Sniffs_WhiteSpace_DisallowSpaceIndentSniff.html">Joomla_Sniffs_WhiteSpace_DisallowSpaceIndentSniff</a></li>
+                                                    <li class="class"><a href="../classes/Joomla_Sniffs_WhiteSpace_MemberVarSpacingSniff.html">Joomla_Sniffs_WhiteSpace_MemberVarSpacingSniff</a></li>
+                                                    <li class="class"><a href="../classes/Joomla_Sniffs_WhiteSpace_ObjectOperatorIndentSniff.html">Joomla_Sniffs_WhiteSpace_ObjectOperatorIndentSniff</a></li>
+                                                    <li class="class"><a href="../classes/Joomla_Sniffs_WhiteSpace_OperatorSpacingSniff.html">Joomla_Sniffs_WhiteSpace_OperatorSpacingSniff</a></li>
+                                                    <li class="class"><a href="../classes/Joomla_Sniffs_WhiteSpace_SemicolonSpacingSniff.html">Joomla_Sniffs_WhiteSpace_SemicolonSpacingSniff</a></li>
+                                                    <li class="class"><a href="../classes/Joomla_Sniffs_WhiteSpace_SpaceAfterCastSniff.html">Joomla_Sniffs_WhiteSpace_SpaceAfterCastSniff</a></li>
+                                                    <li class="class"><a href="../classes/Joomla_Sniffs_WhiteSpace_SuperfluousWhitespaceSniff.html">Joomla_Sniffs_WhiteSpace_SuperfluousWhitespaceSniff</a></li>
+                                                    <li class="class"><a href="../classes/JoomlaWebdriverTestCase.html">JoomlaWebdriverTestCase</a></li>
+                                                    <li class="class"><a href="../classes/JRegistry.html">JRegistry</a></li>
+                                                    <li class="class"><a href="../classes/LevelEditPage.html">LevelEditPage</a></li>
+                                                    <li class="class"><a href="../classes/LevelManager0001Test.html">LevelManager0001Test</a></li>
+                                                    <li class="class"><a href="../classes/LevelManagerPage.html">LevelManagerPage</a></li>
+                                                    <li class="class"><a href="../classes/MenuEditPage.html">MenuEditPage</a></li>
+                                                    <li class="class"><a href="../classes/MenuItemEditPage.html">MenuItemEditPage</a></li>
+                                                    <li class="class"><a href="../classes/MenuItemsManager0001Test.html">MenuItemsManager0001Test</a></li>
+                                                    <li class="class"><a href="../classes/MenuItemsManagerPage.html">MenuItemsManagerPage</a></li>
+                                                    <li class="class"><a href="../classes/MenuManager0001Test.html">MenuManager0001Test</a></li>
+                                                    <li class="class"><a href="../classes/MenuManagerPage.html">MenuManagerPage</a></li>
+                                                    <li class="class"><a href="../classes/Migration611.html">Migration611</a></li>
+                                                    <li class="class"><a href="../classes/Migration612.html">Migration612</a></li>
+                                                    <li class="class"><a href="../classes/Migration613.html">Migration613</a></li>
+                                                    <li class="class"><a href="../classes/Migration614.html">Migration614</a></li>
+                                                    <li class="class"><a href="../classes/Migration622.html">Migration622</a></li>
+                                                    <li class="class"><a href="../classes/Migration623.html">Migration623</a></li>
+                                                    <li class="class"><a href="../classes/Migration700.html">Migration700</a></li>
+                                                    <li class="class"><a href="../classes/Migration701.html">Migration701</a></li>
+                                                    <li class="class"><a href="../classes/Migration702.html">Migration702</a></li>
+                                                    <li class="class"><a href="../classes/Migration710.html">Migration710</a></li>
+                                                    <li class="class"><a href="../classes/Migration800.html">Migration800</a></li>
+                                                    <li class="class"><a href="../classes/Migration900.html">Migration900</a></li>
+                                                    <li class="class"><a href="../classes/ModJBSMHelper.html">ModJBSMHelper</a></li>
+                                                    <li class="class"><a href="../classes/ModuleEditPage.html">ModuleEditPage</a></li>
+                                                    <li class="class"><a href="../classes/ModuleManager0001Test.html">ModuleManager0001Test</a></li>
+                                                    <li class="class"><a href="../classes/ModuleManagerPage.html">ModuleManagerPage</a></li>
+                                                    <li class="class"><a href="../classes/PlgFinderBiblestudy.html">PlgFinderBiblestudy</a></li>
+                                                    <li class="class"><a href="../classes/PlgSearchBiblestudysearch.html">PlgSearchBiblestudysearch</a></li>
+                                                    <li class="class"><a href="../classes/PlgSystemJBSBackup.html">PlgSystemJBSBackup</a></li>
+                                                    <li class="class"><a href="../classes/PlgSystemJBSBackupInstallerScript.html">PlgSystemJBSBackupInstallerScript</a></li>
+                                                    <li class="class"><a href="../classes/PlgSystemJBSPodcast.html">PlgSystemJBSPodcast</a></li>
+                                                    <li class="class"><a href="../classes/PlgSystemJBSPodcastInstallerScript.html">PlgSystemJBSPodcastInstallerScript</a></li>
+                                                    <li class="class"><a href="../classes/S3.html">S3</a></li>
+                                                    <li class="class"><a href="../classes/S3Exception.html">S3Exception</a></li>
+                                                    <li class="class"><a href="../classes/S3Request.html">S3Request</a></li>
+                                                    <li class="class"><a href="../classes/SeleniumClientAutoLoader.html">SeleniumClientAutoLoader</a></li>
+                                                    <li class="class"><a href="../classes/TableAdmin.html">TableAdmin</a></li>
+                                                    <li class="class"><a href="../classes/TableComment.html">TableComment</a></li>
+                                                    <li class="class"><a href="../classes/TableLocation.html">TableLocation</a></li>
+                                                    <li class="class"><a href="../classes/TableMediafile.html">TableMediafile</a></li>
+                                                    <li class="class"><a href="../classes/TableMessage.html">TableMessage</a></li>
+                                                    <li class="class"><a href="../classes/TableMessagetype.html">TableMessagetype</a></li>
+                                                    <li class="class"><a href="../classes/TablePodcast.html">TablePodcast</a></li>
+                                                    <li class="class"><a href="../classes/TableSerie.html">TableSerie</a></li>
+                                                    <li class="class"><a href="../classes/TableServer.html">TableServer</a></li>
+                                                    <li class="class"><a href="../classes/TableShare.html">TableShare</a></li>
+                                                    <li class="class"><a href="../classes/TableStudyTopics.html">TableStudyTopics</a></li>
+                                                    <li class="class"><a href="../classes/TableStyle.html">TableStyle</a></li>
+                                                    <li class="class"><a href="../classes/TableTeacher.html">TableTeacher</a></li>
+                                                    <li class="class"><a href="../classes/TableTemplate.html">TableTemplate</a></li>
+                                                    <li class="class"><a href="../classes/TableTemplatecode.html">TableTemplatecode</a></li>
+                                                    <li class="class"><a href="../classes/TableTopic.html">TableTopic</a></li>
+                                                    <li class="class"><a href="../classes/TestCase.html">TestCase</a></li>
+                                                    <li class="class"><a href="../classes/TestCaseDatabase.html">TestCaseDatabase</a></li>
+                                                    <li class="class"><a href="../classes/TestCaseDatabaseMysql.html">TestCaseDatabaseMysql</a></li>
+                                                    <li class="class"><a href="../classes/TestCaseDatabaseMysqli.html">TestCaseDatabaseMysqli</a></li>
+                                                    <li class="class"><a href="../classes/TestCaseDatabaseOracle.html">TestCaseDatabaseOracle</a></li>
+                                                    <li class="class"><a href="../classes/TestCaseDatabasePostgresql.html">TestCaseDatabasePostgresql</a></li>
+                                                    <li class="class"><a href="../classes/TestCaseDatabaseSqlsrv.html">TestCaseDatabaseSqlsrv</a></li>
+                                                    <li class="class"><a href="../classes/TestMockApplication.html">TestMockApplication</a></li>
+                                                    <li class="class"><a href="../classes/TestMockApplicationBase.html">TestMockApplicationBase</a></li>
+                                                    <li class="class"><a href="../classes/TestMockApplicationCli.html">TestMockApplicationCli</a></li>
+                                                    <li class="class"><a href="../classes/TestMockApplicationCms.html">TestMockApplicationCms</a></li>
+                                                    <li class="class"><a href="../classes/TestMockApplicationWeb.html">TestMockApplicationWeb</a></li>
+                                                    <li class="class"><a href="../classes/TestMockCache.html">TestMockCache</a></li>
+                                                    <li class="class"><a href="../classes/TestMockConfig.html">TestMockConfig</a></li>
+                                                    <li class="class"><a href="../classes/TestMockController.html">TestMockController</a></li>
+                                                    <li class="class"><a href="../classes/TestMockDatabaseDriver.html">TestMockDatabaseDriver</a></li>
+                                                    <li class="class"><a href="../classes/TestMockDatabaseQuery.html">TestMockDatabaseQuery</a></li>
+                                                    <li class="class"><a href="../classes/TestMockDispatcher.html">TestMockDispatcher</a></li>
+                                                    <li class="class"><a href="../classes/TestMockDocument.html">TestMockDocument</a></li>
+                                                    <li class="class"><a href="../classes/TestMockLanguage.html">TestMockLanguage</a></li>
+                                                    <li class="class"><a href="../classes/TestMockRules.html">TestMockRules</a></li>
+                                                    <li class="class"><a href="../classes/TestMockSession.html">TestMockSession</a></li>
+                                                    <li class="class"><a href="../classes/TestReflection.html">TestReflection</a></li>
+                                                    <li class="class"><a href="../classes/TestSuite.html">TestSuite</a></li>
+                                                    <li class="class"><a href="../classes/UploadScript.html">UploadScript</a></li>
+                                                    <li class="class"><a href="../classes/UserEditPage.html">UserEditPage</a></li>
+                                                    <li class="class"><a href="../classes/UserManager0001Test.html">UserManager0001Test</a></li>
+                                                    <li class="class"><a href="../classes/UserManager0002Test.html">UserManager0002Test</a></li>
+                                                    <li class="class"><a href="../classes/UserManagerPage.html">UserManagerPage</a></li>
+                                                    <li class="class"><a href="../classes/UserNotesEditPage.html">UserNotesEditPage</a></li>
+                                                    <li class="class"><a href="../classes/UserNotesManager0001Test.html">UserNotesManager0001Test</a></li>
+                                                    <li class="class"><a href="../classes/UserNotesManagerPage.html">UserNotesManagerPage</a></li>
+                                                    <li class="class"><a href="../classes/WikihelpTest.html">WikihelpTest</a></li>
+                                                    <li class="class"><a href="../classes/Xmap_Com_Biblestudy.html">Xmap_Com_Biblestudy</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/default.html">\</a> <i class="icon-level-up"></i>
+                                            </nav>
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+
+                    <h1><small>\</small>BibleStudyModelMigration</h1>
+                    <p><em>class Migration model</em></p>
+                    
+                    
+                                        
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span4">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#properties">Properties</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span4">
+                                                                    <a href="../classes/BibleStudyModelMigration.html#method_startScanning" class="">startScanning()</a><br />
+                                                                    <a href="../classes/BibleStudyModelMigration.html#method_getVersions" class="">getVersions()</a><br />
+                                                                    <a href="../classes/BibleStudyModelMigration.html#method_correctVersions" class="">correctVersions()</a><br />
+                                                                    <a href="../classes/BibleStudyModelMigration.html#method_run" class="">run()</a><br />
+                                                                    <a href="../classes/BibleStudyModelMigration.html#method_postinstall_messages" class="">postinstall_messages()</a><br />
+                                                                    <a href="../classes/BibleStudyModelMigration.html#method_fiximportparams" class="">fiximportparams()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/BibleStudyModelMigration.html#property_totalVersions" class="">$totalVersions</a><br />
+                                                                    <a href="../classes/BibleStudyModelMigration.html#property_running" class="">$running</a><br />
+                                                                    <a href="../classes/BibleStudyModelMigration.html#property_doneVersions" class="">$doneVersions</a><br />
+                                                                    <a href="../classes/BibleStudyModelMigration.html#property_callstack" class="">$callstack</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No constants found</em>
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span4">
+                                                                    <em>No protected methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/BibleStudyModelMigration.html#property_filePath" class="">$filePath</a><br />
+                                                                    <a href="../classes/BibleStudyModelMigration.html#property_phpPath" class="">$phpPath</a><br />
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span4">
+                                                                    <a href="../classes/BibleStudyModelMigration.html#method_resetStack" class="">resetStack()</a><br />
+                                                                    <a href="../classes/BibleStudyModelMigration.html#method_resetTimer" class="">resetTimer()</a><br />
+                                                                    <a href="../classes/BibleStudyModelMigration.html#method_microtime_float" class="">microtime_float()</a><br />
+                                                                    <a href="../classes/BibleStudyModelMigration.html#method_setSchemaVersion" class="">setSchemaVersion()</a><br />
+                                                                    <a href="../classes/BibleStudyModelMigration.html#method_saveStack" class="">saveStack()</a><br />
+                                                                    <a href="../classes/BibleStudyModelMigration.html#method_loadStack" class="">loadStack()</a><br />
+                                                                    <a href="../classes/BibleStudyModelMigration.html#method_haveEnoughTime" class="">haveEnoughTime()</a><br />
+                                                                    <a href="../classes/BibleStudyModelMigration.html#method_RealRun" class="">RealRun()</a><br />
+                                                                    <a href="../classes/BibleStudyModelMigration.html#method_finish" class="">finish()</a><br />
+                                                                    <a href="../classes/BibleStudyModelMigration.html#method_getUpdateVersion" class="">getUpdateVersion()</a><br />
+                                                                    <a href="../classes/BibleStudyModelMigration.html#method_postinstallclenup" class="">postinstallclenup()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/BibleStudyModelMigration.html#property__startTime" class="">$_startTime</a><br />
+                                                                    <a href="../classes/BibleStudyModelMigration.html#property__versionStack" class="">$_versionStack</a><br />
+                                                                    <a href="../classes/BibleStudyModelMigration.html#property__versionSwitch" class="">$_versionSwitch</a><br />
+                                                                    <a href="../classes/BibleStudyModelMigration.html#property__biblestudyEid" class="">$_biblestudyEid</a><br />
+                                                                    <a href="../classes/BibleStudyModelMigration.html#property__finish" class="">$_finish</a><br />
+                                                                    <a href="../classes/BibleStudyModelMigration.html#property__isimport" class="">$_isimport</a><br />
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                                        
+                    
+                    <dl>
+                        <dt>File</dt>
+                            <dd><a href="../files/com_biblestudy.admin.models.migration.html"><div class="path-wrapper">com_biblestudy/admin/models/migration.php</div></a></dd>
+                                                <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">Proclaim.Admin</div></dd>
+                                                <dt>Class hierarchy</dt>
+                            <dd class="hierarchy">
+                                                                                                                                                                                                                                                                                                
+                                        <div class="namespace-wrapper">\JModelLegacy</div>
+                                                                                                    <div class="namespace-wrapper">\BibleStudyModelMigration</div>
+                            </dd>
+
+                        
+                        
+                        
+                        
+                                                                        </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr>
+                            <th>
+                                since
+                            </th>
+                            <td>
+                                                                    
+                                                            </td>
+                        </tr>
+                                        </table>
+                </aside>
+            </div>
+
+                        
+                                    <a id="properties" name="properties"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Properties</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_totalVersions" name="property_totalVersions" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$totalVersions</h3>
+                <pre class="signature">$totalVersions : integer</pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                integer
+                &mdash; Total numbers of Versions                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_running" name="property_running" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$running</h3>
+                <pre class="signature">$running : string</pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                &mdash; Running Now                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_doneVersions" name="property_doneVersions" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$doneVersions</h3>
+                <pre class="signature">$doneVersions : integer</pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                integer
+                &mdash; Numbers of Versions already processed                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_callstack" name="property_callstack" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$callstack</h3>
+                <pre class="signature">$callstack : array</pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                array
+                &mdash; Call stack for the Visioning System.                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_filePath" name="property_filePath" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$filePath</h3>
+                <pre class="signature">$filePath : string</pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                &mdash; Path to Mysql files                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_phpPath" name="property_phpPath" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$phpPath</h3>
+                <pre class="signature">$phpPath : string</pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                &mdash; Path to PHP Version files                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__startTime" name="property__startTime" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_startTime</h3>
+                <pre class="signature">$_startTime : float</pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                float
+                &mdash; The time the process started                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__versionStack" name="property__versionStack" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_versionStack</h3>
+                <pre class="signature">$_versionStack : array</pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                array
+                &mdash; The pre versions to process                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__versionSwitch" name="property__versionSwitch" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_versionSwitch</h3>
+                <pre class="signature">$_versionSwitch : string</pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                &mdash; Version of BibleStudy                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__biblestudyEid" name="property__biblestudyEid" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_biblestudyEid</h3>
+                <pre class="signature">$_biblestudyEid : integer</pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                integer
+                &mdash; Id of Extinction Table                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__finish" name="property__finish" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_finish</h3>
+                <pre class="signature">$_finish : array</pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                array
+                &mdash; Array of Finish Task                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__isimport" name="property__isimport" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_isimport</h3>
+                <pre class="signature">$_isimport : array</pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                array
+                &mdash; int of Finish Task                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                                    <a id="methods" name="methods"></a>
+            <div class="row-fluid">
+                <div class="span8 content class"><h2>Methods</h2></div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_startScanning" name="method_startScanning" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">startScanning()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">startScanning() : boolean</pre>
+                <p><em>Start Looking though the Versions</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getVersions" name="method_getVersions" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getVersions()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getVersions() : boolean</pre>
+                <p><em>Get migrate versions of DB after import/copy has finished.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_correctVersions" name="method_correctVersions" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">correctVersions()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">correctVersions() : boolean</pre>
+                <p><em>Correct problem in are update table under 7.0.2 systems</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_run" name="method_run" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">run()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">run(boolean  <span class="argument">$resetTimer = true</span>) : boolean</pre>
+                <p><em>Run the Migration will there is time.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$resetTimer </td>
+                                <td><p>If the time must be reset</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_postinstall_messages" name="method_postinstall_messages" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">postinstall_messages()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">postinstall_messages(object  <span class="argument">$message</span>, \JDatabaseDriver  <span class="argument">$db</span>) : void</pre>
+                <p><em>Update messages</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>object</td>
+                                <td>$message </td>
+                                <td><p>Install object</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>\JDatabaseDriver</td>
+                                <td>$db </td>
+                                <td><p>DB Driver</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_fiximportparams" name="method_fiximportparams" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">fiximportparams()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">fiximportparams() : boolean</pre>
+                <p><em>Fix Import problem</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>True if fix complete, False if failure</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_resetStack" name="method_resetStack" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">resetStack()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">resetStack() : void</pre>
+                <p><em>Resets the Versions/SQL/After stack saved in the session</em></p>
+                
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_resetTimer" name="method_resetTimer" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">resetTimer()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">resetTimer() : void</pre>
+                <p><em>Starts or resets the internal timer</em></p>
+                
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_microtime_float" name="method_microtime_float" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">microtime_float()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">microtime_float() : string</pre>
+                <p><em>Returns the current timestamps in decimal seconds</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setSchemaVersion" name="method_setSchemaVersion" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">setSchemaVersion()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setSchemaVersion(string  <span class="argument">$version</span>, integer  <span class="argument">$eid</span>) : void</pre>
+                <p><em>Set the schema version for an extension by looking at its latest update</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$version </td>
+                                <td><p>Version number</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$eid </td>
+                                <td><p>Extension ID</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            7.1.0                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_saveStack" name="method_saveStack" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">saveStack()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">saveStack() : void</pre>
+                <p><em>Saves the Versions/SQL/After stack in the session</em></p>
+                
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_loadStack" name="method_loadStack" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">loadStack()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">loadStack() : void</pre>
+                <p><em>Loads the Versions/SQL/After stack from the session</em></p>
+                
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_haveEnoughTime" name="method_haveEnoughTime" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">haveEnoughTime()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">haveEnoughTime() : boolean</pre>
+                <p><em>Makes sure that no more than 3 seconds since the start of the timer have elapsed</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_RealRun" name="method_RealRun" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">RealRun()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">RealRun() : boolean</pre>
+                <p><em>Start the Run through the Pre Versions then SQL files then After PHP functions.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_finish" name="method_finish" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">finish()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">finish() : boolean</pre>
+                <p><em>Finish the system</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getUpdateVersion" name="method_getUpdateVersion" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">getUpdateVersion()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getUpdateVersion() : string</pre>
+                <p><em>Returns Update Version form Table</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>Returns the Last Version in the #_bsms_update table</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_postinstallclenup" name="method_postinstallclenup" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">postinstallclenup()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">postinstallclenup(\JDatabaseDriver  <span class="argument">$db</span>) : void</pre>
+                <p><em>Cleanup postinstall before migration</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>\JDatabaseDriver</td>
+                                <td>$db </td>
+                                <td><p>Joomla Database Driver</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">migration.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/com_biblestudy/admin/models/migration.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                            <li><a href="../namespaces/SeleniumClient.html">\SeleniumClient</a></li>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on January 28th, 2015 at 12:42.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>

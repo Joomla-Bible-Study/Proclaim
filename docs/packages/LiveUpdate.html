@@ -1,0 +1,223 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>Proclaim API » LiveUpdate</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">Proclaim API</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a>Packages</a></li>
+<li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
+<li><a href="../packages/Proclaim.Admin.html"><i class="icon-folder-open"></i> Proclaim.Admin</a></li>
+<li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
+<li><a href="../packages/LiveUpdate.html"><i class="icon-folder-open"></i> LiveUpdate</a></li>
+<li><a href="../packages/SefExt.html"><i class="icon-folder-open"></i> SefExt</a></li>
+</ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">3</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul></ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">18</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+<ul class="side-nav nav nav-list">
+<li class="nav-header">
+<i class="icon-map-marker"></i> Packages</li>
+<li>
+<a href="../packages/LiveUpdate.html" title="LiveUpdate"><i class="icon-folder-open"></i>LiveUpdate</a><ul class="nav nav-list nav-packages"></ul>
+</li>
+<li class="nav-header">
+<i class="icon-custom icon-class"></i> Classes</li>
+<li><a href="#JoomlaCompatView" title="Live Update Package">JoomlaCompatView</a></li>
+<li><a href="#LiveUpdateView" title="The Live Update MVC view">LiveUpdateView</a></li>
+<li><a href="#LiveUpdateStorageFile" title="Live Update File Storage Class
+Allows to store the update data to files on disk. Its configuration options are:
+path            string    The absolute path to the directory where the update data will be stored as INI files">LiveUpdateStorageFile</a></li>
+<li><a href="#LiveUpdateStorage" title="Abstract class for the update parameters storage">LiveUpdateStorage</a></li>
+<li><a href="#LiveUpdateConfig" title="Configuration class for your extension's updates. Override to your liking.">LiveUpdateConfig</a></li>
+<li><a href="#LiveUpdateDownloadHelper" title="Allows downloading packages over the web to your server">LiveUpdateDownloadHelper</a></li>
+<li><a href="#LiveUpdateAbstractConfig" title="This is the base class inherited by the config.php file in LiveUpdate's root.">LiveUpdateAbstractConfig</a></li>
+<li><a href="#LiveUpdateStorageComponent" title="Live Update Component Storage Class
+Allows to store the update data to a component's parameters. This is the most reliable method.">LiveUpdateStorageComponent</a></li>
+<li><a href="#JoomlaCompatModel" title="The Live Update MVC model">JoomlaCompatModel</a></li>
+<li><a href="#LiveUpdateModel" title="The Live Update MVC model">LiveUpdateModel</a></li>
+<li><a href="#JoomlaCompatController" title="The Live Update MVC controller">JoomlaCompatController</a></li>
+<li><a href="#LiveUpdateController" title="The Live Update MVC controller">LiveUpdateController</a></li>
+<li><a href="#LiveUpdateINIHelper" title="A smart INI file parser with reproducible behaviour among different PHP versions">LiveUpdateINIHelper</a></li>
+<li><a href="#LiveUpdate" title="Class LiveUpdate">LiveUpdate</a></li>
+<li><a href="#LiveUpdateXMLSlurp" title="Live Update XML Slurp">LiveUpdateXMLSlurp</a></li>
+<li><a href="#LiveUpdateFetch" title="Fetches the update information from the server or the cache, depending on
+whether the cache is fresh or not.">LiveUpdateFetch</a></li>
+</ul>
+</div>
+<div class="span8 package-contents">
+<ul class="breadcrumb"><li>
+<a href="../index.html"><i class="icon-folder-open"></i></a><span class="divider">\</span><li class="active"><a href="../packages/LiveUpdate.html">LiveUpdate</a></li>
+</li></ul>
+<div class="package-indent">
+<h3>
+<i class="icon-custom icon-class"></i> Classes and interfaces</h3>
+<div id="JoomlaCompatController" class="element ajax clickable class">
+<h1>JoomlaCompatController<a href="../classes/JoomlaCompatController.html">¶</a>
+</h1>
+<p class="short_description">The Live Update MVC controller</p>
+<div class="details collapse"></div>
+<a href="../classes/JoomlaCompatController.html" class="more">« More »</a>
+</div>
+<div id="JoomlaCompatModel" class="element ajax clickable class">
+<h1>JoomlaCompatModel<a href="../classes/JoomlaCompatModel.html">¶</a>
+</h1>
+<p class="short_description">The Live Update MVC model</p>
+<div class="details collapse"></div>
+<a href="../classes/JoomlaCompatModel.html" class="more">« More »</a>
+</div>
+<div id="JoomlaCompatView" class="element ajax clickable class">
+<h1>JoomlaCompatView<a href="../classes/JoomlaCompatView.html">¶</a>
+</h1>
+<p class="short_description">Live Update Package</p>
+<div class="details collapse"></div>
+<a href="../classes/JoomlaCompatView.html" class="more">« More »</a>
+</div>
+<div id="LiveUpdate" class="element ajax clickable class">
+<h1>LiveUpdate<a href="../classes/LiveUpdate.html">¶</a>
+</h1>
+<p class="short_description">Class LiveUpdate</p>
+<div class="details collapse"></div>
+<a href="../classes/LiveUpdate.html" class="more">« More »</a>
+</div>
+<div id="LiveUpdateAbstractConfig" class="element ajax clickable class">
+<h1>LiveUpdateAbstractConfig<a href="../classes/LiveUpdateAbstractConfig.html">¶</a>
+</h1>
+<p class="short_description">This is the base class inherited by the config.php file in LiveUpdate's root.</p>
+<div class="details collapse"></div>
+<a href="../classes/LiveUpdateAbstractConfig.html" class="more">« More »</a>
+</div>
+<div id="LiveUpdateConfig" class="element ajax clickable class">
+<h1>LiveUpdateConfig<a href="../classes/LiveUpdateConfig.html">¶</a>
+</h1>
+<p class="short_description">Configuration class for your extension's updates. Override to your liking.</p>
+<div class="details collapse"></div>
+<a href="../classes/LiveUpdateConfig.html" class="more">« More »</a>
+</div>
+<div id="LiveUpdateController" class="element ajax clickable class">
+<h1>LiveUpdateController<a href="../classes/LiveUpdateController.html">¶</a>
+</h1>
+<p class="short_description">The Live Update MVC controller</p>
+<div class="details collapse"></div>
+<a href="../classes/LiveUpdateController.html" class="more">« More »</a>
+</div>
+<div id="LiveUpdateDownloadHelper" class="element ajax clickable class">
+<h1>LiveUpdateDownloadHelper<a href="../classes/LiveUpdateDownloadHelper.html">¶</a>
+</h1>
+<p class="short_description">Allows downloading packages over the web to your server</p>
+<div class="details collapse"></div>
+<a href="../classes/LiveUpdateDownloadHelper.html" class="more">« More »</a>
+</div>
+<div id="LiveUpdateFetch" class="element ajax clickable class">
+<h1>LiveUpdateFetch<a href="../classes/LiveUpdateFetch.html">¶</a>
+</h1>
+<p class="short_description">Fetches the update information from the server or the cache, depending on
+whether the cache is fresh or not.</p>
+<div class="details collapse"></div>
+<a href="../classes/LiveUpdateFetch.html" class="more">« More »</a>
+</div>
+<div id="LiveUpdateINIHelper" class="element ajax clickable class">
+<h1>LiveUpdateINIHelper<a href="../classes/LiveUpdateINIHelper.html">¶</a>
+</h1>
+<p class="short_description">A smart INI file parser with reproducible behaviour among different PHP versions</p>
+<div class="details collapse"></div>
+<a href="../classes/LiveUpdateINIHelper.html" class="more">« More »</a>
+</div>
+<div id="LiveUpdateModel" class="element ajax clickable class">
+<h1>LiveUpdateModel<a href="../classes/LiveUpdateModel.html">¶</a>
+</h1>
+<p class="short_description">The Live Update MVC model</p>
+<div class="details collapse"></div>
+<a href="../classes/LiveUpdateModel.html" class="more">« More »</a>
+</div>
+<div id="LiveUpdateStorage" class="element ajax clickable class">
+<h1>LiveUpdateStorage<a href="../classes/LiveUpdateStorage.html">¶</a>
+</h1>
+<p class="short_description">Abstract class for the update parameters storage</p>
+<div class="details collapse"></div>
+<a href="../classes/LiveUpdateStorage.html" class="more">« More »</a>
+</div>
+<div id="LiveUpdateStorageComponent" class="element ajax clickable class">
+<h1>LiveUpdateStorageComponent<a href="../classes/LiveUpdateStorageComponent.html">¶</a>
+</h1>
+<p class="short_description">Live Update Component Storage Class
+Allows to store the update data to a component's parameters. This is the most reliable method.</p>
+<div class="details collapse"></div>
+<a href="../classes/LiveUpdateStorageComponent.html" class="more">« More »</a>
+</div>
+<div id="LiveUpdateStorageFile" class="element ajax clickable class">
+<h1>LiveUpdateStorageFile<a href="../classes/LiveUpdateStorageFile.html">¶</a>
+</h1>
+<p class="short_description">Live Update File Storage Class
+Allows to store the update data to files on disk. Its configuration options are:
+path            string    The absolute path to the directory where the update data will be stored as INI files</p>
+<div class="details collapse"></div>
+<a href="../classes/LiveUpdateStorageFile.html" class="more">« More »</a>
+</div>
+<div id="LiveUpdateView" class="element ajax clickable class">
+<h1>LiveUpdateView<a href="../classes/LiveUpdateView.html">¶</a>
+</h1>
+<p class="short_description">The Live Update MVC view</p>
+<div class="details collapse"></div>
+<a href="../classes/LiveUpdateView.html" class="more">« More »</a>
+</div>
+<div id="LiveUpdateXMLSlurp" class="element ajax clickable class">
+<h1>LiveUpdateXMLSlurp<a href="../classes/LiveUpdateXMLSlurp.html">¶</a>
+</h1>
+<p class="short_description">Live Update XML Slurp</p>
+<div class="details collapse"></div>
+<a href="../classes/LiveUpdateXMLSlurp.html" class="more">« More »</a>
+</div>
+</div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.1
+</a> and<br>
+            generated on 2013-10-17T22:45:23-05:00.<br></footer></div>
+</div>
+</body>
+</html>

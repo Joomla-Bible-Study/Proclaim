@@ -1,0 +1,250 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>Proclaim API » \PlgSystemJBSBackup</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">Proclaim API</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a>Packages</a></li>
+<li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Administrator.html"><i class="icon-folder-open"></i> Joomla.Administrator</a></li>
+<li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
+<li><a href="../packages/Proclaim.html"><i class="icon-folder-open"></i> Proclaim</a></li>
+<li><a href="../packages/Proclaim.Admin.html"><i class="icon-folder-open"></i> Proclaim.Admin</a></li>
+<li><a href="../packages/Proclaim.Site.html"><i class="icon-folder-open"></i> Proclaim.Site</a></li>
+</ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">181</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul></ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">13</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<div class="btn-toolbar">
+<div class="btn-group visibility" data-toggle="buttons-checkbox">
+<button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button>
+</div>
+<div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+</div>
+<ul class="side-nav nav nav-list"><li class="nav-header">
+<i title="Methods" class="icon-custom icon-method"></i> Methods
+                    <ul>
+<li class="method public "><a href="#method___construct" title="__construct() :: Constructor"><span class="description">Constructor</span><pre>__construct()</pre></a></li>
+<li class="method public "><a href="#method_checkdays" title="checkdays() :: Check Days"><span class="description">Check Days</span><pre>checkdays()</pre></a></li>
+<li class="method public "><a href="#method_checktime" title="checktime() :: Check Time"><span class="description">Check Time</span><pre>checktime()</pre></a></li>
+<li class="method public "><a href="#method_doBackup" title="doBackup() :: Do the backup"><span class="description">Do the backup</span><pre>doBackup()</pre></a></li>
+<li class="method public "><a href="#method_doEmail" title="doEmail() :: Send the Email"><span class="description">Send the Email</span><pre>doEmail()</pre></a></li>
+<li class="method public "><a href="#method_onAfterInitialise" title="onAfterInitialise() :: After Initialise system"><span class="description">After Initialise system</span><pre>onAfterInitialise()</pre></a></li>
+<li class="method public "><a href="#method_updatefiles" title="updatefiles() :: Update files"><span class="description">Update files</span><pre>updatefiles()</pre></a></li>
+<li class="method public "><a href="#method_updatetime" title="updatetime() :: Update Time"><span class="description">Update Time</span><pre>updatetime()</pre></a></li>
+</ul>
+</li></ul>
+</div>
+<div class="span8">
+<a id="\PlgSystemJBSBackup"></a><ul class="breadcrumb">
+<li>
+<a href="../index.html"><i title="Classes" class="icon-custom icon-class"></i></a><span class="divider">\</span>
+</li>
+<li class="active">
+<span class="divider">\</span><a href="../classes/PlgSystemJBSBackup.html">PlgSystemJBSBackup</a>
+</li>
+</ul>
+    <div class="element class">
+<p class="short_description">JBSBackup jPlugin class</p>
+<div class="details">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>package</th>
+<td><a href="../packages/Proclaim.Plugin.JBSBackup.html">Proclaim</a></td>
+</tr>
+<tr>
+<th>subpackage</th>
+<td>Plugin.JBSBackup</td>
+</tr>
+<tr>
+<th>since</th>
+<td>7.1.0</td>
+</tr>
+</table>
+<h3>
+<i title="Methods" class="icon-custom icon-method"></i> Methods</h3>
+<a id="method___construct"></a><div class="element clickable method public method___construct " data-toggle="collapse" data-target=".method___construct .collapse" title="public">
+<h2>Constructor</h2>
+<pre>__construct(object $subject, array $config) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.5</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$subject</h4>
+<code>object</code><p>&$subject  The object to observe</p></div>
+<div class="subelement argument">
+<h4>$config</h4>
+<code>array</code><p>An optional associative array of configuration settings.
+Recognized key values include 'name', 'group', 'params', 'language'
+(this list is not meant to be comprehensive).</p></div>
+</div></div>
+</div>
+<a id="method_checkdays"></a><div class="element clickable method public method_checkdays " data-toggle="collapse" data-target=".method_checkdays .collapse" title="public">
+<h2>Check Days</h2>
+<pre>checkdays(\Joomla\Registry\Registry $params) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.1.0</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>\Joomla\Registry\Registry</code><p>?</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method_checktime"></a><div class="element clickable method public method_checktime " data-toggle="collapse" data-target=".method_checktime .collapse" title="public">
+<h2>Check Time</h2>
+<pre>checktime(\Joomla\Registry\Registry $params) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.1.0</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>\Joomla\Registry\Registry</code><p>?</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method_doBackup"></a><div class="element clickable method public method_doBackup " data-toggle="collapse" data-target=".method_doBackup .collapse" title="public">
+<h2>Do the backup</h2>
+<pre>doBackup() : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.1.0</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method_doEmail"></a><div class="element clickable method public method_doEmail " data-toggle="collapse" data-target=".method_doEmail .collapse" title="public">
+<h2>Send the Email</h2>
+<pre>doEmail(\Joomla\Registry\Registry $params, string $dobackup) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.1.0</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>\Joomla\Registry\Registry</code><p>Component Params</p></div>
+<div class="subelement argument">
+<h4>$dobackup</h4>
+<code>string</code><p>File of Backup</p></div>
+</div></div>
+</div>
+<a id="method_onAfterInitialise"></a><div class="element clickable method public method_onAfterInitialise " data-toggle="collapse" data-target=".method_onAfterInitialise .collapse" title="public">
+<h2>After Initialise system</h2>
+<pre>onAfterInitialise() : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.5</td>
+</tr></table>
+</div></div>
+</div>
+<a id="method_updatefiles"></a><div class="element clickable method public method_updatefiles " data-toggle="collapse" data-target=".method_updatefiles .collapse" title="public">
+<h2>Update files</h2>
+<pre>updatefiles(\Joomla\Registry\Registry $params) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.1.0</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>\Joomla\Registry\Registry</code><p>JBSM Params</p></div>
+</div></div>
+</div>
+<a id="method_updatetime"></a><div class="element clickable method public method_updatetime " data-toggle="collapse" data-target=".method_updatetime .collapse" title="public">
+<h2>Update Time</h2>
+<pre>updatetime() : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.1.0</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
+            generated on 2019-02-23T17:32:09-06:00.<br></footer></div>
+</div>
+</body>
+</html>

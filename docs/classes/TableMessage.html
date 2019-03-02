@@ -1,0 +1,1028 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>Proclaim API » \TableMessage</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">Proclaim API</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a>Packages</a></li>
+<li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Administrator.html"><i class="icon-folder-open"></i> Joomla.Administrator</a></li>
+<li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
+<li><a href="../packages/Proclaim.html"><i class="icon-folder-open"></i> Proclaim</a></li>
+<li><a href="../packages/Proclaim.Admin.html"><i class="icon-folder-open"></i> Proclaim.Admin</a></li>
+<li><a href="../packages/Proclaim.Site.html"><i class="icon-folder-open"></i> Proclaim.Site</a></li>
+</ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">181</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul></ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">13</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<div class="btn-toolbar">
+<div class="btn-group visibility" data-toggle="buttons-checkbox">
+<button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button>
+</div>
+<div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+</div>
+<ul class="side-nav nav nav-list">
+<li class="nav-header">
+<i title="Methods" class="icon-custom icon-method"></i> Methods
+                    <ul>
+<li class="method public "><a href="#method___construct" title="__construct() :: Constructor."><span class="description">Constructor.</span><pre>__construct()</pre></a></li>
+<li class="method public "><a href="#method_bind" title="bind() :: Method to bind an associative array or object to the JTable instance.This
+method only binds properties that are publicly accessible and optionally
+takes an array of properties to ignore when binding."><span class="description">Method to bind an associative array or object to the JTable instance.This
+method only binds properties that are publicly accessible and optionally
+takes an array of properties to ignore when binding.</span><pre>bind()</pre></a></li>
+<li class="method public "><a href="#method_ordering" title="ordering() :: Ordering."><span class="description">Ordering.</span><pre>ordering()</pre></a></li>
+<li class="method public "><a href="#method_store" title="store() :: Method to store a row in the database from the JTable instance properties."><span class="description">Method to store a row in the database from the JTable instance properties.</span><pre>store()</pre></a></li>
+</ul>
+</li>
+<li class="nav-header protected">» Protected
+                    <ul>
+<li class="method protected "><a href="#method__getAssetName" title="_getAssetName() :: Method to compute the default name of the asset."><span class="description">Method to compute the default name of the asset.</span><pre>_getAssetName()</pre></a></li>
+<li class="method protected "><a href="#method__getAssetParentId" title="_getAssetParentId() :: Method to get the parent asset under which to register this one."><span class="description">Method to get the parent asset under which to register this one.</span><pre>_getAssetParentId()</pre></a></li>
+<li class="method protected "><a href="#method__getAssetTitle" title="_getAssetTitle() :: Method to return the title to use for the asset table."><span class="description">Method to return the title to use for the asset table.</span><pre>_getAssetTitle()</pre></a></li>
+</ul>
+</li>
+<li class="nav-header">
+<i title="Properties" class="icon-custom icon-property"></i> Properties
+                    <ul>
+<li class="property public "><a href="#property_access" title="$access() :: "><span class="description"></span><pre>$access</pre></a></li>
+<li class="property public "><a href="#property_alias" title="$alias() :: Alias"><span class="description"></span><pre>$alias</pre></a></li>
+<li class="property public "><a href="#property_asset_id" title="$asset_id() :: "><span class="description"></span><pre>$asset_id</pre></a></li>
+<li class="property public "><a href="#property_booknumber" title="$booknumber() :: Book Number"><span class="description"></span><pre>$booknumber</pre></a></li>
+<li class="property public "><a href="#property_booknumber2" title="$booknumber2() :: Book Number 2"><span class="description"></span><pre>$booknumber2</pre></a></li>
+<li class="property public "><a href="#property_chapter_begin" title="$chapter_begin() :: Chapter Begin"><span class="description"></span><pre>$chapter_begin</pre></a></li>
+<li class="property public "><a href="#property_chapter_begin2" title="$chapter_begin2() :: Chapter Begin2"><span class="description"></span><pre>$chapter_begin2</pre></a></li>
+<li class="property public "><a href="#property_chapter_end" title="$chapter_end() :: Chapter End"><span class="description"></span><pre>$chapter_end</pre></a></li>
+<li class="property public "><a href="#property_chapter_end2" title="$chapter_end2() :: Chapter End2"><span class="description"></span><pre>$chapter_end2</pre></a></li>
+<li class="property public "><a href="#property_checked_out" title="$checked_out() :: "><span class="description"></span><pre>$checked_out</pre></a></li>
+<li class="property public "><a href="#property_checked_out_time" title="$checked_out_time() :: "><span class="description"></span><pre>$checked_out_time</pre></a></li>
+<li class="property public "><a href="#property_comments" title="$comments() :: Comments"><span class="description"></span><pre>$comments</pre></a></li>
+<li class="property public "><a href="#property_download_id" title="$download_id() :: "><span class="description"></span><pre>$download_id</pre></a></li>
+<li class="property public "><a href="#property_hits" title="$hits() :: Hits"><span class="description"></span><pre>$hits</pre></a></li>
+<li class="property public "><a href="#property_id" title="$id() :: Primary Key"><span class="description"></span><pre>$id</pre></a></li>
+<li class="property public "><a href="#property_image_cd" title="$image_cd() :: "><span class="description"></span><pre>$image_cd</pre></a></li>
+<li class="property public "><a href="#property_image_dvd" title="$image_dvd() :: "><span class="description"></span><pre>$image_dvd</pre></a></li>
+<li class="property public "><a href="#property_language" title="$language() :: "><span class="description"></span><pre>$language</pre></a></li>
+<li class="property public "><a href="#property_location_id" title="$location_id() :: Location ID"><span class="description"></span><pre>$location_id</pre></a></li>
+<li class="property public "><a href="#property_messagetype" title="$messagetype() :: MessageType"><span class="description"></span><pre>$messagetype</pre></a></li>
+<li class="property public "><a href="#property_modified" title="$modified() :: "><span class="description"></span><pre>$modified</pre></a></li>
+<li class="property public "><a href="#property_modified_by" title="$modified_by() :: "><span class="description"></span><pre>$modified_by</pre></a></li>
+<li class="property public "><a href="#property_ordering" title="$ordering() :: Ordering"><span class="description"></span><pre>$ordering</pre></a></li>
+<li class="property public "><a href="#property_params" title="$params() :: Params"><span class="description"></span><pre>$params</pre></a></li>
+<li class="property public "><a href="#property_prod_cd" title="$prod_cd() :: "><span class="description"></span><pre>$prod_cd</pre></a></li>
+<li class="property public "><a href="#property_prod_dvd" title="$prod_dvd() :: "><span class="description"></span><pre>$prod_dvd</pre></a></li>
+<li class="property public "><a href="#property_publish_down" title="$publish_down() :: "><span class="description">Publish Down</span><pre>$publish_down</pre></a></li>
+<li class="property public "><a href="#property_publish_up" title="$publish_up() :: "><span class="description">Publish Up</span><pre>$publish_up</pre></a></li>
+<li class="property public "><a href="#property_published" title="$published() :: Published"><span class="description"></span><pre>$published</pre></a></li>
+<li class="property public "><a href="#property_secondary_reference" title="$secondary_reference() :: Secondary Reference"><span class="description"></span><pre>$secondary_reference</pre></a></li>
+<li class="property public "><a href="#property_series_id" title="$series_id() :: Series ID"><span class="description"></span><pre>$series_id</pre></a></li>
+<li class="property public "><a href="#property_server_cd" title="$server_cd() :: "><span class="description"></span><pre>$server_cd</pre></a></li>
+<li class="property public "><a href="#property_server_dvd" title="$server_dvd() :: "><span class="description"></span><pre>$server_dvd</pre></a></li>
+<li class="property public "><a href="#property_show_level" title="$show_level() :: Show Level"><span class="description"></span><pre>$show_level</pre></a></li>
+<li class="property public "><a href="#property_studydate" title="$studydate() :: Study Date"><span class="description"></span><pre>$studydate</pre></a></li>
+<li class="property public "><a href="#property_studyintro" title="$studyintro() :: Study Intro"><span class="description"></span><pre>$studyintro</pre></a></li>
+<li class="property public "><a href="#property_studynumber" title="$studynumber() :: Study Number"><span class="description"></span><pre>$studynumber</pre></a></li>
+<li class="property public "><a href="#property_studytext" title="$studytext() :: Study Text"><span class="description"></span><pre>$studytext</pre></a></li>
+<li class="property public "><a href="#property_studytext2" title="$studytext2() :: "><span class="description"></span><pre>$studytext2</pre></a></li>
+<li class="property public "><a href="#property_studytitle" title="$studytitle() :: Study Title"><span class="description"></span><pre>$studytitle</pre></a></li>
+<li class="property public "><a href="#property_teacher_id" title="$teacher_id() :: Teacher id"><span class="description"></span><pre>$teacher_id</pre></a></li>
+<li class="property public "><a href="#property_thumbhm" title="$thumbhm() :: ThumbNail Height"><span class="description"></span><pre>$thumbhm</pre></a></li>
+<li class="property public "><a href="#property_thumbnailm" title="$thumbnailm() :: ThumbNail Media"><span class="description"></span><pre>$thumbnailm</pre></a></li>
+<li class="property public "><a href="#property_thumbwm" title="$thumbwm() :: ThumbNail Width"><span class="description"></span><pre>$thumbwm</pre></a></li>
+<li class="property public "><a href="#property_user_id" title="$user_id() :: User ID"><span class="description"></span><pre>$user_id</pre></a></li>
+<li class="property public "><a href="#property_user_name" title="$user_name() :: User Name"><span class="description"></span><pre>$user_name</pre></a></li>
+<li class="property public "><a href="#property_verse_begin" title="$verse_begin() :: Verse Begin"><span class="description"></span><pre>$verse_begin</pre></a></li>
+<li class="property public "><a href="#property_verse_begin2" title="$verse_begin2() :: Verse Begin2"><span class="description"></span><pre>$verse_begin2</pre></a></li>
+<li class="property public "><a href="#property_verse_end" title="$verse_end() :: Verse End"><span class="description"></span><pre>$verse_end</pre></a></li>
+<li class="property public "><a href="#property_verse_end2" title="$verse_end2() :: Verse End2"><span class="description"></span><pre>$verse_end2</pre></a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="span8">
+<a id="\TableMessage"></a><ul class="breadcrumb">
+<li>
+<a href="../index.html"><i title="Classes" class="icon-custom icon-class"></i></a><span class="divider">\</span>
+</li>
+<li class="active">
+<span class="divider">\</span><a href="../classes/TableMessage.html">TableMessage</a>
+</li>
+</ul>
+    <div class="element class">
+<p class="short_description">Table class for Message</p>
+<div class="details">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>package</th>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
+</tr>
+<tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr>
+</table>
+<h3>
+<i title="Methods" class="icon-custom icon-method"></i> Methods</h3>
+<a id="method___construct"></a><div class="element clickable method public method___construct " data-toggle="collapse" data-target=".method___construct .collapse" title="public">
+<h2>Constructor.</h2>
+<pre>__construct(\JDatabaseDriver $db) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$db</h4>
+<code>\JDatabaseDriver</code><p>&$db  Database connector object</p></div>
+</div></div>
+</div>
+<a id="method_bind"></a><div class="element clickable method public method_bind " data-toggle="collapse" data-target=".method_bind .collapse" title="public">
+<h2>Method to bind an associative array or object to the JTable instance.This
+method only binds properties that are publicly accessible and optionally
+takes an array of properties to ignore when binding.</h2>
+<pre>bind(mixed $array, mixed $ignore<code> = ''</code>) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>link</th>
+<td><a href="http://docs.joomla.org/JTable/bind">http://docs.joomla.org/JTable/bind</a></td>
+</tr>
+<tr>
+<th>since</th>
+<td>11.1</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$array</h4>
+<code>mixed</code><p>An associative array or object to bind to the JTable instance.</p></div>
+<div class="subelement argument">
+<h4>$ignore</h4>
+<code>mixed</code><p>An optional array or space separated list of properties to ignore while binding.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>boolean</code>True on success.</div>
+</div></div>
+</div>
+<a id="method_ordering"></a><div class="element clickable method public method_ordering " data-toggle="collapse" data-target=".method_ordering .collapse" title="public">
+<h2>Ordering.</h2>
+<pre>ordering() : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="method_store"></a><div class="element clickable method public method_store " data-toggle="collapse" data-target=".method_store .collapse" title="public">
+<h2>Method to store a row in the database from the JTable instance properties.</h2>
+<pre>store(boolean $updateNulls<code> = false</code>) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>If a primary key value is set the row with that primary key value will be
+updated with the instance property values.  If no primary key value is set
+a new row will be inserted into the database with the properties from the
+JTable instance.</p></div>
+<table class="table table-bordered">
+<tr>
+<th>link</th>
+<td><a href="https://docs.joomla.org/JTable/store">https://docs.joomla.org/JTable/store</a></td>
+</tr>
+<tr>
+<th>since</th>
+<td>11.1</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$updateNulls</h4>
+<code>boolean</code><p>True to update fields even if they are null.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>boolean</code>True on success.</div>
+</div></div>
+</div>
+<a id="method__getAssetName"></a><div class="element clickable method protected method__getAssetName " data-toggle="collapse" data-target=".method__getAssetName .collapse" title="protected">
+<h2>Method to compute the default name of the asset.</h2>
+<pre>_getAssetName() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>The default name is in the form <code>table_name.id</code>
+where id is the value of the primary key of the table.</p></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.6</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method__getAssetParentId"></a><div class="element clickable method protected method__getAssetParentId " data-toggle="collapse" data-target=".method__getAssetParentId .collapse" title="protected">
+<h2>Method to get the parent asset under which to register this one.</h2>
+<pre>_getAssetParentId(\JTable $table<code> = null</code>, integer $id<code> = null</code>) : integer</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>By default, all assets are registered to the ROOT node with ID 1.
+The extended class can define a table and id to lookup.  If the
+asset does not exist it will be created.</p></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>11.1</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$table</h4>
+<code>\JTable</code><p>A JTable object for the asset parent.</p></div>
+<div class="subelement argument">
+<h4>$id</h4>
+<code>integer</code><p>Id to look up</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>integer</code></div>
+</div></div>
+</div>
+<a id="method__getAssetTitle"></a><div class="element clickable method protected method__getAssetTitle " data-toggle="collapse" data-target=".method__getAssetTitle .collapse" title="protected">
+<h2>Method to return the title to use for the asset table.</h2>
+<pre>_getAssetTitle() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.6</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<h3>
+<i title="Properties" class="icon-custom icon-property"></i> Properties</h3>
+<a id="property_access"> </a><div class="element clickable property public property_access" data-toggle="collapse" data-target=".property_access .collapse" title="public">
+<h2>$access</h2>
+<pre>$access </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_alias"> </a><div class="element clickable property public property_alias" data-toggle="collapse" data-target=".property_alias .collapse" title="public">
+<h2>Alias</h2>
+<pre>$alias : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_asset_id"> </a><div class="element clickable property public property_asset_id" data-toggle="collapse" data-target=".property_asset_id .collapse" title="public">
+<h2>$asset_id</h2>
+<pre>$asset_id </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_booknumber"> </a><div class="element clickable property public property_booknumber" data-toggle="collapse" data-target=".property_booknumber .collapse" title="public">
+<h2>Book Number</h2>
+<pre>$booknumber : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_booknumber2"> </a><div class="element clickable property public property_booknumber2" data-toggle="collapse" data-target=".property_booknumber2 .collapse" title="public">
+<h2>Book Number 2</h2>
+<pre>$booknumber2 : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_chapter_begin"> </a><div class="element clickable property public property_chapter_begin" data-toggle="collapse" data-target=".property_chapter_begin .collapse" title="public">
+<h2>Chapter Begin</h2>
+<pre>$chapter_begin : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_chapter_begin2"> </a><div class="element clickable property public property_chapter_begin2" data-toggle="collapse" data-target=".property_chapter_begin2 .collapse" title="public">
+<h2>Chapter Begin2</h2>
+<pre>$chapter_begin2 : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_chapter_end"> </a><div class="element clickable property public property_chapter_end" data-toggle="collapse" data-target=".property_chapter_end .collapse" title="public">
+<h2>Chapter End</h2>
+<pre>$chapter_end : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_chapter_end2"> </a><div class="element clickable property public property_chapter_end2" data-toggle="collapse" data-target=".property_chapter_end2 .collapse" title="public">
+<h2>Chapter End2</h2>
+<pre>$chapter_end2 : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_checked_out"> </a><div class="element clickable property public property_checked_out" data-toggle="collapse" data-target=".property_checked_out .collapse" title="public">
+<h2>$checked_out</h2>
+<pre>$checked_out </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_checked_out_time"> </a><div class="element clickable property public property_checked_out_time" data-toggle="collapse" data-target=".property_checked_out_time .collapse" title="public">
+<h2>$checked_out_time</h2>
+<pre>$checked_out_time </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_comments"> </a><div class="element clickable property public property_comments" data-toggle="collapse" data-target=".property_comments .collapse" title="public">
+<h2>Comments</h2>
+<pre>$comments : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>1</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_download_id"> </a><div class="element clickable property public property_download_id" data-toggle="collapse" data-target=".property_download_id .collapse" title="public">
+<h2>$download_id</h2>
+<pre>$download_id </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_hits"> </a><div class="element clickable property public property_hits" data-toggle="collapse" data-target=".property_hits .collapse" title="public">
+<h2>Hits</h2>
+<pre>$hits : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>0</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_id"> </a><div class="element clickable property public property_id" data-toggle="collapse" data-target=".property_id .collapse" title="public">
+<h2>Primary Key</h2>
+<pre>$id : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_image_cd"> </a><div class="element clickable property public property_image_cd" data-toggle="collapse" data-target=".property_image_cd .collapse" title="public">
+<h2>$image_cd</h2>
+<pre>$image_cd </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_image_dvd"> </a><div class="element clickable property public property_image_dvd" data-toggle="collapse" data-target=".property_image_dvd .collapse" title="public">
+<h2>$image_dvd</h2>
+<pre>$image_dvd </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_language"> </a><div class="element clickable property public property_language" data-toggle="collapse" data-target=".property_language .collapse" title="public">
+<h2>$language</h2>
+<pre>$language </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_location_id"> </a><div class="element clickable property public property_location_id" data-toggle="collapse" data-target=".property_location_id .collapse" title="public">
+<h2>Location ID</h2>
+<pre>$location_id : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_messagetype"> </a><div class="element clickable property public property_messagetype" data-toggle="collapse" data-target=".property_messagetype .collapse" title="public">
+<h2>MessageType</h2>
+<pre>$messagetype : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_modified"> </a><div class="element clickable property public property_modified" data-toggle="collapse" data-target=".property_modified .collapse" title="public">
+<h2>$modified</h2>
+<pre>$modified </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_modified_by"> </a><div class="element clickable property public property_modified_by" data-toggle="collapse" data-target=".property_modified_by .collapse" title="public">
+<h2>$modified_by</h2>
+<pre>$modified_by </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_ordering"> </a><div class="element clickable property public property_ordering" data-toggle="collapse" data-target=".property_ordering .collapse" title="public">
+<h2>Ordering</h2>
+<pre>$ordering : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_params"> </a><div class="element clickable property public property_params" data-toggle="collapse" data-target=".property_params .collapse" title="public">
+<h2>Params</h2>
+<pre>$params : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_prod_cd"> </a><div class="element clickable property public property_prod_cd" data-toggle="collapse" data-target=".property_prod_cd .collapse" title="public">
+<h2>$prod_cd</h2>
+<pre>$prod_cd </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_prod_dvd"> </a><div class="element clickable property public property_prod_dvd" data-toggle="collapse" data-target=".property_prod_dvd .collapse" title="public">
+<h2>$prod_dvd</h2>
+<pre>$prod_dvd </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_publish_down"> </a><div class="element clickable property public property_publish_down" data-toggle="collapse" data-target=".property_publish_down .collapse" title="public">
+<h2>Publish Down</h2>
+<pre>$publish_down : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>'0000-00-00 00:00:00'</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_publish_up"> </a><div class="element clickable property public property_publish_up" data-toggle="collapse" data-target=".property_publish_up .collapse" title="public">
+<h2>Publish Up</h2>
+<pre>$publish_up : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>'0000-00-00 00:00:00'</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_published"> </a><div class="element clickable property public property_published" data-toggle="collapse" data-target=".property_published .collapse" title="public">
+<h2>Published</h2>
+<pre>$published : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>1</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_secondary_reference"> </a><div class="element clickable property public property_secondary_reference" data-toggle="collapse" data-target=".property_secondary_reference .collapse" title="public">
+<h2>Secondary Reference</h2>
+<pre>$secondary_reference : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_series_id"> </a><div class="element clickable property public property_series_id" data-toggle="collapse" data-target=".property_series_id .collapse" title="public">
+<h2>Series ID</h2>
+<pre>$series_id : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_server_cd"> </a><div class="element clickable property public property_server_cd" data-toggle="collapse" data-target=".property_server_cd .collapse" title="public">
+<h2>$server_cd</h2>
+<pre>$server_cd </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_server_dvd"> </a><div class="element clickable property public property_server_dvd" data-toggle="collapse" data-target=".property_server_dvd .collapse" title="public">
+<h2>$server_dvd</h2>
+<pre>$server_dvd </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_show_level"> </a><div class="element clickable property public property_show_level" data-toggle="collapse" data-target=".property_show_level .collapse" title="public">
+<h2>Show Level</h2>
+<pre>$show_level : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_studydate"> </a><div class="element clickable property public property_studydate" data-toggle="collapse" data-target=".property_studydate .collapse" title="public">
+<h2>Study Date</h2>
+<pre>$studydate : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_studyintro"> </a><div class="element clickable property public property_studyintro" data-toggle="collapse" data-target=".property_studyintro .collapse" title="public">
+<h2>Study Intro</h2>
+<pre>$studyintro : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_studynumber"> </a><div class="element clickable property public property_studynumber" data-toggle="collapse" data-target=".property_studynumber .collapse" title="public">
+<h2>Study Number</h2>
+<pre>$studynumber : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_studytext"> </a><div class="element clickable property public property_studytext" data-toggle="collapse" data-target=".property_studytext .collapse" title="public">
+<h2>Study Text</h2>
+<pre>$studytext : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_studytext2"> </a><div class="element clickable property public property_studytext2" data-toggle="collapse" data-target=".property_studytext2 .collapse" title="public">
+<h2>$studytext2</h2>
+<pre>$studytext2 </pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_studytitle"> </a><div class="element clickable property public property_studytitle" data-toggle="collapse" data-target=".property_studytitle .collapse" title="public">
+<h2>Study Title</h2>
+<pre>$studytitle : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_teacher_id"> </a><div class="element clickable property public property_teacher_id" data-toggle="collapse" data-target=".property_teacher_id .collapse" title="public">
+<h2>Teacher id</h2>
+<pre>$teacher_id : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_thumbhm"> </a><div class="element clickable property public property_thumbhm" data-toggle="collapse" data-target=".property_thumbhm .collapse" title="public">
+<h2>ThumbNail Height</h2>
+<pre>$thumbhm : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_thumbnailm"> </a><div class="element clickable property public property_thumbnailm" data-toggle="collapse" data-target=".property_thumbnailm .collapse" title="public">
+<h2>ThumbNail Media</h2>
+<pre>$thumbnailm : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_thumbwm"> </a><div class="element clickable property public property_thumbwm" data-toggle="collapse" data-target=".property_thumbwm .collapse" title="public">
+<h2>ThumbNail Width</h2>
+<pre>$thumbwm : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_user_id"> </a><div class="element clickable property public property_user_id" data-toggle="collapse" data-target=".property_user_id .collapse" title="public">
+<h2>User ID</h2>
+<pre>$user_id : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_user_name"> </a><div class="element clickable property public property_user_name" data-toggle="collapse" data-target=".property_user_name .collapse" title="public">
+<h2>User Name</h2>
+<pre>$user_name : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_verse_begin"> </a><div class="element clickable property public property_verse_begin" data-toggle="collapse" data-target=".property_verse_begin .collapse" title="public">
+<h2>Verse Begin</h2>
+<pre>$verse_begin : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_verse_begin2"> </a><div class="element clickable property public property_verse_begin2" data-toggle="collapse" data-target=".property_verse_begin2 .collapse" title="public">
+<h2>Verse Begin2</h2>
+<pre>$verse_begin2 : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_verse_end"> </a><div class="element clickable property public property_verse_end" data-toggle="collapse" data-target=".property_verse_end .collapse" title="public">
+<h2>Verse End</h2>
+<pre>$verse_end : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_verse_end2"> </a><div class="element clickable property public property_verse_end2" data-toggle="collapse" data-target=".property_verse_end2 .collapse" title="public">
+<h2>Verse End2</h2>
+<pre>$verse_end2 : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>null</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.0</td>
+</tr></table>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
+            generated on 2019-02-23T17:32:08-06:00.<br></footer></div>
+</div>
+</body>
+</html>

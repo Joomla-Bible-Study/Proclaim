@@ -1,0 +1,408 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>Proclaim API » \JFormFieldJBSMMedia</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">Proclaim API</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a>Packages</a></li>
+<li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Administrator.html"><i class="icon-folder-open"></i> Joomla.Administrator</a></li>
+<li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
+<li><a href="../packages/Proclaim.html"><i class="icon-folder-open"></i> Proclaim</a></li>
+<li><a href="../packages/Proclaim.Admin.html"><i class="icon-folder-open"></i> Proclaim.Admin</a></li>
+<li><a href="../packages/Proclaim.Site.html"><i class="icon-folder-open"></i> Proclaim.Site</a></li>
+</ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">181</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul></ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">13</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<div class="btn-toolbar">
+<div class="btn-group visibility" data-toggle="buttons-checkbox">
+<button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button>
+</div>
+<div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+</div>
+<ul class="side-nav nav nav-list">
+<li class="nav-header">
+<i title="Methods" class="icon-custom icon-method"></i> Methods
+                    <ul>
+<li class="method public "><a href="#method___get" title="__get() :: Method to get certain otherwise inaccessible properties from the form field object."><span class="description">Method to get certain otherwise inaccessible properties from the form field object.</span><pre>__get()</pre></a></li>
+<li class="method public "><a href="#method___set" title="__set() :: Method to set certain otherwise inaccessible properties of the form field object."><span class="description">Method to set certain otherwise inaccessible properties of the form field object.</span><pre>__set()</pre></a></li>
+<li class="method public "><a href="#method_getLayoutData" title="getLayoutData() :: Get the data that is going to be passed to the layout"><span class="description">Get the data that is going to be passed to the layout</span><pre>getLayoutData()</pre></a></li>
+<li class="method public "><a href="#method_setup" title="setup() :: Method to attach a JForm object to the field."><span class="description">Method to attach a JForm object to the field.</span><pre>setup()</pre></a></li>
+</ul>
+</li>
+<li class="nav-header protected">» Protected
+                    <ul><li class="method protected "><a href="#method_getInput" title="getInput() :: Method to get the field input markup for a media selector."><span class="description">Method to get the field input markup for a media selector.</span><pre>getInput()</pre></a></li></ul>
+</li>
+<li class="nav-header">
+<i title="Properties" class="icon-custom icon-property"></i> Properties
+                    <ul></ul>
+</li>
+<li class="nav-header protected">» Protected
+                    <ul>
+<li class="property protected "><a href="#property_asset" title="$asset() :: The asset."><span class="description"></span><pre>$asset</pre></a></li>
+<li class="property protected "><a href="#property_authorField" title="$authorField() :: The authorField."><span class="description"></span><pre>$authorField</pre></a></li>
+<li class="property protected "><a href="#property_directory" title="$directory() :: The preview."><span class="description"></span><pre>$directory</pre></a></li>
+<li class="property protected "><a href="#property_height" title="$height() :: Modal height."><span class="description"></span><pre>$height</pre></a></li>
+<li class="property protected "><a href="#property_layout" title="$layout() :: Layout to render"><span class="description"></span><pre>$layout</pre></a></li>
+<li class="property protected "><a href="#property_link" title="$link() :: The link."><span class="description"></span><pre>$link</pre></a></li>
+<li class="property protected "><a href="#property_preview" title="$preview() :: The authorField."><span class="description"></span><pre>$preview</pre></a></li>
+<li class="property protected "><a href="#property_previewHeight" title="$previewHeight() :: The previewHeight."><span class="description"></span><pre>$previewHeight</pre></a></li>
+<li class="property protected "><a href="#property_previewWidth" title="$previewWidth() :: The previewWidth."><span class="description"></span><pre>$previewWidth</pre></a></li>
+<li class="property protected "><a href="#property_type" title="$type() :: The form field type."><span class="description"></span><pre>$type</pre></a></li>
+<li class="property protected "><a href="#property_width" title="$width() :: Modal width."><span class="description"></span><pre>$width</pre></a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="span8">
+<a id="\JFormFieldJBSMMedia"></a><ul class="breadcrumb">
+<li>
+<a href="../index.html"><i title="Classes" class="icon-custom icon-class"></i></a><span class="divider">\</span>
+</li>
+<li class="active">
+<span class="divider">\</span><a href="../classes/JFormFieldJBSMMedia.html">JFormFieldJBSMMedia</a>
+</li>
+</ul>
+    <div class="element class">
+<p class="short_description">Form Field class for the Joomla CMS.</p>
+<div class="details">
+<div class="long_description"><p>Provides a modal media selector including upload mechanism</p></div>
+<table class="table table-bordered">
+<tr>
+<th>since</th>
+<td>1.6</td>
+</tr>
+<tr>
+<th>package</th>
+<td><a href="../packages/Joomla.Libraries.html">Joomla.Libraries</a></td>
+</tr>
+</table>
+<h3>
+<i title="Methods" class="icon-custom icon-method"></i> Methods</h3>
+<a id="method___get"></a><div class="element clickable method public method___get " data-toggle="collapse" data-target=".method___get .collapse" title="public">
+<h2>Method to get certain otherwise inaccessible properties from the form field object.</h2>
+<pre>__get(string $name) : mixed</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>3.2</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$name</h4>
+<code>string</code><p>The property name for which to the the value.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>mixed</code>The property value or null.</div>
+</div></div>
+</div>
+<a id="method___set"></a><div class="element clickable method public method___set " data-toggle="collapse" data-target=".method___set .collapse" title="public">
+<h2>Method to set certain otherwise inaccessible properties of the form field object.</h2>
+<pre>__set(string $name, mixed $value) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>3.2</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$name</h4>
+<code>string</code><p>The property name for which to the the value.</p></div>
+<div class="subelement argument">
+<h4>$value</h4>
+<code>mixed</code><p>The value of the property.</p></div>
+</div></div>
+</div>
+<a id="method_getLayoutData"></a><div class="element clickable method public method_getLayoutData " data-toggle="collapse" data-target=".method_getLayoutData .collapse" title="public">
+<h2>Get the data that is going to be passed to the layout</h2>
+<pre>getLayoutData() : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>array</code></div>
+</div></div>
+</div>
+<a id="method_setup"></a><div class="element clickable method public method_setup " data-toggle="collapse" data-target=".method_setup .collapse" title="public">
+<h2>Method to attach a JForm object to the field.</h2>
+<pre>setup(\SimpleXMLElement $element, mixed $value, string $group<code> = null</code>) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>see</th>
+<td><a href="%5CJFormField::setup()"></a></td>
+</tr>
+<tr>
+<th>since</th>
+<td>3.2</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$element</h4>
+<code>\SimpleXMLElement</code><p>The SimpleXMLElement object representing the <code><field></code> tag for the form field object.</p></div>
+<div class="subelement argument">
+<h4>$value</h4>
+<code>mixed</code><p>The form field value to validate.</p></div>
+<div class="subelement argument">
+<h4>$group</h4>
+<code>string</code><p>The field name group control value. This acts as as an array container for the field.
+For example if the field has name="foo" and the group value is set to "bar" then the
+full field name would end up being "bar[foo]".</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>boolean</code>True on success.</div>
+</div></div>
+</div>
+<a id="method_getInput"></a><div class="element clickable method protected method_getInput " data-toggle="collapse" data-target=".method_getInput .collapse" title="protected">
+<h2>Method to get the field input markup for a media selector.</h2>
+<pre>getInput() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Use attributes to identify specific created_by and asset_id fields</p></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.6</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code>The field input markup.</div>
+</div></div>
+</div>
+<h3>
+<i title="Properties" class="icon-custom icon-property"></i> Properties</h3>
+<a id="property_asset"> </a><div class="element clickable property protected property_asset" data-toggle="collapse" data-target=".property_asset .collapse" title="protected">
+<h2>The asset.</h2>
+<pre>$asset : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>3.2</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_authorField"> </a><div class="element clickable property protected property_authorField" data-toggle="collapse" data-target=".property_authorField .collapse" title="protected">
+<h2>The authorField.</h2>
+<pre>$authorField : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>3.2</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_directory"> </a><div class="element clickable property protected property_directory" data-toggle="collapse" data-target=".property_directory .collapse" title="protected">
+<h2>The preview.</h2>
+<pre>$directory : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>3.2</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_height"> </a><div class="element clickable property protected property_height" data-toggle="collapse" data-target=".property_height .collapse" title="protected">
+<h2>Modal height.</h2>
+<pre>$height : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>3.4.5</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_layout"> </a><div class="element clickable property protected property_layout" data-toggle="collapse" data-target=".property_layout .collapse" title="protected">
+<h2>Layout to render</h2>
+<pre>$layout : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>'joomla.form.field.jbsmmedia'</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>3.5</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_link"> </a><div class="element clickable property protected property_link" data-toggle="collapse" data-target=".property_link .collapse" title="protected">
+<h2>The link.</h2>
+<pre>$link : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>3.2</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_preview"> </a><div class="element clickable property protected property_preview" data-toggle="collapse" data-target=".property_preview .collapse" title="protected">
+<h2>The authorField.</h2>
+<pre>$preview : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>3.2</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_previewHeight"> </a><div class="element clickable property protected property_previewHeight" data-toggle="collapse" data-target=".property_previewHeight .collapse" title="protected">
+<h2>The previewHeight.</h2>
+<pre>$previewHeight : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>3.2</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_previewWidth"> </a><div class="element clickable property protected property_previewWidth" data-toggle="collapse" data-target=".property_previewWidth .collapse" title="protected">
+<h2>The previewWidth.</h2>
+<pre>$previewWidth : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>3.2</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_type"> </a><div class="element clickable property protected property_type" data-toggle="collapse" data-target=".property_type .collapse" title="protected">
+<h2>The form field type.</h2>
+<pre>$type : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"><code>'Media'</code></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.6</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_width"> </a><div class="element clickable property protected property_width" data-toggle="collapse" data-target=".property_width .collapse" title="protected">
+<h2>Modal width.</h2>
+<pre>$width : integer</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>3.4.5</td>
+</tr></table>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
+            generated on 2019-02-23T17:32:07-06:00.<br></footer></div>
+</div>
+</body>
+</html>

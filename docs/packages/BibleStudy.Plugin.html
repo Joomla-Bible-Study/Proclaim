@@ -1,0 +1,435 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>Proclaim API » BibleStudy\Plugin</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">Proclaim API</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a>Packages</a></li>
+<li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
+<li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
+<li><a href="../packages/Joomla.html"><i class="icon-folder-open"></i> Joomla</a></li>
+<li><a href="../packages/LiveUpdate.html"><i class="icon-folder-open"></i> LiveUpdate</a></li>
+<li><a href="../packages/SefExt.html"><i class="icon-folder-open"></i> SefExt</a></li>
+</ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">2</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul>
+<li>todo 
+                <span class="label label-info">38</span>
+</li>
+<li>fixme 
+                <span class="label label-info">1</span>
+</li>
+</ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">12</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+<ul class="side-nav nav nav-list">
+<li class="nav-header">
+<i class="icon-map-marker"></i> Packages</li>
+<li>
+<span class="empty-package"><i class="icon-folder-close"></i>Plugin</span><ul class="nav nav-list nav-packages">
+<li>
+<a href="../packages/BibleStudy.Plugin.JBSBackup.html" title="JBSBackup"><i class="icon-folder-open"></i>JBSBackup</a><ul class="nav nav-list nav-packages"></ul>
+</li>
+<li>
+<a href="../packages/BibleStudy.Plugin.JBSPodcast.html" title="JBSPodcast"><i class="icon-folder-open"></i>JBSPodcast</a><ul class="nav nav-list nav-packages"></ul>
+</li>
+<li>
+<a href="../packages/BibleStudy.Plugin.reCAPTCHA.html" title="reCAPTCHA"><i class="icon-folder-open"></i>reCAPTCHA</a><ul class="nav nav-list nav-packages"></ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="span8 package-contents">
+<ul class="breadcrumb"><li>
+<a href="../index.html"><i class="icon-folder-open"></i></a><span class="divider">\</span><li><a href="../packages/BibleStudy.html">BibleStudy</a></li>
+<li class="active">
+<span class="divider">\</span><a href="../packages/BibleStudy.Plugin.html">Plugin</a>
+</li>
+</li></ul>
+<div class="package-indent">
+<ul class="breadcrumb"><li>
+<a href="../index.html"><i class="icon-folder-open"></i></a><span class="divider">\</span><li><a href="../packages/BibleStudy.html">BibleStudy</a></li>
+<li>
+<span class="divider">\</span><a href="../packages/BibleStudy.Plugin.html">Plugin</a>
+</li>
+<li class="active">
+<span class="divider">\</span><a href="../packages/BibleStudy.Plugin.JBSBackup.html">JBSBackup</a>
+</li>
+</li></ul>
+<div class="package-indent">
+<h3>
+<i class="icon-custom icon-class"></i> Classes and interfaces</h3>
+<div id="PlgSystemjbsbackup" class="element ajax clickable class">
+<h1>PlgSystemjbsbackup<a href="../classes/PlgSystemjbsbackup.html">¶</a>
+</h1>
+<p class="short_description">JBSBackup jplugin class</p>
+<div class="details collapse"></div>
+<a href="../classes/PlgSystemjbsbackup.html" class="more">« More »</a>
+</div>
+<div id="plgSystemjbsbackupInstallerScript" class="element ajax clickable class">
+<h1>plgSystemjbsbackupInstallerScript<a href="../classes/plgSystemjbsbackupInstallerScript.html">¶</a>
+</h1>
+<p class="short_description">Script file of JBSBACKUP component</p>
+<div class="details collapse"></div>
+<a href="../classes/plgSystemjbsbackupInstallerScript.html" class="more">« More »</a>
+</div>
+</div>
+<ul class="breadcrumb"><li>
+<a href="../index.html"><i class="icon-folder-open"></i></a><span class="divider">\</span><li><a href="../packages/BibleStudy.html">BibleStudy</a></li>
+<li>
+<span class="divider">\</span><a href="../packages/BibleStudy.Plugin.html">Plugin</a>
+</li>
+<li class="active">
+<span class="divider">\</span><a href="../packages/BibleStudy.Plugin.JBSPodcast.html">JBSPodcast</a>
+</li>
+</li></ul>
+<div class="package-indent">
+<h3>
+<i class="icon-custom icon-class"></i> Classes and interfaces</h3>
+<div id="PlgSystemJbspodcast" class="element ajax clickable class">
+<h1>PlgSystemJbspodcast<a href="../classes/PlgSystemJbspodcast.html">¶</a>
+</h1>
+<p class="short_description">Podcast plugin class</p>
+<div class="details collapse"></div>
+<a href="../classes/PlgSystemJbspodcast.html" class="more">« More »</a>
+</div>
+<div id="PlgSystemjbspodcastInstallerScript" class="element ajax clickable class">
+<h1>PlgSystemjbspodcastInstallerScript<a href="../classes/PlgSystemjbspodcastInstallerScript.html">¶</a>
+</h1>
+<p class="short_description">Script file of jbspodcast component</p>
+<div class="details collapse"></div>
+<a href="../classes/PlgSystemjbspodcastInstallerScript.html" class="more">« More »</a>
+</div>
+</div>
+<ul class="breadcrumb"><li>
+<a href="../index.html"><i class="icon-folder-open"></i></a><span class="divider">\</span><li><a href="../packages/BibleStudy.html">BibleStudy</a></li>
+<li>
+<span class="divider">\</span><a href="../packages/BibleStudy.Plugin.html">Plugin</a>
+</li>
+<li class="active">
+<span class="divider">\</span><a href="../packages/BibleStudy.Plugin.reCAPTCHA.html">reCAPTCHA</a>
+</li>
+</li></ul>
+<div class="package-indent">
+<h3>
+<i class="icon-custom icon-function"></i> Functions</h3>
+<a id="function__recaptcha_aes_encrypt"></a><div class="element clickable function  function__recaptcha_aes_encrypt" data-toggle="collapse" data-target=".function__recaptcha_aes_encrypt .collapse">
+<h2>Recaptcha AES Encrypt</h2>
+<pre>_recaptcha_aes_encrypt(string $val, string $ky) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$val</h4>
+<code>string</code><p>?</p>
+</div>
+<div class="subelement argument">
+<h4>$ky</h4>
+<code>string</code><p>?</p>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="function__recaptcha_aes_pad"></a><div class="element clickable function  function__recaptcha_aes_pad" data-toggle="collapse" data-target=".function__recaptcha_aes_pad .collapse">
+<h2>Recaptcha AES Pad</h2>
+<pre>_recaptcha_aes_pad(string $val) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$val</h4>
+<code>string</code><p>?</p>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="function__recaptcha_http_post"></a><div class="element clickable function  function__recaptcha_http_post" data-toggle="collapse" data-target=".function__recaptcha_http_post .collapse">
+<h2>Submits an HTTP POST to a reCAPTCHA server</h2>
+<pre>_recaptcha_http_post(string $host, string $path, array $data, int $port) : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$host</h4>
+<code>string</code><p>Host</p></div>
+<div class="subelement argument">
+<h4>$path</h4>
+<code>string</code><p>Path</p></div>
+<div class="subelement argument">
+<h4>$data</h4>
+<code>array</code><p>Data</p></div>
+<div class="subelement argument">
+<h4>$port</h4>
+<code>int</code><p>Piratical port</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>array</code>response</div>
+</div></div>
+</div>
+<a id="function__recaptcha_mailhide_email_parts"></a><div class="element clickable function  function__recaptcha_mailhide_email_parts" data-toggle="collapse" data-target=".function__recaptcha_mailhide_email_parts .collapse">
+<h2>gets the parts of the email to expose to the user.</h2>
+<pre>_recaptcha_mailhide_email_parts(string $email) : string</pre>
+<div class="labels"></div>
+<div class="row collapse">
+<div class="span4">
+<div class="long_description"><p>eg, given johndoe</p></div>
+<table class="table table-bordered"><tr>
+<th>example</th>
+<td>,com return ["john", "example.com"].
+        the email is then displayed as john...@example.com</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$email</h4>
+<code>string</code><p>?</p>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div>
+<div class="span4">
+<h3>Examples</h3>
+<pre class="prettyprint linenums"></pre>
+</div>
+</div>
+</div>
+<a id="function__recaptcha_mailhide_urlbase64"></a><div class="element clickable function  function__recaptcha_mailhide_urlbase64" data-toggle="collapse" data-target=".function__recaptcha_mailhide_urlbase64 .collapse">
+<h2>Recaptcha MailHide UrlBase64</h2>
+<pre>_recaptcha_mailhide_urlbase64(string $x) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$x</h4>
+<code>string</code><p>?</p>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="function__recaptcha_qsencode"></a><div class="element clickable function  function__recaptcha_qsencode" data-toggle="collapse" data-target=".function__recaptcha_qsencode .collapse">
+<h2>Encodes the given data into a query string format</h2>
+<pre>_recaptcha_qsencode(array $data) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$data</h4>
+<code>array</code><ul>
+<li>array of string elements to be encoded</li>
+</ul>
+</div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code>- encoded request</div>
+</div></div>
+</div>
+<a id="function_recaptcha_check_answer"></a><div class="element clickable function  function_recaptcha_check_answer" data-toggle="collapse" data-target=".function_recaptcha_check_answer .collapse">
+<h2>Calls an HTTP POST function to verify if the user's guess was correct</h2>
+<pre>recaptcha_check_answer(string $privkey, string $remoteip, string $challenge, string $response, array $extra_params) : <a href="../classes/ReCaptchaResponse.html">\ReCaptchaResponse</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$privkey</h4>
+<code>string</code><p>?</p>
+</div>
+<div class="subelement argument">
+<h4>$remoteip</h4>
+<code>string</code><p>?</p>
+</div>
+<div class="subelement argument">
+<h4>$challenge</h4>
+<code>string</code><p>?</p>
+</div>
+<div class="subelement argument">
+<h4>$response</h4>
+<code>string</code><p>?</p>
+</div>
+<div class="subelement argument">
+<h4>$extra_params</h4>
+<code>array</code><p>an array of extra variables to post to the server</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/ReCaptchaResponse.html">\ReCaptchaResponse</a></code></div>
+</div></div>
+</div>
+<a id="function_recaptcha_get_html"></a><div class="element clickable function  function_recaptcha_get_html" data-toggle="collapse" data-target=".function_recaptcha_get_html .collapse">
+<h2>Gets the challenge HTML (javascript and non-javascript version).</h2>
+<pre>recaptcha_get_html(string $pubkey, string $error, boolean $use_ssl) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>This is called from the browser, and the resulting reCAPTCHA HTML widget
+is embedded within the HTML form it was called from.</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$pubkey</h4>
+<code>string</code><p>A public key for reCAPTCHA</p></div>
+<div class="subelement argument">
+<h4>$error</h4>
+<code>string</code><p>The error given by reCAPTCHA (optional, default is null)</p>
+</div>
+<div class="subelement argument">
+<h4>$use_ssl</h4>
+<code>boolean</code><p>Should the request be made over ssl? (optional, default is false)</p>
+</div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code>- The HTML to be embedded in the user's form.</div>
+</div></div>
+</div>
+<a id="function_recaptcha_get_signup_url"></a><div class="element clickable function  function_recaptcha_get_signup_url" data-toggle="collapse" data-target=".function_recaptcha_get_signup_url .collapse">
+<h2>gets a URL where the user can sign up for reCAPTCHA.</h2>
+<pre>recaptcha_get_signup_url(string $domain, string $appname) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>If your application
+has a configuration page where you enter a key, you should provide a link
+using this function.</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$domain</h4>
+<code>string</code><p>The domain where the page is hosted</p></div>
+<div class="subelement argument">
+<h4>$appname</h4>
+<code>string</code><p>The name of your application</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="function_recaptcha_mailhide_html"></a><div class="element clickable function  function_recaptcha_mailhide_html" data-toggle="collapse" data-target=".function_recaptcha_mailhide_html .collapse">
+<h2>Gets html to display an email address given a public an private key.</h2>
+<pre>recaptcha_mailhide_html(string $pubkey, string $privkey, string $email) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>to get a key, go to:</p>
+
+<p>http://www.google.com/recaptcha/mailhide/apikey</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$pubkey</h4>
+<code>string</code><p>?</p>
+</div>
+<div class="subelement argument">
+<h4>$privkey</h4>
+<code>string</code><p>?</p>
+</div>
+<div class="subelement argument">
+<h4>$email</h4>
+<code>string</code><p>?</p>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="function_recaptcha_mailhide_url"></a><div class="element clickable function  function_recaptcha_mailhide_url" data-toggle="collapse" data-target=".function_recaptcha_mailhide_url .collapse">
+<h2>gets the reCAPTCHA Mailhide url for a given email, public key and private key</h2>
+<pre>recaptcha_mailhide_url(string $pubkey, string $privkey, string $email) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$pubkey</h4>
+<code>string</code><p>?</p>
+</div>
+<div class="subelement argument">
+<h4>$privkey</h4>
+<code>string</code><p>?</p>
+</div>
+<div class="subelement argument">
+<h4>$email</h4>
+<code>string</code><p>?</p>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<h3>
+<i class="icon-custom icon-class"></i> Classes and interfaces</h3>
+<div id="ReCaptchaResponse" class="element ajax clickable class">
+<h1>ReCaptchaResponse<a href="../classes/ReCaptchaResponse.html">¶</a>
+</h1>
+<p class="short_description">A ReCaptchaResponse is returned from recaptcha_check_answer()</p>
+<div class="details collapse"></div>
+<a href="../classes/ReCaptchaResponse.html" class="more">« More »</a>
+</div>
+<h3>
+<i class="icon-custom icon-constant"></i> Constants</h3>
+<a id="constant_RECAPTCHA_API_SECURE_SERVER"> </a><div class="element clickable constant  constant_RECAPTCHA_API_SECURE_SERVER" data-toggle="collapse" data-target=".constant_RECAPTCHA_API_SECURE_SERVER .collapse">
+<h2>RECAPTCHA_API_SECURE_SERVER</h2>
+<pre>RECAPTCHA_API_SECURE_SERVER </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="constant_RECAPTCHA_API_SERVER"> </a><div class="element clickable constant  constant_RECAPTCHA_API_SERVER" data-toggle="collapse" data-target=".constant_RECAPTCHA_API_SERVER .collapse">
+<h2>RECAPTCHA_API_SERVER</h2>
+<pre>RECAPTCHA_API_SERVER </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="constant_RECAPTCHA_VERIFY_SERVER"> </a><div class="element clickable constant  constant_RECAPTCHA_VERIFY_SERVER" data-toggle="collapse" data-target=".constant_RECAPTCHA_VERIFY_SERVER .collapse">
+<h2>RECAPTCHA_VERIFY_SERVER</h2>
+<pre>RECAPTCHA_VERIFY_SERVER </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
+            generated on 2013-06-22T20:25:31-05:00.<br></footer></div>
+</div>
+</body>
+</html>

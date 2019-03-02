@@ -1,0 +1,317 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>Proclaim API » \JbStats</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">Proclaim API</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a>Packages</a></li>
+<li><a href="../packages/BibleStudy.html"><i class="icon-folder-open"></i> BibleStudy</a></li>
+<li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
+<li><a href="../packages/Joomla.html"><i class="icon-folder-open"></i> Joomla</a></li>
+<li><a href="../packages/LiveUpdate.html"><i class="icon-folder-open"></i> LiveUpdate</a></li>
+<li><a href="../packages/SefExt.html"><i class="icon-folder-open"></i> SefExt</a></li>
+</ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">2</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul>
+<li>todo 
+                <span class="label label-info">38</span>
+</li>
+<li>fixme 
+                <span class="label label-info">1</span>
+</li>
+</ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">12</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+<ul class="side-nav nav nav-list"><li class="nav-header">
+<i class="icon-custom icon-method"></i> Methods
+                    <ul>
+<li class="method public "><a href="#method_get_downloads_ninety" title="get_downloads_ninety :: Get Downloads ninety"><span class="description">Get Downloads ninety</span><pre>get_downloads_ninety()</pre></a></li>
+<li class="method public "><a href="#method_get_top_books" title="get_top_books :: Get top books"><span class="description">Get top books</span><pre>get_top_books()</pre></a></li>
+<li class="method public "><a href="#method_get_top_downloads" title="get_top_downloads :: Get Top Downloads"><span class="description">Get Top Downloads</span><pre>get_top_downloads()</pre></a></li>
+<li class="method public "><a href="#method_get_top_studies" title="get_top_studies :: Get top studies"><span class="description">Get top studies</span><pre>get_top_studies()</pre></a></li>
+<li class="method public "><a href="#method_get_top_thirty_days" title="get_top_thirty_days :: Get top thirty days"><span class="description">Get top thirty days</span><pre>get_top_thirty_days()</pre></a></li>
+<li class="method public "><a href="#method_get_total_categories" title="get_total_categories :: Total media files in Bible Study"><span class="description">Total media files in Bible Study</span><pre>get_total_categories()</pre></a></li>
+<li class="method public "><a href="#method_get_total_comments" title="get_total_comments :: Total comments"><span class="description">Total comments</span><pre>get_total_comments()</pre></a></li>
+<li class="method public "><a href="#method_get_total_messages" title="get_total_messages :: Total messages in Bible Study"><span class="description">Total messages in Bible Study</span><pre>get_total_messages()</pre></a></li>
+<li class="method public "><a href="#method_get_total_topics" title="get_total_topics :: Total topics in Bible Study"><span class="description">Total topics in Bible Study</span><pre>get_total_topics()</pre></a></li>
+<li class="method public "><a href="#method_players" title="players :: Returns a System of Player"><span class="description">Returns a System of Player</span><pre>players()</pre></a></li>
+<li class="method public "><a href="#method_popups" title="popups :: Popups for media files"><span class="description">Popups for media files</span><pre>popups()</pre></a></li>
+<li class="method public "><a href="#method_top_score" title="top_score :: Top Score ???"><span class="description">Top Score ???</span><pre>top_score()</pre></a></li>
+<li class="method public "><a href="#method_top_score_site" title="top_score_site :: Top Score Site"><span class="description">Top Score Site</span><pre>top_score_site()</pre></a></li>
+<li class="method public "><a href="#method_total_downloads" title="total_downloads :: Total Downloads"><span class="description">Total Downloads</span><pre>total_downloads()</pre></a></li>
+<li class="method public "><a href="#method_total_media_files" title="total_media_files :: Get Total Meida Files"><span class="description">Get Total Meida Files</span><pre>total_media_files()</pre></a></li>
+<li class="method public "><a href="#method_total_plays" title="total_plays :: Total plays of media files per study"><span class="description">Total plays of media files per study</span><pre>total_plays()</pre></a></li>
+</ul>
+</li></ul>
+</div>
+<div class="span8">
+<a id="\JbStats"></a><ul class="breadcrumb">
+<li>
+<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+</li>
+<li><a href="../namespaces/global.html">global</a></li>
+<li class="active">
+<span class="divider">\</span><a href="../classes/JbStats.html">JbStats</a>
+</li>
+</ul>
+<div class="element class">
+<p class="short_description">Bible Study stats support class</p>
+<div class="details">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>package</th>
+<td><a href="../packages/Proclaim.Admin.html">Proclaim.Admin</a></td>
+</tr>
+<tr>
+<th>since</th>
+<td>7.0.0</td>
+</tr>
+</table>
+<h3>
+<i class="icon-custom icon-method"></i> Methods</h3>
+<a id="method_get_downloads_ninety"></a><div class="element clickable method public method_get_downloads_ninety" data-toggle="collapse" data-target=".method_get_downloads_ninety .collapse">
+<h2>Get Downloads ninety</h2>
+<pre>get_downloads_ninety() : array</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>array</code>list of download links</div>
+</div></div>
+</div>
+<a id="method_get_top_books"></a><div class="element clickable method public method_get_top_books" data-toggle="collapse" data-target=".method_get_top_books .collapse">
+<h2>Get top books</h2>
+<pre>get_top_books() : object</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>deprecated</th>
+<td>Not used as of 8.0.0</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>object</code></div>
+</div></div>
+</div>
+<a id="method_get_top_downloads"></a><div class="element clickable method public method_get_top_downloads" data-toggle="collapse" data-target=".method_get_top_downloads .collapse">
+<h2>Get Top Downloads</h2>
+<pre>get_top_downloads() : string</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code>List of links to the downloads</div>
+</div></div>
+</div>
+<a id="method_get_top_studies"></a><div class="element clickable method public method_get_top_studies" data-toggle="collapse" data-target=".method_get_top_studies .collapse">
+<h2>Get top studies</h2>
+<pre>get_top_studies() : array</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>array</code></div>
+</div></div>
+</div>
+<a id="method_get_top_thirty_days"></a><div class="element clickable method public method_get_top_thirty_days" data-toggle="collapse" data-target=".method_get_top_thirty_days .collapse">
+<h2>Get top thirty days</h2>
+<pre>get_top_thirty_days() : string</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_get_total_categories"></a><div class="element clickable method public method_get_total_categories" data-toggle="collapse" data-target=".method_get_total_categories .collapse">
+<h2>Total media files in Bible Study</h2>
+<pre>get_total_categories() : int</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>int</code></div>
+</div></div>
+</div>
+<a id="method_get_total_comments"></a><div class="element clickable method public method_get_total_comments" data-toggle="collapse" data-target=".method_get_total_comments .collapse">
+<h2>Total comments</h2>
+<pre>get_total_comments() : int</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>int</code></div>
+</div></div>
+</div>
+<a id="method_get_total_messages"></a><div class="element clickable method public method_get_total_messages" data-toggle="collapse" data-target=".method_get_total_messages .collapse">
+<h2>Total messages in Bible Study</h2>
+<pre>get_total_messages(string $start, string $end) : int</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$start</h4>
+<code>string</code><p>?</p>
+</div>
+<div class="subelement argument">
+<h4>$end</h4>
+<code>string</code><p>?</p>
+</div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>int</code>Total Messages</div>
+</div></div>
+</div>
+<a id="method_get_total_topics"></a><div class="element clickable method public method_get_total_topics" data-toggle="collapse" data-target=".method_get_total_topics .collapse">
+<h2>Total topics in Bible Study</h2>
+<pre>get_total_topics(string $start, string $end) : int</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$start</h4>
+<code>string</code><p>?</p>
+</div>
+<div class="subelement argument">
+<h4>$end</h4>
+<code>string</code><p>?</p>
+</div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>int</code>Total Topics</div>
+</div></div>
+</div>
+<a id="method_players"></a><div class="element clickable method public method_players" data-toggle="collapse" data-target=".method_players .collapse">
+<h2>Returns a System of Player</h2>
+<pre>players() : string</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_popups"></a><div class="element clickable method public method_popups" data-toggle="collapse" data-target=".method_popups .collapse">
+<h2>Popups for media files</h2>
+<pre>popups() : string</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_top_score"></a><div class="element clickable method public method_top_score" data-toggle="collapse" data-target=".method_top_score .collapse">
+<h2>Top Score ???</h2>
+<pre>top_score() : int</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>int</code>number of scors</div>
+</div></div>
+</div>
+<a id="method_top_score_site"></a><div class="element clickable method public method_top_score_site" data-toggle="collapse" data-target=".method_top_score_site .collapse">
+<h2>Top Score Site</h2>
+<pre>top_score_site() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_total_downloads"></a><div class="element clickable method public method_total_downloads" data-toggle="collapse" data-target=".method_total_downloads .collapse">
+<h2>Total Downloads</h2>
+<pre>total_downloads() : array</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>array</code></div>
+</div></div>
+</div>
+<a id="method_total_media_files"></a><div class="element clickable method public method_total_media_files" data-toggle="collapse" data-target=".method_total_media_files .collapse">
+<h2>Get Total Meida Files</h2>
+<pre>total_media_files() : array</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>array</code>Don't know</div>
+</div></div>
+</div>
+<a id="method_total_plays"></a><div class="element clickable method public method_total_plays" data-toggle="collapse" data-target=".method_total_plays .collapse">
+<h2>Total plays of media files per study</h2>
+<pre>total_plays(int $id) : int</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$id</h4>
+<code>int</code><p>Id number of study</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>int</code>Total plays form the media</div>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
+            generated on 2013-06-22T20:25:34-05:00.<br></footer></div>
+</div>
+</body>
+</html>
