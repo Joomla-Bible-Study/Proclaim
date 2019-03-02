@@ -21,6 +21,7 @@
                                     API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a>Packages</a></li>
 <li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Administrator.html"><i class="icon-folder-open"></i> Joomla.Administrator</a></li>
 <li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
 <li><a href="../packages/Proclaim.html"><i class="icon-folder-open"></i> Proclaim</a></li>
 <li><a href="../packages/Proclaim.Admin.html"><i class="icon-folder-open"></i> Proclaim.Admin</a></li>
@@ -35,11 +36,11 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">196</span></a></li>
+                <span class="label label-info">181</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
-                <span class="label label-info">20</span></a></li>
+                <span class="label label-info">13</span></a></li>
 </ul>
 </li>
 </ul></div>
@@ -53,7 +54,7 @@
                         </div></noscript>
 <div class="row">
 <div class="span4">
-<div xmlns:php="http://php.net/xsl" class="btn-toolbar">
+<div class="btn-toolbar">
 <div class="btn-group visibility" data-toggle="buttons-checkbox">
 <button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button>
 </div>
@@ -61,14 +62,12 @@
 <button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
 </div>
 </div>
-<ul xmlns:php="http://php.net/xsl" class="side-nav nav nav-list">
+<ul class="side-nav nav nav-list">
 <li class="nav-header">
 <i title="Methods" class="icon-custom icon-method"></i> Methods
                     <ul>
 <li class="method public "><a href="#method_createelement" title="createelement() :: Create a Element"><span class="description">Create a Element</span><pre>createelement()</pre></a></li>
-<li class="method public "><a href="#method_getDuration" title="getDuration() :: Get Duration"><span class="description">Get Duration</span><pre>getDuration()</pre></a></li>
 <li class="method public "><a href="#method_getElement" title="getElement() :: Get Element"><span class="description">Get Element</span><pre>getElement()</pre></a></li>
-<li class="method public "><a href="#method_getFilepath" title="getFilepath() :: Get File Path"><span class="description">Get File Path</span><pre>getFilepath()</pre></a></li>
 <li class="method public "><a href="#method_getFluidCustom" title="getFluidCustom() :: Get Fluid Custom"><span class="description">Get Fluid Custom</span><pre>getFluidCustom()</pre></a></li>
 <li class="method public "><a href="#method_getFluidData" title="getFluidData() :: Get Fluid Date"><span class="description">Get Fluid Date</span><pre>getFluidData()</pre></a></li>
 <li class="method public "><a href="#method_getFluidListing" title="getFluidListing() :: Get Fluid Listing"><span class="description">Get Fluid Listing</span><pre>getFluidListing()</pre></a></li>
@@ -83,7 +82,6 @@
 <li class="method public "><a href="#method_getScripture" title="getScripture() :: Get Scripture"><span class="description">Get Scripture</span><pre>getScripture()</pre></a></li>
 <li class="method public "><a href="#method_getShare" title="getShare() :: Share Helper file"><span class="description">Share Helper file</span><pre>getShare()</pre></a></li>
 <li class="method public "><a href="#method_getStudyDate" title="getStudyDate() :: Get StudyDate"><span class="description">Get StudyDate</span><pre>getStudyDate()</pre></a></li>
-<li class="method public "><a href="#method_getStudyExp" title="getStudyExp() :: Get Study Exp"><span class="description">Get Study Exp</span><pre>getStudyExp()</pre></a></li>
 <li class="method public "><a href="#method_sortArrayofObjectByProperty" title="sortArrayofObjectByProperty() :: Sort Array of Object by Property"><span class="description">Sort Array of Object by Property</span><pre>sortArrayofObjectByProperty()</pre></a></li>
 <li class="method public "><a href="#method_useJImage" title="useJImage() :: Use JImage Class"><span class="description">Use JImage Class</span><pre>useJImage()</pre></a></li>
 </ul>
@@ -101,7 +99,7 @@
 </ul>
 </div>
 <div class="span8">
-<a xmlns:php="http://php.net/xsl" id="\JBSMListing"></a><ul xmlns:php="http://php.net/xsl" class="breadcrumb">
+<a id="\JBSMListing"></a><ul class="breadcrumb">
 <li>
 <a href="../index.html"><i title="Classes" class="icon-custom icon-class"></i></a><span class="divider">\</span>
 </li>
@@ -109,7 +107,7 @@
 <span class="divider">\</span><a href="../classes/JBSMListing.html">JBSMListing</a>
 </li>
 </ul>
-<div xmlns:php="http://php.net/xsl" class="element class">
+    <div class="element class">
 <p class="short_description">BibleStudy listing class</p>
 <div class="details">
 <div class="long_description"></div>
@@ -143,29 +141,6 @@
 <div class="subelement response"><code>string</code></div>
 </div></div>
 </div>
-<a id="method_getDuration"></a><div class="element clickable method public method_getDuration " data-toggle="collapse" data-target=".method_getDuration .collapse" title="public">
-<h2>Get Duration</h2>
-<pre>getDuration(\Joomla\Registry\Registry $params, Object $row) : null | string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>7.0</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$params</h4>
-<code>\Joomla\Registry\Registry</code><p>Item Params</p></div>
-<div class="subelement argument">
-<h4>$row</h4>
-<code>Object</code><p>Row info</p></div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>null</code><code>string</code>
-</div>
-</div></div>
-</div>
 <a id="method_getElement"></a><div class="element clickable method public method_getElement " data-toggle="collapse" data-target=".method_getElement .collapse" title="public">
 <h2>Get Element</h2>
 <pre>getElement(String $custom, Object $row, \Joomla\Registry\Registry $params, \TableTemplate $template, String $type) : mixed | null | string</pre>
@@ -192,40 +167,15 @@
 <div class="subelement argument">
 <h4>$type</h4>
 <code>String</code><p>?</p></div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code>\Exception</code></th>
+<td></td>
+</tr></table>
 <h3>Returns</h3>
 <div class="subelement response">
 <code>mixed</code><code>null</code><code>string</code>
 </div>
-</div></div>
-</div>
-<a id="method_getFilepath"></a><div class="element clickable method public method_getFilepath " data-toggle="collapse" data-target=".method_getFilepath .collapse" title="public">
-<h2>Get File Path</h2>
-<pre>getFilepath(string $id3, string $idfield, string $mime<code> = null</code>) : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered">
-<tr>
-<th>since</th>
-<td>7.0</td>
-</tr>
-<tr>
-<th>deprecated</th>
-<td>8.1.3</td>
-</tr>
-</table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$id3</h4>
-<code>string</code><p>ID</p></div>
-<div class="subelement argument">
-<h4>$idfield</h4>
-<code>string</code><p>ID Filed</p></div>
-<div class="subelement argument">
-<h4>$mime</h4>
-<code>string</code><p>MimeType ID</p></div>
-<h3>Returns</h3>
-<div class="subelement response"><code>string</code></div>
 </div></div>
 </div>
 <a id="method_getFluidCustom"></a><div class="element clickable method public method_getFluidCustom " data-toggle="collapse" data-target=".method_getFluidCustom .collapse" title="public">
@@ -254,6 +204,11 @@
 <div class="subelement argument">
 <h4>$type</h4>
 <code>String</code><p>?</p></div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code>\Exception</code></th>
+<td></td>
+</tr></table>
 <h3>Returns</h3>
 <div class="subelement response"><code>mixed</code></div>
 </div></div>
@@ -287,6 +242,11 @@
 <div class="subelement argument">
 <h4>$type</h4>
 <code>string</code><p>?</p></div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code>\Exception</code></th>
+<td></td>
+</tr></table>
 <h3>Returns</h3>
 <div class="subelement response"><code>string</code></div>
 </div></div>
@@ -314,6 +274,11 @@
 <div class="subelement argument">
 <h4>$type</h4>
 <code>String</code><p>Type of Listing</p></div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code>\Exception</code></th>
+<td></td>
+</tr></table>
 <h3>Returns</h3>
 <div class="subelement response"><code>string</code></div>
 </div></div>
@@ -338,6 +303,11 @@
 <div class="subelement argument">
 <h4>$template</h4>
 <code>\TableTemplate</code><p>?</p></div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code>\Exception</code></th>
+<td></td>
+</tr></table>
 <h3>Returns</h3>
 <div class="subelement response"><code>string</code></div>
 </div></div>
@@ -395,6 +365,11 @@
 <div class="subelement argument">
 <h4>$type</h4>
 <code>string</code><p>?</p></div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code>\Exception</code></th>
+<td></td>
+</tr></table>
 <h3>Returns</h3>
 <div class="subelement response"><code>string</code></div>
 </div></div>
@@ -437,6 +412,11 @@
 <div class="subelement argument">
 <h4>$template</h4>
 <code>\TableTemplate</code><p>Template</p></div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code>\Exception</code></th>
+<td></td>
+</tr></table>
 <h3>Returns</h3>
 <div class="subelement response"><code>object</code></div>
 </div></div>
@@ -576,33 +556,6 @@
 <code>string</code><p>Study Date</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code>string</code></div>
-</div></div>
-</div>
-<a id="method_getStudyExp"></a><div class="element clickable method public method_getStudyExp " data-toggle="collapse" data-target=".method_getStudyExp .collapse" title="public">
-<h2>Get Study Exp</h2>
-<pre>getStudyExp(object $row, \Joomla\Registry\Registry $params) : object</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered">
-<tr>
-<th>since</th>
-<td>7.0</td>
-</tr>
-<tr>
-<th>deprecated</th>
-<td>9.0.0</td>
-</tr>
-</table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$row</h4>
-<code>object</code><p>Item Info</p></div>
-<div class="subelement argument">
-<h4>$params</h4>
-<code>\Joomla\Registry\Registry</code><p>Item Params</p></div>
-<h3>Returns</h3>
-<div class="subelement response"><code>object</code></div>
 </div></div>
 </div>
 <a id="method_sortArrayofObjectByProperty"></a><div class="element clickable method public method_sortArrayofObjectByProperty " data-toggle="collapse" data-target=".method_sortArrayofObjectByProperty .collapse" title="public">
@@ -758,7 +711,7 @@
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2018-01-26T22:10:30-06:00.<br></footer></div>
+            generated on 2019-02-23T17:32:05-06:00.<br></footer></div>
 </div>
 </body>
 </html>

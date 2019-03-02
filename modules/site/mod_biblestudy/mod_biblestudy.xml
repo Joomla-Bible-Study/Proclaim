@@ -4,9 +4,9 @@
 	<author>CWM Team</author>
 	<authorEmail>info@joomlabiblestudy.org</authorEmail>
 	<authorUrl>https://www.christianwebministries.org</authorUrl>
-	<copyright>(C) 2007 - 2018 Proclaim All rights reserved.</copyright>
-	<version>9.1.7</version>
-	<creationDate>Nov 14, 2018</creationDate>
+	<copyright>(C) 2007 - 2019 Proclaim All rights reserved.</copyright>
+	<version>9.2.0</version>
+	<creationDate>Feb 27, 2019</creationDate>
 	<license>http://www.gnu.org/licenses/gpl.html</license>
 	<description>JBS_MDL_DESCRIPTION</description>
 	<files>
@@ -14,14 +14,12 @@
 		<filename>helper.php</filename>
 		<folder>tmpl</folder>
 		<folder>language</folder>
-		<filename>mod_biblestudy.xml</filename>
 	</files>
 	<config>
 		<fields name="params">
 			<fieldset name="basic"
 			          addfieldpath="/administrator/components/com_biblestudy/models/fields">
 				<field name="dummy" type="loadlanguagefile" default=""/>
-				<!-- load common language file -->
 				<field name="t" type="sql" label="JBS_MDL_SELECT_TEMPLATE"
 				       description="JBS_MDL_SELECT_TEMPLATE_DESC" default="1"
 				       query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"

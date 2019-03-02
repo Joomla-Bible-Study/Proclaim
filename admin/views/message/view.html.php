@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2018 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -89,6 +89,12 @@ class BiblestudyViewMessage extends JViewLegacy
 		$this->mediafiles = $this->get('MediaFiles');
 		$this->state      = $this->get('State');
 
+		// Check for errors.
+		if (count($errors = $this->get('Errors')))
+		{
+			throw new Exception(implode("\n", $errors), 500);
+		}
+
 		// Set some variables for use by the modal mediafile entry form from a study
 		$app = JFactory::getApplication();
 		$app->setUserState($option . 'sid', $this->item->id);
@@ -98,6 +104,8 @@ class BiblestudyViewMessage extends JViewLegacy
 		$registry->loadString($this->admin->params);
 		$this->admin_params = $registry;
 		$document           = JFactory::getDocument();
+
+		$this->simple_view = JBSMHelper::getSimpleView();
 
 		JHtml::stylesheet('media/com_biblestudy/css/token-input-jbs.css');
 
@@ -124,9 +132,6 @@ class BiblestudyViewMessage extends JViewLegacy
 
 		// Set the toolbar
 		$this->addToolbar();
-
-		// Set the document
-		$this->setDocument();
 
 		// Display the template
 		return parent::display($tpl);
@@ -184,19 +189,5 @@ class BiblestudyViewMessage extends JViewLegacy
 
 		JToolbarHelper::divider();
 		JToolbarHelper::help('biblestudy', true);
-	}
-
-	/**
-	 * Add the page title to browser.
-	 *
-	 * @return void
-	 *
-	 * @since    7.1.0
-	 */
-	protected function setDocument()
-	{
-		$isNew    = ($this->item->id < 1);
-		$document = JFactory::getDocument();
-		$document->setTitle($isNew ? JText::_('JBS_TITLE_STUDIES_CREATING') : JText::sprintf('JBS_TITLE_STUDIES_EDITING', $this->item->studytitle));
 	}
 }

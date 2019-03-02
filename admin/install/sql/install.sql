@@ -11,7 +11,7 @@ CREATE TABLE `#__bsms_update` (
 
 INSERT INTO `#__bsms_update` (`id`, `version`)
 VALUES
-  (1, '9.1.5');
+  (1, '9.2.0');
 
 -- --------------------------------------------------------
 
@@ -307,9 +307,6 @@ CREATE TABLE `#__bsms_studies` (
   `studytitle`          TEXT,
   `alias`               VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
   `studyintro`          TEXT,
-  `media_hours`         VARCHAR(2)                                                DEFAULT NULL,
-  `media_minutes`       VARCHAR(2)                                                DEFAULT NULL,
-  `media_seconds`       VARCHAR(2)                                                DEFAULT NULL,
   `messagetype`         VARCHAR(100)                                              DEFAULT '1',
   `series_id`           INT(3)                                                    DEFAULT '0',
   `studytext`           TEXT,

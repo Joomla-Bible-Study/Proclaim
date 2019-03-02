@@ -21,6 +21,7 @@
                                     API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a>Packages</a></li>
 <li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Administrator.html"><i class="icon-folder-open"></i> Joomla.Administrator</a></li>
 <li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
 <li><a href="../packages/Proclaim.html"><i class="icon-folder-open"></i> Proclaim</a></li>
 <li><a href="../packages/Proclaim.Admin.html"><i class="icon-folder-open"></i> Proclaim.Admin</a></li>
@@ -35,11 +36,11 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">196</span></a></li>
+                <span class="label label-info">181</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
-                <span class="label label-info">20</span></a></li>
+                <span class="label label-info">13</span></a></li>
 </ul>
 </li>
 </ul></div>
@@ -53,7 +54,7 @@
                         </div></noscript>
 <div class="row">
 <div class="span4">
-<div xmlns:php="http://php.net/xsl" class="btn-toolbar">
+<div class="btn-toolbar">
 <div class="btn-group visibility" data-toggle="buttons-checkbox">
 <button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button>
 </div>
@@ -61,7 +62,7 @@
 <button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
 </div>
 </div>
-<ul xmlns:php="http://php.net/xsl" class="side-nav nav nav-list">
+<ul class="side-nav nav nav-list">
 <li class="nav-header">
 <i title="Methods" class="icon-custom icon-method"></i> Methods
                     <ul><li class="method public "><a href="#method_display" title="display() :: Execute and display a template script."><span class="description">Execute and display a template script.</span><pre>display()</pre></a></li></ul>
@@ -69,28 +70,32 @@
 <li class="nav-header protected">» Protected
                     <ul><li class="method protected "><a href="#method__prepareDocument" title="_prepareDocument() :: Prepares the document"><span class="description">Prepares the document</span><pre>_prepareDocument()</pre></a></li></ul>
 </li>
+<li class="nav-header private">» Private
+                    <ul><li class="method private "><a href="#method_updateFilters" title="updateFilters() :: Update Filters per landing page call and Hide filters per the template settings."><span class="description">Update Filters per landing page call and Hide filters per the template settings.</span><pre>updateFilters()</pre></a></li></ul>
+</li>
 <li class="nav-header">
 <i title="Properties" class="icon-custom icon-property"></i> Properties
-                    <ul><li class="property public "><a href="#property_document" title="$document() :: "><span class="description"></span><pre>$document</pre></a></li></ul>
+                    <ul>
+<li class="property public "><a href="#property_activeFilters" title="$activeFilters() :: The active search filters"><span class="description"></span><pre>$activeFilters</pre></a></li>
+<li class="property public "><a href="#property_document" title="$document() :: "><span class="description"></span><pre>$document</pre></a></li>
+<li class="property public "><a href="#property_filterForm" title="$filterForm() :: Form object for search filters"><span class="description"></span><pre>$filterForm</pre></a></li>
+</ul>
 </li>
 <li class="nav-header protected">» Protected
                     <ul>
 <li class="property protected "><a href="#property_admin" title="$admin() :: "><span class="description"></span><pre>$admin</pre></a></li>
 <li class="property protected "><a href="#property_books" title="$books() :: "><span class="description"></span><pre>$books</pre></a></li>
 <li class="property protected "><a href="#property_items" title="$items() :: "><span class="description"></span><pre>$items</pre></a></li>
-<li class="property protected "><a href="#property_limitbox" title="$limitbox() :: "><span class="description"></span><pre>$limitbox</pre></a></li>
-<li class="property protected "><a href="#property_limitstart" title="$limitstart() :: "><span class="description"></span><pre>$limitstart</pre></a></li>
 <li class="property protected "><a href="#property_locations" title="$locations() :: "><span class="description"></span><pre>$locations</pre></a></li>
 <li class="property protected "><a href="#property_main" title="$main() :: "><span class="description"></span><pre>$main</pre></a></li>
 <li class="property protected "><a href="#property_messageTypes" title="$messageTypes() :: "><span class="description"></span><pre>$messageTypes</pre></a></li>
-<li class="property protected "><a href="#property_order" title="$order() :: "><span class="description"></span><pre>$order</pre></a></li>
 <li class="property protected "><a href="#property_orders" title="$orders() :: "><span class="description"></span><pre>$orders</pre></a></li>
 <li class="property protected "><a href="#property_page" title="$page() :: "><span class="description"></span><pre>$page</pre></a></li>
-<li class="property protected "><a href="#property_pagelinks" title="$pagelinks() :: "><span class="description"></span><pre>$pagelinks</pre></a></li>
 <li class="property protected "><a href="#property_pagination" title="$pagination() :: "><span class="description"></span><pre>$pagination</pre></a></li>
 <li class="property protected "><a href="#property_params" title="$params() :: "><span class="description"></span><pre>$params</pre></a></li>
 <li class="property protected "><a href="#property_request_url" title="$request_url() :: "><span class="description"></span><pre>$request_url</pre></a></li>
 <li class="property protected "><a href="#property_series" title="$series() :: "><span class="description"></span><pre>$series</pre></a></li>
+<li class="property protected "><a href="#property_sidebar" title="$sidebar() :: The sidebar markup"><span class="description"></span><pre>$sidebar</pre></a></li>
 <li class="property protected "><a href="#property_state" title="$state() :: "><span class="description"></span><pre>$state</pre></a></li>
 <li class="property protected "><a href="#property_study" title="$study() :: "><span class="description"></span><pre>$study</pre></a></li>
 <li class="property protected "><a href="#property_subscribe" title="$subscribe() :: "><span class="description"></span><pre>$subscribe</pre></a></li>
@@ -104,7 +109,7 @@
 </ul>
 </div>
 <div class="span8">
-<a xmlns:php="http://php.net/xsl" id="\BiblestudyViewSermons"></a><ul xmlns:php="http://php.net/xsl" class="breadcrumb">
+<a id="\BiblestudyViewSermons"></a><ul class="breadcrumb">
 <li>
 <a href="../index.html"><i title="Classes" class="icon-custom icon-class"></i></a><span class="divider">\</span>
 </li>
@@ -112,7 +117,7 @@
 <span class="divider">\</span><a href="../classes/BiblestudyViewSermons.html">BiblestudyViewSermons</a>
 </li>
 </ul>
-<div xmlns:php="http://php.net/xsl" class="element class">
+    <div class="element class">
 <p class="short_description">View for Sermons class</p>
 <div class="details">
 <div class="long_description"></div>
@@ -148,6 +153,11 @@
 <div class="subelement argument">
 <h4>$tpl</h4>
 <code>string</code><p>The name of the template file to parse; automatically searches through the template paths.</p></div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code>\Exception</code></th>
+<td></td>
+</tr></table>
 <h3>Returns</h3>
 <div class="subelement response">
 <code>mixed</code>A string if successful, otherwise a JError object.</div>
@@ -163,10 +173,48 @@
 <th>since</th>
 <td>7.0</td>
 </tr></table>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code>\Exception</code></th>
+<td></td>
+</tr></table>
+</div></div>
+</div>
+<a id="method_updateFilters"></a><div class="element clickable method private method_updateFilters " data-toggle="collapse" data-target=".method_updateFilters .collapse" title="private">
+<h2>Update Filters per landing page call and Hide filters per the template settings.</h2>
+<pre>updateFilters() : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.1.6</td>
+</tr></table>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code>\Exception</code></th>
+<td></td>
+</tr></table>
 </div></div>
 </div>
 <h3>
 <i title="Properties" class="icon-custom icon-property"></i> Properties</h3>
+<a id="property_activeFilters"> </a><div class="element clickable property public property_activeFilters" data-toggle="collapse" data-target=".property_activeFilters .collapse" title="public">
+<h2>The active search filters</h2>
+<pre>$activeFilters : array</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.1.4</td>
+</tr></table>
+</div></div>
+</div>
 <a id="property_document"> </a><div class="element clickable property public property_document" data-toggle="collapse" data-target=".property_document .collapse" title="public">
 <h2>$document</h2>
 <pre>$document : object</pre>
@@ -180,6 +228,22 @@
 <table class="table table-bordered"><tr>
 <th>since</th>
 <td>7.0</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_filterForm"> </a><div class="element clickable property public property_filterForm" data-toggle="collapse" data-target=".property_filterForm .collapse" title="public">
+<h2>Form object for search filters</h2>
+<pre>$filterForm : \JForm</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.1.4</td>
 </tr></table>
 </div></div>
 </div>
@@ -220,39 +284,7 @@
 <pre>$items : object</pre>
 <div class="row collapse"><div class="detail-description">
 <h3>Default</h3>
-<div class="subelement argument"></div>
-</div></div>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>7.0</td>
-</tr></table>
-</div></div>
-</div>
-<a id="property_limitbox"> </a><div class="element clickable property protected property_limitbox" data-toggle="collapse" data-target=".property_limitbox .collapse" title="protected">
-<h2>$limitbox</h2>
-<pre>$limitbox : string</pre>
-<div class="row collapse"><div class="detail-description">
-<h3>Default</h3>
-<div class="subelement argument"></div>
-</div></div>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>7.0</td>
-</tr></table>
-</div></div>
-</div>
-<a id="property_limitstart"> </a><div class="element clickable property protected property_limitstart" data-toggle="collapse" data-target=".property_limitstart .collapse" title="protected">
-<h2>$limitstart</h2>
-<pre>$limitstart : integer</pre>
-<div class="row collapse"><div class="detail-description">
-<h3>Default</h3>
-<div class="subelement argument"></div>
+<div class="subelement argument"><code>null</code></div>
 </div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
@@ -311,22 +343,6 @@
 </tr></table>
 </div></div>
 </div>
-<a id="property_order"> </a><div class="element clickable property protected property_order" data-toggle="collapse" data-target=".property_order .collapse" title="protected">
-<h2>$order</h2>
-<pre>$order : string</pre>
-<div class="row collapse"><div class="detail-description">
-<h3>Default</h3>
-<div class="subelement argument"></div>
-</div></div>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>7.0</td>
-</tr></table>
-</div></div>
-</div>
 <a id="property_orders"> </a><div class="element clickable property protected property_orders" data-toggle="collapse" data-target=".property_orders .collapse" title="protected">
 <h2>$orders</h2>
 <pre>$orders : string</pre>
@@ -359,28 +375,12 @@
 </tr></table>
 </div></div>
 </div>
-<a id="property_pagelinks"> </a><div class="element clickable property protected property_pagelinks" data-toggle="collapse" data-target=".property_pagelinks .collapse" title="protected">
-<h2>$pagelinks</h2>
-<pre>$pagelinks : string</pre>
-<div class="row collapse"><div class="detail-description">
-<h3>Default</h3>
-<div class="subelement argument"></div>
-</div></div>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>7.0</td>
-</tr></table>
-</div></div>
-</div>
 <a id="property_pagination"> </a><div class="element clickable property protected property_pagination" data-toggle="collapse" data-target=".property_pagination .collapse" title="protected">
 <h2>$pagination</h2>
 <pre>$pagination : object</pre>
 <div class="row collapse"><div class="detail-description">
 <h3>Default</h3>
-<div class="subelement argument"></div>
+<div class="subelement argument"><code>null</code></div>
 </div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
@@ -439,12 +439,28 @@
 </tr></table>
 </div></div>
 </div>
+<a id="property_sidebar"> </a><div class="element clickable property protected property_sidebar" data-toggle="collapse" data-target=".property_sidebar .collapse" title="protected">
+<h2>The sidebar markup</h2>
+<pre>$sidebar : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.1.4</td>
+</tr></table>
+</div></div>
+</div>
 <a id="property_state"> </a><div class="element clickable property protected property_state" data-toggle="collapse" data-target=".property_state .collapse" title="protected">
 <h2>$state</h2>
 <pre>$state : \Joomla\Registry\Registry</pre>
 <div class="row collapse"><div class="detail-description">
 <h3>Default</h3>
-<div class="subelement argument"></div>
+<div class="subelement argument"><code>null</code></div>
 </div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
@@ -574,7 +590,7 @@
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2018-01-26T22:10:38-06:00.<br></footer></div>
+            generated on 2019-02-23T17:32:07-06:00.<br></footer></div>
 </div>
 </body>
 </html>

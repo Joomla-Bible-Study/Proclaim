@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    Proclaim.Admin
- * @copyright  2007 - 2018 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -9,7 +9,6 @@ defined('_JEXEC') or die;
 
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
-
 
 /**
  * Proclaim Install Script
@@ -36,11 +35,11 @@ class Com_BiblestudyInstallerScript
 	 */
 	protected $versions = array(
 		'PHP'     => array(
-			'5.5' => '5.5.3',
 			'5.6' => '5.6.30',
 			'7.0' => '7.0.13',
 			'7.1' => '7.1.0',
-			'0'   => '7.0.13' // Preferred version
+			'7.2' => '7.2.1',
+			'0'   => '7.2.11' // Preferred version
 		),
 		'MySQL'   => array(
 			'5.1' => '5.1',
@@ -91,7 +90,7 @@ class Com_BiblestudyInstallerScript
 	 * @return boolean
 	 *
 	 * @throws  Exception
-	 *@since   1.5
+	 * @since   1.5
 	 */
 	public function preflight($type, $parent)
 	{
@@ -244,7 +243,7 @@ class Com_BiblestudyInstallerScript
 	 * @return   void
 	 *
 	 * @throws  Exception
-	 *@since   1.5
+	 * @since   1.5
 	 */
 	public function postflight($type, $parent)
 	{
@@ -274,7 +273,7 @@ class Com_BiblestudyInstallerScript
 	 * @return bool
 	 *
 	 * @throws  Exception
-	 *@since 7.1.0
+	 * @since 7.1.0
 	 */
 	public function checkRequirements($version)
 	{
@@ -625,7 +624,5 @@ class Com_BiblestudyInstallerScript
 				}
 			}
 		}
-
-		return;
 	}
 }

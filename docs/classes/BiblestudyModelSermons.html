@@ -21,6 +21,7 @@
                                     API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a>Packages</a></li>
 <li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Administrator.html"><i class="icon-folder-open"></i> Joomla.Administrator</a></li>
 <li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
 <li><a href="../packages/Proclaim.html"><i class="icon-folder-open"></i> Proclaim</a></li>
 <li><a href="../packages/Proclaim.Admin.html"><i class="icon-folder-open"></i> Proclaim.Admin</a></li>
@@ -35,11 +36,11 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">196</span></a></li>
+                <span class="label label-info">181</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
-                <span class="label label-info">20</span></a></li>
+                <span class="label label-info">13</span></a></li>
 </ul>
 </li>
 </ul></div>
@@ -53,7 +54,7 @@
                         </div></noscript>
 <div class="row">
 <div class="span4">
-<div xmlns:php="http://php.net/xsl" class="btn-toolbar">
+<div class="btn-toolbar">
 <div class="btn-group visibility" data-toggle="buttons-checkbox">
 <button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button>
 </div>
@@ -61,24 +62,15 @@
 <button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
 </div>
 </div>
-<ul xmlns:php="http://php.net/xsl" class="side-nav nav nav-list">
+<ul class="side-nav nav nav-list">
 <li class="nav-header">
 <i title="Methods" class="icon-custom icon-method"></i> Methods
                     <ul>
 <li class="method public "><a href="#method___construct" title="__construct() :: Constructor."><span class="description">Constructor.</span><pre>__construct()</pre></a></li>
-<li class="method public "><a href="#method_getBooks" title="getBooks() :: Get a list of all used books"><span class="description">Get a list of all used books</span><pre>getBooks()</pre></a></li>
 <li class="method public "><a href="#method_getDownloads" title="getDownloads() :: Get Downloads"><span class="description">Get Downloads</span><pre>getDownloads()</pre></a></li>
 <li class="method public "><a href="#method_getFiles" title="getFiles() :: Creates and executes a new query that retrieves the medifile information from the mediafiles table."><span class="description">Creates and executes a new query that retrieves the medifile information from the mediafiles table.</span><pre>getFiles()</pre></a></li>
-<li class="method public "><a href="#method_getItems" title="getItems() :: Method to get a list of sermons."><span class="description">Method to get a list of sermons.</span><pre>getItems()</pre></a></li>
-<li class="method public "><a href="#method_getLocations" title="getLocations() :: Returns the locations"><span class="description">Returns the locations</span><pre>getLocations()</pre></a></li>
-<li class="method public "><a href="#method_getMessageTypes" title="getMessageTypes() :: Get a list of all used message types"><span class="description">Get a list of all used message types</span><pre>getMessageTypes()</pre></a></li>
-<li class="method public "><a href="#method_getPlays" title="getPlays() :: Get the number of plays of this study"><span class="description">Get the number of plays of this study</span><pre>getPlays()</pre></a></li>
-<li class="method public "><a href="#method_getSeries" title="getSeries() :: Get a list of all used series"><span class="description">Get a list of all used series</span><pre>getSeries()</pre></a></li>
-<li class="method public "><a href="#method_getStart2" title="getStart2() :: Get Start 2"><span class="description">Get Start 2</span><pre>getStart2()</pre></a></li>
-<li class="method public "><a href="#method_getTeachers" title="getTeachers() :: Get a list of all used teachers"><span class="description">Get a list of all used teachers</span><pre>getTeachers()</pre></a></li>
-<li class="method public "><a href="#method_getTopics" title="getTopics() :: Returns the topics"><span class="description">Returns the topics</span><pre>getTopics()</pre></a></li>
+<li class="method public "><a href="#method_getStart" title="getStart() :: Method to get the starting number of items for the data set."><span class="description">Method to get the starting number of items for the data set.</span><pre>getStart()</pre></a></li>
 <li class="method public "><a href="#method_getTranslated" title="getTranslated() :: Translate item entries: books, topics"><span class="description">Translate item entries: books, topics</span><pre>getTranslated()</pre></a></li>
-<li class="method public "><a href="#method_getYears" title="getYears() :: Get a list of all used years"><span class="description">Get a list of all used years</span><pre>getYears()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header protected">» Protected
@@ -87,9 +79,6 @@
 <li class="method protected "><a href="#method_getStoreId" title="getStoreId() :: Method to get a store id based on model configuration state."><span class="description">Method to get a store id based on model configuration state.</span><pre>getStoreId()</pre></a></li>
 <li class="method protected "><a href="#method_populateState" title="populateState() :: Method to auto-populate the model state."><span class="description">Method to auto-populate the model state.</span><pre>populateState()</pre></a></li>
 </ul>
-</li>
-<li class="nav-header private">» Private
-                    <ul><li class="method private "><a href="#method_order_new" title="order_new() :: Order New using strcmp"><span class="description">Order New using strcmp</span><pre>order_new()</pre></a></li></ul>
 </li>
 <li class="nav-header">
 <i title="Properties" class="icon-custom icon-property"></i> Properties
@@ -107,7 +96,7 @@
 </ul>
 </div>
 <div class="span8">
-<a xmlns:php="http://php.net/xsl" id="\BiblestudyModelSermons"></a><ul xmlns:php="http://php.net/xsl" class="breadcrumb">
+<a id="\BiblestudyModelSermons"></a><ul class="breadcrumb">
 <li>
 <a href="../index.html"><i title="Classes" class="icon-custom icon-class"></i></a><span class="divider">\</span>
 </li>
@@ -115,7 +104,7 @@
 <span class="divider">\</span><a href="../classes/BiblestudyModelSermons.html">BiblestudyModelSermons</a>
 </li>
 </ul>
-<div xmlns:php="http://php.net/xsl" class="element class">
+    <div class="element class">
 <p class="short_description">Model class for Sermons</p>
 <div class="details">
 <div class="long_description"></div>
@@ -151,20 +140,6 @@
 <div class="subelement argument">
 <h4>$config</h4>
 <code>array</code><p>An optional associative array of configuration settings.</p></div>
-</div></div>
-</div>
-<a id="method_getBooks"></a><div class="element clickable method public method_getBooks " data-toggle="collapse" data-target=".method_getBooks .collapse" title="public">
-<h2>Get a list of all used books</h2>
-<pre>getBooks() : mixed</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>7.0</td>
-</tr></table>
-<h3>Returns</h3>
-<div class="subelement response"><code>mixed</code></div>
 </div></div>
 </div>
 <a id="method_getDownloads"></a><div class="element clickable method public method_getDownloads " data-toggle="collapse" data-target=".method_getDownloads .collapse" title="public">
@@ -205,123 +180,19 @@
 <div class="subelement response"><code>string</code></div>
 </div></div>
 </div>
-<a id="method_getItems"></a><div class="element clickable method public method_getItems " data-toggle="collapse" data-target=".method_getItems .collapse" title="public">
-<h2>Method to get a list of sermons.</h2>
-<pre>getItems() : mixed</pre>
+<a id="method_getStart"></a><div class="element clickable method public method_getStart " data-toggle="collapse" data-target=".method_getStart .collapse" title="public">
+<h2>Method to get the starting number of items for the data set.</h2>
+<pre>getStart() : integer</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
-<div class="long_description"><p>Overridden to add a check for access levels.</p></div>
+<div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>since</th>
-<td>9.0.0</td>
+<td>12.2</td>
 </tr></table>
 <h3>Returns</h3>
 <div class="subelement response">
-<code>mixed</code>An array of data items on success, false on failure.</div>
-</div></div>
-</div>
-<a id="method_getLocations"></a><div class="element clickable method public method_getLocations " data-toggle="collapse" data-target=".method_getLocations .collapse" title="public">
-<h2>Returns the locations</h2>
-<pre>getLocations() : \JObject</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>7.0.2</td>
-</tr></table>
-<h3>Returns</h3>
-<div class="subelement response"><code>\JObject</code></div>
-</div></div>
-</div>
-<a id="method_getMessageTypes"></a><div class="element clickable method public method_getMessageTypes " data-toggle="collapse" data-target=".method_getMessageTypes .collapse" title="public">
-<h2>Get a list of all used message types</h2>
-<pre>getMessageTypes() : object</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>7.0</td>
-</tr></table>
-<h3>Returns</h3>
-<div class="subelement response"><code>object</code></div>
-</div></div>
-</div>
-<a id="method_getPlays"></a><div class="element clickable method public method_getPlays " data-toggle="collapse" data-target=".method_getPlays .collapse" title="public">
-<h2>Get the number of plays of this study</h2>
-<pre>getPlays(integer $id) : array</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>7.0</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$id</h4>
-<code>integer</code><p>ID</p></div>
-<h3>Returns</h3>
-<div class="subelement response"><code>array</code></div>
-</div></div>
-</div>
-<a id="method_getSeries"></a><div class="element clickable method public method_getSeries " data-toggle="collapse" data-target=".method_getSeries .collapse" title="public">
-<h2>Get a list of all used series</h2>
-<pre>getSeries() : Object</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>7.0</td>
-</tr></table>
-<h3>Returns</h3>
-<div class="subelement response"><code>Object</code></div>
-</div></div>
-</div>
-<a id="method_getStart2"></a><div class="element clickable method public method_getStart2 " data-toggle="collapse" data-target=".method_getStart2 .collapse" title="public">
-<h2>Get Start 2</h2>
-<pre>getStart2() : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>7.0</td>
-</tr></table>
-<h3>Returns</h3>
-<div class="subelement response"><code>string</code></div>
-</div></div>
-</div>
-<a id="method_getTeachers"></a><div class="element clickable method public method_getTeachers " data-toggle="collapse" data-target=".method_getTeachers .collapse" title="public">
-<h2>Get a list of all used teachers</h2>
-<pre>getTeachers() : object</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>7.0</td>
-</tr></table>
-<h3>Returns</h3>
-<div class="subelement response"><code>object</code></div>
-</div></div>
-</div>
-<a id="method_getTopics"></a><div class="element clickable method public method_getTopics " data-toggle="collapse" data-target=".method_getTopics .collapse" title="public">
-<h2>Returns the topics</h2>
-<pre>getTopics() : array | boolean</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>7.0.2</td>
-</tr></table>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>array</code><code>boolean</code>
-</div>
+<code>integer</code>The starting number of items available in the data set.</div>
 </div></div>
 </div>
 <a id="method_getTranslated"></a><div class="element clickable method public method_getTranslated " data-toggle="collapse" data-target=".method_getTranslated .collapse" title="public">
@@ -342,20 +213,6 @@
 <div class="subelement response"><code>array</code></div>
 </div></div>
 </div>
-<a id="method_getYears"></a><div class="element clickable method public method_getYears " data-toggle="collapse" data-target=".method_getYears .collapse" title="public">
-<h2>Get a list of all used years</h2>
-<pre>getYears() : object</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>7.0</td>
-</tr></table>
-<h3>Returns</h3>
-<div class="subelement response"><code>object</code></div>
-</div></div>
-</div>
 <a id="method_getListQuery"></a><div class="element clickable method protected method_getListQuery " data-toggle="collapse" data-target=".method_getListQuery .collapse" title="protected">
 <h2>Build an SQL query to load the list data</h2>
 <pre>getListQuery() : \JDatabaseQuery</pre>
@@ -365,6 +222,11 @@
 <table class="table table-bordered"><tr>
 <th>since</th>
 <td>7.0</td>
+</tr></table>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code>\Exception</code></th>
+<td></td>
 </tr></table>
 <h3>Returns</h3>
 <div class="subelement response"><code>\JDatabaseQuery</code></div>
@@ -411,28 +273,11 @@ configuration flag to ignore the request is set.</p>
 <div class="subelement argument">
 <h4>$direction</h4>
 <code>string</code><p>An optional direction (asc|desc).</p></div>
-</div></div>
-</div>
-<a id="method_order_new"></a><div class="element clickable method private method_order_new " data-toggle="collapse" data-target=".method_order_new .collapse" title="private">
-<h2>Order New using strcmp</h2>
-<pre>order_new(object $a, object $b) : integer</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
+<h3>Exceptions</h3>
 <table class="table table-bordered"><tr>
-<th>since</th>
-<td>7.0</td>
+<th><code>\Exception</code></th>
+<td></td>
 </tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$a</h4>
-<code>object</code><p>Start.</p></div>
-<div class="subelement argument">
-<h4>$b</h4>
-<code>object</code><p>End.</p></div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>integer</code>Used to place in new sort.</div>
 </div></div>
 </div>
 <h3>
@@ -574,7 +419,7 @@ configuration flag to ignore the request is set.</p>
 <pre>$context : string</pre>
 <div class="row collapse"><div class="detail-description">
 <h3>Default</h3>
-<div class="subelement argument"><code>'com_biblestudy.list'</code></div>
+<div class="subelement argument"><code>'com_biblestudy.sermons.list'</code></div>
 </div></div>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
@@ -602,7 +447,7 @@ configuration flag to ignore the request is set.</p>
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2018-01-26T22:10:33-06:00.<br></footer></div>
+            generated on 2019-02-23T17:32:05-06:00.<br></footer></div>
 </div>
 </body>
 </html>

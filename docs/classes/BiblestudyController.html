@@ -21,6 +21,7 @@
                                     API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a>Packages</a></li>
 <li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Administrator.html"><i class="icon-folder-open"></i> Joomla.Administrator</a></li>
 <li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
 <li><a href="../packages/Proclaim.html"><i class="icon-folder-open"></i> Proclaim</a></li>
 <li><a href="../packages/Proclaim.Admin.html"><i class="icon-folder-open"></i> Proclaim.Admin</a></li>
@@ -35,11 +36,11 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">196</span></a></li>
+                <span class="label label-info">181</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
-                <span class="label label-info">20</span></a></li>
+                <span class="label label-info">13</span></a></li>
 </ul>
 </li>
 </ul></div>
@@ -53,7 +54,7 @@
                         </div></noscript>
 <div class="row">
 <div class="span4">
-<div xmlns:php="http://php.net/xsl" class="btn-toolbar">
+<div class="btn-toolbar">
 <div class="btn-group visibility" data-toggle="buttons-checkbox">
 <button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button>
 </div>
@@ -61,7 +62,7 @@
 <button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
 </div>
 </div>
-<ul xmlns:php="http://php.net/xsl" class="side-nav nav nav-list">
+<ul class="side-nav nav nav-list">
 <li class="nav-header">
 <i title="Methods" class="icon-custom icon-method"></i> Methods
                     <ul>
@@ -71,9 +72,6 @@
 <li class="method public "><a href="#method_commentsEmail" title="commentsEmail() :: Comments Email"><span class="description">Comments Email</span><pre>commentsEmail()</pre></a></li>
 <li class="method public "><a href="#method_display" title="display() :: Display"><span class="description">Display</span><pre>display()</pre></a></li>
 <li class="method public "><a href="#method_download" title="download() :: Download"><span class="description">Download</span><pre>download()</pre></a></li>
-<li class="method public "><a href="#method_inlinePlayer" title='inlinePlayer() :: This function is supposed to generate the Media Player that is requested via AJAX
-from the sermons view "default.php". It has not been implemented yet, so its not used.'><span class="description">This function is supposed to generate the Media Player that is requested via AJAX
-from the sermons view "default.php". It has not been implemented yet, so its not used.</span><pre>inlinePlayer()</pre></a></li>
 <li class="method public "><a href="#method_playHit" title="playHit() :: Play Hit"><span class="description">Play Hit</span><pre>playHit()</pre></a></li>
 </ul>
 </li>
@@ -82,7 +80,7 @@ from the sermons view "default.php". It has not been implemented yet, so its not
                     <ul><li class="property public "><a href="#property_mediaCode" title="$mediaCode() :: "><span class="description">Media Code</span><pre>$mediaCode</pre></a></li></ul>
 </li>
 </ul>
-<div xmlns:php="http://php.net/xsl" class="btn-toolbar">
+<div class="btn-toolbar">
 <div class="btn-group visibility" data-toggle="buttons-checkbox">
 <button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button>
 </div>
@@ -90,7 +88,7 @@ from the sermons view "default.php". It has not been implemented yet, so its not
 <button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
 </div>
 </div>
-<ul xmlns:php="http://php.net/xsl" class="side-nav nav nav-list">
+<ul class="side-nav nav nav-list">
 <li class="nav-header">
 <i title="Methods" class="icon-custom icon-method"></i> Methods
                     <ul>
@@ -108,7 +106,7 @@ from the sermons view "default.php". It has not been implemented yet, so its not
 </ul>
 </div>
 <div class="span8">
-<a xmlns:php="http://php.net/xsl" id="\BiblestudyController"></a><ul xmlns:php="http://php.net/xsl" class="breadcrumb">
+<a id="\BiblestudyController"></a><ul class="breadcrumb">
 <li>
 <a href="../index.html"><i title="Classes" class="icon-custom icon-class"></i></a><span class="divider">\</span>
 </li>
@@ -116,7 +114,7 @@ from the sermons view "default.php". It has not been implemented yet, so its not
 <span class="divider">\</span><a href="../classes/BiblestudyController.html">BiblestudyController</a>
 </li>
 </ul>
-<div xmlns:php="http://php.net/xsl" class="element class">
+<div class="element class">
 <p class="short_description">Controller for Core BibleStudy</p>
 <div class="details">
 <div class="long_description"></div>
@@ -249,19 +247,6 @@ you will need to override it in your own controllers.</p></div>
 </tr></table>
 </div></div>
 </div>
-<a id="method_inlinePlayer"></a><div class="element clickable method public method_inlinePlayer " data-toggle="collapse" data-target=".method_inlinePlayer .collapse" title="public">
-<h2>This function is supposed to generate the Media Player that is requested via AJAX
-from the sermons view "default.php". It has not been implemented yet, so its not used.</h2>
-<pre>inlinePlayer() : void</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>7.0.0</td>
-</tr></table>
-</div></div>
-</div>
 <a id="method_playHit"></a><div class="element clickable method public method_playHit " data-toggle="collapse" data-target=".method_playHit .collapse" title="public">
 <h2>Play Hit</h2>
 <pre>playHit() : void</pre>
@@ -294,7 +279,7 @@ from the sermons view "default.php". It has not been implemented yet, so its not
 </div>
 </div>
 </div>
-<a xmlns:php="http://php.net/xsl" id="\BiblestudyController"></a><ul xmlns:php="http://php.net/xsl" class="breadcrumb">
+<a id="\BiblestudyController"></a><ul class="breadcrumb">
 <li>
 <a href="../index.html"><i title="Classes" class="icon-custom icon-class"></i></a><span class="divider">\</span>
 </li>
@@ -302,7 +287,7 @@ from the sermons view "default.php". It has not been implemented yet, so its not
 <span class="divider">\</span><a href="../classes/BiblestudyController.html">BiblestudyController</a>
 </li>
 </ul>
-<div xmlns:php="http://php.net/xsl" class="element class">
+    <div class="element class">
 <p class="short_description">JController for BibleStudy Admin class</p>
 <div class="details">
 <div class="long_description"></div>
@@ -335,6 +320,11 @@ from the sermons view "default.php". It has not been implemented yet, so its not
 <div class="subelement argument">
 <h4>$urlparams</h4>
 <code>boolean</code><p>Url params</p></div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code>\Exception</code></th>
+<td></td>
+</tr></table>
 <h3>Returns</h3>
 <div class="subelement response">
 <code>\JControllerLegacy</code>his object to support chaining.</div>
@@ -377,7 +367,7 @@ from the sermons view "default.php". It has not been implemented yet, so its not
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2018-01-26T22:10:41-06:00.<br></footer></div>
+            generated on 2019-02-23T17:32:09-06:00.<br></footer></div>
 </div>
 </body>
 </html>

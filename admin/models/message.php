@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2018 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -85,7 +85,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Gets all the topics associated with a particular study
 	 *
-	 * @return object JSON Object containing the topics
+	 * @return string JSON Object containing the topics
 	 *
 	 * @since 7.0.1
 	 */
@@ -134,7 +134,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Gets all topics available
 	 *
-	 * @return object JSON Object containing the topics
+	 * @return string JSON Object containing the topics
 	 *
 	 * @since 7.0.1
 	 */
@@ -207,6 +207,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	 * @return boolean
 	 *
 	 * @since 7.0.1
+	 * @throws Exception
 	 */
 	public function save($data)
 	{
@@ -256,6 +257,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	 * @return string
 	 *
 	 * @since 7.0
+	 * @throws Exception
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
@@ -305,9 +307,10 @@ class BiblestudyModelMessage extends JModelAdmin
 	 *
 	 * @param   int  $pk  int
 	 *
-	 * @return  mixed|void
+	 * @return  mixed
 	 *
 	 * @since   9.0.0
+	 * @throws  Exception
 	 */
 	public function getItem($pk = null)
 	{
@@ -643,6 +646,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	 * @return  array    The default data is an empty array.
 	 *
 	 * @since   7.0
+	 * @throws  Exception
 	 */
 	protected function loadFormData()
 	{

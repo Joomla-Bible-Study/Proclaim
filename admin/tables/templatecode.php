@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2018 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -93,7 +93,11 @@ class TableTemplatecode extends JTable
 	 */
 	public function store($updateNulls = false)
 	{
-		if ($this->filename == 'main' || $this->filename == 'custom' || $this->filename == 'formheader' || $this->filename == 'formfooter')
+		if ($this->filename == 'main'
+			|| $this->filename == 'simple'
+			|| $this->filename == 'custom'
+			|| $this->filename == 'formheader'
+			|| $this->filename == 'formfooter')
 		{
 			$this->setError(JText::_('JBS_STYLE_RESTRICED_FILE_NAME'));
 

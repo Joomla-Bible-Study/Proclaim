@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2018 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  */
@@ -82,6 +82,7 @@ abstract class JHtmlIcon
 	 * @return  string  The HTML markup for the email item link
 	 *
 	 * @since 7.0
+	 * @throws \Exception
 	 */
 	public static function email($article, $params, $attribs = array(), $legacy = false)
 	{
@@ -223,6 +224,7 @@ abstract class JHtmlIcon
 	 * @return  string  The HTML markup for the popup link
 	 *
 	 * @since 7.0
+	 * @throws \Exception
 	 */
 	public static function print_popup($article, $params, $attribs = array(), $legacy = false)
 	{

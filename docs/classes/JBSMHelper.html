@@ -21,6 +21,7 @@
                                     API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a>Packages</a></li>
 <li><a href="../packages/BibleStudy.Site.html"><i class="icon-folder-open"></i> BibleStudy.Site</a></li>
+<li><a href="../packages/Joomla.Administrator.html"><i class="icon-folder-open"></i> Joomla.Administrator</a></li>
 <li><a href="../packages/Joomla.Libraries.html"><i class="icon-folder-open"></i> Joomla.Libraries</a></li>
 <li><a href="../packages/Proclaim.html"><i class="icon-folder-open"></i> Proclaim</a></li>
 <li><a href="../packages/Proclaim.Admin.html"><i class="icon-folder-open"></i> Proclaim.Admin</a></li>
@@ -35,11 +36,11 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">196</span></a></li>
+                <span class="label label-info">181</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
-                <span class="label label-info">20</span></a></li>
+                <span class="label label-info">13</span></a></li>
 </ul>
 </li>
 </ul></div>
@@ -53,7 +54,7 @@
                         </div></noscript>
 <div class="row">
 <div class="span4">
-<div xmlns:php="http://php.net/xsl" class="btn-toolbar">
+<div class="btn-toolbar">
 <div class="btn-group visibility" data-toggle="buttons-checkbox">
 <button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button>
 </div>
@@ -61,7 +62,7 @@
 <button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
 </div>
 </div>
-<ul xmlns:php="http://php.net/xsl" class="side-nav nav nav-list">
+<ul class="side-nav nav nav-list">
 <li class="nav-header">
 <i title="Methods" class="icon-custom icon-method"></i> Methods
                     <ul>
@@ -70,6 +71,7 @@
 <li class="method public "><a href="#method_clearcache" title="clearcache() :: Clear Cache of JBSM"><span class="description">Clear Cache of JBSM</span><pre>clearcache()</pre></a></li>
 <li class="method public "><a href="#method_getRemoteFileSize" title="getRemoteFileSize() :: Method to get file size"><span class="description">Method to get file size</span><pre>getRemoteFileSize()</pre></a></li>
 <li class="method public "><a href="#method_getShowhide" title="getShowhide() :: Get ShowHide."><span class="description">Get ShowHide.</span><pre>getShowhide()</pre></a></li>
+<li class="method public "><a href="#method_getSimpleView" title="getSimpleView() :: Get Simple View Sate"><span class="description">Get Simple View Sate</span><pre>getSimpleView()</pre></a></li>
 <li class="method public "><a href="#method_getTooltip" title="getTooltip() :: Get tooltip."><span class="description">Get tooltip.</span><pre>getTooltip()</pre></a></li>
 <li class="method public "><a href="#method_remove_http" title="remove_http() :: Remove Http"><span class="description">Remove Http</span><pre>remove_http()</pre></a></li>
 </ul>
@@ -81,7 +83,7 @@
 </ul>
 </div>
 <div class="span8">
-<a xmlns:php="http://php.net/xsl" id="\JBSMHelper"></a><ul xmlns:php="http://php.net/xsl" class="breadcrumb">
+<a id="\JBSMHelper"></a><ul class="breadcrumb">
 <li>
 <a href="../index.html"><i title="Classes" class="icon-custom icon-class"></i></a><span class="divider">\</span>
 </li>
@@ -89,7 +91,7 @@
 <span class="divider">\</span><a href="../classes/JBSMHelper.html">JBSMHelper</a>
 </li>
 </ul>
-<div xmlns:php="http://php.net/xsl" class="element class">
+    <div class="element class">
 <p class="short_description">Core Bible Study Helper</p>
 <div class="details">
 <div class="long_description"></div>
@@ -213,6 +215,32 @@
 <div class="subelement response"><code>string</code></div>
 </div></div>
 </div>
+<a id="method_getSimpleView"></a><div class="element clickable method public method_getSimpleView " data-toggle="collapse" data-target=".method_getSimpleView .collapse" title="public">
+<h2>Get Simple View Sate</h2>
+<pre>getSimpleView(\Joomla\Registry\Registry $params<code> = null</code>, string $simple<code> = null</code>) : integer</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.1.6</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>\Joomla\Registry\Registry</code><p>AdminTable + parametors</p></div>
+<div class="subelement argument">
+<h4>$simple</h4>
+<code>string</code><p>Not Used right now</p></div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code>\Exception</code></th>
+<td></td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>integer</code></div>
+</div></div>
+</div>
 <a id="method_getTooltip"></a><div class="element clickable method public method_getTooltip " data-toggle="collapse" data-target=".method_getTooltip .collapse" title="public">
 <h2>Get tooltip.</h2>
 <pre>getTooltip(object $row, \Joomla\Registry\Registry $params, \TableTemplate $template) : string</pre>
@@ -233,6 +261,11 @@
 <div class="subelement argument">
 <h4>$template</h4>
 <code>\TableTemplate</code><p>ID</p></div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code>\Exception</code></th>
+<td></td>
+</tr></table>
 <h3>Returns</h3>
 <div class="subelement response"><code>string</code></div>
 </div></div>
@@ -280,7 +313,7 @@
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2018-01-26T22:10:30-06:00.<br></footer></div>
+            generated on 2019-02-23T17:32:04-06:00.<br></footer></div>
 </div>
 </body>
 </html>

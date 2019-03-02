@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2018 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -145,9 +145,12 @@ class JBSMBibleStudyHelper
 	 * @return void
 	 *
 	 * @since    1.6
+	 * @throws Exception
 	 */
 	public static function addSubmenu($vName)
 	{
+		$simple_view = JBSMHelper::getSimpleView();
+
 		self::rendermenu(
 			JText::_('JBS_CMN_CONTROL_PANEL'), 'index.php?option=com_biblestudy&view=cpanel', $vName == 'cpanel'
 		);
@@ -166,18 +169,23 @@ class JBSMBibleStudyHelper
 		self::rendermenu(
 			JText::_('JBS_CMN_SERIES'), 'index.php?option=com_biblestudy&view=series', $vName == 'series'
 		);
-		self::rendermenu(
-			JText::_('JBS_CMN_MESSAGETYPES'), 'index.php?option=com_biblestudy&view=messagetypes', $vName == 'messagetypes'
-		);
-		self::rendermenu(
-			JText::_('JBS_CMN_LOCATIONS'), 'index.php?option=com_biblestudy&view=locations', $vName == 'locations'
-		);
-		self::rendermenu(
-			JText::_('JBS_CMN_TOPICS'), 'index.php?option=com_biblestudy&view=topics', $vName == 'topics'
-		);
-		self::rendermenu(
-			JText::_('JBS_CMN_COMMENTS'), 'index.php?option=com_biblestudy&view=comments', $vName == 'comments'
-		);
+
+		if (!$simple_view)
+		{
+			self::rendermenu(
+				JText::_('JBS_CMN_MESSAGETYPES'), 'index.php?option=com_biblestudy&view=messagetypes', $vName == 'messagetypes'
+			);
+			self::rendermenu(
+				JText::_('JBS_CMN_LOCATIONS'), 'index.php?option=com_biblestudy&view=locations', $vName == 'locations'
+			);
+			self::rendermenu(
+				JText::_('JBS_CMN_TOPICS'), 'index.php?option=com_biblestudy&view=topics', $vName == 'topics'
+			);
+			self::rendermenu(
+				JText::_('JBS_CMN_COMMENTS'), 'index.php?option=com_biblestudy&view=comments', $vName == 'comments'
+			);
+		}
+
 		self::rendermenu(
 			JText::_('JBS_CMN_SERVERS'), 'index.php?option=com_biblestudy&view=servers', $vName == 'servers'
 		);
@@ -185,12 +193,15 @@ class JBSMBibleStudyHelper
 			JText::_('JBS_CMN_PODCASTS'), 'index.php?option=com_biblestudy&view=podcasts', $vName == 'podcasts'
 		);
 
-		self::rendermenu(
-			JText::_('JBS_CMN_TEMPLATES'), 'index.php?option=com_biblestudy&view=templates', $vName == 'templates'
-		);
-		self::rendermenu(
-			JText::_('JBS_CMN_TEMPLATECODE'), 'index.php?option=com_biblestudy&view=templatecodes', $vName == 'templatecodes'
-		);
+		if (!$simple_view)
+		{
+			self::rendermenu(
+				JText::_('JBS_CMN_TEMPLATES'), 'index.php?option=com_biblestudy&view=templates', $vName == 'templates'
+			);
+			self::rendermenu(
+				JText::_('JBS_CMN_TEMPLATECODE'), 'index.php?option=com_biblestudy&view=templatecodes', $vName == 'templatecodes'
+			);
+		}
 	}
 
 	/**
@@ -369,6 +380,7 @@ class JBSMBibleStudyHelper
 	 * @return int '1' is on '0' is off
 	 *
 	 * @since 7.1.0
+	 * @throws Exception
 	 */
 	public static function debug()
 	{
@@ -409,6 +421,7 @@ class JBSMBibleStudyHelper
 	 * @return array        Returns list of years of media files based on createdate
 	 *
 	 * @since 8.0.0
+	 * @throws Exception
 	 */
 	public static function getMediaYears()
 	{
@@ -442,6 +455,7 @@ class JBSMBibleStudyHelper
 	 * @return array  Returns list of message types
 	 *
 	 * @since 8.0.0
+	 * @throws Exception
 	 */
 	public static function getMessageTypes()
 	{
@@ -477,6 +491,7 @@ class JBSMBibleStudyHelper
 	 * @return array Returns list of years of studies based on studydate
 	 *
 	 * @since 8.0.0
+	 * @throws Exception
 	 */
 	public static function getStudyYears()
 	{
@@ -510,6 +525,7 @@ class JBSMBibleStudyHelper
 	 * @return array       Returns list of Teachers
 	 *
 	 * @since 8.0.0
+	 * @throws Exception
 	 */
 	public static function getTeachers()
 	{
@@ -545,6 +561,7 @@ class JBSMBibleStudyHelper
 	 * @return array Returns list of books
 	 *
 	 * @since 8.0.0
+	 * @throws Exception
 	 */
 	public static function getStudyBooks()
 	{
@@ -585,6 +602,7 @@ class JBSMBibleStudyHelper
 	 * @return array       Returns list of books
 	 *
 	 * @since 8.0.0
+	 * @throws Exception
 	 */
 	public static function getStudyMediaTypes()
 	{
@@ -620,6 +638,7 @@ class JBSMBibleStudyHelper
 	 * @return array       Returns list of books
 	 *
 	 * @since 8.0.0
+	 * @throws Exception
 	 */
 	public static function getStudyLocations()
 	{
@@ -718,5 +737,61 @@ class JBSMBibleStudyHelper
 	{
 		// Search forward starting from end minus needle length characters
 		return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== false);
+	}
+
+	/**
+	 * Get user ids in an object
+	 *
+	 * @return array
+	 *
+	 * @since 9.1.4
+	 * @throws Exception
+	 */
+	public static function getUsers()
+	{
+		$options = array();
+
+		$db    = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('id AS value, username AS text');
+		$query->from('#__users');
+		$query->order('id');
+
+		// Get the options.
+		$db->setQuery($query);
+
+		try
+		{
+			$options = $db->loadObjectList();
+		}
+		catch (RuntimeException $e)
+		{
+			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'worning');
+
+			return $options;
+		}
+
+		return $options;
+	}
+
+	/**
+	 * Get haf of array count
+	 *
+	 * @param   array|object  $array  Array or Object to count
+	 *
+	 * @return object
+	 *
+	 * @since 9.1.7
+	 */
+	public static function halfarray($array)
+	{
+		$count = count($array);
+
+		$return = new stdClass;
+		$return->half = floor($count / 2);
+		$return->count = $count;
+
+		return $return;
 	}
 }

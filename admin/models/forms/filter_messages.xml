@@ -27,15 +27,6 @@
 				<option value="">JBS_CMN_SELECT_YEAR</option>
 			</field>
 			<field
-					name="book"
-					type="Booklist"
-					label="JBS_CMN_SELECT_BOOK"
-					description="JBS_CMN_SELECT_BOOK_DESC"
-					onchange="this.form.submit();"
-			>
-				<option value="">JBS_CMN_SELECT_BOOK</option>
-			</field>
-			<field
 					name="teacher"
 					type="Teacherlist"
 					label="JBS_CMN_SELECT_TEACHER"

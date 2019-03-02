@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2018 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -139,8 +139,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
-	 * @since   7.1
-	 * @throws  \Exception
+	 * @throws  Exception
+	 *@since   7.1
 	 */
 	public function __construct($config = array())
 	{
@@ -154,8 +154,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 *
 	 * @return bool
 	 *
-	 * @since   7.1
-	 * @throws  \Exception
+	 * @throws  Exception
+	 *@since   7.1
 	 */
 	public function startScanning()
 	{
@@ -214,8 +214,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 *
 	 * @return boolean
 	 *
-	 * @since   7.1
-	 * @throws  \Exception
+	 * @throws  Exception
+	 *@since   7.1
 	 */
 	private function getSteps()
 	{
@@ -481,8 +481,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 *
 	 * @return boolean
 	 *
-	 * @since   7.1
-	 * @throws  \Exception
+	 * @throws  Exception
+	 *@since   7.1
 	 */
 	private function correctVersions()
 	{
@@ -524,8 +524,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 *
 	 * @return  bool
 	 *
-	 * @since   7.1.0
-	 * @throws  \Exception
+	 * @throws  Exception
+	 *@since   7.1.0
 	 */
 	private function setSchemaVersion($version, $eid)
 	{
@@ -577,6 +577,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * @return bool
 	 *
 	 * @since 7.1
+	 * @throws Exception
 	 */
 	public function run($resetTimer = true)
 	{
@@ -760,8 +761,8 @@ class BibleStudyModelInstall extends JModelLegacy
 	 *
 	 * @return bool
 	 *
-	 * @since   7.1
-	 * @throws  \Exception
+	 * @throws  Exception
+	 *@since   7.1
 	 */
 	private function RealRun()
 	{
@@ -828,7 +829,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				{
 					if (strpos($this->running, $this->version))
 					{
-						$this->totalSteps += count($this->allupdates[$this->version]);
+						$this->totalSteps += count((array) $this->allupdates[$this->version]);
 					}
 
 					// Used for Install array.
@@ -1002,7 +1003,7 @@ class BibleStudyModelInstall extends JModelLegacy
 
 			// Just finished
 			$this->resetStack();
-			$this->running = JText::_('JBS_MIGfinishED');
+			$this->running = JText::_('JBS_MIGFINISED');
 
 			return false;
 		}
@@ -1019,7 +1020,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * @return bool
 	 *
 	 * @since   7.1
-	 * @throws  \Exception
+	 * @throws  Exception
 	 */
 	private function install($files = array('install', 'install-defaults'))
 	{
@@ -1055,6 +1056,34 @@ class BibleStudyModelInstall extends JModelLegacy
 			$this->allupdates = array_merge($this->allupdates, $queries);
 		}
 
+		$component = JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.xml';
+
+		$xml = new stdClass;
+
+		if (file_exists($component))
+		{
+			$xml = simplexml_load_file($component);
+		}
+
+		// Check for corresponding PHP file and run Install
+		$migration_file = JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/updates/' . $xml->version . '.php';
+
+		if (JFile::exists($migration_file))
+		{
+			require_once $migration_file;
+			$migrationClass = "Migration" . str_ireplace(".", '', $xml->version);
+
+			if (class_exists($migrationClass))
+			{
+				$migration       = new $migrationClass;
+
+				if (function_exists($migration->postinstall_messages()))
+				{
+					$migration->postinstall_messages();
+				}
+			}
+		}
+
 		return true;
 	}
 
@@ -1064,7 +1093,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * @return bool
 	 *
 	 * @since   7.1
-	 * @throws  \Exception
+	 * @throws  Exception
 	 */
 	public function uninstall()
 	{
@@ -1158,7 +1187,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * @return boolean
 	 *
 	 * @since   7.1
-	 * @throws  \Exception
+	 * @throws  Exception
 	 */
 	private function finish($step)
 	{
@@ -1246,7 +1275,9 @@ class BibleStudyModelInstall extends JModelLegacy
 				$this->running = 'Set New Update URL';
 				break;
 			default:
-				$app->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . JText::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE'), 'message');
+				$app->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') .
+					JText::_('SIMPLEMODEMESSAGE_BODY') .
+					JText::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE'), 'message');
 				break;
 		}
 
@@ -1274,7 +1305,11 @@ class BibleStudyModelInstall extends JModelLegacy
 		$eid                   = $this->_db->loadResult();
 		$this->biblestudyEid   = $eid;
 		$message->extension_id = $this->biblestudyEid;
-		$this->_db->insertObject('#__postinstall_messages', $message);
+
+		if ($this->_db->insertObject('#__postinstall_messages', $message) !== true)
+		{
+			jexit('Bad install');
+		}
 	}
 
 	/**
@@ -1358,7 +1393,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * @return boolean
 	 *
 	 * @since   7.1.4
-	 * @throws  \Exception
+	 * @throws  Exception
 	 */
 	private function allUpdate($value)
 	{
@@ -1397,7 +1432,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			{
 				$migration       = new $migrationClass;
 
-				if (isset($migration->steps))
+				if (isset($migration->postinstall_messages))
 				{
 					$steps = $migration->steps;
 					$this->totalSteps += count($steps);
@@ -1432,7 +1467,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * @return bool
 	 *
 	 * @since   7.1
-	 * @throws  \Exception
+	 * @throws  Exception
 	 */
 	private function runUpdates($string)
 	{

@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2018 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -86,7 +86,6 @@ class JBSMTemplate
 			'[studyComments]'         => array('fieldName' => 'comments'), '[studyHits]' => array('fieldName' => 'hits'),
 			'[studyUserAdded]'        => array('fieldName' => 'user_id'),
 			'[studyLocation]'         => array('fieldName' => 'location_id'),
-			'[studyMediaDuration]'    => array('fieldName' => array('media_hours', 'media_minutes', 'media_seconds')),
 			'[studyMessageType]'      => array('fieldName' => 'messagetype'),
 			'[studySeries]'           => array('fieldName' => 'series_id'), '[studyTopic]' => array('fieldName' => 'topic_id'),
 			'[studyText]'             => array('fieldName' => 'studytext'), '[studyMedia]'

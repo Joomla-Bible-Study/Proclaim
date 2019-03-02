@@ -3,7 +3,7 @@
  * ???
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2018 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -52,7 +52,7 @@ defined('_JEXEC') or die;
 		$("#uploader").pluploadQueue({
 			// General settings
 			runtimes: 'html5,flash,silverlight,html4',
-			url: '../../../../../../media/com_biblestudy/plupload/upload.php',
+			url: '../../../../../../administrator/components/com_biblestudy/addons/servers/legacy/fields/upload.php',
 			chunk_size: '1mb',
 			rename: true,
 			dragdrop: true,
@@ -70,8 +70,8 @@ defined('_JEXEC') or die;
 			// Resize images on clientside if we can
 			resize: {width: 320, height: 240, quality: 90},
 
-			flash_swf_url: '../../../../../../media/com_biblestudy/plupload/js/Moxie.swf',
-			silverlight_xap_url: '../../../../../../media/com_biblestudy/plupload/js/Moxie.xap'
+			flash_swf_url: '../../../../../../administrator/components/com_biblestudy/addons/servers/legacy/includes/js/Moxie.swf',
+			silverlight_xap_url: '../../../../../../administrator/components/com_biblestudy/addons/servers/legacy/includes/js/Moxie.xap'
 		});
 
 	});
