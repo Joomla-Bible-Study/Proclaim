@@ -18,17 +18,17 @@ composer.lock
 /tests/system/servers/configdef.php
 /phpunit.xml
 
-com_biblestudy/admin/biblestudy.script.php
+admin/biblestudy.script.php
 
-com_biblestudy/admin/biblestudy.xml
+admin/biblestudy.xml
 
-com_biblestudy/admin/views/test/tmpl/default.php
+admin/views/test/tmpl/default.php
 
-com_biblestudy/admin/views/test/view.html.php
+admin/views/test/view.html.php
 
-com_biblestudy/admin/views/test/index.html
+admin/views/test/index.html
 
-com_biblestudy/admin/views/test/tmpl/index.html
+admin/views/test/tmpl/index.html
 
 tests/unit/.joomla-cms/
 
@@ -39,15 +39,15 @@ tests/.joomla-cms
 
 tests/test.php
 
-com_biblestudy/admin/help/
-com_biblestudy/media/css/site/
-com_biblestudy/media/google/
+admin/help/
+media/css/site/
+media/google/
 docs/namespaces/
 docs/packages/
 *.html
 /bin/
-com_biblestudy/media/css/biblestudy.css.map
-com_biblestudy/media/css/general.css.map
+media/css/biblestudy.css.map
+media/css/general.css.map
 node_modules/yui-compressor/
 package-lock.json
 /node_modules/
