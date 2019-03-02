@@ -49,3 +49,5 @@ joomla/web.config.txt
 vendor/simplepi
 e/simplepie/demo/cli_test.php
 /vendor/
+.DS_Store
+node_modules/
