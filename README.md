@@ -1,4 +1,4 @@
-CWM - Proclaim
+CWM Proclaim
 ==================
 
 Status
@@ -14,14 +14,14 @@ Status
     <tr>
         <td align="center"><a href="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study" target="_blank"><img src="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=development"/></a></td>
         <td align="center">Development</td>
-        <td align="center">9.2.1</td>
+        <td align="center">9.3.0</td>
         <td align="center">TBD</td>
         <td align="center">3.8+</td>
     </tr>
     <tr>
         <td align="center"><a href="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study" target="_blank"><img src="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=master"/></a></td>
         <td align="center">Master</td>
-        <td align="center">9.2.0/td>
+        <td align="center">9.2.0</td>
         <td align="center">Feb 27, 2019</td>
         <td align="center">3.8+</td>
     </tr>
@@ -31,7 +31,7 @@ Status
 
 Overview
 --------
-CWM - Proclaim is a Joomla!® component written by a team of webservants to further the teaching of God's Word. The component displays information about your church's Bible Studies or sermons in a wide variety of ways. Proclaim is flexible, customizable, and powerful. Easy to configure templates give you the maximum amount of choices. Show only what you want in whatever way you want.
+Proclaim is a Joomla!® component written by a team of webservants to further the teaching of God's Word. The component displays information about your church's Bible Studies or sermons in a wide variety of ways. Proclaim is flexible, customizable, and powerful. Easy to configure templates give you the maximum amount of choices. Show only what you want in whatever way you want.
 
 Embed YouTube videos, play audio, show study notes - even create your own html display pages. You can have multiple locations, series, podcasting, and sharing with social media sites. Please see the example pages for just some of what Bible Study can do for your church - and the best part is the component is completely free. Support is top notch, and also free. Bottom line: we want to help you spread the gospel.
 
