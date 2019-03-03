@@ -12,14 +12,14 @@ Status
         <th>Joomla Version</th>
     </tr>
     <tr>
-        <td align="center"><a href="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study" target="_blank"><img src="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=development"/></a></td>
+        <td align="center"><a href="https://travis-ci.com/Joomla-Bible-Study/Joomla-Bible-Study" target="_blank"><img src="https://travis-ci.com/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=development"/></a></td>
         <td align="center">Development</td>
         <td align="center">9.3.0</td>
         <td align="center">TBD</td>
         <td align="center">3.8+</td>
     </tr>
     <tr>
-        <td align="center"><a href="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study" target="_blank"><img src="https://travis-ci.org/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=master"/></a></td>
+        <td align="center"><a href="https://travis-ci.com/Joomla-Bible-Study/Joomla-Bible-Study" target="_blank"><img src="https://travis-ci.com/Joomla-Bible-Study/Joomla-Bible-Study.png?branch=master"/></a></td>
         <td align="center">Master</td>
         <td align="center">9.2.0</td>
         <td align="center">Feb 27, 2019</td>
