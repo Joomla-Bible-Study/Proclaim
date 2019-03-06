@@ -18,7 +18,7 @@ $JBSMListing = new JBSMListing;
 
 // Load CSS framework for displaying properly.
 JHtml::_('biblestudy.framework');
-JHtml::_('biblestudy.loadCss', $this->params, null, 'font-awesome');
+JHtml::_('biblestudy.loadCss', $params, null, 'font-awesome');
 
 ?>
 <div class="container-fluid JBSM">
