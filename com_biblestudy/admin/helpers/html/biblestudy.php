@@ -103,7 +103,7 @@ abstract class JHtmlBiblestudy
 			JHtml::stylesheet($url);
 		}
 
-		if ($extra == 'font-awesome')
+		if ($extra === 'font-awesome')
 		{
 			JHtml::script('https://use.fontawesome.com/releases/v5.5.0/js/all.js',
 				[],
