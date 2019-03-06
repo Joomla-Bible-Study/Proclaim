@@ -3,7 +3,7 @@
  * Form sub backup
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2018 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -20,8 +20,8 @@ foreach ($fieldSets as $name => $fieldSet)
 		if (isset($fieldSet->description) && trim($fieldSet->description))
 		{
 			?>
-			<p><?php echo $this->escape(JText::_($fieldSet->description)); ?></p>
-		<?php
+			<h3><?php echo $this->escape(JText::_($fieldSet->description)); ?></h3>
+			<?php
 		}
 		foreach ($this->form->getFieldset($name) as $field)
 		{
@@ -30,7 +30,7 @@ foreach ($fieldSets as $name => $fieldSet)
 				<div class="control-label"><?php echo $field->label; ?></div>
 				<div class="controls"><?php echo $field->input; ?></div>
 			</div>
-		<?php
+			<?php
 		}
 	}
 	else
@@ -44,10 +44,10 @@ foreach ($fieldSets as $name => $fieldSet)
 					<div class="control-label"><?php echo $field->label; ?></div>
 					<div class="controls"><?php echo $field->input; ?></div>
 				</div>
-			<?php
+				<?php
 			}
 			?>
 		</div>
-	<?php
+		<?php
 	}
 }

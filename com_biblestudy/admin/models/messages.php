@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2018 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -32,6 +32,8 @@ class BiblestudyModelMessages extends JModelList
 		{
 			$config['filter_fields'] = array(
 				'id', 'study.id',
+				'publish_up', 'study.publish_up',
+				'publish_down', 'study.publish_down',
 				'published', 'study.published',
 				'studydate', 'study.studydate',
 				'studytitle', 'study.studytitle',
@@ -119,12 +121,20 @@ class BiblestudyModelMessages extends JModelList
 	{
 		$app = JFactory::getApplication('administrator');
 
+		$forcedLanguage = $app->input->get('forcedLanguage', '', 'cmd');
+
 		// Adjust the context to support modal layouts.
 		$layout = $app->input->get('layout');
 
 		if ($layout)
 		{
 			$this->context .= '.' . $layout;
+		}
+
+		// Adjust the context to support forced languages.
+		if ($forcedLanguage)
+		{
+			$this->context .= '.' . $forcedLanguage;
 		}
 
 		// Load the parameters.
@@ -163,9 +173,6 @@ class BiblestudyModelMessages extends JModelList
 
 		parent::populateState('study.studydate', 'desc');
 
-		// Force a language
-		$forcedLanguage = $app->input->get('forcedLanguage');
-
 		if (!empty($forcedLanguage))
 		{
 			$this->setState('filter.language', $forcedLanguage);
@@ -189,8 +196,9 @@ class BiblestudyModelMessages extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select',
-				'study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
-                        study.verse_begin, study.chapter_end, study.verse_end, study.ordering, study.hits, study.alias, study.language, study.access'
+				'study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin' .
+				', study.verse_begin, study.chapter_end, study.verse_end, study.ordering, study.hits, study.alias' .
+				', study.language, study.access, study.publish_up, study.publish_down'
 			)
 		);
 		$query->from('#__bsms_studies AS study');
@@ -297,14 +305,6 @@ class BiblestudyModelMessages extends JModelList
 				$search = $db->quote('%' . $db->escape($search, true) . '%');
 				$query->where('(study.studytitle LIKE ' . $search . ' OR study.alias LIKE ' . $search . ')');
 			}
-		}
-
-		// Filter by book
-		$book = $this->getState('filter.book');
-
-		if (is_numeric($book))
-		{
-			$query->where('(study.booknumber = ' . (int) $book . ' OR study.booknumber2 = ' . (int) $book . ')');
 		}
 
 		// Filter by location

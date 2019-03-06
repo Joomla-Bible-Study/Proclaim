@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2018 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -46,11 +46,6 @@ class BiblestudyViewPopup extends JViewLegacy
 	 *
 	 * @since 7.0 */
 	public $date;
-
-	/** @var  string Length
-	 *
-	 * @since 7.0 */
-	public $length;
 
 	/** @var  string Series Thumbnail
 	 *
@@ -200,7 +195,6 @@ class BiblestudyViewPopup extends JViewLegacy
 		 *  The popup window call the counter function
 		 */
 		$this->getMedia->hitPlay($mediaid);
-		$this->length = $JBSMListing->getDuration($this->params, $this->media);
 
 		$images                 = new JBSMImages;
 		$seriesimage            = $images->getSeriesThumbnail($this->media->series_thumbnail);
@@ -276,18 +270,18 @@ class BiblestudyViewPopup extends JViewLegacy
 			$this->autostart = 'false';
 		}
 
-		$this->headertext = $this->titles($this->params->get('popuptitle'), $this->media, $this->scripture, $this->date, $this->length);
+		$this->headertext = $this->titles($this->params->get('popuptitle'), $this->media, $this->scripture, $this->date);
 
 		if ($this->params->get('itempopuptitle'))
 		{
-			$this->headertext = $this->titles($this->params->get('itempopuptitle'), $this->media, $this->scripture, $this->date, $this->length);
+			$this->headertext = $this->titles($this->params->get('itempopuptitle'), $this->media, $this->scripture, $this->date);
 		}
 
-		$this->footertext = $this->titles($this->params->get('popupfooter'), $this->media, $this->scripture, $this->date, $this->length);
+		$this->footertext = $this->titles($this->params->get('popupfooter'), $this->media, $this->scripture, $this->date);
 
 		if ($this->params->get('itempopupfooter'))
 		{
-			$this->footertext = $this->titles($this->params->get('itempopupfooter'), $this->media, $this->scripture, $this->date, $this->length);
+			$this->footertext = $this->titles($this->params->get('itempopupfooter'), $this->media, $this->scripture, $this->date);
 		}
 
 		parent::display($tpl);
@@ -300,13 +294,12 @@ class BiblestudyViewPopup extends JViewLegacy
 	 * @param   object  $media      Media info
 	 * @param   string  $scripture  scripture
 	 * @param   string  $date       Date
-	 * @param   string  $length     Length of Title
 	 *
 	 * @return object
 	 *
 	 * @since 7.0
 	 */
-	private function titles($text, $media, $scripture, $date, $length)
+	private function titles($text, $media, $scripture, $date)
 	{
 		if (isset($media->teachername))
 		{
@@ -326,11 +319,6 @@ class BiblestudyViewPopup extends JViewLegacy
 		if (isset($media->studyintro))
 		{
 			$text = str_replace('{{description}}', $media->studyintro, $text);
-		}
-
-		if (isset($length))
-		{
-			$text = str_replace('{{length}}', $length, $text);
 		}
 
 		if (isset($media->studytitle))

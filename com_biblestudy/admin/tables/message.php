@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2018 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -249,33 +249,6 @@ class TableMessage extends JTable
 	 * @since 9.0.0
 	 */
 	public $studyintro = null;
-
-	/**
-	 * Media Hours
-	 *
-	 * @var int
-	 *
-	 * @since 9.0.0
-	 */
-	public $media_hours = null;
-
-	/**
-	 * Media Minutes
-	 *
-	 * @var int
-	 *
-	 * @since 9.0.0
-	 */
-	public $media_minutes = null;
-
-	/**
-	 * Media seconds
-	 *
-	 * @var int
-	 *
-	 * @since 9.0.0
-	 */
-	public $media_seconds = null;
 
 	/**
 	 * MessageType

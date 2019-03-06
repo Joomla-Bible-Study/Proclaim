@@ -18,7 +18,7 @@
 		</fieldset>
 	</fields>
 	<fields name="media">
-		<fieldset name="details" label="JBS_ADDON_LEGACY_DETAILS">
+		<fieldset name="details" label="JBS_ADDON_LEGACY_MEDIA_TYPE_DEF">
 			<field name="link_type" type="list" extension="com_biblestudy"
 			       label="JBS_MED_SHOW_DOWNLOAD_ICON" description="JBS_MED_SHOW_DOWNLOAD_ICON_DESC"
 			       class="inputbox" default="">
@@ -73,15 +73,8 @@
 				<option value="btn-danger">JBS_MED_DANGER</option>
 			</field>
 			<field name="media_button_color" type="color" description="JBS_ADDON_LEGACY_BUTTON_COLOR_DESC" label="JBS_ADDON_LEGACY_BUTTON_COLOR"/>
-			<field name="media_icon_type" type="list" class="inputbox" default="" label="JBS_ADDON_LEGACY_ICON_TYPE"
+			<field name="media_icon_type" type="icontype" class="inputbox" default="" label="JBS_ADDON_LEGACY_ICON_TYPE"
 				   description="JBS_ADDON_LEGACY_ICON_TYPE_DESC">
-				<option value="fa fa-play">JBS_MED_PLAY</option>
-				<option value="fa fa-youtube">JBS_MED_YOUTUBE</option>
-				<option value="fa fa-video-camera">JBS_MED_VIDEO</option>
-				<option value="fa fa-television">JBS_MED_BROADCAST</option>
-				<option value="fa fa-file">JBS_MED_FILE</option>
-				<option value="fa fa-vimeo">JBS_MED_VIMEO</option>
-				<option value="1">JBS_MED_CUSTOM</option>
 			</field>
 			<field name="media_custom_icon" type="text" default="" label="JBS_ADDON_LEGACY_CUSTOM_ICON" description="JBS_ADDON_LEGACY_CUSTOM_ICON_DESC" />
 			<field name="media_icon_text_size" type="text" default="24" label="JBS_ADDON_LEGACY_FONT_SIZE" description="JBS_ADDON_LEGACY_FONT_SIZE_DESC" />

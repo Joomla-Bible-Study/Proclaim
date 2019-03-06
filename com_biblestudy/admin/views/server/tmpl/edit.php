@@ -3,7 +3,7 @@
  * Form
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2018 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -149,13 +149,13 @@ $input = $app->input;
 		<div class="span3 form-vertical">
 			<h4>
 				<?php
-                if (!is_null($this->item->id)) {echo $this->escape($this->item->addon->name); }
+                if (isset($this->item->id) && isset($this->itemaddon)) {echo $this->escape($this->item->addon->name); }
 				?>
 			</h4>
 
 			<p>
 				<?php
-                if (!is_null($this->item->id)) {echo $this->escape($this->item->addon->description);}
+                if (isset($this->item->id) && isset($this->itemaddon)) {echo $this->escape($this->item->addon->description);}
 				?>
 			</p>
 		</div>
