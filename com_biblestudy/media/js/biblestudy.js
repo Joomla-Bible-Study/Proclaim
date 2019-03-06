@@ -145,6 +145,7 @@ jQuery(document).ready(function () {
 		alert('this is the teacher list setup');
 	}
 });
+
 function goTo() {
 	var sE = null, url;
 	if (document.getElementById) {
@@ -156,6 +157,7 @@ function goTo() {
 		location.href = url;
 	}
 }
+
 function ReverseDisplay() {
 	var ele = document.getElementById("scripture");
 	var text = document.getElementById("heading");
@@ -172,14 +174,63 @@ function ReverseDisplay() {
 function HideContent(d) {
 	document.getElementById(d).style.display = "none";
 }
+
 function ShowContent(d) {
 	document.getElementById(d).style.display = "block";
 }
+
 function ReverseDisplay2(d) {
 	if (document.getElementById(d).style.display == "none") {
 		document.getElementById(d).style.display = "block";
 	}
 	else {
 		document.getElementById(d).style.display = "none";
+	}
+}
+
+function decOnly(i) {
+	var t = i.value;
+	if (t.length > 0) {
+		t = t.replace(/[^\d\.]+/g, '');
+	}
+	var s = t.split('.');
+	if (s.length > 1) {
+		s[1] = s[0] + '.' + s[1];
+		s.shift(s);
+	}
+	i.value = s.join('');
+}
+
+function bandwidth(bytees, type) {
+	var value = bytees;
+	var res;
+	if (!isNaN(value) && (value != '')) {
+		if (type == "KB")
+			value *= 1024;
+		else if (type == "MB")
+			value *= [Math.pow(1024, 2)];
+		else if (type == "GB")
+			value *= [Math.pow(1024, 3)];
+		else
+			return "error";
+
+		res = parseInt(value);
+		return res;
+	}
+	else {
+		return "error";
+	}
+}
+
+function transferFileSize() {
+	var size = document.getElementById('Text1').value;
+	var ty = document.getElementById('Select1').value;
+	var ss = bandwidth(size, ty);
+	if (ss == "error") {
+		alert("Numbers only please.");
+		return false;
+	} else {
+		document.getElementById('jform_params_size').value = ss;
+		return true;
 	}
 }

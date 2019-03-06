@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2018 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -333,21 +333,16 @@ class BiblestudyController extends JControllerLegacy
 	 */
 	public function playHit()
 	{
+		// Check for request forgeries.
+		JSession::checkToken('get') or jexit(JText::_('JINVALID_TOKEN'));
+
 		$input    = new JInput;
 		$getMedia = new JBSMMedia;
 		$getMedia->hitPlay($input->get('id', '', 'int'));
-	}
 
-	/**
-	 * This function is supposed to generate the Media Player that is requested via AJAX
-	 * from the sermons view "default.php". It has not been implemented yet, so its not used.
-	 *
-	 * @return void
-	 *
-	 * @since    7.0.0
-	 */
-	public function inlinePlayer()
-	{
-		echo('{m4vremote}http://www.livingwatersweb.com/video/John_14_15-31.m4v{/m4vremote}');
+		$this->redirect = base64_decode($input->getCmd('return'));
+		$this->redirect();
+
+		return;
 	}
 }

@@ -1,7 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <media>
 	<fields name="params">
-		<fieldset name="details" label="JBS_ADDON_LEGACY_DETAILS">
+		<fieldset name="general" addfieldpath="/administrator/components/com_biblestudy/addons/servers/legacy/fields">
+			<field name="filename"
+			       type="plupload"
+			       handler="upload"
+			       label="JBS_MED_FILENAME"
+			       description="JBS_MED_USE_FILENAME_AS_PATH"
+			       class="inputbox required"
+			       required="true"/>
+			<field name="size" type="filesize" label="JBS_CMN_FILESIZE"
+			       description="JBS_MED_FILESIZE_DESC" class="inputbox" size="15"/>
+		</fieldset>
+		<fieldset name="parameters1">
+			<field name="special" type="list" label="JBS_MED_LINK_TARGET"
+			       description="JBS_MED_LINK_TARGET_DESC" class="inputbox" size="15" default="">
+				<option value="">JGLOBAL_USE_GLOBAL</option>
+				<option value="_blank">JBS_MED_LINK_TARGET_BLANK</option>
+				<option value="_self">JBS_MED_LINK_TARGET_SELF</option>
+				<option value="_parent">JBS_MED_LINK_TARGET_PARENT</option>
+				<option value="_top">JBS_MED_LINK_TARGET_TOP</option>
+			</field>
 			<field name="link_type" type="list" extension="com_biblestudy"
 			       label="JBS_MED_SHOW_DOWNLOAD_ICON" description="JBS_MED_SHOW_DOWNLOAD_ICON_DESC"
 			       class="inputbox" size="1" default="">
@@ -10,8 +29,6 @@
 				<option value="1">JBS_MED_SHOW_DOWNLOAD_ICON</option>
 				<option value="2">JBS_MED_SHOW_ONLY_DOWNLOAD_ICON</option>
 			</field>
-		</fieldset>
-		<fieldset name="files_settings" label="JBS_ADDON_LEGACY_FILE_SETTINGS">
 			<field name="player" type="list" label="JBS_MED_PLAYER"
 			       description="JBS_MED_PLAYER_DESC" class="inputbox" size="1" default="">
 				<option value="">JGLOBAL_USE_GLOBAL</option>
@@ -30,41 +47,24 @@
 				<option value="3">JBS_CMN_SQUEEZEBOX</option>
 			</field>
 		</fieldset>
-		<fieldset name="media_files" label="JBS_ADDON_LEGACY_MEDIA_FILES" addfieldpath="/administrator/components/com_biblestudy/addons/servers/legacy/fields">
-			<field name="filename"
-			       type="plupload"
-			       handler="upload"
-			       label="JBS_MED_FILENAME"
-			       description="JBS_MED_USE_FILENAME_AS_PATH"
-			       class="inputbox required"
-			       required="true"/>
-			<field name="size" type="filesize" label="JBS_CMN_FILESIZE"
-			       description="JBS_MED_FILESIZE_DESC" class="inputbox" size="15"/>
-			<field name="special" type="list" label="JBS_MED_LINK_TARGET"
-			       description="JBS_MED_LINK_TARGET_DESC" class="inputbox" size="15" default="">
-				<option value="">JGLOBAL_USE_GLOBAL</option>
-				<option value="_blank">JBS_MED_LINK_TARGET_BLANK</option>
-				<option value="_self">JBS_MED_LINK_TARGET_SELF</option>
-				<option value="_parent">JBS_MED_LINK_TARGET_PARENT</option>
-				<option value="_top">JBS_MED_LINK_TARGET_TOP</option>
-			</field>
-		</fieldset>
-		<fieldset name="media_type" label="JBS_ADDON_LEGACY_MEDIA_TYPE">
+		<fieldset name="parameters2" label="JBS_ADDON_LOCAL_MEDIA_PARAMETERS">
 			<field name="media_image" type="media" directory="biblestudy"
 			       label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
 			       class="inputbox span6">
 			</field>
-			<field name="media_use_button_icon" label="JBS_ADDON_LEGACY_MEDIA_USE_BUTTON"
-			       description="JBS_ADDON_LEGACY_MEDIA_USE_BUTTON_DESC" class="inputbox" type="list" size="15" default="">
+			<field name="media_use_button_icon" label="JBS_ADDON_LOCAL_MEDIA_USE_BUTTON"
+			       description="JBS_ADDON_MEDIA_USE_BUTTON_DESC" class="inputbox" type="list" size="15" default="">
 				<option value="-1">JBS_MED_SERVER_OPTIONS</option>
 				<option value="">JBS_MED_NONE</option>
 				<option value="1">JBS_MED_BUTTON_ONLY</option>
 				<option value="2">JBS_MED_BUTTON_AND_ICON</option>
 				<option value="3">JBS_MED_ICON_ONLY</option>
 			</field>
-			<field name="media_button_text" type="text" default="Audio" label="JBS_ADDON_LEGACY_BUTTON_TEXT" description="JBS_ADDON_LEGACY_BUTTON_TEXT_DESC"/>
-			<field name="media_button_type" type="list" class="inputbox" size="15" default="" label="JBS_ADDON_LEGACY_BUTTON_TYPE"
-			       description="JBS_ADDON_LEGACY_BUTTON_TYPE_DESC">
+			<field name="media_button_text" type="text" default="Audio" label="JBS_ADDON_LOCAL_BUTTON_TEXT"
+			       description="JBS_ADDON_LOCAL_BUTTON_TEXT_DESC"/>
+			<field name="media_button_type" type="list" class="inputbox" size="15" default=""
+			       label="JBS_ADDON_LOCAL_BUTTON_TYPE"
+			       description="JBS_ADDON_LOCAL_BUTTON_TYPE_DESC">
 				<option value="btn-link">JBS_MED_NO_COLOR</option>
 				<option value="btn-primary">JBS_MED_PRIMARY</option>
 				<option value="btn-success">JBS_MED_SUCCESS</option>
@@ -72,25 +72,20 @@
 				<option value="btn-warning">JBS_MED_WARNING</option>
 				<option value="btn-danger">JBS_MED_DANGER</option>
 			</field>
-			<field name="media_button_color" type="color" description="JBS_ADDON_LEGACY_BUTTON_COLOR_DESC" label="JBS_ADDON_LEGACY_BUTTON_COLOR"/>
-			<field name="media_icon_type" type="list" class="inputbox" size="15" default="" label="JBS_ADDON_LEGACY_ICON_TYPE"
-			       description="JBS_ADDON_LEGACY_ICON_TYPE_DESC">
-				<option value="fa fa-play">JBS_MED_PLAY</option>
-				<option value="fa fa-youtube">JBS_MED_YOUTUBE</option>
-				<option value="fa fa-video-camera">JBS_MED_VIDEO</option>
-				<option value="fa fa-television">JBS_MED_BROADCAST</option>
-				<option value="fa fa-file">JBS_MED_FILE</option>
-				<option value="fa fa-vimeo">JBS_MED_VIMEO</option>
-				<option value="1">JBS_MED_CUSTOM</option>
+			<field name="media_button_color" type="color" description="JBS_ADDON_LOCAL_BUTTON_COLOR_DESC"
+			       label="JBS_ADDON_LOCAL_BUTTON_COLOR"/>
+			<field name="media_icon_type" type="icontype" class="inputbox" size="15" default=""
+			       label="JBS_ADDON_LOCAL_ICON_TYPE"
+			       description="JBS_ADDON_LOCAL_ICON_TYPE_DESC">
 			</field>
-			<field name="media_custom_icon" type="text" default="" label="JBS_ADDON_LEGACY_CUSTOM_ICON" description="JBS_ADDON_LEGACY_CUSTOM_ICON_DESC"/>
-			<field name="media_icon_text_size" type="text" default="24" label="JBS_ADDON_LEGACY_FONT_SIZE" description="JBS_ADDON_LEGACY_FONT_SIZE_DESC"/>
+			<field name="media_custom_icon" type="text" default="" label="JBS_ADDON_LOCAL_CUSTOM_ICON"
+			       description="JBS_ADDON_LOCAL_CUSTOM_ICON_DESC"/>
+			<field name="media_icon_text_size" type="text" default="24" label="JBS_ADDON_LOCAL_FONT_SIZE"
+			       description="JBS_ADDON_LOCAL_FONT_SIZE_DESC"/>
 			<field name="mime_type" type="mimetype" extension="com_biblestudy"
 			       label="JBS_MED_CHOOSE_MIMETYPE" description="JBS_MED_CHOOSE_MIMETYPE_DESC"
 			       class="inputbox" default="">
 			</field>
-		</fieldset>
-		<fieldset name="parameters" label="JBS_ADDON_LEGACY_PARAMETERS">
 			<field name="playerwidth" default="" type="text" label="JBS_MED_PLAYERWIDTH"
 			       description="JBS_MED_PLAYERWIDTH_DESC"/>
 			<field name="playerheight" default="" type="text"

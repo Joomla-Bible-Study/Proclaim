@@ -96,7 +96,6 @@
 			</field>
 		</fieldset>
 		<fieldset name="FILTERS">
-
 			<field name="teacher_id" type="sql"
 			       query="SELECT * FROM #__bsms_teachers WHERE published = 1"
 			       key_field="id" value_field="teachername" default="-1" multiple="true"
@@ -808,7 +807,8 @@
 			</field>
 			<field name="tslistcolor1" type="color" default="" label="JBS_TPL_LISTCOLOR1" description="JBS_TPL_LISTCOLOR_DESC"/>
 			<field name="tslistcolor2" type="color" default="" label="JBS_TPL_LISTCOLOR2" description="JBS_TPL_LISTCOLOR_DESC"/>
-			<field type="spacer" name="myspacer30" hr="true"/>
+		</fieldset>
+		<fieldset name="TEACHERDISPLAY" addfieldpath="/administrator/components/com_biblestudy/models/fields">
 			<field name="tsteacherrow" type="rowoptions" size="1" default="1" label="JBS_CMN_TEACHER" description="JBS_TPL_ROW_DESC"/>
 			<field name="tsteachercol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
 			<field name="tsteachercolspan" type="spanoptions" default="2" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
@@ -924,7 +924,8 @@
 				<option value="1">JBS_TPL_USE_HEADER_ROW</option>
 			</field>
 			<field name="teacherdisplay_color" type="color" label="JBS_TPL_SERIESDISPLAY_COLOR" description="JBS_TPL_SERIESDISPLAY_COLOR"/>
-			<field type="spacer" name="myspacer40" hr="true"/>
+		</fieldset>
+		<fieldset name="TEACHERDETAILSDISPALY" addfilepath="/administrator/components/com_biblestudy/models/fields">
 			<field name="tdteacherrow" type="rowoptions" size="1" default="1" label="JBS_CMN_TEACHER" description="JBS_TPL_ROW_DESC"/>
 			<field name="tdteachercol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
 			<field name="tdteachercolspan" type="spanoptions" default="2" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
@@ -1047,9 +1048,6 @@
 				<option value="0">JBS_CMN_HIDE</option>
 				<option value="1">JBS_CMN_SHOW</option>
 			</field>
-			<field name="show_page_image_series" type="media" directory="/" size="60"
-			       label="JBS_TPL_SERIES_SHOW_PAGE_IMAGE_SERIES"
-			       description="JBS_TPL_SERIES_SHOW_PAGE_IMAGE_SERIES_DESC"/>
 			<field name="series_element" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 			<field name="use_headers_series" type="list" default="1"
 			       label="JBS_TPL_LISTITEMS_USE_HEADERS_LIST" description="JBS_TPL_LISTITEMS_USE_HEADERS_LIST_DESC">
@@ -1111,7 +1109,11 @@
 				<option value="pull-left">JBS_TPL_PULLLEFT</option>
 				<option value="pull-right">JBS_TPL_PULLRIGHT</option>
 			</field>
-			<field type="spacer" name="myspacer23" hr="true"/>
+			<field name="show_page_image_series" type="media" directory="/"
+			       label="JBS_TPL_SERIES_SHOW_PAGE_IMAGE_SERIES"
+			       description="JBS_TPL_SERIES_SHOW_PAGE_IMAGE_SERIES_DESC"/>
+		</fieldset>
+		<fieldset name="SERIESDISPALY" addfieldpath="/administrator/components/com_biblestudy/models/fields">
 			<field name="sseriesrow" type="rowoptions" size="1" default="2" label="JBS_TPL_SERIESTITLE" description="JBS_TPL_ROW_DESC"/>
 			<field name="sseriescol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
 			<field name="sseriescolspan" type="spanoptions" default="6" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
@@ -1207,7 +1209,9 @@
 				<option value="0">JBS_CMN_HIDE</option>
 				<option value="1">JBS_CMN_SHOW</option>
 			</field>
-			<field type="spacer" name="myspacer24" hr="true"/>
+		</fieldset>
+		<fieldset name="SERIESDETAILDISPALY"
+		          addfieldpath="/administrator/components/com_biblestudy/models/fields">
 			<field name="sdseriesrow" type="rowoptions" size="1" default="2" label="JBS_TPL_SERIESTITLE" description="JBS_TPL_ROW_DESC"/>
 			<field name="sdseriescol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
 			<field name="sdseriescolspan" type="spanoptions" default="6" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>

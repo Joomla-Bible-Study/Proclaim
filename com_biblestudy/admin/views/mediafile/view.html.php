@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2018 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -52,6 +52,10 @@ class BiblestudyViewMediafile extends JViewLegacy
 	 * @since    7.0.0 */
 	protected $options;
 
+	/** @var object
+	 * @since    9.1.3 */
+	protected $addon;
+
 	/**
 	 * Execute and display a template script.
 	 *
@@ -72,6 +76,9 @@ class BiblestudyViewMediafile extends JViewLegacy
 		$this->state        = $this->get("State");
 		$this->canDo        = JBSMBibleStudyHelper::getActions($this->item->id, 'mediafile');
 		$this->admin_params = $this->state->get('admin');
+
+		// Load the addon
+		$this->addon = JBSMAddon::getInstance($this->media_form->type);
 
 		$options       = $app->input->get('options');
 		$this->options = new stdClass;
@@ -112,9 +119,6 @@ class BiblestudyViewMediafile extends JViewLegacy
 
 		// Set the toolbar
 		$this->addToolbar();
-
-		// Set the document
-		$this->setDocument();
 
 		// Display the template
 		return parent::display($tpl);
@@ -174,19 +178,5 @@ class BiblestudyViewMediafile extends JViewLegacy
 
 		JToolbarHelper::divider();
 		JToolbarHelper::help('biblestudy', true);
-	}
-
-	/**
-	 * Add the page title to browser.
-	 *
-	 * @return void
-	 *
-	 * @since    7.1.0
-	 */
-	protected function setDocument()
-	{
-		$isNew    = ($this->item->id < 1);
-		$document = JFactory::getDocument();
-		$document->setTitle($isNew ? JText::_('JBS_TITLE_MEDIA_FILES_CREATING') : JText::sprintf('JBS_TITLE_MEDIA_FILES_EDITING', $this->item->id));
 	}
 }

@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2018 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -39,6 +39,7 @@ class JBSMHelper
 	 * @return string
 	 *
 	 * @since  9.0.0
+	 * @throws Exception
 	 */
 	public static function getTooltip($row, $params, $template)
 	{
@@ -136,7 +137,7 @@ class JBSMHelper
 
 		try
 		{
-			$headers = get_headers($url, true);
+			$headers = @get_headers($url, true);
 		}
 		catch (Exception $e)
 		{
@@ -333,5 +334,33 @@ class JBSMHelper
 		}
 
 		return $url;
+	}
+
+	/**
+	 * Get Simple View Sate
+	 *
+	 * @param   Registry  $params  AdminTable + parametors
+	 * @param   string    $simple  Not Used right now
+	 *
+	 * @return int
+	 *
+	 * @since 9.1.6
+	 * @throws Exception
+	 */
+	public static function getSimpleView($params = null, $simple = null)
+	{
+		if (is_null($params))
+		{
+			$params = JBSMParams::getAdmin();
+		}
+
+		$simple = $params->params->get('simple_mode');
+
+		if ($simple)
+		{
+					return 1;
+		}
+
+		return 0;
 	}
 }

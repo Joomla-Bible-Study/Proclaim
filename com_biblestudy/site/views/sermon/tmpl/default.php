@@ -3,7 +3,7 @@
  * Default
  *
  * @package    BibleStudy.Site
- * @copyright  2007 - 2018 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -12,9 +12,13 @@ defined('_JEXEC') or die;
 ?>
 <div class="container-fluid"> <!-- This div is the container for the whole page --><?php
 
-	if ($this->item->params->get('sermontemplate'))
+	if ($this->item->params->get('sermontemplate') && !$this->simple_mode)
 	{
 		echo $this->loadTemplate($this->item->params->get('sermontemplate'));
+	}
+    elseif ($this->simple_mode == 1)
+	{
+		echo $this->loadTemplate('simple');
 	}
 	else
 	{

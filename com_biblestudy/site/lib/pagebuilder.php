@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2018 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -37,6 +37,7 @@ class JBSMPageBuilder
 	 * @return object
 	 *
 	 * @since 7.0
+	 * @throws Exception
 	 */
 	public function buildPage($item, $params, $template)
 	{
@@ -87,8 +88,7 @@ class JBSMPageBuilder
 			$page->scripture2 = '';
 		}
 
-		// Duration
-		$page->duration  = $JBSMElements->getDuration($params, $item);
+		// Study Date
 		$page->studydate = $JBSMElements->getStudyDate($params, $item->studydate);
 
 		// Translate Topics.
@@ -235,6 +235,7 @@ class JBSMPageBuilder
 	 * @return string
 	 *
 	 * @since 7.0
+	 * @throws Exception
 	 */
 	private function mediaBuilder($mediaids, $params, $template, $item)
 	{
@@ -315,34 +316,17 @@ class JBSMPageBuilder
 	 * @return array
 	 *
 	 * @since 7.0
+	 * @throws Exception
 	 */
 	public function studyBuilder($whereitem = null, $wherefield = null, $params = null, $limit = 10, $order = 'DESC', $template = null)
 	{
-		$app  = JFactory::getApplication();
 		$db   = JFactory::getDbo();
 
-		$teacher          = $params->get('teacher_id');
-		$topic            = $params->get('topic_id');
-		$book             = $params->get('booknumber');
-		$series           = $params->get('series_id');
-		$locations        = $params->get('locations');
-		$condition        = $params->get('condition');
-		$messagetype_menu = $params->get('messagetype');
-		$year             = $params->get('year');
 		$orderparam       = $params->get('order', '1');
 
 		if ($orderparam == 2)
 		{
 			$order = "ASC";
-		}
-
-		if ($condition > 0)
-		{
-			$condition = ' AND ';
-		}
-		else
-		{
-			$condition = ' OR ';
 		}
 
 		// Compute view access permissions.
@@ -352,14 +336,14 @@ class JBSMPageBuilder
 		$query = $db->getQuery(true);
 		$query->select('study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
 		                study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.studyintro,
-		                study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, study.media_hours, study.media_minutes, ' .
+		                study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, ' .
 			// Use created if modified is 0
 			'CASE WHEN study.modified = ' . $db->quote($db->getNullDate()) . ' THEN study.studydate ELSE study.modified END as modified, ' .
 			'study.modified_by, uam.name as modified_by_name,' .
 			// Use created if publish_up is 0
 			'CASE WHEN study.publish_up = ' . $db->quote($db->getNullDate()) . ' THEN study.studydate ELSE study.publish_up END as publish_up,' .
 			'study.publish_down,
-		                study.media_seconds, study.series_id, study.download_id, study.thumbnailm, study.thumbhm, study.thumbwm,
+		                study.series_id, study.download_id, study.thumbnailm, study.thumbhm, study.thumbwm,
 		                study.access, study.user_name, study.user_id, study.studynumber, study.chapter_begin2, study.chapter_end2,
 		                study.verse_end2, study.verse_begin2, ' . ' ' . $query->length('study.studytext') . ' AS readmore' . ','
 			. ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug ');
