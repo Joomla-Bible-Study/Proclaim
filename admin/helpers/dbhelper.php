@@ -347,7 +347,7 @@ class JBSMDbHelper
 	 * @return boolean
 	 *
 	 * @throws  Exception
-	 *@since   7.1.0
+	 * @since   7.1.0
 	 */
 	public static function fixupcss($filename, $parent, $newcss, $id = null)
 	{

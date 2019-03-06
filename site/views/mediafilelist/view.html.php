@@ -69,7 +69,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 	 * @return  mixed
 	 *
 	 * @throws Exception
-	 *@since 7.0
+	 * @since 7.0
 	 */
 	public function display($tpl = null)
 	{
@@ -124,7 +124,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 	 * @return void
 	 *
 	 * @throws Exception
-	 *@since 7.0
+	 * @since 7.0
 	 */
 	protected function _prepareDocument()
 	{

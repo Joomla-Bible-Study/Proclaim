@@ -81,6 +81,7 @@ class BiblestudyViewMediafileform extends JViewLegacy
 	 * @return  mixed
 	 *
 	 * @since 7.0
+	 * @throws Exception
 	 */
 	public function display($tpl = null)
 	{
@@ -159,6 +160,9 @@ class BiblestudyViewMediafileform extends JViewLegacy
 	 * Prepares the document
 	 *
 	 * @return void
+	 *
+	 * @since 9.0.0
+	 * @throws Exception
 	 */
 	protected function _prepareDocument()
 	{

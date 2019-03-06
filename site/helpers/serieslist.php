@@ -133,7 +133,7 @@ class JBSMSerieslist extends JBSMListing
 	 * @return string
 	 *
 	 * @throws  Exception
-	 *@since    8.0
+	 * @since   8.0
 	 */
 	public function getSeriesstudiesExp($id, $params, $template)
 	{
@@ -223,7 +223,7 @@ class JBSMSerieslist extends JBSMListing
 	 * @return array
 	 *
 	 * @throws  Exception
-	 *@since    8.0
+	 * @since   8.0
 	 */
 	public function getSeriesstudiesDBO($id, $params, $limit = null)
 	{

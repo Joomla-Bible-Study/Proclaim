@@ -40,7 +40,7 @@ class BiblestudyController extends JControllerLegacy
 	 * 'view_path' (this list is not meant to be comprehensive).
 	 *
 	 * @throws  Exception
-	 *@since    7.0.0
+	 * @since    7.0.0
 	 */
 	public function __construct($config = array())
 	{
@@ -73,12 +73,10 @@ class BiblestudyController extends JControllerLegacy
 	 * @return  JControllerLegacy|bool  A JControllerLegacy object to support chaining.
 	 *
 	 * @throws  Exception
-	 *@since   7.0.0
+	 * @since   7.0.0
 	 */
-	public function display($cachable = false, $urlparams = array())
+	public function display($cachable = true, $urlparams = array())
 	{
-		$cachable = true;
-
 		/* Set the default view name and format from the Request.
 		   Note we are using a_id to avoid collisions with the router and the return page.
 		   Frontend is a bit messier than the backend. */
@@ -88,12 +86,12 @@ class BiblestudyController extends JControllerLegacy
 
 		$user = JFactory::getUser();
 
-		if ($vName == 'popup')
+		if ($vName === 'popup')
 		{
 			$cachable = false;
 		}
 
-		if ($user->get('id') || ($_SERVER['REQUEST_METHOD'] == 'POST' && ($vName == 'archive')))
+		if ($user->get('id') || ($_SERVER['REQUEST_METHOD'] === 'POST' && ($vName === 'archive')))
 		{
 			$cachable = false;
 		}
@@ -129,7 +127,7 @@ class BiblestudyController extends JControllerLegacy
 		);
 
 		// Check for edit form.
-		if ($vName == 'form' && !$this->checkEditId('com_biblestudy.edit.message', $id))
+		if ($vName === 'form' && !$this->checkEditId('com_biblestudy.edit.message', $id))
 		{
 			// Somehow the person just went to the form - we don't allow that.
 			JFactory::getApplication()->enqueueMessage(JText::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id), 'error');
@@ -148,7 +146,7 @@ class BiblestudyController extends JControllerLegacy
 	 * @return boolean|void
 	 *
 	 * @throws   Exception
-	 *@since    7.0.0
+	 * @since    7.0.0
 	 */
 	public function comment()
 	{
@@ -224,7 +222,7 @@ class BiblestudyController extends JControllerLegacy
 	 * @return void
 	 *
 	 * @throws   Exception
-	 *@since    7.0.0
+	 * @since    7.0.0
 	 */
 	public function commentsEmail($params)
 	{
@@ -293,7 +291,7 @@ class BiblestudyController extends JControllerLegacy
 	{
 		$task = $this->input->get('task');
 
-		if ($task == 'download')
+		if ($task === 'download')
 		{
 			$mid        = $this->input->get('mid', '0', 'int');
 			$downloader = new JBSMDownload;
@@ -314,7 +312,7 @@ class BiblestudyController extends JControllerLegacy
 	{
 		$task = $this->input->get('task', '', 'cmd');
 
-		if ($task == 'avplayer')
+		if ($task === 'avplayer')
 		{
 			$mediacode       = $this->input->get('code', '', 'string');
 			$this->mediaCode = $mediacode;

@@ -28,8 +28,8 @@ class BiblestudyViewArchive extends JViewLegacy
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
 	 * @throws Exception
-	 *@since   11.1
-	 * @see     JViewLegacy::loadTemplate()
+	 * @since  11.1
+	 * @see    JViewLegacy::loadTemplate()
 	 */
 	public function display($tpl = null)
 	{
@@ -50,7 +50,7 @@ class BiblestudyViewArchive extends JViewLegacy
 	 * @return null
 	 *
 	 * @throws Exception
-	 *@since 7.0.0
+	 * @since  7.0.0
 	 */
 	protected function addToolbar()
 	{

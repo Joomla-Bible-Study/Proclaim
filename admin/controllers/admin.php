@@ -590,7 +590,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 * @return void
 	 *
 	 * @throws  Exception
-	 *@since   7.1.0
+	 * @since   7.1.0
 	 */
 	public function dbReset()
 	{
@@ -744,7 +744,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 * @return void
 	 *
 	 * @throws  Exception
-	 *@since   7.1.0
+	 * @since   7.1.0
 	 */
 	public function import()
 	{

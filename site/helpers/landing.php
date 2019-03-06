@@ -29,7 +29,7 @@ class JBSMLanding
 	 * @return string
 	 *
 	 * @throws   Exception
-	 *@since    8.0.0
+	 * @since    8.0.0
 	 */
 	public function getLocationsLandingPage($params, $id = 0)
 	{
@@ -225,7 +225,7 @@ class JBSMLanding
 	 * @return string
 	 *
 	 * @throws   Exception
-	 *@since    8.0.0
+	 * @since    8.0.0
 	 */
 	public function getTeacherLandingPage($params, $id = 0)
 	{
@@ -436,7 +436,7 @@ class JBSMLanding
 	 * @return string
 	 *
 	 * @throws   Exception
-	 *@since    8.0.0
+	 * @since    8.0.0
 	 */
 	public function getSeriesLandingPage($params, $id = 0)
 	{
@@ -659,7 +659,7 @@ class JBSMLanding
 	 * @return string
 	 *
 	 * @throws   Exception
-	 *@since    8.0.0
+	 * @since    8.0.0
 	 */
 	public function getYearsLandingPage($params, $id = 0)
 	{
@@ -795,7 +795,7 @@ class JBSMLanding
 	 * @return string
 	 *
 	 * @throws   Exception
-	 *@since    8.0.0
+	 * @since    8.0.0
 	 */
 	public function getTopicsLandingPage($params, $id = 0)
 	{
@@ -933,7 +933,7 @@ class JBSMLanding
 	 * @return string
 	 *
 	 * @throws   Exception
-	 *@since    8.0.0
+	 * @since    8.0.0
 	 */
 	public function getMessageTypesLandingPage($params, $id = 0)
 	{

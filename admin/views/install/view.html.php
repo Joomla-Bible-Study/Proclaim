@@ -98,7 +98,7 @@ class BiblestudyViewInstall extends JViewLegacy
 	 * @return null|void
 	 *
 	 * @throws  Exception
-	 *@since   7.0.0
+	 * @since   7.0.0
 	 */
 	public function display($tpl = null)
 	{
@@ -212,7 +212,7 @@ class BiblestudyViewInstall extends JViewLegacy
 	 * @return null
 	 *
 	 * @throws Exception
-	 *@since 7.0.0
+	 * @since  7.0.0
 	 *
 	 */
 	protected function addToolbar()
