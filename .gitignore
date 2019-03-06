@@ -1,6 +1,4 @@
 # Created by .ignore support plugin (hsz.mobi)
-### Example user template template
-### Example user template
 
 # IntelliJ project files
 .idea
@@ -128,3 +126,6 @@ vendor/symfony/
 vendor/twig/
 vendor/zendframework/
 vendor/zetacomponents/
+Would skip repository vendor/pear/pear_exception/
+Would skip repository vendor/pear/versioncontrol_git/
+vendor/simplepie/simplepie/demo/cli_test.php
