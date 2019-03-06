@@ -15,9 +15,14 @@ $show_link = $params->get('show_link', 1);
 JLoader::register('JBSMHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . 'helper.php');
 JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/listing.php');
 $JBSMListing = new JBSMListing;
+
+// Load CSS framework for displaying properly.
+JHtml::_('biblestudy.framework');
+JHtml::_('biblestudy.loadCss', $this->params, null, 'font-awesome');
+
 ?>
 <div class="container-fluid JBSM">
-	<?php if (($params->get('pageheader')))
+	<?php if ($params->get('pageheader'))
 	{
 		?>
 		<div class="row-fluid">
