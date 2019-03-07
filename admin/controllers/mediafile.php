@@ -39,7 +39,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 	 * @return  mixed  True if the record can be added, a error object if not.
 	 *
 	 * @throws  Exception
-	 *@since   12.2
+	 * @since   12.2
 	 */
 	public function add()
 	{
@@ -66,7 +66,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 	 * @return  bool
 	 *
 	 * @throws  Exception
-	 *@since   9.0.0
+	 * @since   9.0.0
 	 */
 	public function edit($key = null, $urlVar = null)
 	{
@@ -143,7 +143,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 	 * @return  boolean  True if access level checks pass, false otherwise.
 	 *
 	 * @throws  Exception
-	 *@since   12.2
+	 * @since   12.2
 	 */
 	public function cancel($key = null)
 	{
@@ -203,7 +203,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 	 * @return  void
 	 *
 	 * @throws  Exception
-	 *@since   9.0.0
+	 * @since   9.0.0
 	 */
 	public function setServer()
 	{
@@ -236,14 +236,14 @@ class BiblestudyControllerMediafile extends JControllerForm
 	 * @return    void
 	 *
 	 * @throws   Exception
-	 *@since    3.1
+	 * @since    3.1
 	 */
 	protected function postSaveHook(JModelLegacy $model, $validData = array())
 	{
 		$return = $this->input->getCmd('return');
 		$task   = $this->input->get('task');
 
-		if ($return && $task != 'apply')
+		if ($return && $task !== 'apply')
 		{
 			JFactory::getApplication()->enqueueMessage(JText::_('JBS_MED_SAVE'), 'message');
 			$this->setRedirect(base64_decode($return));

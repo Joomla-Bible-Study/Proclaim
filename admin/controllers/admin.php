@@ -36,7 +36,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 * @return void
 	 *
 	 * @throws  Exception
-	 *@since   7.0.0
+	 * @since   7.0.0
 	 */
 	public function tools()
 	{
@@ -567,8 +567,8 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 *
 	 * @return void
 	 *
-	 * @since    7.1.0
-	 * @throws \Exception
+	 * @since   7.1.0
+	 * @throws  Exception
 	 */
 	public function fix()
 	{
@@ -590,7 +590,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 * @return void
 	 *
 	 * @throws  Exception
-	 *@since   7.1.0
+	 * @since   7.1.0
 	 */
 	public function dbReset()
 	{
@@ -634,7 +634,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 * @return void
 	 *
 	 * @throws  Exception
-	 *@since   7.0.0
+	 * @since   7.0.0
 	 */
 	public function doimport($parent = true)
 	{
@@ -690,7 +690,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 * @return boolean
 	 *
 	 * @throws  Exception
-	 *@since   7.0.0
+	 * @since   7.0.0
 	 */
 	public function copyTables($oldprefix)
 	{
@@ -744,7 +744,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 * @return void
 	 *
 	 * @throws  Exception
-	 *@since   7.1.0
+	 * @since   7.1.0
 	 */
 	public function import()
 	{

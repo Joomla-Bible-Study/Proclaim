@@ -198,7 +198,7 @@ class BiblestudyViewDatabase extends JViewLegacy
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
 	 * @throws  Exception
-	 *@since   9.0.14
+	 * @since   9.0.14
 	 * @see     fetch()
 	 */
 	public function display($tpl = null)
@@ -281,7 +281,7 @@ class BiblestudyViewDatabase extends JViewLegacy
 	 * @return void
 	 *
 	 * @throws Exception
-	 *@since 9.0.14
+	 * @since 9.0.14
 	 */
 	protected function addToolbar()
 	{

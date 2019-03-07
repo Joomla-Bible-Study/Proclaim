@@ -140,7 +140,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
 	 * @throws  Exception
-	 *@since   7.1
+	 * @since   7.1
 	 */
 	public function __construct($config = array())
 	{
@@ -155,7 +155,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * @return bool
 	 *
 	 * @throws  Exception
-	 *@since   7.1
+	 * @since   7.1
 	 */
 	public function startScanning()
 	{
@@ -215,7 +215,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * @return boolean
 	 *
 	 * @throws  Exception
-	 *@since   7.1
+	 * @since   7.1
 	 */
 	private function getSteps()
 	{
@@ -482,7 +482,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * @return boolean
 	 *
 	 * @throws  Exception
-	 *@since   7.1
+	 * @since   7.1
 	 */
 	private function correctVersions()
 	{
@@ -525,7 +525,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * @return  bool
 	 *
 	 * @throws  Exception
-	 *@since   7.1.0
+	 * @since   7.1.0
 	 */
 	private function setSchemaVersion($version, $eid)
 	{
@@ -762,7 +762,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	 * @return bool
 	 *
 	 * @throws  Exception
-	 *@since   7.1
+	 * @since   7.1
 	 */
 	private function RealRun()
 	{

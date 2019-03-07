@@ -84,7 +84,7 @@ class BiblestudyViewMessageform extends JViewLegacy
 	 * @return  mixed
 	 *
 	 * @throws  Exception
-	 *@since   9.0.0
+	 * @since   9.0.0
 	 */
 	public function display($tpl = null)
 	{
@@ -145,7 +145,7 @@ class BiblestudyViewMessageform extends JViewLegacy
                     animateDropdown: false,
                     preventDuplicates: true,
                     allowFreeTagging: true,
-                    prePopulate: " . $this->get('topics') . "
+                    prePopulate: '" . $this->get('topics') . "'
                 });
             });
              ";
@@ -167,7 +167,7 @@ class BiblestudyViewMessageform extends JViewLegacy
 	 * @return void
 	 *
 	 * @throws Exception
-	 *@since 7.0
+	 * @since 7.0
 	 */
 	protected function _prepareDocument()
 	{
