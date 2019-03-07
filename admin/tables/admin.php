@@ -108,7 +108,38 @@ class TableAdmin extends JTable
 			// Convert the params field to a string.
 			$parameter = new Registry;
 			$parameter->loadArray($array['params']);
+			$params = $parameter->toArray();
 			$array['params'] = (string) $parameter;
+		}
+		// If simple mode, check and rename some files to hide menus
+		$views = array();
+		$views[] = 'landingpage';
+		$views[] = 'podcastdisplay';
+		$views[] = 'podcastlist';
+		$views[] = 'seriesdisplay';
+		$views[] = 'seriesdisplays';
+		$views[] = 'sermon';
+		$views[] = 'teacher';
+		$views[] = 'teachers';
+		if ($params['simple_mode'] == 1)
+		{
+			//Go through each folder and change content of default.xml to add the hidden value to the layout tag
+			foreach ($views as $view)
+			{
+				$filecontents = file_get_contents(JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/'.$view.'/tmpl/default.xml');
+				$filecontents = str_replace('layout','layout hidden="true"',$filecontents);
+				file_put_contents(JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/'.$view.'/tmpl/default.xml', $filecontents);
+			}
+		}
+		//Remove the hidden value from the layout tag
+		if ($params['simple_mode'] == 0)
+		{
+			foreach ($views as $view)
+			{
+				$filecontents = file_get_contents(JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/'.$view.'/tmpl/default.xml');
+				$filecontents = str_replace('hidden="true"','',$filecontents);
+				file_put_contents(JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/'.$view.'/tmpl/default.xml', $filecontents);
+			}
 		}
 
 		// Bind the rules.
