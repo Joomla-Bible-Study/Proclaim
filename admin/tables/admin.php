@@ -127,7 +127,7 @@ class TableAdmin extends JTable
 			foreach ($views as $view)
 			{
 				$filecontents = file_get_contents(JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/'.$view.'/tmpl/default.xml');
-				$filecontents = str_replace('layout','layout hidden="true"',$filecontents);
+				$filecontents = str_replace('<layout ','<layout hidden="true "',$filecontents);
 				file_put_contents(JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/'.$view.'/tmpl/default.xml', $filecontents);
 			}
 		}
@@ -137,7 +137,7 @@ class TableAdmin extends JTable
 			foreach ($views as $view)
 			{
 				$filecontents = file_get_contents(JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/'.$view.'/tmpl/default.xml');
-				$filecontents = str_replace('hidden="true"','',$filecontents);
+				$filecontents = str_replace('hidden="true "','',$filecontents);
 				file_put_contents(JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/'.$view.'/tmpl/default.xml', $filecontents);
 			}
 		}
