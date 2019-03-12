@@ -128,8 +128,11 @@ if ($url)
 }
 
 $pageclass_sfx = $params->get('pageclass_sfx');
-
-if ($params->get('moduletemplate'))
+if ($params->get('simple_mode') == 1)
+{
+	$template = 'default_simple';
+}
+elseif ($params->get('moduletemplate') && !$params->get('simple_mode'))
 {
 	$template = 'default_' . $params->get('moduletemplate');
 }
