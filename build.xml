@@ -15,23 +15,17 @@
 	<property name="dest.test" value="/admin/views/test"/>
 
 	<target name="init" description="Create artifact directories">
-		<mkdir dir="${basedir}/build/packages"/>
 		<mkdir dir="${basedir}/build/reports"/>
 		<mkdir dir="${basedir}/docs"/>
-		<mkdir dir="${basedir}/build/packages/component"/>
-		<mkdir dir="${basedir}/build/packages/modules"/>
-		<mkdir dir="${basedir}/build/packages/plugins"/>
 	</target>
 
 	<!-- List of all files that are packaged and distributed -->
 	<fileset dir="${basedir}" id="distributed_files">
-		<include name="com_biblestudy/**/*.php"/>
-		<include name="mod_biblestudy/**/*.php"/>
-		<include name="mod_biblestudy_podcast/**/*.php"/>
-		<include name="plg_biblestudy_backup/**/*.php"/>
-		<include name="plg_biblestudy_finder/**/*.php"/>
-		<include name="plg_biblestudy_podcast/**/*.php"/>
-		<include name="plg_biblestudhy_search/**/*.php"/>
+		<include name="admin/**/*.php"/>
+		<include name="media/**/*.php"/>
+		<include name="modules/**/*.php"/>
+		<include name="plugins/**/*.php"/>
+		<include name="site/**/*.php"/>
 		<exclude name=".git"/>
 	</fileset>
 
@@ -101,35 +95,22 @@
 		</phpmd>
 	</target>
 
-	<!-- Build distributable package -->
-	<target name="package" depends="dev.clean,init,package.component" description="Builds the whole component, including modules and plugins">
-
-		<!-- Stage the package -->
-		<mkdir dir="${basedir}/build/packages/_tmp"/>
-		<copy todir="${basedir}/build/packages/_tmp/packages">
-			<mapper type="flatten"/>
-			<fileset dir="${basedir}/build/packages">
-				<include name="component/*.zip"/>
-				<include name="plugins/*.zip"/>
-				<include name="modules/*.zip"/>
-			</fileset>
-		</copy>
-		<copy todir="${basedir}/build/packages/_tmp">
-			<fileset dir="${basedir}/build">
-				<include name="pkg_proclaim_package.xml"/>
-				<include name="script.php"/>
-			</fileset>
-		</copy>
-
-		<!-- Create the archive -->
-		<delete file="${basedir}/build/packages/pkg_proclaim.zip"/>
-		<zip destfile="${basedir}/build/packages/pkg_proclaim.zip" basedir="${basedir}/build/packages/_tmp"/>
-	</target>
-
 	<!-- Create com_proclaim.zip -->
-	<target name="package.component" depends="init,dev.clean" description="Builds the component">
-		<delete file="${basedir}/build/packages/component/com_proclaim.zip"/>
-		<zip destfile="${basedir}/build/packages/component/com_proclaim.zip" basedir="${basedir}/com_biblestudy"/>
+	<target name="component" depends="init,dev.clean" description="Builds the component">
+		<delete file="${basedir}/build/com_proclaim.zip"/>
+		<zip destfile="${basedir}/build/com_proclaim.zip" basedir="${basedir}">
+			<fileset defaultexcludes="true" dir=".">
+				<include name="admin/**" />
+				<include name="media/**" />
+				<include name="modules/**" />
+				<include name="plugins/**" />
+				<include name="site/**" />
+				<include name="*.php" />
+				<include name="*.xml" />
+				<include name="*.txt" />
+				<include name="*.md" />
+			</fileset>
+		</zip>
 		<!--Reset back to a development state-->
 		<phingcall target="dev.init"/>
 	</target>
@@ -208,15 +189,15 @@
 		<echo message="Linking component to Joomla!"/>
 
 		<!-- Create symbolic links for component in the Joomla directory -->
-		<symlink target="/media" link="${joomla_path}${joomla_dir}/media/com_biblestudy" overwrite="true"/>
-		<symlink target="/admin" link="${joomla_path}${joomla_dir}/administrator/components/com_biblestudy" overwrite="true"/>
-		<symlink target="/site" link="${joomla_path}${joomla_dir}/components/com_biblestudy" overwrite="true"/>
-		<symlink target="/modules/site/mod_biblestudy" link="${joomla_path}${joomla_dir}/modules/mod_biblestudy" overwrite="true"/>
-		<symlink target="/modules/site/mod_biblestudy_podcast" link="${joomla_path}${joomla_dir}/modules/mod_biblestudy_podcast" overwrite="true"/>
-		<symlink target="/plugins/system/jbsbackup" link="${joomla_path}${joomla_dir}/plugins/system/jbsbackup" overwrite="true"/>
-		<symlink target="/plugins/finder/biblestudy" link="${joomla_path}${joomla_dir}/plugins/finder/biblestudy" overwrite="true"/>
-		<symlink target="/plugins/system/jbspodcast" link="${joomla_path}${joomla_dir}/plugins/system/jbspodcast" overwrite="true"/>
-		<symlink target="/plugins/search/biblestudysearch" link="${joomla_path}${joomla_dir}/plugins/search/biblestudysearch" overwrite="true"/>
+		<symlink target="${basedir}/media" link="${joomla_path}${joomla_dir}/media/com_biblestudy" overwrite="true"/>
+		<symlink target="${basedir}/admin" link="${joomla_path}${joomla_dir}/administrator/components/com_biblestudy" overwrite="true"/>
+		<symlink target="${basedir}/site" link="${joomla_path}${joomla_dir}/components/com_biblestudy" overwrite="true"/>
+		<symlink target="${basedir}/modules/site/mod_biblestudy" link="${joomla_path}${joomla_dir}/modules/mod_biblestudy" overwrite="true"/>
+		<symlink target="${basedir}/modules/site/mod_biblestudy_podcast" link="${joomla_path}${joomla_dir}/modules/mod_biblestudy_podcast" overwrite="true"/>
+		<symlink target="${basedir}/plugins/system/jbsbackup" link="${joomla_path}${joomla_dir}/plugins/system/jbsbackup" overwrite="true"/>
+		<symlink target="${basedir}/plugins/finder/biblestudy" link="${joomla_path}${joomla_dir}/plugins/finder/biblestudy" overwrite="true"/>
+		<symlink target="${basedir}/plugins/system/jbspodcast" link="${joomla_path}${joomla_dir}/plugins/system/jbspodcast" overwrite="true"/>
+		<symlink target="${basedir}/plugins/search/biblestudysearch" link="${joomla_path}${joomla_dir}/plugins/search/biblestudysearch" overwrite="true"/>
 
 		<phingcall target="dev.init"/>
 	</target>
@@ -224,15 +205,10 @@
 	<!-- Create symbolic links for the development state -->
 	<target name="dev.init">
 		<echo message="Initializing a development state"/>
-		<symlink target="/biblestudy.xml" link="/admin/biblestudy.xml" overwrite="true"/>
-		<symlink target="/biblestudy.script.php" link="/admin/biblestudy.script.php" overwrite="true"/>
-		<mkdir dir="/media/css/site"/>
-		<symlink target="/media/css/biblestudy.css" link="/media/css/site/biblestudy.css" overwrite="true"/>
-
-		<!-- Not sure what this does -->
-		<!--<copy todir="${dest.test}">-->
-		<!--<fileset dir="${src.test}" includes="**"/>-->
-		<!--</copy>-->
+		<symlink target="${basedir}/biblestudy.xml" link="${basedir}/admin/biblestudy.xml" overwrite="true"/>
+		<symlink target="${basedir}/biblestudy.script.php" link="${basedir}/admin/biblestudy.script.php" overwrite="true"/>
+		<mkdir dir="${basedir}/media/css/site"/>
+		<symlink target="${basedir}/media/css/biblestudy.css" link="${basedir}/media/css/site/biblestudy.css" overwrite="true"/>
 	</target>
 
 	<!-- Clean up symbolic links from the development state -->
