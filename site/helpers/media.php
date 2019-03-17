@@ -323,7 +323,9 @@ class JBSMMedia
 				}
 				else
 				{
-					$icon = $imageparams->get('media_icon_type', 'fa fa-play');
+					$icon = $imageparams->get('media_icon_type', 'fas fa-play');
+					//Check for fa youtube tag, change to fab
+					$icon = str_replace('fa fa-youtube','fab fa-youtube', $icon);
 				}
 
 				$mediaimage = '<div  type="button" class="btn ' . $button . '" title="' . $buttontext . '" ' . $color . '><span class="' .
@@ -337,7 +339,9 @@ class JBSMMedia
 				}
 				else
 				{
-					$icon = $imageparams->get('media_icon_type', 'fa fa-play');
+					$icon = $imageparams->get('media_icon_type', 'fas fa-play');
+					//Check for fa-youtube tag, change to fab
+					$icon = str_replace('fa fa-youtube','fab fa-youtube', $icon);
 				}
 
 				$mediaimage = '<span class="' . $icon . '" title="' . $buttontext . '" style="font-size:' . $textsize . 'px;"></span>';
