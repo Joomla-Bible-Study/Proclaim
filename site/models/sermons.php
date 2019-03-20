@@ -379,7 +379,7 @@ class BiblestudyModelSermons extends JModelList
 			$this->getState(
 				'list.select', 'study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
 		                study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.studyintro,
-		                study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, ' .
+		                study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, study.studytext, ' .
 				// Use created if modified is 0
 				'CASE WHEN study.modified = ' . $db->quote($db->getNullDate()) . ' THEN study.studydate ELSE study.modified END as modified, ' .
 				'study.modified_by, uam.name as modified_by_name,' .
@@ -863,6 +863,15 @@ class BiblestudyModelSermons extends JModelList
 			$query->where('study.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
 		}
 
+		// Adding in search strings
+		// Filter: like / search
+		$search = $this->getState('filter.search');
+
+		if (!empty($search))
+		{
+			$like = $db->quote('%' . $search . '%');
+			$query->where('study.studytitle LIKE ' . $like . ' OR study.studytext LIKE ' . $like . ' OR study.studyintro LIKE ' .$like . ' OR series.series_text LIKE ' .$like . ' OR series.description LIKE ' .$like . ' OR t.topic_text LIKE ' . $like);
+		}
 		// Add the list ordering clause.
 		$orderCol  = $this->state->get('list.fullordering');
 		$orderDirn = '';

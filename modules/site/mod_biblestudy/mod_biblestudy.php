@@ -126,7 +126,7 @@ if ($url)
 {
 	$document->addStyleSheet($url);
 }
-
+JHtml::_('biblestudy.loadCss', $params, null, 'font-awesome');
 $pageclass_sfx = $params->get('pageclass_sfx');
 if ($params->get('simple_mode') == 1)
 {
