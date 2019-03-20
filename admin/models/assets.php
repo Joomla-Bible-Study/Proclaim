@@ -73,7 +73,7 @@ class BibleStudyModelAssets extends JModelLegacy
 	/**
 	 * Start Looking though the Versions
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
 	 * @since 7.0
 	 */
@@ -150,7 +150,7 @@ class BibleStudyModelAssets extends JModelLegacy
 	 *
 	 * @param   bool  $resetTimer  If the time must be reset
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
 	 * @since 7.0
 	 */
@@ -230,7 +230,7 @@ class BibleStudyModelAssets extends JModelLegacy
 	/**
 	 * Loads the Versions/SQL/After stack from the session
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
 	 * @since 7.0
 	 */
@@ -276,7 +276,7 @@ class BibleStudyModelAssets extends JModelLegacy
 	/**
 	 * Makes sure that no more than 5 seconds since the start of the timer have elapsed
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
 	 * @since 7.0
 	 */
@@ -291,7 +291,7 @@ class BibleStudyModelAssets extends JModelLegacy
 	/**
 	 * Start the Run through the Pre Versions then SQL files then After PHP functions.
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
 	 * @since 7.0
 	 */

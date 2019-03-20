@@ -27,7 +27,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	 * @param   string  $prefix  The prefix for the PHP class name
 	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return bool|JModelLegacy
+	 * @return boolean|JModelLegacy
 	 *
 	 * @since 7.0.0
 	 */
@@ -41,7 +41,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	/**
 	 * Import Template
 	 *
-	 * @return bool|JControllerLegacy
+	 * @return boolean|JControllerLegacy
 	 *
 	 * @since 8.0
 	 */
@@ -297,7 +297,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	/**
 	 * Export the Template
 	 *
-	 * @return bool|JControllerLegacy
+	 * @return boolean|JControllerLegacy
 	 *
 	 * @since 8.0
 	 */

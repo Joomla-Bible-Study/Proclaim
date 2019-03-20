@@ -90,7 +90,7 @@ class JBSMThumbnail
 	 * @param   string  $path  Path to file
 	 * @param   string  $file  file to check
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
 	 * @since 9.0
 	 */

@@ -439,7 +439,7 @@ class JBSMMedia
 	 * @param   string  $path  Path to file
 	 * @param   string  $alt   Accessibility string
 	 *
-	 * @return bool|string
+	 * @return boolean|string
 	 *
 	 * @since 9.0.0
 	 */

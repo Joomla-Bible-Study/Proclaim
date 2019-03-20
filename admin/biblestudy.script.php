@@ -1,1 +1,0 @@
-/Users/Tom/Documents/JBS/Joomla-Bible-Study/biblestudy.script.php

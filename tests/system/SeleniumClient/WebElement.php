@@ -65,19 +65,19 @@ class WebElement
 
 	/**
 	 * Gets whether element is selected
-	 * @return Boolean
+	 * @return boolean
 	 */
 	public function isSelected() { return $this->_driver->webElementIsSelected($this->_elementId); }
 	
 	/**
 	 * Gets whether element is displayed
-	 * @return Boolean
+	 * @return boolean
 	 */
 	public function isDisplayed() { return $this->_driver->webElementIsDisplayed($this->_elementId); }
 	
 	/**
 	 * Gets whether element is enabled
-	 * @return Boolean
+	 * @return boolean
 	 */
 	public function isEnabled() { return $this->_driver->webElementIsEnabled($this->_elementId); }
 	

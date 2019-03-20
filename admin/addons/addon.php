@@ -131,7 +131,7 @@ abstract class JBSMAddon
 	 * @param   string  $type    ?
 	 * @param   array   $config  ?
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
 	 * @since   9.0.0
 	 */

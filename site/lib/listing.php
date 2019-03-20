@@ -2383,7 +2383,7 @@ class JBSMListing
 	 * @param   int     $height  Height
 	 * @param   string  $class   CSS Class
 	 *
-	 * @return bool|stdClass
+	 * @return boolean|stdClass
 	 *
 	 * @since 9.0.0
 	 */

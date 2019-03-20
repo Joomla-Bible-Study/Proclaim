@@ -148,7 +148,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * Get the media form
 	 *
-	 * @return bool|mixed
+	 * @return boolean|mixed
 	 *
 	 * @throws Exception
 	 *

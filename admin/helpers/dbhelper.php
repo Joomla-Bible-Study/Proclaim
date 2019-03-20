@@ -33,7 +33,7 @@ class JBSMDbHelper
 	 *
 	 * @param   string  $cktable  Table to check for exp:"#__bsms_admin
 	 *
-	 * @return bool  If table is there True else False if not.
+	 * @return boolean  If table is there True else False if not.
 	 *
 	 * @since 7.0
 	 */

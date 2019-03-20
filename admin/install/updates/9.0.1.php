@@ -20,7 +20,7 @@ class Migration901
 	 *
 	 * @param   JDatabaseDriver  $db  Joomla Data bass driver
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
 	 * @since 9.0.1
 	 */

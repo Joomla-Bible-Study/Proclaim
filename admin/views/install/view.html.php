@@ -159,7 +159,7 @@ class BiblestudyViewInstall extends JViewLegacy
 	/**
 	 * Loads the Versions/SQL/After stack from the session
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
 	 * @since    7.0.0
 	 */

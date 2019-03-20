@@ -650,7 +650,7 @@
   var Modal = function ( content, options ) {
     this.options = $.extend({}, $.fn.modal.defaults, options)
     this.$element = $(content)
-      .delegate('[data-dismiss="modal"]', 'modal', $.proxy(this.hide, this))
+      .delegate('[data-dismiss="modal"]', 'click.dismiss.modal', $.proxy(this.hide, this))
   }
 
   Modal.prototype = {
@@ -783,11 +783,11 @@
   function escape() {
     var that = this
     if (this.isShown && this.options.keyboard) {
-      $(document).on('modal', function (e ) {
+      $(document).on('keyup.dismiss.modal', function ( e ) {
         e.which == 27 && that.hide()
       })
     } else if (!this.isShown) {
-      $(document).off('modal')
+      $(document).off('keyup.dismiss.modal')
     }
   }
 
@@ -818,7 +818,7 @@
   * ============== */
 
   $(function () {
-    $('body').on('modal.data-api', '[data-toggle="modal"]', function (e ) {
+    $('body').on('click.modal.data-api', '[data-toggle="modal"]', function ( e ) {
       var $this = $(this), href
         , $target = $($this.attr('data-target') || (href = $this.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '')) //strip for ie7
         , option = $target.data('modal') ? 'toggle' : $.extend({}, $target.data(), $this.data())

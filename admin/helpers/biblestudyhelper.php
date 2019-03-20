@@ -713,7 +713,7 @@ class JBSMBibleStudyHelper
 	 * @param   string  $haystack  String to search.
 	 * @param   string  $needle    What to search for.
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
 	 * @since 1.5
 	 */
@@ -729,7 +729,7 @@ class JBSMBibleStudyHelper
 	 * @param   string  $haystack  String to search.
 	 * @param   string  $needle    What to search for.
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
 	 * @since 1.5
 	 */

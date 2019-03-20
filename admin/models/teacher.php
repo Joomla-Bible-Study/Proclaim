@@ -150,7 +150,7 @@ class BiblestudyModelTeacher extends JModelAdmin
 	 *
 	 * @param   array  $data  Data
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
 	 * @since 9.0.0
 	 */

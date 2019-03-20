@@ -23,7 +23,7 @@ class Migration701
 	 *
 	 * @param   JDatabaseDriver  $db  Data bass driver
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
 	 * @since 9.0.0
 	 */

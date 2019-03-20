@@ -19,11 +19,12 @@ jimport('joomla.filesystem.file');
 class Com_BiblestudyInstallerScript
 {
 	/** @var string The component's name
-	 * @since 1.5 */
+	 * @since 1.5
+	 */
 	protected $biblestudy_extension = 'com_biblestudy';
-    protected $xml;
-    protected $srcxml;
-    protected $status;
+	protected $xml;
+	protected $srcxml;
+	protected $status;
 
 	/** @var string Path to Mysql files
 	 * @since 1.5
@@ -58,10 +59,9 @@ class Com_BiblestudyInstallerScript
 
 	/**
 	 * The list of extra modules and plugins to install
-	 *
-	 * @author CWM Team
 	 * @var   array $_installation_queue Array of Items to install
-	 * @since 9.0.18
+	 * @author CWM Team
+	 * @since  9.0.18
 	 */
 	private $installation_queue = [
 		// -- modules => { (folder) => { (module) => { (position), (published) } }* }*
@@ -77,6 +77,9 @@ class Com_BiblestudyInstallerScript
 		],
 	];
 
+	/**
+	 * @var array $extensions test
+	 */
 	protected $extensions = array('dom', 'gd', 'json', 'pcre', 'SimpleXML');
 
 	/**
@@ -184,7 +187,7 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @param   JInstallerFile  $parent  ?
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
 	 * @since 1.5
 	 */
@@ -198,7 +201,7 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @param   JInstallerFile  $parent  ?
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
 	 * @since 1.5
 	 */
@@ -212,10 +215,10 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @param   JInstallerFile  $parent  ?
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
-	 * @since 1.5
 	 * @throws Exception
+	 * @since 1.5
 	 */
 	public function uninstall($parent)
 	{
@@ -232,8 +235,8 @@ class Com_BiblestudyInstallerScript
 		// Uninstall sub-extensions
 		$this->_uninstallSubextensions($parent);
 
-        // Show the post-uninstalling page
-        $this->_renderPostUninstallation($status = null, $parent);
+		// Show the post-uninstalling page
+		$this->_renderPostUninstallation($status = null, $parent);
 
 		return true;
 	}
@@ -260,8 +263,8 @@ class Com_BiblestudyInstallerScript
 			JFolder::copy('/media/com_biblestudy/images', 'images/biblestudy/', JPATH_SITE, true);
 		}
 
-        // Install subextensions
-        $this->_installSubextensions($parent);
+		// Install subextensions
+		$this->_installSubextensions($parent);
 
 //        // An redirect to a new location after the install is completed.
 //        $controller = JControllerLegacy::getInstance('Biblestudy');
@@ -271,19 +274,19 @@ class Com_BiblestudyInstallerScript
 //            JSession::getFormToken() . '=1');
 //        $controller->redirect();
 
-        // Show the post-installation page
-        $this->_renderPostInstallation($this->status, $parent);
+		// Show the post-installation page
+		$this->_renderPostInstallation($this->status, $parent);
 
-        // Clear FOF's cache
-        if (!defined('FOF_INCLUDED'))
-        {
-            @include_once JPATH_LIBRARIES . '/fof/include.php';
-        }
+		// Clear FOF's cache
+		if (!defined('FOF_INCLUDED'))
+		{
+			@include_once JPATH_LIBRARIES . '/fof/include.php';
+		}
 
-        if (defined('FOF_INCLUDED'))
-        {
-            FOFPlatform::getInstance()->clearCache();
-        }
+		if (defined('FOF_INCLUDED'))
+		{
+			FOFPlatform::getInstance()->clearCache();
+		}
 	}
 
 	/**
@@ -291,7 +294,7 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @param   string  $version  JBSM version to check for.
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
 	 * @throws  Exception
 	 * @since 7.1.0
@@ -327,7 +330,7 @@ class Com_BiblestudyInstallerScript
 	 * @param   string  $name   Driver
 	 * @param   array   $types  Array of drivers supported
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
 	 * @throws Exception
 	 *
@@ -391,7 +394,7 @@ class Com_BiblestudyInstallerScript
 	 * @param   string  $name     Name of version
 	 * @param   string  $version  Version to look for
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
 	 * @throws Exception
 	 *
@@ -425,14 +428,14 @@ class Com_BiblestudyInstallerScript
 		$recommended = end($this->versions[$name]);
 		$app->enqueueMessage(
 			sprintf("%s %s is not supported. Minimum required version is %s %s, but it is higly recommended to use %s %s or later.",
-			$name, $version, $name, $minor, $name, $recommended
+				$name, $version, $name, $minor, $name, $recommended
 			), 'notice'
 		);
 
 		JLog::add(
 			sprintf("%s %s is not supported. Minimum required version is %s %s, but it is higly recommended to use %s %s or later.",
-			$name, $version, $name, $minor, $name, $recommended
-		), JLog::ERROR, 'com_biblestudy');
+				$name, $version, $name, $minor, $name, $recommended
+			), JLog::ERROR, 'com_biblestudy');
 
 		return false;
 	}
@@ -442,7 +445,7 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @param   string  $version  Proclaim Version to check for
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
 	 * @throws Exception
 	 *
@@ -563,142 +566,137 @@ class Com_BiblestudyInstallerScript
 		$this->deleteFolders($path, $ignore);
 	}
 
-    /**
-     * Renders the post-installation message
-     *
-     * @param   object             $status  ?
-     * @param   JInstallerAdapter  $parent  is the class calling this method.
-     *
-     * @since 1.7.4
-     * @return void
-     *
-     * @since 1.7.0
-     *
-     * @todo  need to add verion check system.
-     */
-    private function _renderPostInstallation($status, $parent)
-    {
-        $language = JFactory::getLanguage();
-        $language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', 'en-GB', true);
-        $language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', null, true);
-        $rows = 1; ?>
-        <img src="../media/com_biblestudy/images/icons/icon-48-churchdirectory.png" width="48" height="48"
-             alt="ChurchDirectory"/>
+	/**
+	 * Renders the post-installation message
+	 *
+	 * @param   object             $status  ?
+	 * @param   JInstallerAdapter  $parent  is the class calling this method.
+	 *
+	 * @return void
+	 *
+	 * @since 1.7.4
+	 * @since 1.7.0
+	 *
+	 * @todo  need to add verion check system.
+	 */
+	private function _renderPostInstallation($status, $parent)
+	{
+		$language = JFactory::getLanguage();
+		$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', 'en-GB', true);
+		$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', null, true);
+		$rows = 1;
+		echo "<img src=\"../media/com_biblestudy/images/icons/icon-48-churchdirectory.png\" width=\"48\" height=\"48\"
+             alt=\"ChurchDirectory\"/>
 
         <h2>Welcome to CWM Proclaim System</h2>
 
-        <table class="adminlist table" style="width: 300px;">
+        <table class=\"adminlist table\" style=\"width: 300px;\">
             <thead>
             <tr>
-                <th class="title">Extension</th>
-                <th class="title">Client</th>
-                <th class="title"><?php echo JText::_('COM_CHURCHDIRECTORY_STATUS'); ?></th>
+                <th class=\"title\">Extension</th>
+                <th class=\"title\">Client</th>
+                <th class=\"title\"><?php echo JText::_('COM_CHURCHDIRECTORY_STATUS'); ?></th>
             </tr>
             </thead>
             <tfoot>
             <tr>
-                <td colspan="3"></td>
+                <td colspan=\"3\"></td>
             </tr>
             </tfoot>
             <tbody>
             <tr>
-                <td class="key"><?php echo JText::_('COM_CHURCHDIRECTORY_NAME'); ?></td>
-                <td class="key">Site</td>
-                <td><strong style="color: green"><?php echo JText::_('COM_CHURCHDIRECTORY_INSTALLED'); ?></strong></td>
+                <td class=\"key\"><?php echo JText::_('COM_CHURCHDIRECTORY_NAME'); ?></td>
+                <td class=\"key\">Site</td>
+                <td><strong style=\"color: green\"><?php echo JText::_('COM_CHURCHDIRECTORY_INSTALLED'); ?></strong></td>
+            </tr>";
+		if (count($status->modules))
+		{
+            echo "<tr>
+                <th>Module</th>
+                <th>Client</th>
+                <th><?php echo JText::_('COM_CHURCHDIRECTORY_STATUS'); ?></th>
+            </tr>";
+			foreach ($status->modules as $module)
+			{
+                echo "<tr>
+                    <td class=\"key\">" . $module['name'] . "</td>
+                    <td class=\"key\"><?php echo ucfirst($module['client']); ?></td>
+                    <td class=\"key\">
+                        <strong style=\"color: <?php echo ($module['result']) ? "green" : "red" ?>\">
+						<?php echo ($module['result']) ? JText::_('COM_CHURCHDIRECTORY_INSTALLED') : JText::_('COM_CHURCHDIRECTORY_NOT_INSTALLED'); ?>
+                        </strong>
+                    </td>
+                </tr>
+				<?php
+			}
+		}
+		if (count($status->plugins))
+		{
+			?>
+            <tr>
+                <th>Plugin</th>
+                <th>Group</th>
+                <th><?php echo JText::_('COM_CHURCHDIRECTORY_STATUS'); ?></th>
             </tr>
-            <?php
-            if (count($status->modules))
-            {
-                ?>
+			<?php
+			foreach ($status->plugins as $plugin)
+			{
+				?>
                 <tr>
-                    <th>Module</th>
-                    <th>Client</th>
-                    <th><?php echo JText::_('COM_CHURCHDIRECTORY_STATUS'); ?></th>
+                    <td class=\"key\"><?php echo ucfirst($plugin['name']); ?></td>
+                    <td class=\"key\"><?php echo ucfirst($plugin['group']); ?></td>
+                    <td>
+                        <strong style=\"color: <?php echo ($plugin['result']) ? "green" : "red" ?>\">
+						<?php echo ($plugin['result']) ? JText::_('COM_CHURCHDIRECTORY_INSTALLED') : JText::_('COM_CHURCHDIRECTORY_NOT_INSTALLED'); ?>
+                        </strong>
+                    </td>
                 </tr>
-                <?php
-                foreach ($status->modules as $module)
-                {
-                    ?>
-                    <tr>
-                        <td class="key"><?php echo $module['name']; ?></td>
-                        <td class="key"><?php echo ucfirst($module['client']); ?></td>
-                        <td class="key">
-                            <strong style="color: <?php echo ($module['result']) ? "green" : "red" ?>">
-                                <?php echo ($module['result']) ? JText::_('COM_CHURCHDIRECTORY_INSTALLED') : JText::_('COM_CHURCHDIRECTORY_NOT_INSTALLED'); ?>
-                            </strong>
-                        </td>
-                    </tr>
-                    <?php
-                }
-            }
-            if (count($status->plugins))
-            {
-                ?>
+				<?php
+			}
+		}
+		if (count($status->libraries))
+		{
+			?>
+            <tr>
+                <th>Libraries</th>
+                <th>Version</th>
+                <th><?php echo JText::_('COM_CHURCHDIRECTORY_STATUS'); ?></th>
+            </tr>
+			<?php
+			foreach ($status->libraries as $library)
+			{
+				?>
                 <tr>
-                    <th>Plugin</th>
-                    <th>Group</th>
-                    <th><?php echo JText::_('COM_CHURCHDIRECTORY_STATUS'); ?></th>
+                    <td class=\"key\">" . ucfirst($library['name']) . "</td>
+                    <td class=\"key\">" . ucfirst($library['version']) . "</td>
+                    <td>
+                        <strong style=\"color: " . ($library['result']) ? "green" : "red" . "\">
+                        " . $library['result'] . "
+                        </strong>
+                    </td>
                 </tr>
-                <?php
-                foreach ($status->plugins as $plugin)
-                {
-                    ?>
-                    <tr>
-                        <td class="key"><?php echo ucfirst($plugin['name']); ?></td>
-                        <td class="key"><?php echo ucfirst($plugin['group']); ?></td>
-                        <td>
-                            <strong style="color: <?php echo ($plugin['result']) ? "green" : "red" ?>">
-                                <?php echo ($plugin['result']) ? JText::_('COM_CHURCHDIRECTORY_INSTALLED') : JText::_('COM_CHURCHDIRECTORY_NOT_INSTALLED'); ?>
-                            </strong>
-                        </td>
-                    </tr>
-                    <?php
-                }
-            }
-            if (count($status->libraries))
-            {
-                ?>
-                <tr>
-                    <th>Libraries</th>
-                    <th>Version</th>
-                    <th><?php echo JText::_('COM_CHURCHDIRECTORY_STATUS'); ?></th>
-                </tr>
-                <?php
-                foreach ($status->libraries as $library)
-                {
-                    ?>
-                    <tr>
-                        <td class="key"><?php echo ucfirst($library['name']); ?></td>
-                        <td class="key"><?php echo ucfirst($library['version']); ?></td>
-                        <td>
-                            <strong style="color: <?php echo ($library['result']) ? "green" : "red" ?>">
-                                <?php echo $library['result']; ?>
-                            </strong>
-                        </td>
-                    </tr>
-                    <?php
-                }
-            }
-            ?>
-            </tbody>
-        </table>
-        <?php
-    }
+				<?php
+			}
+		}
+		?>
+        </tbody>
+        </table>";
+        }
 
-    /**
-     * Render Post Uninstalling
-     *
-     * @param   object             $status  ?
-     * @param   JInstallerAdapter  $parent  is the class calling this method.
-     *
-     * @return void
-     *
-     * @since 1.7.0
-     */
-    private function _renderPostUninstallation($status, $parent)
-    {
+        /**
+        * Render Post Uninstalling
+        *
+        * @param   object             $status  ?
+        * @param   JInstallerAdapter  $parent  is the class calling this method.
+        *
+        * @return void
+        *
+        * @since 1.7.0
+        */
+        private function _renderPostUninstallation($status, $parent)
+        {
         ?>
-        <?php $rows = 0; ?>
+		<?php $rows = 0; ?>
         <h2><?php echo JText::_('COM_CHURCHDIRECTORY_UNINSTALL'); ?></h2>
         <table class="adminlist">
             <thead>
@@ -717,245 +715,246 @@ class Com_BiblestudyInstallerScript
                 <td class="key" colspan="2"><?php echo JText::_('COM_CHURCHDIRECTORY'); ?></td>
                 <td><strong style="color: green"><?php echo JText::_('COM_CHURCHDIRECTORY_REMOVED'); ?></strong></td>
             </tr>
-            <?php
-            if (count($status->modules))
-            {
-                ?>
+			<?php
+			if (count($status->modules))
+			{
+				?>
                 <tr>
                     <th><?php echo JText::_('COM_CHURCHDIRECTORY_MODULE'); ?></th>
                     <th><?php echo JText::_('COM_CHURCHDIRECTORY_CLIENT'); ?></th>
                     <th></th>
                 </tr>
-                <?php
-                foreach ($status->modules as $module)
-                {
-                    ?>
+				<?php
+				foreach ($status->modules as $module)
+				{
+					?>
                     <tr class="row<?php echo($rows++); ?>">
                         <td class="key"><?php echo $module['name']; ?></td>
                         <td class="key"><?php echo ucfirst($module['client']); ?></td>
                         <td><strong
-                                style="color: <?php echo ($module['result']) ? "green" : "red" ?>"><?php echo ($module['result']) ? JText::_('COM_CHURCHDIRECTORY_REMOVED')
-                                    : JText::_('COM_CHURCHDIRECTORY_NOT_REMOVED'); ?></strong>
+                                    style="color: <?php echo ($module['result']) ? "green" : "red" ?>"><?php echo ($module['result']) ? JText::_('COM_CHURCHDIRECTORY_REMOVED')
+									: JText::_('COM_CHURCHDIRECTORY_NOT_REMOVED'); ?></strong>
                         </td>
                     </tr>
-                    <?php
-                }
-            }
-            ?>
-            <?php
-            if (count($status->plugins))
-            {
-                ?>
+					<?php
+				}
+			}
+			?>
+			<?php
+			if (count($status->plugins))
+			{
+				?>
                 <tr>
                     <th><?php echo JText::_('Plugin'); ?></th>
                     <th><?php echo JText::_('Group'); ?></th>
                     <th></th>
                 </tr>
-                <?php
-                foreach ($status->plugins as $plugin)
-                {
-                    ?>
+				<?php
+				foreach ($status->plugins as $plugin)
+				{
+					?>
                     <tr class="row<?php echo($rows++); ?>">
                         <td class="key"><?php echo ucfirst($plugin['name']); ?></td>
                         <td class="key"><?php echo ucfirst($plugin['group']); ?></td>
                         <td><strong style="color: <?php echo ($plugin['result']) ? "green" : "red" ?>">
-                                <?php echo ($plugin['result']) ? JText::_('COM_CHURCHDIRECTORY_REMOVED') : JText::_('COM_CHURCHDIRECTORY_NOT_REMOVED'); ?>
+								<?php echo ($plugin['result']) ? JText::_('COM_CHURCHDIRECTORY_REMOVED') : JText::_('COM_CHURCHDIRECTORY_NOT_REMOVED'); ?>
                             </strong>
                         </td>
                     </tr>
-                    <?php
-                }
-            }
-            ?>
+					<?php
+				}
+			}
+			?>
             </tbody>
         </table>
-        <?php
-    }
+		<?php
+	}
 
 
-    /**
-     * Installs subextensions (modules, plugins) bundled with the main extension
-     *
-     * @param   JInstallerAdapter  $parent  is the class calling this method.
-     *
-     * @return Object The subextension installation status
-     *
-     * @since 1.7.0
-     */
-    private function _installSubextensions($parent)
-    {
-        $src = $parent->getParent()->getPath('source');
-        $db = JFactory::getDbo();
-        $status          = new stdClass;
-        $status->modules = [];
-        $status->plugins = [];
-        // Modules installation
-        if (count($this->installation_queue['modules']))
-        {
-            foreach ($this->installation_queue['modules'] as $folder => $modules)
-            {
-                if (count($modules))
-                {
-                    foreach ($modules as $module => $modulePreferences)
-                    {
-                        // Install the module
-                        if (empty($folder))
-                        {
-                            $folder = 'site';
-                        }
-                        $path = "$src/modules/$folder/$module";
-                        if (!is_dir($path))
-                        {
-                            $path = "$src/modules/$folder/mod_$module";
-                        }
-                        if (!is_dir($path))
-                        {
-                            $path = "$src/modules/$module";
-                        }
-                        if (!is_dir($path))
-                        {
-                            $path = "$src/modules/mod_$module";
-                        }
-                        if (!is_dir($path))
-                        {
-                            continue;
-                        }
-                        // Was the module already installed?
-                        $sql = $db->getQuery(true)->select('COUNT(*)')
-                            ->from('#__modules')
-                            ->where($db->qn('module') . ' = ' . $db->q('mod_' . $module));
-                        $db->setQuery($sql);
-                        $count             = $db->loadResult();
-                        $installer         = new JInstaller;
-                        $result            = $installer->install($path);
-                        $status->modules[] = [
-                            'name'   => 'mod_' . $module,
-                            'client' => $folder,
-                            'result' => $result
-                        ];
-                        // Modify where it's published and its published state
-                        if (!$count)
-                        {
-                            // A. Position and state
-                            list($modulePosition, $modulePublished) = $modulePreferences;
-                            if ($modulePosition == 'cpanel')
-                            {
-                                $modulePosition = 'icon';
-                            }
-                            $sql = $db->getQuery(true)
-                                ->update($db->qn('#__modules'))
-                                ->set($db->qn('position') . ' = ' . $db->q($modulePosition))
-                                ->where($db->qn('module') . ' = ' . $db->q('mod_' . $module));
-                            if ($modulePublished)
-                            {
-                                $sql->set($db->qn('published') . ' = ' . $db->q('1'));
-                            }
-                            $db->setQuery($sql);
-                            $db->execute();
-                            // B. Change the ordering of back-end modules to 1 + max ordering
-                            if ($folder == 'admin')
-                            {
-                                $query = $db->getQuery(true);
-                                $query->select('MAX(' . $db->qn('ordering') . ')')
-                                    ->from($db->qn('#__modules'))
-                                    ->where($db->qn('position') . '=' . $db->q($modulePosition));
-                                $db->setQuery($query);
-                                $position = $db->loadResult();
-                                $position++;
-                                $query = $db->getQuery(true);
-                                $query->update($db->qn('#__modules'))
-                                    ->set($db->qn('ordering') . ' = ' . $db->q($position))
-                                    ->where($db->qn('module') . ' = ' . $db->q('mod_' . $module));
-                                $db->setQuery($query);
-                                $db->execute();
-                            }
-                            // C. Link to all pages
-                            $query = $db->getQuery(true);
-                            $query->select('id')
-                                ->from($db->qn('#__modules'))
-                                ->where($db->qn('module') . ' = ' . $db->q('mod_' . $module));
-                            $db->setQuery($query);
-                            $moduleid = $db->loadResult();
-                            $query = $db->getQuery(true);
-                            $query->select('*')
-                                ->from($db->qn('#__modules_menu'))
-                                ->where($db->qn('moduleid') . ' = ' . $db->q($moduleid));
-                            $db->setQuery($query);
-                            $assignments = $db->loadObjectList();
-                            $isAssigned  = !empty($assignments);
-                            if (!$isAssigned)
-                            {
-                                $o = (object) [
-                                    'moduleid' => $moduleid,
-                                    'menuid'   => 0
-                                ];
-                                $db->insertObject('#__modules_menu', $o);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        // Plugins installation
-        if (count($this->installation_queue['plugins']))
-        {
-            foreach ($this->installation_queue['plugins'] as $folder => $plugins)
-            {
-                if (count($plugins))
-                {
-                    foreach ($plugins as $plugin => $published)
-                    {
-                        $path = "$src/plugins/$folder/$plugin";
-                        if (!is_dir($path))
-                        {
-                            $path = "$src/plugins/$folder/plg_$plugin";
-                        }
-                        if (!is_dir($path))
-                        {
-                            $path = "$src/plugins/$plugin";
-                        }
-                        if (!is_dir($path))
-                        {
-                            $path = "$src/plugins/plg_$plugin";
-                        }
-                        if (!is_dir($path))
-                        {
-                            continue;
-                        }
-                        // Was the plugin already installed?
-                        $query = $db->getQuery(true)
-                            ->select('COUNT(*)')
-                            ->from($db->qn('#__extensions'))
-                            ->where($db->qn('element') . ' = ' . $db->q($plugin))
-                            ->where($db->qn('folder') . ' = ' . $db->q($folder));
-                        $db->setQuery($query);
-                        $count = $db->loadResult();
-                        $installer = new JInstaller;
-                        $result    = $installer->install($path);
-                        $status->plugins[] = [
-                            'name'   => 'plg_' . $plugin,
-                            'group'  => $folder,
-                            'result' => $result
-                        ];
-                        if ($published && !$count)
-                        {
-                            $query = $db->getQuery(true)
-                                ->update($db->qn('#__extensions'))
-                                ->set($db->qn('enabled') . ' = ' . $db->q('1'))
-                                ->where($db->qn('element') . ' = ' . $db->q($plugin))
-                                ->where($db->qn('folder') . ' = ' . $db->q($folder));
-                            $db->setQuery($query);
-                            $db->execute();
-                        }
-                    }
-                }
-            }
-        }
-        return $status;
-    }
+	/**
+	 * Installs subextensions (modules, plugins) bundled with the main extension
+	 *
+	 * @param   JInstallerAdapter  $parent  is the class calling this method.
+	 *
+	 * @return Object The subextension installation status
+	 *
+	 * @since 1.7.0
+	 */
+	private function _installSubextensions($parent)
+	{
+		$src             = $parent->getParent()->getPath('source');
+		$db              = JFactory::getDbo();
+		$status          = new stdClass;
+		$status->modules = [];
+		$status->plugins = [];
+		// Modules installation
+		if (count($this->installation_queue['modules']))
+		{
+			foreach ($this->installation_queue['modules'] as $folder => $modules)
+			{
+				if (count($modules))
+				{
+					foreach ($modules as $module => $modulePreferences)
+					{
+						// Install the module
+						if (empty($folder))
+						{
+							$folder = 'site';
+						}
+						$path = "$src/modules/$folder/$module";
+						if (!is_dir($path))
+						{
+							$path = "$src/modules/$folder/mod_$module";
+						}
+						if (!is_dir($path))
+						{
+							$path = "$src/modules/$module";
+						}
+						if (!is_dir($path))
+						{
+							$path = "$src/modules/mod_$module";
+						}
+						if (!is_dir($path))
+						{
+							continue;
+						}
+						// Was the module already installed?
+						$sql = $db->getQuery(true)->select('COUNT(*)')
+							->from('#__modules')
+							->where($db->qn('module') . ' = ' . $db->q('mod_' . $module));
+						$db->setQuery($sql);
+						$count             = $db->loadResult();
+						$installer         = new JInstaller;
+						$result            = $installer->install($path);
+						$status->modules[] = [
+							'name'   => 'mod_' . $module,
+							'client' => $folder,
+							'result' => $result
+						];
+						// Modify where it's published and its published state
+						if (!$count)
+						{
+							// A. Position and state
+							list($modulePosition, $modulePublished) = $modulePreferences;
+							if ($modulePosition == 'cpanel')
+							{
+								$modulePosition = 'icon';
+							}
+							$sql = $db->getQuery(true)
+								->update($db->qn('#__modules'))
+								->set($db->qn('position') . ' = ' . $db->q($modulePosition))
+								->where($db->qn('module') . ' = ' . $db->q('mod_' . $module));
+							if ($modulePublished)
+							{
+								$sql->set($db->qn('published') . ' = ' . $db->q('1'));
+							}
+							$db->setQuery($sql);
+							$db->execute();
+							// B. Change the ordering of back-end modules to 1 + max ordering
+							if ($folder == 'admin')
+							{
+								$query = $db->getQuery(true);
+								$query->select('MAX(' . $db->qn('ordering') . ')')
+									->from($db->qn('#__modules'))
+									->where($db->qn('position') . '=' . $db->q($modulePosition));
+								$db->setQuery($query);
+								$position = $db->loadResult();
+								$position++;
+								$query = $db->getQuery(true);
+								$query->update($db->qn('#__modules'))
+									->set($db->qn('ordering') . ' = ' . $db->q($position))
+									->where($db->qn('module') . ' = ' . $db->q('mod_' . $module));
+								$db->setQuery($query);
+								$db->execute();
+							}
+							// C. Link to all pages
+							$query = $db->getQuery(true);
+							$query->select('id')
+								->from($db->qn('#__modules'))
+								->where($db->qn('module') . ' = ' . $db->q('mod_' . $module));
+							$db->setQuery($query);
+							$moduleid = $db->loadResult();
+							$query    = $db->getQuery(true);
+							$query->select('*')
+								->from($db->qn('#__modules_menu'))
+								->where($db->qn('moduleid') . ' = ' . $db->q($moduleid));
+							$db->setQuery($query);
+							$assignments = $db->loadObjectList();
+							$isAssigned  = !empty($assignments);
+							if (!$isAssigned)
+							{
+								$o = (object) [
+									'moduleid' => $moduleid,
+									'menuid'   => 0
+								];
+								$db->insertObject('#__modules_menu', $o);
+							}
+						}
+					}
+				}
+			}
+		}
+		// Plugins installation
+		if (count($this->installation_queue['plugins']))
+		{
+			foreach ($this->installation_queue['plugins'] as $folder => $plugins)
+			{
+				if (count($plugins))
+				{
+					foreach ($plugins as $plugin => $published)
+					{
+						$path = "$src/plugins/$folder/$plugin";
+						if (!is_dir($path))
+						{
+							$path = "$src/plugins/$folder/plg_$plugin";
+						}
+						if (!is_dir($path))
+						{
+							$path = "$src/plugins/$plugin";
+						}
+						if (!is_dir($path))
+						{
+							$path = "$src/plugins/plg_$plugin";
+						}
+						if (!is_dir($path))
+						{
+							continue;
+						}
+						// Was the plugin already installed?
+						$query = $db->getQuery(true)
+							->select('COUNT(*)')
+							->from($db->qn('#__extensions'))
+							->where($db->qn('element') . ' = ' . $db->q($plugin))
+							->where($db->qn('folder') . ' = ' . $db->q($folder));
+						$db->setQuery($query);
+						$count             = $db->loadResult();
+						$installer         = new JInstaller;
+						$result            = $installer->install($path);
+						$status->plugins[] = [
+							'name'   => 'plg_' . $plugin,
+							'group'  => $folder,
+							'result' => $result
+						];
+						if ($published && !$count)
+						{
+							$query = $db->getQuery(true)
+								->update($db->qn('#__extensions'))
+								->set($db->qn('enabled') . ' = ' . $db->q('1'))
+								->where($db->qn('element') . ' = ' . $db->q($plugin))
+								->where($db->qn('folder') . ' = ' . $db->q($folder));
+							$db->setQuery($query);
+							$db->execute();
+						}
+					}
+				}
+			}
+		}
+
+		return $status;
+	}
 
 
-    /**
+	/**
 	 * Uninstalls subextensions (modules, plugins) bundled with the main extension
 	 *
 	 * @param   JInstallerAdapter  $parent  is the class calling this method.
@@ -991,8 +990,8 @@ class Com_BiblestudyInstallerScript
 						// Uninstall the module
 						if ($id)
 						{
-							$installer         = new JInstaller;
-							$result            = $installer->uninstall('module', $id, 1);
+							$installer               = new JInstaller;
+							$result                  = $installer->uninstall('module', $id, 1);
 							$this->status->modules[] = [
 								'name'   => 'mod_' . $module,
 								'client' => $folder,
@@ -1025,8 +1024,8 @@ class Com_BiblestudyInstallerScript
 
 						if ($id)
 						{
-							$installer         = new JInstaller;
-							$result            = $installer->uninstall('plugin', $id, 1);
+							$installer               = new JInstaller;
+							$result                  = $installer->uninstall('plugin', $id, 1);
 							$this->status->plugins[] = [
 								'name'   => 'plg_' . $plugin,
 								'group'  => $folder,

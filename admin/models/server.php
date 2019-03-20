@@ -164,7 +164,7 @@ class BiblestudyModelServer extends JModelAdmin
 	/**
 	 * Get the server form
 	 *
-	 * @return bool|mixed
+	 * @return boolean|mixed
 	 *
 	 * @throws Exception
 	 *

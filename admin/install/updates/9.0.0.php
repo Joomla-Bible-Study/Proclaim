@@ -82,7 +82,7 @@ class Migration900
 	 * @param   JDatabaseDriver  $db      Joomla database driver
 	 * @param   array            $server  Server to process
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
 	 * @since 9.0.0
 	 */
@@ -143,7 +143,7 @@ class Migration900
 	 * @param   JDatabaseDriver  $db     Joomla database driver
 	 * @param   array            $media  Media to process.
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
 	 * @throws string If problem with media save.
 	 *
@@ -323,7 +323,7 @@ class Migration900
 	 *
 	 * @param   JDatabaseDriver  $db  Joomla Database driver
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
 	 * @since 9.0.0
 	 */
@@ -382,7 +382,7 @@ class Migration900
 	 *
 	 * @param   JDatabaseDriver  $db  Joomla Database driver
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
 	 * @since 9.0.0
 	 */
@@ -582,7 +582,7 @@ class Migration900
 	 *
 	 * @param   int  $element  ?
 	 *
-	 * @return bool|string
+	 * @return boolean|string
 	 *
 	 * @since 9.0.0
 	 */
@@ -598,7 +598,7 @@ class Migration900
 	 *
 	 * @param   int  $elementNumber  Number to stirng
 	 *
-	 * @return bool|string
+	 * @return boolean|string
 	 *
 	 * @since 9.0.0
 	 */
@@ -750,7 +750,7 @@ class Migration900
 	 *
 	 * @param   JDatabaseDriver  $db  Joomla Database driver
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
 	 * @since 9.0.0
 	 */

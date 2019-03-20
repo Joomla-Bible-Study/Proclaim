@@ -137,7 +137,7 @@ class BiblestudyModelSeriesdisplay extends JModelItem
 	/**
 	 * Get Studies
 	 *
-	 * @return bool|mixed
+	 * @return boolean|mixed
 	 *
 	 * @since 7.0
 	 * @throws Exception

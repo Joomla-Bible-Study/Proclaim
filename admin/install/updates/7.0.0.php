@@ -25,7 +25,7 @@ class Migration700
 	 *
 	 * @param   JDatabaseDriver  $db  Data bass driver
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
 	 * @since   9.0.0
 	 * @throws  Exception

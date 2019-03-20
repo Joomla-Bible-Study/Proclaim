@@ -34,7 +34,7 @@ before_script:
 
 script:
   #- libraries/vendor/bin/phpunit --configuration travisci-phpunit.xml
-  - if [[ $RUN_PHPCS == "yes" ]]; then bin/phpcs --report=full --extensions=php -p --standard=build/phpcs/Joomla .; fi
+  - if [[ $RUN_PHPCS == "yes" ]]; then bin/phpcs --report=full --extensions=php -p --standard=vendor/joomla/coding-standards/Joomla .; fi
   - if [[ $RUN_UNIT_TESTS == "yes" ]]; then libraries/vendor/bin/phpunit --configuration travisci-phpunit.xml; fi
 
 branches:

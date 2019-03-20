@@ -168,7 +168,7 @@ class BiblestudyViewPodcastdisplay extends JViewLegacy
 	 * @param   string  $haystack  Search string
 	 * @param   string  $needle    What to search for.
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
 	 * @since version
 	 */
