@@ -33,7 +33,6 @@ before_script:
   - composer install
 
 script:
-  #- libraries/vendor/bin/phpunit --configuration travisci-phpunit.xml
   - if [[ $RUN_PHPCS == "yes" ]]; then bin/phpcs --report=full --extensions=php -p --standard=vendor/joomla/coding-standards/Joomla .; fi
   - if [[ $RUN_UNIT_TESTS == "yes" ]]; then libraries/vendor/bin/phpunit --configuration travisci-phpunit.xml; fi
 
