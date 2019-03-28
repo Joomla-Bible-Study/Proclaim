@@ -21,9 +21,21 @@ class Com_BiblestudyInstallerScript
 	/** @var string The component's name
 	 * @since 1.5
 	 */
-	protected $biblestudy_extension = 'com_biblestudy';
+	protected $extension = 'com_biblestudy';
+
+	/** @var string
+	 * @since 1.5
+	 */
 	protected $xml;
+
+	/** @var string
+	 * @since 1.5
+	 */
 	protected $srcxml;
+
+	/** @var object
+	 * @since 1.5
+	 */
 	protected $status;
 
 	/** @var string Path to Mysql files
@@ -37,7 +49,7 @@ class Com_BiblestudyInstallerScript
 	 * @var array Requirements
 	 * @since 9.0.9
 	 */
-	protected $versions = array(
+	static protected $versions = array(
 		'PHP'     => array(
 			'5.6' => '5.6.30',
 			'7.0' => '7.0.13',
@@ -59,28 +71,30 @@ class Com_BiblestudyInstallerScript
 
 	/**
 	 * The list of extra modules and plugins to install
-	 * @var   array $_installation_queue Array of Items to install
+	 * @var   array $Installation_Queue Array of Items to install
 	 * @author CWM Team
 	 * @since  9.0.18
 	 */
-	private $installation_queue = [
+	static private $installActionQueue = array(
 		// -- modules => { (folder) => { (module) => { (position), (published) } }* }*
-		'modules' => [
-			'admin' => [],
-			'site'  => ['biblestudy' => 0, 'biblestudy_podcast' => 0,],
-		],
+		'modules' => array(
+			'admin' => array(),
+			'site'  => array('biblestudy' => 0, 'biblestudy_podcast' => 0,),
+		),
 		// -- plugins => { (folder) => { (element) => (published) }* }*
-		'plugins' => [
-			'finder' => ['biblestudy' => 1,],
-			'search' => ['biblestudysearch' => 0,],
-			'system' => ['jbspodcast' => 0, 'jbsbackup' => '0'],
-		],
-	];
+		'plugins' => array(
+			'finder' => array('biblestudy' => 1,),
+			'search' => array('biblestudysearch' => 0,),
+			'system' => array('jbspodcast' => 0, 'jbsbackup' => '0'),
+		),
+	);
 
 	/**
 	 * @var array $extensions test
+	 *
+	 * @since 9.0.18
 	 */
-	protected $extensions = array('dom', 'gd', 'json', 'pcre', 'SimpleXML');
+	static protected $extensions = array('dom', 'gd', 'json', 'pcre', 'SimpleXML');
 
 	/**
 	 * $parent is the class calling this method.
@@ -128,8 +142,8 @@ class Com_BiblestudyInstallerScript
 			if (is_file($adminPath . '/install.script.php'))
 			{
 				// JBSM 6.2 or older release..
-				$ignoreAdmin[] = 'install.script.php';
-				$ignoreAdmin[] = 'admin.biblestudy.php';
+				$ignoreAdminarray[] = 'install.script.php';
+				$ignoreAdminarray[] = 'admin.biblestudy.php';
 			}
 
 			static $ignoreSite = array('index.html', 'biblestudy.php', 'router.php', 'COPYRIGHT.php', 'CHANGELOG.php');
@@ -163,7 +177,7 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @param   JInstallerFile  $parent  Where call is coming from
 	 *
-	 * @return  bool
+	 * @return  boolean
 	 *
 	 * @since 1.5
 	 */
@@ -183,20 +197,6 @@ class Com_BiblestudyInstallerScript
 	}
 
 	/**
-	 * Rout to Install
-	 *
-	 * @param   JInstallerFile  $parent  ?
-	 *
-	 * @return boolean
-	 *
-	 * @since 1.5
-	 */
-	public function discover_install($parent)
-	{
-		return self::install($parent);
-	}
-
-	/**
 	 * Update will go to install
 	 *
 	 * @param   JInstallerFile  $parent  ?
@@ -207,7 +207,7 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function update($parent)
 	{
-		return self::install($parent);
+		return $this->install($parent);
 	}
 
 	/**
@@ -233,10 +233,10 @@ class Com_BiblestudyInstallerScript
 		}
 
 		// Uninstall sub-extensions
-		$this->_uninstallSubextensions($parent);
+		$this->uninstallSubextensions($parent);
 
 		// Show the post-uninstalling page
-		$this->_renderPostUninstallation($status = null, $parent);
+		$this->renderPostUninstallation($status = null, $parent);
 
 		return true;
 	}
@@ -254,39 +254,40 @@ class Com_BiblestudyInstallerScript
 	 */
 	public function postflight($type, $parent)
 	{
-		// Import filesystem libraries. Perhaps not necessary, but does not hurt
-		jimport('joomla.filesystem.file');
-
 		if (!JFile::exists(JPATH_SITE . '/images/biblestudy/logo.png'))
 		{
 			// Copy the images to the new folder
 			JFolder::copy('/media/com_biblestudy/images', 'images/biblestudy/', JPATH_SITE, true);
 		}
 
-		// Install subextensions
-		$this->_installSubextensions($parent);
-
-//        // An redirect to a new location after the install is completed.
-//        $controller = JControllerLegacy::getInstance('Biblestudy');
-//        $controller->setRedirect(
-//            JUri::base() .
-//            'index.php?option=com_biblestudy&view=install&task=install.browse&scanstate=start&' .
-//            JSession::getFormToken() . '=1');
-//        $controller->redirect();
-
-		// Show the post-installation page
-		$this->_renderPostInstallation($this->status, $parent);
+		// Install subExtensions
+		$this->installSubextensions($parent);
 
 		// Clear FOF's cache
-		if (!defined('FOF_INCLUDED'))
+		if (!defined('FOF_INCLUDED') && JFile::exists(JPATH_LIBRARIES . '/fof/include.php'))
 		{
-			@include_once JPATH_LIBRARIES . '/fof/include.php';
+			include_once JPATH_LIBRARIES . '/fof/include.php';
 		}
 
 		if (defined('FOF_INCLUDED'))
 		{
 			FOFPlatform::getInstance()->clearCache();
 		}
+
+		if ($type === 'install')
+		{
+			// An redirect to a new location after the install is completed.
+			$controller = JControllerLegacy::getInstance('Biblestudy');
+			$controller->setRedirect(
+				JUri::base() .
+				'index.php?option=com_biblestudy&view=install&task=install.browse&scanstate=start&' .
+				JSession::getFormToken() . '=1'
+			);
+			$controller->redirect();
+		}
+
+		// Show the post-installation page
+		$this->renderPostInstallation($this->status, $parent);
 	}
 
 	/**
@@ -316,7 +317,7 @@ class Com_BiblestudyInstallerScript
 		$pass &= $this->checkVersion('Joomla!', JVERSION);
 		$pass &= $this->checkVersion('MySQL', $db->getVersion());
 		$pass &= $this->checkDbo($db->name, array('mysql', 'mysqli', 'pdo'));
-		$pass &= $this->checkExtensions($this->extensions);
+		$pass &= $this->checkExtensions(self::$extensions);
 		$pass &= $this->checkJBSM($version);
 
 		return $pass;
@@ -349,7 +350,7 @@ class Com_BiblestudyInstallerScript
 		JLog::add(
 			sprintf("Database driver '%s' is not supported. Please use MySQL instead.", $name),
 			JLog::NOTICE,
-			$this->biblestudy_extension
+			$this->extension
 		);
 
 		return false;
@@ -360,7 +361,7 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @param   array  $extensions  Array of version to look for
 	 *
-	 * @return int
+	 * @return integer
 	 *
 	 * @throws Exception
 	 *
@@ -380,7 +381,7 @@ class Com_BiblestudyInstallerScript
 				JLog::add(
 					sprintf("Required PHP extension '%s' is missing. Please install it into your system.", $name),
 					JLog::NOTICE,
-					$this->biblestudy_extension
+					$this->extension
 				);
 			}
 		}
@@ -405,7 +406,7 @@ class Com_BiblestudyInstallerScript
 		$app   = JFactory::getApplication();
 		$major = $minor = 0;
 
-		foreach ($this->versions[$name] as $major => $minor)
+		foreach (self::$versions[$name] as $major => $minor)
 		{
 			if (!$major || version_compare($version, $major, '<'))
 			{
@@ -422,10 +423,10 @@ class Com_BiblestudyInstallerScript
 
 		if (!$major)
 		{
-			$minor = reset($this->versions[$name]);
+			$minor = reset(self::$versions[$name]);
 		}
 
-		$recommended = end($this->versions[$name]);
+		$recommended = end(self::$versions[$name]);
 		$app->enqueueMessage(
 			sprintf("%s %s is not supported. Minimum required version is %s %s, but it is higly recommended to use %s %s or later.",
 				$name, $version, $name, $minor, $name, $recommended
@@ -435,7 +436,8 @@ class Com_BiblestudyInstallerScript
 		JLog::add(
 			sprintf("%s %s is not supported. Minimum required version is %s %s, but it is higly recommended to use %s %s or later.",
 				$name, $version, $name, $minor, $name, $recommended
-			), JLog::ERROR, 'com_biblestudy');
+			), JLog::ERROR, 'com_biblestudy'
+		);
 
 		return false;
 	}
@@ -461,7 +463,7 @@ class Com_BiblestudyInstallerScript
 		$table = $db->getPrefix() . 'bsms_update';
 		$db->setQuery("SHOW TABLES LIKE {$db->q($table)}");
 
-		if ($db->loadResult() != $table)
+		if ($db->loadResult() !== $table)
 		{
 			return true;
 		}
@@ -476,7 +478,7 @@ class Com_BiblestudyInstallerScript
 
 		if (!$installed)
 		{
-			JLog::add('Found No installd version.', JLog::NOTICE, $this->biblestudy_extension);
+			JLog::add('Found No installd version.', JLog::NOTICE, $this->extension);
 
 			return true;
 		}
@@ -492,7 +494,7 @@ class Com_BiblestudyInstallerScript
 		JLog::add(
 			sprintf('Sorry, it is not possible to downgrade BibleStudy %s to version %s.', $installed, $version),
 			JLog::NOTICE,
-			$this->biblestudy_extension
+			$this->extension
 		);
 
 		return false;
@@ -574,135 +576,26 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @return void
 	 *
-	 * @since 1.7.4
 	 * @since 1.7.0
 	 *
-	 * @todo  need to add verion check system.
+	 * @todo  need to add version check system.
 	 */
-	private function _renderPostInstallation($status, $parent)
+	private function renderPostInstallation($status, $parent)
 	{
 		$language = JFactory::getLanguage();
 		$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', 'en-GB', true);
 		$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', null, true);
-		$rows = 1;
-		echo "<img src=\"../media/com_biblestudy/images/icons/icon-48-churchdirectory.png\" width=\"48\" height=\"48\"
-             alt=\"ChurchDirectory\"/>
+		echo '<img src="../media/com_biblestudy/images/icons/icon-48-churchdirectory.png" width="48" height="48"
+             alt="ChurchDirectory"/>
 
         <h2>Welcome to CWM Proclaim System</h2>
 
-        <table class=\"adminlist table\" style=\"width: 300px;\">
+        <table class="adminlist table" style="width: 300px;">
             <thead>
             <tr>
-                <th class=\"title\">Extension</th>
-                <th class=\"title\">Client</th>
-                <th class=\"title\"><?php echo JText::_('COM_CHURCHDIRECTORY_STATUS'); ?></th>
-            </tr>
-            </thead>
-            <tfoot>
-            <tr>
-                <td colspan=\"3\"></td>
-            </tr>
-            </tfoot>
-            <tbody>
-            <tr>
-                <td class=\"key\"><?php echo JText::_('COM_CHURCHDIRECTORY_NAME'); ?></td>
-                <td class=\"key\">Site</td>
-                <td><strong style=\"color: green\"><?php echo JText::_('COM_CHURCHDIRECTORY_INSTALLED'); ?></strong></td>
-            </tr>";
-		if (count($status->modules))
-		{
-            echo "<tr>
-                <th>Module</th>
-                <th>Client</th>
-                <th><?php echo JText::_('COM_CHURCHDIRECTORY_STATUS'); ?></th>
-            </tr>";
-			foreach ($status->modules as $module)
-			{
-                echo "<tr>
-                    <td class=\"key\">" . $module['name'] . "</td>
-                    <td class=\"key\"><?php echo ucfirst($module['client']); ?></td>
-                    <td class=\"key\">
-                        <strong style=\"color: <?php echo ($module['result']) ? "green" : "red" ?>\">
-						<?php echo ($module['result']) ? JText::_('COM_CHURCHDIRECTORY_INSTALLED') : JText::_('COM_CHURCHDIRECTORY_NOT_INSTALLED'); ?>
-                        </strong>
-                    </td>
-                </tr>
-				<?php
-			}
-		}
-		if (count($status->plugins))
-		{
-			?>
-            <tr>
-                <th>Plugin</th>
-                <th>Group</th>
-                <th><?php echo JText::_('COM_CHURCHDIRECTORY_STATUS'); ?></th>
-            </tr>
-			<?php
-			foreach ($status->plugins as $plugin)
-			{
-				?>
-                <tr>
-                    <td class=\"key\"><?php echo ucfirst($plugin['name']); ?></td>
-                    <td class=\"key\"><?php echo ucfirst($plugin['group']); ?></td>
-                    <td>
-                        <strong style=\"color: <?php echo ($plugin['result']) ? "green" : "red" ?>\">
-						<?php echo ($plugin['result']) ? JText::_('COM_CHURCHDIRECTORY_INSTALLED') : JText::_('COM_CHURCHDIRECTORY_NOT_INSTALLED'); ?>
-                        </strong>
-                    </td>
-                </tr>
-				<?php
-			}
-		}
-		if (count($status->libraries))
-		{
-			?>
-            <tr>
-                <th>Libraries</th>
-                <th>Version</th>
-                <th><?php echo JText::_('COM_CHURCHDIRECTORY_STATUS'); ?></th>
-            </tr>
-			<?php
-			foreach ($status->libraries as $library)
-			{
-				?>
-                <tr>
-                    <td class=\"key\">" . ucfirst($library['name']) . "</td>
-                    <td class=\"key\">" . ucfirst($library['version']) . "</td>
-                    <td>
-                        <strong style=\"color: " . ($library['result']) ? "green" : "red" . "\">
-                        " . $library['result'] . "
-                        </strong>
-                    </td>
-                </tr>
-				<?php
-			}
-		}
-		?>
-        </tbody>
-        </table>";
-        }
-
-        /**
-        * Render Post Uninstalling
-        *
-        * @param   object             $status  ?
-        * @param   JInstallerAdapter  $parent  is the class calling this method.
-        *
-        * @return void
-        *
-        * @since 1.7.0
-        */
-        private function _renderPostUninstallation($status, $parent)
-        {
-        ?>
-		<?php $rows = 0; ?>
-        <h2><?php echo JText::_('COM_CHURCHDIRECTORY_UNINSTALL'); ?></h2>
-        <table class="adminlist">
-            <thead>
-            <tr>
-                <th class="title" colspan="2"><?php echo JText::_('COM_CHURCHDIRECTORY_EXTENSION'); ?></th>
-                <th width="30%"><?php echo JText::_('COM_CHURCHDIRECTORY_STATUS'); ?></th>
+                <th class="title">Extension</th>
+                <th class="title">Client</th>
+                <th class="title">' . JText::_('COM_CHURCHDIRECTORY_STATUS') . '</th>
             </tr>
             </thead>
             <tfoot>
@@ -711,63 +604,169 @@ class Com_BiblestudyInstallerScript
             </tr>
             </tfoot>
             <tbody>
-            <tr class="row0">
-                <td class="key" colspan="2"><?php echo JText::_('COM_CHURCHDIRECTORY'); ?></td>
-                <td><strong style="color: green"><?php echo JText::_('COM_CHURCHDIRECTORY_REMOVED'); ?></strong></td>
-            </tr>
+            <tr>
+                <td class="key">' . JText::_('COM_CHURCHDIRECTORY_NAME') . '</td>
+                <td class="key">Site</td>
+                <td><strong style="color: green;">' . JText::_('COM_CHURCHDIRECTORY_INSTALLED') . '</strong></td>
+            </tr>';
+
+		if (count($status->modules))
+		{
+			echo "<tr>
+                <th>Module</th>
+                <th>Client</th>
+                <th><?php echo JText::_('COM_CHURCHDIRECTORY_STATUS'); ?></th>
+            </tr>";
+
+			foreach ($status->modules as $module)
+			{
+				echo '<tr>';
+				echo '<td class="key">' . $module['name'] . '</td>';
+				echo '<td class="key">' . ucfirst($module['client']) . '</td>';
+				echo '<td class="key">';
+				echo '<strong style="color: ' . ($module['result'] ? 'green' : 'red') . ';">';
+				echo ' ' . ($module['result'] ? JText::_('COM_CHURCHDIRECTORY_INSTALLED') : JText::_('COM_CHURCHDIRECTORY_NOT_INSTALLED')) . ' ';
+				echo '</strong>';
+				echo '</td>';
+				echo '</tr>';
+			}
+		}
+
+		if (count($status->plugins))
+		{
+			?>
+			<tr>
+				<th>Plugin</th>
+				<th>Group</th>
+				<th><?php echo JText::_('COM_CHURCHDIRECTORY_STATUS'); ?></th>
+			</tr>
 			<?php
-			if (count($status->modules))
+			foreach ($status->plugins as $plugin)
+			{
+				echo '<tr>';
+				echo '<td class="key">' . ucfirst($plugin['name']) . '</td>';
+				echo '<td class="key">' . ucfirst($plugin['group']) . '</td>';
+				echo '<td>';
+				echo '<strong style="color: ' . ($plugin['result'] ? 'green' : 'red') . ';">';
+				echo '' . ($plugin['result'] ? JText::_('COM_CHURCHDIRECTORY_INSTALLED') : JText::_('COM_CHURCHDIRECTORY_NOT_INSTALLED')) . '';
+				echo '</strong>';
+				echo '</td>';
+				echo '</tr>';
+			}
+		}
+
+		if (count($status->libraries))
+		{
+			?>
+			<tr>
+				<th>Libraries</th>
+				<th>Version</th>
+				<th><?php echo JText::_('COM_CHURCHDIRECTORY_STATUS'); ?></th>
+			</tr>
+			<?php
+			foreach ($status->libraries as $library)
+			{
+				echo '<tr>
+					<td class="key">' . ucfirst($library['name']) . '</td>
+					<td class="key">' . ucfirst($library['version']) . '</td>
+					<td>
+						<strong style="color: ' . ($library['result'] ? 'green' : 'red') . ';">
+						' . $library['result'] . '
+						</strong>
+					</td>
+				</tr>';
+			}
+		}
+
+		echo '</tbody></table>';
+	}
+
+	/**
+	 * Render Post Uninstalling
+	 *
+	 * @param   object             $status  ?
+	 * @param   JInstallerAdapter  $parent  is the class calling this method.
+	 *
+	 * @return void
+	 *
+	 * @since 1.7.0
+	 */
+	private function renderPostUninstallation($status, $parent)
+	{
+		$rows = 0;
+		echo '<h2>' . JText::_('COM_CHURCHDIRECTORY_UNINSTALL') . '</h2>
+		<table class="adminlist">
+			<thead>
+			<tr>
+				<th class="title" colspan="2">' . JText::_('COM_CHURCHDIRECTORY_EXTENSION') . '</th>
+				<th width="30%">' . JText::_('COM_CHURCHDIRECTORY_STATUS') . '</th>
+			</tr>
+			</thead>
+			<tfoot>
+			<tr>
+				<td colspan="3"></td>
+			</tr>
+			</tfoot>
+			<tbody>
+			<tr class="row0">
+				<td class="key" colspan="2">' . JText::_('COM_CHURCHDIRECTORY') . '</td>
+				<td><strong style="color: green;">' . JText::_('COM_CHURCHDIRECTORY_REMOVED') . '</strong></td>
+			</tr>';
+
+		if (count($status->modules))
+		{
+			?>
+			<tr>
+				<th><?php echo JText::_('COM_CHURCHDIRECTORY_MODULE'); ?></th>
+				<th><?php echo JText::_('COM_CHURCHDIRECTORY_CLIENT'); ?></th>
+				<th></th>
+			</tr>
+			<?php
+			foreach ($status->modules as $module)
 			{
 				?>
-                <tr>
-                    <th><?php echo JText::_('COM_CHURCHDIRECTORY_MODULE'); ?></th>
-                    <th><?php echo JText::_('COM_CHURCHDIRECTORY_CLIENT'); ?></th>
-                    <th></th>
-                </tr>
+				<tr class="row<?php echo $rows++; ?>">
+					<td class="key"><?php echo $module['name']; ?></td>
+					<td class="key"><?php echo ucfirst($module['client']); ?></td>
+					<td>
+						<strong style="color: <?php echo '' . ($module['result'] ? 'green' : 'red'); ?>">
+							<?php echo '' . ($module['result'] ? JText::_('COM_CHURCHDIRECTORY_REMOVED')
+									: JText::_('COM_CHURCHDIRECTORY_NOT_REMOVED')); ?></strong>
+					</td>
+				</tr>
 				<?php
-				foreach ($status->modules as $module)
-				{
-					?>
-                    <tr class="row<?php echo($rows++); ?>">
-                        <td class="key"><?php echo $module['name']; ?></td>
-                        <td class="key"><?php echo ucfirst($module['client']); ?></td>
-                        <td><strong
-                                    style="color: <?php echo ($module['result']) ? "green" : "red" ?>"><?php echo ($module['result']) ? JText::_('COM_CHURCHDIRECTORY_REMOVED')
-									: JText::_('COM_CHURCHDIRECTORY_NOT_REMOVED'); ?></strong>
-                        </td>
-                    </tr>
-					<?php
-				}
 			}
-			?>
-			<?php
-			if (count($status->plugins))
-			{
-				?>
-                <tr>
-                    <th><?php echo JText::_('Plugin'); ?></th>
-                    <th><?php echo JText::_('Group'); ?></th>
-                    <th></th>
-                </tr>
-				<?php
-				foreach ($status->plugins as $plugin)
-				{
-					?>
-                    <tr class="row<?php echo($rows++); ?>">
-                        <td class="key"><?php echo ucfirst($plugin['name']); ?></td>
-                        <td class="key"><?php echo ucfirst($plugin['group']); ?></td>
-                        <td><strong style="color: <?php echo ($plugin['result']) ? "green" : "red" ?>">
-								<?php echo ($plugin['result']) ? JText::_('COM_CHURCHDIRECTORY_REMOVED') : JText::_('COM_CHURCHDIRECTORY_NOT_REMOVED'); ?>
-                            </strong>
-                        </td>
-                    </tr>
-					<?php
-				}
-			}
-			?>
-            </tbody>
-        </table>
+		}
+		?>
 		<?php
+		if (count($status->plugins))
+		{
+			?>
+			<tr>
+				<th><?php echo JText::_('Plugin'); ?></th>
+				<th><?php echo JText::_('Group'); ?></th>
+				<th></th>
+			</tr>
+			<?php
+
+			foreach ($status->plugins as $plugin)
+			{
+				?>
+				<tr class="row<?php echo $rows++; ?>">
+					<td class="key"><?php echo ucfirst($plugin['name']); ?></td>
+					<td class="key"><?php echo ucfirst($plugin['group']); ?></td>
+					<td><strong style="color: <?php echo '' . ($plugin['result'] ? 'green' : 'red'); ?>;">
+							<?php echo '' . ($plugin['result'] ?
+									JText::_('COM_CHURCHDIRECTORY_REMOVED') :
+									JText::_('COM_CHURCHDIRECTORY_NOT_REMOVED')); ?>
+						</strong>
+					</td>
+				</tr>
+				<?php
+			}
+		}
+
+		echo '</tbody></table>';
 	}
 
 
@@ -776,21 +775,22 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @param   JInstallerAdapter  $parent  is the class calling this method.
 	 *
-	 * @return Object The subextension installation status
+	 * @return  object The subextension installation status
 	 *
 	 * @since 1.7.0
 	 */
-	private function _installSubextensions($parent)
+	private function installSubextensions($parent)
 	{
 		$src             = $parent->getParent()->getPath('source');
 		$db              = JFactory::getDbo();
 		$status          = new stdClass;
-		$status->modules = [];
-		$status->plugins = [];
+		$status->modules = array();
+		$status->plugins = array();
+
 		// Modules installation
-		if (count($this->installation_queue['modules']))
+		if (count(self::$installActionQueue['modules']))
 		{
-			foreach ($this->installation_queue['modules'] as $folder => $modules)
+			foreach (self::$installActionQueue['modules'] as $folder => $modules)
 			{
 				if (count($modules))
 				{
@@ -801,57 +801,69 @@ class Com_BiblestudyInstallerScript
 						{
 							$folder = 'site';
 						}
+
 						$path = "$src/modules/$folder/$module";
+
 						if (!is_dir($path))
 						{
 							$path = "$src/modules/$folder/mod_$module";
 						}
+
 						if (!is_dir($path))
 						{
 							$path = "$src/modules/$module";
 						}
+
 						if (!is_dir($path))
 						{
 							$path = "$src/modules/mod_$module";
 						}
+
 						if (!is_dir($path))
 						{
 							continue;
 						}
+
 						// Was the module already installed?
 						$sql = $db->getQuery(true)->select('COUNT(*)')
 							->from('#__modules')
 							->where($db->qn('module') . ' = ' . $db->q('mod_' . $module));
 						$db->setQuery($sql);
-						$count             = $db->loadResult();
-						$installer         = new JInstaller;
-						$result            = $installer->install($path);
-						$status->modules[] = [
+						$count                  = $db->loadResult();
+						$installer              = new JInstaller;
+						$result                 = $installer->install($path);
+						$status->modulesarray[] = array(
 							'name'   => 'mod_' . $module,
 							'client' => $folder,
 							'result' => $result
-						];
+						);
+
 						// Modify where it's published and its published state
 						if (!$count)
 						{
 							// A. Position and state
 							list($modulePosition, $modulePublished) = $modulePreferences;
-							if ($modulePosition == 'cpanel')
+
+							if ($modulePosition === 'cpanel')
 							{
 								$modulePosition = 'icon';
 							}
+
 							$sql = $db->getQuery(true)
 								->update($db->qn('#__modules'))
 								->set($db->qn('position') . ' = ' . $db->q($modulePosition))
 								->where($db->qn('module') . ' = ' . $db->q('mod_' . $module));
+
 							if ($modulePublished)
 							{
 								$sql->set($db->qn('published') . ' = ' . $db->q('1'));
 							}
+
 							$db->setQuery($sql);
 							$db->execute();
+
 							// B. Change the ordering of back-end modules to 1 + max ordering
-							if ($folder == 'admin')
+							if ($folder === 'admin')
 							{
 								$query = $db->getQuery(true);
 								$query->select('MAX(' . $db->qn('ordering') . ')')
@@ -867,6 +879,7 @@ class Com_BiblestudyInstallerScript
 								$db->setQuery($query);
 								$db->execute();
 							}
+
 							// C. Link to all pages
 							$query = $db->getQuery(true);
 							$query->select('id')
@@ -881,12 +894,13 @@ class Com_BiblestudyInstallerScript
 							$db->setQuery($query);
 							$assignments = $db->loadObjectList();
 							$isAssigned  = !empty($assignments);
+
 							if (!$isAssigned)
 							{
-								$o = (object) [
+								$o = (object) array(
 									'moduleid' => $moduleid,
 									'menuid'   => 0
-								];
+								);
 								$db->insertObject('#__modules_menu', $o);
 							}
 						}
@@ -894,32 +908,38 @@ class Com_BiblestudyInstallerScript
 				}
 			}
 		}
+
 		// Plugins installation
-		if (count($this->installation_queue['plugins']))
+		if (count(self::$installActionQueue['plugins']))
 		{
-			foreach ($this->installation_queue['plugins'] as $folder => $plugins)
+			foreach (self::$installActionQueue['plugins'] as $folder => $plugins)
 			{
 				if (count($plugins))
 				{
 					foreach ($plugins as $plugin => $published)
 					{
 						$path = "$src/plugins/$folder/$plugin";
+
 						if (!is_dir($path))
 						{
 							$path = "$src/plugins/$folder/plg_$plugin";
 						}
+
 						if (!is_dir($path))
 						{
 							$path = "$src/plugins/$plugin";
 						}
+
 						if (!is_dir($path))
 						{
 							$path = "$src/plugins/plg_$plugin";
 						}
+
 						if (!is_dir($path))
 						{
 							continue;
 						}
+
 						// Was the plugin already installed?
 						$query = $db->getQuery(true)
 							->select('COUNT(*)')
@@ -927,14 +947,15 @@ class Com_BiblestudyInstallerScript
 							->where($db->qn('element') . ' = ' . $db->q($plugin))
 							->where($db->qn('folder') . ' = ' . $db->q($folder));
 						$db->setQuery($query);
-						$count             = $db->loadResult();
-						$installer         = new JInstaller;
-						$result            = $installer->install($path);
-						$status->plugins[] = [
+						$count                  = $db->loadResult();
+						$installer              = new JInstaller;
+						$result                 = $installer->install($path);
+						$status->pluginsarray[] = array(
 							'name'   => 'plg_' . $plugin,
 							'group'  => $folder,
 							'result' => $result
-						];
+						);
+
 						if ($published && !$count)
 						{
 							$query = $db->getQuery(true)
@@ -963,16 +984,16 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @since 9.0.18
 	 */
-	private function _uninstallSubextensions($parent)
+	private function uninstallSubextensions($parent)
 	{
 		jimport('joomla.installer.installer');
 
 		$db = JFactory::getDbo();
 
 		// Modules uninstalling
-		if (count($this->installation_queue['modules']))
+		if (count(self::$installActionQueue['modules']))
 		{
-			foreach ($this->installation_queue['modules'] as $folder => $modules)
+			foreach (self::$installActionQueue['modules'] as $folder => $modules)
 			{
 				if (count($modules))
 				{
@@ -990,13 +1011,13 @@ class Com_BiblestudyInstallerScript
 						// Uninstall the module
 						if ($id)
 						{
-							$installer               = new JInstaller;
-							$result                  = $installer->uninstall('module', $id, 1);
-							$this->status->modules[] = [
+							$installer                    = new JInstaller;
+							$result                       = $installer->uninstall('module', $id, 1);
+							$this->status->modulesarray[] = array(
 								'name'   => 'mod_' . $module,
 								'client' => $folder,
 								'result' => $result
-							];
+							);
 						}
 					}
 				}
@@ -1004,9 +1025,9 @@ class Com_BiblestudyInstallerScript
 		}
 
 		// Plugins uninstalling
-		if (count($this->installation_queue['plugins']))
+		if (count(self::$installActionQueue['plugins']))
 		{
-			foreach ($this->installation_queue['plugins'] as $folder => $plugins)
+			foreach (self::$installActionQueue['plugins'] as $folder => $plugins)
 			{
 				if (count($plugins))
 				{
@@ -1024,13 +1045,13 @@ class Com_BiblestudyInstallerScript
 
 						if ($id)
 						{
-							$installer               = new JInstaller;
-							$result                  = $installer->uninstall('plugin', $id, 1);
-							$this->status->plugins[] = [
+							$installer                    = new JInstaller;
+							$result                       = $installer->uninstall('plugin', $id, 1);
+							$this->status->pluginsarray[] = array(
 								'name'   => 'plg_' . $plugin,
 								'group'  => $folder,
 								'result' => $result
-							];
+							);
 						}
 					}
 				}
