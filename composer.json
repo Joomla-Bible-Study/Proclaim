@@ -32,7 +32,6 @@
     "joomla/string": "^1.4",
     "joomla/uri": "~1.2",
     "joomla/utilities": "^1.6",
-    "ext-ldap": "*",
     "paragonie/random_compat": "~1.4",
     "paragonie/sodium_compat": "~1.6",
     "phpmailer/phpmailer": "^5.2.20",
@@ -69,6 +68,7 @@
       "dev-master": "2.x-dev"
     }
   },
+
   "scripts": {
     "phpcs": "phpcs --standard=joomla",
     "post-install-cmd": "\"vendor/bin/phpcs\" --config-set installed_paths ../../..",
