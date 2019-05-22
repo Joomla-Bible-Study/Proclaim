@@ -53,7 +53,6 @@
     "phing/phing": "^2.9",
     "pdepend/pdepend": "^2.4",
     "phpmd/phpmd": "^2.4",
-    "phploc/phploc": "^4.0",
     "mayflower/php-codebrowser": "^1.1",
     "sebastian/phpcpd": "^3.0",
     "pear/versioncontrol_git": "dev-master",
