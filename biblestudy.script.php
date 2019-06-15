@@ -585,8 +585,8 @@ class Com_BiblestudyInstallerScript
 		$language = JFactory::getLanguage();
 		$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', 'en-GB', true);
 		$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', null, true);
-		echo '<img src="../media/com_biblestudy/images/icons/icon-48-churchdirectory.png" width="48" height="48"
-             alt="ChurchDirectory"/>
+		echo '<img src="../media/com_biblestudy/images/proclaim.jpg" width="48" height="48"
+             alt="Proclaim"/>
 
         <h2>Welcome to CWM Proclaim System</h2>
 
@@ -595,7 +595,7 @@ class Com_BiblestudyInstallerScript
             <tr>
                 <th class="title">Extension</th>
                 <th class="title">Client</th>
-                <th class="title">' . JText::_('COM_CHURCHDIRECTORY_STATUS') . '</th>
+                <th class="title">' . JText::_('JBS_INS_STATUS') . '</th>
             </tr>
             </thead>
             <tfoot>
@@ -605,9 +605,9 @@ class Com_BiblestudyInstallerScript
             </tfoot>
             <tbody>
             <tr>
-                <td class="key">' . JText::_('COM_CHURCHDIRECTORY_NAME') . '</td>
+                <td class="key">' . JText::_('JBS_CMN_COM_BIBLESTUDY') . '</td>
                 <td class="key">Site</td>
-                <td><strong style="color: green;">' . JText::_('COM_CHURCHDIRECTORY_INSTALLED') . '</strong></td>
+                <td><strong style="color: green;">' . JText::_('JBS_INS_INSTALLED') . '</strong></td>
             </tr>';
 
 		if (count($status->modules))
@@ -615,7 +615,7 @@ class Com_BiblestudyInstallerScript
 			echo "<tr>
                 <th>Module</th>
                 <th>Client</th>
-                <th><?php echo JText::_('COM_CHURCHDIRECTORY_STATUS'); ?></th>
+                <th><?php echo JText::_('JBS_INS_STATUS'); ?></th>
             </tr>";
 
 			foreach ($status->modules as $module)
@@ -625,7 +625,7 @@ class Com_BiblestudyInstallerScript
 				echo '<td class="key">' . ucfirst($module['client']) . '</td>';
 				echo '<td class="key">';
 				echo '<strong style="color: ' . ($module['result'] ? 'green' : 'red') . ';">';
-				echo ' ' . ($module['result'] ? JText::_('COM_CHURCHDIRECTORY_INSTALLED') : JText::_('COM_CHURCHDIRECTORY_NOT_INSTALLED')) . ' ';
+				echo ' ' . ($module['result'] ? JText::_('JBS_INS_INSTALLED') : JText::_('JBS_INS_NOT_INSTALLED')) . ' ';
 				echo '</strong>';
 				echo '</td>';
 				echo '</tr>';
@@ -638,7 +638,7 @@ class Com_BiblestudyInstallerScript
 			<tr>
 				<th>Plugin</th>
 				<th>Group</th>
-				<th><?php echo JText::_('COM_CHURCHDIRECTORY_STATUS'); ?></th>
+				<th><?php echo JText::_('JBS_INS_STATUS'); ?></th>
 			</tr>
 			<?php
 			foreach ($status->plugins as $plugin)
@@ -648,7 +648,7 @@ class Com_BiblestudyInstallerScript
 				echo '<td class="key">' . ucfirst($plugin['group']) . '</td>';
 				echo '<td>';
 				echo '<strong style="color: ' . ($plugin['result'] ? 'green' : 'red') . ';">';
-				echo '' . ($plugin['result'] ? JText::_('COM_CHURCHDIRECTORY_INSTALLED') : JText::_('COM_CHURCHDIRECTORY_NOT_INSTALLED')) . '';
+				echo '' . ($plugin['result'] ? JText::_('JBS_INS_INSTALLED') : JText::_('JBS_INS_NOT_INSTALLED')) . '';
 				echo '</strong>';
 				echo '</td>';
 				echo '</tr>';
@@ -661,7 +661,7 @@ class Com_BiblestudyInstallerScript
 			<tr>
 				<th>Libraries</th>
 				<th>Version</th>
-				<th><?php echo JText::_('COM_CHURCHDIRECTORY_STATUS'); ?></th>
+				<th><?php echo JText::_('JBS_INS_STATUS'); ?></th>
 			</tr>
 			<?php
 			foreach ($status->libraries as $library)
@@ -694,12 +694,12 @@ class Com_BiblestudyInstallerScript
 	private function renderPostUninstallation($status, $parent)
 	{
 		$rows = 0;
-		echo '<h2>' . JText::_('COM_CHURCHDIRECTORY_UNINSTALL') . '</h2>
+		echo '<h2>' . JText::_('JBS_INS_UNINSTALL') . '</h2>
 		<table class="adminlist">
 			<thead>
 			<tr>
-				<th class="title" colspan="2">' . JText::_('COM_CHURCHDIRECTORY_EXTENSION') . '</th>
-				<th width="30%">' . JText::_('COM_CHURCHDIRECTORY_STATUS') . '</th>
+				<th class="title" colspan="2">' . JText::_('JBS_INS_EXTENSION') . '</th>
+				<th width="30%">' . JText::_('JBS_INS_STATUS') . '</th>
 			</tr>
 			</thead>
 			<tfoot>
@@ -709,16 +709,16 @@ class Com_BiblestudyInstallerScript
 			</tfoot>
 			<tbody>
 			<tr class="row0">
-				<td class="key" colspan="2">' . JText::_('COM_CHURCHDIRECTORY') . '</td>
-				<td><strong style="color: green;">' . JText::_('COM_CHURCHDIRECTORY_REMOVED') . '</strong></td>
+				<td class="key" colspan="2">' . JText::_('JBS_CMN_COM_BIBLESTUDY') . '</td>
+				<td><strong style="color: green;">' . JText::_('JBS_INS_REMOVED') . '</strong></td>
 			</tr>';
 
 		if (count($status->modules))
 		{
 			?>
 			<tr>
-				<th><?php echo JText::_('COM_CHURCHDIRECTORY_MODULE'); ?></th>
-				<th><?php echo JText::_('COM_CHURCHDIRECTORY_CLIENT'); ?></th>
+				<th><?php echo JText::_('JBS_INS_MODULE'); ?></th>
+				<th><?php echo JText::_('JBS_INS_CLIENT'); ?></th>
 				<th></th>
 			</tr>
 			<?php
@@ -730,8 +730,8 @@ class Com_BiblestudyInstallerScript
 					<td class="key"><?php echo ucfirst($module['client']); ?></td>
 					<td>
 						<strong style="color: <?php echo '' . ($module['result'] ? 'green' : 'red'); ?>">
-							<?php echo '' . ($module['result'] ? JText::_('COM_CHURCHDIRECTORY_REMOVED')
-									: JText::_('COM_CHURCHDIRECTORY_NOT_REMOVED')); ?></strong>
+							<?php echo '' . ($module['result'] ? JText::_('JBS_INS_REMOVED')
+									: JText::_('JBS_INS_NOT_REMOVED')); ?></strong>
 					</td>
 				</tr>
 				<?php
@@ -757,8 +757,8 @@ class Com_BiblestudyInstallerScript
 					<td class="key"><?php echo ucfirst($plugin['group']); ?></td>
 					<td><strong style="color: <?php echo '' . ($plugin['result'] ? 'green' : 'red'); ?>;">
 							<?php echo '' . ($plugin['result'] ?
-									JText::_('COM_CHURCHDIRECTORY_REMOVED') :
-									JText::_('COM_CHURCHDIRECTORY_NOT_REMOVED')); ?>
+									JText::_('JBS_INS_REMOVED') :
+									JText::_('JBS_INS_NOT_REMOVED')); ?>
 						</strong>
 					</td>
 				</tr>
