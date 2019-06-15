@@ -8,7 +8,6 @@ build/reports/pmd.html
 com_biblestudy/admin/biblestudy.script.php
 com_biblestudy/admin/biblestudy.xml
 com_biblestudy/media/css/site/
-composer.lock
 composer.phar
 joomla/.gitignore
 joomla/.travis.yml

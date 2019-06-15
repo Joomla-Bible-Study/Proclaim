@@ -36,7 +36,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">181</span></a></li>
+                <span class="label label-info">182</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -54,7 +54,7 @@
                         </div></noscript>
 <div class="row">
 <div class="span4">
-<div class="btn-toolbar">
+<div xmlns:php="http://php.net/xsl" class="btn-toolbar">
 <div class="btn-group visibility" data-toggle="buttons-checkbox">
 <button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button>
 </div>
@@ -62,7 +62,7 @@
 <button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
 </div>
 </div>
-<ul class="side-nav nav nav-list">
+<ul xmlns:php="http://php.net/xsl" class="side-nav nav nav-list">
 <li class="nav-header">
 <i title="Methods" class="icon-custom icon-method"></i> Methods
                     <ul>
@@ -70,7 +70,6 @@
 <li class="method public "><a href="#method_deleteFiles" title="deleteFiles() :: Delete Files"><span class="description">Delete Files</span><pre>deleteFiles()</pre></a></li>
 <li class="method public "><a href="#method_deleteFolder" title="deleteFolder() :: Delete Folder"><span class="description">Delete Folder</span><pre>deleteFolder()</pre></a></li>
 <li class="method public "><a href="#method_deleteFolders" title="deleteFolders() :: Delete Folders"><span class="description">Delete Folders</span><pre>deleteFolders()</pre></a></li>
-<li class="method public "><a href="#method_discover_install" title="discover_install() :: Rout to Install"><span class="description">Rout to Install</span><pre>discover_install()</pre></a></li>
 <li class="method public "><a href="#method_install" title="install() :: Install"><span class="description">Install</span><pre>install()</pre></a></li>
 <li class="method public "><a href="#method_postflight" title="postflight() :: Post Flight"><span class="description">Post Flight</span><pre>postflight()</pre></a></li>
 <li class="method public "><a href="#method_preflight" title="preflight() :: $parent is the class calling this method."><span class="description">$parent is the class calling this method.</span><pre>preflight()</pre></a></li>
@@ -87,7 +86,12 @@
 </ul>
 </li>
 <li class="nav-header private">» Private
-                    <ul><li class="method private "><a href="#method__uninstallSubextensions" title="_uninstallSubextensions() :: Uninstalls subextensions (modules, plugins) bundled with the main extension"><span class="description">Uninstalls subextensions (modules, plugins) bundled with the main extension</span><pre>_uninstallSubextensions()</pre></a></li></ul>
+                    <ul>
+<li class="method private "><a href="#method_installSubextensions" title="installSubextensions() :: Installs subextensions (modules, plugins) bundled with the main extension"><span class="description">Installs subextensions (modules, plugins) bundled with the main extension</span><pre>installSubextensions()</pre></a></li>
+<li class="method private "><a href="#method_renderPostInstallation" title="renderPostInstallation() :: Renders the post-installation message"><span class="description">Renders the post-installation message</span><pre>renderPostInstallation()</pre></a></li>
+<li class="method private "><a href="#method_renderPostUninstallation" title="renderPostUninstallation() :: Render Post Uninstalling"><span class="description">Render Post Uninstalling</span><pre>renderPostUninstallation()</pre></a></li>
+<li class="method private "><a href="#method_uninstallSubextensions" title="uninstallSubextensions() :: Uninstalls subextensions (modules, plugins) bundled with the main extension"><span class="description">Uninstalls subextensions (modules, plugins) bundled with the main extension</span><pre>uninstallSubextensions()</pre></a></li>
+</ul>
 </li>
 <li class="nav-header">
 <i title="Properties" class="icon-custom icon-property"></i> Properties
@@ -95,19 +99,21 @@
 </li>
 <li class="nav-header protected">» Protected
                     <ul>
-<li class="property protected "><a href="#property_biblestudy_extension" title="$biblestudy_extension() :: "><span class="description">The component's name</span><pre>$biblestudy_extension</pre></a></li>
-<li class="property protected "><a href="#property_extensions" title="$extensions() :: "><span class="description"></span><pre>$extensions</pre></a></li>
+<li class="property protected "><a href="#property_extension" title="$extension() :: "><span class="description">The component's name</span><pre>$extension</pre></a></li>
+<li class="property protected "><a href="#property_extensions" title="$extensions() :: "><span class="description">test</span><pre>$extensions</pre></a></li>
+<li class="property protected "><a href="#property_srcxml" title="$srcxml() :: "><span class="description"></span><pre>$srcxml</pre></a></li>
 <li class="property protected "><a href="#property_status" title="$status() :: "><span class="description"></span><pre>$status</pre></a></li>
 <li class="property protected "><a href="#property_versions" title="$versions() :: This is Minimum requirements for: PHP, MySQL, Joomla"><span class="description"></span><pre>$versions</pre></a></li>
+<li class="property protected "><a href="#property_xml" title="$xml() :: "><span class="description"></span><pre>$xml</pre></a></li>
 </ul>
 </li>
 <li class="nav-header private">» Private
-                    <ul><li class="property private "><a href="#property_installation_queue" title="$installation_queue() :: The list of extra modules and plugins to install"><span class="description"></span><pre>$installation_queue</pre></a></li></ul>
+                    <ul><li class="property private "><a href="#property_installActionQueue" title="$installActionQueue() :: The list of extra modules and plugins to install"><span class="description"></span><pre>$installActionQueue</pre></a></li></ul>
 </li>
 </ul>
 </div>
 <div class="span8">
-<a id="\Com_BiblestudyInstallerScript"></a><ul class="breadcrumb">
+<a xmlns:php="http://php.net/xsl" id="\Com_BiblestudyInstallerScript"></a><ul xmlns:php="http://php.net/xsl" class="breadcrumb">
 <li>
 <a href="../index.html"><i title="Classes" class="icon-custom icon-class"></i></a><span class="divider">\</span>
 </li>
@@ -115,7 +121,7 @@
 <span class="divider">\</span><a href="../classes/Com_BiblestudyInstallerScript.html">Com_BiblestudyInstallerScript</a>
 </li>
 </ul>
-    <div class="element class">
+<div xmlns:php="http://php.net/xsl" class="element class">
 <p class="short_description">Proclaim Install Script</p>
 <div class="details">
 <div class="long_description"></div>
@@ -213,24 +219,6 @@
 <div class="subelement response"><code>\void;</code></div>
 </div></div>
 </div>
-<a id="method_discover_install"></a><div class="element clickable method public method_discover_install " data-toggle="collapse" data-target=".method_discover_install .collapse" title="public">
-<h2>Rout to Install</h2>
-<pre>discover_install(\JInstallerFile $parent) : boolean</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>1.5</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$parent</h4>
-<code>\JInstallerFile</code><p>?</p></div>
-<h3>Returns</h3>
-<div class="subelement response"><code>boolean</code></div>
-</div></div>
-</div>
 <a id="method_install"></a><div class="element clickable method public method_install " data-toggle="collapse" data-target=".method_install .collapse" title="public">
 <h2>Install</h2>
 <pre>install(\JInstallerFile $parent) : boolean</pre>
@@ -275,7 +263,7 @@
 </div>
 <a id="method_preflight"></a><div class="element clickable method public method_preflight " data-toggle="collapse" data-target=".method_preflight .collapse" title="public">
 <h2>$parent is the class calling this method.</h2>
-<pre>preflight(string $type, \JInstallerFile $parent) : boolean</pre>
+<pre>preflight(string $type, \JInstallerAdapter $parent) : boolean</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"><p>$type is the type of change (install, update or discover_install, not uninstall).
@@ -291,7 +279,7 @@ If preflight returns false, Joomla will abort the update and undo everything alr
 <code>string</code><p>Type of install</p></div>
 <div class="subelement argument">
 <h4>$parent</h4>
-<code>\JInstallerFile</code><p>Where it is coming from</p></div>
+<code>\JInstallerAdapter</code><p>Where it is coming from</p></div>
 <h3>Exceptions</h3>
 <table class="table table-bordered"><tr>
 <th><code>\Exception</code></th>
@@ -440,9 +428,72 @@ If preflight returns false, Joomla will abort the update and undo everything alr
 <div class="subelement response"><code>boolean</code></div>
 </div></div>
 </div>
-<a id="method__uninstallSubextensions"></a><div class="element clickable method private method__uninstallSubextensions " data-toggle="collapse" data-target=".method__uninstallSubextensions .collapse" title="private">
+<a id="method_installSubextensions"></a><div class="element clickable method private method_installSubextensions " data-toggle="collapse" data-target=".method_installSubextensions .collapse" title="private">
+<h2>Installs subextensions (modules, plugins) bundled with the main extension</h2>
+<pre>installSubextensions(\JInstallerAdapter $parent) : object</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.7.0</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$parent</h4>
+<code>\JInstallerAdapter</code><p>is the class calling this method.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>object</code>The subextension installation status</div>
+</div></div>
+</div>
+<a id="method_renderPostInstallation"></a><div class="element clickable method private method_renderPostInstallation " data-toggle="collapse" data-target=".method_renderPostInstallation .collapse" title="private">
+<h2>Renders the post-installation message</h2>
+<pre>renderPostInstallation(object $status, \JInstallerAdapter $parent) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>since</th>
+<td>1.7.0</td>
+</tr>
+<tr>
+<th>todo</th>
+<td>need to add version check system.</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$status</h4>
+<code>object</code><p>?</p></div>
+<div class="subelement argument">
+<h4>$parent</h4>
+<code>\JInstallerAdapter</code><p>is the class calling this method.</p></div>
+</div></div>
+</div>
+<a id="method_renderPostUninstallation"></a><div class="element clickable method private method_renderPostUninstallation " data-toggle="collapse" data-target=".method_renderPostUninstallation .collapse" title="private">
+<h2>Render Post Uninstalling</h2>
+<pre>renderPostUninstallation(object $status, \JInstallerAdapter $parent) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.7.0</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$status</h4>
+<code>object</code><p>?</p></div>
+<div class="subelement argument">
+<h4>$parent</h4>
+<code>\JInstallerAdapter</code><p>is the class calling this method.</p></div>
+</div></div>
+</div>
+<a id="method_uninstallSubextensions"></a><div class="element clickable method private method_uninstallSubextensions " data-toggle="collapse" data-target=".method_uninstallSubextensions .collapse" title="private">
 <h2>Uninstalls subextensions (modules, plugins) bundled with the main extension</h2>
-<pre>_uninstallSubextensions(\JInstallerAdapter $parent) : void</pre>
+<pre>uninstallSubextensions(\JInstallerAdapter $parent) : void</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -474,9 +525,9 @@ If preflight returns false, Joomla will abort the update and undo everything alr
 </tr></table>
 </div></div>
 </div>
-<a id="property_biblestudy_extension"> </a><div class="element clickable property protected property_biblestudy_extension" data-toggle="collapse" data-target=".property_biblestudy_extension .collapse" title="protected">
+<a id="property_extension"> </a><div class="element clickable property protected property_extension" data-toggle="collapse" data-target=".property_extension .collapse" title="protected">
 <h2>The component's name</h2>
-<pre>$biblestudy_extension : string</pre>
+<pre>$extension : string</pre>
 <div class="row collapse"><div class="detail-description">
 <h3>Default</h3>
 <div class="subelement argument"><code>'com_biblestudy'</code></div>
@@ -491,24 +542,52 @@ If preflight returns false, Joomla will abort the update and undo everything alr
 </div></div>
 </div>
 <a id="property_extensions"> </a><div class="element clickable property protected property_extensions" data-toggle="collapse" data-target=".property_extensions .collapse" title="protected">
-<h2>$extensions</h2>
-<pre>$extensions </pre>
+<h2>test</h2>
+<pre>$extensions : array</pre>
 <div class="row collapse"><div class="detail-description">
 <h3>Default</h3>
 <div class="subelement argument"><code>array('dom', 'gd', 'json', 'pcre', 'SimpleXML')</code></div>
 </div></div>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>9.0.18</td>
+</tr></table>
+</div></div>
 </div>
-<a id="property_status"> </a><div class="element clickable property protected property_status" data-toggle="collapse" data-target=".property_status .collapse" title="protected">
-<h2>$status</h2>
-<pre>$status </pre>
+<a id="property_srcxml"> </a><div class="element clickable property protected property_srcxml" data-toggle="collapse" data-target=".property_srcxml .collapse" title="protected">
+<h2>$srcxml</h2>
+<pre>$srcxml : string</pre>
 <div class="row collapse"><div class="detail-description">
 <h3>Default</h3>
 <div class="subelement argument"></div>
 </div></div>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.5</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_status"> </a><div class="element clickable property protected property_status" data-toggle="collapse" data-target=".property_status .collapse" title="protected">
+<h2>$status</h2>
+<pre>$status : object</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.5</td>
+</tr></table>
+</div></div>
 </div>
 <a id="property_versions"> </a><div class="element clickable property protected property_versions" data-toggle="collapse" data-target=".property_versions .collapse" title="protected">
 <h2>This is Minimum requirements for: PHP, MySQL, Joomla</h2>
@@ -517,7 +596,7 @@ If preflight returns false, Joomla will abort the update and undo everything alr
 <h3>Default</h3>
 <div class="subelement argument"><code>array('PHP' => array('5.6' => '5.6.30', '7.0' => '7.0.13', '7.1' => '7.1.0', '7.2' => '7.2.1', '0' => '7.2.11'), 'MySQL' => array('5.1' => '5.1', '5.5' => '5.5.3', '0' => '5.5.3'), 'Joomla!' => array('3.6' => '3.6.3', '3.7' => '3.7.0', '0' => '3.8.3'))</code></div>
 </div></div>
-<div class="labels"></div>
+<div class="labels"><span class="label">Static</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
@@ -526,14 +605,30 @@ If preflight returns false, Joomla will abort the update and undo everything alr
 </tr></table>
 </div></div>
 </div>
-<a id="property_installation_queue"> </a><div class="element clickable property private property_installation_queue" data-toggle="collapse" data-target=".property_installation_queue .collapse" title="private">
+<a id="property_xml"> </a><div class="element clickable property protected property_xml" data-toggle="collapse" data-target=".property_xml .collapse" title="protected">
+<h2>$xml</h2>
+<pre>$xml : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.5</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_installActionQueue"> </a><div class="element clickable property private property_installActionQueue" data-toggle="collapse" data-target=".property_installActionQueue .collapse" title="private">
 <h2>The list of extra modules and plugins to install</h2>
-<pre>$installation_queue : array</pre>
+<pre>$installActionQueue : array</pre>
 <div class="row collapse"><div class="detail-description">
 <h3>Default</h3>
 <div class="subelement argument"><code>array('modules' => array('admin' => array(), 'site' => array('biblestudy' => 0, 'biblestudy_podcast' => 0)), 'plugins' => array('finder' => array('biblestudy' => 1), 'search' => array('biblestudysearch' => 0), 'system' => array('jbspodcast' => 0, 'jbsbackup' => '0')))</code></div>
 </div></div>
-<div class="labels"></div>
+<div class="labels"><span class="label">Static</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
 <table class="table table-bordered">
@@ -555,7 +650,7 @@ If preflight returns false, Joomla will abort the update and undo everything alr
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2019-02-23T17:32:08-06:00.<br></footer></div>
+            generated on 2019-06-15T10:41:25-05:00.<br></footer></div>
 </div>
 </body>
 </html>

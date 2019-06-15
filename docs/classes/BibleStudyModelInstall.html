@@ -36,7 +36,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">179</span></a></li>
+                <span class="label label-info">182</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -79,7 +79,6 @@
 </li>
 <li class="nav-header private">» Private
                     <ul>
-<li class="method private "><a href="#method_RealRun" title="RealRun() :: Start the Run through the Pre Versions then SQL files then After PHP functions."><span class="description">Start the Run through the Pre Versions then SQL files then After PHP functions.</span><pre>RealRun()</pre></a></li>
 <li class="method private "><a href="#method_allUpdate" title="allUpdate() :: Function to update using the version number for sql files"><span class="description">Function to update using the version number for sql files</span><pre>allUpdate()</pre></a></li>
 <li class="method private "><a href="#method_correctVersions" title="correctVersions() :: Correct problem in are update table under 7.0.2 systems"><span class="description">Correct problem in are update table under 7.0.2 systems</span><pre>correctVersions()</pre></a></li>
 <li class="method private "><a href="#method_finish" title="finish() :: Finish the system"><span class="description">Finish the system</span><pre>finish()</pre></a></li>
@@ -87,10 +86,10 @@
 <li class="method private "><a href="#method_getSteps" title="getSteps() :: Get migrate versions of DB after import/copy has finished."><span class="description">Get migrate versions of DB after import/copy has finished.</span><pre>getSteps()</pre></a></li>
 <li class="method private "><a href="#method_getUpdateVersion" title="getUpdateVersion() :: Returns Update Version form Table"><span class="description">Returns Update Version form Table</span><pre>getUpdateVersion()</pre></a></li>
 <li class="method private "><a href="#method_haveEnoughTime" title="haveEnoughTime() :: Makes sure that no more than 5 seconds since the start of the timer have elapsed"><span class="description">Makes sure that no more than 5 seconds since the start of the timer have elapsed</span><pre>haveEnoughTime()</pre></a></li>
-<li class="method private "><a href="#method_install" title="install() :: Install step system"><span class="description">Install step system</span><pre>install()</pre></a></li>
 <li class="method private "><a href="#method_loadStack" title="loadStack() :: Loads the Versions/SQL/After stack from the session"><span class="description">Loads the Versions/SQL/After stack from the session</span><pre>loadStack()</pre></a></li>
 <li class="method private "><a href="#method_microtime_float" title="microtime_float() :: Returns the current timestamps in decimal seconds"><span class="description">Returns the current timestamps in decimal seconds</span><pre>microtime_float()</pre></a></li>
 <li class="method private "><a href="#method_postinstallclenup" title="postinstallclenup() :: Cleanup postInstall before migration"><span class="description">Cleanup postInstall before migration</span><pre>postinstallclenup()</pre></a></li>
+<li class="method private "><a href="#method_realRun" title="realRun() :: Start the Run through the Pre Versions then SQL files then After PHP functions."><span class="description">Start the Run through the Pre Versions then SQL files then After PHP functions.</span><pre>realRun()</pre></a></li>
 <li class="method private "><a href="#method_resetStack" title="resetStack() :: Resets the Versions/SQL/After stack saved in the session"><span class="description">Resets the Versions/SQL/After stack saved in the session</span><pre>resetStack()</pre></a></li>
 <li class="method private "><a href="#method_resetTimer" title="resetTimer() :: Starts or resets the internal timer"><span class="description">Starts or resets the internal timer</span><pre>resetTimer()</pre></a></li>
 <li class="method private "><a href="#method_runUpdates" title="runUpdates() :: Run updates SQL"><span class="description">Run updates SQL</span><pre>runUpdates()</pre></a></li>
@@ -112,7 +111,6 @@
                     <ul>
 <li class="property protected "><a href="#property_filePath" title="$filePath() :: "><span class="description">Path to Mysql files</span><pre>$filePath</pre></a></li>
 <li class="property protected "><a href="#property_phpPath" title="$phpPath() :: "><span class="description">Path to PHP Version files</span><pre>$phpPath</pre></a></li>
-<li class="property protected "><a href="#property_type" title="$type() :: "><span class="description"></span><pre>$type</pre></a></li>
 </ul>
 </li>
 <li class="nav-header private">» Private
@@ -120,7 +118,6 @@
 <li class="property private "><a href="#property_allupdates" title="$allupdates() :: "><span class="description">The pre versions sub sql array to process</span><pre>$allupdates</pre></a></li>
 <li class="property private "><a href="#property_biblestudyEid" title="$biblestudyEid() :: "><span class="description">Id of Extinction Table</span><pre>$biblestudyEid</pre></a></li>
 <li class="property private "><a href="#property_finish" title="$finish() :: "><span class="description">Array of Finish Task</span><pre>$finish</pre></a></li>
-<li class="property private "><a href="#property_install" title="$install() :: "><span class="description">Array of Install Task</span><pre>$install</pre></a></li>
 <li class="property private "><a href="#property_isimport" title="$isimport() :: "><span class="description">If was imported</span><pre>$isimport</pre></a></li>
 <li class="property private "><a href="#property_start" title="$start() :: "><span class="description">Array of Install Task</span><pre>$start</pre></a></li>
 <li class="property private "><a href="#property_startTime" title="$startTime() :: "><span class="description">The time the process started</span><pre>$startTime</pre></a></li>
@@ -313,25 +310,6 @@
 <div class="subelement response"><code>boolean</code></div>
 </div></div>
 </div>
-<a id="method_RealRun"></a><div class="element clickable method private method_RealRun " data-toggle="collapse" data-target=".method_RealRun .collapse" title="private">
-<h2>Start the Run through the Pre Versions then SQL files then After PHP functions.</h2>
-<pre>RealRun() : boolean</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>7.1</td>
-</tr></table>
-<h3>Exceptions</h3>
-<table class="table table-bordered"><tr>
-<th><code>\Exception</code></th>
-<td></td>
-</tr></table>
-<h3>Returns</h3>
-<div class="subelement response"><code>boolean</code></div>
-</div></div>
-</div>
 <a id="method_allUpdate"></a><div class="element clickable method private method_allUpdate " data-toggle="collapse" data-target=".method_allUpdate .collapse" title="private">
 <h2>Function to update using the version number for sql files</h2>
 <pre>allUpdate(string $value) : boolean</pre>
@@ -460,29 +438,6 @@
 <div class="subelement response"><code>boolean</code></div>
 </div></div>
 </div>
-<a id="method_install"></a><div class="element clickable method private method_install " data-toggle="collapse" data-target=".method_install .collapse" title="private">
-<h2>Install step system</h2>
-<pre>install(array $files<code> = array('install', 'install-defaults')</code>) : boolean</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>7.1</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$files</h4>
-<code>array</code><p>List of installs to install</p></div>
-<h3>Exceptions</h3>
-<table class="table table-bordered"><tr>
-<th><code>\Exception</code></th>
-<td></td>
-</tr></table>
-<h3>Returns</h3>
-<div class="subelement response"><code>boolean</code></div>
-</div></div>
-</div>
 <a id="method_loadStack"></a><div class="element clickable method private method_loadStack " data-toggle="collapse" data-target=".method_loadStack .collapse" title="private">
 <h2>Loads the Versions/SQL/After stack from the session</h2>
 <pre>loadStack() : boolean</pre>
@@ -521,6 +476,25 @@
 <th>since</th>
 <td>7.1</td>
 </tr></table>
+</div></div>
+</div>
+<a id="method_realRun"></a><div class="element clickable method private method_realRun " data-toggle="collapse" data-target=".method_realRun .collapse" title="private">
+<h2>Start the Run through the Pre Versions then SQL files then After PHP functions.</h2>
+<pre>realRun() : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>7.1</td>
+</tr></table>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code>\Exception</code></th>
+<td></td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
 </div></div>
 </div>
 <a id="method_resetStack"></a><div class="element clickable method private method_resetStack " data-toggle="collapse" data-target=".method_resetStack .collapse" title="private">
@@ -728,28 +702,6 @@
 </tr></table>
 </div></div>
 </div>
-<a id="property_type"> </a><div class="element clickable property protected property_type" data-toggle="collapse" data-target=".property_type .collapse" title="protected">
-<h2>$type</h2>
-<pre>$type </pre>
-<div class="row collapse"><div class="detail-description">
-<h3>Default</h3>
-<div class="subelement argument"><code>null</code></div>
-</div></div>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered">
-<tr>
-<th>type</th>
-<td>string Type of process</td>
-</tr>
-<tr>
-<th>since</th>
-<td>7.1</td>
-</tr>
-</table>
-</div></div>
-</div>
 <a id="property_allupdates"> </a><div class="element clickable property private property_allupdates" data-toggle="collapse" data-target=".property_allupdates .collapse" title="private">
 <h2>The pre versions sub sql array to process</h2>
 <pre>$allupdates : array</pre>
@@ -785,22 +737,6 @@
 <a id="property_finish"> </a><div class="element clickable property private property_finish" data-toggle="collapse" data-target=".property_finish .collapse" title="private">
 <h2>Array of Finish Task</h2>
 <pre>$finish : array</pre>
-<div class="row collapse"><div class="detail-description">
-<h3>Default</h3>
-<div class="subelement argument"><code>array()</code></div>
-</div></div>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>7.1</td>
-</tr></table>
-</div></div>
-</div>
-<a id="property_install"> </a><div class="element clickable property private property_install" data-toggle="collapse" data-target=".property_install .collapse" title="private">
-<h2>Array of Install Task</h2>
-<pre>$install : array</pre>
 <div class="row collapse"><div class="detail-description">
 <h3>Default</h3>
 <div class="subelement argument"><code>array()</code></div>
@@ -977,7 +913,7 @@
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.8.5</a> and<br>
-            generated on 2019-03-16T10:29:06-05:00.<br></footer></div>
+            generated on 2019-06-15T10:41:23-05:00.<br></footer></div>
 </div>
 </body>
 </html>
