@@ -73,6 +73,10 @@ class BiblestudyViewMediafileform extends JViewLegacy
 	 * @since 7.0 */
 	protected $options;
 
+	/** @var object
+	 * @since    9.1.3 */
+	public $addon;
+
 	/**
 	 * Execute and display a template script.
 	 *
@@ -92,6 +96,9 @@ class BiblestudyViewMediafileform extends JViewLegacy
 		$this->state      = $this->get("State");
 		$this->canDo      = JBSMBibleStudyHelper::getActions($this->item->id, 'mediafile');
 		$this->params     = $this->state->get('admin');
+
+		// Load the addon
+		$this->addon = JBSMAddon::getInstance($this->media_form->type);
 
 		$language = JFactory::getLanguage();
 		$language->load('', JPATH_ADMINISTRATOR, null, true);
@@ -150,7 +157,7 @@ class BiblestudyViewMediafileform extends JViewLegacy
 		$this->setLayout('edit');
 
 		// Set the document
-		$this->_prepareDocument();
+		$this->prepareDocument();
 
 		// Display the template
 		parent::display($tpl);
@@ -164,7 +171,7 @@ class BiblestudyViewMediafileform extends JViewLegacy
 	 * @since 9.0.0
 	 * @throws Exception
 	 */
-	protected function _prepareDocument()
+	protected function prepareDocument()
 	{
 		$app   = JFactory::getApplication();
 		$menus = $app->getMenu();
