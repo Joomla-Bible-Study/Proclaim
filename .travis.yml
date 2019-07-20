@@ -28,8 +28,8 @@ before_script:
   - composer install
 
 script:
-  - if [[ $RUN_PHPCS == "yes" ]]; then vendor/bin/phpcs --report=full --ignore=*/tests/*,*/data/*,*/vendor/*,*/tmpl/* --extensions=php -p --standard=vendor/joomla/coding-standards/Joomla .; fi
-  - if [[ $RUN_UNIT_TESTS == "yes" ]]; then vendor/bin/phpunit --configuration travisci-phpunit.xml; fi
+  - if [[ $RUN_PHPCS == "yes" ]]; then libraries/vendor/bin/phpcs --report=full --ignore=*/tests/*,*/data/*,*/vendor/*,*/tmpl/* --extensions=php -p --standard=libraries/vendor/joomla/coding-standards/Joomla .; fi
+  - if [[ $RUN_UNIT_TESTS == "yes" ]]; then libraries/vendor/bin/phpunit --configuration travisci-phpunit.xml; fi
 
 branches:
   except:
