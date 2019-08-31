@@ -101,6 +101,9 @@ class ModJBSMHelper
 		$query->select('book.bookname');
 		$query->join('LEFT', '#__bsms_books AS book ON book.booknumber = study.booknumber');
 
+		$query->select('book2.bookname as bookname2');
+		$query->join('LEFT', '#__bsms_books AS book2 ON book2.booknumber = study.booknumber2');
+
 		// Join over MediaFiles and Plays/Downloads
 		$query->select('GROUP_CONCAT(DISTINCT mediafile.id) as mids, SUM(mediafile.plays) AS totalplays,' .
 			' SUM(mediafile.downloads) as totaldownloads, mediafile.study_id');
