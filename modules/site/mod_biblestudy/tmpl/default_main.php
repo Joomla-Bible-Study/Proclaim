@@ -22,7 +22,7 @@ JHtml::_('biblestudy.loadCss', $params, null, 'font-awesome');
 
 ?>
 <div class="container-fluid JBSM">
-	<?php if (($params->get('pageheader')))
+	<?php if ($params->get('pageheader'))
 	{
 		?>
 		<div class="row-fluid">
