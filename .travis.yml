@@ -19,11 +19,6 @@ matrix:
       env: INSTALL_APCU="yes" INSTALL_MEMCACHE="no"
     - php: 7.3
       env: INSTALL_APCU="yes" INSTALL_MEMCACHE="no" INSTALL_MEMCACHED="no"
-    - php: nightly
-      env: INSTALL_APCU="no" INSTALL_MEMCACHE="no" INSTALL_MEMCACHED="no"
-  allow_failures:
-    - php: 7.3
-    - php: nightly
 
 services:
 
@@ -33,8 +28,7 @@ before_script:
   - composer install
 
 script:
-  #- libraries/vendor/bin/phpunit --configuration travisci-phpunit.xml
-  - if [[ $RUN_PHPCS == "yes" ]]; then bin/phpcs --report=full --extensions=php -p --standard=build/phpcs/Joomla .; fi
+  - if [[ $RUN_PHPCS == "yes" ]]; then libraries/vendor/bin/phpcs --report=full --ignore=*/tests/*,*/data/*,*/vendor/*,*/tmpl/* --extensions=php -p --standard=libraries/vendor/joomla/coding-standards/Joomla .; fi
   - if [[ $RUN_UNIT_TESTS == "yes" ]]; then libraries/vendor/bin/phpunit --configuration travisci-phpunit.xml; fi
 
 branches:

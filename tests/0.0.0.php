@@ -20,7 +20,7 @@ class Migration000
 	 *
 	 * @param   JDatabaseDriver  $db  Joomla Data bass driver
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
 	 * @since 0.0.0
 	 */
