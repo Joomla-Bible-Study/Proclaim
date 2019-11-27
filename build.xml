@@ -222,6 +222,7 @@
 		<symlink target="${basedir}/plugins/finder/biblestudy" link="${joomla_path}${joomla_dir}/plugins/finder/biblestudy" overwrite="true"/>
 		<symlink target="${basedir}/plugins/system/jbspodcast" link="${joomla_path}${joomla_dir}/plugins/system/jbspodcast" overwrite="true"/>
 		<symlink target="${basedir}/plugins/search/biblestudysearch" link="${joomla_path}${joomla_dir}/plugins/search/biblestudysearch" overwrite="true"/>
+		<phingcall target="dev.init"/>
 	</target>
 
 	<!-- Create symbolic links for the development state -->
