@@ -106,6 +106,7 @@
 				<include name="plugins/**" />
 				<include name="site/**" />
 				<include name="*.php" />
+				<exclude name="build.xml" />
 				<include name="*.xml" />
 				<include name="*.txt" />
 				<include name="*.md" />
