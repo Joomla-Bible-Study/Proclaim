@@ -210,7 +210,7 @@
 
 		<echo message="Joomla path set to: ${joomla_path}${joomla_dir}"/>
 
-		<echo message="Linking component to Joomla!"/>
+		<echo message="Linking component, modules, and plugins to Joomla!"/>
 
 		<!-- Create symbolic links for component in the Joomla directory -->
 		<symlink target="${basedir}/media" link="${joomla_path}${joomla_dir}/media/com_biblestudy" overwrite="true"/>
