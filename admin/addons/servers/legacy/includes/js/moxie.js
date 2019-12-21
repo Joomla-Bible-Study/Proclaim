@@ -1162,7 +1162,6 @@ define("moxie/core/utils/Env", [
 		Env.log = function() {
 
 			function logObj(data) {
-				// TODO: this should recursively print out the object in a pretty way
 				console.appendChild(document.createTextNode(data + "\n"));
 			}
 
@@ -2970,7 +2969,7 @@ define('moxie/file/FileInput', [
 		*/
 		'change',
 
-		'cancel', // TODO: might be useful
+		'cancel',
 
 		/**
 		Dispatched when mouse cursor enters file-picker area. Can be used to style element
@@ -5262,14 +5261,6 @@ define("moxie/xhr/XMLHttpRequest", [
 				}
 			}
 		}
-
-		/*
-		function _toASCII(str, AllowUnassigned, UseSTD3ASCIIRules) {
-			// TODO: http://tools.ietf.org/html/rfc3490#section-4.1
-			return str.toLowerCase();
-		}
-		*/
-
 
 		function _doXHR(data) {
 			var self = this;

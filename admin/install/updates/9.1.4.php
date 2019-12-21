@@ -108,8 +108,6 @@ class Migration914
 	 * @since 9.1.3
 	 *
 	 * @return void
-	 *
-	 * @todo Need to do this for Admin and Media;
 	 */
 	protected function updateFA()
 	{
