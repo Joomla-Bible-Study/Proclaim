@@ -135,8 +135,8 @@ if ($saveOrder)
 									<?php // Create dropdown items and render the dropdown list.
 									if ($canChange)
 									{
-										JHtml::_('actionsdropdown.' . ((int) $item->published === 2 ? 'un' : '') . 'archive', 'cb' . $i, 'positions');
-										JHtml::_('actionsdropdown.' . ((int) $item->published === -2 ? 'un' : '') . 'trash', 'cb' . $i, 'positions');
+										JHtml::_('actionsdropdown.' . ((int) $item->published === 2 ? 'un' : '') . 'archive', 'cb' . $i, 'messages');
+										JHtml::_('actionsdropdown.' . ((int) $item->published === -2 ? 'un' : '') . 'trash', 'cb' . $i, 'messages');
 										echo JHtml::_('actionsdropdown.render', $this->escape($item->studytitle));
 									}
 									?>
