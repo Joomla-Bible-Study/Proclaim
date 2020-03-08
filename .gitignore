@@ -19,4 +19,3 @@ build/reports/phpcs-checkstyle.xml
 build/reports/project-size.txt
 /libraries/vendor/
 composer.lock
-/libraries/vendor/
