@@ -15,13 +15,13 @@
 	<rule ref="Generic.Files.EndFileNewline" />
 
 	<exclude name="Joomla.NamingConventions.ValidFunctionName.FunctionNoCapital"/>
-	<exclude name="Squiz.NamingConventions.ValidFunctionName.MethodUnderscore"/>
-	<exclude name="Squiz.NamingConventions.ValidFunctionName.ScopeNotCamelCaps"/>
-	<exclude name="Squiz.NamingConventions.ValidFunctionName.FunctionNameInvalid"/>
-	<exclude name="Squiz.NamingConventions.ValidVariableName.ClassVarHasUnderscore"/>
-	<exclude name="Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps"/>
-	<exclude name="Squiz.NamingConventions.ValidVariableName.NotCamelCaps"/>
-	<exclude name="Squiz.NamingConventions.ValidVariableName.StringNotCamelCaps"/>
+	<exclude name="Joomla.NamingConventions.ValidFunctionName.MethodUnderscore"/>
+	<exclude name="Joomla.NamingConventions.ValidFunctionName.ScopeNotCamelCaps"/>
+	<exclude name="Joomla.NamingConventions.ValidFunctionName.FunctionNameInvalid"/>
+	<exclude name="Joomla.NamingConventions.ValidVariableName.ClassVarHasUnderscore"/>
+	<exclude name="Joomla.NamingConventions.ValidVariableName.MemberNotCamelCaps"/>
+	<exclude name="Joomla.NamingConventions.ValidVariableName.NotCamelCaps"/>
+	<exclude name="Joomla.NamingConventions.ValidVariableName.StringNotCamelCaps"/>
 
 	<!-- Use Unix newlines -->
 	<rule ref="Generic.Files.LineEndings">
