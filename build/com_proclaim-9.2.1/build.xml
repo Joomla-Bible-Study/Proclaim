@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="proclaim" default="build" basedir=".">
+	<php expression="include('vendor/autoload.php')"/>
+
+	<property name="basedir" value="${project.basedir}"/>
+	<property name="project.name" value="Proclaim"/>
+
+	<!-- Joomla version to run the unit tests against -->
+	<property name="joomla.version" value="3.3.6"/>
+
+	<property name="config_path" value="${basedir}/tests/system/servers"/>
+
+	<property name="src.test" value="${basedir}/tests/test"/>
+	<property name="dest.test" value="/admin/views/test"/>
+
+	<target name="init" description="Create artifact directories">
+		<mkdir dir="${basedir}/build/reports"/>
+		<mkdir dir="${basedir}/docs"/>
+	</target>
+
+	<!-- List of all files that are packaged and distributed -->
+	<fileset dir="${basedir}" id="distributed_files">
+		<include name="admin/**/*.php"/>
+		<include name="media/**/*.php"/>
+		<include name="modules/**/*.php"/>
+		<include name="plugins/**/*.php"/>
+		<include name="site/**/*.php"/>
+		<exclude name=".git"/>
+	</fileset>
+
+	<!-- Validate syntax -->
+	<target name="lint" description="Perform syntax check of sourcecode files">
+		<phplint haltonfailure="true">
+			<fileset refid="distributed_files"/>
+		</phplint>
+	</target>
+
+	<target name="phpunit" depends="init" description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
+		<phpunit haltonfailure="true" haltonerror="true" bootstrap="${basedir}/tests/unit/bootstrap.php">
+			<!-- We can only use one formatter at a time -->
+			<formatter todir="${basedir}/build/reports" type="plain" outfile="test-brief.txt"/>
+			<batchtest>
+				<fileset dir="${basedir}/tests/unit/suites/" includes="**/*.php"/>
+			</batchtest>
+		</phpunit>
+	</target>
+
+	<!-- Copy and paste detector -->
+	<target name="phpcpd" depends="init" description="Checks for copy and pasted code">
+		<phpcpd>
+			<fileset refid="distributed_files"/>
+			<formatter type="pmd" outfile="${basedir}/build/reports/cpd-code.xml"/>
+		</phpcpd>
+	</target>
+
+	<!-- Measure the size of the project -->
+	<target name="size" depends="init" description="Measures the size of the project">
+		<phploc reportType="txt" reportName="project-size" reportDirectory="${basedir}/build/reports">
+			<fileset refid="distributed_files"/>
+		</phploc>
+	</target>
+
+	<!-- Detect violations in coding standards -->
+	<target name="phpcs" depends="init" description="Generate checkstyle.xml using PHP_CodeSniffer">
+		<phpcodesniffer standard="PEAR" format="summary" showSniffs="true" showWarnings="true" haltonerror="true">
+			<fileset refid="distributed_files"/>
+			<formatter type="checkstyle" outfile="${basedir}/build/reports/phpcs-checkstyle.xml"/>
+		</phpcodesniffer>
+	</target>
+
+	<!-- Creates API documentation -->
+	<target name="phpdoc" depends="init" description="Generate project API documentation">
+		<phpdoc2 title="${project.name} API" destdir="${basedir}/docs" template="responsive">
+			<fileset refid="distributed_files"/>
+		</phpdoc2>
+	</target>
+
+	<!-- Code analyzer and metric tool -->
+	<target name="pdepend" depends="init" description="Generate jdepend.xml and software metrics charts using PHP_Depend">
+		<phpdepend haltonerror="true">
+			<fileset refid="distributed_files"/>
+			<logger type="jdepend-xml" outfile="${basedir}/build/reports/jdepend.xml"/>
+			<logger type="jdepend-chart" outfile="${basedir}/build/reports/jdepend-dependencies.svg"/>
+			<logger type="overview-pyramid" outfile="${basedir}/build/reports/jdepend-pyramid.svg"/>
+			<analyzer type="coderank-mode" value="method"/>
+		</phpdepend>
+	</target>
+
+	<!-- PHP Mess Detector -->
+	<target name="pmd" depends="init" description="Detect messy code, and generate report">
+		<phpmd rulesets="${basedir}/build/phpmd.xml">
+			<fileset refid="distributed_files"/>
+			<formatter type="html" outfile="${basedir}/build/reports/pmd.html"/>
+		</phpmd>
+	</target>
+
+	<!-- Create com_proclaim.zip -->
+	<target name="component" depends="init,dev.clean" description="Builds the component">
+		<delete file="${basedir}/build/com_proclaim.zip"/>
+		<zip destfile="${basedir}/build/com_proclaim.zip" basedir="${basedir}">
+			<fileset defaultexcludes="true" dir=".">
+				<include name="admin/**" />
+				<include name="media/**" />
+				<include name="modules/**" />
+				<include name="plugins/**" />
+				<include name="site/**" />
+				<include name="*.php" />
+				<include name="*.xml" />
+				<include name="*.txt" />
+				<include name="*.md" />
+			</fileset>
+		</zip>
+		<!--Reset back to a development state-->
+		<phingcall target="dev.init"/>
+	</target>
+
+	<!-- Setup config file for running the Selenium Webdriver tests -->
+	<target name="test.setup">
+		<propertyprompt propertyName="server_root" defaultValue="/Applications/MAMP/htdocs" promptText="Enter the path to your Joomla! root directory"/>
+		<propertyprompt propertyName="host" defaultValue="http://localhost" promptText="Enter the sever host"/>
+		<propertyprompt propertyName="db_host" defaultValue="localhost" promptText="Enter database host"/>
+		<propertyprompt propertyName="db_user" defaultValue="root" promptText="Enter Database username"/>
+		<propertyprompt propertyName="db_pass" defaultValue="root" promptText="Enter database password"/>
+		<propertyprompt propertyName="db_name" defaultValue="joomla-dev" promptText="Enter Database name"/>
+		<propertyprompt propertyName="joomla_username" defaultValue="admin" promptText="Enter an initial Joomla username"/>
+		<propertyprompt propertyName="joomla_password" defaultValue="password" promptText="Enter an initial Joomla password"/>
+		<propertyprompt propertyName="joomla_email" defaultValue="example@example.com" promptText="Enter an initial Joomla email"/>
+
+		<copy file="${config_path}/configdef.php.dist" tofile="${config_path}/configdef.php" overwrite="true">
+			<filterchain>
+				<replacetokens begintoken="##" endtoken="##">
+					<token key="SERVER_ROOT" value="${server_root}"/>
+					<token key="HOST" value="${host}"/>
+					<token key="DB_HOST" value="${db_host}"/>
+					<token key="DB_USER" value="${db_user}"/>
+					<token key="DB_PASS" value="${db_pass}"/>
+					<token key="DB_NAME" value="${db_name}"/>
+					<token key="JOOMLA_USERNAME" value="${joomla_username}"/>
+					<token key="JOOMLA_PASSWORD" value="${joomla_password}"/>
+					<token key="JOOMLA_EMAIL" value="${joomla_email}"/>
+				</replacetokens>
+			</filterchain>
+		</copy>
+
+		<!-- Setup the joomla test environment -->
+		<phingcall target="stage_joomla">
+			<property name="joomla-stage-dir" value="tests/.joomla-dev-test"/>
+		</phingcall>
+
+		<!-- Link Joomla to the webserver's root directory  -->
+		<symlink target="${basedir}/tests/.joomla-dev" link="${server_root}/joomla-dev-test" overwrite="true"/>
+	</target>
+
+	<target name="test.clean">
+		<delete dir="${basedir}/tests/.joomla-dev" includeemptydirs="true"/>
+	</target>
+
+	<target name="test.system" depends="init" description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
+		<phpunit haltonfailure="true" haltonerror="true" bootstrap="${basedir}/tests/system/servers/configdef.php">
+			<!-- We can only use one formatter at a time -->
+			<formatter todir="${basedir}/build/reports" type="plain" outfile="test-brief.txt"/>
+			<batchtest>
+				<fileset dir="tests/system/tests/installation" includes="**/*.php"/>
+			</batchtest>
+		</phpunit>
+	</target>
+
+	<!-- Set the default joomla path and create symbolic links -->
+	<target name="dev.setup">
+		<propertyprompt propertyName="joomla_path" defaultValue="/Applications/MAMP/htdocs/" promptText="Enter the path to your Joomla! root directory"/>
+		<propertyprompt propertyName="joomla_dir" defaultValue="joomla-dev" promptText="Set Joomla folder name"/>
+		<propertyprompt propertyName="stage_joomla" defaultValue="n" promptText="Stage Joomla?"/>
+		<if>
+			<equals arg1="${stage_joomla}" arg2="y"/>
+			<then>
+				<phingcall target="stage_joomla">
+					<property name="joomla-stage-dir" value=".joomla-dev"/>
+					<!-- Force a stage if its already staged -->
+					<property name="force" value="${stage_joomla"/>
+				</phingcall>
+				<!--Link Joomla to the webserver's root directory  -->
+				<symlink target="${basedir}/.joomla-dev" link="${joomla_path}/${joomla_dir}" overwrite="true"/>
+			</then>
+		</if>
+
+		<echo message="Joomla path set to: ${joomla_path}${joomla_dir}"/>
+
+		<echo message="Linking component to Joomla!"/>
+
+		<!-- Create symbolic links for component in the Joomla directory -->
+		<symlink target="${basedir}/media" link="${joomla_path}${joomla_dir}/media/com_biblestudy" overwrite="true"/>
+		<symlink target="${basedir}/admin" link="${joomla_path}${joomla_dir}/administrator/components/com_biblestudy" overwrite="true"/>
+		<symlink target="${basedir}/site" link="${joomla_path}${joomla_dir}/components/com_biblestudy" overwrite="true"/>
+		<symlink target="${basedir}/modules/site/mod_biblestudy" link="${joomla_path}${joomla_dir}/modules/mod_biblestudy" overwrite="true"/>
+		<symlink target="${basedir}/modules/site/mod_biblestudy_podcast" link="${joomla_path}${joomla_dir}/modules/mod_biblestudy_podcast" overwrite="true"/>
+		<symlink target="${basedir}/plugins/system/jbsbackup" link="${joomla_path}${joomla_dir}/plugins/system/jbsbackup" overwrite="true"/>
+		<symlink target="${basedir}/plugins/finder/biblestudy" link="${joomla_path}${joomla_dir}/plugins/finder/biblestudy" overwrite="true"/>
+		<symlink target="${basedir}/plugins/system/jbspodcast" link="${joomla_path}${joomla_dir}/plugins/system/jbspodcast" overwrite="true"/>
+		<symlink target="${basedir}/plugins/search/biblestudysearch" link="${joomla_path}${joomla_dir}/plugins/search/biblestudysearch" overwrite="true"/>
+
+		<phingcall target="dev.init"/>
+	</target>
+
+	<!-- Create symbolic links for the development state -->
+	<target name="dev.init">
+		<echo message="Initializing a development state"/>
+		<symlink target="${basedir}/biblestudy.xml" link="${basedir}/admin/biblestudy.xml" overwrite="true"/>
+		<symlink target="${basedir}/biblestudy.script.php" link="${basedir}/admin/biblestudy.script.php" overwrite="true"/>
+		<mkdir dir="${basedir}/media/css/site"/>
+		<symlink target="${basedir}/media/css/biblestudy.css" link="${basedir}/media/css/site/biblestudy.css" overwrite="true"/>
+	</target>
+
+	<!-- Clean up symbolic links from the development state -->
+	<target name="dev.clean">
+		<echo message="Cleaning up development state"/>
+		<delete file="admin/biblestudy.xml"/>
+		<delete file="admin/biblestudy.script.php"/>
+		<delete file="media/css/site/biblestudy.css"/>
+
+		<!-- Undoing the creation of the dir -->
+		<delete dir="admin/views/test" includeemptydirs="true"/>
+	</target>
+
+	<!-- Stage Joomla for bootstrapping unit tests -->
+	<target name="stage_joomla" description="Stage Joomla in specified path">
+		<!-- Only stage it if its not already staged -->
+		<available file="${joomla-stage-dir}" type="dir" property="joomla-staged"/>
+
+		<!-- Possible conditions for staging-->
+		<condition property="staged_but_not_forced">
+			<and>
+				<istrue value="${joomla-stage-dir}"/>
+				<equals arg1="${force}" arg2="n"/>
+			</and>
+		</condition>
+		<condition property="staged_but_forced">
+			<and>
+				<istrue value="${joomla-stage-dir}"/>
+				<equals arg1="${force}" arg2="y"/>
+			</and>
+		</condition>
+		<if>
+			<or>
+				<isfalse value="${joomla-stage-dir}"/>
+				<isfalse value="#{staged_but__not_forced}"/>
+				<istrue value="#{staged_but_forced}"/>
+			</or>
+			<then>
+				<delete dir="${joomla-stage-dir}" includeemptydirs="true" verbose="true"/>
+				<echo message="Staging Joomla ${joomla.version}. This will take a few minutes"/>
+				<gitclone repository="https://github.com/joomla/joomla-cms.git" targetPath="${joomla-stage-dir}"/>
+				<!-- Switch to the Joomla version that we want to test on -->
+				<gitcheckout repository="${joomla-stage-dir}" branchname="${joomla.version}" create="false"/>
+			</then>
+			<else>
+				<echo message="Joomla ${joomla.version} is already staged"/>
+			</else>
+		</if>
+	</target>
+
+	<!-- This target should exit gracefully in order for a pull request is approved. -->
+	<target name="build" depends="init,lint,phpunit,phpcpd,size,pmd,pdepend,pmd"/>
+</project>
