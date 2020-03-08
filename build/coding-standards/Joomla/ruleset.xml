@@ -10,12 +10,22 @@
 	<!-- Include all sniffs in an external standard directory -->
 
 	<!-- Include some additional sniffs from the Generic standard -->
-	<rule ref="Generic.Arrays.DisallowShortArraySyntax" />
+	<!-- <rule ref="Generic.Arrays.DisallowShortArraySyntax" /> -->
 	<rule ref="Generic.ControlStructures.InlineControlStructure" />
 	<rule ref="Generic.Files.EndFileNewline" />
 
+	<exclude name="Squiz.NamingConventions.ValidFunctionName.FunctionNoCapital"/>
+	<exclude name="Squiz.NamingConventions.ValidFunctionName.MethodUnderscore"/>
+	<exclude name="Squiz.NamingConventions.ValidFunctionName.ScopeNotCamelCaps"/>
+	<exclude name="Squiz.NamingConventions.ValidFunctionName.FunctionNameInvalid"/>
+	<exclude name="Squiz.NamingConventions.ValidVariableName.ClassVarHasUnderscore"/>
+	<exclude name="Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps"/>
+	<exclude name="Squiz.NamingConventions.ValidVariableName.NotCamelCaps"/>
+	<exclude name="Squiz.NamingConventions.ValidVariableName.StringNotCamelCaps"/>
+
 	<!-- Use Unix newlines -->
 	<rule ref="Generic.Files.LineEndings">
+		<exclude name="Generic.Files.LineEndings.InvalidEOLChar"/>
 		<properties>
 			<property name="eolChar" value="\n" />
 		</properties>
