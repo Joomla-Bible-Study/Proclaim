@@ -10,18 +10,9 @@
 	<!-- Include all sniffs in an external standard directory -->
 
 	<!-- Include some additional sniffs from the Generic standard -->
-	<!-- <rule ref="Generic.Arrays.DisallowShortArraySyntax" /> -->
+    <rule ref="Generic.Arrays.DisallowShortArraySyntax" />
 	<rule ref="Generic.ControlStructures.InlineControlStructure" />
 	<rule ref="Generic.Files.EndFileNewline" />
-
-	<exclude name="Joomla.NamingConventions.ValidFunctionName.FunctionNoCapital"/>
-	<exclude name="Joomla.NamingConventions.ValidFunctionName.MethodUnderscore"/>
-	<exclude name="Joomla.NamingConventions.ValidFunctionName.ScopeNotCamelCaps"/>
-	<exclude name="Joomla.NamingConventions.ValidFunctionName.FunctionNameInvalid"/>
-	<exclude name="Joomla.NamingConventions.ValidVariableName.ClassVarHasUnderscore"/>
-	<exclude name="Joomla.NamingConventions.ValidVariableName.MemberNotCamelCaps"/>
-	<exclude name="Joomla.NamingConventions.ValidVariableName.NotCamelCaps"/>
-	<exclude name="Joomla.NamingConventions.ValidVariableName.StringNotCamelCaps"/>
 
 	<!-- Use Unix newlines -->
 	<rule ref="Generic.Files.LineEndings">
