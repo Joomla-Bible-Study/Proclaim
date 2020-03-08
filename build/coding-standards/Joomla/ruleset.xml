@@ -161,12 +161,9 @@
 	<!-- Include some additional sniffs from the Zend standard -->
 	<rule ref="Zend.Files.ClosingTag" />
 
-	<rule ref="Joomla">
-		<exclude name="Joomla.NamingConventions.ValidFunctionName.ScopeNotCamelCaps"/>
-		<exclude name="Joomla.NamingConventions.ValidVariableName.NotCamelCaps"/>
-		<exclude name="Joomla.NamingConventions.ValidVariableName.MemberNotCamelCaps"/>
-		<exclude name="Joomla.NamingConventions.ValidFunctionName.FunctionNoCapital"/>
-	</rule>
-
+	<exclude name="Joomla.NamingConventions.ValidFunctionName.ScopeNotCamelCaps"/>
+	<exclude name="Joomla.NamingConventions.ValidVariableName.NotCamelCaps"/>
+	<exclude name="Joomla.NamingConventions.ValidVariableName.MemberNotCamelCaps"/>
+	<exclude name="Joomla.NamingConventions.ValidFunctionName.FunctionNoCapital"/>
 
 </ruleset>
