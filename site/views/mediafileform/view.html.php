@@ -31,6 +31,11 @@ class BiblestudyViewMediafileform extends JViewLegacy
 	 * @since 7.0 */
 	public $upload_server;
 
+	/**
+	 * @var  string  Page Class
+	 *
+	 * @since 7.0
+	 */
 	public $pageclass_sfx;
 
 	/** @var JForm Form

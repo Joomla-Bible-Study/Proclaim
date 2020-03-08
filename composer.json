@@ -61,7 +61,7 @@
 	  }
   },
   "scripts": {
-	"phpcs": "phpcs --standard=/build/coding-standards/Joomla",
+	"phpcs": "phpcs --standard=/build/coding-standards/CWM",
 	"post-install-cmd": "\"libraries/vendor/bin/phpcs\" --config-set installed_paths ../../../..",
 	"post-update-cmd": "\"libraries/vendor/bin/phpcs\" --config-set installed_paths ../../../.."
   }

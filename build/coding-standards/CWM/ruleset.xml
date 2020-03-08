@@ -20,6 +20,15 @@
 	<exclude-pattern>*/data/*</exclude-pattern>
 	<exclude-pattern>*/tmpl/*</exclude-pattern>
 
+	<rule ref="Generic">
+		<exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+	</rule>
+	<rule ref="Joomla.Classes.InstantiateNewClasses">
+		<properties>
+			<property name="shortArraySyntax" value="true"/>
+		</properties>
+	</rule>
+
 	<!-- Include some additional sniffs from the Generic standard -->
 	<rule ref="Generic.Arrays.DisallowShortArraySyntax">
 		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
@@ -48,7 +57,7 @@
 		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
 		<exclude-pattern type="relative">*/tmpl/*</exclude-pattern>
 	</rule>
-	
+
 	<!-- Include some additional sniffs from the PEAR standard -->
 	<rule ref="PEAR.ControlStructures.MultiLineCondition">
 		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
@@ -71,7 +80,7 @@
 	<rule ref="PEAR.NamingConventions.ValidClassName">
 		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
 	</rule>
-	
+
 	<!-- Include some additional sniffs from the Squiz standard -->
 	<rule ref="Squiz.Commenting.BlockComment">
 		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
@@ -96,13 +105,13 @@
 		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
 		<exclude-pattern type="relative">*/tmpl/*</exclude-pattern>
 	</rule>
-	
+
 	<!-- Include some additional sniffs from the Zend standard -->
 	<rule ref="Zend.Files.ClosingTag">
 		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
 		<exclude-pattern type="relative">*/tmpl/*</exclude-pattern>
 	</rule>
-	
+
 	<!-- CMS specific sniff exclusions from the Joomla standard -->
 	<rule ref="Joomla.Commenting.FileComment">
 		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
