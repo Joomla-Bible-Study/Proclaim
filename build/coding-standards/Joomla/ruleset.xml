@@ -14,7 +14,7 @@
 	<rule ref="Generic.ControlStructures.InlineControlStructure" />
 	<rule ref="Generic.Files.EndFileNewline" />
 
-	<exclude name="Squiz.NamingConventions.ValidFunctionName.FunctionNoCapital"/>
+	<exclude name="Joomla.NamingConventions.ValidFunctionName.FunctionNoCapital"/>
 	<exclude name="Squiz.NamingConventions.ValidFunctionName.MethodUnderscore"/>
 	<exclude name="Squiz.NamingConventions.ValidFunctionName.ScopeNotCamelCaps"/>
 	<exclude name="Squiz.NamingConventions.ValidFunctionName.FunctionNameInvalid"/>
