@@ -13,40 +13,6 @@
 	<rule ref="Generic.ControlStructures.InlineControlStructure" />
 	<rule ref="Generic.Files.EndFileNewline" />
 
-	<rule ref="Joomla">
-		<exclude name="Joomla.NamingConventions.ValidFunctionName.ScopeNotCamelCaps"/>
-		<exclude name="Joomla.NamingConventions.ValidVariableName.NotCamelCaps"/>
-		<exclude name="Joomla.NamingConventions.ValidVariableName.MemberNotCamelCaps"/>
-		<exclude name="Joomla.NamingConventions.ValidFunctionName.FunctionNoCapital"/>
-	</rule>
-	<rule ref="Joomla">
-		<exclude name="Joomla.NamingConventions.ValidFunctionName.MethodUnderscore"/>
-		<exclude name="Joomla.NamingConventions.ValidVariableName.ClassVarHasUnderscore"/>
-	</rule>
-	<rule ref="Generic">
-		<exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
-	</rule>
-	<rule ref="Joomla.Classes.InstantiateNewClasses">
-		<properties>
-			<property name="shortArraySyntax" value="true"/>
-		</properties>
-	</rule>
-
-	<!-- Use Unix newlines -->
-	<rule ref="Generic.Files.LineEndings">
-		<properties>
-			<property name="eolChar" value="\n" />
-		</properties>
-	</rule>
-
-	<!-- Lines can be 150 chars long, but never show errors -->
-	<rule ref="Generic.Files.LineLength">
-		<properties>
-			<property name="lineLimit" value="150" />
-			<property name="absoluteLineLimit" value="0" />
-		</properties>
-	</rule>
-
 	<rule ref="Generic.Formatting.DisallowMultipleStatements" />
 	<rule ref="Generic.Formatting.SpaceAfterCast" />
 	<rule ref="Generic.Functions.FunctionCallArgumentSpacing" />
