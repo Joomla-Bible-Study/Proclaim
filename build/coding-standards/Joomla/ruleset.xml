@@ -10,17 +10,9 @@
 	<!-- Include all sniffs in an external standard directory -->
 
 	<!-- Include some additional sniffs from the Generic standard -->
-	<!-- <rule ref="Generic.Arrays.DisallowShortArraySyntax" /> -->
 	<rule ref="Generic.ControlStructures.InlineControlStructure" />
 	<rule ref="Generic.Files.EndFileNewline" />
 
-	<!-- Exclude folders not containing production code -->
-    <exclude-pattern type="relative">build/*</exclude-pattern>
-	<exclude-pattern type="relative">tests/*</exclude-pattern>
-
-	<!-- Exclude 3rd party libraries. -->
-	<exclude-pattern type="relative">libraries/*</exclude-pattern>
-	<exclude-pattern type="relative">vendor/*</exclude-pattern>
 	<rule ref="Joomla">
 		<exclude name="Joomla.NamingConventions.ValidFunctionName.ScopeNotCamelCaps"/>
 		<exclude name="Joomla.NamingConventions.ValidVariableName.NotCamelCaps"/>
