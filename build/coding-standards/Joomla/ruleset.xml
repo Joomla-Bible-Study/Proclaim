@@ -8,18 +8,6 @@
 	<arg value="p"/>
 
 	<!-- Include all sniffs in an external standard directory -->
-	<rule ref="Joomla">
-		<!-- These exceptions are permanent as long as there are B/C naming exceptions  -->
-		<exclude name="Joomla.NamingConventions.ValidFunctionName.FunctionNoCapital"/>
-		<exclude name="Joomla.NamingConventions.ValidFunctionName.MethodUnderscore"/>
-		<exclude name="Joomla.NamingConventions.ValidFunctionName.ScopeNotCamelCaps"/>
-		<exclude name="Joomla.NamingConventions.ValidFunctionName.FunctionNameInvalid"/>
-		<exclude name="Joomla.NamingConventions.ValidVariableName.ClassVarHasUnderscore"/>
-		<exclude name="Joomla.NamingConventions.ValidVariableName.MemberNotCamelCaps"/>
-		<exclude name="Joomla.NamingConventions.ValidVariableName.NotCamelCaps"/>
-		<exclude name="Joomla.NamingConventions.ValidVariableName.StringNotCamelCaps"/>
-		<exclude name="Generic.Files.LineEndings.InvalidEOLChar"/>
-	</rule>
 
 	<!-- Include some additional sniffs from the Generic standard -->
 	<rule ref="Generic.Arrays.DisallowShortArraySyntax" />
