@@ -20,15 +20,6 @@
 	<exclude-pattern>*/data/*</exclude-pattern>
 	<exclude-pattern>*/tmpl/*</exclude-pattern>
 
-	<rule ref="Generic">
-		<exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
-	</rule>
-	<rule ref="Joomla.Classes.InstantiateNewClasses">
-		<properties>
-			<property name="shortArraySyntax" value="true"/>
-		</properties>
-	</rule>
-
 	<!-- Include some additional sniffs from the Generic standard -->
 	<rule ref="Generic.Arrays.DisallowShortArraySyntax">
 		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
