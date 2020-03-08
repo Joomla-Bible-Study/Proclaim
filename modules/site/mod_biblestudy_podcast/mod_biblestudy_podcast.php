@@ -25,10 +25,8 @@ if (!JComponentHelper::isEnabled('com_biblestudy'))
 {
 	throw new Exception("Extension Bible Study not present or enabled");
 }
-else
-{
-	$templateparams = JBSMParams::getTemplateparams($params);
-}
+
+$templateparams = JBSMParams::getTemplateparams($params);
 
 JHtml::_('biblestudy.framework');
 JHtml::stylesheet('media/css/podcast.css');
