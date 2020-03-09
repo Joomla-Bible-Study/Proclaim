@@ -25,10 +25,28 @@ abstract class JBSMAddon
 	 */
 	protected $xml = null;
 
+	/**
+	 * Name of Add-on
+	 *
+	 * @var     string
+	 * @since   9.0.0
+	 */
 	protected $name = null;
 
+	/**
+	 * Description of add-on
+	 *
+	 * @var     string
+	 * @since   9.0.0
+	 */
 	protected $description = null;
 
+	/**
+	 * Config information
+	 *
+	 * @var     string
+	 * @since   9.0.0
+	 */
 	protected $config = null;
 
 	/**
@@ -91,7 +109,7 @@ abstract class JBSMAddon
 
 			if (!preg_match('/JBSMAddon(.*)/i', get_class($this), $r))
 			{
-				throw new Exception(JText::sprintf('JBS_CMN_CANT_ADDON_CLASS_NAME', $this->type), 500);
+				throw new \RuntimeException(JText::sprintf('JBS_CMN_CANT_ADDON_CLASS_NAME', $this->type), 500);
 			}
 
 			$this->type = strtolower($r[1]);
@@ -148,17 +166,12 @@ abstract class JBSMAddon
 			{
 				require_once $path;
 
-				if (!class_exists($addonClass))
-				{
-					JLog::add(JText::sprintf('JBS_CMN_CANT_ADDON_LOAD_CLASS_NAME', $addonClass), JLog::WARNING, 'jerror');
+				JLog::add(JText::sprintf('JBS_CMN_CANT_ADDON_LOAD_CLASS_NAME', $addonClass), JLog::WARNING, 'jerror');
 
-					return false;
-				}
-			}
-			else
-			{
 				return false;
 			}
+
+			return false;
 		}
 
 		return new $addonClass($config);
