@@ -369,21 +369,22 @@ class BiblestudyViewSermons extends JViewLegacy
 		$input   = JFactory::getApplication()->input;
 		$filters = ['search', 'book', 'teacher', 'series', 'messagetype', 'year', 'topic', 'location', 'language'];
 		$lists   = ['fullordering', 'limit'];
-		$landing = false;
-
-		if (JFactory::getApplication()->input->get('sendingview') !== 'landing')
-		{
-			$landing = true;
-		}
 
 		foreach ($filters as $filter)
 		{
 			$set = $input->getInt('filter_' . $filter);
+			$from = $this->filterForm->getValue($filter, 'filter');
 
 			// Update value from landing page call.
-			if ($set !== 0 && $landing)
+			if ($set !== 0 && $set !== NULL)
 			{
 				$this->filterForm->setValue($filter, 'filter', $set);
+			}
+
+			// Catch active filters and update them.
+			if ($from !== null || $set !== null)
+			{
+				$this->activeFilters[] = $filter;
 			}
 
 			// Remove from view if set to hid in template.
