@@ -35,7 +35,11 @@
 
 	<!-- Exclude the RoboFile.php -->
 	<exclude-pattern type="relative">RoboFile.php</exclude-pattern>
-
+	<!-- Include some additional sniffs from the Generic standard -->
+	<rule ref="Generic.Arrays.DisallowShortArraySyntax">
+		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
+		<exclude-pattern type="relative">*</exclude-pattern>
+	</rule>
 	<!-- Include some additional sniffs from the Generic standard -->
 	<rule ref="Generic.ControlStructures.InlineControlStructure">
 		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
