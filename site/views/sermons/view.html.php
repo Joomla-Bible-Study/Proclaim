@@ -178,7 +178,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		$params = $this->state->params;
 
 		$images     = new JBSMImages;
-		$this->main = $images->mainStudyImage();
+		$this->main = $images->mainStudyImage($params);
 
 		// Only load PageBuilder if the default template is NOT being used
 		if ($params->get('useexpert_list') > 0

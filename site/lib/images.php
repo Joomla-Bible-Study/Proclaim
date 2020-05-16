@@ -23,32 +23,39 @@ class JBSMImages
 	/**
 	 * Main Study Image
 	 *
+	 * @param   Registry  $params  Sermon Params
+	 *
 	 * @return object
 	 *
 	 * @since 7.0
 	 */
-	public static function mainStudyImage()
+	public static function mainStudyImage($params = null)
 	{
-		$path     = null;
-		$image    = null;
-		$database = JFactory::getDbo();
-		$query    = $database->getQuery(true);
-		$query->select('*')->from('#__bsms_admin')->where('id = ' . 1);
-		$database->setQuery($query);
-		$admin = $database->loadObject();
+		$path  = null;
+		$image = null;
 
-		// Convert parameter fields to objects.
-		$registry = new Registry;
-		$registry->loadString($admin->params);
-		$admin_params = $registry;
+		if ($params === null)
+		{
+			$database = JFactory::getDbo();
+			$query    = $database->getQuery(true);
+			$query->select('*')->from('#__bsms_admin')->where('id = ' . 1);
+			$database->setQuery($query);
+			$params = $database->loadObject();
 
-		if (!$admin_params->get('default_main_image'))
+			// Convert parameter fields to objects.
+			$registry = new Registry;
+			$registry->loadString($params->params);
+			$params = $registry;
+		}
+
+
+		if (!$params->get('default_main_image'))
 		{
 			$path = 'media/com_biblestudy/images/openbible.png';
 		}
 		else
 		{
-			$path = $admin_params->get('default_main_image');
+			$path = $params->get('default_main_image');
 		}
 
 		$mainimage = self::getImagePath($path);
@@ -59,7 +66,7 @@ class JBSMImages
 	/**
 	 * Get Image Path
 	 *
-	 * @param   string  $path  ?
+	 * @param   string  $path  File path to image
 	 *
 	 * @return object
 	 *
@@ -120,7 +127,7 @@ class JBSMImages
 	/**
 	 * Get Study Thumbnail
 	 *
-	 * @param   string  $image  ?
+	 * @param   string  $image  file path to image
 	 *
 	 * @return object
 	 *
@@ -158,7 +165,7 @@ class JBSMImages
 	/**
 	 * Get Series Thumbnail
 	 *
-	 * @param   string  $image  ?
+	 * @param   string  $image  Image file
 	 *
 	 * @return object
 	 *
