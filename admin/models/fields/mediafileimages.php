@@ -38,7 +38,7 @@ class JFormFieldMediafileImages extends JFormFieldList
 	 *
 	 * @since 7.0
 	 */
-	protected function getOptions ()
+	protected function getOptions()
 	{
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
@@ -75,19 +75,23 @@ class JFormFieldMediafileImages extends JFormFieldList
 							$button             = $this->getButton($media);
 							$icon               = $this->getIcon($media);
 							$media->media_image = JText::_('JBS_MED_BUTTON') . ': ' . $button . ' - ' . JText::_('JBS_MED_ICON') . ': ' . $icon;
-							$options[]          = JHtml::_('select.option', '{"media_use_button_icon":"' . $media->params->get('media_use_button_icon') .
+							$options[]          = JHtml::_('select.option', '{"media_use_button_icon":"' .
+								$media->params->get('media_use_button_icon') .
 									'","media_button_type":"' . $media->params->get('media_button_type') . '","media_button_text":"' .
 									$media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get('media_icon_type') .
-									'","media_icon_text_size":"' . $media->params->get('media_icon_text_size') . '","media_image":""}', $media->media_image
+									'","media_icon_text_size":"' . $media->params->get('media_icon_text_size') .
+								'","media_image":""}', $media->media_image
 							);
 							break;
 						case 3:
 							$icon               = $this->getIcon($media);
 							$media->media_image = JText::_('JBS_MED_ICON') . ': ' . $icon;
-							$options[]          = JHtml::_('select.option', '{"media_use_button_icon":"' . $media->params->get('media_use_button_icon') .
+							$options[]          = JHtml::_('select.option', '{"media_use_button_icon":"' .
+								$media->params->get('media_use_button_icon') .
 									'","media_button_type":"' . $media->params->get('media_button_type') . '","media_button_text":"' .
 									$media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get('media_icon_type') .
-									'","media_icon_text_size":"' . $media->params->get('media_icon_text_size') . '","media_image":""}', $media->media_image
+									'","media_icon_text_size":"' . $media->params->get('media_icon_text_size') .
+								'","media_image":""}', $media->media_image
 							);
 							break;
 					}
@@ -156,7 +160,7 @@ class JFormFieldMediafileImages extends JFormFieldList
 	 *
 	 * @since 7.0
 	 */
-	public function getButton ($media)
+	public function getButton($media)
 	{
 		$button = null;
 
