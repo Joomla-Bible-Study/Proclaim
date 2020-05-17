@@ -39,12 +39,12 @@ Contributing
 ------------
 We appreciate contributions in varioius capacities, below are some ways that you can contribute to this project
 
-###Setup
+### Setup
 1. [Fork this repository.][fork]
 2. Load dev dependencies with [Composer][composer]: `php composer.phar install --dev`
 3. [Set up your dev environment][setup]
 
-###Development
+### Development
 1. [Create a topic branch.][branch]
 2. Implement your feature or bug fix.
 3. If you implemented a new feature or added an extra functionality, create/update unit tests for that feature
@@ -58,10 +58,10 @@ We appreciate contributions in varioius capacities, below are some ways that you
 Please **make sure to make specific contributions** when submitting pull requests. For example, if fixing bugs across multiple features of the component, create a branch for each fix, and submit a separate pull request for each fix separately, instead of fixing everything in `master`, and then just trying to pull your `master` branch into `Joomla-Bible-Study:master`.
 
 
-###Translation 
+### Translation 
 The language files periodically need to be updated as the component matures. To submit changes ot add new languages, follow the same procedures as above in order to submit a [pull][pr] request.
 
-###Testing
+### Testing
 For every major release, we prefer to have an approximate 2 week testing window. If you would like to help in testing and giving us feedback on the most recent versions of the component, let us know
 
 [fork]: http://help.github.com/fork-a-repo/
