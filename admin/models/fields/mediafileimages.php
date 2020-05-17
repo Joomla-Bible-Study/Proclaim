@@ -64,10 +64,11 @@ class JFormFieldMediafileImages extends JFormFieldList
 							$button             = $this->getButton($media);
 							$media->media_image = JText::_('JBS_MED_BUTTON') . ': ' . $button . ' - ' . JText::_('JBS_MED_TEXT') .
 									': ' . $media->params->get('media_button_text');
-							$options[]          = JHtml::_('select.option', '{"media_use_button_icon":"' . $media->params->get('media_use_button_icon') .
+							$options[] = JHtml::_('select.option', '{"media_use_button_icon":"' . $media->params->get('media_use_button_icon') .
 									'","media_button_type":"' . $media->params->get('media_button_type') . '","media_button_text":"' .
 									$media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get('media_icon_type') .
-									'","media_icon_text_size":"' . $media->params->get('media_icon_text_size') . '","media_image":""}', $media->media_image
+									'","media_icon_text_size":"' . $media->params->get('media_icon_text_size') .
+								'","media_image":""}', $media->media_image
 							);
 							break;
 						case 2:
@@ -198,12 +199,15 @@ class JFormFieldMediafileImages extends JFormFieldList
 	 *
 	 * @since 7.0
 	 */
-	public function getIcon ($media)
+	public function getIcon($media)
 	{
 		$MediaHelper = new JBSMMedia;
 		$mimetypes = $MediaHelper->getIcons();
 
-		if ($media->params->get('media_icon_type') !== '1')
+		if ($media->params->get('media_icon_type') !== '1'
+			&& substr($media->params->get('media_icon_type'), 0, 2) !== 'fa'
+			&& !empty($media->params->get('media_icon_type'))
+		)
 		{
 			return JText::_($mimetypes[$media->params->get('media_icon_type')]);
 		}
