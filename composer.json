@@ -29,7 +29,7 @@
 		"ircmaxell/password-compat": "1.*",
 		"leafo/lessphp": "0.5.0",
 		"paragonie/sodium_compat": "1.9.1",
-		"phpmailer/phpmailer": "^5.2.20",
+		"phpmailer/phpmailer": "*",
 		"symfony/polyfill-php71": "~1.9",
 		"symfony/polyfill-php73": "~1.9",
 		"symfony/yaml": "2.*",
