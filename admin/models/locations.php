@@ -132,7 +132,7 @@ class BiblestudyModelLocations extends JModelList
 		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
 
-		$access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
+		$access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '', 'int');
 		$this->setState('filter.access', $access);
 
 		parent::populateState('location.id', 'desc');

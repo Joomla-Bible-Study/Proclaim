@@ -1,0 +1,206 @@
+<?xml version="1.0"?>
+<ruleset name="Joomla-CMS">
+	<arg name="report" value="full"/>
+	<arg name="tab-width" value="4"/>
+	<arg name="encoding" value="utf-8"/>
+	<arg value="sp"/>
+
+	<!-- Exclude folders not containing production code -->
+	<exclude-pattern>*/build/*</exclude-pattern>
+	<exclude-pattern>*/tests/*</exclude-pattern>
+	<exclude-pattern>*/lib/*</exclude-pattern>
+	<exclude-pattern>*/tmpl/*</exclude-pattern>
+	<exclude-pattern>*/layouts/*</exclude-pattern>
+
+	<!-- Exclude 3rd party libraries. -->
+	<exclude-pattern>*/libraries/*</exclude-pattern>
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/editors/*</exclude-pattern>
+
+	<!-- Exclude the restore_finalisation until we can deal with nested class definitions -->
+	<exclude-pattern type="relative">administrator/components/com_joomlaupdate/restore_finalisation.php</exclude-pattern>
+	<exclude-pattern type="relative">administrator/components/com_joomlaupdate/restore.php</exclude-pattern>
+	<exclude-pattern type="relative">configuration.php</exclude-pattern>
+	<exclude-pattern type="relative">installation/template/index.php</exclude-pattern>
+
+	<!-- Exclude some test related files that don't actually include PHP code -->
+	<exclude-pattern type="relative">tests/unit/suites/libraries/joomla/model/stubs/barbaz.php</exclude-pattern>
+	<exclude-pattern type="relative">tests/unit/suites/libraries/joomla/view/layouts1/fringe/division.php</exclude-pattern>
+	<exclude-pattern type="relative">tests/unit/suites/libraries/joomla/view/layouts1/olivia.php</exclude-pattern>
+	<exclude-pattern type="relative">tests/unit/suites/libraries/joomla/view/layouts1/peter.php</exclude-pattern>
+	<exclude-pattern type="relative">tests/unit/suites/libraries/joomla/view/layouts2/fauxlivia.php</exclude-pattern>
+	<exclude-pattern type="relative">tests/unit/suites/libraries/joomla/view/layouts2/olivia.php</exclude-pattern>
+	<exclude-pattern type="relative">tests/unit/suites/libraries/legacy/controller/stubs/component1/controller.json.php</exclude-pattern>
+	<exclude-pattern type="relative">tests/unit/suites/libraries/legacy/controller/stubs/component2/controller.php</exclude-pattern>
+
+	<!-- Exclude the RoboFile.php -->
+	<exclude-pattern type="relative">RoboFile.php</exclude-pattern>
+	<!-- Include some additional sniffs from the Generic standard -->
+	<rule ref="Generic.Arrays.DisallowShortArraySyntax">
+		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
+		<exclude-pattern type="relative">*</exclude-pattern>
+	</rule>
+	<!-- Include some additional sniffs from the Generic standard -->
+	<rule ref="Generic.ControlStructures.InlineControlStructure">
+		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
+		<exclude-pattern type="relative">*/tmpl/*</exclude-pattern>
+	</rule>
+	<rule ref="Generic.Files.EndFileNewline">
+		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
+		<exclude-pattern type="relative">*/tmpl/*</exclude-pattern>
+		<exclude-pattern type="relative">templates/*</exclude-pattern>
+		<exclude-pattern type="relative">layouts/*</exclude-pattern>
+	</rule>
+	<rule ref="Generic.Files.LineLength">
+		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
+		<exclude-pattern type="relative">*/tmpl/*</exclude-pattern>
+	</rule>
+	<rule ref="Generic.Formatting.DisallowMultipleStatements">
+		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
+		<exclude-pattern type="relative">*/tmpl/*</exclude-pattern>
+		<exclude-pattern type="relative">templates/*</exclude-pattern>
+		<exclude-pattern type="relative">layouts/*</exclude-pattern>
+	</rule>
+	<rule ref="Generic.Strings.UnnecessaryStringConcat">
+		<!-- There is not auto fixer here. These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
+		<exclude-pattern type="relative">*/tmpl/*</exclude-pattern>
+		<exclude-pattern type="relative">templates/*</exclude-pattern>
+		<exclude-pattern type="relative">layouts/*</exclude-pattern>
+	</rule>
+	<rule ref="Generic.WhiteSpace.ScopeIndent">
+		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
+		<exclude-pattern type="relative">*/tmpl/*</exclude-pattern>
+		<exclude-pattern type="relative">templates/*</exclude-pattern>
+		<exclude-pattern type="relative">layouts/*</exclude-pattern>
+	</rule>
+
+	<!-- Include some additional sniffs from the PEAR standard -->
+	<rule ref="PEAR.ControlStructures.MultiLineCondition">
+		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
+		<exclude-pattern type="relative">*/tmpl/*</exclude-pattern>
+		<exclude-pattern type="relative">templates/*</exclude-pattern>
+		<exclude-pattern type="relative">layouts/*</exclude-pattern>
+	</rule>
+	<rule ref="PEAR.Formatting.MultiLineAssignment">
+		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
+	</rule>
+	<rule ref="PEAR.Functions.FunctionCallSignature">
+		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
+		<exclude-pattern type="relative">*/tmpl/*</exclude-pattern>
+		<exclude-pattern type="relative">templates/*</exclude-pattern>
+		<exclude-pattern type="relative">layouts/*</exclude-pattern>
+	</rule>
+	<rule ref="PEAR.Functions.FunctionDeclaration">
+		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
+		<exclude-pattern type="relative">*/tmpl/*</exclude-pattern>
+		<exclude-pattern type="relative">templates/*</exclude-pattern>
+		<exclude-pattern type="relative">layouts/*</exclude-pattern>
+	</rule>
+	<rule ref="PEAR.Functions.ValidDefaultValue">
+		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
+	</rule>
+	<rule ref="PEAR.NamingConventions.ValidClassName">
+		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
+	</rule>
+
+	<!-- Include some additional sniffs from the Squiz standard -->
+	<rule ref="Squiz.Commenting.BlockComment">
+		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
+		<exclude-pattern type="relative">*/tmpl/*</exclude-pattern>
+	</rule>
+	<rule ref="Squiz.Commenting.VariableComment">
+		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
+	</rule>
+	<rule ref="Squiz.Strings.ConcatenationSpacing">
+		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
+		<exclude-pattern type="relative">*/tmpl/*</exclude-pattern>
+		<exclude-pattern type="relative">templates/*</exclude-pattern>
+		<exclude-pattern type="relative">layouts/*</exclude-pattern>
+	</rule>
+	<rule ref="Squiz.WhiteSpace.ControlStructureSpacing">
+		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
+		<exclude-pattern type="relative">*/tmpl/*</exclude-pattern>
+		<exclude-pattern type="relative">templates/*</exclude-pattern>
+		<exclude-pattern type="relative">layouts/*</exclude-pattern>
+	</rule>
+	<rule ref="Squiz.WhiteSpace.OperatorSpacing">
+		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
+		<exclude-pattern type="relative">*/tmpl/*</exclude-pattern>
+		<exclude-pattern type="relative">templates/*</exclude-pattern>
+		<exclude-pattern type="relative">layouts/*</exclude-pattern>
+	</rule>
+	<rule ref="Squiz.WhiteSpace.ScopeClosingBrace">
+		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
+		<exclude-pattern type="relative">*/tmpl/*</exclude-pattern>
+		<exclude-pattern type="relative">templates/*</exclude-pattern>
+		<exclude-pattern type="relative">layouts/*</exclude-pattern>
+	</rule>
+
+	<!-- Include some additional sniffs from the Zend standard -->
+	<rule ref="Zend.Files.ClosingTag">
+		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
+		<exclude-pattern type="relative">*/tmpl/*</exclude-pattern>
+		<exclude-pattern type="relative">templates/*</exclude-pattern>
+		<exclude-pattern type="relative">layouts/*</exclude-pattern>
+	</rule>
+
+	<!-- CMS specific sniff exclusions from the Joomla standard -->
+	<rule ref="Joomla.Commenting.FileComment">
+		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
+		<exclude-pattern type="relative">tests/*</exclude-pattern>
+	</rule>
+	<rule ref="Joomla.Commenting.FunctionComment">
+		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
+		<exclude-pattern type="relative">templates/*</exclude-pattern>
+		<exclude-pattern type="relative">layouts/*</exclude-pattern>
+		<exclude-pattern type="relative">modules/*</exclude-pattern>
+		<exclude-pattern type="relative">plugins/*</exclude-pattern>
+		<exclude-pattern type="relative">*/tests/*</exclude-pattern>
+	</rule>
+	<rule ref="Joomla.Commenting.SingleComment">
+		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
+		<exclude-pattern type="relative">*/tmpl/*</exclude-pattern>
+		<exclude-pattern type="relative">templates/*</exclude-pattern>
+		<exclude-pattern type="relative">layouts/*</exclude-pattern>
+	</rule>
+	<rule ref="Joomla.Commenting.ClassComment">
+		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
+		<exclude-pattern type="relative">tests/*</exclude-pattern>
+	</rule>
+	<rule ref="Joomla.ControlStructures.ControlSignature">
+		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
+		<exclude-pattern type="relative">*/tmpl/*</exclude-pattern>
+		<exclude-pattern type="relative">templates/*</exclude-pattern>
+		<exclude-pattern type="relative">layouts/*</exclude-pattern>
+	</rule>
+	<rule ref="Joomla.ControlStructures.ControlStructuresBrackets">
+		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
+		<exclude-pattern type="relative">*/tmpl/*</exclude-pattern>
+		<exclude-pattern type="relative">templates/*</exclude-pattern>
+		<exclude-pattern type="relative">layouts/*</exclude-pattern>
+	</rule>
+	<rule ref="Joomla.ControlStructures.WhiteSpaceBefore">
+		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
+		<exclude-pattern type="relative">*/tmpl/*</exclude-pattern>
+		<exclude-pattern type="relative">templates/*</exclude-pattern>
+		<exclude-pattern type="relative">layouts/*</exclude-pattern>
+	</rule>
+	<rule ref="Joomla.Operators.ValidLogicalOperators">
+		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
+		<exclude-pattern type="relative">*/tmpl/*</exclude-pattern>
+		<exclude-pattern type="relative">templates/*</exclude-pattern>
+		<exclude-pattern type="relative">layouts/*</exclude-pattern>
+	</rule>
+	<rule ref="Joomla">
+		<!-- These exceptions are permanent as long as there are B/C naming exceptions  -->
+		<exclude name="Joomla.NamingConventions.ValidFunctionName.FunctionNoCapital"/>
+		<exclude name="Joomla.NamingConventions.ValidFunctionName.MethodUnderscore"/>
+		<exclude name="Joomla.NamingConventions.ValidFunctionName.ScopeNotCamelCaps"/>
+		<exclude name="Joomla.NamingConventions.ValidFunctionName.FunctionNameInvalid"/>
+		<exclude name="Joomla.NamingConventions.ValidVariableName.ClassVarHasUnderscore"/>
+		<exclude name="Joomla.NamingConventions.ValidVariableName.MemberNotCamelCaps"/>
+		<exclude name="Joomla.NamingConventions.ValidVariableName.NotCamelCaps"/>
+		<exclude name="Joomla.NamingConventions.ValidVariableName.StringNotCamelCaps"/>
+		<exclude name="Generic.Files.LineEndings.InvalidEOLChar"/>
+	</rule>
+</ruleset>
