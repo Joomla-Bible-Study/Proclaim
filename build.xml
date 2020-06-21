@@ -272,7 +272,8 @@
 			<then>
 				<delete dir="${joomla-stage-dir}" includeemptydirs="true" verbose="true"/>
 				<echo message="Staging Joomla ${joomla.version}. This will take a few minutes"/>
-				<gitclone repository="https://github.com/joomla/joomla-cms.git" targetPath="${joomla-stage-dir}"/>
+				<gitclone repository="https://github.com/joomla/joomla-cms.git" targetPath="${joomla-stage-dir}"
+						  branch="development"/>
 				<!-- Switch to the Joomla version that we want to test on -->
 				<gitcheckout repository="${joomla-stage-dir}" branchname="${joomla.version}" create="false"/>
 			</then>

@@ -14,7 +14,7 @@
   "config": {
 	"optimize-autoloader": true,
 	"platform": {
-	  "php": "7.0.0"
+	  "php": "7.4"
 	},
 	"vendor-dir": "libraries/vendor"
   },
@@ -29,7 +29,6 @@
 	"ircmaxell/password-compat": "1.*",
 	"leafo/lessphp": "0.5.0",
 	"paragonie/sodium_compat": "1.9.1",
-	"phpmailer/phpmailer": "^5.2.20",
 	"symfony/polyfill-php71": "~1.9",
 	"symfony/polyfill-php73": "~1.9",
 	"symfony/yaml": "2.*",
@@ -38,15 +37,14 @@
 	"typo3/phar-stream-wrapper": "^2.1"
   },
   "require-dev": {
-	"roave/security-advisories": "dev-master",
-	"phing/phing": "^2.9",
+	"phing/phing": "2.*",
 	"pdepend/pdepend": "^2.4",
-	"phpmd/phpmd": "^2.4",
+	"phpmd/phpmd": "2.*",
 	"mayflower/php-codebrowser": "^1.1",
 	"sebastian/phpcpd": "^3.0",
 	"pear/versioncontrol_git": "dev-master",
 	"pear/pear_exception": "dev-master",
-	"phpunit/phpunit": "^4.8.35",
+	"phpunit/phpunit": "4.8.*",
 	"friendsofphp/php-cs-fixer": "2.*.*",
 	"squizlabs/php_codesniffer": "^2.8.0",
 	"pear/cache_lite": "1.7.16"

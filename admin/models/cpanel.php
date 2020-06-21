@@ -104,11 +104,6 @@ class BibleStudyModelCpanel extends JModelLegacy
 
 		if (!defined('FOF_INCLUDED'))
 		{
-			include_once JPATH_SITE . '/libraries/fof/include.php';
-		}
-
-		if (!defined('FOF_INCLUDED'))
-		{
 			return false;
 		}
 

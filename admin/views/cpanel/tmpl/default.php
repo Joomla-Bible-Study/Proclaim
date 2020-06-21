@@ -50,7 +50,7 @@ $simple_view = JBSMHelper::getSimpleView();
 				                        alt="PayPal - The safer, easier way to pay online!"> </a>
 			</div>
 			<hr/>
-			<?php echo $this->sidebar; ?>
+			<?php //echo $this->sidebar; ?>
 			<hr/>
 		</div>
 		<div class="clearfix"></div>

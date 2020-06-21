@@ -58,6 +58,7 @@ class JBSMParams
 	{
 		if (!self::$admin)
 		{
+		    $app   = JFactory::getApplication();
 			$db    = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query->select('*')
@@ -78,12 +79,12 @@ class JBSMParams
 				catch (Exception $e)
 				{
 					$msg = $e->getMessage();
-					JFactory::getApplication()->enqueueMessage('Can\'t load Admin Params - ' . $msg, 'error');
+					$app->enqueueMessage('Can\'t load Admin Params - ' . $msg, 'error');
 				}
 				$admin->params = $registry;
 
 				// Add the current user id
-				$user           = JFactory::getUser();
+				$user           = $app->getIdentity();
 				$admin->user_id = $user->id;
 			}
 

@@ -11,8 +11,6 @@
 defined('_JEXEC') or die;
 
 // Load the tooltip behavior.
-JHtml::_('behavior.tooltip');
-JHtml::_('behavior.formvalidation');
 JHtml::_('jquery.framework');
 JHtml::_('formbehavior.chosen', 'select');
 
