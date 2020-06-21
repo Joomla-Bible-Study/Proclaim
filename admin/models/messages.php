@@ -39,7 +39,6 @@ class BiblestudyModelMessages extends JModelList
 				'studytitle', 'study.studytitle',
 				'ordering', 'study.ordering',
 				'year',
-				'book', 'bookname', 'book.bookname',
 				'teacher', 'teachername', 'teacher.teachername',
 				'messagetype', 'message_type', 'messageType.message_type',
 				'series', 'series_text', 'series.series_text',
@@ -51,27 +50,6 @@ class BiblestudyModelMessages extends JModelList
 		}
 
 		parent::__construct($config);
-	}
-
-	/**
-	 * Translate item entries: books, topics
-	 *
-	 * @param   array  $items  Items for entries
-	 *
-	 * @since 7.0
-	 * @return array
-	 */
-	public function getTranslated($items = array())
-	{
-		if ($items)
-		{
-			foreach ($items as $item)
-			{
-				$item->bookname = JText::_($item->bookname);
-			}
-		}
-
-		return $items;
 	}
 
 	/**
@@ -92,7 +70,6 @@ class BiblestudyModelMessages extends JModelList
 		// Compile the store id.
 		$id .= ':' . $this->getState('filter.published');
 		$id .= ':' . $this->getState('filter.year');
-		$id .= ':' . $this->getState('filter.book');
 		$id .= ':' . $this->getState('filter.teacher');
 		$id .= ':' . $this->getState('filter.series');
 		$id .= ':' . $this->getState('filter.messagetype');
@@ -147,9 +124,6 @@ class BiblestudyModelMessages extends JModelList
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
 
-		$book = $this->getUserStateFromRequest($this->context . '.filter.book', 'filter_book');
-		$this->setState('filter.book', $book);
-
 		$teacher = $this->getUserStateFromRequest($this->context . '.filter.teacher', 'filter_teacher');
 		$this->setState('filter.teacher', $teacher);
 
@@ -165,7 +139,7 @@ class BiblestudyModelMessages extends JModelList
 		$language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $language);
 
-		$access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
+		$access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '', 'int');
 		$this->setState('filter.access', $access);
 
 		$location = $this->getUserStateFromRequest($this->context . 'filter.location', 'filter_location');
@@ -196,8 +170,7 @@ class BiblestudyModelMessages extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select',
-				'study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin' .
-				', study.verse_begin, study.chapter_end, study.verse_end, study.ordering, study.hits, study.alias' .
+				'study.id, study.published, study.studydate, study.studytitle, study.ordering, study.hits, study.alias' .
 				', study.language, study.access, study.publish_up, study.publish_down'
 			)
 		);
@@ -222,10 +195,6 @@ class BiblestudyModelMessages extends JModelList
 		// Join over Location
 		$query->select('locations.location_text');
 		$query->join('LEFT', '#__bsms_locations AS locations ON locations.id = study.location_id');
-
-		// Join over Books
-		$query->select('book.bookname');
-		$query->join('LEFT', '#__bsms_books AS book ON book.booknumber = study.booknumber');
 
 		// Join over Plays/Downloads
 		$query->select(

@@ -183,7 +183,6 @@ class BiblestudyViewTeacher extends JViewLegacy
 				$studies[$i]->scripture1 = $pelements->scripture1;
 				$studies[$i]->scripture2 = $pelements->scripture2;
 				$studies[$i]->media      = $pelements->media;
-				$studies[$i]->duration   = $pelements->duration;
 				$studies[$i]->studydate  = $pelements->studydate;
 				$studies[$i]->topics     = $pelements->topics;
 

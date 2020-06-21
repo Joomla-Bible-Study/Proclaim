@@ -24,6 +24,11 @@ defined('_JEXEC') or die;
  */
 class BiblestudyModelSermons extends JModelList
 {
+	/**
+	 * @var   JInput $imput Inpute
+	 *
+	 * @since 7.0.0
+	 */
 	public $input;
 
 	/** @var string Needed for context for Populate State
@@ -118,7 +123,7 @@ class BiblestudyModelSermons extends JModelList
 	 * Creates and executes a new query that retrieves the medifile information from the mediafiles table.
 	 * It then adds to the dataObject the mediafiles associated with the sermon.
 	 *
-	 * @return string
+	 * @return array
 	 *
 	 * @since 7.0
 	 */
@@ -222,18 +227,12 @@ class BiblestudyModelSermons extends JModelList
 
 		$this->setState('filter.language', JLanguageMultilang::isEnabled());
 
-		$studytitle = $this->getUserStateFromRequest($this->context . '.filter.studytitle', 'filter_studytitle');
-		$this->setState('filter.studytitle', $studytitle);
-
-		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
-		$this->setState('filter.published', $published);
-
 		$level = $this->getUserStateFromRequest($this->context . '.filter.level', 'filter_level');
 		$this->setState('filter.level', $level);
 
-		$books = $book = $this->getUserStateFromRequest($this->context . '.filter.book', 'filter_book');
+		$book = $this->getUserStateFromRequest($this->context . '.filter.book', 'filter_book');
 
-		if ($landing == 1 && $books !== 0)
+		if ($landing == 1 && $book !== 0)
 		{
 			$book = $this->getUserStateFromRequest($this->context . '.filter.landingbook', 'filter_book_landing');
 		}
@@ -388,8 +387,9 @@ class BiblestudyModelSermons extends JModelList
 				'study.publish_down,
 		                study.series_id, study.download_id, study.thumbnailm, study.thumbhm, study.thumbwm,
 		                study.access, study.user_name, study.user_id, study.studynumber, study.chapter_begin2, study.chapter_end2,
-		                study.verse_end2, study.verse_begin2, ' . ' ' . $query->length('study.studytext') . ' AS readmore') . ','
-			. ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug ');
+		                study.verse_end2, study.verse_begin2, ' . ' ' . $query->length('study.studytext') . ' AS readmore'
+			) . ', CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug '
+		);
 		$query->from('#__bsms_studies AS study');
 
 		// Join over Message Types
@@ -398,7 +398,8 @@ class BiblestudyModelSermons extends JModelList
 
 		// Join over Teachers
 		$query->select('teacher.teachername AS teachername, teacher.title as title, teacher.teacher_thumbnail as thumb,
-			teacher.thumbh, teacher.thumbw');
+			teacher.thumbh, teacher.thumbw'
+		);
 		$query->join('LEFT', '#__bsms_teachers AS teacher ON teacher.id = study.teacher_id');
 
 		// Join over Series
@@ -414,7 +415,8 @@ class BiblestudyModelSermons extends JModelList
 
 		// Join over Plays/Downloads
 		$query->select('GROUP_CONCAT(DISTINCT mediafile.id) as mids, SUM(mediafile.plays) AS totalplays,' .
-			'SUM(mediafile.downloads) as totaldownloads, mediafile.study_id');
+			'SUM(mediafile.downloads) as totaldownloads, mediafile.study_id'
+		);
 		$query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
 
 		// Join over Locations
@@ -457,399 +459,198 @@ class BiblestudyModelSermons extends JModelList
 		// Begin the filters for menu items
 		$params      = $this->getState('params');
 
-		$books       = null;
-		$teacher     = null;
-		$locations   = null;
-		$messagetype = null;
-		$topics      = null;
-		$series      = null;
-		$years       = null;
+		$filters_group = [];
 
-		// See if we are getting itemid
-		$itemid      = $this->input->get('Itemid', '', 'int');
-		$application = JFactory::getApplication();
-		$menu        = $application->getMenu();
-		$item        = $menu->getItem($itemid);
-
-		// Only do this if item id is available
-		if ($item != null)
+		// Teacher ID
+		if (!is_null($params->get('mteacher_id')) && $params->get('mteacher_id')[0] !== '-1' && empty($this->getState('filter.teacher')))
 		{
-			$teacher     = $params->get('mteacher_id');
-			$locations   = $params->get('mlocations');
-			$books       = $params->get('mbooknumber');
-			$series      = $params->get('mseries_id');
-			$topics      = $params->get('mtopic_id');
-			$messagetype = $params->get('mmessagetype');
-			$years       = $params->get('years');
-
-			// Filter over teachers
-			$filters = $teacher;
-
-			if ($filters)
-			{
-				if (count($filters) > 1)
-				{
-					$where2   = array();
-					$subquery = '(';
-
-					foreach ($filters as $filter)
-					{
-						$where2[] = 'study.teacher_id = ' . (int) $filter;
-					}
-
-					$subquery .= implode(' OR ', $where2);
-					$subquery .= ')';
-
-					$query->where($subquery);
-				}
-				else
-				{
-					foreach ($filters as $filter)
-					{
-						if ($filter >= 1)
-						{
-							$query->where('study.teacher_id = ' . (int) $filter);
-						}
-					}
-				}
-			}
-
-			// Filter locations
-			$filters = $locations;
-
-			if ($filters)
-			{
-				if (count($filters) > 1)
-				{
-					$where2   = array();
-					$subquery = '(';
-
-					foreach ($filters as $filter)
-					{
-						$where2[] = 'study.location_id = ' . (int) $filter;
-					}
-
-					$subquery .= implode(' OR ', $where2);
-					$subquery .= ')';
-
-					$query->where($subquery);
-				}
-				else
-				{
-					foreach ($filters AS $filter)
-					{
-						if ($filter >= 1)
-						{
-							$query->where('study.location_id = ' . (int) $filter);
-						}
-					}
-				}
-			}
-
-			// Filter over books
-			$filters = $books;
-
-			if ($filters)
-			{
-				if (count($filters) > 1)
-				{
-					$where2   = array();
-					$subquery = '(';
-
-					foreach ($filters as $filter)
-					{
-						$where2[] = 'study.booknumber = ' . (int) $filter;
-					}
-
-					$subquery .= implode(' OR ', $where2);
-					$subquery .= ')';
-
-					$query->where($subquery);
-				}
-				else
-				{
-					foreach ($filters AS $filter)
-					{
-						if ($filter >= 1)
-						{
-							$query->where('study.booknumber = ' . (int) $filter);
-						}
-					}
-				}
-			}
-
-			$filters = $series;
-
-			if ($filters)
-			{
-				if (count($filters) > 1)
-				{
-					$where2   = array();
-					$subquery = '(';
-
-					foreach ($filters as $filter)
-					{
-						$where2[] = 'study.series_id = ' . (int) $filter;
-					}
-
-					$subquery .= implode(' OR ', $where2);
-					$subquery .= ')';
-
-					$query->where($subquery);
-				}
-				else
-				{
-					foreach ($filters AS $filter)
-					{
-						if ($filter >= 1)
-						{
-							$query->where('study.series_id = ' . (int) $filter);
-						}
-					}
-				}
-			}
-
-			$filters = $topics;
-
-			if ($filters)
-			{
-				if (count($filters) > 1)
-				{
-					$where2   = array();
-					$subquery = '(';
-
-					foreach ($filters as $filter)
-					{
-						$where2[] = 'st.topic_id = ' . (int) $filter;
-					}
-
-					$subquery .= implode(' OR ', $where2);
-					$subquery .= ')';
-
-					$query->where($subquery);
-				}
-				else
-				{
-					foreach ($filters AS $filter)
-					{
-						if ($filter >= 1)
-						{
-							$query->where('st.topic_id = ' . (int) $filter);
-						}
-					}
-				}
-			}
-
-			$filters = $messagetype;
-
-			if ($filters)
-			{
-				if (count($filters) > 1)
-				{
-					$where2   = array();
-					$subquery = '(';
-
-					foreach ($filters as $filter)
-					{
-						$where2[] = 'study.messagetype = ' . (int) $filter;
-					}
-
-					$subquery .= implode(' OR ', $where2);
-					$subquery .= ')';
-
-					$query->where($subquery);
-				}
-				else
-				{
-					foreach ($filters AS $filter)
-					{
-						if ($filter >= 1)
-						{
-							$query->where('study.messagetype = ' . (int) $filter);
-						}
-					}
-				}
-			}
-
-			$filters = $years;
-
-			if ($filters)
-			{
-				if (count($filters) > 1)
-				{
-					$where2   = array();
-					$subquery = '(';
-
-					foreach ($filters as $filter)
-					{
-						$where2[] = 'YEAR(study.studydate) = ' . (int) $filter;
-					}
-
-					$subquery .= implode(' OR ', $where2);
-					$subquery .= ')';
-
-					$query->where($subquery);
-				}
-				else
-				{
-					foreach ($filters AS $filter)
-					{
-						if ($filter >= 1)
-						{
-							$query->where('YEAR(study.studydate) = ' . (int) $filter);
-						}
-					}
-				}
-			}
+			$filters_group[] = ['study.teacher_id' => $params->get('mteacher_id')];
+		}
+		elseif (!is_null($params->get('mteacher_id')) && $params->get('mteacher_id')[0] !== '-1' && !empty($this->getState('filter.teacher')))
+		{
+			$filters_group[] = ['study.teacher_id' => $params->get('mteacher_id')];
+			$filters_group[] = ['study.teacher_id' => [$this->getState('filter.teacher')]];
+		}
+		elseif (!empty($this->getState('filter.teacher')))
+		{
+			$filters_group[] = ['study.teacher_id' => [$this->getState('filter.teacher')]];
 		}
 
-		// Filter by studytitle
-		$studytitle = $this->getState('filter.studytitle');
-
-		if (!empty($studytitle))
+		// Location ID
+		if (!is_null($params->get('mlocations')) && $params->get('mlocations')[0] !== '-1' && empty($this->getState('filter.location')))
 		{
-			$query->where('study.studytitle LIKE "' . $studytitle . '%"');
+			$filters_group[] = ['study.location_id' => $params->get('mlocations')];
+		}
+		elseif (!is_null($params->get('mlocations')) && $params->get('mlocations')[0] !== '-1' && !empty($this->getState('filter.location')))
+		{
+			$filters_group[] = ['study.location_id' => $params->get('mlocations')];
+			$filters_group[] = ['study.location_id' => [$this->getState('filter.location')]];
+		}
+		elseif (!empty($this->getState('filter.location')))
+		{
+			$filters_group[] = ['study.location_id' => [$this->getState('filter.location')]];
 		}
 
-		// Filter by book
-		$book = $this->getState('filter.book');
-
-		if ($this->landing == 1)
+		// Book Number ID
+		if (!is_null($params->get('mbooknumber')) && $params->get('mbooknumber')[0] !== '-1' && empty($this->getState('filter.book')))
 		{
-			$book = $this->getState('filter.landingbook');
+			$filters_group[] = ['study.booknumber' => $params->get('mbooknumber')];
+		}
+		elseif (!is_null($params->get('mbooknumber')) && $params->get('mbooknumber')[0] !== '-1' && !empty($this->getState('filter.book')))
+		{
+			$filters_group[] = ['study.booknumber' => $params->get('mbooknumber')];
+			$filters_group[] = ['study.booknumber' => [$this->getState('filter.book')]];
+		}
+		elseif (!empty($this->getState('filter.book')))
+		{
+			$filters_group[] = ['study.booknumber' => [$this->getState('filter.book')]];
 		}
 
-		if (!empty($book))
+		// Series ID
+		if (!is_null($params->get('mseries_id')) && $params->get('mseries_id')[0] !== '-1' && empty($this->getState('filter.series')))
 		{
-			$chb   = $this->input->get('minChapt', '', 'int');
-			$che   = $this->input->get('maxChapt', '', 'int');
+			$filters_group[] = ['study.series_id' => $params->get('mseries_id')];
+		}
+		elseif (!is_null($params->get('mseries_id')) && $params->get('mseries_id')[0] !== '-1' && !empty($this->getState('filter.series')))
+		{
+			$filters_group[] = ['study.series_id' => $params->get('mseries_id')];
+			$filters_group[] = ['study.series_id' => [$this->getState('filter.series')]];
+		}
+		elseif (!empty($this->getState('filter.series')))
+		{
+			$filters_group[] = ['study.series_id' => [$this->getState('filter.series')]];
+		}
 
-			// Set the secondary order
-			$this->setState('secondaryorderstate', 1);
+		// Topic ID
+		if (!is_null($params->get('mtopic_id')) && $params->get('mtopic_id')[0] !== '-1' && empty($this->getState('filter.topic')))
+		{
+			$filters_group[] = ['st.topic_id' => $params->get('mtopic_id')];
+		}
+		elseif (!is_null($params->get('mtopic_id')) && $params->get('mtopic_id')[0] !== '-1' && !empty($this->getState('filter.topic')))
+		{
+			$filters_group[] = ['st.topic_id' => $params->get('mtopic_id')];
+			$filters_group[] = ['st.topic_id' => [$this->getState('filter.topic')]];
+		}
+		elseif (!empty($this->getState('filter.topic')))
+		{
+			$filters_group[] = ['st.topic_id' => [$this->getState('filter.topic')]];
+		}
 
-			if ($chb && $che)
+		// Message Type ID
+		if (!is_null($params->get('mmessagetype')) && $params->get('mmessagetype')[0] !== '-1' && empty($this->getState('filter.messagetype')))
+		{
+			$filters_group[] = ['study.messagetype' => $params->get('mmessagetype')];
+		}
+		elseif (!is_null($params->get('mmessagetype'))
+			&& $params->get('mmessagetype')[0] !== '-1'
+			&& !empty($this->getState('filter.messagetype'))
+		)
+		{
+			$filters_group[] = ['study.messagetype' => $params->get('mmessagetype')];
+			$filters_group[] = ['study.messagetype' => [$this->getState('filter.messagetype')]];
+		}
+		elseif (!empty($this->getState('filter.messagetype')))
+		{
+			$filters_group[] = ['study.messagetype' => [$this->getState('filter.messagetype')]];
+		}
+
+		// Year ID
+		if (!is_null($params->get('years')) && $params->get('years')[0] !== '-1' && empty($this->getState('filter.year')))
+		{
+			$filters_group[] = ['YEAR(study.studydate)' => $params->get('years')];
+		}
+		elseif (!is_null($params->get('years')) && $params->get('years')[0] !== '-1' && !empty($this->getState('filter.year')))
+		{
+			$filters_group[] = ['YEAR(study.studydate)' => [$this->getState('filter.year')]];
+			$filters_group[] = ['YEAR(study.studydate)' => $params->get('years')];
+		}
+		elseif (!empty($this->getState('filter.year')))
+		{
+			$filters_group[] = ['YEAR(study.studydate)' => [$this->getState('filter.year')]];
+		}
+
+		// Work through each filter decelerations
+		foreach ($filters_group as $filters)
+		{
+			if (is_array($filters))
 			{
-				$query->where('(study.booknumber = ' . (int) $book .
-					' AND study.chapter_begin >= ' . (int) $chb .
-					' AND study.chapter_end <= ' . (int) $che . ')' .
-					'OR study.booknumber2 = ' . (int) $book
-				);
-			}
-			else
-			{
-				if ($chb)
+				// Work through the menu filters or search filters
+				foreach ($filters as $filter => $filtervalue)
 				{
-					$query->where('(study.booknumber = ' . (int) $book . ' AND study.chapter_begin > = ' . (int) $chb . ') OR study.booknumber2 = ' . (int) $book);
-				}
-				else
-				{
-					if ($che)
+					if (count($filtervalue) > 1)
 					{
-						$query->where('(study.booknumber = ' . (int) $book . ' AND study.chapter_end <= ' . $che . ') OR study.booknumber2 = ' . (int) $book);
+						$where2   = array();
+						$subquery = '(';
+
+						foreach ($filtervalue as $filterid)
+						{
+							$where2[] = $filter . ' = ' . (int) $filterid;
+						}
+
+						$subquery .= implode(' OR ', $where2);
+						$subquery .= ')';
+
+						$query->where($subquery);
 					}
 					else
 					{
-						$query->where('(study.booknumber = ' . (int) $book . ' OR study.booknumber2 = ' . (int) $book . ')');
+						foreach ($filtervalue as $filterid)
+						{
+							if ($filterid >= 1 && $filter !== 'study.booknumber')
+							{
+								if ($this->landing == 1)
+								{
+									$$filterid = $this->getState($filter);
+								}
+
+								$query->where($filter . ' = ' . (int) $filterid);
+							}
+
+							if ($filterid >= 1 && $filter === 'study.booknumber')
+							{
+								$book = $filterid;
+								$chb  = $this->input->get('minChapt', '', 'int');
+								$che  = $this->input->get('maxChapt', '', 'int');
+
+								if ($chb && $che)
+								{
+									$query->where('(study.booknumber = ' . (int) $book .
+										' AND study.chapter_begin >= ' . (int) $chb .
+										' AND study.chapter_end <= ' . (int) $che . ')' .
+										'OR study.booknumber2 = ' . (int) $book
+									);
+								}
+								else
+								{
+									if ($chb)
+									{
+										$query->where('(study.booknumber = ' . (int) $book . ' AND study.chapter_begin > = ' .
+											(int) $chb . ') OR study.booknumber2 = ' . (int) $book
+										);
+									}
+									else
+									{
+										if ($che)
+										{
+											$query->where('(study.booknumber = ' . (int) $book . ' AND study.chapter_end <= ' .
+												$che . ') OR study.booknumber2 = ' . (int) $book
+											);
+										}
+										else
+										{
+											$query->where('(study.booknumber = ' . (int) $book . ' OR study.booknumber2 = ' . (int) $book . ')');
+										}
+									}
+								}
+							}
+						}
 					}
 				}
 			}
 		}
 
-		// Filter by teacher
-		$teacher = $this->getState('filter.teacher');
-
-		if ($this->landing == 1)
-		{
-			$teacher = $this->getState('filter.landingteacher');
-		}
-
-		if ($teacher >= 1)
-		{
-			$query->where('study.teacher_id = ' . (int) $teacher);
-
-			// Set the secondary order
-			$this->setState('secondaryorderstate', 1);
-		}
-
-		// Filter by series
-		$series = $this->getState('filter.series');
-
-		if ($this->landing == 1)
-		{
-			$series = $this->getState('filter.landingseries');
-		}
-
-		if ($series >= 1)
-		{
-			$query->where('study.series_id = ' . (int) $series);
-
-			// Set the secondary order
-			$this->setState('secondaryorderstate', 1);
-		}
-
-		// Filter by message type
-		$messageType = $this->getState('filter.messageType');
-
-		if ($this->landing == 1)
-		{
-			$messageType = $this->getState('filter.landingmessagetype');
-		}
-
-		if ($messageType >= 1)
-		{
-			$query->where('study.messageType = ' . (int) $messageType);
-
-			// Set the secondary order
-			$this->setState('secondaryorderstate', 1);
-		}
-
-		// Filter by Year
-		$year = $this->getState('filter.year');
-
-		if ($this->landing == 1)
-		{
-			$year = $this->getState('filter.landingyear');
-		}
-
-		if ($year >= 1)
-		{
-			$query->where('YEAR(study.studydate) = ' . (int) $year);
-
-			// Set the secondary order
-			$this->setState('secondaryorderstate', 1);
-		}
-
-		// Filter by topic
-		$topic = $this->getState('filter.topic');
-
-		if ($this->landing == 1)
-		{
-			$topic = $this->getState('filter.landingtopic');
-		}
-
-		if (!empty($topic))
-		{
-			$query->where('st.topic_id LIKE "%' . $topic . '%"');
-
-			// Set the secondary order
-			$this->setState('secondaryorderstate', 1);
-		}
-
-		// Filter by location
-		$location = $this->getState('filter.location');
-
-		if ($this->landing == 1)
-		{
-			$location = $this->getState('filter.landinglocation');
-		}
-
-		if (is_numeric($location))
-		{
-			$query->where('study.location_id = ' . (int) $location);
-
-			// Set the secondary order
-			$this->setState('secondaryorderstate', 1);
-		}
+		// Set the secondary order
+		$this->setState('secondaryorderstate', 1);
 
 		// Filter by language
 		$language = $params->get('language', '*');
@@ -870,8 +671,11 @@ class BiblestudyModelSermons extends JModelList
 		if (!empty($search))
 		{
 			$like = $db->quote('%' . $search . '%');
-			$query->where('study.studytitle LIKE ' . $like . ' OR study.studytext LIKE ' . $like . ' OR study.studyintro LIKE ' .$like . ' OR series.series_text LIKE ' .$like . ' OR series.description LIKE ' .$like . ' OR t.topic_text LIKE ' . $like);
+			$query->where('study.studytitle LIKE ' . $like . ' OR study.studytext LIKE ' . $like . ' OR study.studyintro LIKE ' .
+				$like . ' OR series.series_text LIKE ' . $like . ' OR series.description LIKE ' . $like . ' OR t.topic_text LIKE ' . $like
+			);
 		}
+
 		// Add the list ordering clause.
 		$orderCol  = $this->state->get('list.fullordering');
 		$orderDirn = '';
