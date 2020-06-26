@@ -70,28 +70,32 @@ class BiblestudyController extends JControllerLegacy
 	 * @param   boolean  $cachable   If true, the view output will be cached
 	 * @param   array    $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
 	 *
-	 * @return  JControllerLegacy|bool  A JControllerLegacy object to support chaining.
+	 * @return  JControllerLegacy|boolean  A JControllerLegacy object to support chaining.
 	 *
 	 * @throws  Exception
 	 * @since   7.0.0
 	 */
 	public function display($cachable = true, $urlparams = array())
 	{
-		/* Set the default view name and format from the Request.
-		   Note we are using a_id to avoid collisions with the router and the return page.
-		   Frontend is a bit messier than the backend. */
+		/*
+		Set the default view name and format from the Request.
+		Note we are using a_id to avoid collisions with the router and the return page.
+		Frontend is a bit messier than the backend.
+		*/
 		$id    = $this->input->getInt('a_id');
 		$vName = $this->input->get('view', 'landingpage', 'cmd');
 		$this->input->set('view', $vName);
 
 		$user = JFactory::getUser();
 
-		if ($vName === 'popup')
-		{
-			$cachable = false;
-		}
-
-		if ($user->get('id') || ($_SERVER['REQUEST_METHOD'] === 'POST' && ($vName === 'archive')))
+		/*
+		 * This is to check and see if we need to not cache popup pages
+		 * With this we Look to see if things are coming from the Landing page using the vairble sendingview"
+		 */
+		if ($user->get('id')
+			|| ($this->input->getMethod() === 'POST' && strpos($vName, 'form') !== false)
+			|| $vName === 'popup' || $vName === 'sermons'
+		)
 		{
 			$cachable = false;
 		}

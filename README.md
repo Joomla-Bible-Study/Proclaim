@@ -3,41 +3,22 @@ CWM Proclaim
 
 Status
 -----------
-<table>
-    <tr>
-        <th>Code</th>
-        <th>Branch</th>
-        <th>Version</th>
-        <th>Release Date</th>
-        <th>Joomla Version</th>
-    </tr>
-    <tr>
-        <td align="center"><a href="https://travis-ci.com/Joomla-Bible-Study/Joomla-Bible-Study" target="_blank"><img src="https://travis-ci.com/Joomla-Bible-Study/Joomla-Bible-Study.svg?branch=development"/></a></td>
-        <td align="center">Development</td>
-        <td align="center">9.3.0</td>
-        <td align="center">TBD</td>
-        <td align="center">3.8+</td>
-    </tr>
-    <tr>
-        <td align="center"><a href="https://travis-ci.com/Joomla-Bible-Study/Joomla-Bible-Study" target="_blank"><img src="https://travis-ci.com/Joomla-Bible-Study/Joomla-Bible-Study.svg?branch=master"/></a></td>
-        <td align="center">Master</td>
-        <td align="center">9.2.1</td>
-        <td align="center">Oct 31, 2019</td>
-        <td align="center">3.8+</td>
-    </tr>
-</table>
+|                                                                          Code                                                                          |   Branch    | Version | Release Date | Joomla Version |
+|--------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|---------|--------------|----------------|
+| [![](https://travis-ci.com/Joomla-Bible-Study/Joomla-Bible-Study.svg?branch=development)](https://travis-ci.com/Joomla-Bible-Study/Joomla-Bible-Study) | Development | 9.3.0   | TBD          | 3.8+           |
+| [![](https://travis-ci.com/Joomla-Bible-Study/Joomla-Bible-Study.svg?branch=master)](https://travis-ci.com/Joomla-Bible-Study/Joomla-Bible-Study)      | Master      | 9.2.3   | June 21, 2020 | 3.8+           |
 
 *NOTE:* The master branch will always reflect the current, released stable version. Only bug fixes and minor updates should be applied to the master branch. New features are to be introduced into the development branch only.
 
 Overview
 --------
-Proclaim is a Joomla!® component written by a team of webservants to further the teaching of God's Word. The component displays information about your church's Bible Studies or sermons in a wide variety of ways. Proclaim is flexible, customizable, and powerful. Easy to configure templates give you the maximum amount of choices. Show only what you want in whatever way you want.
+Proclaim is a Joomla!® component written by a team of web servants to further the teaching of God's Word. The component displays information about your church's Bible Studies or sermons in a wide variety of ways. Proclaim is flexible, customizable, and powerful. Easy to configure templates give you the maximum amount of choices. Show only what you want in whatever way you want.
 
 Embed YouTube videos, play audio, show study notes - even create your own html display pages. You can have multiple locations, series, podcasting, and sharing with social media sites. Please see the example pages for just some of what Bible Study can do for your church - and the best part is the component is completely free. Support is top notch, and also free. Bottom line: we want to help you spread the gospel.
 
 Contributing
 ------------
-We appreciate contributions in varioius capacities, below are some ways that you can contribute to this project
+We appreciate contributions in various capacities, below are some ways that you can contribute to this project
 
 ### Setup
 1. [Fork this repository.][fork]
@@ -49,8 +30,8 @@ We appreciate contributions in varioius capacities, below are some ways that you
 2. Implement your feature or bug fix.
 3. If you implemented a new feature or added an extra functionality, create/update unit tests for that feature
 4. Run `bin/phing build`
-5. If not building sucessfully, go back to step **1**
-6. Add your files to repositiory: `git add .`
+5. If not building successfully, go back to step **1**
+6. Add your files to repository: `git add .`
 7. Commit your files: `git commit -m "Implemented feature [x]"`
 8. Push your changes: `git push`
 9. [Submit a pull request][pr]
@@ -69,6 +50,7 @@ For every major release, we prefer to have an approximate 2 week testing window.
 [pr]: http://help.github.com/send-pull-requests/
 [phing]: http://www.phing.info/
 [setup]: https://github.com/Joomla-Bible-Study/Joomla-Bible-Study/wiki/Setting-up-your-development-environment
+<!-- @IGNORE PREVIOUS: link -->
 [composer]: https://getcomposer.org/download/
 
 Reporting Issues and requesting features

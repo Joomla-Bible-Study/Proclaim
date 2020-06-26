@@ -28,8 +28,8 @@ before_script:
   - composer install
 
 script:
-  - libraries/vendor/bin/phpcs --config-set installed_paths build/coding-standards,libraries/vendor/squizlabs/php_codesniffer/CodeSniffer/Standards
-  - if [[ $RUN_PHPCS == "yes" ]]; then libraries/vendor/bin/phpcs --report=full -p --standard=build/coding-standards/CWM .; fi
+  #- libraries/vendor/bin/phpcs --config-set installed_paths build/coding-standards,libraries/vendor/squizlabs/php_codesniffer/CodeSniffer/Standards
+  - if [[ $RUN_PHPCS == "yes" ]]; then libraries/vendor/bin/phpcs --report=full --standard=build/coding-standards/CWM .; fi
   - if [[ $RUN_UNIT_TESTS == "yes" ]]; then libraries/vendor/bin/phpunit --configuration travisci-phpunit.xml; fi
 
 branches:

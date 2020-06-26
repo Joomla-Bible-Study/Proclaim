@@ -21,7 +21,8 @@
     </fields>
     <fields name="params">
         <fieldset name="basic"
-                  label="JBS_MNU_TEACHERS_LIST_LAYOUT">
+                  label="JBS_MNU_TEACHERS_LIST_LAYOUT"
+                  addfieldpath="/administrator/components/com_biblestudy/models/fields">
 
             <field name="metakey"
                    type="text"
