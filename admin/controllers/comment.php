@@ -30,7 +30,10 @@ class BiblestudyControllerComment extends JControllerForm
 	public function batch($model = null)
 	{
 		// Set the model
-		$model = $this->getModel('Comment', '', array());
+		if ($model === null)
+		{
+			$model = $this->getModel('Comment', '', array());
+		}
 
 		// Preset the redirect
 		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=comments' . $this->getRedirectToListAppend(), false));
@@ -91,6 +94,7 @@ class BiblestudyControllerComment extends JControllerForm
 	 */
 	public function getModel($name = 'Comment', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
 	{
+		/** @var BiblestudyModelComment $model */
 		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
 
 		return $model;

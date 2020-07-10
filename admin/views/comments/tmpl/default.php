@@ -122,10 +122,10 @@ JFactory::getDocument()->addScriptDeclaration('
 
 									// Create dropdown items
 									$action = $archived ? 'unarchive' : 'archive';
-									JHtml::_('actionsdropdown.' . $action, 'cb' . $i, 'messages');
+									JHtml::_('actionsdropdown.' . $action, 'cb' . $i, 'comments');
 
 									$action = $trashed ? 'untrash' : 'trash';
-									JHtml::_('actionsdropdown.' . $action, 'cb' . $i, 'messages');
+									JHtml::_('actionsdropdown.' . $action, 'cb' . $i, 'comments');
 
 									// Render dropdown list
 									echo JHtml::_('actionsdropdown.render', $this->escape($item->studytitle));

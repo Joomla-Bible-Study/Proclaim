@@ -106,6 +106,7 @@
 				<include name="plugins/**" />
 				<include name="site/**" />
 				<include name="*.php" />
+				<exclude name="build.xml" />
 				<include name="*.xml" />
 				<include name="*.txt" />
 				<include name="*.md" />
@@ -199,6 +200,28 @@
 		<symlink target="${basedir}/plugins/system/jbspodcast" link="${joomla_path}${joomla_dir}/plugins/system/jbspodcast" overwrite="true"/>
 		<symlink target="${basedir}/plugins/search/biblestudysearch" link="${joomla_path}${joomla_dir}/plugins/search/biblestudysearch" overwrite="true"/>
 
+		<phingcall target="dev.init"/>
+	</target>
+
+	<!-- Set the default joomla path and create symbolic links -->
+	<target name="dev.setup_Symbolic_Links">
+		<propertyprompt propertyName="joomla_path" defaultValue="/Applications/MAMP/htdocs/" promptText="Enter the path to your Joomla! root directory"/>
+		<propertyprompt propertyName="joomla_dir" defaultValue="joomla-dev" promptText="Set Joomla folder name"/>
+
+		<echo message="Joomla path set to: ${joomla_path}${joomla_dir}"/>
+
+		<echo message="Linking component, modules, and plugins to Joomla!"/>
+
+		<!-- Create symbolic links for component in the Joomla directory -->
+		<symlink target="${basedir}/media" link="${joomla_path}${joomla_dir}/media/com_biblestudy" overwrite="true"/>
+		<symlink target="${basedir}/admin" link="${joomla_path}${joomla_dir}/administrator/components/com_biblestudy" overwrite="true"/>
+		<symlink target="${basedir}/site" link="${joomla_path}${joomla_dir}/components/com_biblestudy" overwrite="true"/>
+		<symlink target="${basedir}/modules/site/mod_biblestudy" link="${joomla_path}${joomla_dir}/modules/mod_biblestudy" overwrite="true"/>
+		<symlink target="${basedir}/modules/site/mod_biblestudy_podcast" link="${joomla_path}${joomla_dir}/modules/mod_biblestudy_podcast" overwrite="true"/>
+		<symlink target="${basedir}/plugins/system/jbsbackup" link="${joomla_path}${joomla_dir}/plugins/system/jbsbackup" overwrite="true"/>
+		<symlink target="${basedir}/plugins/finder/biblestudy" link="${joomla_path}${joomla_dir}/plugins/finder/biblestudy" overwrite="true"/>
+		<symlink target="${basedir}/plugins/system/jbspodcast" link="${joomla_path}${joomla_dir}/plugins/system/jbspodcast" overwrite="true"/>
+		<symlink target="${basedir}/plugins/search/biblestudysearch" link="${joomla_path}${joomla_dir}/plugins/search/biblestudysearch" overwrite="true"/>
 		<phingcall target="dev.init"/>
 	</target>
 

@@ -105,13 +105,13 @@ abstract class JHtmlBiblestudy
 
 		if ($extra === 'font-awesome')
 		{
-			JHtml::script('https://use.fontawesome.com/releases/v5.3.1/js/all.js',
+			JHtml::script('https://use.fontawesome.com/releases/v5.12.0/js/all.js',
 				[],
-				['integrity' => 'sha384-kW+oWsYx3YpxvjtZjFXqazFpA7UP/MbiY4jvs+RWZo2+N94PFZ36T6TFkc9O3qoB', 'crossorigin' => 'anonymous', 'defer' => 'defer']
+				['defer' => 'defer']
 			);
-			JHtml::script('https://use.fontawesome.com/releases/v5.4.2/js/v4-shims.js',
+			JHtml::script('https://use.fontawesome.com/releases/v5.12.0/js/v4-shims.js',
 				[],
-				['integrity' => 'sha384-kW+oWsYx3YpxvjtZjFXqazFpA7UP/MbiY4jvs+RWZo2+N94PFZ36T6TFkc9O3qoB', 'crossorigin' => 'anonymous', 'defer' => 'defer']
+				['defer' => 'defer']
 			);
 		}
 	}

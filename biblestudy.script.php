@@ -832,7 +832,7 @@ class Com_BiblestudyInstallerScript
 						$count                  = $db->loadResult();
 						$installer              = new JInstaller;
 						$result                 = $installer->install($path);
-						$status->modulesarray[] = array(
+						$status->modules[] = array(
 							'name'   => 'mod_' . $module,
 							'client' => $folder,
 							'result' => $result
@@ -950,7 +950,7 @@ class Com_BiblestudyInstallerScript
 						$count                  = $db->loadResult();
 						$installer              = new JInstaller;
 						$result                 = $installer->install($path);
-						$status->pluginsarray[] = array(
+						$status->plugins[] = array(
 							'name'   => 'plg_' . $plugin,
 							'group'  => $folder,
 							'result' => $result
@@ -1013,7 +1013,7 @@ class Com_BiblestudyInstallerScript
 						{
 							$installer                    = new JInstaller;
 							$result                       = $installer->uninstall('module', $id, 1);
-							$this->status->modulesarray[] = array(
+							$this->status->modules[] = array(
 								'name'   => 'mod_' . $module,
 								'client' => $folder,
 								'result' => $result
@@ -1047,7 +1047,7 @@ class Com_BiblestudyInstallerScript
 						{
 							$installer                    = new JInstaller;
 							$result                       = $installer->uninstall('plugin', $id, 1);
-							$this->status->pluginsarray[] = array(
+							$this->status->plugins[] = array(
 								'name'   => 'plg_' . $plugin,
 								'group'  => $folder,
 								'result' => $result

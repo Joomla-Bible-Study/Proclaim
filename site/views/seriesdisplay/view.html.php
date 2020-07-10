@@ -64,7 +64,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 	/** @var  Registry Admin Params
 	 *
 	 * @since 7.0 */
-	protected $admin_params;
+	protected $adminParams;
 
 	/** @var  object Page
 	 *
@@ -94,7 +94,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 	/** @var  string Passage Link
 	 *
 	 * @since 7.0 */
-	protected $passage_link;
+	protected $passageLink;
 
 	/** @var  object Studies
 	 *
@@ -104,7 +104,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 	/** @var  string Request URL
 	 *
 	 * @since 7.0 */
-	protected $request_url;
+	protected $requestUrl;
 
 	/**
 	 * Execute and display a template script.
@@ -215,6 +215,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 
 			$this->page          = $items;
 		}
+
 		// Prepare meta information (under development)
 		if ($params->get('metakey'))
 		{
@@ -247,8 +248,8 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 			// Convert parameter fields to objects.
 			$registry = new Registry;
 			$registry->loadString($plugin->params);
-			$st_params = $registry;
-			$version   = $st_params->get('bible_version');
+			$stParams = $registry;
+			$version   = $stParams->get('bible_version');
 		}
 
 		// End process prepare content plugins
@@ -257,7 +258,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		$this->studies     = $studies;
 		$uri               = new JUri;
 		$stringuri         = $uri->toString();
-		$this->request_url = $stringuri;
+		$this->requestUrl  = $stringuri;
 
 		parent::display($tpl);
 	}
