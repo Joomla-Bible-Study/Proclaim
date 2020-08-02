@@ -373,6 +373,18 @@ class JBSMPodcast
 								. $episode->sid . $detailstemplateid . '</link>';
 						}
 
+						// Make a duration build from Params of media.
+						$duration = '';
+
+						if ($episode->params->get('media_hours', '00') !== '00' ||
+                            $episode->params->get('media_minutes', '00') !== '00' ||
+                            $episode->params->get('media_seconds', '00') !== '00')
+                        {
+                            $duration = $episode->params->get('media_hours', '00') . ':' .
+                                $episode->params->get('media_minutes', '00') .
+                                ':' . $episode->params->get('media_seconds', '00');
+                        }
+
 						$episodedetailtemp .= '<comments>http://' . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=sermon&amp;id='
 							. $episode->sid . $detailstemplateid . '</comments>
                         		<itunes:author>' . $this->escapeHTML($episode->teachername) . '</itunes:author>
@@ -383,10 +395,7 @@ class JBSMPodcast
                         		<itunes:subtitle>' . $this->escapeHTML($subtitle) . '</itunes:subtitle>
                         		<itunes:summary>' . $description . '</itunes:summary>
                         		<itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>
-                        		<itunes:duration>' . $episode->media_hours . ':' . sprintf(
-								"%02d",
-								$episode->media_minutes
-							) . ':' . sprintf("%02d", $episode->media_seconds) . '</itunes:duration>';
+                        		<itunes:duration>' . $duration . '</itunes:duration>';
 
 						// Here is where we test to see if the link should be an article or docMan link, otherwise it is a mediafile
 						if ($episode->params->get('article_id') > 1)
@@ -543,7 +552,7 @@ class JBSMPodcast
 			. ' mf.id AS mfid, mf.study_id, mf.server_id, mf.podcast_id,'
 		. ' mf.published AS mfpub, mf.createdate, mf.params,'
 		. ' s.id AS sid, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.verse_begin,'
-		. ' s.chapter_end, s.verse_end, s.studytitle, s.studyintro, s.published AS spub, s.media_hours, s.media_minutes, s.media_seconds,'
+		. ' s.chapter_end, s.verse_end, s.studytitle, s.studyintro, s.published AS spub,'
 		. ' se.series_text,'
 		. ' sr.id AS srid, sr.params as srparams,'
 		. ' t.id AS tid, t.teachername,'
