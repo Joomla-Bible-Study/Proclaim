@@ -22,7 +22,8 @@ class BiblestudyViewLandingpage extends JViewLegacy
 {
 	/** @var  string Request URL
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	public $request_url;
 
 	/**
@@ -56,7 +57,7 @@ class BiblestudyViewLandingpage extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$document  = JFactory::getDocument();
+		$document = JFactory::getDocument();
 
 		$this->state  = $this->get('state');
 		$this->params = $this->state->template->params;
@@ -84,16 +85,82 @@ class BiblestudyViewLandingpage extends JViewLegacy
 
 		JHtml::_('biblestudy.framework');
 
-		$images   = new JBSMImages;
-		$images->getShowHide();
+		JBSMImages::getShowHide();
 
 		// Get the main study list image
-		$this->main  = $images->mainStudyImage();
+		$this->main = JBSMImages::mainStudyImage();
 
 		$uri               = new JUri;
 		$Uri_toString      = $uri->toString();
 		$this->request_url = $Uri_toString;
 
 		parent::display($tpl);
+	}
+
+	/**
+	 * Parce through the Show hid buttons/links
+	 *
+	 * @param   string   $showIt         Name of Show
+	 * @param   string   $showIt_phrase  Name of the
+	 * @param   integer  $i              Number of Show
+	 *
+	 * @return string
+	 *
+	 * @since 9.2.4
+	 */
+	public function getShowHide($showIt, $showIt_phrase, $i)
+	{
+
+		// End Switch
+		if ($this->params->get('landing' . $showIt . 'limit'))
+		{
+			$showhide_tmp = JBSMImages::getShowHide();
+
+			$showhideall = "<div id='showhide" . $i . "'>";
+
+			$buttonlink = "\n\t" . '<a class="showhideheadingbutton" href="javascript:ReverseDisplay2(' . "'showhide" . $showIt . "'" . ')">';
+			$labellink  = "\n\t" . '<a class="showhideheadinglabel" href="javascript:ReverseDisplay2(' . "'showhide" . $showIt . "'" . ')">';
+
+			switch ($this->params->get('landing_hide', 0))
+			{
+				case 0: // Image only
+					$showhideall .= $buttonlink;
+					$showhideall .= "\n\t\t" . '<img src="' . JUri::base() . $showhide_tmp->path . '" alt="' . JText::_('JBS_CMN_SHOW_HIDE_ALL');
+					$showhideall .= ' ' . $showIt_phrase . '" title="' . JText::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' .
+						$showIt_phrase . '" border="0" width="';
+					$showhideall .= $showhide_tmp->width . '" height="' . $showhide_tmp->height . '" />';
+
+					// Spacer
+					$showhideall .= ' ';
+					$showhideall .= "\n\t" . '</a>';
+					break;
+
+				case 1: // Image and label
+					$showhideall .= $buttonlink;
+					$showhideall .= "\n\t\t" . '<img src="' . JUri::base() . $showhide_tmp->path . '" alt="' .
+						JText::_('JBS_CMN_SHOW_HIDE_ALL');
+					$showhideall .= ' ' . $showIt_phrase . '" title="' . JText::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' .
+						$showIt_phrase . '" border="0" width="';
+					$showhideall .= $showhide_tmp->width . '" height="' . $showhide_tmp->height . '" />';
+
+					// Spacer
+					$showhideall .= ' ';
+					$showhideall .= "\n\t" . '</a>';
+					$showhideall .= $labellink;
+					$showhideall .= "\n\t\t" . '<span id="landing_label">' . $this->params->get('landing_hidelabel') . '</span>';
+					$showhideall .= "\n\t" . '</a>';
+					break;
+
+				case 2: // Label only
+					$showhideall .= $labellink;
+					$showhideall .= "\n\t\t" . '<span id="landing_label">' . $this->params->get('landing_hidelabel') . '</span>';
+					$showhideall .= "\n\t" . '</a>';
+					break;
+			}
+
+			$showhideall .= "\n" . '</div> <!-- end div id="showhide" for ' . $i . ' -->' . "\n";
+
+			return $showhideall;
+		}
 	}
 }

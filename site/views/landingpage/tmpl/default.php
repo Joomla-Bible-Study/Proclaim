@@ -12,6 +12,8 @@ defined('_JEXEC') or die;
 
 JHtml::_('behavior.tooltip');
 
+/** @var $this BiblestudyViewLandingpage */
+
 $JBSMLanding = new JBSMLanding;
 /** @var Joomla\Registry\Registry $params */
 $params = $this->params;
@@ -51,7 +53,7 @@ $params = $this->params;
 	{
 		$showIt = $params->get('headingorder_' . $i);
 
-		if ($params->get('show' . $showIt) == 1)
+		if ((int) $params->get('show' . $showIt) === 1)
 		{
 			$heading_call  = null;
 			$heading       = null;
@@ -62,85 +64,44 @@ $params = $this->params;
 				case 'teachers':
 					$heading       = $JBSMLanding->getTeacherLandingPage($params, $id = 0);
 					$showIt_phrase = JText::_('JBS_CMN_TEACHERS');
+					$showhideall   = $this->getShowHide($showIt, $showIt_phrase, $i);
 					break;
 
 				case 'series':
 					$heading       = $JBSMLanding->getSeriesLandingPage($params, $id = 0);
 					$showIt_phrase = JText::_('JBS_CMN_SERIES');
+					$showhideall   = $this->getShowHide($showIt, $showIt_phrase, $i);
 					break;
 
 				case 'locations':
 					$heading       = $JBSMLanding->getLocationsLandingPage($params, $id = 0);
 					$showIt_phrase = JText::_('JBS_CMN_LOCATIONS');
+					$showhideall   = $this->getShowHide($showIt, $showIt_phrase, $i);
 					break;
 
 				case 'messagetypes':
 					$heading       = $JBSMLanding->getMessageTypesLandingPage($params, $id = 0);
 					$showIt_phrase = JText::_('JBS_CMN_MESSAGETYPES');
+					$showhideall   = $this->getShowHide($showIt, $showIt_phrase, $i);
 					break;
 
 				case 'topics':
 					$heading       = $JBSMLanding->getTopicsLandingPage($params, $id = 0);
 					$showIt_phrase = JText::_('JBS_CMN_TOPICS');
+					$showhideall   = $this->getShowHide($showIt, $showIt_phrase, $i);
 					break;
 
 				case 'books':
 					$heading       = $JBSMLanding->getBooksLandingPage($params, $id = 0);
 					$showIt_phrase = JText::_('JBS_CMN_BOOKS');
+					$showhideall   = $this->getShowHide($showIt, $showIt_phrase, $i);
 					break;
 
 				case 'years':
 					$heading       = $JBSMLanding->getYearsLandingPage($params, $id = 0);
 					$showIt_phrase = JText::_('JBS_CMN_YEARS');
+					$showhideall   = $this->getShowHide($showIt, $showIt_phrase, $i);
 					break;
-			}
-			// End Switch
-
-			if ($params->get('landing' . $showIt . 'limit'))
-			{
-				$images       = new JBSMImages;
-				$showhide_tmp = $images->getShowHide();
-
-				$showhideall = "<div id='showhide" . $i . "'>";
-
-				$buttonlink = "\n\t" . '<a class="showhideheadingbutton" href="javascript:ReverseDisplay2(' . "'showhide" . $showIt . "'" . ')">';
-				$labellink  = "\n\t" . '<a class="showhideheadinglabel" href="javascript:ReverseDisplay2(' . "'showhide" . $showIt . "'" . ')">';
-
-				switch ($params->get('landing_hide', 0))
-				{
-					case 0: // Image only
-						$showhideall .= $buttonlink;
-						$showhideall .= "\n\t\t" . '<img src="' . JUri::base() . $showhide_tmp->path . '" alt="' . JText::_('JBS_CMN_SHOW_HIDE_ALL');
-						$showhideall .= ' ' . $showIt_phrase . '" title="' . JText::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' . $showIt_phrase . '" border="0" width="';
-						$showhideall .= $showhide_tmp->width . '" height="' . $showhide_tmp->height . '" />';
-
-						// Spacer
-						$showhideall .= ' ';
-						$showhideall .= "\n\t" . '</a>';
-						break;
-
-					case 1: // Image and label
-						$showhideall .= $buttonlink;
-						$showhideall .= "\n\t\t" . '<img src="' . JUri::base() . $showhide_tmp->path . '" alt="' . JText::_('JBS_CMN_SHOW_HIDE_ALL');
-						$showhideall .= ' ' . $showIt_phrase . '" title="' . JText::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' . $showIt_phrase . '" border="0" width="';
-						$showhideall .= $showhide_tmp->width . '" height="' . $showhide_tmp->height . '" />';
-
-						// Spacer
-						$showhideall .= ' ';
-						$showhideall .= "\n\t" . '</a>';
-						$showhideall .= $labellink;
-						$showhideall .= "\n\t\t" . '<span id="landing_label">' . $params->get('landing_hidelabel') . '</span>';
-						$showhideall .= "\n\t" . '</a>';
-						break;
-
-					case 2: // Label only
-						$showhideall .= $labellink;
-						$showhideall .= "\n\t\t" . '<span id="landing_label">' . $params->get('landing_hidelabel') . '</span>';
-						$showhideall .= "\n\t" . '</a>';
-						break;
-				}
-
-				$showhideall .= "\n" . '      </div> <!-- end div id="showhide" for ' . $i . ' -->' . "\n";
 			}
 			?>
 			<!-- Wrap each in a DIV... -->
