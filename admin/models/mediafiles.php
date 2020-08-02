@@ -32,7 +32,7 @@ class BiblestudyModelMediafiles extends JModelList
 	/**
 	 * Number of Deletions
 	 *
-	 * @var int
+	 * @var integer
 	 *
 	 * @since 7.0
 	 */
@@ -103,7 +103,7 @@ class BiblestudyModelMediafiles extends JModelList
 				for ($x = 0, $count = count($items); $x < $count; $x++)
 				{
 					// Check the access level. Remove articles the user shouldn't see
-					if (!in_array($items[$x]->access, $groups))
+					if (!in_array($items[$x]->access, $groups, true))
 					{
 						unset($items[$x]);
 					}
@@ -253,7 +253,8 @@ class BiblestudyModelMediafiles extends JModelList
 
 		$query->select(
 			$this->getState(
-				'list.select', 'mediafile.* ')
+				'list.select', 'mediafile.* '
+			)
 		);
 
 		$query->from('#__bsms_mediafiles AS mediafile');
@@ -338,7 +339,9 @@ class BiblestudyModelMediafiles extends JModelList
 		}
 
 		// Filter on the language.
-		if ($language = $this->getState('filter.language'))
+		$language = $this->getState('filter.language');
+
+		if ($language)
 		{
 			$query->where('mediafile.language = ' . $db->quote($language));
 		}
@@ -348,27 +351,27 @@ class BiblestudyModelMediafiles extends JModelList
 		$orderDirn = $this->state->get('list.direction', 'desc');
 
 		// Sqlsrv change
-		if ($orderCol == 'study_id')
+		if ($orderCol === 'study_id')
 		{
 			$orderCol = 'mediafile.study_id';
 		}
 
-		if ($orderCol == 'ordering')
+		if ($orderCol === 'ordering')
 		{
 			$orderCol = 'mediafile.study_id, mediafile.ordering';
 		}
 
-		if ($orderCol == 'published')
+		if ($orderCol === 'published')
 		{
 			$orderCol = 'mediafile.published';
 		}
 
-		if ($orderCol == 'id')
+		if ($orderCol === 'id')
 		{
 			$orderCol = 'mediafile.id';
 		}
 
-		if ($orderCol == 'mediafile.ordering')
+		if ($orderCol === 'mediafile.ordering')
 		{
 			$orderCol = 'mediafile.study_id ' . $orderDirn . ', mediafile.ordering';
 		}

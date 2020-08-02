@@ -49,7 +49,11 @@ class JFormFieldIcontype extends JFormFieldList
 		$attr .= $this->autofocus ? ' autofocus' : '';
 
 		// To avoid user's confusion, readonly="true" should imply disabled="true".
-		if ((string) $this->readonly == '1' || (string) $this->readonly == 'true' || (string) $this->disabled == '1'|| (string) $this->disabled == 'true')
+		if ((string) $this->readonly === '1'
+			|| (string) $this->readonly === 'true'
+			|| (string) $this->disabled === '1'
+			|| (string) $this->disabled === 'true'
+		)
 		{
 			$attr .= ' disabled="disabled"';
 		}
@@ -60,7 +64,7 @@ class JFormFieldIcontype extends JFormFieldList
 			'fa fa-play'          => 'fas fa-play',
 			'fa fa-youtube'       => 'fab fa-youtube',
 			'fa fa-video-camera'  => 'fas fa-video',
-			'fa fa fa-television' => 'fas fa-tv',
+			'fa fa fa-television' => 'far fa-tv',
 			'fa fa-file'          => 'fas fa-file',
 			'fa fa-file-pdf'      => 'fas fa-file-pdf',
 			'fa fa-vimeo'         => 'fab fa-vimeo'

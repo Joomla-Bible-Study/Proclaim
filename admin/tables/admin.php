@@ -23,7 +23,7 @@ class TableAdmin extends JTable
 	/**
 	 * Primary Key
 	 *
-	 * @var int
+	 * @var integer
 	 * @since    7.0.0
 	 */
 	public $id = null;
@@ -31,7 +31,7 @@ class TableAdmin extends JTable
 	/**
 	 * Drop Tables
 	 *
-	 * @var int
+	 * @var integer
 	 * @since    7.0.0
 	 */
 	public $drop_tables = 0;
@@ -47,7 +47,7 @@ class TableAdmin extends JTable
 	/**
 	 * Asset ID
 	 *
-	 * @var int
+	 * @var integer
 	 * @since    7.0.0
 	 */
 	public $asset_id = 0;
@@ -55,7 +55,7 @@ class TableAdmin extends JTable
 	/**
 	 * Access Level
 	 *
-	 * @var int
+	 * @var integer
 	 * @since    7.0.0
 	 */
 	public $access = 0;
@@ -71,7 +71,7 @@ class TableAdmin extends JTable
 	/**
 	 * Debug settings
 	 *
-	 * @var int
+	 * @var integer
 	 * @since    7.0.0
 	 */
 	public $debug = null;
@@ -124,7 +124,7 @@ class TableAdmin extends JTable
 		$views[] = 'teacher';
 		$views[] = 'teachers';
 
-		if ($params['simple_mode'] == 1)
+		if ($params['simple_mode'] === 1)
 		{
 			// Go through each folder and change content of default.xml to add the hidden value to the layout tag
 			foreach ($views as $view)
@@ -144,7 +144,7 @@ class TableAdmin extends JTable
 		}
 
 		// Remove the hidden value from the layout tag
-		if ($params['simple_mode'] == 0)
+		if ($params['simple_mode'] === 0)
 		{
 			foreach ($views as $view)
 			{
@@ -215,9 +215,7 @@ class TableAdmin extends JTable
 	 */
 	protected function _getAssetTitle()
 	{
-		$title = 'JBS Admin: ' . $this->id;
-
-		return $title;
+		return 'JBS Admin: ' . $this->id;
 	}
 
 	/**
