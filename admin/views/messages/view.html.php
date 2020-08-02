@@ -119,13 +119,12 @@ class BiblestudyViewMessages extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$items            = $this->get('Items');
+		$this->items            = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
 
 		$this->canDo = JBSMBibleStudyHelper::getActions('', 'message');
 		$modelView   = $this->getModel();
-		$this->items = $modelView->getTranslated($items);
 
 		$this->filterForm    = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');

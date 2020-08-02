@@ -1121,104 +1121,107 @@ class JBSMListing
 				break;
 
 			case $extra . 'teacherallinone':
-				($item->email ? $data = '<a href="mailto:' . $item->email . '">
-				<span class="fa fa-envelope-o" style="font-size:20px;" title="Website"></span></a>' : $data = '');
-
-				if ($item->website)
+				if(isset($item->email))
 				{
-					if (substr_count($item->website, 'http://', 0))
-					{
-						$data .= '<a href="' . $item->website . '" target="_blank">
-						<span class="fa fa-globe" style="font-size:20px;" title="Website"></span></a>';
-					}
-					else
-					{
-						$data .= '<a href="http://' . $item->website . '" target="_blank">
-						<span class="fa fa-globe" style="font-size:20px;" title="Website"></span></a>';
-					}
-				}
+					($item->email ? $data = '<a href="mailto:' . $item->email . '">
+				<span class="fas fa-envelope" style="font-size:20px;" title="Website"></span></a>' : $data = '');
 
-				if ($item->facebooklink)
-				{
-					if (substr_count($item->facebooklink, 'http://', 0))
+					if ($item->website)
 					{
-						$data .= '<a href="' . $item->facebooklink . '" target="_blank">
-						<span class="fa fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
+						if (substr_count($item->website, 'http://', 0))
+						{
+							$data .= '<a href="' . $item->website . '" target="_blank">
+						<span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
+						}
+						else
+						{
+							$data .= '<a href="http://' . $item->website . '" target="_blank">
+						<span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
+						}
 					}
-					else
-					{
-						$data .= '<a href="http://' . $item->facebooklink . '" target="_blank">
-						<span class="fa fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
-					}
-				}
 
-				if ($item->twitterlink)
-				{
-					if (substr_count($item->twitterlink, 'http://', 0))
+					if ($item->facebooklink)
 					{
-						$data .= '<a href="' . $item->twitterlink . '" target="_blank">
-						<span class="fa fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
+						if (substr_count($item->facebooklink, 'http://', 0))
+						{
+							$data .= '<a href="' . $item->facebooklink . '" target="_blank">
+						<span class="fab fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
+						}
+						else
+						{
+							$data .= '<a href="http://' . $item->facebooklink . '" target="_blank">
+						<span class="fab fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
+						}
 					}
-					else
-					{
-						$data .= '<a href="http://' . $item->twitterlink . '" target="_blank">
-						<span class="fa fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
-					}
-				}
 
-				if ($item->bloglink)
-				{
-					if (substr_count($item->bloglink, 'http://', 0, 7))
+					if ($item->twitterlink)
 					{
-						$data .= '<a href="' . $item->bloglink . '" target="_blank">
-						<span class="fa fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
+						if (substr_count($item->twitterlink, 'http://', 0))
+						{
+							$data .= '<a href="' . $item->twitterlink . '" target="_blank">
+						<span class="fas fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
+						}
+						else
+						{
+							$data .= '<a href="http://' . $item->twitterlink . '" target="_blank">
+						<span class="fas fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
+						}
 					}
-					else
-					{
-						$data .= '<a href="http://' . $item->bloglink . '" target="_blank">
-						<span class="fa fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
-					}
-				}
 
-				if ($item->link1)
-				{
-					if (substr_count($item->link1, 'http://', 0))
+					if ($item->bloglink)
 					{
-						$data .= '<a href="' . $item->link1 . '" target="_blank">' . $item->link1label . '</a>';
+						if (substr_count($item->bloglink, 'http://', 0, 7))
+						{
+							$data .= '<a href="' . $item->bloglink . '" target="_blank">
+						<span class="fas fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
+						}
+						else
+						{
+							$data .= '<a href="http://' . $item->bloglink . '" target="_blank">
+						<span class="fas fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
+						}
 					}
-					else
-					{
-						$data .= '<a href="http://' . $item->link1 . '" target="_blank">' . $item->link1label . '</a>';
-					}
-				}
 
-				if ($item->link2)
-				{
-					if (substr_count($item->link2, 'http://', 0))
+					if ($item->link1)
 					{
-						$data .= '<a href="' . $item->link2 . '" target="_blank">' . $item->link2label . '</a>';
+						if (substr_count($item->link1, 'http://', 0))
+						{
+							$data .= '<a href="' . $item->link1 . '" target="_blank">' . $item->link1label . '</a>';
+						}
+						else
+						{
+							$data .= '<a href="http://' . $item->link1 . '" target="_blank">' . $item->link1label . '</a>';
+						}
 					}
-					else
-					{
-						$data .= '<a href="http://' . $item->link2 . '" target="_blank">' . $item->link2label . '</a>';
-					}
-				}
 
-				if ($item->link3)
-				{
-					if (substr_count($item->link3, 'http://', 0))
+					if ($item->link2)
 					{
-						$data .= '<a href="' . $item->link3 . '" target="_blank">' . $item->link3label . '</a>';
+						if (substr_count($item->link2, 'http://', 0))
+						{
+							$data .= '<a href="' . $item->link2 . '" target="_blank">' . $item->link2label . '</a>';
+						}
+						else
+						{
+							$data .= '<a href="http://' . $item->link2 . '" target="_blank">' . $item->link2label . '</a>';
+						}
 					}
-					else
+
+					if ($item->link3)
 					{
-						$data .= '<a href="http://' . $item->link3 . '" target="_blank">' . $item->link3label . '</a>';
+						if (substr_count($item->link3, 'http://', 0))
+						{
+							$data .= '<a href="' . $item->link3 . '" target="_blank">' . $item->link3label . '</a>';
+						}
+						else
+						{
+							$data .= '<a href="http://' . $item->link3 . '" target="_blank">' . $item->link3label . '</a>';
+						}
 					}
 				}
 				break;
 
 			case $extra . 'teacherlong':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_TCH_INFORMATION');
 				}
@@ -1229,7 +1232,7 @@ class JBSMListing
 				break;
 
 			case $extra . 'teacheraddress':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_TCH_ADDRESS');
 				}
@@ -1240,7 +1243,7 @@ class JBSMListing
 				break;
 
 			case $extra . 'teacherlink1':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_TCH_LINK1');
 				}
@@ -1261,7 +1264,7 @@ class JBSMListing
 				break;
 
 			case $extra . 'teacherlink2':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_TCH_LINK2');
 				}
@@ -1282,7 +1285,7 @@ class JBSMListing
 				break;
 
 			case $extra . 'teacherlink3':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_TCH_LINK3');
 				}
@@ -1302,19 +1305,19 @@ class JBSMListing
 				}
 				break;
 			case $extra . 'teacheremail':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_TCH_EMAIL');
 				}
 				else
 				{
 					($item->email ? $data = '<a href="mailto:' . $item->email . '">
-					<span class="fa fa-envelope" style="font-size:20px;" title="Email"></span></a>' : $data = '');
+					<span class="fas fa-envelope" style="font-size:20px;" title="Email"></span></a>' : $data = '');
 				}
 				break;
 
 			case $extra . 'teacherweb':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_TCH_WEBSITE');
 				}
@@ -1325,19 +1328,19 @@ class JBSMListing
 						if (substr_count($item->website, 'http://', 0))
 						{
 							$data = '<a href="' . $item->website . '" target="_blank">
-							<span class="fa fa-globe" style="font-size:20px;" title="Website"></span></a>';
+							<span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
 						}
 						else
 						{
 							$data = '<a href="http://' . $item->website . '" target="_blank">
-							<span class="fa fa-globe" style="font-size:20px;" title="Website"></span></a>';
+							<span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
 						}
 					}
 				}
 				break;
 
 			case $extra . 'teacherphone':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_TCH_PHONE');
 				}
@@ -1348,7 +1351,7 @@ class JBSMListing
 				break;
 
 			case $extra . 'teacherfb':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_TCH_FACEBOOK');
 				}
@@ -1359,19 +1362,19 @@ class JBSMListing
 						if (substr_count($item->facebooklink, 'http://', 0))
 						{
 							$data = '<a href="' . $item->facebooklink . '" target="_blank">
-							<span class="fa fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
+							<span class="fab fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
 						}
 						else
 						{
 							$data = '<a href="http://' . $item->facebooklink . '" target="_blank">
-							<span class="fa fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
+							<span class="fab fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
 						}
 					}
 				}
 				break;
 
 			case $extra . 'teachertw':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_TCH_TWITTER');
 				}
@@ -1382,12 +1385,12 @@ class JBSMListing
 						if (substr_count($item->twitterlink, 'http://', 0))
 						{
 							$data = '<a href="' . $item->twitterlink . '" target="_blank">
-							<span class="fa fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
+							<span class="fas fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
 						}
 						else
 						{
 							$data = '<a href="http://' . $item->twitterlink . '" target="_blank">
-							<span class="fa fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
+							<span class="fas fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
 						}
 					}
 				}
@@ -1395,7 +1398,7 @@ class JBSMListing
 				break;
 
 			case $extra . 'teacherblog':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_TCH_BLOG');
 				}
@@ -1406,12 +1409,12 @@ class JBSMListing
 						if (substr_count($item->bloglink, 'http://', 0, 7))
 						{
 							$data = '<a href="' . $item->bloglink . '" target="_blank">
-							<span class="fa fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
+							<span class="fas fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
 						}
 						else
 						{
 							$data = '<a href="http://' . $item->bloglink . '" target="_blank">
-							<span class="fa fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
+							<span class="fas fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
 						}
 					}
 				}
@@ -1419,7 +1422,7 @@ class JBSMListing
 				break;
 
 			case $extra . 'teachershort':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_TCH_SHORT_LIST');
 				}
@@ -1433,7 +1436,7 @@ class JBSMListing
 				$esv          = 0;
 				$scripturerow = 1;
 
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_CMN_SCRIPTURE');
 				}
@@ -1446,7 +1449,7 @@ class JBSMListing
 				$esv          = 0;
 				$scripturerow = 2;
 
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_CMN_SCRIPTURE');
 				}
@@ -1456,7 +1459,7 @@ class JBSMListing
 				}
 				break;
 			case $extra . 'secondary':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_CMN_SECONDARY_REFERENCES');
 				}
@@ -1466,7 +1469,7 @@ class JBSMListing
 				}
 				break;
 			case $extra . 'title':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_CMN_TITLE');
 				}
@@ -1476,7 +1479,7 @@ class JBSMListing
 				}
 				break;
 			case $extra . 'date':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_CMN_STUDY_DATE');
 				}
@@ -1486,7 +1489,7 @@ class JBSMListing
 				}
 				break;
 			case $extra . 'teacher':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_CMN_TEACHER');
 				}
@@ -1497,7 +1500,7 @@ class JBSMListing
 
 				break;
 			case $extra . 'teacher-title':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_CMN_TEACHER');
 				}
@@ -1511,7 +1514,7 @@ class JBSMListing
 				}
 				break;
 			case $extra . 'studyintro':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_CMN_STUDY_INTRO');
 				}
@@ -1521,7 +1524,7 @@ class JBSMListing
 				}
 				break;
 			case $extra . 'series':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_CMN_SERIES');
 				}
@@ -1531,7 +1534,7 @@ class JBSMListing
 				}
 				break;
 			case $extra . 'seriesthumbnail':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_CMN_THUMBNAIL');
 				}
@@ -1548,7 +1551,7 @@ class JBSMListing
 				}
 				break;
 			case $extra . 'teacherlargeimage':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_TCH_TEACHER_IMAGE');
 				}
@@ -1580,7 +1583,7 @@ class JBSMListing
 				}
 				break;
 			case $extra . 'submitted':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_CMN_SUBMITTED_BY');
 				}
@@ -1590,7 +1593,7 @@ class JBSMListing
 				}
 				break;
 			case $extra . 'hits':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_CMN_VIEWS');
 				}
@@ -1600,7 +1603,7 @@ class JBSMListing
 				}
 				break;
 			case $extra . 'downloads':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_CMN_DOWNLOADS');
 				}
@@ -1610,7 +1613,7 @@ class JBSMListing
 				}
 				break;
 			case $extra . 'studynumber':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_CMN_STUDYNUMBER');
 				}
@@ -1620,7 +1623,7 @@ class JBSMListing
 				}
 				break;
 			case $extra . 'topic':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_CMN_TOPIC');
 				}
@@ -1644,7 +1647,7 @@ class JBSMListing
 				}
 				break;
 			case $extra . 'locations':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_CMN_LOCATION');
 				}
@@ -1654,7 +1657,7 @@ class JBSMListing
 				}
 				break;
 			case $extra . 'jbsmedia':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_CMN_MEDIA');
 				}
@@ -1664,7 +1667,7 @@ class JBSMListing
 				}
 				break;
 			case $extra . 'messagetype':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_CMN_MESSAGETYPE');
 				}
@@ -1674,7 +1677,7 @@ class JBSMListing
 				}
 				break;
 			case $extra . 'thumbnail':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_CMN_THUMBNAIL');
 				}
@@ -1688,7 +1691,7 @@ class JBSMListing
 				}
 				break;
 			case $extra . 'teacherimage':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data = JText::_('JBS_TCH_TEACHER_IMAGE');
 				}
@@ -1737,7 +1740,7 @@ class JBSMListing
 
 		$classelement = $this->createelement($row->element);
 
-		if ($header == 1)
+		if ($header === 1)
 		{
 			$classelement = '';
 			$style        = 'style="font-weight:bold;"';
@@ -2121,7 +2124,7 @@ class JBSMListing
 			$v_e        = $row->verse_end2;
 			$book       = JText::_($row->bookname2);
 		}
-		elseif ($scripturerow == 1 && isset($row->booknumber) >= 1)
+		elseif ($scripturerow === 1 && isset($row->booknumber) >= 1)
 		{
 			$booknumber = $row->booknumber;
 			$ch_b       = $row->chapter_begin;
@@ -2154,7 +2157,7 @@ class JBSMListing
 		$b2a = ':';
 		$b3  = '-';
 
-		if ($show_verses == 1)
+		if ($show_verses === 1)
 		{
 			/** @var $ch_b string */
 			/** @var $v_b string */
@@ -2216,7 +2219,7 @@ class JBSMListing
 			}
 		}
 
-		if ($esv == 1)
+		if ($esv === 1)
 		{
 			/** @var $ch_b string */
 			/** @var $v_b string */
@@ -2707,7 +2710,7 @@ class JBSMListing
 
 		$shareit = '<div class="row-fluid">';
 
-		if ($sharetype == 1)
+		if ($sharetype === 1)
 		{
 			$shareit .= '<div class="pull-right">
 						<!-- AddThis Button BEGIN -->

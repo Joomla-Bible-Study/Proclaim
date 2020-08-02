@@ -196,7 +196,7 @@ class BiblestudyModelSermons extends JModelList
 		$this->landing = 0;
 		$landingcheck = $this->input->get->get('sendingview');
 
-		if ($landingcheck == 'landing')
+		if ($landingcheck === 'landing')
 		{
 			$landing = 1;
 			$this->landing = 1;
@@ -232,7 +232,7 @@ class BiblestudyModelSermons extends JModelList
 
 		$book = $this->getUserStateFromRequest($this->context . '.filter.book', 'filter_book');
 
-		if ($landing == 1 && $book !== 0)
+		if ($landing === 1 && $book !== 0)
 		{
 			$book = $this->getUserStateFromRequest($this->context . '.filter.landingbook', 'filter_book_landing');
 		}
@@ -242,7 +242,7 @@ class BiblestudyModelSermons extends JModelList
 
 		$teacher = $this->getUserStateFromRequest($this->context . '.filter.teacher', 'filter_teacher');
 
-		if ($landing == 1 && $teacher !== 0)
+		if ($landing === 1 && $teacher !== 0)
 		{
 			$teacher = $this->getUserStateFromRequest($this->context . '.filter.landingteacher', 'filter_teacher_landing');
 		}
@@ -252,7 +252,7 @@ class BiblestudyModelSermons extends JModelList
 
 		$series = $this->getUserStateFromRequest($this->context . '.filter.series', 'filter_series');
 
-		if ($landing == 1 && $series !== 0)
+		if ($landing === 1 && $series !== 0)
 		{
 			$series = $this->getUserStateFromRequest($this->context . '.filter.landingseries', 'filter_series_landing');
 		}
@@ -272,7 +272,7 @@ class BiblestudyModelSermons extends JModelList
 
 		$year = $this->getUserStateFromRequest($this->context . '.filter.year', 'filter_year');
 
-		if ($landing == 1 && $year !== 0)
+		if ($landing === 1 && $year !== 0)
 		{
 			$year = $this->getUserStateFromRequest($this->context . '.filter.landingyear', 'filter_year_landing');
 		}
@@ -282,7 +282,7 @@ class BiblestudyModelSermons extends JModelList
 
 		$topic = $this->getUserStateFromRequest($this->context . '.filter.topic', 'filter_topic');
 
-		if ($landing == 1 && $topic !== 0)
+		if ($landing === 1 && $topic !== 0)
 		{
 			$topic = $this->getUserStateFromRequest($this->context . '.filter.landingtopic', 'filter_topic_landing');
 		}
@@ -292,7 +292,7 @@ class BiblestudyModelSermons extends JModelList
 
 		$location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location');
 
-		if ($landing == 1 && $location !== 0)
+		if ($landing === 1 && $location !== 0)
 		{
 			$location = $this->getUserStateFromRequest($this->context . '.filter.landinglocation', 'filter_location_landing');
 		}
@@ -659,7 +659,7 @@ class BiblestudyModelSermons extends JModelList
 		{
 			$query->where('study.language in (' . $db->quote($this->getState('filter.languages')) . ',' . $db->quote('*') . ')');
 		}
-		elseif ($this->getState('filter.language') || $language != '*')
+		elseif ($this->getState('filter.language') || $language !== '*')
 		{
 			$query->where('study.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
 		}
@@ -680,7 +680,7 @@ class BiblestudyModelSermons extends JModelList
 		$orderCol  = $this->state->get('list.fullordering');
 		$orderDirn = '';
 
-		if (empty($orderCol) || $orderCol == " ")
+		if (empty($orderCol) || $orderCol === " ")
 		{
 			$orderCol  = $this->state->get('list.ordering', 'study.studydate');
 			$orderDirn = $this->state->get('list.direction', 'DESC');
