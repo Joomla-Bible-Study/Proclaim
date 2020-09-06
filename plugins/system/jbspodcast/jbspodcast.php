@@ -56,7 +56,7 @@ class PlgSystemJBSPodcast extends JPlugin
 		// First check to see what method of updating the podcast we are using
 		$method = $params->get('method', '0');
 
-		if ($method == '0')
+		if ($method === '0')
 		{
 			$check = $this->checktime($params);
 		}
@@ -116,14 +116,7 @@ class PlgSystemJBSPodcast extends JPlugin
 		$difference = $frequency * 3600;
 		$checkit    = $now - $lasttime;
 
-		if ($checkit > $difference)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return $checkit > $difference;
 	}
 
 	/**
@@ -254,9 +247,8 @@ class PlgSystemJBSPodcast extends JPlugin
 	{
 		JLoader::register('JBSMPodcast', JPATH_SITE . '/components/com_biblestudy/lib/podcast.php');
 		$podcasts = new JBSMPodcast;
-		$result   = $podcasts->makePodcasts();
 
-		return $result;
+		return $podcasts->makePodcasts();
 	}
 
 	/**
@@ -277,14 +269,7 @@ class PlgSystemJBSPodcast extends JPlugin
 		$db->execute();
 		$updateresult = $db->getAffectedRows();
 
-		if ($updateresult > 0)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return $updateresult > 0;
 	}
 
 	/**

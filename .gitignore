@@ -17,6 +17,6 @@ build/reports/jdepend-pyramid.svg
 build/reports/jdepend.xml
 build/reports/phpcs-checkstyle.xml
 build/reports/project-size.txt
-/libraries/vendor/
+/libraries/vendor/*
 composer.lock
 /.php_cs.cache
