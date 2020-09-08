@@ -21,3 +21,4 @@ build/reports/project-size.txt
 composer.lock
 /.php_cs.cache
 !/package-lock.json
+media/css/site/biblestudy.css
