@@ -32,6 +32,7 @@ abstract class JHtmlJwplayer
 	 *
 	 * @return  void
 	 *
+	 * @throws \Exception
 	 * @since   3.0
 	 */
 	public static function framework()
@@ -60,8 +61,6 @@ abstract class JHtmlJwplayer
 		}
 
 		self::$loaded[__METHOD__] = true;
-
-		return;
 	}
 
 	/**
@@ -82,7 +81,7 @@ abstract class JHtmlJwplayer
 		$popupmarg = 0;
 
 		// Used to set for MP3 and audio player look
-		if (isset($player->mp3) && $player->mp3 == true)
+		if (isset($player->mp3) && $player->mp3 === true)
 		{
 			$media->playerheight = 30;
 		}
@@ -96,7 +95,7 @@ abstract class JHtmlJwplayer
 		// Fall back check to see if JWplayer can play the media. if not will try and return a link to the file.
 		$acceptedFormats = array('aac', 'm4a', 'f4a', 'mp3', 'ogg', 'oga', 'mp4', 'm4v', 'f4v', 'mov', 'flv', 'webm', 'm3u8', 'mpd', 'DVR');
 
-		if (!in_array(pathinfo($media->path1, PATHINFO_EXTENSION), $acceptedFormats)
+		if (!in_array(pathinfo($media->path1, PATHINFO_EXTENSION), $acceptedFormats, true)
 			&& !strpos($media->path1, 'youtube.com')
 			&& !strpos($media->path1, 'youtu.be')
 			&& !strpos($media->path1, 'rtmp://'))
@@ -143,7 +142,7 @@ abstract class JHtmlJwplayer
 		$media->lightcolor  = $params->get('lightcolor', '0x000000');
 		$media->screencolor = $params->get('screencolor', '0xFFFFFF');
 
-		if ($params->get('autostart', 1) == 1)
+		if ($params->get('autostart', 1) === 1)
 		{
 			$media->autostart = 'true';
 		}
@@ -161,11 +160,11 @@ abstract class JHtmlJwplayer
 			$media->playeridlehide = 'false';
 		}
 
-		if ($params->get('autostart') == 1)
+		if ($params->get('autostart') === 1)
 		{
 			$media->autostart = 'true';
 		}
-		elseif ($params->get('autostart') == 2)
+		elseif ($params->get('autostart') === 2)
 		{
 			$media->autostart = 'false';
 		}
@@ -180,7 +179,7 @@ abstract class JHtmlJwplayer
 
 		if ($popup)
 		{
-			if ($params->get('playerresponsive') != 0)
+			if ($params->get('playerresponsive') !== 0)
 			{
 				$media->playerwidth = '100%';
 				$render .= "<div class='playeralign' style=\"margin-left: auto; margin-right: auto; width:100%;\">";
@@ -247,7 +246,7 @@ abstract class JHtmlJwplayer
 							file: '" . $params->get('jwplayer_logo') . "',
 							link: '" . $params->get('jwplayer_logolink', JUri::base()) . "',
 						 },
-						'title': '" . htmlspecialchars($header, ENT_QUOTES) . "',
+						'title': '" . htmlspecialchars($header, ENT_XML1 | ENT_QUOTES, 'UTF-8') . "',
 						'image': '" . $params->get('popupimage', 'images/biblestudy/speaker24.png') . "',
 						'abouttext': 'Direct Link',
 						'aboutlink': '" . $media->path1 . "',

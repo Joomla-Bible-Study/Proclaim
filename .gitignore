@@ -20,3 +20,4 @@ build/reports/project-size.txt
 /libraries/vendor/*
 composer.lock
 /.php_cs.cache
+!/package-lock.json
