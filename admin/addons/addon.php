@@ -10,6 +10,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_ADDON . '/servers/', 'true', 'true');
+
 /**
  * Abstract Server class
  *
@@ -121,7 +123,7 @@ abstract class JBSMAddon
 	/**
 	 * Loads the addon configuration from the xml file
 	 *
-	 * @return  bool|SimpleXMLElement
+	 * @return  boolean|SimpleXMLElement
 	 *
 	 * @throws  Exception
 	 * @since   9.0.0
@@ -132,7 +134,7 @@ abstract class JBSMAddon
 
 		if ($path)
 		{
-			$xml = simplexml_load_file($path);
+			$xml = simplexml_load_string(file_get_contents($path));
 		}
 		else
 		{
@@ -162,16 +164,15 @@ abstract class JBSMAddon
 			jimport('joomla.filesystem.path');
 			$path = JPath::find(BIBLESTUDY_PATH_ADMIN . '/addons/servers/' . $type . '/', $type . '.php');
 
-			if ($path)
-			{
-				require_once $path;
+			// Try and load missing class
+			JLoader::register($addonClass, $path);
 
+			if (!$path)
+			{
 				JLog::add(JText::sprintf('JBS_CMN_CANT_ADDON_LOAD_CLASS_NAME', $addonClass), JLog::WARNING, 'jerror');
 
 				return false;
 			}
-
-			return false;
 		}
 
 		return new $addonClass($config);
