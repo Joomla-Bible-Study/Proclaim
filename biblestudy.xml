@@ -3,7 +3,7 @@
 	<!-- Generic Metadata -->
 	<name>COM_BIBLESTUDY</name>
 	<author>CWM Team</author>
-	<authorEmail>info@joomlabiblestudy.org</authorEmail>
+	<authorEmail>info@christianwebministries.org</authorEmail>
 	<authorUrl>https://www.christianwebministries.org</authorUrl>
 	<copyright>(C) 2007 - 2019 Proclaim All rights reserved.</copyright>
 	<version>9.2.3</version>
@@ -25,7 +25,7 @@
 		<language tag="en-GB">en-GB/en-GB.com_biblestudy.ini</language>
 	</languages>
 	<updateservers>
-		<server type="extension" priority="1" name="Proclaim Package">https://www.christianwebministries.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=1&amp;dummy=extension.xml</server>
+		<server type="extension" priority="1" name="CWM Proclaim Package">https://www.christianwebministries.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=1&amp;dummy=extension.xml</server>
 	</updateservers>
 
 	<files folder="site">
