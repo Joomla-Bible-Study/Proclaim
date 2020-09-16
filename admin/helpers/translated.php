@@ -82,8 +82,8 @@ class JBSMTranslated
 			// Second choice: language file
 			$jtextString = JText::_($topicItem->topic_text);
 
-			$string1 = strncmp($jtextString, 'JBS_TOP_', 8) == 0 || strncmp($jtextString, '??JBS_TOP_', 10) == 0;
-			$string2 = strlen($jtextString) == 0 || strcmp($jtextString, '????') == 0;
+			$string1 = strncmp($jtextString, 'JBS_TOP_', 8) === 0 || strncmp($jtextString, '??JBS_TOP_', 10) === 0;
+			$string2 = $jtextString === '' || strcmp($jtextString, '????') === 0;
 
 			if ($string1 || $string2)
 			{
@@ -103,7 +103,7 @@ class JBSMTranslated
 			return ($jtextString);
 		}
 
-		return (null);
+		return null;
 	}
 
 	/**

@@ -177,13 +177,12 @@ class BiblestudyViewSermons extends JViewLegacy
 		/** @var  $params Registry */
 		$params = $this->state->params;
 
-		$images     = new JBSMImages;
-		$this->main = $images->mainStudyImage();
+		$this->main = JBSMImages::mainStudyImage($params);
 
 		// Only load PageBuilder if the default template is NOT being used
 		if ($params->get('useexpert_list') > 0
-			|| ($params->get('simple_mode') == 1)
-			|| (is_string($params->get('sermonstemplate')) == true && $params->get('sermonstemplate') != '0'))
+			|| ($params->get('simple_mode') === 1)
+			|| (is_string($params->get('sermonstemplate')) === true && $params->get('sermonstemplate') !== '0'))
 		{
 			$page_builder = new JBSMPageBuilder;
 
@@ -312,11 +311,11 @@ class BiblestudyViewSermons extends JViewLegacy
 		{
 			$title = $app->get('sitename');
 		}
-		elseif ($app->get('sitename_pagetitles', 0) == 1)
+		elseif ($app->get('sitename_pagetitles', 0) === 1)
 		{
 			$title = JText::sprintf('JPAGETITLE', $app->get('sitename'), $title);
 		}
-		elseif ($app->get('sitename_pagetitles', 0) == 2)
+		elseif ($app->get('sitename_pagetitles', 0) === 2)
 		{
 			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
@@ -369,25 +368,34 @@ class BiblestudyViewSermons extends JViewLegacy
 		$input   = JFactory::getApplication()->input;
 		$filters = ['search', 'book', 'teacher', 'series', 'messagetype', 'year', 'topic', 'location', 'language'];
 		$lists   = ['fullordering', 'limit'];
-		$landing = false;
 
-		if (JFactory::getApplication()->input->get('sendingview') !== 'landing')
+		// Fix language filter
+		$lang = $this->params->get('listlanguage', 'NO');
+
+		if ($lang !== 'NO')
 		{
-			$landing = true;
+			$this->params->set('show_language_search', (int) $lang);
 		}
 
 		foreach ($filters as $filter)
 		{
 			$set = $input->getInt('filter_' . $filter);
+			$from = $this->filterForm->getValue($filter, 'filter');
 
 			// Update value from landing page call.
-			if ($set !== 0 && $landing)
+			if ($set !== 0 && $set !== null)
 			{
 				$this->filterForm->setValue($filter, 'filter', $set);
 			}
 
+			// Catch active filters and update them.
+			if ($from !== null || $set !== null)
+			{
+				$this->activeFilters[] = $filter;
+			}
+
 			// Remove from view if set to hid in template.
-			if ((int) $this->params->get('show_' . $filter . '_search', 1) == 0)
+			if ((int) $this->params->get('show_' . $filter . '_search', 1) === 0)
 			{
 				$this->filterForm->removeField($filter, 'filter');
 			}
@@ -396,7 +404,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		foreach ($lists as $list)
 		{
 			// Remove from view if set to hid in template.
-			if ((int) $this->params->get('show_' . $list . '_search', 1) == 0)
+			if ((int) $this->params->get('show_' . $list . '_search', 1) === 0)
 			{
 				$this->filterForm->removeField($list, 'list');
 			}

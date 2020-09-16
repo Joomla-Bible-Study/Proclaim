@@ -36,7 +36,8 @@
 		</phplint>
 	</target>
 
-	<target name="phpunit" depends="init" description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
+	<target name="phpunit" depends="init"
+	        description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
 		<phpunit haltonfailure="true" haltonerror="true" bootstrap="${basedir}/tests/unit/bootstrap.php">
 			<!-- We can only use one formatter at a time -->
 			<formatter todir="${basedir}/build/reports" type="plain" outfile="test-brief.txt"/>
@@ -77,7 +78,8 @@
 	</target>
 
 	<!-- Code analyzer and metric tool -->
-	<target name="pdepend" depends="init" description="Generate jdepend.xml and software metrics charts using PHP_Depend">
+	<target name="pdepend" depends="init"
+	        description="Generate jdepend.xml and software metrics charts using PHP_Depend">
 		<phpdepend haltonerror="true">
 			<fileset refid="distributed_files"/>
 			<logger type="jdepend-xml" outfile="${basedir}/build/reports/jdepend.xml"/>
@@ -100,16 +102,16 @@
 		<delete file="${basedir}/build/com_proclaim.zip"/>
 		<zip destfile="${basedir}/build/com_proclaim.zip" basedir="${basedir}">
 			<fileset defaultexcludes="true" dir=".">
-				<include name="admin/**" />
-				<include name="media/**" />
-				<include name="modules/**" />
-				<include name="plugins/**" />
-				<include name="site/**" />
-				<include name="*.php" />
-				<exclude name="build.xml" />
-				<include name="*.xml" />
-				<include name="*.txt" />
-				<include name="*.md" />
+				<include name="admin/**"/>
+				<include name="media/**"/>
+				<include name="modules/**"/>
+				<include name="plugins/**"/>
+				<include name="site/**"/>
+				<include name="*.php"/>
+				<exclude name="build.xml"/>
+				<include name="*.xml"/>
+				<include name="*.txt"/>
+				<include name="*.md"/>
 			</fileset>
 		</zip>
 		<!--Reset back to a development state-->
@@ -118,15 +120,19 @@
 
 	<!-- Setup config file for running the Selenium Webdriver tests -->
 	<target name="test.setup">
-		<propertyprompt propertyName="server_root" defaultValue="/Applications/MAMP/htdocs" promptText="Enter the path to your Joomla! root directory"/>
+		<propertyprompt propertyName="server_root" defaultValue="/Applications/MAMP/htdocs"
+		                promptText="Enter the path to your Joomla! root directory"/>
 		<propertyprompt propertyName="host" defaultValue="http://localhost" promptText="Enter the sever host"/>
 		<propertyprompt propertyName="db_host" defaultValue="localhost" promptText="Enter database host"/>
 		<propertyprompt propertyName="db_user" defaultValue="root" promptText="Enter Database username"/>
 		<propertyprompt propertyName="db_pass" defaultValue="root" promptText="Enter database password"/>
 		<propertyprompt propertyName="db_name" defaultValue="joomla-dev" promptText="Enter Database name"/>
-		<propertyprompt propertyName="joomla_username" defaultValue="admin" promptText="Enter an initial Joomla username"/>
-		<propertyprompt propertyName="joomla_password" defaultValue="password" promptText="Enter an initial Joomla password"/>
-		<propertyprompt propertyName="joomla_email" defaultValue="example@example.com" promptText="Enter an initial Joomla email"/>
+		<propertyprompt propertyName="joomla_username" defaultValue="admin"
+		                promptText="Enter an initial Joomla username"/>
+		<propertyprompt propertyName="joomla_password" defaultValue="password"
+		                promptText="Enter an initial Joomla password"/>
+		<propertyprompt propertyName="joomla_email" defaultValue="example@example.com"
+		                promptText="Enter an initial Joomla email"/>
 
 		<copy file="${config_path}/configdef.php.dist" tofile="${config_path}/configdef.php" overwrite="true">
 			<filterchain>
@@ -157,7 +163,8 @@
 		<delete dir="${basedir}/tests/.joomla-dev" includeemptydirs="true"/>
 	</target>
 
-	<target name="test.system" depends="init" description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
+	<target name="test.system" depends="init"
+	        description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
 		<phpunit haltonfailure="true" haltonerror="true" bootstrap="${basedir}/tests/system/servers/configdef.php">
 			<!-- We can only use one formatter at a time -->
 			<formatter todir="${basedir}/build/reports" type="plain" outfile="test-brief.txt"/>
@@ -169,7 +176,8 @@
 
 	<!-- Set the default joomla path and create symbolic links -->
 	<target name="dev.setup">
-		<propertyprompt propertyName="joomla_path" defaultValue="/Applications/MAMP/htdocs/" promptText="Enter the path to your Joomla! root directory"/>
+		<propertyprompt propertyName="joomla_path" defaultValue="/Applications/MAMP/htdocs/"
+		                promptText="Enter the path to your Joomla! root directory"/>
 		<propertyprompt propertyName="joomla_dir" defaultValue="joomla-dev" promptText="Set Joomla folder name"/>
 		<propertyprompt propertyName="stage_joomla" defaultValue="n" promptText="Stage Joomla?"/>
 		<if>
@@ -191,21 +199,30 @@
 
 		<!-- Create symbolic links for component in the Joomla directory -->
 		<symlink target="${basedir}/media" link="${joomla_path}${joomla_dir}/media/com_biblestudy" overwrite="true"/>
-		<symlink target="${basedir}/admin" link="${joomla_path}${joomla_dir}/administrator/components/com_biblestudy" overwrite="true"/>
-		<symlink target="${basedir}/site" link="${joomla_path}${joomla_dir}/components/com_biblestudy" overwrite="true"/>
-		<symlink target="${basedir}/modules/site/mod_biblestudy" link="${joomla_path}${joomla_dir}/modules/mod_biblestudy" overwrite="true"/>
-		<symlink target="${basedir}/modules/site/mod_biblestudy_podcast" link="${joomla_path}${joomla_dir}/modules/mod_biblestudy_podcast" overwrite="true"/>
-		<symlink target="${basedir}/plugins/system/jbsbackup" link="${joomla_path}${joomla_dir}/plugins/system/jbsbackup" overwrite="true"/>
-		<symlink target="${basedir}/plugins/finder/biblestudy" link="${joomla_path}${joomla_dir}/plugins/finder/biblestudy" overwrite="true"/>
-		<symlink target="${basedir}/plugins/system/jbspodcast" link="${joomla_path}${joomla_dir}/plugins/system/jbspodcast" overwrite="true"/>
-		<symlink target="${basedir}/plugins/search/biblestudysearch" link="${joomla_path}${joomla_dir}/plugins/search/biblestudysearch" overwrite="true"/>
+		<symlink target="${basedir}/admin" link="${joomla_path}${joomla_dir}/administrator/components/com_biblestudy"
+		         overwrite="true"/>
+		<symlink target="${basedir}/site" link="${joomla_path}${joomla_dir}/components/com_biblestudy"
+		         overwrite="true"/>
+		<symlink target="${basedir}/modules/site/mod_biblestudy"
+		         link="${joomla_path}${joomla_dir}/modules/mod_biblestudy" overwrite="true"/>
+		<symlink target="${basedir}/modules/site/mod_biblestudy_podcast"
+		         link="${joomla_path}${joomla_dir}/modules/mod_biblestudy_podcast" overwrite="true"/>
+		<symlink target="${basedir}/plugins/system/jbsbackup"
+		         link="${joomla_path}${joomla_dir}/plugins/system/jbsbackup" overwrite="true"/>
+		<symlink target="${basedir}/plugins/finder/biblestudy"
+		         link="${joomla_path}${joomla_dir}/plugins/finder/biblestudy" overwrite="true"/>
+		<symlink target="${basedir}/plugins/system/jbspodcast"
+		         link="${joomla_path}${joomla_dir}/plugins/system/jbspodcast" overwrite="true"/>
+		<symlink target="${basedir}/plugins/search/biblestudysearch"
+		         link="${joomla_path}${joomla_dir}/plugins/search/biblestudysearch" overwrite="true"/>
 
 		<phingcall target="dev.init"/>
 	</target>
 
 	<!-- Set the default joomla path and create symbolic links -->
 	<target name="dev.setup_Symbolic_Links">
-		<propertyprompt propertyName="joomla_path" defaultValue="/Applications/MAMP/htdocs/" promptText="Enter the path to your Joomla! root directory"/>
+		<propertyprompt propertyName="joomla_path" defaultValue="/Applications/MAMP/htdocs/"
+		                promptText="Enter the path to your Joomla! root directory"/>
 		<propertyprompt propertyName="joomla_dir" defaultValue="joomla-dev" promptText="Set Joomla folder name"/>
 
 		<echo message="Joomla path set to: ${joomla_path}${joomla_dir}"/>
@@ -214,14 +231,22 @@
 
 		<!-- Create symbolic links for component in the Joomla directory -->
 		<symlink target="${basedir}/media" link="${joomla_path}${joomla_dir}/media/com_biblestudy" overwrite="true"/>
-		<symlink target="${basedir}/admin" link="${joomla_path}${joomla_dir}/administrator/components/com_biblestudy" overwrite="true"/>
-		<symlink target="${basedir}/site" link="${joomla_path}${joomla_dir}/components/com_biblestudy" overwrite="true"/>
-		<symlink target="${basedir}/modules/site/mod_biblestudy" link="${joomla_path}${joomla_dir}/modules/mod_biblestudy" overwrite="true"/>
-		<symlink target="${basedir}/modules/site/mod_biblestudy_podcast" link="${joomla_path}${joomla_dir}/modules/mod_biblestudy_podcast" overwrite="true"/>
-		<symlink target="${basedir}/plugins/system/jbsbackup" link="${joomla_path}${joomla_dir}/plugins/system/jbsbackup" overwrite="true"/>
-		<symlink target="${basedir}/plugins/finder/biblestudy" link="${joomla_path}${joomla_dir}/plugins/finder/biblestudy" overwrite="true"/>
-		<symlink target="${basedir}/plugins/system/jbspodcast" link="${joomla_path}${joomla_dir}/plugins/system/jbspodcast" overwrite="true"/>
-		<symlink target="${basedir}/plugins/search/biblestudysearch" link="${joomla_path}${joomla_dir}/plugins/search/biblestudysearch" overwrite="true"/>
+		<symlink target="${basedir}/admin" link="${joomla_path}${joomla_dir}/administrator/components/com_biblestudy"
+		         overwrite="true"/>
+		<symlink target="${basedir}/site" link="${joomla_path}${joomla_dir}/components/com_biblestudy"
+		         overwrite="true"/>
+		<symlink target="${basedir}/modules/site/mod_biblestudy"
+		         link="${joomla_path}${joomla_dir}/modules/mod_biblestudy" overwrite="true"/>
+		<symlink target="${basedir}/modules/site/mod_biblestudy_podcast"
+		         link="${joomla_path}${joomla_dir}/modules/mod_biblestudy_podcast" overwrite="true"/>
+		<symlink target="${basedir}/plugins/system/jbsbackup"
+		         link="${joomla_path}${joomla_dir}/plugins/system/jbsbackup" overwrite="true"/>
+		<symlink target="${basedir}/plugins/finder/biblestudy"
+		         link="${joomla_path}${joomla_dir}/plugins/finder/biblestudy" overwrite="true"/>
+		<symlink target="${basedir}/plugins/system/jbspodcast"
+		         link="${joomla_path}${joomla_dir}/plugins/system/jbspodcast" overwrite="true"/>
+		<symlink target="${basedir}/plugins/search/biblestudysearch"
+		         link="${joomla_path}${joomla_dir}/plugins/search/biblestudysearch" overwrite="true"/>
 		<phingcall target="dev.init"/>
 	</target>
 
@@ -229,9 +254,11 @@
 	<target name="dev.init">
 		<echo message="Initializing a development state"/>
 		<symlink target="${basedir}/biblestudy.xml" link="${basedir}/admin/biblestudy.xml" overwrite="true"/>
-		<symlink target="${basedir}/biblestudy.script.php" link="${basedir}/admin/biblestudy.script.php" overwrite="true"/>
+		<symlink target="${basedir}/biblestudy.script.php" link="${basedir}/admin/biblestudy.script.php"
+		         overwrite="true"/>
 		<mkdir dir="${basedir}/media/css/site"/>
-		<symlink target="${basedir}/media/css/biblestudy.css" link="${basedir}/media/css/site/biblestudy.css" overwrite="true"/>
+		<symlink target="${basedir}/media/css/biblestudy.css" link="${basedir}/media/css/site/biblestudy.css"
+		         overwrite="true"/>
 	</target>
 
 	<!-- Clean up symbolic links from the development state -->

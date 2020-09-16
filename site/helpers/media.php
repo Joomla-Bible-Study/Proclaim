@@ -100,7 +100,7 @@ class JBSMMedia
 		{
 				$file_size = $media->params->get('size', '0');
 
-				if (!$file_size)
+				if (!$file_size && $link_type !== '0')
 				{
 					$file_size = JBSMHelper::getRemoteFileSize(
 						JBSMHelper::MediaBuildUrl($media->sparams->get('path'), $media->params->get('filename'), $params, true)
@@ -825,6 +825,14 @@ class JBSMMedia
 	public function getFluidFilesize($media, $params)
 	{
 		$filesize = '';
+
+		// Check to see if we need to look up file size or not. By looking at if download like is set.
+		if ($media->params->get('link_type') === '0')
+		{
+			$this->fsize = $filesize;
+
+			return $filesize;
+		}
 
 		$file_size = $media->params->get('size', '0');
 

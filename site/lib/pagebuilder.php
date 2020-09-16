@@ -18,11 +18,13 @@ defined('_JEXEC') or die;
 class JBSMPageBuilder
 {
 	/** @var string Extension Name
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	public $extension = 'com_biblestudy';
 
 	/** @var  string Event
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	public $event;
 
 	/**
@@ -34,13 +36,12 @@ class JBSMPageBuilder
 	 *
 	 * @return object
 	 *
-	 * @since 7.0
 	 * @throws Exception
+	 * @since 7.0
 	 */
 	public function buildPage($item, $params, $template)
 	{
 		$item->tp_id = '1';
-		$images      = new JBSMImages;
 
 		// Media files image, links, download
 		$mids         = $item->mids;
@@ -49,7 +50,7 @@ class JBSMPageBuilder
 
 		if ($mids)
 		{
-			$page->media = self::mediaBuilder($mids, $params, $template, $item);
+			$page->media = $this->mediaBuilder($mids, $params, $template, $item);
 		}
 		else
 		{
@@ -110,7 +111,7 @@ class JBSMPageBuilder
 
 		if ($item->thumbnailm)
 		{
-			$image                 = $images->getStudyThumbnail($item->thumbnailm);
+			$image                 = JBSMImages::getStudyThumbnail($item->thumbnailm);
 			$page->study_thumbnail = '<img src="' . JUri::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height
 				. '" alt="' . $item->studytitle . '" />';
 		}
@@ -121,7 +122,7 @@ class JBSMPageBuilder
 
 		if ($item->series_thumbnail)
 		{
-			$image                  = $images->getSeriesThumbnail($item->series_thumbnail);
+			$image                  = JBSMImages::getSeriesThumbnail($item->series_thumbnail);
 			$page->series_thumbnail = '<img src="' . JUri::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height
 				. '" alt="' . $item->series_text . '" />';
 		}
@@ -144,7 +145,7 @@ class JBSMPageBuilder
 
 		if ($item->image || $item->thumb)
 		{
-			$image              = $images->getTeacherImage($item->image, $item->thumb);
+			$image              = JBSMImages::getTeacherImage($item->image, $item->thumb);
 			$page->teacherimage = '<img src="' . JUri::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="'
 				. $item->teachername . '" />';
 		}
@@ -169,57 +170,54 @@ class JBSMPageBuilder
 			$item->sdescription = '';
 		}
 
-		if ($params->get('show_scripture_link') == 0)
+		if ($params->get('show_scripture_link') === 0)
 		{
 			return $page;
 		}
-		else
+		// Set the item for the plugin to $item->text //run content plugins
+		if ($page->scripture1)
 		{
-			// Set the item for the plugin to $item->text //run content plugins
-			if ($page->scripture1)
-			{
-				$item->text       = $page->scripture1;
-				$item             = self::runContentPlugins($item, $params);
-				$page->scripture1 = $item->text;
-			}
-
-			if ($page->scripture2)
-			{
-				$item->text       = $page->scripture2;
-				$item             = self::runContentPlugins($item, $params);
-				$page->scripture2 = $item->text;
-			}
-
-			if ($item->studyintro)
-			{
-				$item->text       = $item->studyintro;
-				$item             = self::runContentPlugins($item, $params);
-				$page->studyintro = $item->text;
-			}
-
-			if ($item->studytext)
-			{
-				$item->text      = $item->studytext;
-				$item            = self::runContentPlugins($item, $params);
-				$page->studytext = $item->text;
-			}
-
-			if ($item->secondary_reference)
-			{
-				$item->text                = $item->secondary_reference;
-				$item                      = self::runContentPlugins($item, $params);
-				$page->secondary_reference = $item->text;
-			}
-
-			if ($item->sdescription)
-			{
-				$item->text         = $item->sdescription;
-				$item               = self::runContentPlugins($item, $params);
-				$page->sdescription = $item->text;
-			}
-
-			return $page;
+			$item->text       = $page->scripture1;
+			$item             = $this->runContentPlugins($item, $params);
+			$page->scripture1 = $item->text;
 		}
+
+		if ($page->scripture2)
+		{
+			$item->text       = $page->scripture2;
+			$item             = $this->runContentPlugins($item, $params);
+			$page->scripture2 = $item->text;
+		}
+
+		if ($item->studyintro)
+		{
+			$item->text       = $item->studyintro;
+			$item             = $this->runContentPlugins($item, $params);
+			$page->studyintro = $item->text;
+		}
+
+		if ($item->studytext)
+		{
+			$item->text      = $item->studytext;
+			$item            = $this->runContentPlugins($item, $params);
+			$page->studytext = $item->text;
+		}
+
+		if ($item->secondary_reference)
+		{
+			$item->text                = $item->secondary_reference;
+			$item                      = $this->runContentPlugins($item, $params);
+			$page->secondary_reference = $item->text;
+		}
+
+		if ($item->sdescription)
+		{
+			$item->text         = $item->sdescription;
+			$item               = $this->runContentPlugins($item, $params);
+			$page->sdescription = $item->text;
+		}
+
+		return $page;
 	}
 
 	/**
@@ -232,18 +230,17 @@ class JBSMPageBuilder
 	 *
 	 * @return string
 	 *
-	 * @since 7.0
 	 * @throws Exception
+	 * @since 7.0
 	 */
 	private function mediaBuilder($mediaids, $params, $template, $item)
 	{
 		$listing          = new JBSMListing;
-		$mediaids         = $listing->getFluidMediaids($item);
-		$media            = $listing->getMediaFiles($mediaids);
+		$mediaIDs         = $listing->getFluidMediaids($item);
+		$media            = $listing->getMediaFiles($mediaIDs);
 		$item->mediafiles = $media;
-		$mediafiles       = $listing->getFluidMediaFiles($item, $params, $template);
 
-		return $mediafiles;
+		return $listing->getFluidMediaFiles($item, $params, $template);
 	}
 
 	/**
@@ -313,16 +310,16 @@ class JBSMPageBuilder
 	 *
 	 * @return array
 	 *
-	 * @since 7.0
 	 * @throws Exception
+	 * @since 7.0
 	 */
 	public function studyBuilder($whereitem = null, $wherefield = null, $params = null, $limit = 10, $order = 'DESC', $template = null)
 	{
-		$db   = JFactory::getDbo();
+		$db = JFactory::getDbo();
 
-		$orderparam       = $params->get('order', '1');
+		$orderparam = $params->get('order', '1');
 
-		if ($orderparam == 2)
+		if ($orderparam === 2)
 		{
 			$order = "ASC";
 		}
@@ -412,11 +409,11 @@ class JBSMPageBuilder
 		// Filter by language
 		$language = $params->get('language', '*');
 
-		if ($language == '*')
+		if ($language === '*')
 		{
 			$query->where('study.language in (' . $db->quote($language) . ',' . $db->quote('*') . ')');
 		}
-		elseif ($language != '*')
+		elseif ($language !== '*')
 		{
 			$query->where('study.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
 		}
@@ -428,8 +425,7 @@ class JBSMPageBuilder
 		$query->where('study.access IN (' . $groups . ')');
 
 		$db->setQuery($query, 0, $limit);
-		$studies = $db->loadObjectList();
 
-		return $studies;
+		return $db->loadObjectList();
 	}
 }
