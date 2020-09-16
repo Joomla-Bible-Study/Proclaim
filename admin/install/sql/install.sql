@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS `#__bsms_install`;
+SET SQL_MODE = '';
 
 -- Dump of table #__bsms_update
 --  ------------------------------------------------------------
