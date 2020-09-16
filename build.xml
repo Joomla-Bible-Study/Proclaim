@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="proclaim" default="build" basedir=".">
-	<php expression="include('vendor/autoload.php')"/>
+	<php expression="include('libraries/vendor/autoload.php')"/>
 
 	<property name="basedir" value="${project.basedir}"/>
 	<property name="project.name" value="Proclaim"/>
