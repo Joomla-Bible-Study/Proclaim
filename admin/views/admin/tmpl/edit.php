@@ -203,6 +203,13 @@ $input = $app->input;
                             </div>
                         </div>
                         <div class="control-group">
+                            <div class="control-group">
+								<?php echo $this->form->getLabel('simple_mode_display', 'params'); ?>
+                                <div class="controls">
+									<?php echo $this->form->getInput('simple_mode_display', 'params'); ?>
+                                </div>
+                            </div>
+                        <div class="control-group">
 							<?php echo $this->form->getLabel('users', 'params'); ?>
                             <div class="controls">
 								<?php echo $this->form->getInput('users', 'params'); ?>
