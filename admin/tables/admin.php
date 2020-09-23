@@ -103,18 +103,26 @@ class TableAdmin extends JTable
 	 */
 	public function bind($array, $ignore = '')
 	{
+		// For Saving the page.
+		if (isset($array['params']) && is_array($array['params']))
+		{
+			$registry = new Registry;
+			$registry->loadArray($array['params']);
+			$array['params'] = (string) $registry;
+		}
 
+		// For loading the admin page
 		if (isset($array['params']) && is_string($array['params']))
 		{
 			// Convert the params field to a string.
 			$parameter = new Registry;
 			$parameter->loadString($array['params']);
-			$params = $parameter->toArray();
+			$params          = $parameter->toArray();
 			$array['params'] = (string) $parameter;
 		}
 
 		// If simple mode, check and rename some files to hide menus
-		$views = array();
+		$views   = array();
 		$views[] = 'landingpage';
 		$views[] = 'podcastdisplay';
 		$views[] = 'podcastlist';

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
+	<field name="id" type="text" readonly="readonly" class="inputbox hidden"/>
 	<fields name="params">
 		<field name="simple_mode" type="radio" class="btn-group" default="1" label="JBS_ADM_SIMPLE_MODE"
 			   description="JBS_ADM_SIMPLE_MODE_DESC" labelclass="control-label">
