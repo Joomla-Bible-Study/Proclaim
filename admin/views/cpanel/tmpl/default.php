@@ -87,7 +87,7 @@ $simple_view = JBSMHelper::getSimpleView();
 						</a>
 					</div>
 				<?php endif; ?>
-                <?php if ($this->simple_mode == 1)
+                <?php if ($this->simple_mode == 1 && $this->simple_mode_display == 1)
                     {
                         ?><div class="alert alert-info">
 						<h3>

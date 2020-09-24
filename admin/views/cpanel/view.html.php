@@ -70,6 +70,7 @@ class BiblestudyViewCpanel extends JViewLegacy
 		$param = JBSMParams::getAdmin();
 		$params = $param->params;
 		$this->simple_mode = $params['simple_mode'];
+		$this->simple_mode_display = $params['simple_mode_display'];
 		$component = JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.xml';
 
 		if (file_exists($component))
