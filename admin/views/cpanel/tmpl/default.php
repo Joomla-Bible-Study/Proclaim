@@ -57,7 +57,7 @@ $simple = JBSMHelper::getSimpleView();
 		<div id="j-main-container" class="span10">
 			<?php else : ?>
 			<div id="j-main-container">
-                <?php endif; ?>
+				<?php endif; ?>
 				<?php if ($this->hasPostInstallationMessages): ?>
 					<div class="alert alert-info">
 						<h3>
@@ -87,30 +87,33 @@ $simple = JBSMHelper::getSimpleView();
 						</a>
 					</div>
 				<?php endif; ?>
-                <?php if ($simple->mode === 1 && $simple->display === 1)
-                    {
-                        ?><div class="alert alert-info">
-						<h3>
-							<?php echo JText::_('JBS_CPANEL_SIMPLE_MODE_ON'); ?>
-                </h3>
+				<?php if ($simple->mode === 1 && $simple->display === 1)
+				{
+					?>
+					<div class="alert alert-info">
+					<h3>
+						<?php echo JText::_('JBS_CPANEL_SIMPLE_MODE_ON'); ?>
+					</h3>
 
-                <p>
-					<?php echo JText::_('JBS_CPANEL_SIMPLE_MODE_DESC'); ?>
-                </p>
-                <a href="index.php?option=com_biblestudy&task=admin.edit&id=1"
-                   class="btn btn-primary btn-large">
-					<?php echo JText::_('JBS_CPANEL_SIMPLE_MODE_LINK'); ?>
-                </a>
-            </div>
-                    <?php }
-                    ?>
+					<p>
+						<?php echo JText::_('JBS_CPANEL_SIMPLE_MODE_DESC'); ?>
+					</p>
+					<a href="index.php?option=com_biblestudy&task=admin.edit&id=1"
+					   class="btn btn-primary btn-large">
+						<?php echo JText::_('JBS_CPANEL_SIMPLE_MODE_LINK'); ?>
+					</a>
+					</div>
+				<?php }
+				?>
 				<div class="fbwelcome">
 					<h3><?php echo JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY'); ?></h3>
 
 					<p><?php echo JText::_('JBS_CPL_INTRO'); ?> - <a
-								href="https://www.christianwebministries.org/documentation/8-proclaim.html" target="_blank">
+								href="https://www.christianwebministries.org/documentation/8-proclaim.html"
+								target="_blank">
 							<?php echo JText::_('JBS_CPL_ONLINE_DOCUMENTATION'); ?></a> - <a
-								href="https://www.christianwebministries.org/support/user-help-forum.html" target="_blank">
+								href="https://www.christianwebministries.org/support/user-help-forum.html"
+								target="_blank">
 							<?php echo JText::_('JBS_CPL_VISIT_FAQ'); ?></a></p>
 				</div>
 				<div style="border:1px solid #ddd; background:#FBFBFB;" class="visible-desktop">
@@ -141,24 +144,24 @@ $simple = JBSMHelper::getSimpleView();
 									   title="<?php echo JText::_('JBS_CMN_SERIES'); ?>" class="btn"> <i
 												class="icon-big icon-tree-2"></i>
 										<span><br/> <?php echo JText::_('JBS_CMN_SERIES'); ?> </span></a>
-									<?php if (!$simple_view): ?>
-									<a href="index.php?option=com_biblestudy&amp;view=messagetypes"
-									   title="<?php echo JText::_('JBS_CMN_MESSAGETYPES'); ?>" class="btn"> <i
-												class="icon-big icon-list-2"></i><br/>
-										<span> <?php echo JText::_('JBS_CMN_MESSAGETYPES'); ?> </span></a>
-									<a href="index.php?option=com_biblestudy&amp;view=locations"
-									   title="<?php echo JText::_('JBS_CMN_LOCATIONS'); ?>" class="btn"> <i
-												class="icon-big icon-home"></i>
-										<span><br/> <?php echo JText::_('JBS_CMN_LOCATIONS'); ?> </span></a>
-									<a href="index.php?option=com_biblestudy&amp;view=topics"
-									   title="<?php echo JText::_('JBS_CMN_TOPICS'); ?>" class="btn"> <i
-												class="icon-big icon-tags"></i>
-										<span><br/> <?php echo JText::_('JBS_CMN_TOPICS'); ?> </span></a>
-									<a href="index.php?option=com_biblestudy&amp;view=comments"
-									   title="<?php echo JText::_('JBS_CMN_COMMENTS'); ?>" class="btn"> <span
-												class="icon-big icon-comments-2"></span><br/>
-										<span> <?php echo JText::_('JBS_CMN_COMMENTS'); ?> </span></a>
-                                    <?php endif; ?>
+									<?php if (!$simple->mode): ?>
+										<a href="index.php?option=com_biblestudy&amp;view=messagetypes"
+										   title="<?php echo JText::_('JBS_CMN_MESSAGETYPES'); ?>" class="btn"> <i
+													class="icon-big icon-list-2"></i><br/>
+											<span> <?php echo JText::_('JBS_CMN_MESSAGETYPES'); ?> </span></a>
+										<a href="index.php?option=com_biblestudy&amp;view=locations"
+										   title="<?php echo JText::_('JBS_CMN_LOCATIONS'); ?>" class="btn"> <i
+													class="icon-big icon-home"></i>
+											<span><br/> <?php echo JText::_('JBS_CMN_LOCATIONS'); ?> </span></a>
+										<a href="index.php?option=com_biblestudy&amp;view=topics"
+										   title="<?php echo JText::_('JBS_CMN_TOPICS'); ?>" class="btn"> <i
+													class="icon-big icon-tags"></i>
+											<span><br/> <?php echo JText::_('JBS_CMN_TOPICS'); ?> </span></a>
+										<a href="index.php?option=com_biblestudy&amp;view=comments"
+										   title="<?php echo JText::_('JBS_CMN_COMMENTS'); ?>" class="btn"> <span
+													class="icon-big icon-comments-2"></span><br/>
+											<span> <?php echo JText::_('JBS_CMN_COMMENTS'); ?> </span></a>
+									<?php endif; ?>
 									<a href="index.php?option=com_biblestudy&amp;view=servers"
 									   title="<?php echo JText::_('JBS_CMN_SERVERS'); ?>" class="btn"> <span
 												class="icon-big icon-database"></span>
@@ -168,16 +171,16 @@ $simple = JBSMHelper::getSimpleView();
 												class="icon-big icon-stack"></span>
 										<span><br/> <?php echo JText::_('JBS_CMN_PODCASTS'); ?> </span></a>
 
-									<?php if (!$simple_view): ?>
-									<a href="index.php?option=com_biblestudy&amp;view=templates"
-									   title="<?php echo JText::_('JBS_CMN_TEMPLATES'); ?>" class="btn"> <span
-												class="icon-big icon-grid"></span>
-										<span><br/> <?php echo JText::_('JBS_CMN_TEMPLATES'); ?> </span></a>
-									<a href="index.php?option=com_biblestudy&amp;view=templatecodes"
-									   title="<?php echo JText::_('JBS_CMN_TEMPLATECODE'); ?>" class="btn"> <span
-												class="icon-big icon-stack"></span>
-										<span><br/> <?php echo JText::_('JBS_CMN_TEMPLATECODE'); ?> </span></a>
-                                    <?php endif; ?>
+									<?php if (!$simple->mode): ?>
+										<a href="index.php?option=com_biblestudy&amp;view=templates"
+										   title="<?php echo JText::_('JBS_CMN_TEMPLATES'); ?>" class="btn"> <span
+													class="icon-big icon-grid"></span>
+											<span><br/> <?php echo JText::_('JBS_CMN_TEMPLATES'); ?> </span></a>
+										<a href="index.php?option=com_biblestudy&amp;view=templatecodes"
+										   title="<?php echo JText::_('JBS_CMN_TEMPLATECODE'); ?>" class="btn"> <span
+													class="icon-big icon-stack"></span>
+											<span><br/> <?php echo JText::_('JBS_CMN_TEMPLATECODE'); ?> </span></a>
+									<?php endif; ?>
 								</div>
 							</div>
 						</div>

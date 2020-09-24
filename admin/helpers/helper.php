@@ -356,9 +356,9 @@ class JBSMHelper
 			$params = JBSMParams::getAdmin();
 		}
 
-		$simple->mode = $params->params->get('simple_mode');
+		$simple->mode = (integer) $params->params->get('simple_mode');
 
-		$simple->display = $params->params->get('simple_mode_display');
+		$simple->display = (integer) $params->params->get('simple_mode_display');
 
 		return $simple;
 	}
