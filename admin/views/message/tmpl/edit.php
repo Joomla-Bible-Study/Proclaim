@@ -197,7 +197,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
         <!-- Begin Content -->
 		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'general', JText::_('JBS_STY_DETAILS')); ?>
         <div class="row-fluid form-horizontal-desktop">
-			<?php if (!$this->simple_view){ ?>
+			<?php if (!$this->simple->mode){ ?>
                 <div class="span6">
                     <div class="control-group">
 						<?php echo $this->form->getLabel('studyintro'); ?>
@@ -266,7 +266,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
             </div>
         </div>
 		<?php echo JHtml::_('bootstrap.endTab'); ?>
-		<?php if (!$this->simple_view){ ?>
+		<?php if (!$this->simple->mode){ ?>
 			<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'info', JText::_('JBS_CMN_INFO')); ?>
             <div class="row-fluid">
                 <div class="span6">

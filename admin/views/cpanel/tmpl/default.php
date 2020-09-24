@@ -25,7 +25,7 @@ if ($msg)
 	echo $msg;
 }
 
-$simple_view = JBSMHelper::getSimpleView();
+$simple = JBSMHelper::getSimpleView();
 ?>
 <!-- Header -->
 <form action="index.php" method="post" name="adminForm" id="adminForm">
@@ -87,7 +87,7 @@ $simple_view = JBSMHelper::getSimpleView();
 						</a>
 					</div>
 				<?php endif; ?>
-                <?php if ($this->simple_mode == 1 && $this->simple_mode_display == 1)
+                <?php if ($simple->mode === 1 && $simple->display === 1)
                     {
                         ?><div class="alert alert-info">
 						<h3>

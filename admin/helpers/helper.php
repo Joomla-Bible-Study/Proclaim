@@ -322,7 +322,7 @@ class JBSMHelper
 	 *
 	 * @since 9.0.18
 	 */
-	public static function remove_http($url)
+	public static function remove_http(string $url)
 	{
 		$disallowed = array('http://', 'https://');
 
@@ -340,27 +340,26 @@ class JBSMHelper
 	/**
 	 * Get Simple View Sate
 	 *
-	 * @param   Registry  $params  AdminTable + parametors
+	 * @param   object  $params  AdminTable + parametors
 	 *
-	 * @return  integer
+	 * @return  object
 	 *
 	 * @throws Exception
 	 * @since 9.1.6
 	 */
 	public static function getSimpleView($params = null)
 	{
+		$simple = new stdClass;
+
 		if (is_null($params))
 		{
 			$params = JBSMParams::getAdmin();
 		}
 
-		$simple = $params->params->get('simple_mode');
+		$simple->mode = $params->params->get('simple_mode');
 
-		if ($simple)
-		{
-			return 1;
-		}
+		$simple->display = $params->params->get('simple_mode_display');
 
-		return 0;
+		return $simple;
 	}
 }
