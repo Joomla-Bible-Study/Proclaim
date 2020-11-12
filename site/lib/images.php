@@ -48,7 +48,6 @@ class JBSMImages
 			$params = $registry;
 		}
 
-
 		if (!$params->get('default_main_image'))
 		{
 			$path = 'media/com_biblestudy/images/openbible.png';
@@ -58,9 +57,7 @@ class JBSMImages
 			$path = $params->get('default_main_image');
 		}
 
-		$mainimage = self::getImagePath($path);
-
-		return $mainimage;
+		return self::getImagePath($path);
 	}
 
 	/**
@@ -143,9 +140,7 @@ class JBSMImages
 			$path = $image;
 		}
 
-		$imagepath = self::getImagePath($path);
-
-		return $imagepath;
+		return self::getImagePath($path);
 	}
 
 	/**
@@ -157,9 +152,7 @@ class JBSMImages
 	 */
 	private static function getStudiesImageFolder()
 	{
-		$studiesimagefolder = 'images';
-
-		return $studiesimagefolder;
+		return 'images';
 	}
 
 	/**
@@ -181,9 +174,7 @@ class JBSMImages
 			$path = $image;
 		}
 
-		$imagepath = self::getImagePath($path);
-
-		return $imagepath;
+		return self::getImagePath($path);
 	}
 
 	/**
@@ -195,9 +186,7 @@ class JBSMImages
 	 */
 	private static function getSeriesImageFolder()
 	{
-		$seriesimagefolder = 'images';
-
-		return $seriesimagefolder;
+		return 'images';
 	}
 
 	/**
@@ -214,7 +203,7 @@ class JBSMImages
 	{
 		$folder = self::getTeacherImageFolder();
 
-		if (!$image1 || $image1 == '0' || strncmp($image1, '- ', 2) == 0)
+		if (!$image1 || $image1 === '0' || strncmp($image1, '- ', 2) === 0)
 		{
 			$path = $image2;
 
@@ -233,9 +222,7 @@ class JBSMImages
 			}
 		}
 
-		$imagepath = self::getImagePath($path);
-
-		return $imagepath;
+		return self::getImagePath($path);
 	}
 
 	/**
@@ -247,9 +234,7 @@ class JBSMImages
 	 */
 	private static function getTeacherImageFolder()
 	{
-		$teacherimagefolder = 'images';
-
-		return $teacherimagefolder;
+		return 'images';
 	}
 
 	/**
@@ -267,7 +252,7 @@ class JBSMImages
 		$folder = self::getTeacherImageFolder();
 		$path   = null;
 
-		if (!$image1 || $image1 == '0' || strncmp($image1, '- ', 2) == 0)
+		if (!$image1 || $image1 === '0' || strncmp($image1, '- ', 2) === 0)
 		{
 			$path = $image2;
 
@@ -286,9 +271,7 @@ class JBSMImages
 			}
 		}
 
-		$imagepath = self::getImagePath($path);
-
-		return $imagepath;
+		return self::getImagePath($path);
 	}
 
 	/**
@@ -306,7 +289,7 @@ class JBSMImages
 		$folder = self::getMediaImageFolder();
 		$path   = null;
 
-		if (!$media1 || $media1 == '0' || strncmp($media1, '- ', 2) == 0)
+		if (!$media1 || $media1 === '0' || strncmp($media1, '- ', 2) === 0)
 		{
 			$path = $media2;
 
@@ -325,9 +308,7 @@ class JBSMImages
 			}
 		}
 
-		$imagepath = self::getImagePath($path);
-
-		return $imagepath;
+		return self::getImagePath($path);
 	}
 
 	/**
@@ -339,9 +320,7 @@ class JBSMImages
 	 */
 	private static function getMediaImageFolder()
 	{
-		$mediaimagefolder = 'media/com_biblestudy/images';
-
-		return $mediaimagefolder;
+		return 'media/com_biblestudy/images';
 	}
 
 	/**
@@ -364,8 +343,6 @@ class JBSMImages
 			$path = $admin->params->get('default_showHide_image');
 		}
 
-		$imagepath = self::getImagePath($path);
-
-		return $imagepath;
+		return self::getImagePath($path);
 	}
 }

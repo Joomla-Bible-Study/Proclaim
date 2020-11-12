@@ -91,17 +91,17 @@ $simple = JBSMHelper::getSimpleView();
 				{
 					?>
 					<div class="alert alert-info">
-					<h3>
-						<?php echo JText::_('JBS_CPANEL_SIMPLE_MODE_ON'); ?>
-					</h3>
+						<h3>
+							<?php echo JText::_('JBS_CPANEL_SIMPLE_MODE_ON'); ?>
+						</h3>
 
-					<p>
-						<?php echo JText::_('JBS_CPANEL_SIMPLE_MODE_DESC'); ?>
-					</p>
-					<a href="index.php?option=com_biblestudy&task=admin.edit&id=1"
-					   class="btn btn-primary btn-large">
-						<?php echo JText::_('JBS_CPANEL_SIMPLE_MODE_LINK'); ?>
-					</a>
+						<p>
+							<?php echo JText::_('JBS_CPANEL_SIMPLE_MODE_DESC'); ?>
+						</p>
+						<a href="index.php?option=com_biblestudy&task=admin.edit&id=1"
+						   class="btn btn-primary btn-large">
+							<?php echo JText::_('JBS_CPANEL_SIMPLE_MODE_LINK'); ?>
+						</a>
 					</div>
 				<?php }
 				?>
