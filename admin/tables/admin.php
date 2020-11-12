@@ -117,8 +117,7 @@ class TableAdmin extends JTable
 			// Convert the params field to a string.
 			$parameter = new Registry;
 			$parameter->loadString($array['params']);
-			$params          = $parameter->toArray();
-			$array['params'] = (string) $parameter;
+			$params = $parameter->toArray();
 		}
 
 		// If simple mode, check and rename some files to hide menus
