@@ -60,8 +60,8 @@ class JFormFieldPlupload extends JFormField
 					});
 				});
 				uploader.init();
-			});
-		');
+			});'
+		);
 
 		$class = $this->element['class'] ? ' class="' . (string) $this->element['class'] . ' span12"' : '';
 

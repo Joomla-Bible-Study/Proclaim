@@ -48,7 +48,7 @@ abstract class JBSServer
 	{
 		$servers = array();
 
-		$types = JFolder::folders(dirname(__FILE__));
+		$types = JFolder::folders(__DIR__);
 
 		foreach ($types as $type)
 		{
@@ -57,7 +57,7 @@ abstract class JBSServer
 
 			if (!class_exists($class))
 			{
-				$path = dirname(__FILE__) . '/' . $type . '/' . $type . '.php';
+				$path = __DIR__ . '/' . $type . '/' . $type . '.php';
 
 				// If the file exists register the class
 				if (file_exists($path))
@@ -96,7 +96,7 @@ abstract class JBSServer
 	public static function getInstance($options = array())
 	{
 		$options['type'] = (isset($options['type'])) ? $options['type'] : 'amazons3';
-		$instance = null;
+		$instance        = null;
 
 		// Get the options signature for this server type
 		$signature = md5(serialize($options));
@@ -121,7 +121,6 @@ abstract class JBSServer
 			}
 			catch (Exception $e)
 			{
-
 			}
 
 			self::$instances[$signature] = $instance;

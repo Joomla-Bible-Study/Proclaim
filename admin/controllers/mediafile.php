@@ -63,7 +63,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 	 * @param   int     $key     ?
 	 * @param   string  $urlVar  ?
 	 *
-	 * @return  bool
+	 * @return  boolean
 	 *
 	 * @throws  Exception
 	 * @since   9.0.0
