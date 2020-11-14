@@ -18,10 +18,6 @@ defined("_JEXEC") or die();
  */
 class JBSMUploadScript
 {
-	/**
-	 * @var string
-	 * @since version
-	 */
 	protected $folder = '';
 
 	/**
@@ -29,7 +25,7 @@ class JBSMUploadScript
 	 *
 	 * @param   JInput|array  $data  Data to upload
 	 *
-	 * @return array|boolean
+	 * @return array|bool
 	 *
 	 * @since 9.0.0
 	 */
@@ -56,7 +52,7 @@ class JBSMUploadScript
 
 		// Check for the total size of post back data.
 		if (($postMaxSize > 0 && $contentLength > $postMaxSize)
-			|| ($memoryLimit !== -1 && $contentLength > $memoryLimit))
+			|| ($memoryLimit != -1 && $contentLength > $memoryLimit))
 		{
 			return ['data' => '', 'error' => ''];
 		}
@@ -68,7 +64,7 @@ class JBSMUploadScript
 		$file['name']     = str_replace(' ', '-', $file['name']);
 		$file['filepath'] = JPath::clean(implode(DIRECTORY_SEPARATOR, array(JPATH_ROOT, $this->folder, $file['name'])));
 
-		if (($file['error'] === 1)
+		if (($file['error'] == 1)
 			|| ($uploadMaxSize > 0 && $file['size'] > $uploadMaxSize)
 			|| ($uploadMaxFileSize > 0 && $file['size'] > $uploadMaxFileSize))
 		{
