@@ -19,7 +19,7 @@ JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('biblestudy.framework');
 JHtml::_('biblestudy.loadcss', $this->state->params);
 
-JHtml::_('behavior.formvalidation');
+JHtml::_('behavior.formvalidator');
 JHtml::_('behavior.keepalive');
 
 $app = JFactory::getApplication();

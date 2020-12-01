@@ -45,7 +45,7 @@ class JBSMHelper
 	{
 		$JBSMElements = new JBSMListing;
 
-		JHtml::_('behavior.tooltip');
+		JHtml::_('bootstrap.tooltip');
 		$linktext = '<span class="hasTip" title="<strong>' . $params->get('tip_title') . '  :: ';
 
 		$tip1 = $JBSMElements->getElement($params->get('tip_item1'), $row, $params, $template, $type = 0);

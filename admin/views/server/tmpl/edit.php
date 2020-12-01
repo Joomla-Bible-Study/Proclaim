@@ -11,8 +11,8 @@
 defined('_JEXEC') or die;
 
 // Load the tooltip behavior.
-JHtml::_('behavior.tooltip');
-JHtml::_('behavior.formvalidation');
+JHtml::_('bootstrap.tooltip');
+JHtml::_('behavior.formvalidator');
 JHtml::_('behavior.keepalive');
 
 // Create shortcut to parameters.

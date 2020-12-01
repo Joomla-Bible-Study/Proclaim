@@ -46,7 +46,7 @@ class BiblestudyController extends JControllerLegacy
 	 * @since 1.5
 	 * @throws Exception
 	 */
-	public function display($cachable = false, $urlparams = false)
+	public function display($cachable = false, $urlparams = array())
 	{
 		$app = JFactory::getApplication();
 

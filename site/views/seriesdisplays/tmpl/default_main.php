@@ -17,7 +17,7 @@ $input = new JInput;
 $option = $input->get('option', '', 'cmd');
 $JViewLegacy = new JViewLegacy;
 $JBSMSerieslist = new JBSMSerieslist;
-JHtml::_('behavior.tooltip');
+JHtml::_('bootstrap.tooltip');
 $series_menu = $this->params->get('series_id', 1);
 
 /** @type Joomla\Registry\Registry $params */

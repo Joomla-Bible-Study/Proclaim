@@ -10,7 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JHtml::_('behavior.tooltip');
+JHtml::_('bootstrap.tooltip');
 
 /** @var $this BiblestudyViewLandingpage */
 

@@ -49,7 +49,7 @@ class BiblestudyViewUpload extends JViewLegacy
 		$this->form = $this->get("Form");
 		JHtml::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/helpers/html/');
 		JHtml::_('jquery.framework', 'false');
-		JHtml::_('behavior.tooltip');
+		JHtml::_('bootstrap.tooltip');
 		$mediaDir      = JUri::root() . "media/com_biblestudy/plupload/";
 		$document      = JFactory::getDocument();
 		$params        = JComponentHelper::getParams('com_biblestudy');

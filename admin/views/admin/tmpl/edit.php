@@ -9,6 +9,13 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+use Joomla\Registry\Registry;
+
+// Include the component HTML helpers.
+JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+
+JHtml::_('behavior.formvalidator');
+JHtml::_('behavior.keepalive');
 
 // Load the tooltip behavior.
 JHtml::_('jquery.framework');
@@ -16,28 +23,28 @@ JHtml::_('formbehavior.chosen', 'select');
 
 $app   = JFactory::getApplication();
 $input = $app->input;
-?>
-<script type="text/javascript">
+
+JFactory::getDocument()->addScriptDeclaration("
 	jQuery.submitbutton3 = function () {
 		jQuery('[name=tooltype]').val('players');
 		jQuery('[name=task]').val('admin.tools');
-		jQuery("#item-admin").submit();
+		jQuery('#item-admin').submit();
 	};
 
 	jQuery.submitbutton4 = function () {
 		jQuery('[name=tooltype]').val('popups');
 		jQuery('[name=task]').val('admin.tools');
-		jQuery("#item-admin").submit();
+		jQuery('#item-admin').submit();
 	};
 	jQuery.submitbutton5 = function () {
 		jQuery('[name=tooltype]').val('mediaimages');
 		jQuery('[name=task]').val('admin.mediaimages');
-		jQuery("#item-admin").submit();
+		jQuery('#item-admin').submit();
 	};
 	jQuery.submitbutton6 = function () {
 		jQuery('[name=tooltype]').val('playerbymediatype');
 		jQuery('[name=task]').val('admin.tools');
-		jQuery("#item-admin").submit();
+		jQuery('#item-admin').submit();
 	};
 
 	Joomla.submitbutton = function (task) {
@@ -60,10 +67,10 @@ $input = $app->input;
 					thumbnail_changes.push('studies');
 				}
 				if (thumbnail_changes.length > 0) {
-					var resize_thumbnails = confirm("You modified the default thumbnail size(s)." +
-						"Thumbnails will be recreated for: " + thumbnail_changes.toString() + ". Click OK to continue.");
+					var resize_thumbnails = confirm('You modified the default thumbnail size(s).' +
+						'Thumbnails will be recreated for: ' + thumbnail_changes.toString() + '. Click OK to continue.');
 					if (resize_thumbnails) {
-						jQuery.getJSON('index.php?option=com_biblestudy&task=admin.getThumbnailListXHR&<?php echo JSession::getFormToken(); ?>=1',
+						jQuery.getJSON('index.php?option=com_biblestudy&task=admin.getThumbnailListXHR&" . JSession::getFormToken() ."=1',
 							{images: thumbnail_changes}, function (response) {
 								jQuery('#dialog_thumbnail_resize').modal({backdrop: 'static', keyboard: false});
 								var total_paths = response.total;
@@ -90,7 +97,7 @@ $input = $app->input;
 															new_size = 100;
 															break;
 													}
-													jQuery.getJSON('index.php?option=com_biblestudy&task=admin.createThumbnailXHR&<?php echo JSession::getFormToken(); ?>=1', {
+													jQuery.getJSON('index.php?option=com_biblestudy&task=admin.createThumbnailXHR&" . JSession::getFormToken() . "=1', {
 														image_path: this,
 														new_size: new_size
 													}, function (response) {
@@ -119,10 +126,10 @@ $input = $app->input;
 				}
 			}
 		} else {
-			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
+			alert('" . JText::_('JGLOBAL_VALIDATION_FORM_FAILED') . "');
 		}
-	};
-</script>
+	")
+?>
 <div class="modal hide fade" id="dialog_thumbnail_resize">
 	<div class="modal-header">
 		<h3>Creating Thumbnails...</h3>

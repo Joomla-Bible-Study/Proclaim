@@ -265,7 +265,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	{
 		$jversion = null;
 		$file     = JPATH_COMPONENT_ADMINISTRATOR . '/biblestudy.xml';
-		$xml      = simplexml_load_file($file, 'JXMLElement');
+		$xml      = simplexml_load_string(file_get_contents($file), 'SimpleXMLElement');
 
 		if ($xml)
 		{

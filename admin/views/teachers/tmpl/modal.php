@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-JHtml::_('behavior.tooltip');
+JHtml::_('bootstrap.tooltip');
 $input = new JInput;
 $function = $input->get('function', 'jSelectTeacher', 'cmd');
 $listOrder = $this->escape($this->state->get('list.ordering'));

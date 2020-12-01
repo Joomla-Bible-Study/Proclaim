@@ -406,7 +406,7 @@ class BiblestudyViewSermon extends JViewLegacy
 
 		$this->page         = new stdClass;
 		$this->page->social = $JBSMListing->getShare($detailslink, $this->item, $this->item->params);
-		JHtml::_('behavior.tooltip');
+		JHtml::_('bootstrap.tooltip');
 
 		// End process prepare content plugins
 		$this->template = $template;
