@@ -37,7 +37,7 @@ class BiblestudyControllerSermon extends JControllerForm
 	/**
 	 * Method to add a new record.
 	 *
-	 * @return    boolean    True if the article can be added, false if not.
+	 * @return    void  True if the article can be added, false if not.
 	 *
 	 * @since    1.6
 	 */
@@ -67,10 +67,9 @@ class BiblestudyControllerSermon extends JControllerForm
 		{
 			return JUri::base() . 'index.php?option=com_biblestudy&view=sermon';
 		}
-		else
-		{
-			return base64_decode($return);
-		}
+
+		return base64_decode($return);
+
 	}
 
 	/**
@@ -78,7 +77,7 @@ class BiblestudyControllerSermon extends JControllerForm
 	 *
 	 * @param   string  $key  The name of the primary key of the URL variable.
 	 *
-	 * @return    Boolean    True if access level checks pass, false otherwise.
+	 * @return    void  True if access level checks pass, false otherwise.
 	 *
 	 * @since    1.6
 	 */
@@ -102,9 +101,7 @@ class BiblestudyControllerSermon extends JControllerForm
 	 */
 	public function edit($key = null, $urlVar = 'a_id')
 	{
-		$result = parent::edit($key, $urlVar);
-
-		return $result;
+		return parent::edit($key, $urlVar);
 	}
 
 	/**
@@ -174,13 +171,11 @@ class BiblestudyControllerSermon extends JControllerForm
 
 				return null;
 			}
-			else
-			{
-				$cap = 1;
-			}
+
+			$cap = 1;
 		}
 
-		if ($cap == 1)
+		if ($cap === 1)
 		{
 			if ($model->storecomment())
 			{
@@ -219,9 +214,7 @@ class BiblestudyControllerSermon extends JControllerForm
 	 */
 	public function getModel($name = 'Sermon', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
 	{
-		$model = parent::getModel($name, $prefix, $config);
-
-		return $model;
+		return parent::getModel($name, $prefix, $config);
 	}
 
 	/**
@@ -235,7 +228,7 @@ class BiblestudyControllerSermon extends JControllerForm
 	 */
 	public function commentsEmail($params)
 	{
-		$input      = new JInput;
+		$input = new JInput;
 
 		$comment_author    = $input->get('full_name', 'Anonymous', 'string');
 		$comment_study_id  = $input->get('study_detail_id', 0, 'int');
@@ -267,14 +260,14 @@ class BiblestudyControllerSermon extends JControllerForm
 
 		if ($comment_published > 0)
 		{
-			$Body = $Body . ' ' . JText::_('JBS_STY_COMMENT_PUBLISHED');
+			$Body .= ' ' . JText::_('JBS_STY_COMMENT_PUBLISHED');
 		}
 		else
 		{
-			$Body = $Body . ' ' . JText::_('JBS_STY_COMMENT_NOT_PUBLISHED');
+			$Body .= ' ' . JText::_('JBS_STY_COMMENT_NOT_PUBLISHED');
 		}
 
-		$Body = $Body . ' ' . JText::_('JBS_STY_REVIEW_COMMENTS_LOGIN') . ': ' . $comment_livesite;
+		$Body .= ' ' . JText::_('JBS_STY_REVIEW_COMMENTS_LOGIN') . ': ' . $comment_livesite;
 		$mail->addRecipient($ToEmail);
 		$mail->setSubject($Subject . ' ' . $comment_livesite);
 		$mail->setBody($Body);
@@ -284,7 +277,7 @@ class BiblestudyControllerSermon extends JControllerForm
 	/**
 	 * Download system
 	 *
-	 * @return null
+	 * @return void
 	 *
 	 * @since 7.0
 	 */
@@ -320,10 +313,8 @@ class BiblestudyControllerSermon extends JControllerForm
 			// In the absence of better information, revert to the component permissions.
 			return parent::allowAdd();
 		}
-		else
-		{
-			return $allow;
-		}
+
+		return $allow;
 	}
 
 	/**

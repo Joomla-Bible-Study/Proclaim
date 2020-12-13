@@ -843,11 +843,10 @@ class JBSMPodcast
 	{
 		if ($layer === 1)
 		{
-			return intval(((12 * $bitrate * 1000 / $sample_rate) + $padding_bit) * 4);
+			return (int) (((12 * $bitrate * 1000 / $sample_rate) + $padding_bit) * 4);
 		}
 
 		//layer 2, 3
-
-		return intval(((144 * $bitrate * 1000) / $sample_rate) + $padding_bit);
+		return (int) (((144 * $bitrate * 1000) / $sample_rate) + $padding_bit);
 	}
 }

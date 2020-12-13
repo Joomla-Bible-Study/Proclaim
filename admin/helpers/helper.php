@@ -45,7 +45,7 @@ class JBSMHelper
 	{
 		$JBSMElements = new JBSMListing;
 
-		JHtml::_('behavior.tooltip');
+		JHtml::_('bootstrap.tooltip');
 		$linktext = '<span class="hasTip" title="<strong>' . $params->get('tip_title') . '  :: ';
 
 		$tip1 = $JBSMElements->getElement($params->get('tip_item1'), $row, $params, $template, $type = 0);
@@ -153,12 +153,7 @@ class JBSMHelper
 			return 0;
 		}
 
-		if (isset($head['content-length']))
-		{
-			return $head['content-length'];
-		}
-
-		return 0;
+		return $head['content-length'] ?? 0;
 	}
 
 	/**
@@ -260,14 +255,7 @@ class JBSMHelper
 			}
 
 			// Set Protocol based on server status
-			if (!$local)
-			{
-				$path = $protocol . $spath . '/' . $path;
-			}
-			else
-			{
-				$path = $protocol . $path;
-			}
+			$path = $protocol . $spath . '/' . $path;
 		}
 		elseif ((!substr_count($spath, '://') || !substr_count($spath, '//')) && !empty($spath))
 		{
@@ -322,7 +310,7 @@ class JBSMHelper
 	 *
 	 * @since 9.0.18
 	 */
-	public static function remove_http(string $url)
+	public static function remove_http($url)
 	{
 		$disallowed = array('http://', 'https://');
 
@@ -340,26 +328,27 @@ class JBSMHelper
 	/**
 	 * Get Simple View Sate
 	 *
-	 * @param   object  $params  AdminTable + parametors
+	 * @param   Registry  $params  AdminTable + parametors
 	 *
-	 * @return  object
+	 * @return  integer
 	 *
 	 * @throws Exception
 	 * @since 9.1.6
 	 */
 	public static function getSimpleView($params = null)
 	{
-		$simple = new stdClass;
-
 		if (is_null($params))
 		{
 			$params = JBSMParams::getAdmin();
 		}
 
-		$simple->mode = (integer) $params->params->get('simple_mode');
+		$simple = $params->params->get('simple_mode');
 
-		$simple->display = (integer) $params->params->get('simple_mode_display');
+		if ($simple)
+		{
+			return 1;
+		}
 
-		return $simple;
+		return 0;
 	}
 }
