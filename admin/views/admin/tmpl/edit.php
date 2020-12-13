@@ -16,114 +16,149 @@ JHtml::_('behavior.formvalidation');
 JHtml::_('jquery.framework');
 JHtml::_('formbehavior.chosen', 'select');
 
-$app   = JFactory::getApplication();
+$app = JFactory::getApplication();
 $input = $app->input;
 ?>
 <script type="text/javascript">
 	jQuery.submitbutton3 = function () {
-		jQuery('[name=tooltype]').val('players');
-		jQuery('[name=task]').val('admin.tools');
-		jQuery("#item-admin").submit();
-	};
+		jQuery('[name=tooltype]').val('players')
+		jQuery('[name=task]').val('admin.tools')
+		jQuery('#item-admin').submit()
+	}
 
 	jQuery.submitbutton4 = function () {
-		jQuery('[name=tooltype]').val('popups');
-		jQuery('[name=task]').val('admin.tools');
-		jQuery("#item-admin").submit();
-	};
+		jQuery('[name=tooltype]').val('popups')
+		jQuery('[name=task]').val('admin.tools')
+		jQuery('#item-admin').submit()
+	}
 	jQuery.submitbutton5 = function () {
-		jQuery('[name=tooltype]').val('mediaimages');
-		jQuery('[name=task]').val('admin.mediaimages');
-		jQuery("#item-admin").submit();
-	};
+		jQuery('[name=tooltype]').val('mediaimages')
+		jQuery('[name=task]').val('admin.mediaimages')
+		jQuery('#item-admin').submit()
+	}
 	jQuery.submitbutton6 = function () {
-		jQuery('[name=tooltype]').val('playerbymediatype');
-		jQuery('[name=task]').val('admin.tools');
-		jQuery("#item-admin").submit();
-	};
+		jQuery('[name=tooltype]').val('playerbymediatype')
+		jQuery('[name=task]').val('admin.tools')
+		jQuery('#item-admin').submit()
+	}
 
 	Joomla.submitbutton = function (task) {
-		if (task === 'admin.cancel' || task === 'admin.resetHits' || task === 'admin.resetDownloads' || task === 'admin.resetPlays' || task === 'admin.aliasUpdate') {
-			Joomla.submitform(task, document.getElementById('item-admin'));
-		} else if (document.formvalidator.isValid(document.id('item-admin'))) {
-			if (task === 'admin.save' || task === 'admin.apply') {
-				// Confirm thumbnail changes
-				var thumbnail_changes = [];
-				var thumbnail_teacher_size_old = jQuery('#thumbnail_teacher_size_old');
-				var thumbnail_series_size_old = jQuery('#thumbnail_series_size_old');
-				var thumbnail_study_size_old = jQuery('#thumbnail_study_size_old');
-				if (thumbnail_teacher_size_old.val() !== jQuery('#jform_params_thumbnail_teacher_size').val() && thumbnail_teacher_size_old.val() != '') {
-					thumbnail_changes.push('teachers');
-				}
-				if (thumbnail_series_size_old.val() !== jQuery('#jform_params_thumbnail_series_size').val() && thumbnail_series_size_old.val() != '') {
-					thumbnail_changes.push('series');
-				}
-				if (thumbnail_study_size_old.val() !== jQuery('#jform_params_thumbnail_study_size').val() && thumbnail_study_size_old.val() != '') {
-					thumbnail_changes.push('studies');
-				}
-				if (thumbnail_changes.length > 0) {
-					var resize_thumbnails = confirm("You modified the default thumbnail size(s)." +
-						"Thumbnails will be recreated for: " + thumbnail_changes.toString() + ". Click OK to continue.");
-					if (resize_thumbnails) {
-						jQuery.getJSON('index.php?option=com_biblestudy&task=admin.getThumbnailListXHR&<?php echo JSession::getFormToken(); ?>=1',
-							{images: thumbnail_changes}, function (response) {
-								jQuery('#dialog_thumbnail_resize').modal({backdrop: 'static', keyboard: false});
-								var total_paths = response.total;
-								var counter = 0;
-								var progress = 0;
-								if (total_paths) {
-									jQuery.each(response.paths, function () {
-										var type = this[0].type;
-										if (this[0].images) {
-											jQuery.each(this[0].images, function () {
-													console.log(this);
-													var new_size;
-													switch (type) {
-														case 'teachers':
-															new_size = jQuery('#jform_params_thumbnail_teacher_size').val();
-															break;
-														case 'studies':
-															new_size = jQuery('#jform_params_thumbnail_study_size').val();
-															break;
-														case 'series':
-															new_size = jQuery('#jform_params_thumbnail_series_size').val();
-															break;
-														default:
-															new_size = 100;
-															break;
-													}
-													jQuery.getJSON('index.php?option=com_biblestudy&task=admin.createThumbnailXHR&<?php echo JSession::getFormToken(); ?>=1', {
-														image_path: this,
-														new_size: new_size
-													}, function (response) {
-														counter++;
-														progress += 100 / total_paths;
-														jQuery('#dialog_thumbnail_resize .bar').width(progress + '%');
-														if (counter === total_paths) {
-															// Continue and save the rest of the form now.
-															Joomla.submitform(task, document.getElementById('item-admin'));
-														}
-													})
-												}
-											)
-										} else {
-											Joomla.submitform(task, document.getElementById('item-admin'));
-										}
-									});
-								} else {
-									Joomla.submitform(task, document.getElementById('item-admin'));
-								}
-							}
-						)
+		if (task === 'admin.cancel' || task === 'admin.resetHits' || task === 'admin.resetDownloads' || task ===
+			'admin.resetPlays' || task === 'admin.aliasUpdate')
+		{
+			Joomla.submitform(task, document.getElementById('item-admin'))
+		}
+		else
+		{
+			if (document.formvalidator.isValid(document.id('item-admin')))
+			{
+				if (task === 'admin.save' || task === 'admin.apply')
+				{
+					// Confirm thumbnail changes
+					var thumbnail_changes = []
+					var thumbnail_teacher_size_old = jQuery('#thumbnail_teacher_size_old')
+					var thumbnail_series_size_old = jQuery('#thumbnail_series_size_old')
+					var thumbnail_study_size_old = jQuery('#thumbnail_study_size_old')
+					if (thumbnail_teacher_size_old.val() !== jQuery('#jform_params_thumbnail_teacher_size').val() &&
+						thumbnail_teacher_size_old.val() != '')
+					{
+						thumbnail_changes.push('teachers')
 					}
-				} else {
-					Joomla.submitform(task, document.getElementById('item-admin'));
+					if (thumbnail_series_size_old.val() !== jQuery('#jform_params_thumbnail_series_size').val() &&
+						thumbnail_series_size_old.val() != '')
+					{
+						thumbnail_changes.push('series')
+					}
+					if (thumbnail_study_size_old.val() !== jQuery('#jform_params_thumbnail_study_size').val() &&
+						thumbnail_study_size_old.val() != '')
+					{
+						thumbnail_changes.push('studies')
+					}
+					if (thumbnail_changes.length > 0)
+					{
+						var resize_thumbnails = confirm('You modified the default thumbnail size(s).' +
+							'Thumbnails will be recreated for: ' + thumbnail_changes.toString() + '. Click OK to continue.')
+						if (resize_thumbnails)
+						{
+							jQuery.getJSON(
+								'index.php?option=com_biblestudy&task=admin.getThumbnailListXHR&<?php echo JSession::getFormToken(); ?>=1',
+								{ images: thumbnail_changes }, function (response) {
+									jQuery('#dialog_thumbnail_resize').modal({ backdrop: 'static', keyboard: false })
+									var total_paths = response.total
+									var counter = 0
+									var progress = 0
+									if (total_paths)
+									{
+										jQuery.each(response.paths, function () {
+											var type = this[0].type
+											if (this[0].images)
+											{
+												jQuery.each(this[0].images, function () {
+														console.log(this)
+														var new_size
+														switch (type)
+														{
+															case 'teachers':
+																new_size = jQuery('#jform_params_thumbnail_teacher_size').val()
+																break
+															case 'studies':
+																new_size = jQuery('#jform_params_thumbnail_study_size').val()
+																break
+															case 'series':
+																new_size = jQuery('#jform_params_thumbnail_series_size').val()
+																break
+															default:
+																new_size = 100
+																break
+														}
+														jQuery.getJSON(
+															'index.php?option=com_biblestudy&task=admin.createThumbnailXHR&<?php echo JSession::getFormToken(); ?>=1',
+															{
+																image_path: this,
+																new_size: new_size,
+															}, function (response) {
+																counter++
+																progress += 100 / total_paths
+																jQuery('#dialog_thumbnail_resize .bar').width(progress + '%')
+																if (counter === total_paths)
+																{
+																	// Continue and save the rest of the form now.
+																	Joomla.submitform(task, document.getElementById('item-admin'))
+																}
+															})
+													},
+												)
+											}
+											else
+											{
+												Joomla.submitform(task, document.getElementById('item-admin'))
+											}
+										})
+									}
+									else
+									{
+										Joomla.submitform(task, document.getElementById('item-admin'))
+									}
+								},
+							)
+						}
+					}
+					else
+					{
+						Joomla.submitform(task, document.getElementById('item-admin'))
+					}
 				}
 			}
-		} else {
-			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
+			else
+			{
+				alert('<?php echo $this->escape(JText::_('
+				JGLOBAL_VALIDATION_FORM_FAILED
+				'));?>'
+			)
+
+			}
 		}
-	};
+	}
 </script>
 <div class="modal hide fade" id="dialog_thumbnail_resize">
 	<div class="modal-header">
@@ -137,8 +172,8 @@ $input = $app->input;
 </div>
 
 <form
-		action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=admin&layout=edit&id=' . (int) $this->item->id); ?>"
-		method="post" name="adminForm" id="item-admin" class="form-validate form-horizontal">
+	action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=admin&layout=edit&id=' . (int) $this->item->id); ?>"
+	method="post" name="adminForm" id="item-admin" class="form-validate form-horizontal">
 	<div class="row-fluid">
 		<!-- Begin Sidebar -->
 		<div class="span12">
@@ -165,28 +200,28 @@ $input = $app->input;
 									<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets&task=assets.checkassets&' .
 										JSession::getFormToken() . '=1'); ?>"
 									   title="<?php echo JText::_('JBS_ADM_ASSET_CHECK'); ?>" class="btn"> <i
-												class="icon-big icon-list"> </i>
+										class="icon-big icon-list"> </i>
 										<span><br/> <?php echo JText::_('JBS_ADM_ASSET_CHECK'); ?> </span></a>
 									<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=migrate'); ?>"
 									   title="<?php echo JText::_('JBS_ADM_MIGRATE'); ?>" class="btn"> <i
-												class="icon-big icon-share-alt"></i>
+										class="icon-big icon-share-alt"></i>
 										<span><br/> <?php echo JText::_('JBS_ADM_MIGRATE'); ?> </span></a>
 									<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=backup'); ?>"
 									   title="<?php echo JText::_('JBS_ADM_BACKUP_RESTORE'); ?>" class="btn"> <i
-												class="icon-big icon-database"></i>
+										class="icon-big icon-database"></i>
 										<span><br/> <?php echo JText::_('JBS_ADM_BACKUP_RESTORE'); ?> </span></a>
 									<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=archive'); ?>"
 									   title="<?php echo JText::_('JBS_ADM_ARCHIVE'); ?>" class="btn"> <i
-												class="icon-archive icon-big"></i>
+										class="icon-archive icon-big"></i>
 										<span><br/> <?php echo JText::_('JBS_ADM_ARCHIVE'); ?> </span></a>
 									<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets&task=admin.aliasUpdate&' .
 										JSession::getFormToken() . '=1') ?>"
 									   title="<?php echo JText::_('JBS_ADM_RESET_ALIAS'); ?>" class="btn"> <i
-												class="icon-big icon-tree-2"></i>
+										class="icon-big icon-tree-2"></i>
 										<span><br/> <?php echo JText::_('JBS_ADM_RESET_ALIAS'); ?> </span></a>
 									<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=database'); ?>"
 									   title="<?php echo JText::_('JBS_ADM_DATABASE'); ?>" class="btn"> <i
-												class="icon-database icon-big"></i>
+										class="icon-database icon-big"></i>
 										<span><br/> <?php echo JText::_('JBS_ADM_DATABASE'); ?> </span></a>
 								</div>
 							</div>
@@ -196,94 +231,95 @@ $input = $app->input;
 				<div class="tab-pane" id="admin">
 					<h3 class="tab-description"><?php echo JText::_('JBS_ADM_COMPONENT_SETTINGS'); ?></h3>
 					<div class="control-group">
-                        <div class="control-group">
+						<div class="control-group">
 							<?php echo $this->form->getLabel('simple_mode', 'params'); ?>
-                            <div class="controls">
+							<div class="controls">
 								<?php echo $this->form->getInput('simple_mode', 'params'); ?>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <div class="control-group">
+							</div>
+						</div>
+						<div class="control-group">
+							<div class="control-group">
 								<?php echo $this->form->getLabel('simple_mode_display', 'params'); ?>
-                                <div class="controls">
+								<div class="controls">
 									<?php echo $this->form->getInput('simple_mode_display', 'params'); ?>
-                                </div>
-                            </div>
-                        <div class="control-group">
-							<?php echo $this->form->getLabel('users', 'params'); ?>
-                            <div class="controls">
-								<?php echo $this->form->getInput('users', 'params'); ?>
-                            </div>
-                        </div>
-						<?php echo $this->form->getLabel('metakey', 'params'); ?>
-						<div class="controls">
-							<?php echo $this->form->getInput('metakey', 'params'); ?>
+								</div>
+							</div>
+							<div class="control-group">
+								<?php echo $this->form->getLabel('users', 'params'); ?>
+								<div class="controls">
+									<?php echo $this->form->getInput('users', 'params'); ?>
+								</div>
+							</div>
+							<?php echo $this->form->getLabel('metakey', 'params'); ?>
+							<div class="controls">
+								<?php echo $this->form->getInput('metakey', 'params'); ?>
+							</div>
 						</div>
-					</div>
-					<div class="control-group">
-						<?php echo $this->form->getLabel('metadesc', 'params'); ?>
-						<div class="controls">
-							<?php echo $this->form->getInput('metadesc', 'params'); ?>
+						<div class="control-group">
+							<?php echo $this->form->getLabel('metadesc', 'params'); ?>
+							<div class="controls">
+								<?php echo $this->form->getInput('metadesc', 'params'); ?>
+							</div>
 						</div>
-					</div>
-					<div class="control-group">
-						<?php echo $this->form->getLabel('compat_mode', 'params'); ?>
-						<div class="controls">
-							<?php echo $this->form->getInput('compat_mode', 'params'); ?>
+						<div class="control-group">
+							<?php echo $this->form->getLabel('compat_mode', 'params'); ?>
+							<div class="controls">
+								<?php echo $this->form->getInput('compat_mode', 'params'); ?>
+							</div>
 						</div>
-					</div>
-					<div class="control-group">
-						<?php echo $this->form->getLabel('drop_tables'); ?>
-						<div class="controls">
-							<?php echo $this->form->getInput('drop_tables'); ?>
+						<div class="control-group">
+							<?php echo $this->form->getLabel('drop_tables'); ?>
+							<div class="controls">
+								<?php echo $this->form->getInput('drop_tables'); ?>
+							</div>
 						</div>
-					</div>
-					<div class="control-group">
-						<?php echo $this->form->getLabel('filestokeep'); ?>
-						<div class="controls">
-							<?php echo $this->form->getInput('filestokeep'); ?>
+						<div class="control-group">
+							<?php echo $this->form->getLabel('filestokeep'); ?>
+							<div class="controls">
+								<?php echo $this->form->getInput('filestokeep'); ?>
+							</div>
 						</div>
-					</div>
-					<div class="control-group">
-						<?php echo $this->form->getLabel('studylistlimit', 'params'); ?>
-						<div class="controls">
-							<?php echo $this->form->getInput('studylistlimit', 'params'); ?>
+						<div class="control-group">
+							<?php echo $this->form->getLabel('studylistlimit', 'params'); ?>
+							<div class="controls">
+								<?php echo $this->form->getInput('studylistlimit', 'params'); ?>
+							</div>
 						</div>
-					</div>
-					<div class="control-group">
-						<?php echo $this->form->getLabel('uploadtype', 'params'); ?>
-						<div class="controls">
-							<?php echo $this->form->getInput('uploadtype', 'params'); ?>
+						<div class="control-group">
+							<?php echo $this->form->getLabel('uploadtype', 'params'); ?>
+							<div class="controls">
+								<?php echo $this->form->getInput('uploadtype', 'params'); ?>
+							</div>
 						</div>
-					</div>
-					<div class="control-group">
-						<?php echo $this->form->getLabel('show_location_media', 'params'); ?>
-						<div class="controls">
-							<?php echo $this->form->getInput('show_location_media', 'params'); ?>
+						<div class="control-group">
+							<?php echo $this->form->getLabel('show_location_media', 'params'); ?>
+							<div class="controls">
+								<?php echo $this->form->getInput('show_location_media', 'params'); ?>
+							</div>
 						</div>
-					</div>
-					<div class="control-group">
-						<?php echo $this->form->getLabel('popular_limit', 'params'); ?>
-						<div class="controls">
-							<?php echo $this->form->getInput('popular_limit', 'params'); ?>
+						<div class="control-group">
+							<?php echo $this->form->getLabel('popular_limit', 'params'); ?>
+							<div class="controls">
+								<?php echo $this->form->getInput('popular_limit', 'params'); ?>
+							</div>
 						</div>
-					</div>
-					<div class="control-group">
-						<?php echo $this->form->getLabel('character_filter', 'params'); ?>
-						<div class="controls">
-							<?php echo $this->form->getInput('character_filter', 'params'); ?>
+						<div class="control-group">
+							<?php echo $this->form->getLabel('character_filter', 'params'); ?>
+							<div class="controls">
+								<?php echo $this->form->getInput('character_filter', 'params'); ?>
+							</div>
 						</div>
-					</div>
-					<div class="control-group">
-						<?php echo $this->form->getLabel('format_popular', 'params'); ?>
-						<div class="controls">
-							<?php echo $this->form->getInput('format_popular', 'params'); ?>
+						<div class="control-group">
+							<?php echo $this->form->getLabel('format_popular', 'params'); ?>
+							<div class="controls">
+								<?php echo $this->form->getInput('format_popular', 'params'); ?>
+							</div>
 						</div>
-					</div>
-					<div class="control-group">
-						<?php echo $this->form->getLabel('debug'); ?>
-						<div class="controls">
-							<?php echo $this->form->getInput('debug'); ?>
+						<div class="control-group">
+							<?php echo $this->form->getLabel('debug'); ?>
+							<div class="controls">
+								<?php echo $this->form->getInput('debug'); ?>
+							</div>
 						</div>
 					</div>
 				</div>
