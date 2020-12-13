@@ -68,7 +68,7 @@ class BiblestudyControllerSermons extends JControllerLegacy
 	/**
 	 * Add hits to the play count.
 	 *
-	 * @return null
+	 * @return  void
 	 *
 	 * @since 7.0
 	 */

@@ -153,12 +153,7 @@ class JBSMHelper
 			return 0;
 		}
 
-		if (isset($head['content-length']))
-		{
-			return $head['content-length'];
-		}
-
-		return 0;
+		return $head['content-length'] ?? 0;
 	}
 
 	/**
@@ -260,14 +255,7 @@ class JBSMHelper
 			}
 
 			// Set Protocol based on server status
-			if (!$local)
-			{
-				$path = $protocol . $spath . '/' . $path;
-			}
-			else
-			{
-				$path = $protocol . $path;
-			}
+			$path = $protocol . $spath . '/' . $path;
 		}
 		elseif ((!substr_count($spath, '://') || !substr_count($spath, '//')) && !empty($spath))
 		{
@@ -357,7 +345,6 @@ class JBSMHelper
 		}
 
 		$simple->mode = (integer) $params->params->get('simple_mode');
-
 		$simple->display = (integer) $params->params->get('simple_mode_display');
 
 		return $simple;
