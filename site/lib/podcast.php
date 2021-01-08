@@ -377,7 +377,7 @@ class JBSMPodcast
 						$prefix  = JUri::root();
 						$FullUrl = $protocol . $path;
 
-						if (substr($FullUrl, 0, strlen($prefix)) === $prefix)
+						if (strpos($FullUrl, $prefix) === 0)
 						{
 							$this->filename = substr($FullUrl, strlen($prefix));
 							$this->filename = JPATH_SITE . '/' . $this->filename;
@@ -442,7 +442,7 @@ class JBSMPodcast
 						$episodedetailtemp .= '
                         		<itunes:explicit>no</itunes:explicit>
                         	       </item>';
-						$episodedetail     = $episodedetail . $episodedetailtemp;
+						$episodedetail     .= $episodedetailtemp;
 					}
 
 					// End of foreach for episode details
