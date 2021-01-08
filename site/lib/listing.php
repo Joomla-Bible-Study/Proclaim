@@ -28,7 +28,8 @@ use Joomla\Registry\Registry;
 class JBSMListing
 {
 	/** @var  Registry
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	public $params;
 
 	/**
@@ -41,8 +42,8 @@ class JBSMListing
 	 *
 	 * @return string
 	 *
-	 * @since 7.0
 	 * @throws Exception
+	 * @since 7.0
 	 */
 	public function getFluidListing($items, $params, $template, $type)
 	{
@@ -414,7 +415,7 @@ class JBSMListing
 			if ($params->get('use_header_seriesdisplay') > 0)
 			{
 				$oddeven = $params->get('seriesdisplay_color');
-				$list .= $this->getFluidRow($listrows, $listsorts, $items, $params, $template, $oddeven, $header = 1, $type);
+				$list    .= $this->getFluidRow($listrows, $listsorts, $items, $params, $template, $oddeven, $header = 1, $type);
 			}
 
 			$list .= $this->getFluidRow($listrows, $listsorts, $items, $params, $template, $oddeven, $header = 0, $type);
@@ -425,7 +426,7 @@ class JBSMListing
 			if ($params->get('use_headers_teacher_details') > 0)
 			{
 				$oddeven = $params->get('teacherdisplay_color', 'white');
-				$list .= $this->getFluidRow($listrows, $listsorts, $items, $params, $template, $oddeven, $header = 1, $type);
+				$list    .= $this->getFluidRow($listrows, $listsorts, $items, $params, $template, $oddeven, $header = 1, $type);
 			}
 
 			$list .= $this->getFluidRow($listrows, $listsorts, $items, $params, $template, $oddeven, $header = 0, $type);
@@ -599,7 +600,7 @@ class JBSMListing
 	 */
 	public function getListParamsArray($paramtext)
 	{
-		$l             = new stdClass;
+		$l = new stdClass;
 
 		if ($paramtext == 'tdteacherimage')
 		{
@@ -681,9 +682,7 @@ class JBSMListing
 						$i++;
 						$j--;
 					}
-				}
-
-				while ($i <= $j);
+				} while ($i <= $j);
 
 				if ($i < $r)
 				{
@@ -693,12 +692,8 @@ class JBSMListing
 				}
 
 				$r = $j;
-			}
-
-			while ($l < $r);
-		}
-
-		while ($cur != 0);
+			} while ($l < $r);
+		} while ($cur != 0);
 
 		// Added ordering.
 		if ($order == "DESC")
@@ -723,8 +718,8 @@ class JBSMListing
 	 *
 	 * @return string
 	 *
-	 * @since 7.0
 	 * @throws Exception
+	 * @since 7.0
 	 */
 	public function getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header, $type)
 	{
@@ -837,7 +832,7 @@ class JBSMListing
 			$background = "";
 		}
 
-		$frow            = '<div class="row-fluid" style="' . $background . ' padding:5px;" about="' . $type . '">';
+		$frow = '<div class="row-fluid" style="' . $background . ' padding:5px;" about="' . $type . '">';
 
 		$row1count  = 0;
 		$row2count  = 0;
@@ -1074,8 +1069,8 @@ class JBSMListing
 	 *
 	 * @return string
 	 *
-	 * @since 7.0
 	 * @throws Exception
+	 * @since 7.0
 	 */
 	public function getFluidData($item, $row, $params, $template, $header, $type)
 	{
@@ -1121,7 +1116,7 @@ class JBSMListing
 				break;
 
 			case $extra . 'teacherallinone':
-				if(isset($item->email))
+				if (isset($item->email))
 				{
 					($item->email ? $data = '<a href="mailto:' . $item->email . '">
 				<span class="fas fa-envelope" style="font-size:20px;" title="Website"></span></a>' : $data = '');
@@ -1568,7 +1563,7 @@ class JBSMListing
 				}
 				break;
 			case $extra . 'description':
-				if ($type == 'seriesdisplays' || $type == 'seriesdisplay' && $header != 1)
+				if ($type == 'seriesdisplays' || ($type == 'seriesdisplay' && $header !== 1))
 				{
 					(isset($item->description) ? $data = JHtml::_('content.prepare', $item->description, '', 'com_biblestudy.' . $type) : $data = '');
 				}
@@ -1723,8 +1718,8 @@ class JBSMListing
 				break;
 		}
 
-		$style        = '';
-		$customclass  = '';
+		$style       = '';
+		$customclass = '';
 
 		if (isset($row->custom))
 		{
@@ -1785,27 +1780,27 @@ class JBSMListing
 
 		$frow = '<div class="span' . $row->colspan;
 
-			if ($customclass)
-			{
-				$frow .= ' ' . $customclass;
-			}
+		if ($customclass)
+		{
+			$frow .= ' ' . $customclass;
+		}
 
 		$frow .= '" about="' . $row->name . '">' . $classopen;
 
-			if ($link)
-			{
-				$frow .= $link;
-			}
+		if ($link)
+		{
+			$frow .= $link;
+		}
 
-			if ($data)
-			{
-				$frow .= $data;
-			}
+		if ($data)
+		{
+			$frow .= $data;
+		}
 
-			if ($link)
-			{
-				$frow .= '</a>';
-			}
+		if ($link)
+		{
+			$frow .= '</a>';
+		}
 
 		$frow .= $classclose . '</div>';
 
@@ -1823,8 +1818,8 @@ class JBSMListing
 	 *
 	 * @return mixed
 	 *
-	 * @since 7.0
 	 * @throws Exception
+	 * @since 7.0
 	 */
 	public function getFluidCustom($custom, $item, $params, $template, $type)
 	{
@@ -1855,8 +1850,8 @@ class JBSMListing
 	 *
 	 * @return mixed|null|string
 	 *
-	 * @since 7.0
 	 * @throws Exception
+	 * @since 7.0
 	 */
 	public function getElement($custom, $row, $params, $template, $type)
 	{
@@ -2281,12 +2276,12 @@ class JBSMListing
 	 *
 	 * @return string
 	 *
-	 * @since 9.0.0
 	 * @throws Exception
+	 * @since 9.0.0
 	 */
 	public function getFluidMediaFiles($item, $params, $template)
 	{
-		$med      = new JBSMMedia;
+		$med = new JBSMMedia;
 
 		$mediarow = '<div class="bsms_media_contaner" style="display: inline-block;">';
 
@@ -2356,7 +2351,7 @@ class JBSMListing
 						break;
 				}
 			}
-			catch ( Exception $e )
+			catch (Exception $e)
 			{
 				return $studydate;
 			}
@@ -2367,7 +2362,7 @@ class JBSMListing
 			{
 				$date = JHtml::_('date', $studydate, $customDate);
 			}
-			catch ( Exception $e)
+			catch (Exception $e)
 			{
 				return $studydate;
 			}
@@ -2566,7 +2561,7 @@ class JBSMListing
 		{
 			$mediafiles = $db->loadObjectList();
 
-			foreach ($mediafiles AS $media)
+			foreach ($mediafiles as $media)
 			{
 				switch ($islink)
 				{
@@ -2607,8 +2602,8 @@ class JBSMListing
 	 *
 	 * @return object
 	 *
-	 * @since 7.0
 	 * @throws Exception
+	 * @since 7.0
 	 */
 	public function getListingExp($row, $params, $template)
 	{

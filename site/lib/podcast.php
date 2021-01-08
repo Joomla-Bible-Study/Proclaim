@@ -507,13 +507,10 @@ class JBSMPodcast
 		}
 
 		$string = mb_convert_encoding($string, "UTF-8", "HTML-ENTITIES");
-		$string = htmlspecialchars($string, ENT_NOQUOTES, "UTF-8");
+		$string = strip_tags($string);
+		$string = htmlspecialchars($string, ENT_XML1 | ENT_QUOTES, "UTF-8");
 
-		if (!empty($string))
-		{
-			$string = '<![CDATA[' . $string . ']]>';
-		}
-		else
+		if (empty($string))
 		{
 			$string = " ";
 		}
@@ -555,7 +552,9 @@ class JBSMPodcast
 			->leftJoin('#__bsms_books AS b ON (b.booknumber = s.booknumber)')
 			->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)')
 			->leftJoin('#__bsms_podcast AS p ON (p.id = mf.podcast_id)')
-			->where('mf.podcast_id LIKE ' . $db->q('%' . $id . '%'))->where('mf.published = ' . 1)->order('createdate desc');
+			->where('mf.podcast_id LIKE ' . $db->q('%' . $id . '%'))
+			->where('mf.published = ' . 1)
+			->order('createdate desc');
 
 		$db->setQuery($query, 0, $set_limit);
 		$episodes = $db->loadObjectList();
@@ -738,12 +737,12 @@ class JBSMPodcast
 	{
 		if (substr($block, 0, 3) === "ID3")
 		{
-			$id3v2_flags            = ord($block[5]);
-			$flag_footer_present    = ($id3v2_flags & 0x10) ? 1 : 0;
-			$z0                     = ord($block[6]);
-			$z1                     = ord($block[7]);
-			$z2                     = ord($block[8]);
-			$z3                     = ord($block[9]);
+			$id3v2_flags         = ord($block[5]);
+			$flag_footer_present = ($id3v2_flags & 0x10) ? 1 : 0;
+			$z0                  = ord($block[6]);
+			$z1                  = ord($block[7]);
+			$z2                  = ord($block[8]);
+			$z3                  = ord($block[9]);
 			if ((($z0 & 0x80) === 0) && (($z1 & 0x80) === 0) && (($z2 & 0x80) === 0) && (($z3 & 0x80) === 0))
 			{
 				$header_size = 10;
