@@ -153,7 +153,7 @@ class JBSMHelper
 			return 0;
 		}
 
-		return $head['content-length'] ?? 0;
+		return $head['content-length'][1] ?? 0;
 	}
 
 	/**
