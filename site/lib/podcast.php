@@ -411,7 +411,7 @@ class JBSMPodcast
 								<enclosure url="' . $protocol . $episode->srparams->get('path') .
 								'/index.php?option=com_content&amp;view=article&amp;id=' .
 								$episode->params->get('article_id') . '" length="' . $episode->params->get('size', '100') . '" type="' .
-								$episode->params->get('mimetype', 'application/octet-stream') . '" />
+								$episode->params->get('mime_type', 'application/octet-stream') . '" />
                         			<guid>' . $protocol . $episode->srparams->get('path') .
 								'/index.php?option=com_content&amp;view=article&amp;id=' .
 								$episode->params->get('article_id') . '</guid>';
@@ -424,7 +424,7 @@ class JBSMPodcast
 								<enclosure url="' . $protocol . $episode->srparams->get('path') .
 								'/index.php?option=com_docman&amp;task=doc_download&amp;gid=' .
 								$episode->params->get('docMan_id') . '" length="' . $episode->params->get('size') . '" type="' .
-								$episode->params->get('mimetype') . '" />
+								$episode->params->get('mime_type') . '" />
                         			<guid>' . $protocol . $episode->srparams->get('path') .
 								'/index.php?option=com_docman&amp;task=doc_download&amp;gid=' .
 								$episode->params->get('docMan_id') . '</guid>';
@@ -435,7 +435,7 @@ class JBSMPodcast
 								'
 								<enclosure url="' . $protocol . $path .
 								'" length="' . $episode->params->get('size', '100') . '" type="'
-								. $episode->params->get('mimetype', 'audio/mpeg3') . '" />
+								. $episode->params->get('mime_type', 'audio/mpeg3') . '" />
                         			<guid>' . $protocol . $path . '</guid>';
 						}
 
