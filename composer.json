@@ -1,5 +1,5 @@
 {
-  "name": "joomla-bible-study/joomla-bible-study",
+  "name": "joomla-bible-study/Proclaim",
   "type": "project",
   "description": "CWM Proclaim",
   "keywords": [
@@ -7,25 +7,24 @@
 	"biblestudy",
 	"joomlabiblestudy"
   ],
-  "homepage": "https://github.com/Joomla-Bible-Study/Joomla-Bible-Study",
+  "homepage": "https://github.com/Joomla-Bible-Study/Proclaim",
   "license": "GPL-2.0-or-later",
   "minimum-stability": "alpha",
   "prefer-stable": true,
   "config": {
 	"optimize-autoloader": true,
 	"platform": {
-	  "php": "7.0.0"
+	  "php": "7.2.0"
 	},
 	"vendor-dir": "libraries/vendor"
   },
   "support": {
 	"issues": "https://www.christianwebministries.org/issues",
-	"irc": "https://irc.lc/freenode/cwmsupport/",
 	"forum": "https://www.christianwebministries.org/forum",
 	"docs": "https://www.christianwebministries.org/docs"
   },
   "require": {
-	"php": ">=7.0.0",
+	"php": ">=7.2.0",
 	"ircmaxell/password-compat": "1.*",
 	"leafo/lessphp": "0.5.0",
 	"paragonie/sodium_compat": "1.9.1",
@@ -48,9 +47,9 @@
 	"sebastian/phpcpd": "^3.0",
 	"pear/versioncontrol_git": "dev-master",
 	"pear/pear_exception": "dev-master",
-	"phpunit/phpunit": "^4.8.35",
+	"phpunit/phpunit": "^4.8.36",
 	"friendsofphp/php-cs-fixer": "2.*.*",
-	"squizlabs/php_codesniffer": "^2.8.0",
+	"squizlabs/php_codesniffer": "^2.9.2",
 	"pear/cache_lite": "1.7.16"
   },
   "extra": {
