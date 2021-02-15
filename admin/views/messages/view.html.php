@@ -119,7 +119,7 @@ class BiblestudyViewMessages extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$this->items            = $this->get('Items');
+		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
 
