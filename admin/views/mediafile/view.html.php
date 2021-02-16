@@ -30,15 +30,15 @@ class BiblestudyViewMediafile extends JViewLegacy
 
 	/** @var object
 	 * @since    7.0.0 */
-	protected $form;
+	public $form;
 
 	/** @var object
 	 * @since    7.0.0 */
-	protected $media_form;
+	public $media_form;
 
 	/** @var object
 	 * @since    7.0.0 */
-	protected $item;
+	public $item;
 
 	/** @var Registry
 	 * @since    7.0.0 */
@@ -54,7 +54,7 @@ class BiblestudyViewMediafile extends JViewLegacy
 
 	/** @var object
 	 * @since    9.1.3 */
-	protected $addon;
+	public $addon;
 
 	/**
 	 * Execute and display a template script.
@@ -94,12 +94,12 @@ class BiblestudyViewMediafile extends JViewLegacy
 			{
 				$option_st = explode('=', $option_st);
 
-				if ($option_st[0] == 'study_id')
+				if ($option_st[0] === 'study_id')
 				{
 					$this->options->study_id = $option_st[1];
 				}
 
-				if ($option_st[0] == 'createdate')
+				if ($option_st[0] === 'createdate')
 				{
 					$this->options->createdate = $option_st[1];
 				}
@@ -137,8 +137,8 @@ class BiblestudyViewMediafile extends JViewLegacy
 		$input->set('hidemainmenu', true);
 		$user       = JFactory::getUser();
 		$userId     = $user->get('id');
-		$isNew      = ($this->item->id == 0);
-		$checkedOut = !($this->item->checked_out == 0 || $this->item->checked_out == $userId);
+		$isNew      = ($this->item->id === '0');
+		$checkedOut = !($this->item->checked_out === '0' || $this->item->checked_out == $userId);
 		$title      = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
 		JToolbarHelper::title(JText::_('JBS_CMN_MEDIA_FILES') . ': <small><small>[' . $title . ']</small></small>', 'video video');
 

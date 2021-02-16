@@ -34,7 +34,7 @@ abstract class JHtmlFancybox
 	 *
 	 * @since   9.0.0
 	 */
-	public static function framework ($option = false, $mouseweel = false)
+	public static function framework($option = false, $mouseweel = false)
 	{
 		// Only load once
 		if (!empty(self::$loaded[__METHOD__]))
@@ -44,7 +44,7 @@ abstract class JHtmlFancybox
 
 		JHtml::_('jquery.framework');
 		JHtml::_('jwplayer.framework');
-		JHtml::script('https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js');
+		JHtml::script('https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js');
 		JHtml::script('media/com_biblestudy/js/fancybox.js');
 
 		if ($mouseweel)
@@ -55,8 +55,6 @@ abstract class JHtmlFancybox
 		self::loadCss($option);
 
 		self::$loaded[__METHOD__] = true;
-
-		return;
 	}
 
 	/**
@@ -68,9 +66,9 @@ abstract class JHtmlFancybox
 	 *
 	 * @since   3.0
 	 */
-	public static function loadCss ($option = false)
+	public static function loadCss($option = false)
 	{
-		JHtml::stylesheet('https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css');
+		JHtml::stylesheet('https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css');
 		JHtml::stylesheet('media/com_biblestudy/css/bsms.fancybox.css');
 	}
 }

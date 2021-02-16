@@ -69,6 +69,14 @@ class BiblestudyViewMessage extends JViewLegacy
 	protected $admin_params;
 
 	/**
+	 * Simple mode object
+	 *
+	 * @var   object
+	 * @since 9.2.3
+	 */
+	protected $simple;
+
+	/**
 	 * Execute and display a template script.
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
@@ -105,7 +113,7 @@ class BiblestudyViewMessage extends JViewLegacy
 		$this->admin_params = $registry;
 		$document           = JFactory::getDocument();
 
-		$this->simple_view = JBSMHelper::getSimpleView();
+		$this->simple = JBSMHelper::getSimpleView();
 
 		JHtml::stylesheet('media/com_biblestudy/css/token-input-jbs.css');
 

@@ -124,6 +124,7 @@ class BiblestudyViewMessages extends JViewLegacy
 		$this->state      = $this->get('State');
 
 		$this->canDo = JBSMBibleStudyHelper::getActions('', 'message');
+		$modelView   = $this->getModel();
 
 		$this->filterForm    = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');

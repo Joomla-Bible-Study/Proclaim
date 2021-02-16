@@ -15,7 +15,6 @@ defined('_JEXEC') or die;
  *
  * @package  Proclaim.Admin
  * @since    7.1.0
- * @todo     need to update JError as it has been deprecated, but is still used in Joomla 3.3
  */
 class Migration710
 {

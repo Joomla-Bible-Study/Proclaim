@@ -50,8 +50,20 @@ class BiblestudyViewCpanel extends JViewLegacy
 	 */
 	protected $state;
 
+	/**
+	 * Post Installation Messages
+	 *
+	 * @var    string
+	 * @since  7.0.0
+	 */
 	protected $hasPostInstallationMessages;
 
+	/**
+	 * Extension ID
+	 *
+	 * @var    integer
+	 * @since  7.0.0
+	 */
 	protected $extension_id;
 
 	/**
@@ -67,14 +79,11 @@ class BiblestudyViewCpanel extends JViewLegacy
 	{
 		$this->state = $this->get('State');
 		$model       = $this->getModel();
-		$param = JBSMParams::getAdmin();
-		$params = $param->params;
-		$this->simple_mode = $params['simple_mode'];
 		$component = JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.xml';
 
 		if (file_exists($component))
 		{
-			$this->xml = simplexml_load_file($component);
+			$this->xml = simplexml_load_string(file_get_contents($component));
 		}
 
 		$this->total_messages = JBSMStats::get_total_messages();

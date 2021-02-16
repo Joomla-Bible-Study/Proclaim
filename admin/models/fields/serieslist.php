@@ -40,6 +40,7 @@ class JFormFieldSeriesList extends JFormFieldList
 		$query->select('id,series_text');
 		$query->from('#__bsms_series');
 		$query->where('published = 1');
+		$query->order('series_text ASC');
 		$db->setQuery((string) $query);
 		$messages = $db->loadObjectList();
 		$options  = array();

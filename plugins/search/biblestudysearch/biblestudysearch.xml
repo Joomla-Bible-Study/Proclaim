@@ -2,11 +2,11 @@
 <extension version="3.3" type="plugin" group="search" method="upgrade">
 	<name>JBS_PLG_SEARCH</name>
 	<author>CWM Team</author>
-	<authorEmail>info@joomlabiblestudy.org</authorEmail>
+	<authorEmail>info@christianwebministries.org</authorEmail>
 	<authorUrl>https://www.christianwebministries.org</authorUrl>
 	<copyright>(C) 2007 - 2019 Proclaim All rights reserved.</copyright>
-	<version>9.2.1</version>
-	<creationDate>Oct 31, 2019</creationDate>
+	<version>9.2.4</version>
+	<creationDate>Feb 15, 2021</creationDate>
 	<license>http://www.gnu.org/licenses/gpl.html</license>
 	<description>JBS_PLG_SEARCH_XML_DESCRIPTION</description>
 	<files>

@@ -2,7 +2,7 @@
  * Handles js for mediafilesedit view. Uses JQuery
  *
  * @version     $Id: mediafilesedit.js 2025 2011-08-28 04:08:06Z genu $
- * @package     JoomlaBibleStudy
+ * @package     CWMProclaim
  */
 $j(document).ready(function () {
 	$j('#loading').ajaxStart(function () {

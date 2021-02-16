@@ -1159,7 +1159,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				$updateurl           = new stdClass;
 				$updateurl->name     = 'Proclaim Package';
 				$updateurl->type     = 'extension';
-				$updateurl->location = 'https://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;id=2&amp;format=xml';
+				$updateurl->location = 'https://www.christianwebministries.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;id=2&amp;format=xml';
 				$updateurl->enabled  = '1';
 				$this->_db->insertObject('#__update_sites', $updateurl);
 				$lastid                     = $this->_db->insertid();

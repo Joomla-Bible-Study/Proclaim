@@ -7,7 +7,7 @@
  * @subpackage  Model.BibleStudy
  * @copyright   2007 - 2019 (C) CWM Team All rights reserved
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link        https://www.joomlabiblestudy.org
+ * @link        https://www.christianwebministries.org
  * */
 defined('_JEXEC') or die;
 
@@ -53,11 +53,11 @@ class ModJBSMHelper
 
 		if ($orderparam == 2)
 		{
-			$order = "ASC";
+			$order = 'ASC';
 		}
 		else
 		{
-			$order = "DESC";
+			$order = 'DESC';
 		}
 
 		if ($condition > 0)
@@ -80,8 +80,9 @@ class ModJBSMHelper
 				'study.publish_down,
 		                study.series_id, study.download_id, study.thumbnailm, study.thumbhm, study.thumbwm,
 		                study.access, study.user_name, study.user_id, study.studynumber, study.chapter_begin2, study.chapter_end2,
-		                study.verse_end2, study.verse_begin2, ' . $query->length('study.studytext') . ' AS readmore' . ','
-			. ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug ');
+		                study.verse_end2, study.verse_begin2, ' . $query->length('study.studytext') . ' AS readmore,'
+			. ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug '
+		);
 		$query->from('#__bsms_studies AS study');
 
 		// Join over Message Types
@@ -106,7 +107,8 @@ class ModJBSMHelper
 
 		// Join over MediaFiles and Plays/Downloads
 		$query->select('GROUP_CONCAT(DISTINCT mediafile.id) as mids, SUM(mediafile.plays) AS totalplays,' .
-			' SUM(mediafile.downloads) as totaldownloads, mediafile.study_id');
+			' SUM(mediafile.downloads) as totaldownloads, mediafile.study_id'
+		);
 		$query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
 		$query->group('study.id');
 
@@ -118,7 +120,7 @@ class ModJBSMHelper
 
 		// Join over the users for the author and modified_by names.
 		$query->select("CASE WHEN study.user_name > ' ' THEN study.user_name ELSE users.name END AS submitted")
-			->select("users.email AS author_email")
+			->select('users.email AS author_email')
 			->join('LEFT', '#__users AS users ON study.user_id = users.id')
 			->join('LEFT', '#__users AS uam ON uam.id = study.modified_by');
 
@@ -389,8 +391,7 @@ class ModJBSMHelper
 
 		$query->order('studydate ' . $order);
 		$db->setQuery((string) $query, 0, $params->get('moduleitems', '5'));
-		$rows = $db->loadObjectList();
 
-		return $rows;
+		return $db->loadObjectList();
 	}
 }

@@ -38,8 +38,8 @@ class JBSMHelper
 	 *
 	 * @return string
 	 *
-	 * @since  9.0.0
 	 * @throws Exception
+	 * @since  9.0.0
 	 */
 	public static function getTooltip($row, $params, $template)
 	{
@@ -48,11 +48,11 @@ class JBSMHelper
 		JHtml::_('behavior.tooltip');
 		$linktext = '<span class="hasTip" title="<strong>' . $params->get('tip_title') . '  :: ';
 
-		$tip1     = $JBSMElements->getElement($params->get('tip_item1'), $row, $params, $template, $type = 0);
-		$tip2     = $JBSMElements->getElement($params->get('tip_item2'), $row, $params, $template, $type = 0);
-		$tip3     = $JBSMElements->getElement($params->get('tip_item3'), $row, $params, $template, $type = 0);
-		$tip4     = $JBSMElements->getElement($params->get('tip_item4'), $row, $params, $template, $type = 0);
-		$tip5     = $JBSMElements->getElement($params->get('tip_item5'), $row, $params, $template, $type = 0);
+		$tip1 = $JBSMElements->getElement($params->get('tip_item1'), $row, $params, $template, $type = 0);
+		$tip2 = $JBSMElements->getElement($params->get('tip_item2'), $row, $params, $template, $type = 0);
+		$tip3 = $JBSMElements->getElement($params->get('tip_item3'), $row, $params, $template, $type = 0);
+		$tip4 = $JBSMElements->getElement($params->get('tip_item4'), $row, $params, $template, $type = 0);
+		$tip5 = $JBSMElements->getElement($params->get('tip_item5'), $row, $params, $template, $type = 0);
 
 		$linktext .= '<strong>' . $params->get('tip_item1_title') . '</strong>: ' . $tip1 . '<br />';
 		$linktext .= '<strong>' . $params->get('tip_item2_title') . '</strong>: ' . $tip2 . '<br />';
@@ -71,7 +71,7 @@ class JBSMHelper
 	 *
 	 * @deprecated 7.1.8
 	 *
-	 * @since 8.2.0
+	 * @since      8.2.0
 	 */
 	public static function getShowhide()
 	{
@@ -96,13 +96,13 @@ class JBSMHelper
 	 *
 	 * @param   string  $url  URL
 	 *
-	 * @return  int|boolean  Return size or false read.
+	 * @return  integer|boolean  Return size or false read.
 	 *
 	 * @since 9.0.0
 	 */
 	public static function getRemoteFileSize($url)
 	{
-		if ($url == '')
+		if ($url === '')
 		{
 			return 0;
 		}
@@ -153,14 +153,7 @@ class JBSMHelper
 			return 0;
 		}
 
-		if (isset($head['content-length']))
-		{
-			return $head['content-length'];
-		}
-		else
-		{
-			return 0;
-		}
+		return $head['content-length'][1] ?? 0;
 	}
 
 	/**
@@ -175,7 +168,7 @@ class JBSMHelper
 	 */
 	public static function SetFileSize($id, $size)
 	{
-		$db = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('id, params')
 			->from('#__bsms_mediafiles')
@@ -188,8 +181,8 @@ class JBSMHelper
 		$reg->loadString($media->params);
 		$reg->set('size', $size);
 
-		$update = new stdClass;
-		$update->id = $id;
+		$update         = new stdClass;
+		$update->id     = $id;
 		$update->params = $reg->toString();
 
 		$db->updateObject('#__bsms_mediafiles', $update, 'id');
@@ -231,11 +224,13 @@ class JBSMHelper
 		{
 			return str_replace('http://', "", $path);
 		}
-		elseif (substr_count($path, 'https://') && $podcast)
+
+		if (substr_count($path, 'https://') && $podcast)
 		{
 			return str_replace('https://', "", $path);
 		}
-		elseif (!empty($spath) && $podcast)
+
+		if (!empty($spath) && $podcast)
 		{
 			return str_replace('//', "", $spath) . '/' . $path;
 		}
@@ -246,27 +241,21 @@ class JBSMHelper
 			{
 				return $protocol . $path;
 			}
-			elseif ((substr_count($spath, '://') || substr_count($spath, '//')) && !empty($spath))
+
+			$protocol = $params->get('protocol', 'http://');
+
+			if ((substr_count($spath, '://') || substr_count($spath, '//')) && !empty($spath))
 			{
 				if (substr_count($spath, '//'))
 				{
 					$spath = substr($spath, 2);
-					$protocol = $params->get('protocol', 'http://');
 				}
 
 				return $protocol . $spath . '/' . $path;
 			}
 
 			// Set Protocol based on server status
-			if (!$local)
-			{
-				$protocol = $params->get('protocol', '//');
-				$path     = $protocol . $spath . '/' . $path;
-			}
-			else
-			{
-				$path = $protocol . $path;
-			}
+			$path = $protocol . $spath . '/' . $path;
 		}
 		elseif ((!substr_count($spath, '://') || !substr_count($spath, '//')) && !empty($spath))
 		{
@@ -281,15 +270,15 @@ class JBSMHelper
 	 *
 	 * @param   string  $state  Where to clean the cache from. Site or Admin.
 	 *
-	 * @since 9.0.4
 	 * @return void
+	 * @since 9.0.4
 	 */
 	public static function clearcache($state = 'site')
 	{
-		$conf = JFactory::getConfig();
+		$conf    = JFactory::getConfig();
 		$options = array();
 
-		if ($state == 'admin')
+		if ($state === 'admin')
 		{
 			$options = array(
 				'defaultgroup' => 'com_biblestudy',
@@ -298,7 +287,7 @@ class JBSMHelper
 				'cachebase'    => $conf->get('cache_path', JPATH_ADMINISTRATOR . '/cache')
 			);
 		}
-		elseif ($state == 'site')
+		elseif ($state === 'site')
 		{
 			$options = array(
 				'defaultgroup' => 'com_biblestudy',
@@ -321,7 +310,7 @@ class JBSMHelper
 	 *
 	 * @since 9.0.18
 	 */
-	public static function remove_http($url)
+	public static function remove_http(string $url)
 	{
 		$disallowed = array('http://', 'https://');
 
@@ -339,28 +328,25 @@ class JBSMHelper
 	/**
 	 * Get Simple View Sate
 	 *
-	 * @param   Registry  $params  AdminTable + parametors
-	 * @param   string    $simple  Not Used right now
+	 * @param   object  $params  AdminTable + parametors
 	 *
-	 * @return int
+	 * @return  object
 	 *
-	 * @since 9.1.6
 	 * @throws Exception
+	 * @since 9.1.6
 	 */
-	public static function getSimpleView($params = null, $simple = null)
+	public static function getSimpleView($params = null)
 	{
+		$simple = new stdClass;
+
 		if (is_null($params))
 		{
 			$params = JBSMParams::getAdmin();
 		}
 
-		$simple = $params->params->get('simple_mode');
+		$simple->mode = (integer) $params->params->get('simple_mode');
+		$simple->display = (integer) $params->params->get('simple_mode_display');
 
-		if ($simple)
-		{
-					return 1;
-		}
-
-		return 0;
+		return $simple;
 	}
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <media>
 	<fields name="params">
-		<fieldset name="general" addfieldpath="/administrator/components/com_biblestudy/addons/servers/legacy/fields">
+		<fieldset name="general" addfieldpath="/administrator/components/com_biblestudy/addons/servers/local/fields">
 			<field name="filename"
 			       type="plupload"
 			       handler="upload"

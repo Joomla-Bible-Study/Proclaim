@@ -264,7 +264,7 @@ class JBSMMedia
 
 				$url = JBSMHelper::remove_http($url);
 
-				$downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' .
+				$downloadlink = '<a href="http://christianwebministries.org/router.php?file=' .
 					$url . '&amp;size=' . $size . '">';
 			}
 

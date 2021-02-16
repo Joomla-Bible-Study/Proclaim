@@ -30,7 +30,7 @@ else
 	$podcast_id = $this->admin_params->get('podcast');
 }
 
-$new = ($this->item->id == '0' || $this->item->id == false);
+$new = ($this->item->id === '0' || $this->item->id === false);
 
 /** @type BiblestudyViewMediafile $this */
 

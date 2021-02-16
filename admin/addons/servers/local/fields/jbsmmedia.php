@@ -84,7 +84,7 @@ class JFormFieldJBSMMedia extends JFormField
 	/**
 	 * The previewWidth.
 	 *
-	 * @var    int
+	 * @var    integer
 	 * @since  3.2
 	 */
 	protected $previewWidth;
@@ -92,7 +92,7 @@ class JFormFieldJBSMMedia extends JFormField
 	/**
 	 * The previewHeight.
 	 *
-	 * @var    int
+	 * @var    integer
 	 * @since  3.2
 	 */
 	protected $previewHeight;

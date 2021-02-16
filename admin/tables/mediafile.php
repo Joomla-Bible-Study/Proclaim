@@ -23,7 +23,7 @@ class TableMediafile extends JTable
 	/**
 	 * Primary Key
 	 *
-	 * @var int
+	 * @var integer
 	 * @since    7.0.0
 	 */
 	public $id = null;
@@ -31,7 +31,7 @@ class TableMediafile extends JTable
 	/**
 	 * Study id
 	 *
-	 * @var int
+	 * @var integer
 	 * @since    7.0.0
 	 */
 	public $study_id = null;
@@ -39,7 +39,7 @@ class TableMediafile extends JTable
 	/**
 	 * Server id
 	 *
-	 * @var int
+	 * @var integer
 	 * @since    7.0.0
 	 */
 	public $server_id = null;
@@ -162,6 +162,7 @@ class TableMediafile extends JTable
 		{
 			$array['podcast_id'] = implode(',', $array['podcast_id']);
 		}
+
 		// Bind the rules.
 		if (isset($array['rules']) && is_array($array['rules']))
 		{
@@ -221,9 +222,7 @@ class TableMediafile extends JTable
 	 */
 	protected function _getAssetTitle()
 	{
-		$title = 'JBS Media File: ' . $this->id;
-
-		return $title;
+		return 'JBS Media File: ' . $this->id;
 	}
 
 	/**

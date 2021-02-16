@@ -6,7 +6,7 @@
  * @subpackage  Model.BibleStudy
  * @copyright   2007 - 2019 (C) CWM Team All rights reserved
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link        https://www.joomlabiblestudy.org
+ * @link        https://www.christianwebministries
  * */
 defined('_JEXEC') or die;
 
@@ -126,8 +126,10 @@ if ($url)
 {
 	$document->addStyleSheet($url);
 }
+
 JHtml::_('biblestudy.loadCss', $params, null, 'font-awesome');
 $pageclass_sfx = $params->get('pageclass_sfx');
+
 if ($params->get('simple_mode') == 1)
 {
 	$template = 'default_simple';

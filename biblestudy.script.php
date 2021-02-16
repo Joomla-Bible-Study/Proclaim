@@ -236,7 +236,7 @@ class Com_BiblestudyInstallerScript
 		$this->uninstallSubextensions($parent);
 
 		// Show the post-uninstalling page
-		$this->renderPostUninstallation($status = null, $parent);
+		$this->renderPostUninstallation($this->status, $parent);
 
 		return true;
 	}
@@ -361,7 +361,7 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @param   array  $extensions  Array of version to look for
 	 *
-	 * @return integer
+	 * @return integer 1 is passing, 0 failed php version.
 	 *
 	 * @throws Exception
 	 *
@@ -775,7 +775,7 @@ class Com_BiblestudyInstallerScript
 	 *
 	 * @param   JInstallerAdapter  $parent  is the class calling this method.
 	 *
-	 * @return  object The subextension installation status
+	 * @return  void
 	 *
 	 * @since 1.7.0
 	 */
@@ -783,9 +783,9 @@ class Com_BiblestudyInstallerScript
 	{
 		$src             = $parent->getParent()->getPath('source');
 		$db              = JFactory::getDbo();
-		$status          = new stdClass;
-		$status->modules = array();
-		$status->plugins = array();
+		$this->status          = new stdClass;
+		$this->status->modules = array();
+		$this->status->plugins = array();
 
 		// Modules installation
 		if (count(self::$installActionQueue['modules']))
@@ -832,7 +832,7 @@ class Com_BiblestudyInstallerScript
 						$count                  = $db->loadResult();
 						$installer              = new JInstaller;
 						$result                 = $installer->install($path);
-						$status->modulesarray[] = array(
+						$this->status->modules[] = array(
 							'name'   => 'mod_' . $module,
 							'client' => $folder,
 							'result' => $result
@@ -950,7 +950,7 @@ class Com_BiblestudyInstallerScript
 						$count                  = $db->loadResult();
 						$installer              = new JInstaller;
 						$result                 = $installer->install($path);
-						$status->pluginsarray[] = array(
+						$this->status->plugins[] = array(
 							'name'   => 'plg_' . $plugin,
 							'group'  => $folder,
 							'result' => $result
@@ -970,8 +970,6 @@ class Com_BiblestudyInstallerScript
 				}
 			}
 		}
-
-		return $status;
 	}
 
 
@@ -1013,7 +1011,7 @@ class Com_BiblestudyInstallerScript
 						{
 							$installer                    = new JInstaller;
 							$result                       = $installer->uninstall('module', $id, 1);
-							$this->status->modulesarray[] = array(
+							$this->status->modules[] = array(
 								'name'   => 'mod_' . $module,
 								'client' => $folder,
 								'result' => $result
@@ -1047,7 +1045,7 @@ class Com_BiblestudyInstallerScript
 						{
 							$installer                    = new JInstaller;
 							$result                       = $installer->uninstall('plugin', $id, 1);
-							$this->status->pluginsarray[] = array(
+							$this->status->plugins[] = array(
 								'name'   => 'plg_' . $plugin,
 								'group'  => $folder,
 								'result' => $result
