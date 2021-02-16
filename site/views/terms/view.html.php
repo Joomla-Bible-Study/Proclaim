@@ -88,7 +88,7 @@ class BiblestudyViewTerms extends JViewLegacy
 			<?php
 			if ($compat_mode == 1)
 			{
-				echo '<a href="http://joomlabiblestudy.org/router.php?file=' .
+				echo '<a href="http://www.christianwebministries.org/router.php?file=' .
 						JBSMHelper::MediaBuildUrl($this->media->spath, $this->media->filename, $this->params)
 					. '&size=' . $this->media->size . '">' . JText::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a>';
 			}

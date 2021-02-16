@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="proclaim" default="build" basedir=".">
-	<php expression="include('vendor/autoload.php')"/>
+	<php expression="include('libraries/vendor/autoload.php')"/>
 
 	<property name="basedir" value="${project.basedir}"/>
 	<property name="project.name" value="Proclaim"/>
 
 	<!-- Joomla version to run the unit tests against -->
-	<property name="joomla.version" value="3.3.6"/>
+	<property name="joomla.version" value="3.9.24"/>
 
 	<property name="config_path" value="${basedir}/tests/system/servers"/>
 
 	<property name="src.test" value="${basedir}/tests/test"/>
-	<property name="dest.test" value="/admin/views/test"/>
+	<property name="dest.test" value="${basedir}/admin/views/test"/>
 
 	<target name="init" description="Create artifact directories">
 		<mkdir dir="${basedir}/build/reports"/>
@@ -97,10 +97,10 @@
 		</phpmd>
 	</target>
 
-	<!-- Create com_proclaim.zip -->
+	<!-- Create com_proclaim-9.2.4.zip -->
 	<target name="component" depends="init,dev.clean" description="Builds the component">
-		<delete file="${basedir}/build/com_proclaim.zip"/>
-		<zip destfile="${basedir}/build/com_proclaim.zip" basedir="${basedir}">
+		<delete file="${basedir}/build/com_proclaim-9.2.4.zip"/>
+		<zip destfile="${basedir}/build/com_proclaim-9.2.4.zip" basedir="${basedir}">
 			<fileset defaultexcludes="true" dir=".">
 				<include name="admin/**"/>
 				<include name="media/**"/>
@@ -169,7 +169,7 @@
 			<!-- We can only use one formatter at a time -->
 			<formatter todir="${basedir}/build/reports" type="plain" outfile="test-brief.txt"/>
 			<batchtest>
-				<fileset dir="tests/system/tests/installation" includes="**/*.php"/>
+				<fileset dir="${basedir}/tests/system/tests/installation" includes="**/*.php"/>
 			</batchtest>
 		</phpunit>
 	</target>
@@ -264,9 +264,9 @@
 	<!-- Clean up symbolic links from the development state -->
 	<target name="dev.clean">
 		<echo message="Cleaning up development state"/>
-		<delete file="admin/biblestudy.xml"/>
-		<delete file="admin/biblestudy.script.php"/>
-		<delete file="media/css/site/biblestudy.css"/>
+		<delete file="${basedir}/admin/biblestudy.xml"/>
+		<delete file="${basedir}/admin/biblestudy.script.php"/>
+		<delete file="${basedir}/media/css/site/biblestudy.css"/>
 
 		<!-- Undoing the creation of the dir -->
 		<delete dir="admin/views/test" includeemptydirs="true"/>
@@ -299,7 +299,7 @@
 			<then>
 				<delete dir="${joomla-stage-dir}" includeemptydirs="true" verbose="true"/>
 				<echo message="Staging Joomla ${joomla.version}. This will take a few minutes"/>
-				<gitclone repository="https://github.com/joomla/joomla-cms.git" targetPath="${joomla-stage-dir}"/>
+				<gitclone repository="https://github.com/joomla/joomla-cms.git" targetPath="${joomla-stage-dir}" branch="staging"/>
 				<!-- Switch to the Joomla version that we want to test on -->
 				<gitcheckout repository="${joomla-stage-dir}" branchname="${joomla.version}" create="false"/>
 			</then>

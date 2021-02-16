@@ -6,7 +6,7 @@ Status
 |                                                                          Code                                                                          |   Branch    | Version | Release Date | Joomla Version |
 |--------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|---------|--------------|----------------|
 | [![](https://travis-ci.com/Joomla-Bible-Study/Joomla-Bible-Study.svg?branch=development)](https://travis-ci.com/Joomla-Bible-Study/Joomla-Bible-Study) | Development | 9.3.0   | TBD          | 3.8+           |
-| [![](https://travis-ci.com/Joomla-Bible-Study/Joomla-Bible-Study.svg?branch=master)](https://travis-ci.com/Joomla-Bible-Study/Joomla-Bible-Study)      | Master      | 9.2.3   | June 21, 2020 | 3.8+           |
+| [![](https://travis-ci.com/Joomla-Bible-Study/Joomla-Bible-Study.svg?branch=master)](https://travis-ci.com/Joomla-Bible-Study/Joomla-Bible-Study)      | Master      | 9.2.4   | Feb 15, 2021 | 3.8+           |
 
 *NOTE:* The master branch will always reflect the current, released stable version. Only bug fixes and minor updates should be applied to the master branch. New features are to be introduced into the development branch only.
 

@@ -81,7 +81,7 @@ $simple = JBSMHelper::getSimpleView();
 						<p>
 							<?php echo JText::_('JBS_CPL_PIM_ERROR_DESC'); ?>
 						</p>
-						<a href="https://www.joomlabiblestudy.org/jbs-documentation.html"
+						<a href="https://www.christianwebministries.org/jbs-documentation.html"
 						   class="btn btn-primary btn-large">
 							<?php echo JText::_('JBS_CPL_PIM_ERROR_BUTTON'); ?>
 						</a>
