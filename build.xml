@@ -36,16 +36,16 @@
 		</phplint>
 	</target>
 
-	<target name="phpunit" depends="init"
-	        description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
-		<phpunit haltonfailure="true" haltonerror="true" bootstrap="${basedir}/tests/unit/bootstrap.php">
-			<!-- We can only use one formatter at a time -->
-			<formatter todir="${basedir}/build/reports" type="plain" outfile="test-brief.txt"/>
-			<batchtest>
-				<fileset dir="${basedir}/tests/unit/suites/" includes="**/*.php"/>
-			</batchtest>
-		</phpunit>
-	</target>
+<!--	<target name="phpunit" depends="init"-->
+<!--	        description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">-->
+<!--		<phpunit haltonfailure="true" haltonerror="true" bootstrap="${basedir}/tests/unit/bootstrap.php">-->
+<!--			&lt;!&ndash; We can only use one formatter at a time &ndash;&gt;-->
+<!--			<formatter todir="${basedir}/build/reports" type="plain" outfile="test-brief.txt"/>-->
+<!--			<batchtest>-->
+<!--				<fileset dir="${basedir}/tests/unit/suites/" includes="**/*.php"/>-->
+<!--			</batchtest>-->
+<!--		</phpunit>-->
+<!--	</target>-->
 
 	<!-- Copy and paste detector -->
 	<target name="phpcpd" depends="init" description="Checks for copy and pasted code">
@@ -163,16 +163,16 @@
 		<delete dir="${basedir}/tests/.joomla-dev" includeemptydirs="true"/>
 	</target>
 
-	<target name="test.system" depends="init"
-	        description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
-		<phpunit haltonfailure="true" haltonerror="true" bootstrap="${basedir}/tests/system/servers/configdef.php">
-			<!-- We can only use one formatter at a time -->
-			<formatter todir="${basedir}/build/reports" type="plain" outfile="test-brief.txt"/>
-			<batchtest>
-				<fileset dir="${basedir}/tests/system/tests/installation" includes="**/*.php"/>
-			</batchtest>
-		</phpunit>
-	</target>
+<!--	<target name="test.system" depends="init"-->
+<!--	        description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">-->
+<!--		<phpunit haltonfailure="true" haltonerror="true" bootstrap="${basedir}/tests/system/servers/configdef.php">-->
+<!--			&lt;!&ndash; We can only use one formatter at a time &ndash;&gt;-->
+<!--			<formatter todir="${basedir}/build/reports" type="plain" outfile="test-brief.txt"/>-->
+<!--			<batchtest>-->
+<!--				<fileset dir="${basedir}/tests/system/tests/installation" includes="**/*.php"/>-->
+<!--			</batchtest>-->
+<!--		</phpunit>-->
+<!--	</target>-->
 
 	<!-- Set the default joomla path and create symbolic links -->
 	<target name="dev.setup">
@@ -310,5 +310,5 @@
 	</target>
 
 	<!-- This target should exit gracefully in order for a pull request is approved. -->
-	<target name="build" depends="init,lint,phpunit,phpcpd,size,pmd,pdepend,pmd"/>
+	<target name="build" depends="init,lint,phpcpd,size,pmd,pdepend,pmd"/>
 </project>
