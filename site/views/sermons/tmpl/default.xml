@@ -23,14 +23,12 @@
         <fieldset name="basic"
                   label="JBS_MNU_STUDIES_LIST_LAYOUT"
                   addfieldpath="/administrator/components/com_biblestudy/models/fields">
-
             <field name="metakey"
                    type="text"
                    class="inputbox"
                    size="50"
                    label="JBS_STY_METAKEYWORDS"
                    description="JBS_STY_METAKEYWORDS_DESC"/>
-
             <field name="metadesc"
                    type="textarea"
                    class="inputbox"
@@ -38,12 +36,12 @@
                    rows="4"
                    label="JBS_STY_METADESCRIPTION"
                    description="JBS_STY_METADESCRIPTION_DESC"/>
-
             <field name="order"
                    type="list"
                    label="JBS_CMN_ORDERING"
                    description="JBS_CMN_ORDERING_DESC"
-                   default="1">
+                   default="">
+                <option value="">JBS_CMN_USE_GLOBAL</option>
                 <option value="1">JBS_CMN_DESCENDING</option>
                 <option value="2">JBS_CMN_ASCENDING</option>
             </field>
