@@ -248,9 +248,10 @@ class BiblestudyViewMessages extends JViewLegacy
 	protected function getSortFields()
 	{
 		return array(
-			'study.studydate'          => JText::_('JBS_CMN_YEARS'),
-			'teachers.teachername'     => JText::_('JBS_CMN_TEACHERS'),
-			'series.seriestext'        => JText::_('JBS_CMN_SERIES'),
+			'study.studydate'          => JText::_('JBS_CMN_STUDYDATE'),
+			'study.studytitle'         => JText::_('JBS_CMN_TITLE'),
+			'teacher.teachername'      => JText::_('JBS_CMN_TEACHERS'),
+			'series.series_text'       => JText::_('JBS_CMN_SERIES'),
 			'study.ordering'           => JText::_('JGRID_HEADING_ORDERING'),
 			'study.published'          => JText::_('JPUBLISHED'),
 			'study.id'                 => JText::_('JGRID_HEADING_ID'),
