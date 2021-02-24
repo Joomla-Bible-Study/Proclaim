@@ -186,7 +186,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		{
 			$page_builder = new JBSMPageBuilder;
 
-			for ($i = 0, $n = count($items); $i < $n; $i++)
+			foreach ($items as $i => $iValue)
 			{
 				$item = &$items[$i];
 
