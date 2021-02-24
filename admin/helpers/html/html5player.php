@@ -11,13 +11,13 @@ defined('JPATH_PLATFORM') or die;
 use Joomla\Registry\Registry;
 
 /**
- * Utility class for JWplayer behaviors
+ * Utility class for HTML5 player behaviors
  *
  * @package     Proclaim.Admin
  * @subpackage  HTML
  * @since       3.0
  */
-abstract class JHtmlJwplayer
+abstract class JHtmlHtml5player
 {
 	/**
 	 * @var    array  Array containing information for loaded files
@@ -43,23 +43,6 @@ abstract class JHtmlJwplayer
 			return;
 		}
 
-		$doc = JFactory::getDocument();
-		/** @var Joomla\Registry\Registry $params */
-		$params = JBSMParams::getAdmin()->params;
-		$key    = $params->get('jwplayer_key', '8eJ+ik6aOUabfOisJzomcM2Z3h1VZ9+6cufBXQ==');
-		$cdn    = $params->get('jwplayer_cdn', 'https://content.jwplatform.com/libraries/HPyI6990.js');
-
-		if ($cdn)
-		{
-			$doc->addScriptDeclaration('jwplayer.key="' . $key . '";');
-			JHtml::script($cdn);
-		}
-		else
-		{
-			JHtml::script('media/com_biblestudy/player/jwplayer.js');
-			$doc->addScriptDeclaration('jwplayer.key="' . $key . '";');
-		}
-
 		self::$loaded[__METHOD__] = true;
 	}
 
@@ -80,20 +63,17 @@ abstract class JHtmlJwplayer
 	{
 		$popupmarg = 0;
 
-		$media->path1 = JBSMHelper::MediaBuildUrl($media->sparams->get('path'), $params->get('filename'), $params, true);
-
 		// Used to set for MP3 and audio player look
 		if (isset($player->mp3) && $player->mp3 === true)
 		{
 			$media->playerheight = 30;
-
-			return "<audio controls style='width: 100%; height: " . $media->playerheight . "'>
-					  <source src=" . $media->path1 . " type=\"audio/mpeg\">
-					Your browser does not support the audio element.
-					</audio>";
+		}
+		else
+		{
+			$media->playerheight = $params->get('player_hight');
 		}
 
-		$media->playerheight = $params->get('player_hight');
+		$media->path1 = JBSMHelper::MediaBuildUrl($media->sparams->get('path'), $params->get('filename'), $params, true);
 
 		// Fall back check to see if JWplayer can play the media. if not will try and return a link to the file.
 		$acceptedFormats = array('aac', 'm4a', 'f4a', 'mp3', 'ogg', 'oga', 'mp4', 'm4v', 'f4v', 'mov', 'flv', 'webm', 'm3u8', 'mpd', 'DVR');
@@ -125,7 +105,7 @@ abstract class JHtmlJwplayer
 		}
 		else
 		{
-			$media->playerwidth = $params->get('player_width');
+			$media->playerwidth  = $params->get('player_width');
 		}
 
 		if ($params->get('playervars'))
@@ -172,10 +152,10 @@ abstract class JHtmlJwplayer
 
 		// Calculate Height base off width for a 16:9 ratio.
 		$render = "";
-		$rat1   = 16;
-		$rat2   = 9;
+		$rat1 = 16;
+		$rat2 = 9;
 
-		$ratio  = $media->playerwidth / $rat1;
+		$ratio = $media->playerwidth / $rat1;
 		$height = $ratio * $rat2;
 
 		if ($popup)
@@ -183,7 +163,7 @@ abstract class JHtmlJwplayer
 			if ($params->get('playerresponsive') !== 0)
 			{
 				$media->playerwidth = '100%';
-				$render             .= "<div class='playeralign' style=\"margin-left: auto; margin-right: auto; width:100%;\">";
+				$render .= "<div class='playeralign' style=\"margin-left: auto; margin-right: auto; width:100%;\">";
 			}
 			else
 			{
@@ -214,7 +194,7 @@ abstract class JHtmlJwplayer
 			// Add space for popup window
 			$player->playerwidth  = $player->playerwidth + 20;
 			$player->playerheight = $player->playerheight + $popupmarg;
-			$render               .= "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=" . $player->player
+			$render .= "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=" . $player->player
 				. "&amp;view=popup&amp;t=" . $t . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width="
 				. $player->playerwidth . ",height=" .
 				$player->playerheight . "'); return false\">" . $popouttext . "</a>";

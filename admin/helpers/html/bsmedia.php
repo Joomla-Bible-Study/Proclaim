@@ -8,7 +8,7 @@
 defined('JPATH_PLATFORM') or die;
 
 /**
- * Utility class for bPopup JavaScript behaviors
+ * Utility class for Popup JavaScript behaviors
  *
  * @package  Proclaim.Admin
  * @since    9.0.0
@@ -22,7 +22,7 @@ abstract class JHtmlbsMedia
 	protected static $loaded = array();
 
 	/**
-	 * Method to load the bPopup JavaScript framework into the document head
+	 * Method to load the Popup JavaScript framework into the document head
 	 *
 	 * If debugging mode is on an uncompressed version of jQuery is included for easier debugging.
 	 *
@@ -72,8 +72,6 @@ abstract class JHtmlbsMedia
 			// Set static array
 			self::$loaded[__METHOD__][$sig] = true;
 		}
-
-		return;
 	}
 
 	/**
@@ -93,7 +91,7 @@ abstract class JHtmlbsMedia
 		// Load Bootstrap main CSS
 		if ($includeMainCss)
 		{
-			if ($cssName != null && $cssName <= "-1")
+			if ($cssName !== null && $cssName <= "-1")
 			{
 				JHtml::_('stylesheet', 'media/com_biblestudy/css/biblestudy.css', $attribs, true);
 			}
@@ -105,7 +103,7 @@ abstract class JHtmlbsMedia
 			JHtml::_('stylesheet', 'media/com_biblestudy/css/general.css', $attribs, true);
 		}
 
-		if ($cssSet == 'lytebox')
+		if ($cssSet === 'lytebox')
 		{
 			JHtml::_('stylesheet', 'media/com_biblestudy/lytebox/lytebox.css', $attribs, true);
 		}
