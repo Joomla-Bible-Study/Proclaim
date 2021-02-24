@@ -39,7 +39,9 @@
 	"typo3/phar-stream-wrapper": "^2.1",
 	"ext-mbstring": "*",
 	"ext-simplexml": "*",
-	"ext-zip": "*"
+	"ext-zip": "*",
+	"ext-json": "*",
+	"ext-zlib": "*"
   },
   "require-dev": {
 	"roave/security-advisories": "dev-master",

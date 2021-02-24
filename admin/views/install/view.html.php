@@ -20,11 +20,11 @@ JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/compo
  */
 class BiblestudyViewInstall extends JViewLegacy
 {
-	/** @var int Total numbers of Steps
+	/** @var integer Total numbers of Steps
 	 * @since    7.0.0 */
 	public $totalSteps = 0;
 
-	/** @var int Numbers of Steps already processed
+	/** @var integer Numbers of Steps already processed
 	 * @since    7.0.0 */
 	public $doneSteps = 0;
 
@@ -82,7 +82,7 @@ class BiblestudyViewInstall extends JViewLegacy
 	 * @since    7.0.0 */
 	public $install = array();
 
-	/** @var int If was inported
+	/** @var integer If was inported
 	 * @since    7.0.0 */
 	private $isimport = 0;
 
@@ -190,7 +190,6 @@ class BiblestudyViewInstall extends JViewLegacy
 		$this->versionSwitch  = $stack['switch'];
 		$this->allupdates     = $stack['allupdates'];
 		$this->finish         = $stack['finish'];
-		$this->install        = $stack['install'];
 		$this->start          = $stack['start'];
 		$this->subFiles       = $stack['subFiles'];
 		$this->subQuery       = $stack['subQuery'];
@@ -200,7 +199,6 @@ class BiblestudyViewInstall extends JViewLegacy
 		$this->totalSteps     = $stack['total'];
 		$this->doneSteps      = $stack['done'];
 		$this->running        = $stack['run'];
-		$this->type           = $stack['type'];
 		$this->query          = $stack['query'];
 
 		return true;
@@ -271,9 +269,9 @@ class BiblestudyViewInstall extends JViewLegacy
 		// -- General settings
 		jimport('joomla.installer.installer');
 		$db                    = JFactory::getDbo();
-		$this->status          = new JObject;
-		$this->status->modules = array();
-		$this->status->plugins = array();
+		$this->status          = new stdClass;
+		$this->status->cwmmodules = array();
+		$this->status->cwmplugins = array();
 
 		// Modules installation
 		if (count($installation_queue['modules']))
@@ -289,7 +287,7 @@ class BiblestudyViewInstall extends JViewLegacy
 						$sql->select('COUNT(*)')->from('#__modules')->where('module=' . $db->q('mod_' . $module));
 						$db->setQuery($sql);
 						$result                  = $db->loadResult();
-						$this->status->modules[] = array(
+						$this->status->cwmmodules[] = array(
 							'name'   => 'mod_' . $module,
 							'client' => $folder,
 							'result' => $result
@@ -298,6 +296,7 @@ class BiblestudyViewInstall extends JViewLegacy
 				}
 			}
 		}
+
 		// Plugins installation
 		if (count($installation_queue['plugins']))
 		{
@@ -311,7 +310,7 @@ class BiblestudyViewInstall extends JViewLegacy
 						$query->select('COUNT(*)')->from('#__extensions')->where('element=' . $db->q($plugin))->where('folder = ' . $db->q($folder));
 						$db->setQuery($query);
 						$result                  = $db->loadResult();
-						$this->status->plugins[] = array(
+						$this->status->cwmplugins[] = array(
 							'name'   => 'plg_' . $plugin,
 							'group'  => $folder,
 							'result' => $result
