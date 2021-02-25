@@ -190,7 +190,7 @@ class BiblestudyViewSermons extends JViewLegacy
 			{
 				$item = &$items[$i];
 
-				if ($item->access > 1 && !in_array($item->access, $groups))
+				if ($item->access > 1 && !in_array($item->access, $groups, true))
 				{
 					unset($item);
 				}

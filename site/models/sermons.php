@@ -13,12 +13,6 @@ defined('_JEXEC') or die;
 /**
  * Model class for Sermons
  *
- * @property array _Topics
- * @property mixed _total
- * @property mixed _data
- * @property null  _files
- * @property mixed _Locations
- * @property int   landing
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
@@ -106,7 +100,10 @@ class BiblestudyModelSermons extends JModelList
 	public function getDownloads($id)
 	{
 		$query = $this->_db->getQuery(true);
-		$query->select('SUM(downloads) AS totalDownloads')->from('#__bsms_mediafiles')->where('study_id = ' . $id)->group('study_id');
+		$query->select('SUM(downloads) AS totalDownloads')
+			->from('#__bsms_mediafiles')
+			->where('study_id = ' . $id)
+			->group('study_id');
 		$result = $this->_getList($query);
 
 		if (!$result)
@@ -299,7 +296,7 @@ class BiblestudyModelSermons extends JModelList
 
 		$orderCol = $app->input->get('filter_order');
 
-		if (!in_array($orderCol, $this->filter_fields) && !empty($orderCol))
+		if (!empty($orderCol) && !in_array($orderCol, $this->filter_fields, true))
 		{
 			$orderCol = 'study.studydate';
 		}
@@ -309,7 +306,7 @@ class BiblestudyModelSermons extends JModelList
 		// From landing page filter passing
 		$listOrder = $app->input->get('filter_order_Dir');
 
-		if (!in_array(strtoupper($listOrder), array('ASC', 'DESC', '')) && !empty($listOrder))
+		if (!empty($listOrder) && !in_array(strtoupper($listOrder), array('ASC', 'DESC', '')))
 		{
 			$direction = 'DESC';
 		}
