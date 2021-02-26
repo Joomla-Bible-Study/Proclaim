@@ -41,7 +41,8 @@
 	"ext-simplexml": "*",
 	"ext-zip": "*",
 	"ext-json": "*",
-	"ext-zlib": "*"
+	"ext-zlib": "*",
+	"ext-curl": "*"
   },
   "require-dev": {
 	"roave/security-advisories": "dev-master",
