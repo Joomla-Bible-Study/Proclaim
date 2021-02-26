@@ -181,7 +181,7 @@ class BiblestudyViewSermons extends JViewLegacy
 
 		// Only load PageBuilder if the default template is NOT being used
 		if ($params->get('useexpert_list') > 0
-			|| ($params->get('simple_mode') === 1)
+			|| ($params->get('simple_mode') === '1')
 			|| (is_string($params->get('sermonstemplate')) === true && $params->get('sermonstemplate') !== '0'))
 		{
 			$page_builder = new JBSMPageBuilder;
