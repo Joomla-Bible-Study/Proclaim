@@ -52,7 +52,7 @@ class JBSMListing
 		$this->params = $params;
 		$item         = '';
 
-		if ($type == 'sermons')
+		if ($type === 'sermons')
 		{
 			foreach ($items as $item)
 			{
@@ -63,7 +63,7 @@ class JBSMListing
 			}
 		}
 
-		if ($type == 'sermon')
+		if ($type === 'sermon')
 		{
 			$medias = $this->getFluidMediaids($items);
 			$item   = $items;
