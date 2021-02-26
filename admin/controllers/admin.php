@@ -24,7 +24,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	/**
 	 * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanism from kicking in
 	 *
-	 * @param  string
+	 * @var  string
 	 *
 	 * @since 7.0
 	 */
@@ -596,7 +596,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	{
 		$user = JFactory::getUser();
 
-		if (in_array('8', $user->groups))
+		if (in_array('8', $user->groups, true))
 		{
 			JBSMDbHelper::resetdb();
 			$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=assats&task=assets.browse&' . JSession::getFormToken() . '=1', false));
@@ -832,7 +832,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		{
 			$images = JFolder::files(JPATH_ROOT . '/' . 'images/biblestudy/' . $image_type, 'original_', true, true);
 
-			if ( $images != false)
+			if ($images != false)
 			{
 				$count += count($images);
 			}
