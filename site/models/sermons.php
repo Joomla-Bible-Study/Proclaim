@@ -13,12 +13,6 @@ defined('_JEXEC') or die;
 /**
  * Model class for Sermons
  *
- * @property array _Topics
- * @property mixed _total
- * @property mixed _data
- * @property null  _files
- * @property mixed _Locations
- * @property int   landing
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
@@ -106,7 +100,10 @@ class BiblestudyModelSermons extends JModelList
 	public function getDownloads($id)
 	{
 		$query = $this->_db->getQuery(true);
-		$query->select('SUM(downloads) AS totalDownloads')->from('#__bsms_mediafiles')->where('study_id = ' . $id)->group('study_id');
+		$query->select('SUM(downloads) AS totalDownloads')
+			->from('#__bsms_mediafiles')
+			->where('study_id = ' . $id)
+			->group('study_id');
 		$result = $this->_getList($query);
 
 		if (!$result)
@@ -299,23 +296,22 @@ class BiblestudyModelSermons extends JModelList
 
 		$orderCol = $app->input->get('filter_order');
 
-		if (!in_array($orderCol, $this->filter_fields) && !empty($orderCol))
+		if (!empty($orderCol) && !in_array($orderCol, $this->filter_fields, true))
 		{
 			$orderCol = 'study.studydate';
 		}
 
 		$this->setState('list.ordering', $orderCol);
 
+		// From landing page filter passing
 		$listOrder = $app->input->get('filter_order_Dir');
 
-		if (!in_array(strtoupper($listOrder), array('ASC', 'DESC', '')) && !empty($listOrder))
+		if (!empty($listOrder) && !in_array(strtoupper($listOrder), array('ASC', 'DESC', '')))
 		{
-			$listOrder = 'DESC';
+			$direction = 'DESC';
 		}
 
-		$this->setState('list.direction', $listOrder);
-
-		$this->setState('list.direction', $listOrder);
+		$this->setState('list.direction', $direction);
 
 		$this->setState('filter.location', $location);
 		$this->setState('filter.landinglocation', $location);
@@ -596,9 +592,9 @@ class BiblestudyModelSermons extends JModelList
 					{
 						foreach ($filtervalue as $filterid)
 						{
-							if ($filterid >= 1 && $filter !== 'study.booknumber')
+							if ((int) $filterid >= 1 && $filter !== 'study.booknumber')
 							{
-								if ($this->landing == 1)
+								if ((int) $this->landing === 1)
 								{
 									$$filterid = $this->getState($filter);
 								}
@@ -606,7 +602,7 @@ class BiblestudyModelSermons extends JModelList
 								$query->where($filter . ' = ' . (int) $filterid);
 							}
 
-							if ($filterid >= 1 && $filter === 'study.booknumber')
+							if ((int) $filterid >= 1 && $filter === 'study.booknumber')
 							{
 								$book = $filterid;
 								$chb  = $this->input->get('minChapt', '', 'int');
@@ -649,9 +645,6 @@ class BiblestudyModelSermons extends JModelList
 			}
 		}
 
-		// Set the secondary order
-		$this->setState('secondaryorderstate', 1);
-
 		// Filter by language
 		$language = $params->get('language', '*');
 
@@ -659,7 +652,7 @@ class BiblestudyModelSermons extends JModelList
 		{
 			$query->where('study.language in (' . $db->quote($this->getState('filter.languages')) . ',' . $db->quote('*') . ')');
 		}
-		elseif ($this->getState('filter.language') || $language !== '*')
+		elseif ($language !== '*' || $this->getState('filter.language'))
 		{
 			$query->where('study.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
 		}
@@ -683,14 +676,18 @@ class BiblestudyModelSermons extends JModelList
 		if (empty($orderCol) || $orderCol === " ")
 		{
 			$orderCol  = $this->state->get('list.ordering', 'study.studydate');
-			$orderDirn = $this->state->get('list.direction', 'DESC');
 
-			$secondaryorderstate = $this->getState('secondaryorderstate');
-
-			if (!empty($secondaryorderstate))
+			// Set order by menu if set. New Default is blank as of 9.2.5
+			if ($this->state->params->get('order') === '2')
 			{
-				$orderDirn = $params->get('default_order_secondary');
+				$this->state->set('list.direction', 'ASC');
 			}
+			elseif ($this->state->params->get('order') === '1')
+			{
+				$this->state->set('list.direction', 'DESC');
+			}
+
+			$orderDirn = $this->state->get('list.direction', 'DESC');
 		}
 
 		$query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));

@@ -110,7 +110,7 @@ class JBSMPodcast
 						$limit = '';
 					}
 
-					$episodes = $this->getEpisodes($podinfo->id, $limit);
+					$episodes = $this->getEpisodes((int) $podinfo->id, $limit);
 					$registry = new Registry;
 					$registry->loadString(JBSMParams::getAdmin()->params);
 					$registry->merge(JBSMParams::getTemplateparams()->params);
@@ -492,16 +492,16 @@ class JBSMPodcast
 	/**
 	 * Escape Html to XML
 	 *
-	 * @param   string  $string  HTML string to make safe
+	 * @param   null|string  $string  HTML string to make safe
 	 *
 	 * @return mixed|string
 	 *
 	 * @since 9.0.0
 	 */
-	protected function escapeHTML(string $string)
+	protected function escapeHTML(?string $string)
 	{
 
-		if (strpos($string, "<![CDATA[") === 0)
+		if (empty($string))
 		{
 			return $string;
 		}
@@ -509,11 +509,6 @@ class JBSMPodcast
 		$string = mb_convert_encoding($string, "UTF-8", "HTML-ENTITIES");
 		$string = strip_tags($string);
 		$string = htmlspecialchars($string, ENT_XML1 | ENT_QUOTES, "UTF-8");
-
-		if (empty($string))
-		{
-			$string = " ";
-		}
 
 		return $string;
 	}
@@ -528,7 +523,7 @@ class JBSMPodcast
 	 *
 	 * @since 8.0.0
 	 */
-	public function getEpisodes($id, $limit)
+	public function getEpisodes(int $id, string $limit)
 	{
 		preg_match_all('!\d+!', $limit, $set_limit);
 		$set_limit = implode(' ', $set_limit[0]);

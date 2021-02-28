@@ -16,46 +16,22 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    9.0.0
  */
-class JBSServerAmazonS3 extends JBSServer
+class JBSServerAmazonS3 extends JBSMAddon
 {
 	public $name = 'amazonS3';
 
-	/**
-	 * Construct
-	 *
-	 * @param   array  $options  Array of Options
-	 */
-	protected function __construct($options)
+	protected function renderGeneral($media_form, $new)
 	{
-		$options['key']    = (isset($options['key'])) ? $options['key'] : '';
-		$options['secret'] = (isset($options['secret'])) ? $options['secret'] : '';
-
-		// Include the S3 class
-		JLoader::register('S3', dirname(__FILE__) . '/S3.class.php');
-
-		$this->connection = new S3($options['key'], $options['secret']);
+		// TODO: Implement renderGeneral() method.
 	}
 
-	/**
-	 * Upload
-	 *
-	 * @param   JInput  $target     ?
-	 * @param   bool    $overwrite  ?
-	 *
-	 * @return void
-	 */
-	protected function upload($target, $overwrite = true)
+	protected function render($media_form, $new)
+	{
+		// TODO: Implement render() method.
+	}
+
+	protected function upload($data)
 	{
 		// TODO: Implement upload() method.
-	}
-
-	/**
-	 * Test Function
-	 *
-	 * @return string
-	 */
-	public function test()
-	{
-		return "hello from amazon";
 	}
 }
