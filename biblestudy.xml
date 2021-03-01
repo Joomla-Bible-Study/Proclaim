@@ -21,7 +21,7 @@
 		</sql>
 	</install>
 	<!-- Front end translation files -->
-	<languages folder="language/frontend">
+	<languages folder="admin/language">
 		<language tag="en-GB">en-GB/en-GB.com_biblestudy.ini</language>
 	</languages>
 	<updateservers>
