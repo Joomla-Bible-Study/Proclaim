@@ -393,9 +393,7 @@ class BiblestudyViewSermon extends JViewLegacy
 			return null;
 		}
 
-		/*
-         * Process the prepare content plugins
-         */
+		// Process the prepare content plugins
 		$article->text = $this->item->studytext;
 		$linkit        = $this->item->params->get('show_scripture_link');
 

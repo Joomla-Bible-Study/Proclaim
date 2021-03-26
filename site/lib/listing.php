@@ -477,7 +477,7 @@ class JBSMListing
 			{
 				foreach ($mediafiles as $mediafile)
 				{
-					if ($mediafile->study_id === $item->id)
+					if ((int) $mediafile->study_id === (int) $item->id)
 					{
 						$studymedia[] = $mediafile;
 					}
@@ -2070,7 +2070,7 @@ class JBSMListing
 			return null;
 		}
 
-		if (!isset($row->booknumber))
+		if (!isset($row->booknumber) || empty($row->booknumber))
 		{
 			$row->booknumber = 0;
 		}
@@ -2103,7 +2103,7 @@ class JBSMListing
 			}
 		}
 
-		if (!isset($booknumber))
+		if (!isset($booknumber) || $booknumber === "-1")
 		{
 			return $scripture;
 		}
