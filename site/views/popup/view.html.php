@@ -25,117 +25,119 @@ class BiblestudyViewPopup extends JViewLegacy
 	/** @var  string Player
 	 *
 	 * @since 7.0 */
-	public $player;
+	public string $player;
 
 	/** @var  string Media
 	 *
 	 * @since 7.0 */
 	public $media;
 
-	/** @var  JObject Media info
+	/** @var object Media info
 	 *
 	 * @since 7.0 */
-	public $getMedia;
+	public object $getMedia;
 
 	/** @var  string Scripture Text
 	 *
 	 * @since 7.0 */
-	public $scripture;
+	public string $scripture;
 
 	/** @var  string Date
 	 *
 	 * @since 7.0 */
-	public $date;
+	public string $date;
 
 	/** @var  string Series Thumbnail
 	 *
 	 * @since 7.0 */
-	public $series_thumbnail;
+	public string $series_thumbnail;
 
 	/** @var  string Teacher Image
 	 *
 	 * @since 7.0 */
-	public $teacherimage;
+	public string $teacherimage;
 
 	/** @var  string Path 1
 	 *
 	 * @since 7.0 */
-	public $path1;
+	public string $path1;
 
 	/** @var  string Width
 	 *
 	 * @since 7.0 */
-	public $playerwidth;
+	public string $playerwidth;
 
 	/** @var  string Player Height
 	 *
 	 * @since 7.0 */
-	public $playerheight;
+	public string $playerheight;
+
+	// @todo Need to remove as Flash is no longer users in browsers
 
 	/** @var  string Flash Vars
 	 *
 	 * @since 7.0 */
-	public $flashvars;
+	public string $flashvars;
 
 	/** @var  string Back Color
 	 *
 	 * @since 7.0 */
-	public $backcolor;
+	public string $backcolor;
 
 	/** @var  string Front Color
 	 *
 	 * @since 7.0 */
-	public $frontcolor;
+	public string $frontcolor;
 
 	/** @var  string Light Color
 	 *
 	 * @since 7.0 */
-	public $lightcolor;
+	public string $lightcolor;
 
 	/** @var  string Screen Color
 	 *
 	 * @since 7.0 */
-	public $screencolor;
+	public string $screencolor;
 
 	/** @var  string Auto Start
 	 *
 	 * @since 7.0 */
-	public $autostart;
+	public string $autostart;
 
 	/** @var  string Player Idle Hide
 	 *
 	 * @since 7.0 */
-	public $playeridlehide;
+	public string $playeridlehide;
 
 	/** @var  string Header Text
 	 *
 	 * @since 7.0 */
-	public $headertext;
+	public string $headertext;
 
 	/** @var  string Footer Text
 	 *
 	 * @since 7.0 */
-	public $footertext;
+	public string $footertext;
 
 	/** @var  Registry Params
 	 *
 	 * @since 7.0 */
-	protected $params;
+	protected Registry $params;
 
 	/** @var  Registry Params
 	 *
 	 * @since 7.0 */
-	protected $state;
+	protected Registry $state;
 
 	/** @var  Registry Extra Params
 	 *
 	 * @since 7.0 */
-	protected $extraparams;
+	protected Registry $extraparams;
 
 	/** @var  TableTemplate Template
 	 *
 	 * @since 7.0 */
-	protected $template;
+	protected TableTemplate $template;
 
 	/**
 	 * Execute and display a template script.
@@ -150,14 +152,14 @@ class BiblestudyViewPopup extends JViewLegacy
 	{
 		$input = new JInput;
 		$input->get('tmpl', 'component', 'string');
-		$mediaid      = $input->get('mediaid', '', 'int');
-		$close        = $input->get('close', '0', 'int');
-		$this->player = $input->get('player', '1', 'int');
+		$mediaid      = $input->getInt('mediaid');
+		$close        = $input->getInt('close', '0');
+		$this->player = $input->getInt('player', '1');
 
 		/*
 		 *  If this is a direct new window then all we need to do is perform hitPlay and close this window
 		 */
-		if ($close == 1)
+		if ($close === 1)
 		{
 			echo JHtml::_('content.prepare', '<script language="javascript" type="text/javascript">window.close();</script>');
 		}
@@ -185,12 +187,13 @@ class BiblestudyViewPopup extends JViewLegacy
 		JHtml::_('biblestudy.framework');
 		JHtml::_('biblestudy.loadcss', $this->params);
 
-		$saveid          = $this->media->id;
-		$this->media->id = $this->media->study_id;
+		$saveid          = (int) $this->media->id;
+		$this->media->id = (int) $this->media->study_id;
 		$JBSMListing   = new JBSMListing;
 		$this->scripture = $JBSMListing->getScripture($this->params, $this->media, $esv = '0', $scripturerow = '1');
 		$this->media->id = $saveid;
 		$this->date      = $JBSMListing->getStudyDate($this->params, $this->media->studydate);
+
 		/*
 		 *  The popup window call the counter function
 		 */
@@ -209,9 +212,9 @@ class BiblestudyViewPopup extends JViewLegacy
 		$this->playerwidth  = $this->params->get('player_width');
 		$this->playerheight = $this->params->get('player_height');
 
-		if ($this->params->get('playerheight') < 55 && $this->params->get('playerheight'))
+		if ($this->params->get('playerheight') < '55' && $this->params->get('playerheight'))
 		{
-			$this->playerheight = 55;
+			$this->playerheight = '55';
 		}
 		elseif ($this->params->get('playerheight'))
 		{
@@ -233,9 +236,9 @@ class BiblestudyViewPopup extends JViewLegacy
 			$this->flashvars = $this->params->get('altflashvars');
 		}
 
-		if ($this->player == '100')
+		if ($this->player === '100')
 		{
-			$this->player = $this->template->params->get('player', 0);
+			$this->player = $this->template->params->get('player', '0');
 		}
 
 		$this->backcolor   = $this->params->get('backcolor', '0x287585');
@@ -243,7 +246,7 @@ class BiblestudyViewPopup extends JViewLegacy
 		$this->lightcolor  = $this->params->get('lightcolor', '0x000000');
 		$this->screencolor = $this->params->get('screencolor', '0xFFFFFF');
 
-		if ($this->params->get('autostart', 1) == 1)
+		if ($this->params->get('autostart', '1') === '1')
 		{
 			$this->autostart = 'true';
 		}
@@ -261,11 +264,11 @@ class BiblestudyViewPopup extends JViewLegacy
 			$this->playeridlehide = 'false';
 		}
 
-		if ($this->params->get('autostart') == 1)
+		if ($this->params->get('autostart') === '1')
 		{
 			$this->autostart = 'true';
 		}
-		elseif ($this->params->get('autostart') == 2)
+		elseif ($this->params->get('autostart') === '2')
 		{
 			$this->autostart = 'false';
 		}
@@ -295,7 +298,7 @@ class BiblestudyViewPopup extends JViewLegacy
 	 * @param   string  $scripture  scripture
 	 * @param   string  $date       Date
 	 *
-	 * @return object
+	 * @return string
 	 *
 	 * @since 7.0
 	 */
