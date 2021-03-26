@@ -21,8 +21,9 @@ class JBSMRelatedStudies
 {
 	/** @var  array Score
 	 *
-	 * @since    7.2 */
-	public $score;
+	 * @since    7.2
+	 */
+	public array $score;
 
 	/**
 	 * Get Related
@@ -34,12 +35,12 @@ class JBSMRelatedStudies
 	 *
 	 * @since    7.2
 	 */
-	public function getRelated($row, $params)
+	public function getRelated(object $row, Registry $params)
 	{
 		$this->score = array();
 		$keygo       = true;
 		$topicsgo    = false;
-		$keywords = $params->get('metakey');
+		$keywords    = $params->get('metakey');
 
 		$topics = $row->tp_id;
 
@@ -49,7 +50,7 @@ class JBSMRelatedStudies
 		{
 			if ($row->studyintro)
 			{
-				$keygo     = true;
+				$keygo = true;
 			}
 			else
 			{
@@ -75,9 +76,9 @@ class JBSMRelatedStudies
 			{
 				if (is_string($study->params) && !empty($study->params))
 				{
-					$registry = new Registry;
-					$errors  = ['{\\"', '{\"', ',\\"', '\",', ',\"', '\":', ':\"\"', ':\"', '\"}"', '\"}', "\'"];
-					$correct = [  '{"',  '{"',   ',"',  '",',  ',"',  '":',   ':""',  ':"',  '"}"',  '"}', "'"];
+					$registry      = new Registry;
+					$errors        = ['{\\"', '{\"', ',\\"', '\",', ',\"', '\":', ':\"\"', ':\"', '\"}"', '\"}', "\'"];
+					$correct       = ['{"', '{"', ',"', '",', ',"', '":', ':""', ':"', '"}"', '"}', "'"];
 					$study->params = str_replace($errors, $correct, $study->params);
 					$registry->loadString($study->params);
 					$sparams = $registry;
@@ -110,9 +111,7 @@ class JBSMRelatedStudies
 			return false;
 		}
 
-		$related = $this->getRelatedLinks();
-
-		return $related;
+		return $this->getRelatedLinks();
 	}
 
 	/**
@@ -141,9 +140,7 @@ class JBSMRelatedStudies
 			}
 		}
 
-		$returntopics = implode(',', $topicslist);
-
-		return $returntopics;
+		return implode(',', $topicslist);
 	}
 
 	/**
@@ -155,9 +152,9 @@ class JBSMRelatedStudies
 	 *
 	 * @since    7.2
 	 */
-	public function removeCommonWords($input)
+	public function removeCommonWords(string $input)
 	{
-		$commonWords  = array(
+		$commonWords = array(
 			'a',
 			'able',
 			'about',
@@ -817,17 +814,16 @@ class JBSMRelatedStudies
 			'z',
 			'zero'
 		);
-		$content      = strip_tags($input);
-		$content      = strtolower($content);
-		$content      = preg_replace("/[^a-zA-Z 0-9]+/", " ", $content);
-		$content      = preg_replace('/\b(' . implode('|', $commonWords) . ')\b/', '', $content);
-		$content      = preg_replace('/\s\s+/', ' ', $content);
-		$content      = str_replace(' ', ',', $content);
-		$content      = substr($content, 1, strlen($content) - 1);
-		$content      = substr($content, 0, -1);
-		$contentarray = explode(',', $content);
+		$content     = strip_tags($input);
+		$content     = strtolower($content);
+		$content     = preg_replace("/[^a-zA-Z 0-9]+/", " ", $content);
+		$content     = preg_replace('/\b(' . implode('|', $commonWords) . ')\b/', '', $content);
+		$content     = preg_replace('/\s\s+/', ' ', $content);
+		$content     = str_replace(' ', ',', $content);
+		$content     = substr($content, 1, strlen($content) - 1);
+		$content     = substr($content, 0, -1);
 
-		return $contentarray;
+		return explode(',', $content);
 	}
 
 	/**
@@ -854,13 +850,12 @@ class JBSMRelatedStudies
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 		$user   = JFactory::getUser();
 		$groups = $user->getAuthorisedViewLevels();
-		$count  = count($studies);
 
-		for ($i = 0; $i < $count; $i++)
+		foreach ($studies as $i => $iValue)
 		{
-			if ($studies[$i]->access > 1)
+			if ($iValue->access > 1)
 			{
-				if (!in_array($studies[$i]->access, $groups))
+				if (!in_array($iValue->access, $groups, true))
 				{
 					unset($studies[$i]);
 				}
@@ -904,7 +899,7 @@ class JBSMRelatedStudies
 		{
 			foreach ($sourcearray as $sarray)
 			{
-				if (in_array($sarray, $comparearray))
+				if (in_array($sarray, $comparearray, true))
 				{
 					$this->score[] = $id;
 				}
@@ -913,7 +908,7 @@ class JBSMRelatedStudies
 
 		if ($sourceisarray && !$compareisarray)
 		{
-			if (in_array($compare, $sourcearray))
+			if (in_array($compare, $sourcearray, true))
 			{
 				$this->score[] = $id;
 			}
@@ -921,7 +916,7 @@ class JBSMRelatedStudies
 
 		if (!$sourceisarray && $compareisarray)
 		{
-			if (in_array($source, $comparearray))
+			if (in_array($source, $comparearray, true))
 			{
 				$this->score[] = $id;
 			}
@@ -977,14 +972,18 @@ class JBSMRelatedStudies
 		{
 			$related .= '<option value="'
 				. JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $studyrecord->id . '&t=' . $input->get('t', '1', 'int'))
-				. '">' . $studyrecord->studytitle . ' - ' . JText::_($studyrecord->bookname)
-				. ' ' . $studyrecord->chapter_begin . '</option>';
+				. '">' . $studyrecord->studytitle;
+
+			if (!empty($studyrecord->bookname))
+			{
+				$related .= ' - ' . JText::_($studyrecord->bookname)
+					. ' ' . $studyrecord->chapter_begin;
+			}
+			$related .= '</option>';
 		}
 
 		$related .= '</select>';
 
-		$relatedlinks = '<div class="related"><form action="#">' . $related . '</form></div>';
-
-		return $relatedlinks;
+		return '<div class="related"><form action="#">' . $related . '</form></div>';
 	}
 }
