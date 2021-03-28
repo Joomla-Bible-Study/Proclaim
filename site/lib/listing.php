@@ -756,65 +756,66 @@ class JBSMListing
 		}
 
 		$pull        = $params->get($extra . 'rowspanitempull');
-		$rowspanitem = $params->get($extra . 'rowspanitem');
+		$rowspanitem = $params->get($extra . 'rowspanitem', 0);
 
-		if ($rowspanitem)
+		switch ($rowspanitem)
 		{
-			switch ($rowspanitem)
-			{
-				case 1:
-					if (isset($item->thumb) && !empty($item->thumb))
-					{
-						$span = $this->useJImage($item->thumb, $item->teachername, '', '', '', $params->get('rowspanitemimage'));
-					}
-					else
-					{
-						$span = null;
-					}
+			// Teacher Thumbnail
+			case 1:
+				if (isset($item->thumb) && !empty($item->thumb))
+				{
+					$span = $this->useJImage($item->thumb, $item->teachername, '', '', '', $params->get('rowspanitemimage'));
+				}
+				else
+				{
+					$span = null;
+				}
 
-					if (!empty($item->teacher_thumbnail) && is_null($span))
+				if (!empty($item->teacher_thumbnail) && is_null($span))
+				{
+					if (isset($item->teacher_thumbnail))
 					{
-						if (isset($item->teacher_thumbnail))
-						{
-							$span = $this->useJImage($item->teacher_thumbnail, $item->teachername, '', '', '', $params->get('rowspanitemimage'));
-						}
-						else
-						{
-							$span = '';
-						}
-					}
-					break;
-				case 2:
-					if ((isset($item->thumbm) && !empty($item->thumbm)) || isset($item->thumb))
-					{
-						$span = $this->useJImage($item->thumb, JText::_('JBS_CMN_THUMBNAIL'), '', '', '', $params->get('rowspanitemimage'));
+						$span = $this->useJImage($item->teacher_thumbnail, $item->teachername, '', '', '', $params->get('rowspanitemimage'));
 					}
 					else
 					{
 						$span = '';
 					}
-					break;
-				case 3:
-					if (isset($item->series_thumbnail) && !empty($item->series_thumbnail))
-					{
-						$span = $this->useJImage($item->series_thumbnail, JText::_('JBS_CMN_SERIES'), '', '', '', $params->get('rowspanitemimage'));
-					}
-					else
-					{
-						$span = '';
-					}
-					break;
-				case 4:
-					if (isset($item->teacher_image) && !empty($item->teacher_image))
-					{
-						$span = $this->useJImage($item->teacher_image, $item->teachername, '', '', '', $params->get('rowspanitemimage'));
-					}
-					else
-					{
-						$span = '';
-					}
-					break;
-			}
+				}
+				break;
+			// Study Thumbnail
+			case 2:
+				if ((isset($item->thumbnailm) && !empty($item->thumbnailm)) || isset($item->thumbnailm))
+				{
+					$span = $this->useJImage($item->thumbnailm, JText::_('JBS_CMN_THUMBNAIL'), '', '', '', $params->get('rowspanitemimage'));
+				}
+				else
+				{
+					$span = '';
+				}
+				break;
+			// Series Thumbnail
+			case 3:
+				if (isset($item->series_thumbnail) && !empty($item->series_thumbnail))
+				{
+					$span = $this->useJImage($item->series_thumbnail, JText::_('JBS_CMN_SERIES'), '', '', '', $params->get('rowspanitemimage'));
+				}
+				else
+				{
+					$span = '';
+				}
+				break;
+			// Teacher Large image
+			case 4:
+				if (isset($item->teacher_image) && !empty($item->teacher_image))
+				{
+					$span = $this->useJImage($item->teacher_image, $item->teachername, '', '', '', $params->get('rowspanitemimage'));
+				}
+				else
+				{
+					$span = '';
+				}
+				break;
 		}
 
 		$rowspanitemspan = $params->get($extra . 'rowspanitemspan');
@@ -847,7 +848,7 @@ class JBSMListing
 		if ($span)
 		{
 			$frow .= '<div class="row-fluid" about="' . $type . '">';
-			$frow .= '<div class="span' . $rowspanitemspan . ' ' . $pull . '"><div ' . $headerstyle . '>' . $span . '</div></div>';
+			$frow .= '<div class="span' . $rowspanitemspan . ' ' . $pull . '" id="jbsmspan-image"><div ' . $headerstyle . '>' . $span . '</div></div>';
 			$frow .= '<div class="span' . $rowspanbalance . '" about="' . $type . '">';
 		}
 
