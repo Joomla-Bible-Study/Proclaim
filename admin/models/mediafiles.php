@@ -67,8 +67,8 @@ class BiblestudyModelMediafiles extends JModelList
 	 *
 	 * @return mixed  Array  Media files array
 	 *
-	 * @since 9.0.0
 	 * @throws Exception
+	 * @since 9.0.0
 	 */
 	public function getItems()
 	{
@@ -95,18 +95,15 @@ class BiblestudyModelMediafiles extends JModelList
 				return false;
 			}
 
-			if (JFactory::getApplication()->isSite())
-			{
-				$user   = JFactory::getUser();
-				$groups = $user->getAuthorisedViewLevels();
+			$user   = JFactory::getUser();
+			$groups = $user->getAuthorisedViewLevels();
 
-				for ($x = 0, $count = count($items); $x < $count; $x++)
+			foreach ($items as $x => $xValue)
+			{
+				// Check the access level. Remove articles the user shouldn't see
+				if (!in_array($xValue->access, $groups, true))
 				{
-					// Check the access level. Remove articles the user shouldn't see
-					if (!in_array($items[$x]->access, $groups, true))
-					{
-						unset($items[$x]);
-					}
+					unset($items[$x]);
 				}
 			}
 
@@ -152,7 +149,7 @@ class BiblestudyModelMediafiles extends JModelList
 	{
 		if (empty($this->deletes))
 		{
-			$query = 'SELECT allow_deletes'
+			$query         = 'SELECT allow_deletes'
 				. ' FROM #__bsms_admin'
 				. ' WHERE id = 1';
 			$this->deletes = $this->_getList($query);
@@ -175,8 +172,8 @@ class BiblestudyModelMediafiles extends JModelList
 	 *
 	 * @return  void
 	 *
-	 * @since   7.0
 	 * @throws  Exception
+	 * @since   7.0
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
@@ -249,7 +246,7 @@ class BiblestudyModelMediafiles extends JModelList
 	{
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
-		$user = JFactory::getUser();
+		$user  = JFactory::getUser();
 
 		$query->select(
 			$this->getState(

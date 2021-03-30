@@ -32,14 +32,14 @@ class JFormFieldModal_Study extends JFormField
 	/**
 	 * Get input form form
 	 *
-	 * @return array
+	 * @return string
 	 *
+	 * @throws \Exception
 	 * @since 9.0.0
 	 */
 	protected function getInput()
 	{
 		// Load the modal behavior script.
-		JHtml::_('behavior.modal', 'a.modal');
 
 		$view = JFactory::getApplication()->input->get('view');
 
@@ -57,7 +57,7 @@ class JFormFieldModal_Study extends JFormField
 		// Setup variables for display.
 		$html = array();
 
-		if ($view == 'mediafileform')
+		if ($view === 'mediafileform')
 		{
 			$sview = 'messagelist';
 		}
@@ -76,11 +76,6 @@ class JFormFieldModal_Study extends JFormField
 		);
 		$title = $db->loadResult();
 
-		if ($error = $db->getErrorMsg())
-		{
-			JError::raiseWarning(500, $error);
-		}
-
 		if (empty($title))
 		{
 			$title = JText::_('JBS_CMN_STUDY_SELECT');
@@ -98,7 +93,7 @@ class JFormFieldModal_Study extends JFormField
 		$html[] = '</div>';
 
 		// The active article id field.
-		if (0 == (int) $this->value)
+		if (0 === (int) $this->value)
 		{
 			$value = '';
 		}

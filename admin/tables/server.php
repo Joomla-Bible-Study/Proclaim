@@ -10,6 +10,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+
+use Joomla\Database\DatabaseDriver;
 use Joomla\Registry\Registry;
 
 /**
@@ -74,7 +76,7 @@ class TableServer extends JTable
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver  &$db  Database connector object
+	 * @param   DatabaseDriver  &$db  Database connector object
 	 *
 	 * @since 9.0.0
 	 */
@@ -182,8 +184,8 @@ class TableServer extends JTable
 	 * The extended class can define a table and id to lookup.  If the
 	 * asset does not exist it will be created.
 	 *
-	 * @param   JTable   $table  A JTable object for the asset parent.
-	 * @param   integer  $id     Id to look up
+	 * @param   \JTable|null  $table  A JTable object for the asset parent.
+	 * @param   null          $id     Id to look up
 	 *
 	 * @return  integer
 	 *

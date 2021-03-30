@@ -27,7 +27,7 @@ class JFormFieldIcontype extends JFormFieldList
 	 *
 	 * @since 7.0
 	 */
-	protected $type = 'Icontype';
+	protected $type = 'IconType';
 
 	/**
 	 * Method to get the field input markup for a generic list.

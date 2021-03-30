@@ -36,7 +36,7 @@ $sortFields = $this->getSortFields();
       name="adminForm" id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
-		<?php echo $this->sidebar; ?>
+		<?php //echo $this->sidebar; ?>
 		<hr/>
 	</div>
 	<div id="j-main-container" class="span10">
@@ -208,7 +208,7 @@ $sortFields = $this->getSortFields();
 							'title'  => JText::_('JBS_CMN_BATCH_OPTIONS'),
 							'footer' => $this->loadTemplate('batch_footer')
 						),
-						$this->loadTemplate('batch_body')
+						//$this->loadTemplate('batch_body')
 					); ?>
 				<?php endif; ?>
 			<?php endif; ?>

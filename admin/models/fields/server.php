@@ -27,13 +27,13 @@ class JFormFieldServer extends JFormField
 	 *
 	 * @return string
 	 *
-	 * @since 7.0
 	 * @throws \Exception
+	 * @since 7.0
 	 */
 	protected function getInput()
 	{
-		$allowEdit  = ((string) $this->element['edit'] == 'true') ? true : false;
-		$allowClear = ((string) $this->element['clear'] != 'false') ? true : false;
+		$allowEdit  = (string) $this->element['edit'] === 'true';
+		$allowClear = (string) $this->element['clear'] !== 'false';
 
 		// Build the script.
 		$view = JFactory::getApplication()->input->get('view');
@@ -45,14 +45,12 @@ class JFormFieldServer extends JFormField
 		$server = ArrayHelper::getValue($rlu, $this->value);
 
 		// Load the javascript
-		JHtml::_('behavior.framework');
-		JHtml::_('behavior.modal', 'a.modal');
 		JHtml::_('bootstrap.tooltip');
 
 		// Build the script.
 		$script = array();
 
-		if ($view == 'mediafileform')
+		if ($view === 'mediafileform')
 		{
 			$sview = 'mediafileform.setServer';
 		}
@@ -60,6 +58,7 @@ class JFormFieldServer extends JFormField
 		{
 			$sview = 'mediafile.setServer';
 		}
+
 		// Select button script
 		$script[] = '       jSelectServer_jform_server_id = function(server_id) {
         window.parent.Joomla.submitbutton(\'' . $sview . '\', server_id);
@@ -107,7 +106,7 @@ class JFormFieldServer extends JFormField
 		// Setup variables for display.
 		$html = array();
 
-		if ($view == 'mediafileform')
+		if ($view === 'mediafileform')
 		{
 			$sview = 'serverslist';
 		}
@@ -124,7 +123,7 @@ class JFormFieldServer extends JFormField
 		}
 
 		// The active server id field.
-		if (0 == (int) $this->value)
+		if (0 === (int) $this->value)
 		{
 			$value = '';
 		}

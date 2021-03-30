@@ -3,12 +3,12 @@
 	<field name="id" type="text" readonly="readonly" class="inputbox hidden"/>
 	<fields name="params">
 		<field name="simple_mode" type="radio" class="btn-group" default="1" label="JBS_ADM_SIMPLE_MODE"
-			   description="JBS_ADM_SIMPLE_MODE_DESC" labelclass="control-label">
+			   description="JBS_ADM_SIMPLE_MODE_DESC" labelclass="control-label" layout="joomla.form.field.radio.switcher">
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
 		</field>
 		<field name="simple_mode_display" type="radio" class="btn-group" default="0" label="JBS_ADM_SIMPLE_MODE_DISPLAY"
-			   description="JBS_ADM_SIMPLE_MODE_DISPLAY_DESC" labelclass="control-label">
+			   description="JBS_ADM_SIMPLE_MODE_DISPLAY_DESC" labelclass="control-label" layout="joomla.form.field.radio.switcher">
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
 		</field>
@@ -17,13 +17,13 @@
 		<field name="metadesc" type="textarea" class="inputbox" cols="30" rows="3" label="JBS_STY_METADESCRIPTION"
 		       description="JBS_STY_METADESCRIPTION_DESC" labelclass="control-label"/>
 		<field name="compat_mode" type="radio" class="btn-group" default="0" label="JBS_ADM_MEDIA_COMPAT_MODE"
-		       description="JBS_ADM_MEDIA_COMPAT_MODE_DESC" labelclass="control-label">
+		       description="JBS_ADM_MEDIA_COMPAT_MODE_DESC" labelclass="control-label" layout="joomla.form.field.radio.switcher">
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
 		</field>
 		<field name="jbsmigrationshow" type="radio" class="btn-group" default="0"
 		       label="JBS_IBM_SHOW_JBSMIGRATION_LABEL" description="JBS_IBM_SHOW_JBSMIGRATION_LABEL_DESC"
-		       labelclass="control-label">
+		       labelclass="control-label" layout="joomla.form.field.radio.switcher">
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
 		</field>
@@ -32,7 +32,7 @@
 		<field name="show_location_media"
 		       type="radio"
 		       class="btn-group" default="0" label="JBS_ADM_SHOW_LOCATION_MEDIA"
-		       description="JBS_ADM_SHOW_LOCATION_MEDIA_DESC" labelclass="control-label">
+		       description="JBS_ADM_SHOW_LOCATION_MEDIA_DESC" labelclass="control-label" layout="joomla.form.field.radio.switcher">
 			<option value="0">JBS_CMN_HIDE</option>
 			<option value="1">JBS_CMN_SHOW</option>
 		</field>
@@ -59,8 +59,8 @@
 		<!-- Download image/button/icon-->
 
 		<field name="download_show" label="JBS_SHOW_DOWNLOAD_BUTTON"
-		       description="JBS_SHOW_DOWNLOAD_BUTTON_DESC" class="inputbox" type="list" size="15" default=""
-		       labelclass="control-label">
+		       description="JBS_SHOW_DOWNLOAD_BUTTON_DESC" class="inputbox" type="radio" size="15" default=""
+		       labelclass="control-label" layout="joomla.form.field.radio.switcher">
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
 		</field>
@@ -162,7 +162,7 @@
 
 		<field name="download" type="radio" default="0"
 		       label="JBS_ADM_FILLIN_MEDIAFILE_DOWNLOAD" description="JBS_ADM_FILLIN_MEDIAFILE_DOWNLOAD_DESC"
-		       class="btn-group" labelclass="control-label">
+		       class="btn-group" labelclass="control-label" layout="joomla.form.field.radio.switcher">
 			<option value="0">JBS_CMN_NO</option>
 			<option value="1">JBS_CMN_YES</option>
 		</field>
@@ -243,12 +243,12 @@
 		<fieldset name="jwplayer" label="JBS_ADM_PLAYER_ADMIN_LABLE"
 		          description="JBS_ADM_PLAYER_ADMIN_DESC">
 			<field name="controls" type="radio" label="JBS_ADM_JWPLAYER_CONTROL" description="" default="1"
-			       class="btn-group" labelclass="control-label">
+			       class="btn-group" labelclass="control-label" layout="joomla.form.field.radio.switcher">
 				<option value="0">JBS_CMN_NO</option>
 				<option value="1">JBS_CMN_YES</option>
 			</field>
 			<field name="jwplayer_pro" type="radio" label="JBS_ADM_JWPLAYER_PRO" description="" default="0"
-			       class="btn-group" labelclass="control-label">
+			       class="btn-group" labelclass="control-label" layout="joomla.form.field.radio.switcher">
 				<option value="0">JBS_CMN_NO</option>
 				<option value="1">JBS_CMN_YES</option>
 			</field>
@@ -270,35 +270,35 @@
 			<field name="jwplayer_autostart" type="radio"
 			       label="JBS_CMN_MEDIA_AUTOSTART"
 			       description="JBS_ADM_JWPLAYER_AUTOSTART_DESC"
-			       class="btn-group" default="false" labelclass="control-label">
+			       class="btn-group" default="false" labelclass="control-label" layout="joomla.form.field.radio.switcher">
 				<option value="false">JBS_CMN_NO</option>
 				<option value="true">JBS_CMN_YES</option>
 			</field>
 			<field name="jwplayer_playerresponsive" type="radio"
 			       label="JBS_CMN_MEDIA_RESPONSIVE"
 			       description="JBS_ADM_JWPLAYER_RESPONSIVE_DESC"
-			       class="btn-group" default="true" labelclass="control-label">
+			       class="btn-group" default="true" labelclass="control-label" layout="joomla.form.field.radio.switcher">
 				<option value="false">JBS_CMN_NO</option>
 				<option value="true">JBS_CMN_YES</option>
 			</field>
 			<field name="jwplayer_fallback" type="radio"
 			       label="JBS_ADM_JWPLAYER_FALLBACK"
 			       description="JBS_ADM_JWPLAYER_FALLBACK_DESC"
-			       class="btn-group" default="true" labelclass="control-label">
+			       class="btn-group" default="true" labelclass="control-label" layout="joomla.form.field.radio.switcher">
 				<option value="false">JBS_CMN_NO</option>
 				<option value="true">JBS_CMN_YES</option>
 			</field>
 			<field name="jwplayer_mute" type="radio"
 			       label="JBS_ADM_JWPLAYER_MUTE"
 			       description="JBS_ADM_JWPLAYER_MUTE_DESC"
-			       class="btn-group" default="false" labelclass="control-label">
+			       class="btn-group" default="false" labelclass="control-label" layout="joomla.form.field.radio.switcher">
 				<option value="false">JBS_CMN_NO</option>
 				<option value="true">JBS_CMN_YES</option>
 			</field>
 			<field name="jwplayer_stagevideo" type="radio"
 			       label="JBS_ADM_JWPLAYER_STAGE_VIDEO"
 			       description="JBS_ADM_JWPLAYER_STAGE_VIDEO_DESC"
-			       class="btn-group" default="false" labelclass="control-label">
+			       class="btn-group" default="false" labelclass="control-label" layout="joomla.form.field.radio.switcher">
 				<option value="false">JBS_CMN_NO</option>
 				<option value="true">JBS_CMN_YES</option>
 			</field>
@@ -313,13 +313,13 @@
 		          description="JBS_ADM_PLAYER_ADMIN_DESC">
 			<field name="playlist" type="radio"
 			       label="JBS_ADM_JWPLAYER_PLAYLIST" description="JBS_ADM_JWPLAYER_PLAYLIST_DESC"
-			       class="btn-group" default="false" labelclass="control-label">
+			       class="btn-group" default="false" labelclass="control-label" layout="joomla.form.field.radio.switcher">
 				<option value="false">JBS_CMN_NO</option>
 				<option value="true">JBS_CMN_YES</option>
 			</field>
 			<field name="jwplayer_listbar" type="radio"
 			       label="JBS_ADM_JWPLAYER_LISTBAR" description="JBS_ADM_JWPLAYER_LISTBAR_DESC"
-			       class="btn-group" default="false" labelclass="control-label">
+			       class="btn-group" default="false" labelclass="control-label" layout="joomla.form.field.radio.switcher">
 				<option value="false">JBS_CMN_NO</option>
 				<option value="true">JBS_CMN_YES</option>
 			</field>
@@ -327,13 +327,13 @@
 			       label="JBS_ADM_JWPLAYER_LOGO" description="JBS_ADM_JWPLAYER_LOGO_DESC"/>
 			<field name="sharing" type="radio"
 			       label="JBS_ADM_JWPLAYER_SHARING" description="JBS_ADM_JWPLAYER_SHARING_DESC"
-			       class="btn-group" default="false" labelclass="control-label">
+			       class="btn-group" default="false" labelclass="control-label" layout="joomla.form.field.radio.switcher">
 				<option value="false">JBS_CMN_NO</option>
 				<option value="true">JBS_CMN_YES</option>
 			</field>
 			<field name="jwplayer_related" type="radio"
 			       label="JBS_ADM_JWPLAYER_RELATED" description="JBS_ADM_JWPLAYER_RELATED_DESC"
-			       class="btn-group" default="false" labelclass="control-label">
+			       class="btn-group" default="false" labelclass="control-label" layout="joomla.form.field.radio.switcher">
 				<option value="false">JBS_CMN_NO</option>
 				<option value="true">JBS_CMN_YES</option>
 			</field>
@@ -350,7 +350,7 @@
 			       class="readonly" default="Comming Soon" labelclass="control-label"/>
 			<field name="captions" type="radio"
 			       label="JBS_ADM_JWPLAYER_CAPTIONS" description="JBS_ADM_JWPLAYER_CAPTIONS_DESC"
-			       class="btn-group" labelclass="control-label" default="false">
+			       class="btn-group" labelclass="control-label" default="false" layout="joomla.form.field.radio.switcher">
 				<option value="false">JBS_CMN_NO</option>
 				<option value="true">JBS_CMN_YES</option>
 			</field>
@@ -359,7 +359,7 @@
 	<fieldset>
 		<field name="drop_tables" type="radio" default="0"
 		       label="JBS_ADM_DROP_TABLES"
-		       description="JBS_ADM_DROP_TABLES_DESC" class="btn-group" labelclass="control-label">
+		       description="JBS_ADM_DROP_TABLES_DESC" class="btn-group" labelclass="control-label" layout="joomla.form.field.radio.switcher">
 			<option value="0">JBS_CMN_NO</option>
 			<option value="1">JBS_CMN_YES</option>
 		</field>
@@ -367,7 +367,7 @@
 		       label="JBS_PLG_BACKUP_FILES" description="JBS_PLG_BACKUP_FILES_DESC"/>
 		<field name="debug" type="radio" default="0"
 		       label="JBS_ADM_DEBUG_LABEL" description="JBS_ADM_DEBUG_DESC"
-		       class="btn-group" labelclass="control-label">
+		       class="btn-group" labelclass="control-label" layout="joomla.form.field.radio.switcher">
 			<option value="0">JBS_CMN_NO</option>
 			<option value="1">JBS_CMN_YES</option>
 		</field>
@@ -399,7 +399,7 @@
 		</field>
 		<field name="media_button_color" type="color" description="JBS_ADDON_BUTTON_COLOR_DESC"
 		       label="JBS_ADDON_BUTTON_COLOR" class="inputbox" labelclass="control-label"/>
-		<field name="media_icon_type" type="icontype" class="inputbox" labelclass="control-label" size="15" default=""
+		<field name="media_icon_type" type="IconType" class="inputbox" labelclass="control-label" size="15" default=""
 		       label="JBS_ADDON_ICON_TYPE"
 		       description="JBS_ADDON_ICON_TYPE_DESC">
 		</field>

@@ -10,6 +10,7 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 
 /**
@@ -316,6 +317,7 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
+		Factory::getApplication()->input->set('hidemainmenu', true);
 		/** @noinspection PhpMethodOrClassCallIsNotCaseSensitiveInspection */
 		JToolbarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'options options');
 		JToolbarHelper::preferences('com_biblestudy', '600', '800', 'JBS_ADM_PERMISSIONS');

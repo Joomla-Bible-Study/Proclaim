@@ -52,15 +52,11 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 		if (!$row->load($this->_id))
 		{
-			$this->setError($this->_db->getErrorMsg());
-
 			return false;
 		}
 
 		if (!$row->move($direction, ' study_id = ' . (int) $row->study_id . ' AND published >= 0 '))
 		{
-			$this->setError($this->_db->getErrorMsg());
-
 			return false;
 		}
 

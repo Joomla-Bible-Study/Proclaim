@@ -149,7 +149,7 @@ class BiblestudyViewMediafiles extends JViewLegacy
 		$user = JFactory::getUser();
 
 		// Get the toolbar object instance
-		$bar = JToolbar::getInstance('toolbar');
+		$toolbar = JToolbar::getInstance('toolbar');
 
 		JToolbarHelper::title(JText::_('JBS_CMN_MEDIA_FILES'), 'video video');
 
@@ -158,8 +158,16 @@ class BiblestudyViewMediafiles extends JViewLegacy
 			JToolbarHelper::addNew('mediafile.add');
 		}
 
-		if ($this->canDo->get('core.edit'))
+		if ($this->canDo->get('core.edit.state'))
 		{
+			$dropdown = $toolbar->dropdownButton('status-group')
+				->text('JTOOLBAR_CHANGE_STATUS')
+				->toggleSplit(false)
+				->icon('icon-ellipsis-h')
+				->buttonClass('btn btn-action')
+				->listCheck(true);
+
+			$childBar = $dropdown->getChildToolbar();
 			JToolbarHelper::editList('mediafile.edit');
 		}
 
@@ -187,13 +195,10 @@ class BiblestudyViewMediafiles extends JViewLegacy
 			&& $user->authorise('core.edit', 'com_biblestudy')
 			&& $user->authorise('core.edit.state', 'com_biblestudy'))
 		{
-			$title = JText::_('JTOOLBAR_BATCH');
-
-			// Instantiate a new JLayoutFile instance and render the batch button
-			$layout = new JLayoutFile('joomla.toolbar.batch');
-
-			$dhtml = $layout->render(array('title' => $title));
-			$bar->appendButton('Custom', $dhtml, 'batch');
+			$childBar->popupButton('batch')
+				->text('JTOOLBAR_BATCH')
+				->selector('collapseModal')
+				->listCheck(true);
 		}
 
 		include_once JPATH_COMPONENT . '/helpers/html/biblestudy.php';
