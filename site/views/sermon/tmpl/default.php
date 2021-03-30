@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
 	{
 		echo $this->loadTemplate($this->item->params->get('sermontemplate'));
 	}
-    elseif ($this->simple_mode == 1)
+    elseif ($this->simple->mode === 1)
 	{
 		echo $this->loadTemplate('simple');
 	}
@@ -32,7 +32,7 @@ defined('_JEXEC') or die;
 		$groups         = $user->getAuthorisedViewLevels();
 		$comment_access = $this->item->params->get('comment_access');
 
-		if (in_array($show_comments, $groups))
+		if (in_array($show_comments, $groups, true))
 		{
 			// Determine what kind of comments component to use
 			switch ($this->item->params->get('comments_type', 0))

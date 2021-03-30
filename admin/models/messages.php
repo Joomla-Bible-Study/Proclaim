@@ -74,7 +74,7 @@ class BiblestudyModelMessages extends JModelList
 		$id .= ':' . $this->getState('filter.series');
 		$id .= ':' . $this->getState('filter.messagetype');
 		$id .= ':' . $this->getState('filter.location');
-		$id .= ':' . $this->getState('filter.access');
+		$id .= ':' . serialize($this->getState('filter.access'));
 		$id .= ':' . $this->getState('filter.language');
 		$id .= ':' . $this->getState('filter.search');
 
@@ -94,7 +94,7 @@ class BiblestudyModelMessages extends JModelList
 	 * @since 7.1.0
 	 * @throws Exception
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = 'study.studydate', $direction = 'desc')
 	{
 		$app = JFactory::getApplication('administrator');
 
@@ -145,7 +145,30 @@ class BiblestudyModelMessages extends JModelList
 		$location = $this->getUserStateFromRequest($this->context . 'filter.location', 'filter_location');
 		$this->setState('filter.location', $location);
 
-		parent::populateState('study.studydate', 'desc');
+		$formSubmited = $app->input->post->get('form_submited');
+
+		$access     = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
+		$authorId   = $this->getUserStateFromRequest($this->context . '.filter.author_id', 'filter_author_id');
+		$categoryId = $this->getUserStateFromRequest($this->context . '.filter.category_id', 'filter_category_id');
+		$tag        = $this->getUserStateFromRequest($this->context . '.filter.tag', 'filter_tag', '');
+
+		if ($formSubmited)
+		{
+			$access = $app->input->post->get('access');
+			$this->setState('filter.access', $access);
+
+			$authorId = $app->input->post->get('author_id');
+			$this->setState('filter.author_id', $authorId);
+
+			$categoryId = $app->input->post->get('category_id');
+			$this->setState('filter.category_id', $categoryId);
+
+			$tag = $app->input->post->get('tag');
+			$this->setState('filter.tag', $tag);
+		}
+
+		// List state information.
+		parent::populateState($ordering, $direction);
 
 		if (!empty($forcedLanguage))
 		{
@@ -287,7 +310,7 @@ class BiblestudyModelMessages extends JModelList
 		// Add the list ordering clause
 		$orderCol  = $this->state->get('list.ordering', 'study.studydate');
 		$orderDirn = $this->state->get('list.direction', 'DESC');
-		$query->order($db->escape($orderCol . ' ' . $orderDirn));
+		$query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
 
 		return $query;
 	}

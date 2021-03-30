@@ -29,13 +29,13 @@ if (file_exists($api))
  */
 class BibleStudyModelInstall extends JModelLegacy
 {
-	/** @var int Total numbers of Versions
+	/** @var integer Total numbers of Versions
 	 *
 	 * @since 7.1
 	 */
 	public $totalSteps = 0;
 
-	/** @var int Numbers of Versions already processed
+	/** @var integer Numbers of Versions already processed
 	 *
 	 * @since 7.1
 	 */
@@ -89,7 +89,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	 */
 	private $versionSwitch = null;
 
-	/** @var int Id of Extinction Table
+	/** @var integer Id of Extinction Table
 	 *
 	 * @since 7.1
 	 */
@@ -131,7 +131,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	 */
 	private $start = array();
 
-	/** @var int If was imported
+	/** @var integer If was imported
 	 *
 	 * @since 7.1
 	 */
@@ -615,7 +615,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			'run'        => $this->running,
 			'query'      => $this->query,
 		);
-		$stack = json_encode($stack);
+		$stack = json_encode($stack, JSON_THROW_ON_ERROR);
 
 		if (function_exists('base64_encode') && function_exists('base64_decode'))
 		{
@@ -702,7 +702,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			}
 		}
 
-		$stack = json_decode($stack, true);
+		$stack = json_decode($stack, true, 512, JSON_THROW_ON_ERROR);
 
 		$this->version       = $stack['aversion'];
 		$this->versionStack  = $stack['version'];
@@ -816,7 +816,7 @@ class BibleStudyModelInstall extends JModelLegacy
 					$run           = $this->runUpdates($string);
 					$this->doneSteps++;
 				}
-				elseif (in_array($this->version, $this->subFiles) && @empty($this->allupdates[$this->version]))
+				elseif (in_array($this->version, $this->subFiles, true) && @empty($this->allupdates[$this->version]))
 				{
 					// Check for corresponding PHP file and run migration
 					$migrationfile = JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/updates/' . $this->version . '.php';
@@ -1042,13 +1042,13 @@ class BibleStudyModelInstall extends JModelLegacy
 					die('no uninstall-dbtables.sql');
 				}
 
-				$queries = $this->_db->splitSql($buffer);
+				$queries = JDatabaseDriver::splitSql($buffer);
 
 				foreach ($queries as $querie)
 				{
 					$querie = trim($querie);
 
-					if ($querie !== '' && $querie{0} !== '#' && $querie !== '`')
+					if ($querie !== '' && $querie[0] !== '#' && $querie !== '`')
 					{
 						$this->_db->setQuery($querie);
 						$this->_db->execute();
@@ -1068,7 +1068,8 @@ class BibleStudyModelInstall extends JModelLegacy
 		$this->_db->setQuery($query);
 		$this->_db->execute();
 		JFactory::getApplication()->enqueueMessage('<h2>' . JText::_('JBS_INS_UNINSTALLED') . ' ' .
-			BIBLESTUDY_VERSION . '</h2> <div>' . $drop_result . '</div>');
+			BIBLESTUDY_VERSION . '</h2> <div>' . $drop_result . '</div>'
+		);
 
 		return true;
 	}
@@ -1159,7 +1160,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				$updateurl           = new stdClass;
 				$updateurl->name     = 'Proclaim Package';
 				$updateurl->type     = 'extension';
-				$updateurl->location = 'https://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;id=2&amp;format=xml';
+				$updateurl->location = 'https://www.christianwebministries.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;id=2&amp;format=xml';
 				$updateurl->enabled  = '1';
 				$this->_db->insertObject('#__update_sites', $updateurl);
 				$lastid                     = $this->_db->insertid();
@@ -1217,16 +1218,16 @@ class BibleStudyModelInstall extends JModelLegacy
 	 */
 	private function getUpdateVersion()
 	{
-		/* Find Last updated Version in Update table */
+		// Find Last updated Version in Update table
+
 		$query = $this->_db->getQuery(true);
 		$query
 			->select('version')
 			->from('#__bsms_update');
 		$this->_db->setQuery($query);
 		$updates = $this->_db->loadObjectList();
-		$update  = end($updates);
 
-		return $update->version;
+		return end($updates)->version;
 	}
 
 	/**
@@ -1307,7 +1308,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		// Create an array of queries from the sql file
 		$queries = JDatabaseDriver::splitSql($buffer);
 
-		if (count($queries) == 0)
+		if ((int) count($queries) === 0)
 		{
 			return false;
 		}
@@ -1347,7 +1348,7 @@ class BibleStudyModelInstall extends JModelLegacy
 				else
 				{
 					$this->subSteps   = array_merge($this->subSteps, array($value => array('up')));
-					$this->totalSteps += 1;
+					++$this->totalSteps;
 				}
 			}
 		}
@@ -1370,7 +1371,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		// Process each query in the $queries array (split out of sql file).
 		$string = trim($string);
 
-		if ($string !== '' && $string{0} !== '#')
+		if ($string !== '' && $string[0] !== '#')
 		{
 			$this->_db->setQuery($this->_db->convertUtf8mb4QueryToUtf8($string));
 			$this->doneSteps++;

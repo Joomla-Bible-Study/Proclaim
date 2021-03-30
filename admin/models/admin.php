@@ -61,6 +61,11 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
+		if (empty($data))
+		{
+			$this->getItem();
+		}
+
 		// Get the form.
 		$form = $this->loadForm('com_biblestudy.admin', 'admin', array('control' => 'jform', 'load_data' => $loadData));
 
@@ -83,8 +88,6 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 */
 	public function save($data)
 	{
-		$this->cleanCache();
-
 		if (parent::save($data))
 		{
 			return true;
@@ -114,11 +117,11 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 *
 	 * @since 7.0
 	 *
-	 * @todo not sure if this should be here.
+	 * @todo  not sure if this should be here.
 	 */
 	public function getMediaFiles()
 	{
-		$db              = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('*');
 		$query->from('#__bsms_mediafiles');
@@ -140,8 +143,8 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 *
 	 * @return boolean
 	 *
-	 * @since 7.0
 	 * @throws \Exception
+	 * @since 7.0
 	 */
 	public function fix()
 	{
@@ -165,9 +168,9 @@ class BiblestudyModelAdmin extends JModelAdmin
 		 * converted to utf8mb4 or, if not suported by the server, compatible to it.
 		 */
 		$installerJoomla = new JoomlaInstallerScript;
-		$statusArray = $changeSet->getStatus();
+		$statusArray     = $changeSet->getStatus();
 
-		if (count($statusArray['error']) == 0)
+		if (count($statusArray['error']) === 0)
 		{
 			$installerJoomla->convertTablesToUtf8mb4(false);
 		}
@@ -180,8 +183,8 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 *
 	 * @return string JSchema  ChangeSet
 	 *
-	 * @since 7.0
 	 * @throws \Exception
+	 * @since 7.0
 	 */
 	public function getItems()
 	{
@@ -213,13 +216,13 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 *
 	 * @return   mixed  string schema version if success, false if fail
 	 *
-	 * @since 7.0
 	 * @throws \Exception
+	 * @since 7.0
 	 */
 	public function fixSchemaVersion($changeSet)
 	{
 		// Get correct schema version -- last file in array.
-		$schema = $changeSet->getSchema();
+		$schema          = $changeSet->getSchema();
 		$extensionresult = $this->getExtentionId();
 
 		if ($schema == $this->getSchemaVersion())
@@ -228,7 +231,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 		}
 
 		// Delete old row
-		$db = $this->getDbo();
+		$db    = $this->getDbo();
 		$query = $db->getQuery(true)
 			->delete($db->qn('#__schemas'))
 			->where($db->qn('extension_id') . ' = ' . $db->q($extensionresult));
@@ -265,7 +268,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	{
 		$jversion = null;
 		$file     = JPATH_COMPONENT_ADMINISTRATOR . '/biblestudy.xml';
-		$xml      = simplexml_load_string(file_get_contents($file), 'SimpleXMLElement');
+		$xml      = simplexml_load_string(file_get_contents($file), 'JXMLElement');
 
 		if ($xml)
 		{
@@ -280,8 +283,8 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 *
 	 * @return string extension_id
 	 *
-	 * @since 7.1.0
 	 * @throws Exception
+	 * @since 7.1.0
 	 */
 	public function getExtentionId()
 	{
@@ -305,8 +308,8 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 *
 	 * @return  mixed  the return value from the query, or null if the query fails
 	 *
-	 * @since 7.0
 	 * @throws Exception
+	 * @since 7.0
 	 */
 	public function getSchemaVersion()
 	{
@@ -326,8 +329,8 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 *
 	 * @return   mixed  string update version if success, false if fail
 	 *
-	 * @since 7.0
 	 * @throws \Exception
+	 * @since 7.0
 	 */
 	public function fixUpdateVersion()
 	{
@@ -337,7 +340,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 		$cache         = new Registry($table->manifest_cache);
 		$updateVersion = $cache->get('version');
 
-		if ($updateVersion == $this->getCompVersion())
+		if ($updateVersion === $this->getCompVersion())
 		{
 			return $updateVersion;
 		}
@@ -362,7 +365,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 */
 	public function getUpdateJBSMVersion()
 	{
-		$db = $this->getDbo();
+		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
 		$query->select('version')
 			->from('#__bsms_update')
@@ -381,7 +384,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 */
 	public function fixUpdateJBSMVersion()
 	{
-		$db = $this->getDbo();
+		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
 		$query->select('id, version')
 			->from('#__bsms_update')
@@ -390,7 +393,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 
 		$results = $db->loadObject();
 
-		if ($results->version == $this->getCompVersion())
+		if ($results->version === $this->getCompVersion())
 		{
 			return $results->version;
 		}
@@ -465,8 +468,8 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 *
 	 * @return  mixed   version if successful, false if fail
 	 *
-	 * @since 7.0
 	 * @throws \Exception
+	 * @since 7.0
 	 */
 	public function getUpdateVersion()
 	{
@@ -487,9 +490,10 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 */
 	public function getDefaultTextFilters()
 	{
-		/** @type JTableExtension $table */
 		$table = JTable::getInstance('Extension');
 		$table->load($table->find(array('name' => 'com_biblestudy')));
+
+		/** @type TableAdmin $table */
 
 		return $table->params;
 	}
@@ -523,18 +527,18 @@ class BiblestudyModelAdmin extends JModelAdmin
 		// Check for request forgeries.
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-		$db     = JFactory::getDbo();
-		$msg    = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
-		$post   = $_POST['jform'];
-		$reg    = new Registry;
+		$db   = JFactory::getDbo();
+		$msg  = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
+		$post = $_POST['jform'];
+		$reg  = new Registry;
 		$reg->loadArray($post['params']);
-		$from   = $reg->get('mtFrom', 'x');
-		$to     = $reg->get('mtTo', 'x');
-		$account  = 0;
-		$count  = 0;
+		$from    = $reg->get('mtFrom', 'x');
+		$to      = $reg->get('mtTo', 'x');
+		$account = 0;
+		$count   = 0;
 
 		$MediaHelper = new JBSMMedia;
-		$mimetypes = $MediaHelper->getMimetypes();
+		$mimetypes   = $MediaHelper->getMimetypes();
 
 		if ($from !== 'x')
 		{
@@ -556,12 +560,12 @@ class BiblestudyModelAdmin extends JModelAdmin
 			$count++;
 			$search = false;
 			$isfrom = '';
-			$reg = new Registry;
+			$reg    = new Registry;
 			$reg->loadString($media->params);
-			$filename = $reg->get('filename', '');
+			$filename  = $reg->get('filename', '');
 			$mediacode = $reg->get('mediacode');
 
-			$extension   = substr($filename, strrpos($filename, '.') + 1);
+			$extension = substr($filename, strrpos($filename, '.') + 1);
 
 			if (strpos($filename, 'http') !== false && $from == 'http')
 			{
@@ -628,8 +632,8 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 *
 	 * @return  void
 	 *
-	 * @since    1.7.2
 	 * @throws \Exception
+	 * @since    1.7.2
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
@@ -664,8 +668,8 @@ class BiblestudyModelAdmin extends JModelAdmin
 	 *
 	 * @return object
 	 *
-	 * @since 7.0
 	 * @throws \Exception
+	 * @since 7.0
 	 */
 	protected function loadFormData()
 	{

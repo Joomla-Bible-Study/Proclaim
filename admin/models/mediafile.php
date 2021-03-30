@@ -162,13 +162,13 @@ class BiblestudyModelMediafile extends JModelAdmin
 		// If user hasn't selected a server yet, just return an empty form
 		$server_id = $this->data->server_id;
 
-		if (empty($server_id))
+		if ($server_id === null)
 		{
 			/** @var Joomla\Registry\Registry $admin */
 			$admin                 = JBSMParams::getAdmin()->params;
 			$server_id             = $admin->get('server');
 
-			if ($server_id != '-1')
+			if ($server_id !== '-1')
 			{
 				$this->data->server_id = $server_id;
 			}
@@ -269,8 +269,8 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
-		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_biblestudy.mediafile.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy')))
+		if (($id !== 0 && (!$user->authorise('core.edit.state', 'com_biblestudy.mediafile.' . (int) $id)))
+			|| ($id === 0 && !$user->authorise('core.edit.state', 'com_biblestudy')))
 		{
 			// Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');

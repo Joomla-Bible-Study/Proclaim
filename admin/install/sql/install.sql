@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_update` (
 
 INSERT IGNORE INTO `#__bsms_update` (`id`, `version`)
 VALUES
-  (1, '9.2.0');
+  (1, '9.2.5');
 
 -- --------------------------------------------------------
 

@@ -46,7 +46,7 @@ $session->set('migration_stack', '', 'JBSM');
 	<thead>
 	<tr>
 		<th class="title" colspan="2">Extension</th>
-		<th width="30%">Status</th>
+		<th style="width: 30%;">Status</th>
 	</tr>
 	</thead>
 	<tfoot>
@@ -65,7 +65,7 @@ $session->set('migration_stack', '', 'JBSM');
 			<th>Client</th>
 			<th></th>
 		</tr>
-		<?php foreach ($this->status->modules as $module) : ?>
+		<?php foreach ($this->status->cwmmodules as $module) : ?>
 			<tr class="row<?php echo(++$rows % 2); ?>">
 				<td class="key"><?php echo $module['name']; ?></td>
 				<td class="key"><?php echo ucfirst($module['client']); ?></td>
@@ -75,13 +75,13 @@ $session->set('migration_stack', '', 'JBSM');
 			</tr>
 		<?php endforeach; ?>
 	<?php endif; ?>
-	<?php if (count($this->status->plugins)) : ?>
+	<?php if (count($this->status->cwmplugins)) : ?>
 		<tr>
 			<th>Plugin</th>
 			<th>Group</th>
 			<th></th>
 		</tr>
-		<?php foreach ($this->status->plugins as $plugin) : ?>
+		<?php foreach ($this->status->cwmplugins as $plugin) : ?>
 			<tr class="row<?php echo(++$rows % 2); ?>">
 				<td class="key"><?php echo ucfirst($plugin['name']); ?></td>
 				<td class="key"><?php echo ucfirst($plugin['group']); ?></td>

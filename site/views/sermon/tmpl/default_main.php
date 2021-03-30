@@ -29,7 +29,7 @@ $row = $this->item;
 ?>
 
 <?php
-if ($this->item->params->get('showpodcastsubscribedetails') == 1)
+if ($this->item->params->get('showpodcastsubscribedetails') === '1')
 {
 	?>
 	<div class="row-fluid">
@@ -39,7 +39,7 @@ if ($this->item->params->get('showpodcastsubscribedetails') == 1)
 	</div>
 <?php
 }
-if ($this->item->params->get('showrelated') == 1)
+if ($this->item->params->get('showrelated') === '1')
 {
 	?>
 	<div class="row-fluid">
@@ -101,13 +101,13 @@ echo $this->item->studytext;
 
 ?>
 <?php
-if ($this->item->params->get('showrelated') == 2)
+if ($this->item->params->get('showrelated') === '2')
 {
 	echo $this->related;
 }
 ?>
 <?php
-if ($this->item->params->get('showpodcastsubscribedetails') == 2)
+if ($this->item->params->get('showpodcastsubscribedetails') === '2')
 {
 	echo $this->subscribe;
 }

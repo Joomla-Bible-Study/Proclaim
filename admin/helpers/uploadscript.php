@@ -18,14 +18,18 @@ defined("_JEXEC") or die();
  */
 class JBSMUploadScript
 {
-	protected $folder = '';
+	/**
+	 * @var string
+	 * @since 9.0.0
+	 */
+	protected string $folder = '';
 
 	/**
 	 * Upload media files
 	 *
 	 * @param   JInput|array  $data  Data to upload
 	 *
-	 * @return array|bool
+	 * @return array|boolean
 	 *
 	 * @since 9.0.0
 	 */

@@ -25,73 +25,95 @@ class BiblestudyViewSermon extends JViewLegacy
 {
 	/** @var object Item
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $item;
 
 	/** @var Registry Params
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $params;
 
 	/** @var  string Print
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $print;
 
 	/** @var Registry State
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $state;
 
 	/** @var  string User
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $user;
 
 	/** @var  string Passage
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $passage;
 
 	/** @var  string Related
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $related;
 
 	/** @var  string Subscribe
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $subscribe;
 
 	/** @var  int Menu ID
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $menuid;
 
 	/** @var  string Details Link
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $detailslink;
 
 	/** @var  string Page
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $page;
 
 	/** @var  string Template
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $template;
 
 	/** @var  string Article
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $article;
 
 	/** @var  array Article
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $comments;
+
+	/**
+	 * Simple Mode object
+	 *
+	 * @var object
+	 * @since 9.2.3
+	 */
+	protected $simple;
 
 	/**
 	 * Execute and display a template script.
@@ -125,14 +147,14 @@ class BiblestudyViewSermon extends JViewLegacy
 		}
 
 		// Create a shortcut for $item.
-		$item = & $this->item;
+		$item = &$this->item;
 
 		if (!$item)
 		{
 			return;
 		}
 
-		if ($this->getLayout() == 'pagebreak')
+		if ($this->getLayout() === 'pagebreak')
 		{
 			$this->_displayPagebreak($tpl);
 
@@ -220,22 +242,23 @@ class BiblestudyViewSermon extends JViewLegacy
 			elseif (!empty($userId) && $user->authorise('core.edit.own', $asset))
 			{
 				// Check for a valid user and that they are the owner.
-				if ($userId == $item->created_by)
+				if ($userId === $item->created_by)
 				{
 					$item->params->set('access-edit', true);
 				}
 			}
 		}
 
-		$this->simple_mode = JBSMHelper::getSimpleView();
+		$this->simple = JBSMHelper::getSimpleView();
 
 		$offset = $this->state->get('list.offset');
 
 		// Check the view access to the article (the model has already computed the values).
-		if ($item->params->get('access-view') != true && (($item->params->get('show_noauth') != true && $user->get('guest'))))
+		if ($item->params->get('access-view') !== true && (($item->params->get('show_noauth') !== true && $user->get('guest'))))
 		{
-			JFactory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
+			$app->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
 		}
+
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 		$groups = $user->getAuthorisedViewLevels();
 
@@ -243,9 +266,10 @@ class BiblestudyViewSermon extends JViewLegacy
 		{
 			if (!in_array($this->item->access, $groups))
 			{
-				JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_ACCESS_FORBIDDEN'), 'error');
+				$app->enqueueMessage(JText::_('JBS_CMN_ACCESS_FORBIDDEN'), 'error');
 			}
 		}
+
 		// Get Scripture references from listing class in case we don't use the pagebuilder class
 		$this->item->scripture1 = $JBSMListing->getScripture($this->params, $item, $esv = 0, $scripturerow = 1);
 		$this->item->scripture2 = $JBSMListing->getScripture($this->params, $item, $esv = 0, $scripturerow = 2);
@@ -362,16 +386,14 @@ class BiblestudyViewSermon extends JViewLegacy
 		$menuid       = $database->loadResult();
 		$this->menuid = $menuid;
 
-		if ($this->getLayout() == 'pagebreak')
+		if ($this->getLayout() === 'pagebreak')
 		{
 			$this->_displayPagebreak($tpl);
 
 			return null;
 		}
 
-		/*
-         * Process the prepare content plugins
-         */
+		// Process the prepare content plugins
 		$article->text = $this->item->studytext;
 		$linkit        = $this->item->params->get('show_scripture_link');
 
@@ -475,7 +497,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		$id = (int) @$menu->query['id'];
 
 		// If the menu item does not concern this Study
-		if ($menu && ($menu->query['option'] != 'com_biblestudy' || $menu->query['view'] != 'sermon' || $id != $this->item->id))
+		if ($menu && ($menu->query['option'] !== 'com_biblestudy' || $menu->query['view'] !== 'sermon' || $id !== $this->item->id))
 		{
 			// If this is not a single article menu item, set the page title to the article title
 			if ($this->item->studytitle)
@@ -499,11 +521,11 @@ class BiblestudyViewSermon extends JViewLegacy
 		{
 			$title = $app->get('sitename');
 		}
-		elseif ($app->get('sitename_pagetitles', 0) == 1)
+		elseif ($app->get('sitename_pagetitles', 0) === 1)
 		{
 			$title = JText::sprintf('JPAGETITLE', $app->get('sitename'), $title);
 		}
-		elseif ($app->get('sitename_pagetitles', 0) == 2)
+		elseif ($app->get('sitename_pagetitles', 0) === 2)
 		{
 			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
@@ -548,7 +570,7 @@ class BiblestudyViewSermon extends JViewLegacy
 			$this->document->setMetadata('keywords', $this->item->topic_text . ',' . $this->item->studytitle);
 		}
 
-		if ($app->get('MetaAuthor') == '1')
+		if ($app->get('MetaAuthor') === '1')
 		{
 			$this->document->setMetaData('author', $this->item->teachername);
 		}
@@ -556,7 +578,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		// If there is a pagebreak heading or title, add it to the page title
 		if (!empty($this->item->page_title))
 		{
-			$this->item->title = $this->item->title . ' - ' . $this->item->page_title;
+			$this->item->title .= ' - ' . $this->item->page_title;
 			$this->document->setTitle(
 				$this->item->page_title . ' - '
 				. JText::sprintf('PLG_CONTENT_PAGEBREAK_PAGE_NUM', $this->state->get('list.offset') + 1)

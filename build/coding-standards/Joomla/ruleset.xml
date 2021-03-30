@@ -10,13 +10,11 @@
 	<!-- Include all sniffs in an external standard directory -->
 
 	<!-- Include some additional sniffs from the Generic standard -->
-    <rule ref="Generic.Arrays.DisallowShortArraySyntax" />
 	<rule ref="Generic.ControlStructures.InlineControlStructure" />
 	<rule ref="Generic.Files.EndFileNewline" />
 
 	<!-- Use Unix newlines -->
 	<rule ref="Generic.Files.LineEndings">
-		<exclude name="Generic.Files.LineEndings.InvalidEOLChar"/>
 		<properties>
 			<property name="eolChar" value="\n" />
 		</properties>
@@ -138,7 +136,7 @@
 	<rule ref="Squiz.Commenting.DocCommentAlignment" />
 	<rule ref="Squiz.Commenting.VariableComment">
 		<exclude name="Squiz.Commenting.VariableComment.TagNotAllowed" />
-	</rule>
+	</rule>	
 	<rule ref="Squiz.Operators.IncrementDecrementUsage">
 		<exclude name="Squiz.Operators.IncrementDecrementUsage.processAssignment" />
 	</rule>
@@ -161,11 +159,16 @@
 	</rule>
 	<rule ref="Squiz.WhiteSpace.ScopeClosingBrace" />
 	<rule ref="Squiz.WhiteSpace.ScopeClosingBrace.Indent">
-		<message>Closing brace indented incorrectly; expected %s spaces, found %s. Note: the autofixer will convert spaces to tabs</message>
+		   <message>Closing brace indented incorrectly; expected %s spaces, found %s. Note: the autofixer will convert spaces to tabs</message>
 	</rule>
 	<rule ref="Squiz.WhiteSpace.CastSpacing" />
 	<rule ref="Squiz.WhiteSpace.ControlStructureSpacing">
 		<exclude name="Squiz.WhiteSpace.ControlStructureSpacing.LineAfterClose" />
+	</rule>
+	<rule ref="Squiz.WhiteSpace.MemberVarSpacing">
+		<properties>
+			<property name="spacingBeforeFirst" value="0" />
+		</properties>
 	</rule>
 	<rule ref="Squiz.WhiteSpace.OperatorSpacing">
 		<properties>

@@ -18,7 +18,21 @@ defined('_JEXEC') or die;
  */
 class JBSMAddonYouTube extends JBSMAddon
 {
-	protected $config;
+	/**
+	 * Name of Add-on
+	 *
+	 * @var     string
+	 * @since   9.0.0
+	 */
+	protected $name = 'Youtube';
+
+	/**
+	 * Description of add-on
+	 *
+	 * @var     string
+	 * @since   9.0.0
+	 */
+	protected $description = 'Used for YouTube server access';
 
 	/**
 	 * Upload
@@ -31,7 +45,7 @@ class JBSMAddonYouTube extends JBSMAddon
 	 */
 	public function upload($data)
 	{
-		// Holde for nothing
+		// Holds for nothing
 		return $data;
 	}
 
@@ -52,7 +66,8 @@ class JBSMAddonYouTube extends JBSMAddon
 
 		if ($fields)
 		{
-			foreach ($fields as $field):
+			foreach ($fields as $field)
+			:
 				$html .= '<div class="control-group">';
 				$html .= '<div class="control-label">';
 				$html .= $field->label;
@@ -102,7 +117,8 @@ class JBSMAddonYouTube extends JBSMAddon
 			{
 				$html .= '<div class="span6">';
 
-				foreach ($media_form->getFieldset($name) as $field):
+				foreach ($media_form->getFieldset($name) as $field)
+				:
 					$html .= '<div class="control-group">';
 					$html .= '<div class="control-label">';
 					$html .= $field->label;

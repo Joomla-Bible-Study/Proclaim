@@ -18,7 +18,6 @@ build/reports/jdepend.xml
 build/reports/phpcs-checkstyle.xml
 build/reports/project-size.txt
 /libraries/vendor/*
-composer.lock
 /.php_cs.cache
 !/package-lock.json
 media/css/site/biblestudy.css

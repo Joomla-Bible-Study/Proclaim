@@ -110,7 +110,7 @@ class JBSMPodcast
 						$limit = '';
 					}
 
-					$episodes = $this->getEpisodes($podinfo->id, $limit);
+					$episodes = $this->getEpisodes((int) $podinfo->id, $limit);
 					$registry = new Registry;
 					$registry->loadString(JBSMParams::getAdmin()->params);
 					$registry->merge(JBSMParams::getTemplateparams()->params);
@@ -377,7 +377,7 @@ class JBSMPodcast
 						$prefix  = JUri::root();
 						$FullUrl = $protocol . $path;
 
-						if (substr($FullUrl, 0, strlen($prefix)) === $prefix)
+						if (strpos($FullUrl, $prefix) === 0)
 						{
 							$this->filename = substr($FullUrl, strlen($prefix));
 							$this->filename = JPATH_SITE . '/' . $this->filename;
@@ -411,7 +411,7 @@ class JBSMPodcast
 								<enclosure url="' . $protocol . $episode->srparams->get('path') .
 								'/index.php?option=com_content&amp;view=article&amp;id=' .
 								$episode->params->get('article_id') . '" length="' . $episode->params->get('size', '100') . '" type="' .
-								$episode->params->get('mimetype', 'application/octet-stream') . '" />
+								$episode->params->get('mime_type', 'application/octet-stream') . '" />
                         			<guid>' . $protocol . $episode->srparams->get('path') .
 								'/index.php?option=com_content&amp;view=article&amp;id=' .
 								$episode->params->get('article_id') . '</guid>';
@@ -424,7 +424,7 @@ class JBSMPodcast
 								<enclosure url="' . $protocol . $episode->srparams->get('path') .
 								'/index.php?option=com_docman&amp;task=doc_download&amp;gid=' .
 								$episode->params->get('docMan_id') . '" length="' . $episode->params->get('size') . '" type="' .
-								$episode->params->get('mimetype') . '" />
+								$episode->params->get('mime_type') . '" />
                         			<guid>' . $protocol . $episode->srparams->get('path') .
 								'/index.php?option=com_docman&amp;task=doc_download&amp;gid=' .
 								$episode->params->get('docMan_id') . '</guid>';
@@ -435,14 +435,14 @@ class JBSMPodcast
 								'
 								<enclosure url="' . $protocol . $path .
 								'" length="' . $episode->params->get('size', '100') . '" type="'
-								. $episode->params->get('mimetype', 'audio/mpeg3') . '" />
+								. $episode->params->get('mime_type', 'audio/mpeg3') . '" />
                         			<guid>' . $protocol . $path . '</guid>';
 						}
 
 						$episodedetailtemp .= '
                         		<itunes:explicit>no</itunes:explicit>
                         	       </item>';
-						$episodedetail     = $episodedetail . $episodedetailtemp;
+						$episodedetail     .= $episodedetailtemp;
 					}
 
 					// End of foreach for episode details
@@ -492,31 +492,23 @@ class JBSMPodcast
 	/**
 	 * Escape Html to XML
 	 *
-	 * @param   string  $string  HTML string to make safe
+	 * @param   null|string  $string  HTML string to make safe
 	 *
 	 * @return mixed|string
 	 *
 	 * @since 9.0.0
 	 */
-	protected function escapeHTML(string $string)
+	protected function escapeHTML(?string $string)
 	{
 
-		if (strpos($string, "<![CDATA[") === 0)
+		if (empty($string))
 		{
 			return $string;
 		}
 
 		$string = mb_convert_encoding($string, "UTF-8", "HTML-ENTITIES");
-		$string = htmlspecialchars($string, ENT_NOQUOTES, "UTF-8");
-
-		if (!empty($string))
-		{
-			$string = '<![CDATA[' . $string . ']]>';
-		}
-		else
-		{
-			$string = " ";
-		}
+		$string = strip_tags($string);
+		$string = htmlspecialchars($string, ENT_XML1 | ENT_QUOTES, "UTF-8");
 
 		return $string;
 	}
@@ -531,7 +523,7 @@ class JBSMPodcast
 	 *
 	 * @since 8.0.0
 	 */
-	public function getEpisodes($id, $limit)
+	public function getEpisodes(int $id, string $limit)
 	{
 		preg_match_all('!\d+!', $limit, $set_limit);
 		$set_limit = implode(' ', $set_limit[0]);
@@ -555,7 +547,9 @@ class JBSMPodcast
 			->leftJoin('#__bsms_books AS b ON (b.booknumber = s.booknumber)')
 			->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)')
 			->leftJoin('#__bsms_podcast AS p ON (p.id = mf.podcast_id)')
-			->where('mf.podcast_id LIKE ' . $db->q('%' . $id . '%'))->where('mf.published = ' . 1)->order('createdate desc');
+			->where('mf.podcast_id LIKE ' . $db->q('%' . $id . '%'))
+			->where('mf.published = ' . 1)
+			->order('createdate desc');
 
 		$db->setQuery($query, 0, $set_limit);
 		$episodes = $db->loadObjectList();
@@ -738,12 +732,12 @@ class JBSMPodcast
 	{
 		if (substr($block, 0, 3) === "ID3")
 		{
-			$id3v2_flags            = ord($block[5]);
-			$flag_footer_present    = ($id3v2_flags & 0x10) ? 1 : 0;
-			$z0                     = ord($block[6]);
-			$z1                     = ord($block[7]);
-			$z2                     = ord($block[8]);
-			$z3                     = ord($block[9]);
+			$id3v2_flags         = ord($block[5]);
+			$flag_footer_present = ($id3v2_flags & 0x10) ? 1 : 0;
+			$z0                  = ord($block[6]);
+			$z1                  = ord($block[7]);
+			$z2                  = ord($block[8]);
+			$z3                  = ord($block[9]);
 			if ((($z0 & 0x80) === 0) && (($z1 & 0x80) === 0) && (($z2 & 0x80) === 0) && (($z3 & 0x80) === 0))
 			{
 				$header_size = 10;
@@ -843,11 +837,10 @@ class JBSMPodcast
 	{
 		if ($layer === 1)
 		{
-			return intval(((12 * $bitrate * 1000 / $sample_rate) + $padding_bit) * 4);
+			return (int) (((12 * $bitrate * 1000 / $sample_rate) + $padding_bit) * 4);
 		}
 
 		//layer 2, 3
-
-		return intval(((144 * $bitrate * 1000) / $sample_rate) + $padding_bit);
+		return (int) (((144 * $bitrate * 1000) / $sample_rate) + $padding_bit);
 	}
 }

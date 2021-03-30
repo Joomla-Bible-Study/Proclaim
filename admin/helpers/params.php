@@ -33,26 +33,29 @@ class JBSMParams
 
 	/** @var  Object Admin Table
 	 *
-	 * @since 1.5 */
+	 * @since 1.5
+	 */
 	public static $admin;
 
 	/** @var  Object Template Table
 	 *
-	 * @since 1.5 */
+	 * @since 1.5
+	 */
 	public static $template_table;
 
 	/** @var int Default template id and used to check if changed form from last query
 	 *
-	 * @since 1.5 */
+	 * @since 1.5
+	 */
 	public static $t_id = 1;
 
 	/**
 	 * Gets the settings from Admin
 	 *
-	 * @return mixed Return Admin table
+	 * @return object Return Admin table
 	 *
-	 * @since 7.0
 	 * @throws Exception
+	 * @since 7.0
 	 */
 	public static function getAdmin()
 	{
@@ -65,7 +68,7 @@ class JBSMParams
 				->from('#__bsms_admin')
 				->where($db->qn('id') . ' = ' . (int) 1);
 			$db->setQuery($query);
-			$admin    = $db->loadObject();
+			$admin = $db->loadObject();
 
 			if (isset($admin->params))
 			{
@@ -81,6 +84,7 @@ class JBSMParams
 					$msg = $e->getMessage();
 					$app->enqueueMessage('Can\'t load Admin Params - ' . $msg, 'error');
 				}
+
 				$admin->params = $registry;
 
 				// Add the current user id
@@ -101,8 +105,8 @@ class JBSMParams
 	 *
 	 * @return TableTemplate Return active template info
 	 *
-	 * @since 7.0
 	 * @throws Exception
+	 * @since 7.0
 	 */
 	public static function getTemplateparams($pk = null)
 	{
@@ -113,10 +117,10 @@ class JBSMParams
 			$pk = JFactory::getApplication()->input->getInt('t', '1');
 		}
 
-		if (self::$t_id != $pk || !self::$template_table)
+		if (self::$t_id !== $pk || !self::$template_table)
 		{
 			self::$t_id = $pk;
-			$query = $db->getQuery(true);
+			$query      = $db->getQuery(true);
 			$query->select('*')
 				->from('#__bsms_templates')
 				->where('published = ' . (int) 1)
@@ -127,7 +131,7 @@ class JBSMParams
 			if (!$template)
 			{
 				self::$t_id = 1;
-				$query = $db->getQuery(true);
+				$query      = $db->getQuery(true);
 				$query->select('*')
 					->from('#__bsms_templates')
 					->where('published = ' . (int) 1)
@@ -144,7 +148,7 @@ class JBSMParams
 			}
 			else
 			{
-				$template = new stdClass;
+				$template         = new stdClass;
 				$template->params = new Registry;
 			}
 
@@ -168,7 +172,7 @@ class JBSMParams
 		if (count($param_array) > 0)
 		{
 			// Read the existing component value(s)
-			$db = JFactory::getDbo();
+			$db    = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query->select('params')
 				->from('#__extensions')
@@ -177,7 +181,7 @@ class JBSMParams
 			$params = json_decode($db->loadResult(), true);
 
 			// Add the new variable(s) to the existing one(s)
-			foreach ( $param_array as $name => $value )
+			foreach ($param_array as $name => $value)
 			{
 				$params[(string) $name] = (string) $value;
 			}

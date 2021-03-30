@@ -25,7 +25,7 @@ abstract class JBSServer
 	 * @var     string
 	 * @since   9.0.0
 	 */
-	public $type;
+	protected $type = '';
 
 	/**
 	 * @var     resource    The server connection resource
@@ -33,9 +33,19 @@ abstract class JBSServer
 	 */
 	protected $connection;
 
-	protected static $instances = array();
+	/**
+	 * @var array
+	 *
+	 * @since 9.0.0
+	 */
+	protected static array $instances = array();
 
-	protected $file;
+	/**
+	 * @var string
+	 *
+	 * @since 9.0.0
+	 */
+	protected string $file;
 
 	/**
 	 * Get a list of available servers
@@ -48,7 +58,7 @@ abstract class JBSServer
 	{
 		$servers = array();
 
-		$types = JFolder::folders(dirname(__FILE__));
+		$types = JFolder::folders(__DIR__);
 
 		foreach ($types as $type)
 		{
@@ -57,7 +67,7 @@ abstract class JBSServer
 
 			if (!class_exists($class))
 			{
-				$path = dirname(__FILE__) . '/' . $type . '/' . $type . '.php';
+				$path = __DIR__ . '/' . $type . '/' . $type . '.php';
 
 				// If the file exists register the class
 				if (file_exists($path))
@@ -87,7 +97,7 @@ abstract class JBSServer
 	/**
 	 * Instance
 	 *
-	 * @param   array  $options  ?
+	 * @param   array  $options  Options to be set
 	 *
 	 * @return mixed
 	 *
@@ -95,7 +105,7 @@ abstract class JBSServer
 	 */
 	public static function getInstance($options = array())
 	{
-		$options['type'] = (isset($options['type'])) ? $options['type'] : 'amazons3';
+		$options['type'] = $options['type'] ?? 'amazons3';
 		$instance = null;
 
 		// Get the options signature for this server type
@@ -107,7 +117,7 @@ abstract class JBSServer
 
 			if (!class_exists($class))
 			{
-				$path = dirname(__FILE__) . '/' . $options['type'] . '/' . $options['type'] . '.php';
+				$path = __DIR__ . '/' . $options['type'] . '/' . $options['type'] . '.php';
 
 				if (file_exists($path))
 				{
@@ -121,7 +131,6 @@ abstract class JBSServer
 			}
 			catch (Exception $e)
 			{
-
 			}
 
 			self::$instances[$signature] = $instance;
@@ -133,12 +142,11 @@ abstract class JBSServer
 	/**
 	 * Upload
 	 *
-	 * @param   string  $target     ?
-	 * @param   bool    $overwrite  ?
+	 * @param   JInput|array  $data  Data for upload
 	 *
 	 * @return mixed
 	 *
 	 * @since 9.0.0
 	 */
-	abstract protected function upload($target, $overwrite = true);
+	abstract protected function upload($data);
 }

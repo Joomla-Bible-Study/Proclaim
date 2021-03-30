@@ -153,12 +153,7 @@ class JBSMHelper
 			return 0;
 		}
 
-		if (isset($head['content-length']))
-		{
-			return $head['content-length'];
-		}
-
-		return 0;
+		return $head['content-length'][1] ?? 0;
 	}
 
 	/**
@@ -260,14 +255,7 @@ class JBSMHelper
 			}
 
 			// Set Protocol based on server status
-			if (!$local)
-			{
-				$path = $protocol . $spath . '/' . $path;
-			}
-			else
-			{
-				$path = $protocol . $path;
-			}
+			$path = $protocol . $spath . '/' . $path;
 		}
 		elseif ((!substr_count($spath, '://') || !substr_count($spath, '//')) && !empty($spath))
 		{
@@ -322,7 +310,7 @@ class JBSMHelper
 	 *
 	 * @since 9.0.18
 	 */
-	public static function remove_http($url)
+	public static function remove_http(string $url)
 	{
 		$disallowed = array('http://', 'https://');
 
@@ -340,27 +328,25 @@ class JBSMHelper
 	/**
 	 * Get Simple View Sate
 	 *
-	 * @param   Registry  $params  AdminTable + parametors
+	 * @param   object  $params  AdminTable + parametors
 	 *
-	 * @return  integer
+	 * @return  object
 	 *
 	 * @throws Exception
 	 * @since 9.1.6
 	 */
 	public static function getSimpleView($params = null)
 	{
+		$simple = new stdClass;
+
 		if (is_null($params))
 		{
 			$params = JBSMParams::getAdmin();
 		}
 
-		$simple = $params->params->get('simple_mode');
+		$simple->mode = (integer) $params->params->get('simple_mode');
+		$simple->display = (integer) $params->params->get('simple_mode_display');
 
-		if ($simple)
-		{
-			return 1;
-		}
-
-		return 0;
+		return $simple;
 	}
 }

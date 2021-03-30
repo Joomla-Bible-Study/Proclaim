@@ -50,13 +50,23 @@ class BiblestudyViewCpanel extends JViewLegacy
 	 */
 	protected $state;
 
+	/**
+	 * Post Installation Messages
+	 *
+	 * @var    string
+	 * @since  7.0.0
+	 */
 	protected $hasPostInstallationMessages;
 
+	/**
+	 * Extension ID
+	 *
+	 * @var    integer
+	 * @since  7.0.0
+	 */
 	protected $extension_id;
 
-    protected $simple_mode;
-
-    /**
+	/**
 	 * Display
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
@@ -69,14 +79,11 @@ class BiblestudyViewCpanel extends JViewLegacy
 	{
 		$this->state = $this->get('State');
 		$model       = $this->getModel();
-		$param       = JBSMParams::getAdmin();
-		$params = $param->params;
-		$this->simple_mode = $params['simple_mode'];
 		$component = JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.xml';
 
 		if (file_exists($component))
 		{
-			$this->xml = simplexml_load_file($component);
+			$this->xml = simplexml_load_string(file_get_contents($component));
 		}
 
 		$this->total_messages = JBSMStats::get_total_messages();
@@ -93,7 +100,7 @@ class BiblestudyViewCpanel extends JViewLegacy
 		$this->setDocument();
 
 		// Display the template
-		parent::display($tpl);
+		return parent::display($tpl);
 	}
 
 	/**
@@ -117,7 +124,7 @@ class BiblestudyViewCpanel extends JViewLegacy
 	 */
 	protected function setDocument()
 	{
-		$document = JFactory::getApplication()->getDocument();
+		$document = JFactory::getDocument();
 		$document->setTitle(JText::_('JBS_TITLE_CONTROL_PANEL'));
 	}
 }

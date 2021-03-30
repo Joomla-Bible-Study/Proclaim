@@ -27,6 +27,23 @@ $trashed   = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder == 'study.ordering';
 $columns   = 12;
 
+if (strpos($listOrder, 'publish_up') !== false)
+{
+	$orderingColumn = 'publish_up';
+}
+elseif (strpos($listOrder, 'publish_down') !== false)
+{
+	$orderingColumn = 'publish_down';
+}
+elseif (strpos($listOrder, 'modified') !== false)
+{
+	$orderingColumn = 'modified';
+}
+else
+{
+	$orderingColumn = 'created';
+}
+
 if ($saveOrder)
 {
 	$saveOrderingUrl = 'index.php?option=com_biblestudy&task=message.saveOrderAjax&tmpl=component';
@@ -45,7 +62,6 @@ if ($saveOrder)
 		<div id="j-main-container">
 			<?php endif; ?>
 			<?php echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
-			<div class="clearfix"></div>
 			<?php if (empty($this->items)) : ?>
 				<div class="alert alert-no-items">
 					<?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
@@ -55,7 +71,7 @@ if ($saveOrder)
 					<thead>
 					<tr>
 						<th width="1%" class="nowrap center hidden-phone">
-							<?php echo JHtml::_('searchtools.sort', '', 'study.ordering', $listDirn, $listOrder, null, 'desc', 'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
+							<?php echo JHtml::_('searchtools.sort', '', 'study.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
 						</th>
 						<th width="1%">
 							<?php echo JHtml::_('grid.checkall'); ?>
@@ -92,7 +108,6 @@ if ($saveOrder)
 					<tfoot>
 					<tr>
 						<td colspan="<?php echo $columns; ?>">
-							<?php echo $this->pagination->getListFooter(); ?>
 						</td>
 					</tr>
 					</tfoot>
@@ -211,6 +226,9 @@ if ($saveOrder)
 					); ?>
 				<?php endif; ?>
 			<?php endif; ?>
+
+			<?php echo $this->pagination->getListFooter(); ?>
+
 			<input type="hidden" name="task" value=""/>
 			<input type="hidden" name="boxchecked" value="0"/>
 			<?php echo JHtml::_('form.token'); ?>

@@ -19,11 +19,26 @@ defined('_JEXEC') or die;
 class JBSMAddonLegacy extends JBSMAddon
 {
 	/**
+	 * Name of Add-on
+	 *
+	 * @var     string
+	 * @since   9.0.0
+	 */
+	protected $name = 'lagacy';
+
+	/**
+	 * Description of add-on
+	 *
+	 * @var     string
+	 * @since   9.0.0
+	 */
+	protected $description = 'Legacy Server that we brought over from 8.x.x version of proclaim';
+	/**
 	 * Upload
 	 *
 	 * @param   JInput|array  $data  Data to upload
 	 *
-	 * @return array|bool
+	 * @return array|boolean
 	 *
 	 * @since 9.0.0
 	 */
@@ -48,7 +63,8 @@ class JBSMAddonLegacy extends JBSMAddon
 	{
 		$html = '';
 
-		foreach ($media_form->getFieldset('general') as $field):
+		foreach ($media_form->getFieldset('general') as $field)
+		:
 			$html .= '<div class="control-group">';
 			$html .= '<div class="control-label">';
 			$html .= $field->label;
@@ -98,7 +114,8 @@ class JBSMAddonLegacy extends JBSMAddon
 			{
 				$html .= '<div class="span6">';
 
-				foreach ($media_form->getFieldset($name) as $field):
+				foreach ($media_form->getFieldset($name) as $field)
+				:
 					$html .= '<div class="control-group">';
 					$html .= '<div class="control-label">';
 					$html .= $field->label;

@@ -39,7 +39,7 @@ $type = $app->input->get('view');
 
 $controller = JControllerLegacy::getInstance('Biblestudy');
 
-if ($jbsstate && $type == 'install')
+if ($jbsstate && $type === 'install')
 {
 	JBSMHelper::clearcache('admin');
 	JBSMHelper::clearcache('site');

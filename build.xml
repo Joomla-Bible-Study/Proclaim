@@ -7,12 +7,12 @@
 	<property name="project.name" value="Proclaim"/>
 
 	<!-- Joomla version to run the unit tests against -->
-	<property name="joomla.version" value="3.3.6"/>
+	<property name="joomla.version" value="3.9.24"/>
 
 	<property name="config_path" value="${basedir}/tests/system/servers"/>
 
 	<property name="src.test" value="${basedir}/tests/test"/>
-	<property name="dest.test" value="/admin/views/test"/>
+	<property name="dest.test" value="${basedir}/admin/views/test"/>
 
 	<target name="init" description="Create artifact directories">
 		<mkdir dir="${basedir}/build/reports"/>
@@ -36,16 +36,16 @@
 		</phplint>
 	</target>
 
-	<target name="phpunit" depends="init"
-	        description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
-		<phpunit haltonfailure="true" haltonerror="true" bootstrap="${basedir}/tests/unit/bootstrap.php">
-			<!-- We can only use one formatter at a time -->
-			<formatter todir="${basedir}/build/reports" type="plain" outfile="test-brief.txt"/>
-			<batchtest>
-				<fileset dir="${basedir}/tests/unit/suites/" includes="**/*.php"/>
-			</batchtest>
-		</phpunit>
-	</target>
+<!--	<target name="phpunit" depends="init"-->
+<!--	        description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">-->
+<!--		<phpunit haltonfailure="true" haltonerror="true" bootstrap="${basedir}/tests/unit/bootstrap.php">-->
+<!--			&lt;!&ndash; We can only use one formatter at a time &ndash;&gt;-->
+<!--			<formatter todir="${basedir}/build/reports" type="plain" outfile="test-brief.txt"/>-->
+<!--			<batchtest>-->
+<!--				<fileset dir="${basedir}/tests/unit/suites/" includes="**/*.php"/>-->
+<!--			</batchtest>-->
+<!--		</phpunit>-->
+<!--	</target>-->
 
 	<!-- Copy and paste detector -->
 	<target name="phpcpd" depends="init" description="Checks for copy and pasted code">
@@ -97,10 +97,10 @@
 		</phpmd>
 	</target>
 
-	<!-- Create com_proclaim.zip -->
+	<!-- Create com_proclaim-9.2.4.zip -->
 	<target name="component" depends="init,dev.clean" description="Builds the component">
-		<delete file="${basedir}/build/com_proclaim.zip"/>
-		<zip destfile="${basedir}/build/com_proclaim.zip" basedir="${basedir}">
+		<delete file="${basedir}/build/com_proclaim-9.2.5.zip"/>
+		<zip destfile="${basedir}/build/com_proclaim-9.2.5.zip" basedir="${basedir}">
 			<fileset defaultexcludes="true" dir=".">
 				<include name="admin/**"/>
 				<include name="media/**"/>
@@ -163,16 +163,16 @@
 		<delete dir="${basedir}/tests/.joomla-dev" includeemptydirs="true"/>
 	</target>
 
-	<target name="test.system" depends="init"
-	        description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
-		<phpunit haltonfailure="true" haltonerror="true" bootstrap="${basedir}/tests/system/servers/configdef.php">
-			<!-- We can only use one formatter at a time -->
-			<formatter todir="${basedir}/build/reports" type="plain" outfile="test-brief.txt"/>
-			<batchtest>
-				<fileset dir="tests/system/tests/installation" includes="**/*.php"/>
-			</batchtest>
-		</phpunit>
-	</target>
+<!--	<target name="test.system" depends="init"-->
+<!--	        description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">-->
+<!--		<phpunit haltonfailure="true" haltonerror="true" bootstrap="${basedir}/tests/system/servers/configdef.php">-->
+<!--			&lt;!&ndash; We can only use one formatter at a time &ndash;&gt;-->
+<!--			<formatter todir="${basedir}/build/reports" type="plain" outfile="test-brief.txt"/>-->
+<!--			<batchtest>-->
+<!--				<fileset dir="${basedir}/tests/system/tests/installation" includes="**/*.php"/>-->
+<!--			</batchtest>-->
+<!--		</phpunit>-->
+<!--	</target>-->
 
 	<!-- Set the default joomla path and create symbolic links -->
 	<target name="dev.setup">
@@ -264,9 +264,9 @@
 	<!-- Clean up symbolic links from the development state -->
 	<target name="dev.clean">
 		<echo message="Cleaning up development state"/>
-		<delete file="admin/biblestudy.xml"/>
-		<delete file="admin/biblestudy.script.php"/>
-		<delete file="media/css/site/biblestudy.css"/>
+		<delete file="${basedir}/admin/biblestudy.xml"/>
+		<delete file="${basedir}/admin/biblestudy.script.php"/>
+		<delete file="${basedir}/media/css/site/biblestudy.css"/>
 
 		<!-- Undoing the creation of the dir -->
 		<delete dir="admin/views/test" includeemptydirs="true"/>
@@ -299,8 +299,7 @@
 			<then>
 				<delete dir="${joomla-stage-dir}" includeemptydirs="true" verbose="true"/>
 				<echo message="Staging Joomla ${joomla.version}. This will take a few minutes"/>
-				<gitclone repository="https://github.com/joomla/joomla-cms.git" targetPath="${joomla-stage-dir}"
-						  branch="development"/>
+				<gitclone repository="https://github.com/joomla/joomla-cms.git" targetPath="${joomla-stage-dir}" branch="staging"/>
 				<!-- Switch to the Joomla version that we want to test on -->
 				<gitcheckout repository="${joomla-stage-dir}" branchname="${joomla.version}" create="false"/>
 			</then>
@@ -311,5 +310,5 @@
 	</target>
 
 	<!-- This target should exit gracefully in order for a pull request is approved. -->
-	<target name="build" depends="init,lint,phpunit,phpcpd,size,pmd,pdepend,pmd"/>
+	<target name="build" depends="init,lint,phpcpd,size,pmd,pdepend,pmd"/>
 </project>

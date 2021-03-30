@@ -170,7 +170,7 @@ class JBSMBibleStudyHelper
 			JText::_('JBS_CMN_SERIES'), 'index.php?option=com_biblestudy&view=series', $vName == 'series'
 		);
 
-		if (!$simple_view)
+		if (!$simple_view->mode)
 		{
 			self::rendermenu(
 				JText::_('JBS_CMN_MESSAGETYPES'), 'index.php?option=com_biblestudy&view=messagetypes', $vName == 'messagetypes'
@@ -193,7 +193,7 @@ class JBSMBibleStudyHelper
 			JText::_('JBS_CMN_PODCASTS'), 'index.php?option=com_biblestudy&view=podcasts', $vName == 'podcasts'
 		);
 
-		if (!$simple_view)
+		if (!$simple_view->mode)
 		{
 			self::rendermenu(
 				JText::_('JBS_CMN_TEMPLATES'), 'index.php?option=com_biblestudy&view=templates', $vName == 'templates'
