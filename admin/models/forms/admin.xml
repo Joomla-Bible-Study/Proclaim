@@ -372,14 +372,15 @@
 			<option value="1">JBS_CMN_YES</option>
 		</field>
 	</fieldset>
-	<fieldset addfieldpath="/administrator/components/com_biblestudy/models/fields">
+	<fieldset addfieldpath="/administrator/components/com_biblestudy/models/fields" addrulepath="/administrator/components/com_biblestudy/models/rules">
 		<field name="mediaimage" type="mediafileimages" class="inputbox" labelclass="control-label"
 		       label="JBS_ADM_MEDIA_IMAGES" size="20">
 			<option value="-1">JBS_SELECT_IMAGE</option>
 		</field>
 		<field name="media_use_button_icon" label="JBS_ADDON_MEDIA_USE_BUTTON"
 		       description="JBS_ADDON_MEDIA_USE_BUTTON_DESC" class="inputbox" labelclass="control-label"
-		       type="list" size="15" default="">
+		       type="list" size="15" required="true" default="x" validate="image" message="You must choose image, icon, button or button and icon">
+			<option value="x">JBS_ADM_SELECT_NEW_OPTION</option>
 			<option value="">JBS_MED_NONE</option>
 			<option value="1">JBS_MED_BUTTON_ONLY</option>
 			<option value="2">JBS_MED_BUTTON_AND_ICON</option>
