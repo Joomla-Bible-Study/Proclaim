@@ -59,6 +59,10 @@
 	"phploc/phploc": "*",
 	"pear/cache_lite": "1.7.16"
   },
+  "dependencies": {
+	"hoek": ">=4.2.1",
+	"cryptiles": ">=4.1.2"
+  },
   "extra": {
 	"branch-alias": {
 	  "dev-master": "2.x-dev"
