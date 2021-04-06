@@ -511,6 +511,9 @@ p.popupfooter {
   margin-left: 0;
   display: inline-table;
 }
+#jbsmspan-image {
+  padding-right: 20px;
+}
 .jbsmimg {
   width: 200px;
   height: 200px;

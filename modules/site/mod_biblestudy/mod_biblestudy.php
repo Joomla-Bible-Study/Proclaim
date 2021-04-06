@@ -39,7 +39,7 @@ $admin_params->merge($template->params);
 $admin_params->merge($params);
 $params = $admin_params;
 
-require_once dirname(__FILE__) . '/helper.php';
+require_once __DIR__ . '/helper.php';
 
 $items = ModJBSMHelper::getLatest($params);
 
@@ -48,7 +48,7 @@ $user   = JFactory::getUser();
 $groups = $user->getAuthorisedViewLevels();
 $count  = count($items);
 
-if ($params->get('useexpert_module') > 0 || is_string($params->get('moduletemplate')) == true)
+if ($params->get('useexpert_module') > 0 || is_string($params->get('moduletemplate')) === true)
 {
 	foreach ($items AS $item)
 	{
@@ -130,7 +130,7 @@ if ($url)
 JHtml::_('biblestudy.loadCss', $params, null, 'font-awesome');
 $pageclass_sfx = $params->get('pageclass_sfx');
 
-if ($params->get('simple_mode') == 1)
+if ($params->get('simple_mode') === '1')
 {
 	$template = 'default_simple';
 }
