@@ -45,7 +45,7 @@
 	"ext-curl": "*"
   },
   "require-dev": {
-	"roave/security-advisories": "dev-master",
+	"roave/security-advisories": "dev-latest",
 	"phing/phing": "2.16.4",
 	"pdepend/pdepend": "^2.4",
 	"phpmd/phpmd": "^2.4",
