@@ -256,7 +256,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		// Check the view access to the article (the model has already computed the values).
 		if ($item->params->get('access-view') !== true && (($item->params->get('show_noauth') !== true && $user->get('guest'))))
 		{
-			JFactory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
+			$app->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
 		}
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
@@ -266,7 +266,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		{
 			if (!in_array($this->item->access, $groups))
 			{
-				JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_ACCESS_FORBIDDEN'), 'error');
+				$app->enqueueMessage(JText::_('JBS_CMN_ACCESS_FORBIDDEN'), 'error');
 			}
 		}
 
@@ -393,9 +393,7 @@ class BiblestudyViewSermon extends JViewLegacy
 			return null;
 		}
 
-		/*
-         * Process the prepare content plugins
-         */
+		// Process the prepare content plugins
 		$article->text = $this->item->studytext;
 		$linkit        = $this->item->params->get('show_scripture_link');
 

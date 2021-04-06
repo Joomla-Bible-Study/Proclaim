@@ -119,7 +119,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 
 			if (substr_count($querie, 'INSERT'))
 			{
-				if ($querie != '' && $querie{0} != '#')
+				if ($querie != '' && $querie[0] != '#')
 				{
 					// Check for duplicate names and change
 					if (substr_count($querie, '#__bsms_styles'))
