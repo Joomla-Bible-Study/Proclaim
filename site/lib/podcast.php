@@ -126,13 +126,18 @@ class JBSMPodcast
 						$detailstemplateid = 1;
 					}
 
+					if (empty($podinfo->podcastlink))
+					{
+						$podinfo->podcastlink = $podinfo->website;
+					}
+
 					$detailstemplateid = '&amp;t=' . $detailstemplateid;
 					$podhead           = '<?xml version="1.0" encoding="utf-8"?>
                 <rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/"
                  xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
                 <channel>
                 	<title>' . $this->escapeHTML($podinfo->title) . '</title>
-                	<link>' . $protocol . $podinfo->website . '</link>
+                	<link>' . $protocol . $podinfo->podcastlink . '</link>
                 	<language>' . $podlanguage . '</language>
                 	<copyright>© ' . $year . ' All rights reserved.</copyright>
                 	<itunes:subtitle>' . $this->escapeHTML($podinfo->title) . '</itunes:subtitle>
@@ -549,7 +554,7 @@ class JBSMPodcast
 			->leftJoin('#__bsms_podcast AS p ON (p.id = mf.podcast_id)')
 			->where('mf.podcast_id LIKE ' . $db->q('%' . $id . '%'))
 			->where('mf.published = ' . 1)
-			->order('createdate desc');
+			->order($db->q('createdate desc'));
 
 		$db->setQuery($query, 0, $set_limit);
 		$episodes = $db->loadObjectList();

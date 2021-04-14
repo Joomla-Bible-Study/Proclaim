@@ -30,6 +30,8 @@
            size="20" cols="60" rows="5"/>
     <field name="website" type="text" label="JBS_PDC_WEBSITE_URL"
            size="80"/>
+    <field name="podcastlink" type="text" label="JBS_PDC_PODCAST_URL"
+           size="80"/>
     <field name="author" type="text" label="JBS_PDC_PODCAST_AUTHOR"
            size="50"/>
     <field name="editor_name" type="text" label="JBS_PDC_EDITORS_NAME"
