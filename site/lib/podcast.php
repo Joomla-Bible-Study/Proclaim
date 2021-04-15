@@ -142,14 +142,13 @@ class JBSMPodcast
                 	<copyright>© ' . $year . ' All rights reserved.</copyright>
                 	<itunes:subtitle>' . $this->escapeHTML($podinfo->title) . '</itunes:subtitle>
                 	<itunes:author>' . $this->escapeHTML($podinfo->editor_name) . '</itunes:author>
-                	<itunes:summary>' . $this->escapeHTML($podinfo->description) . '</itunes:summary>
-                	<description>' . $this->escapeHTML($description) . '</description>
+                	<description>' . $this->escapeHTML($podinfo->description) . '</description>
                 	<itunes:owner>
                 		<itunes:name>' . $this->escapeHTML($podinfo->editor_name) . '</itunes:name>
                 		<itunes:email>' . $podinfo->editor_email . '</itunes:email>
                 	</itunes:owner>
                 	<itunes:image href="' . $protocol . $podinfo->website . '/' . $podinfo->podcastimage . '" />
-                	<category>Religion &amp;amp; Spirituality</category>
+                	<category>Religion &amp; Spirituality</category>
                 	<itunes:category text="Religion &amp; Spirituality">
                 		<itunes:category text="Christianity" />
                 	</itunes:category>
@@ -159,8 +158,6 @@ class JBSMPodcast
                 	<generator>Proclaim</generator>
                 	<managingEditor>' . $podinfo->editor_email . ' (' . $this->escapeHTML($podinfo->editor_name) . ')</managingEditor>
                 	<webMaster>' . $podinfo->editor_email . ' (' . $this->escapeHTML($podinfo->editor_name) . ')</webMaster>
-
-                	<itunes:explicit>no</itunes:explicit>
                         <itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>
                         <itunes:type>episodic</itunes:type>
                 	<ttl>1</ttl>
@@ -399,9 +396,8 @@ class JBSMPodcast
 							. $episode->sid . $detailstemplateid . '</comments>
                         		<itunes:author>' . $this->escapeHTML($episode->teachername) . '</itunes:author>
                         		<dc:creator>' . $this->escapeHTML($episode->teachername) . '</dc:creator>
-                        		<description>
-                        		<content:encoded>' . $this->escapeHTML($description) . '</content:encoded>
-                        		</description>
+								<description>' . $this->escapeHTML($description) .'</description>
+                        		<content:encoded><![CDATA[' . $description . ']]></content:encoded>
                         		<pubDate>' . $episodedate . '</pubDate>
                         		<itunes:subtitle>' . $this->escapeHTML($subtitle) . '</itunes:subtitle>
                         		<itunes:summary>' . $this->escapeHTML($description) . '</itunes:summary>
@@ -513,9 +509,8 @@ class JBSMPodcast
 
 		$string = mb_convert_encoding($string, "UTF-8", "HTML-ENTITIES");
 		$string = strip_tags($string);
-		$string = htmlspecialchars($string, ENT_XML1 | ENT_QUOTES, "UTF-8");
 
-		return $string;
+		return htmlspecialchars($string, ENT_NOQUOTES, "UTF-8");
 	}
 
 	/**
@@ -531,7 +526,13 @@ class JBSMPodcast
 	public function getEpisodes(int $id, string $limit)
 	{
 		preg_match_all('!\d+!', $limit, $set_limit);
-		$set_limit = implode(' ', $set_limit[0]);
+		$set_limit = (int) implode(' ', $set_limit[0]);
+
+		// This is set do to the hard limit of Apple max episodes.
+		if ($set_limit >= 301)
+		{
+			$set_limit = 300;
+		}
 
 		// Here's where we look at each mediafile to see if they are connected to this podcast
 		$db    = JFactory::getDbo();
@@ -554,7 +555,7 @@ class JBSMPodcast
 			->leftJoin('#__bsms_podcast AS p ON (p.id = mf.podcast_id)')
 			->where('mf.podcast_id LIKE ' . $db->q('%' . $id . '%'))
 			->where('mf.published = ' . 1)
-			->order($db->q('createdate desc'));
+			->order('createdate desc');
 
 		$db->setQuery($query, 0, $set_limit);
 		$episodes = $db->loadObjectList();
