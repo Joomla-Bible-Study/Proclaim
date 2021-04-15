@@ -121,7 +121,7 @@ class BiblestudyViewMediafile extends JViewLegacy
 		$this->addToolbar();
 
 		// Display the template
-		return parent::display($tpl);
+		parent::display($tpl);
 	}
 
 	/**
