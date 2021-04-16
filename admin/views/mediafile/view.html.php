@@ -121,7 +121,7 @@ class BiblestudyViewMediafile extends JViewLegacy
 		$this->addToolbar();
 
 		// Display the template
-		return parent::display($tpl);
+		parent::display($tpl);
 	}
 
 	/**
@@ -137,7 +137,7 @@ class BiblestudyViewMediafile extends JViewLegacy
 		$input->set('hidemainmenu', true);
 		$user       = JFactory::getUser();
 		$userId     = $user->get('id');
-		$isNew      = ($this->item->id === '0');
+		$isNew      = (empty($this->item->id));
 		$checkedOut = !($this->item->checked_out === '0' || $this->item->checked_out == $userId);
 		$title      = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
 		JToolbarHelper::title(JText::_('JBS_CMN_MEDIA_FILES') . ': <small><small>[' . $title . ']</small></small>', 'video video');
@@ -146,24 +146,20 @@ class BiblestudyViewMediafile extends JViewLegacy
 		{
 			JToolbarHelper::apply('mediafile.apply');
 			JToolbarHelper::save('mediafile.save');
-			JToolbarHelper::save2new('mediafile.save2new');
 			JToolbarHelper::cancel('mediafile.cancel');
 			JToolbarHelper::checkin('mediafile.checkin');
 		}
 		else
 		{
 			// Can't save the record if it's checked out.
-			if (!$checkedOut)
+			if (!$checkedOut && $this->canDo->get('core.edit', 'com_biblestudy'))
 			{
-				if ($this->canDo->get('core.edit', 'com_biblestudy'))
-				{
-					JToolbarHelper::apply('mediafile.apply');
-					JToolbarHelper::save('mediafile.save');
+				JToolbarHelper::apply('mediafile.apply');
+				JToolbarHelper::save('mediafile.save');
 
-					if ($this->canDo->get('core.create', 'com_biblestudy'))
-					{
-						JToolbarHelper::save2new('mediafile.save2new');
-					}
+				if ($this->canDo->get('core.create', 'com_biblestudy'))
+				{
+					JToolbarHelper::save2new('mediafile.save2new');
 				}
 			}
 
