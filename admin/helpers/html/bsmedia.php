@@ -105,7 +105,7 @@ abstract class JHtmlbsMedia
 			JHtml::_('stylesheet', 'media/com_biblestudy/css/general.css', $attribs, true);
 		}
 
-		if ($cssSet == 'lytebox')
+		if ($cssSet === 'lytebox')
 		{
 			JHtml::_('stylesheet', 'media/com_biblestudy/lytebox/lytebox.css', $attribs, true);
 		}

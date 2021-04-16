@@ -181,7 +181,7 @@ class BiblestudyModelAdmin extends JModelAdmin
 	/**
 	 * Gets the ChangeSet object
 	 *
-	 * @return string JSchema  ChangeSet
+	 * @return boolean|Joomla\CMS\Schema\ChangeSet JSchema  ChangeSet
 	 *
 	 * @throws \Exception
 	 * @since 7.0
@@ -319,9 +319,8 @@ class BiblestudyModelAdmin extends JModelAdmin
 		$query->select('version_id')->from($db->qn('#__schemas'))
 			->where('extension_id = ' . $db->q($extensionresult));
 		$db->setQuery($query);
-		$result = $db->loadResult();
 
-		return $result;
+		return $db->loadResult();
 	}
 
 	/**
@@ -567,14 +566,14 @@ class BiblestudyModelAdmin extends JModelAdmin
 
 			$extension = substr($filename, strrpos($filename, '.') + 1);
 
-			if (strpos($filename, 'http') !== false && $from == 'http')
+			if ($from === 'http' && strpos($filename, 'http') !== false)
 			{
 				$reg->set('mime_type', ' ');
 				$isfrom = 'http';
 				$search = true;
 			}
 
-			if (!empty($mediacode) && $from == 'mediacode')
+			if (!empty($mediacode) && $from === 'mediacode')
 			{
 				$reg->set('mime_type', ' ');
 				$isfrom = 'mediacode';
