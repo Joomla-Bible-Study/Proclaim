@@ -507,10 +507,9 @@ class JBSMPodcast
 			return $string;
 		}
 
-		$string = mb_convert_encoding($string, "UTF-8", "HTML-ENTITIES");
 		$string = strip_tags($string);
 
-		return htmlspecialchars($string, ENT_NOQUOTES, "UTF-8");
+		return htmlspecialchars($string, ENT_DISALLOWED, "UTF-8");
 	}
 
 	/**
@@ -542,7 +541,7 @@ class JBSMPodcast
 			. ' mf.published AS mfpub, mf.createdate, mf.params,'
 			. ' s.id AS sid, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.verse_begin,'
 			. ' s.chapter_end, s.verse_end, s.studytitle, s.studyintro, s.published AS spub,'
-			. ' se.series_text,'
+			. ' se.series_text, se.published,'
 			. ' sr.id AS srid, sr.params as srparams,'
 			. ' t.id AS tid, t.teachername,'
 			. ' b.id AS bid, b.booknumber AS bnumber, b.bookname')
@@ -555,6 +554,8 @@ class JBSMPodcast
 			->leftJoin('#__bsms_podcast AS p ON (p.id = mf.podcast_id)')
 			->where('mf.podcast_id LIKE ' . $db->q('%' . $id . '%'))
 			->where('mf.published = ' . 1)
+			->where('s.published = ' . 1)
+			->where('(se.published = ' . 1 . ' OR s.series_id = ' . -1 . ')')
 			->order('createdate desc');
 
 		$db->setQuery($query, 0, $set_limit);
