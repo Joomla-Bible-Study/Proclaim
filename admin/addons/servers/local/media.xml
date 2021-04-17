@@ -11,6 +11,12 @@
 			       required="true"/>
 			<field name="size" type="filesize" label="JBS_CMN_FILESIZE"
 			       description="JBS_MED_FILESIZE_DESC" class="inputbox" size="15"/>
+			<field name="media_hours" type="text" label="JBS_CMN_HOURS" description="" default="00" size="2">
+			</field>
+			<field name="media_minutes" type="text" label="JBS_CMN_MINUTES" description="" default="00" size="2">
+			</field>
+			<field name="media_seconds" type="text" label="JBS_CMN_SECONDS" description="" default="00" size="2">
+			</field>
 		</fieldset>
 		<fieldset name="parameters1">
 			<field name="special" type="list" label="JBS_MED_LINK_TARGET"

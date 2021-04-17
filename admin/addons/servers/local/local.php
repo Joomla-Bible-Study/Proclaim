@@ -107,8 +107,7 @@ class JBSMAddonLocal extends JBSMAddon
 	 */
 	public function render($media_form, $new)
 	{
-		$html = '';
-		$html .= JHtml::_('bootstrap.addTab', 'myTab', 'options', JText::_('Options'));
+		$html = JHtml::_('bootstrap.addTab', 'myTab', 'options', JText::_('Options'));
 
 		$html .= '<div class="row-fluid">';
 
