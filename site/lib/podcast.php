@@ -376,27 +376,28 @@ class JBSMPodcast
 						}
 
 						// Make a duration build from Params of media.
-						$prefix  = JUri::root();
-						$FullUrl = $protocol . $path;
+						$prefix   = JUri::root();
+						$FullUrl  = $protocol . $path;
+						$duration = '00:00:00';
 
-						if (strpos($FullUrl, $prefix) === 0)
-						{
-							$this->filename = substr($FullUrl, strlen($prefix));
-							$this->filename = JPATH_SITE . '/' . $this->filename;
-							$duration       = $this->formatTime($this->getDuration());
-						}
-						else
+						if ($episode->params->get('media_hours', '00') !== '00' || $episode->params->get('media_minutes', '00') !== '00' || $episode->params->get('media_seconds', '00') !== '00')
 						{
 							$duration = $episode->params->get('media_hours', '00') . ':' .
 								$episode->params->get('media_minutes', '00') .
 								':' . $episode->params->get('media_seconds', '00');
+						}
+						elseif (strpos($FullUrl, $prefix) === 0)
+						{
+							$this->filename = substr($FullUrl, strlen($prefix));
+							$this->filename = JPATH_SITE . '/' . $this->filename;
+							$duration       = $this->formatTime($this->getDuration());
 						}
 
 						$episodedetailtemp .= '<comments>' . $protocol . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=sermon&amp;id='
 							. $episode->sid . $detailstemplateid . '</comments>
                         		<itunes:author>' . $this->escapeHTML($episode->teachername) . '</itunes:author>
                         		<dc:creator>' . $this->escapeHTML($episode->teachername) . '</dc:creator>
-								<description>' . $this->escapeHTML($description) .'</description>
+								<description>' . $this->escapeHTML($description) . '</description>
                         		<content:encoded><![CDATA[' . $description . ']]></content:encoded>
                         		<pubDate>' . $episodedate . '</pubDate>
                         		<itunes:subtitle>' . $this->escapeHTML($subtitle) . '</itunes:subtitle>
@@ -622,15 +623,16 @@ class JBSMPodcast
 		if (!$fileit)
 		{
 			$app = JFactory::getApplication();
-			$app->enqueueMessage('Could not make the file unwritable', 'notice');
+			$app->enqueueMessage('Could not make the file un-writable', 'notice');
 
 			return false;
 		}
-		// Try to make the template file unwriteable
+		// Try to make the template file un-writeable
+		// @todo not sure what we are doing here but looks like we need to rework this.
 		if (!$ftp['enabled'] && !JPath::setPermissions($file, '0555'))
 		{
 			JFactory::getApplication()
-				->enqueueMessage('Could not make the file unwritable', 'notice');
+				->enqueueMessage('Could not make the file un-writable', 'notice');
 
 			return false;
 		}
@@ -665,12 +667,12 @@ class JBSMPodcast
 	 */
 	public function getDuration($use_cbr_estimate = false)
 	{
-		$fd = fopen($this->filename, "rb");
+		$fd = fopen($this->filename, 'rb');
 
 		$duration = 0;
 		$block    = fread($fd, 100);
 		$offset   = $this->skipID3v2Tag($block);
-		fseek($fd, $offset, SEEK_SET);
+		@fseek($fd, $offset, SEEK_SET);
 		while (!feof($fd))
 		{
 			$block = fread($fd, 10);
@@ -683,6 +685,7 @@ class JBSMPodcast
 			if ($block[0] === "\xff" && (ord($block[1]) & 0xe0))
 			{
 				$info = $this->parseFrameHeader(substr($block, 0, 4));
+
 				if (empty($info['Framesize']))
 				{
 					return $duration;
@@ -690,18 +693,18 @@ class JBSMPodcast
 				fseek($fd, $info['Framesize'] - 10, SEEK_CUR);
 				$duration += ($info['Samples'] / $info['Sampling Rate']);
 			}
-			else if (substr($block, 0, 3) === 'TAG')
+			else if (strpos($block, 'TAG') === 0)
 			{
 				fseek($fd, 128 - 10, SEEK_CUR);//skip over id3v1 tag size
 			}
 			else
 			{
-				fseek($fd, -9, SEEK_CUR);
+				@fseek($fd, -9, SEEK_CUR);
 			}
 
 			if ($use_cbr_estimate && !empty($info))
 			{
-				return $this->estimateDuration($info['Bitrate'], $offset);
+				$duration = $this->estimateDuration($info['Bitrate'], $offset);
 			}
 		}
 
@@ -729,7 +732,7 @@ class JBSMPodcast
 	/**
 	 * Skip ID3v2 Tags
 	 *
-	 * @param   array  $block  ID3 info block
+	 * @param   array|string  $block  ID3 info block
 	 *
 	 * @return float|int
 	 *
@@ -737,14 +740,20 @@ class JBSMPodcast
 	 */
 	public function skipID3v2Tag(&$block)
 	{
-		if (substr($block, 0, 3) === "ID3")
+		// Do not worry about string vs array work right.
+		if (strpos($block, "ID3") === 0)
 		{
-			$id3v2_flags         = ord($block[5]);
-			$flag_footer_present = ($id3v2_flags & 0x10) ? 1 : 0;
-			$z0                  = ord($block[6]);
-			$z1                  = ord($block[7]);
-			$z2                  = ord($block[8]);
-			$z3                  = ord($block[9]);
+			$id3v2_major_version    = ord($block[3]);
+			$id3v2_minor_version    = ord($block[4]);
+			$id3v2_flags            = ord($block[5]);
+			$flag_unsynchronisation = $id3v2_flags & 0x80 ? 1 : 0;
+			$flag_extended_header   = $id3v2_flags & 0x40 ? 1 : 0;
+			$flag_experimental_ind  = $id3v2_flags & 0x20 ? 1 : 0;
+			$flag_footer_present    = $id3v2_flags & 0x10 ? 1 : 0;
+			$z0                     = ord($block[6]);
+			$z1                     = ord($block[7]);
+			$z2                     = ord($block[8]);
+			$z3                     = ord($block[9]);
 			if ((($z0 & 0x80) === 0) && (($z1 & 0x80) === 0) && (($z2 & 0x80) === 0) && (($z3 & 0x80) === 0))
 			{
 				$header_size = 10;
@@ -759,13 +768,15 @@ class JBSMPodcast
 	}
 
 	/**
-	 * @param   array  $fourbytes  array with four bytes
+	 * Get Frame Header of the ID3 file
+	 *
+	 * @param   array|string  $fourbytes  array with four bytes
 	 *
 	 * @return array
 	 *
 	 * @since 9.2.4
 	 */
-	public function parseFrameHeader($fourbytes)
+	public function parseFrameHeader($fourbytes): array
 	{
 		static $versions = array(
 			0x0 => '2.5', 0x1 => 'x', 0x2 => '2', 0x3 => '1', // x=>'reserved'
@@ -805,10 +816,10 @@ class JBSMPodcast
 		$protection_bit = ($b1 & 0x01);
 		$bitrate_key    = sprintf('V%dL%d', $simple_version, $layer);
 		$bitrate_idx    = ($b2 & 0xf0) >> 4;
-		$bitrate        = isset($bitrates[$bitrate_key][$bitrate_idx]) ? $bitrates[$bitrate_key][$bitrate_idx] : 0;
+		$bitrate        = $bitrates[$bitrate_key][$bitrate_idx] ?? 0;
 
 		$sample_rate_idx     = ($b2 & 0x0c) >> 2;//0xc => b1100
-		$sample_rate         = isset($sample_rates[$version][$sample_rate_idx]) ? $sample_rates[$version][$sample_rate_idx] : 0;
+		$sample_rate         = $sample_rates[$version][$sample_rate_idx] ?? 0;
 		$padding_bit         = ($b2 & 0x02) >> 1;
 		$private_bit         = ($b2 & 0x01);
 		$channel_mode_bits   = ($b3 & 0xc0) >> 6;
