@@ -376,22 +376,9 @@ class JBSMPodcast
 						}
 
 						// Make a duration build from Params of media.
-						$prefix   = JUri::root();
-						$FullUrl  = $protocol . $path;
-						$duration = '00:00:00';
-
-						if ($episode->params->get('media_hours', '00') !== '00' || $episode->params->get('media_minutes', '00') !== '00' || $episode->params->get('media_seconds', '00') !== '00')
-						{
-							$duration = $episode->params->get('media_hours', '00') . ':' .
-								$episode->params->get('media_minutes', '00') .
-								':' . $episode->params->get('media_seconds', '00');
-						}
-						elseif (strpos($FullUrl, $prefix) === 0)
-						{
-							$this->filename = substr($FullUrl, strlen($prefix));
-							$this->filename = JPATH_SITE . '/' . $this->filename;
-							$duration       = $this->formatTime($this->getDuration());
-						}
+						$duration = $episode->params->get('media_hours', '00') . ':' .
+							$episode->params->get('media_minutes', '00') .
+							':' . $episode->params->get('media_seconds', '00');
 
 						$episodedetailtemp .= '<comments>' . $protocol . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=sermon&amp;id='
 							. $episode->sid . $detailstemplateid . '</comments>
