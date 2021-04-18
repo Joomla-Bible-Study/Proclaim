@@ -398,9 +398,15 @@ class JBSMPodcast
 						}
 
 						// Make a duration build from Params of media.
-						$duration = $episode->params->get('media_hours', '00') . ':' .
-							$episode->params->get('media_minutes', '00') .
-							':' . $episode->params->get('media_seconds', '00');
+						if (($params->toObject()->media_hours !== '00' && !empty($params->toObject()->media_hours))
+							&& ($params->toObject()->media_minutes !== '00' && !empty($params->toObject()->media_minutes))
+							&& ($params->toObject()->media_seconds !== '00' && !empty($params->toObject()->media_seconds))
+						)
+						{
+							$duration = $episode->params->get('media_hours') . ':' .
+								$episode->params->get('media_minutes') .
+								':' . $episode->params->get('media_seconds');
+						}
 
 						$episodedetailtemp .= '<comments>' . $protocol . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=sermon&amp;id='
 							. $episode->sid . $detailstemplateid . '</comments>
@@ -640,17 +646,18 @@ class JBSMPodcast
 	 *
 	 * @param   int  $duration  Time in seconds
 	 *
-	 * @return array (Array of hours, minutes, seconds)
+	 * @return  object  Returns hours, minutes, seconds
 	 *
 	 * @since 9.2.4
 	 */
-	public function formatTime(int $duration): array //as hh:mm:ss
+	public function formatTime(int $duration): object //as hh:mm:ss
 	{
-		$hours   = floor($duration / 3600);
-		$minutes = floor(($duration - ($hours * 3600)) / 60);
-		$seconds = $duration - ($hours * 3600) - ($minutes * 60);
+		$time          = new StdClass();
+		$time->hours   = floor($duration / 3600);
+		$time->minutes = floor(($duration - ($time->hours * 3600)) / 60);
+		$time->seconds = $duration - ($time->hours * 3600) - ($time->minutes * 60);
 
-		return array('hours' => $hours, 'minutes' => $minutes, 'seconds' => $seconds);
+		return $time;
 	}
 
 	/**
@@ -701,6 +708,27 @@ class JBSMPodcast
 		}
 
 		return (int) $duration;
+	}
+
+	/**
+	 * @param   string  $url
+	 *
+	 * @return string
+	 *
+	 * @since version
+	 */
+	public function remove_http(string $url): string
+	{
+		$disallowed = array('http://', 'https://');
+		foreach ($disallowed as $d)
+		{
+			if (strpos($url, $d) === 0)
+			{
+				return str_replace($d, '', $url);
+			}
+		}
+
+		return $url;
 	}
 
 	/**

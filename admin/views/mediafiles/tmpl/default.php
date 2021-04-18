@@ -22,7 +22,7 @@ $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 $archived  = $this->state->get('filter.published') == 2 ? true : false;
 $trashed   = $this->state->get('filter.published') == -2 ? true : false;
-$saveOrder = $listOrder == 'mediafile.ordering';
+$saveOrder = $listOrder === 'mediafile.ordering';
 $columns   = 10;
 
 if ($saveOrder)
@@ -79,7 +79,7 @@ $sortFields = $this->getSortFields();
 							<?php echo JHtml::_('searchtools.sort', 'JBS_MED_CREATE_DATE', 'mediafile.createdate', $listDirn, $listOrder); ?>
 						</th>
 						<th width="10%" class="nowrap center hidden-phone">
-							<?php echo JHtml::_('searchtools.sort', 'JBS_MED_ACCESS', 'mediafile.plays', $listDirn, $listOrder); ?>
+							<?php echo JHtml::_('searchtools.sort', 'JBS_MED_ACCESS', 'mediafile.access', $listDirn, $listOrder); ?>
 						</th>
 						<th colspan="2" width="5%" class="nowrap center hidden-phone">
 							<?php echo JHtml::_('searchtools.sort', 'JBS_MED_MEDIA_FILES_STATS', 'mediafile.plays', $listDirn, $listOrder); ?>
@@ -97,7 +97,7 @@ $sortFields = $this->getSortFields();
 					<?php
 					foreach ($this->items as $i => $item) :
 						$item->max_ordering = 0;
-						$ordering = ($listOrder == 'mediafile.ordering');
+						$ordering = ($listOrder === 'mediafile.ordering');
 						$canCreate = $user->authorise('core.create');
 						$canEdit = $user->authorise('core.edit', 'com_biblestudy.mediafile.' . $item->id);
 						$canCheckin = $user->authorise('core.manage', 'com_checkin') || $item->checked_out == $userId || $item->checked_out == 0;

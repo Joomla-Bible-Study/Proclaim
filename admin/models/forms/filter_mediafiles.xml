@@ -49,6 +49,27 @@
 	</fieldset>
 	<fields name="list">
 		<field
+				name="fullordering"
+				type="list"
+				label="COM_CONTENT_LIST_FULL_ORDERING"
+				description="COM_CONTENT_LIST_FULL_ORDERING_DESC"
+				onchange="this.form.submit();"
+				default="mediafile.createdate DESC"
+				validate="options"
+		>
+			<option value="">JGLOBAL_SORT_BY</option>
+			<option value="study.studytitle ASC">JBS_CMN_TITLE_ASC</option>
+			<option value="study.studytitle DESC">JBS_CMN_TITLE_DESC</option>
+			<option value="mediafile.createdate ASC">JBS_CMN_STUDY_DATE_ASC</option>
+			<option value="mediafile.createdate DESC">JBS_CMN_STUDY_DATE_DESC</option>
+			<option value="mediafile.published ASC">JBS_CMN_PUBLISHED_ASC</option>
+			<option value="mediafile.published DESC">JBS_CMN_PUBLISHED_DESC</option>
+			<option value="mediafile.id ASC">JGRID_HEADING_ID_ASC</option>
+			<option value="mediafile.id DESC">JGRID_HEADING_ID_DESC</option>
+			<option value="mediafile.access ASC">JGRID_HEADING_ACCESS_ASC</option>
+			<option value="mediafile.access DESC">JGRID_HEADING_ACCESS_DESC</option>
+		</field>
+		<field
 				name="limit"
 				type="limitbox"
 				class="input-mini"
