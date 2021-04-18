@@ -126,8 +126,6 @@ class JBSMPodcast
 					$params = $registry;
 					$params->set('show_verses', '1');
 					$protocol = $params->get('protocol', 'http://');
-
-					$description       = $this->escapeHTML($podinfo->description);
 					$detailstemplateid = $podinfo->detailstemplateid;
 
 					if (!$detailstemplateid)
@@ -145,7 +143,6 @@ class JBSMPodcast
 						$podinfo->subtitle = $podinfo->title;
 					}
 
-					$detailstemplateid = '&amp;t=' . $detailstemplateid;
 					$podhead           = '<?xml version="1.0" encoding="utf-8"?>
                 <rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/"
                  xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
@@ -368,7 +365,6 @@ class JBSMPodcast
 						}
 
 						$title       = $this->escapeHTML($title);
-						$description = $this->escapeHTML($episode->studyintro);
 
 						$episodedetailtemp = '
                         	   <item>
@@ -376,6 +372,9 @@ class JBSMPodcast
                         		<title>' . $title . '</title>';
 						$file              = str_replace(' ', "%20", $episode->params->get('filename'));
 						$path              = JBSMHelper::MediaBuildUrl($episode->srparams->get('path'), $file, $params, false, false, true);
+
+						// Add router helpers.
+						$episode->slug = $episode->alias ? ($episode->id . ':' . $episode->alias) : $episode->id;
 
 						/*
 						 * Default is to episode
@@ -388,13 +387,13 @@ class JBSMPodcast
 						}
 						elseif ($podinfo->linktype == '2')
 						{
-							$episodedetailtemp .= '<link>' . $protocol . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=popup&amp;player=1&amp;id=' .
-								$episode->sid . $detailstemplateid . '</link>';
+							$episodedetailtemp .= '<link>'  . $protocol . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=popup&amp;player=1&amp;id=' .
+								$episode->slug . '&amp;t=' . $detailstemplateid . '</link>';
 						}
 						else
 						{
 							$episodedetailtemp .= '<link>' . $protocol . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=sermon&amp;id='
-								. $episode->sid . $detailstemplateid . '</link>';
+								. $episode->slug . '&amp;t=' . $detailstemplateid . '</link>';
 						}
 
 						// Make a duration build from Params of media.
@@ -407,16 +406,20 @@ class JBSMPodcast
 								$episode->params->get('media_minutes') .
 								':' . $episode->params->get('media_seconds');
 						}
+						else
+						{
+							$duration = '';
+						}
 
 						$episodedetailtemp .= '<comments>' . $protocol . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=sermon&amp;id='
-							. $episode->sid . $detailstemplateid . '</comments>
+							. $episode->slug . '&amp;t=' . $detailstemplateid . '</comments>
                         		<itunes:author>' . $this->escapeHTML($episode->teachername) . '</itunes:author>
                         		<dc:creator>' . $this->escapeHTML($episode->teachername) . '</dc:creator>
-								<description>' . $this->escapeHTML($description) . '</description>
-                        		<content:encoded><![CDATA[' . $description . ']]></content:encoded>
+								<description>' . $this->escapeHTML($episode->studyintro) . '</description>
+                        		<content:encoded><![CDATA[' . $episode->studyintro . ']]></content:encoded>
                         		<pubDate>' . $episodedate . '</pubDate>
                         		<itunes:subtitle>' . $this->escapeHTML($subtitle) . '</itunes:subtitle>
-                        		<itunes:summary>' . $this->escapeHTML($description) . '</itunes:summary>
+                        		<itunes:summary><![CDATA[' . $episode->studyintro . ']]></itunes:summary>
                         		<itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>
                         		<itunes:duration>' . $duration . '</itunes:duration>';
 
