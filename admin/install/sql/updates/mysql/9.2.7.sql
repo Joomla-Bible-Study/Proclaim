@@ -7,4 +7,5 @@ CREATE TABLE IF NOT EXISTS `#__bsms_update` (
 INSERT INTO `#__bsms_update` (id, version) VALUES ('37', '9.2.7')
 ON DUPLICATE KEY UPDATE version = '9.2.7';
 
-ALTER TABLE `iqkc_bsms_podcast` ADD `podcastlink`  VARCHAR(100) NOT NULL AFTER `website`;
+ALTER TABLE `#__bsms_podcast` ADD `podcastlink`  VARCHAR(100) NOT NULL AFTER `website`;
+ALTER TABLE `#__bsms_podcast` ADD `subtitle`  TEXT NOT NULL AFTER `description`;

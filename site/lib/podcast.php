@@ -31,9 +31,18 @@ if (file_exists($api))
  */
 class JBSMPodcast
 {
-	private $templateid = 0;
+	/**
+	 * @var int
+	 * @since version
+	 */
+	private int $templateid = 0;
 
+	/**
+	 * @var null
+	 * @since version
+	 */
 	private $template = null;
+
 	/**
 	 * @var string
 	 * @since version
@@ -131,37 +140,50 @@ class JBSMPodcast
 						$podinfo->podcastlink = $podinfo->website;
 					}
 
+					if (!isset($podinfo->subtitle))
+					{
+						$podinfo->subtitle = $podinfo->title;
+					}
+
 					$detailstemplateid = '&amp;t=' . $detailstemplateid;
 					$podhead           = '<?xml version="1.0" encoding="utf-8"?>
                 <rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/"
                  xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
                 <channel>
+                	<generator>Proclaim</generator>
                 	<title>' . $this->escapeHTML($podinfo->title) . '</title>
                 	<link>' . $protocol . $podinfo->podcastlink . '</link>
+                	<image>
+                	    <url>' . $protocol . $podinfo->website . '/' . $podinfo->podcastimage . '</url>
+                        <title>' . $this->escapeHTML($podinfo->title) . '</title>
+                        <link>' . $protocol . $podinfo->podcastlink . '</link>
+					</image>
+                	<description>
+                	    ' . $this->escapeHTML($podinfo->description) . '
+                	</description>
                 	<language>' . $podlanguage . '</language>
+                	<itunes:type>episodic</itunes:type>
                 	<copyright>© ' . $year . ' All rights reserved.</copyright>
-                	<itunes:subtitle>' . $this->escapeHTML($podinfo->title) . '</itunes:subtitle>
+                	<atom:link href="' . $protocol . $podinfo->website . '/' . $podinfo->filename . '" rel="self" type="application/rss+xml" />
+                	<lastBuildDate>' . $date . '</lastBuildDate>
+                	<itunes:summary>
+                        ' . $this->escapeHTML($podinfo->description) . '
+                    </itunes:summary>
+                	<itunes:subtitle>' . $this->escapeHTML($podinfo->subtitle) . '</itunes:subtitle>
                 	<itunes:author>' . $this->escapeHTML($podinfo->editor_name) . '</itunes:author>
-                	<description>' . $this->escapeHTML($podinfo->description) . '</description>
                 	<itunes:owner>
                 		<itunes:name>' . $this->escapeHTML($podinfo->editor_name) . '</itunes:name>
                 		<itunes:email>' . $podinfo->editor_email . '</itunes:email>
                 	</itunes:owner>
                 	<itunes:image href="' . $protocol . $podinfo->website . '/' . $podinfo->podcastimage . '" />
-                	<category>Religion &amp; Spirituality</category>
                 	<itunes:category text="Religion &amp; Spirituality">
                 		<itunes:category text="Christianity" />
                 	</itunes:category>
                 	<itunes:explicit>no</itunes:explicit>
                 	<pubDate>' . $date . '</pubDate>
-                	<lastBuildDate>' . $date . '</lastBuildDate>
-                	<generator>Proclaim</generator>
                 	<managingEditor>' . $podinfo->editor_email . ' (' . $this->escapeHTML($podinfo->editor_name) . ')</managingEditor>
                 	<webMaster>' . $podinfo->editor_email . ' (' . $this->escapeHTML($podinfo->editor_name) . ')</webMaster>
-                        <itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>
-                        <itunes:type>episodic</itunes:type>
-                	<ttl>1</ttl>
-                	<atom:link href="' . $protocol . $podinfo->website . '/' . $podinfo->filename . '" rel="self" type="application/rss+xml" />';
+                    <itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>';
 
 
 					if (!$episodes)
@@ -249,7 +271,7 @@ class JBSMPodcast
 								if ($this->templateid !== $detailstemplateid || is_null($this->template))
 								{
 									$this->template   = JBSMParams::getTemplateparams($detailstemplateid);
-									$this->templateid = $detailstemplateid;
+									$this->templateid = (int) $detailstemplateid;
 								}
 
 								$element = $JBSMlisting->getFluidCustom(
@@ -264,7 +286,7 @@ class JBSMPodcast
 								break;
 							case 6:
 								$query = $db->getQuery('true');
-								$query->select('*');
+								$query->select(' * ');
 								$query->from('#__bsms_books');
 								$query->where('booknumber = ' . $episode->booknumber);
 								$db->setQuery($query);
@@ -330,7 +352,7 @@ class JBSMPodcast
 								if ($this->templateid !== $detailstemplateid || is_null($this->template))
 								{
 									$this->template   = JBSMParams::getTemplateparams($detailstemplateid);
-									$this->templateid = $detailstemplateid;
+									$this->templateid = (int) $detailstemplateid;
 								}
 
 								$element  = $JBSMlisting->getFluidCustom(
@@ -338,7 +360,7 @@ class JBSMPodcast
 									$episode,
 									$params,
 									$this->template,
-									$rowid = '24'
+									'podcast'
 
 								);
 								$subtitle = $element;
@@ -584,39 +606,25 @@ class JBSMPodcast
 	 * @throws Exception
 	 * @since 7.0.0
 	 */
-	public function writeFile($file, $filecontent)
+	public function writeFile(string $file, string $filecontent)
 	{
 		// Set FTP credentials, if given
-		$files[]        = $file;
-		$podcastresults = '';
 		jimport('joomla.client.helper');
 		jimport('joomla.filesystem.file');
 		JClientHelper::setCredentialsFromRequest('ftp');
 		$ftp = JClientHelper::getCredentials('ftp');
 
 		// Try to make the template file writable
-		if (JFile::exists($file) && !$ftp['enabled'] && !JPath::setPermissions($file, '0755'))
+		if (!$ftp['enabled'] && JFile::exists($file) && !JPath::setPermissions($file, '0755'))
 		{
 			JFactory::getApplication()->enqueueMessage('Could not make the file writable', 'notice');
 		}
 
-		$fileit = JFile::write($file, $filecontent);
+		$fileIt = JFile::write($file, $filecontent);
 
-		if ($fileit)
-		{
-			return true;
-		}
-
-		if (!$fileit)
-		{
-			$app = JFactory::getApplication();
-			$app->enqueueMessage('Could not make the file un-writable', 'notice');
-
-			return false;
-		}
 		// Try to make the template file un-writeable
 		// @todo not sure what we are doing here but looks like we need to rework this.
-		if (!$ftp['enabled'] && !JPath::setPermissions($file, '0555'))
+		if (!$fileIt || (!$ftp['enabled'] && !JPath::setPermissions($file, '0555')))
 		{
 			JFactory::getApplication()
 				->enqueueMessage('Could not make the file un-writable', 'notice');
@@ -624,37 +632,39 @@ class JBSMPodcast
 			return false;
 		}
 
-		return $podcastresults;
+		return true;
 	}
 
 	/**
-	 * @param $duration
+	 * Brake out time from seconds to (Array of hours, minutes, seconds).
 	 *
-	 * @return string
+	 * @param   int  $duration  Time in seconds
 	 *
-	 * @since version
+	 * @return array (Array of hours, minutes, seconds)
+	 *
+	 * @since 9.2.4
 	 */
-	public function formatTime($duration) //as hh:mm:ss
+	public function formatTime(int $duration): array //as hh:mm:ss
 	{
 		$hours   = floor($duration / 3600);
 		$minutes = floor(($duration - ($hours * 3600)) / 60);
 		$seconds = $duration - ($hours * 3600) - ($minutes * 60);
 
-		return sprintf("%02d:%02d:%02d", $hours, $minutes, $seconds);
+		return array('hours' => $hours, 'minutes' => $minutes, 'seconds' => $seconds);
 	}
 
 	/**
 	 * Read entire file, frame by frame... ie: Variable Bit Rate (VBR)
 	 *
-	 * @param   false  $use_cbr_estimate  True: Use CBR to Estimate, False: Will ignore,
+	 * @param   string  $filename  File name of media.
 	 *
-	 * @return float|int
+	 * @return int
 	 *
 	 * @since 9.2.4
 	 */
-	public function getDuration($use_cbr_estimate = false)
+	public function getDuration(string $filename)
 	{
-		$fd = fopen($this->filename, 'rb');
+		$fd = fopen($filename, 'rb');
 
 		$duration = 0;
 		$block    = fread($fd, 100);
@@ -675,7 +685,7 @@ class JBSMPodcast
 
 				if (empty($info['Framesize']))
 				{
-					return $duration;
+					return (int) $duration;
 				} //some corrupt mp3 files
 				fseek($fd, $info['Framesize'] - 10, SEEK_CUR);
 				$duration += ($info['Samples'] / $info['Sampling Rate']);
@@ -688,32 +698,9 @@ class JBSMPodcast
 			{
 				@fseek($fd, -9, SEEK_CUR);
 			}
-
-			if ($use_cbr_estimate && !empty($info))
-			{
-				$duration = $this->estimateDuration($info['Bitrate'], $offset);
-			}
 		}
 
-		return $duration;
-	}
-
-	/**
-	 * Estimate Duration
-	 *
-	 * @param   integer  $bitrate  Bitrate
-	 * @param   integer  $offset   Offset
-	 *
-	 * @return float
-	 *
-	 * @since 9.2.4
-	 */
-	public function estimateDuration($bitrate, $offset)
-	{
-		$kbps     = ($bitrate * 1000) / 8;
-		$datasize = filesize($this->filename) - $offset;
-
-		return round($datasize / $kbps);
+		return (int) $duration;
 	}
 
 	/**
@@ -721,7 +708,7 @@ class JBSMPodcast
 	 *
 	 * @param   array|string  $block  ID3 info block
 	 *
-	 * @return float|int
+	 * @return int
 	 *
 	 * @since 9.2.4
 	 */
@@ -798,7 +785,7 @@ class JBSMPodcast
 		$simple_version = ($version === '2.5' ? 2 : $version);
 
 		$layer_bits = ($b1 & 0x06) >> 1;
-		$layer      = $layers[$layer_bits];
+		$layer      = (int) $layers[$layer_bits];
 
 		$protection_bit = ($b1 & 0x01);
 		$bitrate_key    = sprintf('V%dL%d', $simple_version, $layer);
@@ -829,7 +816,7 @@ class JBSMPodcast
 	/**
 	 * Frame size setup
 	 *
-	 * @param   string   $layer        Layer
+	 * @param   integer  $layer        Layer
 	 * @param   integer  $bitrate      Bit Rate
 	 * @param   integer  $sample_rate  Sample rate
 	 * @param   integer  $padding_bit  Padding
@@ -838,7 +825,7 @@ class JBSMPodcast
 	 *
 	 * @since 9.2.4
 	 */
-	public function framesize($layer, $bitrate, $sample_rate, $padding_bit)
+	public function frameSize(int $layer, int $bitrate, int $sample_rate, int $padding_bit): int
 	{
 		if ($layer === 1)
 		{
