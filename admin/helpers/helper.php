@@ -160,6 +160,10 @@ class JBSMHelper
 				$dif  = count($head['content-length']) - 1;
 				$size = $head['content-length'][$dif];
 			}
+			else
+			{
+				$size = $head['content-length'][0];
+			}
 		}
 		else
 		{
