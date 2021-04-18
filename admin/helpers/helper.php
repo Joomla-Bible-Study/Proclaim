@@ -153,7 +153,19 @@ class JBSMHelper
 			return 0;
 		}
 
-		return $head['content-length'][1] ?? 0;
+		if (is_array($head['content-length']))
+		{
+			if (count($head['content-length']) === 2)
+			{
+				$size = $head['content-length'][1] ?? 0;
+			}
+		}
+		else
+		{
+			$size = $head['content-length'] ?? 0;
+		}
+
+		return $size ?? 0;
 	}
 
 	/**
