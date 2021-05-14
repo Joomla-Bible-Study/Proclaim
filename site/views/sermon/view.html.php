@@ -71,7 +71,7 @@ class BiblestudyViewSermon extends JViewLegacy
 	 */
 	protected $subscribe;
 
-	/** @var  int Menu ID
+	/** @var  integer Menu ID
 	 *
 	 * @since 7.0
 	 */
