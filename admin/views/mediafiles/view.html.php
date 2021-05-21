@@ -134,7 +134,7 @@ class BiblestudyViewMediafiles extends JViewLegacy
 		$this->setDocument();
 
 		// Display the template
-		return parent::display($tpl);
+		parent::display($tpl);
 	}
 
 	/**
@@ -195,8 +195,6 @@ class BiblestudyViewMediafiles extends JViewLegacy
 			$dhtml = $layout->render(array('title' => $title));
 			$bar->appendButton('Custom', $dhtml, 'batch');
 		}
-
-		include_once JPATH_COMPONENT . '/helpers/html/biblestudy.php';
 	}
 
 	/**

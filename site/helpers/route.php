@@ -99,7 +99,7 @@ abstract class JBSMHelperRoute
 		{
 			self::$lookup = array();
 
-			$component = JComponentHelper::getComponent('com_content');
+			$component = JComponentHelper::getComponent('com_biblestudy');
 			$items     = $menus->getItems('component_id', $component->id);
 
 			foreach ($items as $item)
@@ -141,7 +141,7 @@ abstract class JBSMHelperRoute
 		{
 			$active = $menus->getActive();
 
-			if ($active && $active->component == 'com_content')
+			if ($active && $active->component == 'com_biblestudy')
 			{
 				return $active->id;
 			}

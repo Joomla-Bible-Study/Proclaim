@@ -74,6 +74,14 @@ $input  = $app->input;
 					<?php echo $this->form->getInput('website'); ?>
                 </div>
             </div>
+	        <div class="control-group">
+		        <div class="control-label">
+			        <?php echo $this->form->getLabel('podcastlink'); ?>
+		        </div>
+		        <div class="controls">
+			        <?php echo $this->form->getInput('podcastlink'); ?>
+		        </div>
+	        </div>
             <div class="control-group">
                 <div class="control-label">
 					<?php echo $this->form->getLabel('author'); ?>
