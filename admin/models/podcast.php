@@ -109,9 +109,7 @@ class BiblestudyModelPodcast extends JModelAdmin
 	 */
 	public function getItem($pk = null)
 	{
-		$item = parent::getItem($pk);
-
-		return $item;
+		return parent::getItem($pk);
 	}
 
 	/**
