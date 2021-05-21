@@ -1298,7 +1298,7 @@ $.widget("ui.plupload", {
 					// Rename file and glue extension back on
 					if (e.keyCode === 13) {
 						file.name = nameInput.val() + ext;
-						nameSpan.html(escape(file.name));
+						nameSpan.html(file.name);
 					}
 					nameInput.blur();
 				}

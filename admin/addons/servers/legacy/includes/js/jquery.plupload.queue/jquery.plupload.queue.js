@@ -301,7 +301,7 @@ used as it is.
 
 									// Rename file and glue extension back on
 									file.name = targetInput.val() + ext;
-									targetSpan.html(escape(file.name));
+									targetSpan.html(file.name);
 									targetInput.blur();
 								}
 							});
