@@ -119,6 +119,7 @@ class JBSMMedia
 				JBSMHelper::SetFilesize($media->id, $file_size);
 			}
 
+			// Todo may be able to run this through a functions as this looks like duplicate code of 849
 			switch ($file_size)
 			{
 				case  $file_size < 1024 :
@@ -830,7 +831,7 @@ class JBSMMedia
 		// Check to see if we need to look up file size or not. By looking at if download like is set.
 		if ($media->params->get('link_type') === '0')
 		{
-			$this->fsize = $filesize;
+			$this->fsize = (int) $filesize;
 
 			return $this->fsize;
 		}
@@ -843,24 +844,25 @@ class JBSMMedia
 			JBSMHelper::SetFilesize($media->id, $file_size);
 		}
 
-		$this->fsize = $file_size;
-
 		if ($file_size !== 0)
 		{
 			switch ($file_size)
 			{
 				case  $file_size < 1024 :
+					$this->fsize = $file_size;
 					$file_size .= ' Bytes';
 					break;
 				case $file_size < 1048576 :
 					$file_size /= 1024;
 					$file_size = number_format($file_size, 0);
+					$this->fsize = $file_size;
 					$file_size .= ' KB';
 					break;
 				case $file_size < 1073741824 :
 					$file_size /= 1024;
 					$file_size /= 1024;
 					$file_size = number_format($file_size, 1);
+					$this->fsize = $file_size;
 					$file_size .= ' MB';
 					break;
 				case $file_size > 1073741824 :
@@ -868,32 +870,26 @@ class JBSMMedia
 					$file_size /= 1024;
 					$file_size /= 1024;
 					$file_size = number_format($file_size, 1);
+					$this->fsize = $file_size;
 					$file_size .= ' GB';
 					break;
 			}
 
 			switch ($params->get('show_filesize'))
 			{
-				case 1:
-					$this->fsize = $file_size;
-					break;
 				case 2:
-					$this->fsize = $media->comment;
+					$file_size = $media->comment;
 					break;
 				case 3:
 					if ($media->comment)
 					{
-						$this->fsize = $media->comment;
-					}
-					else
-					{
-						($this->fsize = $file_size);
+						$file_size = $media->comment;
 					}
 					break;
 			}
 		}
 
-		return $this->fsize;
+		return $file_size;
 	}
 
 	/**
