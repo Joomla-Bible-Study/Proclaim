@@ -22,24 +22,22 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 ?>
 
 <div class="container-fluid">
-    <div id="bsheader">
+	<div id="bsheader">
 		<?php
-		if ($this->params->get('showpodcastsubscribelist') == 1)
+		if ($this->params->get('showpodcastsubscribelist') === '1')
 		{
 			echo $this->subscribe;
 		}
 		?>
-    </div>
+	</div>
 	<?php if ($this->params->get('intro_show') > 0)
 	{
-		?>
-        <div class="hero-unit" style="padding-top:30px; padding-bottom:20px;">
-			<?php
-			if ($this->params->get('listteachers') && $this->params->get('list_teacher_show') > 0)
-			{
-				?>
-                <div class="row-fluid">
-                    <ul class="thumbnails">
+		if ($this->params->get('listteachers') && $this->params->get('list_teacher_show') > 0)
+		{
+			?>
+			<div class="hero-unit" style="padding-top:30px; padding-bottom:20px;">';
+				<div class="row-fluid">
+					<ul class="thumbnails">
 						<?php $spans = 12 / count($teachers);
 						foreach ($teachers as $teacher)
 						{
@@ -47,7 +45,7 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 							if ($this->params->get('teacherlink') > 0)
 							{
 								echo '<a href="index.php?option=com_biblestudy&view=teacher&id=' . $teacher['id'] . '&t=' . $teacher['t'] . '" >
-							<img class="img-polaroid" src="' . JUri::base() . $teacher['image'] . '"></a>';
+							<img class="img-polaroid" src="' . JUri::base() . $teacher['image'] . '" alt="Teachers Image"></a>';
 							}
 							else
 							{
@@ -65,35 +63,23 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 							echo '</li>';
 						}
 						?>
-                    </ul>
-                </div>
-			<?php } ?>
-            <div class="row-fluid">
-                <div class="span12">
-					<?php if ($this->params->get('show_page_image') > 0)
-					{
-						?>
-                        <img class="imgcenter" src="<?php echo JUri::base() . $this->main->path; ?>" alt="">
-						<?php
-					}
-					if ($this->params->get('show_page_title') == 1)
-					{ ?>
-                    <<?php echo $classelement; ?> style="<?php echo $this->params->get('list_title_align'); ?>
-                    ">
-					<?php echo $this->params->get('list_page_title'); ?>
-                </<?php echo $classelement; ?>>
+					</ul>
+				</div>
+			</div>
+		<?php } ?>
+		<div class="row-fluid">
+			<div class="span12">
 				<?php
-				}
-				if ($this->params->get('list_intro'))
+				if (!empty($this->params->get('list_intro')))
 				{
 					?>
-                    <p>
+					<p>
 						<?php echo $this->params->get('list_intro'); ?>
-                    </p>
+					</p>
 				<?php } ?>
 
-            </div>
-        </div>
+			</div>
+		</div>
 	<?php } ?>
 </div>
 
@@ -102,7 +88,7 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 	// Search tools bar
 	echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 	?>
-    <hr/>
+	<hr/>
 	<?php
 	if ($this->items)
 	{
@@ -111,22 +97,21 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 	?>
 	<?php // Add pagination links ?>
 	<?php if (!empty($this->items)) : ?>
-		<?php if (($this->params->def('show_pagination', 2) == 1
-				|| ($this->params->get('show_pagination') == 2))
-			&& ($this->pagination->pagesTotal > 1)) : ?>
-            <div class="pagination">
+		<?php if (($this->pagination->pagesTotal > 1) &&
+			($this->params->def('show_pagination', 2) === '1' || ($this->params->get('show_pagination') === '2'))) : ?>
+			<div class="pagination">
 				<?php if ($this->params->def('show_pagination_results', 1)) : ?>
-                    <p class="counter pull-right">
+					<p class="counter pull-right">
 						<?php echo $this->pagination->getPagesCounter(); ?>
-                    </p>
+					</p>
 				<?php endif; ?>
 
 				<?php echo $this->pagination->getPagesLinks(); ?>
-            </div>
+			</div>
 		<?php endif; ?>
 	<?php endif; ?>
 	<?php
-	if ($this->params->get('showpodcastsubscribelist') == 2)
+	if ($this->params->get('showpodcastsubscribelist') === '2')
 	{
 		echo $this->subscribe;
 	}

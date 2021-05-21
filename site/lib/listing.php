@@ -2143,7 +2143,7 @@ class JBSMListing
 				$v_e  = '';
 			}
 
-			if ($v_b === '0')
+			if (empty($v_b) || $v_b === '0')
 			{
 				$v_b = '';
 				$v_e = '';
@@ -2151,13 +2151,13 @@ class JBSMListing
 				$b2  = '';
 			}
 
-			if ($v_e === '0')
+			if (empty($v_e) || $v_e === '0')
 			{
 				$v_e = '';
 				$b2a = '';
 			}
 
-			if ($ch_e === '0')
+			if (empty($ch_e) || $ch_e === '0')
 			{
 				$b2a  = '';
 				$ch_e = '';
@@ -2197,7 +2197,7 @@ class JBSMListing
 				$b2a  = '';
 			}
 
-			if ($v_b === '0')
+			if (empty($v_b) || $v_b === '0')
 			{
 				$v_b = '';
 				$v_e = '';
@@ -2205,18 +2205,18 @@ class JBSMListing
 				$b2  = '';
 			}
 
-			if ($v_e === '0')
+			if (empty($v_e) || $v_e === '0')
 			{
 				$v_e = '';
 				$b2a = '';
 			}
 
-			if ($ch_e === '0')
+			if (empty($ch_e) || $ch_e === '0')
 			{
 				$b2a  = '';
 				$ch_e = '';
 
-				if ($v_e === '0')
+				if (empty($v_e) || $v_e === '0')
 				{
 					$b3 = '';
 				}

@@ -1,6 +1,8 @@
 # Created by .ignore support plugin (hsz.mobi)
 # IntelliJ project files
 .idea
+.github
+*.icloud
 out
 gen
 bin/
@@ -21,3 +23,4 @@ build/reports/project-size.txt
 /.php_cs.cache
 !/package-lock.json
 media/css/site/biblestudy.css
+/.composer.phar.icloud
