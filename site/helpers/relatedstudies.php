@@ -23,7 +23,7 @@ class JBSMRelatedStudies
 	 *
 	 * @since    7.2
 	 */
-	public array $score;
+	public $score;
 
 	/**
 	 * Get Related
