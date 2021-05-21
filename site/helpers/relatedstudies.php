@@ -19,7 +19,10 @@ use Joomla\Registry\Registry;
  */
 class JBSMRelatedStudies
 {
-	/** @var  array Score
+	/**
+	 * Remove array declaration for php 7.3.x
+	 *
+	 * @var  array Score
 	 *
 	 * @since    7.2
 	 */
@@ -70,7 +73,7 @@ class JBSMRelatedStudies
 
 		$studies = $this->getStudies();
 
-		if (!empty($studies))
+		if ($studies !== null)
 		{
 			foreach ($studies as $study)
 			{
@@ -979,6 +982,7 @@ class JBSMRelatedStudies
 				$related .= ' - ' . JText::_($studyrecord->bookname)
 					. ' ' . $studyrecord->chapter_begin;
 			}
+
 			$related .= '</option>';
 		}
 
