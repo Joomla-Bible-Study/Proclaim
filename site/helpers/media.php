@@ -825,14 +825,14 @@ class JBSMMedia
 	 */
 	public function getFluidFilesize($media, $params)
 	{
-		$filesize = '';
+		$filesize = 0;
 
 		// Check to see if we need to look up file size or not. By looking at if download like is set.
 		if ($media->params->get('link_type') === '0')
 		{
 			$this->fsize = $filesize;
 
-			return $filesize;
+			return $this->fsize;
 		}
 
 		$file_size = (int) $media->params->get('size', '0');
@@ -875,25 +875,25 @@ class JBSMMedia
 			switch ($params->get('show_filesize'))
 			{
 				case 1:
-					$filesize = $file_size;
+					$this->fsize = $file_size;
 					break;
 				case 2:
-					$filesize = $media->comment;
+					$this->fsize = $media->comment;
 					break;
 				case 3:
 					if ($media->comment)
 					{
-						$filesize = $media->comment;
+						$this->fsize = $media->comment;
 					}
 					else
 					{
-						($filesize = $file_size);
+						($this->fsize = $file_size);
 					}
 					break;
 			}
 		}
 
-		return $filesize;
+		return $this->fsize;
 	}
 
 	/**
