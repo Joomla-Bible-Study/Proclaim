@@ -19,11 +19,12 @@ use Joomla\Registry\Registry;
  */
 class JBSMMedia
 {
-	/** @type int File Size
+	/**
+	 * @var integer File Size
 	 *
 	 * @since    7.0
 	 */
-	private $fsize = 0;
+	private int $fsize = 0;
 
 	/**
 	 * Return Fluid Media row
@@ -80,24 +81,33 @@ class JBSMMedia
 		}
 
 		// New Podcast Playlist cast Player code override option.
-		$player       = self::getPlayerAttributes($params, $media);
-		$playercode   = self::getPlayerCode($params, $player, $image, $media);
-		$downloadlink = self::getFluidDownloadLink($media, $params, $template);
+		$player       = $this->getPlayerAttributes($params, $media);
+		$playercode   = $this->getPlayerCode($params, $player, $image, $media);
+		$downloadlink = $this->getFluidDownloadLink($media, $params, $template);
 
+		$link_type = 0;
+
+		if ($media->params->get('link_type') === '0' || $media->params->get('link_type'))
+		{
+			$link_type = $media->params->get('link_type', 3);
+		}
+		elseif ($params->get('download_show') !== '0' && !$media->params->get('link_type'))
+		{
+			$link_type = 3;
+		}
+
+		if ($params->get('simple_mode') === '1' || $params->get('sermonstemplate') === 'easy')
+		{
+			$link_type = 3;
+		}
+
+		// Used to override everything if used for use of the Podcast playlist system..
 		if ($params->get('pcplaylist'))
 		{
 			$link_type = 0;
 		}
-		elseif ($media->params->get('link_type') === '0' || $media->params->get('link_type'))
-		{
-			$link_type = $media->params->get('link_type', 3);
-		}
-		else
-		{
-			$link_type = $media->smedia->get('link_type');
-		}
 
-		if ($params->get('show_filesize') > 0 && isset($media) && $link_type < 2)
+		if (isset($media) &&  $link_type < 2 && $params->get('show_filesize') > 0)
 		{
 			$file_size = $media->params->get('size', '0');
 
@@ -152,11 +162,6 @@ class JBSMMedia
 
 			$filesize = '<span class="JBSMFilesize" style="font-size: 0.6em;display:inline;padding-left: 5px;">' .
 				$file_size . '</span>';
-		}
-
-		if ($params->get('simple_mode') === '1' || $params->get('sermonstemplate') === 'easy')
-		{
-			$link_type = 3;
 		}
 
 		switch ($link_type)
@@ -242,9 +247,9 @@ class JBSMMedia
 
 		if ($link_type > 0)
 		{
-			$compat_mode = $params->get('compat_mode');
+			$compat_mode = (int) $params->get('compat_mode');
 
-			if ($compat_mode == 0)
+			if ($compat_mode === 0)
 			{
 				$downloadlink = '<a href="index.php?option=com_biblestudy&amp;view=sermon&amp;mid=' .
 					$media->id . '&amp;task=download">';
@@ -273,7 +278,8 @@ class JBSMMedia
 
 			if ($params->get('useterms') > 0)
 			{
-				$downloadlink = '<a class="modal" href="index.php?option=com_biblestudy&amp;view=terms&amp;tmpl=component&amp;layout=modal&amp;compat_mode='
+				$downloadlink = '<a class="modal" href="index.php?option=com_biblestudy&amp;view=terms&amp;' .
+					'tmpl=component&amp;layout=modal&amp;compat_mode='
 					. $compat_mode . '&amp;mid=' . $media->id . '&amp;t=' . $template->id . '" rel="{handler: \'iframe\', size: {x: 640, y: 480}}">';
 			}
 
@@ -318,7 +324,7 @@ class JBSMMedia
 				break;
 			case 2:
 				// Button and icon
-				if ($imageparams->get('media_icon_type') == '1')
+				if ($imageparams->get('media_icon_type') === '1')
 				{
 					$icon = $imageparams->get('media_custom_icon');
 				}
@@ -335,7 +341,7 @@ class JBSMMedia
 				break;
 			case 3:
 				// Icon only
-				if ($imageparams->get('media_icon_type') == 1)
+				if ($imageparams->get('media_icon_type') === '1')
 				{
 					$icon = $imageparams->get('media_custom_icon');
 				}
@@ -351,21 +357,21 @@ class JBSMMedia
 				break;
 		}
 
-		if ($params->get('simple_mode') == 1 || $params->get('sermonstemplate') == 'easy')
+		if ($params->get('simple_mode') === '1' || $params->get('sermonstemplate') === 'easy')
 		{
 			$filename = $media->get('filename');
 
 			if ((preg_match('(youtube.com|youtu.be)', $filename) === 1))
 			{
-				$mediaimage = '<span class="' . 'fab fa-youtube' . '" title="play" style="font-size:' . '24' . 'px;"></span>';
+				$mediaimage = '<span class="fab fa-youtube" title="play" style="font-size:24px;"></span>';
 			}
 			elseif ((preg_match('(pdf|PDF)', $filename) === 1))
 			{
-				$mediaimage = '<span class="' . 'fas fa-file-pdf' . '" title="play" style="font-size:' . '24' . 'px;"></span>';
+				$mediaimage = '<span class="fas fa-file-pdf" title="play" style="font-size:24px;"></span>';
 			}
 			else
 			{
-				$mediaimage = '<span class="' . 'fas fa-play-circle' . '" title="play" style="font-size:' . '24' . 'px;"></span>';
+				$mediaimage = '<span class="fas fa-play-circle" title="play" style="font-size:24px;"></span>';
 			}
 		}
 
@@ -405,7 +411,7 @@ class JBSMMedia
 				break;
 			case 3:
 				// Button and icon
-				if ($download->get('download_icon_type') == '1')
+				if ($download->get('download_icon_type') === '1')
 				{
 					$icon = $download->get('download_custom_icon');
 				}
@@ -419,7 +425,7 @@ class JBSMMedia
 				break;
 			case 4:
 				// Icon only
-				if ($download->get('download_icon_type') == 1)
+				if ($download->get('download_icon_type') === '1')
 				{
 					$icon = $download->get('download_custom_icon');
 				}
@@ -432,7 +438,7 @@ class JBSMMedia
 				break;
 		}
 
-		if ($download->get('simple_mode') == 1 || $download->get('sermonstemplate') == 'easy')
+		if ($download->get('simple_mode') === '1' || $download->get('sermonstemplate') === 'easy')
 		{
 			$downloadimage = '<span class="fas fa-chevron-circle-down" title="download" style="font-size: 24px;"></span>';
 		}
@@ -466,9 +472,7 @@ class JBSMMedia
 			return $alt;
 		}
 
-		$imagereturn = '<img src="' . JUri::base() . $path . '" alt="' . $alt . '" ' . $return->attributes . ' >';
-
-		return $imagereturn;
+		return '<img src="' . JUri::base() . $path . '" alt="' . $alt . '" ' . $return->attributes . ' >';
 	}
 
 	/**
@@ -512,10 +516,10 @@ class JBSMMedia
 		 * In 6.2.3 we changed inline = 2
 		 */
 		$player->player   = 0;
-		$item_mediaplayer = $media->params->get('player');
+		$item_mediaplayer = (int) $media->params->get('player');
 
 		// Check to see if the item player is set to 100 - that means use global settings which comes from $params
-		if ($item_mediaplayer == 100)
+		if ($item_mediaplayer === 100)
 		{
 			// Player is set from the $params
 			$player->player = $params->get('media_player', '0');
@@ -523,28 +527,30 @@ class JBSMMedia
 		else
 		{
 			/*
-			 In this case the item has a player set for it, so we use that instead. We also need to change the old player
-					type of 3 to 2 for all videos reloaded which we don't support */
+			* In this case the item has a player set for it, so we use that instead. We also need to change the old player
+			*		type of 3 to 2 for all videos reloaded which we don't support
+			*/
+
 			if ($params->get('pcplaylist'))
 			{
 				$player->player = 7;
 			}
 			elseif ($media->params->get('player', null) !== null)
 			{
-				$player->player = $media->params->get('player');
+				$player->player = (int) $media->params->get('player');
 			}
 			else
 			{
-				$player->player = $params->get('player', 0);
+				$player->player = (int) $params->get('player', 0);
 			}
 		}
 
-		if ($player->player == 3)
+		if ($player->player === 3)
 		{
 			$player->player = 2;
 		}
 
-		if ($params->get('docMan_id') != 0)
+		if ((int) $params->get('docMan_id') !== 0)
 		{
 			$player->player = 4;
 		}
@@ -623,13 +629,14 @@ class JBSMMedia
 		$template = $input->getInt('t', '1');
 
 		// Here we get more information about the particular media file
-		$filesize = self::getFluidFilesize($media, $params);
+		$filesize = $this->getFluidFilesize($media, $params);
 
 		$path = JBSMHelper::MediaBuildUrl($media->sparams->get('path'), $params->get('filename'), $params, true);
 
 		switch ($player->player)
 		{
 			case 0: // Direct
+				$playercode = '';
 
 				switch ($player->type)
 				{
@@ -646,18 +653,20 @@ class JBSMMedia
 						break;
 
 					case 1: // Popup window
-						$playercode = "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=" . $params->toObject()->player .
+						$playercode = "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player="
+							. $params->toObject()->player .
 							"&amp;view=popup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" .
-							$player->playerwidth . ",height=" . $player->playerheight . "'); return false\"  class=\"jbsmplayerlink\">" . $image . "</a>";
+							$player->playerwidth . ",height=" . $player->playerheight . "'); return false\"  class=\"jbsmplayerlink\">"
+							. $image . "</a>";
 						break;
 				}
 
-				/** @var $playercode string */
 				return $playercode;
-				break;
 
 			case 7:
 			case 1: // Internal
+				$playercode = '';
+
 				switch ($player->type)
 				{
 					case 3: // Squeezebox view
@@ -684,13 +693,13 @@ class JBSMMedia
 						{
 							$playercode = '<iframe class="playhit" data-id="' . $media->id . '" width="' . $player->playerwidth . '" height="' .
 								$player->playerheight . '" src="' . $this->convertYoutube($path) .
-								'" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+								'" allow="autoplay; encrypted-media" allowfullscreen style="border: none"></iframe>';
 						}
 						elseif (preg_match('(vimeo.com)', $path) === 1)
 						{
 							$playercode = '<iframe class="playhit" data-id="' . $media->id . '" src="' . $this->convertVimeo($path) .
 								'" width="' . $player->playerwidth . '" height="' . $player->playerheight .
-								'" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
+								'" webkitallowfullscreen mozallowfullscreen allowfullscreen style="border: none"></iframe>';
 						}
 						else
 						{
@@ -702,25 +711,27 @@ class JBSMMedia
 					case 1: // Popup
 						// Add space for popup window
 						$diff                 = $params->get('player_width') - $params->get('playerwidth');
-						$player->playerwidth  = $player->playerwidth + abs($diff) + 10;
-						$player->playerheight = $player->playerheight + $params->get('popupmargin', '50');
-						$playercode           = "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=" . $player->player
+						$player->playerwidth  += abs($diff) + 10;
+						$player->playerheight += $params->get('popupmargin', '50');
+						$playercode           = "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player="
+							. $player->player
 							. "&amp;view=popup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width="
 							. $player->playerwidth . ", height=" .
 							$player->playerheight . "'); return false\" class=\"jbsmplayerlink\">" . $image . "</a>";
 						break;
 				}
 
-				/** @var $playercode string */
 				return $playercode;
-				break;
 
 			case 2: // All Videos Reloaded
 			case 3:
+				$playercode = '';
+
 				switch ($player->type)
 				{
 					case 1: // This goes to the popup view
-						$playercode = "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_biblestudy&amp;view=popup&amp;player=3&amp;t=" . $template .
+						$playercode = "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_biblestudy"
+							. "&amp;view=popup&amp;player=3&amp;t=" . $template .
 							"&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
 							. $player->playerheight . "'); return false\"  class=\"jbsmplayerlink\">" . $image . "</a>";
 						break;
@@ -731,36 +742,22 @@ class JBSMMedia
 						break;
 				}
 
-				/** @var $playercode string */
-
 				return $playercode;
-				break;
 
 			case 4: // Docman
-				$playercode = $this->getDocman($media, $image);
-
-				return $playercode;
-				break;
+				return $this->getDocman($media, $image);
 
 			case 5: // Article
-				$playercode = $this->getArticle($media, $image);
-
-				return $playercode;
-				break;
+				return $this->getArticle($media, $image);
 
 			case 6: // Virtuemart
-				$playercode = $this->getVirtuemart($media, $image);
-
-				return $playercode;
-				break;
+				return $this->getVirtuemart($media, $image);
 
 			case 8: // Embed code
-				$playercode = "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_biblestudy&amp;view=popup&amp;player=8&amp;t=" . $template .
+				return "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_biblestudy"
+					. "&amp;view=popup&amp;player=8&amp;t=" . $template .
 					"&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
 					. $player->playerheight . "'); return false\">" . $image . "</a>";
-
-				return $playercode;
-				break;
 		}
 
 		return false;
@@ -838,38 +835,40 @@ class JBSMMedia
 			return $filesize;
 		}
 
-		$file_size = $media->params->get('size', '0');
+		$file_size = (int) $media->params->get('size', '0');
 
-		if ($file_size == 0)
+		if ($file_size === 0)
 		{
 			$file_size = JBSMHelper::getRemoteFileSize(JBSMHelper::MediaBuildUrl($media->sparams->get('path'), $params->get('filename'), $params, true));
 			JBSMHelper::SetFilesize($media->id, $file_size);
 		}
 
-		if ($file_size != 0)
+		$this->fsize = $file_size;
+
+		if ($file_size !== 0)
 		{
 			switch ($file_size)
 			{
 				case  $file_size < 1024 :
-					$file_size = ' ' . 'Bytes';
+					$file_size .= ' Bytes';
 					break;
 				case $file_size < 1048576 :
-					$file_size = $file_size / 1024;
+					$file_size /= 1024;
 					$file_size = number_format($file_size, 0);
-					$file_size = $file_size . ' ' . 'KB';
+					$file_size .= ' KB';
 					break;
 				case $file_size < 1073741824 :
-					$file_size = $file_size / 1024;
-					$file_size = $file_size / 1024;
+					$file_size /= 1024;
+					$file_size /= 1024;
 					$file_size = number_format($file_size, 1);
-					$file_size = $file_size . ' ' . 'MB';
+					$file_size .= ' MB';
 					break;
 				case $file_size > 1073741824 :
-					$file_size = $file_size / 1024;
-					$file_size = $file_size / 1024;
-					$file_size = $file_size / 1024;
+					$file_size /= 1024;
+					$file_size /= 1024;
+					$file_size /= 1024;
 					$file_size = number_format($file_size, 1);
-					$file_size = $file_size . ' ' . 'GB';
+					$file_size .= ' GB';
 					break;
 			}
 
@@ -894,8 +893,6 @@ class JBSMMedia
 			}
 		}
 
-		$this->fsize = $filesize;
-
 		return $filesize;
 	}
 
@@ -905,9 +902,10 @@ class JBSMMedia
 	 * @param   Object                    $row     Table Row info
 	 * @param   Joomla\Registry\Registry  $params  Params
 	 *
-	 * @return null|string
+	 * @return void
 	 *
 	 * @since 9.0.0
+	 * @deprecate 9.2.7
 	 */
 	public function getFluidDuration($row, $params)
 	{
@@ -987,10 +985,8 @@ class JBSMMedia
 
 			return $media;
 		}
-		else
-		{
-			return false;
-		}
+
+		return false;
 	}
 
 	/**
@@ -1077,11 +1073,10 @@ class JBSMMedia
 	 */
 	public function getVirtuemart($media, $image)
 	{
-		$vm = '<a class="playhit" data-id="' . $media->id . '" href="index.php?option=com_virtuemart&amp;view=productdetails&amp;virtuemart_product_id=' .
+		return '<a class="playhit" data-id="' . $media->id
+			. '" href="index.php?option=com_virtuemart&amp;view=productdetails&amp;virtuemart_product_id=' .
 			$media->virtueMart_id . '" target="' . $media->special .
 			'">' . $image . '</a>';
-
-		return $vm;
 	}
 
 	/**
@@ -1244,7 +1239,7 @@ class JBSMMedia
 	 */
 	public function getIcons()
 	{
-		$icons = [
+		return [
 			'JBS_MED_PLAY'      => 'fas fa-play',
 			'JBS_MED_YOUTUBE'   => 'fab fa-youtube',
 			'JBS_MED_VIDEO'     => 'fas fa-video',
@@ -1254,7 +1249,5 @@ class JBSMMedia
 			'JBS_MED_VIMEO'     => 'fab fa-vimeo',
 			'JBS_MED_CUSTOM'    => '1'
 		];
-
-		return $icons;
 	}
 }
