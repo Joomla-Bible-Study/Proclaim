@@ -45,7 +45,7 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 							if ($this->params->get('teacherlink') > 0)
 							{
 								echo '<a href="index.php?option=com_biblestudy&view=teacher&id=' . $teacher['id'] . '&t=' . $teacher['t'] . '" >
-							<img class="img-polaroid" src="' . JUri::base() . $teacher['image'] . '"></a>';
+							<img class="img-polaroid" src="' . JUri::base() . $teacher['image'] . '" alt="Teachers Image"></a>';
 							}
 							else
 							{
