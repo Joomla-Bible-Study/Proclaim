@@ -99,8 +99,8 @@
 
 	<!-- Create com_proclaim-x.x.x.zip -->
 	<target name="component" depends="init,dev.clean" description="Builds the component">
-		<delete file="${basedir}/build/com_proclaim-9.2.6.zip"/>
-		<zip destfile="${basedir}/build/com_proclaim-9.2.6.zip" basedir="${basedir}">
+		<delete file="${basedir}/build/com_proclaim-9.2.7.zip"/>
+		<zip destfile="${basedir}/build/com_proclaim-9.2.7.zip" basedir="${basedir}">
 			<fileset defaultexcludes="true" dir=".">
 				<include name="admin/**"/>
 				<include name="media/**"/>
