@@ -51,11 +51,9 @@ class Com_BiblestudyInstallerScript
 	 */
 	static protected $versions = array(
 		'PHP'     => array(
-			'5.6' => '5.6.30',
-			'7.0' => '7.0.13',
 			'7.1' => '7.1.0',
 			'7.2' => '7.2.1',
-			'0'   => '7.2.11' // Preferred version
+			'0'   => '7.4.1' // Preferred version
 		),
 		'MySQL'   => array(
 			'5.1' => '5.1',
@@ -65,7 +63,7 @@ class Com_BiblestudyInstallerScript
 		'Joomla!' => array(
 			'3.6' => '3.6.3',
 			'3.7' => '3.7.0',
-			'0'   => '3.8.3' // Preferred version
+			'0'   => '3.9.3' // Preferred version
 		)
 	);
 
