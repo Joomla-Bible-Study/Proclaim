@@ -315,9 +315,21 @@ class JBSMPIconvert
 				$locations                = new stdClass;
 				$locations->id            = null;
 				$locations->published     = $pi->published;
-				$locations->location_text = $pi->ministry_name;
+				$locations->location_text = $pi->name;
 				$locations->access        = $pi->access;
 				$locations->ordering      = $pi->ordering;
+				$locations->description = $pi->description;
+				$locations->image = $pi->ministry_img_lrg;
+				if ($locations->image_foldering)
+                {
+                    $query = $db->getQuery(true);
+                    $query->select('*')->from('#__pifilepath');
+                    $db->setQuery($query);
+                    $folders = $db->loadObjectList();
+                    foreach ($folders as $folder) {
+                        $locations->image = $folder->folder . $locations->image;
+                    }
+                }
 
 				if (!$db->insertObject('#__bsms_locations', $locations, 'id'))
 				{
