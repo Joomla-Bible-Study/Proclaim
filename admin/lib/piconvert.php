@@ -18,337 +18,298 @@ defined('_JEXEC') or die;
  */
 class JBSMPIconvert
 {
-	/**
-	 * Array of Comments Id's
-	 *
-	 * @var array
-	 *
-	 * @since 9.0.0
-	 */
-	public $commentsids;
+    /**
+     * Array of Comments Id's
+     *
+     * @var array
+     *
+     * @since 9.0.0
+     */
+    public $commentsids;
 
-	/**
-	 * Array of Servers Id's
-	 *
-	 * @var array
-	 *
-	 * @since 9.0.0
-	 */
-	public $serversids;
+    /**
+     * Array of Servers Id's
+     *
+     * @var array
+     *
+     * @since 9.0.0
+     */
+    public $serversids;
 
-	/**
-	 * Array of Folders Id's
-	 *
-	 * @var array
-	 *
-	 * @since 9.0.0
-	 */
-	public $foldersids;
+    /**
+     * Array of Folders Id's
+     *
+     * @var array
+     *
+     * @since 9.0.0
+     */
+    public $foldersids;
 
-	/**
-	 * Array of Studies Id's
-	 *
-	 * @var array
-	 *
-	 * @since 9.0.0
-	 */
-	public $studiesids;
+    /**
+     * Array of Studies Id's
+     *
+     * @var array
+     *
+     * @since 9.0.0
+     */
+    public $studiesids;
 
-	/**
-	 * Array of Media-Files Id's
-	 *
-	 * @var array
-	 *
-	 * @since 9.0.0
-	 */
-	public $mediafilesids;
+    /**
+     * Array of Media-Files Id's
+     *
+     * @var array
+     *
+     * @since 9.0.0
+     */
+    public $mediafilesids;
 
-	/**
-	 * Array of Teachers Id's
-	 *
-	 * @var array
-	 *
-	 * @since 9.0.0
-	 */
-	public $teachersids;
+    /**
+     * Array of Teachers Id's
+     *
+     * @var array
+     *
+     * @since 9.0.0
+     */
+    public $teachersids;
 
-	/**
-	 * Array of Series Id's
-	 *
-	 * @var array
-	 *
-	 * @since 9.0.0
-	 */
-	public $seriesids;
+    /**
+     * Array of Series Id's
+     *
+     * @var array
+     *
+     * @since 9.0.0
+     */
+    public $seriesids;
 
-	/**
-	 * Array of Podcasts Id's
-	 *
-	 * @var array
-	 *
-	 * @since 9.0.0
-	 */
-	public $podcastids;
+    /**
+     * Array of Podcasts Id's
+     *
+     * @var array
+     *
+     * @since 9.0.0
+     */
+    public $podcastids;
 
-	/**
-	 * Array of Locations
-	 *
-	 * @var array
-	 *
-	 * @since 9.0.0
-	 */
-	public $locations;
+    /**
+     * Array of Locations
+     *
+     * @var array
+     *
+     * @since 9.0.0
+     */
+    public $locations;
 
-	/**
-	 * ???
-	 *
-	 * @var int
-	 *
-	 * @since 9.0.0
-	 */
-	public $cnoadd;
+    /**
+     * ???
+     *
+     * @var int
+     *
+     * @since 9.0.0
+     */
+    public $cnoadd;
 
-	/**
-	 * Can Add switch
-	 *
-	 * @var int
-	 *
-	 * @since 9.0.0
-	 */
-	public $cadd;
+    /**
+     * Can Add switch
+     *
+     * @var int
+     *
+     * @since 9.0.0
+     */
+    public $cadd;
 
-	/**
-	 * Comment object
-	 *
-	 * @var object
-	 *
-	 * @since 9.0.0
-	 */
-	public $picomments;
+    /**
+     * Comment object
+     *
+     * @var object
+     *
+     * @since 9.0.0
+     */
+    public $picomments;
 
-	/**
-	 * Number of Podcasts
-	 *
-	 * @var int
-	 *
-	 * @since 9.0.0
-	 */
-	public $podcasts;
+    /**
+     * Number of Podcasts
+     *
+     * @var int
+     *
+     * @since 9.0.0
+     */
+    public $podcasts;
 
-	/**
-	 * Convert PreachIT
-	 *
-	 * @return string
-	 *
-	 * @since 7.1.0
-	 */
-	public function convertPI ()
-	{
-		$this->commentsids   = array();
-		$this->serversids    = array();
-		$this->foldersids    = array();
-		$this->mediafilesids = array();
-		$this->studiesids    = array();
-		$this->teachersids   = array();
-		$this->seriesids     = array();
-		$this->podcastids    = array();
-		$this->locations     = array();
-		$this->cnoadd        = 0;
-		$this->cadd          = 0;
-		$svadd               = 0;
-		$svnoadd             = 0;
-		$fnoadd              = 0;
-		$fadd                = 0;
-		$tnoadd              = 0;
-		$tadd                = 0;
-		$srnoadd             = 0;
-		$sradd               = 0;
-		$pnoadd              = 0;
-		$padd                = 0;
-		$lnoadd              = 0;
-		$ladd                = 0;
-		$snoadd              = 0;
-		$sadd                = 0;
-		$mnoadd              = 0;
-		$madd                = 0;
-		$newid               = 0;
-		$oldid               = 0;
-		$db                  = JFactory::getDbo();
-		$query               = $db->getQuery(true);
-		$query->select('*')->from('#__picomments');
-		$db->setQuery($query);
-		$this->picomments = $db->loadObjectList();
-		/** @var $piconversion string */
-		$piconversion = null;
+    /**
+     * Convert PreachIT
+     *
+     * @return string
+     *
+     * @since 7.1.0
+     */
+    public function convertPI()
+    {
+        $this->commentsids = array();
+        $this->serversids = array();
+        $this->foldersids = array();
+        $this->mediafilesids = array();
+        $this->studiesids = array();
+        $this->teachersids = array();
+        $this->seriesids = array();
+        $this->podcastids = array();
+        $this->locations = array();
+        $this->cnoadd = 0;
+        $this->cadd = 0;
+        $svadd = 0;
+        $svnoadd = 0;
+        $fnoadd = 0;
+        $fadd = 0;
+        $tnoadd = 0;
+        $tadd = 0;
+        $srnoadd = 0;
+        $sradd = 0;
+        $pnoadd = 0;
+        $padd = 0;
+        $lnoadd = 0;
+        $ladd = 0;
+        $snoadd = 0;
+        $sadd = 0;
+        $mnoadd = 0;
+        $madd = 0;
+        $newid = 0;
+        $oldid = 0;
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('*')->from('#__picomments');
+        $db->setQuery($query);
+        $this->picomments = $db->loadObjectList();
+        /** @var $piconversion string */
+        $piconversion = null;
 
-		// Create servers and folders
-		$query = $db->getQuery(true);
-		$query->select('*')->from('#__pifilepath');
-		$db->setQuery($query);
-		$piservers = $db->loadObjectList();
+        // Create servers and folders
+        $query = $db->getQuery(true);
+        $query->select('*')->from('#__pifilepath');
+        $db->setQuery($query);
+        $piservers = $db->loadObjectList();
 
-		if (!$piservers)
-		{
-			$svnoadd++;
-		}
-		else
-		{
-			foreach ($piservers AS $pi)
-			{
-				$data              = new stdClass;
-				$data->id          = null;
-				$data->server_path = $pi->server;
-				$data->server_name = $pi->server;
-				$data->published   = $pi->published;
+        if (!$piservers) {
+            $svnoadd++;
+        } else {
+            foreach ($piservers as $pi) {
+                $data = new stdClass;
+                $data->id = null;
+                $data->server_path = $pi->server;
+                $data->server_name = $pi->name;
+                $data->published = $pi->published;
 
-				if (!$db->insertObject('#__bsms_servers', $data, 'id'))
-				{
-					$svnoadd++;
-				}
-				else
-				{
-					$svadd++;
-					$query = $db->getQuery(true);
-					$query->select('id')->from('#__bsms_servers')->order('id desc');
-					$db->setQuery($query, 0, 1);
-					$newid              = $db->loadResult();
-					$oldid              = $pi->id;
-					$this->serversids[] = array('newid' => $newid, 'oldid' => $oldid);
-				}
-
-				$datafolders             = new stdClass;
-				$datafolders->id         = null;
-				$datafolders->foldername = $pi->name;
-				$datafolders->folderpath = $pi->server . '/' . $pi->folder . '/';
-				$datafolders->published  = $pi->published;
-			}
-		}
-
-		// Teachers
-		$query = $db->getQuery(true);
-		$query->select('*')->from('#__piteachers');
-		$db->setQuery($query);
-		$piteachers = $db->loadObjectList();
-
-		if (!$piteachers)
-		{
-			$tnoadd++;
-		}
-		else
-		{
-			foreach ($piteachers AS $pi)
-			{
-				// Map new folder for images to old one
-				$foldersmall = $pi->image_folder;
-				$folderlarge = $pi->image_folderlrg;
-
-				foreach ($this->foldersids as $folder)
-				{
-					if ($folder['oldid'] == $foldersmall)
-					{
-						$foldersmall = $folder['newid'];
-					}
-
-					if ($folder['oldid'] == $folderlarge)
-					{
-						$folderlarge = $folder['newid'];
-					}
-				}
-
-				// Look up folders to use in teacher images
-				$query = $db->getQuery(true);
-				$query->select('folderpath')->from('#__bsms_folders')->where('id = ' . $foldersmall);
-				$db->setQuery($query);
-				$object         = $db->loadObject();
-				$newfoldersmall = $object->folderpath;
-				$query          = $db->getQuery(true);
-				$query->select('folderpath')->from('#__bsms_folders')->where('id = ' . $folderlarge);
-				$db->setQuery($query);
-				$object                    = $db->loadObject();
-				$newfolderlarge            = $object->folderpath;
-				$datateachers              = new stdClass;
-				$datateachers->id          = null;
-				$datateachers->teachername = $pi->teacher_name;
-				$datateachers->alias       = $pi->alias;
-				$datateachers->title       = $pi->teacher_role;
-				$datateachers->image       = $newfolderlarge . $pi->teacher_image_lrg;
-				$datateachers->thumb       = $newfoldersmall . $pi->teacher_image_sm;
-				$datateachers->email       = $pi->teacher_email;
-				$datateachers->website     = $pi->teacher_website;
-				$datateachers->short       = $db->escape($pi->teacher_description);
-				$datateachers->list_show   = $pi->teacher_view;
-				$datateachers->published   = $pi->published;
-
-				if (!$db->insertObject('#__bsms_teachers', $datateachers, 'id'))
-				{
-					$tnoadd++;
-				}
-				else
-				{
-					$tadd++;
-
-					// Get the new teacherid so we can later connect it to a study
-					$query = $db->getQuery(true);
-					$query->select('id')->from('#__bsms_teachers')->order('id desc');
-					$db->setQuery($query, 0, 1);
-					$newid               = $db->loadResult();
-					$oldid               = $pi->id;
-					$this->teachersids[] = array('newid' => $newid, 'oldid' => $oldid);
-				}
-			}
-		}
-
-		// Convert Ministries
-		$query = $db->getQuery(true);
-		$query->select('*')->from('#__piministry');
-		$db->setQuery($query);
-		$ministries = $db->loadObjectList();
-
-		if (!$ministries)
-		{
-			$piconversion .= '<tr><td>' . JText::_('JBS_IBM_NO_MINISTRIES') . '</td></tr>';
-		}
-		else
-		{
-			foreach ($ministries as $pi)
-			{
-				$locations                = new stdClass;
-				$locations->id            = null;
-				$locations->published     = $pi->published;
-				$locations->location_text = $pi->name;
-				$locations->access        = $pi->access;
-				$locations->ordering      = $pi->ordering;
-				$locations->description = $pi->description;
-				$locations->image = $pi->ministry_img_lrg;
-				if ($locations->image_foldering)
-                {
+                if (!$db->insertObject('#__bsms_servers', $data, 'id')) {
+                    $svnoadd++;
+                } else {
+                    $svadd++;
                     $query = $db->getQuery(true);
-                    $query->select('*')->from('#__pifilepath')->where('id = ' . $locations->image_foldering);
-                    $db->setQuery($query);
-                    $folders = $db->loadObjectList();
-                    foreach ($folders as $folder) {
-                        $locations->image = $folder->folder . $locations->image;
-                    }
+                    $query->select('id')->from('#__bsms_servers')->order('id desc');
+                    $db->setQuery($query, 0, 1);
+                    $newid = $db->loadResult();
+                    $oldid = $pi->id;
+                    $this->serversids[] = array('newid' => $newid, 'oldid' => $oldid);
                 }
 
-				if (!$db->insertObject('#__bsms_locations', $locations, 'id'))
-				{
-					$lnoadd++;
-				}
-				else
-				{
-					$ladd++;
+                $datafolders = new stdClass;
+                $datafolders->id = null;
+                $datafolders->foldername = $pi->name;
+                $datafolders->folderpath = $pi->server . '/' . $pi->folder . '/';
+                $datafolders->published = $pi->published;
+            }
+        }
 
-					// Get the new teacherid so we can later connect it to a study
-					$query = $db->getQuery(true);
-					$query->select('id')->from('#__bsms_locations')->order('id desc');
-					$db->setQuery($query, 0, 1);
-					$newid             = $db->loadResult();
-					$oldid             = $pi->id;
-					$this->locations[] = array('newid' => $newid, 'oldid' => $oldid);
-				}
-			}
-		}
+        // Teachers
+        $query = $db->getQuery(true);
+        $query->select('*')->from('#__piteachers');
+        $db->setQuery($query);
+        $piteachers = $db->loadObjectList();
+
+        if (!$piteachers) {
+            $tnoadd++;
+        } else {
+            foreach ($piteachers as $pi) {
+                // Map new folder for images to old one
+
+                $folderlarge = $pi->image_folderlrg;
+
+
+                // Look up folders to use in teacher images
+                $query = $db->getQuery(true);
+                $query->select('folderpath')->from('#__bsms_folders')->where('id = ' . $pi->image_folderlrg);
+                $db->setQuery($query);
+                $object = $db->loadObject();
+                $newfolderlarge = $object->folderpath;
+                $datateachers = new stdClass;
+                $datateachers->id = null;
+                $datateachers->teachername = $pi->teacher_name;
+                $datateachers->alias = $pi->alias;
+                $datateachers->title = $pi->teacher_role;
+                $datateachers->image = $newfolderlarge . $pi->teacher_image_lrg;
+                $datateachers->thumb = $newfolderlarge . $pi->teacher_image_lrg;
+                $datateachers->email = $pi->teacher_email;
+                $datateachers->website = $pi->teacher_website;
+                $datateachers->short = $db->escape($pi->teacher_description);
+                $datateachers->list_show = $pi->teacher_view;
+                $datateachers->published = $pi->published;
+
+                if (!$db->insertObject('#__bsms_teachers', $datateachers, 'id')) {
+                    $tnoadd++;
+                } else {
+                    $tadd++;
+
+                    // Get the new teacherid so we can later connect it to a study
+                    $query = $db->getQuery(true);
+                    $query->select('id')->from('#__bsms_teachers')->order('id desc');
+                    $db->setQuery($query, 0, 1);
+                    $newid = $db->loadResult();
+                    $oldid = $pi->id;
+                    $this->teachersids[] = array('newid' => $newid, 'oldid' => $oldid);
+                }
+            }
+        }
+
+        // Convert Ministries
+        $query = $db->getQuery(true);
+        $query->select('*')->from('#__piministry');
+        $db->setQuery($query);
+        $ministries = $db->loadObjectList();
+
+        if (!$ministries) {
+            $piconversion .= '<tr><td>' . JText::_('JBS_IBM_NO_MINISTRIES') . '</td></tr>';
+        } else {
+            foreach ($ministries as $pi) {
+                $locations = new stdClass;
+                $locations->id = null;
+                $locations->published = $pi->published;
+                $locations->location_text = $pi->name;
+                $locations->access = $pi->access;
+                $locations->ordering = $pi->ordering;
+                $locations->description = $pi->description;
+                $locations->image = $pi->ministry_img_lrg;
+                if ($locations->image_folderlrg) {
+                    $query = $db->getQuery(true);
+                    $query->select('folderpath')->from('#__bsms_folders')->where('id = ' . $pi->image_folderlrg);
+                    $db->setQuery($query);
+                    $object = $db->loadObject();
+                    $locations->image = $object->folderpath . $pi->ministry_img_lrg;
+                }
+            }
+
+            if (!$db->insertObject('#__bsms_locations', $locations, 'id')) {
+                $lnoadd++;
+            } else {
+                $ladd++;
+
+                // Get the new teacherid so we can later connect it to a study
+                $query = $db->getQuery(true);
+                $query->select('id')->from('#__bsms_locations')->order('id desc');
+                $db->setQuery($query, 0, 1);
+                $newid = $db->loadResult();
+                $oldid = $pi->id;
+                $this->locations[] = array('newid' => $newid, 'oldid' => $oldid);
+            }
+        }
+
+
 
 		// Convert Series
 		$query = $db->getQuery(true);
@@ -367,15 +328,11 @@ class JBSMPIconvert
 				// Map new folder for images to old one
 				$folderlarge = $pi->image_folderlrg;
                 $query = $db->getQuery(true);
-                $query->select('*')->from('#__pifilepath')->where('id = ' . $locations->image_foldering);
-                $db->setQuery($query);
-                $folders = $db->loadObjectList();
-                foreach ($folders as $folder) {
-                    $series->image = $folder->folder . $pi->series_image_lrg;
-                }
+                $query->select('*')->from('#__pifilepath')->where('id = ' . $locations->image_folderlrg);
+
 				// Look up folders to use in series images
 				$query = $db->getQuery(true);
-				$query->select('folderpath')->from('#__bsms_folders')->where('id = ' . $foldersmall);
+				$query->select('folderpath')->from('#__bsms_folders')->where('id = ' . $folderlarge);
 				$db->setQuery($query);
 				$object                       = $db->loadObject();
 				$dataseries                   = new stdClass;
@@ -383,7 +340,7 @@ class JBSMPIconvert
 				$dataseries->series_text      = $pi->name;
 				$dataseries->alias            = $pi->alias;
 				$dataseries->description      = $pi->description;
-				$dataseries->series_thumbnail = $series->image;
+				$dataseries->series_thumbnail = $object->folderpath . $series->image;
 				$dataseries->published        = $pi->published;
 
 				if (!$db->insertObject('#__bsms_series', $dataseries, 'id'))
