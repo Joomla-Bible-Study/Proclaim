@@ -323,7 +323,7 @@ class JBSMPIconvert
 				if ($locations->image_foldering)
                 {
                     $query = $db->getQuery(true);
-                    $query->select('*')->from('#__pifilepath');
+                    $query->select('*')->from('#__pifilepath')->where('id = ' . $locations->image_foldering);
                     $db->setQuery($query);
                     $folders = $db->loadObjectList();
                     foreach ($folders as $folder) {
@@ -365,34 +365,25 @@ class JBSMPIconvert
 			foreach ($series AS $pi)
 			{
 				// Map new folder for images to old one
-				$foldersmall = $pi->image_folder;
 				$folderlarge = $pi->image_folderlrg;
-
-				foreach ($this->foldersids as $folder)
-				{
-					if ($folder['oldid'] == $foldersmall)
-					{
-						$foldersmall = $folder['newid'];
-					}
-
-					if ($folder['oldid'] == $folderlarge)
-					{
-						$folderlarge = $folder['newid'];
-					}
-				}
-
+                $query = $db->getQuery(true);
+                $query->select('*')->from('#__pifilepath')->where('id = ' . $locations->image_foldering);
+                $db->setQuery($query);
+                $folders = $db->loadObjectList();
+                foreach ($folders as $folder) {
+                    $series->image = $folder->folder . $pi->series_image_lrg;
+                }
 				// Look up folders to use in series images
 				$query = $db->getQuery(true);
 				$query->select('folderpath')->from('#__bsms_folders')->where('id = ' . $foldersmall);
 				$db->setQuery($query);
 				$object                       = $db->loadObject();
-				$newfoldersmall               = $object->folderpath;
 				$dataseries                   = new stdClass;
 				$dataseries->id               = null;
-				$dataseries->series_text      = $pi->series_name;
-				$dataseries->alias            = $pi->series_alias;
-				$dataseries->description      = $pi->series_description;
-				$dataseries->series_thumbnail = $newfoldersmall . $pi->series_image_sm;
+				$dataseries->series_text      = $pi->name;
+				$dataseries->alias            = $pi->alias;
+				$dataseries->description      = $pi->description;
+				$dataseries->series_thumbnail = $series->image;
 				$dataseries->published        = $pi->published;
 
 				if (!$db->insertObject('#__bsms_series', $dataseries, 'id'))
