@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2019 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2021 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -18,300 +18,321 @@ defined('_JEXEC') or die;
  */
 class JBSMPIconvert
 {
-    /**
-     * Array of Comments Id's
-     *
-     * @var array
-     *
-     * @since 9.0.0
-     */
-    public $commentsids;
+	/**
+	 * Array of Comments Id's
+	 *
+	 * @var array
+	 *
+	 * @since 9.0.0
+	 */
+	public $commentsids;
 
-    /**
-     * Array of Servers Id's
-     *
-     * @var array
-     *
-     * @since 9.0.0
-     */
-    public $serversids;
+	/**
+	 * Array of Servers Id's
+	 *
+	 * @var array
+	 *
+	 * @since 9.0.0
+	 */
+	public $serversids;
 
-    /**
-     * Array of Folders Id's
-     *
-     * @var array
-     *
-     * @since 9.0.0
-     */
-    public $foldersids;
+	/**
+	 * Array of Folders Id's
+	 *
+	 * @var array
+	 *
+	 * @since 9.0.0
+	 */
+	public $foldersids;
 
-    /**
-     * Array of Studies Id's
-     *
-     * @var array
-     *
-     * @since 9.0.0
-     */
-    public $studiesids;
+	/**
+	 * Array of Studies Id's
+	 *
+	 * @var array
+	 *
+	 * @since 9.0.0
+	 */
+	public $studiesids;
 
-    /**
-     * Array of Media-Files Id's
-     *
-     * @var array
-     *
-     * @since 9.0.0
-     */
-    public $mediafilesids;
+	/**
+	 * Array of Media-Files Id's
+	 *
+	 * @var array
+	 *
+	 * @since 9.0.0
+	 */
+	public $mediafilesids;
 
-    /**
-     * Array of Teachers Id's
-     *
-     * @var array
-     *
-     * @since 9.0.0
-     */
-    public $teachersids;
+	/**
+	 * Array of Teachers Id's
+	 *
+	 * @var array
+	 *
+	 * @since 9.0.0
+	 */
+	public $teachersids;
 
-    /**
-     * Array of Series Id's
-     *
-     * @var array
-     *
-     * @since 9.0.0
-     */
-    public $seriesids;
+	/**
+	 * Array of Series Id's
+	 *
+	 * @var array
+	 *
+	 * @since 9.0.0
+	 */
+	public $seriesids;
 
-    /**
-     * Array of Podcasts Id's
-     *
-     * @var array
-     *
-     * @since 9.0.0
-     */
-    public $podcastids;
+	/**
+	 * Array of Podcasts Id's
+	 *
+	 * @var array
+	 *
+	 * @since 9.0.0
+	 */
+	public $podcastids;
 
-    /**
-     * Array of Locations
-     *
-     * @var array
-     *
-     * @since 9.0.0
-     */
-    public $locations;
+	/**
+	 * Array of Locations
+	 *
+	 * @var array
+	 *
+	 * @since 9.0.0
+	 */
+	public $locations;
 
-    /**
-     * ???
-     *
-     * @var int
-     *
-     * @since 9.0.0
-     */
-    public $cnoadd;
+	/**
+	 * ???
+	 *
+	 * @var int
+	 *
+	 * @since 9.0.0
+	 */
+	public $cnoadd;
 
-    /**
-     * Can Add switch
-     *
-     * @var int
-     *
-     * @since 9.0.0
-     */
-    public $cadd;
+	/**
+	 * Can Add switch
+	 *
+	 * @var int
+	 *
+	 * @since 9.0.0
+	 */
+	public $cadd;
 
-    /**
-     * Comment object
-     *
-     * @var object
-     *
-     * @since 9.0.0
-     */
-    public $picomments;
+	/**
+	 * Comment object
+	 *
+	 * @var object
+	 *
+	 * @since 9.0.0
+	 */
+	public $picomments;
 
-    /**
-     * Number of Podcasts
-     *
-     * @var int
-     *
-     * @since 9.0.0
-     */
-    public $podcasts;
+	/**
+	 * Number of Podcasts
+	 *
+	 * @var int
+	 *
+	 * @since 9.0.0
+	 */
+	public $podcasts;
 
-    /**
-     * Convert PreachIT
-     *
-     * @return string
-     *
-     * @since 7.1.0
-     */
-    public function convertPI()
-    {
-        $this->commentsids = array();
-        $this->serversids = array();
-        $this->foldersids = array();
-        $this->mediafilesids = array();
-        $this->studiesids = array();
-        $this->teachersids = array();
-        $this->seriesids = array();
-        $this->podcastids = array();
-        $this->locations = array();
-        $this->cnoadd = 0;
-        $this->cadd = 0;
-        $svadd = 0;
-        $svnoadd = 0;
-        $fnoadd = 0;
-        $fadd = 0;
-        $tnoadd = 0;
-        $tadd = 0;
-        $srnoadd = 0;
-        $sradd = 0;
-        $pnoadd = 0;
-        $padd = 0;
-        $lnoadd = 0;
-        $ladd = 0;
-        $snoadd = 0;
-        $sadd = 0;
-        $mnoadd = 0;
-        $madd = 0;
-        $newid = 0;
-        $oldid = 0;
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-        $query->select('*')->from('#__picomments');
-        $db->setQuery($query);
-        $this->picomments = $db->loadObjectList();
-        /** @var $piconversion string */
-        $piconversion = null;
+	/**
+	 * Convert PreachIT
+	 *
+	 * @return string
+	 *
+	 * @since 7.1.0
+	 */
+	public function convertPI()
+	{
+		$this->commentsids   = array();
+		$this->serversids    = array();
+		$this->foldersids    = array();
+		$this->mediafilesids = array();
+		$this->studiesids    = array();
+		$this->teachersids   = array();
+		$this->seriesids     = array();
+		$this->podcastids    = array();
+		$this->locations     = array();
+		$this->cnoadd        = 0;
+		$this->cadd          = 0;
+		$svadd               = 0;
+		$svnoadd             = 0;
+		$fnoadd              = 0;
+		$fadd                = 0;
+		$tnoadd              = 0;
+		$tadd                = 0;
+		$srnoadd             = 0;
+		$sradd               = 0;
+		$pnoadd              = 0;
+		$padd                = 0;
+		$lnoadd              = 0;
+		$ladd                = 0;
+		$snoadd              = 0;
+		$sadd                = 0;
+		$mnoadd              = 0;
+		$madd                = 0;
+		$newid               = 0;
+		$oldid               = 0;
+		$db                  = JFactory::getDbo();
+		$query               = $db->getQuery(true);
+		$query->select('*')->from('#__picomments');
+		$db->setQuery($query);
+		$this->picomments = $db->loadObjectList();
+		/** @var $piconversion string */
+		$piconversion = null;
 
-        // Create servers and folders
-        $query = $db->getQuery(true);
-        $query->select('*')->from('#__pifilepath');
-        $db->setQuery($query);
-        $piservers = $db->loadObjectList();
+		// Create servers and folders
+		$query = $db->getQuery(true);
+		$query->select('*')->from('#__pifilepath');
+		$db->setQuery($query);
+		$piservers = $db->loadObjectList();
 
-        if (!$piservers) {
-            $svnoadd++;
-        } else {
-            foreach ($piservers as $pi) {
-                $data = new stdClass;
-                $data->id = null;
-                $data->type = 'legacy';
-                $data->params = '{"path":"\/\/'.$pi->server . $pi->folder . '\/","protocol":"http:\/\/"}';
-                $data->media = '{"link_type":"1","player":"7","popup":"3","mediacode":"","media_image":"images\/biblestudy\/mp3.png","mime_type":"audio\/mp3","autostart":"1"}';
-                //$data->server_path = $pi->server;
-                $data->server_name = $pi->name;
-                $data->published = $pi->published;
+		if (!$piservers)
+		{
+			$svnoadd++;
+		}
+		else
+		{
+			foreach ($piservers as $pi)
+			{
+				$data         = new stdClass;
+				$data->id     = null;
+				$data->type   = 'legacy';
+				$data->params = '{"path":"\/\/' . $pi->server . $pi->folder . '\/","protocol":"http:\/\/"}';
+				$data->media  = '{"link_type":"1","player":"7","popup":"3","mediacode":"","media_image":"images\/biblestudy\/mp3.png","mime_type":"audio\/mp3","autostart":"1"}';
+				//$data->server_path = $pi->server;
+				$data->server_name = $pi->name;
+				$data->published   = $pi->published;
 
-                if (!$db->insertObject('#__bsms_servers', $data, 'id')) {
-                    $svnoadd++;
-                } else {
-                    $svadd++;
-                    $query = $db->getQuery(true);
-                    $query->select('id')->from('#__bsms_servers')->order('id desc');
-                    $db->setQuery($query, 0, 1);
-                    $newid = $db->loadResult();
-                    $oldid = $pi->id;
-                    $this->serversids[] = array('newid' => $newid, 'oldid' => $oldid);
-                }
+				if (!$db->insertObject('#__bsms_servers', $data, 'id'))
+				{
+					$svnoadd++;
+				}
+				else
+				{
+					$svadd++;
+					$query = $db->getQuery(true);
+					$query->select('id')->from('#__bsms_servers')->order('id desc');
+					$db->setQuery($query, 0, 1);
+					$newid              = $db->loadResult();
+					$oldid              = $pi->id;
+					$this->serversids[] = array('newid' => $newid, 'oldid' => $oldid);
+				}
 
-                $datafolders = new stdClass;
-                $datafolders->id = null;
-                $datafolders->foldername = $pi->name;
-                $datafolders->folderpath = $pi->server .  $pi->folder ;
-                $datafolders->published = $pi->published;
-            }
-        }
+				$datafolders             = new stdClass;
+				$datafolders->id         = null;
+				$datafolders->foldername = $pi->name;
+				$datafolders->folderpath = $pi->server . $pi->folder;
+				$datafolders->published  = $pi->published;
+			}
+		}
 
-        // Teachers
-        $query = $db->getQuery(true);
-        $query->select('*')->from('#__piteachers');
-        $db->setQuery($query);
-        $piteachers = $db->loadObjectList();
+		// Teachers
+		$query = $db->getQuery(true);
+		$query->select('*')->from('#__piteachers');
+		$db->setQuery($query);
+		$piteachers = $db->loadObjectList();
 
-        if (!$piteachers) {
-            $tnoadd++;
-        } else {
-            foreach ($piteachers as $pi) {
-                // Map new folder for images to old one
+		if (!$piteachers)
+		{
+			$tnoadd++;
+		}
+		else
+		{
+			foreach ($piteachers as $pi)
+			{
+				// Map new folder for images to old one
 
-                $folderlarge = $pi->image_folderlrg;
+				$folderlarge = $pi->image_folderlrg;
 
 
-                // Look up folders to use in teacher images
-                $query = $db->getQuery(true);
-                $query->select('folderpath')->from('#__bsms_folders')->where('id = ' . $pi->image_folderlrg);
-                $db->setQuery($query);
-                $object = $db->loadObject();
-                $newfolderlarge = $object->folderpath;
-                $datateachers = new stdClass;
-                $datateachers->id = null;
-                $datateachers->teachername = $pi->name;
-                $datateachers->alias = $pi->alias;
-                $datateachers->title = $pi->teacher_role;
-                $datateachers->image = $newfolderlarge . $pi->teacher_image_lrg;
-                $datateachers->thumb = $newfolderlarge . $pi->teacher_image_lrg;
-                $datateachers->email = $pi->email;
-                $datateachers->website = $pi->website;
-                $datateachers->short = $db->escape($pi->description);
-                $datateachers->list_show = $pi->teacher_view;
-                $datateachers->published = $pi->published;
+				// Look up folders to use in teacher images
+				$query = $db->getQuery(true);
+				$query->select('folderpath')->from('#__bsms_folders')->where('id = ' . $pi->image_folderlrg);
+				$db->setQuery($query);
+				$object                    = $db->loadObject();
+				$newfolderlarge            = $object->folderpath;
+				$datateachers              = new stdClass;
+				$datateachers->id          = null;
+				$datateachers->teachername = $pi->name;
+				$datateachers->alias       = $pi->alias;
+				$datateachers->title       = $pi->teacher_role;
+				$datateachers->image       = $newfolderlarge . $pi->teacher_image_lrg;
+				$datateachers->thumb       = $newfolderlarge . $pi->teacher_image_lrg;
+				$datateachers->email       = $pi->email;
+				$datateachers->website     = $pi->website;
+				$datateachers->short       = $db->escape($pi->description);
+				$datateachers->list_show   = $pi->teacher_view;
+				$datateachers->published   = $pi->published;
 
-                if (!$db->insertObject('#__bsms_teachers', $datateachers, 'id')) {
-                    $tnoadd++;
-                } else {
-                    $tadd++;
+				if (!$db->insertObject('#__bsms_teachers', $datateachers, 'id'))
+				{
+					$tnoadd++;
+				}
+				else
+				{
+					$tadd++;
 
-                    // Get the new teacherid so we can later connect it to a study
-                    $query = $db->getQuery(true);
-                    $query->select('id')->from('#__bsms_teachers')->order('id desc');
-                    $db->setQuery($query, 0, 1);
-                    $newid = $db->loadResult();
-                    $oldid = $pi->id;
-                    $this->teachersids[] = array('newid' => $newid, 'oldid' => $oldid);
-                }
-            }
-        }
+					// Get the new teacherid so we can later connect it to a study
+					$query = $db->getQuery(true);
+					$query->select('id')->from('#__bsms_teachers')->order('id desc');
+					$db->setQuery($query, 0, 1);
+					$newid               = $db->loadResult();
+					$oldid               = $pi->id;
+					$this->teachersids[] = array('newid' => $newid, 'oldid' => $oldid);
+				}
+			}
+		}
 
-        // Convert Ministries
-        $query = $db->getQuery(true);
-        $query->select('*')->from('#__piministry');
-        $db->setQuery($query);
-        $ministries = $db->loadObjectList();
+		// Convert Ministries
+		$query = $db->getQuery(true);
+		$query->select('*')->from('#__piministry');
+		$db->setQuery($query);
+		$ministries = $db->loadObjectList();
 
-        if (!$ministries) {
-            $piconversion .= '<tr><td>' . JText::_('JBS_IBM_NO_MINISTRIES') . '</td></tr>';
-        } else {
-            foreach ($ministries as $pi) {
-                $locations = new stdClass;
-                $locations->id = null;
-                $locations->published = $pi->published;
-                $locations->location_text = $pi->name;
-                $locations->access = $pi->access;
-                $locations->ordering = $pi->ordering;
-                $locations->description = $pi->description;
-                $locations->image = $pi->ministry_img_lrg;
-                if ($locations->image_folderlrg) {
-                    $query = $db->getQuery(true);
-                    $query->select('folderpath')->from('#__bsms_folders')->where('id = ' . $pi->image_folderlrg);
-                    $db->setQuery($query);
-                    $object = $db->loadObject();
-                    $locations->image = $object->folderpath . $pi->ministry_img_lrg;
-                }
-            }
+		if (!$ministries)
+		{
+			$piconversion .= '<tr><td>' . JText::_('JBS_IBM_NO_MINISTRIES') . '</td></tr>';
+		}
+		else
+		{
+			foreach ($ministries as $pi)
+			{
+				$locations                = new stdClass;
+				$locations->id            = null;
+				$locations->published     = $pi->published;
+				$locations->location_text = $pi->name;
+				$locations->access        = $pi->access;
+				$locations->ordering      = $pi->ordering;
+				$locations->description   = $pi->description;
+				$locations->image         = $pi->ministry_img_lrg;
+				if ($locations->image_folderlrg)
+				{
+					$query = $db->getQuery(true);
+					$query->select('folderpath')->from('#__bsms_folders')->where('id = ' . $pi->image_folderlrg);
+					$db->setQuery($query);
+					$object           = $db->loadObject();
+					$locations->image = $object->folderpath . $pi->ministry_img_lrg;
+				}
+			}
 
-            if (!$db->insertObject('#__bsms_locations', $locations, 'id')) {
-                $lnoadd++;
-            } else {
-                $ladd++;
+			if (!$db->insertObject('#__bsms_locations', $locations, 'id'))
+			{
+				$lnoadd++;
+			}
+			else
+			{
+				$ladd++;
 
-                // Get the new teacherid so we can later connect it to a study
-                $query = $db->getQuery(true);
-                $query->select('id')->from('#__bsms_locations')->order('id desc');
-                $db->setQuery($query, 0, 1);
-                $newid = $db->loadResult();
-                $oldid = $pi->id;
-                $this->locations[] = array('newid' => $newid, 'oldid' => $oldid);
-            }
-        }
-
+				// Get the new teacherid so we can later connect it to a study
+				$query = $db->getQuery(true);
+				$query->select('id')->from('#__bsms_locations')->order('id desc');
+				$db->setQuery($query, 0, 1);
+				$newid             = $db->loadResult();
+				$oldid             = $pi->id;
+				$this->locations[] = array('newid' => $newid, 'oldid' => $oldid);
+			}
+		}
 
 
 		// Convert Series
@@ -326,12 +347,12 @@ class JBSMPIconvert
 		}
 		else
 		{
-			foreach ($series AS $pi)
+			foreach ($series as $pi)
 			{
 				// Map new folder for images to old one
 				$folderlarge = $pi->image_folderlrg;
-                $query = $db->getQuery(true);
-                $query->select('*')->from('#__pifilepath')->where('id = ' . $locations->image_folderlrg);
+				$query       = $db->getQuery(true);
+				$query->select('*')->from('#__pifilepath')->where('id = ' . $locations->image_folderlrg);
 
 				// Look up folders to use in series images
 				$query = $db->getQuery(true);
@@ -377,7 +398,7 @@ class JBSMPIconvert
 		}
 		else
 		{
-			foreach ($podcasts AS $pi)
+			foreach ($podcasts as $pi)
 			{
 				$podcast                    = new stdClass;
 				$podcast->id                = null;
@@ -430,7 +451,7 @@ class JBSMPIconvert
 		}
 		else
 		{
-			foreach ($studies AS $pi)
+			foreach ($studies as $pi)
 			{
 				$studydate  = $pi->study_date;
 				$studytitle = $pi->study_name;
@@ -452,7 +473,7 @@ class JBSMPIconvert
 				$booknumber  = null;
 				$booknumber2 = null;
 
-				foreach ($books AS $book)
+				foreach ($books as $book)
 				{
 					if ($book['id'] == $pi->study_book)
 					{
@@ -483,7 +504,7 @@ class JBSMPIconvert
 				$show_level     = $pi->access;
 				$location_id    = null;
 
-				foreach ($this->locations AS $location)
+				foreach ($this->locations as $location)
 				{
 					if ($location['oldid'] == $pi->ministry)
 					{
@@ -491,9 +512,9 @@ class JBSMPIconvert
 					}
 				}
 
-				$alias         = $pi->alias;
-				$studyintro    = $pi->description;
-				$series_id     = null;
+				$alias      = $pi->alias;
+				$studyintro = $pi->description;
+				$series_id  = null;
 
 				foreach ($this->seriesids as $series)
 				{
@@ -636,16 +657,16 @@ class JBSMPIconvert
 		}
 
 		$piconversion = '<table><tr><td><h3>' . JText::_('JBS_IBM_PREACHIT_RESULTS') . '</h3></td></tr>'
-				. '<tr><td>' . JText::_('JBS_IBM_PI_SERVERS') . '<strong>' . $svadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $svnoadd . '</td></tr>'
-				. '<tr><td>' . JText::_('JBS_IBM_PI_FOLDERS') . '<strong>' . $fadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $fnoadd . '</td></tr>'
-				. '<tr><td>' . JText::_('JBS_IBM_PI_TEACHERS') . '<strong>' . $tadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $tnoadd . '</td></tr>'
-				. '<tr><td>' . JText::_('JBS_IBM_PI_SERIES') . '<strong>' . $sradd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $srnoadd . '</td></tr>'
-				. '<tr><td>' . JText::_('JBS_IBM_PI_PODCAST') . '<strong>' . $padd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $pnoadd . '</td></tr>'
-				. '<tr><td>' . JText::_('JBS_IBM_PI_STUDIES') . '<strong>' . $sadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $snoadd . '</td></tr>'
-				. '<tr><td>' . JText::_('JBS_IBM_PI_MEDIA') . '<strong>' . $madd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $mnoadd . '</td></tr>'
-				. '<tr><td>' . JText::_('JBS_IBM_PI_COMMENTS') . '<strong>' . $this->cadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED')
-				. $this->cnoadd . '</td></tr>'
-				. '</table>';
+			. '<tr><td>' . JText::_('JBS_IBM_PI_SERVERS') . '<strong>' . $svadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $svnoadd . '</td></tr>'
+			. '<tr><td>' . JText::_('JBS_IBM_PI_FOLDERS') . '<strong>' . $fadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $fnoadd . '</td></tr>'
+			. '<tr><td>' . JText::_('JBS_IBM_PI_TEACHERS') . '<strong>' . $tadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $tnoadd . '</td></tr>'
+			. '<tr><td>' . JText::_('JBS_IBM_PI_SERIES') . '<strong>' . $sradd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $srnoadd . '</td></tr>'
+			. '<tr><td>' . JText::_('JBS_IBM_PI_PODCAST') . '<strong>' . $padd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $pnoadd . '</td></tr>'
+			. '<tr><td>' . JText::_('JBS_IBM_PI_STUDIES') . '<strong>' . $sadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $snoadd . '</td></tr>'
+			. '<tr><td>' . JText::_('JBS_IBM_PI_MEDIA') . '<strong>' . $madd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $mnoadd . '</td></tr>'
+			. '<tr><td>' . JText::_('JBS_IBM_PI_COMMENTS') . '<strong>' . $this->cadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED')
+			. $this->cnoadd . '</td></tr>'
+			. '</table>';
 
 		return $piconversion;
 	}
@@ -657,75 +678,75 @@ class JBSMPIconvert
 	 *
 	 * @since 9.0.0
 	 */
-	private function getBooks ()
+	private function getBooks()
 	{
 		$books = array(
-				array('id' => '1', 'book_name' => 'Genesis', 'published' => '1', 'jbs' => '101'),
-				array('id' => '2', 'book_name' => 'Exodus', 'published' => '1', 'jbs' => '102'),
-				array('id' => '3', 'book_name' => 'Leviticus', 'published' => '1', 'jbs' => '103'),
-				array('id' => '4', 'book_name' => 'Numbers', 'published' => '1', 'jbs' => '104'),
-				array('id' => '5', 'book_name' => 'Deuteronomy', 'published' => '1', 'jbs' => '105'),
-				array('id' => '6', 'book_name' => 'Joshua', 'published' => '1', 'jbs' => '106'),
-				array('id' => '7', 'book_name' => 'Judges', 'published' => '1', 'jbs' => '107'),
-				array('id' => '8', 'book_name' => 'Ruth', 'published' => '1', 'jbs' => '108'),
-				array('id' => '9', 'book_name' => '1 Samuel', 'published' => '1', 'jbs' => '109'),
-				array('id' => '10', 'book_name' => '2 Samuel', 'published' => '1', 'jbs' => '110'),
-				array('id' => '11', 'book_name' => '1 Kings', 'published' => '1', 'jbs' => '111'),
-				array('id' => '12', 'book_name' => '2 Kings', 'published' => '1', 'jbs' => '112'),
-				array('id' => '13', 'book_name' => '1 Chronicles', 'published' => '1', 'jbs' => '113'),
-				array('id' => '14', 'book_name' => '2 Chronicles', 'published' => '1', 'jbs' => '114'),
-				array('id' => '15', 'book_name' => 'Ezra', 'published' => '1', 'jbs' => '115'),
-				array('id' => '16', 'book_name' => 'Nehemiah', 'published' => '1', 'jbs' => '116'),
-				array('id' => '17', 'book_name' => 'Esther', 'published' => '1', 'jbs' => '117'),
-				array('id' => '18', 'book_name' => 'Job', 'published' => '1', 'jbs' => '118'),
-				array('id' => '19', 'book_name' => 'Psalm', 'published' => '1', 'jbs' => '119'),
-				array('id' => '20', 'book_name' => 'Proverbs', 'published' => '1', 'jbs' => '120'),
-				array('id' => '21', 'book_name' => 'Ecclesiastes', 'published' => '1', 'jbs' => '121'),
-				array('id' => '22', 'book_name' => 'Song of Songs', 'published' => '1', 'jbs' => '122'),
-				array('id' => '23', 'book_name' => 'Isaiah', 'published' => '1', 'jbs' => '123'),
-				array('id' => '24', 'book_name' => 'Jeremiah', 'published' => '1', 'jbs' => '124'),
-				array('id' => '25', 'book_name' => 'Lamentations', 'published' => '1', 'jbs' => '125'),
-				array('id' => '26', 'book_name' => 'Ezekiel', 'published' => '1', 'jbs' => '126'),
-				array('id' => '27', 'book_name' => 'Daniel', 'published' => '1', 'jbs' => '127'),
-				array('id' => '28', 'book_name' => 'Hosea', 'published' => '1', 'jbs' => '129'),
-				array('id' => '29', 'book_name' => 'Joel', 'published' => '1', 'jbs' => '129'),
-				array('id' => '30', 'book_name' => 'Amos', 'published' => '1', 'jbs' => '130'),
-				array('id' => '31', 'book_name' => 'Obadiah', 'published' => '1', 'jbs' => '131'),
-				array('id' => '32', 'book_name' => 'Jonah', 'published' => '1', 'jbs' => '132'),
-				array('id' => '33', 'book_name' => 'Micah', 'published' => '1', 'jbs' => '133'),
-				array('id' => '34', 'book_name' => 'Nahum', 'published' => '1', 'jbs' => '134'),
-				array('id' => '35', 'book_name' => 'Habakkuk', 'published' => '1', 'jbs' => '135'),
-				array('id' => '36', 'book_name' => 'Zephaniah', 'published' => '1', 'jbs' => '136'),
-				array('id' => '37', 'book_name' => 'Haggai', 'published' => '1', 'jbs' => '137'),
-				array('id' => '38', 'book_name' => 'Zechariah', 'published' => '1', 'jbs' => '138'),
-				array('id' => '39', 'book_name' => 'Malachi', 'published' => '1', 'jbs' => '139'),
-				array('id' => '40', 'book_name' => 'Matthew', 'published' => '1', 'jbs' => '140'),
-				array('id' => '41', 'book_name' => 'Mark', 'published' => '1', 'jbs' => '141'),
-				array('id' => '42', 'book_name' => 'Luke', 'published' => '1', 'jbs' => '142'),
-				array('id' => '43', 'book_name' => 'John', 'published' => '1', 'jbs' => '143'),
-				array('id' => '44', 'book_name' => 'Acts', 'published' => '1', 'jbs' => '144'),
-				array('id' => '45', 'book_name' => 'Romans', 'published' => '1', 'jbs' => '145'),
-				array('id' => '46', 'book_name' => '1 Corinthians', 'published' => '1', 'jbs' => '146'),
-				array('id' => '47', 'book_name' => '2 Corinthians', 'published' => '1', 'jbs' => '147'),
-				array('id' => '48', 'book_name' => 'Galatians', 'published' => '1', 'jbs' => '148'),
-				array('id' => '49', 'book_name' => 'Ephesians', 'published' => '1', 'jbs' => '149'),
-				array('id' => '50', 'book_name' => 'Philippians', 'published' => '1', 'jbs' => '150'),
-				array('id' => '51', 'book_name' => 'Colossians', 'published' => '1', 'jbs' => '151'),
-				array('id' => '52', 'book_name' => '1 Thessalonians', 'published' => '1', 'jbs' => '152'),
-				array('id' => '53', 'book_name' => '2 Thessalonians', 'published' => '1', 'jbs' => '153'),
-				array('id' => '54', 'book_name' => '1 Timothy', 'published' => '1', 'jbs' => '154'),
-				array('id' => '55', 'book_name' => '2 Timothy', 'published' => '1', 'jbs' => '155'),
-				array('id' => '56', 'book_name' => 'Titus', 'published' => '1', 'jbs' => '156'),
-				array('id' => '57', 'book_name' => 'Philemon', 'published' => '1', 'jbs' => '157'),
-				array('id' => '58', 'book_name' => 'Hebrews', 'published' => '1', 'jbs' => '158'),
-				array('id' => '59', 'book_name' => 'James', 'published' => '1', 'jbs' => '159'),
-				array('id' => '60', 'book_name' => '1 Peter', 'published' => '1', 'jbs' => '160'),
-				array('id' => '61', 'book_name' => '2 Peter', 'published' => '1', 'jbs' => '161'),
-				array('id' => '62', 'book_name' => '1 John', 'published' => '1', 'jbs' => '162'),
-				array('id' => '63', 'book_name' => '2 John', 'published' => '1', 'jbs' => '163'),
-				array('id' => '64', 'book_name' => '3 John', 'published' => '1', 'jbs' => '164'),
-				array('id' => '65', 'book_name' => 'Jude', 'published' => '1', 'jbs' => '165'),
-				array('id' => '66', 'book_name' => 'Revelation', 'published' => '1', 'jbs' => '166')
+			array('id' => '1', 'book_name' => 'Genesis', 'published' => '1', 'jbs' => '101'),
+			array('id' => '2', 'book_name' => 'Exodus', 'published' => '1', 'jbs' => '102'),
+			array('id' => '3', 'book_name' => 'Leviticus', 'published' => '1', 'jbs' => '103'),
+			array('id' => '4', 'book_name' => 'Numbers', 'published' => '1', 'jbs' => '104'),
+			array('id' => '5', 'book_name' => 'Deuteronomy', 'published' => '1', 'jbs' => '105'),
+			array('id' => '6', 'book_name' => 'Joshua', 'published' => '1', 'jbs' => '106'),
+			array('id' => '7', 'book_name' => 'Judges', 'published' => '1', 'jbs' => '107'),
+			array('id' => '8', 'book_name' => 'Ruth', 'published' => '1', 'jbs' => '108'),
+			array('id' => '9', 'book_name' => '1 Samuel', 'published' => '1', 'jbs' => '109'),
+			array('id' => '10', 'book_name' => '2 Samuel', 'published' => '1', 'jbs' => '110'),
+			array('id' => '11', 'book_name' => '1 Kings', 'published' => '1', 'jbs' => '111'),
+			array('id' => '12', 'book_name' => '2 Kings', 'published' => '1', 'jbs' => '112'),
+			array('id' => '13', 'book_name' => '1 Chronicles', 'published' => '1', 'jbs' => '113'),
+			array('id' => '14', 'book_name' => '2 Chronicles', 'published' => '1', 'jbs' => '114'),
+			array('id' => '15', 'book_name' => 'Ezra', 'published' => '1', 'jbs' => '115'),
+			array('id' => '16', 'book_name' => 'Nehemiah', 'published' => '1', 'jbs' => '116'),
+			array('id' => '17', 'book_name' => 'Esther', 'published' => '1', 'jbs' => '117'),
+			array('id' => '18', 'book_name' => 'Job', 'published' => '1', 'jbs' => '118'),
+			array('id' => '19', 'book_name' => 'Psalm', 'published' => '1', 'jbs' => '119'),
+			array('id' => '20', 'book_name' => 'Proverbs', 'published' => '1', 'jbs' => '120'),
+			array('id' => '21', 'book_name' => 'Ecclesiastes', 'published' => '1', 'jbs' => '121'),
+			array('id' => '22', 'book_name' => 'Song of Songs', 'published' => '1', 'jbs' => '122'),
+			array('id' => '23', 'book_name' => 'Isaiah', 'published' => '1', 'jbs' => '123'),
+			array('id' => '24', 'book_name' => 'Jeremiah', 'published' => '1', 'jbs' => '124'),
+			array('id' => '25', 'book_name' => 'Lamentations', 'published' => '1', 'jbs' => '125'),
+			array('id' => '26', 'book_name' => 'Ezekiel', 'published' => '1', 'jbs' => '126'),
+			array('id' => '27', 'book_name' => 'Daniel', 'published' => '1', 'jbs' => '127'),
+			array('id' => '28', 'book_name' => 'Hosea', 'published' => '1', 'jbs' => '129'),
+			array('id' => '29', 'book_name' => 'Joel', 'published' => '1', 'jbs' => '129'),
+			array('id' => '30', 'book_name' => 'Amos', 'published' => '1', 'jbs' => '130'),
+			array('id' => '31', 'book_name' => 'Obadiah', 'published' => '1', 'jbs' => '131'),
+			array('id' => '32', 'book_name' => 'Jonah', 'published' => '1', 'jbs' => '132'),
+			array('id' => '33', 'book_name' => 'Micah', 'published' => '1', 'jbs' => '133'),
+			array('id' => '34', 'book_name' => 'Nahum', 'published' => '1', 'jbs' => '134'),
+			array('id' => '35', 'book_name' => 'Habakkuk', 'published' => '1', 'jbs' => '135'),
+			array('id' => '36', 'book_name' => 'Zephaniah', 'published' => '1', 'jbs' => '136'),
+			array('id' => '37', 'book_name' => 'Haggai', 'published' => '1', 'jbs' => '137'),
+			array('id' => '38', 'book_name' => 'Zechariah', 'published' => '1', 'jbs' => '138'),
+			array('id' => '39', 'book_name' => 'Malachi', 'published' => '1', 'jbs' => '139'),
+			array('id' => '40', 'book_name' => 'Matthew', 'published' => '1', 'jbs' => '140'),
+			array('id' => '41', 'book_name' => 'Mark', 'published' => '1', 'jbs' => '141'),
+			array('id' => '42', 'book_name' => 'Luke', 'published' => '1', 'jbs' => '142'),
+			array('id' => '43', 'book_name' => 'John', 'published' => '1', 'jbs' => '143'),
+			array('id' => '44', 'book_name' => 'Acts', 'published' => '1', 'jbs' => '144'),
+			array('id' => '45', 'book_name' => 'Romans', 'published' => '1', 'jbs' => '145'),
+			array('id' => '46', 'book_name' => '1 Corinthians', 'published' => '1', 'jbs' => '146'),
+			array('id' => '47', 'book_name' => '2 Corinthians', 'published' => '1', 'jbs' => '147'),
+			array('id' => '48', 'book_name' => 'Galatians', 'published' => '1', 'jbs' => '148'),
+			array('id' => '49', 'book_name' => 'Ephesians', 'published' => '1', 'jbs' => '149'),
+			array('id' => '50', 'book_name' => 'Philippians', 'published' => '1', 'jbs' => '150'),
+			array('id' => '51', 'book_name' => 'Colossians', 'published' => '1', 'jbs' => '151'),
+			array('id' => '52', 'book_name' => '1 Thessalonians', 'published' => '1', 'jbs' => '152'),
+			array('id' => '53', 'book_name' => '2 Thessalonians', 'published' => '1', 'jbs' => '153'),
+			array('id' => '54', 'book_name' => '1 Timothy', 'published' => '1', 'jbs' => '154'),
+			array('id' => '55', 'book_name' => '2 Timothy', 'published' => '1', 'jbs' => '155'),
+			array('id' => '56', 'book_name' => 'Titus', 'published' => '1', 'jbs' => '156'),
+			array('id' => '57', 'book_name' => 'Philemon', 'published' => '1', 'jbs' => '157'),
+			array('id' => '58', 'book_name' => 'Hebrews', 'published' => '1', 'jbs' => '158'),
+			array('id' => '59', 'book_name' => 'James', 'published' => '1', 'jbs' => '159'),
+			array('id' => '60', 'book_name' => '1 Peter', 'published' => '1', 'jbs' => '160'),
+			array('id' => '61', 'book_name' => '2 Peter', 'published' => '1', 'jbs' => '161'),
+			array('id' => '62', 'book_name' => '1 John', 'published' => '1', 'jbs' => '162'),
+			array('id' => '63', 'book_name' => '2 John', 'published' => '1', 'jbs' => '163'),
+			array('id' => '64', 'book_name' => '3 John', 'published' => '1', 'jbs' => '164'),
+			array('id' => '65', 'book_name' => 'Jude', 'published' => '1', 'jbs' => '165'),
+			array('id' => '66', 'book_name' => 'Revelation', 'published' => '1', 'jbs' => '166')
 		);
 
 		return $books;
@@ -745,7 +766,7 @@ class JBSMPIconvert
 	 *
 	 * @FIXME look like the $pod is missing.
 	 */
-	public function insertMedia ($pi, $type, $newid, $oldid)
+	public function insertMedia($pi, $type, $newid, $oldid)
 	{
 		$db          = JFactory::getDbo();
 		$podcast_id  = '-1';
@@ -817,8 +838,8 @@ class JBSMPIconvert
 				case 4:
 					// Bliptv
 					$mediacode   = '<embed src="http://blip.tv/play/' . $pi->video_link
-							. '" type="application/x-shockwave-flash" width="500" height="500" wmode="transparent"'
-							. 'allowscriptaccess="always" allowfullscreen="true" ></embed>';
+						. '" type="application/x-shockwave-flash" width="500" height="500" wmode="transparent"'
+						. 'allowscriptaccess="always" allowfullscreen="true" ></embed>';
 					$mediacode   = $db->escape($mediacode);
 					$player      = '8';
 					$media_image = '5';
@@ -883,7 +904,7 @@ class JBSMPIconvert
 				case 3:
 					// Youtube
 					$mediacode   = '<iframe width="500" height="500" src="http://www.youtube.com/embed/' . $pi->video_link
-							. '" frameborder="0" allowfullscreen></iframe>';
+						. '" frameborder="0" allowfullscreen></iframe>';
 					$mediacode   = $db->escape($mediacode);
 					$player      = '8';
 					$media_image = '13';
@@ -998,38 +1019,36 @@ class JBSMPIconvert
 	 *
 	 * @since 9.0.0
 	 */
-	private function insertComments ($oldid, $newid)
+	private function insertComments($oldid, $newid)
 	{
 		if (!$this->picomments)
 		{
 			return false;
 		}
-		else
+
+		$db = JFactory::getDbo();
+
+		foreach ($this->picomments as $pi)
 		{
-			$db = JFactory::getDbo();
-
-			foreach ($this->picomments AS $pi)
+			if ($pi->id == $oldid)
 			{
-				if ($pi->id == $oldid)
-				{
-					$comments               = new stdClass;
-					$comments->id           = null;
-					$comments->published    = $pi->published;
-					$comments->study_id     = $newid;
-					$comments->user_id      = $pi->user_id;
-					$comments->full_name    = $pi->full_name;
-					$comments->comment_date = $pi->comment_date;
-					$comments->user_email = $pi->email;
-					$comments->comment_text = $db->escape($pi->comment_text);
+				$comments               = new stdClass;
+				$comments->id           = null;
+				$comments->published    = $pi->published;
+				$comments->study_id     = $newid;
+				$comments->user_id      = $pi->user_id;
+				$comments->full_name    = $pi->full_name;
+				$comments->comment_date = $pi->comment_date;
+				$comments->user_email   = $pi->email;
+				$comments->comment_text = $db->escape($pi->comment_text);
 
-					if (!$db->insertObject('#__bsms_comments', $comments, 'id'))
-					{
-						$this->cnoadd++;
-					}
-					else
-					{
-						$this->cadd++;
-					}
+				if (!$db->insertObject('#__bsms_comments', $comments, 'id'))
+				{
+					$this->cnoadd++;
+				}
+				else
+				{
+					$this->cadd++;
 				}
 			}
 		}
