@@ -215,7 +215,7 @@ class JBSMPIconvert
                 $datafolders = new stdClass;
                 $datafolders->id = null;
                 $datafolders->foldername = $pi->name;
-                $datafolders->folderpath = $pi->server . '/' . $pi->folder . '/';
+                $datafolders->folderpath = $pi->server .  $pi->folder ;
                 $datafolders->published = $pi->published;
             }
         }
@@ -243,14 +243,14 @@ class JBSMPIconvert
                 $newfolderlarge = $object->folderpath;
                 $datateachers = new stdClass;
                 $datateachers->id = null;
-                $datateachers->teachername = $pi->teacher_name;
+                $datateachers->teachername = $pi->name;
                 $datateachers->alias = $pi->alias;
                 $datateachers->title = $pi->teacher_role;
                 $datateachers->image = $newfolderlarge . $pi->teacher_image_lrg;
                 $datateachers->thumb = $newfolderlarge . $pi->teacher_image_lrg;
-                $datateachers->email = $pi->teacher_email;
-                $datateachers->website = $pi->teacher_website;
-                $datateachers->short = $db->escape($pi->teacher_description);
+                $datateachers->email = $pi->email;
+                $datateachers->website = $pi->website;
+                $datateachers->short = $db->escape($pi->description);
                 $datateachers->list_show = $pi->teacher_view;
                 $datateachers->published = $pi->published;
 
