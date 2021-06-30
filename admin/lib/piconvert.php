@@ -193,7 +193,10 @@ class JBSMPIconvert
             foreach ($piservers as $pi) {
                 $data = new stdClass;
                 $data->id = null;
-                $data->server_path = $pi->server;
+                $data->type = 'legacy';
+                $data->params = '{"path":"\/\/'.$pi->server . $pi->folder . '\/","protocol":"http:\/\/"}';
+                $data->media = '{"link_type":"1","player":"7","popup":"3","mediacode":"","media_image":"images\/biblestudy\/mp3.png","mime_type":"audio\/mp3","autostart":"1"}';
+                //$data->server_path = $pi->server;
                 $data->server_name = $pi->name;
                 $data->published = $pi->published;
 
@@ -403,7 +406,7 @@ class JBSMPIconvert
 				{
 					$padd++;
 
-					// Get the new teacherid so we can later connect it to a study
+					// Get the new podcast id so we can later connect it to a study
 					$query = $db->getQuery(true);
 					$query->select('id')->from('#__bsms_podcast')->order('id desc');
 					$db->setQuery($query, 0, 1);
@@ -488,8 +491,8 @@ class JBSMPIconvert
 					}
 				}
 
-				$alias         = $pi->study_alias;
-				$studyintro    = $pi->study_description;
+				$alias         = $pi->alias;
+				$studyintro    = $pi->description;
 				$series_id     = null;
 
 				foreach ($this->seriesids as $series)
@@ -508,18 +511,6 @@ class JBSMPIconvert
 
 				foreach ($this->foldersids as $folder)
 				{
-					if ($folder['oldid'] == $pi->image_folder)
-					{
-						$imagefolder = $folder['newid'];
-						$image       = $pi->imagesm;
-					}
-
-					if ($folder['oldid'] == $pi->image_foldermed)
-					{
-						$imagefolder = $folder['newid'];
-						$image       = $pi->imagemed;
-					}
-
 					if ($folder['oldid'] == $pi->image_folderlrg)
 					{
 						$imagefolder = $folder['newid'];
@@ -771,7 +762,7 @@ class JBSMPIconvert
 		$player      = '';
 		$pod         = array();
 		$query       = $db->getQuery(true);
-		$query->select('*')->from('#__pipodmes');
+		$query->select('*')->from('#__pipodcast');
 		$db->setQuery($query);
 		$podcasts = $db->loadObjectList();
 
@@ -788,9 +779,9 @@ class JBSMPIconvert
 			{
 				foreach ($podcasts as $podcast)
 				{
-					if ($podcast->mesid == $oldid)
+					if ($podcast->id == $oldid)
 					{
-						$oldpodid = $podcast->podaudid;
+						$oldpodid = $podcast->id;
 
 						if ($pod['oldid'] == $oldpodid)
 						{
@@ -807,9 +798,9 @@ class JBSMPIconvert
 			{
 				foreach ($podcasts as $podcast)
 				{
-					if ($podcast->mesid == $oldid)
+					if ($podcast->id == $oldid)
 					{
-						$oldpodid = $podcast->podvidid;
+						$oldpodid = $podcast->id;
 
 						if ($pod['oldid'] == $oldpodid)
 						{
@@ -1028,6 +1019,7 @@ class JBSMPIconvert
 					$comments->user_id      = $pi->user_id;
 					$comments->full_name    = $pi->full_name;
 					$comments->comment_date = $pi->comment_date;
+					$comments->user_email = $pi->email;
 					$comments->comment_text = $db->escape($pi->comment_text);
 
 					if (!$db->insertObject('#__bsms_comments', $comments, 'id'))
