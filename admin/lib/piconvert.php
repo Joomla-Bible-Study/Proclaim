@@ -144,6 +144,9 @@ class JBSMPIconvert
 	 */
 	public function convertPI()
 	{
+		// Check for request forgeries.
+		JSession::checkToken('get') or JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$this->commentsids   = array();
 		$this->serversids    = array();
 		$this->foldersids    = array();

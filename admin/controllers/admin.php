@@ -538,7 +538,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	public function convertSermonSpeaker()
 	{
 		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		JSession::checkToken('get') or JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
 		$convert      = new JBSMSSConvert;
 		$ssconversion = $convert->convertSS();
@@ -555,7 +555,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	public function convertPreachIt()
 	{
 		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		JSession::checkToken('get') or JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
 		$convert      = new JBSMPIconvert;
 		$piconversion = $convert->convertPI();
@@ -830,7 +830,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 
 		foreach ($image_types as $image_type)
 		{
-			$images = JFolder::files(JPATH_ROOT . '/' . 'images/biblestudy/' . $image_type, 'original_', true, true);
+			$images = JFolder::files(JPATH_ROOT . '/images/biblestudy/' . $image_type, 'original_', true, true);
 
 			if ($images != false)
 			{
