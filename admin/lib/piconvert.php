@@ -522,11 +522,7 @@ class JBSMPIconvert
 
 				if ($imagefolder)
 				{
-					//$query = $db->getQuery(true);
-					//$query->select('folderpath')->from('#__bsms_folders')->where('id = ' . $imagefolder);
-					//$db->setQuery($query);
-					//$object     = $db->loadObject();
-					//$newfolder  = $object->folderpath;
+
 					$thumbnailm = $newfolder . $image;
 				}
 
@@ -829,19 +825,15 @@ class JBSMPIconvert
 
 				case 7:
 					// Flowplayer
-					foreach ($this->foldersids as $folder)
-					{
-						if ($pi->video_folder == $folder['oldid'])
-						{
-							// Look up the text to put here for $folder.
+
 							$query = $db->getQuery(true);
-							$query->select('folderpath')->from('#__bsms_folders')->where('id = ' . $folder['newid']);
+							$query->select('folder')->from('#__pifilepath')->where('id = ' . $pi->video_link);
 							$db->setQuery($query);
 							$object   = $db->loadObject();
-							$path     = $object->folderpath;
+							$path     = $object->folder;
 							$filename = $path . $pi->video_link;
-						}
-					}
+
+
 
 					$player      = '1';
 					$media_image = '5';
@@ -851,19 +843,12 @@ class JBSMPIconvert
 
 				case 1:
 					// JWPlayer
-					foreach ($this->foldersids as $folder)
-					{
-						if ($pi->video_folder == $folder['oldid'])
-						{
-							// Look up the text to put here for $folder.
-							$query = $db->getQuery(true);
-							$query->select('folderpath')->from('#__bsms_folders')->where('id = ' . $folder['newid']);
-							$db->setQuery($query);
-							$object   = $db->loadObject();
-							$path     = $object->folderpath;
-							$filename = $path . $pi->video_link;
-						}
-					}
+                    $query = $db->getQuery(true);
+                    $query->select('folder')->from('#__pifilepath')->where('id = ' . $pi->video_link);
+                    $db->setQuery($query);
+                    $object   = $db->loadObject();
+                    $path     = $object->folder;
+                    $filename = $path . $pi->video_link;
 
 					$player      = '1';
 					$media_image = '5';
@@ -916,19 +901,12 @@ class JBSMPIconvert
 			$media_image = '12';
 			$mime_type   = '6';
 
-			foreach ($this->foldersids as $folder)
-			{
-				if ($pi->notes_folder == $folder['oldid'])
-				{
-					$query = $db->getQuery(true);
-					$query->select('folderpath')->from('#__bsms_folders')->where('id = ' . $folder['newid']);
-					$db->setQuery($query);
-					$object   = $db->loadObject();
-					$path     = $object->folderpath;
-					$filename = $path . $pi->notes_link;
-					$server   = '-1';
-				}
-			}
+            $query = $db->getQuery(true);
+            $query->select('folder')->from('#__pifilepath')->where('id = ' . $pi->video_link);
+            $db->setQuery($query);
+            $object   = $db->loadObject();
+            $path     = $object->folder;
+            $filename = $path . $pi->video_link;
 		}
 
 		$hits      = $pi->hits;
@@ -946,21 +924,12 @@ class JBSMPIconvert
 			$player   = '0';
 			$filename = $pi->slides_link;
 
-			foreach ($this->foldersids as $folder)
-			{
-				if ($pi->slides_folder == $folder['oldid'])
-				{
-					$query = $db->getQuery(true);
-					$query->select('folderpath')->from('#__bsms_folders')->where('id = ' . $folder['newid']);
-					$db->setQuery($query);
-					$object      = $db->loadObject();
-					$path        = $object->folderpath;
-					$server      = '-1';
-					$filename    = $path . $pi->slides_link;
-					$media_image = '12';
-					$mime_type   = '6';
-				}
-			}
+            $query = $db->getQuery(true);
+            $query->select('folder')->from('#__pifilepath')->where('id = ' . $pi->slides_link);
+            $db->setQuery($query);
+            $object   = $db->loadObject();
+            $path     = $object->folder;
+            $filename = $path . $pi->slides_link;
 		}
 
 		$mediafiles              = new stdClass;
