@@ -300,7 +300,7 @@ class JBSMPIconvert
 				$locations->location_text = $pi->name;
 				$locations->access        = $pi->access;
 				$locations->ordering      = $pi->ordering;
-				$locations->description   = $pi->description;
+				$locations->misc   = $pi->description;
 				$locations->image         = $pi->ministry_img_lrg. $pi->ministry_img_lrg;
 
                 if (!$db->insertObject('#__bsms_locations', $locations, 'id'))
@@ -912,7 +912,7 @@ class JBSMPIconvert
 		$hits      = $pi->hits;
 		$downloads = $pi->downloads;
 		$published = $pi->published;
-		$params    = '{"playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50"}';
+		$params    = '{"playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","filename":"'.$pi->path.$pi->filename.'","size":"'.$pi->size.'"}';
 		$params    = $db->escape($params);
 		$popup     = '1';
 		$access    = $pi->access;
@@ -936,9 +936,9 @@ class JBSMPIconvert
 		$mediafiles->id          = null;
 		$mediafiles->published   = $published;
 		$mediafiles->study_id    = $newid;
-		$mediafiles->path        = $path;
-		$mediafiles->filename    = $filename;
-		$mediafiles->size        = $filesize;
+		//$mediafiles->path        = $path;
+		//$mediafiles->filename    = $filename;
+		//$mediafiles->size        = $filesize;
 		$mediafiles->mime_type   = $mime_type;
 		$mediafiles->podcast_id  = $podcast_id;
 		$mediafiles->mediacode   = $mediacode;
