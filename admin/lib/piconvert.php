@@ -939,7 +939,7 @@ class JBSMPIconvert
 		//$mediafiles->path        = $path;
 		//$mediafiles->filename    = $filename;
 		//$mediafiles->size        = $filesize;
-		$mediafiles->mime_type   = $mime_type;
+		//$mediafiles->mime_type   = $mime_type;
 		$mediafiles->podcast_id  = $podcast_id;
 		$mediafiles->mediacode   = $mediacode;
 		$mediafiles->createdate  = $createdate;
@@ -950,6 +950,7 @@ class JBSMPIconvert
 		$mediafiles->popup       = 1;
 		$mediafiles->access      = $pi->access;
 		$mediafiles->media_image = $media_image;
+		$mediafiles->server_id = 1;
 
 		if (!$db->insertObject('#__bsms_mediafiles', $mediafiles, 'id'))
 		{
