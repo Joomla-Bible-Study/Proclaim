@@ -42,7 +42,8 @@
 	"ext-zip": "*",
 	"ext-json": "*",
 	"ext-zlib": "*",
-	"ext-curl": "*"
+	"ext-curl": "*",
+	"ext-gd": "*"
   },
   "require-dev": {
 	"roave/security-advisories": "dev-latest",

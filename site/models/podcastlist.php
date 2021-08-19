@@ -50,7 +50,7 @@ class BiblestudyModelPodcastlist extends JModelList
 
 		$orderCol = $app->input->get('filter_order', 'a.ordering');
 
-		if (!in_array($orderCol, $this->filter_fields))
+		if (!in_array($orderCol, $this->filter_fields, true))
 		{
 			$orderCol = 'a.id';
 		}
@@ -112,7 +112,7 @@ class BiblestudyModelPodcastlist extends JModelList
 	/**
 	 * Build an SQL query to load the list data
 	 *
-	 * @return  JDatabaseQuery
+	 * @return  \Joomla\Database\QueryInterface
 	 *
 	 * @since   7.0
 	 */
@@ -127,7 +127,8 @@ class BiblestudyModelPodcastlist extends JModelList
 
 		$query->select(
 			$this->getState(
-				'list.select', '*')
+				'list.select', '*'
+			)
 		);
 
 		// Filter by state

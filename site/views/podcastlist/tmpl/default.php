@@ -21,7 +21,7 @@ $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 $archived  = $this->state->get('filter.published') == 2 ? true : false;
 $trashed   = $this->state->get('filter.published') == -2 ? true : false;
-$saveOrder = $listOrder == 'ordering';
+$saveOrder = $listOrder === 'ordering';
 
 $jbsmedia = new JBSMMedia;
 ?>
@@ -31,18 +31,15 @@ $jbsmedia = new JBSMMedia;
     <div id="effect-1" class="effects">
 		<?php foreach ($this->items as $item)
 		{
-			$img_base      = pathinfo($item->series_thumbnail);
 			$originalFile = $item->series_thumbnail;
 
-			if (file_exists(JPATH_ROOT . '/' . $originalFile) && $img_base['basename'])
+			if (!empty($originalFile) && file_exists(JPATH_ROOT . '/' . $originalFile))
 			{
-				$array    = explode('.', $img_base['basename']);
-				$NewfileName = $img_base['dirname'] . '/' . $array[0] . '-200.' . $array[1];
-				$img = JBSMImageLib::getSeriesPodcast($originalFile, $NewfileName);
+				$img = JBSMImageLib::getSeriesPodcast($originalFile);
 			}
 			else
 			{
-				$img = null;
+				$img = JBSMImageLib::getSeriesPodcast($this->params->get('default_study_image'));
 			}
 			?>
             <div class="jbsmimg">
