@@ -71,18 +71,18 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function mediaimages()
 	{
-		$post = $_POST['jform'];
+		$post    = $_POST['jform'];
 		$decoded = json_decode($post['mediaimage']);
-		$db   = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$db      = JFactory::getDbo();
+		$query   = $db->getQuery(true);
 		$query->select('id, params')
 			->from('#__bsms_mediafiles');
 		$db->setQuery($query);
-		$images = $db->loadObjectList();
-		$error = 0;
-		$added = 0;
+		$images    = $db->loadObjectList();
+		$error     = 0;
+		$added     = 0;
 		$errortext = '';
-		$msg = JText::_('JBS_RESULTS') . ': ';
+		$msg       = JText::_('JBS_RESULTS') . ': ';
 
 		switch ($decoded->media_use_button_icon)
 		{
@@ -124,7 +124,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 								->set('params = ' . $db->q($reg->toString()))
 								->where('id = ' . (int) $media->id);
 							$db->execute();
-							$rows = $db->getAffectedRows();
+							$rows  = $db->getAffectedRows();
 							$added = $added + $rows;
 						}
 						catch (RuntimeException $e)
@@ -136,12 +136,12 @@ class BiblestudyControllerAdmin extends JControllerForm
 				}
 
 				$msg .= JText::_('JBS_ERROR') . ': ' . $error . '<br />' . $errortext . '<br />' . JText::_('JBS_RESULTS') .
-						': ' . $added . ' ' . JText::_('JBS_SUCCESS');
+					': ' . $added . ' ' . JText::_('JBS_SUCCESS');
 				$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
 				break;
 			case 2:
 				$buttontype = $decoded->media_button_type;
-				$icontype = $decoded->media_icon_type;
+				$icontype   = $decoded->media_icon_type;
 
 				foreach ($images as $media)
 				{
@@ -171,7 +171,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 								->set('params = ' . $db->q($reg->toString()))
 								->where('id = ' . (int) $media->id);
 							$db->execute();
-							$rows = $db->getAffectedRows();
+							$rows  = $db->getAffectedRows();
 							$added = $added + $rows;
 						}
 						catch (RuntimeException $e)
@@ -183,7 +183,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 				}
 
 				$msg .= JText::_('JBS_ERROR') . ': ' . $error . '<br />' . $errortext . '<br />' . JText::_('JBS_RESULTS') .
-						': ' . $added . ' ' . JText::_('JBS_SUCCESS');
+					': ' . $added . ' ' . JText::_('JBS_SUCCESS');
 				$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
 				break;
 			case 3:
@@ -223,7 +223,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 								->set('params = ' . $db->q($reg->toString()))
 								->where('id = ' . (int) $media->id);
 							$db->execute();
-							$rows = $db->getAffectedRows();
+							$rows  = $db->getAffectedRows();
 							$added = $added + $rows;
 						}
 						catch (RuntimeException $e)
@@ -235,7 +235,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 				}
 
 				$msg .= JText::_('JBS_ERROR') . ': ' . $error . '<br />' . $errortext . '<br />' . JText::_('JBS_RESULTS') .
-						': ' . $added . ' ' . JText::_('JBS_SUCCESS');
+					': ' . $added . ' ' . JText::_('JBS_SUCCESS');
 				$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
 				break;
 			case 0:
@@ -276,7 +276,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 								->set('params = ' . $db->q($reg->toString()))
 								->where('id = ' . (int) $media->id);
 							$db->execute();
-							$rows = $db->getAffectedRows();
+							$rows  = $db->getAffectedRows();
 							$added = $added + $rows;
 						}
 						catch (RuntimeException $e)
@@ -288,7 +288,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 				}
 
 				$msg .= JText::_('JBS_ERROR') . ': ' . $error . '<br />' . $errortext . '<br />' . JText::_('JBS_RESULTS') .
-						': ' . $added . ' ' . JText::_('JBS_SUCCESS');
+					': ' . $added . ' ' . JText::_('JBS_SUCCESS');
 				$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
 				break;
 			default:
@@ -368,16 +368,16 @@ class BiblestudyControllerAdmin extends JControllerForm
 		// Check for request forgeries.
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-		$db     = JFactory::getDbo();
-		$msg    = null;
-		$post   = $_POST['jform'];
-		$reg    = new Registry;
+		$db   = JFactory::getDbo();
+		$msg  = null;
+		$post = $_POST['jform'];
+		$reg  = new Registry;
 		$reg->loadArray($post['params']);
-		$from   = $reg->get('pFrom', 'x');
-		$form2  = '';
-		$to     = $reg->get('pTo', 'x');
-		$msg    = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
-		$query  = $db->getQuery(true);
+		$from  = $reg->get('pFrom', 'x');
+		$form2 = '';
+		$to    = $reg->get('pTo', 'x');
+		$msg   = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
+		$query = $db->getQuery(true);
 		$query->select('id, params')
 			->from('#__bsms_mediafiles');
 		$db->setQuery($query);
@@ -430,8 +430,8 @@ class BiblestudyControllerAdmin extends JControllerForm
 		// Check for request forgeries.
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-		$db   = JFactory::getDbo();
-		$msg  = null;
+		$db    = JFactory::getDbo();
+		$msg   = null;
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
 			->set('hits = ' . 0)
@@ -538,7 +538,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	public function convertSermonSpeaker()
 	{
 		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		JSession::checkToken('get') or JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
 		$convert      = new JBSMSSConvert;
 		$ssconversion = $convert->convertSS();
@@ -555,7 +555,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	public function convertPreachIt()
 	{
 		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		JSession::checkToken('get') or JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
 		$convert      = new JBSMPIconvert;
 		$piconversion = $convert->convertPI();
@@ -567,8 +567,8 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 *
 	 * @return void
 	 *
-	 * @since   7.1.0
 	 * @throws  Exception
+	 * @since   7.1.0
 	 */
 	public function fix()
 	{
@@ -811,9 +811,9 @@ class BiblestudyControllerAdmin extends JControllerForm
 	/**
 	 * Get Thumbnail List XHR
 	 *
-	 * @throws Exception
-	 *
 	 * @return void
+	 *
+	 * @throws Exception
 	 *
 	 * @since 9.0.0
 	 */
@@ -830,7 +830,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 
 		foreach ($image_types as $image_type)
 		{
-			$images = JFolder::files(JPATH_ROOT . '/' . 'images/biblestudy/' . $image_type, 'original_', true, true);
+			$images = JFolder::files(JPATH_ROOT . '/images/biblestudy/' . $image_type, 'original_', true, true);
 
 			if ($images != false)
 			{
@@ -848,9 +848,9 @@ class BiblestudyControllerAdmin extends JControllerForm
 	/**
 	 * Create Thumbnail XHR
 	 *
-	 * @throws Exception
-	 *
 	 * @return void
+	 *
+	 * @throws Exception
 	 *
 	 * @since 9.0.0
 	 */
@@ -883,7 +883,60 @@ class BiblestudyControllerAdmin extends JControllerForm
 
 		/** @var BiblestudyModelArchive $model */
 		$model = $this->getModel('archive');
-		$msg = $model->doArchive();
+		$msg   = $model->doArchive();
 		$this->setRedirect('index.php?option=com_biblestudy&view=cpanel', $msg);
+	}
+
+	public function submit($key = null, $urlVar = null)
+	{
+		$this->checkToken();
+
+		$app   = JFactory::getApplication();
+		$model = $this->getModel('form');
+		$form  = $model->getForm($data, false);
+
+		if (!$form)
+		{
+			$app->enqueueMessage($model->getError(), 'error');
+
+			return false;
+		}
+
+		// Name of array 'jform' must match 'control' => 'jform' line in the model code
+		$data = $this->input->post->get('jform', array(), 'array');
+
+		// This is validate() from the FormModel class, not the Form class
+		// FormModel::validate() calls both Form::filter() and Form::validate() methods
+		$validData = $model->validate($form, $data);
+
+		if ($validData === false)
+		{
+			$errors = $model->getErrors();
+
+			foreach ($errors as $error)
+			{
+				if ($error instanceof \Exception)
+				{
+					$app->enqueueMessage($error->getMessage(), 'warning');
+				}
+				else
+				{
+					$app->enqueueMessage($error, 'warning');
+				}
+			}
+
+			// Save the form data in the session, using a unique identifier
+			$app->setUserState('com_biblestudy.admin', $data);
+		}
+		else
+		{
+			$app->enqueueMessage("Data successfully validated", 'notice');
+
+			// Clear the form data in the session
+			$app->setUserState('com_biblestudy.admin', null);
+		}
+
+		// Redirect back to the form in all cases
+		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=admin&layout=edit', false));
 	}
 }

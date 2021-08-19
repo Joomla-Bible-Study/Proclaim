@@ -97,10 +97,12 @@
 		</phpmd>
 	</target>
 
-	<!-- Create com_proclaim-9.2.4.zip -->
+	<!-- Create com_proclaim-x.x.x.zip -->
 	<target name="component" depends="init,dev.clean" description="Builds the component">
-		<delete file="${basedir}/build/com_proclaim-9.2.5.zip"/>
-		<zip destfile="${basedir}/build/com_proclaim-9.2.5.zip" basedir="${basedir}">
+		<propertyprompt propertyName="version" defaultValue="9.2.x"
+		                promptText="Enter the version you are building."/>
+		<delete file="${basedir}/build/com_proclaim-${version}.zip"/>
+		<zip destfile="${basedir}/build/com_proclaim-${version}.zip" basedir="${basedir}">
 			<fileset defaultexcludes="true" dir=".">
 				<include name="admin/**"/>
 				<include name="media/**"/>

@@ -28,15 +28,15 @@ abstract class JHtmlBiblestudy
 	 *
 	 * If debugging mode is on an uncompressed version of jQuery is included for easier debugging.
 	 *
-	 * @param   mixed  $debug  Is debugging mode on? [optional]
-	 * @param   mixed  $extra  Option to load extra js [optional]
+	 * @param   mixed        $debug  Is debugging mode on? [optional]
+	 * @param   string|null  $extra  Option to load extra js [optional]
 	 *
 	 * @return  void
 	 *
-	 * @since   9.0.0
 	 * @throws  \Exception
+	 * @since   9.0.0
 	 */
-	public static function framework($debug = null, $extra = null)
+	public static function framework($debug = null, string $extra = null)
 	{
 		// Only load once
 		if (!empty(self::$loaded[__METHOD__]))
@@ -64,8 +64,6 @@ abstract class JHtmlBiblestudy
 		JHtml::script('media/com_biblestudy/js/modernizr.js');
 
 		self::$loaded[__METHOD__] = true;
-
-		return;
 	}
 
 	/**
@@ -113,6 +111,11 @@ abstract class JHtmlBiblestudy
 				[],
 				['defer' => 'defer']
 			);
+		}
+
+		if ($extra === 'podcast')
+		{
+			JHtml::stylesheet('media/com_biblestudy/css/podcast.css');
 		}
 	}
 
@@ -188,7 +191,7 @@ abstract class JHtmlBiblestudy
 	/**
 	 * Method to get the field options.
 	 *
-	 * @return   Object    The field option objects.
+	 * @return   object    The field option objects.
 	 *
 	 * @since    1.6
 	 */

@@ -59,7 +59,7 @@ $session->set('migration_stack', '', 'JBSM');
 		<td class="key" colspan="2">Proclaim Component</td>
 		<td><strong>Installed</strong></td>
 	</tr>
-	<?php if (count($this->status->modules)) : ?>
+	<?php if (count($this->status->cwmmodules)) : ?>
 		<tr>
 			<th>Module</th>
 			<th>Client</th>

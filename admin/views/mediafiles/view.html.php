@@ -134,7 +134,7 @@ class BiblestudyViewMediafiles extends JViewLegacy
 		$this->setDocument();
 
 		// Display the template
-		return parent::display($tpl);
+		parent::display($tpl);
 	}
 
 	/**
@@ -200,8 +200,6 @@ class BiblestudyViewMediafiles extends JViewLegacy
 				->selector('collapseModal')
 				->listCheck(true);
 		}
-
-		include_once JPATH_COMPONENT . '/helpers/html/biblestudy.php';
 	}
 
 	/**

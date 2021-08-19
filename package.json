@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@hapi/cryptiles": ">=4.1.2",
+    "csso": "^4.2.0",
+    "hoek": "<=5.0.3",
+    "less": "^4.1.1",
+    "less-cli": "^1.0.0"
+  }
+}

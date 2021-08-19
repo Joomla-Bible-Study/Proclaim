@@ -781,7 +781,7 @@ $input  = $app->input;
                                 </li>
                                 <li class="">
                                     <a href="#serieslistdisplay" data-toggle="tab">
-										<?php echo JText::_('JBS_TPL_SERIESDETAILSDISPLAY'); ?>
+										<?php echo JText::_('JBS_TPL_SERIESLISTDISPLAY'); ?>
                                     </a>
                                 </li>
                                 <li class="">
