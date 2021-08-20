@@ -222,6 +222,8 @@ class JBSMPIconvert
 					$newid              = $db->loadResult();
 					$oldid              = $pi->id;
 					$this->serversids[] = array('newid' => $newid, 'oldid' => $oldid);
+					//xdebug_var_dump($this->serversids);
+
 				}
 /*
 				$datafolders             = new stdClass;
@@ -252,7 +254,7 @@ class JBSMPIconvert
 				$datateachers->id          = null;
 				$datateachers->teachername = $pi->name;
 				$datateachers->alias       = $pi->alias;
-				$datateachers->title       = $pi->teacher_role;
+				$datateachers->title       = $pi->teacher_title;
 				$datateachers->image       = $pi->image_folderlrg . $pi->teacher_image_lrg;
 				$datateachers->thumb       = $pi->image_folderlrg . $pi->teacher_image_lrg;
 				$datateachers->email       = $pi->email;
@@ -301,7 +303,7 @@ class JBSMPIconvert
 				$locations->access        = $pi->access;
 				$locations->ordering      = $pi->ordering;
 				$locations->misc   = $pi->description;
-				$locations->image         = $pi->ministry_img_lrg. $pi->ministry_img_lrg;
+				$locations->image         = $pi->image_folderlrg . $pi->ministry_image_lrg;
 
                 if (!$db->insertObject('#__bsms_locations', $locations, 'id'))
                 {
@@ -434,8 +436,8 @@ class JBSMPIconvert
 		{
 			foreach ($studies as $pi)
 			{
-				$studydate  = $pi->study_date;
-				$studytitle = $pi->study_name;
+				$studydate  = $pi->date;
+				$studytitle = $pi->name;
 				$teacher_id = null;
 
 				foreach ($this->teachersids as $teacher)
@@ -527,7 +529,7 @@ class JBSMPIconvert
 				}
 
 				$published = $pi->published;
-				$params    = '{"metakey":"' . $pi->tags . '","metadesc":""}';
+				$params    = '{"metakey":"' . $pi->metakey . '","metadesc":""}';
 				$params    = $db->escape($params);
 				$access    = $pi->saccess;
 
@@ -781,10 +783,10 @@ class JBSMPIconvert
 					{
 						$oldpodid = $podcast->id;
 
-						if ($pod['oldid'] == $oldpodid)
-						{
-							$podcast_id = $pod['newid'];
-						}
+						//if ($pod['oldid'] == $oldpodid)
+						//{
+							//$podcast_id = $pod['newid'];
+						//}
 					}
 				}
 			}
@@ -838,7 +840,7 @@ class JBSMPIconvert
 					$player      = '1';
 					$media_image = '5';
 					$mime_type   = '15';
-					$server      = '-1';
+					//$server      = '-1';
 					break;
 
 				case 1:
@@ -853,7 +855,7 @@ class JBSMPIconvert
 					$player      = '1';
 					$media_image = '5';
 					$mime_type   = '15';
-					$server      = '-1';
+					//$server      = '-1';
 					break;
 
 				case 2:
@@ -863,8 +865,8 @@ class JBSMPIconvert
 					$player      = '8';
 					$media_image = '5';
 					$mime_type   = '15';
-					$path        = '-1';
-					$server      = '-1';
+					//$path        = '-1';
+					//$server      = '-1';
 					break;
 
 				case 3:
@@ -875,13 +877,13 @@ class JBSMPIconvert
 					$player      = '8';
 					$media_image = '13';
 					$mime_type   = '15';
-					$path        = '-1';
-					$server      = '-1';
+					//$path        = '-1';
+					//$server      = '-1';
 					break;
 			}
 		}
 
-		$createdate = $pi->study_date;
+		$createdate = $pi->date;
 
 		if ($type == 'audio')
 		{
@@ -896,7 +898,7 @@ class JBSMPIconvert
 		if ($type == 'notes')
 		{
 			$filesize    = $pi->notesfs;
-			$download    = '1';
+			//$download    = '1';
 			$player      = '0';
 			$media_image = '12';
 			$mime_type   = '6';
@@ -909,20 +911,14 @@ class JBSMPIconvert
             $filename = $path . $pi->video_link;
 		}
 
-		$hits      = $pi->hits;
-		$downloads = $pi->downloads;
-		$published = $pi->published;
-		$params    = '{"playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","filename":"'.$pi->path.$pi->filename.'","size":"'.$pi->size.'"}';
-		$params    = $db->escape($params);
-		$popup     = '1';
-		$access    = $pi->access;
+
 
 		if ($type == 'slides')
 		{
-			$download = '1';
+			//$download = '1';
 			$filesize = $pi->slidesfs;
 			$player   = '0';
-			$filename = $pi->slides_link;
+			//$filename = $pi->slides_link;
 
             $query = $db->getQuery(true);
             $query->select('folder')->from('#__pifilepath')->where('id = ' . $pi->slides_link);
@@ -931,6 +927,12 @@ class JBSMPIconvert
             $path     = $object->folder;
             $filename = $path . $pi->slides_link;
 		}
+        $hits      = $pi->hits;
+        $downloads = $pi->downloads;
+        $published = $pi->published;
+        $params    = '{"mime_type":'.$mime_type.'","media_image":"'.$media_image.'","playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","filename":"'.$filename.'","size":"'.$filesize.'","mediacode:""'.$mediacode.'"}';
+        $params    = $db->escape($params);
+        //$popup     = '1';
 
 		$mediafiles              = new stdClass;
 		$mediafiles->id          = null;
@@ -941,16 +943,27 @@ class JBSMPIconvert
 		//$mediafiles->size        = $filesize;
 		//$mediafiles->mime_type   = $mime_type;
 		$mediafiles->podcast_id  = $podcast_id;
-		$mediafiles->mediacode   = $mediacode;
+		//$mediafiles->mediacode   = $mediacode;
 		$mediafiles->createdate  = $createdate;
-		$mediafiles->link_type   = $link_type;
-		$mediafiles->hits        = $pi->hits;
+		//$mediafiles->link_type   = $link_type;
+		$mediafiles->hits        = $hits;
+		$mediafiles->downloads = $downloads;
 		$mediafiles->params      = $params;
-		$mediafiles->player      = $player;
-		$mediafiles->popup       = 1;
-		$mediafiles->access      = $pi->access;
-		$mediafiles->media_image = $media_image;
-		$mediafiles->server_id = 1;
+		//$mediafiles->player      = $player;
+		//$mediafiles->popup       = 1;
+
+		//$mediafiles->media_image = $media_image;
+		$mediafiles->access = $pi->access;
+		$servers = $this->serversids;
+		foreach ($servers as $server)
+        {
+            if ($server['oldid'] == $pi->audio_folder){$mediafiles->server_id = $server->newid;}
+            if ($server['oldid'] == $pi->video_folder){$mediafiles->server_id = $server->newid;}
+            else {$mediafiles->server_id = 1;}
+        }
+
+		//xdebug_var_dump($servers);
+
 
 		if (!$db->insertObject('#__bsms_mediafiles', $mediafiles, 'id'))
 		{
