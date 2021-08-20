@@ -10,20 +10,32 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Button\FeaturedButton;
+use Joomla\CMS\Button\PublishedButton;
+use Joomla\CMS\Button\TransitionButton;
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Associations;
+use Joomla\CMS\Language\Multilanguage;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
+use Joomla\Component\Content\Administrator\Helper\ContentHelper;
+use Joomla\Utilities\ArrayHelper;
+
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
-JHtml::_('bootstrap.tooltip');
-JHtml::_('dropdown.init');
-JHtml::_('behavior.multiselect');
-JHtml::_('formbehavior.chosen', 'select');
+HTMLHelper::_('behavior.multiselect');
 
 $app       = JFactory::getApplication();
 $user      = JFactory::getUser();
 $userId    = $user->get('id');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
-$archived  = $this->state->get('filter.published') == 2 ? true : false;
-$trashed   = $this->state->get('filter.published') == -2 ? true : false;
+//$archived  = $this->state->get('filter.published') == 2 ? true : false;
+//$trashed   = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder == 'study.ordering';
 $columns   = 12;
 
@@ -47,7 +59,7 @@ else
 if ($saveOrder)
 {
 	$saveOrderingUrl = 'index.php?option=com_biblestudy&task=message.saveOrderAjax&tmpl=component';
-	JHtml::_('sortablelist.sortable', 'messagesList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+	HTMLHelper::_('draggablelist.draggable');
 }
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messages'); ?>" method="post" name="adminForm"
@@ -215,12 +227,12 @@ if ($saveOrder)
 					&& $user->authorise('core.edit', 'com_biblestudy')
 					&& $user->authorise('core.edit.state', 'com_biblestudy')
 				) : ?>
-					<?php echo JHtml::_(
+					<?php echo HTMLHelper::_(
 						'bootstrap.renderModal',
 						'collapseModal',
 						array(
-							'title'  => JText::_('JBS_CMN_BATCH_OPTIONS'),
-							'footer' => $this->loadTemplate('batch_footer')
+							'title'  => Text::_('COM_CONTENT_BATCH_OPTIONS'),
+							'footer' => $this->loadTemplate('batch_footer'),
 						),
 						$this->loadTemplate('batch_body')
 					); ?>
@@ -231,6 +243,6 @@ if ($saveOrder)
 
 			<input type="hidden" name="task" value=""/>
 			<input type="hidden" name="boxchecked" value="0"/>
-			<?php echo JHtml::_('form.token'); ?>
+			<?php echo HTMLHelper::_('form.token'); ?>
 		</div>
 </form>

@@ -9,36 +9,57 @@
  * */
 defined('_JEXEC') or die;
 
-$published = $this->state->get('filter.published');
-JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html');
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Multilanguage;
+use Joomla\CMS\Layout\LayoutHelper;
+
+$params = ComponentHelper::getParams('com_biblestudy');
+
+$published = (int) $this->state->get('filter.published');
+
+$user = Factory::getUser();
 ?>
 
-<div class="row-fluid">
-	<div class="control-group span4">
-		<div class="controls">
-			<?php echo JHtml::_('batch.access'); ?>
+<div class="p-3">
+	<div class="row">
+		<?php if (Multilanguage::isEnabled()) : ?>
+			<div class="form-group col-md-6">
+				<div class="controls">
+					<?php echo LayoutHelper::render('joomla.html.batch.language', []); ?>
+				</div>
+			</div>
+		<?php endif; ?>
+		<div class="form-group col-md-6">
+			<div class="controls">
+				<?php echo LayoutHelper::render('joomla.html.batch.access', []); ?>
+			</div>
 		</div>
 	</div>
-	<div class="control-group span4">
+	<div class="row">
+		<?php if ($published >= 0) : ?>
+			<div class="form-group col-md-6">
+				<div class="controls">
+					<?php echo LayoutHelper::render('joomla.html.batch.item', ['extension' => 'com_biblestudy']); ?>
+				</div>
+			</div>
+		<?php endif; ?>
+	</div>
+	<div class="form-group col-md-4">
 		<div class="controls">
 			<?php echo JHtml::_('biblestudy.Teacher'); ?>
 		</div>
 	</div>
-	<div class="control-group span4">
-		<div class="controls">
-			<?php echo JHtml::_('biblestudy.Messagetype'); ?>
-		</div>
-	</div>
 </div>
-<div class="row-fluid">
-	<div class="control-group span4">
+<div class="row">
+	<div class="form-group col-md-6">
 		<div class="controls">
 			<?php echo JHtml::_('biblestudy.Series'); ?>
 		</div>
 	</div>
-	<div class="control-group span4">
+	<div class="form-group col-md-4">
 		<div class="controls">
-			<?php echo JHtml::_('batch.language'); ?>
+			<?php echo JHtml::_('biblestudy.Messagetype'); ?>
 		</div>
 	</div>
 </div>

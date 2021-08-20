@@ -7,8 +7,21 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 // No Direct Access
 defined('_JEXEC') or die;
+
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Multilanguage;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\GenericDataException;
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\Component\Content\Administrator\Extension\ContentComponent;
+use Joomla\Component\Content\Administrator\Helper\ContentHelper;
 
 /**
  * View class for a list of Messages.
@@ -111,7 +124,7 @@ class BiblestudyViewMessages extends JViewLegacy
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  mixed  A string if successful, otherwise a JError object.
+	 * @return  void  A string if successful, otherwise a JError object.
 	 *
 	 * @see     fetch()
 	 * @since   11.1
@@ -132,9 +145,7 @@ class BiblestudyViewMessages extends JViewLegacy
 		// Check for errors
 		if (count($errors = $this->get('Errors')))
 		{
-			JFactory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
-
-			return false;
+			throw new GenericDataException(implode("\n", $errors), 500);
 		}
 
 		// Levels filter.
@@ -156,14 +167,21 @@ class BiblestudyViewMessages extends JViewLegacy
 		if ($this->getLayout() !== 'modal')
 		{
 			$this->addToolbar();
-			$this->sidebar = JHtmlSidebar::render();
+
+			// We do not need to filter by language when multilingual is disabled
+			if (!Multilanguage::isEnabled())
+			{
+				unset($this->activeFilters['language']);
+				$this->filterForm->removeField('language', 'filter');
+			}
+			//$this->sidebar = JHtmlSidebar::render();
 		}
 
 		// Set the document
 		$this->setDocument();
 
 		// Display the template
-		return parent::display($tpl);
+		parent::display($tpl);
 	}
 
 	/**
@@ -175,39 +193,52 @@ class BiblestudyViewMessages extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
+		$canDo = ContentHelper::getActions('com_biblestudy', 'category', $this->state->get('filter.category_id'));
 		$user = JFactory::getUser();
 
 		// Get the toolbar object instance
-		$bar = JToolbar::getInstance('toolbar');
+		$toolbar = Toolbar::getInstance('toolbar');
 
-		JToolbarHelper::title(JText::_('JBS_CMN_STUDIES'), 'book book');
+		ToolbarHelper::title(JText::_('JBS_CMN_STUDIES'), 'book book');
 
 		if ($this->canDo->get('core.create'))
 		{
-			JToolbarHelper::addNew('message.add');
+			$toolbar->addNew('message.add');
 		}
+
+		$dropdown = $toolbar->dropdownButton('status-group')
+			->text('JTOOLBAR_CHANGE_STATUS')
+			->toggleSplit(false)
+			->icon('icon-ellipsis-h')
+			->buttonClass('btn btn-action')
+			->listCheck(true);
+		$childBar = $dropdown->getChildToolbar();
 
 		if ($this->canDo->get('core.edit'))
 		{
-			JToolbarHelper::editList('message.edit');
+			$toolbar->edit('message.edit');
 		}
 
 		if ($this->canDo->get('core.edit.state'))
 		{
-			JToolbarHelper::divider();
-			JToolbarHelper::publishList('messages.publish');
-			JToolbarHelper::unpublishList('messages.unpublish');
-			JToolbarHelper::divider();
-			JToolbarHelper::archiveList('messages.archive');
+			$toolbar->divider();
+			$toolbar->publish('messages.publish');
+			$toolbar->unpublish('messages.unpublish');
+			$toolbar->divider();
+			$toolbar->archive('messages.archive');
 		}
 
-		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
+		if ($this->state->get('filter.published') == ContentComponent::CONDITION_TRASHED && $canDo->get('core.delete'))
 		{
-			JToolbarHelper::deleteList('', 'messages.delete', 'JTOOLBAR_EMPTY_TRASH');
+			$toolbar->delete('messages.delete')
+				->text('JTOOLBAR_EMPTY_TRASH')
+				->message('JGLOBAL_CONFIRM_DELETE')
+				->listCheck(true);
 		}
-		elseif ($this->canDo->get('core.edit.state'))
+
+		if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED)
 		{
-			JToolbarHelper::trash('messages.trash');
+			$childBar->trash('articles.trash')->listCheck(true);
 		}
 
 		// Add a batch button
@@ -215,14 +246,13 @@ class BiblestudyViewMessages extends JViewLegacy
 			&& $user->authorise('core.edit', 'com_biblestudy')
 			&& $user->authorise('core.edit.state', 'com_biblestudy'))
 		{
-			$title = JText::_('JTOOLBAR_BATCH');
-
-			// Instantiate a new JLayoutFile instance and render the batch button
-			$layout = new JLayoutFile('joomla.toolbar.batch');
-
-			$dhtml = $layout->render(array('title' => $title));
-			$bar->appendButton('Custom', $dhtml, 'batch');
+			$childBar->popupButton('batch')
+				->text('JTOOLBAR_BATCH')
+				->selector('collapseModal')
+				->listCheck(true);
 		}
+
+		$toolbar->help('JHELP_CONTENT_ARTICLE_MANAGER');
 	}
 
 	/**

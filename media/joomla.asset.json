@@ -1,0 +1,185 @@
+{
+  "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
+  "name": "com_biblstudy",
+  "version": "10.0.0",
+  "description": "Proclaim",
+  "license": "GPL-2.0-or-later",
+  "assets": [
+    {
+      "name": "com_biblestudy.admin-article-pagebreak.es5",
+      "type": "script",
+      "uri": "com_biblestudy/admin-article-pagebreak-es5.min.js",
+      "dependencies": [
+        "core"
+      ],
+      "attributes": {
+        "nomodule": true,
+        "defer": true
+      },
+      "version": "dfda2cadb929cf361efab69cd56c9ef003a65dbe"
+    },
+    {
+      "name": "com_biblestudy.admin-message-pagebreak",
+      "type": "script",
+      "uri": "com_biblestudy/admin-message-pagebreak.min.js",
+      "dependencies": [
+        "com_biblestudy.admin-message-pagebreak.es5"
+      ],
+      "attributes": {
+        "type": "module",
+        "defer": true
+      },
+      "version": "3a6400cb085212bd7f5f2f43ab8bfadfb405b7fd"
+    },
+    {
+      "name": "com_biblestudy.admin-message-readmore.es5",
+      "type": "script",
+      "uri": "com_biblestudy/admin-message-readmore-es5.min.js",
+      "dependencies": [
+        "core"
+      ],
+      "attributes": {
+        "nomodule": true,
+        "defer": true
+      },
+      "version": "3caf2bd836dad54185a2fbb3c9a625b7576d677c"
+    },
+    {
+      "name": "com_biblestudy.admin-message-readmore",
+      "type": "script",
+      "uri": "com_biblestudy/admin-message-readmore.min.js",
+      "dependencies": [
+        "com_biblestudy.admin-message-readmore.es5"
+      ],
+      "attributes": {
+        "type": "module"
+      },
+      "version": "3e285e1e49b30182e409d2d82de5a337fa3a6c89"
+    },
+    {
+      "name": "com_biblestudy.admin-messages-batch.es5",
+      "type": "script",
+      "uri": "com_biblestudy/admin-messages-default-batch-footer-es5.min.js",
+      "dependencies": [
+        "core"
+      ],
+      "attributes": {
+        "nomodule": true,
+        "defer": true
+      },
+      "version": "3660f7dadca40d79416fff13b55596f0cec73cd9"
+    },
+    {
+      "name": "com_biblestudy.admin-messages-batch",
+      "type": "script",
+      "uri": "com_biblestudy/admin-messages-default-batch-footer.min.js",
+      "dependencies": [
+        "com_biblestudy.admin-messages-batch.es5"
+      ],
+      "attributes": {
+        "type": "module"
+      },
+      "version": "9ac1245a9dd2a9bf7e7f95c6e7e24f6075eef0ae"
+    },
+    {
+      "name": "com_biblestudy.admin-messages-stage.es5",
+      "type": "script",
+      "uri": "com_biblestudy/admin-messages-default-stage-footer-es5.min.js",
+      "dependencies": [
+        "core"
+      ],
+      "attributes": {
+        "nomodule": true,
+        "defer": true
+      },
+      "version": "361f99af1774ed60da28e3c2b8c6089c1e020b3f"
+    },
+    {
+      "name": "com_biblestudy.admin-messages-stage",
+      "type": "script",
+      "uri": "com_biblestudy/admin-messages-default-stage-footer.min.js",
+      "dependencies": [
+        "com_biblestudy.admin-messages-stage.es5"
+      ],
+      "attributes": {
+        "type": "module"
+      },
+      "version": "08fce4ef3c52022ecd9f512a44d64299dc9e89ed"
+    },
+    {
+      "name": "com_biblestudy.admin-messages-modal",
+      "type": "script",
+      "uri": "com_biblestudy/admin-messages-modal.min.js",
+      "dependencies": [
+        "com_biblestudy.admin-messages-modal.es5"
+      ],
+      "attributes": {
+        "type": "module"
+      },
+      "version": "b0a8df19948936e693d5c710d22673ed9ad760a3"
+    },
+    {
+      "name": "com_biblestudy.form-edit.es5",
+      "type": "script",
+      "uri": "com_biblestudy/form-edit-es5.min.js",
+      "dependencies": [
+        "core"
+      ],
+      "attributes": {
+        "nomodule": true,
+        "defer": true
+      },
+      "version": "e7c98071755bbe4d4ad185fa342d361d56892073"
+    },
+    {
+      "name": "com_biblestudy.form-edit",
+      "type": "script",
+      "uri": "com_biblestudy/form-edit.min.js",
+      "dependencies": [
+        "com_biblestudy.form-edit.es5"
+      ],
+      "attributes": {
+        "type": "module"
+      },
+      "version": "405b01d00df544c5790201546a69f79d485a500d"
+    },
+    {
+      "name": "com_biblestudy.messages-list.es5",
+      "type": "script",
+      "uri": "com_biblestudy/messages-list-es5.min.js",
+      "dependencies": [
+        "core"
+      ],
+      "attributes": {
+        "nomodule": true,
+        "defer": true
+      },
+      "version": "4d40a071d6672febde9190f361c8adecc94917d8"
+    },
+    {
+      "name": "com_biblestudy.admin-messages-modal.es5",
+      "type": "script",
+      "uri": "com_biblestudy/admin-messages-modal-es5.min.js",
+      "dependencies": [
+        "core"
+      ],
+      "attributes": {
+        "nomodule": true,
+        "defer": true
+      },
+      "version": "872a497cd19612c3e1940b5feefdc0e14c08d4b9"
+    },
+    {
+      "name": "com_biblestudy.messages-list",
+      "type": "script",
+      "uri": "com_biblestudy/messages-list.min.js",
+      "dependencies": [
+        "com_biblestudy.messages-list.es5"
+      ],
+      "attributes": {
+        "type": "module"
+      },
+      "version": "4efda122de260213f85aceee619bfc3ea5b4a0aa"
+    }
+  ]
+}
