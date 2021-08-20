@@ -19,8 +19,6 @@ defined('_JEXEC') or die;
  */
 class JBSMImageLib
 {
-	// Public abstract static function resize($img);
-
 	/**
 	 * Extension Name
 	 *
@@ -34,34 +32,34 @@ class JBSMImageLib
 	 * Get Series Podcast File
 	 *
 	 * @param   string  $img  Org Image File
-	 * @param   string  $new  New Image File
 	 *
 	 * @return string
 	 *
+	 * @throws \Exception
 	 * @since 9.0.18
 	 */
-	public static function getSeriesPodcast($img, $new)
+	public static function getSeriesPodcast(string $img)
 	{
 		// Prep files
-		$new_sub = JPATH_ROOT . '/' . $new;
-		$img_sub = JPATH_ROOT . '/' . $img;
-		$return  = $img;
+		$img_base    = pathinfo($img);
+		$array       = explode('.', $img_base['basename']);
+		$NewfileName = $img_base["dirname"] . '/' . $array[0] . '-200x112.' . $array[1];
+		$new_sub     = JPATH_ROOT . '/' . $NewfileName;
+		$img_sub     = JPATH_ROOT . '/' . $img;
 
-		if (file_exists($img_sub))
+		if (file_exists($img_sub) && !file_exists($new_sub))
 		{
-			if (extension_loaded('gd') && function_exists('gd_info'))
+			if (function_exists('gd_info') && extension_loaded('gd'))
 			{
 				GDLib::resize_image($new_sub, $img_sub);
 
-				$return = $new;
+				return $NewfileName;
 			}
-			else
-			{
-				$return = $img;
-			}
+
+			return $img;
 		}
 
-		return $return;
+		return $NewfileName;
 	}
 }
 
@@ -88,8 +86,8 @@ class ImageMagickLib extends JBSMImageLib
 	 * @param   string  $targetFile    Target File Path
 	 * @param   string  $originalFile  File
 	 * @param   int     $newWidth      Image New Width
-	 * @param   int     $canv_width    Image Canvas Width
-	 * @param   int     $canv_height   Image Canvas Height
+	 * @param   float   $canv_width    Image Canvas Width
+	 * @param   float   $canv_height   Image Canvas Height
 	 *
 	 * @return void
 	 *
@@ -100,7 +98,8 @@ class ImageMagickLib extends JBSMImageLib
 		$originalFile,
 		$newWidth = 200,
 		$canv_width = 200,
-		$canv_height = 200)
+		$canv_height = 112.5
+	)
 	{
 		try
 		{
@@ -153,8 +152,8 @@ class GDLib extends JBSMImageLib
 	 * @param   string  $targetFile    Target File Path
 	 * @param   string  $originalFile  File
 	 * @param   int     $newWidth      Image New Width
-	 * @param   int     $canv_width    Image Canvas Width
-	 * @param   int     $canv_height   Image Canvas Height
+	 * @param   float   $canv_width    Image Canvas Width
+	 * @param   float   $canv_height   Image Canvas Height
 	 *
 	 * @return void
 	 *
@@ -162,11 +161,12 @@ class GDLib extends JBSMImageLib
 	 * @since 9.0.18
 	 */
 	public static function resize_image(
-		$targetFile,
-		$originalFile,
-		$newWidth = 200,
-		$canv_width = 200,
-		$canv_height = 200)
+		string $targetFile,
+		string $originalFile,
+		int $newWidth = 200,
+		float $canv_width = 200,
+		float $canv_height = 112.5
+	): void
 	{
 		$info = getimagesize($originalFile);
 		$mime = $info['mime'];
@@ -175,20 +175,20 @@ class GDLib extends JBSMImageLib
 		{
 			case 'image/jpeg':
 				$image_create_func = 'imagecreatefromjpeg';
-				$image_save_func = 'imagejpeg';
-				$new_image_ext = 'jpg';
+				$image_save_func   = 'imagejpeg';
+				$new_image_ext     = 'jpg';
 				break;
 
 			case 'image/png':
 				$image_create_func = 'imagecreatefrompng';
-				$image_save_func = 'imagepng';
-				$new_image_ext = 'png';
+				$image_save_func   = 'imagepng';
+				$new_image_ext     = 'png';
 				break;
 
 			case 'image/gif':
 				$image_create_func = 'imagecreatefromgif';
-				$image_save_func = 'imagegif';
-				$new_image_ext = 'gif';
+				$image_save_func   = 'imagegif';
+				$new_image_ext     = 'gif';
 				break;
 
 			default:
@@ -196,17 +196,19 @@ class GDLib extends JBSMImageLib
 		}
 
 		$img = $image_create_func($originalFile);
-		list($width, $height) = getimagesize($originalFile);
+		[$width, $height] = getimagesize($originalFile);
 
 		$newHeight = ($height / $width) * $newWidth;
-		$tmp = imagecreatetruecolor($canv_width, $canv_height);
+		$tmp       = imagecreatetruecolor($canv_width, $canv_height);
 		imagecopyresampled($tmp, $img, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
 
 		if (file_exists($targetFile))
 		{
 			unlink($targetFile);
 		}
-
-		$image_save_func($tmp, "$targetFile");
+		else
+		{
+			$image_save_func($tmp, $targetFile);
+		}
 	}
 }
