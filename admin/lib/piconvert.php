@@ -200,10 +200,12 @@ class JBSMPIconvert
 		{
 			foreach ($piservers as $pi)
 			{
-				$data         = new stdClass;
+			    $uri = JURI::getInstance();
+			    $url = $uri->gethost();
+			    $data         = new stdClass;
 				$data->id     = null;
 				$data->type   = 'legacy';
-				$data->params = '{"path":"\/\/' . $pi->server . $pi->folder . '\/","protocol":"http:\/\/"}';
+				$data->params = '{"path":"\/\/' .$url . $pi->server . $pi->folder . '\/","protocol":"http:\/\/"}';
 				$data->media  = '{"link_type":"1","player":"7","popup":"3","mediacode":"","media_image":"images\/biblestudy\/mp3.png","mime_type":"audio\/mp3","autostart":"1"}';
 				//$data->server_path = $pi->server;
 				$data->server_name = $pi->name;
@@ -225,13 +227,7 @@ class JBSMPIconvert
 					//xdebug_var_dump($this->serversids);
 
 				}
-/*
-				$datafolders             = new stdClass;
-				$datafolders->id         = null;
-				$datafolders->foldername = $pi->name;
-				$datafolders->folderpath = $pi->server . $pi->folder;
-				$datafolders->published  = $pi->published;
-*/
+
 			}
 		}
 
@@ -530,7 +526,7 @@ class JBSMPIconvert
 
 				$published = $pi->published;
 				$params    = '{"metakey":"' . $pi->metakey . '","metadesc":""}';
-				$params    = $db->escape($params);
+				//$params    = $db->escape($params);
 				$access    = $pi->saccess;
 
 				// Create the study then get the id to create the media file and comments
@@ -637,7 +633,6 @@ class JBSMPIconvert
 
 		$piconversion = '<table><tr><td><h3>' . JText::_('JBS_IBM_PREACHIT_RESULTS') . '</h3></td></tr>'
 			. '<tr><td>' . JText::_('JBS_IBM_PI_SERVERS') . '<strong>' . $svadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $svnoadd . '</td></tr>'
-			. '<tr><td>' . JText::_('JBS_IBM_PI_FOLDERS') . '<strong>' . $fadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $fnoadd . '</td></tr>'
 			. '<tr><td>' . JText::_('JBS_IBM_PI_TEACHERS') . '<strong>' . $tadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $tnoadd . '</td></tr>'
 			. '<tr><td>' . JText::_('JBS_IBM_PI_SERIES') . '<strong>' . $sradd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $srnoadd . '</td></tr>'
 			. '<tr><td>' . JText::_('JBS_IBM_PI_PODCAST') . '<strong>' . $padd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $pnoadd . '</td></tr>'
@@ -774,7 +769,7 @@ class JBSMPIconvert
 			$filesize    = $pi->audiofs;
 			$player      = '1';
 			$filename    = $pi->audio_link;
-
+            $server_id = 1;
 			if ($podcasts)
 			{
 				foreach ($podcasts as $podcast)
@@ -811,7 +806,7 @@ class JBSMPIconvert
 			}
 
 			$filesize = $pi->videofs;
-
+            $server_id = 1;
 			switch ($pi->video_type)
 			{
 				case 4:
@@ -878,9 +873,10 @@ class JBSMPIconvert
 					$media_image = '13';
 					$mime_type   = '15';
 					//$path        = '-1';
-					//$server      = '-1';
+					$server_id      = '0';
 					break;
 			}
+
 		}
 
 		$createdate = $pi->date;
@@ -904,11 +900,11 @@ class JBSMPIconvert
 			$mime_type   = '6';
 
             $query = $db->getQuery(true);
-            $query->select('folder')->from('#__pifilepath')->where('id = ' . $pi->video_link);
+            $query->select('folder')->from('#__pifilepath')->where('id = ' . $pi->notes_folder);
             $db->setQuery($query);
             $object   = $db->loadObject();
             $path     = $object->folder;
-            $filename = $path . $pi->video_link;
+            $filename = $path . $pi->notes_link;
 		}
 
 
@@ -919,19 +915,19 @@ class JBSMPIconvert
 			$filesize = $pi->slidesfs;
 			$player   = '0';
 			//$filename = $pi->slides_link;
-
             $query = $db->getQuery(true);
-            $query->select('folder')->from('#__pifilepath')->where('id = ' . $pi->slides_link);
+            $query->select('folder')->from('#__pifilepath')->where('id = ' . $pi->slides_folder);
             $db->setQuery($query);
             $object   = $db->loadObject();
             $path     = $object->folder;
             $filename = $path . $pi->slides_link;
 		}
+		if (!player){$player = 1;}
         $hits      = $pi->hits;
         $downloads = $pi->downloads;
         $published = $pi->published;
-        $params    = '{"mime_type":'.$mime_type.'","media_image":"'.$media_image.'","playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","filename":"'.$filename.'","size":"'.$filesize.'","mediacode:""'.$mediacode.'"}';
-        $params    = $db->escape($params);
+        $params    = '{"player":"'.$player.'","link_type":"'.$link_type.'","mime_type":"'.$mime_type.'","media_image":"'.$media_image.'","playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","filename":"'.$filename.'","size":"'.$filesize.'","mediacode":"'.$mediacode.'"}';
+        //$params    = $db->escape($params);
         //$popup     = '1';
 
 		$mediafiles              = new stdClass;
@@ -951,19 +947,10 @@ class JBSMPIconvert
 		$mediafiles->params      = $params;
 		//$mediafiles->player      = $player;
 		//$mediafiles->popup       = 1;
-
+        $mediafiles->server_id = $server_id;
 		//$mediafiles->media_image = $media_image;
 		$mediafiles->access = $pi->access;
 		$servers = $this->serversids;
-		foreach ($servers as $server)
-        {
-            if ($server['oldid'] == $pi->audio_folder){$mediafiles->server_id = $server->newid;}
-            if ($server['oldid'] == $pi->video_folder){$mediafiles->server_id = $server->newid;}
-            else {$mediafiles->server_id = 1;}
-        }
-
-		//xdebug_var_dump($servers);
-
 
 		if (!$db->insertObject('#__bsms_mediafiles', $mediafiles, 'id'))
 		{
