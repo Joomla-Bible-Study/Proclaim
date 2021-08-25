@@ -248,7 +248,7 @@ class JBSMPIconvert
 
 				$datateachers              = new stdClass;
 				$datateachers->id          = null;
-				$datateachers->teachername = $pi->name;
+				$datateachers->teachername = $pi->name . " " . $pi->lastname;
 				$datateachers->alias       = $pi->alias;
 				$datateachers->title       = $pi->teacher_title;
 				$datateachers->image       = $pi->image_folderlrg . $pi->teacher_image_lrg;
@@ -274,6 +274,7 @@ class JBSMPIconvert
 					$newid               = $db->loadResult();
 					$oldid               = $pi->id;
 					$this->teachersids[] = array('newid' => $newid, 'oldid' => $oldid);
+
 				}
 			}
 		}
@@ -309,7 +310,7 @@ class JBSMPIconvert
                 {
                     $ladd++;
 
-                    // Get the new teacherid so we can later connect it to a study
+                    // Get the new locationid so we can later connect it to a study
                     $query = $db->getQuery(true);
                     $query->select('id')->from('#__bsms_locations')->order('id desc');
                     $db->setQuery($query, 0, 1);
@@ -354,7 +355,7 @@ class JBSMPIconvert
 				{
 					$sradd++;
 
-					// Get the new teacherid so we can later connect it to a study
+					// Get the new seriesid so we can later connect it to a study
 					$query = $db->getQuery(true);
 					$query->select('id')->from('#__bsms_series')->order('id desc');
 					$db->setQuery($query, 0, 1);
@@ -435,17 +436,15 @@ class JBSMPIconvert
 				$studydate  = $pi->date;
 				$studytitle = $pi->name;
 				$teacher_id = null;
-
+                $t = json_decode($pi->teacher, true);
 				foreach ($this->teachersids as $teacher)
 				{
-					if ($teacher['oldid'] == $pi->teacher)
+
+				    if ($teacher['oldid'] == $t['0'])
 					{
 						$teacher_id = $teacher['newid'];
 					}
-					else
-					{
-						$teacher_id = '1';
-					}
+
 				}
 
 				$studynumber = $pi->id;
@@ -482,10 +481,11 @@ class JBSMPIconvert
 				$user_id        = $pi->user;
 				$show_level     = $pi->access;
 				$location_id    = null;
+                $l = json_decode($pi->ministry, true);
 
-				foreach ($this->locations as $location)
+                foreach ($this->locations as $location)
 				{
-					if ($location['oldid'] == $pi->ministry)
+					if ($location['oldid'] == $l['0'])
 					{
 						$location_id = $location['newid'];
 					}
@@ -526,7 +526,6 @@ class JBSMPIconvert
 
 				$published = $pi->published;
 				$params    = '{"metakey":"' . $pi->metakey . '","metadesc":""}';
-				//$params    = $db->escape($params);
 				$access    = $pi->saccess;
 
 				// Create the study then get the id to create the media file and comments
@@ -765,11 +764,18 @@ class JBSMPIconvert
 		{
 			$player      = $pi->audio_type;
 			$media_image = '1';
-			$mime_type   = '1';
+			$mime_type   = 'audio\/mp3';
 			$filesize    = $pi->audiofs;
 			$player      = '1';
 			$filename    = $pi->audio_link;
-            $server_id = 1;
+            $servers = $this->serversids;
+            foreach ($servers as $server)
+            {
+                if ($server['oldid'] == $pi->audio_type )
+                {
+                    $server_id = $server['newid'];
+                }
+            }
 			if ($podcasts)
 			{
 				foreach ($podcasts as $podcast)
@@ -806,7 +812,13 @@ class JBSMPIconvert
 			}
 
 			$filesize = $pi->videofs;
-            $server_id = 1;
+			if ($pi->video_type == 3)
+            {
+                $server_id = 3;
+            }
+			else
+            {$server_id = 1;}
+
 			switch ($pi->video_type)
 			{
 				case 4:
@@ -817,7 +829,8 @@ class JBSMPIconvert
 					$mediacode   = $db->escape($mediacode);
 					$player      = '8';
 					$media_image = '5';
-					$mime_type   = '15';
+					$mime_type   = 'video\/mp4';
+					$filename = $pi->video_link;
 					break;
 
 				case 7:
@@ -834,8 +847,8 @@ class JBSMPIconvert
 
 					$player      = '1';
 					$media_image = '5';
-					$mime_type   = '15';
-					//$server      = '-1';
+					$mime_type   = 'video\/mp4';
+					$server_id      = '-1';
 					break;
 
 				case 1:
@@ -849,8 +862,8 @@ class JBSMPIconvert
 
 					$player      = '1';
 					$media_image = '5';
-					$mime_type   = '15';
-					//$server      = '-1';
+					$mime_type   = 'video\/mp4';
+					$server_id      = '-1';
 					break;
 
 				case 2:
@@ -859,9 +872,10 @@ class JBSMPIconvert
 					$mediacode   = $db->escape($mediacode);
 					$player      = '8';
 					$media_image = '5';
-					$mime_type   = '15';
+					$mime_type   = 'video\/mp4';
 					//$path        = '-1';
-					//$server      = '-1';
+					$server_id      = '-1';
+                    $filename = $pi->video_link;
 					break;
 
 				case 3:
@@ -871,9 +885,10 @@ class JBSMPIconvert
 					$mediacode   = $db->escape($mediacode);
 					$player      = '8';
 					$media_image = '13';
-					$mime_type   = '15';
+					$mime_type   = 'video\/mp4';
 					//$path        = '-1';
-					$server_id      = '0';
+					$server_id      = '3';
+                    $filename = $pi->video_link;
 					break;
 			}
 
@@ -884,6 +899,7 @@ class JBSMPIconvert
 		if ($type == 'audio')
 		{
 			$link_type = $pi->audio_download;
+			$mime_type = 'audio\/mp3';
 		}
 
 		if ($type == 'video')
@@ -897,7 +913,7 @@ class JBSMPIconvert
 			//$download    = '1';
 			$player      = '0';
 			$media_image = '12';
-			$mime_type   = '6';
+			$mime_type   = 'text\/html';
 
             $query = $db->getQuery(true);
             $query->select('folder')->from('#__pifilepath')->where('id = ' . $pi->notes_folder);
@@ -921,6 +937,7 @@ class JBSMPIconvert
             $object   = $db->loadObject();
             $path     = $object->folder;
             $filename = $path . $pi->slides_link;
+            $mime_type = 'text\/html';
 		}
 		if (!player){$player = 1;}
         $hits      = $pi->hits;
@@ -950,7 +967,7 @@ class JBSMPIconvert
         $mediafiles->server_id = $server_id;
 		//$mediafiles->media_image = $media_image;
 		$mediafiles->access = $pi->access;
-		$servers = $this->serversids;
+
 
 		if (!$db->insertObject('#__bsms_mediafiles', $mediafiles, 'id'))
 		{
