@@ -202,7 +202,7 @@ class BiblestudyViewSermons extends JViewLegacy
 					$item->scripture1 = $pelements->scripture1;
 					$item->scripture2 = $pelements->scripture2;
 					$item->media      = $pelements->media;
-					$item->duration   = $pelements->duration;
+					//$item->duration   = $pelements->duration;
 					$item->studydate  = $pelements->studydate;
 					$item->topics     = $pelements->topics;
 
