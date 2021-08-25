@@ -206,7 +206,7 @@ class JBSMPIconvert
 				$data->id     = null;
 				$data->type   = 'legacy';
 				$data->params = '{"path":"\/\/' . $url . $pi->server . $pi->folder . '\/","protocol":"http:\/\/"}';
-				$data->media  = '{"link_type":"1","player":"7","popup":"3","mediacode":"","media_image":"images\/biblestudy\/mp3.png","mime_type":"audio\/mp3","autostart":"1"}';
+				$data->media  = '{uploadpath":"\/images\/biblestudy\/media\/","link_type":"1","player":"7","popup":"3","mediacode":"","media_image":"images\/biblestudy\/mp3.png","mime_type":"audio\/mp3","autostart":"1"}';
 				//$data->server_path = $pi->server;
 				$data->server_name = $pi->name;
 				$data->published   = $pi->published;
