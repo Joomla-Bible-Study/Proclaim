@@ -178,8 +178,8 @@ class JBSMPIconvert
 		$oldid               = 0;
 
 		//Convert comments
-		$db                  = JFactory::getDbo();
-		$query               = $db->getQuery(true);
+		$db    = JFactory::getDbo();
+		$query = $db->getQuery(true);
 		$query->select('*')->from('#__picomments');
 		$db->setQuery($query);
 		$this->picomments = $db->loadObjectList();
@@ -200,12 +200,12 @@ class JBSMPIconvert
 		{
 			foreach ($piservers as $pi)
 			{
-			    $uri = JURI::getInstance();
-			    $url = $uri->gethost();
-			    $data         = new stdClass;
+				$uri          = JURI::getInstance();
+				$url          = $uri->gethost();
+				$data         = new stdClass;
 				$data->id     = null;
 				$data->type   = 'legacy';
-				$data->params = '{"path":"\/\/' .$url . $pi->server . $pi->folder . '\/","protocol":"http:\/\/"}';
+				$data->params = '{"path":"\/\/' . $url . $pi->server . $pi->folder . '\/","protocol":"http:\/\/"}';
 				$data->media  = '{"link_type":"1","player":"7","popup":"3","mediacode":"","media_image":"images\/biblestudy\/mp3.png","mime_type":"audio\/mp3","autostart":"1"}';
 				//$data->server_path = $pi->server;
 				$data->server_name = $pi->name;
@@ -299,25 +299,25 @@ class JBSMPIconvert
 				$locations->location_text = $pi->name;
 				$locations->access        = $pi->access;
 				$locations->ordering      = $pi->ordering;
-				$locations->misc   = $pi->description;
+				$locations->misc          = $pi->description;
 				$locations->image         = $pi->image_folderlrg . $pi->ministry_image_lrg;
 
-                if (!$db->insertObject('#__bsms_locations', $locations, 'id'))
-                {
-                    $lnoadd++;
-                }
-                else
-                {
-                    $ladd++;
+				if (!$db->insertObject('#__bsms_locations', $locations, 'id'))
+				{
+					$lnoadd++;
+				}
+				else
+				{
+					$ladd++;
 
-                    // Get the new locationid so we can later connect it to a study
-                    $query = $db->getQuery(true);
-                    $query->select('id')->from('#__bsms_locations')->order('id desc');
-                    $db->setQuery($query, 0, 1);
-                    $newid             = $db->loadResult();
-                    $oldid             = $pi->id;
-                    $this->locations[] = array('newid' => $newid, 'oldid' => $oldid);
-                }
+					// Get the new locationid so we can later connect it to a study
+					$query = $db->getQuery(true);
+					$query->select('id')->from('#__bsms_locations')->order('id desc');
+					$db->setQuery($query, 0, 1);
+					$newid             = $db->loadResult();
+					$oldid             = $pi->id;
+					$this->locations[] = array('newid' => $newid, 'oldid' => $oldid);
+				}
 
 			}
 
@@ -436,11 +436,11 @@ class JBSMPIconvert
 				$studydate  = $pi->date;
 				$studytitle = $pi->name;
 				$teacher_id = null;
-                $t = json_decode($pi->teacher, true);
+				$t          = json_decode($pi->teacher, true);
 				foreach ($this->teachersids as $teacher)
 				{
 
-				    if ($teacher['oldid'] == $t['0'])
+					if ($teacher['oldid'] == $t['0'])
 					{
 						$teacher_id = $teacher['newid'];
 					}
@@ -481,9 +481,9 @@ class JBSMPIconvert
 				$user_id        = $pi->user;
 				$show_level     = $pi->access;
 				$location_id    = null;
-                $l = json_decode($pi->ministry, true);
+				$l              = json_decode($pi->ministry, true);
 
-                foreach ($this->locations as $location)
+				foreach ($this->locations as $location)
 				{
 					if ($location['oldid'] == $l['0'])
 					{
@@ -768,14 +768,14 @@ class JBSMPIconvert
 			$filesize    = $pi->audiofs;
 			$player      = '1';
 			$filename    = $pi->audio_link;
-            $servers = $this->serversids;
-            foreach ($servers as $server)
-            {
-                if ($server['oldid'] == $pi->audio_type )
-                {
-                    $server_id = $server['newid'];
-                }
-            }
+			$servers     = $this->serversids;
+			foreach ($servers as $server)
+			{
+				if ($server['oldid'] == $pi->audio_type)
+				{
+					$server_id = $server['newid'];
+				}
+			}
 			if ($podcasts)
 			{
 				foreach ($podcasts as $podcast)
@@ -786,7 +786,7 @@ class JBSMPIconvert
 
 						//if ($pod['oldid'] == $oldpodid)
 						//{
-							//$podcast_id = $pod['newid'];
+						//$podcast_id = $pod['newid'];
 						//}
 					}
 				}
@@ -813,11 +813,13 @@ class JBSMPIconvert
 
 			$filesize = $pi->videofs;
 			if ($pi->video_type == 3)
-            {
-                $server_id = 3;
-            }
+			{
+				$server_id = 3;
+			}
 			else
-            {$server_id = 1;}
+			{
+				$server_id = 1;
+			}
 
 			switch ($pi->video_type)
 			{
@@ -830,40 +832,39 @@ class JBSMPIconvert
 					$player      = '8';
 					$media_image = '5';
 					$mime_type   = 'video\/mp4';
-					$filename = $pi->video_link;
+					$filename    = $pi->video_link;
 					break;
 
 				case 7:
 					// Flowplayer
 
-							$query = $db->getQuery(true);
-							$query->select('folder')->from('#__pifilepath')->where('id = ' . $pi->video_link);
-							$db->setQuery($query);
-							$object   = $db->loadObject();
-							$path     = $object->folder;
-							$filename = $path . $pi->video_link;
-
+					$query = $db->getQuery(true);
+					$query->select('folder')->from('#__pifilepath')->where('id = ' . $pi->video_link);
+					$db->setQuery($query);
+					$object   = $db->loadObject();
+					$path     = $object->folder;
+					$filename = $path . $pi->video_link;
 
 
 					$player      = '1';
 					$media_image = '5';
 					$mime_type   = 'video\/mp4';
-					$server_id      = '-1';
+					$server_id   = '-1';
 					break;
 
 				case 1:
 					// JWPlayer
-                    $query = $db->getQuery(true);
-                    $query->select('folder')->from('#__pifilepath')->where('id = ' . $pi->video_link);
-                    $db->setQuery($query);
-                    $object   = $db->loadObject();
-                    $path     = $object->folder;
-                    $filename = $path . $pi->video_link;
+					$query = $db->getQuery(true);
+					$query->select('folder')->from('#__pifilepath')->where('id = ' . $pi->video_link);
+					$db->setQuery($query);
+					$object   = $db->loadObject();
+					$path     = $object->folder;
+					$filename = $path . $pi->video_link;
 
 					$player      = '1';
 					$media_image = '5';
 					$mime_type   = 'video\/mp4';
-					$server_id      = '-1';
+					$server_id   = '-1';
 					break;
 
 				case 2:
@@ -874,8 +875,8 @@ class JBSMPIconvert
 					$media_image = '5';
 					$mime_type   = 'video\/mp4';
 					//$path        = '-1';
-					$server_id      = '-1';
-                    $filename = $pi->video_link;
+					$server_id = '-1';
+					$filename  = $pi->video_link;
 					break;
 
 				case 3:
@@ -887,8 +888,8 @@ class JBSMPIconvert
 					$media_image = '13';
 					$mime_type   = 'video\/mp4';
 					//$path        = '-1';
-					$server_id      = '3';
-                    $filename = $pi->video_link;
+					$server_id = '3';
+					$filename  = $pi->video_link;
 					break;
 			}
 
@@ -909,20 +910,19 @@ class JBSMPIconvert
 
 		if ($type == 'notes')
 		{
-			$filesize    = $pi->notesfs;
+			$filesize = $pi->notesfs;
 			//$download    = '1';
 			$player      = '0';
 			$media_image = '12';
 			$mime_type   = 'text\/html';
 
-            $query = $db->getQuery(true);
-            $query->select('folder')->from('#__pifilepath')->where('id = ' . $pi->notes_folder);
-            $db->setQuery($query);
-            $object   = $db->loadObject();
-            $path     = $object->folder;
-            $filename = $path . $pi->notes_link;
+			$query = $db->getQuery(true);
+			$query->select('folder')->from('#__pifilepath')->where('id = ' . $pi->notes_folder);
+			$db->setQuery($query);
+			$object   = $db->loadObject();
+			$path     = $object->folder;
+			$filename = $path . $pi->notes_link;
 		}
-
 
 
 		if ($type == 'slides')
@@ -931,40 +931,43 @@ class JBSMPIconvert
 			$filesize = $pi->slidesfs;
 			$player   = '0';
 			//$filename = $pi->slides_link;
-            $query = $db->getQuery(true);
-            $query->select('folder')->from('#__pifilepath')->where('id = ' . $pi->slides_folder);
-            $db->setQuery($query);
-            $object   = $db->loadObject();
-            $path     = $object->folder;
-            $filename = $path . $pi->slides_link;
-            $mime_type = 'text\/html';
+			$query = $db->getQuery(true);
+			$query->select('folder')->from('#__pifilepath')->where('id = ' . $pi->slides_folder);
+			$db->setQuery($query);
+			$object    = $db->loadObject();
+			$path      = $object->folder;
+			$filename  = $path . $pi->slides_link;
+			$mime_type = 'text\/html';
 		}
-		if (!player){$player = 1;}
-        $hits      = $pi->hits;
-        $downloads = $pi->downloads;
-        $published = $pi->published;
-        $params    = '{"player":"'.$player.'","link_type":"'.$link_type.'","mime_type":"'.$mime_type.'","media_image":"'.$media_image.'","playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","filename":"'.$filename.'","size":"'.$filesize.'","mediacode":"'.$mediacode.'"}';
-        //$params    = $db->escape($params);
-        //$popup     = '1';
+		if (!player)
+		{
+			$player = 1;
+		}
+		$hits      = $pi->hits;
+		$downloads = $pi->downloads;
+		$published = $pi->published;
+		$params    = '{"player":"' . $player . '","link_type":"' . $link_type . '","mime_type":"' . $mime_type . '","media_image":"' . $media_image . '","playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","filename":"' . $filename . '","size":"' . $filesize . '","mediacode":"' . $mediacode . '"}';
+		//$params    = $db->escape($params);
+		//$popup     = '1';
 
-		$mediafiles              = new stdClass;
-		$mediafiles->id          = null;
-		$mediafiles->published   = $published;
-		$mediafiles->study_id    = $newid;
+		$mediafiles            = new stdClass;
+		$mediafiles->id        = null;
+		$mediafiles->published = $published;
+		$mediafiles->study_id  = $newid;
 		//$mediafiles->path        = $path;
 		//$mediafiles->filename    = $filename;
 		//$mediafiles->size        = $filesize;
 		//$mediafiles->mime_type   = $mime_type;
-		$mediafiles->podcast_id  = $podcast_id;
+		$mediafiles->podcast_id = $podcast_id;
 		//$mediafiles->mediacode   = $mediacode;
-		$mediafiles->createdate  = $createdate;
+		$mediafiles->createdate = $createdate;
 		//$mediafiles->link_type   = $link_type;
-		$mediafiles->hits        = $hits;
+		$mediafiles->hits      = $hits;
 		$mediafiles->downloads = $downloads;
-		$mediafiles->params      = $params;
+		$mediafiles->params    = $params;
 		//$mediafiles->player      = $player;
 		//$mediafiles->popup       = 1;
-        $mediafiles->server_id = $server_id;
+		$mediafiles->server_id = $server_id;
 		//$mediafiles->media_image = $media_image;
 		$mediafiles->access = $pi->access;
 
