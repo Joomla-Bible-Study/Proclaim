@@ -240,148 +240,30 @@ class JBSMPIconvert
             $this->legacydirect = $db->loadResult();
 
         }
-        foreach ($pistudies as $study)
+        //create YouTube server
+        $youtubeserver = null;
+        $youtubeserver->media = '{"player":"1","popup":"","media_image":"\/biblestudy\/youtube24.png","media_use_button_icon":"3","media_button_text":"YouTube","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fab fa-youtube","media_custom_icon":"","media_icon_text_size":"24","autostart":""}';
+        $youtubeserver->server_name = 'Legacy YouTube';
+        $youtubeserver->access = 1;
+        $youtubeserver->type = 'legacy';
+        $youtubeserver->params = '{"path":"'.$url.'","protocol":"http:\/\/"}';
+        if (!$db->insertObject('#__bsms_servers', $youtubeserver, 'id'))
         {
-            switch ($study->video_type)
-            {
-                case 3:
-                    // Youtube
-                    if ($youtube == 1){break;}
-                    else
-                    {
-                        //create server
-                        $youtubeserver = null;
-                        $youtubeserver->media = '{"player":"1","popup":"","media_image":"\/biblestudy\/youtube24.png","media_use_button_icon":"3","media_button_text":"YouTube","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fab fa-youtube","media_custom_icon":"","media_icon_text_size":"24","autostart":""}';
-                        $youtubeserver->server_name = 'Legacy YouTube';
-                        $youtubeserver->access = 1;
-                        $youtubeserver->type = 'legacy';
-                        $youtubeserver->params = '{"path":"'.$url.'","protocol":"http:\/\/"}';
-                        if (!$db->insertObject('#__bsms_servers', $youtubeserver, 'id'))
-                        {
-                            $this->svnoadd++;
-                            break;
-                        }
-                        else {
-                            $this->svadd++;
-                            $youtube = 1;
-                            $query = $db->getQuery(true);
-                            $query->select('id')->from('#__bsms_servers')->order('id desc');
-                            $db->setQuery($query, 0, 1);
-                            $this->youtube = $db->loadResult();
-                            break;
-                        }
-                    }
-
-            }
-            switch ($study->audio_type)
-            {
-                case 8:
-                {
-                    //HTML5 -- use internal play
-                    if ($this->internalplayer == 1){break;}
-                    else
-                    {
-                        if (!$this->insertInternalPlayer())
-                        {
-                            break;
-                        }
-                        else
-                        {
-                            $this->internalplayer = 1;
-                            break;
-                        }
-
-                    }
-                }
-                case 13:
-                {
-                    if ($this->internalplayer == 1){break;}
-                    else
-                    {
-                        if (!$this->insertInternalPlayer())
-                        {
-                            break;
-                        }
-                        else
-                        {
-                            $this->internalplayer = 1;
-                            break;
-                        }
-
-                    }
-                }
-                case 16:
-                {
-                    if ($this->internalplayer == 1){break;}
-                else
-                {
-                    if (!$this->insertInternalPlayer())
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        $this->internalplayer = 1;
-                        break;
-                    }
-
-                }
-                }
-                case 6:
-                {
-                    if ($this->internalplayer == 1){break;}
-                    else
-                    {
-                        if (!$this->insertInternalPlayer())
-                        {
-                            break;
-                        }
-                        else
-                        {
-                            $this->internalplayer = 1;
-                            break;
-                        }
-
-                    }
-                }
-                case 5:
-                {
-                    if ($this->internalplayer == 1){break;}
-                    else
-                    {
-                        if (!$this->insertInternalPlayer())
-                        {
-                            break;
-                        }
-                        else
-                        {
-                            $this->internalplayer = 1;
-                            break;
-                        }
-
-                    }
-                }
-                case 9:
-                {
-                    if ($this->internalplayer == 1){break;}
-                    else
-                    {
-                        if (!$this->insertInternalPlayer())
-                        {
-                            break;
-                        }
-                        else
-                        {
-                            $this->internalplayer = 1;
-                            break;
-                        }
-
-                    }
-                }
-            }
+            $this->svnoadd++;
+        }
+        else {
+            $this->svadd++;
+        }
+        //Create internal player
+        if (!$this->insertInternalPlayer())
+        {
+            $this->svnoadd++;
+        }
+        else{
+            $this->svadd++;
         }
 
-		// Teachers
+        // Teachers
 		$query = $db->getQuery(true);
 		$query->select('*')->from('#__piteachers');
 		$db->setQuery($query);
@@ -914,25 +796,6 @@ class JBSMPIconvert
 		$db->setQuery($query);
 		$podcasts = $db->loadObjectList();
 
-		if ($type == 'audio')
-		{
-			$oldplayer      = $pi->audio_type;
-			$player      = $this->internalplayer;
-			$media_image = '1';
-			$mime_type   = 'audio\/mp3';
-			$filesize    = $pi->audiofs;
-			$filename    = $pi->audio_link;
-			$servers     = $this->serversids;
-
-			if ($podcasts)
-			{
-				foreach ($podcasts as $podcast)
-				{
-					//@todo need to json_decode the series and type and match to new podcasts
-				}
-			}
-		}
-
 		if ($type == 'video')
 		{
 			if ($podcasts)
@@ -960,27 +823,29 @@ class JBSMPIconvert
 						. '" type="application/x-shockwave-flash" width="500" height="500" wmode="transparent"'
 						. ' allowscriptaccess="always" allowfullscreen="true" ></embed>';
 					$mediacode   = $db->escape($mediacode);
-					$player      = '8';
-					$media_image = '5';
-					$mime_type   = 'video\/mp4';
-					$filename    = $pi->video_link;
-					break;
+					$media->params = '{"link_type":"","player":"5","popup":"1","mediacode":"'.$mediacode.'","media_image":"","media_use_button_icon":"3","media_button_text":"Video","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-video","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'"}';
+					$media->study_id = $newid;
+					$media->server_id = $this->legacyvideo;
+					$media->podcast_id = '';
+					$media->createdate = $pi->date;
+					$media->hits = $pi->hits;
+					$media->access = $pi->accesscode;
+					$media->language = '*';
+                    $media->created_by = $pi->user;
+                    if (!$this->insertMediaRecord($media))
+                    {
+                        $this->mnoadd++;
+                        break;
+                    }
+                    else{
+                        $this->madd++;
+                        break;
+                    }
 
 				case 7:
 					// Flowplayer
 
-					$query = $db->getQuery(true);
-					$query->select('folder')->from('#__pifilepath')->where('id = ' . $pi->video_link);
-					$db->setQuery($query);
-					$object   = $db->loadObject();
-					$path     = $object->folder;
-					$filename = $path . $pi->video_link;
-
-
-					$player      = '1';
-					$media_image = '5';
-					$mime_type   = 'video\/mp4';
-					$server_id   = '-1';
+					//Not yet supported
 					break;
 
 				case 1:
@@ -991,7 +856,25 @@ class JBSMPIconvert
 					$object   = $db->loadObject();
 					$path     = $object->folder;
 					$filename = $path . $pi->video_link;
-
+					$filename = $db->escape($filename);
+                    $media->params = '{"size":"'.$filesize.',"filename":"'.$filename.',"link_type":"","player":"3","popup":"1","mediacode":"","media_image":"","media_use_button_icon":"3","media_button_text":"Video","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-video","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1"":"","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'"}';
+                    $media->study_id = $newid;
+                    $media->server_id = $this->legacyvideo;
+                    $media->podcast_id = '';
+                    $media->createdate = $pi->date;
+                    $media->hits = $pi->hits;
+                    $media->access = $pi->accesscode;
+                    $media->language = '*';
+                    $media->created_by = $pi->user;
+                    if (!$this->insertMediaRecord($media))
+                    {
+                        $this->mnoadd++;
+                        break;
+                    }
+                    else{
+                        $this->madd++;
+                        break;
+                    }
 					$player      = $this->newvideoplayer;
 					$media_image = '5';
 					$mime_type   = 'video\/mp4';
@@ -1000,14 +883,26 @@ class JBSMPIconvert
 
 				case 2:
 					// Vimeo
-					$mediacode   = '<iframe src="http://player.vimeo.com/video/' . $pi->video_link . '" width="500" height="500" frameborder="0"></iframe> ';
-					$mediacode   = $db->escape($mediacode);
-					$player      = '8';
-					$media_image = '5';
-					$mime_type   = 'video\/mp4';
-					//$path        = '-1';
-					$server_id = '-1';
-					$filename  = $pi->video_link;
+					$media->mediacode   = '<iframe src="http://player.vimeo.com/video/' . $pi->video_link . '" width="500" height="500" frameborder="0"></iframe> ';
+					$media->mediacode   = $db->escape($mediacode);
+                    $media->params = '{"link_type":"","player":"5","popup":"1","mediacode":"'.$mediacode.'","media_image":"","media_use_button_icon":"3","media_button_text":"Video","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-video","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'"}';
+                    $media->study_id = $newid;
+                    $media->server_id = $this->legacyvideo;
+                    $media->podcast_id = '';
+                    $media->createdate = $pi->date;
+                    $media->hits = $pi->hits;
+                    $media->access = $pi->accesscode;
+                    $media->language = '*';
+                    $media->created_by = $pi->user;
+                    if (!$this->insertMediaRecord($media))
+                    {
+                        $this->mnoadd++;
+                        break;
+                    }
+                    else{
+                        $this->madd++;
+                        break;
+                    }
 					break;
 
 				case 3:
@@ -1015,18 +910,28 @@ class JBSMPIconvert
 					$mediacode   = '<iframe width="500" height="500" src="http://www.youtube.com/embed/' . $pi->video_link
 						. '" frameborder="0" allowfullscreen></iframe>';
 					$mediacode   = $db->escape($mediacode);
-					$player      = '8';
-					$media_image = '13';
-					$mime_type   = 'video\/mp4';
-					//$path        = '-1';
-					$server_id = '3';
-					$filename  = $pi->video_link;
+                    $media->params = '{"link_type":"","player":"5","popup":"1","mediacode":"'.$mediacode.'","media_image":"","media_use_button_icon":"3","media_button_text":"Video","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-youtube","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'"}';
+                    $media->study_id = $newid;
+                    $media->server_id = $this->legacyvideo;
+                    $media->podcast_id = '';
+                    $media->createdate = $pi->date;
+                    $media->hits = $pi->hits;
+                    $media->access = $pi->accesscode;
+                    $media->language = '*';
+                    $media->created_by = $pi->user;
+                    if (!$this->insertMediaRecord($media))
+                    {
+                        $this->mnoadd++;
+                        break;
+                    }
+                    else{
+                        $this->madd++;
+                        break;
+                    }
 					break;
 			}
 
 		}
-
-		$createdate = $pi->date;
 
 		if ($type == 'audio')
 		{
@@ -1046,7 +951,13 @@ class JBSMPIconvert
 			$mediafile->createdate = $pi->date;
 			$mediafile->hits = $pi->hits;
 			$mediafile->downloads = $pi->downloads;
-			if (!$this->$this->insertMediaRecord($mediafile))
+			$mediafile->language = '*';
+			$mediafile->created_by = $pi->user;
+			if ($podcasts)
+            {
+                $mediafile->podcast_id = $this->insertPodcast($pi);
+            }
+			if (!$this->insertMediaRecord($mediafile))
 			    {
 			        $this->mnoadd++;
                 }
@@ -1056,78 +967,78 @@ class JBSMPIconvert
                 }
 		}
 
-		if ($type == 'video')
-		{
-			$link_type = $pi->video_download;
-		}
 
 		if ($type == 'notes')
 		{
 			$filesize = $pi->notesfs;
-			//$download    = '1';
-			$player      = '0';
-			$media_image = '12';
-			$mime_type   = 'text\/html';
-
 			$query = $db->getQuery(true);
 			$query->select('folder')->from('#__pifilepath')->where('id = ' . $pi->notes_folder);
 			$db->setQuery($query);
 			$object   = $db->loadObject();
 			$path     = $object->folder;
 			$filename = $path . $pi->notes_link;
+			$filename = $db->escape($filename);
+			$mediafile->server_id = $this->legacydirect;
+            $mediafile->params = '{"filename":"'.$filename.'","mediacode":"","size":"'.$filesize.'","special":"","player":"1","popup":"3","link_type":"0","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'","docMan_id":"0","article_id":"","virtueMart_id":"0","media_image":"images\/biblestudy\/speaker24.png","media_use_button_icon":"3","media_button_text":"Text","media_button_color":"","media_icon_type":"fas fa-sticky-note","media_custom_icon":"","media_icon_text_size":"24","mime_type":"audio\/mp3","playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","autostart":"false"}';
+            $mediafile->study_id = $newid;
+            $mediafile->podcast_id = null;
+            $mediafile->createdate = $pi->date;
+            $mediafile->hits = $pi->hits;
+            $mediafile->downloads = $pi->downloads;
+            $mediafile->language = '*';
+            $mediafile->created_by = $pi->user;
+            if ($podcasts)
+            {
+                $mediafile->podcast_id = $this->insertPodcast($pi);
+            }
+            if (!$this->insertMediaRecord($mediafile))
+            {
+                $this->mnoadd++;
+            }
+            else
+            {
+                $this->madd++;
+            }
+
 		}
 
 
 		if ($type == 'slides')
 		{
-			//$download = '1';
 			$filesize = $pi->slidesfs;
 			$player   = '0';
-			//$filename = $pi->slides_link;
 			$query = $db->getQuery(true);
 			$query->select('folder')->from('#__pifilepath')->where('id = ' . $pi->slides_folder);
 			$db->setQuery($query);
 			$object    = $db->loadObject();
 			$path      = $object->folder;
 			$filename  = $path . $pi->slides_link;
-			$mime_type = 'text\/html';
+			$filename = $db->escape($filename);
+            $mediafile->params = '{"filename":"'.$filename.'","mediacode":"","size":"'.$filesize.'","special":"","player":"1","popup":"3","link_type":"0","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'","docMan_id":"0","article_id":"","virtueMart_id":"0","media_image":"images\/biblestudy\/speaker24.png","media_use_button_icon":"3","media_button_text":"Audio","media_button_color":"","media_icon_type":"fas fa-file-powerpoint","media_custom_icon":"","media_icon_text_size":"24","mime_type":"audio\/mp3","playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","autostart":"false"}';
+            $mediafile->study_id = $newid;
+            $mediafile->server_id = $this->legacydirect;
+            $mediafile->podcast_id = null;
+            $mediafile->createdate = $pi->date;
+            $mediafile->hits = $pi->hits;
+            $mediafile->downloads = $pi->downloads;
+            $mediafile->language = '*';
+            $mediafile->created_by = $pi->user;
+            if ($podcasts)
+            {
+                $podcast_id = $this->insertPodcast($pi);
+            }
+            if (!$this->insertMediaRecord($mediafile))
+            {
+                $this->mnoadd++;
+            }
+            else
+            {
+                $this->madd++;
+            }
 		}
 		if (!player)
 		{
-			$player = 1;
-		}
-		$hits      = $pi->hits;
-		$downloads = $pi->downloads;
-		$published = $pi->published;
-		$params    = '{"player":"' . $player . '","link_type":"' . $link_type . '","mime_type":"' . $mime_type . '","media_image":"' . $media_image . '","playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","filename":"' . $filename . '","size":"' . $filesize . '","mediacode":"' . $mediacode . '"}';
-		//$params    = $db->escape($params);
-		//$popup     = '1';
-
-		$mediafiles            = new stdClass;
-		$mediafiles->id        = null;
-		$mediafiles->published = $published;
-		$mediafiles->study_id  = $newid;
-		//$mediafiles->path        = $path;
-		//$mediafiles->filename    = $filename;
-		//$mediafiles->size        = $filesize;
-		//$mediafiles->mime_type   = $mime_type;
-		$mediafiles->podcast_id = $podcast_id;
-		//$mediafiles->mediacode   = $mediacode;
-		$mediafiles->createdate = $createdate;
-		//$mediafiles->link_type   = $link_type;
-		$mediafiles->hits      = $hits;
-		$mediafiles->downloads = $downloads;
-		$mediafiles->params    = $params;
-		//$mediafiles->player      = $player;
-		//$mediafiles->popup       = 1;
-		$mediafiles->server_id = $server_id;
-		//$mediafiles->media_image = $media_image;
-		$mediafiles->access = $pi->access;
-
-
-		if (!$db->insertObject('#__bsms_mediafiles', $mediafiles, 'id'))
-		{
-			return false;
+			$this->mnoadd++;
 		}
 
 		return true;
@@ -1226,4 +1137,35 @@ class JBSMPIconvert
 
         return true;
     }
+
+    private function insertPodcast($pi)
+    {
+        $query = $db->getQuery(true);
+        $query->select('*')->from('#__pipodcast');
+        $db->setQuery($query);
+        $podcasts = $db->loadObjectList();
+        foreach ($podcasts as $podcast)
+        {
+            if ($podcast->series == 1)
+            {
+                $serieslist = json_decode($podcast->series_list, false);
+                $series = json_decode($pi->series);
+                foreach ($serieslist as $podseries)
+                {
+                    foreach ($series as $serie)
+                    {
+                        if ($podseries == $serie)
+                        {
+                            foreach ($this->podcastids as $podids)
+                            {
+                                if ($podcast->id == $podids['oldid']){$podcast_id = $podids['newid'];}
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if ($podcast_id){return $podcast_id;}
+        else {return false;}
+}
 }
