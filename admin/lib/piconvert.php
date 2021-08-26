@@ -158,8 +158,8 @@ class JBSMPIconvert
 		$this->locations     = array();
 		$this->cnoadd        = 0;
 		$this->cadd          = 0;
-		$svadd               = 0;
-		$svnoadd             = 0;
+		$this->svadd               = 0;
+		$this->svnoadd             = 0;
 		$fnoadd              = 0;
 		$fadd                = 0;
 		$tnoadd              = 0;
@@ -188,48 +188,198 @@ class JBSMPIconvert
 
 		// Create servers
 		$query = $db->getQuery(true);
-		$query->select('*')->from('#__pifilepath');
+		$query->select('*')->from('#__mediaplayers');
 		$db->setQuery($query);
 		$piservers = $db->loadObjectList();
+		//Get the players used
+        $query->select('*')->from('#__pistudies');
+        $pistudies = $db->loadObjectList();
+        $youtube = 0;
+        $this->internalplayer = 0;
+        $jwpvideo = 0;
+        $blip = 0;
+        $flow = 0;
+        $vimeo = 0;
+        $uri          = JURI::getInstance();
+        $url          = $uri->gethost();
+        $videoserver = null;
+        //Create a legacy video server
+        $videoserver->server_name = 'Legacy Video';
+        $videoserver->access = 1;
+        $videoserver->type = 'legacy';
+        $videoserver->params = '{"path":"\/\/'.$url.'","protocol":"http:","uploadpath":"\/images\/biblestudy\/media\/"}';
+        $videoserver->media = '{"link_type":"","player":"3","popup":"1","mediacode":"","media_image":"","media_use_button_icon":"3","media_button_text":"Audio","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-video","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1"}';
+        if (!$this->insertServer($videoserver))
+        {
+            $this->svnoadd++;
+        }
+        else
+        {
+            $this->svadd++;
+            $query = $db->getQuery(true);
+            $query->select('id')->from('#__bsms_servers')->order('id desc');
+            $db->setQuery($query, 0, 1);
+            $this->legacyvideo = $db->loadResult();
+        }
+        //create legacy direct server for notes and slides
+        $direct = null;
+        $direct->access = 1;
+        $direct->server_name = 'Legacy Direct';
+        $direct->params = '{"path":"'.$url.'\/","protocol":"http:\/\/"}';
+        $direct->media = '{"link_type":"1","player":"0","popup":"2","mediacode":"","media_image":"images\/biblestudy\/pdf16.png","media_use_button_icon":"3","media_button_text":"Audio","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-file-pdf","media_custom_icon":"","media_icon_text_size":"24","mime_type":"application\/pdf","autostart":"1"}';
+        $direct->type = 'legacy';
+        if (!$this->insertServer($direct))
+        {
+            $this->svnoadd++;
+        }
+        else{
+            $this->svadd++;
+            $query = $db->getQuery(true);
+            $query->select('id')->from('#__bsms_servers')->order('id desc');
+            $db->setQuery($query, 0, 1);
+            $this->legacydirect = $db->loadResult();
 
-		if (!$piservers)
-		{
-			$svnoadd++;
-		}
-		else
-		{
-			foreach ($piservers as $pi)
-			{
-				$uri          = JURI::getInstance();
-				$url          = $uri->gethost();
-				$data         = new stdClass;
-				$data->id     = null;
-				$data->type   = 'legacy';
-				$data->params = '{"path":"\/\/' . $url . $pi->server . $pi->folder . '\/","protocol":"http:\/\/"}';
-				$data->media  = '{uploadpath":"\/images\/biblestudy\/media\/","link_type":"1","player":"7","popup":"3","mediacode":"","media_image":"images\/biblestudy\/mp3.png","mime_type":"audio\/mp3","autostart":"1"}';
-				//$data->server_path = $pi->server;
-				$data->server_name = $pi->name;
-				$data->published   = $pi->published;
+        }
+        foreach ($pistudies as $study)
+        {
+            switch ($study->video_type)
+            {
+                case 3:
+                    // Youtube
+                    if ($youtube == 1){break;}
+                    else
+                    {
+                        //create server
+                        $youtubeserver = null;
+                        $youtubeserver->media = '{"player":"1","popup":"","media_image":"\/biblestudy\/youtube24.png","media_use_button_icon":"3","media_button_text":"YouTube","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fab fa-youtube","media_custom_icon":"","media_icon_text_size":"24","autostart":""}';
+                        $youtubeserver->server_name = 'Legacy YouTube';
+                        $youtubeserver->access = 1;
+                        $youtubeserver->type = 'legacy';
+                        $youtubeserver->params = '{"path":"'.$url.'","protocol":"http:\/\/"}';
+                        if (!$db->insertObject('#__bsms_servers', $youtubeserver, 'id'))
+                        {
+                            $this->svnoadd++;
+                            break;
+                        }
+                        else {
+                            $this->svadd++;
+                            $youtube = 1;
+                            $query = $db->getQuery(true);
+                            $query->select('id')->from('#__bsms_servers')->order('id desc');
+                            $db->setQuery($query, 0, 1);
+                            $this->youtube = $db->loadResult();
+                            break;
+                        }
+                    }
 
-				if (!$db->insertObject('#__bsms_servers', $data, 'id'))
-				{
-					$svnoadd++;
-				}
-				else
-				{
-					$svadd++;
-					$query = $db->getQuery(true);
-					$query->select('id')->from('#__bsms_servers')->order('id desc');
-					$db->setQuery($query, 0, 1);
-					$newid              = $db->loadResult();
-					$oldid              = $pi->id;
-					$this->serversids[] = array('newid' => $newid, 'oldid' => $oldid);
-					//xdebug_var_dump($this->serversids);
+            }
+            switch ($study->audio_type)
+            {
+                case 8:
+                {
+                    //HTML5 -- use internal play
+                    if ($this->internalplayer == 1){break;}
+                    else
+                    {
+                        if (!$this->insertInternalPlayer())
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            $this->internalplayer = 1;
+                            break;
+                        }
 
-				}
+                    }
+                }
+                case 13:
+                {
+                    if ($this->internalplayer == 1){break;}
+                    else
+                    {
+                        if (!$this->insertInternalPlayer())
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            $this->internalplayer = 1;
+                            break;
+                        }
 
-			}
-		}
+                    }
+                }
+                case 16:
+                {
+                    if ($this->internalplayer == 1){break;}
+                else
+                {
+                    if (!$this->insertInternalPlayer())
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        $this->internalplayer = 1;
+                        break;
+                    }
+
+                }
+                }
+                case 6:
+                {
+                    if ($this->internalplayer == 1){break;}
+                    else
+                    {
+                        if (!$this->insertInternalPlayer())
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            $this->internalplayer = 1;
+                            break;
+                        }
+
+                    }
+                }
+                case 5:
+                {
+                    if ($this->internalplayer == 1){break;}
+                    else
+                    {
+                        if (!$this->insertInternalPlayer())
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            $this->internalplayer = 1;
+                            break;
+                        }
+
+                    }
+                }
+                case 9:
+                {
+                    if ($this->internalplayer == 1){break;}
+                    else
+                    {
+                        if (!$this->insertInternalPlayer())
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            $this->internalplayer = 1;
+                            break;
+                        }
+
+                    }
+                }
+            }
+        }
 
 		// Teachers
 		$query = $db->getQuery(true);
@@ -631,12 +781,12 @@ class JBSMPIconvert
 		}
 
 		$piconversion = '<table><tr><td><h3>' . JText::_('JBS_IBM_PREACHIT_RESULTS') . '</h3></td></tr>'
-			. '<tr><td>' . JText::_('JBS_IBM_PI_SERVERS') . '<strong>' . $svadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $svnoadd . '</td></tr>'
-			. '<tr><td>' . JText::_('JBS_IBM_PI_TEACHERS') . '<strong>' . $tadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $tnoadd . '</td></tr>'
-			. '<tr><td>' . JText::_('JBS_IBM_PI_SERIES') . '<strong>' . $sradd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $srnoadd . '</td></tr>'
-			. '<tr><td>' . JText::_('JBS_IBM_PI_PODCAST') . '<strong>' . $padd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $pnoadd . '</td></tr>'
-			. '<tr><td>' . JText::_('JBS_IBM_PI_STUDIES') . '<strong>' . $sadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $snoadd . '</td></tr>'
-			. '<tr><td>' . JText::_('JBS_IBM_PI_MEDIA') . '<strong>' . $madd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $mnoadd . '</td></tr>'
+			. '<tr><td>' . JText::_('JBS_IBM_PI_SERVERS') . '<strong>' . $this->svadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $this->svnoadd . '</td></tr>'
+			. '<tr><td>' . JText::_('JBS_IBM_PI_TEACHERS') . '<strong>' . $this->tadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $this->tnoadd . '</td></tr>'
+			. '<tr><td>' . JText::_('JBS_IBM_PI_SERIES') . '<strong>' . $$this->sradd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $this->srnoadd . '</td></tr>'
+			. '<tr><td>' . JText::_('JBS_IBM_PI_PODCAST') . '<strong>' . $this->padd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $this->pnoadd . '</td></tr>'
+			. '<tr><td>' . JText::_('JBS_IBM_PI_STUDIES') . '<strong>' . $this->sadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $this->snoadd . '</td></tr>'
+			. '<tr><td>' . JText::_('JBS_IBM_PI_MEDIA') . '<strong>' . $this->madd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $this->mnoadd . '</td></tr>'
 			. '<tr><td>' . JText::_('JBS_IBM_PI_COMMENTS') . '<strong>' . $this->cadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED')
 			. $this->cnoadd . '</td></tr>'
 			. '</table>';
@@ -742,6 +892,10 @@ class JBSMPIconvert
 	public function insertMedia($pi, $type, $newid, $oldid)
 	{
 		$db          = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('*')->from('#__pifilepath');
+        $db->setQuery($query);
+        $folders   = $db->loadObject();
 		$podcast_id  = '-1';
 		$study_id    = $newid;
 		$media_image = '';
@@ -762,33 +916,19 @@ class JBSMPIconvert
 
 		if ($type == 'audio')
 		{
-			$player      = $pi->audio_type;
+			$oldplayer      = $pi->audio_type;
+			$player      = $this->internalplayer;
 			$media_image = '1';
 			$mime_type   = 'audio\/mp3';
 			$filesize    = $pi->audiofs;
-			$player      = '1';
 			$filename    = $pi->audio_link;
 			$servers     = $this->serversids;
-			foreach ($servers as $server)
-			{
-				if ($server['oldid'] == $pi->audio_type)
-				{
-					$server_id = $server['newid'];
-				}
-			}
+
 			if ($podcasts)
 			{
 				foreach ($podcasts as $podcast)
 				{
-					if ($podcast->id == $oldid)
-					{
-						$oldpodid = $podcast->id;
-
-						//if ($pod['oldid'] == $oldpodid)
-						//{
-						//$podcast_id = $pod['newid'];
-						//}
-					}
+					//@todo need to json_decode the series and type and match to new podcasts
 				}
 			}
 		}
@@ -812,22 +952,13 @@ class JBSMPIconvert
 			}
 
 			$filesize = $pi->videofs;
-			if ($pi->video_type == 3)
-			{
-				$server_id = 3;
-			}
-			else
-			{
-				$server_id = 1;
-			}
-
 			switch ($pi->video_type)
 			{
 				case 4:
 					// Bliptv
 					$mediacode   = '<embed src="http://blip.tv/play/' . $pi->video_link
 						. '" type="application/x-shockwave-flash" width="500" height="500" wmode="transparent"'
-						. 'allowscriptaccess="always" allowfullscreen="true" ></embed>';
+						. ' allowscriptaccess="always" allowfullscreen="true" ></embed>';
 					$mediacode   = $db->escape($mediacode);
 					$player      = '8';
 					$media_image = '5';
@@ -861,7 +992,7 @@ class JBSMPIconvert
 					$path     = $object->folder;
 					$filename = $path . $pi->video_link;
 
-					$player      = '1';
+					$player      = $this->newvideoplayer;
 					$media_image = '5';
 					$mime_type   = 'video\/mp4';
 					$server_id   = '-1';
@@ -899,8 +1030,30 @@ class JBSMPIconvert
 
 		if ($type == 'audio')
 		{
-			$link_type = $pi->audio_download;
-			$mime_type = 'audio\/mp3';
+			$mediafile = null;
+		    foreach ($folders as $folder)
+            {
+                if ($folder->id == $pi->audio_folder)
+                {
+                    $filename = $folder->folder.$pi->audiolink;
+                    $filename = $db->escape($filename);
+                }
+            }
+		    $mediafile->params = '{"filename":"'.$filename.'","mediacode":"","size":"241","special":"","player":"'.$this->internalplayer.'","popup":"3","link_type":"0","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'","docMan_id":"0","article_id":"","virtueMart_id":"0","media_image":"images\/biblestudy\/speaker24.png","media_use_button_icon":"3","media_button_text":"Audio","media_button_color":"","media_icon_type":"fas fa-play","media_custom_icon":"","media_icon_text_size":"24","mime_type":"audio\/mp3","playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","autostart":"false"}';
+			$mediafile->study_id = $newid;
+			$mediafile->server_id = $this->internalplayer;
+			$mediafile->podcast_id = null;
+			$mediafile->createdate = $pi->date;
+			$mediafile->hits = $pi->hits;
+			$mediafile->downloads = $pi->downloads;
+			if (!$this->$this->insertMediaRecord($mediafile))
+			    {
+			        $this->mnoadd++;
+                }
+			else
+			    {
+			        $this->madd++;
+                }
 		}
 
 		if ($type == 'video')
@@ -1026,4 +1179,51 @@ class JBSMPIconvert
 
 		return true;
 	}
+	private function insertServer($data)
+    {
+        $db = JFactory::getDbo();
+        if (!$db->insertObject('#__bsms_servers', $data, 'id'))
+        {
+            $this->svnoadd++;
+            return false;
+        }
+        else
+        {
+            $this->svadd++;
+            return true;
+        }
+    }
+
+    private function insertInternalPlayer()
+    {
+        $uri          = JURI::getInstance();
+        $url          = $uri->gethost();
+        $newserver = null;
+        $newserver->access = 1;
+        $newserver->type = 'legacy';
+        $newserver->server_name = 'Legacy Audio Player';
+        $newserver->params = '{"path":"\/\/'.$url.'\/","protocol":"http:\/\/"}';
+        $newserver->media = '{"link_type":"1","player":"7","popup":"3","mediacode":"","media_image":"images\/biblestudy\/mp3.png","media_use_button_icon":"3","media_button_text":"Audio","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-play","media_custom_icon":"","media_icon_text_size":"24","mime_type":"audio\/mp3","autostart":"1"}';
+        if (!$this->insertServer($newserver))
+        {
+            return false;
+        }
+        else
+        {
+            $query = $db->getQuery(true);
+            $query->select('id')->from('#__bsms_servers')->order('id desc');
+            $db->setQuery($query, 0, 1);
+            $this->internalplayer = $db->loadResult();
+            return true;
+        }
+    }
+    private function insertMediaRecord($mediafiles)
+    {
+        if (!$db->insertObject('#__bsms_mediafiles', $mediafiles, 'id'))
+        {
+            return false;
+        }
+
+        return true;
+    }
 }
