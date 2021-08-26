@@ -160,20 +160,20 @@ class JBSMPIconvert
 		$this->cadd          = 0;
 		$this->svadd               = 0;
 		$this->svnoadd             = 0;
-		$fnoadd              = 0;
-		$fadd                = 0;
-		$tnoadd              = 0;
-		$tadd                = 0;
-		$srnoadd             = 0;
-		$sradd               = 0;
-		$pnoadd              = 0;
-		$padd                = 0;
-		$lnoadd              = 0;
-		$ladd                = 0;
-		$snoadd              = 0;
-		$sadd                = 0;
-		$mnoadd              = 0;
-		$madd                = 0;
+		$this->fnoadd              = 0;
+		$this->fadd                = 0;
+		$this->tnoadd              = 0;
+		$this->tadd                = 0;
+		$this->srnoadd             = 0;
+		$this->sradd               = 0;
+		$this->pnoadd              = 0;
+		$this->padd                = 0;
+		$this->lnoadd              = 0;
+		$this->ladd                = 0;
+		$this->snoadd              = 0;
+		$this->sadd                = 0;
+		$this->mnoadd              = 0;
+		$this->madd                = 0;
 		$newid               = 0;
 		$oldid               = 0;
 
@@ -188,12 +188,9 @@ class JBSMPIconvert
 
 		// Create servers
 		$query = $db->getQuery(true);
-		$query->select('*')->from('#__mediaplayers');
+		$query->select('*')->from('#__pimediaplayers');
 		$db->setQuery($query);
 		$piservers = $db->loadObjectList();
-		//Get the players used
-        $query->select('*')->from('#__pistudies');
-        $pistudies = $db->loadObjectList();
         $youtube = 0;
         $this->internalplayer = 0;
         $jwpvideo = 0;
@@ -202,7 +199,7 @@ class JBSMPIconvert
         $vimeo = 0;
         $uri          = JURI::getInstance();
         $url          = $uri->gethost();
-        $videoserver = null;
+        $videoserver = new stdClass();
         //Create a legacy video server
         $videoserver->server_name = 'Legacy Video';
         $videoserver->access = 1;
@@ -222,7 +219,7 @@ class JBSMPIconvert
             $this->legacyvideo = $db->loadResult();
         }
         //create legacy direct server for notes and slides
-        $direct = null;
+        $direct = new stdClass();
         $direct->access = 1;
         $direct->server_name = 'Legacy Direct';
         $direct->params = '{"path":"'.$url.'\/","protocol":"http:\/\/"}';
@@ -241,7 +238,7 @@ class JBSMPIconvert
 
         }
         //create YouTube server
-        $youtubeserver = null;
+        $youtubeserver = new stdClass();
         $youtubeserver->media = '{"player":"1","popup":"","media_image":"\/biblestudy\/youtube24.png","media_use_button_icon":"3","media_button_text":"YouTube","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fab fa-youtube","media_custom_icon":"","media_icon_text_size":"24","autostart":""}';
         $youtubeserver->server_name = 'Legacy YouTube';
         $youtubeserver->access = 1;
@@ -264,14 +261,31 @@ class JBSMPIconvert
         }
 
         // Teachers
-		$query = $db->getQuery(true);
+		//Create a blank teacher
+        $teach = new stdClass();
+        $teach->teachername = 'Not Listed';
+        $teach->list_show = 0;
+        $teach->access = 1;
+        if (!$db->insertObject('#__bsms_teachers', $teach, 'id'))
+        {
+            $this->tnoadd++;
+        }
+        else
+        {
+            $this->tadd++;
+            $query = $db->getQuery(true);
+            $query->select('id')->from('#__bsms_teachers')->order('id desc');
+            $db->setQuery($query, 0, 1);
+            $this->genericteacher = $db->loadResult();
+        }
+        $query = $db->getQuery(true);
 		$query->select('*')->from('#__piteachers');
 		$db->setQuery($query);
 		$piteachers = $db->loadObjectList();
 
 		if (!$piteachers)
 		{
-			$tnoadd++;
+			$this->tnoadd++;
 		}
 		else
 		{
@@ -293,11 +307,11 @@ class JBSMPIconvert
 
 				if (!$db->insertObject('#__bsms_teachers', $datateachers, 'id'))
 				{
-					$tnoadd++;
+					$this->tnoadd++;
 				}
 				else
 				{
-					$tadd++;
+					$this->tadd++;
 
 					// Get the new teacherid so we can later connect it to a study
 					$query = $db->getQuery(true);
@@ -381,11 +395,11 @@ class JBSMPIconvert
 
 				if (!$db->insertObject('#__bsms_series', $dataseries, 'id'))
 				{
-					$srnoadd++;
+					$this->srnoadd++;
 				}
 				else
 				{
-					$sradd++;
+					$this->sradd++;
 
 					// Get the new seriesid so we can later connect it to a study
 					$query = $db->getQuery(true);
@@ -433,11 +447,11 @@ class JBSMPIconvert
 
 				if (!$db->insertObject('#__bsms_podcast', $podcast, 'id'))
 				{
-					$pnoadd++;
+					$this->pnoadd++;
 				}
 				else
 				{
-					$padd++;
+					$this->padd++;
 
 					// Get the new podcast id so we can later connect it to a study
 					$query = $db->getQuery(true);
@@ -476,6 +490,9 @@ class JBSMPIconvert
 					{
 						$teacher_id = $teacher['newid'];
 					}
+					else{
+					    $teacher_id = $this->genericteacher;
+                    }
 
 				}
 
@@ -512,7 +529,7 @@ class JBSMPIconvert
 				$hits           = $pi->hits;
 				$user_id        = $pi->user;
 				$show_level     = $pi->access;
-				$location_id    = null;
+				$location_id    = '';
 				$l              = json_decode($pi->ministry, true);
 
 				foreach ($this->locations as $location)
@@ -525,7 +542,7 @@ class JBSMPIconvert
 
 				$alias      = $pi->alias;
 				$studyintro = $pi->description;
-				$series_id  = null;
+				$series_id  = '';
 
 				foreach ($this->seriesids as $series)
 				{
@@ -539,7 +556,7 @@ class JBSMPIconvert
 				$imagefolder = 0;
 				$newfolder   = 0;
 				$thumbnailm  = '';
-				$image       = null;
+				$image       = '';
 
 				foreach ($this->foldersids as $folder)
 				{
@@ -562,7 +579,7 @@ class JBSMPIconvert
 
 				// Create the study then get the id to create the media file and comments
 				$datastudies                 = new stdClass;
-				$datastudies->id             = null;
+				$datastudies->id             = '';
 				$datastudies->published      = $published;
 				$datastudies->studydate      = $studydate;
 				$datastudies->studytitle     = $studytitle;
@@ -590,14 +607,15 @@ class JBSMPIconvert
 				$datastudies->thumbnailm     = $thumbnailm;
 				$datastudies->params         = $params;
 				$datastudies->access         = $access;
+				$datastudies->language = '*';
 
 				if (!$db->insertObject('#__bsms_studies', $datastudies, 'id'))
 				{
-					$snoadd++;
+					$this->snoadd++;
 				}
 				else
 				{
-					$sadd++;
+					$this->sadd++;
 
 					// Get the new studiesid so we can later connect it to a study
 					$query = $db->getQuery(true);
@@ -613,11 +631,11 @@ class JBSMPIconvert
 				{
 					if (!$audio = $this->insertMedia($pi, $type = 'audio', $newid, $oldid))
 					{
-						$mnoadd++;
+						$this->mnoadd++;
 					}
 					else
 					{
-						$madd++;
+						$this->madd++;
 					}
 				}
 
@@ -625,11 +643,11 @@ class JBSMPIconvert
 				{
 					if (!$video = $this->insertMedia($pi, $type = 'video', $newid, $oldid))
 					{
-						$mnoadd++;
+						$this->mnoadd++;
 					}
 					else
 					{
-						$madd++;
+						$this->madd++;
 					}
 				}
 
@@ -637,11 +655,11 @@ class JBSMPIconvert
 				{
 					if (!$slides = $this->insertMedia($pi, $type = 'slides', $newid, $oldid))
 					{
-						$mnoadd++;
+						$this->mnoadd++;
 					}
 					else
 					{
-						$madd++;
+						$this->madd++;
 					}
 				}
 
@@ -649,11 +667,11 @@ class JBSMPIconvert
 				{
 					if (!$notes = $this->insertMedia($pi, $type = 'notes', $newid, $oldid))
 					{
-						$mnoadd++;
+						$this->mnoadd++;
 					}
 					else
 					{
-						$madd++;
+						$this->madd++;
 					}
 				}
 
@@ -662,7 +680,7 @@ class JBSMPIconvert
 			// Endforeach study
 		}
 
-		$piconversion = '<table><tr><td><h3>' . JText::_('JBS_IBM_PREACHIT_RESULTS') . '</h3></td></tr>'
+		/**$piconversion = '<table><tr><td><h3>' . JText::_('JBS_IBM_PREACHIT_RESULTS') . '</h3></td></tr>'
 			. '<tr><td>' . JText::_('JBS_IBM_PI_SERVERS') . '<strong>' . $this->svadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $this->svnoadd . '</td></tr>'
 			. '<tr><td>' . JText::_('JBS_IBM_PI_TEACHERS') . '<strong>' . $this->tadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $this->tnoadd . '</td></tr>'
 			. '<tr><td>' . JText::_('JBS_IBM_PI_SERIES') . '<strong>' . $$this->sradd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $this->srnoadd . '</td></tr>'
@@ -673,7 +691,7 @@ class JBSMPIconvert
 			. $this->cnoadd . '</td></tr>'
 			. '</table>';
 
-		return $piconversion;
+		return $piconversion;**/
 	}
 
 	/**
@@ -777,7 +795,7 @@ class JBSMPIconvert
         $query = $db->getQuery(true);
         $query->select('*')->from('#__pifilepath');
         $db->setQuery($query);
-        $folders   = $db->loadObject();
+        $folders   = $db->loadObjectList();
 		$podcast_id  = '-1';
 		$study_id    = $newid;
 		$media_image = '';
@@ -798,28 +816,15 @@ class JBSMPIconvert
 
 		if ($type == 'video')
 		{
-			if ($podcasts)
-			{
-				foreach ($podcasts as $podcast)
-				{
-					if ($podcast->id == $oldid)
-					{
-						$oldpodid = $podcast->id;
 
-						if ($pod['oldid'] == $oldpodid)
-						{
-							$podcast_id = $pod['newid'];
-						}
-					}
-				}
-			}
 
 			$filesize = $pi->videofs;
 			switch ($pi->video_type)
 			{
 				case 4:
 					// Bliptv
-					$mediacode   = '<embed src="http://blip.tv/play/' . $pi->video_link
+					$media = new stdClass();
+                    $mediacode   = '<embed src="http://blip.tv/play/' . $pi->video_link
 						. '" type="application/x-shockwave-flash" width="500" height="500" wmode="transparent"'
 						. ' allowscriptaccess="always" allowfullscreen="true" ></embed>';
 					$mediacode   = $db->escape($mediacode);
@@ -857,7 +862,8 @@ class JBSMPIconvert
 					$path     = $object->folder;
 					$filename = $path . $pi->video_link;
 					$filename = $db->escape($filename);
-                    $media->params = '{"size":"'.$filesize.',"filename":"'.$filename.',"link_type":"","player":"3","popup":"1","mediacode":"","media_image":"","media_use_button_icon":"3","media_button_text":"Video","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-video","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1"":"","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'"}';
+                    $media = new stdClass();
+					$media->params = '{"size":"'.$filesize.',"filename":"'.$filename.',"link_type":"","player":"3","popup":"1","mediacode":"","media_image":"","media_use_button_icon":"3","media_button_text":"Video","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-video","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1"":"","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'"}';
                     $media->study_id = $newid;
                     $media->server_id = $this->legacyvideo;
                     $media->podcast_id = '';
@@ -875,15 +881,12 @@ class JBSMPIconvert
                         $this->madd++;
                         break;
                     }
-					$player      = $this->newvideoplayer;
-					$media_image = '5';
-					$mime_type   = 'video\/mp4';
-					$server_id   = '-1';
-					break;
+
 
 				case 2:
 					// Vimeo
-					$media->mediacode   = '<iframe src="http://player.vimeo.com/video/' . $pi->video_link . '" width="500" height="500" frameborder="0"></iframe> ';
+					$media = new stdClass();
+                    $media->mediacode   = '<iframe src="http://player.vimeo.com/video/' . $pi->video_link . '" width="500" height="500" frameborder="0"></iframe> ';
 					$media->mediacode   = $db->escape($mediacode);
                     $media->params = '{"link_type":"","player":"5","popup":"1","mediacode":"'.$mediacode.'","media_image":"","media_use_button_icon":"3","media_button_text":"Video","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-video","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'"}';
                     $media->study_id = $newid;
@@ -903,14 +906,15 @@ class JBSMPIconvert
                         $this->madd++;
                         break;
                     }
-					break;
+
 
 				case 3:
 					// Youtube
 					$mediacode   = '<iframe width="500" height="500" src="http://www.youtube.com/embed/' . $pi->video_link
 						. '" frameborder="0" allowfullscreen></iframe>';
 					$mediacode   = $db->escape($mediacode);
-                    $media->params = '{"link_type":"","player":"5","popup":"1","mediacode":"'.$mediacode.'","media_image":"","media_use_button_icon":"3","media_button_text":"Video","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-youtube","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'"}';
+                    $media = new stdClass();
+					$media->params = '{"link_type":"","player":"5","popup":"1","mediacode":"'.$mediacode.'","media_image":"","media_use_button_icon":"3","media_button_text":"Video","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-youtube","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'"}';
                     $media->study_id = $newid;
                     $media->server_id = $this->legacyvideo;
                     $media->podcast_id = '';
@@ -928,14 +932,13 @@ class JBSMPIconvert
                         $this->madd++;
                         break;
                     }
-					break;
+
 			}
 
 		}
 
 		if ($type == 'audio')
 		{
-			$mediafile = null;
 		    foreach ($folders as $folder)
             {
                 if ($folder->id == $pi->audio_folder)
@@ -944,7 +947,8 @@ class JBSMPIconvert
                     $filename = $db->escape($filename);
                 }
             }
-		    $mediafile->params = '{"filename":"'.$filename.'","mediacode":"","size":"241","special":"","player":"'.$this->internalplayer.'","popup":"3","link_type":"0","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'","docMan_id":"0","article_id":"","virtueMart_id":"0","media_image":"images\/biblestudy\/speaker24.png","media_use_button_icon":"3","media_button_text":"Audio","media_button_color":"","media_icon_type":"fas fa-play","media_custom_icon":"","media_icon_text_size":"24","mime_type":"audio\/mp3","playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","autostart":"false"}';
+		    $mediafile = new stdClass();
+		    $mediafile->params = '{"filename":"'.$filename.'","mediacode":"","size":"'.$pi->audiofs.'","special":"","player":"'.$this->internalplayer.'","popup":"3","link_type":"0","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'","docMan_id":"0","article_id":"","virtueMart_id":"0","media_image":"images\/biblestudy\/speaker24.png","media_use_button_icon":"3","media_button_text":"Audio","media_button_color":"","media_icon_type":"fas fa-play","media_custom_icon":"","media_icon_text_size":"24","mime_type":"audio\/mp3","playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","autostart":"false"}';
 			$mediafile->study_id = $newid;
 			$mediafile->server_id = $this->internalplayer;
 			$mediafile->podcast_id = null;
@@ -978,6 +982,7 @@ class JBSMPIconvert
 			$path     = $object->folder;
 			$filename = $path . $pi->notes_link;
 			$filename = $db->escape($filename);
+			$mediafile = new stdClass();
 			$mediafile->server_id = $this->legacydirect;
             $mediafile->params = '{"filename":"'.$filename.'","mediacode":"","size":"'.$filesize.'","special":"","player":"1","popup":"3","link_type":"0","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'","docMan_id":"0","article_id":"","virtueMart_id":"0","media_image":"images\/biblestudy\/speaker24.png","media_use_button_icon":"3","media_button_text":"Text","media_button_color":"","media_icon_type":"fas fa-sticky-note","media_custom_icon":"","media_icon_text_size":"24","mime_type":"audio\/mp3","playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","autostart":"false"}';
             $mediafile->study_id = $newid;
@@ -1006,7 +1011,6 @@ class JBSMPIconvert
 		if ($type == 'slides')
 		{
 			$filesize = $pi->slidesfs;
-			$player   = '0';
 			$query = $db->getQuery(true);
 			$query->select('folder')->from('#__pifilepath')->where('id = ' . $pi->slides_folder);
 			$db->setQuery($query);
@@ -1014,6 +1018,7 @@ class JBSMPIconvert
 			$path      = $object->folder;
 			$filename  = $path . $pi->slides_link;
 			$filename = $db->escape($filename);
+			$mediafile = new stdClass();
             $mediafile->params = '{"filename":"'.$filename.'","mediacode":"","size":"'.$filesize.'","special":"","player":"1","popup":"3","link_type":"0","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'","docMan_id":"0","article_id":"","virtueMart_id":"0","media_image":"images\/biblestudy\/speaker24.png","media_use_button_icon":"3","media_button_text":"Audio","media_button_color":"","media_icon_type":"fas fa-file-powerpoint","media_custom_icon":"","media_icon_text_size":"24","mime_type":"audio\/mp3","playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","autostart":"false"}';
             $mediafile->study_id = $newid;
             $mediafile->server_id = $this->legacydirect;
@@ -1036,10 +1041,7 @@ class JBSMPIconvert
                 $this->madd++;
             }
 		}
-		if (!player)
-		{
-			$this->mnoadd++;
-		}
+
 
 		return true;
 	}
@@ -1068,7 +1070,7 @@ class JBSMPIconvert
 			if ($pi->id == $oldid)
 			{
 				$comments               = new stdClass;
-				$comments->id           = null;
+				$comments->id           = '';
 				$comments->published    = $pi->published;
 				$comments->study_id     = $newid;
 				$comments->user_id      = $pi->user_id;
@@ -1107,9 +1109,11 @@ class JBSMPIconvert
 
     private function insertInternalPlayer()
     {
+
+        $db = JFactory::getDbo();
         $uri          = JURI::getInstance();
         $url          = $uri->gethost();
-        $newserver = null;
+        $newserver = new stdClass();
         $newserver->access = 1;
         $newserver->type = 'legacy';
         $newserver->server_name = 'Legacy Audio Player';
@@ -1130,6 +1134,7 @@ class JBSMPIconvert
     }
     private function insertMediaRecord($mediafiles)
     {
+        $db = JFactory::getDbo();
         if (!$db->insertObject('#__bsms_mediafiles', $mediafiles, 'id'))
         {
             return false;
@@ -1140,6 +1145,7 @@ class JBSMPIconvert
 
     private function insertPodcast($pi)
     {
+       /** $db = JFactory::getDbo();
         $query = $db->getQuery(true);
         $query->select('*')->from('#__pipodcast');
         $db->setQuery($query);
@@ -1166,6 +1172,8 @@ class JBSMPIconvert
             }
         }
         if ($podcast_id){return $podcast_id;}
-        else {return false;}
+        else {return false;} **/
+        $podcast_id = 1;
+        return $podcast_id;
 }
 }
