@@ -490,7 +490,7 @@ class JBSMPIconvert
 					{
 						$teacher_id = $teacher['newid'];
 					}
-					else{
+					elseif ($t['0'] == 0) {
 					    $teacher_id = $this->genericteacher;
                     }
 
