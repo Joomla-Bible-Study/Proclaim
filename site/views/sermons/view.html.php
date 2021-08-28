@@ -181,16 +181,16 @@ class BiblestudyViewSermons extends JViewLegacy
 
 		// Only load PageBuilder if the default template is NOT being used
 		if ($params->get('useexpert_list') > 0
-			|| ($params->get('simple_mode') === 1)
+			|| ($params->get('simple_mode') === '1')
 			|| (is_string($params->get('sermonstemplate')) === true && $params->get('sermonstemplate') !== '0'))
 		{
 			$page_builder = new JBSMPageBuilder;
 
-			for ($i = 0, $n = count($items); $i < $n; $i++)
+			foreach ($items as $i => $iValue)
 			{
 				$item = &$items[$i];
 
-				if ($item->access > 1 && !in_array($item->access, $groups))
+				if ($item->access > 1 && !in_array($item->access, $groups, true))
 				{
 					unset($item);
 				}
@@ -202,7 +202,7 @@ class BiblestudyViewSermons extends JViewLegacy
 					$item->scripture1 = $pelements->scripture1;
 					$item->scripture2 = $pelements->scripture2;
 					$item->media      = $pelements->media;
-					$item->duration   = $pelements->duration;
+					//$item->duration   = $pelements->duration;
 					$item->studydate  = $pelements->studydate;
 					$item->topics     = $pelements->topics;
 

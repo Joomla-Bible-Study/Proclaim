@@ -39,7 +39,7 @@ class BiblestudyControllerSermons extends JControllerLegacy
 		$task  = $input->get('task');
 		$mid   = $input->getInt('id');
 
-		if ($task == 'download')
+		if ($task === 'download')
 		{
 			$downloader = new JBSMDownload;
 			$downloader->download($mid);
@@ -58,7 +58,7 @@ class BiblestudyControllerSermons extends JControllerLegacy
 		$input = new JInput;
 		$task  = $input->get('task');
 
-		if ($task == 'avplayer')
+		if ($task === 'avplayer')
 		{
 			$mediacode       = $input->get('code', '', 'string');
 			$this->mediaCode = $mediacode;

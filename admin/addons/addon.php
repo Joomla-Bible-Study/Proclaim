@@ -33,7 +33,7 @@ abstract class JBSMAddon
 	 * @var     string
 	 * @since   9.0.0
 	 */
-	protected $name = null;
+	protected $name = '';
 
 	/**
 	 * Description of add-on
@@ -41,7 +41,7 @@ abstract class JBSMAddon
 	 * @var     string
 	 * @since   9.0.0
 	 */
-	protected $description = null;
+	protected $description = '';
 
 	/**
 	 * Config information
@@ -49,7 +49,7 @@ abstract class JBSMAddon
 	 * @var     string
 	 * @since   9.0.0
 	 */
-	protected $config = null;
+	protected $config = '';
 
 	/**
 	 * The type of server
@@ -57,7 +57,7 @@ abstract class JBSMAddon
 	 * @var     string
 	 * @since   9.0.0
 	 */
-	protected $type;
+	protected $type = '';
 
 	/**
 	 * Construct
@@ -205,11 +205,11 @@ abstract class JBSMAddon
 	/**
 	 * Upload
 	 *
-	 * @param   JInput  $target  URL
+	 * @param   JInput|array  $data  Data to upload
 	 *
 	 * @return mixed
 	 *
 	 * @since 9.0.0
 	 */
-	abstract protected function upload($target);
+	abstract protected function upload($data);
 }

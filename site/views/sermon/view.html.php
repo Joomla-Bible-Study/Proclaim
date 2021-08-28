@@ -71,7 +71,7 @@ class BiblestudyViewSermon extends JViewLegacy
 	 */
 	protected $subscribe;
 
-	/** @var  int Menu ID
+	/** @var  integer Menu ID
 	 *
 	 * @since 7.0
 	 */
@@ -256,7 +256,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		// Check the view access to the article (the model has already computed the values).
 		if ($item->params->get('access-view') !== true && (($item->params->get('show_noauth') !== true && $user->get('guest'))))
 		{
-			JFactory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
+			$app->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
 		}
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
@@ -266,7 +266,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		{
 			if (!in_array($this->item->access, $groups))
 			{
-				JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_ACCESS_FORBIDDEN'), 'error');
+				$app->enqueueMessage(JText::_('JBS_CMN_ACCESS_FORBIDDEN'), 'error');
 			}
 		}
 
@@ -284,8 +284,8 @@ class BiblestudyViewSermon extends JViewLegacy
 		JHtml::_('biblestudy.framework');
 		JHtml::_('biblestudy.loadCss', $this->params, null, 'font-awesome');
 
-		// Only load pagebuilder if the default template is NOT being used
-		if ($this->item->params->get('useexpert_details') > 0 || is_string($this->params->get('sermontemplate')))
+		// Only load page builder if the default template is NOT being used
+		if ($this->item->params->get('useexpert_details', '0') !== '0' || $this->params->get('sermontemplate', '0') !== '0')
 		{
 			$pagebuilder            = new JBSMPageBuilder;
 			$pelements              = $pagebuilder->buildPage($this->item, $this->item->params, $template);
@@ -393,9 +393,7 @@ class BiblestudyViewSermon extends JViewLegacy
 			return null;
 		}
 
-		/*
-         * Process the prepare content plugins
-         */
+		// Process the prepare content plugins
 		$article->text = $this->item->studytext;
 		$linkit        = $this->item->params->get('show_scripture_link');
 

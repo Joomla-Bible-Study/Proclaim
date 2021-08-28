@@ -36,6 +36,7 @@ class BiblestudyViewPodcastlist extends JViewLegacy
 	 *
 	 * @return  void
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function display($tpl = null)
@@ -48,7 +49,7 @@ class BiblestudyViewPodcastlist extends JViewLegacy
 		$this->params     = $this->state->params;
 
 		JHtml::_('biblestudy.framework', '', 'modernizr');
-		JHtml::_('biblestudy.loadcss', $this->params);
+		JHtml::_('biblestudy.loadcss', $this->params, '', 'podcast');
 
 		$attribs = array(
 			'class' => "jbsmimg"

@@ -47,6 +47,12 @@
 				<option value="1">JBS_MED_SHOW_DOWNLOAD_ICON</option>
 				<option value="2">JBS_MED_SHOW_ONLY_DOWNLOAD_ICON</option>
 			</field>
+			<field name="media_hours" type="text" label="JBS_CMN_HOURS" description="" default="00" size="2">
+			</field>
+			<field name="media_minutes" type="text" label="JBS_CMN_MINUTES" description="" default="00" size="2">
+			</field>
+			<field name="media_seconds" type="text" label="JBS_CMN_SECONDS" description="" default="00" size="2">
+			</field>
 		</fieldset>
 		<fieldset name="files_linker" label="JBD_ADDON_LEGACY_FILE_LINKER">
 			<field name="docMan_id" type="docman" extension="com_biblestudy"

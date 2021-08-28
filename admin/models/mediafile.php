@@ -105,22 +105,22 @@ class BiblestudyModelMediafile extends JModelAdmin
 			$params = new Registry;
 			$params->loadArray($data['params']);
 
-			if (isset($params->toObject()->size) && $params->get('size', '0') == '0')
+			$jdb   = JFactory::getDbo();
+			$table = new TableServer($jdb);
+			$table->load($data['server_id']);
+
+			$path = new Registry;
+			$path->loadString($table->params);
+			$set_path = '';
+
+			if ($path->get('path'))
 			{
-				$jdb   = JFactory::getDbo();
-				$table = new TableServer($jdb);
-				$table->load($data['server_id']);
+				$set_path = $path->get('path') . '/';
+			}
 
-				$path = new Registry;
-				$path->loadString($table->params);
-				$set_path = '';
-
-				if ($path->get('path'))
-				{
-					$set_path = $path->get('path') . '/';
-				}
-
-				if (!$path->get('protocal') && $set_path)
+			if (isset($params->toObject()->size) && $params->get('size', '0') === '0')
+			{
+				if ($set_path && !$path->get('protocal'))
 				{
 					$path->set('protocal', 'http://');
 				}
@@ -129,12 +129,40 @@ class BiblestudyModelMediafile extends JModelAdmin
 					$path->set('protocal', rtrim(JUri::root(), '/'));
 				}
 
-				if ($table->type == 'legacy' || $table->type == 'local')
+				if ($table->type === 'legacy' || $table->type === 'local')
 				{
-					$params->set('size', JBSMHelper::getRemoteFileSize(JBSMHelper::MediaBuildUrl($set_path, $params->get('filename'), $params, true, true)));
-					$data['params'] = $params->toArray();
+					$params->set('size',
+						JBSMHelper::getRemoteFileSize(JBSMHelper::MediaBuildUrl($set_path, $params->get('filename'), $params, true, true)
+						)
+					);
 				}
 			}
+
+			if (($params->toObject()->media_hours === '00' || empty($params->toObject()->media_hours))
+				&& ($params->toObject()->media_minutes === '00' || empty($params->toObject()->media_minutes))
+				&& ($params->toObject()->media_seconds === '00' || empty($params->toObject()->media_seconds))
+			)
+			{
+				$path       = JBSMHelper::MediaBuildUrl($set_path, $params->get('filename'), $params, false, false, true);
+				$jbspodcast = new JBSMPodcast;
+
+				// Make a duration build from Params of media.
+				$prefix = JUri::root();
+				$nohttp = $jbspodcast->remove_http($prefix);
+
+				if (strpos($path, $nohttp) === 0)
+				{
+					$filename = substr($path, strlen($nohttp));
+					$filename = JPATH_SITE . '/' . $filename;
+					$duration = $jbspodcast->formatTime($jbspodcast->getDuration($filename));
+
+					$params->set('media_hours', $duration->hourse);
+					$params->set('media_minutes', $duration->minutes);
+					$params->set('media_seconds', $duration->seconds);
+				}
+			}
+
+			$data['params'] = $params->toArray();
 
 			if (parent::save($data))
 			{
@@ -162,13 +190,13 @@ class BiblestudyModelMediafile extends JModelAdmin
 		// If user hasn't selected a server yet, just return an empty form
 		$server_id = $this->data->server_id;
 
-		if (empty($server_id))
+		if ($server_id === null)
 		{
 			/** @var Joomla\Registry\Registry $admin */
-			$admin                 = JBSMParams::getAdmin()->params;
-			$server_id             = $admin->get('server');
+			$admin     = JBSMParams::getAdmin()->params;
+			$server_id = $admin->get('server');
 
-			if ($server_id != '-1')
+			if ($server_id !== '-1')
 			{
 				$this->data->server_id = $server_id;
 			}
@@ -182,7 +210,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 		/** @type BiblestudyModelServer $model */
 		$model       = JModelLegacy::getInstance('Server', 'BibleStudyModel');
 		$server_type = $model->getType($server_id, true);
-		$s_item = $model->getItem($server_id);
+		$s_item      = $model->getItem($server_id);
 
 		$reg = new Registry;
 		$reg->loadArray($s_item->params);
@@ -233,8 +261,8 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 *
 	 * @return boolean|object
 	 *
-	 * @since 7.0
 	 * @throws Exception
+	 * @since 7.0
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
@@ -269,8 +297,8 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
-		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_biblestudy.mediafile.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy')))
+		if (($id !== 0 && (!$user->authorise('core.edit.state', 'com_biblestudy.mediafile.' . (int) $id)))
+			|| ($id === 0 && !$user->authorise('core.edit.state', 'com_biblestudy')))
 		{
 			// Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');
@@ -292,8 +320,8 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 *
 	 * @return  mixed
 	 *
-	 * @since   9.0.0
 	 * @throws  Exception
+	 * @since   9.0.0
 	 */
 	public function getItem($pk = null)
 	{
@@ -452,7 +480,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	protected function batchPlayer($value, $pks, $contexts)
 	{
 		// Set the variables
-		$user  = JFactory::getUser();
+		$user = JFactory::getUser();
 		/** @type TableMediafile $table */
 		$table = $this->getTable();
 
@@ -517,7 +545,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	protected function batchlink_type($value, $pks, $contexts)
 	{
 		// Set the variables
-		$user  = JFactory::getUser();
+		$user = JFactory::getUser();
 		/** @type TableMediafile $table */
 		$table = $this->getTable();
 
@@ -567,7 +595,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	protected function batchMimetype($value, $pks, $contexts)
 	{
 		// Set the variables
-		$user  = JFactory::getUser();
+		$user = JFactory::getUser();
 		/** @type TableMediafile $table */
 		$table = $this->getTable();
 
@@ -732,8 +760,8 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 *
 	 * @return array
 	 *
-	 * @since   7.0
 	 * @throws  Exception
+	 * @since   7.0
 	 */
 	protected function loadFormData()
 	{
@@ -749,8 +777,8 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 *
 	 * @return  void
 	 *
-	 * @since   9.0.0
 	 * @throws  Exception
+	 * @since   9.0.0
 	 */
 	protected function populateState()
 	{
@@ -758,8 +786,8 @@ class BiblestudyModelMediafile extends JModelAdmin
 		$input = $app->input;
 
 		// Load the Admin settings
-		$admin = JBSMParams::getAdmin();
-		$registry    = new Registry;
+		$admin    = JBSMParams::getAdmin();
+		$registry = new Registry;
 		$registry->loadString($admin->params);
 		$this->setState('admin', $registry);
 

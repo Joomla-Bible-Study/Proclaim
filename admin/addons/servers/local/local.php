@@ -19,6 +19,22 @@ defined('_JEXEC') or die;
 class JBSMAddonLocal extends JBSMAddon
 {
 	/**
+	 * Name of Add-on
+	 *
+	 * @var     string
+	 * @since   9.0.0
+	 */
+	protected $name = 'local';
+
+	/**
+	 * Description of add-on
+	 *
+	 * @var     string
+	 * @since   9.0.0
+	 */
+	protected $description = 'Used for local server files';
+
+	/**
 	 * Upload
 	 *
 	 * @param   JInput|array  $data  Data to upload
@@ -51,7 +67,8 @@ class JBSMAddonLocal extends JBSMAddon
 
 		if ($fields)
 		{
-			foreach ($media_form->getFieldset('general') as $field):
+			foreach ($media_form->getFieldset('general') as $field)
+			:
 				$html .= '<div class="control-group">';
 				$html .= '<div class="control-label">';
 				$html .= $field->label;
@@ -90,44 +107,43 @@ class JBSMAddonLocal extends JBSMAddon
 	 */
 	public function render($media_form, $new)
 	{
-		$html = '';
-
-		$html .= JHtml::_('bootstrap.addTab', 'myTab', 'options', JText::_('Options'));
+		$html = JHtml::_('bootstrap.addTab', 'myTab', 'options', JText::_('Options'));
 
 		$html .= '<div class="row-fluid">';
 
-			foreach ($media_form->getFieldsets('params') as $name => $fieldset)
+		foreach ($media_form->getFieldsets('params') as $name => $fieldset)
+		{
+			if ($name !== 'general')
 			{
-				if ($name !== 'general')
-				{
-					$html .= '<div class="span6">';
+				$html .= '<div class="span6">';
 
-					foreach ($media_form->getFieldset($name) as $field):
-						$html .= '<div class="control-group">';
-						$html .= '<div class="control-label">';
-						$html .= $field->label;
-						$html .= '</div>';
-						$html .= '<div class="controls">';
-
-						// Way to set defaults on new media
-						if ($new)
-						{
-							$s_name = $field->fieldname;
-
-							if (isset($media_form->s_params[$s_name]))
-							{
-								$field->setValue($media_form->s_params[$s_name]);
-							}
-						}
-
-						$html .= $field->input;
-						$html .= '</div>';
-						$html .= '</div>';
-					endforeach;
-
+				foreach ($media_form->getFieldset($name) as $field)
+				:
+					$html .= '<div class="control-group">';
+					$html .= '<div class="control-label">';
+					$html .= $field->label;
 					$html .= '</div>';
-				}
+					$html .= '<div class="controls">';
+
+					// Way to set defaults on new media
+					if ($new)
+					{
+						$s_name = $field->fieldname;
+
+						if (isset($media_form->s_params[$s_name]))
+						{
+							$field->setValue($media_form->s_params[$s_name]);
+						}
+					}
+
+					$html .= $field->input;
+					$html .= '</div>';
+					$html .= '</div>';
+				endforeach;
+
+				$html .= '</div>';
 			}
+		}
 
 		$html .= '</div>';
 		$html .= JHtml::_('bootstrap.endTab');

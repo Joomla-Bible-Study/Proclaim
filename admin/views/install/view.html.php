@@ -102,7 +102,7 @@ class BiblestudyViewInstall extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$input = new JInput;
+		$input = new Joomla\Input\Input;
 		$input->set('hidemainmenu', true);
 		$app   = JFactory::getApplication();
 		$this->state = $app->input->get('scanstate', false);
@@ -145,6 +145,7 @@ class BiblestudyViewInstall extends JViewLegacy
 		$document->setTitle(JText::_('JBS_MIG_TITLE'));
 
 		// Install systems setup files
+		// @todo need to move to a helper as this is call do many times.
 		$this->installsetup();
 
 		$this->addToolbar();
@@ -207,7 +208,7 @@ class BiblestudyViewInstall extends JViewLegacy
 	/**
 	 * Add Toolbar to page
 	 *
-	 * @return null
+	 * @return void
 	 *
 	 * @throws Exception
 	 * @since  7.0.0

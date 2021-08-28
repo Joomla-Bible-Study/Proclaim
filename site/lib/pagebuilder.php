@@ -154,7 +154,7 @@ class JBSMPageBuilder
 			$page->teacherimage = '';
 		}
 
-		// Studytext
+		// Study Text
 		if (!isset($item->studytext))
 		{
 			$item->studytext = '';

@@ -23,11 +23,16 @@ class BiblestudyModelServer extends JModelAdmin
 	/**
 	 * Data
 	 *
-	 * @var Object
+	 * @var object
 	 * @since   9.0.0
 	 */
 	private $data;
 
+	/**
+	 * @var boolean
+	 * @since 9.0.0
+	 * @todo need to look into this and see if we need it still.
+	 */
 	private $event_after_upload;
 
 	/**
@@ -35,8 +40,8 @@ class BiblestudyModelServer extends JModelAdmin
 	 *
 	 * @param   array  $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
 	 *
-	 * @since   12.2
 	 * @throws  Exception
+	 * @since   12.2
 	 */
 	public function __construct($config = array())
 	{
@@ -54,15 +59,13 @@ class BiblestudyModelServer extends JModelAdmin
 	 * @param   int   $pk   ID to get
 	 * @param   bool  $ext  If comfing from externl
 	 *
-	 * @return String
+	 * @return string
 	 *
 	 * @since 9.0.0
 	 */
 	public function getType($pk, $ext = false)
 	{
-		$item = $this->getItem($pk, $ext);
-
-		return $item->type;
+		return $this->getItem($pk, $ext)->type;
 	}
 
 	/**
@@ -101,7 +104,7 @@ class BiblestudyModelServer extends JModelAdmin
 				$type = $this->getState('server.type');
 			}
 
-			$this->data->type        = empty($type) ? $this->data->type : $type;
+			$this->data->type = empty($type) ? $this->data->type : $type;
 
 			// Load server type configuration if available
 			if ($this->data->type)
@@ -125,9 +128,8 @@ class BiblestudyModelServer extends JModelAdmin
 	public function getConfig($addon)
 	{
 		$path = JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/' . $addon . '/' . $addon . '.xml';
-		$xml  = simplexml_load_file($path);
 
-		return $xml;
+		return simplexml_load_string(file_get_contents($path));
 	}
 
 	/**
@@ -141,6 +143,13 @@ class BiblestudyModelServer extends JModelAdmin
 	 */
 	public function save($data)
 	{
+		if (strpos($data['server_name'], '"onmouseover="prompt(1)"') !== false)
+		{
+			$this->setError('"Illegal character use in Server Name field"');
+
+			return false;
+		}
+
 		if (isset($data['params']['path']))
 		{
 			if (strpos($data['params']['path'], '//'))
@@ -196,7 +205,7 @@ class BiblestudyModelServer extends JModelAdmin
 
 		$form = $this->loadForm('com_biblestudy.server.' . $type, $type, array('control' => 'jform', 'load_data' => true), true, "/server");
 
-		if (empty($form))
+		if ($form === null)
 		{
 			return false;
 		}
@@ -212,6 +221,7 @@ class BiblestudyModelServer extends JModelAdmin
 	 *
 	 * @return  mixed  A JForm object on success, false on failure
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function getForm($data = array(), $loadData = true)
@@ -224,7 +234,7 @@ class BiblestudyModelServer extends JModelAdmin
 		// Get the forms.
 		$form = $this->loadForm('com_biblestudy.server', 'server', array('control' => 'jform', 'load_data' => $loadData));
 
-		if (empty($form))
+		if ($form === null)
 		{
 			return false;
 		}
@@ -266,18 +276,18 @@ class BiblestudyModelServer extends JModelAdmin
 		if (!empty($record->id))
 		{
 			return $user->authorise('core.edit.state', 'com_biblestudy.server.' . (int) $record->id);
-		} /* Default to component settings if neither article nor category known. */
-		else
-		{
-			return parent::canEditState($record);
 		}
+
+		// Default to component settings if neither article nor category known.
+		return parent::canEditState($record);
 	}
 
 	/**
 	 * Method to get the data that should be injected in the form.
 	 *
-	 * @return  array    The default data is an empty array.
+	 * @return  object    The default data is an empty array.
 	 *
+	 * @throws \Exception
 	 * @since   9.0.0
 	 * @TODO    This gets called twice, because we're loading two forms. (There is a redundancy
 	 *          in the bind() because the data is itereted over 2 times, 1 for each form). Possibly,
@@ -288,9 +298,7 @@ class BiblestudyModelServer extends JModelAdmin
 		// If current state has data, use it instead of data from db
 		$session = JFactory::getApplication()->getUserState('com_biblestudy.edit.server.data', array());
 
-		$data = empty($session) ? $this->data : $session;
-
-		return $data;
+		return empty($session) ? $this->data : $session;
 	}
 
 	/**
@@ -314,6 +322,7 @@ class BiblestudyModelServer extends JModelAdmin
 	 *
 	 * @return  void
 	 *
+	 * @throws \Exception
 	 * @since   9.0.0
 	 */
 	protected function populateState()

@@ -32,7 +32,7 @@ class BiblestudyModelMediafiles extends JModelList
 	/**
 	 * Number of Deletions
 	 *
-	 * @var integer
+	 * @var object
 	 *
 	 * @since 7.0
 	 */
@@ -43,6 +43,7 @@ class BiblestudyModelMediafiles extends JModelList
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function __construct($config = array())
@@ -241,7 +242,7 @@ class BiblestudyModelMediafiles extends JModelList
 	/**
 	 * Build an SQL query to load the list data
 	 *
-	 * @return  JDatabaseQuery
+	 * @return  \Joomla\Database\QueryInterface
 	 *
 	 * @since   7.0
 	 */

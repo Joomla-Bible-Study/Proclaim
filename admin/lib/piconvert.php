@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2019 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2021 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -142,8 +142,11 @@ class JBSMPIconvert
 	 *
 	 * @since 7.1.0
 	 */
-	public function convertPI ()
+	public function convertPI()
 	{
+		// Check for request forgeries.
+		JSession::checkToken('get') or JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
 		$this->commentsids   = array();
 		$this->serversids    = array();
 		$this->foldersids    = array();
@@ -155,137 +158,160 @@ class JBSMPIconvert
 		$this->locations     = array();
 		$this->cnoadd        = 0;
 		$this->cadd          = 0;
-		$svadd               = 0;
-		$svnoadd             = 0;
-		$fnoadd              = 0;
-		$fadd                = 0;
-		$tnoadd              = 0;
-		$tadd                = 0;
-		$srnoadd             = 0;
-		$sradd               = 0;
-		$pnoadd              = 0;
-		$padd                = 0;
-		$lnoadd              = 0;
-		$ladd                = 0;
-		$snoadd              = 0;
-		$sadd                = 0;
-		$mnoadd              = 0;
-		$madd                = 0;
+		$this->svadd               = 0;
+		$this->svnoadd             = 0;
+		$this->fnoadd              = 0;
+		$this->fadd                = 0;
+		$this->tnoadd              = 0;
+		$this->tadd                = 0;
+		$this->srnoadd             = 0;
+		$this->sradd               = 0;
+		$this->pnoadd              = 0;
+		$this->padd                = 0;
+		$this->lnoadd              = 0;
+		$this->ladd                = 0;
+		$this->snoadd              = 0;
+		$this->sadd                = 0;
+		$this->mnoadd              = 0;
+		$this->madd                = 0;
 		$newid               = 0;
 		$oldid               = 0;
-		$db                  = JFactory::getDbo();
-		$query               = $db->getQuery(true);
+
+		//Convert comments
+		$db    = JFactory::getDbo();
+		$query = $db->getQuery(true);
 		$query->select('*')->from('#__picomments');
 		$db->setQuery($query);
 		$this->picomments = $db->loadObjectList();
 		/** @var $piconversion string */
 		$piconversion = null;
 
-		// Create servers and folders
+		// Create servers
 		$query = $db->getQuery(true);
-		$query->select('*')->from('#__pifilepath');
+		$query->select('*')->from('#__pimediaplayers');
 		$db->setQuery($query);
 		$piservers = $db->loadObjectList();
+        $youtube = 0;
+        $this->internalplayer = 0;
+        $jwpvideo = 0;
+        $blip = 0;
+        $flow = 0;
+        $vimeo = 0;
+        $uri          = JURI::getInstance();
+        $url          = $uri->gethost();
+        $videoserver = new stdClass();
+        //Create a legacy video server
+        $videoserver->server_name = 'Legacy Video';
+        $videoserver->access = 1;
+        $videoserver->type = 'legacy';
+        $videoserver->params = '{"path":"\/\/'.$url.'","protocol":"http:","uploadpath":"\/images\/biblestudy\/media\/"}';
+        $videoserver->media = '{"link_type":"","player":"3","popup":"1","mediacode":"","media_image":"","media_use_button_icon":"3","media_button_text":"Audio","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-video","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1"}';
+        if (!$this->insertServer($videoserver))
+        {
+            $this->svnoadd++;
+        }
+        else
+        {
+            $this->svadd++;
+            $query = $db->getQuery(true);
+            $query->select('id')->from('#__bsms_servers')->order('id desc');
+            $db->setQuery($query, 0, 1);
+            $this->legacyvideo = $db->loadResult();
+        }
+        //create legacy direct server for notes and slides
+        $direct = new stdClass();
+        $direct->access = 1;
+        $direct->server_name = 'Legacy Direct';
+        $direct->params = '{"path":"'.$url.'\/","protocol":"http:\/\/"}';
+        $direct->media = '{"link_type":"1","player":"0","popup":"2","mediacode":"","media_image":"images\/biblestudy\/pdf16.png","media_use_button_icon":"3","media_button_text":"Audio","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-file-pdf","media_custom_icon":"","media_icon_text_size":"24","mime_type":"application\/pdf","autostart":"1"}';
+        $direct->type = 'legacy';
+        if (!$this->insertServer($direct))
+        {
+            $this->svnoadd++;
+        }
+        else{
+            $this->svadd++;
+            $query = $db->getQuery(true);
+            $query->select('id')->from('#__bsms_servers')->order('id desc');
+            $db->setQuery($query, 0, 1);
+            $this->legacydirect = $db->loadResult();
 
-		if (!$piservers)
-		{
-			$svnoadd++;
-		}
-		else
-		{
-			foreach ($piservers AS $pi)
-			{
-				$data              = new stdClass;
-				$data->id          = null;
-				$data->server_path = $pi->server;
-				$data->server_name = $pi->server;
-				$data->published   = $pi->published;
+        }
+        //create YouTube server
+        $youtubeserver = new stdClass();
+        $youtubeserver->media = '{"player":"1","popup":"","media_image":"\/biblestudy\/youtube24.png","media_use_button_icon":"3","media_button_text":"YouTube","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fab fa-youtube","media_custom_icon":"","media_icon_text_size":"24","autostart":""}';
+        $youtubeserver->server_name = 'Legacy YouTube';
+        $youtubeserver->access = 1;
+        $youtubeserver->type = 'legacy';
+        $youtubeserver->params = '{"path":"'.$url.'","protocol":"http:\/\/"}';
+        if (!$db->insertObject('#__bsms_servers', $youtubeserver, 'id'))
+        {
+            $this->svnoadd++;
+        }
+        else {
+            $this->svadd++;
+        }
+        //Create internal player
+        if (!$this->insertInternalPlayer())
+        {
+            $this->svnoadd++;
+        }
+        else{
+            $this->svadd++;
+        }
 
-				if (!$db->insertObject('#__bsms_servers', $data, 'id'))
-				{
-					$svnoadd++;
-				}
-				else
-				{
-					$svadd++;
-					$query = $db->getQuery(true);
-					$query->select('id')->from('#__bsms_servers')->order('id desc');
-					$db->setQuery($query, 0, 1);
-					$newid              = $db->loadResult();
-					$oldid              = $pi->id;
-					$this->serversids[] = array('newid' => $newid, 'oldid' => $oldid);
-				}
-
-				$datafolders             = new stdClass;
-				$datafolders->id         = null;
-				$datafolders->foldername = $pi->name;
-				$datafolders->folderpath = $pi->server . '/' . $pi->folder . '/';
-				$datafolders->published  = $pi->published;
-			}
-		}
-
-		// Teachers
-		$query = $db->getQuery(true);
+        // Teachers
+		//Create a blank teacher
+        $teach = new stdClass();
+        $teach->teachername = 'Not Listed';
+        $teach->list_show = 0;
+        $teach->access = 1;
+        if (!$db->insertObject('#__bsms_teachers', $teach, 'id'))
+        {
+            $this->tnoadd++;
+        }
+        else
+        {
+            $this->tadd++;
+            $query = $db->getQuery(true);
+            $query->select('id')->from('#__bsms_teachers')->order('id desc');
+            $db->setQuery($query, 0, 1);
+            $this->genericteacher = $db->loadResult();
+        }
+        $query = $db->getQuery(true);
 		$query->select('*')->from('#__piteachers');
 		$db->setQuery($query);
 		$piteachers = $db->loadObjectList();
 
 		if (!$piteachers)
 		{
-			$tnoadd++;
+			$this->tnoadd++;
 		}
 		else
 		{
-			foreach ($piteachers AS $pi)
+			foreach ($piteachers as $pi)
 			{
-				// Map new folder for images to old one
-				$foldersmall = $pi->image_folder;
-				$folderlarge = $pi->image_folderlrg;
 
-				foreach ($this->foldersids as $folder)
-				{
-					if ($folder['oldid'] == $foldersmall)
-					{
-						$foldersmall = $folder['newid'];
-					}
-
-					if ($folder['oldid'] == $folderlarge)
-					{
-						$folderlarge = $folder['newid'];
-					}
-				}
-
-				// Look up folders to use in teacher images
-				$query = $db->getQuery(true);
-				$query->select('folderpath')->from('#__bsms_folders')->where('id = ' . $foldersmall);
-				$db->setQuery($query);
-				$object         = $db->loadObject();
-				$newfoldersmall = $object->folderpath;
-				$query          = $db->getQuery(true);
-				$query->select('folderpath')->from('#__bsms_folders')->where('id = ' . $folderlarge);
-				$db->setQuery($query);
-				$object                    = $db->loadObject();
-				$newfolderlarge            = $object->folderpath;
 				$datateachers              = new stdClass;
 				$datateachers->id          = null;
-				$datateachers->teachername = $pi->teacher_name;
+				$datateachers->teachername = $pi->name . " " . $pi->lastname;
 				$datateachers->alias       = $pi->alias;
-				$datateachers->title       = $pi->teacher_role;
-				$datateachers->image       = $newfolderlarge . $pi->teacher_image_lrg;
-				$datateachers->thumb       = $newfoldersmall . $pi->teacher_image_sm;
-				$datateachers->email       = $pi->teacher_email;
-				$datateachers->website     = $pi->teacher_website;
-				$datateachers->short       = $db->escape($pi->teacher_description);
+				$datateachers->title       = $pi->teacher_title;
+				$datateachers->image       = $pi->image_folderlrg . $pi->teacher_image_lrg;
+				$datateachers->thumb       = $pi->image_folderlrg . $pi->teacher_image_lrg;
+				$datateachers->email       = $pi->email;
+				$datateachers->website     = $pi->website;
+				$datateachers->short       = $db->escape($pi->description);
 				$datateachers->list_show   = $pi->teacher_view;
 				$datateachers->published   = $pi->published;
 
 				if (!$db->insertObject('#__bsms_teachers', $datateachers, 'id'))
 				{
-					$tnoadd++;
+					$this->tnoadd++;
 				}
 				else
 				{
-					$tadd++;
+					$this->tadd++;
 
 					// Get the new teacherid so we can later connect it to a study
 					$query = $db->getQuery(true);
@@ -294,6 +320,7 @@ class JBSMPIconvert
 					$newid               = $db->loadResult();
 					$oldid               = $pi->id;
 					$this->teachersids[] = array('newid' => $newid, 'oldid' => $oldid);
+
 				}
 			}
 		}
@@ -315,9 +342,11 @@ class JBSMPIconvert
 				$locations                = new stdClass;
 				$locations->id            = null;
 				$locations->published     = $pi->published;
-				$locations->location_text = $pi->ministry_name;
+				$locations->location_text = $pi->name;
 				$locations->access        = $pi->access;
 				$locations->ordering      = $pi->ordering;
+				$locations->misc          = $pi->description;
+				$locations->image         = $pi->image_folderlrg . $pi->ministry_image_lrg;
 
 				if (!$db->insertObject('#__bsms_locations', $locations, 'id'))
 				{
@@ -327,7 +356,7 @@ class JBSMPIconvert
 				{
 					$ladd++;
 
-					// Get the new teacherid so we can later connect it to a study
+					// Get the new locationid so we can later connect it to a study
 					$query = $db->getQuery(true);
 					$query->select('id')->from('#__bsms_locations')->order('id desc');
 					$db->setQuery($query, 0, 1);
@@ -335,8 +364,11 @@ class JBSMPIconvert
 					$oldid             = $pi->id;
 					$this->locations[] = array('newid' => $newid, 'oldid' => $oldid);
 				}
+
 			}
+
 		}
+
 
 		// Convert Series
 		$query = $db->getQuery(true);
@@ -350,48 +382,26 @@ class JBSMPIconvert
 		}
 		else
 		{
-			foreach ($series AS $pi)
+			foreach ($series as $pi)
 			{
-				// Map new folder for images to old one
-				$foldersmall = $pi->image_folder;
-				$folderlarge = $pi->image_folderlrg;
 
-				foreach ($this->foldersids as $folder)
-				{
-					if ($folder['oldid'] == $foldersmall)
-					{
-						$foldersmall = $folder['newid'];
-					}
-
-					if ($folder['oldid'] == $folderlarge)
-					{
-						$folderlarge = $folder['newid'];
-					}
-				}
-
-				// Look up folders to use in series images
-				$query = $db->getQuery(true);
-				$query->select('folderpath')->from('#__bsms_folders')->where('id = ' . $foldersmall);
-				$db->setQuery($query);
-				$object                       = $db->loadObject();
-				$newfoldersmall               = $object->folderpath;
 				$dataseries                   = new stdClass;
 				$dataseries->id               = null;
-				$dataseries->series_text      = $pi->series_name;
-				$dataseries->alias            = $pi->series_alias;
-				$dataseries->description      = $pi->series_description;
-				$dataseries->series_thumbnail = $newfoldersmall . $pi->series_image_sm;
+				$dataseries->series_text      = $pi->name;
+				$dataseries->alias            = $pi->alias;
+				$dataseries->description      = $pi->description;
+				$dataseries->series_thumbnail = $pi->image_folderlrg . $pi->series_image_lrg;
 				$dataseries->published        = $pi->published;
 
 				if (!$db->insertObject('#__bsms_series', $dataseries, 'id'))
 				{
-					$srnoadd++;
+					$this->srnoadd++;
 				}
 				else
 				{
-					$sradd++;
+					$this->sradd++;
 
-					// Get the new teacherid so we can later connect it to a study
+					// Get the new seriesid so we can later connect it to a study
 					$query = $db->getQuery(true);
 					$query->select('id')->from('#__bsms_series')->order('id desc');
 					$db->setQuery($query, 0, 1);
@@ -414,7 +424,7 @@ class JBSMPIconvert
 		}
 		else
 		{
-			foreach ($podcasts AS $pi)
+			foreach ($podcasts as $pi)
 			{
 				$podcast                    = new stdClass;
 				$podcast->id                = null;
@@ -437,13 +447,13 @@ class JBSMPIconvert
 
 				if (!$db->insertObject('#__bsms_podcast', $podcast, 'id'))
 				{
-					$pnoadd++;
+					$this->pnoadd++;
 				}
 				else
 				{
-					$padd++;
+					$this->padd++;
 
-					// Get the new teacherid so we can later connect it to a study
+					// Get the new podcast id so we can later connect it to a study
 					$query = $db->getQuery(true);
 					$query->select('id')->from('#__bsms_podcast')->order('id desc');
 					$db->setQuery($query, 0, 1);
@@ -467,29 +477,30 @@ class JBSMPIconvert
 		}
 		else
 		{
-			foreach ($studies AS $pi)
+			foreach ($studies as $pi)
 			{
-				$studydate  = $pi->study_date;
-				$studytitle = $pi->study_name;
+				$studydate  = $pi->date;
+				$studytitle = $pi->name;
 				$teacher_id = null;
-
+				$t          = json_decode($pi->teacher, true);
 				foreach ($this->teachersids as $teacher)
 				{
-					if ($teacher['oldid'] == $pi->teacher)
+
+					if ($teacher['oldid'] == $t['0'])
 					{
 						$teacher_id = $teacher['newid'];
 					}
-					else
-					{
-						$teacher_id = '1';
-					}
+					elseif ($t['0'] == 0) {
+					    $teacher_id = $this->genericteacher;
+                    }
+
 				}
 
 				$studynumber = $pi->id;
 				$booknumber  = null;
 				$booknumber2 = null;
 
-				foreach ($books AS $book)
+				foreach ($books as $book)
 				{
 					if ($book['id'] == $pi->study_book)
 					{
@@ -518,19 +529,20 @@ class JBSMPIconvert
 				$hits           = $pi->hits;
 				$user_id        = $pi->user;
 				$show_level     = $pi->access;
-				$location_id    = null;
+				$location_id    = '';
+				$l              = json_decode($pi->ministry, true);
 
-				foreach ($this->locations AS $location)
+				foreach ($this->locations as $location)
 				{
-					if ($location['oldid'] == $pi->ministry)
+					if ($location['oldid'] == $l['0'])
 					{
 						$location_id = $location['newid'];
 					}
 				}
 
-				$alias         = $pi->study_alias;
-				$studyintro    = $pi->study_description;
-				$series_id     = null;
+				$alias      = $pi->alias;
+				$studyintro = $pi->description;
+				$series_id  = '';
 
 				foreach ($this->seriesids as $series)
 				{
@@ -544,22 +556,10 @@ class JBSMPIconvert
 				$imagefolder = 0;
 				$newfolder   = 0;
 				$thumbnailm  = '';
-				$image       = null;
+				$image       = '';
 
 				foreach ($this->foldersids as $folder)
 				{
-					if ($folder['oldid'] == $pi->image_folder)
-					{
-						$imagefolder = $folder['newid'];
-						$image       = $pi->imagesm;
-					}
-
-					if ($folder['oldid'] == $pi->image_foldermed)
-					{
-						$imagefolder = $folder['newid'];
-						$image       = $pi->imagemed;
-					}
-
 					if ($folder['oldid'] == $pi->image_folderlrg)
 					{
 						$imagefolder = $folder['newid'];
@@ -569,22 +569,17 @@ class JBSMPIconvert
 
 				if ($imagefolder)
 				{
-					$query = $db->getQuery(true);
-					$query->select('folderpath')->from('#__bsms_folders')->where('id = ' . $imagefolder);
-					$db->setQuery($query);
-					$object     = $db->loadObject();
-					$newfolder  = $object->folderpath;
+
 					$thumbnailm = $newfolder . $image;
 				}
 
 				$published = $pi->published;
-				$params    = '{"metakey":"' . $pi->tags . '","metadesc":""}';
-				$params    = $db->escape($params);
+				$params    = '{"metakey":"' . $pi->metakey . '","metadesc":""}';
 				$access    = $pi->saccess;
 
 				// Create the study then get the id to create the media file and comments
 				$datastudies                 = new stdClass;
-				$datastudies->id             = null;
+				$datastudies->id             = '';
 				$datastudies->published      = $published;
 				$datastudies->studydate      = $studydate;
 				$datastudies->studytitle     = $studytitle;
@@ -612,14 +607,15 @@ class JBSMPIconvert
 				$datastudies->thumbnailm     = $thumbnailm;
 				$datastudies->params         = $params;
 				$datastudies->access         = $access;
+				$datastudies->language = '*';
 
 				if (!$db->insertObject('#__bsms_studies', $datastudies, 'id'))
 				{
-					$snoadd++;
+					$this->snoadd++;
 				}
 				else
 				{
-					$sadd++;
+					$this->sadd++;
 
 					// Get the new studiesid so we can later connect it to a study
 					$query = $db->getQuery(true);
@@ -635,11 +631,11 @@ class JBSMPIconvert
 				{
 					if (!$audio = $this->insertMedia($pi, $type = 'audio', $newid, $oldid))
 					{
-						$mnoadd++;
+						$this->mnoadd++;
 					}
 					else
 					{
-						$madd++;
+						$this->madd++;
 					}
 				}
 
@@ -647,11 +643,11 @@ class JBSMPIconvert
 				{
 					if (!$video = $this->insertMedia($pi, $type = 'video', $newid, $oldid))
 					{
-						$mnoadd++;
+						$this->mnoadd++;
 					}
 					else
 					{
-						$madd++;
+						$this->madd++;
 					}
 				}
 
@@ -659,11 +655,11 @@ class JBSMPIconvert
 				{
 					if (!$slides = $this->insertMedia($pi, $type = 'slides', $newid, $oldid))
 					{
-						$mnoadd++;
+						$this->mnoadd++;
 					}
 					else
 					{
-						$madd++;
+						$this->madd++;
 					}
 				}
 
@@ -671,11 +667,11 @@ class JBSMPIconvert
 				{
 					if (!$notes = $this->insertMedia($pi, $type = 'notes', $newid, $oldid))
 					{
-						$mnoadd++;
+						$this->mnoadd++;
 					}
 					else
 					{
-						$madd++;
+						$this->madd++;
 					}
 				}
 
@@ -684,19 +680,18 @@ class JBSMPIconvert
 			// Endforeach study
 		}
 
-		$piconversion = '<table><tr><td><h3>' . JText::_('JBS_IBM_PREACHIT_RESULTS') . '</h3></td></tr>'
-				. '<tr><td>' . JText::_('JBS_IBM_PI_SERVERS') . '<strong>' . $svadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $svnoadd . '</td></tr>'
-				. '<tr><td>' . JText::_('JBS_IBM_PI_FOLDERS') . '<strong>' . $fadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $fnoadd . '</td></tr>'
-				. '<tr><td>' . JText::_('JBS_IBM_PI_TEACHERS') . '<strong>' . $tadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $tnoadd . '</td></tr>'
-				. '<tr><td>' . JText::_('JBS_IBM_PI_SERIES') . '<strong>' . $sradd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $srnoadd . '</td></tr>'
-				. '<tr><td>' . JText::_('JBS_IBM_PI_PODCAST') . '<strong>' . $padd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $pnoadd . '</td></tr>'
-				. '<tr><td>' . JText::_('JBS_IBM_PI_STUDIES') . '<strong>' . $sadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $snoadd . '</td></tr>'
-				. '<tr><td>' . JText::_('JBS_IBM_PI_MEDIA') . '<strong>' . $madd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $mnoadd . '</td></tr>'
-				. '<tr><td>' . JText::_('JBS_IBM_PI_COMMENTS') . '<strong>' . $this->cadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED')
-				. $this->cnoadd . '</td></tr>'
-				. '</table>';
+		/**$piconversion = '<table><tr><td><h3>' . JText::_('JBS_IBM_PREACHIT_RESULTS') . '</h3></td></tr>'
+			. '<tr><td>' . JText::_('JBS_IBM_PI_SERVERS') . '<strong>' . $this->svadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $this->svnoadd . '</td></tr>'
+			. '<tr><td>' . JText::_('JBS_IBM_PI_TEACHERS') . '<strong>' . $this->tadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $this->tnoadd . '</td></tr>'
+			. '<tr><td>' . JText::_('JBS_IBM_PI_SERIES') . '<strong>' . $$this->sradd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $this->srnoadd . '</td></tr>'
+			. '<tr><td>' . JText::_('JBS_IBM_PI_PODCAST') . '<strong>' . $this->padd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $this->pnoadd . '</td></tr>'
+			. '<tr><td>' . JText::_('JBS_IBM_PI_STUDIES') . '<strong>' . $this->sadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $this->snoadd . '</td></tr>'
+			. '<tr><td>' . JText::_('JBS_IBM_PI_MEDIA') . '<strong>' . $this->madd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $this->mnoadd . '</td></tr>'
+			. '<tr><td>' . JText::_('JBS_IBM_PI_COMMENTS') . '<strong>' . $this->cadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED')
+			. $this->cnoadd . '</td></tr>'
+			. '</table>';
 
-		return $piconversion;
+		return $piconversion;**/
 	}
 
 	/**
@@ -706,75 +701,75 @@ class JBSMPIconvert
 	 *
 	 * @since 9.0.0
 	 */
-	private function getBooks ()
+	private function getBooks()
 	{
 		$books = array(
-				array('id' => '1', 'book_name' => 'Genesis', 'published' => '1', 'jbs' => '101'),
-				array('id' => '2', 'book_name' => 'Exodus', 'published' => '1', 'jbs' => '102'),
-				array('id' => '3', 'book_name' => 'Leviticus', 'published' => '1', 'jbs' => '103'),
-				array('id' => '4', 'book_name' => 'Numbers', 'published' => '1', 'jbs' => '104'),
-				array('id' => '5', 'book_name' => 'Deuteronomy', 'published' => '1', 'jbs' => '105'),
-				array('id' => '6', 'book_name' => 'Joshua', 'published' => '1', 'jbs' => '106'),
-				array('id' => '7', 'book_name' => 'Judges', 'published' => '1', 'jbs' => '107'),
-				array('id' => '8', 'book_name' => 'Ruth', 'published' => '1', 'jbs' => '108'),
-				array('id' => '9', 'book_name' => '1 Samuel', 'published' => '1', 'jbs' => '109'),
-				array('id' => '10', 'book_name' => '2 Samuel', 'published' => '1', 'jbs' => '110'),
-				array('id' => '11', 'book_name' => '1 Kings', 'published' => '1', 'jbs' => '111'),
-				array('id' => '12', 'book_name' => '2 Kings', 'published' => '1', 'jbs' => '112'),
-				array('id' => '13', 'book_name' => '1 Chronicles', 'published' => '1', 'jbs' => '113'),
-				array('id' => '14', 'book_name' => '2 Chronicles', 'published' => '1', 'jbs' => '114'),
-				array('id' => '15', 'book_name' => 'Ezra', 'published' => '1', 'jbs' => '115'),
-				array('id' => '16', 'book_name' => 'Nehemiah', 'published' => '1', 'jbs' => '116'),
-				array('id' => '17', 'book_name' => 'Esther', 'published' => '1', 'jbs' => '117'),
-				array('id' => '18', 'book_name' => 'Job', 'published' => '1', 'jbs' => '118'),
-				array('id' => '19', 'book_name' => 'Psalm', 'published' => '1', 'jbs' => '119'),
-				array('id' => '20', 'book_name' => 'Proverbs', 'published' => '1', 'jbs' => '120'),
-				array('id' => '21', 'book_name' => 'Ecclesiastes', 'published' => '1', 'jbs' => '121'),
-				array('id' => '22', 'book_name' => 'Song of Songs', 'published' => '1', 'jbs' => '122'),
-				array('id' => '23', 'book_name' => 'Isaiah', 'published' => '1', 'jbs' => '123'),
-				array('id' => '24', 'book_name' => 'Jeremiah', 'published' => '1', 'jbs' => '124'),
-				array('id' => '25', 'book_name' => 'Lamentations', 'published' => '1', 'jbs' => '125'),
-				array('id' => '26', 'book_name' => 'Ezekiel', 'published' => '1', 'jbs' => '126'),
-				array('id' => '27', 'book_name' => 'Daniel', 'published' => '1', 'jbs' => '127'),
-				array('id' => '28', 'book_name' => 'Hosea', 'published' => '1', 'jbs' => '129'),
-				array('id' => '29', 'book_name' => 'Joel', 'published' => '1', 'jbs' => '129'),
-				array('id' => '30', 'book_name' => 'Amos', 'published' => '1', 'jbs' => '130'),
-				array('id' => '31', 'book_name' => 'Obadiah', 'published' => '1', 'jbs' => '131'),
-				array('id' => '32', 'book_name' => 'Jonah', 'published' => '1', 'jbs' => '132'),
-				array('id' => '33', 'book_name' => 'Micah', 'published' => '1', 'jbs' => '133'),
-				array('id' => '34', 'book_name' => 'Nahum', 'published' => '1', 'jbs' => '134'),
-				array('id' => '35', 'book_name' => 'Habakkuk', 'published' => '1', 'jbs' => '135'),
-				array('id' => '36', 'book_name' => 'Zephaniah', 'published' => '1', 'jbs' => '136'),
-				array('id' => '37', 'book_name' => 'Haggai', 'published' => '1', 'jbs' => '137'),
-				array('id' => '38', 'book_name' => 'Zechariah', 'published' => '1', 'jbs' => '138'),
-				array('id' => '39', 'book_name' => 'Malachi', 'published' => '1', 'jbs' => '139'),
-				array('id' => '40', 'book_name' => 'Matthew', 'published' => '1', 'jbs' => '140'),
-				array('id' => '41', 'book_name' => 'Mark', 'published' => '1', 'jbs' => '141'),
-				array('id' => '42', 'book_name' => 'Luke', 'published' => '1', 'jbs' => '142'),
-				array('id' => '43', 'book_name' => 'John', 'published' => '1', 'jbs' => '143'),
-				array('id' => '44', 'book_name' => 'Acts', 'published' => '1', 'jbs' => '144'),
-				array('id' => '45', 'book_name' => 'Romans', 'published' => '1', 'jbs' => '145'),
-				array('id' => '46', 'book_name' => '1 Corinthians', 'published' => '1', 'jbs' => '146'),
-				array('id' => '47', 'book_name' => '2 Corinthians', 'published' => '1', 'jbs' => '147'),
-				array('id' => '48', 'book_name' => 'Galatians', 'published' => '1', 'jbs' => '148'),
-				array('id' => '49', 'book_name' => 'Ephesians', 'published' => '1', 'jbs' => '149'),
-				array('id' => '50', 'book_name' => 'Philippians', 'published' => '1', 'jbs' => '150'),
-				array('id' => '51', 'book_name' => 'Colossians', 'published' => '1', 'jbs' => '151'),
-				array('id' => '52', 'book_name' => '1 Thessalonians', 'published' => '1', 'jbs' => '152'),
-				array('id' => '53', 'book_name' => '2 Thessalonians', 'published' => '1', 'jbs' => '153'),
-				array('id' => '54', 'book_name' => '1 Timothy', 'published' => '1', 'jbs' => '154'),
-				array('id' => '55', 'book_name' => '2 Timothy', 'published' => '1', 'jbs' => '155'),
-				array('id' => '56', 'book_name' => 'Titus', 'published' => '1', 'jbs' => '156'),
-				array('id' => '57', 'book_name' => 'Philemon', 'published' => '1', 'jbs' => '157'),
-				array('id' => '58', 'book_name' => 'Hebrews', 'published' => '1', 'jbs' => '158'),
-				array('id' => '59', 'book_name' => 'James', 'published' => '1', 'jbs' => '159'),
-				array('id' => '60', 'book_name' => '1 Peter', 'published' => '1', 'jbs' => '160'),
-				array('id' => '61', 'book_name' => '2 Peter', 'published' => '1', 'jbs' => '161'),
-				array('id' => '62', 'book_name' => '1 John', 'published' => '1', 'jbs' => '162'),
-				array('id' => '63', 'book_name' => '2 John', 'published' => '1', 'jbs' => '163'),
-				array('id' => '64', 'book_name' => '3 John', 'published' => '1', 'jbs' => '164'),
-				array('id' => '65', 'book_name' => 'Jude', 'published' => '1', 'jbs' => '165'),
-				array('id' => '66', 'book_name' => 'Revelation', 'published' => '1', 'jbs' => '166')
+			array('id' => '1', 'book_name' => 'Genesis', 'published' => '1', 'jbs' => '101'),
+			array('id' => '2', 'book_name' => 'Exodus', 'published' => '1', 'jbs' => '102'),
+			array('id' => '3', 'book_name' => 'Leviticus', 'published' => '1', 'jbs' => '103'),
+			array('id' => '4', 'book_name' => 'Numbers', 'published' => '1', 'jbs' => '104'),
+			array('id' => '5', 'book_name' => 'Deuteronomy', 'published' => '1', 'jbs' => '105'),
+			array('id' => '6', 'book_name' => 'Joshua', 'published' => '1', 'jbs' => '106'),
+			array('id' => '7', 'book_name' => 'Judges', 'published' => '1', 'jbs' => '107'),
+			array('id' => '8', 'book_name' => 'Ruth', 'published' => '1', 'jbs' => '108'),
+			array('id' => '9', 'book_name' => '1 Samuel', 'published' => '1', 'jbs' => '109'),
+			array('id' => '10', 'book_name' => '2 Samuel', 'published' => '1', 'jbs' => '110'),
+			array('id' => '11', 'book_name' => '1 Kings', 'published' => '1', 'jbs' => '111'),
+			array('id' => '12', 'book_name' => '2 Kings', 'published' => '1', 'jbs' => '112'),
+			array('id' => '13', 'book_name' => '1 Chronicles', 'published' => '1', 'jbs' => '113'),
+			array('id' => '14', 'book_name' => '2 Chronicles', 'published' => '1', 'jbs' => '114'),
+			array('id' => '15', 'book_name' => 'Ezra', 'published' => '1', 'jbs' => '115'),
+			array('id' => '16', 'book_name' => 'Nehemiah', 'published' => '1', 'jbs' => '116'),
+			array('id' => '17', 'book_name' => 'Esther', 'published' => '1', 'jbs' => '117'),
+			array('id' => '18', 'book_name' => 'Job', 'published' => '1', 'jbs' => '118'),
+			array('id' => '19', 'book_name' => 'Psalm', 'published' => '1', 'jbs' => '119'),
+			array('id' => '20', 'book_name' => 'Proverbs', 'published' => '1', 'jbs' => '120'),
+			array('id' => '21', 'book_name' => 'Ecclesiastes', 'published' => '1', 'jbs' => '121'),
+			array('id' => '22', 'book_name' => 'Song of Songs', 'published' => '1', 'jbs' => '122'),
+			array('id' => '23', 'book_name' => 'Isaiah', 'published' => '1', 'jbs' => '123'),
+			array('id' => '24', 'book_name' => 'Jeremiah', 'published' => '1', 'jbs' => '124'),
+			array('id' => '25', 'book_name' => 'Lamentations', 'published' => '1', 'jbs' => '125'),
+			array('id' => '26', 'book_name' => 'Ezekiel', 'published' => '1', 'jbs' => '126'),
+			array('id' => '27', 'book_name' => 'Daniel', 'published' => '1', 'jbs' => '127'),
+			array('id' => '28', 'book_name' => 'Hosea', 'published' => '1', 'jbs' => '129'),
+			array('id' => '29', 'book_name' => 'Joel', 'published' => '1', 'jbs' => '129'),
+			array('id' => '30', 'book_name' => 'Amos', 'published' => '1', 'jbs' => '130'),
+			array('id' => '31', 'book_name' => 'Obadiah', 'published' => '1', 'jbs' => '131'),
+			array('id' => '32', 'book_name' => 'Jonah', 'published' => '1', 'jbs' => '132'),
+			array('id' => '33', 'book_name' => 'Micah', 'published' => '1', 'jbs' => '133'),
+			array('id' => '34', 'book_name' => 'Nahum', 'published' => '1', 'jbs' => '134'),
+			array('id' => '35', 'book_name' => 'Habakkuk', 'published' => '1', 'jbs' => '135'),
+			array('id' => '36', 'book_name' => 'Zephaniah', 'published' => '1', 'jbs' => '136'),
+			array('id' => '37', 'book_name' => 'Haggai', 'published' => '1', 'jbs' => '137'),
+			array('id' => '38', 'book_name' => 'Zechariah', 'published' => '1', 'jbs' => '138'),
+			array('id' => '39', 'book_name' => 'Malachi', 'published' => '1', 'jbs' => '139'),
+			array('id' => '40', 'book_name' => 'Matthew', 'published' => '1', 'jbs' => '140'),
+			array('id' => '41', 'book_name' => 'Mark', 'published' => '1', 'jbs' => '141'),
+			array('id' => '42', 'book_name' => 'Luke', 'published' => '1', 'jbs' => '142'),
+			array('id' => '43', 'book_name' => 'John', 'published' => '1', 'jbs' => '143'),
+			array('id' => '44', 'book_name' => 'Acts', 'published' => '1', 'jbs' => '144'),
+			array('id' => '45', 'book_name' => 'Romans', 'published' => '1', 'jbs' => '145'),
+			array('id' => '46', 'book_name' => '1 Corinthians', 'published' => '1', 'jbs' => '146'),
+			array('id' => '47', 'book_name' => '2 Corinthians', 'published' => '1', 'jbs' => '147'),
+			array('id' => '48', 'book_name' => 'Galatians', 'published' => '1', 'jbs' => '148'),
+			array('id' => '49', 'book_name' => 'Ephesians', 'published' => '1', 'jbs' => '149'),
+			array('id' => '50', 'book_name' => 'Philippians', 'published' => '1', 'jbs' => '150'),
+			array('id' => '51', 'book_name' => 'Colossians', 'published' => '1', 'jbs' => '151'),
+			array('id' => '52', 'book_name' => '1 Thessalonians', 'published' => '1', 'jbs' => '152'),
+			array('id' => '53', 'book_name' => '2 Thessalonians', 'published' => '1', 'jbs' => '153'),
+			array('id' => '54', 'book_name' => '1 Timothy', 'published' => '1', 'jbs' => '154'),
+			array('id' => '55', 'book_name' => '2 Timothy', 'published' => '1', 'jbs' => '155'),
+			array('id' => '56', 'book_name' => 'Titus', 'published' => '1', 'jbs' => '156'),
+			array('id' => '57', 'book_name' => 'Philemon', 'published' => '1', 'jbs' => '157'),
+			array('id' => '58', 'book_name' => 'Hebrews', 'published' => '1', 'jbs' => '158'),
+			array('id' => '59', 'book_name' => 'James', 'published' => '1', 'jbs' => '159'),
+			array('id' => '60', 'book_name' => '1 Peter', 'published' => '1', 'jbs' => '160'),
+			array('id' => '61', 'book_name' => '2 Peter', 'published' => '1', 'jbs' => '161'),
+			array('id' => '62', 'book_name' => '1 John', 'published' => '1', 'jbs' => '162'),
+			array('id' => '63', 'book_name' => '2 John', 'published' => '1', 'jbs' => '163'),
+			array('id' => '64', 'book_name' => '3 John', 'published' => '1', 'jbs' => '164'),
+			array('id' => '65', 'book_name' => 'Jude', 'published' => '1', 'jbs' => '165'),
+			array('id' => '66', 'book_name' => 'Revelation', 'published' => '1', 'jbs' => '166')
 		);
 
 		return $books;
@@ -794,9 +789,13 @@ class JBSMPIconvert
 	 *
 	 * @FIXME look like the $pod is missing.
 	 */
-	public function insertMedia ($pi, $type, $newid, $oldid)
+	public function insertMedia($pi, $type, $newid, $oldid)
 	{
 		$db          = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('*')->from('#__pifilepath');
+        $db->setQuery($query);
+        $folders   = $db->loadObjectList();
 		$podcast_id  = '-1';
 		$study_id    = $newid;
 		$media_image = '';
@@ -811,228 +810,238 @@ class JBSMPIconvert
 		$player      = '';
 		$pod         = array();
 		$query       = $db->getQuery(true);
-		$query->select('*')->from('#__pipodmes');
+		$query->select('*')->from('#__pipodcast');
 		$db->setQuery($query);
 		$podcasts = $db->loadObjectList();
 
-		if ($type == 'audio')
-		{
-			$player      = $pi->audio_type;
-			$media_image = '1';
-			$mime_type   = '1';
-			$filesize    = $pi->audiofs;
-			$player      = '1';
-			$filename    = $pi->audio_link;
-
-			if ($podcasts)
-			{
-				foreach ($podcasts as $podcast)
-				{
-					if ($podcast->mesid == $oldid)
-					{
-						$oldpodid = $podcast->podaudid;
-
-						if ($pod['oldid'] == $oldpodid)
-						{
-							$podcast_id = $pod['newid'];
-						}
-					}
-				}
-			}
-		}
-
 		if ($type == 'video')
 		{
-			if ($podcasts)
-			{
-				foreach ($podcasts as $podcast)
-				{
-					if ($podcast->mesid == $oldid)
-					{
-						$oldpodid = $podcast->podvidid;
 
-						if ($pod['oldid'] == $oldpodid)
-						{
-							$podcast_id = $pod['newid'];
-						}
-					}
-				}
-			}
 
 			$filesize = $pi->videofs;
-
 			switch ($pi->video_type)
 			{
 				case 4:
 					// Bliptv
-					$mediacode   = '<embed src="http://blip.tv/play/' . $pi->video_link
-							. '" type="application/x-shockwave-flash" width="500" height="500" wmode="transparent"'
-							. 'allowscriptaccess="always" allowfullscreen="true" ></embed>';
+					$media = new stdClass();
+                    $mediacode   = '<embed src="http://blip.tv/play/' . $pi->video_link
+						. '" type="application/x-shockwave-flash" width="500" height="500" wmode="transparent"'
+						. ' allowscriptaccess="always" allowfullscreen="true" ></embed>';
 					$mediacode   = $db->escape($mediacode);
-					$player      = '8';
-					$media_image = '5';
-					$mime_type   = '15';
-					break;
+					$media->params = '{"link_type":"","player":"5","popup":"1","mediacode":"'.$mediacode.'","media_image":"","media_use_button_icon":"3","media_button_text":"Video","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-video","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'"}';
+					$media->study_id = $newid;
+					$media->server_id = $this->legacyvideo;
+					$media->podcast_id = '';
+					$media->createdate = $pi->date;
+					$media->hits = $pi->hits;
+					$media->access = $pi->accesscode;
+					$media->language = '*';
+                    $media->created_by = $pi->user;
+                    if (!$this->insertMediaRecord($media))
+                    {
+                        $this->mnoadd++;
+                        break;
+                    }
+                    else{
+                        $this->madd++;
+                        break;
+                    }
 
 				case 7:
 					// Flowplayer
-					foreach ($this->foldersids as $folder)
-					{
-						if ($pi->video_folder == $folder['oldid'])
-						{
-							// Look up the text to put here for $folder.
-							$query = $db->getQuery(true);
-							$query->select('folderpath')->from('#__bsms_folders')->where('id = ' . $folder['newid']);
-							$db->setQuery($query);
-							$object   = $db->loadObject();
-							$path     = $object->folderpath;
-							$filename = $path . $pi->video_link;
-						}
-					}
 
-					$player      = '1';
-					$media_image = '5';
-					$mime_type   = '15';
-					$server      = '-1';
+					//Not yet supported
 					break;
 
 				case 1:
 					// JWPlayer
-					foreach ($this->foldersids as $folder)
-					{
-						if ($pi->video_folder == $folder['oldid'])
-						{
-							// Look up the text to put here for $folder.
-							$query = $db->getQuery(true);
-							$query->select('folderpath')->from('#__bsms_folders')->where('id = ' . $folder['newid']);
-							$db->setQuery($query);
-							$object   = $db->loadObject();
-							$path     = $object->folderpath;
-							$filename = $path . $pi->video_link;
-						}
-					}
+					$query = $db->getQuery(true);
+					$query->select('folder')->from('#__pifilepath')->where('id = ' . $pi->video_link);
+					$db->setQuery($query);
+					$object   = $db->loadObject();
+					$path     = $object->folder;
+					$filename = $path . $pi->video_link;
+					$filename = $db->escape($filename);
+                    $media = new stdClass();
+					$media->params = '{"size":"'.$filesize.',"filename":"'.$filename.',"link_type":"","player":"3","popup":"1","mediacode":"","media_image":"","media_use_button_icon":"3","media_button_text":"Video","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-video","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1"":"","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'"}';
+                    $media->study_id = $newid;
+                    $media->server_id = $this->legacyvideo;
+                    $media->podcast_id = '';
+                    $media->createdate = $pi->date;
+                    $media->hits = $pi->hits;
+                    $media->access = $pi->accesscode;
+                    $media->language = '*';
+                    $media->created_by = $pi->user;
+                    if (!$this->insertMediaRecord($media))
+                    {
+                        $this->mnoadd++;
+                        break;
+                    }
+                    else{
+                        $this->madd++;
+                        break;
+                    }
 
-					$player      = '1';
-					$media_image = '5';
-					$mime_type   = '15';
-					$server      = '-1';
-					break;
 
 				case 2:
 					// Vimeo
-					$mediacode   = '<iframe src="http://player.vimeo.com/video/' . $pi->video_link . '" width="500" height="500" frameborder="0"></iframe> ';
-					$mediacode   = $db->escape($mediacode);
-					$player      = '8';
-					$media_image = '5';
-					$mime_type   = '15';
-					$path        = '-1';
-					$server      = '-1';
-					break;
+					$media = new stdClass();
+                    $media->mediacode   = '<iframe src="http://player.vimeo.com/video/' . $pi->video_link . '" width="500" height="500" frameborder="0"></iframe> ';
+					$media->mediacode   = $db->escape($mediacode);
+                    $media->params = '{"link_type":"","player":"5","popup":"1","mediacode":"'.$mediacode.'","media_image":"","media_use_button_icon":"3","media_button_text":"Video","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-video","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'"}';
+                    $media->study_id = $newid;
+                    $media->server_id = $this->legacyvideo;
+                    $media->podcast_id = '';
+                    $media->createdate = $pi->date;
+                    $media->hits = $pi->hits;
+                    $media->access = $pi->accesscode;
+                    $media->language = '*';
+                    $media->created_by = $pi->user;
+                    if (!$this->insertMediaRecord($media))
+                    {
+                        $this->mnoadd++;
+                        break;
+                    }
+                    else{
+                        $this->madd++;
+                        break;
+                    }
+
 
 				case 3:
 					// Youtube
 					$mediacode   = '<iframe width="500" height="500" src="http://www.youtube.com/embed/' . $pi->video_link
-							. '" frameborder="0" allowfullscreen></iframe>';
+						. '" frameborder="0" allowfullscreen></iframe>';
 					$mediacode   = $db->escape($mediacode);
-					$player      = '8';
-					$media_image = '13';
-					$mime_type   = '15';
-					$path        = '-1';
-					$server      = '-1';
-					break;
-			}
-		}
+                    $media = new stdClass();
+					$media->params = '{"link_type":"","player":"5","popup":"1","mediacode":"'.$mediacode.'","media_image":"","media_use_button_icon":"3","media_button_text":"Video","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-youtube","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'"}';
+                    $media->study_id = $newid;
+                    $media->server_id = $this->legacyvideo;
+                    $media->podcast_id = '';
+                    $media->createdate = $pi->date;
+                    $media->hits = $pi->hits;
+                    $media->access = $pi->accesscode;
+                    $media->language = '*';
+                    $media->created_by = $pi->user;
+                    if (!$this->insertMediaRecord($media))
+                    {
+                        $this->mnoadd++;
+                        break;
+                    }
+                    else{
+                        $this->madd++;
+                        break;
+                    }
 
-		$createdate = $pi->study_date;
+			}
+
+		}
 
 		if ($type == 'audio')
 		{
-			$link_type = $pi->audio_download;
+		    foreach ($folders as $folder)
+            {
+                if ($folder->id == $pi->audio_folder)
+                {
+                    $filename = $folder->folder.$pi->audiolink;
+                    $filename = $db->escape($filename);
+                }
+            }
+		    $mediafile = new stdClass();
+		    $mediafile->params = '{"filename":"'.$filename.'","mediacode":"","size":"'.$pi->audiofs.'","special":"","player":"'.$this->internalplayer.'","popup":"3","link_type":"0","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'","docMan_id":"0","article_id":"","virtueMart_id":"0","media_image":"images\/biblestudy\/speaker24.png","media_use_button_icon":"3","media_button_text":"Audio","media_button_color":"","media_icon_type":"fas fa-play","media_custom_icon":"","media_icon_text_size":"24","mime_type":"audio\/mp3","playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","autostart":"false"}';
+			$mediafile->study_id = $newid;
+			$mediafile->server_id = $this->internalplayer;
+			$mediafile->podcast_id = null;
+			$mediafile->createdate = $pi->date;
+			$mediafile->hits = $pi->hits;
+			$mediafile->downloads = $pi->downloads;
+			$mediafile->language = '*';
+			$mediafile->created_by = $pi->user;
+			if ($podcasts)
+            {
+                $mediafile->podcast_id = $this->insertPodcast($pi);
+            }
+			if (!$this->insertMediaRecord($mediafile))
+			    {
+			        $this->mnoadd++;
+                }
+			else
+			    {
+			        $this->madd++;
+                }
 		}
 
-		if ($type == 'video')
-		{
-			$link_type = $pi->video_download;
-		}
 
 		if ($type == 'notes')
 		{
-			$filesize    = $pi->notesfs;
-			$download    = '1';
-			$player      = '0';
-			$media_image = '12';
-			$mime_type   = '6';
+			$filesize = $pi->notesfs;
+			$query = $db->getQuery(true);
+			$query->select('folder')->from('#__pifilepath')->where('id = ' . $pi->notes_folder);
+			$db->setQuery($query);
+			$object   = $db->loadObject();
+			$path     = $object->folder;
+			$filename = $path . $pi->notes_link;
+			$filename = $db->escape($filename);
+			$mediafile = new stdClass();
+			$mediafile->server_id = $this->legacydirect;
+            $mediafile->params = '{"filename":"'.$filename.'","mediacode":"","size":"'.$filesize.'","special":"","player":"1","popup":"3","link_type":"0","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'","docMan_id":"0","article_id":"","virtueMart_id":"0","media_image":"images\/biblestudy\/speaker24.png","media_use_button_icon":"3","media_button_text":"Text","media_button_color":"","media_icon_type":"fas fa-sticky-note","media_custom_icon":"","media_icon_text_size":"24","mime_type":"audio\/mp3","playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","autostart":"false"}';
+            $mediafile->study_id = $newid;
+            $mediafile->podcast_id = null;
+            $mediafile->createdate = $pi->date;
+            $mediafile->hits = $pi->hits;
+            $mediafile->downloads = $pi->downloads;
+            $mediafile->language = '*';
+            $mediafile->created_by = $pi->user;
+            if ($podcasts)
+            {
+                $mediafile->podcast_id = $this->insertPodcast($pi);
+            }
+            if (!$this->insertMediaRecord($mediafile))
+            {
+                $this->mnoadd++;
+            }
+            else
+            {
+                $this->madd++;
+            }
 
-			foreach ($this->foldersids as $folder)
-			{
-				if ($pi->notes_folder == $folder['oldid'])
-				{
-					$query = $db->getQuery(true);
-					$query->select('folderpath')->from('#__bsms_folders')->where('id = ' . $folder['newid']);
-					$db->setQuery($query);
-					$object   = $db->loadObject();
-					$path     = $object->folderpath;
-					$filename = $path . $pi->notes_link;
-					$server   = '-1';
-				}
-			}
 		}
 
-		$hits      = $pi->hits;
-		$downloads = $pi->downloads;
-		$published = $pi->published;
-		$params    = '{"playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50"}';
-		$params    = $db->escape($params);
-		$popup     = '1';
-		$access    = $pi->access;
 
 		if ($type == 'slides')
 		{
-			$download = '1';
 			$filesize = $pi->slidesfs;
-			$player   = '0';
-			$filename = $pi->slides_link;
-
-			foreach ($this->foldersids as $folder)
-			{
-				if ($pi->slides_folder == $folder['oldid'])
-				{
-					$query = $db->getQuery(true);
-					$query->select('folderpath')->from('#__bsms_folders')->where('id = ' . $folder['newid']);
-					$db->setQuery($query);
-					$object      = $db->loadObject();
-					$path        = $object->folderpath;
-					$server      = '-1';
-					$filename    = $path . $pi->slides_link;
-					$media_image = '12';
-					$mime_type   = '6';
-				}
-			}
+			$query = $db->getQuery(true);
+			$query->select('folder')->from('#__pifilepath')->where('id = ' . $pi->slides_folder);
+			$db->setQuery($query);
+			$object    = $db->loadObject();
+			$path      = $object->folder;
+			$filename  = $path . $pi->slides_link;
+			$filename = $db->escape($filename);
+			$mediafile = new stdClass();
+            $mediafile->params = '{"filename":"'.$filename.'","mediacode":"","size":"'.$filesize.'","special":"","player":"1","popup":"3","link_type":"0","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'","docMan_id":"0","article_id":"","virtueMart_id":"0","media_image":"images\/biblestudy\/speaker24.png","media_use_button_icon":"3","media_button_text":"Audio","media_button_color":"","media_icon_type":"fas fa-file-powerpoint","media_custom_icon":"","media_icon_text_size":"24","mime_type":"audio\/mp3","playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","autostart":"false"}';
+            $mediafile->study_id = $newid;
+            $mediafile->server_id = $this->legacydirect;
+            $mediafile->podcast_id = null;
+            $mediafile->createdate = $pi->date;
+            $mediafile->hits = $pi->hits;
+            $mediafile->downloads = $pi->downloads;
+            $mediafile->language = '*';
+            $mediafile->created_by = $pi->user;
+            if ($podcasts)
+            {
+                $podcast_id = $this->insertPodcast($pi);
+            }
+            if (!$this->insertMediaRecord($mediafile))
+            {
+                $this->mnoadd++;
+            }
+            else
+            {
+                $this->madd++;
+            }
 		}
 
-		$mediafiles              = new stdClass;
-		$mediafiles->id          = null;
-		$mediafiles->published   = $published;
-		$mediafiles->study_id    = $newid;
-		$mediafiles->path        = $path;
-		$mediafiles->filename    = $filename;
-		$mediafiles->size        = $filesize;
-		$mediafiles->mime_type   = $mime_type;
-		$mediafiles->podcast_id  = $podcast_id;
-		$mediafiles->mediacode   = $mediacode;
-		$mediafiles->createdate  = $createdate;
-		$mediafiles->link_type   = $link_type;
-		$mediafiles->hits        = $pi->hits;
-		$mediafiles->params      = $params;
-		$mediafiles->player      = $player;
-		$mediafiles->popup       = 1;
-		$mediafiles->access      = $pi->access;
-		$mediafiles->media_image = $media_image;
-
-		if (!$db->insertObject('#__bsms_mediafiles', $mediafiles, 'id'))
-		{
-			return false;
-		}
 
 		return true;
 	}
@@ -1047,41 +1056,124 @@ class JBSMPIconvert
 	 *
 	 * @since 9.0.0
 	 */
-	private function insertComments ($oldid, $newid)
+	private function insertComments($oldid, $newid)
 	{
 		if (!$this->picomments)
 		{
 			return false;
 		}
-		else
+
+		$db = JFactory::getDbo();
+
+		foreach ($this->picomments as $pi)
 		{
-			$db = JFactory::getDbo();
-
-			foreach ($this->picomments AS $pi)
+			if ($pi->id == $oldid)
 			{
-				if ($pi->id == $oldid)
-				{
-					$comments               = new stdClass;
-					$comments->id           = null;
-					$comments->published    = $pi->published;
-					$comments->study_id     = $newid;
-					$comments->user_id      = $pi->user_id;
-					$comments->full_name    = $pi->full_name;
-					$comments->comment_date = $pi->comment_date;
-					$comments->comment_text = $db->escape($pi->comment_text);
+				$comments               = new stdClass;
+				$comments->id           = '';
+				$comments->published    = $pi->published;
+				$comments->study_id     = $newid;
+				$comments->user_id      = $pi->user_id;
+				$comments->full_name    = $pi->full_name;
+				$comments->comment_date = $pi->comment_date;
+				$comments->user_email   = $pi->email;
+				$comments->comment_text = $db->escape($pi->comment_text);
 
-					if (!$db->insertObject('#__bsms_comments', $comments, 'id'))
-					{
-						$this->cnoadd++;
-					}
-					else
-					{
-						$this->cadd++;
-					}
+				if (!$db->insertObject('#__bsms_comments', $comments, 'id'))
+				{
+					$this->cnoadd++;
+				}
+				else
+				{
+					$this->cadd++;
 				}
 			}
 		}
 
 		return true;
 	}
+	private function insertServer($data)
+    {
+        $db = JFactory::getDbo();
+        if (!$db->insertObject('#__bsms_servers', $data, 'id'))
+        {
+            $this->svnoadd++;
+            return false;
+        }
+        else
+        {
+            $this->svadd++;
+            return true;
+        }
+    }
+
+    private function insertInternalPlayer()
+    {
+
+        $db = JFactory::getDbo();
+        $uri          = JURI::getInstance();
+        $url          = $uri->gethost();
+        $newserver = new stdClass();
+        $newserver->access = 1;
+        $newserver->type = 'legacy';
+        $newserver->server_name = 'Legacy Audio Player';
+        $newserver->params = '{"path":"\/\/'.$url.'\/","protocol":"http:\/\/"}';
+        $newserver->media = '{"link_type":"1","player":"7","popup":"3","mediacode":"","media_image":"images\/biblestudy\/mp3.png","media_use_button_icon":"3","media_button_text":"Audio","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-play","media_custom_icon":"","media_icon_text_size":"24","mime_type":"audio\/mp3","autostart":"1"}';
+        if (!$this->insertServer($newserver))
+        {
+            return false;
+        }
+        else
+        {
+            $query = $db->getQuery(true);
+            $query->select('id')->from('#__bsms_servers')->order('id desc');
+            $db->setQuery($query, 0, 1);
+            $this->internalplayer = $db->loadResult();
+            return true;
+        }
+    }
+    private function insertMediaRecord($mediafiles)
+    {
+        $db = JFactory::getDbo();
+        if (!$db->insertObject('#__bsms_mediafiles', $mediafiles, 'id'))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function insertPodcast($pi)
+    {
+       /** $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('*')->from('#__pipodcast');
+        $db->setQuery($query);
+        $podcasts = $db->loadObjectList();
+        foreach ($podcasts as $podcast)
+        {
+            if ($podcast->series == 1)
+            {
+                $serieslist = json_decode($podcast->series_list, false);
+                $series = json_decode($pi->series);
+                foreach ($serieslist as $podseries)
+                {
+                    foreach ($series as $serie)
+                    {
+                        if ($podseries == $serie)
+                        {
+                            foreach ($this->podcastids as $podids)
+                            {
+                                if ($podcast->id == $podids['oldid']){$podcast_id = $podids['newid'];}
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if ($podcast_id){return $podcast_id;}
+        else {return false;} **/
+        $podcast_id = 1;
+        return $podcast_id;
+}
 }

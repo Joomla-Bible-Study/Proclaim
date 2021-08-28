@@ -19,7 +19,7 @@ if (defined('JBSM_LOADED'))
 define('JBSM_PROFILER', 0);
 
 // Version information
-define('BIBLESTUDY_VERSION', '9.2.4');
+define('BIBLESTUDY_VERSION', '9.2.8');
 define('BIBLESTUDY_VERSION_UPDATEFILE', 'JBS Version ' . BIBLESTUDY_VERSION);
 
 // Default values
@@ -64,7 +64,7 @@ define('BIBLESTUDY_FILE_INSTALL', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 
 define('BIBLESTUDY_PATH_MOD', BIBLESTUDY_ROOT_PATH . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'mod_biblestudy');
 
 // Minimum version requirements
-define('BIBLESTUDY_MIN_PHP', '5.4.0');
+define('BIBLESTUDY_MIN_PHP', '7.4.1');
 define('BIBLESTUDY_MIN_MYSQL', '5.1');
 
 // Time related
