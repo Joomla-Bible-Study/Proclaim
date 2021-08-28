@@ -596,7 +596,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	{
 		// Set the variables
 		$user = JFactory::getUser();
-		/** @type TableMediafile $table */
+
 		$table = $this->getTable();
 
 		foreach ($pks as $pk)
@@ -742,7 +742,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	{
 		if (!empty($record->id))
 		{
-			if ($record->state != -2)
+			if ($record->published != -2)
 			{
 				return false;
 			}
