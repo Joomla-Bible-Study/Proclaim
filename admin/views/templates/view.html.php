@@ -112,8 +112,6 @@ class BiblestudyViewTemplates extends JViewLegacy
 		if ($this->getLayout() !== 'modal')
 		{
 			$this->addToolbar();
-
-			$this->sidebar = JHtmlSidebar::render();
 		}
 
 		$bar = JToolbar::getInstance('toolbar');
@@ -124,7 +122,7 @@ class BiblestudyViewTemplates extends JViewLegacy
 		$this->setDocument();
 
 		// Display the template
-		return parent::display($tpl);
+		parent::display($tpl);
 	}
 
 	/**

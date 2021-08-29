@@ -174,7 +174,6 @@ class BiblestudyViewMessages extends JViewLegacy
 				unset($this->activeFilters['language']);
 				$this->filterForm->removeField('language', 'filter');
 			}
-			//$this->sidebar = JHtmlSidebar::render();
 		}
 
 		// Set the document

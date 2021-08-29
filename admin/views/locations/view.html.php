@@ -10,6 +10,10 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\Component\Content\Administrator\Extension\ContentComponent;
+
 /**
  * View class for Locations
  *
@@ -73,10 +77,10 @@ class BiblestudyViewLocations extends JViewLegacy
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
-	 * @see     fetch()
+	 * @throws Exception
 	 * @since   11.1
 	 *
-	 * @throws Exception
+	 * @see     fetch()
 	 */
 	public function display($tpl = null)
 	{
@@ -84,9 +88,9 @@ class BiblestudyViewLocations extends JViewLegacy
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
 
-		$this->filterForm = $this->get('FilterForm');
+		$this->filterForm    = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');
-		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'location');
+		$this->canDo         = JBSMBibleStudyHelper::getActions('', 'location');
 
 		// Check for errors
 		if (count($errors = $this->get('Errors')))
@@ -115,14 +119,13 @@ class BiblestudyViewLocations extends JViewLegacy
 		if ($this->getLayout() !== 'modal')
 		{
 			$this->addToolbar();
-			$this->sidebar = JHtmlSidebar::render();
 		}
 
 		// Set the document
 		$this->setDocument();
 
 		// Display the template
-		return parent::display($tpl);
+		parent::display($tpl);
 	}
 
 	/**
@@ -137,35 +140,47 @@ class BiblestudyViewLocations extends JViewLegacy
 		$user = JFactory::getUser();
 
 		// Get the toolbar object instance
-		$bar = JToolbar::getInstance('toolbar');
-		JToolbarHelper::title(JText::_('JBS_CMN_LOCATIONS'), 'home home');
+		$toolbar = Toolbar::getInstance('toolbar');
+		ToolbarHelper::title(JText::_('JBS_CMN_LOCATIONS'), 'home home');
 
 		if ($this->canDo->get('core.create'))
 		{
-			JToolbarHelper::addNew('location.add');
+			$toolbar->addNew('location.add');
 		}
+
+		$dropdown = $toolbar->dropdownButton('status-group')
+			->text('JTOOLBAR_CHANGE_STATUS')
+			->toggleSplit(false)
+			->icon('icon-ellipsis-h')
+			->buttonClass('btn btn-action')
+			->listCheck(true);
+		$childBar = $dropdown->getChildToolbar();
 
 		if ($this->canDo->get('core.edit'))
 		{
-			JToolbarHelper::editList('location.edit');
+			$toolbar->edit('location.edit');
 		}
 
 		if ($this->canDo->get('core.edit.state'))
 		{
-			JToolbarHelper::divider();
-			JToolbarHelper::publishList('locations.publish');
-			JToolbarHelper::unpublishList('locations.unpublish');
-			JToolbarHelper::divider();
-			JToolbarHelper::archiveList('locations.archive');
+			$toolbar->divider();
+			$toolbar->publish('locations.publish');
+			$toolbar->unpublish('locations.unpublish');
+			$toolbar->divider();
+			$toolbar->archive('locations.archive');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
-			JToolbarHelper::deleteList('', 'locations.delete', 'JTOOLBAR_EMPTY_TRASH');
+			$toolbar->delete('', 'locations.delete')
+				->text('JTOOLBAR_EMPTY_TRASH')
+				->message('JGLOBAL_CONFIRM_DELETE')
+				->listCheck(true);
 		}
-		elseif ($this->canDo->get('core.delete'))
+
+		if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED)
 		{
-			JToolbarHelper::trash('locations.trash');
+			$toolbar->trash('locations.trash')->listCheck(true);
 		}
 
 		// Add a batch button
@@ -173,13 +188,10 @@ class BiblestudyViewLocations extends JViewLegacy
 			&& $user->authorise('core.edit', 'com_biblestudy')
 			&& $user->authorise('core.edit.state', 'com_biblestudy'))
 		{
-			$title = JText::_('JTOOLBAR_BATCH');
-
-			// Instantiate a new JLayoutFile instance and render the batch button
-			$layout = new JLayoutFile('joomla.toolbar.batch');
-
-			$dhtml = $layout->render(array('title' => $title));
-			$bar->appendButton('Custom', $dhtml, 'batch');
+			$childBar->popupButton('batch')
+				->text('JTOOLBAR_BATCH')
+				->selector('collapseModal')
+				->listCheck(true);
 		}
 	}
 
@@ -208,7 +220,7 @@ class BiblestudyViewLocations extends JViewLegacy
 		return array(
 			'location.location_text' => JText::_('JGRID_HEADING_ORDERING'),
 			'location.published'     => JText::_('JSTATUS'),
-			'access_level'            => JText::_('JGRID_HEADING_ACCESS'),
+			'access_level'           => JText::_('JGRID_HEADING_ACCESS'),
 			'location.id'            => JText::_('JGRID_HEADING_ID')
 		);
 	}

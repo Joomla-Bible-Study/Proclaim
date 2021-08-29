@@ -23,6 +23,7 @@ class BiblestudyModelSeries extends JModelList
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function __construct($config = array())
@@ -64,18 +65,15 @@ class BiblestudyModelSeries extends JModelList
 		$items = parent::getItems();
 		$app   = JFactory::getApplication();
 
-		if ($app->isSite())
-		{
-			$user   = JFactory::getUser();
-			$groups = $user->getAuthorisedViewLevels();
+		$user   = JFactory::getUser();
+		$groups = $user->getAuthorisedViewLevels();
 
-			for ($x = 0, $count = count($items); $x < $count; $x++)
+		foreach ($items as $x => $xValue)
+		{
+			// Check the access level. Remove articles the user shouldn't see
+			if (!in_array($xValue->access, $groups, true))
 			{
-				// Check the access level. Remove articles the user shouldn't see
-				if (!in_array($items[$x]->access, $groups))
-				{
-					unset($items[$x]);
-				}
+				unset($items[$x]);
 			}
 		}
 
@@ -163,7 +161,7 @@ class BiblestudyModelSeries extends JModelList
 	/**
 	 * Build and SQL query to load the list data
 	 *
-	 * @return  JDatabaseQuery
+	 * @return  \Joomla\Database\QueryInterface
 	 *
 	 * @since   7.1.0
 	 */

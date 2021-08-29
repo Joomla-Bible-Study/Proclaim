@@ -10,6 +10,18 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Multilanguage;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\GenericDataException;
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\Component\Content\Administrator\Extension\ContentComponent;
+use Joomla\Component\Content\Administrator\Helper\ContentHelper;
+
 /**
  * View class for Messagetype
  *
@@ -113,15 +125,13 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 		if ($this->getLayout() !== 'modal')
 		{
 			$this->addToolbar();
-
-			$this->sidebar = JHtmlSidebar::render();
 		}
 
 		// Set the document
 		$this->setDocument();
 
 		// Display the template
-		return parent::display($tpl);
+		parent::display($tpl);
 	}
 
 	/**
@@ -136,49 +146,59 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 		$user = JFactory::getUser();
 
 		// Get the toolbar object instance
-		$bar = JToolbar::getInstance('toolbar');
+		$toolbar = Toolbar::getInstance('toolbar');
 
-		JToolbarHelper::title(JText::_('JBS_CMN_MESSAGETYPES'), 'list-2 list-2');
+		ToolbarHelper::title(JText::_('JBS_CMN_MESSAGETYPES'), 'list-2 list-2');
 
 		if ($this->canDo->get('core.create'))
 		{
-			JToolbarHelper::addNew('messagetype.add');
+			$toolbar->addNew('messagetype.add');
 		}
+
+		$dropdown = $toolbar->dropdownButton('status-group')
+			->text('JTOOLBAR_CHANGE_STATUS')
+			->toggleSplit(false)
+			->icon('icon-ellipsis-h')
+			->buttonClass('btn btn-action')
+			->listCheck(true);
+		$childBar = $dropdown->getChildToolbar();
 
 		if ($this->canDo->get('core.edit'))
 		{
-			JToolbarHelper::editList('messagetype.edit');
+			$toolbar->edit('messagetype.edit');
 		}
 
 		if ($this->canDo->get('core.edit.state'))
 		{
-			JToolbarHelper::divider();
-			JToolbarHelper::publishList('messagetypes.publish');
-			JToolbarHelper::unpublishList('messagetypes.unpublish');
-			JToolbarHelper::divider();
-			JToolbarHelper::archiveList('messagetypes.archive');
+			$toolbar->divider();
+			$toolbar->publish('messagetypes.publish');
+			$toolbar->unpublish('messagetypes.unpublish');
+			$toolbar->divider();
+			$toolbar->archive('messagetypes.archive');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
-			JToolbarHelper::deleteList('', 'messagetypes.delete', 'JTOOLBAR_EMPTY_TRASH');
+			$toolbar->delete('', 'messagetypes.delete')
+				->text('JTOOLBAR_EMPTY_TRASH')
+				->message('JGLOBAL_CONFIRM_DELETE')
+				->listCheck(true);
 		}
-		elseif ($this->canDo->get('core.delete'))
+
+		if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED)
 		{
-			JToolbarHelper::trash('messagetypes.trash');
+			$toolbar->trash('messagetypes.trash')->listCheck(true);
 		}
 
 		// Add a batch button
-		if ($user->authorise('core.edit'))
+		if ($user->authorise('core.create', 'com_biblestudy')
+			&& $user->authorise('core.edit', 'com_biblestudy')
+			&& $user->authorise('core.edit.state', 'com_biblestudy'))
 		{
-			JToolbarHelper::divider();
-			JHtml::_('bootstrap.modal', 'collapseModal');
-
-			$title = JText::_('JBS_CMN_BATCH_LABLE');
-			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
-						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
-						$title</button>";
-			$bar->appendButton('Custom', $dhtml, 'batch');
+			$childBar->popupButton('batch')
+				->text('JTOOLBAR_BATCH')
+				->selector('collapseModal')
+				->listCheck(true);
 		}
 	}
 

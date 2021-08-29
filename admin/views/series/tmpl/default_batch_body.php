@@ -20,12 +20,24 @@ $published = (int) $this->state->get('filter.published');
 
 $user = Factory::getUser();
 ?>
-
 <div class="p-3">
 	<div class="row">
-		<div class="form-group col-md-6">
-			<div class="controls">
-				<?php echo LayoutHelper::render('joomla.html.batch.access', []); ?>
+		<div class="modal-header">
+			<button type="button" role="presentation" class="close" data-dismiss="modal">x</button>
+			<h3><?php echo JText::_('JBS_CMN_BATCH_OPTIONS'); ?></h3>
+		</div>
+		<div class="row">
+			<?php if (Multilanguage::isEnabled()) : ?>
+				<div class="form-group col-md-6">
+					<div class="controls">
+						<?php echo LayoutHelper::render('joomla.html.batch.language', []); ?>
+					</div>
+				</div>
+			<?php endif; ?>
+			<div class="form-group col-md-6">
+				<div class="controls">
+					<?php echo LayoutHelper::render('joomla.html.batch.access', []); ?>
+				</div>
 			</div>
 		</div>
 	</div>

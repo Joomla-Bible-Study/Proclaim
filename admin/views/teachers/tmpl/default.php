@@ -10,6 +10,9 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('dropdown.init');
 JHtml::_('formbehavior.chosen', 'select');
@@ -241,11 +244,25 @@ if ($saveOrder)
 					<?php endforeach; ?>
 					</tbody>
 				</table>
+				<?php // Load the batch processing form. ?>
+				<?php if ($user->authorise('core.create', 'com_biblestudy')
+					&& $user->authorise('core.edit', 'com_biblestudy')
+					&& $user->authorise('core.edit.state', 'com_biblestudy')
+				) : ?>
+					<?php echo HTMLHelper::_(
+						'bootstrap.renderModal',
+						'collapseModal',
+						array(
+							'title'  => Text::_('COM_CONTENT_BATCH_OPTIONS'),
+							'footer' => $this->loadTemplate('batch_footer'),
+						),
+						$this->loadTemplate('batch_body')
+					); ?>
+				<?php endif; ?>
 			<?php endif; ?>
 
 			<?php echo $this->pagination->getListFooter(); ?>
 			<?php //Load the batch processing form. ?>
-			<?php echo $this->loadTemplate('batch'); ?>
 			<input type="hidden" name="task" value=""/>
 			<input type="hidden" name="boxchecked" value="0"/>
 			<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>

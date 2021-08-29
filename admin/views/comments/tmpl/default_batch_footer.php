@@ -15,11 +15,12 @@ $published = $this->state->get('filter.published');
 
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 //$wa = $this->document->getWebAssetManager();
-//$wa->useScript('com_biblestudy.admin-messages-batch');
+//$wa->useScript('com_biblestudy.admin-comments-batch');
+
 ?>
 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
 	<?php echo Text::_('JCANCEL'); ?>
 </button>
-<button type="submit" id='batch-submit-button-id' class="btn btn-success"  data-submit-task='location.batch'>
+<button type="submit" id='batch-submit-button-id' class="btn btn-success"  data-submit-task='comment.batch'>
 	<?php echo JText::_('JGLOBAL_BATCH_PROCESS'); ?>
 </button>

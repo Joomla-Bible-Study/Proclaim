@@ -94,7 +94,6 @@ class BiblestudyViewPodcasts extends JViewLegacy
 		$this->f_levels = $options;
 
 		$this->addToolbar();
-		$this->sidebar = JHtmlSidebar::render();
 
 		// Display the template
 		parent::display($tpl);

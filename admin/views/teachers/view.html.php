@@ -10,6 +10,18 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Multilanguage;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\GenericDataException;
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\Component\Content\Administrator\Extension\ContentComponent;
+use Joomla\Component\Content\Administrator\Helper\ContentHelper;
+
 /**
  * View class for Teachers
  *
@@ -51,11 +63,13 @@ class BiblestudyViewTeachers extends JViewLegacy
 	protected $canDo;
 
 	/** @var  array Filter Levels
-	 * @since    7.0.0 */
+	 * @since    7.0.0
+	 */
 	protected $f_levels;
 
 	/** @var  object Side Bar
-	 * @since    7.0.0 */
+	 * @since    7.0.0
+	 */
 	protected $sidebar;
 
 	/**
@@ -65,9 +79,9 @@ class BiblestudyViewTeachers extends JViewLegacy
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
-	 * @see     fetch()
-	 * @since   11.1
 	 * @throws  Exception
+	 * @since   11.1
+	 * @see     fetch()
 	 */
 	public function display($tpl = null)
 	{
@@ -106,7 +120,12 @@ class BiblestudyViewTeachers extends JViewLegacy
 		{
 			$this->addToolbar();
 
-			$this->sidebar = JHtmlSidebar::render();
+			// We do not need to filter by language when multilingual is disabled
+			if (!Multilanguage::isEnabled())
+			{
+				unset($this->activeFilters['language']);
+				$this->filterForm->removeField('language', 'filter');
+			}
 		}
 
 		// Set the document
@@ -128,58 +147,67 @@ class BiblestudyViewTeachers extends JViewLegacy
 		$user = JFactory::getUser();
 
 		// Get the toolbar object instance
-		$bar = JToolbar::getInstance('toolbar');
+		$toolbar = Toolbar::getInstance('toolbar');
 
-		JToolbarHelper::title(JText::_('JBS_CMN_TEACHERS'), 'users users');
+		ToolbarHelper::title(JText::_('JBS_CMN_TEACHERS'), 'users users');
 
 		if ($this->canDo->get('core.create'))
 		{
-			JToolbarHelper::addNew('teacher.add');
+			$toolbar->addNew('teacher.add');
 		}
+
+		$dropdown = $toolbar->dropdownButton('status-group')
+			->text('JTOOLBAR_CHANGE_STATUS')
+			->toggleSplit(false)
+			->icon('icon-ellipsis-h')
+			->buttonClass('btn btn-action')
+			->listCheck(true);
+		$childBar = $dropdown->getChildToolbar();
 
 		if ($this->canDo->get('core.edit'))
 		{
-			JToolbarHelper::editList('teacher.edit');
+			$toolbar->edit('teacher.edit');
 		}
 
 		if ($this->canDo->get('core.edit.state'))
 		{
-			JToolbarHelper::divider();
-			JToolbarHelper::publishList('teachers.publish');
-			JToolbarHelper::unpublishList('teachers.unpublish');
-			JToolbarHelper::divider();
-			JToolbarHelper::archiveList('teachers.archive');
+			$toolbar->divider();
+			$toolbar->publish('teachers.publish');
+			$toolbar->unpublish('teachers.unpublish');
+			$toolbar->divider();
+			$toolbar->archive('teachers.archive');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
-			JToolbarHelper::deleteList('', 'teachers.delete', 'JTOOLBAR_EMPTY_TRASH');
+			$toolbar->delete('teachers.delete')
+				->text('JTOOLBAR_EMPTY_TRASH')
+				->message('JGLOBAL_CONFIRM_DELETE')
+				->listCheck(true);
 		}
 		elseif ($this->canDo->get('core.edit.state'))
 		{
-			JToolbarHelper::trash('teachers.trash');
+			$childBar->trash('teachers.trash');
 		}
 
 		// Add a batch button
-		if ($user->authorise('core.edit'))
+		if ($user->authorise('core.create', 'com_biblestudy')
+			&& $user->authorise('core.edit', 'com_biblestudy')
+			&& $user->authorise('core.edit.state', 'com_biblestudy'))
 		{
-			JToolbarHelper::divider();
-			JHtml::_('bootstrap.modal', 'collapseModal');
-
-			$title = JText::_('JBS_CMN_BATCH_LABLE');
-			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
-						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
-						$title</button>";
-			$bar->appendButton('Custom', $dhtml, 'batch');
+			$childBar->popupButton('batch')
+				->text('JTOOLBAR_BATCH')
+				->selector('collapseModal')
+				->listCheck(true);
 		}
 	}
 
 	/**
 	 * Add the page title to browser.
 	 *
+	 * @return void
 	 * @since    7.1.0
 	 *
-	 * @return void
 	 */
 	protected function setDocument()
 	{

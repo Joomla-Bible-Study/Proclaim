@@ -10,6 +10,18 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Multilanguage;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\GenericDataException;
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\Component\Content\Administrator\Extension\ContentComponent;
+use Joomla\Component\Content\Administrator\Helper\ContentHelper;
+
 /**
  * View class for Topics
  *
@@ -73,9 +85,9 @@ class BiblestudyViewTopics extends JViewLegacy
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
-	 * @see     fetch()
-	 * @since   11.1
 	 * @throws  Exception
+	 * @since   11.1
+	 * @see     fetch()
 	 */
 	public function display($tpl = null)
 	{
@@ -116,15 +128,13 @@ class BiblestudyViewTopics extends JViewLegacy
 		if ($this->getLayout() !== 'modal')
 		{
 			$this->addToolbar();
-
-			$this->sidebar = JHtmlSidebar::render();
 		}
 
 		// Set the document
 		$this->setDocument();
 
 		// Display the template
-		return parent::display($tpl);
+		parent::display($tpl);
 	}
 
 	/**
@@ -136,34 +146,51 @@ class BiblestudyViewTopics extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JToolbarHelper::title(JText::_('JBS_CMN_TOPICS'), 'tags tags');
+		$user = JFactory::getUser();
+
+		// Get the toolbar object instance
+		$toolbar = Toolbar::getInstance('toolbar');
+
+		ToolbarHelper::title(JText::_('JBS_CMN_TOPICS'), 'tags tags');
 
 		if ($this->canDo->get('core.create'))
 		{
-			JToolbarHelper::addNew('topic.add');
+			$toolbar->addNew('topic.add');
 		}
+
+		$dropdown = $toolbar->dropdownButton('status-group')
+			->text('JTOOLBAR_CHANGE_STATUS')
+			->toggleSplit(false)
+			->icon('icon-ellipsis-h')
+			->buttonClass('btn btn-action')
+			->listCheck(true);
+		$childBar = $dropdown->getChildToolbar();
 
 		if ($this->canDo->get('core.edit'))
 		{
-			JToolbarHelper::editList('topic.edit');
+			$toolbar->edit('topic.edit');
 		}
 
 		if ($this->canDo->get('core.edit.state'))
 		{
-			JToolbarHelper::divider();
-			JToolbarHelper::publishList('topics.publish');
-			JToolbarHelper::unpublishList('topics.unpublish');
-			JToolbarHelper::divider();
-			JToolbarHelper::archiveList('topics.archive', 'JTOOLBAR_ARCHIVE');
+			$toolbar->divider();
+			$toolbar->publish('topics.publish');
+			$toolbar->unpublish('topics.unpublish');
+			$toolbar->divider();
+			$toolbar->archive('topics.archive', 'JTOOLBAR_ARCHIVE');
 		}
 
-		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
+		if ($this->state->get('filter.published') == ContentComponent::CONDITION_TRASHED && $canDo->get('core.delete'))
 		{
-			JToolbarHelper::deleteList('', 'topics.delete', 'JTOOLBAR_EMPTY_TRASH');
+			$toolbar->delete('topics.delete')
+				->text('JTOOLBAR_EMPTY_TRASH')
+				->message('JGLOBAL_CONFIRM_DELETE')
+				->listCheck(true);
 		}
-		elseif ($this->canDo->get('core.delete'))
+
+		if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED)
 		{
-			JToolbarHelper::trash('topics.trash');
+			$toolbar->trash('topics.trash')->listCheck(true);
 		}
 	}
 

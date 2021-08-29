@@ -119,10 +119,10 @@ $simple = JBSMHelper::getSimpleView();
 					<h3 style="text-align: center;">
 						<?php echo JText::_('JBS_CPL_MENUE_LINKS'); ?>
 					</h3>
-					<div class="row-fluid">
-						<div class="span12">
+					<div class="container">
+						<div class="row">
 							<div class="well well-small">
-								<div id="dashboard-icons" class="btn-group" style="white-space:normal;">
+								<div id="dashboard-icons" class="col" style="white-space:normal;">
 									<a href="index.php?option=com_biblestudy&amp;task=admin.edit&amp;id=1"
 									   title="<?php echo JText::_('JBS_CMN_ADMINISTRATION'); ?>" class="btn"> <i
 												class="icon-big icon-options"> </i>
