@@ -3,7 +3,7 @@
 * Part of Proclaim Package
 *
  * @package    Proclaim.Admin
-* @copyright  2007 - 2019 (C) CWM Team All rights reserved
+* @copyright  2007 - 2021 (C) CWM Team All rights reserved
 * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -44,16 +44,15 @@ $columns   = 12;
   <div class="row-fluid span12 dropdowns" style="background-color:#A9A9A9; margin:0 -5px; padding:8px 8px; border:1px solid #C5C1BE; position:relative; -webkit-border-radius:10px;">
 
     <?php
-    echo $this->page->books;
-    echo $this->page->teachers;
-    echo $this->page->series;
+    //echo $this->page->books;
+    //echo $this->page->teachers;
+    //echo $this->page->series;
     $oddeven = '';
 	$class1 = '#d3d3d3';
     $class2 = '';?>
 </div>
 <?php foreach ($this->items as $study)
 {
-
 	$oddeven = ($oddeven == $class1) ? $class2 : $class1;
 	?>
 	<div style="width:100%;">
