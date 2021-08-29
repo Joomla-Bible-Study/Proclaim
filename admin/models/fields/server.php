@@ -43,8 +43,6 @@ class JFormFieldServer extends JFormField
 		$model  = JModelLegacy::getInstance('servers', 'BibleStudyModel');
 		$rlu    = $model->getIdToNameReverseLookup();
 		$server = ArrayHelper::getValue($rlu, $this->value);
-		// Load the javascript
-		JHtml::_('bootstrap.tooltip');
 
 		// Build the script.
 		$script = array();

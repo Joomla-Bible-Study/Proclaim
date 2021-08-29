@@ -12,7 +12,6 @@ defined('_JEXEC') or die;
 
 JHtml::_('bootstrap.framework');
 JHtml::_('dropdown.init');
-JHtml::_('bootstrap.tooltip');
 JHtml::_('formbehavior.chosen', 'select');
 
 $JBSMTeacher  = new JBSMTeacher;

@@ -18,7 +18,6 @@ if ($app->isSite())
 }
 
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-JHtml::_('bootstrap.tooltip');
 
 $function = $app->input->getCmd('function', 'jSelectStudy');
 $listOrder = $this->escape($this->state->get('list.ordering'));

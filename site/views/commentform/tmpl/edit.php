@@ -14,7 +14,6 @@ defined('_JEXEC') or die;
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 // Load the tooltip behavior.
-JHtml::_('bootstrap.tooltip');
 JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('biblestudy.framework');
 JHtml::_('biblestudy.loadcss', $this->state->params);

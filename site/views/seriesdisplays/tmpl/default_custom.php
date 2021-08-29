@@ -13,7 +13,6 @@ defined('_JEXEC') or die;
 $mainframe = JFactory::getApplication();
 $input = new JInput;
 $option = $input->get('option', '', 'cmd');
-JHtml::_('bootstrap.tooltip');
 $series_menu = $this->params->get('series_id', 1);
 $document = JFactory::getDocument();
 /** @var Joomla\Registry\Registry $params */

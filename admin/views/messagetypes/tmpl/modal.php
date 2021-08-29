@@ -11,7 +11,6 @@
 defined('_JEXEC') or die;
 
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 $input = new JInput;
 $function = $input->get('function', 'jSelectMessagetype', 'cmd');

@@ -11,7 +11,6 @@
 defined('_JEXEC') or die;
 
 // Load the tooltip behavior.
-JHtml::_('bootstrap.tooltip');
 JHtml::_('dropdown.init');
 JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.multiselect');

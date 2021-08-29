@@ -11,7 +11,6 @@
 defined('_JEXEC') or die;
 
 JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN . '/helpers/html');
-JHtml::_('bootstrap.tooltip');
 JHtml::_('dropdown.init');
 JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.multiselect');

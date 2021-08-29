@@ -32,7 +32,6 @@ abstract class JHtmlIcon
 	 */
 	public static function create($category, $params, $attribs = array(), $legacy = false)
 	{
-		JHtml::_('bootstrap.tooltip');
 
 		$uri = JUri::getInstance();
 
@@ -152,8 +151,6 @@ abstract class JHtmlIcon
 		{
 			return null;
 		}
-
-		JHtml::_('bootstrap.tooltip');
 
 		// Show checked_out icon if the article is checked out by a different user
 		if (property_exists($article, 'checked_out')
