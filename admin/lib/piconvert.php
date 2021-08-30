@@ -251,6 +251,10 @@ class JBSMPIconvert
         }
         else {
             $this->svadd++;
+            $query = $db->getQuery(true);
+            $query->select('id')->from('#__bsms_servers')->order('id desc');
+            $db->setQuery($query, 0, 1);
+            $this->youtube = $db->loadResult();
         }
         //Create internal player
         if (!$this->insertInternalPlayer())
@@ -259,6 +263,10 @@ class JBSMPIconvert
         }
         else{
             $this->svadd++;
+            $query = $db->getQuery(true);
+            $query->select('id')->from('#__bsms_servers')->order('id desc');
+            $db->setQuery($query, 0, 1);
+            $this->internalplayer = $db->loadResult();
         }
 
         // Teachers
@@ -818,9 +826,7 @@ class JBSMPIconvert
 
 		if ($type == 'video')
 		{
-
-
-			$filesize = $pi->videofs;
+            $filesize = $pi->videofs;
 			switch ($pi->video_type)
 			{
 				case 4:
@@ -830,7 +836,7 @@ class JBSMPIconvert
 						. '" type="application/x-shockwave-flash" width="500" height="500" wmode="transparent"'
 						. ' allowscriptaccess="always" allowfullscreen="true" ></embed>';
 					$mediacode   = $db->escape($mediacode);
-					$media->params = '{"filename":"'.$pi_video_link.'","link_type":"","player":"5","popup":"1","mediacode":"'.$mediacode.'","media_image":"","media_use_button_icon":"3","media_button_text":"Video","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-video","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'"}';
+					$media->params = '{"filename":"'.$pi->video_link.'","link_type":"","player":"5","popup":"1","mediacode":"'.$mediacode.'","media_image":"","media_use_button_icon":"3","media_button_text":"Video","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-video","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'"}';
 					$media->study_id = $newid;
 					$media->server_id = $this->legacyvideo;
                     $mediafile->podcast_id = $this->insertPodcast($pi);
@@ -890,7 +896,7 @@ class JBSMPIconvert
 					$media = new stdClass();
                     $media->mediacode   = '<iframe src="http://player.vimeo.com/video/' . $pi->video_link . '" width="500" height="500" frameborder="0"></iframe> ';
 					$media->mediacode   = $db->escape($mediacode);
-                    $media->params = '{"filename":"'.$pi_video_link.'","link_type":"","player":"5","popup":"1","mediacode":"'.$mediacode.'","media_image":"","media_use_button_icon":"3","media_button_text":"Video","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-video","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'"}';
+                    $media->params = '{"filename":"'.$pi->video_link.'","link_type":"","player":"5","popup":"1","mediacode":"'.$mediacode.'","media_image":"","media_use_button_icon":"3","media_button_text":"Video","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-video","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'"}';
                     $media->study_id = $newid;
                     $media->server_id = $this->legacyvideo;
                     $mediafile->podcast_id = $this->insertPodcast($pi);
@@ -916,9 +922,9 @@ class JBSMPIconvert
 						. '" frameborder="0" allowfullscreen></iframe>';
 					$mediacode   = $db->escape($mediacode);
                     $media = new stdClass();
-					$media->params = '{"filename":"'.$pi_video_link.'","link_type":"","player":"5","popup":"1","mediacode":"'.$mediacode.'","media_image":"","media_use_button_icon":"3","media_button_text":"Video","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-youtube","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'"}';
+					$media->params = '{"filename":"'.$pi->video_link.'","link_type":"","player":"5","popup":"1","mediacode":"'.$mediacode.'","media_image":"","media_use_button_icon":"3","media_button_text":"Video","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-youtube","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'"}';
                     $media->study_id = $newid;
-                    $media->server_id = $this->legacyvideo;
+                    $media->server_id = $this->youtube;
                     $mediafile->podcast_id = $this->insertPodcast($pi);
                     $media->createdate = $pi->date;
                     $media->hits = $pi->hits;
