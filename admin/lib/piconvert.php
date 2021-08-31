@@ -178,6 +178,15 @@ class JBSMPIconvert
 		$newid               = 0;
 		$oldid               = 0;
 
+		//drop sample table entries in Proclaim!
+        $db    = JFactory::getDbo();
+        $db->truncateTable('#__bsms_studies');
+        $db->truncateTable('#__bsms_teachers');
+        $db->truncateTable('#__bsms_mediafiles');
+        //$db->truncateTable('#__bsms_servers');
+        $db->truncateTable('#__bsms_podcast');
+        $db->truncateTable('#__bsms_locations');
+        $db->truncateTable('#__bsms_series');
 		//Convert comments
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
@@ -188,7 +197,7 @@ class JBSMPIconvert
 		$piconversion = null;
 
 		// Create servers
-		$query = $db->getQuery(true);
+		/**$query = $db->getQuery(true);
 		$query->select('*')->from('#__pimediaplayers');
 		$db->setQuery($query);
 		$piservers = $db->loadObjectList();
@@ -267,7 +276,7 @@ class JBSMPIconvert
             $query->select('id')->from('#__bsms_servers')->order('id desc');
             $db->setQuery($query, 0, 1);
             $this->internalplayer = $db->loadResult();
-        }
+        }*/
 
         // Teachers
 		//Create a blank teacher
@@ -421,7 +430,7 @@ class JBSMPIconvert
 			}
 		}
 
-		// Convert the podcacst
+		// Convert podcacsts
 		$query = $db->getQuery(true);
 		$query->select('*')->from('#__pipodcast')->where('published = 1');
 		$db->setQuery($query);
@@ -690,7 +699,7 @@ class JBSMPIconvert
 			// Endforeach study
 		}
 
-		/**$piconversion = '<table><tr><td><h3>' . JText::_('JBS_IBM_PREACHIT_RESULTS') . '</h3></td></tr>'
+		/**$piconvertresults = '<table><tr><td><h3>' . JText::_('JBS_IBM_PREACHIT_RESULTS') . '</h3></td></tr>'
 			. '<tr><td>' . JText::_('JBS_IBM_PI_SERVERS') . '<strong>' . $this->svadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $this->svnoadd . '</td></tr>'
 			. '<tr><td>' . JText::_('JBS_IBM_PI_TEACHERS') . '<strong>' . $this->tadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $this->tnoadd . '</td></tr>'
 			. '<tr><td>' . JText::_('JBS_IBM_PI_SERIES') . '<strong>' . $$this->sradd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $this->srnoadd . '</td></tr>'
@@ -701,7 +710,7 @@ class JBSMPIconvert
 			. $this->cnoadd . '</td></tr>'
 			. '</table>';
 
-		return $piconversion;*/
+        JFactory::getApplication()->enqueueMessage(JText::_($piconvertresults), 'message'); ;*/
 	}
 
 	/**
@@ -806,7 +815,7 @@ class JBSMPIconvert
         $query->select('*')->from('#__pifilepath');
         $db->setQuery($query);
         $folders   = $db->loadObjectList();
-		$podcast_id  = '-1';
+		$podcast_id  = '1';
 		$study_id    = $newid;
 		$media_image = '';
 		$path        = '';
@@ -830,30 +839,9 @@ class JBSMPIconvert
 			switch ($pi->video_type)
 			{
 				case 4:
-					// Bliptv
-					$media = new stdClass();
-                    $mediacode   = '<embed src="http://blip.tv/play/' . $pi->video_link
-						. '" type="application/x-shockwave-flash" width="500" height="500" wmode="transparent"'
-						. ' allowscriptaccess="always" allowfullscreen="true" ></embed>';
-					$mediacode   = $db->escape($mediacode);
-					$media->params = '{"filename":"'.$pi->video_link.'","link_type":"","player":"5","popup":"1","mediacode":"'.$mediacode.'","media_image":"","media_use_button_icon":"3","media_button_text":"Video","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-video","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'"}';
-					$media->study_id = $newid;
-					$media->server_id = $this->legacyvideo;
-                    $mediafile->podcast_id = $this->insertPodcast($pi);
-					$media->createdate = $pi->date;
-					$media->hits = $pi->hits;
-					$media->access = $pi->accesscode;
-					$media->language = '*';
-                    $media->created_by = $pi->user;
-                    if (!$this->insertMediaRecord($media))
-                    {
+					// Bliptv no longer exists
                         $this->mnoadd++;
                         break;
-                    }
-                    else{
-                        $this->madd++;
-                        break;
-                    }
 
 				case 7:
 					// Flowplayer
@@ -922,7 +910,7 @@ class JBSMPIconvert
 						. '" frameborder="0" allowfullscreen></iframe>';
 					$mediacode   = $db->escape($mediacode);
                     $media = new stdClass();
-					$media->params = '{"filename":"'.$pi->video_link.'","link_type":"","player":"5","popup":"1","mediacode":"'.$mediacode.'","media_image":"","media_use_button_icon":"3","media_button_text":"Video","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-youtube","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'"}';
+					$media->params = '{"filename":"https:\/\/youtu.be\/'.$pi->video_link.'","link_type":"","player":"1","popup":"3","mediacode":"","media_image":"","media_use_button_icon":"3","media_button_text":"Watch","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-youtube","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'"}';
                     $media->study_id = $newid;
                     $media->server_id = $this->youtube;
                     $mediafile->podcast_id = $this->insertPodcast($pi);
@@ -956,9 +944,9 @@ class JBSMPIconvert
                 }
             }
 		    $mediafile = new stdClass();
-		    $mediafile->params = '{"filename":"'.$filename.'","mediacode":"","size":"'.$pi->audiofs.'","special":"","player":"'.$this->internalplayer.'","popup":"3","link_type":"0","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'","docMan_id":"0","article_id":"","virtueMart_id":"0","media_image":"images\/biblestudy\/speaker24.png","media_use_button_icon":"3","media_button_text":"Audio","media_button_color":"","media_icon_type":"fas fa-play","media_custom_icon":"","media_icon_text_size":"24","mime_type":"audio\/mp3","playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","autostart":"false"}';
-			$mediafile->study_id = $newid;
-			$mediafile->server_id = $this->internalplayer;
+		    $mediafile->params = '{"filename":"'.$filename.'","mediacode":"","size":"'.$pi->audiofs.'","special":"","player":"7","popup":"3","link_type":"1","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'","media_image":"images\/biblestudy\/speaker24.png","media_use_button_icon":"3","media_button_text":"Listen","media_button_color":"","media_icon_type":"fas fa-play","media_custom_icon":"","media_icon_text_size":"24","mime_type":"audio\/mp3","playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","autostart":"1"}';
+		    $mediafile->study_id = $newid;
+			$mediafile->server_id = 1;
             $mediafile->podcast_id = $this->insertPodcast($pi);
 			$mediafile->createdate = $pi->date;
 			$mediafile->hits = $pi->hits;
@@ -991,8 +979,8 @@ class JBSMPIconvert
 			$filename = $path . $pi->notes_link;
 			$filename = $db->escape($filename);
 			$mediafile = new stdClass();
-			$mediafile->server_id = $this->legacydirect;
-            $mediafile->params = '{"filename":"'.$filename.'","mediacode":"","size":"'.$filesize.'","special":"","player":"1","popup":"3","link_type":"0","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'","docMan_id":"0","article_id":"","virtueMart_id":"0","media_image":"images\/biblestudy\/speaker24.png","media_use_button_icon":"3","media_button_text":"Text","media_button_color":"","media_icon_type":"fas fa-sticky-note","media_custom_icon":"","media_icon_text_size":"24","mime_type":"audio\/mp3","playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","autostart":"false"}';
+			$mediafile->server_id = 3;
+            $mediafile->params = '{"filename":"'.$filename.'","mediacode":"","size":"'.$filesize.'","special":"","player":"0","popup":"3","link_type":"0","media_hours":"","media_minutes":"","media_seconds":"","docMan_id":"0","article_id":"","virtueMart_id":"0","media_image":"images\/biblestudy\/speaker24.png","media_use_button_icon":"3","media_button_text":"Text","media_button_color":"","media_icon_type":"fas fa-sticky-note","media_custom_icon":"","media_icon_text_size":"24","mime_type":"audio\/mp3","playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","autostart":"false"}';
             $mediafile->study_id = $newid;
             $mediafile->podcast_id = $this->insertPodcast($pi);
             $mediafile->createdate = $pi->date;
@@ -1023,9 +1011,9 @@ class JBSMPIconvert
 			$filename  = $path . $pi->slides_link;
 			$filename = $db->escape($filename);
 			$mediafile = new stdClass();
-            $mediafile->params = '{"filename":"'.$filename.'","mediacode":"","size":"'.$filesize.'","special":"","player":"1","popup":"3","link_type":"0","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'","docMan_id":"0","article_id":"","virtueMart_id":"0","media_image":"images\/biblestudy\/speaker24.png","media_use_button_icon":"3","media_button_text":"Audio","media_button_color":"","media_icon_type":"fas fa-file-powerpoint","media_custom_icon":"","media_icon_text_size":"24","mime_type":"audio\/mp3","playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","autostart":"false"}';
+            $mediafile->params = '{"filename":"'.$filename.'","mediacode":"","size":"'.$filesize.'","special":"","player":"0","popup":"3","link_type":"0","media_hours":"'.$pi->dur_hrs.'","media_minutes":"'.$pi->dur_mins.'","media_seconds":"'.$pi->dur_secs.'","docMan_id":"0","article_id":"","virtueMart_id":"0","media_image":"images\/biblestudy\/speaker24.png","media_use_button_icon":"3","media_button_text":"Audio","media_button_color":"","media_icon_type":"fas fa-file-powerpoint","media_custom_icon":"","media_icon_text_size":"24","mime_type":"audio\/mp3","playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","autostart":"false"}';
             $mediafile->study_id = $newid;
-            $mediafile->server_id = $this->legacydirect;
+            $mediafile->server_id = 3;
             $mediafile->podcast_id = $this->insertPodcast($pi);
             $mediafile->createdate = $pi->date;
             $mediafile->hits = $pi->hits;
@@ -1122,7 +1110,7 @@ class JBSMPIconvert
         $newserver->type = 'legacy';
         $newserver->server_name = 'Legacy Audio Player';
         $newserver->params = '{"path":"\/\/'.$url.'\/","protocol":"http:\/\/"}';
-        $newserver->media = '{"link_type":"1","player":"7","popup":"3","mediacode":"","media_image":"images\/biblestudy\/mp3.png","media_use_button_icon":"3","media_button_text":"Audio","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-play","media_custom_icon":"","media_icon_text_size":"24","mime_type":"audio\/mp3","autostart":"1"}';
+        $newserver->media = '{"link_type":"1","player":"1","popup":"3","mediacode":"","media_image":"images\/biblestudy\/mp3.png","media_use_button_icon":"3","media_button_text":"Audio","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-play","media_custom_icon":"","media_icon_text_size":"24","mime_type":"audio\/mp3","autostart":"1"}';
         if (!$this->insertServer($newserver))
         {
             return false;
@@ -1159,6 +1147,7 @@ class JBSMPIconvert
         $includeministry = array();
         $includeseries = array();
         $includemedia = array();
+        $podcast_id = 1; return $podcast_id;
         //Series, ministry, teacher, media (audio, video, notes, slidewhow)
         // $podcast_series = 0 means "all"
         // 1 means inclusive (only those)
@@ -1176,7 +1165,7 @@ class JBSMPIconvert
                 foreach ($media_list as $medi)
                 {
                     if ($medi =='audio'){$includemedia[] = 'audio';}
-                    if ($medi =='video'){$includemedia[] = 'slides';}
+                    if ($medi =='video'){$includemedia[] = 'video';}
                     if ($medi =='slides'){$includemedia[] = 'slides';}
                 }
 
@@ -1228,7 +1217,7 @@ class JBSMPIconvert
                 {
                     if ($si == $pi->series || $podcast->series == 0)
                     {
-                        return $this->checkMedia($includemedia, $pi);
+                        return $this->checkMedia($includemedia, $pi, $podcast);
                     }
                 }
             }
@@ -1245,7 +1234,7 @@ class JBSMPIconvert
                 {
                     if (in_array($ti, $teacher) || $podcast->teacher == 0)
                     {
-                        return $this->checkMedia($includemedia, $pi);
+                        return $this->checkMedia($includemedia, $pi, $podcast);
                     }
                 }
             }
@@ -1262,7 +1251,7 @@ class JBSMPIconvert
                     {
                         if (in_array($mi, $ministry) || $podcast->ministry == 0)
                         {
-                            return $this->checkMedia($includemedia, $pi);
+                            return $this->checkMedia($includemedia, $pi, $podcast);
                         }
                     }
                 }
@@ -1275,7 +1264,7 @@ class JBSMPIconvert
 
 }
 
-    private function checkMedia($includemedia, $pi)
+    private function checkMedia($includemedia, $pi, $podcast)
     {
         //check for which media to include
         if ($includemedia == 'all' )
