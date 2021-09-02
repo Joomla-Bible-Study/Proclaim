@@ -34,14 +34,12 @@ class BiblestudyControllerTemplatecode extends JControllerForm
 	 * @param   string  $prefix  The class prefix. Optional.
 	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return BiblestudyModelTemplatecode
+	 * @return \Joomla\CMS\MVC\Model\BaseDatabaseModel
 	 *
 	 * @since 7.1.0
 	 */
 	public function getModel($name = 'Templatecode', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
 	{
-		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
-
-		return $model;
+		return parent::getModel($name, $prefix, array('ignore_request' => true));
 	}
 }

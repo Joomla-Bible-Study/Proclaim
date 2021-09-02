@@ -29,12 +29,9 @@ class BiblestudyControllerMessagetype extends JControllerForm
 	 */
 	public function batch($model = null)
 	{
-		/** @var JModelLegacy $model */
-		$model = $this->getModel('Messagetype', '', array());
-
 		// Preset the redirect
 		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=messagetypes' . $this->getRedirectToListAppend(), false));
 
-		return parent::batch($model);
+		return parent::batch($this->getModel('Messagetype', '', array()));
 	}
 }

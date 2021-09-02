@@ -10,6 +10,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Database\DatabaseFactory;
+
 /**
  * Controller for Message
  *
@@ -21,6 +23,7 @@ class BiblestudyControllerMessage extends JControllerForm
 	/**
 	 * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
 	 *
+	 * @var   string
 	 * @since 7.0
 	 */
 	protected $view_list = 'messages';
@@ -38,8 +41,8 @@ class BiblestudyControllerMessage extends JControllerForm
 	protected function allowEdit($data = array(), $key = 'id')
 	{
 		$recordId = (int) isset($data[$key]) ? $data[$key] : 0;
-		$user = JFactory::getUser();
-		$userId = $user->get('id');
+		$user     = JFactory::getApplication()->getIdentity();
+		$userId   = $user->get('id');
 
 		// Check general edit permission first.
 		if ($user->authorise('core.edit', 'com_biblestudy.message.' . $recordId))
@@ -68,7 +71,7 @@ class BiblestudyControllerMessage extends JControllerForm
 			}
 
 			// If the owner matches 'me' then do the test.
-			if ($ownerId == $userId)
+			if ($ownerId === $userId)
 			{
 				return true;
 			}
@@ -90,11 +93,12 @@ class BiblestudyControllerMessage extends JControllerForm
 		// Check for request forgeries.
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-		$msg   = null;
-		$input = new JInput;
-		$id    = $input->get('id', 0, 'int');
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$msg    = null;
+		$input  = new Joomla\Input\Input;
+		$id     = $input->get('id', 0, 'int');
+		$driver = new DatabaseFactory;
+		$db     = $driver->getDriver();
+		$query  = $db->getQuery(true);
 		$query->update('#__bsms_studies')
 			->set('hits = ' . $db->q('0'))
 			->where(' id = ' . (int) $id);
@@ -124,13 +128,10 @@ class BiblestudyControllerMessage extends JControllerForm
 	 */
 	public function batch($model = null)
 	{
-		// Set the model
-		$model = $this->getModel('Message', '', array());
-
 		// Preset the redirect
 		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=messages' . $this->getRedirectToListAppend(), false));
 
-		return parent::batch($model);
+		return parent::batch($this->getModel('Message', '', array()));
 	}
 
 	/**
@@ -140,7 +141,7 @@ class BiblestudyControllerMessage extends JControllerForm
 	 * @param   string  $prefix  The class prefix. Optional.
 	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return  BibleStudyModelMessage
+	 * @return  \Joomla\CMS\MVC\Model\BaseDatabaseModel
 	 *
 	 * @since   12.2
 	 */
@@ -157,6 +158,7 @@ class BiblestudyControllerMessage extends JControllerForm
 	 *
 	 * @return  boolean  True if successful, false otherwise.
 	 *
+	 * @throws \Exception
 	 * @since 1.5
 	 */
 	public function save($key = null, $urlVar = null)
@@ -165,9 +167,9 @@ class BiblestudyControllerMessage extends JControllerForm
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
 		/** @var BibleStudyModelTopic $model */
-		$model      = $this->getModel('Topic');
-		$app        = JFactory::getApplication();
-		$data       = $this->input->post->get('jform', array(), 'array');
+		$model = $this->getModel('Topic');
+		$app   = JFactory::getApplication();
+		$data  = $this->input->post->get('jform', array(), 'array');
 
 		// Get Tags
 		$vTags = $data['topics'];
@@ -175,7 +177,8 @@ class BiblestudyControllerMessage extends JControllerForm
 		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_biblestudy/tables');
 
 		// Remove Exerting StudyTopics tags
-		$db = JFactory::getDbo();
+		$driver = new DatabaseFactory;
+		$db = $driver->getDriver();
 		$qurey = $db->getQuery(true);
 		$qurey->delete('#__bsms_studytopics')
 			->where('study_id =' . $data['id']);
@@ -194,7 +197,7 @@ class BiblestudyControllerMessage extends JControllerForm
 				if ($aTag != "")
 				{
 					/** @type TableStudyTopics $tagRow */
-					$tagRow = JTable::getInstance('studytopics', 'Table');
+					$tagRow           = JTable::getInstance('studytopics', 'Table');
 					$tagRow->study_id = $data['id'];
 					$tagRow->topic_id = $aTag;
 

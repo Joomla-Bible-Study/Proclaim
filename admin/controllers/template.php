@@ -10,6 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Database\DatabaseFactory;
 use Joomla\Utilities\ArrayHelper;
 
 /**
@@ -25,15 +26,17 @@ class BiblestudyControllerTemplate extends JControllerForm
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function copy()
 	{
-		$input = new JInput;
+		$input = JFactory::getApplication()->input;
 		$cid   = $input->get('cid', '', 'array');
 		ArrayHelper::toInteger($cid);
 
-		$model = & $this->getModel('template');
+		$baseDatabaseModel = $this->getModel('template');
+		$model             = &$baseDatabaseModel;
 
 		if ($model->copy($cid))
 		{
@@ -52,12 +55,13 @@ class BiblestudyControllerTemplate extends JControllerForm
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function makeDefault()
 	{
 		$app   = JFactory::getApplication();
-		$input = new JInput;
+		$input = $app->input;
 		$cid   = $input->get('cid', array(0), 'array');
 
 		if (!is_array($cid) || count($cid) < 1)
@@ -82,14 +86,15 @@ class BiblestudyControllerTemplate extends JControllerForm
 	 *
 	 * @return boolean|string
 	 *
-	 * @since 7.0
+	 * @since      7.0
 	 *
 	 * @deprecated 8.0.0 Not used in scope bcc
 	 */
 	public function getTemplate($template)
 	{
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$driver = new DatabaseFactory;
+		$db     = $driver->getDriver();
+		$query  = $db->getQuery(true);
 		$query->select('tc.id, tc.templatecode,tc.type,tc.filename');
 		$query->from('#__bsms_templatecode as tc');
 		$query->where('tc.filename ="' . $template . '"');

@@ -29,13 +29,10 @@ class BiblestudyControllerTeacher extends JControllerForm
 	 */
 	public function batch($model = null)
 	{
-		// Set the model
-		$model = $this->getModel('Teacher', '', array());
-
 		// Preset the redirect
 		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=teachers' . $this->getRedirectToListAppend(), false));
 
-		return parent::batch($model);
+		return parent::batch($this->getModel('Teacher', '', array()));
 	}
 
 	/**
@@ -45,14 +42,12 @@ class BiblestudyControllerTeacher extends JControllerForm
 	 * @param   string  $prefix  The class prefix. Optional.
 	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return BiblestudyModelTeacher
+	 * @return boolean|\Joomla\CMS\MVC\Model\BaseDatabaseModel
 	 *
 	 * @since 7.0
 	 */
 	public function getModel($name = 'Teacher', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
 	{
-		$model = parent::getModel($name, $prefix, $config);
-
-		return $model;
+		return parent::getModel($name, $prefix, $config);
 	}
 }

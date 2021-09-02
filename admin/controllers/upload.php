@@ -25,8 +25,9 @@ class BiblestudyControllerUpload extends JControllerLegacy
 	 * File upload hanlder
 	 * Controller adapted from COM_MEDIAMU
 	 *
-	 * @return string JSON response
+	 * @return void JSON response
 	 *
+	 * @throws \JsonException
 	 * @since 9.0
 	 */
 	public function upload()
@@ -45,10 +46,11 @@ class BiblestudyControllerUpload extends JControllerLegacy
 			error_reporting(0);
 		}
 
-		$input   = new JInput;
+		$input   = new Joomla\Input\Input;
 		$params  = JComponentHelper::getParams('com_biblestudy');
-		$session = JFactory::getSession();
-		$user    = JFactory::getUser();
+		$app = JFactory::getApplication();
+		$session = $app->getSession();
+		$user    = $app->getIdentity();
 
 		$cleanupTargetDir = true; /* Remove old files */
 		$maxFileAge       = 5 * 3600; /* Temp file age in seconds */
@@ -247,6 +249,7 @@ class BiblestudyControllerUpload extends JControllerLegacy
 	 *
 	 * @return void
 	 *
+	 * @throws \JsonException
 	 * @since 9.0
 	 */
 	private function _setResponse($code, $msg = null, $error = true)
@@ -268,6 +271,6 @@ class BiblestudyControllerUpload extends JControllerLegacy
 			);
 		}
 
-		die(json_encode($jsonrpc));
+		die(json_encode($jsonrpc, JSON_THROW_ON_ERROR));
 	}
 }

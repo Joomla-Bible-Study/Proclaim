@@ -23,15 +23,14 @@ class BiblestudyControllerPodcasts extends JControllerAdmin
 	 *
 	 * @param   string  $name    The name of the model
 	 * @param   string  $prefix  The prefix for the PHP class name
+	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return JModel
+	 * @return boolean|\Joomla\CMS\MVC\Model\BaseDatabaseModel
 	 *
 	 * @since 7.0
 	 */
-	public function getModel($name = 'Podcast', $prefix = 'BiblestudyModel')
+	public function getModel($name = 'Podcast', $prefix = 'BiblestudyModel', $config = array())
 	{
-		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
-
-		return $model;
+		return parent::getModel($name, $prefix, array('ignore_request' => true));
 	}
 }

@@ -58,14 +58,12 @@ class BiblestudyControllerMessages extends JControllerAdmin
 	 * @param   string  $prefix  The class prefix. Optional.
 	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return BiblestudyModelMessage
+	 * @return \BiblestudyModelMessage|boolean|\Joomla\CMS\MVC\Model\BaseDatabaseModel
 	 *
 	 * @since 7.0
 	 */
 	public function getModel($name = 'Message', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
 	{
-		$model = parent::getModel($name, $prefix, $config);
-
-		return $model;
+		return parent::getModel($name, $prefix, $config);
 	}
 }

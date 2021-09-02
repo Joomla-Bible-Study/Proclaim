@@ -46,8 +46,9 @@ class BiblestudyControllerServer extends JControllerForm
 	 * @param   int     $key     ?
 	 * @param   string  $urlVar  ?
 	 *
-	 * @return  bool
+	 * @return  boolean
 	 *
+	 * @throws \Exception
 	 * @since   9.0.0
 	 */
 	public function edit($key = null, $urlVar = null)
@@ -69,6 +70,7 @@ class BiblestudyControllerServer extends JControllerForm
 	 *
 	 * @return  void
 	 *
+	 * @throws \Exception
 	 * @since   9.0.0
 	 */
 	public function setType()
@@ -78,14 +80,18 @@ class BiblestudyControllerServer extends JControllerForm
 
 		$data  = $input->get('jform', array(), 'post');
 		$sname = $data['server_name'];
-		$type  = json_decode(base64_decode($data['type']));
+		$type  = json_decode(base64_decode($data['type']), true, 512, JSON_THROW_ON_ERROR);
 
-		$recordId = isset($type->id) ? $type->id : 0;
+		$recordId = $type->id ?? 0;
 
 		// Save the endpoint in the session
 		$app->setUserState('com_biblestudy.edit.server.type', $type->name);
 		$app->setUserState('com_biblestudy.edit.server.server_name', $sname);
 
-		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend($recordId), false));
+		$this->setRedirect(
+			JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item .
+				$this->getRedirectToItemAppend($recordId), false
+			)
+		);
 	}
 }

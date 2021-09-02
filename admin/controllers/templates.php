@@ -10,6 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Database\DatabaseFactory;
 use Joomla\Registry\Registry;
 
 /**
@@ -33,15 +34,13 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	 */
 	public function getModel($name = 'Template', $prefix = 'BiblestudyModel', $config = array())
 	{
-		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
-
-		return $model;
+		return parent::getModel($name, $prefix, array('ignore_request' => true));
 	}
 
 	/**
 	 * Import Template
 	 *
-	 * @return boolean|JControllerLegacy
+	 * @return \BiblestudyControllerTemplates|integer
 	 *
 	 * @since 8.0
 	 */
@@ -51,23 +50,17 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
 		// Set Variables.
-		$sermonstemplate = null;
-		$sermontemplate = null;
-		$teacherstemplate = null;
-		$teachertemplate = null;
+		$sermonstemplate        = null;
+		$sermontemplate         = null;
+		$teacherstemplate       = null;
+		$teachertemplate        = null;
 		$seriesdisplaystemplate = null;
-		$seriesdisplaytemplate = null;
-		$moduletemplate = null;
+		$seriesdisplaytemplate  = null;
+		$moduletemplate         = null;
 
-		/**
-		 * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
-		 */
-		if (!ini_get('safe_mode'))
-		{
-			set_time_limit(300);
-		}
+		set_time_limit(300);
 
-		$input    = new JInputFiles;
+		$input    = new Joomla\Input\Files;
 		$userfile = $input->get('template_import');
 		$app      = JFactory::getApplication();
 		$tc       = 0;
@@ -102,12 +95,13 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		jimport('joomla.filesystem.file');
 		move_uploaded_file($tmp_src, $tmp_dest);
 
-		$db = JFactory::getDbo();
+		$driver = new DatabaseFactory;
+		$db     = $driver->getDriver();
 
 		$query   = file_get_contents(JPATH_SITE . '/tmp/' . $userfile['name']);
-		$queries = $db->splitSql($query);
+		$queries = JDatabaseDriver::splitSql($query);
 
-		if (count($queries) == 0)
+		if (count($queries) === 0)
 		{
 			// No queries to process
 			return 0;
@@ -119,14 +113,10 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 
 			if (substr_count($querie, 'INSERT'))
 			{
-				if ($querie != '' && $querie[0] != '#')
+				if ($querie !== '' && $querie[0] !== '#')
 				{
 					// Check for duplicate names and change
-					if (substr_count($querie, '#__bsms_styles'))
-					{
-						// Defecating this as we nologer support style in DB
-					}
-					elseif (substr_count($querie, '#__bsms_templatecode'))
+					if (substr_count($querie, '#__bsms_templatecode'))
 					{
 						// Start to insert new Record
 						$this->performDB($querie);
@@ -190,7 +180,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		$db->setQuery($query, 0, $tc);
 		$data = $db->loadObjectList();
 
-		foreach ($data AS $tpcode)
+		foreach ($data as $tpcode)
 		{
 			// Preload variables for templates
 			$type = $tpcode->type;
@@ -281,9 +271,10 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	 *
 	 * @since 8.0
 	 */
-	private function performDB($query)
+	private function performDB(string $query)
 	{
-		$db = JFactory::getDbo();
+		$driver = new DatabaseFactory;
+		$db     = $driver->getDriver();
 		$db->setQuery($query);
 
 		if (!$db->execute())
@@ -306,7 +297,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		// Check for request forgeries.
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-		$input          = new JInput;
+		$input          = new Joomla\Input\Input;
 		$data           = $input->get('template_export');
 		$exporttemplate = $data;
 
@@ -317,8 +308,9 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		}
 
 		jimport('joomla.filesystem.file');
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$driver = new DatabaseFactory;
+		$db     = $driver->getDriver();
+		$query  = $db->getQuery(true);
 		$query->select('t.id, t.type, t.params, t.title, t.text');
 		$query->from('#__bsms_templates as t');
 		$query->where('t.id = ' . $exporttemplate);
@@ -357,7 +349,8 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		$registry = new Registry;
 		$registry->loadString($result->params);
 		$params  = $registry;
-		$db      = JFactory::getDbo();
+		$driver  = new DatabaseFactory;
+		$db      = $driver->getDriver();
 		$objects = '';
 		$css     = $params->get('css');
 		$css     = substr($css, 0, -4);
@@ -372,7 +365,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 			$db->setQuery($query2);
 			$db->execute();
 			$cssresult = $db->loadObject();
-			$objects .= "\nINSERT INTO #__bsms_styles SET `published` = '1',\n`filename` = " . $db->q($cssresult->filename)
+			$objects   .= "\nINSERT INTO #__bsms_styles SET `published` = '1',\n`filename` = " . $db->q($cssresult->filename)
 				. ",\n`stylecode` = " . $db->q($cssresult->stylecode) . ";\n";
 		}
 
@@ -449,8 +442,9 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	 */
 	public function getTemplate($template)
 	{
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$driver = new DatabaseFactory;
+		$db     = $driver->getDriver();
+		$query  = $db->getQuery(true);
 		$query->select('tc.id, tc.templatecode,tc.type,tc.filename');
 		$query->from('#__bsms_templatecode as tc');
 		$query->where('tc.filename ="' . $template . '"');

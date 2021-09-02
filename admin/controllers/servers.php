@@ -25,14 +25,12 @@ class BiblestudyControllerServers extends JControllerAdmin
 	 * @param   string  $prefix  The class prefix. Optional.
 	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return BiblestudyModelServer
+	 * @return boolean|\Joomla\CMS\MVC\Model\BaseDatabaseModel
 	 *
 	 * @since 7.0.0
 	 */
 	public function getModel($name = 'Server', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
 	{
-		$model = parent::getModel($name, $prefix, $config);
-
-		return $model;
+		return parent::getModel($name, $prefix, $config);
 	}
 }

@@ -11,6 +11,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
+use Joomla\Database\DatabaseFactory;
 
 jimport('joomla.filesystem.folder');
 
@@ -67,13 +68,15 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 *
 	 * @return void
 	 *
+	 * @throws \JsonException
 	 * @since 7.0.0
 	 */
 	public function mediaimages()
 	{
 		$post    = $_POST['jform'];
-		$decoded = json_decode($post['mediaimage']);
-		$db      = JFactory::getDbo();
+		$decoded = json_decode($post['mediaimage'], true, 512, JSON_THROW_ON_ERROR);
+		$driver = new DatabaseFactory;
+		$db = $driver->getDriver();
 		$query   = $db->getQuery(true);
 		$query->select('id, params')
 			->from('#__bsms_mediafiles');
@@ -137,7 +140,6 @@ class BiblestudyControllerAdmin extends JControllerForm
 
 				$msg .= JText::_('JBS_ERROR') . ': ' . $error . '<br />' . $errortext . '<br />' . JText::_('JBS_RESULTS') .
 					': ' . $added . ' ' . JText::_('JBS_SUCCESS');
-				$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
 				break;
 			case 2:
 				$buttontype = $decoded->media_button_type;
@@ -184,7 +186,6 @@ class BiblestudyControllerAdmin extends JControllerForm
 
 				$msg .= JText::_('JBS_ERROR') . ': ' . $error . '<br />' . $errortext . '<br />' . JText::_('JBS_RESULTS') .
 					': ' . $added . ' ' . JText::_('JBS_SUCCESS');
-				$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
 				break;
 			case 3:
 				// Icon only
@@ -236,7 +237,6 @@ class BiblestudyControllerAdmin extends JControllerForm
 
 				$msg .= JText::_('JBS_ERROR') . ': ' . $error . '<br />' . $errortext . '<br />' . JText::_('JBS_RESULTS') .
 					': ' . $added . ' ' . JText::_('JBS_SUCCESS');
-				$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
 				break;
 			case 0:
 				// It's an image
@@ -289,13 +289,13 @@ class BiblestudyControllerAdmin extends JControllerForm
 
 				$msg .= JText::_('JBS_ERROR') . ': ' . $error . '<br />' . $errortext . '<br />' . JText::_('JBS_RESULTS') .
 					': ' . $added . ' ' . JText::_('JBS_SUCCESS');
-				$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
 				break;
 			default:
 				$msg = JText::_('JBS_NOTHING_MATCHED');
-				$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
 				break;
 		}
+
+		$this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
 	}
 
 	/**
@@ -310,7 +310,8 @@ class BiblestudyControllerAdmin extends JControllerForm
 		// Check for request forgeries.
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-		$db   = JFactory::getDbo();
+		$driver = new DatabaseFactory;
+		$db = $driver->getDriver();
 		$msg  = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
 		$post = $_POST['jform'];
 		$reg  = new Registry;
@@ -368,8 +369,8 @@ class BiblestudyControllerAdmin extends JControllerForm
 		// Check for request forgeries.
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-		$db   = JFactory::getDbo();
-		$msg  = null;
+		$driver = new DatabaseFactory;
+		$db = $driver->getDriver();
 		$post = $_POST['jform'];
 		$reg  = new Registry;
 		$reg->loadArray($post['params']);
@@ -620,8 +621,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		// Check for request forgeries.
 		JSession::checkToken('get') or jexit(JText::_('JINVALID_TOKEN'));
 
-		$alias  = new JBSMAlias;
-		$update = $alias->updateAlias();
+		$update = JBSMAlias::updateAlias();
 		$this->setMessage(JText::_('JBS_ADM_ALIAS_ROWS') . $update);
 		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', false));
 	}
@@ -784,8 +784,8 @@ class BiblestudyControllerAdmin extends JControllerForm
 		// Check for request forgeries.
 		JSession::checkToken('get') or JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-		$input  = new JInput;
-		$run    = $input->get('run', '', 'int');
+		$input  = new Joomla\Input\Input;
+		$run    = (int) $input->get('run', '', 'int');
 		$export = new JBSMBackup;
 
 		if (!$result = $export->exportdb($run))
@@ -793,7 +793,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 			$msg = JText::_('JBS_CMN_OPERATION_FAILED');
 			$this->setRedirect('index.php?option=com_biblestudy&view=backup', $msg);
 		}
-		elseif ($run == 2)
+		elseif ($run === 2)
 		{
 			if (!$result)
 			{
@@ -840,7 +840,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 			$images_paths[] = array(array('type' => $image_type, 'images' => $images));
 		}
 
-		echo json_encode(array('total' => $count, 'paths' => $images_paths));
+		echo json_encode(array('total' => $count, 'paths' => $images_paths), JSON_THROW_ON_ERROR);
 
 		JFactory::getApplication()->close();
 	}
@@ -856,7 +856,8 @@ class BiblestudyControllerAdmin extends JControllerForm
 	 */
 	public function createThumbnailXHR()
 	{
-		$document = JFactory::getDocument();
+		$app = JFactory::getApplication();
+		$document = $app->getDocument();
 		$input    = JFactory::getApplication()->input;
 
 		$document->setMimeEncoding('application/json');
@@ -893,7 +894,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 
 		$app   = JFactory::getApplication();
 		$model = $this->getModel('form');
-		$form  = $model->getForm($data, false);
+		$form  = $model->getForm('', false);
 
 		if (!$form)
 		{

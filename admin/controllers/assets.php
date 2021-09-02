@@ -18,7 +18,13 @@ defined('_JEXEC') or die;
  */
 class BiblestudyControllerAssets extends JControllerForm
 {
-	public $modelName;
+	/**
+	 * The Model Name Varible.
+	 *
+	 * @var    string
+	 * @since  7.0.0
+	 */
+	public string $modelName;
 
 	/**
 	 * The context for storing internal data, e.g. record.
@@ -49,6 +55,7 @@ class BiblestudyControllerAssets extends JControllerForm
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
+	 * @throws \Exception
 	 * @since 1.5
 	 */
 	public function __construct($config = array())
@@ -65,11 +72,12 @@ class BiblestudyControllerAssets extends JControllerForm
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 1.5
 	 */
 	public function execute($task)
 	{
-		if ($task != 'run' && $task != 'checkassets' && $task != 'clear')
+		if ($task !== 'run' && $task !== 'checkassets' && $task !== 'clear')
 		{
 			$task = 'browse';
 		}
@@ -82,9 +90,10 @@ class BiblestudyControllerAssets extends JControllerForm
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 8.0.0
 	 */
-	public function checkassets()
+	public function checkassets(): void
 	{
 		// Check for request forgeries.
 		JSession::checkToken('get') or JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
@@ -92,10 +101,10 @@ class BiblestudyControllerAssets extends JControllerForm
 		/** @var BibleStudyModelAssets $model */
 		$model = $this->getModel('assets');
 		$checkassets = $model->checkAssets();
-		$session = JFactory::getSession();
+		$session = JFactory::getApplication()->getSession();
 		$session->set('assat_stack', '', 'JBSM');
 		$session->set('checkassets', $checkassets, 'JBSM');
-		parent::display();
+		$this->display();
 	}
 
 	/**
@@ -103,6 +112,7 @@ class BiblestudyControllerAssets extends JControllerForm
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 8.0.0
 	 */
 	public function browse()
@@ -111,7 +121,7 @@ class BiblestudyControllerAssets extends JControllerForm
 		JSession::checkToken('get') or jexit(JText::_('JINVALID_TOKEN'));
 
 		$app = JFactory::getApplication();
-		$session = JFactory::getSession();
+		$session = $app->getSession();
 		$stack = $session->get('asset_stack', '', 'JBSM');
 
 		if (empty($stack) || !is_array($stack))
@@ -139,6 +149,7 @@ class BiblestudyControllerAssets extends JControllerForm
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 9.0.2
 	 */
 	public function clear()
@@ -160,6 +171,7 @@ class BiblestudyControllerAssets extends JControllerForm
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 8.0.0
 	 */
 	public function run()

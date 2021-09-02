@@ -49,6 +49,7 @@ class BiblestudyControllerInstall extends JControllerForm
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
+	 * @throws \Exception
 	 * @since 1.5
 	 */
 	public function __construct($config = array())
@@ -65,11 +66,12 @@ class BiblestudyControllerInstall extends JControllerForm
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 9.0.0
 	 */
 	public function execute($task)
 	{
-		if ($task != 'run' && $task != 'clear' && $task != 'browse')
+		if ($task !== 'run' && $task !== 'clear' && $task !== 'browse')
 		{
 			$task = 'browse';
 		}
@@ -82,6 +84,7 @@ class BiblestudyControllerInstall extends JControllerForm
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 9.0.0
 	 */
 	public function browse()
@@ -115,6 +118,7 @@ class BiblestudyControllerInstall extends JControllerForm
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 9.0.0
 	 */
 	public function clear()
@@ -131,6 +135,7 @@ class BiblestudyControllerInstall extends JControllerForm
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 9.0.0
 	 */
 	public function run()

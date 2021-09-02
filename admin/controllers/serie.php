@@ -29,13 +29,10 @@ class BiblestudyControllerSerie extends JControllerForm
 	 */
 	public function batch($model = null)
 	{
-		/** @var JModelLegacy $model */
-		$model = $this->getModel('Serie', '', array());
-
 		// Preset the redirect
 		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=series' . $this->getRedirectToListAppend(), false));
 
-		return parent::batch($model);
+		return parent::batch($this->getModel('Serie', '', array()));
 	}
 
 	/**
@@ -51,15 +48,7 @@ class BiblestudyControllerSerie extends JControllerForm
 	{
 		$allow = null;
 
-		if ($allow === null)
-		{
-			// In the absence of better information, revert to the component permissions.
-			return parent::allowAdd();
-		}
-		else
-		{
-			return $allow;
-		}
+		return $allow ?? parent::allowAdd();
 	}
 
 	/**
@@ -70,12 +59,13 @@ class BiblestudyControllerSerie extends JControllerForm
 	 *
 	 * @return  boolean
 	 *
+	 * @throws \Exception
 	 * @since   1.6
 	 */
 	protected function allowEdit($data = array(), $key = 'id')
 	{
 		$recordId = (int) isset($data[$key]) ? $data[$key] : 0;
-		$user     = JFactory::getUser();
+		$user     = JFactory::getApplication()->getIdentity();
 
 		// Check general edit permission first.
 		if ($user->authorise('core.edit', 'com_biblestudy.serie.' . $recordId))

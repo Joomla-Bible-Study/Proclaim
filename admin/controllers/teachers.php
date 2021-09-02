@@ -25,6 +25,7 @@ class BiblestudyControllerTeachers extends JControllerAdmin
 	 *
 	 * @return    void
 	 *
+	 * @throws \Exception
 	 * @since   3.0
 	 */
 	public function saveOrderAjax()
@@ -58,15 +59,12 @@ class BiblestudyControllerTeachers extends JControllerAdmin
 	 * @param   string  $prefix  The class prefix. Optional.
 	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return BiblestudyModelTeacher
+	 * @return boolean|\Joomla\CMS\MVC\Model\BaseDatabaseModel
 	 *
 	 * @since 7.0.0
 	 */
 	public function getModel($name = 'Teacher', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
 	{
-		/** @var BiblestudyModelTeacher $model */
-		$model = parent::getModel($name, $prefix, $config);
-
-		return $model;
+		return parent::getModel($name, $prefix, $config);
 	}
 }

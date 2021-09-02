@@ -29,13 +29,10 @@ class BiblestudyControllerLocation extends JControllerForm
 	 */
 	public function batch($model = null)
 	{
-		// Set the model
-		$model = $this->getModel('Location', '', array());
-
 		// Preset the redirect
 		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=locations' . $this->getRedirectToListAppend(), false));
 
-		return parent::batch($model);
+		return parent::batch($this->getModel('Location', '', array()));
 	}
 
 	/**
@@ -45,14 +42,12 @@ class BiblestudyControllerLocation extends JControllerForm
 	 * @param   string  $prefix  The class prefix. Optional.
 	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return BiblestudyModelLocation
+	 * @return \Joomla\CMS\MVC\Model\BaseDatabaseModel
 	 *
 	 * @since 7.1.0
 	 */
 	public function getModel($name = 'Location', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
 	{
-		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
-
-		return $model;
+		return parent::getModel($name, $prefix, array('ignore_request' => true));
 	}
 }

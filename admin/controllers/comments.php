@@ -25,7 +25,7 @@ class BiblestudyControllerComments extends JControllerAdmin
 	 * @param   string  $prefix  The class prefix. Optional.
 	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return BiblestudyModelComment
+	 * @return \BiblestudyModelComment|boolean|\Joomla\CMS\MVC\Model\BaseDatabaseModel
 	 *
 	 * @since 7.0
 	 */

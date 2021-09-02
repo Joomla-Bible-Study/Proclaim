@@ -25,9 +25,10 @@ class BiblestudyControllerMediafiles extends JControllerAdmin
 	 *
 	 * @return  boolean  True on success
 	 *
+	 * @throws \Exception
 	 * @since   12.2
 	 */
-	public function checkin()
+	public function checkin(): bool
 	{
 		// Check for request forgeries.
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
@@ -45,14 +46,12 @@ class BiblestudyControllerMediafiles extends JControllerAdmin
 
 			return false;
 		}
-		else
-		{
-			// Checkin succeeded.
-			$message = JText::plural($this->text_prefix . '_N_ITEMS_CHECKED_IN', count($ids));
-			$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false), $message);
 
-			return true;
-		}
+		// Checkin succeeded.
+		$message = JText::plural($this->text_prefix . '_N_ITEMS_CHECKED_IN', count($ids));
+		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false), $message);
+
+		return true;
 	}
 
 	/**
@@ -94,7 +93,7 @@ class BiblestudyControllerMediafiles extends JControllerAdmin
 	 * @param   string  $prefix  The prefix for the PHP class name
 	 * @param   array   $config  Set ignore request
 	 *
-	 * @return BiblestudyModelMediafile
+	 * @return \BiblestudyModelMediafile|boolean|\Joomla\CMS\MVC\Model\BaseDatabaseModel
 	 *
 	 * @since 7.0
 	 */

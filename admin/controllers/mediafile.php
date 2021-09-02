@@ -21,6 +21,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 	/**
 	 * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
 	 *
+	 * @var   string
 	 * @since 7.0
 	 */
 	protected $view_list = 'mediafiles';
@@ -36,7 +37,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 	/**
 	 * Method to add a new record.
 	 *
-	 * @return  mixed  True if the record can be added, a error object if not.
+	 * @return  boolean  True if the record can be added, a error object if not.
 	 *
 	 * @throws  Exception
 	 * @since   12.2
@@ -63,7 +64,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 	 * @param   int     $key     ?
 	 * @param   string  $urlVar  ?
 	 *
-	 * @return  bool
+	 * @return  boolean
 	 *
 	 * @throws  Exception
 	 * @since   9.0.0
@@ -104,7 +105,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 
 		if (method_exists($addon, $handler))
 		{
-			echo json_encode($addon->$handler($input));
+			echo json_encode($addon->$handler($input), JSON_THROW_ON_ERROR);
 
 			$app = JFactory::getApplication();
 			$app->close();
@@ -126,13 +127,10 @@ class BiblestudyControllerMediafile extends JControllerForm
 	 */
 	public function batch($model = null)
 	{
-		/** @type BiblestudyModelMediafile $model */
-		$model = $this->getModel('Mediafile', 'BiblestudyModel', array());
-
 		// Preset the redirect
 		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=mediafiles' . $this->getRedirectToListAppend(), false));
 
-		return parent::batch($model);
+		return parent::batch($this->getModel('Mediafile', 'BiblestudyModel', array()));
 	}
 
 	/**
@@ -149,8 +147,8 @@ class BiblestudyControllerMediafile extends JControllerForm
 	{
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-		$app     = JFactory::getApplication();
-		$model   = $this->getModel();
+		$app   = JFactory::getApplication();
+		$model = $this->getModel();
 		/** @type TableMediafile $table */
 		$table   = $model->getTable();
 		$checkin = property_exists($table, 'checked_out');
@@ -213,9 +211,9 @@ class BiblestudyControllerMediafile extends JControllerForm
 		$app   = JFactory::getApplication();
 		$input = $app->input;
 
-		$data = $input->get('jform', array(), 'post', 'array');
-		$cdate = $data['createdate'];
-		$study_id = $data['study_id'];
+		$data      = $input->get('jform', array(), 'post', 'array');
+		$cdate     = $data['createdate'];
+		$study_id  = $data['study_id'];
 		$server_id = $data['server_id'];
 
 		// Save server in the session
@@ -268,7 +266,7 @@ class BiblestudyControllerMediafile extends JControllerForm
 		$layout  = $this->input->get('layout', 'edit', 'string');
 		$return  = $this->input->getCmd('return');
 		$options = $this->input->get('options');
-		$append = '';
+		$append  = '';
 
 		// Setup redirect info.
 		if ($tmpl)
