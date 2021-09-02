@@ -5,12 +5,24 @@
 	<author>CWM Team</author>
 	<authorEmail>info@christianwebministries.org</authorEmail>
 	<authorUrl>https://www.christianwebministries.org</authorUrl>
-	<copyright>(C) 2007 - 2019 Proclaim All rights reserved.</copyright>
-	<version>9.2.8</version>
-	<creationDate>June 2, 2021</creationDate>
+	<copyright>(C) 2007 - 2021 Proclaim All rights reserved.</copyright>
+	<version>10.0.0</version>
+	<creationDate>October 1, 2021</creationDate>
 	<license>http://www.gnu.org/licenses/gpl.html</license>
 	<description>JBS_INS_XML_DESCRIPTION</description>
 
+    <!-- This is the PHP namespace under which the extension's
+    code is organised. It should follow this format:
+
+    Vendor\Component\ComponentName
+
+    "Vendor" can be your company or your own name
+
+    The "ComponentName" section MUST match the name used
+    everywhere else for your component. Whatever the name of
+    this XML file is, the namespace must match (ignoring CamelCase).
+    -->
+    <namespace path="src/">Proclaim\Component\biblestudy</namespace>
 	<!-- Installer Hooks -->
 	<scriptfile>biblestudy.script.php</scriptfile>
 
@@ -38,6 +50,9 @@
 		<folder>models</folder>
 		<folder>sef_ext</folder>
 		<folder>views</folder>
+        <folder>services</folder>
+		<folder>src</folder>
+		<folder>tmpl</folder>
 	</files>
 
 	<!-- Media files -->
@@ -90,6 +105,9 @@
 			<folder>postinstall</folder>
 			<folder>tables</folder>
 			<folder>views</folder>
+			<folder>services</folder>
+			<folder>src</folder>
+			<folder>tmpl</folder>
 		</files>
 	</administration>
 </extension>
