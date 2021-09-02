@@ -122,7 +122,7 @@ abstract class JHtmlJwplayer
 		}
 		else
 		{
-			$media->playerwidth  = $params->get('player_width');
+			$media->playerwidth = $params->get('player_width');
 		}
 
 		if ($params->get('playervars'))
@@ -169,10 +169,10 @@ abstract class JHtmlJwplayer
 
 		// Calculate Height base off width for a 16:9 ratio.
 		$render = "";
-		$rat1 = 16;
-		$rat2 = 9;
+		$rat1   = 16;
+		$rat2   = 9;
 
-		$ratio = $media->playerwidth / $rat1;
+		$ratio  = $media->playerwidth / $rat1;
 		$height = $ratio * $rat2;
 
 		if ($popup)
@@ -180,7 +180,7 @@ abstract class JHtmlJwplayer
 			if ($params->get('playerresponsive') !== 0)
 			{
 				$media->playerwidth = '100%';
-				$render .= "<div class='playeralign' style=\"margin-left: auto; margin-right: auto; width:100%;\">";
+				$render             .= "<div class='playeralign' style=\"margin-left: auto; margin-right: auto; width:100%;\">";
 			}
 			else
 			{
@@ -211,7 +211,7 @@ abstract class JHtmlJwplayer
 			// Add space for popup window
 			$player->playerwidth  = $player->playerwidth + 20;
 			$player->playerheight = $player->playerheight + $popupmarg;
-			$render .= "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=" . $player->player
+			$render               .= "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=" . $player->player
 				. "&amp;view=popup&amp;t=" . $t . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width="
 				. $player->playerwidth . ",height=" .
 				$player->playerheight . "'); return false\">" . $popouttext . "</a>";

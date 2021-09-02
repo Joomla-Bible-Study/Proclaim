@@ -11,11 +11,12 @@
 defined('_JEXEC') or die;
 
 JFactory::getApplication()->enqueueMessage('Use of old function replace ASAP', 'error');
+
 /**
  * Template helper class
  *
- * @package  Proclaim.Admin
- * @since    7.0.1
+ * @package   Proclaim.Admin
+ * @since     7.0.1
  *
  * @deprecate 8.0.1
  */
@@ -117,7 +118,7 @@ class JBSMTemplate
 	 * @staticvar bibleStudyTemplate $instance
 	 * @return JBSMTemplate
 	 *
-	 * @since 1.5
+	 * @since     1.5
 	 */
 	public function &getInstance()
 	{
@@ -189,7 +190,7 @@ class JBSMTemplate
 	 *
 	 * @param   int  $id  The id of the template to query
 	 *
-	 * @return Object  Row Object list
+	 * @return object  Row Object list
 	 *
 	 * @since 1.5
 	 */
@@ -233,7 +234,7 @@ class JBSMTemplate
 	 *
 	 * @param   array  $fields  The fields to include in the SELECT
 	 *
-	 * @return String
+	 * @return string
 	 *
 	 * @since 1.5
 	 */

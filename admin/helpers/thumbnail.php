@@ -27,13 +27,13 @@ class JBSMThumbnail
 	 * @param   string  $path  Path to file
 	 * @param   int     $size  Size of image with default of 100
 	 *
-	 * @return null
+	 * @return void
 	 *
 	 * @since 9.0.0
 	 */
 	public static function create($file, $path, $size = 100)
 	{
-		$name = basename($file);
+		$name     = basename($file);
 		$original = JPATH_ROOT . '/' . $file;
 		$thumb    = JPATH_ROOT . '/' . $path . '/thumb_' . $name;
 
@@ -50,8 +50,6 @@ class JBSMThumbnail
 		$image     = new JImage($original);
 		$thumbnail = $image->resize($size, $size, true);
 		$thumbnail->toFile($thumb, IMAGETYPE_JPEG);
-
-		return;
 	}
 
 	/**
@@ -60,7 +58,7 @@ class JBSMThumbnail
 	 * @param   string  $path      Path to file
 	 * @param   int     $new_size  New image size
 	 *
-	 * @return null
+	 * @return void
 	 *
 	 * @since 9.0
 	 */
@@ -80,8 +78,6 @@ class JBSMThumbnail
 		$image     = new JImage($path);
 		$thumbnail = $image->resize($new_size, $new_size);
 		$thumbnail->toFile(dirname($path) . '/thumb_' . $filename, IMAGETYPE_PNG);
-
-		return;
 	}
 
 	/**
@@ -100,7 +96,8 @@ class JBSMThumbnail
 		{
 			return false;
 		}
-		elseif ($file)
+
+		if ($file)
 		{
 			return JFile::exists(JPATH_ROOT . $path . $file);
 		}

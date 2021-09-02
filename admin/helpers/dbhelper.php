@@ -9,6 +9,8 @@
  * */
 defined('_JEXEC') or die;
 
+use Joomla\Database\DatabaseFactory;
+
 /**
  * Database Helper class for version 7.1.0
  *
@@ -24,9 +26,16 @@ class JBSMDbHelper
 	 *
 	 * @since 1.5
 	 */
-	public static $extension = 'com_biblestudy';
+	public static string $extension = 'com_biblestudy';
 
-	public static $install_state = null;
+	/**
+	 * Install State
+	 *
+	 * @var boolean
+	 *
+	 * @since 1.5
+	 */
+	public static bool $install_state = false;
 
 	/**
 	 * System to Check if Table Exists
@@ -39,11 +48,12 @@ class JBSMDbHelper
 	 */
 	public static function checkIfTable($cktable)
 	{
-		$db     = JFactory::getDbo();
+		$driver = new DatabaseFactory;
+		$db     = $driver->getDriver();
 		$tables = $db->getTableList();
 		$prefix = $db->getPrefix();
 
-		foreach ($tables AS $table)
+		foreach ($tables as $table)
 		{
 			$tableAF = str_replace($prefix, "#__", $table);
 
@@ -70,7 +80,8 @@ class JBSMDbHelper
 	 */
 	public static function alterDB($tables, $from = null)
 	{
-		$db = JFactory::getDbo();
+		$driver = new DatabaseFactory;
+		$db     = $driver->getDriver();
 
 		foreach ($tables as $t)
 		{
@@ -198,7 +209,8 @@ class JBSMDbHelper
 	 */
 	public static function checkTables($table, $field)
 	{
-		$db     = JFactory::getDbo();
+		$driver = new DatabaseFactory;
+		$db     = $driver->getDriver();
 
 		$fields = $db->getTableColumns($table, 'false');
 
@@ -216,23 +228,24 @@ class JBSMDbHelper
 	/**
 	 * performs a database query
 	 *
-	 * @param   string  $query  Is a Joomla ready query
-	 * @param   string  $from   Where the source of the query comes from
-	 * @param   int     $limit  Set the Limit of the query
+	 * @param   string       $query  Is a Joomla ready query
+	 * @param   string|null  $from   Where the source of the query comes from
+	 * @param   int|null     $limit  Set the Limit of the query
 	 *
 	 * @return boolean true if success, or error string if failed
 	 *
-	 * @since   7.0
 	 * @throws  Exception
+	 * @since   7.0
 	 */
-	public static function performDB($query, $from = null, $limit = null)
+	public static function performDB($query, string $from = null, int $limit = null)
 	{
 		if (!$query)
 		{
 			return false;
 		}
 
-		$db = JFactory::getDbo();
+		$driver = new DatabaseFactory;
+		$db     = $driver->getDriver();
 		$db->setQuery($query, 0, $limit);
 
 		if (!$db->execute())
@@ -241,12 +254,10 @@ class JBSMDbHelper
 
 			return false;
 		}
-		else
-		{
-			JLog::add($from . $query, JLog::INFO, 'com_biblestudy');
 
-			return true;
-		}
+		JLog::add($from . $query, JLog::INFO, 'com_biblestudy');
+
+		return true;
 	}
 
 	/**
@@ -257,8 +268,8 @@ class JBSMDbHelper
 	 *
 	 * @return boolean
 	 *
-	 * @since 7.0
 	 * @throws Exception
+	 * @since 7.0
 	 */
 	public static function checkDB($table, $field)
 	{
@@ -272,10 +283,8 @@ class JBSMDbHelper
 
 			return true;
 		}
-		else
-		{
-			return true;
-		}
+
+		return true;
 	}
 
 	/**
@@ -287,7 +296,8 @@ class JBSMDbHelper
 	 */
 	public static function getObjects()
 	{
-		$db        = JFactory::getDbo();
+		$driver    = new DatabaseFactory;
+		$db        = $driver->getDriver();
 		$tables    = $db->getTableList();
 		$prefix    = $db->getPrefix();
 		$prelength = strlen($prefix);
@@ -309,7 +319,7 @@ class JBSMDbHelper
 	/**
 	 * Get State of install for Main Admin Controller
 	 *
-	 * @return  bool false if table exists | true if dos not
+	 * @return  boolean false if table exists | true if dos not
 	 *
 	 * @since 7.1.0
 	 */
@@ -317,19 +327,16 @@ class JBSMDbHelper
 	{
 		if (!is_bool(self::$install_state))
 		{
-			$db = JFactory::getDbo();
+			$driver = new DatabaseFactory;
+			$db     = $driver->getDriver();
 
 			// Check if JBSM can be found from the database
 			$table = $db->getPrefix() . 'bsms_admin';
 			$db->setQuery("SHOW TABLES LIKE {$db->quote($table)}");
 
-			if ($db->loadResult() != $table)
+			if ($db->loadResult() !== $table)
 			{
 				self::$install_state = true;
-			}
-			else
-			{
-				self::$install_state = false;
 			}
 		}
 
@@ -339,22 +346,25 @@ class JBSMDbHelper
 	/**
 	 * Fix up css.
 	 *
-	 * @param   string   $filename  Name of css file
-	 * @param   boolean  $parent    if coming form the update script
-	 * @param   string   $newcss    New css style
-	 * @param   int      $id        this is the id of record to be fixed
+	 * @param   string    $filename  Name of css file
+	 * @param   boolean   $parent    if coming form the update script
+	 * @param   string    $newcss    New css style
+	 * @param   int|null  $id        this is the id of record to be fixed
 	 *
 	 * @return boolean
 	 *
 	 * @throws  Exception
 	 * @since   7.1.0
 	 */
-	public static function fixupcss($filename, $parent, $newcss, $id = null)
+	public static function fixupcss(string $filename, bool $parent, string $newcss, int $id = null)
 	{
 		$app = JFactory::getApplication();
-		/* Start by getting existing Style */
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+
+		// Start by getting existing Style
+
+		$driver = new DatabaseFactory;
+		$db     = $driver->getDriver();
+		$query  = $db->getQuery(true);
 		$query->select('*')->from('#__bsms_styles');
 
 		if ($filename)
@@ -370,7 +380,8 @@ class JBSMDbHelper
 		$result = $db->loadObject();
 		$oldcss = $result->stylecode;
 
-		/* Now the arrays of changes that need to be done. */
+		// Now the arrays of changes that need to be done.
+
 		$oldlines = array(
 			".bsm_teachertable_list", "#bslisttable", "#bslisttable", "#landing_table", "#landing_separator",
 			"#landing_item", "#landing_title", "#landinglist"
@@ -381,7 +392,8 @@ class JBSMDbHelper
 		);
 		$oldcss   = str_replace($oldlines, $newlines, $oldcss);
 
-		/* now see if we are adding new css to the db css */
+		// Now see if we are adding new css to the db css
+
 		if ($parent || $newcss)
 		{
 			$newcss = $db->escape($newcss) . ' ' . $oldcss;
@@ -391,7 +403,8 @@ class JBSMDbHelper
 			$newcss = $oldcss;
 		}
 
-		/* no apply the new css back to the table */
+		// No apply the new css back to the table
+
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_styles')->set('stylecode="' . $newcss . '"');
 
@@ -413,7 +426,8 @@ class JBSMDbHelper
 			return false;
 		}
 
-		/* If we are not coming from the upgrade scripts we update the table and let them know what was updated. */
+		// If we are not coming from the upgrade scripts we update the table and let them know what was updated.
+
 		if (!$parent)
 		{
 			self::reloadtable($result, 'Style');
@@ -435,9 +449,10 @@ class JBSMDbHelper
 	 *
 	 * @since 7.0
 	 */
-	public static function reloadtable($result, $table = 'Style')
+	public static function reloadtable(object $result, string $table = 'Style')
 	{
-		$db = JFactory::getDbo();
+		$driver = new DatabaseFactory;
+		$db     = $driver->getDriver();
 
 		// Store new Recorder so it can be seen.
 		JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
@@ -463,15 +478,16 @@ class JBSMDbHelper
 	 *
 	 * @param   bool  $install  If coming from the installer true|false not form installer
 	 *
-	 * @return boolean|int
+	 * @return boolean|integer
 	 *
 	 * @throws Exception
 	 * @since  7.0
 	 */
 	public static function resetdb($install = false)
 	{
-		$app = JFactory::getApplication();
-		$db  = JFactory::getDbo();
+		$app    = JFactory::getApplication();
+		$driver = new DatabaseFactory;
+		$db     = $driver->getDriver();
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');
 		$path = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_biblestudy/install/sql';
@@ -479,7 +495,7 @@ class JBSMDbHelper
 		$files = str_replace('.sql', '', JFolder::files($path, '\.sql$'));
 		$files = array_reverse($files, true);
 
-		if ($install == true)
+		if ($install === true)
 		{
 			foreach ($files as $a => $file)
 			{
@@ -506,7 +522,7 @@ class JBSMDbHelper
 			// Create an array of queries from the sql file
 			$queries = $db->splitSql($buffer);
 
-			if (count($queries) == 0)
+			if (count($queries) === 0)
 			{
 				// No queries to process
 				return 0;
@@ -557,14 +573,15 @@ class JBSMDbHelper
 	 */
 	public static function CleanStudyTopics()
 	{
-		$app   = JFactory::getApplication();
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$app    = JFactory::getApplication();
+		$driver = new DatabaseFactory;
+		$db     = $driver->getDriver();
+		$query  = $db->getQuery(true);
 		$query->select('id')->from('#__bsms_studies');
 		$db->setQuery($query);
 		$results = $db->loadObjectList();
 
-		foreach ($results AS $result)
+		foreach ($results as $result)
 		{
 			$query = $db->getQuery(true);
 			$query->select('id, topic_id')->from('#__bsms_studytopics')->where('study_id = ' . $result->id);
@@ -576,7 +593,7 @@ class JBSMDbHelper
 			{
 				$t = 1;
 
-				foreach ($resulta AS $study_topics)
+				foreach ($resulta as $study_topics)
 				{
 					$query = $db->getQuery(true);
 					$query->select('id')
@@ -590,7 +607,7 @@ class JBSMDbHelper
 
 					if ($records > 1)
 					{
-						foreach ($results AS $id)
+						foreach ($results as $id)
 						{
 							if ($t < $records)
 							{

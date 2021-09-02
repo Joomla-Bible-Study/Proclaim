@@ -26,7 +26,7 @@ class JBSMImage
 	 *
 	 * @since 1.5
 	 */
-	public static $extension = 'com_biblestudy';
+	public static string $extension = 'com_biblestudy';
 
 	/**
 	 * Get Image

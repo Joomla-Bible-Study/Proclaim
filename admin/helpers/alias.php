@@ -10,6 +10,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Database\DatabaseFactory;
+
 /**
  * Class for updating the alias in certain tables
  *
@@ -30,8 +32,8 @@ class JBSMAlias
 	/**
 	 * Update Alias
 	 *
-	 * @since 7.1.0
 	 * @return string
+	 * @since 7.1.0
 	 */
 	public static function updateAlias()
 	{
@@ -108,8 +110,9 @@ class JBSMAlias
 			return false;
 		}
 
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$driver = new DatabaseFactory;
+		$db     = $driver->getDriver();
+		$query  = $db->getQuery(true);
 		$query->select('id, alias, ' . $title)
 			->from($table);
 		$db->setQuery($query);

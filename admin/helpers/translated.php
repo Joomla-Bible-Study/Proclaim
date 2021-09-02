@@ -11,6 +11,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
+use Joomla\Database\DatabaseFactory;
 
 /**
  * class for Translated Helper
@@ -122,7 +123,8 @@ class JBSMTranslated
 			// Check if there should be topics at all to save time
 			if ($topicItem->tp_id)
 			{
-				$db    = JFactory::getDbo();
+				$driver = new DatabaseFactory;
+				$db = $driver->getDriver();
 				$query = $db->getQuery(true);
 				$query->select('#__bsms_topics.topic_text, #__bsms_topics.params AS topic_params')
 					->from('#__bsms_topics')

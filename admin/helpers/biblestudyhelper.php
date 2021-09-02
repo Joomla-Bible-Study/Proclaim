@@ -10,6 +10,9 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Database\DatabaseFactory;
+use Joomla\Registry\Registry;
+
 /**
  * BibleStudy Helper class
  *
@@ -18,6 +21,13 @@ defined('_JEXEC') or die;
  */
 class JBSMBibleStudyHelper
 {
+	/**
+	 * Admin Prams
+	 *
+	 * @var object
+	 *
+	 * @since 1.5
+	 */
 	public static $admin_params = null;
 
 	/**
@@ -37,11 +47,12 @@ class JBSMBibleStudyHelper
 	 *
 	 * @return JObject
 	 *
+	 * @throws \Exception
 	 * @since 1.5
 	 */
 	public static function getActions($Itemid = 0, $type = '')
 	{
-		$user   = JFactory::getUser();
+		$user   = JFactory::getApplication()->getIdentity();
 		$result = new JObject;
 
 		if (empty($Itemid))
@@ -144,8 +155,8 @@ class JBSMBibleStudyHelper
 	 *
 	 * @return void
 	 *
-	 * @since    1.6
 	 * @throws Exception
+	 * @since    1.6
 	 */
 	public static function addSubmenu($vName)
 	{
@@ -251,7 +262,7 @@ class JBSMBibleStudyHelper
 
 		// Cycle through each of the user groups the user is in.
 		// Remember they are include in the Public group as well.
-		foreach ($userGroups AS $groupId)
+		foreach ($userGroups as $groupId)
 		{
 			// May have added a group by not saved the filters.
 			if (!isset($filters->$groupId))
@@ -263,11 +274,7 @@ class JBSMBibleStudyHelper
 			$filterData = $filters->$groupId;
 			$filterType = strtoupper($filterData->filter_type);
 
-			if ($filterType == 'NH')
-			{
-				// Maximum HTML filtering.
-			}
-			else
+			if ($filterType !== 'NH')
 			{
 				if ($filterType == 'NONE')
 				{
@@ -283,7 +290,7 @@ class JBSMBibleStudyHelper
 					$tempTags       = array();
 					$tempAttributes = array();
 
-					foreach ($tags AS $tag)
+					foreach ($tags as $tag)
 					{
 						$tag = trim($tag);
 
@@ -293,7 +300,7 @@ class JBSMBibleStudyHelper
 						}
 					}
 
-					foreach ($attributes AS $attribute)
+					foreach ($attributes as $attribute)
 					{
 						$attribute = trim($attribute);
 
@@ -342,7 +349,6 @@ class JBSMBibleStudyHelper
 			{
 				// Remove the white-listed attributes from the black-list.
 				$filter = JFilterInput::getInstance(
-
 				// Blacklisted tags
 					array_diff($blackListTags, $whiteListTags),
 					// Blacklisted attributes
@@ -369,18 +375,16 @@ class JBSMBibleStudyHelper
 			}
 		}
 
-		$text = $filter->clean($text, 'html');
-
-		return $text;
+		return $filter->clean($text, 'html');
 	}
 
 	/**
 	 * Debug switch state form Admin Settings page
 	 *
-	 * @return int '1' is on '0' is off
+	 * @return integer '1' is on '0' is off
 	 *
-	 * @since 7.1.0
 	 * @throws Exception
+	 * @since 7.1.0
 	 */
 	public static function debug()
 	{
@@ -403,11 +407,11 @@ class JBSMBibleStudyHelper
 	/**
 	 * Media Types
 	 *
-	 * @since 8.0.0
+	 * @return void
+	 * @throws Exception For bad function
+	 * @since       8.0.0
 	 * @depreciated 9.0.0
 	 *
-	 * @throws Exception For bad function
-	 * @return void
 	 */
 	public static function getMediaTypes()
 	{
@@ -420,15 +424,15 @@ class JBSMBibleStudyHelper
 	 *
 	 * @return array        Returns list of years of media files based on createdate
 	 *
-	 * @since 8.0.0
 	 * @throws Exception
+	 * @since 8.0.0
 	 */
 	public static function getMediaYears()
 	{
 		$options = array();
-
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$driver  = new DatabaseFactory;
+		$db      = $driver->getDriver();
+		$query   = $db->getQuery(true);
 
 		$query->select('DISTINCT YEAR(createdate) as value, YEAR(createdate) as text');
 		$query->from('#__bsms_mediafiles');
@@ -454,15 +458,15 @@ class JBSMBibleStudyHelper
 	 *
 	 * @return array  Returns list of message types
 	 *
-	 * @since 8.0.0
 	 * @throws Exception
+	 * @since 8.0.0
 	 */
 	public static function getMessageTypes()
 	{
 		$options = array();
-
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$driver  = new DatabaseFactory;
+		$db      = $driver->getDriver();
+		$query   = $db->getQuery(true);
 
 		$query->select('messageType.id AS value, messageType.message_type AS text');
 		$query->from('#__bsms_message_type AS messageType');
@@ -490,15 +494,15 @@ class JBSMBibleStudyHelper
 	 *
 	 * @return array Returns list of years of studies based on studydate
 	 *
-	 * @since 8.0.0
 	 * @throws Exception
+	 * @since 8.0.0
 	 */
 	public static function getStudyYears()
 	{
 		$options = array();
-
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$driver  = new DatabaseFactory;
+		$db      = $driver->getDriver();
+		$query   = $db->getQuery(true);
 
 		$query->select('DISTINCT YEAR(studydate) as value, YEAR(studydate) as text');
 		$query->from('#__bsms_studies');
@@ -524,15 +528,15 @@ class JBSMBibleStudyHelper
 	 *
 	 * @return array       Returns list of Teachers
 	 *
-	 * @since 8.0.0
 	 * @throws Exception
+	 * @since 8.0.0
 	 */
 	public static function getTeachers()
 	{
 		$options = array();
-
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$driver  = new DatabaseFactory;
+		$db      = $driver->getDriver();
+		$query   = $db->getQuery(true);
 
 		$query->select('teacher.id AS value, teacher.teachername AS text');
 		$query->from('#__bsms_teachers AS teacher');
@@ -560,15 +564,15 @@ class JBSMBibleStudyHelper
 	 *
 	 * @return array Returns list of books
 	 *
-	 * @since 8.0.0
 	 * @throws Exception
+	 * @since 8.0.0
 	 */
 	public static function getStudyBooks()
 	{
 		$options = array();
-
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$driver  = new DatabaseFactory;
+		$db      = $driver->getDriver();
+		$query   = $db->getQuery(true);
 
 		$query->select('book.booknumber AS value, book.bookname AS text, book.id');
 		$query->from('#__bsms_books AS book');
@@ -601,15 +605,15 @@ class JBSMBibleStudyHelper
 	 *
 	 * @return array       Returns list of books
 	 *
-	 * @since 8.0.0
 	 * @throws Exception
+	 * @since 8.0.0
 	 */
 	public static function getStudyMediaTypes()
 	{
 		$options = array();
-
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$driver  = new DatabaseFactory;
+		$db      = $driver->getDriver();
+		$query   = $db->getQuery(true);
 
 		$query->select('messageType.id AS value, messageType.message_type AS text');
 		$query->from('#__bsms_message_type AS messageType');
@@ -637,15 +641,15 @@ class JBSMBibleStudyHelper
 	 *
 	 * @return array       Returns list of books
 	 *
-	 * @since 8.0.0
 	 * @throws Exception
+	 * @since 8.0.0
 	 */
 	public static function getStudyLocations()
 	{
 		$options = array();
-
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$driver  = new DatabaseFactory;
+		$db      = $driver->getDriver();
+		$query   = $db->getQuery(true);
 
 		$query->select('id AS value, location_text AS text');
 		$query->from('#__bsms_locations');
@@ -669,9 +673,9 @@ class JBSMBibleStudyHelper
 	/**
 	 * Sorting the array a Column
 	 *
-	 * @param   array   &$arr  Array to sort
-	 * @param   string  $col   Sort column
-	 * @param   int     $dir   Direction to sort
+	 * @param   array   $arr  Array to sort
+	 * @param   string  $col  Sort column
+	 * @param   int     $dir  Direction to sort
 	 *
 	 * @return void applied back to the array
 	 *
@@ -703,8 +707,7 @@ class JBSMBibleStudyHelper
 	public static function stop($msg = '')
 	{
 		echo $msg;
-		$mainframe = JFactory::getApplication();
-		$mainframe->close();
+		JFactory::getApplication()->close();
 	}
 
 	/**
@@ -744,15 +747,16 @@ class JBSMBibleStudyHelper
 	 *
 	 * @return array
 	 *
-	 * @since 9.1.4
 	 * @throws Exception
+	 * @since 9.1.4
 	 */
 	public static function getUsers()
 	{
 		$options = array();
 
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$driver = new DatabaseFactory;
+		$db     = $driver->getDriver();
+		$query  = $db->getQuery(true);
 
 		$query->select('id AS value, username AS text');
 		$query->from('#__users');
@@ -788,8 +792,8 @@ class JBSMBibleStudyHelper
 	{
 		$count = count($array);
 
-		$return = new stdClass;
-		$return->half = floor($count / 2);
+		$return        = new stdClass;
+		$return->half  = floor($count / 2);
 		$return->count = $count;
 
 		return $return;

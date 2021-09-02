@@ -9,6 +9,8 @@
  * */
 defined('JPATH_BASE') or die;
 
+use Joomla\Database\DatabaseFactory;
+
 /**
  * Biblestudy HTML class.
  *
@@ -52,7 +54,7 @@ abstract class JHtmlBiblestudy
 		}
 
 		JHtml::_('bootstrap.framework', $debug);
-		$app = JFactory::getApplication();
+		$app  = JFactory::getApplication();
 		$menu = $app->getMenu();
 
 		if ($menu->getActive() !== null)
@@ -285,13 +287,14 @@ abstract class JHtmlBiblestudy
 	 *
 	 * @return    array    The field option objects.
 	 *
-	 * @since    1.6
 	 * @throws   Exception
+	 * @since    1.6
 	 */
 	public static function Mediatypelist()
 	{
 		$options = null;
-		$db      = JFactory::getDbo();
+		$driver  = new DatabaseFactory;
+		$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
 		$query->select('id As value, media_text As text');
@@ -318,8 +321,8 @@ abstract class JHtmlBiblestudy
 	 *
 	 * @return  string  The necessary HTML for the widget.
 	 *
-	 * @since   2.5
 	 * @throws  Exception
+	 * @since   2.5
 	 */
 	public static function Teacher()
 	{
@@ -341,13 +344,14 @@ abstract class JHtmlBiblestudy
 	 *
 	 * @return    array    The field option objects.
 	 *
-	 * @since    1.6
 	 * @throws   Exception
+	 * @since    1.6
 	 */
 	public static function Teacherlist()
 	{
 		$options = null;
-		$db      = JFactory::getDbo();
+		$driver  = new DatabaseFactory;
+		$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
 		$query->select('id As value, teachername As text');
@@ -374,8 +378,8 @@ abstract class JHtmlBiblestudy
 	 *
 	 * @return  string  The necessary HTML for the widget.
 	 *
-	 * @since   2.5
 	 * @throws  Exception
+	 * @since   2.5
 	 */
 	public static function Messagetype()
 	{
@@ -397,13 +401,14 @@ abstract class JHtmlBiblestudy
 	 *
 	 * @return    array    The field option objects.
 	 *
-	 * @since    1.6
 	 * @throws   Exception
+	 * @since    1.6
 	 */
 	public static function Messagetypelist()
 	{
 		$options = null;
-		$db      = JFactory::getDbo();
+		$driver  = new DatabaseFactory;
+		$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
 		$query->select('id As value, message_type As text');
@@ -430,8 +435,8 @@ abstract class JHtmlBiblestudy
 	 *
 	 * @return  string  The necessary HTML for the widget.
 	 *
-	 * @since   2.5
 	 * @throws  Exception
+	 * @since   2.5
 	 */
 	public static function Series()
 	{
@@ -453,13 +458,14 @@ abstract class JHtmlBiblestudy
 	 *
 	 * @return    array    The field option objects.
 	 *
-	 * @since    1.6
 	 * @throws   Exception
+	 * @since    1.6
 	 */
 	public static function Serieslist()
 	{
 		$options = null;
-		$db      = JFactory::getDbo();
+		$driver  = new DatabaseFactory;
+		$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
 		$query->select('id As value, series_text As text');

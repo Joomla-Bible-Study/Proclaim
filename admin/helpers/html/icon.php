@@ -7,7 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  */
-// No Direct Access
+defined('JPATH_BASE') or die;
 
 use Joomla\Registry\Registry;
 
@@ -80,8 +80,8 @@ abstract class JHtmlIcon
 	 *
 	 * @return  string  The HTML markup for the email item link
 	 *
-	 * @since 7.0
 	 * @throws \Exception
+	 * @since 7.0
 	 */
 	public static function email($article, $params, $attribs = array(), $legacy = false)
 	{
@@ -115,9 +115,7 @@ abstract class JHtmlIcon
 		$attribs['onclick'] = "window.open(this.href,'win2','" . $status . "'); return false;";
 		$attribs['rel']     = 'nofollow';
 
-		$output = JHtml::_('link', JRoute::_($url), $text, $attribs);
-
-		return $output;
+		return JHtml::_('link', JRoute::_($url), $text, $attribs);
 	}
 
 	/**
@@ -131,7 +129,7 @@ abstract class JHtmlIcon
 	 * @param   array     $attribs  Optional attributes for the link
 	 * @param   boolean   $legacy   True to use legacy images, false to use icomoon based graphic
 	 *
-	 * @return  string	The HTML for the article edit icon.
+	 * @return  string    The HTML for the article edit icon.
 	 *
 	 * @since   1.6
 	 */
@@ -205,9 +203,7 @@ abstract class JHtmlIcon
 				. JText::_('JGLOBAL_EDIT');
 		}
 
-		$output = JHtml::_('link', JRoute::_($url), $text, $attribs);
-
-		return $output;
+		return JHtml::_('link', JRoute::_($url), $text, $attribs);
 	}
 
 	/**
@@ -220,16 +216,16 @@ abstract class JHtmlIcon
 	 *
 	 * @return  string  The HTML markup for the popup link
 	 *
-	 * @since 7.0
 	 * @throws \Exception
+	 * @since 7.0
 	 */
 	public static function print_popup($article, $params, $attribs = array(), $legacy = false)
 	{
-		$app = JFactory::getApplication();
-		$input = $app->input;
+		$app     = JFactory::getApplication();
+		$input   = $app->input;
 		$request = $input->request;
 
-		$url  = JBSMHelperRoute::getArticleRoute($article->id, $article->language);
+		$url = JBSMHelperRoute::getArticleRoute($article->id, $article->language);
 		$url .= '&tmpl=component&print=1&layout=default&page=' . @$request->limitstart;
 
 		$status = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';

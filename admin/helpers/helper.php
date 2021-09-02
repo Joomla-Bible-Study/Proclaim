@@ -11,6 +11,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
+use Joomla\Database\DatabaseFactory;
 
 /**
  * Core Bible Study Helper
@@ -184,8 +185,9 @@ class JBSMHelper
 	 */
 	public static function SetFileSize($id, $size)
 	{
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$driver = new DatabaseFactory;
+		$db     = $driver->getDriver();
+		$query  = $db->getQuery(true);
 		$query->select('id, params')
 			->from('#__bsms_mediafiles')
 			->where('id = ' . (int) $id);
@@ -291,7 +293,7 @@ class JBSMHelper
 	 */
 	public static function clearcache($state = 'site')
 	{
-		$conf    = JFactory::getConfig();
+		$conf    = JFactory::getApplication()->getConfig();
 		$options = array();
 
 		if ($state === 'admin')

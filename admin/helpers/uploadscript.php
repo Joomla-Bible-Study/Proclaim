@@ -10,6 +10,8 @@
 // No direct access
 defined("_JEXEC") or die();
 
+use Joomla\Event;
+
 /**
  * Class UploadScript
  *

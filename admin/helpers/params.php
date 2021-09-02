@@ -10,6 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\Database\DatabaseFactory;
 use Joomla\Registry\Registry;
 
 /**
@@ -29,25 +30,25 @@ class JBSMParams
 	 *
 	 * @since 1.5
 	 */
-	public static $extension = 'com_biblestudy';
+	public static string $extension = 'com_biblestudy';
 
-	/** @var  Object Admin Table
+	/** @var  object Admin Table
 	 *
 	 * @since 1.5
 	 */
 	public static $admin;
 
-	/** @var  Object Template Table
+	/** @var  object Template Table
 	 *
 	 * @since 1.5
 	 */
 	public static $template_table;
 
-	/** @var int Default template id and used to check if changed form from last query
+	/** @var integer Default template id and used to check if changed form from last query
 	 *
 	 * @since 1.5
 	 */
-	public static $t_id = 1;
+	public static int $t_id = 1;
 
 	/**
 	 * Gets the settings from Admin
@@ -61,9 +62,10 @@ class JBSMParams
 	{
 		if (!self::$admin)
 		{
-		    $app   = JFactory::getApplication();
-			$db    = JFactory::getDbo();
-			$query = $db->getQuery(true);
+			$app    = JFactory::getApplication();
+			$driver = new DatabaseFactory;
+			$db     = $driver->getDriver();
+			$query  = $db->getQuery(true);
 			$query->select('*')
 				->from('#__bsms_admin')
 				->where($db->qn('id') . ' = ' . (int) 1);
@@ -110,7 +112,8 @@ class JBSMParams
 	 */
 	public static function getTemplateparams($pk = null)
 	{
-		$db = JFactory::getDbo();
+		$driver = new DatabaseFactory;
+		$db     = $driver->getDriver();
 
 		if (!$pk)
 		{
@@ -165,6 +168,7 @@ class JBSMParams
 	 *
 	 * @return void
 	 *
+	 * @throws \JsonException
 	 * @since 9.1.5
 	 */
 	public static function setCompParams($param_array)
@@ -172,13 +176,14 @@ class JBSMParams
 		if (count($param_array) > 0)
 		{
 			// Read the existing component value(s)
-			$db    = JFactory::getDbo();
-			$query = $db->getQuery(true);
+			$driver = new DatabaseFactory;
+			$db     = $driver->getDriver();
+			$query  = $db->getQuery(true);
 			$query->select('params')
 				->from('#__extensions')
 				->where('name = ' . $db->q('com_biblestudy'));
 			$db->setQuery($query);
-			$params = json_decode($db->loadResult(), true);
+			$params = json_decode($db->loadResult(), true, 512, JSON_THROW_ON_ERROR);
 
 			// Add the new variable(s) to the existing one(s)
 			foreach ($param_array as $name => $value)
@@ -187,7 +192,7 @@ class JBSMParams
 			}
 
 			// Store the combined new and existing values back as a JSON string
-			$paramsString = json_encode($params);
+			$paramsString = json_encode($params, JSON_THROW_ON_ERROR);
 			$query->clear();
 			$query->update('#__extensions')
 				->set('params = ' . $db->q($paramsString))
