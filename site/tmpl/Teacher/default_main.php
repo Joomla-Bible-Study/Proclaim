@@ -1,4 +1,5 @@
 <?php
+use Joomla\CMS\Language\Text;
 /**
  * Teacher view subset main
  *
@@ -36,7 +37,7 @@ $listing = new JBSMListing;
 	<div class="row-fluid">
 		<div class="span12">
 			<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=teachers&t=' . $this->template->id) ?>">
-				<button class="btn"><?php echo '&lt;-- ' . JText::_('JBS_TCH_RETURN_TEACHER_LIST'); ?></button>
+				<button class="btn"><?php echo '&lt;-- ' . Text::_('JBS_TCH_RETURN_TEACHER_LIST'); ?></button>
 			</a>
 			<?php
 			if ($this->params->get('teacherlink', '1') > 0)
@@ -44,7 +45,7 @@ $listing = new JBSMListing;
 				echo '<a href="' .
 					JRoute::_('index.php?option=com_biblestudy&view=sermons&filter_teacher=' . (int) $this->item->id . '&t=' . (int) $this->template->id
 					) .
-					'"><button class="btn">' . JText::_('JBS_TCH_MORE_FROM_THIS_TEACHER') . ' --></button></a>';
+					'"><button class="btn">' . Text::_('JBS_TCH_MORE_FROM_THIS_TEACHER') . ' --></button></a>';
 			}
 			?>
 		</div>

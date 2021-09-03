@@ -17,6 +17,7 @@ use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Table\Table;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\Component\Biblestudy\Admin\Helpers\params;
 
 /**
  * Model class for Teacher
@@ -114,8 +115,8 @@ class TeacherModel extends ListModel
 		// Load the parameters.
 		$params = $app->getParams();
 		$this->setState('params', $params);
-		$template = JBSMParams::getTemplateparams();
-		$admin    = JBSMParams::getAdmin();
+		$template = Params::getTemplateparams();
+		$admin    = Params::getAdmin();
 
 		$template->params->merge($params);
 		$template->params->merge($admin->params);

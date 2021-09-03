@@ -8,6 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
+namespace Joomla\Component\Biblestudy\Admin\Helpers;
 defined('_JEXEC') or die;
 
 use Joomla\Database\DatabaseFactory;
@@ -21,7 +22,7 @@ use Joomla\Registry\Registry;
  *
  * @property $template->params Registry
  */
-class JBSMParams
+class Params
 {
 	/**
 	 * Extension Name
