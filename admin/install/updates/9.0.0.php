@@ -1190,7 +1190,7 @@ class Migration900
 			'/components/com_biblestudy/helpers/filepath.php',
 			'/components/com_biblestudy/helpers/filesize.php',
 			'/components/com_biblestudy/helpers/header.php',
-			'/components/com_biblestudy/helpers/listing.php',
+			'/components/com_biblestudy/helpers/JBSMListing.php',
 			'/components/com_biblestudy/helpers/location.php',
 			'/components/com_biblestudy/helpers/mediatable.php',
 			'/components/com_biblestudy/helpers/messagetype.php',
