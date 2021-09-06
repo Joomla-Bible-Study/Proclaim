@@ -16,10 +16,11 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-namespace ChristianWebMinistries\Component\biblestudy\site\Controller;
+namespace CWM\Component\biblestudy\site\Controller;
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
 
 
@@ -34,9 +35,10 @@ class TeacherController extends BaseController
 	 */
 	public function view()
 	{
-		$input = new JInput;
-		$input->set('view', 'teacher');
-		$input->set('layout', 'default');
+
+        $app = Factory::getApplication('site');
+		$app->set('view', 'teacher');
+		$app->set('layout', 'default');
 
 		parent::display();
 	}

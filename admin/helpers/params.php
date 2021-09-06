@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
-namespace Joomla\Component\Biblestudy\Admin\Helpers;
+namespace CWM\Component\Biblestudy\Admin\Helpers;
 defined('_JEXEC') or die;
 
 use Joomla\Database\DatabaseFactory;

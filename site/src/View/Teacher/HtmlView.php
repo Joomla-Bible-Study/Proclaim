@@ -8,11 +8,13 @@
  * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
-namespace ChristianWebMinistries\Component\Biblestudy\Site\View\Teacher;
+namespace CWM\Component\Biblestudy\Site\View\Teacher;
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
-
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\HTML\HTMLHelper;
 /**
  * View class for Teacher
  *
@@ -86,10 +88,10 @@ class HtmlView extends TeacherView
 
 		JHtml::_('biblestudy.framework');
 		JHtml::_('biblestudy.loadCss', $params, null, 'font-awesome');
+        $input = Factory::getApplication('site');
 
-		$input = new JInput;
 
-		$item = $this->get('Item');
+		$item = $this->item;
 
 		// Add the slug
 		$item->slug = $item->alias ? ($item->id . ':' . $item->alias) : str_replace(
@@ -129,12 +131,13 @@ class HtmlView extends TeacherView
 		// Check to see if com_contact used instead
 		if ($item->contact)
 		{
-			$language = JFactory::getLanguage();
+			$language = Factory::getLanguage();
 			$language->load('com_contact', JPATH_SITE);
 			require_once JPATH_ROOT . '/components/com_contact/models/contact.php';
 
-			/** @var ContactModelContact $contactmodel */
-			$contactmodel  = JModelLegacy::getInstance('contact', 'contactModel');
+
+
+			$contactmodel  = ListModel::getInstance('contact', 'contactModel');
 			$this->contact = $contactmodel->getItem($pk = $item->contact);
 
 			// Substitute contact info from com_contacts for duplicate fields
@@ -161,11 +164,12 @@ class HtmlView extends TeacherView
 
 		$this->item = $item;
 
-		$whereitem  = intval($item->id);
+		$whereitem  = (int)$item->id;
 		$wherefield = 'study.teacher_id';
 		$limit      = $params->get('studies', '20');
 		$order      = 'DESC';
-		$template      = $this->get('template');
+		//$template      = $this->get('template');
+        $template      = Factory::getApplication()->getTemplate('template');
 
 		if ($params->get('show_teacher_studies') > 0)
 		{
@@ -244,7 +248,7 @@ class HtmlView extends TeacherView
 		$this->print    = $print;
 		$this->params   = $params;
 		$this->template = $this->state->template;
-		$this->document = JFactory::getDocument();
+		$this->document = Factory::getDocument();
 
 		$this->_prepareDocument();
 
