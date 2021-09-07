@@ -11,7 +11,7 @@ use Joomla\CMS\Language\Text;
 // No Direct Access
 defined('_JEXEC') or die;
 
-$listing = new JBSMListing;
+$listing = new CWMListing();
 ?>
 <div class="container-fluid">
 

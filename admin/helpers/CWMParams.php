@@ -8,11 +8,11 @@
  * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
-namespace CWM\Component\Biblestudy\Admin\Helpers;
+namespace CWM\Component\Biblestudy\Admin\Helpers\CWMParams;
 defined('_JEXEC') or die;
 
-use Joomla\Database\DatabaseFactory;
 use Joomla\Registry\Registry;
+use Joomla\CMS\Factory;
 
 /**
  * This is for Retrieving Admin and Template db
@@ -22,7 +22,7 @@ use Joomla\Registry\Registry;
  *
  * @property $template->params Registry
  */
-class Params
+class CWMParams
 {
 	/**
 	 * Extension Name
@@ -63,10 +63,9 @@ class Params
 	{
 		if (!self::$admin)
 		{
-			$app    = JFactory::getApplication();
-			$driver = new DatabaseFactory;
-			$db     = $driver->getDriver();
-			$query  = $db->getQuery(true);
+			$app    = Factory::getApplication();
+            $db = Factory::getDbo();
+            $query = $db->getQuery(true);
 			$query->select('*')
 				->from('#__bsms_admin')
 				->where($db->qn('id') . ' = ' . (int) 1);
@@ -113,12 +112,12 @@ class Params
 	 */
 	public static function getTemplateparams($pk = null)
 	{
-		$driver = new DatabaseFactory;
+		$driver = new Database\DatabaseFactory;
 		$db     = $driver->getDriver();
 
 		if (!$pk)
 		{
-			$pk = JFactory::getApplication()->input->getInt('t', '1');
+			$pk = Factory::getApplication()->input->getInt('t', '1');
 		}
 
 		if (self::$t_id !== $pk || !self::$template_table)

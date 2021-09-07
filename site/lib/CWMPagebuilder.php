@@ -8,6 +8,8 @@
  * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
+use Joomla\CMS\Language;
+use Joomla\CMS\Factory;
 defined('_JEXEC') or die;
 
 /**
@@ -15,7 +17,7 @@ defined('_JEXEC') or die;
  *
  * @since  7.0.1
  */
-class JBSMPageBuilder
+class CWMPageBuilder
 {
 	/** @var string Extension Name
 	 * @since 7.0
@@ -99,14 +101,14 @@ class JBSMPageBuilder
 
 			foreach ($topics as $key => $value)
 			{
-				$topics[$key] = JText::_($value);
+				$topics[$key] = Text::_($value);
 			}
 
 			$page->topics = implode(', ', $topics);
 		}
 		else
 		{
-			$page->topics = JText::_($item->topics_text);
+			$page->topics = Text::_($item->topics_text);
 		}
 
 		if ($item->thumbnailm)
@@ -315,7 +317,7 @@ class JBSMPageBuilder
 	 */
 	public function studyBuilder($whereitem = null, $wherefield = null, $params = null, $limit = 10, $order = 'DESC', $template = null)
 	{
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 
 		$orderparam = $params->get('order', '1');
 
@@ -325,7 +327,7 @@ class JBSMPageBuilder
 		}
 
 		// Compute view access permissions.
-		$user   = JFactory::getUser();
+		$user   = Factory::getUser();
 		$groups = implode(',', $user->getAuthorisedViewLevels());
 
 		$query = $db->getQuery(true);
@@ -397,7 +399,7 @@ class JBSMPageBuilder
 
 		// Define null and now dates
 		$nullDate = $db->quote($db->getNullDate());
-		$nowDate  = $db->quote(JFactory::getDate()->toSql());
+		$nowDate  = $db->quote(Factory::getDate()->toSql());
 
 		// Filter by start and end dates.
 		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
@@ -415,7 +417,7 @@ class JBSMPageBuilder
 		}
 		elseif ($language !== '*')
 		{
-			$query->where('study.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
+			$query->where('study.language in (' . $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
 		}
 
 		$query->order('studydate ' . $order);

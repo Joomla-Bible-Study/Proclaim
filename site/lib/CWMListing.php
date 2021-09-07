@@ -19,13 +19,14 @@ if (file_exists($api))
 }
 
 use Joomla\Registry\Registry;
-
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 /**
  * BibleStudy listing class
  *
  * @since  7.0.0
  */
-class JBSMListing
+class CWMListing
 {
 	/** @var  Registry
 	 * @since 7.0
@@ -47,7 +48,7 @@ class JBSMListing
 	 */
 	public function getFluidListing($items, $params, $template, $type)
 	{
-		$list         = '';
+		$list         = null;
 		$row          = array();
 		$this->params = $params;
 		$item         = '';
@@ -787,7 +788,7 @@ class JBSMListing
 			case 2:
 				if ((isset($item->thumbnailm) && !empty($item->thumbnailm)) || isset($item->thumbnailm))
 				{
-					$span = $this->useJImage($item->thumbnailm, JText::_('JBS_CMN_THUMBNAIL'), '', '', '', $params->get('rowspanitemimage'));
+					$span = $this->useJImage($item->thumbnailm, Text::_('JBS_CMN_THUMBNAIL'), '', '', '', $params->get('rowspanitemimage'));
 				}
 				else
 				{
@@ -798,7 +799,7 @@ class JBSMListing
 			case 3:
 				if (isset($item->series_thumbnail) && !empty($item->series_thumbnail))
 				{
-					$span = $this->useJImage($item->series_thumbnail, JText::_('JBS_CMN_SERIES'), '', '', '', $params->get('rowspanitemimage'));
+					$span = $this->useJImage($item->series_thumbnail, Text::_('JBS_CMN_SERIES'), '', '', '', $params->get('rowspanitemimage'));
 				}
 				else
 				{
@@ -1216,7 +1217,7 @@ class JBSMListing
 			case $extra . 'teacherlong':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_TCH_INFORMATION');
+					$data = Text::_('JBS_TCH_INFORMATION');
 				}
 				else
 				{
@@ -1227,7 +1228,7 @@ class JBSMListing
 			case $extra . 'teacheraddress':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_TCH_ADDRESS');
+					$data = Text::_('JBS_TCH_ADDRESS');
 				}
 				else
 				{
@@ -1238,7 +1239,7 @@ class JBSMListing
 			case $extra . 'teacherlink1':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_TCH_LINK1');
+					$data = Text::_('JBS_TCH_LINK1');
 				}
 				else
 				{
@@ -1259,7 +1260,7 @@ class JBSMListing
 			case $extra . 'teacherlink2':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_TCH_LINK2');
+					$data = Text::_('JBS_TCH_LINK2');
 				}
 				else
 				{
@@ -1280,7 +1281,7 @@ class JBSMListing
 			case $extra . 'teacherlink3':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_TCH_LINK3');
+					$data = Text::_('JBS_TCH_LINK3');
 				}
 				else
 				{
@@ -1300,7 +1301,7 @@ class JBSMListing
 			case $extra . 'teacheremail':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_TCH_EMAIL');
+					$data = Text::_('JBS_TCH_EMAIL');
 				}
 				else
 				{
@@ -1312,7 +1313,7 @@ class JBSMListing
 			case $extra . 'teacherweb':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_TCH_WEBSITE');
+					$data = Text::_('JBS_TCH_WEBSITE');
 				}
 				else
 				{
@@ -1335,7 +1336,7 @@ class JBSMListing
 			case $extra . 'teacherphone':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_TCH_PHONE');
+					$data = Text::_('JBS_TCH_PHONE');
 				}
 				else
 				{
@@ -1346,7 +1347,7 @@ class JBSMListing
 			case $extra . 'teacherfb':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_TCH_FACEBOOK');
+					$data = Text::_('JBS_TCH_FACEBOOK');
 				}
 				else
 				{
@@ -1369,7 +1370,7 @@ class JBSMListing
 			case $extra . 'teachertw':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_TCH_TWITTER');
+					$data = Text::_('JBS_TCH_TWITTER');
 				}
 				else
 				{
@@ -1393,7 +1394,7 @@ class JBSMListing
 			case $extra . 'teacherblog':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_TCH_BLOG');
+					$data = Text::_('JBS_TCH_BLOG');
 				}
 				else
 				{
@@ -1417,7 +1418,7 @@ class JBSMListing
 			case $extra . 'teachershort':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_TCH_SHORT_LIST');
+					$data = Text::_('JBS_TCH_SHORT_LIST');
 				}
 				else
 				{
@@ -1431,7 +1432,7 @@ class JBSMListing
 
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_CMN_SCRIPTURE');
+					$data = Text::_('JBS_CMN_SCRIPTURE');
 				}
 				else
 				{
@@ -1444,7 +1445,7 @@ class JBSMListing
 
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_CMN_SCRIPTURE');
+					$data = Text::_('JBS_CMN_SCRIPTURE');
 				}
 				else
 				{
@@ -1454,7 +1455,7 @@ class JBSMListing
 			case $extra . 'secondary':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_CMN_SECONDARY_REFERENCES');
+					$data = Text::_('JBS_CMN_SECONDARY_REFERENCES');
 				}
 				else
 				{
@@ -1464,7 +1465,7 @@ class JBSMListing
 			case $extra . 'title':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_CMN_TITLE');
+					$data = Text::_('JBS_CMN_TITLE');
 				}
 				else
 				{
@@ -1474,7 +1475,7 @@ class JBSMListing
 			case $extra . 'date':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_CMN_STUDY_DATE');
+					$data = Text::_('JBS_CMN_STUDY_DATE');
 				}
 				else
 				{
@@ -1484,7 +1485,7 @@ class JBSMListing
 			case $extra . 'teacher':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_CMN_TEACHER');
+					$data = Text::_('JBS_CMN_TEACHER');
 				}
 				else
 				{
@@ -1495,7 +1496,7 @@ class JBSMListing
 			case $extra . 'teacher-title':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_CMN_TEACHER');
+					$data = Text::_('JBS_CMN_TEACHER');
 				}
 				elseif (isset($item->title) && isset($item->teachername))
 				{
@@ -1509,7 +1510,7 @@ class JBSMListing
 			case $extra . 'studyintro':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_CMN_STUDY_INTRO');
+					$data = Text::_('JBS_CMN_STUDY_INTRO');
 				}
 				else
 				{
@@ -1519,7 +1520,7 @@ class JBSMListing
 			case $extra . 'series':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_CMN_SERIES');
+					$data = Text::_('JBS_CMN_SERIES');
 				}
 				else
 				{
@@ -1529,13 +1530,13 @@ class JBSMListing
 			case $extra . 'seriesthumbnail':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_CMN_THUMBNAIL');
+					$data = Text::_('JBS_CMN_THUMBNAIL');
 				}
 				else
 				{
 					if ($item->series_thumbnail)
 					{
-						$data = $this->useJImage($item->series_thumbnail, JText::_('JBS_CMN_THUMBNAIL'));
+						$data = $this->useJImage($item->series_thumbnail, Text::_('JBS_CMN_THUMBNAIL'));
 					}
 					else
 					{
@@ -1546,11 +1547,11 @@ class JBSMListing
 			case $extra . 'teacherlargeimage':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_TCH_TEACHER_IMAGE');
+					$data = Text::_('JBS_TCH_TEACHER_IMAGE');
 				}
 				elseif (isset($item->teacher_image) && !empty($item->teacher_image))
 				{
-					$data = $this->useJImage($item->teacher_image, JText::_('JBS_CMN_THUMBNAIL'));
+					$data = $this->useJImage($item->teacher_image, Text::_('JBS_CMN_THUMBNAIL'));
 				}
 				else
 				{
@@ -1575,7 +1576,7 @@ class JBSMListing
 			case $extra . 'submitted':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_CMN_SUBMITTED_BY');
+					$data = Text::_('JBS_CMN_SUBMITTED_BY');
 				}
 				else
 				{
@@ -1585,7 +1586,7 @@ class JBSMListing
 			case $extra . 'hits':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_CMN_VIEWS');
+					$data = Text::_('JBS_CMN_VIEWS');
 				}
 				else
 				{
@@ -1595,7 +1596,7 @@ class JBSMListing
 			case $extra . 'downloads':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_CMN_DOWNLOADS');
+					$data = Text::_('JBS_CMN_DOWNLOADS');
 				}
 				else
 				{
@@ -1605,7 +1606,7 @@ class JBSMListing
 			case $extra . 'studynumber':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_CMN_STUDYNUMBER');
+					$data = Text::_('JBS_CMN_STUDYNUMBER');
 				}
 				else
 				{
@@ -1615,7 +1616,7 @@ class JBSMListing
 			case $extra . 'topic':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_CMN_TOPIC');
+					$data = Text::_('JBS_CMN_TOPIC');
 				}
 				elseif (isset($item->topics_text))
 				{
@@ -1625,21 +1626,21 @@ class JBSMListing
 
 						foreach ($topics as $key => $value)
 						{
-							$topics[$key] = JText::_($value);
+							$topics[$key] = Text::_($value);
 						}
 
 						$data = implode(', ', $topics);
 					}
 					else
 					{
-						(isset($item->topics_text) ? $data = JText::_($item->topics_text) : $data = '');
+						(isset($item->topics_text) ? $data = Text::_($item->topics_text) : $data = '');
 					}
 				}
 				break;
 			case $extra . 'locations':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_CMN_LOCATION');
+					$data = Text::_('JBS_CMN_LOCATION');
 				}
 				else
 				{
@@ -1649,7 +1650,7 @@ class JBSMListing
 			case $extra . 'jbsmedia':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_CMN_MEDIA');
+					$data = Text::_('JBS_CMN_MEDIA');
 				}
 				else
 				{
@@ -1659,7 +1660,7 @@ class JBSMListing
 			case $extra . 'messagetype':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_CMN_MESSAGETYPE');
+					$data = Text::_('JBS_CMN_MESSAGETYPE');
 				}
 				else
 				{
@@ -1669,11 +1670,11 @@ class JBSMListing
 			case $extra . 'thumbnail':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_CMN_THUMBNAIL');
+					$data = Text::_('JBS_CMN_THUMBNAIL');
 				}
 				elseif ($item->thumbnailm)
 				{
-					$data = $this->useJImage($item->thumbnailm, JText::_('JBS_CMN_THUMBNAIL'));
+					$data = $this->useJImage($item->thumbnailm, Text::_('JBS_CMN_THUMBNAIL'));
 				}
 				else
 				{
@@ -1683,13 +1684,13 @@ class JBSMListing
 			case $extra . 'teacherimage':
 				if ($header === 1)
 				{
-					$data = JText::_('JBS_TCH_TEACHER_IMAGE');
+					$data = Text::_('JBS_TCH_TEACHER_IMAGE');
 				}
 				elseif ($type === 'seriesdisplays' || $type === 'seriesdisplay' || $type === 'teachers' || $type === 'teacher')
 				{
 					if (isset($item->teacher_thumbnail) && !empty($item->teacher_thumbnail))
 					{
-						$data = $this->useJImage($item->teacher_thumbnail, JText::_('JBS_CMN_THUMBNAIL'));
+						$data = $this->useJImage($item->teacher_thumbnail, Text::_('JBS_CMN_THUMBNAIL'));
 					}
 					else
 					{
@@ -1700,7 +1701,7 @@ class JBSMListing
 				{
 					if ($item->thumb)
 					{
-						$data = $this->useJImage($item->thumb, JText::_('JBS_CMN_THUMBNAIL'));
+						$data = $this->useJImage($item->thumb, Text::_('JBS_CMN_THUMBNAIL'));
 					}
 					else
 					{
@@ -1965,7 +1966,7 @@ class JBSMListing
 					$element = '';
 				}
 				break;
-				break;
+
 			case 'topics':
 				if (isset($row->topics_text))
 				{
@@ -1975,14 +1976,14 @@ class JBSMListing
 
 						foreach ($topics as $key => $value)
 						{
-							$topics[$key] = JText::_($value);
+							$topics[$key] = Text::_($value);
 						}
 
 						$element = implode(', ', $topics);
 					}
 					else
 					{
-						(isset($row->topics_text) ? $element = JText::_($row->topics_text) : $element = '');
+						(isset($row->topics_text) ? $element = Text::_($row->topics_text) : $element = '');
 					}
 				}
 				break;
@@ -2037,7 +2038,7 @@ class JBSMListing
 			case 'hits':
 				if (isset($row->hits))
 				{
-					$element = JText::_('JBS_CMN_HITS') . ' ' . $row->hits;
+					$element = Text::_('JBS_CMN_HITS') . ' ' . $row->hits;
 				}
 				else
 				{
@@ -2088,7 +2089,7 @@ class JBSMListing
 			$ch_e       = $row->chapter_end2;
 			$v_b        = $row->verse_begin2;
 			$v_e        = $row->verse_end2;
-			$book       = JText::_($row->bookname2);
+			$book       = Text::_($row->bookname2);
 		}
 		elseif ($scripturerow === 1 && isset($row->booknumber) >= 1)
 		{
@@ -2100,7 +2101,7 @@ class JBSMListing
 
 			if (isset($row->bookname))
 			{
-				$book = JText::_($row->bookname);
+				$book = Text::_($row->bookname);
 			}
 		}
 
@@ -2309,7 +2310,7 @@ class JBSMListing
 						$date = date("j/n/Y", strtotime($studydate));
 						break;
 					case 8:
-						$date = JHtml::_('date', $studydate, JText::_('DATE_FORMAT_LC'), null);
+						$date = JHtml::_('date', $studydate, Text::_('DATE_FORMAT_LC'), null);
 						break;
 					case 9:
 						$date = JHtml::_('date', $studydate, "Y/M/D", null);
@@ -2649,7 +2650,7 @@ class JBSMListing
 		}
 		else
 		{
-			$response = JText::_('JBS_STY_NO_PASSAGE_INCLUDED');
+			$response = Text::_('JBS_STY_NO_PASSAGE_INCLUDED');
 		}
 
 		return $response;
