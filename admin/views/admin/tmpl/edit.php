@@ -10,20 +10,23 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
-use Joomla\CMS\Router\Route;
-use Joomla\Registry\Registry;
 
 // Load the tooltip behavior.
 JHtml::_('jquery.framework');
 JHtml::_('formbehavior.chosen', 'select');
 
+/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
+$wa = $this->document->getWebAssetManager();
+$wa->useScript('keepalive')
+	->useScript('form.validate');
+
 $app   = JFactory::getApplication();
 $input = $app->input;
+
+$this->useCoreUI = true;
 ?>
 <script type="text/javascript">
 	jQuery.submitbutton3 = function () {
@@ -71,17 +74,17 @@ $input = $app->input;
 					var thumbnail_series_size_old = jQuery('#thumbnail_series_size_old')
 					var thumbnail_study_size_old = jQuery('#thumbnail_study_size_old')
 					if (thumbnail_teacher_size_old.val() !== jQuery('#jform_params_thumbnail_teacher_size').val() &&
-						thumbnail_teacher_size_old.val() != '')
+						thumbnail_teacher_size_old.val() !== '')
 					{
 						thumbnail_changes.push('teachers')
 					}
 					if (thumbnail_series_size_old.val() !== jQuery('#jform_params_thumbnail_series_size').val() &&
-						thumbnail_series_size_old.val() != '')
+						thumbnail_series_size_old.val() !== '')
 					{
 						thumbnail_changes.push('series')
 					}
 					if (thumbnail_study_size_old.val() !== jQuery('#jform_params_thumbnail_study_size').val() &&
-						thumbnail_study_size_old.val() != '')
+						thumbnail_study_size_old.val() !== '')
 					{
 						thumbnail_changes.push('studies')
 					}
@@ -184,7 +187,7 @@ $input = $app->input;
 
 <form
 		action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=admin&layout=edit&id=' . (int) $this->item->id); ?>"
-		method="post" name="adminForm" id="item-cpanl"
+		method="post" name="adminForm" id="item-admin"
 		aria-label="<?php echo Text::_('COM_CONTENT_FORM_TITLE_' . ((int) $this->item->id === 0 ? 'NEW' : 'EDIT'), true); ?>"
 		class="form-validate">
 	<?php echo LayoutHelper::render('joomla.edit.title_alias', $this); ?>

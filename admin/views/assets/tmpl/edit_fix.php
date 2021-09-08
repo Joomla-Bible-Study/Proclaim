@@ -11,9 +11,6 @@
 // Protect from unauthorized access
 defined('_JEXEC') or die();
 
-JHtml::_('behavior.framework');
-JHtml::_('behavior.modal');
-
 if ($this->more)
 {
 	?>
@@ -28,7 +25,7 @@ else
 }
 ?>
 
-<script type="text/javascript" language="javascript">
+<script type="text/javascript">
 	if (typeof jQuery == 'function') {
 		if (typeof jQuery.ui == 'object') {
 			jQuery('#nojquerywarning').css('display', 'none');

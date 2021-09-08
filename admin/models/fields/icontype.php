@@ -10,6 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Form\Field\ListField;
 JFormHelper::loadFieldClass('list');
 
 /**
@@ -18,7 +19,7 @@ JFormHelper::loadFieldClass('list');
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class JFormFieldIcontype extends JFormFieldList
+class JFormFieldIcontype extends ListField
 {
 	/**
 	 * The field type.
@@ -39,26 +40,7 @@ class JFormFieldIcontype extends JFormFieldList
 	 */
 	protected function getInput()
 	{
-		$attr = '';
-
-		// Initialize some field attributes.
-		$attr .= !empty($this->class) ? ' class="' . $this->class . '"' : '';
-		$attr .= !empty($this->size) ? ' size="' . $this->size . '"' : '';
-		$attr .= $this->multiple ? ' multiple' : '';
-		$attr .= $this->required ? ' required aria-required="true"' : '';
-		$attr .= $this->autofocus ? ' autofocus' : '';
-
-		// To avoid user's confusion, readonly="true" should imply disabled="true".
-		if ((string) $this->readonly === '1'
-			|| (string) $this->readonly === 'true'
-			|| (string) $this->disabled === '1'
-			|| (string) $this->disabled === 'true'
-		)
-		{
-			$attr .= ' disabled="disabled"';
-		}
-
-		$options = $this->getOptions();
+		$data = $this->getLayoutData();
 
 		$convert = [
 			'fa fa-play'          => 'fas fa-play',
@@ -75,13 +57,9 @@ class JFormFieldIcontype extends JFormFieldList
 			$this->value = $convert[$this->value];
 		}
 
-		// Initialize JavaScript field attributes.
-		$attr .= $this->onchange ? ' onchange="' . $this->onchange . '"' : '';
-		$html[] = JHtml::_('select.genericlist', $options, $this->name, trim($attr), 'value', 'text', $this->value,
-			$this->id
-		);
+		$data['options'] = (array) $this->getOptions();
 
-		return implode($html);
+		return $this->getRenderer($this->layout)->render($data);
 	}
 
 	/**

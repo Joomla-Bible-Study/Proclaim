@@ -8,6 +8,8 @@
  * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
+use Joomla\CMS\Object\CMSObject;
+
 defined('_JEXEC') or die;
 
 /**
@@ -25,6 +27,14 @@ class BiblestudyModelTeacher extends JModelAdmin
 	 * @since    1.6
 	 */
 	protected $text_prefix = 'COM_BIBLESTUDY';
+
+	/**
+	 * Items data
+	 *
+	 * @var  CMSObject|boolean
+	 * @since 10.0.0
+	 */
+	private $data;
 
 	/**
 	 * Method to get a table object, load it if necessary.
@@ -59,7 +69,7 @@ class BiblestudyModelTeacher extends JModelAdmin
 		// Get the form.
 		$form = $this->loadForm('com_biblestudy.teacher', 'teacher', array('control' => 'jform', 'load_data' => $loadData));
 
-		if (empty($form))
+		if ($form === null)
 		{
 			return false;
 		}
@@ -125,10 +135,8 @@ class BiblestudyModelTeacher extends JModelAdmin
 
 			return false;
 		}
-		else
-		{
-			return $canDoState;
-		}
+
+		return $canDoState;
 	}
 
 	/**
@@ -224,14 +232,9 @@ class BiblestudyModelTeacher extends JModelAdmin
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
-		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.teacher.data', array());
+		$session = JFactory::getApplication()->getUserState('com_biblestudy.edit.teacher.data', array());
 
-		if (empty($data))
-		{
-			$data = $this->getItem();
-		}
-
-		return $data;
+		return empty($session) ? $this->data : $session;
 	}
 
 	/**
@@ -241,18 +244,32 @@ class BiblestudyModelTeacher extends JModelAdmin
 	 *
 	 * @return    mixed    Object on success, false on failure.
 	 *
+	 * @throws \Exception
 	 * @since    1.7.0
 	 */
 	public function getItem($pk = null)
 	{
-		$item = parent::getItem($pk);
+		$jinput = JFactory::getApplication()->input;
 
-		if ($item)
+		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
+		if ($jinput->get('a_id'))
 		{
-			// Convert the params field to an array.
+			$pk = $jinput->get('a_id', 0);
+		}
+		else
+		{
+			// The back end uses id so we use that the rest of the time and set it to 0 by default.
+			$pk = $jinput->get('id', 0);
 		}
 
-		return $item;
+		if (!empty($this->data))
+		{
+			return $this->data;
+		}
+
+		$this->data = parent::getItem($pk);
+
+		return $this->data;
 	}
 
 	/**
@@ -260,7 +277,7 @@ class BiblestudyModelTeacher extends JModelAdmin
 	 *
 	 * @param   TableTeacher  $table  A reference to a JTable object.
 	 *
-	 * @return    void
+	 * @return  void
 	 *
 	 * @since    1.6
 	 */

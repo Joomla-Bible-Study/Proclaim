@@ -19,6 +19,22 @@ defined('_JEXEC') or die;
 class BiblestudyControllerTeacher extends JControllerForm
 {
 	/**
+	 * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
+	 *
+	 * @var   string
+	 * @since 7.0
+	 */
+	protected $view_list = 'teachers';
+
+	/**
+	 * The URL option for the component.
+	 *
+	 * @var    string
+	 * @since  12.2
+	 */
+	protected $option = 'com_biblestudy';
+
+	/**
 	 * Method to run batch operations.
 	 *
 	 * @param   JModelLegacy  $model  The model.

@@ -10,7 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-// Load the tooltip behavior.
 JHtml::_('behavior.formvalidator');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
@@ -30,26 +29,39 @@ else
 	$teacher_thumbnail = $this->admin->params->get('default_teacher_image');
 }
 
+/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
+$wa = $this->document->getWebAssetManager();
+$wa->useScript('keepalive')
+	->useScript('form.validate');
+
+$this->useCoreUI = true;
+
 ?>
 <script type="text/javascript">
 	Joomla.submitbutton = function (task) {
-		if (task == 'teacher.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
-			Joomla.submitform(task, document.getElementById('item-form'));
-		} else {
-			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
+		if (task === 'teacher.cancel' || document.formvalidator.isValid(document.getElementById('teacher-form')))
+		{
+			Joomla.submitform(task, document.getElementById('teacher-form'))
 		}
-	};
-	function jInsertFieldValue(value, id) {
-		var old_id = document.id(id).value;
-		if (old_id != id) {
-			var elem = document.id(id);
-			elem.value = value;
-			elem.fireEvent("change");
+		else
+		{
+			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>')
+		}
+	}
+
+	function jInsertFieldValue (value, id)
+	{
+		var old_id = document.id(id).value
+		if (old_id !== id)
+		{
+			var elem = document.id(id)
+			elem.value = value
+			elem.fireEvent('change')
 		}
 	}
 </script>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=edit&id=' . (int) $this->item->id); ?>"
-      method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
+      method="post" name="adminForm" id="teacher-form" class="form-validate" enctype="multipart/form-data">
 	<div class="row-fluid">
 		<!-- Begin Content -->
 		<div class="span8 form-horizontal">
@@ -319,4 +331,7 @@ else
 		<!-- End Sidebar -->
 		<?php echo $this->form->getInput('id'); ?>
 		<?php echo $this->form->getInput('teacher_image'); ?>
+		<input type="hidden" name="task" value=""/>
+		<input type="hidden" name="return" value="<?php echo JFactory::getApplication()->input->getCmd('return'); ?>"/>
+		<?php echo JHtml::_('form.token'); ?>
 </form>

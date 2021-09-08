@@ -10,7 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-use Joomla\Database\DatabaseFactory;
 use Joomla\Utilities\ArrayHelper;
 
 /**
@@ -92,8 +91,7 @@ class BiblestudyControllerTemplate extends JControllerForm
 	 */
 	public function getTemplate($template)
 	{
-		$driver = new DatabaseFactory;
-		$db     = $driver->getDriver();
+		$db     = JFactory::getDbo();
 		$query  = $db->getQuery(true);
 		$query->select('tc.id, tc.templatecode,tc.type,tc.filename');
 		$query->from('#__bsms_templatecode as tc');

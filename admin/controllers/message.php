@@ -10,8 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-use Joomla\Database\DatabaseFactory;
-
 /**
  * Controller for Message
  *
@@ -96,8 +94,7 @@ class BiblestudyControllerMessage extends JControllerForm
 		$msg    = null;
 		$input  = new Joomla\Input\Input;
 		$id     = $input->get('id', 0, 'int');
-		$driver = new DatabaseFactory;
-		$db     = $driver->getDriver();
+		$db     = JFactory::getDbo();
 		$query  = $db->getQuery(true);
 		$query->update('#__bsms_studies')
 			->set('hits = ' . $db->q('0'))
@@ -177,8 +174,7 @@ class BiblestudyControllerMessage extends JControllerForm
 		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_biblestudy/tables');
 
 		// Remove Exerting StudyTopics tags
-		$driver = new DatabaseFactory;
-		$db = $driver->getDriver();
+		$db = JFactory::getDbo();
 		$qurey = $db->getQuery(true);
 		$qurey->delete('#__bsms_studytopics')
 			->where('study_id =' . $data['id']);

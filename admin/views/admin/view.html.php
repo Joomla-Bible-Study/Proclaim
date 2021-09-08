@@ -11,6 +11,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Registry\Registry;
 
 /**
@@ -196,9 +197,9 @@ class BiblestudyViewAdmin extends JViewLegacy
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
-	 * @see     fetch()
-	 * @since   11.1
 	 * @throws  Exception
+	 * @since   11.1
+	 * @see     fetch()
 	 */
 	public function display($tpl = null)
 	{
@@ -244,7 +245,9 @@ class BiblestudyViewAdmin extends JViewLegacy
 
 				$types[]                      = JHtml::_('select.option', '0', JText::_('JBS_IBM_SELECT_DB'));
 				$types                        = array_merge($types, $filelist);
-				$this->lists['backedupfiles'] = JHtml::_('select.genericlist', $types, 'backuprestore', 'class="inputbox" size="1" ', 'value', 'text', '');
+				$this->lists['backedupfiles'] = JHtml::_('select.genericlist', $types, 'backuprestore',
+					'class="inputbox" size="1" ', 'value', 'text', ''
+				);
 			}
 		}
 		else
@@ -305,13 +308,13 @@ class BiblestudyViewAdmin extends JViewLegacy
 		$this->setDocument();
 
 		// Display the template
-		return parent::display($tpl);
+		parent::display($tpl);
 	}
 
 	/**
 	 * Add Toolbar
 	 *
-	 * @return null
+	 * @return void
 	 *
 	 * @since 7.0.0
 	 */
@@ -319,30 +322,31 @@ class BiblestudyViewAdmin extends JViewLegacy
 	{
 		Factory::getApplication()->input->set('hidemainmenu', true);
 		/** @noinspection PhpMethodOrClassCallIsNotCaseSensitiveInspection */
-		JToolbarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'options options');
-		JToolbarHelper::preferences('com_biblestudy', '600', '800', 'JBS_ADM_PERMISSIONS');
-		JToolbarHelper::divider();
-		JToolbarHelper::apply('admin.apply');
-		JToolbarHelper::save('admin.save');
-		JToolbarHelper::cancel('admin.cancel', 'JTOOLBAR_CLOSE');
-		JToolbarHelper::divider();
-		JToolbarHelper::custom('admin.resetHits', 'reset.png', 'Reset All Hits', 'JBS_ADM_RESET_ALL_HITS', false);
-		JToolbarHelper::custom('admin.resetDownloads', 'download.png', 'Reset All Download Hits', 'JBS_ADM_RESET_ALL_DOWNLOAD_HITS', false);
-		JToolbarHelper::custom('admin.resetPlays', 'play.png', 'Reset All Plays', 'JBS_ADM_RESET_ALL_PLAYS', false);
-		JToolbarHelper::divider();
-		JToolbarHelper::help('biblestudy', true);
+		ToolbarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'options options');
+		ToolbarHelper::preferences('com_biblestudy', '600', '800', 'JBS_ADM_PERMISSIONS');
+		ToolbarHelper::divider();
+		ToolbarHelper::apply('admin.apply');
+		ToolbarHelper::save('admin.save');
+		ToolbarHelper::cancel('admin.cancel', 'JTOOLBAR_CLOSE');
+		ToolbarHelper::divider();
+		ToolbarHelper::custom('admin.resetHits', 'reset.png', 'Reset All Hits', 'JBS_ADM_RESET_ALL_HITS', false);
+		ToolbarHelper::custom('admin.resetDownloads', 'download.png', 'Reset All Download Hits', 'JBS_ADM_RESET_ALL_DOWNLOAD_HITS', false);
+		ToolbarHelper::custom('admin.resetPlays', 'play.png', 'Reset All Plays', 'JBS_ADM_RESET_ALL_PLAYS', false);
+		ToolbarHelper::divider();
+		ToolbarHelper::help('biblestudy', true);
 	}
 
 	/**
 	 * Add the page title to browser.
 	 *
-	 * @return null
+	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since    7.1.0
 	 */
 	protected function setDocument()
 	{
-		$document = JFactory::getDocument();
+		$document = Factory::getApplication()->getDocument();
 		$document->setTitle(JText::_('JBS_TITLE_ADMINISTRATION'));
 	}
 
@@ -366,10 +370,8 @@ class BiblestudyViewAdmin extends JViewLegacy
 				{
 					return $data['version'];
 				}
-				else
-				{
-					return false;
-				}
+
+				return false;
 				break;
 
 			case 'preachit':
@@ -379,10 +381,8 @@ class BiblestudyViewAdmin extends JViewLegacy
 				{
 					return $data['version'];
 				}
-				else
-				{
-					return false;
-				}
+
+				return false;
 				break;
 		}
 

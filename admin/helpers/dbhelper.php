@@ -9,8 +9,6 @@
  * */
 defined('_JEXEC') or die;
 
-use Joomla\Database\DatabaseFactory;
-
 /**
  * Database Helper class for version 7.1.0
  *
@@ -48,8 +46,7 @@ class JBSMDbHelper
 	 */
 	public static function checkIfTable($cktable)
 	{
-		$driver = new DatabaseFactory;
-		$db     = $driver->getDriver();
+		$db     = JFactory::getDbo();
 		$tables = $db->getTableList();
 		$prefix = $db->getPrefix();
 
@@ -80,8 +77,7 @@ class JBSMDbHelper
 	 */
 	public static function alterDB($tables, $from = null)
 	{
-		$driver = new DatabaseFactory;
-		$db     = $driver->getDriver();
+		$db     = JFactory::getDbo();
 
 		foreach ($tables as $t)
 		{
@@ -209,8 +205,7 @@ class JBSMDbHelper
 	 */
 	public static function checkTables($table, $field)
 	{
-		$driver = new DatabaseFactory;
-		$db     = $driver->getDriver();
+		$db     = JFactory::getDbo();
 
 		$fields = $db->getTableColumns($table, 'false');
 
@@ -244,8 +239,7 @@ class JBSMDbHelper
 			return false;
 		}
 
-		$driver = new DatabaseFactory;
-		$db     = $driver->getDriver();
+		$db     = JFactory::getDbo();
 		$db->setQuery($query, 0, $limit);
 
 		if (!$db->execute())
@@ -296,8 +290,7 @@ class JBSMDbHelper
 	 */
 	public static function getObjects()
 	{
-		$driver    = new DatabaseFactory;
-		$db        = $driver->getDriver();
+		$db        = JFactory::getDbo();
 		$tables    = $db->getTableList();
 		$prefix    = $db->getPrefix();
 		$prelength = strlen($prefix);
@@ -327,8 +320,7 @@ class JBSMDbHelper
 	{
 		if (!is_bool(self::$install_state))
 		{
-			$driver = new DatabaseFactory;
-			$db     = $driver->getDriver();
+			$db     = JFactory::getDbo();
 
 			// Check if JBSM can be found from the database
 			$table = $db->getPrefix() . 'bsms_admin';
@@ -361,9 +353,7 @@ class JBSMDbHelper
 		$app = JFactory::getApplication();
 
 		// Start by getting existing Style
-
-		$driver = new DatabaseFactory;
-		$db     = $driver->getDriver();
+		$db     = JFactory::getDbo();
 		$query  = $db->getQuery(true);
 		$query->select('*')->from('#__bsms_styles');
 
@@ -451,8 +441,7 @@ class JBSMDbHelper
 	 */
 	public static function reloadtable(object $result, string $table = 'Style')
 	{
-		$driver = new DatabaseFactory;
-		$db     = $driver->getDriver();
+		$db     = JFactory::getDbo();
 
 		// Store new Recorder so it can be seen.
 		JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
@@ -486,8 +475,7 @@ class JBSMDbHelper
 	public static function resetdb($install = false)
 	{
 		$app    = JFactory::getApplication();
-		$driver = new DatabaseFactory;
-		$db     = $driver->getDriver();
+		$db     = JFactory::getDbo();
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');
 		$path = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_biblestudy/install/sql';
@@ -574,8 +562,7 @@ class JBSMDbHelper
 	public static function CleanStudyTopics()
 	{
 		$app    = JFactory::getApplication();
-		$driver = new DatabaseFactory;
-		$db     = $driver->getDriver();
+		$db     = JFactory::getDbo();
 		$query  = $db->getQuery(true);
 		$query->select('id')->from('#__bsms_studies');
 		$db->setQuery($query);

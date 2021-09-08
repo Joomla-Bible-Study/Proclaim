@@ -9,7 +9,6 @@
  * */
 defined('JPATH_BASE') or die;
 
-use Joomla\Database\DatabaseFactory;
 
 /**
  * Biblestudy HTML class.
@@ -293,8 +292,7 @@ abstract class JHtmlBiblestudy
 	public static function Mediatypelist()
 	{
 		$options = null;
-		$driver  = new DatabaseFactory;
-		$db      = $driver->getDriver();
+		$db      = JFactory::getDbo();
 		$query   = $db->getQuery(true);
 
 		$query->select('id As value, media_text As text');
@@ -350,8 +348,7 @@ abstract class JHtmlBiblestudy
 	public static function Teacherlist()
 	{
 		$options = null;
-		$driver  = new DatabaseFactory;
-		$db      = $driver->getDriver();
+		$db      = JFactory::getDbo();
 		$query   = $db->getQuery(true);
 
 		$query->select('id As value, teachername As text');
@@ -407,8 +404,7 @@ abstract class JHtmlBiblestudy
 	public static function Messagetypelist()
 	{
 		$options = null;
-		$driver  = new DatabaseFactory;
-		$db      = $driver->getDriver();
+		$db      = JFactory::getDbo();
 		$query   = $db->getQuery(true);
 
 		$query->select('id As value, message_type As text');
@@ -464,8 +460,7 @@ abstract class JHtmlBiblestudy
 	public static function Serieslist()
 	{
 		$options = null;
-		$driver  = new DatabaseFactory;
-		$db      = $driver->getDriver();
+		$db      = JFactory::getDbo();
 		$query   = $db->getQuery(true);
 
 		$query->select('id As value, series_text As text');

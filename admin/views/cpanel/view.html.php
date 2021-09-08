@@ -8,6 +8,9 @@
  * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
+use Joomla\CMS\Factory;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+
 defined('_JEXEC') or die;
 
 /**
@@ -100,7 +103,7 @@ class BiblestudyViewCpanel extends JViewLegacy
 		$this->setDocument();
 
 		// Display the template
-		return parent::display($tpl);
+		parent::display($tpl);
 	}
 
 	/**
@@ -112,19 +115,20 @@ class BiblestudyViewCpanel extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JToolbarHelper::title(JText::_('JBS_CMN_CONTROL_PANEL'), 'administration');
+		ToolbarHelper::title(JText::_('JBS_CMN_CONTROL_PANEL'), 'administration');
 	}
 
 	/**
 	 * Add the page title to browser.
 	 *
+	 * @return void
+	 * @throws \Exception
 	 * @since    7.1.0
 	 *
-	 * @return void
 	 */
 	protected function setDocument()
 	{
-		$document = JFactory::getDocument();
+		$document = Factory::getApplication()->getDocument();
 		$document->setTitle(JText::_('JBS_TITLE_CONTROL_PANEL'));
 	}
 }

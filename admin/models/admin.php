@@ -267,8 +267,8 @@ class BiblestudyModelAdmin extends JModelAdmin
 	public function getCompVersion()
 	{
 		$jversion = null;
-		$file     = JPATH_COMPONENT_ADMINISTRATOR . '/biblestudy.xml';
-		$xml      = simplexml_load_string(file_get_contents($file), 'JXMLElement');
+		$file     = JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.xml';
+		$xml      = simplexml_load_string(file_get_contents($file));
 
 		if ($xml)
 		{

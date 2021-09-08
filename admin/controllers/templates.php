@@ -10,7 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-use Joomla\Database\DatabaseFactory;
 use Joomla\Registry\Registry;
 
 /**
@@ -95,8 +94,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		jimport('joomla.filesystem.file');
 		move_uploaded_file($tmp_src, $tmp_dest);
 
-		$driver = new DatabaseFactory;
-		$db     = $driver->getDriver();
+		$db     = JFactory::getDbo();
 
 		$query   = file_get_contents(JPATH_SITE . '/tmp/' . $userfile['name']);
 		$queries = JDatabaseDriver::splitSql($query);
@@ -273,8 +271,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	 */
 	private function performDB(string $query)
 	{
-		$driver = new DatabaseFactory;
-		$db     = $driver->getDriver();
+		$db     = JFactory::getDbo();
 		$db->setQuery($query);
 
 		if (!$db->execute())
@@ -308,8 +305,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		}
 
 		jimport('joomla.filesystem.file');
-		$driver = new DatabaseFactory;
-		$db     = $driver->getDriver();
+		$db     = JFactory::getDbo();
 		$query  = $db->getQuery(true);
 		$query->select('t.id, t.type, t.params, t.title, t.text');
 		$query->from('#__bsms_templates as t');
@@ -349,8 +345,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 		$registry = new Registry;
 		$registry->loadString($result->params);
 		$params  = $registry;
-		$driver  = new DatabaseFactory;
-		$db      = $driver->getDriver();
+		$db      = JFactory::getDbo();
 		$objects = '';
 		$css     = $params->get('css');
 		$css     = substr($css, 0, -4);
@@ -442,8 +437,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin
 	 */
 	public function getTemplate($template)
 	{
-		$driver = new DatabaseFactory;
-		$db     = $driver->getDriver();
+		$db     = JFactory::getDbo();
 		$query  = $db->getQuery(true);
 		$query->select('tc.id, tc.templatecode,tc.type,tc.filename');
 		$query->from('#__bsms_templatecode as tc');

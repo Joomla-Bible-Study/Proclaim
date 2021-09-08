@@ -51,12 +51,15 @@ JFactory::getDocument()->addScriptDeclaration("
 				</a>
 			</div>
 			<div class="span2">
-				<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets&task=assets.browse&tmpl=component&' . JSession::getFormToken() . '=1'); ?>" class="modal"
-				   rel="{handler: 'iframe', size: {x: 600, y: 250}}">
-					<img src="<?php echo JUri::base() . '../media/com_biblestudy/images/icons/export.png'; ?>"
-						alt="Fix Assets" height="48" width="48"/>
-					<div><?php echo JText::_('JBS_ADM_FIX'); ?></div>
-				</a>
+				<button value="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets&task=assets.browse&tmpl=component&' . JSession::getFormToken() . '=1'); ?>" class="button-fix" type="button" data-bs-toggle="modal" data-bs-target="#collapseModal">
+					<span class="icon-square" aria-hidden="true"></span>
+					<?php echo JText::_('JBS_ADM_FIX'); ?></button>
+<!--				<a href="--><?php //echo JRoute::_('index.php?option=com_biblestudy&view=assets&task=assets.browse&tmpl=component&' . JSession::getFormToken() . '=1'); ?><!--" class="modals"-->
+<!--				   rel="{handler: 'iframe', size: {x: 600, y: 250}}">-->
+<!--					<img src="--><?php //echo JUri::base() . '../media/com_biblestudy/images/icons/export.png'; ?><!--"-->
+<!--						alt="Fix Assets" height="48" width="48"/>-->
+<!--					<div>--><?php //echo JText::_('JBS_ADM_FIX'); ?><!--</div>-->
+<!--				</a>-->
 			</div>
 			<div class="clearfix"></div>
 			<div class="table table-hover table-striped">
@@ -130,6 +133,14 @@ JFactory::getDocument()->addScriptDeclaration("
 					echo '</table>';
 				}
 				?>
+				<?php echo JHtml::_(
+					'bootstrap.renderModal',
+					'collapseModal',
+					array(
+						'title'  => JText::_('JBS_CMN_BATCH_OPTIONS'),
+						'footer' => $this->loadTemplate('fix')
+					),
+				); ?>
 			</div>
 			<input type="hidden" name="task" value=""/>
 			<input type="hidden" name="tooltype" value=""/>

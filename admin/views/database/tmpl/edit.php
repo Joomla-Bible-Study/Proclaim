@@ -32,7 +32,7 @@ defined('_JEXEC') or die;
                     <fieldset class="panelform">
                         <ul>
 							<?php if (!$this->filterParams) : ?>
-                                <li><?php echo JText::_('COM_INSTALLER_MSG_DATABASE_FILTER_ERROR'); ?></li>
+                                <li><?php echo JText::_('JBS_ADM_MSG_DATABASE_FILTER_ERROR'); ?></li>
 							<?php endif; ?>
 
 							<?php if ($this->schemaVersion != $this->changeSet->getSchema()) : ?>
@@ -58,7 +58,7 @@ defined('_JEXEC') or die;
 	                        <?php endif; ?>
 
 							<?php foreach ($this->errors as $line => $error) : ?>
-								<?php $key = 'COM_INSTALLER_MSG_DATABASE_' . $error->queryType;
+								<?php $key = 'JBS_ADM__MSG_DATABASE_' . $error->queryType;
 								$msgs = $error->msgElements;
 								$file = basename($error->file);
 								$msg0 = (isset($msgs[0])) ? $msgs[0] : ' ';

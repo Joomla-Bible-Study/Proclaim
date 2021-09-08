@@ -11,7 +11,6 @@
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
-use Joomla\Database\DatabaseFactory;
 
 jimport('joomla.filesystem.folder');
 
@@ -75,8 +74,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 	{
 		$post    = $_POST['jform'];
 		$decoded = json_decode($post['mediaimage'], true, 512, JSON_THROW_ON_ERROR);
-		$driver = new DatabaseFactory;
-		$db = $driver->getDriver();
+		$db = JFactory::getDbo();
 		$query   = $db->getQuery(true);
 		$query->select('id, params')
 			->from('#__bsms_mediafiles');
@@ -310,8 +308,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		// Check for request forgeries.
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-		$driver = new DatabaseFactory;
-		$db = $driver->getDriver();
+		$db = JFactory::getDbo();
 		$msg  = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
 		$post = $_POST['jform'];
 		$reg  = new Registry;
@@ -369,8 +366,7 @@ class BiblestudyControllerAdmin extends JControllerForm
 		// Check for request forgeries.
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-		$driver = new DatabaseFactory;
-		$db = $driver->getDriver();
+		$db = JFactory::getDbo();
 		$post = $_POST['jform'];
 		$reg  = new Registry;
 		$reg->loadArray($post['params']);

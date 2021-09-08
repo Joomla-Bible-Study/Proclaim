@@ -82,7 +82,7 @@ class BiblestudyViewAssets extends JViewLegacy
 		$layout      = $app->input->get('layout', 'edit');
 		$task        = $app->input->get('task', 'checkassets');
 
-		$session      = JFactory::getSession();
+		$session      = $app->getSession();
 		$this->assets = $session->get('checkassets', null, 'JBSM');
 		$stack        = $session->get('asset_stack', '', 'JBSM');
 
@@ -105,7 +105,7 @@ class BiblestudyViewAssets extends JViewLegacy
 				}
 			}
 
-			$stack = json_decode($stack, true);
+			$stack = json_decode($stack, true, 512, JSON_THROW_ON_ERROR);
 
 			$this->versionStack   = $stack['version'];
 			$this->step           = $stack['step'];
@@ -140,10 +140,10 @@ class BiblestudyViewAssets extends JViewLegacy
 			$script = "window.addEvent( 'domready' ,  function() {\n";
 			$script .= "document.forms.adminForm.submit();\n";
 			$script .= "});\n";
-			JFactory::getDocument()->addScriptDeclaration($script);
+			$app->getDocument()->addScriptDeclaration($script);
 		}
 
-		if ($task == 'browse' || $task == 'run')
+		if ($task === 'browse' || $task === 'run')
 		{
 			$this->setLayout('fix');
 		}
@@ -162,13 +162,13 @@ class BiblestudyViewAssets extends JViewLegacy
 		$this->setDocument();
 
 		// Display the template
-		return parent::display($tpl);
+		parent::display($tpl);
 	}
 
 	/**
 	 * Add Toolbar
 	 *
-	 * @return null
+	 * @return void
 	 *
 	 * @since 7.0.0
 	 */
@@ -182,13 +182,13 @@ class BiblestudyViewAssets extends JViewLegacy
 	/**
 	 * Add the page title to browser.
 	 *
-	 * @return null
+	 * @return void
 	 *
 	 * @since    7.1.0
 	 */
 	protected function setDocument()
 	{
-		$document = JFactory::getDocument();
+		$document = JFactory::getApplication()->getDocument();
 		$document->setTitle(JText::_('JBS_TITLE_ADMINISTRATION'));
 	}
 }

@@ -10,7 +10,6 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-use Joomla\Database\DatabaseFactory;
 use Joomla\Registry\Registry;
 
 /**
@@ -63,8 +62,7 @@ class JBSMParams
 		if (!self::$admin)
 		{
 			$app    = JFactory::getApplication();
-			$driver = new DatabaseFactory;
-			$db     = $driver->getDriver();
+			$db     = JFactory::getDbo();
 			$query  = $db->getQuery(true);
 			$query->select('*')
 				->from('#__bsms_admin')
@@ -112,8 +110,7 @@ class JBSMParams
 	 */
 	public static function getTemplateparams($pk = null)
 	{
-		$driver = new DatabaseFactory;
-		$db     = $driver->getDriver();
+		$db     = JFactory::getDbo();
 
 		if (!$pk)
 		{
@@ -176,8 +173,7 @@ class JBSMParams
 		if (count($param_array) > 0)
 		{
 			// Read the existing component value(s)
-			$driver = new DatabaseFactory;
-			$db     = $driver->getDriver();
+			$db     = JFactory::getDbo();
 			$query  = $db->getQuery(true);
 			$query->select('params')
 				->from('#__extensions')
