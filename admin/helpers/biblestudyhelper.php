@@ -10,8 +10,10 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use CWMParams\CWMParams;
 use Joomla\Database\DatabaseFactory;
 use Joomla\Registry\Registry;
+use CWM\Component\Biblestudy\Admin\Helpers;
 
 /**
  * BibleStudy Helper class
@@ -19,7 +21,7 @@ use Joomla\Registry\Registry;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class JBSMBibleStudyHelper
+class BibleStudyHelper
 {
 	/**
 	 * Admin Prams
@@ -390,7 +392,7 @@ class JBSMBibleStudyHelper
 	{
 		if (!JBSMDbHelper::getInstallState())
 		{
-			self::$admin_params = JBSMParams::getAdmin();
+			self::$admin_params = CWMParams::getAdmin();
 
 			if (!isset(self::$admin_params->debug))
 			{

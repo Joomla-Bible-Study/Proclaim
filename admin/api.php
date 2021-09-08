@@ -7,6 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+use Joomla\CMS\Factory;
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -88,19 +89,19 @@ JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html/');
 JLoader::register('JBSMHelperRoute', BIBLESTUDY_PATH_HELPERS . '/route.php', true);
 
 // If phrase is not found in specific language file, load english language file:
-$language = JFactory::getLanguage();
+$language = Factory::getLanguage();
 $language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
 $language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, null, true);
 
 // Component debugging
-if (JBSMBibleStudyHelper::debug() === '1' || JFactory::getApplication()->input->getInt('jbsmdbg', '0') === '1')
-{
-	define('JBSMDEBUG', 1);
-}
-else
-{
-	define('JBSMDEBUG', 0);
-}
+//if (BibleStudyHelper::debug() === '1' || Factory::getApplication()->input->getInt('jbsmdbg', '0') === '1')
+//{
+//	define('JBSMDEBUG', 1);
+//}
+//else
+//{
+//	define('JBSMDEBUG', 0);
+//}
 
 // Include the JLog class.
 jimport('joomla.log.log');

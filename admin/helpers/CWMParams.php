@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
-namespace CWM\Component\Biblestudy\Admin\Helpers\CWMParams;
+namespace CWMParams;
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
