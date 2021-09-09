@@ -22,7 +22,7 @@
     everywhere else for your component. Whatever the name of
     this XML file is, the namespace must match (ignoring CamelCase).
     -->
-    <namespace path="src/">CWM\Component\biblestudy</namespace>
+    <namespace>CWM\Component\biblestudy</namespace>
 	<!-- Installer Hooks -->
 	<scriptfile>biblestudy.script.php</scriptfile>
 

@@ -8,6 +8,10 @@
  * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Model\ItemModel;
+use Joomla\CMS\Factory;
+//use CWM\Component\BibleStudy\Administrator\CWMParams;
 defined('_JEXEC') or die;
 
 /**
@@ -15,7 +19,7 @@ defined('_JEXEC') or die;
  *
  * @since  7.0.0
  */
-class BiblestudyModelTeacher extends JModelItem
+class BiblestudyModelTeacher extends ItemModel
 {
 	/**
 	 *  Model context string.
@@ -37,16 +41,15 @@ class BiblestudyModelTeacher extends JModelItem
 	 */
 	public function &getItem($pk = null)
 	{
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 
 		// Initialise variables.
-		$pk = (!empty($pk)) ? $pk : (int) $this->getState('teacher.id');
-
+        $pk  = $app->input->getInt('id');
 		if (!isset($this->_item[$pk]))
 		{
 			try
 			{
-				$db    = $this->getDbo();
+				$db    = Factory::getDbo();
 				$query = $db->getQuery(true);
 				$query->select($this->getState('item.select', 't.*,CASE WHEN CHAR_LENGTH(t.alias) THEN CONCAT_WS(\':\', t.id, t.alias) ELSE t.id END as slug'));
 				$query->from('#__bsms_teachers AS t');
@@ -56,9 +59,8 @@ class BiblestudyModelTeacher extends JModelItem
 
 				if (empty($data))
 				{
-					$app->enqueueMessage(JText::_('JBS_CMN_TEACHER_NOT_FOUND'), 'error');
+					$app->enqueueMessage(Text::_('JBS_CMN_TEACHER_NOT_FOUND'), 'error');
 
-					return false;
 				}
 
 				$this->_item[$pk] = $data;
@@ -93,21 +95,21 @@ class BiblestudyModelTeacher extends JModelItem
 	protected function populateState()
 	{
 		/** @type JApplicationSite $app */
-		$app = JFactory::getApplication('site');
+		$app = Factory::getApplication('site');
 
 		// Load state from the request.
-		$input = new JInput;
-		$pk    = $input->get('id', '', 'int');
+		//$input = new JInput;
+		$pk    = $app->get('id', '', 'int');
 		$this->setState('teacher.id', $pk);
 
-		$offset = $input->get('limitstart', '', 'int');
+		$offset = $app->get('limitstart', '', 'int');
 		$this->setState('list.offset', $offset);
 
 		// Load the parameters.
 		$params = $app->getParams();
 		$this->setState('params', $params);
-		$template = JBSMParams::getTemplateparams();
-		$admin    = JBSMParams::getAdmin();
+		$template = CWMParams::getTemplateparams();
+		$admin    = CWMParams::getAdmin();
 
 		$template->params->merge($params);
 		$template->params->merge($admin->params);

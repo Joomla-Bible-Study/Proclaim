@@ -17,7 +17,7 @@ use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Table\Table;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
-use Joomla\Component\Biblestudy\Admin\Helpers\CWMParams;
+use CWM\Component\Biblestudy\Admin\Helpers;
 
 /**
  * Model class for Teacher
@@ -65,7 +65,7 @@ class TeacherModel extends ListModel
 
 				if (empty($data))
 				{
-					$app->enqueueMessage(JText::_('JBS_CMN_TEACHER_NOT_FOUND'), 'error');
+					$app->enqueueMessage(Text::_('JBS_CMN_TEACHER_NOT_FOUND'), 'error');
 
 					return;
 				}

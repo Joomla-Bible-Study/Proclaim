@@ -9,6 +9,8 @@
  * */
 // No Direct Access
 namespace CWM\Component\Biblestudy\Site\View\Teacher;
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use CWM\Component;
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
@@ -20,7 +22,7 @@ use Joomla\CMS\HTML\HTMLHelper;
  *
  * @since  7.0.0
  */
-class HtmlView extends TeacherView
+class HtmlView extends BaseHtmlView
 {
 	/** @var  object Item
 	 *
@@ -78,7 +80,7 @@ class HtmlView extends TeacherView
 	 */
 	public function display($tpl = null)
 	{
-		$pagebuilder = new JBSMPageBuilder;
+		$pagebuilder = new CWMPageBuilder;
 
 		$images        = new JBSMImages;
 		$this->state   = $this->get('state');

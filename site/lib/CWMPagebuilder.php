@@ -8,8 +8,10 @@
  * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
-use Joomla\CMS\Language;
+//namespace CWM\Compenent\BibleStudy\Site\CWMPagebuilder;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+require_once(BIBLESTUDY_PATH_LIB.'/CWMListing.php');
 defined('_JEXEC') or die;
 
 /**
@@ -17,7 +19,7 @@ defined('_JEXEC') or die;
  *
  * @since  7.0.1
  */
-class CWMPageBuilder
+class CWMPagebuilder
 {
 	/** @var string Extension Name
 	 * @since 7.0
@@ -48,7 +50,7 @@ class CWMPageBuilder
 		// Media files image, links, download
 		$mids         = $item->mids;
 		$page         = new stdClass;
-		$JBSMElements = new JBSMListing;
+		$JBSMElements = new CWMListing;
 
 		if ($mids)
 		{
@@ -237,7 +239,7 @@ class CWMPageBuilder
 	 */
 	private function mediaBuilder($mediaids, $params, $template, $item)
 	{
-		$listing          = new JBSMListing;
+		$listing          = new CWMListing;
 		$mediaIDs         = $listing->getFluidMediaids($item);
 		$media            = $listing->getMediaFiles($mediaIDs);
 		$item->mediafiles = $media;
@@ -262,8 +264,9 @@ class CWMPageBuilder
 		JPluginHelper::importPlugin('content');
 
 		// Run content plugins
-		$dispatcher = JEventDispatcher::getInstance();
-		$dispatcher->trigger('onContentPrepare', array(
+        $dispatcher = Factory::getApplication();
+
+		$dispatcher->triggerEvent('onContentPrepare', array(
 				'com_biblestudy.sermon',
 				& $item,
 				& $params,
@@ -273,7 +276,7 @@ class CWMPageBuilder
 
 		$item->event = new stdClass;
 
-		$results                        = $dispatcher->trigger('onContentAfterTitle', array(
+		$results                        = $dispatcher->triggerEvent('onContentAfterTitle', array(
 				'com_biblestudy.sermon',
 				&$item,
 				&$params,
@@ -281,7 +284,7 @@ class CWMPageBuilder
 		);
 		$item->event->afterDisplayTitle = trim(implode("\n", $results));
 
-		$results                           = $dispatcher->trigger('onContentBeforeDisplay', array(
+		$results                           = $dispatcher->triggerEvent('onContentBeforeDisplay', array(
 				'com_biblestudy.sermon',
 				&$item,
 				&$params,
@@ -289,7 +292,7 @@ class CWMPageBuilder
 		);
 		$item->event->beforeDisplayContent = trim(implode("\n", $results));
 
-		$results                          = $dispatcher->trigger('onContentAfterDisplay', array(
+		$results                          = $dispatcher->triggerEvent('onContentAfterDisplay', array(
 				'com_biblestudy.sermon',
 				&$item,
 				&$params,

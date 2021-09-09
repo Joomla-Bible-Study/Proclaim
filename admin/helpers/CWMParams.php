@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
-namespace CWMParams;
+//namespace \CWM\Component\biblestudy\Administrator;
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
@@ -112,8 +112,8 @@ class CWMParams
 	 */
 	public static function getTemplateparams($pk = null)
 	{
-		$driver = new Database\DatabaseFactory;
-		$db     = $driver->getDriver();
+		//$driver = new Database\DatabaseFactory;
+        $db = Factory::getDbo();
 
 		if (!$pk)
 		{

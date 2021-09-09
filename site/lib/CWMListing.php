@@ -17,7 +17,7 @@ if (file_exists($api))
 {
 	require_once $api;
 }
-
+require_once(BIBLESTUDY_PATH_HELPERS.'/CWMMedia.php');
 use Joomla\Registry\Registry;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -2253,7 +2253,7 @@ class CWMListing
 	 */
 	public function getFluidMediaFiles($item, $params, $template)
 	{
-		$med = new JBSMMedia;
+		$med = new CWMMedia;
 
 		$mediarow = '<div class="bsms_media_contaner" style="display: inline-block;">';
 
@@ -2575,7 +2575,7 @@ class CWMListing
 	 */
 	public function getListingExp($row, $params, $template)
 	{
-		$Media  = new JBSMMedia;
+		$Media  = new CWMMedia;
 		$images = new JBSMImages;
 		$image  = JBSMImages::getStudyThumbnail($row->thumbnailm);
 		$label  = $params->get('templatecode');
