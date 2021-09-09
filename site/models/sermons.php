@@ -10,6 +10,8 @@
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
+require_once (BIBLESTUDY_PATH_ADMIN_HELPERS.'/CWMParams.php');
+require_once(BIBLESTUDY_PATH_LIB.'/CWMPagebuilder.php');
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -19,7 +21,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class Sermons extends ListModel
+class BiblestudyModelSermons extends ListModel
 {
 	/**
 	 * @var   JInput $imput Inpute
@@ -178,8 +180,8 @@ class Sermons extends ListModel
 		// Load the parameters.
 		$params   = $app->getParams();
 
-		$template = JBSMParams::getTemplateparams();
-		$admin    = JBSMParams::getAdmin();
+		$template = CWMParams::getTemplateparams();
+		$admin    = CWMParams::getAdmin();
 
 		$template->params->merge($params);
 		$template->params->merge($admin->params);
@@ -194,7 +196,7 @@ class Sermons extends ListModel
 
 		$landing = 0;
 		$this->landing = 0;
-		$landingcheck = $this->input->get->get('sendingview');
+		$landingcheck = $this->input->get('sendingview');
 
 		if ($landingcheck === 'landing')
 		{

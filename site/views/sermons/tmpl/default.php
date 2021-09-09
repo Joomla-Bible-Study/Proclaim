@@ -10,7 +10,7 @@
 use Joomla\CMS\HTML\HTMLHelper;
 // No Direct Access
 defined('_JEXEC') or die;
-HTMLHelper::_('behavior.modal');
+HTMLHelper::_('bootstrap.modal');
 
 
 	echo $this->loadTemplate('formheader');
