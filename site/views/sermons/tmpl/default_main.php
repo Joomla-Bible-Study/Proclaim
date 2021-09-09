@@ -9,7 +9,7 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
+use Joomla\CMS\Layout\LayoutHelper;
 JHtml::_('bootstrap.framework');
 JHtml::_('dropdown.init');
 JHtml::_('formbehavior.chosen', 'select');
@@ -85,7 +85,7 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 <div class="container-fluid">
 	<?php
 	// Search tools bar
-	echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+	echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 	?>
 	<hr/>
 	<?php

@@ -7,6 +7,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Controller\BaseController;
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -16,7 +18,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class BiblestudyControllerSermons extends JControllerLegacy
+class Sermons extends BaseController
 {
 	/**
 	 * Media Code
@@ -35,7 +37,7 @@ class BiblestudyControllerSermons extends JControllerLegacy
 	 */
 	public function download()
 	{
-		$input = new JInput;
+        $input = Factory::getApplication();
 		$task  = $input->get('task');
 		$mid   = $input->getInt('id');
 
@@ -55,7 +57,7 @@ class BiblestudyControllerSermons extends JControllerLegacy
 	 */
 	public function avplayer()
 	{
-		$input = new JInput;
+        $input = Factory::getApplication();
 		$task  = $input->get('task');
 
 		if ($task === 'avplayer')

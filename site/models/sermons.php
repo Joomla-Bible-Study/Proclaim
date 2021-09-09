@@ -7,6 +7,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Factory;
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -16,7 +19,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class BiblestudyModelSermons extends JModelList
+class Sermons extends ListModel
 {
 	/**
 	 * @var   JInput $imput Inpute
@@ -60,7 +63,7 @@ class BiblestudyModelSermons extends JModelList
 			);
 		}
 
-		$this->input = new JInput;
+		$this->input = Factory::getApplication();
 
 		parent::__construct($config);
 	}
@@ -78,9 +81,9 @@ class BiblestudyModelSermons extends JModelList
 	{
 		foreach ($items as $item)
 		{
-			$item->bookname   = JText::_($item->bookname);
+			$item->bookname   = Text::_($item->bookname);
 			$item->topic_text = JBSMTranslated::getTopicItemTranslated($item);
-			$item->bookname2   = JText::_($item->bookname2);
+			$item->bookname2   = Text::_($item->bookname2);
 			$item->topic_text = JBSMTranslated::getTopicItemTranslated($item);
 		}
 
@@ -127,7 +130,7 @@ class BiblestudyModelSermons extends JModelList
 	public function getFiles()
 	{
 		$mediaFiles = null;
-		$db         = JFactory::getDbo();
+		$db         = Factory::getDbo();
 		$i          = 0;
 
 		foreach ($this->_data as $sermon)
@@ -168,7 +171,7 @@ class BiblestudyModelSermons extends JModelList
 	protected function populateState($ordering = null, $direction = null)
 	{
 		/** @type JApplicationSite $app */
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 
 		$forcedLanguage = $app->input->get('forcedLanguage', '', 'cmd');
 
@@ -366,7 +369,7 @@ class BiblestudyModelSermons extends JModelList
 	 */
 	protected function getListQuery()
 	{
-		$user            = JFactory::getUser();
+		$user            = Factory::getUser();
 		$groups          = implode(',', $user->getAuthorisedViewLevels());
 		$db              = $this->getDbo();
 		$query           = parent::getListQuery();
@@ -443,7 +446,7 @@ class BiblestudyModelSermons extends JModelList
 
 		// Define null and now dates
 		$nullDate = $db->quote($db->getNullDate());
-		$nowDate  = $db->quote(JFactory::getDate()->toSql());
+		$nowDate  = $db->quote(Factory::getDate()->toSql());
 
 		// Filter by start and end dates.
 		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
@@ -654,7 +657,7 @@ class BiblestudyModelSermons extends JModelList
 		}
 		elseif ($language !== '*' || $this->getState('filter.language'))
 		{
-			$query->where('study.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
+			$query->where('study.language in (' . $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
 		}
 
 		// Adding in search strings

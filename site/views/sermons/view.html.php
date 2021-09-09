@@ -9,8 +9,11 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\Registry\Registry;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 
 /**
  * View for Sermons class
@@ -18,7 +21,7 @@ use Joomla\Registry\Registry;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class BiblestudyViewSermons extends JViewLegacy
+class BiblestudyViewSermons extends BaseHtmlView
 {
 	/** @var object
 	 *
@@ -172,7 +175,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		$this->admin      = $this->state->get('admin');
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-		$user   = JFactory::getUser();
+		$user   = Factory::getUser();
 		$groups = $user->getAuthorisedViewLevels();
 		/** @var  $params Registry */
 		$params = $this->state->params;
@@ -184,7 +187,7 @@ class BiblestudyViewSermons extends JViewLegacy
 			|| ($params->get('simple_mode') === '1')
 			|| (is_string($params->get('sermonstemplate')) === true && $params->get('sermonstemplate') !== '0'))
 		{
-			$page_builder = new JBSMPageBuilder;
+			$page_builder = new CWMPageBuilder;
 
 			foreach ($items as $i => $iValue)
 			{
@@ -253,7 +256,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		}
 
 		// Get the podcast subscription
-		JHtml::stylesheet('media/css/podcast.css');
+		HtmlHelper::_('stylesheet','media/css/podcast.css');
 		$podcast         = new JBSMPodcastSubscribe;
 		$this->subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
 
@@ -288,7 +291,7 @@ class BiblestudyViewSermons extends JViewLegacy
 	 */
 	protected function _prepareDocument()
 	{
-		$app   = JFactory::getApplication();
+		$app   = Factory::getApplication();
 		$menus = $app->getMenu();
 		$title = null;
 
@@ -302,7 +305,7 @@ class BiblestudyViewSermons extends JViewLegacy
 		}
 		else
 		{
-			$this->params->def('page_heading', JText::_('JBS_CMN_MESSAGES_LIST'));
+			$this->params->def('page_heading', Text::_('JBS_CMN_MESSAGES_LIST'));
 		}
 
 		$title = $this->params->def('page_title', '');
@@ -313,11 +316,11 @@ class BiblestudyViewSermons extends JViewLegacy
 		}
 		elseif ($app->get('sitename_pagetitles', 0) === 1)
 		{
-			$title = JText::sprintf('JPAGETITLE', $app->get('sitename'), $title);
+			$title = Text::sprintf('JPAGETITLE', $app->get('sitename'), $title);
 		}
 		elseif ($app->get('sitename_pagetitles', 0) === 2)
 		{
-			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
+			$title = Text::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
 
 		$this->document->setTitle($title);
@@ -365,7 +368,7 @@ class BiblestudyViewSermons extends JViewLegacy
 	 */
 	private function updateFilters()
 	{
-		$input   = JFactory::getApplication()->input;
+		$input   = Factory::getApplication()->input;
 		$filters = ['search', 'book', 'teacher', 'series', 'messagetype', 'year', 'topic', 'location', 'language'];
 		$lists   = ['fullordering', 'limit'];
 
