@@ -8,6 +8,8 @@
  * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Controller\BaseController;
 defined('_JEXEC') or die;
 
 /**
@@ -16,7 +18,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class BiblestudyControllerTeacher extends JControllerLegacy
+class Teacher extends BaseController
 {
 	/**
 	 * Display the edit form
@@ -27,7 +29,7 @@ class BiblestudyControllerTeacher extends JControllerLegacy
 	 */
 	public function view()
 	{
-		$input = new JInput;
+		$input = Factory::getApplication('site');
 		$input->set('view', 'teacher');
 		$input->set('layout', 'default');
 

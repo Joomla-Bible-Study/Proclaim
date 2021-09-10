@@ -7,6 +7,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Factory;
+require_once (BIBLESTUDY_PATH_ADMIN_HELPERS.'/CWMParams.php');
+require_once(BIBLESTUDY_PATH_LIB.'/CWMPagebuilder.php');
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -16,7 +21,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class BiblestudyModelTeachers extends JModelList
+class BiblestudyModelTeachers extends ListModel
 {
 	/**
 	 * Build an SQL query to load the list data
@@ -27,10 +32,10 @@ class BiblestudyModelTeachers extends JModelList
 	 */
 	protected function getListQuery()
 	{
-		$db = $this->getDbo();
+		$db = Factory::getApplication()->getDbo();
 
 		// See if this view is being filtered by language in the menu
-		$app  = JFactory::getApplication();
+		$app  = Factory::getApplication();
 		$menu = $app->getMenu();
 		$item = $menu->getActive();
 
@@ -69,7 +74,7 @@ class BiblestudyModelTeachers extends JModelList
 	protected function populateState($ordering = 'teachers.ordering', $direction = 'asc')
 	{
 		/** @type JApplicationSite $app */
-		$app = JFactory::getApplication('site');
+		$app = Factory::getApplication('site');
 
 		// Load state from the request.
 		$pk = $app->input->getInt('id', '');
@@ -81,8 +86,8 @@ class BiblestudyModelTeachers extends JModelList
 		// Load the parameters.
 		$params = $app->getParams();
 		$this->setState('params', $params);
-		$template = JBSMParams::getTemplateparams();
-		$admin    = JBSMParams::getAdmin();
+		$template = CWMParams::getTemplateparams();
+		$admin    = CWMParams::getAdmin();
 
 		$template->params->merge($params);
 		$template->params->merge($admin->params);
@@ -92,7 +97,7 @@ class BiblestudyModelTeachers extends JModelList
 
 		if (!$t)
 		{
-			$input = new JInput;
+			$input = Factory::getApplication();
 			$t     = $input->get('t', 1, 'int');
 		}
 
@@ -101,7 +106,7 @@ class BiblestudyModelTeachers extends JModelList
 		$this->setState('template', $template);
 		$this->setState('admin', $admin);
 
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 
 		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
 		{
@@ -124,9 +129,9 @@ class BiblestudyModelTeachers extends JModelList
 	{
 		$items = parent::getItems();
 
-		if (JFactory::getApplication()->isSite())
+		if (Factory::getApplication()->isClient('site'))
 		{
-			$user   = JFactory::getUser();
+			$user   = Factory::getUser();
 			$groups = $user->getAuthorisedViewLevels();
 
 			for ($x = 0, $count = count($items); $x < $count; $x++)

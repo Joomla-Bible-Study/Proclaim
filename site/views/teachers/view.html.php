@@ -7,6 +7,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\Registry\Registry;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
+require_once (BIBLESTUDY_PATH_LIB.'/CWMPagebuilder.php');
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -16,7 +22,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class BiblestudyViewTeachers extends JViewLegacy
+class BiblestudyViewTeachers extends BaseHtmlView
 {
 	/**
 	 * Document
@@ -121,9 +127,8 @@ class BiblestudyViewTeachers extends JViewLegacy
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
-			JFactory::getApplication()->enqueueMessage(implode("\n", $errors), 'worning');
+			Factory::getApplication()->enqueueMessage(implode("\n", $errors), 'worning');
 
-			return;
 		}
 
 		// Load the Admin settings and params from the template
@@ -143,7 +148,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 			{
 				if (isset($item->teacher_thumbnail))
 				{
-					$image                  = $images->getTeacherThumbnail($item->teacher_thumbnail, $item->thumb);
+					$image                  = $images::getTeacherThumbnail($item->teacher_thumbnail, $item->thumb);
 					$items[$i]->image       = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width
 						. '" alt="' . $item->teachername . '" />';
 					$items[$i]->slug        = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
@@ -191,7 +196,7 @@ class BiblestudyViewTeachers extends JViewLegacy
 	 */
 	protected function _prepareDocument()
 	{
-		$app   = JFactory::getApplication('site');
+		$app   = Factory::getApplication('site');
 		$menus = $app->getMenu();
 
 		/** @var Joomla\Registry\Registry $itemparams */

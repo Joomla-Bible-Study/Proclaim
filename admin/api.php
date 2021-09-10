@@ -80,39 +80,32 @@ define('BIBLESTUDY_SECONDS_IN_YEAR', 31536000);
 define('BIBLESTUDY_DB_MISSING_COLUMN', 1054);
 
 // Load JBSM Class
-//JLoader::registerPrefix();
-discover('CWM\Component\Proclaim\Administrator', JPATH_COMPONENT . "/src", 'true', 'true');
-//JLoader::registerAlias('CWM', '\\CWM\\Component\\Proclaim', '5.0');
-//JLoader::discover('CWM', BIBLESTUDY_PATH_LIB, 'true', 'true');
-//JLoader::discover('CWM', BIBLESTUDY_PATH_ADMIN_LIB, 'true', 'true');
-//JLoader::discover('CWM', BIBLESTUDY_PATH_HELPERS, 'false', 'true');
-//JLoader::discover('Table', BIBLESTUDY_PATH_TABLES, 'false', 'true');
-//JLoader::discover('CWM', BIBLESTUDY_PATH_ADMIN_HELPERS, 'false', 'true');
-//JLoader::discover('CWM', BIBLESTUDY_PATH_ADMIN_ADDON, 'false', 'true');
-//JLoader::discover('Table', BIBLESTUDY_PATH_ADMIN_TABLES, 'false', 'true');
+JLoader::discover('JBSM', BIBLESTUDY_PATH_LIB, 'true', 'true');
+JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_LIB, 'true', 'true');
+JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS, 'false', 'true');
+JLoader::discover('Table', BIBLESTUDY_PATH_TABLES, 'false', 'true');
+JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS, 'false', 'true');
+JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_ADDON, 'false', 'true');
+JLoader::discover('Table', BIBLESTUDY_PATH_ADMIN_TABLES, 'false', 'true');
 JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html/');
 
 // Fixes Router overrider.
-//JLoader::register('CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper', JPATH_COMPONENT . '/src/Helper/CWMProclaimHelper.php', true);
-//JLoader::register('CWM\Component\Proclaim\Administrator\Helper\CWMDbHelper', JPATH_COMPONENT . '/src/Helper/CWMDbHelper.php', true);
 JLoader::register('JBSMHelperRoute', BIBLESTUDY_PATH_HELPERS . '/route.php', true);
 
-var_dump(JLoader::getClassList());die;
-
 // If phrase is not found in specific language file, load english language file:
-$language = jFactory::getLanguage();
+$language = Factory::getLanguage();
 $language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
 $language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, null, true);
 
 // Component debugging
-if (CWMProclaimHelper::debug() === '1' || Factory::getApplication()->input->getInt('jbsmdbg', '0') === '1')
-{
-	define('JBSMDEBUG', 1);
-}
-else
-{
-	define('JBSMDEBUG', 0);
-}
+//if (BibleStudyHelper::debug() === '1' || Factory::getApplication()->input->getInt('jbsmdbg', '0') === '1')
+//{
+//	define('JBSMDEBUG', 1);
+//}
+//else
+//{
+//	define('JBSMDEBUG', 0);
+//}
 
 // Include the JLog class.
 jimport('joomla.log.log');

@@ -11,10 +11,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+use Joomla\CMS\Factory;
+use Joomla\CMS\Router\Route;
 // No Direct Access
 defined('_JEXEC') or die;
-$input = new JInput;
+$input = Factory::getApplication();
 ?>
 <form
-	action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $input->get('t', '1', 'int')); ?>"
+	action="<?php echo Route::_('index.php?option=com_biblestudy&view=sermons&t=' . $input->get('t', '1', 'int')); ?>"
 	method="post" name="adminForm" id="adminForm">

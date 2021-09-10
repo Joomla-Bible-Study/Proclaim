@@ -19,6 +19,11 @@ use Joomla\CMS\Log\Log;
 
 defined('_JEXEC') or die;
 
+use CWMParams\CWMParams;
+use Joomla\Database\DatabaseFactory;
+use Joomla\Registry\Registry;
+use CWM\Component\Biblestudy\Admin\Helpers;
+
 /**
  * BibleStudy Helper class
  *
@@ -436,7 +441,8 @@ class CWMProclaimHelper
 	public static function getMediaYears()
 	{
 		$options = array();
-		$db      = Factory::getDbo();
+		$driver  = new DatabaseFactory;
+		$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
 		$query->select('DISTINCT YEAR(createdate) as value, YEAR(createdate) as text');
@@ -469,7 +475,8 @@ class CWMProclaimHelper
 	public static function getMessageTypes()
 	{
 		$options = array();
-		$db      = Factory::getDbo();
+		$driver  = new DatabaseFactory;
+		$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
 		$query->select('messageType.id AS value, messageType.message_type AS text');
@@ -504,7 +511,8 @@ class CWMProclaimHelper
 	public static function getStudyYears()
 	{
 		$options = array();
-		$db      = Factory::getDbo();
+		$driver  = new DatabaseFactory;
+		$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
 		$query->select('DISTINCT YEAR(studydate) as value, YEAR(studydate) as text');
@@ -537,7 +545,8 @@ class CWMProclaimHelper
 	public static function getTeachers()
 	{
 		$options = array();
-		$db      = Factory::getDbo();
+		$driver  = new DatabaseFactory;
+		$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
 		$query->select('teacher.id AS value, teacher.teachername AS text');
@@ -572,7 +581,8 @@ class CWMProclaimHelper
 	public static function getStudyBooks()
 	{
 		$options = array();
-		$db      = Factory::getDbo();
+		$driver  = new DatabaseFactory;
+		$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
 		$query->select('book.booknumber AS value, book.bookname AS text, book.id');
@@ -612,7 +622,8 @@ class CWMProclaimHelper
 	public static function getStudyMediaTypes()
 	{
 		$options = array();
-		$db      = Factory::getDbo();
+		$driver  = new DatabaseFactory;
+		$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
 		$query->select('messageType.id AS value, messageType.message_type AS text');
@@ -647,7 +658,8 @@ class CWMProclaimHelper
 	public static function getStudyLocations()
 	{
 		$options = array();
-		$db      = Factory::getDbo();
+		$driver  = new DatabaseFactory;
+		$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
 		$query->select('id AS value, location_text AS text');
@@ -752,8 +764,10 @@ class CWMProclaimHelper
 	public static function getUsers()
 	{
 		$options = array();
-		$db      = Factory::getDbo();
-		$query   = $db->getQuery(true);
+
+		$driver = new DatabaseFactory;
+		$db     = $driver->getDriver();
+		$query  = $db->getQuery(true);
 
 		$query->select('id AS value, username AS text');
 		$query->from('#__users');

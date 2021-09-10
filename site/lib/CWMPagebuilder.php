@@ -8,6 +8,10 @@
  * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
+//namespace CWM\Compenent\BibleStudy\Site\CWMPagebuilder;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+require_once(BIBLESTUDY_PATH_LIB.'/CWMListing.php');
 defined('_JEXEC') or die;
 
 /**
@@ -15,7 +19,7 @@ defined('_JEXEC') or die;
  *
  * @since  7.0.1
  */
-class JBSMPageBuilder
+class CWMPagebuilder
 {
 	/** @var string Extension Name
 	 * @since 7.0
@@ -46,7 +50,7 @@ class JBSMPageBuilder
 		// Media files image, links, download
 		$mids         = $item->mids;
 		$page         = new stdClass;
-		$JBSMElements = new JBSMListing;
+		$JBSMElements = new CWMListing;
 
 		if ($mids)
 		{
@@ -99,14 +103,14 @@ class JBSMPageBuilder
 
 			foreach ($topics as $key => $value)
 			{
-				$topics[$key] = JText::_($value);
+				$topics[$key] = Text::_($value);
 			}
 
 			$page->topics = implode(', ', $topics);
 		}
 		else
 		{
-			$page->topics = JText::_($item->topics_text);
+			$page->topics = Text::_($item->topics_text);
 		}
 
 		if ($item->thumbnailm)
@@ -235,7 +239,7 @@ class JBSMPageBuilder
 	 */
 	private function mediaBuilder($mediaids, $params, $template, $item)
 	{
-		$listing          = new JBSMListing;
+		$listing          = new CWMListing;
 		$mediaIDs         = $listing->getFluidMediaids($item);
 		$media            = $listing->getMediaFiles($mediaIDs);
 		$item->mediafiles = $media;
@@ -260,8 +264,9 @@ class JBSMPageBuilder
 		JPluginHelper::importPlugin('content');
 
 		// Run content plugins
-		$dispatcher = JEventDispatcher::getInstance();
-		$dispatcher->trigger('onContentPrepare', array(
+        $dispatcher = Factory::getApplication();
+
+		$dispatcher->triggerEvent('onContentPrepare', array(
 				'com_biblestudy.sermon',
 				& $item,
 				& $params,
@@ -271,7 +276,7 @@ class JBSMPageBuilder
 
 		$item->event = new stdClass;
 
-		$results                        = $dispatcher->trigger('onContentAfterTitle', array(
+		$results                        = $dispatcher->triggerEvent('onContentAfterTitle', array(
 				'com_biblestudy.sermon',
 				&$item,
 				&$params,
@@ -279,7 +284,7 @@ class JBSMPageBuilder
 		);
 		$item->event->afterDisplayTitle = trim(implode("\n", $results));
 
-		$results                           = $dispatcher->trigger('onContentBeforeDisplay', array(
+		$results                           = $dispatcher->triggerEvent('onContentBeforeDisplay', array(
 				'com_biblestudy.sermon',
 				&$item,
 				&$params,
@@ -287,7 +292,7 @@ class JBSMPageBuilder
 		);
 		$item->event->beforeDisplayContent = trim(implode("\n", $results));
 
-		$results                          = $dispatcher->trigger('onContentAfterDisplay', array(
+		$results                          = $dispatcher->triggerEvent('onContentAfterDisplay', array(
 				'com_biblestudy.sermon',
 				&$item,
 				&$params,
@@ -315,7 +320,7 @@ class JBSMPageBuilder
 	 */
 	public function studyBuilder($whereitem = null, $wherefield = null, $params = null, $limit = 10, $order = 'DESC', $template = null)
 	{
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 
 		$orderparam = $params->get('order', '1');
 
@@ -325,7 +330,7 @@ class JBSMPageBuilder
 		}
 
 		// Compute view access permissions.
-		$user   = JFactory::getUser();
+		$user   = Factory::getUser();
 		$groups = implode(',', $user->getAuthorisedViewLevels());
 
 		$query = $db->getQuery(true);
@@ -397,7 +402,7 @@ class JBSMPageBuilder
 
 		// Define null and now dates
 		$nullDate = $db->quote($db->getNullDate());
-		$nowDate  = $db->quote(JFactory::getDate()->toSql());
+		$nowDate  = $db->quote(Factory::getDate()->toSql());
 
 		// Filter by start and end dates.
 		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
@@ -415,7 +420,7 @@ class JBSMPageBuilder
 		}
 		elseif ($language !== '*')
 		{
-			$query->where('study.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
+			$query->where('study.language in (' . $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
 		}
 
 		$query->order('studydate ' . $order);

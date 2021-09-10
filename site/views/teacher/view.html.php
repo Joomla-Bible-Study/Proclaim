@@ -9,15 +9,19 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\Registry\Registry;
-
+use Joomla\CMS\Factory;
+//use CWM\Component\Biblestudy\Site\CWMPagebuilder;
+use Joomla\CMS\Language\Text;
+require_once(BIBLESTUDY_PATH_ADMIN_HELPERS.'/CWMParams.php');
+require_once(BIBLESTUDY_PATH_LIB.'/CWMPagebuilder.php');
 /**
  * View class for Teacher
  *
  * @since  7.0.0
  */
-class BiblestudyViewTeacher extends JViewLegacy
+class biblestudyViewTeacher extends BaseHtmlView
 {
 	/** @var  object Item
 	 *
@@ -75,7 +79,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$pagebuilder = new JBSMPageBuilder;
+		$pagebuilder = new CWMPagebuilder;
 
 		$images        = new JBSMImages;
 		$this->state   = $this->get('state');
@@ -86,8 +90,8 @@ class BiblestudyViewTeacher extends JViewLegacy
 		JHtml::_('biblestudy.framework');
 		JHtml::_('biblestudy.loadCss', $params, null, 'font-awesome');
 
-		$input = new JInput;
 
+        $input = Factory::getApplication();
 		$item = $this->get('Item');
 
 		// Add the slug
@@ -128,7 +132,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 		// Check to see if com_contact used instead
 		if ($item->contact)
 		{
-			$language = JFactory::getLanguage();
+			$language = Factory::getLanguage();
 			$language->load('com_contact', JPATH_SITE);
 			require_once JPATH_ROOT . '/components/com_contact/models/contact.php';
 
@@ -140,7 +144,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 			$item->title       = $this->contact->con_position;
 			$item->teachername = $this->contact->name;
 			$item->email       = $this->contact->email_to;
-			$largeimage        = $images->getImagePath($this->contact->image);
+			$largeimage        = $images::getImagePath($this->contact->image);
 			$item->largeimage  = '<img src="' . $largeimage->path . '" height="' . $largeimage->height . '" <width="' . $largeimage->width . '" alt="" />';
 			$item->information = $this->contact->misc;
 			$item->phone       = $this->contact->telephone;
@@ -160,7 +164,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 
 		$this->item = $item;
 
-		$whereitem  = intval($item->id);
+		$whereitem  = (int)$item->id;
 		$wherefield = 'study.teacher_id';
 		$limit      = $params->get('studies', '20');
 		$order      = 'DESC';

@@ -17,7 +17,7 @@ use Joomla\Registry\Registry;
  *
  * @since  7.0.0
  */
-class JBSMMedia
+class CWMMedia
 {
 	/**
 	 * @var integer File Size

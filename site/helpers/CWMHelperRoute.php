@@ -18,7 +18,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.2
  */
-abstract class CWMMHelperRoute
+abstract class CWMHelperRoute
 {
 	/**
 	 * Lookup
