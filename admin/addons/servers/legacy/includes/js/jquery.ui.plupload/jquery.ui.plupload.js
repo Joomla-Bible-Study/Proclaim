@@ -37,7 +37,7 @@ _jQuery UI_ widget factory, there are some specifics. See examples below for mor
 
 	<script>
 		$('#uploader').plupload({
-			url : '../upload.php',
+			url : '../UploadController.php',
 			filters : [
 				{title : "Image files", extensions : "jpg,gif,png"}
 			],

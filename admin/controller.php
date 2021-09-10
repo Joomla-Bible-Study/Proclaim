@@ -24,7 +24,7 @@ if (file_exists($api))
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class BiblestudyController extends JControllerLegacy
+class controller extends JControllerLegacy
 {
 	/**
 	 * Default view var.

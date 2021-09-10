@@ -123,7 +123,7 @@ VALUES
 
 INSERT IGNORE INTO `#__bsms_podcast` (`id`, `title`, `website`, `podcastlink`, `description`, `subtitle`, `image`, `imageh`, `imagew`, `author`, `podcastimage`, `podcastsearch`, `filename`, `language`, `editor_name`, `editor_email`, `podcastlimit`, `published`, `episodetitle`, `custom`, `detailstemplateid`, `asset_id`, `access`, `alternatelink`, `alternateimage`, `podcast_subscribe_show`, `podcast_image_subscribe`, `podcast_subscribe_desc`, `alternatewords`, `episodesubtitle`, `customsubtitle`, `linktype`)
 VALUES
-    (1, 'My Podcast', 'www.mywebsite.com', 'www.mywebsite.com/podcast.php', 'Podcast Description goes here', 'Short sentence about the podcast', 'www.mywebsite.com/myimage.jpg', 30, 30,
+    (1, 'My Podcast', 'www.mywebsite.com', 'www.mywebsite.com/PodcastController.php', 'Podcast Description goes here', 'Short sentence about the podcast', 'www.mywebsite.com/myimage.jpg', 30, 30,
      'Pastor Billy', 'www.mywebsite.com/myimage.jpg', 'jesus', 'mypodcast.xml', '*', 'Jim Editor', 'jim@mywebsite.com',
      50, 1, 0, '', 1, 7483, 1, '', '', 0, '', '', '', 0, '', 0);
 

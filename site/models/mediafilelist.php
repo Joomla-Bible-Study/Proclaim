@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 // Base this model on the backend version.
-JLoader::register('BiblestudyModelMediafiles', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/mediafiles.php');
+JLoader::register('BiblestudyModelMediafiles', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/MediaFilesController.php');
 
 /**
  * Model class for MediaFiles

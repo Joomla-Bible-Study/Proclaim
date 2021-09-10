@@ -221,7 +221,7 @@ class Com_BiblestudyInstallerScript
 	public function uninstall($parent)
 	{
 		$adminpath = $parent->getParent()->getPath('extension_administrator');
-		$model     = "{$adminpath}/models/install.php";
+		$model     = "{$adminpath}/models/InstallController.php";
 
 		if (file_exists($model))
 		{

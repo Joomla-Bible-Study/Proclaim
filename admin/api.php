@@ -7,7 +7,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Log\Log;
+
 defined('_JEXEC') or die;
 
 if (defined('JBSM_LOADED'))
@@ -75,25 +80,32 @@ define('BIBLESTUDY_SECONDS_IN_YEAR', 31536000);
 define('BIBLESTUDY_DB_MISSING_COLUMN', 1054);
 
 // Load JBSM Class
-JLoader::discover('JBSM', BIBLESTUDY_PATH_LIB, 'true', 'true');
-JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_LIB, 'true', 'true');
-JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS, 'false', 'true');
-JLoader::discover('Table', BIBLESTUDY_PATH_TABLES, 'false', 'true');
-JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS, 'false', 'true');
-JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_ADDON, 'false', 'true');
-JLoader::discover('Table', BIBLESTUDY_PATH_ADMIN_TABLES, 'false', 'true');
+//JLoader::registerPrefix();
+discover('CWM\Component\Proclaim\Administrator', JPATH_COMPONENT . "/src", 'true', 'true');
+//JLoader::registerAlias('CWM', '\\CWM\\Component\\Proclaim', '5.0');
+//JLoader::discover('CWM', BIBLESTUDY_PATH_LIB, 'true', 'true');
+//JLoader::discover('CWM', BIBLESTUDY_PATH_ADMIN_LIB, 'true', 'true');
+//JLoader::discover('CWM', BIBLESTUDY_PATH_HELPERS, 'false', 'true');
+//JLoader::discover('Table', BIBLESTUDY_PATH_TABLES, 'false', 'true');
+//JLoader::discover('CWM', BIBLESTUDY_PATH_ADMIN_HELPERS, 'false', 'true');
+//JLoader::discover('CWM', BIBLESTUDY_PATH_ADMIN_ADDON, 'false', 'true');
+//JLoader::discover('Table', BIBLESTUDY_PATH_ADMIN_TABLES, 'false', 'true');
 JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html/');
 
 // Fixes Router overrider.
+//JLoader::register('CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper', JPATH_COMPONENT . '/src/Helper/CWMProclaimHelper.php', true);
+//JLoader::register('CWM\Component\Proclaim\Administrator\Helper\CWMDbHelper', JPATH_COMPONENT . '/src/Helper/CWMDbHelper.php', true);
 JLoader::register('JBSMHelperRoute', BIBLESTUDY_PATH_HELPERS . '/route.php', true);
 
+var_dump(JLoader::getClassList());die;
+
 // If phrase is not found in specific language file, load english language file:
-$language = JFactory::getLanguage();
+$language = jFactory::getLanguage();
 $language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
 $language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, null, true);
 
 // Component debugging
-if (JBSMBibleStudyHelper::debug() === '1' || JFactory::getApplication()->input->getInt('jbsmdbg', '0') === '1')
+if (CWMProclaimHelper::debug() === '1' || Factory::getApplication()->input->getInt('jbsmdbg', '0') === '1')
 {
 	define('JBSMDEBUG', 1);
 }
@@ -104,13 +116,63 @@ else
 
 // Include the JLog class.
 jimport('joomla.log.log');
-JLog::addLogger(
+Log::addLogger(
 	array(
 		'text_file' => 'com_biblestudy.errors.php'
 	),
-	JLog::ALL,
+	Log::ALL,
 	'com_biblestudy'
 );
 
 // JBSM has been initialized
 define('JBSM_LOADED', 1);
+
+/**
+ * Method to discover classes of a given type in a given path.
+ *
+ * @param   string   $classPrefix  The class name prefix to use for discovery.
+ * @param   string   $parentPath   Full path to the parent folder for the classes to discover.
+ * @param   boolean  $force        True to overwrite the autoload path value for the class if it already exists.
+ * @param   boolean  $recurse      Recurse through all child directories as well as the parent path.
+ *
+ * @return  void
+ *
+ * @since   1.7.0
+ */
+function discover($classPrefix, $parentPath, $force = true, $recurse = false)
+{
+	try
+	{
+		if ($recurse)
+		{
+			$iterator = new RecursiveIteratorIterator(
+				new RecursiveDirectoryIterator($parentPath),
+				RecursiveIteratorIterator::SELF_FIRST
+			);
+		}
+		else
+		{
+			$iterator = new DirectoryIterator($parentPath);
+		}
+
+		/** @type  $file  DirectoryIterator */
+		foreach ($iterator as $file)
+		{
+			$fileName = $file->getFilename();
+			var_dump($fileName, true);
+
+			// Only load for php files.
+			if ($file->isFile() && $file->getExtension() === 'php')
+			{
+				// Get the class name and full path for each file.
+				$class = $classPrefix . preg_replace('#\.php$#', '', $fileName);
+
+					JLoader::register($class, $file->getPath() . '/' . $fileName);
+			}
+		}
+	}
+	catch (UnexpectedValueException $e)
+	{
+		// Exception will be thrown if the path is not a directory. Ignore it.
+	}
+}

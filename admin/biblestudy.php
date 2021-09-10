@@ -7,13 +7,25 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
+//JLoader::registerNamespace('\\CWM\\Application\\Proclaim', JPATH_ADMINISTRATOR . '/components/com_biblestudy/src');
+
+JLoader::registerNamespace('CWM\Component\Proclaim\Administrator\Helper', JPATH_COMPONENT . '/src/Helper');
+
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Helper\CWMDbHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Controller\BaseController;
+use Joomla\Component\Finder\Administrator\Indexer\Parser\Html;
+
 defined('_JEXEC') or die;
 
 // Access check.
-if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy'))
+if (!Factory::getUser()->authorise('core.manage', 'com_biblestudy'))
 {
-	throw new JAccessExceptionNotallowed(JText::_('JERROR_ALERTNOAUTHOR'), 403);
+	throw new JAccessExceptionNotallowed(Text::_('JERROR_ALERTNOAUTHOR'), 403);
 }
 
 // Always load JBSM API if it exists.
@@ -26,23 +38,24 @@ if (file_exists($api))
 
 if (version_compare(PHP_VERSION, BIBLESTUDY_MIN_PHP, '<'))
 {
-	throw new Exception(JText::_('JERROR_ERROR') . JText::sprintf('JBS_CMN_PHP_ERROR', BIBLESTUDY_MIN_PHP), 403);
+	throw new \Exception(Text::_('JERROR_ERROR') . Text::sprintf('JBS_CMN_PHP_ERROR', BIBLESTUDY_MIN_PHP), 403);
 }
 
 addCSS();
 
-$app = JFactory::getApplication();
+$app = Factory::getApplication();
 
-$jbsstate = JBSMDbHelper::getInstallState();
+
+$jbsstate = CWMDbHelper::getInstallState();
 
 $type = $app->input->get('view');
 
-$controller = JControllerLegacy::getInstance('Biblestudy');
+$controller = BaseController::getInstance('CWMProclaim');
 
 if ($jbsstate && $type === 'install')
 {
-	JBSMHelper::clearcache('admin');
-	JBSMHelper::clearcache('site');
+	CWMHelper::clearcache('admin');
+	CWMHelper::clearcache('site');
 	$app->input->set('task', 'browse');
 }
 
@@ -58,11 +71,13 @@ $controller->redirect();
  */
 function addCSS()
 {
+	$document = Factory::getDocument();
+
 	if (JBSMDEBUG)
 	{
-		JHtml::stylesheet('media/com_biblestudy/css/biblestudy-debug.css');
+		$document->addStyleSheet('media/com_biblestudy/css/biblestudy-debug.css');
 	}
 
-	JHtml::stylesheet('media/com_biblestudy/css/general.css');
-	JHtml::stylesheet('media/com_biblestudy/css/icons.css');
+	$document->addStyleSheet('media/com_biblestudy/css/general.css');
+	$document->addStyleSheet('media/com_biblestudy/css/icons.css');
 }

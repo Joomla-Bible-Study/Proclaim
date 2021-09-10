@@ -6178,7 +6178,7 @@ define("moxie/image/Image", [
 					xhr.onload = function() {
 						// upload complete
 					};
-					xhr.open('post', 'upload.php');
+					xhr.open('post', 'UploadController.php');
 					xhr.send(formData);
 				};
 				img.load("http://www.moxiecode.com/images/mox-logo.jpg"); // notice file extension (.jpg)

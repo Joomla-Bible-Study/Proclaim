@@ -10,6 +10,9 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Input\Input;
 use Joomla\Registry\Registry;
 
 /**
@@ -18,7 +21,7 @@ use Joomla\Registry\Registry;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class JBSMDownload
+class CWMDownload
 {
 	/**
 	 * Method to send file to browser
@@ -34,9 +37,9 @@ class JBSMDownload
 		clearstatcache();
 
 		$this->hitDownloads($mid);
-		$input    = new JInput;
+		$input    = new Input;
 		$template = $input->get('t', '1', 'int');
-		$db       = JFactory::getDbo();
+		$db       = Factory::getDbo();
 
 		// Get the template so we can find a protocol
 		$query = $db->getQuery(true);
@@ -77,17 +80,17 @@ class JBSMDownload
 			}
 		}
 
-		$jweb = new JApplicationWeb;
-		$jweb->clearHeaders();
+//		$jweb = new JApplicationWeb;
+//		$jweb->clearHeaders();
 
 		$registry = new Registry;
 		$registry->loadString($media->params);
 		$params->merge($registry);
 
-		$download_file = JBSMHelper::MediaBuildUrl($media->spath, $params->get('filename'), $params, true);
+		$download_file = CWMHelper::MediaBuildUrl($media->spath, $params->get('filename'), $params, true);
 		if ($params->get('size', 0) === "0")
 		{
-			$getsize       = JBSMHelper::getRemoteFileSize($download_file);
+			$getsize       = CWMHelper::getRemoteFileSize($download_file);
 		}
 		else
 		{
@@ -151,7 +154,7 @@ class JBSMDownload
 	 */
 	protected function hitDownloads($mid)
 	{
-		$db    = JFactory::getDbo();
+		$db    = Factory::getDbo();
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
 			->set('downloads = downloads + 1 ')

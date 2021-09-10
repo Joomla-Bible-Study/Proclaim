@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 // Base this model on the backend version.
-JLoader::register('BiblestudyModelMessage', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/message.php');
+JLoader::register('BiblestudyModelMessage', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/MessageController.php');
 
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;

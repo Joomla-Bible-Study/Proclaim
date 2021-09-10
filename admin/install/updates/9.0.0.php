@@ -355,9 +355,9 @@ class Migration900
 		$message->language_extension = 'com_biblestudy';
 		$message->language_client_id = 1;
 		$message->type               = 'action';
-		$message->action_file        = 'admin://components/com_biblestudy/postinstall/template.php';
+		$message->action_file        = 'admin://components/com_biblestudy/postinstall/TemplateController.php';
 		$message->action             = 'admin_postinstall_template_action';
-		$message->condition_file     = "admin://components/com_biblestudy/postinstall/template.php";
+		$message->condition_file     = "admin://components/com_biblestudy/postinstall/TemplateController.php";
 		$message->condition_method   = 'admin_postinstall_template_condition';
 		$message->version_introduced = '9.0.0';
 		$message->enabled            = 1;
@@ -1046,7 +1046,7 @@ class Migration900
 			'/language/no-NO/no-NO.com_biblestudy.ini',
 			'/language/en-GB/en-GB.mod_biblestudy.ini',
 			'/language/en-GB/en-GB.mod_biblestudy.sys.ini',
-			'/administrator/components/com_biblestudy/install/biblestudy.assets.php',
+			'/administrator/components/com_biblestudy/install/biblestudy.AssetsModel.php',
 			'/administrator/components/com_biblestudy/install/sql/jbs7.0.0.sql',
 			'/administrator/components/com_biblestudy/install/sql/updates/mysql/20100101.sql',
 			'/administrator/components/com_biblestudy/lib/biblestudy.podcast.class.php',
@@ -1178,10 +1178,10 @@ class Migration900
 			// Site:
 			'/components/com_biblestudy/controllers/commentsedit.php',
 			'/components/com_biblestudy/controllers/commentslist.php',
-			'/components/com_biblestudy/controllers/mediafile.php',
-			'/components/com_biblestudy/controllers/mediafiles.php',
-			'/components/com_biblestudy/controllers/message.php',
-			'/components/com_biblestudy/controllers/messages.php',
+			'/components/com_biblestudy/controllers/MediaFileController.php',
+			'/components/com_biblestudy/controllers/MediaFilesController.php',
+			'/components/com_biblestudy/controllers/MessageController.php',
+			'/components/com_biblestudy/controllers/MessagesController.php',
 			'/components/com_biblestudy/helpers/book.php',
 			'/components/com_biblestudy/helpers/date.php',
 			'/components/com_biblestudy/helpers/duration.php',
@@ -1191,9 +1191,9 @@ class Migration900
 			'/components/com_biblestudy/helpers/filesize.php',
 			'/components/com_biblestudy/helpers/header.php',
 			'/components/com_biblestudy/helpers/listing.php',
-			'/components/com_biblestudy/helpers/location.php',
+			'/components/com_biblestudy/helpers/LocationController.php',
 			'/components/com_biblestudy/helpers/mediatable.php',
-			'/components/com_biblestudy/helpers/messagetype.php',
+			'/components/com_biblestudy/helpers/MessageTypeController.php',
 			'/components/com_biblestudy/helpers/params.php',
 			'/components/com_biblestudy/helpers/passage.php',
 			'/components/com_biblestudy/helpers/scripture.php',
@@ -1202,7 +1202,7 @@ class Migration900
 			'/components/com_biblestudy/helpers/textlink.php',
 			'/components/com_biblestudy/helpers/title.php',
 			'/components/com_biblestudy/helpers/toolbar.php',
-			'/components/com_biblestudy/helpers/topics.php',
+			'/components/com_biblestudy/helpers/TopicsController.php',
 			'/components/com_biblestudy/helpers/year.php',
 			'/components/com_biblestudy/lib/biblestudy.admin.class.php',
 			'/components/com_biblestudy/lib/biblestudy.defines.php',
@@ -1210,10 +1210,10 @@ class Migration900
 			'/components/com_biblestudy/models/forms/commentsedit.xml',
 			'/components/com_biblestudy/models/commentsedit.php',
 			'/components/com_biblestudy/models/commentslist.php',
-			'/components/com_biblestudy/models/mediafile.php',
-			'/components/com_biblestudy/models/mediafiles.php',
-			'/components/com_biblestudy/models/message.php',
-			'/components/com_biblestudy/models/messages.php',
+			'/components/com_biblestudy/models/MediaFileController.php',
+			'/components/com_biblestudy/models/MediaFilesController.php',
+			'/components/com_biblestudy/models/MessageController.php',
+			'/components/com_biblestudy/models/MessagesController.php',
 			// Admin:
 			'/administrator/components/com_biblestudy/controllers/ajax.php',
 			'/administrator/components/com_biblestudy/helpers/cleanurl.php',
