@@ -9,7 +9,7 @@
  * */
 
 // No Direct Access
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use CWM\Component\BibleStudy\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
 
@@ -98,14 +98,20 @@ $language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
 $language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, null, true);
 
 // Component debugging
-//if (BibleStudyHelper::debug() === '1' || Factory::getApplication()->input->getInt('jbsmdbg', '0') === '1')
-//{
-//	define('JBSMDEBUG', 1);
-//}
-//else
-//{
-//	define('JBSMDEBUG', 0);
-//}
+try
+{
+	if (CWMProclaimHelper::debug() === '1' || Factory::getApplication()->input->getInt('jbsmdbg', '0') === '1')
+	{
+		define('JBSMDEBUG', 1);
+	}
+	else
+	{
+		define('JBSMDEBUG', 0);
+	}
+}
+catch (Exception $e)
+{
+}
 
 // Include the JLog class.
 jimport('joomla.log.log');

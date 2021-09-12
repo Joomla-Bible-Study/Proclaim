@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\Helper;
+namespace CWM\Component\BibleStudy\Administrator\Helper;
 
 defined('_JEXEC') or die;
 
@@ -49,7 +49,7 @@ class CWMDbHelper
 	 */
 	public static function checkIfTable($cktable)
 	{
-		$db     = JFactory::getDbo();
+		$db     = Factory::getDbo();
 		$tables = $db->getTableList();
 		$prefix = $db->getPrefix();
 
@@ -80,7 +80,7 @@ class CWMDbHelper
 	 */
 	public static function alterDB($tables, $from = null)
 	{
-		$db     = JFactory::getDbo();
+		$db     = Factory::getDbo();
 
 		foreach ($tables as $t)
 		{
@@ -208,7 +208,7 @@ class CWMDbHelper
 	 */
 	public static function checkTables($table, $field)
 	{
-		$db     = JFactory::getDbo();
+		$db     = Factory::getDbo();
 
 		$fields = $db->getTableColumns($table, 'false');
 
@@ -242,12 +242,12 @@ class CWMDbHelper
 			return false;
 		}
 
-		$db     = JFactory::getDbo();
+		$db     = Factory::getDbo();
 		$db->setQuery($query, 0, $limit);
 
 		if (!$db->execute())
 		{
-			JFactory::getApplication()->enqueueMessage($from . JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'warning');
+			Factory::getApplication()->enqueueMessage($from . JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'warning');
 
 			return false;
 		}
@@ -293,7 +293,7 @@ class CWMDbHelper
 	 */
 	public static function getObjects()
 	{
-		$db        = JFactory::getDbo();
+		$db        = Factory::getDbo();
 		$tables    = $db->getTableList();
 		$prefix    = $db->getPrefix();
 		$prelength = strlen($prefix);
@@ -323,7 +323,7 @@ class CWMDbHelper
 	{
 		if (!is_bool(self::$install_state))
 		{
-			$db     = JFactory::getDbo();
+			$db     = Factory::getDbo();
 
 			// Check if JBSM can be found from the database
 			$table = $db->getPrefix() . 'bsms_admin';
@@ -353,10 +353,10 @@ class CWMDbHelper
 	 */
 	public static function fixupcss(string $filename, bool $parent, string $newcss, int $id = null)
 	{
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 
 		// Start by getting existing Style
-		$db     = JFactory::getDbo();
+		$db     = Factory::getDbo();
 		$query  = $db->getQuery(true);
 		$query->select('*')->from('#__bsms_styles');
 
@@ -444,7 +444,7 @@ class CWMDbHelper
 	 */
 	public static function reloadtable(object $result, string $table = 'Style')
 	{
-		$db     = JFactory::getDbo();
+		$db     = Factory::getDbo();
 
 		// Store new Recorder so it can be seen.
 		JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
@@ -477,8 +477,8 @@ class CWMDbHelper
 	 */
 	public static function resetdb($install = false)
 	{
-		$app    = JFactory::getApplication();
-		$db     = JFactory::getDbo();
+		$app    = Factory::getApplication();
+		$db     = Factory::getDbo();
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');
 		$path = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_biblestudy/install/sql';
@@ -564,8 +564,8 @@ class CWMDbHelper
 	 */
 	public static function CleanStudyTopics()
 	{
-		$app    = JFactory::getApplication();
-		$db     = JFactory::getDbo();
+		$app    = Factory::getApplication();
+		$db     = Factory::getDbo();
 		$query  = $db->getQuery(true);
 		$query->select('id')->from('#__bsms_studies');
 		$db->setQuery($query);

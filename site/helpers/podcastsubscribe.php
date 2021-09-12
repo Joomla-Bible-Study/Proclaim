@@ -93,9 +93,9 @@ class JBSMPodcastSubscribe
 	 */
 	public function getPodcasts()
 	{
-		$user   = JFactory::getUser();
+		$user   = Factory::getUser();
 		$groups = implode(',', $user->getAuthorisedViewLevels());
-		$db    = JFactory::getDbo();
+		$db    = Factory::getDbo();
 		$query = $db->getQuery('true');
 		$query->select('*')
 			->from('#__bsms_podcast as p')

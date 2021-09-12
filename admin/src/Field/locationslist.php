@@ -36,7 +36,7 @@ class JFormFieldLocationslist extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		$db    = JFactory::getDbo();
+		$db    = Factory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('id,location_text');
 		$query->from('#__bsms_locations');

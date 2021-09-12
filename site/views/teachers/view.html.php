@@ -132,7 +132,7 @@ class BiblestudyViewTeachers extends BaseHtmlView
 		}
 
 		// Load the Admin settings and params from the template
-		$this->admin = $state->get('admin');
+		$this->admin = $state->get('administrator');
 		$uri                = new JUri;
 
 		JHtml::_('biblestudy.framework');

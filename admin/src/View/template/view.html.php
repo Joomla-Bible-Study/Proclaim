@@ -155,7 +155,7 @@ class BiblestudyViewTemplate extends JViewLegacy
 	protected function setDocument()
 	{
 		$isNew    = ($this->item->id < 1);
-		$document = JFactory::getDocument();
+		$document = Factory::getDocument();
 		$document->setTitle($isNew ? JText::_('JBS_TITLE_TEMPLATES_CREATING') : JText::sprintf('JBS_TITLE_TEMPLATES_EDITING', $this->item->title));
 	}
 }

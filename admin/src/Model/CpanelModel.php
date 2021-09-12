@@ -6,7 +6,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\Model;
+namespace CWM\Component\BibleStudy\Administrator\Model;
 
 
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
@@ -30,7 +30,7 @@ class CpanelModel extends BaseDatabaseModel
 	public function getData()
 	{
 		// Get version information
-		$db     = JFactory::getDbo();
+		$db     = Factory::getDbo();
 		$return = new stdClass;
 		$query  = $db->getQuery(true);
 		$query->select('*');
@@ -81,7 +81,7 @@ class CpanelModel extends BaseDatabaseModel
 
 		// Get the extension ID
 		// Get the extension ID for our component
-		$db    = JFactory::getDbo();
+		$db    = Factory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('extension_id')
 			->from('#__extensions')

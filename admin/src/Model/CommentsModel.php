@@ -58,7 +58,7 @@ class CommentsModel extends ListModel
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		$app    = JFactory::getApplication();
+		$app    = Factory::getApplication();
 		$layout = $app->input->get('layout');
 
 		// Adjust the context to support modal layouts.

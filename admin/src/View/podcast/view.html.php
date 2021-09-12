@@ -142,7 +142,7 @@ class BiblestudyViewPodcast extends JViewLegacy
 	protected function setDocument()
 	{
 		$isNew    = ($this->item->id < 1);
-		$document = JFactory::getDocument();
+		$document = Factory::getDocument();
 		$document->setTitle($isNew ? JText::_('JBS_TITLE_PODCAST_CREATING') : JText::sprintf('JBS_TITLE_PODCAST_EDITING', $this->item->title));
 	}
 }

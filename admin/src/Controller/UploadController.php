@@ -8,15 +8,19 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\Controller;
+namespace CWM\Component\BibleStudy\Administrator\Controller;
 
 // No direct access
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Path;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Uri\Uri;
 
 defined('_JEXEC') or die();
-
-jimport('joomla.filesystem.folder');
-jimport('joomla.filesystem.file');
 
 /**
  * Class BiblestudyControllerUpload
@@ -38,7 +42,7 @@ class UploadController extends AdminController
 	public function upload()
 	{
 		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
 		$contentType = null;
 
@@ -52,13 +56,16 @@ class UploadController extends AdminController
 		}
 
 		$input   = new Joomla\Input\Input;
-		$params  = JComponentHelper::getParams('com_biblestudy');
-		$app = JFactory::getApplication();
+		$params  = ComponentHelper::getParams('com_biblestudy');
+		$app     = Factory::getApplication();
 		$session = $app->getSession();
 		$user    = $app->getIdentity();
 
-		$cleanupTargetDir = true; /* Remove old files */
-		$maxFileAge       = 5 * 3600; /* Temp file age in seconds */
+		// Remove old files
+		$cleanupTargetDir = true;
+
+		// Temp file age in seconds
+		$maxFileAge       = 5 * 3600;
 
 		// Directory for file upload
 		$targetDirBase64  = $session->get('current_dir', null, 'com_biblestudy');
@@ -66,7 +73,7 @@ class UploadController extends AdminController
 		$targetDirWithSep = $targetDirDecoded . DIRECTORY_SEPARATOR;
 
 		// Check for snooping
-		$targetDirCleaned = JPath::check($targetDirWithSep);
+		$targetDirCleaned = Path::check($targetDirWithSep);
 
 		// Finally
 		$targetDir = $targetDirCleaned;
@@ -79,7 +86,7 @@ class UploadController extends AdminController
 		$fileNameFromReq = $input->getString('name', '');
 
 		// Clean the fileName for security reasons
-		$fileName = JFile::makeSafe($fileNameFromReq);
+		$fileName = File::makeSafe($fileNameFromReq);
 
 		// Check file extension
 		$ext_images = $params->get('image_file_extensions', null);
@@ -93,25 +100,25 @@ class UploadController extends AdminController
 		// Check token
 		if (!$session->checkToken('request'))
 		{
-			$this->_setResponse(400, JText::_('JINVALID_TOKEN'));
+			$this->_setResponse(400, Text::_('JINVALID_TOKEN'));
 		}
 
 		// Check user perms
 		if (!$user->authorise('core.create', 'com_biblestudy'))
 		{
-			$this->_setResponse(400, JText::_('JBS_ERROR_PERM_DENIDED'));
+			$this->_setResponse(400, Text::_('JBS_ERROR_PERM_DENIDED'));
 		}
 
 		// Directory check
-		if (!file_exists($targetDir) && !is_dir($targetDir) && strpos(JUri::base(), $targetDir) !== false)
+		if (!file_exists($targetDir) && !is_dir($targetDir) && strpos(Uri::base(), $targetDir) !== false)
 		{
-			$this->_setResponse(100, JText::_('JBS_ERROR_UPLOAD_INVALID_PATH'));
+			$this->_setResponse(100, Text::_('JBS_ERROR_UPLOAD_INVALID_PATH'));
 		}
 
 		// File type check
-		if (!in_array(JFile::getExt($fileName), $exts_arr))
+		if (!in_array(File::getExt($fileName), $exts_arr, true))
 		{
-			$this->_setResponse(100, JText::_('JBS_ERROR_UPLOAD_INVALID_FILE_EXTENSION'));
+			$this->_setResponse(100, Text::_('JBS_ERROR_UPLOAD_INVALID_FILE_EXTENSION'));
 		}
 
 		// Make sure the fileName is unique but only if chunk is disabled
@@ -143,7 +150,7 @@ class UploadController extends AdminController
 				// Remove temp file if it is older than the max age and is not the current file
 				if (preg_match('/\.part$/', $file) && (filemtime($tmpfilePath) < time() - $maxFileAge) && ($tmpfilePath != "{$filePath}.part"))
 				{
-					JFile::delete($tmpfilePath);
+					File::delete($tmpfilePath);
 				}
 			}
 
@@ -192,7 +199,7 @@ class UploadController extends AdminController
 
 					fclose($in);
 					fclose($out);
-					JFile::delete($_FILES['file']['tmp_name']);
+					File::delete($_FILES['file']['tmp_name']);
 				}
 				else
 				{
@@ -248,16 +255,16 @@ class UploadController extends AdminController
 	/**
 	 * Set the JSON response and exists script
 	 *
-	 * @param   int     $code   Error Code
-	 * @param   string  $msg    Error Message
-	 * @param   bool    $error  ?
+	 * @param   int          $code   Error Code
+	 * @param   string|null  $msg    Error Message
+	 * @param   bool         $error  ?
 	 *
 	 * @return void
 	 *
 	 * @throws \JsonException
 	 * @since 9.0
 	 */
-	private function _setResponse($code, $msg = null, $error = true)
+	private function _setResponse(int $code, string $msg = null, bool $error = true)
 	{
 		if ($error)
 		{

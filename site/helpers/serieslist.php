@@ -173,7 +173,7 @@ class JBSMSerieslist extends JBSMListing
 		echo $params->get('series_headercode');
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-		$user   = JFactory::getUser();
+		$user   = Factory::getUser();
 		$groups = $user->getAuthorisedViewLevels();
 		$count  = count($items);
 
@@ -227,9 +227,9 @@ class JBSMSerieslist extends JBSMListing
 	 */
 	public function getSeriesstudiesDBO($id, $params, $limit = null)
 	{
-		$db        = JFactory::getDbo();
-		$user      = JFactory::getUser();
-		$language  = $language = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
+		$db        = Factory::getDbo();
+		$user      = Factory::getUser();
+		$language  = $language = $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*');
 		$set_limit = null;
 
 		if ($limit)

@@ -39,7 +39,7 @@ class BiblestudyModelSeriesdisplays extends JModelList
 	protected function populateState($ordering = null, $direction = null)
 	{
 		/** @type JApplicationSite $app */
-		$app = JFactory::getApplication('site');
+		$app = Factory::getApplication('site');
 
 		// Adjust the context to support modal layouts.
 		$input  = new JInput;
@@ -71,7 +71,7 @@ class BiblestudyModelSeriesdisplays extends JModelList
 		$template->id = $t;
 
 		$this->setState('template', $template);
-		$this->setState('admin', $admin);
+		$this->setState('administrator', $admin);
 
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
@@ -115,7 +115,7 @@ class BiblestudyModelSeriesdisplays extends JModelList
 		$db              = $this->getDbo();
 		$template_params = JBSMParams::getTemplateparams();
 		$t_params        = $template_params->params;
-		$app             = JFactory::getApplication('site');
+		$app             = Factory::getApplication('site');
 		$params          = JComponentHelper::getParams('com_biblestudy');
 		$menuparams      = new Registry;
 		$menu            = $app->getMenu()->getActive();
@@ -141,7 +141,7 @@ class BiblestudyModelSeriesdisplays extends JModelList
 
 		if ($this->getState('filter.language') || $language != '*')
 		{
-			$query->where('se.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
+			$query->where('se.language in (' . $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
 		}
 
 		$orderDir = $t_params->get('series_list_order', 'DESC');
@@ -160,7 +160,7 @@ class BiblestudyModelSeriesdisplays extends JModelList
 	 */
 	public function _buildContentWhere()
 	{
-		$mainframe      = JFactory::getApplication();
+		$mainframe      = Factory::getApplication();
 		$input          = new JInput;
 		$option         = $input->get('option', '', 'cmd');
 		$params         = JComponentHelper::getParams($option);
@@ -297,7 +297,7 @@ class BiblestudyModelSeriesdisplays extends JModelList
 		$items = $db->loadObjectList();
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-		$user   = JFactory::getUser();
+		$user   = Factory::getUser();
 		$groups = $user->getAuthorisedViewLevels();
 		$count  = count($items);
 

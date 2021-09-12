@@ -92,7 +92,7 @@ abstract class CWMMHelperRoute
 	 */
 	protected static function _findItem($needles = null)
 	{
-		$app   = JFactory::getApplication();
+		$app   = Factory::getApplication();
 		$menus = $app->getMenu('site');
 
 		// Prepare the reverse lookup array.

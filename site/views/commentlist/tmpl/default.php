@@ -15,8 +15,8 @@ JHtml::_('dropdown.init');
 JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.multiselect');
 
-$app        = JFactory::getApplication();
-$user       = JFactory::getUser();
+$app        = Factory::getApplication();
+$user       = Factory::getUser();
 $userId     = $user->get('id');
 $listOrder  = $this->escape($this->state->get('list.ordering'));
 $listDirn   = $this->escape($this->state->get('list.direction'));

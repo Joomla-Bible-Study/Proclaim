@@ -101,7 +101,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 			$params = new Registry;
 			$params->loadArray($data['params']);
 
-			$jdb   = JFactory::getDbo();
+			$jdb   = Factory::getDbo();
 			$table = new TableServer($jdb);
 			$table->load($data['server_id']);
 
@@ -223,18 +223,18 @@ class BiblestudyModelMediafile extends JModelAdmin
 			JForm::addFieldPath($path . '/fields');
 
 			// Add language files
-			$lang = JFactory::getLanguage();
+			$lang = Factory::getLanguage();
 
 			if (!$lang->load('jbs_addon_' . $server_type, JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/' . $server_type) && !$server_type)
 			{
-				JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'), 'error');
+				Factory::getApplication()->enqueueMessage(JText::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'), 'error');
 			}
 
 			$form = $this->loadForm('com_biblestudy.mediafile.media', "media", array('control' => 'jform', 'load_data' => true), true, "/media");
 		}
 		else
 		{
-			JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'), 'warning');
+			Factory::getApplication()->enqueueMessage(JText::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'), 'warning');
 			$form = $this->getForm();
 		}
 
@@ -276,7 +276,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 			return false;
 		}
 
-		$jinput = JFactory::getApplication()->input;
+		$jinput = Factory::getApplication()->input;
 
 		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
 		if ($jinput->get('a_id'))
@@ -289,7 +289,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 			$id = $jinput->get('id', 0);
 		}
 
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
@@ -321,7 +321,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 */
 	public function getItem($pk = null)
 	{
-		$jinput = JFactory::getApplication()->input;
+		$jinput = Factory::getApplication()->input;
 
 		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
 		if ($jinput->get('a_id'))
@@ -476,7 +476,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	protected function batchPlayer($value, $pks, $contexts)
 	{
 		// Set the variables
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 		/** @type TableMediafile $table */
 		$table = $this->getTable();
 
@@ -541,7 +541,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	protected function batchlink_type($value, $pks, $contexts)
 	{
 		// Set the variables
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 		/** @type TableMediafile $table */
 		$table = $this->getTable();
 
@@ -591,7 +591,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	protected function batchMimetype($value, $pks, $contexts)
 	{
 		// Set the variables
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 		/** @type TableMediafile $table */
 		$table = $this->getTable();
 
@@ -641,7 +641,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	protected function batchMediatype($value, $pks, $contexts)
 	{
 		// Set the variables
-		$user  = JFactory::getUser();
+		$user  = Factory::getUser();
 		$table = $this->getTable();
 
 		foreach ($pks as $pk)
@@ -690,7 +690,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	protected function batchPopup($value, $pks, $contexts)
 	{
 		// Set the variables
-		$user  = JFactory::getUser();
+		$user  = Factory::getUser();
 		$table = $this->getTable();
 
 		foreach ($pks as $pk)
@@ -743,7 +743,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 				return false;
 			}
 
-			$user = JFactory::getUser();
+			$user = Factory::getUser();
 
 			return $user->authorise('core.delete', 'com_biblestudy.mediafile.' . (int) $record->id);
 		}
@@ -761,7 +761,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 */
 	protected function loadFormData()
 	{
-		$session = JFactory::getApplication()->getUserState('com_biblestudy.mediafile.edit.data', array());
+		$session = Factory::getApplication()->getUserState('com_biblestudy.mediafile.edit.data', array());
 
 		$data = empty($session) ? $this->data : $session;
 
@@ -778,14 +778,14 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 */
 	protected function populateState()
 	{
-		$app   = JFactory::getApplication('administrator');
+		$app   = Factory::getApplication('administrator');
 		$input = $app->input;
 
 		// Load the Admin settings
 		$admin    = JBSMParams::getAdmin();
 		$registry = new Registry;
 		$registry->loadString($admin->params);
-		$this->setState('admin', $registry);
+		$this->setState('administrator', $registry);
 
 		$pk = $input->get('id', null, 'INTEGER');
 		$this->setState('mediafile.id', $pk);

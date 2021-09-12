@@ -36,7 +36,7 @@ class JFormFieldServer extends JFormField
 		$allowClear = (string) $this->element['clear'] !== 'false';
 
 		// Build the script.
-		$view = JFactory::getApplication()->input->get('view');
+		$view = Factory::getApplication()->input->get('view');
 		$size = ($v = $this->element['size']) ? ' size="' . $v . '"' : '';
 
 		// Get a reverse lookup of the server id to server name
@@ -98,7 +98,7 @@ class JFormFieldServer extends JFormField
 		}
 
 		// Add the script to the document head.
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
+		Factory::getDocument()->addScriptDeclaration(implode("\n", $script));
 
 		// Setup variables for display.
 		$html = array();

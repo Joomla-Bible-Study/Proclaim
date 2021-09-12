@@ -43,7 +43,7 @@ class BiblestudyModelSermon extends JModelItem
 	public function hit($pk = null)
 	{
 		$pk    = (!empty($pk)) ? $pk : (int) $this->getState('study.id');
-		$db    = JFactory::getDbo();
+		$db    = Factory::getDbo();
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_studies')->set('hits = hits  + 1')->where('id = ' . (int) $pk);
 		$db->setQuery($query);
@@ -64,7 +64,7 @@ class BiblestudyModelSermon extends JModelItem
 	 */
 	public function &getItem($pk = null)
 	{
-		$user	= JFactory::getUser();
+		$user	= Factory::getUser();
 
 		// Initialise variables.
 		$pk = (!empty($pk)) ? $pk : (int) $this->getState('study.id');
@@ -123,7 +123,7 @@ class BiblestudyModelSermon extends JModelItem
 				{
 					// Filter by start and end dates.
 					$nullDate = $db->quote($db->getNullDate());
-					$date     = JFactory::getDate();
+					$date     = Factory::getDate();
 
 					$nowDate = $db->quote($date->toSql());
 
@@ -132,7 +132,7 @@ class BiblestudyModelSermon extends JModelItem
 				}
 
 				// Implement View Level Access
-				if (!$user->authorise('core.admin'))
+				if (!$user->authorise('core.administrator'))
 				{
 					$groups = implode(',', $user->getAuthorisedViewLevels());
 					$query->where('s.access IN (' . $groups . ')');
@@ -154,7 +154,7 @@ class BiblestudyModelSermon extends JModelItem
 
 				if (empty($data))
 				{
-					JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_STUDY_NOT_FOUND', 'error'));
+					Factory::getApplication()->enqueueMessage(JText::_('JBS_CMN_STUDY_NOT_FOUND', 'error'));
 
 					return $data;
 				}
@@ -162,7 +162,7 @@ class BiblestudyModelSermon extends JModelItem
 				// Check for published state if filter set.
 				if (((is_numeric($published)) || (is_numeric($archived))) && (($data->published != $published) && ($data->published != $archived)))
 				{
-					JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_ITEM_NOT_PUBLISHED'), 'error');
+					Factory::getApplication()->enqueueMessage(JText::_('JBS_CMN_ITEM_NOT_PUBLISHED'), 'error');
 					$data = null;
 
 					return $data;
@@ -221,7 +221,7 @@ class BiblestudyModelSermon extends JModelItem
 				else
 				{
 					// If no access filter is set, the layout takes some responsibility for display of limited information.
-					$user   = JFactory::getUser();
+					$user   = Factory::getUser();
 					$groups = $user->getAuthorisedViewLevels();
 
 					$data->params->set('access-view', in_array($data->access, $groups));
@@ -234,11 +234,11 @@ class BiblestudyModelSermon extends JModelItem
 				if ($e->getCode() == 404)
 				{
 					// Need to go through the error handler to allow Redirect to work.
-					JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+					Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
 				}
 				else
 				{
-					JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+					Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
 					$this->_item[$pk] = false;
 				}
 			}
@@ -257,10 +257,10 @@ class BiblestudyModelSermon extends JModelItem
 	 */
 	public function getComments()
 	{
-		$app = JFactory::getApplication('site');
+		$app = Factory::getApplication('site');
 		$id  = $app->input->get('id', '', 'int');
 
-		$db    = JFactory::getDbo();
+		$db    = Factory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('c.*')->from('#__bsms_comments AS c')->where('c.published = 1')->where('c.study_id = ' . $id)->order('c.comment_date asc');
 		$db->setQuery($query);
@@ -314,7 +314,7 @@ class BiblestudyModelSermon extends JModelItem
 	protected function populateState()
 	{
 		/** @type JApplicationSite $app */
-		$app = JFactory::getApplication('site');
+		$app = Factory::getApplication('site');
 
 		// Load state from the request.
 		$pk = $app->input->get('id', '', 'int');
@@ -344,9 +344,9 @@ class BiblestudyModelSermon extends JModelItem
 		$template->id = $t;
 
 		$this->setState('template', $template);
-		$this->setState('admin', $admin);
+		$this->setState('administrator', $admin);
 
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 
 		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
 		{

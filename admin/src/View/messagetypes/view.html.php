@@ -101,7 +101,7 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 		// Check for errors
 		if (count($errors = $this->get('Errors')))
 		{
-			JFactory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
+			Factory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
 
 			return false;
 		}
@@ -143,7 +143,7 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 
 		// Get the toolbar object instance
 		$toolbar = Toolbar::getInstance('toolbar');
@@ -211,7 +211,7 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 	 */
 	protected function setDocument()
 	{
-		$document = JFactory::getDocument();
+		$document = Factory::getDocument();
 		$document->setTitle(JText::_('JBS_TITLE_MESSAGETYPES'));
 	}
 

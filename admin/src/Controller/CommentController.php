@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\Controller;
+namespace CWM\Component\BibleStudy\Administrator\Controller;
 
 // No Direct Access
 defined('_JEXEC') or die;
@@ -74,7 +74,7 @@ class CommentController extends FormController
 	protected function allowEdit($data = array(), $key = 'id')
 	{
 		$recordId = (int) isset($data[$key]) ? $data[$key] : 0;
-		$user     = JFactory::getApplication()->getIdentity();
+		$user     = Factory::getApplication()->getIdentity();
 
 		// Check general edit permission first.
 		if ($user->authorise('core.edit', 'com_biblestudy.comment.' . $recordId))

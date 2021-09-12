@@ -206,7 +206,7 @@ class AssetsModel extends BaseDatabaseModel
 			$stack = base64_encode($stack);
 		}
 
-		$session = JFactory::getSession();
+		$session = Factory::getSession();
 		$session->set('asset_stack', $stack, 'JBSM');
 	}
 
@@ -219,7 +219,7 @@ class AssetsModel extends BaseDatabaseModel
 	 */
 	private function resetStack()
 	{
-		$session = JFactory::getSession();
+		$session = Factory::getSession();
 		$session->set('asset_stack', '', 'JBSM');
 		$this->versionStack   = array();
 		$this->versionSwitch  = null;
@@ -238,7 +238,7 @@ class AssetsModel extends BaseDatabaseModel
 	 */
 	private function loadStack()
 	{
-		$session = JFactory::getSession();
+		$session = Factory::getSession();
 		$stack = $session->get('asset_stack', '', 'JBSM');
 
 		if (empty($stack))
@@ -431,7 +431,7 @@ class AssetsModel extends BaseDatabaseModel
 			array(
 				'name'       => '#__bsms_admin',
 				'titlefield' => 'id',
-				'assetname'  => 'admin',
+				'assetname'  => 'administrator',
 				'realname'   => 'JBS_CMN_ADMINISTRATION'
 			)
 		);
@@ -449,7 +449,7 @@ class AssetsModel extends BaseDatabaseModel
 	public function checkAssets()
 	{
 		$return = array();
-		$db     = JFactory::getDbo();
+		$db     = Factory::getDbo();
 		$result = new stdClass;
 
 		// First get the new parent_id

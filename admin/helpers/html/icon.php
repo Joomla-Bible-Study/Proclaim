@@ -89,7 +89,7 @@ abstract class JHtmlIcon
 
 		$uri      = JUri::getInstance();
 		$base     = $uri->toString(array('scheme', 'host', 'port'));
-		$template = JFactory::getApplication()->getTemplate();
+		$template = Factory::getApplication()->getTemplate();
 		$link     = $base . JRoute::_(JBSMHelperRoute::getArticleRoute($article->id, $article->language), false);
 		$url      = 'index.php?option=com_mailto&tmpl=component&template=' . $template . '&link=' . MailtoHelper::addLink($link);
 
@@ -135,7 +135,7 @@ abstract class JHtmlIcon
 	 */
 	public static function edit($article, $params, $attribs = array(), $legacy = false)
 	{
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 		$uri  = JUri::getInstance();
 
 		// Ignore if in a popup window.
@@ -156,7 +156,7 @@ abstract class JHtmlIcon
 			&& $article->checked_out > 0
 			&& $article->checked_out != $user->get('id'))
 		{
-			$checkoutUser = JFactory::getUser($article->checked_out);
+			$checkoutUser = Factory::getUser($article->checked_out);
 			$button       = JHtml::_('image', 'system/checked_out.png', null, null, true);
 			$date         = JHtml::_('date', $article->checked_out_time);
 			$tooltip      = JText::_('JLIB_HTML_CHECKED_OUT') . ' :: ' . JText::sprintf('COM_CONTENT_CHECKED_OUT_BY', $checkoutUser->name)
@@ -180,8 +180,8 @@ abstract class JHtmlIcon
 		{
 			$icon = $article->state ? 'edit.png' : 'edit_unpublished.png';
 
-			if (strtotime($article->publish_up) > strtotime(JFactory::getDate())
-				|| ((strtotime($article->publish_down) < strtotime(JFactory::getDate())) && $article->publish_down != JFactory::getDbo()->getNullDate()))
+			if (strtotime($article->publish_up) > strtotime(Factory::getDate())
+				|| ((strtotime($article->publish_down) < strtotime(Factory::getDate())) && $article->publish_down != Factory::getDbo()->getNullDate()))
 			{
 				$icon = 'edit_unpublished.png';
 			}
@@ -192,8 +192,8 @@ abstract class JHtmlIcon
 		{
 			$icon = $article->published ? 'edit' : 'eye-close';
 
-			if (strtotime($article->publish_up) > strtotime(JFactory::getDate())
-				|| ((strtotime($article->publish_down) < strtotime(JFactory::getDate())) && $article->publish_down != JFactory::getDbo()->getNullDate()))
+			if (strtotime($article->publish_up) > strtotime(Factory::getDate())
+				|| ((strtotime($article->publish_down) < strtotime(Factory::getDate())) && $article->publish_down != Factory::getDbo()->getNullDate()))
 			{
 				$icon = 'eye-close';
 			}
@@ -221,7 +221,7 @@ abstract class JHtmlIcon
 	 */
 	public static function print_popup($article, $params, $attribs = array(), $legacy = false)
 	{
-		$app     = JFactory::getApplication();
+		$app     = Factory::getApplication();
 		$input   = $app->input;
 		$request = $input->request;
 

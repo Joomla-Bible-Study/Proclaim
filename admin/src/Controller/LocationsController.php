@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\Controller;
+namespace CWM\Component\BibleStudy\Administrator\Controller;
 
 // No Direct Access
 defined('_JEXEC') or die;
@@ -53,7 +53,7 @@ class LocationsController extends AdminController
 		}
 
 		// Close the application
-		JFactory::getApplication()->close();
+		Factory::getApplication()->close();
 	}
 
 	/**

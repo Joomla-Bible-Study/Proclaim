@@ -8,11 +8,16 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\Helper;
+namespace CWM\Component\BibleStudy\Administrator\Helper;
 
 // No Direct Access
 defined('_JEXEC') or die;
 
+use CWMListing;
+use Joomla\CMS\Cache\Cache;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Component\Mails\Administrator\Table\TemplateTable;
 use Joomla\Registry\Registry;
 
 /**
@@ -37,11 +42,11 @@ class CWMHelper
 	 *
 	 * @param   object                    $row       JTable
 	 * @param   Joomla\Registry\Registry  $params    Item Params
-	 * @param   TableTemplate             $template  ID
+	 * @param   TemplateTable             $template  ID
 	 *
 	 * @return string
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since  9.0.0
 	 */
 	public static function getTooltip($row, $params, $template)
@@ -77,7 +82,7 @@ class CWMHelper
 	 */
 	public static function getShowhide()
 	{
-		$showhide = '
+		return '
         function HideContent(d) {
         document.getElementById(d).style.display = "none";
         }
@@ -89,8 +94,6 @@ class CWMHelper
         else { document.getElementById(d).style.display = "none"; }
         }
         ';
-
-		return $showhide;
 	}
 
 	/**
@@ -141,7 +144,7 @@ class CWMHelper
 		{
 			$headers = @get_headers($url, true);
 		}
-		catch (Exception $e)
+		catch (\Exception $e)
 		{
 			return 0;
 		}
@@ -187,8 +190,8 @@ class CWMHelper
 	 */
 	public static function SetFileSize($id, $size)
 	{
-		$db     = JFactory::getDbo();
-		$query  = $db->getQuery(true);
+		$db    = Factory::getDbo();
+		$query = $db->getQuery(true);
 		$query->select('id, params')
 			->from('#__bsms_mediafiles')
 			->where('id = ' . (int) $id);
@@ -200,7 +203,7 @@ class CWMHelper
 		$reg->loadString($media->params);
 		$reg->set('size', $size);
 
-		$update         = new stdClass;
+		$update         = new \stdClass;
 		$update->id     = $id;
 		$update->params = $reg->toString();
 
@@ -226,7 +229,7 @@ class CWMHelper
 		$spath    = rtrim($spath, '/');
 		$path     = ltrim($path, '/');
 		$host     = $_SERVER['HTTP_HOST'];
-		$protocol = JUri::root();
+		$protocol = Uri::root();
 
 		if (empty($path))
 		{
@@ -290,14 +293,15 @@ class CWMHelper
 	 * @param   string  $state  Where to clean the cache from. Site or Admin.
 	 *
 	 * @return void
+	 * @throws \Exception
 	 * @since 9.0.4
 	 */
 	public static function clearcache($state = 'site')
 	{
-		$conf    = JFactory::getApplication()->getConfig();
+		$conf    = Factory::getApplication()->getConfig();
 		$options = array();
 
-		if ($state === 'admin')
+		if ($state === 'administrator')
 		{
 			$options = array(
 				'defaultgroup' => 'com_biblestudy',
@@ -316,7 +320,7 @@ class CWMHelper
 			);
 		}
 
-		$cache = JCache::getInstance('', $options);
+		$cache = Cache::getInstance('', $options);
 		$cache->clean();
 	}
 
@@ -351,7 +355,7 @@ class CWMHelper
 	 *
 	 * @return  object
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 9.1.6
 	 */
 	public static function getSimpleView($params = null)

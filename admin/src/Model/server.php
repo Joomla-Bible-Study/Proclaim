@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 use Joomla\Registry\Registry;
 
 /**
- * Server admin model
+ * Server administrator model
  *
  * @package  Proclaim.Admin
  * @since    7.0.0
@@ -196,7 +196,7 @@ class BiblestudyModelServer extends JModelAdmin
 		JForm::addFieldPath($path . '/fields');
 
 		// Add language files
-		$lang = JFactory::getLanguage();
+		$lang = Factory::getLanguage();
 
 		if (!$lang->load('jbs_addon_' . $type, $path))
 		{
@@ -253,7 +253,7 @@ class BiblestudyModelServer extends JModelAdmin
 	 */
 	protected function canDelete($record)
 	{
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 
 		return $user->authorise('core.delete', 'com_biblestudy.article.' . (int) $record->id);
 	}
@@ -270,7 +270,7 @@ class BiblestudyModelServer extends JModelAdmin
 	 */
 	protected function canEditState($record)
 	{
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 
 		// Check for existing article.
 		if (!empty($record->id))
@@ -296,7 +296,7 @@ class BiblestudyModelServer extends JModelAdmin
 	protected function loadFormData()
 	{
 		// If current state has data, use it instead of data from db
-		$session = JFactory::getApplication()->getUserState('com_biblestudy.edit.server.data', array());
+		$session = Factory::getApplication()->getUserState('com_biblestudy.edit.server.data', array());
 
 		return empty($session) ? $this->data : $session;
 	}
@@ -327,7 +327,7 @@ class BiblestudyModelServer extends JModelAdmin
 	 */
 	protected function populateState()
 	{
-		$app   = JFactory::getApplication('administrator');
+		$app   = Factory::getApplication('administrator');
 		$input = $app->input;
 
 		$pk = $input->get('id', null, 'INTEGER');

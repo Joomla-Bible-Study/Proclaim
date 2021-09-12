@@ -204,7 +204,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 		$model = JModelLegacy::getInstance('Admin', 'BiblestudyModel');
 		$this->setModel($model, true);
 
-		$language = JFactory::getLanguage();
+		$language = Factory::getLanguage();
 		$language->load('com_installer');
 
 		// Get data from the model
@@ -213,7 +213,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 		$this->state = $this->get("State");
 		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id);
 
-		$config         = JFactory::getApplication();
+		$config         = Factory::getApplication();
 		$this->tmp_dest = $config->get('tmp_path');
 
 		// Get the list of backup files
@@ -254,7 +254,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 		{
 			if ($extension->element == 'com_sermonspeaker')
 			{
-				$this->ss = '<a href="index.php?option=com_biblestudy&view=admin&layout=edit&id=1&task=admin.convertSermonSpeaker">'
+				$this->ss = '<a href="index.php?option=com_biblestudy&view=administrator&layout=edit&id=1&task=administration.convertSermonSpeaker">'
 					. JText::_('JBS_IBM_CONVERT_SERMON_SPEAKER') . '</a>';
 			}
 			else
@@ -264,7 +264,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 
 			if ($extension->element == 'com_preachit')
 			{
-				$this->pi = '<a href="index.php?option=com_biblestudy&view=admin&layout=edit&id=1&task=admin.convertPreachIt">'
+				$this->pi = '<a href="index.php?option=com_biblestudy&view=administrator&layout=edit&id=1&task=administration.convertPreachIt">'
 					. JText::_('JBS_IBM_CONVERT_PREACH_IT') . '</a>';
 			}
 			else
@@ -313,7 +313,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JFactory::getApplication()->input->set('hidemainmenu', true);
+		Factory::getApplication()->input->set('hidemainmenu', true);
 
 		JToolbarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
 		JToolbarHelper::preferences('com_biblestudy', '600', '800', 'JBS_ADM_PERMISSIONS');
@@ -330,7 +330,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 */
 	protected function setDocument()
 	{
-		$document = JFactory::getDocument();
+		$document = Factory::getDocument();
 		$document->setTitle(JText::_('JBS_TITLE_ADMINISTRATION'));
 	}
 

@@ -36,7 +36,7 @@ class BiblestudyModelMessagelist extends BiblestudyModelMessages
 	protected function populateState($ordering = null, $direction = null)
 	{
 		/** @type JApplicationSite $app */
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 
 		$return = $app->input->get('return', null, 'base64');
 		$this->setState('return_page', base64_decode($return));
@@ -62,7 +62,7 @@ class BiblestudyModelMessagelist extends BiblestudyModelMessages
 		$template->id = $t;
 
 		$this->setState('template', $template);
-		$this->setState('admin', $admin);
+		$this->setState('administrator', $admin);
 
 		// Adjust the context to support modal layouts.
 		$input  = $app->input;

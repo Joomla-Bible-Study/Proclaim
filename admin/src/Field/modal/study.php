@@ -41,7 +41,7 @@ class JFormFieldModal_Study extends JFormField
 	{
 		// Load the modal behavior script.
 
-		$view = JFactory::getApplication()->input->get('view');
+		$view = Factory::getApplication()->input->get('view');
 
 		// Build the script.
 		$script   = array();
@@ -52,7 +52,7 @@ class JFormFieldModal_Study extends JFormField
 		$script[] = '   }';
 
 		// Add the script to the document head.
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
+		Factory::getDocument()->addScriptDeclaration(implode("\n", $script));
 
 		// Setup variables for display.
 		$html = array();
@@ -68,7 +68,7 @@ class JFormFieldModal_Study extends JFormField
 
 		$link = 'index.php?option=com_biblestudy&amp;view=' . $sview . '&amp;layout=modal&amp;tmpl=component&amp;function=jSelectStudy_' . $this->id;
 
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 		$db->setQuery(
 			'SELECT studytitle AS title' .
 			' FROM #__bsms_studies' .

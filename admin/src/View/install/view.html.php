@@ -104,7 +104,7 @@ class BiblestudyViewInstall extends JViewLegacy
 	{
 		$input = new Joomla\Input\Input;
 		$input->set('hidemainmenu', true);
-		$app   = JFactory::getApplication();
+		$app   = Factory::getApplication();
 		$this->state = $app->input->get('scanstate', false);
 		$layout = $app->input->get('layout', 'default');
 
@@ -137,11 +137,11 @@ class BiblestudyViewInstall extends JViewLegacy
 			$script = "window.addEvent( 'domready' ,  function() {\n";
 			$script .= "document.forms.adminForm.submit();\n";
 			$script .= "});\n";
-			JFactory::getDocument()->addScriptDeclaration($script);
+			Factory::getDocument()->addScriptDeclaration($script);
 		}
 
 		JToolbarHelper::title(JText::_('JBS_MIG_TITLE'), 'administration');
-		$document = JFactory::getDocument();
+		$document = Factory::getDocument();
 		$document->setTitle(JText::_('JBS_MIG_TITLE'));
 
 		// Install systems setup files
@@ -166,7 +166,7 @@ class BiblestudyViewInstall extends JViewLegacy
 	 */
 	private function loadStack()
 	{
-		$session = JFactory::getSession();
+		$session = Factory::getSession();
 		$stack   = $session->get('migration_stack', '', 'JBSM');
 
 		if (empty($stack))
@@ -216,7 +216,7 @@ class BiblestudyViewInstall extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JFactory::getApplication()->input->set('hidemainmenu', true);
+		Factory::getApplication()->input->set('hidemainmenu', true);
 		JToolbarHelper::help('biblestudy', true);
 		JToolbarHelper::title(JText::_('JBS_CMN_INSTALL'), 'administration');
 	}
@@ -230,7 +230,7 @@ class BiblestudyViewInstall extends JViewLegacy
 	 */
 	protected function setDocument()
 	{
-		$document = JFactory::getDocument();
+		$document = Factory::getDocument();
 		$document->setTitle(JText::sprintf('JBS_TITLE_INSTALL', $this->percentage . '%', $this->running));
 	}
 
@@ -246,7 +246,7 @@ class BiblestudyViewInstall extends JViewLegacy
 		$installation_queue = array(
 			// Example: modules => { (folder) => { (module) => { (position), (published) } }* }*
 			'modules' => array(
-				'admin' => array(),
+				'administrator' => array(),
 				'site'  => array(
 					'biblestudy'         => 0,
 					'biblestudy_podcast' => 0,
@@ -269,7 +269,7 @@ class BiblestudyViewInstall extends JViewLegacy
 
 		// -- General settings
 		jimport('joomla.installer.installer');
-		$db                    = JFactory::getDbo();
+		$db                    = Factory::getDbo();
 		$this->status          = new stdClass;
 		$this->status->cwmmodules = array();
 		$this->status->cwmplugins = array();

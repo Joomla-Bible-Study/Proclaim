@@ -78,7 +78,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 	public function display($tpl = null)
 	{
 		/** @type JApplicationSite $mainframe */
-		$mainframe = JFactory::getApplication('site');
+		$mainframe = Factory::getApplication('site');
 		$input     = new JInput;
 		$option    = $input->get('option', '', 'cmd');
 		$this->state = $this->get('state');
@@ -86,7 +86,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 		$params = $this->state->template->params;
 		$this->template = $this->state->get('template');
 
-		$document = JFactory::getDocument();
+		$document = Factory::getDocument();
 		/** @var $itemparams Registry */
 		$itemparams = $mainframe->getPageParameters();
 

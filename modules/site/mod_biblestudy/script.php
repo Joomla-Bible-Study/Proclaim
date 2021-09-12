@@ -59,7 +59,7 @@ class Mod_BiblestudyInstallerScript
 	 */
 	public function update($parent)
 	{
-		$db    = JFactory::getDbo();
+		$db    = Factory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('*')
 			->from('#__modules')

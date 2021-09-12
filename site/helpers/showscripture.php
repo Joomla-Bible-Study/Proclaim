@@ -71,7 +71,7 @@ class JBSMShowScripture
 
 		if ($css)
 		{
-			$document = JFactory::getDocument();
+			$document = Factory::getDocument();
 			$document->addStyleSheet(JUri::base() . 'media/com_biblestudy/css/biblegateway-print.css');
 		}
 

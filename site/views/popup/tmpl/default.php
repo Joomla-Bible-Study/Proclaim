@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 $style = 'body { background-color:' . $this->params->get('popupbackground', 'black') . ' !important; padding:0 !important;}
 	#all{background-color:' . $this->params->get('popupbackground', 'black') . ' !important;}';
-$doc = JFactory::getDocument();
+$doc = Factory::getDocument();
 $doc->addStyleDeclaration($style);
 $jbsmedia = new JBSMMedia;
 
@@ -58,7 +58,7 @@ $jbsmedia = new JBSMMedia;
 
 	if ($this->player == 0)
 	{
-		$app =& JFactory::getApplication();
+		$app =& Factory::getApplication();
 		$app->redirect(JRoute::_($this->path1));
 	}
 	?>

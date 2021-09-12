@@ -225,7 +225,7 @@ class BiblestudyModelSermons extends ListModel
 
 		$template->id = $t;
 		$this->setState('template', $template);
-		$this->setState('admin', $admin);
+		$this->setState('administrator', $admin);
 
 		$this->setState('filter.language', JLanguageMultilang::isEnabled());
 

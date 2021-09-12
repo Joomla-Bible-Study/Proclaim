@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\Helper;
+namespace CWM\Component\BibleStudy\Administrator\Helper;
 
 // No direct access
 defined("_JEXEC") or die();

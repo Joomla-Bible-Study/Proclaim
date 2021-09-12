@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 
 JHtml::_('bootstrap.framework');
 
-$mainframe = JFactory::getApplication();
+$mainframe = Factory::getApplication();
 $input = new JInput;
 $option = $input->get('option', '', 'cmd');
 $JViewLegacy = new JViewLegacy;

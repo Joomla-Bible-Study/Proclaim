@@ -103,8 +103,8 @@ class BiblestudyModelTeacher extends JModelAdmin
 	protected function canEditState($record)
 	{
 		$tmp        = (array) $record;
-		$db         = JFactory::getDbo();
-		$user       = JFactory::getUser();
+		$db         = Factory::getDbo();
+		$user       = Factory::getUser();
 		$canDoState = $user->authorise('core.edit.state', $this->option);
 		$text       = '';
 
@@ -130,7 +130,7 @@ class BiblestudyModelTeacher extends JModelAdmin
 					$text .= ' ' . $studie->id . '-"' . $studie->studytitle . '",';
 				}
 
-				JFactory::getApplication()->enqueueMessage(JText::_('JBS_TCH_CAN_NOT_DELETE') . $text);
+				Factory::getApplication()->enqueueMessage(JText::_('JBS_TCH_CAN_NOT_DELETE') . $text);
 			}
 
 			return false;
@@ -232,7 +232,7 @@ class BiblestudyModelTeacher extends JModelAdmin
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
-		$session = JFactory::getApplication()->getUserState('com_biblestudy.edit.teacher.data', array());
+		$session = Factory::getApplication()->getUserState('com_biblestudy.edit.teacher.data', array());
 
 		return empty($session) ? $this->data : $session;
 	}
@@ -249,7 +249,7 @@ class BiblestudyModelTeacher extends JModelAdmin
 	 */
 	public function getItem($pk = null)
 	{
-		$jinput = JFactory::getApplication()->input;
+		$jinput = Factory::getApplication()->input;
 
 		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
 		if ($jinput->get('a_id'))
@@ -298,7 +298,7 @@ class BiblestudyModelTeacher extends JModelAdmin
 			// Set ordering to the last item if not set
 			if (empty($table->ordering))
 			{
-				$db    = JFactory::getDbo();
+				$db    = Factory::getDbo();
 				$query = $db->getQuery(true);
 				$query->select('MAX(ordering)')->from('#__bsms_teachers');
 				$db->setQuery($query);

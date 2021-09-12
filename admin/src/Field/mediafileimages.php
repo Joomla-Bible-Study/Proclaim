@@ -40,7 +40,7 @@ class JFormFieldMediafileImages extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		$db    = JFactory::getDbo();
+		$db    = Factory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('*');
 		$query->from('#__bsms_mediafiles');

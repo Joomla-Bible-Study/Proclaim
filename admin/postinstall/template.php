@@ -33,7 +33,7 @@ function Admin_Postinstall_Template_condition()
 {
 	$results = null;
 
-	$db = JFactory::getDbo();
+	$db = Factory::getDbo();
 	$qurey = $db->getQuery(true);
 	$qurey->select('*')->from('#__bsms_templates');
 	$db->setQuery($qurey);
@@ -76,5 +76,5 @@ function Admin_Postinstall_Template_condition()
 function Admin_Postinstall_Template_action()
 {
 	$url = 'index.php?option=com_biblestudy&view=templates';
-	JFactory::getApplication()->redirect($url);
+	Factory::getApplication()->redirect($url);
 }

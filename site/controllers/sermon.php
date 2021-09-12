@@ -61,7 +61,7 @@ class BiblestudyControllerSermon extends JControllerForm
 	 */
 	protected function getReturnPage()
 	{
-		$return = JFactory::getApplication()->input->get('return', null, 'base64');
+		$return = Factory::getApplication()->input->get('return', null, 'base64');
 
 		if (empty($return) || !JUri::isInternal(base64_decode($return)))
 		{
@@ -136,7 +136,7 @@ class BiblestudyControllerSermon extends JControllerForm
 	 */
 	public function comment()
 	{
-		$mainframe = JFactory::getApplication();
+		$mainframe = Factory::getApplication();
 		$input     = new JInput;
 		$model     = $this->getModel('sermon');
 		$t         = '';
@@ -234,18 +234,18 @@ class BiblestudyControllerSermon extends JControllerForm
 		$comment_study_id  = $input->get('study_detail_id', 0, 'int');
 		$comment_published = $input->get('published', 0, 'int');
 		$comment_date      = date('Y-m-d H:i:s');
-		$config            = JFactory::getConfig();
+		$config            = Factory::getConfig();
 		$comment_mailfrom  = $config->get('mailfrom');
 
 		$comment_livesite = JUri::root();
-		$db               = JFactory::getDbo();
+		$db               = Factory::getDbo();
 		$query            = $db->getQuery(true);
 		$query->select('id, studytitle, studydate')->from('#__bsms_studies')->where('id = ' . (int) $comment_study_id);
 		$db->setQuery($query);
 		$comment_details    = $db->loadObject();
 		$comment_title      = $comment_details->studytitle;
 		$comment_study_date = $comment_details->studydate;
-		$mail               = JFactory::getMailer();
+		$mail               = Factory::getMailer();
 		$ToEmail            = $params->get('recipient', '');
 		$Subject            = $params->get('subject', 'Comments');
 

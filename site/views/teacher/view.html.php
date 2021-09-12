@@ -247,7 +247,7 @@ class biblestudyViewTeacher extends BaseHtmlView
 		$this->print    = $print;
 		$this->params   = $params;
 		$this->template = $this->state->template;
-		$this->document = JFactory::getDocument();
+		$this->document = Factory::getDocument();
 
 		$this->_prepareDocument();
 
@@ -263,7 +263,7 @@ class biblestudyViewTeacher extends BaseHtmlView
 	 */
 	protected function _prepareDocument()
 	{
-		$app   = JFactory::getApplication('site');
+		$app   = Factory::getApplication('site');
 		$menus = $app->getMenu();
 
 		/** @var $itemparams Registry */

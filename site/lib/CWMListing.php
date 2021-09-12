@@ -17,10 +17,13 @@ if (file_exists($api))
 {
 	require_once $api;
 }
-require_once(BIBLESTUDY_PATH_HELPERS.'/CWMMedia.php');
-use Joomla\Registry\Registry;
+require_once(BIBLESTUDY_PATH_HELPERS . '/CWMMedia.php');
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\Component\Mails\Administrator\Table\TemplateTable;
+use Joomla\Registry\Registry;
+
 /**
  * BibleStudy listing class
  *
@@ -38,7 +41,7 @@ class CWMListing
 	 *
 	 * @param   Object                    $items     Items
 	 * @param   Joomla\Registry\Registry  $params    Page Params
-	 * @param   TableTemplate             $template  Template name
+	 * @param   TemplateTable             $template  Template name
 	 * @param   String                    $type      Type of Listing
 	 *
 	 * @return string
@@ -552,7 +555,7 @@ class CWMListing
 	 */
 	public function getMediaFiles($medias)
 	{
-		$db    = JFactory::getDbo();
+		$db    = Factory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('#__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.params AS sparams, #__bsms_servers.media AS smedia,'
 			. ' s.studytitle, s.studydate, s.studyintro, s.teacher_id,'
@@ -583,7 +586,7 @@ class CWMListing
 		$subquery .= ')';
 		$query->where($subquery);
 		$query->where('#__bsms_mediafiles.published = 1');
-		$query->where('#__bsms_mediafiles.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
+		$query->where('#__bsms_mediafiles.language in (' . $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
 		$query->order('ordering ASC');
 		$db->setQuery($query);
 
@@ -712,7 +715,7 @@ class CWMListing
 	 * @param   array                     $listsorts  ?
 	 * @param   Object                    $item       ?
 	 * @param   Joomla\Registry\Registry  $params     Item Params
-	 * @param   TableTemplate             $template   Template info
+	 * @param   TemplateTable             $template   Template info
 	 * @param   string                    $oddeven    ?
 	 * @param   integer                   $header     ?
 	 * @param   string                    $type       ?
@@ -1062,7 +1065,7 @@ class CWMListing
 	 * @param   Object                    $item      Study item
 	 * @param   Object                    $row       Row Setup data
 	 * @param   Joomla\Registry\Registry  $params    Parameters for the study
-	 * @param   TableTemplate             $template  Template table
+	 * @param   TemplateTable             $template  Template table
 	 * @param   integer                   $header    Header will display if 1, Do not display if 0
 	 * @param   string                    $type      Type of Fluid Data
 	 *
@@ -1806,7 +1809,7 @@ class CWMListing
 	 * @param   String                    $custom    Custom String
 	 * @param   Object                    $item      Study Item
 	 * @param   Joomla\Registry\Registry  $params    Params
-	 * @param   TableTemplate             $template  Template Table Data
+	 * @param   TemplateTable             $template  Template Table Data
 	 * @param   String                    $type      Type of data
 	 *
 	 * @return mixed
@@ -1838,7 +1841,7 @@ class CWMListing
 	 * @param   String                    $custom    Custom String
 	 * @param   Object                    $row       Row Data
 	 * @param   Joomla\Registry\Registry  $params    Params
-	 * @param   TableTemplate             $template  Template Data
+	 * @param   TemplateTable             $template  Template Data
 	 * @param   String                    $type      Type of element
 	 *
 	 * @return mixed|null|string
@@ -2244,7 +2247,7 @@ class CWMListing
 	 *
 	 * @param   Object                    $item      Study item
 	 * @param   Joomla\Registry\Registry  $params    Params
-	 * @param   TableTemplate             $template  Template return
+	 * @param   TemplateTable             $template  Template return
 	 *
 	 * @return string
 	 *
@@ -2406,7 +2409,7 @@ class CWMListing
 	 * @param   object                    $tmenu       Itemid
 	 * @param   Joomla\Registry\Registry  $params      Params
 	 * @param   object                    $row         Row data
-	 * @param   TableTemplate             $templateid  Template Table Data
+	 * @param   TemplateTable             $templateid  Template Table Data
 	 *
 	 * @return string
 	 *
@@ -2515,7 +2518,7 @@ class CWMListing
 	public function getOtherlinks($id3, $islink, $params)
 	{
 		$link  = '';
-		$db    = JFactory::getDbo();
+		$db    = Factory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('#__bsms_mediafiles.*')
 			->from('#__bsms_mediafiles')
@@ -2566,7 +2569,7 @@ class CWMListing
 	 *
 	 * @param   object                    $row       Item Info
 	 * @param   Joomla\Registry\Registry  $params    Item Params
-	 * @param   TableTemplate             $template  Template
+	 * @param   TemplateTable             $template  Template
 	 *
 	 * @return object
 	 *

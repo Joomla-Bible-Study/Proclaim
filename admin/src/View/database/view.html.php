@@ -204,12 +204,12 @@ class BiblestudyViewDatabase extends JViewLegacy
 	public function display($tpl = null)
 	{
 		// Set variables
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 
 		$model = JModelLegacy::getInstance('Admin', 'BiblestudyModel');
 		$this->setModel($model, true);
 
-		$language = JFactory::getLanguage();
+		$language = Factory::getLanguage();
 		$language->load('com_installer');
 
 		// Get data from the model
@@ -285,14 +285,14 @@ class BiblestudyViewDatabase extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JFactory::getApplication()->input->set('hidemainmenu', true);
+		Factory::getApplication()->input->set('hidemainmenu', true);
 
 		JToolbarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
 		JToolbarHelper::preferences('com_biblestudy', '600', '800', 'JBS_ADM_PERMISSIONS');
 		JToolbarHelper::divider();
-		JToolbarHelper::custom('admin.back', 'back', 'back', 'JTOOLBAR_BACK', false);
+		JToolbarHelper::custom('administration.back', 'back', 'back', 'JTOOLBAR_BACK', false);
 		JToolbarHelper::divider();
-		JToolbarHelper::custom('admin.fix', 'refresh', 'refresh', 'JBS_ADM_DB_FIX', false);
+		JToolbarHelper::custom('administration.fix', 'refresh', 'refresh', 'JBS_ADM_DB_FIX', false);
 		JToolbarHelper::divider();
 		JToolbarHelper::help('biblestudy', true);
 	}
@@ -306,7 +306,7 @@ class BiblestudyViewDatabase extends JViewLegacy
 	 */
 	protected function setDocument()
 	{
-		$document = JFactory::getDocument();
+		$document = Factory::getDocument();
 		$document->setTitle(JText::_('JBS_TITLE_ADMINISTRATION'));
 	}
 }

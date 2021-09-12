@@ -41,7 +41,7 @@ class BiblestudyModelMediafilelist extends BiblestudyModelMediafiles
 	protected function populateState($ordering = null, $direction = null)
 	{
 		/** @type JApplicationSite $app */
-		$app = JFactory::getApplication('site');
+		$app = Factory::getApplication('site');
 
 		// Load the parameters.
 		$params   = $app->getParams();
@@ -64,7 +64,7 @@ class BiblestudyModelMediafilelist extends BiblestudyModelMediafiles
 		$template->id = $t;
 
 		$this->setState('template', $template);
-		$this->setState('admin', $admin);
+		$this->setState('administrator', $admin);
 
 		$filename = $this->getUserStateFromRequest($this->context . '.filter.filename', 'filter_filename');
 		$this->setState('filter.filename', $filename);

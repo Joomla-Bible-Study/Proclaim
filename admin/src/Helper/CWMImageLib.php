@@ -8,13 +8,13 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\Helper;
+namespace CWM\Component\BibleStudy\Administrator\Helper;
 
 // No Direct Access
 defined('_JEXEC') or die;
 
 /**
- * Creates an instance of the necessary library class, as specified in the admin
+ * Creates an instance of the necessary library class, as specified in the administrator
  * params.
  *
  * @package  Proclaim.Admin

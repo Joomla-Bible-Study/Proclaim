@@ -77,7 +77,7 @@ class BiblestudyViewAssets extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$app         = JFactory::getApplication();
+		$app         = Factory::getApplication();
 		$this->state = $app->input->getBool('scanstate', false);
 		$layout      = $app->input->get('layout', 'edit');
 		$task        = $app->input->get('task', 'checkassets');
@@ -175,7 +175,7 @@ class BiblestudyViewAssets extends JViewLegacy
 	protected function addToolbar()
 	{
 		JToolbarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
-		JToolbarHelper::custom('admin.back', 'back', 'back', 'JTOOLBAR_BACK', false);
+		JToolbarHelper::custom('administration.back', 'back', 'back', 'JTOOLBAR_BACK', false);
 		JToolbarHelper::help('biblestudy', true);
 	}
 
@@ -188,7 +188,7 @@ class BiblestudyViewAssets extends JViewLegacy
 	 */
 	protected function setDocument()
 	{
-		$document = JFactory::getApplication()->getDocument();
+		$document = Factory::getApplication()->getDocument();
 		$document->setTitle(JText::_('JBS_TITLE_ADMINISTRATION'));
 	}
 }

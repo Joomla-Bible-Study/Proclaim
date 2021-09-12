@@ -81,7 +81,7 @@ class BiblestudyModelLandingpage extends JModelList
 		$template->id = $t;
 
 		$this->setState('template', $template);
-		$this->setState('admin', $admin);
+		$this->setState('administrator', $admin);
 
 		parent::populateState('s.studydate', 'DESC');
 	}
@@ -104,7 +104,7 @@ class BiblestudyModelLandingpage extends JModelList
 
 		// Load the parameters. Merge Global and Menu Item params into new object
 		/** @type JApplicationSite $app */
-		$app        = JFactory::getApplication('site');
+		$app        = Factory::getApplication('site');
 		/** @var Registry $params */
 		$params     = $app->getParams();
 		$this->setState('params', $params);

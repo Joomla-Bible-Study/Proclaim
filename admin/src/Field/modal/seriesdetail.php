@@ -52,7 +52,7 @@ class JFormFieldModal_Seriesdetail extends JFormField
 		$script[] = '	}';
 
 		// Add the script to the document head.
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
+		Factory::getDocument()->addScriptDeclaration(implode("\n", $script));
 
 		// Build the script.
 		$script   = array();
@@ -64,10 +64,10 @@ class JFormFieldModal_Seriesdetail extends JFormField
 		$script[] = '	});';
 
 		// Add the script to the document head.
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
+		Factory::getDocument()->addScriptDeclaration(implode("\n", $script));
 
 		// Get the title of the linked chart
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 		$db->setQuery(
 			'SELECT series_text AS name' .
 			' FROM #__bsms_series' .

@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\Controller;
+namespace CWM\Component\BibleStudy\Administrator\Controller;
 
 // No Direct Access
 use Joomla\CMS\MVC\Controller\AdminController;
@@ -34,7 +34,7 @@ class TopicsController extends AdminController
 	 *
 	 * @since 7.0.0
 	 */
-	public function getModel($name = 'Topic', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
+	public function getModel($name = 'TopicModel', $prefix = '', $config = array('ignore_request' => true))
 	{
 		return parent::getModel($name, $prefix, $config);
 	}

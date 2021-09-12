@@ -96,7 +96,7 @@ class BiblestudyModelMediafiles extends JModelList
 				return false;
 			}
 
-			$user   = JFactory::getUser();
+			$user   = Factory::getUser();
 			$groups = $user->getAuthorisedViewLevels();
 
 			foreach ($items as $x => $xValue)
@@ -178,7 +178,7 @@ class BiblestudyModelMediafiles extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 
 		// Adjust the context to support modal layouts.
 		$input  = new JInput;
@@ -247,7 +247,7 @@ class BiblestudyModelMediafiles extends JModelList
 	{
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
-		$user  = JFactory::getUser();
+		$user  = Factory::getUser();
 
 		$query->select(
 			$this->getState(
@@ -298,7 +298,7 @@ class BiblestudyModelMediafiles extends JModelList
 		}
 
 		// Implement View Level Access
-		if (!$user->authorise('core.admin'))
+		if (!$user->authorise('core.administrator'))
 		{
 			$groups = implode(',', $user->getAuthorisedViewLevels());
 			$query->where('mediafile.access IN (' . $groups . ')');

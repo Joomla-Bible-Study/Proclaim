@@ -28,7 +28,7 @@ defined('_JEXEC') or die;
 
 	if ($show_comments >= 1)
 	{
-		$user           = JFactory::getUser();
+		$user           = Factory::getUser();
 		$groups         = $user->getAuthorisedViewLevels();
 		$comment_access = $this->item->params->get('comment_access');
 

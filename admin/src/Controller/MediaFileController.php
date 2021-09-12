@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\Controller;
+namespace CWM\Component\BibleStudy\Administrator\Controller;
 
 // No Direct Access
 defined('_JEXEC') or die;
@@ -49,7 +49,7 @@ class MediaFileController extends FormController
 	 */
 	public function add()
 	{
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 
 		if (parent::add())
 		{
@@ -215,7 +215,7 @@ class MediaFileController extends FormController
 		// Check for request forgeries.
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-		$app   = JFactory::getApplication();
+		$app   = Factory::getApplication();
 		$input = $app->input;
 
 		$data = $input->get('jform', array(), 'post', 'array');
@@ -250,7 +250,7 @@ class MediaFileController extends FormController
 
 		if ($return && $task !== 'apply')
 		{
-			JFactory::getApplication()->enqueueMessage(JText::_('JBS_MED_SAVE'), 'message');
+			Factory::getApplication()->enqueueMessage(JText::_('JBS_MED_SAVE'), 'message');
 			$this->setRedirect(base64_decode($return));
 		}
 

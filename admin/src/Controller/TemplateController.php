@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\Controller;
+namespace CWM\Component\BibleStudy\Administrator\Controller;
 
 // No Direct Access
 defined('_JEXEC') or die;
@@ -34,7 +34,7 @@ class TemplateController extends FormController
 	 */
 	public function copy()
 	{
-		$input = JFactory::getApplication()->input;
+		$input = Factory::getApplication()->input;
 		$cid   = $input->get('cid', '', 'array');
 		ArrayHelper::toInteger($cid);
 
@@ -63,7 +63,7 @@ class TemplateController extends FormController
 	 */
 	public function makeDefault()
 	{
-		$app   = JFactory::getApplication();
+		$app   = Factory::getApplication();
 		$input = $app->input;
 		$cid   = $input->get('cid', array(0), 'array');
 
@@ -95,7 +95,7 @@ class TemplateController extends FormController
 	 */
 	public function getTemplate($template)
 	{
-		$db     = JFactory::getDbo();
+		$db     = Factory::getDbo();
 		$query  = $db->getQuery(true);
 		$query->select('tc.id, tc.templatecode,tc.type,tc.filename');
 		$query->from('#__bsms_templatecode as tc');

@@ -75,7 +75,7 @@ class BiblestudyViewSerie extends JViewLegacy
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
-			JFactory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
+			Factory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
 
 			return false;
 		}
@@ -100,7 +100,7 @@ class BiblestudyViewSerie extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JFactory::getApplication()->input->set('hidemainmenu', true);
+		Factory::getApplication()->input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
 		JToolbarHelper::title(JText::_('JBS_CMN_SERIES') . ': <small><small>[' . $title . ']</small></small>', 'tree tree');
@@ -136,7 +136,7 @@ class BiblestudyViewSerie extends JViewLegacy
 	protected function setDocument()
 	{
 		$isNew    = ($this->item->id < 1);
-		$document = JFactory::getDocument();
+		$document = Factory::getDocument();
 		$document->setTitle($isNew ? JText::_('JBS_TITLE_SERIES_CREATING') : JText::sprintf('JBS_TITLE_SERIES_EDITING', $this->item->series_text));
 	}
 }

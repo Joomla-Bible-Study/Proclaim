@@ -43,7 +43,7 @@ abstract class JHtmlJwplayer
 			return;
 		}
 
-		$doc = JFactory::getDocument();
+		$doc = Factory::getDocument();
 		/** @var Joomla\Registry\Registry $params */
 		$params = JBSMParams::getAdmin()->params;
 		$key    = $params->get('jwplayer_key', '8eJ+ik6aOUabfOisJzomcM2Z3h1VZ9+6cufBXQ==');

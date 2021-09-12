@@ -36,7 +36,7 @@ class JBSMImages
 
 		if ($params === null)
 		{
-			$database = JFactory::getDbo();
+			$database = Factory::getDbo();
 			$query    = $database->getQuery(true);
 			$query->select('*')->from('#__bsms_admin')->where('id = ' . 1);
 			$database->setQuery($query);

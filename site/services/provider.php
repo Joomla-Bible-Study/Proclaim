@@ -12,17 +12,18 @@ use Joomla\DI\ServiceProviderInterface;
 
 return new class implements ServiceProviderInterface {
 
-    public function register(Container $container): void {
-        $container->registerServiceProvider(new MVCFactory('\\ChristianWebMinistries\\Component\\biblestudy'));
-        $container->registerServiceProvider(new ComponentDispatcherFactory('\\ChristianWebMinistries\\Component\\biblestudy'));
-        $container->set(
-            ComponentInterface::class,
-            function (Container $container) {
-                $component = new MVCComponent($container->get(ComponentDispatcherFactoryInterface::class));
-                $component->setMVCFactory($container->get(MVCFactoryInterface::class));
+	public function register(Container $container): void
+	{
+		$container->registerServiceProvider(new MVCFactory('\\CWM\\Component\\biblestudy'));
+		$container->registerServiceProvider(new ComponentDispatcherFactory('\\CWM\\Component\\biblestudy'));
+		$container->set(
+			ComponentInterface::class,
+			function (Container $container) {
+				$component = new MVCComponent($container->get(ComponentDispatcherFactoryInterface::class));
+				$component->setMVCFactory($container->get(MVCFactoryInterface::class));
 
-                return $component;
-            }
-        );
-    }
+				return $component;
+			}
+		);
+	}
 };

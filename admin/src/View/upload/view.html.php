@@ -51,7 +51,7 @@ class BiblestudyViewUpload extends JViewLegacy
 		JHtml::_('jquery.framework', 'false');
 
 		$mediaDir      = JUri::root() . "media/com_biblestudy/plupload/";
-		$document      = JFactory::getDocument();
+		$document      = Factory::getDocument();
 		$params        = JComponentHelper::getParams('com_biblestudy');
 		$UploadScript  = new UploadScript($params, $mediaDir);
 		$runtimeScript = $UploadScript->runtimeScript;
@@ -90,7 +90,7 @@ class BiblestudyViewUpload extends JViewLegacy
 	 */
 	protected function setDocument()
 	{
-		$document = JFactory::getDocument();
+		$document = Factory::getDocument();
 		$document->setTitle(JText::_('JBS_TITLE_UPLOAD_FORM'));
 	}
 

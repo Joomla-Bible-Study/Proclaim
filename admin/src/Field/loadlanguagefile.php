@@ -60,7 +60,7 @@ class JFormFieldLoadLanguageFile extends JFormField
 	protected function getInput()
 	{
 		// Get language file; english language as fallback
-		$language = JFactory::getLanguage();
+		$language = Factory::getLanguage();
 		$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
 		$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, null, true);
 

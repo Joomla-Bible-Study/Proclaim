@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\Controller;
+namespace CWM\Component\BibleStudy\Administrator\Controller;
 
 // No Direct Access
 defined('_JEXEC') or die;
@@ -65,7 +65,7 @@ class TemplatesController extends AdminController
 
 		$input    = new Joomla\Input\Files;
 		$userfile = $input->get('template_import');
-		$app      = JFactory::getApplication();
+		$app      = Factory::getApplication();
 		$tc       = 0;
 
 		// Make sure that file uploads are enabled in php
@@ -98,7 +98,7 @@ class TemplatesController extends AdminController
 		jimport('joomla.filesystem.file');
 		move_uploaded_file($tmp_src, $tmp_dest);
 
-		$db     = JFactory::getDbo();
+		$db     = Factory::getDbo();
 
 		$query   = file_get_contents(JPATH_SITE . '/tmp/' . $userfile['name']);
 		$queries = JDatabaseDriver::splitSql($query);
@@ -275,7 +275,7 @@ class TemplatesController extends AdminController
 	 */
 	private function performDB(string $query)
 	{
-		$db     = JFactory::getDbo();
+		$db     = Factory::getDbo();
 		$db->setQuery($query);
 
 		if (!$db->execute())
@@ -309,7 +309,7 @@ class TemplatesController extends AdminController
 		}
 
 		jimport('joomla.filesystem.file');
-		$db     = JFactory::getDbo();
+		$db     = Factory::getDbo();
 		$query  = $db->getQuery(true);
 		$query->select('t.id, t.type, t.params, t.title, t.text');
 		$query->from('#__bsms_templates as t');
@@ -349,7 +349,7 @@ class TemplatesController extends AdminController
 		$registry = new Registry;
 		$registry->loadString($result->params);
 		$params  = $registry;
-		$db      = JFactory::getDbo();
+		$db      = Factory::getDbo();
 		$objects = '';
 		$css     = $params->get('css');
 		$css     = substr($css, 0, -4);
@@ -441,7 +441,7 @@ class TemplatesController extends AdminController
 	 */
 	public function getTemplate($template)
 	{
-		$db     = JFactory::getDbo();
+		$db     = Factory::getDbo();
 		$query  = $db->getQuery(true);
 		$query->select('tc.id, tc.templatecode,tc.type,tc.filename');
 		$query->from('#__bsms_templatecode as tc');

@@ -62,7 +62,7 @@ class JBSMTeacher extends JBSMListing
 
 		foreach ($teacherids as $teach)
 		{
-			$database = JFactory::getDbo();
+			$database = Factory::getDbo();
 			$query    = $database->getQuery(true);
 			$query->select('*')->from('#__bsms_teachers')->where('id = ' . $teach);
 			$database->setQuery($query);
@@ -153,7 +153,7 @@ class JBSMTeacher extends JBSMListing
 
 		foreach ($teacherids as $teachers)
 		{
-			$database = JFactory::getDbo();
+			$database = Factory::getDbo();
 			$query    = $database->getQuery(true);
 			$query->select('*')->from('#__bsms_teachers')->where('id = ' . $teachers);
 			$database->setQuery($query);
@@ -310,7 +310,7 @@ class JBSMTeacher extends JBSMListing
 			$limit = '';
 		}
 
-		$db    = JFactory::getDbo();
+		$db    = Factory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('#__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
 			. ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
@@ -331,7 +331,7 @@ class JBSMTeacher extends JBSMListing
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 
-		$user   = JFactory::getUser();
+		$user   = Factory::getUser();
 		$groups = $user->getAuthorisedViewLevels();
 		$count  = count($items);
 

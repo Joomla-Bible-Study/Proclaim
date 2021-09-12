@@ -38,7 +38,7 @@ class JFormFieldTeacherlist extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		$db    = JFactory::getDbo();
+		$db    = Factory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('id,teachername');
 		$query->from('#__bsms_teachers');

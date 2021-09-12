@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\Helper;
+namespace CWM\Component\BibleStudy\Administrator\Helper;
 
 // No Direct Access
 use Joomla\CMS\Access\Access;
@@ -19,7 +19,6 @@ use Joomla\CMS\Log\Log;
 
 defined('_JEXEC') or die;
 
-use CWMParams\CWMParams;
 use Joomla\Database\DatabaseFactory;
 use Joomla\Registry\Registry;
 use CWM\Component\Biblestudy\Admin\Helpers;
@@ -74,8 +73,8 @@ class CWMProclaimHelper
 		{
 			switch ($type)
 			{
-				case 'admin':
-					$assetName = 'com_biblestudy.admin.' . (int) $Itemid;
+				case 'administrator':
+					$assetName = 'com_biblestudy.administration.' . (int) $Itemid;
 					break;
 				case 'assets':
 					$assetName = 'com_biblestudy.assets.' . (int) $Itemid;
@@ -142,7 +141,7 @@ class CWMProclaimHelper
 		}
 
 		$actions = array(
-			'core.admin',
+			'core.administrator',
 			'core.manage',
 			'core.create',
 			'core.edit',
@@ -153,7 +152,7 @@ class CWMProclaimHelper
 
 		foreach ($actions as $action)
 		{
-			$result->set($action, $user->authorise($action, $assetName));
+			$result->$action = $user->authorise($action, $assetName);
 		}
 
 		return $result;
@@ -177,7 +176,7 @@ class CWMProclaimHelper
 			Text::_('JBS_CMN_CONTROL_PANEL'), 'index.php?option=com_biblestudy&view=cpanel', $vName == 'cpanel'
 		);
 		self::rendermenu(
-			Text::_('JBS_CMN_ADMINISTRATION'), 'index.php?option=com_biblestudy&task=admin.edit&id=1', $vName == 'admin'
+			Text::_('JBS_CMN_ADMINISTRATION'), 'index.php?option=com_biblestudy&task=administration.edit&id=1', $vName == 'administrator'
 		);
 		self::rendermenu(
 			Text::_('JBS_CMN_STUDIES'), 'index.php?option=com_biblestudy&view=messages', $vName == 'messages'

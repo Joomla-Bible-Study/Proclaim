@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\Lib;
+namespace CWM\Component\BibleStudy\Administrator\Lib;
 
 // No Direct Access
 use Joomla\CMS\Factory;
@@ -219,7 +219,7 @@ class CWMAssets
 			array(
 				'name'       => '#__bsms_admin',
 				'titlefield' => 'id',
-				'assetname'  => 'admin',
+				'assetname'  => 'administrator',
 				'realname'   => 'JBS_CMN_ADMINISTRATION'
 			)
 		);

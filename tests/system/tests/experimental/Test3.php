@@ -39,7 +39,7 @@ class AlertTest extends PHPUnit_Framework_TestCase
 		//access text input
 		$webElement = $d->findElement(By::id("mod-login-username"));
 		$webElement->clear();
-		$webElement->sendKeys("admin");
+		$webElement->sendKeys("administrator");
 		$webElement = $d->findElement(By::id("mod-login-password"));
 		$webElement->clear();
 		$webElement->sendKeys("password");

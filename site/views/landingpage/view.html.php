@@ -57,7 +57,7 @@ class BiblestudyViewLandingpage extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$document = JFactory::getDocument();
+		$document = Factory::getDocument();
 
 		$this->state  = $this->get('state');
 		$this->params = $this->state->template->params;

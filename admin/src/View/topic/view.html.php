@@ -79,7 +79,7 @@ class BiblestudyViewTopic extends JViewLegacy
 		// Check for errors
 		if (count($errors = $this->get('Errors')))
 		{
-			JFactory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
+			Factory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
 
 			return false;
 		}
@@ -142,7 +142,7 @@ class BiblestudyViewTopic extends JViewLegacy
 	protected function setDocument()
 	{
 		$isNew    = ($this->item->id < 1);
-		$document = JFactory::getDocument();
+		$document = Factory::getDocument();
 		$document->setTitle($isNew ? JText::_('JBS_TITLE_TOPICS_CREATING') : JText::sprintf('JBS_TITLE_TOPICS_EDITING', $this->item->topic_text));
 	}
 }

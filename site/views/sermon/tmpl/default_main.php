@@ -17,7 +17,7 @@ JHtml::_('behavior.caption');
 
 /** @type Joomla\Registry\Registry $params */
 $params = $this->item->params;
-$user = JFactory::getUser();
+$user = Factory::getUser();
 $canEdit = $params->get('access-edit');
 
 $JViewLegacy = new JViewLegacy;

@@ -96,7 +96,7 @@ class BiblestudyModelMessages extends JModelList
 	 */
 	protected function populateState($ordering = 'study.studydate', $direction = 'desc')
 	{
-		$app = JFactory::getApplication('administrator');
+		$app = Factory::getApplication('administrator');
 
 		$forcedLanguage = $app->input->get('forcedLanguage', '', 'cmd');
 
@@ -188,7 +188,7 @@ class BiblestudyModelMessages extends JModelList
 	{
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
-		$user  = JFactory::getUser();
+		$user  = Factory::getUser();
 
 		$query->select(
 			$this->getState(
@@ -233,7 +233,7 @@ class BiblestudyModelMessages extends JModelList
 		}
 
 		// Implement View Level Access
-		if (!$user->authorise('core.admin'))
+		if (!$user->authorise('core.administrator'))
 		{
 			$groups = implode(',', $user->getAuthorisedViewLevels());
 			$query->where('study.access IN (' . $groups . ')');

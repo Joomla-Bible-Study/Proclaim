@@ -69,13 +69,13 @@ class BiblestudyViewMediafile extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$app                = JFactory::getApplication();
+		$app                = Factory::getApplication();
 		$this->form         = $this->get("Form");
 		$this->media_form   = $this->get("MediaForm");
 		$this->item         = $this->get("Item");
 		$this->state        = $this->get("State");
 		$this->canDo        = JBSMBibleStudyHelper::getActions($this->item->id, 'mediafile');
-		$this->admin_params = $this->state->get('admin');
+		$this->admin_params = $this->state->get('administrator');
 
 		// Load the addon
 		$this->addon = JBSMAddon::getInstance($this->media_form->type);
@@ -135,7 +135,7 @@ class BiblestudyViewMediafile extends JViewLegacy
 	{
 		$input = new JInput;
 		$input->set('hidemainmenu', true);
-		$user       = JFactory::getUser();
+		$user       = Factory::getUser();
 		$userId     = $user->get('id');
 		$isNew      = (empty($this->item->id));
 		$checkedOut = !($this->item->checked_out === '0' || $this->item->checked_out == $userId);

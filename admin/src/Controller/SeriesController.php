@@ -50,7 +50,7 @@ class SeriesController extends AdminController
 		}
 
 		// Close the application
-		JFactory::getApplication()->close();
+		Factory::getApplication()->close();
 	}
 
 	/**

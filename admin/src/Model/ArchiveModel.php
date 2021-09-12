@@ -9,6 +9,7 @@
  * */
 
 use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Versioning\VersionableModelTrait;
 
 defined('_JEXEC') or die;
 
@@ -19,6 +20,8 @@ defined('_JEXEC') or die;
  */
 class ArchiveModel extends AdminModel
 {
+	use VersionableModelTrait;
+
 	/**
 	 * @var        string    The prefix to use with controller messages.
 	 * @since    1.6
@@ -57,12 +60,12 @@ class ArchiveModel extends AdminModel
 	 */
 	public function doArchive()
 	{
-		$db   = JFactory::getDbo();
+		$db   = Factory::getDbo();
 		$query = $db->getQuery(true);
 		$studies = 0;
 		$mediafiles = 0;
 
-		$data = JFactory::getApplication()->input->get('jform', array(), 'array');
+		$data = Factory::getApplication()->input->get('jform', array(), 'array');
 
 		// Used this field to show how long back to archive.
 		$timeframe = (int) $data['timeframe'];

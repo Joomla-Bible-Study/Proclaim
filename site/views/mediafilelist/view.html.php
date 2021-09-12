@@ -73,7 +73,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$app              = JFactory::getApplication();
+		$app              = Factory::getApplication();
 		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'mediafilesedit');
 		$this->state      = $this->get('State');
 		$this->items      = $this->get('Items');
@@ -88,12 +88,12 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 			return;
 		}
 
-		$language = JFactory::getLanguage();
+		$language = Factory::getLanguage();
 		$language->load('', JPATH_ADMINISTRATOR, null, true);
 
 		if (!$this->canDo->get('core.edit'))
 		{
-			JFactory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
+			Factory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
 			$app->setHeader('status', 403, true);
 
 			return false;
@@ -128,7 +128,7 @@ class BiblestudyViewMediafilelist extends JViewLegacy
 	 */
 	protected function _prepareDocument()
 	{
-		$app     = JFactory::getApplication();
+		$app     = Factory::getApplication();
 		$menus   = $app->getMenu();
 		$title   = null;
 

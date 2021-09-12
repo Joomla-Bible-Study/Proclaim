@@ -124,7 +124,7 @@ class BiblestudyModelTeachers extends JModelList
 	{
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
-		$user  = JFactory::getUser();
+		$user  = Factory::getUser();
 
 		$query->select($this->getState('list.select', 'teacher.*'));
 		$query->from('#__bsms_teachers AS teacher');
@@ -144,7 +144,7 @@ class BiblestudyModelTeachers extends JModelList
 		}
 
 		// Implement View Level Access
-		if (!$user->authorise('core.admin'))
+		if (!$user->authorise('core.administrator'))
 		{
 			$groups = implode(',', $user->getAuthorisedViewLevels());
 			$query->where('teacher.access IN (' . $groups . ')');

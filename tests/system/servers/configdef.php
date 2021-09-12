@@ -55,9 +55,9 @@ class SeleniumConfig
 	// set the site name (keep to less than 14 characters)
 	var $site_name = 'Joomla Tests';
 
-	// set the admin login, admin password, and admin email address
-	var $username = 'admin';
-	var $password = 'admin';
+	// set the administrator login, administrator password, and administrator email address
+	var $username = 'administrator';
+	var $password = 'administrator';
 	var $admin_email = 'test@localhost';
 
 	// this setting will use the default browser for your system

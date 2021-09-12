@@ -63,9 +63,9 @@ class BiblestudyModelSeries extends JModelList
 	public function getItems()
 	{
 		$items = parent::getItems();
-		$app   = JFactory::getApplication();
+		$app   = Factory::getApplication();
 
-		$user   = JFactory::getUser();
+		$user   = Factory::getUser();
 		$groups = $user->getAuthorisedViewLevels();
 
 		foreach ($items as $x => $xValue)
@@ -98,7 +98,7 @@ class BiblestudyModelSeries extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		$app    = JFactory::getApplication();
+		$app    = Factory::getApplication();
 		$layout = $app->input->get('layout');
 
 		// Adjust the context to support modal layouts.
@@ -170,7 +170,7 @@ class BiblestudyModelSeries extends JModelList
 		// Create a new query object.
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
-		$user  = JFactory::getUser();
+		$user  = Factory::getUser();
 
 		// Select the required fields from the table.
 		$query->select(
@@ -206,7 +206,7 @@ class BiblestudyModelSeries extends JModelList
 		}
 
 		// Implement View Level Access
-		if (!$user->authorise('core.admin'))
+		if (!$user->authorise('core.administrator'))
 		{
 			$groups = implode(',', $user->getAuthorisedViewLevels());
 			$query->where('series.access IN (' . $groups . ')');

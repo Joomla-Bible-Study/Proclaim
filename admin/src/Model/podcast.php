@@ -88,7 +88,7 @@ class BiblestudyModelPodcast extends JModelAdmin
 	 */
 	protected function loadFormData()
 	{
-		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.podcast.data', array());
+		$data = Factory::getApplication()->getUserState('com_biblestudy.edit.podcast.data', array());
 
 		if (empty($data))
 		{

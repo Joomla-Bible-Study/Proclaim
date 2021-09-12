@@ -172,7 +172,7 @@ class BiblestudyViewSermons extends BaseHtmlView
 		$this->activeFilters = $this->get('ActiveFilters');
 
 		$pagination       = $this->get('Pagination');
-		$this->admin      = $this->state->get('admin');
+		$this->admin      = $this->state->get('administrator');
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 		$user   = Factory::getUser();

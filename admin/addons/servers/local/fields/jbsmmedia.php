@@ -235,7 +235,7 @@ class JFormFieldJBSMMedia extends JFormField
 
 		if ($asset == '')
 		{
-			$asset = JFactory::getApplication()->input->get('option');
+			$asset = Factory::getApplication()->input->get('option');
 		}
 
 		if ($this->value && file_exists(JPATH_ROOT . '/' . $this->value))

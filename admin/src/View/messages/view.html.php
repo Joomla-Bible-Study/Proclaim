@@ -193,7 +193,7 @@ class BiblestudyViewMessages extends JViewLegacy
 	protected function addToolbar()
 	{
 		$canDo = ContentHelper::getActions('com_biblestudy', 'category', $this->state->get('filter.category_id'));
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 
 		// Get the toolbar object instance
 		$toolbar = Toolbar::getInstance('toolbar');
@@ -263,7 +263,7 @@ class BiblestudyViewMessages extends JViewLegacy
 	 */
 	protected function setDocument()
 	{
-		$document = JFactory::getDocument();
+		$document = Factory::getDocument();
 		$document->setTitle(JText::_('JBS_TITLE_STUDIES'));
 	}
 

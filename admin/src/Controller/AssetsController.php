@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\Controller;
+namespace CWM\Component\BibleStudy\Administrator\Controller;
 
 // No Direct Access
 use Joomla\CMS\MVC\Controller\FormController;
@@ -106,7 +106,7 @@ class AssetsController extends FormController
 		/** @var BibleStudyModelAssets $model */
 		$model = $this->getModel('assets');
 		$checkassets = $model->checkAssets();
-		$session = JFactory::getApplication()->getSession();
+		$session = Factory::getApplication()->getSession();
 		$session->set('assat_stack', '', 'JBSM');
 		$session->set('checkassets', $checkassets, 'JBSM');
 		$this->display();
@@ -125,14 +125,14 @@ class AssetsController extends FormController
 		// Check for request forgeries.
 		JSession::checkToken('get') or jexit(JText::_('JINVALID_TOKEN'));
 
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		$session = $app->getSession();
 		$stack = $session->get('asset_stack', '', 'JBSM');
 
 		if (empty($stack) || !is_array($stack))
 		{
 			JBSMHelper::clearcache('site');
-			JBSMHelper::clearcache('admin');
+			JBSMHelper::clearcache('administrator');
 			$session->set('asset_stack', '', 'JBSM');
 
 			/** @var BibleStudyModelAssets $model */
@@ -162,11 +162,11 @@ class AssetsController extends FormController
 		// Check for request forgeries.
 		JSession::checkToken('get') or jexit(JText::_('JINVALID_TOKEN'));
 
-		JBSMHelper::clearcache('admin');
+		JBSMHelper::clearcache('administrator');
 		JBSMHelper::clearcache('site');
-		$session = JFactory::getSession();
+		$session = Factory::getSession();
 		$session->set('assat_stack', '', 'JBSM');
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		$app->input->set('view', 'assets');
 		$this->display(false);
 	}
@@ -184,7 +184,7 @@ class AssetsController extends FormController
 		// Check for request forgeries.
 		JSession::checkToken('get') or JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-		$app   = JFactory::getApplication();
+		$app   = Factory::getApplication();
 		/** @var BibleStudyModelAssets $model */
 		$model = $this->getModel('assets');
 		$state = $model->run();

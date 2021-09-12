@@ -139,7 +139,7 @@ class BiblestudyModelTemplatecode extends JModelAdmin
 	 */
 	protected function populateState()
 	{
-		$app = JFactory::getApplication('administrator');
+		$app = Factory::getApplication('administrator');
 
 		// Save the syntax for later use
 		$app->setUserState('editor.source.syntax', 'php');
@@ -184,7 +184,7 @@ class BiblestudyModelTemplatecode extends JModelAdmin
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
-		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.templatecode.data', array());
+		$data = Factory::getApplication()->getUserState('com_biblestudy.edit.templatecode.data', array());
 
 		if (empty($data))
 		{

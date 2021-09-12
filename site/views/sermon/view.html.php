@@ -127,8 +127,8 @@ class BiblestudyViewSermon extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$app         = JFactory::getApplication();
-		$user        = JFactory::getUser();
+		$app         = Factory::getApplication();
+		$user        = Factory::getUser();
 		$JBSMListing = new JBSMListing;
 		$dispatcher  = JEventDispatcher::getInstance();
 
@@ -379,7 +379,7 @@ class BiblestudyViewSermon extends JViewLegacy
 		}
 
 		// Added database queries from the default template - moved here instead
-		$database = JFactory::getDbo();
+		$database = Factory::getDbo();
 		$query    = $database->getQuery(true);
 		$query->select('id')->from('#__menu')->where('link =' . $database->q('index.php?option=com_biblestudy&view=sermons'))->where('published = 1');
 		$database->setQuery($query);
@@ -470,7 +470,7 @@ class BiblestudyViewSermon extends JViewLegacy
 	 */
 	protected function _prepareDocument()
 	{
-		$app     = JFactory::getApplication();
+		$app     = Factory::getApplication();
 		$menus   = $app->getMenu();
 		$pathway = $app->getPathway();
 		$title   = null;

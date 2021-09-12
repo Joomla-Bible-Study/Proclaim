@@ -122,7 +122,7 @@ class BiblestudyViewBackup extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JFactory::getApplication()->input->set('hidemainmenu', true);
+		Factory::getApplication()->input->set('hidemainmenu', true);
 
 		JToolbarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
 		JToolbarHelper::preferences('com_biblestudy', '600', '800', 'JBS_ADM_PERMISSIONS');
@@ -139,7 +139,7 @@ class BiblestudyViewBackup extends JViewLegacy
 	 */
 	protected function setDocument()
 	{
-		$document = JFactory::getDocument();
+		$document = Factory::getDocument();
 		$document->setTitle(JText::_('JBS_TITLE_ADMINISTRATION'));
 	}
 

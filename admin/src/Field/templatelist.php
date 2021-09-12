@@ -47,7 +47,7 @@ class JFormFieldTemplatelist extends JFormFieldList
 
 		if (!self::$templates)
 		{
-			$db    = JFactory::getDbo();
+			$db    = Factory::getDbo();
 			$query = $db->getQuery(true);
 			$query->select('id,title');
 			$query->from('#__bsms_templates');

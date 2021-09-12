@@ -105,7 +105,7 @@ class BiblestudyModelMessagetype extends JModelAdmin
 	 */
 	protected function loadFormData()
 	{
-		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.messagetype.data', array());
+		$data = Factory::getApplication()->getUserState('com_biblestudy.edit.messagetype.data', array());
 
 		if (empty($data))
 		{
@@ -141,7 +141,7 @@ class BiblestudyModelMessagetype extends JModelAdmin
 			// Set ordering to the last item if not set
 			if (empty($table->ordering))
 			{
-				$db    = JFactory::getDbo();
+				$db    = Factory::getDbo();
 				$query = $db->getQuery(true);
 				$query->select('MAX(ordering)')->from('#__bsms_message_type');
 				$db->setQuery($query);

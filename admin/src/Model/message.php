@@ -63,7 +63,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	 */
 	public function isDuplicate($study_id, $topic_id)
 	{
-		$db    = JFactory::getDbo();
+		$db    = Factory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('*')
 			->from('#__bsms_studytopics')
@@ -213,7 +213,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	{
 		/** @var Joomla\Registry\Registry $params */
 		$params = JBSMParams::getAdmin()->params;
-		$input  = JFactory::getApplication()->input;
+		$input  = Factory::getApplication()->input;
 		$path   = 'images/biblestudy/studies/' . $data['id'];
 
 		$this->cleanCache();
@@ -269,7 +269,7 @@ class BiblestudyModelMessage extends JModelAdmin
 			return false;
 		}
 
-		$jinput = JFactory::getApplication()->input;
+		$jinput = Factory::getApplication()->input;
 
 		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
 		if ($jinput->get('a_id'))
@@ -282,7 +282,7 @@ class BiblestudyModelMessage extends JModelAdmin
 			$id = $jinput->get('id', 0);
 		}
 
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
@@ -314,7 +314,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	 */
 	public function getItem($pk = null)
 	{
-		$jinput = JFactory::getApplication()->input;
+		$jinput = Factory::getApplication()->input;
 
 		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
 		if ($jinput->get('a_id'))
@@ -513,7 +513,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	protected function batchTeacher($value, $pks, $contexts)
 	{
 		// Set the variables
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 		/** @var TableMessage $table */
 		$table = $this->getTable();
 
@@ -560,7 +560,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	protected function batchSeries($value, $pks, $contexts)
 	{
 		// Set the variables
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 		/** @var TableMessage $table */
 		$table = $this->getTable();
 
@@ -607,7 +607,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	protected function batchMessagetype($value, $pks, $contexts)
 	{
 		// Set the variables
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 		/** @var TableMessage $table */
 		$table = $this->getTable();
 
@@ -650,7 +650,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	 */
 	protected function loadFormData()
 	{
-		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.message.data', array());
+		$data = Factory::getApplication()->getUserState('com_biblestudy.edit.message.data', array());
 
 		if (empty($data))
 		{
@@ -671,8 +671,8 @@ class BiblestudyModelMessage extends JModelAdmin
 	 */
 	protected function prepareTable($table)
 	{
-		$date          = JFactory::getDate();
-		$user          = JFactory::getUser();
+		$date          = Factory::getDate();
+		$user          = Factory::getUser();
 
 		jimport('joomla.filter.output');
 
@@ -689,7 +689,7 @@ class BiblestudyModelMessage extends JModelAdmin
 			// Set ordering to the last item if not set
 			if (empty($table->ordering))
 			{
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 				$query = $db->getQuery(true)
 					->select('MAX(ordering)')
 					->from($db->quoteName('#__bsms_studies'));

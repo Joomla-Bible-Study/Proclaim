@@ -8,8 +8,8 @@
  * @link       https://www.christianwebministries.org
  */
 // No Direct Access
-use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
-use CWM\Component\Proclaim\Administrator\Lib\CWMStats;
+use CWM\Component\BibleStudy\Administrator\Helper\CWMHelper;
+use CWM\Component\BibleStudy\Administrator\Lib\CWMStats;
 use Joomla\CMS\Input\Input;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;

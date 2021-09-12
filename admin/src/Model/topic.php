@@ -93,7 +93,7 @@ class BiblestudyModelTopic extends JModelAdmin
 	 */
 	protected function loadFormData()
 	{
-		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.topic.data', array());
+		$data = Factory::getApplication()->getUserState('com_biblestudy.edit.topic.data', array());
 
 		if (empty($data))
 		{

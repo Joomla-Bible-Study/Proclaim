@@ -146,7 +146,7 @@ class BiblestudyModelMessagetypes extends JModelList
 	{
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
-		$user  = JFactory::getUser();
+		$user  = Factory::getUser();
 
 		$query->select(
 			$this->getState(
@@ -166,7 +166,7 @@ class BiblestudyModelMessagetypes extends JModelList
 		}
 
 		// Implement View Level Access
-		if (!$user->authorise('core.admin'))
+		if (!$user->authorise('core.administrator'))
 		{
 			$groups = implode(',', $user->getAuthorisedViewLevels());
 			$query->where('messagetype.access IN (' . $groups . ')');

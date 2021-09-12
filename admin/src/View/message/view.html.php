@@ -104,14 +104,14 @@ class BiblestudyViewMessage extends JViewLegacy
 		}
 
 		// Set some variables for use by the modal mediafile entry form from a study
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		$app->setUserState($option . 'sid', $this->item->id);
 		$app->setUserState($option . 'sdate', $this->item->studydate);
 		$this->admin = JBSMParams::getAdmin();
 		$registry    = new Registry;
 		$registry->loadString($this->admin->params);
 		$this->admin_params = $registry;
-		$document           = JFactory::getDocument();
+		$document           = Factory::getDocument();
 
 		$this->simple = JBSMHelper::getSimpleView();
 

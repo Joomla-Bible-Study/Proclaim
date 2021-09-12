@@ -79,7 +79,7 @@ class CommentModel extends AdminModel
 			return false;
 		}
 
-		$jinput = JFactory::getApplication()->input;
+		$jinput = Factory::getApplication()->input;
 
 		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
 		if ($jinput->get('a_id'))
@@ -92,7 +92,7 @@ class CommentModel extends AdminModel
 			$id = $jinput->get('id', 0);
 		}
 
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
@@ -133,8 +133,8 @@ class CommentModel extends AdminModel
 		$i     = 0;
 
 		// Check that the user has create permission for the component
-		$extension = JFactory::getApplication()->input->get('option', '');
-		$user      = JFactory::getUser();
+		$extension = Factory::getApplication()->input->get('option', '');
+		$user      = Factory::getUser();
 
 		if (!$user->authorise('core.create', $extension))
 		{
@@ -255,7 +255,7 @@ class CommentModel extends AdminModel
 				return false;
 			}
 
-			$user = JFactory::getUser();
+			$user = Factory::getUser();
 
 			return $user->authorise('core.delete', 'com_biblestudy.comment.' . (int) $record->id);
 		}
@@ -274,7 +274,7 @@ class CommentModel extends AdminModel
 	 */
 	protected function canEditState($record)
 	{
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 
 		// Check for existing article.
 		if (!empty($record->id))
@@ -309,7 +309,7 @@ class CommentModel extends AdminModel
 	 */
 	protected function loadFormData()
 	{
-		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.comment.data', array());
+		$data = Factory::getApplication()->getUserState('com_biblestudy.edit.comment.data', array());
 
 		if (empty($data))
 		{

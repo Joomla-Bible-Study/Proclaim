@@ -40,7 +40,7 @@ class JFormFieldMessagetypelist extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		$db    = JFactory::getDbo();
+		$db    = Factory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('id,message_type');
 		$query->from('#__bsms_message_type');

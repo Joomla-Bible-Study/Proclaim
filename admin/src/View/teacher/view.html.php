@@ -139,7 +139,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 	protected function setDocument()
 	{
 		$isNew    = ($this->item->id < 1);
-		$document = JFactory::getDocument();
+		$document = Factory::getDocument();
 		$document->setTitle($isNew ? JText::_('JBS_TITLE_TEACHER_CREATING') : JText::sprintf('JBS_TITLE_TEACHER_EDITING', $this->item->teachername));
 	}
 }

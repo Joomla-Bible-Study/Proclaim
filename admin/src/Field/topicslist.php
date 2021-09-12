@@ -40,7 +40,7 @@ class JFormFieldTopicslist extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		$db    = JFactory::getDbo();
+		$db    = Factory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('DISTINCT #__bsms_topics.id, #__bsms_topics.topic_text, #__bsms_topics.params as topic_params')
 			->from('#__bsms_studies')

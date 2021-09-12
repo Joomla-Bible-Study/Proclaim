@@ -21,7 +21,7 @@ $return  = base64_encode('index.php?option=com_biblestudy&task=messageform.edit&
 $options = base64_encode('study_id=' . $this->item->id . '&createdate=' . $this->item->studydate);
 
 $params = $this->form->getFieldsets('params');
-$app    = JFactory::getApplication();
+$app    = Factory::getApplication();
 $input  = $app->input;
 
 // Set up defaults
@@ -45,7 +45,7 @@ else
 	$series_id   = $this->state->params->get('series_id');
 	$messagetype = $this->state->params->get('messagetype');
 	$thumbnailm  = $this->state->params->get('default_study_image');
-	$user_id     = JFactory::getUser()->id;
+	$user_id     = Factory::getUser()->id;
 }
 ?>
 <script type="text/javascript">
@@ -85,7 +85,7 @@ else
 					<li><a href="#info" data-toggle="tab"><?php echo JText::_('JBS_CMN_INFO'); ?></a></li>
 					<li><a href="#metadata" data-toggle="tab"><?php echo JText::_('JBS_STY_METADATA'); ?></a></li>
 					<li><a href="#media" data-toggle="tab"><?php echo JText::_('JBS_STY_MEDIA_THIS_STUDY'); ?></a></li>
-					<?php if ($this->canDo->get('core.admin')): ?>
+					<?php if ($this->canDo->get('core.administrator')): ?>
 						<li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a>
 						</li>
 					<?php endif ?>
@@ -393,7 +393,7 @@ else
 							</div>
 						</div>
 					</div>
-					<?php if ($this->canDo->get('core.admin')): ?>
+					<?php if ($this->canDo->get('core.administrator')): ?>
 						<div class="tab-pane" id="permissions">
 
 							<?php echo $this->form->getInput('rules'); ?>

@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\Controller;
+namespace CWM\Component\BibleStudy\Administrator\Controller;
 
 // No Direct Access
 defined('_JEXEC') or die;
@@ -94,14 +94,14 @@ class InstallController extends FormController
 	 */
 	public function browse()
 	{
-		$app = JFactory::getApplication();
-		$session = JFactory::getSession();
+		$app = Factory::getApplication();
+		$session = Factory::getSession();
 		$stack = $session->get('migration_stack', '', 'JBSM');
 
 		if (empty($stack))
 		{
 			JBSMHelper::clearcache('site');
-			JBSMHelper::clearcache('admin');
+			JBSMHelper::clearcache('administrator');
 			$session->set('migration_stack', '', 'JBSM');
 
 			/** @var BibleStudyModelInstall $model */
@@ -129,8 +129,8 @@ class InstallController extends FormController
 	public function clear()
 	{
 		JBSMHelper::clearcache('site');
-		JBSMHelper::clearcache('admin');
-		$session = JFactory::getSession();
+		JBSMHelper::clearcache('administrator');
+		$session = Factory::getSession();
 		$session->set('migration_stack', '', 'JBSM');
 		$this->browse();
 	}
@@ -145,7 +145,7 @@ class InstallController extends FormController
 	 */
 	public function run()
 	{
-		$app   = JFactory::getApplication();
+		$app   = Factory::getApplication();
 		/** @var BibleStudyModelInstall $model */
 		$model = $this->getModel('install');
 		$state = $model->run();

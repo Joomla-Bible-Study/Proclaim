@@ -71,7 +71,7 @@ class BiblestudyViewPodcastlist extends JViewLegacy
 	 */
 	protected function _prepareDocument()
 	{
-		$app     = JFactory::getApplication('site');
+		$app     = Factory::getApplication('site');
 		$menus   = $app->getMenu()->getActive();
 		$this->params->merge($menus->params);
 

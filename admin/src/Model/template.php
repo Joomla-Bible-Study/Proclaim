@@ -32,7 +32,7 @@ class BiblestudyModelTemplate extends JModelAdmin
 		// Make sure we cannot unpublished default template.
 		if ($data['id'] == '1' && $data['published'] != '1')
 		{
-			JFactory::getApplication()->enqueueMessage(JText::_('JBS_TPL_DEFAULT_ERROR'), 'error');
+			Factory::getApplication()->enqueueMessage(JText::_('JBS_TPL_DEFAULT_ERROR'), 'error');
 
 			return false;
 		}
@@ -62,7 +62,7 @@ class BiblestudyModelTemplate extends JModelAdmin
 
 			if (!$tmplCurr->store())
 			{
-				JFactory::getApplication()->enqueueMessage($tmplCurr->getError(), 'error');
+				Factory::getApplication()->enqueueMessage($tmplCurr->getError(), 'error');
 
 				return false;
 			}
@@ -87,7 +87,7 @@ class BiblestudyModelTemplate extends JModelAdmin
 		{
 			if ($pk == 1 && $value != 1)
 			{
-				JFactory::getApplication()->enqueueMessage(JText::_('JBS_TPL_DEFAULT_ERROR'), 'error');
+				Factory::getApplication()->enqueueMessage(JText::_('JBS_TPL_DEFAULT_ERROR'), 'error');
 				unset($pks[$i]);
 			}
 		}
@@ -157,7 +157,7 @@ class BiblestudyModelTemplate extends JModelAdmin
 	 */
 	protected function loadFormData()
 	{
-		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.template.data', array());
+		$data = Factory::getApplication()->getUserState('com_biblestudy.edit.template.data', array());
 
 		if (empty($data))
 		{

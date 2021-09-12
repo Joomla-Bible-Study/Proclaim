@@ -15,7 +15,7 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('behavior.framework', true);
 JHtml::_('formbehavior.chosen', 'select');
 
-$input     = JFactory::getApplication()->input;
+$input     = Factory::getApplication()->input;
 $function  = $input->getCmd('function', 'jSelectServer');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));

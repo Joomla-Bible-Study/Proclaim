@@ -105,7 +105,7 @@ class BiblestudyModelLocation extends JModelAdmin
 	 */
 	protected function loadFormData()
 	{
-		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.location.data', array());
+		$data = Factory::getApplication()->getUserState('com_biblestudy.edit.location.data', array());
 
 		if (empty($data))
 		{

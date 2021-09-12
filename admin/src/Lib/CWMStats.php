@@ -8,12 +8,12 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\Lib;
+namespace CWM\Component\BibleStudy\Administrator\Lib;
 
 // No Direct Access
 defined('_JEXEC') or die;
 
-use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
+use CWM\Component\BibleStudy\Administrator\Helper\CWMParams;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Input\Input;
 use Joomla\CMS\Language\Text;

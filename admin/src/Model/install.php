@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\Model;
+namespace CWM\Component\BibleStudy\Administrator\Model;
 
 use Symfony\Component\Config\Loader\Loader;
 
@@ -231,7 +231,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	private function getSteps()
 	{
 		$olderversiontype = 0;
-		$app              = JFactory::getApplication();
+		$app              = Factory::getApplication();
 
 		// Set Finishing Steps
 		$this->finish     = array('updateversion', 'fixassets', 'fixmenus', 'fixemptyaccess', 'fixemptylanguage',
@@ -466,7 +466,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			}
 		}
 
-		$this->isimport   = JFactory::getApplication()->input->getInt('jbsmalt', 0);
+		$this->isimport   = Factory::getApplication()->input->getInt('jbsmalt', 0);
 		++$this->totalSteps;
 
 		return true;
@@ -502,7 +502,7 @@ class BibleStudyModelInstall extends JModelLegacy
 
 				if (!$this->_db->execute())
 				{
-					JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_OPERATION_FAILED'), 'error');
+					Factory::getApplication()->enqueueMessage(JText::_('JBS_CMN_OPERATION_FAILED'), 'error');
 
 					return false;
 				}
@@ -525,7 +525,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	 */
 	private function setSchemaVersion($version, $eid)
 	{
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 
 		if ($version && $eid)
 		{
@@ -631,7 +631,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			$stack = base64_encode($stack);
 		}
 
-		$session = JFactory::getSession();
+		$session = Factory::getSession();
 		$session->set('migration_stack', $stack, 'JBSM');
 	}
 
@@ -644,7 +644,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	 */
 	private function resetStack()
 	{
-		$session = JFactory::getSession();
+		$session = Factory::getSession();
 		$session->set('migration_stack', '', 'JBSM');
 		$this->version       = '0.0.0';
 		$this->versionStack  = array();
@@ -672,7 +672,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	 */
 	private function loadStack()
 	{
-		$session = JFactory::getSession();
+		$session = Factory::getSession();
 		$stack   = $session->get('migration_stack', '', 'JBSM');
 
 		if (empty($stack))
@@ -752,7 +752,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	 */
 	private function realRun()
 	{
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		$run = true;
 
 		if (!empty($this->start))
@@ -787,7 +787,7 @@ class BibleStudyModelInstall extends JModelLegacy
 
 				if (!$run)
 				{
-					JFactory::getApplication()->enqueueMessage('Error Updating Update version ' . (string) $version, 'error');
+					Factory::getApplication()->enqueueMessage('Error Updating Update version ' . (string) $version, 'error');
 					JLog::add('Error Updating Update version ' . (string) $version, JLog::ERROR, 'com_biblestudy');
 				}
 			}
@@ -884,7 +884,7 @@ class BibleStudyModelInstall extends JModelLegacy
 							else
 							{
 								$this->running = 'PHP Sub Process: ' . $this->version . ' - ' . $step;
-								$migration->$step(JFactory::getDbo(), $query);
+								$migration->$step(Factory::getDbo(), $query);
 
 								// Pull back the Query form PHP file if any.
 								if (isset($migration->query) && !empty($migration->query))
@@ -1071,7 +1071,7 @@ class BibleStudyModelInstall extends JModelLegacy
 			->where($this->_db->qn('language_extension') . ' = ' . $this->_db->q('com_biblestudy'));
 		$this->_db->setQuery($query);
 		$this->_db->execute();
-		JFactory::getApplication()->enqueueMessage('<h2>' . JText::_('JBS_INS_UNINSTALLED') . ' ' .
+		Factory::getApplication()->enqueueMessage('<h2>' . JText::_('JBS_INS_UNINSTALLED') . ' ' .
 			BIBLESTUDY_VERSION . '</h2> <div>' . $drop_result . '</div>'
 		);
 
@@ -1090,7 +1090,7 @@ class BibleStudyModelInstall extends JModelLegacy
 	 */
 	private function finish($step)
 	{
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		$run = false;
 
 		switch ($step)
@@ -1303,7 +1303,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		// Graceful exit and rollback if read not successful
 		if ($buffer === false)
 		{
-			JFactory::getApplication()->enqueueMessage(JText::sprintf('JLIBinstallER_ERROR_SQL_READBUFFER'), 'WARNING');
+			Factory::getApplication()->enqueueMessage(JText::sprintf('JLIBinstallER_ERROR_SQL_READBUFFER'), 'WARNING');
 			JLog::add(JText::sprintf('JLIBinstallER_ERROR_SQL_READBUFFER'), JLog::WARNING, 'com_biblestudy');
 
 			return false;
@@ -1513,7 +1513,7 @@ class BibleStudyModelInstall extends JModelLegacy
 		);
 
 		// Get Public id
-		$id = JFactory::getConfig()->get('access', 1);
+		$id = Factory::getConfig()->get('access', 1);
 
 		// Correct blank or not set records
 		foreach ($tables as $table)

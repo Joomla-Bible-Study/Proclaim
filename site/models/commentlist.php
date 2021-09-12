@@ -34,7 +34,7 @@ class BiblestudyModelCommentlist extends BiblestudyModelComments
 	protected function populateState($ordering = null, $direction = null)
 	{
 		/** @type JApplicationSite $app */
-		$app    = JFactory::getApplication();
+		$app    = Factory::getApplication();
 		$layout = $app->input->get('layout');
 
 		// Adjust the context to support modal layouts.
@@ -76,7 +76,7 @@ class BiblestudyModelCommentlist extends BiblestudyModelComments
 		$template->id = $t;
 
 		$this->setState('template', $template);
-		$this->setState('admin', $admin);
+		$this->setState('administrator', $admin);
 
 		$this->setState('layout', $app->input->get('layout'));
 

@@ -112,7 +112,7 @@ class BiblestudyModelLocations extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		$app = JFactory::getApplication('administrator');
+		$app = Factory::getApplication('administrator');
 
 		// Adjust the context to support modal layouts.
 		$layout = $app->input->get('layout');
@@ -149,7 +149,7 @@ class BiblestudyModelLocations extends JModelList
 	{
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
-		$user  = JFactory::getUser();
+		$user  = Factory::getUser();
 
 		$query->select(
 			$this->getState(
@@ -168,7 +168,7 @@ class BiblestudyModelLocations extends JModelList
 		}
 
 		// Implement View Level Access
-		if (!$user->authorise('core.admin'))
+		if (!$user->authorise('core.administrator'))
 		{
 			$groups = implode(',', $user->getAuthorisedViewLevels());
 			$query->where('location.access IN (' . $groups . ')');

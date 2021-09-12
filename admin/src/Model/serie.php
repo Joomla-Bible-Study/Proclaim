@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 /**
- * Serie admin model
+ * Serie administrator model
  *
  * @package  Proclaim.Admin
  * @since    7.0.0
@@ -46,7 +46,7 @@ class BiblestudyModelSerie extends JModelAdmin
 			return false;
 		}
 
-		$jinput = JFactory::getApplication()->input;
+		$jinput = Factory::getApplication()->input;
 
 		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
 		if ($jinput->get('a_id'))
@@ -59,7 +59,7 @@ class BiblestudyModelSerie extends JModelAdmin
 			$id = $jinput->get('id', 0);
 		}
 
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
@@ -112,7 +112,7 @@ class BiblestudyModelSerie extends JModelAdmin
 	{
 		/** @var Joomla\Registry\Registry $params */
 		$params = JBSMParams::getAdmin()->params;
-		$app    = JFactory::getApplication();
+		$app    = Factory::getApplication();
 		$path   = 'images/biblestudy/series/' . $data['id'];
 		$prefix = 'thumb_';
 
@@ -192,7 +192,7 @@ class BiblestudyModelSerie extends JModelAdmin
 	 */
 	protected function batchCopy($value, $pks, $contexts)
 	{
-		$app    = JFactory::getApplication();
+		$app    = Factory::getApplication();
 		/** @type TableSerie $table */
 		$table  = $this->getTable();
 		$i      = 0;
@@ -200,7 +200,7 @@ class BiblestudyModelSerie extends JModelAdmin
 
 		// Check that the user has create permission for the component
 		$extension = $app->input->get('option', '');
-		$user      = JFactory::getUser();
+		$user      = Factory::getUser();
 
 		if (!$user->authorise('core.create', $extension))
 		{
@@ -324,7 +324,7 @@ class BiblestudyModelSerie extends JModelAdmin
 				return false;
 			}
 
-			$user = JFactory::getUser();
+			$user = Factory::getUser();
 
 			return $user->authorise('core.delete', 'com_biblestudy.serie.' . (int) $record->id);
 		}
@@ -343,7 +343,7 @@ class BiblestudyModelSerie extends JModelAdmin
 	 */
 	protected function canEditState($record)
 	{
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 
 		// Check for existing article.
 		if (!empty($record->id))
@@ -381,7 +381,7 @@ class BiblestudyModelSerie extends JModelAdmin
 			// Set ordering to the last item if not set
 			if (empty($table->ordering))
 			{
-				$db    = JFactory::getDbo();
+				$db    = Factory::getDbo();
 				$query = $db->getQuery(true);
 				$query->select('MAX(ordering)')->from('#__bsms_series');
 				$db->setQuery($query);
@@ -408,7 +408,7 @@ class BiblestudyModelSerie extends JModelAdmin
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
-		$app  = JFactory::getApplication();
+		$app  = Factory::getApplication();
 		$data = $app->getUserState('com_biblestudy.edit.serie.data', array());
 
 		if (empty($data))

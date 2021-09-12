@@ -10,11 +10,11 @@
 
 //JLoader::registerNamespace('\\CWM\\Application\\Proclaim', JPATH_ADMINISTRATOR . '/components/com_biblestudy/src');
 
-JLoader::registerNamespace('CWM\Component\Proclaim\Administrator\Helper', JPATH_COMPONENT . '/src/Helper');
+JLoader::registerNamespace('CWM\Component\BibleStudy\Administrator\Helper', JPATH_COMPONENT . '/src/Helper');
 
 // No Direct Access
-use CWM\Component\Proclaim\Administrator\Helper\CWMDbHelper;
-use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
+use CWM\Component\BibleStudy\Administrator\Helper\CWMDbHelper;
+use CWM\Component\BibleStudy\Administrator\Helper\CWMHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
@@ -54,7 +54,7 @@ $controller = BaseController::getInstance('CWMProclaim');
 
 if ($jbsstate && $type === 'install')
 {
-	CWMHelper::clearcache('admin');
+	CWMHelper::clearcache('administrator');
 	CWMHelper::clearcache('site');
 	$app->input->set('task', 'browse');
 }

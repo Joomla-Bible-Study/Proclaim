@@ -33,9 +33,9 @@ class JBSMLanding
 	 */
 	public function getLocationsLandingPage($params, $id = 0)
 	{
-		$mainframe   = JFactory::getApplication();
-		$user        = JFactory::getUser();
-		$db          = JFactory::getDbo();
+		$mainframe   = Factory::getApplication();
+		$user        = Factory::getUser();
+		$db          = Factory::getDbo();
 		$location    = null;
 		$teacherid   = null;
 		$template    = $params->get('studieslisttemplateid', 1);
@@ -61,7 +61,7 @@ class JBSMLanding
 		}
 		else
 		{
-			$language   = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
+			$language   = $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*');
 			$menu_order = null;
 		}
 
@@ -229,9 +229,9 @@ class JBSMLanding
 	 */
 	public function getTeacherLandingPage($params, $id = 0)
 	{
-		$mainframe = JFactory::getApplication();
-		$db        = JFactory::getDbo();
-		$user      = JFactory::getUser();
+		$mainframe = Factory::getApplication();
+		$db        = Factory::getDbo();
+		$user      = Factory::getUser();
 		$langlink  = JLanguageMultilang::isEnabled();
 		$order     = null;
 		$teacher   = null;
@@ -253,7 +253,7 @@ class JBSMLanding
 		}
 		else
 		{
-			$language   = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
+			$language   = $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*');
 			$menu_order = null;
 		}
 
@@ -440,9 +440,9 @@ class JBSMLanding
 	 */
 	public function getSeriesLandingPage($params, $id = 0)
 	{
-		$mainframe = JFactory::getApplication();
-		$user      = JFactory::getUser();
-		$db        = JFactory::getDbo();
+		$mainframe = Factory::getApplication();
+		$user      = Factory::getUser();
+		$db        = Factory::getDbo();
 		$order     = 'ASC';
 		$series    = null;
 		$seriesid  = null;
@@ -469,7 +469,7 @@ class JBSMLanding
 		}
 		else
 		{
-			$language   = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
+			$language   = $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*');
 			$menu_order = null;
 		}
 
@@ -663,9 +663,9 @@ class JBSMLanding
 	 */
 	public function getYearsLandingPage($params, $id = 0)
 	{
-		$mainframe = JFactory::getApplication();
-		$db        = JFactory::getDbo();
-		$user      = JFactory::getUser();
+		$mainframe = Factory::getApplication();
+		$db        = Factory::getDbo();
+		$user      = Factory::getUser();
 		$order     = 'ASC';
 		$year      = null;
 		$teacherid = null;
@@ -690,7 +690,7 @@ class JBSMLanding
 		}
 		else
 		{
-			$language   = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
+			$language   = $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*');
 			$menu_order = null;
 		}
 
@@ -799,9 +799,9 @@ class JBSMLanding
 	 */
 	public function getTopicsLandingPage($params, $id = 0)
 	{
-		$mainframe = JFactory::getApplication();
-		$user      = JFactory::getUser();
-		$db        = JFactory::getDbo();
+		$mainframe = Factory::getApplication();
+		$user      = Factory::getUser();
+		$db        = Factory::getDbo();
 		$input     = $mainframe->input;
 		$order     = 'ASC';
 		$topic     = null;
@@ -827,7 +827,7 @@ class JBSMLanding
 		}
 		else
 		{
-			$language   = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
+			$language   = $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*');
 			$menu_order = null;
 		}
 
@@ -937,9 +937,9 @@ class JBSMLanding
 	 */
 	public function getMessageTypesLandingPage($params, $id = 0)
 	{
-		$mainframe   = JFactory::getApplication();
-		$db          = JFactory::getDbo();
-		$user        = JFactory::getUser();
+		$mainframe   = Factory::getApplication();
+		$db          = Factory::getDbo();
+		$user        = Factory::getUser();
 		$messagetype = null;
 		$order       = 'ASC';
 		$teacherid   = null;
@@ -965,7 +965,7 @@ class JBSMLanding
 		}
 		else
 		{
-			$language   = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
+			$language   = $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*');
 			$menu_order = null;
 		}
 
@@ -1131,8 +1131,8 @@ class JBSMLanding
 	 */
 	public function getBooksLandingPage($params, $id = 0)
 	{
-		$user     = JFactory::getUser();
-		$db       = JFactory::getDbo();
+		$user     = Factory::getUser();
+		$db       = Factory::getDbo();
 		$order    = 'ASC';
 		$book     = null;
 		$template = $params->get('studieslisttemplateid');
@@ -1143,7 +1143,7 @@ class JBSMLanding
 			$limit = 10000;
 		}
 
-		$app      = JFactory::getApplication();
+		$app      = Factory::getApplication();
 		$menu     = $app->getMenu();
 		$item     = $menu->getActive();
 		$registry = new Registry;
@@ -1157,7 +1157,7 @@ class JBSMLanding
 		}
 		else
 		{
-			$language   = $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*');
+			$language   = $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*');
 			$menu_order = null;
 		}
 

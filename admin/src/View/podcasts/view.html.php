@@ -157,7 +157,7 @@ class BiblestudyViewPodcasts extends JViewLegacy
 	 */
 	protected function setDocument()
 	{
-		$document = JFactory::getDocument();
+		$document = Factory::getDocument();
 		$document->setTitle(JText::_('JBS_TITLE_PODCASTS'));
 	}
 

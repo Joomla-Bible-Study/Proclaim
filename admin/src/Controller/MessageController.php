@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\Controller;
+namespace CWM\Component\BibleStudy\Administrator\Controller;
 
 // No Direct Access
 defined('_JEXEC') or die;
@@ -113,7 +113,7 @@ class MessageController extends FormController
 		if (!$db->execute())
 		{
 			$msg = Text::_('JBS_CMN_ERROR_RESETTING_HITS');
-			$this->setRedirect('index.php?option=com_biblestudy&view=message&controller=admin&layout=form&cid[]=' . $id, $msg);
+			$this->setRedirect('index.php?option=com_biblestudy&view=message&controller=administrator&layout=form&cid[]=' . $id, $msg);
 		}
 		else
 		{

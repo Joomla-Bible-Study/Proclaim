@@ -345,7 +345,7 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 	 */
 	protected function getListQuery($sql = null)
 	{
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 
 		// Check if we can use the supplied SQL query.
 		$sql = $sql instanceof JDatabaseQuery ? $sql : $db->getQuery(true);

@@ -96,7 +96,7 @@ class PlgSystemJBSBackup extends JPlugin
 	public function checktime($params)
 	{
 		$now   = time();
-		$db    = JFactory::getDbo();
+		$db    = Factory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('backup')->from('#__jbsbackup_timeset');
 		$db->setQuery($query, 0, 1);
@@ -128,11 +128,11 @@ class PlgSystemJBSBackup extends JPlugin
 	public function checkdays($params)
 	{
 		$checkdays = false;
-		$config    = JFactory::getConfig();
+		$config    = Factory::getConfig();
 		$offset    = $config->get('config.offset');
 
 		$now   = time();
-		$db    = JFactory::getDbo();
+		$db    = Factory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('backup')->from('#__jbsbackup_timeset');
 		$db->setQuery($query, 0, 1);
@@ -257,7 +257,7 @@ class PlgSystemJBSBackup extends JPlugin
 	public function updatetime()
 	{
 		$time  = time();
-		$db    = JFactory::getDbo();
+		$db    = Factory::getDbo();
 		$query = $db->getQuery(true);
 		$query->update('#__jbsbackup_timeset')->set($db->qn('backup') . ' = ' . $db->q($time));
 		$db->setQuery($query);
@@ -287,7 +287,7 @@ class PlgSystemJBSBackup extends JPlugin
 	public function doEmail($params, $dobackup)
 	{
 		$livesite = JUri::root();
-		$config   = JFactory::getConfig();
+		$config   = Factory::getConfig();
 		$mailfrom = $config->get('config.mailfrom');
 		$fromname = $config->get('config.fromname');
 		jimport('joomla.filesystem.file');
@@ -309,7 +309,7 @@ class PlgSystemJBSBackup extends JPlugin
 			$fromname = $params->def('fromname', $fromname);
 		}
 
-		$mail = JFactory::getMailer();
+		$mail = Factory::getMailer();
 		$mail->isHtml(true);
 		jimport('joomla.utilities.date');
 		$sender = array(

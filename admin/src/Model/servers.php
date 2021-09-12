@@ -175,7 +175,7 @@ class BiblestudyModelServers extends JModelList
 	{
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
-		$user  = JFactory::getUser();
+		$user  = Factory::getUser();
 
 		$query->select($this->getState('list.select', 'server.id, server.published, server.server_name, server.type'));
 		$query->from('#__bsms_servers AS server');
@@ -183,7 +183,7 @@ class BiblestudyModelServers extends JModelList
 		// Filter by published state
 		$published = $this->getState('filter.published');
 
-		if (JFactory::getApplication()->input->get('layout') == 'modal' && $published === '')
+		if (Factory::getApplication()->input->get('layout') == 'modal' && $published === '')
 		{
 			$published = 1;
 		}
@@ -198,7 +198,7 @@ class BiblestudyModelServers extends JModelList
 		}
 
 		// Implement View Level Access
-		if (!$user->authorise('core.admin'))
+		if (!$user->authorise('core.administrator'))
 		{
 			$groups = implode(',', $user->getAuthorisedViewLevels());
 			$query->where('server.access IN (' . $groups . ')');
