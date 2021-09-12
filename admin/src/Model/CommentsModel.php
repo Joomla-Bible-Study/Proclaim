@@ -7,6 +7,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
+namespace CWM\Component\BibleStudy\Administrator\Model;
+
 // No Direct Access
 use Joomla\CMS\MVC\Model\ListModel;
 
@@ -24,6 +27,7 @@ class CommentsModel extends ListModel
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function __construct($config = array())

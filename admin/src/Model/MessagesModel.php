@@ -7,7 +7,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
+namespace CWM\Component\BibleStudy\Administrator\Model;
+
 // No Direct Access
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\ListModel;
+
 defined('_JEXEC') or die;
 
 /**
@@ -16,15 +23,16 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class BiblestudyModelMessages extends JModelList
+class MessagesModel extends ListModel
 {
 	/**
 	 * Constructor.
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
-	 * @see     JController
+	 * @throws \Exception
 	 * @since   11.1
+	 * @see     Controller
 	 */
 	public function __construct($config = array())
 	{
@@ -92,7 +100,7 @@ class BiblestudyModelMessages extends JModelList
 	 * @return    void
 	 *
 	 * @since 7.1.0
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	protected function populateState($ordering = 'study.studydate', $direction = 'desc')
 	{
@@ -115,7 +123,7 @@ class BiblestudyModelMessages extends JModelList
 		}
 
 		// Load the parameters.
-		$params = JComponentHelper::getParams('com_biblestudy');
+		$params = ComponentHelper::getParams('com_biblestudy');
 		$this->setState('params', $params);
 
 		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
@@ -180,7 +188,7 @@ class BiblestudyModelMessages extends JModelList
 	/**
 	 * Build an SQL query to load the list data
 	 *
-	 * @return  JDatabaseQuery
+	 * @return  \Joomla\Database\QueryInterface
 	 *
 	 * @since   7.0
 	 */

@@ -6,9 +6,9 @@
   "license": "GPL-2.0-or-later",
   "assets": [
 	{
-	  "name": "com_biblestudy.admin-article-pagebreak.es5",
+	  "name": "com_biblestudy.administrator-article-pagebreak.es5",
 	  "type": "script",
-	  "uri": "com_biblestudy/admin-article-pagebreak-es5.min.js",
+	  "uri": "com_biblestudy/administrator-article-pagebreak-es5.min.js",
 	  "dependencies": [
 		"core"
 	  ],
@@ -19,11 +19,11 @@
 	  "version": "dfda2cadb929cf361efab69cd56c9ef003a65dbe"
 	},
 	{
-	  "name": "com_biblestudy.admin-message-pagebreak",
+	  "name": "com_biblestudy.administrator-message-pagebreak",
 	  "type": "script",
-	  "uri": "com_biblestudy/admin-message-pagebreak.min.js",
+	  "uri": "com_biblestudy/administrator-message-pagebreak.min.js",
 	  "dependencies": [
-		"com_biblestudy.admin-message-pagebreak.es5"
+		"com_biblestudy.administrator-message-pagebreak.es5"
 	  ],
 	  "attributes": {
 		"type": "module",
@@ -32,9 +32,9 @@
 	  "version": "3a6400cb085212bd7f5f2f43ab8bfadfb405b7fd"
 	},
 	{
-	  "name": "com_biblestudy.admin-message-readmore.es5",
+	  "name": "com_biblestudy.administrator-message-readmore.es5",
 	  "type": "script",
-	  "uri": "com_biblestudy/admin-message-readmore-es5.min.js",
+	  "uri": "com_biblestudy/administrator-message-readmore-es5.min.js",
 	  "dependencies": [
 		"core"
 	  ],
@@ -45,11 +45,11 @@
 	  "version": "3caf2bd836dad54185a2fbb3c9a625b7576d677c"
 	},
 	{
-	  "name": "com_biblestudy.admin-message-readmore",
+	  "name": "com_biblestudy.administrator-message-readmore",
 	  "type": "script",
-	  "uri": "com_biblestudy/admin-message-readmore.min.js",
+	  "uri": "com_biblestudy/administrator-message-readmore.min.js",
 	  "dependencies": [
-		"com_biblestudy.admin-message-readmore.es5"
+		"com_biblestudy.administrator-message-readmore.es5"
 	  ],
 	  "attributes": {
 		"type": "module"
@@ -57,9 +57,9 @@
 	  "version": "3e285e1e49b30182e409d2d82de5a337fa3a6c89"
 	},
 	{
-	  "name": "com_biblestudy.admin-messages-batch.es5",
+	  "name": "com_biblestudy.administrator-messages-batch.es5",
 	  "type": "script",
-	  "uri": "com_biblestudy/admin-messages-default-batch-footer-es5.min.js",
+	  "uri": "com_biblestudy/administrator-messages-default-batch-footer-es5.min.js",
 	  "dependencies": [
 		"core"
 	  ],
@@ -70,11 +70,11 @@
 	  "version": "3660f7dadca40d79416fff13b55596f0cec73cd9"
 	},
 	{
-	  "name": "com_biblestudy.admin-messages-batch",
+	  "name": "com_biblestudy.administrator-messages-batch",
 	  "type": "script",
-	  "uri": "com_biblestudy/admin-messages-default-batch-footer.min.js",
+	  "uri": "com_biblestudy/administrator-messages-default-batch-footer.min.js",
 	  "dependencies": [
-		"com_biblestudy.admin-messages-batch.es5"
+		"com_biblestudy.administrator-messages-batch.es5"
 	  ],
 	  "attributes": {
 		"type": "module"
@@ -82,9 +82,9 @@
 	  "version": "9ac1245a9dd2a9bf7e7f95c6e7e24f6075eef0ae"
 	},
 	{
-	  "name": "com_biblestudy.admin-teachers-batch.es5",
+	  "name": "com_biblestudy.administrator-teachers-batch.es5",
 	  "type": "script",
-	  "uri": "com_biblestudy/admin-teachers-default-batch-footer-es5.min.js",
+	  "uri": "com_biblestudy/administrator-teachers-default-batch-footer-es5.min.js",
 	  "dependencies": [
 		"core"
 	  ],
@@ -95,11 +95,11 @@
 	  "version": "3660f7dadca40d79416fff13b55596f0cec73cd9"
 	},
 	{
-	  "name": "com_biblestudy.admin-teachers-batch",
+	  "name": "com_biblestudy.administrator-teachers-batch",
 	  "type": "script",
-	  "uri": "com_biblestudy/admin-teachers-default-batch-footer.min.js",
+	  "uri": "com_biblestudy/administrator-teachers-default-batch-footer.min.js",
 	  "dependencies": [
-		"com_biblestudy.admin-teachers-batch.es5"
+		"com_biblestudy.administrator-teachers-batch.es5"
 	  ],
 	  "attributes": {
 		"type": "module"
@@ -107,9 +107,9 @@
 	  "version": "9ac1245a9dd2a9bf7e7f95c6e7e24f6075eef0ae"
 	},
 	{
-	  "name": "com_biblestudy.admin-series-batch.es5",
+	  "name": "com_biblestudy.administrator-series-batch.es5",
 	  "type": "script",
-	  "uri": "com_biblestudy/admin-series-default-batch-footer-es5.min.js",
+	  "uri": "com_biblestudy/administrator-series-default-batch-footer-es5.min.js",
 	  "dependencies": [
 		"core"
 	  ],
@@ -120,11 +120,11 @@
 	  "version": "3660f7dadca40d79416fff13b55596f0cec73cd9"
 	},
 	{
-	  "name": "com_biblestudy.admin-series-batch",
+	  "name": "com_biblestudy.administrator-series-batch",
 	  "type": "script",
-	  "uri": "com_biblestudy/admin-series-default-batch-footer.min.js",
+	  "uri": "com_biblestudy/administrator-series-default-batch-footer.min.js",
 	  "dependencies": [
-		"com_biblestudy.admin-series-batch.es5"
+		"com_biblestudy.administrator-series-batch.es5"
 	  ],
 	  "attributes": {
 		"type": "module"
@@ -132,9 +132,9 @@
 	  "version": "9ac1245a9dd2a9bf7e7f95c6e7e24f6075eef0ae"
 	},
 	{
-	  "name": "com_biblestudy.admin-messages-stage.es5",
+	  "name": "com_biblestudy.administrator-messages-stage.es5",
 	  "type": "script",
-	  "uri": "com_biblestudy/admin-messages-default-stage-footer-es5.min.js",
+	  "uri": "com_biblestudy/administrator-messages-default-stage-footer-es5.min.js",
 	  "dependencies": [
 		"core"
 	  ],
@@ -145,11 +145,11 @@
 	  "version": "361f99af1774ed60da28e3c2b8c6089c1e020b3f"
 	},
 	{
-	  "name": "com_biblestudy.admin-messages-stage",
+	  "name": "com_biblestudy.administrator-messages-stage",
 	  "type": "script",
-	  "uri": "com_biblestudy/admin-messages-default-stage-footer.min.js",
+	  "uri": "com_biblestudy/administrator-messages-default-stage-footer.min.js",
 	  "dependencies": [
-		"com_biblestudy.admin-messages-stage.es5"
+		"com_biblestudy.administrator-messages-stage.es5"
 	  ],
 	  "attributes": {
 		"type": "module"
@@ -157,11 +157,11 @@
 	  "version": "08fce4ef3c52022ecd9f512a44d64299dc9e89ed"
 	},
 	{
-	  "name": "com_biblestudy.admin-messages-modal",
+	  "name": "com_biblestudy.administrator-messages-modal",
 	  "type": "script",
-	  "uri": "com_biblestudy/admin-messages-modal.min.js",
+	  "uri": "com_biblestudy/administrator-messages-modal.min.js",
 	  "dependencies": [
-		"com_biblestudy.admin-messages-modal.es5"
+		"com_biblestudy.administrator-messages-modal.es5"
 	  ],
 	  "attributes": {
 		"type": "module"
@@ -207,9 +207,9 @@
 	  "version": "4d40a071d6672febde9190f361c8adecc94917d8"
 	},
 	{
-	  "name": "com_biblestudy.admin-messages-modal.es5",
+	  "name": "com_biblestudy.administrator-messages-modal.es5",
 	  "type": "script",
-	  "uri": "com_biblestudy/admin-messages-modal-es5.min.js",
+	  "uri": "com_biblestudy/administrator-messages-modal-es5.min.js",
 	  "dependencies": [
 		"core"
 	  ],

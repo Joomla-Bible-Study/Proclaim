@@ -7,6 +7,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
+use Joomla\CMS\Factory;
+
 defined('JPATH_BASE') or die;
 
 
