@@ -51,8 +51,6 @@
 		<folder>sef_ext</folder>
 		<folder>views</folder>
         <folder>services</folder>
-		<folder>src</folder>
-		<folder>tmpl</folder>
 	</files>
 
 	<!-- Media files -->

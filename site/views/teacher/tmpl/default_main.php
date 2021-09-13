@@ -8,6 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
+use Joomla\CMS\Router\Route;
 defined('_JEXEC') or die;
 
 $listing = new CWMListing;
@@ -42,7 +43,7 @@ $listing = new CWMListing;
 			if ($this->params->get('teacherlink', '1') > 0)
 			{
 				echo '<a href="' .
-					JRoute::_('index.php?option=com_biblestudy&view=sermons&filter_teacher=' . (int) $this->item->id . '&t=' . (int) $this->template->id
+					Route::_('index.php?option=com_biblestudy&view=sermons&filter_teacher=' . (int) $this->item->id . '&t=' . (int) $this->template->id
 					) .
 					'"><button class="btn">' . JText::_('JBS_TCH_MORE_FROM_THIS_TEACHER') . ' --></button></a>';
 			}

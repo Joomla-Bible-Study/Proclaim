@@ -8,9 +8,9 @@
  * @link       https://www.christianwebministries.org
  * */
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Multilanguage;
 // No direct access
 defined('_JEXEC') or die;
-
 /**
  * Biblestudy Component Route Helper
  *
@@ -47,8 +47,7 @@ abstract class CWMHelperRoute
 
 		// Create the link
 		$link = 'index.php?option=com_biblestudy&view=sermon&id=' . $id;
-
-		if ($language && $language !== "*" && JLanguageMultilang::isEnabled())
+		if ($language && $language !== "*" && Multilanguage::isEnabled())
 		{
 			$db    = Factory::getDbo();
 			$query = $db->getQuery(true);
@@ -77,7 +76,6 @@ abstract class CWMHelperRoute
 		{
 			$link .= '&Itemid=' . $item;
 		}
-
 		return $link;
 	}
 
@@ -92,7 +90,7 @@ abstract class CWMHelperRoute
 	 */
 	protected static function _findItem($needles = null)
 	{
-		$app   = JFactory::getApplication();
+		$app   = Factory::getApplication();
 		$menus = $app->getMenu('site');
 
 		// Prepare the reverse lookup array.
@@ -116,7 +114,7 @@ abstract class CWMHelperRoute
 
 					if (isset($item->query['id']))
 					{
-						self::$lookup[$view][$item->query['id']] = $item->id;
+                        $item->id = self::$lookup[$view][$item->query['id']];
 					}
 				}
 			}

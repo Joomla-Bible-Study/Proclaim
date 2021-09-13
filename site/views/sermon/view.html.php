@@ -8,6 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
@@ -21,7 +22,7 @@ use Joomla\Registry\Registry;
  *
  * @todo     Still need to fix all the problems.
  */
-class BiblestudyViewSermon extends JViewLegacy
+class BiblestudyViewSermon extends BaseHtmlView
 {
 	/** @var object Item
 	 *
@@ -129,7 +130,7 @@ class BiblestudyViewSermon extends JViewLegacy
 	{
 		$app         = JFactory::getApplication();
 		$user        = JFactory::getUser();
-		$JBSMListing = new JBSMListing;
+		$JBSMListing = new CWMListing;
 		$dispatcher  = JEventDispatcher::getInstance();
 
 		$this->item     = $this->get('Item');

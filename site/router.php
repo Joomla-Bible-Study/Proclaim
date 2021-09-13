@@ -7,6 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+use Joomla\CMS\Component\Router\RouterBase;
 defined('_JEXEC') or die;
 
 /**
@@ -18,10 +19,11 @@ defined('_JEXEC') or die;
  *
  * @since 7.0
  */
-function biblestudyBuildRoute(&$query)
+class Router extends RouterBase
+{
+function build(&$query)
 {
 	$segments = array();
-
 	if (isset($query['view']))
 	{
 		if ($query['view'] == 'mediafile')
@@ -73,7 +75,7 @@ function biblestudyBuildRoute(&$query)
  *
  * @since 7.0
  */
-function biblestudyParseRoute($segments)
+function Parse(&$segments)
 {
 	$vars = array();
 
@@ -109,4 +111,5 @@ function biblestudyParseRoute($segments)
 
 		return $vars;
 	}
+}
 }
