@@ -7,6 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Site\Controller;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
 // No Direct Access
@@ -18,7 +19,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class BiblestudyControllerTeachers extends BaseController
+class TeachersController extends BaseController
 {
 	/**
 	 * Proxy for getModel
@@ -31,7 +32,7 @@ class BiblestudyControllerTeachers extends BaseController
 	 *
 	 * @since 7.0
 	 */
-	public function &getModel($name = 'Teacher', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
+	public function &getModel($name = 'Teacher', $prefix = 'ProclaimModel', $config = array('ignore_request' => true))
 	{
 		$model = parent::getModel($name, $prefix, $config);
 

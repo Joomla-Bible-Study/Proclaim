@@ -7,9 +7,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-// No Direct Access
+namespace CWM\Component\Proclaim\Site\Controller;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
+// No Direct Access
 defined('_JEXEC') or die;
 
 /**
@@ -18,7 +21,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class Teacher extends BaseController
+class TeacherController extends BaseController
 {
 	/**
 	 * Display the edit form

@@ -7,11 +7,17 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Site\Controller;
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
+use Joomla\CMS\MVC\Controller\BaseController;
 // No Direct Access
 defined('_JEXEC') or die;
 
 // Base this model on the backend version.
-JLoader::register('BiblestudyControllerComments', JPATH_ADMINISTRATOR . '/components/com_biblestudy/controllers/CommentsController.php');
+JLoader::register('ProclaimControllerComments', JPATH_ADMINISTRATOR . '/components/com_proclaim/controllers/CommentsController.php');
 
 /**
  * Controller for Comments
@@ -19,7 +25,7 @@ JLoader::register('BiblestudyControllerComments', JPATH_ADMINISTRATOR . '/compon
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class BiblestudyControllerCommentlist extends BiblestudyControllerComments
+class CommentlistController extends BaseController
 {
 	/**
 	 * View item
@@ -52,7 +58,7 @@ class BiblestudyControllerCommentlist extends BiblestudyControllerComments
 	 *
 	 * @since 7.0
 	 */
-	public function &getModel($name = 'CommentList', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
+	public function &getModel($name = 'CommentList', $prefix = 'ProclaimModel', $config = array('ignore_request' => true))
 	{
 		$model = parent::getModel($name, $prefix, $config);
 

@@ -7,11 +7,16 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Site\Controller;
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Controller\BaseController;
 // No Direct Access
 defined('_JEXEC') or die;
 
 // Base this model on the backend version.
-JLoader::register('BiblestudyControllerMessages', JPATH_ADMINISTRATOR . '/components/com_biblestudy/controllers/MessagesController.php');
+JLoader::register('ProclaimControllerMessages', JPATH_ADMINISTRATOR . '/components/com_proclaim/controllers/MessagesController.php');
 
 /**
  * Controller class for Messages
@@ -19,7 +24,7 @@ JLoader::register('BiblestudyControllerMessages', JPATH_ADMINISTRATOR . '/compon
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class BiblestudyControllerMessagelist extends BiblestudyControllerMessages
+class MessagelistController extends BaseController
 {
 	/**
 	 * View item
@@ -39,7 +44,7 @@ class BiblestudyControllerMessagelist extends BiblestudyControllerMessages
 	 * @var        string    The prefix to use with controller messages.
 	 * @since    1.6
 	 */
-	protected $text_prefix = 'COM_BIBLESTUDY';
+	protected $text_prefix = 'COM_PROCLAIM';
 
 	/**
 	 * Proxy for getModel
@@ -52,7 +57,7 @@ class BiblestudyControllerMessagelist extends BiblestudyControllerMessages
 	 *
 	 * @since 7.0
 	 */
-	public function &getModel($name = 'Messagelist', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
+	public function &getModel($name = 'Messagelist', $prefix = 'ProclaimModel', $config = array('ignore_request' => true))
 	{
 		$model = parent::getModel($name, $prefix, $config);
 

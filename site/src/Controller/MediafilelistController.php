@@ -7,6 +7,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
+use Joomla\CMS\MVC\Controller\BaseController;
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -16,7 +21,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class BiblestudyControllerMediafilelist extends JControllerAdmin
+class MediafilelistController extends BaseController
 {
 	/**
 	 * View item
@@ -36,7 +41,7 @@ class BiblestudyControllerMediafilelist extends JControllerAdmin
 	 * @var        string    The prefix to use with controller messages.
 	 * @since    1.6
 	 */
-	protected $text_prefix = 'COM_BIBLESTUDY';
+	protected $text_prefix = 'COM_PROCLAIM';
 
 	/**
 	 * Proxy for getModel
@@ -51,7 +56,7 @@ class BiblestudyControllerMediafilelist extends JControllerAdmin
 	 */
 	public function &getModel(
 		$name = 'Mediafileform',
-		$prefix = 'BiblestudyModel',
+		$prefix = 'ProclaimModel',
 		$config = array('ignore_request' => true))
 	{
 		$model = parent::getModel($name, $prefix, $config);

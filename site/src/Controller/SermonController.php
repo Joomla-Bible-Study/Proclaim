@@ -7,14 +7,18 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Site\Controller;
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Controller\BaseController;
+use Joomla\Registry\Registry;
+use Joomla\CMS\Plugin\PluginHelper;
 // No Direct Access
 defined('_JEXEC') or die;
 
-use Joomla\Registry\Registry;
-use Joomla\CMS\MVC\Controller;
-use Joomla\CMS\Factory;
-use Joomla\CMS\Plugin\PluginHelper;
-use Joomla\CMS\Language\Text;
+
+
 
 /**
  * Class for Sermon
@@ -22,7 +26,7 @@ use Joomla\CMS\Language\Text;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class sermon extends Controller\BaseController
+class SermonController extends BaseController
 {
 	/**
 	 * View item
@@ -65,11 +69,11 @@ class sermon extends Controller\BaseController
 	 */
 	protected function getReturnPage()
 	{
-		$return = JFactory::getApplication()->input->get('return', null, 'base64');
+		$return = Factory::getApplication()->input->get('return', null, 'base64');
 
 		if (empty($return) || !JUri::isInternal(base64_decode($return)))
 		{
-			return JUri::base() . 'index.php?option=com_biblestudy&view=sermon';
+			return JUri::base() . 'index.php?option=com_proclaim&view=sermon';
 		}
 
 		return base64_decode($return);

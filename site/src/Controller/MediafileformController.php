@@ -7,6 +7,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Site\Controller;
+use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Router\Route;
+use Joomla\Session\Session;
+use Joomla\CMS\MVC\Model\ItemModel;
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -16,7 +24,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class BiblestudyControllerMediafileform extends JControllerForm
+class MediafileformController extends FormController
 {
 	/**
 	 * View item
@@ -36,7 +44,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	 * @var        string    The prefix to use with controller messages.
 	 * @since    1.6
 	 */
-	protected $text_prefix = 'COM_BIBLESTUDY';
+	protected $text_prefix = 'COM_PROCLAIM';
 
 	/**
 	 * Handles XHR requests (i.e. File uploads)
@@ -48,7 +56,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	 */
 	public function xhr()
 	{
-		JSession::checkToken('get') or die('Invalid Token');
+		Session::checkToken('get') or die('Invalid Token');
 
 		$addonType = $this->input->get('type', 'Legacy', 'string');
 		$handler   = $this->input->get('handler');
@@ -65,7 +73,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 		}
 		else
 		{
-			throw new Exception(JText::sprintf('Handler: "' . $handler . '" does not exist!'), 404);
+			throw new Exception(Text::sprintf('Handler: "' . $handler . '" does not exist!'), 404);
 		}
 	}
 
@@ -106,9 +114,9 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	{
 		$return = Factory::getApplication()->input->get('return', null, 'base64');
 
-		if (empty($return) || !JUri::isInternal(base64_decode($return)))
+		if (empty($return) || !Uri::isInternal(base64_decode($return)))
 		{
-			return JUri::base() . 'index.php?option=com_biblestudy&view=mediafilelist';
+			return Uri::base() . 'index.php?option=com_biblestudy&view=mediafilelist';
 		}
 		else
 		{
@@ -177,7 +185,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	 */
 	public function getModel(
 		$name = 'Mediafileform',
-		$prefix = 'BiblestudyModel',
+		$prefix = 'ProclaimModel',
 		$config = array('ignore_request' => true))
 	{
 		$model = parent::getModel($name, $prefix, $config);
@@ -214,14 +222,14 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	 *
 	 * @since    3.1
 	 */
-	protected function postSaveHook(JModelLegacy $model, $validData = array())
+	protected function postSaveHook(ItemModel $model, $validData = array())
 	{
 		$return = $this->input->getCmd('return');
 		$task   = $this->input->get('task');
 
 		if ($return && $task != 'apply')
 		{
-			Factory::getApplication()->enqueueMessage(JText::_('JBS_MED_SAVE'), 'message');
+			Factory::getApplication()->enqueueMessage(Text::_('JBS_MED_SAVE'), 'message');
 			$this->setRedirect(base64_decode($return));
 		}
 
@@ -281,7 +289,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 		$app->setUserState('com_biblestudy.edit.mediafile.server_id', $server_id);
 
 		$redirect = $this->getRedirectToItemAppend($data['id']);
-		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item . $redirect, false));
+		$this->setRedirect(Route::_('index.php?option=' . $this->option . '&view=' . $this->view_item . $redirect, false));
 	}
 
 	/**

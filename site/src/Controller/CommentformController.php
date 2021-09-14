@@ -7,6 +7,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Site\Controller;
+use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Router\Route;
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -16,7 +22,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class BiblestudyControllerCommentform extends JControllerForm
+class CommentformController extends FormController
 {
 	/**
 	 * View item
@@ -41,7 +47,7 @@ class BiblestudyControllerCommentform extends JControllerForm
 	 */
 	public function __construct($config = array())
 	{
-		$input = new JInput;
+		$input = Factory::getApplication();
 		$input->set('a_id', $input->get('a_id', 0, 'int'));
 		parent::__construct($config);
 	}
@@ -75,9 +81,9 @@ class BiblestudyControllerCommentform extends JControllerForm
 	{
 		$return = Factory::getApplication()->input->get('return', null, 'base64');
 
-		if (empty($return) || !JUri::isInternal(base64_decode($return)))
+		if (empty($return) || !Uri::isInternal(base64_decode($return)))
 		{
-			return JUri::base() . 'index.php?option=com_biblestudy&view=commentlist';
+			return Uri::base() . 'index.php?option=com_biblestudy&view=commentlist';
 		}
 		else
 		{
@@ -96,14 +102,14 @@ class BiblestudyControllerCommentform extends JControllerForm
 	 */
 	public function batch($model = null)
 	{
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		JSession::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
 		// Set the model
-		$model = $this->getModel('Commentlist', 'BiblestudyModel', array());
+		$model = $this->getModel('Commentlist', 'ProclaimModel', array());
 
 		// Preset the redirect
 		$this->setRedirect(
-			JRoute::_('index.php?option=com_biblestudy&view=commentlist' . $this->getRedirectToListAppend(), false)
+			Route::_('index.php?option=com_proclaim&view=commentlist' . $this->getRedirectToListAppend(), false)
 		);
 
 		/** @var $model JModelLegacy */
@@ -230,7 +236,7 @@ class BiblestudyControllerCommentform extends JControllerForm
 	 */
 	protected function getRedirectToItemAppend($recordId = null, $urlVar = 'a_id')
 	{
-		$this->input = new JInput;
+		$this->input = Factory::getApplication();
 
 		// Need to override the parent method completely.
 		$tmpl   = $this->input->get('tmpl');

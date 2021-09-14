@@ -7,11 +7,20 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Site\Controller;
+use Joomla\CMS\MVC\Controller\BaseController;
+use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Router\Route;
+use Joomla\Session\Session;
+use Joomla\CMS\MVC\Model\ItemModel;
 // No Direct Access
 defined('_JEXEC') or die;
 
 // Base this model on the backend version.
-JLoader::register('BiblestudyControllerMessage', JPATH_ADMINISTRATOR . '/components/com_biblestudy/controllers/MessageController.php');
+JLoader::register('ProclaimControllerMessage', JPATH_ADMINISTRATOR . '/components/com_proclaim/controllers/MessageController.php');
 
 /**
  * Controller class for MessageForm
@@ -19,7 +28,7 @@ JLoader::register('BiblestudyControllerMessage', JPATH_ADMINISTRATOR . '/compone
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class BiblestudyControllerMessageform extends BiblestudyControllerMessage
+class MessageformController extends BaseController
 {
 	/**
 	 * View item
@@ -88,9 +97,9 @@ class BiblestudyControllerMessageform extends BiblestudyControllerMessage
 	{
 		$return = Factory::getApplication()->input->get('return', null, 'base64');
 
-		if (empty($return) || !JUri::isInternal(base64_decode($return)))
+		if (empty($return) || !Uri::isInternal(base64_decode($return)))
 		{
-			return JUri::base() . 'index.php?option=com_biblestudy&view=messagelist';
+			return Uri::base() . 'index.php?option=com_proclaim&view=messagelist';
 		}
 		else
 		{
@@ -126,7 +135,7 @@ class BiblestudyControllerMessageform extends BiblestudyControllerMessage
 	 *
 	 * @since 7.0
 	 */
-	public function &getModel($name = 'MessageForm', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
+	public function &getModel($name = 'MessageForm', $prefix = 'ProclaimModel', $config = array('ignore_request' => true))
 	{
 		$model = parent::getModel($name, $prefix, $config);
 
