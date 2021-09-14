@@ -9,21 +9,21 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-
-JHtml::addIncludePath(JPATH_COMPONENT . '/helpers');
-JHtml::_('behavior.caption');
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\View\HtmlView;
+//HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers');
+//HTMLHelper::_('behavior.caption');
 
 // Create shortcuts to some parameters.
 
 /** @type Joomla\Registry\Registry $params */
 $params = $this->item->params;
-$user = JFactory::getUser();
+$user = Factory::getUser();
 $canEdit = $params->get('access-edit');
 
-$JViewLegacy = new JViewLegacy;
-
-$JViewLegacy->loadHelper('title');
-$JViewLegacy->loadHelper('teacher');
+HtmlView::loadHelper('title');
+HtmlView::loadHelper('teacher');
 $row = $this->item;
 ?>
 
@@ -57,20 +57,20 @@ if ($this->item->params->get('showrelated') === '1')
 			<?php // Note the actions class is deprecated. Use dropdown-menu instead. ?>
 			<ul class="dropdown-menu actions">
 				<?php if ($params->get('show_print_view')) : ?>
-					<li class="print-icon"> <?php echo JHtml::_('icon.print_popup', $this->item, $params); ?> </li>
+					<li class="print-icon"> <?php echo HTMLHelper::_('icon.print_popup', $this->item, $params); ?> </li>
 				<?php endif; ?>
 				<?php if ($params->get('show_email_icon')) : ?>
-					<li class="email-icon"> <?php echo JHtml::_('icon.email', $this->item, $params); ?> </li>
+					<li class="email-icon"> <?php echo HTMLHelper::_('icon.email', $this->item, $params); ?> </li>
 				<?php endif; ?>
 				<?php if ($canEdit) : ?>
-					<li class="edit-icon"> <?php echo JHtml::_('icon.edit', $this->item, $params); ?> </li>
+					<li class="edit-icon"> <?php echo HTMLHelper::_('icon.edit', $this->item, $params); ?> </li>
 				<?php endif; ?>
 			</ul>
 		</div>
 	<?php endif; ?>
 <?php else : ?>
 	<div id="pop-print" class="btn hidden-print">
-		<?php echo JHtml::_('icon.print_screen', $this->item, $params); ?>
+		<?php echo HTMLHelper::_('icon.print_screen', $this->item, $params); ?>
 	</div>
 <?php endif; ?>
 
@@ -86,7 +86,7 @@ if ($this->item->params->get('socialnetworking') > 0)
 ?>
 	<!-- Begin Fluid layout -->
 
-<?php $listing = new JBSMListing;
+<?php $listing = new CWMListing;
 $list = $listing->getFluidListing($this->item, $this->item->params, $this->template, $type = 'sermon');
 echo $list;
 ?>

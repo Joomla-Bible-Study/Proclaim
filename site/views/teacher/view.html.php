@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Factory;
-//use CWM\Component\Biblestudy\Site\CWMPagebuilder;
+use Joomla\CMS\Html\HTMLHelper;
 use Joomla\CMS\Language\Text;
 require_once(BIBLESTUDY_PATH_ADMIN_HELPERS.'/CWMParams.php');
 require_once(BIBLESTUDY_PATH_LIB.'/CWMPagebuilder.php');
@@ -87,8 +87,8 @@ class biblestudyViewTeacher extends BaseHtmlView
 		/** @var Registry $params */
 		$params = $this->state->template->params;
 
-		JHtml::_('biblestudy.framework');
-		JHtml::_('biblestudy.loadCss', $params, null, 'font-awesome');
+		HtmlHelper::_('biblestudy.framework');
+		HtmlHelper::_('biblestudy.loadCss', $params, null, 'font-awesome');
 
 
         $input = Factory::getApplication();
@@ -247,7 +247,7 @@ class biblestudyViewTeacher extends BaseHtmlView
 		$this->print    = $print;
 		$this->params   = $params;
 		$this->template = $this->state->template;
-		$this->document = JFactory::getDocument();
+		$this->document = Factory::getDocument();
 
 		$this->_prepareDocument();
 
@@ -263,7 +263,7 @@ class biblestudyViewTeacher extends BaseHtmlView
 	 */
 	protected function _prepareDocument()
 	{
-		$app   = JFactory::getApplication('site');
+		$app   = Factory::getApplication('site');
 		$menus = $app->getMenu();
 
 		/** @var $itemparams Registry */
@@ -280,7 +280,7 @@ class biblestudyViewTeacher extends BaseHtmlView
 		}
 		else
 		{
-			$this->params->def('page_heading', JText::_('JGLOBAL_ARTICLES'));
+			$this->params->def('page_heading', Text::_('JGLOBAL_ARTICLES'));
 		}
 
 		$title = $this->params->get('page_title', '');

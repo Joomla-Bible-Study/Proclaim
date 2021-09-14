@@ -7,6 +7,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 // No Direct Access
 defined('_JEXEC') or die;
 ?>
@@ -17,7 +19,7 @@ defined('_JEXEC') or die;
 
 	if (!$link_text)
 	{
-		$link_text = JText::_('JBS_STY_RETURN_STUDIES_LIST');
+		$link_text = Text::_('JBS_STY_RETURN_STUDIES_LIST');
 	}
 
 	if ($this->item->params->get('view_link') > 0)
@@ -36,11 +38,11 @@ defined('_JEXEC') or die;
 
 		if (!$Itemid)
 		{
-			$link = JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $t);
+			$link = Route::_('index.php?option=com_biblestudy&view=sermons&t=' . $t);
 		}
 		else
 		{
-			$link = JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $t);
+			$link = Route::_('index.php?option=com_biblestudy&view=sermons&t=' . $t);
 		}
 		?>
 		<a href="<?php echo $link; ?>"> <?php echo $link_text; ?> </a> <?php } // End of if view_link not 0 ?>

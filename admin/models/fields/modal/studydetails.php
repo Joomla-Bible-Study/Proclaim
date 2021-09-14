@@ -8,6 +8,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -17,7 +21,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class JFormFieldModal_Studydetails extends JFormField
+class studydetails extends FormField
 {
 	/**
 	 * The form field type.
@@ -37,12 +41,12 @@ class JFormFieldModal_Studydetails extends JFormField
 	protected function getInput()
 	{
 		// Load the modal behavior script.
-		JHtml::_('behavior.modal', 'a.modal');
+		HtmlHelper::_('bootstrap.modal', 'a.modal');
 
 		// Load the javascript and css
-		JHtml::_('behavior.framework');
-		JHtml::_('script', 'system/modal.js', false, true);
-		JHtml::_('stylesheet', 'system/modal.css', array(), true);
+        HtmlHelper::_('behavior.framework');
+        HtmlHelper::_('script', 'system/modal.js', false, true);
+        HtmlHelper::_('stylesheet', 'system/modal.css', array(), true);
 
 		// Build the script.
 		$script   = array();
@@ -53,7 +57,7 @@ class JFormFieldModal_Studydetails extends JFormField
 		$script[] = '	}';
 
 		// Add the script to the document head.
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
+		Factory::getDocument()->addScriptDeclaration(implode("\n", $script));
 
 		// Build the script.
 		$script   = array();
@@ -65,10 +69,10 @@ class JFormFieldModal_Studydetails extends JFormField
 		$script[] = '	});';
 
 		// Add the script to the document head.
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
+		Factory::getDocument()->addScriptDeclaration(implode("\n", $script));
 
 		// Get the title of the linked chart
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 		$db->setQuery(
 			'SELECT studytitle AS name' .
 			' FROM #__bsms_studies' .
@@ -83,12 +87,12 @@ class JFormFieldModal_Studydetails extends JFormField
 
 		if (empty($title))
 		{
-			$title = JText::_('JBS_CMN_SELECT_STUDY');
+			$title = Text::_('JBS_CMN_SELECT_STUDY');
 		}
 
 		$link = 'index.php?option=com_biblestudy&amp;view=messages&amp;layout=modal&amp;tmpl=component&amp;function=jSelectChart_' . $this->id;
 
-		JHtml::_('behavior.modal', 'a.modal');
+		HtmlHelper::_('bootstrap.modal', 'a.modal');
 		$html = "\n" . '<div class="fltlft"><input type="text" id="' . $this->id . '_name" value="' .
 			htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '" disabled="disabled" /></div>';
 		$html .= '<div class="button2-left"><div class="blank"><a class="modal" title="' . JText::_('JBS_CMN_SELECT_STUDY') .

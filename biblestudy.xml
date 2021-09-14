@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="3.3" method="upgrade">
 	<!-- Generic Metadata -->
-	<name>COM_BIBLESTUDY</name>
+	<name>COM_PROCLAIM</name>
 	<author>CWM Team</author>
 	<authorEmail>info@christianwebministries.org</authorEmail>
 	<authorUrl>https://www.christianwebministries.org</authorUrl>
@@ -22,9 +22,9 @@
     everywhere else for your component. Whatever the name of
     this XML file is, the namespace must match (ignoring CamelCase).
     -->
-    <namespace>CWM\Component\biblestudy</namespace>
+    <namespace path="src/">CWM\Component\Proclaim</namespace>
 	<!-- Installer Hooks -->
-	<scriptfile>biblestudy.script.php</scriptfile>
+	<scriptfile>proclaim.script.php</scriptfile>
 
 	<!-- Installer Hooks -->
 	<install>
@@ -34,7 +34,7 @@
 	</install>
 	<!-- Front end translation files -->
 	<languages folder="admin/language">
-		<language tag="en-GB">en-GB/en-GB.com_biblestudy.ini</language>
+		<language tag="en-GB">en-GB/en-GB.com_proclaim.ini</language>
 	</languages>
 	<updateservers>
 		<server type="extension" priority="1" name="CWM Proclaim Package">https://www.christianwebministries.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=1&amp;dummy=extension.xml</server>
@@ -62,6 +62,8 @@
 		<folder>js</folder>
 		<folder>less</folder>
 		<folder>player</folder>
+		<folder>src</folder>
+		<folder>tmpl</folder>
 	</media>
 
 	<administration>

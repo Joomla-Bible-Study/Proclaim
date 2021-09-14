@@ -7,6 +7,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Language\Text;
 // No Direct Access
 defined('_JEXEC') or die;
 JHtml::_('behavior.keepalive');
@@ -31,15 +34,15 @@ JHtml::_('behavior.keepalive');
 $commentjava = "javascript:ReverseDisplay('JBScomments')";
 
 //php code
-JPluginHelper::importPlugin('captcha');
-$dispatcher = JEventDispatcher::getInstance();
-$dispatcher->trigger('onInit', 'dynamic_recaptcha_1');
+PluginHelper::importPlugin('captcha');
+
+Factory::getApplication('onInit', 'dynamic_recaptcha_1');
 
 switch ($this->item->params->get('link_comments', 0))
 {
 	case 0:
 		echo '<strong><a class="heading' . $this->item->params->get('pageclass_sfx') . '" href="' . $commentjava . '">>>'
-			. JText::_('JBS_CMT_SHOW_HIDE_COMMENTS') . '<<</a></strong>';
+			. Text::_('JBS_CMT_SHOW_HIDE_COMMENTS') . '<<</a></strong>';
 		?>
         <div id="JBScomments" style="display:none;">
             <br/>
@@ -55,12 +58,12 @@ switch ($this->item->params->get('link_comments', 0))
 
     <div class="row-fluid">
         <div class="span12">
-			<h2><?php echo JText::_('JBS_CMN_COMMENTS'); ?></h2>
+			<h2><?php echo Text::_('JBS_CMN_COMMENTS'); ?></h2>
         </div>
     </div>
 
 <?php
-$input = new JInput;
+$input = Factory::getApplication();
 
 if (!$this->item->id)
 {
@@ -72,7 +75,7 @@ if (!count($this->comments))
 {
 	?>
     <div class="row-fluid">
-        <div class="span12"><?php echo JText::_('JBS_STY_NO_COMMENT') ?></div>
+        <div class="span12"><?php echo Text::_('JBS_STY_NO_COMMENT') ?></div>
     </div>
 		</div>
 			<?php
@@ -82,7 +85,7 @@ else
 	foreach ($this->comments as $comment)
 	{
 
-		$comment_date_display = JHtml::_('date', $comment->comment_date, JText::_('DATE_FORMAT_LC3'));
+		$comment_date_display = JHtml::_('date', $comment->comment_date, Text::_('DATE_FORMAT_LC3'));
 		?>
                     <div class="row-fluid">
                         <div class="span6"><strong><?php echo $comment->full_name ?></strong> <i>
@@ -90,7 +93,7 @@ else
                         </div>
                     </div>
     <div class="row-fluid">
-        <div class="span12"><?php echo JText::_('JBS_CMN_COMMENT') . ': ' . $comment->comment_text ?></div>
+        <div class="span12"><?php echo Text::_('JBS_CMN_COMMENT') . ': ' . $comment->comment_text ?></div>
     </div>
     <div class="row-fluid">
         <div class="span12">
@@ -108,7 +111,7 @@ else
 <?php
 // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 $allow          = 0;
-$user           = JFactory::getUser();
+$user           = Factory::getUser();
 $groups         = $user->getAuthorisedViewLevels();
 $show_comments  = $this->item->params->get('show_comments');
 $comment_access = $this->item->params->get('comment_access');
@@ -134,7 +137,7 @@ if ($allow > 9)
 		{
 			?>
 
-                    <strong><div class="span12"><?php echo JText::_('JBS_CMT_REGISTER_TO_POST_COMMENTS') ?></div></strong>
+                    <strong><div class="span12"><?php echo Text::_('JBS_CMT_REGISTER_TO_POST_COMMENTS') ?></div></strong>
 
 			<?php
 		}
@@ -160,12 +163,12 @@ if ($allow > 9)
 						$user_email = '';
 					}
 					?><strong>
-					<?php echo JText::_('JBS_CMT_POST_COMMENT') ?>
+					<?php echo Text::_('JBS_CMT_POST_COMMENT') ?>
                 </strong>
                 </div>
             <div class="row-fluid">
                 <div class="span2">
-					<?php echo JText::_('JBS_CMT_FULL_NAME') ?>
+					<?php echo Text::_('JBS_CMT_FULL_NAME') ?>
                 </div>
                 <div class="span7">
                     <input class="text_area" size="50" type="text" name="full_name" id="full_name"
@@ -174,7 +177,7 @@ if ($allow > 9)
             </div>
             <div class="row-fluid">
                 <div class="span2">
-					<?php echo JText::_('JBS_CMT_EMAIL') ?>
+					<?php echo Text::_('JBS_CMT_EMAIL') ?>
                 </div>
                 <div class="span7">
                     <input class="text_area" type="text"  name="user_email" id="user_email"
@@ -183,7 +186,7 @@ if ($allow > 9)
             </div>
             <div class="row-fluid">
                 <div class="span2">
-					<?php echo JText::_('JBS_CMN_COMMENT') ?>:
+					<?php echo Text::_('JBS_CMN_COMMENT') ?>:
                 </div>
                 <div class="span7">
                     <textarea class="text_area" cols="20" rows="4" name="comment_text"
@@ -202,7 +205,7 @@ if ($allow > 9)
 						}
 						else
 						{
-							echo JText::_('JBS_CMN_NO_KEY');
+							echo Text::_('JBS_CMN_NO_KEY');
 						}
 					}
 					?>
@@ -210,7 +213,7 @@ if ($allow > 9)
             </div>
             <div class="row-fluid">
             <div class="span12">
-<?php $input = new JInput(); $t = $input->getString('t'); ?>
+<?php $input = Factory::getApplication(); $t = $input->getString('t'); ?>
                 <input type="hidden" name="study_id" id="study_id" value="<?php echo $this->item->id ?>"/>
                 <input type="hidden" name="t" value="<?php echo $t;?>">
                 <input type="hidden" name="task" value="comment"/>

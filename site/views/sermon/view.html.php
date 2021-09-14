@@ -9,9 +9,13 @@
  * */
 // No Direct Access
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Plugin\PluginHelper;
 defined('_JEXEC') or die;
-
+require_once(BIBLESTUDY_PATH_LIB.'CWMListing.php');
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\Registry\Registry;
+use Joomla\CMS\Factory;
 
 /**
  * View class for Sermon
@@ -128,11 +132,9 @@ class BiblestudyViewSermon extends BaseHtmlView
 	 */
 	public function display($tpl = null)
 	{
-		$app         = JFactory::getApplication();
-		$user        = JFactory::getUser();
+		$app         = Factory::getApplication();
+		$user        = Factory::getUser();
 		$JBSMListing = new CWMListing;
-		$dispatcher  = JEventDispatcher::getInstance();
-
 		$this->item     = $this->get('Item');
 		$this->print    = $app->input->getBool('print');
 		$this->state    = $this->get('State');
@@ -257,7 +259,7 @@ class BiblestudyViewSermon extends BaseHtmlView
 		// Check the view access to the article (the model has already computed the values).
 		if ($item->params->get('access-view') !== true && (($item->params->get('show_noauth') !== true && $user->get('guest'))))
 		{
-			$app->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
+			$app->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'error');
 		}
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
@@ -267,7 +269,7 @@ class BiblestudyViewSermon extends BaseHtmlView
 		{
 			if (!in_array($this->item->access, $groups))
 			{
-				$app->enqueueMessage(JText::_('JBS_CMN_ACCESS_FORBIDDEN'), 'error');
+				$app->enqueueMessage(Text::_('JBS_CMN_ACCESS_FORBIDDEN'), 'error');
 			}
 		}
 
@@ -282,8 +284,8 @@ class BiblestudyViewSermon extends BaseHtmlView
 		$template      = $this->get('template');
 		$this->related = $relatedstudies->getRelated($this->item, $item->params);
 
-		JHtml::_('biblestudy.framework');
-		JHtml::_('biblestudy.loadCss', $this->params, null, 'font-awesome');
+		HtmlHelper::_('biblestudy.framework');
+		HtmlHelper::_('biblestudy.loadCss', $this->params, null, 'font-awesome');
 
 		// Only load page builder if the default template is NOT being used
 		if ($this->item->params->get('useexpert_details', '0') !== '0' || $this->params->get('sermontemplate', '0') !== '0')
@@ -343,33 +345,34 @@ class BiblestudyViewSermon extends BaseHtmlView
 			}
 		}
 
+        PluginHelper::importPlugin('content');
 		$article       = new stdClass;
 		$article->text = $this->item->scripture1;
-		$dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $this->item->params, $limitstart = null));
+        Factory::getApplication()->triggerEvent('onContentPrepare', array('com_biblestudy.sermons', & $article, & $this->item->params, $limitstart = null));
 		$this->item->scripture1 = $article->text;
 		$article->text          = $this->item->scripture2;
-		$dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $this->item->params, $limitstart = null));
+        Factory::getApplication()->triggerEvent('onContentPrepare', array('com_biblestudy.sermons', & $article, & $this->item->params, $limitstart = null));
 		$this->item->scripture2 = $article->text;
 		$article->text          = $this->item->studyintro;
-		$dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $this->item->params, $limitstart = null));
+        Factory::getApplication()->triggerEvent('onContentPrepare', array('com_biblestudy.sermons', & $article, & $this->item->params, $limitstart = null));
 		$this->item->studyintro = $article->text;
 		$article->text          = $this->item->secondary_reference;
-		$dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $this->item->params, $limitstart = null));
+        Factory::getApplication()->triggerEvent('onContentPrepare', array('com_biblestudy.sermons', & $article, & $this->item->params, $limitstart = null));
 		$this->item->secondary_reference = $article->text;
 		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
 		$this->loadHelper('params');
 
 		// Get the podcast subscription
-		JHtml::stylesheet('media/css/podcast.css');
+        HtmlHelper::_('styleshtt','media/css/podcast.css');
 		$podcast         = new JBSMPodcastSubscribe;
 		$this->subscribe = $podcast->buildSubscribeTable($this->item->params->get('subscribeintro', 'Our Podcasts'));
 
 		// Passage link to BibleGateway
-		$plugin = JPluginHelper::getPlugin('content', 'scripturelinks');
+		$plugin = PluginHelper::getPlugin('content', 'scripturelinks');
 
 		if ($plugin)
 		{
-			$plugin = JPluginHelper::getPlugin('content', 'scripturelinks');
+			$plugin = PluginHelper::getPlugin('content', 'scripturelinks');
 
 			// Convert parameter fields to objects.
 			$registry = new Registry;
@@ -380,7 +383,7 @@ class BiblestudyViewSermon extends BaseHtmlView
 		}
 
 		// Added database queries from the default template - moved here instead
-		$database = JFactory::getDbo();
+		$database = Factory::getDbo();
 		$query    = $database->getQuery(true);
 		$query->select('id')->from('#__menu')->where('link =' . $database->q('index.php?option=com_biblestudy&view=sermons'))->where('published = 1');
 		$database->setQuery($query);
@@ -405,15 +408,15 @@ class BiblestudyViewSermon extends BaseHtmlView
 				case 0:
 					break;
 				case 1:
-					JPluginHelper::importPlugin('content');
+					PluginHelper::importPlugin('content');
 					break;
 				case 2:
-					JPluginHelper::importPlugin('content', 'scripturelinks');
+					PluginHelper::importPlugin('content', 'scripturelinks');
 					break;
 			}
 
 			$limitstart = $app->input->get('limitstart', 'int');
-			$dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermon', & $article, & $this->item->params, $limitstart));
+            Factory::getApplication()->triggerEvent('onContentPrepare', array('com_biblestudy.sermon', & $article, & $this->item->params, $limitstart));
 			$article->studytext    = $article->text;
 			$this->item->studytext = $article->text;
 		}
@@ -457,7 +460,7 @@ class BiblestudyViewSermon extends BaseHtmlView
 	 */
 	protected function _displayPagebreak($tpl)
 	{
-		$this->document->setTitle(JText::_('JBS_CMN_READ_MORE'));
+		$this->document->setTitle(Text::_('JBS_CMN_READ_MORE'));
 		parent::display($tpl);
 	}
 
@@ -471,7 +474,7 @@ class BiblestudyViewSermon extends BaseHtmlView
 	 */
 	protected function _prepareDocument()
 	{
-		$app     = JFactory::getApplication();
+		$app     = Factory::getApplication();
 		$menus   = $app->getMenu();
 		$pathway = $app->getPathway();
 		$title   = null;
@@ -489,7 +492,7 @@ class BiblestudyViewSermon extends BaseHtmlView
 		}
 		else
 		{
-			$this->params->def('page_heading', JText::_('JBS_CMN_MESSAGE_TITLE'));
+			$this->params->def('page_heading', Text::_('JBS_CMN_MESSAGE_TITLE'));
 		}
 
 		$title = $this->params->get('page_title', '');
@@ -523,11 +526,11 @@ class BiblestudyViewSermon extends BaseHtmlView
 		}
 		elseif ($app->get('sitename_pagetitles', 0) === 1)
 		{
-			$title = JText::sprintf('JPAGETITLE', $app->get('sitename'), $title);
+			$title = Text::sprintf('JPAGETITLE', $app->get('sitename'), $title);
 		}
 		elseif ($app->get('sitename_pagetitles', 0) === 2)
 		{
-			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
+			$title = Text::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
 
 		if (empty($title))
@@ -581,7 +584,7 @@ class BiblestudyViewSermon extends BaseHtmlView
 			$this->item->title .= ' - ' . $this->item->page_title;
 			$this->document->setTitle(
 				$this->item->page_title . ' - '
-				. JText::sprintf('PLG_CONTENT_PAGEBREAK_PAGE_NUM', $this->state->get('list.offset') + 1)
+				. Text::sprintf('PLG_CONTENT_PAGEBREAK_PAGE_NUM', $this->state->get('list.offset') + 1)
 			);
 		}
 

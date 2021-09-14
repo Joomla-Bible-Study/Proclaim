@@ -7,6 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+use Joomla\CMS\Factory;
 // No Direct Access
 defined('_JEXEC') or die;
 ?>
@@ -28,7 +29,7 @@ defined('_JEXEC') or die;
 
 	if ($show_comments >= 1)
 	{
-		$user           = JFactory::getUser();
+		$user           = Factory::getUser();
 		$groups         = $user->getAuthorisedViewLevels();
 		$comment_access = $this->item->params->get('comment_access');
 
@@ -42,26 +43,6 @@ defined('_JEXEC') or die;
 					echo $this->loadTemplate('commentsform');
 					break;
 
-				case 1:
-					// This is a just JComments
-					$comments = JPATH_SITE . '/components/com_jcomments/jcomments.php';
-					if (file_exists($comments))
-					{
-						require_once($comments);
-						echo JComments::showComments($this->item->id, 'com_biblestudy', $this->item->studytitle);
-					}
-					break;
-
-				case 2:
-					// This is a combination of JBS and JComments
-					$comments = JPATH_SITE . '/components/com_jcomments/jcomments.php';
-					if (file_exists($comments))
-					{
-						require_once($comments);
-						echo JComments::show($this->item->id, 'com_biblestudy', $this->item->studytitle);
-					}
-					echo $this->loadTemplate('commentsform');
-					break;
 			}
 
 		}

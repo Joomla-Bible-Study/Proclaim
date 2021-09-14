@@ -11,6 +11,10 @@
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
+use Joomla\CMS\MVC\Controller;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Language\Text;
 
 /**
  * Class for Sermon
@@ -18,7 +22,7 @@ use Joomla\Registry\Registry;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class BiblestudyControllerSermon extends JControllerForm
+class sermon extends Controller\BaseController
 {
 	/**
 	 * View item
@@ -136,8 +140,7 @@ class BiblestudyControllerSermon extends JControllerForm
 	 */
 	public function comment()
 	{
-		$mainframe = JFactory::getApplication();
-		$input     = new JInput;
+		$input = Factory::getApplication();
 		$model     = $this->getModel('sermon');
 		$t         = '';
 
@@ -158,14 +161,13 @@ class BiblestudyControllerSermon extends JControllerForm
 		if ($params->get('use_captcha') > 0)
 		{
 			// Begin reCaptcha
-			JPluginHelper::importPlugin('captcha');
-			$dispatcher = JEventDispatcher::getInstance();
-			$res        = $dispatcher->trigger('onCheckAnswer', $_POST['recaptcha_response_field']);
+			PluginHelper::importPlugin('captcha');
+			$res        = Factory::getApplication()->triggerEvent('onCheckAnswer', $_POST['recaptcha_response_field']);
 
 			if (!$res[0])
 			{
 				// What happens when the CAPTCHA was entered incorrectly
-				$mess = JText::_('JBS_STY_INCORRECT_KEY');
+				$mess = Text::_('JBS_STY_INCORRECT_KEY');
 				echo "<script language='javascript' type='text/javascript'>alert('" . $mess . "')</script>";
 				echo "<script language='javascript' type='text/javascript'>window.parent.location.reload()</script>";
 
@@ -179,11 +181,11 @@ class BiblestudyControllerSermon extends JControllerForm
 		{
 			if ($model->storecomment())
 			{
-				$msg = JText::_('JBS_STY_COMMENT_SUBMITTED');
+				$msg = Text::_('JBS_STY_COMMENT_SUBMITTED');
 			}
 			else
 			{
-				$msg = JText::_('JBS_STY_ERROR_SUBMITTING_COMMENT');
+				$msg = Text::_('JBS_STY_ERROR_SUBMITTING_COMMENT');
 			}
 
 			if ($params->get('email_comments') > 0)
@@ -193,7 +195,7 @@ class BiblestudyControllerSermon extends JControllerForm
 
 			$study_detail_id = $input->get('study_detail_id', 0, 'int');
 
-			$mainframe->redirect(
+			$input->redirect(
 				'index.php?option=com_biblestudy&id=' . $study_detail_id . '&view=sermon&t=' . $t . '&msg=' . $msg,
 				'Comment Added'
 			);
@@ -228,17 +230,17 @@ class BiblestudyControllerSermon extends JControllerForm
 	 */
 	public function commentsEmail($params)
 	{
-		$input = new JInput;
+		$input = Factory::getApplication();
 
 		$comment_author    = $input->get('full_name', 'Anonymous', 'string');
 		$comment_study_id  = $input->get('study_detail_id', 0, 'int');
 		$comment_published = $input->get('published', 0, 'int');
 		$comment_date      = date('Y-m-d H:i:s');
-		$config            = JFactory::getConfig();
+		$config            = Factory::getConfig();
 		$comment_mailfrom  = $config->get('mailfrom');
 
 		$comment_livesite = JUri::root();
-		$db               = JFactory::getDbo();
+		$db               = Factory::getDbo();
 		$query            = $db->getQuery(true);
 		$query->select('id, studytitle, studydate')->from('#__bsms_studies')->where('id = ' . (int) $comment_study_id);
 		$db->setQuery($query);
@@ -254,20 +256,20 @@ class BiblestudyControllerSermon extends JControllerForm
 			$ToEmail = $comment_mailfrom;
 		}
 
-		$Body = $comment_author . ' ' . JText::_(
+		$Body = $comment_author . ' ' . Text::_(
 				'JBS_STY_HAS_ENTERED_COMMENT'
-			) . ': ' . $comment_title . ' - ' . $comment_study_date . ' ' . JText::_('JBS_STY_ON') . ': ' . $comment_date;
+			) . ': ' . $comment_title . ' - ' . $comment_study_date . ' ' . Text::_('JBS_STY_ON') . ': ' . $comment_date;
 
 		if ($comment_published > 0)
 		{
-			$Body .= ' ' . JText::_('JBS_STY_COMMENT_PUBLISHED');
+			$Body .= ' ' . Text::_('JBS_STY_COMMENT_PUBLISHED');
 		}
 		else
 		{
-			$Body .= ' ' . JText::_('JBS_STY_COMMENT_NOT_PUBLISHED');
+			$Body .= ' ' . Text::_('JBS_STY_COMMENT_NOT_PUBLISHED');
 		}
 
-		$Body .= ' ' . JText::_('JBS_STY_REVIEW_COMMENTS_LOGIN') . ': ' . $comment_livesite;
+		$Body .= ' ' . Text::_('JBS_STY_REVIEW_COMMENTS_LOGIN') . ': ' . $comment_livesite;
 		$mail->addRecipient($ToEmail);
 		$mail->setSubject($Subject . ' ' . $comment_livesite);
 		$mail->setBody($Body);
@@ -283,7 +285,7 @@ class BiblestudyControllerSermon extends JControllerForm
 	 */
 	public function download()
 	{
-		$input = new JInput;
+		$input = Factory::getApplication();
 		$task  = $input->get('task');
 		$mid   = $input->getInt('id');
 
@@ -344,7 +346,7 @@ class BiblestudyControllerSermon extends JControllerForm
 	 */
 	protected function getRedirectToItemAppend($recordId = null, $urlVar = 'a_id')
 	{
-		$this->input = new JInput;
+		$this->input = Factory::getApplication();
 
 		// Need to override the parent method completely.
 		$tmpl   = $this->input->get('tmpl');
