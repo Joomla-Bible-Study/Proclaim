@@ -96,7 +96,7 @@ class BiblestudyViewMessageform extends JViewLegacy
 
 		$input  = new JInput;
 		$option = $input->get('option', '', 'cmd');
-		$app    = JFactory::getApplication();
+		$app    = Factory::getApplication();
 		$app->setUserState($option . 'sid', $this->item->id);
 		$app->setUserState($option . 'sdate', $this->item->studydate);
 		$input->set('sid', $this->item->id);
@@ -104,14 +104,14 @@ class BiblestudyViewMessageform extends JViewLegacy
 		$this->mediafiles = $this->get('MediaFiles');
 		$this->canDo      = JBSMBibleStudyHelper::getActions($this->item->id, 'sermon');
 
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 
 		// Create a shortcut to the parameters.
 		$this->params = $this->state->template->params;
 
 		$this->user = $user;
 
-		$language = JFactory::getLanguage();
+		$language = Factory::getLanguage();
 		$language->load('', JPATH_ADMINISTRATOR, null, true);
 
 		if (!$this->params->def('page_title', ''))
@@ -121,7 +121,7 @@ class BiblestudyViewMessageform extends JViewLegacy
 
 		if (!$this->canDo->get('core.edit'))
 		{
-			JFactory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
+			Factory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
 			$app->setHeader('status', 403, true);
 
 			return false;
@@ -129,7 +129,7 @@ class BiblestudyViewMessageform extends JViewLegacy
 
 		// Escape strings for HTML output
 		$this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
-		$document            = JFactory::getDocument();
+		$document            = Factory::getDocument();
 
 		JHtml::_('jquery.framework');
 		$document->addScript(JUri::base() . 'media/com_biblestudy/js/plugins/jquery.tokeninput.js');
@@ -171,7 +171,7 @@ class BiblestudyViewMessageform extends JViewLegacy
 	 */
 	protected function _prepareDocument()
 	{
-		$app   = JFactory::getApplication();
+		$app   = Factory::getApplication();
 		$menus = $app->getMenu();
 		$title = null;
 

@@ -83,13 +83,13 @@ class BiblestudyViewCommentform extends JViewLegacy
 			throw new Exception(implode("\n", $errors), 500);
 		}
 
-		$language = JFactory::getLanguage();
+		$language = Factory::getLanguage();
 		$language->load('', JPATH_ADMINISTRATOR, null, true);
 
 		// Check permissions to enter comments
 		if (!$this->canDo->get('core.edit'))
 		{
-			JFactory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
+			Factory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
 
 			return;
 		}
@@ -114,7 +114,7 @@ class BiblestudyViewCommentform extends JViewLegacy
 	protected function setDocument()
 	{
 		$isNew    = ($this->item->id < 1);
-		$document = JFactory::getDocument();
+		$document = Factory::getDocument();
 		$document->setTitle($isNew ? JText::_('JBS_TITLE_COMMENT_CREATING') : JText::sprintf('JBS_TITLE_COMMENT_EDITING', $this->item->id));
 	}
 }

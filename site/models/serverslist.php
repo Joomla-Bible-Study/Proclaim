@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 jimport('joomla.filesystem.folder');
 
 // Base this model on the backend version.
-JLoader::register('BiblestudyModelServers', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/servers.php');
+JLoader::register('BiblestudyModelServers', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/ServersController.php');
 /**
  * Servers model class
  *

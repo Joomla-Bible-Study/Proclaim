@@ -18,8 +18,8 @@ JHtml::_('behavior.multiselect');
 JHtml::_('biblestudy.framework');
 JHtml::_('biblestudy.loadcss', $this->params);
 
-$app = JFactory::getApplication();
-$user = JFactory::getUser();
+$app = Factory::getApplication();
+$user = Factory::getUser();
 $userId = $user->get('id');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn = $this->escape($this->state->get('list.direction'));

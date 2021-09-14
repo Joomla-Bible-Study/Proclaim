@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 // Base this model on the backend version.
-JLoader::register('BiblestudyControllerMessage', JPATH_ADMINISTRATOR . '/components/com_biblestudy/controllers/message.php');
+JLoader::register('BiblestudyControllerMessage', JPATH_ADMINISTRATOR . '/components/com_biblestudy/controllers/MessageController.php');
 
 /**
  * Controller class for MessageForm
@@ -86,7 +86,7 @@ class BiblestudyControllerMessageform extends BiblestudyControllerMessage
 	 */
 	protected function getReturnPage()
 	{
-		$return = JFactory::getApplication()->input->get('return', null, 'base64');
+		$return = Factory::getApplication()->input->get('return', null, 'base64');
 
 		if (empty($return) || !JUri::isInternal(base64_decode($return)))
 		{

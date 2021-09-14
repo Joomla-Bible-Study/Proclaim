@@ -918,7 +918,7 @@ class CWMMedia
 	 */
 	public function hitPlay($id)
 	{
-		$db    = JFactory::getDbo();
+		$db    = Factory::getDbo();
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
 			->set('plays = plays + 1')
@@ -945,7 +945,7 @@ class CWMMedia
 	public function getMediaRows2($id)
 	{
 		// We use this for the popup view because it relies on the media file's id rather than the study_id field above
-		$db    = JFactory::getDbo();
+		$db    = Factory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('#__bsms_mediafiles.*, #__bsms_servers.params AS sparams,'
 			. ' s.studyintro, s.series_id, s.studytitle, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin,'
@@ -959,7 +959,7 @@ class CWMMedia
 			->leftJoin('#__bsms_series AS se ON (s.series_id = se.id)')
 			->where('#__bsms_mediafiles.id = ' . (int) $id)
 			->where('#__bsms_mediafiles.published = ' . 1)
-			->where('#__bsms_mediafiles.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->q('*') . ')')
+			->where('#__bsms_mediafiles.language in (' . $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->q('*') . ')')
 			->order('ordering asc');
 		$db->setQuery($query);
 		$media = $db->loadObject();
@@ -1029,7 +1029,7 @@ class CWMMedia
 	{
 		$url = 'com_docman';
 
-		$getmenu  = JFactory::getApplication();
+		$getmenu  = Factory::getApplication();
 		$menuItem = $getmenu->getMenu()->getItems('component', $url, true);
 		$Itemid   = $menuItem->id;
 		$docman   = '<a href="index.php?option=com_docman&amp;view=document&amp;slug=' .

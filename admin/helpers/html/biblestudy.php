@@ -7,9 +7,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
+use Joomla\CMS\Factory;
+
 defined('JPATH_BASE') or die;
 
-use Joomla\Database\DatabaseFactory;
 
 /**
  * Biblestudy HTML class.
@@ -49,12 +51,12 @@ abstract class JHtmlBiblestudy
 		// If no debugging value is set, use the configuration setting
 		if ($debug === null)
 		{
-			$config = JFactory::getConfig();
+			$config = Factory::getConfig();
 			$debug  = (boolean) $config->get('debug');
 		}
 
 		JHtml::_('bootstrap.framework', $debug);
-		$app  = JFactory::getApplication();
+		$app  = Factory::getApplication();
 		$menu = $app->getMenu();
 
 		if ($menu->getActive() !== null)
@@ -293,8 +295,7 @@ abstract class JHtmlBiblestudy
 	public static function Mediatypelist()
 	{
 		$options = null;
-		$driver  = new DatabaseFactory;
-		$db      = $driver->getDriver();
+		$db      = Factory::getDbo();
 		$query   = $db->getQuery(true);
 
 		$query->select('id As value, media_text As text');
@@ -310,7 +311,7 @@ abstract class JHtmlBiblestudy
 		}
 		catch (RuntimeException $e)
 		{
-			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
+			Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
 		}
 
 		return $options;
@@ -350,8 +351,7 @@ abstract class JHtmlBiblestudy
 	public static function Teacherlist()
 	{
 		$options = null;
-		$driver  = new DatabaseFactory;
-		$db      = $driver->getDriver();
+		$db      = Factory::getDbo();
 		$query   = $db->getQuery(true);
 
 		$query->select('id As value, teachername As text');
@@ -367,7 +367,7 @@ abstract class JHtmlBiblestudy
 		}
 		catch (RuntimeException $e)
 		{
-			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
+			Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
 		}
 
 		return $options;
@@ -407,8 +407,7 @@ abstract class JHtmlBiblestudy
 	public static function Messagetypelist()
 	{
 		$options = null;
-		$driver  = new DatabaseFactory;
-		$db      = $driver->getDriver();
+		$db      = Factory::getDbo();
 		$query   = $db->getQuery(true);
 
 		$query->select('id As value, message_type As text');
@@ -424,7 +423,7 @@ abstract class JHtmlBiblestudy
 		}
 		catch (RuntimeException $e)
 		{
-			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
+			Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
 		}
 
 		return $options;
@@ -464,8 +463,7 @@ abstract class JHtmlBiblestudy
 	public static function Serieslist()
 	{
 		$options = null;
-		$driver  = new DatabaseFactory;
-		$db      = $driver->getDriver();
+		$db      = Factory::getDbo();
 		$query   = $db->getQuery(true);
 
 		$query->select('id As value, series_text As text');
@@ -481,7 +479,7 @@ abstract class JHtmlBiblestudy
 		}
 		catch (RuntimeException $e)
 		{
-			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
+			Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
 		}
 
 		return $options;

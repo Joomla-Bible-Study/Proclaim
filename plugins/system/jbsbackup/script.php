@@ -89,7 +89,7 @@ class PlgSystemJBSBackupInstallerScript
 	 */
 	public function postflight($type, $parent)
 	{
-		JFactory::getDbo()->setQuery('DROP TABLE IF EXISTS `#__jbsbackup_update`')->execute();
+		Factory::getDbo()->setQuery('DROP TABLE IF EXISTS `#__jbsbackup_update`')->execute();
 	}
 
 	/**
@@ -103,7 +103,7 @@ class PlgSystemJBSBackupInstallerScript
 	{
 		// $parent is the class calling this method
 		// check to see if we are dealing with version 7.0.0 and create the update table if needed
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 
 		// First see if there is an update table
 		$tables      = $db->getTableList();

@@ -24,7 +24,7 @@ used as it is.
 
 	<script>
 		$('#uploader').pluploadQueue({
-			url : '../upload.php',
+			url : '../UploadController.php',
 			filters : [
 				{title : "Image files", extensions : "jpg,gif,png"}
 			],

@@ -77,9 +77,9 @@ class PlgSearchBiblestudysearch extends JPlugin
 	 */
 	public function onContentSearch($text, $phrase = '', $ordering = '', $areas = null)
 	{
-		$db        = JFactory::getDbo();
-		$jinput    = JFactory::getApplication()->input;
-		$user      = JFactory::getUser();
+		$db        = Factory::getDbo();
+		$jinput    = Factory::getApplication()->input;
+		$user      = Factory::getUser();
 		$groups    = implode(',', $user->getAuthorisedViewLevels());
 		$limit     = $this->params->def('search_limit');
 		$sContent  = $this->params->get('search_content', 1);
@@ -167,7 +167,7 @@ class PlgSearchBiblestudysearch extends JPlugin
 		if (!empty($state))
 		{
 			// Load language files (english language file as fallback)
-			$language = JFactory::getLanguage();
+			$language = Factory::getLanguage();
 			$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
 			$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, null, true);
 

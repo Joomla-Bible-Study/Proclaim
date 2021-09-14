@@ -42,7 +42,7 @@ class BiblestudyModelPodcastdisplay extends JModelItem
 	protected function populateState()
 	{
 		/** @type JApplicationSite $app */
-		$app = JFactory::getApplication('site');
+		$app = Factory::getApplication('site');
 
 		// Load state from the request.
 		$pk = $app->input->get('id', '', 'int');
@@ -72,9 +72,9 @@ class BiblestudyModelPodcastdisplay extends JModelItem
 		$template->id = $t;
 
 		$this->setState('template', $template);
-		$this->setState('admin', $admin);
+		$this->setState('administrator', $admin);
 
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 
 		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
 		{
@@ -123,7 +123,7 @@ class BiblestudyModelPodcastdisplay extends JModelItem
 
 			if (empty($data))
 			{
-				JFactory::getApplication()->enqueueMessage(JText::_('JBS_CMN_SERIES_NOT_FOUND'), 'message');
+				Factory::getApplication()->enqueueMessage(JText::_('JBS_CMN_SERIES_NOT_FOUND'), 'message');
 
 				return false;
 			}
@@ -145,12 +145,12 @@ class BiblestudyModelPodcastdisplay extends JModelItem
 	public function getStudies()
 	{
 		/** @type JApplicationSite $app */
-		$app = JFactory::getApplication('site');
+		$app = Factory::getApplication('site');
 		$sid = $app->getUserState('sid');
 
 		/** @var Registry $params */
 		$params          = $app->getParams();
-		$user            = JFactory::getUser();
+		$user            = Factory::getUser();
 		$groups          = implode(',', $user->getAuthorisedViewLevels());
 		$db              = $this->getDbo();
 		$query           = $db->getQuery(true);

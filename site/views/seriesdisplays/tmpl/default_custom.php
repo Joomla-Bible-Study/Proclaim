@@ -10,11 +10,11 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-$mainframe = JFactory::getApplication();
+$mainframe = Factory::getApplication();
 $input = new JInput;
 $option = $input->get('option', '', 'cmd');
 $series_menu = $this->params->get('series_id', 1);
-$document = JFactory::getDocument();
+$document = Factory::getDocument();
 /** @var Joomla\Registry\Registry $params */
 $params = $this->params;
 $url = $params->get('stylesheet');

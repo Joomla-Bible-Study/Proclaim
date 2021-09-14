@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 // Base this model on the backend version.
-JLoader::register('BiblestudyModelMessage', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/message.php');
+JLoader::register('BiblestudyModelMessage', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/MessageController.php');
 
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
@@ -85,7 +85,7 @@ class BiblestudyModelMessageform extends BiblestudyModelMessage
 	protected function populateState()
 	{
 		/** @type JApplicationSite $app */
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 
 		// Load state from the request.
 		$pk = $app->input->getInt('a_id');
@@ -114,7 +114,7 @@ class BiblestudyModelMessageform extends BiblestudyModelMessage
 		$template->id = $t;
 
 		$this->setState('template', $template);
-		$this->setState('admin', $admin);
+		$this->setState('administrator', $admin);
 
 		$this->setState('layout', $app->input->get('layout'));
 	}

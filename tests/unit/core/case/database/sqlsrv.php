@@ -101,8 +101,8 @@ abstract class TestCaseDatabaseSqlsrv extends TestCaseDatabase
 		}
 
 		// Setup the factory pointer for the driver and stash the old one.
-		self::$stash = JFactory::$database;
-		JFactory::$database = self::$driver;
+		self::$stash = Factory::$database;
+		Factory::$database = self::$driver;
 	}
 
 	/**
@@ -114,7 +114,7 @@ abstract class TestCaseDatabaseSqlsrv extends TestCaseDatabase
 	 */
 	public static function tearDownAfterClass()
 	{
-		JFactory::$database = self::$stash;
+		Factory::$database = self::$stash;
 		self::$driver = null;
 	}
 

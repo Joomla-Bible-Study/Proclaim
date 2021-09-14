@@ -196,7 +196,7 @@
 	<rule ref="PEAR.Functions.ValidDefaultValue">
 		<!-- These exceptions are temporary. Remove these exceptions as code style violations are fixed -->
 		<exclude-pattern type="relative">administrator/components/com_contact/helpers/html/contact.php</exclude-pattern>
-		<exclude-pattern type="relative">administrator/components/com_content/helpers/html/contentadministrator.php</exclude-pattern>
+		<exclude-pattern type="relative">administrator/components/com_content/helpers/html/contentadministration.php</exclude-pattern>
 		<exclude-pattern type="relative">libraries/cms/component/router/stubs/ComContentRouter.php</exclude-pattern>
 		<exclude-pattern type="relative">libraries/cms/pagination/JPaginationObjectTest.php</exclude-pattern>
 		<exclude-pattern type="relative">modules/mod_articles_category/helper.php</exclude-pattern>

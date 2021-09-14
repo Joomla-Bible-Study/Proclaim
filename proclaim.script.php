@@ -76,7 +76,7 @@ class Com_BiblestudyInstallerScript
 	static private $installActionQueue = array(
 		// -- modules => { (folder) => { (module) => { (position), (published) } }* }*
 		'modules' => array(
-			'admin' => array(),
+			'administrator' => array(),
 			'site'  => array('biblestudy' => 0, 'biblestudy_podcast' => 0,),
 		),
 		// -- plugins => { (folder) => { (element) => (published) }* }*
@@ -132,7 +132,7 @@ class Com_BiblestudyInstallerScript
 		$adminPath = $parent->getPath('extension_administrator');
 		$sitePath  = $parent->getPath('extension_site');
 
-		if (is_file($adminPath . '/admin.biblestudy.php'))
+		if (is_file($adminPath . '/administration.biblestudy.php'))
 		{
 			// JBSM 8.0 or older release found, clean up the directories.
 			static $ignoreAdmin = array('index.html', 'biblestudy.xml', 'archive');
@@ -141,7 +141,7 @@ class Com_BiblestudyInstallerScript
 			{
 				// JBSM 6.2 or older release..
 				$ignoreAdminarray[] = 'install.script.php';
-				$ignoreAdminarray[] = 'admin.biblestudy.php';
+				$ignoreAdminarray[] = 'administration.biblestudy.php';
 			}
 
 			static $ignoreSite = array('index.html', 'biblestudy.php', 'router.php', 'COPYRIGHT.php', 'CHANGELOG.php');
@@ -221,7 +221,7 @@ class Com_BiblestudyInstallerScript
 	public function uninstall($parent)
 	{
 		$adminpath = $parent->getParent()->getPath('extension_administrator');
-		$model     = "{$adminpath}/models/install.php";
+		$model     = "{$adminpath}/models/InstallController.php";
 
 		if (file_exists($model))
 		{
@@ -310,7 +310,7 @@ class Com_BiblestudyInstallerScript
 			'com_biblestudy'
 		);
 
-		$db   = JFactory::getDbo();
+		$db   = Factory::getDbo();
 		$pass = $this->checkVersion('PHP', phpversion());
 		$pass &= $this->checkVersion('Joomla!', JVERSION);
 		$pass &= $this->checkVersion('MySQL', $db->getVersion());
@@ -337,7 +337,7 @@ class Com_BiblestudyInstallerScript
 	 */
 	protected function checkDbo($name, $types)
 	{
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 
 		if (in_array($name, $types))
 		{
@@ -367,7 +367,7 @@ class Com_BiblestudyInstallerScript
 	 */
 	protected function checkExtensions($extensions)
 	{
-		$app  = JFactory::getApplication();
+		$app  = Factory::getApplication();
 		$pass = 1;
 
 		foreach ($extensions as $name)
@@ -401,7 +401,7 @@ class Com_BiblestudyInstallerScript
 	 */
 	protected function checkVersion($name, $version)
 	{
-		$app   = JFactory::getApplication();
+		$app   = Factory::getApplication();
 		$major = $minor = 0;
 
 		foreach (self::$versions[$name] as $major => $minor)
@@ -453,9 +453,9 @@ class Com_BiblestudyInstallerScript
 	 */
 	protected function checkJBSM($version)
 	{
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 
 		// Check if JBSM can be found from the database
 		$table = $db->getPrefix() . 'bsms_update';
@@ -580,7 +580,7 @@ class Com_BiblestudyInstallerScript
 	 */
 	private function renderPostInstallation($status, $parent)
 	{
-		$language = JFactory::getLanguage();
+		$language = Factory::getLanguage();
 		$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', 'en-GB', true);
 		$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', null, true);
 		echo '<img src="../media/com_biblestudy/images/proclaim.jpg" width="48" height="48"
@@ -780,7 +780,7 @@ class Com_BiblestudyInstallerScript
 	private function installSubextensions($parent)
 	{
 		$src             = $parent->getParent()->getPath('source');
-		$db              = JFactory::getDbo();
+		$db              = Factory::getDbo();
 		$this->status          = new stdClass;
 		$this->status->modules = array();
 		$this->status->plugins = array();
@@ -861,7 +861,7 @@ class Com_BiblestudyInstallerScript
 							$db->execute();
 
 							// B. Change the ordering of back-end modules to 1 + max ordering
-							if ($folder === 'admin')
+							if ($folder === 'administrator')
 							{
 								$query = $db->getQuery(true);
 								$query->select('MAX(' . $db->qn('ordering') . ')')
@@ -984,7 +984,7 @@ class Com_BiblestudyInstallerScript
 	{
 		jimport('joomla.installer.installer');
 
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 
 		// Modules uninstalling
 		if (count(self::$installActionQueue['modules']))

@@ -25,7 +25,7 @@ else
 }
 
 // Need for inline player
-$document = JFactory::getDocument();
+$document = Factory::getDocument();
 
 /** @var $params Registry */
 $templatemenuid = $params->get('t');
@@ -44,7 +44,7 @@ require_once __DIR__ . '/helper.php';
 $items = ModJBSMHelper::getLatest($params);
 
 // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-$user   = JFactory::getUser();
+$user   = Factory::getUser();
 $groups = $user->getAuthorisedViewLevels();
 $count  = count($items);
 
@@ -112,7 +112,7 @@ if (!$templatemenuid)
 
 $linkurl  = JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $templatemenuid);
 $link     = '<a href="' . $linkurl . '"><button class="btn">' . $link_text . '</button></a>';
-$document = JFactory::getDocument();
+$document = Factory::getDocument();
 
 JHtml::_('biblestudy.framework');
 JHtml::_('biblestudy.loadcss', $params);

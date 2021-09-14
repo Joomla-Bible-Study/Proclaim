@@ -17,7 +17,7 @@ JHtml::_('behavior.formvalidator');
 JHtml::_('formbehavior.chosen', 'select');
 
 // Set up defaults
-if (JFactory::getApplication()->input->getInt('id'))
+if (Factory::getApplication()->input->getInt('id'))
 {
 	$study_id   = $this->item->study_id;
 	$createdate = $this->item->createdate;
@@ -34,7 +34,7 @@ $new = ($this->item->id == '0' || $this->item->id == false);
 
 /** @type BiblestudyViewMediafileform $this */
 
-JFactory::getDocument()->addScriptDeclaration("
+Factory::getDocument()->addScriptDeclaration("
 	Joomla.submitbutton = function (task, server_id) {
 		if (task == 'mediafileform.setServer') {
 			document.id('media-form').elements['jform[server_id]'].value = server_id;
@@ -145,7 +145,7 @@ JFactory::getDocument()->addScriptDeclaration("
 
 				<?php echo $this->addon->render($this->media_form, $new); ?>
 
-				<?php if ($this->canDo->get('core.admin')): ?>
+				<?php if ($this->canDo->get('core.administrator')): ?>
 					<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'permissions', JText::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
                     <div class="row-fluid">
 						<?php echo $this->form->getInput('rules'); ?>
@@ -171,7 +171,7 @@ JFactory::getDocument()->addScriptDeclaration("
 		<?php echo $this->form->getInput('id'); ?>
         <input type="hidden" name="task" value=""/>
         <input type="hidden" name="return"
-               value="<?php echo JFactory::getApplication()->input->getCmd('return'); ?>"/>
+               value="<?php echo Factory::getApplication()->input->getCmd('return'); ?>"/>
 		<?php echo JHtml::_('form.token'); ?>
     </form>
 </div>

@@ -33,7 +33,7 @@ class BiblestudyModelPodcastlist extends JModelList
 	protected function populateState($ordering = null, $direction = null)
 	{
 		/** @type JApplicationSite $app */
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 
 		// List state information
 		$value = $app->input->get('limit', $app->get('list_limit', 0), 'uint');
@@ -68,7 +68,7 @@ class BiblestudyModelPodcastlist extends JModelList
 
 		$params = $app->getParams();
 		$this->setState('params', $params);
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 
 		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
 		{
@@ -119,7 +119,7 @@ class BiblestudyModelPodcastlist extends JModelList
 	protected function getListQuery()
 	{
 		// Get the current user for authorisation checks
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 
 		// Create a new query object.
 		$db = $this->getDbo();
@@ -160,7 +160,7 @@ class BiblestudyModelPodcastlist extends JModelList
 		// Filter by language
 		if ($this->getState('filter.language'))
 		{
-			$query->where('a.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
+			$query->where('a.language in (' . $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
 		}
 
 		$query->from('#__bsms_series as a');
@@ -182,7 +182,7 @@ class BiblestudyModelPodcastlist extends JModelList
 	public function getItems()
 	{
 		$items = parent::getItems();
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 		$userId = $user->get('id');
 		$guest = $user->get('guest');
 		$groups = $user->getAuthorisedViewLevels();

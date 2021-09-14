@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 // Base this model on the backend version.
-JLoader::register('BiblestudyControllerMessages', JPATH_ADMINISTRATOR . '/components/com_biblestudy/controllers/messages.php');
+JLoader::register('BiblestudyControllerMessages', JPATH_ADMINISTRATOR . '/components/com_biblestudy/controllers/MessagesController.php');
 
 /**
  * Controller class for Messages

@@ -60,7 +60,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 		{
 			echo json_encode($addon->$handler($this->input));
 
-			$app = JFactory::getApplication();
+			$app = Factory::getApplication();
 			$app->close();
 		}
 		else
@@ -78,7 +78,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	 */
 	public function add()
 	{
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 
 		if (!parent::add())
 		{
@@ -104,7 +104,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	 */
 	protected function getReturnPage()
 	{
-		$return = JFactory::getApplication()->input->get('return', null, 'base64');
+		$return = Factory::getApplication()->input->get('return', null, 'base64');
 
 		if (empty($return) || !JUri::isInternal(base64_decode($return)))
 		{
@@ -151,7 +151,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	 */
 	public function edit($key = null, $urlVar = 'a_id')
 	{
-		$app    = JFactory::getApplication();
+		$app    = Factory::getApplication();
 		$result = parent::edit($key, $urlVar);
 
 		if ($result)
@@ -197,7 +197,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	 */
 	public function save($key = null, $urlVar = 'a_id')
 	{
-		$input = JFactory::getApplication()->input;
+		$input = Factory::getApplication()->input;
 		$input->set('a_id', $input->get('id'));
 		$result = parent::save($key, $urlVar);
 
@@ -221,7 +221,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 
 		if ($return && $task != 'apply')
 		{
-			JFactory::getApplication()->enqueueMessage(JText::_('JBS_MED_SAVE'), 'message');
+			Factory::getApplication()->enqueueMessage(JText::_('JBS_MED_SAVE'), 'message');
 			$this->setRedirect(base64_decode($return));
 		}
 
@@ -267,7 +267,7 @@ class BiblestudyControllerMediafileform extends JControllerForm
 	 */
 	public function setServer()
 	{
-		$app   = JFactory::getApplication();
+		$app   = Factory::getApplication();
 		$input = $app->input;
 
 		$data = $input->get('jform', array(), 'post');

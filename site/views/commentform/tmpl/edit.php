@@ -21,7 +21,7 @@ JHtml::_('biblestudy.loadcss', $this->state->params);
 JHtml::_('behavior.formvalidator');
 JHtml::_('behavior.keepalive');
 
-$app = JFactory::getApplication();
+$app = Factory::getApplication();
 $input = $app->input;
 ?>
 <div class="edit item-page<?php echo $this->pageclass_sfx; ?>">
@@ -46,7 +46,7 @@ $input = $app->input;
 				</li>
 				<li><a href="#parameters" data-toggle="tab"><?php echo JText::_('JBS_CMN_PARAMETERS'); ?></a>
 				</li>
-				<?php if ($this->canDo->get('core.admin')): ?>
+				<?php if ($this->canDo->get('core.administrator')): ?>
 					<li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a>
 					</li>
 				<?php endif ?>
@@ -104,7 +104,7 @@ $input = $app->input;
 					</div>
 				</div>
 
-				<?php if ($this->canDo->get('core.admin')): ?>
+				<?php if ($this->canDo->get('core.administrator')): ?>
 					<div class="tab-pane" id="permissions">
 						<div class="control-group">
 							<div class="control-label">

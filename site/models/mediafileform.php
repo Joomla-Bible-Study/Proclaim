@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 // Base this model on the backend version.
-JLoader::register('BiblestudyModelMediafile', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/mediafile.php');
+JLoader::register('BiblestudyModelMediafile', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/MediaFileController.php');
 
 /**
  * Model class for MediaFile
@@ -31,7 +31,7 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 	 */
 	public function __construct($config = array())
 	{
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		$app->input->set('id', $app->input->getInt('a_id'));
 		parent::__construct($config);
 	}
@@ -60,7 +60,7 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 	protected function populateState()
 	{
 		/** @type JApplicationSite $app */
-		$app   = JFactory::getApplication('site');
+		$app   = Factory::getApplication('site');
 		$input = $app->input;
 
 		// Load state from the request.
@@ -76,7 +76,7 @@ class BiblestudyModelMediafileform extends BiblestudyModelMediafile
 		$this->setState('params', $params);
 		$admin    = JBSMParams::getAdmin();
 		$params->merge($admin->params);
-		$this->setState('admin', $params);
+		$this->setState('administrator', $params);
 
 		$this->setState('layout', $app->input->get('layout'));
 

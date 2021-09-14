@@ -32,7 +32,7 @@ class BiblestudyModelPopup extends JModelLegacy
 	protected function populateState()
 	{
 		/** @type JApplicationSite $app */
-		$app = JFactory::getApplication('site');
+		$app = Factory::getApplication('site');
 
 		// Load the parameters.
 		/** @var Registry $params */
@@ -55,7 +55,7 @@ class BiblestudyModelPopup extends JModelLegacy
 		$template->id = $t;
 
 		$this->setState('template', $template);
-		$this->setState('admin', $admin);
+		$this->setState('administrator', $admin);
 
 		$this->setState('layout', $app->input->get('layout'));
 	}

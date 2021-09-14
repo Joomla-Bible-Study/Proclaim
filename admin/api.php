@@ -7,8 +7,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-use Joomla\CMS\Factory;
+
 // No Direct Access
+use CWM\Component\BibleStudy\Administrator\Helper\CWMProclaimHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Log\Log;
+
 defined('_JEXEC') or die;
 
 if (defined('JBSM_LOADED'))
@@ -94,24 +98,80 @@ $language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
 $language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, null, true);
 
 // Component debugging
-//if (BibleStudyHelper::debug() === '1' || Factory::getApplication()->input->getInt('jbsmdbg', '0') === '1')
-//{
-//	define('JBSMDEBUG', 1);
-//}
-//else
-//{
-//	define('JBSMDEBUG', 0);
-//}
+try
+{
+	if (CWMProclaimHelper::debug() === '1' || Factory::getApplication()->input->getInt('jbsmdbg', '0') === '1')
+	{
+		define('JBSMDEBUG', 1);
+	}
+	else
+	{
+		define('JBSMDEBUG', 0);
+	}
+}
+catch (Exception $e)
+{
+}
 
 // Include the JLog class.
 jimport('joomla.log.log');
-JLog::addLogger(
+Log::addLogger(
 	array(
 		'text_file' => 'com_biblestudy.errors.php'
 	),
-	JLog::ALL,
+	Log::ALL,
 	'com_biblestudy'
 );
 
 // JBSM has been initialized
 define('JBSM_LOADED', 1);
+
+/**
+ * Method to discover classes of a given type in a given path.
+ *
+ * @param   string   $classPrefix  The class name prefix to use for discovery.
+ * @param   string   $parentPath   Full path to the parent folder for the classes to discover.
+ * @param   boolean  $force        True to overwrite the autoload path value for the class if it already exists.
+ * @param   boolean  $recurse      Recurse through all child directories as well as the parent path.
+ *
+ * @return  void
+ *
+ * @since   1.7.0
+ */
+function discover($classPrefix, $parentPath, $force = true, $recurse = false)
+{
+	try
+	{
+		if ($recurse)
+		{
+			$iterator = new RecursiveIteratorIterator(
+				new RecursiveDirectoryIterator($parentPath),
+				RecursiveIteratorIterator::SELF_FIRST
+			);
+		}
+		else
+		{
+			$iterator = new DirectoryIterator($parentPath);
+		}
+
+		/** @type  $file  DirectoryIterator */
+		foreach ($iterator as $file)
+		{
+			$fileName = $file->getFilename();
+			var_dump($fileName, true);
+
+			// Only load for php files.
+			if ($file->isFile() && $file->getExtension() === 'php')
+			{
+				// Get the class name and full path for each file.
+				$class = $classPrefix . preg_replace('#\.php$#', '', $fileName);
+
+					JLoader::register($class, $file->getPath() . '/' . $fileName);
+			}
+		}
+	}
+	catch (UnexpectedValueException $e)
+	{
+		// Exception will be thrown if the path is not a directory. Ignore it.
+	}
+}

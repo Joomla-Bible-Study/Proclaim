@@ -88,7 +88,7 @@ class Migration914
 		$path = array(
 			BIBLESTUDY_PATH_ADMIN . '/addons/servers/legacy/fields/filesize.php',
 			BIBLESTUDY_PATH_ADMIN . '/addons/servers/local/fields/filesize.php',
-			BIBLESTUDY_PATH_ADMIN . '/models/upload.php',
+			BIBLESTUDY_PATH_ADMIN . '/models/UploadController.php',
 			BIBLESTUDY_PATH_ADMIN . '/convert1.htm',
 			BIBLESTUDY_PATH . '/convert1.htm',
 		);

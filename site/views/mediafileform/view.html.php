@@ -94,23 +94,23 @@ class BiblestudyViewMediafileform extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$app              = JFactory::getApplication();
+		$app              = Factory::getApplication();
 		$this->form       = $this->get("Form");
 		$this->media_form = $this->get("MediaForm");
 		$this->item       = $this->get("Item");
 		$this->state      = $this->get("State");
 		$this->canDo      = JBSMBibleStudyHelper::getActions($this->item->id, 'mediafile');
-		$this->params     = $this->state->get('admin');
+		$this->params     = $this->state->get('administrator');
 
 		// Load the addon
 		$this->addon = JBSMAddon::getInstance($this->media_form->type);
 
-		$language = JFactory::getLanguage();
+		$language = Factory::getLanguage();
 		$language->load('', JPATH_ADMINISTRATOR, null, true);
 
 		if (!$this->canDo->get('core.edit'))
 		{
-			JFactory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
+			Factory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
 			$app->setHeader('status', 403, true);
 
 			return false;
@@ -178,7 +178,7 @@ class BiblestudyViewMediafileform extends JViewLegacy
 	 */
 	protected function prepareDocument()
 	{
-		$app   = JFactory::getApplication();
+		$app   = Factory::getApplication();
 		$menus = $app->getMenu();
 		$title = null;
 

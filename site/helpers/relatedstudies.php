@@ -126,7 +126,7 @@ class JBSMRelatedStudies
 	 */
 	public function getTopics()
 	{
-		$db    = JFactory::getDbo();
+		$db    = Factory::getDbo();
 		$query = $db->getQuery('true');
 		$query->select('id');
 		$query->from('#__bsms_topics');
@@ -838,7 +838,7 @@ class JBSMRelatedStudies
 	 */
 	public function getStudies()
 	{
-		$db    = JFactory::getDbo();
+		$db    = Factory::getDbo();
 		$query = $db->getQuery('true');
 		$query->select('s.id, s.params, s.access');
 		$query->from('#__bsms_studies as s');
@@ -851,7 +851,7 @@ class JBSMRelatedStudies
 		$studies = $db->loadObjectList();
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-		$user   = JFactory::getUser();
+		$user   = Factory::getUser();
 		$groups = $user->getAuthorisedViewLevels();
 
 		foreach ($studies as $i => $iValue)
@@ -945,7 +945,7 @@ class JBSMRelatedStudies
 	 */
 	public function getRelatedLinks()
 	{
-		$db           = JFactory::getDbo();
+		$db           = Factory::getDbo();
 		$scored       = array_count_values($this->score);
 		$output       = array_slice($scored, 0, 20, true);
 		$links        = array();

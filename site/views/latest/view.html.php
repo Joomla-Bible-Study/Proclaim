@@ -29,7 +29,7 @@ class BiblestudyViewLatest extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$db    = JFactory::getDbo();
+		$db    = Factory::getDbo();
 		$query = $db->getQuery('true');
 		$query->select('id')
 				->from('#__bsms_studies')
@@ -41,7 +41,7 @@ class BiblestudyViewLatest extends JViewLegacy
 		$t     = $input->getInt('t', '1');
 
 		$link = JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $id . '&t=' . $t);
-		$app  = JFactory::getApplication();
+		$app  = Factory::getApplication();
 
 		$app->redirect($link);
 	}

@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 // Base this model on the backend version.
-JLoader::register('BiblestudyModelComment', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/comment.php');
+JLoader::register('BiblestudyModelComment', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/CommentController.php');
 
 use Joomla\Utilities\ArrayHelper;
 
@@ -78,14 +78,14 @@ class BiblestudyModelCommentform extends BiblestudyModelComment
 	protected function populateState()
 	{
 		/** @type JApplicationSite $app */
-		$app = JFactory::getApplication('site');
+		$app = Factory::getApplication('site');
 
 		// Load state from the request.
 		$pk = $app->input->getInt('a_id');
 		$this->setState('comment.id', $pk);
 
 		$option = $app->input->get('option', '', 'cmd');
-		$app    = JFactory::getApplication();
+		$app    = Factory::getApplication();
 		$app->setUserState($option . 'comment.id', $pk);
 
 		$return = $app->input->get('return', null, 'base64');
@@ -112,7 +112,7 @@ class BiblestudyModelCommentform extends BiblestudyModelComment
 		$template->id = $t;
 
 		$this->setState('template', $template);
-		$this->setState('admin', $admin);
+		$this->setState('administrator', $admin);
 
 		$this->setState('layout', $app->input->get('layout'));
 	}

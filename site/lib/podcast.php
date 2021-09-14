@@ -60,13 +60,13 @@ class JBSMPodcast
 	public function makePodcasts()
 	{
 		$msg = array();
-		$db  = JFactory::getDbo();
+		$db  = Factory::getDbo();
 		jimport('joomla.utilities.date');
 		$year = '(' . date('Y') . ')';
 		$date = date('r');
 
 		// Get english language file as fallback
-		$language = JFactory::getLanguage();
+		$language = Factory::getLanguage();
 		$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
 
 		// First get all of the podcast that are published
@@ -88,7 +88,7 @@ class JBSMPodcast
 				// Work Around all language
 				if ($podinfo->language === '*')
 				{
-					$podlanguage = JFactory::getConfig()->get('language');
+					$podlanguage = Factory::getConfig()->get('language');
 				}
 				else
 				{
@@ -553,7 +553,7 @@ class JBSMPodcast
 		}
 
 		// Here's where we look at each mediafile to see if they are connected to this podcast
-		$db    = JFactory::getDbo();
+		$db    = Factory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('p.id AS pid, p.podcastlimit,'
 			. ' mf.id AS mfid, mf.study_id, mf.server_id, mf.podcast_id,'
@@ -626,7 +626,7 @@ class JBSMPodcast
 		// Try to make the template file writable
 		if (!$ftp['enabled'] && JFile::exists($file) && !JPath::setPermissions($file, '0755'))
 		{
-			JFactory::getApplication()->enqueueMessage('Could not make the file writable', 'notice');
+			Factory::getApplication()->enqueueMessage('Could not make the file writable', 'notice');
 		}
 
 		$fileIt = JFile::write($file, $filecontent);
@@ -635,7 +635,7 @@ class JBSMPodcast
 		// @todo not sure what we are doing here but looks like we need to rework this.
 		if (!$fileIt || (!$ftp['enabled'] && !JPath::setPermissions($file, '0555')))
 		{
-			JFactory::getApplication()
+			Factory::getApplication()
 				->enqueueMessage('Could not make the file un-writable', 'notice');
 
 			return false;

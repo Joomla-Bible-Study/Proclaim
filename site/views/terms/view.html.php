@@ -66,7 +66,7 @@ class BiblestudyViewTerms extends JViewLegacy
 		$template     = JBSMParams::getTemplateparams();
 		$this->params = $template->params;
 		$termstext    = $this->params->get('terms');
-		$db           = JFactory::getDbo();
+		$db           = Factory::getDbo();
 		$query        = $db->getQuery('true');
 		$query->select('*');
 		$query->from('#__bsms_mediafiles');
@@ -113,7 +113,7 @@ class BiblestudyViewTerms extends JViewLegacy
 	 */
 	protected function _prepareDocument()
 	{
-		$app   = JFactory::getApplication();
+		$app   = Factory::getApplication();
 		$menus = $app->getMenu();
 
 		$itemparams = JComponentHelper::getParams('com_biblestudy');

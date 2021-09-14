@@ -115,7 +115,7 @@ class BiblestudyViewMessagelist extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$app              = JFactory::getApplication();
+		$app              = Factory::getApplication();
 		$items            = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
@@ -133,12 +133,12 @@ class BiblestudyViewMessagelist extends JViewLegacy
 		$this->filterForm    = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');
 
-		$language = JFactory::getLanguage();
+		$language = Factory::getLanguage();
 		$language->load('', JPATH_ADMINISTRATOR, null, true);
 
 		if (!$this->canDo->get('core.edit'))
 		{
-			JFactory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
+			Factory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
 			$app->setHeader('status', 403, true);
 
 			return false;
@@ -166,7 +166,7 @@ class BiblestudyViewMessagelist extends JViewLegacy
 	 */
 	protected function _prepareDocument()
 	{
-		$app     = JFactory::getApplication('site');
+		$app     = Factory::getApplication('site');
 		$menus   = $app->getMenu();
 		$title   = null;
 

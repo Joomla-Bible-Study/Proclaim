@@ -75,7 +75,7 @@ class Migration924
 		$path = array(
 			'/administrator/components/com_biblestudy/addons/servers/legacy/fields/filesize.php',
 			'/administrator/components/com_biblestudy/addons/servers/local/fields/filesize.php',
-			'/administrator/components/com_biblestudy/models/upload.php',
+			'/administrator/components/com_biblestudy/models/UploadController.php',
 			'/administrator/components/com_biblestudy/convert1.htm',
 			'/components/com_biblestudy/convert1.htm',
 			'/media/com_biblestudy/js/filesize.js',

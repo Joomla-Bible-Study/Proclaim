@@ -67,7 +67,7 @@ class BiblestudyViewCommentlist extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$app              = JFactory::getApplication();
+		$app              = Factory::getApplication();
 		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
@@ -81,7 +81,7 @@ class BiblestudyViewCommentlist extends JViewLegacy
 			return;
 		}
 
-		$language = JFactory::getLanguage();
+		$language = Factory::getLanguage();
 		$language->load('', JPATH_ADMINISTRATOR, null, true);
 
 		$this->canDo = JBSMBibleStudyHelper::getActions('', 'comments');
@@ -131,7 +131,7 @@ class BiblestudyViewCommentlist extends JViewLegacy
 	 */
 	protected function setDocument()
 	{
-		$document = JFactory::getDocument();
+		$document = Factory::getDocument();
 		$document->setTitle(JText::_('JBS_TITLE_COMMENTS'));
 	}
 

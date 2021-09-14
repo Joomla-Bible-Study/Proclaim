@@ -24,7 +24,7 @@ if (file_exists($api))
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class BiblestudyController extends JControllerLegacy
+class controller extends JControllerLegacy
 {
 	/**
 	 * Default view var.
@@ -48,7 +48,7 @@ class BiblestudyController extends JControllerLegacy
 	 */
 	public function display($cachable = false, $urlparams = array())
 	{
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 
 		$view   = $app->input->getCmd('view', 'cpanel');
 		$layout = $app->input->getCmd('layout', 'default');
@@ -77,7 +77,7 @@ class BiblestudyController extends JControllerLegacy
 	}
 
 	/**
-	 * Write the XML file Called from admin podcast list page.
+	 * Write the XML file Called from administrator podcast list page.
 	 *
 	 * @return void
 	 *

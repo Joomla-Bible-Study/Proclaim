@@ -245,11 +245,11 @@ class BiblestudyController extends BaseController
 		$comment_study_id  = $this->input->get('study_detail_id', 0, 'INT');
 		$comment_published = $this->input->get('published', 0, 'INT');
 		$comment_date      = $this->input->get('comment_date', 0, 'WORD');
-		$config            = JFactory::getConfig();
+		$config            = Factory::getConfig();
 		$comment_mailfrom  = $config->get('config.mailfrom');
 		$comment_fromname  = $config->get('config.fromname');
 		$comment_livesite  = JUri::root();
-		$db                = JFactory::getDbo();
+		$db                = Factory::getDbo();
 		$query             = $db->getQuery(true);
 		$query->select('id, studytitle, studydate')->from('#__bsms_studies')->where('id = ' . $comment_study_id);
 		$db->setQuery($query);

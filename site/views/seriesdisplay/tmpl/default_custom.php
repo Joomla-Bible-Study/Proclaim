@@ -10,10 +10,10 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-$mainframe = JFactory::getApplication();
+$mainframe = Factory::getApplication();
 $input = new JInput;
 $option = $input->get('option', '', 'cmd');
-$document = JFactory::getDocument();
+$document = Factory::getDocument();
 $params = $this->params;
 $url = $this->params->get('stylesheet');
 

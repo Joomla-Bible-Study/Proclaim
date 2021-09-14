@@ -104,7 +104,7 @@ class BiblestudyModelTeachers extends ListModel
 		$template->id = $t;
 
 		$this->setState('template', $template);
-		$this->setState('admin', $admin);
+		$this->setState('administrator', $admin);
 
 		$user = Factory::getUser();
 

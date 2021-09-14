@@ -117,9 +117,9 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$mainframe = JFactory::getApplication();
+		$mainframe = Factory::getApplication();
 		$input     = new JInput;
-		$document = JFactory::getDocument();
+		$document = Factory::getDocument();
 
 		// Get the menu item object
 		// Load the Admin settings and params from the template
@@ -228,7 +228,7 @@ class BiblestudyViewSeriesdisplay extends JViewLegacy
 		}
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-		$user   = JFactory::getUser();
+		$user   = Factory::getUser();
 		$groups = $user->getAuthorisedViewLevels();
 
 		if (!in_array($items->access, $groups) && $items->access)

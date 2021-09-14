@@ -21,7 +21,7 @@ function assetinstall(event) {
 		displayText: false
 	});
 
-	var d = new Ajax('components/com_biblestudy/install/biblestudy.assets.php', {
+	var d = new Ajax('components/com_biblestudy/install/biblestudy.AssetsModel.php', {
 		method: 'get',
 		noCache: true,
 		onComplete: function (response) {
