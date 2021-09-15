@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\BibleStudy\Administrator\Controller;
+namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // No Direct Access
 use Joomla\CMS\MVC\Controller\AdminController;
