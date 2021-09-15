@@ -52,7 +52,7 @@
 	</files>
 
 	<!-- Media files -->
-	<media destination="com_proclaim" folder="media">
+	<media destination="com_biblestudy" folder="media">
 		<folder>backup</folder>
 		<folder>css</folder>
 		<folder>fancybox</folder>
