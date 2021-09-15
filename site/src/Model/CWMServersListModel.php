@@ -7,19 +7,20 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Site\Model;
 // No Direct Access
 defined('_JEXEC') or die;
-jimport('joomla.filesystem.folder');
 
+use CWM\Component\Proclaim\Administrator\Model\servers;
 // Base this model on the backend version.
-JLoader::register('BiblestudyModelServers', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/ServersController.php');
+//JLoader::register('BiblestudyModelServers', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/ServersController.php');
 /**
  * Servers model class
  *
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class BiblestudyModelServerslist extends BiblestudyModelServers
+class CWMServersListModel extends servers
 {
 	// Holder.
 }

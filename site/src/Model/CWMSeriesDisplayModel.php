@@ -1,4 +1,5 @@
 <?php
+namespace CWM\Component\Proclaim\Site\Model;
 /**
  * Part of Proclaim Package
  *

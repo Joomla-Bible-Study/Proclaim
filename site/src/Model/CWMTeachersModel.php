@@ -7,11 +7,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Site\Model;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
-require_once (BIBLESTUDY_PATH_ADMIN_HELPERS.'/CWMParams.php');
-require_once(BIBLESTUDY_PATH_LIB.'/CWMPagebuilder.php');
+use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
+
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -21,7 +22,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class BiblestudyModelTeachers extends ListModel
+class CWMTeachersModel extends ListModel
 {
 	/**
 	 * Build an SQL query to load the list data

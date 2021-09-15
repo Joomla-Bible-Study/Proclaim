@@ -7,10 +7,16 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Site\Model;
 // No Direct Access
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
+use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Factory;
+use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
+use Joomla\CMS\Language\LanguageHelper;
+use Joomla\CMS\Component\ComponentHelper;
 
 /**
  * Model class for SeriesDisplays
@@ -18,7 +24,7 @@ use Joomla\Registry\Registry;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class BiblestudyModelSeriesdisplays extends JModelList
+class CWMSeriesDisplaysModel extends ListModel
 {
 	/**
 	 * Method to auto-populate the model state.
@@ -42,7 +48,7 @@ class BiblestudyModelSeriesdisplays extends JModelList
 		$app = Factory::getApplication('site');
 
 		// Adjust the context to support modal layouts.
-		$input  = new JInput;
+		$input  = Factory::getApplication();
 		$layout = $input->get('layout');
 
 		if ($layout)
@@ -53,8 +59,8 @@ class BiblestudyModelSeriesdisplays extends JModelList
 		// Load the parameters.
 		$params   = $app->getParams();
 		$this->setState('params', $params);
-		$template = JBSMParams::getTemplateparams();
-		$admin    = JBSMParams::getAdmin();
+		$template = CWMParams::getTemplateparams();
+		$admin    = CWMParams::getAdmin();
 
 		$template->params->merge($params);
 		$template->params->merge($admin->params);
@@ -64,7 +70,7 @@ class BiblestudyModelSeriesdisplays extends JModelList
 
 		if (!$t)
 		{
-			$input = new JInput;
+			$input = Factory::getApplication();
 			$t     = $input->get('t', 1, 'int');
 		}
 
@@ -79,7 +85,7 @@ class BiblestudyModelSeriesdisplays extends JModelList
 		$series = $this->getUserStateFromRequest($this->context . '.filter.series', 'filter_series');
 		$this->setState('filter.series', $series);
 
-		$this->setState('filter.language', JLanguageHelper::getLanguages());
+		$this->setState('filter.language', LanguageHelper::getLanguages());
 
 		$teacher = $this->getUserStateFromRequest($this->context . '.filter.teacher', 'filter_teacher', '');
 		$this->setState('filter.teacher', $teacher);
@@ -113,10 +119,10 @@ class BiblestudyModelSeriesdisplays extends JModelList
 	protected function getListQuery()
 	{
 		$db              = $this->getDbo();
-		$template_params = JBSMParams::getTemplateparams();
+		$template_params = CWMParams::getTemplateparams();
 		$t_params        = $template_params->params;
 		$app             = Factory::getApplication('site');
-		$params          = JComponentHelper::getParams('com_biblestudy');
+		$params          = ComponentHelper::getParams('com_biblestudy');
 		$menuparams      = new Registry;
 		$menu            = $app->getMenu()->getActive();
 
@@ -161,9 +167,9 @@ class BiblestudyModelSeriesdisplays extends JModelList
 	public function _buildContentWhere()
 	{
 		$mainframe      = Factory::getApplication();
-		$input          = new JInput;
+		$input          = Factory::getApplication();
 		$option         = $input->get('option', '', 'cmd');
-		$params         = JComponentHelper::getParams($option);
+		$params         = ComponentHelper::getParams($option);
 		$filter_series  = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');
 		$filter_teacher = $mainframe->getUserStateFromRequest($option . 'filter_teacher', 'filter_teacher', 0, 'int');
 		$filter_year    = $mainframe->getUserStateFromRequest($option . 'filter_year', 'filter_year', 0, 'int');

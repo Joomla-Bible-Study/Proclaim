@@ -7,18 +7,25 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Site\Model;
 // No Direct Access
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
-
+use Joomla\CMS\MVC\Model\ItemModel;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use CWM\Component\Proclaim\Administrator\Helper\CWMTranslated;
+use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
+use Joomla\CMS\Language\LanguageHelper;
+use Joomla\CMS\Component\ComponentHelper;
 /**
  * Model class for Sermon
  *
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class BiblestudyModelSermon extends JModelItem
+class CWMSermonModel extends ItemModel
 {
 	/**
 	 * Model context string.
@@ -27,7 +34,7 @@ class BiblestudyModelSermon extends JModelItem
 	 *
 	 * @since 7.0
 	 */
-	protected $context = 'com_biblestudy.sermon';
+	protected $context = 'com_proclaim.sermon';
 
 	/**
 	 * Method to increment the hit counter for the study
@@ -154,7 +161,7 @@ class BiblestudyModelSermon extends JModelItem
 
 				if (empty($data))
 				{
-					Factory::getApplication()->enqueueMessage(JText::_('JBS_CMN_STUDY_NOT_FOUND', 'error'));
+					Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_STUDY_NOT_FOUND', 'error'));
 
 					return $data;
 				}
@@ -162,22 +169,22 @@ class BiblestudyModelSermon extends JModelItem
 				// Check for published state if filter set.
 				if (((is_numeric($published)) || (is_numeric($archived))) && (($data->published != $published) && ($data->published != $archived)))
 				{
-					Factory::getApplication()->enqueueMessage(JText::_('JBS_CMN_ITEM_NOT_PUBLISHED'), 'error');
+					Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_ITEM_NOT_PUBLISHED'), 'error');
 					$data = null;
 
 					return $data;
 				}
 
 				// Concat topic_text and concat topic_params do not fit, so translate individually
-				$topic_text       = JBSMTranslated::getTopicItemTranslated($data);
+				$topic_text       = CWMTranslated::getTopicItemTranslated($data);
 				$data->id         = $pk;
 				$data->topic_text = $topic_text;
-				$data->bookname   = JText::_($data->bookname);
+				$data->bookname   = Text::_($data->bookname);
 
 				$registry = new Registry;
 				$registry->loadString($data->params);
 				$data->params = $registry;
-				$template     = JBSMParams::getTemplateparams();
+				$template     = CWMParams::getTemplateparams();
 
 				$data->params->merge($template->params);
 				$mparams = clone $this->getState('params');
@@ -185,7 +192,7 @@ class BiblestudyModelSermon extends JModelItem
 				$mj->loadString($mparams);
 				$data->params->merge($mj);
 
-				$a_params           = JBSMParams::getAdmin();
+				$a_params           = CWMParams::getAdmin();
 				$data->admin_params = $a_params->params;
 
 				// Technically guest could edit an article, but lets not check that to improve performance a little.
@@ -280,7 +287,7 @@ class BiblestudyModelSermon extends JModelItem
 	public function storecomment()
 	{
 		$row                  = $this->getTable('comment');
-		$input                = new JInput;
+		$input                = Factory::getApplication();
 		$data                 = $_POST;
 		$data['comment_text'] = $input->get('comment_text', '', 'string');
 
@@ -326,8 +333,8 @@ class BiblestudyModelSermon extends JModelItem
 		// Load the parameters.
 		$params = $app->getParams();
 		$this->setState('params', $params);
-		$template = JBSMParams::getTemplateparams();
-		$admin    = JBSMParams::getAdmin();
+		$template = CWMParams::getTemplateparams();
+		$admin    = CWMParams::getAdmin();
 
 		$template->params->merge($params);
 		$template->params->merge($admin->params);
@@ -337,7 +344,7 @@ class BiblestudyModelSermon extends JModelItem
 
 		if (!$t)
 		{
-			$input = new JInput;
+			$input = Factory::getApplication();
 			$t     = $input->get('t', 1, 'int');
 		}
 

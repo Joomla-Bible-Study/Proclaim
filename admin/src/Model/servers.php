@@ -7,17 +7,25 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Administrator\Model;
 // No Direct Access
 defined('_JEXEC') or die;
-jimport('joomla.filesystem.folder');
-
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Factory;
+use CWM\Component\Proclaim\Site\Helper\CWMPagebuilder;
+use CWM\Component\Proclaim\Administrator\Helper\CWMTranslated;
+use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
+use Joomla\CMS\Language\Multilanguage;
+use Joomla\CMS\Uri\Uri;
 /**
  * Servers model class
  *
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class BiblestudyModelServers extends JModelList
+class servers extends ListModel
 {
 	/**
 	 * A reverse lookup of the Endpoint id to Endpoint name
@@ -93,9 +101,9 @@ class BiblestudyModelServers extends JModelList
 		// Path to endpoints
 		$path = JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers';
 
-		if (JFolder::exists($path))
+		if (Folder::exists($path))
 		{
-			$servers = JFolder::folders($path);
+			$servers = Folder::folders($path);
 		}
 		else
 		{
@@ -116,7 +124,7 @@ class BiblestudyModelServers extends JModelList
 					$o              = new stdClass;
 					$o->type        = (string) $xml['type'];
 					$o->name        = (string) $server;
-					$o->image_url   = JUri::base() . '/components/com_biblestudy/addons/servers/' . $server . '/' . $server . '.png';
+					$o->image_url   = Uri::base() . '/components/com_biblestudy/addons/servers/' . $server . '/' . $server . '.png';
 					$o->title       = (string) $xml->name;
 					$o->description = (string) $xml->description;
 					$o->path        = $path . '/' . $server . '/';
@@ -149,7 +157,7 @@ class BiblestudyModelServers extends JModelList
 	protected function populateState($ordering = null, $direction = null)
 	{
 		// Adjust the context to support modal layouts.
-		$input  = new JInput;
+		$input  = Factory::getApplication();
 		$layout = $input->get('layout');
 
 		if ($layout)

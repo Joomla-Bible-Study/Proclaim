@@ -7,10 +7,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Site\Model;
 // No Direct Access
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\ItemModel;
 use Joomla\CMS\Factory;
+use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 //use CWM\Component\BibleStudy\Administrator\CWMParams;
 defined('_JEXEC') or die;
 
@@ -19,7 +21,7 @@ defined('_JEXEC') or die;
  *
  * @since  7.0.0
  */
-class BiblestudyModelTeacher extends ItemModel
+class CWMTeacherModel extends ItemModel
 {
 	/**
 	 *  Model context string.
@@ -119,7 +121,7 @@ class BiblestudyModelTeacher extends ItemModel
 
 		if (!$t)
 		{
-			$input = new JInput;
+			$input = Factory::getApplication();
 			$t     = $input->get('t', 1, 'int');
 		}
 

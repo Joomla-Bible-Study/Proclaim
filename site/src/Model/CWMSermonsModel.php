@@ -7,11 +7,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Site\Model;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
-require_once (BIBLESTUDY_PATH_ADMIN_HELPERS.'/CWMParams.php');
-require_once(BIBLESTUDY_PATH_LIB.'/CWMPagebuilder.php');
+use CWM\Component\Proclaim\Site\Helper\CWMPagebuilder;
+use CWM\Component\Proclaim\Administrator\Helper\CWMTranslated;
+use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
+use Joomla\CMS\Language\Multilanguage;
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -21,7 +24,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class BiblestudyModelSermons extends ListModel
+class CWMSermonsModel extends ListModel
 {
 	/**
 	 * @var   JInput $imput Inpute
@@ -84,9 +87,9 @@ class BiblestudyModelSermons extends ListModel
 		foreach ($items as $item)
 		{
 			$item->bookname   = Text::_($item->bookname);
-			$item->topic_text = JBSMTranslated::getTopicItemTranslated($item);
+			$item->topic_text = CWMTranslated::getTopicItemTranslated($item);
 			$item->bookname2   = Text::_($item->bookname2);
-			$item->topic_text = JBSMTranslated::getTopicItemTranslated($item);
+			$item->topic_text = CWMTranslated::getTopicItemTranslated($item);
 		}
 
 		return $items;
@@ -227,7 +230,7 @@ class BiblestudyModelSermons extends ListModel
 		$this->setState('template', $template);
 		$this->setState('administrator', $admin);
 
-		$this->setState('filter.language', JLanguageMultilang::isEnabled());
+		$this->setState('filter.language', Multilanguage::isEnabled());
 
 		$level = $this->getUserStateFromRequest($this->context . '.filter.level', 'filter_level');
 		$this->setState('filter.level', $level);
