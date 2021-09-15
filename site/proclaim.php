@@ -1,5 +1,5 @@
 <?php
-namespace CWM\Component\Biblestudy\Controller;
+namespace CWM\Component\Proclaim\Site\Controller;
 use Joomla\CMS\Factory;
 use JLoader;
 use Joomla\CMS\Language\Text;
@@ -19,7 +19,7 @@ use Joomla\CMS\MVC\Controller\BaseController;
 JLoader::registerPrefix('CWMHelperRoute', JPATH_COMPONENT );
 
 // Always load JBSM API if it exists.
-$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
 if (file_exists($api))
 {
@@ -31,6 +31,6 @@ if (version_compare(PHP_VERSION, BIBLESTUDY_MIN_PHP, '<'))
 	throw new Exception(Text::_('JERROR_ERROR') . Text::sprintf('JBS_CMN_PHP_ERROR', BIBLESTUDY_MIN_PHP), 404);
 }
 
-$controller = BaseController::getInstance('Biblestudy');
+$controller = BaseController::getInstance('Proclaim');
 $controller->execute(Factory::getApplication()->input->get('task'));
 $controller->redirect();
