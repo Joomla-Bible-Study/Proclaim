@@ -12,7 +12,6 @@ namespace CWM\Component\Proclaim\Site\View\MediaFileForm;
 defined('_JEXEC') or die;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
-use CWM\Component\Proclaim\Administrator\Helper\CWMAddon;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\Registry\Registry;
