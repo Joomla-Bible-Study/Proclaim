@@ -7,7 +7,15 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
+namespace CWM\Component\BibleStudy\Administrator\View\Mediafiles;
+
 // No Direct Access
+use CWM\Component\BibleStudy\Administrator\Helper\CWMProclaimHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+
 defined('_JEXEC') or die;
 
 /**
@@ -16,7 +24,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0
  */
-class BiblestudyViewMediafiles extends JViewLegacy
+class HTMLView extends BaseHtmlView
 {
 	/**
 	 * Media Types
@@ -83,7 +91,7 @@ class BiblestudyViewMediafiles extends JViewLegacy
 	 *
 	 * @see     fetch()
 	 * @since   11.1
-	 * @throws  Exception
+	 * @throws  \Exception
 	 */
 	public function display($tpl = null)
 	{
@@ -91,7 +99,7 @@ class BiblestudyViewMediafiles extends JViewLegacy
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
 		$this->mediatypes = $this->get('Mediatypes');
-		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'mediafile');
+		$this->canDo      = CWMProclaimHelper::getActions('', 'mediafile');
 
 		$this->filterForm    = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');
@@ -109,16 +117,16 @@ class BiblestudyViewMediafiles extends JViewLegacy
 
 		// Levels filter.
 		$options   = array();
-		$options[] = JHtml::_('select.option', '1', JText::_('J1'));
-		$options[] = JHtml::_('select.option', '2', JText::_('J2'));
-		$options[] = JHtml::_('select.option', '3', JText::_('J3'));
-		$options[] = JHtml::_('select.option', '4', JText::_('J4'));
-		$options[] = JHtml::_('select.option', '5', JText::_('J5'));
-		$options[] = JHtml::_('select.option', '6', JText::_('J6'));
-		$options[] = JHtml::_('select.option', '7', JText::_('J7'));
-		$options[] = JHtml::_('select.option', '8', JText::_('J8'));
-		$options[] = JHtml::_('select.option', '9', JText::_('J9'));
-		$options[] = JHtml::_('select.option', '10', JText::_('J10'));
+		$options[] = JHtml::_('select.option', '1', Text::_('J1'));
+		$options[] = JHtml::_('select.option', '2', Text::_('J2'));
+		$options[] = JHtml::_('select.option', '3', Text::_('J3'));
+		$options[] = JHtml::_('select.option', '4', Text::_('J4'));
+		$options[] = JHtml::_('select.option', '5', Text::_('J5'));
+		$options[] = JHtml::_('select.option', '6', Text::_('J6'));
+		$options[] = JHtml::_('select.option', '7', Text::_('J7'));
+		$options[] = JHtml::_('select.option', '8', Text::_('J8'));
+		$options[] = JHtml::_('select.option', '9', Text::_('J9'));
+		$options[] = JHtml::_('select.option', '10', Text::_('J10'));
 
 		$this->f_levels = $options;
 
@@ -151,7 +159,7 @@ class BiblestudyViewMediafiles extends JViewLegacy
 		// Get the toolbar object instance
 		$toolbar = JToolbar::getInstance('toolbar');
 
-		JToolbarHelper::title(JText::_('JBS_CMN_MEDIA_FILES'), 'video video');
+		JToolbarHelper::title(Text::_('JBS_CMN_MEDIA_FILES'), 'video video');
 
 		if ($this->canDo->get('core.create'))
 		{
@@ -212,7 +220,7 @@ class BiblestudyViewMediafiles extends JViewLegacy
 	protected function setDocument()
 	{
 		$document = Factory::getDocument();
-		$document->setTitle(JText::_('JBS_TITLE_MEDIA_FILES'));
+		$document->setTitle(Text::_('JBS_TITLE_MEDIA_FILES'));
 	}
 
 	/**
@@ -225,12 +233,12 @@ class BiblestudyViewMediafiles extends JViewLegacy
 	protected function getSortFields()
 	{
 		return array(
-			'study.studytitle'     => JText::_('JBS_CMN_STUDY_TITLE'),
-			'mediatype.media_text' => JText::_('JBS_MED_MEDIA_TYPE'),
-			'mediafile.filename'   => JText::_('JBS_MED_FILENAME'),
-			'mediafile.ordering'   => JText::_('JGRID_HEADING_ORDERING'),
-			'mediafile.published'  => JText::_('JSTATUS'),
-			'mediafile.id'         => JText::_('JGRID_HEADING_ID')
+			'study.studytitle'     => Text::_('JBS_CMN_STUDY_TITLE'),
+			'mediatype.media_text' => Text::_('JBS_MED_MEDIA_TYPE'),
+			'mediafile.filename'   => Text::_('JBS_MED_FILENAME'),
+			'mediafile.ordering'   => Text::_('JGRID_HEADING_ORDERING'),
+			'mediafile.published'  => Text::_('JSTATUS'),
+			'mediafile.id'         => Text::_('JGRID_HEADING_ID')
 		);
 	}
 }
