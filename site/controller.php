@@ -13,7 +13,8 @@ defined('_JEXEC') or die;
 use Joomla\Registry\Registry;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Language;
+use Joomla\CMS\Language\Text;
+use CWM\Component\Proclaim\Site\Helper\CWMMedia;
 
 // Always load JBSM API if it exists.
 $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
@@ -29,7 +30,7 @@ if (file_exists($api))
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class BiblestudyController extends BaseController
+class controller extends BaseController
 {
 	/** @var  string Media Code
 	 * @since    7.0.0 */
@@ -176,9 +177,12 @@ class BiblestudyController extends BaseController
 
 		if ($params->get('use_captcha') > 0)
 		{
-			JPluginHelper::importPlugin('captcha');
-			$dispatcher = JEventDispatcher::getInstance();
-			$res        = $dispatcher->trigger('onCheckAnswer', $_POST['recaptcha_response_field']);
+            $dispatcher = Joomla\CMS\Factory::getApplication()->TriggerEvent();
+            $event = new Joomla\Event\Event('onCheckAnswer', [$_POST['recaptcha_response_field']]);
+            $res = $dispatcher->dispatch('onCheckAnswer', $event);
+		    //JPluginHelper::importPlugin('captcha');
+			//$dispatcher = JEventDispatcher::getInstance();
+			//$res        = $dispatcher->trigger('onCheckAnswer', $_POST['recaptcha_response_field']);
 
 			if (!$res[0])
 			{
