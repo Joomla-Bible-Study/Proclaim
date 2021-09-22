@@ -16,12 +16,10 @@ use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
-
+use Joomla\CMS\Filter\InputFilter;
+use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
 defined('_JEXEC') or die;
 
-use Joomla\Database\DatabaseFactory;
-use Joomla\Registry\Registry;
-use CWM\Component\Proclaim\Admin\Helpers;
 
 /**
  * BibleStudy Helper class
@@ -141,7 +139,7 @@ class CWMProclaimHelper
 		}
 
 		$actions = array(
-			'core.cwmadmin',
+			'core.administrator',
 			'core.manage',
 			'core.create',
 			'core.edit',
@@ -238,7 +236,7 @@ class CWMProclaimHelper
 	 */
 	public static function rendermenu($text, $url, $vName)
 	{
-		JHtmlSidebar::addEntry($text, $url, $vName);
+		//JHtmlSidebar::addEntry($text, $url, $vName);
 	}
 
 	/**
@@ -350,7 +348,7 @@ class CWMProclaimHelper
 		// Unfiltered assumes first priority.
 		if ($unfiltered)
 		{
-			$filter = JFilterInput::getInstance(array(), array(), 1, 1, 0);
+			$filter = InputFilter::getInstance(array(), array(), 1, 1, 0);
 		}
 		else
 		{
@@ -358,7 +356,7 @@ class CWMProclaimHelper
 			if ($blackList)
 			{
 				// Remove the white-listed attributes from the black-list.
-				$filter = JFilterInput::getInstance(
+				$filter = InputFilter::getInstance(
 				// Blacklisted tags
 					array_diff($blackListTags, $whiteListTags),
 					// Blacklisted attributes
@@ -375,12 +373,12 @@ class CWMProclaimHelper
 				if ($whiteList)
 				{
 					// Turn off xss auto clean
-					$filter = JFilterInput::getInstance($whiteListTags, $whiteListAttributes, 0, 0, 0);
+					$filter = InputFilter::getInstance($whiteListTags, $whiteListAttributes, 0, 0, 0);
 				}
 				else
 				{
 					// No HTML takes last place.
-					$filter = JFilterInput::getInstance();
+					$filter = InputFilter::getInstance();
 				}
 			}
 		}
@@ -440,7 +438,7 @@ class CWMProclaimHelper
 	public static function getMediaYears()
 	{
 		$options = array();
-		$driver  = new DatabaseFactory;
+		$driver  = Factory::getDbo();
 		$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
@@ -474,7 +472,7 @@ class CWMProclaimHelper
 	public static function getMessageTypes()
 	{
 		$options = array();
-		$driver  = new DatabaseFactory;
+		$driver  = Factory::getDbo();
 		$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
@@ -510,7 +508,7 @@ class CWMProclaimHelper
 	public static function getStudyYears()
 	{
 		$options = array();
-		$driver  = new DatabaseFactory;
+		$driver  = Factory::getDbo();
 		$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
@@ -544,7 +542,7 @@ class CWMProclaimHelper
 	public static function getTeachers()
 	{
 		$options = array();
-		$driver  = new DatabaseFactory;
+		$driver  = Factory::getDbo();
 		$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
@@ -580,7 +578,7 @@ class CWMProclaimHelper
 	public static function getStudyBooks()
 	{
 		$options = array();
-		$driver  = new DatabaseFactory;
+		$driver  = Factory::getDbo();
 		$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
@@ -621,7 +619,7 @@ class CWMProclaimHelper
 	public static function getStudyMediaTypes()
 	{
 		$options = array();
-		$driver  = new DatabaseFactory;
+		$driver  = Factory::getDbo();
 		$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
@@ -657,7 +655,7 @@ class CWMProclaimHelper
 	public static function getStudyLocations()
 	{
 		$options = array();
-		$driver  = new DatabaseFactory;
+		$driver  = Factory::getDbo();
 		$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
@@ -764,7 +762,7 @@ class CWMProclaimHelper
 	{
 		$options = array();
 
-		$driver = new DatabaseFactory;
+		$driver = Factory::getDbo();
 		$db     = $driver->getDriver();
 		$query  = $db->getQuery(true);
 
