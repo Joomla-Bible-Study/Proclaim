@@ -112,7 +112,7 @@ class BiblestudyViewServer extends JViewLegacy
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
 		JToolbarHelper::title(JText::_('JBS_CMN_SERVERS') . ': <small><small>[' . $title . ']</small></small>', 'database database');
 
-		if ($isNew && $this->canDo->get('core.create', 'com_biblestudy'))
+		if ($isNew && $this->canDo->get('core.create', 'com_proclaim'))
 		{
 			JToolbarHelper::apply('server.apply');
 			JToolbarHelper::save('server.save');
@@ -121,19 +121,19 @@ class BiblestudyViewServer extends JViewLegacy
 		}
 		else
 		{
-			if ($this->canDo->get('core.edit', 'com_biblestudy'))
+			if ($this->canDo->get('core.edit', 'com_proclaim'))
 			{
 				JToolbarHelper::apply('server.apply');
 				JToolbarHelper::save('server.save');
 
 				// We can save this record, but check the create permission to see if we can return to make a new one.
-				if ($this->canDo->get('core.create', 'com_biblestudy'))
+				if ($this->canDo->get('core.create', 'com_proclaim'))
 				{
 					JToolbarHelper::save2new('server.save2new');
 				}
 			}
 			// If checked out, we can still save
-			if ($this->canDo->get('core.create', 'com_biblestudy'))
+			if ($this->canDo->get('core.create', 'com_proclaim'))
 			{
 				JToolbarHelper::save2copy('server.save2copy');
 			}

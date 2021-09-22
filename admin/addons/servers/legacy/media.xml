@@ -2,7 +2,7 @@
 <media>
 	<fields name="params">
 		<fieldset name="media" label="JBS_ADDON_LEGACY_MEDIA"
-		          addfieldpath="/administrator/components/com_biblestudy/addons/servers/legacy/fields">
+		          addfieldpath="/administrator/components/com_proclaim/addons/servers/legacy/fields">
 			<field name="filename"
 			       type="plupload"
 			       handler="upload"
@@ -39,7 +39,7 @@
 				<option value="2">JBS_CMN_INLINE</option>
 				<option value="3">JBS_CMN_SQUEEZEBOX</option>
 			</field>
-			<field name="link_type" type="list" extension="com_biblestudy"
+			<field name="link_type" type="list" extension="com_proclaim"
 			       label="JBS_MED_SHOW_DOWNLOAD_ICON" description="JBS_MED_SHOW_DOWNLOAD_ICON_DESC"
 			       class="inputbox" size="1" default="">
 				<option value="">JGLOBAL_USE_GLOBAL</option>
@@ -55,7 +55,7 @@
 			</field>
 		</fieldset>
 		<fieldset name="files_linker" label="JBD_ADDON_LEGACY_FILE_LINKER">
-			<field name="docMan_id" type="docman" extension="com_biblestudy"
+			<field name="docMan_id" type="docman" extension="com_proclaim"
 			       label="JBS_MED_USE_DOCMAN" description="JBS_MED_USE_DOCMAN_DESC"
 			       class="inputbox"/>
 			<field name="article_id" type="Modal_Article" extension="com_content"
@@ -66,7 +66,7 @@
 			</field>
 		</fieldset>
 		<fieldset name="media_type" label="JBS_ADDON_LEGACY_MEDIA_TYPE"
-		          addfieldpath="/administrator/components/com_biblestudy/medels/fields">
+		          addfieldpath="/administrator/components/com_proclaim/medels/fields">
 			<field name="media_image" type="media" directory="biblestudy"
 			       label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
 			       class="inputbox span6">
@@ -94,7 +94,7 @@
 			</field>
 			<field name="media_button_color" type="color" description="JBS_ADDON_LEGACY_BUTTON_COLOR_DESC"
 			       label="JBS_ADDON_LEGACY_BUTTON_COLOR"/>
-			<field name="media_icon_type" type="icontype" extension="com_biblestudy" class="inputbox"
+			<field name="media_icon_type" type="icontype" extension="com_proclaim" class="inputbox"
 			       default=""
 			       label="JBS_ADDON_LEGACY_ICON_TYPE"
 			       description="JBS_ADDON_LEGACY_ICON_TYPE_DESC">
@@ -103,7 +103,7 @@
 			       description="JBS_ADDON_LEGACY_CUSTOM_ICON_DESC"/>
 			<field name="media_icon_text_size" type="text" default="24" label="JBS_ADDON_LEGACY_FONT_SIZE"
 			       description="JBS_ADDON_LEGACY_FONT_SIZE_DESC"/>
-			<field name="mime_type" type="mimetype" extension="com_biblestudy"
+			<field name="mime_type" type="mimetype" extension="com_proclaim"
 			       label="JBS_MED_CHOOSE_MIMETYPE" description="JBS_MED_CHOOSE_MIMETYPE_DESC"
 			       class="inputbox" default="">
 			</field>

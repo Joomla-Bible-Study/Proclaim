@@ -21,7 +21,7 @@ function assetinstall(event) {
 		displayText: false
 	});
 
-	var d = new Ajax('components/com_biblestudy/install/biblestudy.AssetsModel.php', {
+	var d = new Ajax('components/com_proclaim/install/biblestudy.AssetsModel.php', {
 		method: 'get',
 		noCache: true,
 		onComplete: function (response) {
@@ -41,7 +41,7 @@ function assetinstall(event) {
  */
 function done(event) {
 
-	var d = new Ajax('components/com_biblestudy/install/done.php', {
+	var d = new Ajax('components/com_proclaim/install/done.php', {
 		method: 'get',
 		onComplete: function (response) {
 			var mySlideDone = new Fx.Slide('done');

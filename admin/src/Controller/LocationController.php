@@ -35,7 +35,7 @@ class LocationController extends FormController
 	public function batch($model = null)
 	{
 		// Preset the redirect
-		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=locations' . $this->getRedirectToListAppend(), false));
+		$this->setRedirect(JRoute::_('index.php?option=com_proclaim&view=locations' . $this->getRedirectToListAppend(), false));
 
 		return parent::batch($this->getModel('Location', '', array()));
 	}

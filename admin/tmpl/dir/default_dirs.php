@@ -19,12 +19,12 @@ $first = true;
 			<tr>
 				<td class="file_icon folder">
 					<a class="folder_link"
-					   href="index.php?option=com_biblestudy&view=dir&tmpl=component&dir=<?php echo $folder->parentShort; ?>"><img
+					   href="index.php?option=com_proclaim&view=dir&tmpl=component&dir=<?php echo $folder->parentShort; ?>"><img
 							src="<?php echo $this->imgURL . 'ext/_folder_up.png'; ?>"/></a>
 				</td>
 				<td class="file_name">
 					<a class="folder_link"
-					   href="index.php?option=com_biblestudy&view=dir&tmpl=component&dir=<?php echo $folder->parentShort; ?>">..</a>
+					   href="index.php?option=com_proclaim&view=dir&tmpl=component&dir=<?php echo $folder->parentShort; ?>">..</a>
 				</td>
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
@@ -38,7 +38,7 @@ $first = true;
 			<tr>
 				<td class="file_icon folder">
 					<a class="finfo" id="folder_info<?php echo $index; ?>"
-					   href="index.php?option=com_biblestudy&view=dir&tmpl=component&dir=<?php echo $folder->folderLink; ?>"><img
+					   href="index.php?option=com_proclaim&view=dir&tmpl=component&dir=<?php echo $folder->folderLink; ?>"><img
 							src="<?php echo ($folder->fileCount == 0 && $folder->folderCount == 0) ? $this->imgURL .
 								'ext/_folder.png' : $this->imgURL . 'ext/_folder_open.png'; ?>"/></a>
 
@@ -59,7 +59,7 @@ $first = true;
 
 						</div>
 						<div class="prev_footer">
-							<a href="index.php?option=com_biblestudy&view=dir&tmpl=component&dir=<?php echo $folder->folderLink; ?>">
+							<a href="index.php?option=com_proclaim&view=dir&tmpl=component&dir=<?php echo $folder->folderLink; ?>">
 								<?php echo JText::_('COM_MEDIAMU_FINFO_OPEN'); ?></a>
 							<span>|</span> <a class="path_rm_btn" name="<?php echo base64_encode($folder->basename); ?>"
 							                  href="#"><?php echo JText::_('COM_MEDIAMU_FINFO_DELETE'); ?></a>
@@ -68,7 +68,7 @@ $first = true;
 				</td>
 				<td class="file_name">
 					<a class="folder_link"
-					   href="index.php?option=com_biblestudy&view=dir&tmpl=component&dir=<?php echo $folder->folderLink; ?>">
+					   href="index.php?option=com_proclaim&view=dir&tmpl=component&dir=<?php echo $folder->folderLink; ?>">
 						<?php echo $folder->basename; ?></a>
 				</td>
 				<td>&nbsp;</td>

@@ -15,7 +15,7 @@ use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 use CWM\Component\Proclaim\Administrator\Controller\MessageController;
 // Base this model on the backend version.
-//JLoader::register('BiblestudyModelMessage', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/MessageController.php');
+//JLoader::register('BiblestudyModelMessage', JPATH_ADMINISTRATOR . '/components/com_proclaim/models/MessageController.php');
 
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;

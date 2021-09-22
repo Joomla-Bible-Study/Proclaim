@@ -126,7 +126,7 @@ class CWMSermonModel extends ItemModel
 				$query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
 				$query->join('LEFT', '#__bsms_mediafiles AS m on s.id = m.study_id');
 
-				if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
+				if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise('core.edit', 'com_proclaim')))
 				{
 					// Filter by start and end dates.
 					$nullDate = $db->quote($db->getNullDate());
@@ -199,7 +199,7 @@ class CWMSermonModel extends ItemModel
 				if (!$user->get('guest'))
 				{
 					$userId = $user->get('id');
-					$asset  = 'com_biblestudy.message.' . $data->id;
+					$asset  = 'com_proclaim.message.' . $data->id;
 
 					// Check general edit permission first.
 					if ($user->authorise('core.edit', $asset))
@@ -355,7 +355,7 @@ class CWMSermonModel extends ItemModel
 
 		$user = Factory::getUser();
 
-		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
+		if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise('core.edit', 'com_proclaim')))
 		{
 			$this->setState('filter.published', 1);
 			$this->setState('filter.archived', 2);

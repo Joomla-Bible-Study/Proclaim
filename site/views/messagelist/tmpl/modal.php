@@ -17,7 +17,7 @@ $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
 ?>
 <form
-	action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messagelist&layout=modal&tmpl=component&function=' . $function); ?>"
+	action="<?php echo JRoute::_('index.php?option=com_proclaim&view=messagelist&layout=modal&tmpl=component&function=' . $function); ?>"
 	method="post" name="adminForm" id="adminForm">
 	<?php
 	// Search tools bar

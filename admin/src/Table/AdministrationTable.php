@@ -143,14 +143,14 @@ class AdministrationTable extends Table
 			foreach ($views as $view)
 			{
 				$filecontents = file_get_contents(JPATH_ROOT . DIRECTORY_SEPARATOR .
-					'components/com_biblestudy/views/' . $view . '/tmpl/default.xml'
+					'components/com_proclaim/views/' . $view . '/tmpl/default.xml'
 				);
 
 				if (!substr_count($filecontents, '<layout hidden=\"true\" '))
 				{
 					$filecontents = str_replace('<layout ', '<layout hidden=\"true\" ', $filecontents);
 					file_put_contents(JPATH_ROOT . DIRECTORY_SEPARATOR .
-						'components/com_biblestudy/views/' . $view . '/tmpl/default.xml', $filecontents
+						'components/com_proclaim/views/' . $view . '/tmpl/default.xml', $filecontents
 					);
 				}
 			}
@@ -162,10 +162,10 @@ class AdministrationTable extends Table
 			foreach ($views as $view)
 			{
 				$filecontents = file_get_contents(JPATH_ROOT . DIRECTORY_SEPARATOR .
-					'components/com_biblestudy/views/' . $view . '/tmpl/default.xml'
+					'components/com_proclaim/views/' . $view . '/tmpl/default.xml'
 				);
 				$filecontents = str_replace('hidden=\"true \" ', '', $filecontents);
-				file_put_contents(JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/' . $view . '/tmpl/default.xml', $filecontents);
+				file_put_contents(JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/views/' . $view . '/tmpl/default.xml', $filecontents);
 			}
 		}
 
@@ -216,7 +216,7 @@ class AdministrationTable extends Table
 	{
 		$k = $this->_tbl_key;
 
-		return 'com_biblestudy.administration.' . (int) $this->$k;
+		return 'com_proclaim.administration.' . (int) $this->$k;
 	}
 
 	/**
@@ -247,7 +247,7 @@ class AdministrationTable extends Table
 	protected function _getAssetParentId(Table $table = null, $id = null)
 	{
 		$asset = Table::getInstance('Asset');
-		$asset->loadByName('com_biblestudy');
+		$asset->loadByName('com_proclaim');
 
 		return $asset->id;
 	}

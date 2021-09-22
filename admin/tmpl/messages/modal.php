@@ -43,7 +43,7 @@ if (!empty($editor))
 }
 ?>
 <div class="container-popup">
-	<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messages&layout=modal&tmpl=component&function=' .
+	<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=messages&layout=modal&tmpl=component&function=' .
 		$function . '&' . JSession::getFormToken() . '=1&editor=' . $editor); ?>" method="post" name="adminForm"
 	      id="adminForm" class="form-inline">
 

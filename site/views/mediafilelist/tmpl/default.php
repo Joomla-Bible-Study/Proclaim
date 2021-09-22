@@ -29,7 +29,7 @@ $saveOrder = $listOrder == 'mediafile.ordering';
 
 if ($saveOrder)
 {
-	$saveOrderingUrl = 'index.php?option=com_biblestudy&task=mediafiles.saveOrderAjax&tmpl=component';
+	$saveOrderingUrl = 'index.php?option=com_proclaim&task=mediafiles.saveOrderAjax&tmpl=component';
 	JHtml::_('sortablelist.sortable', 'mediafileList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 }
 $sortFields = $this->getSortFields();
@@ -50,7 +50,7 @@ $sortFields = $this->getSortFields();
 </script>
 
 <h2><?php echo JText::_('JBS_CMN_MEDIA'); ?></h2>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafilelist'); ?>" method="post"
+<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=mediafilelist'); ?>" method="post"
       name="adminForm" id="adminForm">
 	<div id="j-main-container">
 		<div id="filter-bar" class="btn-toolbar">
@@ -123,9 +123,9 @@ $sortFields = $this->getSortFields();
 			foreach ($this->items as $i => $item) :
 				$item->max_ordering = 0;
 				$canCreate          = $user->authorise('core.create');
-				$canEdit            = $user->authorise('core.edit', 'com_biblestudy.mediafile.' . $item->id);
-				$canEditOwn         = $user->authorise('core.edit.own', 'com_biblestudy.mediafile.' . $item->id);
-				$canChange          = $user->authorise('core.edit.state', 'com_biblestudy.mediafile.' . $item->id);
+				$canEdit            = $user->authorise('core.edit', 'com_proclaim.mediafile.' . $item->id);
+				$canEditOwn         = $user->authorise('core.edit.own', 'com_proclaim.mediafile.' . $item->id);
+				$canChange          = $user->authorise('core.edit.state', 'com_proclaim.mediafile.' . $item->id);
 				?>
 				<tr class="row<?php echo $i % 2; ?>">
 					<td class="center hidden-phone">
@@ -140,7 +140,7 @@ $sortFields = $this->getSortFields();
 					<td class="nowrap has-context">
 						<div class="pull-left">
 							<?php if ($canEdit || $canEditOwn) : ?>
-							<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=mediafileform.edit&a_id=' . (int) $item->id); ?>">
+							<a href="<?php echo JRoute::_('index.php?option=com_proclaim&task=mediafileform.edit&a_id=' . (int) $item->id); ?>">
 								<?php endif; ?>
 								<span class="label">
 										<?php

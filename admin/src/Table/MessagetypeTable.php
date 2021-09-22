@@ -145,7 +145,7 @@ class MessagetypeTable extends Table
 	{
 		$k = $this->_tbl_key;
 
-		return 'com_biblestudy.messagetype.' . (int) $this->$k;
+		return 'com_proclaim.messagetype.' . (int) $this->$k;
 	}
 
 	/**
@@ -177,7 +177,7 @@ class MessagetypeTable extends Table
 	{
 		/** @type Asset $asset */
 		$asset = Table::getInstance('Asset');
-		$asset->loadByName('com_biblestudy');
+		$asset->loadByName('com_proclaim');
 
 		return $asset->id;
 	}

@@ -97,7 +97,7 @@ $this->useCoreUI = true;
 						if (resize_thumbnails)
 						{
 							jQuery.getJSON(
-								'index.php?option=com_biblestudy&task=administration.getThumbnailListXHR&<?php echo JSession::getFormToken(); ?>=1',
+								'index.php?option=com_proclaim&task=administration.getThumbnailListXHR&<?php echo JSession::getFormToken(); ?>=1',
 								{ images: thumbnail_changes }, function (response) {
 									jQuery('#dialog_thumbnail_resize').modal({ backdrop: 'static', keyboard: false })
 									var total_paths = response.total
@@ -128,7 +128,7 @@ $this->useCoreUI = true;
 																break
 														}
 														jQuery.getJSON(
-															'index.php?option=com_biblestudy&task=administration.createThumbnailXHR&<?php echo JSession::getFormToken(); ?>=1',
+															'index.php?option=com_proclaim&task=administration.createThumbnailXHR&<?php echo JSession::getFormToken(); ?>=1',
 															{
 																image_path: this,
 																new_size: new_size,
@@ -188,7 +188,7 @@ $this->useCoreUI = true;
 </div>
 
 <form
-		action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=administration&layout=edit&id=' . (int) $this->item->id); ?>"
+		action="<?php echo JRoute::_('index.php?option=com_proclaim&view=administration&layout=edit&id=' . (int) $this->item->id); ?>"
 		method="post" name="adminForm" id="item-admin"
 		aria-label="<?php echo Text::_('COM_CONTENT_FORM_TITLE_' . ((int) $this->item->id === 0 ? 'NEW' : 'EDIT'), true); ?>"
 		class="form-validate">
@@ -202,29 +202,29 @@ $this->useCoreUI = true;
 			<div class="col-12 col-lg-12">
 				<div class="well well-small">
 					<div id="dashboard-icons" class="btn-group" style="white-space: normal;">
-						<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets&task=assets.checkassets&' .
+						<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=assets&task=assets.checkassets&' .
 							JSession::getFormToken() . '=1'); ?>"
 						   title="<?php echo JText::_('JBS_ADM_ASSET_CHECK'); ?>" class="btn"> <i
 									class="icon-big icon-list"> </i>
 							<span><br/> <?php echo JText::_('JBS_ADM_ASSET_CHECK'); ?> </span></a>
-						<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=migrate'); ?>"
+						<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=migrate'); ?>"
 						   title="<?php echo JText::_('JBS_ADM_MIGRATE'); ?>" class="btn"> <i
 									class="icon-big icon-share-alt"></i>
 							<span><br/> <?php echo JText::_('JBS_ADM_MIGRATE'); ?> </span></a>
-						<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=backup'); ?>"
+						<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=backup'); ?>"
 						   title="<?php echo JText::_('JBS_ADM_BACKUP_RESTORE'); ?>" class="btn"> <i
 									class="icon-big icon-database"></i>
 							<span><br/> <?php echo JText::_('JBS_ADM_BACKUP_RESTORE'); ?> </span></a>
-						<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=archive'); ?>"
+						<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=archive'); ?>"
 						   title="<?php echo JText::_('JBS_ADM_ARCHIVE'); ?>" class="btn"> <i
 									class="icon-archive icon-big"></i>
 							<span><br/> <?php echo JText::_('JBS_ADM_ARCHIVE'); ?> </span></a>
-						<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets&task=administration.aliasUpdate&' .
+						<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=assets&task=administration.aliasUpdate&' .
 							JSession::getFormToken() . '=1') ?>"
 						   title="<?php echo JText::_('JBS_ADM_RESET_ALIAS'); ?>" class="btn"> <i
 									class="icon-big icon-tree-2"></i>
 							<span><br/> <?php echo JText::_('JBS_ADM_RESET_ALIAS'); ?> </span></a>
-						<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=database'); ?>"
+						<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=database'); ?>"
 						   title="<?php echo JText::_('JBS_ADM_DATABASE'); ?>" class="btn"> <i
 									class="icon-database icon-big"></i>
 							<span><br/> <?php echo JText::_('JBS_ADM_DATABASE'); ?> </span></a>
@@ -606,7 +606,7 @@ $this->useCoreUI = true;
 		<div class="row" id="convert">
 			<h4><?php echo JText::_('JBS_IBM_CONVERT'); ?></h4>
 			<h3><?php echo JText::_('CONVERSION_NOT_AVAILABLE_IN_900'); ?></h3>
-			<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets&task=administration.convertPreachIt&' .
+			<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=assets&task=administration.convertPreachIt&' .
 				JSession::getFormToken() . '=1'); ?>"
 			   title="<?php echo JText::_('JBS_ADM_PREACHIT'); ?>" class="btn"> <i
 						class="icon-big icon-list"> </i>

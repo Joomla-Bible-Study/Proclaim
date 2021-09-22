@@ -57,7 +57,7 @@ class BiblestudyViewArchive extends JViewLegacy
 		Factory::getApplication()->input->set('hidemainmenu', true);
 
 		JToolbarHelper::title(JText::_('JBS_CMN_ARCHIVE'), 'archive');
-		JToolbarHelper::preferences('com_biblestudy', '600', '800', 'JBS_ADM_PERMISSIONS');
+		JToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
 		JToolbarHelper::custom('administration.back', 'back', 'back', 'JTOOLBAR_BACK', false);
 		JToolbarHelper::help('biblestudy', true);
 	}

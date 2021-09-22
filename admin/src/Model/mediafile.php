@@ -26,7 +26,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 * @var    string  The prefix to use with controller messages.
 	 * @since  1.6
 	 */
-	protected $text_prefix = 'COM_BIBLESTUDY';
+	protected $text_prefix = 'com_proclaim';
 
 	/**
 	 * Data
@@ -217,7 +217,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 		if ($server_type)
 		{
-			$path = JPath::clean(JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/' . $server_type);
+			$path = JPath::clean(JPATH_ADMINISTRATOR . '/components/com_proclaim/addons/servers/' . $server_type);
 
 			JForm::addFormPath($path);
 			JForm::addFieldPath($path . '/fields');
@@ -225,12 +225,12 @@ class BiblestudyModelMediafile extends JModelAdmin
 			// Add language files
 			$lang = Factory::getLanguage();
 
-			if (!$lang->load('jbs_addon_' . $server_type, JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/' . $server_type) && !$server_type)
+			if (!$lang->load('jbs_addon_' . $server_type, JPATH_ADMINISTRATOR . '/components/com_proclaim/addons/servers/' . $server_type) && !$server_type)
 			{
 				Factory::getApplication()->enqueueMessage(JText::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'), 'error');
 			}
 
-			$form = $this->loadForm('com_biblestudy.mediafile.media', "media", array('control' => 'jform', 'load_data' => true), true, "/media");
+			$form = $this->loadForm('com_proclaim.mediafile.media', "media", array('control' => 'jform', 'load_data' => true), true, "/media");
 		}
 		else
 		{
@@ -269,7 +269,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 		// Get the form.
 		// @TODO Rename the form to "media" instead of mediafile
-		$form = $this->loadForm('com_biblestudy.mediafile', 'mediafile', array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_proclaim.mediafile', 'mediafile', array('control' => 'jform', 'load_data' => $loadData));
 
 		if (empty($form))
 		{
@@ -293,8 +293,8 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
-		if (($id !== 0 && (!$user->authorise('core.edit.state', 'com_biblestudy.mediafile.' . (int) $id)))
-			|| ($id === 0 && !$user->authorise('core.edit.state', 'com_biblestudy')))
+		if (($id !== 0 && (!$user->authorise('core.edit.state', 'com_proclaim.mediafile.' . (int) $id)))
+			|| ($id === 0 && !$user->authorise('core.edit.state', 'com_proclaim')))
 		{
 			// Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');
@@ -512,7 +512,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	}
 
 	/**
-	 * Custom clean the cache of com_biblestudy and biblestudy modules
+	 * Custom clean the cache of com_proclaim and biblestudy modules
 	 *
 	 * @param   string   $group      The cache group
 	 * @param   integer  $client_id  The ID of the client
@@ -523,7 +523,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 */
 	protected function cleanCache($group = null, $client_id = 0)
 	{
-		parent::cleanCache('com_biblestudy');
+		parent::cleanCache('com_proclaim');
 		parent::cleanCache('mod_biblestudy');
 	}
 
@@ -745,7 +745,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 			$user = Factory::getUser();
 
-			return $user->authorise('core.delete', 'com_biblestudy.mediafile.' . (int) $record->id);
+			return $user->authorise('core.delete', 'com_proclaim.mediafile.' . (int) $record->id);
 		}
 
 		return false;
@@ -761,7 +761,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 */
 	protected function loadFormData()
 	{
-		$session = Factory::getApplication()->getUserState('com_biblestudy.mediafile.edit.data', array());
+		$session = Factory::getApplication()->getUserState('com_proclaim.mediafile.edit.data', array());
 
 		$data = empty($session) ? $this->data : $session;
 
@@ -790,13 +790,13 @@ class BiblestudyModelMediafile extends JModelAdmin
 		$pk = $input->get('id', null, 'INTEGER');
 		$this->setState('mediafile.id', $pk);
 
-		$server_id = $app->getUserState('com_biblestudy.edit.mediafile.server_id');
+		$server_id = $app->getUserState('com_proclaim.edit.mediafile.server_id');
 		$this->setState('mediafile.server_id', $server_id);
 
-		$study_id = $app->getUserState('com_biblestudy.edit.mediafile.study_id');
+		$study_id = $app->getUserState('com_proclaim.edit.mediafile.study_id');
 		$this->setState('mediafile.study_id', $study_id);
 
-		$createdate = $app->getUserState('com_biblestudy.edit.mediafile.createdate');
+		$createdate = $app->getUserState('com_proclaim.edit.mediafile.createdate');
 		$this->setState('mediafile.createdate', $createdate);
 	}
 

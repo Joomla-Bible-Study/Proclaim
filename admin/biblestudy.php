@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-//JLoader::registerNamespace('\\CWM\\Application\\Proclaim', JPATH_ADMINISTRATOR . '/components/com_biblestudy/src');
+//JLoader::registerNamespace('\\CWM\\Application\\Proclaim', JPATH_ADMINISTRATOR . '/components/com_proclaim/src');
 
 JLoader::registerNamespace('CWM\Component\BibleStudy\Administrator\Helper', JPATH_COMPONENT . '/src/Helper');
 
@@ -23,13 +23,13 @@ use Joomla\Component\Finder\Administrator\Indexer\Parser\Html;
 defined('_JEXEC') or die;
 
 // Access check.
-if (!Factory::getUser()->authorise('core.manage', 'com_biblestudy'))
+if (!Factory::getUser()->authorise('core.manage', 'com_proclaim'))
 {
 	throw new JAccessExceptionNotallowed(Text::_('JERROR_ALERTNOAUTHOR'), 403);
 }
 
 // Always load JBSM API if it exists.
-$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
 if (file_exists($api))
 {
@@ -75,9 +75,9 @@ function addCSS()
 
 	if (JBSMDEBUG)
 	{
-		$document->addStyleSheet('media/com_biblestudy/css/biblestudy-debug.css');
+		$document->addStyleSheet('media/com_proclaim/css/biblestudy-debug.css');
 	}
 
-	$document->addStyleSheet('media/com_biblestudy/css/general.css');
-	$document->addStyleSheet('media/com_biblestudy/css/icons.css');
+	$document->addStyleSheet('media/com_proclaim/css/general.css');
+	$document->addStyleSheet('media/com_proclaim/css/icons.css');
 }

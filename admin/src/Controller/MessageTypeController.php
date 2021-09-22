@@ -36,7 +36,7 @@ class MessageTypeController extends FormController
 	public function batch($model = null)
 	{
 		// Preset the redirect
-		$this->setRedirect(Route::_('index.php?option=com_biblestudy&view=messagetypes' . $this->getRedirectToListAppend(), false));
+		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=messagetypes' . $this->getRedirectToListAppend(), false));
 
 		return parent::batch($this->getModel('Messagetype', '', array()));
 	}

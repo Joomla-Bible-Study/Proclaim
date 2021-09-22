@@ -17,61 +17,61 @@ DROP TABLE IF EXISTS `#__bsms_version`;
 -- Menu Icon Corrections
 --
 UPDATE `#__menu`
-SET `img` = '../media/com_biblestudy/images/menu/icon-16-biblemenu.png'
+SET `img` = '../media/com_proclaim/images/menu/icon-16-biblemenu.png'
 WHERE `#__menu`.`alias` = 'jbscmncombiblestudy';
 UPDATE `#__menu`
-SET `img` = '../media/com_biblestudy/images/menu/icon-16-biblemenu.png'
+SET `img` = '../media/com_proclaim/images/menu/icon-16-biblemenu.png'
 WHERE `#__menu`.`alias` = 'jbsmnucontrolpanel';
 UPDATE `#__menu`
-SET `img` = '../media/com_biblestudy/images/menu/icon-16-mediaimages.png'
+SET `img` = '../media/com_proclaim/images/menu/icon-16-mediaimages.png'
 WHERE `#__menu`.`alias` = 'jbsmnumediaimages';
 UPDATE `#__menu`
-SET `img` = '../media/com_biblestudy/images/menu/icon-16-templates.png'
+SET `img` = '../media/com_proclaim/images/menu/icon-16-templates.png'
 WHERE `#__menu`.`alias` = 'jbsmnutemplatedisplay';
 UPDATE `#__menu`
-SET `img` = '../media/com_biblestudy/images/menu/icon-16-social.png'
+SET `img` = '../media/com_proclaim/images/menu/icon-16-social.png'
 WHERE `#__menu`.`alias` = 'jbsmnusocialnetworklinks';
 UPDATE `#__menu`
-SET `img` = '../media/com_biblestudy/images/menu/icon-16-podcast.png'
+SET `img` = '../media/com_proclaim/images/menu/icon-16-podcast.png'
 WHERE `#__menu`.`alias` = 'jbsmnupodcasts';
 UPDATE `#__menu`
-SET `img` = '../media/com_biblestudy/images/menu/icon-16-folder.png'
+SET `img` = '../media/com_proclaim/images/menu/icon-16-folder.png'
 WHERE `#__menu`.`alias` = 'jbsmnuserverfolders';
 UPDATE `#__menu`
-SET `img` = '../media/com_biblestudy/images/menu/icon-16-servers.png'
+SET `img` = '../media/com_proclaim/images/menu/icon-16-servers.png'
 WHERE `#__menu`.`alias` = 'jbsmnuservers';
 UPDATE `#__menu`
-SET `img` = '../media/com_biblestudy/images/menu/icon-16-comments.png'
+SET `img` = '../media/com_proclaim/images/menu/icon-16-comments.png'
 WHERE `#__menu`.`alias` = 'jbsmnustudycomments';
 UPDATE `#__menu`
-SET `img` = '../media/com_biblestudy/images/menu/icon-16-topics.png'
+SET `img` = '../media/com_proclaim/images/menu/icon-16-topics.png'
 WHERE `#__menu`.`alias` = 'jbsmnutopics';
 UPDATE `#__menu`
-SET `img` = '../media/com_biblestudy/images/menu/icon-16-locations.png'
+SET `img` = '../media/com_proclaim/images/menu/icon-16-locations.png'
 WHERE `#__menu`.`alias` = 'jbsmnulocations';
 UPDATE `#__menu`
-SET `img` = '../media/com_biblestudy/images/menu/icon-16-messagetype.png'
+SET `img` = '../media/com_proclaim/images/menu/icon-16-messagetype.png'
 WHERE `#__menu`.`alias` = 'jbsmnumessagetypes';
 UPDATE `#__menu`
-SET `img` = '../media/com_biblestudy/images/menu/icon-16-series.png'
+SET `img` = '../media/com_proclaim/images/menu/icon-16-series.png'
 WHERE `#__menu`.`alias` = 'jbsmnuseries';
 UPDATE `#__menu`
-SET `img` = '../media/com_biblestudy/images/menu/icon-16-teachers.png'
+SET `img` = '../media/com_proclaim/images/menu/icon-16-teachers.png'
 WHERE `#__menu`.`alias` = 'jbsmnuteachers';
 UPDATE `#__menu`
-SET `img` = '../media/com_biblestudy/images/menu/icon-16-mp3.png'
+SET `img` = '../media/com_proclaim/images/menu/icon-16-mp3.png'
 WHERE `#__menu`.`alias` = 'jbsmnumediafiles';
 UPDATE `#__menu`
-SET `img` = '../media/com_biblestudy/images/menu/icon-16-studies.png'
+SET `img` = '../media/com_proclaim/images/menu/icon-16-studies.png'
 WHERE `#__menu`.`alias` = 'jbsmnustudies';
 UPDATE `#__menu`
-SET `img` = '../media/com_biblestudy/images/menu/icon-16-administration.png'
+SET `img` = '../media/com_proclaim/images/menu/icon-16-administration.png'
 WHERE `#__menu`.`alias` = 'jbsmnuadministration';
 UPDATE `#__menu`
-SET `img` = '../media/com_biblestudy/images/menu/icon-16-css.png'
+SET `img` = '../media/com_proclaim/images/menu/icon-16-css.png'
 WHERE `#__menu`.`alias` = 'jbsmnucssedit';
 UPDATE `#__menu`
-SET `img` = '../media/com_biblestudy/images/menu/icon-16-mimetype.png'
+SET `img` = '../media/com_proclaim/images/menu/icon-16-mimetype.png'
 WHERE `#__menu`.`alias` = 'jbsmnumimetypes';
 
 --

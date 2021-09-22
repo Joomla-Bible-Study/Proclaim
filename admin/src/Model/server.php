@@ -127,7 +127,7 @@ class BiblestudyModelServer extends JModelAdmin
 	 */
 	public function getConfig($addon)
 	{
-		$path = JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/' . $addon . '/' . $addon . '.xml';
+		$path = JPATH_ADMINISTRATOR . '/components/com_proclaim/addons/servers/' . $addon . '/' . $addon . '.xml';
 
 		return simplexml_load_string(file_get_contents($path));
 	}
@@ -190,7 +190,7 @@ class BiblestudyModelServer extends JModelAdmin
 			return new JForm("No-op");
 		}
 
-		$path = JPath::clean(JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers/' . $type);
+		$path = JPath::clean(JPATH_ADMINISTRATOR . '/components/com_proclaim/addons/servers/' . $type);
 
 		JForm::addFormPath($path);
 		JForm::addFieldPath($path . '/fields');
@@ -203,7 +203,7 @@ class BiblestudyModelServer extends JModelAdmin
 			throw new Exception(JText::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'));
 		}
 
-		$form = $this->loadForm('com_biblestudy.server.' . $type, $type, array('control' => 'jform', 'load_data' => true), true, "/server");
+		$form = $this->loadForm('com_proclaim.server.' . $type, $type, array('control' => 'jform', 'load_data' => true), true, "/server");
 
 		if ($form === null)
 		{
@@ -232,7 +232,7 @@ class BiblestudyModelServer extends JModelAdmin
 		}
 
 		// Get the forms.
-		$form = $this->loadForm('com_biblestudy.server', 'server', array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_proclaim.server', 'server', array('control' => 'jform', 'load_data' => $loadData));
 
 		if ($form === null)
 		{
@@ -255,7 +255,7 @@ class BiblestudyModelServer extends JModelAdmin
 	{
 		$user = Factory::getUser();
 
-		return $user->authorise('core.delete', 'com_biblestudy.article.' . (int) $record->id);
+		return $user->authorise('core.delete', 'com_proclaim.article.' . (int) $record->id);
 	}
 
 	/**
@@ -275,7 +275,7 @@ class BiblestudyModelServer extends JModelAdmin
 		// Check for existing article.
 		if (!empty($record->id))
 		{
-			return $user->authorise('core.edit.state', 'com_biblestudy.server.' . (int) $record->id);
+			return $user->authorise('core.edit.state', 'com_proclaim.server.' . (int) $record->id);
 		}
 
 		// Default to component settings if neither article nor category known.
@@ -296,13 +296,13 @@ class BiblestudyModelServer extends JModelAdmin
 	protected function loadFormData()
 	{
 		// If current state has data, use it instead of data from db
-		$session = Factory::getApplication()->getUserState('com_biblestudy.edit.server.data', array());
+		$session = Factory::getApplication()->getUserState('com_proclaim.edit.server.data', array());
 
 		return empty($session) ? $this->data : $session;
 	}
 
 	/**
-	 * Custom clean the cache of com_biblestudy and biblestudy modules
+	 * Custom clean the cache of com_proclaim and biblestudy modules
 	 *
 	 * @param   string   $group      The cache group
 	 * @param   integer  $client_id  The ID of the client
@@ -313,7 +313,7 @@ class BiblestudyModelServer extends JModelAdmin
 	 */
 	protected function cleanCache($group = null, $client_id = 0)
 	{
-		parent::cleanCache('com_biblestudy');
+		parent::cleanCache('com_proclaim');
 		parent::cleanCache('mod_biblestudy');
 	}
 
@@ -333,10 +333,10 @@ class BiblestudyModelServer extends JModelAdmin
 		$pk = $input->get('id', null, 'INTEGER');
 		$this->setState('server.id', $pk);
 
-		$sname = $app->getUserState('com_biblestudy.edit.server.server_name');
+		$sname = $app->getUserState('com_proclaim.edit.server.server_name');
 		$this->setState('server.server_name', $sname);
 
-		$type = $app->getUserState('com_biblestudy.edit.server.type');
+		$type = $app->getUserState('com_proclaim.edit.server.type');
 		$this->setState('server.type', $type);
 	}
 }

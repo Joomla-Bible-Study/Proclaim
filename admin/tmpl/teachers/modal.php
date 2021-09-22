@@ -17,7 +17,7 @@ $function = $input->get('function', 'jSelectTeacher', 'cmd');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn = $this->escape($this->state->get('list.direction'));
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=teachers&layout=modal&tmpl=component'); ?>"
+<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=teachers&layout=modal&tmpl=component'); ?>"
       method="post" name="adminForm" id="adminForm">
 	<table class="adminlist">
 		<thead>

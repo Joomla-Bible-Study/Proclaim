@@ -41,7 +41,7 @@ class CommentController extends FormController
 		}
 
 		// Preset the redirect
-		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=comments' . $this->getRedirectToListAppend(), false));
+		$this->setRedirect(JRoute::_('index.php?option=com_proclaim&view=comments' . $this->getRedirectToListAppend(), false));
 
 		return parent::batch($model);
 	}
@@ -77,7 +77,7 @@ class CommentController extends FormController
 		$user     = Factory::getApplication()->getIdentity();
 
 		// Check general edit permission first.
-		if ($user->authorise('core.edit', 'com_biblestudy.comment.' . $recordId))
+		if ($user->authorise('core.edit', 'com_proclaim.comment.' . $recordId))
 		{
 			return true;
 		}

@@ -12,7 +12,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 defined('_JEXEC') or die;
 
 // Always load JBSM API if it exists.
-$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
 if (file_exists($api))
 {
@@ -1225,7 +1225,7 @@ class CWMListing
 				}
 				else
 				{
-					($item->information ? $data = JHtml::_('content.prepare', $item->information, '', 'com_biblestudy.' . $type) : $data = '');
+					($item->information ? $data = JHtml::_('content.prepare', $item->information, '', 'com_proclaim.' . $type) : $data = '');
 				}
 				break;
 
@@ -1426,7 +1426,7 @@ class CWMListing
 				}
 				else
 				{
-					(isset($item->short) ? $data = JHtml::_('content.prepare', $item->short, '', 'com_biblestudy.' . $type) : $data = '');
+					(isset($item->short) ? $data = JHtml::_('content.prepare', $item->short, '', 'com_proclaim.' . $type) : $data = '');
 				}
 				break;
 
@@ -1518,7 +1518,7 @@ class CWMListing
 				}
 				else
 				{
-					isset($item->studyintro) ? $data = JHtml::_('content.prepare', $item->studyintro, '', 'com_biblestudy.' . $type) : $data = '';
+					isset($item->studyintro) ? $data = JHtml::_('content.prepare', $item->studyintro, '', 'com_proclaim.' . $type) : $data = '';
 				}
 				break;
 			case $extra . 'series':
@@ -1565,11 +1565,11 @@ class CWMListing
 			case $extra . 'description':
 				if ($type === 'seriesdisplays' || ($type === 'seriesdisplay' && $header !== 1))
 				{
-					(isset($item->description) ? $data = JHtml::_('content.prepare', $item->description, '', 'com_biblestudy.' . $type) : $data = '');
+					(isset($item->description) ? $data = JHtml::_('content.prepare', $item->description, '', 'com_proclaim.' . $type) : $data = '');
 				}
 				else
 				{
-					(isset($item->sdescription) ? $data = JHtml::_('content.prepare', $item->sdescription, '', 'com_biblestudy.' . $type) : $data = '');
+					(isset($item->sdescription) ? $data = JHtml::_('content.prepare', $item->sdescription, '', 'com_proclaim.' . $type) : $data = '');
 				}
 
 				if ($type === 'seriesdisplays' && !$header)
@@ -1875,7 +1875,7 @@ class CWMListing
 			case 'studyintro':
 				if (isset($row->studyintro))
 				{
-					$element = JHtml::_('content.prepare', $row->studyintro, '', 'com_biblestudy.' . $type);
+					$element = JHtml::_('content.prepare', $row->studyintro, '', 'com_proclaim.' . $type);
 				}
 				else
 				{

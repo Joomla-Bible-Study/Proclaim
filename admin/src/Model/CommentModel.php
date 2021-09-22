@@ -24,7 +24,7 @@ class CommentModel extends AdminModel
 	 * @var        string    The prefix to use with controller messages.
 	 * @since    1.6
 	 */
-	protected $text_prefix = 'COM_BIBLESTUDY';
+	protected $text_prefix = 'com_proclaim';
 
 	/**
 	 * Overrides the JModelAdmin save routine to save the topics(tags)
@@ -72,7 +72,7 @@ class CommentModel extends AdminModel
 	public function getForm($data = array(), $loadData = true)
 	{
 		// Get the form.
-		$form = $this->loadForm('com_biblestudy.comment', 'comment', array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_proclaim.comment', 'comment', array('control' => 'jform', 'load_data' => $loadData));
 
 		if (empty($form))
 		{
@@ -96,8 +96,8 @@ class CommentModel extends AdminModel
 
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
-		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_biblestudy.comment.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy')))
+		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_proclaim.comment.' . (int) $id))
+			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_proclaim')))
 		{
 			// Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');
@@ -233,7 +233,7 @@ class CommentModel extends AdminModel
 	 */
 	protected function cleanCache($group = null, $client_id = 0)
 	{
-		parent::cleanCache('com_biblestudy');
+		parent::cleanCache('com_proclaim');
 		parent::cleanCache('mod_biblestudy');
 	}
 
@@ -257,7 +257,7 @@ class CommentModel extends AdminModel
 
 			$user = Factory::getUser();
 
-			return $user->authorise('core.delete', 'com_biblestudy.comment.' . (int) $record->id);
+			return $user->authorise('core.delete', 'com_proclaim.comment.' . (int) $record->id);
 		}
 
 		return false;
@@ -279,7 +279,7 @@ class CommentModel extends AdminModel
 		// Check for existing article.
 		if (!empty($record->id))
 		{
-			return $user->authorise('core.edit.state', 'com_biblestudy.comment.' . (int) $record->id);
+			return $user->authorise('core.edit.state', 'com_proclaim.comment.' . (int) $record->id);
 		}
 
 		// Default to component settings if serie known.
@@ -309,7 +309,7 @@ class CommentModel extends AdminModel
 	 */
 	protected function loadFormData()
 	{
-		$data = Factory::getApplication()->getUserState('com_biblestudy.edit.comment.data', array());
+		$data = Factory::getApplication()->getUserState('com_proclaim.edit.comment.data', array());
 
 		if (empty($data))
 		{

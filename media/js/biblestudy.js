@@ -7,7 +7,7 @@ jQuery(document).ready(function () {
 		jQuery('.inlinePlayer:not(#media-' + mediaId + ')').hide();
 		jQuery('.inlinePlayer').html('');
 		mediaid.toggle();
-		mediaid.load('index.php?option=com_biblestudy&view=studieslist&controller=studieslist&task=inlinePlayer&tmpl=component');
+		mediaid.load('index.php?option=com_proclaim&view=studieslist&controller=studieslist&task=inlinePlayer&tmpl=component');
 		return false;
 	});
 

@@ -27,7 +27,7 @@ $classelement = $listing->createelement($this->params->get('teachers_element'));
 		<?php
 		if ($this->params->get('teacher_headercode'))
 		{
-			echo JHtml::_('content.prepare', $this->params->get('teacher_headercode'), '', 'com_biblestudy.teachers');
+			echo JHtml::_('content.prepare', $this->params->get('teacher_headercode'), '', 'com_proclaim.teachers');
 		}
 		?>
 	</div>

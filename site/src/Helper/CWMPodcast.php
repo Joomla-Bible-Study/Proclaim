@@ -24,7 +24,7 @@ use Joomla\CMS\Client\ClientHelper;
 /* Put in do to this file is used in a plugin. */
 
 // Always load CWM API if it exists.
-$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
 if (file_exists($api))
 {
@@ -75,7 +75,7 @@ class CWMPodcast
 
 		// Get english language file as fallback
 		$language = Factory::getLanguage();
-		$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
+		$language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
 
 		// First get all of the podcast that are published
 		$query = $db->getQuery(true);
@@ -104,7 +104,7 @@ class CWMPodcast
 				}
 
 				// Load language file
-				$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, $podlanguage, true);
+				$language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, $podlanguage, true);
 
 				// Check to see if there is a media file associated - if not, don't continue
 				$query = $db->getQuery(true);
@@ -395,12 +395,12 @@ class CWMPodcast
 						}
 						elseif ($podinfo->linktype == '2')
 						{
-							$episodedetailtemp .= '<link>'  . $protocol . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=popup&amp;player=1&amp;id=' .
+							$episodedetailtemp .= '<link>'  . $protocol . $podinfo->website . '/index.php?option=com_proclaim&amp;view=popup&amp;player=1&amp;id=' .
 								$episode->slug . '&amp;t=' . $detailstemplateid . '</link>';
 						}
 						else
 						{
-							$episodedetailtemp .= '<link>' . $protocol . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=sermon&amp;id='
+							$episodedetailtemp .= '<link>' . $protocol . $podinfo->website . '/index.php?option=com_proclaim&amp;view=sermon&amp;id='
 								. $episode->slug . '&amp;t=' . $detailstemplateid . '</link>';
 						}
 
@@ -419,7 +419,7 @@ class CWMPodcast
 							$duration = '';
 						}
 
-						$episodedetailtemp .= '<comments>' . $protocol . $podinfo->website . '/index.php?option=com_biblestudy&amp;view=sermon&amp;id='
+						$episodedetailtemp .= '<comments>' . $protocol . $podinfo->website . '/index.php?option=com_proclaim&amp;view=sermon&amp;id='
 							. $episode->slug . '&amp;t=' . $detailstemplateid . '</comments>
                         		<itunes:author>' . $this->escapeHTML($episode->teachername) . '</itunes:author>
                         		<dc:creator>' . $this->escapeHTML($episode->teachername) . '</dc:creator>

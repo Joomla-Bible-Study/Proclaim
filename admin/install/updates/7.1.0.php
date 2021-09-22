@@ -89,7 +89,7 @@ class Migration710
 			}
 			catch (Exception $e)
 			{
-				JLog::add(JText::sprintf('Caught exception: ', $e->getMessage()), JLog::WARNING, 'com_biblestudy');
+				JLog::add(JText::sprintf('Caught exception: ', $e->getMessage()), JLog::WARNING, 'com_proclaim');
 			}
 		}
 	}

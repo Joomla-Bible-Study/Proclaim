@@ -65,7 +65,7 @@ class AdministrationController extends FormController
 
 			case 'playerbymediatype':
 				$msg = $model->playerByMediaType();
-				$this->setRedirect('index.php?option=com_biblestudy&view=administrator&layout=edit&id=1', $msg);
+				$this->setRedirect('index.php?option=com_proclaim&view=administrator&layout=edit&id=1', $msg);
 				break;
 		}
 	}
@@ -301,7 +301,7 @@ class AdministrationController extends FormController
 				break;
 		}
 
-		$this->setRedirect('index.php?option=com_biblestudy&view=administrator&layout=edit&id=1', $msg);
+		$this->setRedirect('index.php?option=com_proclaim&view=administrator&layout=edit&id=1', $msg);
 	}
 
 	/**
@@ -349,7 +349,7 @@ class AdministrationController extends FormController
 					if (!$db->execute())
 					{
 						$msg = Text::_('JBS_ADM_ERROR_OCCURED');
-						$this->setRedirect('index.php?option=com_biblestudy&view=administrator&layout=edit&id=1', $msg);
+						$this->setRedirect('index.php?option=com_proclaim&view=administrator&layout=edit&id=1', $msg);
 					}
 				}
 			}
@@ -359,7 +359,7 @@ class AdministrationController extends FormController
 			$msg = Text::_('JBS_ADM_ERROR_OCCURED') . ': Missed setting the From or Two';
 		}
 
-		$this->setRedirect('index.php?option=com_biblestudy&view=administrator&layout=edit&id=1', $msg);
+		$this->setRedirect('index.php?option=com_proclaim&view=administrator&layout=edit&id=1', $msg);
 	}
 
 	/**
@@ -415,12 +415,12 @@ class AdministrationController extends FormController
 				if (!$db->execute())
 				{
 					$msg = Text::_('JBS_ADM_ERROR_OCCURED');
-					$this->setRedirect('index.php?option=com_biblestudy&view=administrator&layout=edit&id=1', $msg);
+					$this->setRedirect('index.php?option=com_proclaim&view=administrator&layout=edit&id=1', $msg);
 				}
 			}
 		}
 
-		$this->setRedirect('index.php?option=com_biblestudy&view=administrator&layout=edit&id=1', $msg);
+		$this->setRedirect('index.php?option=com_proclaim&view=administrator&layout=edit&id=1', $msg);
 	}
 
 	/**
@@ -452,7 +452,7 @@ class AdministrationController extends FormController
 			$msg = Text::_('JBS_CMN_OPERATION_SUCCESSFUL');
 		}
 
-		$this->setRedirect('index.php?option=com_biblestudy&view=administrator&layout=edit&id=1', $msg);
+		$this->setRedirect('index.php?option=com_proclaim&view=administrator&layout=edit&id=1', $msg);
 	}
 
 	/**
@@ -485,7 +485,7 @@ class AdministrationController extends FormController
 			$msg     = Text::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . Text::_('JBS_CMN_ROWS_RESET');
 		}
 
-		$this->setRedirect('index.php?option=com_biblestudy&view=administrator&layout=edit&id=1', $msg);
+		$this->setRedirect('index.php?option=com_proclaim&view=administrator&layout=edit&id=1', $msg);
 	}
 
 	/**
@@ -518,7 +518,7 @@ class AdministrationController extends FormController
 			$msg     = Text::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . Text::_('JBS_CMN_ROWS_RESET');
 		}
 
-		$this->setRedirect('index.php?option=com_biblestudy&view=administrator&layout=edit&id=1', $msg);
+		$this->setRedirect('index.php?option=com_proclaim&view=administrator&layout=edit&id=1', $msg);
 	}
 
 	/**
@@ -530,7 +530,7 @@ class AdministrationController extends FormController
 	 */
 	public function back()
 	{
-		$this->setRedirect('index.php?option=com_biblestudy&view=administrator&layout=edit&id=1');
+		$this->setRedirect('index.php?option=com_proclaim&view=administrator&layout=edit&id=1');
 	}
 
 	/**
@@ -547,7 +547,7 @@ class AdministrationController extends FormController
 
 		$convert      = new CWMSSConvert;
 		$ssconversion = $convert->convertSS();
-		$this->setRedirect('index.php?option=com_biblestudy&view=administrator&layout=edit&id=1', $ssconversion);
+		$this->setRedirect('index.php?option=com_proclaim&view=administrator&layout=edit&id=1', $ssconversion);
 	}
 
 	/**
@@ -564,7 +564,7 @@ class AdministrationController extends FormController
 
 		$convert      = new CWMPIconvert;
 		$piconversion = $convert->convertPI();
-		$this->setRedirect('index.php?option=com_biblestudy&view=administrator&layout=edit&id=1', $piconversion);
+		$this->setRedirect('index.php?option=com_proclaim&view=administrator&layout=edit&id=1', $piconversion);
 	}
 
 	/**
@@ -586,7 +586,7 @@ class AdministrationController extends FormController
 		/** @var AdminModel $model */
 		$model = $this->getModel('administrator');
 		$model->fix();
-		$this->setRedirect(Route::_('index.php?option=com_biblestudy&view=database', false));
+		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=database', false));
 	}
 
 	/**
@@ -604,12 +604,12 @@ class AdministrationController extends FormController
 		if (in_array('8', $user->groups, true))
 		{
 			CWMDbHelper::resetdb();
-			$this->setRedirect(Route::_('index.php?option=com_biblestudy&view=assats&task=assets.browse&' . Session::getFormToken() . '=1', false));
+			$this->setRedirect(Route::_('index.php?option=com_proclaim&view=assats&task=assets.browse&' . Session::getFormToken() . '=1', false));
 		}
 		else
 		{
 			Factory::getApplication()->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'eroor');
-			$this->setRedirect(Route::_('index.php?option=com_biblestudy&view=cpanel', false));
+			$this->setRedirect(Route::_('index.php?option=com_proclaim&view=cpanel', false));
 		}
 	}
 
@@ -627,7 +627,7 @@ class AdministrationController extends FormController
 
 		$update = CWMAlias::updateAlias();
 		$this->setMessage(Text::_('JBS_ADM_ALIAS_ROWS') . $update);
-		$this->setRedirect(Route::_('index.php?option=com_biblestudy&view=administrator&layout=edit&id=1', false));
+		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=administrator&layout=edit&id=1', false));
 	}
 
 	/**
@@ -678,11 +678,11 @@ class AdministrationController extends FormController
 
 		if ($result || $copysuccess)
 		{
-			$this->setRedirect('index.php?option=com_biblestudy&view=install&scanstate=start&jbsimport=1' . $alt);
+			$this->setRedirect('index.php?option=com_proclaim&view=install&scanstate=start&jbsimport=1' . $alt);
 		}
 		else
 		{
-			$this->setRedirect('index.php?option=com_biblestudy&view=migrate');
+			$this->setRedirect('index.php?option=com_proclaim&view=migrate');
 		}
 	}
 
@@ -773,7 +773,7 @@ class AdministrationController extends FormController
 			$application->enqueueMessage('' . $result . '');
 		}
 
-		$this->setRedirect('index.php?option=com_biblestudy&view=backup');
+		$this->setRedirect('index.php?option=com_proclaim&view=backup');
 	}
 
 	/**
@@ -795,7 +795,7 @@ class AdministrationController extends FormController
 		if (!$result = $export->exportdb($run))
 		{
 			$msg = Text::_('JBS_CMN_OPERATION_FAILED');
-			$this->setRedirect('index.php?option=com_biblestudy&view=backup', $msg);
+			$this->setRedirect('index.php?option=com_proclaim&view=backup', $msg);
 		}
 		elseif ($run === 2)
 		{
@@ -808,7 +808,7 @@ class AdministrationController extends FormController
 				$msg = Text::_('JBS_CMN_OPERATION_SUCCESSFUL');
 			}
 
-			$this->setRedirect('index.php?option=com_biblestudy&view=backup', $msg);
+			$this->setRedirect('index.php?option=com_proclaim&view=backup', $msg);
 		}
 	}
 
@@ -889,7 +889,7 @@ class AdministrationController extends FormController
 		/** @var ArchiveModel $model */
 		$model = $this->getModel('archive');
 		$msg   = $model->doArchive();
-		$this->setRedirect('index.php?option=com_biblestudy&view=cpanel', $msg);
+		$this->setRedirect('index.php?option=com_proclaim&view=cpanel', $msg);
 	}
 
 	public function submit($key = null, $urlVar = null)
@@ -931,17 +931,17 @@ class AdministrationController extends FormController
 			}
 
 			// Save the form data in the session, using a unique identifier
-			$app->setUserState('com_biblestudy.administrator', $data);
+			$app->setUserState('com_proclaim.administrator', $data);
 		}
 		else
 		{
 			$app->enqueueMessage("Data successfully validated", 'notice');
 
 			// Clear the form data in the session
-			$app->setUserState('com_biblestudy.administrator', null);
+			$app->setUserState('com_proclaim.administrator', null);
 		}
 
 		// Redirect back to the form in all cases
-		$this->setRedirect(Route::_('index.php?option=com_biblestudy&view=administrator&layout=edit', false));
+		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=administrator&layout=edit', false));
 	}
 }

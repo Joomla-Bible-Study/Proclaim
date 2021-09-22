@@ -22,7 +22,7 @@ class BiblestudyModelSerie extends JModelAdmin
 	 * @var  string    The prefix to use with controller messages.
 	 * @since    1.6
 	 */
-	protected $text_prefix = 'COM_BIBLESTUDY';
+	protected $text_prefix = 'com_proclaim';
 
 	protected $teacher;
 
@@ -39,7 +39,7 @@ class BiblestudyModelSerie extends JModelAdmin
 	public function getForm($data = array(), $loadData = true)
 	{
 		// Get the form.
-		$form = $this->loadForm('com_biblestudy.serie', 'serie', array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_proclaim.serie', 'serie', array('control' => 'jform', 'load_data' => $loadData));
 
 		if (empty($form))
 		{
@@ -63,8 +63,8 @@ class BiblestudyModelSerie extends JModelAdmin
 
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
-		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_biblestudy.serie.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy')))
+		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_proclaim.serie.' . (int) $id))
+			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_proclaim')))
 		{
 			// Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');
@@ -290,7 +290,7 @@ class BiblestudyModelSerie extends JModelAdmin
 	}
 
 	/**
-	 * Custom clean the cache of com_biblestudy and biblestudy modules
+	 * Custom clean the cache of com_proclaim and biblestudy modules
 	 *
 	 * @param   string   $group      The cache group
 	 * @param   integer  $client_id  The ID of the client
@@ -301,7 +301,7 @@ class BiblestudyModelSerie extends JModelAdmin
 	 */
 	protected function cleanCache($group = null, $client_id = 0)
 	{
-		parent::cleanCache('com_biblestudy');
+		parent::cleanCache('com_proclaim');
 		parent::cleanCache('mod_biblestudy');
 		parent::cleanCache('mod_biblestudy_podcast');
 	}
@@ -326,7 +326,7 @@ class BiblestudyModelSerie extends JModelAdmin
 
 			$user = Factory::getUser();
 
-			return $user->authorise('core.delete', 'com_biblestudy.serie.' . (int) $record->id);
+			return $user->authorise('core.delete', 'com_proclaim.serie.' . (int) $record->id);
 		}
 
 		return false;
@@ -348,7 +348,7 @@ class BiblestudyModelSerie extends JModelAdmin
 		// Check for existing article.
 		if (!empty($record->id))
 		{
-			return $user->authorise('core.edit.state', 'com_biblestudy.serie.' . (int) $record->id);
+			return $user->authorise('core.edit.state', 'com_proclaim.serie.' . (int) $record->id);
 		}
 
 		// Default to component settings if serie known.
@@ -409,7 +409,7 @@ class BiblestudyModelSerie extends JModelAdmin
 	{
 		// Check the session for previously entered form data.
 		$app  = Factory::getApplication();
-		$data = $app->getUserState('com_biblestudy.edit.serie.data', array());
+		$data = $app->getUserState('com_proclaim.edit.serie.data', array());
 
 		if (empty($data))
 		{

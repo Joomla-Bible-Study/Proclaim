@@ -120,7 +120,7 @@ class CWMBackup
 				break;
 
 			case 2:
-				$this->dumpFile = JPATH_SITE . '/media/com_biblestudy/backup/' . $this->saveAsName;
+				$this->dumpFile = JPATH_SITE . '/media/com_proclaim/backup/' . $this->saveAsName;
 
 				if (!$this->writeline($this->data_cache))
 				{
@@ -498,7 +498,7 @@ class CWMBackup
 	{
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');
-		$path          = JPATH_SITE . '/media/com_biblestudy/database';
+		$path          = JPATH_SITE . '/media/com_proclaim/database';
 		$exclude = array('.git', '.svn', 'CVS', '.DS_Store', '__MACOSX', '.html');
 		$excludefilter = array('^\..*', '.*~');
 		$files         = Folder::files($path, '.', 'false', 'true', $exclude, $excludefilter);

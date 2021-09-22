@@ -71,7 +71,7 @@ class BiblestudyViewBackup extends JViewLegacy
 
 		// Get the list of backup files
 		jimport('joomla.filesystem.folder');
-		$path = JPATH_SITE . '/media/com_biblestudy/backup';
+		$path = JPATH_SITE . '/media/com_proclaim/backup';
 
 		if (JFolder::exists($path))
 		{
@@ -125,7 +125,7 @@ class BiblestudyViewBackup extends JViewLegacy
 		Factory::getApplication()->input->set('hidemainmenu', true);
 
 		JToolbarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
-		JToolbarHelper::preferences('com_biblestudy', '600', '800', 'JBS_ADM_PERMISSIONS');
+		JToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
 		JToolbarHelper::divider();
 		JToolbarHelper::help('biblestudy', true);
 	}

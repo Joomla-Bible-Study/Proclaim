@@ -174,7 +174,7 @@ class CWMStats
 		foreach ($results as $result)
 		{
 			$top_studies .= $result->hits . ' ' . Text::_('JBS_CMN_HITS') .
-				' - <a href="index.php?option=com_biblestudy&amp;task=message.edit&amp;id=' . $result->id . '">' .
+				' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . $result->id . '">' .
 				$result->studytitle . '</a> - ' . date('Y-m-d', strtotime($result->studydate)) . '<br>';
 		}
 
@@ -301,7 +301,7 @@ class CWMStats
 			foreach ($results as $result)
 			{
 				$top_studies .= $result->hits . ' ' . JText::_('JBS_CMN_HITS') .
-					' - <a href="index.php?option=com_biblestudy&amp;task=message.edit&amp;id=' . $result->id . '">' .
+					' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . $result->id . '">' .
 					$result->studytitle . '</a> - ' . date('Y-m-d', strtotime($result->studydate)) . '<br>';
 			}
 		}
@@ -357,7 +357,7 @@ class CWMStats
 		foreach ($results as $result)
 		{
 			$top_studies .=
-				$result->downloads . ' - <a href="index.php?option=com_biblestudy&amp;task=message.edit&amp;d=' .
+				$result->downloads . ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;d=' .
 				$result->sid . '">' . $result->stitle . '</a> - ' . date('Y-m-d', strtotime($result->sdate)) .
 				'<br>';
 		}
@@ -401,7 +401,7 @@ class CWMStats
 			foreach ($results as $result)
 			{
 				$top_studies .= $result->downloads . ' ' . JText::_('JBS_CMN_HITS') .
-					' - <a href="index.php?option=com_biblestudy&amp;task=message.edit&amp;id=' . $result->sid . '">' .
+					' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . $result->sid . '">' .
 					$result->stitle . '</a> - ' . date('Y-m-d', strtotime($result->sdate)) . '<br>';
 			}
 		}
@@ -478,7 +478,7 @@ class CWMStats
 					$total = $result->added;
 				}
 
-				$link    = ' <a href="index.php?option=com_biblestudy&amp;task=message.edit&amp;id=' . $hits->id . '">' .
+				$link    = ' <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . $hits->id . '">' .
 					$hits->studytitle . '</a> ' . date('Y-m-d', strtotime($hits->studydate)) . '<br>';
 				$final2  = array('total' => $total, 'link' => $link);
 				$final[] = $final2;
@@ -712,7 +712,7 @@ class CWMStats
 				$total = $result->added;
 			}
 
-			$selectvalue   = Route::_('index.php?option=com_biblestudy&view=sermon&id=' . $hits->id . '&t=' . $t);
+			$selectvalue   = Route::_('index.php?option=com_proclaim&view=sermon&id=' . $hits->id . '&t=' . $t);
 			$selectdisplay = $name . ' - ' . Text::_('JBS_CMN_SCORE') . ': ' . $total;
 			$final2        = array(
 				'score'   => $total,

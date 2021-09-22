@@ -115,7 +115,7 @@ class BiblestudyViewMessage extends JViewLegacy
 
 		$this->simple = JBSMHelper::getSimpleView();
 
-		JHtml::stylesheet('media/com_biblestudy/css/token-input-jbs.css');
+		JHtml::stylesheet('media/com_proclaim/css/token-input-jbs.css');
 
 		JHtml::_('biblestudy.framework');
 		$script = "
@@ -136,7 +136,7 @@ class BiblestudyViewMessage extends JViewLegacy
 
 		$document->addScriptDeclaration($script);
 
-		JHtml::script('media/com_biblestudy/js/plugins/jquery.tokeninput.js');
+		JHtml::script('media/com_proclaim/js/plugins/jquery.tokeninput.js');
 
 		// Set the toolbar
 		$this->addToolbar();
@@ -160,7 +160,7 @@ class BiblestudyViewMessage extends JViewLegacy
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
 		JToolbarHelper::title(JText::_('JBS_CMN_STUDIES') . ': <small><small>[ ' . $title . ' ]</small></small>', 'book book');
 
-		if ($isNew && $this->canDo->get('core.create', 'com_biblestudy'))
+		if ($isNew && $this->canDo->get('core.create', 'com_proclaim'))
 		{
 			JToolbarHelper::apply('message.apply');
 			JToolbarHelper::save('message.save');
@@ -169,26 +169,26 @@ class BiblestudyViewMessage extends JViewLegacy
 		}
 		else
 		{
-			if ($this->canDo->get('core.edit', 'com_biblestudy'))
+			if ($this->canDo->get('core.edit', 'com_proclaim'))
 			{
 				JToolbarHelper::apply('message.apply');
 				JToolbarHelper::save('message.save');
 
 				// We can save this record, but check the create permission to see if we can return to make a new one.
-				if ($this->canDo->get('core.create', 'com_biblestudy'))
+				if ($this->canDo->get('core.create', 'com_proclaim'))
 				{
 					JToolbarHelper::save2new('message.save2new');
 				}
 			}
 			// If checked out, we can still save
-			if ($this->canDo->get('core.create', 'com_biblestudy'))
+			if ($this->canDo->get('core.create', 'com_proclaim'))
 			{
 				JToolbarHelper::save2copy('message.save2copy');
 			}
 
 			JToolbarHelper::cancel('message.cancel', 'JTOOLBAR_CLOSE');
 
-			if ($this->canDo->get('core.edit', 'com_biblestudy'))
+			if ($this->canDo->get('core.edit', 'com_proclaim'))
 			{
 				JToolbarHelper::divider();
 				JToolbarHelper::custom('resetHits', 'reset.png', 'Reset Hits', 'JBS_STY_RESET_HITS', false);

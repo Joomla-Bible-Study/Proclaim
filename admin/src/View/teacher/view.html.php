@@ -108,7 +108,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
 		JToolbarHelper::title(JText::_('JBS_CMN_TEACHERS') . ': <small><small>[' . $title . ']</small></small>', 'user user');
 
-		if ($isNew && $this->canDo->get('core.create', 'com_biblestudy'))
+		if ($isNew && $this->canDo->get('core.create', 'com_proclaim'))
 		{
 			JToolbarHelper::apply('teacher.apply');
 			JToolbarHelper::save('teacher.save');
@@ -116,7 +116,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 		}
 		else
 		{
-			if ($this->canDo->get('core.edit', 'com_biblestudy'))
+			if ($this->canDo->get('core.edit', 'com_proclaim'))
 			{
 				JToolbarHelper::apply('teacher.apply');
 				JToolbarHelper::save('teacher.save');

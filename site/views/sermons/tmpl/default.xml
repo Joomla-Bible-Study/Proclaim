@@ -22,7 +22,7 @@
     <fields name="params">
         <fieldset name="basic"
                   label="JBS_MNU_STUDIES_LIST_LAYOUT"
-                  addfieldpath="/administrator/components/com_biblestudy/models/fields">
+                  addfieldpath="/administrator/components/com_proclaim/models/fields">
             <field name="metakey"
                    type="text"
                    class="inputbox"

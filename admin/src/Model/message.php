@@ -25,7 +25,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	 * @var    string  The prefix to use with controller messages.
 	 * @since  1.6
 	 */
-	protected $text_prefix = 'COM_BIBLESTUDY';
+	protected $text_prefix = 'com_proclaim';
 
 	/**
 	 * The type alias for this content type (for example, 'com_content.article').
@@ -33,7 +33,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	 * @var      string
 	 * @since    3.2
 	 */
-	public $typeAlias = 'com_biblestudy.message';
+	public $typeAlias = 'com_proclaim.message';
 
 	/**
 	 * Returns a reference to the a Table object, always creating it.
@@ -262,7 +262,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	public function getForm($data = array(), $loadData = true)
 	{
 		// Get the form.
-		$form = $this->loadForm('com_biblestudy.message', 'message', array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_proclaim.message', 'message', array('control' => 'jform', 'load_data' => $loadData));
 
 		if (empty($form))
 		{
@@ -286,8 +286,8 @@ class BiblestudyModelMessage extends JModelAdmin
 
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
-		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_biblestudy.message.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_biblestudy')))
+		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_proclaim.message.' . (int) $id))
+			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_proclaim')))
 		{
 			// Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');
@@ -419,7 +419,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	}
 
 	/**
-	 * Custom clean the cache of com_biblestudy and biblestudy modules
+	 * Custom clean the cache of com_proclaim and biblestudy modules
 	 *
 	 * @param   string   $group      The cache group
 	 * @param   integer  $client_id  The ID of the client
@@ -430,7 +430,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	 */
 	protected function cleanCache($group = null, $client_id = 0)
 	{
-		parent::cleanCache('com_biblestudy');
+		parent::cleanCache('com_proclaim');
 		parent::cleanCache('mod_biblestudy');
 	}
 
@@ -650,7 +650,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	 */
 	protected function loadFormData()
 	{
-		$data = Factory::getApplication()->getUserState('com_biblestudy.edit.message.data', array());
+		$data = Factory::getApplication()->getUserState('com_proclaim.edit.message.data', array());
 
 		if (empty($data))
 		{

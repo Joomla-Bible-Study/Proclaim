@@ -88,7 +88,7 @@ class Migration900
 	 */
 	public function servers($db, $server)
 	{
-		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_biblestudy/tables');
+		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_proclaim/tables');
 		$server = (object) $server;
 
 		if (!isset($server->id))
@@ -130,7 +130,7 @@ class Migration900
 
 		// Delete old server
 		JTable::getInstance('Server', 'Table', array('dbo' => $db))->delete($server->id);
-		JLog::add('Server on: ' . $server->id . ', New ID: ' . $newServer->id, JLog::INFO, 'com_biblestudy');
+		JLog::add('Server on: ' . $server->id . ', New ID: ' . $newServer->id, JLog::INFO, 'com_proclaim');
 
 		$this->query = array_merge($this->query, array('old-' . $server->id => $newServer));
 
@@ -158,7 +158,7 @@ class Migration900
 
 		$mediaFile = (object) $media;
 		$registry = new Registry;
-		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_biblestudy/tables');
+		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_proclaim/tables');
 
 		$query = $db->getQuery(true);
 		$query->select('*')
@@ -196,7 +196,7 @@ class Migration900
 			$db->execute();
 		}
 
-		JLog::add('Media working on: ' . $mediaFile->id, JLog::INFO, 'com_biblestudy');
+		JLog::add('Media working on: ' . $mediaFile->id, JLog::INFO, 'com_proclaim');
 
 		/** @var TableMediafile $newMediaFile */
 		$newMediaFile = JTable::getInstance('Mediafile', 'Table', array('dbo' => $db));
@@ -293,14 +293,14 @@ class Migration900
 		{
 			// Cast server query to be object and not array.
 			$oldserver = (Object) $this->query['old-' . $mediaFile->server];
-			JLog::add('New Server ID status: ' . $oldserver->id, JLog::NOTICE, 'com_biblestudy');
+			JLog::add('New Server ID status: ' . $oldserver->id, JLog::NOTICE, 'com_proclaim');
 			$newMediaFile->server_id = (int) $oldserver->id;
 		}
 		else
 		{
 			// Use default server ID.
 			$newMediaFile->server_id = (int) $newServer->id;
-			JLog::add('New Lag Server ID status: ' . $newServer->id, JLog::NOTICE, 'com_biblestudy');
+			JLog::add('New Lag Server ID status: ' . $newServer->id, JLog::NOTICE, 'com_proclaim');
 		}
 
 		$newMediaFile->params   = $registry->toString();
@@ -352,12 +352,12 @@ class Migration900
 		$message->title_key          = 'JBS_POSTINSTALL_TITLE_TEMPLATE';
 		$message->description_key    = 'JBS_POSTINSTALL_BODY_TEMPLATE';
 		$message->action_key         = 'JBS_POSTINSTALL_ACTION_TEMPLATE';
-		$message->language_extension = 'com_biblestudy';
+		$message->language_extension = 'com_proclaim';
 		$message->language_client_id = 1;
 		$message->type               = 'action';
-		$message->action_file        = 'admin://components/com_biblestudy/postinstall/template.php';
+		$message->action_file        = 'admin://components/com_proclaim/postinstall/template.php';
 		$message->action             = 'admin_postinstall_template_action';
-		$message->condition_file     = "admin://components/com_biblestudy/postinstall/template.php";
+		$message->condition_file     = "admin://components/com_proclaim/postinstall/template.php";
 		$message->condition_method   = 'admin_postinstall_template_condition';
 		$message->version_introduced = '9.0.0';
 		$message->enabled            = 1;
@@ -368,7 +368,7 @@ class Migration900
 		if (!JFile::exists(JPATH_SITE . '/images/biblestudy/logo.png'))
 		{
 			// Copy the images to the new folder
-			JFolder::copy('/media/com_biblestudy/images', 'images/biblestudy/', JPATH_SITE, true);
+			JFolder::copy('/media/com_proclaim/images', 'images/biblestudy/', JPATH_SITE, true);
 		}
 
 		$script = new BibleStudyModelInstall;
@@ -779,7 +779,7 @@ class Migration900
 				$filecontent    = '<?php defined(\'_JEXEC\') or die; ?>' . $dataheaderlist . '<?php foreach ($this->items as $study){ ?>' .
 					$dataitemlist . '<?php } ?>';
 				$filename       = 'default_listtemplate' . $filenumber;
-				$file           = JPATH_ROOT . '/components/com_biblestudy/views/sermons/tmpl/' . $filename . '.php';
+				$file           = JPATH_ROOT . '/components/com_proclaim/views/sermons/tmpl/' . $filename . '.php';
 				JFile::write($file, $filecontent);
 				$profile               = new stdClass;
 				$profile->published    = 1;
@@ -797,7 +797,7 @@ class Migration900
 				$dataitemlist = $this->itemReplace($dataitemlist);
 				$filecontent  = '<?php defined(\'_JEXEC\') or die; $study = $this->item; ?>' . $dataitemlist;
 				$filename     = 'default_sermontemplate' . $filenumber;
-				$file         = JPATH_ROOT . '/components/com_biblestudy/views/sermon/tmpl/' . $filename . '.php';
+				$file         = JPATH_ROOT . '/components/com_proclaim/views/sermon/tmpl/' . $filename . '.php';
 				JFile::write($file, $filecontent);
 				$profile               = new stdClass;
 				$profile->published    = 1;
@@ -826,7 +826,7 @@ class Migration900
 				$filecontent    = '<?php defined(\'_JEXEC\') or die; ?>' . $dataheaderlist . '<?php foreach ($this->items as $teacher){ ?>' .
 					$dataitemlist . '<?php } ?>';
 				$filename       = 'default_teacherstemplate' . $filenumber;
-				$file           = JPATH_ROOT . '/components/com_biblestudy/views/teachers/tmpl/' . $filename . '.php';
+				$file           = JPATH_ROOT . '/components/com_proclaim/views/teachers/tmpl/' . $filename . '.php';
 				JFile::write($file, $filecontent);
 				$profile               = new stdClass;
 				$profile->published    = 1;
@@ -846,7 +846,7 @@ class Migration900
 				$dataitemlist = $this->itemReplace($dataitemlist);
 				$filecontent  = '<?php defined(\'_JEXEC\') or die; ?>' . $dataitemlist;
 				$filename     = 'default_teachertemplate' . $filenumber;
-				$file         = JPATH_ROOT . '/components/com_biblestudy/views/teacher/tmpl/' . $filename . '.php';
+				$file         = JPATH_ROOT . '/components/com_proclaim/views/teacher/tmpl/' . $filename . '.php';
 				JFile::write($file, $filecontent);
 				$profile               = new stdClass;
 				$profile->published    = 1;
@@ -1010,11 +1010,11 @@ class Migration900
 		jimport('joomla.filesystem.folder');
 
 		$files = array(
-			'/media/com_biblestudy/css/biblestudy.css.dist',
+			'/media/com_proclaim/css/biblestudy.css.dist',
 			'/images/textfile24.png',
-			'/components/com_biblestudy/biblestudy.css',
-			'/components/com_biblestudy/class.biblestudydownload.php',
-			'/components/language/en-GB/en-GB.com_biblestudy.ini',
+			'/components/com_proclaim/biblestudy.css',
+			'/components/com_proclaim/class.biblestudydownload.php',
+			'/components/language/en-GB/en-GB.com_proclaim.ini',
 			'/administrator/language/en-GB/en-GB.com_biblestudy.ini',
 			'/administrator/language/en-GB/en-GB.com_biblestudy.sys.ini',
 			'/administrator/components/com_biblestudy/Snoopy.class.php',

@@ -16,7 +16,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Language;
 
 // Always load JBSM API if it exists.
-$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
 if (file_exists($api))
 {
@@ -133,7 +133,7 @@ class BiblestudyController extends BaseController
 		);
 
 		// Check for edit form.
-		if ($vName === 'form' && !$this->checkEditId('com_biblestudy.edit.message', $id))
+		if ($vName === 'form' && !$this->checkEditId('com_proclaim.edit.message', $id))
 		{
 			// Somehow the person just went to the form - we don't allow that.
 			Factory::getApplication()->enqueueMessage(JText::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id), 'error');
@@ -216,7 +216,7 @@ class BiblestudyController extends BaseController
 
 			$study_detail_id = $this->input->get('study_detail_id', 0, 'INT');
 
-			$mainframe->redirect('index.php?option=com_biblestudy&id=' . $study_detail_id . '&view=sermon&t=' . $t, $msg);
+			$mainframe->redirect('index.php?option=com_proclaim&id=' . $study_detail_id . '&view=sermon&t=' . $t, $msg);
 		}
 	}
 

@@ -39,8 +39,8 @@ class ServerController extends FormController
 
 		if (parent::add())
 		{
-			$app->setUserState('com_biblestudy.edit.server.server_name', null);
-			$app->setUserState('com_biblestudy.edit.server.type', null);
+			$app->setUserState('com_proclaim.edit.server.server_name', null);
+			$app->setUserState('com_proclaim.edit.server.type', null);
 
 			return true;
 		}
@@ -66,8 +66,8 @@ class ServerController extends FormController
 
 		if ($result)
 		{
-			$app->setUserState('com_biblestudy.edit.server.server_name', null);
-			$app->setUserState('com_biblestudy.edit.server.type', null);
+			$app->setUserState('com_proclaim.edit.server.server_name', null);
+			$app->setUserState('com_proclaim.edit.server.type', null);
 		}
 
 		return true;
@@ -93,8 +93,8 @@ class ServerController extends FormController
 		$recordId = $type->id ?? 0;
 
 		// Save the endpoint in the session
-		$app->setUserState('com_biblestudy.edit.server.type', $type->name);
-		$app->setUserState('com_biblestudy.edit.server.server_name', $sname);
+		$app->setUserState('com_proclaim.edit.server.type', $type->name);
+		$app->setUserState('com_proclaim.edit.server.server_name', $sname);
 
 		$this->setRedirect(
 			Route::_('index.php?option=' . $this->option . '&view=' . $this->view_item .

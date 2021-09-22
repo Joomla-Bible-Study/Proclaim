@@ -123,7 +123,7 @@ class MessagesModel extends ListModel
 		}
 
 		// Load the parameters.
-		$params = ComponentHelper::getParams('com_biblestudy');
+		$params = ComponentHelper::getParams('com_proclaim');
 		$this->setState('params', $params);
 
 		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');

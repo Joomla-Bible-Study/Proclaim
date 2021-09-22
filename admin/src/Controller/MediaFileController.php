@@ -37,7 +37,7 @@ class MediaFileController extends FormController
 	 * @var    string
 	 * @since  12.2
 	 */
-	protected $option = 'com_biblestudy';
+	protected $option = 'com_proclaim';
 
 	/**
 	 * Method to add a new record.
@@ -53,9 +53,9 @@ class MediaFileController extends FormController
 
 		if (parent::add())
 		{
-			$app->setUserState('com_biblestudy.edit.mediafile.createdate', null);
-			$app->setUserState('com_biblestudy.edit.mediafile.study_id', null);
-			$app->setUserState('com_biblestudy.edit.mediafile.server_id', null);
+			$app->setUserState('com_proclaim.edit.mediafile.createdate', null);
+			$app->setUserState('com_proclaim.edit.mediafile.study_id', null);
+			$app->setUserState('com_proclaim.edit.mediafile.server_id', null);
 
 			return true;
 		}
@@ -81,9 +81,9 @@ class MediaFileController extends FormController
 
 		if ($result)
 		{
-			$app->setUserState('com_biblestudy.edit.mediafile.createdate', null);
-			$app->setUserState('com_biblestudy.edit.mediafile.study_id', null);
-			$app->setUserState('com_biblestudy.edit.mediafile.server_id', null);
+			$app->setUserState('com_proclaim.edit.mediafile.createdate', null);
+			$app->setUserState('com_proclaim.edit.mediafile.study_id', null);
+			$app->setUserState('com_proclaim.edit.mediafile.server_id', null);
 		}
 
 		return true;
@@ -136,7 +136,7 @@ class MediaFileController extends FormController
 		$model = $this->getModel('Mediafile', 'BiblestudyModel', array());
 
 		// Preset the redirect
-		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=mediafiles' . $this->getRedirectToListAppend(), false));
+		$this->setRedirect(JRoute::_('index.php?option=com_proclaim&view=mediafiles' . $this->getRedirectToListAppend(), false));
 
 		return parent::batch($model);
 	}
@@ -224,9 +224,9 @@ class MediaFileController extends FormController
 		$server_id = $data['server_id'];
 
 		// Save server in the session
-		$app->setUserState('com_biblestudy.edit.mediafile.createdate', $cdate);
-		$app->setUserState('com_biblestudy.edit.mediafile.study_id', $study_id);
-		$app->setUserState('com_biblestudy.edit.mediafile.server_id', $server_id);
+		$app->setUserState('com_proclaim.edit.mediafile.createdate', $cdate);
+		$app->setUserState('com_proclaim.edit.mediafile.study_id', $study_id);
+		$app->setUserState('com_proclaim.edit.mediafile.server_id', $server_id);
 
 		$redirect = $this->getRedirectToItemAppend($data['id']);
 		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item . $redirect, false));

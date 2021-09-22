@@ -29,7 +29,7 @@ class CWMSeriesDisplayModel extends ItemModel{
 	 *
 	 * @since 7.0
 	 */
-	protected $context = 'com_biblestudy.seriesdisplay';
+	protected $context = 'com_proclaim.seriesdisplay';
 
 	/**
 	 * Method to auto-populate the model state.
@@ -78,7 +78,7 @@ class CWMSeriesDisplayModel extends ItemModel{
 
 		$user = Factory::getUser();
 
-		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
+		if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise('core.edit', 'com_proclaim')))
 		{
 			$this->setState('filter.published', 1);
 			$this->setState('filter.archived', 2);

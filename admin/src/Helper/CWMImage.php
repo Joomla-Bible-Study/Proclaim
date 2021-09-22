@@ -30,7 +30,7 @@ class CWMImage
 	 *
 	 * @since 1.5
 	 */
-	public static string $extension = 'com_biblestudy';
+	public static string $extension = 'com_proclaim';
 
 	/**
 	 * Get Image

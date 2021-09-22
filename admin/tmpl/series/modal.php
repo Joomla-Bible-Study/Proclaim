@@ -24,7 +24,7 @@ $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn = $this->escape($this->state->get('list.direction'));
 ?>
 <form
-	action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=series&layout=modal&tmpl=component&function=' . $function . '&' . JSession::getFormToken() . '=1'); ?>"
+	action="<?php echo JRoute::_('index.php?option=com_proclaim&view=series&layout=modal&tmpl=component&function=' . $function . '&' . JSession::getFormToken() . '=1'); ?>"
 	method="post" name="adminForm" id="adminForm" class="form-inline">
 	<fieldset id="filter clearfix">
 		<div class="btn-toolbar">

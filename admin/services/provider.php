@@ -53,7 +53,7 @@ return new class implements ServiceProviderInterface {
 				$component->setRouterFactory($container->get(RouterFactoryInterface::class));
 
 				// Always load JBSM API if it exists.
-				$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+				$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
 				if (file_exists($api))
 				{

@@ -27,7 +27,7 @@ JHtml::_('biblestudy.loadCss', $params, null, 'font-awesome');
 		?>
 		<div class="row-fluid">
 			<div class="span12">
-				<?php echo JHtml::_('content.prepare', $params->get('pageheader'), '', 'com_biblestudy.module'); ?>
+				<?php echo JHtml::_('content.prepare', $params->get('pageheader'), '', 'com_proclaim.module'); ?>
 			</div>
 		</div>
 	<?php

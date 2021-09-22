@@ -28,13 +28,13 @@ $columns   = 5;
 
 if ($saveOrder)
 {
-	$saveOrderingUrl = 'index.php?option=com_biblestudy&task=location.saveOrderAjax&tmpl=component';
+	$saveOrderingUrl = 'index.php?option=com_proclaim&task=location.saveOrderAjax&tmpl=component';
 	JHtml::_('sortablelist.sortable', 'locationsList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 }
 
 $sortFields = $this->getSortFields();
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=locations'); ?>" method="post" name="adminForm"
+<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=locations'); ?>" method="post" name="adminForm"
       id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
@@ -86,9 +86,9 @@ $sortFields = $this->getSortFields();
 						$item->max_ordering = 0;
 						$ordering = ($listOrder == 'location.ordering');
 						$canCreate = $user->authorise('core.create');
-						$canEdit = $user->authorise('core.edit', 'com_biblestudy.location.' . $item->id);
-						$canEditOwn = $user->authorise('core.edit.own', 'com_biblestudy.location.' . $item->id);
-						$canChange = $user->authorise('core.edit.state', 'com_biblestudy.location.' . $item->id);
+						$canEdit = $user->authorise('core.edit', 'com_proclaim.location.' . $item->id);
+						$canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.location.' . $item->id);
+						$canChange = $user->authorise('core.edit.state', 'com_proclaim.location.' . $item->id);
 						?>
 						<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo '1' ?>">
 							<td class="center hidden-phone">
@@ -102,7 +102,7 @@ $sortFields = $this->getSortFields();
 							<td class="nowrap has-context">
 								<div class="pull-left">
 									<?php if ($canEdit || $canEditOwn) : ?>
-										<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=location.edit&id=' . (int) $item->id); ?>"
+										<a href="<?php echo JRoute::_('index.php?option=com_proclaim&task=location.edit&id=' . (int) $item->id); ?>"
 										   title="<?php echo JText::_('JACTION_EDIT'); ?>">
 											<?php echo $this->escape($item->location_text); ?></a>
 									<?php else : ?>
@@ -151,9 +151,9 @@ $sortFields = $this->getSortFields();
 					</tbody>
 				</table>
 				<?php // Load the batch processing form. ?>
-				<?php if ($user->authorise('core.create', 'com_biblestudy')
-					&& $user->authorise('core.edit', 'com_biblestudy')
-					&& $user->authorise('core.edit.state', 'com_biblestudy')
+				<?php if ($user->authorise('core.create', 'com_proclaim')
+					&& $user->authorise('core.edit', 'com_proclaim')
+					&& $user->authorise('core.edit.state', 'com_proclaim')
 				) : ?>
 					<?php echo JHtml::_(
 						'bootstrap.renderModal',

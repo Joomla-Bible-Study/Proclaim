@@ -7,7 +7,7 @@
         </message>
     </layout>
     <fields name="request">
-        <fieldset name="request" addfieldpath="/administrator/components/com_biblestudy/models/fields">
+        <fieldset name="request" addfieldpath="/administrator/components/com_proclaim/models/fields">
             <field name="t" type="sql"
                    description="JBS_MNU_SELECT_TEMPLATE_DESC"
                    label="JBS_MNU_SELECT_TEMPLATE"

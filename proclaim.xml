@@ -52,7 +52,7 @@
 	</files>
 
 	<!-- Media files -->
-	<media destination="com_biblestudy" folder="media">
+	<media destination="com_proclaim" folder="media">
 		<folder>backup</folder>
 		<folder>css</folder>
 		<folder>fancybox</folder>
@@ -65,23 +65,23 @@
 	</media>
 
 	<administration>
-		<menu img="../media/com_proclaim/images/menu/icon-16-biblemenu.png">JBS_CMN_COM_BIBLESTUDY</menu>
+		<menu img="../media/com_proclaim/images/menu/icon-16-biblemenu.png">JBS_CMN_com_proclaim</menu>
 		<submenu>
 			<!-- Note that all & must be escaped to &amp; for the file to be valid XML and be parsed by the installer -->
-			<menu link="option=com_proclaim" img="../media/com_biblestudy/images/menu/icon-16-biblemenu.png">JBS_MNU_CONTROL_PANEL</menu>
-			<menu link="option=com_proclaim&amp;task=admin.edit&amp;id=1" img="../media/com_biblestudy/images/menu/icon-16-administration.png">JBS_MNU_ADMINISTRATION</menu>
-			<menu link="option=com_proclaim&amp;view=messages" img="../media/com_biblestudy/images/menu/icon-16-studies.png">JBS_MNU_STUDIES</menu>
-			<menu link="option=com_proclaim&amp;view=mediafiles" img="../media/com_biblestudy/images/menu/icon-16-mp3.png">JBS_MNU_MEDIA_FILES</menu>
-			<menu link="option=com_proclaim&amp;view=teachers" img="../media/com_biblestudy/images/menu/icon-16-teachers.png">JBS_MNU_TEACHERS</menu>
-			<menu link="option=com_proclaim&amp;view=series" img="../media/com_biblestudy/images/menu/icon-16-series.png">JBS_MNU_SERIES</menu>
-			<menu link="option=com_proclaim&amp;view=messagetypes" img="../media/com_biblestudy/images/menu/icon-16-messagetype.png">JBS_MNU_MESSAGETYPES</menu>
-			<menu link="option=com_proclaim&amp;view=locations" img="../media/com_biblestudy/images/menu/icon-16-locations.png">JBS_MNU_LOCATIONS</menu>
-			<menu link="option=com_proclaim&amp;view=topics" img="../media/com_biblestudy/images/menu/icon-16-topics.png">JBS_MNU_TOPICS</menu>
-			<menu link="option=com_proclaim&amp;view=comments" img="../media/com_biblestudy/images/menu/icon-16-comments.png">JBS_MNU_STUDY_COMMENTS</menu>
-			<menu link="option=com_proclaim&amp;view=servers" img="../media/com_biblestudy/images/menu/icon-16-servers.png">JBS_MNU_SERVERS</menu>
-			<menu link="option=com_proclaim&amp;view=podcasts" img="../media/com_biblestudy/images/menu/icon-16-podcast.png">JBS_MNU_PODCASTS</menu>
-			<menu link="option=com_proclaim&amp;view=templates" img="../media/com_biblestudy/images/menu/icon-16-templates.png">JBS_MNU_TEMPLATE_DISPLAY</menu>
-			<menu link="option=com_proclaim&amp;view=templatecodes" img="../media/com_biblestudy/images/menu/icon-16-templates.png">JBS_MNU_TEMPLATE_CODE_DISPLAY</menu>
+			<menu link="option=com_proclaim" img="../media/com_proclaim/images/menu/icon-16-biblemenu.png">JBS_MNU_CONTROL_PANEL</menu>
+			<menu link="option=com_proclaim&amp;task=admin.edit&amp;id=1" img="../media/com_proclaim/images/menu/icon-16-administration.png">JBS_MNU_ADMINISTRATION</menu>
+			<menu link="option=com_proclaim&amp;view=messages" img="../media/com_proclaim/images/menu/icon-16-studies.png">JBS_MNU_STUDIES</menu>
+			<menu link="option=com_proclaim&amp;view=mediafiles" img="../media/com_proclaim/images/menu/icon-16-mp3.png">JBS_MNU_MEDIA_FILES</menu>
+			<menu link="option=com_proclaim&amp;view=teachers" img="../media/com_proclaim/images/menu/icon-16-teachers.png">JBS_MNU_TEACHERS</menu>
+			<menu link="option=com_proclaim&amp;view=series" img="../media/com_proclaim/images/menu/icon-16-series.png">JBS_MNU_SERIES</menu>
+			<menu link="option=com_proclaim&amp;view=messagetypes" img="../media/com_proclaim/images/menu/icon-16-messagetype.png">JBS_MNU_MESSAGETYPES</menu>
+			<menu link="option=com_proclaim&amp;view=locations" img="../media/com_proclaim/images/menu/icon-16-locations.png">JBS_MNU_LOCATIONS</menu>
+			<menu link="option=com_proclaim&amp;view=topics" img="../media/com_proclaim/images/menu/icon-16-topics.png">JBS_MNU_TOPICS</menu>
+			<menu link="option=com_proclaim&amp;view=comments" img="../media/com_proclaim/images/menu/icon-16-comments.png">JBS_MNU_STUDY_COMMENTS</menu>
+			<menu link="option=com_proclaim&amp;view=servers" img="../media/com_proclaim/images/menu/icon-16-servers.png">JBS_MNU_SERVERS</menu>
+			<menu link="option=com_proclaim&amp;view=podcasts" img="../media/com_proclaim/images/menu/icon-16-podcast.png">JBS_MNU_PODCASTS</menu>
+			<menu link="option=com_proclaim&amp;view=templates" img="../media/com_proclaim/images/menu/icon-16-templates.png">JBS_MNU_TEMPLATE_DISPLAY</menu>
+			<menu link="option=com_proclaim&amp;view=templatecodes" img="../media/com_proclaim/images/menu/icon-16-templates.png">JBS_MNU_TEMPLATE_CODE_DISPLAY</menu>
 			<!-- Instead of link you can specify individual link attributes -->
 		</submenu>
 

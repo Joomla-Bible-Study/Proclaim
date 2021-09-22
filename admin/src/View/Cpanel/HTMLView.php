@@ -88,7 +88,7 @@ class HTMLView extends BaseHtmlView
 	{
 		$this->state = $this->get('State');
 		$model       = $this->getModel();
-		$component = JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.xml';
+		$component = JPATH_ADMINISTRATOR . '/components/com_proclaim/biblestudy.xml';
 
 		if (file_exists($component))
 		{

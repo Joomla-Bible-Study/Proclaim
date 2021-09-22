@@ -111,7 +111,7 @@ class BiblestudyViewTopic extends JViewLegacy
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
 		JToolbarHelper::title(JText::_('JBS_CMN_TOPICS') . ': <small><small>[' . $title . ']</small></small>', 'tag tag');
 
-		if ($isNew && $this->canDo->get('core.create', 'com_biblestudy'))
+		if ($isNew && $this->canDo->get('core.create', 'com_proclaim'))
 		{
 			JToolbarHelper::apply('topic.apply');
 			JToolbarHelper::save('topic.save');
@@ -119,7 +119,7 @@ class BiblestudyViewTopic extends JViewLegacy
 		}
 		else
 		{
-			if ($this->canDo->get('core.edit', 'com_biblestudy'))
+			if ($this->canDo->get('core.edit', 'com_proclaim'))
 			{
 				JToolbarHelper::apply('topic.apply');
 				JToolbarHelper::save('topic.save');

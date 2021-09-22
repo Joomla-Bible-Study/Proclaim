@@ -132,7 +132,7 @@ class LocationTable extends Table
 	{
 		$k = $this->_tbl_key;
 
-		return 'com_biblestudy.location.' . (int) $this->$k;
+		return 'com_proclaim.location.' . (int) $this->$k;
 	}
 
 	/**
@@ -165,7 +165,7 @@ class LocationTable extends Table
 		// For simple cases, parent to the asset root.
 		/** @var Asset $assets */
 		$asset = Table::getInstance('Asset', 'JTable', array('dbo' => $this->getDbo()));
-		$asset->loadByName('com_biblestudy');
+		$asset->loadByName('com_proclaim');
 
 		return $asset->id;
 	}

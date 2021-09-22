@@ -231,7 +231,7 @@ class BiblestudyViewDatabase extends JViewLegacy
 
 		$this->updateJBSMVersion = $this->get('UpdateJBSMVersion');
 
-		$jbsversion    = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.xml');
+		$jbsversion    = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_proclaim/biblestudy.xml');
 		$this->version = $jbsversion['version'];
 
 		if ($this->schemaVersion != $this->changeSet->getSchema())
@@ -288,7 +288,7 @@ class BiblestudyViewDatabase extends JViewLegacy
 		Factory::getApplication()->input->set('hidemainmenu', true);
 
 		JToolbarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
-		JToolbarHelper::preferences('com_biblestudy', '600', '800', 'JBS_ADM_PERMISSIONS');
+		JToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
 		JToolbarHelper::divider();
 		JToolbarHelper::custom('administration.back', 'back', 'back', 'JTOOLBAR_BACK', false);
 		JToolbarHelper::divider();

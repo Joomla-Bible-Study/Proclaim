@@ -57,7 +57,7 @@ Factory::getDocument()->addScriptDeclaration("
             </h1>
         </div>
 	<?php endif; ?>
-    <form action="<?php echo 'index.php?option=com_biblestudy&view=mediafileform&layout=edit&id=' . (int) $this->item->id; ?>"
+    <form action="<?php echo 'index.php?option=com_proclaim&view=mediafileform&layout=edit&id=' . (int) $this->item->id; ?>"
           method="post"
           name="adminForm"
           id="media-form"

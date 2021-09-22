@@ -12,8 +12,9 @@ defined('_JEXEC') or die;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\View\HtmlView;
-//HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers');
-//HTMLHelper::_('behavior.caption');
+use CWM\Component\Proclaim\Site\Helper\CWMListing;
+HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers');
+HTMLHelper::_('behavior.caption');
 
 // Create shortcuts to some parameters.
 
@@ -21,9 +22,9 @@ use Joomla\CMS\MVC\View\HtmlView;
 $params = $this->item->params;
 $user = Factory::getUser();
 $canEdit = $params->get('access-edit');
-
-HtmlView::loadHelper('title');
-HtmlView::loadHelper('teacher');
+$view = new HtmlView;
+$view->loadHelper('title');
+$view->loadHelper('teacher');
 $row = $this->item;
 ?>
 

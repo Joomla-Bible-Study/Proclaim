@@ -17,7 +17,7 @@
 	<config>
 		<fields name="params">
 			<fieldset name="basic"
-			          addfieldpath="/administrator/components/com_biblestudy/models/fields">
+			          addfieldpath="/administrator/components/com_proclaim/models/fields">
 				<field name="dummy" type="loadlanguagefile" default=""/>   <!-- load common language file -->
 				<field name="t" type="sql" default="1"
 				       label="JBS_MDL_SELECT_TEMPLATE" description="JBS_MDL_SELECT_TEMPLATE_DESC"

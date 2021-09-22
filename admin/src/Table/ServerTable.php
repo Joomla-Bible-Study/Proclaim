@@ -169,7 +169,7 @@ class ServerTable extends Table
 	{
 		$k = $this->_tbl_key;
 
-		return 'com_biblestudy.server.' . (int) $this->$k;
+		return 'com_proclaim.server.' . (int) $this->$k;
 	}
 
 	/**
@@ -201,7 +201,7 @@ class ServerTable extends Table
 	{
 		/** @type Asset $asset */
 		$asset = Table::getInstance('Asset');
-		$asset->loadByName('com_biblestudy');
+		$asset->loadByName('com_proclaim');
 
 		return $asset->id;
 	}

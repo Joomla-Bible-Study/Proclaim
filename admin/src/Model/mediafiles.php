@@ -27,7 +27,7 @@ class BiblestudyModelMediafiles extends JModelList
 	 *
 	 * @since 7.0
 	 */
-	public $context = 'com_biblestudy.mediafiles';
+	public $context = 'com_proclaim.mediafiles';
 
 	/**
 	 * Number of Deletions

@@ -50,7 +50,7 @@ class TemplateController extends FormController
 			$msg = $model->getError();
 		}
 
-		$this->setRedirect('index.php?option=com_biblestudy&view=templates', $msg);
+		$this->setRedirect('index.php?option=com_proclaim&view=templates', $msg);
 	}
 
 	/**
@@ -79,7 +79,7 @@ class TemplateController extends FormController
 			echo "<script> alert('" . $model->getError(true) . "'); window.history.go(-1); </script>\n";
 		}
 
-		$this->setRedirect('index.php?option=com_biblestudy&view=templates');
+		$this->setRedirect('index.php?option=com_proclaim&view=templates');
 	}
 
 	/**

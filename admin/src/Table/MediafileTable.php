@@ -217,7 +217,7 @@ class MediafileTable extends Table
 	{
 		$k = $this->_tbl_key;
 
-		return 'com_biblestudy.mediafile.' . (int) $this->$k;
+		return 'com_proclaim.mediafile.' . (int) $this->$k;
 	}
 
 	/**
@@ -249,7 +249,7 @@ class MediafileTable extends Table
 	{
 		/** @type Asset $asset */
 		$asset = Table::getInstance('Asset');
-		$asset->loadByName('com_biblestudy');
+		$asset->loadByName('com_proclaim');
 
 		return $asset->id;
 	}

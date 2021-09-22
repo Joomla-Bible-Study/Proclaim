@@ -50,9 +50,9 @@ class BiblestudyViewUpload extends JViewLegacy
 		JHtml::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/helpers/html/');
 		JHtml::_('jquery.framework', 'false');
 
-		$mediaDir      = JUri::root() . "media/com_biblestudy/plupload/";
+		$mediaDir      = JUri::root() . "media/com_proclaim/plupload/";
 		$document      = Factory::getDocument();
-		$params        = JComponentHelper::getParams('com_biblestudy');
+		$params        = JComponentHelper::getParams('com_proclaim');
 		$UploadScript  = new UploadScript($params, $mediaDir);
 		$runtimeScript = $UploadScript->runtimeScript;
 		$runtime       = $UploadScript->runtime;

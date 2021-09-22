@@ -62,7 +62,7 @@ class BiblestudyViewLandingpage extends JViewLegacy
 		$this->state  = $this->get('state');
 		$this->params = $this->state->template->params;
 
-		$itemparams = JComponentHelper::getParams('com_biblestudy');
+		$itemparams = JComponentHelper::getParams('com_proclaim');
 
 		// Prepare meta information (under development)
 		if ($itemparams->get('metakey'))

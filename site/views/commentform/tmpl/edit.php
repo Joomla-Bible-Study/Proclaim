@@ -26,7 +26,7 @@ $input = $app->input;
 ?>
 <div class="edit item-page<?php echo $this->pageclass_sfx; ?>">
 	<form
-		action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=commentfrom&a_id=' . (int) $this->item->id); ?>"
+		action="<?php echo JRoute::_('index.php?option=com_proclaim&view=commentfrom&a_id=' . (int) $this->item->id); ?>"
 		method="post" name="adminForm" id="adminForm" class="form-validate form-vertical">
 		<div class="btn-toolbar">
 			<div class="btn-group">

@@ -55,7 +55,7 @@ class AdministrationModel extends AdminModel
 	 * @var        string    The prefix to use with controller messages.
 	 * @since    1.6
 	 */
-	protected $text_prefix = 'COM_BIBLESTUDY';
+	protected $text_prefix = 'com_proclaim';
 
 	/**
 	 * The type alias for this content type (for example, 'com_content.article').
@@ -63,7 +63,7 @@ class AdministrationModel extends AdminModel
 	 * @var    string
 	 * @since  3.2
 	 */
-	public $typeAlias = 'com_biblestudy.administration';
+	public $typeAlias = 'com_proclaim.administration';
 
 	/**
 	 * The context used for the associations table
@@ -71,7 +71,7 @@ class AdministrationModel extends AdminModel
 	 * @var    string
 	 * @since  3.4.4
 	 */
-	protected $associationsContext = 'com_biblestudy.item';
+	protected $associationsContext = 'com_proclaim.item';
 
 	/**
 	 * Name of the form
@@ -142,7 +142,7 @@ class AdministrationModel extends AdminModel
 		}
 
 		// Get the form.
-		$form = $this->loadForm('com_biblestudy.admin', 'admin', array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_proclaim.admin', 'admin', array('control' => 'jform', 'load_data' => $loadData));
 
 		if (empty($form))
 		{
@@ -263,7 +263,7 @@ class AdministrationModel extends AdminModel
 	 */
 	public function getItems()
 	{
-		$folder = JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/sql/updates/';
+		$folder = JPATH_ADMINISTRATOR . '/components/com_proclaim/install/sql/updates/';
 
 		if ($this->changeSet !== null)
 		{
@@ -342,7 +342,7 @@ class AdministrationModel extends AdminModel
 	public function getCompVersion()
 	{
 		$jversion = null;
-		$file     = JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.xml';
+		$file     = JPATH_ADMINISTRATOR . '/components/com_proclaim/biblestudy.xml';
 		$xml      = simplexml_load_string(file_get_contents($file));
 
 		if ($xml)
@@ -366,7 +366,7 @@ class AdministrationModel extends AdminModel
 		$db    = Factory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('extension_id')->from($db->qn('#__extensions'))
-			->where('element = ' . $db->q('com_biblestudy'));
+			->where('element = ' . $db->q('com_proclaim'));
 		$db->setQuery($query);
 		$result = $db->loadResult();
 
@@ -492,7 +492,7 @@ class AdministrationModel extends AdminModel
 	}
 
 	/**
-	 * Check if com_biblestudy parameters are blank. If so, populate with com_content text filters.
+	 * Check if com_proclaim parameters are blank. If so, populate with com_content text filters.
 	 *
 	 * @return  mixed  boolean true if params are updated, null otherwise
 	 *
@@ -501,13 +501,13 @@ class AdministrationModel extends AdminModel
 	public function fixDefaultTextFilters()
 	{
 		$table = Table::getInstance('Extension');
-		$table->load($table->find(array('name' => 'com_biblestudy')));
+		$table->load($table->find(array('name' => 'com_proclaim')));
 
 		// Check for empty $config and non-empty content filters
 		if (!$table->params)
 		{
 			// Get filters from com_content and store if you find them
-			$contentParams = ComponentHelper::getParams('com_biblestudy');
+			$contentParams = ComponentHelper::getParams('com_proclaim');
 
 			if ($contentParams->get('filters'))
 			{
@@ -553,7 +553,7 @@ class AdministrationModel extends AdminModel
 	}
 
 	/**
-	 * Check if com_biblestudy parameters are blank.
+	 * Check if com_proclaim parameters are blank.
 	 *
 	 * @return  string  default text filters (if any)
 	 *
@@ -562,7 +562,7 @@ class AdministrationModel extends AdminModel
 	public function getDefaultTextFilters()
 	{
 		$table = Table::getInstance('Extension');
-		$table->load($table->find(array('name' => 'com_biblestudy')));
+		$table->load($table->find(array('name' => 'com_proclaim')));
 
 		return $table->params;
 	}
@@ -707,10 +707,10 @@ class AdministrationModel extends AdminModel
 //	protected function populateState($ordering = null, $direction = null)
 //	{
 //		$app = Factory::getApplication();
-//		$this->setState('message', $app->getUserState('com_biblestudy.message'));
-//		$this->setState('extension_message', $app->getUserState('com_biblestudy.extension_message'));
-//		$app->setUserState('com_biblestudy.message', '');
-//		$app->setUserState('com_biblestudy.extension_message', '');
+//		$this->setState('message', $app->getUserState('com_proclaim.message'));
+//		$this->setState('extension_message', $app->getUserState('com_proclaim.extension_message'));
+//		$app->setUserState('com_proclaim.message', '');
+//		$app->setUserState('com_proclaim.extension_message', '');
 //		parent::populateState();
 //	}
 
@@ -742,7 +742,7 @@ class AdministrationModel extends AdminModel
 	 */
 	protected function loadFormData()
 	{
-		$data = Factory::getApplication()->getUserState('com_biblestudy.edit.administration.data', array());
+		$data = Factory::getApplication()->getUserState('com_proclaim.edit.administration.data', array());
 
 		if (empty($data))
 		{

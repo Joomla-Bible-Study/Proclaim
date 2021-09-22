@@ -53,7 +53,7 @@ Factory::getDocument()->addScriptDeclaration('
 	}
 ');
 ?>
-<form action="<?php echo 'index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . (int) $this->item->id; ?>"
+<form action="<?php echo 'index.php?option=com_proclaim&view=mediafile&layout=edit&id=' . (int) $this->item->id; ?>"
       method="post"
       name="adminForm"
       id="media-form"

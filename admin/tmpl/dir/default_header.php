@@ -20,7 +20,7 @@ $first_bc = true;
 				<?php if (!$first_bc) : ?>
 					&GT;
 				<?php endif; ?>
-				<a href="index.php?option=com_biblestudy&view=dir&tmpl=component&dir=<?php echo $bc->link; ?>"><?php echo $bc->name ?></a>
+				<a href="index.php?option=com_proclaim&view=dir&tmpl=component&dir=<?php echo $bc->link; ?>"><?php echo $bc->name ?></a>
 			</li>
 			<?php $first_bc = false; endforeach; ?>
 		<li><a id="new_folder" href="#"><img src="<?php echo $this->imgURL ?>folder_new.png"/></a></li>

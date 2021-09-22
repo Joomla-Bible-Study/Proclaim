@@ -16,7 +16,7 @@ use Joomla\CMS\Layout\LayoutHelper;
 
 $published = $this->state->get('filter.published');
 
-$params = ComponentHelper::getParams('com_biblestudy');
+$params = ComponentHelper::getParams('com_proclaim');
 
 $published = (int) $this->state->get('filter.published');
 

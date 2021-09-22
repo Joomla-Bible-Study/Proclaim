@@ -39,7 +39,7 @@ $sortFields = $this->getSortFields();
 		Joomla.tableOrdering(order, dirn, '');
 	}
 </script>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=topics'); ?>" method="post" name="adminForm"
+<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=topics'); ?>" method="post" name="adminForm"
       id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
@@ -87,12 +87,12 @@ $sortFields = $this->getSortFields();
 					<tbody>
 					<?php
 					foreach ($this->items as $i => $item) :
-						$link = JRoute::_('index.php?option=com_biblestudy&task=topic.edit&id=' . (int) $item->id);
+						$link = JRoute::_('index.php?option=com_proclaim&task=topic.edit&id=' . (int) $item->id);
 						$item->max_ordering = 0; //??
 						$canCreate = $user->authorise('core.create');
-						$canEdit = $user->authorise('core.edit', 'com_biblestudy.topic.' . $item->id);
-						$canEditOwn = $user->authorise('core.edit.own', 'com_biblestudy.topic.' . $item->id);
-						$canChange = $user->authorise('core.edit.state', 'com_biblestudy.topic.' . $item->id);
+						$canEdit = $user->authorise('core.edit', 'com_proclaim.topic.' . $item->id);
+						$canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.topic.' . $item->id);
+						$canChange = $user->authorise('core.edit.state', 'com_proclaim.topic.' . $item->id);
 						?>
 						<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo '1' ?>">
 
@@ -109,7 +109,7 @@ $sortFields = $this->getSortFields();
 								<div class="pull-left">
 
 									<?php if ($canEdit || $canEditOwn) : ?>
-										<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=topic.edit&id=' . (int) $item->id); ?>">
+										<a href="<?php echo JRoute::_('index.php?option=com_proclaim&task=topic.edit&id=' . (int) $item->id); ?>">
 											<?php echo $this->escape($item->topic_text); ?>
 										</a>
 

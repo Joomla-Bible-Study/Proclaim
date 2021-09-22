@@ -10,7 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/components/com_biblestudy/proclaim.script.php');
+JLoader::register('com_proclaimInstallerScript', JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.script.php');
 
 /**
  * JView class for Install

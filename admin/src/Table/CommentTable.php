@@ -137,7 +137,7 @@ class CommentTable extends Table
 	{
 		$k = $this->_tbl_key;
 
-		return 'com_biblestudy.comment.' . (int) $this->$k;
+		return 'com_proclaim.comment.' . (int) $this->$k;
 	}
 
 	/**
@@ -171,7 +171,7 @@ class CommentTable extends Table
 	{
 		/** @type TableAsset $asset */
 		$asset = Table::getInstance('Asset');
-		$asset->loadByName('com_biblestudy');
+		$asset->loadByName('com_proclaim');
 
 		return $asset->id;
 	}

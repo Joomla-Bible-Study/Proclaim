@@ -328,7 +328,7 @@ class PodcastTable extends Table
 	{
 		$k = $this->_tbl_key;
 
-		return 'com_biblestudy.podcast.' . (int) $this->$k;
+		return 'com_proclaim.podcast.' . (int) $this->$k;
 	}
 
 	/**
@@ -360,7 +360,7 @@ class PodcastTable extends Table
 	{
 		/** @type Asset $asset */
 		$asset = Table::getInstance('Asset');
-		$asset->loadByName('com_biblestudy');
+		$asset->loadByName('com_proclaim');
 
 		return $asset->id;
 	}

@@ -15,7 +15,7 @@ use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 use CWM\Component\Proclaim\Administrator\Controller\MediaFilesController;
 // Base this model on the backend version.
-//JLoader::register('BiblestudyModelMediafiles', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/MediaFilesController.php');
+//JLoader::register('BiblestudyModelMediafiles', JPATH_ADMINISTRATOR . '/components/com_proclaim/models/MediaFilesController.php');
 
 /**
  * Model class for MediaFiles

@@ -26,12 +26,12 @@ $columns   = 10;
 
 if ($saveOrder)
 {
-	$saveOrderingUrl = 'index.php?option=com_biblestudy&task=mediafiles.saveOrderAjax&tmpl=component';
+	$saveOrderingUrl = 'index.php?option=com_proclaim&task=mediafiles.saveOrderAjax&tmpl=component';
 	JHtml::_('sortablelist.sortable', 'mediafileList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 }
 $sortFields = $this->getSortFields();
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafiles'); ?>" method="post"
+<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=mediafiles'); ?>" method="post"
       name="adminForm" id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
@@ -98,10 +98,10 @@ $sortFields = $this->getSortFields();
 						$item->max_ordering = 0;
 						$ordering = ($listOrder === 'mediafile.ordering');
 						$canCreate = $user->authorise('core.create');
-						$canEdit = $user->authorise('core.edit', 'com_biblestudy.mediafile.' . $item->id);
+						$canEdit = $user->authorise('core.edit', 'com_proclaim.mediafile.' . $item->id);
 						$canCheckin = $user->authorise('core.manage', 'com_checkin') || $item->checked_out == $userId || $item->checked_out == 0;
-						$canEditOwn = $user->authorise('core.edit.own', 'com_biblestudy.mediafile.' . $item->id);
-						$canChange = $user->authorise('core.edit.state', 'com_biblestudy.mediafile.' . $item->id);
+						$canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.mediafile.' . $item->id);
+						$canChange = $user->authorise('core.edit.state', 'com_proclaim.mediafile.' . $item->id);
 						$label = $this->escape($item->serverConfig->name->__toString()) . ' - ';
 						$label .= $this->escape($item->params[$item->serverConfig->config->media_resource->__toString()])
 							? $item->serverConfig->config->media_resource->__toString() : 'mediacode';
@@ -156,7 +156,7 @@ $sortFields = $this->getSortFields();
 										<?php $language = $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
 									<?php endif; ?>
 									<?php if ($canEdit || $canEditOwn) : ?>
-										<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=mediafile.edit&id=' . (int) $item->id); ?>">
+										<a href="<?php echo JRoute::_('index.php?option=com_proclaim&task=mediafile.edit&id=' . (int) $item->id); ?>">
 											<span class="label pull-left"><?php echo $this->escape($label); ?></span>
 										</a>
 									<?php else : ?>
@@ -168,7 +168,7 @@ $sortFields = $this->getSortFields();
 								</div>
 								<div class="clearfix"></div>
 								<div class="pull-left">
-									<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=mediafile.edit&id=' . (int) $item->id); ?>">
+									<a href="<?php echo JRoute::_('index.php?option=com_proclaim&task=mediafile.edit&id=' . (int) $item->id); ?>">
 										<?php echo $this->escape($item->params[$item->serverConfig->config->media_resource->__toString()]); ?>
 									</a>
 								</div>
@@ -196,9 +196,9 @@ $sortFields = $this->getSortFields();
 					</tbody>
 				</table>
 				<?php // Load the batch processing form. ?>
-				<?php if ($user->authorise('core.create', 'com_biblestudy')
-					&& $user->authorise('core.edit', 'com_biblestudy')
-					&& $user->authorise('core.edit.state', 'com_biblestudy')
+				<?php if ($user->authorise('core.create', 'com_proclaim')
+					&& $user->authorise('core.edit', 'com_proclaim')
+					&& $user->authorise('core.edit.state', 'com_proclaim')
 				) : ?>
 					<?php echo JHtml::_(
 						'bootstrap.renderModal',

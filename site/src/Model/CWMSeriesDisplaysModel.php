@@ -122,7 +122,7 @@ class CWMSeriesDisplaysModel extends ListModel
 		$template_params = CWMParams::getTemplateparams();
 		$t_params        = $template_params->params;
 		$app             = Factory::getApplication('site');
-		$params          = ComponentHelper::getParams('com_biblestudy');
+		$params          = ComponentHelper::getParams('com_proclaim');
 		$menuparams      = new Registry;
 		$menu            = $app->getMenu()->getActive();
 

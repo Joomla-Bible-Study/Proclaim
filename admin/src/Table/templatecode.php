@@ -118,27 +118,27 @@ class TableTemplatecode extends Table
 		{
 			case 1:
 				// Sermons
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/sermons/tmpl' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/views/sermons/tmpl' . DIRECTORY_SEPARATOR . $filename;
 				break;
 			case 2:
 				// Sermon
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/sermon/tmpl' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/views/sermon/tmpl' . DIRECTORY_SEPARATOR . $filename;
 				break;
 			case 3:
 				// Teachers
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/teachers/tmpl' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/views/teachers/tmpl' . DIRECTORY_SEPARATOR . $filename;
 				break;
 			case 4:
 				// Teacher
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/teacher/tmpl' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/views/teacher/tmpl' . DIRECTORY_SEPARATOR . $filename;
 				break;
 			case 5:
 				// Seriesdisplays
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/seriesdisplays/tmpl' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/views/seriesdisplays/tmpl' . DIRECTORY_SEPARATOR . $filename;
 				break;
 			case 6:
 				// Seriesdisplay
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/seriesdisplay/tmpl' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/views/seriesdisplay/tmpl' . DIRECTORY_SEPARATOR . $filename;
 				break;
 			case 7:
 				// Model Display
@@ -194,27 +194,27 @@ class TableTemplatecode extends Table
 		{
 			case 1:
 				// Sermons
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/sermons/tmpl' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/views/sermons/tmpl' . DIRECTORY_SEPARATOR . $filename;
 				break;
 			case 2:
 				// Sermon
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/sermon/tmpl' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/views/sermon/tmpl' . DIRECTORY_SEPARATOR . $filename;
 				break;
 			case 3:
 				// Teachers
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/teachers/tmpl' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/views/teachers/tmpl' . DIRECTORY_SEPARATOR . $filename;
 				break;
 			case 4:
 				// Teacher
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/teacher/tmpl' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/views/teacher/tmpl' . DIRECTORY_SEPARATOR . $filename;
 				break;
 			case 5:
 				// Seriesdisplays
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/seriesdisplays/tmpl' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/views/seriesdisplays/tmpl' . DIRECTORY_SEPARATOR . $filename;
 				break;
 			case 6:
 				// Seriesdisplay
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_biblestudy/views/seriesdisplay/tmpl' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/views/seriesdisplay/tmpl' . DIRECTORY_SEPARATOR . $filename;
 				break;
 			case 7:
 				// Module's Display
@@ -248,7 +248,7 @@ class TableTemplatecode extends Table
 	{
 		$k = $this->_tbl_key;
 
-		return 'com_biblestudy.templatecode.' . (int) $this->$k;
+		return 'com_proclaim.templatecode.' . (int) $this->$k;
 	}
 
 	/**
@@ -282,7 +282,7 @@ class TableTemplatecode extends Table
 	{
 		/** @type TableAsset $asset */
 		$asset = Table::getInstance('Asset');
-		$asset->loadByName('com_biblestudy');
+		$asset->loadByName('com_proclaim');
 
 		return $asset->id;
 	}

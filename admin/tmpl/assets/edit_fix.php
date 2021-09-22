@@ -37,9 +37,9 @@ else
     <div class="bar" style="width: <?php echo $this->percentage ?>%;"></div> <?php echo $this->percentage; ?>%
 </div>
 
-<form action="<?php JRoute::_('index.php?option=com_biblestudy&view=assets'); ?>" name="adminForm" id="adminForm"
+<form action="<?php JRoute::_('index.php?option=com_proclaim&view=assets'); ?>" name="adminForm" id="adminForm"
       method="get">
-    <input type="hidden" name="option" value="com_biblestudy"/>
+    <input type="hidden" name="option" value="com_proclaim"/>
     <input type="hidden" name="view" value="assets"/>
 	<?php if ($this->state === 'start')
 	{ ?>
@@ -60,7 +60,7 @@ else
     <script type="text/javascript">
 		window.setTimeout('closeme();', 3000);
 		function closeme() {
-			window.parent.document.location = 'index.php?option=com_biblestudy&view=assets&task=assets.checkassets&<?php echo JSession::getFormToken(); ?>=1';
+			window.parent.document.location = 'index.php?option=com_proclaim&view=assets&task=assets.checkassets&<?php echo JSession::getFormToken(); ?>=1';
 			window.location.reload();
 			parent.SqueezeBox.close();
 		}

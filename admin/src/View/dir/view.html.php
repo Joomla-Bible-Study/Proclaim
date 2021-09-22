@@ -40,10 +40,10 @@ class BiblestudyViewDir extends JViewLegacy
 	public function display($tpl = null)
 	{
 		$document = Factory::getDocument();
-		$mediaDir = JUri::root() . "media/com_biblestudy/";
+		$mediaDir = JUri::root() . "media/com_proclaim/";
 
 		// Add style sheet
-		$document->addStyleSheet($mediaDir . 'css/com_biblestudy.css');
+		$document->addStyleSheet($mediaDir . 'css/com_proclaim.css');
 		$bodyStyle = "body {background-color: #F4F4F4;}";
 		$document->addStyleDeclaration($bodyStyle);
 
@@ -125,7 +125,7 @@ class BiblestudyViewDir extends JViewLegacy
 
 		function rmPath( fileName ) {
 
-		var action = 'index.php?option=com_biblestudy&no_html=1&task=path.delete';
+		var action = 'index.php?option=com_proclaim&no_html=1&task=path.delete';
 		var currentFolder = $('input#current_folder').val();
 		var token = '<?php echo JSession::getFormToken() ?>';
 		var dataString = '';
@@ -149,7 +149,7 @@ class BiblestudyViewDir extends JViewLegacy
 		alert('Enter a name for new folder');
 		} else {
 		var dataString = $('#input_form').serialize();
-		var action = 'index.php?option=com_biblestudy&no_html=1&task=folder.create';
+		var action = 'index.php?option=com_proclaim&no_html=1&task=folder.create';
 		ajaxReq(dataString, action);
 		}
 		return false;

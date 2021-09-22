@@ -33,7 +33,7 @@ $input  = $app->input;
 </script>
 
 
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=edit&id=' . (int) $this->item->id); ?>"
+<form action="<?php echo JRoute::_('index.php?option=com_proclaim&layout=edit&id=' . (int) $this->item->id); ?>"
       method="post" name="adminForm" id="item-form" class="form-validate">
     <div class="row-fluid">
         <!-- Begin Content -->

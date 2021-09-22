@@ -30,7 +30,7 @@ class CWMTags
 	 *
 	 * @since 1.5
 	 */
-	public static $extension = 'com_biblestudy';
+	public static $extension = 'com_proclaim';
 
 	/**
 	 * Check to see if Duplicate

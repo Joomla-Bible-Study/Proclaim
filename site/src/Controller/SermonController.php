@@ -200,7 +200,7 @@ class SermonController extends BaseController
 			$study_detail_id = $input->get('study_detail_id', 0, 'int');
 
 			$input->redirect(
-				'index.php?option=com_biblestudy&id=' . $study_detail_id . '&view=sermon&t=' . $t . '&msg=' . $msg,
+				'index.php?option=com_proclaim&id=' . $study_detail_id . '&view=sermon&t=' . $t . '&msg=' . $msg,
 				'Comment Added'
 			);
 		}

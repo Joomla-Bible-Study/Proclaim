@@ -16,7 +16,7 @@ JHtml::_('formbehavior.chosen', 'select');
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=migrate'); ?>" enctype="multipart/form-data"
+<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=migrate'); ?>" enctype="multipart/form-data"
       method="post" name="adminForm" id="adminForm">
     <div class="row-fluid">
         <div class="span10 form-horizontal">

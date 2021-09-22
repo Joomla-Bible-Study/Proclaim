@@ -97,11 +97,11 @@ BootableExtensionInterface, FieldsServiceInterface, RouterServiceInterface
 	 */
 	public function getContexts(): array
 	{
-		Factory::getLanguage()->load('com_biblestudy', JPATH_ADMINISTRATOR);
+		Factory::getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
 
 		$contexts = array(
-			'com_biblestudy.cpanel'    => Text::_('COM_BIBLESTUDY'),
-			'com_biblestudy.administrator' => Text::_('JCATEGORY')
+			'com_proclaim.cpanel'    => Text::_('com_proclaim'),
+			'com_proclaim.administrator' => Text::_('JCATEGORY')
 		);
 
 		return $contexts;

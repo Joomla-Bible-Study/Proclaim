@@ -14,7 +14,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Layout\LayoutHelper;
 
-$params = ComponentHelper::getParams('com_biblestudy');
+$params = ComponentHelper::getParams('com_proclaim');
 
 $published = (int) $this->state->get('filter.published');
 

@@ -112,7 +112,7 @@ class JFormFieldServer extends JFormField
 			$sview = 'servers';
 		}
 
-		$link = 'index.php?option=com_biblestudy&amp;view=' . $sview . '&amp;layout=modal&amp;tmpl=component&amp;function=jSelectServer_' . $this->id;
+		$link = 'index.php?option=com_proclaim&amp;view=' . $sview . '&amp;layout=modal&amp;tmpl=component&amp;function=jSelectServer_' . $this->id;
 
 		if (isset($this->element['language']))
 		{
@@ -146,7 +146,7 @@ class JFormFieldServer extends JFormField
 		{
 			$html[] = '<a'
 				. ' class="btn hasTooltip' . ($value ? '' : ' hidden') . '"'
-				. ' href="index.php?option=com_biblestudy&layout=modal&tmpl=component&task=server.edit&id=' . $value . '"'
+				. ' href="index.php?option=com_proclaim&layout=modal&tmpl=component&task=server.edit&id=' . $value . '"'
 				. ' target="_blank"'
 				. ' title="' . JHtml::tooltipText('JBS_SVR_SERVER_NAME') . '" >'
 				. '<span class="icon-edit"></span>' . JText::_('JACTION_EDIT')

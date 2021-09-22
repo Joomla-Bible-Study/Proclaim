@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 // Always load JBSM API if it exists.
-$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
 if (file_exists($api))
 {
@@ -62,7 +62,7 @@ class controller extends JControllerLegacy
 
 		if ($jbsstate)
 		{
-			$cache = new JCache(array('defaultgroup' => 'com_biblestudy'));
+			$cache = new JCache(array('defaultgroup' => 'com_proclaim'));
 			$cache->clean();
 			$app->input->set('view', 'install');
 			$app->input->set('scanstate', 'start');
@@ -90,6 +90,6 @@ class controller extends JControllerLegacy
 
 		$podcasts = new JBSMPodcast;
 		$result   = $podcasts->makePodcasts();
-		$this->setRedirect('index.php?option=com_biblestudy&view=podcasts&' . JSession::getFormToken() . '=1', $result);
+		$this->setRedirect('index.php?option=com_proclaim&view=podcasts&' . JSession::getFormToken() . '=1', $result);
 	}
 }

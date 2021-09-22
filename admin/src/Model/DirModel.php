@@ -53,11 +53,11 @@ class DirModel extends ItemModel
 		if (strpos($currentDir, BIBLESTUDY_ROOT_PATH) === false)
 		{
 			// Path is invalid, save default directory
-			$session->set('current_dir', $homeDirBase64, 'com_biblestudy');
+			$session->set('current_dir', $homeDirBase64, 'com_proclaim');
 		}
 		else
 		{
-			$session->set('current_dir', $currentDirBase64, 'com_biblestudy');
+			$session->set('current_dir', $currentDirBase64, 'com_proclaim');
 		}
 	}
 

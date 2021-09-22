@@ -142,7 +142,7 @@ class BiblestudyViewMediafile extends JViewLegacy
 		$title      = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
 		JToolbarHelper::title(JText::_('JBS_CMN_MEDIA_FILES') . ': <small><small>[' . $title . ']</small></small>', 'video video');
 
-		if ($isNew && $this->canDo->get('core.create', 'com_biblestudy'))
+		if ($isNew && $this->canDo->get('core.create', 'com_proclaim'))
 		{
 			JToolbarHelper::apply('mediafile.apply');
 			JToolbarHelper::save('mediafile.save');
@@ -152,19 +152,19 @@ class BiblestudyViewMediafile extends JViewLegacy
 		else
 		{
 			// Can't save the record if it's checked out.
-			if (!$checkedOut && $this->canDo->get('core.edit', 'com_biblestudy'))
+			if (!$checkedOut && $this->canDo->get('core.edit', 'com_proclaim'))
 			{
 				JToolbarHelper::apply('mediafile.apply');
 				JToolbarHelper::save('mediafile.save');
 
-				if ($this->canDo->get('core.create', 'com_biblestudy'))
+				if ($this->canDo->get('core.create', 'com_proclaim'))
 				{
 					JToolbarHelper::save2new('mediafile.save2new');
 				}
 			}
 
 			// If checked out, we can still save
-			if ($this->canDo->get('core.create', 'com_biblestudy'))
+			if ($this->canDo->get('core.create', 'com_proclaim'))
 			{
 				JToolbarHelper::save2copy('mediafile.save2copy');
 			}

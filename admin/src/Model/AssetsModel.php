@@ -13,7 +13,7 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 defined('_JEXEC') or die;
 
 // Always load JBSM API if it exists.
-$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
 if (file_exists($api))
 {

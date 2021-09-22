@@ -17,7 +17,7 @@ $j(document).ready(function () {
 		var docManItems = $j('#docManItems');
 		docManItems.removeOption(/./);
 		var catId = $j('#docManCategories option:selected').attr('value');
-		var url = 'index.php?option=com_biblestudy&controller=mediafilesedit&task=docmanCategoryItems&format=raw&catId=';
+		var url = 'index.php?option=com_proclaim&controller=mediafilesedit&task=docmanCategoryItems&format=raw&catId=';
 		// request the items
 		$j.ajax({
 			dataType: "json",
@@ -44,7 +44,7 @@ $j(document).ready(function () {
 	$j('#articlesSections').change(function () {
 		$j('#articleSectionCategories').removeOption(/./);
 		var secId = $j('#articlesSections option:selected').attr('value');
-		var url = 'index.php?option=com_biblestudy&controller=mediafilesedit&task=articlesSectionCategories&format=raw&secId=' + secId;
+		var url = 'index.php?option=com_proclaim&controller=mediafilesedit&task=articlesSectionCategories&format=raw&secId=' + secId;
 		if (secId !== "") {
 			$j.ajax({
 				dataType: "json",
@@ -77,7 +77,7 @@ $j(document).ready(function () {
 			function () {
 				$j('#categoryItems').removeOption(/./);
 				var catId = $j('#articleSectionCategories option:selected').attr('value');
-				var url = 'index.php?option=com_biblestudy&controller=mediafilesedit&task=articlesCategoryItems&format=raw&catId=' + catId;
+				var url = 'index.php?option=com_proclaim&controller=mediafilesedit&task=articlesCategoryItems&format=raw&catId=' + catId;
 				$j.ajax({
 					dataType: "json",
 					url: url,
@@ -96,7 +96,7 @@ $j(document).ready(function () {
 
 	function refreshArticleItems() {
 		var catId = $j('#articleSectionCategories option:selected').attr('value');
-		var url = 'index.php?option=com_biblestudy&controller=mediafilesedit&task=articlesCategoryItems&format=raw&catId=' + catId;
+		var url = 'index.php?option=com_proclaim&controller=mediafilesedit&task=articlesCategoryItems&format=raw&catId=' + catId;
 		$j.ajax({
 			dataType: "json",
 			url: url,
@@ -114,7 +114,7 @@ $j(document).ready(function () {
 		var virtueMartItems = $j('#virtueMartItems');
 		virtueMartItems.removeOption(/./);
 		var catId = $j('#virtueMartCategories option:selected').attr('value');
-		var url = 'index.php?option=com_biblestudy&controller=mediafilesedit&task=virtueMartItems&format=raw&catId=';
+		var url = 'index.php?option=com_proclaim&controller=mediafilesedit&task=virtueMartItems&format=raw&catId=';
 		// request the items
 		$j.ajax({
 			dataType: "json",
@@ -166,7 +166,7 @@ $j(document).ready(function () {
 
 	//Articles Integration (1.6 Version)
 	$j('#jform_article_id').change(function () {
-		var url = 'index.php?option=com_biblestudy&task=mediafilesedit.articlesCategoryItems&format=raw';
+		var url = 'index.php?option=com_proclaim&task=mediafilesedit.articlesCategoryItems&format=raw';
 		var categories = $j("#categoryItems");
 		categories.removeOption(/./); //Remove all the items before reloading them
 		$j('#loadingMsg').html('Loading Articles');

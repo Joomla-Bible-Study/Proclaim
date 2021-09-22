@@ -457,7 +457,7 @@ class MessageTable extends Table
 	{
 		$k = $this->_tbl_key;
 
-		return 'com_biblestudy.message.' . (int) $this->$k;
+		return 'com_proclaim.message.' . (int) $this->$k;
 	}
 
 	/**
@@ -489,7 +489,7 @@ class MessageTable extends Table
 	{
 		/** @type Asset $asset */
 		$assets = self::getInstance('Asset', 'JTable', array('dbo' => $this->getDbo()));
-		$asset->loadByName('com_biblestudy');
+		$asset->loadByName('com_proclaim');
 
 		return $asset->id;
 	}

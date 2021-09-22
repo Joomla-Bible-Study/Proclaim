@@ -52,14 +52,14 @@ class MessageController extends FormController
 		$userId   = $user->get('id');
 
 		// Check general edit permission first.
-		if ($user->authorise('core.edit', 'com_biblestudy.message.' . $recordId))
+		if ($user->authorise('core.edit', 'com_proclaim.message.' . $recordId))
 		{
 			return true;
 		}
 
 		// Fallback on edit.own.
 		// First test if the permission is available.
-		if ($user->authorise('core.edit.own', 'com_biblestudy.message.' . $recordId))
+		if ($user->authorise('core.edit.own', 'com_proclaim.message.' . $recordId))
 		{
 			// Now test the owner is the user.
 			$ownerId = (int) isset($data['created_by']) ? $data['created_by'] : 0;
@@ -113,13 +113,13 @@ class MessageController extends FormController
 		if (!$db->execute())
 		{
 			$msg = Text::_('JBS_CMN_ERROR_RESETTING_HITS');
-			$this->setRedirect('index.php?option=com_biblestudy&view=message&controller=administrator&layout=form&cid[]=' . $id, $msg);
+			$this->setRedirect('index.php?option=com_proclaim&view=message&controller=administrator&layout=form&cid[]=' . $id, $msg);
 		}
 		else
 		{
 			$updated = $db->getAffectedRows();
 			$msg     = Text::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . Text::_('JBS_CMN_ROWS_RESET');
-			$this->setRedirect('index.php?option=com_biblestudy&view=message&controller=message&layout=form&cid[]=' . $id, $msg);
+			$this->setRedirect('index.php?option=com_proclaim&view=message&controller=message&layout=form&cid[]=' . $id, $msg);
 		}
 	}
 
@@ -135,7 +135,7 @@ class MessageController extends FormController
 	public function batch($model = null)
 	{
 		// Preset the redirect
-		$this->setRedirect(Route::_('index.php?option=com_biblestudy&view=messages' . $this->getRedirectToListAppend(), false));
+		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=messages' . $this->getRedirectToListAppend(), false));
 
 		return parent::batch($this->getModel('Message', '', array()));
 	}
@@ -180,7 +180,7 @@ class MessageController extends FormController
 		// Get Tags
 		$vTags = $data['topics'];
 		$iTags = explode(",", $vTags);
-		Table::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_biblestudy/tables');
+		Table::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_proclaim/tables');
 
 		// Remove Exerting StudyTopics tags
 		$db = Factory::getDbo();

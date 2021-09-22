@@ -72,21 +72,21 @@ class TemplatesController extends AdminController
 		if (!(bool) ini_get('file_uploads'))
 		{
 			$app->enqueueMessage(JText::_('JBS_CMN_UPLOADS_NOT_ENABLED'), 'warning');
-			$this->setRedirect('index.php?option=com_biblestudy&view=templates');
+			$this->setRedirect('index.php?option=com_proclaim&view=templates');
 		}
 
 		// If there is no uploaded file, we have a problem...
 		if (!is_array($userfile))
 		{
 			$app->enqueueMessage(JText::_('JBS_CMN_NO_FILE_SELECTED'), 'warning');
-			$this->setRedirect('index.php?option=com_biblestudy&view=templates');
+			$this->setRedirect('index.php?option=com_proclaim&view=templates');
 		}
 
 		// Check if there was a problem uploading the file.
 		if ($userfile['error'] || $userfile['size'] < 1)
 		{
 			$app->enqueueMessage(JText::_('JBS_CMN_WARN_INSTALL_UPLOAD_ERROR'), 'warning');
-			$this->setRedirect('index.php?option=com_biblestudy&view=templates');
+			$this->setRedirect('index.php?option=com_proclaim&view=templates');
 		}
 
 		// Build the appropriate paths
@@ -261,7 +261,7 @@ class TemplatesController extends AdminController
 
 		$message = JText::_('JBS_TPL_IMPORT_SUCCESS');
 
-		return $this->setRedirect('index.php?option=com_biblestudy&view=templates', $message);
+		return $this->setRedirect('index.php?option=com_proclaim&view=templates', $message);
 	}
 
 	/**
@@ -305,7 +305,7 @@ class TemplatesController extends AdminController
 		if (!$exporttemplate)
 		{
 			$message = JText::_('JBS_TPL_NO_FILE_SELECTED');
-			$this->setRedirect('index.php?option=com_biblestudy&view=templates', $message);
+			$this->setRedirect('index.php?option=com_proclaim&view=templates', $message);
 		}
 
 		jimport('joomla.filesystem.file');
@@ -331,7 +331,7 @@ class TemplatesController extends AdminController
 		JFile::delete($filepath);
 		$message = JText::_('JBS_TPL_EXPORT_SUCCESS');
 
-		return $this->setRedirect('index.php?option=com_biblestudy&view=templates', $message);
+		return $this->setRedirect('index.php?option=com_proclaim&view=templates', $message);
 	}
 
 	/**

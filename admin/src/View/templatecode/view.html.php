@@ -95,7 +95,7 @@ class BiblestudyViewTemplatecode extends JViewLegacy
 			jimport('joomla.filesystem.file');
 			JClientHelper::setCredentialsFromRequest('ftp');
 			$ftp               = JClientHelper::getCredentials('ftp');
-			$file              = JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/defaulttemplatecode.php';
+			$file              = JPATH_ADMINISTRATOR . '/components/com_proclaim/helpers/defaulttemplatecode.php';
 			$this->defaultcode = file_get_contents($file);
 		}
 
@@ -131,7 +131,7 @@ class BiblestudyViewTemplatecode extends JViewLegacy
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
 		JToolbarHelper::title(JText::_('JBS_CMN_TEMPLATECODE') . ': <small><small>[' . $title . ']</small></small>', 'file file');
 
-		if ($isNew && $this->canDo->get('core.create', 'com_biblestudy'))
+		if ($isNew && $this->canDo->get('core.create', 'com_proclaim'))
 		{
 			JToolbarHelper::apply('templatecode.apply');
 			JToolbarHelper::save('templatecode.save');
@@ -140,7 +140,7 @@ class BiblestudyViewTemplatecode extends JViewLegacy
 		}
 		else
 		{
-			if ($this->canDo->get('core.edit', 'com_biblestudy'))
+			if ($this->canDo->get('core.edit', 'com_proclaim'))
 			{
 				JToolbarHelper::apply('templatecode.apply');
 				JToolbarHelper::save('templatecode.save');

@@ -110,7 +110,7 @@
 			<option>JBS_CMN_DEFAULT_IMAGE</option>
 		</field>
 		<!--Users for simple_view-->
-		<field name="users" type="sql" extension="com_biblestudy" label="JBS_USERS"
+		<field name="users" type="sql" extension="com_proclaim" label="JBS_USERS"
 			   description="JBS_USERS_DESC" class="list" multiple="multiple"
 			   query="SELECT id, username FROM #__users ORDER BY id ASC"
 			   key_field="id"
@@ -125,7 +125,7 @@
 		<field name="thumbnail_study_size" default="100" type="int" size="5" label="JBS_ADM_THUMBNAIL_STUDY_SIZE"
 		       description="JBS_ADM_THUMBNAIL_STUDY_SIZE_DESC" labelclass="control-label" class="span2"/>
 
-		<field name="location_id" type="sql" extension="com_biblestudy" label="JBS_CMN_LOCATION"
+		<field name="location_id" type="sql" extension="com_proclaim" label="JBS_CMN_LOCATION"
 		       description="JBS_ADM_FILLIN_STUDY_DESC" class="inputbox"
 		       query="SELECT id, location_text FROM #__bsms_locations WHERE published = 1 ORDER BY location_text ASC"
 		       key_field="id"
@@ -372,7 +372,7 @@
 			<option value="1">JBS_CMN_YES</option>
 		</field>
 	</fieldset>
-	<fieldset addfieldpath="/administrator/components/com_biblestudy/models/fields" addrulepath="/administrator/components/com_biblestudy/models/rules">
+	<fieldset addfieldpath="/administrator/components/com_proclaim/models/fields" addrulepath="/administrator/components/com_proclaim/models/rules">
 		<field name="mediaimage" type="mediafileimages" class="inputbox" labelclass="control-label"
 		       label="JBS_ADM_MEDIA_IMAGES" size="20">
 			<option value="-1">JBS_SELECT_IMAGE</option>

@@ -21,7 +21,7 @@ $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 ?>
 <form
-	action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=servers&layout=modal&tmpl=component&function=' . $function); ?>"
+	action="<?php echo JRoute::_('index.php?option=com_proclaim&view=servers&layout=modal&tmpl=component&function=' . $function); ?>"
 	method="post" name="adminForm" id="adminForm" class="form-inline">
 	<?php
 	// Search tools bar
@@ -47,7 +47,7 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 			<tr class="row<?php echo $i % 2; ?>">
 				<td class="center">
 					<a href="javascript:void(0)"
-					   onclick="if (window.parent) window.parent.<?php echo $this->escape($function); ?>('<?php echo $item->id; ?>', '<?php echo $item->server_name; ?>', '', null, '<?php echo "index.php?option=com_biblestudy&view=server&id=" . $item->id; ?>', '', null);">
+					   onclick="if (window.parent) window.parent.<?php echo $this->escape($function); ?>('<?php echo $item->id; ?>', '<?php echo $item->server_name; ?>', '', null, '<?php echo "index.php?option=com_proclaim&view=server&id=" . $item->id; ?>', '', null);">
 						<?php echo $this->escape($item->server_name); ?>
 					</a>
 				</td>

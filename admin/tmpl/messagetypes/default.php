@@ -41,7 +41,7 @@ $sortFields = $this->getSortFields();
 		Joomla.tableOrdering(order, dirn, '');
 	}
 </script>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messagetypes'); ?>" method="post"
+<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=messagetypes'); ?>" method="post"
       name="adminForm" id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
@@ -86,9 +86,9 @@ $sortFields = $this->getSortFields();
 					foreach ($this->items as $i => $item) :
 						$item->max_ordering = 0;
 						$canCreate = $user->authorise('core.create');
-						$canEdit = $user->authorise('core.edit', 'com_biblestudy.messagetype.' . $item->id);
-						$canEditOwn = $user->authorise('core.edit.own', 'com_biblestudy.messagetype.' . $item->id);
-						$canChange = $user->authorise('core.edit.state', 'com_biblestudy.messagetype.' . $item->id);
+						$canEdit = $user->authorise('core.edit', 'com_proclaim.messagetype.' . $item->id);
+						$canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.messagetype.' . $item->id);
+						$canChange = $user->authorise('core.edit.state', 'com_proclaim.messagetype.' . $item->id);
 						?>
 						<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo '1' ?>">
 
@@ -104,7 +104,7 @@ $sortFields = $this->getSortFields();
 								<div class="pull-left">
 
 									<?php if ($canEdit || $canEditOwn) : ?>
-										<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=messagetype.edit&id=' . (int) $item->id); ?>"
+										<a href="<?php echo JRoute::_('index.php?option=com_proclaim&task=messagetype.edit&id=' . (int) $item->id); ?>"
 										   title="<?php echo JText::_('JACTION_EDIT'); ?>">
 											<?php echo $this->escape($item->message_type); ?></a>
 									<?php else : ?>
@@ -151,9 +151,9 @@ $sortFields = $this->getSortFields();
 					</tbody>
 				</table>
 				<?php // Load the batch processing form. ?>
-				<?php if ($user->authorise('core.create', 'com_biblestudy')
-					&& $user->authorise('core.edit', 'com_biblestudy')
-					&& $user->authorise('core.edit.state', 'com_biblestudy')
+				<?php if ($user->authorise('core.create', 'com_proclaim')
+					&& $user->authorise('core.edit', 'com_proclaim')
+					&& $user->authorise('core.edit.state', 'com_proclaim')
 				) : ?>
 					<?php echo HTMLHelper::_(
 						'bootstrap.renderModal',

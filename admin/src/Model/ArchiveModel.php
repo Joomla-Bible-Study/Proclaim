@@ -26,7 +26,7 @@ class ArchiveModel extends AdminModel
 	 * @var        string    The prefix to use with controller messages.
 	 * @since    1.6
 	 */
-	protected $text_prefix = 'COM_BIBLESTUDY';
+	protected $text_prefix = 'com_proclaim';
 
 	/**
 	 * Gets the form from the XML file.
@@ -41,7 +41,7 @@ class ArchiveModel extends AdminModel
 	public function getForm($data = array(), $loadData = true)
 	{
 		// Get the form.
-		$form = $this->loadForm('com_biblestudy.archive', 'archive', array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_proclaim.archive', 'archive', array('control' => 'jform', 'load_data' => $loadData));
 
 		if ($form === null)
 		{

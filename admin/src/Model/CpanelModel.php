@@ -35,7 +35,7 @@ class CpanelModel extends BaseDatabaseModel
 		$query  = $db->getQuery(true);
 		$query->select('*');
 		$query->from('#__extensions');
-		$query->where('element = "com_biblestudy" and type = "component"');
+		$query->where('element = "com_proclaim" and type = "component"');
 		$db->setQuery($query);
 
 		try
@@ -85,7 +85,7 @@ class CpanelModel extends BaseDatabaseModel
 		$query = $db->getQuery(true);
 		$query->select('extension_id')
 			->from('#__extensions')
-			->where($db->qn('element') . ' = ' . $db->q('com_biblestudy'));
+			->where($db->qn('element') . ' = ' . $db->q('com_proclaim'));
 		$db->setQuery($query);
 
 		try

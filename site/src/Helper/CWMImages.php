@@ -54,7 +54,7 @@ class CWMImages
 
 		if (!$params->get('default_main_image'))
 		{
-			$path = 'media/com_biblestudy/images/openbible.png';
+			$path = 'media/com_proclaim/images/openbible.png';
 		}
 		else
 		{
@@ -324,7 +324,7 @@ class CWMImages
 	 */
 	private static function getMediaImageFolder()
 	{
-		return 'media/com_biblestudy/images';
+		return 'media/com_proclaim/images';
 	}
 
 	/**
@@ -340,7 +340,7 @@ class CWMImages
 
 		if (!$admin->params->get('default_showHide_image'))
 		{
-			$path = 'media/com_biblestudy/images/showhide.gif';
+			$path = 'media/com_proclaim/images/showhide.gif';
 		}
 		else
 		{

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-	<fieldset addfieldpath="/administrator/components/com_biblestudy/models/fields">
+	<fieldset addfieldpath="/administrator/components/com_proclaim/models/fields">
 	    <field name="id" type="hidden"/>
 	    <field name="createdate" type="calendar" label="JBS_CMN_CREATE_DATE"
 	           description="JBS_MED_CREATE_DATE_DESC" class="inputbox" size="22"
@@ -45,7 +45,7 @@
 	    </field>
 	    <field name="asset_id" type="hidden" filter="unset"/>
 	    <field name="rules" type="rules" label="JFIELD_RULES_LABEL"
-	           translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"
+	           translate_label="false" class="inputbox" filter="rules" component="com_proclaim"
 	           section="mediafile" validate="rules"/>
 		<!--Server media specific fields-->
 		<field name="params"/>

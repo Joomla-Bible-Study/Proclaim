@@ -25,7 +25,7 @@ class CWMPagebuilder
 	/** @var string Extension Name
 	 * @since 7.0
 	 */
-	public $extension = 'com_biblestudy';
+	public $extension = 'com_proclaim';
 
 	/** @var  string Event
 	 * @since 7.0
@@ -136,7 +136,7 @@ class CWMPagebuilder
 			$page->series_thumnail = '';
 		}
 
-		$page->detailslink = JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $item->slug . '&t=' . $params->get('detailstemplateid'));
+		$page->detailslink = JRoute::_('index.php?option=com_proclaim&view=sermon&id=' . $item->slug . '&t=' . $params->get('detailstemplateid'));
 
 		if (!isset($item->image))
 		{
@@ -268,7 +268,7 @@ class CWMPagebuilder
         $dispatcher = Factory::getApplication();
 
 		$dispatcher->triggerEvent('onContentPrepare', array(
-				'com_biblestudy.sermon',
+				'com_proclaim.sermon',
 				& $item,
 				& $params,
 				$offset
@@ -278,7 +278,7 @@ class CWMPagebuilder
 		$item->event = new stdClass;
 
 		$results                        = $dispatcher->triggerEvent('onContentAfterTitle', array(
-				'com_biblestudy.sermon',
+				'com_proclaim.sermon',
 				&$item,
 				&$params,
 				$offset)
@@ -286,7 +286,7 @@ class CWMPagebuilder
 		$item->event->afterDisplayTitle = trim(implode("\n", $results));
 
 		$results                           = $dispatcher->triggerEvent('onContentBeforeDisplay', array(
-				'com_biblestudy.sermon',
+				'com_proclaim.sermon',
 				&$item,
 				&$params,
 				$offset)
@@ -294,7 +294,7 @@ class CWMPagebuilder
 		$item->event->beforeDisplayContent = trim(implode("\n", $results));
 
 		$results                          = $dispatcher->triggerEvent('onContentAfterDisplay', array(
-				'com_biblestudy.sermon',
+				'com_proclaim.sermon',
 				&$item,
 				&$params,
 				$offset)
@@ -406,7 +406,7 @@ class CWMPagebuilder
 		$nowDate  = $db->quote(Factory::getDate()->toSql());
 
 		// Filter by start and end dates.
-		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
+		if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise('core.edit', 'com_proclaim')))
 		{
 			$query->where('(study.publish_up = ' . $nullDate . ' OR study.publish_up <= ' . $nowDate . ')')
 				->where('(study.publish_down = ' . $nullDate . ' OR study.publish_down >= ' . $nowDate . ')');

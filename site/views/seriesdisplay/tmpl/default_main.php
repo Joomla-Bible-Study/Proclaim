@@ -34,10 +34,10 @@ $t = $this->template->id;
 			if ($this->params->get('series_list_return') > 0)
 			{
 				echo '<a href="'
-					. JRoute::_('index.php?option=com_biblestudy&view=seriesdisplays&t=' . $t) . '"><button class="btn"><< '
+					. JRoute::_('index.php?option=com_proclaim&view=seriesdisplays&t=' . $t) . '"><button class="btn"><< '
 					. JText::_('JBS_SER_RETURN_SERIES_LIST') . '</button></a>'; ?>
 				<?php echo '<a href="'
-				. JRoute::_('index.php?option=com_biblestudy&view=sermons&filter_series=' . $this->items->id . '&t=' . $t)
+				. JRoute::_('index.php?option=com_proclaim&view=sermons&filter_series=' . $this->items->id . '&t=' . $t)
 				. '"><button class="btn">' . JText::_('JBS_CMN_SHOW_ALL') . ' ' . JText::_('JBS_SER_STUDIES_FROM_THIS_SERIES')
 				. ' >></button></a>'; ?>
 			<?php

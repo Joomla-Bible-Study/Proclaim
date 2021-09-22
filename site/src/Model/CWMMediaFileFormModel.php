@@ -14,7 +14,7 @@ use Joomla\CMS\MVC\Model\ItemModel;
 Use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 // Base this model on the backend version.
-//JLoader::register('BiblestudyModelMediafile', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/MediaFileController.php');
+//JLoader::register('BiblestudyModelMediafile', JPATH_ADMINISTRATOR . '/components/com_proclaim/models/MediaFileController.php');
 
 /**
  * Model class for MediaFile
@@ -83,13 +83,13 @@ class CWMMediaFileFormModel extends ItemModel
 
 		$this->setState('layout', $app->input->get('layout'));
 
-		$cdate = $app->getUserState('com_biblestudy.edit.mediafile.createdate');
+		$cdate = $app->getUserState('com_proclaim.edit.mediafile.createdate');
 		$this->setState('mediafile.createdate', $cdate);
 
-		$study_id = $app->getUserState('com_biblestudy.edit.mediafile.study_id');
+		$study_id = $app->getUserState('com_proclaim.edit.mediafile.study_id');
 		$this->setState('mediafile.study_id', $study_id);
 
-		$server_id = $app->getUserState('com_biblestudy.edit.mediafile.server_id');
+		$server_id = $app->getUserState('com_proclaim.edit.mediafile.server_id');
 		$this->setState('mediafile.server_id', $server_id);
 	}
 }

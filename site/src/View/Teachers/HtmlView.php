@@ -166,7 +166,7 @@ class HtmlView extends BaseHtmlView
 						. '" alt="' . $item->teachername . '" />';
 					$items[$i]->slug        = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
 						. str_replace(' ', '-', htmlspecialchars_decode($item->teachername, ENT_QUOTES));
-					$items[$i]->teacherlink = Route::_('index.php?option=com_biblestudy&view=teacher&id=' . $item->slug . '&t=' . $this->template->id);
+					$items[$i]->teacherlink = Route::_('index.php?option=com_proclaim&view=teacher&id=' . $item->slug . '&t=' . $this->template->id);
 
 					if (isset($items[$i]->information))
 					{

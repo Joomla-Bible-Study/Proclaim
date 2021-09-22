@@ -56,7 +56,7 @@ class UploadController extends AdminController
 		}
 
 		$input   = new Joomla\Input\Input;
-		$params  = ComponentHelper::getParams('com_biblestudy');
+		$params  = ComponentHelper::getParams('com_proclaim');
 		$app     = Factory::getApplication();
 		$session = $app->getSession();
 		$user    = $app->getIdentity();
@@ -68,7 +68,7 @@ class UploadController extends AdminController
 		$maxFileAge       = 5 * 3600;
 
 		// Directory for file upload
-		$targetDirBase64  = $session->get('current_dir', null, 'com_biblestudy');
+		$targetDirBase64  = $session->get('current_dir', null, 'com_proclaim');
 		$targetDirDecoded = base64_decode($targetDirBase64);
 		$targetDirWithSep = $targetDirDecoded . DIRECTORY_SEPARATOR;
 
@@ -104,7 +104,7 @@ class UploadController extends AdminController
 		}
 
 		// Check user perms
-		if (!$user->authorise('core.create', 'com_biblestudy'))
+		if (!$user->authorise('core.create', 'com_proclaim'))
 		{
 			$this->_setResponse(400, Text::_('JBS_ERROR_PERM_DENIDED'));
 		}

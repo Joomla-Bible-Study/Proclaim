@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 use Joomla\Registry\Registry;
 
 // Always load JBSM API if it exists.
-$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
 if (file_exists($api))
 {
@@ -110,16 +110,16 @@ if (!$templatemenuid)
 	$templatemenuid = $jinput->getInt('templatemenuid', 1);
 }
 
-$linkurl  = JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $templatemenuid);
+$linkurl  = JRoute::_('index.php?option=com_proclaim&view=sermons&t=' . $templatemenuid);
 $link     = '<a href="' . $linkurl . '"><button class="btn">' . $link_text . '</button></a>';
 $document = Factory::getDocument();
 
 JHtml::_('biblestudy.framework');
 JHtml::_('biblestudy.loadcss', $params);
-$config = JComponentHelper::getParams('com_biblestudy');
+$config = JComponentHelper::getParams('com_proclaim');
 
 // We need to load the path to the helper files
-$path1 = JPATH_BASE . '/components/com_biblestudy/helpers/';
+$path1 = JPATH_BASE . '/components/com_proclaim/helpers/';
 $url   = $params->get('stylesheet');
 
 if ($url)

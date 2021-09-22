@@ -37,7 +37,7 @@ class TeacherController extends FormController
 	 * @var    string
 	 * @since  12.2
 	 */
-	protected $option = 'com_biblestudy';
+	protected $option = 'com_proclaim';
 
 	/**
 	 * Method to run batch operations.
@@ -51,7 +51,7 @@ class TeacherController extends FormController
 	public function batch($model = null)
 	{
 		// Preset the redirect
-		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=teachers' . $this->getRedirectToListAppend(), false));
+		$this->setRedirect(JRoute::_('index.php?option=com_proclaim&view=teachers' . $this->getRedirectToListAppend(), false));
 
 		return parent::batch($this->getModel('Teacher', '', array()));
 	}

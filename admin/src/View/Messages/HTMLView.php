@@ -194,7 +194,7 @@ class HTMLView extends BaseHtmlView
 	 */
 	protected function addToolbar()
 	{
-		$canDo = ContentHelper::getActions('com_biblestudy');
+		$canDo = ContentHelper::getActions('com_proclaim');
 		$user = Factory::getApplication()->getIdentity();
 
 		// Get the toolbar object instance
@@ -243,9 +243,9 @@ class HTMLView extends BaseHtmlView
 		}
 
 		// Add a batch button
-		if ($user->authorise('core.create', 'com_biblestudy')
-			&& $user->authorise('core.edit', 'com_biblestudy')
-			&& $user->authorise('core.edit.state', 'com_biblestudy'))
+		if ($user->authorise('core.create', 'com_proclaim')
+			&& $user->authorise('core.edit', 'com_proclaim')
+			&& $user->authorise('core.edit.state', 'com_proclaim'))
 		{
 			$childBar->popupButton('batch')
 				->text('JTOOLBAR_BATCH')

@@ -10,9 +10,10 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Html\HTMLHelper;
 // No Direct Access
 defined('_JEXEC') or die;
-JHtml::_('behavior.keepalive');
+HtmlHelper::_('behavior.keepalive');
 ?>
 <script type="text/javascript" language="JavaScript">
     function HideContent(d) {
@@ -85,7 +86,7 @@ else
 	foreach ($this->comments as $comment)
 	{
 
-		$comment_date_display = JHtml::_('date', $comment->comment_date, Text::_('DATE_FORMAT_LC3'));
+		$comment_date_display = HtmlHelper::_('date', $comment->comment_date, Text::_('DATE_FORMAT_LC3'));
 		?>
                     <div class="row-fluid">
                         <div class="span6"><strong><?php echo $comment->full_name ?></strong> <i>
@@ -217,7 +218,7 @@ if ($allow > 9)
                 <input type="hidden" name="study_id" id="study_id" value="<?php echo $this->item->id ?>"/>
                 <input type="hidden" name="t" value="<?php echo $t;?>">
                 <input type="hidden" name="task" value="comment"/>
-                <input type="hidden" name="option" value="com_biblestudy"/>
+                <input type="hidden" name="option" value="com_proclaim"/>
                 <input type="hidden" name="published" id="published"
                        value="<?php echo $this->item->params->get('comment_publish') ?>"/>
                 <input type="hidden" name="view" value="sermon"/>

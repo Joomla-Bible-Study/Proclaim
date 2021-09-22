@@ -31,7 +31,7 @@ class CWMPodcastDisplayModel extends ItemModel
 	 *
 	 * @since 7.0
 	 */
-	protected $context = 'com_biblestudy.podcastdisplay';
+	protected $context = 'com_proclaim.podcastdisplay';
 
 	/**
 	 * Method to auto-populate the model state.
@@ -80,7 +80,7 @@ class CWMPodcastDisplayModel extends ItemModel
 
 		$user = Factory::getUser();
 
-		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
+		if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise('core.edit', 'com_proclaim')))
 		{
 			$this->setState('filter.published', 1);
 			$this->setState('filter.archived', 2);

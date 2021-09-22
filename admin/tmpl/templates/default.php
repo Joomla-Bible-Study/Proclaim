@@ -39,7 +39,7 @@ $columns    = 4;
 		Joomla.tableOrdering(order, dirn, '');
 	}
 </script>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=templates'); ?>" method="post" name="adminForm"
+<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=templates'); ?>" method="post" name="adminForm"
       id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
@@ -87,12 +87,12 @@ $columns    = 4;
 					<tbody>
 					<?php
 					foreach ($this->items as $i => $item) :
-						$link = JRoute::_('index.php?option=com_biblestudy&task=template.edit&id=' . (int) $item->id);
+						$link = JRoute::_('index.php?option=com_proclaim&task=template.edit&id=' . (int) $item->id);
 						$item->max_ordering = 0;
 						$canCreate = $user->authorise('core.create');
-						$canEdit = $user->authorise('core.edit', 'com_biblestudy.template.' . $item->id);
-						$canEditOwn = $user->authorise('core.edit.own', 'com_biblestudy.template.' . $item->id);
-						$canChange = $user->authorise('core.edit.state', 'com_biblestudy.template.' . $item->id);
+						$canEdit = $user->authorise('core.edit', 'com_proclaim.template.' . $item->id);
+						$canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.template.' . $item->id);
+						$canChange = $user->authorise('core.edit.state', 'com_proclaim.template.' . $item->id);
 						?>
 						<tr class="row<?php echo $i % 2; ?>">
 							<td class="center hidden-phone">
@@ -105,7 +105,7 @@ $columns    = 4;
 								<div class="pull-left">
 
 									<?php if ($canEdit || $canEditOwn) : ?>
-										<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=template.edit&id=' . (int) $item->id); ?>">
+										<a href="<?php echo JRoute::_('index.php?option=com_proclaim&task=template.edit&id=' . (int) $item->id); ?>">
 											<?php echo $this->escape($item->title); ?>
 										</a>
 

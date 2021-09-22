@@ -15,7 +15,7 @@ use CWM\Component\Proclaim\Administrator\Controller\CommentsController;
 use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 // Base this model on the backend version.
-//JLoader::register('BiblestudyModelComments', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/CommentsController.php');
+//JLoader::register('BiblestudyModelComments', JPATH_ADMINISTRATOR . '/components/com_proclaim/models/CommentsController.php');
 
 /**
  * Comments model class

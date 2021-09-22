@@ -66,7 +66,7 @@ class JFormFieldModal_Study extends JFormField
 			$sview = 'messages';
 		}
 
-		$link = 'index.php?option=com_biblestudy&amp;view=' . $sview . '&amp;layout=modal&amp;tmpl=component&amp;function=jSelectStudy_' . $this->id;
+		$link = 'index.php?option=com_proclaim&amp;view=' . $sview . '&amp;layout=modal&amp;tmpl=component&amp;function=jSelectStudy_' . $this->id;
 
 		$db = Factory::getDbo();
 		$db->setQuery(

@@ -128,7 +128,7 @@ class BiblestudyViewSeriesdisplays extends JViewLegacy
 				. str_replace(' ', '-', htmlspecialchars_decode($item->series_text, ENT_QUOTES));
 			$seriesimage        = $images->getSeriesThumbnail($item->series_thumbnail);
 			$item->image        = '<img src="' . $seriesimage->path . '" height="' . $seriesimage->height . '" width="' . $seriesimage->width . '" alt="" />';
-			$item->serieslink   = JRoute::_('index.php?option=com_biblestudy&view=seriesdisplay&id=' . $item->slug . '&t=' . $this->template->id);
+			$item->serieslink   = JRoute::_('index.php?option=com_proclaim&view=seriesdisplay&id=' . $item->slug . '&t=' . $this->template->id);
 			$teacherimage       = $images->getTeacherImage($item->thumb, $image2 = null);
 			$item->teacherimage = '<img src="' . $teacherimage->path . '" height="' . $teacherimage->height .
 				'" width="' . $teacherimage->width . '" alt="" />';

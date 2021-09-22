@@ -218,7 +218,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 
 		// Get the list of backup files
 		jimport('joomla.filesystem.folder');
-		$path = JPATH_SITE . '/media/com_biblestudy/backup';
+		$path = JPATH_SITE . '/media/com_proclaim/backup';
 
 		if (JFolder::exists($path))
 		{
@@ -254,7 +254,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 		{
 			if ($extension->element == 'com_sermonspeaker')
 			{
-				$this->ss = '<a href="index.php?option=com_biblestudy&view=administrator&layout=edit&id=1&task=administration.convertSermonSpeaker">'
+				$this->ss = '<a href="index.php?option=com_proclaim&view=administrator&layout=edit&id=1&task=administration.convertSermonSpeaker">'
 					. JText::_('JBS_IBM_CONVERT_SERMON_SPEAKER') . '</a>';
 			}
 			else
@@ -264,7 +264,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 
 			if ($extension->element == 'com_preachit')
 			{
-				$this->pi = '<a href="index.php?option=com_biblestudy&view=administrator&layout=edit&id=1&task=administration.convertPreachIt">'
+				$this->pi = '<a href="index.php?option=com_proclaim&view=administrator&layout=edit&id=1&task=administration.convertPreachIt">'
 					. JText::_('JBS_IBM_CONVERT_PREACH_IT') . '</a>';
 			}
 			else
@@ -273,7 +273,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 			}
 		}
 
-		$jbsversion    = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.xml');
+		$jbsversion    = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_proclaim/biblestudy.xml');
 		$this->version = $jbsversion['version'];
 
 		if (!(strncmp($this->schemaVersion, $this->version, 5) === 0))
@@ -316,7 +316,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 		Factory::getApplication()->input->set('hidemainmenu', true);
 
 		JToolbarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
-		JToolbarHelper::preferences('com_biblestudy', '600', '800', 'JBS_ADM_PERMISSIONS');
+		JToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
 		JToolbarHelper::divider();
 		JToolbarHelper::help('biblestudy', true);
 	}

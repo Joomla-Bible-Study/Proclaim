@@ -34,7 +34,7 @@ class PlgSystemJBSPodcast extends JPlugin
 		$this->loadLanguage();
 
 		// Always load JBSM API if it exists.
-		$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+		$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
 		if (file_exists($api))
 		{
@@ -245,7 +245,7 @@ class PlgSystemJBSPodcast extends JPlugin
 	 */
 	public function doPodcast()
 	{
-		JLoader::register('JBSMPodcast', JPATH_SITE . '/components/com_biblestudy/lib/PodcastController.php');
+		JLoader::register('JBSMPodcast', JPATH_SITE . '/components/com_proclaim/lib/PodcastController.php');
 		$podcasts = new JBSMPodcast;
 
 		return $podcasts->makePodcasts();

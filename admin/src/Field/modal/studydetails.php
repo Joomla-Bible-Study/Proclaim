@@ -90,7 +90,7 @@ class studydetails extends FormField
 			$title = Text::_('JBS_CMN_SELECT_STUDY');
 		}
 
-		$link = 'index.php?option=com_biblestudy&amp;view=messages&amp;layout=modal&amp;tmpl=component&amp;function=jSelectChart_' . $this->id;
+		$link = 'index.php?option=com_proclaim&amp;view=messages&amp;layout=modal&amp;tmpl=component&amp;function=jSelectChart_' . $this->id;
 
 		HtmlHelper::_('bootstrap.modal', 'a.modal');
 		$html = "\n" . '<div class="fltlft"><input type="text" id="' . $this->id . '_name" value="' .

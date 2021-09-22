@@ -27,7 +27,7 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 	}
 </script>
 <form
-	action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=servers&layout=modal&tmpl=component&function=' . $function); ?>"
+	action="<?php echo JRoute::_('index.php?option=com_proclaim&view=servers&layout=modal&tmpl=component&function=' . $function); ?>"
 	method="post" name="adminForm" id="adminForm" class="form-inline">
 	<?php
 	// Search tools bar

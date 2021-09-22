@@ -234,7 +234,7 @@ class HTMLView extends BaseHtmlView
 
 		// Get the list of backup files
 		jimport('joomla.filesystem.folder');
-		$path = JPATH_SITE . '/media/com_biblestudy/backup';
+		$path = JPATH_SITE . '/media/com_proclaim/backup';
 
 		if (Folder::exists($path))
 		{
@@ -272,7 +272,7 @@ class HTMLView extends BaseHtmlView
 		{
 			if ($extension->element == 'com_sermonspeaker')
 			{
-				$this->ss = '<a href="index.php?option=com_biblestudy&view=administrator&layout=edit&id=1&task=administration.convertSermonSpeaker">'
+				$this->ss = '<a href="index.php?option=com_proclaim&view=administrator&layout=edit&id=1&task=administration.convertSermonSpeaker">'
 					. Text::_('JBS_IBM_CONVERT_SERMON_SPEAKER') . '</a>';
 			}
 			else
@@ -282,7 +282,7 @@ class HTMLView extends BaseHtmlView
 
 			if ($extension->element == 'com_preachit')
 			{
-				$this->pi = '<a href="index.php?option=com_biblestudy&view=administrator&layout=edit&id=1&task=administration.convertPreachIt">'
+				$this->pi = '<a href="index.php?option=com_proclaim&view=administrator&layout=edit&id=1&task=administration.convertPreachIt">'
 					. Text::_('JBS_IBM_CONVERT_PREACH_IT') . '</a>';
 			}
 			else
@@ -291,7 +291,7 @@ class HTMLView extends BaseHtmlView
 			}
 		}
 
-		$jbsversion    = Installer::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.xml');
+		$jbsversion    = Installer::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_proclaim/biblestudy.xml');
 		$this->version = $jbsversion['version'];
 
 		if (!(strncmp($this->schemaVersion, $this->version, 5) === 0))
@@ -333,7 +333,7 @@ class HTMLView extends BaseHtmlView
 		Factory::getApplication()->input->set('hidemainmenu', true);
 		/** @noinspection PhpMethodOrClassCallIsNotCaseSensitiveInspection */
 		ToolbarHelper::title(Text::_('JBS_CMN_ADMINISTRATION'), 'options options');
-		ToolbarHelper::preferences('com_biblestudy', '600', '800', 'JBS_ADM_PERMISSIONS');
+		ToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
 		ToolbarHelper::divider();
 		ToolbarHelper::apply('administration.apply');
 		ToolbarHelper::save('administration.save');

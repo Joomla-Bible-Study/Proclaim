@@ -9,12 +9,13 @@
  * */
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Factory;
 // No Direct Access
 defined('_JEXEC') or die;
 ?>
 <div class="listingfooter">
 	<?php
-	$input = new JInput;
+	$input = Factory::getApplication();
 	$link_text = $this->item->params->get('link_text');
 
 	if (!$link_text)
@@ -38,11 +39,11 @@ defined('_JEXEC') or die;
 
 		if (!$Itemid)
 		{
-			$link = Route::_('index.php?option=com_biblestudy&view=sermons&t=' . $t);
+			$link = Route::_('index.php?option=com_proclaim&view=sermons&t=' . $t);
 		}
 		else
 		{
-			$link = Route::_('index.php?option=com_biblestudy&view=sermons&t=' . $t);
+			$link = Route::_('index.php?option=com_proclaim&view=sermons&t=' . $t);
 		}
 		?>
 		<a href="<?php echo $link; ?>"> <?php echo $link_text; ?> </a> <?php } // End of if view_link not 0 ?>

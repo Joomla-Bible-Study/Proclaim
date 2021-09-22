@@ -83,7 +83,7 @@ class CommentformController extends FormController
 
 		if (empty($return) || !Uri::isInternal(base64_decode($return)))
 		{
-			return Uri::base() . 'index.php?option=com_biblestudy&view=commentlist';
+			return Uri::base() . 'index.php?option=com_proclaim&view=commentlist';
 		}
 		else
 		{

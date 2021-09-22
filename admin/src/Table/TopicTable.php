@@ -237,7 +237,7 @@ class TopicTable extends Table
 	{
 		$k = $this->_tbl_key;
 
-		return 'com_biblestudy.topic.' . (int) $this->$k;
+		return 'com_proclaim.topic.' . (int) $this->$k;
 	}
 
 	/**
@@ -269,7 +269,7 @@ class TopicTable extends Table
 	{
 		/** @type Asset $asset */
 		$asset = Table::getInstance('Asset');
-		$asset->loadByName('com_biblestudy');
+		$asset->loadByName('com_proclaim');
 
 		return $asset->id;
 	}

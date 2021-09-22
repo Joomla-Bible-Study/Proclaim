@@ -36,7 +36,7 @@ class SerieController extends FormController
 	public function batch($model = null)
 	{
 		// Preset the redirect
-		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=series' . $this->getRedirectToListAppend(), false));
+		$this->setRedirect(JRoute::_('index.php?option=com_proclaim&view=series' . $this->getRedirectToListAppend(), false));
 
 		return parent::batch($this->getModel('Serie', '', array()));
 	}
@@ -74,7 +74,7 @@ class SerieController extends FormController
 		$user     = Factory::getApplication()->getIdentity();
 
 		// Check general edit permission first.
-		if ($user->authorise('core.edit', 'com_biblestudy.serie.' . $recordId))
+		if ($user->authorise('core.edit', 'com_proclaim.serie.' . $recordId))
 		{
 			return true;
 		}

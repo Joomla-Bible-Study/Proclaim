@@ -7,7 +7,7 @@ out
 gen
 bin/
 build/reports/pmd.html
-com_biblestudy/media/css/site/
+com_proclaim/media/css/site/
 composer.phar
 .DS_Store
 node_modules/

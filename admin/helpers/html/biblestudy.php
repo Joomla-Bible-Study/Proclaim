@@ -64,8 +64,8 @@ abstract class JHtmlBiblestudy
 			JHtml::_('bootstrap.loadCss');
 		}
 
-		JHtml::script('media/com_biblestudy/js/biblestudy.js');
-		JHtml::script('media/com_biblestudy/js/modernizr.js');
+		JHtml::script('media/com_proclaim/js/biblestudy.js');
+		JHtml::script('media/com_proclaim/js/modernizr.js');
 
 		self::$loaded[__METHOD__] = true;
 	}
@@ -83,7 +83,7 @@ abstract class JHtmlBiblestudy
 	 */
 	public static function loadCss($params, $url = null, $extra = null)
 	{
-		JHtml::stylesheet('media/com_biblestudy/css/general.css');
+		JHtml::stylesheet('media/com_proclaim/css/general.css');
 
 		// Import Stylesheets
 		if ($params)
@@ -92,11 +92,11 @@ abstract class JHtmlBiblestudy
 
 			if ($css <= "-1")
 			{
-				JHtml::stylesheet('media/com_biblestudy/css/biblestudy.css');
+				JHtml::stylesheet('media/com_proclaim/css/biblestudy.css');
 			}
 			else
 			{
-				JHtml::stylesheet('media/com_biblestudy/css/site/' . $css);
+				JHtml::stylesheet('media/com_proclaim/css/site/' . $css);
 			}
 		}
 
@@ -119,7 +119,7 @@ abstract class JHtmlBiblestudy
 
 		if ($extra === 'podcast')
 		{
-			JHtml::stylesheet('media/com_biblestudy/css/podcast.css');
+			JHtml::stylesheet('media/com_proclaim/css/podcast.css');
 		}
 	}
 

@@ -115,7 +115,7 @@ class BiblestudyViewTemplates extends JViewLegacy
 		}
 
 		$bar = JToolbar::getInstance('toolbar');
-		$url = JRoute::_('index.php?option=com_biblestudy&view=templates&layout=default_export');
+		$url = JRoute::_('index.php?option=com_proclaim&view=templates&layout=default_export');
 		$bar->appendButton('Link', 'export', 'JBS_TPL_IMPORT_EXPORT_TEMPLATE', $url);
 
 		// Set the document

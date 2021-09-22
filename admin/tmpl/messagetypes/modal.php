@@ -18,7 +18,7 @@ $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn = $this->escape($this->state->get('list.direction'));
 ?>
 <form
-	action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messagetypes&layout=modal&tmpl=component&function=' . $function . '&' . JSession::getFormToken() . '=1'); ?>"
+	action="<?php echo JRoute::_('index.php?option=com_proclaim&view=messagetypes&layout=modal&tmpl=component&function=' . $function . '&' . JSession::getFormToken() . '=1'); ?>"
 	method="post" name="adminForm" id="adminForm">
 	<fieldset id="filter-bar">
 		<div class="filter-select fltrt">
@@ -66,7 +66,7 @@ $listDirn = $this->escape($this->state->get('list.direction'));
 		$n = count($this->items);
 		foreach ($this->items as $i => $item) :
 			$ordering = ($listOrder == 'messagetype.ordering');
-			$link     = JRoute::_('index.php?option=com_biblestudy&task=messagetype.edit&id=' . (int) $item->id);
+			$link     = JRoute::_('index.php?option=com_proclaim&task=messagetype.edit&id=' . (int) $item->id);
 			?>
 			<tr class="row<?php echo $i % 2; ?>">
 				<td class="center">

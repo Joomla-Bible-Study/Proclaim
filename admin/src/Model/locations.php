@@ -123,7 +123,7 @@ class BiblestudyModelLocations extends JModelList
 		}
 
 		// Load the parameters.
-		$params = JComponentHelper::getParams('com_biblestudy');
+		$params = JComponentHelper::getParams('com_proclaim');
 		$this->setState('params', $params);
 
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');

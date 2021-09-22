@@ -107,7 +107,7 @@ class StudyTopicsTable extends Table
 	{
 		$k = $this->_tbl_key;
 
-		return 'com_biblestudy.studytopics.' . (int) $this->$k;
+		return 'com_proclaim.studytopics.' . (int) $this->$k;
 	}
 
 	/**
@@ -139,7 +139,7 @@ class StudyTopicsTable extends Table
 	{
 		/** @type Asset $asset */
 		$asset = Table::getInstance('Asset');
-		$asset->loadByName('com_biblestudy');
+		$asset->loadByName('com_proclaim');
 
 		return $asset->id;
 	}
