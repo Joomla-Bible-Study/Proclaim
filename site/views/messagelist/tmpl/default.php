@@ -27,7 +27,7 @@ $trashed = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder == 'ordering';
 ?>
 <h2><?php echo JText::_('JBS_CMN_MESSAGES_LIST'); ?></h2>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messagelist'); ?>" method="post"
+<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=messagelist'); ?>" method="post"
       name="adminForm" id="adminForm">
 	<div id="j-main-container">
 		<div id="filter-bar" class="btn-toolbar">
@@ -116,9 +116,9 @@ $saveOrder = $listOrder == 'ordering';
 			foreach ($this->items as $i => $item) :
 				$item->max_ordering = 0;
 				$canCreate          = $user->authorise('core.create');
-				$canEdit            = $user->authorise('core.edit', 'com_biblestudy.message.' . $item->id);
-				$canEditOwn         = $user->authorise('core.edit.own', 'com_biblestudy.message.' . $item->id);
-				$canChange          = $user->authorise('core.edit.state', 'com_biblestudy.message.' . $item->id);
+				$canEdit            = $user->authorise('core.edit', 'com_proclaim.message.' . $item->id);
+				$canEditOwn         = $user->authorise('core.edit.own', 'com_proclaim.message.' . $item->id);
+				$canChange          = $user->authorise('core.edit.state', 'com_proclaim.message.' . $item->id);
 				?>
 				<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->id; ?>">
 					<td class="center hidden-phone">
@@ -138,7 +138,7 @@ $saveOrder = $listOrder == 'ordering';
 					<td class=" has-context">
 						<div class="pull-left">
 							<?php if ($canEdit || $canEditOwn) : ?>
-								<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=messageform.edit&a_id=' . (int) $item->id); ?>">
+								<a href="<?php echo JRoute::_('index.php?option=com_proclaim&task=messageform.edit&a_id=' . (int) $item->id); ?>">
 									<?php echo $this->escape($item->studytitle); ?></a>
 							<?php else: ?>
 								<?php echo $this->escape($item->studytitle); ?>

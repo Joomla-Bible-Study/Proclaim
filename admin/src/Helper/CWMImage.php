@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\BibleStudy\Administrator\Helper;
+namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // No Direct Access
 use Joomla\CMS\Filesystem\File;
@@ -30,7 +30,7 @@ class CWMImage
 	 *
 	 * @since 1.5
 	 */
-	public static string $extension = 'com_biblestudy';
+	public static string $extension = 'com_proclaim';
 
 	/**
 	 * Get Image

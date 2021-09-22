@@ -33,7 +33,7 @@ class CWMTranslated
 	 * @var string
 	 * @since    7.0.0
 	 */
-	public static $extension = 'com_biblestudy';
+	public static $extension = 'com_proclaim';
 
 	/**
 	 * Translate a list of topicItems to clear text each

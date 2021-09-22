@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\BibleStudy\Administrator\Helper;
+namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // No Direct Access
 use Joomla\CMS\Access\Access;
@@ -21,7 +21,7 @@ defined('_JEXEC') or die;
 
 use Joomla\Database\DatabaseFactory;
 use Joomla\Registry\Registry;
-use CWM\Component\Biblestudy\Admin\Helpers;
+use CWM\Component\Proclaim\Admin\Helpers;
 
 /**
  * BibleStudy Helper class
@@ -47,7 +47,7 @@ class CWMProclaimHelper
 	 *
 	 * @since 1.5
 	 */
-	public static $extension = 'com_biblestudy';
+	public static $extension = 'com_proclaim';
 
 	/**
 	 * Get Actions
@@ -67,81 +67,81 @@ class CWMProclaimHelper
 
 		if (empty($Itemid))
 		{
-			$assetName = 'com_biblestudy';
+			$assetName = 'com_proclaim';
 		}
 		else
 		{
 			switch ($type)
 			{
 				case 'administrator':
-					$assetName = 'com_biblestudy.administration.' . (int) $Itemid;
+					$assetName = 'com_proclaim.administration.' . (int) $Itemid;
 					break;
 				case 'assets':
-					$assetName = 'com_biblestudy.assets.' . (int) $Itemid;
+					$assetName = 'com_proclaim.assets.' . (int) $Itemid;
 					break;
 				case 'backup':
-					$assetName = 'com_biblestudy.backup.' . (int) $Itemid;
+					$assetName = 'com_proclaim.backup.' . (int) $Itemid;
 					break;
 				case 'comment':
-					$assetName = 'com_biblestudy.comment.' . (int) $Itemid;
+					$assetName = 'com_proclaim.comment.' . (int) $Itemid;
 					break;
 				case 'database':
-					$assetName = 'com_biblestudy.database.' . (int) $Itemid;
+					$assetName = 'com_proclaim.database.' . (int) $Itemid;
 					break;
 				case 'location':
-					$assetName = 'com_biblestudy.location.' . (int) $Itemid;
+					$assetName = 'com_proclaim.location.' . (int) $Itemid;
 					break;
 				case 'messagetype':
-					$assetName = 'com_biblestudy.messagetype.' . (int) $Itemid;
+					$assetName = 'com_proclaim.messagetype.' . (int) $Itemid;
 					break;
 				case 'migrate':
-					$assetName = 'com_biblestudy.migrate.' . (int) $Itemid;
+					$assetName = 'com_proclaim.migrate.' . (int) $Itemid;
 					break;
 
 				case 'podcast':
-					$assetName = 'com_biblestudy.podcast.' . (int) $Itemid;
+					$assetName = 'com_proclaim.podcast.' . (int) $Itemid;
 					break;
 
 				case 'serie':
-					$assetName = 'com_biblestudy.serie.' . (int) $Itemid;
+					$assetName = 'com_proclaim.serie.' . (int) $Itemid;
 					break;
 
 				case 'server':
-					$assetName = 'com_biblestudy.server.' . (int) $Itemid;
+					$assetName = 'com_proclaim.server.' . (int) $Itemid;
 					break;
 
 				case 'teacher':
-					$assetName = 'com_biblestudy.teacher.' . (int) $Itemid;
+					$assetName = 'com_proclaim.teacher.' . (int) $Itemid;
 					break;
 
 				case 'template':
-					$assetName = 'com_biblestudy.template.' . (int) $Itemid;
+					$assetName = 'com_proclaim.template.' . (int) $Itemid;
 					break;
 
 				case 'topic':
-					$assetName = 'com_biblestudy.topic.' . (int) $Itemid;
+					$assetName = 'com_proclaim.topic.' . (int) $Itemid;
 					break;
 
 				case 'message':
-					$assetName = 'com_biblestudy.message.' . (int) $Itemid;
+					$assetName = 'com_proclaim.message.' . (int) $Itemid;
 					break;
 
 				case 'mediafile':
-					$assetName = 'com_biblestudy.mediafile.' . (int) $Itemid;
+					$assetName = 'com_proclaim.mediafile.' . (int) $Itemid;
 					break;
 
 				case 'templatecode':
-					$assetName = 'com_biblestudy.templatecode' . (int) $Itemid;
+					$assetName = 'com_proclaim.templatecode' . (int) $Itemid;
 					break;
 
 				default:
-					$assetName = 'com_biblestudy.studiesedit.' . (int) $Itemid;
+					$assetName = 'com_proclaim.studiesedit.' . (int) $Itemid;
 					break;
 			}
 		}
 
 		$actions = array(
-			'core.administrator',
+			'core.cwmadmin',
 			'core.manage',
 			'core.create',
 			'core.edit',
@@ -173,54 +173,54 @@ class CWMProclaimHelper
 		$simple_view = CWMHelper::getSimpleView();
 
 		self::rendermenu(
-			Text::_('JBS_CMN_CONTROL_PANEL'), 'index.php?option=com_biblestudy&view=cpanel', $vName == 'cpanel'
+			Text::_('JBS_CMN_CONTROL_PANEL'), 'index.php?option=com_proclaim&view=cpanel', $vName == 'cpanel'
 		);
 		self::rendermenu(
-			Text::_('JBS_CMN_ADMINISTRATION'), 'index.php?option=com_biblestudy&task=administration.edit&id=1', $vName == 'administrator'
+			Text::_('JBS_CMN_ADMINISTRATION'), 'index.php?option=com_proclaim&task=administration.edit&id=1', $vName == 'administrator'
 		);
 		self::rendermenu(
-			Text::_('JBS_CMN_STUDIES'), 'index.php?option=com_biblestudy&view=messages', $vName == 'messages'
+			Text::_('JBS_CMN_STUDIES'), 'index.php?option=com_proclaim&view=messages', $vName == 'messages'
 		);
 		self::rendermenu(
-			Text::_('JBS_CMN_MEDIA_FILES'), 'index.php?option=com_biblestudy&view=mediafiles', $vName == 'mediafiles'
+			Text::_('JBS_CMN_MEDIA_FILES'), 'index.php?option=com_proclaim&view=mediafiles', $vName == 'mediafiles'
 		);
 		self::rendermenu(
-			Text::_('JBS_CMN_TEACHERS'), 'index.php?option=com_biblestudy&view=teachers', $vName == 'teachers'
+			Text::_('JBS_CMN_TEACHERS'), 'index.php?option=com_proclaim&view=teachers', $vName == 'teachers'
 		);
 		self::rendermenu(
-			Text::_('JBS_CMN_SERIES'), 'index.php?option=com_biblestudy&view=series', $vName == 'series'
+			Text::_('JBS_CMN_SERIES'), 'index.php?option=com_proclaim&view=series', $vName == 'series'
 		);
 
 		if (!$simple_view->mode)
 		{
 			self::rendermenu(
-				Text::_('JBS_CMN_MESSAGETYPES'), 'index.php?option=com_biblestudy&view=messagetypes', $vName == 'messagetypes'
+				Text::_('JBS_CMN_MESSAGETYPES'), 'index.php?option=com_proclaim&view=messagetypes', $vName == 'messagetypes'
 			);
 			self::rendermenu(
-				Text::_('JBS_CMN_LOCATIONS'), 'index.php?option=com_biblestudy&view=locations', $vName == 'locations'
+				Text::_('JBS_CMN_LOCATIONS'), 'index.php?option=com_proclaim&view=locations', $vName == 'locations'
 			);
 			self::rendermenu(
-				Text::_('JBS_CMN_TOPICS'), 'index.php?option=com_biblestudy&view=topics', $vName == 'topics'
+				Text::_('JBS_CMN_TOPICS'), 'index.php?option=com_proclaim&view=topics', $vName == 'topics'
 			);
 			self::rendermenu(
-				Text::_('JBS_CMN_COMMENTS'), 'index.php?option=com_biblestudy&view=comments', $vName == 'comments'
+				Text::_('JBS_CMN_COMMENTS'), 'index.php?option=com_proclaim&view=comments', $vName == 'comments'
 			);
 		}
 
 		self::rendermenu(
-			Text::_('JBS_CMN_SERVERS'), 'index.php?option=com_biblestudy&view=servers', $vName == 'servers'
+			Text::_('JBS_CMN_SERVERS'), 'index.php?option=com_proclaim&view=servers', $vName == 'servers'
 		);
 		self::rendermenu(
-			Text::_('JBS_CMN_PODCASTS'), 'index.php?option=com_biblestudy&view=podcasts', $vName == 'podcasts'
+			Text::_('JBS_CMN_PODCASTS'), 'index.php?option=com_proclaim&view=podcasts', $vName == 'podcasts'
 		);
 
 		if (!$simple_view->mode)
 		{
 			self::rendermenu(
-				Text::_('JBS_CMN_TEMPLATES'), 'index.php?option=com_biblestudy&view=templates', $vName == 'templates'
+				Text::_('JBS_CMN_TEMPLATES'), 'index.php?option=com_proclaim&view=templates', $vName == 'templates'
 			);
 			self::rendermenu(
-				Text::_('JBS_CMN_TEMPLATECODE'), 'index.php?option=com_biblestudy&view=templatecodes', $vName == 'templatecodes'
+				Text::_('JBS_CMN_TEMPLATECODE'), 'index.php?option=com_proclaim&view=templatecodes', $vName == 'templatecodes'
 			);
 		}
 	}
@@ -254,7 +254,7 @@ class CWMProclaimHelper
 	{
 		// Filter settings
 		jimport('joomla.application.component.helper');
-		$config     = ComponentHelper::getParams('com_biblestudy');
+		$config     = ComponentHelper::getParams('com_proclaim');
 		$user       = Factory::getApplication()->getIdentity();
 		$userGroups = Access::getGroupsByUser($user->get('id'));
 
@@ -425,7 +425,7 @@ class CWMProclaimHelper
 	 */
 	public static function getMediaTypes()
 	{
-		Log::add('getMediaTypes is nologer supported', Log::NOTICE, 'com_biblestudy');
+		Log::add('getMediaTypes is nologer supported', Log::NOTICE, 'com_proclaim');
 		throw new \Exception('Bad function getMediaTypes is nologer supported');
 	}
 

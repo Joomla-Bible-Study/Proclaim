@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\BibleStudy\Administrator\Lib;
+namespace CWM\Component\Proclaim\Administrator\Lib;
 
 // No Direct Access
 use Joomla\CMS\Factory;
@@ -67,7 +67,7 @@ class CWMAssets
 			$this->query = array_merge((array) $this->query, array($object['assetname'] => $results));
 		}
 
-		Log::add('Build fixAsset', Log::INFO, 'com_biblestudy');
+		Log::add('Build fixAsset', Log::INFO, 'com_proclaim');
 
 		return true;
 	}
@@ -91,7 +91,7 @@ class CWMAssets
 		if (!$result->asset_id)
 		{
 			self::setasset($result, $key);
-			Log::add('Set Asset Under Key: ' . $key, Log::NOTICE, 'com_biblestudy');
+			Log::add('Set Asset Under Key: ' . $key, Log::NOTICE, 'com_proclaim');
 		}
 
 		// If there is a jasset_id but no match to the parent_id then a mismatch has occured
@@ -126,7 +126,7 @@ class CWMAssets
 			$query = $db->getQuery(true);
 			$query->select('id')
 				->from('#__assets')
-				->where('name = ' . $db->q('com_biblestudy'));
+				->where('name = ' . $db->q('com_proclaim'));
 			$db->setQuery($query);
 			self::$parent_id = $db->loadResult();
 		}

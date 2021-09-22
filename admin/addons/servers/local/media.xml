@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <media>
 	<fields name="params">
-		<fieldset name="general" addfieldpath="/administrator/components/com_biblestudy/addons/servers/local/fields">
+		<fieldset name="general" addfieldpath="/administrator/components/com_proclaim/addons/servers/local/fields">
 			<field name="filename"
 			       type="plupload"
 			       handler="upload"
@@ -27,7 +27,7 @@
 				<option value="_parent">JBS_MED_LINK_TARGET_PARENT</option>
 				<option value="_top">JBS_MED_LINK_TARGET_TOP</option>
 			</field>
-			<field name="link_type" type="list" extension="com_biblestudy"
+			<field name="link_type" type="list" extension="com_proclaim"
 			       label="JBS_MED_SHOW_DOWNLOAD_ICON" description="JBS_MED_SHOW_DOWNLOAD_ICON_DESC"
 			       class="inputbox" size="1" default="">
 				<option value="">JGLOBAL_USE_GLOBAL</option>
@@ -88,7 +88,7 @@
 			       description="JBS_ADDON_LOCAL_CUSTOM_ICON_DESC"/>
 			<field name="media_icon_text_size" type="text" default="24" label="JBS_ADDON_LOCAL_FONT_SIZE"
 			       description="JBS_ADDON_LOCAL_FONT_SIZE_DESC"/>
-			<field name="mime_type" type="mimetype" extension="com_biblestudy"
+			<field name="mime_type" type="mimetype" extension="com_proclaim"
 			       label="JBS_MED_CHOOSE_MIMETYPE" description="JBS_MED_CHOOSE_MIMETYPE_DESC"
 			       class="inputbox" default="">
 			</field>

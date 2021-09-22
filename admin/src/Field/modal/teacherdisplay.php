@@ -85,7 +85,7 @@ class JFormFieldModal_Teacherdisplay extends JFormField
 			$title = JText::_('JBS_CMN_SELECT_TEACHER');
 		}
 
-		$link = 'index.php?option=com_biblestudy&amp;view=teachers&amp;layout=modal&amp;tmpl=component&amp;function=jSelectChart_' . $this->id;
+		$link = 'index.php?option=com_proclaim&amp;view=teachers&amp;layout=modal&amp;tmpl=component&amp;function=jSelectChart_' . $this->id;
 
 		JHtml::_('behavior.modal', 'a.modal');
 		$html = "\n" . '<div class="fltlft"><input type="text" id="' . $this->id . '_name" value="' .

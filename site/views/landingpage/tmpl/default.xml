@@ -8,7 +8,7 @@
     </layout>
     <state>
         <name>JBS_MNU_LANDING_PAGE_LAYOUT</name>
-        <params addpath="/administrator/components/com_biblestudy/helpers/html">
+        <params addpath="/administrator/components/com_proclaim/helpers/html">
             <param name="type" type="hidden" default="landingpage"/>
             <param name="templatemenuid" type="t" default="" label="JBS_MNU_SELECT_TEMPLATE"
                    description="JBS_MNU_SELECT_TEMPLATE_DESC"/>

@@ -40,7 +40,7 @@ class BiblestudyViewLatest extends JViewLegacy
 		$input = new JInput;
 		$t     = $input->getInt('t', '1');
 
-		$link = JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $id . '&t=' . $t);
+		$link = JRoute::_('index.php?option=com_proclaim&view=sermon&id=' . $id . '&t=' . $t);
 		$app  = Factory::getApplication();
 
 		$app->redirect($link);

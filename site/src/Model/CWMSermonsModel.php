@@ -35,7 +35,7 @@ class CWMSermonsModel extends ListModel
 
 	/** @var string Needed for context for Populate State
 	 * @since 9.0.14 */
-	public $context = 'com_biblestudy.sermons.list';
+	public $context = 'com_proclaim.sermons.list';
 
 	/**
 	 * Constructor.
@@ -454,7 +454,7 @@ class CWMSermonsModel extends ListModel
 		$nowDate  = $db->quote(Factory::getDate()->toSql());
 
 		// Filter by start and end dates.
-		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
+		if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise('core.edit', 'com_proclaim')))
 		{
 			$query->where('(study.publish_up = ' . $nullDate . ' OR study.publish_up <= ' . $nowDate . ')')
 				->where('(study.publish_down = ' . $nullDate . ' OR study.publish_down >= ' . $nowDate . ')');

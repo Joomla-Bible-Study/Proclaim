@@ -26,7 +26,7 @@ class BiblestudyModelTeacher extends JModelAdmin
 	 * @var        string    The prefix to use with controller messages.
 	 * @since    1.6
 	 */
-	protected $text_prefix = 'COM_BIBLESTUDY';
+	protected $text_prefix = 'com_proclaim';
 
 	/**
 	 * Items data
@@ -67,7 +67,7 @@ class BiblestudyModelTeacher extends JModelAdmin
 		JForm::addFieldPath('JPATH_ADMINISTRATOR/components/com_users/models/fields');
 
 		// Get the form.
-		$form = $this->loadForm('com_biblestudy.teacher', 'teacher', array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_proclaim.teacher', 'teacher', array('control' => 'jform', 'load_data' => $loadData));
 
 		if ($form === null)
 		{
@@ -232,7 +232,7 @@ class BiblestudyModelTeacher extends JModelAdmin
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
-		$session = Factory::getApplication()->getUserState('com_biblestudy.edit.teacher.data', array());
+		$session = Factory::getApplication()->getUserState('com_proclaim.edit.teacher.data', array());
 
 		return empty($session) ? $this->data : $session;
 	}
@@ -310,7 +310,7 @@ class BiblestudyModelTeacher extends JModelAdmin
 	}
 
 	/**
-	 * Custom clean the cache of com_biblestudy and biblestudy modules
+	 * Custom clean the cache of com_proclaim and biblestudy modules
 	 *
 	 * @param   string   $group      The cache group
 	 * @param   integer  $client_id  The ID of the client
@@ -321,7 +321,7 @@ class BiblestudyModelTeacher extends JModelAdmin
 	 */
 	protected function cleanCache($group = null, $client_id = 0)
 	{
-		parent::cleanCache('com_biblestudy');
+		parent::cleanCache('com_proclaim');
 		parent::cleanCache('mod_biblestudy');
 	}
 }

@@ -25,7 +25,7 @@ $saveOrder = $listOrder === 'ordering';
 $jbsmedia = new JBSMMedia;
 ?>
 <h2><?php echo JText::_('JBS_CMN_PODCASTS_LIST'); ?></h2>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=podcastlist'); ?>" method="post"
+<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=podcastlist'); ?>" method="post"
       name="adminForm" id="adminForm">
     <div id="effect-1" class="effects">
 		<?php foreach ($this->items as $item)
@@ -44,7 +44,7 @@ $jbsmedia = new JBSMMedia;
             <div class="jbsmimg">
 				<?php echo JHtml::image($img, $item->id . ' : ' . stripslashes($item->series_text), $this->attribs); ?>
                 <div class="overlay">
-                    <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=podcastdisplay&id=' .
+                    <a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=podcastdisplay&id=' .
 	                    $item->id . ':' . $item->alias); ?>" class="expand">+</a>
                     <p class="expand"><?php echo stripslashes($item->series_text); ?></p>
                     <a class="jbsmclose-overlay hidden">x</a>

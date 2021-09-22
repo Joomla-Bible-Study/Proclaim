@@ -230,7 +230,7 @@ class CWMMedia
 		}
 		else
 		{
-			$d_image        = 'media/com_biblestudy/images/download.png';
+			$d_image        = 'media/com_proclaim/images/download.png';
 			$download_image = $this->useJImage($d_image, JText::_('JBS_MED_DOWNLOAD'));
 		}
 
@@ -253,7 +253,7 @@ class CWMMedia
 
 			if ($compat_mode === 0)
 			{
-				$downloadlink = '<a href="index.php?option=com_biblestudy&amp;view=sermon&amp;mid=' .
+				$downloadlink = '<a href="index.php?option=com_proclaim&amp;view=sermon&amp;mid=' .
 					$media->id . '&amp;task=download">';
 			}
 			else
@@ -280,7 +280,7 @@ class CWMMedia
 
 			if ($params->get('useterms') > 0)
 			{
-				$downloadlink = '<a class="modal" href="index.php?option=com_biblestudy&amp;view=terms&amp;' .
+				$downloadlink = '<a class="modal" href="index.php?option=com_proclaim&amp;view=terms&amp;' .
 					'tmpl=component&amp;layout=modal&amp;compat_mode='
 					. $compat_mode . '&amp;mid=' . $media->id . '&amp;t=' . $template->id . '" rel="{handler: \'iframe\', size: {x: 640, y: 480}}">';
 			}
@@ -644,7 +644,7 @@ class CWMMedia
 				{
 					case 2: // New window
 						$return     = base64_encode($path);
-						$playercode = '<a href="javascript:;" onclick="window.open(\'index.php?option=com_biblestudy&amp;task=playHit&amp;return=' .
+						$playercode = '<a href="javascript:;" onclick="window.open(\'index.php?option=com_proclaim&amp;task=playHit&amp;return=' .
 							$return . '&amp;' . JSession::getFormToken() . '=1\')" title="' .
 							$media->params->get("media_button_text") . ' - ' . $media->comment . ' '
 							. $filesize . '">' . $image . '</a>';
@@ -655,7 +655,7 @@ class CWMMedia
 						break;
 
 					case 1: // Popup window
-						$playercode = "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player="
+						$playercode = "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim&amp;player="
 							. $params->toObject()->player .
 							"&amp;view=popup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" .
 							$player->playerwidth . ",height=" . $player->playerheight . "'); return false\"  class=\"jbsmplayerlink\">"
@@ -715,7 +715,7 @@ class CWMMedia
 						$diff                 = $params->get('player_width') - $params->get('playerwidth');
 						$player->playerwidth  += abs($diff) + 10;
 						$player->playerheight += $params->get('popupmargin', '50');
-						$playercode           = "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player="
+						$playercode           = "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim&amp;player="
 							. $player->player
 							. "&amp;view=popup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width="
 							. $player->playerwidth . ", height=" .
@@ -732,7 +732,7 @@ class CWMMedia
 				switch ($player->type)
 				{
 					case 1: // This goes to the popup view
-						$playercode = "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_biblestudy"
+						$playercode = "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim"
 							. "&amp;view=popup&amp;player=3&amp;t=" . $template .
 							"&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
 							. $player->playerheight . "'); return false\"  class=\"jbsmplayerlink\">" . $image . "</a>";
@@ -756,7 +756,7 @@ class CWMMedia
 				return $this->getVirtuemart($media, $image);
 
 			case 8: // Embed code
-				return "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_biblestudy"
+				return "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim"
 					. "&amp;view=popup&amp;player=8&amp;t=" . $template .
 					"&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
 					. $player->playerheight . "'); return false\">" . $image . "</a>";

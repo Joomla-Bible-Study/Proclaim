@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 use Joomla\Registry\Registry;
 
 // Always load JBSM API if it exists.
-$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
 if (file_exists($api))
 {
@@ -75,6 +75,6 @@ function Admin_Postinstall_Template_condition()
  */
 function Admin_Postinstall_Template_action()
 {
-	$url = 'index.php?option=com_biblestudy&view=templates';
+	$url = 'index.php?option=com_proclaim&view=templates';
 	Factory::getApplication()->redirect($url);
 }

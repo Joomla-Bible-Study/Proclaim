@@ -56,7 +56,7 @@ abstract class JHtmlJwplayer
 		}
 		else
 		{
-			JHtml::script('media/com_biblestudy/player/jwplayer.js');
+			JHtml::script('media/com_proclaim/player/jwplayer.js');
 			$doc->addScriptDeclaration('jwplayer.key="' . $key . '";');
 		}
 
@@ -211,7 +211,7 @@ abstract class JHtmlJwplayer
 			// Add space for popup window
 			$player->playerwidth  = $player->playerwidth + 20;
 			$player->playerheight = $player->playerheight + $popupmarg;
-			$render               .= "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&amp;player=" . $player->player
+			$render               .= "<a href=\"#\" onclick=\"window.open('index.php?option=com_proclaim&amp;player=" . $player->player
 				. "&amp;view=popup&amp;t=" . $t . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width="
 				. $player->playerwidth . ",height=" .
 				$player->playerheight . "'); return false\">" . $popouttext . "</a>";

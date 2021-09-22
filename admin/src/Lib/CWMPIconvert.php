@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\BibleStudy\Administrator\Lib;
+namespace CWM\Component\Proclaim\Administrator\Lib;
 
 defined('_JEXEC') or die;
 

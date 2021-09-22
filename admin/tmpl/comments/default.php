@@ -49,7 +49,7 @@ Factory::getDocument()->addScriptDeclaration('
 	};
 ');
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=comments'); ?>" method="post" name="adminForm"
+<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=comments'); ?>" method="post" name="adminForm"
       id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
@@ -110,11 +110,11 @@ Factory::getDocument()->addScriptDeclaration('
 					<tbody>
 					<?php
 					foreach ($this->items as $i => $item) :
-						$link = JRoute::_('index.php?option=com_biblestudy&task=comment.edit&id=' . (int) $item->id);
+						$link = JRoute::_('index.php?option=com_proclaim&task=comment.edit&id=' . (int) $item->id);
 						$canCreate = $user->authorise('core.create');
-						$canEdit = $user->authorise('core.edit', 'com_biblestudy.comment.' . $item->id);
-						$canEditOwn = $user->authorise('core.edit.own', 'com_biblestudy.comment.' . $item->id);
-						$canChange = $user->authorise('core.edit.state', 'com_biblestudy.comment.' . $item->id);
+						$canEdit = $user->authorise('core.edit', 'com_proclaim.comment.' . $item->id);
+						$canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.comment.' . $item->id);
+						$canChange = $user->authorise('core.edit.state', 'com_proclaim.comment.' . $item->id);
 						?>
 						<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo '1' ?>">
 
@@ -175,9 +175,9 @@ Factory::getDocument()->addScriptDeclaration('
 					</tbody>
 				</table>
 				<?php // Load the batch processing form. ?>
-				<?php if ($user->authorise('core.create', 'com_biblestudy')
-					&& $user->authorise('core.edit', 'com_biblestudy')
-					&& $user->authorise('core.edit.state', 'com_biblestudy')
+				<?php if ($user->authorise('core.create', 'com_proclaim')
+					&& $user->authorise('core.edit', 'com_proclaim')
+					&& $user->authorise('core.edit.state', 'com_proclaim')
 				) : ?>
 					<?php echo HTMLHelper::_(
 						'bootstrap.renderModal',

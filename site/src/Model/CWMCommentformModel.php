@@ -15,7 +15,7 @@ use CWM\Component\Proclaim\Site\Controller\CommentformController;
 use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 // Base this model on the backend version.
-//JLoader::register('BiblestudyModelComment', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/CommentController.php');
+//JLoader::register('BiblestudyModelComment', JPATH_ADMINISTRATOR . '/components/com_proclaim/models/CommentController.php');
 
 use Joomla\Utilities\ArrayHelper;
 

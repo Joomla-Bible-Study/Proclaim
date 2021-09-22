@@ -39,7 +39,7 @@ $sortFields = $this->getSortFields();
 		Joomla.tableOrdering(order, dirn, '');
 	}
 </script>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=commentlist'); ?>" method="post"
+<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=commentlist'); ?>" method="post"
       name="adminForm" id="adminForm">
 	<div id="j-main-container">
 
@@ -119,11 +119,11 @@ $sortFields = $this->getSortFields();
 			<tbody>
 			<?php
 			foreach ($this->items as $i => $item) :
-				$link       = 'index.php?option=com_biblestudy&task=commentform.edit&a_id=' . (int) $item->id;
+				$link       = 'index.php?option=com_proclaim&task=commentform.edit&a_id=' . (int) $item->id;
 				$canCreate  = $user->authorise('core.create');
-				$canEdit    = $user->authorise('core.edit', 'com_biblestudy.comment.' . $item->id);
-				$canEditOwn = $user->authorise('core.edit.own', 'com_biblestudy.comment.' . $item->id);
-				$canChange  = $user->authorise('core.edit.state', 'com_biblestudy.comment.' . $item->id);
+				$canEdit    = $user->authorise('core.edit', 'com_proclaim.comment.' . $item->id);
+				$canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.comment.' . $item->id);
+				$canChange  = $user->authorise('core.edit.state', 'com_proclaim.comment.' . $item->id);
 				?>
 				<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo '1' ?>">
 

@@ -41,11 +41,11 @@ defined('_JEXEC') or die();
 $input = new Joomla\Input\Input;
 if ($input->get('layout', '', 'string') === 'modal')
 {
-    $url = 'index.php?option=com_biblestudy&view=upload&tmpl=component&layout=modal';
+    $url = 'index.php?option=com_proclaim&view=upload&tmpl=component&layout=modal';
 }
 else
 {
-    $url = 'index.php?option=com_biblestudy&view=upload&layout=default';
+    $url = 'index.php?option=com_proclaim&view=upload&layout=default';
 }
 echo JRoute::_($url);
 ?>" method="post" name="adminForm" id="item-form" class=" form-horizontal">

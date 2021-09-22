@@ -38,11 +38,11 @@ defined('_JEXEC') or die;
 
 		if (!$Itemid)
 		{
-			$link = Route::_('index.php?option=com_biblestudy&view=sermons&t=' . $t);
+			$link = Route::_('index.php?option=com_proclaim&view=sermons&t=' . $t);
 		}
 		else
 		{
-			$link = Route::_('index.php?option=com_biblestudy&view=sermons&t=' . $t);
+			$link = Route::_('index.php?option=com_proclaim&view=sermons&t=' . $t);
 		}
 		?>
 		<a href="<?php echo $link; ?>"> <?php echo $link_text; ?> </a> <?php } // End of if view_link not 0 ?>

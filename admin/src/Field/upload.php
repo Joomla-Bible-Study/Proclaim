@@ -34,13 +34,13 @@ class JFormFieldUpload extends JFormField
 	{
 		// Include Plupload libraries
 		$document = Factory::getDocument();
-		$document->addScript(JUri::root() . 'administrator/components/com_biblestudy/addons/servers/legacy/includes/js/plupload.full.min.js');
+		$document->addScript(JUri::root() . 'administrator/components/com_proclaim/addons/servers/legacy/includes/js/plupload.full.min.js');
 
-		$document->addScript(JUri::root() . 'administrator/components/com_biblestudy/addons/servers/legacy/includes/js/legacy.js');
+		$document->addScript(JUri::root() . 'administrator/components/com_proclaim/addons/servers/legacy/includes/js/legacy.js');
 
 		$document->addScriptDeclaration('
             jQuery(document).ready(function() {
-                uploader.setOption("url", "index.php?option=com_biblestudy&task=mediafile.xhr&' . JSession::getFormToken() . '=1");
+                uploader.setOption("url", "index.php?option=com_proclaim&task=mediafile.xhr&' . JSession::getFormToken() . '=1");
                 uploader.bind("BeforeUpload", function() {
                     var path = jQuery("#jform_params_localFolder").val();
                     var type = jQuery("#jform_serverType").val();

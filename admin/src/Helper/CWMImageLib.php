@@ -29,7 +29,7 @@ class CWMImageLib
 	 *
 	 * @since 1.5
 	 */
-	public static $extension = 'com_biblestudy';
+	public static $extension = 'com_proclaim';
 
 	/**
 	 * Get Series Podcast File
@@ -81,7 +81,7 @@ class ImageMagickLib extends CWMImageLib
 	 *
 	 * @since 1.5
 	 */
-	public static $extension = 'com_biblestudy';
+	public static $extension = 'com_proclaim';
 
 	/**
 	 * Resize Image
@@ -133,7 +133,7 @@ class GDLib extends CWMImageLib
 	 *
 	 * @since 1.5
 	 */
-	public static $extension = 'com_biblestudy';
+	public static $extension = 'com_proclaim';
 
 	/**
 	 * Construct System.

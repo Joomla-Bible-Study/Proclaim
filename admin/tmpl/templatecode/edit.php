@@ -43,7 +43,7 @@ else
 	}
 </script>
 
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=edit&id=' . (int) $this->item->id); ?>"
+<form action="<?php echo JRoute::_('index.php?option=com_proclaim&layout=edit&id=' . (int) $this->item->id); ?>"
       method="post" name="adminForm" id="item-form" class="form-validate">
 	<div class="row-fluid">
 		<!-- Begin Content -->
@@ -51,7 +51,7 @@ else
 			<ul class="nav nav-tabs">
 				<li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
 				</li>
-				<?php if ($this->canDo->get('core.administrator')): ?>
+				<?php if ($this->canDo->get('core.cwmadmin')): ?>
 					<li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a>
 					</li>
 				<?php endif ?>
@@ -95,7 +95,7 @@ else
 						</div>
 					</div>
 				</div>
-				<?php if ($this->canDo->get('core.administrator')): ?>
+				<?php if ($this->canDo->get('core.cwmadmin')): ?>
 					<div class="tab-pane" id="permissions">
 						<?php echo $this->form->getInput('rules'); ?>
 					</div>

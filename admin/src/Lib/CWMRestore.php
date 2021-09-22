@@ -8,9 +8,9 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\BibleStudy\Administrator\Lib;
+namespace CWM\Component\Proclaim\Administrator\Lib;
 
-use CWM\Component\BibleStudy\Administrator\Helper\CWMProclaimHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
@@ -239,7 +239,7 @@ class CWMRestore
 			if (($parent !== true) && $result)
 			{
 				$controlser = BaseController::getInstance('Biblestudy');
-				$controlser->setRedirect('index.php?option=com_biblestudy&task=administration.fixasset');
+				$controlser->setRedirect('index.php?option=com_proclaim&task=administration.fixasset');
 				$controlser->redirect();
 			}
 		}
@@ -269,7 +269,7 @@ class CWMRestore
 			set_time_limit(3000);
 		}
 
-		$query = file_get_contents(JPATH_SITE . '/media/com_biblestudy/backup/' . $backuprestore);
+		$query = file_get_contents(JPATH_SITE . '/media/com_proclaim/backup/' . $backuprestore);
 
 		// Check to see if this is a backup from an old db and not a migration
 		$isold   = substr_count($query, '#__bsms_admin_genesis');

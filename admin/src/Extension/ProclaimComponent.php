@@ -7,11 +7,10 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-namespace CWM\Component\BibleStudy\Administrator\Extension;
+namespace CWM\Component\Proclaim\Administrator\Extension;
 
 \defined('JPATH_PLATFORM') or die;
 
-use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Component\Router\RouterServiceInterface;
 use Joomla\CMS\Component\Router\RouterServiceTrait;
 use Joomla\CMS\Extension\BootableExtensionInterface;
@@ -19,15 +18,16 @@ use Joomla\CMS\Extension\MVCComponent;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Fields\FieldsServiceInterface;
 use Joomla\CMS\HTML\HTMLRegistryAwareTrait;
+use Joomla\CMS\Language\Text;
 use Psr\Container\ContainerInterface;
 
 /**
- * Component class for com_mywalks
+ * Component class for com_proclaim
  *
  * @since  4.0.0
  */
 class ProclaimComponent extends MVCComponent implements
-BootableExtensionInterface, FieldsServiceInterface, RouterServiceInterface
+	BootableExtensionInterface, FieldsServiceInterface, RouterServiceInterface
 {
 	use RouterServiceTrait;
 	use HTMLRegistryAwareTrait;
@@ -47,7 +47,7 @@ BootableExtensionInterface, FieldsServiceInterface, RouterServiceInterface
 	 */
 	public function boot(ContainerInterface $container)
 	{
-		//$this->getRegistry()->register('cwmproclaimadministrator', new AdministratorService);
+		//$this->getRegistry()->register('cwmproclaima', new CWMProclaim);
 	}
 
 	/**
@@ -79,7 +79,7 @@ BootableExtensionInterface, FieldsServiceInterface, RouterServiceInterface
 			}
 		}
 
-		if ($section != 'cpanel')
+		if ($section != 'cwmcpanel')
 		{
 			// We don't know other sections
 			return null;
@@ -97,11 +97,11 @@ BootableExtensionInterface, FieldsServiceInterface, RouterServiceInterface
 	 */
 	public function getContexts(): array
 	{
-		Factory::getLanguage()->load('com_biblestudy', JPATH_ADMINISTRATOR);
+		Factory::getApplication()->getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
 
 		$contexts = array(
-			'com_biblestudy.cpanel'    => Text::_('COM_BIBLESTUDY'),
-			'com_biblestudy.administrator' => Text::_('JCATEGORY')
+			'com_proclaim.cwmcpanel'        => Text::_('com_proclaim'),
+			'com_proclaim.cwmadmin' => Text::_('JCATEGORY')
 		);
 
 		return $contexts;

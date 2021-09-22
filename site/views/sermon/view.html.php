@@ -233,7 +233,7 @@ class BiblestudyViewSermon extends BaseHtmlView
 		if (!$user->get('guest'))
 		{
 			$userId = $user->get('id');
-			$asset  = 'com_biblestudy.message.' . $item->id;
+			$asset  = 'com_proclaim.message.' . $item->id;
 
 			// Check general edit permission first.
 			if ($user->authorise('core.edit', $asset))
@@ -348,16 +348,16 @@ class BiblestudyViewSermon extends BaseHtmlView
         PluginHelper::importPlugin('content');
 		$article       = new stdClass;
 		$article->text = $this->item->scripture1;
-        Factory::getApplication()->triggerEvent('onContentPrepare', array('com_biblestudy.sermons', & $article, & $this->item->params, $limitstart = null));
+        Factory::getApplication()->triggerEvent('onContentPrepare', array('com_proclaim.sermons', & $article, & $this->item->params, $limitstart = null));
 		$this->item->scripture1 = $article->text;
 		$article->text          = $this->item->scripture2;
-        Factory::getApplication()->triggerEvent('onContentPrepare', array('com_biblestudy.sermons', & $article, & $this->item->params, $limitstart = null));
+        Factory::getApplication()->triggerEvent('onContentPrepare', array('com_proclaim.sermons', & $article, & $this->item->params, $limitstart = null));
 		$this->item->scripture2 = $article->text;
 		$article->text          = $this->item->studyintro;
-        Factory::getApplication()->triggerEvent('onContentPrepare', array('com_biblestudy.sermons', & $article, & $this->item->params, $limitstart = null));
+        Factory::getApplication()->triggerEvent('onContentPrepare', array('com_proclaim.sermons', & $article, & $this->item->params, $limitstart = null));
 		$this->item->studyintro = $article->text;
 		$article->text          = $this->item->secondary_reference;
-        Factory::getApplication()->triggerEvent('onContentPrepare', array('com_biblestudy.sermons', & $article, & $this->item->params, $limitstart = null));
+        Factory::getApplication()->triggerEvent('onContentPrepare', array('com_proclaim.sermons', & $article, & $this->item->params, $limitstart = null));
 		$this->item->secondary_reference = $article->text;
 		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
 		$this->loadHelper('params');
@@ -385,7 +385,7 @@ class BiblestudyViewSermon extends BaseHtmlView
 		// Added database queries from the default template - moved here instead
 		$database = Factory::getDbo();
 		$query    = $database->getQuery(true);
-		$query->select('id')->from('#__menu')->where('link =' . $database->q('index.php?option=com_biblestudy&view=sermons'))->where('published = 1');
+		$query->select('id')->from('#__menu')->where('link =' . $database->q('index.php?option=com_proclaim&view=sermons'))->where('published = 1');
 		$database->setQuery($query);
 		$menuid       = $database->loadResult();
 		$this->menuid = $menuid;
@@ -416,7 +416,7 @@ class BiblestudyViewSermon extends BaseHtmlView
 			}
 
 			$limitstart = $app->input->get('limitstart', 'int');
-            Factory::getApplication()->triggerEvent('onContentPrepare', array('com_biblestudy.sermon', & $article, & $this->item->params, $limitstart));
+            Factory::getApplication()->triggerEvent('onContentPrepare', array('com_proclaim.sermon', & $article, & $this->item->params, $limitstart));
 			$article->studytext    = $article->text;
 			$this->item->studytext = $article->text;
 		}
@@ -500,7 +500,7 @@ class BiblestudyViewSermon extends BaseHtmlView
 		$id = (int) @$menu->query['id'];
 
 		// If the menu item does not concern this Study
-		if ($menu && ($menu->query['option'] !== 'com_biblestudy' || $menu->query['view'] !== 'sermon' || $id !== $this->item->id))
+		if ($menu && ($menu->query['option'] !== 'com_proclaim' || $menu->query['view'] !== 'sermon' || $id !== $this->item->id))
 		{
 			// If this is not a single article menu item, set the page title to the article title
 			if ($this->item->studytitle)

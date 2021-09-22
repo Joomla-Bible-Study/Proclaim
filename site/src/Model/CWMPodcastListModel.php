@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
-use CWM\Component\Proclaim\Administrator\Controller\MediaFilesController;
+use CWM\Component\Proclaim\Administrator\Controller\CWMMediaFilesController;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Helper\TagsHelper;
 /**
@@ -76,7 +76,7 @@ class CWMPodcastListModel extends ListModel
 
 		$user = Factory::getUser();
 
-		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
+		if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise('core.edit', 'com_proclaim')))
 		{
 			// Filter on published for those who do not have edit or edit.state rights.
 			$this->setState('filter.published', 1);
@@ -202,7 +202,7 @@ class CWMPodcastListModel extends ListModel
 			// Technically guest could edit an article, but lets not check that to improve performance a little.
 			if (!$guest)
 			{
-				$asset = 'com_biblestudy.series.' . $item->id;
+				$asset = 'com_proclaim.series.' . $item->id;
 
 				// Check general edit permission first.
 				if ($user->authorise('core.edit', $asset))

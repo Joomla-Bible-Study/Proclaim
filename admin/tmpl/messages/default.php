@@ -58,11 +58,11 @@ else
 
 if ($saveOrder)
 {
-	$saveOrderingUrl = 'index.php?option=com_biblestudy&task=message.saveOrderAjax&tmpl=component';
+	$saveOrderingUrl = 'index.php?option=com_proclaim&task=message.saveOrderAjax&tmpl=component';
 	HTMLHelper::_('draggablelist.draggable');
 }
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messages'); ?>" method="post" name="adminForm"
+<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=messages'); ?>" method="post" name="adminForm"
       id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
@@ -128,9 +128,9 @@ if ($saveOrder)
 					foreach ($this->items as $i => $item) :
 						$ordering = ($listOrder == 'study.ordering');
 						$canCreate = $user->authorise('core.create');
-						$canEdit = $user->authorise('core.edit', 'com_biblestudy.message.' . $item->id);
-						$canEditOwn = $user->authorise('core.edit.own', 'com_biblestudy.message.' . $item->id);
-						$canChange = $user->authorise('core.edit.state', 'com_biblestudy.message.' . $item->id);
+						$canEdit = $user->authorise('core.edit', 'com_proclaim.message.' . $item->id);
+						$canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.message.' . $item->id);
+						$canChange = $user->authorise('core.edit.state', 'com_proclaim.message.' . $item->id);
 						?>
 						<tr class="row<?php echo $i % 2; ?>" sortable-group-id="1">
 							<td class="order nowrap center hidden-phone">
@@ -176,7 +176,7 @@ if ($saveOrder)
 								<div class="pull-left">
 									<?php if ($canEdit || $canEditOwn) : ?>
 										<a href="<?php echo JRoute::_(
-											'index.php?option=com_biblestudy&task=message.edit&id=' . (int) $item->id
+											'index.php?option=com_proclaim&task=message.edit&id=' . (int) $item->id
 										); ?>">
 											<?php echo $this->escape($item->studytitle); ?>
 										</a>
@@ -223,9 +223,9 @@ if ($saveOrder)
 					</tbody>
 				</table>
 				<?php // Load the batch processing form. ?>
-				<?php if ($user->authorise('core.create', 'com_biblestudy')
-					&& $user->authorise('core.edit', 'com_biblestudy')
-					&& $user->authorise('core.edit.state', 'com_biblestudy')
+				<?php if ($user->authorise('core.create', 'com_proclaim')
+					&& $user->authorise('core.edit', 'com_proclaim')
+					&& $user->authorise('core.edit.state', 'com_proclaim')
 				) : ?>
 					<?php echo HTMLHelper::_(
 						'bootstrap.renderModal',

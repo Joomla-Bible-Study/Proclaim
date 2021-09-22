@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\BibleStudy\Administrator\Helper;
+namespace CWM\Component\Proclaim\Administrator\Helper;
 
 defined('_JEXEC') or die;
 
@@ -27,7 +27,7 @@ class CWMDbHelper
 	 *
 	 * @since 1.5
 	 */
-	public static string $extension = 'com_biblestudy';
+	public static string $extension = 'com_proclaim';
 
 	/**
 	 * Install State
@@ -252,7 +252,7 @@ class CWMDbHelper
 			return false;
 		}
 
-		JLog::add($from . $query, JLog::INFO, 'com_biblestudy');
+		JLog::add($from . $query, JLog::INFO, 'com_proclaim');
 
 		return true;
 	}
@@ -481,7 +481,7 @@ class CWMDbHelper
 		$db     = Factory::getDbo();
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');
-		$path = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_biblestudy/install/sql';
+		$path = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_proclaim/install/sql';
 
 		$files = str_replace('.sql', '', JFolder::files($path, '\.sql$'));
 		$files = array_reverse($files, true);
@@ -541,7 +541,7 @@ class CWMDbHelper
 		// Remove old assets.
 		$query = $db->getQuery(true);
 		$query->delete('#__assets')
-			->where('name LIKE ' . $db->q('com_biblestudy.%'));
+			->where('name LIKE ' . $db->q('com_proclaim.%'));
 		$db->setQuery($query);
 		$db->execute();
 

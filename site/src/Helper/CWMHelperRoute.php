@@ -47,7 +47,7 @@ class CWMHelperRoute
 		);
 
 		// Create the link
-		$link = 'index.php?option=com_biblestudy&view=sermon&id=' . $id;
+		$link = 'index.php?option=com_proclaim&view=sermon&id=' . $id;
 		if ($language && $language !== "*" && Multilanguage::isEnabled())
 		{
 			$db    = Factory::getDbo();
@@ -99,7 +99,7 @@ class CWMHelperRoute
 		{
 			self::$lookup = array();
 
-			$component = JComponentHelper::getComponent('com_biblestudy');
+			$component = JComponentHelper::getComponent('com_proclaim');
 			$items     = $menus->getItems('component_id', $component->id);
 
 			foreach ($items as $item)
@@ -141,7 +141,7 @@ class CWMHelperRoute
 		{
 			$active = $menus->getActive();
 
-			if ($active && $active->component === 'com_biblestudy')
+			if ($active && $active->component === 'com_proclaim')
 			{
 				return $active->id;
 			}
@@ -162,7 +162,7 @@ class CWMHelperRoute
 	public static function getTeacherRoute($id)
 	{
 		// Create the link
-		$link = 'index.php?option=com_biblestudy&view=teacher&id=' . $id;
+		$link = 'index.php?option=com_proclaim&view=teacher&id=' . $id;
 
 		return $link;
 	}
@@ -179,7 +179,7 @@ class CWMHelperRoute
 	public static function getSeriesRoute($id)
 	{
 		// Create the link
-		$link = 'index.php?option=com_biblestudy&view=seriesdisplay&id=' . $id;
+		$link = 'index.php?option=com_proclaim&view=seriesdisplay&id=' . $id;
 
 		return $link;
 	}

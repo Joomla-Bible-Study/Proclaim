@@ -45,11 +45,11 @@ abstract class JHtmlFancybox
 		JHtml::_('jquery.framework');
 		JHtml::_('jwplayer.framework');
 		JHtml::script('https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js');
-		JHtml::script('media/com_biblestudy/js/fancybox.js');
+		JHtml::script('media/com_proclaim/js/fancybox.js');
 
 		if ($mouseweel)
 		{
-			JHtml::script('media/com_biblestudy/js/jquery.mousewheel.pack.js');
+			JHtml::script('media/com_proclaim/js/jquery.mousewheel.pack.js');
 		}
 
 		self::loadCss($option);
@@ -69,6 +69,6 @@ abstract class JHtmlFancybox
 	public static function loadCss($option = false)
 	{
 		JHtml::stylesheet('https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css');
-		JHtml::stylesheet('media/com_biblestudy/css/bsms.fancybox.css');
+		JHtml::stylesheet('media/com_proclaim/css/bsms.fancybox.css');
 	}
 }

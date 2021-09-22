@@ -24,7 +24,7 @@ class BiblestudyModelTemplatecode extends JModelAdmin
 	 * @var        string    The prefix to use with controller messages.
 	 * @since    1.6
 	 */
-	protected $text_prefix = 'COM_BIBLESTUDY';
+	protected $text_prefix = 'com_proclaim';
 
 	/**
 	 * Method to get the record form.
@@ -39,7 +39,7 @@ class BiblestudyModelTemplatecode extends JModelAdmin
 	public function getForm($data = array(), $loadData = true)
 	{
 		// Get the form.
-		$form = $this->loadForm('com_biblestudy.templatecode', 'templatecode', array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_proclaim.templatecode', 'templatecode', array('control' => 'jform', 'load_data' => $loadData));
 
 		if (empty($form))
 		{
@@ -184,7 +184,7 @@ class BiblestudyModelTemplatecode extends JModelAdmin
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
-		$data = Factory::getApplication()->getUserState('com_biblestudy.edit.templatecode.data', array());
+		$data = Factory::getApplication()->getUserState('com_proclaim.edit.templatecode.data', array());
 
 		if (empty($data))
 		{

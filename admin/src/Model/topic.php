@@ -47,7 +47,7 @@ class BiblestudyModelTopic extends JModelAdmin
 	public function getForm($data = array(), $loadData = true)
 	{
 		// Get the form.
-		$form = $this->loadForm('com_biblestudy.topic', 'topic', array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_proclaim.topic', 'topic', array('control' => 'jform', 'load_data' => $loadData));
 
 		if (empty($form))
 		{
@@ -93,7 +93,7 @@ class BiblestudyModelTopic extends JModelAdmin
 	 */
 	protected function loadFormData()
 	{
-		$data = Factory::getApplication()->getUserState('com_biblestudy.edit.topic.data', array());
+		$data = Factory::getApplication()->getUserState('com_proclaim.edit.topic.data', array());
 
 		if (empty($data))
 		{
@@ -104,7 +104,7 @@ class BiblestudyModelTopic extends JModelAdmin
 	}
 
 	/**
-	 * Custom clean the cache of com_biblestudy and biblestudy modules
+	 * Custom clean the cache of com_proclaim and biblestudy modules
 	 *
 	 * @param   string   $group      The cache group
 	 * @param   integer  $client_id  The ID of the client
@@ -115,7 +115,7 @@ class BiblestudyModelTopic extends JModelAdmin
 	 */
 	protected function cleanCache($group = null, $client_id = 0)
 	{
-		parent::cleanCache('com_biblestudy');
+		parent::cleanCache('com_proclaim');
 		parent::cleanCache('mod_biblestudy');
 	}
 }

@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 
 use CWM\Component\Proclaim\Administrator\Model\servers;
 // Base this model on the backend version.
-//JLoader::register('BiblestudyModelServers', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/ServersController.php');
+//JLoader::register('BiblestudyModelServers', JPATH_ADMINISTRATOR . '/components/com_proclaim/models/ServersController.php');
 /**
  * Servers model class
  *

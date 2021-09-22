@@ -16,12 +16,12 @@ jimport('joomla.filesystem.file');
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class Com_BiblestudyInstallerScript
+class com_proclaimInstallerScript
 {
 	/** @var string The component's name
 	 * @since 1.5
 	 */
-	protected $extension = 'com_biblestudy';
+	protected $extension = 'com_proclaim';
 
 	/** @var string
 	 * @since 1.5
@@ -41,7 +41,7 @@ class Com_BiblestudyInstallerScript
 	/** @var string Path to Mysql files
 	 * @since 1.5
 	 */
-	public $filePath = '/components/com_biblestudy/install/sql/updates/mysql';
+	public $filePath = '/components/com_proclaim/install/sql/updates/mysql';
 
 	/**
 	 * This is Minimum requirements for: PHP, MySQL, Joomla
@@ -117,10 +117,10 @@ class Com_BiblestudyInstallerScript
 		jimport('joomla.log.log');
 		JLog::addLogger(
 			array(
-				'text_file' => 'com_biblestudy.errors.php'
+				'text_file' => 'com_proclaim.errors.php'
 			),
 			JLog::ALL,
-			'com_biblestudy'
+			'com_proclaim'
 		);
 
 		// Prevent installation if requirements are not met.
@@ -150,21 +150,21 @@ class Com_BiblestudyInstallerScript
 		}
 
 		// Remove all old install files before install/upgrade
-		if (JFolder::exists(JPATH_ADMINISTRATOR . '/components/com_biblestudy/install'))
+		if (JFolder::exists(JPATH_ADMINISTRATOR . '/components/com_proclaim/install'))
 		{
-			JFolder::delete(JPATH_ADMINISTRATOR . '/components/com_biblestudy/install');
+			JFolder::delete(JPATH_ADMINISTRATOR . '/components/com_proclaim/install');
 		}
 
 		// Remove old BibleStudy Helper. @since 9.0.14
-		if (JFile::exists(JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php'))
+		if (JFile::exists(JPATH_ADMINISTRATOR . '/components/com_proclaim/helpers/biblestudy.php'))
 		{
-			JFile::delete(JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/biblestudy.php');
+			JFile::delete(JPATH_ADMINISTRATOR . '/components/com_proclaim/helpers/biblestudy.php');
 		}
 
 		// Remove Variability plupload folder from media not use. 9.1.2
-		if (JFolder::exists(JPATH_ROOT . '/media/com_biblestudy/plupload'))
+		if (JFolder::exists(JPATH_ROOT . '/media/com_proclaim/plupload'))
 		{
-			JFolder::delete(JPATH_ROOT . '/media/com_biblestudy/plupload');
+			JFolder::delete(JPATH_ROOT . '/media/com_proclaim/plupload');
 		}
 
 		return true;
@@ -255,7 +255,7 @@ class Com_BiblestudyInstallerScript
 		if (!JFile::exists(JPATH_SITE . '/images/biblestudy/logo.png'))
 		{
 			// Copy the images to the new folder
-			JFolder::copy('/media/com_biblestudy/images', 'images/biblestudy/', JPATH_SITE, true);
+			JFolder::copy('/media/com_proclaim/images', 'images/biblestudy/', JPATH_SITE, true);
 		}
 
 		// Install subExtensions
@@ -278,7 +278,7 @@ class Com_BiblestudyInstallerScript
 			$controller = JControllerLegacy::getInstance('Biblestudy');
 			$controller->setRedirect(
 				JUri::base() .
-				'index.php?option=com_biblestudy&view=install&task=install.browse&scanstate=start&' .
+				'index.php?option=com_proclaim&view=install&task=install.browse&scanstate=start&' .
 				JSession::getFormToken() . '=1'
 			);
 			$controller->redirect();
@@ -304,10 +304,10 @@ class Com_BiblestudyInstallerScript
 		jimport('joomla.log.log');
 		JLog::addLogger(
 			array(
-				'text_file' => 'com_biblestudy.errors.php'
+				'text_file' => 'com_proclaim.errors.php'
 			),
 			JLog::ALL,
-			'com_biblestudy'
+			'com_proclaim'
 		);
 
 		$db   = Factory::getDbo();
@@ -434,7 +434,7 @@ class Com_BiblestudyInstallerScript
 		JLog::add(
 			sprintf("%s %s is not supported. Minimum required version is %s %s, but it is higly recommended to use %s %s or later.",
 				$name, $version, $name, $minor, $name, $recommended
-			), JLog::ERROR, 'com_biblestudy'
+			), JLog::ERROR, 'com_proclaim'
 		);
 
 		return false;
@@ -581,9 +581,9 @@ class Com_BiblestudyInstallerScript
 	private function renderPostInstallation($status, $parent)
 	{
 		$language = Factory::getLanguage();
-		$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', 'en-GB', true);
-		$language->load('com_biblestudy', JPATH_ADMINISTRATOR . '/components/com_biblestudy', null, true);
-		echo '<img src="../media/com_biblestudy/images/proclaim.jpg" width="48" height="48"
+		$language->load('com_proclaim', JPATH_ADMINISTRATOR . '/components/com_proclaim', 'en-GB', true);
+		$language->load('com_proclaim', JPATH_ADMINISTRATOR . '/components/com_proclaim', null, true);
+		echo '<img src="../media/com_proclaim/images/proclaim.jpg" width="48" height="48"
              alt="Proclaim"/>
 
         <h2>Welcome to CWM Proclaim System</h2>
@@ -603,7 +603,7 @@ class Com_BiblestudyInstallerScript
             </tfoot>
             <tbody>
             <tr>
-                <td class="key">' . JText::_('JBS_CMN_COM_BIBLESTUDY') . '</td>
+                <td class="key">' . JText::_('JBS_CMN_com_proclaim') . '</td>
                 <td class="key">Site</td>
                 <td><strong style="color: green;">' . JText::_('JBS_INS_INSTALLED') . '</strong></td>
             </tr>';
@@ -707,7 +707,7 @@ class Com_BiblestudyInstallerScript
 			</tfoot>
 			<tbody>
 			<tr class="row0">
-				<td class="key" colspan="2">' . JText::_('JBS_CMN_COM_BIBLESTUDY') . '</td>
+				<td class="key" colspan="2">' . JText::_('JBS_CMN_com_proclaim') . '</td>
 				<td><strong style="color: green;">' . JText::_('JBS_INS_REMOVED') . '</strong></td>
 			</tr>';
 
@@ -842,7 +842,7 @@ class Com_BiblestudyInstallerScript
 							// A. Position and state
 							list($modulePosition, $modulePublished) = $modulePreferences;
 
-							if ($modulePosition === 'cpanel')
+							if ($modulePosition === 'cwmcpanel')
 							{
 								$modulePosition = 'icon';
 							}

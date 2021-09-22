@@ -8,10 +8,10 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\BibleStudy\Administrator\Lib;
+namespace CWM\Component\Proclaim\Administrator\Lib;
 
-use CWM\Component\BibleStudy\Administrator\Helper\CWMDbHelper;
-use CWM\Component\BibleStudy\Administrator\Helper\CWMParams;
+use CWM\Component\Proclaim\Administrator\Helper\CWMDbHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
@@ -120,7 +120,7 @@ class CWMBackup
 				break;
 
 			case 2:
-				$this->dumpFile = JPATH_SITE . '/media/com_biblestudy/backup/' . $this->saveAsName;
+				$this->dumpFile = JPATH_SITE . '/media/com_proclaim/backup/' . $this->saveAsName;
 
 				if (!$this->writeline($this->data_cache))
 				{
@@ -498,7 +498,7 @@ class CWMBackup
 	{
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');
-		$path          = JPATH_SITE . '/media/com_biblestudy/database';
+		$path          = JPATH_SITE . '/media/com_proclaim/database';
 		$exclude = array('.git', '.svn', 'CVS', '.DS_Store', '__MACOSX', '.html');
 		$excludefilter = array('^\..*', '.*~');
 		$files         = Folder::files($path, '.', 'false', 'true', $exclude, $excludefilter);

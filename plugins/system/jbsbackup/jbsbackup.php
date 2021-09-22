@@ -32,7 +32,7 @@ class PlgSystemJBSBackup extends JPlugin
 		parent::__construct($subject, $config);
 
 		// Always load JBSM API if it exists.
-		$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+		$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
 		if (file_exists($api))
 		{
@@ -342,7 +342,7 @@ class PlgSystemJBSBackup extends JPlugin
 
 		if (!$mail->Send())
 		{
-			JLog::add('JBSM Bakup Plugin email faild.', JLog::ERROR, 'com_biblestudy', DateTime::W3C);
+			JLog::add('JBSM Bakup Plugin email faild.', JLog::ERROR, 'com_proclaim', DateTime::W3C);
 		}
 	}
 
@@ -359,7 +359,7 @@ class PlgSystemJBSBackup extends JPlugin
 	{
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');
-		$path          = JPATH_SITE . '/media/com_biblestudy/database';
+		$path          = JPATH_SITE . '/media/com_proclaim/database';
 		$exclude = array('.git', '.svn', 'CVS', '.DS_Store', '__MACOSX', '.html');
 		$excludefilter = array('^\..*', '.*~');
 		$files         = JFolder::files($path, '.', 'false', 'true', $exclude, $excludefilter);

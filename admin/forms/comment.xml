@@ -39,7 +39,7 @@
 	<field name="comment_text" type="editor" label="JBS_CMN_COMMENT" class="inputbox"
 	       rows="10" cols="50" filter="JBSMBibleStudyHelper::filterText" buttons="true"/>
 	<field name="rules" type="rules" label="JFIELD_RULES_LABEL"
-	       translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"
+	       translate_label="false" class="inputbox" filter="rules" component="com_proclaim"
 	       section="comment" validate="rules"/>
 	<field name="asset_id" type="hidden" filter="unset"/>
 	<field name="id" type="text" class="readonly span12" label="JGLOBAL_FIELD_ID_LABEL"

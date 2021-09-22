@@ -36,7 +36,7 @@
 	</field>
 	<field name="asset_id" type="hidden" filter="unset"/>
 	<field name="rules" type="rules" label="JFIELD_RULES_LABEL"
-	       translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"
+	       translate_label="false" class="inputbox" filter="rules" component="com_proclaim"
 	       section="messagetype" validate="rules"/>
 	<field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
 	       description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"

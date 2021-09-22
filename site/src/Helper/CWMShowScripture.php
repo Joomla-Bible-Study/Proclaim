@@ -75,7 +75,7 @@ class CWMShowScripture
 
 		if ($css)
 		{
-			HtmlHelper::_('stylesheet',Uri::base() . 'media/com_biblestudy/css/biblegateway-print.css');
+			HtmlHelper::_('stylesheet',Uri::base() . 'media/com_proclaim/css/biblegateway-print.css');
 		}
 
 		return $passage;

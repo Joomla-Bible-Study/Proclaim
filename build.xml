@@ -200,10 +200,10 @@
 		<echo message="Linking component to Joomla!"/>
 
 		<!-- Create symbolic links for component in the Joomla directory -->
-		<symlink target="${basedir}/media" link="${joomla_path}${joomla_dir}/media/com_biblestudy" overwrite="true"/>
-		<symlink target="${basedir}/admin" link="${joomla_path}${joomla_dir}/administrator/components/com_biblestudy"
+		<symlink target="${basedir}/media" link="${joomla_path}${joomla_dir}/media/com_proclaim" overwrite="true"/>
+		<symlink target="${basedir}/admin" link="${joomla_path}${joomla_dir}/administrator/components/com_proclaim"
 		         overwrite="true"/>
-		<symlink target="${basedir}/site" link="${joomla_path}${joomla_dir}/components/com_biblestudy"
+		<symlink target="${basedir}/site" link="${joomla_path}${joomla_dir}/components/com_proclaim"
 		         overwrite="true"/>
 		<symlink target="${basedir}/modules/site/mod_biblestudy"
 		         link="${joomla_path}${joomla_dir}/modules/mod_biblestudy" overwrite="true"/>
@@ -232,10 +232,10 @@
 		<echo message="Linking component, modules, and plugins to Joomla!"/>
 
 		<!-- Create symbolic links for component in the Joomla directory -->
-		<symlink target="${basedir}/media" link="${joomla_path}${joomla_dir}/media/com_biblestudy" overwrite="true"/>
-		<symlink target="${basedir}/admin" link="${joomla_path}${joomla_dir}/administrator/components/com_biblestudy"
+		<symlink target="${basedir}/media" link="${joomla_path}${joomla_dir}/media/com_proclaim" overwrite="true"/>
+		<symlink target="${basedir}/admin" link="${joomla_path}${joomla_dir}/administrator/components/com_proclaim"
 		         overwrite="true"/>
-		<symlink target="${basedir}/site" link="${joomla_path}${joomla_dir}/components/com_biblestudy"
+		<symlink target="${basedir}/site" link="${joomla_path}${joomla_dir}/components/com_proclaim"
 		         overwrite="true"/>
 		<symlink target="${basedir}/modules/site/mod_biblestudy"
 		         link="${joomla_path}${joomla_dir}/modules/mod_biblestudy" overwrite="true"/>

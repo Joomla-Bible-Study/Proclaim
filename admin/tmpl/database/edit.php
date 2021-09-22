@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
 
 ?>
 <div id="installer-database" class="clearfix">
-    <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=database'); ?>" method="post" name="adminForm" id="adminForm">
+    <form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=database'); ?>" method="post" name="adminForm" id="adminForm">
 
 		<?php if (!empty( $this->sidebar)) : ?>
         <div id="j-sidebar-container" class="span2">

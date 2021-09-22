@@ -12,9 +12,9 @@ defined('_JEXEC') or die;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
-use CWM\Component\Proclaim\Administrator\Controller\MessagesController;
+use CWM\Component\Proclaim\Administrator\Controller\CWMMessagesController;
 // Base this model on the backend version.
-//JLoader::register('BiblestudyModelMessages', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/MessagesController.php');
+//JLoader::register('BiblestudyModelMessages', JPATH_ADMINISTRATOR . '/components/com_proclaim/models/MessagesController.php');
 
 /**
  * Model class for MessageList

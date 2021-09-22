@@ -26,7 +26,7 @@ $columns   = 4;
 
 $sortFields = $this->getSortFields();
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=servers'); ?>" method="post" name="adminForm"
+<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=servers'); ?>" method="post" name="adminForm"
       id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
@@ -73,9 +73,9 @@ $sortFields = $this->getSortFields();
 				foreach ($this->items as $i => $item) :
 					$item->max_ordering = 0;
 					$canCreate = $user->authorise('core.create');
-					$canEdit = $user->authorise('core.edit', 'com_biblestudy.server.' . $item->id);
-					$canEditOwn = $user->authorise('core.edit.own', 'com_biblestudy.server.' . $item->id);
-					$canChange = $user->authorise('core.edit.state', 'com_biblestudy.server.' . $item->id);
+					$canEdit = $user->authorise('core.edit', 'com_proclaim.server.' . $item->id);
+					$canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.server.' . $item->id);
+					$canChange = $user->authorise('core.edit.state', 'com_proclaim.server.' . $item->id);
 					?>
 					<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->id ?>">
 
@@ -91,7 +91,7 @@ $sortFields = $this->getSortFields();
 							<div class="pull-left">
 
 								<?php if ($canEdit || $canEditOwn) : ?>
-									<a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=server.edit&id=' . (int) $item->id); ?>"
+									<a href="<?php echo JRoute::_('index.php?option=com_proclaim&task=server.edit&id=' . (int) $item->id); ?>"
 									   title="<?php echo JText::_('JACTION_EDIT'); ?>">
 										<?php echo $this->escape($item->server_name); ?></a>
 								<?php else : ?>

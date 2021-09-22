@@ -8,11 +8,11 @@
     </layout>
     <state>
         <name>JBS_MNU_SINGLE_SERIES_LAYOUT</name>
-        <url addpath="/administrator/components/com_biblestudy/elements">
+        <url addpath="/administrator/components/com_proclaim/elements">
             <param name="id" type="series" default="" label="JBS_CMN_SELECT_SERIES"
                    description="JBS_MNU_SELECT_SERIES_DESC"/>
         </url>
-        <params addpath="/components/com_biblestudy/elements">
+        <params addpath="/components/com_proclaim/elements">
             <param name="type" type="hidden" default=""/>
             <param name="t" type="t" default="" label="JBS_MNU_SELECT_TEMPLATE"
                    description="JBS_MNU_SELECT_TEMPLATE_DESC"/>
@@ -20,7 +20,7 @@
     </state>
     <fields name="request">
         <fieldset name="request"
-                  addfieldpath="/administrator/components/com_biblestudy/models/fields"
+                  addfieldpath="/administrator/components/com_proclaim/models/fields"
                 >
             <field name="id" type="modal_seriesdetail"
                    description="JBS_MNU_SELECT_SERIES_DESC"

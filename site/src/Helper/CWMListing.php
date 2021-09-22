@@ -12,7 +12,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 defined('_JEXEC') or die;
 
 // Always load JBSM API if it exists.
-$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
 if (file_exists($api))
 {
@@ -1225,7 +1225,7 @@ class CWMListing
 				}
 				else
 				{
-					($item->information ? $data = JHtml::_('content.prepare', $item->information, '', 'com_biblestudy.' . $type) : $data = '');
+					($item->information ? $data = JHtml::_('content.prepare', $item->information, '', 'com_proclaim.' . $type) : $data = '');
 				}
 				break;
 
@@ -1426,7 +1426,7 @@ class CWMListing
 				}
 				else
 				{
-					(isset($item->short) ? $data = JHtml::_('content.prepare', $item->short, '', 'com_biblestudy.' . $type) : $data = '');
+					(isset($item->short) ? $data = JHtml::_('content.prepare', $item->short, '', 'com_proclaim.' . $type) : $data = '');
 				}
 				break;
 
@@ -1518,7 +1518,7 @@ class CWMListing
 				}
 				else
 				{
-					isset($item->studyintro) ? $data = JHtml::_('content.prepare', $item->studyintro, '', 'com_biblestudy.' . $type) : $data = '';
+					isset($item->studyintro) ? $data = JHtml::_('content.prepare', $item->studyintro, '', 'com_proclaim.' . $type) : $data = '';
 				}
 				break;
 			case $extra . 'series':
@@ -1565,11 +1565,11 @@ class CWMListing
 			case $extra . 'description':
 				if ($type === 'seriesdisplays' || ($type === 'seriesdisplay' && $header !== 1))
 				{
-					(isset($item->description) ? $data = JHtml::_('content.prepare', $item->description, '', 'com_biblestudy.' . $type) : $data = '');
+					(isset($item->description) ? $data = JHtml::_('content.prepare', $item->description, '', 'com_proclaim.' . $type) : $data = '');
 				}
 				else
 				{
-					(isset($item->sdescription) ? $data = JHtml::_('content.prepare', $item->sdescription, '', 'com_biblestudy.' . $type) : $data = '');
+					(isset($item->sdescription) ? $data = JHtml::_('content.prepare', $item->sdescription, '', 'com_proclaim.' . $type) : $data = '');
 				}
 
 				if ($type === 'seriesdisplays' && !$header)
@@ -1875,7 +1875,7 @@ class CWMListing
 			case 'studyintro':
 				if (isset($row->studyintro))
 				{
-					$element = JHtml::_('content.prepare', $row->studyintro, '', 'com_biblestudy.' . $type);
+					$element = JHtml::_('content.prepare', $row->studyintro, '', 'com_proclaim.' . $type);
 				}
 				else
 				{
@@ -2027,11 +2027,11 @@ class CWMListing
 				{
 					if ($type === 'seriesdisplays' || $type === 'seriesdisplay')
 					{
-						$element = JHtml::_('content.prepare', $row->description, '', 'com_biblestudy.' . $type);
+						$element = JHtml::_('content.prepare', $row->description, '', 'com_proclaim.' . $type);
 					}
 					else
 					{
-						$element = JHtml::_('content.prepare', $row->sdescription, '', 'com_biblestudy.' . $type);
+						$element = JHtml::_('content.prepare', $row->sdescription, '', 'com_proclaim.' . $type);
 					}
 				}
 				else
@@ -2430,20 +2430,20 @@ class CWMListing
 
 				if (!$Itemid)
 				{
-					$link = JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
+					$link = JRoute::_('index.php?option=com_proclaim&view=sermon&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
 
 					if ($view === 'seriesdisplays')
 					{
-						$link = JRoute::_('index.php?option=com_biblestudy&view=seriesidsplay&id=' . $row->slug . '&t=' . $params->get('seriesdetailtemplateid'));
+						$link = JRoute::_('index.php?option=com_proclaim&view=seriesidsplay&id=' . $row->slug . '&t=' . $params->get('seriesdetailtemplateid'));
 					}
 				}
 				else
 				{
-					$link = JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
+					$link = JRoute::_('index.php?option=com_proclaim&view=sermon&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
 
 					if ($view === 'seriesdisplays')
 					{
-						$link = JRoute::_('index.php?option=com_biblestudy&view=seriesdisplay&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
+						$link = JRoute::_('index.php?option=com_proclaim&view=seriesdisplay&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
 					}
 				}
 
@@ -2451,7 +2451,7 @@ class CWMListing
 				break;
 
 			case 3 :
-				$link = JRoute::_('index.php?option=com_biblestudy&view=teacher&id=' . $tid . '&t=' . $params->get('teachertemplateid'));
+				$link = JRoute::_('index.php?option=com_proclaim&view=teacher&id=' . $tid . '&t=' . $params->get('teachertemplateid'));
 
 				if ($tmenu > 0)
 				{
@@ -2498,7 +2498,7 @@ class CWMListing
 
 			case 9 :
 				// Case 9 is a link to download
-				$column .= '<a href="index.php?option=com_biblestudy&amp;view=sermon&amp;mid=' .
+				$column .= '<a href="index.php?option=com_proclaim&amp;view=sermon&amp;mid=' .
 					$row->download_id . '&amp;task=download">';
 		}
 
@@ -2589,7 +2589,7 @@ class CWMListing
 		$label  = str_replace('{{studyintro}}', $row->studyintro, $label);
 		$label  = str_replace('{{scripture}}', $this->getScripture($params, $row, 0, 1), $label);
 		$label  = str_replace('{{topics}}', $row->topic_text, $label);
-		$label  = str_replace('{{url}}', JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $row->id . '&t=' . $template->id), $label);
+		$label  = str_replace('{{url}}', JRoute::_('index.php?option=com_proclaim&view=sermon&id=' . $row->id . '&t=' . $template->id), $label);
 		$label  = str_replace('{{thumbnail}}', $this->useJImage($image->path, "", "bsms_studyThumbnail" . $row->id, $image->width, $image->height), $label);
 		$label  = str_replace('{{seriestext}}', $row->series_text, $label);
 		$label  = str_replace('{{messagetype}}', $row->message_type, $label);

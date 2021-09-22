@@ -67,7 +67,7 @@ abstract class JHtmlbsMedia
 		if (!isset(self::$loaded[__METHOD__][$sig]))
 		{
 			// Attach the carousel to document
-			JHtml::_('script', 'media/com_biblestudy/lytebox/lytebox.js', false, true, false, false);
+			JHtml::_('script', 'media/com_proclaim/lytebox/lytebox.js', false, true, false, false);
 
 			// Set static array
 			self::$loaded[__METHOD__][$sig] = true;
@@ -95,19 +95,19 @@ abstract class JHtmlbsMedia
 		{
 			if ($cssName != null && $cssName <= "-1")
 			{
-				JHtml::_('stylesheet', 'media/com_biblestudy/css/biblestudy.css', $attribs, true);
+				JHtml::_('stylesheet', 'media/com_proclaim/css/biblestudy.css', $attribs, true);
 			}
 			else
 			{
-				JHtml::_('stylesheet', 'media/com_biblestudy/css/site/' . $cssName, $attribs, true);
+				JHtml::_('stylesheet', 'media/com_proclaim/css/site/' . $cssName, $attribs, true);
 			}
 
-			JHtml::_('stylesheet', 'media/com_biblestudy/css/general.css', $attribs, true);
+			JHtml::_('stylesheet', 'media/com_proclaim/css/general.css', $attribs, true);
 		}
 
 		if ($cssSet === 'lytebox')
 		{
-			JHtml::_('stylesheet', 'media/com_biblestudy/lytebox/lytebox.css', $attribs, true);
+			JHtml::_('stylesheet', 'media/com_proclaim/lytebox/lytebox.css', $attribs, true);
 		}
 	}
 }

@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\BibleStudy\Administrator\Helper;
+namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // No direct access
 defined("_JEXEC") or die();
@@ -49,7 +49,7 @@ class CWMUploadScript
 	public function upload($data)
 	{
 		Session::checkToken('get') or die('Invalid Token');
-		$params = ComponentHelper::getParams('com_biblestudy');
+		$params = ComponentHelper::getParams('com_proclaim');
 
 		// Get some data from the request
 		$file         = $_FILES['file'];
@@ -100,7 +100,7 @@ class CWMUploadScript
 		PluginHelper::importPlugin('content');
 		$app = Factory::getApplication();
 
-		if (!$mediaHelper->canUpload($file, 'com_biblestudy'))
+		if (!$mediaHelper->canUpload($file, 'com_proclaim'))
 		{
 			// The file can't be uploaded
 			return ['data' => '', 'error' => 'The file can\'t be uploaded by types allowed'];
@@ -108,7 +108,7 @@ class CWMUploadScript
 
 		// Trigger the onContentBeforeSave event.
 		$object_file = (object) $file;
-		$result      = $app->triggerEvent('onContentBeforeSave', array('com_biblestudy.file', &$object_file, true));
+		$result      = $app->triggerEvent('onContentBeforeSave', array('com_proclaim.file', &$object_file, true));
 
 		if (in_array(false, $result, true))
 		{
@@ -122,7 +122,7 @@ class CWMUploadScript
 		}
 
 		// Trigger the onContentAfterSave event.
-		$app->triggerEvent('onContentAfterSave', array('com_biblestudy.file', &$object_file, true));
+		$app->triggerEvent('onContentAfterSave', array('com_proclaim.file', &$object_file, true));
 
 		// Return Success
 		return array(

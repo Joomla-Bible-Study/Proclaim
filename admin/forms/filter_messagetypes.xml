@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-    <fieldset addfieldpath="/administrator/components/com_biblestudy/models/fields">
+    <fieldset addfieldpath="/administrator/components/com_proclaim/models/fields">
         <fields name="filter">
             <field
                     name="search"

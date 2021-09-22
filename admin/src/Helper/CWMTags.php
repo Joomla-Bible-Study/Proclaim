@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\BibleStudy\Administrator\Helper;
+namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // No Direct Access
 use Joomla\CMS\Factory;
@@ -30,7 +30,7 @@ class CWMTags
 	 *
 	 * @since 1.5
 	 */
-	public static $extension = 'com_biblestudy';
+	public static $extension = 'com_proclaim';
 
 	/**
 	 * Check to see if Duplicate

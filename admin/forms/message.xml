@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-	<fieldset addfieldpath="/administrator/components/com_biblestudy/src/Field">
-		<field name="server" type="sql" extension="com_biblestudy" label="JBS_CMN_SERVER"
+	<fieldset addfieldpath="/administrator/components/com_proclaim/src/Field">
+		<field name="server" type="sql" extension="com_proclaim" label="JBS_CMN_SERVER"
 		       description="JBS_MED_SERVER_DESC" class="inputbox" default="-1"
 		       query="SELECT id, server_name FROM #__bsms_servers WHERE published=1 ORDER BY server_name ASC"
 		       key_field="id" value_field="server_name">
@@ -105,21 +105,21 @@
 			       description="JBS_STY_SECONDARY_REFERENCES_DESC"/>
 		</fieldset>
 
-		<field name="teacher_id" type="sql" extension="com_biblestudy" label="JBS_CMN_TEACHER"
+		<field name="teacher_id" type="sql" extension="com_proclaim" label="JBS_CMN_TEACHER"
 		       class="inputbox"
 		       query="SELECT id, teachername FROM #__bsms_teachers WHERE published = 1 ORDER by teachername ASC"
 		       key_field="id" value_field="teachername">
 			<option value="-1">JBS_CMN_SELECT_TEACHER</option>
 		</field>
 
-		<field name="location_id" type="sql" extension="com_biblestudy" label="JBS_CMN_LOCATION"
+		<field name="location_id" type="sql" extension="com_proclaim" label="JBS_CMN_LOCATION"
 		       class="inputbox"
 		       query="SELECT id, location_text FROM #__bsms_locations WHERE published = 1 ORDER by location_text ASC"
 		       key_field="id" value_field="location_text">
 			<option value="-1">JBS_CMN_SELECT_LOCATION</option>
 		</field>
 
-		<field name="series_id" type="sql" extension="com_biblestudy" label="JBS_CMN_SERIES"
+		<field name="series_id" type="sql" extension="com_proclaim" label="JBS_CMN_SERIES"
 		       class="inputbox"
 		       query="SELECT id, series_text FROM #__bsms_series WHERE published = 1 ORDER by series_text ASC"
 		       key_field="id" value_field="series_text">
@@ -129,7 +129,7 @@
 		<field name="topics" type="topics" class="inputbox" label="JBS_CMN_TOPIC_TAG"
 		       description="JBS_CMN_TOPIC_TAG_DESC" filter="row"/>
 
-		<field name="messagetype" type="sql" extension="com_biblestudy"
+		<field name="messagetype" type="sql" extension="com_proclaim"
 		       label="JBS_CMN_MESSAGETYPE" description="JBS_STY_MESSAGETYPE_DESC"
 		       class="inputbox"
 		       query="SELECT id, message_type FROM #__bsms_message_type WHERE published = 1 ORDER by message_type ASC"
@@ -140,7 +140,7 @@
 		<field name="image" type="media" label="JBS_STY_STUDY_IMAGE" accept="image/*"/>
 
 		<field name="rules" type="rules" label="JFIELD_RULES_LABEL"
-		       translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"
+		       translate_label="false" class="inputbox" filter="rules" component="com_proclaim"
 		       section="message" validate="rules"/>
 
 		<field name="created_by" type="user"

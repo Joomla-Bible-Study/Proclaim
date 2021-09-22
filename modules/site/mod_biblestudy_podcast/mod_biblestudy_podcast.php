@@ -12,7 +12,7 @@
 defined('_JEXEC') or die;
 
 // Always load JBSM API if it exists.
-$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
 if (file_exists($api))
 {
@@ -21,7 +21,7 @@ if (file_exists($api))
 
 $templateparams = null;
 
-if (!JComponentHelper::isEnabled('com_biblestudy'))
+if (!JComponentHelper::isEnabled('com_proclaim'))
 {
 	throw new Exception("Extension Bible Study not present or enabled");
 }

@@ -11,7 +11,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 // No Direct Access
 defined('_JEXEC') or die;
 
-use CWM\Component\BibleStudy\Administrator\Helper\CWMHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Input\Input;
 use Joomla\Registry\Registry;

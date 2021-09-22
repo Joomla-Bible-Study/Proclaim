@@ -37,7 +37,7 @@
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
 		</field>
-		<field name="teacher" type="sql" extension="com_biblestudy"
+		<field name="teacher" type="sql" extension="com_proclaim"
 		       label="JBS_CMN_TEACHER"
 		       query="SELECT id, teachername FROM #__bsms_teachers WHERE published = 1 ORDER by teachername ASC"
 		       key_field="id" value_field="teachername">
@@ -55,7 +55,7 @@
 		       description="JFIELD_ACCESS_DESC" class="span12 small" size="1"/>
 		<field name="asset_id" type="hidden" filter="unset"/>
 		<field name="rules" type="rules" label="JFIELD_RULES_LABEL"
-		       translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"
+		       translate_label="false" class="inputbox" filter="rules" component="com_proclaim"
 		       section="serie" validate="rules"/>
 		<field name="id" type="hidden" default="0"/>
 		<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"

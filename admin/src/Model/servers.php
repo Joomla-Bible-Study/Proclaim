@@ -99,7 +99,7 @@ class servers extends ListModel
 		$options = array();
 
 		// Path to endpoints
-		$path = JPATH_ADMINISTRATOR . '/components/com_biblestudy/addons/servers';
+		$path = JPATH_ADMINISTRATOR . '/components/com_proclaim/addons/servers';
 
 		if (Folder::exists($path))
 		{
@@ -124,7 +124,7 @@ class servers extends ListModel
 					$o              = new stdClass;
 					$o->type        = (string) $xml['type'];
 					$o->name        = (string) $server;
-					$o->image_url   = Uri::base() . '/components/com_biblestudy/addons/servers/' . $server . '/' . $server . '.png';
+					$o->image_url   = Uri::base() . '/components/com_proclaim/addons/servers/' . $server . '/' . $server . '.png';
 					$o->title       = (string) $xml->name;
 					$o->description = (string) $xml->description;
 					$o->path        = $path . '/' . $server . '/';
@@ -206,7 +206,7 @@ class servers extends ListModel
 		}
 
 		// Implement View Level Access
-		if (!$user->authorise('core.administrator'))
+		if (!$user->authorise('core.cwmadmin'))
 		{
 			$groups = implode(',', $user->getAuthorisedViewLevels());
 			$query->where('server.access IN (' . $groups . ')');

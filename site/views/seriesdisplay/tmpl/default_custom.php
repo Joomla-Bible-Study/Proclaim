@@ -40,9 +40,9 @@ $t = $this->template->id;
 			<table class="table table-striped">
 				<tr class="seriesreturnlink">
 					<td>
-						<?php echo '<a href="' . JRoute::_('index.php?option=com_biblestudy&view=seriesdisplays&t=' . $t)
+						<?php echo '<a href="' . JRoute::_('index.php?option=com_proclaim&view=seriesdisplays&t=' . $t)
 							. '"><< ' . JText::_('JBS_SER_RETURN_SERIES_LIST') . '</a> | <a href="'
-							. JRoute::_('index.php?option=com_biblestudy&view=sermons&filter_series=' . $this->items->id . '&t=' . $t)
+							. JRoute::_('index.php?option=com_proclaim&view=sermons&filter_series=' . $this->items->id . '&t=' . $t)
 							. '">' . JText::_('JBS_CMN_SHOW_ALL') . ' ' . JText::_('JBS_SER_STUDIES_FROM_THIS_SERIES') . ' >>'
 							. '</a>';
 						?>
@@ -54,7 +54,7 @@ $t = $this->template->id;
 		?>
 	</div>
 	<!--end of bspagecontainer div-->
-	<input name="option" value="com_biblestudy" type="hidden">
+	<input name="option" value="com_proclaim" type="hidden">
 	<input name="task" value="" type="hidden">
 	<input name="boxchecked" value="0" type="hidden">
 	<input name="controller" value="seriesdisplay" type="hidden">

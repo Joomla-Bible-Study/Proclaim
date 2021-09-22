@@ -90,9 +90,9 @@ class MediafileformController extends FormController
 
 		if (!parent::add())
 		{
-			$app->setUserState('com_biblestudy.edit.mediafile.createdate', null);
-			$app->setUserState('com_biblestudy.edit.mediafile.study_id', null);
-			$app->setUserState('com_biblestudy.edit.mediafile.server_id', null);
+			$app->setUserState('com_proclaim.edit.mediafile.createdate', null);
+			$app->setUserState('com_proclaim.edit.mediafile.study_id', null);
+			$app->setUserState('com_proclaim.edit.mediafile.server_id', null);
 
 			// Redirect to the return page.
 			$this->setRedirect($this->getReturnPage());
@@ -116,7 +116,7 @@ class MediafileformController extends FormController
 
 		if (empty($return) || !Uri::isInternal(base64_decode($return)))
 		{
-			return Uri::base() . 'index.php?option=com_biblestudy&view=mediafilelist';
+			return Uri::base() . 'index.php?option=com_proclaim&view=mediafilelist';
 		}
 		else
 		{
@@ -164,9 +164,9 @@ class MediafileformController extends FormController
 
 		if ($result)
 		{
-			$app->setUserState('com_biblestudy.edit.mediafile.createdate', null);
-			$app->setUserState('com_biblestudy.edit.mediafile.study_id', null);
-			$app->setUserState('com_biblestudy.edit.mediafile.server_id', null);
+			$app->setUserState('com_proclaim.edit.mediafile.createdate', null);
+			$app->setUserState('com_proclaim.edit.mediafile.study_id', null);
+			$app->setUserState('com_proclaim.edit.mediafile.server_id', null);
 		}
 
 		return $result;
@@ -284,9 +284,9 @@ class MediafileformController extends FormController
 		$server_id = $data['server_id'];
 
 		// Save server in the session
-		$app->setUserState('com_biblestudy.edit.mediafile.createdate', $cdate);
-		$app->setUserState('com_biblestudy.edit.mediafile.study_id', $study_id);
-		$app->setUserState('com_biblestudy.edit.mediafile.server_id', $server_id);
+		$app->setUserState('com_proclaim.edit.mediafile.createdate', $cdate);
+		$app->setUserState('com_proclaim.edit.mediafile.study_id', $study_id);
+		$app->setUserState('com_proclaim.edit.mediafile.server_id', $server_id);
 
 		$redirect = $this->getRedirectToItemAppend($data['id']);
 		$this->setRedirect(Route::_('index.php?option=' . $this->option . '&view=' . $this->view_item . $redirect, false));

@@ -43,7 +43,7 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 							echo '<li class="span' . $spans . '">';
 							if ($this->params->get('teacherlink') > 0)
 							{
-								echo '<a href="index.php?option=com_biblestudy&view=teacher&id=' . $teacher['id'] . '&t=' . $teacher['t'] . '" >
+								echo '<a href="index.php?option=com_proclaim&view=teacher&id=' . $teacher['id'] . '&t=' . $teacher['t'] . '" >
 							<img class="img-polaroid" src="' . JUri::base() . $teacher['image'] . '" alt="Teachers Image"></a>';
 							}
 							else
@@ -52,7 +52,7 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 							}
 							if ($this->params->get('teacherlink') > 0)
 							{
-								echo '<div class="caption"><p><a href="index.php?option=com_biblestudy&view=teacher&id=' .
+								echo '<div class="caption"><p><a href="index.php?option=com_proclaim&view=teacher&id=' .
 									$teacher['id'] . '&t=' . $teacher['t'] . '">' . $teacher['name'] . '</a></p></div>';
 							}
 							else

@@ -29,7 +29,7 @@ Factory::getDocument()->addScriptDeclaration("
 		};
 ");
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=cpanel'); ?>" enctype="multipart/form-data"
+<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmcpanel'); ?>" enctype="multipart/form-data"
       method="post" name="adminForm" id="adminForm">
 	<div class="row-fluid" style="margin-top: 50px;">
 		<div class="span12 form-horizontal">
@@ -52,7 +52,7 @@ Factory::getDocument()->addScriptDeclaration("
 			</div>
 		</div>
 	</div>
-	<input type="hidden" name="option" value="com_biblestudy"/>
+	<input type="hidden" name="option" value="com_proclaim"/>
 	<input type="hidden" name="task" value="admin.doArchive"/>
 	<input type="hidden" name="controller" value="admin"/>
 	<?php echo JHtml::_('form.token'); ?>

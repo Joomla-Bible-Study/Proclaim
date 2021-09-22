@@ -18,20 +18,20 @@ defined('_JEXEC') or die;
 	<title>Plupload - Queue widget example</title>
 
 	<link rel="stylesheet"
-	      href="../../../../../../media/com_biblestudy/plupload/js/jquery.plupload.queue/css/jquery.plupload.queue.css"
+	      href="../../../../../../media/com_proclaim/plupload/js/jquery.plupload.queue/css/jquery.plupload.queue.css"
 	      type="text/css" media="screen"/>
 
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 
 	<!-- production -->
-	<script type="text/javascript" src="../../../../../../media/com_biblestudy/plupload/js/plupload.full.js"></script>
+	<script type="text/javascript" src="../../../../../../media/com_proclaim/plupload/js/plupload.full.js"></script>
 	<script type="text/javascript"
-	        src="../../../../../../media/com_biblestudy/plupload/js/jquery.plupload.queue/jquery.plupload.queue.js"></script>
+	        src="../../../../../../media/com_proclaim/plupload/js/jquery.plupload.queue/jquery.plupload.queue.js"></script>
 
 	<!-- debug
-	<script type="text/javascript" src="/media/com_biblestudy/plupload/js/moxie.js"></script>
-	<script type="text/javascript" src="/media/com_biblestudy/plupload/js/plupload.dev.js"></script>
-	<script type="text/javascript" src="/media/com_biblestudy/plupload/js/jquery.ui.plupload/jquery.ui.plupload.js"></script>
+	<script type="text/javascript" src="/media/com_proclaim/plupload/js/moxie.js"></script>
+	<script type="text/javascript" src="/media/com_proclaim/plupload/js/plupload.dev.js"></script>
+	<script type="text/javascript" src="/media/com_proclaim/plupload/js/jquery.ui.plupload/jquery.ui.plupload.js"></script>
 	-->
 
 
@@ -52,7 +52,7 @@ defined('_JEXEC') or die;
 		$("#uploader").pluploadQueue({
 			// General settings
 			runtimes: 'html5,flash,silverlight,html4',
-			url: '../../../../../../administrator/components/com_biblestudy/addons/servers/legacy/fields/upload.php',
+			url: '../../../../../../administrator/components/com_proclaim/addons/servers/legacy/fields/upload.php',
 			chunk_size: '1mb',
 			rename: true,
 			dragdrop: true,
@@ -70,8 +70,8 @@ defined('_JEXEC') or die;
 			// Resize images on clientside if we can
 			resize: {width: 320, height: 240, quality: 90},
 
-			flash_swf_url: '../../../../../../administrator/components/com_biblestudy/addons/servers/legacy/includes/js/Moxie.swf',
-			silverlight_xap_url: '../../../../../../administrator/components/com_biblestudy/addons/servers/legacy/includes/js/Moxie.xap'
+			flash_swf_url: '../../../../../../administrator/components/com_proclaim/addons/servers/legacy/includes/js/Moxie.swf',
+			silverlight_xap_url: '../../../../../../administrator/components/com_proclaim/addons/servers/legacy/includes/js/Moxie.xap'
 		});
 
 	});

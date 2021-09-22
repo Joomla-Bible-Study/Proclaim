@@ -17,7 +17,7 @@
 			</field>
 		</fieldset>
 		<fieldset name="details" label="JBS_ADDON_YOUTUBE_DETAILS"
-		          addfieldpath="/administrator/components/com_biblestudy/addons/servers/youtube/fields">
+		          addfieldpath="/administrator/components/com_proclaim/addons/servers/youtube/fields">
 			<field name="media_image" type="media" directory="biblestudy"
 			       label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
 			       class="inputbox span6">
@@ -54,7 +54,7 @@
 			       description="JBS_ADDON_YOUTUBE_CUSTOM_ICON_DESC"/>
 			<field name="media_icon_text_size" type="text" default="24" label="JBS_ADDON_YOUTUBE_FONT_SIZE"
 			       description="JBS_ADDON_YOUTUBE_FONT_SIZE_DESC"/>
-			<field name="link_type" type="hidden" extension="com_biblestudy"
+			<field name="link_type" type="hidden" extension="com_proclaim"
 			       label="JBS_MED_SHOW_DOWNLOAD_ICON" description="JBS_MED_SHOW_DOWNLOAD_ICON_DESC"
 			       class="inputbox" readonly="readonly" size="1" default="0">
 				<option value="0">JBS_MED_NO_DOWNLOAD_ICON</option>

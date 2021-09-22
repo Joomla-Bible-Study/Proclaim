@@ -26,7 +26,7 @@ $input = $app->input;
 ?>
 <div class="edit item-page<?php echo $this->pageclass_sfx; ?>">
 	<form
-		action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=commentfrom&a_id=' . (int) $this->item->id); ?>"
+		action="<?php echo JRoute::_('index.php?option=com_proclaim&view=commentfrom&a_id=' . (int) $this->item->id); ?>"
 		method="post" name="adminForm" id="adminForm" class="form-validate form-vertical">
 		<div class="btn-toolbar">
 			<div class="btn-group">
@@ -46,7 +46,7 @@ $input = $app->input;
 				</li>
 				<li><a href="#parameters" data-toggle="tab"><?php echo JText::_('JBS_CMN_PARAMETERS'); ?></a>
 				</li>
-				<?php if ($this->canDo->get('core.administrator')): ?>
+				<?php if ($this->canDo->get('core.cwmadmin')): ?>
 					<li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a>
 					</li>
 				<?php endif ?>
@@ -104,7 +104,7 @@ $input = $app->input;
 					</div>
 				</div>
 
-				<?php if ($this->canDo->get('core.administrator')): ?>
+				<?php if ($this->canDo->get('core.cwmadmin')): ?>
 					<div class="tab-pane" id="permissions">
 						<div class="control-group">
 							<div class="control-label">

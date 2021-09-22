@@ -35,7 +35,7 @@ abstract class JHtmlIcon
 
 		$uri = JUri::getInstance();
 
-		$url = 'index.php?option=com_biblestudy&task=messageform.add&return=' . base64_encode($uri) . '&a_id=0';
+		$url = 'index.php?option=com_proclaim&task=messageform.add&return=' . base64_encode($uri) . '&a_id=0';
 
 		if ($params->get('show_icons'))
 		{
@@ -165,7 +165,7 @@ abstract class JHtmlIcon
 			return '<span class="hasTooltip" title="' . JHtml::tooltipText($tooltip . '', 0) . '">' . $button . '</span>';
 		}
 
-		$url = 'index.php?option=com_biblestudy&task=messageform.edit&a_id=' . $article->id . '&return=' . base64_encode($uri);
+		$url = 'index.php?option=com_proclaim&task=messageform.edit&a_id=' . $article->id . '&return=' . base64_encode($uri);
 
 		if ($article->published == 0)
 		{

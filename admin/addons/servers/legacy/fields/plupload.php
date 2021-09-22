@@ -36,8 +36,8 @@ class JFormFieldPlupload extends JFormField
 		// Include Plupload libraries
 		$document = Factory::getDocument();
 		$app = Factory::getApplication();
-		$document->addScript(JUri::root() . 'administrator/components/com_biblestudy/addons/servers/legacy/includes/js/plupload.full.min.js');
-		$document->addScript(JUri::root() . 'administrator/components/com_biblestudy/addons/servers/legacy/includes/js/legacy.js');
+		$document->addScript(JUri::root() . 'administrator/components/com_proclaim/addons/servers/legacy/includes/js/plupload.full.min.js');
+		$document->addScript(JUri::root() . 'administrator/components/com_proclaim/addons/servers/legacy/includes/js/legacy.js');
 		$view = $app->input->get('view');
 		$admin = JBSMParams::getAdmin();
 
@@ -52,7 +52,7 @@ class JFormFieldPlupload extends JFormField
 
 		$document->addScriptDeclaration('
 			jQuery(document).ready(function() {
-				uploader.setOption("url", "index.php?option=com_biblestudy&task=' . $view . '.xhr&' . JSession::getFormToken() . '=1");
+				uploader.setOption("url", "index.php?option=com_proclaim&task=' . $view . '.xhr&' . JSession::getFormToken() . '=1");
 				uploader.bind("BeforeUpload", function() {
 					uploader.setOption("multipart_params", {
 						handler: "' . $this->element["handler"] . '",

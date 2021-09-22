@@ -14,7 +14,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Layout\LayoutHelper;
 
-$params = ComponentHelper::getParams('com_biblestudy');
+$params = ComponentHelper::getParams('com_proclaim');
 
 $published = (int) $this->state->get('filter.published');
 
@@ -40,7 +40,7 @@ $user = Factory::getUser();
 		<?php if ($published >= 0) : ?>
 			<div class="form-group col-md-6">
 				<div class="controls">
-					<?php echo LayoutHelper::render('joomla.html.batch.item', ['extension' => 'com_biblestudy']); ?>
+					<?php echo LayoutHelper::render('joomla.html.batch.item', ['extension' => 'com_proclaim']); ?>
 				</div>
 			</div>
 		<?php endif; ?>

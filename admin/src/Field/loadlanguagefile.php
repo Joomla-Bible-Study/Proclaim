@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 
 
 // Always load JBSM API if it exists.
-$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
 if (file_exists($api))
 {
@@ -61,8 +61,8 @@ class JFormFieldLoadLanguageFile extends JFormField
 	{
 		// Get language file; english language as fallback
 		$language = Factory::getLanguage();
-		$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
-		$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, null, true);
+		$language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
+		$language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, null, true);
 
 		// Return an empty string; nothing to display
 		return '';

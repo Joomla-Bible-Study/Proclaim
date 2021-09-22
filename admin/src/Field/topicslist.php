@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 // For some reason the autoloader is not finding this file so this is a temporary workaround
-include_once JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/CWMTranslated.php';
+include_once JPATH_ADMINISTRATOR . '/components/com_proclaim/helpers/CWMTranslated.php';
 
 /**
  * Topics List Form Field class for the Proclaim component

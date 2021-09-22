@@ -17,7 +17,7 @@ JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.framework');
 
-$return  = base64_encode('index.php?option=com_biblestudy&task=messageform.edit&a_id=' . (int) $this->item->id);
+$return  = base64_encode('index.php?option=com_proclaim&task=messageform.edit&a_id=' . (int) $this->item->id);
 $options = base64_encode('study_id=' . $this->item->id . '&createdate=' . $this->item->studydate);
 
 $params = $this->form->getFieldsets('params');
@@ -59,7 +59,7 @@ else
 </script>
 <div class="edit item-page<?php echo $this->pageclass_sfx; ?>">
 	<form
-			action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messageform&a_id=' . (int) $this->item->id); ?>"
+			action="<?php echo JRoute::_('index.php?option=com_proclaim&view=messageform&a_id=' . (int) $this->item->id); ?>"
 			method="post" name="adminForm" id="adminForm" class="form-validate form-vertical"
 			enctype="multipart/form-data">
 		<div class="row-fluid">
@@ -85,7 +85,7 @@ else
 					<li><a href="#info" data-toggle="tab"><?php echo JText::_('JBS_CMN_INFO'); ?></a></li>
 					<li><a href="#metadata" data-toggle="tab"><?php echo JText::_('JBS_STY_METADATA'); ?></a></li>
 					<li><a href="#media" data-toggle="tab"><?php echo JText::_('JBS_STY_MEDIA_THIS_STUDY'); ?></a></li>
-					<?php if ($this->canDo->get('core.administrator')): ?>
+					<?php if ($this->canDo->get('core.cwmadmin')): ?>
 						<li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a>
 						</li>
 					<?php endif ?>
@@ -393,7 +393,7 @@ else
 							</div>
 						</div>
 					</div>
-					<?php if ($this->canDo->get('core.administrator')): ?>
+					<?php if ($this->canDo->get('core.cwmadmin')): ?>
 						<div class="tab-pane" id="permissions">
 
 							<?php echo $this->form->getInput('rules'); ?>
@@ -438,7 +438,7 @@ else
 									?>
 									<tr class="row<?php echo $i % 2; ?>">
 										<td>
-											<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafileform.edit&amp;a_id='
+											<?php $link = 'index.php?option=com_proclaim&amp;task=mediafileform.edit&amp;a_id='
 													. (int) $item->id . '&amp;return=' . $return . '&amp;options=' . $options; ?>
 											<a class="btn btn-primary" href="<?php echo $link; ?>"
 											   title="<?php echo $this->escape($item->params->get('filename')) ? $this->escape($item->params->get('filename')) : $this->escape($item->params->get('media_image_name')); ?>">
@@ -463,7 +463,7 @@ else
 							<tfoot>
 							<tr>
 								<td colspan="4">
-									<?php $link = 'index.php?option=com_biblestudy&amp;task=mediafileform.edit&amp;sid='
+									<?php $link = 'index.php?option=com_proclaim&amp;task=mediafileform.edit&amp;sid='
 											. $this->form->getValue('id') . '&amp;options=' . $options . '&amp;return=' . $return;  ?>
 									<?php
 									if (empty($this->item->id))

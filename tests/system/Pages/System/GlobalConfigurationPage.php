@@ -99,7 +99,7 @@ class GlobalConfigurationPage extends AdminEditPage
 			array('label' => 'SMTP Host', 'id' => 'jform_smtphost', 'type' => 'input', 'tab' => 'page-server'),
 	);
 
-	public $permissions = array('core.login.site', 'core.login.administrator', 'core.login.offline', 'core.administrator', 'core.manage', 'core.create', 'core.delete', 'core.edit', 'core.edit.state', 'core.edit.own');
+	public $permissions = array('core.login.site', 'core.login.cwmadmin', 'core.login.offline', 'core.cwmadmin', 'core.manage', 'core.create', 'core.delete', 'core.edit', 'core.edit.state', 'core.edit.own');
 
 
 

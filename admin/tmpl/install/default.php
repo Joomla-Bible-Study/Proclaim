@@ -53,7 +53,7 @@ else
 	</div>
 </div>
 <form action="index.php" name="adminForm" id="adminForm" method="get">
-	<input type="hidden" name="option" value="com_biblestudy"/>
+	<input type="hidden" name="option" value="com_proclaim"/>
 	<input type="hidden" name="view" value="install"/>
 	<?php ?>
 	<?php if ($this->state === 'start')
@@ -83,7 +83,7 @@ else
 		<script type="text/javascript">
 			window.setTimeout('redirect();', 3000);
 			function redirect() {
-				window.location.replace("index.php?option=com_biblestudy&view=install&layout=install_finished&<?php echo JSession::getFormToken() ?>=1");
+				window.location.replace("index.php?option=com_proclaim&view=install&layout=install_finished&<?php echo JSession::getFormToken() ?>=1");
 			}
 		</script>
 	<?php

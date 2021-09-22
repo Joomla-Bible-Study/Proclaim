@@ -33,7 +33,7 @@ class CWMParams
 	 *
 	 * @since 1.5
 	 */
-	public static string $extension = 'com_biblestudy';
+	public static string $extension = 'com_proclaim';
 
 	/** @var  object Admin Table
 	 *
@@ -181,7 +181,7 @@ class CWMParams
 			$query  = $db->getQuery(true);
 			$query->select('params')
 				->from('#__extensions')
-				->where('name = ' . $db->q('com_biblestudy'));
+				->where('name = ' . $db->q('com_proclaim'));
 			$db->setQuery($query);
 			$params = json_decode($db->loadResult(), true, 512, JSON_THROW_ON_ERROR);
 
@@ -196,7 +196,7 @@ class CWMParams
 			$query->clear();
 			$query->update('#__extensions')
 				->set('params = ' . $db->q($paramsString))
-				->where('name = ' . $db->q('com_biblestudy'));
+				->where('name = ' . $db->q('com_proclaim'));
 			$db->setQuery($query);
 			$db->execute();
 		}

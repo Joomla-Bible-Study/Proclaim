@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\BibleStudy\Administrator\Helper;
+namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // No Direct Access
 defined('_JEXEC') or die;
@@ -35,7 +35,7 @@ class CWMHelper
 	 *
 	 * @since 8.0.0
 	 */
-	public static $extension = 'com_biblestudy';
+	public static $extension = 'com_proclaim';
 
 	/**
 	 * Get tooltip.
@@ -304,7 +304,7 @@ class CWMHelper
 		if ($state === 'administrator')
 		{
 			$options = array(
-				'defaultgroup' => 'com_biblestudy',
+				'defaultgroup' => 'com_proclaim',
 				'storage'      => $conf->get('cache_handler', ''),
 				'caching'      => true,
 				'cachebase'    => $conf->get('cache_path', JPATH_ADMINISTRATOR . '/cache')
@@ -313,7 +313,7 @@ class CWMHelper
 		elseif ($state === 'site')
 		{
 			$options = array(
-				'defaultgroup' => 'com_biblestudy',
+				'defaultgroup' => 'com_proclaim',
 				'storage'      => $conf->get('cache_handler', ''),
 				'caching'      => true,
 				'cachebase'    => $conf->get('cache_path', JPATH_SITE . '/cache')

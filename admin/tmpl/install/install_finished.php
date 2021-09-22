@@ -35,7 +35,7 @@ $session->set('migration_stack', '', 'JBSM');
 <?php endif; ?>
 
 <h1>
-	<img src="../media/com_biblestudy/images/openbible.png" alt="Bible Study" border="0" class="float: left"/>
+	<img src="../media/com_proclaim/images/openbible.png" alt="Bible Study" border="0" class="float: left"/>
 	<?php echo JText::sprintf('JBS_INS_INSTALLATION_RESULTS', JText::_('JBS_MIG_MIGRATION_DONE')); ?>
 </h1>
 
@@ -98,8 +98,8 @@ $session->set('migration_stack', '', 'JBSM');
 	<tr>
 		<td>
 
-			<a href="index.php?option=com_biblestudy">
-				<img src="../media/com_biblestudy/images/done-icon.jpg" alt="Done"/>
+			<a href="index.php?option=com_proclaim">
+				<img src="../media/com_proclaim/images/done-icon.jpg" alt="Done"/>
 
 				<h3 style="text-align: left;"><?php echo JText::_('JBS_INS_CLICK_TO_FINISH'); ?></h3>
 			</a>

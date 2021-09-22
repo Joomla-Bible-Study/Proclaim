@@ -15,7 +15,7 @@ JHtml::_('behavior.modal');
 ?>
 
 <form action="index.php" name="adminForm" id="adminForm">
-	<input type="hidden" name="option" value="com_biblestudy"/>
+	<input type="hidden" name="option" value="com_proclaim"/>
 	<input type="hidden" name="view" value="squeezebox"/>
 	<input type="hidden" name="tmpl" value="component"/>
 </form>

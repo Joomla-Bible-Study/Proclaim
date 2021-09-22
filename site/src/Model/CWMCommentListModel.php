@@ -11,11 +11,11 @@ namespace CWM\Component\Proclaim\Site\Model;
 // No Direct Access
 defined('_JEXEC') or die;
 use Joomla\CMS\MVC\Model\ListModel;
-use CWM\Component\Proclaim\Administrator\Controller\CommentsController;
+use CWM\Component\Proclaim\Administrator\Controller\CWMCommentsController;
 use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 // Base this model on the backend version.
-//JLoader::register('BiblestudyModelComments', JPATH_ADMINISTRATOR . '/components/com_biblestudy/models/CommentsController.php');
+//JLoader::register('BiblestudyModelComments', JPATH_ADMINISTRATOR . '/components/com_proclaim/models/CommentsController.php');
 
 /**
  * Comments model class

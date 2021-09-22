@@ -9,7 +9,7 @@
  * */
 
 // No Direct Access
-use CWM\Component\BibleStudy\Administrator\Helper\CWMProclaimHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
 
@@ -28,7 +28,7 @@ define('BIBLESTUDY_VERSION', '9.2.8');
 define('BIBLESTUDY_VERSION_UPDATEFILE', 'JBS Version ' . BIBLESTUDY_VERSION);
 
 // Default values
-define('BIBLESTUDY_COMPONENT_NAME', 'com_biblestudy');
+define('BIBLESTUDY_COMPONENT_NAME', 'com_proclaim');
 define('BIBLESTUDY_LANGUAGE_DEFAULT', 'english');
 define('BIBLESTUDY_TEMPLATE_DEFAULT', 'default');
 
@@ -38,7 +38,7 @@ define('BIBLESTUDY_COMPONENT_RELPATH', 'components' . DIRECTORY_SEPARATOR . BIBL
 // Root system paths
 define('BIBLESTUDY_ROOT_PATH', JPATH_ROOT);
 define('BIBLESTUDY_ROOT_PATH_ADMIN', JPATH_ADMINISTRATOR);
-define('BIBLESTUDY_MEDIA_PATH', JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy');
+define('BIBLESTUDY_MEDIA_PATH', JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_proclaim');
 define('BIBLESTUDY_PATH_IMAGES', BIBLESTUDY_MEDIA_PATH . DIRECTORY_SEPARATOR . 'images');
 
 // Site Component paths
@@ -94,8 +94,8 @@ JLoader::register('JBSMHelperRoute', BIBLESTUDY_PATH_HELPERS . '/route.php', tru
 
 // If phrase is not found in specific language file, load english language file:
 $language = Factory::getLanguage();
-$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
-$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, null, true);
+$language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
+$language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, null, true);
 
 // Component debugging
 try
@@ -117,10 +117,10 @@ catch (Exception $e)
 jimport('joomla.log.log');
 Log::addLogger(
 	array(
-		'text_file' => 'com_biblestudy.errors.php'
+		'text_file' => 'com_proclaim.errors.php'
 	),
 	Log::ALL,
-	'com_biblestudy'
+	'com_proclaim'
 );
 
 // JBSM has been initialized

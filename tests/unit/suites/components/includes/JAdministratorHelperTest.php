@@ -79,7 +79,7 @@ class JAdministratorHelperTest extends TestCase
 			->will($this->returnValue(false));
 		$this->user->expects($this->once())
 			->method('authorise')
-			->with($this->equalTo('core.login.administrator'))
+			->with($this->equalTo('core.login.cwmadmin'))
 			->will($this->returnValue(false));
 
 		$this->assertEquals(
@@ -104,7 +104,7 @@ class JAdministratorHelperTest extends TestCase
 			->will($this->returnValue(false));
 		$this->user->expects($this->once())
 			->method('authorise')
-			->with($this->equalTo('core.login.administrator'))
+			->with($this->equalTo('core.login.cwmadmin'))
 			->will($this->returnValue(true));
 
 		$this->assertEquals(
@@ -129,7 +129,7 @@ class JAdministratorHelperTest extends TestCase
 			->will($this->returnValue(false));
 		$this->user->expects($this->once())
 			->method('authorise')
-			->with($this->equalTo('core.login.administrator'))
+			->with($this->equalTo('core.login.cwmadmin'))
 			->will($this->returnValue(true));
 
 		Factory::$application->input->set('option', 'foo');

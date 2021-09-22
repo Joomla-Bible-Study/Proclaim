@@ -7,7 +7,7 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-namespace CWM\Component\BibleStudy\Administrator\Controller;
+namespace CWM\Component\Proclaim\Administrator\Controller;
 
 defined('_JEXEC') or die;
 
@@ -26,7 +26,7 @@ class DisplayController extends BaseController
 	 * @var    string
 	 * @since  1.6
 	 */
-	protected $default_view = 'cpanel';
+	protected $default_view = 'cwmcpanel';
 
 	/**
 	 * Method to display a view.

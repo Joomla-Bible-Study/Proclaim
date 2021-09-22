@@ -85,7 +85,7 @@ class JFormFieldModal_Seriesdetail extends JFormField
 			$title = JText::_('JBS_CMN_SELECT_SERIES');
 		}
 
-		$link = 'index.php?option=com_biblestudy&amp;view=series&amp;layout=modal&amp;tmpl=component&amp;function=jSelectChart_' . $this->id;
+		$link = 'index.php?option=com_proclaim&amp;view=series&amp;layout=modal&amp;tmpl=component&amp;function=jSelectChart_' . $this->id;
 
 		JHtml::_('behavior.modal', 'a.modal');
 		$html = "\n" . '<div class="fltlft"><input type="text" id="' . $this->id . '_name" value="' .

@@ -37,7 +37,7 @@ Factory::getDocument()->addScriptDeclaration("
 		};
 ");
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets') ?>" method="post" name="assetsForm" id="item-assets" class="form-horizontal">
+<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=assets') ?>" method="post" name="assetsForm" id="item-assets" class="form-horizontal">
 	<div class="row-fluid">
 		<div class="span6 form-horizontal">
 			<h4><?php echo JText::_('JBS_ADM_ASSET_CHECK'); ?></h4>
@@ -45,18 +45,18 @@ Factory::getDocument()->addScriptDeclaration("
 			<div class="span2">
 				<a onclick="Joomla.submitbutton('assets.checkassets')">
 					<img
-						src="<?php echo JUri::base() . '../media/com_biblestudy/images/icons/import.png'; ?>"
+						src="<?php echo JUri::base() . '../media/com_proclaim/images/icons/import.png'; ?>"
 						alt="Check Assets" height="48" width="48" style="clear: right;"/>
 					<div><?php echo JText::_('JBS_ADM_CHECK_ASSETS'); ?></div>
 				</a>
 			</div>
 			<div class="span2">
-				<button value="<?php echo JRoute::_('index.php?option=com_biblestudy&view=assets&task=assets.browse&tmpl=component&' . JSession::getFormToken() . '=1'); ?>" class="button-fix" type="button" data-bs-toggle="modal" data-bs-target="#collapseModal">
+				<button value="<?php echo JRoute::_('index.php?option=com_proclaim&view=assets&task=assets.browse&tmpl=component&' . JSession::getFormToken() . '=1'); ?>" class="button-fix" type="button" data-bs-toggle="modal" data-bs-target="#collapseModal">
 					<span class="icon-square" aria-hidden="true"></span>
 					<?php echo JText::_('JBS_ADM_FIX'); ?></button>
-<!--				<a href="--><?php //echo JRoute::_('index.php?option=com_biblestudy&view=assets&task=assets.browse&tmpl=component&' . JSession::getFormToken() . '=1'); ?><!--" class="modals"-->
+<!--				<a href="--><?php //echo JRoute::_('index.php?option=com_proclaim&view=assets&task=assets.browse&tmpl=component&' . JSession::getFormToken() . '=1'); ?><!--" class="modals"-->
 <!--				   rel="{handler: 'iframe', size: {x: 600, y: 250}}">-->
-<!--					<img src="--><?php //echo JUri::base() . '../media/com_biblestudy/images/icons/export.png'; ?><!--"-->
+<!--					<img src="--><?php //echo JUri::base() . '../media/com_proclaim/images/icons/export.png'; ?><!--"-->
 <!--						alt="Fix Assets" height="48" width="48"/>-->
 <!--					<div>--><?php //echo JText::_('JBS_ADM_FIX'); ?><!--</div>-->
 <!--				</a>-->

@@ -14,7 +14,7 @@
 	const submitTask = task => {
 		const form = document.getElementById(formId)
 
-		if (form && task === 'message.batch')
+		if (form && task === 'messages.batch')
 		{
 			submitForm(task, form)
 		}
