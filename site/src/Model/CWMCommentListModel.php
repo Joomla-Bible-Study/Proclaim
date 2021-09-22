@@ -11,7 +11,7 @@ namespace CWM\Component\Proclaim\Site\Model;
 // No Direct Access
 defined('_JEXEC') or die;
 use Joomla\CMS\MVC\Model\ListModel;
-use CWM\Component\Proclaim\Administrator\Controller\CommentsController;
+use CWM\Component\Proclaim\Administrator\Controller\CWMCommentsController;
 use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 // Base this model on the backend version.

@@ -15,7 +15,7 @@ $published = $this->state->get('filter.published');
 
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 //$wa = $this->document->getWebAssetManager();
-//$wa->useScript('com_biblestudy.administrator-comments-batch');
+//$wa->useScript('com_proclaim.cwmadmin-comments-batch');
 
 ?>
 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">

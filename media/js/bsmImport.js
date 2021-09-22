@@ -18,7 +18,7 @@ $j(document).ready(function () {
 		$j.getJSON(
 			"index.php",
 			{
-				option: 'com_biblestudyimport',
+				option: 'com_proclaimimport',
 				controller: 'ajax',
 				format: 'raw',
 				task: 'getFolder',
@@ -84,7 +84,7 @@ $j(document).ready(function () {
 		$j.ajax(
 			{
 				type: "POST",
-				url: "index.php?option=com_biblestudyimport&controller=ajax&format=raw&task=importFile",
+				url: "index.php?option=com_proclaimimport&controller=ajax&format=raw&task=importFile",
 				data: json,
 				success: function (response) {
 				}

@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\BibleStudy\Administrator\Lib;
+namespace CWM\Component\Proclaim\Administrator\Lib;
 
 // No Direct Access
 use Joomla\CMS\Factory;

@@ -24,17 +24,17 @@ defined('_JEXEC') or die;
 
             <div class="control-group">
                 <div class="control-label">
-                    <img src="<?php echo JUri::base() . '../media/com_biblestudy/images/icons/export.png'; ?>"
+                    <img src="<?php echo JUri::base() . '../media/com_proclaim/images/icons/export.png'; ?>"
                          alt="Export" height="48" width="48"/></div>
                 <div class="controls">
                     <!--suppress HtmlUnknownTarget -->
-                    <a href="<?php echo JRoute::_("index.php?option=com_biblestudy&task=administration.export&run=1&" .
+                    <a href="<?php echo JRoute::_("index.php?option=com_proclaim&task=administration.export&run=1&" .
 						JSession::getFormToken() . "=1"); ?>" class="btn btn-primary">
 						<?php echo JText::_('JBS_CMN_EXPORT'); ?>
                     </a>
 					<?php echo '<br /><br />'; ?>
                     <!--suppress HtmlUnknownTarget -->
-                    <a href="index.php?option=com_biblestudy&task=admin.export&run=2&<?php echo JSession::getFormToken(); ?>=1"
+                    <a href="index.php?option=com_proclaim&task=cwmadmin.export&run=2&<?php echo JSession::getFormToken(); ?>=1"
                        class="btn">
 						<?php echo JText::_('JBS_IBM_SAVE_DB'); ?>
                     </a>
@@ -49,7 +49,7 @@ defined('_JEXEC') or die;
             </div>
             <div class="control-group">
                 <div class="control-label">
-                    <img src="<?php echo JUri::base() . '../media/com_biblestudy/images/icons/import.png'; ?>"
+                    <img src="<?php echo JUri::base() . '../media/com_proclaim/images/icons/import.png'; ?>"
                          alt="Import" height="48" width="48"/>
                 </div>
                 <div class="controls">
@@ -67,7 +67,7 @@ defined('_JEXEC') or die;
             </div>
             <div class="control-group">
                 <div class="control-label">
-                    <img src="<?php echo JUri::base() . '../media/com_biblestudy/images/icons/backuprestore.png'; ?>"
+                    <img src="<?php echo JUri::base() . '../media/com_proclaim/images/icons/backuprestore.png'; ?>"
                          alt="Backup Folder" height="48" width="48"/>
 
                 </div>
@@ -77,7 +77,7 @@ defined('_JEXEC') or die;
             </div>
             <div class="control-group">
                 <div class="control-label">
-                    <img src="<?php echo JUri::base() . '../media/com_biblestudy/images/icons/folder.png'; ?>"
+                    <img src="<?php echo JUri::base() . '../media/com_proclaim/images/icons/folder.png'; ?>"
                          alt="Tmp Folder" height="48" width="48"/>
                 </div>
                 <div class="controls">
@@ -89,13 +89,13 @@ defined('_JEXEC') or die;
             <div class="control-group">
                 <input class="btn btn-primary" type="submit" value="<?php echo JText::_('JBS_CMN_SUBMIT'); ?>"
                        name="submit"/>
-                <a href="index.php?option=com_biblestudy&task=admin.edit&id=1">
+                <a href="index.php?option=com_proclaim&task=cwmadmin.edit&id=1">
                     <button type="button" class="btn btn-default"><?php echo JText::_('JTOOLBAR_BACK'); ?></button>
                 </a>
             </div>
         </div>
     </div>
-    <input type="hidden" name="option" value="com_biblestudy"/>
+    <input type="hidden" name="option" value="com_proclaim"/>
     <input type="hidden" name="task" value="admin.doimport"/>
     <input type="hidden" name="controller" value="admin"/>
 	<?php echo JHtml::_('form.token'); ?>

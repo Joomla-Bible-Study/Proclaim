@@ -56,7 +56,7 @@ Factory::getDocument()->addScriptDeclaration("
 					<?php echo JText::_('JBS_ADM_FIX'); ?></button>
 <!--				<a href="--><?php //echo JRoute::_('index.php?option=com_proclaim&view=assets&task=assets.browse&tmpl=component&' . JSession::getFormToken() . '=1'); ?><!--" class="modals"-->
 <!--				   rel="{handler: 'iframe', size: {x: 600, y: 250}}">-->
-<!--					<img src="--><?php //echo JUri::base() . '../media/com_biblestudy/images/icons/export.png'; ?><!--"-->
+<!--					<img src="--><?php //echo JUri::base() . '../media/com_proclaim/images/icons/export.png'; ?><!--"-->
 <!--						alt="Fix Assets" height="48" width="48"/>-->
 <!--					<div>--><?php //echo JText::_('JBS_ADM_FIX'); ?><!--</div>-->
 <!--				</a>-->

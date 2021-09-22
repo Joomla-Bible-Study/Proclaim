@@ -9,7 +9,7 @@
  * */
 
 // No Direct Access
-use CWM\Component\BibleStudy\Administrator\Helper\CWMProclaimHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
 

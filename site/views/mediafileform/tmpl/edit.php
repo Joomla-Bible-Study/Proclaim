@@ -145,7 +145,7 @@ Factory::getDocument()->addScriptDeclaration("
 
 				<?php echo $this->addon->render($this->media_form, $new); ?>
 
-				<?php if ($this->canDo->get('core.administrator')): ?>
+				<?php if ($this->canDo->get('core.cwmadmin')): ?>
 					<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'permissions', JText::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
                     <div class="row-fluid">
 						<?php echo $this->form->getInput('rules'); ?>

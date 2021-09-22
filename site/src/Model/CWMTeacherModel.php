@@ -13,7 +13,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\ItemModel;
 use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
-//use CWM\Component\BibleStudy\Administrator\CWMParams;
+//use CWM\Component\Proclaim\Administrator\CWMParams;
 defined('_JEXEC') or die;
 
 /**

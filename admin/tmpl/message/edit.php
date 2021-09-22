@@ -382,7 +382,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
         </div>
 	    <?php echo JHtml::_('bootstrap.endTab'); ?>
 
-		<?php if ($this->canDo->get('core.administrator')): ?>
+		<?php if ($this->canDo->get('core.cwmadmin')): ?>
 			<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'permissions', JText::_('JBS_CMN_FIELDSET_RULES')); ?>
             <div class="row-fluid">
 				<?php echo $this->form->getInput('rules'); ?>

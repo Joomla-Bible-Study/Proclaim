@@ -842,7 +842,7 @@ class com_proclaimInstallerScript
 							// A. Position and state
 							list($modulePosition, $modulePublished) = $modulePreferences;
 
-							if ($modulePosition === 'cpanel')
+							if ($modulePosition === 'cwmcpanel')
 							{
 								$modulePosition = 'icon';
 							}

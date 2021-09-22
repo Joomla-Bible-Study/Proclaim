@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
-use CWM\Component\Proclaim\Administrator\Controller\MediaFilesController;
+use CWM\Component\Proclaim\Administrator\Controller\CWMMediaFilesController;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Helper\TagsHelper;
 /**

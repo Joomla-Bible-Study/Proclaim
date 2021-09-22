@@ -47,7 +47,7 @@ $input = $app->input;
 					<li class="active"><a href="#general"
 					                      data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
 					</li>
-					<?php if ($this->canDo->get('core.administrator')): ?>
+					<?php if ($this->canDo->get('core.cwmadmin')): ?>
 						<li><a href="#permissions"
 						       data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a>
 						</li>
@@ -99,7 +99,7 @@ $input = $app->input;
 
 					</div>
 
-					<?php if ($this->canDo->get('core.administrator')): ?>
+					<?php if ($this->canDo->get('core.cwmadmin')): ?>
 						<div class="tab-pane" id="permissions">
 							<div class="control-group">
 								<div class="control-label">

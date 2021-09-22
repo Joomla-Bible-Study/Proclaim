@@ -49,7 +49,7 @@ $input  = $app->input;
                 <li><a href="#teacherdetails" data-toggle="tab"><?php echo JText::_('JBS_TPL_TEACHER_DETAILS'); ?></a>
                 </li>
                 <li><a href="#series" data-toggle="tab"><?php echo JText::_('JBS_CMN_SERIES'); ?></a></li>
-				<?php if ($this->canDo->get('core.administrator')): ?>
+				<?php if ($this->canDo->get('core.cwmadmin')): ?>
                     <li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a>
                     </li>
 				<?php endif ?>
@@ -893,7 +893,7 @@ $input  = $app->input;
                     </div>
                 </div>
 
-				<?php if ($this->canDo->get('core.administrator')): ?>
+				<?php if ($this->canDo->get('core.cwmadmin')): ?>
                     <div class="tab-pane" id="permissions">
 						<?php echo $this->form->getInput('rules'); ?>
                     </div>

@@ -206,7 +206,7 @@ class servers extends ListModel
 		}
 
 		// Implement View Level Access
-		if (!$user->authorise('core.administrator'))
+		if (!$user->authorise('core.cwmadmin'))
 		{
 			$groups = implode(',', $user->getAuthorisedViewLevels());
 			$query->where('server.access IN (' . $groups . ')');

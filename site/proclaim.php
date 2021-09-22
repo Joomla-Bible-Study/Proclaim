@@ -15,7 +15,7 @@ use Joomla\CMS\Language\Text;
 defined('_JEXEC') or die;
 use Joomla\CMS\MVC\Controller\BaseController;
 // Include dependencies
-//JLoader::registerNamespace(cwm\component\biblestudy);
+//JLoader::registerNamespace(CWM\Component\Proclaim);
 JLoader::registerPrefix('CWMHelperRoute', JPATH_COMPONENT );
 
 // Always load JBSM API if it exists.

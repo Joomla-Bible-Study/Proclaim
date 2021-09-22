@@ -33,7 +33,7 @@ class controller extends JControllerLegacy
 	 *
 	 * @since 7.0.0
 	 */
-	protected $default_view = 'cpanel';
+	protected $default_view = 'cwmcpanel';
 
 	/**
 	 * Core Display
@@ -50,7 +50,7 @@ class controller extends JControllerLegacy
 	{
 		$app = Factory::getApplication();
 
-		$view   = $app->input->getCmd('view', 'cpanel');
+		$view   = $app->input->getCmd('view', 'cwmcpanel');
 		$layout = $app->input->getCmd('layout', 'default');
 
 		if ($layout !== 'modal')
@@ -70,7 +70,7 @@ class controller extends JControllerLegacy
 
 		if (!$view)
 		{
-			$app->input->set('view ', 'cpanel');
+			$app->input->set('view ', 'cwmcpanel');
 		}
 
 		return parent::display();

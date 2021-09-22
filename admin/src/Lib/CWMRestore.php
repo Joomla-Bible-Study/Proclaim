@@ -8,9 +8,9 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\BibleStudy\Administrator\Lib;
+namespace CWM\Component\Proclaim\Administrator\Lib;
 
-use CWM\Component\BibleStudy\Administrator\Helper\CWMProclaimHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;

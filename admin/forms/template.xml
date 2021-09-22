@@ -1436,7 +1436,7 @@
 			       label="JBS_TPL_SERIES_SHOW_PAGE_IMAGE_SERIES"
 			       description="JBS_TPL_SERIES_SHOW_PAGE_IMAGE_SERIES_DESC"/>
 		</fieldset>
-		<fieldset name="SERIESDISPALY" addfieldpath="/administrator/components/com_biblestudy/models/fields">
+		<fieldset name="SERIESDISPALY" addfieldpath="/administrator/components/com_proclaim/models/fields">
 			<field name="sseriesrow" type="rowoptions" size="1" default="2" label="JBS_TPL_SERIESTITLE"
 			       description="JBS_TPL_ROW_DESC"/>
 			<field name="sseriescol" type="spanoptions" default="1" label="JBS_TPL_COLUMN"
@@ -1530,7 +1530,7 @@
 
 		</fieldset>
 		<fieldset name="SERIESDETAIL"
-		          addfieldpath="/administrator/components/com_biblestudy/models/fields">
+		          addfieldpath="/administrator/components/com_proclaim/models/fields">
 			<field name="series_detail_sort" default="1" type="list"
 			       label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_SORT"
 			       description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_SORT_DESC">
@@ -1582,7 +1582,7 @@
 			</field>
 		</fieldset>
 		<fieldset name="SERIESDETAILDISPALY"
-		          addfieldpath="/administrator/components/com_biblestudy/models/fields">
+		          addfieldpath="/administrator/components/com_proclaim/models/fields">
 			<field name="sdseriesrow" type="rowoptions" size="1" default="2" label="JBS_TPL_SERIESTITLE"
 			       description="JBS_TPL_ROW_DESC"/>
 			<field name="sdseriescol" type="spanoptions" default="1" label="JBS_TPL_COLUMN"
@@ -1790,7 +1790,7 @@
 				<option value="series_text">JBS_SER_SERIES_NAME</option>
 			</field>
 		</fieldset>
-		<fieldset name="DDISPLAYELEMENTS1" addfieldpath="/administrator/components/com_biblestudy/models/fields">
+		<fieldset name="DDISPLAYELEMENTS1" addfieldpath="/administrator/components/com_proclaim/models/fields">
 			<field name="drowspanitem" type="list" default="0" label="JBS_TPL_ROWSPANITEM"
 			       description="JBS_TPL_ROWSPANITEM_DESC">
 				<option value="0">JBS_TPL_NO_ITEM</option>
@@ -1878,7 +1878,7 @@
 			       description="JBS_TPL_ROW_DESC"/>
 
 		</fieldset>
-		<fieldset name="DDISPLAYELEMENTS2" addfieldpath="/administrator/components/com_biblestudy/models/fields">
+		<fieldset name="DDISPLAYELEMENTS2" addfieldpath="/administrator/components/com_proclaim/models/fields">
 			<field name="dtitlerow" type="rowoptions" size="1" default="1" label="JBS_CMN_TITLE"
 			       description="JBS_TPL_ROW_DESC"/>
 			<field name="dtitlecol" type="spanoptions" default="2" label="JBS_TPL_COLUMN"
@@ -1944,7 +1944,7 @@
 			<field name="dteacher-titlelinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
 			       description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 		</fieldset>
-		<fieldset name="DDISPLAYELEMENTS3" addfieldpath="/administrator/components/com_biblestudy/models/fields">
+		<fieldset name="DDISPLAYELEMENTS3" addfieldpath="/administrator/components/com_proclaim/models/fields">
 			<field name="ddurationrow" type="rowoptions" size="1" default="0" label="JBS_CMN_DURATION"
 			       description="JBS_TPL_ROW_DESC"/>
 			<field name="ddurationcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN"
@@ -2010,7 +2010,7 @@
 			<field name="dseriesdescriptionlinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
 			       description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 		</fieldset>
-		<fieldset name="DDISPLAYELEMENTS4" addfieldpath="/administrator/components/com_biblestudy/models/fields">
+		<fieldset name="DDISPLAYELEMENTS4" addfieldpath="/administrator/components/com_proclaim/models/fields">
 			<field name="dsubmittedrow" type="rowoptions" size="1" default="0" label="JBS_CMN_SUBMITTED_BY"
 			       description="JBS_TPL_ROW_DESC"/>
 			<field name="dsubmittedcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN"
@@ -2050,7 +2050,7 @@
 			<field name="ddownloadslinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
 			       description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 		</fieldset>
-		<fieldset name="DDISPLAYELEMENTS5" addfieldpath="/administrator/components/com_biblestudy/models/fields">
+		<fieldset name="DDISPLAYELEMENTS5" addfieldpath="/administrator/components/com_proclaim/models/fields">
 			<field name="dstudynumberrow" type="rowoptions" size="1" default="0" label="JBS_CMN_STUDYNUMBER"
 			       description="JBS_TPL_ROW_DESC"/>
 			<field name="dstudynumbercol" type="spanoptions" default="1" label="JBS_TPL_COLUMN"
@@ -2090,7 +2090,7 @@
 			<field name="dlocationslinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
 			       description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 		</fieldset>
-		<fieldset name="DDISPLAYELEMENTS6" addfieldpath="/administrator/components/com_biblestudy/models/fields">
+		<fieldset name="DDISPLAYELEMENTS6" addfieldpath="/administrator/components/com_proclaim/models/fields">
 			<field name="dmessagetyperow" type="rowoptions" size="1" default="0" label="JBS_CMN_MESSAGETYPE"
 			       description="JBS_TPL_ROW_DESC"/>
 			<field name="dmessagetypecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN"
@@ -2387,6 +2387,6 @@
 	</fields>
 	<field name="asset_id" type="hidden" filter="unset"/>
 	<field name="rules" type="rules" label="JFIELD_RULES_LABEL"
-	       translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"
+	       translate_label="false" class="inputbox" filter="rules" component="com_proclaim"
 	       section="template" validate="rules"/>
 </form>

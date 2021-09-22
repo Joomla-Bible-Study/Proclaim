@@ -52,7 +52,7 @@ else
 				</li>
 				<li><a href="#publishing" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_PUBLISHING'); ?></a>
 				</li>
-				<?php if ($this->canDo->get('core.administrator')): ?>
+				<?php if ($this->canDo->get('core.cwmadmin')): ?>
 					<li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a>
 					</li>
 				<?php endif ?>
@@ -111,7 +111,7 @@ else
 						</div>
 					</div>
 				</div>
-				<?php if ($this->canDo->get('core.administrator')): ?>
+				<?php if ($this->canDo->get('core.cwmadmin')): ?>
 					<div class="tab-pane" id="permissions">
 						<fieldset>
 							<?php echo $this->form->getInput('rules'); ?>
