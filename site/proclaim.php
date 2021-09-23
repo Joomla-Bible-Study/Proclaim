@@ -87,7 +87,7 @@ class controller extends BaseController
 		Frontend is a bit messier than the backend.
 		*/
 		$id    = $this->input->getInt('a_id');
-		$vName = $this->input->get('view', 'landingpage', 'cmd');
+		$vName = $this->input->getCmd('view', 'landingpage', 'cmd');
 		$this->input->set('view', $vName);
 		$user = Factory::getUser();
 
@@ -137,7 +137,7 @@ class controller extends BaseController
 		if ($vName === 'form' && !$this->checkEditId('com_proclaim.edit.message', $id))
 		{
 			// Somehow the person just went to the form - we don't allow that.
-			Factory::getApplication()->enqueueMessage(JText::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id), 'error');
+			Factory::getApplication()->enqueueMessage(Text::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id), 'error');
 
 			return false;
 		}
@@ -270,7 +270,7 @@ class controller extends BaseController
 			$ToEmail = $comment_mailfrom;
 		}
 
-		$Body = $comment_author . ' ' . JText::_('JBS_STY_HAS_ENTERED_COMMENT') . ': ' . $comment_title .
+		$Body = $comment_author . ' ' . Text::_('JBS_STY_HAS_ENTERED_COMMENT') . ': ' . $comment_title .
 			' - ' . $comment_study_date . ' '
 			. Text::_('JBS_STY_ON') . ': ' . $comment_date;
 
@@ -342,7 +342,7 @@ class controller extends BaseController
 	public function playHit()
 	{
 		// Check for request forgeries.
-		JSession::checkToken('get') or jexit(JText::_('JINVALID_TOKEN'));
+		JSession::checkToken('get') or jexit(Text::_('JINVALID_TOKEN'));
 
 		$input    = Factory::getApplication('site');
 		$getMedia = new CWMMedia;
