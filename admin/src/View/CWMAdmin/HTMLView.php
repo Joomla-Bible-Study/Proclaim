@@ -9,12 +9,12 @@
  * */
 // Check to ensure this file is included in Joomla!
 
-namespace CWM\Component\BibleStudy\Administrator\View\Administration;
+namespace CWM\Component\Proclaim\Administrator\View\CWMAdmin;
 
 defined('_JEXEC') or die;
 
-use CWM\Component\BibleStudy\Administrator\Helper\CWMProclaimHelper;
-use CWM\Component\BibleStudy\Administrator\Lib\CWMStats;
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use CWM\Component\Proclaim\Administrator\Lib\CWMStats;
 use Joomla\CMS\HTML\HTMLHelper as JHtml;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\Folder;

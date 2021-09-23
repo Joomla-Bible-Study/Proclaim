@@ -7,7 +7,7 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-namespace CWM\Component\BibleStudy\Administrator\Extension;
+namespace CWM\Component\Proclaim\Administrator\Extension;
 
 \defined('JPATH_PLATFORM') or die;
 
