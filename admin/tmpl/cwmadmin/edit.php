@@ -33,34 +33,34 @@ $this->useCoreUI = true;
 <script type="text/javascript">
 	jQuery.submitbutton3 = function () {
 		jQuery('[name=tooltype]').val('players')
-		jQuery('[name=task]').val('administration.tools')
+		jQuery('[name=task]').val('cwmadmin.tools')
 		jQuery('#item-administrator').submit()
 	}
 
 	jQuery.submitbutton4 = function () {
 		jQuery('[name=tooltype]').val('popups')
-		jQuery('[name=task]').val('administration.tools')
+		jQuery('[name=task]').val('cwmadmin.tools')
 		jQuery('#item-administrator').submit()
 	}
 	jQuery.submitbutton5 = function () {
 		jQuery('[name=tooltype]').val('mediaimages')
-		jQuery('[name=task]').val('administration.mediaimages')
+		jQuery('[name=task]').val('cwmadmin.mediaimages')
 		jQuery('#item-administrator').submit()
 	}
 	jQuery.submitbutton6 = function () {
 		jQuery('[name=tooltype]').val('playerbymediatype')
-		jQuery('[name=task]').val('administration.tools')
+		jQuery('[name=task]').val('cwmadmin.tools')
 		jQuery('#item-administrator').submit()
 	}
 	jQuery.submitbutton7 = function () {
 		jQuery('[name=tooltype]').val('preachitconvert')
-		jQuery('[name=task]').val('administration.convertPreachIt')
+		jQuery('[name=task]').val('cwmadmin.convertPreachIt')
 		jQuery('#item-administrator').submit()
 	}
 
 	Joomla.submitbutton = function (task) {
-		if (task === 'administration.cancel' || task === 'administration.resetHits' || task === 'administration.resetDownloads' || task ===
-			'administration.resetPlays' || task === 'administration.aliasUpdate')
+		if (task === 'cwmadmin.cancel' || task === 'cwmadmin.resetHits' || task === 'cwmadmin.resetDownloads' || task ===
+			'cwmadmin.resetPlays' || task === 'cwmadmin.aliasUpdate')
 		{
 			Joomla.submitform(task, document.getElementById('item-administrator'))
 		}
@@ -68,7 +68,7 @@ $this->useCoreUI = true;
 		{
 			if (document.formvalidator.isValid(document.id('item-administrator')))
 			{
-				if (task === 'administration.save' || task === 'administration.apply')
+				if (task === 'cwmadmin.save' || task === 'cwmadmin.apply')
 				{
 					// Confirm thumbnail changes
 					var thumbnail_changes = []
@@ -97,7 +97,7 @@ $this->useCoreUI = true;
 						if (resize_thumbnails)
 						{
 							jQuery.getJSON(
-								'index.php?option=com_proclaim&task=administration.getThumbnailListXHR&<?php echo JSession::getFormToken(); ?>=1',
+								'index.php?option=com_proclaim&task=cwmadmin.getThumbnailListXHR&<?php echo JSession::getFormToken(); ?>=1',
 								{ images: thumbnail_changes }, function (response) {
 									jQuery('#dialog_thumbnail_resize').modal({ backdrop: 'static', keyboard: false })
 									var total_paths = response.total
@@ -128,7 +128,7 @@ $this->useCoreUI = true;
 																break
 														}
 														jQuery.getJSON(
-															'index.php?option=com_proclaim&task=administration.createThumbnailXHR&<?php echo JSession::getFormToken(); ?>=1',
+															'index.php?option=com_proclaim&task=cwmadmin.createThumbnailXHR&<?php echo JSession::getFormToken(); ?>=1',
 															{
 																image_path: this,
 																new_size: new_size,
@@ -219,7 +219,7 @@ $this->useCoreUI = true;
 						   title="<?php echo JText::_('JBS_ADM_ARCHIVE'); ?>" class="btn"> <i
 									class="icon-archive icon-big"></i>
 							<span><br/> <?php echo JText::_('JBS_ADM_ARCHIVE'); ?> </span></a>
-						<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=assets&task=administration.aliasUpdate&' .
+						<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=assets&task=cwmadmin.aliasUpdate&' .
 							JSession::getFormToken() . '=1') ?>"
 						   title="<?php echo JText::_('JBS_ADM_RESET_ALIAS'); ?>" class="btn"> <i
 									class="icon-big icon-tree-2"></i>
@@ -606,7 +606,7 @@ $this->useCoreUI = true;
 		<div class="row" id="convert">
 			<h4><?php echo JText::_('JBS_IBM_CONVERT'); ?></h4>
 			<h3><?php echo JText::_('CONVERSION_NOT_AVAILABLE_IN_900'); ?></h3>
-			<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=assets&task=administration.convertPreachIt&' .
+			<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=assets&task=cwmadmin.convertPreachIt&' .
 				JSession::getFormToken() . '=1'); ?>"
 			   title="<?php echo JText::_('JBS_ADM_PREACHIT'); ?>" class="btn"> <i
 						class="icon-big icon-list"> </i>

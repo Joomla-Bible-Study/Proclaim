@@ -254,7 +254,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 		{
 			if ($extension->element == 'com_sermonspeaker')
 			{
-				$this->ss = '<a href="index.php?option=com_proclaim&view=administrator&layout=edit&id=1&task=administration.convertSermonSpeaker">'
+				$this->ss = '<a href="index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1&task=cwmadmin.convertSermonSpeaker">'
 					. JText::_('JBS_IBM_CONVERT_SERMON_SPEAKER') . '</a>';
 			}
 			else
@@ -264,7 +264,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 
 			if ($extension->element == 'com_preachit')
 			{
-				$this->pi = '<a href="index.php?option=com_proclaim&view=administrator&layout=edit&id=1&task=administration.convertPreachIt">'
+				$this->pi = '<a href="index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1&task=cwmadmin.convertPreachIt">'
 					. JText::_('JBS_IBM_CONVERT_PREACH_IT') . '</a>';
 			}
 			else

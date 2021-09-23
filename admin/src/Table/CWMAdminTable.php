@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\BibleStudy\Administrator\Table;
+namespace CWM\Component\Proclaim\Administrator\Table;
 
 // No Direct Access
 defined('_JEXEC') or die;
@@ -24,7 +24,7 @@ use Joomla\Registry\Registry;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class AdministrationTable extends Table
+class CWMAdminTable extends Table
 {
 	/**
 	 * Primary Key

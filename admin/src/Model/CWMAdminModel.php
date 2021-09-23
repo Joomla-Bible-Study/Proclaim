@@ -8,12 +8,12 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\BibleStudy\Administrator\Model;
+namespace CWM\Component\Proclaim\Administrator\Model;
 
 // No Direct Access
 \defined('_JEXEC') or die;
 
-use CWM\Component\BibleStudy\Administrator\Table\AdministrationTable;
+use CWM\Component\Proclaim\Administrator\Table\AdministrationTable;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Event\AbstractEvent;
 use Joomla\CMS\Factory;
@@ -47,7 +47,7 @@ use Joomla\Utilities\ArrayHelper;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class AdministrationModel extends AdminModel
+class CWMAdminModel extends AdminModel
 {
 	use VersionableModelTrait;
 
@@ -63,7 +63,7 @@ class AdministrationModel extends AdminModel
 	 * @var    string
 	 * @since  3.2
 	 */
-	public $typeAlias = 'com_proclaim.administration';
+	public $typeAlias = 'com_proclaim.admin';
 
 	/**
 	 * The context used for the associations table

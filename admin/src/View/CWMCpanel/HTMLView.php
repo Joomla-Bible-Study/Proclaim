@@ -8,10 +8,10 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\BibleStudy\Administrator\View\Cpanel;
+namespace CWM\Component\Proclaim\Administrator\View\CWMCpanel;
 
 // No Direct Access
-use CWM\Component\BibleStudy\Administrator\Lib\CWMStats;
+use CWM\Component\Proclaim\Administrator\Lib\CWMStats;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
