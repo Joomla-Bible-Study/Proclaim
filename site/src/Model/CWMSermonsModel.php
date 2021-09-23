@@ -28,7 +28,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class SermonsModel extends ListModel
+class CWMSermonsModel extends ListModel
 {
 	/**
 	 * @var   Input $imput Inpute

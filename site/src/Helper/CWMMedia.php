@@ -17,7 +17,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
 use CWM\Component\Proclaim\Administrator\Table\CWMTemplateTable;
 use JHtmlJwplayer;
 use Joomla\CMS\Factory;
-use Joomla\CMS\HTML\HTMLHelper as JHtml;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Image\Image;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;

@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Site\View\Sermons;
+namespace CWM\Component\Proclaim\Site\View\CWMSermons;
 
 // No Direct Access
 defined('_JEXEC') or die;
