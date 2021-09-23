@@ -15,7 +15,9 @@ defined('_JEXEC') or die;
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
 use CWM\Component\Proclaim\Administrator\Table\CWMTemplateTable;
-use JHtml;
+use JHtmlJwplayer;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper as JHtml;
 use Joomla\CMS\Image\Image;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
@@ -308,7 +310,7 @@ class CWMMedia
 	 * @param   Registry  $params       ?
 	 * @param   object    $media        Media Object
 	 *
-	 * @return mixed
+	 * @return string|null
 	 *
 	 * @since 9.0.0
 	 */
@@ -628,7 +630,7 @@ class CWMMedia
 	 *
 	 * @return string
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 9.0.0
 	 */
 	public function getPlayerCode($params, $player, $image, $media)
@@ -687,7 +689,7 @@ class CWMMedia
 						break;
 
 					case 2: // Inline
-						JHtml::_('Jwplayer.framework', true, true);
+						HtmlHelper::_('Jwplayer.framework', true, true);
 
 						if ($player->player == 7)
 						{
@@ -791,7 +793,7 @@ class CWMMedia
 	 */
 	public function rendersb($media, $params, $player, $image, $path, $direct = false)
 	{
-		JHtml::_('fancybox.framework', true, true);
+		HtmlHelper::_('fancybox.framework', true, true);
 
 		if ($player->player == 7 && !$direct)
 		{
@@ -1033,7 +1035,7 @@ class CWMMedia
 	 *
 	 * @return string
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 9.0.0
 	 */
 	public function getDocman($media, $image)

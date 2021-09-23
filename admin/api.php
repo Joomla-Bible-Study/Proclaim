@@ -11,6 +11,7 @@
 // No Direct Access
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Log\Log;
 
 defined('_JEXEC') or die;
@@ -79,15 +80,8 @@ define('BIBLESTUDY_SECONDS_IN_YEAR', 31536000);
 // Database defines
 define('BIBLESTUDY_DB_MISSING_COLUMN', 1054);
 
-// Load JBSM Class
-JLoader::discover('JBSM', BIBLESTUDY_PATH_LIB, 'true', 'true');
-JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_LIB, 'true', 'true');
-JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS, 'false', 'true');
-JLoader::discover('Table', BIBLESTUDY_PATH_TABLES, 'false', 'true');
-JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS, 'false', 'true');
-JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_ADDON, 'false', 'true');
-JLoader::discover('Table', BIBLESTUDY_PATH_ADMIN_TABLES, 'false', 'true');
-JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html/');
+// Load HTML helpers
+HTMLHelper::addIncludePath(BIBLESTUDY_PATH_ADMIN . '/helper/html/');
 
 // Fixes Router overrider.
 JLoader::register('JBSMHelperRoute', BIBLESTUDY_PATH_HELPERS . '/route.php', true);

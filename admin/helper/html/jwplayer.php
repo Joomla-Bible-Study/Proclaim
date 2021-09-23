@@ -8,6 +8,10 @@
 
 defined('JPATH_PLATFORM') or die;
 
+use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\Registry\Registry;
 
 /**
@@ -43,20 +47,19 @@ abstract class JHtmlJwplayer
 			return;
 		}
 
-		$doc = Factory::getDocument();
-		/** @var Joomla\Registry\Registry $params */
-		$params = JBSMParams::getAdmin()->params;
+		$doc    = Factory::getDocument();
+		$params = CWMParams::getAdmin()->params;
 		$key    = $params->get('jwplayer_key', '8eJ+ik6aOUabfOisJzomcM2Z3h1VZ9+6cufBXQ==');
 		$cdn    = $params->get('jwplayer_cdn', 'https://content.jwplatform.com/libraries/HPyI6990.js');
 
 		if ($cdn)
 		{
 			$doc->addScriptDeclaration('jwplayer.key="' . $key . '";');
-			JHtml::script($cdn);
+			HtmlHelper::script($cdn);
 		}
 		else
 		{
-			JHtml::script('media/com_proclaim/player/jwplayer.js');
+			HtmlHelper::script('media/com_proclaim/player/jwplayer.js');
 			$doc->addScriptDeclaration('jwplayer.key="' . $key . '";');
 		}
 
