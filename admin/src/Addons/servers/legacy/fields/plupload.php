@@ -40,8 +40,8 @@ class JFormFieldPlupload extends JFormField
 		// Include Plupload libraries
 		$document = Factory::getDocument();
 		$app = Factory::getApplication();
-		$document->addScript(JUri::root() . 'administrator/components/com_proclaim/addons/servers/legacy/includes/js/plupload.full.min.js');
-		$document->addScript(JUri::root() . 'administrator/components/com_proclaim/addons/servers/legacy/includes/js/legacy.js');
+		$document->addScript(JUri::root() . 'administrator/components/com_proclaim/src/addons/servers/legacy/includes/js/plupload.full.min.js');
+		$document->addScript(JUri::root() . 'administrator/components/com_proclaim/src/addons/servers/legacy/includes/js/legacy.js');
 		$view = $app->input->get('view');
 		$admin = CWMParams::getAdmin();
 
