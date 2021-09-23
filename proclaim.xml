@@ -65,11 +65,11 @@
 	</media>
 
 	<administration>
-		<menu img="../media/com_proclaim/images/menu/icon-16-biblemenu.png">JBS_CMN_COM_PROCLAIM</menu>
+		<menu img="../media/com_proclaim/images/menu/icon-16-biblemenu.png">JBS_CMN_com_proclaim</menu>
 		<submenu>
 			<!-- Note that all & must be escaped to &amp; for the file to be valid XML and be parsed by the installer -->
 			<menu link="option=com_proclaim" img="../media/com_proclaim/images/menu/icon-16-biblemenu.png">JBS_MNU_CONTROL_PANEL</menu>
-			<menu link="option=com_proclaim&amp;task=cwmadmin.edit&amp;id=1" img="../media/com_proclaim/images/menu/icon-16-administration.png">JBS_MNU_ADMINISTRATION</menu>
+			<menu link="option=com_proclaim&amp;task=admin.edit&amp;id=1" img="../media/com_proclaim/images/menu/icon-16-administration.png">JBS_MNU_ADMINISTRATION</menu>
 			<menu link="option=com_proclaim&amp;view=messages" img="../media/com_proclaim/images/menu/icon-16-studies.png">JBS_MNU_STUDIES</menu>
 			<menu link="option=com_proclaim&amp;view=mediafiles" img="../media/com_proclaim/images/menu/icon-16-mp3.png">JBS_MNU_MEDIA_FILES</menu>
 			<menu link="option=com_proclaim&amp;view=teachers" img="../media/com_proclaim/images/menu/icon-16-teachers.png">JBS_MNU_TEACHERS</menu>
@@ -89,7 +89,7 @@
 		<files folder="admin">
 			<filename>access.xml</filename>
 			<filename>api.php</filename>
-			<filename>proclaim.php</filename>
+			<filename>biblestudy.php</filename>
 			<filename>config.xml</filename>
 			<filename>controller.php</filename>
 			<folder>addons</folder>

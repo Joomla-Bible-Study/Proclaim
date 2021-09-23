@@ -101,7 +101,7 @@ class HtmlView extends BaseHtmlView
 			}
 			else
 			{
-				echo '<a href="index.php?option=com_biblestudy&mid=' . $this->media->id . '&view=sermons&task=download">'
+				echo '<a href="index.php?option=com_proclaim&mid=' . $this->media->id . '&view=sermons&task=download">'
 					. Text::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a>';
 			}
 			?>
@@ -123,7 +123,7 @@ class HtmlView extends BaseHtmlView
 		$app   = Factory::getApplication();
 		$menus = $app->getMenu();
 
-		$itemparams = ComponentHelper::getParams('com_biblestudy');
+		$itemparams = ComponentHelper::getParams('com_proclaim');
 		$title      = null;
 
 		// Because the application sets a default page title,

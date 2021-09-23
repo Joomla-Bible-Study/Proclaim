@@ -9,12 +9,13 @@
  * */
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Factory;
 // No Direct Access
 defined('_JEXEC') or die;
 ?>
 <div class="listingfooter">
 	<?php
-	$input = new JInput;
+	$input = Factory::getApplication();
 	$link_text = $this->item->params->get('link_text');
 
 	if (!$link_text)

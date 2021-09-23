@@ -7,13 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-
-namespace CWM\Component\Proclaim\Administrator\Model;
-
 // No Direct Access
-use Joomla\CMS\Factory;
-use Joomla\CMS\MVC\Model\AdminModel;
-
 defined('_JEXEC') or die;
 
 /**
@@ -22,7 +16,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CWMLocationModel extends AdminModel
+class BiblestudyModelLocation extends JModelAdmin
 {
 	/**
 	 * Method to store a record
@@ -30,13 +24,12 @@ class CWMLocationModel extends AdminModel
 	 * @access    public
 	 * @return    boolean    True on success
 	 *
-	 * @throws \Exception
-	 * @since     7.0
+	 * @since 7.0
 	 */
 	public function store()
 	{
-		$row   = $this->getTable();
-		$input = new Joomla\Input\Input;
+		$row   = & $this->getTable();
+		$input = new JInput;
 		$data  = $input->get('post');
 
 		// Bind the form fields to the table
@@ -72,7 +65,7 @@ class CWMLocationModel extends AdminModel
 	 * @param   array    $data      Data for the form.
 	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
-	 * @return  false|\Joomla\CMS\Form\Form  A JForm object on success, false on failure
+	 * @return  mixed  A JForm object on success, false on failure
 	 *
 	 * @since  7.0
 	 */
@@ -81,7 +74,12 @@ class CWMLocationModel extends AdminModel
 		// Get the form.
 		$form = $this->loadForm('com_proclaim.location', 'location', array('control' => 'jform', 'load_data' => $loadData));
 
-		return $form ?? false;
+		if (empty($form))
+		{
+			return false;
+		}
+
+		return $form;
 	}
 
 	/**

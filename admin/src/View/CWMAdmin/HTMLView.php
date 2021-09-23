@@ -7,18 +7,17 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-
 // Check to ensure this file is included in Joomla!
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMAdmin;
+namespace CWM\Component\BibleStudy\Administrator\View\Administration;
 
 defined('_JEXEC') or die;
 
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
-use CWM\Component\Proclaim\Administrator\Lib\CWMStats;
+use CWM\Component\BibleStudy\Administrator\Helper\CWMProclaimHelper;
+use CWM\Component\BibleStudy\Administrator\Lib\CWMStats;
+use Joomla\CMS\HTML\HTMLHelper as JHtml;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\Folder;
-use Joomla\CMS\HTML\HTMLHelper as JHtml;
 use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -180,7 +179,7 @@ class HTMLView extends BaseHtmlView
 	/**
 	 * Form
 	 *
-	 * @var mixed
+	 * @var \Joomla\CMS\Form\Form
 	 * @since    7.0.0
 	 */
 	protected mixed $form;
@@ -208,7 +207,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
-	 * @throws  \Exception
+	 * @throws  Exception
 	 * @since   11.1
 	 * @see     fetch()
 	 */
@@ -273,7 +272,7 @@ class HTMLView extends BaseHtmlView
 		{
 			if ($extension->element == 'com_sermonspeaker')
 			{
-				$this->ss = '<a href="index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1&task=cwmadmin.convertSermonSpeaker">'
+				$this->ss = '<a href="index.php?option=com_proclaim&view=administrator&layout=edit&id=1&task=administration.convertSermonSpeaker">'
 					. Text::_('JBS_IBM_CONVERT_SERMON_SPEAKER') . '</a>';
 			}
 			else
@@ -283,7 +282,7 @@ class HTMLView extends BaseHtmlView
 
 			if ($extension->element == 'com_preachit')
 			{
-				$this->pi = '<a href="index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1&task=cwmadmin.convertPreachIt">'
+				$this->pi = '<a href="index.php?option=com_proclaim&view=administrator&layout=edit&id=1&task=administration.convertPreachIt">'
 					. Text::_('JBS_IBM_CONVERT_PREACH_IT') . '</a>';
 			}
 			else
@@ -336,13 +335,13 @@ class HTMLView extends BaseHtmlView
 		ToolbarHelper::title(Text::_('JBS_CMN_ADMINISTRATION'), 'options options');
 		ToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
 		ToolbarHelper::divider();
-		ToolbarHelper::apply('cwmadmin.apply');
-		ToolbarHelper::save('cwmadmin.save');
-		ToolbarHelper::cancel('cwmadmin.cancel', 'JTOOLBAR_CLOSE');
+		ToolbarHelper::apply('administration.apply');
+		ToolbarHelper::save('administration.save');
+		ToolbarHelper::cancel('administration.cancel', 'JTOOLBAR_CLOSE');
 		ToolbarHelper::divider();
-		ToolbarHelper::custom('cwmadmin.resetHits', 'reset.png', 'Reset All Hits', 'JBS_ADM_RESET_ALL_HITS', false);
-		ToolbarHelper::custom('cwmadmin.resetDownloads', 'download.png', 'Reset All Download Hits', 'JBS_ADM_RESET_ALL_DOWNLOAD_HITS', false);
-		ToolbarHelper::custom('cwmadmin.resetPlays', 'play.png', 'Reset All Plays', 'JBS_ADM_RESET_ALL_PLAYS', false);
+		ToolbarHelper::custom('administration.resetHits', 'reset.png', 'Reset All Hits', 'JBS_ADM_RESET_ALL_HITS', false);
+		ToolbarHelper::custom('administration.resetDownloads', 'download.png', 'Reset All Download Hits', 'JBS_ADM_RESET_ALL_DOWNLOAD_HITS', false);
+		ToolbarHelper::custom('administration.resetPlays', 'play.png', 'Reset All Plays', 'JBS_ADM_RESET_ALL_PLAYS', false);
 		ToolbarHelper::divider();
 		ToolbarHelper::help('biblestudy', true);
 	}
@@ -375,7 +374,7 @@ class HTMLView extends BaseHtmlView
 		switch ($component)
 		{
 			case 'sermonspeaker':
-				$data = Installer::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_sermonspeaker/sermonspeaker.xml');
+				$data = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_sermonspeaker/sermonspeaker.xml');
 
 				if ($data)
 				{
@@ -386,7 +385,7 @@ class HTMLView extends BaseHtmlView
 				break;
 
 			case 'preachit':
-				$data = Installer::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_preachit/preachit.xml');
+				$data = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_preachit/preachit.xml');
 
 				if ($data)
 				{

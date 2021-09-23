@@ -15,7 +15,7 @@ $published = $this->state->get('filter.published');
 
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
-$wa->useScript('com_proclaim.cwmadmin-series-batch');
+$wa->useScript('com_proclaim.administrator-series-batch');
 
 ?>
 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">

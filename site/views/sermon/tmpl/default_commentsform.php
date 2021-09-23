@@ -10,9 +10,10 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Html\HTMLHelper;
 // No Direct Access
 defined('_JEXEC') or die;
-JHtml::_('behavior.keepalive');
+HtmlHelper::_('behavior.keepalive');
 ?>
 <script type="text/javascript" language="JavaScript">
     function HideContent(d) {
@@ -85,7 +86,7 @@ else
 	foreach ($this->comments as $comment)
 	{
 
-		$comment_date_display = JHtml::_('date', $comment->comment_date, Text::_('DATE_FORMAT_LC3'));
+		$comment_date_display = HtmlHelper::_('date', $comment->comment_date, Text::_('DATE_FORMAT_LC3'));
 		?>
                     <div class="row-fluid">
                         <div class="span6"><strong><?php echo $comment->full_name ?></strong> <i>

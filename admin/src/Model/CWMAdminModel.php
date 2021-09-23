@@ -8,20 +8,18 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\Model;
+namespace CWM\Component\BibleStudy\Administrator\Model;
 
 // No Direct Access
 \defined('_JEXEC') or die;
 
-use CWM\Component\Proclaim\Administrator\Table\CWMAdminTable;
-use CWM\Component\Proclaim\Site\Helper\CWMMedia;
+use CWM\Component\BibleStudy\Administrator\Table\AdministrationTable;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Event\AbstractEvent;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Form\FormFactoryInterface;
 use Joomla\CMS\Helper\TagsHelper;
-use Joomla\CMS\Installer\InstallerScript;
 use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Language\Text;
@@ -30,7 +28,6 @@ use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\MVC\Model\WorkflowBehaviorTrait;
 use Joomla\CMS\MVC\Model\WorkflowModelInterface;
 use Joomla\CMS\Plugin\PluginHelper;
-use Joomla\CMS\Session\Session;
 use Joomla\CMS\String\PunycodeHelper;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Table\TableInterface;
@@ -50,7 +47,7 @@ use Joomla\Utilities\ArrayHelper;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CWMAdminModel extends AdminModel
+class AdministrationModel extends AdminModel
 {
 	use VersionableModelTrait;
 
@@ -66,7 +63,7 @@ class CWMAdminModel extends AdminModel
 	 * @var    string
 	 * @since  3.2
 	 */
-	public $typeAlias = 'com_proclaim.cwmadmin';
+	public $typeAlias = 'com_proclaim.administration';
 
 	/**
 	 * The context used for the associations table
@@ -82,7 +79,7 @@ class CWMAdminModel extends AdminModel
 	 * @var string
 	 * @since  4.0.0
 	 */
-	protected $formName = 'cwmcpanel';
+	protected $formName = 'cpanel';
 
 	protected $changeSet = null;
 
@@ -145,7 +142,7 @@ class CWMAdminModel extends AdminModel
 		}
 
 		// Get the form.
-		$form = $this->loadForm('com_proclaim.cwmadmin', 'admin', array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_proclaim.admin', 'admin', array('control' => 'jform', 'load_data' => $loadData));
 
 		if (empty($form))
 		{
@@ -235,7 +232,7 @@ class CWMAdminModel extends AdminModel
 		$this->fixSchemaVersion($changeSet);
 		$this->fixUpdateVersion();
 		$this->fixUpdateJBSMVersion();
-		$installer = new CWMInstallModel;
+		$installer = new BiblestudyModelInstall;
 		$installer->fixMenus();
 		$installer->fixemptyaccess();
 		$installer->fixemptylanguage();
@@ -245,7 +242,7 @@ class CWMAdminModel extends AdminModel
 		 * Finally, if the schema updates succeeded, make sure the database is
 		 * converted to utf8mb4 or, if not suported by the server, compatible to it.
 		 */
-		$installerJoomla = new InstallerScript;
+		$installerJoomla = new JoomlaInstallerScript;
 		$statusArray     = $changeSet->getStatus();
 
 		if (count($statusArray['error']) === 0)
@@ -275,7 +272,7 @@ class CWMAdminModel extends AdminModel
 
 		try
 		{
-			$this->changeSet = ChangesetSchema::getInstance(Factory::getDbo(), $folder);
+			$this->changeSet = JSchemaChangeset::getInstance(Factory::getDbo(), $folder);
 		}
 		catch (\RuntimeException $e)
 		{
@@ -345,7 +342,7 @@ class CWMAdminModel extends AdminModel
 	public function getCompVersion()
 	{
 		$jversion = null;
-		$file     = JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.xml';
+		$file     = JPATH_ADMINISTRATOR . '/components/com_proclaim/biblestudy.xml';
 		$xml      = simplexml_load_string(file_get_contents($file));
 
 		if ($xml)
@@ -686,7 +683,7 @@ class CWMAdminModel extends AdminModel
 
 				if (!$db->execute())
 				{
-					return Text::_('JBS_ADM_ERROR_OCCURED');
+					return JText::_('JBS_ADM_ERROR_OCCURED');
 				}
 			}
 		}
@@ -720,7 +717,7 @@ class CWMAdminModel extends AdminModel
 	/**
 	 * Prepare and sanitise the table data prior to saving.
 	 *
-	 * @param   CWMAdminTable  $table  A JTable object.
+	 * @param   AdministrationTable  $table  A JTable object.
 	 *
 	 * @return   void
 	 *
@@ -745,7 +742,7 @@ class CWMAdminModel extends AdminModel
 	 */
 	protected function loadFormData()
 	{
-		$data = Factory::getApplication()->getUserState('com_proclaim.edit.cwmadmin.data', array());
+		$data = Factory::getApplication()->getUserState('com_proclaim.edit.administration.data', array());
 
 		if (empty($data))
 		{
@@ -756,7 +753,7 @@ class CWMAdminModel extends AdminModel
 	}
 
 	/**
-	 * Custom clean the cache of com_proclaim and biblestudy modules
+	 * Custom clean the cache of com_biblestudy and biblestudy modules
 	 *
 	 * @param   string   $group      The cache group
 	 * @param   integer  $client_id  The ID of the client
@@ -767,7 +764,42 @@ class CWMAdminModel extends AdminModel
 	 */
 	protected function cleanCache($group = null, $client_id = 0)
 	{
-		parent::cleanCache('com_proclaim');
-		parent::cleanCache('mod_proclaim');
+		parent::cleanCache('com_biblestudy');
+		parent::cleanCache('mod_biblestudy');
+	}
+
+	public function setUpWorkflow($extension)
+	{
+		// TODO: Implement setUpWorkflow() method.
+	}
+
+	public function workflowPreprocessForm(Form $form, $data)
+	{
+		// TODO: Implement workflowPreprocessForm() method.
+	}
+
+	public function workflowBeforeStageChange()
+	{
+		// TODO: Implement workflowBeforeStageChange() method.
+	}
+
+	public function workflowBeforeSave()
+	{
+		// TODO: Implement workflowBeforeSave() method.
+	}
+
+	public function workflowAfterSave($data)
+	{
+		// TODO: Implement workflowAfterSave() method.
+	}
+
+	public function workflowCleanupBatchMove($oldId, $newId)
+	{
+		// TODO: Implement workflowCleanupBatchMove() method.
+	}
+
+	public function executeTransition(array $pks, int $transitionId)
+	{
+		// TODO: Implement executeTransition() method.
 	}
 }

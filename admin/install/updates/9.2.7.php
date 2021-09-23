@@ -73,7 +73,7 @@ class Migration927
 		jimport('joomla.filesystem.file');
 
 		$path = array(
-			'/administrator/components/com_biblestudy/addons/servers/local/local.php'
+			'/administrator/components/com_proclaim/addons/servers/local/local.php'
 		);
 
 		foreach ($path as $file)

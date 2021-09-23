@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\Table;
+namespace CWM\Component\BibleStudy\Administrator\Table;
 
 // No Direct Access
 defined('_JEXEC') or die;
@@ -24,7 +24,7 @@ use Joomla\Registry\Registry;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CWMAdminTable extends Table
+class AdministrationTable extends Table
 {
 	/**
 	 * Primary Key
@@ -32,7 +32,7 @@ class CWMAdminTable extends Table
 	 * @var integer
 	 * @since    7.0.0
 	 */
-	public ?int $id = null;
+	public $id = null;
 
 	/**
 	 * Drop Tables
@@ -40,7 +40,7 @@ class CWMAdminTable extends Table
 	 * @var integer
 	 * @since    7.0.0
 	 */
-	public int $drop_tables = 0;
+	public $drop_tables = 0;
 
 	/**
 	 * Params
@@ -48,7 +48,7 @@ class CWMAdminTable extends Table
 	 * @var string
 	 * @since    7.0.0
 	 */
-	public ?string $params = null;
+	public $params = null;
 
 	/**
 	 * Asset ID
@@ -56,7 +56,7 @@ class CWMAdminTable extends Table
 	 * @var integer
 	 * @since    7.0.0
 	 */
-	public ?int $asset_id = 0;
+	public $asset_id = 0;
 
 	/**
 	 * Access Level
@@ -64,7 +64,7 @@ class CWMAdminTable extends Table
 	 * @var integer
 	 * @since    7.0.0
 	 */
-	public int $access = 0;
+	public $access = 0;
 
 	/**
 	 * Install State
@@ -80,7 +80,7 @@ class CWMAdminTable extends Table
 	 * @var integer
 	 * @since    7.0.0
 	 */
-	public ?int $debug = null;
+	public $debug = null;
 
 	/**
 	 * Constructor
@@ -216,7 +216,7 @@ class CWMAdminTable extends Table
 	{
 		$k = $this->_tbl_key;
 
-		return 'com_proclaim.cwmadmin.' . (int) $this->$k;
+		return 'com_proclaim.administration.' . (int) $this->$k;
 	}
 
 	/**

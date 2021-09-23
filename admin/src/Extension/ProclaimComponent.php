@@ -7,10 +7,11 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-namespace CWM\Component\Proclaim\Administrator\Extension;
+namespace CWM\Component\BibleStudy\Administrator\Extension;
 
 \defined('JPATH_PLATFORM') or die;
 
+use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Component\Router\RouterServiceInterface;
 use Joomla\CMS\Component\Router\RouterServiceTrait;
 use Joomla\CMS\Extension\BootableExtensionInterface;
@@ -18,16 +19,15 @@ use Joomla\CMS\Extension\MVCComponent;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Fields\FieldsServiceInterface;
 use Joomla\CMS\HTML\HTMLRegistryAwareTrait;
-use Joomla\CMS\Language\Text;
 use Psr\Container\ContainerInterface;
 
 /**
- * Component class for com_proclaim
+ * Component class for com_mywalks
  *
  * @since  4.0.0
  */
 class ProclaimComponent extends MVCComponent implements
-	BootableExtensionInterface, FieldsServiceInterface, RouterServiceInterface
+BootableExtensionInterface, FieldsServiceInterface, RouterServiceInterface
 {
 	use RouterServiceTrait;
 	use HTMLRegistryAwareTrait;
@@ -87,7 +87,7 @@ class ProclaimComponent extends MVCComponent implements
 	 */
 	public function boot(ContainerInterface $container)
 	{
-		//$this->getRegistry()->register('cwmproclaima', new CWMProclaim);
+		//$this->getRegistry()->register('cwmproclaimadministrator', new AdministratorService);
 	}
 
 	/**
@@ -119,7 +119,7 @@ class ProclaimComponent extends MVCComponent implements
 			}
 		}
 
-		if ($section != 'cwmcpanel')
+		if ($section != 'cpanel')
 		{
 			// We don't know other sections
 			return null;
@@ -137,11 +137,11 @@ class ProclaimComponent extends MVCComponent implements
 	 */
 	public function getContexts(): array
 	{
-		Factory::getApplication()->getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
+		Factory::getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
 
 		$contexts = array(
-			'com_proclaim.cwmcpanel'        => Text::_('com_proclaim'),
-			'com_proclaim.cwmadmin' => Text::_('JCATEGORY')
+			'com_proclaim.cpanel'    => Text::_('com_proclaim'),
+			'com_proclaim.administrator' => Text::_('JCATEGORY')
 		);
 
 		return $contexts;

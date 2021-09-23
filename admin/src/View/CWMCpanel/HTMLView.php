@@ -8,10 +8,10 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMCpanel;
+namespace CWM\Component\BibleStudy\Administrator\View\Cpanel;
 
 // No Direct Access
-use CWM\Component\Proclaim\Administrator\Lib\CWMStats;
+use CWM\Component\BibleStudy\Administrator\Lib\CWMStats;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -80,7 +80,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  void|mixed  A string if successful, otherwise a Error object.
+	 * @return  mixed  A string if successful, otherwise a Error object.
 	 *
 	 * @since    7.0.0
 	 */
@@ -88,7 +88,7 @@ class HTMLView extends BaseHtmlView
 	{
 		$this->state = $this->get('State');
 		$model       = $this->getModel();
-		$component = JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.xml';
+		$component = JPATH_ADMINISTRATOR . '/components/com_proclaim/biblestudy.xml';
 
 		if (file_exists($component))
 		{

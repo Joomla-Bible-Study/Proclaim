@@ -942,6 +942,6 @@ class CWMAdminController extends FormController
 		}
 
 		// Redirect back to the form in all cases
-		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=administrator&layout=edit', false));
+		$this->setRedirect(Route::_('index.php?option=com_biblestudy&view=administrator&layout=edit', false));
 	}
 }
