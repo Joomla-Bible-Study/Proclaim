@@ -26,12 +26,12 @@ defined('_JEXEC') or die;
  */
 class HTMLView extends BaseHtmlView
 {
-	/** @var int Total numbers of Steps
+	/** @var integer Total numbers of Steps
 	 *
 	 * @since 9.0.0 */
 	public $totalSteps = 0;
 
-	/** @var int Numbers of Steps already processed
+	/** @var integer Numbers of Steps already processed
 	 *
 	 * @since 9.0.0 */
 	public $doneSteps = 0;

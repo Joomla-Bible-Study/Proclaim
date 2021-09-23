@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\MVC\Model\ItemModel;
 use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
-use CWM\Component\Proclaim\Administrator\Controller\CWMMessageController;
+use CWM\Component\Proclaim\Administrator\Controller\CwmmessageController;
 // Base this model on the backend version.
 //JLoader::register('BiblestudyModelMessage', JPATH_ADMINISTRATOR . '/components/com_proclaim/models/MessageController.php');
 

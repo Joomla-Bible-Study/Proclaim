@@ -17,7 +17,9 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
 use Joomla\CMS\Table\Table;
+use Joomla\Input\Input;
 
 /**
  * Controller for Message
@@ -33,16 +35,17 @@ class CWMMessageController extends FormController
 	 * @var   string
 	 * @since 7.0
 	 */
-	protected $view_list = 'messages';
+	protected $view_list = 'CWMMessages';
 
 	/**
-	 * Method override to check if you can edit an existing record.
+	 * Method overrides to check if you can edit an existing record.
 	 *
 	 * @param   array   $data  An array of input data.
 	 * @param   string  $key   The name of the key for the primary key.
 	 *
 	 * @return  boolean
 	 *
+	 * @throws \Exception
 	 * @since   1.6
 	 */
 	protected function allowEdit($data = array(), $key = 'id')
@@ -100,11 +103,11 @@ class CWMMessageController extends FormController
 		// Check for request forgeries.
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
-		$msg    = null;
-		$input  = new Joomla\Input\Input;
-		$id     = $input->get('id', 0, 'int');
-		$db     = Factory::getDbo();
-		$query  = $db->getQuery(true);
+		$msg   = null;
+		$input = new Input;
+		$id    = $input->get('id', 0, 'int');
+		$db    = Factory::getDbo();
+		$query = $db->getQuery(true);
 		$query->update('#__bsms_studies')
 			->set('hits = ' . $db->q('0'))
 			->where(' id = ' . (int) $id);
@@ -135,7 +138,7 @@ class CWMMessageController extends FormController
 	public function batch($model = null)
 	{
 		// Preset the redirect
-		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=messages' . $this->getRedirectToListAppend(), false));
+		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmmessages' . $this->getRedirectToListAppend(), false));
 
 		return parent::batch($this->getModel('Message', '', array()));
 	}
@@ -151,7 +154,7 @@ class CWMMessageController extends FormController
 	 *
 	 * @since   12.2
 	 */
-	public function getModel($name = 'Message', $prefix = 'BibleStudyModel', $config = array('ignore_request' => true))
+	public function getModel($name = 'CWMMessage', $prefix = '', $config = array('ignore_request' => true))
 	{
 		return parent::getModel($name, $prefix, array('ignore_request' => true));
 	}
@@ -170,10 +173,9 @@ class CWMMessageController extends FormController
 	public function save($key = null, $urlVar = null)
 	{
 		// Check for request forgeries.
-		JSession::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
-		/** @var BibleStudyModelTopic $model */
-		$model = $this->getModel('Topic');
+		$model = $this->getModel('CWMTopicModel');
 		$app   = Factory::getApplication();
 		$data  = $this->input->post->get('jform', array(), 'array');
 
@@ -183,7 +185,7 @@ class CWMMessageController extends FormController
 		Table::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_proclaim/tables');
 
 		// Remove Exerting StudyTopics tags
-		$db = Factory::getDbo();
+		$db    = Factory::getDbo();
 		$qurey = $db->getQuery(true);
 		$qurey->delete('#__bsms_studytopics')
 			->where('study_id =' . $data['id']);
@@ -201,8 +203,7 @@ class CWMMessageController extends FormController
 				// It's an existing tag.  Add it
 				if ($aTag != "")
 				{
-					/** @type TableStudyTopics $tagRow */
-					$tagRow           = JTable::getInstance('studytopics', 'Table');
+					$tagRow           = Table::getInstance('CWMstudytopicsTable');
 					$tagRow->study_id = $data['id'];
 					$tagRow->topic_id = $aTag;
 
@@ -222,8 +223,7 @@ class CWMMessageController extends FormController
 					$model->save(array('topic_text' => $aTag, 'language' => $data['language']));
 
 					// Gotta somehow make sure this isn't a duplicate...
-					/** @type TableStudyTopics $tagRow */
-					$tagRow           = JTable::getInstance('studytopics', 'Table');
+					$tagRow           = Table::getInstance('CWMstudytopicsTable');
 					$tagRow->study_id = $data['id'];
 					$tagRow->topic_id = $model->getState('topic.id');
 

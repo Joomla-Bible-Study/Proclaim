@@ -7,9 +7,17 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
+namespace CWM\Component\Proclaim\Administrator\Model;
+
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\Path;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\Registry\Registry;
 
 /**
@@ -18,7 +26,7 @@ use Joomla\Registry\Registry;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class BiblestudyModelServer extends JModelAdmin
+class CWMServerModel extends AdminModel
 {
 	/**
 	 * Data
@@ -31,7 +39,7 @@ class BiblestudyModelServer extends JModelAdmin
 	/**
 	 * @var boolean
 	 * @since 9.0.0
-	 * @todo need to look into this and see if we need it still.
+	 * @todo  need to look into this and see if we need it still.
 	 */
 	private $event_after_upload;
 
@@ -40,7 +48,7 @@ class BiblestudyModelServer extends JModelAdmin
 	 *
 	 * @param   array  $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   12.2
 	 */
 	public function __construct($config = array())
@@ -121,13 +129,13 @@ class BiblestudyModelServer extends JModelAdmin
 	 *
 	 * @param   string  $addon  Type of server
 	 *
-	 * @return SimpleXMLElement
+	 * @return \|false|\SimpleXMLElement
 	 *
 	 * @since   9.0.0
 	 */
 	public function getConfig($addon)
 	{
-		$path = JPATH_ADMINISTRATOR . '/components/com_proclaim/addons/servers/' . $addon . '/' . $addon . '.xml';
+		$path = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/addons/servers/' . $addon . '/' . $addon . '.xml';
 
 		return simplexml_load_string(file_get_contents($path));
 	}
@@ -175,7 +183,7 @@ class BiblestudyModelServer extends JModelAdmin
 	 *
 	 * @return boolean|mixed
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 *
 	 * @since   9.0.0
 	 */
@@ -187,20 +195,20 @@ class BiblestudyModelServer extends JModelAdmin
 		if (empty($type))
 		{
 			// @TODO This may not be optimal, seems like a hack
-			return new JForm("No-op");
+			return new Form("No-op");
 		}
 
-		$path = JPath::clean(JPATH_ADMINISTRATOR . '/components/com_proclaim/addons/servers/' . $type);
+		$path = Path::clean(JPATH_ADMINISTRATOR . '/components/com_proclaim/addons/servers/' . $type);
 
-		JForm::addFormPath($path);
-		JForm::addFieldPath($path . '/fields');
+		Form::addFormPath($path);
+		Form::addFieldPath($path . '/fields');
 
 		// Add language files
 		$lang = Factory::getLanguage();
 
 		if (!$lang->load('jbs_addon_' . $type, $path))
 		{
-			throw new Exception(JText::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'));
+			throw new \Exception(Text::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'));
 		}
 
 		$form = $this->loadForm('com_proclaim.server.' . $type, $type, array('control' => 'jform', 'load_data' => true), true, "/server");
@@ -232,7 +240,7 @@ class BiblestudyModelServer extends JModelAdmin
 		}
 
 		// Get the forms.
-		$form = $this->loadForm('com_proclaim.server', 'server', array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_proclaim.cwmserver', 'cwmserver', array('control' => 'jform', 'load_data' => $loadData));
 
 		if ($form === null)
 		{

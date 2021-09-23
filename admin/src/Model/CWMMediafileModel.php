@@ -7,11 +7,29 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-// No Direct Access
-defined('_JEXEC') or die;
 
+namespace CWM\Component\Proclaim\Administrator\Model;
+
+
+use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
+use CWM\Component\Proclaim\Administrator\Table\CWMMediafileTable;
+use CWM\Component\Proclaim\Administrator\Table\CWMServerTable;
+use CWM\Component\Proclaim\Site\Helper\CWMPodcast;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\Path;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\MVC\Model\BaseModel;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
+use JUri;
+
+// No Direct Access
+defined('_JEXEC') or die;
 
 /**
  * MediaFile model class
@@ -20,7 +38,7 @@ use Joomla\Utilities\ArrayHelper;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class BiblestudyModelMediafile extends JModelAdmin
+class CWMMediafileModel extends AdminModel
 {
 	/**
 	 * @var    string  The prefix to use with controller messages.
@@ -31,7 +49,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	/**
 	 * Data
 	 *
-	 * @var TableMediafile
+	 * @var CWMMediafileTable
 	 * @since   9.0.0
 	 */
 	private $data;
@@ -64,25 +82,6 @@ class BiblestudyModelMediafile extends JModelAdmin
 	}
 
 	/**
-	 * Returns a Table object, always creating it.
-	 *
-	 * @param   string  $type    The table type to instantiate
-	 * @param   string  $prefix  A prefix for the table class name. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return    TableMediafile  A database object
-	 *
-	 * @since 7.0.0
-	 */
-	public function getTable($type = 'Mediafile', $prefix = 'Table', $config = array())
-	{
-		/** @var TableMediafile $table */
-		$table = JTable::getInstance($type, $prefix, $config);
-
-		return $table;
-	}
-
-	/**
 	 * Overrides the JModelAdmin save routine in order to implode the podcast_id
 	 *
 	 * @param   array  $data  The form data.
@@ -102,7 +101,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 			$params->loadArray($data['params']);
 
 			$jdb   = Factory::getDbo();
-			$table = new TableServer($jdb);
+			$table = new CWMServerTable($jdb);
 			$table->load($data['server_id']);
 
 			$path = new Registry;
@@ -128,7 +127,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 				if ($table->type === 'legacy' || $table->type === 'local')
 				{
 					$params->set('size',
-						JBSMHelper::getRemoteFileSize(JBSMHelper::MediaBuildUrl($set_path, $params->get('filename'), $params, true, true)
+						CWMHelper::getRemoteFileSize(CWMHelper::MediaBuildUrl($set_path, $params->get('filename'), $params, true, true)
 						)
 					);
 				}
@@ -139,11 +138,11 @@ class BiblestudyModelMediafile extends JModelAdmin
 				&& ($params->toObject()->media_seconds === '00' || empty($params->toObject()->media_seconds))
 			)
 			{
-				$path       = JBSMHelper::MediaBuildUrl($set_path, $params->get('filename'), $params, false, false, true);
-				$jbspodcast = new JBSMPodcast;
+				$path       = CWMHelper::MediaBuildUrl($set_path, $params->get('filename'), $params, false, false, true);
+				$jbspodcast = new CWMPodcast;
 
 				// Make a duration build from Params of media.
-				$prefix = JUri::root();
+				$prefix = Uri::root();
 				$nohttp = $jbspodcast->remove_http($prefix);
 
 				if (strpos($path, $nohttp) === 0)
@@ -174,22 +173,22 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 *
 	 * @return boolean|mixed
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 *
 	 * @since   9.0.0
 	 */
 	public function getMediaForm()
 	{
 		// Needed for site view
-		JModelLegacy::addIncludePath(BIBLESTUDY_PATH_ADMIN_MODELS);
+		BaseModel::addIncludePath(BIBLESTUDY_PATH_ADMIN_MODELS);
 
 		// If user hasn't selected a server yet, just return an empty form
 		$server_id = $this->data->server_id;
 
 		if ($server_id === null)
 		{
-			/** @var Joomla\Registry\Registry $admin */
-			$admin     = JBSMParams::getAdmin()->params;
+			/** @var Registry $admin */
+			$admin     = CWMParams::getAdmin()->params;
 			$server_id = $admin->get('server');
 
 			if ($server_id !== '-1')
@@ -203,8 +202,8 @@ class BiblestudyModelMediafile extends JModelAdmin
 		}
 
 		// Reverse lookup server_id to server type
-		/** @type BiblestudyModelServer $model */
-		$model       = JModelLegacy::getInstance('Server', 'BibleStudyModel');
+		/** @type CWMServerModel $model */
+		$model       = new CWMServerModel;
 		$server_type = $model->getType($server_id, true);
 		$s_item      = $model->getItem($server_id);
 
@@ -217,24 +216,24 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 		if ($server_type)
 		{
-			$path = JPath::clean(JPATH_ADMINISTRATOR . '/components/com_proclaim/addons/servers/' . $server_type);
+			$path = Path::clean(JPATH_ADMINISTRATOR . '/components/com_proclaim/src/addons/servers/' . $server_type);
 
-			JForm::addFormPath($path);
-			JForm::addFieldPath($path . '/fields');
+			Form::addFormPath($path);
+			Form::addFieldPath($path . '/fields');
 
 			// Add language files
 			$lang = Factory::getLanguage();
 
-			if (!$lang->load('jbs_addon_' . $server_type, JPATH_ADMINISTRATOR . '/components/com_proclaim/addons/servers/' . $server_type) && !$server_type)
+			if (!$lang->load('jbs_addon_' . $server_type, JPATH_ADMINISTRATOR . '/components/com_proclaim/src/addons/servers/' . $server_type) && !$server_type)
 			{
-				Factory::getApplication()->enqueueMessage(JText::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'), 'error');
+				Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'), 'error');
 			}
 
 			$form = $this->loadForm('com_proclaim.mediafile.media', "media", array('control' => 'jform', 'load_data' => true), true, "/media");
 		}
 		else
 		{
-			Factory::getApplication()->enqueueMessage(JText::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'), 'warning');
+			Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'), 'warning');
 			$form = $this->getForm();
 		}
 
@@ -257,7 +256,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 *
 	 * @return boolean|object
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function getForm($data = array(), $loadData = true)
@@ -316,7 +315,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 *
 	 * @return  mixed
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   9.0.0
 	 */
 	public function getItem($pk = null)
@@ -385,21 +384,21 @@ class BiblestudyModelMediafile extends JModelAdmin
 		ArrayHelper::toInteger($pks);
 
 		// Remove any values of zero.
-		if (array_search(0, $pks, true))
+		if (in_array(0, $pks, true))
 		{
 			unset($pks[array_search(0, $pks, true)]);
 		}
 
 		if (empty($pks))
 		{
-			$this->setError(JText::_('JGLOBAL_NO_ITEM_SELECTED'));
+			$this->setError(Text::_('JGLOBAL_NO_ITEM_SELECTED'));
 
 			return false;
 		}
 
 		$done = false;
 
-		if (strlen($commands['player']) > 0)
+		if ($commands['player'] != '')
 		{
 			if (!$this->batchPlayer($commands['player'], $pks, $contexts))
 			{
@@ -409,7 +408,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 			$done = true;
 		}
 
-		if (strlen($commands['link_type']) > 0)
+		if ($commands['link_type'] != '')
 		{
 			if (!$this->batchlink_type($commands['link_type'], $pks, $contexts))
 			{
@@ -419,7 +418,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 			$done = true;
 		}
 
-		if (strlen($commands['mimetype']) > 0)
+		if ($commands['mimetype'] != '')
 		{
 			if (!$this->batchMimetype($commands['mimetype'], $pks, $contexts))
 			{
@@ -429,7 +428,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 			$done = true;
 		}
 
-		if (strlen($commands['mediatype']) > 0)
+		if ($commands['mediatype'] != '')
 		{
 			if (!$this->batchMediatype($commands['mediatype'], $pks, $contexts))
 			{
@@ -439,7 +438,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 			$done = true;
 		}
 
-		if (strlen($commands['popup']) > 0)
+		if ($commands['popup'] != '')
 		{
 			if (!$this->batchPopup($commands['popup'], $pks, $contexts))
 			{
@@ -451,7 +450,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 
 		if (!$done)
 		{
-			$this->setError(JText::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'));
+			$this->setError(Text::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'));
 
 			return false;
 		}
@@ -477,7 +476,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	{
 		// Set the variables
 		$user = Factory::getUser();
-		/** @type TableMediafile $table */
+		/** @type CWMMediafileTable $table */
 		$table = $this->getTable();
 
 		foreach ($pks as $pk)
@@ -499,7 +498,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 			}
 			else
 			{
-				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+				$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
 
 				return false;
 			}
@@ -542,7 +541,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	{
 		// Set the variables
 		$user = Factory::getUser();
-		/** @type TableMediafile $table */
+		/** @type CWMMediafileTable $table */
 		$table = $this->getTable();
 
 		foreach ($pks as $pk)
@@ -565,7 +564,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 			}
 			else
 			{
-				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+				$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
 
 				return false;
 			}
@@ -592,7 +591,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	{
 		// Set the variables
 		$user = Factory::getUser();
-		/** @type TableMediafile $table */
+		/** @type CWMMediafileTable $table */
 		$table = $this->getTable();
 
 		foreach ($pks as $pk)
@@ -615,7 +614,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 			}
 			else
 			{
-				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+				$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
 
 				return false;
 			}
@@ -664,7 +663,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 			}
 			else
 			{
-				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+				$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
 
 				return false;
 			}
@@ -713,7 +712,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 			}
 			else
 			{
-				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+				$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
 
 				return false;
 			}
@@ -756,16 +755,14 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 *
 	 * @return array
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   7.0
 	 */
 	protected function loadFormData()
 	{
 		$session = Factory::getApplication()->getUserState('com_proclaim.mediafile.edit.data', array());
 
-		$data = empty($session) ? $this->data : $session;
-
-		return $data;
+		return empty($session) ? $this->data : $session;
 	}
 
 	/**
@@ -773,7 +770,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 	 *
 	 * @return  void
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   9.0.0
 	 */
 	protected function populateState()
@@ -782,7 +779,7 @@ class BiblestudyModelMediafile extends JModelAdmin
 		$input = $app->input;
 
 		// Load the Admin settings
-		$admin    = JBSMParams::getAdmin();
+		$admin    = CWMParams::getAdmin();
 		$registry = new Registry;
 		$registry->loadString($admin->params);
 		$this->setState('administrator', $registry);

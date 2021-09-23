@@ -64,7 +64,7 @@ class CWMServerTable extends Table
 	 */
 	public $assset_id = null;
 
-	public $access;
+	public int $access;
 
 	/**
 	 * Server Type

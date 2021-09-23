@@ -7,9 +7,22 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
+namespace CWM\Component\Proclaim\Administrator\Model;
+
 // No Direct Access
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CWMThumbnail;
+use CWM\Component\Proclaim\Administrator\Helper\CWMTranslated;
+use CWM\Component\Proclaim\Administrator\Table\CWMMessageTable;
+use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 
@@ -19,7 +32,7 @@ use Joomla\Utilities\ArrayHelper;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class BiblestudyModelMessage extends JModelAdmin
+class CWMMessageModel extends AdminModel
 {
 	/**
 	 * @var    string  The prefix to use with controller messages.
@@ -33,23 +46,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	 * @var      string
 	 * @since    3.2
 	 */
-	public $typeAlias = 'com_proclaim.message';
-
-	/**
-	 * Returns a reference to the a Table object, always creating it.
-	 *
-	 * @param   string  $type    The table type to instantiate
-	 * @param   string  $prefix  A prefix for the table class name. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return    JTable    A database object
-	 *
-	 * @since    1.6
-	 */
-	public function getTable($type = 'Message', $prefix = 'Table', $config = array())
-	{
-		return JTable::getInstance($type, $prefix, $config);
-	}
+	public $typeAlias = 'com_proclaim.cwmmessage';
 
 	/**
 	 * Duplicate Check
@@ -76,10 +73,8 @@ class BiblestudyModelMessage extends JModelAdmin
 		{
 			return false;
 		}
-		else
-		{
-			return true;
-		}
+
+		return true;
 	}
 
 	/**
@@ -87,12 +82,13 @@ class BiblestudyModelMessage extends JModelAdmin
 	 *
 	 * @return string JSON Object containing the topics
 	 *
+	 * @throws \Exception
 	 * @since 7.0.1
 	 */
 	public function getTopics()
 	{
 		// Do search in case of present study only, suppress otherwise
-		$input          = new JInput;
+		$input          = new Input;
 		$translatedList = array();
 		$id = $input->get('a_id', 0, 'int');
 
@@ -119,7 +115,7 @@ class BiblestudyModelMessage extends JModelAdmin
 			{
 				foreach ($topics as $topic)
 				{
-					$text             = JBSMTranslated::getTopicItemTranslated($topic);
+					$text             = CWMTranslated::getTopicItemTranslated($topic);
 					$translatedList[] = array(
 						'id'   => $topic->id,
 						'name' => $text
@@ -128,7 +124,7 @@ class BiblestudyModelMessage extends JModelAdmin
 			}
 		}
 
-		return json_encode($translatedList);
+		return json_encode($translatedList, JSON_THROW_ON_ERROR);
 	}
 
 	/**
@@ -136,6 +132,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	 *
 	 * @return string JSON Object containing the topics
 	 *
+	 * @throws \JsonException
 	 * @since 7.0.1
 	 */
 	public function getAlltopics()
@@ -154,7 +151,7 @@ class BiblestudyModelMessage extends JModelAdmin
 		{
 			foreach ($topics as $topic)
 			{
-				$text             = JBSMTranslated::getTopicItemTranslated($topic);
+				$text             = CWMTranslated::getTopicItemTranslated($topic);
 				$translatedList[] = array(
 					'id'   => $topic->id,
 					'name' => $text
@@ -162,7 +159,7 @@ class BiblestudyModelMessage extends JModelAdmin
 			}
 		}
 
-		return json_encode($translatedList);
+		return json_encode($translatedList, JSON_THROW_ON_ERROR);
 	}
 
 	/**
@@ -207,12 +204,12 @@ class BiblestudyModelMessage extends JModelAdmin
 	 * @return boolean
 	 *
 	 * @since 7.0.1
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	public function save($data)
 	{
-		/** @var Joomla\Registry\Registry $params */
-		$params = JBSMParams::getAdmin()->params;
+		/** @var Registry $params */
+		$params = CWMParams::getAdmin()->params;
 		$input  = Factory::getApplication()->input;
 		$path   = 'images/biblestudy/studies/' . $data['id'];
 
@@ -231,7 +228,7 @@ class BiblestudyModelMessage extends JModelAdmin
 				// Modify model data if no image is set.
 				$data['thumbnailm']     = "";
 			}
-			elseif (!JBSMBibleStudyHelper::startsWith(basename($data['image']), 'thumb_'))
+			elseif (!CWMProclaimHelper::startsWith(basename($data['image']), 'thumb_'))
 			{
 				// Modify model data
 				$data['thumbnailm'] = $path . '/thumb_' . basename($data['image']);
@@ -240,7 +237,7 @@ class BiblestudyModelMessage extends JModelAdmin
 			return parent::save($data);
 		}
 
-		JBSMThumbnail::create($data['image'], $path, $params->get('thumbnail_study_size', 100));
+		CWMThumbnail::create($data['image'], $path, $params->get('thumbnail_study_size', 100));
 
 		// Modify model data
 		$data['thumbnailm'] = $path . '/thumb_' . basename($data['image']);
@@ -254,17 +251,17 @@ class BiblestudyModelMessage extends JModelAdmin
 	 * @param   array    $data      Data for the form.
 	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
-	 * @return string
+	 * @return boolean|\Joomla\CMS\Form\Form
 	 *
+	 * @throws \Exception
 	 * @since 7.0
-	 * @throws Exception
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
 		// Get the form.
 		$form = $this->loadForm('com_proclaim.message', 'message', array('control' => 'jform', 'load_data' => $loadData));
 
-		if (empty($form))
+		if ($form === null)
 		{
 			return false;
 		}
@@ -286,7 +283,7 @@ class BiblestudyModelMessage extends JModelAdmin
 
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
-		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_proclaim.message.' . (int) $id))
+		if (($id != 0 && (!$user->authorise('core.edit.state', 'com_proclaim.message.' . (int) $id)))
 			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_proclaim')))
 		{
 			// Disable fields for display.
@@ -310,7 +307,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	 * @return  mixed
 	 *
 	 * @since   9.0.0
-	 * @throws  Exception
+	 * @throws  \Exception
 	 */
 	public function getItem($pk = null)
 	{
@@ -361,7 +358,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	 */
 	public function saveorder($pks = null, $order = null)
 	{
-		/** @var TableMessage $row */
+		/** @var CWMMessageTable $row */
 		$row        = $this->getTable();
 		$conditions = array();
 
@@ -452,21 +449,21 @@ class BiblestudyModelMessage extends JModelAdmin
 		ArrayHelper::toInteger($pks);
 
 		// Remove any values of zero.
-		if (array_search(0, $pks, true))
+		if (in_array(0, $pks, true))
 		{
 			unset($pks[array_search(0, $pks, true)]);
 		}
 
 		if (empty($pks))
 		{
-			$this->setError(JText::_('JGLOBAL_NO_ITEM_SELECTED'));
+			$this->setError(Text::_('JGLOBAL_NO_ITEM_SELECTED'));
 
 			return false;
 		}
 
 		$done = false;
 
-		if (strlen($commands['teacher']) > 0)
+		if ($commands['teacher'] != '')
 		{
 			if (!$this->batchTeacher($commands['teacher'], $pks, $contexts))
 			{
@@ -476,7 +473,7 @@ class BiblestudyModelMessage extends JModelAdmin
 			$done = true;
 		}
 
-		if (strlen($commands['series']) > 0)
+		if ($commands['series'] != '')
 		{
 			if (!$this->batchSeries($commands['series'], $pks, $contexts))
 			{
@@ -486,7 +483,7 @@ class BiblestudyModelMessage extends JModelAdmin
 			$done = true;
 		}
 
-		if (strlen($commands['messagetype']) > 0)
+		if ($commands['messagetype'] != '')
 		{
 			if (!$this->batchMessagetype($commands['messagetype'], $pks, $contexts))
 			{
@@ -514,7 +511,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	{
 		// Set the variables
 		$user = Factory::getUser();
-		/** @var TableMessage $table */
+		/** @var CWMMessageTable $table */
 		$table = $this->getTable();
 
 		foreach ($pks as $pk)
@@ -534,7 +531,7 @@ class BiblestudyModelMessage extends JModelAdmin
 			}
 			else
 			{
-				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+				$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
 
 				return false;
 			}
@@ -561,7 +558,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	{
 		// Set the variables
 		$user = Factory::getUser();
-		/** @var TableMessage $table */
+		/** @var CWMMessageTable $table */
 		$table = $this->getTable();
 
 		foreach ($pks as $pk)
@@ -581,7 +578,7 @@ class BiblestudyModelMessage extends JModelAdmin
 			}
 			else
 			{
-				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+				$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
 
 				return false;
 			}
@@ -608,7 +605,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	{
 		// Set the variables
 		$user = Factory::getUser();
-		/** @var TableMessage $table */
+		/** @var CWMMessageTable $table */
 		$table = $this->getTable();
 
 		foreach ($pks as $pk)
@@ -628,7 +625,7 @@ class BiblestudyModelMessage extends JModelAdmin
 			}
 			else
 			{
-				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+				$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
 
 				return false;
 			}
@@ -646,7 +643,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	 * @return  array    The default data is an empty array.
 	 *
 	 * @since   7.0
-	 * @throws  Exception
+	 * @throws  \Exception
 	 */
 	protected function loadFormData()
 	{
@@ -663,7 +660,7 @@ class BiblestudyModelMessage extends JModelAdmin
 	/**
 	 * Prepare and sanitise the table prior to saving.
 	 *
-	 * @param   TableMessage  $table  A reference to a JTable object.
+	 * @param   CWMMessageTable  $table  A reference to a JTable object.
 	 *
 	 * @return    void
 	 *
@@ -677,11 +674,11 @@ class BiblestudyModelMessage extends JModelAdmin
 		jimport('joomla.filter.output');
 
 		$table->studytitle = htmlspecialchars_decode($table->studytitle, ENT_QUOTES);
-		$table->alias      = JApplicationHelper::stringURLSafe($table->alias);
+		$table->alias      = ApplicationHelper::stringURLSafe($table->alias);
 
 		if (empty($table->alias))
 		{
-			$table->alias = JApplicationHelper::stringURLSafe($table->studytitle);
+			$table->alias = ApplicationHelper::stringURLSafe($table->studytitle);
 		}
 
 		if (empty($table->id))

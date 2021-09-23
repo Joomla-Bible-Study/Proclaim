@@ -14,7 +14,10 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
 use Joomla\Utilities\ArrayHelper;
 
 /**
@@ -36,7 +39,7 @@ class CWMMediaFilesController extends AdminController
 	public function checkin(): bool
 	{
 		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
 		$ids = Factory::getApplication()->input->post->get('cid', array(), 'array');
 
@@ -46,15 +49,15 @@ class CWMMediaFilesController extends AdminController
 		if ($return === false)
 		{
 			// Checkin failed.
-			$message = JText::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $model->getError());
-			$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false), $message, 'error');
+			$message = Text::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $model->getError());
+			$this->setRedirect(Route::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false), $message, 'error');
 
 			return false;
 		}
 
 		// Checkin succeeded.
-		$message = JText::plural($this->text_prefix . '_N_ITEMS_CHECKED_IN', count($ids));
-		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false), $message);
+		$message = Text::plural($this->text_prefix . '_N_ITEMS_CHECKED_IN', count($ids));
+		$this->setRedirect(Route::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false), $message);
 
 		return true;
 	}
@@ -64,6 +67,7 @@ class CWMMediaFilesController extends AdminController
 	 *
 	 * @return    void
 	 *
+	 * @throws \Exception
 	 * @since   3.0
 	 */
 	public function saveOrderAjax()
@@ -102,7 +106,7 @@ class CWMMediaFilesController extends AdminController
 	 *
 	 * @since 7.0
 	 */
-	public function &getModel($name = 'Mediafile', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
+	public function &getModel($name = 'CWMMediaFile', $prefix = '', $config = array('ignore_request' => true))
 	{
 		$model = parent::getModel($name, $prefix, $config);
 
