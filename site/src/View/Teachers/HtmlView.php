@@ -7,7 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-namespace CWM\Component\Proclaim\Site\View;
+namespace CWM\Component\Proclaim\Site\View\Teachers;
 
 require_once (BIBLESTUDY_PATH_LIB.'/CWMPagebuilder.php');
 // No Direct Access
