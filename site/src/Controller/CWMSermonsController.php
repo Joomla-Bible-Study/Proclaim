@@ -7,7 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-namespace CWM\Component\Proclaim\Site\Controller;
+namespace CWM\Component\Proclaim\Site\CWMSermonsController;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
 // No Direct Access

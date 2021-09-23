@@ -7,8 +7,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-namespace CWM\Component\Proclaim\Site\Controller;
+namespace CWM\Component\Proclaim\Site\SeriesDisplaysController;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
 // No Direct Access
 defined('_JEXEC') or die;
@@ -16,10 +18,10 @@ defined('_JEXEC') or die;
 /**
  * Controller for Teachers
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    7.0.0
  */
-class TeachersController extends BaseController
+class SeriesdisplaysController extends BaseController
 {
 	/**
 	 * Proxy for getModel
