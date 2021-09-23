@@ -272,7 +272,7 @@ class HTMLView extends BaseHtmlView
 		{
 			if ($extension->element == 'com_sermonspeaker')
 			{
-				$this->ss = '<a href="index.php?option=com_proclaim&view=administrator&layout=edit&id=1&task=administration.convertSermonSpeaker">'
+				$this->ss = '<a href="index.php?option=com_proclaim&view=administrator&layout=edit&id=1&task=cwmadmin.convertSermonSpeaker">'
 					. Text::_('JBS_IBM_CONVERT_SERMON_SPEAKER') . '</a>';
 			}
 			else
@@ -282,7 +282,7 @@ class HTMLView extends BaseHtmlView
 
 			if ($extension->element == 'com_preachit')
 			{
-				$this->pi = '<a href="index.php?option=com_proclaim&view=administrator&layout=edit&id=1&task=administration.convertPreachIt">'
+				$this->pi = '<a href="index.php?option=com_proclaim&view=administrator&layout=edit&id=1&task=cwmadmin.convertPreachIt">'
 					. Text::_('JBS_IBM_CONVERT_PREACH_IT') . '</a>';
 			}
 			else
@@ -335,13 +335,13 @@ class HTMLView extends BaseHtmlView
 		ToolbarHelper::title(Text::_('JBS_CMN_ADMINISTRATION'), 'options options');
 		ToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
 		ToolbarHelper::divider();
-		ToolbarHelper::apply('administration.apply');
-		ToolbarHelper::save('administration.save');
-		ToolbarHelper::cancel('administration.cancel', 'JTOOLBAR_CLOSE');
+		ToolbarHelper::apply('cwmadmin.apply');
+		ToolbarHelper::save('cwmadmin.save');
+		ToolbarHelper::cancel('cwmadmin.cancel', 'JTOOLBAR_CLOSE');
 		ToolbarHelper::divider();
-		ToolbarHelper::custom('administration.resetHits', 'reset.png', 'Reset All Hits', 'JBS_ADM_RESET_ALL_HITS', false);
-		ToolbarHelper::custom('administration.resetDownloads', 'download.png', 'Reset All Download Hits', 'JBS_ADM_RESET_ALL_DOWNLOAD_HITS', false);
-		ToolbarHelper::custom('administration.resetPlays', 'play.png', 'Reset All Plays', 'JBS_ADM_RESET_ALL_PLAYS', false);
+		ToolbarHelper::custom('cwmadmin.resetHits', 'reset.png', 'Reset All Hits', 'JBS_ADM_RESET_ALL_HITS', false);
+		ToolbarHelper::custom('cwmadmin.resetDownloads', 'download.png', 'Reset All Download Hits', 'JBS_ADM_RESET_ALL_DOWNLOAD_HITS', false);
+		ToolbarHelper::custom('cwmadmin.resetPlays', 'play.png', 'Reset All Plays', 'JBS_ADM_RESET_ALL_PLAYS', false);
 		ToolbarHelper::divider();
 		ToolbarHelper::help('biblestudy', true);
 	}
