@@ -16,6 +16,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\Registry\Registry;
 
@@ -128,13 +129,13 @@ class CWMServerModel extends AdminModel
 	 *
 	 * @param   string  $addon  Type of server
 	 *
-	 * @return \$1|\CWM\Component\Proclaim\Administrator\Model\SimpleXMLElement|false|\SimpleXMLElement
+	 * @return \|false|\SimpleXMLElement
 	 *
 	 * @since   9.0.0
 	 */
 	public function getConfig($addon)
 	{
-		$path = JPATH_ADMINISTRATOR . '/components/com_proclaim/addons/servers/' . $addon . '/' . $addon . '.xml';
+		$path = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/addons/servers/' . $addon . '/' . $addon . '.xml';
 
 		return simplexml_load_string(file_get_contents($path));
 	}
@@ -207,7 +208,7 @@ class CWMServerModel extends AdminModel
 
 		if (!$lang->load('jbs_addon_' . $type, $path))
 		{
-			throw new \Exception(JText::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'));
+			throw new \Exception(Text::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'));
 		}
 
 		$form = $this->loadForm('com_proclaim.server.' . $type, $type, array('control' => 'jform', 'load_data' => true), true, "/server");
@@ -239,7 +240,7 @@ class CWMServerModel extends AdminModel
 		}
 
 		// Get the forms.
-		$form = $this->loadForm('com_proclaim.server', 'server', array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_proclaim.cwmserver', 'cwmserver', array('control' => 'jform', 'load_data' => $loadData));
 
 		if ($form === null)
 		{

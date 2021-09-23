@@ -17,7 +17,9 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Filter\InputFilter;
-use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
+use Joomla\Registry\Registry;
+use stdClass;
+
 defined('_JEXEC') or die;
 
 
@@ -53,7 +55,7 @@ class CWMProclaimHelper
 	 * @param   int     $Itemid  ID
 	 * @param   string  $type    Type
 	 *
-	 * @return \stdClass
+	 * @return \Joomla\Registry\Registry
 	 *
 	 * @throws \Exception
 	 * @since 1.5
@@ -61,7 +63,7 @@ class CWMProclaimHelper
 	public static function getActions($Itemid = 0, $type = '')
 	{
 		$user   = Factory::getApplication()->getIdentity();
-		$result = new \stdClass;
+		$result = new Registry;
 
 		if (empty($Itemid))
 		{
@@ -402,7 +404,7 @@ class CWMProclaimHelper
 
 			if (!isset(self::$admin_params->debug))
 			{
-				self::$admin_params        = new \stdClass;
+				self::$admin_params        = new stdClass;
 				self::$admin_params->debug = 1;
 			}
 
@@ -800,7 +802,7 @@ class CWMProclaimHelper
 	{
 		$count = count($array);
 
-		$return        = new \stdClass;
+		$return        = new stdClass;
 		$return->half  = floor($count / 2);
 		$return->count = $count;
 

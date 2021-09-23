@@ -13,7 +13,11 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use JConfig;
+use JModelLegacy;
+use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
 /**
@@ -72,7 +76,7 @@ class CWMMediafilesModel extends ListModel
 	 *
 	 * @return mixed  Array  Media files array
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 9.0.0
 	 */
 	public function getItems()
@@ -88,10 +92,8 @@ class CWMMediafilesModel extends ListModel
 
 		try
 		{
-			// Needed for site view
-			JModelLegacy::addIncludePath(BIBLESTUDY_PATH_ADMIN_MODELS);
-
-			$serverModel = JModelLegacy::getInstance('Server', 'BibleStudyModel');
+			// This is to load the server model into the Media Files Variable.
+			$serverModel = new CWMServerModel;
 
 			$items = parent::getItems();
 
@@ -100,7 +102,7 @@ class CWMMediafilesModel extends ListModel
 				return false;
 			}
 
-			$user   = Factory::getUser();
+			$user   = Factory::getApplication()->getIdentity();
 			$groups = $user->getAuthorisedViewLevels();
 
 			foreach ($items as $x => $xValue)
@@ -133,7 +135,7 @@ class CWMMediafilesModel extends ListModel
 
 			$this->cache[$store] = $items;
 		}
-		catch (RuntimeException $e)
+		catch (\RuntimeException $e)
 		{
 			$this->setError($e->getMessage());
 
@@ -177,7 +179,7 @@ class CWMMediafilesModel extends ListModel
 	 *
 	 * @return  void
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   7.0
 	 */
 	protected function populateState($ordering = null, $direction = null)
@@ -185,7 +187,7 @@ class CWMMediafilesModel extends ListModel
 		$app = Factory::getApplication();
 
 		// Adjust the context to support modal layouts.
-		$input  = new JInput;
+		$input  = new Input;
 		$layout = $input->get('layout');
 
 		if ($layout)
@@ -243,7 +245,7 @@ class CWMMediafilesModel extends ListModel
 	/**
 	 * Build an SQL query to load the list data
 	 *
-	 * @return  \Joomla\Database\QueryInterface
+	 * @return \JDatabaseQuery|\Joomla\Database\QueryInterface|string
 	 *
 	 * @since   7.0
 	 */

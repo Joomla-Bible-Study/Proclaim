@@ -13,7 +13,15 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Administrator\Model\CWMMediafileModel;
+use CWM\Component\Proclaim\Administrator\Table\CWMMediafileTable;
+use CWMAddon;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\MVC\Model\BaseModel;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
 
 /**
  * Controller For MediaFile
@@ -44,7 +52,7 @@ class CWMMediaFileController extends FormController
 	 *
 	 * @return  mixed  True if the record can be added, a error object if not.
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   12.2
 	 */
 	public function add()
@@ -71,7 +79,7 @@ class CWMMediaFileController extends FormController
 	 *
 	 * @return  boolean
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   9.0.0
 	 */
 	public function edit($key = null, $urlVar = null)
@@ -94,19 +102,19 @@ class CWMMediaFileController extends FormController
 	 *
 	 * @return void
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   9.0.0
 	 */
 	public function xhr()
 	{
-		JSession::checkToken('get') or die('Invalid Token');
+		Session::checkToken('get') or die('Invalid Token');
 		$input = Factory::getApplication()->input;
 
 		$addonType = $input->get('type', 'Legacy', 'string');
 		$handler   = $input->get('handler');
 
 		// Load the addon
-		$addon = JBSMAddon::getInstance($addonType);
+		$addon = CWMAddon::getInstance($addonType);
 
 		if (method_exists($addon, $handler))
 		{
@@ -117,14 +125,14 @@ class CWMMediaFileController extends FormController
 		}
 		else
 		{
-			throw new Exception(JText::sprintf('Handler: "' . $handler . '" does not exist!'), 404);
+			throw new \Exception(Text::sprintf('Handler: "' . $handler . '" does not exist!'), 404);
 		}
 	}
 
 	/**
 	 * Method to run batch operations.
 	 *
-	 * @param   BiblestudyModelMediafile  $model  The model.
+	 * @param   CWMMediafileModel  $model  The model.
 	 *
 	 * @return  boolean     True if successful, false otherwise and internal error is set.
 	 *
@@ -132,11 +140,11 @@ class CWMMediaFileController extends FormController
 	 */
 	public function batch($model = null)
 	{
-		/** @type BiblestudyModelMediafile $model */
-		$model = $this->getModel('Mediafile', 'BiblestudyModel', array());
+		/** @type CWMMediafileModel $model */
+		$model = $this->getModel('CWMMediafile', '', array());
 
 		// Preset the redirect
-		$this->setRedirect(JRoute::_('index.php?option=com_proclaim&view=mediafiles' . $this->getRedirectToListAppend(), false));
+		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmmediafiles' . $this->getRedirectToListAppend(), false));
 
 		return parent::batch($model);
 	}
@@ -152,11 +160,11 @@ class CWMMediaFileController extends FormController
 	 */
 	public function cancel($key = null)
 	{
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
-		$app     = Factory::getApplication();
-		$model   = $this->getModel();
-		/** @type TableMediafile $table */
+		$app   = Factory::getApplication();
+		$model = $this->getModel();
+		/** @type CWMMediafileTable $table */
 		$table   = $model->getTable();
 		$checkin = property_exists($table, 'checked_out');
 
@@ -175,11 +183,11 @@ class CWMMediaFileController extends FormController
 				if ($model->checkin($recordId) === false)
 				{
 					// Check-in failed, go back to the record and display a notice.
-					$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $model->getError()));
+					$this->setError(Text::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $model->getError()));
 					$this->setMessage($this->getError(), 'error');
 
 					$this->setRedirect(
-						JRoute::_(
+						Route::_(
 							'index.php?option=' . $this->option . '&view=' . $this->view_item
 							. $this->getRedirectToItemAppend($recordId, $key), false
 						)
@@ -197,7 +205,7 @@ class CWMMediaFileController extends FormController
 			return true;
 		}
 
-		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
+		$this->setRedirect(Route::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
 
 		return false;
 	}
@@ -207,20 +215,20 @@ class CWMMediaFileController extends FormController
 	 *
 	 * @return  void
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   9.0.0
 	 */
 	public function setServer()
 	{
 		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
 		$app   = Factory::getApplication();
 		$input = $app->input;
 
-		$data = $input->get('jform', array(), 'post', 'array');
-		$cdate = $data['createdate'];
-		$study_id = $data['study_id'];
+		$data      = $input->get('jform', array(), 'post', 'array');
+		$cdate     = $data['createdate'];
+		$study_id  = $data['study_id'];
 		$server_id = $data['server_id'];
 
 		// Save server in the session
@@ -229,28 +237,28 @@ class CWMMediaFileController extends FormController
 		$app->setUserState('com_proclaim.edit.mediafile.server_id', $server_id);
 
 		$redirect = $this->getRedirectToItemAppend($data['id']);
-		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item . $redirect, false));
+		$this->setRedirect(Route::_('index.php?option=' . $this->option . '&view=' . $this->view_item . $redirect, false));
 	}
 
 	/**
 	 * Function that allows child controller access to model data after the data has been saved.
 	 *
-	 * @param   JModelLegacy  $model      The data model object.
-	 * @param   array         $validData  The validated data.
+	 * @param   BaseModel  $model      The data model object.
+	 * @param   array      $validData  The validated data.
 	 *
 	 * @return    void
 	 *
-	 * @throws   Exception
+	 * @throws   \Exception
 	 * @since    3.1
 	 */
-	protected function postSaveHook(JModelLegacy $model, $validData = array())
+	protected function postSaveHook($model, $validData = array())
 	{
 		$return = $this->input->getCmd('return');
 		$task   = $this->input->get('task');
 
 		if ($return && $task !== 'apply')
 		{
-			Factory::getApplication()->enqueueMessage(JText::_('JBS_MED_SAVE'), 'message');
+			Factory::getApplication()->enqueueMessage(Text::_('JBS_MED_SAVE'), 'message');
 			$this->setRedirect(base64_decode($return));
 		}
 
@@ -273,7 +281,7 @@ class CWMMediaFileController extends FormController
 		$layout  = $this->input->get('layout', 'edit', 'string');
 		$return  = $this->input->getCmd('return');
 		$options = $this->input->get('options');
-		$append = '';
+		$append  = '';
 
 		// Setup redirect info.
 		if ($tmpl)

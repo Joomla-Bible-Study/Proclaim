@@ -7,11 +7,22 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
+namespace CWM\Component\Proclaim\Administrator\Model;
+
 // No Direct Access
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CWMThumbnail;
+use CWM\Component\Proclaim\Administrator\Helper\CWMTranslated;
+use CWM\Component\Proclaim\Administrator\Table\CWMMessageTable;
+use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 
@@ -35,23 +46,7 @@ class CWMMessageModel extends AdminModel
 	 * @var      string
 	 * @since    3.2
 	 */
-	public $typeAlias = 'com_proclaim.message';
-
-	/**
-	 * Returns a reference to the a Table object, always creating it.
-	 *
-	 * @param   string  $type    The table type to instantiate
-	 * @param   string  $prefix  A prefix for the table class name. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return    JTable    A database object
-	 *
-	 * @since    1.6
-	 */
-	public function getTable($type = 'Message', $prefix = 'Table', $config = array())
-	{
-		return JTable::getInstance($type, $prefix, $config);
-	}
+	public $typeAlias = 'com_proclaim.cwmmessage';
 
 	/**
 	 * Duplicate Check
@@ -93,7 +88,7 @@ class CWMMessageModel extends AdminModel
 	public function getTopics()
 	{
 		// Do search in case of present study only, suppress otherwise
-		$input          = new JInput;
+		$input          = new Input;
 		$translatedList = array();
 		$id = $input->get('a_id', 0, 'int');
 
@@ -120,7 +115,7 @@ class CWMMessageModel extends AdminModel
 			{
 				foreach ($topics as $topic)
 				{
-					$text             = JBSMTranslated::getTopicItemTranslated($topic);
+					$text             = CWMTranslated::getTopicItemTranslated($topic);
 					$translatedList[] = array(
 						'id'   => $topic->id,
 						'name' => $text
@@ -156,7 +151,7 @@ class CWMMessageModel extends AdminModel
 		{
 			foreach ($topics as $topic)
 			{
-				$text             = JBSMTranslated::getTopicItemTranslated($topic);
+				$text             = CWMTranslated::getTopicItemTranslated($topic);
 				$translatedList[] = array(
 					'id'   => $topic->id,
 					'name' => $text
@@ -209,12 +204,12 @@ class CWMMessageModel extends AdminModel
 	 * @return boolean
 	 *
 	 * @since 7.0.1
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	public function save($data)
 	{
-		/** @var Joomla\Registry\Registry $params */
-		$params = JBSMParams::getAdmin()->params;
+		/** @var Registry $params */
+		$params = CWMParams::getAdmin()->params;
 		$input  = Factory::getApplication()->input;
 		$path   = 'images/biblestudy/studies/' . $data['id'];
 
@@ -233,7 +228,7 @@ class CWMMessageModel extends AdminModel
 				// Modify model data if no image is set.
 				$data['thumbnailm']     = "";
 			}
-			elseif (!JBSMBibleStudyHelper::startsWith(basename($data['image']), 'thumb_'))
+			elseif (!CWMProclaimHelper::startsWith(basename($data['image']), 'thumb_'))
 			{
 				// Modify model data
 				$data['thumbnailm'] = $path . '/thumb_' . basename($data['image']);
@@ -258,7 +253,7 @@ class CWMMessageModel extends AdminModel
 	 *
 	 * @return boolean|\Joomla\CMS\Form\Form
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function getForm($data = array(), $loadData = true)
@@ -312,7 +307,7 @@ class CWMMessageModel extends AdminModel
 	 * @return  mixed
 	 *
 	 * @since   9.0.0
-	 * @throws  Exception
+	 * @throws  \Exception
 	 */
 	public function getItem($pk = null)
 	{
@@ -461,7 +456,7 @@ class CWMMessageModel extends AdminModel
 
 		if (empty($pks))
 		{
-			$this->setError(JText::_('JGLOBAL_NO_ITEM_SELECTED'));
+			$this->setError(Text::_('JGLOBAL_NO_ITEM_SELECTED'));
 
 			return false;
 		}
@@ -536,7 +531,7 @@ class CWMMessageModel extends AdminModel
 			}
 			else
 			{
-				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+				$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
 
 				return false;
 			}
@@ -583,7 +578,7 @@ class CWMMessageModel extends AdminModel
 			}
 			else
 			{
-				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+				$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
 
 				return false;
 			}
@@ -630,7 +625,7 @@ class CWMMessageModel extends AdminModel
 			}
 			else
 			{
-				$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+				$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
 
 				return false;
 			}
@@ -648,7 +643,7 @@ class CWMMessageModel extends AdminModel
 	 * @return  array    The default data is an empty array.
 	 *
 	 * @since   7.0
-	 * @throws  Exception
+	 * @throws  \Exception
 	 */
 	protected function loadFormData()
 	{
@@ -679,11 +674,11 @@ class CWMMessageModel extends AdminModel
 		jimport('joomla.filter.output');
 
 		$table->studytitle = htmlspecialchars_decode($table->studytitle, ENT_QUOTES);
-		$table->alias      = JApplicationHelper::stringURLSafe($table->alias);
+		$table->alias      = ApplicationHelper::stringURLSafe($table->alias);
 
 		if (empty($table->alias))
 		{
-			$table->alias = JApplicationHelper::stringURLSafe($table->studytitle);
+			$table->alias = ApplicationHelper::stringURLSafe($table->studytitle);
 		}
 
 		if (empty($table->id))

@@ -8,25 +8,18 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMMediaFiles;
+namespace CWM\Component\Proclaim\Administrator\View\CWMLocations;
 
 // No Direct Access
-use CWM\Component\Proclaim\Administrator\Extension\ProclaimComponent;
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
-use JHtml;
-use JHtmlSidebar;
-use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
+defined('_JEXEC') or die;
+
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Component\Content\Administrator\Extension\ContentComponent;
-use Joomla\Component\Content\Administrator\Helper\ContentHelper;
-
-defined('_JEXEC') or die;
 
 /**
- * View class for Mediafiles
+ * View class for Locations
  *
  * @package  Proclaim.Admin
  * @since    7.0
@@ -34,41 +27,9 @@ defined('_JEXEC') or die;
 class HTMLView extends BaseHtmlView
 {
 	/**
-	 * Media Types
-	 *
-	 * @var string
-	 * @since    7.0.0
-	 */
-	public $mediatypes;
-
-	/**
-	 * Can Do
-	 *
-	 * @var object
-	 * @since    7.0.0
-	 */
-	public $canDo;
-
-	/**
-	 * Filter Levers
-	 *
-	 * @var string
-	 * @since    7.0.0
-	 */
-	public $f_levels;
-
-	/**
-	 * Side Bare
-	 *
-	 * @var string
-	 * @since    7.0.0
-	 */
-	public $sidebar;
-
-	/**
 	 * Items
 	 *
-	 * @var array
+	 * @var object
 	 * @since    7.0.0
 	 */
 	protected $items;
@@ -76,7 +37,7 @@ class HTMLView extends BaseHtmlView
 	/**
 	 * Pagination
 	 *
-	 * @var array
+	 * @var object
 	 * @since    7.0.0
 	 */
 	protected $pagination;
@@ -90,28 +51,50 @@ class HTMLView extends BaseHtmlView
 	protected $state;
 
 	/**
+	 * Can Do
+	 *
+	 * @var object
+	 * @since    7.0.0
+	 */
+	public $canDo;
+
+	/**
+	 * Filter Levels
+	 *
+	 * @var object
+	 * @since    7.0.0
+	 */
+	public $f_levels;
+
+	/**
+	 * Side Bar
+	 *
+	 * @var string
+	 * @since 9.0.0
+	 */
+	public $sidebar;
+
+	/**
 	 * Execute and display a template script.
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
-	 * @see     fetch()
+	 * @throws Exception
 	 * @since   11.1
-	 * @throws  \Exception
+	 *
+	 * @see     fetch()
 	 */
 	public function display($tpl = null)
 	{
 		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
-		$this->mediatypes = $this->get('Mediatypes');
 
 		$this->filterForm    = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');
-
-		$this->sortDirection = $this->state->get('list.direction');
-		$this->sortColumn    = $this->state->get('list.ordering');
+		$this->canDo         = JBSMBibleStudyHelper::getActions('', 'location');
 
 		// Check for errors
 		if (count($errors = $this->get('Errors')))
@@ -123,16 +106,16 @@ class HTMLView extends BaseHtmlView
 
 		// Levels filter.
 		$options   = array();
-		$options[] = JHtml::_('select.option', '1', Text::_('J1'));
-		$options[] = JHtml::_('select.option', '2', Text::_('J2'));
-		$options[] = JHtml::_('select.option', '3', Text::_('J3'));
-		$options[] = JHtml::_('select.option', '4', Text::_('J4'));
-		$options[] = JHtml::_('select.option', '5', Text::_('J5'));
-		$options[] = JHtml::_('select.option', '6', Text::_('J6'));
-		$options[] = JHtml::_('select.option', '7', Text::_('J7'));
-		$options[] = JHtml::_('select.option', '8', Text::_('J8'));
-		$options[] = JHtml::_('select.option', '9', Text::_('J9'));
-		$options[] = JHtml::_('select.option', '10', Text::_('J10'));
+		$options[] = JHtml::_('select.option', '1', JText::_('J1'));
+		$options[] = JHtml::_('select.option', '2', JText::_('J2'));
+		$options[] = JHtml::_('select.option', '3', JText::_('J3'));
+		$options[] = JHtml::_('select.option', '4', JText::_('J4'));
+		$options[] = JHtml::_('select.option', '5', JText::_('J5'));
+		$options[] = JHtml::_('select.option', '6', JText::_('J6'));
+		$options[] = JHtml::_('select.option', '7', JText::_('J7'));
+		$options[] = JHtml::_('select.option', '8', JText::_('J8'));
+		$options[] = JHtml::_('select.option', '9', JText::_('J9'));
+		$options[] = JHtml::_('select.option', '10', JText::_('J10'));
 
 		$this->f_levels = $options;
 
@@ -158,17 +141,15 @@ class HTMLView extends BaseHtmlView
 	 */
 	protected function addToolbar()
 	{
-		$canDo = ContentHelper::getActions('com_proclaim');
-		$user = Factory::getApplication()->getIdentity();
+		$user = Factory::getUser();
 
 		// Get the toolbar object instance
 		$toolbar = Toolbar::getInstance('toolbar');
+		ToolbarHelper::title(JText::_('JBS_CMN_LOCATIONS'), 'home home');
 
-		ToolbarHelper::title(Text::_('JBS_CMN_MEDIA_FILES'), 'video video');
-
-		if ($canDo->get('core.create'))
+		if ($this->canDo->get('core.create'))
 		{
-			$toolbar->addNew('cwmmediafile.add');
+			$toolbar->addNew('location.add');
 		}
 
 		$dropdown = $toolbar->dropdownButton('status-group')
@@ -177,26 +158,25 @@ class HTMLView extends BaseHtmlView
 			->icon('icon-ellipsis-h')
 			->buttonClass('btn btn-action')
 			->listCheck(true);
-
 		$childBar = $dropdown->getChildToolbar();
 
-		if ($canDo->get('core.edit.state'))
+		if ($this->canDo->get('core.edit'))
 		{
-			$toolbar->edit('cwmmediafile.edit');
+			$toolbar->edit('location.edit');
 		}
 
-		if ($canDo->get('core.edit.state'))
+		if ($this->canDo->get('core.edit.state'))
 		{
 			$toolbar->divider();
-			$toolbar->publish('cwmmediafiles.publish');
-			$toolbar->unpublish('cwmmediafiles.unpublish');
+			$toolbar->publish('locations.publish');
+			$toolbar->unpublish('locations.unpublish');
 			$toolbar->divider();
-			$toolbar->archive('cwmmediafiles.archive');
+			$toolbar->archive('locations.archive');
 		}
 
-		if ($this->state->get('filter.published') == ProclaimComponent::CONDITION_TRASHED && $canDo->get('core.delete'))
+		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
-			$toolbar->delete('cwmmediafiles.delete')
+			$toolbar->delete('', 'locations.delete')
 				->text('JTOOLBAR_EMPTY_TRASH')
 				->message('JGLOBAL_CONFIRM_DELETE')
 				->listCheck(true);
@@ -204,7 +184,7 @@ class HTMLView extends BaseHtmlView
 
 		if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED)
 		{
-			$childBar->trash('cwmmediafiles.trash')->listCheck(true);
+			$toolbar->trash('locations.trash')->listCheck(true);
 		}
 
 		// Add a batch button
@@ -217,8 +197,6 @@ class HTMLView extends BaseHtmlView
 				->selector('collapseModal')
 				->listCheck(true);
 		}
-
-		$toolbar->help('JHELP_CONTENT_ARTICLE_MANAGER');
 	}
 
 	/**
@@ -226,13 +204,12 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
-	 * @throws \Exception
 	 * @since    7.1.0
 	 */
 	protected function setDocument()
 	{
-		$document = Factory::getApplication()->getDocument();
-		$document->setTitle(Text::_('JBS_TITLE_MEDIA_FILES'));
+		$document = Factory::getDocument();
+		$document->setTitle(JText::_('JBS_TITLE_LOCATIONS'));
 	}
 
 	/**
@@ -245,12 +222,10 @@ class HTMLView extends BaseHtmlView
 	protected function getSortFields()
 	{
 		return array(
-			'study.studytitle'     => Text::_('JBS_CMN_STUDY_TITLE'),
-			'mediatype.media_text' => Text::_('JBS_MED_MEDIA_TYPE'),
-			'mediafile.filename'   => Text::_('JBS_MED_FILENAME'),
-			'mediafile.ordering'   => Text::_('JGRID_HEADING_ORDERING'),
-			'mediafile.published'  => Text::_('JSTATUS'),
-			'mediafile.id'         => Text::_('JGRID_HEADING_ID')
+			'location.location_text' => JText::_('JGRID_HEADING_ORDERING'),
+			'location.published'     => JText::_('JSTATUS'),
+			'access_level'           => JText::_('JGRID_HEADING_ACCESS'),
+			'location.id'            => JText::_('JGRID_HEADING_ID')
 		);
 	}
 }

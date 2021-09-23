@@ -52,7 +52,7 @@ return new class implements ServiceProviderInterface {
 				$component->setMVCFactory($container->get(MVCFactoryInterface::class));
 				$component->setRouterFactory($container->get(RouterFactoryInterface::class));
 
-				// Always load JBSM API if it exists.
+				// Always load Proclaim API if it exists.
 				$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
 				if (file_exists($api))

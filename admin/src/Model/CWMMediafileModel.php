@@ -26,6 +26,7 @@ use Joomla\CMS\Table\Table;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
+use JUri;
 
 // No Direct Access
 defined('_JEXEC') or die;
@@ -78,25 +79,6 @@ class CWMMediafileModel extends AdminModel
 		}
 
 		return true;
-	}
-
-	/**
-	 * Returns a Table object, always creating it.
-	 *
-	 * @param   string  $type    The table type to instantiate
-	 * @param   string  $prefix  A prefix for the table class name. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return    CWMMediafileTable  A database object
-	 *
-	 * @since 7.0.0
-	 */
-	public function getTable($type = 'Mediafile', $prefix = 'Table', $config = array())
-	{
-		/** @var CWMMediafileTable $table */
-		$table = Table::getInstance($type, $prefix, $config);
-
-		return $table;
 	}
 
 	/**
@@ -205,7 +187,7 @@ class CWMMediafileModel extends AdminModel
 
 		if ($server_id === null)
 		{
-			/** @var Joomla\Registry\Registry $admin */
+			/** @var Registry $admin */
 			$admin     = CWMParams::getAdmin()->params;
 			$server_id = $admin->get('server');
 
@@ -221,7 +203,7 @@ class CWMMediafileModel extends AdminModel
 
 		// Reverse lookup server_id to server type
 		/** @type CWMServerModel $model */
-		$model       = BaseModel::getInstance('Server', 'BibleStudyModel');
+		$model       = new CWMServerModel;
 		$server_type = $model->getType($server_id, true);
 		$s_item      = $model->getItem($server_id);
 
@@ -234,7 +216,7 @@ class CWMMediafileModel extends AdminModel
 
 		if ($server_type)
 		{
-			$path = Path::clean(JPATH_ADMINISTRATOR . '/components/com_proclaim/addons/servers/' . $server_type);
+			$path = Path::clean(JPATH_ADMINISTRATOR . '/components/com_proclaim/src/addons/servers/' . $server_type);
 
 			Form::addFormPath($path);
 			Form::addFieldPath($path . '/fields');
@@ -242,7 +224,7 @@ class CWMMediafileModel extends AdminModel
 			// Add language files
 			$lang = Factory::getLanguage();
 
-			if (!$lang->load('jbs_addon_' . $server_type, JPATH_ADMINISTRATOR . '/components/com_proclaim/addons/servers/' . $server_type) && !$server_type)
+			if (!$lang->load('jbs_addon_' . $server_type, JPATH_ADMINISTRATOR . '/components/com_proclaim/src/addons/servers/' . $server_type) && !$server_type)
 			{
 				Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'), 'error');
 			}
