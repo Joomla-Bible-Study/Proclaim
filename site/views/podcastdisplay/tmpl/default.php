@@ -69,7 +69,7 @@ $jbsmedia = new JBSMMedia;
 				$item->params = $reg;
 				?>
                 <tr>
-					<?php $path1 = JBSMHelper::MediaBuildUrl($item->sparams->get('path'), $item->params->get('filename'), $item->params, true);?>
+					<?php $path1 = CWMHelper::MediaBuildUrl($item->sparams->get('path'), $item->params->get('filename'), $item->params, true);?>
                     <td>
 						<?php echo stripslashes($item->studytitle); ?>
                     </td>

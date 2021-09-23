@@ -252,7 +252,7 @@ class BiblestudyViewSermon extends BaseHtmlView
 			}
 		}
 
-		$this->simple = JBSMHelper::getSimpleView();
+		$this->simple = CWMHelper::getSimpleView();
 
 		$offset = $this->state->get('list.offset');
 

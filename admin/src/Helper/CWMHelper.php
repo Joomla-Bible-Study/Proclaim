@@ -13,7 +13,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 // No Direct Access
 defined('_JEXEC') or die;
 
-use CWMListing;
+use CWM\Component\Proclaim\Site\Helper\CWMListing;
 use Joomla\CMS\Cache\Cache;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
@@ -40,9 +40,9 @@ class CWMHelper
 	/**
 	 * Get tooltip.
 	 *
-	 * @param   object                    $row       JTable
-	 * @param   Joomla\Registry\Registry  $params    Item Params
-	 * @param   TemplateTable             $template  ID
+	 * @param   object         $row       JTable
+	 * @param   Registry       $params    Item Params
+	 * @param   TemplateTable  $template  ID
 	 *
 	 * @return string
 	 *
@@ -199,7 +199,7 @@ class CWMHelper
 		$db->setQuery($query);
 		$media = $db->loadObject();
 
-		$reg = new Joomla\Registry\Registry;
+		$reg = new Registry;
 		$reg->loadString($media->params);
 		$reg->set('size', $size);
 

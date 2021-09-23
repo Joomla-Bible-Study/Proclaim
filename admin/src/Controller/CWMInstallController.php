@@ -100,8 +100,8 @@ class CWMInstallController extends FormController
 
 		if (empty($stack))
 		{
-			JBSMHelper::clearcache('site');
-			JBSMHelper::clearcache('administrator');
+			CWMHelper::clearcache('site');
+			CWMHelper::clearcache('administrator');
 			$session->set('migration_stack', '', 'JBSM');
 
 			/** @var BibleStudyModelInstall $model */
@@ -128,8 +128,8 @@ class CWMInstallController extends FormController
 	 */
 	public function clear()
 	{
-		JBSMHelper::clearcache('site');
-		JBSMHelper::clearcache('administrator');
+		CWMHelper::clearcache('site');
+		CWMHelper::clearcache('administrator');
 		$session = Factory::getSession();
 		$session->set('migration_stack', '', 'JBSM');
 		$this->browse();

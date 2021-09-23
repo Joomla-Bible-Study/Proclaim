@@ -7,24 +7,23 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-namespace CWM\Component\Proclaim\Site\View;
+
+namespace CWM\Component\Proclaim\Site\View\Sermons;
+
 // No Direct Access
 defined('_JEXEC') or die;
-use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use Joomla\CMS\Plugin\PluginHelper;
-use CWM\Component\Proclaim\Site\Helper\CWMListing;
-use CWM\Component\Proclaim\Site\Helper\CWMShowScripture;
-use CWM\Component\Proclaim\Site\Helper\CWMHelperRoute;
-use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
-use CWM\Component\Proclaim\Site\Helper\CWMRelatedstudies;
+
+use CWM\Component\Proclaim\Site\Helper\CWMImages;
 use CWM\Component\Proclaim\Site\Helper\CWMPagebuilder;
 use CWM\Component\Proclaim\Site\Helper\CWMPodcastsubscribe;
-use Joomla\CMS\Uri\Uri;
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\Registry\Registry;
+use JHtml;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Router\Route;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
 
 /**
  * View for Sermons class
@@ -36,113 +35,134 @@ class HtmlView extends BaseHtmlView
 {
 	/** @var object
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	public $document;
 
 	/** @var object
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $items = null;
 
 	/** @var object
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $pagination = null;
 
 	/** @var Registry
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $state = null;
 
-	/** @var JObject
+	/** @var Object
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $admin;
 
 	/** @var Registry
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $params;
 
 	/** @var object
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $study;
 
 	/** @var string
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $subscribe;
 
 	/** @var string
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $series;
 
 	/** @var string
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $teachers;
 
 	/** @var string
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $messageTypes;
 
 	/** @var string
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $years;
 
 	/** @var string
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $locations;
 
 	/** @var string
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $topics;
 
 	/** @var string
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $orders;
 
 	/** @var string
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $books;
 
 	/** @var object
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $template;
 
 	/** @var array
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $topic;
 
 	/** @var object
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $main;
 
 	/** @var object
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $page;
 
 	/** @var string
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $request_url;
 
 	/**
 	 * Form object for search filters
 	 *
-	 * @var  JForm
+	 * @var  Form
 	 * @since 9.1.4
 	 */
 	public $filterForm;
@@ -170,20 +190,20 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
-	 * @see     fetch()
+	 * @throws  \Exception
 	 * @since   11.1
-	 * @throws  Exception
+	 * @see     fetch()
 	 */
 	public function display($tpl = null)
 	{
 		$this->state         = $this->get('State');
 		$this->template      = $this->state->get('template');
 		$items               = $this->get('Items');
-		$this->filterForm    = $this->get('FilterForm');
+		//$this->filterForm    = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');
 
-		$pagination       = $this->get('Pagination');
-		$this->admin      = $this->state->get('administrator');
+		$pagination  = $this->get('Pagination');
+		$this->admin = $this->state->get('administrator');
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 		$user   = Factory::getUser();
@@ -191,7 +211,7 @@ class HtmlView extends BaseHtmlView
 		/** @var  $params Registry */
 		$params = $this->state->params;
 
-		$this->main = JBSMImages::mainStudyImage($params);
+		$this->main = CWMImages::mainStudyImage($params);
 
 		// Only load PageBuilder if the default template is NOT being used
 		if ($params->get('useexpert_list') > 0
@@ -217,8 +237,8 @@ class HtmlView extends BaseHtmlView
 					$item->scripture2 = $pelements->scripture2;
 					$item->media      = $pelements->media;
 					//$item->duration   = $pelements->duration;
-					$item->studydate  = $pelements->studydate;
-					$item->topics     = $pelements->topics;
+					$item->studydate = $pelements->studydate;
+					$item->topics    = $pelements->topics;
 
 					if (isset($pelements->study_thumbnail))
 					{
@@ -267,11 +287,11 @@ class HtmlView extends BaseHtmlView
 		}
 
 		// Get the podcast subscription
-		HtmlHelper::_('stylesheet','media/css/podcast.css');
-		$podcast         = new JBSMPodcastSubscribe;
+		HtmlHelper::_('stylesheet', 'media/css/podcast.css');
+		$podcast         = new CWMPodcastSubscribe;
 		$this->subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
 
-		$uri = new JUri;
+		$uri = new Uri;
 
 		// End scripture helper
 		// Get the data for the drop down boxes
@@ -289,7 +309,7 @@ class HtmlView extends BaseHtmlView
 
 		// Get the drop down menus
 
-		return parent::display($tpl);
+		parent::display($tpl);
 	}
 
 	/**
@@ -297,8 +317,8 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0
-	 * @throws Exception
 	 */
 	protected function _prepareDocument()
 	{
@@ -365,8 +385,8 @@ class HtmlView extends BaseHtmlView
 			$this->document->setMetadata('robots', $this->params->get('robots'));
 		}
 
-		JHtml::_('biblestudy.framework');
-		JHtml::_('biblestudy.loadCss', $this->params, null, 'font-awesome');
+		//JHtml::_('biblestudy.framework');
+		//JHtml::_('biblestudy.loadCss', $this->params, null, 'font-awesome');
 	}
 
 	/**
@@ -374,8 +394,8 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return  void
 	 *
+	 * @throws \Exception
 	 * @since 9.1.6
-	 * @throws Exception
 	 */
 	private function updateFilters()
 	{
@@ -391,29 +411,29 @@ class HtmlView extends BaseHtmlView
 			$this->params->set('show_language_search', (int) $lang);
 		}
 
-		foreach ($filters as $filter)
-		{
-			$set = $input->getInt('filter_' . $filter);
-			$from = $this->filterForm->getValue($filter, 'filter');
-
-			// Update value from landing page call.
-			if ($set !== 0 && $set !== null)
-			{
-				$this->filterForm->setValue($filter, 'filter', $set);
-			}
-
-			// Catch active filters and update them.
-			if ($from !== null || $set !== null)
-			{
-				$this->activeFilters[] = $filter;
-			}
-
-			// Remove from view if set to hid in template.
-			if ((int) $this->params->get('show_' . $filter . '_search', 1) === 0)
-			{
-				$this->filterForm->removeField($filter, 'filter');
-			}
-		}
+//		foreach ($filters as $filter)
+//		{
+//			$set  = $input->getInt('filter_' . $filter);
+//			$from = $this->filterForm->getValue($filter, 'filter');
+//
+//			// Update value from landing page call.
+//			if ($set !== 0 && $set !== null)
+//			{
+//				$this->filterForm->setValue($filter, 'filter', $set);
+//			}
+//
+//			// Catch active filters and update them.
+//			if ($from !== null || $set !== null)
+//			{
+//				$this->activeFilters[] = $filter;
+//			}
+//
+//			// Remove from view if set to hid in template.
+//			if ((int) $this->params->get('show_' . $filter . '_search', 1) === 0)
+//			{
+//				$this->filterForm->removeField($filter, 'filter');
+//			}
+//		}
 
 		foreach ($lists as $list)
 		{

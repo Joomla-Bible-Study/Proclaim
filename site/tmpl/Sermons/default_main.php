@@ -9,6 +9,8 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
+use CWM\Component\Proclaim\Site\Helper\CWMListing;
 use Joomla\CMS\Layout\LayoutHelper;
 use CWM\Component\Proclaim\Site\Helper\CWMTeacher;
 use Joomla\CMS\Html\HTMLHelper;
@@ -18,7 +20,7 @@ HtmlHelper::_('formbehavior.chosen', 'select');
 
 $CWMTeacher  = new CWMTeacher;
 $teachers     = $CWMTeacher->getTeachersFluid($this->params);
-$listing      = new JBSMListing;
+$listing      = new CWMListing;
 $classelement = $listing->createelement($this->params->get('studies_element'));
 ?>
 
@@ -87,7 +89,7 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 <div class="container-fluid">
 	<?php
 	// Search tools bar
-	echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+	//echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 	?>
 	<hr/>
 	<?php

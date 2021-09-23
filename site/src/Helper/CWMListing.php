@@ -7,6 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Site\Helper;
 // No Direct Access
 defined('_JEXEC') or die;
@@ -18,11 +19,15 @@ if (file_exists($api))
 {
 	require_once $api;
 }
-require_once(BIBLESTUDY_PATH_HELPERS . '/CWMMedia.php');
 
+use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
+use JHtml;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Image\Image;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 use Joomla\Component\Mails\Administrator\Table\TemplateTable;
+use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
 /**
@@ -40,14 +45,14 @@ class CWMListing
 	/**
 	 * Get Fluid Listing
 	 *
-	 * @param   Object                    $items     Items
-	 * @param   Joomla\Registry\Registry  $params    Page Params
-	 * @param   TemplateTable             $template  Template name
-	 * @param   String                    $type      Type of Listing
+	 * @param   Object         $items     Items
+	 * @param   Registry       $params    Page Params
+	 * @param   TemplateTable  $template  Template name
+	 * @param   String         $type      Type of Listing
 	 *
 	 * @return string
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function getFluidListing($items, $params, $template, $type)
@@ -599,13 +604,13 @@ class CWMListing
 	 *
 	 * @param   string  $paramtext  Param Text
 	 *
-	 * @return stdClass
+	 * @return \stdClass
 	 *
 	 * @since 7.0
 	 */
 	public function getListParamsArray($paramtext)
 	{
-		$l = new stdClass;
+		$l = new \stdClass;
 
 		if ($paramtext === 'tdteacherimage')
 		{
@@ -715,7 +720,7 @@ class CWMListing
 	 * @param   array                     $listrows   ?
 	 * @param   array                     $listsorts  ?
 	 * @param   Object                    $item       ?
-	 * @param   Joomla\Registry\Registry  $params     Item Params
+	 * @param   Registry  $params     Item Params
 	 * @param   TemplateTable             $template   Template info
 	 * @param   string                    $oddeven    ?
 	 * @param   integer                   $header     ?
@@ -1065,7 +1070,7 @@ class CWMListing
 	 *
 	 * @param   Object                    $item      Study item
 	 * @param   Object                    $row       Row Setup data
-	 * @param   Joomla\Registry\Registry  $params    Parameters for the study
+	 * @param   Registry  $params    Parameters for the study
 	 * @param   TemplateTable             $template  Template table
 	 * @param   integer                   $header    Header will display if 1, Do not display if 0
 	 * @param   string                    $type      Type of Fluid Data
@@ -1809,7 +1814,7 @@ class CWMListing
 	 *
 	 * @param   String                    $custom    Custom String
 	 * @param   Object                    $item      Study Item
-	 * @param   Joomla\Registry\Registry  $params    Params
+	 * @param   Registry  $params    Params
 	 * @param   TemplateTable             $template  Template Table Data
 	 * @param   String                    $type      Type of data
 	 *
@@ -1841,7 +1846,7 @@ class CWMListing
 	 *
 	 * @param   String                    $custom    Custom String
 	 * @param   Object                    $row       Row Data
-	 * @param   Joomla\Registry\Registry  $params    Params
+	 * @param   Registry  $params    Params
 	 * @param   TemplateTable             $template  Template Data
 	 * @param   String                    $type      Type of element
 	 *
@@ -2057,7 +2062,7 @@ class CWMListing
 	/**
 	 * Get Scripture
 	 *
-	 * @param   \Joomla\Registry\Registry  $params        Item Params
+	 * @param   Registry  $params        Item Params
 	 * @param   object                     $row           Row Info
 	 * @param   int                        $esv           ESV String
 	 * @param   int                        $scripturerow  Scripture Row
@@ -2247,7 +2252,7 @@ class CWMListing
 	 * Get Fluid Media Files
 	 *
 	 * @param   Object                    $item      Study item
-	 * @param   Joomla\Registry\Registry  $params    Params
+	 * @param   Registry  $params    Params
 	 * @param   TemplateTable             $template  Template return
 	 *
 	 * @return string
@@ -2275,7 +2280,7 @@ class CWMListing
 	/**
 	 * Get StudyDate
 	 *
-	 * @param   Joomla\Registry\Registry  $params     Item Params
+	 * @param   Registry  $params     Item Params
 	 * @param   string                    $studydate  Study Date
 	 *
 	 * @return string
@@ -2354,7 +2359,7 @@ class CWMListing
 	 * @param   int     $height  Height
 	 * @param   string  $class   CSS Class
 	 *
-	 * @return boolean|stdClass
+	 * @return boolean|\stdClass
 	 *
 	 * @since 9.0.0
 	 */
@@ -2364,9 +2369,9 @@ class CWMListing
 
 		try
 		{
-			$image = JImage::getImageFileProperties($path);
+			$image = Image::getImageFileProperties($path);
 		}
-		catch (Exception $e)
+		catch (\Exception $e)
 		{
 			$return = false;
 		}
@@ -2403,14 +2408,14 @@ class CWMListing
 	/**
 	 *  Get Link
 	 *
-	 * @param   bool                      $islink      True is a link, False is not
-	 * @param   string                    $id3         Id3 data
-	 * @param   int                       $tid         Template ID
-	 * @param   object                    $smenu       Menu data
-	 * @param   object                    $tmenu       Itemid
-	 * @param   Joomla\Registry\Registry  $params      Params
-	 * @param   object                    $row         Row data
-	 * @param   TemplateTable             $templateid  Template Table Data
+	 * @param   bool           $islink      True is a link, False is not
+	 * @param   string         $id3         Id3 data
+	 * @param   int            $tid         Template ID
+	 * @param   object         $smenu       Menu data
+	 * @param   object         $tmenu       Itemid
+	 * @param   Registry       $params      Params
+	 * @param   object         $row         Row data
+	 * @param   TemplateTable  $templateid  Template Table Data
 	 *
 	 * @return string
 	 *
@@ -2418,7 +2423,7 @@ class CWMListing
 	 */
 	private function getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $row, $templateid)
 	{
-		$input  = new JInput;
+		$input  = new Input;
 		$Itemid = $input->get('Itemid', '', 'int');
 		$view   = $input->getString('view', '');
 		$column = '';
@@ -2430,20 +2435,20 @@ class CWMListing
 
 				if (!$Itemid)
 				{
-					$link = JRoute::_('index.php?option=com_proclaim&view=sermon&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
+					$link = Route::_('index.php?option=com_proclaim&view=sermon&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
 
 					if ($view === 'seriesdisplays')
 					{
-						$link = JRoute::_('index.php?option=com_proclaim&view=seriesidsplay&id=' . $row->slug . '&t=' . $params->get('seriesdetailtemplateid'));
+						$link = Route::_('index.php?option=com_proclaim&view=seriesidsplay&id=' . $row->slug . '&t=' . $params->get('seriesdetailtemplateid'));
 					}
 				}
 				else
 				{
-					$link = JRoute::_('index.php?option=com_proclaim&view=sermon&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
+					$link = Route::_('index.php?option=com_proclaim&view=sermon&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
 
 					if ($view === 'seriesdisplays')
 					{
-						$link = JRoute::_('index.php?option=com_proclaim&view=seriesdisplay&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
+						$link = Route::_('index.php?option=com_proclaim&view=seriesdisplay&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
 					}
 				}
 
@@ -2451,7 +2456,7 @@ class CWMListing
 				break;
 
 			case 3 :
-				$link = JRoute::_('index.php?option=com_proclaim&view=teacher&id=' . $tid . '&t=' . $params->get('teachertemplateid'));
+				$link = Route::_('index.php?option=com_proclaim&view=teacher&id=' . $tid . '&t=' . $params->get('teachertemplateid'));
 
 				if ($tmenu > 0)
 				{
@@ -2465,20 +2470,20 @@ class CWMListing
 				// Case 4 is a details link with tooltip
 				if (!$Itemid)
 				{
-					$link = JRoute::_(JBSMHelperRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
+					$link = Route::_(CWMHelperRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
 				}
 				else
 				{
-					$link = JRoute::_(JBSMHelperRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
+					$link = Route::_(CWMHelperRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
 				}
 
-				$column = JBSMHelper::getTooltip($row, $params, $templateid);
+				$column = CWMHelper::getTooltip($row, $params, $templateid);
 				$column .= '<a href="' . $link . '">';
 
 				break;
 
 			case 5 :
-				$column = JBSMHelper::getTooltip($row, $params, $templateid);
+				$column = CWMHelper::getTooltip($row, $params, $templateid);
 				break;
 
 			case 6 :
@@ -2508,9 +2513,9 @@ class CWMListing
 	/**
 	 * Get Other Links
 	 *
-	 * @param   int                       $id3     Study ID ID
-	 * @param   string                    $islink  Is a Link
-	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   int       $id3     Study ID ID
+	 * @param   string    $islink  Is a Link
+	 * @param   Registry  $params  Item Params
 	 *
 	 * @return string
 	 *
@@ -2569,7 +2574,7 @@ class CWMListing
 	 * Get Listing Exp
 	 *
 	 * @param   object                    $row       Item Info
-	 * @param   Joomla\Registry\Registry  $params    Item Params
+	 * @param   Registry  $params    Item Params
 	 * @param   TemplateTable             $template  Template
 	 *
 	 * @return object
@@ -2589,7 +2594,7 @@ class CWMListing
 		$label  = str_replace('{{studyintro}}', $row->studyintro, $label);
 		$label  = str_replace('{{scripture}}', $this->getScripture($params, $row, 0, 1), $label);
 		$label  = str_replace('{{topics}}', $row->topic_text, $label);
-		$label  = str_replace('{{url}}', JRoute::_('index.php?option=com_proclaim&view=sermon&id=' . $row->id . '&t=' . $template->id), $label);
+		$label  = str_replace('{{url}}', Route::_('index.php?option=com_proclaim&view=sermon&id=' . $row->id . '&t=' . $template->id), $label);
 		$label  = str_replace('{{thumbnail}}', $this->useJImage($image->path, "", "bsms_studyThumbnail" . $row->id, $image->width, $image->height), $label);
 		$label  = str_replace('{{seriestext}}', $row->series_text, $label);
 		$label  = str_replace('{{messagetype}}', $row->message_type, $label);
@@ -2612,7 +2617,7 @@ class CWMListing
 	/**
 	 * Get Passage
 	 *
-	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   Registry  $params  Item Params
 	 * @param   object                    $row     Item Info
 	 *
 	 * @return string
@@ -2665,7 +2670,7 @@ class CWMListing
 	 *
 	 * @param   string                    $link    Link
 	 * @param   object                    $row     Item Info
-	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   Registry  $params  Item Params
 	 *
 	 * @return null|string
 	 *

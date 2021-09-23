@@ -14,7 +14,7 @@ defined('JPATH_PLATFORM') or die;
  * @package  Proclaim.Admin
  * @since    9.0.0
  */
-abstract class JHtmlFancybox
+abstract class Fancybox
 {
 	/**
 	 * @var    array  Array containing information for loaded files

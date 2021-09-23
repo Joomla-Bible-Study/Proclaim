@@ -7,9 +7,15 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Site\Controller;
+
+use CWM\Component\Proclaim\Site\Helper\CWMdownload;
+use CWM\Component\Proclaim\Site\Helper\CWMMedia;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
+use Joomla\Input\Input;
+
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -19,7 +25,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class SermonsController extends BaseController
+class CWMSermonsController extends BaseController
 {
 	/**
 	 * Media Code
@@ -38,13 +44,13 @@ class SermonsController extends BaseController
 	 */
 	public function download()
 	{
-        $input = Factory::getApplication();
+		$input = Factory::getApplication()->input;
 		$task  = $input->get('task');
 		$mid   = $input->getInt('id');
 
 		if ($task === 'download')
 		{
-			$downloader = new JBSMDownload;
+			$downloader = new CWMDownload;
 			$downloader->download($mid);
 		}
 	}
@@ -58,7 +64,7 @@ class SermonsController extends BaseController
 	 */
 	public function avplayer()
 	{
-        $input = Factory::getApplication();
+		$input = Factory::getApplication()->input;
 		$task  = $input->get('task');
 
 		if ($task === 'avplayer')
@@ -77,8 +83,8 @@ class SermonsController extends BaseController
 	 */
 	public function playHit()
 	{
-		$getMedia = new JBSMMedia;
-		$input    = new JInput;
+		$getMedia = new CWMMedia;
+		$input    = new Input;
 		$getMedia->hitPlay($input->get('id', '', 'int'));
 	}
 }

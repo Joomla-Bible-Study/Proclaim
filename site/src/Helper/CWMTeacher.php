@@ -7,13 +7,20 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Site\Helper;
+
 // No Direct Access
 defined('_JEXEC') or die;
+
+use CWM\Component\Proclaim\Administrator\Table\CWMTemplateTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ItemModel;
 use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Router\Route;
+use Joomla\Component\Contact\Site\Model\ContactModel;
+use Joomla\Registry\Registry;
+
 /**
  * Class for Teachers Helper
  *
@@ -27,10 +34,11 @@ class CWMTeacher extends CWMListing
 	/**
 	 * Get Teacher for Fluid layout
 	 *
-	 * @param   Joomla\Registry\Registry  $params  ?
+	 * @param   Registry  $params  ?
 	 *
 	 * @return array
 	 *
+	 * @throws \Exception
 	 * @since    8.0.0
 	 */
 	public function getTeachersFluid($params)
@@ -39,7 +47,7 @@ class CWMTeacher extends CWMListing
 		$id         = $input->get('id', '', 'int');
 		$teachers   = array();
 		$teacherid  = null;
-		$teacherids = new stdClass;
+		$teacherids = new \stdClass;
 		$t          = $params->get('teachertemplateid');
 
 		if (!$t)
@@ -75,9 +83,7 @@ class CWMTeacher extends CWMListing
 			// Check to see if com_contact used instead
 			if ($result->contact)
 			{
-				require_once JPATH_ROOT . '/components/com_contact/models/contact.php';
-
-				/** @var contactModelcontact $contactmodel */
+				/** @var ContactModel $contactmodel */
 				$contactmodel  = ItemModel::getInstance('contact', 'contactModel');
 				$this->contact = $contactmodel->getItem($pk = $result->contact);
 
@@ -113,22 +119,22 @@ class CWMTeacher extends CWMListing
 	/**
 	 * Get Teacher
 	 *
-	 * @param   Joomla\Registry\Registry  $params  Item Params
-	 * @param   int                       $id      Item ID
+	 * @param   Registry  $params  Item Params
+	 * @param   int       $id      Item ID
 	 *
 	 * @return string
 	 *
 	 * @since    8.0.0
-	 * @todo need to redo to bootstrap
+	 * @todo     need to redo to bootstrap
 	 */
 	public function getTeacher($params, $id)
 	{
 		$input       = Factory::getApplication();
-        $JViewLegacy = new HtmlView;
-        $JViewLegacy->loadHelper('image');
+		$JViewLegacy = new HtmlView;
+		$JViewLegacy->loadHelper('image');
 		$teacher    = null;
 		$teacherid  = null;
-		$teacherids = new stdClass;
+		$teacherids = new \stdClass;
 		$t          = $params->get('teachertemplateid');
 
 		if (!$t)
@@ -209,10 +215,10 @@ class CWMTeacher extends CWMListing
 	/**
 	 * Get TeacherList Exp
 	 *
-	 * @param   object         $row       Table info
-	 * @param   object         $params    Item Params
-	 * @param   string         $oddeven   Odd Even
-	 * @param   TableTemplate  $template  Template
+	 * @param   object            $row       Table info
+	 * @param   object            $params    Item Params
+	 * @param   string            $oddeven   Odd Even
+	 * @param   CWMTemplateTable  $template  Template
 	 *
 	 * @return object
 	 *
@@ -222,10 +228,9 @@ class CWMTeacher extends CWMListing
 	{
 		$JViewLegacy = new HtmlView;
 		$JViewLegacy->loadHelper('image');
-		$images     = new CWMImages;
-		$imagelarge = $images->getTeacherThumbnail($row->teacher_image, $row->image);
+		$imagelarge = CWMImages::getTeacherThumbnail($row->teacher_image, $row->image);
 
-		$imagesmall = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
+		$imagesmall = CWMImages::getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
 
 		$label = $params->get('teacher_templatecode');
 		$label = str_replace('{{teacher}}', $row->teachername, $label);
@@ -242,7 +247,7 @@ class CWMTeacher extends CWMListing
 		);
 		$label = str_replace('{{url}}', JRoute::_('index.php?option=com_proclaim&amp;view=teacherdisplay&amp;id=' .
 			$row->id . '&amp;t=' . $template
-			), $label
+		), $label
 		);
 
 		return $label;
@@ -251,8 +256,8 @@ class CWMTeacher extends CWMListing
 	/**
 	 * Get Teacher Details Exp
 	 *
-	 * @param   object                    $row     Table Row
-	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   object    $row     Table Row
+	 * @param   Registry  $params  Item Params
 	 *
 	 * @return object
 	 *
@@ -264,10 +269,9 @@ class CWMTeacher extends CWMListing
 		$JViewLegacy->loadHelper('image');
 
 		// Get the image folders and images
-		$images     = new CWMImages;
-		$imagelarge = $images->getTeacherThumbnail($row->teacher_image, $row->image);
+		$imagelarge = CWMImages::getTeacherThumbnail($row->teacher_image, $row->image);
 
-		$imagesmall = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
+		$imagesmall = CWMImages::getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
 
 		$label = $params->get('teacher_detailtemplate');
 		$label = str_replace('{{teacher}}', $row->teachername, $label);
@@ -291,8 +295,8 @@ class CWMTeacher extends CWMListing
 	/**
 	 * Get Teacher Studies Exp
 	 *
-	 * @param   int                       $id      Item ID
-	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   int       $id      Item ID
+	 * @param   Registry  $params  Item Params
 	 *
 	 * @return string
 	 *
@@ -337,13 +341,12 @@ class CWMTeacher extends CWMListing
 
 		$user   = Factory::getUser();
 		$groups = $user->getAuthorisedViewLevels();
-		$count  = count($items);
 
-		for ($i = 0; $i < $count; $i++)
+		foreach ($items as $i => $iValue)
 		{
-			if ($items[$i]->access > 1)
+			if ($iValue->access > 1)
 			{
-				if (!in_array($items[$i]->access, $groups))
+				if (!in_array($iValue->access, $groups))
 				{
 					unset($items[$i]);
 				}
@@ -372,7 +375,7 @@ class CWMTeacher extends CWMListing
 		$params->get('headercode');
 		$j = 0;
 
-		foreach ($items AS $row)
+		foreach ($items as $row)
 		{
 			if ($j > $studieslimit)
 			{

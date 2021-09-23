@@ -7,10 +7,20 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Site\Helper;
+
 // No Direct Access
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
+use CWM\Component\Proclaim\Administrator\Table\CWMTemplateTable;
+use JHtml;
+use Joomla\CMS\Image\Image;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
 /**
@@ -30,13 +40,13 @@ class CWMMedia
 	/**
 	 * Return Fluid Media row
 	 *
-	 * @param   Object                    $media     Media info
-	 * @param   Joomla\Registry\Registry  $params    Params
-	 * @param   TableTemplate             $template  Template Table
+	 * @param   Object            $media     Media info
+	 * @param   Registry          $params    Params
+	 * @param   CWMTemplateTable  $template  Template Table
 	 *
 	 * @return string
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 9.0.0
 	 */
 	public function getFluidMedia($media, $params, $template)
@@ -108,16 +118,16 @@ class CWMMedia
 			$link_type = 0;
 		}
 
-		if (isset($media) &&  $link_type < 2 && $params->get('show_filesize') > 0)
+		if (isset($media) && $link_type < 2 && $params->get('show_filesize') > 0)
 		{
 			$file_size = $media->params->get('size', '0');
 
 			if (!$file_size && $link_type !== '0')
 			{
-				$file_size = JBSMHelper::getRemoteFileSize(
-					JBSMHelper::MediaBuildUrl($media->sparams->get('path'), $media->params->get('filename'), $params, true)
+				$file_size = CWMHelper::getRemoteFileSize(
+					CWMHelper::MediaBuildUrl($media->sparams->get('path'), $media->params->get('filename'), $params, true)
 				);
-				JBSMHelper::SetFilesize($media->id, $file_size);
+				CWMHelper::SetFilesize($media->id, $file_size);
 			}
 
 			// Todo may be able to run this through a functions as this looks like duplicate code of 849
@@ -198,9 +208,9 @@ class CWMMedia
 	/**
 	 * Return download link
 	 *
-	 * @param   Object                    $media     Media
-	 * @param   Joomla\Registry\Registry  $params    Params
-	 * @param   TableTemplate             $template  Template ID
+	 * @param   Object            $media     Media
+	 * @param   Registry          $params    Params
+	 * @param   CWMTemplateTable  $template  Template ID
 	 *
 	 * @return string
 	 *
@@ -226,12 +236,12 @@ class CWMMedia
 		elseif ($params->get('default_download_image'))
 		{
 			$d_image        = $params->get('default_download_image');
-			$download_image = $this->useJImage($d_image, JText::_('JBS_MED_DOWNLOAD'));
+			$download_image = $this->useJImage($d_image, Text::_('JBS_MED_DOWNLOAD'));
 		}
 		else
 		{
 			$d_image        = 'media/com_proclaim/images/download.png';
-			$download_image = $this->useJImage($d_image, JText::_('JBS_MED_DOWNLOAD'));
+			$download_image = $this->useJImage($d_image, Text::_('JBS_MED_DOWNLOAD'));
 		}
 
 		if ($media->params->get('link_type'))
@@ -240,7 +250,7 @@ class CWMMedia
 		}
 
 		if (($params->get('download_show')
-			&& (!$media->params->get('link_type')))
+				&& (!$media->params->get('link_type')))
 			|| $params->get('simple_mode') === '1'
 			|| $params->get('sermonstemplate') === 'easy')
 		{
@@ -258,19 +268,19 @@ class CWMMedia
 			}
 			else
 			{
-				$url = JBSMHelper::MediaBuildUrl($media->sparams->get('path'), $media->params->get('filename'), $params, true);
+				$url = CWMHelper::MediaBuildUrl($media->sparams->get('path'), $media->params->get('filename'), $params, true);
 
 				if ($media->params->get('size') === '0')
 				{
-					$size = JBSMHelper::getRemoteFileSize($url);
-					JBSMHelper::SetFilesize($media->id, $size);
+					$size = CWMHelper::getRemoteFileSize($url);
+					CWMHelper::SetFilesize($media->id, $size);
 				}
 				else
 				{
 					$size = $media->params->get('size');
 				}
 
-				$url = JBSMHelper::remove_http($url);
+				$url = CWMHelper::remove_http($url);
 
 				$downloadlink = '<a href="http://christianwebministries.org/router.php?file=' .
 					$url . '&amp;size=' . $size . '">';
@@ -454,7 +464,7 @@ class CWMMedia
 	 * @param   string  $path  Path to file
 	 * @param   string  $alt   Accessibility string
 	 *
-	 * @return boolean|string
+	 * @return string
 	 *
 	 * @since 9.0.0
 	 */
@@ -467,21 +477,21 @@ class CWMMedia
 
 		try
 		{
-			$return = JImage::getImageFileProperties($path);
+			$return = Image::getImageFileProperties($path);
 		}
-		catch (Exception $e)
+		catch (\Exception $e)
 		{
 			return $alt;
 		}
 
-		return '<img src="' . JUri::base() . $path . '" alt="' . $alt . '" ' . $return->attributes . ' >';
+		return '<img src="' . Uri::base() . $path . '" alt="' . $alt . '" ' . $return->attributes . ' >';
 	}
 
 	/**
 	 * Set up Player Attributes
 	 *
-	 * @param   Joomla\Registry\Registry  $params  Params
-	 * @param   object                    $media   Media info
+	 * @param   Registry  $params  Params
+	 * @param   object    $media   Media info
 	 *
 	 * @return object
 	 *
@@ -489,7 +499,7 @@ class CWMMedia
 	 */
 	public function getPlayerAttributes($params, $media)
 	{
-		$player               = new stdClass;
+		$player               = new \stdClass;
 		$player->playerwidth  = $params->get('player_width');
 		$player->playerheight = $params->get('player_height');
 
@@ -611,10 +621,10 @@ class CWMMedia
 	/**
 	 * Setup Player Code.
 	 *
-	 * @param   Joomla\Registry\Registry  $params  Params are the merged of system and items.
-	 * @param   object                    $player  Player code
-	 * @param   String                    $image   Image info
-	 * @param   object                    $media   Media
+	 * @param   Registry  $params  Params are the merged of system and items.
+	 * @param   object    $player  Player code
+	 * @param   String    $image   Image info
+	 * @param   object    $media   Media
 	 *
 	 * @return string
 	 *
@@ -627,13 +637,13 @@ class CWMMedia
 		$params = clone $params;
 		$params->merge($media->params);
 
-		$input    = new JInput;
+		$input    = new Input;
 		$template = $input->getInt('t', '1');
 
 		// Here we get more information about the particular media file
 		$filesize = $this->getFluidFilesize($media, $params);
 
-		$path = JBSMHelper::MediaBuildUrl($media->sparams->get('path'), $params->get('filename'), $params, true);
+		$path = CWMHelper::MediaBuildUrl($media->sparams->get('path'), $params->get('filename'), $params, true);
 
 		switch ($player->player)
 		{
@@ -645,7 +655,7 @@ class CWMMedia
 					case 2: // New window
 						$return     = base64_encode($path);
 						$playercode = '<a href="javascript:;" onclick="window.open(\'index.php?option=com_proclaim&amp;task=playHit&amp;return=' .
-							$return . '&amp;' . JSession::getFormToken() . '=1\')" title="' .
+							$return . '&amp;' . Session::getFormToken() . '=1\')" title="' .
 							$media->params->get("media_button_text") . ' - ' . $media->comment . ' '
 							. $filesize . '">' . $image . '</a>';
 						break;
@@ -790,7 +800,7 @@ class CWMMedia
 
 		if ($params->get('media_popout_yes', true))
 		{
-			$popout = $params->get('media_popout_text', JText::_('JBS_CMN_POPOUT'));
+			$popout = $params->get('media_popout_text', Text::_('JBS_CMN_POPOUT'));
 		}
 		else
 		{
@@ -811,15 +821,15 @@ class CWMMedia
 			$player->playerheight . '" autostart="' . $params->get('autostart', false) . '" controls="' .
 			$params->get('controls') . '"" data-image="' . $params->get('jwplayer_image') . '" data-mute="' .
 			$params->get('jwplayer_mute') . '" data-logo="' . $params->get('jwplayer_logo') . '" data-logolink="' .
-			$params->get('jwplayer_logolink', JUri::base()) . '">' .
+			$params->get('jwplayer_logolink', Uri::base()) . '">' .
 			$image . '</a>';
 	}
 
 	/**
 	 * return $table
 	 *
-	 * @param   Object                    $media   Media info
-	 * @param   Joomla\Registry\Registry  $params  Params
+	 * @param   Object    $media   Media info
+	 * @param   Registry  $params  Params
 	 *
 	 * @return null|string
 	 *
@@ -841,8 +851,8 @@ class CWMMedia
 
 		if ($file_size === 0)
 		{
-			$file_size = JBSMHelper::getRemoteFileSize(JBSMHelper::MediaBuildUrl($media->sparams->get('path'), $params->get('filename'), $params, true));
-			JBSMHelper::SetFilesize($media->id, $file_size);
+			$file_size = CWMHelper::getRemoteFileSize(CWMHelper::MediaBuildUrl($media->sparams->get('path'), $params->get('filename'), $params, true));
+			CWMHelper::SetFilesize($media->id, $file_size);
 		}
 
 		if ($file_size !== 0)
@@ -851,28 +861,28 @@ class CWMMedia
 			{
 				case  $file_size < 1024 :
 					$this->fsize = $file_size;
-					$file_size .= ' Bytes';
+					$file_size   .= ' Bytes';
 					break;
 				case $file_size < 1048576 :
-					$file_size /= 1024;
-					$file_size = number_format($file_size, 0);
+					$file_size   /= 1024;
+					$file_size   = number_format($file_size, 0);
 					$this->fsize = $file_size;
-					$file_size .= ' KB';
+					$file_size   .= ' KB';
 					break;
 				case $file_size < 1073741824 :
-					$file_size /= 1024;
-					$file_size /= 1024;
-					$file_size = number_format($file_size, 1);
+					$file_size   /= 1024;
+					$file_size   /= 1024;
+					$file_size   = number_format($file_size, 1);
 					$this->fsize = $file_size;
-					$file_size .= ' MB';
+					$file_size   .= ' MB';
 					break;
 				case $file_size > 1073741824 :
-					$file_size /= 1024;
-					$file_size /= 1024;
-					$file_size /= 1024;
-					$file_size = number_format($file_size, 1);
+					$file_size   /= 1024;
+					$file_size   /= 1024;
+					$file_size   /= 1024;
+					$file_size   = number_format($file_size, 1);
 					$this->fsize = $file_size;
-					$file_size .= ' GB';
+					$file_size   .= ' GB';
 					break;
 			}
 
@@ -896,12 +906,12 @@ class CWMMedia
 	/**
 	 * Get duration
 	 *
-	 * @param   Object                    $row     Table Row info
-	 * @param   Joomla\Registry\Registry  $params  Params
+	 * @param   Object    $row     Table Row info
+	 * @param   Registry  $params  Params
 	 *
 	 * @return void
 	 *
-	 * @since 9.0.0
+	 * @since     9.0.0
 	 * @deprecate 9.2.7
 	 */
 	public function getFluidDuration($row, $params)
@@ -1005,11 +1015,11 @@ class CWMMedia
 
 		if ($isonlydash)
 		{
-			$mediacode = substr_replace($mediacode, 'http://' . JBSMHelper::MediaBuildUrl($media->spath, $media->filename, null), $dashposition, 1);
+			$mediacode = substr_replace($mediacode, 'http://' . CWMHelper::MediaBuildUrl($media->spath, $media->filename, null), $dashposition, 1);
 		}
 		elseif ($dashposition)
 		{
-			$mediacode = substr_replace($mediacode, JBSMHelper::MediaBuildUrl($media->spath, $media->filename, null), $bracketend - 1, 1);
+			$mediacode = substr_replace($mediacode, CWMHelper::MediaBuildUrl($media->spath, $media->filename, null), $bracketend - 1, 1);
 		}
 
 		return $mediacode;

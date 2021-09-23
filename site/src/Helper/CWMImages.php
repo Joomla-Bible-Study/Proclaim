@@ -75,7 +75,7 @@ class CWMImages
 	 */
 	public static function getImagePath($path)
 	{
-		$tmp = new stdClass;
+		$tmp = new \stdClass;
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');
 

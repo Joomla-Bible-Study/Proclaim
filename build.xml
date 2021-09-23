@@ -255,7 +255,7 @@
 	<!-- Create symbolic links for the development state -->
 	<target name="dev.init">
 		<echo message="Initializing a development state"/>
-		<symlink target="${basedir}/biblestudy.xml" link="${basedir}/admin/biblestudy.xml" overwrite="true"/>
+		<symlink target="${basedir}/biblestudy.xml" link="/admin/proclaim.xml" overwrite="true"/>
 		<symlink target="/proclaim.script.php" link="${basedir}/admin/biblestudy.script.php"
                  overwrite="true"/>
 		<mkdir dir="${basedir}/media/css/site"/>
@@ -266,7 +266,7 @@
 	<!-- Clean up symbolic links from the development state -->
 	<target name="dev.clean">
 		<echo message="Cleaning up development state"/>
-		<delete file="${basedir}/admin/biblestudy.xml"/>
+		<delete file="/admin/proclaim.xml"/>
 		<delete file="${basedir}/admin/biblestudy.script.php"/>
 		<delete file="${basedir}/media/css/site/biblestudy.css"/>
 

@@ -131,8 +131,8 @@ class CWMAssetsController extends FormController
 
 		if (empty($stack) || !is_array($stack))
 		{
-			JBSMHelper::clearcache('site');
-			JBSMHelper::clearcache('administrator');
+			CWMHelper::clearcache('site');
+			CWMHelper::clearcache('administrator');
 			$session->set('asset_stack', '', 'JBSM');
 
 			/** @var BibleStudyModelAssets $model */
@@ -162,8 +162,8 @@ class CWMAssetsController extends FormController
 		// Check for request forgeries.
 		JSession::checkToken('get') or jexit(JText::_('JINVALID_TOKEN'));
 
-		JBSMHelper::clearcache('administrator');
-		JBSMHelper::clearcache('site');
+		CWMHelper::clearcache('administrator');
+		CWMHelper::clearcache('site');
 		$session = Factory::getSession();
 		$session->set('assat_stack', '', 'JBSM');
 		$app = Factory::getApplication();

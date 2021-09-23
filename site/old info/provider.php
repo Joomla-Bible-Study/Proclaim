@@ -14,8 +14,8 @@ return new class implements ServiceProviderInterface {
 
 	public function register(Container $container): void
 	{
-		$container->registerServiceProvider(new MVCFactory('\\CWM\\Component\\biblestudy'));
-		$container->registerServiceProvider(new ComponentDispatcherFactory('\\CWM\\Component\\biblestudy'));
+		$container->registerServiceProvider(new MVCFactory('\\CWM\\Component\\Proclaim'));
+		$container->registerServiceProvider(new ComponentDispatcherFactory('\\CWM\\Component\\Proclaim'));
 		$container->set(
 			ComponentInterface::class,
 			function (Container $container) {

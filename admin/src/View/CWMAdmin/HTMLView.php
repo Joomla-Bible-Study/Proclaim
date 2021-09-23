@@ -7,6 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 // Check to ensure this file is included in Joomla!
 
 namespace CWM\Component\Proclaim\Administrator\View\CWMAdmin;
@@ -15,9 +16,9 @@ defined('_JEXEC') or die;
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use CWM\Component\Proclaim\Administrator\Lib\CWMStats;
-use Joomla\CMS\HTML\HTMLHelper as JHtml;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\HTML\HTMLHelper as JHtml;
 use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -207,13 +208,14 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   11.1
 	 * @see     fetch()
 	 */
 	public function display($tpl = null)
 	{
-		$language = Factory::getLanguage();
+		$app = Factory::getApplication();
+		$language = $app->getLanguage();
 		$language->load('com_installer');
 
 		// Get data from the model
@@ -223,17 +225,15 @@ class HTMLView extends BaseHtmlView
 		$this->canDo = CWMProclaimHelper::getActions($this->item->id);
 
 		// End for database
-		$config         = Factory::getApplication();
-		$this->tmp_dest = $config->get('tmp_path');
+		$this->tmp_dest = $app->get('tmp_path');
 
 		$stats             = new CWMStats;
 		$this->playerstats = CWMStats::players();
-		$this->assets      = Factory::getApplication()->input->get('checkassets', null, 'get');
+		$this->assets      = $app->input->get('checkassets', null, 'get');
 		$popups            = CWMStats::popups();
 		$this->popups      = $popups;
 
 		// Get the list of backup files
-		jimport('joomla.filesystem.folder');
 		$path = JPATH_SITE . '/media/com_proclaim/backup';
 
 		if (Folder::exists($path))
@@ -270,9 +270,9 @@ class HTMLView extends BaseHtmlView
 
 		foreach ($extensions as $extension)
 		{
-			if ($extension->element == 'com_sermonspeaker')
+			if ($extension->element === 'com_sermonspeaker')
 			{
-				$this->ss = '<a href="index.php?option=com_proclaim&view=administrator&layout=edit&id=1&task=cwmadmin.convertSermonSpeaker">'
+				$this->ss = '<a href="index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1&task=cwmadmin.convertSermonSpeaker">'
 					. Text::_('JBS_IBM_CONVERT_SERMON_SPEAKER') . '</a>';
 			}
 			else
@@ -280,9 +280,9 @@ class HTMLView extends BaseHtmlView
 				$this->ss = Text::_('JBS_IBM_NO_SERMON_SPEAKER_FOUND');
 			}
 
-			if ($extension->element == 'com_preachit')
+			if ($extension->element === 'com_preachit')
 			{
-				$this->pi = '<a href="index.php?option=com_proclaim&view=administrator&layout=edit&id=1&task=cwmadmin.convertPreachIt">'
+				$this->pi = '<a href="index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1&task=cwmadmin.convertPreachIt">'
 					. Text::_('JBS_IBM_CONVERT_PREACH_IT') . '</a>';
 			}
 			else
@@ -291,7 +291,7 @@ class HTMLView extends BaseHtmlView
 			}
 		}
 
-		$jbsversion    = Installer::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_proclaim/biblestudy.xml');
+		$jbsversion    = Installer::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.xml');
 		$this->version = $jbsversion['version'];
 
 		if (!(strncmp($this->schemaVersion, $this->version, 5) === 0))
@@ -374,7 +374,7 @@ class HTMLView extends BaseHtmlView
 		switch ($component)
 		{
 			case 'sermonspeaker':
-				$data = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_sermonspeaker/sermonspeaker.xml');
+				$data = Installer::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_sermonspeaker/sermonspeaker.xml');
 
 				if ($data)
 				{
@@ -385,7 +385,7 @@ class HTMLView extends BaseHtmlView
 				break;
 
 			case 'preachit':
-				$data = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_preachit/preachit.xml');
+				$data = Installer::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_preachit/preachit.xml');
 
 				if ($data)
 				{

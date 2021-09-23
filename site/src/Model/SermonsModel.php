@@ -7,14 +7,18 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Site\Model;
+
+use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
+use CWM\Component\Proclaim\Administrator\Helper\CWMTranslated;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\ListModel;
-use Joomla\CMS\Factory;
-use CWM\Component\Proclaim\Site\Helper\CWMPagebuilder;
-use CWM\Component\Proclaim\Administrator\Helper\CWMTranslated;
-use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
-use Joomla\CMS\Language\Multilanguage;
+use Joomla\Database\DatabaseQuery;
+use Joomla\Input\Input;
+
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -24,17 +28,18 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class CWMSermonsModel extends ListModel
+class SermonsModel extends ListModel
 {
 	/**
-	 * @var   JInput $imput Inpute
+	 * @var   Input $imput Inpute
 	 *
 	 * @since 7.0.0
 	 */
 	public $input;
 
 	/** @var string Needed for context for Populate State
-	 * @since 9.0.14 */
+	 * @since 9.0.14
+	 */
 	public $context = 'com_proclaim.sermons.list';
 
 	/**
@@ -42,8 +47,9 @@ class CWMSermonsModel extends ListModel
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
-	 * @see     JController
+	 * @throws \Exception
 	 * @since   11.1
+	 * @see     JController
 	 */
 	public function __construct($config = array())
 	{
@@ -88,7 +94,7 @@ class CWMSermonsModel extends ListModel
 		{
 			$item->bookname   = Text::_($item->bookname);
 			$item->topic_text = CWMTranslated::getTopicItemTranslated($item);
-			$item->bookname2   = Text::_($item->bookname2);
+			$item->bookname2  = Text::_($item->bookname2);
 			$item->topic_text = CWMTranslated::getTopicItemTranslated($item);
 		}
 
@@ -103,7 +109,7 @@ class CWMSermonsModel extends ListModel
 	 * @return string
 	 *
 	 * @since 7.0
-	 * @todo Need to see if we can use this out of a helper to reduce code.
+	 * @todo  Need to see if we can use this out of a helper to reduce code.
 	 */
 	public function getDownloads($id)
 	{
@@ -170,18 +176,17 @@ class CWMSermonsModel extends ListModel
 	 *
 	 * @return  void
 	 *
+	 * @throws  \Exception
 	 * @since   11.1
-	 * @throws  Exception
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		/** @type JApplicationSite $app */
 		$app = Factory::getApplication();
 
 		$forcedLanguage = $app->input->get('forcedLanguage', '', 'cmd');
 
 		// Load the parameters.
-		$params   = $app->getParams();
+		$params = $app->getParams();
 
 		$template = CWMParams::getTemplateparams();
 		$admin    = CWMParams::getAdmin();
@@ -194,16 +199,16 @@ class CWMSermonsModel extends ListModel
 
 		if (!$t)
 		{
-			$t     = $this->input->get('t', 1, 'int');
+			$t = $this->input->get('t', 1, 'int');
 		}
 
-		$landing = 0;
+		$landing       = 0;
 		$this->landing = 0;
-		$landingcheck = $this->input->get('sendingview');
+		$landingcheck  = $this->input->get('sendingview');
 
 		if ($landingcheck === 'landing')
 		{
-			$landing = 1;
+			$landing       = 1;
 			$this->landing = 1;
 			$this->setState('sendingview', '');
 		}
@@ -367,17 +372,17 @@ class CWMSermonsModel extends ListModel
 	/**
 	 * Build an SQL query to load the list data
 	 *
-	 * @return  JDatabaseQuery
+	 * @return  DatabaseQuery
 	 *
+	 * @throws  \Exception
 	 * @since   7.0
-	 * @throws  Exception
 	 */
 	protected function getListQuery()
 	{
-		$user            = Factory::getUser();
-		$groups          = implode(',', $user->getAuthorisedViewLevels());
-		$db              = $this->getDbo();
-		$query           = parent::getListQuery();
+		$user   = Factory::getUser();
+		$groups = implode(',', $user->getAuthorisedViewLevels());
+		$db     = $this->getDbo();
+		$query  = parent::getListQuery();
 		$query->select(
 			$this->getState(
 				'list.select', 'study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
@@ -461,7 +466,7 @@ class CWMSermonsModel extends ListModel
 		}
 
 		// Begin the filters for menu items
-		$params      = $this->getState('params');
+		$params = $this->getState('params');
 
 		$filters_group = [];
 
@@ -683,7 +688,7 @@ class CWMSermonsModel extends ListModel
 
 		if (empty($orderCol) || $orderCol === " ")
 		{
-			$orderCol  = $this->state->get('list.ordering', 'study.studydate');
+			$orderCol = $this->state->get('list.ordering', 'study.studydate');
 
 			// Set order by menu if set. New Default is blank as of 9.2.5
 			if ($this->state->params->get('order') === '2')

@@ -547,7 +547,7 @@ class CWMAdminController extends FormController
 
 		$convert      = new CWMSSConvert;
 		$ssconversion = $convert->convertSS();
-		$this->setRedirect('index.php?option=com_proclaim&view=administrator&layout=edit&id=1', $ssconversion);
+		$this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $ssconversion);
 	}
 
 	/**
@@ -564,7 +564,7 @@ class CWMAdminController extends FormController
 
 		$convert      = new CWMPIconvert;
 		$piconversion = $convert->convertPI();
-		$this->setRedirect('index.php?option=com_proclaim&view=administrator&layout=edit&id=1', $piconversion);
+		$this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $piconversion);
 	}
 
 	/**
@@ -627,7 +627,7 @@ class CWMAdminController extends FormController
 
 		$update = CWMAlias::updateAlias();
 		$this->setMessage(Text::_('JBS_ADM_ALIAS_ROWS') . $update);
-		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=administrator&layout=edit&id=1', false));
+		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', false));
 	}
 
 	/**
@@ -942,6 +942,6 @@ class CWMAdminController extends FormController
 		}
 
 		// Redirect back to the form in all cases
-		$this->setRedirect(Route::_('index.php?option=com_biblestudy&view=administrator&layout=edit', false));
+		$this->setRedirect(Route::_('index.php?option=com_biblestudy&view=cwmadmin&layout=edit', false));
 	}
 }
