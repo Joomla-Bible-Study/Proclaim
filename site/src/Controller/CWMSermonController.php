@@ -26,7 +26,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class SermonController extends BaseController
+class CWMSermonController extends BaseController
 {
 	/**
 	 * View item

@@ -22,7 +22,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CommentformController extends FormController
+class CWMCommentformController extends FormController
 {
 	/**
 	 * View item

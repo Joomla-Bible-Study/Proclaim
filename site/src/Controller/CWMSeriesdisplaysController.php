@@ -21,7 +21,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Site
  * @since    7.0.0
  */
-class SeriesdisplaysController extends BaseController
+class CWMSeriesdisplaysController extends BaseController
 {
 	/**
 	 * Proxy for getModel

@@ -28,7 +28,7 @@ JLoader::register('ProclaimControllerMessage', JPATH_ADMINISTRATOR . '/component
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class MessageformController extends BaseController
+class CWMMessageformController extends BaseController
 {
 	/**
 	 * View item

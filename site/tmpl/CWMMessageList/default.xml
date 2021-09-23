@@ -9,7 +9,7 @@
     <fields name="params">
         <fieldset name="basic"
                   label="JBS_MNU_STUDIES_LIST_LAYOUT"
-                  addfieldpath="/administrator/components/ccom_proclaim/src/Field">
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
 
             <field name="mteacher_id"
                    type="teacherlist"

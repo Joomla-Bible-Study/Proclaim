@@ -24,7 +24,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class MediafileformController extends FormController
+class CWMMediafileformController extends FormController
 {
 	/**
 	 * View item

@@ -25,7 +25,7 @@ JLoader::register('ProclaimControllerComments', JPATH_ADMINISTRATOR . '/componen
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CommentlistController extends BaseController
+class CWMCommentlistController extends BaseController
 {
 	/**
 	 * View item
