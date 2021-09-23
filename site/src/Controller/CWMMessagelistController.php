@@ -1,41 +1,44 @@
 <?php
 /**
- * Controller for MediaFiles
+ * Controller Messages
  *
  * @package    BibleStudy.Site
  * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Site\CWMMessagelistController;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Controller\BaseController;
 // No Direct Access
 defined('_JEXEC') or die;
 
+// Base this model on the backend version.
+JLoader::register('ProclaimControllerMessages', JPATH_ADMINISTRATOR . '/components/com_proclaim/controllers/MessagesController.php');
+
 /**
- * Controller for MediaFiles
+ * Controller class for Messages
  *
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class MediafilelistController extends BaseController
+class MessagelistController extends BaseController
 {
 	/**
 	 * View item
 	 *
 	 * @since    1.6
 	 */
-	protected $view_item = 'mediafileform';
+	protected $view_item = 'messageform';
 
 	/**
 	 * View list
 	 *
 	 * @since    1.6
 	 */
-	protected $view_list = 'mediafilelist';
+	protected $view_list = 'messagelist';
 
 	/**
 	 * @var        string    The prefix to use with controller messages.
@@ -54,10 +57,7 @@ class MediafilelistController extends BaseController
 	 *
 	 * @since 7.0
 	 */
-	public function &getModel(
-		$name = 'Mediafileform',
-		$prefix = 'ProclaimModel',
-		$config = array('ignore_request' => true))
+	public function &getModel($name = 'Messagelist', $prefix = 'ProclaimModel', $config = array('ignore_request' => true))
 	{
 		$model = parent::getModel($name, $prefix, $config);
 

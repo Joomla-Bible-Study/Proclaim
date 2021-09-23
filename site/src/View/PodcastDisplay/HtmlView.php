@@ -7,7 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.christianwebministries.org
  * */
-namespace CWM\Component\Proclaim\Site\View\PodcastList;
+namespace CWM\Component\Proclaim\Site\View\PodcastDisplay;
 // No Direct Access
 defined('_JEXEC') or die;
 
