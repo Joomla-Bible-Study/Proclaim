@@ -8,6 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 namespace CWM\Component\Proclaim\Site\Helper;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
 // No direct access
@@ -99,7 +100,7 @@ class CWMHelperRoute
 		{
 			self::$lookup = array();
 
-			$component = JComponentHelper::getComponent('com_proclaim');
+			$component = ComponentHelper::getComponent('com_proclaim');
 			$items     = $menus->getItems('component_id', $component->id);
 
 			foreach ($items as $item)

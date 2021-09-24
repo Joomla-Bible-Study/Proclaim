@@ -35,7 +35,7 @@ class CWMRelatedstudies
 	 * Get Related
 	 *
 	 * @param   object                    $row     JTable
-	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   Registry  $params  Item Params
 	 *
 	 * @return boolean
 	 *
@@ -835,7 +835,7 @@ class CWMRelatedstudies
 	/**
 	 * Get Studies
 	 *
-	 * @return JObject
+	 * @return Object
 	 *
 	 * @since    7.2
 	 */

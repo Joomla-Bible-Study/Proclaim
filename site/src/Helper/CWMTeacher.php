@@ -144,12 +144,12 @@ class CWMTeacher extends CWMListing
 
 		$viewtype = $input->get('view');
 
-		if ($viewtype == 'sermons')
+		if ($viewtype == 'CWmSermons')
 		{
 			$teacherids = explode(",", $params->get('listteachers'));
 		}
 
-		if ($viewtype == 'sermon' && $id != 0)
+		if ($viewtype == 'CWMSermon' && $id != 0)
 		{
 			$teacherids->id = $id;
 		}
@@ -188,7 +188,7 @@ class CWMTeacher extends CWMListing
 
 			if ($params->get('teacherlink') > 0)
 			{
-				$teacher .= '<a href="' . Route::_('index.php?option=com_proclaim&amp;view=teacher&amp;id=' . $tresult->id . '&amp;t=' . $t) . '">';
+				$teacher .= '<a href="' . Route::_('index.php?option=com_proclaim&amp;view=CWMTeacher&amp;id=' . $tresult->id . '&amp;t=' . $t) . '">';
 			}
 
 			$teacher .= $tresult->teachername;
@@ -245,7 +245,7 @@ class CWMTeacher extends CWMListing
 		$label = str_replace('{{thumbnail}}', '<img src="' . $imagesmall->path . '" width="' . $imagesmall->width .
 			'" height="' . $imagesmall->height . '" />', $label
 		);
-		$label = str_replace('{{url}}', JRoute::_('index.php?option=com_proclaim&amp;view=teacherdisplay&amp;id=' .
+		$label = str_replace('{{url}}', JRoute::_('index.php?option=com_proclaim&amp;view=CWMTeacherDisplay&amp;id=' .
 			$row->id . '&amp;t=' . $template
 		), $label
 		);

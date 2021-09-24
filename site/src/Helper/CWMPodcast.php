@@ -12,6 +12,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 defined('_JEXEC') or die;
 jimport('joomla.html.parameter');
 
+use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
@@ -21,6 +22,7 @@ use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\Client\ClientHelper;
+
 /* Put in do to this file is used in a plugin. */
 
 // Always load CWM API if it exists.
@@ -62,7 +64,7 @@ class CWMPodcast
 	 *
 	 * @return boolean|string
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 8.0.0
 	 */
 	public function makePodcasts()
@@ -620,7 +622,7 @@ class CWMPodcast
 	 *
 	 * @return boolean|string
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 7.0.0
 	 */
 	public function writeFile(string $file, string $filecontent)
@@ -663,7 +665,7 @@ class CWMPodcast
 	 */
 	public function formatTime(int $duration): object //as hh:mm:ss
 	{
-		$time          = new StdClass();
+		$time          = new \stdClass();
 		$time->hours   = floor($duration / 3600);
 		$time->minutes = floor(($duration - ($time->hours * 3600)) / 60);
 		$time->seconds = $duration - ($time->hours * 3600) - ($time->minutes * 60);
