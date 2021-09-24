@@ -7,18 +7,19 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Site\Model;
+
 // No Direct Access
 defined('_JEXEC') or die;
 
-use Joomla\Registry\Registry;
-use Joomla\CMS\MVC\Model\ItemModel;
+use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
+use CWM\Component\Proclaim\Administrator\Helper\CWMTranslated;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use CWM\Component\Proclaim\Administrator\Helper\CWMTranslated;
-use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
-use Joomla\CMS\Language\LanguageHelper;
-use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\MVC\Model\ItemModel;
+use Joomla\Registry\Registry;
+
 /**
  * Model class for Sermon
  *
@@ -64,14 +65,14 @@ class CWMSermonModel extends ItemModel
 	 *
 	 * @param   int  $pk  The id of the study.
 	 *
-	 * @since 7.1.0
 	 * @return    mixed    Menu item data object on success, false on failure.
 	 *
+	 * @since 7.1.0
 	 * @todo  this look like it is not needed. bcc
 	 */
 	public function &getItem($pk = null)
 	{
-		$user	= Factory::getUser();
+		$user = Factory::getUser();
 
 		// Initialise variables.
 		$pk = (!empty($pk)) ? $pk : (int) $this->getState('study.id');
@@ -260,7 +261,7 @@ class CWMSermonModel extends ItemModel
 	 * @access  public
 	 * @return object
 	 *
-	 * @since 7.0
+	 * @since   7.0
 	 */
 	public function getComments()
 	{
@@ -282,7 +283,7 @@ class CWMSermonModel extends ItemModel
 	 * @access    public
 	 * @return    boolean    True on success
 	 *
-	 * @since 7.0
+	 * @since     7.0
 	 */
 	public function storecomment()
 	{
