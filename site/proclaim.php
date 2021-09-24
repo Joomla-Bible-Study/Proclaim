@@ -7,6 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Site\Controller;
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -30,7 +31,7 @@ if (file_exists($api))
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class controller extends BaseController
+class proclaim extends BaseController
 {
 	/** @var  string Media Code
 	 * @since    7.0.0 */
@@ -80,28 +81,27 @@ class controller extends BaseController
 	 * @since   7.0.0
 	 */
 	public function display($cachable = true, $urlparams = array())
-	{
-		/*
-		Set the default view name and format from the Request.
-		Note we are using a_id to avoid collisions with the router and the return page.
-		Frontend is a bit messier than the backend.
-		*/
-		$id    = $this->input->getInt('a_id');
-		$vName = $this->input->getCmd('view', 'landingpage', 'cmd');
-		$this->input->set('view', $vName);
-		$user = Factory::getUser();
+    {
+        /*
+        Set the default view name and format from the Request.
+        Note we are using a_id to avoid collisions with the router and the return page.
+        Frontend is a bit messier than the backend.
+        */
+        $id = $this->input->getInt('a_id');
+        $vName = $this->input->getCmd('view', 'CWMLandingPage', 'cmd');
+        $this->input->set('view', $vName);
+        $user = Factory::getUser();
 
-		/*
-		 * This is to check and see if we need to not cache popup pages
-		 * With this we Look to see if things are coming from the Landing page using the vairble sendingview"
-		 */
-		if ($user->get('id')
-			|| ($this->input->getMethod() === 'POST' && strpos($vName, 'form') !== false)
-			|| $vName === 'popup' || $vName === 'sermons'
-		)
-		{
-			$cachable = false;
-		}
+        /*
+         * This is to check and see if we need to not cache popup pages
+         * With this we Look to see if things are coming from the Landing page using the vairble sendingview"
+         */
+        if ($user->get('id')
+            || ($this->input->getMethod() === 'POST' && strpos($vName, 'form') !== false)
+            || $vName === 'popup' || $vName === 'sermons'
+        ) {
+            $cachable = false;
+        }
 
 		// Attempt to change mysql for error in large select
 		$db = Factory::getDbo();
@@ -136,10 +136,8 @@ class controller extends BaseController
 		// Check for edit form.
 		if ($vName === 'form' && !$this->checkEditId('com_proclaim.edit.message', $id))
 		{
-			// Somehow the person just went to the form - we don't allow that.
-			Factory::getApplication()->enqueueMessage(Text::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id), 'error');
-
-			return false;
+            // Somehow the person just went to the form - we don't allow that.
+            throw new \Exception(Text::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id), 403);
 		}
 
 		parent::display($cachable, $safeurlparams);
