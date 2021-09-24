@@ -4,12 +4,16 @@
  *
  * @package    Proclaim.Admin
  * @copyright  2007 - 2019 (C) CWM Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license    http://www.gnu.org/copyleft/gpl.HtmlHelper GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Administrator\Field;
 // No Direct Access
 defined('_JEXEC') or die;
-
+use Joomla\CMS\Form\Field\ListField;
+use Joomla\CMS\Factory;
+use CWM\Component\Proclaim\Administrator\Helper\CWMTranslated;
+use Joomla\CMS\Html\HtmlHelper;
 // For some reason the autoloader is not finding this file so this is a temporary workaround
 include_once JPATH_ADMINISTRATOR . '/components/com_proclaim/helpers/CWMTranslated.php';
 
@@ -20,7 +24,7 @@ include_once JPATH_ADMINISTRATOR . '/components/com_proclaim/helpers/CWMTranslat
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class JFormFieldTopicslist extends JFormFieldList
+class topicslist extends ListField
 {
 	/**
 	 * The field type.
@@ -34,7 +38,7 @@ class JFormFieldTopicslist extends JFormFieldList
 	/**
 	 * Method to get a list of options for a list input.
 	 *
-	 * @return  array  An array of JHtml options.
+	 * @return  array  An array of JHtmlHelper options.
 	 *
 	 * @since 9.0.0
 	 */
@@ -56,8 +60,8 @@ class JFormFieldTopicslist extends JFormFieldList
 		{
 			foreach ($topics as $topic)
 			{
-				$text      = JBSMTranslated::getTopicItemTranslated($topic);
-				$options[] = JHtml::_('select.option', $topic->id, $text);
+				$text      = CWMTranslated::getTopicItemTranslated($topic);
+				$options[] = HtmlHelper::_('select.option', $topic->id, $text);
 			}
 		}
 
