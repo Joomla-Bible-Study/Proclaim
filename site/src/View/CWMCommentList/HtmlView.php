@@ -7,7 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-namespace CWM\Component\Proclaim\Site\View\CommentList;
+namespace CWM\Component\Proclaim\Site\View\CWMCommentList;
 // No Direct Access
 defined('_JEXEC') or die;
 use Joomla\Registry\Registry;

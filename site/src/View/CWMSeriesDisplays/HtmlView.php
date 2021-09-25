@@ -7,10 +7,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-namespace CWM\Component\Proclaim\Site\View\SeriesDisplays;
+namespace CWM\Component\Proclaim\Site\View\CWMSeriesDisplays;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use JApplicationSite;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -102,7 +103,7 @@ class HtmlView extends BaseHtmlView
 
 		$document = Factory::getDocument();
 		/** @var $itemparams Registry */
-		$itemparams = $mainframe->getPageParameters();
+		$itemparams = JApplicationSite::getParams();
 
 		// Prepare meta information (under development)
 		if ($itemparams->get('metakey'))
