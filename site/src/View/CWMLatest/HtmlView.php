@@ -41,9 +41,9 @@ class HtmlView extends BaseHtmlView
 		$db->setQuery($query);
 		$id    = $db->loadResult();
 		$input = Factory::getApplication();
-		$t     = $input->getInt('t', '1');
+		$t     = $input->get('t', '1');
 
-		$link = Route::_('index.php?option=com_proclaim&view=sermon&id=' . $id . '&t=' . $t);
+		$link = Route::_('index.php?option=com_proclaim&view=CWMSermon&id=' . $id . '&t=' . $t);
 		$app  = Factory::getApplication();
 
 		$app->redirect($link);
