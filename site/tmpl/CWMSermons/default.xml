@@ -91,7 +91,7 @@
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
             <field name="mlocations"
-                   type="locationslist"
+                   type="modal_location"
                    multiple="true"
                    label="JBS_CMN_FILTERS_LOCATIONS"
                    description="JBS_CMN_FILTERS_DESC"
