@@ -9,15 +9,17 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Router\Route;
 
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
-$input = new JInput;
+$input = Factory::getApplication();
 $function = $input->get('function', 'jSelectTeacher', 'cmd');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn = $this->escape($this->state->get('list.direction'));
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=teachers&layout=modal&tmpl=component'); ?>"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=CWMTeachers&layout=modal&tmpl=component'); ?>"
       method="post" name="adminForm" id="adminForm">
 	<table class="adminlist">
 		<thead>

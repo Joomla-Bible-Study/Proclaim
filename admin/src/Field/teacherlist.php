@@ -7,6 +7,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Administrator\Field;
+use JFormFieldList;
+use JFormHelper;
+use JHtml;
+use Joomla\CMS\Factory;
 // No Direct Access
 defined('_JEXEC') or die;
 jimport('joomla.form.helper');
@@ -18,7 +23,7 @@ JFormHelper::loadFieldClass('list');
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class JFormFieldTeacherlist extends JFormFieldList
+class teacherlist extends JFormFieldList
 {
 	/**
 	 * The field type.
@@ -50,11 +55,11 @@ class JFormFieldTeacherlist extends JFormFieldList
 		{
 			foreach ($messages as $message)
 			{
-				$options[] = JHtml::_('select.option', $message->id, $message->teachername);
+				$options .= JHtml::_('select.option', $message->id, $message->teachername);
 			}
 		}
 
-		$options = array_merge(parent::getOptions(), $options);
+		//$options = array_merge(parent::getOptions(), $options);
 
 		return $options;
 	}

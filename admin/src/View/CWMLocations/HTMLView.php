@@ -96,7 +96,7 @@ class HTMLView extends BaseHtmlView
 		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
-
+		$this->form        = $this->get('form');
 		$this->filterForm    = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');
 		$this->canDo         = CWMProclaimHelper::getActions('', 'location');
@@ -131,8 +131,8 @@ class HTMLView extends BaseHtmlView
 
 		// Set the document
 		$this->setDocument();
-
 		// Display the template
+
 		parent::display($tpl);
 	}
 

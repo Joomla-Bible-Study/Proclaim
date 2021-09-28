@@ -10,13 +10,15 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 
-JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-JHtml::_('dropdown.init');
-JHtml::_('formbehavior.chosen', 'select');
-JHtml::_('behavior.multiselect');
+HtmlHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+HtmlHelper::_('dropdown.init');
+HtmlHelper::_('formbehavior.chosen', 'select');
+HtmlHelper::_('behavior.multiselect');
 
 $app        = Factory::getApplication();
 $user       = Factory::getUser();
@@ -32,7 +34,7 @@ $columns    = 9;
 if ($saveOrder)
 {
 	$saveOrderingUrl = 'index.php?option=com_proclaim&task=teachers.saveOrderAjax&tmpl=component';
-	JHtml::_('sortablelist.sortable', 'teachers', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+	HtmlHelper::_('sortablelist.sortable', 'teachers', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 }
 
 ?>
@@ -49,7 +51,7 @@ if ($saveOrder)
 		Joomla.tableOrdering(order, dirn, '');
 	}
 </script>
-<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=teachers'); ?>" method="post" name="adminForm"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=teachers'); ?>" method="post" name="adminForm"
       id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
@@ -66,41 +68,41 @@ if ($saveOrder)
 			?>
 			<?php if (empty($this->items)) : ?>
 				<div class="alert alert-no-items">
-					<?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+					<?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
 				</div>
 			<?php else : ?>
 				<table class="table table-striped adminlist" id="teachers">
 					<thead>
 					<tr>
 						<th width="1%" class="nowrap center hidden-phone">
-							<?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'teacher.ordering', $listDirn, $listOrder, null, 'desc', 'JGRID_HEADING_ORDERING'); ?>
+							<?php echo HtmlHelper::_('grid.sort', '<i class="icon-menu-2"></i>', 'teacher.ordering', $listDirn, $listOrder, null, 'desc', 'JGRID_HEADING_ORDERING'); ?>
 						</th>
 						<th width="1%">
 							<input type="checkbox" name="checkall-toggle" value=""
-							       title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>"
+							       title="<?php echo Text::_('JGLOBAL_CHECK_ALL'); ?>"
 							       onclick="Joomla.checkAll(this)"/>
 						</th>
 						<th width="5%">
-							<?php echo JHtml::_('grid.sort', 'JBS_CMN_PUBLISHED', 'teacher.published', $listDirn, $listOrder); ?>
+							<?php echo HtmlHelper::_('grid.sort', 'JBS_CMN_PUBLISHED', 'teacher.published', $listDirn, $listOrder); ?>
 						</th>
 
 						<th align="center">
-							<?php echo JHtml::_('grid.sort', 'JBS_CMN_TEACHER', 'teacher.teachername', $listDirn, $listOrder); ?>
+							<?php echo HtmlHelper::_('grid.sort', 'JBS_CMN_TEACHER', 'teacher.teachername', $listDirn, $listOrder); ?>
 						</th>
 						<th width="10%" class="nowrap hidden-phone">
-							<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ACCESS', 'teacher.access', $listDirn, $listOrder); ?>
+							<?php echo HtmlHelper::_('grid.sort', 'JGRID_HEADING_ACCESS', 'teacher.access', $listDirn, $listOrder); ?>
 						</th>
 						<th width="5%">
-							<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
+							<?php echo HtmlHelper::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
 						</th>
 						<th>
-							<?php echo JText::_('JBS_TCH_SHOW_LIST'); ?>
+							<?php echo Text::_('JBS_TCH_SHOW_LIST'); ?>
 						</th>
 						<th>
-							<?php echo JText::_('JBS_TCH_SHOW_LANDING_PAGE'); ?>
+							<?php echo Text::_('JBS_TCH_SHOW_LANDING_PAGE'); ?>
 						</th>
 						<th width="1%" class="nowrap">
-							<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'teacher.id', $listDirn, $listOrder); ?>
+							<?php echo HtmlHelper::_('grid.sort', 'JGRID_HEADING_ID', 'teacher.id', $listDirn, $listOrder); ?>
 						</th>
 					</tr>
 					</thead>
@@ -126,7 +128,7 @@ if ($saveOrder)
 									$disableClassName = '';
 									$disabledLabel = '';
 									if (!$saveOrder) :
-										$disabledLabel    = JText::_('JORDERINGDISABLED');
+										$disabledLabel    = Text::_('JORDERINGDISABLED');
 										$disableClassName = 'inactive tip-top';
 									endif; ?>
 									<span class="sortable-handler hasTooltip<?php echo $disableClassName ?>"
@@ -142,54 +144,54 @@ if ($saveOrder)
 								<?php endif; ?>
 							</td>
 							<td class="center hidden-phone">
-								<?php echo JHtml::_('grid.id', $i, $item->id); ?>
+								<?php echo HtmlHelper::_('grid.id', $i, $item->id); ?>
 							</td>
 							<td class="center">
 								<div class="btn-group">
-									<?php echo JHtml::_('jgrid.published', $item->published, $i, 'teachers.', $canChange, 'cb', '', ''); ?>
+									<?php echo HtmlHelper::_('jgrid.published', $item->published, $i, 'teachers.', $canChange, 'cb', '', ''); ?>
 								</div>
 							</td>
 
 							<td class="nowrap has-context">
 								<div class="pull-left">
 									<?php if ($canEdit || $canEditOwn) : ?>
-										<a href="<?php echo JRoute::_('index.php?option=com_proclaim&task=teacher.edit&id=' . (int) $item->id); ?>">
+										<a href="<?php echo Route::_('index.php?option=com_proclaim&task=teacher.edit&id=' . (int) $item->id); ?>">
 											<?php echo($this->escape($item->teachername) ? $this->escape($item->teachername) : 'ID: ' . $this->escape($item->id)); ?>
 										</a>
 									<?php else : ?>
 										<?php echo($this->escape($item->teachername) ? $this->escape($item->teachername) : 'ID: ' . $this->escape($item->id)); ?>
 									<?php endif; ?>
 									<span class="small">
-					<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
+					<?php echo Text::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
 				</span>
 								</div>
 								<div class="pull-left">
 									<?php
 									// Create dropdown items
-									JHtml::_('dropdown.edit', $item->id, 'teacher.');
-									JHtml::_('dropdown.divider');
+									HtmlHelper::_('dropdown.edit', $item->id, 'teacher.');
+									HtmlHelper::_('dropdown.divider');
 									if ($item->published) :
-										JHtml::_('dropdown.unpublish', 'cb' . $i, 'teachers.');
+										HtmlHelper::_('dropdown.unpublish', 'cb' . $i, 'teachers.');
 									else :
-										JHtml::_('dropdown.publish', 'cb' . $i, 'teachers.');
+										HtmlHelper::_('dropdown.publish', 'cb' . $i, 'teachers.');
 									endif;
 
-									JHtml::_('dropdown.divider');
+									HtmlHelper::_('dropdown.divider');
 
 									if ($archived) :
-										JHtml::_('dropdown.unarchive', 'cb' . $i, 'teachers.');
+										HtmlHelper::_('dropdown.unarchive', 'cb' . $i, 'teachers.');
 									else :
-										JHtml::_('dropdown.archive', 'cb' . $i, 'teachers.');
+										HtmlHelper::_('dropdown.archive', 'cb' . $i, 'teachers.');
 									endif;
 
 									if ($trashed) :
-										JHtml::_('dropdown.untrash', 'cb' . $i, 'teachers.');
+										HtmlHelper::_('dropdown.untrash', 'cb' . $i, 'teachers.');
 									else :
-										JHtml::_('dropdown.trash', 'cb' . $i, 'teachers.');
+										HtmlHelper::_('dropdown.trash', 'cb' . $i, 'teachers.');
 									endif;
 
 									// Render dropdown list
-									echo JHtml::_('dropdown.render');
+									echo HtmlHelper::_('dropdown.render');
 									?>
 								</div>
 							</td>
@@ -199,9 +201,9 @@ if ($saveOrder)
 							<td class="nowrap has-context">
 								<div class="pull-left">
 									<?php if ($item->language == '*'): ?>
-										<?php echo JText::alt('JALL', 'language'); ?>
+										<?php echo Text::alt('JALL', 'language'); ?>
 									<?php else: ?>
-										<?php echo $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
+										<?php echo $item->language_title ? $this->escape($item->language_title) : Text::_('JUNDEFINED'); ?>
 									<?php endif; ?>
 								</div>
 							</td>
@@ -209,11 +211,11 @@ if ($saveOrder)
 								<div class="pull-left">
 									<?php if (!$item->list_show)
 									{
-										echo JText::_('JNO');
+										echo Text::_('JNO');
 									}
 									if ($item->list_show > 0)
 									{
-										echo JText::_('JYES');
+										echo Text::_('JYES');
 									} ?>
 								</div>
 							</td>
@@ -221,19 +223,19 @@ if ($saveOrder)
 								<div class="pull-left">
 									<?php if (!$item->landing_show)
 									{
-										echo JText::_('JNO');
+										echo Text::_('JNO');
 									}
 									if ($item->landing_show > 0)
 									{
-										echo JText::_('JYES');
+										echo Text::_('JYES');
 									}
 									if ($item->landing_show == '1')
 									{
-										echo ' - ' . JText::_('JBS_TCH_ABOVE');
+										echo ' - ' . Text::_('JBS_TCH_ABOVE');
 									}
 									elseif ($item->landing_show == '2')
 									{
-										echo ' - ' . JText::_('JBS_TCH_BELOW');
+										echo ' - ' . Text::_('JBS_TCH_BELOW');
 									} ?>
 								</div>
 							</td>
@@ -267,6 +269,6 @@ if ($saveOrder)
 			<input type="hidden" name="boxchecked" value="0"/>
 			<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
 			<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
-			<?php echo JHtml::_('form.token'); ?>
+			<?php echo HtmlHelper::_('form.token'); ?>
 		</div>
 </form>

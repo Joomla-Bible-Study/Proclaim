@@ -95,6 +95,12 @@
                    multiple="true"
                    label="JBS_CMN_FILTERS_LOCATIONS"
                    description="JBS_CMN_FILTERS_DESC"
+                   extension="com_proclaim"
+                   select="true"
+                   new="true"
+                   edit="true"
+                   clear="true"
+                   filter="integer"
                    default="-1">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>

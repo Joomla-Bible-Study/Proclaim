@@ -115,21 +115,33 @@ class TeacherDisplayField extends FormField
 */
 		// Add the script to the document head.
 //		Factory::getDocument()->addScriptDeclaration(implode("\n", $script));
-
-		// Get the title of the linked chart
-		$db = Factory::getDbo();
-		$db->setQuery(
-			'SELECT teachername AS name' .
-			' FROM #__bsms_teachers' .
-			' WHERE id = ' . (int) $this->value
-		);
-		$title = $db->loadResult();
-
-		if ($error = $db->getErrorMsg())
+		try
 		{
-            Factory::getApplication()->enqueueMessage(500, $error);
-		}
 
+			// Get the title of the linked chart
+			$db = Factory::getDbo();
+			$db->setQuery(
+				'SELECT teachername AS name' .
+				' FROM #__bsms_teachers' .
+				' WHERE id = ' . (int) $this->value
+			);
+			$title = $db->loadResult();
+
+
+		}
+		catch (\Exception $e)
+		{
+			if ($e->getCode() == 404)
+			{
+				// Need to go through the error handler to allow Redirect to work.
+				throw new \Exception($e->getMessage(), 404);
+			}
+			else
+			{
+				$this->setError($e);
+
+			}
+		}
 		if (empty($title))
 		{
 			$modalTitle = Text::_('JBS_CMN_SELECT_TEACHER');
