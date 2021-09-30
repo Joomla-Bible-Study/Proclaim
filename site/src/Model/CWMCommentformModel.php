@@ -81,7 +81,7 @@ class CWMCommentformModel extends ItemModel
 	 */
 	protected function populateState()
 	{
-		/** @type JApplicationSite $app */
+
 		$app = Factory::getApplication('site');
 
 		// Load state from the request.

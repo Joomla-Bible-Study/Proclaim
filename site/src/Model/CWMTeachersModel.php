@@ -33,7 +33,7 @@ class CWMTeachersModel extends ListModel
 	 */
 	protected function getListQuery()
 	{
-		$db = Factory::getApplication()->getDbo();
+		$db = Factory::getDbo();
 
 		// See if this view is being filtered by language in the menu
 		$app  = Factory::getApplication();

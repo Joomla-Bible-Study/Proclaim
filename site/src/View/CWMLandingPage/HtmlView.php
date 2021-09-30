@@ -95,7 +95,7 @@ class HtmlView extends BaseHtmlView
 		CWMImages::getShowHide();
 
 		// Get the main study list image
-		$this->main = CWMImages::mainStudyImage($this->state->admin->params);
+		//$this->main = CWMImages::mainStudyImage($this->state->admin->params);
 
 		$uri               = new Uri;
 		$Uri_toString      = $uri->toString();

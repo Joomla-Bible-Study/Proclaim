@@ -46,7 +46,7 @@
                 <option value="2">JBS_CMN_ASCENDING</option>
             </field>
             <field name="mteacher_id"
-                   type="teacherlist"
+                   type="modal_TeacherDisplay"
                    label="JBS_CMN_FILTERS_TEACHER"
                    description="JBS_CMN_FILTERS_DESC"
                    multiple="true"

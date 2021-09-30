@@ -77,7 +77,7 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return  mixed
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function display($tpl = null)
@@ -132,7 +132,7 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	protected function _prepareDocument()

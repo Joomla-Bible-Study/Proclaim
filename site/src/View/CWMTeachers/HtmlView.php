@@ -8,8 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 namespace CWM\Component\Proclaim\Site\View\CWMTeachers;
-
-require_once (BIBLESTUDY_PATH_LIB.'/CWMPagebuilder.php');
+use CWM\Component\Proclaim\Site\Helper\CWMPagebuilder;
 // No Direct Access
 defined('_JEXEC') or die;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -20,7 +19,6 @@ use CWM\Component\Proclaim\Site\Helper\CWMShowScripture;
 use CWM\Component\Proclaim\Site\Helper\CWMHelperRoute;
 use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
 use CWM\Component\Proclaim\Site\Helper\CWMRelatedstudies;
-use CWM\Component\Proclaim\Site\Helper\CWMPagebuilder;
 use CWM\Component\Proclaim\Site\Helper\CWMPodcastsubscribe;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Language\Text;
@@ -132,7 +130,7 @@ class HtmlView extends BaseHtmlView
 		$state  = $this->get('State');
 		$items  = $this->get('Items');
 
-		/** @var $params Joomla\Registry\Registry */
+
 		$params	= $state->template->params;
 
 		$this->template        = $state->get('template');
@@ -186,7 +184,7 @@ class HtmlView extends BaseHtmlView
 		}
 
 		$pagination            = $this->get('Pagination');
-		$this->page            = new stdClass;
+		$this->page            = new \stdClass;
 		$this->page->pagelinks = $pagination->getPagesLinks();
 		$this->page->counter   = $pagination->getPagesCounter();
 		$this->pagination      = $pagination;

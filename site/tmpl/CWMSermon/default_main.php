@@ -66,10 +66,10 @@ if ($this->item->params->get('showrelated') === '1')
 					<li class="print-icon"> <?php echo CWMIcon::print_popup($this->item, $params); ?> </li>
 				<?php endif; ?>
 				<?php if ($params->get('show_email_icon')) : ?>
-					<li class="email-icon"> <?php echo CWMIcon::_('email', $this->item, $params); ?> </li>
+					<li class="email-icon"> <?php echo CWMIcon::email( $this->item, $params); ?> </li>
 				<?php endif; ?>
 				<?php if ($canEdit) : ?>
-					<li class="edit-icon"> <?php echo CWMIcon::_('edit', $this->item, $params); ?> </li>
+					<li class="edit-icon"> <?php echo CWMIcon::edit( $this->item, $params); ?> </li>
 				<?php endif; ?>
 			</ul>
 		</div>

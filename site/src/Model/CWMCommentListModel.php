@@ -36,7 +36,6 @@ class CWMCommentListModel extends ListModel
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		/** @type JApplicationSite $app */
 		$app    = Factory::getApplication();
 		$layout = $app->input->get('layout');
 

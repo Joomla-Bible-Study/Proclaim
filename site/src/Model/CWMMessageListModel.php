@@ -7,6 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Site\Model;
 // No Direct Access
 defined('_JEXEC') or die;
 use Joomla\CMS\MVC\Model\ListModel;
@@ -38,7 +39,7 @@ class CWMMessageListModel extends ListModel
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		/** @type JApplicationSite $app */
+
 		$app = Factory::getApplication();
 
 		$return = $app->input->get('return', null, 'base64');
@@ -47,8 +48,8 @@ class CWMMessageListModel extends ListModel
 		// Load the parameters.
 		$params   = $app->getParams();
 		$this->setState('params', $params);
-		$template = JBSMParams::getTemplateparams();
-		$admin    = JBSMParams::getAdmin();
+		$template = CWMParams::getTemplateparams();
+		$admin    = CWMParams::getAdmin();
 
 		$template->params->merge($params);
 		$template->params->merge($admin->params);
@@ -58,7 +59,7 @@ class CWMMessageListModel extends ListModel
 
 		if (!$t)
 		{
-			$input = new JInput;
+			$input = Factory::getApplication();
 			$t     = $input->get('t', 1, 'int');
 		}
 
