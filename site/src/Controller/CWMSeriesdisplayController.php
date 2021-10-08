@@ -21,7 +21,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class SeriesdisplayController extends BaseController
+class CWMSeriesdisplayController extends BaseController
 {
 	// Holder.
 }

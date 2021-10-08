@@ -22,7 +22,7 @@
     everywhere else for your component. Whatever the name of
     this XML file is, the namespace must match (ignoring CamelCase).
     -->
-    <namespace path="src/">CWM\Component\Proclaim</namespace>
+    <namespace path="src">CWM\Component\Proclaim</namespace>
 	<!-- Installer Hooks -->
 	<scriptfile>proclaim.script.php</scriptfile>
 
@@ -52,7 +52,7 @@
 	</files>
 
 	<!-- Media files -->
-	<media destination="com_proclaim" folder="media">
+	<media destination="com_biblestudy" folder="media">
 		<folder>backup</folder>
 		<folder>css</folder>
 		<folder>fancybox</folder>
@@ -65,7 +65,7 @@
 	</media>
 
 	<administration>
-		<menu img="../media/com_proclaim/images/menu/icon-16-biblemenu.png">JBS_CMN_com_proclaim</menu>
+		<menu img="../media/com_biblestudy/images/menu/icon-16-biblemenu.png">JBS_CMN_com_proclaim</menu>
 		<submenu>
 			<!-- Note that all & must be escaped to &amp; for the file to be valid XML and be parsed by the installer -->
 			<menu link="option=com_proclaim" img="../media/com_proclaim/images/menu/icon-16-biblemenu.png">JBS_MNU_CONTROL_PANEL</menu>

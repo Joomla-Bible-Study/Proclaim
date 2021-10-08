@@ -21,7 +21,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class TeacherController extends BaseController
+class CWMTeacherController extends BaseController
 {
 	/**
 	 * Display the edit form

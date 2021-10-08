@@ -19,7 +19,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class TeachersController extends BaseController
+class CWMTeachersController extends BaseController
 {
 	/**
 	 * Proxy for getModel
@@ -28,7 +28,7 @@ class TeachersController extends BaseController
 	 * @param   string  $prefix  The prefix for the PHP class name
 	 * @param   array   $config  Set ignore request
 	 *
-	 * @return JModelLegacy
+	 * @return $model
 	 *
 	 * @since 7.0
 	 */

@@ -8,7 +8,14 @@
  * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
+namespace CWM\Component\Proclaim\Administrator\Field\Modal\TeacherDisplayField;
 defined('_JEXEC') or die;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\LanguageHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Session\Session;
 
 /**
  * Supports a modal study picker.
@@ -16,7 +23,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class JFormFieldModal_Teacherdisplay extends JFormField
+class TeacherDisplayField extends FormField
 {
 	/**
 	 * The form field type.
@@ -35,16 +42,59 @@ class JFormFieldModal_Teacherdisplay extends JFormField
 	 */
 	protected function getInput()
 	{
-		// Load the modal behavior script.
-		JHtml::_('behavior.modal', 'a.modal');
+        $allowNew       = ((string) $this->element['new'] == 'true');
+        $allowEdit      = ((string) $this->element['edit'] == 'true');
+        $allowClear     = ((string) $this->element['clear'] != 'false');
+        $allowSelect    = ((string) $this->element['select'] != 'false');
+        $allowPropagate = ((string) $this->element['propagate'] == 'true');
+
+        // The active article id field.
+        $value = (int) $this->value ?: '';
+
+        // Create the modal id.
+        $modalId = 'TeacherDisplay_' . $this->id;
+	    // Load the modal behavior script.
+		//HtmlHelper::_('behavior.modal', 'a.modal');
 
 		// Load the javascript and css
-		JHtml::_('behavior.framework');
-		JHtml::_('script', 'system/modal.js', false, true);
-		JHtml::_('stylesheet', 'system/modal.css', array(), true);
+		//HtmlHelper::_('behavior.framework');
+		//HtmlHelper::_('script', 'system/modal.js', false, true);
+		//HtmlHelper::_('stylesheet', 'system/modal.css', array(), true);
 
+
+
+        /** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
+        $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+
+        // Add the modal field script to the document head.
+        $wa->useScript('field.modal-fields');
+
+        if ($allowSelect)
+        {
+            static $scriptSelect = null;
+
+            if (is_null($scriptSelect))
+            {
+                $scriptSelect = array();
+            }
+
+            if (!isset($scriptSelect[$this->id]))
+            {
+                $wa->addInlineScript("
+				window.jSelectChart_" . $this->id . " = function (id, name, object) {
+					window.processModalSelect('TeacherDisplay', '" . $this->id . "', id, name, object);
+				}",
+                    [],
+                    ['type' => 'module']
+                );
+
+                Text::script('JGLOBAL_ASSOCIATIONS_PROPAGATE_FAILED');
+
+                $scriptSelect[$this->id] = true;
+            }
+        }
 		// Build the script.
-		$script   = array();
+		/*$script   = array();
 		$script[] = '	function jSelectChart_' . $this->id . '(id, name, object) {';
 		$script[] = '		document.id("' . $this->id . '_id").value = id;';
 		$script[] = '		document.id("' . $this->id . '_name").value = name;';
@@ -62,9 +112,9 @@ class JFormFieldModal_Teacherdisplay extends JFormField
 		$script[] = '		SqueezeBox.initialize();';
 		$script[] = '		SqueezeBox.assign($$("input.modal"), {parse:"rel"});';
 		$script[] = '	});';
-
+*/
 		// Add the script to the document head.
-		Factory::getDocument()->addScriptDeclaration(implode("\n", $script));
+//		Factory::getDocument()->addScriptDeclaration(implode("\n", $script));
 
 		// Get the title of the linked chart
 		$db = Factory::getDbo();
@@ -77,21 +127,21 @@ class JFormFieldModal_Teacherdisplay extends JFormField
 
 		if ($error = $db->getErrorMsg())
 		{
-			JError::raiseWarning(500, $error);
+            Factory::getApplication()->enqueueMessage(500, $error);
 		}
 
 		if (empty($title))
 		{
-			$title = JText::_('JBS_CMN_SELECT_TEACHER');
+			$title = Text::_('JBS_CMN_SELECT_TEACHER');
 		}
 
 		$link = 'index.php?option=com_proclaim&amp;view=teachers&amp;layout=modal&amp;tmpl=component&amp;function=jSelectChart_' . $this->id;
 
-		JHtml::_('behavior.modal', 'a.modal');
+		HtmlHelper::_('behavior.modal', 'a.modal');
 		$html = "\n" . '<div class="fltlft"><input type="text" id="' . $this->id . '_name" value="' .
 			htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '" disabled="disabled" /></div>';
-		$html .= '<div class="button2-left"><div class="blank"><a class="modal" title="' . JText::_('JBS_CMN_SELECT_TEACHER') .
-			'"  href="' . $link . '" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">' . JText::_('JBS_CMN_SELECT_TEACHER') .
+		$html .= '<div class="button2-left"><div class="blank"><a class="modal" title="' . Text::_('JBS_CMN_SELECT_TEACHER') .
+			'"  href="' . $link . '" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">' . Text::_('JBS_CMN_SELECT_TEACHER') .
 			'</a></div></div>' . "\n";
 
 		// The active study id field.

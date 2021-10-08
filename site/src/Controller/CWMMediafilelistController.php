@@ -22,7 +22,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class MediafilelistController extends BaseController
+class CWMMediafilelistController extends BaseController
 {
 	/**
 	 * View item
