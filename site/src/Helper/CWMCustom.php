@@ -11,6 +11,7 @@
 namespace CWM\Component\Proclaim\Site\Helper;
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Administrator\Table\CWMTemplateTable;
 use Joomla\Registry\Registry;
 
 /**
@@ -28,7 +29,7 @@ class CWMCustom
 	 * @param   string         $custom    Custom String
 	 * @param   object         $row       Row info
 	 * @param   Registry       $params    Params for intro
-	 * @param   TableTemplate  $template  Template ID
+	 * @param   CWMTemplateTable  $template  Template ID
 	 *
 	 * @return array
 	 *

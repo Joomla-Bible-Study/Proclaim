@@ -7,12 +7,19 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Site\Helper;
 // No Direct Access
-//namespace CWM\Compenent\BibleStudy\Site\CWMPagebuilder;
+use CWM\Component\Proclaim\Administrator\Helper\CWMTranslated;
+use CWM\Component\Proclaim\Administrator\Table\CWMTemplateTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-require_once(BIBLESTUDY_PATH_LIB.'/CWMListing.php');
+use CWM\Component\Proclaim\Site\Helper\CWMListing;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
+
 defined('_JEXEC') or die;
 
 /**
@@ -35,13 +42,13 @@ class CWMPagebuilder
 	/**
 	 * Build Page
 	 *
-	 * @param   object                    $item      Item info
-	 * @param   Joomla\Registry\Registry  $params    Item Params
-	 * @param   TableTemplate             $template  Template data
+	 * @param   object            $item      Item info
+	 * @param   Registry          $params    Item Params
+	 * @param   CWMTemplateTable  $template  Template data
 	 *
 	 * @return object
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function buildPage($item, $params, $template)
@@ -49,9 +56,9 @@ class CWMPagebuilder
 		$item->tp_id = '1';
 
 		// Media files image, links, download
-		$mids         = $item->mids;
-		$page         = new stdClass;
-		$JBSMElements = new CWMListing;
+		$mids        = $item->mids;
+		$page        = new \stdClass;
+		$CWMElements = new CWMListing;
 
 		if ($mids)
 		{
@@ -68,7 +75,7 @@ class CWMPagebuilder
 
 		if ($item->chapter_begin)
 		{
-			$page->scripture1 = $JBSMElements->getScripture($params, $item, $esv, $scripturerow);
+			$page->scripture1 = $CWMElements->getScripture($params, $item, $esv, $scripturerow);
 		}
 		else
 		{
@@ -85,7 +92,7 @@ class CWMPagebuilder
 
 		if ($item->booknumber2 >= 1)
 		{
-			$page->scripture2 = $JBSMElements->getScripture($params, $item, $esv, $scripturerow);
+			$page->scripture2 = $CWMElements->getScripture($params, $item, $esv, $scripturerow);
 		}
 		else
 		{
@@ -93,10 +100,10 @@ class CWMPagebuilder
 		}
 
 		// Study Date
-		$page->studydate = $JBSMElements->getStudyDate($params, $item->studydate);
+		$page->studydate = $CWMElements->getStudyDate($params, $item->studydate);
 
 		// Translate Topics.
-		$item->topics_text = JBSMTranslated::getConcatTopicItemTranslated($item);
+		$item->topics_text = CWMTranslated::getConcatTopicItemTranslated($item);
 
 		if (isset($item->topics_text) && (substr_count($item->topics_text, ',') > 0))
 		{
@@ -116,8 +123,8 @@ class CWMPagebuilder
 
 		if ($item->thumbnailm)
 		{
-			$image                 = JBSMImages::getStudyThumbnail($item->thumbnailm);
-			$page->study_thumbnail = '<img src="' . JUri::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height
+			$image                 = CWMImages::getStudyThumbnail($item->thumbnailm);
+			$page->study_thumbnail = '<img src="' . Uri::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height
 				. '" alt="' . $item->studytitle . '" />';
 		}
 		else
@@ -127,8 +134,8 @@ class CWMPagebuilder
 
 		if ($item->series_thumbnail)
 		{
-			$image                  = JBSMImages::getSeriesThumbnail($item->series_thumbnail);
-			$page->series_thumbnail = '<img src="' . JUri::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height
+			$image                  = CWMImages::getSeriesThumbnail($item->series_thumbnail);
+			$page->series_thumbnail = '<img src="' . Uri::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height
 				. '" alt="' . $item->series_text . '" />';
 		}
 		else
@@ -136,7 +143,7 @@ class CWMPagebuilder
 			$page->series_thumnail = '';
 		}
 
-		$page->detailslink = JRoute::_('index.php?option=com_proclaim&view=sermon&id=' . $item->slug . '&t=' . $params->get('detailstemplateid'));
+		$page->detailslink = Route::_('index.php?option=com_proclaim&view=sermon&id=' . $item->slug . '&t=' . $params->get('detailstemplateid'));
 
 		if (!isset($item->image))
 		{
@@ -150,8 +157,8 @@ class CWMPagebuilder
 
 		if ($item->image || $item->thumb)
 		{
-			$image              = JBSMImages::getTeacherImage($item->image, $item->thumb);
-			$page->teacherimage = '<img src="' . JUri::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="'
+			$image              = CWMImages::getTeacherImage($item->image, $item->thumb);
+			$page->teacherimage = '<img src="' . Uri::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="'
 				. $item->teachername . '" />';
 		}
 		else
@@ -228,14 +235,14 @@ class CWMPagebuilder
 	/**
 	 * Media Builder
 	 *
-	 * @param   array                     $mediaids  ID of Media
-	 * @param   Joomla\Registry\Registry  $params    Item Params
-	 * @param   TableTemplate             $template  template date
-	 * @param   object                    $item      Item Params
+	 * @param   array             $mediaids  ID of Media
+	 * @param   Registry          $params    Item Params
+	 * @param   CWMTemplateTable  $template  template date
+	 * @param   object            $item      Item Params
 	 *
 	 * @return string
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	private function mediaBuilder($mediaids, $params, $template, $item)
@@ -262,10 +269,10 @@ class CWMPagebuilder
 	{
 		// We don't need offset but it is a required argument for the plugin dispatcher
 		$offset = '';
-		JPluginHelper::importPlugin('content');
+		PluginHelper::importPlugin('content');
 
 		// Run content plugins
-        $dispatcher = Factory::getApplication();
+		$dispatcher = Factory::getApplication();
 
 		$dispatcher->triggerEvent('onContentPrepare', array(
 				'com_proclaim.sermon',
@@ -275,7 +282,7 @@ class CWMPagebuilder
 			)
 		);
 
-		$item->event = new stdClass;
+		$item->event = new \stdClass;
 
 		$results                        = $dispatcher->triggerEvent('onContentAfterTitle', array(
 				'com_proclaim.sermon',
@@ -309,14 +316,14 @@ class CWMPagebuilder
 	 *
 	 * @param   string                    $whereitem   ?
 	 * @param   string                    $wherefield  ?
-	 * @param   Joomla\Registry\Registry  $params      Item params
+	 * @param   Registry  $params      Item params
 	 * @param   int                       $limit       Limit of Records
 	 * @param   string                    $order       DESC or ASC
-	 * @param   TableTemplate             $template    Template Data
+	 * @param   CWMTemplateTable             $template    Template Data
 	 *
 	 * @return array
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function studyBuilder($whereitem = null, $wherefield = null, $params = null, $limit = 10, $order = 'DESC', $template = null)

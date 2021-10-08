@@ -21,11 +21,13 @@ if (file_exists($api))
 }
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
-use JHtml;
+use CWM\Component\Proclaim\Administrator\Table\CWMTemplateTable;
+use Joomla\CMS\Html\HtmlHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Image\Image;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Component\Mails\Administrator\Table\TemplateTable;
 use Joomla\Input\Input;
 use Joomla\Registry\Registry;
@@ -47,7 +49,7 @@ class CWMListing
 	 *
 	 * @param   Object         $items     Items
 	 * @param   Registry       $params    Page Params
-	 * @param   TemplateTable  $template  Template name
+	 * @param   CWMTemplateTable  $template  Template name
 	 * @param   String         $type      Type of Listing
 	 *
 	 * @return string
@@ -721,14 +723,14 @@ class CWMListing
 	 * @param   array                     $listsorts  ?
 	 * @param   Object                    $item       ?
 	 * @param   Registry  $params     Item Params
-	 * @param   TemplateTable             $template   Template info
+	 * @param   CWMTemplateTable            $template   Template info
 	 * @param   string                    $oddeven    ?
 	 * @param   integer                   $header     ?
 	 * @param   string                    $type       ?
 	 *
 	 * @return string
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, int $header, $type)
@@ -1071,13 +1073,13 @@ class CWMListing
 	 * @param   Object                    $item      Study item
 	 * @param   Object                    $row       Row Setup data
 	 * @param   Registry  $params    Parameters for the study
-	 * @param   TemplateTable             $template  Template table
+	 * @param   CWMTemplateTable             $template  Template table
 	 * @param   integer                   $header    Header will display if 1, Do not display if 0
 	 * @param   string                    $type      Type of Fluid Data
 	 *
 	 * @return string
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function getFluidData($item, $row, $params, $template, int $header, $type)
@@ -1230,7 +1232,7 @@ class CWMListing
 				}
 				else
 				{
-					($item->information ? $data = JHtml::_('content.prepare', $item->information, '', 'com_proclaim.' . $type) : $data = '');
+					($item->information ? $data = HtmlHelper::_('content.prepare', $item->information, '', 'com_proclaim.' . $type) : $data = '');
 				}
 				break;
 
@@ -1431,7 +1433,7 @@ class CWMListing
 				}
 				else
 				{
-					(isset($item->short) ? $data = JHtml::_('content.prepare', $item->short, '', 'com_proclaim.' . $type) : $data = '');
+					(isset($item->short) ? $data = HtmlHelper::_('content.prepare', $item->short, '', 'com_proclaim.' . $type) : $data = '');
 				}
 				break;
 
@@ -1523,7 +1525,7 @@ class CWMListing
 				}
 				else
 				{
-					isset($item->studyintro) ? $data = JHtml::_('content.prepare', $item->studyintro, '', 'com_proclaim.' . $type) : $data = '';
+					isset($item->studyintro) ? $data = HtmlHelper::_('content.prepare', $item->studyintro, '', 'com_proclaim.' . $type) : $data = '';
 				}
 				break;
 			case $extra . 'series':
@@ -1570,11 +1572,11 @@ class CWMListing
 			case $extra . 'description':
 				if ($type === 'seriesdisplays' || ($type === 'seriesdisplay' && $header !== 1))
 				{
-					(isset($item->description) ? $data = JHtml::_('content.prepare', $item->description, '', 'com_proclaim.' . $type) : $data = '');
+					(isset($item->description) ? $data = HTMLHelper::_('content.prepare', $item->description, '', 'com_proclaim.' . $type) : $data = '');
 				}
 				else
 				{
-					(isset($item->sdescription) ? $data = JHtml::_('content.prepare', $item->sdescription, '', 'com_proclaim.' . $type) : $data = '');
+					(isset($item->sdescription) ? $data = HtmlHelper::_('content.prepare', $item->sdescription, '', 'com_proclaim.' . $type) : $data = '');
 				}
 
 				if ($type === 'seriesdisplays' && !$header)
@@ -1880,7 +1882,7 @@ class CWMListing
 			case 'studyintro':
 				if (isset($row->studyintro))
 				{
-					$element = JHtml::_('content.prepare', $row->studyintro, '', 'com_proclaim.' . $type);
+					$element = HtmlHelper::_('content.prepare', $row->studyintro, '', 'com_proclaim.' . $type);
 				}
 				else
 				{
@@ -2032,11 +2034,11 @@ class CWMListing
 				{
 					if ($type === 'seriesdisplays' || $type === 'seriesdisplay')
 					{
-						$element = JHtml::_('content.prepare', $row->description, '', 'com_proclaim.' . $type);
+						$element = HtmlHelper::_('content.prepare', $row->description, '', 'com_proclaim.' . $type);
 					}
 					else
 					{
-						$element = JHtml::_('content.prepare', $row->sdescription, '', 'com_proclaim.' . $type);
+						$element = HtmlHelper::_('content.prepare', $row->sdescription, '', 'com_proclaim.' . $type);
 					}
 				}
 				else
@@ -2298,34 +2300,34 @@ class CWMListing
 				switch ($params->get('date_format'))
 				{
 					case 0:
-						$date = JHtml::_('date', $studydate, "M j, Y", null);
+						$date = HtmlHelper::_('date', $studydate, "M j, Y", null);
 						break;
 					case 1:
-						$date = JHtml::_('date', $studydate, "M J", null);
+						$date = HtmlHelper::_('date', $studydate, "M J", null);
 						break;
 					case 2:
-						$date = JHtml::_('date', $studydate, "n/j/Y", null);
+						$date = HtmlHelper::_('date', $studydate, "n/j/Y", null);
 						break;
 					case 4:
-						$date = JHtml::_('date', $studydate, "l, F j, Y", null);
+						$date = HtmlHelper::_('date', $studydate, "l, F j, Y", null);
 						break;
 					case 5:
-						$date = JHtml::_('date', $studydate, "F j, Y", null);
+						$date = HtmlHelper::_('date', $studydate, "F j, Y", null);
 						break;
 					case 6:
-						$date = JHtml::_('date', $studydate, "j F Y", null);
+						$date = HtmlHelper::_('date', $studydate, "j F Y", null);
 						break;
 					case 7:
 						$date = date("j/n/Y", strtotime($studydate));
 						break;
 					case 8:
-						$date = JHtml::_('date', $studydate, Text::_('DATE_FORMAT_LC'), null);
+						$date = HtmlHelper::_('date', $studydate, Text::_('DATE_FORMAT_LC'), null);
 						break;
 					case 9:
-						$date = JHtml::_('date', $studydate, "Y/M/D", null);
+						$date = HtmlHelper::_('date', $studydate, "Y/M/D", null);
 						break;
 					default:
-						$date = JHtml::_('date', $studydate, "n/j", null);
+						$date = HtmlHelper::_('date', $studydate, "n/j", null);
 						break;
 				}
 			}
@@ -2338,9 +2340,9 @@ class CWMListing
 		{
 			try
 			{
-				$date = JHtml::_('date', $studydate, $customDate);
+				$date = HtmlHelper::_('date', $studydate, $customDate);
 			}
-			catch (Exception $e)
+			catch (\Exception $e)
 			{
 				return $studydate;
 			}
@@ -2398,7 +2400,7 @@ class CWMListing
 
 		if (!empty($path) && isset($image->attributes))
 		{
-			$return = '<img src="' . JUri::base() . $path . '"' . $id . $width . $height
+			$return = '<img src="' . Uri::base() . $path . '"' . $id . $width . $height
 				. 'alt="' . $alt . '" ' . $class . $image->attributes . ' />';
 		}
 
@@ -2415,7 +2417,7 @@ class CWMListing
 	 * @param   object         $tmenu       Itemid
 	 * @param   Registry       $params      Params
 	 * @param   object         $row         Row data
-	 * @param   TemplateTable  $templateid  Template Table Data
+	 * @param   CWMTemplateTable  $templateid  Template Table Data
 	 *
 	 * @return string
 	 *
@@ -2435,20 +2437,20 @@ class CWMListing
 
 				if (!$Itemid)
 				{
-					$link = Route::_('index.php?option=com_proclaim&view=sermon&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
+					$link = Route::_('index.php?option=com_proclaim&view=CWMSermon&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
 
 					if ($view === 'seriesdisplays')
 					{
-						$link = Route::_('index.php?option=com_proclaim&view=seriesidsplay&id=' . $row->slug . '&t=' . $params->get('seriesdetailtemplateid'));
+						$link = Route::_('index.php?option=com_proclaim&view=CWMSeriesiDsplay&id=' . $row->slug . '&t=' . $params->get('seriesdetailtemplateid'));
 					}
 				}
 				else
 				{
-					$link = Route::_('index.php?option=com_proclaim&view=sermon&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
+					$link = Route::_('index.php?option=com_proclaim&view=CWMSermon&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
 
 					if ($view === 'seriesdisplays')
 					{
-						$link = Route::_('index.php?option=com_proclaim&view=seriesdisplay&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
+						$link = Route::_('index.php?option=com_proclaim&view=CWMSeriesDisplay&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
 					}
 				}
 
@@ -2456,7 +2458,7 @@ class CWMListing
 				break;
 
 			case 3 :
-				$link = Route::_('index.php?option=com_proclaim&view=teacher&id=' . $tid . '&t=' . $params->get('teachertemplateid'));
+				$link = Route::_('index.php?option=com_proclaim&view=CWMTeacher&id=' . $tid . '&t=' . $params->get('teachertemplateid'));
 
 				if ($tmenu > 0)
 				{
@@ -2503,7 +2505,7 @@ class CWMListing
 
 			case 9 :
 				// Case 9 is a link to download
-				$column .= '<a href="index.php?option=com_proclaim&amp;view=sermon&amp;mid=' .
+				$column .= '<a href="index.php?option=com_proclaim&amp;view=CWMSermon&amp;mid=' .
 					$row->download_id . '&amp;task=download">';
 		}
 
@@ -2575,18 +2577,18 @@ class CWMListing
 	 *
 	 * @param   object                    $row       Item Info
 	 * @param   Registry  $params    Item Params
-	 * @param   TemplateTable             $template  Template
+	 * @param   CWMTemplateTable           $template  Template
 	 *
 	 * @return object
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function getListingExp($row, $params, $template)
 	{
 		$Media  = new CWMMedia;
-		$images = new JBSMImages;
-		$image  = JBSMImages::getStudyThumbnail($row->thumbnailm);
+		$images = new CWMImages;
+		$image  = CWMImages::getStudyThumbnail($row->thumbnailm);
 		$label  = $params->get('templatecode');
 		$label  = str_replace('{{teacher}}', $row->teachername, $label);
 		$label  = str_replace('{{title}}', $row->studytitle, $label);
@@ -2594,7 +2596,7 @@ class CWMListing
 		$label  = str_replace('{{studyintro}}', $row->studyintro, $label);
 		$label  = str_replace('{{scripture}}', $this->getScripture($params, $row, 0, 1), $label);
 		$label  = str_replace('{{topics}}', $row->topic_text, $label);
-		$label  = str_replace('{{url}}', Route::_('index.php?option=com_proclaim&view=sermon&id=' . $row->id . '&t=' . $template->id), $label);
+		$label  = str_replace('{{url}}', Route::_('index.php?option=com_proclaim&view=CWMSermon&id=' . $row->id . '&t=' . $template->id), $label);
 		$label  = str_replace('{{thumbnail}}', $this->useJImage($image->path, "", "bsms_studyThumbnail" . $row->id, $image->width, $image->height), $label);
 		$label  = str_replace('{{seriestext}}', $row->series_text, $label);
 		$label  = str_replace('{{messagetype}}', $row->message_type, $label);

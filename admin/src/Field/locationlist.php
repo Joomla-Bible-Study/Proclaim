@@ -8,6 +8,11 @@
  * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
+namespace CWM\Component\Proclaim\Administrator\Field;
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+
+
+
 defined('_JEXEC') or die;
 
 /**
@@ -16,7 +21,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class JFormFieldLocationlist extends JFormFieldList
+class locationlist extends \JFormFieldList
 {
 	/**
 	 * The field type.
@@ -25,7 +30,7 @@ class JFormFieldLocationlist extends JFormFieldList
 	 *
 	 * @since 7.0
 	 */
-	protected $type = 'Locationlist';
+	protected $type = 'locationlist';
 
 	/**
 	 * Method to get a list of options for a list input.
@@ -36,7 +41,7 @@ class JFormFieldLocationlist extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		$options = array_merge(parent::getOptions(), JBSMBibleStudyHelper::getStudyLocations());
+		$options = array_merge(parent::getOptions(), CWMProclaimHelper::getStudyLocations());
 
 		return $options;
 	}

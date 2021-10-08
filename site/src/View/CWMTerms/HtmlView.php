@@ -7,7 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-namespace CWM\Component\Proclaim\Site\View\Terms;
+namespace CWM\Component\Proclaim\Site\View\CWMTerms;
 // No Direct Access
 defined('_JEXEC') or die;
 

@@ -11,12 +11,14 @@ namespace CWM\Component\Proclaim\Site\Model;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use JApplicationSite;
 use Joomla\Registry\Registry;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Menu\MenuItem;
 
 /**
  * Model class for SeriesDisplays
@@ -123,13 +125,20 @@ class CWMSeriesDisplaysModel extends ListModel
 		$t_params        = $template_params->params;
 		$app             = Factory::getApplication('site');
 		$params          = ComponentHelper::getParams('com_proclaim');
-		$menuparams      = new Registry;
-		$menu            = $app->getMenu()->getActive();
-
-		if ($menu)
+		//$menuparams      = new Registry;
+		//$menuparams = new MenuItem();
+		$sitemenu = $app->getMenu();
+		$menuitems = $sitemenu->getItems(array(), array());
+		foreach ($menuitems as $menuitem)
 		{
-			$menuparams->loadString($menu->params);
+			$menuparams = $menuitem->getParams();
 		}
+		//$menu            = $app->getMenu()->getActive();
+
+		//if ($menu)
+		//{
+		//	$menuparams->loadString($menu->params);
+		//}
 
 		$query = $db->getQuery(true);
 		$query->select('se.*,CASE WHEN CHAR_LENGTH(se.alias) THEN CONCAT_WS(\':\', se.id, se.alias) ELSE se.id END as slug');

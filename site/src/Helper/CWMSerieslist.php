@@ -76,7 +76,7 @@ class CWMSerieslist extends CWMListing
 	 * Get Serieslist Exp
 	 *
 	 * @param   object                    $row       JTable
-	 * @param   Joomla\Registry\Registry  $params    Item Params
+	 * @param   Registry  $params    Item Params
 	 * @param   object                    $template  Template
 	 *
 	 * @return object
@@ -103,7 +103,7 @@ class CWMSerieslist extends CWMListing
 	 * Get Series Details EXP
 	 *
 	 * @param   object                    $row       JTable
-	 * @param   Joomla\Registry\Registry  $params    Item Params
+	 * @param   Registry  $params    Item Params
 	 * @param   object                    $template  Template
 	 *
 	 * @return object
@@ -130,12 +130,12 @@ class CWMSerieslist extends CWMListing
 	 * Get Series Studies Exp
 	 *
 	 * @param   int                       $id        ID
-	 * @param   Joomla\Registry\Registry  $params    Item Params
+	 * @param   Registry  $params    Item Params
 	 * @param   object                    $template  Template
 	 *
 	 * @return string
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   8.0
 	 */
 	public function getSeriesstudiesExp($id, $params, $template)
@@ -225,7 +225,7 @@ class CWMSerieslist extends CWMListing
 	 *
 	 * @return array
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   8.0
 	 */
 	public function getSeriesstudiesDBO($id, $params, $limit = null)

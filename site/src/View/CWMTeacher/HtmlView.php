@@ -7,7 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-namespace CWM\Component\Proclaim\Site\View\Teacher;
+namespace CWM\Component\Proclaim\Site\View\CWMTeacher;
 // No Direct Access
 defined('_JEXEC') or die;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;

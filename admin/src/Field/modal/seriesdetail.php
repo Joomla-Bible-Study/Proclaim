@@ -7,7 +7,13 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Administrator\Field\Modal;
 // No Direct Access
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+
 defined('_JEXEC') or die;
 
 /**
@@ -16,7 +22,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class JFormFieldModal_Seriesdetail extends JFormField
+class seriesdetail extends FormField
 {
 	/**
 	 * The form field type.
@@ -36,12 +42,12 @@ class JFormFieldModal_Seriesdetail extends JFormField
 	protected function getInput()
 	{
 		// Load the modal behavior script.
-		JHtml::_('behavior.modal', 'a.modal');
+		HtmlHelper::_('behavior.modal', 'a.modal');
 
 		// Load the javascript and css
-		JHtml::_('behavior.framework');
-		JHtml::_('script', 'system/modal.js', false, true);
-		JHtml::_('stylesheet', 'system/modal.css', array(), true);
+		HtmlHelper::_('behavior.framework');
+		HtmlHelper::_('script', 'system/modal.js', false, true);
+		HtmlHelper::_('stylesheet', 'system/modal.css', array(), true);
 
 		// Build the script.
 		$script   = array();
@@ -75,23 +81,20 @@ class JFormFieldModal_Seriesdetail extends JFormField
 		);
 		$title = $db->loadResult();
 
-		if ($error = $db->getErrorMsg())
-		{
-			JError::raiseWarning(500, $error);
-		}
+		
 
 		if (empty($title))
 		{
-			$title = JText::_('JBS_CMN_SELECT_SERIES');
+			$title = Text::_('JBS_CMN_SELECT_SERIES');
 		}
 
-		$link = 'index.php?option=com_proclaim&amp;view=series&amp;layout=modal&amp;tmpl=component&amp;function=jSelectChart_' . $this->id;
+		$link = 'index.php?option=com_proclaim&amp;view=CWMSeriesDisplay&amp;layout=modal&amp;tmpl=component&amp;function=jSelectChart_' . $this->id;
 
-		JHtml::_('behavior.modal', 'a.modal');
+		HtmlHelper::_('behavior.modal', 'a.modal');
 		$html = "\n" . '<div class="fltlft"><input type="text" id="' . $this->id . '_name" value="' .
 			htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '" disabled="disabled" /></div>';
-		$html .= '<div class="button2-left"><div class="blank"><a class="modal" title="' . JText::_('JBS_CMN_SELECT_SERIES') .
-			'"  href="' . $link . '" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">' . JText::_('JBS_CMN_SELECT_SERIES') . '</a></div></div>' . "\n";
+		$html .= '<div class="button2-left"><div class="blank"><a class="modal" title="' . Text::_('JBS_CMN_SELECT_SERIES') .
+			'"  href="' . $link . '" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">' . Text::_('JBS_CMN_SELECT_SERIES') . '</a></div></div>' . "\n";
 
 		// The active study id field.
 		if (0 == (int) $this->value)

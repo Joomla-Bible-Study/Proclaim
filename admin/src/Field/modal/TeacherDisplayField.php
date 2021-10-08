@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
-namespace CWM\Component\Proclaim\Administrator\Field\Modal\TeacherDisplayField;
+namespace CWM\Component\Proclaim\Administrator\Field\Modal;
 defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
@@ -115,29 +115,93 @@ class TeacherDisplayField extends FormField
 */
 		// Add the script to the document head.
 //		Factory::getDocument()->addScriptDeclaration(implode("\n", $script));
-
-		// Get the title of the linked chart
-		$db = Factory::getDbo();
-		$db->setQuery(
-			'SELECT teachername AS name' .
-			' FROM #__bsms_teachers' .
-			' WHERE id = ' . (int) $this->value
-		);
-		$title = $db->loadResult();
-
-		if ($error = $db->getErrorMsg())
+		try
 		{
-            Factory::getApplication()->enqueueMessage(500, $error);
-		}
 
+			// Get the title of the linked chart
+			$db = Factory::getDbo();
+			$db->setQuery(
+				'SELECT teachername AS name' .
+				' FROM #__bsms_teachers' .
+				' WHERE id = ' . (int) $this->value
+			);
+			$title = $db->loadResult();
+
+
+		}
+		catch (\Exception $e)
+		{
+			if ($e->getCode() == 404)
+			{
+				// Need to go through the error handler to allow Redirect to work.
+				throw new \Exception($e->getMessage(), 404);
+			}
+			else
+			{
+				$this->setError($e);
+
+			}
+		}
 		if (empty($title))
 		{
-			$title = Text::_('JBS_CMN_SELECT_TEACHER');
+			$modalTitle = Text::_('JBS_CMN_SELECT_TEACHER');
 		}
 
-		$link = 'index.php?option=com_proclaim&amp;view=teachers&amp;layout=modal&amp;tmpl=component&amp;function=jSelectChart_' . $this->id;
+		$link = 'index.php?option=com_proclaim&amp;view=CWMTeachers&amp;layout=modal&amp;tmpl=component&amp;function=jSelectChart_' . $this->id;
+		$urlSelect = $link . '&amp;function=jSelectArticle_' . $this->id;
+		// The current article display field.
+		$html  = '';
 
-		HtmlHelper::_('behavior.modal', 'a.modal');
+		if ($allowSelect || $allowNew || $allowEdit || $allowClear)
+		{
+			$html .= '<span class="input-group">';
+		}
+
+		$html .= '<input class="form-control" id="' . $this->id . '_name" type="text" value="' . $title . '" readonly size="35">';
+
+		// Select article button
+		if ($allowSelect)
+		{
+			$html .= '<button'
+				. ' class="btn btn-primary' . ($value ? ' hidden' : '') . '"'
+				. ' id="' . $this->id . '_select"'
+				. ' data-bs-toggle="modal"'
+				. ' type="button"'
+				. ' data-bs-target="#ModalSelect' . $modalId . '">'
+				. '<span class="icon-file" aria-hidden="true"></span> ' . Text::_('JSELECT')
+				. '</button>';
+		}
+
+		if ($allowSelect || $allowNew || $allowEdit || $allowClear)
+		{
+			$html .= '</span>';
+		}
+
+		// Select article modal
+		if ($allowSelect)
+		{
+			$html .= HTMLHelper::_(
+				'bootstrap.renderModal',
+				'ModalSelect' . $modalId,
+				array(
+					'title'       => $modalTitle,
+					'url'         => $urlSelect,
+					'height'      => '400px',
+					'width'       => '800px',
+					'bodyHeight'  => 70,
+					'modalWidth'  => 80,
+					'footer'      => '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">'
+						. Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>',
+				)
+			);
+		}
+		$class = $this->required ? ' class="required modal-value"' : '';
+
+		$html .= '<input type="hidden" id="' . $this->id . '_id" ' . $class . ' data-required="' . (int) $this->required . '" name="' . $this->name
+			. '" data-text="' . htmlspecialchars(Text::_('JBS_CMN_SELECT_TEACHER'), ENT_COMPAT, 'UTF-8') . '" value="' . $value . '">';
+
+		return $html;
+		/**HtmlHelper::_('behavior.modal', 'a.modal');
 		$html = "\n" . '<div class="fltlft"><input type="text" id="' . $this->id . '_name" value="' .
 			htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '" disabled="disabled" /></div>';
 		$html .= '<div class="button2-left"><div class="blank"><a class="modal" title="' . Text::_('JBS_CMN_SELECT_TEACHER') .
@@ -164,6 +228,6 @@ class TeacherDisplayField extends FormField
 
 		$html .= '<input type="hidden" id="' . $this->id . '_id"' . $class . ' name="' . $this->name . '" value="' . $value . '" />';
 
-		return $html;
+		return $html; */
 	}
 }

@@ -11,6 +11,9 @@
 namespace CWM\Component\Proclaim\Administrator\Model;
 
 // No Direct Access
+use JComponentHelper;
+use JDatabaseQuery;
+use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 
 defined('_JEXEC') or die;
@@ -113,7 +116,7 @@ class CWMLocationsModel extends ListModel
 	 * @return  void
 	 *
 	 * @since   7.0
-	 * @throws  Exception
+	 * @throws  \Exception
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{

@@ -11,6 +11,8 @@ namespace CWM\Component\Proclaim\Site\Helper;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Html\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\Registry\Registry;
+
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -30,7 +32,7 @@ class CWMShowScripture
 	 * Passage Build system
 	 *
 	 * @param   object                    $row     Item Info
-	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   Registry  $params  Item Params
 	 *
 	 * @return boolean
 	 *

@@ -7,7 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-namespace CWM\Component\Proclaim\Site\View\Latest;
+namespace CWM\Component\Proclaim\Site\View\CWMLatest;
 // No Direct Access
 defined('_JEXEC') or die;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -41,9 +41,9 @@ class HtmlView extends BaseHtmlView
 		$db->setQuery($query);
 		$id    = $db->loadResult();
 		$input = Factory::getApplication();
-		$t     = $input->getInt('t', '1');
+		$t     = $input->get('t', '1');
 
-		$link = Route::_('index.php?option=com_proclaim&view=sermon&id=' . $id . '&t=' . $t);
+		$link = Route::_('index.php?option=com_proclaim&view=CWMSermon&id=' . $id . '&t=' . $t);
 		$app  = Factory::getApplication();
 
 		$app->redirect($link);

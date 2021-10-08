@@ -13,6 +13,11 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMLocations;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Helper\ContentHelper;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
@@ -81,7 +86,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since   11.1
 	 *
 	 * @see     fetch()
@@ -91,10 +96,10 @@ class HTMLView extends BaseHtmlView
 		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
-
+		$this->form        = $this->get('form');
 		$this->filterForm    = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');
-		$this->canDo         = JBSMBibleStudyHelper::getActions('', 'location');
+		$this->canDo         = CWMProclaimHelper::getActions('', 'location');
 
 		// Check for errors
 		if (count($errors = $this->get('Errors')))
@@ -106,19 +111,18 @@ class HTMLView extends BaseHtmlView
 
 		// Levels filter.
 		$options   = array();
-		$options[] = JHtml::_('select.option', '1', JText::_('J1'));
-		$options[] = JHtml::_('select.option', '2', JText::_('J2'));
-		$options[] = JHtml::_('select.option', '3', JText::_('J3'));
-		$options[] = JHtml::_('select.option', '4', JText::_('J4'));
-		$options[] = JHtml::_('select.option', '5', JText::_('J5'));
-		$options[] = JHtml::_('select.option', '6', JText::_('J6'));
-		$options[] = JHtml::_('select.option', '7', JText::_('J7'));
-		$options[] = JHtml::_('select.option', '8', JText::_('J8'));
-		$options[] = JHtml::_('select.option', '9', JText::_('J9'));
-		$options[] = JHtml::_('select.option', '10', JText::_('J10'));
+		$options[] = HtmlHelper::_('select.option', '1', Text::_('J1'));
+		$options[] = HtmlHelper::_('select.option', '2', Text::_('J2'));
+		$options[] = HtmlHelper::_('select.option', '3', Text::_('J3'));
+		$options[] = HtmlHelper::_('select.option', '4', Text::_('J4'));
+		$options[] = HtmlHelper::_('select.option', '5', Text::_('J5'));
+		$options[] = HtmlHelper::_('select.option', '6', Text::_('J6'));
+		$options[] = HtmlHelper::_('select.option', '7', Text::_('J7'));
+		$options[] = HtmlHelper::_('select.option', '8', Text::_('J8'));
+		$options[] = HtmlHelper::_('select.option', '9', Text::_('J9'));
+		$options[] = HtmlHelper::_('select.option', '10', Text::_('J10'));
 
 		$this->f_levels = $options;
-
 		// We don't need toolbar in the modal window.
 		if ($this->getLayout() !== 'modal')
 		{
@@ -127,8 +131,8 @@ class HTMLView extends BaseHtmlView
 
 		// Set the document
 		$this->setDocument();
-
 		// Display the template
+
 		parent::display($tpl);
 	}
 
@@ -145,11 +149,11 @@ class HTMLView extends BaseHtmlView
 
 		// Get the toolbar object instance
 		$toolbar = Toolbar::getInstance('toolbar');
-		ToolbarHelper::title(JText::_('JBS_CMN_LOCATIONS'), 'home home');
+		ToolbarHelper::title(Text::_('JBS_CMN_LOCATIONS'), 'home home');
 
 		if ($this->canDo->get('core.create'))
 		{
-			$toolbar->addNew('location.add');
+			ToolBarHelper::addNew('location.add');
 		}
 
 		$dropdown = $toolbar->dropdownButton('status-group')
@@ -209,7 +213,7 @@ class HTMLView extends BaseHtmlView
 	protected function setDocument()
 	{
 		$document = Factory::getDocument();
-		$document->setTitle(JText::_('JBS_TITLE_LOCATIONS'));
+		$document->setTitle(Text::_('JBS_TITLE_LOCATIONS'));
 	}
 
 	/**
@@ -222,10 +226,10 @@ class HTMLView extends BaseHtmlView
 	protected function getSortFields()
 	{
 		return array(
-			'location.location_text' => JText::_('JGRID_HEADING_ORDERING'),
-			'location.published'     => JText::_('JSTATUS'),
-			'access_level'           => JText::_('JGRID_HEADING_ACCESS'),
-			'location.id'            => JText::_('JGRID_HEADING_ID')
+			'location.location_text' => Text::_('JGRID_HEADING_ORDERING'),
+			'location.published'     => Text::_('JSTATUS'),
+			'access_level'           => Text::_('JGRID_HEADING_ACCESS'),
+			'location.id'            => Text::_('JGRID_HEADING_ID')
 		);
 	}
 }

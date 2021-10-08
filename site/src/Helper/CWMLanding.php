@@ -29,12 +29,12 @@ class CWMLanding
 	/**
 	 * Get Locations for Landing Page
 	 *
-	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   Registry  $params  Item Params
 	 * @param   int                       $id      Item ID
 	 *
 	 * @return string
 	 *
-	 * @throws   Exception
+	 * @throws   \Exception
 	 * @since    8.0.0
 	 */
 	public function getLocationsLandingPage($params, $id = 0)
@@ -140,7 +140,7 @@ class CWMLanding
 						}
 
 						$location .= '<div class="span4">';
-						$location .= '<a href="index.php?option=com_proclaim&amp;view=sermons&amp;filter_location=' . $b->id . '&amp;sendingview=landing' .
+						$location .= '<a href="index.php?option=com_proclaim&amp;view=CWMSermons&amp;filter_location=' . $b->id . '&amp;sendingview=CWMLanding' .
 						'&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
 							. $template . '">';
 
@@ -180,7 +180,7 @@ class CWMLanding
 						{
 							$location .= '<div class="landingrow">';
 							$location .= '<div class="landingcell">
-							<a class="landinglink" href="index.php?option=com_proclaim&amp;sendingview=landing&amp;view=sermons&amp;filter_location='
+							<a class="landinglink" href="index.php?option=com_proclaim&amp;sendingview=CWMLlanding&amp;view=CWMSermons&amp;filter_location='
 								. $b->id . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
 								. $template . '">';
 							$location .= $b->location_text;
@@ -198,7 +198,7 @@ class CWMLanding
 						{
 							$location .= '<div class="landingrow">';
 							$location .= '<div class="landingcell">
-							<a class="landinglink" href="index.php?option=com_proclaim&amp;sendingview=landing&amp;view=sermons&amp;filter_location='
+							<a class="landinglink" href="index.php?option=com_proclaim&amp;sendingview=CWMLanding&amp;view=CWMSermons&amp;filter_location='
 								. $b->id . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
 								. $template . '">';
 							$location .= $b->location_text;
@@ -225,12 +225,12 @@ class CWMLanding
 	/**
 	 * Get Teacher for LandingPage
 	 *
-	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   Registry  $params  Item Params
 	 * @param   int                       $id      Item ID
 	 *
 	 * @return string
 	 *
-	 * @throws   Exception
+	 * @throws   \Exception
 	 * @since    8.0.0
 	 */
 	public function getTeacherLandingPage($params, $id = 0)
@@ -333,14 +333,14 @@ class CWMLanding
 						if ($params->get('linkto') == 0)
 						{
 							$teacher .= '<div class="span4">';
-							$teacher .= '<a href="' . Route::_('index.php?option=com_proclaim&amp;view=sermons&amp;t=' . $template)
-								. '&amp;sendingview=landing&amp;filter_teacher=' . $b->id
+							$teacher .= '<a href="' . Route::_('index.php?option=com_proclaim&amp;view=CWMSermons&amp;t=' . $template)
+								. '&amp;sendingview=CWMLanding&amp;filter_teacher=' . $b->id
 								. $langlink . '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
 						}
 						else
 						{
 							$teacher .= '<div class="span4">';
-							$teacher .= '<a href="' . Route::_('index.php?option=com_proclaim&amp;view=teacher&id=' . $b->id . $langlink . '&t=' . $template) . '">';
+							$teacher .= '<a href="' . Route::_('index.php?option=com_proclaim&amp;view=CWMTeacher&id=' . $b->id . $langlink . '&t=' . $template) . '">';
 						}
 
 						$teacher .= $b->teachername;
@@ -377,14 +377,14 @@ class CWMLanding
 							if ($params->get('linkto') == 0)
 							{
 								$teacher .= '<div class="span4"> <a '
-									. Route::_('index.php?option=com_proclaim&amp;view=sermons&amp;t=' . $template)
+									. Route::_('index.php?option=com_proclaim&amp;view=CWMSermons&amp;t=' . $template)
 									. '&amp;sendingview=landing&amp;filter_teacher=' . $b->id
 									. '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
 							}
 							else
 							{
 								$teacher .= '<div class="span4"><a href="'
-									. Route::_('index.php?option=com_proclaim&amp;view=teacher&amp;id=' . $b->id . '&amp;t=' . $template) . '">';
+									. Route::_('index.php?option=com_proclaim&amp;view=CWMTeacher&amp;id=' . $b->id . '&amp;t=' . $template) . '">';
 							}
 
 							$teacher .= $b->teachername;
@@ -401,14 +401,14 @@ class CWMLanding
 							if ($params->get('linkto') == 0)
 							{
 								$teacher .= '<div class="span4"><a href="'
-									. Route::_('index.php?option=com_proclaim&amp;view=sermons&amp;t=' . $template)
+									. Route::_('index.php?option=com_proclaim&amp;view=CWMSermons&amp;t=' . $template)
 									. '&amp;sendingview=landing&amp;filter_teacher=' . $b->id
 									. '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
 							}
 							else
 							{
 								$teacher .= '<div class="span4"><a href="'
-									. Route::_('index.php?option=com_proclaim&amp;sendingview=landing&amp;view=teacher&amp;id=' .
+									. Route::_('index.php?option=com_proclaim&amp;sendingview=CWMLanding&amp;view=teacher&amp;id=' .
 												$b->id . '&amp;t=' . $template
 										) . '">';
 							}
@@ -436,12 +436,12 @@ class CWMLanding
 	/**
 	 * Get Series for LandingPage
 	 *
-	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   Registry  $params  Item Params
 	 * @param   int                       $id      ID
 	 *
 	 * @return string
 	 *
-	 * @throws   Exception
+	 * @throws   \Exception
 	 * @since    8.0.0
 	 */
 	public function getSeriesLandingPage($params, $id = 0)
@@ -594,13 +594,13 @@ class CWMLanding
 							if ($params->get('series_linkto') == '0')
 							{
 								$series .= '<div class="landingcell">
-									<a href="index.php?option=com_proclaim&amp;view=sermons&amp;filter_series='
-									. $b->id . '&amp;sendingview=landing&amp;filter_book=0&amp;filter_teacher=0'
+									<a href="index.php?option=com_proclaim&amp;view=CWMSermons&amp;filter_series='
+									. $b->id . '&amp;sendingview=CWMLanding&amp;filter_book=0&amp;filter_teacher=0'
 									. '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
 							}
 							else
 							{
-								$series .= '<div class="landingcell"><a href="index.php?option=com_proclaim&amp;sendingview=landing&amp;view=seriesdisplay&amp;id='
+								$series .= '<div class="landingcell"><a href="index.php?option=com_proclaim&amp;sendingview=CWMLanding&amp;view=seriesdisplay&amp;id='
 									. $b->id . '&amp;t=' . $template . '">';
 							}
 
@@ -623,14 +623,14 @@ class CWMLanding
 							if ($params->get('series_linkto') == '0')
 							{
 								$series .= '<div class="landingcell">
-									<a href="index.php?option=com_proclaim&amp;view=sermons&amp;filter_series='
-									. $b->id . '&amp;sendingview=landing&amp;filter_book=0&amp;filter_teacher=0'
+									<a href="index.php?option=com_proclaim&amp;view=CWMSermons&amp;filter_series='
+									. $b->id . '&amp;sendingview=CWMLanding&amp;filter_book=0&amp;filter_teacher=0'
 									. '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
 							}
 							else
 							{
 								$series .= '<div class="landingcell">
-									<a href="index.php?option=com_proclaim&amp;sendingview=landing&amp;view=seriesdisplay&amp;id='
+									<a href="index.php?option=com_proclaim&amp;sendingview=CWMLanding&amp;view=CWMSeriesDisplay&amp;id='
 									. $b->id . '&amp;t=' . $template . '">';
 							}
 
@@ -659,12 +659,12 @@ class CWMLanding
 	/**
 	 * Get Years for Landing Page
 	 *
-	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   Registry  $params  Item Params
 	 * @param   int                       $id      Item ID
 	 *
 	 * @return string
 	 *
-	 * @throws   Exception
+	 * @throws   \Exception
 	 * @since    8.0.0
 	 */
 	public function getYearsLandingPage($params, $id = 0)
@@ -753,8 +753,8 @@ class CWMLanding
 				}
 
 				$year .= '<div class="span2">';
-				$year .= '<a href="index.php?option=com_proclaim&amp;view=sermons&amp;filter_year='
-					. $b->theYear . '&amp;sendingview=landing&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;'
+				$year .= '<a href="index.php?option=com_proclaim&amp;view=CWMSermons&amp;filter_year='
+					. $b->theYear . '&amp;sendingview=CWMLanding&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;'
 					. 'filter_book=0&amp;filter_messagetype=0&amp;t='
 					. $template . '">';
 
@@ -795,12 +795,12 @@ class CWMLanding
 	/**
 	 * Get Topics for LandingPage
 	 *
-	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   Registry  $params  Item Params
 	 * @param   int                       $id      ID
 	 *
 	 * @return string
 	 *
-	 * @throws   Exception
+	 * @throws   \Exception
 	 * @since    8.0.0
 	 */
 	public function getTopicsLandingPage($params, $id = 0)
@@ -893,8 +893,8 @@ class CWMLanding
 				}
 
 				$topic .= '<div class="span2">';
-				$topic .= '<a href="index.php?option=com_proclaim&amp;view=sermons&amp;filter_topic=' .
-						$b->id . '&amp;sendingview=landing&amp;filter_teacher=0'
+				$topic .= '<a href="index.php?option=com_proclaim&amp;view=CWMSermons&amp;filter_topic=' .
+						$b->id . '&amp;sendingview=CWMLanding&amp;filter_teacher=0'
 					. '&amp;filter_series=0&amp;filter_location=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
 				$trans = new CWMTranslated;
 				$topic .= $trans::getTopicItemTranslated($b);
@@ -933,12 +933,12 @@ class CWMLanding
 	/**
 	 * Get MessageType for Landing Page
 	 *
-	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   Registry  $params  Item Params
 	 * @param   int                       $id      ID
 	 *
 	 * @return string
 	 *
-	 * @throws   Exception
+	 * @throws   \Exception
 	 * @since    8.0.0
 	 */
 	public function getMessageTypesLandingPage($params, $id = 0)
@@ -1042,8 +1042,8 @@ class CWMLanding
 						}
 
 						$messagetype .= '<div class="span2">';
-						$messagetype .= '<a href="index.php?option=com_proclaim&amp;view=sermons&amp;filter_messagetype=' .
-								$b->id . '&amp;sendingview=landing&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0' .
+						$messagetype .= '<a href="index.php?option=com_proclaim&amp;view=CWMSermons&amp;filter_messagetype=' .
+								$b->id . '&amp;sendingview=CWMLanding&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0' .
 						'&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;t=' . $template . '">';
 
 						$messagetype .= $b->message_type;
@@ -1082,8 +1082,8 @@ class CWMLanding
 						{
 							$messagetype .= '<div class="landingrow">';
 							$messagetype .= '<div class="landingcell">
-							<a class="landinglink" href="index.php?option=com_proclaim&amp;view=sermons&amp;filter_messagetype='
-								. $b->id . '&amp;sendingview=landing&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0' .
+							<a class="landinglink" href="index.php?option=com_proclaim&amp;view=CWMSermons&amp;filter_messagetype='
+								. $b->id . '&amp;sendingview=CWMLanding&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0' .
 							'&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;t=' . $template . '">';
 							$messagetype .= $b->message_type;
 							$messagetype .= '</a></div>';
@@ -1100,8 +1100,8 @@ class CWMLanding
 						{
 							$messagetype .= '<div class="landingrow">';
 							$messagetype .= '<div class="landingcell">
-							<a class="landinglink" href="index.php?option=com_proclaim&amp;view=sermons&amp;filter_messagetype=' . $b->id
-								. '&amp;sendingview=landing&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0' .
+							<a class="landinglink" href="index.php?option=com_proclaim&amp;view=CWMSermons&amp;filter_messagetype=' . $b->id
+								. '&amp;sendingview=CWMLanding&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0' .
 							'&amp;filter_location=0&amp;filter_year=0&amp;t=' . $template . '">';
 							$messagetype .= $b->message_type;
 							$messagetype .= '</a></div>';
@@ -1127,13 +1127,13 @@ class CWMLanding
 	/**
 	 * Get Books for Landing Page.
 	 *
-	 * @param   Joomla\Registry\Registry  $params  Item Params
+	 * @param   Registry  $params  Item Params
 	 * @param   int                       $id      ID
 	 *
 	 * @return string
 	 *
 	 * @since    8.0.0
-	 * @throws   Exception
+	 * @throws   \Exception
 	 */
 	public function getBooksLandingPage($params, $id = 0)
 	{
@@ -1231,8 +1231,8 @@ class CWMLanding
 				}
 
 				$book .= '<div class="span2">';
-				$book .= '<a href="index.php?option=com_proclaim&amp;sendingview=landing&amp;view=sermons&amp;filter_book=' . $b->booknumber
-					. '&amp;sendingview=landing&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0' .
+				$book .= '<a href="index.php?option=com_proclaim&amp;sendingview=landing&amp;view=CWMSermons&amp;filter_book=' . $b->booknumber
+					. '&amp;sendingview=CWMLanding&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0' .
 				'&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
 
 				$book .= Text::sprintf($b->bookname);

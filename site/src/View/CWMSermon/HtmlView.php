@@ -7,7 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-namespace CWM\Component\Proclaim\Site\View\Sermon;
+namespace CWM\Component\Proclaim\Site\View\CWMSermon;
 defined('_JEXEC') or die;
 // No Direct Access
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -136,7 +136,7 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return  void
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function display($tpl = null)
@@ -193,7 +193,7 @@ class HtmlView extends BaseHtmlView
 			$currentLink = $active->link;
 
 			// If the current view is the active item and an article view for this article, then the menu item params take priority
-			if (strpos($currentLink, 'view=sermon') && (strpos($currentLink, '&id=' . (string) $item->id)))
+			if (strpos($currentLink, 'view=CWMSermon') && (strpos($currentLink, '&id=' . (string) $item->id)))
 			{
 				// $item->params are the article params, $temp are the menu item params
 				// Merge so that the menu item params take priority
@@ -242,7 +242,7 @@ class HtmlView extends BaseHtmlView
 		if (!$user->get('guest'))
 		{
 			$userId = $user->get('id');
-			$asset  = 'com_proclaim.message.' . $item->id;
+			$asset  = 'com_proclaim.CWMMessage.' . $item->id;
 
 			// Check general edit permission first.
 			if ($user->authorise('core.edit', $asset))
@@ -355,7 +355,7 @@ class HtmlView extends BaseHtmlView
 		}
 
         PluginHelper::importPlugin('content');
-		$article       = new stdClass;
+		$article       = new \stdClass;
 		$article->text = $this->item->scripture1;
         Factory::getApplication()->triggerEvent('onContentPrepare', array('com_proclaim.sermons', & $article, & $this->item->params, $limitstart = null));
 		$this->item->scripture1 = $article->text;
@@ -372,7 +372,7 @@ class HtmlView extends BaseHtmlView
 		$this->loadHelper('params');
 
 		// Get the podcast subscription
-        HtmlHelper::_('styleshtt','media/css/podcast.css');
+        HtmlHelper::_('stylesheet','media/css/podcast.css');
 		$podcast         = new CWMPodcastSubscribe;
 		$this->subscribe = $podcast->buildSubscribeTable($this->item->params->get('subscribeintro', 'Our Podcasts'));
 
@@ -394,7 +394,7 @@ class HtmlView extends BaseHtmlView
 		// Added database queries from the default template - moved here instead
 		$database = Factory::getDbo();
 		$query    = $database->getQuery(true);
-		$query->select('id')->from('#__menu')->where('link =' . $database->q('index.php?option=com_proclaim&view=sermons'))->where('published = 1');
+		$query->select('id')->from('#__menu')->where('link =' . $database->q('index.php?option=com_proclaim&view=CWMSermons'))->where('published = 1');
 		$database->setQuery($query);
 		$menuid       = $database->loadResult();
 		$this->menuid = $menuid;
@@ -439,7 +439,7 @@ class HtmlView extends BaseHtmlView
 		$detailslink       = Route::_($detailslink);
 		$this->detailslink = $detailslink;
 
-		$this->page         = new stdClass;
+		$this->page         = new \stdClass;
 		$this->page->social = $CWMListing->getShare($detailslink, $this->item, $this->item->params);
 
 		// End process prepare content plugins

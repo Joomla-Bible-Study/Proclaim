@@ -46,7 +46,7 @@
                 <option value="2">JBS_CMN_ASCENDING</option>
             </field>
             <field name="mteacher_id"
-                   type="teacherlist"
+                   type="modal_TeacherDisplay"
                    label="JBS_CMN_FILTERS_TEACHER"
                    description="JBS_CMN_FILTERS_DESC"
                    multiple="true"
@@ -91,10 +91,16 @@
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
             <field name="mlocations"
-                   type="locationslist"
+                   type="modal_location"
                    multiple="true"
                    label="JBS_CMN_FILTERS_LOCATIONS"
                    description="JBS_CMN_FILTERS_DESC"
+                   extension="com_proclaim"
+                   select="true"
+                   new="true"
+                   edit="true"
+                   clear="true"
+                   filter="integer"
                    default="-1">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>

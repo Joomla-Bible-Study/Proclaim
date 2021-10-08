@@ -7,10 +7,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-namespace CWM\Component\Proclaim\Site\View\SeriesDisplays;
+namespace CWM\Component\Proclaim\Site\View\CWMSeriesDisplays;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use JApplicationSite;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -25,6 +26,7 @@ use CWM\Component\Proclaim\Site\Helper\CWMMedia;
 use CWM\Component\Proclaim\Site\Helper\CWMListing;
 use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
 use CWM\Component\Proclaim\Site\Helper\CWMPagebuilder;
+use Joomla\CMS\Menu\SiteMenu;
 
 /**
  * View class for SeriesDisplays
@@ -94,15 +96,17 @@ class HtmlView extends BaseHtmlView
 		/** @type JApplicationSite $mainframe */
 		$mainframe = Factory::getApplication('site');
 		$input     = Factory::getApplication();
-		$option    = $input->get('option', '', 'cmd');
+		$option    = $input->get('option', '');
 		$this->state = $this->get('state');
 		/** @var  $params Registry */
 		$params = $this->state->template->params;
 		$this->template = $this->state->get('template');
 
 		$document = Factory::getDocument();
-		/** @var $itemparams Registry */
-		$itemparams = $mainframe->getPageParameters();
+/*
+ * @todo Fix getting itemparams
+		$itemparams = new SiteMenu();
+		$itemparams->getParams($this->id);
 
 		// Prepare meta information (under development)
 		if ($itemparams->get('metakey'))
@@ -122,7 +126,7 @@ class HtmlView extends BaseHtmlView
 		{
 			$document->setDescription($params->get('metadesc'));
 		}
-
+*/
 		HtmlHelper::_('biblestudy.framework');
 		HtmlHelper::_('biblestudy.loadCss', $params, null, 'font-awesome');
 
@@ -157,7 +161,7 @@ class HtmlView extends BaseHtmlView
 
 		$this->items           = $items;
 		$pagination            = $this->get('Pagination');
-		$this->page            = new stdClass;
+		$this->page            = new \stdClass;
 		$this->page->pagelinks = $pagination->getPagesLinks();
 		$this->page->counter   = $pagination->getPagesCounter();
 		$series                = $this->get('Series');

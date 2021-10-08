@@ -11,6 +11,9 @@ namespace CWM\Component\Proclaim\Site\Controller;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Site\Helper\CWMdownload;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Session\Session;
 use Joomla\Registry\Registry;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Factory;
@@ -44,7 +47,7 @@ class proclaim extends BaseController
 	 *                          Recognized key values include 'name', 'default_task', 'model_path', and
 	 * 'view_path' (this list is not meant to be comprehensive).
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since    7.0.0
 	 */
 	public function __construct($config = array())
@@ -59,7 +62,7 @@ class proclaim extends BaseController
 		// Article frontpage Editor article proxying:
 		elseif ($this->input->get('view') === 'sermons' && $this->input->get('layout') === 'modal')
 		{
-			JHtml::_('stylesheet', 'system/adminlist.css', array(), true);
+			HtmlHelper::_('stylesheet', 'system/adminlist.css', array(), true);
 			$config['base_path'] = JPATH_COMPONENT_ADMINISTRATOR;
 		}
 
@@ -77,7 +80,7 @@ class proclaim extends BaseController
 	 *
 	 * @return  BaseController|boolean  A BaseController object to support chaining.
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   7.0.0
 	 */
 	public function display($cachable = true, $urlparams = array())
@@ -150,7 +153,7 @@ class proclaim extends BaseController
 	 *
 	 * @return boolean|void
 	 *
-	 * @throws   Exception
+	 * @throws   \Exception
 	 * @since    7.0.0
 	 */
 	public function comment()
@@ -229,7 +232,7 @@ class proclaim extends BaseController
 	 *
 	 * @return void
 	 *
-	 * @throws   Exception
+	 * @throws   \Exception
 	 * @since    7.0.0
 	 */
 	public function commentsEmail($params)
@@ -302,7 +305,7 @@ class proclaim extends BaseController
 		if ($task === 'download')
 		{
 			$mid        = $this->input->get('mid', '0', 'int');
-			$downloader = new JBSMDownload;
+			$downloader = new CWMDownload;
 			$downloader->download($mid);
 
 			die;
@@ -340,7 +343,7 @@ class proclaim extends BaseController
 	public function playHit()
 	{
 		// Check for request forgeries.
-		JSession::checkToken('get') or jexit(Text::_('JINVALID_TOKEN'));
+		Session::checkToken('get') or jexit(Text::_('JINVALID_TOKEN'));
 
 		$input    = Factory::getApplication('site');
 		$getMedia = new CWMMedia;

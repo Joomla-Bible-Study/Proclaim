@@ -7,7 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-namespace CWM\Component\Proclaim\Site\View\MessageList;
+namespace CWM\Component\Proclaim\Site\View;
 // No Direct Access
 defined('_JEXEC') or die;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -120,7 +120,7 @@ class HtmlView extends BaseHtmlView
 	 * @return  mixed
 	 *
 	 * @since 7.0
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	public function display($tpl = null)
 	{
@@ -157,7 +157,7 @@ class HtmlView extends BaseHtmlView
 		if ($this->canDo->get('core.create'))
 		{
 			$this->newlink = '<a href="' . Route::_('index.php?option=com_proclaim&task=messageform.edit') . '" class="btn btn-primary">'
-				. JText::_('JBS_CMN_NEW') . ' <i class="icon-plus"></i></a>';
+				. Text::_('JBS_CMN_NEW') . ' <i class="icon-plus"></i></a>';
 		}
 
 		$this->_prepareDocument();
@@ -171,7 +171,7 @@ class HtmlView extends BaseHtmlView
 	 * @return void
 	 *
 	 * @since 7.0
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	protected function _prepareDocument()
 	{
@@ -200,7 +200,7 @@ class HtmlView extends BaseHtmlView
 		}
 		elseif ($app->get('sitename_pagetitles', 0) == 1)
 		{
-			$title = JText::sprintf('JPAGETITLE', $app->get('sitename'), $title);
+			$title = Text::sprintf('JPAGETITLE', $app->get('sitename'), $title);
 		}
 		elseif ($app->get('sitename_pagetitles', 0) == 2)
 		{
