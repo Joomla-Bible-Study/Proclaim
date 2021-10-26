@@ -40,18 +40,21 @@ if ($saveOrder)
 ?>
 <script type="text/javascript">
 	Joomla.orderTable = function () {
-		table = document.getElementById("sortTable");
-		direction = document.getElementById("directionTable");
-		order = table.options[table.selectedIndex].value;
-		if (order != '<?php echo $listOrder; ?>') {
-			dirn = 'asc';
-		} else {
-			dirn = direction.options[direction.selectedIndex].value;
+		table = document.getElementById('sortTable')
+		direction = document.getElementById('directionTable')
+		order = table.options[table.selectedIndex].value
+		if (order != '<?php echo $listOrder; ?>')
+		{
+			dirn = 'asc'
 		}
-		Joomla.tableOrdering(order, dirn, '');
+		else
+		{
+			dirn = direction.options[direction.selectedIndex].value
+		}
+		Joomla.tableOrdering(order, dirn, '')
 	}
 </script>
-<form action="<?php echo Route::_('index.php?option=com_proclaim&view=teachers'); ?>" method="post" name="adminForm"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="post" name="adminForm"
       id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
@@ -83,17 +86,17 @@ if ($saveOrder)
 							       onclick="Joomla.checkAll(this)"/>
 						</th>
 						<th width="5%">
-							<?php echo HtmlHelper::_('grid.sort', 'JBS_CMN_PUBLISHED', 'teacher.published', $listDirn, $listOrder); ?>
+							<?php echo HtmlHelper::_('grid.sort', 'JBS_CMN_PUBLISHED', 'cwmteacher.published', $listDirn, $listOrder); ?>
 						</th>
 
 						<th align="center">
-							<?php echo HtmlHelper::_('grid.sort', 'JBS_CMN_TEACHER', 'teacher.teachername', $listDirn, $listOrder); ?>
+							<?php echo HtmlHelper::_('grid.sort', 'JBS_CMN_TEACHER', 'cwmteacher.teachername', $listDirn, $listOrder); ?>
 						</th>
 						<th width="10%" class="nowrap hidden-phone">
-							<?php echo HtmlHelper::_('grid.sort', 'JGRID_HEADING_ACCESS', 'teacher.access', $listDirn, $listOrder); ?>
+							<?php echo HtmlHelper::_('grid.sort', 'JGRID_HEADING_ACCESS', 'cwmteacher.access', $listDirn, $listOrder); ?>
 						</th>
 						<th width="5%">
-							<?php echo HtmlHelper::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
+							<?php echo HtmlHelper::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'cwmlanguage', $listDirn, $listOrder); ?>
 						</th>
 						<th>
 							<?php echo Text::_('JBS_TCH_SHOW_LIST'); ?>
@@ -102,7 +105,7 @@ if ($saveOrder)
 							<?php echo Text::_('JBS_TCH_SHOW_LANDING_PAGE'); ?>
 						</th>
 						<th width="1%" class="nowrap">
-							<?php echo HtmlHelper::_('grid.sort', 'JGRID_HEADING_ID', 'teacher.id', $listDirn, $listOrder); ?>
+							<?php echo HtmlHelper::_('grid.sort', 'JGRID_HEADING_ID', 'cwmteacher.id', $listDirn, $listOrder); ?>
 						</th>
 					</tr>
 					</thead>
@@ -116,7 +119,7 @@ if ($saveOrder)
 					<?php
 					foreach ($this->items as $i => $item) :
 						//$item->max_ordering = 0; //??
-						$ordering = ($listOrder == 'teacher.ordering');
+						$ordering = ($listOrder == 'cwmteacher.ordering');
 						$canCreate = $user->authorise('core.create');
 						$canEdit = $user->authorise('core.edit', 'com_proclaim.teacher.' . $item->id);
 						$canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.teacher.' . $item->id);
@@ -155,7 +158,7 @@ if ($saveOrder)
 							<td class="nowrap has-context">
 								<div class="pull-left">
 									<?php if ($canEdit || $canEditOwn) : ?>
-										<a href="<?php echo Route::_('index.php?option=com_proclaim&task=teacher.edit&id=' . (int) $item->id); ?>">
+										<a href="<?php echo Route::_('index.php?option=com_proclaim&task=cwmteacher.edit&id=' . (int) $item->id); ?>">
 											<?php echo($this->escape($item->teachername) ? $this->escape($item->teachername) : 'ID: ' . $this->escape($item->id)); ?>
 										</a>
 									<?php else : ?>
@@ -168,26 +171,26 @@ if ($saveOrder)
 								<div class="pull-left">
 									<?php
 									// Create dropdown items
-									HtmlHelper::_('dropdown.edit', $item->id, 'teacher.');
+									HtmlHelper::_('dropdown.edit', $item->id, 'cwmteacher.');
 									HtmlHelper::_('dropdown.divider');
 									if ($item->published) :
-										HtmlHelper::_('dropdown.unpublish', 'cb' . $i, 'teachers.');
+										HtmlHelper::_('dropdown.unpublish', 'cb' . $i, 'cwmteachers.');
 									else :
-										HtmlHelper::_('dropdown.publish', 'cb' . $i, 'teachers.');
+										HtmlHelper::_('dropdown.publish', 'cb' . $i, 'cwmteachers.');
 									endif;
 
 									HtmlHelper::_('dropdown.divider');
 
 									if ($archived) :
-										HtmlHelper::_('dropdown.unarchive', 'cb' . $i, 'teachers.');
+										HtmlHelper::_('dropdown.unarchive', 'cb' . $i, 'cwmteachers.');
 									else :
-										HtmlHelper::_('dropdown.archive', 'cb' . $i, 'teachers.');
+										HtmlHelper::_('dropdown.archive', 'cb' . $i, 'cwmteachers.');
 									endif;
 
 									if ($trashed) :
-										HtmlHelper::_('dropdown.untrash', 'cb' . $i, 'teachers.');
+										HtmlHelper::_('dropdown.untrash', 'cb' . $i, 'cwmteachers.');
 									else :
-										HtmlHelper::_('dropdown.trash', 'cb' . $i, 'teachers.');
+										HtmlHelper::_('dropdown.trash', 'cb' . $i, 'cwmteachers.');
 									endif;
 
 									// Render dropdown list

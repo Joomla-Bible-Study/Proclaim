@@ -7,11 +7,13 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-// No direct access
-defined('_JEXEC') or die();
 
-// Include dependencies
-JLoader::register('UploadScript', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/CWMUploadScript.php');
+namespace CWM\Component\Proclaim\Administrator\View\CWMMessageTypes;
+
+// No direct access
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+
+defined('_JEXEC') or die();
 
 /**
  * Mediamu View
@@ -19,7 +21,7 @@ JLoader::register('UploadScript', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/CWMU
  * @package  Proclaim.Admin
  * @since    9.0.0
  */
-class BiblestudyViewUpload extends JViewLegacy
+class HTMLView extends BaseHtmlView
 {
 	public $enableLog;
 

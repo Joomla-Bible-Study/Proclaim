@@ -8,7 +8,12 @@
  * @link       https://www.christianwebministries.org
  * @since      7.1.0
  * */
+
+namespace CWM\Component\Proclaim\Administrator\View\CWMTemplatecodes;
+
 // No Direct Access
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+
 defined('_JEXEC') or die;
 
 /**
@@ -17,7 +22,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.1.0
  */
-class BiblestudyViewTemplatecodes extends JViewLegacy
+class HTMLView extends BaseHtmlView
 {
 	/**
 	 * Items

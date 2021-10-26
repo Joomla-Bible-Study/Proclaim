@@ -11,7 +11,18 @@
 namespace CWM\Component\Proclaim\Administrator\Model;
 
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CWMThumbnail;
+use CWM\Component\Proclaim\Administrator\Table\CWMTeacherTable;
+use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Table\Table;
+use Joomla\Input\Input;
+use Joomla\Registry\Registry;
 
 defined('_JEXEC') or die;
 
@@ -32,6 +43,14 @@ class CWMTeacherModel extends AdminModel
 	protected $text_prefix = 'com_proclaim';
 
 	/**
+	 * The type alias for this content type (for example, 'com_content.article').
+	 *
+	 * @var      string
+	 * @since    3.2
+	 */
+	public $typeAlias = 'com_proclaim.teacher';
+
+	/**
 	 * Items data
 	 *
 	 * @var  object|boolean
@@ -40,20 +59,12 @@ class CWMTeacherModel extends AdminModel
 	private $data;
 
 	/**
-	 * Method to get a table object, load it if necessary.
+	 * Name of the form
 	 *
-	 * @param   string  $name     The table name. Optional.
-	 * @param   string  $prefix   The class prefix. Optional.
-	 * @param   array   $options  Configuration array for model. Optional.
-	 *
-	 * @return  JTable  A JTable object
-	 *
-	 * @since    1.7.0
+	 * @var string
+	 * @since  4.0.0
 	 */
-	public function getTable($name = 'Teacher', $prefix = 'Table', $options = array())
-	{
-		return JTable::getInstance($name, $prefix, $options);
-	}
+	protected $formName = 'teacher';
 
 	/**
 	 * Get the form data
@@ -63,22 +74,40 @@ class CWMTeacherModel extends AdminModel
 	 *
 	 * @return  mixed  A JForm object on success, false on failure
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
-		JForm::addFieldPath('JPATH_ADMINISTRATOR/components/com_users/models/fields');
+		Form::addFieldPath('JPATH_ADMINISTRATOR/components/com_users/models/fields');
 
 		// Get the form.
-		$form = $this->loadForm('com_proclaim.teacher', 'teacher', array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_contact.' . $this->formName, $this->formName, array('control' => 'jform', 'load_data' => $loadData));
 
 		if ($form === null)
 		{
 			return false;
 		}
 
-		// Modify the form based on access controls.
-		if (!$this->canEditState((object) $data))
+		$jinput = Factory::getApplication()->input;
+
+		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
+		if ($jinput->get('a_id'))
+		{
+			$id = $jinput->get('a_id', 0);
+		}
+		else
+		{
+			// The back end uses id so we use that the rest of the time and set it to 0 by default.
+			$id = $jinput->get('id', 0);
+		}
+
+		$user = Factory::getUser();
+
+		// Check for existing article.
+		// Modify the form based on Edit State access controls.
+		if (($id != 0 && (!$user->authorise('core.edit.state', 'com_proclaim.message.' . (int) $id)))
+			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_proclaim')))
 		{
 			// Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');
@@ -101,6 +130,7 @@ class CWMTeacherModel extends AdminModel
 	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the
 	 *                   component.
 	 *
+	 * @throws \Exception
 	 * @since   12.2
 	 */
 	protected function canEditState($record)
@@ -133,7 +163,7 @@ class CWMTeacherModel extends AdminModel
 					$text .= ' ' . $studie->id . '-"' . $studie->studytitle . '",';
 				}
 
-				Factory::getApplication()->enqueueMessage(JText::_('JBS_TCH_CAN_NOT_DELETE') . $text);
+				Factory::getApplication()->enqueueMessage(Text::_('JBS_TCH_CAN_NOT_DELETE') . $text);
 			}
 
 			return false;
@@ -153,7 +183,7 @@ class CWMTeacherModel extends AdminModel
 	 */
 	public function checkout($pk = null)
 	{
-		return $pk;
+		return true;
 	}
 
 	/**
@@ -163,12 +193,13 @@ class CWMTeacherModel extends AdminModel
 	 *
 	 * @return boolean
 	 *
+	 * @throws \Exception
 	 * @since 9.0.0
 	 */
 	public function save($data)
 	{
-		/** @var Joomla\Registry\Registry $params */
-		$params = JBSMParams::getAdmin()->params;
+		/** @var Registry $params */
+		$params = CWMParams::getAdmin()->params;
 		$path   = 'images/biblestudy/teachers/' . $data['id'];
 		$prefix = 'thumb_';
 
@@ -181,7 +212,7 @@ class CWMTeacherModel extends AdminModel
 				$data['teacher_image']     = "";
 				$data['teacher_thumbnail'] = "";
 			}
-			elseif (!JBSMBibleStudyHelper::startsWith(basename($data['image']), $prefix))
+			elseif (!CWMProclaimHelper::startsWith(basename($data['image']), $prefix))
 			{
 				// Modify model data
 				$data['teacher_image']     = $data['image'];
@@ -216,7 +247,7 @@ class CWMTeacherModel extends AdminModel
 			return parent::save($data);
 		}
 
-		JBSMThumbnail::create($data['image'], $path, $params->get('thumbnail_teacher_size', 100));
+		CWMThumbnail::create($data['image'], $path, $params->get('thumbnail_teacher_size', 100));
 
 		// Modify model data
 		$data['teacher_image']     = $data['image'];
@@ -230,6 +261,7 @@ class CWMTeacherModel extends AdminModel
 	 *
 	 * @return    mixed    The data for the form.
 	 *
+	 * @throws \Exception
 	 * @since   7.0
 	 */
 	protected function loadFormData()
@@ -252,7 +284,7 @@ class CWMTeacherModel extends AdminModel
 	 */
 	public function getItem($pk = null)
 	{
-		$jinput = Factory::getApplication()->input;
+		$jinput = new Input;
 
 		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
 		if ($jinput->get('a_id'))
@@ -278,7 +310,7 @@ class CWMTeacherModel extends AdminModel
 	/**
 	 * Prepare and sanitise the table prior to saving.
 	 *
-	 * @param   TableTeacher  $table  A reference to a JTable object.
+	 * @param   CWMTeacherTable  $table  A reference to a JTable object.
 	 *
 	 * @return  void
 	 *
@@ -289,11 +321,11 @@ class CWMTeacherModel extends AdminModel
 		jimport('joomla.filter.output');
 
 		$table->teachername = htmlspecialchars_decode($table->teachername, ENT_QUOTES);
-		$table->alias       = JApplicationHelper::stringURLSafe($table->alias);
+		$table->alias       = ApplicationHelper::stringURLSafe($table->alias);
 
 		if (empty($table->alias))
 		{
-			$table->alias = JApplicationHelper::stringURLSafe($table->teachername);
+			$table->alias = ApplicationHelper::stringURLSafe($table->teachername);
 		}
 
 		if (empty($table->id))

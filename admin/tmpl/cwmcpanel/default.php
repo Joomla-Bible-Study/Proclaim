@@ -135,55 +135,55 @@ $simple = CWMHelper::getSimpleView();
 									   title="<?php echo Text::_('JBS_CMN_ADMINISTRATION'); ?>" class="btn"> <i
 												class="icon-big icon-options"> </i>
 										<span><br/> <?php echo Text::_('JBS_CMN_ADMINISTRATION'); ?> </span></a>
-									<a href="index.php?option=com_proclaim&amp;view=messages"
+									<a href="index.php?option=com_proclaim&amp;view=cwmmessages"
 									   title="<?php echo Text::_('JBS_CMN_STUDIES'); ?>" class="btn"> <i
 												class="icon-big icon-book"></i>
 										<span><br/> <?php echo Text::_('JBS_CMN_STUDIES'); ?> </span></a>
-									<a href="index.php?option=com_proclaim&amp;view=mediafiles"
+									<a href="index.php?option=com_proclaim&amp;view=cwmmediafiles"
 									   title="<?php echo Text::_('JBS_CMN_MEDIA_FILES'); ?>" class="btn"> <i
 												class="icon-big icon-video"></i>
 										<span><br/> <?php echo Text::_('JBS_CMN_MEDIA_FILES'); ?> </span></a>
-									<a href="index.php?option=com_proclaim&amp;view=teachers"
+									<a href="index.php?option=com_proclaim&amp;view=cwmteachers"
 									   title="<?php echo Text::_('JBS_CMN_TEACHERS'); ?>" class="btn"> <i
 												class="icon-user icon-big"></i>
 										<span><br/> <?php echo Text::_('JBS_CMN_TEACHERS'); ?> </span></a>
-									<a href="index.php?option=com_proclaim&amp;view=series"
+									<a href="index.php?option=com_proclaim&amp;view=cwmseries"
 									   title="<?php echo Text::_('JBS_CMN_SERIES'); ?>" class="btn"> <i
 												class="icon-big icon-tree-2"></i>
 										<span><br/> <?php echo Text::_('JBS_CMN_SERIES'); ?> </span></a>
 									<?php if (!$simple->mode): ?>
-										<a href="index.php?option=com_proclaim&amp;view=messagetypes"
+										<a href="index.php?option=com_proclaim&amp;view=cwmmessagetypes"
 										   title="<?php echo Text::_('JBS_CMN_MESSAGETYPES'); ?>" class="btn"> <i
 													class="icon-big icon-list-2"></i><br/>
 											<span> <?php echo Text::_('JBS_CMN_MESSAGETYPES'); ?> </span></a>
-										<a href="index.php?option=com_proclaim&amp;view=locations"
+										<a href="index.php?option=com_proclaim&amp;view=cwmlocations"
 										   title="<?php echo Text::_('JBS_CMN_LOCATIONS'); ?>" class="btn"> <i
 													class="icon-big icon-home"></i>
 											<span><br/> <?php echo Text::_('JBS_CMN_LOCATIONS'); ?> </span></a>
-										<a href="index.php?option=com_proclaim&amp;view=topics"
+										<a href="index.php?option=com_proclaim&amp;view=cwmtopics"
 										   title="<?php echo Text::_('JBS_CMN_TOPICS'); ?>" class="btn"> <i
 													class="icon-big icon-tags"></i>
 											<span><br/> <?php echo Text::_('JBS_CMN_TOPICS'); ?> </span></a>
-										<a href="index.php?option=com_proclaim&amp;view=comments"
+										<a href="index.php?option=com_proclaim&amp;view=cwmcomments"
 										   title="<?php echo Text::_('JBS_CMN_COMMENTS'); ?>" class="btn"> <span
 													class="icon-big icon-comments-2"></span><br/>
 											<span> <?php echo Text::_('JBS_CMN_COMMENTS'); ?> </span></a>
 									<?php endif; ?>
-									<a href="index.php?option=com_proclaim&amp;view=servers"
+									<a href="index.php?option=com_proclaim&amp;view=cwmservers"
 									   title="<?php echo Text::_('JBS_CMN_SERVERS'); ?>" class="btn"> <span
 												class="icon-big icon-database"></span>
 										<span><br/> <?php echo Text::_('JBS_CMN_SERVERS'); ?> </span></a>
-									<a href="index.php?option=com_proclaim&amp;view=podcasts"
+									<a href="index.php?option=com_proclaim&amp;view=cwmpodcasts"
 									   title="<?php echo Text::_('JBS_CMN_PODCASTS'); ?>" class="btn"> <span
 												class="icon-big icon-stack"></span>
 										<span><br/> <?php echo Text::_('JBS_CMN_PODCASTS'); ?> </span></a>
 
 									<?php if (!$simple->mode): ?>
-										<a href="index.php?option=com_proclaim&amp;view=templates"
+										<a href="index.php?option=com_proclaim&amp;view=cwmtemplates"
 										   title="<?php echo Text::_('JBS_CMN_TEMPLATES'); ?>" class="btn"> <span
 													class="icon-big icon-grid"></span>
 											<span><br/> <?php echo Text::_('JBS_CMN_TEMPLATES'); ?> </span></a>
-										<a href="index.php?option=com_proclaim&amp;view=templatecodes"
+										<a href="index.php?option=com_proclaim&amp;view=cwmtemplatecodes"
 										   title="<?php echo Text::_('JBS_CMN_TEMPLATECODE'); ?>" class="btn"> <span
 													class="icon-big icon-stack"></span>
 											<span><br/> <?php echo Text::_('JBS_CMN_TEMPLATECODE'); ?> </span></a>

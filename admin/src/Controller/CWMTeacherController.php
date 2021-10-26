@@ -23,7 +23,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CMWTeacherController extends FormController
+class CWMTeacherController extends FormController
 {
 	/**
 	 * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
@@ -69,7 +69,7 @@ class CMWTeacherController extends FormController
 	 *
 	 * @since 7.0
 	 */
-	public function getModel($name = 'CWMTeacherModel', $prefix = '', $config = array('ignore_request' => true))
+	public function getModel($name = 'CWMTeacher', $prefix = '', $config = array('ignore_request' => true))
 	{
 		return parent::getModel($name, $prefix, $config);
 	}

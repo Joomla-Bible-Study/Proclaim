@@ -329,7 +329,9 @@ class CWMMessageModel extends AdminModel
 			return $this->data;
 		}
 
-		return parent::getItem($pk);
+		$this->data = parent::getItem($pk);
+
+		return $this->data;
 	}
 
 	/**
@@ -354,6 +356,7 @@ class CWMMessageModel extends AdminModel
 	 *
 	 * @return  mixed
 	 *
+	 * @throws \Exception
 	 * @since    11.1
 	 */
 	public function saveorder($pks = null, $order = null)

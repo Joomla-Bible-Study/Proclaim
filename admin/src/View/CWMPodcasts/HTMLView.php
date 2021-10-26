@@ -7,7 +7,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
+namespace CWM\Component\Proclaim\Administrator\View\CWMPodcasts;
+
 // No Direct Access
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+
 defined('_JEXEC') or die;
 
 /**
@@ -16,7 +21,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class BiblestudyViewPodcasts extends JViewLegacy
+class HTMLView extends BaseHtmlView
 {
 	/**
 	 * Can Do

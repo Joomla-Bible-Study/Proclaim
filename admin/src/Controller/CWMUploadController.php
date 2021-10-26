@@ -28,7 +28,7 @@ defined('_JEXEC') or die();
  * @package  Proclaim.Admin
  * @since    9.0.0
  */
-class CMWUploadController extends AdminController
+class CWMUploadController extends AdminController
 {
 	/**
 	 * File upload hanlder

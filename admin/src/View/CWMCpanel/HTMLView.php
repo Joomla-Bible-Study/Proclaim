@@ -99,11 +99,9 @@ class HTMLView extends BaseHtmlView
 
 		$this->addToolbar();
 
-		//$this->sidebar = HtmlSidebar::render();
-
 		// Post-installation messages information
-		//$this->hasPostInstallationMessages = $model->hasPostInstallMessages();
-		//$this->extension_id                = $this->state->get('extension_id', 0, 'int');
+		$this->hasPostInstallationMessages = $model->hasPostInstallMessages();
+		$this->extension_id                = $this->state->get('extension_id', 0, 'int');
 
 		// Set the document
 		$this->setDocument();

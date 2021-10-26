@@ -23,7 +23,7 @@ use Joomla\Utilities\ArrayHelper;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CMWTeachersController extends AdminController
+class CWMTeachersController extends AdminController
 {
 	/**
 	 * Method to save the submitted ordering values for records via AJAX.

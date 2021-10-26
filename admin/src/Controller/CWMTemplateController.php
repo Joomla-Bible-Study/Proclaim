@@ -24,7 +24,7 @@ use Joomla\Utilities\ArrayHelper;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CMWTemplateController extends FormController
+class CWMTemplateController extends FormController
 {
 	/**
 	 * Copy Template

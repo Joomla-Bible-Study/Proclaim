@@ -1,30 +1,43 @@
 <?php
 /**
- * JView html
+ * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
  * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
+namespace CWM\Component\Proclaim\Administrator\View\CWMTemplate;
+
 // No Direct Access
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+
 defined('_JEXEC') or die;
 
 /**
- * View class for Podcast
+ * View class for Template
  *
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class BiblestudyViewPodcast extends JViewLegacy
+class HTMLView extends BaseHtmlView
 {
 	/**
-	 * Form
+	 * Pagination
 	 *
-	 * @var object
+	 * @var array
 	 * @since    7.0.0
 	 */
-	protected $form;
+	protected $pagination;
+
+	/**
+	 * State
+	 *
+	 * @var array
+	 * @since    7.0.0
+	 */
+	protected $state;
 
 	/**
 	 * Item
@@ -35,20 +48,20 @@ class BiblestudyViewPodcast extends JViewLegacy
 	protected $item;
 
 	/**
-	 * State
+	 * Types
 	 *
 	 * @var object
 	 * @since    7.0.0
 	 */
-	protected $state;
+	protected $types;
 
 	/**
-	 * Defaults
+	 * Form
 	 *
-	 * @var array
+	 * @var object
 	 * @since    7.0.0
 	 */
-	protected $defaults;
+	protected $form;
 
 	/**
 	 * Can Do
@@ -70,18 +83,23 @@ class BiblestudyViewPodcast extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$this->form  = $this->get("Form");
-		$this->item  = $this->get("Item");
-		$this->state = $this->get("State");
-		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'podcast');
-		$this->setLayout("edit");
-		$this->addToolbar();
+		$this->item       = $this->get('Item');
+		$this->pagination = $this->get('Pagination');
+		$this->state      = $this->get('State');
+		$this->types      = $this->get('Types');
+		$this->form       = $this->get("Form");
+		$this->canDo      = JBSMBibleStudyHelper::getActions($this->item->id, 'template');
 
-		// Display the template
-		parent::display($tpl);
+		$this->setLayout("edit");
+
+		// Set the toolbar
+		$this->addToolbar();
 
 		// Set the document
 		$this->setDocument();
+
+		// Display the template
+		parent::display($tpl);
 	}
 
 	/**
@@ -97,35 +115,35 @@ class BiblestudyViewPodcast extends JViewLegacy
 		$input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolbarHelper::title(JText::_('JBS_CMN_PODCASTS') . ': <small><small>[' . $title . ']</small></small>', 'feed feed');
+		JToolbarHelper::title(JText::_('JBS_CMN_TEMPLATES') . ': <small><small>[' . $title . ']</small></small>', 'square square');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_proclaim'))
 		{
-			JToolbarHelper::apply('podcast.apply');
-			JToolbarHelper::save('podcast.save');
-			JToolbarHelper::save2new('podcast.save2new');
-			JToolbarHelper::cancel('podcast.cancel');
+			JToolbarHelper::apply('template.apply');
+			JToolbarHelper::save('template.save');
+			JToolbarHelper::save2new('template.save2new');
+			JToolbarHelper::cancel('template.cancel');
 		}
 		else
 		{
 			if ($this->canDo->get('core.edit', 'com_proclaim'))
 			{
-				JToolbarHelper::apply('podcast.apply');
-				JToolbarHelper::save('podcast.save');
+				JToolbarHelper::apply('template.apply');
+				JToolbarHelper::save('template.save');
 
 				// We can save this record, but check the create permission to see if we can return to make a new one.
 				if ($this->canDo->get('core.create', 'com_proclaim'))
 				{
-					JToolbarHelper::save2new('podcast.save2new');
+					JToolbarHelper::save2new('template.save2new');
 				}
 			}
 			// If checked out, we can still save
 			if ($this->canDo->get('core.create', 'com_proclaim'))
 			{
-				JToolbarHelper::save2copy('podcast.save2copy');
+				JToolbarHelper::save2copy('template.save2copy');
 			}
 
-			JToolbarHelper::cancel('podcast.cancel', 'JTOOLBAR_CLOSE');
+			JToolbarHelper::cancel('template.cancel', 'JTOOLBAR_CLOSE');
 		}
 
 		JToolbarHelper::divider();
@@ -143,6 +161,6 @@ class BiblestudyViewPodcast extends JViewLegacy
 	{
 		$isNew    = ($this->item->id < 1);
 		$document = Factory::getDocument();
-		$document->setTitle($isNew ? JText::_('JBS_TITLE_PODCAST_CREATING') : JText::sprintf('JBS_TITLE_PODCAST_EDITING', $this->item->title));
+		$document->setTitle($isNew ? JText::_('JBS_TITLE_TEMPLATES_CREATING') : JText::sprintf('JBS_TITLE_TEMPLATES_EDITING', $this->item->title));
 	}
 }

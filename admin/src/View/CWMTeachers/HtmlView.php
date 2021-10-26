@@ -7,7 +7,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-namespace CWM\Component\Proclaim\Administrator\View;
+namespace CWM\Component\Proclaim\Administrator\View\CWMTeachers;
+
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -135,7 +136,7 @@ class HtmlView extends BaseHtmlView
 		$this->setDocument();
 
 		// Display the template
-		return parent::display($tpl);
+		parent::display($tpl);
 	}
 
 	/**
@@ -147,14 +148,15 @@ class HtmlView extends BaseHtmlView
 	 */
 	protected function addToolbar()
 	{
-		$user = Factory::getUser();
+		$canDo = ContentHelper::getActions('com_proclaim');
+		$user = Factory::getApplication()->getIdentity();
 
 		// Get the toolbar object instance
 		$toolbar = Toolbar::getInstance('toolbar');
 
 		ToolbarHelper::title(Text::_('JBS_CMN_TEACHERS'), 'users users');
 
-		if ($this->canDo->get('core.create'))
+		if ($canDo->get('core.create'))
 		{
 			$toolbar->addNew('teacher.add');
 		}
@@ -167,12 +169,12 @@ class HtmlView extends BaseHtmlView
 			->listCheck(true);
 		$childBar = $dropdown->getChildToolbar();
 
-		if ($this->canDo->get('core.edit'))
+		if ($canDo->get('core.edit'))
 		{
 			$toolbar->edit('teacher.edit');
 		}
 
-		if ($this->canDo->get('core.edit.state'))
+		if ($canDo->get('core.edit.state'))
 		{
 			$toolbar->divider();
 			$toolbar->publish('teachers.publish');
@@ -181,14 +183,14 @@ class HtmlView extends BaseHtmlView
 			$toolbar->archive('teachers.archive');
 		}
 
-		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
+		if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete'))
 		{
 			$toolbar->delete('teachers.delete')
 				->text('JTOOLBAR_EMPTY_TRASH')
 				->message('JGLOBAL_CONFIRM_DELETE')
 				->listCheck(true);
 		}
-		elseif ($this->canDo->get('core.edit.state'))
+		elseif ($canDo->get('core.edit.state'))
 		{
 			$childBar->trash('teachers.trash');
 		}
@@ -214,7 +216,7 @@ class HtmlView extends BaseHtmlView
 	 */
 	protected function setDocument()
 	{
-		$document = Factory::getDocument();
+		$document = Factory::getApplication()->getDocument();
 		$document->setTitle(Text::_('JBS_TITLE_TEACHERS'));
 	}
 

@@ -8,13 +8,13 @@
  * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
+use Joomla\CMS\Factory;
+
 defined('_JEXEC') or die;
 
 JHtml::_('behavior.formvalidator');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
-
-/** @var BiblestudyViewTeacher $this */
 
 $app   = Factory::getApplication();
 $input = $app->input;

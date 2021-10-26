@@ -13,7 +13,8 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // No Direct Access
 \defined('_JEXEC') or die;
 
-use CWM\Component\Proclaim\Administrator\Table\AdministrationTable;
+use CWM\Component\Proclaim\Administrator\Table\CWMAdminTable;
+use CWM\Component\Proclaim\Site\Helper\CWMMedia;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Event\AbstractEvent;
 use Joomla\CMS\Factory;
@@ -28,6 +29,8 @@ use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\MVC\Model\WorkflowBehaviorTrait;
 use Joomla\CMS\MVC\Model\WorkflowModelInterface;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Schema\ChangeSet;
+use Joomla\CMS\Session\Session;
 use Joomla\CMS\String\PunycodeHelper;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Table\TableInterface;
@@ -81,6 +84,10 @@ class CWMAdminModel extends AdminModel
 	 */
 	protected $formName = 'cpanel';
 
+	/**
+	 * @var null
+	 * @since 7.0
+	 */
 	protected $changeSet = null;
 
 	/**
@@ -232,7 +239,7 @@ class CWMAdminModel extends AdminModel
 		$this->fixSchemaVersion($changeSet);
 		$this->fixUpdateVersion();
 		$this->fixUpdateJBSMVersion();
-		$installer = new BiblestudyModelInstall;
+		$installer = new CWMInstallModel;
 		$installer->fixMenus();
 		$installer->fixemptyaccess();
 		$installer->fixemptylanguage();
@@ -242,7 +249,7 @@ class CWMAdminModel extends AdminModel
 		 * Finally, if the schema updates succeeded, make sure the database is
 		 * converted to utf8mb4 or, if not suported by the server, compatible to it.
 		 */
-		$installerJoomla = new JoomlaInstallerScript;
+		$installerJoomla = new ScriptJoomlaInstaller;
 		$statusArray     = $changeSet->getStatus();
 
 		if (count($statusArray['error']) === 0)
@@ -256,7 +263,7 @@ class CWMAdminModel extends AdminModel
 	/**
 	 * Gets the ChangeSet object
 	 *
-	 * @return boolean|Joomla\CMS\Schema\ChangeSet JSchema  ChangeSet
+	 * @return \Joomla\CMS\Schema\ChangeSet JSchema  ChangeSet
 	 *
 	 * @throws \Exception
 	 * @since 7.0
@@ -272,7 +279,7 @@ class CWMAdminModel extends AdminModel
 
 		try
 		{
-			$this->changeSet = JSchemaChangeset::getInstance(Factory::getDbo(), $folder);
+			$this->changeSet = ChangeSet::getInstance(Factory::getDbo(), $folder);
 		}
 		catch (\RuntimeException $e)
 		{
@@ -324,7 +331,7 @@ class CWMAdminModel extends AdminModel
 		{
 			$db->execute();
 		}
-		catch (JDatabaseExceptionExecuting $e)
+		catch (\Exception $e)
 		{
 			return false;
 		}
@@ -483,7 +490,7 @@ class CWMAdminModel extends AdminModel
 		{
 			$db->execute();
 		}
-		catch (JDatabaseExceptionExecuting $e)
+		catch (\Exception $e)
 		{
 			return false;
 		}
@@ -691,33 +698,33 @@ class CWMAdminModel extends AdminModel
 		return $msg . ' ' . $account;
 	}
 
-//	/**
-//	 * Method to auto-populate the model state.
-//	 *
-//	 * Note. Calling getState in this method will result in recursion.
-//	 *
-//	 * @param   string  $ordering   ?
-//	 * @param   string  $direction  ?
-//	 *
-//	 * @return  void
-//	 *
-//	 * @throws \Exception
-//	 * @since    1.7.2
-//	 */
-//	protected function populateState($ordering = null, $direction = null)
-//	{
-//		$app = Factory::getApplication();
-//		$this->setState('message', $app->getUserState('com_proclaim.message'));
-//		$this->setState('extension_message', $app->getUserState('com_proclaim.extension_message'));
-//		$app->setUserState('com_proclaim.message', '');
-//		$app->setUserState('com_proclaim.extension_message', '');
-//		parent::populateState();
-//	}
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @param   string  $ordering   ?
+	 * @param   string  $direction  ?
+	 *
+	 * @return  void
+	 *
+	 * @throws \Exception
+	 * @since    1.7.2
+	 */
+	protected function populateState($ordering = null, $direction = null)
+	{
+		$app = Factory::getApplication();
+		$this->setState('message', $app->getUserState('com_proclaim.message'));
+		$this->setState('extension_message', $app->getUserState('com_proclaim.extension_message'));
+		$app->setUserState('com_proclaim.message', '');
+		$app->setUserState('com_proclaim.extension_message', '');
+		parent::populateState();
+	}
 
 	/**
 	 * Prepare and sanitise the table data prior to saving.
 	 *
-	 * @param   AdministrationTable  $table  A JTable object.
+	 * @param   CWMAdminTable  $table  A JTable object.
 	 *
 	 * @return   void
 	 *
@@ -766,40 +773,5 @@ class CWMAdminModel extends AdminModel
 	{
 		parent::cleanCache('com_biblestudy');
 		parent::cleanCache('mod_biblestudy');
-	}
-
-	public function setUpWorkflow($extension)
-	{
-		// TODO: Implement setUpWorkflow() method.
-	}
-
-	public function workflowPreprocessForm(Form $form, $data)
-	{
-		// TODO: Implement workflowPreprocessForm() method.
-	}
-
-	public function workflowBeforeStageChange()
-	{
-		// TODO: Implement workflowBeforeStageChange() method.
-	}
-
-	public function workflowBeforeSave()
-	{
-		// TODO: Implement workflowBeforeSave() method.
-	}
-
-	public function workflowAfterSave($data)
-	{
-		// TODO: Implement workflowAfterSave() method.
-	}
-
-	public function workflowCleanupBatchMove($oldId, $newId)
-	{
-		// TODO: Implement workflowCleanupBatchMove() method.
-	}
-
-	public function executeTransition(array $pks, int $transitionId)
-	{
-		// TODO: Implement executeTransition() method.
 	}
 }

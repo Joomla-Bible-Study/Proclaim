@@ -8,22 +8,19 @@
  * @link       https://www.christianwebministries.org
  * */
 
-//JLoader::registerNamespace('\\CWM\\Application\\Proclaim', JPATH_ADMINISTRATOR . '/components/com_proclaim/src');
-
-JLoader::registerNamespace('CWM\Component\Proclaim\Administrator\Helper', JPATH_COMPONENT . '/src/Helper');
-
 // No Direct Access
 use CWM\Component\Proclaim\Administrator\Helper\CWMDbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
-use Joomla\Component\Finder\Administrator\Indexer\Parser\Html;
 
 defined('_JEXEC') or die;
 
+$app = Factory::getApplication();
+
 // Access check.
-if (!Factory::getUser()->authorise('core.manage', 'com_proclaim'))
+if (!$app->getIdentity()->authorise('core.manage', 'com_proclaim'))
 {
 	throw new JAccessExceptionNotallowed(Text::_('JERROR_ALERTNOAUTHOR'), 403);
 }
@@ -42,9 +39,6 @@ if (version_compare(PHP_VERSION, BIBLESTUDY_MIN_PHP, '<'))
 }
 
 addCSS();
-
-$app = Factory::getApplication();
-
 
 $jbsstate = CWMDbHelper::getInstallState();
 
@@ -67,11 +61,12 @@ $controller->redirect();
  *
  * @return void
  *
+ * @throws \Exception
  * @since   7.0
  */
 function addCSS()
 {
-	$document = Factory::getDocument();
+	$document = Factory::getApplication()->getDocument();
 
 	if (JBSMDEBUG)
 	{

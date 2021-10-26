@@ -10,7 +10,9 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\Component\Postinstall\Administrator\Model\MessagesModel;
 use Joomla\Registry\Registry;
 
 /**
@@ -107,19 +109,13 @@ class CWMCpanelModel extends BaseDatabaseModel
 
 		$this->setState('extension_id', $extension_id);
 
-		if (!defined('FOF_INCLUDED'))
-		{
-			return false;
-		}
-
 		// Do I have messages?
 		try
 		{
-			$pimModel = FOFModel::getTmpInstance('Messages', 'PostinstallModel');
-			$pimModel->savestate(false);
+			$pimModel = new MessagesModel;
 			$pimModel->setState('eid', $extension_id);
 
-			$list   = $pimModel->getList();
+			$list   = $pimModel->getitems();
 			$result = count($list) >= 1;
 		}
 		catch (\Exception $e)

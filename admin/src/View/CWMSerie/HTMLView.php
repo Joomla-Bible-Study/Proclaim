@@ -7,17 +7,31 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
+namespace CWM\Component\Proclaim\Administrator\View\CWMSerie;
+
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\Registry\Registry;
+
 /**
- * View class for Topic
+ * JView class for Serie
  *
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class BiblestudyViewTopic extends JViewLegacy
+class HTMLView extends BaseHtmlView
 {
+	/**
+	 * Can Do
+	 *
+	 * @var object
+	 * @since    7.0.0
+	 */
+	public $canDo;
+
 	/**
 	 * Form
 	 *
@@ -35,28 +49,12 @@ class BiblestudyViewTopic extends JViewLegacy
 	protected $item;
 
 	/**
-	 * State
+	 * Admin
 	 *
-	 * @var object
+	 * @var Registry
 	 * @since    7.0.0
 	 */
-	protected $state;
-
-	/**
-	 * Defaults
-	 *
-	 * @var object
-	 * @since    7.0.0
-	 */
-	protected $defaults;
-
-	/**
-	 * Can Do
-	 *
-	 * @var object
-	 * @since    7.0.0
-	 */
-	protected $canDo;
+	protected $admin_params;
 
 	/**
 	 * Execute and display a template script.
@@ -65,26 +63,26 @@ class BiblestudyViewTopic extends JViewLegacy
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
-	 * @see     fetch()
-	 * @since   11.1
 	 * @throws  Exception
+	 * @since   7.0.0
 	 */
 	public function display($tpl = null)
 	{
 		$this->form  = $this->get("Form");
 		$this->item  = $this->get("Item");
-		$this->state = $this->get("State");
-		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'topic');
+		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'serie');
+		$admin = JBSMParams::getAdmin();
+		$registry    = new Registry;
+		$registry->loadString($admin->params);
+		$this->admin_params = $registry;
 
-		// Check for errors
+		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
 			Factory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
 
 			return false;
 		}
-
-		$this->setLayout("edit");
 
 		// Set the toolbar
 		$this->addToolbar();
@@ -97,35 +95,35 @@ class BiblestudyViewTopic extends JViewLegacy
 	}
 
 	/**
-	 * Adds ToolBar
+	 * Add Toolbar
 	 *
 	 * @return void
 	 *
-	 * @since 7.0
+	 * @throws Exception
+	 * @since  7.0.0
 	 */
 	protected function addToolbar()
 	{
-		$input = new JInput;
-		$input->set('hidemainmenu', true);
+		Factory::getApplication()->input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolbarHelper::title(JText::_('JBS_CMN_TOPICS') . ': <small><small>[' . $title . ']</small></small>', 'tag tag');
+		JToolbarHelper::title(JText::_('JBS_CMN_SERIES') . ': <small><small>[' . $title . ']</small></small>', 'tree tree');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_proclaim'))
 		{
-			JToolbarHelper::apply('topic.apply');
-			JToolbarHelper::save('topic.save');
-			JToolbarHelper::cancel('topic.cancel');
+			JToolbarHelper::apply('serie.apply');
+			JToolbarHelper::save('serie.save');
+			JToolbarHelper::cancel('serie.cancel');
 		}
 		else
 		{
 			if ($this->canDo->get('core.edit', 'com_proclaim'))
 			{
-				JToolbarHelper::apply('topic.apply');
-				JToolbarHelper::save('topic.save');
+				JToolbarHelper::apply('serie.apply');
+				JToolbarHelper::save('serie.save');
 			}
 
-			JToolbarHelper::cancel('topic.cancel', 'JTOOLBAR_CLOSE');
+			JToolbarHelper::cancel('serie.cancel', 'JTOOLBAR_CLOSE');
 		}
 
 		JToolbarHelper::divider();
@@ -143,6 +141,6 @@ class BiblestudyViewTopic extends JViewLegacy
 	{
 		$isNew    = ($this->item->id < 1);
 		$document = Factory::getDocument();
-		$document->setTitle($isNew ? JText::_('JBS_TITLE_TOPICS_CREATING') : JText::sprintf('JBS_TITLE_TOPICS_EDITING', $this->item->topic_text));
+		$document->setTitle($isNew ? JText::_('JBS_TITLE_SERIES_CREATING') : JText::sprintf('JBS_TITLE_SERIES_EDITING', $this->item->series_text));
 	}
 }

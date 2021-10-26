@@ -8,6 +8,8 @@
  * @link       https://www.christianwebministries.org
  * */
 
+use CWM\Component\Proclaim\Administrator\Lib\CWMAssets;
+use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 defined('_JEXEC') or die;
@@ -28,34 +30,54 @@ if (file_exists($api))
  */
 class CMWAssetsModel extends BaseDatabaseModel
 {
+	/**
+	 * Parant ID
+	 *
+	 * @var null
+	 * @since 7.0
+	 */
 	public $parent_id = null;
 
-	/** @var int Total numbers of Versions
-	 * @since 7.0 */
+	/** @var integer Total numbers of Versions
+	 * @since 7.0
+	 */
 	public $totalSteps = 0;
 
-	/** @var int Numbers of Versions already processed
-	 * @since 7.0 */
+	/** @var integer Numbers of Versions already processed
+	 * @since 7.0
+	 */
 	public $doneSteps = 0;
 
+	/**
+	 * @var null
+	 * @since 7.0
+	 */
 	public $step = null;
 
+	/**
+	 * @var array
+	 * @since 7.0
+	 */
 	public $assets = array();
 
 	/** @var float The time the process started
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	private $startTime = null;
 
 	/** @var array The pre versions to process
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	private $versionStack = array();
 
 	/** @var array The pre versions sub sql array to process
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	private $allupdates = array();
 
 	/** @var string Version of BibleStudy
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	private $versionSwitch = null;
 
 	/**
@@ -63,6 +85,7 @@ class CMWAssetsModel extends BaseDatabaseModel
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function __construct($config = array())
@@ -77,6 +100,7 @@ class CMWAssetsModel extends BaseDatabaseModel
 	 *
 	 * @return boolean
 	 *
+	 * @throws \JsonException
 	 * @since 7.0
 	 */
 	public function startScanning()
@@ -98,10 +122,8 @@ class CMWAssetsModel extends BaseDatabaseModel
 		{
 			return true;
 		}
-		else
-		{
-			return $this->run(false);
-		}
+
+		return $this->run(false);
 	}
 
 	/**
@@ -125,7 +147,7 @@ class CMWAssetsModel extends BaseDatabaseModel
 	 */
 	private function microtime_float()
 	{
-		list($usec, $sec) = explode(" ", microtime());
+		[$usec, $sec] = explode(" ", microtime());
 
 		return ((float) $usec + (float) $sec);
 	}
@@ -139,10 +161,10 @@ class CMWAssetsModel extends BaseDatabaseModel
 	 */
 	private function getSteps()
 	{
-		$fix = new JBSMAssets;
+		$fix = new CWMAssets;
 		$fix->build();
 		$this->versionStack = $fix->query;
-		$this->totalSteps = $fix->count;
+		$this->totalSteps   = $fix->count;
 
 		return true;
 	}
@@ -154,6 +176,7 @@ class CMWAssetsModel extends BaseDatabaseModel
 	 *
 	 * @return boolean
 	 *
+	 * @throws \JsonException
 	 * @since 7.0
 	 */
 	public function run($resetTimer = true)
@@ -182,19 +205,20 @@ class CMWAssetsModel extends BaseDatabaseModel
 	 *
 	 * @return void
 	 *
+	 * @throws \JsonException
 	 * @since 7.0
 	 */
 	private function saveStack()
 	{
 		$stack = array(
-				'version'    => $this->versionStack,
-				'step'       => $this->step,
-				'switch'     => $this->versionSwitch,
-				'allupdates' => $this->allupdates,
-				'total'      => $this->totalSteps,
-				'done'       => $this->doneSteps,
+			'version'    => $this->versionStack,
+			'step'       => $this->step,
+			'switch'     => $this->versionSwitch,
+			'allupdates' => $this->allupdates,
+			'total'      => $this->totalSteps,
+			'done'       => $this->doneSteps,
 		);
-		$stack = json_encode($stack);
+		$stack = json_encode($stack, JSON_THROW_ON_ERROR);
 
 		if (function_exists('base64_encode') && function_exists('base64_decode'))
 		{
@@ -221,12 +245,12 @@ class CMWAssetsModel extends BaseDatabaseModel
 	{
 		$session = Factory::getSession();
 		$session->set('asset_stack', '', 'JBSM');
-		$this->versionStack   = array();
-		$this->versionSwitch  = null;
-		$this->allupdates     = array();
-		$this->step           = null;
-		$this->totalSteps     = 0;
-		$this->doneSteps      = 0;
+		$this->versionStack  = array();
+		$this->versionSwitch = null;
+		$this->allupdates    = array();
+		$this->step          = null;
+		$this->totalSteps    = 0;
+		$this->doneSteps     = 0;
 	}
 
 	/**
@@ -234,21 +258,22 @@ class CMWAssetsModel extends BaseDatabaseModel
 	 *
 	 * @return boolean
 	 *
+	 * @throws \JsonException
 	 * @since 7.0
 	 */
 	private function loadStack()
 	{
 		$session = Factory::getSession();
-		$stack = $session->get('asset_stack', '', 'JBSM');
+		$stack   = $session->get('asset_stack', '', 'JBSM');
 
 		if (empty($stack))
 		{
-			$this->versionStack   = array();
-			$this->versionSwitch  = null;
-			$this->allupdates     = array();
-			$this->step           = null;
-			$this->totalSteps     = 0;
-			$this->doneSteps      = 0;
+			$this->versionStack  = array();
+			$this->versionSwitch = null;
+			$this->allupdates    = array();
+			$this->step          = null;
+			$this->totalSteps    = 0;
+			$this->doneSteps     = 0;
 
 			return false;
 		}
@@ -263,14 +288,14 @@ class CMWAssetsModel extends BaseDatabaseModel
 			}
 		}
 
-		$stack = json_decode($stack, true);
+		$stack = json_decode($stack, true, 512, JSON_THROW_ON_ERROR);
 
-		$this->versionStack   = $stack['version'];
-		$this->versionSwitch  = $stack['switch'];
-		$this->allupdates     = $stack['allupdates'];
-		$this->step           = $stack['step'];
-		$this->totalSteps     = $stack['total'];
-		$this->doneSteps      = $stack['done'];
+		$this->versionStack  = $stack['version'];
+		$this->versionSwitch = $stack['switch'];
+		$this->allupdates    = $stack['allupdates'];
+		$this->step          = $stack['step'];
+		$this->totalSteps    = $stack['total'];
+		$this->doneSteps     = $stack['done'];
 
 		return true;
 	}
@@ -311,8 +336,7 @@ class CMWAssetsModel extends BaseDatabaseModel
 				{
 					$version = array_pop($this->versionStack[$this->step]);
 					$this->doneSteps++;
-					$asset = new JBSMAssets;
-					$asset->fixAssets($this->step, $version);
+					CWMAssets::fixAssets($this->step, $version);
 				}
 				else
 				{
@@ -342,8 +366,7 @@ class CMWAssetsModel extends BaseDatabaseModel
 	 */
 	public function parentid()
 	{
-		$fix = new JBSMAssets;
-		$this->parent_id = $fix->parentid();
+		$this->parent_id = CWMAssets::parentid();
 	}
 
 	/**
@@ -355,7 +378,7 @@ class CMWAssetsModel extends BaseDatabaseModel
 	 */
 	protected function getassetObjects()
 	{
-		$objects = array(
+		return array(
 			array(
 				'name'       => '#__bsms_servers',
 				'titlefield' => 'server_name',
@@ -435,8 +458,6 @@ class CMWAssetsModel extends BaseDatabaseModel
 				'realname'   => 'JBS_CMN_ADMINISTRATION'
 			)
 		);
-
-		return $objects;
 	}
 
 	/**
@@ -486,16 +507,19 @@ class CMWAssetsModel extends BaseDatabaseModel
 				{
 					$nullrows++;
 				}
+
 				// If there is a jasset_id but no match to the parent_id then a mismatch has occurred
 				if ($this->parent_id != $result->parent_id && $result->jasset_id)
 				{
 					$nomatchrows++;
 				}
+
 				// If $parent_id and $result->parent_id match and the Asset rules are not blank then everything is okay
 				if ($this->parent_id == $result->parent_id && $result->arules !== "")
 				{
 					$matchrows++;
 				}
+
 				// If $parent_id and $result->parent_id match and the Asset rules is blank we need to fix
 				if ($this->parent_id == $result->parent_id && $result->arules === "")
 				{

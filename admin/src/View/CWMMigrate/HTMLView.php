@@ -7,18 +7,22 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
+namespace CWM\Component\Proclaim\Administrator\View\CWMMigrate;
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
 
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\Registry\Registry;
 
 /**
- * View class for Admin
+ * View class for Migrate
  *
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class BiblestudyViewMigrate extends JViewLegacy
+class HTMLView extends BaseHtmlView
 {
 	/**
 	 * Version
@@ -34,7 +38,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 * @var string
 	 * @since    7.0.0
 	 */
-	public $canDo;
+	public string $canDo;
 
 	/**
 	 * Change Set
@@ -42,7 +46,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 * @var string
 	 * @since    7.0.0
 	 */
-	public $changeSet;
+	public string $changeSet;
 
 	/**
 	 * Errors
@@ -50,7 +54,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 * @var string
 	 * @since    7.0.0
 	 */
-	public $errors;
+	public string $errors;
 
 	/**
 	 * Results
@@ -58,7 +62,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 * @var string
 	 * @since    7.0.0
 	 */
-	public $results;
+	public string $results;
 
 	/**
 	 * Schema Version
@@ -66,7 +70,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 * @var string
 	 * @since    7.0.0
 	 */
-	public $schemaVersion;
+	public string $schemaVersion;
 
 	/**
 	 * Update Version
@@ -74,7 +78,7 @@ class BiblestudyViewMigrate extends JViewLegacy
 	 * @var string
 	 * @since 9.0.0
 	 */
-	public $updateVersion;
+	public string $updateVersion;
 
 	/**
 	 * Filter Params

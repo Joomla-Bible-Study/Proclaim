@@ -21,7 +21,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.1.0
  */
-class CMWTemplateCodesController extends AdminController
+class CWMTemplateCodesController extends AdminController
 {
 	/**
 	 * Proxy for getModel

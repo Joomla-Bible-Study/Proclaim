@@ -1,12 +1,15 @@
 <?php
 /**
- * Part of Proclaim Package
+ * Topics html
  *
  * @package    Proclaim.Admin
  * @copyright  2007 - 2019 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
+namespace CWM\Component\Proclaim\Administrator\View\CWMTopics;
+
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -23,12 +26,12 @@ use Joomla\Component\Content\Administrator\Extension\ContentComponent;
 use Joomla\Component\Content\Administrator\Helper\ContentHelper;
 
 /**
- * View class for Messagetype
+ * View class for Topics
  *
  * @package  Proclaim.Admin
  * @since    7.0
  */
-class BiblestudyViewMessagetypes extends JViewLegacy
+class HTMLView extends BaseHtmlView
 {
 	/**
 	 * Filter Levels
@@ -41,7 +44,7 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 	/**
 	 * Side Bar
 	 *
-	 * @var object
+	 * @var string
 	 * @since    7.0.0
 	 */
 	public $sidebar;
@@ -49,7 +52,7 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 	/**
 	 * Items
 	 *
-	 * @var object
+	 * @var array
 	 * @since    7.0.0
 	 */
 	protected $items;
@@ -85,18 +88,18 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
-	 * @see     fetch()
-	 * @since   11.1
 	 * @throws  Exception
+	 * @since   11.1
+	 * @see     fetch()
 	 */
 	public function display($tpl = null)
 	{
-		$this->items      = $this->get('Items');
+		$items            = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
 
 		$this->filterForm = $this->get('FilterForm');
-		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'messagetype');
+		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'topic');
 
 		// Check for errors
 		if (count($errors = $this->get('Errors')))
@@ -105,6 +108,9 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 
 			return false;
 		}
+
+		$modelView   = $this->getModel();
+		$this->items = $modelView->getTranslated($items);
 
 		// Levels filter.
 		$options   = array();
@@ -148,11 +154,11 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 		// Get the toolbar object instance
 		$toolbar = Toolbar::getInstance('toolbar');
 
-		ToolbarHelper::title(JText::_('JBS_CMN_MESSAGETYPES'), 'list-2 list-2');
+		ToolbarHelper::title(JText::_('JBS_CMN_TOPICS'), 'tags tags');
 
 		if ($this->canDo->get('core.create'))
 		{
-			$toolbar->addNew('messagetype.add');
+			$toolbar->addNew('topic.add');
 		}
 
 		$dropdown = $toolbar->dropdownButton('status-group')
@@ -165,21 +171,21 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 
 		if ($this->canDo->get('core.edit'))
 		{
-			$toolbar->edit('messagetype.edit');
+			$toolbar->edit('topic.edit');
 		}
 
 		if ($this->canDo->get('core.edit.state'))
 		{
 			$toolbar->divider();
-			$toolbar->publish('messagetypes.publish');
-			$toolbar->unpublish('messagetypes.unpublish');
+			$toolbar->publish('topics.publish');
+			$toolbar->unpublish('topics.unpublish');
 			$toolbar->divider();
-			$toolbar->archive('messagetypes.archive');
+			$toolbar->archive('topics.archive', 'JTOOLBAR_ARCHIVE');
 		}
 
-		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
+		if ($this->state->get('filter.published') == ContentComponent::CONDITION_TRASHED && $canDo->get('core.delete'))
 		{
-			$toolbar->delete('', 'messagetypes.delete')
+			$toolbar->delete('topics.delete')
 				->text('JTOOLBAR_EMPTY_TRASH')
 				->message('JGLOBAL_CONFIRM_DELETE')
 				->listCheck(true);
@@ -187,18 +193,7 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 
 		if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED)
 		{
-			$toolbar->trash('messagetypes.trash')->listCheck(true);
-		}
-
-		// Add a batch button
-		if ($user->authorise('core.create', 'com_proclaim')
-			&& $user->authorise('core.edit', 'com_proclaim')
-			&& $user->authorise('core.edit.state', 'com_proclaim'))
-		{
-			$childBar->popupButton('batch')
-				->text('JTOOLBAR_BATCH')
-				->selector('collapseModal')
-				->listCheck(true);
+			$toolbar->trash('topics.trash')->listCheck(true);
 		}
 	}
 
@@ -212,7 +207,7 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 	protected function setDocument()
 	{
 		$document = Factory::getDocument();
-		$document->setTitle(JText::_('JBS_TITLE_MESSAGETYPES'));
+		$document->setTitle(JText::_('JBS_TITLE_TOPICS'));
 	}
 
 	/**
@@ -225,9 +220,9 @@ class BiblestudyViewMessagetypes extends JViewLegacy
 	protected function getSortFields()
 	{
 		return array(
-			'messagetypes.message_type' => JText::_('JGRID_HEADING_ORDERING'),
-			'messagetypes.published'    => JText::_('JSTATUS'),
-			'messagetypes.id'           => JText::_('JGRID_HEADING_ID')
+			'topic.topic_text' => JText::_('JBS_CMN_TOPICS'),
+			'topic.published'  => JText::_('JSTATUS'),
+			'topic.id'         => JText::_('JGRID_HEADING_ID')
 		);
 	}
 }

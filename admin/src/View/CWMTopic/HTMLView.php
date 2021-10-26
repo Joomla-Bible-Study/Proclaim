@@ -7,16 +7,21 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
+namespace CWM\Component\Proclaim\Administrator\View\CWMTopic;
+
 // No Direct Access
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+
 defined('_JEXEC') or die;
 
 /**
- * View class for Teacher
+ * View class for Topic
  *
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class BiblestudyViewTeacher extends JViewLegacy
+class HTMLView extends BaseHtmlView
 {
 	/**
 	 * Form
@@ -24,7 +29,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 	 * @var object
 	 * @since    7.0.0
 	 */
-	public $form;
+	protected $form;
 
 	/**
 	 * Item
@@ -32,7 +37,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 	 * @var object
 	 * @since    7.0.0
 	 */
-	public $item;
+	protected $item;
 
 	/**
 	 * State
@@ -40,15 +45,15 @@ class BiblestudyViewTeacher extends JViewLegacy
 	 * @var object
 	 * @since    7.0.0
 	 */
-	public $state;
+	protected $state;
 
 	/**
-	 * Admin
+	 * Defaults
 	 *
 	 * @var object
 	 * @since    7.0.0
 	 */
-	public $admin;
+	protected $defaults;
 
 	/**
 	 * Can Do
@@ -56,7 +61,7 @@ class BiblestudyViewTeacher extends JViewLegacy
 	 * @var object
 	 * @since    7.0.0
 	 */
-	public $canDo;
+	protected $canDo;
 
 	/**
 	 * Execute and display a template script.
@@ -67,38 +72,41 @@ class BiblestudyViewTeacher extends JViewLegacy
 	 *
 	 * @see     fetch()
 	 * @since   11.1
+	 * @throws  Exception
 	 */
 	public function display($tpl = null)
 	{
 		$this->form  = $this->get("Form");
 		$this->item  = $this->get("Item");
 		$this->state = $this->get("State");
-		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'teacher');
+		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'topic');
 
-		// Load the Admin settings
-		$this->admin = JBSMParams::getAdmin();
+		// Check for errors
+		if (count($errors = $this->get('Errors')))
+		{
+			Factory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
+
+			return false;
+		}
 
 		$this->setLayout("edit");
 
-		// We don't need toolbar in the modal window.
-		if ($this->getLayout() !== 'modal')
-		{
-			$this->addToolbar();
-		}
-
-		// Display the template
-		parent::display($tpl);
+		// Set the toolbar
+		$this->addToolbar();
 
 		// Set the document
 		$this->setDocument();
+
+		// Display the template
+		return parent::display($tpl);
 	}
 
 	/**
-	 * Add Toolbar
+	 * Adds ToolBar
 	 *
 	 * @return void
 	 *
-	 * @since 7.0.0
+	 * @since 7.0
 	 */
 	protected function addToolbar()
 	{
@@ -106,23 +114,23 @@ class BiblestudyViewTeacher extends JViewLegacy
 		$input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolbarHelper::title(JText::_('JBS_CMN_TEACHERS') . ': <small><small>[' . $title . ']</small></small>', 'user user');
+		JToolbarHelper::title(JText::_('JBS_CMN_TOPICS') . ': <small><small>[' . $title . ']</small></small>', 'tag tag');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_proclaim'))
 		{
-			JToolbarHelper::apply('teacher.apply');
-			JToolbarHelper::save('teacher.save');
-			JToolbarHelper::cancel('teacher.cancel');
+			JToolbarHelper::apply('topic.apply');
+			JToolbarHelper::save('topic.save');
+			JToolbarHelper::cancel('topic.cancel');
 		}
 		else
 		{
 			if ($this->canDo->get('core.edit', 'com_proclaim'))
 			{
-				JToolbarHelper::apply('teacher.apply');
-				JToolbarHelper::save('teacher.save');
+				JToolbarHelper::apply('topic.apply');
+				JToolbarHelper::save('topic.save');
 			}
 
-			JToolbarHelper::cancel('teacher.cancel', 'JTOOLBAR_CLOSE');
+			JToolbarHelper::cancel('topic.cancel', 'JTOOLBAR_CLOSE');
 		}
 
 		JToolbarHelper::divider();
@@ -140,6 +148,6 @@ class BiblestudyViewTeacher extends JViewLegacy
 	{
 		$isNew    = ($this->item->id < 1);
 		$document = Factory::getDocument();
-		$document->setTitle($isNew ? JText::_('JBS_TITLE_TEACHER_CREATING') : JText::sprintf('JBS_TITLE_TEACHER_EDITING', $this->item->teachername));
+		$document->setTitle($isNew ? JText::_('JBS_TITLE_TOPICS_CREATING') : JText::sprintf('JBS_TITLE_TOPICS_EDITING', $this->item->topic_text));
 	}
 }

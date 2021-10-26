@@ -47,6 +47,12 @@ class CWMTeacherTable extends Table
 	public $ordering;
 
 	/**
+	 * @var integer
+	 * @since 9.0.0
+	 */
+	public $id;
+
+	/**
 	 * Constructor
 	 *
 	 * @param   DatabaseDriver  $db  Database connector object
@@ -73,7 +79,7 @@ class CWMTeacherTable extends Table
 	 */
 	public function bind($array, $ignore = '')
 	{
-		if (isset($array['params']) && is_array($array['params']))
+		if (array_key_exists('params', $array) && is_array($array['params']))
 		{
 			$registry = new Registry;
 			$registry->loadArray($array['params']);

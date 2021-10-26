@@ -11,6 +11,8 @@
 namespace CWM\Component\Proclaim\Administrator\Model;
 
 // No Direct Access
+use Joomla\CMS\Factory;
+use Joomla\Input\Input;
 use Joomla\CMS\MVC\Model\ListModel;
 
 defined('_JEXEC') or die;
@@ -72,7 +74,7 @@ class CWMTeachersModel extends ListModel
 	protected function populateState($ordering = null, $direction = null)
 	{
 		// Adjust the context to support modal layouts.
-		$input  = new JInput;
+		$input  = new Input;
 		$layout = $input->get('layout');
 
 		if ($layout)
@@ -122,7 +124,7 @@ class CWMTeachersModel extends ListModel
 	/**
 	 * Build an SQL query to load the list data.
 	 *
-	 * @return    JDatabaseQuery
+	 * @return  \Joomla\Database\QueryInterface
 	 *
 	 * @since   7.0
 	 */
