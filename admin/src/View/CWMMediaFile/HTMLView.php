@@ -18,7 +18,6 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 use JText;
 use JToolbarHelper;
@@ -32,39 +31,48 @@ use JToolbarHelper;
 class HTMLView extends BaseHtmlView
 {
 	/** @var object
-	 * @since    7.0.0 */
+	 * @since    7.0.0
+	 */
 	public $canDo;
 
 	/** @var Registry
-	 * @since    7.0.0 */
+	 * @since    7.0.0
+	 */
 	public $admin_params;
 
 	/** @var object
-	 * @since    7.0.0 */
+	 * @since    7.0.0
+	 */
 	public $form;
 
 	/** @var object
-	 * @since    7.0.0 */
+	 * @since    7.0.0
+	 */
 	public $media_form;
 
 	/** @var object
-	 * @since    7.0.0 */
+	 * @since    7.0.0
+	 */
 	public $item;
 
 	/** @var Registry
-	 * @since    7.0.0 */
+	 * @since    7.0.0
+	 */
 	protected $state;
 
 	/** @var object
-	 * @since    7.0.0 */
+	 * @since    7.0.0
+	 */
 	protected $admin;
 
 	/** @var object
-	 * @since    7.0.0 */
+	 * @since    7.0.0
+	 */
 	protected $options;
 
 	/** @var object
-	 * @since    9.1.3 */
+	 * @since    9.1.3
+	 */
 	public $addon;
 
 	/**
@@ -74,9 +82,9 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
-	 * @see     fetch()
-	 * @since   11.1
 	 * @throws  \Exception
+	 * @since   11.1
+	 * @see     fetch()
 	 */
 	public function display($tpl = null)
 	{
@@ -144,8 +152,7 @@ class HTMLView extends BaseHtmlView
 	 */
 	protected function addToolbar()
 	{
-		$input = new Input;
-		$input->set('hidemainmenu', true);
+		Factory::getApplication()->input->set('hidemainmenu', true);
 		$user       = Factory::getUser();
 		$userId     = $user->get('id');
 		$isNew      = (empty($this->item->id));
@@ -155,32 +162,32 @@ class HTMLView extends BaseHtmlView
 
 		if ($isNew && $this->canDo->get('core.create', 'com_proclaim'))
 		{
-			JToolbarHelper::apply('mediafile.apply');
-			JToolbarHelper::save('mediafile.save');
-			JToolbarHelper::cancel('mediafile.cancel');
-			JToolbarHelper::checkin('mediafile.checkin');
+			JToolbarHelper::apply('cwmmediafile.apply');
+			JToolbarHelper::save('cwmmediafile.save');
+			JToolbarHelper::cancel('cwmmediafile.cancel');
+			JToolbarHelper::checkin('cwmmediafile.checkin');
 		}
 		else
 		{
 			// Can't save the record if it's checked out.
 			if (!$checkedOut && $this->canDo->get('core.edit', 'com_proclaim'))
 			{
-				JToolbarHelper::apply('mediafile.apply');
-				JToolbarHelper::save('mediafile.save');
+				JToolbarHelper::apply('cwmmediafile.apply');
+				JToolbarHelper::save('cwmmediafile.save');
 
 				if ($this->canDo->get('core.create', 'com_proclaim'))
 				{
-					JToolbarHelper::save2new('mediafile.save2new');
+					JToolbarHelper::save2new('cwmmediafile.save2new');
 				}
 			}
 
 			// If checked out, we can still save
 			if ($this->canDo->get('core.create', 'com_proclaim'))
 			{
-				JToolbarHelper::save2copy('mediafile.save2copy');
+				JToolbarHelper::save2copy('cwmmediafile.save2copy');
 			}
 
-			JToolbarHelper::cancel('mediafile.cancel', 'JTOOLBAR_CLOSE');
+			JToolbarHelper::cancel('cwmmediafile.cancel', 'JTOOLBAR_CLOSE');
 		}
 
 		JToolbarHelper::divider();

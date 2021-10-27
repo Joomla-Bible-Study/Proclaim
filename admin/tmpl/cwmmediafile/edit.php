@@ -43,10 +43,10 @@ $this->useCoreUI = true;
 
 Factory::getDocument()->addScriptDeclaration('
 	Joomla.submitbutton = function (task, server_id) {
-		if (task == "mediafile.setServer") {
+		if (task == "cwmmediafile.setServer") {
 			document.getElementById("media-form").elements["jform[server_id]"].value = server_id;
 			Joomla.submitform(task, document.getElementById("media-form"));
-		} else if (task == "mediafile.cancel"|| document.formvalidator.isValid(document.getElementById("media-form"))) {
+		} else if (task == "cwmmediafile.cancel"|| document.formvalidator.isValid(document.getElementById("media-form"))) {
 			Joomla.submitform(task, document.getElementById("media-form"));
 		} else {
 			alert("' . $this->escape(JText::_("JGLOBAL_VALIDATION_FORM_FAILED")) . '");
@@ -54,7 +54,7 @@ Factory::getDocument()->addScriptDeclaration('
 	}
 ');
 ?>
-<form action="<?php echo 'index.php?option=com_proclaim&view=mediafile&layout=edit&id=' . (int) $this->item->id; ?>"
+<form action="<?php echo 'index.php?option=com_proclaim&view=cwmmediafile&layout=edit&id=' . (int) $this->item->id; ?>"
       method="post"
       name="adminForm"
       id="media-form"

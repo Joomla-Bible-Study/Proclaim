@@ -120,27 +120,26 @@ class HTMLView extends BaseHtmlView
 	 */
 	protected function addToolbar()
 	{
-		$input = new Input;
-		$input->set('hidemainmenu', true);
+		Factory::getApplication()->input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
 		$title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
-		ToolbarHelper::title(Text::_('JBS_CMN_TEACHERS') . ': <small><small>[' . $title . ']</small></small>', 'user user');
+		ToolbarHelper::title(Text::_('JBS_CMN_TEACHER') . ': <small><small>[' . $title . ']</small></small>', 'user user');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_proclaim'))
 		{
-			ToolbarHelper::apply('teacher.apply');
-			ToolbarHelper::save('teacher.save');
-			ToolbarHelper::cancel('teacher.cancel');
+			ToolbarHelper::apply('cwmteacher.apply');
+			ToolbarHelper::save('cwmteacher.save');
+			ToolbarHelper::cancel('cwmteacher.cancel');
 		}
 		else
 		{
 			if ($this->canDo->get('core.edit', 'com_proclaim'))
 			{
-				ToolbarHelper::apply('teacher.apply');
-				ToolbarHelper::save('teacher.save');
+				ToolbarHelper::apply('cwmteacher.apply');
+				ToolbarHelper::save('cwmteacher.save');
 			}
 
-			ToolbarHelper::cancel('teacher.cancel', 'JTOOLBAR_CLOSE');
+			ToolbarHelper::cancel('cwmteacher.cancel', 'JTOOLBAR_CLOSE');
 		}
 
 		ToolbarHelper::divider();

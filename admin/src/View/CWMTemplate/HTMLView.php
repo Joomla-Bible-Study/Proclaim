@@ -11,7 +11,12 @@
 namespace CWM\Component\Proclaim\Administrator\View\CWMTemplate;
 
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\Input\Input;
 
 defined('_JEXEC') or die;
 
@@ -88,7 +93,7 @@ class HTMLView extends BaseHtmlView
 		$this->state      = $this->get('State');
 		$this->types      = $this->get('Types');
 		$this->form       = $this->get("Form");
-		$this->canDo      = JBSMBibleStudyHelper::getActions($this->item->id, 'template');
+		$this->canDo      = CWMProclaimHelper::getActions($this->item->id, 'template');
 
 		$this->setLayout("edit");
 
@@ -111,39 +116,40 @@ class HTMLView extends BaseHtmlView
 	 */
 	protected function addToolbar()
 	{
-		$input = new JInput;
+		$input = new Input;
 		$input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
-		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolbarHelper::title(JText::_('JBS_CMN_TEMPLATES') . ': <small><small>[' . $title . ']</small></small>', 'square square');
+		$title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
+		ToolbarHelper::title(Text::_('JBS_CMN_TEMPLATE') . ': <small><small>[' . $title . ']</small></small>', 'square square');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_proclaim'))
 		{
-			JToolbarHelper::apply('template.apply');
-			JToolbarHelper::save('template.save');
-			JToolbarHelper::save2new('template.save2new');
-			JToolbarHelper::cancel('template.cancel');
+			ToolbarHelper::apply('template.apply');
+			ToolbarHelper::save('template.save');
+			ToolbarHelper::save2new('template.save2new');
+			ToolbarHelper::cancel('template.cancel');
 		}
 		else
 		{
 			if ($this->canDo->get('core.edit', 'com_proclaim'))
 			{
-				JToolbarHelper::apply('template.apply');
-				JToolbarHelper::save('template.save');
+				ToolbarHelper::apply('template.apply');
+				ToolbarHelper::save('template.save');
 
 				// We can save this record, but check the create permission to see if we can return to make a new one.
 				if ($this->canDo->get('core.create', 'com_proclaim'))
 				{
-					JToolbarHelper::save2new('template.save2new');
+					ToolbarHelper::save2new('template.save2new');
 				}
 			}
+
 			// If checked out, we can still save
 			if ($this->canDo->get('core.create', 'com_proclaim'))
 			{
-				JToolbarHelper::save2copy('template.save2copy');
+				ToolbarHelper::save2copy('template.save2copy');
 			}
 
-			JToolbarHelper::cancel('template.cancel', 'JTOOLBAR_CLOSE');
+			ToolbarHelper::cancel('template.cancel', 'JTOOLBAR_CLOSE');
 		}
 
 		JToolbarHelper::divider();
@@ -161,6 +167,6 @@ class HTMLView extends BaseHtmlView
 	{
 		$isNew    = ($this->item->id < 1);
 		$document = Factory::getDocument();
-		$document->setTitle($isNew ? JText::_('JBS_TITLE_TEMPLATES_CREATING') : JText::sprintf('JBS_TITLE_TEMPLATES_EDITING', $this->item->title));
+		$document->setTitle($isNew ? Text::_('JBS_TITLE_TEMPLATES_CREATING') : Text::sprintf('JBS_TITLE_TEMPLATES_EDITING', $this->item->title));
 	}
 }

@@ -7,7 +7,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
+namespace CWM\Component\Proclaim\Administrator\Model;
+
 // No Direct Access
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\Input\Input;
+
 defined('_JEXEC') or die;
 
 /**
@@ -16,7 +23,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class BiblestudyModelLocation extends JModelAdmin
+class CWMLocationModel extends AdminModel
 {
 	/**
 	 * Method to store a record
@@ -24,12 +31,12 @@ class BiblestudyModelLocation extends JModelAdmin
 	 * @access    public
 	 * @return    boolean    True on success
 	 *
-	 * @since 7.0
+	 * @since     7.0
 	 */
 	public function store()
 	{
-		$row   = & $this->getTable();
-		$input = new JInput;
+		$row   = $this->getTable();
+		$input = new Input;
 		$data  = $input->get('post');
 
 		// Bind the form fields to the table
@@ -74,12 +81,7 @@ class BiblestudyModelLocation extends JModelAdmin
 		// Get the form.
 		$form = $this->loadForm('com_proclaim.location', 'location', array('control' => 'jform', 'load_data' => $loadData));
 
-		if (empty($form))
-		{
-			return false;
-		}
-
-		return $form;
+		return $form ?? false;
 	}
 
 	/**

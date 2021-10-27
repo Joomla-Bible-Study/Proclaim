@@ -7,23 +7,20 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Administrator\View\CWMTeachers;
 
 // No Direct Access
 defined('_JEXEC') or die;
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
-use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
-use Joomla\Component\Content\Administrator\Extension\ContentComponent;
 use Joomla\Component\Content\Administrator\Helper\ContentHelper;
 
 /**
@@ -127,7 +124,6 @@ class HtmlView extends BaseHtmlView
 			// We do not need to filter by language when multilingual is disabled
 			if (!Multilanguage::isEnabled())
 			{
-				//unset($this->activeFilters['language']);
 				$this->filterForm->removeField('language', 'filter');
 			}
 		}
@@ -149,7 +145,7 @@ class HtmlView extends BaseHtmlView
 	protected function addToolbar()
 	{
 		$canDo = ContentHelper::getActions('com_proclaim');
-		$user = Factory::getApplication()->getIdentity();
+		$user  = Factory::getApplication()->getIdentity();
 
 		// Get the toolbar object instance
 		$toolbar = Toolbar::getInstance('toolbar');
@@ -158,7 +154,7 @@ class HtmlView extends BaseHtmlView
 
 		if ($canDo->get('core.create'))
 		{
-			$toolbar->addNew('teacher.add');
+			$toolbar->addNew('cwmteacher.add');
 		}
 
 		$dropdown = $toolbar->dropdownButton('status-group')
@@ -177,15 +173,15 @@ class HtmlView extends BaseHtmlView
 		if ($canDo->get('core.edit.state'))
 		{
 			$toolbar->divider();
-			$toolbar->publish('teachers.publish');
-			$toolbar->unpublish('teachers.unpublish');
+			$toolbar->publish('cwmteachers.publish');
+			$toolbar->unpublish('cwmteachers.unpublish');
 			$toolbar->divider();
-			$toolbar->archive('teachers.archive');
+			$toolbar->archive('cwmteachers.archive');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete'))
 		{
-			$toolbar->delete('teachers.delete')
+			$toolbar->delete('cwmteachers.delete')
 				->text('JTOOLBAR_EMPTY_TRASH')
 				->message('JGLOBAL_CONFIRM_DELETE')
 				->listCheck(true);

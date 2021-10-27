@@ -31,7 +31,7 @@ class CWMTeacherController extends FormController
 	 * @var   string
 	 * @since 7.0
 	 */
-	protected $view_list = 'teachers';
+	protected $view_list = 'cwmteachers';
 
 	/**
 	 * The URL option for the component.

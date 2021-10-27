@@ -124,7 +124,7 @@ class HTMLView extends BaseHtmlView
 		$registry    = new Registry;
 		$registry->loadString($this->admin->params);
 		$this->admin_params = $registry;
-		$document           = Factory::getDocument();
+		$this->document     = Factory::getApplication()->getDocument();
 
 		$this->simple = CWMHelper::getSimpleView();
 
@@ -147,7 +147,8 @@ class HTMLView extends BaseHtmlView
             });
              ";
 
-		$document->addScriptDeclaration($script);
+		$wa = $this->document->getWebAssetManager();
+		$wa->addInlineScript($script);
 
 		JHtml::script('media/com_proclaim/js/plugins/jquery.tokeninput.js');
 
@@ -167,8 +168,7 @@ class HTMLView extends BaseHtmlView
 	 */
 	protected function addToolbar()
 	{
-		$input = new Input;
-		$input->set('hidemainmenu', true);
+		Factory::getApplication()->input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
 		JToolbarHelper::title(JText::_('JBS_CMN_STUDIES') . ': <small><small>[ ' . $title . ' ]</small></small>', 'book book');

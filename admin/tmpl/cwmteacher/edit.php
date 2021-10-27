@@ -39,7 +39,7 @@ $this->useCoreUI = true;
 ?>
 <script type="text/javascript">
 	Joomla.submitbutton = function (task) {
-		if (task === 'teacher.cancel' || document.formvalidator.isValid(document.getElementById('teacher-form')))
+		if (task === 'cwmteacher.cancel' || document.formvalidator.isValid(document.getElementById('teacher-form')))
 		{
 			Joomla.submitform(task, document.getElementById('teacher-form'))
 		}

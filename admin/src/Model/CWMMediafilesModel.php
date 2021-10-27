@@ -13,8 +13,6 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // No Direct Access
 defined('_JEXEC') or die;
 
-use JConfig;
-use JModelLegacy;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Input\Input;
@@ -29,6 +27,12 @@ use Joomla\Registry\Registry;
 class CWMMediafilesModel extends ListModel
 {
 	/**
+	 * @var    string  The prefix to use with controller messages.
+	 * @since  1.6
+	 */
+	protected $text_prefix = 'com_proclaim';
+
+	/**
 	 * Model context string.
 	 *
 	 * @var        string
@@ -36,6 +40,14 @@ class CWMMediafilesModel extends ListModel
 	 * @since 7.0
 	 */
 	public $context = 'com_proclaim.mediafiles';
+
+	/**
+	 * The type alias for this content type (for example, 'com_content.article').
+	 *
+	 * @var      string
+	 * @since    3.2
+	 */
+	public $typeAlias = 'com_proclaim.cwmmediafiles';
 
 	/**
 	 * Number of Deletions

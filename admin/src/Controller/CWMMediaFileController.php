@@ -15,7 +15,6 @@ defined('_JEXEC') or die;
 
 use CWM\Component\Proclaim\Administrator\Model\CWMMediafileModel;
 use CWM\Component\Proclaim\Administrator\Table\CWMMediafileTable;
-use CWMAddon;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
@@ -37,7 +36,7 @@ class CWMMediaFileController extends FormController
 	 * @var string
 	 * @since 7.0
 	 */
-	protected $view_list = 'mediafiles';
+	protected $view_list = 'cwmmediafiles';
 
 	/**
 	 * The URL option for the component.

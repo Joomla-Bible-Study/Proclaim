@@ -12,6 +12,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\MVC\Model\BaseModel;
 use Joomla\Component\Postinstall\Administrator\Model\MessagesModel;
 use Joomla\Registry\Registry;
 
@@ -21,7 +22,7 @@ use Joomla\Registry\Registry;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CWMCpanelModel extends BaseDatabaseModel
+class CWMCpanelModel extends BaseModel
 {
 	/**
 	 * Get Data

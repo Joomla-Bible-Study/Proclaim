@@ -48,7 +48,7 @@ class CWMTeacherModel extends AdminModel
 	 * @var      string
 	 * @since    3.2
 	 */
-	public $typeAlias = 'com_proclaim.teacher';
+	public $typeAlias = 'com_proclaim.cwmteachers';
 
 	/**
 	 * Items data
@@ -79,10 +79,13 @@ class CWMTeacherModel extends AdminModel
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
-		Form::addFieldPath('JPATH_ADMINISTRATOR/components/com_users/models/fields');
+		if (empty($data))
+		{
+			$this->getItem();
+		}
 
 		// Get the form.
-		$form = $this->loadForm('com_contact.' . $this->formName, $this->formName, array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_proclaim.' . $this->formName, $this->formName, array('control' => 'jform', 'load_data' => $loadData));
 
 		if ($form === null)
 		{

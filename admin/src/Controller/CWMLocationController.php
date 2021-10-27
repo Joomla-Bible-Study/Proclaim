@@ -13,7 +13,9 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Administrator\Model\CWMLocationModel;
 use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Router\Route;
 
 /**
  * Location controller class
@@ -24,9 +26,17 @@ use Joomla\CMS\MVC\Controller\FormController;
 class CWMLocationController extends FormController
 {
 	/**
+	 * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
+	 *
+	 * @var string
+	 * @since 7.0
+	 */
+	protected $view_list = 'cwmlocations';
+
+	/**
 	 * Method to run batch operations.
 	 *
-	 * @param   JModelLegacy  $model  The model.
+	 * @param   CWMLocationModel  $model  The model.
 	 *
 	 * @return  boolean     True if successful, false otherwise and internal error is set.
 	 *
@@ -35,7 +45,7 @@ class CWMLocationController extends FormController
 	public function batch($model = null)
 	{
 		// Preset the redirect
-		$this->setRedirect(JRoute::_('index.php?option=com_proclaim&view=locations' . $this->getRedirectToListAppend(), false));
+		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=locations' . $this->getRedirectToListAppend(), false));
 
 		return parent::batch($this->getModel('Location', '', array()));
 	}
@@ -51,7 +61,7 @@ class CWMLocationController extends FormController
 	 *
 	 * @since 7.1.0
 	 */
-	public function getModel($name = 'Location', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
+	public function getModel($name = 'CWMLocation', $prefix = '', $config = array('ignore_request' => true))
 	{
 		return parent::getModel($name, $prefix, array('ignore_request' => true));
 	}
