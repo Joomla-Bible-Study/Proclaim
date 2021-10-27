@@ -113,6 +113,9 @@ class BiblestudyModelMediafile extends JModelAdmin
 			$path->loadString($table->params);
 			$set_path = '';
 
+			// Clean up Path for the file name
+			$params->set('filename', trim($params->get('filename')));
+
 			if ($path->get('path'))
 			{
 				$set_path = $path->get('path') . '/';
