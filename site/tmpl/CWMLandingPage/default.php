@@ -9,13 +9,12 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+
 use Joomla\CMS\Language\Text;
 use CWM\Component\Proclaim\Site\Helper\CWMLanding;
 use Joomla\CMS\Uri\Uri;
-/** @var $this BiblestudyViewLandingpage */
 
 $CWMLanding = new CWMLanding;
-/** @var Joomla\Registry\Registry $params */
 $params = $this->params;
 ?>
 

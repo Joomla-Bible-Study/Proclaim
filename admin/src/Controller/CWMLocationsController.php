@@ -67,7 +67,7 @@ class CWMLocationsController extends AdminController
 	 *
 	 * @since 7.0.0
 	 */
-	public function getModel($name = 'Location', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
+	public function getModel($name = 'CWMLocation', $prefix = '', $config = array('ignore_request' => true))
 	{
 		return parent::getModel($name, $prefix, $config);
 	}

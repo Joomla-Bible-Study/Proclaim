@@ -57,12 +57,12 @@ class HTMLView extends BaseHtmlView
 	 * @since 9.0.0 */
 	protected $percentage;
 
-	/** @var string Starte of install
+	/** @var string Start of install
 	 *
 	 * @since 9.0.0 */
 	public $state;
 
-	/** @var JObject Status
+	/** @var object Status
 	 *
 	 * @since 9.0.0 */
 	public $status;

@@ -13,6 +13,8 @@ use Joomla\CMS\Factory;
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+
 // Load the tooltip behavior.
 
 JHtml::_('behavior.formvalidator');
@@ -60,7 +62,7 @@ else
 Factory::getDocument()->addScriptDeclaration('
 	Joomla.submitbutton = function (task)
 	{
-		if (task == "message.cancel" || document.formvalidator.isValid(document.getElementById("message-form")))
+		if (task == "cwmmessage.cancel" || document.formvalidator.isValid(document.getElementById("message-form")))
 		{
 			Joomla.submitform(task, document.getElementById("message-form"));
 		}
@@ -73,7 +75,7 @@ $layout  = $isModal ? 'modal' : 'edit';
 $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=component' : '';
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=message&layout=' . $layout . $tmpl . '&id=' . (int) $this->item->id); ?>"
+<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmmessage&layout=' . $layout . $tmpl . '&id=' . (int) $this->item->id); ?>"
       method="post" name="adminForm" id="message-form" class="form-validate" enctype="multipart/form-data">
     <div class="form-inline form-inline-header">
         <div class="control-group">
@@ -398,6 +400,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
         <!-- Hidden fields -->
 		<?php echo $this->form->getInput('thumbnailm'); ?>
         <input type="hidden" name="task" value=""/>
-		<?php echo JHtml::_('form.token'); ?>
+	    <input type="hidden" name="return" value="<?php echo $input->getBase64('return'); ?>">
+	    <?php echo HTMLHelper::_('form.token'); ?>
     </div>
 </form>

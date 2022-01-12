@@ -7,7 +7,7 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-namespace Joomla\Component\Content\Site\Helper;
+namespace CWM\Component\Proclaim\Site\Helper;
 
 \defined('_JEXEC') or die;
 
@@ -15,28 +15,28 @@ use Joomla\CMS\Categories\CategoryNode;
 use Joomla\CMS\Language\Multilanguage;
 
 /**
- * Content Component Route Helper.
+ * Proclaim Component Route Helper.
  *
  * @since  1.5
  */
-abstract class RouteHelper
+abstract class CWMRouteHelper
 {
 	/**
-	 * Get the article route.
+	 * Get the sermon route.
 	 *
 	 * @param   integer  $id        The route of the content item.
 	 * @param   integer  $catid     The category ID.
 	 * @param   integer  $language  The language code.
 	 * @param   string   $layout    The layout value.
 	 *
-	 * @return  string  The article route.
+	 * @return  string  The sermon route.
 	 *
 	 * @since   1.5
 	 */
-	public static function getArticleRoute($id, $catid = 0, $language = 0, $layout = null)
+	public static function getSermonRoute($id, $catid = 0, $language = 0, $layout = null)
 	{
 		// Create the link
-		$link = 'index.php?option=com_content&view=article&id=' . $id;
+		$link = 'index.php?option=com_proclaim&view=cwmsermon&id=' . $id;
 
 		if ((int) $catid > 1)
 		{
@@ -57,7 +57,7 @@ abstract class RouteHelper
 	}
 
 	/**
-	 * Get the category route.
+	 * Get the Series route.
 	 *
 	 * @param   integer  $catid     The category ID.
 	 * @param   integer  $language  The language code.
@@ -67,15 +67,15 @@ abstract class RouteHelper
 	 *
 	 * @since   1.5
 	 */
-	public static function getCategoryRoute($catid, $language = 0, $layout = null)
+	public static function getSeriesRoute($seriesid, int $language = 0, $layout = null)
 	{
-		if ($catid instanceof CategoryNode)
+		if ($seriesid instanceof CategoryNode)
 		{
-			$id = $catid->id;
+			$id = $seriesid->id;
 		}
 		else
 		{
-			$id = (int) $catid;
+			$id = (int) $seriesid;
 		}
 
 		if ($id < 1)
@@ -83,7 +83,7 @@ abstract class RouteHelper
 			return '';
 		}
 
-		$link = 'index.php?option=com_content&view=category&id=' . $id;
+		$link = 'index.php?option=com_proclaim&view=cwmseriesdisplay&id=' . $id;
 
 		if ($language && $language !== '*' && Multilanguage::isEnabled())
 		{
@@ -109,6 +109,6 @@ abstract class RouteHelper
 	 */
 	public static function getFormRoute($id)
 	{
-		return 'index.php?option=com_content&task=article.edit&a_id=' . (int) $id;
+		return 'index.php?option=com_proclaim&task=cwmmessageform.edit&a_id=' . (int) $id;
 	}
 }

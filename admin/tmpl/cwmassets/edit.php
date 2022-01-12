@@ -8,6 +8,8 @@
  * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
+use Joomla\CMS\Factory;
+
 defined('_JEXEC') or die;
 
 // Load the tooltip behavior.
@@ -22,28 +24,28 @@ Factory::getDocument()->addScriptDeclaration("
 		Joomla.submitbutton = function(task)
 		{
 			var form = document.getElementById('item-assets');
-			if (task == 'asset.back' || document.formvalidator.isValid(form))
+			if (task == 'cwmasset.back' || document.formvalidator.isValid(form))
 			{
 				Joomla.submitform(task, form);
 			}
-			elseif (task == 'asset.checkassets' || document.formvalidator.isValid(form))
+			elseif (task == 'cwmasset.checkassets' || document.formvalidator.isValid(form))
 			{
 				Joomla.submitform(task, form);
 			}
-			elseif (task == 'asset.browse' || document.formvalidator.isValid(form))
+			elseif (task == 'cwmasset.browse' || document.formvalidator.isValid(form))
 			{
 				Joomla.submitform(task, form);
 			}
 		};
 ");
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=assets') ?>" method="post" name="assetsForm" id="item-assets" class="form-horizontal">
+<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmassets') ?>" method="post" name="assetsForm" id="item-assets" class="form-horizontal">
 	<div class="row-fluid">
 		<div class="span6 form-horizontal">
 			<h4><?php echo JText::_('JBS_ADM_ASSET_CHECK'); ?></h4>
 
 			<div class="span2">
-				<a onclick="Joomla.submitbutton('assets.checkassets')">
+				<a onclick="Joomla.submitbutton('cwmassets.checkassets')">
 					<img
 						src="<?php echo JUri::base() . '../media/com_proclaim/images/icons/import.png'; ?>"
 						alt="Check Assets" height="48" width="48" style="clear: right;"/>
@@ -51,10 +53,10 @@ Factory::getDocument()->addScriptDeclaration("
 				</a>
 			</div>
 			<div class="span2">
-				<button value="<?php echo JRoute::_('index.php?option=com_proclaim&view=assets&task=assets.browse&tmpl=component&' . JSession::getFormToken() . '=1'); ?>" class="button-fix" type="button" data-bs-toggle="modal" data-bs-target="#collapseModal">
+				<button value="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmassets&task=cwmassets.browse&tmpl=component&' . JSession::getFormToken() . '=1'); ?>" class="button-fix" type="button" data-bs-toggle="modal" data-bs-target="#collapseModal">
 					<span class="icon-square" aria-hidden="true"></span>
 					<?php echo JText::_('JBS_ADM_FIX'); ?></button>
-<!--				<a href="--><?php //echo JRoute::_('index.php?option=com_proclaim&view=assets&task=assets.browse&tmpl=component&' . JSession::getFormToken() . '=1'); ?><!--" class="modals"-->
+<!--				<a href="--><?php //echo JRoute::_('index.php?option=com_proclaim&view=cwmassets&task=cwmssets.browse&tmpl=component&' . JSession::getFormToken() . '=1'); ?><!--" class="modals"-->
 <!--				   rel="{handler: 'iframe', size: {x: 600, y: 250}}">-->
 <!--					<img src="--><?php //echo JUri::base() . '../media/com_proclaim/images/icons/export.png'; ?><!--"-->
 <!--						alt="Fix Assets" height="48" width="48"/>-->

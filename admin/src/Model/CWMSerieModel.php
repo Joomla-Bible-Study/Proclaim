@@ -7,7 +7,21 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
+namespace CWM\Component\Proclaim\Administrator\Model;
+
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CWMThumbnail;
+use CWM\Component\Proclaim\Administrator\Table\CWMSerieTable;
+use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Table\Table;
+use Joomla\Registry\Registry;
+
 defined('_JEXEC') or die;
 
 /**
@@ -16,13 +30,39 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CWMSerieModel extends JModelAdmin
+class CWMSerieModel extends AdminModel
 {
 	/**
-	 * @var  string    The prefix to use with controller messages.
+	 * Controller Prefix
+	 *
+	 * @var        string    The prefix to use with controller messages.
 	 * @since    1.6
 	 */
 	protected $text_prefix = 'com_proclaim';
+
+	/**
+	 * The type alias for this content type (for example, 'com_content.article').
+	 *
+	 * @var      string
+	 * @since    3.2
+	 */
+	public $typeAlias = 'com_proclaim.cwmserie';
+
+	/**
+	 * Items data
+	 *
+	 * @var  object|boolean
+	 * @since 10.0.0
+	 */
+	private $data;
+
+	/**
+	 * Name of the form
+	 *
+	 * @var string
+	 * @since  4.0.0
+	 */
+	protected $formName = 'serie';
 
 	protected $teacher;
 
@@ -38,10 +78,15 @@ class CWMSerieModel extends JModelAdmin
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
+		if (empty($data))
+		{
+			$this->getItem();
+		}
+
 		// Get the form.
 		$form = $this->loadForm('com_proclaim.serie', 'serie', array('control' => 'jform', 'load_data' => $loadData));
 
-		if (empty($form))
+		if ($form === null)
 		{
 			return false;
 		}
@@ -63,7 +108,7 @@ class CWMSerieModel extends JModelAdmin
 
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
-		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_proclaim.serie.' . (int) $id))
+		if (($id != 0 && (!$user->authorise('core.edit.state', 'com_proclaim.serie.' . (int) $id)))
 			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_proclaim')))
 		{
 			// Disable fields for display.
@@ -90,7 +135,7 @@ class CWMSerieModel extends JModelAdmin
 	{
 		if (empty($this->teacher))
 		{
-			$query = 'SELECT id AS value, teachername AS text'
+			$query         = 'SELECT id AS value, teachername AS text'
 				. ' FROM #__bsms_teachers'
 				. ' WHERE published = 1';
 			$this->teacher = $this->_getList($query);
@@ -110,8 +155,8 @@ class CWMSerieModel extends JModelAdmin
 	 */
 	public function save($data)
 	{
-		/** @var Joomla\Registry\Registry $params */
-		$params = JBSMParams::getAdmin()->params;
+		/** @var Registry $params */
+		$params = CWMParams::getAdmin()->params;
 		$app    = Factory::getApplication();
 		$path   = 'images/biblestudy/series/' . $data['id'];
 		$prefix = 'thumb_';
@@ -132,7 +177,7 @@ class CWMSerieModel extends JModelAdmin
 				// Modify model data if no image is set.
 				$data['series_thumbnail'] = "";
 			}
-			elseif (!JBSMBibleStudyHelper::startsWith(basename($data['image']), $prefix))
+			elseif (!CWMProclaimHelper::startsWith(basename($data['image']), $prefix))
 			{
 				// Modify model data
 				$data['series_thumbnail'] = $path . '/thumb_' . basename($data['image']);
@@ -145,9 +190,9 @@ class CWMSerieModel extends JModelAdmin
 				{
 					if (substr(basename($data['image']), 0, strlen($prefix)) == $prefix)
 					{
-						$str = substr(basename($data['image']), strlen($prefix));
+						$str                      = substr(basename($data['image']), strlen($prefix));
 						$data['series_thumbnail'] = $path . '/' . $str;
-						$data['image'] = $path . '/' . $str;
+						$data['image']            = $path . '/' . $str;
 					}
 
 					$x--;
@@ -157,7 +202,7 @@ class CWMSerieModel extends JModelAdmin
 			return parent::save($data);
 		}
 
-		JBSMThumbnail::create($data['image'], $path, $params->get('thumbnail_series_size', 100));
+		CWMThumbnail::create($data['image'], $path, $params->get('thumbnail_series_size', 100));
 
 		// Modify model data
 		$data['series_thumbnail'] = $path . '/thumb_' . basename($data['image']);
@@ -192,8 +237,8 @@ class CWMSerieModel extends JModelAdmin
 	 */
 	protected function batchCopy($value, $pks, $contexts)
 	{
-		$app    = Factory::getApplication();
-		/** @type TableSerie $table */
+		$app = Factory::getApplication();
+		/** @type CWMSerieTable $table */
 		$table  = $this->getTable();
 		$i      = 0;
 		$newIds = array();
@@ -204,7 +249,7 @@ class CWMSerieModel extends JModelAdmin
 
 		if (!$user->authorise('core.create', $extension))
 		{
-			$app->enqueueMessage(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'), 'error');
+			$app->enqueueMessage(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'), 'error');
 
 			return false;
 		}
@@ -227,12 +272,10 @@ class CWMSerieModel extends JModelAdmin
 
 					return false;
 				}
-				else
-				{
-					// Not fatal error
-					$app->enqueueMessage(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
-					continue;
-				}
+
+				// Not fatal error
+				$app->enqueueMessage(Text::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
+				continue;
 			}
 
 			// Alter the title & alias
@@ -271,22 +314,6 @@ class CWMSerieModel extends JModelAdmin
 		$this->cleanCache();
 
 		return $newIds;
-	}
-
-	/**
-	 * Method to get a table object, load it if necessary.
-	 *
-	 * @param   string  $name     The table name. Optional.
-	 * @param   string  $prefix   The class prefix. Optional.
-	 * @param   array   $options  Configuration array for model. Optional.
-	 *
-	 * @return  JTable  A JTable object
-	 *
-	 * @since 7.0
-	 */
-	public function getTable($name = 'Serie', $prefix = 'Table', $options = array())
-	{
-		return JTable::getInstance($name, $prefix, $options);
 	}
 
 	/**
@@ -358,7 +385,7 @@ class CWMSerieModel extends JModelAdmin
 	/**
 	 * Prepare and sanitise the table data prior to saving.
 	 *
-	 * @param   TableSerie  $table  A reference to a JTable object.
+	 * @param   CWMSerieTable  $table  A reference to a JTable object.
 	 *
 	 * @return  void
 	 *
@@ -369,11 +396,11 @@ class CWMSerieModel extends JModelAdmin
 		jimport('joomla.filter.output');
 
 		$table->series_text = htmlspecialchars_decode($table->series_text, ENT_QUOTES);
-		$table->alias       = JApplicationHelper::stringURLSafe($table->alias);
+		$table->alias       = ApplicationHelper::stringURLSafe($table->alias);
 
 		if (empty($table->alias))
 		{
-			$table->alias = JApplicationHelper::stringURLSafe($table->series_text);
+			$table->alias = ApplicationHelper::stringURLSafe($table->series_text);
 		}
 
 		if (empty($table->id))
@@ -434,7 +461,7 @@ class CWMSerieModel extends JModelAdmin
 
 		if ($item)
 		{
-			$item->admin = JBSMParams::getAdmin();
+			$item->admin = CWMParams::getAdmin();
 		}
 
 		return $item;
@@ -443,7 +470,7 @@ class CWMSerieModel extends JModelAdmin
 	/**
 	 * A protected method to get a set of ordering conditions.
 	 *
-	 * @param   JTable  $table  A JTable object.
+	 * @param   Table  $table  A JTable object.
 	 *
 	 * @return  array  An array of conditions to add to ordering queries.
 	 *

@@ -12,7 +12,7 @@
             <param name="id" type="series" default="" label="JBS_CMN_SELECT_SERIES"
                    description="JBS_MNU_SELECT_SERIES_DESC"/>
         </url>
-        <params addpath="/components/com_proclaim/elements">
+        <params addpath="/components/com_proclaim/elements" >
             <param name="type" type="hidden" default=""/>
             <param name="t" type="t" default="" label="JBS_MNU_SELECT_TEMPLATE"
                    description="JBS_MNU_SELECT_TEMPLATE_DESC"/>
@@ -20,9 +20,9 @@
     </state>
     <fields name="request">
         <fieldset name="request"
-                  addfieldpath="/administrator/components/com_proclaim/src/Field"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
                 >
-            <field name="id" type="modal_seriesdetail"
+            <field name="id" type="Modal_Series"
                    description="JBS_MNU_SELECT_SERIES_DESC"
                    label="JBS_CMN_SELECT_SERIES"
                    required="true"
@@ -37,7 +37,6 @@
                    required="true"
                     />
         </fieldset>
-
     </fields>
     <fields name="params">
         <fieldset name="basic"

@@ -202,29 +202,29 @@ $this->useCoreUI = true;
 			<div class="col-12 col-lg-12">
 				<div class="well well-small">
 					<div id="dashboard-icons" class="btn-group" style="white-space: normal;">
-						<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=assets&task=assets.checkassets&' .
+						<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmassets&task=cwmassets.checkassets&' .
 							JSession::getFormToken() . '=1'); ?>"
 						   title="<?php echo JText::_('JBS_ADM_ASSET_CHECK'); ?>" class="btn"> <i
 									class="icon-big icon-list"> </i>
 							<span><br/> <?php echo JText::_('JBS_ADM_ASSET_CHECK'); ?> </span></a>
-						<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=migrate'); ?>"
+						<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmmigrate'); ?>"
 						   title="<?php echo JText::_('JBS_ADM_MIGRATE'); ?>" class="btn"> <i
 									class="icon-big icon-share-alt"></i>
 							<span><br/> <?php echo JText::_('JBS_ADM_MIGRATE'); ?> </span></a>
-						<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=backup'); ?>"
+						<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmbackup'); ?>"
 						   title="<?php echo JText::_('JBS_ADM_BACKUP_RESTORE'); ?>" class="btn"> <i
 									class="icon-big icon-database"></i>
 							<span><br/> <?php echo JText::_('JBS_ADM_BACKUP_RESTORE'); ?> </span></a>
-						<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=archive'); ?>"
+						<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmarchive'); ?>"
 						   title="<?php echo JText::_('JBS_ADM_ARCHIVE'); ?>" class="btn"> <i
 									class="icon-archive icon-big"></i>
 							<span><br/> <?php echo JText::_('JBS_ADM_ARCHIVE'); ?> </span></a>
-						<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=assets&task=cwmadmin.aliasUpdate&' .
+						<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmassets&task=cwmadmin.aliasUpdate&' .
 							JSession::getFormToken() . '=1') ?>"
 						   title="<?php echo JText::_('JBS_ADM_RESET_ALIAS'); ?>" class="btn"> <i
 									class="icon-big icon-tree-2"></i>
 							<span><br/> <?php echo JText::_('JBS_ADM_RESET_ALIAS'); ?> </span></a>
-						<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=database'); ?>"
+						<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmdatabase'); ?>"
 						   title="<?php echo JText::_('JBS_ADM_DATABASE'); ?>" class="btn"> <i
 									class="icon-database icon-big"></i>
 							<span><br/> <?php echo JText::_('JBS_ADM_DATABASE'); ?> </span></a>

@@ -106,7 +106,7 @@ class CWMMessageModel extends AdminModel
 			$query->from('#__bsms_studytopics AS studytopics');
 
 			$query->join('LEFT', '#__bsms_topics AS topic ON topic.id = studytopics.topic_id');
-			$query->where('studytopics.study_id = ' . $id);
+			$query->where('studytopics.study_id = ' . (int) $id);
 
 			$db->setQuery($query->__toString());
 			$topics = $db->loadObjectList();

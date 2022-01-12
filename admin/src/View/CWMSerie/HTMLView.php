@@ -13,7 +13,12 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMSerie;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Registry\Registry;
 
 /**
@@ -63,15 +68,15 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   7.0.0
 	 */
 	public function display($tpl = null)
 	{
 		$this->form  = $this->get("Form");
 		$this->item  = $this->get("Item");
-		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'serie');
-		$admin = JBSMParams::getAdmin();
+		$this->canDo = CWMProclaimHelper::getActions($this->item->id, 'serie');
+		$admin = CWMParams::getAdmin();
 		$registry    = new Registry;
 		$registry->loadString($admin->params);
 		$this->admin_params = $registry;
@@ -99,35 +104,35 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since  7.0.0
 	 */
 	protected function addToolbar()
 	{
 		Factory::getApplication()->input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
-		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolbarHelper::title(JText::_('JBS_CMN_SERIES') . ': <small><small>[' . $title . ']</small></small>', 'tree tree');
+		$title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
+		ToolbarHelper::title(Text::_('JBS_CMN_SERIES') . ': <small><small>[' . $title . ']</small></small>', 'tree tree');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_proclaim'))
 		{
-			JToolbarHelper::apply('serie.apply');
-			JToolbarHelper::save('serie.save');
-			JToolbarHelper::cancel('serie.cancel');
+			ToolbarHelper::apply('cwmserie.apply');
+			ToolbarHelper::save('cwmserie.save');
+			ToolbarHelper::cancel('cwmserie.cancel');
 		}
 		else
 		{
 			if ($this->canDo->get('core.edit', 'com_proclaim'))
 			{
-				JToolbarHelper::apply('serie.apply');
-				JToolbarHelper::save('serie.save');
+				ToolbarHelper::apply('cwmserie.apply');
+				ToolbarHelper::save('cwmserie.save');
 			}
 
-			JToolbarHelper::cancel('serie.cancel', 'JTOOLBAR_CLOSE');
+			ToolbarHelper::cancel('cwmserie.cancel', 'JTOOLBAR_CLOSE');
 		}
 
-		JToolbarHelper::divider();
-		JToolbarHelper::help('biblestudy', true);
+		ToolbarHelper::divider();
+		ToolbarHelper::help('biblestudy', true);
 	}
 
 	/**
@@ -141,6 +146,6 @@ class HTMLView extends BaseHtmlView
 	{
 		$isNew    = ($this->item->id < 1);
 		$document = Factory::getDocument();
-		$document->setTitle($isNew ? JText::_('JBS_TITLE_SERIES_CREATING') : JText::sprintf('JBS_TITLE_SERIES_EDITING', $this->item->series_text));
+		$document->setTitle($isNew ? Text::_('JBS_TITLE_SERIES_CREATING') : Text::sprintf('JBS_TITLE_SERIES_EDITING', $this->item->series_text));
 	}
 }

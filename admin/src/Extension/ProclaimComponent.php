@@ -11,7 +11,6 @@ namespace CWM\Component\Proclaim\Administrator\Extension;
 
 \defined('JPATH_PLATFORM') or die;
 
-use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Component\Router\RouterServiceInterface;
 use Joomla\CMS\Component\Router\RouterServiceTrait;
 use Joomla\CMS\Extension\BootableExtensionInterface;
@@ -19,6 +18,9 @@ use Joomla\CMS\Extension\MVCComponent;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Fields\FieldsServiceInterface;
 use Joomla\CMS\HTML\HTMLRegistryAwareTrait;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Workflow\WorkflowServiceInterface;
+use Joomla\CMS\Workflow\WorkflowServiceTrait;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -27,10 +29,17 @@ use Psr\Container\ContainerInterface;
  * @since  4.0.0
  */
 class ProclaimComponent extends MVCComponent implements
-BootableExtensionInterface, FieldsServiceInterface, RouterServiceInterface
+BootableExtensionInterface, FieldsServiceInterface, RouterServiceInterface, WorkflowServiceInterface
 {
 	use RouterServiceTrait;
 	use HTMLRegistryAwareTrait;
+	use WorkflowServiceTrait;
+
+	/** @var array Supported functionality */
+	protected $supportedFunctionality = [
+		'core.featured' => true,
+		'core.state' => true,
+	];
 
 	/**
 	 * The trashed condition
@@ -119,7 +128,7 @@ BootableExtensionInterface, FieldsServiceInterface, RouterServiceInterface
 			}
 		}
 
-		if ($section != 'cpanel')
+		if ($section !== 'cpanel')
 		{
 			// We don't know other sections
 			return null;
@@ -145,5 +154,25 @@ BootableExtensionInterface, FieldsServiceInterface, RouterServiceInterface
 		);
 
 		return $contexts;
+	}
+
+	public function filterTransitions(array $transitions, int $pk): array
+	{
+		// TODO: Implement filterTransitions() method.
+	}
+
+	public function getWorkflowTableBySection(?string $section = null): string
+	{
+		// TODO: Implement getWorkflowTableBySection() method.
+	}
+
+	public function getWorkflowContexts(): array
+	{
+		// TODO: Implement getWorkflowContexts() method.
+	}
+
+	public function getCategoryWorkflowContext(?string $section = null): string
+	{
+		// TODO: Implement getCategoryWorkflowContext() method.
 	}
 }

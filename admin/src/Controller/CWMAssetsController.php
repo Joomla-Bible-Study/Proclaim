@@ -11,9 +11,16 @@
 namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // No Direct Access
-use Joomla\CMS\MVC\Controller\FormController;
-
 defined('_JEXEC') or die;
+
+// No Direct Access
+use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
+use CWM\Component\Proclaim\Administrator\Model\CWMAssetsModel;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Controller\BaseController;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
 
 /**
  * Controller for Assets
@@ -21,54 +28,24 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CWMAssetsController extends FormController
+class CWMAssetsController extends BaseController
 {
 	/**
-	 * The Model Name Varible.
+	 * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanism from kicking in
 	 *
-	 * @var    string
-	 * @since  7.0.0
+	 * @var  string
+	 *
+	 * @since 7.0
 	 */
-	public string $modelName;
+	protected $view_list = 'CWMAdmin';
 
 	/**
-	 * The context for storing internal data, e.g. record.
+	 * The default view for the display method.
 	 *
 	 * @var    string
-	 * @since  12.2
+	 * @since  3.0
 	 */
-	protected $context = 'assets';
-
-	/**
-	 * The URL view item variable.
-	 *
-	 * @var    string
-	 * @since  12.2
-	 */
-	protected $view_item = 'assets';
-
-	/**
-	 * The URL view list variable.
-	 *
-	 * @var    string
-	 * @since  12.2
-	 */
-	protected $view_list = 'assets';
-
-	/**
-	 * Constructor.
-	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
-	 *
-	 * @throws \Exception
-	 * @since 1.5
-	 */
-	public function __construct($config = array())
-	{
-		parent::__construct($config);
-
-		$this->modelName = 'assets';
-	}
+	protected $default_view = 'CWMAssets';
 
 	/**
 	 * Constructor.
@@ -101,15 +78,15 @@ class CWMAssetsController extends FormController
 	public function checkassets(): void
 	{
 		// Check for request forgeries.
-		JSession::checkToken('get') or JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		Session::checkToken('get') || Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
-		/** @var BibleStudyModelAssets $model */
-		$model = $this->getModel('assets');
+		$model = new CWMAssetsModel;
 		$checkassets = $model->checkAssets();
 		$session = Factory::getApplication()->getSession();
 		$session->set('assat_stack', '', 'JBSM');
 		$session->set('checkassets', $checkassets, 'JBSM');
-		$this->display();
+
+		$this->display(false);
 	}
 
 	/**
@@ -123,7 +100,7 @@ class CWMAssetsController extends FormController
 	public function browse()
 	{
 		// Check for request forgeries.
-		JSession::checkToken('get') or jexit(JText::_('JINVALID_TOKEN'));
+		Session::checkToken('get') or jexit(Text::_('JINVALID_TOKEN'));
 
 		$app = Factory::getApplication();
 		$session = $app->getSession();
@@ -135,11 +112,10 @@ class CWMAssetsController extends FormController
 			CWMHelper::clearcache('administrator');
 			$session->set('asset_stack', '', 'JBSM');
 
-			/** @var BibleStudyModelAssets $model */
-			$model = $this->getModel('assets');
+			$model = new CWMAssetsModel;
 			$state = $model->startScanning();
 			$app->input->set('scanstate', $state);
-			$app->input->set('view', 'assets');
+			$app->input->set('view', 'cwmassets');
 
 			$this->display(false);
 		}
@@ -160,14 +136,14 @@ class CWMAssetsController extends FormController
 	public function clear()
 	{
 		// Check for request forgeries.
-		JSession::checkToken('get') or jexit(JText::_('JINVALID_TOKEN'));
+		Session::checkToken('get') or jexit(Text::_('JINVALID_TOKEN'));
 
 		CWMHelper::clearcache('administrator');
 		CWMHelper::clearcache('site');
 		$session = Factory::getSession();
 		$session->set('assat_stack', '', 'JBSM');
 		$app = Factory::getApplication();
-		$app->input->set('view', 'assets');
+		$app->input->set('view', 'cwmassets');
 		$this->display(false);
 	}
 
@@ -182,14 +158,13 @@ class CWMAssetsController extends FormController
 	public function run()
 	{
 		// Check for request forgeries.
-		JSession::checkToken('get') or JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		Session::checkToken('get') || Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
 		$app   = Factory::getApplication();
-		/** @var BibleStudyModelAssets $model */
-		$model = $this->getModel('assets');
+		$model = new CWMAssetsModel;
 		$state = $model->run();
 		$app->input->set('scanstate', $state);
-		$app->input->set('view', 'assets');
+		$app->input->set('view', 'cwmassets');
 
 		$this->display(false);
 	}

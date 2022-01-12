@@ -8,9 +8,11 @@
  * @link       https://www.christianwebministries.org
  * */
 namespace CWM\Component\Proclaim\Site\Model;
+
 // No Direct Access
 defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseQuery;
 use Joomla\Registry\Registry;
 use Joomla\CMS\MVC\Model\ListModel;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
@@ -28,8 +30,9 @@ class CWMLandingPageModel extends ListModel
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
-	 * @see        JController
+	 * @throws \Exception
 	 * @since      1.6
+	 * @see        JController
 	 */
 	public function __construct($config = array())
 	{
@@ -92,7 +95,7 @@ class CWMLandingPageModel extends ListModel
 	/**
 	 * Method to get a JDatabaseQuery object for retrieving the data set from a database.
 	 *
-	 * @return  JDatabaseQuery   A JDatabaseQuery object to retrieve the data set.
+	 * @return  \Joomla\Database\QueryInterface   A JDatabaseQuery object to retrieve the data set.
 	 *
 	 * @since   11.1
 	 */
@@ -106,7 +109,6 @@ class CWMLandingPageModel extends ListModel
 		$t_params = $registry;
 
 		// Load the parameters. Merge Global and Menu Item params into new object
-		/** @type JApplicationSite $app */
 		$app        = Factory::getApplication('site');
 		/** @var Registry $params */
 		$params     = $app->getParams();

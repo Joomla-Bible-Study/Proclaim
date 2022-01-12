@@ -15,6 +15,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Router\Route;
 
 /**
  * Controller for a Serie
@@ -24,6 +25,14 @@ use Joomla\CMS\MVC\Controller\FormController;
  */
 class CWMSerieController extends FormController
 {
+	/**
+	 * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
+	 *
+	 * @var   string
+	 * @since 7.0
+	 */
+	protected $view_list = 'cwmseries';
+
 	/**
 	 * Method to run batch operations.
 	 *
@@ -36,9 +45,9 @@ class CWMSerieController extends FormController
 	public function batch($model = null)
 	{
 		// Preset the redirect
-		$this->setRedirect(JRoute::_('index.php?option=com_proclaim&view=series' . $this->getRedirectToListAppend(), false));
+		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmseries' . $this->getRedirectToListAppend(), false));
 
-		return parent::batch($this->getModel('Serie', '', array()));
+		return parent::batch($this->getModel('CWMSerie', '', array()));
 	}
 
 	/**
@@ -81,5 +90,21 @@ class CWMSerieController extends FormController
 
 		// Since there is no asset tracking, revert to the component permissions.
 		return parent::allowEdit($data, $key);
+	}
+
+	/**
+	 * Proxy for getModel
+	 *
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 *
+	 * @return \Joomla\CMS\MVC\Model\BaseDatabaseModel
+	 *
+	 * @since 7.0
+	 */
+	public function getModel($name = 'CWMSerie', $prefix = '', $config = array('ignore_request' => true))
+	{
+		return parent::getModel($name, $prefix, $config);
 	}
 }

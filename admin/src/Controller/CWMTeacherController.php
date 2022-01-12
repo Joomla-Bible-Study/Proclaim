@@ -55,7 +55,7 @@ class CWMTeacherController extends FormController
 		// Preset the redirect
 		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmteachers' . $this->getRedirectToListAppend(), false));
 
-		return parent::batch($this->getModel('CWMTeacherModel', '', array()));
+		return parent::batch($this->getModel());
 	}
 
 	/**

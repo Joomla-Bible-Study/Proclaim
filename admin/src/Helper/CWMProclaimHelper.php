@@ -17,6 +17,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Filter\InputFilter;
+use Joomla\CMS\Object\CMSObject;
 use Joomla\Registry\Registry;
 use stdClass;
 
@@ -55,15 +56,15 @@ class CWMProclaimHelper
 	 * @param   int     $Itemid  ID
 	 * @param   string  $type    Type
 	 *
-	 * @return \Joomla\Registry\Registry
+	 * @return \Joomla\CMS\Object\CMSObject
 	 *
 	 * @throws \Exception
 	 * @since 1.5
 	 */
 	public static function getActions($Itemid = 0, $type = '')
 	{
-		$user   = Factory::getApplication()->getIdentity();
-		$result = new Registry;
+		$result = new CMSObject;
+		$user = Factory::getUser();
 
 		if (empty($Itemid))
 		{
@@ -141,7 +142,7 @@ class CWMProclaimHelper
 		}
 
 		$actions = array(
-			'core.administrator',
+			'core.admin',
 			'core.manage',
 			'core.create',
 			'core.edit',

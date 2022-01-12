@@ -11,16 +11,18 @@ namespace CWM\Component\Proclaim\Site\Service;
 
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Site\Service\ProclaimNomenuRules as NomenuRules;
 use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Categories\CategoryFactoryInterface;
+use Joomla\CMS\Categories\CategoryInterface;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Component\Router\RouterView;
 use Joomla\CMS\Component\Router\RouterViewConfiguration;
 use Joomla\CMS\Component\Router\Rules\MenuRules;
-use CWM\Component\Proclaim\Site\Service\ProclaimNomenuRules as NomenuRules;
 use Joomla\CMS\Component\Router\Rules\StandardRules;
 use Joomla\CMS\Menu\AbstractMenu;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 
 /**
  * Routing class of com_proclaim
@@ -29,16 +31,13 @@ use Joomla\Database\DatabaseInterface;
  */
 class Router extends RouterView
 {
-	protected $noIDs = false;
-
 	/**
-	 * The category factory
+	 * Flag to remove IDs
 	 *
-	 * @var CategoryFactoryInterface
-	 *
-	 * @since  4.0.0
+	 * @var    boolean
+	 * @since  10.0.0
 	 */
-	private $categoryFactory;
+	protected $noIDs = false;
 
 	/**
 	 * The db
@@ -56,63 +55,63 @@ class Router extends RouterView
 	 * @param   AbstractMenu              $menu             The menu object to work with
 	 * @param   CategoryFactoryInterface  $categoryFactory  The category object
 	 * @param   DatabaseInterface         $db               The database object
+	 *
+	 * @since 10.0.0
 	 */
-	public function __construct(SiteApplication $app, AbstractMenu $menu,
-	                            CategoryFactoryInterface $categoryFactory, DatabaseInterface $db)
+	public function __construct(SiteApplication $app, AbstractMenu $menu, CategoryFactoryInterface $categoryFactory, DatabaseInterface $db)
 	{
-		$this->categoryFactory = $categoryFactory;
-		$this->db              = $db;
+		$this->db = $db;
 
-		$params = ComponentHelper::getParams('com_proclaim');
+		$params      = ComponentHelper::getParams('com_proclaim');
 		$this->noIDs = (bool) $params->get('sef_ids');
 
-		$proclaim = new RouterViewConfiguration('CWMSermons');
-		$proclaim->setKey('id');
-		$this->registerView($proclaim);
+		$Sermons = new RouterViewConfiguration('CWMSermons');
+		$Sermons->setKey('id');
+		$this->registerView($Sermons);
 
-		$proclaim = new RouterViewConfiguration('CWMSermon');
-		$proclaim->setKey('id');
-		$this->registerView($proclaim);
+		$Sermon = new RouterViewConfiguration('CWMSermon');
+		$Sermon->setKey('id');
+		$this->registerView($Sermon);
 
-		$proclaim = new RouterViewConfiguration('CWMTeachers');
-		$proclaim->setKey('id');
-		$this->registerView($proclaim);
+		$Teachers = new RouterViewConfiguration('CWMTeachers');
+		$Teachers->setKey('id');
+		$this->registerView($Teachers);
 
-		$proclaim = new RouterViewConfiguration('CWMTeachers');
-		$proclaim->setKey('id');
-		$this->registerView($proclaim);
+		$Teachers = new RouterViewConfiguration('CWMTeachers');
+		$Teachers->setKey('id');
+		$this->registerView($Teachers);
 
-		$proclaim = new RouterViewConfiguration('CWMSeriesDisplay');
-		$proclaim->setKey('id');
-		$this->registerView($proclaim);
+		$SeriesDisplay = new RouterViewConfiguration('CWMSeriesDisplay');
+		$SeriesDisplay->setKey('id');
+		$this->registerView($SeriesDisplay);
 
-		$proclaim = new RouterViewConfiguration('CWMSeriesDisplays');
-		$proclaim->setKey('id');
-		$this->registerView($proclaim);
+		$SeriesDisplays = new RouterViewConfiguration('CWMSeriesDisplays');
+		$SeriesDisplays->setKey('id');
+		$this->registerView($SeriesDisplays);
 
-		$proclaim = new RouterViewConfiguration('CWMcommentform');
-		$proclaim->setKey('id');
-		$this->registerView($proclaim);
+		$commentform = new RouterViewConfiguration('CWMcommentform');
+		$commentform->setKey('id');
+		$this->registerView($commentform);
 
-		$proclaim = new RouterViewConfiguration('CWMCommentList');
-		$proclaim->setKey('id');
-		$this->registerView($proclaim);
+		$CommentList = new RouterViewConfiguration('CWMCommentList');
+		$CommentList->setKey('id');
+		$this->registerView($CommentList);
 
-		$proclaim = new RouterViewConfiguration('CWMLandingPage');
-		$proclaim->setKey('id');
-		$this->registerView($proclaim);
+		$LandingPage = new RouterViewConfiguration('CWMLandingPage');
+		$LandingPage->setKey('id');
+		$this->registerView($LandingPage);
 
-		$proclaim = new RouterViewConfiguration('CWMLatest');
-		$proclaim->setKey('id');
-		$this->registerView($proclaim);
+		$Latest = new RouterViewConfiguration('CWMLatest');
+		$Latest->setKey('id');
+		$this->registerView($Latest);
 
-		$proclaim = new RouterViewConfiguration('CWMMediaFileForm');
-		$proclaim->setKey('id');
-		$this->registerView($proclaim);
+		$MediaFileForm = new RouterViewConfiguration('CWMMediaFileForm');
+		$MediaFileForm->setKey('id');
+		$this->registerView($MediaFileForm);
 
-		$proclaim = new RouterViewConfiguration('CWMMediaFileList');
-		$proclaim->setKey('id');
-		$this->registerView($proclaim);
+		$MediaFileList = new RouterViewConfiguration('CWMMediaFileList');
+		$MediaFileList->setKey('id');
+		$this->registerView($MediaFileList);
 
 		$proclaim = new RouterViewConfiguration('CWMMessageForm');
 		$proclaim->setKey('id');

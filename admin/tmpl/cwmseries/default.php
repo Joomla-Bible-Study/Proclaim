@@ -10,6 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
@@ -29,7 +30,7 @@ $columns   = 7;
 
 if ($saveOrder)
 {
-	$saveOrderingUrl = 'index.php?option=com_proclaim&task=series.saveOrderAjax&tmpl=component';
+	$saveOrderingUrl = 'index.php?option=com_proclaim&task=cwmseries.saveOrderAjax&tmpl=component';
 	JHtml::_('sortablelist.sortable', 'seriesList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 }
 
@@ -48,7 +49,7 @@ $sortFields = $this->getSortFields();
 		Joomla.tableOrdering(order, dirn, '');
 	}
 </script>
-<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=series'); ?>" method="post" name="adminForm"
+<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmseries'); ?>" method="post" name="adminForm"
       id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
@@ -152,7 +153,7 @@ $sortFields = $this->getSortFields();
 										<?php $language = $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
 									<?php endif; ?>
 									<?php if ($canEdit || $canEditOwn) : ?>
-										<a href="<?php echo JRoute::_('index.php?option=com_proclaim&task=serie.edit&id=' . (int) $item->id); ?>"
+										<a href="<?php echo JRoute::_('index.php?option=com_proclaim&task=cwmserie.edit&id=' . (int) $item->id); ?>"
 										   title="<?php echo JText::_('JACTION_EDIT'); ?>">
 											<?php echo $this->escape($item->series_text); ?></a>
 									<?php else : ?>

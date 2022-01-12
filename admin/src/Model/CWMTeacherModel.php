@@ -17,10 +17,8 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMThumbnail;
 use CWM\Component\Proclaim\Administrator\Table\CWMTeacherTable;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
-use Joomla\CMS\Table\Table;
 use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
@@ -48,7 +46,7 @@ class CWMTeacherModel extends AdminModel
 	 * @var      string
 	 * @since    3.2
 	 */
-	public $typeAlias = 'com_proclaim.cwmteachers';
+	public $typeAlias = 'com_proclaim.cwmteacher';
 
 	/**
 	 * Items data
@@ -109,7 +107,7 @@ class CWMTeacherModel extends AdminModel
 
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
-		if (($id != 0 && (!$user->authorise('core.edit.state', 'com_proclaim.message.' . (int) $id)))
+		if (($id != 0 && (!$user->authorise('core.edit.state', 'com_proclaim.teacher.' . (int) $id)))
 			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_proclaim')))
 		{
 			// Disable fields for display.
@@ -230,21 +228,24 @@ class CWMTeacherModel extends AdminModel
 				{
 					if (substr(basename($data['image']), 0, strlen($prefix)) == $prefix)
 					{
-						$str = substr(basename($data['image']), strlen($prefix));
+						$str                       = substr(basename($data['image']), strlen($prefix));
 						$data['teacher_image']     = $path . '/' . $str;
 						$data['teacher_thumbnail'] = $path . '/' . $str;
-						$data['image'] = $path . '/' . $str;
+						$data['image']             = $path . '/' . $str;
 					}
 
 					$x--;
 				}
 			}
 
+			// Set contact to be a Int to work with Database
+			$data['contact'] = (int) $data['contact'];
+
 			// Fix Save of update file to match path.
 			if ($data['teacher_image'] != $data['image'])
 			{
 				$data['teacher_thumbnail'] = $data['image'];
-				$data['teacher_image'] = $data['image'];
+				$data['teacher_image']     = $data['image'];
 			}
 
 			return parent::save($data);

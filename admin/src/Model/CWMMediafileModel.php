@@ -22,11 +22,9 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\MVC\Model\BaseModel;
-use Joomla\CMS\Table\Table;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
-use JUri;
 
 // No Direct Access
 defined('_JEXEC') or die;
@@ -121,7 +119,7 @@ class CWMMediafileModel extends AdminModel
 				}
 				else
 				{
-					$path->set('protocal', rtrim(JUri::root(), '/'));
+					$path->set('protocal', rtrim(Uri::root(), '/'));
 				}
 
 				if ($table->type === 'legacy' || $table->type === 'local')

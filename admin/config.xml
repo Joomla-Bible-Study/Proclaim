@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
+	<help key="Proclaim:_Options"/>
 	<fieldset
 			name="component"
 			label="JBS_ADM_FIELDSET_OPTIONS_LABEL">
@@ -22,10 +23,9 @@
 		<field
 				name="restrict_uploads"
 				type="radio"
-				class="btn-group btn-group-yesno"
 				default="1"
-				label="JBS_ADM_FIELD_RESTRICT_UPLOADS_LABEL"
-				description="JBS_ADM_FIELD_RESTRICT_UPLOADS_DESC">
+				layout="joomla.form.field.radio.switcher"
+				label="JBS_ADM_FIELD_RESTRICT_UPLOADS_LABEL">
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
 		</field>
@@ -36,7 +36,7 @@
 				class="btn-group btn-group-yesno"
 				default="1"
 				label="JBS_ADM_FIELD_CHECK_MIME_LABEL"
-				description="JBS_ADM_FIELD_CHECK_MIME_DESC">
+				layout="joomla.form.field.radio.switcher">
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
 		</field>
@@ -75,14 +75,18 @@
 	</fieldset>
 	<fieldset name="permissions" label="JCONFIG_PERMISSIONS_LABEL"
 	          description="JCONFIG_PERMISSIONS_DESC">
-		<field name="rules" type="rules" label="JBS_ADM_PERMISSION_SETTINGS"
-		       class="inputbox" validate="rules" filter="rules" component="com_proclaim"
+		<field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL"
+		       validate="rules" filter="rules" component="com_proclaim"
 		       section="component"/>
 	</fieldset>
-	<fieldset name="filters"
-	          addfieldpath="/administrator/components/com_proclaim/models/fields"
-	          label="JBS_ADM_TEXT_FILTERS_LABEL" description="JBS_ADM_TEXT_FILTERS_DESC">
-		<field name="filters" type="filters" label="JBS_ADM_TEXT_FILTERS_LABEL"
-		       class="inputbox" filter=""/>
+	<fieldset addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
+	          name="filters"
+	          label="JBS_ADM_TEXT_FILTERS_LABEL"
+	          description="JBS_ADM_TEXT_FILTERS_DESC">
+		<field
+				name="filters"
+				type="filters"
+		        filter=""
+		/>
 	</fieldset>
 </config>

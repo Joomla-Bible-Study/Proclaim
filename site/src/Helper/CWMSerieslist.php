@@ -7,13 +7,15 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Site\Helper;
+
 // No Direct Access
 defined('_JEXEC') or die;
 
-use Joomla\Registry\Registry;
-use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMTranslated;
+use Joomla\CMS\Factory;
+use Joomla\Registry\Registry;
 
 /**
  *  Class for Series List
@@ -75,9 +77,9 @@ class CWMSerieslist extends CWMListing
 	/**
 	 * Get Serieslist Exp
 	 *
-	 * @param   object                    $row       JTable
+	 * @param   object    $row       JTable
 	 * @param   Registry  $params    Item Params
-	 * @param   object                    $template  Template
+	 * @param   object    $template  Template
 	 *
 	 * @return object
 	 *
@@ -102,9 +104,9 @@ class CWMSerieslist extends CWMListing
 	/**
 	 * Get Series Details EXP
 	 *
-	 * @param   object                    $row       JTable
+	 * @param   object    $row       JTable
 	 * @param   Registry  $params    Item Params
-	 * @param   object                    $template  Template
+	 * @param   object    $template  Template
 	 *
 	 * @return object
 	 *
@@ -129,9 +131,9 @@ class CWMSerieslist extends CWMListing
 	/**
 	 * Get Series Studies Exp
 	 *
-	 * @param   int                       $id        ID
+	 * @param   int       $id        ID
 	 * @param   Registry  $params    Item Params
-	 * @param   object                    $template  Template
+	 * @param   object    $template  Template
 	 *
 	 * @return string
 	 *
@@ -154,7 +156,7 @@ class CWMSerieslist extends CWMListing
 			$limit = '';
 		}
 
-		$items   = $this->getSeriesstudiesDBO($id, $params, $limit);
+		$items = $this->getSeriesstudiesDBO($id, $params, $limit);
 
 		$studies = '';
 
@@ -191,7 +193,7 @@ class CWMSerieslist extends CWMListing
 			}
 		}
 
-		foreach ($items AS $row)
+		foreach ($items as $row)
 		{
 			$studies .= $this->getListingExp($row, $params, $params->get('seriesdetailtemplateid'));
 		}

@@ -7,7 +7,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
+namespace CWM\Component\Proclaim\Administrator\Field;
+
 // No Direct Access
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Field\ListField;
+use Joomla\CMS\HTML\HTMLHelper;
+
 defined('_JEXEC') or die;
 
 /**
@@ -16,7 +23,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.4
  */
-class JFormFieldSeriesList extends JFormFieldList
+class SeriesField extends ListField
 {
 	/**
 	 * The field type.
@@ -24,7 +31,7 @@ class JFormFieldSeriesList extends JFormFieldList
 	 * @var         string
 	 * @since    7.0.4
 	 */
-	protected $type = 'SeriesList';
+	protected $type = 'Series';
 
 	/**
 	 * Method to get a list of options for a list input.
@@ -49,7 +56,7 @@ class JFormFieldSeriesList extends JFormFieldList
 		{
 			foreach ($messages as $message)
 			{
-				$options[] = JHtml::_('select.option', $message->id, $message->series_text);
+				$options[] = HtmlHelper::_('select.option', $message->id, $message->series_text);
 			}
 		}
 

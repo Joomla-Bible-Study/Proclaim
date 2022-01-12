@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-    <fieldset addfieldpath="/administrator/components/com_contact/models/fields">
+    <fieldset addfieldprefix="Joomla\Component\Contact\Administrator\Field">
         <field name="id" type="hidden" label="JGLOBAL_FIELD_ID_LABEL"
                description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"
                class="readonly span12 small"/>

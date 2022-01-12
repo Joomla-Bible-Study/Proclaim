@@ -19,7 +19,7 @@ use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Workflow\Workflow;
-use Joomla\Component\Content\Site\Helper\RouteHelper;
+use Joomla\Component\Content\Site\Helper\CWMRouteHelper;
 use Joomla\Registry\Registry;
 
 /**
@@ -143,7 +143,7 @@ class Icon
 			return $output;
 		}
 
-		$contentUrl = RouteHelper::getArticleRoute($article->slug, $article->catid, $article->language);
+		$contentUrl = CWMRouteHelper::getArticleRoute($article->slug, $article->catid, $article->language);
 		$url        = $contentUrl . '&task=article.edit&a_id=' . $article->id . '&return=' . base64_encode($uri);
 
 		if ($article->state == Workflow::CONDITION_UNPUBLISHED)

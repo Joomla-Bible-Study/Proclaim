@@ -8,19 +8,14 @@
  * @link       https://www.christianwebministries.org
  * */
 
+namespace CWM\Component\Proclaim\Administrator\Model;
+
 use CWM\Component\Proclaim\Administrator\Lib\CWMAssets;
 use Joomla\CMS\Factory;
-use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
+use Joomla\CMS\MVC\Model\ListModel;
 
 defined('_JEXEC') or die;
-
-// Always load JBSM API if it exists.
-$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
-
-if (file_exists($api))
-{
-	require_once $api;
-}
 
 /**
  * class Assets model
@@ -28,7 +23,7 @@ if (file_exists($api))
  * @package  Proclaim.Admin
  * @since    7.1.0
  */
-class CMWAssetsModel extends BaseDatabaseModel
+class CWMAssetsModel extends ListModel
 {
 	/**
 	 * Parant ID
@@ -83,14 +78,15 @@ class CMWAssetsModel extends BaseDatabaseModel
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array                                             $config   An optional associative array of configuration settings.
+	 * @param   \Joomla\CMS\MVC\Factory\MVCFactoryInterface|null  $factory  The factory.
 	 *
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function __construct($config = array())
+	public function __construct($config = array(), MVCFactoryInterface $factory = null)
 	{
-		parent::__construct($config);
+		parent::__construct($config, $factory);
 
 		$this->name = 'assets';
 	}
@@ -100,7 +96,7 @@ class CMWAssetsModel extends BaseDatabaseModel
 	 *
 	 * @return boolean
 	 *
-	 * @throws \JsonException
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function startScanning()
@@ -179,7 +175,7 @@ class CMWAssetsModel extends BaseDatabaseModel
 	 * @throws \JsonException
 	 * @since 7.0
 	 */
-	public function run($resetTimer = true)
+	public function run(bool $resetTimer = true)
 	{
 		if ($resetTimer)
 		{
@@ -471,7 +467,7 @@ class CMWAssetsModel extends BaseDatabaseModel
 	{
 		$return = array();
 		$db     = Factory::getDbo();
-		$result = new stdClass;
+		$result = new \stdClass;
 
 		// First get the new parent_id
 		if (!$this->parent_id)

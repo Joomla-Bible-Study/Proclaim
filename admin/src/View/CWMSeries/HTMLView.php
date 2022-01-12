@@ -11,7 +11,13 @@
 namespace CWM\Component\Proclaim\Administrator\View\CWMSeries;
 
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper as JHtml;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die;
 
@@ -80,7 +86,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @see     fetch()
 	 * @since   11.1
-	 * @throws  Exception
+	 * @throws  \Exception
 	 */
 	public function display($tpl = null)
 	{
@@ -89,7 +95,7 @@ class HTMLView extends BaseHtmlView
 		$this->state      = $this->get('State');
 
 		$this->filterForm    = $this->get('FilterForm');
-		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'serie');
+		$this->canDo         = CWMProclaimHelper::getActions('', 'serie');
 
 		// Check for errors
 		if (count($errors = $this->get('Errors')))
@@ -101,16 +107,16 @@ class HTMLView extends BaseHtmlView
 
 		// Levels filter.
 		$options   = array();
-		$options[] = JHtml::_('select.option', '1', JText::_('J1'));
-		$options[] = JHtml::_('select.option', '2', JText::_('J2'));
-		$options[] = JHtml::_('select.option', '3', JText::_('J3'));
-		$options[] = JHtml::_('select.option', '4', JText::_('J4'));
-		$options[] = JHtml::_('select.option', '5', JText::_('J5'));
-		$options[] = JHtml::_('select.option', '6', JText::_('J6'));
-		$options[] = JHtml::_('select.option', '7', JText::_('J7'));
-		$options[] = JHtml::_('select.option', '8', JText::_('J8'));
-		$options[] = JHtml::_('select.option', '9', JText::_('J9'));
-		$options[] = JHtml::_('select.option', '10', JText::_('J10'));
+		$options[] = JHtml::_('select.option', '1', Text::_('J1'));
+		$options[] = JHtml::_('select.option', '2', Text::_('J2'));
+		$options[] = JHtml::_('select.option', '3', Text::_('J3'));
+		$options[] = JHtml::_('select.option', '4', Text::_('J4'));
+		$options[] = JHtml::_('select.option', '5', Text::_('J5'));
+		$options[] = JHtml::_('select.option', '6', Text::_('J6'));
+		$options[] = JHtml::_('select.option', '7', Text::_('J7'));
+		$options[] = JHtml::_('select.option', '8', Text::_('J8'));
+		$options[] = JHtml::_('select.option', '9', Text::_('J9'));
+		$options[] = JHtml::_('select.option', '10', Text::_('J10'));
 
 		$this->f_levels = $options;
 
@@ -139,45 +145,45 @@ class HTMLView extends BaseHtmlView
 		$user = Factory::getUser();
 
 		// Get the toolbar object instance
-		$bar = JToolbar::getInstance('toolbar');
+		$bar = Toolbar::getInstance('toolbar');
 
-		JToolbarHelper::title(JText::_('JBS_CMN_SERIES'), 'tree-2 tree-2');
+		ToolbarHelper::title(Text::_('JBS_CMN_SERIES'), 'tree-2 tree-2');
 
 		if ($this->canDo->get('core.create'))
 		{
-			JToolbarHelper::addNew('serie.add');
+			ToolbarHelper::addNew('serie.add');
 		}
 
 		if ($this->canDo->get('core.edit'))
 		{
-			JToolbarHelper::editList('serie.edit');
+			ToolbarHelper::editList('serie.edit');
 		}
 
 		if ($this->canDo->get('core.edit.state'))
 		{
-			JToolbarHelper::divider();
-			JToolbarHelper::publishList('series.publish');
-			JToolbarHelper::unpublishList('series.unpublish');
-			JToolbarHelper::divider();
-			JToolbarHelper::archiveList('series.archive');
+			ToolbarHelper::divider();
+			ToolbarHelper::publishList('series.publish');
+			ToolbarHelper::unpublishList('series.unpublish');
+			ToolbarHelper::divider();
+			ToolbarHelper::archiveList('series.archive');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
-			JToolbarHelper::deleteList('', 'series.delete', 'JTOOLBAR_EMPTY_TRASH');
+			ToolbarHelper::deleteList('', 'series.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
 		elseif ($this->canDo->get('core.delete'))
 		{
-			JToolbarHelper::trash('series.trash');
+			ToolbarHelper::trash('series.trash');
 		}
 
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
-			JToolbarHelper::divider();
+			ToolbarHelper::divider();
 			JHtml::_('bootstrap.modal', 'collapseModal');
 
-			$title = JText::_('JBS_CMN_BATCH_LABLE');
+			$title = Text::_('JBS_CMN_BATCH_LABLE');
 			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
 						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
 						$title</button>";
@@ -195,7 +201,7 @@ class HTMLView extends BaseHtmlView
 	protected function setDocument()
 	{
 		$document = Factory::getDocument();
-		$document->setTitle(JText::_('JBS_TITLE_SERIES'));
+		$document->setTitle(Text::_('JBS_TITLE_SERIES'));
 	}
 
 	/**
@@ -208,11 +214,11 @@ class HTMLView extends BaseHtmlView
 	protected function getSortFields()
 	{
 		return array(
-			'series.ordering'  => JText::_('JGRID_HEADING_ORDERING'),
-			'series.published' => JText::_('JSTATUS'),
-			'access_level'     => JText::_('JGRID_HEADING_ACCESS'),
-			'series.language'  => JText::_('JGRID_HEADING_LANGUAGE'),
-			'series.id'        => JText::_('JGRID_HEADING_ID')
+			'series.ordering'  => Text::_('JGRID_HEADING_ORDERING'),
+			'series.published' => Text::_('JSTATUS'),
+			'access_level'     => Text::_('JGRID_HEADING_ACCESS'),
+			'series.language'  => Text::_('JGRID_HEADING_LANGUAGE'),
+			'series.id'        => Text::_('JGRID_HEADING_ID')
 		);
 	}
 }

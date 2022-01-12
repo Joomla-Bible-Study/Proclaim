@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\Utilities\ArrayHelper;
 
@@ -67,7 +68,7 @@ class CWMSeriesController extends AdminController
 	 *
 	 * @since 7.0.0
 	 */
-	public function getModel($name = 'Serie', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
+	public function getModel($name = 'CWMSerie', $prefix = '', $config = array('ignore_request' => true))
 	{
 		return parent::getModel($name, $prefix, $config);
 	}
