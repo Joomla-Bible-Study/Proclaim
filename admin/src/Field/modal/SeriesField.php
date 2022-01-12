@@ -7,7 +7,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Administrator\Field\Modal;
+
 // No Direct Access
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
@@ -22,7 +24,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class seriesdetail extends FormField
+class SeriesDetailField extends FormField
 {
 	/**
 	 * The form field type.
@@ -30,7 +32,7 @@ class seriesdetail extends FormField
 	 * @var        string
 	 * @since    1.6
 	 */
-	protected $type = 'Modal_Seriesdetail';
+	protected $type = 'Modal_SeriesDetail';
 
 	/**
 	 * Method to get the field input markup.
@@ -80,8 +82,6 @@ class seriesdetail extends FormField
 			' WHERE id = ' . (int) $this->value
 		);
 		$title = $db->loadResult();
-
-		
 
 		if (empty($title))
 		{
