@@ -13,7 +13,7 @@
 	window.jSelectSeries = (id, title, catid, object, link, lang) => {
 		let hreflang = ''
 
-		if (!Joomla.getOptions('xtd-articles'))
+		if (!Joomla.getOptions('xtd-series'))
 		{
 			// Something went wrong!
 			// @TODO Close the modal
@@ -22,7 +22,7 @@
 
 		const {
 			editor,
-		} = Joomla.getOptions('xtd-articles')
+		} = Joomla.getOptions('xtd-series')
 
 		if (lang !== '')
 		{
@@ -61,7 +61,7 @@
 						target.getAttribute('data-title'),
 						target.getAttribute('data-cat-id'), null,
 						target.getAttribute('data-uri'),
-						target.getAttribute('data-language')
+						target.getAttribute('data-language'),
 					)
 				}
 				else
@@ -71,7 +71,7 @@
 						target.getAttribute('data-title'),
 						target.getAttribute('data-cat-id'), null,
 						target.getAttribute('data-uri'),
-						target.getAttribute('data-language')
+						target.getAttribute('data-language'),
 					)
 				}
 

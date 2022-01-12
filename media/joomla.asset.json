@@ -1,14 +1,14 @@
 {
   "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
-  "name": "com_biblstudy",
+  "name": "com_proclaim",
   "version": "10.0.0",
   "description": "Proclaim",
   "license": "GPL-2.0-or-later",
   "assets": [
 	{
-	  "name": "com_proclaim.administrator-article-pagebreak.es5",
+	  "name": "com_proclaim.cwmadmin-message-pagebreak.es5",
 	  "type": "script",
-	  "uri": "com_proclaim/administrator-article-pagebreak-es5.min.js",
+	  "uri": "com_proclaim/cwmadmin-message-pagebreak-es5.min.js",
 	  "dependencies": [
 		"core"
 	  ],
@@ -230,6 +230,31 @@
 		"type": "module"
 	  },
 	  "version": "4efda122de260213f85aceee619bfc3ea5b4a0aa"
+	},
+	{
+	  "name": "com_proclaim.cwmadmin-series-modal.es5",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmadmin-series-modal-es5.min.js",
+	  "dependencies": [
+		"core"
+	  ],
+	  "attributes": {
+		"nomodule": true,
+		"defer": true
+	  },
+	  "version": "872a497cd19612c3e1940b5feefdc0e14c08d4b9"
+	},
+	{
+	  "name": "com_proclaim.cwmadmin-series-modal",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmadmin-series-modal.min.js",
+	  "dependencies": [
+		"com_proclaim.cwmadmin-series-modal.es5"
+	  ],
+	  "attributes": {
+		"type": "module"
+	  },
+	  "version": "b0a8df19948936e693d5c710d22673ed9ad760a3"
 	}
   ]
 }
