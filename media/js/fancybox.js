@@ -5,25 +5,24 @@
  * Time: 11:35 AM
  * To change this template use File | Settings | File Templates.
  */
-;
-(function (window, document, $) {
+;(function (window, document, $) {
 	$(document).ready(function () {
-		$(".fancybox_jwplayer").on("click", function () {
-			var tarGet;
-			var contentPanelId = $(this).attr("id");
-			var id = $("#" + contentPanelId);
-			var myVideo = id.attr('data-src');
-			var title = id.attr('title');
-			var height = id.attr('pheight');
-			var width = id.attr('pwidth');
-			var ptype = id.attr('ptype');
-			var potext = id.attr('potext');
-			var autostart = id.attr('autostart');
-			var controls = id.attr('data-controls') || true;
-			var logo = id.attr('data-logo');
-			var logolink = id.attr('data-logolink') || '#';
-			var image = id.attr('data-image');
-			var mute = id.attr('data-mute') || false;
+		$('.fancybox_jwplayer').on('click', function () {
+			var tarGet
+			var contentPanelId = $(this).attr('id')
+			var id = $('#' + contentPanelId)
+			var myVideo = id.attr('data-src')
+			var title = id.attr('title')
+			var height = id.attr('pheight')
+			var width = id.attr('pwidth')
+			var ptype = id.attr('ptype')
+			var potext = id.attr('potext')
+			var autostart = id.attr('autostart')
+			var controls = id.attr('data-controls') || true
+			var logo = id.attr('data-logo')
+			var logolink = id.attr('data-logolink') || '#'
+			var image = id.attr('data-image')
+			var mute = id.attr('data-mute') || false
 			$.fancybox.open({
 				content: '<div id="video_container"></div>',
 				type: 'html',
@@ -32,15 +31,15 @@
 				opts: {
 					smallBtn: false,
 					afterLoad: function () {
-						var playerInstance = jwplayer("video_container");
+						var playerInstance = jwplayer('video_container')
 						playerInstance.setup({
 							title: title,
 							logo: {
 								file: logo,
-								link: logolink
+								link: logolink,
 							},
 							image: image,
-							abouttext: "Direct Link",
+							abouttext: 'Direct Link',
 							aboutlink: myVideo,
 							mediaid: contentPanelId,
 							file: myVideo,
@@ -48,13 +47,15 @@
 							height: height,
 							mute: false,
 							autostart: autostart,
-							controls: controls
-						});
+							controls: controls,
+						})
 					},
-					caption: '<button data-fancybox-close onclick="window.open(\'index.php?option=com_proclaim&amp;player=' + ptype + '&amp;view=popup&amp;mediaid=' + contentPanelId +
-					'&amp;tmpl=component\',\'_blank\',\'resizable=yes\')">' + potext + '</button>'
-				}
-			});
-		}); // on
-	}); // ready
-}(window, document, jQuery));
+					caption: '<button data-fancybox-close onclick="window.open(\'index.php?option=com_proclaim&amp;player=' +
+						ptype + '&amp;view=popup&amp;mediaid=' + contentPanelId +
+						'&amp;tmpl=component\',\'_blank\',\'resizable=yes\')">' + potext +
+						'</button>',
+				},
+			})
+		}) // on
+	}) // ready
+}(window, document, jQuery))

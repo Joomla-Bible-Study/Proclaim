@@ -22,18 +22,18 @@
 	} // Register events
 
 	document.addEventListener('DOMContentLoaded', () => {
-		const button = document.getElementById('batch-submit-button-id')
+			const button = document.getElementById('batch-submit-button-id')
 
-		if (button)
-		{
-			button.addEventListener('click', e => {
-				const task = e.target.getAttribute(buttonDataSelector)
-				submitTask(task)
-				return false
-				}
-			)
-		}
+			if (button)
+			{
+				button.addEventListener('click', e => {
+						const task = e.target.getAttribute(buttonDataSelector)
+						submitTask(task)
+						return false
+					},
+				)
+			}
 
-		}
+		},
 	)
 })(document, Joomla.submitform)
