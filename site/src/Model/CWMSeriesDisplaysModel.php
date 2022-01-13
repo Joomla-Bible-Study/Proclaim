@@ -8,10 +8,12 @@
  * @link       https://www.christianwebministries.org
  * */
 namespace CWM\Component\Proclaim\Site\Model;
+
 // No Direct Access
 defined('_JEXEC') or die;
 
 use JApplicationSite;
+use Joomla\Database\DatabaseQuery;
 use Joomla\Registry\Registry;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
@@ -114,7 +116,7 @@ class CWMSeriesDisplaysModel extends ListModel
 	/**
 	 * Build an SQL query to load the list data
 	 *
-	 * @return  JDatabaseQuery
+	 * @return  DatabaseQuery
 	 *
 	 * @since   7.0
 	 */
@@ -125,20 +127,23 @@ class CWMSeriesDisplaysModel extends ListModel
 		$t_params        = $template_params->params;
 		$app             = Factory::getApplication('site');
 		$params          = ComponentHelper::getParams('com_proclaim');
-		//$menuparams      = new Registry;
-		//$menuparams = new MenuItem();
+
+		// $menuparams      = new Registry;
+		// $menuparams = new MenuItem();
 		$sitemenu = $app->getMenu();
 		$menuitems = $sitemenu->getItems(array(), array());
+
 		foreach ($menuitems as $menuitem)
 		{
 			$menuparams = $menuitem->getParams();
 		}
-		//$menu            = $app->getMenu()->getActive();
 
-		//if ($menu)
-		//{
+		// $menu            = $app->getMenu()->getActive();
+
+		// If ($menu)
+		// {
 		//	$menuparams->loadString($menu->params);
-		//}
+		// }
 
 		$query = $db->getQuery(true);
 		$query->select('se.*,CASE WHEN CHAR_LENGTH(se.alias) THEN CONCAT_WS(\':\', se.id, se.alias) ELSE se.id END as slug');
@@ -295,7 +300,7 @@ class CWMSeriesDisplaysModel extends ListModel
 	 * Get a list of all used series
 	 *
 	 * @since 7.0
-	 * @return Object
+	 * @return object
 	 */
 	public function getSeries()
 	{
@@ -318,11 +323,11 @@ class CWMSeriesDisplaysModel extends ListModel
 
 		if ($count > 0)
 		{
-			for ($i = 0; $i < $count; $i++)
+			foreach ($items as $i => $iValue)
 			{
-				if ($items[$i]->access > 1)
+				if ($iValue->access > 1)
 				{
-					if (!in_array($items[$i]->access, $groups))
+					if (!in_array($iValue->access, $groups, true))
 					{
 						unset($items[$i]);
 					}

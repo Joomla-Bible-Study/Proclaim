@@ -12,6 +12,9 @@ use JFormFieldList;
 use JFormHelper;
 use JHtml;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Field\ListField;
+use Joomla\CMS\HTML\HTMLHelper;
+
 // No Direct Access
 defined('_JEXEC') or die;
 jimport('joomla.form.helper');
@@ -23,7 +26,7 @@ JFormHelper::loadFieldClass('list');
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class teacherlist extends JFormFieldList
+class TeacherListField extends ListField
 {
 	/**
 	 * The field type.
@@ -32,7 +35,7 @@ class teacherlist extends JFormFieldList
 	 *
 	 * @since 9.0.0
 	 */
-	protected $type = 'Teachers';
+	protected $type = 'TeachersList';
 
 	/**
 	 * Method to get a list of options for a list input.
@@ -48,19 +51,17 @@ class teacherlist extends JFormFieldList
 		$query->select('id,teachername');
 		$query->from('#__bsms_teachers');
 		$db->setQuery((string) $query);
-		$messages = $db->loadObjectList();
+		$teachers = $db->loadObjectList();
 		$options  = array();
 
-		if ($messages)
+		if ($teachers)
 		{
-			foreach ($messages as $message)
+			foreach ($teachers as $teacher)
 			{
-				$options .= JHtml::_('select.option', $message->id, $message->teachername);
+				$options[] = HtmlHelper::_('select.option', $teacher->id, $teacher->teachername);
 			}
 		}
 
-		//$options = array_merge(parent::getOptions(), $options);
-
-		return $options;
+		return array_merge(parent::getOptions(), $options);
 	}
 }

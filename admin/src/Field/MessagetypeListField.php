@@ -7,12 +7,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-// No Direct Access
-defined('_JEXEC') or die;
+namespace CWM\Component\Proclaim\Administrator\Field;
 
-// Import the list field type
-jimport('joomla.form.helper');
-JFormHelper::loadFieldClass('list');
+// No Direct Access
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Field\ListField;
+use Joomla\CMS\HTML\HTMLHelper;
+
+defined('_JEXEC') or die;
 
 /**
  * Message Type List Form Field class for the Proclaim component
@@ -20,7 +22,7 @@ JFormHelper::loadFieldClass('list');
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class JFormFieldMessagetypelist extends JFormFieldList
+class MessagetypeListField extends ListField
 {
 	/**
 	 * The field type.
@@ -53,7 +55,7 @@ class JFormFieldMessagetypelist extends JFormFieldList
 		{
 			foreach ($messages as $message)
 			{
-				$options[] = JHtml::_('select.option', $message->id, $message->message_type);
+				$options[] = HtmlHelper::_('select.option', $message->id, $message->message_type);
 			}
 		}
 

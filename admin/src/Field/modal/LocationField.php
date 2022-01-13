@@ -7,13 +7,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 // No Direct Access
 namespace CWM\Component\Proclaim\Administrator\Field\Modal;
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
-
-
-
-defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
@@ -22,6 +18,9 @@ use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
 use Joomla\Database\ParameterType;
+
+
+defined('_JEXEC') or die;
 
 /**
  * Supports a modal article picker.
@@ -97,11 +96,11 @@ class LocationField extends FormField
 		{
 			$linkArticles .= '&amp;forcedLanguage=' . $this->element['language'];
 			$linkArticle  .= '&amp;forcedLanguage=' . $this->element['language'];
-			$modalTitle    = Text::_('COM_CONTENT_SELECT_AN_ARTICLE') . ' &#8212; ' . $this->element['label'];
+			$modalTitle   = Text::_('COM_CONTENT_SELECT_AN_ARTICLE') . ' &#8212; ' . $this->element['label'];
 		}
 		else
 		{
-			$modalTitle    = Text::_('JBS_CMN_SELECT_LOCATION');
+			$modalTitle = Text::_('JBS_CMN_SELECT_LOCATION');
 		}
 
 		$urlSelect = $linkArticles . '&amp;function=jSelectArticle_' . $this->id;
@@ -131,7 +130,7 @@ class LocationField extends FormField
 		$title = empty($title) ? Text::_('JBS_CMN_SELECT_LOCATION') : htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
 
 		// The current article display field.
-		$html  = '';
+		$html = '';
 
 		if ($allowSelect || $allowNew || $allowEdit || $allowClear)
 		{
@@ -195,7 +194,7 @@ class LocationField extends FormField
 		if ($allowPropagate && count($languages) > 2)
 		{
 			// Strip off language tag at the end
-			$tagLength = (int) strlen($this->element['language']);
+			$tagLength            = (int) strlen($this->element['language']);
 			$callbackFunctionStem = substr("jSelectArticle_" . $this->id, 0, -$tagLength);
 
 			$html .= '<button'
@@ -220,13 +219,13 @@ class LocationField extends FormField
 				'bootstrap.renderModal',
 				'ModalSelect' . $modalId,
 				array(
-					'title'       => $modalTitle,
-					'url'         => $urlSelect,
-					'height'      => '400px',
-					'width'       => '800px',
-					'bodyHeight'  => 70,
-					'modalWidth'  => 80,
-					'footer'      => '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">'
+					'title'      => $modalTitle,
+					'url'        => $urlSelect,
+					'height'     => '400px',
+					'width'      => '800px',
+					'bodyHeight' => 70,
+					'modalWidth' => 80,
+					'footer'     => '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">'
 						. Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>',
 				)
 			);

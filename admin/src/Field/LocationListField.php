@@ -9,9 +9,11 @@
  * */
 // No Direct Access
 namespace CWM\Component\Proclaim\Administrator\Field;
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 
-
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Field\ListField;
+use Joomla\CMS\Form\FormHelper;
+use Joomla\CMS\HTML\HTMLHelper;
 
 defined('_JEXEC') or die;
 
@@ -21,7 +23,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class locationlist extends \JFormFieldList
+class LocationListField extends ListField
 {
 	/**
 	 * The field type.
@@ -30,7 +32,7 @@ class locationlist extends \JFormFieldList
 	 *
 	 * @since 7.0
 	 */
-	protected $type = 'locationlist';
+	protected $type = 'LocationList';
 
 	/**
 	 * Method to get a list of options for a list input.
@@ -41,8 +43,22 @@ class locationlist extends \JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		$options = array_merge(parent::getOptions(), CWMProclaimHelper::getStudyLocations());
+		$db    = Factory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select('id,location_text');
+		$query->from('#__bsms_locations');
+		$db->setQuery((string) $query);
+		$messages = $db->loadObjectList();
+		$options  = array();
 
-		return $options;
+		if ($messages)
+		{
+			foreach ($messages as $message)
+			{
+				$options[] = HtmlHelper::_('select.option', $message->id, $message->location_text);
+			}
+		}
+
+		return array_merge(parent::getOptions(), $options);
 	}
 }

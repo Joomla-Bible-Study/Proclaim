@@ -7,10 +7,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-
 namespace CWM\Component\Proclaim\Administrator\Field\Modal;
 
 // No Direct Access
+defined('_JEXEC') or die;
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -18,8 +19,6 @@ use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
 use Joomla\Database\ParameterType;
-
-defined('_JEXEC') or die;
 
 /**
  * Supports a modal series picker.
@@ -51,8 +50,6 @@ class SeriesField extends FormField
 		$allowClear     = ((string) $this->element['clear'] != 'false');
 		$allowSelect    = ((string) $this->element['select'] != 'false');
 		$allowPropagate = ((string) $this->element['propagate'] == 'true');
-
-		$languages = LanguageHelper::getContentLanguages(array(0, 1), false);
 
 		// Load language
 		Factory::getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
@@ -97,7 +94,7 @@ class SeriesField extends FormField
 
 		// Setup variables for display.
 		$linkSeries = 'index.php?option=com_proclaim&amp;view=cwmseries&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken() . '=1';
-		$linkSerie  = 'index.php?option=com_proclaim&amp;view=cwmseries&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken() . '=1';
+		$linkSerie  = 'index.php?option=com_proclaim&amp;view=cwmserie&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken() . '=1';
 
 		if (isset($this->element['language']))
 		{
@@ -107,7 +104,7 @@ class SeriesField extends FormField
 		}
 		else
 		{
-			$modalTitle    = Text::_('OM_PROCLAIM_SELECT_AN_SERIE');
+			$modalTitle    = Text::_('JBS_CMN_SELECT_SERIES');
 		}
 
 		$urlSelect = $linkSeries . '&amp;function=jSelectSeries_' . $this->id;

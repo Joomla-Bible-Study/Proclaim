@@ -60,8 +60,6 @@ class SeriesField extends ListField
 			}
 		}
 
-		$options = array_merge(parent::getOptions(), $options);
-
-		return $options;
+		return array_merge(parent::getOptions(), $options);
 	}
 }

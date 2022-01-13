@@ -1,3 +1,5 @@
+// noinspection JSAnnotator
+
 (function () {
 	'use strict'
 

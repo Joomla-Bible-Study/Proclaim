@@ -1,5 +1,4 @@
 <?php
-namespace CWM\Component\Proclaim\Site\Model;
 /**
  * Part of Proclaim Package
  *
@@ -8,11 +7,16 @@ namespace CWM\Component\Proclaim\Site\Model;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
+namespace CWM\Component\Proclaim\Site\Model;
+
 // No Direct Access
 defined('_JEXEC') or die;
-use Joomla\CMS\MVC\Model\ItemModel;
-use Joomla\CMS\Factory;
+
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Model\ItemModel;
 use Joomla\Registry\Registry;
 
 /**
@@ -21,7 +25,8 @@ use Joomla\Registry\Registry;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class CWMSeriesDisplayModel extends ItemModel{
+class CWMSeriesDisplayModel extends ItemModel
+{
 	/**
 	 * Model context string.
 	 *
@@ -38,13 +43,12 @@ class CWMSeriesDisplayModel extends ItemModel{
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since    1.6
-	 * @throws Exception
 	 */
 	protected function populateState()
 	{
-		/** @type JApplicationSite $app */
-		$app = Factory::getApplication('site');
+		$app = Factory::getApplication();
 
 		// Load state from the request.
 		$pk = $app->input->get('id', '', 'int');
@@ -54,7 +58,7 @@ class CWMSeriesDisplayModel extends ItemModel{
 		$this->setState('list.offset', $offset);
 
 		// Load the parameters.
-		$params   = $app->getParams();
+		$params = $app->getParams();
 		$this->setState('params', $params);
 		$template = CWMParams::getTemplateparams();
 		$admin    = CWMParams::getAdmin();
@@ -90,11 +94,11 @@ class CWMSeriesDisplayModel extends ItemModel{
 	 *
 	 * @param   int  $pk  The id of the study.
 	 *
-	 * @since 7.1.0
-	 * @throws Exception
-	 *
 	 * @return    mixed    Menu item data object on success, false on failure.
 	 *
+	 * @throws \Exception
+	 *
+	 * @since 7.1.0
 	 * @todo  look are removing this may not used. bcc
 	 */
 	public function getItem($pk = null)
@@ -125,7 +129,7 @@ class CWMSeriesDisplayModel extends ItemModel{
 
 			if (empty($data))
 			{
-				Factory::getApplication()->enqueueMessage(JText::_('JBS_CMN_SERIES_NOT_FOUND'), 'message');
+				Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_SERIES_NOT_FOUND'), 'message');
 
 				return false;
 			}
@@ -141,13 +145,12 @@ class CWMSeriesDisplayModel extends ItemModel{
 	 *
 	 * @return boolean|mixed
 	 *
+	 * @throws \Exception
 	 * @since 7.0
-	 * @throws Exception
 	 */
 	public function getStudies()
 	{
-		/** @type JApplicationSite $app */
-		$app = Factory::getApplication('site');
+		$app = Factory::getApplication();
 		$sid = $app->getUserState('sid');
 
 		/** @var Registry $params */
@@ -156,7 +159,7 @@ class CWMSeriesDisplayModel extends ItemModel{
 		$groups          = implode(',', $user->getAuthorisedViewLevels());
 		$db              = $this->getDbo();
 		$query           = $db->getQuery(true);
-		$template_params = JBSMParams::getTemplateparams();
+		$template_params = CWMParams::getTemplateparams();
 		$t_params        = $template_params->params;
 		$query->select(
 			$this->getState('list.select', 'study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
@@ -224,7 +227,7 @@ class CWMSeriesDisplayModel extends ItemModel{
 		// Select only published studies
 		$query->where('study.published = 1');
 		$query->where('(series.published = 1 OR study.series_id <= 0)');
-		$query->where('study.series_id = ' . $sid);
+		$query->where('study.series_id = ' . (int) $sid);
 
 		// Order by order filter
 		$orderparam = $params->get('default_order');
@@ -243,7 +246,7 @@ class CWMSeriesDisplayModel extends ItemModel{
 			$order = "DESC";
 		}
 
-		$query->order('studydate ' . $order);
+		$query->order('study.studydate ' . $order);
 		$db->setQuery($query, 0, $t_params->get('series_detail_limit', 20));
 		$studies = $db->loadObjectList();
 

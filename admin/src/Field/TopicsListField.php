@@ -14,8 +14,6 @@ use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMTranslated;
 use Joomla\CMS\Html\HtmlHelper;
-// For some reason the autoloader is not finding this file so this is a temporary workaround
-include_once JPATH_ADMINISTRATOR . '/components/com_proclaim/helpers/CWMTranslated.php';
 
 /**
  * Topics List Form Field class for the Proclaim component
@@ -24,7 +22,7 @@ include_once JPATH_ADMINISTRATOR . '/components/com_proclaim/helpers/CWMTranslat
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class topicslist extends ListField
+class TopicsListField extends ListField
 {
 	/**
 	 * The field type.
@@ -33,7 +31,7 @@ class topicslist extends ListField
 	 *
 	 * @since 9.0.0
 	 */
-	protected $type = 'Topics';
+	protected $type = 'TopicsList';
 
 	/**
 	 * Method to get a list of options for a list input.
@@ -67,9 +65,8 @@ class topicslist extends ListField
 
 		// Sort the Topics after Translation to Alphabetically
 		usort($options, array($this, "order_new"));
-		$options = array_merge(parent::getOptions(), $options);
 
-		return $options;
+		return array_merge(parent::getOptions(), $options);
 	}
 
 	/**

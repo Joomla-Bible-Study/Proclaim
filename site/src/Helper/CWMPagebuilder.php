@@ -14,7 +14,6 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMTranslated;
 use CWM\Component\Proclaim\Administrator\Table\CWMTemplateTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use CWM\Component\Proclaim\Site\Helper\CWMListing;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
@@ -86,6 +85,7 @@ class CWMPagebuilder
 		{
 			$item->secondary_reference = '';
 		}
+
 		// Scripture 2
 		$esv          = 0;
 		$scripturerow = 2;
@@ -143,7 +143,7 @@ class CWMPagebuilder
 			$page->series_thumnail = '';
 		}
 
-		$page->detailslink = Route::_('index.php?option=com_proclaim&view=sermon&id=' . $item->slug . '&t=' . $params->get('detailstemplateid'));
+		$page->detailslink = Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . $item->slug . '&t=' . $params->get('detailstemplateid'));
 
 		if (!isset($item->image))
 		{
@@ -186,6 +186,7 @@ class CWMPagebuilder
 		{
 			return $page;
 		}
+
 		// Set the item for the plugin to $item->text //run content plugins
 		if ($page->scripture1)
 		{
@@ -314,12 +315,12 @@ class CWMPagebuilder
 	/**
 	 * Study Builder
 	 *
-	 * @param   string                    $whereitem   ?
-	 * @param   string                    $wherefield  ?
-	 * @param   Registry  $params      Item params
-	 * @param   int                       $limit       Limit of Records
-	 * @param   string                    $order       DESC or ASC
-	 * @param   CWMTemplateTable             $template    Template Data
+	 * @param   string            $whereitem   ?
+	 * @param   string            $wherefield  ?
+	 * @param   Registry          $params      Item params
+	 * @param   int               $limit       Limit of Records
+	 * @param   string            $order       DESC or ASC
+	 * @param   CWMTemplateTable  $template    Template Data
 	 *
 	 * @return array
 	 *
