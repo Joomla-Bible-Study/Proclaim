@@ -7,14 +7,21 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 // No Direct Access
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Router\Route;
+
 defined('_JEXEC') or die;
 
-JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
-JHtml::_('dropdown.init');
-JHtml::_('behavior.multiselect');
-JHtml::_('formbehavior.chosen', 'select');
+HTMLHelper::_('dropdown.init');
+HTMLHelper::_('behavior.multiselect');
+HTMLHelper::_('formbehavior.chosen', 'select');
 
 $app       = Factory::getApplication();
 $user      = Factory::getUser();
@@ -28,13 +35,13 @@ $columns   = 5;
 
 if ($saveOrder)
 {
-	$saveOrderingUrl = 'index.php?option=com_proclaim&task=location.saveOrderAjax&tmpl=component';
-	JHtml::_('sortablelist.sortable', 'locationsList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+	$saveOrderingUrl = 'index.php?option=com_proclaim&task=cwmlocation.saveOrderAjax&tmpl=component';
+	HTMLHelper::_('sortablelist.sortable', 'locationsList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 }
 
 $sortFields = $this->getSortFields();
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=locations'); ?>" method="post" name="adminForm"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmlocations'); ?>" method="post" name="adminForm"
       id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
@@ -47,7 +54,7 @@ $sortFields = $this->getSortFields();
 			<?php endif; ?>
 			<?php
 			// Search tools bar
-			echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+			echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 			?>
 			<?php if (empty($this->items)) : ?>
 				<div class="alert alert-no-items">
@@ -58,19 +65,19 @@ $sortFields = $this->getSortFields();
 					<thead>
 					<tr>
 						<th width="1%" class="hidden-phone">
-							<?php echo JHtml::_('grid.checkall'); ?>
+							<?php echo HTMLHelper::_('grid.checkall'); ?>
 						</th>
 						<th width="1%" style="min-width:55px;" class="nowrap center">
-							<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'location.published', $listDirn, $listOrder); ?>
+							<?php echo HTMLHelper::_('grid.sort', 'JPUBLISHED', 'location.published', $listDirn, $listOrder); ?>
 						</th>
 						<th>
-							<?php echo JHtml::_('grid.sort', 'JBS_CMN_LOCATIONS', 'location.locations_text', $listDirn, $listOrder); ?>
+							<?php echo HTMLHelper::_('grid.sort', 'JBS_CMN_LOCATIONS', 'location.locations_text', $listDirn, $listOrder); ?>
 						</th>
 						<th width="10%" class="nowrap hidden-phone">
-							<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ACCESS', 'access_level', $listDirn, $listOrder); ?>
+							<?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_ACCESS', 'access_level', $listDirn, $listOrder); ?>
 						</th>
 						<th width="1%" class="nowrap center hidden-phone">
-							<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'location.id', $listDirn, $listOrder); ?>
+							<?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_ID', 'location.id', $listDirn, $listOrder); ?>
 						</th>
 					</tr>
 					</thead>
@@ -92,51 +99,51 @@ $sortFields = $this->getSortFields();
 						?>
 						<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo '1' ?>">
 							<td class="center hidden-phone">
-								<?php echo JHtml::_('grid.id', $i, $item->id); ?>
+								<?php echo HTMLHelper::_('grid.id', $i, $item->id); ?>
 							</td>
 							<td class="center">
 								<div class="btn-group">
-									<?php echo JHtml::_('jgrid.published', $item->published, $i, 'locations.', $canChange, 'cb', '', ''); ?>
+									<?php echo HTMLHelper::_('jgrid.published', $item->published, $i, 'locations.', $canChange, 'cb', '', ''); ?>
 								</div>
 							</td>
 							<td class="nowrap has-context">
 								<div class="pull-left">
 									<?php if ($canEdit || $canEditOwn) : ?>
-										<a href="<?php echo JRoute::_('index.php?option=com_proclaim&task=location.edit&id=' . (int) $item->id); ?>"
-										   title="<?php echo JText::_('JACTION_EDIT'); ?>">
+										<a href="<?php echo Route::_('index.php?option=com_proclaim&task=cwmlocation.edit&id=' . (int) $item->id); ?>"
+										   title="<?php echo Text::_('JACTION_EDIT'); ?>">
 											<?php echo $this->escape($item->location_text); ?></a>
 									<?php else : ?>
 										<span
-											title="<?php echo JText::sprintf('JFIELD_ALIAS_LABEL', $this->escape($item->location_text)); ?>"><?php echo $this->escape($item->location_text); ?></span>
+												title="<?php echo Text::sprintf('JFIELD_ALIAS_LABEL', $this->escape($item->location_text)); ?>"><?php echo $this->escape($item->location_text); ?></span>
 									<?php endif; ?>
 								</div>
 								<div class="pull-left">
 									<?php
 									// Create dropdown items
-									JHtml::_('dropdown.edit', $item->id, 'location.');
-									JHtml::_('dropdown.divider');
+									HTMLHelper::_('dropdown.edit', $item->id, 'cwmlocation.');
+									HTMLHelper::_('dropdown.divider');
 									if ($item->published) :
-										JHtml::_('dropdown.unpublish', 'cb' . $i, 'locations.');
+										HTMLHelper::_('dropdown.unpublish', 'cb' . $i, 'cwmlocations.');
 									else :
-										JHtml::_('dropdown.publish', 'cb' . $i, 'locations.');
+										HTMLHelper::_('dropdown.publish', 'cb' . $i, 'cwmlocations.');
 									endif;
 
-									JHtml::_('dropdown.divider');
+									HTMLHelper::_('dropdown.divider');
 
 									if ($archived) :
-										JHtml::_('dropdown.unarchive', 'cb' . $i, 'locations.');
+										HTMLHelper::_('dropdown.unarchive', 'cb' . $i, 'cwmlocations.');
 									else :
-										JHtml::_('dropdown.archive', 'cb' . $i, 'locations.');
+										HTMLHelper::_('dropdown.archive', 'cb' . $i, 'cwmlocations.');
 									endif;
 
 									if ($trashed) :
-										JHtml::_('dropdown.untrash', 'cb' . $i, 'locations.');
+										HTMLHelper::_('dropdown.untrash', 'cb' . $i, 'cwmlocations.');
 									else :
-										JHtml::_('dropdown.trash', 'cb' . $i, 'locations.');
+										HTMLHelper::_('dropdown.trash', 'cb' . $i, 'cwmlocations.');
 									endif;
 
 									// Render dropdown list
-									echo JHtml::_('dropdown.render');
+									echo HTMLHelper::_('dropdown.render');
 									?>
 								</div>
 							</td>
@@ -155,7 +162,7 @@ $sortFields = $this->getSortFields();
 					&& $user->authorise('core.edit', 'com_proclaim')
 					&& $user->authorise('core.edit.state', 'com_proclaim')
 				) : ?>
-					<?php echo JHtml::_(
+					<?php echo HTMLHelper::_(
 						'bootstrap.renderModal',
 						'collapseModal',
 						array(
@@ -171,6 +178,6 @@ $sortFields = $this->getSortFields();
 			<input type="hidden" name="boxchecked" value="0"/>
 			<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
 			<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
-			<?php echo JHtml::_('form.token'); ?>
+			<?php echo HTMLHelper::_('form.token'); ?>
 		</div>
 </form>

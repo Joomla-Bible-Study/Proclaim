@@ -7,12 +7,17 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 // No Direct Access
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Router\Route;
+
 defined('_JEXEC') or die;
 
-JHtml::_('dropdown.init');
-JHtml::_('formbehavior.chosen', 'select');
-JHtml::_('behavior.multiselect');
+HTMLHelper::_('dropdown.init');
+HTMLHelper::_('formbehavior.chosen', 'select');
+HTMLHelper::_('behavior.multiselect');
 
 $app       = Factory::getApplication();
 $user      = Factory::getUser();
@@ -25,21 +30,7 @@ $columns   = 4;
 
 $sortFields = $this->getSortFields();
 ?>
-<script type="text/javascript">
-	Joomla.orderTable = function () {
-		var table = document.getElementById("sortTable");
-		var direction = document.getElementById("directionTable");
-		var order = table.options[table.selectedIndex].value;
-		var dirn;
-		if (order != '<?php echo $listOrder; ?>') {
-			dirn = 'asc';
-		} else {
-			dirn = direction.options[direction.selectedIndex].value;
-		}
-		Joomla.tableOrdering(order, dirn, '');
-	}
-</script>
-<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=topics'); ?>" method="post" name="adminForm"
+<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmtopics'); ?>" method="post" name="adminForm"
       id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
@@ -68,13 +59,13 @@ $sortFields = $this->getSortFields();
 							       onclick="Joomla.checkAll(this)"/>
 						</th>
 						<th width="1%" class="hidden-phone">
-							<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'topic.published', $listDirn, $listOrder); ?>
+							<?php echo HTMLHelper::_('grid.sort', 'JPUBLISHED', 'topic.published', $listDirn, $listOrder); ?>
 						</th>
 						<th>
-							<?php echo JHtml::_('grid.sort', 'JBS_CMN_TOPICS', 'topic.topic_text', $listDirn, $listOrder); ?>
+							<?php echo HTMLHelper::_('grid.sort', 'JBS_CMN_TOPICS', 'topic.topic_text', $listDirn, $listOrder); ?>
 						</th>
 						<th width="1%" class="nowrap center hidden-phone">
-							<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'topic.id', $listDirn, $listOrder); ?>
+							<?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_ID', 'topic.id', $listDirn, $listOrder); ?>
 						</th>
 					</tr>
 					</thead>
@@ -97,11 +88,11 @@ $sortFields = $this->getSortFields();
 						<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo '1' ?>">
 
 							<td class="center hidden-phone">
-								<?php echo JHtml::_('grid.id', $i, $item->id); ?>
+								<?php echo HTMLHelper::_('grid.id', $i, $item->id); ?>
 							</td>
 							<td class="center">
 								<div class="btn-group">
-									<?php echo JHtml::_('jgrid.published', $item->published, $i, 'topics.', $canChange, 'cb', '', ''); ?>
+									<?php echo HTMLHelper::_('jgrid.published', $item->published, $i, 'topics.', $canChange, 'cb', '', ''); ?>
 								</div>
 							</td>
 
@@ -109,42 +100,42 @@ $sortFields = $this->getSortFields();
 								<div class="pull-left">
 
 									<?php if ($canEdit || $canEditOwn) : ?>
-										<a href="<?php echo JRoute::_('index.php?option=com_proclaim&task=topic.edit&id=' . (int) $item->id); ?>">
+										<a href="<?php echo Route::_('index.php?option=com_proclaim&task=cwmtopic.edit&id=' . (int) $item->id); ?>">
 											<?php echo $this->escape($item->topic_text); ?>
 										</a>
 
 									<?php else : ?>
 										<span
-											title="<?php echo $this->escape($item->topic_text); ?>"><?php echo $this->escape($item->topic_text); ?></span>
+												title="<?php echo $this->escape($item->topic_text); ?>"><?php echo $this->escape($item->topic_text); ?></span>
 									<?php endif; ?>
 								</div>
 								<div class="pull-left">
 									<?php
 									// Create dropdown items
-									JHtml::_('dropdown.edit', $item->id, 'topic.');
-									JHtml::_('dropdown.divider');
+									HTMLHelper::_('dropdown.edit', $item->id, 'cwmtopic.');
+									HTMLHelper::_('dropdown.divider');
 									if ($item->published) :
-										JHtml::_('dropdown.unpublish', 'cb' . $i, 'topics.');
+										HTMLHelper::_('dropdown.unpublish', 'cb' . $i, 'cwmtopics.');
 									else :
-										JHtml::_('dropdown.publish', 'cb' . $i, 'topics.');
+										HTMLHelper::_('dropdown.publish', 'cb' . $i, 'cwmtopics.');
 									endif;
 
-									JHtml::_('dropdown.divider');
+									HTMLHelper::_('dropdown.divider');
 
 									if ($archived) :
-										JHtml::_('dropdown.unarchive', 'cb' . $i, 'topics.');
+										HTMLHelper::_('dropdown.unarchive', 'cb' . $i, 'cwmtopics.');
 									else :
-										JHtml::_('dropdown.archive', 'cb' . $i, 'topics.');
+										HTMLHelper::_('dropdown.archive', 'cb' . $i, 'cwmtopics.');
 									endif;
 
 									if ($trashed) :
-										JHtml::_('dropdown.untrash', 'cb' . $i, 'topics.');
+										HTMLHelper::_('dropdown.untrash', 'cb' . $i, 'cwmtopics.');
 									else :
-										JHtml::_('dropdown.trash', 'cb' . $i, 'topics.');
+										HTMLHelper::_('dropdown.trash', 'cb' . $i, 'cwmtopics.');
 									endif;
 
 									// Render dropdown list
-									echo JHtml::_('dropdown.render');
+									echo HTMLHelper::_('dropdown.render');
 									?>
 								</div>
 							</td>
@@ -164,6 +155,6 @@ $sortFields = $this->getSortFields();
 			<input type="hidden" name="boxchecked" value="0"/>
 			<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
 			<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
-			<?php echo JHtml::_('form.token'); ?>
+			<?php echo HTMLHelper::_('form.token'); ?>
 		</div>
 </form>

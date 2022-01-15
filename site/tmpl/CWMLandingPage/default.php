@@ -10,9 +10,13 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use CWM\Component\Proclaim\Site\Helper\CWMLanding;
 use Joomla\CMS\Uri\Uri;
+
+// Load CSS for view.
+HtmlHelper::_('biblestudy.loadcss', $this->params);
 
 $CWMLanding = new CWMLanding;
 $params = $this->params;

@@ -14,9 +14,9 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
-JHtml::_('dropdown.init');
-JHtml::_('formbehavior.chosen', 'select');
-JHtml::_('behavior.multiselect');
+HTMLHelper::_('dropdown.init');
+HTMLHelper::_('formbehavior.chosen', 'select');
+HTMLHelper::_('behavior.multiselect');
 
 $app       = Factory::getApplication();
 $user      = Factory::getUser();
@@ -31,7 +31,7 @@ $columns   = 7;
 if ($saveOrder)
 {
 	$saveOrderingUrl = 'index.php?option=com_proclaim&task=cwmseries.saveOrderAjax&tmpl=component';
-	JHtml::_('sortablelist.sortable', 'seriesList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+	HTMLHelper::_('sortablelist.sortable', 'seriesList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 }
 
 $sortFields = $this->getSortFields();
@@ -73,7 +73,7 @@ $sortFields = $this->getSortFields();
 					<thead>
 					<tr>
 						<th width="1%" class="nowrap center hidden-phone">
-							<?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'series.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING'); ?>
+							<?php echo HTMLHelper::_('grid.sort', '<i class="icon-menu-2"></i>', 'series.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING'); ?>
 						</th>
 						<th width="1%">
 							<input type="checkbox" name="checkall-toggle" value=""
@@ -81,19 +81,19 @@ $sortFields = $this->getSortFields();
 							       onclick="Joomla.checkAll(this)"/>
 						</th>
 						<th width="1%" style="min-width:55px;" class="nowrap center">
-							<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'series.published', $listDirn, $listOrder); ?>
+							<?php echo HTMLHelper::_('grid.sort', 'JPUBLISHED', 'series.published', $listDirn, $listOrder); ?>
 						</th>
 						<th>
-							<?php echo JHtml::_('grid.sort', 'JBS_CMN_SERIES', 'series.series_text', $listDirn, $listOrder); ?>
+							<?php echo HTMLHelper::_('grid.sort', 'JBS_CMN_SERIES', 'series.series_text', $listDirn, $listOrder); ?>
 						</th>
 						<th width="10%" class="nowrap hidden-phone">
-							<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ACCESS', 'series.access', $listDirn, $listOrder); ?>
+							<?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_ACCESS', 'series.access', $listDirn, $listOrder); ?>
 						</th>
 						<th width="5%" class="nowrap hidden-phone">
-							<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
+							<?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
 						</th>
 						<th width="1%" class="nowrap hidden-phone">
-							<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'series.id', $listDirn, $listOrder); ?>
+							<?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_ID', 'series.id', $listDirn, $listOrder); ?>
 						</th>
 					</tr>
 					</thead>
@@ -138,11 +138,11 @@ $sortFields = $this->getSortFields();
 								<?php endif; ?>
 							</td>
 							<td class="center hidden-phone">
-								<?php echo JHtml::_('grid.id', $i, $item->id); ?>
+								<?php echo HTMLHelper::_('grid.id', $i, $item->id); ?>
 							</td>
 							<td class="center">
 								<div class="btn-group">
-									<?php echo JHtml::_('jgrid.published', $item->published, $i, 'series.', $canChange, 'cb', '', ''); ?>
+									<?php echo HTMLHelper::_('jgrid.published', $item->published, $i, 'series.', $canChange, 'cb', '', ''); ?>
 								</div>
 							</td>
 							<td class="nowrap has-context">
@@ -164,30 +164,30 @@ $sortFields = $this->getSortFields();
 								<div class="pull-left">
 									<?php
 									// Create dropdown items
-									JHtml::_('dropdown.edit', $item->id, 'serie.');
-									JHtml::_('dropdown.divider');
+									HTMLHelper::_('dropdown.edit', $item->id, 'serie.');
+									HTMLHelper::_('dropdown.divider');
 									if ($item->published) :
-										JHtml::_('dropdown.unpublish', 'cb' . $i, 'series.');
+										HTMLHelper::_('dropdown.unpublish', 'cb' . $i, 'series.');
 									else :
-										JHtml::_('dropdown.publish', 'cb' . $i, 'series.');
+										HTMLHelper::_('dropdown.publish', 'cb' . $i, 'series.');
 									endif;
 
-									JHtml::_('dropdown.divider');
+									HTMLHelper::_('dropdown.divider');
 
 									if ($archived) :
-										JHtml::_('dropdown.unarchive', 'cb' . $i, 'series.');
+										HTMLHelper::_('dropdown.unarchive', 'cb' . $i, 'series.');
 									else :
-										JHtml::_('dropdown.archive', 'cb' . $i, 'series.');
+										HTMLHelper::_('dropdown.archive', 'cb' . $i, 'series.');
 									endif;
 
 									if ($trashed) :
-										JHtml::_('dropdown.untrash', 'cb' . $i, 'series.');
+										HTMLHelper::_('dropdown.untrash', 'cb' . $i, 'series.');
 									else :
-										JHtml::_('dropdown.trash', 'cb' . $i, 'series.');
+										HTMLHelper::_('dropdown.trash', 'cb' . $i, 'series.');
 									endif;
 
 									// Render dropdown list
-									echo JHtml::_('dropdown.render');
+									echo HTMLHelper::_('dropdown.render');
 									?>
 								</div>
 							</td>
@@ -232,6 +232,6 @@ $sortFields = $this->getSortFields();
 			<input type="hidden" name="boxchecked" value="0"/>
 			<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
 			<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
-			<?php echo JHtml::_('form.token'); ?>
+			<?php echo HTMLHelper::_('form.token'); ?>
 		</div>
 </form>

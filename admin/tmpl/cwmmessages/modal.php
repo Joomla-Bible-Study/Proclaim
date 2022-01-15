@@ -17,17 +17,17 @@ if ($app->isClient('site'))
 	JSession::checkToken('get') or die(JText::_('JINVALID_TOKEN'));
 }
 
-JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
-JHtml::_('behavior.core');
-JHtml::_('behavior.polyfill', ['event'], 'lt IE 9');
-JHtml::_('script', 'com_content/administrator-articles-modal.min.js', ['version' => 'auto', 'relative' => true]);
-JHtml::_('bootstrap.tooltip', '.hasTooltip', ['placement' => 'bottom']);
-JHtml::_('formbehavior.chosen', 'select');
+HTMLHelper::_('behavior.core');
+HTMLHelper::_('behavior.polyfill', ['event'], 'lt IE 9');
+HTMLHelper::_('script', 'com_content/administrator-articles-modal.min.js', ['version' => 'auto', 'relative' => true]);
+HTMLHelper::_('bootstrap.tooltip', '.hasTooltip', ['placement' => 'bottom']);
+HTMLHelper::_('formbehavior.chosen', 'select');
 
 // Special case for the search field tooltip.
 $searchFilterDesc = $this->filterForm->getFieldAttribute('search', 'description', null, 'filter');
-JHtml::_('bootstrap.tooltip', '#filter_search', ['title' => JText::_($searchFilterDesc), 'placement' => 'bottom']);
+HTMLHelper::_('bootstrap.tooltip', '#filter_search', ['title' => JText::_($searchFilterDesc), 'placement' => 'bottom']);
 
 $function  = $app->input->getCmd('function', 'jSelectStudy');
 $editor    = $app->input->getCmd('editor', '');
@@ -60,13 +60,13 @@ if (!empty($editor))
 				<thead>
 				<tr>
 					<th width="8%">
-						<?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'study.published', $listDirn, $listOrder); ?>
+						<?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'study.published', $listDirn, $listOrder); ?>
 					</th>
 					<th>
-						<?php echo JHtml::_('searchtools.sort', 'JBS_CMN_TITLE', 'study.studytitle', $listDirn, $listOrder); ?>
+						<?php echo HTMLHelper::_('searchtools.sort', 'JBS_CMN_TITLE', 'study.studytitle', $listDirn, $listOrder); ?>
 					</th>
 					<th>
-						<?php echo JHtml::_('searchtools.sort', 'JBS_CMN_STUDY_DATE', 'study.studydate', $listDirn, $listOrder); ?>
+						<?php echo HTMLHelper::_('searchtools.sort', 'JBS_CMN_STUDY_DATE', 'study.studydate', $listDirn, $listOrder); ?>
 					</th>
 					<th>
 						<?php echo JHtml::_('searchtools.sort', 'JBS_CMN_TEACHER', 'teacher.teachername', $listDirn, $listOrder); ?>

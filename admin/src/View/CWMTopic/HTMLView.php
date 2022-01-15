@@ -11,7 +11,12 @@
 namespace CWM\Component\Proclaim\Administrator\View\CWMTopic;
 
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\Input\Input;
 
 defined('_JEXEC') or die;
 
@@ -29,7 +34,7 @@ class HTMLView extends BaseHtmlView
 	 * @var object
 	 * @since    7.0.0
 	 */
-	protected $form;
+	protected mixed $form;
 
 	/**
 	 * Item
@@ -70,16 +75,16 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
-	 * @see     fetch()
+	 * @throws  \Exception
 	 * @since   11.1
-	 * @throws  Exception
+	 * @see     fetch()
 	 */
 	public function display($tpl = null)
 	{
 		$this->form  = $this->get("Form");
 		$this->item  = $this->get("Item");
 		$this->state = $this->get("State");
-		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'topic');
+		$this->canDo = CWMProclaimHelper::getActions($this->item->id, 'topic');
 
 		// Check for errors
 		if (count($errors = $this->get('Errors')))
@@ -98,7 +103,7 @@ class HTMLView extends BaseHtmlView
 		$this->setDocument();
 
 		// Display the template
-		return parent::display($tpl);
+		parent::display($tpl);
 	}
 
 	/**
@@ -110,31 +115,31 @@ class HTMLView extends BaseHtmlView
 	 */
 	protected function addToolbar()
 	{
-		$input = new JInput;
+		$input = new Input;
 		$input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
-		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolbarHelper::title(JText::_('JBS_CMN_TOPICS') . ': <small><small>[' . $title . ']</small></small>', 'tag tag');
+		$title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
+		ToolbarHelper::title(Text::_('JBS_CMN_TOPICS') . ': <small><small>[' . $title . ']</small></small>', 'tag tag');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_proclaim'))
 		{
-			JToolbarHelper::apply('topic.apply');
-			JToolbarHelper::save('topic.save');
-			JToolbarHelper::cancel('topic.cancel');
+			ToolbarHelper::apply('cwmtopic.apply');
+			ToolbarHelper::save('cwmtopic.save');
+			ToolbarHelper::cancel('cwmtopic.cancel');
 		}
 		else
 		{
 			if ($this->canDo->get('core.edit', 'com_proclaim'))
 			{
-				JToolbarHelper::apply('topic.apply');
-				JToolbarHelper::save('topic.save');
+				ToolbarHelper::apply('cwmtopic.apply');
+				ToolbarHelper::save('cwmtopic.save');
 			}
 
-			JToolbarHelper::cancel('topic.cancel', 'JTOOLBAR_CLOSE');
+			ToolbarHelper::cancel('cwmtopic.cancel', 'JTOOLBAR_CLOSE');
 		}
 
-		JToolbarHelper::divider();
-		JToolbarHelper::help('biblestudy', true);
+		ToolbarHelper::divider();
+		ToolbarHelper::help('biblestudy', true);
 	}
 
 	/**
@@ -148,6 +153,6 @@ class HTMLView extends BaseHtmlView
 	{
 		$isNew    = ($this->item->id < 1);
 		$document = Factory::getDocument();
-		$document->setTitle($isNew ? JText::_('JBS_TITLE_TOPICS_CREATING') : JText::sprintf('JBS_TITLE_TOPICS_EDITING', $this->item->topic_text));
+		$document->setTitle($isNew ? Text::_('JBS_TITLE_TOPICS_CREATING') : Text::sprintf('JBS_TITLE_TOPICS_EDITING', $this->item->topic_text));
 	}
 }

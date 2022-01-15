@@ -144,7 +144,7 @@ class HTMLView extends BaseHtmlView
 
 		// Get the toolbar object instance
 		$toolbar = Toolbar::getInstance('toolbar');
-		$canDo   = JBSMBibleStudyHelper::getActions('', 'comment');
+		$canDo   = CWMProclaimHelper::getActions('', 'comment');
 		ToolbarHelper::title(JText::_('JBS_CMN_COMMENTS'), 'comments-2 comments-2');
 
 		if ($canDo->get('core.create'))

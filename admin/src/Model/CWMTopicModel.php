@@ -11,6 +11,7 @@
 namespace CWM\Component\Proclaim\Administrator\Model;
 
 // No Direct Access
+use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 
@@ -24,22 +25,6 @@ defined('_JEXEC') or die;
  */
 class CWMTopicModel extends AdminModel
 {
-	/**
-	 * Get Table
-	 *
-	 * @param   string  $name     The table name. Optional.
-	 * @param   string  $prefix   The class prefix. Optional.
-	 * @param   array   $options  Configuration array for model. Optional.
-	 *
-	 * @return  Table  A JTable object
-	 *
-	 * @since    7.0.0
-	 */
-	public function getTable($name = 'topic', $prefix = 'Table', $options = array())
-	{
-		return Table::getInstance($name, $prefix, $options);
-	}
-
 	/**
 	 * Get the form data
 	 *
@@ -56,7 +41,7 @@ class CWMTopicModel extends AdminModel
 		// Get the form.
 		$form = $this->loadForm('com_proclaim.topic', 'topic', array('control' => 'jform', 'load_data' => $loadData));
 
-		if (empty($form))
+		if ($form === null)
 		{
 			return false;
 		}
@@ -96,6 +81,7 @@ class CWMTopicModel extends AdminModel
 	 *
 	 * @return  array    The default data is an empty array.
 	 *
+	 * @throws \Exception
 	 * @since   7.0
 	 */
 	protected function loadFormData()

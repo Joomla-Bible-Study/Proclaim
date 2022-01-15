@@ -12,10 +12,10 @@ use Joomla\CMS\Factory;
 
 defined('_JEXEC') or die;
 
-JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
-JHtml::_('behavior.framework', true);
-JHtml::_('formbehavior.chosen', 'select');
+HTMLHelper::_('behavior.framework', true);
+HTMLHelper::_('formbehavior.chosen', 'select');
 
 $input     = Factory::getApplication()->input;
 $function  = $input->getCmd('function', 'jSelectServer');
@@ -39,7 +39,7 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 		<thead>
 		<tr>
 			<th>
-				<?php echo JHtml::_('grid.sort', 'JBS_SVR_SERVER_NAME', 'mediafile.name', $listDirn, $listOrder); ?>
+				<?php echo HTMLHelper::_('grid.sort', 'JBS_SVR_SERVER_NAME', 'mediafile.name', $listDirn, $listOrder); ?>
 			</th>
 		</tr>
 		</thead>
@@ -67,5 +67,5 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 	<input type="hidden" name="task" value=""/>
 	<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
 	<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
-	<?php echo JHtml::_('form.token'); ?>
+	<?php echo HTMLHelper::_('form.token'); ?>
 </form>

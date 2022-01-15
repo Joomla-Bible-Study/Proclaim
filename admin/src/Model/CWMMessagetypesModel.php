@@ -7,7 +7,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
+namespace CWM\Component\Proclaim\Administrator\Model;
+
 // No Direct Access
+use Joomla\CMS\Factory;
+use Joomla\CMS\Input\Input;
+use Joomla\CMS\MVC\Model\ListModel;
+
 defined('_JEXEC') or die;
 
 /**
@@ -16,7 +23,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CWMMessagetypesModel extends JModelList
+class CWMMessagetypesModel extends ListModel
 {
 	/**
 	 * Number of Deletions
@@ -31,6 +38,7 @@ class CWMMessagetypesModel extends JModelList
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
+	 * @throws \Exception
 	 * @since 7.0.0
 	 */
 	public function __construct($config = array())
@@ -52,7 +60,7 @@ class CWMMessagetypesModel extends JModelList
 	/**
 	 * Get Deletes
 	 *
-	 * @return object
+	 * @return integer|object[]
 	 *
 	 * @since 7.0.0
 	 */
@@ -60,7 +68,7 @@ class CWMMessagetypesModel extends JModelList
 	{
 		if (empty($this->deletes))
 		{
-			$query          = 'SELECT allowdeletes'
+			$query         = 'SELECT allowdeletes'
 				. ' FROM #__bsms_admin'
 				. ' WHERE id = 1';
 			$this->deletes = $this->_getList($query);
@@ -88,7 +96,7 @@ class CWMMessagetypesModel extends JModelList
 	protected function populateState($ordering = null, $direction = null)
 	{
 		// Adjust the context to support modal layouts.
-		$input  = new JInput;
+		$input  = new Input;
 		$layout = $input->get('layout');
 
 		if ($layout)
@@ -138,7 +146,7 @@ class CWMMessagetypesModel extends JModelList
 	/**
 	 * Get List Query
 	 *
-	 * @return  JDatabaseQuery   A JDatabaseQuery object to retrieve the data set.
+	 * @return  \Joomla\Database\QueryInterface   A JDatabaseQuery object to retrieve the data set.
 	 *
 	 * @since   7.0.0
 	 */

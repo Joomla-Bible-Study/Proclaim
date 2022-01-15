@@ -13,10 +13,10 @@ use Joomla\CMS\Factory;
 defined('_JEXEC') or die;
 
 // Load the tooltip behavior.
-JHtml::_('behavior.formvalidator');
-JHtml::_('jquery.framework');
-JHtml::_('formbehavior.chosen', 'select');
-JHtml::_('bootstrap.renderModal');
+HTMLHelper::_('behavior.formvalidator');
+HTMLHelper::_('jquery.framework');
+HTMLHelper::_('formbehavior.chosen', 'select');
+HTMLHelper::_('bootstrap.renderModal');
 
 JText::script('ERROR');
 
@@ -135,7 +135,7 @@ Factory::getDocument()->addScriptDeclaration("
 					echo '</table>';
 				}
 				?>
-				<?php echo JHtml::_(
+				<?php echo HTMLHelper::_(
 					'bootstrap.renderModal',
 					'collapseModal',
 					array(
@@ -146,7 +146,7 @@ Factory::getDocument()->addScriptDeclaration("
 			</div>
 			<input type="hidden" name="task" value=""/>
 			<input type="hidden" name="tooltype" value=""/>
-			<?php echo JHtml::_('form.token'); ?>
+			<?php echo HTMLHelper::_('form.token'); ?>
 		</div>
 	</div>
 </form>

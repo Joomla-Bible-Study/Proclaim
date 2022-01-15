@@ -7,7 +7,16 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
+namespace CWM\Component\Proclaim\Administrator\Model;
+
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Table\CWMMessagetypeTable;
+use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Input\Input;
+use Joomla\CMS\MVC\Model\AdminModel;
+
 defined('_JEXEC') or die;
 
 /**
@@ -16,7 +25,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CWMMessagetypeModel extends JModelAdmin
+class CWMMessagetypeModel extends AdminModel
 {
 	/**
 	 * Method to store a record
@@ -24,12 +33,12 @@ class CWMMessagetypeModel extends JModelAdmin
 	 * @access    public
 	 * @return    boolean    True on success
 	 *
-	 * @since    7.0.0
+	 * @since     7.0.0
 	 */
 	public function store()
 	{
-		$row   = & $this->getTable();
-		$input = new JInput;
+		$row   = new CWMMessagetypeTable($this->_db);
+		$input = new Input;
 		$data  = $input->get('post');
 
 		// Bind the form fields to the hello table
@@ -118,7 +127,7 @@ class CWMMessagetypeModel extends JModelAdmin
 	/**
 	 * Prepare and sanitise the table prior to saving.
 	 *
-	 * @param   TableMessagetype  $table  A reference to a JTable object.
+	 * @param   CWMMessagetypeTable  $table  A reference to a JTable object.
 	 *
 	 * @return  void
 	 *
@@ -129,11 +138,11 @@ class CWMMessagetypeModel extends JModelAdmin
 		jimport('joomla.filter.output');
 
 		$table->message_type = htmlspecialchars_decode($table->message_type, ENT_QUOTES);
-		$table->alias        = JApplicationHelper::stringURLSafe($table->alias);
+		$table->alias        = ApplicationHelper::stringURLSafe($table->alias);
 
 		if (empty($table->alias))
 		{
-			$table->alias = JApplicationHelper::stringURLSafe($table->message_type);
+			$table->alias = ApplicationHelper::stringURLSafe($table->message_type);
 		}
 
 		if (empty($table->id))

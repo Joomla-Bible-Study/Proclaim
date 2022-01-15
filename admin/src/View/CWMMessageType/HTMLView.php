@@ -11,6 +11,11 @@
 namespace CWM\Component\Proclaim\Administrator\View\CWMMessageType;
 
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\Input\Input;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 
 defined('_JEXEC') or die;
@@ -78,7 +83,7 @@ class HTMLView extends BaseHtmlView
 		$this->form  = $this->get("Form");
 		$this->item  = $this->get("Item");
 		$this->state = $this->get("State");
-		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'messagetype');
+		$this->canDo = CWMProclaimHelper::getActions($this->item->id, 'messagetype');
 		$this->setLayout("edit");
 
 		// Set the toolbar
@@ -100,31 +105,31 @@ class HTMLView extends BaseHtmlView
 	 */
 	protected function addToolbar()
 	{
-		$input = new JInput;
+		$input = new Input;
 		$input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
-		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolbarHelper::title(JText::_('JBS_CMN_MESSAGETYPES') . ': <small><small>[' . $title . ']</small></small>', 'menu menu');
+		$title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
+		ToolbarHelper::title(Text::_('JBS_CMN_MESSAGETYPES') . ': <small><small>[' . $title . ']</small></small>', 'menu menu');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_proclaim'))
 		{
-			JToolbarHelper::apply('messagetype.apply');
-			JToolbarHelper::save('messagetype.save');
-			JToolbarHelper::cancel('messagetype.cancel');
+			ToolbarHelper::apply('cwmmessagetype.apply');
+			ToolbarHelper::save('cwmmessagetype.save');
+			ToolbarHelper::cancel('cwmmessagetype.cancel');
 		}
 		else
 		{
 			if ($this->canDo->get('core.edit', 'com_proclaim'))
 			{
-				JToolbarHelper::apply('messagetype.apply');
-				JToolbarHelper::save('messagetype.save');
+				ToolbarHelper::apply('cwmmessagetype.apply');
+				ToolbarHelper::save('cwmmessagetype.save');
 			}
 
-			JToolbarHelper::cancel('messagetype.cancel', 'JTOOLBAR_CLOSE');
+			ToolbarHelper::cancel('cwmmessagetype.cancel', 'JTOOLBAR_CLOSE');
 		}
 
-		JToolbarHelper::divider();
-		JToolbarHelper::help('biblestudy', true);
+		ToolbarHelper::divider();
+		ToolbarHelper::help('biblestudy', true);
 	}
 
 	/**
@@ -139,8 +144,8 @@ class HTMLView extends BaseHtmlView
 		$isNew    = ($this->item->id < 1);
 		$document = Factory::getDocument();
 		$document->setTitle(
-			$isNew ? JText::_('JBS_TITLE_MESSAGETYPES_CREATING')
-				: JText::sprintf('JBS_TITLE_MESSAGETYPES_EDITING', $this->item->message_type)
+			$isNew ? Text::_('JBS_TITLE_MESSAGETYPES_CREATING')
+				: Text::sprintf('JBS_TITLE_MESSAGETYPES_EDITING', $this->item->message_type)
 		);
 	}
 }

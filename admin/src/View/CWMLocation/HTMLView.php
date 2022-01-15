@@ -29,14 +29,6 @@ defined('_JEXEC') or die;
 class HTMLView extends BaseHtmlView
 {
 	/**
-	 * Form
-	 *
-	 * @var object
-	 * @since    7.0.0
-	 */
-	protected mixed $form;
-
-	/**
 	 * Item
 	 *
 	 * @var object
@@ -75,8 +67,9 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
-	 * @see     fetch()
+	 * @throws \Exception
 	 * @since   11.1
+	 * @see     fetch()
 	 */
 	public function display($tpl = null)
 	{
@@ -108,38 +101,38 @@ class HTMLView extends BaseHtmlView
 	{
 		$input = new Input;
 		$input->set('hidemainmenu', true);
-		$isNew = ($this->item->id == 0);
+		$isNew = ((int) $this->item->id === 0);
 		$title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
 		ToolbarHelper::title(Text::_('JBS_CMN_LOCATIONS') . ': <small><small>[' . $title . ']</small></small>', 'home home');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_proclaim'))
 		{
-			ToolbarHelper::apply('location.apply');
-			ToolbarHelper::save('location.save');
-			ToolbarHelper::save2new('location.save2new');
-			ToolbarHelper::cancel('location.cancel');
+			ToolbarHelper::apply('cwmlocation.apply');
+			ToolbarHelper::save('cwmlocation.save');
+			ToolbarHelper::save2new('cwmlocation.save2new');
+			ToolbarHelper::cancel('cwmlocation.cancel');
 		}
 		else
 		{
 			if ($this->canDo->get('core.edit', 'com_proclaim'))
 			{
-				ToolbarHelper::apply('location.apply');
-				ToolbarHelper::save('location.save');
+				ToolbarHelper::apply('cwmlocation.apply');
+				ToolbarHelper::save('cwmlocation.save');
 
 				// We can save this record, but check the create permission to see if we can return to make a new one.
 				if ($this->canDo->get('core.create', 'com_proclaim'))
 				{
-					ToolbarHelper::save2new('location.save2new');
+					ToolbarHelper::save2new('cwmlocation.save2new');
 				}
 			}
 
 			// If checked out, we can still save
 			if ($this->canDo->get('core.create', 'com_proclaim'))
 			{
-				ToolbarHelper::save2copy('location.save2copy');
+				ToolbarHelper::save2copy('cwmlocation.save2copy');
 			}
 
-			ToolbarHelper::cancel('location.cancel', 'JTOOLBAR_CLOSE');
+			ToolbarHelper::cancel('cwmlocation.cancel', 'JTOOLBAR_CLOSE');
 		}
 
 		ToolbarHelper::divider();

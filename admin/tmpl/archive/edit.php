@@ -12,9 +12,9 @@
 // Load the tooltip behavior.
 use Joomla\CMS\Factory;
 
-JHtml::_('behavior.formvalidator');
-JHtml::_('jquery.framework');
-JHtml::_('formbehavior.chosen', 'select');
+HTMLHelper::_('behavior.formvalidator');
+HTMLHelper::_('jquery.framework');
+HTMLHelper::_('formbehavior.chosen', 'select');
 
 defined('_JEXEC') or die;
 
@@ -55,5 +55,5 @@ Factory::getDocument()->addScriptDeclaration("
 	<input type="hidden" name="option" value="com_proclaim"/>
 	<input type="hidden" name="task" value="admin.doArchive"/>
 	<input type="hidden" name="controller" value="admin"/>
-	<?php echo JHtml::_('form.token'); ?>
+	<?php echo HTMLHelper::_('form.token'); ?>
 </form>

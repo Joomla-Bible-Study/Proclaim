@@ -11,12 +11,12 @@
 defined('_JEXEC') or die;
 
 // Include the component HTML helpers.
-JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 // Load the tooltip behavior.
-JHtml::_('behavior.formvalidator');
-JHtml::_('behavior.keepalive');
-JHtml::_('formbehavior.chosen', 'select');
+HTMLHelper::_('behavior.formvalidator');
+HTMLHelper::_('behavior.keepalive');
+HTMLHelper::_('formbehavior.chosen', 'select');
 
 // Create shortcut to parameters.
 
@@ -115,7 +115,7 @@ $input = $app->input;
 			</fieldset>
 			<input type="hidden" name="task" value=""/>
 			<input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
-			<?php echo JHtml::_('form.token'); ?>
+			<?php echo HTMLHelper::_('form.token'); ?>
 		</div>
 		<!-- Begin Sidebar -->
 		<div class="span2 form-vertical">

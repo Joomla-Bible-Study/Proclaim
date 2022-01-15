@@ -73,7 +73,7 @@ echo JRoute::_($url);
         <p><?php echo JText::_('JBS_UPLOADER_ERROR_RUNTIME_NOT_SUPORTED') . ' ' .  $this->runtime; ?></p>
 
 </div>
-<?php echo JHtml::_('form.token'); ?>
+<?php echo HTMLHelper::_('form.token'); ?>
 <input type="hidden" name="<?php echo JSession::getFormToken(); ?>" value="1" />
 
 

@@ -96,7 +96,7 @@ class HTMLView extends BaseHtmlView
 		$this->state      = $this->get('State');
 
 		$this->filterForm = $this->get('FilterForm');
-		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'template');
+		$this->canDo      = CWMProclaimHelper::getActions('', 'template');
 
 		// Levels filter.
 		$options   = array();

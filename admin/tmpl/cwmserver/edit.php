@@ -13,8 +13,8 @@ use Joomla\CMS\Factory;
 defined('_JEXEC') or die;
 
 // Load the tooltip behavior.
-JHtml::_('behavior.formvalidator');
-JHtml::_('behavior.keepalive');
+HTMLHelper::_('behavior.formvalidator');
+HTMLHelper::_('behavior.keepalive');
 
 // Create shortcut to parameters.
 $app   = Factory::getApplication();
@@ -143,7 +143,7 @@ $input = $app->input;
 			</div>
 			<input type="hidden" name="task" value=""/>
 			<input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
-			<?php echo JHtml::_('form.token'); ?>
+			<?php echo HTMLHelper::_('form.token'); ?>
 		</div>
 		<!-- End Content -->
 		<!-- Begin Sidebar -->

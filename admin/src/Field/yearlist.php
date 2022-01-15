@@ -36,7 +36,7 @@ class JFormFieldYearlist extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		$options = array_merge(parent::getOptions(), JBSMBibleStudyHelper::getStudyYears());
+		$options = array_merge(parent::getOptions(), CWMProclaimHelper::getStudyYears());
 
 		return $options;
 	}

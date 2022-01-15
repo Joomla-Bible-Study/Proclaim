@@ -25,10 +25,10 @@ defined('_JEXEC') or die;
             <div id="j-main-container">
 				<?php endif; ?>
 				<?php if ($this->errorCount === 0) : ?>
-					<?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'other')); ?>
+					<?php echo HTMLHelper::_('bootstrap.startTabSet', 'myTab', array('active' => 'other')); ?>
 				<?php else : ?>
-					<?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'problems')); ?>
-					<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'problems', JText::plural('COM_INSTALLER_MSG_N_DATABASE_ERROR_PANEL', $this->errorCount)); ?>
+					<?php echo HTMLHelper::_('bootstrap.startTabSet', 'myTab', array('active' => 'problems')); ?>
+					<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'problems', JText::plural('COM_INSTALLER_MSG_N_DATABASE_ERROR_PANEL', $this->errorCount)); ?>
                     <fieldset class="panelform">
                         <ul>
 							<?php if (!$this->filterParams) : ?>
@@ -69,9 +69,9 @@ defined('_JEXEC') or die;
 							<?php endforeach; ?>
                         </ul>
                     </fieldset>
-					<?php echo JHtml::_('bootstrap.endTab'); ?>
+					<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 				<?php endif; ?>
-				<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'other', JText::_('COM_INSTALLER_MSG_DATABASE_INFO')); ?>
+				<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'other', JText::_('COM_INSTALLER_MSG_DATABASE_INFO')); ?>
                 <div class="control-group" >
                     <fieldset class="panelform">
                         <ul>
@@ -84,12 +84,12 @@ defined('_JEXEC') or die;
                         </ul>
                     </fieldset>
                 </div>
-				<?php echo JHtml::_('bootstrap.endTab'); ?>
-				<?php echo JHtml::_('bootstrap.endTabSet'); ?>
+				<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
+				<?php echo HTMLHelper::_('bootstrap.endTabSet'); ?>
 
                 <input type="hidden" name="task" value="" />
                 <input type="hidden" name="boxchecked" value="0" />
-				<?php echo JHtml::_('form.token'); ?>
+				<?php echo HTMLHelper::_('form.token'); ?>
             </div>
     </form>
 </div>

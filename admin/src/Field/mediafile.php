@@ -11,6 +11,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Field\ListField;
 use Joomla\Registry\Registry;
 
 JFormHelper::loadFieldClass('list');
@@ -21,7 +22,7 @@ JFormHelper::loadFieldClass('list');
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class JFormFieldMediafile extends JFormFieldList
+class JFormFieldMediafile extends ListField
 {
 	/**
 	 * The field type.

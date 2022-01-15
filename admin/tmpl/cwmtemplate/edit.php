@@ -11,9 +11,9 @@
 defined('_JEXEC') or die;
 
 // Load the tooltip behavior.
-JHtml::_('behavior.formvalidator');
-JHtml::_('behavior.keepalive');
-JHtml::_('formbehavior.chosen', 'select');
+HTMLHelper::_('behavior.formvalidator');
+HTMLHelper::_('behavior.keepalive');
+HTMLHelper::_('formbehavior.chosen', 'select');
 
 // Create shortcut to parameters.
 /** @type \Joomla\Registry\Registry $params */
@@ -76,7 +76,7 @@ $input  = $app->input;
                     <div class="row-fluid">
 						<?php
 						$c     = 0;
-						$count = JBSMBibleStudyHelper::halfarray($this->form->getFieldset('TEMPLATES'));
+						$count = CWMProclaimHelper::halfarray($this->form->getFieldset('TEMPLATES'));
 						foreach ($this->form->getFieldset('TEMPLATES') as $field):
 
                         if ($c == 0)
@@ -119,7 +119,7 @@ $input  = $app->input;
                     <div class="row-fluid">
 		                <?php
 		                $c = 0;
-		                $count = JBSMBibleStudyHelper::halfarray($this->form->getFieldset('MEDIA'));
+		                $count = CWMProclaimHelper::halfarray($this->form->getFieldset('MEDIA'));
 		                foreach ($this->form->getFieldset('MEDIA') as $field):
 
 			                if ($c == 0)
@@ -152,7 +152,7 @@ $input  = $app->input;
                     <div class="row-fluid">
 		                <?php
 		                $c = 0;
-		                $count = JBSMBibleStudyHelper::halfarray($this->form->getFieldset('LANDINGPAGE'));
+		                $count = CWMProclaimHelper::halfarray($this->form->getFieldset('LANDINGPAGE'));
 		                foreach ($this->form->getFieldset('LANDINGPAGE') as $field):
 
 			                if ($c == 0)
@@ -481,7 +481,7 @@ $input  = $app->input;
                                 <div class="row-fluid">
 		                            <?php
 		                            $c = 0;
-		                            $count = JBSMBibleStudyHelper::halfarray($this->form->getFieldset('DETAILS'));
+		                            $count = CWMProclaimHelper::halfarray($this->form->getFieldset('DETAILS'));
 		                            foreach ($this->form->getFieldset('DETAILS') as $field):
 
 			                            if ($c == 0)
@@ -800,7 +800,7 @@ $input  = $app->input;
                                 <div class="row-fluid">
 		                            <?php
 		                            $c     = 0;
-		                            $count = JBSMBibleStudyHelper::halfarray($this->form->getFieldset('SERIES'));
+		                            $count = CWMProclaimHelper::halfarray($this->form->getFieldset('SERIES'));
 		                            foreach ($this->form->getFieldset('SERIES') as $field):
 
 			                            if ($c == 0)
@@ -900,7 +900,7 @@ $input  = $app->input;
 				<?php endif; ?>
             </div>
             <input type="hidden" name="task" value=""/>
-			<?php echo JHtml::_('form.token'); ?>
+			<?php echo HTMLHelper::_('form.token'); ?>
         </div>
         <!-- End Content -->
         <!-- Begin Sidebar -->

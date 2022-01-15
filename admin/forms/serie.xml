@@ -47,7 +47,7 @@
 		       description="JGLOBAL_ACTION_PERMISSIONS_DESCRIPTION"
 		       type="spacer"/>
 		<field name="description" type="editor" class="inputbox"
-		       label="JBS_CMN_DESCRIPTION" filter="JBSMBibleStudyHelper::filterText"
+		       label="JBS_CMN_DESCRIPTION" filter="CWMProclaimHelper::filterText"
 		       buttons="true"/>
 		<field name="series_thumbnail" type="hidden"/>
 		<field name="image" type="media" label="JBS_CMN_SERIES_THUMBNAIL" labelclass="control-label"/>

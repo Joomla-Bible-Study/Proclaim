@@ -70,18 +70,18 @@ if (!empty($editor))
 					<?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'series.published', $listDirn, $listOrder); ?>
 				</th>
 				<th scope="col" class="title">
-					<?php echo JHtml::_('grid.sort', 'JBS_CMN_SERIES', 'series.series_text', $listDirn, $listOrder); ?>
+					<?php echo HTMLHelper::_('grid.sort', 'JBS_CMN_SERIES', 'series.series_text', $listDirn, $listOrder); ?>
 				</th>
 				<th scope="col" class="w-10 d-none d-md-table-cell">
 					<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ACCESS', 'series.access', $listDirn, $listOrder); ?>
 				</th>
 				<?php if ($multilang) : ?>
 				<th scope="col" class="w-15">
-					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
+					<?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
 				</th>
 				<?php endif; ?>
 				<th scope="col" class="w-1 d-none d-md-table-cell">
-					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'series.id', $listDirn, $listOrder); ?>
+					<?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_ID', 'series.id', $listDirn, $listOrder); ?>
 				</th>
 			</tr>
 			</thead>

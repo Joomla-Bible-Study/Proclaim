@@ -9,13 +9,14 @@
  * */
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die;
 
-JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-JHtml::_('behavior.keepalive');
-JHtml::_('behavior.formvalidator');
-JHtml::_('formbehavior.chosen', 'select');
+HTMLHelper::_('behavior.keepalive');
+HTMLHelper::_('behavior.formvalidator');
+HTMLHelper::_('formbehavior.chosen', 'select');
 
 // Set up defaults
 if (Factory::getApplication()->input->getInt('id'))
@@ -36,12 +37,8 @@ $new = ($this->item->id === '0' || empty($this->item->id));
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('keepalive')
-	->useScript('form.validate');
-
-$this->useCoreUI = true;
-
-
-Factory::getDocument()->addScriptDeclaration('
+	->useScript('form.validate')
+	->addInlineScript('
 	Joomla.submitbutton = function (task, server_id) {
 		if (task == "cwmmediafile.setServer") {
 			document.getElementById("media-form").elements["jform[server_id]"].value = server_id;
@@ -49,10 +46,12 @@ Factory::getDocument()->addScriptDeclaration('
 		} else if (task == "cwmmediafile.cancel"|| document.formvalidator.isValid(document.getElementById("media-form"))) {
 			Joomla.submitform(task, document.getElementById("media-form"));
 		} else {
-			alert("' . $this->escape(JText::_("JGLOBAL_VALIDATION_FORM_FAILED")) . '");
+			alert("' . $this->escape(Text::_("JGLOBAL_VALIDATION_FORM_FAILED")) . '");
 		}
 	}
 ');
+
+$this->useCoreUI = true;
 ?>
 <form action="<?php echo 'index.php?option=com_proclaim&view=cwmmediafile&layout=edit&id=' . (int) $this->item->id; ?>"
       method="post"
@@ -61,10 +60,10 @@ Factory::getDocument()->addScriptDeclaration('
       class="form-validate">
 	<div class="form-horizontal">
 		<div class="form-horizontal">
-			<?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
+			<?php echo HTMLHelper::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
 
 			<!-- Begin Content -->
-			<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'general', JText::_('JBS_CMN_GENERAL')); ?>
+			<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'general', JText::_('JBS_CMN_GENERAL')); ?>
 			<div class="row-fluid">
 				<div class="span9">
 					<div class="control-group">
@@ -138,22 +137,22 @@ Factory::getDocument()->addScriptDeclaration('
 					</div>
 				</div>
 			</div>
-			<?php echo JHtml::_('bootstrap.endTab'); ?>
+			<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 
 			<?php echo $this->addon->render($this->media_form, $new); ?>
 
 			<?php if ($this->canDo->get('core.cwmadmin')): ?>
-				<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'permissions', JText::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
+				<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'permissions', JText::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
 				<div class="row-fluid">
 					<?php echo $this->form->getInput('rules'); ?>
 				</div>
-				<?php echo JHtml::_('bootstrap.endTab'); ?>
+				<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 			<?php endif; ?>
 
-			<?php echo JHtml::_('bootstrap.endTabSet'); ?>
+			<?php echo HTMLHelper::_('bootstrap.endTabSet'); ?>
 
 			<?php // Load the batch processing form. ?>
-			<?php echo JHtml::_(
+			<?php echo HTMLHelper::_(
 				'bootstrap.renderModal',
 				'collapseModal',
 				array(
@@ -166,6 +165,6 @@ Factory::getDocument()->addScriptDeclaration('
 	</div>
 	<?php echo $this->form->getInput('asset_id'); ?>
 	<input type="hidden" name="task" value=""/>
-	<input type="hidden" name="return" value="<?php echo Factory::getApplication()->input->getCmd('return'); ?>"/>
-	<?php echo JHtml::_('form.token'); ?>
+	<input type="hidden" name="return" value="<?php echo $input->getBase64('return'); ?>"/>
+	<?php echo HTMLHelper::_('form.token'); ?>
 </form>

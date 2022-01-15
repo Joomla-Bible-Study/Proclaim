@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 defined('_JEXEC') or die;
-JHtml::_('biblestudy.framework');
+HTMLHelper::_('biblestudy.framework');
 ?>
 <div class="row-fluid">
 	<div class="control-group">

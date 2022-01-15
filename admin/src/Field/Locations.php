@@ -10,6 +10,7 @@
 // No Direct Access
 namespace CWM\Component\Proclaim\Administrator\Field;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -27,7 +28,7 @@ FormHelper::loadFieldClass('list');
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class locations extends FormField
+class Locations extends ListField
 {
 	/**
 	 * The field type.

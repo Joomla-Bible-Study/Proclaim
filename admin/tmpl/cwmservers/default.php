@@ -12,10 +12,10 @@ use Joomla\CMS\Layout\LayoutHelper;
 
 defined('_JEXEC') or die;
 
-JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
-JHtml::_('behavior.multiselect');
-JHtml::_('formbehavior.chosen', 'select');
+HTMLHelper::_('behavior.multiselect');
+HTMLHelper::_('formbehavior.chosen', 'select');
 
 $app       = JFactory::getApplication();
 $user      = JFactory::getUser();
@@ -53,14 +53,14 @@ $sortFields = $this->getSortFields();
 						       title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
 					</th>
 					<th width="1%" style="min-width:55px;" class="nowrap center">
-						<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'cwmservers.published', $listDirn, $listOrder); ?>
+						<?php echo HTMLHelper::_('grid.sort', 'JPUBLISHED', 'cwmservers.published', $listDirn, $listOrder); ?>
 					</th>
 					<th>
-						<?php echo JHtml::_('grid.sort', 'JBS_CMN_SERVERS', 'cwmservers.server_name', $listDirn, $listOrder); ?>
+						<?php echo HTMLHelper::_('grid.sort', 'JBS_CMN_SERVERS', 'cwmservers.server_name', $listDirn, $listOrder); ?>
 					</th>
 
 					<th width="1%" class="nowrap hidden-phone">
-						<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'cwmservers.id', $listDirn, $listOrder); ?>
+						<?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_ID', 'cwmservers.id', $listDirn, $listOrder); ?>
 					</th>
 				</tr>
 				</thead>
@@ -82,11 +82,11 @@ $sortFields = $this->getSortFields();
 					<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->id ?>">
 
 						<td class="center hidden-phone">
-							<?php echo JHtml::_('grid.id', $i, $item->id); ?>
+							<?php echo HTMLHelper::_('grid.id', $i, $item->id); ?>
 						</td>
 						<td class="center">
 							<div class="btn-group">
-								<?php echo JHtml::_('jgrid.published', $item->published, $i, 'cwmservers.', $canChange, 'cb', '', ''); ?>
+								<?php echo HTMLHelper::_('jgrid.published', $item->published, $i, 'cwmservers.', $canChange, 'cb', '', ''); ?>
 							</div>
 						</td>
 						<td class="nowrap has-context">
@@ -104,30 +104,30 @@ $sortFields = $this->getSortFields();
 							<div class="pull-left">
 								<?php
 								// Create dropdown items
-								JHtml::_('dropdown.edit', $item->id, 'server.');
-								JHtml::_('dropdown.divider');
+								HTMLHelper::_('dropdown.edit', $item->id, 'server.');
+								HTMLHelper::_('dropdown.divider');
 								if ($item->published) :
-									JHtml::_('dropdown.unpublish', 'cb' . $i, 'cwmservers.');
+									HTMLHelper::_('dropdown.unpublish', 'cb' . $i, 'cwmservers.');
 								else :
-									JHtml::_('dropdown.publish', 'cb' . $i, 'cwmservers.');
+									HTMLHelper::_('dropdown.publish', 'cb' . $i, 'cwmservers.');
 								endif;
 
-								JHtml::_('dropdown.divider');
+								HTMLHelper::_('dropdown.divider');
 
 								if ($archived) :
-									JHtml::_('dropdown.unarchive', 'cb' . $i, 'cwmservers.');
+									HTMLHelper::_('dropdown.unarchive', 'cb' . $i, 'cwmservers.');
 								else :
-									JHtml::_('dropdown.archive', 'cb' . $i, 'cwmservers.');
+									HTMLHelper::_('dropdown.archive', 'cb' . $i, 'cwmservers.');
 								endif;
 
 								if ($trashed) :
-									JHtml::_('dropdown.untrash', 'cb' . $i, 'cwmservers.');
+									HTMLHelper::_('dropdown.untrash', 'cb' . $i, 'cwmservers.');
 								else :
-									JHtml::_('dropdown.trash', 'cb' . $i, 'cwmservers.');
+									HTMLHelper::_('dropdown.trash', 'cb' . $i, 'cwmservers.');
 								endif;
 
 								// Render dropdown list
-								echo JHtml::_('dropdown.render');
+								echo HTMLHelper::_('dropdown.render');
 								?>
 							</div>
 						</td>
@@ -143,6 +143,6 @@ $sortFields = $this->getSortFields();
 			<input type="hidden" name="boxchecked" value="0"/>
 			<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
 			<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
-			<?php echo JHtml::_('form.token'); ?>
+			<?php echo HTMLHelper::_('form.token'); ?>
 		</div>
 </form>

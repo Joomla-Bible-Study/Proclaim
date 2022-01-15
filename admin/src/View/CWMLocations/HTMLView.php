@@ -123,6 +123,7 @@ class HTMLView extends BaseHtmlView
 		$options[] = HtmlHelper::_('select.option', '10', Text::_('J10'));
 
 		$this->f_levels = $options;
+
 		// We don't need toolbar in the modal window.
 		if ($this->getLayout() !== 'modal')
 		{
@@ -131,8 +132,8 @@ class HTMLView extends BaseHtmlView
 
 		// Set the document
 		$this->setDocument();
-		// Display the template
 
+		// Display the template
 		parent::display($tpl);
 	}
 

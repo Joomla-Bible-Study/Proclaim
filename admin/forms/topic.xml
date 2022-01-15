@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-	<field name="published" type="list" label="JSTATUS" description="JFIELD_PUBLISHED_DESC" class="span12 small" filter="intval" size="1" default="1">
+	<field name="published" type="list" label="JSTATUS" description="JFIELD_PUBLISHED_DESC" class="span12 small"
+	       filter="intval" size="1" default="1">
 		<option value="1">JPUBLISHED</option>
 		<option value="0">JUNPUBLISHED</option>
 		<option value="-2">JTRASHED</option>
 	</field>
-	<field name="topic_text" type="text" label="JBS_TPC_TOPIC_ALIAS" description="JBS_TPC_TOPIC_ALIAS_DESC" size="75"/>
-	<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="com_proclaim_LANGUAGE_DESC" class="span12 small">
+	<field name="topic_text" type="text" label="JBS_TPC_TOPIC_ALIAS" description="JBS_TPC_TOPIC_ALIAS_DESC"
+	       size="75"/>
+	<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="com_proclaim_LANGUAGE_DESC"
+	       class="span12 small">
 		<option value="*">JALL</option>
 	</field>
-	<field name="rules" type="rules" label="JFIELD_RULES_LABEL" translate_label="false" class="inputbox" filter="rules" component="com_proclaim" section="topic" validate="rules"/>
+	<field name="rules" type="rules" label="JFIELD_RULES_LABEL" translate_label="false" class="inputbox" filter="rules"
+	       component="com_proclaim" section="topic" validate="rules"/>
 	<field name="asset_id" type="hidden" filter="unset"/>
 	<field name="id" type="hidden" default="0" readonly="true"/>
 </form>

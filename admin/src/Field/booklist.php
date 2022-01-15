@@ -40,7 +40,7 @@ class JFormFieldBooklist extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		$options = array_merge(parent::getOptions(), JBSMBibleStudyHelper::getStudyBooks());
+		$options = array_merge(parent::getOptions(), CWMProclaimHelper::getStudyBooks());
 
 		return $options;
 	}

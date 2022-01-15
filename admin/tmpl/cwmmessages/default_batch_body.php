@@ -47,19 +47,19 @@ $user = Factory::getUser();
 	</div>
 	<div class="form-group col-md-4">
 		<div class="controls">
-			<?php echo JHtml::_('biblestudy.Teacher'); ?>
+			<?php echo HTMLHelper::_('biblestudy.Teacher'); ?>
 		</div>
 	</div>
 </div>
 <div class="row">
 	<div class="form-group col-md-6">
 		<div class="controls">
-			<?php echo JHtml::_('biblestudy.Series'); ?>
+			<?php echo HTMLHelper::_('biblestudy.Series'); ?>
 		</div>
 	</div>
 	<div class="form-group col-md-4">
 		<div class="controls">
-			<?php echo JHtml::_('biblestudy.Messagetype'); ?>
+			<?php echo HTMLHelper::_('biblestudy.Messagetype'); ?>
 		</div>
 	</div>
 </div>

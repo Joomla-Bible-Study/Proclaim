@@ -15,6 +15,7 @@ use JComponentHelper;
 use JDatabaseQuery;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Database\DatabaseQuery;
 
 defined('_JEXEC') or die;
 
@@ -29,7 +30,7 @@ class CWMLocationsModel extends ListModel
 	/**
 	 * Number of Deletes
 	 *
-	 * @var int
+	 * @var integer
 	 *
 	 * @since 7.0
 	 */
@@ -40,6 +41,7 @@ class CWMLocationsModel extends ListModel
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
+	 * @throws \Exception
 	 * @since 7.0.0
 	 */
 	public function __construct($config = array())
@@ -61,7 +63,7 @@ class CWMLocationsModel extends ListModel
 	/**
 	 * Get Deletes
 	 *
-	 * @return object
+	 * @return integer|object[]
 	 *
 	 * @since 7.0
 	 */
@@ -120,7 +122,7 @@ class CWMLocationsModel extends ListModel
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		$app = Factory::getApplication('administrator');
+		$app = Factory::getApplication();
 
 		// Adjust the context to support modal layouts.
 		$layout = $app->input->get('layout');
@@ -149,7 +151,7 @@ class CWMLocationsModel extends ListModel
 	/**
 	 * Get List Query
 	 *
-	 * @return  JDatabaseQuery   A JDatabaseQuery object to retrieve the data set.
+	 * @return  \Joomla\Database\QueryInterface   A JDatabaseQuery object to retrieve the data set.
 	 *
 	 * @since   12.2
 	 */
@@ -161,7 +163,8 @@ class CWMLocationsModel extends ListModel
 
 		$query->select(
 			$this->getState(
-				'list.select', 'location.id, location.published, location.access, location.location_text')
+				'list.select', 'location.id, location.published, location.access, location.location_text'
+			)
 		);
 		$query->from('`#__bsms_locations` AS location');
 

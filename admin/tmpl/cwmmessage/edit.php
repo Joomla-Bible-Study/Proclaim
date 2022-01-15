@@ -14,12 +14,10 @@ use Joomla\CMS\Factory;
 defined('_JEXEC') or die;
 
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 
 // Load the tooltip behavior.
-
-JHtml::_('behavior.formvalidator');
-JHtml::_('behavior.keepalive');
-JHtml::_('formbehavior.chosen', 'select');
+HTMLHelper::_('formbehavior.chosen', 'select');
 
 $this->configFieldsets  = array('editorConfig');
 $this->hiddenFieldsets  = array('basic-limited');
@@ -59,14 +57,21 @@ else
 	$user_id     = $this->admin->user_id;
 }
 
-Factory::getDocument()->addScriptDeclaration('
-	Joomla.submitbutton = function (task)
-	{
+/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
+$wa = $this->document->getWebAssetManager();
+$wa->useScript('keepalive')
+	->useScript('form.validate')
+	->addInlineScript('
+	Joomla.submitbutton = function (task) {
 		if (task == "cwmmessage.cancel" || document.formvalidator.isValid(document.getElementById("message-form")))
 		{
 			Joomla.submitform(task, document.getElementById("message-form"));
 		}
-	};
+		else
+		{
+			alert(' . $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')) . ')
+		}
+	}
 ');
 
 // In case of modal
@@ -136,10 +141,10 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
                                 </a>
                             </td>
                             <td class="center">
-								<?php echo JHtml::_('jgrid.published', $item->published, $i, 'message.', true, 'cb', '', ''); ?>
+								<?php echo HTMLHelper::_('jgrid.published', $item->published, $i, 'message.', true, 'cb', '', ''); ?>
                             </td>
                             <td class="center">
-								<?php echo JHtml::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
+								<?php echo HTMLHelper::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
                             </td>
                             <td class="center hidden-phone">
 								<?php echo $item->language; ?>
@@ -198,10 +203,10 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
     </div>
 
     <div class="form-horizontal">
-		<?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
+		<?php echo HTMLHelper::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
 
         <!-- Begin Content -->
-		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'general', JText::_('JBS_STY_DETAILS')); ?>
+		<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'general', JText::_('JBS_STY_DETAILS')); ?>
         <div class="row-fluid form-horizontal-desktop">
 			<?php if (!$this->simple->mode){ ?>
                 <div class="span6">
@@ -271,9 +276,9 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
 
             </div>
         </div>
-		<?php echo JHtml::_('bootstrap.endTab'); ?>
+		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 		<?php if (!$this->simple->mode){ ?>
-			<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'info', JText::_('JBS_CMN_INFO')); ?>
+			<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'info', JText::_('JBS_CMN_INFO')); ?>
             <div class="row-fluid">
                 <div class="span6">
                     <div class="control-group">
@@ -356,10 +361,10 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
                 </div>
 
             </div>
-			<?php echo JHtml::_('bootstrap.endTab'); ?>
+			<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 		<?php } ?>
 
-	    <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'publish', JText::_('JBS_STY_PUBLISH')); ?>
+	    <?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'publish', JText::_('JBS_STY_PUBLISH')); ?>
         <div class="row-fluid form-horizontal-desktop">
             <div class="span6">
 			    <?php echo JLayoutHelper::render('joomla.edit.publishingdata', $this); ?>
@@ -386,16 +391,16 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
 			    <?php echo JLayoutHelper::render('joomla.edit.metadata', $this); ?>
             </div>
         </div>
-	    <?php echo JHtml::_('bootstrap.endTab'); ?>
+	    <?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 
 		<?php if ($this->canDo->get('core.administrator')): ?>
-			<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'permissions', JText::_('JBS_CMN_FIELDSET_RULES')); ?>
+			<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'permissions', JText::_('JBS_CMN_FIELDSET_RULES')); ?>
             <div class="row-fluid">
 				<?php echo $this->form->getInput('rules'); ?>
             </div>
-			<?php echo JHtml::_('bootstrap.endTab'); ?>
+			<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 		<?php endif; ?>
-		<?php echo JHtml::_('bootstrap.endTabSet'); ?>
+		<?php echo HTMLHelper::_('bootstrap.endTabSet'); ?>
 
         <!-- Hidden fields -->
 		<?php echo $this->form->getInput('thumbnailm'); ?>

@@ -79,7 +79,7 @@ class HTMLView extends BaseHtmlView
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
 
-		$this->canDo         = JBSMBibleStudyHelper::getActions('', 'podcast');
+		$this->canDo         = CWMProclaimHelper::getActions('', 'podcast');
 		$this->filterForm    = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');
 

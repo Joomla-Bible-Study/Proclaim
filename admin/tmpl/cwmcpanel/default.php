@@ -19,9 +19,9 @@ use Joomla\CMS\Router\Route;
 defined('_JEXEC') or die;
 
 // Load the tooltip behavior.
-JHtml::_('dropdown.init');
-JHtml::_('formbehavior.chosen', 'select');
-JHtml::_('behavior.multiselect');
+HTMLHelper::_('dropdown.init');
+HTMLHelper::_('formbehavior.chosen', 'select');
+HTMLHelper::_('behavior.multiselect');
 
 $msg   = '';
 $input = new Input;
@@ -261,5 +261,5 @@ $simple = CWMHelper::getSimpleView();
 				<div style="clear: both;"></div>
 			</div>
 		</div>
-		<?php echo JHtml::_('form.token'); ?>
+		<?php echo HTMLHelper::_('form.token'); ?>
 </form>

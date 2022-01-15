@@ -113,7 +113,7 @@ class HTMLView extends BaseHtmlView
 
 		$this->item  = $item;
 		$this->state = $this->get("State");
-		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'templatecode');
+		$this->canDo = CWMProclaimHelper::getActions($this->item->id, 'templatecode');
 
 		$this->setLayout("edit");
 		$this->addToolbar();

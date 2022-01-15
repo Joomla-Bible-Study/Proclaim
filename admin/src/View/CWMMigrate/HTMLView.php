@@ -215,7 +215,7 @@ class HTMLView extends BaseHtmlView
 		$this->form  = $this->get("Form");
 		$this->item  = $this->get("Item");
 		$this->state = $this->get("State");
-		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id);
+		$this->canDo = CWMProclaimHelper::getActions($this->item->id);
 
 		$config         = Factory::getApplication();
 		$this->tmp_dest = $config->get('tmp_path');

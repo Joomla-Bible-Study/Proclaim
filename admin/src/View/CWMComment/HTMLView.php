@@ -74,7 +74,7 @@ class HTMLView extends BaseHtmlView
 		$this->form  = $this->get("Form");
 		$this->item  = $this->get("Item");
 		$this->state = $this->get("State");
-		$this->canDo = JBSMBibleStudyHelper::getActions($this->item->id, 'comment');
+		$this->canDo = CWMProclaimHelper::getActions($this->item->id, 'comment');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))

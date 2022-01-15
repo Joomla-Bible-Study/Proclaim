@@ -13,8 +13,10 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMTopics;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
@@ -88,7 +90,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   11.1
 	 * @see     fetch()
 	 */
@@ -99,7 +101,7 @@ class HTMLView extends BaseHtmlView
 		$this->state      = $this->get('State');
 
 		$this->filterForm = $this->get('FilterForm');
-		$this->canDo      = JBSMBibleStudyHelper::getActions('', 'topic');
+		$this->canDo      = CWMProclaimHelper::getActions('', 'topic');
 
 		// Check for errors
 		if (count($errors = $this->get('Errors')))
@@ -114,16 +116,16 @@ class HTMLView extends BaseHtmlView
 
 		// Levels filter.
 		$options   = array();
-		$options[] = JHtml::_('select.option', '1', JText::_('J1'));
-		$options[] = JHtml::_('select.option', '2', JText::_('J2'));
-		$options[] = JHtml::_('select.option', '3', JText::_('J3'));
-		$options[] = JHtml::_('select.option', '4', JText::_('J4'));
-		$options[] = JHtml::_('select.option', '5', JText::_('J5'));
-		$options[] = JHtml::_('select.option', '6', JText::_('J6'));
-		$options[] = JHtml::_('select.option', '7', JText::_('J7'));
-		$options[] = JHtml::_('select.option', '8', JText::_('J8'));
-		$options[] = JHtml::_('select.option', '9', JText::_('J9'));
-		$options[] = JHtml::_('select.option', '10', JText::_('J10'));
+		$options[] = HtmlHelper::_('select.option', '1', Text::_('J1'));
+		$options[] = HtmlHelper::_('select.option', '2', Text::_('J2'));
+		$options[] = HtmlHelper::_('select.option', '3', Text::_('J3'));
+		$options[] = HtmlHelper::_('select.option', '4', Text::_('J4'));
+		$options[] = HtmlHelper::_('select.option', '5', Text::_('J5'));
+		$options[] = HtmlHelper::_('select.option', '6', Text::_('J6'));
+		$options[] = HtmlHelper::_('select.option', '7', Text::_('J7'));
+		$options[] = HtmlHelper::_('select.option', '8', Text::_('J8'));
+		$options[] = HtmlHelper::_('select.option', '9', Text::_('J9'));
+		$options[] = HtmlHelper::_('select.option', '10', Text::_('J10'));
 
 		$this->f_levels = $options;
 
@@ -154,7 +156,7 @@ class HTMLView extends BaseHtmlView
 		// Get the toolbar object instance
 		$toolbar = Toolbar::getInstance('toolbar');
 
-		ToolbarHelper::title(JText::_('JBS_CMN_TOPICS'), 'tags tags');
+		ToolbarHelper::title(Text::_('JBS_CMN_TOPICS'), 'tags tags');
 
 		if ($this->canDo->get('core.create'))
 		{
@@ -207,7 +209,7 @@ class HTMLView extends BaseHtmlView
 	protected function setDocument()
 	{
 		$document = Factory::getDocument();
-		$document->setTitle(JText::_('JBS_TITLE_TOPICS'));
+		$document->setTitle(Text::_('JBS_TITLE_TOPICS'));
 	}
 
 	/**
@@ -220,9 +222,9 @@ class HTMLView extends BaseHtmlView
 	protected function getSortFields()
 	{
 		return array(
-			'topic.topic_text' => JText::_('JBS_CMN_TOPICS'),
-			'topic.published'  => JText::_('JSTATUS'),
-			'topic.id'         => JText::_('JGRID_HEADING_ID')
+			'topic.topic_text' => Text::_('JBS_CMN_TOPICS'),
+			'topic.published'  => Text::_('JSTATUS'),
+			'topic.id'         => Text::_('JGRID_HEADING_ID')
 		);
 	}
 }

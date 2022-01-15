@@ -31,6 +31,7 @@ class CWMLocationModel extends AdminModel
 	 * @access    public
 	 * @return    boolean    True on success
 	 *
+	 * @throws \Exception
 	 * @since     7.0
 	 */
 	public function store()
@@ -72,7 +73,7 @@ class CWMLocationModel extends AdminModel
 	 * @param   array    $data      Data for the form.
 	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
-	 * @return  mixed  A JForm object on success, false on failure
+	 * @return  false|\Joomla\CMS\Form\Form  A JForm object on success, false on failure
 	 *
 	 * @since  7.0
 	 */
@@ -89,7 +90,7 @@ class CWMLocationModel extends AdminModel
 	 *
 	 * @param   integer  $pk  The numeric id of the primary key.
 	 *
-	 * @return  boolean  False on failure or error, true otherwise.
+	 * @return  integer|null  False on failure or error, true otherwise.
 	 *
 	 * @since   11.1
 	 */
@@ -103,6 +104,7 @@ class CWMLocationModel extends AdminModel
 	 *
 	 * @return  array    The default data is an empty array.
 	 *
+	 * @throws \Exception
 	 * @since   7.0
 	 */
 	protected function loadFormData()

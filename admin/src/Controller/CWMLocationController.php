@@ -45,24 +45,8 @@ class CWMLocationController extends FormController
 	public function batch($model = null)
 	{
 		// Preset the redirect
-		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=locations' . $this->getRedirectToListAppend(), false));
+		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmlocations' . $this->getRedirectToListAppend(), false));
 
-		return parent::batch($this->getModel('Location', '', array()));
-	}
-
-	/**
-	 * Proxy for getModel
-	 *
-	 * @param   string  $name    The model name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return \Joomla\CMS\MVC\Model\BaseDatabaseModel
-	 *
-	 * @since 7.1.0
-	 */
-	public function getModel($name = 'CWMLocation', $prefix = '', $config = array('ignore_request' => true))
-	{
-		return parent::getModel($name, $prefix, array('ignore_request' => true));
+		return parent::batch($this->getModel('CWMLocation', '', array()));
 	}
 }

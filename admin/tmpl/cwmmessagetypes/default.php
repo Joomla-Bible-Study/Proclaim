@@ -10,12 +10,13 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
-JHtml::_('dropdown.init');
-JHtml::_('formbehavior.chosen', 'select');
-JHtml::_('behavior.multiselect');
+HTMLHelper::_('dropdown.init');
+HTMLHelper::_('formbehavior.chosen', 'select');
+HTMLHelper::_('behavior.multiselect');
 
 $app       = Factory::getApplication();
 $user      = Factory::getUser();
@@ -41,7 +42,7 @@ $sortFields = $this->getSortFields();
 		Joomla.tableOrdering(order, dirn, '');
 	}
 </script>
-<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=messagetypes'); ?>" method="post"
+<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmmessagetypes'); ?>" method="post"
       name="adminForm" id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
@@ -70,14 +71,14 @@ $sortFields = $this->getSortFields();
 							       onclick="Joomla.checkAll(this)"/>
 						</th>
 						<th width="1%" style="min-width:55px;" class="nowrap center">
-							<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'messagetypes.published', $listDirn, $listOrder); ?>
+							<?php echo HTMLHelper::_('grid.sort', 'JPUBLISHED', 'messagetypes.published', $listDirn, $listOrder); ?>
 						</th>
 						<th>
-							<?php echo JHtml::_('grid.sort', 'JBS_CMN_MESSAGETYPES', 'messagetypes.message_type', $listDirn, $listOrder); ?>
+							<?php echo HTMLHelper::_('grid.sort', 'JBS_CMN_MESSAGETYPES', 'messagetypes.message_type', $listDirn, $listOrder); ?>
 						</th>
 
 						<th width="1%" class="nowrap hidden-phone">
-							<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'messagetypes.id', $listDirn, $listOrder); ?>
+							<?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_ID', 'messagetypes.id', $listDirn, $listOrder); ?>
 						</th>
 					</tr>
 					</thead>
@@ -93,18 +94,18 @@ $sortFields = $this->getSortFields();
 						<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo '1' ?>">
 
 							<td class="center hidden-phone">
-								<?php echo JHtml::_('grid.id', $i, $item->id); ?>
+								<?php echo HTMLHelper::_('grid.id', $i, $item->id); ?>
 							</td>
 							<td class="center">
 								<div class="btn-group">
-									<?php echo JHtml::_('jgrid.published', $item->published, $i, 'messagetypes.', $canChange, 'cb', '', ''); ?>
+									<?php echo HTMLHelper::_('jgrid.published', $item->published, $i, 'messagetypes.', $canChange, 'cb', '', ''); ?>
 								</div>
 							</td>
 							<td class="nowrap has-context">
 								<div class="pull-left">
 
 									<?php if ($canEdit || $canEditOwn) : ?>
-										<a href="<?php echo JRoute::_('index.php?option=com_proclaim&task=messagetype.edit&id=' . (int) $item->id); ?>"
+										<a href="<?php echo JRoute::_('index.php?option=com_proclaim&task=cwmmessagetype.edit&id=' . (int) $item->id); ?>"
 										   title="<?php echo JText::_('JACTION_EDIT'); ?>">
 											<?php echo $this->escape($item->message_type); ?></a>
 									<?php else : ?>
@@ -115,30 +116,30 @@ $sortFields = $this->getSortFields();
 								<div class="pull-left">
 									<?php
 									// Create dropdown items
-									JHtml::_('dropdown.edit', $item->id, 'messagetype.');
-									JHtml::_('dropdown.divider');
+									HTMLHelper::_('dropdown.edit', $item->id, 'cwmmessagetype.');
+									HTMLHelper::_('dropdown.divider');
 									if ($item->published) :
-										JHtml::_('dropdown.unpublish', 'cb' . $i, 'messagetypes.');
+										HTMLHelper::_('dropdown.unpublish', 'cb' . $i, 'cwmmessagetypes.');
 									else :
-										JHtml::_('dropdown.publish', 'cb' . $i, 'messagetypes.');
+										HTMLHelper::_('dropdown.publish', 'cb' . $i, 'cwmmessagetypes.');
 									endif;
 
-									JHtml::_('dropdown.divider');
+									HTMLHelper::_('dropdown.divider');
 
 									if ($archived) :
-										JHtml::_('dropdown.unarchive', 'cb' . $i, 'messagetypes.');
+										HTMLHelper::_('dropdown.unarchive', 'cb' . $i, 'cwmmessagetypes.');
 									else :
-										JHtml::_('dropdown.archive', 'cb' . $i, 'messagetypes.');
+										HTMLHelper::_('dropdown.archive', 'cb' . $i, 'cwmmessagetypes.');
 									endif;
 
 									if ($trashed) :
-										JHtml::_('dropdown.untrash', 'cb' . $i, 'messagetypes.');
+										HTMLHelper::_('dropdown.untrash', 'cb' . $i, 'cwmmessagetypes.');
 									else :
-										JHtml::_('dropdown.trash', 'cb' . $i, 'messagetypes.');
+										HTMLHelper::_('dropdown.trash', 'cb' . $i, 'cwmmessagetypes.');
 									endif;
 
 									// Render dropdown list
-									echo JHtml::_('dropdown.render');
+									echo HTMLHelper::_('dropdown.render');
 									?>
 								</div>
 							</td>
@@ -172,6 +173,6 @@ $sortFields = $this->getSortFields();
 			<input type="hidden" name="boxchecked" value="0"/>
 			<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
 			<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
-			<?php echo JHtml::_('form.token'); ?>
+			<?php echo HTMLHelper::_('form.token'); ?>
 		</div>
 </form>

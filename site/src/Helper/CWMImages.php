@@ -7,14 +7,15 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Site\Helper;
 // No Direct Access
 defined('_JEXEC') or die;
 
-use Joomla\Registry\Registry;
+use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
-use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
+use Joomla\Registry\Registry;
 
 /**
  * BibleStudy images class

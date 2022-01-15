@@ -16,13 +16,11 @@ defined('_JEXEC') or die;
 use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
-use JHtml;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\Input\Input;
 use Joomla\Registry\Registry;
-use JText;
 use JToolbarHelper;
 
 /**
@@ -128,9 +126,9 @@ class HTMLView extends BaseHtmlView
 
 		$this->simple = CWMHelper::getSimpleView();
 
-		JHtml::stylesheet('media/com_proclaim/css/token-input-jbs.css');
+		HTMLHelper::stylesheet('media/com_proclaim/css/token-input-jbs.css');
 
-		// JHtml::_('proclaim.framework');
+		// HTMLHelper::_('proclaim.framework');
 		$script = "
             jQuery(document).ready(function() {
                 jQuery('#topics').tokenInput(" . $this->get('alltopics') . ",
@@ -150,7 +148,7 @@ class HTMLView extends BaseHtmlView
 		$wa = $this->document->getWebAssetManager();
 		$wa->addInlineScript($script);
 
-		JHtml::script('media/com_proclaim/js/plugins/jquery.tokeninput.js');
+		HTMLHelper::script('media/com_proclaim/js/plugins/jquery.tokeninput.js');
 
 		// Set the toolbar
 		$this->addToolbar();

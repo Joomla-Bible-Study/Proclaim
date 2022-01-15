@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\Utilities\ArrayHelper;
 
@@ -54,21 +55,5 @@ class CWMLocationsController extends AdminController
 
 		// Close the application
 		Factory::getApplication()->close();
-	}
-
-	/**
-	 * Proxy for getModel
-	 *
-	 * @param   string  $name    The name of the model
-	 * @param   string  $prefix  The prefix for the PHP class name
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return \BiblestudyModelLocation|bool|\Joomla\CMS\MVC\Model\BaseDatabaseModel
-	 *
-	 * @since 7.0.0
-	 */
-	public function getModel($name = 'CWMLocation', $prefix = '', $config = array('ignore_request' => true))
-	{
-		return parent::getModel($name, $prefix, $config);
 	}
 }

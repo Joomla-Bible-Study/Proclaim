@@ -11,7 +11,7 @@
 // Protect from unauthorized access
 defined('_JEXEC') or die();
 
-JHtml::_('behavior.framework');
+HTMLHelper::_('behavior.framework');
 
 if ($this->totalSteps != '0')
 {

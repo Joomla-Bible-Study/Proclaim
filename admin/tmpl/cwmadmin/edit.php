@@ -17,8 +17,8 @@ use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\HTML\HTMLHelper as JHtml;
 
 // Load the tooltip behavior.
-JHtml::_('jquery.framework');
-JHtml::_('formbehavior.chosen', 'select');
+HTMLHelper::_('jquery.framework');
+HTMLHelper::_('formbehavior.chosen', 'select');
 
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();

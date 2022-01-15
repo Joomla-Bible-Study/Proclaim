@@ -50,7 +50,7 @@ else
         <input type="hidden" name="task" value="assets.run"/>
 	<?php } ?>
     <input type="hidden" name="tmpl" value="component"/>
-	<?php echo JHtml::_('form.token'); ?>
+	<?php echo HTMLHelper::_('form.token'); ?>
 </form>
 
 <?php if (!$this->more): ?>
