@@ -215,7 +215,7 @@ class HtmlView extends BaseHtmlView
 	 */
 	protected function setDocument()
 	{
-		$document = Factory::getDocument();
+		$document = Factory::getApplication()->getDocument();
 		$document->setTitle(Text::_('JBS_TITLE_SERVERS'));
 	}
 

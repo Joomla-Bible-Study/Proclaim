@@ -11,7 +11,14 @@
 namespace CWM\Component\Proclaim\Administrator\View\CWMTemplates;
 
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die;
 
@@ -100,16 +107,16 @@ class HTMLView extends BaseHtmlView
 
 		// Levels filter.
 		$options   = array();
-		$options[] = JHtml::_('select.option', '1', JText::_('J1'));
-		$options[] = JHtml::_('select.option', '2', JText::_('J2'));
-		$options[] = JHtml::_('select.option', '3', JText::_('J3'));
-		$options[] = JHtml::_('select.option', '4', JText::_('J4'));
-		$options[] = JHtml::_('select.option', '5', JText::_('J5'));
-		$options[] = JHtml::_('select.option', '6', JText::_('J6'));
-		$options[] = JHtml::_('select.option', '7', JText::_('J7'));
-		$options[] = JHtml::_('select.option', '8', JText::_('J8'));
-		$options[] = JHtml::_('select.option', '9', JText::_('J9'));
-		$options[] = JHtml::_('select.option', '10', JText::_('J10'));
+		$options[] = HTMLHelper::_('select.option', '1', Text::_('J1'));
+		$options[] = HTMLHelper::_('select.option', '2', Text::_('J2'));
+		$options[] = HTMLHelper::_('select.option', '3', Text::_('J3'));
+		$options[] = HTMLHelper::_('select.option', '4', Text::_('J4'));
+		$options[] = HTMLHelper::_('select.option', '5', Text::_('J5'));
+		$options[] = HTMLHelper::_('select.option', '6', Text::_('J6'));
+		$options[] = HTMLHelper::_('select.option', '7', Text::_('J7'));
+		$options[] = HTMLHelper::_('select.option', '8', Text::_('J8'));
+		$options[] = HTMLHelper::_('select.option', '9', Text::_('J9'));
+		$options[] = HTMLHelper::_('select.option', '10', Text::_('J10'));
 
 		$this->f_levels = $options;
 
@@ -119,8 +126,8 @@ class HTMLView extends BaseHtmlView
 			$this->addToolbar();
 		}
 
-		$bar = JToolbar::getInstance('toolbar');
-		$url = JRoute::_('index.php?option=com_proclaim&view=templates&layout=default_export');
+		$bar = Toolbar::getInstance('toolbar');
+		$url = Route::_('index.php?option=com_proclaim&view=templates&layout=default_export');
 		$bar->appendButton('Link', 'export', 'JBS_TPL_IMPORT_EXPORT_TEMPLATE', $url);
 
 		// Set the document
@@ -139,34 +146,34 @@ class HTMLView extends BaseHtmlView
 	 */
 	protected function addToolbar()
 	{
-		JToolbarHelper::title(JText::_('JBS_CMN_TEMPLATES'), 'grid grid');
+		ToolbarHelper::title(Text::_('JBS_CMN_TEMPLATES'), 'grid grid');
 
 		if ($this->canDo->get('core.create'))
 		{
-			JToolbarHelper::addNew('template.add');
+			ToolbarHelper::addNew('template.add');
 		}
 
 		if ($this->canDo->get('core.edit'))
 		{
-			JToolbarHelper::editList('template.edit');
+			ToolbarHelper::editList('template.edit');
 		}
 
 		if ($this->canDo->get('core.edit.state'))
 		{
-			JToolbarHelper::divider();
-			JToolbarHelper::publishList('templates.publish');
-			JToolbarHelper::unpublishList('templates.unpublish');
+			ToolbarHelper::divider();
+			ToolbarHelper::publishList('templates.publish');
+			ToolbarHelper::unpublishList('templates.unpublish');
 		}
 
-		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
+		if ($this->state->get('filter.published') === "-2" && $this->canDo->get('core.delete'))
 		{
-			JToolbarHelper::divider();
-			JToolbarHelper::deleteList('', 'templates.delete', 'JTOOLBAR_EMPTY_TRASH');
+			ToolbarHelper::divider();
+			ToolbarHelper::deleteList('', 'templates.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
 		elseif ($this->canDo->get('core.delete'))
 		{
-			JToolbarHelper::divider();
-			JToolbarHelper::trash('templates.trash');
+			ToolbarHelper::divider();
+			ToolbarHelper::trash('templates.trash');
 		}
 	}
 
@@ -179,8 +186,8 @@ class HTMLView extends BaseHtmlView
 	 */
 	protected function setDocument()
 	{
-		$document = Factory::getDocument();
-		$document->setTitle(JText::_('JBS_TITLE_TEMPLATES'));
+		$document = Factory::getApplication()->getDocument();
+		$document->setTitle(Text::_('JBS_TITLE_TEMPLATES'));
 	}
 
 	/**
@@ -193,9 +200,9 @@ class HTMLView extends BaseHtmlView
 	protected function getSortFields()
 	{
 		return array(
-			'template.title'     => JText::_('JBS_TPL_TEMPLATE_ID'),
-			'template.published' => JText::_('JSTATUS'),
-			'template.id'        => JText::_('JGRID_HEADING_ID')
+			'template.title'     => Text::_('JBS_TPL_TEMPLATE_ID'),
+			'template.published' => Text::_('JSTATUS'),
+			'template.id'        => Text::_('JGRID_HEADING_ID')
 		);
 	}
 }

@@ -65,7 +65,7 @@ class HtmlView extends BaseHtmlView
 	 */
 	public function display($tpl = null)
 	{
-		$document = Factory::getDocument();
+		$document = Factory::getApplication()->getDocument();
 
 		$this->state  = $this->get('state');
 		$this->params = $this->state->template->params;

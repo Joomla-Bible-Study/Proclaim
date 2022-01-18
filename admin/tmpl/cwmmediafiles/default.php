@@ -9,12 +9,14 @@
  * */
 // No Direct Access
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Router\Route;
 
 defined('_JEXEC') or die;
 
-JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-JHtml::_('behavior.multiselect');
-JHtml::_('formbehavior.chosen', 'select');
+HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+HTMLHelper::_('behavior.multiselect');
+HTMLHelper::_('formbehavior.chosen', 'select');
 
 $app       = Factory::getApplication();
 $user      = Factory::getUser();
@@ -29,11 +31,11 @@ $columns   = 10;
 if ($saveOrder)
 {
 	$saveOrderingUrl = 'index.php?option=com_proclaim&task=cwmmediafiles.saveOrderAjax&tmpl=component';
-	JHtml::_('sortablelist.sortable', 'mediafileList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+	HTMLHelper::_('sortablelist.sortable', 'mediafileList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 }
 $sortFields = $this->getSortFields();
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmmediafiles'); ?>" method="post"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmmediafiles'); ?>" method="post"
       name="adminForm" id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
@@ -57,33 +59,33 @@ $sortFields = $this->getSortFields();
 					<thead>
 					<tr>
 						<th width="1%" class="nowrap center hidden-phone">
-							<?php echo JHtml::_('searchtools.sort', '', 'cwmmediafile.ordering', $listDirn,
+							<?php echo HTMLHelper::_('searchtools.sort', '', 'cwmmediafile.ordering', $listDirn,
 								$listOrder, null, 'desc', 'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
 						</th>
 						<th width="1%" class="center">
-							<?php echo JHtml::_('grid.checkall'); ?>
+							<?php echo HTMLHelper::_('grid.checkall'); ?>
 						</th>
 
 						<th class="nowrap center">
-							<?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'cwmmediafile.published', $listDirn, $listOrder); ?>
+							<?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'cwmmediafile.published', $listDirn, $listOrder); ?>
 						</th>
 						<th>
 							<?php echo JText::_('JBS_MED_RESOURCE_NAME'); ?>
 						</th>
 						<th class="nowrap center">
-							<?php echo JHtml::_('searchtools.sort', 'JBS_CMN_STUDY_TITLE', 'study.studytitle', $listDirn, $listOrder); ?>
+							<?php echo HTMLHelper::_('searchtools.sort', 'JBS_CMN_STUDY_TITLE', 'study.studytitle', $listDirn, $listOrder); ?>
 						</th>
 						<th>
 							<?php echo JText::_('JBS_MED_MEDIA_TYPE'); ?>
 						</th>
 						<th>
-							<?php echo JHtml::_('searchtools.sort', 'JBS_MED_CREATE_DATE', 'cwmmediafile.createdate', $listDirn, $listOrder); ?>
+							<?php echo HTMLHelper::_('searchtools.sort', 'JBS_MED_CREATE_DATE', 'cwmmediafile.createdate', $listDirn, $listOrder); ?>
 						</th>
 						<th width="10%" class="nowrap center hidden-phone">
-							<?php echo JHtml::_('searchtools.sort', 'JBS_MED_ACCESS', 'cwmmediafile.access', $listDirn, $listOrder); ?>
+							<?php echo HTMLHelper::_('searchtools.sort', 'JBS_MED_ACCESS', 'cwmmediafile.access', $listDirn, $listOrder); ?>
 						</th>
 						<th colspan="2" width="5%" class="nowrap center hidden-phone">
-							<?php echo JHtml::_('searchtools.sort', 'JBS_MED_MEDIA_FILES_STATS', 'cwmmediafile.plays', $listDirn, $listOrder); ?>
+							<?php echo HTMLHelper::_('searchtools.sort', 'JBS_MED_MEDIA_FILES_STATS', 'cwmmediafile.plays', $listDirn, $listOrder); ?>
 						</th>
 					</tr>
 					</thead>
@@ -118,7 +120,7 @@ $sortFields = $this->getSortFields();
 								}
 								elseif (!$saveOrder)
 								{
-									$iconClass = ' inactive tip-top hasTooltip" title="' . JHtml::tooltipText('JORDERINGDISABLED');
+									$iconClass = ' inactive tip-top hasTooltip" title="' . HTMLHelper::tooltipText('JORDERINGDISABLED');
 								}
 								?>
 								<span class="sortable-handler hasTooltip <?php echo $iconClass ?>">
@@ -129,28 +131,28 @@ $sortFields = $this->getSortFields();
 								<?php endif; ?>
 							</td>
 							<td class="center">
-								<?php echo JHtml::_('grid.id', $i, $item->id); ?>
+								<?php echo HTMLHelper::_('grid.id', $i, $item->id); ?>
 							</td>
 							<td class="center">
 								<div class="btn-group">
-									<?php echo JHtml::_('jgrid.published', $item->published, $i, 'cwmmediafiles.', $canChange, 'cb', null, null); ?>
+									<?php echo HTMLHelper::_('jgrid.published', $item->published, $i, 'cwmmediafiles.', $canChange, 'cb', null, null); ?>
 									<?php
 									// Create dropdown items
 									$action = $archived ? 'unarchive' : 'archive';
-									JHtml::_('actionsdropdown.' . $action, 'cb' . $i, 'cwmmediafiles');
+									HTMLHelper::_('actionsdropdown.' . $action, 'cb' . $i, 'cwmmediafiles');
 
 									$action = $trashed ? 'untrash' : 'trash';
-									JHtml::_('actionsdropdown.' . $action, 'cb' . $i, 'cwmmediafiles');
+									HTMLHelper::_('actionsdropdown.' . $action, 'cb' . $i, 'cwmmediafiles');
 
 									// Render dropdown list
-									echo JHtml::_('actionsdropdown.render', $this->escape($label));
+									echo HTMLHelper::_('actionsdropdown.render', $this->escape($label));
 									?>
 								</div>
 							</td>
 							<td class="has-context">
 								<div class="pull-left">
 									<?php if ($item->checked_out) : ?>
-										<?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'cwmmediafiles.', $canCheckin); ?>
+										<?php echo HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'cwmmediafiles.', $canCheckin); ?>
 									<?php endif; ?>
 									<?php if ($item->language == '*'): ?>
 										<?php $language = JText::alt('JALL', 'language'); ?>
@@ -158,7 +160,7 @@ $sortFields = $this->getSortFields();
 										<?php $language = $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
 									<?php endif; ?>
 									<?php if ($canEdit || $canEditOwn) : ?>
-										<a href="<?php echo JRoute::_('index.php?option=com_proclaim&task=cwmmediafile.edit&id=' . (int) $item->id); ?>">
+										<a href="<?php echo Route::_('index.php?option=com_proclaim&task=cwmmediafile.edit&id=' . (int) $item->id); ?>">
 											<span class="label pull-left"><?php echo $this->escape($label); ?></span>
 										</a>
 									<?php else : ?>
@@ -182,7 +184,7 @@ $sortFields = $this->getSortFields();
 								<?php echo $this->escape($item->serverConfig->name->__toString()); ?>
 							</td>
 							<td class="nowrap small hidden-phone">
-								<?php echo JHtml::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
+								<?php echo HTMLHelper::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
 							</td>
 							<td class="center hidden-phone">
 								<?php echo $this->escape($item->access_level); ?>
@@ -202,7 +204,7 @@ $sortFields = $this->getSortFields();
 					&& $user->authorise('core.edit', 'com_proclaim')
 					&& $user->authorise('core.edit.state', 'com_proclaim')
 				) : ?>
-					<?php echo JHtml::_(
+					<?php echo HTMLHelper::_(
 						'bootstrap.renderModal',
 						'collapseModal',
 						array(
@@ -215,6 +217,6 @@ $sortFields = $this->getSortFields();
 			<?php endif; ?>
 			<input type="hidden" name="task" value=""/>
 			<input type="hidden" name="boxchecked" value="0"/>
-			<?php echo JHtml::_('form.token'); ?>
+			<?php echo HTMLHelper::_('form.token'); ?>
 		</div>
 </form>

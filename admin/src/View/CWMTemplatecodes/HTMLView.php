@@ -12,7 +12,12 @@
 namespace CWM\Component\Proclaim\Administrator\View\CWMTemplatecodes;
 
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die;
 
@@ -77,10 +82,11 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  mixed  A string if successful, otherwise a JError object.
+	 * @return  void  A string if successful, otherwise a JError object.
 	 *
-	 * @see     fetch()
+	 * @throws \Exception
 	 * @since   11.1
+	 * @see     fetch()
 	 */
 	public function display($tpl = null)
 	{
@@ -96,41 +102,41 @@ class HTMLView extends BaseHtmlView
 			switch ($item->type)
 			{
 				case 1:
-					$item->typetext = JText::_('JBS_TPLCODE_SERMONLIST');
+					$item->typetext = Text::_('JBS_TPLCODE_SERMONLIST');
 					break;
 				case 2:
-					$item->typetext = JText::_('JBS_TPLCODE_SERMON');
+					$item->typetext = Text::_('JBS_TPLCODE_SERMON');
 					break;
 				case 3:
-					$item->typetext = JText::_('JBS_TPLCODE_TEACHERS');
+					$item->typetext = Text::_('JBS_TPLCODE_TEACHERS');
 					break;
 				case 4:
-					$item->typetext = JText::_('JBS_TPLCODE_TEACHER');
+					$item->typetext = Text::_('JBS_TPLCODE_TEACHER');
 					break;
 				case 5:
-					$item->typetext = JText::_('JBS_TPLCODE_SERIESDISPLAYS');
+					$item->typetext = Text::_('JBS_TPLCODE_SERIESDISPLAYS');
 					break;
 				case 6:
-					$item->typetext = JText::_('JBS_TPLCODE_SERIESDISPLAY');
+					$item->typetext = Text::_('JBS_TPLCODE_SERIESDISPLAY');
 					break;
 				case 7:
-					$item->typetext = JText::_('JBS_TPLCODE_MODULE');
+					$item->typetext = Text::_('JBS_TPLCODE_MODULE');
 					break;
 			}
 		}
 
 		// Levels filter.
-		$options   = array();
-		$options[] = JHtml::_('select.option', '1', JText::_('J1'));
-		$options[] = JHtml::_('select.option', '2', JText::_('J2'));
-		$options[] = JHtml::_('select.option', '3', JText::_('J3'));
-		$options[] = JHtml::_('select.option', '4', JText::_('J4'));
-		$options[] = JHtml::_('select.option', '5', JText::_('J5'));
-		$options[] = JHtml::_('select.option', '6', JText::_('J6'));
-		$options[] = JHtml::_('select.option', '7', JText::_('J7'));
-		$options[] = JHtml::_('select.option', '8', JText::_('J8'));
-		$options[] = JHtml::_('select.option', '9', JText::_('J9'));
-		$options[] = JHtml::_('select.option', '10', JText::_('J10'));
+		$options   = [];
+		$options[] = HTMLHelper::_('select.option', '1', Text::_('J1'));
+		$options[] = HTMLHelper::_('select.option', '2', Text::_('J2'));
+		$options[] = HTMLHelper::_('select.option', '3', Text::_('J3'));
+		$options[] = HTMLHelper::_('select.option', '4', Text::_('J4'));
+		$options[] = HTMLHelper::_('select.option', '5', Text::_('J5'));
+		$options[] = HTMLHelper::_('select.option', '6', Text::_('J6'));
+		$options[] = HTMLHelper::_('select.option', '7', Text::_('J7'));
+		$options[] = HTMLHelper::_('select.option', '8', Text::_('J8'));
+		$options[] = HTMLHelper::_('select.option', '9', Text::_('J9'));
+		$options[] = HTMLHelper::_('select.option', '10', Text::_('J10'));
 
 		$this->f_levels = $options;
 
@@ -156,34 +162,34 @@ class HTMLView extends BaseHtmlView
 	 */
 	protected function addToolbar()
 	{
-		JToolbarHelper::title(JText::_('JBS_TPLCODE_TPLCODES'), 'stack stack');
+		ToolbarHelper::title(Text::_('JBS_TPLCODE_TPLCODES'), 'stack stack');
 
 		if ($this->canDo->get('core.create'))
 		{
-			JToolbarHelper::addNew('templatecode.add');
+			ToolbarHelper::addNew('templatecode.add');
 		}
 
 		if ($this->canDo->get('core.edit'))
 		{
-			JToolbarHelper::editList('templatecode.edit');
+			ToolbarHelper::editList('templatecode.edit');
 		}
 
 		if ($this->canDo->get('core.edit.state'))
 		{
-			JToolbarHelper::divider();
-			JToolbarHelper::publishList('templatecodes.publish');
-			JToolbarHelper::unpublishList('templatecodes.unpublish');
-			JToolbarHelper::divider();
-			JToolbarHelper::archiveList('templatecodes.archive');
+			ToolbarHelper::divider();
+			ToolbarHelper::publishList('templatecodes.publish');
+			ToolbarHelper::unpublishList('templatecodes.unpublish');
+			ToolbarHelper::divider();
+			ToolbarHelper::archiveList('templatecodes.archive');
 		}
 
-		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
+		if ($this->state->get('filter.published') === "-2" && $this->canDo->get('core.delete'))
 		{
-			JToolbarHelper::deleteList('', 'templatecodes.delete', 'JTOOLBAR_EMPTY_TRASH');
+			ToolbarHelper::deleteList('', 'templatecodes.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
 		elseif ($this->canDo->get('core.edit.state'))
 		{
-			JToolbarHelper::trash('templatecodes.trash');
+			ToolbarHelper::trash('templatecodes.trash');
 		}
 	}
 
@@ -196,8 +202,8 @@ class HTMLView extends BaseHtmlView
 	 */
 	protected function setDocument()
 	{
-		$document = Factory::getDocument();
-		$document->setTitle(JText::_('JBS_TITLE_TEMPLATECODES'));
+		$document = Factory::getApplication()->getDocument();
+		$document->setTitle(Text::_('JBS_TITLE_TEMPLATECODES'));
 	}
 
 	/**
@@ -210,12 +216,12 @@ class HTMLView extends BaseHtmlView
 	protected function getSortFields()
 	{
 		return array(
-			'study.studytitle'     => JText::_('JBS_CMN_STUDY_TITLE'),
-			'mediatype.media_text' => JText::_('JBS_MED_MEDIA_TYPE'),
-			'mediafile.filename'   => JText::_('JBS_MED_FILENAME'),
-			'mediafile.ordering'   => JText::_('JGRID_HEADING_ORDERING'),
-			'mediafile.published'  => JText::_('JSTATUS'),
-			'mediafile.id'         => JText::_('JGRID_HEADING_ID')
+			'study.studytitle'     => Text::_('JBS_CMN_STUDY_TITLE'),
+			'mediatype.media_text' => Text::_('JBS_MED_MEDIA_TYPE'),
+			'mediafile.filename'   => Text::_('JBS_MED_FILENAME'),
+			'mediafile.ordering'   => Text::_('JGRID_HEADING_ORDERING'),
+			'mediafile.published'  => Text::_('JSTATUS'),
+			'mediafile.id'         => Text::_('JGRID_HEADING_ID')
 		);
 	}
 }

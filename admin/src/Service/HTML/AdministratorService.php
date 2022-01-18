@@ -30,19 +30,20 @@ class AdministratorService
 	/**
 	 * Render the list of associated items
 	 *
-	 * @param   integer  $articleid  The article item id
+	 * @param   integer  $messageid  The message item id
 	 *
 	 * @return  string  The language HTML
 	 *
 	 * @throws  \Exception
+	 * @since 10.0.0
 	 */
-	public function association($articleid)
+	public function association($messageid)
 	{
 		// Defaults
 		$html = '';
 
 		// Get the associations
-		if ($associations = Associations::getAssociations('com_proclaim', '#__content', 'com_proclaim.item', $articleid))
+		if ($associations = Associations::getAssociations('com_proclaim', '#__bsms_studies', 'com_proclaim.item', $messageid))
 		{
 			foreach ($associations as $tag => $associated)
 			{
@@ -62,12 +63,11 @@ class AdministratorService
 						$db->quoteName('l.title', 'language_title'),
 					]
 				)
-				->from($db->quoteName('#__content', 'c'))
-				->join('LEFT', $db->quoteName('#__categories', 'cat'), $db->quoteName('cat.id') . ' = ' . $db->quoteName('c.catid'))
+				->from($db->quoteName('#__bsms_studies', 'c'))
 				->join('LEFT', $db->quoteName('#__languages', 'l'), $db->quoteName('c.language') . ' = ' . $db->quoteName('l.lang_code'))
 				->whereIn($db->quoteName('c.id'), array_values($associations))
 				->where($db->quoteName('c.id') . ' != :articleId')
-				->bind(':articleId', $articleid, ParameterType::INTEGER);
+				->bind(':messageId', $messageid, ParameterType::INTEGER);
 
 			$db->setQuery($query);
 
@@ -87,21 +87,25 @@ class AdministratorService
 
 				foreach ($items as &$item)
 				{
-					if (in_array($item->lang_code, $content_languages))
+					if (in_array($item->lang_code, $content_languages, true))
 					{
 						$text    = $item->lang_code;
-						$url     = Route::_('index.php?option=com_content&task=article.edit&id=' . (int) $item->id);
+						$url     = Route::_('index.php?option=com_proclaim&task=cwmmessage.edit&id=' . (int) $item->id);
 						$tooltip = '<strong>' . htmlspecialchars($item->language_title, ENT_QUOTES, 'UTF-8') . '</strong><br>'
-							. htmlspecialchars($item->title, ENT_QUOTES, 'UTF-8') . '<br>' . Text::sprintf('JCATEGORY_SPRINTF', $item->category_title);
+							. htmlspecialchars($item->title, ENT_QUOTES, 'UTF-8') .
+							'<br>' . Text::sprintf('JCATEGORY_SPRINTF', $item->category_title);
 						$classes = 'badge bg-secondary';
 
 						$item->link = '<a href="' . $url . '" class="' . $classes . '">' . $text . '</a>'
-							. '<div role="tooltip" id="tip-' . (int) $articleid . '-' . (int) $item->id . '">' . $tooltip . '</div>';
+							. '<div role="tooltip" id="tip-' . (int) $messageid . '-' . (int) $item->id . '">' . $tooltip . '</div>';
 					}
 					else
 					{
 						// Display warning if Content Language is trashed or deleted
-						Factory::getApplication()->enqueueMessage(Text::sprintf('JGLOBAL_ASSOCIATIONS_CONTENTLANGUAGE_WARNING', $item->lang_code), 'warning');
+						Factory::getApplication()->enqueueMessage(
+							Text::sprintf('JGLOBAL_ASSOCIATIONS_CONTENTLANGUAGE_WARNING', $item->lang_code),
+							'warning'
+						);
 					}
 				}
 			}

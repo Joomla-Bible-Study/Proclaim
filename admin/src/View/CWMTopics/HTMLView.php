@@ -88,7 +88,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  mixed  A string if successful, otherwise a JError object.
+	 * @return  void  A string if successful, otherwise a JError object.
 	 *
 	 * @throws  \Exception
 	 * @since   11.1
@@ -103,19 +103,17 @@ class HTMLView extends BaseHtmlView
 		$this->filterForm = $this->get('FilterForm');
 		$this->canDo      = CWMProclaimHelper::getActions('', 'topic');
 
-		// Check for errors
+		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
-			Factory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
-
-			return false;
+			throw new \RuntimeException(implode("\n", $errors), 500);
 		}
 
 		$modelView   = $this->getModel();
 		$this->items = $modelView->getTranslated($items);
 
 		// Levels filter.
-		$options   = array();
+		$options   = [];
 		$options[] = HtmlHelper::_('select.option', '1', Text::_('J1'));
 		$options[] = HtmlHelper::_('select.option', '2', Text::_('J2'));
 		$options[] = HtmlHelper::_('select.option', '3', Text::_('J3'));
@@ -151,8 +149,6 @@ class HTMLView extends BaseHtmlView
 	 */
 	protected function addToolbar()
 	{
-		$user = Factory::getUser();
-
 		// Get the toolbar object instance
 		$toolbar = Toolbar::getInstance('toolbar');
 
@@ -185,7 +181,7 @@ class HTMLView extends BaseHtmlView
 			$toolbar->archive('topics.archive', 'JTOOLBAR_ARCHIVE');
 		}
 
-		if ($this->state->get('filter.published') == ContentComponent::CONDITION_TRASHED && $canDo->get('core.delete'))
+		if ($this->state->get('filter.published') === ContentComponent::CONDITION_TRASHED && $this->canDo->get('core.delete'))
 		{
 			$toolbar->delete('topics.delete')
 				->text('JTOOLBAR_EMPTY_TRASH')
@@ -208,7 +204,7 @@ class HTMLView extends BaseHtmlView
 	 */
 	protected function setDocument()
 	{
-		$document = Factory::getDocument();
+		$document = Factory::getApplication()->getDocument();
 		$document->setTitle(Text::_('JBS_TITLE_TOPICS'));
 	}
 

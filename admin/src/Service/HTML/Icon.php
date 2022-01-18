@@ -11,6 +11,7 @@ namespace Joomla\Component\Content\Administrator\Service\HTML;
 
 \defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Site\Helper\CWMRouteHelper;
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -19,7 +20,6 @@ use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Workflow\Workflow;
-use Joomla\Component\Content\Site\Helper\CWMRouteHelper;
 use Joomla\Registry\Registry;
 
 /**
@@ -66,7 +66,7 @@ class Icon
 	{
 		$uri = Uri::getInstance();
 
-		$url = 'index.php?option=com_content&task=article.add&return=' . base64_encode($uri) . '&a_id=0&catid=' . $category->id;
+		$url = 'index.php?option=com_proclaim&task=cwmmessage.add&return=' . base64_encode($uri) . '&a_id=0&catid=' . $category->id;
 
 		$text = '';
 
@@ -87,9 +87,7 @@ class Icon
 			$attribs['class'] = 'btn btn-primary';
 		}
 
-		$button = HTMLHelper::_('link', Route::_($url), $text, $attribs);
-
-		return $button;
+		return HTMLHelper::_('link', Route::_($url), $text, $attribs);
 	}
 
 	/**
@@ -105,6 +103,8 @@ class Icon
 	 *
 	 * @return  string	The HTML for the article edit icon.
 	 *
+	 * @todo   need to work on this more. May use.
+	 *
 	 * @since  4.0.0
 	 */
 	public function edit($article, $params, $attribs = array(), $legacy = false)
@@ -115,13 +115,13 @@ class Icon
 		// Ignore if in a popup window.
 		if ($params && $params->get('popup'))
 		{
-			return;
+			return '';
 		}
 
 		// Ignore if the state is negative (trashed).
-		if (!in_array($article->state, [Workflow::CONDITION_UNPUBLISHED, Workflow::CONDITION_PUBLISHED]))
+		if (!in_array($article->state, [Workflow::CONDITION_UNPUBLISHED, Workflow::CONDITION_PUBLISHED], true))
 		{
-			return;
+			return '';
 		}
 
 		// Show checked_out icon if the article is checked out by a different user
@@ -143,8 +143,8 @@ class Icon
 			return $output;
 		}
 
-		$contentUrl = CWMRouteHelper::getArticleRoute($article->slug, $article->catid, $article->language);
-		$url        = $contentUrl . '&task=article.edit&a_id=' . $article->id . '&return=' . base64_encode($uri);
+		$contentUrl = CWMRouteHelper::getMessageRoute($article->slug, $article->catid, $article->language);
+		$url        = $contentUrl . '&task=cwmmessage.edit&a_id=' . $article->id . '&return=' . base64_encode($uri);
 
 		if ($article->state == Workflow::CONDITION_UNPUBLISHED)
 		{

@@ -11,6 +11,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Layout\LayoutHelper;
 
@@ -20,7 +21,6 @@ $published = (int) $this->state->get('filter.published');
 
 $user = Factory::getUser();
 ?>
-
 <div class="p-3">
 	<div class="row">
 		<?php if (Multilanguage::isEnabled()) : ?>

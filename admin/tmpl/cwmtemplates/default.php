@@ -7,7 +7,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 // No Direct Access
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+
 defined('_JEXEC') or die;
 
 JHtml::_('dropdown.init');
@@ -27,19 +32,23 @@ $columns    = 4;
 ?>
 <script type="text/javascript">
 	Joomla.orderTable = function () {
-		var table = document.getElementById("sortTable");
-		var direction = document.getElementById("directionTable");
-		var order = table.options[table.selectedIndex].value;
-		var dirn;
-		if (order != '<?php echo $listOrder; ?>') {
-			dirn = 'asc';
-		} else {
-			dirn = direction.options[direction.selectedIndex].value;
+		var table = document.getElementById('sortTable')
+		var direction = document.getElementById('directionTable')
+		var order = table.options[table.selectedIndex].value
+		var dirn
+		if (order != '<?php echo $listOrder; ?>')
+		{
+			dirn = 'asc'
 		}
-		Joomla.tableOrdering(order, dirn, '');
+		else
+		{
+			dirn = direction.options[direction.selectedIndex].value
+		}
+		Joomla.tableOrdering(order, dirn, '')
 	}
 </script>
-<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=templates'); ?>" method="post" name="adminForm"
+<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmtemplates'); ?>" method="post"
+      name="adminForm"
       id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
@@ -56,7 +65,7 @@ $columns    = 4;
 			?>
 			<?php if (empty($this->items)) : ?>
 				<div class="alert alert-no-items">
-					<?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+					<?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
 				</div>
 			<?php else : ?>
 				<table class="table table-striped adminlist" id="templatelist">
@@ -64,7 +73,7 @@ $columns    = 4;
 					<tr>
 						<th width="1%" class="hidden-phone">
 							<input type="checkbox" name="checkall-toggle" value=""
-							       title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>"
+							       title="<?php echo Text::_('JGLOBAL_CHECK_ALL'); ?>"
 							       onclick="Joomla.checkAll(this)"/>
 						</th>
 						<th width="1%" style="min-width:55px;" class="nowrap center">
@@ -87,7 +96,7 @@ $columns    = 4;
 					<tbody>
 					<?php
 					foreach ($this->items as $i => $item) :
-						$link = JRoute::_('index.php?option=com_proclaim&task=template.edit&id=' . (int) $item->id);
+						$link = JRoute::_('index.php?option=com_proclaim&task=cwmtemplate.edit&id=' . (int) $item->id);
 						$item->max_ordering = 0;
 						$canCreate = $user->authorise('core.create');
 						$canEdit = $user->authorise('core.edit', 'com_proclaim.template.' . $item->id);
@@ -105,13 +114,13 @@ $columns    = 4;
 								<div class="pull-left">
 
 									<?php if ($canEdit || $canEditOwn) : ?>
-										<a href="<?php echo JRoute::_('index.php?option=com_proclaim&task=template.edit&id=' . (int) $item->id); ?>">
+										<a href="<?php echo Route::_('index.php?option=com_proclaim&task=cwmtemplate.edit&id=' . (int) $item->id); ?>">
 											<?php echo $this->escape($item->title); ?>
 										</a>
 
 									<?php else : ?>
 										<span
-											title="<?php echo $this->escape($item->title); ?>"><?php echo $this->escape($item->title); ?></span>
+												title="<?php echo $this->escape($item->title); ?>"><?php echo $this->escape($item->title); ?></span>
 									<?php endif; ?>
 								</div>
 								<div class="pull-left">
@@ -120,23 +129,23 @@ $columns    = 4;
 									JHtml::_('dropdown.edit', $item->id, 'template.');
 									JHtml::_('dropdown.divider');
 									if ($item->published) :
-										JHtml::_('dropdown.unpublish', 'cb' . $i, 'templates.');
+										JHtml::_('dropdown.unpublish', 'cb' . $i, 'cwmtemplates.');
 									else :
-										JHtml::_('dropdown.publish', 'cb' . $i, 'templates.');
+										JHtml::_('dropdown.publish', 'cb' . $i, 'cwmtemplates.');
 									endif;
 
 									JHtml::_('dropdown.divider');
 
 									if ($archived) :
-										JHtml::_('dropdown.unarchive', 'cb' . $i, 'templates.');
+										JHtml::_('dropdown.unarchive', 'cb' . $i, 'cwmtemplates.');
 									else :
-										JHtml::_('dropdown.archive', 'cb' . $i, 'templates.');
+										JHtml::_('dropdown.archive', 'cb' . $i, 'cwmtemplates.');
 									endif;
 
 									if ($trashed) :
-										JHtml::_('dropdown.untrash', 'cb' . $i, 'templates.');
+										JHtml::_('dropdown.untrash', 'cb' . $i, 'cwmtemplates.');
 									else :
-										JHtml::_('dropdown.trash', 'cb' . $i, 'templates.');
+										JHtml::_('dropdown.trash', 'cb' . $i, 'cwmtemplates.');
 									endif;
 
 									// Render dropdown list

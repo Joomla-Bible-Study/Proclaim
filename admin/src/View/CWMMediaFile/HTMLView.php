@@ -17,6 +17,7 @@ use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormHelper;
+use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\Registry\Registry;
 use JText;
@@ -80,7 +81,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  mixed  A string if successful, otherwise a JError object.
+	 * @return  false|void  A string if successful, otherwise a JError object.
 	 *
 	 * @throws  \Exception
 	 * @since   11.1
@@ -131,9 +132,7 @@ class HTMLView extends BaseHtmlView
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
-			$app->enqueueMessage(implode("\n", $errors), 'error');
-
-			return false;
+			throw new GenericDataException(implode("\n", $errors), 500);
 		}
 
 		// Set the toolbar

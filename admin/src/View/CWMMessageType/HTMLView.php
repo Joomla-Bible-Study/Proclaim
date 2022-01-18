@@ -14,6 +14,7 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMMessageType;
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Input\Input;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -86,6 +87,12 @@ class HTMLView extends BaseHtmlView
 		$this->canDo = CWMProclaimHelper::getActions($this->item->id, 'messagetype');
 		$this->setLayout("edit");
 
+		// Check for errors.
+		if (count($errors = $this->get('Errors')))
+		{
+			throw new GenericDataException(implode("\n", $errors), 500);
+		}
+
 		// Set the toolbar
 		$this->addToolbar();
 
@@ -142,7 +149,7 @@ class HTMLView extends BaseHtmlView
 	protected function setDocument()
 	{
 		$isNew    = ($this->item->id < 1);
-		$document = Factory::getDocument();
+		$document = Factory::getApplication()->getDocument();
 		$document->setTitle(
 			$isNew ? Text::_('JBS_TITLE_MESSAGETYPES_CREATING')
 				: Text::sprintf('JBS_TITLE_MESSAGETYPES_EDITING', $this->item->message_type)

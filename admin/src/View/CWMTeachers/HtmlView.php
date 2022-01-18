@@ -78,7 +78,7 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  mixed  A string if successful, otherwise a JError object.
+	 * @return  void  A string if successful, otherwise a JError object.
 	 *
 	 * @throws  \Exception
 	 * @since   11.1
@@ -93,16 +93,14 @@ class HtmlView extends BaseHtmlView
 		$this->filterForm = $this->get('FilterForm');
 		$this->canDo      = CWMProclaimHelper::getActions('', 'teacher');
 
-		// Check for errors
+		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
-			Factory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
-
-			return false;
+			throw new \RuntimeException(implode("\n", $errors), 500);
 		}
 
 		// Levels filter.
-		$options   = array();
+		$options   = [];
 		$options[] = HtmlHelper::_('select.option', '1', Text::_('J1'));
 		$options[] = HtmlHelper::_('select.option', '2', Text::_('J2'));
 		$options[] = HtmlHelper::_('select.option', '3', Text::_('J3'));

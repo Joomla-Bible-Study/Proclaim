@@ -14,8 +14,8 @@ use Joomla\CMS\Language\Text;
 $published = $this->state->get('filter.published');
 
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-//$wa = $this->document->getWebAssetManager();
-//$wa->useScript('com_proclaim.administrator-messages-batch');
+$wa = $this->document->getWebAssetManager();
+$wa->useScript('com_proclaim.cwmadim-locations-batch');
 ?>
 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
 	<?php echo Text::_('JCANCEL'); ?>

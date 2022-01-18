@@ -11,7 +11,12 @@
 namespace CWM\Component\Proclaim\Administrator\View\CWMPodcast;
 
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\Input\Input;
 
 defined('_JEXEC') or die;
 
@@ -68,10 +73,11 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  mixed  A string if successful, otherwise a JError object.
+	 * @return  void  A string if successful, otherwise a JError object.
 	 *
-	 * @see     fetch()
+	 * @throws \Exception
 	 * @since   11.1
+	 * @see     fetch()
 	 */
 	public function display($tpl = null)
 	{
@@ -98,43 +104,44 @@ class HTMLView extends BaseHtmlView
 	 */
 	protected function addToolbar()
 	{
-		$input = new JInput;
+		$input = new Input;
 		$input->set('hidemainmenu', true);
-		$isNew = ($this->item->id == 0);
-		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolbarHelper::title(JText::_('JBS_CMN_PODCASTS') . ': <small><small>[' . $title . ']</small></small>', 'feed feed');
+		$isNew = ((int) $this->item->id === 0);
+		$title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
+		ToolbarHelper::title(Text::_('JBS_CMN_PODCASTS') . ': <small><small>[' . $title . ']</small></small>', 'feed feed');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_proclaim'))
 		{
-			JToolbarHelper::apply('podcast.apply');
-			JToolbarHelper::save('podcast.save');
-			JToolbarHelper::save2new('podcast.save2new');
-			JToolbarHelper::cancel('podcast.cancel');
+			ToolbarHelper::apply('podcast.apply');
+			ToolbarHelper::save('podcast.save');
+			ToolbarHelper::save2new('podcast.save2new');
+			ToolbarHelper::cancel('podcast.cancel');
 		}
 		else
 		{
 			if ($this->canDo->get('core.edit', 'com_proclaim'))
 			{
-				JToolbarHelper::apply('podcast.apply');
-				JToolbarHelper::save('podcast.save');
+				ToolbarHelper::apply('podcast.apply');
+				ToolbarHelper::save('podcast.save');
 
 				// We can save this record, but check the create permission to see if we can return to make a new one.
 				if ($this->canDo->get('core.create', 'com_proclaim'))
 				{
-					JToolbarHelper::save2new('podcast.save2new');
+					ToolbarHelper::save2new('podcast.save2new');
 				}
 			}
+
 			// If checked out, we can still save
 			if ($this->canDo->get('core.create', 'com_proclaim'))
 			{
-				JToolbarHelper::save2copy('podcast.save2copy');
+				ToolbarHelper::save2copy('podcast.save2copy');
 			}
 
-			JToolbarHelper::cancel('podcast.cancel', 'JTOOLBAR_CLOSE');
+			ToolbarHelper::cancel('podcast.cancel', 'JTOOLBAR_CLOSE');
 		}
 
-		JToolbarHelper::divider();
-		JToolbarHelper::help('biblestudy', true);
+		ToolbarHelper::divider();
+		ToolbarHelper::help('biblestudy', true);
 	}
 
 	/**
@@ -147,7 +154,7 @@ class HTMLView extends BaseHtmlView
 	protected function setDocument()
 	{
 		$isNew    = ($this->item->id < 1);
-		$document = Factory::getDocument();
-		$document->setTitle($isNew ? JText::_('JBS_TITLE_PODCAST_CREATING') : JText::sprintf('JBS_TITLE_PODCAST_EDITING', $this->item->title));
+		$document = Factory::getApplication()->getDocument();
+		$document->setTitle($isNew ? Text::_('JBS_TITLE_PODCAST_CREATING') : Text::sprintf('JBS_TITLE_PODCAST_EDITING', $this->item->title));
 	}
 }

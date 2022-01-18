@@ -16,7 +16,7 @@ use Joomla\CMS\Router\Route;
 $mainframe = Factory::getApplication();
 $input = Factory::getApplication();
 $option = $input->get('option', '', 'cmd');
-$document = Factory::getDocument();
+$document = Factory::getApplication()->getDocument();
 $params = $this->params;
 $url = $this->params->get('stylesheet');
 

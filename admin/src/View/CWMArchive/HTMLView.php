@@ -11,7 +11,10 @@
 namespace CWM\Component\Proclaim\Administrator\View\CWMArchive;
 
 // Check to ensure this file is included in Joomla!
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die;
 
@@ -30,7 +33,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  mixed  A string if successful, otherwise a JError object.
+	 * @return  void  A string if successful, otherwise a JError object.
 	 *
 	 * @throws \Exception
 	 * @since  11.1
@@ -46,24 +49,24 @@ class HTMLView extends BaseHtmlView
 		$this->addToolbar();
 
 		// Display the template
-		return parent::display($tpl);
+		parent::display($tpl);
 	}
 
 	/**
 	 * Add Toolbar
 	 *
-	 * @return null
+	 * @return void
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since  7.0.0
 	 */
 	protected function addToolbar()
 	{
 		Factory::getApplication()->input->set('hidemainmenu', true);
 
-		JToolbarHelper::title(JText::_('JBS_CMN_ARCHIVE'), 'archive');
-		JToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
-		JToolbarHelper::custom('administration.back', 'back', 'back', 'JTOOLBAR_BACK', false);
-		JToolbarHelper::help('biblestudy', true);
+		ToolbarHelper::title(Text::_('JBS_CMN_ARCHIVE'), 'archive');
+		ToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
+		ToolbarHelper::custom('administration.back', 'back', 'back', 'JTOOLBAR_BACK', false);
+		ToolbarHelper::help('biblestudy', true);
 	}
 }

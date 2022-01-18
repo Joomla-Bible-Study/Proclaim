@@ -25,7 +25,7 @@ else
 }
 
 // Need for inline player
-$document = Factory::getDocument();
+$document = Factory::getApplication()->getDocument();
 
 /** @var $params Registry */
 $templatemenuid = $params->get('t');
@@ -112,7 +112,7 @@ if (!$templatemenuid)
 
 $linkurl  = JRoute::_('index.php?option=com_proclaim&view=sermons&t=' . $templatemenuid);
 $link     = '<a href="' . $linkurl . '"><button class="btn">' . $link_text . '</button></a>';
-$document = Factory::getDocument();
+$document = Factory::getApplication()->getDocument();
 
 JHtml::_('biblestudy.framework');
 JHtml::_('biblestudy.loadcss', $params);

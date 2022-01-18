@@ -7,12 +7,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 // No Direct Access
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Router\Route;
 
 defined('_JEXEC') or die;
-
-HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 HTMLHelper::_('behavior.multiselect');
 HTMLHelper::_('formbehavior.chosen', 'select');
@@ -28,7 +30,7 @@ $columns   = 4;
 
 $sortFields = $this->getSortFields();
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=servers'); ?>" method="post" name="adminForm"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmservers'); ?>" method="post" name="adminForm"
       id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
@@ -50,7 +52,7 @@ $sortFields = $this->getSortFields();
 
 					<th width="1%">
 						<input type="checkbox" name="checkall-toggle" value=""
-						       title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
+						       title="<?php echo Text::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
 					</th>
 					<th width="1%" style="min-width:55px;" class="nowrap center">
 						<?php echo HTMLHelper::_('grid.sort', 'JPUBLISHED', 'cwmservers.published', $listDirn, $listOrder); ?>
@@ -93,12 +95,12 @@ $sortFields = $this->getSortFields();
 							<div class="pull-left">
 
 								<?php if ($canEdit || $canEditOwn) : ?>
-									<a href="<?php echo JRoute::_('index.php?option=com_proclaim&task=cwmserver.edit&id=' . (int) $item->id); ?>"
-									   title="<?php echo JText::_('JACTION_EDIT'); ?>">
+									<a href="<?php echo Route::_('index.php?option=com_proclaim&task=cwmserver.edit&id=' . (int) $item->id); ?>"
+									   title="<?php echo Text::_('JACTION_EDIT'); ?>">
 										<?php echo $this->escape($item->server_name); ?></a>
 								<?php else : ?>
 									<span
-										title="<?php echo JText::sprintf('JFIELD_ALIAS_LABEL', $this->escape($item->server_name)); ?>"><?php echo $this->escape($item->server_name); ?></span>
+											title="<?php echo Text::sprintf('JFIELD_ALIAS_LABEL', $this->escape($item->server_name)); ?>"><?php echo $this->escape($item->server_name); ?></span>
 								<?php endif; ?>
 							</div>
 							<div class="pull-left">

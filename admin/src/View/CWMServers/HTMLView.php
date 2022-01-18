@@ -12,10 +12,11 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMServers;
 
 // No Direct Access
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
-use JHtml;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
@@ -62,11 +63,13 @@ class HTMLView extends BaseHtmlView
 	protected $canDo;
 
 	/** @var  array Filter Levels
-	 * @since    7.0.0 */
+	 * @since    7.0.0
+	 */
 	protected $f_levels;
 
 	/** @var  object Side Bar
-	 * @since    7.0.0 */
+	 * @since    7.0.0
+	 */
 	protected $sidebar;
 
 	/**
@@ -76,9 +79,9 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
-	 * @see     fetch()
-	 * @since   11.1
 	 * @throws  \Exception
+	 * @since   11.1
+	 * @see     fetch()
 	 */
 	public function display($tpl = null)
 	{
@@ -90,26 +93,24 @@ class HTMLView extends BaseHtmlView
 		$this->filterForm    = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');
 
-		// Check for errors
+		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
-			Factory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
-
-			return false;
+			throw new GenericDataException(implode("\n", $errors), 500);
 		}
 
 		// Levels filter.
 		$options   = array();
-		$options[] = JHtml::_('select.option', '1', Text::_('J1'));
-		$options[] = JHtml::_('select.option', '2', Text::_('J2'));
-		$options[] = JHtml::_('select.option', '3', Text::_('J3'));
-		$options[] = JHtml::_('select.option', '4', Text::_('J4'));
-		$options[] = JHtml::_('select.option', '5', Text::_('J5'));
-		$options[] = JHtml::_('select.option', '6', Text::_('J6'));
-		$options[] = JHtml::_('select.option', '7', Text::_('J7'));
-		$options[] = JHtml::_('select.option', '8', Text::_('J8'));
-		$options[] = JHtml::_('select.option', '9', Text::_('J9'));
-		$options[] = JHtml::_('select.option', '10', Text::_('J10'));
+		$options[] = HTMLHelper::_('select.option', '1', Text::_('J1'));
+		$options[] = HTMLHelper::_('select.option', '2', Text::_('J2'));
+		$options[] = HTMLHelper::_('select.option', '3', Text::_('J3'));
+		$options[] = HTMLHelper::_('select.option', '4', Text::_('J4'));
+		$options[] = HTMLHelper::_('select.option', '5', Text::_('J5'));
+		$options[] = HTMLHelper::_('select.option', '6', Text::_('J6'));
+		$options[] = HTMLHelper::_('select.option', '7', Text::_('J7'));
+		$options[] = HTMLHelper::_('select.option', '8', Text::_('J8'));
+		$options[] = HTMLHelper::_('select.option', '9', Text::_('J9'));
+		$options[] = HTMLHelper::_('select.option', '10', Text::_('J10'));
 
 		$this->f_levels = $options;
 
@@ -176,7 +177,7 @@ class HTMLView extends BaseHtmlView
 	 */
 	protected function setDocument()
 	{
-		$document = Factory::getDocument();
+		$document = Factory::getApplication()->getDocument();
 		$document->setTitle(Text::_('JBS_TITLE_SERVERS'));
 	}
 

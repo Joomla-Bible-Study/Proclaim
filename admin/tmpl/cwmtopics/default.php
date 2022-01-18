@@ -11,6 +11,7 @@
 // No Direct Access
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 
 defined('_JEXEC') or die;
@@ -55,7 +56,7 @@ $sortFields = $this->getSortFields();
 					<tr>
 						<th width="1%" class="nowrap center hidden-phone">
 							<input type="checkbox" name="checkall-toggle" value=""
-							       title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>"
+							       title="<?php echo Text::_('JGLOBAL_CHECK_ALL'); ?>"
 							       onclick="Joomla.checkAll(this)"/>
 						</th>
 						<th width="1%" class="hidden-phone">
@@ -78,8 +79,7 @@ $sortFields = $this->getSortFields();
 					<tbody>
 					<?php
 					foreach ($this->items as $i => $item) :
-						$link = JRoute::_('index.php?option=com_proclaim&task=topic.edit&id=' . (int) $item->id);
-						$item->max_ordering = 0; //??
+						$link = Route::_('index.php?option=com_proclaim&task=topic.edit&id=' . (int) $item->id);
 						$canCreate = $user->authorise('core.create');
 						$canEdit = $user->authorise('core.edit', 'com_proclaim.topic.' . $item->id);
 						$canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.topic.' . $item->id);
@@ -149,8 +149,6 @@ $sortFields = $this->getSortFields();
 				</table>
 			<?php endif; ?>
 			<?php echo $this->pagination->getListFooter(); ?>
-			<?php //Load the batch processing form. ?>
-			<?php //echo $this->loadTemplate('batch'); ?>
 			<input type="hidden" name="task" value=""/>
 			<input type="hidden" name="boxchecked" value="0"/>
 			<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>

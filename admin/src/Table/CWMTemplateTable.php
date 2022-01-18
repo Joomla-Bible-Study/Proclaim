@@ -14,7 +14,6 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Access\Rules;
-use Joomla\CMS\Table\Asset;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseDriver;
 use Joomla\Registry\Registry;
@@ -218,7 +217,7 @@ class CWMTemplateTable extends Table
 	 */
 	protected function _getAssetParentId(Table $table = null, $id = null)
 	{
-		/** @type Asset $asset */
+		/** @var \Joomla\CMS\Table\Asset $asset */
 		$asset = Table::getInstance('Asset');
 		$asset->loadByName('com_proclaim');
 

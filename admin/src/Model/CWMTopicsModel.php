@@ -57,13 +57,11 @@ class CWMTopicsModel extends ListModel
 	 *
 	 * @since 7.0
 	 */
-	public function getTranslated($items = array())
+	public function getTranslated(array $items): array
 	{
-		$translate = new CWMTranslated;
-
 		foreach ($items as $item)
 		{
-			$item->topic_text = $translate->getTopicItemTranslated($item);
+			$item->topic_text = CWMTranslated::getTopicItemTranslated($item);
 		}
 
 		return $items;

@@ -7,6 +7,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
+use Joomla\CMS\HTML\HTMLHelper;
+
 defined('_JEXEC') or die;
 HTMLHelper::_('biblestudy.framework');
 ?>

@@ -17,6 +17,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Database\DatabaseQuery;
 
 /**
  * Servers model class
@@ -89,7 +90,7 @@ class CWMServersModel extends ListModel
 	/**
 	 * Get a list of available endpoints
 	 *
-	 * @return  array|bool   Array of available endpoints options grouped by type or false if there aren't any
+	 * @return  array|boolean   Array of available endpoints options grouped by type or false if there aren't any
 	 *
 	 * @since   9.0.0
 	 */
@@ -123,7 +124,7 @@ class CWMServersModel extends ListModel
 					$o              = new \stdClass;
 					$o->type        = (string) $xml['type'];
 					$o->name        = (string) $server;
-					$o->image_url   = Uri::base() . '/components/com_proclaim/addons/servers/' . $server . '/' . $server . '.png';
+					$o->image_url   = Uri::base() . '/components/com_proclaim/src/addons/servers/' . $server . '/' . $server . '.png';
 					$o->title       = (string) $xml->name;
 					$o->description = (string) $xml->description;
 					$o->path        = $path . '/' . $server . '/';
@@ -151,6 +152,7 @@ class CWMServersModel extends ListModel
 	 *
 	 * @return  void
 	 *
+	 * @throws \Exception
 	 * @since   7.0.0
 	 */
 	protected function populateState($ordering = null, $direction = null)
@@ -173,9 +175,9 @@ class CWMServersModel extends ListModel
 	/**
 	 * Method to get a JDatabaseQuery object for retrieving the data set from a database.
 	 *
-	 * @return  JDatabaseQuery   A JDatabaseQuery object to retrieve the data set.
+	 * @return  \Joomla\Database\QueryInterface   A JDatabaseQuery object to retrieve the data set.
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   7.0.0
 	 */
 	protected function getListQuery()

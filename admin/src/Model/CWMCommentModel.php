@@ -7,8 +7,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
+namespace CWM\Component\Proclaim\Administrator\Model;
+
 // No Direct Access
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Table\Table;
 
 defined('_JEXEC') or die;
 
@@ -21,10 +27,18 @@ defined('_JEXEC') or die;
 class CWMCommentModel extends AdminModel
 {
 	/**
-	 * @var        string    The prefix to use with controller messages.
-	 * @since    1.6
+	 * @var    string  The prefix to use with controller messages.
+	 * @since  1.6
 	 */
 	protected $text_prefix = 'com_proclaim';
+
+	/**
+	 * The type alias for this content type (for example, 'com_proclaim.cwmcomment').
+	 *
+	 * @var      string
+	 * @since    3.2
+	 */
+	public $typeAlias = 'com_proclaim.cwmcomment';
 
 	/**
 	 * Overrides the JModelAdmin save routine to save the topics(tags)
@@ -128,7 +142,7 @@ class CWMCommentModel extends AdminModel
 		$categoryId = (int) '';
 		$newIds     = array();
 
-		/** @type TableComment $table */
+		/** @type CWMCommentTable $table */
 		$table = $this->getTable();
 		$i     = 0;
 
@@ -138,7 +152,7 @@ class CWMCommentModel extends AdminModel
 
 		if (!$user->authorise('core.create', $extension))
 		{
-			$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
+			$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
 
 			return false;
 		}
@@ -164,7 +178,7 @@ class CWMCommentModel extends AdminModel
 				else
 				{
 					// Not fatal error
-					$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
+					$this->setError(Text::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
 					continue;
 				}
 			}
@@ -203,22 +217,6 @@ class CWMCommentModel extends AdminModel
 		$this->cleanCache();
 
 		return $newIds;
-	}
-
-	/**
-	 * Method to get a table object, load it if necessary.
-	 *
-	 * @param   string  $name     The table name. Optional.
-	 * @param   string  $prefix   The class prefix. Optional.
-	 * @param   array   $options  Configuration array for model. Optional.
-	 *
-	 * @return  JTable  A JTable object
-	 *
-	 * @since 7.0
-	 */
-	public function getTable($name = 'Comment', $prefix = 'Table', $options = array())
-	{
-		return JTable::getInstance($name, $prefix, $options);
 	}
 
 	/**
@@ -289,7 +287,7 @@ class CWMCommentModel extends AdminModel
 	/**
 	 * Prepare and sanitise the table prior to saving.
 	 *
-	 * @param   JTable  $table  A reference to a JTable object.
+	 * @param   Table  $table  A reference to a JTable object.
 	 *
 	 * @return  void
 	 *
@@ -305,6 +303,7 @@ class CWMCommentModel extends AdminModel
 	 *
 	 * @return object
 	 *
+	 * @throws \Exception
 	 * @since   7.0
 	 */
 	protected function loadFormData()

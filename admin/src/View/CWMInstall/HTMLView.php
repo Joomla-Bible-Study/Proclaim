@@ -11,11 +11,14 @@
 namespace CWM\Component\Proclaim\Administrator\View\CWMInstall;
 
 // No Direct Access
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\Input\Input;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Symfony\Component\Config\Loader\Loader;
 
 defined('_JEXEC') or die;
-
-JLoader::register('com_proclaimInstallerScript', JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.script.php');
 
 /**
  * JView class for Install
@@ -27,29 +30,29 @@ class HTMLView extends BaseHtmlView
 {
 	/** @var integer Total numbers of Steps
 	 * @since    7.0.0 */
-	public $totalSteps = 0;
+	public int $totalSteps = 0;
 
 	/** @var integer Numbers of Steps already processed
 	 * @since    7.0.0 */
-	public $doneSteps = 0;
+	public int $doneSteps = 0;
 
 	/** @var string Running Now
 	 * @since    7.0.0 */
-	public $running;
+	public string $running;
 
 	/** @var array Call stack for the Visioning System.
 	 * @since    7.0.0 */
-	public $callstack = array();
+	public array $callstack = [];
 
-	public $subSteps = null;
+	public string $subSteps;
 
-	public $subQuery = array();
+	public array $subQuery = [];
 
-	public $subFiles = array();
+	public array $subFiles = [];
 
-	public $version = '0.0.0';
+	public string $version = '0.0.0';
 
-	public $query = array();
+	public array $query = [];
 
 	/** @var string More
 	 * @since    7.0.0 */
@@ -63,37 +66,37 @@ class HTMLView extends BaseHtmlView
 	 * @since    7.0.0 */
 	public $state;
 
-	/** @var JObject Status
+	/** @var object Status
 	 * @since    7.0.0 */
 	public $status;
 
 	/** @var array The pre versions to process
 	 * @since    7.0.0 */
-	private $versionStack = array();
+	private array $versionStack = [];
 
 	/** @var array The pre versions to process
 	 * @since    7.0.0 */
-	private $versionSwitch = null;
+	private array $versionSwitch = [];
 
 	/** @var array The pre versions sub sql array to process
 	 * @since    7.0.0 */
-	public $allupdates = array();
+	public array $allupdates = [];
 
 	/** @var array Array of Finish Task
 	 * @since    7.0.0 */
-	private $finish = array();
+	private array $finish = [];
 
 	/** @var array Array of Install Task
 	 * @since    7.0.0 */
-	public $install = array();
+	public array $install = [];
 
-	/** @var integer If was inported
+	/** @var integer If was imported
 	 * @since    7.0.0 */
-	private $isimport = 0;
+	private int $isimport = 0;
 
-	/** @type string Type of process
+	/** @var string Type of process
 	 * @since    7.0.0 */
-	protected $type = null;
+	protected string $type;
 
 	/**
 	 * Display
@@ -102,12 +105,12 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return null|void
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   7.0.0
 	 */
 	public function display($tpl = null)
 	{
-		$input = new Joomla\Input\Input;
+		$input = new Input;
 		$input->set('hidemainmenu', true);
 		$app   = Factory::getApplication();
 		$this->state = $app->input->get('scanstate', false);
@@ -123,8 +126,6 @@ class HTMLView extends BaseHtmlView
 			{
 				$percent = min(max(round(100 * $this->doneSteps / $this->totalSteps), 1), 100);
 			}
-
-			$more = true;
 		}
 		elseif ($load)
 		{
@@ -142,12 +143,12 @@ class HTMLView extends BaseHtmlView
 			$script = "window.addEvent( 'domready' ,  function() {\n";
 			$script .= "document.forms.adminForm.submit();\n";
 			$script .= "});\n";
-			Factory::getDocument()->addScriptDeclaration($script);
+			$app->getDocument()->addScriptDeclaration($script);
 		}
 
-		JToolbarHelper::title(JText::_('JBS_MIG_TITLE'), 'administration');
-		$document = Factory::getDocument();
-		$document->setTitle(JText::_('JBS_MIG_TITLE'));
+		ToolbarHelper::title(Text::_('JBS_MIG_TITLE'), 'administration');
+		$document = $app->getDocument();
+		$document->setTitle(Text::_('JBS_MIG_TITLE'));
 
 		// Install systems setup files
 		// @todo need to move to a helper as this is call do many times.
@@ -215,28 +216,29 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since  7.0.0
 	 *
 	 */
 	protected function addToolbar()
 	{
 		Factory::getApplication()->input->set('hidemainmenu', true);
-		JToolbarHelper::help('biblestudy', true);
-		JToolbarHelper::title(JText::_('JBS_CMN_INSTALL'), 'administration');
+		ToolbarHelper::help('biblestudy', true);
+		ToolbarHelper::title(Text::_('JBS_CMN_INSTALL'), 'administration');
 	}
 
 	/**
 	 * Add the page title to browser.
 	 *
+	 * @return void
+	 * @throws \Exception
 	 * @since    7.1.0
 	 *
-	 * @return void
 	 */
 	protected function setDocument()
 	{
-		$document = Factory::getDocument();
-		$document->setTitle(JText::sprintf('JBS_TITLE_INSTALL', $this->percentage . '%', $this->running));
+		$document = Factory::getApplication()->getDocument();
+		$document->setTitle(Text::sprintf('JBS_TITLE_INSTALL', $this->percentage . '%', $this->running));
 	}
 
 	/**
@@ -275,7 +277,7 @@ class HTMLView extends BaseHtmlView
 		// -- General settings
 		jimport('joomla.installer.installer');
 		$db                    = Factory::getDbo();
-		$this->status          = new stdClass;
+		$this->status          = new \stdClass;
 		$this->status->cwmmodules = array();
 		$this->status->cwmplugins = array();
 

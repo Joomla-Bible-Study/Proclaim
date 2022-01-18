@@ -73,7 +73,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  mixed  A string if successful, otherwise a JError object.
+	 * @return  void  A string if successful, otherwise a JError object.
 	 *
 	 * @throws  \Exception
 	 * @since   11.1
@@ -86,12 +86,10 @@ class HTMLView extends BaseHtmlView
 		$this->state = $this->get("State");
 		$this->canDo = CWMProclaimHelper::getActions($this->item->id, 'topic');
 
-		// Check for errors
+		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
-			Factory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
-
-			return false;
+			throw new \RuntimeException(implode("\n", $errors), 500);
 		}
 
 		$this->setLayout("edit");
@@ -117,7 +115,7 @@ class HTMLView extends BaseHtmlView
 	{
 		$input = new Input;
 		$input->set('hidemainmenu', true);
-		$isNew = ($this->item->id == 0);
+		$isNew = ((int) $this->item->id === 0);
 		$title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
 		ToolbarHelper::title(Text::_('JBS_CMN_TOPICS') . ': <small><small>[' . $title . ']</small></small>', 'tag tag');
 
@@ -147,12 +145,13 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since    7.1.0
 	 */
 	protected function setDocument()
 	{
 		$isNew    = ($this->item->id < 1);
-		$document = Factory::getDocument();
+		$document = Factory::getApplication()->getDocument();
 		$document->setTitle($isNew ? Text::_('JBS_TITLE_TOPICS_CREATING') : Text::sprintf('JBS_TITLE_TOPICS_EDITING', $this->item->topic_text));
 	}
 }

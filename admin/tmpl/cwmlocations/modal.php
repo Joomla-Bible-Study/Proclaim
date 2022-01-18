@@ -9,6 +9,7 @@
 
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Site\Helper\CWMRouteHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\RouteHelper;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -30,9 +31,9 @@ HTMLHelper::_('behavior.multiselect');
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('core')
-	->useScript('com_content.admin-articles-modal');
+	->useScript('com_content.cwmadmin-locations-modal');
 
-$function  = $app->input->getCmd('function', 'jSelectArticle');
+$function  = $app->input->getCmd('function', 'jSelectLocations');
 $editor    = $app->input->getCmd('editor', '');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
@@ -42,13 +43,13 @@ $multilang = Multilanguage::isEnabled();
 if (!empty($editor))
 {
 	// This view is used also in com_menus. Load the xtd script only if the editor is set!
-	$this->document->addScriptOptions('xtd-articles', array('editor' => $editor));
-	$onclick = "jSelectArticle";
+	$this->document->addScriptOptions('xtd-locations', array('editor' => $editor));
+	$onclick = "jSelectLocations";
 }
 ?>
 <div class="container-popup">
 
-	<form action="<?php echo Route::_('index.php?option=com_proclaim&view=CWMocations&layout=modal&tmpl=component&function=' . $function . '&' . Session::getFormToken() . '=1&editor=' . $editor); ?>" method="post" name="adminForm" id="adminForm">
+	<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmocations&layout=modal&tmpl=component&function=' . $function . '&' . Session::getFormToken() . '=1&editor=' . $editor); ?>" method="post" name="adminForm" id="adminForm">
 
 		<?php echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
 
@@ -127,8 +128,7 @@ if (!empty($editor))
 							<?php $attribs = 'data-function="' . $this->escape($onclick) . '"'
 								. ' data-id="' . $item->id . '"'
 								. ' data-title="' . $this->escape($item->title) . '"'
-								. ' data-cat-id="' . $this->escape($item->catid) . '"'
-								. ' data-uri="' . $this->escape(RouteHelper::getArticleRoute($item->id, $item->catid, $item->language)) . '"'
+								. ' data-uri="' . $this->escape(CWMRouteHelper::getLocationsRoute($item->id, $item->language)) . '"'
 								. ' data-language="' . $this->escape($lang) . '"';
 							?>
 							<a class="select-link" href="javascript:void(0)" <?php echo $attribs; ?>>

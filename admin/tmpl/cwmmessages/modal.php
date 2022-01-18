@@ -7,138 +7,145 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 // No Direct Access
+use CWM\Component\Proclaim\Site\Helper\CWMRouteHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Multilanguage;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
+
 defined('_JEXEC') or die;
 
 $app = Factory::getApplication();
 
 if ($app->isClient('site'))
 {
-	JSession::checkToken('get') or die(JText::_('JINVALID_TOKEN'));
+	Session::checkToken('get') or die(Text::_('JINVALID_TOKEN'));
 }
 
-HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+HTMLHelper::_('behavior.multiselect');
 
-HTMLHelper::_('behavior.core');
-HTMLHelper::_('behavior.polyfill', ['event'], 'lt IE 9');
-HTMLHelper::_('script', 'com_content/administrator-articles-modal.min.js', ['version' => 'auto', 'relative' => true]);
-HTMLHelper::_('bootstrap.tooltip', '.hasTooltip', ['placement' => 'bottom']);
-HTMLHelper::_('formbehavior.chosen', 'select');
+/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
+$wa = $this->document->getWebAssetManager();
+$wa->useScript('core')
+	->useScript('com_proclaim.cwmadmin-messages-modal');
 
-// Special case for the search field tooltip.
-$searchFilterDesc = $this->filterForm->getFieldAttribute('search', 'description', null, 'filter');
-HTMLHelper::_('bootstrap.tooltip', '#filter_search', ['title' => JText::_($searchFilterDesc), 'placement' => 'bottom']);
-
-$function  = $app->input->getCmd('function', 'jSelectStudy');
+$function  = $app->input->getCmd('function', 'jSelectMessage');
 $editor    = $app->input->getCmd('editor', '');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 $onclick   = $this->escape($function);
+$multilang = Multilanguage::isEnabled();
 
 if (!empty($editor))
 {
 	// This view is used also in com_menus. Load the xtd script only if the editor is set!
-	Factory::getDocument()->addScriptOptions('xtd-articles', ['editor' => $editor]);
-	$onclick = "jSelectArticle";
+	$this->document->addScriptOptions('xtd-messages', array('editor' => $editor));
+	$onclick = "jSelectMessage";
 }
 ?>
 <div class="container-popup">
-	<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=messages&layout=modal&tmpl=component&function=' .
+	<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmmessages&layout=modal&tmpl=component&function=' .
 		$function . '&' . JSession::getFormToken() . '=1&editor=' . $editor); ?>" method="post" name="adminForm"
 	      id="adminForm" class="form-inline">
 
-		<?php echo JLayoutHelper::render('joomla.searchtools.default', ['view' => $this]); ?>
-
-		<div class="clearfix"></div>
+		<?php echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
 
 		<?php if (empty($this->items)) : ?>
-			<div class="alert alert-no-items">
-				<?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+			<div class="alert alert-info">
+				<span class="icon-info-circle" aria-hidden="true"></span><span
+						class="visually-hidden"><?php echo Text::_('INFO'); ?></span>
+				<?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
 			</div>
 		<?php else : ?>
-			<table class="table table-striped table-condensed">
+			<table class="table table-sm">
+				<caption class="visually-hidden">
+					<?php echo Text::_('COM_CONTENT_ARTICLES_TABLE_CAPTION'); ?>,
+					<span id="orderedBy"><?php echo Text::_('JGLOBAL_SORTED_BY'); ?> </span>,
+					<span id="filteredBy"><?php echo Text::_('JGLOBAL_FILTERED_BY'); ?></span>
+				</caption>
 				<thead>
 				<tr>
-					<th width="8%">
+					<th scope="col" class="w-1 text-center">
 						<?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'study.published', $listDirn, $listOrder); ?>
 					</th>
-					<th>
+					<th scope="col" class="title">
 						<?php echo HTMLHelper::_('searchtools.sort', 'JBS_CMN_TITLE', 'study.studytitle', $listDirn, $listOrder); ?>
 					</th>
-					<th>
+					<th scope="col" class="w-10 d-none d-md-table-cell">
 						<?php echo HTMLHelper::_('searchtools.sort', 'JBS_CMN_STUDY_DATE', 'study.studydate', $listDirn, $listOrder); ?>
 					</th>
-					<th>
-						<?php echo JHtml::_('searchtools.sort', 'JBS_CMN_TEACHER', 'teacher.teachername', $listDirn, $listOrder); ?>
+					<th scope="col" class="w-10 d-none d-md-table-cell">
+						<?php echo HTMLHelper::_('searchtools.sort', 'JBS_CMN_TEACHER', 'teacher.teachername', $listDirn, $listOrder); ?>
 					</th>
-					<th>
-						<?php echo JHtml::_('searchtools.sort', 'JBS_CMN_MESSAGETYPE', 'messageType.message_type', $listDirn, $listOrder); ?>
+					<th scope="col" class="w-10 d-none d-md-table-cell">
+						<?php echo HTMLHelper::_('searchtools.sort', 'JBS_CMN_MESSAGETYPE', 'messageType.message_type', $listDirn, $listOrder); ?>
 					</th>
-					<th>
-						<?php echo JHtml::_('searchtools.sort', 'JBS_CMN_SERIES', 'series.series_text', $listDirn, $listOrder); ?>
+					<th scope="col" class="w-10 d-none d-md-table-cell">
+						<?php echo HTMLHelper::_('searchtools.sort', 'JBS_CMN_SERIES', 'series.series_text', $listDirn, $listOrder); ?>
 					</th>
-					<th width="5%">
-						<?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
-					</th>
+					<?php if ($multilang) : ?>
+						<th scope="col" class="w-15">
+							<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
+						</th>
+					<?php endif; ?>
 				</tr>
 				</thead>
-				<tfoot>
-				<tr>
-					<td colspan="12">
-						<?php echo $this->pagination->getListFooter(); ?>
-					</td>
-				</tr>
-				</tfoot>
 				<tbody>
 				<?php
-				$iconStates = [
+				$iconStates = array(
 					-2 => 'icon-trash',
-					0  => 'icon-unpublish',
-					1  => 'icon-publish',
-					2  => 'icon-archive',
-				];
+					0  => 'icon-times',
+					1  => 'icon-check',
+				);
 				?>
 				<?php
-				foreach ($this->items as $i => $item) :
-					?>
-					<?php if ($item->language && JLanguageMultilang::isEnabled())
-				{
-					$tag = strlen($item->language);
-					if ($tag == 5)
+				foreach ($this->items as $i => $item) : ?>
+					<?php if ($item->language && $multilang)
 					{
-						$lang = substr($item->language, 0, 2);
+						$tag = strlen($item->language);
+						if ($tag == 5)
+						{
+							$lang = substr($item->language, 0, 2);
+						}
+						elseif ($tag == 6)
+						{
+							$lang = substr($item->language, 0, 3);
+						}
+						else
+						{
+							$lang = '';
+						}
 					}
-					elseif ($tag == 6)
-					{
-						$lang = substr($item->language, 0, 3);
-					}
-					else
+					elseif (!$multilang)
 					{
 						$lang = '';
 					}
-				}
-				elseif (!JLanguageMultilang::isEnabled())
-				{
-					$lang = '';
-				}
 					?>
 					<tr class="row<?php echo $i % 2; ?>">
-						<td class="center">
-							<span class="<?php echo $iconStates[$this->escape($item->published)]; ?>"></span>
+						<td class="text-center">
+							<span class="tbody-icon">
+								<span class="<?php echo $iconStates[$this->escape($item->published)]; ?>"
+								      aria-hidden="true"></span>
+							</span>
 						</td>
-						<td>
+						<th scope="row">
 							<?php $attribs = 'data-function="' . $this->escape($onclick) . '"'
 								. ' data-id="' . $item->id . '"'
-								. ' data-title="' . $this->escape(addslashes($item->studytitle)) . '"'
-								. ' data-uri=" "'
+								. ' data-title="' . $this->escape($item->studytitle) . '"'
+								. ' data-uri="' . $this->escape(CWMRouteHelper::getMessageRoute($item->id, $item->language)) . '"'
 								. ' data-language="' . $this->escape($lang) . '"';
 							?>
 							<a class="select-link" href="javascript:void(0)" <?php echo $attribs; ?>">
 							<?php echo $this->escape($item->studytitle); ?>
 							</a>
-						</td>
+						</th>
 						<td class="nowrap small hidden-phone">
-							<?php echo JHtml::_('date', $item->studydate, JText::_('DATE_FORMAT_LC4')); ?>
+							<?php echo HTMLHelper::_('date', $item->studydate, JText::_('DATE_FORMAT_LC4')); ?>
 						</td>
 						<td class="small hidden-phone">
 							<?php echo $this->escape($item->teachername); ?>
@@ -149,9 +156,11 @@ if (!empty($editor))
 						<td class="small hidden-phone">
 							<?php echo $this->escape($item->series_text); ?>
 						</td>
-						<td class="small">
-							<?php echo JLayoutHelper::render('joomla.content.language', $item); ?>
-						</td>
+						<?php if ($multilang) : ?>
+							<td class="small">
+								<?php echo LayoutHelper::render('joomla.content.language', $item); ?>
+							</td>
+						<?php endif; ?>
 					</tr>
 				<?php endforeach; ?>
 				</tbody>
@@ -160,8 +169,7 @@ if (!empty($editor))
 
 		<input type="hidden" name="task" value=""/>
 		<input type="hidden" name="boxchecked" value="0"/>
-		<input type="hidden" name="forcedLanguage"
-		       value="<?php echo $app->input->get('forcedLanguage', '', 'CMD'); ?>"/>
-		<?php echo JHtml::_('form.token'); ?>
+		<input type="hidden" name="forcedLanguage" value="<?php echo $app->input->get('forcedLanguage', '', 'CMD'); ?>">
+		<?php echo HTMLHelper::_('form.token'); ?>
 	</form>
 </div>

@@ -7,7 +7,15 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
+namespace CWM\Component\Proclaim\Administrator\Model;
+
 // No Direct Access
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Database\DatabaseQuery;
+use Joomla\Input\Input;
+
 defined('_JEXEC') or die;
 
 /**
@@ -16,7 +24,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CWMPodcastsModel extends JModelList
+class CWMPodcastsModel extends ListModel
 {
 	/**
 	 * Constructor.
@@ -85,7 +93,7 @@ class CWMPodcastsModel extends JModelList
 	protected function populateState($ordering = null, $direction = null)
 	{
 		// Adjust the context to support modal layouts.
-		$input  = new JInput;
+		$input  = new Input;
 		$layout = $input->get('layout');
 
 		if ($layout)
@@ -111,7 +119,7 @@ class CWMPodcastsModel extends JModelList
 	/**
 	 * Method to get a JDatabaseQuery object for retrieving the data set from a database.
 	 *
-	 * @return  JDatabaseQuery   A JDatabaseQuery object to retrieve the data set.
+	 * @return  \Joomla\Database\QueryInterface   A JDatabaseQuery object to retrieve the data set.
 	 *
 	 * @since   7.0
 	 */

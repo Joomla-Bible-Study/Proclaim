@@ -11,7 +11,14 @@
 namespace CWM\Component\Proclaim\Administrator\View\CWMMessageTypes;
 
 // No direct access
+use CWM\Component\Proclaim\Administrator\Helper\CWMUploadScript;
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\CMS\Uri\Uri;
 
 defined('_JEXEC') or die();
 
@@ -32,10 +39,10 @@ class HTMLView extends BaseHtmlView
 	/**
 	 * Form
 	 *
-	 * @var object
+	 * @var mixed
 	 * @since 7.0
 	 */
-	protected $form;
+	protected mixed $form;
 
 	/**
 	 * View display method
@@ -44,18 +51,19 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function display($tpl = null)
 	{
 		$this->form = $this->get("Form");
-		JHtml::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/helpers/html/');
-		JHtml::_('jquery.framework', 'false');
+		HTMLHelper::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/helpers/html/');
+		HTMLHelper::_('jquery.framework', 'false');
 
-		$mediaDir      = JUri::root() . "media/com_proclaim/plupload/";
-		$document      = Factory::getDocument();
-		$params        = JComponentHelper::getParams('com_proclaim');
-		$UploadScript  = new UploadScript($params, $mediaDir);
+		$mediaDir      = Uri::root() . "media/com_proclaim/plupload/";
+		$document      = Factory::getApplication()->getDocument();
+		$params        = ComponentHelper::getParams('com_proclaim');
+		$UploadScript  = new CWMUploadScript($params, $mediaDir);
 		$runtimeScript = $UploadScript->runtimeScript;
 		$runtime       = $UploadScript->runtime;
 
@@ -64,7 +72,7 @@ class HTMLView extends BaseHtmlView
 		$document->addScript($mediaDir . 'js/plupload.browserplus.js');
 		$document->addScript($mediaDir . 'js/plupload.full.js');
 		$document->addScript($mediaDir . 'js/jquery.plupload.queue/jquery.plupload.queue.js');
-		$document->addScript('http://bp.yahooapis.com/2.4.21/browserplus-min.js');
+		$document->addScript('https://bp.yahooapis.com/2.4.21/browserplus-min.js');
 		$document->addStyleSheet($mediaDir . 'js/jquery.plupload.queue/css/jquery.plupload.queue.css', 'text/css', 'screen');
 		$document->addScriptDeclaration($UploadScript->UIScript());
 
@@ -88,12 +96,13 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since    7.1.0
 	 */
 	protected function setDocument()
 	{
-		$document = Factory::getDocument();
-		$document->setTitle(JText::_('JBS_TITLE_UPLOAD_FORM'));
+		$document = Factory::getApplication()->getDocument();
+		$document->setTitle(Text::_('JBS_TITLE_UPLOAD_FORM'));
 	}
 
 	/**
@@ -105,6 +114,6 @@ class HTMLView extends BaseHtmlView
 	 */
 	protected function addToolbar()
 	{
-		JToolbarHelper::title(JText::_('JBS_TITLE_UPLOAD_FORM'), 'mp3.png');
+		ToolbarHelper::title(Text::_('JBS_TITLE_UPLOAD_FORM'), 'mp3.png');
 	}
 }

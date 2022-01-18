@@ -102,7 +102,7 @@ class HtmlView extends BaseHtmlView
 		$params = $this->state->template->params;
 		$this->template = $this->state->get('template');
 
-		$document = Factory::getDocument();
+		$document = Factory::getApplication()->getDocument();
 /*
  * @todo Fix getting itemparams
 		$itemparams = new SiteMenu();

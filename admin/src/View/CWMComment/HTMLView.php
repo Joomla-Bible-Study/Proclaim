@@ -11,7 +11,12 @@
 namespace CWM\Component\Proclaim\Administrator\View\CWMComment;
 
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die;
 
@@ -64,9 +69,9 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  mixed  A string if successful, otherwise a Error object.
+	 * @return  false|void  A string if successful, otherwise a Error object.
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since  9.0.0
 	 */
 	public function display($tpl = null)
@@ -79,10 +84,9 @@ class HTMLView extends BaseHtmlView
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
-			Factory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
-
-			return false;
+			throw new GenericDataException(implode("\n", $errors), 500);
 		}
+
 		// Set the toolbar
 		$this->addToolbar();
 
@@ -90,7 +94,7 @@ class HTMLView extends BaseHtmlView
 		$this->setDocument();
 
 		// Display the template
-		return parent::display($tpl);
+		parent::display($tpl);
 	}
 
 	/**
@@ -98,36 +102,36 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since  7.0
 	 */
 	protected function addToolbar()
 	{
 		Factory::getApplication()->input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
-		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolbarHelper::title(JText::_('JBS_CMN_COMMENTS') . ': <small><small>[ ' . $title . ' ]</small></small>', 'comment comment');
+		$title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
+		ToolbarHelper::title(Text::_('JBS_CMN_COMMENTS') . ': <small><small>[ ' . $title . ' ]</small></small>', 'comment comment');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_proclaim'))
 		{
-			JToolbarHelper::apply('comment.apply');
-			JToolbarHelper::save('comment.save');
-			JToolbarHelper::save2new('comment.save2new');
-			JToolbarHelper::cancel('comment.cancel');
+			ToolbarHelper::apply('cwmcomment.apply');
+			ToolbarHelper::save('cwmcomment.save');
+			ToolbarHelper::save2new('cwmcomment.save2new');
+			ToolbarHelper::cancel('cwmcomment.cancel');
 		}
 		else
 		{
 			if ($this->canDo->get('core.edit', 'com_proclaim'))
 			{
-				JToolbarHelper::apply('comment.apply');
-				JToolbarHelper::save('comment.save');
+				ToolbarHelper::apply('cwmcomment.apply');
+				ToolbarHelper::save('cwmcomment.save');
 			}
 
-			JToolbarHelper::cancel('comment.cancel', 'JTOOLBAR_CLOSE');
+			ToolbarHelper::cancel('cwmcomment.cancel', 'JTOOLBAR_CLOSE');
 		}
 
-		JToolbarHelper::divider();
-		JToolbarHelper::help('biblestudy', true);
+		ToolbarHelper::divider();
+		ToolbarHelper::help('biblestudy', true);
 	}
 
 	/**
@@ -140,7 +144,7 @@ class HTMLView extends BaseHtmlView
 	protected function setDocument()
 	{
 		$isNew    = ($this->item->id < 1);
-		$document = Factory::getDocument();
-		$document->setTitle($isNew ? JText::_('JBS_TITLE_COMMENT_CREATING') : JText::sprintf('JBS_TITLE_COMMENT_EDITING', $this->item->id));
+		$document = Factory::getApplication()->getDocument();
+		$document->setTitle($isNew ? Text::_('JBS_TITLE_COMMENT_CREATING') : Text::sprintf('JBS_TITLE_COMMENT_EDITING', $this->item->id));
 	}
 }

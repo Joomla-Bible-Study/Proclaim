@@ -13,7 +13,10 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\Router\Route;
 
 /**
  * Controller for a Comment
@@ -24,9 +27,17 @@ use Joomla\CMS\MVC\Controller\FormController;
 class CWMCommentController extends FormController
 {
 	/**
+	 * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
+	 *
+	 * @var   string
+	 * @since 7.0
+	 */
+	protected $view_list = 'CWMComments';
+
+	/**
 	 * Method to run batch operations.
 	 *
-	 * @param   JModelLegacy  $model  The model.
+	 * @param   BaseDatabaseModel  $model  The model.
 	 *
 	 * @return  boolean     True if successful, false otherwise and internal error is set.
 	 *
@@ -41,7 +52,7 @@ class CWMCommentController extends FormController
 		}
 
 		// Preset the redirect
-		$this->setRedirect(JRoute::_('index.php?option=com_proclaim&view=comments' . $this->getRedirectToListAppend(), false));
+		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmcomments' . $this->getRedirectToListAppend(), false));
 
 		return parent::batch($model);
 	}
@@ -87,21 +98,18 @@ class CWMCommentController extends FormController
 	}
 
 	/**
-	 * Proxy for getModel
+	 * Method to get a model object, loading it if required.
 	 *
 	 * @param   string  $name    The model name. Optional.
 	 * @param   string  $prefix  The class prefix. Optional.
 	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return BiblestudyModelComment
+	 * @return  \Joomla\CMS\MVC\Model\BaseDatabaseModel
 	 *
-	 * @since 7.1.0
+	 * @since   12.2
 	 */
-	public function getModel($name = 'Comment', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
+	public function getModel($name = 'CWMComment', $prefix = '', $config = array('ignore_request' => true))
 	{
-		/** @var BiblestudyModelComment $model */
-		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
-
-		return $model;
+		return parent::getModel($name, $prefix, array('ignore_request' => true));
 	}
 }

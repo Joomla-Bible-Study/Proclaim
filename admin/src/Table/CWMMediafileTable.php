@@ -247,7 +247,7 @@ class CWMMediafileTable extends Table
 	 */
 	protected function _getAssetParentId(Table $table = null, $id = null)
 	{
-		/** @type Asset $asset */
+		/** @var \Joomla\CMS\Table\Asset $asset */
 		$asset = Table::getInstance('Asset');
 		$asset->loadByName('com_proclaim');
 

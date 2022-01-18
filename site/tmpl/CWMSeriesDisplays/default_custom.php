@@ -15,7 +15,7 @@ $mainframe = Factory::getApplication();
 $input = Factory::getApplication();
 $option = $input->get('option', '', 'cmd');
 $series_menu = $this->params->get('series_id', 1);
-$document = Factory::getDocument();
+$document = Factory::getApplication()->getDocument();
 /** @var Joomla\Registry\Registry $params */
 $params = $this->params;
 $url = $params->get('stylesheet');

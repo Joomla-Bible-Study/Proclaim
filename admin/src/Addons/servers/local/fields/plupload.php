@@ -34,7 +34,7 @@ class JFormFieldPlupload extends JFormField
 	protected function getInput()
 	{
 		// Include Plupload libraries
-		$document = Factory::getDocument();
+		$document = Factory::getApplication()->getDocument();
 		$app = Factory::getApplication();
 		$document->addScript(JUri::root() . 'administrator/components/com_proclaim/addons/servers/legacy/includes/js/plupload.full.min.js');
 		$document->addScript(JUri::root() . 'administrator/components/com_proclaim/addons/servers/legacy/includes/js/legacy.js');

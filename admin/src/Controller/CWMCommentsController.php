@@ -23,21 +23,4 @@ defined('_JEXEC') or die;
  */
 class CWMCommentsController extends AdminController
 {
-	/**
-	 * Proxy for getModel
-	 *
-	 * @param   string  $name    The model name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return \BiblestudyModelComment|boolean|\Joomla\CMS\MVC\Model\BaseDatabaseModel
-	 *
-	 * @since 7.0
-	 */
-	public function &getModel($name = 'CWMComment', $prefix = '', $config = array())
-	{
-		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
-
-		return $model;
-	}
 }

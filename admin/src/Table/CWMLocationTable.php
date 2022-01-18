@@ -163,7 +163,7 @@ class CWMLocationTable extends Table
 	protected function _getAssetParentId(Table $table = null, $id = null)
 	{
 		// For simple cases, parent to the asset root.
-		/** @var Asset $assets */
+		/** @var \Joomla\CMS\Table\Asset $asset */
 		$asset = Table::getInstance('Asset', 'JTable', array('dbo' => $this->getDbo()));
 		$asset->loadByName('com_proclaim');
 

@@ -134,7 +134,7 @@ class HtmlView extends BaseHtmlView
 	{
 		$mainframe = Factory::getApplication();
 		$input     = Factory::getApplication();
-		$document = Factory::getDocument();
+		$document = Factory::getApplication()->getDocument();
 
 		// Get the menu item object
 		// Load the Admin settings and params from the template

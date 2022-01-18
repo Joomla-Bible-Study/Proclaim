@@ -90,7 +90,7 @@ class HTMLView extends BaseHtmlView
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
-			throw new \Exception(implode("\n", $errors), 500);
+			throw new \RuntimeException(implode("\n", $errors), 500);
 		}
 
 		// Load the Admin settings

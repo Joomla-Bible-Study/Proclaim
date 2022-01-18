@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // No Direct Access
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Database\DatabaseQuery;
 
 defined('_JEXEC') or die;
 
@@ -107,7 +108,7 @@ class CWMCommentsModel extends ListModel
 	/**
 	 * List Query
 	 *
-	 * @return  JDatabaseQuery   A JDatabaseQuery object to retrieve the data set.
+	 * @return  \Joomla\Database\QueryInterface   A JDatabaseQuery object to retrieve the data set.
 	 *
 	 * @since   7.0
 	 */

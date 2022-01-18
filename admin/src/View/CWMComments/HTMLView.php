@@ -13,6 +13,10 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMComments;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
@@ -82,7 +86,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since   11.1
 	 * @see     fetch()
 	 */
@@ -105,16 +109,16 @@ class HTMLView extends BaseHtmlView
 
 		// Levels filter.
 		$options   = array();
-		$options[] = JHtml::_('select.option', '1', JText::_('J1'));
-		$options[] = JHtml::_('select.option', '2', JText::_('J2'));
-		$options[] = JHtml::_('select.option', '3', JText::_('J3'));
-		$options[] = JHtml::_('select.option', '4', JText::_('J4'));
-		$options[] = JHtml::_('select.option', '5', JText::_('J5'));
-		$options[] = JHtml::_('select.option', '6', JText::_('J6'));
-		$options[] = JHtml::_('select.option', '7', JText::_('J7'));
-		$options[] = JHtml::_('select.option', '8', JText::_('J8'));
-		$options[] = JHtml::_('select.option', '9', JText::_('J9'));
-		$options[] = JHtml::_('select.option', '10', JText::_('J10'));
+		$options[] = HTMLHelper::_('select.option', '1', Text::_('J1'));
+		$options[] = HTMLHelper::_('select.option', '2', Text::_('J2'));
+		$options[] = HTMLHelper::_('select.option', '3', Text::_('J3'));
+		$options[] = HTMLHelper::_('select.option', '4', Text::_('J4'));
+		$options[] = HTMLHelper::_('select.option', '5', Text::_('J5'));
+		$options[] = HTMLHelper::_('select.option', '6', Text::_('J6'));
+		$options[] = HTMLHelper::_('select.option', '7', Text::_('J7'));
+		$options[] = HTMLHelper::_('select.option', '8', Text::_('J8'));
+		$options[] = HTMLHelper::_('select.option', '9', Text::_('J9'));
+		$options[] = HTMLHelper::_('select.option', '10', Text::_('J10'));
 
 		$this->f_levels = $options;
 
@@ -145,11 +149,11 @@ class HTMLView extends BaseHtmlView
 		// Get the toolbar object instance
 		$toolbar = Toolbar::getInstance('toolbar');
 		$canDo   = CWMProclaimHelper::getActions('', 'comment');
-		ToolbarHelper::title(JText::_('JBS_CMN_COMMENTS'), 'comments-2 comments-2');
+		ToolbarHelper::title(Text::_('JBS_CMN_COMMENTS'), 'comments-2 comments-2');
 
 		if ($canDo->get('core.create'))
 		{
-			$toolbar->addNew('comment.add');
+			$toolbar->addNew('cwmcomment.add');
 		}
 
 		$dropdown = $toolbar->dropdownButton('status-group')
@@ -162,20 +166,20 @@ class HTMLView extends BaseHtmlView
 
 		if ($canDo->get('core.edit'))
 		{
-			$toolbar->edit('comment.edit');
+			$toolbar->edit('cwmcomment.edit');
 		}
 
 		if ($canDo->get('core.edit.state'))
 		{
 			$toolbar->divider();
-			$toolbar->publish('comments.publish');
-			$toolbar->unpublish('comments.unpublish');
+			$toolbar->publish('cwmcomments.publish');
+			$toolbar->unpublish('cwmcomments.unpublish');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete'))
 		{
 			$toolbar->divider();
-			$toolbar->delete('', 'comments.delete')
+			$toolbar->delete('', 'cwmcomments.delete')
 				->text('JTOOLBAR_EMPTY_TRASH')
 				->message('JGLOBAL_CONFIRM_DELETE')
 				->listCheck(true);
@@ -183,7 +187,7 @@ class HTMLView extends BaseHtmlView
 
 		if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED)
 		{
-			$childBar->trash('comments.trash');
+			$childBar->trash('cwmcomments.trash');
 		}
 
 		// Add a batch button
@@ -207,8 +211,8 @@ class HTMLView extends BaseHtmlView
 	 */
 	protected function setDocument()
 	{
-		$document = Factory::getDocument();
-		$document->setTitle(JText::_('JBS_TITLE_COMMENTS'));
+		$document = Factory::getApplication()->getDocument();
+		$document->setTitle(Text::_('JBS_TITLE_COMMENTS'));
 	}
 
 	/**
@@ -221,12 +225,12 @@ class HTMLView extends BaseHtmlView
 	protected function getSortFields()
 	{
 		return array(
-			'comment.full_name' => JText::_('JBS_CMT_FULL_NAME'),
-			'comment.published' => JText::_('JSTATUS'),
-			'study.studytitle'  => JText::_('JBS_CMN_TITLE'),
-			'comment.language'  => JText::_('JGRID_HEADING_LANGUAGE'),
-			'access_level'      => JText::_('JGRID_HEADING_ACCESS'),
-			'comment.id'        => JText::_('JGRID_HEADING_ID')
+			'comment.full_name' => Text::_('JBS_CMT_FULL_NAME'),
+			'comment.published' => Text::_('JSTATUS'),
+			'study.studytitle'  => Text::_('JBS_CMN_TITLE'),
+			'comment.language'  => Text::_('JGRID_HEADING_LANGUAGE'),
+			'access_level'      => Text::_('JGRID_HEADING_ACCESS'),
+			'comment.id'        => Text::_('JGRID_HEADING_ID')
 		);
 	}
 }

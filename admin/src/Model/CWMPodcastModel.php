@@ -7,7 +7,13 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
+namespace CWM\Component\Proclaim\Administrator\Model;
+
 // No Direct Access
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\AdminModel;
+
 defined('_JEXEC') or die;
 
 /**
@@ -16,7 +22,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CWMPodcastModel extends JModelAdmin
+class CWMPodcastModel extends AdminModel
 {
 	/**
 	 * Protect prefix
@@ -47,22 +53,6 @@ class CWMPodcastModel extends JModelAdmin
 		}
 
 		return $form;
-	}
-
-	/**
-	 * Returns a reference to the a Table object, always creating it.
-	 *
-	 * @param   string  $name     The table name. Optional.
-	 * @param   string  $prefix   The class prefix. Optional.
-	 * @param   array   $options  Configuration array for model. Optional.
-	 *
-	 * @return    JTable    A database object
-	 *
-	 * @since    2.5
-	 */
-	public function getTable($name = 'Podcast', $prefix = 'Table', $options = array())
-	{
-		return JTable::getInstance($name, $prefix, $options);
 	}
 
 	/**

@@ -10,10 +10,12 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 
 HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 HTMLHelper::_('bootstrap.framework');
@@ -49,7 +51,7 @@ Factory::getDocument()->addScriptDeclaration('
 	};
 ');
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=comments'); ?>" method="post" name="adminForm"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="post" name="adminForm"
       id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
@@ -110,7 +112,7 @@ Factory::getDocument()->addScriptDeclaration('
 					<tbody>
 					<?php
 					foreach ($this->items as $i => $item) :
-						$link = JRoute::_('index.php?option=com_proclaim&task=comment.edit&id=' . (int) $item->id);
+						$link = Route::_('index.php?option=com_proclaim&task=comment.edit&id=' . (int) $item->id);
 						$canCreate = $user->authorise('core.create');
 						$canEdit = $user->authorise('core.edit', 'com_proclaim.comment.' . $item->id);
 						$canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.comment.' . $item->id);
@@ -123,14 +125,14 @@ Factory::getDocument()->addScriptDeclaration('
 							</td>
 							<td class="center">
 								<div class="btn-group">
-									<?php echo HTMLHelper::_('jgrid.published', $item->published, $i, 'comments.', $canChange, 'cb', '', ''); ?><?php
+									<?php echo HTMLHelper::_('jgrid.published', $item->published, $i, 'cwmcomments.', $canChange, 'cb', '', ''); ?><?php
 
 									// Create dropdown items
 									$action = $archived ? 'unarchive' : 'archive';
-									HTMLHelper::_('actionsdropdown.' . $action, 'cb' . $i, 'comments');
+									HTMLHelper::_('actionsdropdown.' . $action, 'cb' . $i, 'cwmcomments');
 
 									$action = $trashed ? 'untrash' : 'trash';
-									HTMLHelper::_('actionsdropdown.' . $action, 'cb' . $i, 'comments');
+									HTMLHelper::_('actionsdropdown.' . $action, 'cb' . $i, 'cwmcomments');
 
 									// Render dropdown list
 									echo HTMLHelper::_('actionsdropdown.render', $this->escape($item->studytitle));

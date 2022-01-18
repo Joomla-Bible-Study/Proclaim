@@ -29,6 +29,22 @@ use Joomla\Registry\Registry;
 class CWMServerModel extends AdminModel
 {
 	/**
+	 * The prefix to use with controller messages.
+	 *
+	 * @var    string
+	 * @since  1.6
+	 */
+	protected $text_prefix = 'COM_PROCLAIM';
+
+	/**
+	 * The type alias for this content type (for example, 'com_content.article').
+	 *
+	 * @var    string
+	 * @since  3.2
+	 */
+	public $typeAlias = 'com_proclaim.server';
+
+	/**
 	 * Data
 	 *
 	 * @var object
@@ -65,7 +81,7 @@ class CWMServerModel extends AdminModel
 	 * Reverse look up of id to server_type
 	 *
 	 * @param   int   $pk   ID to get
-	 * @param   bool  $ext  If comfing from externl
+	 * @param   bool  $ext  If coming from external
 	 *
 	 * @return string
 	 *
@@ -80,9 +96,9 @@ class CWMServerModel extends AdminModel
 	 * Method to get a server item.
 	 *
 	 * @param   null  $pk   An optional id of the object to get
-	 * @param   bool  $ext  If comfing from externl
+	 * @param   bool  $ext  If coming from external
 	 *
-	 * @return mixed Server Server data object, false on failure
+	 * @return mixed Server data object, false on failure
 	 *
 	 * @since 9.0.0
 	 */
@@ -102,14 +118,14 @@ class CWMServerModel extends AdminModel
 			$this->data->media = $registry->toArray();
 
 			// Set the type from session if available or fall back on the db value
-			$server_name             = $this->getState('server.server_name');
+			$server_name             = $this->getState('cwmserver.server_name');
 			$this->data->server_name = empty($server_name) ? $this->data->server_name : $server_name;
 
 			$type = null;
 
 			if (!$ext)
 			{
-				$type = $this->getState('server.type');
+				$type = $this->getState('cwmserver.type');
 			}
 
 			$this->data->type = empty($type) ? $this->data->type : $type;
@@ -198,7 +214,7 @@ class CWMServerModel extends AdminModel
 			return new Form("No-op");
 		}
 
-		$path = Path::clean(JPATH_ADMINISTRATOR . '/components/com_proclaim/addons/servers/' . $type);
+		$path = Path::clean(JPATH_ADMINISTRATOR . '/components/com_proclaim/src/addons/servers/' . $type);
 
 		Form::addFormPath($path);
 		Form::addFieldPath($path . '/fields');
@@ -240,7 +256,7 @@ class CWMServerModel extends AdminModel
 		}
 
 		// Get the forms.
-		$form = $this->loadForm('com_proclaim.cwmserver', 'cwmserver', array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_proclaim.server', 'server', array('control' => 'jform', 'load_data' => $loadData));
 
 		if ($form === null)
 		{
@@ -263,7 +279,7 @@ class CWMServerModel extends AdminModel
 	{
 		$user = Factory::getUser();
 
-		return $user->authorise('core.delete', 'com_proclaim.article.' . (int) $record->id);
+		return $user->authorise('core.delete', 'com_proclaim.server.' . (int) $record->id);
 	}
 
 	/**
@@ -319,7 +335,7 @@ class CWMServerModel extends AdminModel
 	 *
 	 * @since    1.6
 	 */
-	protected function cleanCache($group = null, $client_id = 0)
+	protected function cleanCache($group = null, int $client_id = 0)
 	{
 		parent::cleanCache('com_proclaim');
 		parent::cleanCache('mod_biblestudy');
@@ -335,16 +351,16 @@ class CWMServerModel extends AdminModel
 	 */
 	protected function populateState()
 	{
-		$app   = Factory::getApplication('administrator');
+		$app   = Factory::getApplication();
 		$input = $app->input;
 
 		$pk = $input->get('id', null, 'INTEGER');
-		$this->setState('server.id', $pk);
+		$this->setState('cwmserver.id', $pk);
 
 		$sname = $app->getUserState('com_proclaim.edit.server.server_name');
-		$this->setState('server.server_name', $sname);
+		$this->setState('cwmserver.server_name', $sname);
 
 		$type = $app->getUserState('com_proclaim.edit.server.type');
-		$this->setState('server.type', $type);
+		$this->setState('cwmserver.type', $type);
 	}
 }

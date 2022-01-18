@@ -15,6 +15,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Input\Input;
@@ -82,19 +83,25 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  mixed  A string if successful, otherwise a JError object.
+	 * @return  void  A string if successful, otherwise a JError object.
 	 *
-	 * @see     fetch()
+	 * @throws \Exception
 	 * @since   11.1
+	 * @see     fetch()
 	 */
 	public function display($tpl = null)
 	{
 		$this->form        = $this->get("form");
+		$this->state       = $this->get("State");
+		$this->item        = $this->get("Item");
+		$this->canDo       = CWMProclaimHelper::getActions($this->item->id, 'server');
 		$this->server_form = $this->get('AddonServerForm');
 
-		$this->item  = $this->get("Item");
-		$this->state = $this->get("State");
-		$this->canDo = CWMProclaimHelper::getActions($this->item->id, 'server');
+		// Check for errors.
+		if (count($errors = $this->get('Errors')))
+		{
+			throw new GenericDataException(implode("\n", $errors), 500);
+		}
 
 		$this->setLayout("edit");
 
@@ -126,32 +133,32 @@ class HTMLView extends BaseHtmlView
 
 		if ($isNew && $canDo->get('core.create', 'com_proclaim'))
 		{
-			ToolbarHelper::apply('server.apply');
-			ToolbarHelper::save('server.save');
-			ToolbarHelper::save2new('server.save2new');
-			ToolbarHelper::cancel('server.cancel');
+			ToolbarHelper::apply('cwmserver.apply');
+			ToolbarHelper::save('cwmserver.save');
+			ToolbarHelper::save2new('cwmserver.save2new');
+			ToolbarHelper::cancel('cwmserver.cancel');
 		}
 		else
 		{
 			if ($canDo->get('core.edit', 'com_proclaim'))
 			{
-				ToolbarHelper::apply('server.apply');
-				ToolbarHelper::save('server.save');
+				ToolbarHelper::apply('cwmserver.apply');
+				ToolbarHelper::save('cwmserver.save');
 
 				// We can save this record, but check the create permission to see if we can return to make a new one.
 				if ($canDo->get('core.create', 'com_proclaim'))
 				{
-					ToolbarHelper::save2new('server.save2new');
+					ToolbarHelper::save2new('cwmserver.save2new');
 				}
 			}
 
 			// If checked out, we can still save
 			if ($canDo->get('core.create', 'com_proclaim'))
 			{
-				ToolbarHelper::save2copy('server.save2copy');
+				ToolbarHelper::save2copy('cwmserver.save2copy');
 			}
 
-			ToolbarHelper::cancel('server.cancel', 'JTOOLBAR_CLOSE');
+			ToolbarHelper::cancel('cwmserver.cancel', 'JTOOLBAR_CLOSE');
 		}
 
 		ToolbarHelper::divider();
@@ -163,12 +170,13 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since    7.1.0
 	 */
 	protected function setDocument()
 	{
 		$isNew    = ($this->item->id < 1);
-		$document = Factory::getDocument();
+		$document = Factory::getApplication()->getDocument();
 		$document->setTitle($isNew ? Text::_('JBS_TITLE_SERVERS_CREATING') : Text::sprintf('JBS_TITLE_SERVERS_EDITING', $this->item->server_name));
 	}
 }

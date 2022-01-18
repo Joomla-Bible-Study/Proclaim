@@ -11,7 +11,15 @@
 namespace CWM\Component\Proclaim\Administrator\View\CWMBackup;
 
 // Check to ensure this file is included in Joomla!
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use CWM\Component\Proclaim\Administrator\Model\CWMAdminModel;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Installer\Installer;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die;
 
@@ -25,32 +33,38 @@ class HTMLView extends BaseHtmlView
 {
 	/** @var string CanDo function
 	 *
-	 * @since 9.0.0 */
+	 * @since 9.0.0
+	 */
 	public $canDo;
 
 	/** @var string Temp Destination
 	 *
-	 * @since 9.0.0 */
+	 * @since 9.0.0
+	 */
 	public $tmp_dest;
 
 	/** @var string Lists
 	 *
-	 * @since 9.0.0 */
+	 * @since 9.0.0
+	 */
 	public $lists;
 
 	/** @var array Form
 	 *
-	 * @since 9.0.0 */
+	 * @since 9.0.0
+	 */
 	protected $form;
 
 	/** @var array Item
 	 *
-	 * @since 9.0.0 */
+	 * @since 9.0.0
+	 */
 	protected $item;
 
 	/** @var array State
 	 *
-	 * @since 9.0.0 */
+	 * @since 9.0.0
+	 */
 	protected $state;
 
 	/**
@@ -58,14 +72,15 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  mixed  A string if successful, otherwise a JError object.
+	 * @return  void  A string if successful, otherwise a JError object.
 	 *
-	 * @see     fetch()
+	 * @throws \Exception
 	 * @since   11.1
+	 * @see     fetch()
 	 */
 	public function display($tpl = null)
 	{
-		$model = JModelLegacy::getInstance('Admin', 'BiblestudyModel');
+		$model = new CWMAdminModel;
 		$this->setModel($model, true);
 
 		// Get data from the model
@@ -75,14 +90,13 @@ class HTMLView extends BaseHtmlView
 		$this->canDo = CWMProclaimHelper::getActions($this->item->id);
 
 		// Get the list of backup files
-		jimport('joomla.filesystem.folder');
 		$path = JPATH_SITE . '/media/com_proclaim/backup';
 
-		if (JFolder::exists($path))
+		if (Folder::exists($path))
 		{
-			if (!$files = JFolder::files($path, '.sql'))
+			if (!$files = Folder::files($path, '.sql'))
 			{
-				$this->lists['backedupfiles'] = JText::_('JBS_CMN_NO_FILES_TO_DISPLAY');
+				$this->lists['backedupfiles'] = Text::_('JBS_CMN_NO_FILES_TO_DISPLAY');
 			}
 			else
 			{
@@ -95,14 +109,14 @@ class HTMLView extends BaseHtmlView
 					$filelist[]   = $filelisttemp;
 				}
 
-				$types[]                      = JHtml::_('select.option', '0', JText::_('JBS_IBM_SELECT_DB'));
+				$types[]                      = HtmlHelper::_('select.option', '0', Text::_('JBS_IBM_SELECT_DB'));
 				$types                        = array_merge($types, $filelist);
-				$this->lists['backedupfiles'] = JHtml::_('select.genericlist', $types, 'backuprestore', 'class="inputbox" size="1" ', 'value', 'text', '');
+				$this->lists['backedupfiles'] = HtmlHelper::_('select.genericlist', $types, 'backuprestore', 'class="inputbox" size="1" ', 'value', 'text', '');
 			}
 		}
 		else
 		{
-			$this->lists['backedupfiles'] = JText::_('JBS_CMN_NO_FILES_TO_DISPLAY');
+			$this->lists['backedupfiles'] = Text::_('JBS_CMN_NO_FILES_TO_DISPLAY');
 		}
 
 		$this->setLayout('edit');
@@ -114,38 +128,39 @@ class HTMLView extends BaseHtmlView
 		$this->setDocument();
 
 		// Display the template
-		return parent::display($tpl);
+		parent::display($tpl);
 	}
 
 	/**
 	 * Add Toolbar
 	 *
-	 * @return null
+	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0.0
-	 * @throws Exception
 	 */
 	protected function addToolbar()
 	{
 		Factory::getApplication()->input->set('hidemainmenu', true);
 
-		JToolbarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
-		JToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
-		JToolbarHelper::divider();
-		JToolbarHelper::help('biblestudy', true);
+		ToolbarHelper::title(Text::_('JBS_CMN_ADMINISTRATION'), 'administration');
+		ToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
+		ToolbarHelper::divider();
+		ToolbarHelper::help('biblestudy', true);
 	}
 
 	/**
 	 * Add the page title to browser.
 	 *
-	 * @return null
+	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since    7.1.0
 	 */
 	protected function setDocument()
 	{
-		$document = Factory::getDocument();
-		$document->setTitle(JText::_('JBS_TITLE_ADMINISTRATION'));
+		$document = Factory::getApplication()->getDocument();
+		$document->setTitle(Text::_('JBS_TITLE_ADMINISTRATION'));
 	}
 
 	/**
@@ -162,29 +177,25 @@ class HTMLView extends BaseHtmlView
 		switch ($component)
 		{
 			case 'sermonspeaker':
-				$data = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_sermonspeaker/sermonspeaker.xml');
+				$data = Installer::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_sermonspeaker/sermonspeaker.xml');
 
 				if ($data)
 				{
 					return $data['version'];
 				}
-				else
-				{
-					return false;
-				}
+
+				return false;
 				break;
 
 			case 'preachit':
-				$data = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_preachit/preachit.xml');
+				$data = Installer::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_preachit/preachit.xml');
 
 				if ($data)
 				{
 					return $data['version'];
 				}
-				else
-				{
-					return false;
-				}
+
+				return false;
 				break;
 		}
 

@@ -11,7 +11,11 @@
 namespace CWM\Component\Proclaim\Administrator\View\CWMDir;
 
 // No direct access
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Uri\Uri;
 
 defined('_JEXEC') or die();
 
@@ -38,14 +42,15 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  mixed  A string if successful, otherwise a Error object.
+	 * @return  void  A string if successful, otherwise a Error object.
 	 *
+	 * @throws \Exception
 	 * @since    7.0.0
 	 */
 	public function display($tpl = null)
 	{
-		$document = Factory::getDocument();
-		$mediaDir = JUri::root() . "media/com_proclaim/";
+		$document = Factory::getApplication()->getDocument();
+		$mediaDir = Uri::root() . "media/com_proclaim/";
 
 		// Add style sheet
 		$document->addStyleSheet($mediaDir . 'css/com_proclaim.css');
@@ -132,7 +137,7 @@ class HTMLView extends BaseHtmlView
 
 		var action = 'index.php?option=com_proclaim&no_html=1&task=path.delete';
 		var currentFolder = $('input#current_folder').val();
-		var token = '<?php echo JSession::getFormToken() ?>';
+		var token = '<?php echo Session::getFormToken() ?>';
 		var dataString = '';
 
 		dataString+= 'paths[]=' + fileName + '&';
@@ -184,7 +189,7 @@ class HTMLView extends BaseHtmlView
 		});
 
 		$('a.path_rm_btn').click(function() {
-		var cnfTxt = '<?php echo JText::_('JBSM_DIR_BROSWER_CONFIRM_DELETE'); ?>';
+		var cnfTxt = '<?php echo Text::_('JBSM_DIR_BROSWER_CONFIRM_DELETE'); ?>';
 		if(confirm(cnfTxt)) {
 		rmPath( this.name );
 		} else {

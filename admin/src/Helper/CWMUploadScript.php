@@ -18,10 +18,10 @@ use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Path;
+use Joomla\CMS\Helper\MediaHelper;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Session\Session;
-use Joomla\CMS\Helper\MediaHelper;
-use Joomla\Event;
+use Joomla\Input\Input;
 
 /**
  * Class UploadScript
@@ -31,6 +31,9 @@ use Joomla\Event;
  */
 class CWMUploadScript
 {
+	public $runtimeScript;
+	public $runtime;
+
 	/**
 	 * @var string
 	 * @since 9.0.0
@@ -44,6 +47,7 @@ class CWMUploadScript
 	 *
 	 * @return array|boolean
 	 *
+	 * @throws \Exception
 	 * @since 9.0.0
 	 */
 	public function upload($data)
@@ -131,5 +135,18 @@ class CWMUploadScript
 				'size'     => $_FILES['file']['size']
 			)
 		);
+	}
+
+	/**
+	 * Upload media files
+	 *
+	 * @return string
+	 *
+	 * @throws \Exception
+	 * @since 9.0.0
+	 */
+	public function UIScript()
+	{
+		return '';
 	}
 }

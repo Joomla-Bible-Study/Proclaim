@@ -17,6 +17,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Registry\Registry;
@@ -66,7 +67,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  mixed  A string if successful, otherwise a JError object.
+	 * @return  void  A string if successful, otherwise a JError object.
 	 *
 	 * @throws  \Exception
 	 * @since   7.0.0
@@ -76,7 +77,7 @@ class HTMLView extends BaseHtmlView
 		$this->form  = $this->get("Form");
 		$this->item  = $this->get("Item");
 		$this->canDo = CWMProclaimHelper::getActions($this->item->id, 'serie');
-		$admin = CWMParams::getAdmin();
+		$admin       = CWMParams::getAdmin();
 		$registry    = new Registry;
 		$registry->loadString($admin->params);
 		$this->admin_params = $registry;
@@ -84,9 +85,7 @@ class HTMLView extends BaseHtmlView
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
-			Factory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
-
-			return false;
+			throw new GenericDataException(implode("\n", $errors), 500);
 		}
 
 		// Set the toolbar
@@ -96,7 +95,7 @@ class HTMLView extends BaseHtmlView
 		$this->setDocument();
 
 		// Display the template
-		return parent::display($tpl);
+		parent::display($tpl);
 	}
 
 	/**
@@ -140,12 +139,13 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since    7.1.0
 	 */
 	protected function setDocument()
 	{
 		$isNew    = ($this->item->id < 1);
-		$document = Factory::getDocument();
+		$document = Factory::getApplication()->getDocument();
 		$document->setTitle($isNew ? Text::_('JBS_TITLE_SERIES_CREATING') : Text::sprintf('JBS_TITLE_SERIES_EDITING', $this->item->series_text));
 	}
 }

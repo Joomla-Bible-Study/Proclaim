@@ -16,11 +16,10 @@ $published = $this->state->get('filter.published');
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('com_proclaim.cwmadmin-messages-batch');
-
 ?>
 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
 	<?php echo Text::_('JCANCEL'); ?>
 </button>
-<button type="submit" id='batch-submit-button-id' class="btn btn-success"  data-submit-task='message.batch'>
+<button type="submit" id='batch-submit-button-id' class="btn btn-success" data-submit-task='message.batch'>
 	<?php echo JText::_('JGLOBAL_BATCH_PROCESS'); ?>
 </button>

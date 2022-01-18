@@ -13,7 +13,15 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Administrator\Table\CWMTemplatecodeTable;
+use CWM\Component\Proclaim\Administrator\Table\CWMTemplateTable;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Table\Table;
+use Joomla\Database\DatabaseDriver;
+use Joomla\Input\Files;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
+use Joomla\CMS\Session\Session;
 use Joomla\Registry\Registry;
 
 /**
@@ -25,32 +33,16 @@ use Joomla\Registry\Registry;
 class CWMTemplatesController extends AdminController
 {
 	/**
-	 * Proxy for getModel
-	 *
-	 * @param   string  $name    The name of the model
-	 * @param   string  $prefix  The prefix for the PHP class name
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return boolean|JModelLegacy
-	 *
-	 * @since 7.0.0
-	 */
-	public function getModel($name = 'Template', $prefix = 'BiblestudyModel', $config = array())
-	{
-		return parent::getModel($name, $prefix, array('ignore_request' => true));
-	}
-
-	/**
 	 * Import Template
 	 *
-	 * @return \BiblestudyControllerTemplates|integer
+	 * @return CWMTemplatesController|integer
 	 *
 	 * @since 8.0
 	 */
 	public function template_import()
 	{
 		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
 		// Set Variables.
 		$sermonstemplate        = null;
@@ -63,7 +55,7 @@ class CWMTemplatesController extends AdminController
 
 		set_time_limit(300);
 
-		$input    = new Joomla\Input\Files;
+		$input    = new Files;
 		$userfile = $input->get('template_import');
 		$app      = Factory::getApplication();
 		$tc       = 0;
@@ -71,21 +63,21 @@ class CWMTemplatesController extends AdminController
 		// Make sure that file uploads are enabled in php
 		if (!(bool) ini_get('file_uploads'))
 		{
-			$app->enqueueMessage(JText::_('JBS_CMN_UPLOADS_NOT_ENABLED'), 'warning');
+			$app->enqueueMessage(Text::_('JBS_CMN_UPLOADS_NOT_ENABLED'), 'warning');
 			$this->setRedirect('index.php?option=com_proclaim&view=templates');
 		}
 
 		// If there is no uploaded file, we have a problem...
 		if (!is_array($userfile))
 		{
-			$app->enqueueMessage(JText::_('JBS_CMN_NO_FILE_SELECTED'), 'warning');
+			$app->enqueueMessage(Text::_('JBS_CMN_NO_FILE_SELECTED'), 'warning');
 			$this->setRedirect('index.php?option=com_proclaim&view=templates');
 		}
 
 		// Check if there was a problem uploading the file.
 		if ($userfile['error'] || $userfile['size'] < 1)
 		{
-			$app->enqueueMessage(JText::_('JBS_CMN_WARN_INSTALL_UPLOAD_ERROR'), 'warning');
+			$app->enqueueMessage(Text::_('JBS_CMN_WARN_INSTALL_UPLOAD_ERROR'), 'warning');
 			$this->setRedirect('index.php?option=com_proclaim&view=templates');
 		}
 
@@ -101,7 +93,7 @@ class CWMTemplatesController extends AdminController
 		$db     = Factory::getDbo();
 
 		$query   = file_get_contents(JPATH_SITE . '/tmp/' . $userfile['name']);
-		$queries = JDatabaseDriver::splitSql($query);
+		$queries = DatabaseDriver::splitSql($query);
 
 		if (count($queries) === 0)
 		{
@@ -139,15 +131,14 @@ class CWMTemplatesController extends AdminController
 						$tc++;
 
 						// Store new Recorded so it can be seen.
-						JTable::addIncludePath(JPATH_COMPONENT . '/tables');
-						$table = JTable::getInstance('Templatecode', 'Table', array('dbo' => $db));
+						$table = new CWMTemplatecodeTable($db);
 
 						try
 						{
 							$table->load($data->id);
 							$table->store();
 						}
-						catch (Exception $e)
+						catch (\Exception $e)
 						{
 							echo 'Caught exception: ', $e->getMessage(), "\n";
 						}
@@ -229,15 +220,13 @@ class CWMTemplatesController extends AdminController
 		$data = $db->loadObject();
 
 		// Load Table Data.
-		JTable::addIncludePath(JPATH_COMPONENT . '/tables');
-		/** @type TableTemplate $table */
-		$table = JTable::getInstance('Template', 'Table', array('dbo' => $db));
+		$table = new CWMTemplateTable($db);
 
 		try
 		{
 			$table->load($data->id);
 		}
-		catch (Exception $e)
+		catch (\Exception $e)
 		{
 			echo 'Caught exception: ', $e->getMessage(), "\n";
 		}
@@ -259,9 +248,9 @@ class CWMTemplatesController extends AdminController
 
 		$table->store();
 
-		$message = JText::_('JBS_TPL_IMPORT_SUCCESS');
+		$message = Text::_('JBS_TPL_IMPORT_SUCCESS');
 
-		return $this->setRedirect('index.php?option=com_proclaim&view=templates', $message);
+		return $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates', $message);
 	}
 
 	/**
@@ -296,7 +285,7 @@ class CWMTemplatesController extends AdminController
 	public function template_export()
 	{
 		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		JSession::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
 		$input          = new Joomla\Input\Input;
 		$data           = $input->get('template_export');
@@ -304,7 +293,7 @@ class CWMTemplatesController extends AdminController
 
 		if (!$exporttemplate)
 		{
-			$message = JText::_('JBS_TPL_NO_FILE_SELECTED');
+			$message = Text::_('JBS_TPL_NO_FILE_SELECTED');
 			$this->setRedirect('index.php?option=com_proclaim&view=templates', $message);
 		}
 
@@ -329,7 +318,7 @@ class CWMTemplatesController extends AdminController
 		$xport = new JBSMBackup;
 		$xport->output_file($filepath, $filename, 'text/x-sql');
 		JFile::delete($filepath);
-		$message = JText::_('JBS_TPL_EXPORT_SUCCESS');
+		$message = Text::_('JBS_TPL_EXPORT_SUCCESS');
 
 		return $this->setRedirect('index.php?option=com_proclaim&view=templates', $message);
 	}

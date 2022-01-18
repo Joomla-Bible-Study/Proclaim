@@ -7,7 +7,13 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
+namespace CWM\Component\Proclaim\Administrator\Table;
+
 // No Direct Access
+use Joomla\CMS\Table\Table;
+use Joomla\Database\DatabaseDriver;
+
 defined('_JEXEC') or die;
 
 /**
@@ -21,7 +27,7 @@ class CWMCommentTable extends Table
 	/**
 	 * Primary Key
 	 *
-	 * @var int
+	 * @var integer
 	 * @since    7.0.0
 	 */
 	public $id = null;
@@ -91,7 +97,7 @@ class CWMCommentTable extends Table
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver  &$db  Database connector object
+	 * @param   DatabaseDriver  $db  Database connector object
 	 *
 	 * @since    7.0.0
 	 */
@@ -160,8 +166,8 @@ class CWMCommentTable extends Table
 	 * The extended class can define a table and id to lookup.  If the
 	 * asset does not exist it will be created.
 	 *
-	 * @param   Table   $table  A Table object for the asset parent.
-	 * @param   integer  $id     Id to look up
+	 * @param   \Joomla\CMS\Table\Table|null  $table  A Table object for the asset parent.
+	 * @param   null                          $id     Id to look up
 	 *
 	 * @return  integer
 	 *
@@ -169,7 +175,7 @@ class CWMCommentTable extends Table
 	 */
 	protected function _getAssetParentId(Table $table = null, $id = null)
 	{
-		/** @type TableAsset $asset */
+		/** @var \Joomla\CMS\Table\Asset $asset */
 		$asset = Table::getInstance('Asset');
 		$asset->loadByName('com_proclaim');
 

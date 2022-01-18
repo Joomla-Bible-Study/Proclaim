@@ -12,6 +12,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // No Direct Access
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Input\Input;
 
 defined('_JEXEC') or die;
 
@@ -37,9 +38,9 @@ class CWMTemplatesModel extends ListModel
 		if (empty($config['filter_fields']))
 		{
 			$config['filter_fields'] = array(
-					'id', 'template.id',
-					'published', 'template.published',
-					'title', 'template.title'
+				'id', 'template.id',
+				'published', 'template.published',
+				'title', 'template.title'
 			);
 		}
 
@@ -65,7 +66,7 @@ class CWMTemplatesModel extends ListModel
 	{
 		if (empty($this->templates))
 		{
-			$query            = 'SELECT id as value, title as text FROM `#__bsms_templates` WHERE published = 1 ORDER BY id ASC';
+			$query           = 'SELECT id as value, title as text FROM `#__bsms_templates` WHERE published = 1 ORDER BY id ASC';
 			$this->templates = $this->_getList($query);
 		}
 
@@ -107,7 +108,7 @@ class CWMTemplatesModel extends ListModel
 	protected function populateState($ordering = null, $direction = null)
 	{
 		// Adjust the context to support modal layouts.
-		$input  = new JInput;
+		$input  = new Input;
 		$layout = $input->get('layout');
 
 		if ($layout)
@@ -130,7 +131,7 @@ class CWMTemplatesModel extends ListModel
 	/**
 	 * Build and SQL query to load the list data
 	 *
-	 * @return  JDatabaseQuery
+	 * @return  \Joomla\Database\QueryInterface
 	 *
 	 * @since   7.0
 	 */
@@ -141,7 +142,8 @@ class CWMTemplatesModel extends ListModel
 
 		$query->select(
 			$this->getState(
-				'list.select', 'template.id, template.published, template.title')
+				'list.select', 'template.id, template.published, template.title'
+			)
 		);
 		$query->from('#__bsms_templates AS template');
 

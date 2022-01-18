@@ -13,7 +13,12 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMDatabase;
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Administrator\Model\CWMAdminModel;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Installer\Installer;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Registry\Registry;
 
 /**
@@ -30,7 +35,7 @@ class HTMLView extends BaseHtmlView
 	 * @var string
 	 * @since    9.0.14
 	 */
-	public $version;
+	public string $version;
 
 	/**
 	 * Can Do
@@ -38,7 +43,7 @@ class HTMLView extends BaseHtmlView
 	 * @var string
 	 * @since    9.0.14
 	 */
-	public $canDo;
+	public string $canDo;
 
 	/**
 	 * Change Set
@@ -46,7 +51,7 @@ class HTMLView extends BaseHtmlView
 	 * @var string
 	 * @since    9.0.14
 	 */
-	public $changeSet;
+	public string $changeSet;
 
 	/**
 	 * Errors
@@ -54,7 +59,7 @@ class HTMLView extends BaseHtmlView
 	 * @var string
 	 * @since    9.0.14
 	 */
-	public $errors;
+	public string $errors;
 
 	/**
 	 * Results
@@ -62,7 +67,7 @@ class HTMLView extends BaseHtmlView
 	 * @var string
 	 * @since    9.0.14
 	 */
-	public $results;
+	public string $results;
 
 	/**
 	 * Schema Version
@@ -70,7 +75,7 @@ class HTMLView extends BaseHtmlView
 	 * @var string
 	 * @since    9.0.14
 	 */
-	public $schemaVersion;
+	public string $schemaVersion;
 
 	/**
 	 * Update Version
@@ -78,7 +83,7 @@ class HTMLView extends BaseHtmlView
 	 * @var string
 	 * @since    9.0.14
 	 */
-	public $updateVersion;
+	public string $updateVersion;
 
 	/**
 	 * Filter Params
@@ -86,7 +91,7 @@ class HTMLView extends BaseHtmlView
 	 * @var Registry
 	 * @since    9.0.14
 	 */
-	public $filterParams;
+	public Registry $filterParams;
 
 	/**
 	 * Pagination
@@ -94,7 +99,7 @@ class HTMLView extends BaseHtmlView
 	 * @var string
 	 * @since    9.0.14
 	 */
-	public $pagination;
+	public string $pagination;
 
 	/**
 	 * Error Count
@@ -102,7 +107,7 @@ class HTMLView extends BaseHtmlView
 	 * @var string
 	 * @since    9.0.14
 	 */
-	public $errorCount;
+	public string $errorCount;
 
 	/**
 	 * Joomla BibleStudy Version
@@ -110,7 +115,7 @@ class HTMLView extends BaseHtmlView
 	 * @var string
 	 * @since    9.0.14
 	 */
-	public $jversion;
+	public string $jversion;
 
 	/**
 	 * Temp Destination
@@ -118,7 +123,7 @@ class HTMLView extends BaseHtmlView
 	 * @var string
 	 * @since    9.0.14
 	 */
-	public $tmp_dest;
+	public string $tmp_dest;
 
 	/**
 	 * Player Stats
@@ -126,7 +131,7 @@ class HTMLView extends BaseHtmlView
 	 * @var string
 	 * @since    9.0.14
 	 */
-	public $playerstats;
+	public string $playerstats;
 
 	/**
 	 * Assets
@@ -134,7 +139,7 @@ class HTMLView extends BaseHtmlView
 	 * @var string
 	 * @since    9.0.14
 	 */
-	public $assets;
+	public string $assets;
 
 	/**
 	 * Popups
@@ -142,7 +147,7 @@ class HTMLView extends BaseHtmlView
 	 * @var string
 	 * @since    9.0.14
 	 */
-	public $popups;
+	public string $popups;
 
 	/**
 	 * SS
@@ -174,7 +179,7 @@ class HTMLView extends BaseHtmlView
 	 * @var array
 	 * @since    9.0.14
 	 */
-	protected $form;
+	protected mixed $form;
 
 	/**
 	 * Item
@@ -182,7 +187,7 @@ class HTMLView extends BaseHtmlView
 	 * @var array
 	 * @since    9.0.14
 	 */
-	protected $item;
+	protected array $item;
 
 	/**
 	 * State
@@ -190,18 +195,18 @@ class HTMLView extends BaseHtmlView
 	 * @var array
 	 * @since    9.0.14
 	 */
-	protected $state;
+	protected array $state;
 
-	protected $updateJBSMVersion;
+	protected string $updateJBSMVersion;
 
 	/**
 	 * Execute and display a template script.
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  mixed  A string if successful, otherwise a JError object.
+	 * @return  void  A string if successful, otherwise a JError object.
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   9.0.14
 	 * @see     fetch()
 	 */
@@ -210,10 +215,10 @@ class HTMLView extends BaseHtmlView
 		// Set variables
 		$app = Factory::getApplication();
 
-		$model = JModelLegacy::getInstance('Admin', 'BiblestudyModel');
+		$model = new CWMAdminModel;
 		$this->setModel($model, true);
 
-		$language = Factory::getLanguage();
+		$language = $app->getLanguage();
 		$language->load('com_installer');
 
 		// Get data from the model
@@ -227,15 +232,15 @@ class HTMLView extends BaseHtmlView
 		$this->schemaVersion = $this->get('SchemaVersion');
 		$this->updateVersion = $this->get('UpdateVersion');
 		$this->filterParams  = $this->get('DefaultTextFilters');
-		$this->schemaVersion = ($this->schemaVersion) ? $this->schemaVersion : JText::_('JNONE');
-		$this->updateVersion = ($this->updateVersion) ? $this->updateVersion : JText::_('JNONE');
+		$this->schemaVersion = ($this->schemaVersion) ? $this->schemaVersion : Text::_('JNONE');
+		$this->updateVersion = ($this->updateVersion) ? $this->updateVersion : Text::_('JNONE');
 		$this->pagination    = $this->get('Pagination');
 		$this->errorCount    = count($this->errors);
 		$this->jversion      = $this->get('CompVersion');
 
 		$this->updateJBSMVersion = $this->get('UpdateJBSMVersion');
 
-		$jbsversion    = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_proclaim/biblestudy.xml');
+		$jbsversion    = Installer::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_proclaim/biblestudy.xml');
 		$this->version = $jbsversion['version'];
 
 		if ($this->schemaVersion != $this->changeSet->getSchema())
@@ -260,11 +265,11 @@ class HTMLView extends BaseHtmlView
 
 		if ($this->errorCount === 0)
 		{
-			$app->enqueueMessage(JText::_('COM_INSTALLER_MSG_DATABASE_OK'), 'notice');
+			$app->enqueueMessage(Text::_('COM_INSTALLER_MSG_DATABASE_OK'), 'notice');
 		}
 		else
 		{
-			$app->enqueueMessage(JText::_('COM_INSTALLER_MSG_DATABASE_ERRORS'), 'warning');
+			$app->enqueueMessage(Text::_('COM_INSTALLER_MSG_DATABASE_ERRORS'), 'warning');
 		}
 
 		$this->setLayout('edit');
@@ -276,7 +281,7 @@ class HTMLView extends BaseHtmlView
 		$this->setDocument();
 
 		// Display the template
-		return parent::display($tpl);
+		parent::display($tpl);
 	}
 
 	/**
@@ -284,21 +289,21 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 9.0.14
 	 */
 	protected function addToolbar()
 	{
 		Factory::getApplication()->input->set('hidemainmenu', true);
 
-		JToolbarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
-		JToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
-		JToolbarHelper::divider();
-		JToolbarHelper::custom('administration.back', 'back', 'back', 'JTOOLBAR_BACK', false);
-		JToolbarHelper::divider();
-		JToolbarHelper::custom('administration.fix', 'refresh', 'refresh', 'JBS_ADM_DB_FIX', false);
-		JToolbarHelper::divider();
-		JToolbarHelper::help('biblestudy', true);
+		ToolbarHelper::title(Text::_('JBS_CMN_ADMINISTRATION'), 'administration');
+		ToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
+		ToolbarHelper::divider();
+		ToolbarHelper::custom('cwmadmin.back', 'back', 'back', 'JTOOLBAR_BACK', false);
+		ToolbarHelper::divider();
+		ToolbarHelper::custom('cwmadmin.fix', 'refresh', 'refresh', 'JBS_ADM_DB_FIX', false);
+		ToolbarHelper::divider();
+		ToolbarHelper::help('biblestudy', true);
 	}
 
 	/**
@@ -306,11 +311,12 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since    9.0.14
 	 */
 	protected function setDocument()
 	{
-		$document = Factory::getDocument();
-		$document->setTitle(JText::_('JBS_TITLE_ADMINISTRATION'));
+		$document = Factory::getApplication()->getDocument();
+		$document->setTitle(Text::_('JBS_TITLE_ADMINISTRATION'));
 	}
 }

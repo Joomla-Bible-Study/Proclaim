@@ -17,6 +17,7 @@ use JHtml;
 use JHtmlSidebar;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
@@ -113,12 +114,10 @@ class HTMLView extends BaseHtmlView
 		$this->sortDirection = $this->state->get('list.direction');
 		$this->sortColumn    = $this->state->get('list.ordering');
 
-		// Check for errors
+		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
-			Factory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
-
-			return false;
+			throw new GenericDataException(implode("\n", $errors), 500);
 		}
 
 		// Levels filter.

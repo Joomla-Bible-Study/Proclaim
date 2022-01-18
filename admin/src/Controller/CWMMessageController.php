@@ -16,6 +16,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Table\Table;
@@ -129,7 +130,7 @@ class CWMMessageController extends FormController
 	/**
 	 * Method to run batch operations.
 	 *
-	 * @param   JModelLegacy  $model  The model.
+	 * @param   BaseDatabaseModel  $model  The model.
 	 *
 	 * @return  boolean     True if successful, false otherwise and internal error is set.
 	 *

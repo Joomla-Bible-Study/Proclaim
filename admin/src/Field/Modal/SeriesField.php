@@ -235,13 +235,13 @@ class SeriesField extends FormField
 					'bodyHeight'  => 70,
 					'modalWidth'  => 80,
 					'footer'      => '<button type="button" class="btn btn-secondary"'
-						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'article\', \'cancel\', \'item-form\'); return false;">'
+						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'cwmserie\', \'cancel\', \'item-form\'); return false;">'
 						. Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>'
 						. '<button type="button" class="btn btn-primary"'
-						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'article\', \'save\', \'item-form\'); return false;">'
+						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'cwmserie\', \'save\', \'item-form\'); return false;">'
 						. Text::_('JSAVE') . '</button>'
 						. '<button type="button" class="btn btn-success"'
-						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'article\', \'apply\', \'item-form\'); return false;">'
+						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'cwmserie\', \'apply\', \'item-form\'); return false;">'
 						. Text::_('JAPPLY') . '</button>',
 				)
 			);
@@ -264,13 +264,13 @@ class SeriesField extends FormField
 					'bodyHeight'  => 70,
 					'modalWidth'  => 80,
 					'footer'      => '<button type="button" class="btn btn-secondary"'
-						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'article\', \'cancel\', \'item-form\'); return false;">'
+						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'cwmserie\', \'cancel\', \'item-form\'); return false;">'
 						. Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>'
 						. '<button type="button" class="btn btn-primary"'
-						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'article\', \'save\', \'item-form\'); return false;">'
+						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'cwmserie\', \'save\', \'item-form\'); return false;">'
 						. Text::_('JSAVE') . '</button>'
 						. '<button type="button" class="btn btn-success"'
-						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'article\', \'apply\', \'item-form\'); return false;">'
+						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'cwmserie\', \'apply\', \'item-form\'); return false;">'
 						. Text::_('JAPPLY') . '</button>',
 				)
 			);

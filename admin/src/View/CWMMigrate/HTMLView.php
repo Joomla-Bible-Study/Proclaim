@@ -13,7 +13,15 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMMigrate;
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use CWM\Component\Proclaim\Administrator\Model\CWMAdminModel;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Installer\Installer;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Registry\Registry;
 
 /**
@@ -30,7 +38,7 @@ class HTMLView extends BaseHtmlView
 	 * @var string
 	 * @since    7.0.0
 	 */
-	public $version;
+	public string $version;
 
 	/**
 	 * Can Do
@@ -86,7 +94,7 @@ class HTMLView extends BaseHtmlView
 	 * @var Registry
 	 * @since    7.0.0
 	 */
-	public $filterParams;
+	public Registry $filterParams;
 
 	/**
 	 * Pagination
@@ -94,7 +102,7 @@ class HTMLView extends BaseHtmlView
 	 * @var string
 	 * @since    7.0.0
 	 */
-	public $pagination;
+	public string $pagination;
 
 	/**
 	 * Error Count
@@ -102,7 +110,7 @@ class HTMLView extends BaseHtmlView
 	 * @var string
 	 * @since    7.0.0
 	 */
-	public $errorCount;
+	public string $errorCount;
 
 	/**
 	 * Joomla BibleStudy Version
@@ -110,7 +118,7 @@ class HTMLView extends BaseHtmlView
 	 * @var string
 	 * @since    7.0.0
 	 */
-	public $jversion;
+	public string $jversion;
 
 	/**
 	 * Temp Destination
@@ -118,7 +126,7 @@ class HTMLView extends BaseHtmlView
 	 * @var string
 	 * @since    7.0.0
 	 */
-	public $tmp_dest;
+	public string $tmp_dest;
 
 	/**
 	 * Player Stats
@@ -126,7 +134,7 @@ class HTMLView extends BaseHtmlView
 	 * @var string
 	 * @since    7.0.0
 	 */
-	public $playerstats;
+	public string $playerstats;
 
 	/**
 	 * Assets
@@ -134,7 +142,7 @@ class HTMLView extends BaseHtmlView
 	 * @var string
 	 * @since    7.0.0
 	 */
-	public $assets;
+	public string $assets;
 
 	/**
 	 * Popups
@@ -142,7 +150,7 @@ class HTMLView extends BaseHtmlView
 	 * @var string
 	 * @since    7.0.0
 	 */
-	public $popups;
+	public string $popups;
 
 	/**
 	 * SS
@@ -150,7 +158,7 @@ class HTMLView extends BaseHtmlView
 	 * @var string
 	 * @since    7.0.0
 	 */
-	public $ss;
+	public string $ss;
 
 	/**
 	 * Lists
@@ -158,7 +166,7 @@ class HTMLView extends BaseHtmlView
 	 * @var string
 	 * @since    7.0.0
 	 */
-	public $lists;
+	public string $lists;
 
 	/**
 	 * PI
@@ -166,7 +174,7 @@ class HTMLView extends BaseHtmlView
 	 * @var string
 	 * @since    7.0.0
 	 */
-	public $pi;
+	public string $pi;
 
 	/**
 	 * Form
@@ -174,7 +182,7 @@ class HTMLView extends BaseHtmlView
 	 * @var array
 	 * @since    7.0.0
 	 */
-	protected $form;
+	protected mixed $form;
 
 	/**
 	 * Item
@@ -182,7 +190,7 @@ class HTMLView extends BaseHtmlView
 	 * @var array
 	 * @since    7.0.0
 	 */
-	protected $item;
+	protected array $item;
 
 	/**
 	 * State
@@ -190,25 +198,25 @@ class HTMLView extends BaseHtmlView
 	 * @var array
 	 * @since    7.0.0
 	 */
-	protected $state;
+	protected array $state;
 
 	/**
 	 * Execute and display a template script.
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  mixed  A string if successful, otherwise a JError object.
+	 * @return  void  A string if successful, otherwise a JError object.
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   11.1
 	 * @see     fetch()
 	 */
 	public function display($tpl = null)
 	{
-		$model = JModelLegacy::getInstance('Admin', 'BiblestudyModel');
+		$model = new CWMAdminModel;
 		$this->setModel($model, true);
 
-		$language = Factory::getLanguage();
+		$language = Factory::getApplication()->getLanguage();
 		$language->load('com_installer');
 
 		// Get data from the model
@@ -221,14 +229,13 @@ class HTMLView extends BaseHtmlView
 		$this->tmp_dest = $config->get('tmp_path');
 
 		// Get the list of backup files
-		jimport('joomla.filesystem.folder');
 		$path = JPATH_SITE . '/media/com_proclaim/backup';
 
-		if (JFolder::exists($path))
+		if (Folder::exists($path))
 		{
-			if (!$files = JFolder::files($path, '.sql'))
+			if (!$files = Folder::files($path, '.sql'))
 			{
-				$this->lists['backedupfiles'] = JText::_('JBS_CMN_NO_FILES_TO_DISPLAY');
+				$this->lists['backedupfiles'] = Text::_('JBS_CMN_NO_FILES_TO_DISPLAY');
 			}
 			else
 			{
@@ -241,14 +248,14 @@ class HTMLView extends BaseHtmlView
 					$filelist[]   = $filelisttemp;
 				}
 
-				$types[]                      = JHtml::_('select.option', '0', JText::_('JBS_IBM_SELECT_DB'));
+				$types[]                      = HTMLHelper::_('select.option', '0', Text::_('JBS_IBM_SELECT_DB'));
 				$types                        = array_merge($types, $filelist);
-				$this->lists['backedupfiles'] = JHtml::_('select.genericlist', $types, 'backuprestore', 'class="inputbox" size="1" ', 'value', 'text', '');
+				$this->lists['backedupfiles'] = HTMLHelper::_('select.genericlist', $types, 'backuprestore', 'class="inputbox" size="1" ', 'value', 'text', '');
 			}
 		}
 		else
 		{
-			$this->lists['backedupfiles'] = JText::_('JBS_CMN_NO_FILES_TO_DISPLAY');
+			$this->lists['backedupfiles'] = Text::_('JBS_CMN_NO_FILES_TO_DISPLAY');
 		}
 
 		// Check for SermonSpeaker and PreachIt
@@ -259,25 +266,25 @@ class HTMLView extends BaseHtmlView
 			if ($extension->element == 'com_sermonspeaker')
 			{
 				$this->ss = '<a href="index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1&task=cwmadmin.convertSermonSpeaker">'
-					. JText::_('JBS_IBM_CONVERT_SERMON_SPEAKER') . '</a>';
+					. Text::_('JBS_IBM_CONVERT_SERMON_SPEAKER') . '</a>';
 			}
 			else
 			{
-				$this->ss = JText::_('JBS_IBM_NO_SERMON_SPEAKER_FOUND');
+				$this->ss = Text::_('JBS_IBM_NO_SERMON_SPEAKER_FOUND');
 			}
 
 			if ($extension->element == 'com_preachit')
 			{
 				$this->pi = '<a href="index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1&task=cwmadmin.convertPreachIt">'
-					. JText::_('JBS_IBM_CONVERT_PREACH_IT') . '</a>';
+					. Text::_('JBS_IBM_CONVERT_PREACH_IT') . '</a>';
 			}
 			else
 			{
-				$this->pi = JText::_('JBS_IBM_NO_PREACHIT_FOUND');
+				$this->pi = Text::_('JBS_IBM_NO_PREACHIT_FOUND');
 			}
 		}
 
-		$jbsversion    = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_proclaim/biblestudy.xml');
+		$jbsversion    = Installer::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_proclaim/biblestudy.xml');
 		$this->version = $jbsversion['version'];
 
 		if (!(strncmp($this->schemaVersion, $this->version, 5) === 0))
@@ -304,38 +311,38 @@ class HTMLView extends BaseHtmlView
 		$this->setDocument();
 
 		// Display the template
-		return parent::display($tpl);
+		parent::display($tpl);
 	}
 
 	/**
 	 * Add Toolbar
 	 *
-	 * @return null
+	 * @return void
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since  7.0.0
 	 */
 	protected function addToolbar()
 	{
 		Factory::getApplication()->input->set('hidemainmenu', true);
 
-		JToolbarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
-		JToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
-		JToolbarHelper::divider();
-		JToolbarHelper::help('biblestudy', true);
+		ToolbarHelper::title(Text::_('JBS_CMN_ADMINISTRATION'), 'administration');
+		ToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
+		ToolbarHelper::divider();
+		ToolbarHelper::help('biblestudy', true);
 	}
 
 	/**
 	 * Add the page title to browser.
 	 *
-	 * @return null
+	 * @return void
 	 *
 	 * @since    7.1.0
 	 */
 	protected function setDocument()
 	{
-		$document = Factory::getDocument();
-		$document->setTitle(JText::_('JBS_TITLE_ADMINISTRATION'));
+		$document = Factory::getApplication()->getDocument();
+		$document->setTitle(Text::_('JBS_TITLE_ADMINISTRATION'));
 	}
 
 	/**
@@ -352,29 +359,25 @@ class HTMLView extends BaseHtmlView
 		switch ($component)
 		{
 			case 'sermonspeaker':
-				$data = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_sermonspeaker/sermonspeaker.xml');
+				$data = Installer::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_sermonspeaker/sermonspeaker.xml');
 
 				if ($data)
 				{
 					return $data['version'];
 				}
-				else
-				{
-					return false;
-				}
+
+				return false;
 				break;
 
 			case 'preachit':
-				$data = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_preachit/preachit.xml');
+				$data = Installer::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_preachit/preachit.xml');
 
 				if ($data)
 				{
 					return $data['version'];
 				}
-				else
-				{
-					return false;
-				}
+
+				return false;
 				break;
 		}
 

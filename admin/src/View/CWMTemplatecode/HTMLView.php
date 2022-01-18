@@ -11,7 +11,13 @@
 namespace CWM\Component\Proclaim\Administrator\View\CWMTemplatecode;
 
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use Joomla\CMS\Client\ClientHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\Input\Input;
 
 defined('_JEXEC') or die;
 
@@ -84,22 +90,23 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  mixed  A string if successful, otherwise a JError object.
+	 * @return  void  A string if successful, otherwise a JError object.
 	 *
-	 * @see     fetch()
+	 * @throws \Exception
 	 * @since   11.1
+	 * @see     fetch()
 	 */
 	public function display($tpl = null)
 	{
 		$this->form = $this->get("Form");
 		$item       = $this->get("Item");
 
-		if ($item->id == 0)
+		if ((int) $item->id === 0)
 		{
 			jimport('joomla.client.helper');
 			jimport('joomla.filesystem.file');
-			JClientHelper::setCredentialsFromRequest('ftp');
-			$ftp               = JClientHelper::getCredentials('ftp');
+			ClientHelper::setCredentialsFromRequest('ftp');
+			$ftp               = ClientHelper::getCredentials('ftp');
 			$file              = JPATH_ADMINISTRATOR . '/components/com_proclaim/helpers/defaulttemplatecode.php';
 			$this->defaultcode = file_get_contents($file);
 		}
@@ -118,45 +125,45 @@ class HTMLView extends BaseHtmlView
 		$this->setLayout("edit");
 		$this->addToolbar();
 
-		return parent::display($tpl);
+		parent::display($tpl);
 	}
 
 	/**
 	 * Add Toolbar
 	 *
-	 * @return object
+	 * @return void
 	 *
 	 * @since 7.0.0
 	 */
 	protected function addToolbar()
 	{
-		$input = new JInput;
+		$input = new Input;
 		$input->set('hidemainmenu', true);
-		$isNew = ($this->item->id == 0);
-		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolbarHelper::title(JText::_('JBS_CMN_TEMPLATECODE') . ': <small><small>[' . $title . ']</small></small>', 'file file');
+		$isNew = ((int) $this->item->id === 0);
+		$title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
+		ToolbarHelper::title(Text::_('JBS_CMN_TEMPLATECODE') . ': <small><small>[' . $title . ']</small></small>', 'file file');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_proclaim'))
 		{
-			JToolbarHelper::apply('templatecode.apply');
-			JToolbarHelper::save('templatecode.save');
-			JToolbarHelper::save2new('templatecode.save2new');
-			JToolbarHelper::cancel('templatecode.cancel');
+			ToolbarHelper::apply('templatecode.apply');
+			ToolbarHelper::save('templatecode.save');
+			ToolbarHelper::save2new('templatecode.save2new');
+			ToolbarHelper::cancel('templatecode.cancel');
 		}
 		else
 		{
 			if ($this->canDo->get('core.edit', 'com_proclaim'))
 			{
-				JToolbarHelper::apply('templatecode.apply');
-				JToolbarHelper::save('templatecode.save');
-				JToolbarHelper::save2copy('templatecode.save2copy');
+				ToolbarHelper::apply('templatecode.apply');
+				ToolbarHelper::save('templatecode.save');
+				ToolbarHelper::save2copy('templatecode.save2copy');
 			}
 
-			JToolbarHelper::cancel('templatecode.cancel', 'JTOOLBAR_CLOSE');
+			ToolbarHelper::cancel('templatecode.cancel', 'JTOOLBAR_CLOSE');
 		}
 
-		JToolbarHelper::divider();
-		JToolbarHelper::help('templatecodehelp', true);
+		ToolbarHelper::divider();
+		ToolbarHelper::help('templatecodehelp', true);
 	}
 
 	/**
@@ -164,15 +171,16 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since    7.1.0
 	 */
 	protected function setDocument()
 	{
 		$isNew    = ($this->item->id < 1);
-		$document = Factory::getDocument();
+		$document = Factory::getApplication()->getDocument();
 		$document->setTitle(
-			$isNew ? JText::_('JBS_TITLE_TEMPLATECODES_CREATING')
-				: JText::sprintf('JBS_TITLE_TEMPLATECODES_EDITING', $this->item->topic_text)
+			$isNew ? Text::_('JBS_TITLE_TEMPLATECODES_CREATING')
+				: Text::sprintf('JBS_TITLE_TEMPLATECODES_EDITING', $this->item->topic_text)
 		);
 	}
 }

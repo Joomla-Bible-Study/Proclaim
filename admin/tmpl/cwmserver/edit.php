@@ -9,6 +9,8 @@
  * */
 // No Direct Access
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die;
 
@@ -22,15 +24,15 @@ $input = $app->input;
 ?>
 <script type="text/javascript">
 	Joomla.submitbutton = function (task, type) {
-		if (task == 'server.setType') {
+		if (task == 'cwmserver.setType') {
 			document.id('server-form').elements['jform[type]'].value = type;
 			Joomla.submitform(task, document.id('server-form'));
-		} else if (task == 'server.cancel') {
+		} else if (task == 'cwmserver.cancel') {
 			Joomla.submitform(task, document.getElementById('server-form'));
-		} else if (task == 'server.apply' || document.formvalidator.isValid(document.id('server-form'))) {
+		} else if (task == 'cwmserver.apply' || document.formvalidator.isValid(document.id('server-form'))) {
 			Joomla.submitform(task, document.getElementById('server-form'));
 		} else {
-			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
+			alert('<?php echo $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
 		}
 	}
 </script>
@@ -41,23 +43,23 @@ $input = $app->input;
 		<!-- Begin Content -->
 		<div class="span8 form-horizontal">
 			<ul class="nav nav-tabs">
-				<li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
+				<li class="active"><a href="#general" data-toggle="tab"><?php echo Text::_('JBS_CMN_DETAILS'); ?></a>
 				</li>
 				<?php foreach ($this->server_form->getFieldsets('params') as $fieldsets): ?>
 					<li>
 						<a href="#<?php echo $fieldsets->name; ?>" data-toggle="tab">
-							<?php echo JText::_($fieldsets->label); ?>
+							<?php echo Text::_($fieldsets->label); ?>
 						</a>
 					</li>
 				<?php endforeach; ?>
 				<?php if (count($this->server_form->getFieldsets('media')) > 0): ?>
 					<li>
 						<a href="#media_settings" data-toggle="tab">
-							<?php echo JText::_("JBS_SVR_MEDIA_SETTINGS"); ?>
+							<?php echo Text::_("JBS_SVR_MEDIA_SETTINGS"); ?>
 						</a>
 					</li>
 				<?php endif; ?>
-				<?php if ($this->canDo->get('core.cwmadmin')): ?>
+				<?php if ($this->canDo->get('core.admin')): ?>
 					<li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a>
 					</li>
 				<?php endif ?>
@@ -135,7 +137,7 @@ $input = $app->input;
 						<?php endforeach; ?>
 					</div>
 				</div>
-				<?php if ($this->canDo->get('core.cwmadmin')): ?>
+				<?php if ($this->canDo->get('core.admin')): ?>
 					<div class="tab-pane" id="permissions">
 						<?php echo $this->form->getInput('rules'); ?>
 					</div>

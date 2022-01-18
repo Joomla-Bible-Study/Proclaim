@@ -81,10 +81,11 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  mixed  A string if successful, otherwise a JError object.
+	 * @return  void  A string if successful, otherwise a JError object.
 	 *
-	 * @see     fetch()
+	 * @throws \Exception
 	 * @since   11.1
+	 * @see     fetch()
 	 */
 	public function display($tpl = null)
 	{
@@ -124,36 +125,36 @@ class HTMLView extends BaseHtmlView
 
 		if ($isNew && $this->canDo->get('core.create', 'com_proclaim'))
 		{
-			ToolbarHelper::apply('template.apply');
-			ToolbarHelper::save('template.save');
-			ToolbarHelper::save2new('template.save2new');
-			ToolbarHelper::cancel('template.cancel');
+			ToolbarHelper::apply('cwmtemplate.apply');
+			ToolbarHelper::save('cwmtemplate.save');
+			ToolbarHelper::save2new('cwmtemplate.save2new');
+			ToolbarHelper::cancel('cwmtemplate.cancel');
 		}
 		else
 		{
 			if ($this->canDo->get('core.edit', 'com_proclaim'))
 			{
-				ToolbarHelper::apply('template.apply');
-				ToolbarHelper::save('template.save');
+				ToolbarHelper::apply('cwmtemplate.apply');
+				ToolbarHelper::save('cwmtemplate.save');
 
 				// We can save this record, but check the create permission to see if we can return to make a new one.
 				if ($this->canDo->get('core.create', 'com_proclaim'))
 				{
-					ToolbarHelper::save2new('template.save2new');
+					ToolbarHelper::save2new('cwmtemplate.save2new');
 				}
 			}
 
 			// If checked out, we can still save
 			if ($this->canDo->get('core.create', 'com_proclaim'))
 			{
-				ToolbarHelper::save2copy('template.save2copy');
+				ToolbarHelper::save2copy('cwmtemplate.save2copy');
 			}
 
-			ToolbarHelper::cancel('template.cancel', 'JTOOLBAR_CLOSE');
+			ToolbarHelper::cancel('cwmtemplate.cancel', 'JTOOLBAR_CLOSE');
 		}
 
-		JToolbarHelper::divider();
-		JToolbarHelper::help('biblestudy', true);
+		ToolbarHelper::divider();
+		ToolbarHelper::help('biblestudy', true);
 	}
 
 	/**
@@ -161,12 +162,13 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since    7.1.0
 	 */
 	protected function setDocument()
 	{
 		$isNew    = ($this->item->id < 1);
-		$document = Factory::getDocument();
+		$document = Factory::getApplication()->getDocument();
 		$document->setTitle($isNew ? Text::_('JBS_TITLE_TEMPLATES_CREATING') : Text::sprintf('JBS_TITLE_TEMPLATES_EDITING', $this->item->title));
 	}
 }

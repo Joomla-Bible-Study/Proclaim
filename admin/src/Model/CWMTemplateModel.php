@@ -64,8 +64,8 @@ class CWMTemplateModel extends AdminModel
 	{
 		foreach ($cid as $id)
 		{
-			/** @type CWMTemplateTable $tmplCurr */
-			$tmplCurr = Table::getInstance('Template', 'Table');
+			$db       = Factory::getDbo();
+			$tmplCurr = new CWMTemplateTable($db);
 
 			$tmplCurr->load($id);
 			$tmplCurr->id    = null;
@@ -146,26 +146,11 @@ class CWMTemplateModel extends AdminModel
 	}
 
 	/**
-	 * Method to get a table object, load it if necessary.
-	 *
-	 * @param   string  $name     The table name. Optional.
-	 * @param   string  $prefix   The class prefix. Optional.
-	 * @param   array   $options  Configuration array for model. Optional.
-	 *
-	 * @return  Table  A Joomla\CMS\Table\Table object
-	 *
-	 * @since       1.6
-	 */
-	public function getTable($name = 'template', $prefix = 'Table', $options = array())
-	{
-		return Table::getInstance($name, $prefix, $options);
-	}
-
-	/**
 	 * Load Form Date
 	 *
 	 * @return  array    The default data is an empty array.
 	 *
+	 * @throws \Exception
 	 * @since   7.0
 	 */
 	protected function loadFormData()
