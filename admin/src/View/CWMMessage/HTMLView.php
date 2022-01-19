@@ -17,9 +17,11 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 use JToolbarHelper;
@@ -169,46 +171,46 @@ class HTMLView extends BaseHtmlView
 	{
 		Factory::getApplication()->input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
-		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolbarHelper::title(JText::_('JBS_CMN_STUDIES') . ': <small><small>[ ' . $title . ' ]</small></small>', 'book book');
+		$title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
+		ToolbarHelper::title(Text::_('JBS_CMN_STUDIES') . ': <small><small>[ ' . $title . ' ]</small></small>', 'book book');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_proclaim'))
 		{
-			JToolbarHelper::apply('cwmmessage.apply');
-			JToolbarHelper::save('cwmmessage.save');
-			JToolbarHelper::save2new('cwmmessage.save2new');
-			JToolbarHelper::cancel('cwmmessage.cancel');
+			ToolbarHelper::apply('cwmmessage.apply');
+			ToolbarHelper::save('cwmmessage.save');
+			ToolbarHelper::save2new('cwmmessage.save2new');
+			ToolbarHelper::cancel('cwmmessage.cancel');
 		}
 		else
 		{
 			if ($this->canDo->get('core.edit', 'com_proclaim'))
 			{
-				JToolbarHelper::apply('cwmmessage.apply');
-				JToolbarHelper::save('cwmmessage.save');
+				ToolbarHelper::apply('cwmmessage.apply');
+				ToolbarHelper::save('cwmmessage.save');
 
 				// We can save this record, but check the create permission to see if we can return to make a new one.
 				if ($this->canDo->get('core.create', 'com_proclaim'))
 				{
-					JToolbarHelper::save2new('cwmmessage.save2new');
+					ToolbarHelper::save2new('cwmmessage.save2new');
 				}
 			}
 
 			// If checked out, we can still save
 			if ($this->canDo->get('core.create', 'com_proclaim'))
 			{
-				JToolbarHelper::save2copy('cwmmessage.save2copy');
+				ToolbarHelper::save2copy('cwmmessage.save2copy');
 			}
 
-			JToolbarHelper::cancel('cwmmessage.cancel', 'JTOOLBAR_CLOSE');
+			ToolbarHelper::cancel('cwmmessage.cancel', 'JTOOLBAR_CLOSE');
 
 			if ($this->canDo->get('core.edit', 'com_proclaim'))
 			{
-				JToolbarHelper::divider();
-				JToolbarHelper::custom('resetHits', 'reset.png', 'Reset Hits', 'JBS_STY_RESET_HITS', false);
+				ToolbarHelper::divider();
+				ToolbarHelper::custom('resetHits', 'reset.png', 'Reset Hits', 'JBS_STY_RESET_HITS', false);
 			}
 		}
 
-		JToolbarHelper::divider();
-		JToolbarHelper::help('biblestudy', true);
+		ToolbarHelper::divider();
+		ToolbarHelper::help('biblestudy', true);
 	}
 }

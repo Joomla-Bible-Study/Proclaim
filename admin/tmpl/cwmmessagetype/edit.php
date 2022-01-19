@@ -16,8 +16,6 @@ use Joomla\CMS\Language\Text;
 defined('_JEXEC') or die;
 
 // Load the tooltip behavior.
-HTMLHelper::_('behavior.formvalidator');
-HTMLHelper::_('behavior.keepalive');
 HTMLHelper::_('formbehavior.chosen', 'select');
 
 // Create shortcut to parameters.
@@ -99,7 +97,6 @@ $wa->useScript('keepalive')
 				</div>
 			</div>
 		</div>
-
 		<?php echo HTMLHelper::_('uitab.endTab'); ?>
 
 		<?php if ($this->canDo->get('core.admin')) : ?>
