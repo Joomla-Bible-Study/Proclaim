@@ -8,12 +8,14 @@
     </layout>
     <fields name="request">
         <fieldset name="request"
-                  addfieldpath="/administrator/components/com_biblestudy/models/fields"
+                  addfieldprefix="Proclaim\Component\Proclaim\Administrator\Field"
                 >
             <field name="id" type="modal_studydetails"
                    description="JBS_MNU_SELECT_STUDY_DESC"
                    label="JBS_CMN_SELECT_STUDY"
                     required="true"
+                   select="true"
+                   clear="true"
                     />
 
             <field name="t" type="sql"

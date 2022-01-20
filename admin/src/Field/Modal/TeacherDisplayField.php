@@ -44,11 +44,11 @@ class TeacherDisplayField extends FormField
 	 */
 	protected function getInput()
 	{
-		$allowNew       = ((string) $this->element['new'] == 'true');
-		$allowEdit      = ((string) $this->element['edit'] == 'true');
-		$allowClear     = ((string) $this->element['clear'] != 'false');
-		$allowSelect    = ((string) $this->element['select'] != 'false');
-		$allowPropagate = ((string) $this->element['propagate'] == 'true');
+		$allowNew       = ((string) $this->element['new'] === 'true');
+		$allowEdit      = ((string) $this->element['edit'] === 'true');
+		$allowClear     = ((string) $this->element['clear'] !== 'false');
+		$allowSelect    = ((string) $this->element['select'] !== 'false');
+		$allowPropagate = ((string) $this->element['propagate'] === 'true');
 
 		// Load language
 		Factory::getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
