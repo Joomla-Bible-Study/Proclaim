@@ -14,6 +14,7 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Access\Rules;
+use Joomla\CMS\Factory;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseDriver;
 use Joomla\Registry\Registry;
@@ -33,25 +34,25 @@ class CWMTemplateTable extends Table
 	 *
 	 * @since 9.0.0
 	 */
-	public $id = null;
+	public int $id = 0;
 
 	/**
 	 * Type
 	 *
-	 * @var string
+	 * @var ?string
 	 *
 	 * @since 9.0.0
 	 */
-	public $type = null;
+	public ?string $type = null;
 
 	/**
 	 * Template
 	 *
-	 * @var string
+	 * @var ?string
 	 *
 	 * @since 9.0.0
 	 */
-	public $tmpl = null;
+	public ?string $tmpl = null;
 
 	/**
 	 * Published
@@ -60,43 +61,43 @@ class CWMTemplateTable extends Table
 	 *
 	 * @since 9.0.0
 	 */
-	public $published = 1;
+	public int $published = 1;
 
 	/**
 	 * Params
 	 *
-	 * @var Registry
+	 * @var ?string
 	 *
 	 * @since 9.0.0
 	 */
-	public $params = null;
+	public ?string $params = null;
 
 	/**
 	 * Title
 	 *
-	 * @var string
+	 * @var ?string
 	 *
 	 * @since 9.0.0
 	 */
-	public $title = null;
+	public ?string $title = null;
 
 	/**
 	 * Text
 	 *
-	 * @var string
+	 * @var ?string
 	 *
 	 * @since 9.0.0
 	 */
-	public $text = null;
+	public ?string $text = null;
 
 	/**
 	 * PDF file
 	 *
-	 * @var string
+	 * @var ?string
 	 *
 	 * @since 9.0.0
 	 */
-	public $pdf = null;
+	public ?string $pdf = null;
 
 	/**
 	 * Contractor
@@ -123,7 +124,7 @@ class CWMTemplateTable extends Table
 	 * @link    http://docs.joomla.org/Table/bind
 	 * @since   11.1
 	 */
-	public function bind($array, $ignore = '')
+	public function bind($array, $ignore = ''): bool
 	{
 		if (isset($array['params']) && is_array($array['params']))
 		{
@@ -156,10 +157,12 @@ class CWMTemplateTable extends Table
 	 * @link    http://docs.joomla.org/Table/store
 	 * @since   11.1
 	 */
-	public function store($updateNulls = false)
+	public function store($updateNulls = false): bool
 	{
+		$db = Factory::getDbo();
+
 		// Attempt to store the user data.
-		$oldrow = Table::getInstance('template', 'Table');
+		$oldrow = new CWMTemplateTable($db);
 
 		if (!$oldrow->load($this->id) && $oldrow->getError())
 		{
@@ -183,7 +186,7 @@ class CWMTemplateTable extends Table
 	 *
 	 * @since       1.6
 	 */
-	protected function _getAssetName()
+	protected function _getAssetName(): string
 	{
 		$k = $this->_tbl_key;
 
@@ -197,7 +200,7 @@ class CWMTemplateTable extends Table
 	 *
 	 * @since       1.6
 	 */
-	protected function _getAssetTitle()
+	protected function _getAssetTitle(): string
 	{
 		return 'JBS Template: ' . $this->title;
 	}
@@ -215,7 +218,7 @@ class CWMTemplateTable extends Table
 	 *
 	 * @since   11.1
 	 */
-	protected function _getAssetParentId(Table $table = null, $id = null)
+	protected function _getAssetParentId(Table $table = null, $id = null): int
 	{
 		/** @var \Joomla\CMS\Table\Asset $asset */
 		$asset = Table::getInstance('Asset');
