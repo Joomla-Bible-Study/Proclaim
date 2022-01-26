@@ -27,14 +27,12 @@ if ($app->isClient('site'))
 	Session::checkToken('get') or die(Text::_('JINVALID_TOKEN'));
 }
 
-HTMLHelper::_('behavior.multiselect');
-
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('core')
 	->useScript('com_proclaim.cwmadmin-messages-modal');
 
-$function  = $app->input->getCmd('function', 'jSelectMessage');
+$function  = $app->input->getCmd('function', 'jSelectMessages');
 $editor    = $app->input->getCmd('editor', '');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
@@ -45,7 +43,7 @@ if (!empty($editor))
 {
 	// This view is used also in com_menus. Load the xtd script only if the editor is set!
 	$this->document->addScriptOptions('xtd-messages', array('editor' => $editor));
-	$onclick = "jSelectMessage";
+	$onclick = "jSelectMessages";
 }
 ?>
 <div class="container-popup">
@@ -64,7 +62,7 @@ if (!empty($editor))
 		<?php else : ?>
 			<table class="table table-sm">
 				<caption class="visually-hidden">
-					<?php echo Text::_('COM_CONTENT_ARTICLES_TABLE_CAPTION'); ?>,
+					<?php echo Text::_('JBS_CMN_MESSAGE_TABLE_CAPTION'); ?>,
 					<span id="orderedBy"><?php echo Text::_('JGLOBAL_SORTED_BY'); ?> </span>,
 					<span id="filteredBy"><?php echo Text::_('JGLOBAL_FILTERED_BY'); ?></span>
 				</caption>

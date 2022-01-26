@@ -56,7 +56,7 @@
 
 				if (functionName === 'jSelectMessages')
 				{
-					// Used in xtd_contacts
+					// Used in xtd_messages
 					window[functionName](target.getAttribute('data-id'),
 						target.getAttribute('data-title'),
 						target.getAttribute('data-cat-id'), null,

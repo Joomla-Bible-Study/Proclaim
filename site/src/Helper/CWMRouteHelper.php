@@ -24,14 +24,14 @@ abstract class CWMRouteHelper
 	 * Get the sermon route.
 	 *
 	 * @param   integer      $id        The route of the content item.
-	 * @param   integer      $language  The language code.
+	 * @param   string       $language  The language code.
 	 * @param   string|null  $layout    The layout value.
 	 *
 	 * @return  string  The sermon route.
 	 *
 	 * @since   1.5
 	 */
-	public static function getMessageRoute(int $id, int $language = 0, string $layout = null)
+	public static function getMessageRoute(int $id, string $language = '*', string $layout = null)
 	{
 		// Create the link
 		$link = 'index.php?option=com_proclaim&view=cwmsermon&id=' . $id;
