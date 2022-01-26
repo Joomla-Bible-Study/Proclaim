@@ -14,6 +14,8 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Session\Session;
+use Joomla\Database\ParameterType;
 
 // No Direct Access
 defined('_JEXEC') or die;
@@ -32,7 +34,7 @@ class StudyDetailsField extends FormField
 	 * @var        string
 	 * @since    1.6
 	 */
-	protected $type = 'Modal_Studydetails';
+	protected $type = 'Modal_StudyDetails';
 
 	/**
 	 * Method to get the field input markup.
@@ -41,89 +43,246 @@ class StudyDetailsField extends FormField
 	 *
 	 * @throws \Exception
 	 * @since    1.6
-	 * @todo need to rewrite for 10.0.0
+	 * @todo     need to rewrite for 10.0.0
 	 */
 	protected function getInput()
 	{
-		// Load the modal behavior script.
-		HtmlHelper::_('bootstrap.modal', 'a.modal');
+		$allowNew       = ((string) $this->element['new'] == 'true');
+		$allowEdit      = ((string) $this->element['edit'] == 'true');
+		$allowClear     = ((string) $this->element['clear'] != 'false');
+		$allowSelect    = ((string) $this->element['select'] != 'false');
+		$allowPropagate = ((string) $this->element['propagate'] == 'true');
 
-		// Load the javascript and css
-		HtmlHelper::_('script', 'system/modal.js', false, true);
-		HtmlHelper::_('stylesheet', 'system/modal.css', array(), true);
+		// Load language
+		Factory::getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
 
-		// Build the script.
-		$script   = array();
-		$script[] = '	function jSelectChart_' . $this->id . '(id, name, object) {';
-		$script[] = '		document.id("' . $this->id . '_id").value = id;';
-		$script[] = '		document.id("' . $this->id . '_name").value = name;';
-		$script[] = '		SqueezeBox.close();';
-		$script[] = '	}';
+		// The active article id field.
+		$value = (int) $this->value ?: '';
 
-		// Add the script to the document head.
-		Factory::getDocument()->addScriptDeclaration(implode("\n", $script));
+		// Create the modal id.
+		$modalId = 'Study_' . $this->id;
 
-		// Build the script.
-		$script   = array();
-		$script[] = '	window.addEvent("domready", function() {';
-		$script[] = '		var div = new Element("div").setStyle("display", "none").injectBefore(document.id("menu-types"));';
-		$script[] = '		document.id("menu-types").injectInside(div);';
-		$script[] = '		SqueezeBox.initialize();';
-		$script[] = '		SqueezeBox.assign($$("input.modal"), {parse:"rel"});';
-		$script[] = '	});';
+		/** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
+		$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
 
-		// Add the script to the document head.
-		Factory::getDocument()->addScriptDeclaration(implode("\n", $script));
+		// Add the modal field script to the document head.
+		$wa->useScript('field.modal-fields');
 
-		// Get the title of the linked chart
-		$db = Factory::getDbo();
-		$db->setQuery(
-			'SELECT studytitle AS name' .
-			' FROM #__bsms_studies' .
-			' WHERE id = ' . (int) $this->value
-		);
-
-		try
+		// Script to proxy the select modal function to the modal-fields.js file.
+		if ($allowSelect)
 		{
-			$title = $db->loadResult();
-		}
-		catch (\RuntimeException $e)
-		{
-			Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
-		}
+			static $scriptSelect = null;
 
-		if (empty($title))
-		{
-			$title = Text::_('JBS_CMN_SELECT_STUDY');
+			if (is_null($scriptSelect))
+			{
+				$scriptSelect = array();
+			}
+
+			if (!isset($scriptSelect[$this->id]))
+			{
+				$wa->addInlineScript("
+				window.jSelectStudy_" . $this->id . " = function (id, title, catid, object, url, language) {
+					window.processModalSelect('Study', '" . $this->id . "', id, title, catid, object, url, language);
+				}",
+					[],
+					['type' => 'module']
+				);
+
+				Text::script('JGLOBAL_ASSOCIATIONS_PROPAGATE_FAILED');
+
+				$scriptSelect[$this->id] = true;
+			}
 		}
 
-		$link = 'index.php?option=com_proclaim&amp;view=messages&amp;layout=modal&amp;tmpl=component&amp;function=jSelectChart_' . $this->id;
+		// Setup variables for display.
+		$linkSeries = 'index.php?option=com_proclaim&amp;view=cwmmessages&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken() . '=1';
+		$linkSerie  = 'index.php?option=com_proclaim&amp;view=cwmmessages&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken() . '=1';
 
-		HtmlHelper::_('bootstrap.modal', 'a.modal');
-		$html = "\n" . '<div class="fltlft"><input type="text" id="' . $this->id . '_name" value="' .
-			htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '" disabled="disabled" /></div>';
-		$html .= '<div class="button2-left"><div class="blank"><a class="modal" title="' . Text::_('JBS_CMN_SELECT_STUDY') .
-			'"  href="' . $link . '" rel="{handler: \'iframe\', size: {x: 900, y: 450}}">' . Text::_('JBS_CMN_SELECT_STUDY') . '</a></div></div>' . "\n";
-
-		// The active study id field.
-		if (0 == (int) $this->value)
+		if (isset($this->element['language']))
 		{
-			$value = '';
+			$linkSeries .= '&amp;forcedLanguage=' . $this->element['language'];
+			$linkSerie  .= '&amp;forcedLanguage=' . $this->element['language'];
+			$modalTitle = Text::_('JBS_CMN_SELECT_STUDY') . ' &#8212; ' . $this->element['label'];
 		}
 		else
 		{
-			$value = (int) $this->value;
+			$modalTitle = Text::_('JBS_CMN_SELECT_STUDY');
 		}
 
-		// Class='required' for client side validation
-		$class = '';
+		$urlSelect = $linkSeries . '&amp;function=jSelectStudy_' . $this->id;
+		$urlEdit   = $linkSerie . '&amp;task=cwmmessage.edit&amp;id=\' + document.getElementById(&quot;' . $this->id . '_id&quot;).value + \'';
+		$urlNew    = $linkSerie . '&amp;task=cwmmessage.add';
 
-		if ($this->required)
+		if ($value)
 		{
-			$class = ' class="required modal-value"';
+			$db    = Factory::getDbo();
+			$query = $db->getQuery(true)
+				->select($db->quoteName('studytitle') . 'AS name')
+				->from($db->quoteName('#__bsms_studies'))
+				->where($db->quoteName('id') . ' = :value')
+				->bind(':value', $value, ParameterType::INTEGER);
+			$db->setQuery($query);
+
+			try
+			{
+				$title = $db->loadResult();
+			}
+			catch (\RuntimeException $e)
+			{
+				Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+			}
 		}
 
-		$html .= '<input type="hidden" id="' . $this->id . '_id"' . $class . ' name="' . $this->name . '" value="' . $value . '" />';
+		$title = empty($title) ? Text::_('JBS_CMN_SELECT_STUDY') : htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
+
+		// The current series display field.
+		$html = '';
+
+		if ($allowSelect || $allowNew || $allowEdit || $allowClear)
+		{
+			$html .= '<span class="input-group">';
+		}
+
+		$html .= '<input class="form-control" id="' . $this->id . '_name" type="text" value="' . $title . '" readonly size="35">';
+
+		// Select Message button
+		if ($allowSelect)
+		{
+			$html .= '<button'
+				. ' class="btn btn-primary' . ($value ? ' hidden' : '') . '"'
+				. ' id="' . $this->id . '_select"'
+				. ' data-bs-toggle="modal"'
+				. ' type="button"'
+				. ' data-bs-target="#ModalSelect' . $modalId . '">'
+				. '<span class="icon-file" aria-hidden="true"></span> ' . Text::_('JSELECT')
+				. '</button>';
+		}
+
+		// New Message button
+		if ($allowNew)
+		{
+			$html .= '<button'
+				. ' class="btn btn-secondary' . ($value ? ' hidden' : '') . '"'
+				. ' id="' . $this->id . '_new"'
+				. ' data-bs-toggle="modal"'
+				. ' type="button"'
+				. ' data-bs-target="#ModalNew' . $modalId . '">'
+				. '<span class="icon-plus" aria-hidden="true"></span> ' . Text::_('JACTION_CREATE')
+				. '</button>';
+		}
+
+		// Edit Message button
+		if ($allowEdit)
+		{
+			$html .= '<button'
+				. ' class="btn btn-primary' . ($value ? '' : ' hidden') . '"'
+				. ' id="' . $this->id . '_edit"'
+				. ' data-bs-toggle="modal"'
+				. ' type="button"'
+				. ' data-bs-target="#ModalEdit' . $modalId . '">'
+				. '<span class="icon-pen-square" aria-hidden="true"></span> ' . Text::_('JACTION_EDIT')
+				. '</button>';
+		}
+
+		// Clear Message button
+		if ($allowClear)
+		{
+			$html .= '<button'
+				. ' class="btn btn-secondary' . ($value ? '' : ' hidden') . '"'
+				. ' id="' . $this->id . '_clear"'
+				. ' type="button"'
+				. ' onclick="window.processModalParent(\'' . $this->id . '\'); return false;">'
+				. '<span class="icon-times" aria-hidden="true"></span> ' . Text::_('JCLEAR')
+				. '</button>';
+		}
+
+		if ($allowSelect || $allowNew || $allowEdit || $allowClear)
+		{
+			$html .= '</span>';
+		}
+
+		// Select Message modal
+		if ($allowSelect)
+		{
+			$html .= HTMLHelper::_(
+				'bootstrap.renderModal',
+				'ModalSelect' . $modalId,
+				array(
+					'title'      => $modalTitle,
+					'url'        => $urlSelect,
+					'height'     => '400px',
+					'width'      => '800px',
+					'bodyHeight' => 70,
+					'modalWidth' => 80,
+					'footer'     => '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">'
+						. Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>',
+				)
+			);
+		}
+
+		// New Message modal
+		if ($allowNew)
+		{
+			$html .= HTMLHelper::_(
+				'bootstrap.renderModal',
+				'ModalNew' . $modalId,
+				array(
+					'title'       => Text::_('JBS_NEW_MESSAGE'),
+					'backdrop'    => 'static',
+					'keyboard'    => false,
+					'closeButton' => false,
+					'url'         => $urlNew,
+					'height'      => '400px',
+					'width'       => '800px',
+					'bodyHeight'  => 70,
+					'modalWidth'  => 80,
+					'footer'      => '<button type="button" class="btn btn-secondary"'
+						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'cwmmessage\', \'cancel\', \'item-form\'); return false;">'
+						. Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>'
+						. '<button type="button" class="btn btn-primary"'
+						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'cwmmessage\', \'save\', \'item-form\'); return false;">'
+						. Text::_('JSAVE') . '</button>'
+						. '<button type="button" class="btn btn-success"'
+						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'cwmmessage\', \'apply\', \'item-form\'); return false;">'
+						. Text::_('JAPPLY') . '</button>',
+				)
+			);
+		}
+
+		// Edit Message modal
+		if ($allowEdit)
+		{
+			$html .= HTMLHelper::_(
+				'bootstrap.renderModal',
+				'ModalEdit' . $modalId,
+				array(
+					'title'       => Text::_('JBS_NEW_MESSAGE'),
+					'backdrop'    => 'static',
+					'keyboard'    => false,
+					'closeButton' => false,
+					'url'         => $urlEdit,
+					'height'      => '400px',
+					'width'       => '800px',
+					'bodyHeight'  => 70,
+					'modalWidth'  => 80,
+					'footer'      => '<button type="button" class="btn btn-secondary"'
+						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'cwmmessage\', \'cancel\', \'item-form\'); return false;">'
+						. Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>'
+						. '<button type="button" class="btn btn-primary"'
+						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'cwmmessage\', \'save\', \'item-form\'); return false;">'
+						. Text::_('JSAVE') . '</button>'
+						. '<button type="button" class="btn btn-success"'
+						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'cwmmessage\', \'apply\', \'item-form\'); return false;">'
+						. Text::_('JAPPLY') . '</button>',
+				)
+			);
+		}
+
+		// Note: class='required' for client side validation.
+		$class = $this->required ? ' class="required modal-value"' : '';
+
+		$html .= '<input type="hidden" id="' . $this->id . '_id"' . $class . ' data-required="' . (int) $this->required . '" name="' . $this->name
+			. '" data-text="' . htmlspecialchars(Text::_('JBS_CMN_SELECT_STUDY'), ENT_COMPAT, 'UTF-8') . '" value="' . $value . '">';
 
 		return $html;
 	}
