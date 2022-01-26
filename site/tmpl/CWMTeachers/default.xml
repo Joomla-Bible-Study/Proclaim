@@ -6,7 +6,7 @@
             <![CDATA[JBS_MNU_TEACHERS_LIST_LAYOUT_DESC]]>
         </message>
     </layout>
-    <fields name="request">
+    <fields name="request" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
         <fieldset name="request">
             <field name="t" type="sql"
                    description="JBS_MNU_SELECT_TEMPLATE_DESC"
