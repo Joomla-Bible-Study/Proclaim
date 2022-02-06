@@ -366,97 +366,6 @@ class CWMAssetsModel extends ListModel
 	}
 
 	/**
-	 * Table list Array.
-	 *
-	 * @return array
-	 *
-	 * @since 7.0
-	 */
-	protected function getassetObjects()
-	{
-		return array(
-			array(
-				'name'       => '#__bsms_servers',
-				'titlefield' => 'server_name',
-				'assetname'  => 'server',
-				'realname'   => 'JBS_CMN_SERVERS'
-			),
-			array(
-				'name'       => '#__bsms_studies',
-				'titlefield' => 'studytitle',
-				'assetname'  => 'message',
-				'realname'   => 'JBS_CMN_STUDIES'
-			),
-			array(
-				'name'       => '#__bsms_comments',
-				'titlefield' => 'comment_date',
-				'assetname'  => 'comment',
-				'realname'   => 'JBS_CMN_COMMENTS'
-			),
-			array(
-				'name'       => '#__bsms_locations',
-				'titlefield' => 'location_text',
-				'assetname'  => 'location',
-				'realname'   => 'JBS_CMN_LOCATIONS'
-			),
-			array(
-				'name'       => '#__bsms_mediafiles',
-				'titlefield' => 'filename',
-				'assetname'  => 'mediafile',
-				'realname'   => 'JBS_CMN_MEDIA_FILES'
-			),
-			array(
-				'name'       => '#__bsms_message_type',
-				'titlefield' => 'message_type',
-				'assetname'  => 'messagetype',
-				'realname'   => 'JBS_CMN_MESSAGETYPES'
-			),
-			array(
-				'name'       => '#__bsms_podcast',
-				'titlefield' => 'title',
-				'assetname'  => 'podcast',
-				'realname'   => 'JBS_CMN_PODCASTS'
-			),
-			array(
-				'name'       => '#__bsms_series',
-				'titlefield' => 'series_text',
-				'assetname'  => 'serie',
-				'realname'   => 'JBS_CMN_SERIES'
-			),
-			array(
-				'name'       => '#__bsms_teachers',
-				'titlefield' => 'teachername',
-				'assetname'  => 'teacher',
-				'realname'   => 'JBS_CMN_TEACHERS'
-			),
-			array(
-				'name'       => '#__bsms_templates',
-				'titlefield' => 'title',
-				'assetname'  => 'template',
-				'realname'   => 'JBS_CMN_TEMPLATES'
-			),
-			array(
-				'name'       => '#__bsms_topics',
-				'titlefield' => 'topic_text',
-				'assetname'  => 'topic',
-				'realname'   => 'JBS_CMN_TOPICS'
-			),
-			array(
-				'name'       => '#__bsms_templatecode',
-				'titlefield' => 'filename',
-				'assetname'  => 'templatecode',
-				'realname'   => 'JBS_CMN_TEMPLATECODE'
-			),
-			array(
-				'name'       => '#__bsms_admin',
-				'titlefield' => 'id',
-				'assetname'  => 'administrator',
-				'realname'   => 'JBS_CMN_ADMINISTRATION'
-			)
-		);
-	}
-
-	/**
 	 * Check Assets
 	 *
 	 * @return array
@@ -476,7 +385,7 @@ class CWMAssetsModel extends ListModel
 		}
 
 		// Get the names of the JBS tables
-		$objects = $this->getassetObjects();
+		$objects = CWMAssets::getassetObjects();
 
 		// Run through each table
 		foreach ($objects as $object)

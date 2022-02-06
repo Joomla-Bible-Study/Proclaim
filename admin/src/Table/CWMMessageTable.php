@@ -488,7 +488,7 @@ class CWMMessageTable extends Table
 	protected function _getAssetParentId(Table $table = null, $id = null): int
 	{
 		/** @var \Joomla\CMS\Table\Asset $asset */
-		$assets = self::getInstance('Asset', 'JTable', array('dbo' => $this->getDbo()));
+		$asset = Table::getInstance('Asset');
 		$asset->loadByName('com_proclaim');
 
 		return $asset->id;

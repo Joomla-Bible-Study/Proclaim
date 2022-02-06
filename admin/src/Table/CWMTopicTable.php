@@ -14,7 +14,6 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Access\Rules;
-use Joomla\CMS\Table\Asset;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseDriver;
 use Joomla\Registry\Registry;
