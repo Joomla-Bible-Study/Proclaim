@@ -14,7 +14,9 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMAssets;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\Component\Content\Administrator\Helper\ContentHelper;
 
 defined('_JEXEC') or die;
 
@@ -47,10 +49,10 @@ class HTMLView extends BaseHtmlView
 
 	public $assets;
 
-	/** @var string More
+	/** @var boolean More
 	 *
 	 * @since 9.0.0 */
-	protected $more;
+	protected bool $more = false;
 
 	/** @var  string Percentage
 	 *
@@ -182,8 +184,28 @@ class HTMLView extends BaseHtmlView
 	 */
 	protected function addToolbar()
 	{
+		$canDo = ContentHelper::getActions('com_proclaim');
+		$user = Factory::getApplication()->getIdentity();
+
 		ToolbarHelper::title(Text::_('JBS_CMN_ADMINISTRATION'), 'administration');
-		ToolbarHelper::custom('administration.back', 'back', 'back', 'JTOOLBAR_BACK', false);
+		ToolbarHelper::custom('cwmadmin.back', 'home', 'home', 'JTOOLBAR_BACK', false);
+
+		ToolbarHelper::custom('cwmadmin.checkassets', 'refresh', 'refresh', 'JBS_ADM_CHECK_ASSETS', false);
+
+		// Get the toolbar object instance
+		$toolbar = Toolbar::getInstance('toolbar');
+
+		// Add a batch button
+		if ($user->authorise('core.create', 'com_proclaim')
+			&& $user->authorise('core.edit', 'com_proclaim')
+			&& $user->authorise('core.edit.state', 'com_proclaim'))
+		{
+			$toolbar->popupButton('fix')
+				->text('JBS_ADM_FIX')
+				->selector('collapseModal')
+				->listCheck(false);
+		}
+
 		ToolbarHelper::help('biblestudy', true);
 	}
 
@@ -192,6 +214,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since    7.1.0
 	 */
 	protected function setDocument()

@@ -13,7 +13,8 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 // No Direct Access
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
-use Joomla\CMS\Table\Table;
+
+// Set to use with add hock call.
 
 defined('_JEXEC') or die;
 
@@ -84,7 +85,7 @@ class CWMAssets
 	 */
 	public static function fixAssets($key, $result)
 	{
-		$result = (Object) $result;
+		$result = (object) $result;
 		self::parentid();
 
 		// If there is no jasset_id it means that this has not been set and should be
@@ -141,85 +142,85 @@ class CWMAssets
 	 *
 	 * @since 9.0.0
 	 */
-	protected static function getassetObjects()
+	public static function getassetObjects()
 	{
 		$objects = array(
 			array(
 				'name'       => '#__bsms_servers',
 				'titlefield' => 'server_name',
-				'assetname'  => 'server',
+				'assetname'  => 'Server',
 				'realname'   => 'JBS_CMN_SERVERS'
 			),
 			array(
 				'name'       => '#__bsms_studies',
 				'titlefield' => 'studytitle',
-				'assetname'  => 'message',
+				'assetname'  => 'Message',
 				'realname'   => 'JBS_CMN_STUDIES'
 			),
 			array(
 				'name'       => '#__bsms_comments',
 				'titlefield' => 'comment_date',
-				'assetname'  => 'comment',
+				'assetname'  => 'Comment',
 				'realname'   => 'JBS_CMN_COMMENTS'
 			),
 			array(
 				'name'       => '#__bsms_locations',
 				'titlefield' => 'location_text',
-				'assetname'  => 'location',
+				'assetname'  => 'Location',
 				'realname'   => 'JBS_CMN_LOCATIONS'
 			),
 			array(
 				'name'       => '#__bsms_mediafiles',
 				'titlefield' => 'filename',
-				'assetname'  => 'mediafile',
+				'assetname'  => 'MediaFile',
 				'realname'   => 'JBS_CMN_MEDIA_FILES'
 			),
 			array(
 				'name'       => '#__bsms_message_type',
 				'titlefield' => 'message_type',
-				'assetname'  => 'messagetype',
+				'assetname'  => 'MessageType',
 				'realname'   => 'JBS_CMN_MESSAGETYPES'
 			),
 			array(
 				'name'       => '#__bsms_podcast',
 				'titlefield' => 'title',
-				'assetname'  => 'podcast',
+				'assetname'  => 'Podcast',
 				'realname'   => 'JBS_CMN_PODCASTS'
 			),
 			array(
 				'name'       => '#__bsms_series',
 				'titlefield' => 'series_text',
-				'assetname'  => 'serie',
+				'assetname'  => 'Serie',
 				'realname'   => 'JBS_CMN_SERIES'
 			),
 			array(
 				'name'       => '#__bsms_teachers',
 				'titlefield' => 'teachername',
-				'assetname'  => 'teacher',
+				'assetname'  => 'Teacher',
 				'realname'   => 'JBS_CMN_TEACHERS'
 			),
 			array(
 				'name'       => '#__bsms_templates',
 				'titlefield' => 'title',
-				'assetname'  => 'template',
+				'assetname'  => 'Template',
 				'realname'   => 'JBS_CMN_TEMPLATES'
 			),
 			array(
 				'name'       => '#__bsms_topics',
 				'titlefield' => 'topic_text',
-				'assetname'  => 'topic',
+				'assetname'  => 'Topic',
 				'realname'   => 'JBS_CMN_TOPICS'
 			),
 			array(
 				'name'       => '#__bsms_templatecode',
 				'titlefield' => 'filename',
-				'assetname'  => 'templatecode',
+				'assetname'  => 'Templatecode',
 				'realname'   => 'JBS_CMN_TEMPLATECODE'
 			),
 			array(
 				'name'       => '#__bsms_admin',
 				'titlefield' => 'id',
-				'assetname'  => 'administrator',
+				'assetname'  => 'Admin',
 				'realname'   => 'JBS_CMN_ADMINISTRATION'
 			)
 		);
@@ -239,14 +240,14 @@ class CWMAssets
 	 */
 	private static function setasset($data, $assetName)
 	{
-		Table::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
-		$table = Table::getInstance($assetName, 'Table');
+		$AssetTable = '\CWM\Component\Proclaim\Administrator\Table\CWM' . $assetName . 'Table';
+		$table      = new $AssetTable(Factory::getDbo());
 
 		if ($data->id)
 		{
 			try
 			{
-				if ($assetName === 'mediafile')
+				if ($assetName === 'MediaFile')
 				{
 					$columns = array('media_image', 'special', 'filename', 'size', 'mime_type', 'mediacode', 'link_type',
 						'docMan_id', 'article_id', 'virtueMart_id', 'player', 'popup', 'server', 'internal_viewer', 'path');

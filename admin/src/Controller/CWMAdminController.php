@@ -12,6 +12,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Administrator\Helper\CWMAlias;
 use CWM\Component\Proclaim\Administrator\Helper\CWMDbHelper;
 use CWM\Component\Proclaim\Administrator\Lib\CWMBackup;
 use CWM\Component\Proclaim\Administrator\Model\AdminModel;
@@ -530,7 +531,7 @@ class CWMAdminController extends FormController
 	 */
 	public function back()
 	{
-		$this->setRedirect('index.php?option=com_proclaim&view=cwmadministratiion&layout=edit&id=1');
+		$this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1');
 	}
 
 	/**

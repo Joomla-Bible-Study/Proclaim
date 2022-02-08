@@ -7,20 +7,25 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 // No Direct Access
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+
+ToolbarHelper::title(JText::_('JBS_ADM_ASSET_TABLE_NAME'), 'administration');
 
 defined('_JEXEC') or die;
 
-// Load the tooltip behavior.
-HTMLHelper::_('behavior.formvalidator');
-HTMLHelper::_('jquery.framework');
-HTMLHelper::_('formbehavior.chosen', 'select');
-HTMLHelper::_('bootstrap.renderModal');
+$app  = Factory::getApplication();
+$user = Factory::getUser();
 
-JText::script('ERROR');
-
-Factory::getDocument()->addScriptDeclaration("
+/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
+$wa = $this->document->getWebAssetManager();
+$wa->useScript('keepalive')
+	->useScript('form.validate')
+	->addInlineScript("
 		Joomla.submitbutton = function(task)
 		{
 			var form = document.getElementById('item-assets');
@@ -39,114 +44,93 @@ Factory::getDocument()->addScriptDeclaration("
 		};
 ");
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmassets') ?>" method="post" name="assetsForm" id="item-assets" class="form-horizontal">
+<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmassets') ?>" method="post" name="assetsForm"
+      id="item-assets" class="form-horizontal">
 	<div class="row-fluid">
-		<div class="span6 form-horizontal">
-			<h4><?php echo JText::_('JBS_ADM_ASSET_CHECK'); ?></h4>
+		<?php
 
-			<div class="span2">
-				<a onclick="Joomla.submitbutton('cwmassets.checkassets')">
-					<img
-						src="<?php echo JUri::base() . '../media/com_proclaim/images/icons/import.png'; ?>"
-						alt="Check Assets" height="48" width="48" style="clear: right;"/>
-					<div><?php echo JText::_('JBS_ADM_CHECK_ASSETS'); ?></div>
-				</a>
-			</div>
-			<div class="span2">
-				<button value="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmassets&task=cwmassets.browse&tmpl=component&' . JSession::getFormToken() . '=1'); ?>" class="button-fix" type="button" data-bs-toggle="modal" data-bs-target="#collapseModal">
-					<span class="icon-square" aria-hidden="true"></span>
-					<?php echo JText::_('JBS_ADM_FIX'); ?></button>
-<!--				<a href="--><?php //echo JRoute::_('index.php?option=com_proclaim&view=cwmassets&task=cwmssets.browse&tmpl=component&' . JSession::getFormToken() . '=1'); ?><!--" class="modals"-->
-<!--				   rel="{handler: 'iframe', size: {x: 600, y: 250}}">-->
-<!--					<img src="--><?php //echo JUri::base() . '../media/com_proclaim/images/icons/export.png'; ?><!--"-->
-<!--						alt="Fix Assets" height="48" width="48"/>-->
-<!--					<div>--><?php //echo JText::_('JBS_ADM_FIX'); ?><!--</div>-->
-<!--				</a>-->
-			</div>
-			<div class="clearfix"></div>
-			<div class="table table-hover table-striped">
-				<?php
+		if ($this->assets)
+		{
+			echo '<table class="table table-hover table-striped table-sm table-bordered">';
+			echo '<thead>';
+			echo '<tr class="table-primary">';
 
-				if ($this->assets)
+			echo '<th style="width: 20%;" class="center">' . JText::_('JBS_ADM_TABLENAMES') . '</th>';
+			echo '<th class="center">' . JText::_('JBS_ADM_ROWCOUNT') . '</th>';
+			echo '<th class="center">' . JText::_('JBS_ADM_NULLROWS') . '</th>';
+			echo '<th class="center">' . JText::_('JBS_ADM_MATCHROWS') . '</th>';
+			echo '<th class="center">' . JText::_('JBS_ADM_ARULESROWS') . '</th>';
+			echo '<th class="center">' . JText::_('JBS_ADM_NOMATCHROWS') . '</th>';
+			echo '</tr>';
+			echo '</thead>';
+			foreach ($this->assets as $asset)
+			{
+				echo '<tr>';
+				echo '<td>' . JText::_($asset['realname']) . '</td>';
+				echo '<td class="center">' . JText::_($asset['numrows']) . '</td>';
+				echo '<td class="center">';
+				if ($asset['nullrows'] > 0)
 				{
-					echo '<table style="border: 1px solid;">';
-					echo '<caption><h2>' . JText::_('JBS_ADM_ASSET_TABLE_NAME') . '</h2></caption>';
-					echo '<thead>';
-					echo '<tr>';
-
-					echo '<th style="width: 20%;" class="center">' . JText::_('JBS_ADM_TABLENAMES') . '</th>';
-					echo '<th class="center">' . JText::_('JBS_ADM_ROWCOUNT') . '</th>';
-					echo '<th class="center">' . JText::_('JBS_ADM_NULLROWS') . '</th>';
-					echo '<th class="center">' . JText::_('JBS_ADM_MATCHROWS') . '</th>';
-					echo '<th class="center">' . JText::_('JBS_ADM_ARULESROWS') . '</th>';
-					echo '<th class="center">' . JText::_('JBS_ADM_NOMATCHROWS') . '</th>';
-					echo '</tr>';
-					echo '</thead>';
-					foreach ($this->assets as $asset)
-					{
-						echo '<tr>';
-						echo '<td><p>' . JText::_($asset['realname']) . '</p></td>';
-						echo '<td class="center"><p>' . JText::_($asset['numrows']) . '</p></td>';
-						echo '<td class="center">';
-						if ($asset['nullrows'] > 0)
-						{
-							echo '<p style="color: red;">';
-						}
-						else
-						{
-							echo '<p>';
-						}
-						echo JText::_($asset['nullrows']) . '</p></td>';
-						echo '<td class="center">';
-						if ($asset['matchrows'] > 0)
-						{
-							echo '<p style="color: green;">';
-						}
-						else
-						{
-							echo '<p>';
-						}
-						echo JText::_($asset['matchrows']) . '</p></td>';
-						echo '<td class="center">';
-						if ($asset['arulesrows'] > 0)
-						{
-							echo '<p style="color: red;">';
-						}
-						else
-						{
-							echo '<p>';
-						}
-						echo JText::_($asset['arulesrows']) . '</p></td>';
-						echo '<td class="center">';
-						if ($asset['nomatchrows'] > 0)
-						{
-							echo '<p style="color: red;">';
-						}
-						else
-						{
-							echo '<p>';
-						}
-						echo JText::_($asset['nomatchrows']) . '</p></td>';
-						echo '</tr>';
-					}
-					echo '<tr><td colspan="6">';
-					echo '<p>' . JText::_('JBS_ADM_ASSET_EXPLANATION') . '</p>';
-					echo '</td></tr>';
-					echo '</table>';
+					echo '<span style="color: red;">';
 				}
-				?>
-				<?php echo HTMLHelper::_(
-					'bootstrap.renderModal',
-					'collapseModal',
-					array(
-						'title'  => JText::_('JBS_CMN_BATCH_OPTIONS'),
-						'footer' => $this->loadTemplate('fix')
-					),
-				); ?>
-			</div>
-			<input type="hidden" name="task" value=""/>
-			<input type="hidden" name="tooltype" value=""/>
-			<?php echo HTMLHelper::_('form.token'); ?>
-		</div>
+				else
+				{
+					echo '<span>';
+				}
+				echo JText::_($asset['nullrows']) . '</span></td>';
+				echo '<td class="center">';
+				if ($asset['matchrows'] > 0)
+				{
+					echo '<span style="color: green;">';
+				}
+				else
+				{
+					echo '<span>';
+				}
+				echo JText::_($asset['matchrows']) . '</span></td>';
+				echo '<td class="center">';
+				if ($asset['arulesrows'] > 0)
+				{
+					echo '<span style="color: red;">';
+				}
+				else
+				{
+					echo '<sapn>';
+				}
+				echo JText::_($asset['arulesrows']) . '</span></td>';
+				echo '<td class="center">';
+				if ($asset['nomatchrows'] > 0)
+				{
+					echo '<span style="color: red;">';
+				}
+				else
+				{
+					echo '<span>';
+				}
+				echo JText::_($asset['nomatchrows']) . '</span></td>';
+				echo '</tr>';
+			}
+			echo '<tr><td colspan="6">';
+			echo JText::_('JBS_ADM_ASSET_EXPLANATION');
+			echo '</td></tr>';
+			echo '</table>';
+		}
+		?>
+		<?php if ($user->authorise('core.create', 'com_proclaim')
+			&& $user->authorise('core.edit', 'com_proclaim')
+			&& $user->authorise('core.edit.state', 'com_proclaim')
+		) : ?>
+			<?php echo HTMLHelper::_(
+				'bootstrap.renderModal',
+				'collapseModal',
+				array(
+					'title'  => Text::_('JBS_ADM_FIX'),
+					'footer' => $this->loadTemplate('fix'),
+				),
+			); ?>
+		<?php endif; ?>
+		<input type="hidden" name="task" value=""/>
+		<input type="hidden" name="tooltype" value=""/>
+		<?php echo HTMLHelper::_('form.token'); ?>
 	</div>
 </form>
