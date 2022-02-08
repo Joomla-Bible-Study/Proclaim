@@ -255,6 +255,31 @@
 		"type": "module"
 	  },
 	  "version": "b0a8df19948936e693d5c710d22673ed9ad760a3"
-	}
+	},
+	  {
+		  "name": "com_proclaim.cwmadmin-teachers-modal",
+		  "type": "script",
+		  "uri": "",
+		  "dependencies": [
+			  "com_proclaim.cwmadmin-teachers-modal.es5"
+		  ],
+		  "attributes": {
+			  "type": "module"
+		  },
+		  "version": "b0a8df19948936e693d5c710d22673ed9ad760a3"
+	  },
+	  {
+		  "name": "com_proclaim.cwmadmin-teachers-modal.es5",
+		  "type": "script",
+		  "uri": "",
+		  "dependencies": [
+			  "core"
+		  ],
+		  "attributes": {
+			  "nomodule": true,
+			  "defer": true
+		  },
+		  "version": "872a497cd19612c3e1940b5feefdc0e14c08d4b9"
+	  }
   ]
 }

@@ -140,7 +140,7 @@ if (!empty($editor))
 							?>
 							<a class="select-link" href="javascript:void(0)" <?php echo $attribs; ?>">
 							<?php echo $this->escape($item->studytitle); ?>
-							</a>
+
 						</th>
 						<td class="nowrap small hidden-phone">
 							<?php echo HTMLHelper::_('date', $item->studydate, JText::_('DATE_FORMAT_LC4')); ?>

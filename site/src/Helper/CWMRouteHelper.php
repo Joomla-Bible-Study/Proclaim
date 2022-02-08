@@ -100,7 +100,7 @@ abstract class CWMRouteHelper
 			return '';
 		}
 
-		$link = 'index.php?option=com_proclaim&view=cwmloations&id=' . $seriesid;
+		$link = 'index.php?option=com_proclaim&view=cwmlocations&id=' . $seriesid;
 
 		if ($language && $language !== '*' && Multilanguage::isEnabled())
 		{
@@ -114,7 +114,38 @@ abstract class CWMRouteHelper
 
 		return $link;
 	}
+	/**
+	 * Get the Teacher route.
+	 *
+	 * @param   integer      $seriesid  The Series ID.
+	 * @param   integer      $language  The language code.
+	 * @param   string|null  $layout    The layout value.
+	 *
+	 * @return  string  The article route.
+	 *
+	 * @since   1.5
+	 */
+	public static function getTeachersRoute(int $id, int $language = 0, string $layout = null): string
+	{
+		if ($id < 1)
+		{
+			return '';
+		}
 
+		$link = 'index.php?option=com_proclaim&view=cwmteachers&id=' . $id;
+
+		if ($language && $language !== '*' && Multilanguage::isEnabled())
+		{
+			$link .= '&lang=' . $language;
+		}
+
+		if ($layout)
+		{
+			$link .= '&layout=' . $layout;
+		}
+
+		return $link;
+	}
 	/**
 	 * Get the form route.
 	 *
