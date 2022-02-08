@@ -43,7 +43,7 @@ $multilang = Multilanguage::isEnabled();
 if (!empty($editor))
 {
 	// This view is used also in com_menus. Load the xtd script only if the editor is set!
-	$this->document->addScriptOptions('xtd-series', array('editor' => $editor));
+	$this->document->addScriptOptions('xtd-teachers', array('editor' => $editor));
 	$onclick = "jSelectTeachers";
 }
 ?>
@@ -125,7 +125,7 @@ if (!empty($editor))
                     <th scope="row">
 						<?php $attribs = 'data-function="' . $this->escape($onclick) . '"'
 							. ' data-id="' . $item->id . '"'
-							. ' data-title="' . $this->escape($item->title) . '"'
+							. ' data-title="' . $this->escape($item->teachername) . '"'
 							. ' data-uri="' . $this->escape(CWMRouteHelper::getTeachersRoute($item->id, (int) $item->language)) . '"'
 							. ' data-language="' . $this->escape($lang) . '"';
 						?>

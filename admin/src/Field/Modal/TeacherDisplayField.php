@@ -79,7 +79,7 @@ class TeacherDisplayField extends FormField
 			if (!isset($scriptSelect[$this->id]))
 			{
 				$wa->addInlineScript("
-				window.jSelectTeacher_" . $this->id . " = function (id, title, catid, object, url, language) {
+				window.jSelectTeachers_" . $this->id . " = function (id, title, catid, object, url, language) {
 					window.processModalSelect('Teacher', '" . $this->id . "', id, title, catid, object, url, language);
 				}",
 					[],
@@ -107,7 +107,7 @@ class TeacherDisplayField extends FormField
 			$modalTitle = Text::_('JBS_CMN_SELECT_TEACHER');
 		}
 
-		$urlSelect = $linkSeries . '&amp;function=jSelectTeacher_' . $this->id;
+		$urlSelect = $linkSeries . '&amp;function=jSelectTeachers_' . $this->id;
 		$urlEdit   = $linkSerie . '&amp;task=cwmteacher.edit&amp;id=\' + document.getElementById(&quot;' . $this->id . '_id&quot;).value + \'';
 		$urlNew    = $linkSerie . '&amp;task=cwmteacher.add';
 

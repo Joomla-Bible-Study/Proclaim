@@ -132,7 +132,7 @@ abstract class CWMRouteHelper
 			return '';
 		}
 
-		$link = 'index.php?option=com_proclaim&view=cwmteachers&id=' . $id;
+		$link = 'index.php?option=com_proclaim&view=cwmteacher&id=' . $id;
 
 		if ($language && $language !== '*' && Multilanguage::isEnabled())
 		{
