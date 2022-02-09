@@ -94,7 +94,7 @@ class TeacherDisplayField extends FormField
 
 		// Setup variables for display.
 		$linkSeries = 'index.php?option=com_proclaim&amp;view=cwmteachers&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken() . '=1';
-		$linkSerie  = 'index.php?option=com_proclaim&amp;view=cwmteachers&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken() . '=1';
+		$linkSerie  = 'index.php?option=com_proclaim&amp;view=cwmteacher&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken() . '=1';
 
 		if (isset($this->element['language']))
 		{
