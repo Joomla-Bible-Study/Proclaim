@@ -4,9 +4,9 @@
 	<name>com_proclaim</name>
 	<author>CWM Team</author>
 	<authorEmail>info@christianwebministries.org</authorEmail>
-	<authorUrl>https://www.christianwebministries.org</authorUrl>
+	<authorUrl>www.christianwebministries.org</authorUrl>
 	<copyright>(C) 2007 - 2019 Proclaim All rights reserved.</copyright>
-	<version>10.0.0</version>
+	<version>10.0.0.DEV</version>
 	<creationDate>June 2, 2021</creationDate>
 	<license>http://www.gnu.org/licenses/gpl.html</license>
 	<description>JBS_INS_XML_DESCRIPTION</description>
@@ -30,19 +30,20 @@
 	</updateservers>
 
 	<files folder="site">
-		<filename>biblestudy.php</filename>
+		<filename>proclaim.php</filename>
 		<filename>controller.php</filename>
 		<filename>router.php</filename>
-		<folder>controllers</folder>
+		<folder>forms</folder>
 		<folder>helpers</folder>
-		<folder>lib</folder>
-		<folder>models</folder>
+		<folder>layouts</folder>
 		<folder>sef_ext</folder>
-		<folder>views</folder>
+		<folder>src</folder>
+		<folder>tmpl</folder>
 	</files>
 
 	<!-- Media files -->
 	<media destination="com_proclaim" folder="media">
+		<filename>joomla.asset.json</filename>
 		<folder>backup</folder>
 		<folder>css</folder>
 		<folder>fancybox</folder>
@@ -77,23 +78,17 @@
 		<files folder="admin">
 			<filename>access.xml</filename>
 			<filename>api.php</filename>
-			<filename>biblestudy.php</filename>
+			<filename>proclaim.php</filename>
 			<filename>config.xml</filename>
-			<filename>controller.php</filename>
-			<folder>addons</folder>
-			<folder>controllers</folder>
+			<folder>forms</folder>
 			<folder>help</folder>
-			<folder>helpers</folder>
+			<folder>helper</folder>
 			<folder>install</folder>
 			<folder>language</folder>
-			<folder>lib</folder>
 			<folder>models</folder>
 			<folder>postinstall</folder>
-			<folder>tables</folder>
-			<folder>views</folder>
-			<folder>forms</folder>
-			<folder>postinstall</folder>
 			<folder>services</folder>
+			<folder>sql</folder>
 			<folder>src</folder>
 			<folder>tmpl</folder>
 		</files>
