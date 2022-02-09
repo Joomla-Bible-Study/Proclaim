@@ -14,59 +14,49 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
-use Joomla\CMS\HTML\HTMLHelper as JHtml;
-
-// Load the tooltip behavior.
-HTMLHelper::_('jquery.framework');
-HTMLHelper::_('formbehavior.chosen', 'select');
+use Joomla\CMS\Router\Route;
 
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('keepalive')
-	->useScript('form.validate');
-
-$app   = Factory::getApplication();
-$input = $app->input;
-
-$this->useCoreUI = true;
-?>
-<script type="text/javascript">
+	->useScript('form.validate')
+	->addInlineScript("
 	jQuery.submitbutton3 = function () {
 		jQuery('[name=tooltype]').val('players')
 		jQuery('[name=task]').val('cwmadmin.tools')
-		jQuery('#item-administrator').submit()
+		jQuery('#item-admin').submit()
 	}
 
 	jQuery.submitbutton4 = function () {
 		jQuery('[name=tooltype]').val('popups')
 		jQuery('[name=task]').val('cwmadmin.tools')
-		jQuery('#item-administrator').submit()
+		jQuery('#item-admin').submit()
 	}
 	jQuery.submitbutton5 = function () {
 		jQuery('[name=tooltype]').val('mediaimages')
 		jQuery('[name=task]').val('cwmadmin.mediaimages')
-		jQuery('#item-administrator').submit()
+		jQuery('#item-admin').submit()
 	}
 	jQuery.submitbutton6 = function () {
 		jQuery('[name=tooltype]').val('playerbymediatype')
 		jQuery('[name=task]').val('cwmadmin.tools')
-		jQuery('#item-administrator').submit()
+		jQuery('#item-admin').submit()
 	}
 	jQuery.submitbutton7 = function () {
 		jQuery('[name=tooltype]').val('preachitconvert')
 		jQuery('[name=task]').val('cwmadmin.convertPreachIt')
-		jQuery('#item-administrator').submit()
+		jQuery('#item-admin').submit()
 	}
 
 	Joomla.submitbutton = function (task) {
 		if (task === 'cwmadmin.cancel' || task === 'cwmadmin.resetHits' || task === 'cwmadmin.resetDownloads' || task ===
 			'cwmadmin.resetPlays' || task === 'cwmadmin.aliasUpdate')
 		{
-			Joomla.submitform(task, document.getElementById('item-administrator'))
+			Joomla.submitform(task, document.getElementById('item-admin'))
 		}
 		else
 		{
-			if (document.formvalidator.isValid(document.id('item-administrator')))
+			if (document.formvalidator.isValid(document.getElementById('item-admin')))
 			{
 				if (task === 'cwmadmin.save' || task === 'cwmadmin.apply')
 				{
@@ -97,7 +87,7 @@ $this->useCoreUI = true;
 						if (resize_thumbnails)
 						{
 							jQuery.getJSON(
-								'index.php?option=com_proclaim&task=cwmadmin.getThumbnailListXHR&<?php echo JSession::getFormToken(); ?>=1',
+								'index.php?option=com_proclaim&task=cwmadmin.getThumbnailListXHR&" . JSession::getFormToken() . "=1',
 								{ images: thumbnail_changes }, function (response) {
 									jQuery('#dialog_thumbnail_resize').modal({ backdrop: 'static', keyboard: false })
 									var total_paths = response.total
@@ -128,7 +118,7 @@ $this->useCoreUI = true;
 																break
 														}
 														jQuery.getJSON(
-															'index.php?option=com_proclaim&task=cwmadmin.createThumbnailXHR&<?php echo JSession::getFormToken(); ?>=1',
+															'index.php?option=com_proclaim&task=cwmadmin.createThumbnailXHR&" . JSession::getFormToken() . "=1',
 															{
 																image_path: this,
 																new_size: new_size,
@@ -139,7 +129,7 @@ $this->useCoreUI = true;
 																if (counter === total_paths)
 																{
 																	// Continue and save the rest of the form now.
-																	Joomla.submitform(task, document.getElementById('item-administrator'))
+																	Joomla.submitform(task, document.getElementById('item-admin'))
 																}
 															})
 													},
@@ -147,13 +137,13 @@ $this->useCoreUI = true;
 											}
 											else
 											{
-												Joomla.submitform(task, document.getElementById('item-administrator'))
+												Joomla.submitform(task, document.getElementById('item-admin'))
 											}
 										})
 									}
 									else
 									{
-										Joomla.submitform(task, document.getElementById('item-administrator'))
+										Joomla.submitform(task, document.getElementById('item-admin'))
 									}
 								},
 							)
@@ -161,21 +151,23 @@ $this->useCoreUI = true;
 					}
 					else
 					{
-						Joomla.submitform(task, document.getElementById('item-administrator'))
+						Joomla.submitform(task, document.getElementById('item-admin'))
 					}
 				}
 			}
 			else
 			{
-				alert('<?php echo $this->escape(JText::_('
-				JGLOBAL_VALIDATION_FORM_FAILED
-				'));?>',
-				)
+				alert('" . Text::_('JGLOBAL_VALIDATION_FORM_FAILED') . "')
 
 			}
 		}
-	}
-</script>
+	}");
+
+$app   = Factory::getApplication();
+$input = $app->input;
+
+$this->useCoreUI = true;
+?>
 <div class="modal hide fade" id="dialog_thumbnail_resize">
 	<div class="modal-header">
 		<h3>Creating Thumbnails...</h3>
@@ -187,11 +179,10 @@ $this->useCoreUI = true;
 	</div>
 </div>
 
-<form
-		action="<?php echo JRoute::_('index.php?option=com_proclaim&view=administration&layout=edit&id=' . (int) $this->item->id); ?>"
-		method="post" name="adminForm" id="item-admin"
-		aria-label="<?php echo Text::_('COM_CONTENT_FORM_TITLE_' . ((int) $this->item->id === 0 ? 'NEW' : 'EDIT'), true); ?>"
-		class="form-validate">
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=administration&layout=edit&id=' . (int) $this->item->id); ?>"
+      method="post" name="adminForm" id="item-admin"
+      aria-label="<?php echo Text::_('COM_CONTENT_FORM_TITLE_' . ((int) $this->item->id === 0 ? 'NEW' : 'EDIT'), true); ?>"
+      class="form-validate">
 	<?php echo LayoutHelper::render('joomla.edit.title_alias', $this); ?>
 	<div class="row-fluid">
 		<?php echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'cpanl', 'recall' => true, 'breakpoint' => 768]); ?>
@@ -202,32 +193,32 @@ $this->useCoreUI = true;
 			<div class="col-12 col-lg-12">
 				<div class="well well-small">
 					<div id="dashboard-icons" class="btn-group" style="white-space: normal;">
-						<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmassets&task=cwmassets.checkassets&' .
+						<a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmassets&task=cwmassets.checkassets&' .
 							JSession::getFormToken() . '=1'); ?>"
-						   title="<?php echo JText::_('JBS_ADM_ASSET_CHECK'); ?>" class="btn"> <i
+						   title="<?php echo Text::_('JBS_ADM_ASSET_CHECK'); ?>" class="btn"> <i
 									class="icon-big icon-list"> </i>
-							<span><br/> <?php echo JText::_('JBS_ADM_ASSET_CHECK'); ?> </span></a>
-						<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmmigrate'); ?>"
-						   title="<?php echo JText::_('JBS_ADM_MIGRATE'); ?>" class="btn"> <i
+							<span><br/> <?php echo Text::_('JBS_ADM_ASSET_CHECK'); ?> </span></a>
+						<a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmmigrate'); ?>"
+						   title="<?php echo Text::_('JBS_ADM_MIGRATE'); ?>" class="btn"> <i
 									class="icon-big icon-share-alt"></i>
-							<span><br/> <?php echo JText::_('JBS_ADM_MIGRATE'); ?> </span></a>
-						<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmbackup'); ?>"
-						   title="<?php echo JText::_('JBS_ADM_BACKUP_RESTORE'); ?>" class="btn"> <i
+							<span><br/> <?php echo Text::_('JBS_ADM_MIGRATE'); ?> </span></a>
+						<a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmbackup'); ?>"
+						   title="<?php echo Text::_('JBS_ADM_BACKUP_RESTORE'); ?>" class="btn"> <i
 									class="icon-big icon-database"></i>
-							<span><br/> <?php echo JText::_('JBS_ADM_BACKUP_RESTORE'); ?> </span></a>
-						<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmarchive'); ?>"
-						   title="<?php echo JText::_('JBS_ADM_ARCHIVE'); ?>" class="btn"> <i
+							<span><br/> <?php echo Text::_('JBS_ADM_BACKUP_RESTORE'); ?> </span></a>
+						<a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmarchive'); ?>"
+						   title="<?php echo Text::_('JBS_ADM_ARCHIVE'); ?>" class="btn"> <i
 									class="icon-archive icon-big"></i>
-							<span><br/> <?php echo JText::_('JBS_ADM_ARCHIVE'); ?> </span></a>
-						<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmadmin&task=cwmadmin.aliasUpdate&' .
+							<span><br/> <?php echo Text::_('JBS_ADM_ARCHIVE'); ?> </span></a>
+						<a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmadmin&task=cwmadmin.aliasUpdate&' .
 							JSession::getFormToken() . '=1') ?>"
-						   title="<?php echo JText::_('JBS_ADM_RESET_ALIAS'); ?>" class="btn"> <i
+						   title="<?php echo Text::_('JBS_ADM_RESET_ALIAS'); ?>" class="btn"> <i
 									class="icon-big icon-tree-2"></i>
-							<span><br/> <?php echo JText::_('JBS_ADM_RESET_ALIAS'); ?> </span></a>
-						<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmdatabase'); ?>"
-						   title="<?php echo JText::_('JBS_ADM_DATABASE'); ?>" class="btn"> <i
+							<span><br/> <?php echo Text::_('JBS_ADM_RESET_ALIAS'); ?> </span></a>
+						<a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmdatabase'); ?>"
+						   title="<?php echo Text::_('JBS_ADM_DATABASE'); ?>" class="btn"> <i
 									class="icon-database icon-big"></i>
-							<span><br/> <?php echo JText::_('JBS_ADM_DATABASE'); ?> </span></a>
+							<span><br/> <?php echo Text::_('JBS_ADM_DATABASE'); ?> </span></a>
 					</div>
 				</div>
 			</div>
@@ -236,8 +227,8 @@ $this->useCoreUI = true;
 
 		<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'administrator', Text::_('JBS_ADM_ADMIN_PARAMS')); ?>
 		<div class="row">
-			<h3 class="tab-description"><?php echo JText::_('JBS_ADM_COMPONENT_SETTINGS'); ?></h3>
-			<div class="control-group">
+			<h3 class="tab-description"><?php echo Text::_('JBS_ADM_COMPONENT_SETTINGS'); ?></h3>
+			<div class="col-12 col-lg-6">
 				<div class="control-group">
 					<?php echo $this->form->getLabel('simple_mode', 'params'); ?>
 					<div class="controls">
@@ -245,18 +236,18 @@ $this->useCoreUI = true;
 					</div>
 				</div>
 				<div class="control-group">
-					<div class="control-group">
-						<?php echo $this->form->getLabel('simple_mode_display', 'params'); ?>
-						<div class="controls">
-							<?php echo $this->form->getInput('simple_mode_display', 'params'); ?>
-						</div>
+					<?php echo $this->form->getLabel('simple_mode_display', 'params'); ?>
+					<div class="controls">
+						<?php echo $this->form->getInput('simple_mode_display', 'params'); ?>
 					</div>
-					<div class="control-group">
-						<?php echo $this->form->getLabel('users', 'params'); ?>
-						<div class="controls">
-							<?php echo $this->form->getInput('users', 'params'); ?>
-						</div>
+				</div>
+				<div class="control-group">
+					<?php echo $this->form->getLabel('users', 'params'); ?>
+					<div class="controls">
+						<?php echo $this->form->getInput('users', 'params'); ?>
 					</div>
+				</div>
+				<div class="control-group">
 					<?php echo $this->form->getLabel('metakey', 'params'); ?>
 					<div class="controls">
 						<?php echo $this->form->getInput('metakey', 'params'); ?>
@@ -280,6 +271,9 @@ $this->useCoreUI = true;
 						<?php echo $this->form->getInput('drop_tables'); ?>
 					</div>
 				</div>
+			</div>
+			<div class="col-12 col-lg-6">
+
 				<div class="control-group">
 					<?php echo $this->form->getLabel('filestokeep'); ?>
 					<div class="controls">
@@ -335,7 +329,7 @@ $this->useCoreUI = true;
 		<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'defaults', Text::_('JBS_ADM_SYSTEM_DEFAULTS')); ?>
 		<div class="row">
 			<div class="col-12 col-lg-6">
-				<h3 class="tab-description"><?php echo JText::_('JBS_ADM_AUTO_FILL_STUDY_REC'); ?></h3>
+				<h3 class="tab-description"><?php echo Text::_('JBS_ADM_AUTO_FILL_STUDY_REC'); ?></h3>
 
 				<div class="control-group">
 					<?php echo $this->form->getLabel('location_id', 'params'); ?>
@@ -375,7 +369,7 @@ $this->useCoreUI = true;
 				</div>
 			</div>
 			<div class="col-12 col-lg-6">
-				<h3 class="tab-description"><?php echo JText::_('JBS_ADM_AUTO_FILL_MEDIA_REC'); ?></h3>
+				<h3 class="tab-description"><?php echo Text::_('JBS_ADM_AUTO_FILL_MEDIA_REC'); ?></h3>
 
 				<div class="control-group">
 					<?php echo $this->form->getLabel('download', 'params'); ?>
@@ -411,7 +405,7 @@ $this->useCoreUI = true;
 		</div>
 		<div class="row">
 			<div class="col-12 col-lg-6">
-				<h3 class="tab-description"><?php echo JText::_('JBS_CMN_DEFAULT_IMAGES'); ?></h3>
+				<h3 class="tab-description"><?php echo Text::_('JBS_CMN_DEFAULT_IMAGES'); ?></h3>
 
 				<div class="control-group">
 					<?php echo $this->form->getLabel('default_main_image', 'params'); ?>
@@ -493,7 +487,7 @@ $this->useCoreUI = true;
 				</div>
 			</div>
 			<div class="col-12 col-lg-6">
-				<h3 class="tab-description"><?php echo JText::_('JBS_CMN_DEFAULT_IMAGES_SIZES'); ?></h3>
+				<h3 class="tab-description"><?php echo Text::_('JBS_CMN_DEFAULT_IMAGES_SIZES'); ?></h3>
 
 				<div class="control-group">
 					<?php echo $this->form->getLabel('thumbnail_teacher_size', 'params'); ?>
@@ -520,10 +514,10 @@ $this->useCoreUI = true;
 		<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'playersettings', Text::_('JBS_ADM_PLAYER_SETTINGS')); ?>
 		<div class="row" id="playersettings">
 			<div class="span4" style="border: ridge; padding: 3px">
-				<h3 class="tab-description"><?php echo JText::_('JBS_CMN_MEDIA_FILES'); ?></h3>
+				<h3 class="tab-description"><?php echo Text::_('JBS_CMN_MEDIA_FILES'); ?></h3>
 
 				<div class="control-group">
-					<?php echo JText::_('JBS_ADM_MEDIA_PLAYER_STAT'); ?>
+					<?php echo Text::_('JBS_ADM_MEDIA_PLAYER_STAT'); ?>
 					<div class="controls">
 						<?php echo $this->playerstats; ?>
 					</div>
@@ -542,15 +536,15 @@ $this->useCoreUI = true;
 				</div>
 				<div class="control-group">
 					<button type="button" class="btn btn-primary" onclick="jQuery.submitbutton3(task)">
-						<i class="icon-user icon-white"></i> <?php echo JText::_('JBS_CMN_SUBMIT'); ?>
+						<i class="icon-user icon-white"></i> <?php echo Text::_('JBS_CMN_SUBMIT'); ?>
 					</button>
 				</div>
 			</div>
 			<div class="span4" style="border: ridge; padding: 3px">
-				<h3 class="tab-description"><?php echo JText::_('JBS_ADM_POPUP_OPTIONS'); ?></h3>
+				<h3 class="tab-description"><?php echo Text::_('JBS_ADM_POPUP_OPTIONS'); ?></h3>
 
 				<div class="control-group">
-					<?php echo JText::_('JBS_ADM_MEDIA_PLAYER_POPUP_STAT'); ?>
+					<?php echo Text::_('JBS_ADM_MEDIA_PLAYER_POPUP_STAT'); ?>
 					<div class="controls">
 						<?php echo $this->popups; ?>
 					</div>
@@ -569,12 +563,12 @@ $this->useCoreUI = true;
 				</div>
 				<div class="control-group">
 					<button type="button" class="btn btn-primary" onclick="jQuery.submitbutton4(task)">
-						<i class="icon-user icon-white"></i> <?php echo JText::_('JBS_CMN_SUBMIT'); ?>
+						<i class="icon-user icon-white"></i> <?php echo Text::_('JBS_CMN_SUBMIT'); ?>
 					</button>
 				</div>
 			</div>
 			<div class="span4" style="border: ridge; padding: 3px">
-				<h3 class="tab-description"><?php echo JText::_('JBS_ADM_MEDIATYPES_OPTIONS'); ?></h3>
+				<h3 class="tab-description"><?php echo Text::_('JBS_ADM_MEDIATYPES_OPTIONS'); ?></h3>
 				<div class="control-group">
 					<?php echo $this->form->getLabel('mtFrom', 'params'); ?>
 					<div class="controls">
@@ -589,7 +583,7 @@ $this->useCoreUI = true;
 				</div>
 				<div class="control-group">
 					<button type="button" class="btn btn-primary" onclick="jQuery.submitbutton6(task)">
-						<i class="icon-user icon-white"></i> <?php echo JText::_('JBS_CMN_SUBMIT'); ?>
+						<i class="icon-user icon-white"></i> <?php echo Text::_('JBS_CMN_SUBMIT'); ?>
 					</button>
 				</div>
 			</div>
@@ -604,21 +598,21 @@ $this->useCoreUI = true;
 
 		<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'convert', Text::_('JBS_IBM_CONVERT')); ?>
 		<div class="row" id="convert">
-			<h4><?php echo JText::_('JBS_IBM_CONVERT'); ?></h4>
-			<h3><?php echo JText::_('CONVERSION_NOT_AVAILABLE_IN_900'); ?></h3>
-			<a href="<?php echo JRoute::_('index.php?option=com_proclaim&view=assets&task=cwmadmin.convertPreachIt&' .
+			<h4><?php echo Text::_('JBS_IBM_CONVERT'); ?></h4>
+			<h3><?php echo Text::_('CONVERSION_NOT_AVAILABLE_IN_900'); ?></h3>
+			<a href="<?php echo Route::_('index.php?option=com_proclaim&view=assets&task=cwmadmin.convertPreachIt&' .
 				JSession::getFormToken() . '=1'); ?>"
-			   title="<?php echo JText::_('JBS_ADM_PREACHIT'); ?>" class="btn"> <i
+			   title="<?php echo Text::_('JBS_ADM_PREACHIT'); ?>" class="btn"> <i
 						class="icon-big icon-list"> </i>
-				<span><br/> <?php echo JText::_('JBS_ADM_PREACHIT'); ?> </span></a>
+				<span><br/> <?php echo Text::_('JBS_ADM_PREACHIT'); ?> </span></a>
 		</div>
 		<?php echo HTMLHelper::_('uitab.endTab'); ?>
 
 		<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'images', Text::_('JBS_IBM_IMAGES')); ?>
 		<div class="row" id="images">
-			<div class="span12"><h3><?php echo JText::_('JBS_IBM_IMAGES'); ?></h3></div>
+			<div class="span12"><h3><?php echo Text::_('JBS_IBM_IMAGES'); ?></h3></div>
 			<div class="span6">
-				<h4 class="tab-description"><?php echo JText::_('JBS_IBM_OLD_IMAGES'); ?></h4>
+				<h4 class="tab-description"><?php echo Text::_('JBS_IBM_OLD_IMAGES'); ?></h4>
 				<div class="control-group">
 					<?php echo $this->form->getLabel('mediaimage'); ?>
 					<div class="controls">
@@ -627,7 +621,7 @@ $this->useCoreUI = true;
 				</div>
 			</div>
 			<div class="span6">
-				<h4 class="tab-description"><?php echo JText::_('JBS_IBM_NEW_IMAGES'); ?></h4>
+				<h4 class="tab-description"><?php echo Text::_('JBS_IBM_NEW_IMAGES'); ?></h4>
 				<div class="control-group">
 					<?php echo $this->form->getLabel('media_use_button_icon'); ?>
 					<div class="controls">
@@ -678,7 +672,7 @@ $this->useCoreUI = true;
 				</div>
 				<div class="control-group">
 					<button type="button" class="btn btn-primary" onclick="jQuery.submitbutton5(task)">
-						<i class="icon-user icon-white"></i> <?php echo JText::_('JBS_CMN_SUBMIT'); ?>
+						<i class="icon-user icon-white"></i> <?php echo Text::_('JBS_CMN_SUBMIT'); ?>
 					</button>
 				</div>
 			</div>
@@ -695,6 +689,6 @@ $this->useCoreUI = true;
 		<input type="hidden" name="tooltype" value=""/>
 		<input type="hidden" name="task" value=""/>
 		<input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
-		<?php echo JHtml::_('form.token'); ?>
+		<?php echo HTMLHelper::_('form.token'); ?>
 	</div>
 </form>
