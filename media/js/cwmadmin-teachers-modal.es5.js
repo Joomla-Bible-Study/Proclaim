@@ -17,14 +17,14 @@
 			window.jSelectTeachers = function (id, title, catid, object, link, lang) {
 				var hreflang = ''
 
-				if (!Joomla.getOptions('xtd-series'))
+				if (!Joomla.getOptions('xtd-teachers'))
 				{
 					// Something went wrong!
 					// @TODO Close the modal
 					return false
 				}
 
-				var _Joomla$getOptions = Joomla.getOptions('xtd-series'),
+				var _Joomla$getOptions = Joomla.getOptions('xtd-teachers'),
 					editor = _Joomla$getOptions.editor
 
 				if (lang !== '')
