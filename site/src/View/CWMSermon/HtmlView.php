@@ -179,7 +179,7 @@ class HtmlView extends BaseHtmlView
 		// Add router helpers.
 		$item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;
 
-		$item->readmore_link = Route::_(CWMHelperRoute::getArticleRoute($item->slug, ''));
+		//$item->readmore_link = Route::_(CWMHelperRoute::getArticleRoute($item->slug, ''));
 
 		// Merge article params. If this is single-article view, menu params override article params
 		// Otherwise, article params override menu item params

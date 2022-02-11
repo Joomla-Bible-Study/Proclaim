@@ -61,7 +61,7 @@ class Router extends RouterView
 	public function __construct(SiteApplication $app, AbstractMenu $menu, CategoryFactoryInterface $categoryFactory, DatabaseInterface $db)
 	{
 		$this->db = $db;
-
+		$this->categoryFactory = $categoryFactory;
 		$params      = ComponentHelper::getParams('com_proclaim');
 		$this->noIDs = (bool) $params->get('sef_ids');
 
@@ -77,7 +77,7 @@ class Router extends RouterView
 		$Teachers->setKey('id');
 		$this->registerView($Teachers);
 
-		$Teachers = new RouterViewConfiguration('CWMTeachers');
+		$Teachers = new RouterViewConfiguration('CWMTeacher');
 		$Teachers->setKey('id');
 		$this->registerView($Teachers);
 
