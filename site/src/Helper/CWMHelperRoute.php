@@ -48,7 +48,7 @@ class CWMHelperRoute
 		);
 
 		// Create the link
-		$link = 'index.php?option=com_proclaim&view=sermon&id=' . $id;
+		$link = 'index.php?option=com_proclaim&view=cwmsermon&id=' . $id;
 		if ($language && $language !== "*" && Multilanguage::isEnabled())
 		{
 			$db    = Factory::getDbo();
@@ -90,7 +90,7 @@ class CWMHelperRoute
 	 *
 	 * @since    7.2
 	 */
-	protected static function _findItem($needles = null)
+protected static function _findItem($needles = null)
 	{
 		$app   = Factory::getApplication();
 		$menus = $app->getMenu('site');
@@ -163,7 +163,7 @@ class CWMHelperRoute
 	public static function getTeacherRoute($id)
 	{
 		// Create the link
-		$link = 'index.php?option=com_proclaim&view=teacher&id=' . $id;
+		$link = 'index.php?option=com_proclaim&view=cwmteacher&id=' . $id;
 
 		return $link;
 	}
@@ -180,7 +180,7 @@ class CWMHelperRoute
 	public static function getSeriesRoute($id)
 	{
 		// Create the link
-		$link = 'index.php?option=com_proclaim&view=seriesdisplay&id=' . $id;
+		$link = 'index.php?option=com_proclaim&view=cwmseriesdisplay&id=' . $id;
 
 		return $link;
 	}
