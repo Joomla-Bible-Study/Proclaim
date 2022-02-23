@@ -2426,15 +2426,15 @@ class CWMListing
 	private function getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $row, $templateid)
 	{
 		$input  = new Input;
-		$Itemid = $input->get('Itemid', '', 'int');
+		//$Itemid = $input->get('Itemid', '', 'int');
 		$view   = $input->getString('view', '');
 		$column = '';
 
 		switch ($islink)
 		{
 			case 1 :
-				$Itemid = $input->get('Itemid', '', 'int');
-
+				//$Itemid = $input->get('Itemid', '', 'int');
+				$Itemid = '';
 				if (!$Itemid)
 				{
 					$link = Route::_('index.php?option=com_proclaim&view=CWMSermon&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
@@ -2470,14 +2470,9 @@ class CWMListing
 
 			case 4 :
 				// Case 4 is a details link with tooltip
-				if (!$Itemid)
-				{
+
 					$link = Route::_(CWMHelperRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
-				}
-				else
-				{
-					$link = Route::_(CWMHelperRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
-				}
+
 
 				$column = CWMHelper::getTooltip($row, $params, $templateid);
 				$column .= '<a href="' . $link . '">';
