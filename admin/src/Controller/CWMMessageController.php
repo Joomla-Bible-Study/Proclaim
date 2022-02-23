@@ -13,6 +13,8 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Administrator\Model\CWMTopicModel;
+use CWM\Component\Proclaim\Administrator\Table\CWMStudyTopicsTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
@@ -145,22 +147,6 @@ class CWMMessageController extends FormController
 	}
 
 	/**
-	 * Method to get a model object, loading it if required.
-	 *
-	 * @param   string  $name    The model name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return  \Joomla\CMS\MVC\Model\BaseDatabaseModel
-	 *
-	 * @since   12.2
-	 */
-	public function getModel($name = 'CWMMessage', $prefix = '', $config = array('ignore_request' => true))
-	{
-		return parent::getModel($name, $prefix, array('ignore_request' => true));
-	}
-
-	/**
 	 * Method to save a record.
 	 *
 	 * @param   string  $key     The name of the primary key of the URL variable.
@@ -176,14 +162,13 @@ class CWMMessageController extends FormController
 		// Check for request forgeries.
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
-		$model = $this->getModel('CWMTopicModel');
+		$model = new CWMTopicModel;
 		$app   = Factory::getApplication();
 		$data  = $this->input->post->get('jform', array(), 'array');
 
 		// Get Tags
 		$vTags = $data['topics'];
 		$iTags = explode(",", $vTags);
-		Table::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_proclaim/tables');
 
 		// Remove Exerting StudyTopics tags
 		$db    = Factory::getDbo();
@@ -204,7 +189,7 @@ class CWMMessageController extends FormController
 				// It's an existing tag.  Add it
 				if ($aTag != "")
 				{
-					$tagRow           = Table::getInstance('CWMstudytopicsTable');
+					$tagRow           = new CWMStudyTopicsTable($db);
 					$tagRow->study_id = $data['id'];
 					$tagRow->topic_id = $aTag;
 
@@ -224,7 +209,7 @@ class CWMMessageController extends FormController
 					$model->save(array('topic_text' => $aTag, 'language' => $data['language']));
 
 					// Gotta somehow make sure this isn't a duplicate...
-					$tagRow           = Table::getInstance('CWMstudytopicsTable');
+					$tagRow           = new CWMstudytopicsTable($db);
 					$tagRow->study_id = $data['id'];
 					$tagRow->topic_id = $model->getState('topic.id');
 

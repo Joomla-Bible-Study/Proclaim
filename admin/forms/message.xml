@@ -165,15 +165,21 @@
 
 		<field name="checked_out_time" type="hidden" filter="unset"/>
 
-		<field name="publish_up" type="calendar"
-		       label="JGLOBAL_FIELD_PUBLISH_UP_LABEL" description="JGLOBAL_FIELD_PUBLISH_UP_DESC"
-		       class="inputbox" format="%Y-%m-%d %H:%M:%S" size="22"
-		       filter="user_utc"/>
+		<field name="publish_up"
+		       type="calendar"
+		       label="JGLOBAL_FIELD_PUBLISH_UP_LABEL"
+		       translateformat="true"
+		       showtime="true"
+		       filter="user_utc"
+		/>
 
-		<field name="publish_down" type="calendar"
-		       label="JGLOBAL_FIELD_PUBLISH_DOWN_LABEL" description="JGLOBAL_FIELD_PUBLISH_DOWN_DESC"
-		       class="inputbox" format="%Y-%m-%d %H:%M:%S" size="22"
-		       filter="user_utc"/>
+		<field name="publish_down"
+		       type="calendar"
+		       label="JGLOBAL_FIELD_PUBLISH_DOWN_LABEL"
+		       translateformat="true"
+		       showtime="true"
+		       filter="user_utc"
+		/>
 
 		<field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL"
 		       description="JFIELD_ACCESS_DESC"/>

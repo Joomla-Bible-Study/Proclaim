@@ -22,6 +22,7 @@ use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Workflow\Workflow;
 use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
@@ -90,7 +91,7 @@ class CWMMessageModel extends AdminModel
 		// Do search in case of present study only, suppress otherwise
 		$input          = new Input;
 		$translatedList = array();
-		$id = $input->get('a_id', 0, 'int');
+		$id             = $input->get('a_id', 0, 'int');
 
 		if (!$id)
 		{
@@ -165,8 +166,8 @@ class CWMMessageModel extends AdminModel
 	/**
 	 * Returns a list of media files associated with this study
 	 *
-	 * @since   7.0
 	 * @return object
+	 * @since   7.0
 	 */
 	public function getMediaFiles()
 	{
@@ -186,7 +187,7 @@ class CWMMessageModel extends AdminModel
 		$db->setQuery($query->__toString());
 		$mediafiles = $db->loadObjectList();
 
-		foreach ($mediafiles AS $i => $mediafile)
+		foreach ($mediafiles as $i => $mediafile)
 		{
 			$reg = new Registry;
 			$reg->loadString($mediafile->params);
@@ -203,14 +204,15 @@ class CWMMessageModel extends AdminModel
 	 *
 	 * @return boolean
 	 *
-	 * @since 7.0.1
 	 * @throws \Exception
+	 * @since 7.0.1
 	 */
 	public function save($data)
 	{
 		/** @var Registry $params */
+		$app    = Factory::getApplication();
 		$params = CWMParams::getAdmin()->params;
-		$input  = Factory::getApplication()->input;
+		$input  = $app->input;
 		$path   = 'images/biblestudy/studies/' . $data['id'];
 
 		$this->cleanCache();
@@ -226,7 +228,7 @@ class CWMMessageModel extends AdminModel
 			if (empty($data['image']))
 			{
 				// Modify model data if no image is set.
-				$data['thumbnailm']     = "";
+				$data['thumbnailm'] = "";
 			}
 			elseif (!CWMProclaimHelper::startsWith(basename($data['image']), 'thumb_'))
 			{
@@ -306,8 +308,8 @@ class CWMMessageModel extends AdminModel
 	 *
 	 * @return  mixed
 	 *
-	 * @since   9.0.0
 	 * @throws  \Exception
+	 * @since   9.0.0
 	 */
 	public function getItem($pk = null)
 	{
@@ -645,8 +647,8 @@ class CWMMessageModel extends AdminModel
 	 *
 	 * @return  array    The default data is an empty array.
 	 *
-	 * @since   7.0
 	 * @throws  \Exception
+	 * @since   7.0
 	 */
 	protected function loadFormData()
 	{
@@ -671,10 +673,19 @@ class CWMMessageModel extends AdminModel
 	 */
 	protected function prepareTable($table)
 	{
-		$date          = Factory::getDate();
-		$user          = Factory::getUser();
+		$date = Factory::getDate();
+		$user = Factory::getUser();
 
-		jimport('joomla.filter.output');
+		// Set the publishing date to now
+		if ($table->published === Workflow::CONDITION_PUBLISHED && (int) $table->publish_up === 0)
+		{
+			$table->publish_up = Factory::getDate()->toSql();
+		}
+
+		if ($table->published === Workflow::CONDITION_PUBLISHED && (int) $table->publish_down === 0)
+		{
+			$table->publish_down = null;
+		}
 
 		$table->studytitle = htmlspecialchars_decode($table->studytitle, ENT_QUOTES);
 		$table->alias      = ApplicationHelper::stringURLSafe($table->alias);
@@ -689,7 +700,7 @@ class CWMMessageModel extends AdminModel
 			// Set ordering to the last item if not set
 			if (empty($table->ordering))
 			{
-				$db = Factory::getDbo();
+				$db    = Factory::getDbo();
 				$query = $db->getQuery(true)
 					->select('MAX(ordering)')
 					->from($db->quoteName('#__bsms_studies'));
