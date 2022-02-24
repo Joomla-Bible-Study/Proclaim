@@ -157,8 +157,8 @@ class HtmlView extends BaseHtmlView
 		$items->teacherimage = '<img src="' . $teacherimage->path . '" height="' . $teacherimage->height . '" width="'
 			. $teacherimage->width . '" alt="" />';
 
-		HtmlHelper::_('biblestudy.framework');
-		HtmlHelper::_('biblestudy.loadCss', $params, null, 'font-awesome');
+		HtmlHelper::_('proclaim.framework');
+		HTMLHelper::_('proclaim.loadCss', $params, null, 'font-awesome');
 
 		$items->slug = $items->alias ? ($items->id . ':' . $items->alias) : str_replace(' ', '-', htmlspecialchars_decode($items->series_text, ENT_QUOTES))
 			. ':' . $items->id;

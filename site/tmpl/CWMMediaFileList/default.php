@@ -18,8 +18,8 @@ HtmlHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 HtmlHelper::_('dropdown.init');
 HtmlHelper::_('formbehavior.chosen', 'select');
 HtmlHelper::_('behavior.multiselect');
-HtmlHelper::_('biblestudy.framework');
-HtmlHelper::_('biblestudy.loadcss', $this->params);
+HtmlHelper::_('proclaim.framework');
+HTMLHelper::_('proclaim.loadcss', $this->params);
 
 $app = Factory::getApplication();
 $user = Factory::getUser();

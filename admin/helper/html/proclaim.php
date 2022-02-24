@@ -19,7 +19,7 @@ defined('JPATH_BASE') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-abstract class JHtmlBiblestudy
+abstract class JHtmlProclaim
 {
 	/**
 	 * @var    array  Array containing information for loaded files

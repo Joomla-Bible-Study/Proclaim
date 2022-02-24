@@ -7,7 +7,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Administrator\Field;
 // No Direct Access
+use Joomla\CMS\Form\FormField;
+
 defined('_JEXEC') or die;
 
 jimport('joomla.html.html');
@@ -20,7 +23,7 @@ jimport('joomla.form.formfield');
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class JFormFieldTopics extends JFormField
+class TopicsFormField extends FormField
 {
 	/**
 	 * Set type to topics
@@ -29,10 +32,10 @@ class JFormFieldTopics extends JFormField
 	 *
 	 * @since 9.0.0
 	 */
-	public $type = 'Topics';
+	public $type = 'TopicsForm';
 
 	/**
-	 * Get input form form
+	 * Get input form
 	 *
 	 * @return string
 	 *

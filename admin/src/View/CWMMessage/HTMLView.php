@@ -129,9 +129,9 @@ class HTMLView extends BaseHtmlView
 
 		$this->simple = CWMHelper::getSimpleView();
 
-		HTMLHelper::stylesheet('media/com_proclaim/css/token-input-jbs.css');
+		HTMLHelper::stylesheet('media/com_proclaim/css/token-input-jbs.min.css');
 
-		// HTMLHelper::_('proclaim.framework');
+		HTMLHelper::_('proclaim.framework');
 		$script = "
             jQuery(document).ready(function() {
                 jQuery('#topics').tokenInput(" . $this->get('alltopics') . ",
@@ -151,7 +151,7 @@ class HTMLView extends BaseHtmlView
 		$wa = $this->document->getWebAssetManager();
 		$wa->addInlineScript($script);
 
-		HTMLHelper::script('media/com_proclaim/js/plugins/jquery.tokeninput.js');
+		HTMLHelper::script('media/com_proclaim/js/plugins/jquery.tokeninput.min.js');
 
 		// Set the toolbar
 		$this->addToolbar();
@@ -165,6 +165,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0.0
 	 */
 	protected function addToolbar()

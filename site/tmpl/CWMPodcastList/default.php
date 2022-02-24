@@ -15,7 +15,7 @@ use CWM\Component\Proclaim\Site\Helper\CWMMedia;
 use CWM\Component\Proclaim\Administrator\Helper\CWMImageLib;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
-HtmlHelper::_('biblestudy.framework');
+HtmlHelper::_('proclaim.framework');
 
 $app       = Factory::getApplication();
 $user      = Factory::getUser();

@@ -18,8 +18,8 @@ HtmlHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 // Load the tooltip behavior.
 HtmlHelper::_('formbehavior.chosen', 'select');
-HtmlHelper::_('biblestudy.framework');
-HtmlHelper::_('biblestudy.loadcss', $this->state->params);
+HtmlHelper::_('proclaim.framework');
+HTMLHelper::_('proclaim.loadcss', $this->state->params);
 
 HtmlHelper::_('behavior.formvalidator');
 HtmlHelper::_('behavior.keepalive');

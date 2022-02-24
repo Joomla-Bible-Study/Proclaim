@@ -8,6 +8,8 @@
  * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+
 defined('_JEXEC') or die;
 
 /**
@@ -36,8 +38,6 @@ class JFormFieldYearlist extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		$options = array_merge(parent::getOptions(), CWMProclaimHelper::getStudyYears());
-
-		return $options;
+		return array_merge(parent::getOptions(), CWMProclaimHelper::getStudyYears());
 	}
 }

@@ -91,7 +91,7 @@ class HtmlView extends BaseHtmlView
 			$document->setDescription($this->params->get('metadesc'));
 		}
 
-		HtmlHelper::_('biblestudy.framework');
+		HtmlHelper::_('proclaim.framework');
 
 		CWMImages::getShowHide();
 

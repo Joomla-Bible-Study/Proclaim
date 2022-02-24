@@ -16,7 +16,7 @@ JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/CWMListing.php');
 $JBSMListing = new JBSMListing;
 
 // Load CSS framework for displaying properly.
-JHtml::_('biblestudy.framework');
+JHtml::_('proclaim.framework');
 JHtml::_('biblestudy.loadCss', $params, null, 'font-awesome');
 foreach ($list as $study)
 {?>

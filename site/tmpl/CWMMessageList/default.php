@@ -15,8 +15,8 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 HtmlHelper::_('dropdown.init');
 HtmlHelper::_('formbehavior.chosen', 'select');
-HtmlHelper::_('biblestudy.framework');
-HtmlHelper::_('biblestudy.loadcss', $this->params);
+HtmlHelper::_('proclaim.framework');
+HTMLHelper::_('proclaim.loadcss', $this->params);
 HtmlHelper::_('behavior.multiselect');
 
 $app = Factory::getApplication();

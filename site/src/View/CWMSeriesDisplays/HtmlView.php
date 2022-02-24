@@ -127,8 +127,8 @@ class HtmlView extends BaseHtmlView
 			$document->setDescription($params->get('metadesc'));
 		}
 */
-		HtmlHelper::_('biblestudy.framework');
-		HtmlHelper::_('biblestudy.loadCss', $params, null, 'font-awesome');
+		HtmlHelper::_('proclaim.framework');
+		HTMLHelper::_('proclaim.loadCss', $params, null, 'font-awesome');
 
 		$uri            = new Uri;
 		$filter_series  = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');

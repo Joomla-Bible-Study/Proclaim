@@ -9,7 +9,7 @@
  * */
 defined('_JEXEC') or die;
 use Joomla\CMS\Html\HTMLHelper;
-HtmlHelper::_('biblestudy.framework');
+HtmlHelper::_('proclaim.framework');
 ?>
 <div class="row-fluid">
 	<div class="control-group">

@@ -58,8 +58,8 @@ class HtmlView extends BaseHtmlView
 		$this->template   = $this->state->template;
 		$this->params     = $this->state->params;
 
-		HtmlHelper::_('biblestudy.framework', '', 'modernizr');
-		HtmlHelper::_('biblestudy.loadcss', $this->params, '', 'podcast');
+		HtmlHelper::_('proclaim.framework', '', 'modernizr');
+		HTMLHelper::_('proclaim.loadcss', $this->params, '', 'podcast');
 
 		$attribs = array(
 			'class' => "jbsmimg"

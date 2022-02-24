@@ -64,6 +64,7 @@ li.token-input-selected-token-jbs {
 
 li.token-input-input-token-jbs {
 	float: left;
+	padding: 9px;
 }
 
 div.token-input-dropdown-jbs {

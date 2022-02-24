@@ -385,7 +385,7 @@ class HtmlView extends BaseHtmlView
 			$this->document->setMetadata('robots', $this->params->get('robots'));
 		}
 
-		JHtml::_('biblestudy.framework');
+		JHtml::_('proclaim.framework');
 		JHtml::_('biblestudy.loadCss', $this->params, null, 'font-awesome');
 	}
 

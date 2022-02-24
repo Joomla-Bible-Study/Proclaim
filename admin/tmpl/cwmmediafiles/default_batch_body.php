@@ -19,24 +19,24 @@ HTMLHelper::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html');
 <div class="row-fluid">
 	<div class="control-group span4">
 		<div class="controls">
-			<?php echo HTMLHelper::_('biblestudy.players'); ?>
+			<?php echo HTMLHelper::_('proclaim.players'); ?>
 		</div>
 	</div>
 	<div class="control-group span4">
 		<div class="controls">
-			<?php echo HTMLHelper::_('biblestudy.popup'); ?>
+			<?php echo HTMLHelper::_('proclaim.popup'); ?>
 		</div>
 	</div>
 	<div class="control-group span4">
 		<div class="controls">
-			<?php echo HTMLHelper::_('biblestudy.Mediatype'); ?>
+			<?php echo HTMLHelper::_('proclaim.Mediatype'); ?>
 		</div>
 	</div>
 </div>
 <div class="row-fluid">
 	<div class="control-group span4">
 		<div class="controls">
-			<?php echo HTMLHelper::_('biblestudy.link_type'); ?>
+			<?php echo HTMLHelper::_('proclaim.link_type'); ?>
 		</div>
 	</div>
 	<div class="control-group span4">

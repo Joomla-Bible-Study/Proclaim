@@ -146,8 +146,8 @@ class HtmlView extends BaseHtmlView
 		$this->admin = $state->get('administrator');
 		$uri                = new Uri;
 
-		HtmlHelper::_('biblestudy.framework');
-		HtmlHelper::_('biblestudy.loadCss', $params, null, 'font-awesome');
+		HtmlHelper::_('proclaim.framework');
+		HTMLHelper::_('proclaim.loadCss', $params, null, 'font-awesome');
 
 		$images = new CWMImages;
 

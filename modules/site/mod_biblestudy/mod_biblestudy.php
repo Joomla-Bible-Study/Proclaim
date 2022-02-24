@@ -114,7 +114,7 @@ $linkurl  = JRoute::_('index.php?option=com_proclaim&view=sermons&t=' . $templat
 $link     = '<a href="' . $linkurl . '"><button class="btn">' . $link_text . '</button></a>';
 $document = Factory::getApplication()->getDocument();
 
-JHtml::_('biblestudy.framework');
+JHtml::_('proclaim.framework');
 JHtml::_('biblestudy.loadcss', $params);
 $config = JComponentHelper::getParams('com_proclaim');
 

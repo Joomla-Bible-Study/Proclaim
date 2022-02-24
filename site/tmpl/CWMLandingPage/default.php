@@ -16,7 +16,7 @@ use CWM\Component\Proclaim\Site\Helper\CWMLanding;
 use Joomla\CMS\Uri\Uri;
 
 // Load CSS for view.
-HtmlHelper::_('biblestudy.loadcss', $this->params);
+HTMLHelper::_('proclaim.loadcss', $this->params);
 
 $CWMLanding = new CWMLanding;
 $params = $this->params;

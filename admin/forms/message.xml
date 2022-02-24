@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-	<fieldset addfieldpath="/administrator/components/com_proclaim/src/Field">
+	<fieldset addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
 		<field name="server" type="sql" extension="com_proclaim" label="JBS_CMN_SERVER"
 		       description="JBS_MED_SERVER_DESC" class="inputbox" default="-1"
 		       query="SELECT id, server_name FROM #__bsms_servers WHERE published=1 ORDER BY server_name ASC"
@@ -77,28 +77,20 @@
 				<option value="-1">JBS_CMN_SELECT_BOOK</option>
 			</field>
 
-			<field name="chapter_begin" type="text" class="jbsscript" size="5" label="JBS_STY_CHAPTER_BEGIN"
-			       description="JBS_STY_SCRIPTURE_DESC"/>
-			<field name="verse_begin" type="text" class="inputbox" size="5" label="JBS_STY_VERSE_BEGIN"
-			       description="JBS_STY_SCRIPTURE_DESC"/>
-			<field name="chapter_end" type="text" class="inputbox" size="5" label="JBS_STY_CHAPTER_END"
-			       description="JBS_STY_SCRIPTURE_DESC"/>
-			<field name="verse_end" type="text" class="inputbox" size="5" label="JBS_STY_VERSE_END"
-			       description="JBS_STY_SCRIPTURE_DESC"/>
+			<field name="chapter_begin" type="text" class="jbsscript" size="5" label="JBS_STY_CHAPTER_BEGIN"/>
+			<field name="verse_begin" type="text" class="inputbox" size="5" label="JBS_STY_VERSE_BEGIN"/>
+			<field name="chapter_end" type="text" class="inputbox" size="5" label="JBS_STY_CHAPTER_END"/>
+			<field name="verse_end" type="text" class="inputbox" size="5" label="JBS_STY_VERSE_END"/>
 
 			<field name="booknumber2" type="SQL" class="inputbox" label="JBS_STY_BOOK2" translate="true"
 			       query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC"
 			       key_field="booknumber" value_field="bookname">
 				<option value="-1">JBS_CMN_SELECT_BOOK</option>
 			</field>
-			<field name="chapter_begin2" type="text" class="inputbox" size="5" label="JBS_STY_CHAPTER_BEGIN2"
-			       description="JBS_STY_SCRIPTURE_DESC"/>
-			<field name="verse_begin2" type="text" class="inputbox" size="5" label="JBS_STY_VERSE_BEGIN2"
-			       description="JBS_STY_SCRIPTURE_DESC"/>
-			<field name="chapter_end2" type="text" class="inputbox" size="5" label="JBS_STY_CHAPTER_END2"
-			       description="JBS_STY_SCRIPTURE_DESC"/>
-			<field name="verse_end2" type="text" class="inputbox" size="5" label="JBS_STY_VERSE_END2"
-			       description="JBS_STY_SCRIPTURE_DESC"/>
+			<field name="chapter_begin2" type="text" class="inputbox" size="5" label="JBS_STY_CHAPTER_BEGIN2"/>
+			<field name="verse_begin2" type="text" class="inputbox" size="5" label="JBS_STY_VERSE_BEGIN2"/>
+			<field name="chapter_end2" type="text" class="inputbox" size="5" label="JBS_STY_CHAPTER_END2"/>
+			<field name="verse_end2" type="text" class="inputbox" size="5" label="JBS_STY_VERSE_END2"/>
 
 			<field name="secondary_reference" type="text" class="inputbox" size="100"
 			       label="JBS_CMN_SECONDARY_REFERENCES"
@@ -126,7 +118,7 @@
 			<option value="-1">JBS_CMN_SELECT_SERIES</option>
 		</field>
 
-		<field name="topics" type="topics" class="inputbox" label="JBS_CMN_TOPIC_TAG"
+		<field name="topics" type="TopicsForm" class="inputbox" label="JBS_CMN_TOPIC_TAG"
 		       description="JBS_CMN_TOPIC_TAG_DESC" filter="row"/>
 
 		<field name="messagetype" type="sql" extension="com_proclaim"

@@ -98,8 +98,8 @@ class HtmlView extends BaseHtmlView
 		/** @var Registry $params */
 		$params = $this->state->template->params;
 
-		HtmlHelper::_('biblestudy.framework');
-		HtmlHelper::_('biblestudy.loadCss', $params, null, 'font-awesome');
+		HtmlHelper::_('proclaim.framework');
+		HTMLHelper::_('proclaim.loadCss', $params, null, 'font-awesome');
 
 
         $input = Factory::getApplication();

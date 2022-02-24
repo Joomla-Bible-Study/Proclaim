@@ -194,8 +194,8 @@ class HtmlView extends BaseHtmlView
 		$registry->loadString($this->media->params);
 		$this->params->merge($registry);
 
-		HtmlHelper::_('biblestudy.framework');
-		HtmlHelper::_('biblestudy.loadcss', $this->params);
+		HtmlHelper::_('proclaim.framework');
+		HTMLHelper::_('proclaim.loadcss', $this->params);
 
 		$saveid          = $this->media->id;
 		$this->media->id = $this->media->study_id;

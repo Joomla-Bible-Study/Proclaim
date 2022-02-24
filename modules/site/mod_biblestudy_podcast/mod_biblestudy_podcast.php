@@ -28,7 +28,7 @@ if (!JComponentHelper::isEnabled('com_proclaim'))
 
 $templateparams = JBSMParams::getTemplateparams($params);
 
-JHtml::_('biblestudy.framework');
+JHtml::_('proclaim.framework');
 JHtml::stylesheet('media/css/podcast.css');
 $podcast   = new JBSMPodcastSubscribe;
 $subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));

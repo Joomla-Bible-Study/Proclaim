@@ -157,8 +157,8 @@ class HtmlView extends BaseHtmlView
              ";
 
 		$document->addScriptDeclaration($script);
-		HtmlHelper::_('biblestudy.framework');
-		HtmlHelper::_('biblestudy.loadcss', $this->params);
+		HtmlHelper::_('proclaim.framework');
+		HTMLHelper::_('proclaim.loadcss', $this->params);
 
 		$this->setLayout('edit');
 

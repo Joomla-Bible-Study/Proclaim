@@ -11,7 +11,7 @@
 use Joomla\CMS\HTML\HTMLHelper;
 
 defined('_JEXEC') or die;
-HTMLHelper::_('biblestudy.framework');
+HTMLHelper::_('proclaim.framework');
 ?>
 <div class="row-fluid">
 	<div class="control-group">
