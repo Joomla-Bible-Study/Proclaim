@@ -145,10 +145,7 @@ class ProclaimNomenuRules implements RulesInterface
 			$segments[] = $query['slug'];
 			unset($query['slug']);
 		}
-		if (isset($query['Itemid'])) {
-			$segments[] = $query['Itemid']['1031'];
-			unset($query['Itemid']);
-		}
+		var_dump($segments);
 		unset($query['view']);
 		unset($query['id']);
 		unset($query['t']);
