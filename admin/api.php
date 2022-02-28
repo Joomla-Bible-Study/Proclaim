@@ -21,6 +21,8 @@ if (defined('JBSM_LOADED'))
 	return;
 }
 
+$app = Factory::getApplication();
+
 // Manually enable code profiling by setting value to 1
 define('JBSM_PROFILER', 0);
 
@@ -70,8 +72,8 @@ define('BIBLESTUDY_FILE_INSTALL', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 
 define('BIBLESTUDY_PATH_MOD', BIBLESTUDY_ROOT_PATH . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'mod_biblestudy');
 
 // Minimum version requirements
-define('BIBLESTUDY_MIN_PHP', '7.4.1');
-define('BIBLESTUDY_MIN_MYSQL', '5.1');
+const BIBLESTUDY_MIN_PHP = '7.4.1';
+const BIBLESTUDY_MIN_MYSQL = '5.1';
 
 // Time related
 define('BIBLESTUDY_SECONDS_IN_HOUR', 3600);
@@ -80,14 +82,11 @@ define('BIBLESTUDY_SECONDS_IN_YEAR', 31536000);
 // Database defines
 define('BIBLESTUDY_DB_MISSING_COLUMN', 1054);
 
-// Load HTML helpers
-HTMLHelper::addIncludePath(BIBLESTUDY_PATH_ADMIN . '/helper/html/');
-
 // Fixes Router overrider.
-JLoader::register('JBSMHelperRoute', BIBLESTUDY_PATH_HELPERS . '/route.php', true);
+//JLoader::register('JBSMHelperRoute', BIBLESTUDY_PATH_HELPERS . '/route.php', true);
 
 // If phrase is not found in specific language file, load english language file:
-$language = Factory::getLanguage();
+$language = $app->getLanguage();
 $language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
 $language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, null, true);
 
@@ -152,7 +151,6 @@ function discover($classPrefix, $parentPath, $force = true, $recurse = false)
 		foreach ($iterator as $file)
 		{
 			$fileName = $file->getFilename();
-			var_dump($fileName, true);
 
 			// Only load for php files.
 			if ($file->isFile() && $file->getExtension() === 'php')

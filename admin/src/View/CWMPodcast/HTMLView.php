@@ -112,32 +112,32 @@ class HTMLView extends BaseHtmlView
 
 		if ($isNew && $this->canDo->get('core.create', 'com_proclaim'))
 		{
-			ToolbarHelper::apply('podcast.apply');
-			ToolbarHelper::save('podcast.save');
-			ToolbarHelper::save2new('podcast.save2new');
-			ToolbarHelper::cancel('podcast.cancel');
+			ToolbarHelper::apply('cwmpodcast.apply');
+			ToolbarHelper::save('cwmpodcast.save');
+			ToolbarHelper::save2new('cwmpodcast.save2new');
+			ToolbarHelper::cancel('cwmpodcast.cancel');
 		}
 		else
 		{
 			if ($this->canDo->get('core.edit', 'com_proclaim'))
 			{
-				ToolbarHelper::apply('podcast.apply');
-				ToolbarHelper::save('podcast.save');
+				ToolbarHelper::apply('cwmpodcast.apply');
+				ToolbarHelper::save('cwmpodcast.save');
 
 				// We can save this record, but check the create permission to see if we can return to make a new one.
 				if ($this->canDo->get('core.create', 'com_proclaim'))
 				{
-					ToolbarHelper::save2new('podcast.save2new');
+					ToolbarHelper::save2new('cwmpodcast.save2new');
 				}
 			}
 
 			// If checked out, we can still save
 			if ($this->canDo->get('core.create', 'com_proclaim'))
 			{
-				ToolbarHelper::save2copy('podcast.save2copy');
+				ToolbarHelper::save2copy('cwmpodcast.save2copy');
 			}
 
-			ToolbarHelper::cancel('podcast.cancel', 'JTOOLBAR_CLOSE');
+			ToolbarHelper::cancel('cwmpodcast.cancel', 'JTOOLBAR_CLOSE');
 		}
 
 		ToolbarHelper::divider();

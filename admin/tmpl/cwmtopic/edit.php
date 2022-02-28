@@ -17,16 +17,13 @@ use Joomla\Input\Input;
 
 defined('_JEXEC') or die;
 
-// Load the tooltip behavior.
-HTMLHelper::_('formbehavior.chosen', 'select');
-
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('keepalive')
 	->useScript('form.validate')
 	->addInlineScript('
 	Joomla.submitbutton = function (task) {
-		if (task == "cwmtopic.cancel" || document.formvalidator.isValid(document.id("item-form")))
+		if (task == "cwmtopic.cancel" || document.formvalidator.isValid(document.getElementById("item-form")))
 		{
 			Joomla.submitform(task, document.getElementById("item-form"))
 		}

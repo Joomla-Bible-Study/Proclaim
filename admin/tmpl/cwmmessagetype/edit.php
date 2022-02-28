@@ -15,11 +15,7 @@ use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die;
 
-// Load the tooltip behavior.
-HTMLHelper::_('formbehavior.chosen', 'select');
-
 // Create shortcut to parameters.
-
 /** @type Joomla\Registry\Registry $params */
 $params = $this->state->get('params');
 $params = $params->toArray();

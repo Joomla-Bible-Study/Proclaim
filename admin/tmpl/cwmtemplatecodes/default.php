@@ -8,11 +8,16 @@
  * @link           https://www.christianwebministries.org
  * */
 // No Direct Access
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+
 defined('_JEXEC') or die;
 
-JHtml::_('dropdown.init');
-JHtml::_('formbehavior.chosen', 'select');
-JHtml::_('behavior.multiselect');
+HTMLHelper::_('dropdown.init');
+HTMLHelper::_('formbehavior.chosen', 'select');
+HTMLHelper::_('behavior.multiselect');
 
 $app        = Factory::getApplication();
 $user       = Factory::getUser();
@@ -57,7 +62,7 @@ $columns    = 5;
 			?>
 			<?php if (empty($this->items)) : ?>
 				<div class="alert alert-no-items">
-					<?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+					<?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
 				</div>
 			<?php else : ?>
 				<table class="table table-striped adminlist" id="templatecodes">
@@ -65,20 +70,20 @@ $columns    = 5;
 					<tr>
 						<th width="1%">
 							<input type="checkbox" name="checkall-toggle" value=""
-							       title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>"
+							       title="<?php echo Text::_('JGLOBAL_CHECK_ALL'); ?>"
 							       onclick="Joomla.checkAll(this)"/>
 						</th>
 						<th width="8%">
-							<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'templatecode.published', $listDirn, $listOrder); ?>
+							<?php echo HTMLHelper::_('grid.sort', 'JPUBLISHED', 'templatecode.published', $listDirn, $listOrder); ?>
 						</th>
 						<th>
-							<?php echo JText::_('JBS_TPLCODE_FILENAME'); ?>
+							<?php echo Text::_('JBS_TPLCODE_FILENAME'); ?>
 						</th>
 						<th>
-							<?php echo JText::_('JBS_TPLCODE_TYPE'); ?>
+							<?php echo Text::_('JBS_TPLCODE_TYPE'); ?>
 						</th>
 						<th>
-							<?php echo JText::_('JGRID_HEADING_ID'); ?>
+							<?php echo Text::_('JGRID_HEADING_ID'); ?>
 						</th>
 					</tr>
 					</thead>
@@ -91,7 +96,7 @@ $columns    = 5;
 					<tbody>
 					<?php
 					foreach ($this->items as $i => $item) :
-						$link = JRoute::_('index.php?option=com_proclaim&task=templatecode.edit&id=' . (int) $item->id);
+						$link = Route::_('index.php?option=com_proclaim&task=cwmtemplatecode.edit&id=' . (int) $item->id);
 						$item->max_ordering = 0; //??
 						$canCreate = $user->authorise('core.create');
 						$canEdit = $user->authorise('core.edit', 'com_proclaim.templatcode.' . $item->id);
@@ -101,11 +106,11 @@ $columns    = 5;
 						<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo '1' ?>">
 
 							<td class="center hidden-phone">
-								<?php echo JHtml::_('grid.id', $i, $item->id); ?>
+								<?php echo HTMLHelper::_('grid.id', $i, $item->id); ?>
 							</td>
 							<td class="center">
 								<div class="btn-group">
-									<?php echo JHtml::_('jgrid.published', $item->published, $i, 'templatecodes.', $canChange, 'cb', '', ''); ?>
+									<?php echo HTMLHelper::_('jgrid.published', $item->published, $i, 'templatecodes.', $canChange, 'cb', '', ''); ?>
 								</div>
 							</td>
 
@@ -119,30 +124,30 @@ $columns    = 5;
 									<div class="pull-left">
 										<?php
 										// Create dropdown items
-										JHtml::_('dropdown.edit', $item->id, 'templatecode.');
-										JHtml::_('dropdown.divider');
+										HTMLHelper::_('dropdown.edit', $item->id, 'templatecode.');
+										HTMLHelper::_('dropdown.divider');
 										if ($item->published) :
-											JHtml::_('dropdown.unpublish', 'cb' . $i, 'templatecodes.');
+											HTMLHelper::_('dropdown.unpublish', 'cb' . $i, 'templatecodes.');
 										else :
-											JHtml::_('dropdown.publish', 'cb' . $i, 'templatecodes.');
+											HTMLHelper::_('dropdown.publish', 'cb' . $i, 'templatecodes.');
 										endif;
 
-										JHtml::_('dropdown.divider');
+										HTMLHelper::_('dropdown.divider');
 
 										if ($archived) :
-											JHtml::_('dropdown.unarchive', 'cb' . $i, 'templatecodes.');
+											HTMLHelper::_('dropdown.unarchive', 'cb' . $i, 'templatecodes.');
 										else :
-											JHtml::_('dropdown.archive', 'cb' . $i, 'templatecodes.');
+											HTMLHelper::_('dropdown.archive', 'cb' . $i, 'templatecodes.');
 										endif;
 
 										if ($trashed) :
-											JHtml::_('dropdown.untrash', 'cb' . $i, 'templatecodes.');
+											HTMLHelper::_('dropdown.untrash', 'cb' . $i, 'templatecodes.');
 										else :
-											JHtml::_('dropdown.trash', 'cb' . $i, 'templatecodes.');
+											HTMLHelper::_('dropdown.trash', 'cb' . $i, 'templatecodes.');
 										endif;
 
 										// Render dropdown list
-										echo JHtml::_('dropdown.render');
+										echo HTMLHelper::_('dropdown.render');
 										?>
 									</div>
 
@@ -172,6 +177,6 @@ $columns    = 5;
 			<input type="hidden" name="boxchecked" value="0"/>
 			<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
 			<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
-			<?php echo JHtml::_('form.token'); ?>
+			<?php echo HTMLHelper::_('form.token'); ?>
 		</div>
 </form>

@@ -145,21 +145,21 @@ class HTMLView extends BaseHtmlView
 
 		if ($isNew && $this->canDo->get('core.create', 'com_proclaim'))
 		{
-			ToolbarHelper::apply('templatecode.apply');
-			ToolbarHelper::save('templatecode.save');
-			ToolbarHelper::save2new('templatecode.save2new');
-			ToolbarHelper::cancel('templatecode.cancel');
+			ToolbarHelper::apply('cwmtemplatecode.apply');
+			ToolbarHelper::save('cwmtemplatecode.save');
+			ToolbarHelper::save2new('cwmtemplatecode.save2new');
+			ToolbarHelper::cancel('cwmtemplatecode.cancel');
 		}
 		else
 		{
 			if ($this->canDo->get('core.edit', 'com_proclaim'))
 			{
-				ToolbarHelper::apply('templatecode.apply');
-				ToolbarHelper::save('templatecode.save');
-				ToolbarHelper::save2copy('templatecode.save2copy');
+				ToolbarHelper::apply('cwmtemplatecode.apply');
+				ToolbarHelper::save('cwmtemplatecode.save');
+				ToolbarHelper::save2copy('cwmtemplatecode.save2copy');
 			}
 
-			ToolbarHelper::cancel('templatecode.cancel', 'JTOOLBAR_CLOSE');
+			ToolbarHelper::cancel('cwmtemplatecode.cancel', 'JTOOLBAR_CLOSE');
 		}
 
 		ToolbarHelper::divider();

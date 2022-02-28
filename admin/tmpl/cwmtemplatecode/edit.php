@@ -8,20 +8,22 @@
  * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+
 defined('_JEXEC') or die;
 
 // Load the tooltip behavior.
 JHtml::_('behavior.formvalidator');
 JHtml::_('behavior.keepalive');
-JHtml::_('formbehavior.chosen', 'select');
 
 // Create shortcut to parameters.
 
 /** @type Joomla\Registry\Registry $params */
 $params = $this->state->get('params');
 $params = $params->toArray();
-$app = Factory::getApplication();
-$input = $app->input;
+$app    = Factory::getApplication();
+$input  = $app->input;
 
 // Set up defaults
 if ($input->getInt('a_id'))
@@ -32,17 +34,22 @@ else
 {
 	$templatecode = $this->defaultcode;
 }
-?>
-<script type="text/javascript">
-	Joomla.submitbutton = function (task) {
-		if (task == 'templatecode.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
-			Joomla.submitform(task, document.getElementById('item-form'));
-		} else {
-			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
-		}
-	}
-</script>
 
+/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
+$wa = $this->document->getWebAssetManager();
+$wa->useScript('keepalive')
+	->useScript('form.validate')
+	->addInlineScript("Joomla.submitbutton = function (task) {
+		if (task == 'templatecode.cancel' || document.formvalidator.isValid(document.id('item-form')))
+		{
+			Joomla.submitform(task, document.getElementById('item-form'))
+		}
+		else
+		{
+			alert('" . $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')) . "')
+		}
+	}");
+?>
 <form action="<?php echo JRoute::_('index.php?option=com_proclaim&layout=edit&id=' . (int) $this->item->id); ?>"
       method="post" name="adminForm" id="item-form" class="form-validate">
 	<div class="row-fluid">

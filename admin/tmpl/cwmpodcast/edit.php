@@ -11,35 +11,35 @@
 // No Direct Access
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 
 defined('_JEXEC') or die;
 
-// Load the tooltip behavior.
-HTMLHelper::_('behavior.formvalidator');
-HTMLHelper::_('behavior.keepalive');
-HTMLHelper::_('formbehavior.chosen', 'select');
-
 // Create shortcut to parameters.
-
 /** @type Joomla\Registry\Registry $params */
 $params = $this->state->get('params');
 $params = $params->toArray();
 $app    = Factory::getApplication();
 $input  = $app->input;
-?>
-<script type="text/javascript">
+
+/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
+$wa = $this->document->getWebAssetManager();
+$wa->useScript('keepalive')
+	->useScript('form.validate')
+	->addInlineScript('
 	Joomla.submitbutton = function (task) {
-		if (task == 'cwmpodcast.cancel' || document.formvalidator.isValid(document.id('item-form')))
+		if (task == "cwmpodcast.cancel" || document.formvalidator.isValid(document.getElementById("item-form")))
 		{
-			Joomla.submitform(task, document.getElementById('item-form'))
+			Joomla.submitform(task, document.getElementById("item-form"))
 		}
 		else
 		{
-			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>')
+			alert("' . $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')) . '")
 		}
 	}
-</script>
+');
+?>
 
 <form action="<?php echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int) $this->item->id); ?>"
       method="post" name="adminForm" id="item-form" class="form-validate form-horizontal">

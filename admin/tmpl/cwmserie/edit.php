@@ -17,11 +17,6 @@ defined('_JEXEC') or die;
 // Include the component HTML helpers.
 HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
-// Load the tooltip behavior.
-HTMLHelper::_('behavior.formvalidator');
-HTMLHelper::_('behavior.keepalive');
-HTMLHelper::_('formbehavior.chosen', 'select');
-
 $app   = Factory::getApplication();
 $input = $app->input;
 
@@ -34,7 +29,12 @@ else
 {
 	$series_thumbnail = $this->admin_params->get('default_series_image');
 }
-Factory::getDocument()->addScriptDeclaration('
+
+/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
+$wa = $this->document->getWebAssetManager();
+$wa->useScript('keepalive')
+	->useScript('form.validate')
+	->addInlineScript('
 	Joomla.submitbutton = function (task)
 	{
 		if (task == "cwmserie.cancel" || document.formvalidator.isValid(document.getElementById("item-form")))
@@ -108,21 +108,27 @@ Factory::getDocument()->addScriptDeclaration('
 					</div>
 				</div>
 				<div class="control-group">
-					<?php echo $this->form->getLabel('published'); ?>
+					<div class="control-label">
+						<?php echo $this->form->getLabel('published'); ?>
+					</div>
 					<div class="controls">
 						<?php echo $this->form->getInput('published'); ?>
 					</div>
 				</div>
 
 				<div class="control-group">
-					<?php echo $this->form->getLabel('access'); ?>
+					<div class="control-label">
+						<?php echo $this->form->getLabel('access'); ?>
+					</div>
 					<div class="controls">
 						<?php echo $this->form->getInput('access'); ?>
 					</div>
 				</div>
 
 				<div class="control-group">
-					<?php echo $this->form->getLabel('language'); ?>
+					<div class="control-label">
+						<?php echo $this->form->getLabel('language'); ?>
+					</div>
 					<div class="controls">
 						<?php echo $this->form->getInput('language'); ?>
 					</div>
