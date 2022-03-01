@@ -280,6 +280,68 @@
 		"type": "module"
 	  },
 	  "version": "b0a8df19948936e693d5c710d22673ed9ad760a3"
+	},
+	{
+	  "name": "com_proclaim.cwmadmin-locations-modal.es5",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmadmin-locations-modal-es5.min.js",
+	  "dependencies": [
+		"core"
+	  ],
+	  "attributes": {
+		"nomodule": true,
+		"defer": true
+	  },
+	  "version": "872a497cd19612c3e1940b5feefdc0e14c08d4b9"
+	},
+	{
+	  "name": "com_proclaim.cwmadmin-locations-modal",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmadmin-locations-modal.min.js",
+	  "dependencies": [
+		"com_proclaim.cwmadmin-locations-modal.es5"
+	  ],
+	  "attributes": {
+		"type": "module"
+	  },
+	  "version": "b0a8df19948936e693d5c710d22673ed9ad760a3"
+	},
+	{
+	  "name": "com_proclaim.cwmadmin-locations-batch.es5",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmadmin-locations-default-batch-footer-es5.min.js",
+	  "dependencies": [
+		"core"
+	  ],
+	  "attributes": {
+		"nomodule": true,
+		"defer": true
+	  },
+	  "version": "3660f7dadca40d79416fff13b55596f0cec73cd9"
+	},
+	{
+	  "name": "com_proclaim.cwmadmin-locations-batch",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmadmin-locations-default-batch-footer.min.js",
+	  "dependencies": [
+		"com_proclaim.cwmadmin-locations-batch.es5"
+	  ],
+	  "attributes": {
+		"type": "module"
+	  },
+	  "version": "9ac1245a9dd2a9bf7e7f95c6e7e24f6075eef0ae"
+	},
+	{
+	  "name": "com_procalim.biblestudy",
+	  "type": "style",
+	  "uri": "com_proclaim/biblestudy.min.css",
+	  "version": "b9ad01318a9ef37832023f20e030a408968d38fd"
+	},
+	{
+	  "name": "com_procalim.general",
+	  "type": "style",
+	  "uri": "com_proclaim/general.min.css",
+	  "version": "b9ad01318a9ef37832023f20e030a408968d38fd"
 	}
   ]
 }

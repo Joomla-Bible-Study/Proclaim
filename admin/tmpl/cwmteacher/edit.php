@@ -15,10 +15,6 @@ use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die;
 
-HTMLHelper::_('behavior.formvalidator');
-HTMLHelper::_('behavior.keepalive');
-HTMLHelper::_('formbehavior.chosen', 'select');
-
 $app   = Factory::getApplication();
 $input = $app->input;
 
@@ -35,7 +31,29 @@ else
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('keepalive')
-	->useScript('form.validate');
+	->useScript('form.validate')
+	->addInlineScript("Joomla.submitbutton = function (task) {
+			if (task === 'cwmteacher.cancel' || document.formvalidator.isValid(document.getElementById('teacher-form')))
+			{
+				Joomla.submitform(task, document.getElementById('teacher-form'))
+			}
+			else
+			{
+				alert('" . $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')) . "')
+			}
+		}
+
+		function jInsertFieldValue (value, id)
+		{
+			var old_id = document.id(id).value
+			if (old_id !== id)
+			{
+				var elem = document.id(id)
+				elem.value = value
+				elem.fireEvent('change')
+			}
+		}
+");
 
 $this->useCoreUI = true;
 
@@ -44,29 +62,6 @@ $isModal = $input->get('layout') === 'modal';
 $layout  = $isModal ? 'modal' : 'edit';
 $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=component' : '';
 ?>
-<script type="text/javascript">
-	Joomla.submitbutton = function (task) {
-		if (task === 'cwmteacher.cancel' || document.formvalidator.isValid(document.getElementById('teacher-form')))
-		{
-			Joomla.submitform(task, document.getElementById('teacher-form'))
-		}
-		else
-		{
-			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>')
-		}
-	}
-
-	function jInsertFieldValue (value, id)
-	{
-		var old_id = document.id(id).value
-		if (old_id !== id)
-		{
-			var elem = document.id(id)
-			elem.value = value
-			elem.fireEvent('change')
-		}
-	}
-</script>
 <form action="<?php echo JRoute::_('index.php?option=com_proclaim&layout=' . $layout . $tmpl . '&id=' . (int) $this->item->id); ?>"
       method="post" name="adminForm" id="teacher-form" class="form-validate" enctype="multipart/form-data">
 	<div class="row-fluid">

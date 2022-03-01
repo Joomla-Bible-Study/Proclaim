@@ -44,9 +44,11 @@ class CWMLocationController extends FormController
 	 */
 	public function batch($model = null)
 	{
+		$this->checkToken();
+
 		// Preset the redirect
 		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmlocations' . $this->getRedirectToListAppend(), false));
 
-		return parent::batch($this->getModel('CWMLocation', '', array()));
+		return parent::batch($this->getModel('CWMLocation', 'Administrator', array()));
 	}
 }

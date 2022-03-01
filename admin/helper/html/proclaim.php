@@ -64,8 +64,8 @@ abstract class JHtmlProclaim
 			JHtml::_('bootstrap.loadCss');
 		}
 
-		JHtml::script('media/com_proclaim/js/biblestudy.js');
-		JHtml::script('media/com_proclaim/js/modernizr.js');
+		JHtml::script('media/com_proclaim/js/biblestudy.min.js');
+		JHtml::script('media/com_proclaim/js/modernizr.min.js');
 
 		self::$loaded[__METHOD__] = true;
 	}
@@ -83,7 +83,7 @@ abstract class JHtmlProclaim
 	 */
 	public static function loadCss($params, $url = null, $extra = null)
 	{
-		JHtml::stylesheet('media/com_proclaim/css/general.css');
+		JHtml::stylesheet('media/com_proclaim/css/general.min.css');
 
 		// Import Stylesheets
 		if ($params)
@@ -92,7 +92,7 @@ abstract class JHtmlProclaim
 
 			if ($css <= "-1")
 			{
-				JHtml::stylesheet('media/com_proclaim/css/biblestudy.css');
+				JHtml::stylesheet('media/com_proclaim/css/biblestudy.min.css');
 			}
 			else
 			{
@@ -119,7 +119,7 @@ abstract class JHtmlProclaim
 
 		if ($extra === 'podcast')
 		{
-			JHtml::stylesheet('media/com_proclaim/css/podcast.css');
+			JHtml::stylesheet('media/com_proclaim/css/podcast.min.css');
 		}
 	}
 

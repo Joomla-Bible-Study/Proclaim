@@ -14,10 +14,6 @@ use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die;
 
-HTMLHelper::_('behavior.keepalive');
-HTMLHelper::_('behavior.formvalidator');
-HTMLHelper::_('formbehavior.chosen', 'select');
-
 // Set up defaults
 if (Factory::getApplication()->input->getInt('id'))
 {

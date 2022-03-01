@@ -12,15 +12,8 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Language\Associations;
-use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
-
-HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-HTMLHelper::_('bootstrap.framework');
-HTMLHelper::_('behavior.multiselect');
-HTMLHelper::_('formbehavior.chosen', 'select');
 
 $app        = Factory::getApplication();
 $user       = Factory::getUser();
@@ -33,7 +26,12 @@ $saveOrder  = $listOrder == 'ordering';
 $sortFields = $this->getSortFields();
 $columns    = 9;
 
-Factory::getDocument()->addScriptDeclaration('
+
+/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
+$wa = $this->document->getWebAssetManager();
+$wa->useScript('keepalive')
+	->useScript('form.validate')
+	->addInlineScript('
 	Joomla.orderTable = function()
 	{
 		table = document.getElementById("sortTable");
@@ -112,7 +110,7 @@ Factory::getDocument()->addScriptDeclaration('
 					<tbody>
 					<?php
 					foreach ($this->items as $i => $item) :
-						$link = Route::_('index.php?option=com_proclaim&task=comment.edit&id=' . (int) $item->id);
+						$link = Route::_('index.php?option=com_proclaim&task=cwmcomment.edit&id=' . (int) $item->id);
 						$canCreate = $user->authorise('core.create');
 						$canEdit = $user->authorise('core.edit', 'com_proclaim.comment.' . $item->id);
 						$canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.comment.' . $item->id);

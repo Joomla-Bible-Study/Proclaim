@@ -21,7 +21,6 @@ HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 HTMLHelper::_('dropdown.init');
 HTMLHelper::_('behavior.multiselect');
-HTMLHelper::_('formbehavior.chosen', 'select');
 
 $app       = Factory::getApplication();
 $user      = Factory::getUser();

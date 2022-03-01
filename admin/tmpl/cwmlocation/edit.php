@@ -16,9 +16,6 @@ use Joomla\CMS\Router\Route;
 
 defined('_JEXEC') or die;
 
-// Load the tooltip behavior.
-HTMLHelper::_('formbehavior.chosen', 'select');
-
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('keepalive')

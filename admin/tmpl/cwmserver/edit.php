@@ -7,6 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 // No Direct Access
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -14,15 +15,15 @@ use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die;
 
-// Load the tooltip behavior.
-HTMLHelper::_('behavior.formvalidator');
-HTMLHelper::_('behavior.keepalive');
-
 // Create shortcut to parameters.
-$app   = Factory::getApplication();
+$app = Factory::getApplication();
 $input = $app->input;
-?>
-<script type="text/javascript">
+
+/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
+$wa = $this->document->getWebAssetManager();
+$wa->useScript('keepalive')
+	->useScript('form.validate')
+	->addInlineScript("
 	Joomla.submitbutton = function (task, type) {
 		if (task == 'cwmserver.setType') {
 			document.id('server-form').elements['jform[type]'].value = type;
@@ -32,11 +33,11 @@ $input = $app->input;
 		} else if (task == 'cwmserver.apply' || document.formvalidator.isValid(document.id('server-form'))) {
 			Joomla.submitform(task, document.getElementById('server-form'));
 		} else {
-			alert('<?php echo $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
+			alert('" . $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')) . "');
 		}
 	}
-</script>
-
+");
+?>
 <form action="<?php echo JRoute::_('index.php?option=com_proclaim&layout=edit&id=' . (int) $this->item->id); ?>"
       method="post" name="adminForm" id="server-form" class="form-validate">
 	<div class="row-fluid">
@@ -46,22 +47,22 @@ $input = $app->input;
 				<li class="active"><a href="#general" data-toggle="tab"><?php echo Text::_('JBS_CMN_DETAILS'); ?></a>
 				</li>
 				<?php foreach ($this->server_form->getFieldsets('params') as $fieldsets): ?>
-					<li>
-						<a href="#<?php echo $fieldsets->name; ?>" data-toggle="tab">
-							<?php echo Text::_($fieldsets->label); ?>
-						</a>
-					</li>
+				<li>
+					<a href="#<?php echo $fieldsets->name; ?>" data-toggle="tab">
+						<?php echo Text::_($fieldsets->label); ?>
+					</a>
+				</li>
 				<?php endforeach; ?>
 				<?php if (count($this->server_form->getFieldsets('media')) > 0): ?>
-					<li>
-						<a href="#media_settings" data-toggle="tab">
-							<?php echo Text::_("JBS_SVR_MEDIA_SETTINGS"); ?>
-						</a>
-					</li>
+				<li>
+					<a href="#media_settings" data-toggle="tab">
+						<?php echo Text::_("JBS_SVR_MEDIA_SETTINGS"); ?>
+					</a>
+				</li>
 				<?php endif; ?>
 				<?php if ($this->canDo->get('core.admin')): ?>
-					<li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a>
-					</li>
+				<li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a>
+				</li>
 				<?php endif ?>
 			</ul>
 			<div class="tab-content">
@@ -93,54 +94,54 @@ $input = $app->input;
 					</div>
 				</div>
 				<?php foreach ($this->server_form->getFieldsets('params') as $fieldset): ?>
-					<div class="tab-pane" id="<?php echo $fieldset->name; ?>">
-						<?php foreach ($this->server_form->getFieldset($fieldset->name) as $field): ?>
-							<div class="control-group">
-								<div class="control-label">
-									<?php echo $field->label; ?>
-								</div>
-								<div class="controls">
-									<?php echo $field->input; ?>
-								</div>
-							</div>
-						<?php endforeach; ?>
+				<div class="tab-pane" id="<?php echo $fieldset->name; ?>">
+					<?php foreach ($this->server_form->getFieldset($fieldset->name) as $field): ?>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $field->label; ?>
+						</div>
+						<div class="controls">
+							<?php echo $field->input; ?>
+						</div>
 					</div>
+					<?php endforeach; ?>
+				</div>
 				<?php endforeach; ?>
 				<div class="tab-pane" id="media_settings">
 					<div class="accordion" id="accordion">
 						<?php $first = true; ?>
 						<?php foreach ($this->server_form->getFieldsets('media') as $name => $fieldset): ?>
-							<div class="accordion-group">
-								<div class="accordion-heading">
-									<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion"
-									   href="#<?php echo $name; ?>">
-										<?php echo JText::_($fieldset->label); ?>
-									</a>
-								</div>
-								<div id="<?php echo $name; ?>"
-								     class="accordion-body collapse <?php echo $first ? "in" : ""; ?>">
-									<div class="accordion-inner">
-										<?php foreach ($this->server_form->getFieldset($name) as $field): ?>
-											<div class="control-group">
-												<div class="control-label">
-													<?php echo $field->label; ?>
-												</div>
-												<div class="controls">
-													<?php echo $field->input; ?>
-												</div>
-											</div>
-										<?php endforeach; ?>
+						<div class="accordion-group">
+							<div class="accordion-heading">
+								<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion"
+								   href="#<?php echo $name; ?>">
+									<?php echo JText::_($fieldset->label); ?>
+								</a>
+							</div>
+							<div id="<?php echo $name; ?>"
+							     class="accordion-body collapse <?php echo $first ? "in" : ""; ?>">
+								<div class="accordion-inner">
+									<?php foreach ($this->server_form->getFieldset($name) as $field): ?>
+									<div class="control-group">
+										<div class="control-label">
+											<?php echo $field->label; ?>
+										</div>
+										<div class="controls">
+											<?php echo $field->input; ?>
+										</div>
 									</div>
+									<?php endforeach; ?>
 								</div>
 							</div>
-							<?php $first = false; ?>
+						</div>
+						<?php $first = false; ?>
 						<?php endforeach; ?>
 					</div>
 				</div>
 				<?php if ($this->canDo->get('core.admin')): ?>
-					<div class="tab-pane" id="permissions">
-						<?php echo $this->form->getInput('rules'); ?>
-					</div>
+				<div class="tab-pane" id="permissions">
+					<?php echo $this->form->getInput('rules'); ?>
+				</div>
 				<?php endif; ?>
 			</div>
 			<input type="hidden" name="task" value=""/>
@@ -152,13 +153,19 @@ $input = $app->input;
 		<div class="span3 form-vertical">
 			<h4>
 				<?php
-                if (isset($this->item->id) && isset($this->itemaddon)) {echo $this->escape($this->item->addon->name); }
+				if (isset($this->item->id) && isset($this->itemaddon))
+				{
+					echo $this->escape($this->item->addon->name);
+				}
 				?>
 			</h4>
 
 			<p>
 				<?php
-                if (isset($this->item->id) && isset($this->itemaddon)) {echo $this->escape($this->item->addon->description);}
+				if (isset($this->item->id) && isset($this->itemaddon))
+				{
+					echo $this->escape($this->item->addon->description);
+				}
 				?>
 			</p>
 		</div>

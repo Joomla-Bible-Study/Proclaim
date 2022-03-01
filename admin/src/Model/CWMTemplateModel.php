@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // No Direct Access
 use CWM\Component\Proclaim\Administrator\Table\CWMTemplateTable;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
@@ -68,7 +69,7 @@ class CWMTemplateModel extends AdminModel
 			$tmplCurr = new CWMTemplateTable($db);
 
 			$tmplCurr->load($id);
-			$tmplCurr->id    = null;
+			$tmplCurr->id    = '';
 			$tmplCurr->title .= " - copy";
 
 			if (!$tmplCurr->store())
@@ -123,12 +124,7 @@ class CWMTemplateModel extends AdminModel
 		// Get the form.
 		$form = $this->loadForm('com_proclaim.template', 'template', array('control' => 'jform', 'load_data' => $loadData));
 
-		if (empty($form))
-		{
-			return false;
-		}
-
-		return $form;
+		return $form ?? false;
 	}
 
 	/**
@@ -166,7 +162,7 @@ class CWMTemplateModel extends AdminModel
 	}
 
 	/**
-	 * Custom clean the cache of com_proclaim and biblestudy modules
+	 * Custom clean the cache of COM_Proclaim and Proclaim modules
 	 *
 	 * @param   string   $group      The cache group
 	 * @param   integer  $client_id  The ID of the client
@@ -178,6 +174,6 @@ class CWMTemplateModel extends AdminModel
 	protected function cleanCache($group = null, $client_id = 0)
 	{
 		parent::cleanCache('com_proclaim');
-		parent::cleanCache('mod_biblestudy');
+		parent::cleanCache('mod_proclaim');
 	}
 }

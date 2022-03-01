@@ -13,15 +13,17 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Administrator\Lib\CWMBackup;
 use CWM\Component\Proclaim\Administrator\Table\CWMTemplatecodeTable;
 use CWM\Component\Proclaim\Administrator\Table\CWMTemplateTable;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Table\Table;
-use Joomla\Database\DatabaseDriver;
-use Joomla\Input\Files;
+use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\CMS\Session\Session;
+use Joomla\Database\DatabaseDriver;
+use Joomla\Input\Files;
+use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
 /**
@@ -90,7 +92,7 @@ class CWMTemplatesController extends AdminController
 		jimport('joomla.filesystem.file');
 		move_uploaded_file($tmp_src, $tmp_dest);
 
-		$db     = Factory::getDbo();
+		$db = Factory::getDbo();
 
 		$query   = file_get_contents(JPATH_SITE . '/tmp/' . $userfile['name']);
 		$queries = DatabaseDriver::splitSql($query);
@@ -264,7 +266,7 @@ class CWMTemplatesController extends AdminController
 	 */
 	private function performDB(string $query)
 	{
-		$db     = Factory::getDbo();
+		$db = Factory::getDbo();
 		$db->setQuery($query);
 
 		if (!$db->execute())
@@ -278,16 +280,16 @@ class CWMTemplatesController extends AdminController
 	/**
 	 * Export the Template
 	 *
-	 * @return boolean|JControllerLegacy
+	 * @return \CWM\Component\Proclaim\Administrator\Controller\CWMTemplatesController|false
 	 *
 	 * @since 8.0
 	 */
 	public function template_export()
 	{
 		// Check for request forgeries.
-		JSession::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
-		$input          = new Joomla\Input\Input;
+		$input          = new Input;
 		$data           = $input->get('template_export');
 		$exporttemplate = $data;
 
@@ -298,8 +300,8 @@ class CWMTemplatesController extends AdminController
 		}
 
 		jimport('joomla.filesystem.file');
-		$db     = Factory::getDbo();
-		$query  = $db->getQuery(true);
+		$db    = Factory::getDbo();
+		$query = $db->getQuery(true);
 		$query->select('t.id, t.type, t.params, t.title, t.text');
 		$query->from('#__bsms_templates as t');
 		$query->where('t.id = ' . $exporttemplate);
@@ -310,14 +312,14 @@ class CWMTemplatesController extends AdminController
 		$filename     = $result->title . '.sql';
 		$filepath     = JPATH_ROOT . '/tmp/' . $filename;
 
-		if (!JFile::write($filepath, $filecontents))
+		if (!File::write($filepath, $filecontents))
 		{
 			return false;
 		}
 
-		$xport = new JBSMBackup;
+		$xport = new CWMBackup;
 		$xport->output_file($filepath, $filename, 'text/x-sql');
-		JFile::delete($filepath);
+		File::delete($filepath);
 		$message = Text::_('JBS_TPL_EXPORT_SUCCESS');
 
 		return $this->setRedirect('index.php?option=com_proclaim&view=templates', $message);
@@ -430,8 +432,8 @@ class CWMTemplatesController extends AdminController
 	 */
 	public function getTemplate($template)
 	{
-		$db     = Factory::getDbo();
-		$query  = $db->getQuery(true);
+		$db    = Factory::getDbo();
+		$query = $db->getQuery(true);
 		$query->select('tc.id, tc.templatecode,tc.type,tc.filename');
 		$query->from('#__bsms_templatecode as tc');
 		$query->where('tc.filename ="' . $template . '"');
