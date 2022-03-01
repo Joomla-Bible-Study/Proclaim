@@ -143,4 +143,67 @@ class Router extends RouterView
 		$this->attachRule(new StandardRules($this));
 		$this->attachRule(new NomenuRules($this));
 	}
+
+	/**
+	 * Method to get the segment(s) for a sermon
+	 * @param   string  $id     ID of the article to retrieve the segments for
+	 * @param   array   $query  The request that is built right now
+	 *
+	 * @return  array|string  The segments of this item
+	 */
+	public function getCWMSermonSegment($id, $query)
+	{
+		if (!strpos($id, ':'))
+		{
+			$id      = (int) $id;
+			$dbquery = $this->db->getQuery(true);
+			$dbquery->select($this->db->quoteName('alias'))
+				->from($this->db->quoteName('#__bsms_studies'))
+				->where($this->db->quoteName('id') . ' = :id')
+				->bind(':id', $id, ParameterType::INTEGER);
+			$this->db->setQuery($dbquery);
+
+			$id .= ':' . $this->db->loadResult();
+		}
+
+		if ($this->noIDs)
+		{
+			list($void, $segment) = explode(':', $id, 2);
+
+			return array($void => $segment);
+		}
+
+		return array((int) $id => $id);
+	}
+
+	/**
+	 * Method to get the segment(s) for an article
+	 *
+	 * @param   string  $segment  Segment of the article to retrieve the ID for
+	 * @param   array   $query    The request that is parsed right now
+	 *
+	 * @return  mixed   The id of this item or false
+	 */
+	public function getCWMSermonId($segment, $query)
+	{
+		if ($this->noIDs)
+		{
+			$dbquery = $this->db->getQuery(true);
+			$dbquery->select($this->db->quoteName('id'))
+				->from($this->db->quoteName('#__bsms_studies'))
+				->where(
+					[
+						$this->db->quoteName('alias') . ' = :alias',
+
+					]
+				)
+				->bind(':alias', $segment);
+
+			$this->db->setQuery($dbquery);
+
+			return (int) $this->db->loadResult();
+		}
+
+		return (int) $segment;
+	}
 }

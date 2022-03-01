@@ -61,7 +61,7 @@ class ProclaimNomenuRules implements RulesInterface
 	 * @param   array  &$segments  The URL segments to parse
 	 * @param   array  &$vars      The vars that result from the segments
 	 *
-	 * @return  void
+	 * @return  array
 	 *
 	 * @since   3.4
 	 */
@@ -75,17 +75,21 @@ class ProclaimNomenuRules implements RulesInterface
 		if ($count == 3)
 		{
 			$vars['view'] = $segments[0];
-			$vars['id']   = (int) $segments[$count - 2];
+			//$vars['id']   = (int) $segments[$count - 2];
+		$id = explode('/', $segments[1]);
+				$vars['id'] = (int) $id[0];
 			$vars['t']    = $segments[$count - 1];
 
-			return;
+			//return;
 		}
 		if ($count == 2)
 		{
 			if ($segments[0] === 'podcastdisplay')
 			{
 				$vars['view'] = $segments[0];
-				$vars['id']   = (int) $segments[1];
+				//$vars['id']   = (int) $segments[1];
+		$id = explode('/', $segments[1]);
+				$vars['id'] = (int) $id[0];
 			}
 			else
 			{
@@ -93,14 +97,16 @@ class ProclaimNomenuRules implements RulesInterface
 				$vars['t']    = $segments[$count - 1];
 			}
 
-			return;
+			//return;
 		}
 		else
 		{
 			$vars['view'] = $segments[0];
 
-			return;
+
 		}
+		return $vars;
+
 		/*
 		//with this url: http://localhost/j4x/my-walks/mywalk-n/walk-title.html
 		// segments: [[0] => mywalk-n, [1] => walk-title]
@@ -120,7 +126,7 @@ class ProclaimNomenuRules implements RulesInterface
 	 * @param   array  &$query     The vars that should be converted
 	 * @param   array  &$segments  The URL segments to create
 	 *
-	 * @return  void
+	 * @return  array
 	 *
 	 * @since   3.4
 	 */
@@ -135,7 +141,7 @@ class ProclaimNomenuRules implements RulesInterface
 		// the url should look like this: /site-root/mywalks/walk-n/walk-title.html
 
 		// if the view is not mywalk - the single walk view
-		if (!isset($query['view']) || (isset($query['view']) && $query['view'] !== 'CWMSermon') || isset($query['format']))
+		/*if (!isset($query['view']) || (isset($query['view']) && $query['view'] !== 'CWMSermon') || isset($query['format']))
 		{
 			return;
 		}
@@ -145,10 +151,26 @@ class ProclaimNomenuRules implements RulesInterface
 			$segments[] = $query['slug'];
 			unset($query['slug']);
 		}
-		var_dump($segments);
 		unset($query['view']);
 		unset($query['id']);
 		unset($query['t']);
-
+*/
+		$segments = array();
+		if (isset($query['view']))
+		{
+			$segments[] = $query['view'];
+			unset($query['view']);
+		}
+		if (isset($query['id']))
+		{
+			$segments[] = $query['id'];
+			unset($query['id']);
+		}
+		if (isset($query['t']))
+		{
+			$segments[] = $query['t'];
+			unset($query['t']);
+		}
+		return $segments;
 	}
 }
