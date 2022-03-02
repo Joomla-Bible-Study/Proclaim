@@ -138,8 +138,11 @@ class HtmlView extends BaseHtmlView
 		$document            = Factory::getDocument();
 
 		HtmlHelper::_('jquery.framework');
-		$document->addScript(Uri::base() . 'media/com_proclaim/js/plugins/jquery.tokeninput.js');
-		$document->addStyleSheet(Uri::base() . 'media/com_proclaim/css/token-input-jbs.css');
+		$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+		$wa->useScript('com_proclaim.tokeninput');
+		$wa->useStyle('com_proclaim.token-input-jbs');
+
+
 		$script = "
             jQuery(document).ready(function() {
                 jQuery('#topics').tokenInput(" . $this->get('alltopics') . ",

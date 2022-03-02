@@ -115,7 +115,7 @@ class HtmlView extends BaseHtmlView
 		// Puts a new record link at the top of the form @todo There is not "get" in getActions function. I can't test the return but hopefully this is how to do it.
 		if ($this->canDo === 'core.create')
 		{
-			$this->newlink = '<a href="index.php?option=com_proclaim&view=mediafileform&task=mediafileform.edit"  class="btn btn-primary">'
+			$this->newlink = '<a href="index.php?option=com_proclaim&view=CWMMediaFileForm&task=mediafileform.edit"  class="btn btn-primary">'
 				. Text::_('JBS_CMN_NEW') . ' <i class="icon-plus"></i></a>';
 		}
 

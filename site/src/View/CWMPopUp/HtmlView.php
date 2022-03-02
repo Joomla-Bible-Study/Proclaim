@@ -195,7 +195,9 @@ class HtmlView extends BaseHtmlView
 		$this->params->merge($registry);
 
 		HtmlHelper::_('proclaim.framework');
-		HTMLHelper::_('proclaim.loadcss', $this->params);
+		$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+		$wa->useStyle('com_proclaim.biblestudy');
+		$wa->useStyle('com_proclaim.general');
 
 		$saveid          = $this->media->id;
 		$this->media->id = $this->media->study_id;

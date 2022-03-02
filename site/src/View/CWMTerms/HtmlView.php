@@ -101,7 +101,7 @@ class HtmlView extends BaseHtmlView
 			}
 			else
 			{
-				echo '<a href="index.php?option=com_proclaim&mid=' . $this->media->id . '&view=sermons&task=download">'
+				echo '<a href="index.php?option=com_proclaim&mid=' . $this->media->id . '&view=CWMSermons&task=download">'
 					. Text::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a>';
 			}
 			?>

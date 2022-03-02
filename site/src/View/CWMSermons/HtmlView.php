@@ -384,9 +384,10 @@ class HtmlView extends BaseHtmlView
 		{
 			$this->document->setMetadata('robots', $this->params->get('robots'));
 		}
+		$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+		$wa->useStyle('com_proclaim.biblestudy');
+		$wa->useStyle('com_proclaim.general');
 
-		HTMLHelper::_('proclaim.framework');
-		HTMLHelper::_('proclaim.loadCss', $this->params, null, 'font-awesome');
 	}
 
 	/**

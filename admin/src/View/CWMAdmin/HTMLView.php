@@ -183,7 +183,7 @@ class HTMLView extends BaseHtmlView
 	 * @var \Joomla\CMS\Form\Form
 	 * @since    7.0.0
 	 */
-	protected mixed $form;
+	protected $form;
 
 	/**
 	 * Item

@@ -293,8 +293,10 @@ class HtmlView extends BaseHtmlView
 		$template      = $this->get('template');
 		$this->related = $relatedstudies->getRelated($this->item, $item->params);
 
-		HtmlHelper::_('proclaim.framework');
-		HTMLHelper::_('proclaim.loadCss', $this->params, null, 'font-awesome');
+		//HtmlHelper::_('proclaim.framework');
+		$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+		$wa->useStyle('com_proclaim.biblestudy');
+		$wa->useStyle('com_proclaim.general');
 
 		// Only load page builder if the default template is NOT being used
 		if ($this->item->params->get('useexpert_details', '0') !== '0' || $this->params->get('sermontemplate', '0') !== '0')

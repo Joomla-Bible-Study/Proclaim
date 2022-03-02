@@ -31,7 +31,7 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @since 7.0
 	 */
-	protected $form;
+	protected mixed $form;
 
 	/**
 	 * Item

@@ -332,13 +332,19 @@
 	  "version": "9ac1245a9dd2a9bf7e7f95c6e7e24f6075eef0ae"
 	},
 	{
-	  "name": "com_procalim.biblestudy",
+	  "name": "com_proclaim.biblestudy",
 	  "type": "style",
 	  "uri": "com_proclaim/biblestudy.min.css",
 	  "version": "b9ad01318a9ef37832023f20e030a408968d38fd"
 	},
+	  {
+		  "name": "com_proclaim.podcast",
+		  "type": "style",
+		  "uri": "com_proclaim/podcast.css",
+		  "version": "b9ad01318a9ef37832023f20e030a408968d38fd"
+	  },
 	{
-	  "name": "com_procalim.general",
+	  "name": "com_proclaim.general",
 	  "type": "style",
 	  "uri": "com_proclaim/general.min.css",
 	  "version": "b9ad01318a9ef37832023f20e030a408968d38fd"
