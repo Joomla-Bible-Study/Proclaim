@@ -24,8 +24,8 @@ $listing      = new CWMListing;
 $classelement = $listing->createelement($this->params->get('studies_element'));
 ?>
 
-<div class="container-fluid">
-	<div id="bsheader">
+<div class="container">
+	<div id="bsheader" class="row">
 		<?php
 		if ($this->params->get('showpodcastsubscribelist') === '1')
 		{
@@ -39,7 +39,7 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 		{
 			?>
 			<div class="hero-unit" style="padding-top:30px; padding-bottom:20px;">';
-				<div class="row-fluid">
+				<div class="row">
 					<ul class="thumbnails">
 						<?php $spans = 12 / count($teachers);
 						foreach ($teachers as $teacher)
@@ -47,7 +47,7 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 							echo '<li class="span' . $spans . '">';
 							if ($this->params->get('teacherlink') > 0)
 							{
-								echo '<a href="index.php?option=com_proclaim&view=teacher&id=' . $teacher['id'] . '&t=' . $teacher['t'] . '" >
+								echo '<a href="index.php?option=com_proclaim&view=CWMTeacher&id=' . $teacher['id'] . '&t=' . $teacher['t'] . '" >
 							<img class="img-polaroid" src="' . JUri::base() . $teacher['image'] . '" alt="Teachers Image"></a>';
 							}
 							else
@@ -56,7 +56,7 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 							}
 							if ($this->params->get('teacherlink') > 0)
 							{
-								echo '<div class="caption"><p><a href="index.php?option=com_proclaim&view=teacher&id=' .
+								echo '<div class="caption"><p><a href="index.php?option=com_proclaim&view=CWMTeacher&id=' .
 									$teacher['id'] . '&t=' . $teacher['t'] . '">' . $teacher['name'] . '</a></p></div>';
 							}
 							else
@@ -70,8 +70,8 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 				</div>
 			</div>
 		<?php } ?>
-		<div class="row-fluid">
-			<div class="span12">
+		<div class="row">
+			<div class="col-12">
 				<?php
 				if (!empty($this->params->get('list_intro')))
 				{
@@ -86,7 +86,7 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 	<?php } ?>
 </div>
 
-<div class="container-fluid">
+<div class="container">
 	<?php
 	// Search tools bar
 	//echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));

@@ -842,7 +842,14 @@ class CWMListing
 			$background = "";
 		}
 
-		$frow = '<div class="row-fluid" style="' . $background . ' padding:5px;" about="' . $type . '">';
+		if ($header === 1)
+		{
+			$frow = '<div class="row" style="' . $background . 'padding:5px; white-space:nowrap; font-weight:bold;" about="' . $type . '">';
+		}
+		else
+		{
+			$frow = '<div class="row" style="' . $background . 'padding:5px;" about="' . $type . '">';
+		}
 
 		$row1count  = 0;
 		$row2count  = 0;
@@ -859,7 +866,7 @@ class CWMListing
 
 		if ($span)
 		{
-			$frow .= '<div class="row-fluid" about="' . $type . '">';
+			$frow .= '<div class="row" about="' . $type . '">';
 			$frow .= '<div class="span' . $rowspanitemspan . ' ' . $pull . '" id="jbsmspan-image"><div ' . $headerstyle . '>' . $span . '</div></div>';
 			$frow .= '<div class="span' . $rowspanbalance . '" about="' . $type . '">';
 		}
@@ -915,12 +922,12 @@ class CWMListing
 			{
 				if ($row1count === $row1count2)
 				{
-					$frow .= '<div class="row-fluid JBSM" about="row1-' . $row1count . '">';
+					$frow .= '<div class="row JBSM" about="row1-' . $row1count . '">';
 				}
 
 				if ($header === 1)
 				{
-					$frow .= '<b>' . $this->getFluidData($item, $row, $params, $template, $header = 1, $type) . '</b>';
+					$frow .=  $this->getFluidData($item, $row, $params, $template, $header = 1, $type) ;
 				}
 				else
 				{
@@ -939,12 +946,12 @@ class CWMListing
 			{
 				if ($row2count === $row2count2)
 				{
-					$frow .= '<div class="row-fluid JBSM" about="row2-' . $row2count . '">';
+					$frow .= '<div class="row JBSM" about="row2-' . $row2count . '">';
 				}
 
 				if ($header === 1)
 				{
-					$frow .= '<b>' . $this->getFluidData($item, $row, $params, $template, $header = 1, $type) . '</b>';
+					$frow .=  $this->getFluidData($item, $row, $params, $template, $header = 1, $type) ;
 				}
 				else
 				{
@@ -963,12 +970,12 @@ class CWMListing
 			{
 				if ($row3count === $row3count2)
 				{
-					$frow .= '<div class="row-fluid JBSM" about="row3-' . $row3count . '">';
+					$frow .= '<div class="row JBSM" about="row3-' . $row3count . '">';
 				}
 
 				if ($header === 1)
 				{
-					$frow .= '<b>' . $this->getFluidData($item, $row, $params, $template, $header = 1, $type) . '</b>';
+					$frow .=  $this->getFluidData($item, $row, $params, $template, $header = 1, $type) ;
 				}
 				else
 				{
@@ -987,12 +994,12 @@ class CWMListing
 			{
 				if ($row4count === $row4count2)
 				{
-					$frow .= '<div class="row-fluid JBSM" about="row4-' . $row4count . '">';
+					$frow .= '<div class="row JBSM" about="row4-' . $row4count . '">';
 				}
 
 				if ($header === 1)
 				{
-					$frow .= '<b>' . $this->getFluidData($item, $row, $params, $template, $header = 1, $type) . '</b>';
+					$frow .=  $this->getFluidData($item, $row, $params, $template, $header = 1, $type) ;
 				}
 				else
 				{
@@ -1011,7 +1018,7 @@ class CWMListing
 			{
 				if ($row5count === $row5count2)
 				{
-					$frow .= '<div class="row-fluid JBSM" about="row5-' . $row5count . '">';
+					$frow .= '<div class="row JBSM" about="row5-' . $row5count . '">';
 				}
 
 				if ($header === 1)
@@ -1035,7 +1042,7 @@ class CWMListing
 			{
 				if ($row6count === $row6count2)
 				{
-					$frow .= '<div class="row-fluid JBSM" about="row5-' . $row5count . '">';
+					$frow .= '<div class="row JBSM" about="row5-' . $row5count . '">';
 				}
 
 				if ($header === 1)
@@ -1164,12 +1171,12 @@ class CWMListing
 						if (substr_count($item->twitterlink, 'http://', 0))
 						{
 							$data .= '<a href="' . $item->twitterlink . '" target="_blank">
-						<span class="fas fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
+						<span class="fab fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
 						}
 						else
 						{
 							$data .= '<a href="http://' . $item->twitterlink . '" target="_blank">
-						<span class="fas fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
+						<span class="fab fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
 						}
 					}
 
@@ -1782,7 +1789,7 @@ class CWMListing
 			}
 		}
 
-		$frow = '<div class="span' . $row->colspan;
+		$frow = '<div class="col-' . $row->colspan;
 
 		if ($customclass)
 		{
@@ -2266,11 +2273,11 @@ class CWMListing
 	{
 		$med = new CWMMedia;
 
-		$mediarow = '<div class="bsms_media_contaner" style="display: inline-block;">';
+		$mediarow = '<div class="bsms_media_container row "  >';
 
 		foreach ($item->mediafiles as $media)
 		{
-			$mediarow .= '<div id="bsms_media_file' . $media->id . '" class="bsms_media_file" style="display:inline; padding-right:1px;">' .
+			$mediarow .= '<div id="bsms_media_file' . $media->id . '" class="col bsms_media_file" >' .
 				$med->getFluidMedia($media, $params, $template) . '</div>';
 		}
 
@@ -2677,7 +2684,7 @@ class CWMListing
 	{
 		$sharetype = $params->get('socialnetworking', 1);
 
-		$shareit = '<div class="row-fluid">';
+		$shareit = '<div class="row">';
 
 		if ($sharetype === 1)
 		{

@@ -18,5 +18,5 @@ defined('_JEXEC') or die;
 $input = Factory::getApplication();
 ?>
 <form
-	action="<?php echo Route::_('index.php?option=com_proclaim&view=sermons&t=' . $input->get('t', '1', 'int')); ?>"
+	action="<?php echo Route::_('index.php?option=com_proclaim&view=CWMSermons&t=' . $input->get('t', '1', 'int')); ?>"
 	method="post" name="adminForm" id="adminForm">

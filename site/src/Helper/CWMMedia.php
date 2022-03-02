@@ -187,7 +187,7 @@ class CWMMedia
 			case 1:
 				if ($downloadlink)
 				{
-					$mediafile = $playercode . '<div style="display:inline;position:relative;">' . $downloadlink . $filesize . '</div>';
+					$mediafile = $playercode . '<div class="col"">' . $downloadlink . $filesize . '</div>';
 				}
 				else
 				{
