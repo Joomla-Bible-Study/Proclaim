@@ -77,9 +77,9 @@ class Router extends RouterView
 		$Teachers->setKey('id');
 		$this->registerView($Teachers);
 
-		$Teachers = new RouterViewConfiguration('CWMTeacher');
-		$Teachers->setKey('id');
-		$this->registerView($Teachers);
+		$Teacher = new RouterViewConfiguration('CWMTeacher');
+		$Teacher->setKey('id');
+		$this->registerView($Teacher);
 
 		$SeriesDisplay = new RouterViewConfiguration('CWMSeriesDisplay');
 		$SeriesDisplay->setKey('id');

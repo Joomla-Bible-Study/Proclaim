@@ -2466,12 +2466,6 @@ class CWMListing
 
 			case 3 :
 				$link = Route::_('index.php?option=com_proclaim&view=CWMTeacher&id=' . $tid . '&t=' . $params->get('teachertemplateid'));
-
-				if ($tmenu > 0)
-				{
-					$link .= '&Itemid=' . $tmenu;
-				}
-
 				$column .= '<a href="' . $link . '">';
 				break;
 

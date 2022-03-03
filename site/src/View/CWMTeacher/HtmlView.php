@@ -27,6 +27,7 @@ use Joomla\Registry\Registry;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\MVC\Model\ItemModel;
+use Joomla\Component\Contact\Site\Model\ContactModel;
 /**
  * View class for Teacher
  *
@@ -147,7 +148,7 @@ class HtmlView extends BaseHtmlView
 		{
 			$language = Factory::getLanguage();
 			$language->load('com_contact', JPATH_SITE);
-			require_once JPATH_ROOT . '/components/com_contact/models/contact.php';
+			//require_once JPATH_ROOT . '/components/com_contact/src/Model/ContactModel.php';
 
 			/** @var ContactModelContact $contactmodel */
 			$contactmodel  = ItemModel::getInstance('contact', 'contactModel');

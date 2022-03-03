@@ -15,7 +15,7 @@ use Joomla\CMS\Language\Text;
 $listing = new CWMListing;
 $classelement = $listing->createelement($this->params->get('teachers_element'));
 ?>
-<div class="container-fluid">
+<div class="container">
 	<div class="hero-unit" style="padding-top:30px; padding-bottom:20px;"> <!-- This div is the header container -->
 		<?php if ($classelement) : ?>
 			<<?php echo $classelement; ?> class="componentheading">
@@ -25,8 +25,8 @@ $classelement = $listing->createelement($this->params->get('teachers_element'));
 	</<?php echo $classelement; ?> >
 	<?php endif; ?>
 </div>
-<div class="row-fluid">
-	<div class="span12">
+<div class="row">
+	<div class="col-12">
 		<?php
 		if ($this->params->get('teacher_headercode'))
 		{
@@ -35,8 +35,8 @@ $classelement = $listing->createelement($this->params->get('teachers_element'));
 		?>
 	</div>
 </div>
-<div class="row-fluid">
-	<div class="span12">
+<div class="row">
+	<div class="col-12">
 		<?php
 		echo $listing->getFluidListing($this->items, $this->params, $this->template, $type = 'teachers');
 		?>
