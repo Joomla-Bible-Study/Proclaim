@@ -1,14 +1,25 @@
 <?php
 /**
  * @package    Proclaim.Admin
- * @copyright  2007 - 2019 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2022 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-defined('_JEXEC') or die;
 
-jimport('joomla.filesystem.folder');
-jimport('joomla.filesystem.file');
+use CWM\Component\Proclaim\Administrator\Model\CWMInstallModel;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Installer\Adapter\FileAdapter;
+use Joomla\CMS\Installer\Installer;
+use Joomla\CMS\Installer\InstallerAdapter;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Log\Log;
+use Joomla\CMS\MVC\Controller\BaseController;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Uri\Uri;
+
+defined('_JEXEC') or die;
 
 /**
  * Proclaim Install Script
@@ -18,10 +29,18 @@ jimport('joomla.filesystem.file');
  */
 class com_proclaimInstallerScript
 {
+	/**
+	 * The minimum Joomla! version required to install this extension
+	 *
+	 * @var   string
+	 * @since 10.0.0
+	 */
+	protected string $minimumJoomlaVersion = '4.0.0';
+
 	/** @var string The component's name
 	 * @since 1.5
 	 */
-	protected $extension = 'com_proclaim';
+	protected string $extension = 'com_proclaim';
 
 	/** @var string
 	 * @since 1.5
@@ -31,17 +50,17 @@ class com_proclaimInstallerScript
 	/** @var string
 	 * @since 1.5
 	 */
-	protected $srcxml;
+	protected string $srcxml;
 
 	/** @var object
 	 * @since 1.5
 	 */
-	protected $status;
+	protected object $status;
 
 	/** @var string Path to Mysql files
 	 * @since 1.5
 	 */
-	public $filePath = '/components/com_proclaim/install/sql/updates/mysql';
+	public string $filePath = '/components/com_proclaim/install/sql/updates/mysql';
 
 	/**
 	 * This is Minimum requirements for: PHP, MySQL, Joomla
@@ -49,21 +68,16 @@ class com_proclaimInstallerScript
 	 * @var array Requirements
 	 * @since 9.0.9
 	 */
-	static protected $versions = array(
-		'PHP'     => array(
+	static protected array $versions = array(
+		'PHP'   => array(
 			'7.1' => '7.1.0',
 			'7.2' => '7.2.1',
 			'0'   => '7.4.1' // Preferred version
 		),
-		'MySQL'   => array(
+		'MySQL' => array(
 			'5.1' => '5.1',
 			'5.5' => '5.5.3',
 			'0'   => '5.5.3' // Preferred version
-		),
-		'Joomla!' => array(
-			'3.6' => '3.6.3',
-			'3.7' => '3.7.0',
-			'0'   => '3.9.3' // Preferred version
 		)
 	);
 
@@ -73,11 +87,11 @@ class com_proclaimInstallerScript
 	 * @author CWM Team
 	 * @since  9.0.18
 	 */
-	static private $installActionQueue = array(
+	static private array $installActionQueue = array(
 		// -- modules => { (folder) => { (module) => { (position), (published) } }* }*
 		'modules' => array(
 			'administrator' => array(),
-			'site'  => array('biblestudy' => 0, 'biblestudy_podcast' => 0,),
+			'site'          => array('biblestudy' => 0, 'biblestudy_podcast' => 0,),
 		),
 		// -- plugins => { (folder) => { (element) => (published) }* }*
 		'plugins' => array(
@@ -92,7 +106,7 @@ class com_proclaimInstallerScript
 	 *
 	 * @since 9.0.18
 	 */
-	static protected $extensions = array('dom', 'gd', 'json', 'pcre', 'SimpleXML');
+	static protected array $extensions = array('dom', 'gd', 'json', 'pcre', 'SimpleXML');
 
 	/**
 	 * $parent is the class calling this method.
@@ -100,8 +114,8 @@ class com_proclaimInstallerScript
 	 * preflight runs before anything else and while the extracted files are in the uploaded temp folder.
 	 * If preflight returns false, Joomla will abort the update and undo everything already done.
 	 *
-	 * @param   string             $type    Type of install
-	 * @param   JInstallerAdapter  $parent  Where it is coming from
+	 * @param   string            $type    Type of install
+	 * @param   InstallerAdapter  $parent  Where it is coming from
 	 *
 	 * @return boolean
 	 *
@@ -110,16 +124,23 @@ class com_proclaimInstallerScript
 	 */
 	public function preflight($type, $parent)
 	{
-		$parent   = $parent->getParent();
 		$manifest = $parent->getManifest();
 
+		// Check the minimum Joomla! version
+		if (!version_compare(JVERSION, $this->minimumJoomlaVersion, 'ge'))
+		{
+			$msg = "<p>You need Joomla! $this->minimumJoomlaVersion or later to install this component</p>";
+			Log::add($msg, Log::WARNING, 'jerror');
+
+			return false;
+		}
+
 		// Include the JLog class.
-		jimport('joomla.log.log');
-		JLog::addLogger(
+		Log::addLogger(
 			array(
 				'text_file' => 'com_proclaim.errors.php'
 			),
-			JLog::ALL,
+			Log::ALL,
 			'com_proclaim'
 		);
 
@@ -129,42 +150,10 @@ class com_proclaimInstallerScript
 			return false;
 		}
 
-		$adminPath = $parent->getPath('extension_administrator');
-		$sitePath  = $parent->getPath('extension_site');
-
-		if (is_file($adminPath . '/administration.biblestudy.php'))
-		{
-			// JBSM 8.0 or older release found, clean up the directories.
-			static $ignoreAdmin = array('index.html', 'biblestudy.xml', 'archive');
-
-			if (is_file($adminPath . '/install.script.php'))
-			{
-				// JBSM 6.2 or older release..
-				$ignoreAdminarray[] = 'install.script.php';
-				$ignoreAdminarray[] = 'administration.biblestudy.php';
-			}
-
-			static $ignoreSite = array('index.html', 'biblestudy.php', 'router.php', 'COPYRIGHT.php', 'CHANGELOG.php');
-			$this->deleteFolder($adminPath, $ignoreAdmin);
-			$this->deleteFolder($sitePath, $ignoreSite);
-		}
-
 		// Remove all old install files before install/upgrade
-		if (JFolder::exists(JPATH_ADMINISTRATOR . '/components/com_proclaim/install'))
+		if (Folder::exists(JPATH_ADMINISTRATOR . '/components/com_proclaim/install'))
 		{
-			JFolder::delete(JPATH_ADMINISTRATOR . '/components/com_proclaim/install');
-		}
-
-		// Remove old BibleStudy Helper. @since 9.0.14
-		if (JFile::exists(JPATH_ADMINISTRATOR . '/components/com_proclaim/helpers/biblestudy.php'))
-		{
-			JFile::delete(JPATH_ADMINISTRATOR . '/components/com_proclaim/helpers/biblestudy.php');
-		}
-
-		// Remove Variability plupload folder from media not use. 9.1.2
-		if (JFolder::exists(JPATH_ROOT . '/media/com_proclaim/plupload'))
-		{
-			JFolder::delete(JPATH_ROOT . '/media/com_proclaim/plupload');
+			Folder::delete(JPATH_ADMINISTRATOR . '/components/com_proclaim/install');
 		}
 
 		return true;
@@ -173,7 +162,7 @@ class com_proclaimInstallerScript
 	/**
 	 * Install
 	 *
-	 * @param   JInstallerFile  $parent  Where call is coming from
+	 * @param   FileAdapter  $parent  Where call is coming from
 	 *
 	 * @return  boolean
 	 *
@@ -186,10 +175,10 @@ class com_proclaimInstallerScript
 
 		if (is_dir($cacheDir))
 		{
-			JFolder::delete($cacheDir);
+			Folder::delete($cacheDir);
 		}
 
-		JFolder::create($cacheDir);
+		Folder::create($cacheDir);
 
 		return true;
 	}
@@ -197,7 +186,7 @@ class com_proclaimInstallerScript
 	/**
 	 * Update will go to install
 	 *
-	 * @param   JInstallerFile  $parent  ?
+	 * @param   FileAdapter  $parent  ?
 	 *
 	 * @return boolean
 	 *
@@ -209,9 +198,9 @@ class com_proclaimInstallerScript
 	}
 
 	/**
-	 * Uninstall rout to JBSMModelInstall
+	 * Uninstall rout to CWMInstallModel
 	 *
-	 * @param   JInstallerFile  $parent  ?
+	 * @param   FileAdapter  $parent  ?
 	 *
 	 * @return boolean
 	 *
@@ -226,7 +215,7 @@ class com_proclaimInstallerScript
 		if (file_exists($model))
 		{
 			require_once $model;
-			$installer = new BibleStudyModelInstall;
+			$installer = new CWMInstallModel;
 			$installer->uninstall();
 		}
 
@@ -242,8 +231,8 @@ class com_proclaimInstallerScript
 	/**
 	 * Post Flight
 	 *
-	 * @param   string          $type    Type of install
-	 * @param   JInstallerFile  $parent  Where it is coming from
+	 * @param   string       $type    Type of install
+	 * @param   FileAdapter  $parent  Where it is coming from
 	 *
 	 * @return   void
 	 *
@@ -252,34 +241,23 @@ class com_proclaimInstallerScript
 	 */
 	public function postflight($type, $parent)
 	{
-		if (!JFile::exists(JPATH_SITE . '/images/biblestudy/logo.png'))
+		if (!File::exists(JPATH_SITE . '/images/com_proclaim/logo.png'))
 		{
 			// Copy the images to the new folder
-			JFolder::copy('/media/com_proclaim/images', 'images/biblestudy/', JPATH_SITE, true);
+			Folder::copy('/media/com_proclaim/images', 'images/com_proclaim/', JPATH_SITE, true);
 		}
 
 		// Install subExtensions
 		$this->installSubextensions($parent);
 
-		// Clear FOF's cache
-		if (!defined('FOF_INCLUDED') && JFile::exists(JPATH_LIBRARIES . '/fof/include.php'))
-		{
-			include_once JPATH_LIBRARIES . '/fof/include.php';
-		}
-
-		if (defined('FOF_INCLUDED'))
-		{
-			FOFPlatform::getInstance()->clearCache();
-		}
-
 		if ($type === 'install')
 		{
-			// An redirect to a new location after the install is completed.
-			$controller = JControllerLegacy::getInstance('Biblestudy');
+			// Redirect to a new location after the installer is completed.
+			$controller = BaseController::getInstance('Proclaim');
 			$controller->setRedirect(
-				JUri::base() .
+				Uri::base() .
 				'index.php?option=com_proclaim&view=install&task=install.browse&scanstate=start&' .
-				JSession::getFormToken() . '=1'
+				Session::getFormToken() . '=1'
 			);
 			$controller->redirect();
 		}
@@ -301,18 +279,16 @@ class com_proclaimInstallerScript
 	public function checkRequirements($version)
 	{
 		// Include the JLog class.
-		jimport('joomla.log.log');
-		JLog::addLogger(
+		Log::addLogger(
 			array(
 				'text_file' => 'com_proclaim.errors.php'
 			),
-			JLog::ALL,
+			Log::ALL,
 			'com_proclaim'
 		);
 
 		$db   = Factory::getDbo();
-		$pass = $this->checkVersion('PHP', phpversion());
-		$pass &= $this->checkVersion('Joomla!', JVERSION);
+		$pass = $this->checkVersion('PHP', PHP_VERSION);
 		$pass &= $this->checkVersion('MySQL', $db->getVersion());
 		$pass &= $this->checkDbo($db->name, array('mysql', 'mysqli', 'pdo'));
 		$pass &= $this->checkExtensions(self::$extensions);
@@ -339,15 +315,15 @@ class com_proclaimInstallerScript
 	{
 		$app = Factory::getApplication();
 
-		if (in_array($name, $types))
+		if (in_array($name, $types, true))
 		{
 			return true;
 		}
 
 		$app->enqueueMessage(sprintf("Database driver '%s' is not supported. Please use MySQL instead.", $name), 'notice');
-		JLog::add(
+		Log::add(
 			sprintf("Database driver '%s' is not supported. Please use MySQL instead.", $name),
-			JLog::NOTICE,
+			Log::NOTICE,
 			$this->extension
 		);
 
@@ -376,9 +352,9 @@ class com_proclaimInstallerScript
 			{
 				$pass = 0;
 				$app->enqueueMessage(sprintf("Required PHP extension '%s' is missing. Please install it into your system.", $name), 'notice');
-				JLog::add(
+				Log::add(
 					sprintf("Required PHP extension '%s' is missing. Please install it into your system.", $name),
-					JLog::NOTICE,
+					Log::NOTICE,
 					$this->extension
 				);
 			}
@@ -431,10 +407,10 @@ class com_proclaimInstallerScript
 			), 'notice'
 		);
 
-		JLog::add(
+		Log::add(
 			sprintf("%s %s is not supported. Minimum required version is %s %s, but it is higly recommended to use %s %s or later.",
 				$name, $version, $name, $minor, $name, $recommended
-			), JLog::ERROR, 'com_proclaim'
+			), Log::ERROR, 'com_proclaim'
 		);
 
 		return false;
@@ -476,7 +452,7 @@ class com_proclaimInstallerScript
 
 		if (!$installed)
 		{
-			JLog::add('Found No installd version.', JLog::NOTICE, $this->extension);
+			Log::add('Found No installd version.', Log::NOTICE, $this->extension);
 
 			return true;
 		}
@@ -489,9 +465,9 @@ class com_proclaimInstallerScript
 
 		// @todo need to move to language string.
 		$app->enqueueMessage(sprintf('Sorry, it is not possible to downgrade BibleStudy %s to version %s.', $installed, $version), 'notice');
-		JLog::add(
+		Log::add(
 			sprintf('Sorry, it is not possible to downgrade BibleStudy %s to version %s.', $installed, $version),
-			JLog::NOTICE,
+			Log::NOTICE,
 			$this->extension
 		);
 
@@ -512,13 +488,13 @@ class com_proclaimInstallerScript
 	{
 		$ignore = array_merge($ignore, array('.git', '.svn', 'CVS', '.DS_Store', '__MACOSX'));
 
-		if (JFolder::exists($path))
+		if (Folder::exists($path))
 		{
-			foreach (JFolder::files($path, '.', false, true, $ignore) as $file)
+			foreach (Folder::files($path, '.', false, true, $ignore) as $file)
 			{
-				if (JFile::exists($file))
+				if (File::exists($file))
 				{
-					JFile::delete($file);
+					File::delete($file);
 				}
 			}
 		}
@@ -538,13 +514,13 @@ class com_proclaimInstallerScript
 	{
 		$ignore = array_merge($ignore, array('.git', '.svn', 'CVS', '.DS_Store', '__MACOSX'));
 
-		if (JFolder::exists($path))
+		if (Folder::exists($path))
 		{
-			foreach (JFolder::folders($path, '.', false, true, $ignore) as $folder)
+			foreach (Folder::folders($path, '.', false, true, $ignore) as $folder)
 			{
-				if (JFolder::exists($folder))
+				if (Folder::exists($folder))
 				{
-					JFolder::delete($folder);
+					Folder::delete($folder);
 				}
 			}
 		}
@@ -569,8 +545,8 @@ class com_proclaimInstallerScript
 	/**
 	 * Renders the post-installation message
 	 *
-	 * @param   object             $status  ?
-	 * @param   JInstallerAdapter  $parent  is the class calling this method.
+	 * @param   object            $status  ?
+	 * @param   InstallerAdapter  $parent  is the class calling this method.
 	 *
 	 * @return void
 	 *
@@ -580,7 +556,7 @@ class com_proclaimInstallerScript
 	 */
 	private function renderPostInstallation($status, $parent)
 	{
-		$language = Factory::getLanguage();
+		$language = Factory::getApplication()->getLanguage();
 		$language->load('com_proclaim', JPATH_ADMINISTRATOR . '/components/com_proclaim', 'en-GB', true);
 		$language->load('com_proclaim', JPATH_ADMINISTRATOR . '/components/com_proclaim', null, true);
 		echo '<img src="../media/com_proclaim/images/proclaim.jpg" width="48" height="48"
@@ -593,7 +569,7 @@ class com_proclaimInstallerScript
             <tr>
                 <th class="title">Extension</th>
                 <th class="title">Client</th>
-                <th class="title">' . JText::_('JBS_INS_STATUS') . '</th>
+                <th class="title">' . Text::_('JBS_INS_STATUS') . '</th>
             </tr>
             </thead>
             <tfoot>
@@ -603,9 +579,9 @@ class com_proclaimInstallerScript
             </tfoot>
             <tbody>
             <tr>
-                <td class="key">' . JText::_('JBS_CMN_com_proclaim') . '</td>
+                <td class="key">' . Text::_('JBS_CMN_com_proclaim') . '</td>
                 <td class="key">Site</td>
-                <td><strong style="color: green;">' . JText::_('JBS_INS_INSTALLED') . '</strong></td>
+                <td><strong style="color: green;">' . Text::_('JBS_INS_INSTALLED') . '</strong></td>
             </tr>';
 
 		if (count($status->modules))
@@ -613,7 +589,7 @@ class com_proclaimInstallerScript
 			echo "<tr>
                 <th>Module</th>
                 <th>Client</th>
-                <th><?php echo JText::_('JBS_INS_STATUS'); ?></th>
+                <th><?php echo Text::_('JBS_INS_STATUS'); ?></th>
             </tr>";
 
 			foreach ($status->modules as $module)
@@ -623,7 +599,7 @@ class com_proclaimInstallerScript
 				echo '<td class="key">' . ucfirst($module['client']) . '</td>';
 				echo '<td class="key">';
 				echo '<strong style="color: ' . ($module['result'] ? 'green' : 'red') . ';">';
-				echo ' ' . ($module['result'] ? JText::_('JBS_INS_INSTALLED') : JText::_('JBS_INS_NOT_INSTALLED')) . ' ';
+				echo ' ' . ($module['result'] ? Text::_('JBS_INS_INSTALLED') : Text::_('JBS_INS_NOT_INSTALLED')) . ' ';
 				echo '</strong>';
 				echo '</td>';
 				echo '</tr>';
@@ -636,7 +612,7 @@ class com_proclaimInstallerScript
 			<tr>
 				<th>Plugin</th>
 				<th>Group</th>
-				<th><?php echo JText::_('JBS_INS_STATUS'); ?></th>
+				<th><?php echo Text::_('JBS_INS_STATUS'); ?></th>
 			</tr>
 			<?php
 			foreach ($status->plugins as $plugin)
@@ -646,7 +622,7 @@ class com_proclaimInstallerScript
 				echo '<td class="key">' . ucfirst($plugin['group']) . '</td>';
 				echo '<td>';
 				echo '<strong style="color: ' . ($plugin['result'] ? 'green' : 'red') . ';">';
-				echo '' . ($plugin['result'] ? JText::_('JBS_INS_INSTALLED') : JText::_('JBS_INS_NOT_INSTALLED')) . '';
+				echo '' . ($plugin['result'] ? Text::_('JBS_INS_INSTALLED') : Text::_('JBS_INS_NOT_INSTALLED')) . '';
 				echo '</strong>';
 				echo '</td>';
 				echo '</tr>';
@@ -659,7 +635,7 @@ class com_proclaimInstallerScript
 			<tr>
 				<th>Libraries</th>
 				<th>Version</th>
-				<th><?php echo JText::_('JBS_INS_STATUS'); ?></th>
+				<th><?php echo Text::_('JBS_INS_STATUS'); ?></th>
 			</tr>
 			<?php
 			foreach ($status->libraries as $library)
@@ -682,8 +658,8 @@ class com_proclaimInstallerScript
 	/**
 	 * Render Post Uninstalling
 	 *
-	 * @param   object             $status  ?
-	 * @param   JInstallerAdapter  $parent  is the class calling this method.
+	 * @param   object            $status  ?
+	 * @param   InstallerAdapter  $parent  is the class calling this method.
 	 *
 	 * @return void
 	 *
@@ -692,12 +668,12 @@ class com_proclaimInstallerScript
 	private function renderPostUninstallation($status, $parent)
 	{
 		$rows = 0;
-		echo '<h2>' . JText::_('JBS_INS_UNINSTALL') . '</h2>
+		echo '<h2>' . Text::_('JBS_INS_UNINSTALL') . '</h2>
 		<table class="adminlist">
 			<thead>
 			<tr>
-				<th class="title" colspan="2">' . JText::_('JBS_INS_EXTENSION') . '</th>
-				<th width="30%">' . JText::_('JBS_INS_STATUS') . '</th>
+				<th class="title" colspan="2">' . Text::_('JBS_INS_EXTENSION') . '</th>
+				<th width="30%">' . Text::_('JBS_INS_STATUS') . '</th>
 			</tr>
 			</thead>
 			<tfoot>
@@ -707,16 +683,16 @@ class com_proclaimInstallerScript
 			</tfoot>
 			<tbody>
 			<tr class="row0">
-				<td class="key" colspan="2">' . JText::_('JBS_CMN_com_proclaim') . '</td>
-				<td><strong style="color: green;">' . JText::_('JBS_INS_REMOVED') . '</strong></td>
+				<td class="key" colspan="2">' . Text::_('JBS_CMN_com_proclaim') . '</td>
+				<td><strong style="color: green;">' . Text::_('JBS_INS_REMOVED') . '</strong></td>
 			</tr>';
 
 		if (count($status->modules))
 		{
 			?>
 			<tr>
-				<th><?php echo JText::_('JBS_INS_MODULE'); ?></th>
-				<th><?php echo JText::_('JBS_INS_CLIENT'); ?></th>
+				<th><?php echo Text::_('JBS_INS_MODULE'); ?></th>
+				<th><?php echo Text::_('JBS_INS_CLIENT'); ?></th>
 				<th></th>
 			</tr>
 			<?php
@@ -728,8 +704,8 @@ class com_proclaimInstallerScript
 					<td class="key"><?php echo ucfirst($module['client']); ?></td>
 					<td>
 						<strong style="color: <?php echo '' . ($module['result'] ? 'green' : 'red'); ?>">
-							<?php echo '' . ($module['result'] ? JText::_('JBS_INS_REMOVED')
-									: JText::_('JBS_INS_NOT_REMOVED')); ?></strong>
+							<?php echo '' . ($module['result'] ? Text::_('JBS_INS_REMOVED')
+									: Text::_('JBS_INS_NOT_REMOVED')); ?></strong>
 					</td>
 				</tr>
 				<?php
@@ -741,8 +717,8 @@ class com_proclaimInstallerScript
 		{
 			?>
 			<tr>
-				<th><?php echo JText::_('Plugin'); ?></th>
-				<th><?php echo JText::_('Group'); ?></th>
+				<th><?php echo Text::_('Plugin'); ?></th>
+				<th><?php echo Text::_('Group'); ?></th>
 				<th></th>
 			</tr>
 			<?php
@@ -755,8 +731,8 @@ class com_proclaimInstallerScript
 					<td class="key"><?php echo ucfirst($plugin['group']); ?></td>
 					<td><strong style="color: <?php echo '' . ($plugin['result'] ? 'green' : 'red'); ?>;">
 							<?php echo '' . ($plugin['result'] ?
-									JText::_('JBS_INS_REMOVED') :
-									JText::_('JBS_INS_NOT_REMOVED')); ?>
+									Text::_('JBS_INS_REMOVED') :
+									Text::_('JBS_INS_NOT_REMOVED')); ?>
 						</strong>
 					</td>
 				</tr>
@@ -771,7 +747,7 @@ class com_proclaimInstallerScript
 	/**
 	 * Installs subextensions (modules, plugins) bundled with the main extension
 	 *
-	 * @param   JInstallerAdapter  $parent  is the class calling this method.
+	 * @param   InstallerAdapter  $parent  is the class calling this method.
 	 *
 	 * @return  void
 	 *
@@ -779,8 +755,8 @@ class com_proclaimInstallerScript
 	 */
 	private function installSubextensions($parent)
 	{
-		$src             = $parent->getParent()->getPath('source');
-		$db              = Factory::getDbo();
+		$src                   = $parent->getParent()->getPath('source');
+		$db                    = Factory::getDbo();
 		$this->status          = new stdClass;
 		$this->status->modules = array();
 		$this->status->plugins = array();
@@ -827,9 +803,9 @@ class com_proclaimInstallerScript
 							->from('#__modules')
 							->where($db->qn('module') . ' = ' . $db->q('mod_' . $module));
 						$db->setQuery($sql);
-						$count                  = $db->loadResult();
-						$installer              = new JInstaller;
-						$result                 = $installer->install($path);
+						$count                   = $db->loadResult();
+						$installer               = new Installer;
+						$result                  = $installer->install($path);
 						$this->status->modules[] = array(
 							'name'   => 'mod_' . $module,
 							'client' => $folder,
@@ -945,9 +921,9 @@ class com_proclaimInstallerScript
 							->where($db->qn('element') . ' = ' . $db->q($plugin))
 							->where($db->qn('folder') . ' = ' . $db->q($folder));
 						$db->setQuery($query);
-						$count                  = $db->loadResult();
-						$installer              = new JInstaller;
-						$result                 = $installer->install($path);
+						$count                   = $db->loadResult();
+						$installer               = new JInstaller;
+						$result                  = $installer->install($path);
 						$this->status->plugins[] = array(
 							'name'   => 'plg_' . $plugin,
 							'group'  => $folder,
@@ -974,7 +950,7 @@ class com_proclaimInstallerScript
 	/**
 	 * Uninstalls subextensions (modules, plugins) bundled with the main extension
 	 *
-	 * @param   JInstallerAdapter  $parent  is the class calling this method.
+	 * @param   InstallerAdapter  $parent  is the class calling this method.
 	 *
 	 * @return void
 	 *
@@ -982,8 +958,6 @@ class com_proclaimInstallerScript
 	 */
 	private function uninstallSubextensions($parent)
 	{
-		jimport('joomla.installer.installer');
-
 		$db = Factory::getDbo();
 
 		// Modules uninstalling
@@ -1007,8 +981,8 @@ class com_proclaimInstallerScript
 						// Uninstall the module
 						if ($id)
 						{
-							$installer                    = new JInstaller;
-							$result                       = $installer->uninstall('module', $id, 1);
+							$installer               = new Installer;
+							$result                  = $installer->uninstall('module', $id, 1);
 							$this->status->modules[] = array(
 								'name'   => 'mod_' . $module,
 								'client' => $folder,
@@ -1041,8 +1015,8 @@ class com_proclaimInstallerScript
 
 						if ($id)
 						{
-							$installer                    = new JInstaller;
-							$result                       = $installer->uninstall('plugin', $id, 1);
+							$installer               = new Installer;
+							$result                  = $installer->uninstall('plugin', $id, 1);
 							$this->status->plugins[] = array(
 								'name'   => 'plg_' . $plugin,
 								'group'  => $folder,
