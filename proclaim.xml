@@ -5,10 +5,10 @@
 	<author>CWM Team</author>
 	<authorEmail>info@christianwebministries.org</authorEmail>
 	<authorUrl>https://www.christianwebministries.org</authorUrl>
-	<copyright>(C) 2007 - 2021 Proclaim All rights reserved.</copyright>
+	<copyright>(C) 2007 - 2022 Proclaim All rights reserved.</copyright>
 	<version>10.0.0</version>
 	<creationDate>October 1, 2021</creationDate>
-	<license>http://www.gnu.org/licenses/gpl.html</license>
+	<license>https://www.gnu.org/licenses/gpl.html</license>
 	<description>JBS_INS_XML_DESCRIPTION</description>
 
     <!-- This is the PHP namespace under which the extension's
@@ -41,12 +41,10 @@
 	</updateservers>
 
 	<files folder="site">
-		<filename>proclaim.php</filename>
-		<filename>controller.php</filename>
-		<filename>router.php</filename>
-		<folder>sef_ext</folder>
-		<folder>views</folder>
-        <folder>services</folder>
+		<folder>forms</folder>
+		<folder>helpers</folder>
+		<folder>layouts</folder>
+        <folder>sef_ext</folder>
 		<folder>src</folder>
 		<folder>tmpl</folder>
 	</files>
@@ -60,8 +58,7 @@
 		<folder>js</folder>
 		<folder>less</folder>
 		<folder>player</folder>
-		<folder>src</folder>
-		<folder>tmpl</folder>
+		<filename>joomla.asset.json</filename>
 	</media>
 
 	<administration>
@@ -69,19 +66,19 @@
 		<submenu>
 			<!-- Note that all & must be escaped to &amp; for the file to be valid XML and be parsed by the installer -->
 			<menu link="option=com_proclaim" img="../media/com_proclaim/images/menu/icon-16-biblemenu.png">JBS_MNU_CONTROL_PANEL</menu>
-			<menu link="option=com_proclaim&amp;task=admin.edit&amp;id=1" img="../media/com_proclaim/images/menu/icon-16-administration.png">JBS_MNU_ADMINISTRATION</menu>
-			<menu link="option=com_proclaim&amp;view=messages" img="../media/com_proclaim/images/menu/icon-16-studies.png">JBS_MNU_STUDIES</menu>
-			<menu link="option=com_proclaim&amp;view=mediafiles" img="../media/com_proclaim/images/menu/icon-16-mp3.png">JBS_MNU_MEDIA_FILES</menu>
-			<menu link="option=com_proclaim&amp;view=teachers" img="../media/com_proclaim/images/menu/icon-16-teachers.png">JBS_MNU_TEACHERS</menu>
-			<menu link="option=com_proclaim&amp;view=series" img="../media/com_proclaim/images/menu/icon-16-series.png">JBS_MNU_SERIES</menu>
-			<menu link="option=com_proclaim&amp;view=messagetypes" img="../media/com_proclaim/images/menu/icon-16-messagetype.png">JBS_MNU_MESSAGETYPES</menu>
-			<menu link="option=com_proclaim&amp;view=locations" img="../media/com_proclaim/images/menu/icon-16-locations.png">JBS_MNU_LOCATIONS</menu>
-			<menu link="option=com_proclaim&amp;view=topics" img="../media/com_proclaim/images/menu/icon-16-topics.png">JBS_MNU_TOPICS</menu>
-			<menu link="option=com_proclaim&amp;view=comments" img="../media/com_proclaim/images/menu/icon-16-comments.png">JBS_MNU_STUDY_COMMENTS</menu>
-			<menu link="option=com_proclaim&amp;view=servers" img="../media/com_proclaim/images/menu/icon-16-servers.png">JBS_MNU_SERVERS</menu>
-			<menu link="option=com_proclaim&amp;view=podcasts" img="../media/com_proclaim/images/menu/icon-16-podcast.png">JBS_MNU_PODCASTS</menu>
-			<menu link="option=com_proclaim&amp;view=templates" img="../media/com_proclaim/images/menu/icon-16-templates.png">JBS_MNU_TEMPLATE_DISPLAY</menu>
-			<menu link="option=com_proclaim&amp;view=templatecodes" img="../media/com_proclaim/images/menu/icon-16-templates.png">JBS_MNU_TEMPLATE_CODE_DISPLAY</menu>
+			<menu link="option=com_proclaim&amp;task=cwmadmin.edit&amp;id=1" img="../media/com_proclaim/images/menu/icon-16-administration.png">JBS_MNU_ADMINISTRATION</menu>
+			<menu link="option=com_proclaim&amp;view=cwmmessages" img="../media/com_proclaim/images/menu/icon-16-studies.png">JBS_MNU_STUDIES</menu>
+			<menu link="option=com_proclaim&amp;view=cwmmediafiles" img="../media/com_proclaim/images/menu/icon-16-mp3.png">JBS_MNU_MEDIA_FILES</menu>
+			<menu link="option=com_proclaim&amp;view=cwmteachers" img="../media/com_proclaim/images/menu/icon-16-teachers.png">JBS_MNU_TEACHERS</menu>
+			<menu link="option=com_proclaim&amp;view=cwmseries" img="../media/com_proclaim/images/menu/icon-16-series.png">JBS_MNU_SERIES</menu>
+			<menu link="option=com_proclaim&amp;view=cwmmessagetypes" img="../media/com_proclaim/images/menu/icon-16-messagetype.png">JBS_MNU_MESSAGETYPES</menu>
+			<menu link="option=com_proclaim&amp;view=cwmlocations" img="../media/com_proclaim/images/menu/icon-16-locations.png">JBS_MNU_LOCATIONS</menu>
+			<menu link="option=com_proclaim&amp;view=cwmtopics" img="../media/com_proclaim/images/menu/icon-16-topics.png">JBS_MNU_TOPICS</menu>
+			<menu link="option=com_proclaim&amp;view=cwmcomments" img="../media/com_proclaim/images/menu/icon-16-comments.png">JBS_MNU_STUDY_COMMENTS</menu>
+			<menu link="option=com_proclaim&amp;view=cwmservers" img="../media/com_proclaim/images/menu/icon-16-servers.png">JBS_MNU_SERVERS</menu>
+			<menu link="option=com_proclaim&amp;view=cwmpodcasts" img="../media/com_proclaim/images/menu/icon-16-podcast.png">JBS_MNU_PODCASTS</menu>
+			<menu link="option=com_proclaim&amp;view=cwmtemplates" img="../media/com_proclaim/images/menu/icon-16-templates.png">JBS_MNU_TEMPLATE_DISPLAY</menu>
+			<menu link="option=com_proclaim&amp;view=cwmtemplatecodes" img="../media/com_proclaim/images/menu/icon-16-templates.png">JBS_MNU_TEMPLATE_CODE_DISPLAY</menu>
 			<!-- Instead of link you can specify individual link attributes -->
 		</submenu>
 
@@ -89,20 +86,13 @@
 		<files folder="admin">
 			<filename>access.xml</filename>
 			<filename>api.php</filename>
-			<filename>biblestudy.php</filename>
 			<filename>config.xml</filename>
-			<filename>controller.php</filename>
-			<folder>addons</folder>
-			<folder>controllers</folder>
+			<folder>forms</folder>
 			<folder>help</folder>
-			<folder>helpers</folder>
+			<folder>helper</folder>
 			<folder>install</folder>
 			<folder>language</folder>
-			<folder>lib</folder>
-			<folder>models</folder>
 			<folder>postinstall</folder>
-			<folder>tables</folder>
-			<folder>views</folder>
 			<folder>services</folder>
 			<folder>src</folder>
 			<folder>tmpl</folder>
