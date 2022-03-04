@@ -202,7 +202,7 @@ class CWMMessageListModel extends ListModel
 			$this->getState(
 				'list.select',
 				'study.id, study.published, study.studydate, study.studytitle, study.ordering, study.hits, study.alias' .
-				', study.language, study.access, study.publish_up, study.publish_down'
+				', study.language, study.access, study.publish_up, study.publish_down, study.chapter_begin, study.verse_begin'
 			)
 		);
 		$query->from('#__bsms_studies AS study');
@@ -233,6 +233,13 @@ class CWMMessageListModel extends ListModel
 		);
 		$query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
 		$query->group('study.id');
+
+		// Join over Books
+		$query->select('book.bookname');
+		$query->join('LEFT', '#__bsms_books AS book ON book.booknumber = study.booknumber');
+
+		$query->select('book2.bookname as bookname2');
+		$query->join('LEFT', '#__bsms_books AS book2 ON book2.booknumber = study.booknumber2');
 
 		// Filter by access level.
 		if ($access = $this->getState('filter.access'))

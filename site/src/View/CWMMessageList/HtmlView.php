@@ -128,7 +128,7 @@ class HtmlView extends BaseHtmlView
 		//$items            = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
-		$this->params     = $this->state->template->params;
+		$this->params     = $this->state->params;
 
 		$this->canDo = CWMProclaimHelper::getActions('', 'message');
 

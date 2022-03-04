@@ -32,7 +32,7 @@ $trashed = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder == 'ordering';
 ?>
 <h2><?php echo Text::_('JBS_CMN_MESSAGES_LIST'); ?></h2>
-<form action="<?php echo Route::_('index.php?option=com_proclaim&view=messagelist'); ?>" method="post"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmmessagelist'); ?>" method="post"
       name="adminForm" id="adminForm">
 	<div id="j-main-container">
 		<div id="filter-bar" class="btn-toolbar">
