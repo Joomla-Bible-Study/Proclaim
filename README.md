@@ -3,10 +3,10 @@ CWM Proclaim
 
 Status
 -----------
-|                                                                          Code                                                                          |   Branch    | Version | Release Date | Joomla Version |
-|--------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|---------|--------------|----------------|
-| [![Build Status](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim.svg?branch=development)](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim) | Development | 9.3.0   | TBD          | 3.8+           |
-| [![Build Status](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim.svg?branch=master)](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim) | Master      | 9.2.6   | April 6, 2021 | 3.8+           |
+| Code                                                                                                                                                   | Branch      | Version | Release Date  | Joomla Version |
+|--------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|---------|---------------|----------------|
+| [![Build Status](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim.svg?branch=development)](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim) | Development | 10.0.0  | TBD           | 4              |
+| [![Build Status](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim.svg?branch=master)](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim)      | Master      | 9.2.8   | April 6, 2021 | 3.8+           |
 
 *NOTE:* The master branch will always reflect the current, released stable version. Only bug fixes and minor updates should be applied to the master branch. New features are to be introduced into the development branch only.
 
@@ -14,7 +14,7 @@ Overview
 --------
 Proclaim is a Joomla!® component written by a team of web servants to further the teaching of God's Word. The component displays information about your church's Bible Studies or sermons in a wide variety of ways. Proclaim is flexible, customizable, and powerful. Easy to configure templates give you the maximum amount of choices. Show only what you want in whatever way you want.
 
-Embed YouTube videos, play audio, show study notes - even create your own html display pages. You can have multiple locations, series, podcasting, and sharing with social media sites. Please see the example pages for just some of what Bible Study can do for your church - and the best part is the component is completely free. Support is top notch, and also free. Bottom line: we want to help you spread the gospel.
+Embed YouTube videos, play audio, show study notes - even create your own html display pages. You can have multiple locations, series, podcasting, and sharing with social media sites. Please see the example pages for just some of what Bible Study can do for your church - and the best part is the component is completely free. Support is top-notch, and also free. Bottom line: we want to help you spread the gospel.
 
 Contributing
 ------------
@@ -43,7 +43,7 @@ Please **make sure to make specific contributions** when submitting pull request
 The language files periodically need to be updated as the component matures. To submit changes ot add new languages, follow the same procedures as above in order to submit a [pull][pr] request.
 
 ### Testing
-For every major release, we prefer to have an approximate 2 week testing window. If you would like to help in testing and giving us feedback on the most recent versions of the component, let us know
+For every major release, we prefer to have an approximate 2-week testing window. If you would like to help in testing and giving us feedback on the most recent versions of the component, let us know
 
 [fork]: http://help.github.com/fork-a-repo/
 [branch]: http://learn.github.com/p/branching.html
