@@ -6,7 +6,7 @@ Status
 |                                                                          Code                                                                          |   Branch    | Version | Release Date | Joomla Version |
 |--------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|---------|--------------|----------------|
 | [![Build Status](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim.svg?branch=development)](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim) | Development | 9.3.0   | TBD          | 3.8+           |
-| [![Build Status](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim.svg?branch=master)](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim) | Master      | 9.2.6   | April 6, 2021 | 3.8+           |
+| [![Build Status](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim.svg?branch=master)](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim) | Master      | 9.2.8   | Jun 02, 2021 | 3.8+           |
 
 *NOTE:* The master branch will always reflect the current, released stable version. Only bug fixes and minor updates should be applied to the master branch. New features are to be introduced into the development branch only.
 
