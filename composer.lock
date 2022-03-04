@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "867b4d62783105cfe026be21555af674",
+    "content-hash": "625d46af72516c935850e68871343f02",
     "packages": [
         {
             "name": "brumann/polyfill-unserialize",
@@ -1371,16 +1371,16 @@
         },
         {
             "name": "phing/phing",
-            "version": "2.16.4",
+            "version": "2.17.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phingofficial/phing.git",
-                "reference": "30831b22fc6bab57003f1893842668c44b7f65ae"
+                "reference": "8b8cee3eb12c24502fc4c227ac5889746248a140"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phingofficial/phing/zipball/30831b22fc6bab57003f1893842668c44b7f65ae",
-                "reference": "30831b22fc6bab57003f1893842668c44b7f65ae",
+                "url": "https://api.github.com/repos/phingofficial/phing/zipball/8b8cee3eb12c24502fc4c227ac5889746248a140",
+                "reference": "8b8cee3eb12c24502fc4c227ac5889746248a140",
                 "shasum": ""
             },
             "require": {
@@ -1463,7 +1463,7 @@
             "support": {
                 "irc": "irc://irc.freenode.net/phing",
                 "issues": "https://www.phing.info/trac/report",
-                "source": "https://github.com/phingofficial/phing/tree/2.16.4"
+                "source": "https://github.com/phingofficial/phing/tree/2.17.2"
             },
             "funding": [
                 {
@@ -1479,7 +1479,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2021-01-29T14:00:54+00:00"
+            "time": "2022-02-09T09:50:58+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
