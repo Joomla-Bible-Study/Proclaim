@@ -15,9 +15,12 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 HtmlHelper::_('dropdown.init');
 HtmlHelper::_('formbehavior.chosen', 'select');
-HtmlHelper::_('proclaim.framework');
-HTMLHelper::_('proclaim.loadcss', $this->params);
+//HtmlHelper::_('proclaim.framework');
+//HTMLHelper::_('proclaim.loadcss', $this->params);
 HtmlHelper::_('behavior.multiselect');
+$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+$wa->useStyle('com_proclaim.biblestudy');
+$wa->useStyle('com_proclaim.podcast');
 
 $app = Factory::getApplication();
 $user = Factory::getUser();

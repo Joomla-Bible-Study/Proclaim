@@ -8,10 +8,14 @@
  * @link       https://www.christianwebministries.org
  * */
 namespace CWM\Component\Proclaim\Site\CWMMessagelistController;
+use JLoader;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
+use Joomla\CMS\MVC\Model\ListModel;
+use CWM\Component\Proclaim\Administrator\Model\CWMMessagesModel;
+
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -53,14 +57,16 @@ class CWMMessagelistController extends BaseController
 	 * @param   string  $prefix  The prefix for the PHP class name
 	 * @param   array   $config  Set ignore request
 	 *
-	 * @return JModelLegacy
+	 * @return ListModel
 	 *
 	 * @since 7.0
 	 */
-	public function &getModel($name = 'Messagelist', $prefix = 'ProclaimModel', $config = array('ignore_request' => true))
+	public function &getModel($name = 'Model', $prefix = 'CWMMessages', $config = array('ignore_request' => true))
 	{
 		$model = parent::getModel($name, $prefix, $config);
 
+
+		//$this->items = $model->get('Items');
 		return $model;
 	}
 }

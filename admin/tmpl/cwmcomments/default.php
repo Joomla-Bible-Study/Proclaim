@@ -66,7 +66,7 @@ $wa->useScript('keepalive')
 			?>
 			<?php if (empty($this->items)) : ?>
 				<div class="alert alert-no-items">
-					<?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+					<?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
 				</div>
 			<?php else : ?>
 				<table class="table table-striped adminlist" id="comments">
@@ -88,7 +88,7 @@ $wa->useScript('keepalive')
 							<?php echo HTMLHelper::_('grid.sort', 'JBS_CMT_FULL_NAME', 'comment.full_name', $listDirn, $listOrder); ?>
 						</th>
 						<th class="nowrap hidden-phone">
-							<?php echo JText::_('JBS_CMT_TEXT'); ?>
+							<?php echo Text::_('JBS_CMT_TEXT'); ?>
 						</th>
 						<th class="nowrap hidden-phone">
 							<?php echo HTMLHelper::_('grid.sort', 'JBS_CMT_CREATE_DATE', 'comment.studydate', $listDirn, $listOrder); ?>
@@ -142,9 +142,9 @@ $wa->useScript('keepalive')
 								<div class="pull-left">
 									<?php if ($canEdit || $canEditOwn) : ?>
 										<a href="<?php echo $link; ?>"><?php echo $this->escape($item->studytitle) . ' - '
-												. JText::_($item->bookname) . ' ' . $item->chapter_begin; ?></a>
+												. Text::_($item->bookname) . ' ' . $item->chapter_begin; ?></a>
 									<?php else : ?>
-										<?php echo $this->escape($item->studytitle) . ' - ' . JText::_($item->bookname) . ' ' . $item->chapter_begin; ?>
+										<?php echo $this->escape($item->studytitle) . ' - ' . Text::_($item->bookname) . ' ' . $item->chapter_begin; ?>
 									<?php endif; ?>
 								</div>
 							</td>
@@ -162,9 +162,9 @@ $wa->useScript('keepalive')
 							</td>
 							<td class="small hidden-phone">
 								<?php if ($item->language == '*'): ?>
-									<?php echo JText::alt('JALL', 'language'); ?>
+									<?php echo Text::alt('JALL', 'language'); ?>
 								<?php else: ?>
-									<?php echo $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
+									<?php echo $item->language_title ? $this->escape($item->language_title) : Text::_('JUNDEFINED'); ?>
 								<?php endif; ?>
 							</td>
 							<td class="center hidden-phone">

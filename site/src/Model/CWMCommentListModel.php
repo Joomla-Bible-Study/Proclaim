@@ -10,12 +10,15 @@
 namespace CWM\Component\Proclaim\Site\Model;
 // No Direct Access
 defined('_JEXEC') or die;
+
+use JLoader;
 use Joomla\CMS\MVC\Model\ListModel;
 use CWM\Component\Proclaim\Administrator\Controller\CWMCommentsController;
 use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
+use CWM\Component\Proclaim\Administrator\Model\CWMCommentsModel;
 // Base this model on the backend version.
-//JLoader::register('BiblestudyModelComments', JPATH_ADMINISTRATOR . '/components/com_proclaim/models/CommentsController.php');
+//JLoader::registerNamespace('CWM\Component\Proclaim\Administrator\Controller', JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Controller/CommentsController.php');
 
 /**
  * Comments model class

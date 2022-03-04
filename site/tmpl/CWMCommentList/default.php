@@ -42,7 +42,7 @@ $sortFields = $this->getSortFields();
 		Joomla.tableOrdering(order, dirn, '');
 	}
 </script>
-<form action="<?php echo Route::_('index.php?option=com_proclaim&view=commentlist'); ?>" method="post"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmcommentlist'); ?>" method="post"
       name="adminForm" id="adminForm">
 	<div id="j-main-container">
 
@@ -122,7 +122,7 @@ $sortFields = $this->getSortFields();
 			<tbody>
 			<?php
 			foreach ($this->items as $i => $item) :
-				$link       = 'index.php?option=com_proclaim&task=commentform.edit&a_id=' . (int) $item->id;
+				$link       = 'index.php?option=com_proclaim&task=cwmcommentform.edit&a_id=' . (int) $item->id;
 				$canCreate  = $user->authorise('core.create');
 				$canEdit    = $user->authorise('core.edit', 'com_proclaim.comment.' . $item->id);
 				$canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.comment.' . $item->id);

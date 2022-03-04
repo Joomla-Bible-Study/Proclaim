@@ -8,16 +8,19 @@
  * @link       https://www.christianwebministries.org
  * */
 namespace CWM\Component\Proclaim\Site\CWMCommentlistController;
+use JLoader;
+use JModelLegacy;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Controller\BaseController;
+use CWM\Component\Proclaim\Administrator\Controller\CWMCommentsController;
 // No Direct Access
 defined('_JEXEC') or die;
 
 // Base this model on the backend version.
-JLoader::register('ProclaimControllerComments', JPATH_ADMINISTRATOR . '/components/com_proclaim/controllers/CommentsController.php');
+//JLoader::register('ProclaimControllerComments', JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Controllers/CWMCommentsController.php');
 
 /**
  * Controller for Comments
@@ -32,14 +35,14 @@ class CWMCommentlistController extends BaseController
 	 *
 	 * @since    1.6
 	 */
-	protected $view_item = 'commentform';
+	protected $view_item = 'cwmcommentform';
 
 	/**
 	 * View list
 	 *
 	 * @since    1.6
 	 */
-	protected $view_list = 'commentlist';
+	protected $view_list = 'cwmcommentlist';
 
 	/**
 	 * @var        string    The prefix to use with controller messages.
@@ -58,10 +61,8 @@ class CWMCommentlistController extends BaseController
 	 *
 	 * @since 7.0
 	 */
-	public function &getModel($name = 'CommentList', $prefix = 'ProclaimModel', $config = array('ignore_request' => true))
+	public function getModel($name = 'CWMComments', $prefix = 'Administrator', $config = array('ignore_request' => true))
 	{
-		$model = parent::getModel($name, $prefix, $config);
-
-		return $model;
+		return parent::getModel($name, $prefix, $config);
 	}
 }

@@ -7,7 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-namespace CWM\Component\Proclaim\Site\View;
+namespace CWM\Component\Proclaim\Site\View\CWMMessageList;
 // No Direct Access
 defined('_JEXEC') or die;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -125,7 +125,7 @@ class HtmlView extends BaseHtmlView
 	public function display($tpl = null)
 	{
 		$app              = Factory::getApplication();
-		$items            = $this->get('Items');
+		//$items            = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
 		$this->params     = $this->state->template->params;
@@ -137,8 +137,8 @@ class HtmlView extends BaseHtmlView
 		$this->series        = $this->get('Series');
 		$this->messageTypes  = $this->get('MessageTypes');
 		$this->years         = $this->get('Years');
-		$modelView           = $this->getModel();
-		$this->items         = $modelView->getTranslated($items);
+		//$modelView           = $this->getModel();
+		$this->items               = $this->get('Items');
 		$this->filterForm    = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');
 
@@ -156,7 +156,7 @@ class HtmlView extends BaseHtmlView
 		// Puts a new record link at the top of the form
 		if ($this->canDo->get('core.create'))
 		{
-			$this->newlink = '<a href="' . Route::_('index.php?option=com_proclaim&task=messageform.edit') . '" class="btn btn-primary">'
+			$this->newlink = '<a href="' . Route::_('index.php?option=com_proclaim&task=cwmmessageform.edit') . '" class="btn btn-primary">'
 				. Text::_('JBS_CMN_NEW') . ' <i class="icon-plus"></i></a>';
 		}
 
@@ -182,7 +182,7 @@ class HtmlView extends BaseHtmlView
 		// Because the application sets a default page title,
 		// we need to get it from the menu item itself
 		$menu = $menus->getActive();
-
+/*
 		if ($menu)
 		{
 			$this->params->def('page_heading', $this->params->get('page_title', $menu->title));
@@ -225,6 +225,6 @@ class HtmlView extends BaseHtmlView
 		if ($this->params->get('robots'))
 		{
 			$this->document->setMetaData('robots', $this->params->get('robots'));
-		}
+		} */
 	}
 }
