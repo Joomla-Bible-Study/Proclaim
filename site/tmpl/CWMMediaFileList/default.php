@@ -14,7 +14,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 /** @var $this BiblestudyViewMediafilelist */
-HtmlHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 HtmlHelper::_('dropdown.init');
 HtmlHelper::_('formbehavior.chosen', 'select');
 HtmlHelper::_('behavior.multiselect');

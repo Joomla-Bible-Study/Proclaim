@@ -30,13 +30,11 @@ HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 HTMLHelper::_('behavior.multiselect');
 
 $app       = Factory::getApplication();
-$user      = Factory::getUser();
+$user      = $app->getIdentity();
 $userId    = $user->get('id');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
-//$archived  = $this->state->get('filter.published') == 2 ? true : false;
-//$trashed   = $this->state->get('filter.published') == -2 ? true : false;
-$saveOrder = $listOrder == 'study.ordering';
+$saveOrder = $listOrder === 'study.ordering';
 $columns   = 12;
 
 if (strpos($listOrder, 'publish_up') !== false)
@@ -62,7 +60,7 @@ if ($saveOrder)
 	HTMLHelper::_('draggablelist.draggable');
 }
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=messages'); ?>" method="post" name="adminForm"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="post" name="adminForm"
       id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
@@ -73,10 +71,10 @@ if ($saveOrder)
 		<?php else : ?>
 		<div id="j-main-container">
 			<?php endif; ?>
-			<?php echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
+			<?php echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
 			<?php if (empty($this->items)) : ?>
 				<div class="alert alert-no-items">
-					<?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+					<?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
 				</div>
 			<?php else : ?>
 				<table class="table table-striped" id="messagesList">
@@ -107,7 +105,7 @@ if ($saveOrder)
 							<?php echo HTMLHelper::_('searchtools.sort', 'JBS_CMN_SERIES', 'series.series_text', $listDirn, $listOrder); ?>
 						</th>
 						<th class="nowrap center hidden-phone hidden-tablet">
-							<?php echo JText::_('JBS_CPL_STATISTIC'); ?>
+							<?php echo Text::_('JBS_CPL_STATISTIC'); ?>
 						</th>
 						<th width="5%" class="nowrap hidden-phone hidden-tablet">
 							<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
@@ -142,7 +140,7 @@ if ($saveOrder)
 								}
 								elseif (!$saveOrder)
 								{
-									$iconClass = ' inactive tip-top hasTooltip" title="' . JHtml::tooltipText('JORDERINGDISABLED');
+									$iconClass = ' inactive tip-top hasTooltip" title="' . HtmlHelper::tooltipText('JORDERINGDISABLED');
 								}
 								?>
 								<span class="sortable-handler hasTooltip <?php echo $iconClass ?>">
@@ -153,24 +151,24 @@ if ($saveOrder)
 								<?php endif; ?>
 							</td>
 							<td class="center hidden-phone">
-								<?php echo JHtml::_('grid.id', $i, $item->id); ?>
+								<?php echo HTMLHelper::_('grid.id', $i, $item->id); ?>
 							</td>
 							<td class="center">
 								<div class="btn-group">
-									<?php echo JHtml::_('jgrid.published', $item->published, $i, 'messages.', $canChange, 'cb', $item->publish_up, $item->publish_down); ?>
+									<?php echo HTMLHelper::_('jgrid.published', $item->published, $i, 'messages.', $canChange, 'cb', $item->publish_up, $item->publish_down); ?>
 
 									<?php // Create dropdown items and render the dropdown list.
 									if ($canChange)
 									{
-										JHtml::_('actionsdropdown.' . ((int) $item->published === 2 ? 'un' : '') . 'archive', 'cb' . $i, 'messages');
-										JHtml::_('actionsdropdown.' . ((int) $item->published === -2 ? 'un' : '') . 'trash', 'cb' . $i, 'messages');
-										echo JHtml::_('actionsdropdown.render', $this->escape($item->studytitle));
+										HTMLHelper::_('actionsdropdown.' . ((int) $item->published === 2 ? 'un' : '') . 'archive', 'cb' . $i, 'messages');
+										HTMLHelper::_('actionsdropdown.' . ((int) $item->published === -2 ? 'un' : '') . 'trash', 'cb' . $i, 'messages');
+										echo HTMLHelper::_('actionsdropdown.render', $this->escape($item->studytitle));
 									}
 									?>
 								</div>
 							</td>
 							<td class="small hidden-phone hidden-tablet">
-								<?php echo JHtml::_('date', $this->escape($item->studydate, JText::_('DATE_FORMAT_LC4'))); ?>
+								<?php echo HTMLHelper::_('date', $this->escape($item->studydate, Text::_('DATE_FORMAT_LC4'))); ?>
 							</td>
 							<td class="nowrap has-context">
 								<div class="pull-left">
@@ -185,7 +183,7 @@ if ($saveOrder)
 									<?php endif; ?>
 									<br />
 									<span class="small">
-										<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
+										<?php echo Text::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
 									</span>
 								</div>
 							</td>
@@ -200,19 +198,19 @@ if ($saveOrder)
 							</td>
 							<td class="center hidden-phone hidden-tablet">
 								<button type="button" class="btn btn-mini btn-info hasTooltip" data-placement="top"
-								        title="<?php echo $this->escape($item->hits); ?>"><?php echo JText::_('JBS_CMN_HITS'); ?></button>
+								        title="<?php echo $this->escape($item->hits); ?>"><?php echo Text::_('JBS_CMN_HITS'); ?></button>
 								<br/>
 								<button type="button" class="btn btn-mini btn-info hasTooltip" data-placement="top"
-								        title="<?php echo $this->escape($item->totalplays); ?>"><?php echo JText::_('JBS_CMN_PLAYS'); ?></button>
+								        title="<?php echo $this->escape($item->totalplays); ?>"><?php echo Text::_('JBS_CMN_PLAYS'); ?></button>
 								<br/>
 								<button type="button" class="btn btn-mini btn-info hasTooltip" data-placement="top"
-								        title="<?php echo $this->escape($item->totaldownloads); ?>"><?php echo JText::_('JBS_CMN_DOWNLOADS'); ?></button>
+								        title="<?php echo $this->escape($item->totaldownloads); ?>"><?php echo Text::_('JBS_CMN_DOWNLOADS'); ?></button>
 							</td>
 							<td class="small hidden-phone">
 								<?php if ($item->language == '*'): ?>
-									<?php echo JText::alt('JALL', 'language'); ?>
+									<?php echo Text::alt('JALL', 'language'); ?>
 								<?php else: ?>
-									<?php echo $item->language_title ? JHtml::_('image', 'mod_languages/' . $item->language_image . '.gif', $item->language_title, array('title' => $item->language_title), true) . '&nbsp;' . $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
+									<?php echo $item->language_title ? HTMLHelper::_('image', 'mod_languages/' . $item->language_image . '.gif', $item->language_title, array('title' => $item->language_title), true) . '&nbsp;' . $this->escape($item->language_title) : Text::_('JUNDEFINED'); ?>
 								<?php endif; ?>
 							</td>
 							<td class="hidden-phone">

@@ -24,7 +24,7 @@ use Joomla\Database\ParameterType;
  *
  * @since  3.0
  */
-class AdministratorService
+class CWMAdministratorService
 {
 
 	/**

@@ -14,7 +14,7 @@ use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Site\Helper\CWMMedia;
 use Joomla\CMS\Language\Text;
 use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
-HtmlHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 HtmlHelper::_('dropdown.init');
 HtmlHelper::_('formbehavior.chosen', 'select');
 HtmlHelper::_('proclaim.framework');

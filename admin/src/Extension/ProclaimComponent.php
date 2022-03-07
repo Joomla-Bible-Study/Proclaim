@@ -11,6 +11,8 @@ namespace CWM\Component\Proclaim\Administrator\Extension;
 
 \defined('JPATH_PLATFORM') or die;
 
+use CWM\Component\Proclaim\Administrator\Service\HTML\Proclaim;
+use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Component\Router\RouterServiceInterface;
 use Joomla\CMS\Component\Router\RouterServiceTrait;
 use Joomla\CMS\Extension\BootableExtensionInterface;
@@ -21,7 +23,10 @@ use Joomla\CMS\HTML\HTMLRegistryAwareTrait;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Workflow\WorkflowServiceInterface;
 use Joomla\CMS\Workflow\WorkflowServiceTrait;
+use CWM\Component\Proclaim\Administrator\Helper\ProclaimHelper;
 use Psr\Container\ContainerInterface;
+use CWM\Component\Proclaim\Administrator\Service\HTML\CWMAdministratorService;
+use CWM\Component\Proclaim\Administrator\Service\HTML\Icon;
 
 /**
  * Component class for com_mywalks
@@ -29,7 +34,7 @@ use Psr\Container\ContainerInterface;
  * @since  4.0.0
  */
 class ProclaimComponent extends MVCComponent implements
-BootableExtensionInterface, FieldsServiceInterface, RouterServiceInterface, WorkflowServiceInterface
+	BootableExtensionInterface, FieldsServiceInterface, RouterServiceInterface, WorkflowServiceInterface
 {
 	use RouterServiceTrait;
 	use HTMLRegistryAwareTrait;
@@ -38,7 +43,7 @@ BootableExtensionInterface, FieldsServiceInterface, RouterServiceInterface, Work
 	/** @var array Supported functionality */
 	protected $supportedFunctionality = [
 		'core.featured' => true,
-		'core.state' => true,
+		'core.state'    => true,
 	];
 
 	/**
@@ -96,7 +101,11 @@ BootableExtensionInterface, FieldsServiceInterface, RouterServiceInterface, Work
 	 */
 	public function boot(ContainerInterface $container)
 	{
-		//$this->getRegistry()->register('cwmproclaimadministrator', new AdministratorService);
+		$this->getRegistry()->register('proclaimadministrator', new CWMAdministratorService);
+		$this->getRegistry()->register('proclaimicon', new Icon($container->get(SiteApplication::class)));
+
+		// The layout cwm.proclaim.icons does need a general icon service
+		$this->getRegistry()->register('icon', $this->getRegistry()->getService('proclaimicon'));
 	}
 
 	/**
@@ -120,11 +129,6 @@ BootableExtensionInterface, FieldsServiceInterface, RouterServiceInterface, Work
 			{
 				// Editing an article
 				case 'form':
-
-					// Category list view
-				case 'featured':
-				case 'category':
-					$section = 'article';
 			}
 		}
 
@@ -149,30 +153,73 @@ BootableExtensionInterface, FieldsServiceInterface, RouterServiceInterface, Work
 		Factory::getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
 
 		$contexts = array(
-			'com_proclaim.cpanel'    => Text::_('com_proclaim'),
-			'com_proclaim.administrator' => Text::_('JCATEGORY')
+			'com_proclaim.cwmcpanel' => Text::_('com_proclaim'),
+			'com_proclaim.cwmadmin'  => Text::_('JCATEGORY')
 		);
 
 		return $contexts;
 	}
 
+	/**
+	 * Method to filter transitions by given id of state.
+	 *
+	 * @param   array  $transitions  The Transitions to filter
+	 * @param   int    $pk           Id of the state
+	 *
+	 * @return  array
+	 *
+	 * @since  4.0.0
+	 */
 	public function filterTransitions(array $transitions, int $pk): array
 	{
-		// TODO: Implement filterTransitions() method.
+		return ContentHelper::filterTransitions($transitions, $pk);
 	}
 
+	/**
+	 * Returns a table name for the state association
+	 *
+	 * @param   string|null  $section  An optional section to separate different areas in the component
+	 *
+	 * @return  string
+	 *
+	 * @since   4.0.0
+	 */
 	public function getWorkflowTableBySection(?string $section = null): string
 	{
-		// TODO: Implement getWorkflowTableBySection() method.
+		return '#__bsms_studies';
 	}
 
+	/**
+	 * Returns valid contexts
+	 *
+	 * @return  array
+	 *
+	 * @since   4.0.0
+	 */
 	public function getWorkflowContexts(): array
 	{
-		// TODO: Implement getWorkflowContexts() method.
+		Factory::getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
+
+		$contexts = array(
+			'com_proclaim.cwmadmin' => Text::_('COM_CONTENT')
+		);
+
+		return $contexts;
 	}
 
+	/**
+	 * Returns the workflow context based on the given category section
+	 *
+	 * @param   string|null  $section  The section
+	 *
+	 * @return  string|null
+	 *
+	 * @since   4.0.0
+	 */
 	public function getCategoryWorkflowContext(?string $section = null): string
 	{
-		// TODO: Implement getCategoryWorkflowContext() method.
+		$context = $this->getWorkflowContexts();
+
+		return array_key_first($context);
 	}
 }
