@@ -13,7 +13,7 @@ use Joomla\CMS\Html\HtmlHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
-//HtmlHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+//HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 HtmlHelper::_('behavior.framework', true);
 HtmlHelper::_('formbehavior.chosen', 'select');

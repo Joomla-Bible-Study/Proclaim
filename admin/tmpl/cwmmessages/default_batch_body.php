@@ -47,19 +47,19 @@ $user = Factory::getUser();
 	</div>
 	<div class="form-group col-md-4">
 		<div class="controls">
-			<?php echo HTMLHelper::_('proclaim.Teacher'); ?>
+			<?php echo HTMLHelper::_('Proclaim.Teacher'); ?>
 		</div>
 	</div>
 </div>
 <div class="row">
 	<div class="form-group col-md-6">
 		<div class="controls">
-			<?php echo HTMLHelper::_('proclaim.Series'); ?>
+			<?php echo HTMLHelper::_('Proclaim.Series'); ?>
 		</div>
 	</div>
 	<div class="form-group col-md-4">
 		<div class="controls">
-			<?php echo HTMLHelper::_('proclaim.MessageType'); ?>
+			<?php echo HTMLHelper::_('Proclaim.MessageType'); ?>
 		</div>
 	</div>
 </div>

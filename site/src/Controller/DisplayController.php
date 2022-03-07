@@ -68,10 +68,10 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
 		$cachable = true;
 
 		/*
-	   Set the default view name and format from the Request.
-	   Note we are using a_id to avoid collisions with the router and the return page.
-	   Frontend is a bit messier than the backend.
-	   */
+		Set the default view name and format from the Request.
+		Note we are using a_id to avoid collisions with the router and the return page.
+		Frontend is a bit messier than the backend.
+		*/
 		$id    = $this->input->getInt('a_id');
 		$vName = $this->input->getCmd('view', 'CWMLandingPage');
 		$this->input->set('view', $vName);
@@ -80,17 +80,14 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
 
 		if ($user->get('id')
 			|| ($this->input->getMethod() === 'POST'
-				&& strpos($vName, 'form') !== false)
-			|| $vName === 'popup' || $vName === 'CWMSermons'
+			&& strpos($vName, 'form') !== false)
+			|| $vName === 'popup'
 		)
 		{
 			$cachable = false;
 		}
 
 		// Attempt to change mysql for error in large select
-//		$db = Factory::getDbo();
-//		$db->setQuery('SET SQL_BIG_SELECTS=1');
-//		$db->execute();
 		$t = $this->input->get('t', '', 'int');
 
 		if (!$t)
@@ -114,7 +111,8 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
 			'filter_order_Dir' => 'CMD',
 			'filter-search'    => 'STRING',
 			'print'            => 'BOOLEAN',
-			'lang'             => 'CMD'
+			'lang'             => 'CMD',
+			'Itemid'           => 'INT'
 		);
 
 		// Check for edit form.

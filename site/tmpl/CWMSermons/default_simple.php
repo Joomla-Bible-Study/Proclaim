@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Html\HtmlHelper;
-HtmlHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 HtmlHelper::_('dropdown.init');
 HtmlHelper::_('behavior.multiselect');

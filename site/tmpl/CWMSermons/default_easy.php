@@ -15,7 +15,7 @@ use Joomla\CMS\Factory;
 
 // Do not remove
 // this is here to make sure that security of the site is maintained. It should be placed in every template file
-HtmlHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 HtmlHelper::_('dropdown.init');
 HtmlHelper::_('behavior.multiselect');

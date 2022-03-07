@@ -48,7 +48,7 @@ if (!empty($editor))
 ?>
 <div class="container-popup">
 	<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmmessages&layout=modal&tmpl=component&function=' .
-		$function . '&' . JSession::getFormToken() . '=1&editor=' . $editor); ?>" method="post" name="adminForm"
+		$function . '&' . Session::getFormToken() . '=1&editor=' . $editor); ?>" method="post" name="adminForm"
 	      id="adminForm" class="form-inline">
 
 		<?php echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>

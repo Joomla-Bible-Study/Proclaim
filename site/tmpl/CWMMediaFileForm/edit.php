@@ -13,7 +13,7 @@ use Joomla\CMS\Html\HTMLHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
-HtmlHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 HtmlHelper::_('behavior.tabstate');
 HtmlHelper::_('behavior.keepalive');
 HtmlHelper::_('behavior.formvalidator');
