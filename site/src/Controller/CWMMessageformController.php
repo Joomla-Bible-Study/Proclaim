@@ -7,11 +7,13 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-namespace CWM\Component\Proclaim\Site\CWMMessageformController;
+namespace CWM\Component\Proclaim\Site\Controller;
+use JLoader;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Router\Route;
 use Joomla\Session\Session;
@@ -20,7 +22,7 @@ use Joomla\CMS\MVC\Model\ItemModel;
 defined('_JEXEC') or die;
 
 // Base this model on the backend version.
-JLoader::register('ProclaimControllerMessage', JPATH_ADMINISTRATOR . '/components/com_proclaim/controllers/MessageController.php');
+JLoader::register('CWMMessageController', JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Controller/CWMMessageController.php');
 
 /**
  * Controller class for MessageForm
@@ -28,21 +30,21 @@ JLoader::register('ProclaimControllerMessage', JPATH_ADMINISTRATOR . '/component
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class CWMMessageformController extends BaseController
+class CWMMessageformController extends FormController
 {
 	/**
 	 * View item
 	 *
 	 * @since    1.6
 	 */
-	protected $view_item = 'messageform';
+	protected $view_item = 'CWMMessageform';
 
 	/**
 	 * View list
 	 *
 	 * @since    1.6
 	 */
-	protected $view_list = 'messagelist';
+	protected $view_list = 'CWMMessagelist';
 
 	/**
 	 * @var        string    The prefix to use with controller messages.
@@ -59,9 +61,10 @@ class CWMMessageformController extends BaseController
 	 * @since   12.2
 	 * @throws  Exception
 	 */
-	public function __construct($config = array())
+	public function __construct($config = array(), MVCFactoryInterface $factory=null, $app=null, $input=null)
 	{
-		parent::__construct($config);
+		parent::__construct($config, $factory, $app, $input);
+
 
 		// Register Extra tasks
 		$this->registerTask('add', 'edit');
@@ -99,7 +102,7 @@ class CWMMessageformController extends BaseController
 
 		if (empty($return) || !Uri::isInternal(base64_decode($return)))
 		{
-			return Uri::base() . 'index.php?option=com_proclaim&view=messagelist';
+			return Uri::base() . 'index.php?option=com_proclaim&view=cwmmessagelist';
 		}
 		else
 		{
@@ -131,11 +134,11 @@ class CWMMessageformController extends BaseController
 	 * @param   string  $prefix  The prefix for the PHP class name
 	 * @param   array   $config  Set ignore request
 	 *
-	 * @return JModelLegacy
+	 * @return \JModelForm
 	 *
 	 * @since 7.0
 	 */
-	public function &getModel($name = 'MessageForm', $prefix = 'ProclaimModel', $config = array('ignore_request' => true))
+	public function &getModel($name = 'CWMMessageForm', $prefix = '', $config = array('ignore_request' => true))
 	{
 		$model = parent::getModel($name, $prefix, $config);
 

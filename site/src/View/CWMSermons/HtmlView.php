@@ -287,7 +287,11 @@ class HtmlView extends BaseHtmlView
 		}
 
 		// Get the podcast subscription
-		HtmlHelper::_('stylesheet', 'media/css/podcast.css');
+
+		$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+		$wa->useStyle('com_proclaim.biblestudy');
+		$wa->useStyle('com_proclaim.general');
+		$wa->useStyle('com_proclaim.podcast');
 		$podcast         = new CWMPodcastSubscribe;
 		$this->subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
 

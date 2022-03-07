@@ -10,6 +10,9 @@
 namespace CWM\Component\Proclaim\Site\View\CWMMessageForm;
 // No Direct Access
 defined('_JEXEC') or die;
+
+use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
@@ -113,17 +116,20 @@ class HtmlView extends BaseHtmlView
 		$user = Factory::getUser();
 
 		// Create a shortcut to the parameters.
-		$this->params = $this->state->template->params;
-
+//		$this->params = $this->state->template->params;
+		$this->admin = CWMParams::getAdmin();
+		$registry    = new Registry;
+		$registry->loadString($this->admin->params);
+		$this->admin_params = $registry;
 		$this->user = $user;
-
+		$this->simple = CWMHelper::getSimpleView();
 		$language = Factory::getLanguage();
 		$language->load('', JPATH_ADMINISTRATOR, null, true);
 
-		if (!$this->params->def('page_title', ''))
-		{
-			define('JBSPAGETITLE', 0);
-		}
+//		if (!$this->params->def('page_title', ''))
+//		{
+//			define('JBSPAGETITLE', 0);
+//		}
 
 		if (!$this->canDo->get('core.edit'))
 		{
@@ -134,13 +140,13 @@ class HtmlView extends BaseHtmlView
 		}
 
 		// Escape strings for HTML output
-		$this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
+		//$this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
 		$document            = Factory::getDocument();
 
 		HtmlHelper::_('jquery.framework');
 		$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-		$wa->useScript('com_proclaim.tokeninput');
-		$wa->useStyle('com_proclaim.token-input-jbs');
+		//$wa->useScript('com_proclaim.tokeninput');
+		//$wa->useStyle('com_proclaim.token-input-jbs');
 
 
 		$script = "
@@ -160,9 +166,11 @@ class HtmlView extends BaseHtmlView
              ";
 
 		$document->addScriptDeclaration($script);
-		HtmlHelper::_('proclaim.framework');
-		HTMLHelper::_('proclaim.loadcss', $this->params);
+		//HtmlHelper::_('proclaim.framework');
 
+		$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+		$wa->useStyle('com_proclaim.biblestudy');
+		$wa->useStyle('com_proclaim.general');
 		$this->setLayout('edit');
 
 		$this->_prepareDocument();
@@ -188,16 +196,16 @@ class HtmlView extends BaseHtmlView
 		// we need to get it from the menu item itself
 		$menu = $menus->getActive();
 
-		if ($menu)
-		{
-			$this->params->def('page_heading', $this->params->get('page_title', $menu->title));
-		}
-		else
-		{
-			$this->params->def('page_heading', Text::_('JBS_FORM_EDIT_ARTICLE'));
-		}
+		//if ($menu)
+		//{
+		//	$this->params->def('page_heading', $this->params->get('page_title', $menu->title));
+		//}
+		//else
+		//{
+		//	$this->params->def('page_heading', Text::_('JBS_FORM_EDIT_ARTICLE'));
+		//}
 
-		$title = $this->params->def('page_title', '');
+		//$title = $this->params->def('page_title', '');
 		$isNew = ($this->item->id == 0);
 		$state = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
 		$title .= ' : ' . $state . ' : ' . $this->form->getValue('studytitle');
@@ -215,7 +223,7 @@ class HtmlView extends BaseHtmlView
 
 		$pathway = $app->getPathway();
 		$pathway->addItem($title, '');
-
+/*
 		if ($this->params->get('menu-meta_description'))
 		{
 			$this->document->setDescription($this->params->get('menu-meta_description'));
@@ -230,5 +238,6 @@ class HtmlView extends BaseHtmlView
 		{
 			$this->document->setMetadata('robots', $this->params->get('robots'));
 		}
+*/
 	}
 }

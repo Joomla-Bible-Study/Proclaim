@@ -143,7 +143,7 @@ $saveOrder = $listOrder == 'ordering';
 					<td class=" has-context">
 						<div class="pull-left">
 							<?php if ($canEdit || $canEditOwn) : ?>
-								<a href="<?php echo Route::_('index.php?option=com_proclaim&task=messageform.edit&a_id=' . (int) $item->id); ?>">
+								<a href="<?php echo Route::_('index.php?option=com_proclaim&task=CWMMessageForm.edit&a_id=' . (int) $item->id); ?>">
 									<?php echo $this->escape($item->studytitle); ?></a>
 							<?php else: ?>
 								<?php echo $this->escape($item->studytitle); ?>
