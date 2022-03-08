@@ -63,7 +63,7 @@ class CWMProclaimHelper
 	 */
 	public static function getActions($Itemid = 0, $type = '')
 	{
-		$result = new CMSObject;
+		$result = new Registry;
 		$user = Factory::getUser();
 
 		if (empty($Itemid))
