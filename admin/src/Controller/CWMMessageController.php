@@ -119,13 +119,13 @@ class CWMMessageController extends FormController
 		if (!$db->execute())
 		{
 			$msg = Text::_('JBS_CMN_ERROR_RESETTING_HITS');
-			$this->setRedirect('index.php?option=com_proclaim&view=message&controller=administrator&layout=form&cid[]=' . $id, $msg);
+			$this->setRedirect('index.php?option=com_proclaim&view=cwmmessage&controller=administrator&layout=form&cid[]=' . $id, $msg);
 		}
 		else
 		{
 			$updated = $db->getAffectedRows();
 			$msg     = Text::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . Text::_('JBS_CMN_ROWS_RESET');
-			$this->setRedirect('index.php?option=com_proclaim&view=message&controller=message&layout=form&cid[]=' . $id, $msg);
+			$this->setRedirect('index.php?option=com_proclaim&view=cwmmessage&controller=message&layout=form&cid[]=' . $id, $msg);
 		}
 	}
 

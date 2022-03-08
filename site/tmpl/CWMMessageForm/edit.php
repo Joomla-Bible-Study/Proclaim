@@ -13,6 +13,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 
 defined('_JEXEC') or die;
 
@@ -76,8 +77,12 @@ $isModal = $input->get('layout') === 'modal' ? true : false;
 $layout  = $isModal ? 'modal' : 'edit';
 $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=component' : '';
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmmessageform&layout=' . $layout . $tmpl . '&id=' . (int) $this->item->id); ?>"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmmessageform&layout=' . $layout . $tmpl . '&id=' . (int) $this->item->id); ?>"
       method="post" name="adminForm" id="message-form" class="form-validate" enctype="multipart/form-data">
+	<?= HTMLHelper::_('form.token'); ?>
+    <input type="hidden" name="option" value="com_proclaim">
+    <input type="hidden" name="task" value="" />
+    <input type="hidden" name="boxchecked" value="0" />
     <div class="form-inline form-inline-header">
         <div class="control-group">
             <div class="control-label">
@@ -97,7 +102,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
         </div>
         <div class="control-group">
             <div class="control-label">
-				<?php echo JText::_('JBS_STY_HITS'); ?>
+				<?php echo Text::_('JBS_STY_HITS'); ?>
             </div>
             <div class="controls small">
 				<?php echo '<input type="text" name="jform[hits]" id="jform_hits" value="' . $this->item->hits .
@@ -109,9 +114,9 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th class="center"><?php echo JText::_('JBS_CMN_EDIT_MEDIA_FILE'); ?></th>
-                    <th class="center"><?php echo JText::_('JSTATUS'); ?></th>
-                    <th class="center"><?php echo JText::_('JBS_CMN_MEDIA_CREATE_DATE'); ?></th>
+                    <th class="center"><?php echo Text::_('JBS_CMN_EDIT_MEDIA_FILE'); ?></th>
+                    <th class="center"><?php echo Text::_('JSTATUS'); ?></th>
+                    <th class="center"><?php echo Text::_('JBS_CMN_MEDIA_CREATE_DATE'); ?></th>
                     <th class="center hidden-phone">Language</th>
                     <th class="center hidden-phone">Access</th>
                     <th class="center hidden-phone">ID</th>
@@ -140,7 +145,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
 								<?php echo HTMLHelper::_('jgrid.published', $item->published, $i, 'message.', true, 'cb', '', ''); ?>
                             </td>
                             <td class="center">
-								<?php echo HTMLHelper::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
+								<?php echo HTMLHelper::_('date', $item->createdate, Text::_('DATE_FORMAT_LC4')); ?>
                             </td>
                             <td class="center hidden-phone">
 								<?php echo $item->language; ?>
@@ -158,7 +163,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
 				else:
 					?>
                     <tr>
-                        <td colspan="5" class="center"><?php echo JText::_('JBS_STY_NO_MEDIAFILES'); ?></td>
+                        <td colspan="5" class="center"><?php echo Text::_('JBS_STY_NO_MEDIAFILES'); ?></td>
                     </tr>
 				<?php endif; ?>
 
@@ -173,14 +178,14 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
 						if (empty($this->item->id))
 						{
 							?> <a onClick="Joomla.submitbutton('message.apply');"
-                                  href="#"> <?php echo JText::_('JBS_STY_SAVE_FIRST'); ?> </a> <?php
+                                  href="#"> <?php echo Text::_('JBS_STY_SAVE_FIRST'); ?> </a> <?php
 						}
 						else
 						{
 							?>
                             <a class="btn btn-primary" href="<?php echo $link; ?>"
-                               title="<?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?>">
-								<?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?></a> <?php
+                               title="<?php echo Text::_('JBS_STY_ADD_MEDIA_FILE'); ?>">
+								<?php echo Text::_('JBS_STY_ADD_MEDIA_FILE'); ?></a> <?php
 						}
 						?>
                     </td>
@@ -202,7 +207,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
 		<?php echo HTMLHelper::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
 
         <!-- Begin Content -->
-		<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'general', JText::_('JBS_STY_DETAILS')); ?>
+		<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'general', Text::_('JBS_STY_DETAILS')); ?>
         <div class="row">
 			<?php if (!$this->simple->mode) { ?>
                 <div class="col-lg-7">
@@ -276,7 +281,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
         </div>
 		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 		<?php if (!$this->simple->mode) { ?>
-			<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'info', JText::_('JBS_CMN_INFO')); ?>
+			<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'info', Text::_('JBS_CMN_INFO')); ?>
             <div class="row">
                 <div class="col-lg-12">
                     <div class="control-group">
@@ -361,7 +366,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
 			<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 		<?php } ?>
 
-		<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'publish', JText::_('JBS_STY_PUBLISH')); ?>
+		<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'publish', Text::_('JBS_STY_PUBLISH')); ?>
         <div class="row">
             <div class="col-lg-12">
 				<?php echo JLayoutHelper::render('joomla.edit.publishingdata', $this); ?>
@@ -391,7 +396,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
 		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 
 		<?php if ($this->canDo->get('core.admin')): ?>
-			<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'permissions', JText::_('JBS_CMN_FIELDSET_RULES')); ?>
+			<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'permissions', Text::_('JBS_CMN_FIELDSET_RULES')); ?>
             <div class="row">
 				<?php echo $this->form->getInput('rules'); ?>
             </div>

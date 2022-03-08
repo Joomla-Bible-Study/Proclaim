@@ -17,6 +17,8 @@ use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\Html\HtmlHelper;
@@ -111,8 +113,7 @@ class HtmlView extends BaseHtmlView
 		$input->set('sid', $this->item->id);
 		$input->set('sdate', $this->item->studydate);
 		$this->mediafiles = $this->get('MediaFiles');
-		$this->canDo      = CWMProclaimHelper::getActions($this->item->id, 'sermon');
-
+		$this->canDo      = CWMProclaimHelper::getActions($this->item->id, 'message');
 		$user = Factory::getUser();
 
 		// Create a shortcut to the parameters.
@@ -174,7 +175,8 @@ class HtmlView extends BaseHtmlView
 		$this->setLayout('edit');
 
 		$this->_prepareDocument();
-
+		// Set the toolbar
+		$this->addToolbar();
 		parent::display($tpl);
 	}
 
@@ -240,4 +242,58 @@ class HtmlView extends BaseHtmlView
 		}
 */
 	}
+
+	/**
+	 * Adds ToolBar
+	 *
+	 * @return string
+	 *
+	 * @throws \Exception
+	 * @since  7.0
+	 */
+	protected function addToolbar()
+	{
+		Factory::getApplication()->input->set('hidemainmenu', true);
+		$this->sidebar = \JHtmlSidebar::render();
+		$user  = Factory::getUser();
+		// Get the toolbar object instance
+		$toolbar = Toolbar::getInstance('toolbar');
+		$isNew = ($this->item->id == 0);
+		$title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
+		ToolbarHelper::title(Text::_('JBS_CMN_STUDIES') . ': <small><small>[ ' . $title . ' ]</small></small>', 'book book');
+
+		/*	if ($isNew && $this->canDo->get('core.edit.state', 'com_proclaim'))
+			{
+				$dropdown = $toolbar->dropdownButton('status-group')
+					->text('JTOOLBAR_CHANGE_STATUS')
+					->toggleSplit(false)
+					->icon('fa fa-ellipsis-h')
+					->buttonClass('btn btn-action')
+					->listCheck(true);
+				$childBar = $dropdown->getChildToolbar();
+				$childBar->publish('cwmmessageform.publish')->listCheck(true);
+				$childBar->unpublish('cwmmessageform.unpublish')->listCheck(true);
+				$childBar->archive('cwmmessageform.archive')->listCheck(true);
+			}
+
+				if ($this->state->get('filter.published') != -2)
+				{
+					$childBar->trash('cwmmessageform.trash')->listCheck(true);
+				}
+				if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
+				{
+					$toolbar->delete('cwmmessageform.delete')
+						->text('JTOOLBAR_EMPTY_TRASH')
+						->message('JGLOBAL_CONFIRM_DELETE')
+						->listCheck(true);
+				} */
+		if ($user->authorise('core.admin', 'com_proclaim') || $user->authorise('core.options', 'com_proclaim'))
+		{
+			$toolbar->preferences('com_proclaim');
+		}
+
+
+		return Toolbar::getInstance()->render();
+	}
+
 }
