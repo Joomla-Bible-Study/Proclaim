@@ -10,13 +10,18 @@
 
 namespace CWM\Component\Proclaim\Administrator\Model;
 
+use CWM\Component\Proclaim\Administrator\Helper\CWMDbHelper;
+use CWM\Component\Proclaim\Administrator\Lib\CWMAssets;
+use CWM\Component\Proclaim\Administrator\Lib\CWMBackup;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Model\BaseModel;
-use Symfony\Component\Config\Loader\Loader;
+use Joomla\Database\DatabaseDriver;
 
 defined('_JEXEC') or die;
-
-Loader::register('com_proclaimInstallerScript', JPATH_ADMINISTRATOR . '/components/com_proclaim/biblestudy.script.php');
-Loader::register('JBSMFreshInstall', JPATH_ADMINISTRATOR . '/components/com_proclaim/install/biblestudy.install.special.php');
 
 // Always load JBSM API if it exists.
 $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
@@ -56,19 +61,19 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @since 7.1
 	 */
-	public $callstack = array();
+	public array $callstack = array();
 
 	/** @var string Path to Mysql files
 	 *
 	 * @since 7.1
 	 */
-	protected $filePath = '/components/com_proclaim/install/sql/updates/mysql';
+	protected string $filePath = '/components/com_proclaim/install/sql/updates/mysql';
 
 	/** @var string Path to PHP Version files
 	 *
 	 * @since 7.1
 	 */
-	protected $phpPath = '/components/com_proclaim/install/updates/';
+	protected string $phpPath = '/components/com_proclaim/install/updates/';
 
 	/** @var float The time the process started
 	 *
@@ -80,13 +85,13 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @since 7.1
 	 */
-	private $versionStack = array();
+	private array $versionStack = array();
 
 	/** @var array The pre versions sub sql array to process
 	 *
 	 * @since 7.1
 	 */
-	private $allupdates = array();
+	private array $allupdates = array();
 
 	/** @var string Version of BibleStudy
 	 *
@@ -104,56 +109,56 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @since 7.1
 	 */
-	private $finish = array();
+	private array $finish = array();
 
 	/** @var string Version number to be running
 	 *
 	 * @since 7.1
 	 */
-	private $version = "0.0.0";
+	private string $version = "0.0.0";
 
-	/** @type array PHP file steps for migrations
+	/** @var array PHP file steps for migrations
 	 *
 	 * @since 7.1
 	 */
-	private $subSteps = array();
+	private array $subSteps = array();
 
 	/** @var array Array of Sub Query from php files queries Task
 	 *
 	 * @since 7.1
 	 */
-	private $subQuery = array();
+	private array $subQuery = array();
 
-	/** @type array list of php files to work through
+	/** @var array list of php files to work through
 	 *
 	 * @since 7.1
 	 */
-	private $subFiles = array();
+	private array $subFiles = array();
 
 	/** @var array Array of Install Task
 	 *
 	 * @since 9.0.14
 	 */
-	private $start = array();
+	private array $start = array();
 
 	/** @var integer If was imported
 	 *
 	 * @since 7.1
 	 */
-	private $isimport = 0;
+	private int $isimport = 0;
 
-	/** @type array Array of assets to fix
+	/** @var array Array of assets to fix
 	 *
 	 * @since 7.1
 	 */
-	public $query = array();
+	public array $query = array();
 
 	/**
 	 * Constructor.
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   7.1
 	 */
 	public function __construct($config = array())
@@ -168,7 +173,7 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @return boolean
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   7.1
 	 */
 	public function startScanning()
@@ -210,7 +215,7 @@ class CWMInstallModel extends BaseModel
 	/**
 	 * Returns the current timestamps in decimal seconds
 	 *
-	 * @return string
+	 * @return float
 	 *
 	 * @since 7.1
 	 */
@@ -226,7 +231,7 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @return boolean
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   7.1
 	 */
 	private function getSteps()
@@ -392,10 +397,10 @@ class CWMInstallModel extends BaseModel
 				break;
 
 			case 4:
-				$this->callstack['subversiontype_version'] = JText::_('JBS_IBM_VERSION_TOO_OLD');
+				$this->callstack['subversiontype_version'] = Text::_('JBS_IBM_VERSION_TOO_OLD');
 
 				// There is a version installed, but it is older than 6.0.8 and we can't upgrade it
-				$this->setState('scanerror', JText::_('JBS_IBM_VERSION_TOO_OLD'));
+				$this->setState('scanerror', Text::_('JBS_IBM_VERSION_TOO_OLD'));
 
 				return false;
 				break;
@@ -403,12 +408,8 @@ class CWMInstallModel extends BaseModel
 
 		if ($this->callstack['subversiontype_version'] > 000)
 		{
-			// Start of Building the All state build.
-			jimport('joomla.filesystem.folder');
-			jimport('joomla.filesystem.file');
-
-			$files = str_replace('.sql', '', JFolder::files(JPATH_ADMINISTRATOR . $this->filePath, '\.sql$'));
-			$php   = str_replace('.php', '', JFolder::files(JPATH_ADMINISTRATOR . $this->phpPath, '\.php$'));
+			$files = str_replace('.sql', '', Folder::files(JPATH_ADMINISTRATOR . $this->filePath, '\.sql$'));
+			$php   = str_replace('.php', '', Folder::files(JPATH_ADMINISTRATOR . $this->phpPath, '\.php$'));
 			usort($files, 'version_compare');
 			usort($php, 'version_compare');
 
@@ -447,7 +448,7 @@ class CWMInstallModel extends BaseModel
 				}
 				else
 				{
-					$app->enqueueMessage(JText::_('JBS_INS_NO_UPDATE_SQL_FILES'), 'warning');
+					$app->enqueueMessage(Text::_('JBS_INS_NO_UPDATE_SQL_FILES'), 'warning');
 
 					return false;
 				}
@@ -467,7 +468,7 @@ class CWMInstallModel extends BaseModel
 			}
 		}
 
-		$this->isimport   = Factory::getApplication()->input->getInt('jbsmalt', 0);
+		$this->isimport = Factory::getApplication()->input->getInt('jbsmalt', 0);
 		++$this->totalSteps;
 
 		return true;
@@ -478,7 +479,7 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @return boolean
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   7.1
 	 */
 	private function correctVersions()
@@ -490,7 +491,7 @@ class CWMInstallModel extends BaseModel
 		$this->_db->setQuery($query);
 		$updates = $this->_db->loadObjectList();
 
-		foreach ($updates AS $value)
+		foreach ($updates as $value)
 		{
 			// Check to see if Bad version is in key 3
 
@@ -503,7 +504,7 @@ class CWMInstallModel extends BaseModel
 
 				if (!$this->_db->execute())
 				{
-					Factory::getApplication()->enqueueMessage(JText::_('JBS_CMN_OPERATION_FAILED'), 'error');
+					Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_OPERATION_FAILED'), 'error');
 
 					return false;
 				}
@@ -521,7 +522,7 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @return  boolean
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   7.1.0
 	 */
 	private function setSchemaVersion($version, $eid)
@@ -558,7 +559,7 @@ class CWMInstallModel extends BaseModel
 
 			$app->enqueueMessage('Could not locate extension id in schemas table');
 
-				return false;
+			return false;
 		}
 
 		return false;
@@ -571,7 +572,7 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @return boolean
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 7.1
 	 */
 	public function run($resetTimer = true)
@@ -632,7 +633,7 @@ class CWMInstallModel extends BaseModel
 			$stack = base64_encode($stack);
 		}
 
-		$session = Factory::getSession();
+		$session = Factory::getApplication()->getSession();
 		$session->set('migration_stack', $stack, 'JBSM');
 	}
 
@@ -645,7 +646,7 @@ class CWMInstallModel extends BaseModel
 	 */
 	private function resetStack()
 	{
-		$session = Factory::getSession();
+		$session = Factory::getApplication()->getSession();
 		$session->set('migration_stack', '', 'JBSM');
 		$this->version       = '0.0.0';
 		$this->versionStack  = array();
@@ -660,7 +661,7 @@ class CWMInstallModel extends BaseModel
 		$this->callstack     = array();
 		$this->totalSteps    = 0;
 		$this->doneSteps     = 0;
-		$this->running       = JText::_('JBS_MIG_STARTING');
+		$this->running       = Text::_('JBS_MIG_STARTING');
 		$this->query         = array();
 	}
 
@@ -673,7 +674,7 @@ class CWMInstallModel extends BaseModel
 	 */
 	private function loadStack()
 	{
-		$session = Factory::getSession();
+		$session = Factory::getApplication()->getSession();
 		$stack   = $session->get('migration_stack', '', 'JBSM');
 
 		if (empty($stack))
@@ -691,7 +692,7 @@ class CWMInstallModel extends BaseModel
 			$this->callstack     = array();
 			$this->totalSteps    = 0;
 			$this->doneSteps     = 0;
-			$this->running       = JText::_('JBS_MIG_STARTING');
+			$this->running       = Text::_('JBS_MIG_STARTING');
 			$this->query         = array();
 
 			return false;
@@ -748,7 +749,7 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @return boolean
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   7.1
 	 */
 	private function realRun()
@@ -760,9 +761,9 @@ class CWMInstallModel extends BaseModel
 		{
 			$this->running = 'Backup DB';
 			$this->doneSteps++;
-			$export = new JBSMBackup;
+			$export = new CWMBackup;
 			$export->exportdb(2);
-			JLog::add('Backup DB', JLog::INFO, 'com_proclaim');
+			Log::add('Backup DB', Log::INFO, 'com_proclaim');
 			$this->start = array();
 		}
 
@@ -771,7 +772,7 @@ class CWMInstallModel extends BaseModel
 			$this->fiximport();
 			$this->running  = 'Fixing Imported Params';
 			$this->isimport = 0;
-			JLog::add('Fixing Imported Params', JLog::INFO, 'com_proclaim');
+			Log::add('Fixing Imported Params', Log::INFO, 'com_proclaim');
 			$this->doneSteps++;
 		}
 
@@ -789,7 +790,7 @@ class CWMInstallModel extends BaseModel
 				if (!$run)
 				{
 					Factory::getApplication()->enqueueMessage('Error Updating Update version ' . (string) $version, 'error');
-					JLog::add('Error Updating Update version ' . (string) $version, JLog::ERROR, 'com_proclaim');
+					Log::add('Error Updating Update version ' . (string) $version, Log::ERROR, 'com_proclaim');
 				}
 			}
 		}
@@ -832,7 +833,7 @@ class CWMInstallModel extends BaseModel
 
 					if (!class_exists($migrationClass))
 					{
-						JLog::add('Missing Class' . $migrationClass, JLog::WARNING, 'com_proclaim');
+						Log::add('Missing Class' . $migrationClass, Log::WARNING, 'com_proclaim');
 
 						return true;
 					}
@@ -847,18 +848,16 @@ class CWMInstallModel extends BaseModel
 							if (!isset($this->subQuery[$this->version][$step]) && !empty($this->subSteps[$this->version]))
 							{
 								$step = $this->versionSwitch = array_shift($this->subSteps[$this->version]);
-								JLog::add('Change step : ' . $step, JLog::INFO, 'com_proclaim');
+								Log::add('Change step : ' . $step, Log::INFO, 'com_proclaim');
 							}
 							elseif (empty($this->subSteps[$this->version]))
 							{
-								JLog::add('Unset Last Step : ' . $step, JLog::INFO, 'com_proclaim');
+								Log::add('Unset Last Step : ' . $step, Log::INFO, 'com_proclaim');
 
 								$step = $this->versionSwitch = null;
-								unset($this->subSteps[$this->version]);
-								unset($this->subQuery[$this->version]);
-								unset($this->allupdates[$this->version]);
+								unset($this->subSteps[$this->version], $this->subQuery[$this->version], $this->allupdates[$this->version]);
 
-								if (($key = array_search($this->version, $this->subFiles)) !== false)
+								if (($key = array_search($this->version, $this->subFiles, true)) !== false)
 								{
 									unset($this->subFiles[$key]);
 								}
@@ -873,14 +872,13 @@ class CWMInstallModel extends BaseModel
 							{
 								unset($this->subQuery[$this->version][$step]);
 								$this->versionSwitch = null;
-								JLog::add('Uset Sub Query if empty : ' . $step . ' ' . $this->version, JLog::INFO, 'com_proclaim');
+								Log::add('Uset Sub Query if empty : ' . $step . ' ' . $this->version, Log::INFO, 'com_proclaim');
 							}
 
 							if (empty($step) && empty($query))
 							{
-								unset($this->subFiles[$this->version]);
-								unset($this->subSteps[$this->version]);
-								JLog::add('Uset Version in All updates : ' . $this->version, JLog::INFO, 'com_proclaim');
+								unset($this->subFiles[$this->version], $this->subSteps[$this->version]);
+								Log::add('Uset Version in All updates : ' . $this->version, Log::INFO, 'com_proclaim');
 							}
 							else
 							{
@@ -902,7 +900,7 @@ class CWMInstallModel extends BaseModel
 									$queryString = ' ID:' . $queryString . ' Query count: ' . count($this->subQuery[$this->version][$step]);
 								}
 
-								JLog::add('Doing Step in ' . $migrationClass . ' Step: ' . $step . $queryString, JLog::INFO, 'com_proclaim');
+								Log::add('Doing Step in ' . $migrationClass . ' Step: ' . $step . $queryString, Log::INFO, 'com_proclaim');
 
 								$this->doneSteps++;
 							}
@@ -912,14 +910,14 @@ class CWMInstallModel extends BaseModel
 				else
 				{
 					unset($this->allupdates[$this->version]);
-					JLog::add('Unset Version if no steps : ' . $this->version, JLog::INFO, 'com_proclaim');
+					Log::add('Unset Version if no steps : ' . $this->version, Log::INFO, 'com_proclaim');
 				}
 
 				if ($run === false)
 				{
-					JBSMDbHelper::resetdb();
+					CWMDbHelper::resetdb();
 					$this->resetStack();
-					$app->enqueueMessage(JText::_('JBS_CMN_DATABASE_NOT_MIGRATED'), 'warning');
+					$app->enqueueMessage(Text::_('JBS_CMN_DATABASE_NOT_MIGRATED'), 'warning');
 
 					return false;
 				}
@@ -955,7 +953,7 @@ class CWMInstallModel extends BaseModel
 					$version = array_pop($this->query[$this->versionSwitch]);
 					$this->doneSteps++;
 					$this->running = 'Fixing Assets that are not right';
-					JBSMAssets::fixAssets($this->versionSwitch, $version);
+					CWMAssets::fixAssets($this->versionSwitch, $version);
 				}
 				else
 				{
@@ -970,14 +968,12 @@ class CWMInstallModel extends BaseModel
 			&& empty($this->allupdates)
 			&& empty($this->subFiles))
 		{
-			// Fix any problem with db versions after migration.
-			JLoader::register('BiblestudyModelAdmin', JPATH_ADMINISTRATOR . '/components/com_proclaim/models/AdministratorModel.php');
-			$admin = new BiblestudyModelAdmin;
+			$admin = new CWMAdminModel;
 			$admin->fix();
 
 			// Just finished
 			$this->resetStack();
-			$this->running = JText::_('JBS_MIGFINISED');
+			$this->running = Text::_('JBS_MIGFINISED');
 
 			return false;
 		}
@@ -991,7 +987,7 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @return boolean
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   7.1
 	 */
 	public function uninstall()
@@ -1047,7 +1043,7 @@ class CWMInstallModel extends BaseModel
 					die('no uninstall-dbtables.sql');
 				}
 
-				$queries = JDatabaseDriver::splitSql($buffer);
+				$queries = DatabaseDriver::splitSql($buffer);
 
 				foreach ($queries as $querie)
 				{
@@ -1063,7 +1059,7 @@ class CWMInstallModel extends BaseModel
 		}
 		else
 		{
-			$drop_result = '<h3>' . JText::_('JBS_INS_NO_DATABASE_REMOVED') . '</h3>';
+			$drop_result = '<h3>' . Text::_('JBS_INS_NO_DATABASE_REMOVED') . '</h3>';
 		}
 
 		// Post Install Messages Cleanup for Component
@@ -1072,7 +1068,7 @@ class CWMInstallModel extends BaseModel
 			->where($this->_db->qn('language_extension') . ' = ' . $this->_db->q('com_proclaim'));
 		$this->_db->setQuery($query);
 		$this->_db->execute();
-		Factory::getApplication()->enqueueMessage('<h2>' . JText::_('JBS_INS_UNINSTALLED') . ' ' .
+		Factory::getApplication()->enqueueMessage('<h2>' . Text::_('JBS_INS_UNINSTALLED') . ' ' .
 			BIBLESTUDY_VERSION . '</h2> <div>' . $drop_result . '</div>'
 		);
 
@@ -1086,7 +1082,7 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @return boolean
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   7.1
 	 */
 	private function finish($step)
@@ -1105,7 +1101,7 @@ class CWMInstallModel extends BaseModel
 				break;
 			case 'fixassets':
 				// Final step is to fix assets by building what need to be fixed.
-				$assets = new JBSMAssets;
+				$assets = new CWMAssets;
 				$assets->build();
 				$this->query      = $assets->query;
 				$this->totalSteps += $assets->count;
@@ -1162,23 +1158,23 @@ class CWMInstallModel extends BaseModel
 				$this->_db->setQuery($query);
 				$this->_db->execute();
 
-				$updateurl           = new stdClass;
+				$updateurl           = new \stdClass;
 				$updateurl->name     = 'Proclaim Package';
 				$updateurl->type     = 'extension';
 				$updateurl->location = 'https://www.christianwebministries.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;id=2&amp;format=xml';
 				$updateurl->enabled  = '1';
 				$this->_db->insertObject('#__update_sites', $updateurl);
 				$lastid                     = $this->_db->insertid();
-				$updateurl1                 = new stdClass;
+				$updateurl1                 = new \stdClass;
 				$updateurl1->update_site_id = $lastid;
 				$updateurl1->extension_id   = $eid;
 				$this->_db->insertObject('#__update_sites_extensions', $updateurl1);
 				$this->running = 'Set New Update URL';
 				break;
 			default:
-				$app->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') .
-					JText::_('SIMPLEMODEMESSAGE_BODY') .
-					JText::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE')
+				$app->enqueueMessage('' . Text::_('JBS_CMN_OPERATION_SUCCESSFUL') .
+					Text::_('SIMPLEMODEMESSAGE_BODY') .
+					Text::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE')
 				);
 				break;
 		}
@@ -1210,7 +1206,7 @@ class CWMInstallModel extends BaseModel
 
 		if ($this->_db->insertObject('#__postinstall_messages', $message) !== true)
 		{
-			jexit('Bad install');
+			exit('Bad install');
 		}
 	}
 
@@ -1244,7 +1240,7 @@ class CWMInstallModel extends BaseModel
 	 */
 	private function fiximport()
 	{
-		$tables = JBSMDbHelper::getObjects();
+		$tables = CWMDbHelper::getObjects();
 		$set    = false;
 
 		foreach ($tables as $table)
@@ -1294,7 +1290,7 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @return boolean
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   7.1.4
 	 */
 	private function allUpdate($value)
@@ -1304,14 +1300,14 @@ class CWMInstallModel extends BaseModel
 		// Graceful exit and rollback if read not successful
 		if ($buffer === false)
 		{
-			Factory::getApplication()->enqueueMessage(JText::sprintf('JLIBinstallER_ERROR_SQL_READBUFFER'), 'WARNING');
-			JLog::add(JText::sprintf('JLIBinstallER_ERROR_SQL_READBUFFER'), JLog::WARNING, 'com_proclaim');
+			Factory::getApplication()->enqueueMessage(Text::sprintf('JLIBinstallER_ERROR_SQL_READBUFFER'), 'WARNING');
+			Log::add(Text::sprintf('JLIBinstallER_ERROR_SQL_READBUFFER'), Log::WARNING, 'com_proclaim');
 
 			return false;
 		}
 
 		// Create an array of queries from the sql file
-		$queries = JDatabaseDriver::splitSql($buffer);
+		$queries = DatabaseDriver::splitSql($buffer);
 
 		if ((int) count($queries) === 0)
 		{
@@ -1325,7 +1321,7 @@ class CWMInstallModel extends BaseModel
 		// Build php steps now.
 		$migrationFile = JPATH_ADMINISTRATOR . '/components/com_proclaim/install/updates/' . $value . '.php';
 
-		if (JFile::exists($migrationFile))
+		if (File::exists($migrationFile))
 		{
 			require_once $migrationFile;
 			$migrationClass = "Migration" . str_ireplace(".", '', $value);
@@ -1352,7 +1348,7 @@ class CWMInstallModel extends BaseModel
 				}
 				else
 				{
-					$this->subSteps   = array_merge($this->subSteps, array($value => array('up')));
+					$this->subSteps = array_merge($this->subSteps, array($value => array('up')));
 					++$this->totalSteps;
 				}
 			}
@@ -1368,7 +1364,7 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @return boolean
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   7.1
 	 */
 	private function runUpdates($string)
@@ -1385,18 +1381,18 @@ class CWMInstallModel extends BaseModel
 			{
 				$this->_db->execute();
 			}
-			catch (RuntimeException $e)
+			catch (\RuntimeException $e)
 			{
-				JLog::add($e->getMessage(), JLog::WARNING, 'com_proclaim');
+				Log::add($e->getMessage(), Log::WARNING, 'com_proclaim');
 
 				return false;
 			}
 
 			$queryString = (string) $string;
 			$queryString = str_replace(array("\r", "\n"), array('', ' '), substr($queryString, 0, 80));
-			JLog::add(
-				JText::sprintf('JLIBINSTALLER_UPDATE_LOG_QUERY', $this->running, $queryString),
-				JLog::INFO, 'com_proclaim'
+			Log::add(
+				Text::sprintf('JLIBINSTALLER_UPDATE_LOG_QUERY', $this->running, $queryString),
+				Log::INFO, 'com_proclaim'
 			);
 		}
 
@@ -1418,7 +1414,7 @@ class CWMInstallModel extends BaseModel
 			->where($this->_db->qn('language_extension') . ' = ' . $this->_db->q('com_proclaim'));
 		$this->_db->setQuery($query);
 		$this->_db->execute();
-		JLog::add('PostInstallCleanup', JLog::INFO, 'com_proclaim');
+		Log::add('PostInstallCleanup', Log::INFO, 'com_proclaim');
 	}
 
 	/**
@@ -1438,7 +1434,7 @@ class CWMInstallModel extends BaseModel
 		$this->_db->setQuery($query);
 		$menus = $this->_db->loadObjectList();
 
-		foreach ($menus AS $menu)
+		foreach ($menus as $menu)
 		{
 			$menu->link = str_replace('teacherlist', 'teachers', $menu->link);
 			$menu->link = str_replace('teacherdisplay', 'teacher', $menu->link);

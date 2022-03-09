@@ -7,7 +7,7 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-namespace Joomla\Component\Content\Administrator\Service\HTML;
+namespace CWM\Component\Proclaim\Administrator\Service\HTML;
 
 \defined('_JEXEC') or die;
 

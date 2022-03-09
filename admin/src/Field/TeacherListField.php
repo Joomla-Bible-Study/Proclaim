@@ -17,7 +17,6 @@ use Joomla\CMS\HTML\HTMLHelper;
 
 // No Direct Access
 defined('_JEXEC') or die;
-jimport('joomla.form.helper');
 JFormHelper::loadFieldClass('list');
 
 /**

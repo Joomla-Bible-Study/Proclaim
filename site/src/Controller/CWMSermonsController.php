@@ -40,6 +40,7 @@ class CWMSermonsController extends BaseController
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function download()
@@ -60,6 +61,7 @@ class CWMSermonsController extends BaseController
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function avplayer()

@@ -7,17 +7,21 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Site\Helper;
+
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
+
 // No direct access
 defined('_JEXEC') or die;
+
 /**
- * Biblestudy Component Route Helper
+ * Proclaim Component Route Helper
  *
  * @static
- * @package  BibleStudy.Site
+ * @package  Procalaim.Site
  * @since    7.2
  */
 class CWMHelperRoute
@@ -29,26 +33,23 @@ class CWMHelperRoute
 	 *
 	 * @since    7.2
 	 */
-	protected static $lookup;
+	protected static string $lookup;
 
 	/**
 	 * Get Article Rout
 	 *
-	 * @param   int  $id        The route of the study item
-	 * @param   int  $language  The state of language
+	 * @param   int     $id        The route of the study item
+	 * @param   string  $language  The state of language
 	 *
 	 * @return string
 	 *
 	 * @since    7.2
 	 */
-	public static function getArticleRoute($id, $language = 0)
+	public static function getArticleRoute(int $id, string $language = '0'): string
 	{
-		$needles = array(
-			'article' => array((int) $id)
-		);
-
 		// Create the link
 		$link = 'index.php?option=com_proclaim&view=cwmsermon&id=' . $id;
+
 		if ($language && $language !== "*" && Multilanguage::isEnabled())
 		{
 			$db    = Factory::getDbo();
@@ -65,32 +66,24 @@ class CWMHelperRoute
 				if ($language == $lang->lang_code)
 				{
 					$link .= '&lang=' . $lang->sef;
-					$needles['language'] = $language;
 				}
 			}
 		}
 
-		if ($item = self::_findItem($needles))
-		{
-			$link .= '&Itemid=' . $item;
-		}
-		elseif ($item = self::_findItem())
-		{
-			$link .= '&Itemid=' . $item;
-		}
 		return $link;
 	}
 
 	/**
 	 * Find Item
 	 *
-	 * @param   string  $needles  ?
+	 * @param   array  $needles  ?
 	 *
 	 * @return mixed
 	 *
+	 * @throws \Exception
 	 * @since    7.2
 	 */
-protected static function _findItem($needles = null)
+	protected static function _findItem(array $needles = array())
 	{
 		$app   = Factory::getApplication();
 		$menus = $app->getMenu('site');
@@ -116,7 +109,7 @@ protected static function _findItem($needles = null)
 
 					if (isset($item->query['id']))
 					{
-                        $item->id = self::$lookup[$view][$item->query['id']];
+						$item->id = self::$lookup[$view][$item->query['id']];
 					}
 				}
 			}
@@ -160,12 +153,10 @@ protected static function _findItem($needles = null)
 	 *
 	 * @since    7.2
 	 */
-	public static function getTeacherRoute($id)
+	public static function getTeacherRoute($id): string
 	{
 		// Create the link
-		$link = 'index.php?option=com_proclaim&view=cwmteacher&id=' . $id;
-
-		return $link;
+		return 'index.php?option=com_proclaim&view=cwmteacher&id=' . $id;
 	}
 
 	/**
@@ -177,12 +168,10 @@ protected static function _findItem($needles = null)
 	 *
 	 * @since    7.2
 	 */
-	public static function getSeriesRoute($id)
+	public static function getSeriesRoute($id): string
 	{
 		// Create the link
-		$link = 'index.php?option=com_proclaim&view=cwmseriesdisplay&id=' . $id;
-
-		return $link;
+		return 'index.php?option=com_proclaim&view=cwmseriesdisplay&id=' . $id;
 	}
 
 	/**
@@ -193,10 +182,10 @@ protected static function _findItem($needles = null)
 	 *
 	 * @return string  The fixed URL
 	 *
-	 * @since    7.2
+	 * @since     7.2
 	 * @deprecate 8.0.7
 	 */
-	public static function addScheme($url, $scheme = 'http://')
+	public static function addScheme(string $url, string $scheme = 'https://')
 	{
 		if (parse_url($url, PHP_URL_SCHEME) === null)
 		{

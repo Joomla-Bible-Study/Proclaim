@@ -7,13 +7,15 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Site\Helper;
 defined('_JEXEC') or die;
 
-use Joomla\Registry\Registry;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\Registry\Registry;
+
 /**
  * helper to get related studies to the current one
  *
@@ -34,7 +36,7 @@ class CWMRelatedstudies
 	/**
 	 * Get Related
 	 *
-	 * @param   object                    $row     JTable
+	 * @param   object    $row     JTable
 	 * @param   Registry  $params  Item Params
 	 *
 	 * @return boolean
@@ -83,9 +85,9 @@ class CWMRelatedstudies
 				if (is_string($study->params) && !empty($study->params))
 				{
 					$registry      = new Registry;
-					$errors        = ['{\\"', '{\"', ',\\"', '\",', ',\"', '\":', ':\"\"', ':\"', '\"}"', '\"}', "\'"];
-					$correct       = ['{"', '{"', ',"', '",', ',"', '":', ':""', ':"', '"}"', '"}', "'"];
-					$study->params = str_replace($errors, $correct, $study->params);
+//					$errors        = ['{\\"', '{\"', ',\\"', '\",', ',\"', '\":', ':\"\"', ':\"', '\"}"', '\"}', "\'"];
+//					$correct       = ['{"', '{"', ',"', '",', ',"', '":', ':""', ':"', '"}"', '"}', "'"];
+//					$study->params = str_replace($errors, $correct, $study->params);
 					$registry->loadString($study->params);
 					$sparams = $registry;
 					$compare = $sparams->get('metakey');

@@ -22,8 +22,8 @@ if (file_exists($api))
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
 use CWM\Component\Proclaim\Administrator\Table\CWMTemplateTable;
-use Joomla\CMS\Html\HtmlHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Html\HtmlHelper;
 use Joomla\CMS\Image\Image;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
@@ -47,10 +47,10 @@ class CWMListing
 	/**
 	 * Get Fluid Listing
 	 *
-	 * @param   Object         $items     Items
-	 * @param   Registry       $params    Page Params
+	 * @param   Object            $items     Items
+	 * @param   Registry          $params    Page Params
 	 * @param   CWMTemplateTable  $template  Template name
-	 * @param   String         $type      Type of Listing
+	 * @param   String            $type      Type of Listing
 	 *
 	 * @return string
 	 *
@@ -719,14 +719,14 @@ class CWMListing
 	/**
 	 * Get Fluid Row
 	 *
-	 * @param   array                     $listrows   ?
-	 * @param   array                     $listsorts  ?
-	 * @param   Object                    $item       ?
-	 * @param   Registry  $params     Item Params
-	 * @param   CWMTemplateTable            $template   Template info
-	 * @param   string                    $oddeven    ?
-	 * @param   integer                   $header     ?
-	 * @param   string                    $type       ?
+	 * @param   array             $listrows   ?
+	 * @param   array             $listsorts  ?
+	 * @param   Object            $item       ?
+	 * @param   Registry          $params     Item Params
+	 * @param   CWMTemplateTable  $template   Template info
+	 * @param   string            $oddeven    ?
+	 * @param   integer           $header     ?
+	 * @param   string            $type       ?
 	 *
 	 * @return string
 	 *
@@ -927,7 +927,7 @@ class CWMListing
 
 				if ($header === 1)
 				{
-					$frow .=  $this->getFluidData($item, $row, $params, $template, $header = 1, $type) ;
+					$frow .= $this->getFluidData($item, $row, $params, $template, $header = 1, $type);
 				}
 				else
 				{
@@ -951,7 +951,7 @@ class CWMListing
 
 				if ($header === 1)
 				{
-					$frow .=  $this->getFluidData($item, $row, $params, $template, $header = 1, $type) ;
+					$frow .= $this->getFluidData($item, $row, $params, $template, $header = 1, $type);
 				}
 				else
 				{
@@ -975,7 +975,7 @@ class CWMListing
 
 				if ($header === 1)
 				{
-					$frow .=  $this->getFluidData($item, $row, $params, $template, $header = 1, $type) ;
+					$frow .= $this->getFluidData($item, $row, $params, $template, $header = 1, $type);
 				}
 				else
 				{
@@ -999,7 +999,7 @@ class CWMListing
 
 				if ($header === 1)
 				{
-					$frow .=  $this->getFluidData($item, $row, $params, $template, $header = 1, $type) ;
+					$frow .= $this->getFluidData($item, $row, $params, $template, $header = 1, $type);
 				}
 				else
 				{
@@ -1077,12 +1077,12 @@ class CWMListing
 	/**
 	 * Get Fluid Date
 	 *
-	 * @param   Object                    $item      Study item
-	 * @param   Object                    $row       Row Setup data
-	 * @param   Registry  $params    Parameters for the study
-	 * @param   CWMTemplateTable             $template  Template table
-	 * @param   integer                   $header    Header will display if 1, Do not display if 0
-	 * @param   string                    $type      Type of Fluid Data
+	 * @param   Object            $item      Study item
+	 * @param   Object            $row       Row Setup data
+	 * @param   Registry          $params    Parameters for the study
+	 * @param   CWMTemplateTable  $template  Template table
+	 * @param   integer           $header    Header will display if 1, Do not display if 0
+	 * @param   string            $type      Type of Fluid Data
 	 *
 	 * @return string
 	 *
@@ -1821,11 +1821,11 @@ class CWMListing
 	/**
 	 * Get Fluid Custom
 	 *
-	 * @param   String                    $custom    Custom String
-	 * @param   Object                    $item      Study Item
-	 * @param   Registry  $params    Params
-	 * @param   TemplateTable             $template  Template Table Data
-	 * @param   String                    $type      Type of data
+	 * @param   String         $custom    Custom String
+	 * @param   Object         $item      Study Item
+	 * @param   Registry       $params    Params
+	 * @param   TemplateTable  $template  Template Table Data
+	 * @param   String         $type      Type of data
 	 *
 	 * @return mixed
 	 *
@@ -1853,11 +1853,11 @@ class CWMListing
 	/**
 	 * Get Element
 	 *
-	 * @param   String                    $custom    Custom String
-	 * @param   Object                    $row       Row Data
-	 * @param   Registry  $params    Params
-	 * @param   TemplateTable             $template  Template Data
-	 * @param   String                    $type      Type of element
+	 * @param   String         $custom    Custom String
+	 * @param   Object         $row       Row Data
+	 * @param   Registry       $params    Params
+	 * @param   TemplateTable  $template  Template Data
+	 * @param   String         $type      Type of element
 	 *
 	 * @return mixed|null|string
 	 *
@@ -2072,9 +2072,9 @@ class CWMListing
 	 * Get Scripture
 	 *
 	 * @param   Registry  $params        Item Params
-	 * @param   object                     $row           Row Info
-	 * @param   int                        $esv           ESV String
-	 * @param   int                        $scripturerow  Scripture Row
+	 * @param   object    $row           Row Info
+	 * @param   int       $esv           ESV String
+	 * @param   int       $scripturerow  Scripture Row
 	 *
 	 * @return string
 	 *
@@ -2260,9 +2260,9 @@ class CWMListing
 	/**
 	 * Get Fluid Media Files
 	 *
-	 * @param   Object                    $item      Study item
-	 * @param   Registry  $params    Params
-	 * @param   TemplateTable             $template  Template return
+	 * @param   Object         $item      Study item
+	 * @param   Registry       $params    Params
+	 * @param   TemplateTable  $template  Template return
 	 *
 	 * @return string
 	 *
@@ -2290,7 +2290,7 @@ class CWMListing
 	 * Get StudyDate
 	 *
 	 * @param   Registry  $params     Item Params
-	 * @param   string                    $studydate  Study Date
+	 * @param   string    $studydate  Study Date
 	 *
 	 * @return string
 	 *
@@ -2417,13 +2417,13 @@ class CWMListing
 	/**
 	 *  Get Link
 	 *
-	 * @param   bool           $islink      True is a link, False is not
-	 * @param   string         $id3         Id3 data
-	 * @param   int            $tid         Template ID
-	 * @param   object         $smenu       Menu data
-	 * @param   object         $tmenu       Itemid
-	 * @param   Registry       $params      Params
-	 * @param   object         $row         Row data
+	 * @param   bool              $islink      True is a link, False is not
+	 * @param   string            $id3         Id3 data
+	 * @param   int               $tid         Template ID
+	 * @param   object            $smenu       Menu data
+	 * @param   object            $tmenu       Itemid
+	 * @param   Registry          $params      Params
+	 * @param   object            $row         Row data
 	 * @param   CWMTemplateTable  $templateid  Template Table Data
 	 *
 	 * @return string
@@ -2432,7 +2432,7 @@ class CWMListing
 	 */
 	private function getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $row, $templateid)
 	{
-		$input  = new Input;
+		$input = new Input;
 		//$Itemid = $input->get('Itemid', '', 'int');
 		$view   = $input->getString('view', '');
 		$column = '';
@@ -2465,14 +2465,14 @@ class CWMListing
 				break;
 
 			case 3 :
-				$link = Route::_('index.php?option=com_proclaim&view=CWMTeacher&id=' . $tid . '&t=' . $params->get('teachertemplateid'));
+				$link   = Route::_('index.php?option=com_proclaim&view=CWMTeacher&id=' . $tid . '&t=' . $params->get('teachertemplateid'));
 				$column .= '<a href="' . $link . '">';
 				break;
 
 			case 4 :
 				// Case 4 is a details link with tooltip
 
-					$link = Route::_(CWMHelperRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
+				$link = Route::_(CWMHelperRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
 
 
 				$column = CWMHelper::getTooltip($row, $params, $templateid);
@@ -2571,9 +2571,9 @@ class CWMListing
 	/**
 	 * Get Listing Exp
 	 *
-	 * @param   object                    $row       Item Info
-	 * @param   Registry  $params    Item Params
-	 * @param   CWMTemplateTable           $template  Template
+	 * @param   object            $row       Item Info
+	 * @param   Registry          $params    Item Params
+	 * @param   CWMTemplateTable  $template  Template
 	 *
 	 * @return object
 	 *
@@ -2616,7 +2616,7 @@ class CWMListing
 	 * Get Passage
 	 *
 	 * @param   Registry  $params  Item Params
-	 * @param   object                    $row     Item Info
+	 * @param   object    $row     Item Info
 	 *
 	 * @return string
 	 *
@@ -2666,8 +2666,8 @@ class CWMListing
 	/**
 	 * Share Helper file
 	 *
-	 * @param   string                    $link    Link
-	 * @param   object                    $row     Item Info
+	 * @param   string    $link    Link
+	 * @param   object    $row     Item Info
 	 * @param   Registry  $params  Item Params
 	 *
 	 * @return null|string

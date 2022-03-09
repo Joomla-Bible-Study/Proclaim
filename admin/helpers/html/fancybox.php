@@ -47,11 +47,11 @@ abstract class JHtmlFancybox
 		HTMLHelper::_('jquery.framework');
 		HTMLHelper::_('jwplayer.framework');
 		HTMLHelper::script('https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js');
-		HTMLHelper::script('media/com_proclaim/js/fancybox.js');
+		HTMLHelper::script('media/com_proclaim/js/fancybox.min.js');
 
 		if ($mouseweel)
 		{
-			HTMLHelper::script('media/com_proclaim/js/jquery.mousewheel.pack.js');
+			HTMLHelper::script('media/com_proclaim/js/jquery.mousewheel.pack.min.js');
 		}
 
 		self::loadCss($option);
@@ -71,6 +71,6 @@ abstract class JHtmlFancybox
 	public static function loadCss($option = false)
 	{
 		HTMLHelper::stylesheet('https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css');
-		HTMLHelper::stylesheet('media/com_proclaim/css/bsms.fancybox.css');
+		HTMLHelper::stylesheet('media/com_proclaim/css/bsms.fancybox.min.css');
 	}
 }

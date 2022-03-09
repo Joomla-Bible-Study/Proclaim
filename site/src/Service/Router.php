@@ -14,7 +14,6 @@ defined('_JEXEC') or die;
 use CWM\Component\Proclaim\Site\Service\ProclaimNomenuRules as NomenuRules;
 use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Categories\CategoryFactoryInterface;
-use Joomla\CMS\Categories\CategoryInterface;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Component\Router\RouterView;
 use Joomla\CMS\Component\Router\RouterViewConfiguration;
@@ -60,10 +59,10 @@ class Router extends RouterView
 	 */
 	public function __construct(SiteApplication $app, AbstractMenu $menu, CategoryFactoryInterface $categoryFactory, DatabaseInterface $db)
 	{
-		$this->db = $db;
+		$this->db              = $db;
 		$this->categoryFactory = $categoryFactory;
-		$params      = ComponentHelper::getParams('com_proclaim');
-		$this->noIDs = (bool) $params->get('sef_ids');
+		$params                = ComponentHelper::getParams('com_proclaim');
+		$this->noIDs           = (bool) $params->get('sef_ids');
 
 		$Sermons = new RouterViewConfiguration('CWMSermons');
 		$Sermons->setKey('id');
@@ -89,7 +88,7 @@ class Router extends RouterView
 		$SeriesDisplays->setKey('id');
 		$this->registerView($SeriesDisplays);
 
-		$commentform = new RouterViewConfiguration('CWMcommentform');
+		$commentform = new RouterViewConfiguration('CWMCommentForm');
 		$commentform->setKey('id');
 		$this->registerView($commentform);
 
@@ -137,6 +136,10 @@ class Router extends RouterView
 		$proclaim->setKey('id');
 		$this->registerView($proclaim);
 
+		$form = new RouterViewConfiguration('form');
+		$form->setKey('a_id');
+		$this->registerView($form);
+
 		parent::__construct($app, $menu);
 
 		$this->attachRule(new MenuRules($this));
@@ -146,10 +149,12 @@ class Router extends RouterView
 
 	/**
 	 * Method to get the segment(s) for a sermon
-	 * @param   string  $id     ID of the article to retrieve the segments for
-	 * @param   array   $query  The request that is built right now
 	 *
-	 * @return  array|string  The segments of this item
+	 * @param   integer  $id     ID of the article to retrieve the segments for
+	 * @param   array    $query  The request that is built right now
+	 *
+	 * @return  array  The segments of this item
+	 * @since 10.0.0
 	 */
 	public function getCWMSermonSegment($id, $query)
 	{
@@ -177,12 +182,28 @@ class Router extends RouterView
 	}
 
 	/**
+	 * Method to get the segment(s) for a form
+	 *
+	 * @param   string  $id     ID of the article form to retrieve the segments for
+	 * @param   array   $query  The request that is built right now
+	 *
+	 * @return  array  The segments of this item
+	 *
+	 * @since   3.7.3
+	 */
+	public function getFormSegment($id, $query)
+	{
+		return $this->getCWMSermonSegment($id, $query);
+	}
+
+	/**
 	 * Method to get the segment(s) for an article
 	 *
 	 * @param   string  $segment  Segment of the article to retrieve the ID for
 	 * @param   array   $query    The request that is parsed right now
 	 *
 	 * @return  mixed   The id of this item or false
+	 * @since   10.0.0
 	 */
 	public function getCWMSermonId($segment, $query)
 	{

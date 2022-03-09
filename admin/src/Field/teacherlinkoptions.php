@@ -8,6 +8,9 @@
  * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+
 defined('_JEXEC') or die;
 
 // Import the list field type
@@ -40,8 +43,8 @@ class JFormFieldTeacherLinkoptions extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		$options[] = JHtml::_('select.option', '0', JText::_('JBS_TPL_NO_LINK'));
-		$options[] = JHtml::_('select.option', '3', JText::_('JBS_TPL_LINK_TO_TEACHERS_PROFILE'));
+		$options[] = HtmlHelper::_('select.option', '0', Text::_('JBS_TPL_NO_LINK'));
+		$options[] = HtmlHelper::_('select.option', '3', Text::_('JBS_TPL_LINK_TO_TEACHERS_PROFILE'));
 		$options   = array_merge(parent::getOptions(), $options);
 
 		return $options;
