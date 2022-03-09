@@ -18,9 +18,11 @@ HtmlHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 HtmlHelper::_('dropdown.init');
 HtmlHelper::_('formbehavior.chosen', 'select');
 HtmlHelper::_('behavior.multiselect');
-HtmlHelper::_('proclaim.framework');
-HTMLHelper::_('proclaim.loadcss', $this->params);
-
+//HtmlHelper::_('proclaim.framework');
+//HTMLHelper::_('proclaim.loadcss', $this->params);
+$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+$wa->useStyle('com_proclaim.biblestudy');
+$wa->useStyle('com_proclaim.general');
 $app = Factory::getApplication();
 $user = Factory::getUser();
 $userId = $user->get('id');
@@ -32,7 +34,7 @@ $saveOrder = $listOrder == 'mediafile.ordering';
 
 if ($saveOrder)
 {
-	$saveOrderingUrl = 'index.php?option=com_proclaim&task=mediafiles.saveOrderAjax&tmpl=component';
+	$saveOrderingUrl = 'index.php?option=com_proclaim&task=cwmmediafilelist.saveOrderAjax&tmpl=component';
 	HtmlHelper::_('sortablelist.sortable', 'mediafileList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 }
 $sortFields = $this->getSortFields();
@@ -53,7 +55,7 @@ $sortFields = $this->getSortFields();
 </script>
 
 <h2><?php echo Text::_('JBS_CMN_MEDIA'); ?></h2>
-<form action="<?php echo Route::_('index.php?option=com_proclaim&view=mediafilelist'); ?>" method="post"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmmediafilelist'); ?>" method="post"
       name="adminForm" id="adminForm">
 	<div id="j-main-container">
 		<div id="filter-bar" class="btn-toolbar">
@@ -143,7 +145,7 @@ $sortFields = $this->getSortFields();
 					<td class="nowrap has-context">
 						<div class="pull-left">
 							<?php if ($canEdit || $canEditOwn) : ?>
-							<a href="<?php echo Route::_('index.php?option=com_proclaim&task=mediafileform.edit&a_id=' . (int) $item->id); ?>">
+							<a href="<?php echo Route::_('index.php?option=com_proclaim&task=cwmmediafileform.edit&a_id=' . (int) $item->id); ?>">
 								<?php endif; ?>
 								<span class="label">
 										<?php

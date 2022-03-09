@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\MVC\Model\ItemModel;
 Use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
+use CWM\Component\Proclaim\Administrator\Model\CWMMediafileModel;
 // Base this model on the backend version.
 //JLoader::register('BiblestudyModelMediafile', JPATH_ADMINISTRATOR . '/components/com_proclaim/models/MediaFileController.php');
 
@@ -22,7 +23,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class CWMMediaFileFormModel extends ItemModel
+class CWMMediaFileFormModel extends CWMMediafileModel
 {
 	/**
 	 * Constructor.

@@ -25,7 +25,7 @@ use CWM\Component\Proclaim\Administrator\Model\CWMCommentsModel;
  *
  * @since  7.0.0
  */
-class CWMCommentListModel extends ListModel
+class CWMCommentListModel extends CWMCommentsModel
 {
 	/**
 	 * Populate State

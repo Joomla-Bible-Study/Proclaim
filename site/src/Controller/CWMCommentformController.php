@@ -13,6 +13,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Router\Route;
+use CWM\Component\Proclaim\Administrator\Controller\CWMCommentController;
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -22,7 +23,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CWMCommentformController extends FormController
+class CWMCommentformController extends CWMCommentController
 {
 	/**
 	 * View item
@@ -128,7 +129,7 @@ class CWMCommentformController extends FormController
 	 *
 	 * @since    1.5
 	 */
-	public function getModel($name = 'CommentForm', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
+	public function getModel($name = 'CWMCommentFormModel', $prefix = 'administrator', $config = array('ignore_request' => true))
 	{
 		$model = parent::getModel($name, $prefix, $config);
 

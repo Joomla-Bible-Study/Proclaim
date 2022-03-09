@@ -7,7 +7,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-namespace CWM\Component\Proclaim\Site\CWMMediafileformController;
+namespace CWM\Component\Proclaim\Site\Controller;
+use JBSMAddon;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -15,6 +16,9 @@ use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Router\Route;
 use Joomla\Session\Session;
 use Joomla\CMS\MVC\Model\ItemModel;
+use CWM\Component\Proclaim\Administrator\Controller\CWMMediaFileController;
+use CWM\Component\Proclaim\Administrator\Model\CWMMediafileModel;
+use Joomla\CMS\Table\Table;
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -183,15 +187,7 @@ class CWMMediafileformController extends FormController
 	 *
 	 * @since   12.2
 	 */
-	public function getModel(
-		$name = 'Mediafileform',
-		$prefix = 'ProclaimModel',
-		$config = array('ignore_request' => true))
-	{
-		$model = parent::getModel($name, $prefix, $config);
 
-		return $model;
-	}
 
 	/**
 	 * Method to save a record.
@@ -203,14 +199,7 @@ class CWMMediafileformController extends FormController
 	 *
 	 * @since    1.6
 	 */
-	public function save($key = null, $urlVar = 'a_id')
-	{
-		$input = Factory::getApplication()->input;
-		$input->set('a_id', $input->get('id'));
-		$result = parent::save($key, $urlVar);
 
-		return $result;
-	}
 
 	/**
 	 * Function that allows child controller access to model data after the data has been saved.
@@ -222,19 +211,7 @@ class CWMMediafileformController extends FormController
 	 *
 	 * @since    3.1
 	 */
-	protected function postSaveHook(ItemModel $model, $validData = array())
-	{
-		$return = $this->input->getCmd('return');
-		$task   = $this->input->get('task');
 
-		if ($return && $task != 'apply')
-		{
-			Factory::getApplication()->enqueueMessage(Text::_('JBS_MED_SAVE'), 'message');
-			$this->setRedirect(base64_decode($return));
-		}
-
-		return;
-	}
 
 	/**
 	 * Method override to check if you can add a new record.

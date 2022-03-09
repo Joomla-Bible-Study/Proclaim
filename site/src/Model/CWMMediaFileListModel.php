@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
-use CWM\Component\Proclaim\Administrator\Controller\CWMMediaFilesController;
+use CWM\Component\Proclaim\Administrator\Model\CWMMediafilesModel;
 // Base this model on the backend version.
 //JLoader::register('BiblestudyModelMediafiles', JPATH_ADMINISTRATOR . '/components/com_proclaim/models/MediaFilesController.php');
 
@@ -24,7 +24,7 @@ use CWM\Component\Proclaim\Administrator\Controller\CWMMediaFilesController;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class CWMMediaFileListModel extends ListModel
+class CWMMediaFileListModel extends CWMMediafilesModel
 {
 	/**
 	 * Method to auto-populate the model state.

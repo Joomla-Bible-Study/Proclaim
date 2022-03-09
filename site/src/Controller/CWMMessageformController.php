@@ -155,13 +155,33 @@ class CWMMessageformController extends FormController
 	 *
 	 * @since    1.6
 	 */
-	public function edit($key = null, $urlVar = 'a_id')
+	protected function allowEdit($data = array(), $key = 'id')
 	{
-		$result = parent::edit($key, $urlVar);
+		$recordId = (int) isset($data[$key]) ? $data[$key] : 0;
 
-		return $result;
+		// Since there is no asset tracking, fallback to the component permissions.
+		if (!$recordId)
+		{
+			return parent::allowEdit($data, $key);
+		}
+
+		// Get the item.
+		$item = $this->getModel()->getItem($recordId);
+
+		// Since there is no item, return false.
+		if (empty($item))
+		{
+			return false;
+		}
+
+		$user = $this->app->getIdentity();
+
+		// Check if can edit own core.edit.own.
+		$canEditOwn = $user->authorise('core.edit.own', $this->option . '.message.' ) && $item->created_by == $user->id;
+
+		// Check the category core.edit permissions.
+		return $canEditOwn || $user->authorise('core.edit', $this->option . '.message.');
 	}
-
 	/**
 	 * Method to save a record.
 	 *
@@ -194,18 +214,6 @@ class CWMMessageformController extends FormController
 		return parent::allowAdd();
 	}
 
-	/**
-	 * Method override to check if you can edit an existing record.
-	 *
-	 * @param   array   $data  An array of input data.
-	 * @param   string  $key   The name of the key for the primary key.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   1.6
-	 */
-	protected function allowEdit($data = array(), $key = 'a_id')
-	{
-		return true;
-	}
+
+
 }

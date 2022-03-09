@@ -28,7 +28,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CWMCommentlistController extends BaseController
+class CWMCommentlistController extends CWMCommentsController
 {
 	/**
 	 * View item
@@ -61,7 +61,7 @@ class CWMCommentlistController extends BaseController
 	 *
 	 * @since 7.0
 	 */
-	public function getModel($name = 'CWMComments', $prefix = 'Administrator', $config = array('ignore_request' => true))
+	public function getModel($name = 'CWMCommentsList', $prefix = 'Administrator', $config = array('ignore_request' => true))
 	{
 		return parent::getModel($name, $prefix, $config);
 	}

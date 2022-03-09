@@ -13,6 +13,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Controller\BaseController;
+use CWM\Component\Proclaim\Administrator\Controller\CWMMediaFilesController;
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -22,7 +23,7 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class CWMMediafilelistController extends BaseController
+class CWMMediafilelistController extends CWMMediaFilesController
 {
 	/**
 	 * View item
