@@ -14,10 +14,9 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 use Joomla\CMS\Access\Access;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
-use Joomla\CMS\Filter\InputFilter;
-use Joomla\CMS\Object\CMSObject;
 use Joomla\Registry\Registry;
 use stdClass;
 
@@ -56,7 +55,7 @@ class CWMProclaimHelper
 	 * @param   int     $Itemid  ID
 	 * @param   string  $type    Type
 	 *
-	 * @return \Joomla\CMS\Object\CMSObject
+	 * @return \Joomla\Registry\Registry
 	 *
 	 * @throws \Exception
 	 * @since 1.5
@@ -64,7 +63,7 @@ class CWMProclaimHelper
 	public static function getActions($Itemid = 0, $type = '')
 	{
 		$result = new Registry;
-		$user = Factory::getUser();
+		$user   = Factory::getApplication()->getIdentity();
 
 		if (empty($Itemid))
 		{
@@ -153,7 +152,7 @@ class CWMProclaimHelper
 
 		foreach ($actions as $action)
 		{
-			$result->$action = $user->authorise($action, $assetName);
+			$result->set($action, $user->authorise($action, $assetName));
 		}
 
 		return $result;

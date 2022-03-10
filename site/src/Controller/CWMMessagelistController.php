@@ -19,9 +19,6 @@ use CWM\Component\Proclaim\Administrator\Model\CWMMessagesModel;
 // No Direct Access
 defined('_JEXEC') or die;
 
-// Base this model on the backend version.
-JLoader::register('ProclaimControllerMessages', JPATH_ADMINISTRATOR . '/components/com_proclaim/controllers/MessagesController.php');
-
 /**
  * Controller class for Messages
  *
@@ -31,24 +28,25 @@ JLoader::register('ProclaimControllerMessages', JPATH_ADMINISTRATOR . '/componen
 class CWMMessagelistController extends BaseController
 {
 	/**
-	 * View item
+	 * @var string View item
 	 *
 	 * @since    1.6
 	 */
 	protected $view_item = 'messageform';
 
 	/**
-	 * View list
+	 * @var string View List
 	 *
 	 * @since    1.6
 	 */
-	protected $view_list = 'messagelist';
+	protected string $view_list = 'messagelist';
 
 	/**
-	 * @var        string    The prefix to use with controller messages.
+	 * @var string The prefix to use with controller messages.
+	 *
 	 * @since    1.6
 	 */
-	protected $text_prefix = 'COM_PROCLAIM';
+	protected string $text_prefix = 'COM_PROCLAIM';
 
 	/**
 	 * Proxy for getModel
@@ -57,7 +55,7 @@ class CWMMessagelistController extends BaseController
 	 * @param   string  $prefix  The prefix for the PHP class name
 	 * @param   array   $config  Set ignore request
 	 *
-	 * @return ListModel
+	 * @return boolean|\Joomla\CMS\MVC\Model\BaseDatabaseModel|\Joomla\CMS\MVC\Model\ListModel
 	 *
 	 * @since 7.0
 	 */
@@ -65,8 +63,6 @@ class CWMMessagelistController extends BaseController
 	{
 		$model = parent::getModel($name, $prefix, $config);
 
-
-		//$this->items = $model->get('Items');
 		return $model;
 	}
 }

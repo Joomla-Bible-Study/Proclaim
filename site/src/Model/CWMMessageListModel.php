@@ -99,12 +99,12 @@ class CWMMessageListModel extends ListModel
 	 *
 	 * @return    void
 	 *
-	 * @since 7.1.0
 	 * @throws \Exception
+	 * @since 7.1.0
 	 */
 	protected function populateState($ordering = 'study.studydate', $direction = 'desc')
 	{
-		$app = Factory::getApplication('administrator');
+		$app = Factory::getApplication();
 
 		$forcedLanguage = $app->input->get('forcedLanguage', '', 'cmd');
 
