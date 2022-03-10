@@ -14,12 +14,11 @@ defined('_JEXEC') or die;
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\HTML\HTMLHelper as JHtml;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Component\Content\Administrator\Extension\ContentComponent;
@@ -39,7 +38,7 @@ class HTMLView extends BaseHtmlView
 	 * @var object
 	 * @since    7.0.0
 	 */
-	public $canDo;
+	public object $canDo;
 
 	/**
 	 * Books
@@ -47,7 +46,7 @@ class HTMLView extends BaseHtmlView
 	 * @var object
 	 * @since    7.0.0
 	 */
-	public $books;
+	public object $books;
 
 	/**
 	 * Teachers
@@ -55,7 +54,7 @@ class HTMLView extends BaseHtmlView
 	 * @var object
 	 * @since    7.0.0
 	 */
-	public $teachers;
+	public object $teachers;
 
 	/**
 	 * Series
@@ -63,7 +62,7 @@ class HTMLView extends BaseHtmlView
 	 * @var object
 	 * @since    7.0.0
 	 */
-	public $series;
+	public object $series;
 
 	/**
 	 * Message Types
@@ -71,7 +70,7 @@ class HTMLView extends BaseHtmlView
 	 * @var object
 	 * @since    7.0.0
 	 */
-	public $messageTypes;
+	public object $messageTypes;
 
 	/**
 	 * Years
@@ -79,7 +78,7 @@ class HTMLView extends BaseHtmlView
 	 * @var object
 	 * @since    7.0.0
 	 */
-	public $years;
+	public object $years;
 
 	/**
 	 * Filter Levels
@@ -87,7 +86,7 @@ class HTMLView extends BaseHtmlView
 	 * @var array
 	 * @since    7.0.0
 	 */
-	public $f_levels;
+	public array $f_levels;
 
 	/**
 	 * Side Bar
@@ -95,15 +94,15 @@ class HTMLView extends BaseHtmlView
 	 * @var object
 	 * @since    7.0.0
 	 */
-	public $sidebar;
+	public object $sidebar;
 
 	/**
 	 * Items
 	 *
-	 * @var object
+	 * @var array
 	 * @since    7.0.0
 	 */
-	protected $items;
+	protected array $items;
 
 	/**
 	 * Pagination
@@ -111,7 +110,7 @@ class HTMLView extends BaseHtmlView
 	 * @var object
 	 * @since    7.0.0
 	 */
-	protected $pagination;
+	protected object $pagination;
 
 	/**
 	 * State
@@ -119,7 +118,23 @@ class HTMLView extends BaseHtmlView
 	 * @var object
 	 * @since    7.0.0
 	 */
-	protected $state;
+	protected object $state;
+
+	/**
+	 * Active Filters
+	 *
+	 * @var array
+	 * @since    7.0.0
+	 */
+	protected array $activeFilters;
+
+	/**
+	 * Filters of the Form
+	 *
+	 * @var mixed ?still not setup yet?
+	 * @since    7.0.0
+	 */
+	public $filterForm;
 
 	/**
 	 * Execute and display a template script.
@@ -152,16 +167,16 @@ class HTMLView extends BaseHtmlView
 
 		// Levels filter.
 		$options   = array();
-		$options[] = JHtml::_('select.option', '1', Text::_('J1'));
-		$options[] = JHtml::_('select.option', '2', Text::_('J2'));
-		$options[] = JHtml::_('select.option', '3', Text::_('J3'));
-		$options[] = JHtml::_('select.option', '4', Text::_('J4'));
-		$options[] = JHtml::_('select.option', '5', Text::_('J5'));
-		$options[] = JHtml::_('select.option', '6', Text::_('J6'));
-		$options[] = JHtml::_('select.option', '7', Text::_('J7'));
-		$options[] = JHtml::_('select.option', '8', Text::_('J8'));
-		$options[] = JHtml::_('select.option', '9', Text::_('J9'));
-		$options[] = JHtml::_('select.option', '10', Text::_('J10'));
+		$options[] = HTMLHelper::_('select.option', '1', Text::_('J1'));
+		$options[] = HTMLHelper::_('select.option', '2', Text::_('J2'));
+		$options[] = HTMLHelper::_('select.option', '3', Text::_('J3'));
+		$options[] = HTMLHelper::_('select.option', '4', Text::_('J4'));
+		$options[] = HTMLHelper::_('select.option', '5', Text::_('J5'));
+		$options[] = HTMLHelper::_('select.option', '6', Text::_('J6'));
+		$options[] = HTMLHelper::_('select.option', '7', Text::_('J7'));
+		$options[] = HTMLHelper::_('select.option', '8', Text::_('J8'));
+		$options[] = HTMLHelper::_('select.option', '9', Text::_('J9'));
+		$options[] = HTMLHelper::_('select.option', '10', Text::_('J10'));
 
 		$this->f_levels = $options;
 
@@ -230,7 +245,7 @@ class HTMLView extends BaseHtmlView
 			$toolbar->archive('messages.archive');
 		}
 
-		if ($this->state->get('filter.published') == ContentComponent::CONDITION_TRASHED && $canDo->get('core.delete'))
+		if ($this->state->get('filter.published') === ContentComponent::CONDITION_TRASHED && $canDo->get('core.delete'))
 		{
 			$toolbar->delete('messages.delete')
 				->text('JTOOLBAR_EMPTY_TRASH')
