@@ -3,13 +3,15 @@
  * Batch Template
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2019 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2022 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
 defined('_JEXEC') or die;
 use Joomla\CMS\Html\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
+
 $published = $this->state->get('filter.published');
 ?>
 <div class="modal hide fade" id="collapseModal">
@@ -22,7 +24,7 @@ $published = $this->state->get('filter.published');
 
 		<div class="control-group">
 			<div class="controls">
-				<?php echo HtmlHelper::_('batch.access'); ?>
+				<?php echo LayoutHelper::render('joomla.html.batch.access', []); ?>
 			</div>
 		</div>
 

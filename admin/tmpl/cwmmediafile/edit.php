@@ -3,7 +3,7 @@
  * Edit
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2019 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2022 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -13,9 +13,10 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die;
+$input = Factory::getApplication()->input;
 
 // Set up defaults
-if (Factory::getApplication()->input->getInt('id'))
+if ($input->getInt('id'))
 {
 	$study_id   = $this->item->study_id;
 	$createdate = $this->item->createdate;
@@ -137,7 +138,7 @@ $this->useCoreUI = true;
 
 			<?php echo $this->addon->render($this->media_form, $new); ?>
 
-			<?php if ($this->canDo->get('core.cwmadmin')): ?>
+			<?php if ($this->canDo->get('core.admin')): ?>
 				<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'permissions', JText::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
 				<div class="row-fluid">
 					<?php echo $this->form->getInput('rules'); ?>

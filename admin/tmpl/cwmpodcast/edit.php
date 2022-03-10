@@ -51,7 +51,7 @@ $wa->useScript('keepalive')
 				</li>
 				<li><a href="#images" data-toggle="tab"><?php echo JText::_('JBS_PDC_PODCAST_IMAGES'); ?></a></li>
 
-				<?php if ($this->canDo->get('core.cwmadmin')): ?>
+				<?php if ($this->canDo->get('core.admin')): ?>
 					<li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a>
 					</li>
 				<?php endif ?>
@@ -215,7 +215,7 @@ $wa->useScript('keepalive')
 					</div>
 				</div>
 
-				<?php if ($this->canDo->get('core.cwmadmin')): ?>
+				<?php if ($this->canDo->get('core.admin')): ?>
 					<div class="tab-pane" id="permissions">
 
 						<?php echo $this->form->getInput('rules'); ?>

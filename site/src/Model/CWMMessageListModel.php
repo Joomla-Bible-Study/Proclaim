@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2019 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2022 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -99,12 +99,12 @@ class CWMMessageListModel extends ListModel
 	 *
 	 * @return    void
 	 *
-	 * @since 7.1.0
 	 * @throws \Exception
+	 * @since 7.1.0
 	 */
 	protected function populateState($ordering = 'study.studydate', $direction = 'desc')
 	{
-		$app = Factory::getApplication('administrator');
+		$app = Factory::getApplication();
 
 		$forcedLanguage = $app->input->get('forcedLanguage', '', 'cmd');
 

@@ -3,32 +3,31 @@
  * Default
  *
  * @package    BibleStudy.Site
- * @copyright  2007 - 2019 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2022 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
 defined('_JEXEC') or die;
-use Joomla\CMS\Html\HTMLHelper;
+
 use Joomla\CMS\Factory;
+use Joomla\CMS\Html\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
-HtmlHelper::_('dropdown.init');
-HtmlHelper::_('formbehavior.chosen', 'select');
-//HtmlHelper::_('proclaim.framework');
-//HTMLHelper::_('proclaim.loadcss', $this->params);
-HtmlHelper::_('behavior.multiselect');
+
+HtmlHelper::_('proclaim.framework');
+HTMLHelper::_('proclaim.loadcss', $this->params);
 $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
 $wa->useStyle('com_proclaim.biblestudy');
 $wa->useStyle('com_proclaim.podcast');
 
-$app = Factory::getApplication();
-$user = Factory::getUser();
-$userId = $user->get('id');
+$app       = Factory::getApplication();
+$user      = $app->getIdentity();
+$userId    = $user->get('id');
 $listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn = $this->escape($this->state->get('list.direction'));
-$archived = $this->state->get('filter.published') == 2 ? true : false;
-$trashed = $this->state->get('filter.published') == -2 ? true : false;
+$listDirn  = $this->escape($this->state->get('list.direction'));
+$archived  = $this->state->get('filter.published') == 2 ? true : false;
+$trashed   = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder == 'ordering';
 ?>
 <h2><?php echo Text::_('JBS_CMN_MESSAGES_LIST'); ?></h2>
@@ -48,7 +47,7 @@ $saveOrder = $listOrder == 'ordering';
 			<div class="btn-group pull-left hidden-phone">
 				<button class="btn tip hasTooltip" type="submit"
 				        title="<?php echo Text::_('JSEARCH_FILTER_SUBMIT'); ?>"><i
-						class="icon-search"></i></button>
+							class="icon-search"></i></button>
 				<button class="btn tip hasTooltip" type="button"
 				        onclick="document.id('filter_search').value='';this.form.submit();"
 				        title="<?php echo Text::_('JSEARCH_FILTER_CLEAR'); ?>"><i class="icon-remove"></i></button>
@@ -120,10 +119,10 @@ $saveOrder = $listOrder == 'ordering';
 			<?php
 			foreach ($this->items as $i => $item) :
 				$item->max_ordering = 0;
-				$canCreate          = $user->authorise('core.create');
-				$canEdit            = $user->authorise('core.edit', 'com_proclaim.message.' . $item->id);
-				$canEditOwn         = $user->authorise('core.edit.own', 'com_proclaim.message.' . $item->id);
-				$canChange          = $user->authorise('core.edit.state', 'com_proclaim.message.' . $item->id);
+				$canCreate = $user->authorise('core.create');
+				$canEdit = $user->authorise('core.edit', 'com_proclaim.message.' . $item->id);
+				$canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.message.' . $item->id);
+				$canChange = $user->authorise('core.edit.state', 'com_proclaim.message.' . $item->id);
 				?>
 				<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->id; ?>">
 					<td class="center hidden-phone">
@@ -151,29 +150,29 @@ $saveOrder = $listOrder == 'ordering';
 						</div>
 						<div class="pull-left">
 							<?php
-								// Create dropdown items
-								if ($item->published) :
-									HtmlHelper::_('dropdown.unpublish', 'cb' . $i, 'messagelist.');
-								else :
-									HtmlHelper::_('dropdown.publish', 'cb' . $i, 'messagelist.');
-								endif;
+							// Create dropdown items
+							if ($item->published) :
+								HtmlHelper::_('dropdown.unpublish', 'cb' . $i, 'messagelist.');
+							else :
+								HtmlHelper::_('dropdown.publish', 'cb' . $i, 'messagelist.');
+							endif;
 
-								HtmlHelper::_('dropdown.divider');
+							HtmlHelper::_('dropdown.divider');
 
-								if ($archived) :
-									HtmlHelper::_('dropdown.unarchive', 'cb' . $i, 'messagelist.');
-								else :
-									HtmlHelper::_('dropdown.archive', 'cb' . $i, 'messagelist.');
-								endif;
+							if ($archived) :
+								HtmlHelper::_('dropdown.unarchive', 'cb' . $i, 'messagelist.');
+							else :
+								HtmlHelper::_('dropdown.archive', 'cb' . $i, 'messagelist.');
+							endif;
 
-								if ($trashed) :
-									HtmlHelper::_('dropdown.untrash', 'cb' . $i, 'messagelist.');
-								else :
-									HtmlHelper::_('dropdown.trash', 'cb' . $i, 'messagelist.');
-								endif;
+							if ($trashed) :
+								HtmlHelper::_('dropdown.untrash', 'cb' . $i, 'messagelist.');
+							else :
+								HtmlHelper::_('dropdown.trash', 'cb' . $i, 'messagelist.');
+							endif;
 
-								// Render dropdown list
-								echo HtmlHelper::_('dropdown.render');
+							// Render dropdown list
+							echo HtmlHelper::_('dropdown.render');
 							?>
 						</div>
 					</td>

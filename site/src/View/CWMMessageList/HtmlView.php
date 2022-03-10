@@ -3,20 +3,19 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2019 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2022 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
 namespace CWM\Component\Proclaim\Site\View\CWMMessageList;
+
 // No Direct Access
 defined('_JEXEC') or die;
+
+use Joomla\CMS\Document\Document;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Html\HTMLHelper;
-use CWM\Component\Proclaim\Site\Helper\CWMImages;
-use Joomla\CMS\Uri\Uri;
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Router\Route;
@@ -64,7 +63,7 @@ class HtmlView extends BaseHtmlView
 	 * @since 7.0 */
 	public $newlink;
 
-	/** @var  JDocument Document
+	/** @var  Document Document
 	 *
 	 * @since 7.0 */
 	public $document;
@@ -117,15 +116,16 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  mixed
+	 * @return  false|void
 	 *
-	 * @since 7.0
 	 * @throws \Exception
+	 * @since 7.0
 	 */
 	public function display($tpl = null)
 	{
 		$app              = Factory::getApplication();
-		//$items            = $this->get('Items');
+
+		// $items            = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
 		$this->params     = $this->state->params;
@@ -137,12 +137,11 @@ class HtmlView extends BaseHtmlView
 		$this->series        = $this->get('Series');
 		$this->messageTypes  = $this->get('MessageTypes');
 		$this->years         = $this->get('Years');
-		//$modelView           = $this->getModel();
 		$this->items               = $this->get('Items');
 		$this->filterForm    = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');
 
-		$language = Factory::getLanguage();
+		$language = $app->getLanguage();
 		$language->load('', JPATH_ADMINISTRATOR, null, true);
 
 		if (!$this->canDo->get('core.edit'))
@@ -182,7 +181,8 @@ class HtmlView extends BaseHtmlView
 		// Because the application sets a default page title,
 		// we need to get it from the menu item itself
 		$menu = $menus->getActive();
-/*
+
+		/*
 		if ($menu)
 		{
 			$this->params->def('page_heading', $this->params->get('page_title', $menu->title));
