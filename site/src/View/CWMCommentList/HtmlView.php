@@ -7,18 +7,18 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Site\View\CWMCommentList;
+
 // No Direct Access
 defined('_JEXEC') or die;
-use Joomla\Registry\Registry;
-use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Html\HTMLHelper;
-use CWM\Component\Proclaim\Site\Helper\CWMImages;
-use Joomla\CMS\Uri\Uri;
+
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Html\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+
 /**
  * View class for CommentList extends Comments
  *
@@ -117,7 +117,6 @@ class HtmlView extends BaseHtmlView
 		$options[] = HtmlHelper::_('select.option', '10', Text::_('J10'));
 
 		$this->f_levels = $options;
-
 
 
 		// Display the template
