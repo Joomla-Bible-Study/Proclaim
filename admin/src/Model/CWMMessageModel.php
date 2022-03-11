@@ -260,41 +260,50 @@ class CWMMessageModel extends AdminModel
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
+		$app = Factory::getApplication();
+
 		// Get the form.
-		$form = $this->loadForm('com_proclaim.message', 'message', array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_proclaim.cwmmessage', 'message', array('control' => 'jform', 'load_data' => $loadData));
 
 		if ($form === null)
 		{
 			return false;
 		}
 
-		$jinput = Factory::getApplication()->input;
+		// Object uses for checking edit state permission of article
+		$record = new \stdClass;
 
-		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
-		if ($jinput->get('a_id'))
-		{
-			$id = $jinput->get('a_id', 0);
-		}
-		else
-		{
-			// The back end uses id so we use that the rest of the time and set it to 0 by default.
-			$id = $jinput->get('id', 0);
-		}
+		// Get ID of the article from input, for frontend, we use a_id while backend uses id
+		$messageIdFromInput = $app->isClient('site')
+			? $app->input->getInt('a_id', 0)
+			: $app->input->getInt('id', 0);
 
-		$user = Factory::getUser();
+		// On edit article, we get ID of article from article.id state, but on save, we use data from input
+		$id = (int) $this->getState('message.id', $messageIdFromInput);
 
-		// Check for existing article.
+		$record->id = $id;
+
+		// Check for existing message.
 		// Modify the form based on Edit State access controls.
-		if (($id != 0 && (!$user->authorise('core.edit.state', 'com_proclaim.message.' . (int) $id)))
-			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_proclaim')))
+		if (!$this->canEditState($record))
 		{
 			// Disable fields for display.
+			$form->setFieldAttribute('featured', 'disabled', 'true');
+			$form->setFieldAttribute('featured_up', 'disabled', 'true');
+			$form->setFieldAttribute('featured_down', 'disabled', 'true');
 			$form->setFieldAttribute('ordering', 'disabled', 'true');
+			$form->setFieldAttribute('publish_up', 'disabled', 'true');
+			$form->setFieldAttribute('publish_down', 'disabled', 'true');
 			$form->setFieldAttribute('state', 'disabled', 'true');
 
 			// Disable fields while saving.
-			// The controller has already verified this is an article you can edit.
+			// The controller has already verified this is a message you can edit.
+			$form->setFieldAttribute('featured', 'filter', 'unset');
+			$form->setFieldAttribute('featured_up', 'filter', 'unset');
+			$form->setFieldAttribute('featured_down', 'filter', 'unset');
 			$form->setFieldAttribute('ordering', 'filter', 'unset');
+			$form->setFieldAttribute('publish_up', 'filter', 'unset');
+			$form->setFieldAttribute('publish_down', 'filter', 'unset');
 			$form->setFieldAttribute('state', 'filter', 'unset');
 		}
 
@@ -313,7 +322,7 @@ class CWMMessageModel extends AdminModel
 	 */
 	public function getItem($pk = null)
 	{
-		$jinput = Factory::getApplication()->input;
+		$jinput = Factory::getApplication()->getInput();
 
 		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
 		if ($jinput->get('a_id'))

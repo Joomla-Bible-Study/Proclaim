@@ -17,11 +17,16 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CWMThumbnail;
 use CWM\Component\Proclaim\Administrator\Helper\CWMTranslated;
-use CWMMessageTable;
+use CWM\Component\Proclaim\Administrator\Model\CWMMessageModel;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Helper\TagsHelper;
+use Joomla\CMS\Language\Associations;
+use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Table\Table;
 use Joomla\CMS\Workflow\Workflow;
 use Joomla\Input\Input;
 use Joomla\Registry\Registry;
@@ -33,219 +38,25 @@ use Joomla\Utilities\ArrayHelper;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CWMMessageFormModel extends AdminModel
+class CWMMessageFormModel extends CWMMessageModel
 {
 	/**
-	 * @var    string  The prefix to use with controller messages.
-	 * @since  1.6
-	 */
-	protected $text_prefix = 'com_proclaim';
-
-	/**
-	 * The type alias for this content type (for example, 'com_content.article').
+	 * Model typeAlias string. Used for version history.
 	 *
-	 * @var      string
-	 * @since    3.2
+	 * @var    string
+	 *
+	 * @since  4.0.0
 	 */
 	public $typeAlias = 'com_proclaim.cwmmessage';
 
 	/**
-	 * Duplicate Check
+	 * Name of the form
 	 *
-	 * @param   int  $study_id  Study ID
-	 * @param   int  $topic_id  Topic ID
+	 * @var    string
 	 *
-	 * @return boolean
-	 *
-	 * @since 7.0
+	 * @since  4.0.0
 	 */
-	public function isDuplicate($study_id, $topic_id)
-	{
-		$db    = Factory::getDbo();
-		$query = $db->getQuery(true);
-		$query->select('*')
-			->from('#__bsms_studytopics')
-			->where('study_id = ' . (int) $study_id)
-			->where('topic_id = ' . (int) $topic_id);
-		$db->setQuery($query);
-		$tresult = $db->loadObject();
-
-		if (empty($tresult))
-		{
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Gets all the topics associated with a particular study
-	 *
-	 * @return string JSON Object containing the topics
-	 *
-	 * @throws \Exception
-	 * @since 7.0.1
-	 */
-	public function getTopics()
-	{
-		// Do search in case of present study only, suppress otherwise
-		$input          = new Input;
-		$translatedList = array();
-		$id             = $input->get('a_id', 0, 'int');
-
-		if (!$id)
-		{
-			$id = $input->get('id', 0, 'int');
-		}
-
-		if ($id > 0)
-		{
-			$db    = $this->getDbo();
-			$query = $db->getQuery(true);
-
-			$query->select('topic.id, topic.topic_text, topic.params AS topic_params');
-			$query->from('#__bsms_studytopics AS studytopics');
-
-			$query->join('LEFT', '#__bsms_topics AS topic ON topic.id = studytopics.topic_id');
-			$query->where('studytopics.study_id = ' . (int) $id);
-
-			$db->setQuery($query->__toString());
-			$topics = $db->loadObjectList();
-
-			if ($topics)
-			{
-				foreach ($topics as $topic)
-				{
-					$text             = CWMTranslated::getTopicItemTranslated($topic);
-					$translatedList[] = array(
-						'id'   => $topic->id,
-						'name' => $text
-					);
-				}
-			}
-		}
-
-		return json_encode($translatedList, JSON_THROW_ON_ERROR);
-	}
-
-	/**
-	 * Gets all topics available
-	 *
-	 * @return string JSON Object containing the topics
-	 *
-	 * @throws \JsonException
-	 * @since 7.0.1
-	 */
-	public function getAlltopics()
-	{
-		$db    = $this->getDbo();
-		$query = $db->getQuery(true);
-
-		$query->select('topic.id, topic.topic_text, topic.params AS topic_params');
-		$query->from('#__bsms_topics AS topic');
-
-		$db->setQuery($query->__toString());
-		$topics         = $db->loadObjectList();
-		$translatedList = array();
-
-		if ($topics)
-		{
-			foreach ($topics as $topic)
-			{
-				$text             = CWMTranslated::getTopicItemTranslated($topic);
-				$translatedList[] = array(
-					'id'   => $topic->id,
-					'name' => $text
-				);
-			}
-		}
-
-		return json_encode($translatedList, JSON_THROW_ON_ERROR);
-	}
-
-	/**
-	 * Returns a list of media files associated with this study
-	 *
-	 * @return object
-	 * @since   7.0
-	 */
-	public function getMediaFiles()
-	{
-		$db    = $this->getDbo();
-		$query = $db->getQuery(true);
-
-		$query->select('m.id, m.language, m.published, m.createdate, m.params');
-		$query->from('#__bsms_mediafiles AS m');
-		$query->where('m.study_id = ' . (int) $this->getItem()->id);
-		$query->where('(m.published = 0 OR m.published = 1)');
-		$query->order('m.createdate DESC');
-
-		// Join over the asset groups.
-		$query->select('ag.title AS access_level');
-		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = m.access');
-
-		$db->setQuery($query->__toString());
-		$mediafiles = $db->loadObjectList();
-
-		foreach ($mediafiles as $i => $mediafile)
-		{
-			$reg = new Registry;
-			$reg->loadString($mediafile->params);
-			$mediafiles[$i]->params = $reg;
-		}
-
-		return $mediafiles;
-	}
-
-	/**
-	 * Overrides the JModelAdmin save routine to save the topics(tags)
-	 *
-	 * @param   string  $data  The form data.
-	 *
-	 * @return boolean
-	 *
-	 * @throws \Exception
-	 * @since 7.0.1
-	 */
-	public function save($data)
-	{
-		/** @var Registry $params */
-		$app    = Factory::getApplication();
-		$params = CWMParams::getAdmin()->params;
-		$input  = $app->input;
-		$path   = 'images/biblestudy/studies/' . $data['id'];
-
-		$this->cleanCache();
-
-		if ($input->get('a_id'))
-		{
-			$data['id'] = $input->get('a_id');
-		}
-
-		// If no image uploaded, just save data as usual
-		if (empty($data['image']) || strpos($data['image'], 'thumb_') !== false)
-		{
-			if (empty($data['image']))
-			{
-				// Modify model data if no image is set.
-				$data['thumbnailm'] = "";
-			}
-			elseif (!CWMProclaimHelper::startsWith(basename($data['image']), 'thumb_'))
-			{
-				// Modify model data
-				$data['thumbnailm'] = $path . '/thumb_' . basename($data['image']);
-			}
-
-			return parent::save($data);
-		}
-
-		CWMThumbnail::create($data['image'], $path, $params->get('thumbnail_study_size', 100));
-
-		// Modify model data
-		$data['thumbnailm'] = $path . '/thumb_' . basename($data['image']);
-
-		return parent::save($data);
-	}
+	protected $formName = 'cwmmessageform';
 
 	/**
 	 * Get the form data
@@ -261,460 +72,164 @@ class CWMMessageFormModel extends AdminModel
 	public function getForm($data = array(), $loadData = true)
 	{
 		// Get the form.
-		$form = $this->loadForm('com_proclaim.message', 'message', array('control' => 'jform', 'load_data' => $loadData));
+		$form = parent::getForm($data, $loadData);
 
-		if ($form === null)
+		// Prevent messing with article language and category when editing existing contact with associations
+		if ($id = ($this->getState('message.id') && Associations::isEnabled()))
 		{
-			return false;
-		}
+			$associations = Associations::getAssociations('com_proclaim', '#__bsms_studies', 'com_message.item', $id);
 
-		$jinput = Factory::getApplication()->input;
-
-		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
-		if ($jinput->get('a_id'))
-		{
-			$id = $jinput->get('a_id', 0);
-		}
-		else
-		{
-			// The back end uses id so we use that the rest of the time and set it to 0 by default.
-			$id = $jinput->get('id', 0);
-		}
-
-		$user = Factory::getUser();
-
-		// Check for existing article.
-		// Modify the form based on Edit State access controls.
-		if (($id != 0 && (!$user->authorise('core.edit.state', 'com_proclaim.message.' . (int) $id)))
-			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_proclaim')))
-		{
-			// Disable fields for display.
-			$form->setFieldAttribute('ordering', 'disabled', 'true');
-			$form->setFieldAttribute('state', 'disabled', 'true');
-
-			// Disable fields while saving.
-			// The controller has already verified this is an article you can edit.
-			$form->setFieldAttribute('ordering', 'filter', 'unset');
-			$form->setFieldAttribute('state', 'filter', 'unset');
+			// Make fields read only
+			if (!empty($associations))
+			{
+				$form->setFieldAttribute('language', 'readonly', 'true');
+				$form->setFieldAttribute('language', 'filter', 'unset');
+			}
 		}
 
 		return $form;
 	}
 
 	/**
-	 * Method to get media item
+	 * Get the return URL.
 	 *
-	 * @param   int  $pk  int
+	 * @return  string  The return URL.
 	 *
-	 * @return  mixed
+	 * @since   4.0.0
+	 */
+	public function getReturnPage()
+	{
+		return base64_encode($this->getState('return_page'));
+	}
+
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @return  void
+	 *
+	 * @since   4.0.0
 	 *
 	 * @throws  \Exception
-	 * @since   9.0.0
 	 */
-	public function getItem($pk = null)
+	protected function populateState()
 	{
-		$jinput = Factory::getApplication()->input;
+		$app = Factory::getApplication();
 
-		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
-		if ($jinput->get('a_id'))
-		{
-			$pk = $jinput->get('a_id', 0);
-		}
-		else
-		{
-			// The back end uses id so we use that the rest of the time and set it to 0 by default.
-			$pk = $jinput->get('id', 0);
-		}
+		// Load state from the request.
+		$pk = $app->input->getInt('id');
+		$this->setState('message.id', $pk);
 
-		if (!empty($this->data))
-		{
-			return $this->data;
-		}
+		$return = $app->input->get('return', null, 'base64');
+		$this->setState('return_page', base64_decode($return));
 
-		$this->data = parent::getItem($pk);
+		// Load the parameters.
+		$params = $app->getParams();
+		$this->setState('params', $params);
 
-		return $this->data;
+		$this->setState('layout', $app->input->getString('layout'));
 	}
 
 	/**
-	 * Method to check-out a row for editing.
+	 * Allows preprocessing of the JForm object.
 	 *
-	 * @param   integer  $pk  The numeric id of the primary key.
+	 * @param   Form    $form   The form object
+	 * @param   array   $data   The data to be merged into the form object
+	 * @param   string  $group  The plugin group to be executed
 	 *
-	 * @return  boolean  False on failure or error, true otherwise.
+	 * @return  void
 	 *
-	 * @since   11.1
+	 * @throws \Exception
+	 * @since   4.0.0
 	 */
-	public function checkout($pk = null)
+	protected function preprocessForm(Form $form, $data, $group = 'contact')
 	{
-		return true;
+		if (!Multilanguage::isEnabled())
+		{
+			$form->setFieldAttribute('language', 'type', 'hidden');
+			$form->setFieldAttribute('language', 'default', '*');
+		}
+
+		parent::preprocessForm($form, $data, $group);
 	}
 
 	/**
-	 * Saves the manually set order of records.
+	 * Method to get a table object, load it if necessary.
 	 *
-	 * @param   array    $pks    An array of primary key ids.
-	 * @param   integer  $order  +1 or -1
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
+	 *
+	 * @return  bool|Table  A Table object
+	 *
+	 * @since   4.0.0
+
+	 * @throws  \Exception
+	 */
+	public function getTable($name = 'CWMMessage', $prefix = 'Administrator', $options = array())
+	{
+		return parent::getTable($name, $prefix, $options);
+	}
+
+	/**
+	 * Method to get media item
+	 *
+	 * @param   integer  $itemId ID
 	 *
 	 * @return  mixed
 	 *
 	 * @throws \Exception
-	 * @since    11.1
+	 * @since   9.0.0
 	 */
-	public function saveorder($pks = null, $order = null)
+	public function getItem($itemId = null)
 	{
-		/** @var CWMMessageTable $row */
-		$row        = $this->getTable();
-		$conditions = array();
+		$jinput = Factory::getApplication()->getInput();
 
-		// Update ordering values
-		foreach ($pks as $i => $pk)
+		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
+		if ($jinput->get('a_id'))
 		{
-			$row->load((int) $pk);
+			$itemId = $jinput->get('a_id', 0);
+		}
+		else
+		{
+			// The back end uses id so we use that the rest of the time and set it to 0 by default.
+			$itemId = $jinput->get('id', 0);
+		}
 
-			// Track categories
-			$groupings[] = $row->id;
+		$itemId = (int) (!empty($itemId)) ? $itemId : $this->getState('message.id');
 
-			if ($row->ordering != $order[$i])
+		// Get a row instance.
+		$table = $this->getTable();
+
+		// Attempt to load the row.
+		try
+		{
+			if (!$table->load($itemId))
 			{
-				$row->ordering = $order[$i];
-
-				if (!$row->store())
-				{
-					$this->setError($this->_db->getErrorMsg());
-
-					return false;
-				}
-
-				// Remember to reorder within position and client_id
-				$condition = $this->getReorderConditions($row);
-				$found     = false;
-
-				foreach ($conditions as $cond)
-				{
-					if ($cond[1] == $condition)
-					{
-						$found = true;
-						break;
-					}
-				}
-
-				if (!$found)
-				{
-					$key          = $row->getKeyName();
-					$conditions[] = array($row->$key, $condition);
-				}
+				return false;
 			}
 		}
-
-		foreach ($conditions as $cond)
+		catch (\Exception $e)
 		{
-			// $row->reorder('id = ' . (int) $group);
-			$row->load($cond[0]);
-			$row->reorder($cond[1]);
-		}
-
-		// Clear the component's cache
-		$this->cleanCache();
-
-		return true;
-	}
-
-	/**
-	 * Custom clean the cache of com_proclaim and biblestudy modules
-	 *
-	 * @param   string   $group      The cache group
-	 * @param   integer  $client_id  The ID of the client
-	 *
-	 * @return  void
-	 *
-	 * @since    1.6
-	 */
-	protected function cleanCache($group = null, $client_id = 0)
-	{
-		parent::cleanCache('com_proclaim');
-		parent::cleanCache('mod_biblestudy');
-	}
-
-	/**
-	 * Method to perform batch operations on an item or a set of items.
-	 *
-	 * @param   array  $commands  An array of commands to perform.
-	 * @param   array  $pks       An array of item ids.
-	 * @param   array  $contexts  An array of item contexts.
-	 *
-	 * @return    boolean     Returns true on success, false on failure.
-	 *
-	 * @since    2.5
-	 */
-	public function batch($commands, $pks, $contexts)
-	{
-		// Sanitize user ids.
-		$pks = array_unique($pks);
-		ArrayHelper::toInteger($pks);
-
-		// Remove any values of zero.
-		if (in_array(0, $pks, true))
-		{
-			unset($pks[array_search(0, $pks, true)]);
-		}
-
-		if (empty($pks))
-		{
-			$this->setError(Text::_('JGLOBAL_NO_ITEM_SELECTED'));
+			Factory::getApplication()->enqueueMessage($e->getMessage());
 
 			return false;
 		}
 
-		$done = false;
+		$properties = $table->getProperties();
+		$value      = ArrayHelper::toObject($properties, \Joomla\CMS\Object\CMSObject::class);
 
-		if ($commands['teacher'] != '')
+		// Convert field to Registry.
+		$value->params = new Registry($value->params);
+
+		if ($itemId)
 		{
-			if (!$this->batchTeacher($commands['teacher'], $pks, $contexts))
-			{
-				return false;
-			}
-
-			$done = true;
+			$value->tags = new TagsHelper;
+			$value->tags->getTagIds($value->id, 'com_proclaim.messsage');
+			$value->metadata['tags'] = $value->tags;
 		}
 
-		if ($commands['series'] != '')
-		{
-			if (!$this->batchSeries($commands['series'], $pks, $contexts))
-			{
-				return false;
-			}
-
-			$done = true;
-		}
-
-		if ($commands['messagetype'] != '')
-		{
-			if (!$this->batchMessagetype($commands['messagetype'], $pks, $contexts))
-			{
-				return false;
-			}
-
-			$done = true;
-		}
-
-		return $done;
-	}
-
-	/**
-	 * Batch popup changes for a group of media files.
-	 *
-	 * @param   string  $value     The new value matching a client.
-	 * @param   array   $pks       An array of row IDs.
-	 * @param   array   $contexts  An array of item contexts.
-	 *
-	 * @return  boolean  True if successful, false otherwise and internal error is set.
-	 *
-	 * @since   2.5
-	 */
-	protected function batchTeacher($value, $pks, $contexts)
-	{
-		// Set the variables
-		$user = Factory::getUser();
-		/** @var CWMMessageTable $table */
-		$table = $this->getTable();
-
-		foreach ($pks as $pk)
-		{
-			if ($user->authorise('core.edit', $contexts[$pk]))
-			{
-				$table->reset();
-				$table->load($pk);
-				$table->teacher_id = (int) $value;
-
-				if (!$table->store())
-				{
-					$this->setError($table->getError());
-
-					return false;
-				}
-			}
-			else
-			{
-				$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
-
-				return false;
-			}
-		}
-
-		// Clean the cache
-		$this->cleanCache();
-
-		return true;
-	}
-
-	/**
-	 * Batch popup changes for a group of media files.
-	 *
-	 * @param   string  $value     The new value matching a client.
-	 * @param   array   $pks       An array of row IDs.
-	 * @param   array   $contexts  An array of item contexts.
-	 *
-	 * @return  boolean  True if successful, false otherwise and internal error is set.
-	 *
-	 * @since   2.5
-	 */
-	protected function batchSeries($value, $pks, $contexts)
-	{
-		// Set the variables
-		$user = Factory::getUser();
-		/** @var CWMMessageTable $table */
-		$table = $this->getTable();
-
-		foreach ($pks as $pk)
-		{
-			if ($user->authorise('core.edit', $contexts[$pk]))
-			{
-				$table->reset();
-				$table->load($pk);
-				$table->series_id = (int) $value;
-
-				if (!$table->store())
-				{
-					$this->setError($table->getError());
-
-					return false;
-				}
-			}
-			else
-			{
-				$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
-
-				return false;
-			}
-		}
-
-		// Clean the cache
-		$this->cleanCache();
-
-		return true;
-	}
-
-	/**
-	 * Batch popup changes for a group of media files.
-	 *
-	 * @param   string  $value     The new value matching a client.
-	 * @param   array   $pks       An array of row IDs.
-	 * @param   array   $contexts  An array of item contexts.
-	 *
-	 * @return  boolean  True if successful, false otherwise and internal error is set.
-	 *
-	 * @since   2.5
-	 */
-	protected function batchMessagetype($value, $pks, $contexts)
-	{
-		// Set the variables
-		$user = Factory::getUser();
-		/** @var CWMMessageTable $table */
-		$table = $this->getTable();
-
-		foreach ($pks as $pk)
-		{
-			if ($user->authorise('core.edit', $contexts[$pk]))
-			{
-				$table->reset();
-				$table->load($pk);
-				$table->messagetype = (int) $value;
-
-				if (!$table->store())
-				{
-					$this->setError($table->getError());
-
-					return false;
-				}
-			}
-			else
-			{
-				$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
-
-				return false;
-			}
-		}
-
-		// Clean the cache
-		$this->cleanCache();
-
-		return true;
-	}
-
-	/**
-	 * Method to get the data that should be injected in the form.
-	 *
-	 * @return  array    The default data is an empty array.
-	 *
-	 * @throws  \Exception
-	 * @since   7.0
-	 */
-	protected function loadFormData()
-	{
-		$data = Factory::getApplication()->getUserState('com_proclaim.edit.message.data', array());
-
-		if (empty($data))
-		{
-			$data = $this->getItem();
-		}
-
-		return $data;
-	}
-
-	/**
-	 * Prepare and sanitise the table prior to saving.
-	 *
-	 * @param   CWMMessageTable  $table  A reference to a JTable object.
-	 *
-	 * @return    void
-	 *
-	 * @since    1.6
-	 */
-	protected function prepareTable($table)
-	{
-		$date = Factory::getDate();
-		$user = Factory::getUser();
-
-		// Set the publishing date to now
-		if ($table->published === Workflow::CONDITION_PUBLISHED && (int) $table->publish_up === 0)
-		{
-			$table->publish_up = Factory::getDate()->toSql();
-		}
-
-		if ($table->published === Workflow::CONDITION_PUBLISHED && (int) $table->publish_down === 0)
-		{
-			$table->publish_down = null;
-		}
-
-		$table->studytitle = htmlspecialchars_decode($table->studytitle, ENT_QUOTES);
-		$table->alias      = ApplicationHelper::stringURLSafe($table->alias);
-
-		if (empty($table->alias))
-		{
-			$table->alias = ApplicationHelper::stringURLSafe($table->studytitle);
-		}
-
-		if (empty($table->id))
-		{
-			// Set ordering to the last item if not set
-			if (empty($table->ordering))
-			{
-				$db    = Factory::getDbo();
-				$query = $db->getQuery(true)
-					->select('MAX(ordering)')
-					->from($db->quoteName('#__bsms_studies'));
-				$db->setQuery($query);
-				$max = $db->loadResult();
-
-				$table->ordering = $max + 1;
-			}
-		}
-		else
-		{
-			// Set the values
-			$table->modified    = $date->toSql();
-			$table->modified_by = $user->get('id');
-		}
+		return $value;
 	}
 }

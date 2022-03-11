@@ -59,12 +59,13 @@ class CWMMessageformController extends FormController
 	 *
 	 * @see     JControllerForm
 	 * @since   12.2
-	 * @throws  Exception
+	 * @throws  \Exception
 	 */
 	public function __construct($config = array(), MVCFactoryInterface $factory=null, $app=null, $input=null)
 	{
 		parent::__construct($config, $factory, $app, $input);
 
+		$input->set('id', $input->getInt('a_id'));
 
 		// Register Extra tasks
 		$this->registerTask('add', 'edit');
@@ -104,10 +105,8 @@ class CWMMessageformController extends FormController
 		{
 			return Uri::base() . 'index.php?option=com_proclaim&view=cwmmessagelist';
 		}
-		else
-		{
-			return base64_decode($return);
-		}
+
+		return base64_decode($return);
 	}
 
 	/**
@@ -155,7 +154,7 @@ class CWMMessageformController extends FormController
 	 *
 	 * @since    1.6
 	 */
-	protected function allowEdit($data = array(), $key = 'id')
+	protected function allowEdit($data = array(), $key = 'a_id')
 	{
 		$recordId = (int) isset($data[$key]) ? $data[$key] : 0;
 
