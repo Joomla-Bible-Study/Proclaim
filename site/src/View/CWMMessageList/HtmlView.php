@@ -7,18 +7,19 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Site\View\CWMMessageList;
 
 // No Direct Access
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Document\Document;
-use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
-use Joomla\Registry\Registry;
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Router\Route;
+use Joomla\Registry\Registry;
 
 /**
  * View class for Messages
@@ -30,42 +31,50 @@ class HtmlView extends BaseHtmlView
 {
 	/** @var  string Can Do
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	public $canDo;
 
 	/** @var  string Books
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	public $books;
 
 	/** @var  Registry Teachers
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	public $teachers;
 
 	/** @var  string Series
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	public $series;
 
 	/** @var  string Message Types
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	public $messageTypes;
 
 	/** @var  string Years
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	public $years;
 
 	/** @var  string New Link
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	public $newlink;
 
 	/** @var  Document Document
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	public $document;
 
 	public $filterForm;
@@ -108,7 +117,8 @@ class HtmlView extends BaseHtmlView
 
 	/** @var Registry Params
 	 *
-	 * @since 7.0 */
+	 * @since 7.0
+	 */
 	protected $params;
 
 	/**
@@ -123,7 +133,7 @@ class HtmlView extends BaseHtmlView
 	 */
 	public function display($tpl = null)
 	{
-		$app              = Factory::getApplication();
+		$app = Factory::getApplication();
 
 		// $items            = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
@@ -137,7 +147,7 @@ class HtmlView extends BaseHtmlView
 		$this->series        = $this->get('Series');
 		$this->messageTypes  = $this->get('MessageTypes');
 		$this->years         = $this->get('Years');
-		$this->items               = $this->get('Items');
+		$this->items         = $this->get('Items');
 		$this->filterForm    = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');
 
@@ -169,14 +179,14 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
-	 * @since 7.0
 	 * @throws \Exception
+	 * @since 7.0
 	 */
 	protected function _prepareDocument()
 	{
-		$app     = Factory::getApplication('site');
-		$menus   = $app->getMenu();
-		$title   = null;
+		$app   = Factory::getApplication('site');
+		$menus = $app->getMenu();
+		$title = null;
 
 		// Because the application sets a default page title,
 		// we need to get it from the menu item itself

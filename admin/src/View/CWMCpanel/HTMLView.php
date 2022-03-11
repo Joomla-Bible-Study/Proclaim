@@ -97,8 +97,6 @@ class HTMLView extends BaseHtmlView
 
 		$this->total_messages = CWMStats::get_total_messages();
 
-		$this->addToolbar();
-
 		// Post-installation messages information
 		$this->hasPostInstallationMessages = $model->hasPostInstallMessages();
 		$this->extension_id                = $this->state->get('extension_id', 0, 'int');
@@ -111,18 +109,6 @@ class HTMLView extends BaseHtmlView
 	}
 
 	/**
-	 * Add Toolbar to page
-	 *
-	 * @since 7.0.0
-	 *
-	 * @return void
-	 */
-	protected function addToolbar()
-	{
-		ToolbarHelper::title(Text::_('JBS_CMN_CONTROL_PANEL'), 'administration');
-	}
-
-	/**
 	 * Add the page title to browser.
 	 *
 	 * @return void
@@ -132,7 +118,6 @@ class HTMLView extends BaseHtmlView
 	 */
 	protected function setDocument()
 	{
-		$document = Factory::getApplication()->getDocument();
-		$document->setTitle(Text::_('JBS_TITLE_CONTROL_PANEL'));
+		$this->document->setTitle(Text::_('JBS_TITLE_CONTROL_PANEL'));
 	}
 }

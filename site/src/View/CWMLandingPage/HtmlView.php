@@ -92,7 +92,7 @@ class HtmlView extends BaseHtmlView
 		}
 
 		$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-		$wa->useStyle('com_proclaim.biblestudy');
+		$wa->useStyle('com_proclaim.cwmcore');
 		$wa->useStyle('com_proclaim.general');
 
 		CWMImages::getShowHide();

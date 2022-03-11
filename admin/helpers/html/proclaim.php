@@ -70,7 +70,7 @@ abstract class JHtmlProclaim
 		HtmlHelper::script('media/com_proclaim/js/modernizr.min.js');
 
 		// @todo may need ot look at including this or offing CDN???
-		HTMLHelper::script('https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js');
+		//HTMLHelper::script('https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js');
 
 		self::$loaded[__METHOD__] = true;
 	}

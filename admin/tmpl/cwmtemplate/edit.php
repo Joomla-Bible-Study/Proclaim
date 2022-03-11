@@ -28,7 +28,7 @@ $input  = $app->input;
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('keepalive')
 	->useScript('form.validate')
-	->useStyle('com_proclaim.biblestudy');
+	->useStyle('com_proclaim.cwmcore');
 ?>
 
 <form action="<?php echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int) $this->item->id); ?>"

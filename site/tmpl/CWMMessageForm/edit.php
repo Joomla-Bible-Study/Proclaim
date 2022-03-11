@@ -28,7 +28,7 @@ $params = $this->form->getFieldsets('params');
 $app   = Factory::getApplication();
 $input = $app->input;
 
-$return  = base64_encode('index.php?option=com_proclaim&task=message.edit&id=' . (int) $this->item->id);
+$return  = base64_encode('index.php?option=com_proclaim&task=cwmmessage.edit&id=' . (int) $this->item->id);
 $options = base64_encode('study_id=' . $this->item->id . '&createdate=' . $this->item->studydate);
 
 // Set up defaults
@@ -171,7 +171,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
                 <tfoot>
                 <tr>
                     <td colspan="6">
-						<?php $link = 'index.php?option=com_proclaim&amp;task=mediafileform.edit&amp;sid='
+						<?php $link = 'index.php?option=com_proclaim&amp;task=cwmmediafileform.edit&amp;sid='
 							. $this->form->getValue('id') . '&amp;options=' . $options . '&amp;return=' .
 							$return . '&amp;' . JSession::getFormToken() . '=1'; ?>
 						<?php

@@ -11,7 +11,7 @@
 namespace CWM\Component\Proclaim\Administrator\Model;
 
 // No Direct Access
-use CWM\Component\Proclaim\Administrator\Table\CWMMessagetypeTable;
+use CWM\Component\Proclaim\Administrator\Table\CWMMessageTable;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Input\Input;
@@ -37,7 +37,7 @@ class CWMMessagetypeModel extends AdminModel
 	 */
 	public function store()
 	{
-		$row   = new CWMMessagetypeTable($this->_db);
+		$row   = new CWMMessageTable($this->_db);
 		$input = new Input;
 		$data  = $input->get('post');
 
@@ -127,7 +127,7 @@ class CWMMessagetypeModel extends AdminModel
 	/**
 	 * Prepare and sanitise the table prior to saving.
 	 *
-	 * @param   CWMMessagetypeTable  $table  A reference to a JTable object.
+	 * @param   CWMMessageTable  $table  A reference to a JTable object.
 	 *
 	 * @return  void
 	 *

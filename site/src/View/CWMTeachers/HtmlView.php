@@ -149,7 +149,7 @@ class HtmlView extends BaseHtmlView
 		//HtmlHelper::_('proclaim.framework');
 		//HTMLHelper::_('proclaim.loadCss', $params, null, 'font-awesome');
 		$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-		$wa->useStyle('com_proclaim.biblestudy');
+		$wa->useStyle('com_proclaim.cwmcore');
 		$wa->useStyle('com_proclaim.general');
 		$images = new CWMImages;
 

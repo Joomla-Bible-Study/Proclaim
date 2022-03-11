@@ -15,10 +15,8 @@ use Joomla\CMS\Html\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 
-HtmlHelper::_('proclaim.framework');
-HTMLHelper::_('proclaim.loadcss', $this->params);
-$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-$wa->useStyle('com_proclaim.biblestudy');
+$wa = $this->document->getWebAssetManager();
+$wa->useStyle('com_proclaim.cwmcore');
 $wa->useStyle('com_proclaim.podcast');
 
 $app       = Factory::getApplication();
