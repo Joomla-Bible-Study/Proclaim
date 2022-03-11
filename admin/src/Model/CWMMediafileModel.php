@@ -13,7 +13,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
-use CWM\Component\Proclaim\Administrator\Table\CWMMediafileTable;
+use CWM\Component\Proclaim\Administrator\Table\CWMMediaFileTable;
 use CWM\Component\Proclaim\Administrator\Table\CWMServerTable;
 use CWM\Component\Proclaim\Site\Helper\CWMPodcast;
 use Joomla\CMS\Factory;
@@ -47,7 +47,7 @@ class CWMMediafileModel extends AdminModel
 	/**
 	 * Data
 	 *
-	 * @var CWMMediafileTable
+	 * @var CWMMediaFileTable
 	 * @since   9.0.0
 	 */
 	private $data;
@@ -474,7 +474,7 @@ class CWMMediafileModel extends AdminModel
 	{
 		// Set the variables
 		$user = Factory::getUser();
-		/** @type CWMMediafileTable $table */
+		/** @type CWMMediaFileTable $table */
 		$table = $this->getTable();
 
 		foreach ($pks as $pk)
@@ -539,7 +539,7 @@ class CWMMediafileModel extends AdminModel
 	{
 		// Set the variables
 		$user = Factory::getUser();
-		/** @type CWMMediafileTable $table */
+		/** @type CWMMediaFileTable $table */
 		$table = $this->getTable();
 
 		foreach ($pks as $pk)
@@ -589,7 +589,7 @@ class CWMMediafileModel extends AdminModel
 	{
 		// Set the variables
 		$user = Factory::getUser();
-		/** @type CWMMediafileTable $table */
+		/** @type CWMMediaFileTable $table */
 		$table = $this->getTable();
 
 		foreach ($pks as $pk)

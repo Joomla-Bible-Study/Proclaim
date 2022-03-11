@@ -359,6 +359,7 @@
 		"bootstrap.es5",
 		"com_proclaim.popper"
 	  ],
+	  "class": "com_proclaim.cwmcore",
 	  "version": "dfda2cadb929cf361efab69cd56c9ef003a65dbe"
 
 	},

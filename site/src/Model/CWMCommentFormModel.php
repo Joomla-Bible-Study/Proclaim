@@ -7,16 +7,16 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-    namespace CWM\Component\Proclaim\Model;
+
+namespace CWM\Component\Proclaim\Site\Model;
+
 // No Direct Access
 defined('_JEXEC') or die;
-use Joomla\CMS\MVC\Model\ItemModel;
-use CWM\Component\Proclaim\Site\Controller\CommentformController;
-use Joomla\CMS\Factory;
-use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
-// Base this model on the backend version.
-//JLoader::register('BiblestudyModelComment', JPATH_ADMINISTRATOR . '/components/com_proclaim/models/CommentController.php');
 
+use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
+use CWM\Component\Proclaim\Administrator\Model\CWMCommentModel;
+use CWM\Component\Proclaim\Administrator\Table\CWMCommentTable;
+use Joomla\CMS\Factory;
 use Joomla\Utilities\ArrayHelper;
 
 /**
@@ -24,7 +24,7 @@ use Joomla\Utilities\ArrayHelper;
  *
  * @since  7.0.0
  */
-class CWMCommentformModel extends ItemModel
+class CWMCommentFormModel extends CWMCommentModel
 {
 	/**
 	 * Method to get a single record.
@@ -33,6 +33,7 @@ class CWMCommentformModel extends ItemModel
 	 *
 	 * @return  mixed    Object on success, false on failure.
 	 *
+	 * @throws \Exception
 	 * @since    7.0.0
 	 */
 	public function getItem($pk = null)
@@ -53,9 +54,27 @@ class CWMCommentformModel extends ItemModel
 		}
 
 		$properties = $table->getProperties(1);
-		$value      = ArrayHelper::toObject($properties, 'JObject');
 
-		return $value;
+		return ArrayHelper::toObject($properties, 'JObject');
+	}
+
+	/**
+	 * Method to get a table object, load it if necessary.
+	 *
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
+	 *
+	 * @return  CWMCommentTable  A Table object
+	 *
+	 * @throws  \Exception
+	 * @since   3.0
+	 */
+	public function getTable($name = '', $prefix = '', $options = array())
+	{
+		$db = Factory::getDbo();
+
+		return new CWMCommentTable($db);
 	}
 
 	/**
@@ -77,11 +96,11 @@ class CWMCommentformModel extends ItemModel
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since    1.6
 	 */
 	protected function populateState()
 	{
-
 		$app = Factory::getApplication('site');
 
 		// Load state from the request.
@@ -96,7 +115,7 @@ class CWMCommentformModel extends ItemModel
 		$this->setState('return_page', base64_decode($return));
 
 		// Load the parameters.
-		$params   = $app->getParams();
+		$params = $app->getParams();
 		$this->setState('params', $params);
 		$template = CWMParams::getTemplateparams();
 		$admin    = CWMParams::getAdmin();
@@ -109,8 +128,7 @@ class CWMCommentformModel extends ItemModel
 
 		if (!$t)
 		{
-			$input = Factory::getApplication();
-			$t     = $input->get('t', 1, 'int');
+			$t     = $app->input->get('t', 1, 'int');
 		}
 
 		$template->id = $t;
