@@ -161,7 +161,7 @@ class HtmlView extends BaseHtmlView
 			. $teacherimage->width . '" alt="" />';
 				HtmlHelper::_('proclaim.framework');
 		$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-		$wa->useStyle('com_proclaim.biblestudy');
+		$wa->useStyle('com_proclaim.cwmcore');
 		$wa->useStyle('com_proclaim.general');
 
 		$items->slug = $items->alias ? ($items->id . ':' . $items->alias) : str_replace(' ', '-', htmlspecialchars_decode($items->series_text, ENT_QUOTES))

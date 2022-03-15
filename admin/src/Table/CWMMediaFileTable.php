@@ -25,7 +25,7 @@ use Joomla\Registry\Registry;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CWMMediafileTable extends Table
+class CWMMediaFileTable extends Table
 {
 	/**
 	 * Primary Key

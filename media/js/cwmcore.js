@@ -1,80 +1,80 @@
-jQuery(document).ready(function () {
-	jQuery('.btnPlay').click(function () {
-		var mediaId = jQuery(this).attr('alt')
-		var url = jQuery(this).attr('href')
-		var mediaid = jQuery('#media-' + mediaId)
+$(document).ready(function () {
+	$('.btnPlay').click(function () {
+		var mediaId = $(this).attr('alt')
+		var url = $(this).attr('href')
+		var mediaid = $('#media-' + mediaId)
 
-		jQuery('.inlinePlayer:not(#media-' + mediaId + ')').hide()
-		jQuery('.inlinePlayer').html('')
+		$('.inlinePlayer:not(#media-' + mediaId + ')').hide()
+		$('.inlinePlayer').html('')
 		mediaid.toggle()
 		mediaid.load(
-			'index.php?option=com_proclaim&view=studieslist&controller=studieslist&task=inlinePlayer&tmpl=component')
+			'index.php?option=com_proclaim&view=cwmstudieslist&controller=cwmstudieslist&task=inlinePlayer&tmpl=component')
 		return false
 	})
 
 	if (Modernizr.touch)
 	{
 		// show the close overlay button
-		jQuery('.jbsmclose-overlay').removeClass('hidden')
+		$('.jbsmclose-overlay').removeClass('hidden')
 		// handle the adding of hover class when clicked
-		jQuery('.jbsmimg').click(function (e) {
-			if (!jQuery(this).hasClass('hover'))
+		$('.jbsmimg').click(function (e) {
+			if (!$(this).hasClass('hover'))
 			{
-				jQuery(this).addClass('hover')
+				$(this).addClass('hover')
 			}
 		})
 		// handle the closing of the overlay
-		jQuery('.jbsmclose-overlay').click(function (e) {
+		$('.jbsmclose-overlay').click(function (e) {
 			e.preventDefault()
 			e.stopPropagation()
-			if (jQuery(this).closest('.jbsmimg').hasClass('hover'))
+			if ($(this).closest('.jbsmimg').hasClass('hover'))
 			{
-				jQuery(this).closest('.jbsmimg').removeClass('hover')
+				$(this).closest('.jbsmimg').removeClass('hover')
 			}
 		})
 	}
 	else
 	{
 		// handle the mouseenter functionality
-		jQuery('.jbsmimg').mouseenter(function () {
-			jQuery(this).addClass('hover')
+		$('.jbsmimg').mouseenter(function () {
+			$(this).addClass('hover')
 		})
 			// handle the mouseleave functionality
 			.mouseleave(function () {
-				jQuery(this).removeClass('hover')
+				$(this).removeClass('hover')
 			})
 	}
 
 	/**
 	 * @title Add Study
 	 */
-	jQuery('#addReference').click(function () {
-		var newReference = jQuery('#reference').clone()
+	$('#addReference').click(function () {
+		var newReference = $('#reference').clone()
 		var deleteButton = '<a href="#" class="referenceDelete">Delete</a>'
 
-		jQuery(newReference).children('#text').attr('value', '')
-		jQuery(newReference).children('#scripture').selectOptions('0')
+		$(newReference).children('#text').attr('value', '')
+		$(newReference).children('#scripture').selectOptions('0')
 
-		jQuery(newReference).append(deleteButton)
-		jQuery(newReference).appendTo('#references')
+		$(newReference).append(deleteButton)
+		$(newReference).appendTo('#references')
 
-		jQuery('.referenceDelete').bind('click', function () {
-			jQuery(this).parent('#reference').remove()
+		$('.referenceDelete').bind('click', function () {
+			$(this).parent('#reference').remove()
 			return false
 		})
 		return false
 	})
-	jQuery('.referenceDelete').click(function () {
-		jQuery(this).parent('#reference').remove()
+	$('.referenceDelete').click(function () {
+		$(this).parent('#reference').remove()
 		return false
 	})
 
-	jQuery('.imgChoose').change(function () {
-		var targetImage = jQuery('#img' + jQuery(this).attr('id'))
+	$('.imgChoose').change(function () {
+		var targetImage = $('#img' + $(this).attr('id'))
 		var activeDir = targetImage.attr('src').split('/')
 		activeDir.pop() //Remove the previous image
 
-		if (jQuery(this).val().substr(0, 1) == 0)
+		if ($(this).val().substr(0, 1) == 0)
 		{
 			targetImage.hide()
 		}
@@ -83,7 +83,7 @@ jQuery(document).ready(function () {
 			targetImage.show()
 		}
 
-		targetImage.attr('src', activeDir.join('/') + '/' + jQuery(this).val())
+		targetImage.attr('src', activeDir.join('/') + '/' + $(this).val())
 	})
 
 	/**
@@ -91,16 +91,16 @@ jQuery(document).ready(function () {
 	 */
 
 	//Determine the type of template, and route to that function
-	jQuery('#type').change(function () {
-		eval(jQuery('#type').find('option:selected').attr('value') + '()')
+	$('#type').change(function () {
+		eval($('#type').find('option:selected').attr('value') + '()')
 	})
 
 	function canvasItemFunctions ()
 	{
-		jQuery('#canvasDeleteItem').click(function () {
+		$('#canvasDeleteItem').click(function () {
 			//Delete Item, and update JSON string
 
-			jQuery(this).parent('#canvasListItem').draggable(
+			$(this).parent('#canvasListItem').draggable(
 				{
 					handle: 'div#canvasDeleteItem',
 				},
@@ -117,7 +117,7 @@ jQuery(document).ready(function () {
 		var itemOptions = '<div id="canvasItemOptions">&nbsp;</div>'
 		var moveItem = '<div id="canvasMoveItem">&nbsp;</div>'
 		var deleteItem = '<div id="canvasDeleteItem">&nbsp;</div>'
-		var canvasItem = jQuery('.canvasItem')
+		var canvasItem = $('.canvasItem')
 
 		canvasItem.append(itemOptions)
 		canvasItem.append(moveItem)
@@ -131,7 +131,7 @@ jQuery(document).ready(function () {
 	{
 		var canvasListItem = '<div id="canvasListItem" class="canvasItem"></div>'
 
-		jQuery('#tmplCanvas').append(canvasListItem)
+		$('#tmplCanvas').append(canvasListItem)
 		canvasItemControls('List Items')
 	}
 
@@ -285,7 +285,13 @@ function transferFileSize ()
 	}
 	else
 	{
-		document.getElementById('jform_params_size').value = ss;
-		return true;
+		document.getElementById('jform_params_size').value = ss
+		return true
 	}
 }
+
+// Load on all pages tooltip
+$(function () {
+		$('[data-toggle=\"tooltip\"]').tooltip()
+	},
+)

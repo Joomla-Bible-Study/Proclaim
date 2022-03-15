@@ -7,17 +7,23 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Site\Controller;
+
+use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use JLoader;
-use Joomla\CMS\MVC\Controller\BaseController;
-use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
-use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
-use Joomla\Session\Session;
-use Joomla\CMS\MVC\Model\ItemModel;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Input\Input;
+use Joomla\Utilities\ArrayHelper;
+
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -33,18 +39,18 @@ JLoader::register('CWMMessageController', JPATH_ADMINISTRATOR . '/components/com
 class CWMMessageformController extends FormController
 {
 	/**
-	 * View item
+	 * @var string View item
 	 *
 	 * @since    1.6
 	 */
-	protected $view_item = 'CWMMessageform';
+	protected $view_item = 'CWMMessageForm';
 
 	/**
-	 * View list
+	 * @var string View list
 	 *
 	 * @since    1.6
 	 */
-	protected $view_list = 'CWMMessagelist';
+	protected $view_list = 'CWMMessageList';
 
 	/**
 	 * @var        string    The prefix to use with controller messages.
@@ -55,36 +61,27 @@ class CWMMessageformController extends FormController
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array                                        $config   An optional associative array of configuration settings.
+	 *                                                                 Recognized key values include 'name', 'default_task', 'model_path', and
+	 *                                                                 'view_path' (this list is not meant to be comprehensive).
+	 * @param   MVCFactoryInterface|null                     $factory  The factory.
+	 * @param   \Joomla\CMS\Application\CMSApplication|null  $app      The Application for the dispatcher
+	 * @param   \Joomla\Input\Input|null                     $input    Input
 	 *
+	 * @throws \Exception
 	 * @see     JControllerForm
 	 * @since   12.2
-	 * @throws  Exception
 	 */
-	public function __construct($config = array(), MVCFactoryInterface $factory=null, $app=null, $input=null)
+	public function __construct($config = array(), MVCFactoryInterface $factory = null, ?CMSApplication $app = null, ?Input $input = null)
 	{
 		parent::__construct($config, $factory, $app, $input);
 
+		// This seems to fix all needs for ID usage
+		$input->set('id', $input->getInt('a_id'));
 
 		// Register Extra tasks
 		$this->registerTask('add', 'edit');
 		$this->registerTask('upload', 'upload');
-	}
-
-	/**
-	 * Method to add a new record.
-	 *
-	 * @return    boolean    True if the article can be added, false if not.
-	 *
-	 * @since    1.6
-	 */
-	public function add()
-	{
-		if (!parent::add())
-		{
-			// Redirect to the return page.
-			$this->setRedirect($this->getReturnPage());
-		}
 	}
 
 	/**
@@ -94,20 +91,19 @@ class CWMMessageformController extends FormController
 	 *
 	 * @return    string    The return URL.
 	 *
+	 * @throws \Exception
 	 * @since    1.6
 	 */
 	protected function getReturnPage()
 	{
-		$return = Factory::getApplication()->input->get('return', null, 'base64');
+		$return = $this->input->get('return', null, 'base64');
 
 		if (empty($return) || !Uri::isInternal(base64_decode($return)))
 		{
 			return Uri::base() . 'index.php?option=com_proclaim&view=cwmmessagelist';
 		}
-		else
-		{
-			return base64_decode($return);
-		}
+
+		return base64_decode($return);
 	}
 
 	/**
@@ -115,43 +111,44 @@ class CWMMessageformController extends FormController
 	 *
 	 * @param   string  $key  The name of the primary key of the URL variable.
 	 *
-	 * @return  Boolean    True if access level checks pass, false otherwise.
+	 * @return  boolean    True if access level checks pass, false otherwise.
 	 *
+	 * @throws \Exception
 	 * @since    1.6
 	 */
-	public function cancel($key = 'a_id')
+	public function cancel($key = null)
 	{
-		parent::cancel($key);
+		$result = parent::cancel($key);
 
 		// Redirect to the return page.
-		$this->setRedirect($this->getReturnPage());
+		$this->setRedirect(Route::_($this->getReturnPage(), false));
+
+		return $result;
 	}
 
 	/**
-	 * Proxy for getModel
+	 * Method to get a model object, loading it if required.
 	 *
-	 * @param   string  $name    The name of the model
-	 * @param   string  $prefix  The prefix for the PHP class name
-	 * @param   array   $config  Set ignore request
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return \JModelForm
+	 * @return BaseDatabaseModel The model.
 	 *
 	 * @since 7.0
 	 */
-	public function &getModel($name = 'CWMMessageForm', $prefix = '', $config = array('ignore_request' => true))
+	public function getModel($name = 'CWMMessageForm', $prefix = '', $config = array('ignore_request' => true)): BaseDatabaseModel
 	{
-		$model = parent::getModel($name, $prefix, $config);
-
-		return $model;
+		return parent::getModel($name, $prefix, array('ignore_request' => false));
 	}
 
 	/**
 	 * Method to edit an existing record.
 	 *
-	 * @param   string  $key     The name of the primary key of the URL variable.
-	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+	 * @param   array   $data  An array of input data.
+	 * @param   string  $key   The name of the key for the primary key; default is id.
 	 *
-	 * @return    Boolean    True if access level check and checkout passes, false otherwise.
+	 * @return  boolean
 	 *
 	 * @since    1.6
 	 */
@@ -162,45 +159,38 @@ class CWMMessageformController extends FormController
 		// Since there is no asset tracking, fallback to the component permissions.
 		if (!$recordId)
 		{
-			return parent::allowEdit($data, $key);
-		}
-
-		// Get the item.
-		$item = $this->getModel()->getItem($recordId);
-
-		// Since there is no item, return false.
-		if (empty($item))
-		{
 			return false;
 		}
 
-		$user = $this->app->getIdentity();
+		// Need to do a lookup from the model.
+		$record     = $this->getModel()->getItem($recordId);
+		$series_Id = (int) $record->series_id;
 
-		// Check if can edit own core.edit.own.
-		$canEditOwn = $user->authorise('core.edit.own', $this->option . '.message.' ) && $item->created_by == $user->id;
+		if ($series_Id)
+		{
+			$user = $this->app->getIdentity();
 
-		// Check the category core.edit permissions.
-		return $canEditOwn || $user->authorise('core.edit', $this->option . '.message.');
+			// The category has been set. Check the category permissions.
+			if ($user->authorise('core.edit', $this->option . '.series.' . $series_Id))
+			{
+				return true;
+			}
+
+			// Fallback on edit.own.
+			if ($user->authorise('core.edit.own', $this->option . '.series.' . $series_Id))
+			{
+				return ($record->created_by === $user->id);
+			}
+
+			return false;
+		}
+
+		// Since there is no asset tracking, revert to the component permissions.
+		return parent::allowEdit($data, $key);
 	}
-	/**
-	 * Method to save a record.
-	 *
-	 * @param   string  $key     The name of the primary key of the URL variable.
-	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
-	 *
-	 * @return    Boolean    True if successful, false otherwise.
-	 *
-	 * @since    1.6
-	 */
-	public function save($key = null, $urlVar = 'a_id')
-	{
-		$result = parent::save($key, $urlVar);
-
-		return $result;
-	}
 
 	/**
-	 * Method override to check if you can add a new record.
+	 * Method overrides to check if you can add a new record.
 	 *
 	 * @param   array  $data  An array of input data.
 	 *
@@ -208,12 +198,15 @@ class CWMMessageformController extends FormController
 	 *
 	 * @since   1.6
 	 */
-	protected function allowAdd($data = array())
+	protected function allowAdd($data = array()): bool
 	{
+		if ($study_Id = ArrayHelper::getValue($data, 'study_id', $this->input->getInt('study_id'), 'int'))
+		{
+			// If the category has been passed in the data or URL check it.
+			return $this->app->getIdentity()->authorise('core.create', 'com_contact.study.' . $study_Id);
+		}
+
 		// In the absence of better information, revert to the component permissions.
 		return parent::allowAdd();
 	}
-
-
-
 }

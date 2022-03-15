@@ -14,7 +14,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 defined('_JEXEC') or die;
 
 use CWM\Component\Proclaim\Administrator\Lib\CWMBackup;
-use CWM\Component\Proclaim\Administrator\Table\CWMTemplatecodeTable;
+use CWM\Component\Proclaim\Administrator\Table\CWMTemplateCodeTable;
 use CWM\Component\Proclaim\Administrator\Table\CWMTemplateTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
@@ -133,7 +133,7 @@ class CWMTemplatesController extends AdminController
 						$tc++;
 
 						// Store new Recorded so it can be seen.
-						$table = new CWMTemplatecodeTable($db);
+						$table = new CWMTemplateCodeTable($db);
 
 						try
 						{

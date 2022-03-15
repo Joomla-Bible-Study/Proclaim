@@ -21,7 +21,7 @@ HtmlHelper::_('behavior.multiselect');
 //HtmlHelper::_('proclaim.framework');
 //HTMLHelper::_('proclaim.loadcss', $this->params);
 $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-$wa->useStyle('com_proclaim.biblestudy');
+$wa->useStyle('com_proclaim.cwmcore');
 $wa->useStyle('com_proclaim.general');
 $app = Factory::getApplication();
 $user = Factory::getUser();

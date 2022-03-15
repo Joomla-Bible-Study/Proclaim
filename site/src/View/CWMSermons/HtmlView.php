@@ -289,7 +289,7 @@ class HtmlView extends BaseHtmlView
 		// Get the podcast subscription
 
 		$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-		$wa->useStyle('com_proclaim.biblestudy');
+		$wa->useStyle('com_proclaim.cwmcore');
 		$wa->useStyle('com_proclaim.general');
 		$wa->useStyle('com_proclaim.podcast');
 		$podcast         = new CWMPodcastSubscribe;
@@ -389,7 +389,7 @@ class HtmlView extends BaseHtmlView
 			$this->document->setMetadata('robots', $this->params->get('robots'));
 		}
 		$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-		$wa->useStyle('com_proclaim.biblestudy');
+		$wa->useStyle('com_proclaim.cwmcore');
 		$wa->useStyle('com_proclaim.general');
 
 	}

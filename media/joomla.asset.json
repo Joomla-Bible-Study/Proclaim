@@ -194,9 +194,9 @@
 	  "version": "405b01d00df544c5790201546a69f79d485a500d"
 	},
 	{
-	  "name": "com_proclaim.messages-list.es5",
+	  "name": "com_proclaim.cwmmessages-list.es5",
 	  "type": "script",
-	  "uri": "com_proclaim/messages-list-es5.min.js",
+	  "uri": "com_proclaim/cwmmessages-list-es5.min.js",
 	  "dependencies": [
 		"core"
 	  ],
@@ -220,11 +220,11 @@
 	  "version": "872a497cd19612c3e1940b5feefdc0e14c08d4b9"
 	},
 	{
-	  "name": "com_proclaim.messages-list",
+	  "name": "com_proclaim.cwmmessages-list",
 	  "type": "script",
-	  "uri": "com_proclaim/messages-list.min.js",
+	  "uri": "com_proclaim/cwmmessages-list.min.js",
 	  "dependencies": [
-		"com_proclaim.messages-list.es5"
+		"com_proclaim.cwmmessages-list.es5"
 	  ],
 	  "attributes": {
 		"type": "module"
@@ -314,8 +314,7 @@
 		"core"
 	  ],
 	  "attributes": {
-		"nomodule": true,
-		"defer": true
+		"type": "module"
 	  },
 	  "version": "3660f7dadca40d79416fff13b55596f0cec73cd9"
 	},
@@ -327,27 +326,75 @@
 		"com_proclaim.cwmadmin-locations-batch.es5"
 	  ],
 	  "attributes": {
-		"type": "module"
+		"nomodule": true,
+		"defer": true
 	  },
 	  "version": "9ac1245a9dd2a9bf7e7f95c6e7e24f6075eef0ae"
 	},
 	{
-	  "name": "com_proclaim.biblestudy",
+	  "name": "com_proclaim.cwmcore",
 	  "type": "style",
-	  "uri": "com_proclaim/biblestudy.min.css",
-	  "version": "b9ad01318a9ef37832023f20e030a408968d38fd"
-	},
-	  {
-		  "name": "com_proclaim.podcast",
-		  "type": "style",
-		  "uri": "com_proclaim/podcast.css",
-		  "version": "b9ad01318a9ef37832023f20e030a408968d38fd"
+	  "uri": "com_proclaim/cwmcore.min.css",
+	  "dependencies": [
+		"com_proclaim.general"
+	  ],
+	  "js": [
+		"come_proclaim.CWMCoreJS"
+	  ],
+	  "attributes": {
+		"nomodule": true,
+		"defer": true
 	  },
+	  "version": "dfda2cadb929cf361efab69cd56c9ef003a65dbe"
+	},
+	{
+	  "name": "com_proclaim.cwmcorejs",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmcore.min.js",
+	  "dependencies":[
+		"core",
+		"jquery-noconflict",
+		"com_proclaim.modernizr",
+		"bootstrap.popover",
+		"bootstrap.es5",
+		"com_proclaim.popper"
+	  ],
+	  "class": "com_proclaim.cwmcore",
+	  "version": "dfda2cadb929cf361efab69cd56c9ef003a65dbe"
+
+	},
+	{
+	  "name": "com_proclaim.cwmpodcast",
+	  "type": "style",
+	  "uri": "com_proclaim/cwmpodcast.min.css",
+	  "dependencies": [
+		"com_proclaim.CWMCore"
+	  ],
+	  "version": "dfda2cadb929cf361efab69cd56c9ef003a65dbe"
+	},
 	{
 	  "name": "com_proclaim.general",
 	  "type": "style",
 	  "uri": "com_proclaim/general.min.css",
-	  "version": "b9ad01318a9ef37832023f20e030a408968d38fd"
+	  "version": "dfda2cadb929cf361efab69cd56c9ef003a65dbe"
+	},
+	{
+	  "name": "com_proclaim.podcast",
+	  "type": "style",
+	  "uri": "com_proclaim/podcast.min.css",
+	  "version": "dfda2cadb929cf361efab69cd56c9ef003a65dbe"
+	},
+	{
+	  "name": "com_proclaim.popper",
+	  "type": "script",
+	  "uri": "com_proclaim/popper.min.js",
+	  "version": "dfda2cadb929cf361efab69cd56c9ef003a65dbe"
+	},
+	{
+	  "name": "com_proclaim.modernizr",
+	  "type": "script",
+	  "uri": "com_proclaim/modernizr.min.js",
+	  "version": "dfda2cadb929cf361efab69cd56c9ef003a65dbe"
 	}
   ]
 }

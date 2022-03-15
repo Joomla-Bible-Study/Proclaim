@@ -22,7 +22,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.1.0
  */
-class CWMTemplatecodeTable extends Table
+class CWMTemplateCodeTable extends Table
 {
 	/**
 	 * File Name

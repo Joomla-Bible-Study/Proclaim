@@ -14,7 +14,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 defined('_JEXEC') or die;
 
 use CWM\Component\Proclaim\Administrator\Model\CWMMediafileModel;
-use CWM\Component\Proclaim\Administrator\Table\CWMMediafileTable;
+use CWM\Component\Proclaim\Administrator\Table\CWMMediaFileTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
@@ -163,7 +163,7 @@ class CWMMediaFileController extends FormController
 
 		$app   = Factory::getApplication();
 		$model = $this->getModel();
-		/** @type CWMMediafileTable $table */
+		/** @type CWMMediaFileTable $table */
 		$table   = $model->getTable();
 		$checkin = property_exists($table, 'checked_out');
 

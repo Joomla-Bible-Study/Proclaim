@@ -7,13 +7,20 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-namespace CWM\Component\Proclaim\Site\CWMCommentformController;
-use Joomla\CMS\MVC\Controller\FormController;
+
+namespace CWM\Component\Proclaim\Site\Controller;
+
+use CWM\Component\Proclaim\Administrator\Controller\CWMCommentController;
+use CWM\Component\Proclaim\Administrator\Model\CWMCommentModel;
+use CWM\Component\Proclaim\Site\Model\CWMCommentFormModel;
+use CWM\Component\Proclaim\Site\Model\CWMCommentListModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Router\Route;
-use CWM\Component\Proclaim\Administrator\Controller\CWMCommentController;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Input\Input;
+
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -23,32 +30,33 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CWMCommentformController extends CWMCommentController
+class CWMCommentFormController extends CWMCommentController
 {
 	/**
-	 * View item
+	 * @var string View item
 	 *
 	 * @since    1.6
 	 */
-	protected $view_item = 'commentform';
+	protected $view_item = 'cwmcommentform';
 
 	/**
-	 * View list
+	 * @var string View list
 	 *
 	 * @since    1.6
 	 */
-	protected $view_list = 'commentlist';
+	protected $view_list = 'cwmcommentlist';
 
 	/**
 	 * Class constructor.
 	 *
 	 * @param   array  $config  A named array of configuration variables.
 	 *
+	 * @throws \Exception
 	 * @since    7.0.0
 	 */
 	public function __construct($config = array())
 	{
-		$input = Factory::getApplication();
+		$input = new Input;
 		$input->set('a_id', $input->get('a_id', 0, 'int'));
 		parent::__construct($config);
 	}
@@ -56,7 +64,7 @@ class CWMCommentformController extends CWMCommentController
 	/**
 	 * Method to add a new record.
 	 *
-	 * @return    boolean    True if the article can be added, false if not.
+	 * @return    void    True if the article can be added, false if not.
 	 *
 	 * @since    1.6
 	 */
@@ -76,6 +84,7 @@ class CWMCommentformController extends CWMCommentController
 	 *
 	 * @return    string    The return URL.
 	 *
+	 * @throws \Exception
 	 * @since    1.6
 	 */
 	protected function getReturnPage()
@@ -84,18 +93,16 @@ class CWMCommentformController extends CWMCommentController
 
 		if (empty($return) || !Uri::isInternal(base64_decode($return)))
 		{
-			return Uri::base() . 'index.php?option=com_proclaim&view=commentlist';
+			return Uri::base() . 'index.php?option=com_proclaim&view=cwmcommentlist';
 		}
-		else
-		{
-			return base64_decode($return);
-		}
+
+		return base64_decode($return);
 	}
 
 	/**
 	 * Method to run batch operations.
 	 *
-	 * @param   JModelLegacy  $model  The model of the component being processed.
+	 * @param   CWMCommentListModel  $model  The model of the component being processed.
 	 *
 	 * @return  boolean     True if successful, false otherwise and internal error is set.
 	 *
@@ -103,17 +110,15 @@ class CWMCommentformController extends CWMCommentController
 	 */
 	public function batch($model = null)
 	{
-		JSession::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
 		// Set the model
-		$model = $this->getModel('Commentlist', 'ProclaimModel', array());
+		$model = new CWMCommentListModel;
 
 		// Preset the redirect
 		$this->setRedirect(
-			Route::_('index.php?option=com_proclaim&view=commentlist' . $this->getRedirectToListAppend(), false)
+			Route::_('index.php?option=com_proclaim&view=cwmcommentlist' . $this->getRedirectToListAppend(), false)
 		);
-
-		/** @var $model JModelLegacy */
 
 		return parent::batch($model);
 	}
@@ -125,15 +130,13 @@ class CWMCommentformController extends CWMCommentController
 	 * @param   string  $prefix  The class prefix. Optional.
 	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return    JModelLegacy    The model.
+	 * @return    CWMCommentModel    The model.
 	 *
 	 * @since    1.5
 	 */
 	public function getModel($name = 'CWMCommentFormModel', $prefix = 'administrator', $config = array('ignore_request' => true))
 	{
-		$model = parent::getModel($name, $prefix, $config);
-
-		return $model;
+		return new CWMCommentModel;
 	}
 
 	/**
@@ -141,8 +144,9 @@ class CWMCommentformController extends CWMCommentController
 	 *
 	 * @param   string  $key  The name of the primary key of the URL variable.
 	 *
-	 * @return   Boolean  True if access level checks pass, false otherwise.
+	 * @return   boolean  True if access level checks pass, false otherwise.
 	 *
+	 * @throws \Exception
 	 * @since    1.6
 	 */
 	public function cancel($key = 'a_id')
@@ -161,15 +165,13 @@ class CWMCommentformController extends CWMCommentController
 	 * @param   string  $key     The name of the primary key of the URL variable.
 	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
 	 *
-	 * @return   Boolean  True if access level check and checkout passes, false otherwise.
+	 * @return   boolean  True if access level check and checkout passes, false otherwise.
 	 *
 	 * @since    1.6
 	 */
 	public function edit($key = null, $urlVar = 'a_id')
 	{
-		$result = parent::edit($key, $urlVar);
-
-		return $result;
+		return parent::edit($key, $urlVar);
 	}
 
 	/**
@@ -178,8 +180,9 @@ class CWMCommentformController extends CWMCommentController
 	 * @param   string  $key     The name of the primary key of the URL variable.
 	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
 	 *
-	 * @return    Boolean    True if successful, false otherwise.
+	 * @return    boolean    True if successful, false otherwise.
 	 *
+	 * @throws \Exception
 	 * @since    1.6
 	 */
 	public function save($key = null, $urlVar = 'a_id')
@@ -233,11 +236,12 @@ class CWMCommentformController extends CWMCommentController
 	 *
 	 * @return    string    The arguments to append to the redirect URL.
 	 *
+	 * @throws \Exception
 	 * @since    1.6
 	 */
 	protected function getRedirectToItemAppend($recordId = null, $urlVar = 'a_id')
 	{
-		$this->input = Factory::getApplication();
+		$this->input = new Input;
 
 		// Need to override the parent method completely.
 		$tmpl   = $this->input->get('tmpl');

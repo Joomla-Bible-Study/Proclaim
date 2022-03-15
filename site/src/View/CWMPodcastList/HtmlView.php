@@ -60,7 +60,7 @@ class HtmlView extends BaseHtmlView
 
 		HtmlHelper::_('proclaim.framework', '', 'modernizr');
 		$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-		$wa->useStyle('com_proclaim.biblestudy');
+		$wa->useStyle('com_proclaim.cwmcore');
 		$wa->useStyle('com_proclaim.podcast');
 
 		$attribs = array(
