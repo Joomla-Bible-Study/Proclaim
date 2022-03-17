@@ -7,12 +7,15 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Administrator\Field;
 // No Direct Access
+use Joomla\CMS\Form\Field\ListField;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+
 defined('_JEXEC') or die;
 
-// Import the list field type
-jimport('joomla.form.helper');
-JFormHelper::loadFieldClass('list');
+
 
 /**
  * Books List Form Field class for the Proclaim component
@@ -20,7 +23,7 @@ JFormHelper::loadFieldClass('list');
  * @package  Proclaim.Admin
  * @since    7.0.4
  */
-class JFormFieldSeriesLinkoptions extends JFormFieldList
+class serieslinkoptionsField extends ListField
 {
 	/**
 	 * The field type.
@@ -40,8 +43,8 @@ class JFormFieldSeriesLinkoptions extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		$options[] = JHtml::_('select.option', '0', JText::_('JBS_TPL_NO_LINK'));
-		$options[] = JHtml::_('select.option', '1', JText::_('JBS_TPL_LINK_TO_DETAILS'));
+		$options[] = HTMLHelper::_('select.option', '0', Text::_('JBS_TPL_NO_LINK'));
+		$options[] = HTMLHelper::_('select.option', '1', Text::_('JBS_TPL_LINK_TO_DETAILS'));
 		$options   = array_merge(parent::getOptions(), $options);
 
 		return $options;

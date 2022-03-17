@@ -7,14 +7,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Administrator\Field;
 // No Direct Access
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use Joomla\CMS\Form\Field\ListField;
 
 defined('_JEXEC') or die;
 
-// Import the list field type
-jimport('joomla.form.helper');
-JFormHelper::loadFieldClass('list');
+
 
 /**
  * Location List Form Field class for the Proclaim component
@@ -22,7 +22,7 @@ JFormHelper::loadFieldClass('list');
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class JFormFieldBooklist extends JFormFieldList
+class booklist extends ListField
 {
 	/**
 	 * The field type.

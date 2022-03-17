@@ -9,7 +9,7 @@
  * */
 
 namespace CWM\Component\Proclaim\Administrator\View\CWMTemplate;
-
+defined('_JEXEC') or die;
 // No Direct Access
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;

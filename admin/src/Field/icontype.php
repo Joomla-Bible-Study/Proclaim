@@ -7,11 +7,15 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Administrator\Field;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Site\Helper\CWMMedia;
 use Joomla\CMS\Form\Field\ListField;
-JFormHelper::loadFieldClass('list');
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+
 
 /**
  * Icons List Form Field class for the Proclaim component
@@ -19,7 +23,7 @@ JFormHelper::loadFieldClass('list');
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class JFormFieldIcontype extends ListField
+class icontype extends ListField
 {
 	/**
 	 * The field type.
@@ -71,15 +75,15 @@ class JFormFieldIcontype extends ListField
 	 */
 	protected function getOptions()
 	{
-		$MediaHelper = new JBSMMedia;
+		$MediaHelper = new CWMMedia;
 		$icontypes = $MediaHelper->getIcons();
 
 		$options = array();
 
 		foreach ($icontypes as $key => $message)
 		{
-			$key = JText::_($key);
-			$options[] = JHtml::_('select.option', $message, $key);
+			$key = Text::_($key);
+			$options[] = HTMLHelper::_('select.option', $message, $key);
 		}
 
 		$options = array_merge(parent::getOptions(), $options);

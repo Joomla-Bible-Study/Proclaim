@@ -18,9 +18,6 @@ use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die;
 
-// Import the list field type
-jimport('joomla.form.helper');
-FormHelper::loadFieldClass('list');
 
 /**
  * Location List Form Field class for the Proclaim component

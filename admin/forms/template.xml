@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<form>
+<form addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
 	<fieldset name="GENERAL">
 		<field name="published"
 		       type="list"

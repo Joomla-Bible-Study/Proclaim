@@ -7,12 +7,15 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Administrator\Field;
 // No Direct Access
 defined('_JEXEC') or die;
 
-// Import the list field type
-jimport('joomla.form.helper');
-JFormHelper::loadFieldClass('list');
+use Joomla\CMS\Form\Field\ListField;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+
 
 /**
  * Books List Form Field class for the Proclaim component
@@ -20,7 +23,7 @@ JFormHelper::loadFieldClass('list');
  * @package  Proclaim.Admin
  * @since    7.0.4
  */
-class JFormFieldRowOptions extends JFormFieldList
+class rowoptions extends ListField
 {
 	/**
 	 * The field type.
@@ -40,15 +43,15 @@ class JFormFieldRowOptions extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		$options[] = JHtml::_('select.option', '0', JText::_('JBS_CMN_HIDE'));
-		$options[] = JHtml::_('select.option', '1', JText::_('JBS_TPL_ROW1'));
-		$options[] = JHtml::_('select.option', '2', JText::_('JBS_TPL_ROW2'));
-		$options[] = JHtml::_('select.option', '3', JText::_('JBS_TPL_ROW3'));
-		$options[] = JHtml::_('select.option', '4', JText::_('JBS_TPL_ROW4'));
-		$options[] = JHtml::_('select.option', '5', JText::_('JBS_TPL_ROW5'));
-		$options[] = JHtml::_('select.option', '6', JText::_('JBS_TPL_ROW6'));
+		$options[] = HTMLHelper::_('select.option', '0', Text::_('JBS_CMN_HIDE'));
+		$options[] = HTMLHelper::_('select.option', '1', Text::_('JBS_TPL_ROW1'));
+		$options[] = HTMLHelper::_('select.option', '2', Text::_('JBS_TPL_ROW2'));
+		$options[] = HTMLHelper::_('select.option', '3', Text::_('JBS_TPL_ROW3'));
+		$options[] = HTMLHelper::_('select.option', '4', Text::_('JBS_TPL_ROW4'));
+		$options[] = HTMLHelper::_('select.option', '5', Text::_('JBS_TPL_ROW5'));
+		$options[] = HTMLHelper::_('select.option', '6', Text::_('JBS_TPL_ROW6'));
 		$options   = array_merge(parent::getOptions(), $options);
-
+var_dump($options);
 		return $options;
 	}
 }

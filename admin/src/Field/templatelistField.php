@@ -7,10 +7,18 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-// No Direct Access
-defined('_JEXEC') or die;
 
-JFormHelper::loadFieldClass('list');
+// No Direct Access
+
+namespace CWM\Component\Proclaim\Administrator\Field;
+defined('_JEXEC') or die;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Field\ListField;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Form\Form;
+
+
+
 
 /**
  * Teachers List Form Field class for the Proclaim component
@@ -18,7 +26,7 @@ JFormHelper::loadFieldClass('list');
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class JFormFieldTemplatelist extends JFormFieldList
+class templatelistField extends ListField
 {
 	/**
 	 * The field type.
@@ -58,7 +66,7 @@ class JFormFieldTemplatelist extends JFormFieldList
 
 			foreach ($messages as $message)
 			{
-				$options[] = JHtml::_('select.option', $message->id, $message->title);
+				$options[] = HTMLHelper::_('select.option', $message->id, $message->title);
 			}
 
 			self::$templates = array_merge(parent::getOptions(), $options);
