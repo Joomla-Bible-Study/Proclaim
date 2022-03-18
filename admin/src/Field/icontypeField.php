@@ -23,7 +23,7 @@ use Joomla\CMS\Language\Text;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class icontype extends ListField
+class icontypeField extends ListField
 {
 	/**
 	 * The field type.

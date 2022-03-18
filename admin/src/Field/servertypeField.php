@@ -7,11 +7,17 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Administrator\Field;
 // No Direct Access
 defined('_JEXEC') or die;
 
-JFormHelper::loadFieldClass('list');
 
+
+use Joomla\CMS\Form\Field\ListField;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Router\Route;
 use Joomla\Utilities\ArrayHelper;
 
 /**
@@ -20,7 +26,7 @@ use Joomla\Utilities\ArrayHelper;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class JFormFieldServerType extends JFormFieldList
+class servertypeField extends ListField
 {
 	/**
 	 * Get Input
@@ -39,18 +45,18 @@ class JFormFieldServerType extends JFormFieldList
 
 		// Get a reverse lookup of the endpoint type to endpoint name
 		/** @var BiblestudyModelServers $model */
-		$model    = JModelLegacy::getInstance('servers', 'BibleStudyModel');
+		$model    = ListModel::getInstance('CWMServers', 'Model');
 		$rlu_type = $model->getTypeReverseLookup();
 
 		$value = ArrayHelper::getValue($rlu_type, $this->value);
-		JHtml::_('behavior.framework');
-		JHtml::_('behavior.modal');
+		HTMLHelper::_('behavior.framework');
+		HTMLHelper::_('behavior.modal');
 
 		$html[] = '<div class="input-append">';
 		$html[] = '    <input type="text" readonly="readonly" disabled="disabled" value="' . $value . '"' . $size . $class . ' />';
 		$html[] = '    <a class="btn" onclick="SqueezeBox.fromElement(this, {handler:\'iframe\', size: {x: 600, y: 450}, url:\'' .
-			JRoute::_('index.php?option=com_proclaim&view=servers&layout=types&tmpl=component&recordId=' . $recordId) . '\'})"><i class="icon-list"></i> ' .
-			JText::_('JSELECT') . '</a>';
+			Route::_('index.php?option=com_proclaim&view=servers&layout=types&tmpl=component&recordId=' . $recordId) . '\'})"><i class="icon-list"></i> ' .
+			Text::_('JSELECT') . '</a>';
 		$html[] = '    <input type="hidden" name="' . $this->name . '" value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '" />';
 		$html[] = '</div>';
 

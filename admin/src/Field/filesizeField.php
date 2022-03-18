@@ -7,12 +7,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Administrator\Field;
 // No Direct Access
+use Joomla\CMS\Form\Field\ListField;
+use Joomla\CMS\Language\Text;
+
 defined('_JEXEC') or die;
 
-jimport('joomla.html.html');
-jimport('joomla.access.access');
-jimport('joomla.form.formfield');
+
 
 /**
  * Form Field class for the FileSize
@@ -20,7 +22,7 @@ jimport('joomla.form.formfield');
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class JFormFieldFilesize extends JFormField
+class filesizeField extends ListField
 {
 	/**
 	 *  Set Naming of type
@@ -44,8 +46,8 @@ class JFormFieldFilesize extends JFormField
 		$size      = $this->element['size'] ? ' size="' . (int) $this->element['size'] . '"' : '';
 		$maxLength = $this->element['maxlength'] ? ' maxlength="' . (int) $this->element['maxlength'] . '"' : '';
 		$class     = $this->element['class'] ? ' class="' . (string) $this->element['class'] . '"' : '';
-		$readonly  = ((string) $this->element['readonly'] == 'true') ? ' readonly="readonly"' : '';
-		$disabled  = ((string) $this->element['disabled'] == 'true') ? ' disabled="disabled"' : '';
+		$readonly  = ((string) $this->element['readonly'] === 'true') ? ' readonly="readonly"' : '';
+		$disabled  = ((string) $this->element['disabled'] === 'true') ? ' disabled="disabled"' : '';
 
 		// Initialize JavaScript field attributes.
 		$onchange = $this->element['onchange'] ? ' onchange="' . (string) $this->element['onchange'] . '"' : '';
@@ -65,7 +67,7 @@ class JFormFieldFilesize extends JFormField
 	private function sizeConverter()
 	{
 		return "<button data-toggle=\"modal\" onclick=\"jQuery( '#collapseModal' ).modal('show'); return true;\" class=\"btn btn-primary\">
-	<span class=\"icon-checkbox-partial\" aria-hidden=\"true\"></span>" . JText::_('JBS_MED_FILESIZE_CONVERTER') .
+	<span class=\"icon-checkbox-partial\" aria-hidden=\"true\"></span>" . Text::_('JBS_MED_FILESIZE_CONVERTER') .
 			"</button>";
 	}
 }

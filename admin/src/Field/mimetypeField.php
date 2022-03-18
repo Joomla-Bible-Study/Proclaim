@@ -7,10 +7,15 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Administrator\Field;
 // No Direct Access
+use CWM\Component\Proclaim\Site\Helper\CWMMedia;
+use Joomla\CMS\Form\Field\ListField;
+use Joomla\CMS\HTML\HTMLHelper;
+
 defined('_JEXEC') or die;
 
-JFormHelper::loadFieldClass('list');
+
 
 /**
  * Mime Type List Form Field class for the Proclaim component
@@ -18,7 +23,7 @@ JFormHelper::loadFieldClass('list');
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class JFormFieldMimetype extends JFormFieldList
+class mimetypeField extends ListField
 {
 	/**
 	 * The field type.
@@ -38,14 +43,14 @@ class JFormFieldMimetype extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		$MediaHelper = new JBSMMedia;
+		$MediaHelper = new CWMMedia;
 		$mimetypes = $MediaHelper->getMimetypes();
 
 		$options = array();
 
 		foreach ($mimetypes as $key => $message)
 		{
-			$options[] = JHtml::_('select.option', $message, $key);
+			$options[] = HTMLHelper::_('select.option', $message, $key);
 		}
 
 		$options = array_merge(parent::getOptions(), $options);

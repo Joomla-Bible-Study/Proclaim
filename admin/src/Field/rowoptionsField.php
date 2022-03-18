@@ -7,15 +7,15 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Administrator\Field;
 // No Direct Access
+defined('_JEXEC') or die;
+
+use Joomla\CMS\Form\Field\ListField;
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
-defined('_JEXEC') or die;
-
-// Import the list field type
-jimport('joomla.form.helper');
-JFormHelper::loadFieldClass('list');
 
 /**
  * Books List Form Field class for the Proclaim component
@@ -23,7 +23,7 @@ JFormHelper::loadFieldClass('list');
  * @package  Proclaim.Admin
  * @since    7.0.4
  */
-class JFormFieldTeacherLinkoptions extends JFormFieldList
+class rowoptionsField extends ListField
 {
 	/**
 	 * The field type.
@@ -32,7 +32,7 @@ class JFormFieldTeacherLinkoptions extends JFormFieldList
 	 *
 	 * @since 7.0
 	 */
-	protected $type = 'TeacherLinkoptions';
+	protected $type = 'Rowoptions';
 
 	/**
 	 * Method to get a list of options for a list input.
@@ -43,10 +43,15 @@ class JFormFieldTeacherLinkoptions extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		$options[] = HtmlHelper::_('select.option', '0', Text::_('JBS_TPL_NO_LINK'));
-		$options[] = HtmlHelper::_('select.option', '3', Text::_('JBS_TPL_LINK_TO_TEACHERS_PROFILE'));
+		$options[] = HTMLHelper::_('select.option', '0', Text::_('JBS_CMN_HIDE'));
+		$options[] = HTMLHelper::_('select.option', '1', Text::_('JBS_TPL_ROW1'));
+		$options[] = HTMLHelper::_('select.option', '2', Text::_('JBS_TPL_ROW2'));
+		$options[] = HTMLHelper::_('select.option', '3', Text::_('JBS_TPL_ROW3'));
+		$options[] = HTMLHelper::_('select.option', '4', Text::_('JBS_TPL_ROW4'));
+		$options[] = HTMLHelper::_('select.option', '5', Text::_('JBS_TPL_ROW5'));
+		$options[] = HTMLHelper::_('select.option', '6', Text::_('JBS_TPL_ROW6'));
 		$options   = array_merge(parent::getOptions(), $options);
-
+var_dump($options);
 		return $options;
 	}
 }

@@ -14,34 +14,32 @@ use Joomla\CMS\Form\Field\ListField;
 
 defined('_JEXEC') or die;
 
-
-
 /**
  * Location List Form Field class for the Proclaim component
  *
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class booklist extends ListField
+class yearlistField extends ListField
 {
 	/**
 	 * The field type.
 	 *
-	 * @var         string
+	 * @var  string
 	 *
-	 * @since 7.0
+	 * @since 9.0.0
 	 */
-	protected $type = 'Booklist';
+	protected $type = 'Yearlist';
 
 	/**
 	 * Method to get a list of options for a list input.
 	 *
-	 * @return      array           An array of JHtml options.
+	 * @return  array  An array of JHtml options.
 	 *
-	 * @since 7.0
+	 * @since 9.0.0
 	 */
 	protected function getOptions()
 	{
-		return array_merge(parent::getOptions(), CWMProclaimHelper::getStudyBooks());
+		return array_merge(parent::getOptions(), CWMProclaimHelper::getStudyYears());
 	}
 }

@@ -22,7 +22,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.4
  */
-class elementoptions extends ListField
+class elementoptionsField extends ListField
 {
 	/**
 	 * The field type.

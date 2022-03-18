@@ -7,12 +7,18 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Administrator\Field;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Site\Helper\CWMMedia;
+use JBSMMedia;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Field\ListField;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\Registry\Registry;
 
-JFormHelper::loadFieldClass('list');
 
 /**
  * Location List Form Field class for the Proclaim component
@@ -20,7 +26,7 @@ JFormHelper::loadFieldClass('list');
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class JFormFieldMediafileImages extends JFormFieldList
+class mediafileimagesField extends ListField
 {
 	/**
 	 * The field type.
@@ -34,7 +40,7 @@ class JFormFieldMediafileImages extends JFormFieldList
 	/**
 	 * Method to get a list of options for a list input.
 	 *
-	 * @return   array  An array of JHtml options.
+	 * @return   array  An array of HTMLHelper options.
 	 *
 	 * @since 7.0
 	 */
@@ -62,9 +68,9 @@ class JFormFieldMediafileImages extends JFormFieldList
 					{
 						case 1:
 							$button             = $this->getButton($media);
-							$media->media_image = JText::_('JBS_MED_BUTTON') . ': ' . $button . ' - ' . JText::_('JBS_MED_TEXT') .
+							$media->media_image = Text::_('JBS_MED_BUTTON') . ': ' . $button . ' - ' . Text::_('JBS_MED_TEXT') .
 									': ' . $media->params->get('media_button_text');
-							$options[] = JHtml::_('select.option', '{"media_use_button_icon":"' . $media->params->get('media_use_button_icon') .
+							$options[] = HTMLHelper::_('select.option', '{"media_use_button_icon":"' . $media->params->get('media_use_button_icon') .
 									'","media_button_type":"' . $media->params->get('media_button_type') . '","media_button_text":"' .
 									$media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get('media_icon_type') .
 									'","media_icon_text_size":"' . $media->params->get('media_icon_text_size') .
@@ -74,8 +80,8 @@ class JFormFieldMediafileImages extends JFormFieldList
 						case 2:
 							$button             = $this->getButton($media);
 							$icon               = $this->getIcon($media);
-							$media->media_image = JText::_('JBS_MED_BUTTON') . ': ' . $button . ' - ' . JText::_('JBS_MED_ICON') . ': ' . $icon;
-							$options[]          = JHtml::_('select.option', '{"media_use_button_icon":"' .
+							$media->media_image = Text::_('JBS_MED_BUTTON') . ': ' . $button . ' - ' . Text::_('JBS_MED_ICON') . ': ' . $icon;
+							$options[]          = HTMLHelper::_('select.option', '{"media_use_button_icon":"' .
 								$media->params->get('media_use_button_icon') .
 									'","media_button_type":"' . $media->params->get('media_button_type') . '","media_button_text":"' .
 									$media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get('media_icon_type') .
@@ -85,8 +91,8 @@ class JFormFieldMediafileImages extends JFormFieldList
 							break;
 						case 3:
 							$icon               = $this->getIcon($media);
-							$media->media_image = JText::_('JBS_MED_ICON') . ': ' . $icon;
-							$options[]          = JHtml::_('select.option', '{"media_use_button_icon":"' .
+							$media->media_image = Text::_('JBS_MED_ICON') . ': ' . $icon;
+							$options[]          = HTMLHelper::_('select.option', '{"media_use_button_icon":"' .
 								$media->params->get('media_use_button_icon') .
 									'","media_button_type":"' . $media->params->get('media_button_type') . '","media_button_text":"' .
 									$media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get('media_icon_type') .
@@ -102,8 +108,8 @@ class JFormFieldMediafileImages extends JFormFieldList
 					$totalcount         = strlen($image);
 					$slash              = strrpos($image, '/');
 					$imagecount         = $totalcount - $slash;
-					$media->media_image = JText::_('JBS_MED_IMAGE') . ': ' . substr($image, $slash + 1, $imagecount);
-					$options[]          = JHtml::_('select.option', '{"media_use_button_icon":"' . $media->params->get('media_use_button_icon') .
+					$media->media_image = Text::_('JBS_MED_IMAGE') . ': ' . substr($image, $slash + 1, $imagecount);
+					$options[]          = HTMLHelper::_('select.option', '{"media_use_button_icon":"' . $media->params->get('media_use_button_icon') .
 							'","media_button_type":"' . $media->params->get('media_button_type') . '","media_button_text":"' .
 							$media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get('media_icon_type') .
 							'","media_icon_text_size":"' . $media->params->get('media_icon_text_size') . '","media_image":"' .
@@ -167,22 +173,22 @@ class JFormFieldMediafileImages extends JFormFieldList
 		switch ($media->params->get('media_button_type'))
 		{
 			case 'btn-link':
-				$button = JText::_('JBS_MED_NO_COLOR');
+				$button = Text::_('JBS_MED_NO_COLOR');
 				break;
 			case 'btn-primary':
-				$button = JText::_('JBS_MED_PRIMARY');
+				$button = Text::_('JBS_MED_PRIMARY');
 				break;
 			case 'btn-success':
-				$button = JText::_('JBS_MED_SUCCESS');
+				$button = Text::_('JBS_MED_SUCCESS');
 				break;
 			case 'btn-info':
-				$button = JText::_('JBS_MED_INFO');
+				$button = Text::_('JBS_MED_INFO');
 				break;
 			case 'btn-warning':
-				$button = JText::_('JBS_MED_WARNING');
+				$button = Text::_('JBS_MED_WARNING');
 				break;
 			case 'btn-danger':
-				$button = JText::_('JBS_MED_DANGER');
+				$button = Text::_('JBS_MED_DANGER');
 				break;
 		}
 
@@ -205,7 +211,7 @@ class JFormFieldMediafileImages extends JFormFieldList
 	 */
 	public function getIcon($media)
 	{
-		$MediaHelper = new JBSMMedia;
+		$MediaHelper = new CWMMedia;
 		$mimetypes = $MediaHelper->getIcons();
 
 		if ($media->params->get('media_icon_type') !== '1'
@@ -213,7 +219,7 @@ class JFormFieldMediafileImages extends JFormFieldList
 			&& !empty($media->params->get('media_icon_type'))
 		)
 		{
-			return JText::_($mimetypes[$media->params->get('media_icon_type')]);
+			return Text::_($mimetypes[$media->params->get('media_icon_type')]);
 		}
 
 		return $media->params->get('media_custom_icon');

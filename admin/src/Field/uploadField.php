@@ -7,11 +7,16 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Administrator\Field;
 // No Direct Access
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Uri\Uri;
+
 defined('_JEXEC') or die;
 
-jimport('joomla.html.html');
-jimport('joomla.form.formfield');
+
 
 /**
  * Upload Field class
@@ -19,7 +24,7 @@ jimport('joomla.form.formfield');
  * @package  Proclaim.Admin
  * @since    9.0.0
  */
-class JFormFieldUpload extends JFormField
+class uploadField extends FormField
 {
 	public $type = 'upload';
 
@@ -32,15 +37,19 @@ class JFormFieldUpload extends JFormField
 	 */
 	protected function getInput()
 	{
+		$wa = $this->document->getWebAssetManager();
+		$wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
+		$wa->useScript('/administrator/components/com_proclaim/addons/servers/legacy/includes/js/plupload.full.min.js')
+			->useScript('/administrator/components/com_proclaim/addons/servers/legacy/includes/js/legacy.js');
 		// Include Plupload libraries
 		$document = Factory::getApplication()->getDocument();
-		$document->addScript(JUri::root() . 'administrator/components/com_proclaim/addons/servers/legacy/includes/js/plupload.full.min.js');
+		//$document->addScript(Uri::root() . 'administrator/components/com_proclaim/addons/servers/legacy/includes/js/plupload.full.min.js');
 
-		$document->addScript(JUri::root() . 'administrator/components/com_proclaim/addons/servers/legacy/includes/js/legacy.js');
+		//$document->addScript(JUri::root() . 'administrator/components/com_proclaim/addons/servers/legacy/includes/js/legacy.js');
 
 		$document->addScriptDeclaration('
             jQuery(document).ready(function() {
-                uploader.setOption("url", "index.php?option=com_proclaim&task=mediafile.xhr&' . JSession::getFormToken() . '=1");
+                uploader.setOption("url", "index.php?option=com_proclaim&task=mediafile.xhr&' . Session::getFormToken() . '=1");
                 uploader.bind("BeforeUpload", function() {
                     var path = jQuery("#jform_params_localFolder").val();
                     var type = jQuery("#jform_serverType").val();

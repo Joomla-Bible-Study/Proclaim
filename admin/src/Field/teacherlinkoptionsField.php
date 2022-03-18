@@ -9,12 +9,12 @@
  * */
 namespace CWM\Component\Proclaim\Administrator\Field;
 // No Direct Access
-defined('_JEXEC') or die;
-
 use Joomla\CMS\Form\Field\ListField;
-use Joomla\CMS\Form\Form;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+
+defined('_JEXEC') or die;
+
 
 
 /**
@@ -23,7 +23,7 @@ use Joomla\CMS\Language\Text;
  * @package  Proclaim.Admin
  * @since    7.0.4
  */
-class rowoptions extends ListField
+class teacherlinkoptionsField extends ListField
 {
 	/**
 	 * The field type.
@@ -32,7 +32,7 @@ class rowoptions extends ListField
 	 *
 	 * @since 7.0
 	 */
-	protected $type = 'Rowoptions';
+	protected $type = 'TeacherLinkoptions';
 
 	/**
 	 * Method to get a list of options for a list input.
@@ -43,15 +43,10 @@ class rowoptions extends ListField
 	 */
 	protected function getOptions()
 	{
-		$options[] = HTMLHelper::_('select.option', '0', Text::_('JBS_CMN_HIDE'));
-		$options[] = HTMLHelper::_('select.option', '1', Text::_('JBS_TPL_ROW1'));
-		$options[] = HTMLHelper::_('select.option', '2', Text::_('JBS_TPL_ROW2'));
-		$options[] = HTMLHelper::_('select.option', '3', Text::_('JBS_TPL_ROW3'));
-		$options[] = HTMLHelper::_('select.option', '4', Text::_('JBS_TPL_ROW4'));
-		$options[] = HTMLHelper::_('select.option', '5', Text::_('JBS_TPL_ROW5'));
-		$options[] = HTMLHelper::_('select.option', '6', Text::_('JBS_TPL_ROW6'));
+		$options[] = HtmlHelper::_('select.option', '0', Text::_('JBS_TPL_NO_LINK'));
+		$options[] = HtmlHelper::_('select.option', '3', Text::_('JBS_TPL_LINK_TO_TEACHERS_PROFILE'));
 		$options   = array_merge(parent::getOptions(), $options);
-var_dump($options);
+
 		return $options;
 	}
 }

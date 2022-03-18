@@ -7,7 +7,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Administrator\Field;
 // No Direct Access
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Field\ListField;
+
 defined('_JEXEC') or die;
 
 
@@ -25,7 +29,7 @@ if (file_exists($api))
  * @package  Proclaim.Admin
  * @since    9.0.0
  */
-class JFormFieldLoadLanguageFile extends JFormField
+class loadlanguagefileField extends ListField
 {
 	/**
 	 * The form field type.

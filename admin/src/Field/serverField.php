@@ -7,10 +7,17 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Administrator\Field;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Field\ListField;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Session\Session;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\MVC\Model\ListModel;
 
 /**
  * Field class for Server
@@ -18,7 +25,7 @@ use Joomla\Utilities\ArrayHelper;
  * @package  Proclaim.Admin
  * @since    9.0.0
  */
-class JFormFieldServer extends JFormField
+class serverField extends ListField
 {
 	protected $type = 'Server';
 
@@ -40,7 +47,7 @@ class JFormFieldServer extends JFormField
 		$size = ($v = $this->element['size']) ? ' size="' . $v . '"' : '';
 
 		// Get a reverse lookup of the server id to server name
-		$model  = JModelLegacy::getInstance('servers', 'BibleStudyModel');
+		$model  = ListModel::getInstance('CWMServers', 'Model');
 		$rlu    = $model->getIdToNameReverseLookup();
 		$server = ArrayHelper::getValue($rlu, $this->value);
 
@@ -88,7 +95,7 @@ class JFormFieldServer extends JFormField
 			$script[] = '	function jClearServer(id) {';
 			$script[] = '		document.getElementById(id).value = "";';
 			$script[] = '		document.getElementById(id + "_name").value = "'
-				. htmlspecialchars(JText::_('JBS_SVR_SERVER_NAME', true), ENT_COMPAT, 'UTF-8') . '";';
+				. htmlspecialchars(Text::_('JBS_SVR_SERVER_NAME', true), ENT_COMPAT, 'UTF-8') . '";';
 			$script[] = '		jQuery("#"+id + "_clear").addClass("hidden");';
 			$script[] = '		if (document.getElementById(id + "_edit")) {';
 			$script[] = '			jQuery("#"+id + "_edit").addClass("hidden");';
@@ -135,10 +142,10 @@ class JFormFieldServer extends JFormField
 			$size . ' disabled="disabled" size="55" />';
 		$html[] = '<a'
 			. ' class="modal btn hasTooltip"'
-			. ' title="' . JHtml::tooltipText('JBS_SVR_SERVER_NAME') . '"'
-			. ' href="' . $link . '&amp;' . JSession::getFormToken() . '=1"'
+			. ' title="' . HTMLHelper::tooltipText('JBS_SVR_SERVER_NAME') . '"'
+			. ' href="' . $link . '&amp;' . Session::getFormToken() . '=1"'
 			. ' rel="{handler: \'iframe\', size: {x: 800, y: 450}}">'
-			. '<i class="icon-file"></i> ' . JText::_('JSELECT')
+			. '<i class="icon-file"></i> ' . Text::_('JSELECT')
 			. '</a>';
 
 		// Edit Server button.
@@ -148,8 +155,8 @@ class JFormFieldServer extends JFormField
 				. ' class="btn hasTooltip' . ($value ? '' : ' hidden') . '"'
 				. ' href="index.php?option=com_proclaim&layout=modal&tmpl=component&task=server.edit&id=' . $value . '"'
 				. ' target="_blank"'
-				. ' title="' . JHtml::tooltipText('JBS_SVR_SERVER_NAME') . '" >'
-				. '<span class="icon-edit"></span>' . JText::_('JACTION_EDIT')
+				. ' title="' . HTMLHelper::tooltipText('JBS_SVR_SERVER_NAME') . '" >'
+				. '<span class="icon-edit"></span>' . Text::_('JACTION_EDIT')
 				. '</a>';
 		}
 
@@ -160,7 +167,7 @@ class JFormFieldServer extends JFormField
 				. ' id="' . $this->id . '_clear"'
 				. ' class="btn' . ($value ? '' : ' hidden') . '"'
 				. ' onclick="return jClearServer(\'' . $this->id . '\')">'
-				. '<span class="icon-remove"></span>' . JText::_('JCLEAR')
+				. '<span class="icon-remove"></span>' . Text::_('JCLEAR')
 				. '</button>';
 		}
 

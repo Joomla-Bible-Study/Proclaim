@@ -7,14 +7,15 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Administrator\Field;
 // No Direct Access
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\Registry\Registry;
 
-JFormHelper::loadFieldClass('list');
 
 /**
  * Location List Form Field class for the Proclaim component
@@ -22,7 +23,7 @@ JFormHelper::loadFieldClass('list');
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class JFormFieldMediafile extends ListField
+class mediafileField extends ListField
 {
 	/**
 	 * The field type.
@@ -66,7 +67,7 @@ class JFormFieldMediafile extends ListField
 				$reg = new Registry;
 				$reg->loadString($message->params);
 				$message->params = $reg;
-				$options[]       = JHtml::_('select.option', $message->id, $message->params->get('filename') ? $message->id . ' - ' .
+				$options[]       = HTMLHelper::_('select.option', $message->id, $message->params->get('filename') ? $message->id . ' - ' .
 						$message->params->get('mimetext') : $message->params->get('filename')
 				);
 			}
