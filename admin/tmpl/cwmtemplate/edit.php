@@ -300,16 +300,7 @@ $wa->useScript('keepalive')
 					     data-bs-parent="#accordionlist">
 						<div class="accordion-body">
 							<?php foreach ($this->form->getFieldset('DISPLAYELEMENTS1') as $field): ?>
-								<?php if ($field->type !== "Spacer"): ?>
-									<div class="pull-left">
-										<div>
-											<?php echo $field->label; ?>
-										</div>
-										<div>
-											<?php echo $field->input; ?>
-										</div>
-									</div>
-								<?php else: ?>
+
 									<div class="control-group">
 										<div class="control-label">
 											<?php echo $field->label; ?>
@@ -318,7 +309,7 @@ $wa->useScript('keepalive')
 											<?php echo $field->input; ?>
 										</div>
 									</div>
-								<?php endif; ?>
+
 							<?php endforeach; ?>
 						</div>
 					</div>
@@ -334,16 +325,7 @@ $wa->useScript('keepalive')
 					     data-bs-parent="#accordionlist">
 						<div class="accordion-body">
 							<?php foreach ($this->form->getFieldset('DISPLAYELEMENTS2') as $field): ?>
-								<?php if ($field->type !== "Spacer"): ?>
-									<div class="pull-left">
-										<div>
-											<?php echo $field->label; ?>
-										</div>
-										<div>
-											<?php echo $field->input; ?>
-										</div>
-									</div>
-								<?php else: ?>
+
 									<div class="control-group">
 										<div class="control-label">
 											<?php echo $field->label; ?>
@@ -352,7 +334,7 @@ $wa->useScript('keepalive')
 											<?php echo $field->input; ?>
 										</div>
 									</div>
-								<?php endif; ?>
+
 							<?php endforeach; ?>
 						</div>
 					</div>
@@ -369,16 +351,7 @@ $wa->useScript('keepalive')
 					     data-bs-parent="#accordionlist">
 						<div class="accordion-body">
 							<?php foreach ($this->form->getFieldset('DISPLAYELEMENTS3') as $field): ?>
-								<?php if ($field->type !== "Spacer"): ?>
-									<div class="pull-left">
-										<div>
-											<?php echo $field->label; ?>
-										</div>
-										<div>
-											<?php echo $field->input; ?>
-										</div>
-									</div>
-								<?php else: ?>
+
 									<div class="control-group">
 										<div class="control-label">
 											<?php echo $field->label; ?>
@@ -387,7 +360,7 @@ $wa->useScript('keepalive')
 											<?php echo $field->input; ?>
 										</div>
 									</div>
-								<?php endif; ?>
+
 							<?php endforeach; ?>
 						</div>
 					</div>
@@ -403,16 +376,7 @@ $wa->useScript('keepalive')
 					     data-bs-parent="#accordionlist">
 						<div class="accordion-body">
 							<?php foreach ($this->form->getFieldset('DISPLAYELEMENTS4') as $field): ?>
-								<?php if ($field->type !== "Spacer"): ?>
-									<div class="pull-left">
-										<div>
-											<?php echo $field->label; ?>
-										</div>
-										<div>
-											<?php echo $field->input; ?>
-										</div>
-									</div>
-								<?php else: ?>
+
 									<div class="control-group">
 										<div class="control-label">
 											<?php echo $field->label; ?>
@@ -421,7 +385,7 @@ $wa->useScript('keepalive')
 											<?php echo $field->input; ?>
 										</div>
 									</div>
-								<?php endif; ?>
+
 							<?php endforeach; ?>
 						</div>
 					</div>
@@ -438,16 +402,7 @@ $wa->useScript('keepalive')
 					     data-bs-parent="#accordionlist">
 						<div class="accordion-body">
 							<?php foreach ($this->form->getFieldset('DISPLAYELEMENTS5') as $field): ?>
-								<?php if ($field->type !== "Spacer"): ?>
-									<div class="pull-left">
-										<div>
-											<?php echo $field->label; ?>
-										</div>
-										<div>
-											<?php echo $field->input; ?>
-										</div>
-									</div>
-								<?php else: ?>
+
 									<div class="control-group">
 										<div class="control-label">
 											<?php echo $field->label; ?>
@@ -456,7 +411,7 @@ $wa->useScript('keepalive')
 											<?php echo $field->input; ?>
 										</div>
 									</div>
-								<?php endif; ?>
+
 							<?php endforeach; ?>
 						</div>
 					</div>
@@ -473,16 +428,7 @@ $wa->useScript('keepalive')
 					     data-bs-parent="#accordionlist">
 						<div class="accordion-body">
 							<?php foreach ($this->form->getFieldset('DISPLAYELEMENTS6') as $field): ?>
-								<?php if ($field->type !== "Spacer"): ?>
-									<div class="pull-left">
-										<div>
-											<?php echo $field->label; ?>
-										</div>
-										<div>
-											<?php echo $field->input; ?>
-										</div>
-									</div>
-								<?php else: ?>
+
 									<div class="control-group">
 										<div class="control-label">
 											<?php echo $field->label; ?>
@@ -491,7 +437,7 @@ $wa->useScript('keepalive')
 											<?php echo $field->input; ?>
 										</div>
 									</div>
-								<?php endif; ?>
+
 							<?php endforeach; ?>
 						</div>
 					</div>
@@ -500,475 +446,344 @@ $wa->useScript('keepalive')
 		</div>
 		<?php echo HTMLHelper::_('uitab.endTab'); ?>
 
-		<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'details', Text::_('JBS_TPL_STUDY_DETAILS_VIEW')); ?>
-		<div class="tab-pane" id="details">
-			<div id="details-sliders">
-				<div class="span2">
-					<ul class="nav nav-pills nav-stacked">
-						<li class="active">
-							<a href="#details-1" data-toggle="tab">
-								<?php echo Text::_('JBS_TPL_DETAILS_VIEW'); ?>
-							</a>
-						</li>
-						<li class="">
-							<a href="#details-2" data-toggle="tab">
-								<?php echo Text::_('JBS_TPL_DISPLAY_ITEMS1'); ?>
-							</a>
-						</li>
-						<li class="">
-							<a href="#details-3" data-toggle="tab">
-								<?php echo Text::_('JBS_TPL_DISPLAY_ITEMS2'); ?>
-							</a>
-						</li>
-						<li class="">
-							<a href="#details-4" data-toggle="tab">
-								<?php echo Text::_('JBS_TPL_DISPLAY_ITEMS3'); ?>
-							</a>
-						</li>
-						<li class="">
-							<a href="#details-5" data-toggle="tab">
-								<?php echo Text::_('JBS_TPL_DISPLAY_ITEMS4'); ?>
-							</a>
-						</li>
-						<li class="">
-							<a href="#details-6" data-toggle="tab">
-								<?php echo Text::_('JBS_TPL_DISPLAY_ITEMS5'); ?>
-							</a>
-						</li>
-						<li class="">
-							<a href="#details-7" data-toggle="tab">
-								<?php echo Text::_('JBS_TPL_DISPLAY_ITEMS6'); ?>
-							</a>
-						</li>
-					</ul>
-				</div>
-				<div class="tab-content span10">
-					<div class="tab-pane active" id="details-1">
-						<div class="row-fluid">
-							<?php
-							$c     = 0;
-							$count = CWMProclaimHelper::halfarray($this->form->getFieldset('DETAILS'));
-							foreach ($this->form->getFieldset('DETAILS') as $field):
+        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'list', Text::_('JBS_TPL_STUDY_DETAILS_VIEW')); ?>
+        <div class="row">
+            <div class="accordion" id="accordionlist">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading11">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapse11" aria-expanded="false" aria-controls="collapse11">
+					<?php echo Text::_('JBS_TPL_STUDY_DETAILS_VIEW'); ?>
+                </button>
+            </h2>
+            <div id="collapse11" class="accordion-collapse collapse show" aria-labelledby="heading11"
+                 data-bs-parent="#accordionlist">
+                <div class="accordion-body">
+					<?php foreach ($this->form->getFieldset('DETAILS') as $field): ?>
 
-								if ($c == 0)
-								{
-									echo '<div class="col-md-5">';
-								}
-								elseif ($c == $count->half)
-								{
-									echo '</div><div class="col-md-5">';
-								}
-								?>
-								<div class="control-group">
-									<div class="control-label">
-										<?php echo $field->label; ?>
-									</div>
-									<div class="controls">
-										<?php echo $field->input; ?>
-									</div>
-								</div>
-								<?php
-								$c++;
-								if ($c == $count->count)
-								{
-									echo '</div>';
-								}
-							endforeach; ?>
-						</div>
-					</div>
-					<div class="tab-pane" id="details-2">
-						<?php foreach ($this->form->getFieldset('DDISPLAYELEMENTS1') as $field): ?>
-							<?php if ($field->type != "Spacer"): ?>
-								<div class="pull-left" style="margin:0;">
-									<div>
-										<?php echo $field->label; ?>
-									</div>
-									<div>
-										<?php echo $field->input; ?>
-									</div>
-								</div>
-							<?php else: ?>
-								<div class="clearfix"></div>
-								<div class="control-group" style="margin:0;">
-									<div class="control-label">
-										<?php echo $field->label; ?>
-									</div>
-									<div class="controls">
-										<?php echo $field->input; ?>
-									</div>
-								</div>
-							<?php endif; ?>
-						<?php endforeach; ?>
-					</div>
-					<div class="tab-pane" id="details-3">
-						<?php foreach ($this->form->getFieldset('DDISPLAYELEMENTS2') as $field): ?>
-							<?php if ($field->type != "Spacer"): ?>
-								<div class="pull-left" style="margin:0;">
-									<div>
-										<?php echo $field->label; ?>
-									</div>
-									<div>
-										<?php echo $field->input; ?>
-									</div>
-								</div>
-							<?php else: ?>
-								<div class="clearfix"></div>
-								<div class="control-group" style="margin:0;">
-									<div class="control-label">
-										<?php echo $field->label; ?>
-									</div>
-									<div class="controls">
-										<?php echo $field->input; ?>
-									</div>
-								</div>
-							<?php endif; ?>
-						<?php endforeach; ?>
-					</div>
-					<div class="tab-pane" id="details-4">
-						<?php foreach ($this->form->getFieldset('DDISPLAYELEMENTS3') as $field): ?>
-							<?php if ($field->type != "Spacer"): ?>
-								<div class="pull-left" style="margin:0;">
-									<div>
-										<?php echo $field->label; ?>
-									</div>
-									<div>
-										<?php echo $field->input; ?>
-									</div>
-								</div>
-							<?php else: ?>
-								<div class="clearfix"></div>
-								<div class="control-group" style="margin:0;">
-									<div class="control-label">
-										<?php echo $field->label; ?>
-									</div>
-									<div class="controls">
-										<?php echo $field->input; ?>
-									</div>
-								</div>
-							<?php endif; ?>
-						<?php endforeach; ?>
-					</div>
-					<div class="tab-pane" id="details-5">
-						<?php foreach ($this->form->getFieldset('DDISPLAYELEMENTS4') as $field): ?>
-							<?php if ($field->type != "Spacer"): ?>
-								<div class="pull-left" style="margin:0;">
-									<div>
-										<?php echo $field->label; ?>
-									</div>
-									<div>
-										<?php echo $field->input; ?>
-									</div>
-								</div>
-							<?php else: ?>
-								<div class="clearfix"></div>
-								<div class="control-group" style="margin:0;">
-									<div class="control-label">
-										<?php echo $field->label; ?>
-									</div>
-									<div class="controls">
-										<?php echo $field->input; ?>
-									</div>
-								</div>
-							<?php endif; ?>
-						<?php endforeach; ?>
-					</div>
-					<div class="tab-pane" id="details-6">
-						<?php foreach ($this->form->getFieldset('DDISPLAYELEMENTS5') as $field): ?>
-							<?php if ($field->type != "Spacer"): ?>
-								<div class="pull-left" style="margin:0;">
-									<div>
-										<?php echo $field->label; ?>
-									</div>
-									<div>
-										<?php echo $field->input; ?>
-									</div>
-								</div>
-							<?php else: ?>
-								<div class="clearfix"></div>
-								<div class="control-group" style="margin:0;">
-									<div class="control-label">
-										<?php echo $field->label; ?>
-									</div>
-									<div class="controls">
-										<?php echo $field->input; ?>
-									</div>
-								</div>
-							<?php endif; ?>
-						<?php endforeach; ?>
-					</div>
-					<div class="tab-pane" id="details-7">
-						<?php foreach ($this->form->getFieldset('DDISPLAYELEMENTS6') as $field): ?>
-							<?php if ($field->type != "Spacer"): ?>
-								<div class="pull-left" style="margin:0;">
-									<div>
-										<?php echo $field->label; ?>
-									</div>
-									<div>
-										<?php echo $field->input; ?>
-									</div>
-								</div>
-							<?php else: ?>
-								<div class="clearfix"></div>
-								<div class="control-group" style="margin:0;">
-									<div class="control-label">
-										<?php echo $field->label; ?>
-									</div>
-									<div class="controls">
-										<?php echo $field->input; ?>
-									</div>
-								</div>
-							<?php endif; ?>
-						<?php endforeach; ?>
-					</div>
-				</div>
-			</div>
-		</div>
-		<?php echo HTMLHelper::_('uitab.endTab'); ?>
-
-		<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'teacher', Text::_('JBS_TPL_TEACHER_VIEW')); ?>
-		<div class="tab-pane" id="teacher">
-			<div id="details-sliders">
-				<div class="span2">
-					<ul class="nav nav-pills nav-stacked">
-						<li class="active">
-							<a href="#teacherlistdetails" data-toggle="tab">
-								<?php echo Text::_('JBS_TPL_TEACHERDETAILS'); ?>
-							</a>
-						</li>
-						<li class="">
-							<a href="#teacherlistdisplay" data-toggle="tab">
-								<?php echo Text::_('JBS_TPL_TEACHERDISPLAY'); ?>
-							</a>
-						</li>
-					</ul>
-				</div>
-				<div class="tab-content span10">
-					<div class="tab-pane active" id="teacherlistdetails">
-						<?php foreach ($this->form->getFieldset('TEACHER') as $field): ?>
-							<div class="control-group">
-								<div class="control-label">
+                            <div class="control-group">
+                                <div class="control-label">
 									<?php echo $field->label; ?>
-								</div>
-								<div class="controls">
+                                </div>
+                                <div class="controls">
 									<?php echo $field->input; ?>
-								</div>
-							</div>
-						<?php endforeach; ?>
-					</div>
-					<div class="tab-pane" id="teacherlistdisplay">
-						<?php foreach ($this->form->getFieldset('TEACHERDISPLAY') as $field): ?>
-							<?php if ($field->type != "Spacer"): ?>
-								<div class="pull-left" style="margin:0;">
-									<div>
-										<?php echo $field->label; ?>
-									</div>
-									<div>
-										<?php echo $field->input; ?>
-									</div>
-								</div>
-							<?php else: ?>
-								<div class="clearfix"></div>
-								<div class="control-group" style="margin:0;">
-									<div class="control-label">
-										<?php echo $field->label; ?>
-									</div>
-									<div class="controls">
-										<?php echo $field->input; ?>
-									</div>
-								</div>
-							<?php endif; ?>
-						<?php endforeach; ?>
-					</div>
-				</div>
-			</div>
-		</div>
+                                </div>
+                            </div>
+
+					<?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading12">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse12" aria-expanded="false" aria-controls="collapse12">
+				            <?php echo Text::_('JBS_TPL_DISPLAY_ITEMS1'); ?>
+                        </button>
+                    </h2>
+                    <div id="collapse12" class="accordion-collapse collapse" aria-labelledby="heading12"
+                         data-bs-parent="#accordionlist">
+                        <div class="accordion-body">
+				            <?php foreach ($this->form->getFieldset('DDISPLAYELEMENTS1') as $field): ?>
+
+                                    <div class="control-group">
+                                        <div class="control-label">
+								            <?php echo $field->label; ?>
+                                        </div>
+                                        <div class="controls">
+								            <?php echo $field->input; ?>
+                                        </div>
+                                    </div>
+
+				            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading13">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse13" aria-expanded="false" aria-controls="collapse13">
+				            <?php echo Text::_('JBS_TPL_DISPLAY_ITEMS2'); ?>
+                        </button>
+                    </h2>
+                    <div id="collapse13" class="accordion-collapse collapse" aria-labelledby="heading13"
+                         data-bs-parent="#accordionlist">
+                        <div class="accordion-body">
+				            <?php foreach ($this->form->getFieldset('DDISPLAYELEMENTS2') as $field): ?>
+
+                                    <div class="control-group">
+                                        <div class="control-label">
+								            <?php echo $field->label; ?>
+                                        </div>
+                                        <div class="controls">
+								            <?php echo $field->input; ?>
+                                        </div>
+                                    </div>
+
+				            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading14">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse14" aria-expanded="false" aria-controls="collapse14">
+				            <?php echo Text::_('JBS_TPL_DISPLAY_ITEMS3'); ?>
+                        </button>
+                    </h2>
+                    <div id="collapse14" class="accordion-collapse collapse" aria-labelledby="heading14"
+                         data-bs-parent="#accordionlist">
+                        <div class="accordion-body">
+				            <?php foreach ($this->form->getFieldset('DDISPLAYELEMENTS3') as $field): ?>
+
+                                    <div class="control-group">
+                                        <div class="control-label">
+								            <?php echo $field->label; ?>
+                                        </div>
+                                        <div class="controls">
+								            <?php echo $field->input; ?>
+                                        </div>
+                                    </div>
+
+				            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading15">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse15" aria-expanded="false" aria-controls="collapse15">
+				            <?php echo Text::_('JBS_TPL_DISPLAY_ITEMS4'); ?>
+                        </button>
+                    </h2>
+                    <div id="collapse15" class="accordion-collapse collapse" aria-labelledby="heading15"
+                         data-bs-parent="#accordionlist">
+                        <div class="accordion-body">
+				            <?php foreach ($this->form->getFieldset('DDISPLAYELEMENTS4') as $field): ?>
+
+                                    <div class="control-group">
+                                        <div class="control-label">
+								            <?php echo $field->label; ?>
+                                        </div>
+                                        <div class="controls">
+								            <?php echo $field->input; ?>
+                                        </div>
+                                    </div>
+
+				            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading16">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse16" aria-expanded="false" aria-controls="collapse16">
+				            <?php echo Text::_('JBS_TPL_DISPLAY_ITEMS5'); ?>
+                        </button>
+                    </h2>
+                    <div id="collapse16" class="accordion-collapse collapse" aria-labelledby="heading16"
+                         data-bs-parent="#accordionlist">
+                        <div class="accordion-body">
+				            <?php foreach ($this->form->getFieldset('DDISPLAYELEMENTS5') as $field): ?>
+
+                                    <div class="control-group">
+                                        <div class="control-label">
+								            <?php echo $field->label; ?>
+                                        </div>
+                                        <div class="controls">
+								            <?php echo $field->input; ?>
+                                        </div>
+                                    </div>
+
+				            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading17">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse17" aria-expanded="false" aria-controls="collapse17">
+				            <?php echo Text::_('JBS_TPL_DISPLAY_ITEMS6'); ?>
+                        </button>
+                    </h2>
+                    <div id="collapse17" class="accordion-collapse collapse" aria-labelledby="heading17"
+                         data-bs-parent="#accordionlist">
+                        <div class="accordion-body">
+				            <?php foreach ($this->form->getFieldset('DDISPLAYELEMENTS6') as $field): ?>
+
+                                    <div class="control-group">
+                                        <div class="control-label">
+								            <?php echo $field->label; ?>
+                                        </div>
+                                        <div class="controls">
+								            <?php echo $field->input; ?>
+                                        </div>
+                                    </div>
+
+				            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
 		<?php echo HTMLHelper::_('uitab.endTab'); ?>
 
-		<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'teacherdetails', Text::_('JBS_TPL_TEACHER_DETAILS')); ?>
-		<div class="tab-pane" id="teacherdetails">
-			<div id="details-sliders">
-				<div class="span2">
-					<ul class="nav nav-pills nav-stacked">
-						<li class="active">
-							<a href="#teacherviewdetails" data-toggle="tab">
-								<?php echo Text::_('JBS_TPL_TEACHERDETAILS'); ?>
-							</a>
-						</li>
-						<li class="">
-							<a href="#teacherviewdisplay" data-toggle="tab">
-								<?php echo Text::_('JBS_TPL_TEACHERDISPLAY'); ?>
-							</a>
-						</li>
-					</ul>
-				</div>
-				<div class="tab-content span10">
-					<div class="tab-pane active" id="teacherviewdetails">
-						<?php foreach ($this->form->getFieldset('TEACHERDETAILS') as $field): ?>
-							<div class="control-group">
-								<div class="control-label">
-									<?php echo $field->label; ?>
-								</div>
-								<div class="controls">
-									<?php echo $field->input; ?>
-								</div>
-							</div>
-						<?php endforeach; ?>
-					</div>
-					<div class="tab-pane" id="teacherviewdisplay">
-						<?php foreach ($this->form->getFieldset('TEACHERDETAILSDISPALY') as $field): ?>
-							<?php if ($field->type != "Spacer"): ?>
-								<div class="pull-left" style="margin:0;">
-									<div>
-										<?php echo $field->label; ?>
-									</div>
-									<div>
-										<?php echo $field->input; ?>
-									</div>
-								</div>
-							<?php else: ?>
-								<div class="clearfix"></div>
-								<div class="control-group" style="margin:0;">
-									<div class="control-label">
-										<?php echo $field->label; ?>
-									</div>
-									<div class="controls">
-										<?php echo $field->input; ?>
-									</div>
-								</div>
-							<?php endif; ?>
-						<?php endforeach; ?>
-					</div>
-				</div>
-			</div>
-		</div>
+        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'list', Text::_('JBS_TPL_TEACHER_VIEW')); ?>
+        <div class="row">
+            <div class="accordion" id="accordionlist">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading18">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse18" aria-expanded="false" aria-controls="collapse18">
+				            <?php echo Text::_('JBS_TPL_TEACHERDETAILS'); ?>
+                        </button>
+                    </h2>
+                    <div id="collapse18" class="accordion-collapse collapse" aria-labelledby="heading18"
+                         data-bs-parent="#accordionlist">
+                        <div class="accordion-body">
+				            <?php foreach ($this->form->getFieldset('TEACHERDETAILS') as $field): ?>
+
+                                <div class="control-group">
+                                    <div class="control-label">
+							            <?php echo $field->label; ?>
+                                    </div>
+                                    <div class="controls">
+							            <?php echo $field->input; ?>
+                                    </div>
+                                </div>
+
+				            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading19">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse19" aria-expanded="false" aria-controls="collapse19">
+				            <?php echo Text::_('JBS_TPL_TEACHERDISPLAY'); ?>
+                        </button>
+                    </h2>
+                    <div id="collapse19" class="accordion-collapse collapse" aria-labelledby="heading19"
+                         data-bs-parent="#accordionlist">
+                        <div class="accordion-body">
+				            <?php foreach ($this->form->getFieldset('TEACHERDISPLAY') as $field): ?>
+
+                                <div class="control-group">
+                                    <div class="control-label">
+							            <?php echo $field->label; ?>
+                                    </div>
+                                    <div class="controls">
+							            <?php echo $field->input; ?>
+                                    </div>
+                                </div>
+
+				            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 		<?php echo HTMLHelper::_('uitab.endTab'); ?>
 
-		<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'series', Text::_('JBS_CMN_SERIES')); ?>
-		<div class="tab-pane" id="series">
-			<div id="details-sliders">
-				<div class="span2">
-					<ul class="nav nav-pills nav-stacked">
-						<li class="active">
-							<a href="#serieslist" data-toggle="tab">
-								<?php echo Text::_('JBS_TPL_SERIESLIST'); ?>
-							</a>
-						</li>
-						<li class="">
-							<a href="#serieslistdisplay" data-toggle="tab">
-								<?php echo Text::_('JBS_TPL_SERIESLISTDISPLAY'); ?>
-							</a>
-						</li>
-						<li class="">
-							<a href="#seriesdetails" data-toggle="tab">
-								<?php echo Text::_('JBS_TPL_SERIESDETAILS'); ?>
-							</a>
-						</li>
-						<li class="">
-							<a href="#seriesdetailsdisplay" data-toggle="tab">
-								<?php echo Text::_('JBS_TPL_SERIESDETAILSDISPLAY'); ?>
-							</a>
-						</li>
-					</ul>
-				</div>
-				<div class="tab-content span10">
-					<div class="tab-pane active" id="serieslist">
-						<div class="row-fluid">
-							<?php
-							$c     = 0;
-							$count = CWMProclaimHelper::halfarray($this->form->getFieldset('SERIES'));
-							foreach ($this->form->getFieldset('SERIES') as $field):
-
-								if ($c == 0)
-								{
-									echo '<div class="col-md-5">';
-								}
-								elseif ($c == $count->half)
-								{
-									echo '</div><div class="col-md-5">';
-								}
-								?>
-								<div class="control-group">
-									<div class="control-label">
-										<?php echo $field->label; ?>
-									</div>
-									<div class="controls">
-										<?php echo $field->input; ?>
-									</div>
-								</div>
-								<?php
-								$c++;
-								if ($c == $count->count)
-								{
-									echo '</div>';
-								}
-							endforeach; ?>
-						</div>
-					</div>
-					<div class="tab-pane" id="serieslistdisplay">
-						<?php foreach ($this->form->getFieldset('SERIESDISPALY') as $field): ?>
-							<?php if ($field->type != "Spacer"): ?>
-								<div class="pull-left" style="margin:0;">
-									<div>
-										<?php echo $field->label; ?>
-									</div>
-									<div>
-										<?php echo $field->input; ?>
-									</div>
-								</div>
-							<?php else: ?>
-								<div class="clearfix"></div>
-								<div class="control-group" style="margin:0;">
-									<div class="control-label">
-										<?php echo $field->label; ?>
-									</div>
-									<div class="controls">
-										<?php echo $field->input; ?>
-									</div>
-								</div>
-							<?php endif; ?>
-						<?php endforeach; ?>
-					</div>
-					<div class="tab-pane" id="seriesdetails">
-						<?php foreach ($this->form->getFieldset('SERIESDETAIL') as $field): ?>
-							<div class="control-group">
-								<div class="control-label">
-									<?php echo $field->label; ?>
-								</div>
-								<div class="controls">
-									<?php echo $field->input; ?>
-								</div>
-							</div>
-						<?php endforeach; ?>
-					</div>
-					<div class="tab-pane" id="seriesdetailsdisplay">
-						<?php foreach ($this->form->getFieldset('SERIESDETAILDISPALY') as $field): ?>
-							<?php if ($field->type != "Spacer"): ?>
-								<div class="pull-left" style="margin:0;">
-									<div>
-										<?php echo $field->label; ?>
-									</div>
-									<div>
-										<?php echo $field->input; ?>
-									</div>
-								</div>
-							<?php else: ?>
-								<div class="clearfix"></div>
-								<div class="control-group" style="margin:0;">
-									<div class="control-label">
-										<?php echo $field->label; ?>
-									</div>
-									<div class="controls">
-										<?php echo $field->input; ?>
-									</div>
-								</div>
-							<?php endif; ?>
-						<?php endforeach; ?>
-					</div>
-				</div>
-			</div>
-		</div>
+		<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'list', Text::_('JBS_CMN_SERIES')); ?>
+        <div class="row">
+            <div class="accordion" id="accordionlist">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading20">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse20" aria-expanded="false" aria-controls="collapse20">
+				            <?php echo Text::_('JBS_TPL_SERIESLIST'); ?>
+                        </button>
+                    </h2>
+                    <div id="collapse20" class="accordion-collapse collapse show" aria-labelledby="heading20"
+                         data-bs-parent="#accordionlist">
+                        <div class="accordion-body">
+				            <?php foreach ($this->form->getFieldset('SERIES') as $field): ?>
+                                <div class="control-group">
+                                    <div class="control-label">
+							            <?php echo $field->label; ?>
+                                    </div>
+                                    <div class="controls">
+							            <?php echo $field->input; ?>
+                                    </div>
+                                </div>
+				            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading21">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse21" aria-expanded="false" aria-controls="collapse21">
+				            <?php echo Text::_('JBS_TPL_SERIESLISTDISPLAY'); ?>
+                        </button>
+                    </h2>
+                    <div id="collapse21" class="accordion-collapse collapse" aria-labelledby="heading21"
+                         data-bs-parent="#accordionlist">
+                        <div class="accordion-body">
+				            <?php foreach ($this->form->getFieldset('SERIESDISPALY') as $field): ?>
+                                <div class="control-group">
+                                    <div class="control-label">
+							            <?php echo $field->label; ?>
+                                    </div>
+                                    <div class="controls">
+							            <?php echo $field->input; ?>
+                                    </div>
+                                </div>
+				            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading22">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse22" aria-expanded="false" aria-controls="collapse22">
+				            <?php echo Text::_('JBS_TPL_SERIESDETAILS'); ?>
+                        </button>
+                    </h2>
+                    <div id="collapse22" class="accordion-collapse collapse" aria-labelledby="heading22"
+                         data-bs-parent="#accordionlist">
+                        <div class="accordion-body">
+				            <?php foreach ($this->form->getFieldset('SERIESDETAIL') as $field): ?>
+                                <div class="control-group">
+                                    <div class="control-label">
+							            <?php echo $field->label; ?>
+                                    </div>
+                                    <div class="controls">
+							            <?php echo $field->input; ?>
+                                    </div>
+                                </div>
+				            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading23">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse23" aria-expanded="false" aria-controls="collapse23">
+				            <?php echo Text::_('JBS_TPL_SERIESDETAILSDISPLAY'); ?>
+                        </button>
+                    </h2>
+                    <div id="collapse23" class="accordion-collapse collapse" aria-labelledby="heading23"
+                         data-bs-parent="#accordionlist">
+                        <div class="accordion-body">
+				            <?php foreach ($this->form->getFieldset('SERIESDETAILDISPALY') as $field): ?>
+                                <div class="control-group">
+                                    <div class="control-label">
+							            <?php echo $field->label; ?>
+                                    </div>
+                                    <div class="controls">
+							            <?php echo $field->input; ?>
+                                    </div>
+                                </div>
+				            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 		<?php echo HTMLHelper::_('uitab.endTab'); ?>
-
 		<?php if ($this->canDo->get('core.admin')): ?>
 			<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_CMN_FIELDSET_RULES')); ?>
 			<fieldset id="fieldset-rules" class="options-form">

@@ -51,7 +51,7 @@ class rowoptionsField extends ListField
 		$options[] = HTMLHelper::_('select.option', '5', Text::_('JBS_TPL_ROW5'));
 		$options[] = HTMLHelper::_('select.option', '6', Text::_('JBS_TPL_ROW6'));
 		$options   = array_merge(parent::getOptions(), $options);
-var_dump($options);
+
 		return $options;
 	}
 }
