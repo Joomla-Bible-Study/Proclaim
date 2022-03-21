@@ -10,6 +10,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use CWM\Component\Proclaim\Site\Helper\CWMLanding;
@@ -17,12 +18,14 @@ use Joomla\CMS\Uri\Uri;
 
 // Load CSS for view.
 HTMLHelper::_('proclaim.loadcss', $this->params);
-
+$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+$wa->useScript('com_proclaim.cwmcore');
+$wa->useStyle('com_proclaim.general');
 $CWMLanding = new CWMLanding;
 $params = $this->params;
 ?>
 
-<div id="biblestudy_landing" class="noRefTagger"> <!-- This div is the container for the whole page -->
+<div id="biblestudy_landing" class="container"> <!-- This div is the container for the whole page -->
 	<div id="bsms_header">
 		<h1 class="componentheading">
 			<?php

@@ -18,6 +18,12 @@
 	  },
 	  "version": "dfda2cadb929cf361efab69cd56c9ef003a65dbe"
 	},
+	  {
+		  "name": "com_proclaim.cwmcore",
+		  "type": "script",
+		  "uri": "com_proclaim/cwmcore.min.js",
+		  "version": "dfda2cadb929cf361efab69cd56c9ef003a65dbe"
+	  },
 	{
 	  "name": "com_proclaim.administrator-message-pagebreak",
 	  "type": "script",
