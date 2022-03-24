@@ -187,7 +187,7 @@ class CWMMedia
 			case 1:
 				if ($downloadlink)
 				{
-					$mediafile = $playercode . '<div class="col"">' . $downloadlink . $filesize . '</div>';
+					$mediafile = $playercode . '<div class="col">' . $downloadlink . $filesize . '</div>';
 				}
 				else
 				{
@@ -292,9 +292,10 @@ class CWMMedia
 
 			if ($params->get('useterms') > 0)
 			{
-				$downloadlink = '<a class="modal" href="index.php?option=com_proclaim&amp;view=terms&amp;' .
+				$downloadlink = '<a href="index.php?option=com_proclaim&amp;view=CWMTerms&amp;' .
 					'tmpl=component&amp;layout=modal&amp;compat_mode='
-					. $compat_mode . '&amp;mid=' . $media->id . '&amp;t=' . $template->id . '" rel="{handler: \'iframe\', size: {x: 640, y: 480}}">';
+					. $compat_mode . '&amp;mid=' . $media->id . '&amp;t=' . $template->id
+					. '" rel="{handler: \'iframe\', size: {x: 640, y: 480}}">';
 			}
 
 			$downloadlink .= $download_image . '</a>';
