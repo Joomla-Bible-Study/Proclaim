@@ -336,7 +336,7 @@ class BiblestudyController extends JControllerLegacy
 	public function playHit()
 	{
 		// Check for request forgeries.
-		JSession::checkToken('get') or jexit(JText::_('JINVALID_TOKEN'));
+		JSession::checkToken('get') or JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
 		$input    = new JInput;
 		$getMedia = new JBSMMedia;
