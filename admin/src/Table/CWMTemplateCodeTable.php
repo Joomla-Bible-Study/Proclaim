@@ -11,6 +11,7 @@
 namespace CWM\Component\Proclaim\Administrator\Table;
 
 // No Direct Access
+use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Table\Table;
 
@@ -160,9 +161,9 @@ class CWMTemplateCodeTable extends Table
 			$filecontent = $requiredtext . $filecontent;
 		}
 
-		if (!$return = JFile::write($file, $filecontent))
+		if (!$return = File::write($file, $filecontent))
 		{
-			$this->setError(JText::_('JBS_STYLE_FILENAME_NOT_UNIQUE'));
+			$this->setError(Text::_('JBS_STYLE_FILENAME_NOT_UNIQUE'));
 
 			return false;
 		}
@@ -187,8 +188,6 @@ class CWMTemplateCodeTable extends Table
 	 */
 	public function delete($pk = null)
 	{
-		jimport('joomla.client.helper');
-		jimport('joomla.filesystem.file');
 		$filename     = 'default_' . $this->filename . '.php';
 		$templatetype = $this->type;
 		$file         = null;
@@ -225,11 +224,11 @@ class CWMTemplateCodeTable extends Table
 				break;
 		}
 
-		if (JFile::exists($file))
+		if (File::exists($file))
 		{
-			if (!JFile::delete($file))
+			if (!File::delete($file))
 			{
-				$this->setError(JText::_('JBS_STYLE_FILENAME_NOT_DELETED'));
+				$this->setError(Text::_('JBS_STYLE_FILENAME_NOT_DELETED'));
 
 				return false;
 			}
@@ -263,9 +262,7 @@ class CWMTemplateCodeTable extends Table
 	 */
 	protected function _getAssetTitle()
 	{
-		$title = 'JBS Templatecode ' . $this->filename;
-
-		return $title;
+		return 'JBS Templatecode ' . $this->filename;
 	}
 
 	/**
@@ -274,8 +271,8 @@ class CWMTemplateCodeTable extends Table
 	 * The extended class can define a table and id to lookup.  If the
 	 * asset does not exist it will be created.
 	 *
-	 * @param   Table   $table  A Table object for the asset parent.
-	 * @param   integer  $id     Id to look up
+	 * @param   \Joomla\CMS\Table\Table|null  $table  A Table object for the asset parent.
+	 * @param   null                          $id     Id to look up
 	 *
 	 * @return  integer
 	 *

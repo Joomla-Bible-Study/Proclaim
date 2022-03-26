@@ -16,6 +16,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
+use Joomla\Input\Input;
 
 defined('_JEXEC') or die;
 
@@ -36,6 +37,22 @@ class CWMTemplatecodeModel extends AdminModel
 	protected $text_prefix = 'com_proclaim';
 
 	/**
+	 * The type alias for this content type (for example, 'com_content.article').
+	 *
+	 * @var      string
+	 * @since    3.2
+	 */
+	public $typeAlias = 'com_proclaim.cwmtemplatecode';
+
+	/**
+	 * Name of the form
+	 *
+	 * @var string
+	 * @since  4.0.0
+	 */
+	protected $formName = 'templatecode';
+
+	/**
 	 * Method to get the record form.
 	 *
 	 * @param   array    $data      Data for the form.
@@ -49,7 +66,7 @@ class CWMTemplatecodeModel extends AdminModel
 	public function getForm($data = array(), $loadData = true)
 	{
 		// Get the form.
-		$form = $this->loadForm('com_proclaim.templatecode', 'templatecode', array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_proclaim.' . $this->formName, $this->formName, array('control' => 'jform', 'load_data' => $loadData));
 
 		if (empty($form))
 		{
@@ -159,29 +176,13 @@ class CWMTemplatecodeModel extends AdminModel
 		$key   = $table->getKeyName();
 
 		// Get the pk of the record from the request.
-		$input = new Joomla\Input\Input;
+		$input = new Input;
 		$pk    = $input->get($key, '', 'int');
 		$this->setState($this->getName() . '.id', $pk);
 
 		// Load the parameters.
 		$value = ComponentHelper::getParams($this->option);
 		$this->setState('params', $value);
-	}
-
-	/**
-	 * Returns a reference to the a Table object, always creating it.
-	 *
-	 * @param   string  $name     The table name. Optional.
-	 * @param   string  $prefix   The class prefix. Optional.
-	 * @param   array   $options  Configuration array for model. Optional.
-	 *
-	 * @return  Table  A JTable object
-	 *
-	 * @since    2.5
-	 */
-	public function getTable($name = 'Templatecode', $prefix = 'Table', $options = array())
-	{
-		return Table::getInstance($name, $prefix, $options);
 	}
 
 	/**

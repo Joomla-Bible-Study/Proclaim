@@ -31,7 +31,15 @@ class CWMTemplatecodeController extends FormController
 	 *
 	 * @since 1.5
 	 */
-	protected $view_list = 'templatecodes';
+	protected $view_list = 'cwmtemplatecodes';
+
+	/**
+	 * The URL option for the component.
+	 *
+	 * @var    string
+	 * @since  12.2
+	 */
+	protected $option = 'com_proclaim';
 
 	/**
 	 * Proxy for getModel
@@ -44,7 +52,7 @@ class CWMTemplatecodeController extends FormController
 	 *
 	 * @since 7.1.0
 	 */
-	public function getModel($name = 'TemplatecodeModel', $prefix = '', $config = array('ignore_request' => true))
+	public function getModel($name = 'CWMTemplateCode', $prefix = '', $config = array('ignore_request' => true))
 	{
 		return parent::getModel($name, $prefix, array('ignore_request' => true));
 	}
