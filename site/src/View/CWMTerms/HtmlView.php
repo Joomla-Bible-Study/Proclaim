@@ -11,6 +11,7 @@ namespace CWM\Component\Proclaim\Site\View\CWMTerms;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Document\Document;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
@@ -49,7 +50,7 @@ class HtmlView extends BaseHtmlView
 	/**
 	 * Document
 	 *
-	 * @var JDocument
+	 * @var Document
 	 *
 	 * @since 7.0
 	 */
@@ -62,11 +63,12 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return  void
 	 *
+	 * @throws \Exception
 	 * @since 7.0.0
 	 */
 	public function display($tpl = null)
 	{
-		$input       = Factory::getApplication();
+		$input       = Factory::getApplication()->input;
 		$mid         = $input->get('mid', '', 'int');
 		$compat_mode = $input->get('compat_mode', '0', 'int');
 
@@ -101,7 +103,7 @@ class HtmlView extends BaseHtmlView
 			}
 			else
 			{
-				echo '<a href="index.php?option=com_proclaim&mid=' . $this->media->id . '&view=CWMSermons&task=download">'
+				echo '<a href="index.php?option=com_proclaim&task=CWMSermons.download&mid=' . $this->media->id . '">'
 					. Text::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a>';
 			}
 			?>
@@ -116,6 +118,7 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0.0
 	 */
 	protected function _prepareDocument()
@@ -146,11 +149,11 @@ class HtmlView extends BaseHtmlView
 		{
 			$title = $app->get('sitename');
 		}
-		elseif ($app->get('sitename_pagetitles', 0) == 1)
+		elseif ((int) $app->get('sitename_pagetitles', 0) === 1)
 		{
 			$title = Text::sprintf('JPAGETITLE', $app->get('sitename'), $title);
 		}
-		elseif ($app->get('sitename_pagetitles', 0) == 2)
+		elseif ((int) $app->get('sitename_pagetitles', 0) === 2)
 		{
 			$title = Text::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 		}
