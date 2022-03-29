@@ -670,7 +670,7 @@ class CWMMedia
 					case 1: // Popup window
 						$playercode = "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim&amp;player="
 							. $params->toObject()->player .
-							"&amp;view=popup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" .
+							"&amp;view=CWMPopUp&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" .
 							$player->playerwidth . ",height=" . $player->playerheight . "'); return false\"  class=\"jbsmplayerlink\">"
 							. $image . "</a>";
 						break;
@@ -730,7 +730,7 @@ class CWMMedia
 						$player->playerheight += $params->get('popupmargin', '50');
 						$playercode           = "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim&amp;player="
 							. $player->player
-							. "&amp;view=popup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width="
+							. "&amp;view=CWMPopUp&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width="
 							. $player->playerwidth . ", height=" .
 							$player->playerheight . "'); return false\" class=\"jbsmplayerlink\">" . $image . "</a>";
 						break;
@@ -746,7 +746,7 @@ class CWMMedia
 				{
 					case 1: // This goes to the popup view
 						$playercode = "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim"
-							. "&amp;view=popup&amp;player=3&amp;t=" . $template .
+							. "&amp;view=CWMPopUp&amp;player=3&amp;t=" . $template .
 							"&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
 							. $player->playerheight . "'); return false\"  class=\"jbsmplayerlink\">" . $image . "</a>";
 						break;
@@ -770,7 +770,7 @@ class CWMMedia
 
 			case 8: // Embed code
 				return "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim"
-					. "&amp;view=popup&amp;player=8&amp;t=" . $template .
+					. "&amp;view=CWMPopUp&amp;player=8&amp;t=" . $template .
 					"&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
 					. $player->playerheight . "'); return false\">" . $image . "</a>";
 		}

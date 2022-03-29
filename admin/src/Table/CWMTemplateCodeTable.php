@@ -11,9 +11,13 @@
 namespace CWM\Component\Proclaim\Administrator\Table;
 
 // No Direct Access
+use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Table\Table;
+use Joomla\CMS\Access\Rule;
+use Joomla\CMS\Service\Provider\Database;
+
 
 defined('_JEXEC') or die;
 
@@ -55,7 +59,7 @@ class CWMTemplateCodeTable extends Table
 	/**
 	 * Constructor
 	 *
-	 * @param   DriverDatabase  $db  Database connector object
+	 * @param     $db  \JDatabaseDriver connector object
 	 *
 	 * @since 9.0.0
 	 */
@@ -82,7 +86,7 @@ class CWMTemplateCodeTable extends Table
 		// Bind the rules.
 		if (isset($array['rules']) && is_array($array['rules']))
 		{
-			$rules = new AccessRules($array['rules']);
+			$rules = new Rule($array['rules']);
 			$this->setRules($rules);
 		}
 
@@ -100,14 +104,13 @@ class CWMTemplateCodeTable extends Table
 	 */
 	public function store($updateNulls = false)
 	{
-		if ($this->filename == 'main'
-			|| $this->filename == 'simple'
-			|| $this->filename == 'custom'
-			|| $this->filename == 'formheader'
-			|| $this->filename == 'formfooter')
+		if ($this->filename === 'main'
+			|| $this->filename === 'simple'
+			|| $this->filename === 'custom'
+			|| $this->filename === 'formheader'
+			|| $this->filename === 'formfooter')
 		{
-			$this->setError(Text::_('JBS_STYLE_RESTRICED_FILE_NAME'));
-
+			Factory::getApplication()->enqueueMessage('JBS_STYLE_RESTRICED_FILE_NAME', 'error');
 			return false;
 		}
 
@@ -122,30 +125,30 @@ class CWMTemplateCodeTable extends Table
 		{
 			case 1:
 				// Sermons
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/views/sermons/tmpl' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/CWMSermons' . DIRECTORY_SEPARATOR . $filename;
 				break;
 			case 2:
 				// Sermon
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/views/sermon/tmpl' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/CWMSermon' . DIRECTORY_SEPARATOR . $filename;
 				break;
 			case 3:
 				// Teachers
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/views/teachers/tmpl' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/CWMTeachers' . DIRECTORY_SEPARATOR . $filename;
 				break;
 			case 4:
 				// Teacher
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/views/teacher/tmpl' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/CWMTeacher' . DIRECTORY_SEPARATOR . $filename;
 				break;
 			case 5:
 				// Seriesdisplays
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/views/seriesdisplays/tmpl' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/CWMSeriesdisplays' . DIRECTORY_SEPARATOR . $filename;
 				break;
 			case 6:
 				// Seriesdisplay
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/views/seriesdisplay/tmpl' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/CWMSeriesdisplay' . DIRECTORY_SEPARATOR . $filename;
 				break;
 			case 7:
-				// Model Display
+				// Module's Display
 				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'modules/mod_biblestudy/tmpl' . DIRECTORY_SEPARATOR . $filename;
 				break;
 		}
@@ -163,8 +166,7 @@ class CWMTemplateCodeTable extends Table
 
 		if (!$return = File::write($file, $filecontent))
 		{
-			$this->setError(Text::_('JBS_STYLE_FILENAME_NOT_UNIQUE'));
-
+			Factory::getApplication()->enqueueMessage('JBS_STYLE_FILENAME_NOT_UNIQUE', 'error');
 			return false;
 		}
 
@@ -196,27 +198,27 @@ class CWMTemplateCodeTable extends Table
 		{
 			case 1:
 				// Sermons
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/views/sermons/tmpl' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/CWMSermons' . DIRECTORY_SEPARATOR . $filename;
 				break;
 			case 2:
 				// Sermon
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/views/sermon/tmpl' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/CWMSermon' . DIRECTORY_SEPARATOR . $filename;
 				break;
 			case 3:
 				// Teachers
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/views/teachers/tmpl' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/CWMTeachers' . DIRECTORY_SEPARATOR . $filename;
 				break;
 			case 4:
 				// Teacher
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/views/teacher/tmpl' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/CWMTeacher' . DIRECTORY_SEPARATOR . $filename;
 				break;
 			case 5:
 				// Seriesdisplays
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/views/seriesdisplays/tmpl' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/CWMSeriesdisplays' . DIRECTORY_SEPARATOR . $filename;
 				break;
 			case 6:
 				// Seriesdisplay
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/views/seriesdisplay/tmpl' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/CWMSeriesdisplay' . DIRECTORY_SEPARATOR . $filename;
 				break;
 			case 7:
 				// Module's Display
@@ -228,8 +230,7 @@ class CWMTemplateCodeTable extends Table
 		{
 			if (!File::delete($file))
 			{
-				$this->setError(Text::_('JBS_STYLE_FILENAME_NOT_DELETED'));
-
+				Factory::getApplication()->enqueueMessage('JBS_STYLE_FILENAME_NOT_DELETED', 'error');
 				return false;
 			}
 		}

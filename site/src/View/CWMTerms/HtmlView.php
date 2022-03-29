@@ -80,7 +80,6 @@ class HtmlView extends BaseHtmlView
 		$query->where('id= ' . (int) $mid);
 		$db->setQuery($query);
 		$this->media = $db->loadObject();
-
 		// Params are the individual params for the media file record
 		$registory = new Registry;
 		$registory->loadString($this->media->params);

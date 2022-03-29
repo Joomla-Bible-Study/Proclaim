@@ -300,7 +300,7 @@ class CWMStats
 		{
 			foreach ($results as $result)
 			{
-				$top_studies .= $result->hits . ' ' . JText::_('JBS_CMN_HITS') .
+				$top_studies .= $result->hits . ' ' . Text::_('JBS_CMN_HITS') .
 					' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . $result->id . '">' .
 					$result->studytitle . '</a> - ' . date('Y-m-d', strtotime($result->studydate)) . '<br>';
 			}
@@ -400,7 +400,7 @@ class CWMStats
 		{
 			foreach ($results as $result)
 			{
-				$top_studies .= $result->downloads . ' ' . JText::_('JBS_CMN_HITS') .
+				$top_studies .= $result->downloads . ' ' . Text::_('JBS_CMN_HITS') .
 					' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . $result->sid . '">' .
 					$result->stitle . '</a> - ' . date('Y-m-d', strtotime($result->sdate)) . '<br>';
 			}
@@ -642,7 +642,7 @@ class CWMStats
 	 */
 	public function top_score_site()
 	{
-		$input = new Input ;
+		$input     = Factory::getApplication();
 		$t     = $input->get('t', 1, 'int');
 
 		$admin = CWMParams::getAdmin();

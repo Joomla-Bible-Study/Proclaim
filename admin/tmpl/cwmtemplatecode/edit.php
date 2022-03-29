@@ -9,13 +9,15 @@
  * */
 // No Direct Access
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 
 defined('_JEXEC') or die;
 
 // Load the tooltip behavior.
-JHtml::_('behavior.formvalidator');
-JHtml::_('behavior.keepalive');
+HTMLHelper::_('behavior.formvalidator');
+HTMLHelper::_('behavior.keepalive');
 
 // Create shortcut to parameters.
 
@@ -39,27 +41,26 @@ else
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('keepalive')
 	->useScript('form.validate')
-	->addInlineScript("Joomla.submitbutton = function (task) {
-		if (task == 'templatecode.cancel' || document.formvalidator.isValid(document.id('item-form')))
+	->addInlineScript('
+	Joomla.submitbutton = function (task)
+	{
+		if (task == "cwmtemplatecode.cancel" || document.formvalidator.isValid(document.getElementById("item-form")))
 		{
-			Joomla.submitform(task, document.getElementById('item-form'))
+			Joomla.submitform(task, document.getElementById("item-form"));
 		}
-		else
-		{
-			alert('" . $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')) . "')
-		}
-	}");
+	};
+	');
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_proclaim&layout=edit&id=' . (int) $this->item->id); ?>"
-      method="post" name="adminForm" id="item-form" class="form-validate">
+<form action="<?php echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int) $this->item->id); ?>"
+      method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
 	<div class="row-fluid">
 		<!-- Begin Content -->
 		<div class="span10 form-horizontal">
 			<ul class="nav nav-tabs">
-				<li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
+				<li class="active"><a href="#general" data-toggle="tab"><?php echo Text::_('JBS_CMN_DETAILS'); ?></a>
 				</li>
 				<?php if ($this->canDo->get('core.admin')): ?>
-					<li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a>
+					<li><a href="#permissions" data-toggle="tab"><?php echo Text::_('JBS_CMN_FIELDSET_RULES'); ?></a>
 					</li>
 				<?php endif ?>
 			</ul>
@@ -109,11 +110,11 @@ $wa->useScript('keepalive')
 				<?php endif; ?>
 			</div>
 			<input type="hidden" name="task" value=""/>
-			<?php echo JHtml::_('form.token'); ?>
+			<?php echo HTMLHelper::_('form.token'); ?>
 		</div>
 		<!-- Begin Sidebar -->
 		<div class="span2 form-vertical">
-			<h4><?php echo JText::_('JDETAILS'); ?></h4>
+			<h4><?php echo Text::_('JDETAILS'); ?></h4>
 			<hr/>
 			<div class="control-group">
 				<div class="control-label">

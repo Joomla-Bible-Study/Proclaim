@@ -11,10 +11,8 @@ use Joomla\CMS\HTML\HTMLHelper;
 // No Direct Access
 defined('_JEXEC') or die;
 HTMLHelper::_('bootstrap.modal');
-
-
 	echo $this->loadTemplate('formheader');
-
+//var_dump($this->params->get('sermonstemplate'));
 	if ($this->params->get('sermonstemplate'))
 	{
 		echo $this->loadTemplate($this->params->get('sermonstemplate'));
@@ -28,3 +26,5 @@ HTMLHelper::_('bootstrap.modal');
 		echo $this->loadTemplate('main');
 	}
 	echo $this->loadTemplate('formfooter');
+?>
+
