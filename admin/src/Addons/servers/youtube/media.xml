@@ -8,8 +8,11 @@
 			       description="JBS_ADDON_YOUTUBE_URL_DISC"
 			       class="inputbox"/>
 			<field name="popup" type="list" label="JBS_MED_INTERNAL_POPUP"
-			       description="JBS_MED_INTERNAL_POPUP_DESC" class="inputbox" size="1"
-			       default="">
+			       description="JBS_MED_INTERNAL_POPUP_DESC"
+			       class="form-select-color-state"
+			       size="1"
+			       default=""
+			       validate="options">
 				<option value="">JGLOBAL_USE_GLOBAL</option>
 				<option value="1">JBS_CMN_POPUP</option>
 				<option value="2">JBS_CMN_INLINE</option>
@@ -20,11 +23,14 @@
 		          addfieldpath="/administrator/components/com_proclaim/addons/servers/youtube/fields">
 			<field name="media_image" type="media" directory="biblestudy"
 			       label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
-			       class="inputbox span6">
+			       class="inputbox">
 			</field>
 			<field name="media_use_button_icon" label="JBS_ADDON_YOUTUBE_MEDIA_USE_BUTTON"
-			       description="JBS_ADDON_YOUTUBE_MEDIA_USE_BUTTON_DESC" class="inputbox" type="list" size="15"
-			       default="-1">
+			       description="JBS_ADDON_YOUTUBE_MEDIA_USE_BUTTON_DESC"
+			       class="form-select-color-state"
+			       size="1"
+			       default="-1"
+			       validate="options">
 				<option value="-1">JBS_MED_SERVER_OPTIONS</option>
 				<option value="">JBS_MED_NONE</option>
 				<option value="1">JBS_MED_BUTTON_ONLY</option>
@@ -33,7 +39,11 @@
 			</field>
 			<field name="media_button_text" type="text" default="YouTube" label="JBS_ADDON_YOUTUBE_BUTTON_TEXT"
 			       description="JBS_ADDON_YOUTUBE_BUTTON_TEXT_DESC"/>
-			<field name="media_button_type" type="list" class="inputbox" size="15" default=""
+			<field name="media_button_type" type="list"
+			       class="form-select-color-state"
+			       size="1"
+			       default=""
+			       validate="options"
 			       label="JBS_ADDON_YOUTUBE_BUTTON_TYPE"
 			       description="JBS_ADDON_YOUTUBE_BUTTON_TYPE_DESC">
 				<option value="">JGLOBAL_USE_GLOBAL</option>

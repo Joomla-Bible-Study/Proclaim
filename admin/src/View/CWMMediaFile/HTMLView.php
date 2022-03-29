@@ -44,7 +44,7 @@ class HTMLView extends BaseHtmlView
 	/** @var object
 	 * @since    7.0.0
 	 */
-	public $form;
+	public mixed $form;
 
 	/** @var object
 	 * @since    7.0.0
@@ -147,6 +147,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0.0
 	 */
 	protected function addToolbar()

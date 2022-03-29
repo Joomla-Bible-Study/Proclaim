@@ -8,12 +8,13 @@
  * @link       https://www.christianwebministries.org
  * */
 namespace CWM\Component\Proclaim\Site\Helper;
+
 // No Direct Access
 defined('_JEXEC') or die;
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Input\Input;
+use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
 /**
@@ -22,7 +23,7 @@ use Joomla\Registry\Registry;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class CWMdownload
+class CWMDownload
 {
 	/**
 	 * Method to send file to browser
@@ -30,9 +31,9 @@ class CWMdownload
 	 * @param   int  $mid  ID of media
 	 *
 	 * @since 6.1.2
-	 * @return null
+	 * @return void
 	 */
-	public function download($mid)
+	public function download($mid): void
 	{
 		// Clears file status cache
 		clearstatcache();
@@ -57,7 +58,8 @@ class CWMdownload
 
 		$query    = $db->getQuery(true);
 		$query->select('#__bsms_mediafiles.*,'
-			. ' #__bsms_servers.id AS ssid, #__bsms_servers.params AS sparams')
+			. ' #__bsms_servers.id AS ssid, #__bsms_servers.params AS sparams'
+		)
 			->from('#__bsms_mediafiles')
 			->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server_id)')
 			->where('#__bsms_mediafiles.id = ' . (int) $mid);
@@ -81,15 +83,13 @@ class CWMdownload
 			}
 		}
 
-//		$jweb = new JApplicationWeb;
-//		$jweb->clearHeaders();
-
 		$registry = new Registry;
 		$registry->loadString($media->params);
 		$params->merge($registry);
 
 		$download_file = CWMHelper::MediaBuildUrl($media->spath, $params->get('filename'), $params, true);
-		if ($params->get('size', 0) === "0")
+
+		if ((int) $params->get('size', 0) === 0)
 		{
 			$getsize       = CWMHelper::getRemoteFileSize($download_file);
 		}
@@ -112,7 +112,7 @@ class CWMdownload
 		{
 			if (JBSMDEBUG)
 			{
-				var_dump($download_file);
+				echo "<pre>" . $download_file . "</pre>";
 			}
 
 			jexit("Unable to open file");
