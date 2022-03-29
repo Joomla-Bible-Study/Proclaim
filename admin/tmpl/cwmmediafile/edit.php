@@ -56,109 +56,107 @@ $this->useCoreUI = true;
       id="media-form"
       class="form-validate">
 	<div class="form-horizontal">
-		<div class="form-horizontal">
-			<?php echo HTMLHelper::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
+		<?php echo HTMLHelper::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
 
-			<!-- Begin Content -->
-			<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'general', JText::_('JBS_CMN_GENERAL')); ?>
-			<div class="row-fluid">
-				<div class="span9">
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('study_id'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('study_id', null, $study_id); ?>
-						</div>
+		<!-- Begin Content -->
+		<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'general', JText::_('JBS_CMN_GENERAL')); ?>
+		<div class="row">
+			<div class="col-lg-7">
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('study_id'); ?>
 					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('createdate'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('createdate', null, $createdate); ?>
-						</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('study_id', null, $study_id); ?>
 					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('server_id'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('server_id', null, $this->item->server_id); ?>
-						</div>
-					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('podcast_id'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('podcast_id', null, $podcast_id); ?>
-						</div>
-					</div>
-
-					<?php echo $this->addon->renderGeneral($this->media_form, $new); ?>
-
 				</div>
-				<div class="span3 form-vertical">
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('id'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('id'); ?>
-						</div>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('createdate'); ?>
 					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('published'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('published'); ?>
-						</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('createdate', null, $createdate); ?>
 					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('language'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('language'); ?>
-						</div>
+				</div>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('server_id'); ?>
 					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('comment'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('comment'); ?>
-						</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('server_id', null, $this->item->server_id); ?>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('podcast_id'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('podcast_id', null, $podcast_id); ?>
+					</div>
+				</div>
+
+				<?php echo $this->addon->renderGeneral($this->media_form, $new); ?>
+
+			</div>
+			<div class="col-lg-5 form-vertical">
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('id'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('id'); ?>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('published'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('published'); ?>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('language'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('language'); ?>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('comment'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('comment'); ?>
 					</div>
 				</div>
 			</div>
-			<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
-
-			<?php echo $this->addon->render($this->media_form, $new); ?>
-
-			<?php if ($this->canDo->get('core.admin')): ?>
-				<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'permissions', JText::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
-				<div class="row-fluid">
-					<?php echo $this->form->getInput('rules'); ?>
-				</div>
-				<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
-			<?php endif; ?>
-
-			<?php echo HTMLHelper::_('bootstrap.endTabSet'); ?>
-
-			<?php // Load the batch processing form. ?>
-			<?php echo HTMLHelper::_(
-				'bootstrap.renderModal',
-				'collapseModal',
-				array(
-					'title'  => JText::_('JBS_CMN_BATCH_OPTIONS'),
-					'footer' => $this->loadTemplate('converter_footer')
-				),
-				$this->loadTemplate('converter_body')
-			); ?>
 		</div>
+		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
+
+		<?php echo $this->addon->render($this->media_form, $new); ?>
+
+		<?php if ($this->canDo->get('core.admin')): ?>
+			<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'permissions', JText::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
+			<div class="row-fluid">
+				<?php echo $this->form->getInput('rules'); ?>
+			</div>
+			<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
+		<?php endif; ?>
+
+		<?php echo HTMLHelper::_('bootstrap.endTabSet'); ?>
+
+		<?php // Load the batch processing form. ?>
+		<?php echo HTMLHelper::_(
+			'bootstrap.renderModal',
+			'collapseModal',
+			array(
+				'title'  => JText::_('JBS_CMN_BATCH_OPTIONS'),
+				'footer' => $this->loadTemplate('converter_footer')
+			),
+			$this->loadTemplate('converter_body')
+		); ?>
 	</div>
 	<?php echo $this->form->getInput('asset_id'); ?>
 	<input type="hidden" name="task" value=""/>

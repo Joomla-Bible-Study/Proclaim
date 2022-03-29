@@ -20,7 +20,11 @@
 		</fieldset>
 		<fieldset name="parameters1">
 			<field name="special" type="list" label="JBS_MED_LINK_TARGET"
-			       description="JBS_MED_LINK_TARGET_DESC" class="inputbox" size="15" default="">
+			       description="JBS_MED_LINK_TARGET_DESC"
+			       class="form-select-color-state"
+			       size="1"
+			       default=""
+			       validate="options">
 				<option value="">JGLOBAL_USE_GLOBAL</option>
 				<option value="_blank">JBS_MED_LINK_TARGET_BLANK</option>
 				<option value="_self">JBS_MED_LINK_TARGET_SELF</option>
@@ -29,14 +33,21 @@
 			</field>
 			<field name="link_type" type="list" extension="com_proclaim"
 			       label="JBS_MED_SHOW_DOWNLOAD_ICON" description="JBS_MED_SHOW_DOWNLOAD_ICON_DESC"
-			       class="inputbox" size="1" default="">
+			       class="form-select-color-state"
+			       size="1"
+			       default=""
+			       validate="options">
 				<option value="">JGLOBAL_USE_GLOBAL</option>
 				<option value="0">JBS_MED_NO_DOWNLOAD_ICON</option>
 				<option value="1">JBS_MED_SHOW_DOWNLOAD_ICON</option>
 				<option value="2">JBS_MED_SHOW_ONLY_DOWNLOAD_ICON</option>
 			</field>
 			<field name="player" type="list" label="JBS_MED_PLAYER"
-			       description="JBS_MED_PLAYER_DESC" class="inputbox" size="1" default="">
+			       description="JBS_MED_PLAYER_DESC"
+			       class="form-select-color-state"
+			       size="1"
+			       default=""
+			       validate="options">
 				<option value="">JGLOBAL_USE_GLOBAL</option>
 				<option value="0">JBS_CMN_DIRECT_LINK</option>
 				<option value="1">JBS_CMN_USE_INTERNAL_PLAYER</option>
@@ -45,8 +56,11 @@
 				<option value="8">JBS_CMN_USE_EMBED_CODE</option>
 			</field>
 			<field name="popup" type="list" label="JBS_MED_INTERNAL_POPUP"
-			       description="JBS_MED_INTERNAL_POPUP_DESC" class="inputbox" size="1"
-			       default="">
+			       description="JBS_MED_INTERNAL_POPUP_DESC"
+			       class="form-select-color-state"
+			       size="1"
+			       default=""
+			       validate="options">
 				<option value="">JGLOBAL_USE_GLOBAL</option>
 				<option value="1">JBS_CMN_POPUP</option>
 				<option value="2">JBS_CMN_INLINE</option>
@@ -59,7 +73,11 @@
 			       class="inputbox span6">
 			</field>
 			<field name="media_use_button_icon" label="JBS_ADDON_LOCAL_MEDIA_USE_BUTTON"
-			       description="JBS_ADDON_MEDIA_USE_BUTTON_DESC" class="inputbox" type="list" size="15" default="">
+			       description="JBS_ADDON_MEDIA_USE_BUTTON_DESC"
+			       class="form-select-color-state"
+			       size="1"
+			       default="-1"
+			       validate="options">
 				<option value="-1">JBS_MED_SERVER_OPTIONS</option>
 				<option value="">JBS_MED_NONE</option>
 				<option value="1">JBS_MED_BUTTON_ONLY</option>
@@ -68,7 +86,11 @@
 			</field>
 			<field name="media_button_text" type="text" default="Audio" label="JBS_ADDON_LOCAL_BUTTON_TEXT"
 			       description="JBS_ADDON_LOCAL_BUTTON_TEXT_DESC"/>
-			<field name="media_button_type" type="list" class="inputbox" size="15" default=""
+			<field name="media_button_type" type="list"
+			       class="form-select-color-state"
+			       size="1"
+			       default=""
+			       validate="options"
 			       label="JBS_ADDON_LOCAL_BUTTON_TYPE"
 			       description="JBS_ADDON_LOCAL_BUTTON_TYPE_DESC">
 				<option value="btn-link">JBS_MED_NO_COLOR</option>
@@ -103,7 +125,11 @@
 			<field name="popupmargin" type="text" default="50"
 			       label="JBS_MED_MEDIA_POPUPMARGIN" description="JBS_MED_MEDIA_POPUPMARGIN_DESC"/>
 			<field name="autostart" type="list"
-			       label="JBS_CMN_MEDIA_AUTOSTART" description="JBS_CMN_MEDIA_AUTOSTART_DESC" default="">
+			       label="JBS_CMN_MEDIA_AUTOSTART" description="JBS_CMN_MEDIA_AUTOSTART_DESC"
+			       class="form-select-color-state"
+			       size="1"
+			       default=""
+			       validate="options">
 				<option value="">JGLOBAL_USE_GLOBAL</option>
 				<option value="true">JYES</option>
 				<option value="false">JNO</option>

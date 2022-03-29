@@ -56,10 +56,10 @@ class HTMLView extends BaseHtmlView
 	/**
 	 * Form
 	 *
-	 * @var object
+	 * @var mixed
 	 * @since    7.0.0
 	 */
-	protected $form;
+	protected mixed $form;
 
 	/**
 	 * Item
