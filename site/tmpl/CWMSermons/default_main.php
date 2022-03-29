@@ -14,6 +14,8 @@ use CWM\Component\Proclaim\Site\Helper\CWMListing;
 use Joomla\CMS\Layout\LayoutHelper;
 use CWM\Component\Proclaim\Site\Helper\CWMTeacher;
 use Joomla\CMS\Html\HTMLHelper;
+use Joomla\CMS\Uri\Uri;
+
 HtmlHelper::_('bootstrap.framework');
 HtmlHelper::_('dropdown.init');
 HtmlHelper::_('formbehavior.chosen', 'select');
@@ -48,11 +50,11 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 							if ($this->params->get('teacherlink') > 0)
 							{
 								echo '<a href="index.php?option=com_proclaim&view=CWMTeacher&id=' . $teacher['id'] . '&t=' . $teacher['t'] . '" >
-							<img class="img-polaroid" src="' . JUri::base() . $teacher['image'] . '" alt="Teachers Image"></a>';
+							<img class="img-polaroid" src="' . Uri::base() . $teacher['image'] . '" alt="Teachers Image"></a>';
 							}
 							else
 							{
-								echo '<img class="img-polaroid" src="' . JUri::base() . $teacher['image'] . '">';
+								echo '<img class="img-polaroid" src="' . Uri::base() . $teacher['image'] . '">';
 							}
 							if ($this->params->get('teacherlink') > 0)
 							{

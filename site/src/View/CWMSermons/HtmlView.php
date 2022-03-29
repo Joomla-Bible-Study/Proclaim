@@ -15,6 +15,7 @@ defined('_JEXEC') or die;
 
 use CWM\Component\Proclaim\Administrator\Lib\CWMStats;
 use CWM\Component\Proclaim\Site\Helper\CWMImages;
+use CWM\Component\Proclaim\Site\Helper\CWMLanding;
 use CWM\Component\Proclaim\Site\Helper\CWMPagebuilder;
 use CWM\Component\Proclaim\Site\Helper\CWMPodcastsubscribe;
 use JHtml;
@@ -25,6 +26,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
+
 
 /**
  * View for Sermons class
@@ -208,6 +210,7 @@ class HtmlView extends BaseHtmlView
 		$series                = $this->get('Series');
 		$teachers              = $this->get('Teachers');
 		$years                 = $this->get('Years');
+		$books =    $this->get('Books');
 		$mainframe = Factory::getApplication('site');
 		$input     = Factory::getApplication();
 		$option    = $input->get('option', '');
@@ -215,23 +218,38 @@ class HtmlView extends BaseHtmlView
 		$filter_series  = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');
 		$filter_teacher = $mainframe->getUserStateFromRequest($option . 'filter_teacher', 'filter_teacher', 0, 'int');
 		$filter_year    = $mainframe->getUserStateFromRequest($option . 'filter_year', 'filter_year', 0, 'int');
-		$this->page->popular = CWMStats::get_top_studies();
+		$filter_books    = $mainframe->getUserStateFromRequest($option . 'filter_books', 'filter_books', 0, 'int');
+		$filter_order    = $mainframe->getUserStateFromRequest($option . 'filter_order', 'filter_order', 0, 'int');
+		/** @var  $params Registry */
+		$params = $this->state->params;
+		$this->page->popular = (new CWMStats)->top_score_site();
+
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 		$user   = Factory::getUser();
 		$groups = $user->getAuthorisedViewLevels();
-		/** @var  $params Registry */
-		$params = $this->state->params;
-
 		$this->main = CWMImages::mainStudyImage($params);
 		// Build go button
 		$this->page->gobutton = '<input class="btn btn-primary" type="submit" value="' . Text::_('JBS_STY_GO_BUTTON') . '">';
+		// Build Order for drop down menu
+		$order[] = 'DESC';
+		$order[] = 'ASC';
+		$orderarray[]      = HtmlHelper::_('select.option', '0', Text::_('JBS_CMN_SELECT_ORDER'));
+		$orderarray        = array_merge($orderarray, $order);
+		$this->page->order = HtmlHelper::_('select.genericlist', $orderarray, 'filter_order', 'class="inputbox" size="1" ',
+			'value', 'text', "$filter_order"
+		);
 		// Build Series List for drop down menu
 		$seriesarray[]      = HtmlHelper::_('select.option', '0', Text::_('JBS_CMN_SELECT_SERIES'));
 		$seriesarray        = array_merge($seriesarray, $series);
 		$this->page->series = HtmlHelper::_('select.genericlist', $seriesarray, 'filter_series', 'class="inputbox" size="1" ',
 			'value', 'text', "$filter_series"
 		);
-
+		// Build list for books
+		$booksarray[]      = HtmlHelper::_('select.option', '0', Text::_('JBS_CMN_SELECT_BOOKS'));
+		$booksarray        = array_merge($booksarray, $books);
+		$this->page->books = HtmlHelper::_('select.genericlist', $booksarray, 'filter_books', 'class="inputbox" size="1" ',
+			'value', 'text', "$filter_books"
+		);
 		// Build Years List for drop down menu
 		$yeararray[]       = HtmlHelper::_('select.option', '0', Text::_('JBS_CMN_SELECT_YEAR'));
 		$yeararray         = array_merge($yeararray, $years);
@@ -245,7 +263,7 @@ class HtmlView extends BaseHtmlView
 		$this->page->teachers = HtmlHelper::_('select.genericlist', $teacherarray, 'filter_teacher', 'class="inputbox" size="1" ',
 			'value', 'text', "$filter_teacher"
 		);
-		$go                   = 0;
+		/*$go                   = 0;
 
 		if ($params->get('series_list_years') > 0)
 		{
@@ -263,12 +281,8 @@ class HtmlView extends BaseHtmlView
 		}
 
 		$this->go = $go;
+*/
 
-		if ($params->get('show_pagination') == 1)
-		{
-			$this->page->limits = '<span class="display-limit">' . Text::_('JGLOBAL_DISPLAY_NUM') . $this->pagination->getLimitBox() . '</span>';
-			$dropdowns[]        = array('order' => '0', 'item' => $this->page->limits);
-		}
 		// Only load PageBuilder if the default template is NOT being used
 		if ($params->get('useexpert_list') > 0
 			|| ($params->get('simple_mode') === '1')
@@ -357,7 +371,7 @@ class HtmlView extends BaseHtmlView
 		// Get the data for the drop down boxes
 
 		$this->pagination = &$pagination;
-
+		$this->limitbox = $this->pagination->getLimitBox();
 		$this->items       = &$items;
 		$stringuri         = $uri->toString();
 		$this->request_url = $stringuri;

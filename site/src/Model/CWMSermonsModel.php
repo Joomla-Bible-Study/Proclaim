@@ -719,4 +719,107 @@ class CWMSermonsModel extends ListModel
 	{
 		return $this->getState('list.start');
 	}
+	/**
+	 * Get a list of teachers associated with series
+	 *
+	 * @since 9.0.0
+	 * @return mixed
+	 */
+	public function getTeachers()
+	{
+		$db    = $this->getDbo();
+		$query = $db->getQuery(true);
+		$query->select('t.id AS value, t.teachername AS text');
+		$query->from('#__bsms_teachers AS t');
+		$query->select('series.access');
+		$query->join('INNER', '#__bsms_series AS series ON t.id = series.teacher');
+		$query->group('t.id');
+		$query->order('t.teachername ASC');
+
+		$db->setQuery($query->__toString());
+		$items = $db->loadObjectList();
+
+		return $items;
+	}
+
+	/**
+	 * Get a list of teachers associated with series
+	 *
+	 * @since 9.0.0
+	 * @return mixed
+	 */
+	public function getYears()
+	{
+		$db    = $this->getDbo();
+		$query = $db->getQuery(true);
+		$query->select('DISTINCT YEAR(s.studydate) as value, YEAR(s.studydate) as text');
+		$query->from('#__bsms_studies as s');
+		$query->select('series.access');
+		$query->join('INNER', '#__bsms_series as series on s.series_id = series.id');
+		$query->order('value');
+
+		$db->setQuery($query->__toString());
+		$items = $db->loadObjectList();
+
+		return $items;
+	}
+
+	/**
+	 * Get a list of all used series
+	 *
+	 * @since 7.0
+	 * @return object
+	 */
+	public function getSeries()
+	{
+		$db    = $this->getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('series.id AS value, series.series_text AS text, series.access');
+		$query->from('#__bsms_series AS series');
+		$query->join('INNER', '#__bsms_studies AS study ON study.series_id = series.id');
+		$query->group('series.id');
+		$query->order('series.series_text');
+
+		$db->setQuery($query->__toString());
+		$items = $db->loadObjectList();
+
+		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
+		$user   = Factory::getUser();
+		$groups = $user->getAuthorisedViewLevels();
+		$count  = count($items);
+
+		if ($count > 0)
+		{
+			foreach ($items as $i => $iValue)
+			{
+				if ($iValue->access > 1)
+				{
+					if (!in_array($iValue->access, $groups, true))
+					{
+						unset($items[$i]);
+					}
+				}
+			}
+		}
+
+		return $items;
+	}
+	public function getBooks()
+	{
+		$db    = $this->getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('books.id AS value, books.bookname AS text, books.id as value');
+		$query->from('#__bsms_books AS books');
+		$query->order('books.booknumber');
+
+		$db->setQuery($query->__toString());
+		$books = $db->loadObjectList();
+		foreach ($books as $book)
+		{
+			$book->text = Text::_($book->text);
+		}
+		return $books;
+	}
 }

@@ -541,7 +541,7 @@ class CWMLanding
 						if ($params->get('series_linkto') == '0')
 						{
 							$series .= '<div class="span4">';
-							$series .= '<a href="index.php?option=com_proclaim&amp;view=sermons&amp;filter_series=' . $b->id
+							$series .= '<a href="index.php?option=com_proclaim&amp;view=CWMSermons&amp;filter_series=' . $b->id
 								. '&amp;sendingview=landing&amp;filter_book=0&amp;filter_teacher=0'
 								. '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
 								. $template . '">';
@@ -549,7 +549,7 @@ class CWMLanding
 						else
 						{
 							$series .= '<div class="span4">';
-							$series .= '<a href="index.php?option=com_proclaim&amp;sendingview=landing&amp;view=seriesdisplay&amp;id=' .
+							$series .= '<a href="index.php?option=com_proclaim&amp;sendingview=landing&amp;view=CWMSeriesdisplay&amp;id=' .
 									$b->id . '&amp;t=' . $template . '">';
 						}
 
