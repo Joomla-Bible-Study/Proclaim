@@ -334,7 +334,7 @@ class CWMLanding
 						{
 							$teacher .= '<div class="span4">';
 							$teacher .= '<a href="' . Route::_('index.php?option=com_proclaim&amp;view=CWMSermons&amp;t=' . $template)
-								. '&amp;sendingview=CWMLanding&amp;filter_teacher=' . $b->id
+								. '&amp;sendingview=landing&amp;filter_teacher=' . $b->id
 								. $langlink . '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
 						}
 						else
@@ -408,7 +408,7 @@ class CWMLanding
 							else
 							{
 								$teacher .= '<div class="span4"><a href="'
-									. Route::_('index.php?option=com_proclaim&amp;sendingview=CWMLanding&amp;view=teacher&amp;id=' .
+									. Route::_('index.php?option=com_proclaim&amp;sendingview=landing&amp;view=teacher&amp;id=' .
 												$b->id . '&amp;t=' . $template
 										) . '">';
 							}

@@ -40,21 +40,21 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 		if ($this->params->get('listteachers') && $this->params->get('list_teacher_show') > 0)
 		{
 			?>
-			<div class="hero-unit" style="padding-top:30px; padding-bottom:20px;">';
+			<div class="hero-unit" style="padding-top:30px; padding-bottom:20px;">
 				<div class="row">
-					<ul class="thumbnails">
-						<?php $spans = 12 / count($teachers);
+
+						<?php
 						foreach ($teachers as $teacher)
 						{
-							echo '<li class="span' . $spans . '">';
+							echo '<div class="col">';
 							if ($this->params->get('teacherlink') > 0)
 							{
 								echo '<a href="index.php?option=com_proclaim&view=CWMTeacher&id=' . $teacher['id'] . '&t=' . $teacher['t'] . '" >
-							<img class="img-polaroid" src="' . Uri::base() . $teacher['image'] . '" alt="Teachers Image"></a>';
+							<img class="img-polaroid" src="' . Uri::base() . 'media/com_proclaim/'.$teacher['image'] . '" alt="Teachers Image"></a>';
 							}
 							else
 							{
-								echo '<img class="img-polaroid" src="' . Uri::base() . $teacher['image'] . '">';
+								echo '<img class="img-polaroid" src="' . Uri::base() . 'media/com_proclaim/'. $teacher['image'] . '">';
 							}
 							if ($this->params->get('teacherlink') > 0)
 							{
@@ -65,16 +65,22 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 							{
 								echo '<div class="caption"><p>' . $teacher['name'] . '</p></div>';
 							}
-							echo '</li>';
+							echo '</div>';
 						}
 						?>
-					</ul>
+
 				</div>
 			</div>
 		<?php } ?>
+            <div class="row">
+                <?php if ($this->params->get('show_page_image') > 0){echo '<div class="col">'.$this->mainimage.'</div>';}
+	if ($this->params->get('show_page_title') > 0){echo '<h2><div class="col">'.$this->params->get('list_page_title').'</div></h2>';}
+?>
+            </div>
 		<div class="row">
 			<div class="col-12">
 				<?php
+
 				if (!empty($this->params->get('list_intro')))
 				{
 					?>
@@ -90,7 +96,7 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 
 <div class="container">
 	<?php
-	// Search tools bar
+		// Search tools bar
 	//echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 	?>
 	<hr/>

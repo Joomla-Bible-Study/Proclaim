@@ -47,14 +47,14 @@ class CWMTeacher extends CWMListing
 		$id         = $input->get('id', '', 'int');
 		$teachers   = array();
 		$teacherid  = null;
-		$teacherids = new \stdClass;
+		//$teacherids = new \stdClass;
 		$t          = $params->get('teachertemplateid');
 
 		if (!$t)
 		{
 			$t = $input->get('t', 1, 'int');
 		}
-
+/*
 		$viewtype = $input->get('view');
 
 		if ($viewtype == 'sermons')
@@ -65,12 +65,10 @@ class CWMTeacher extends CWMListing
 		if ($viewtype == 'sermon' && $id != 0)
 		{
 			$teacherids->id = $id;
-		}
+		} */
 
-		if (!isset($teacherids))
-		{
-			return $teachers;
-		}
+		$teacherids = $params->get('listteachers');
+
 
 		foreach ($teacherids as $teach)
 		{
@@ -144,7 +142,7 @@ class CWMTeacher extends CWMListing
 
 		$viewtype = $input->get('view');
 
-		if ($viewtype == 'CWmSermons')
+		if ($viewtype == 'CWMSermons')
 		{
 			$teacherids = explode(",", $params->get('listteachers'));
 		}

@@ -228,6 +228,7 @@ class HtmlView extends BaseHtmlView
 		$user   = Factory::getUser();
 		$groups = $user->getAuthorisedViewLevels();
 		$this->main = CWMImages::mainStudyImage($params);
+		$this->mainimage = '<img src="'.$this->main->path.'" width="'.$this->main->width.'" height="'.$this->main->height.'">';
 		// Build go button
 		$this->page->gobutton = '<input class="btn btn-primary" type="submit" value="' . Text::_('JBS_STY_GO_BUTTON') . '">';
 		// Build Order for drop down menu
