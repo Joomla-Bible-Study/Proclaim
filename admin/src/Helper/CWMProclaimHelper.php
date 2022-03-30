@@ -440,8 +440,8 @@ class CWMProclaimHelper
 	public static function getMediaYears()
 	{
 		$options = array();
-		$driver  = Factory::getDbo();
-		$db      = $driver->getDriver();
+		$db  = Factory::getDbo();
+		//$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
 		$query->select('DISTINCT YEAR(createdate) as value, YEAR(createdate) as text');
@@ -474,8 +474,8 @@ class CWMProclaimHelper
 	public static function getMessageTypes()
 	{
 		$options = array();
-		$driver  = Factory::getDbo();
-		$db      = $driver->getDriver();
+		$db  = Factory::getDbo();
+		//$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
 		$query->select('messageType.id AS value, messageType.message_type AS text');
@@ -510,8 +510,8 @@ class CWMProclaimHelper
 	public static function getStudyYears()
 	{
 		$options = array();
-		$driver  = Factory::getDbo();
-		$db      = $driver->getDriver();
+		$db  = Factory::getDbo();
+		//$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
 		$query->select('DISTINCT YEAR(studydate) as value, YEAR(studydate) as text');
@@ -580,8 +580,8 @@ class CWMProclaimHelper
 	public static function getStudyBooks()
 	{
 		$options = array();
-		$driver  = Factory::getDbo();
-		$db      = $driver->getDriver();
+		$db  = Factory::getDbo();
+		//$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
 		$query->select('book.booknumber AS value, book.bookname AS text, book.id');
@@ -621,8 +621,8 @@ class CWMProclaimHelper
 	public static function getStudyMediaTypes()
 	{
 		$options = array();
-		$driver  = Factory::getDbo();
-		$db      = $driver->getDriver();
+		$db  = Factory::getDbo();
+		//$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
 		$query->select('messageType.id AS value, messageType.message_type AS text');
@@ -657,8 +657,8 @@ class CWMProclaimHelper
 	public static function getStudyLocations()
 	{
 		$options = array();
-		$driver  = Factory::getDbo();
-		$db      = $driver->getDriver();
+		$db  = Factory::getDbo();
+		//$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
 		$query->select('id AS value, location_text AS text');
@@ -764,8 +764,8 @@ class CWMProclaimHelper
 	{
 		$options = array();
 
-		$driver = Factory::getDbo();
-		$db     = $driver->getDriver();
+		$db = Factory::getDbo();
+		//$db     = $driver->getDriver();
 		$query  = $db->getQuery(true);
 
 		$query->select('id AS value, username AS text');
