@@ -97,8 +97,9 @@ $classelement = $listing->createelement($this->params->get('studies_element'));
 <div class="container">
 	<?php
 		// Search tools bar
-	//echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+	echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 	?>
+
 	<hr/>
 	<?php
 	if ($this->items)

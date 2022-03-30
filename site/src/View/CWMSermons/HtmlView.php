@@ -207,6 +207,9 @@ class HtmlView extends BaseHtmlView
 		$this->page->pagelinks = $pagination->getPagesLinks();
 		$this->page->counter   = $pagination->getPagesCounter();
 		$this->activeFilters = $this->get('ActiveFilters');
+		// Get filter form.
+		$this->filterForm = $this->get('FilterForm');
+
 		$series                = $this->get('Series');
 		$teachers              = $this->get('Teachers');
 		$years                 = $this->get('Years');

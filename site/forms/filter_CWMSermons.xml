@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-	<fieldset addfieldpath="/administrator/components/com_proclaim/models/fields">
+	<fieldset addfieldpath="/administrator/components/com_proclaim/src/Field">
 	<fields name="filter">
 		<field
 				name="search"
@@ -10,7 +10,7 @@
 				/>
 		<field
 				name="book"
-				type="Booklist"
+				type="booklist"
 				label="JBS_CMN_SELECT_BOOK"
 				description="JBS_CMN_SELECT_BOOK_DESC"
 				onchange="this.form.submit();"
@@ -28,7 +28,7 @@
 		</field>
 		<field
 				name="series"
-				type="Serieslist"
+				type="Series"
 				label="JBS_CMN_SELECT_SERIES"
 				description="JBS_CMN_SELECT_SERIES_DESC"
 				onchange="this.form.submit();"
@@ -37,7 +37,7 @@
 		</field>
 		<field
 				name="messagetype"
-				type="Messagetypelist"
+				type="MessagetypeList"
 				label="JBS_CMN_SELECT_MESSAGETYPE"
 				description="JBS_CMN_SELECT_MESSAGETYPE_DESC"
 				onchange="this.form.submit();"
@@ -46,7 +46,7 @@
 		</field>
 		<field
 				name="year"
-				type="Yearlist"
+				type="yearlist"
 				label="JBS_CMN_SELECT_YEAR"
 				description="JBS_CMN_SELECT_YEAR_DESC"
 				onchange="this.form.submit();"
@@ -55,7 +55,7 @@
 		</field>
 		<field
 				name="topic"
-				type="Topicslist"
+				type="TopicsList"
 				label="JBS_CMN_SELECT_TOPIC"
 				description="JBS_CMN_SELECT_TOPIC_DESC"
 				onchange="this.form.submit();"
@@ -64,7 +64,7 @@
 		</field>
 		<field
 				name="location"
-				type="Locationlist"
+				type="LocationList"
 				label="JBS_CMN_SELECT_LOCATION"
 				description="JBS_CMN_SELECT_LOCATION_DESC"
 				onchange="this.form.submit();"
