@@ -23,6 +23,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
@@ -206,6 +207,7 @@ class HtmlView extends BaseHtmlView
 		$this->page            = new \stdClass;
 		$this->page->pagelinks = $pagination->getPagesLinks();
 		$this->page->counter   = $pagination->getPagesCounter();
+		//$this->page->searchtools = LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 		$this->activeFilters = $this->get('ActiveFilters');
 		// Get filter form.
 		$this->filterForm = $this->get('FilterForm');
@@ -218,12 +220,7 @@ class HtmlView extends BaseHtmlView
 		$input     = Factory::getApplication();
 		$option    = $input->get('option', '');
 		$this->admin = $this->state->get('administrator');
-		$filter_series  = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');
-		$filter_teacher = $mainframe->getUserStateFromRequest($option . 'filter_teacher', 'filter_teacher', 0, 'int');
-		$filter_year    = $mainframe->getUserStateFromRequest($option . 'filter_year', 'filter_year', 0, 'int');
-		$filter_books    = $mainframe->getUserStateFromRequest($option . 'filter_books', 'filter_books', 0, 'int');
-		$filter_order    = $mainframe->getUserStateFromRequest($option . 'filter_order', 'filter_order', 0, 'int');
-		/** @var  $params Registry */
+				/** @var  $params Registry */
 		$params = $this->state->params;
 		$this->page->popular = (new CWMStats)->top_score_site();
 
@@ -232,60 +229,6 @@ class HtmlView extends BaseHtmlView
 		$groups = $user->getAuthorisedViewLevels();
 		$this->main = CWMImages::mainStudyImage($params);
 		$this->mainimage = '<img src="'.$this->main->path.'" width="'.$this->main->width.'" height="'.$this->main->height.'">';
-		// Build go button
-		$this->page->gobutton = '<input class="btn btn-primary" type="submit" value="' . Text::_('JBS_STY_GO_BUTTON') . '">';
-		// Build Order for drop down menu
-		$order[] = 'DESC';
-		$order[] = 'ASC';
-		$orderarray[]      = HtmlHelper::_('select.option', '0', Text::_('JBS_CMN_SELECT_ORDER'));
-		$orderarray        = array_merge($orderarray, $order);
-		$this->page->order = HtmlHelper::_('select.genericlist', $orderarray, 'filter_order', 'class="inputbox" size="1" ',
-			'value', 'text', "$filter_order"
-		);
-		// Build Series List for drop down menu
-		$seriesarray[]      = HtmlHelper::_('select.option', '0', Text::_('JBS_CMN_SELECT_SERIES'));
-		$seriesarray        = array_merge($seriesarray, $series);
-		$this->page->series = HtmlHelper::_('select.genericlist', $seriesarray, 'filter_series', 'class="inputbox" size="1" ',
-			'value', 'text', "$filter_series"
-		);
-		// Build list for books
-		$booksarray[]      = HtmlHelper::_('select.option', '0', Text::_('JBS_CMN_SELECT_BOOKS'));
-		$booksarray        = array_merge($booksarray, $books);
-		$this->page->books = HtmlHelper::_('select.genericlist', $booksarray, 'filter_books', 'class="inputbox" size="1" ',
-			'value', 'text', "$filter_books"
-		);
-		// Build Years List for drop down menu
-		$yeararray[]       = HtmlHelper::_('select.option', '0', Text::_('JBS_CMN_SELECT_YEAR'));
-		$yeararray         = array_merge($yeararray, $years);
-		$this->page->years = HtmlHelper::_('select.genericlist', $yeararray, 'filter_year', 'class="inputbox" size="1" ',
-			'value', 'text', "$filter_year"
-		);
-
-		// Build Teachers List for drop down menu
-		$teacherarray[]       = HtmlHelper::_('select.option', '0', Text::_('JBS_CMN_SELECT_TEACHER'));
-		$teacherarray         = array_merge($teacherarray, $teachers);
-		$this->page->teachers = HtmlHelper::_('select.genericlist', $teacherarray, 'filter_teacher', 'class="inputbox" size="1" ',
-			'value', 'text', "$filter_teacher"
-		);
-		/*$go                   = 0;
-
-		if ($params->get('series_list_years') > 0)
-		{
-			$go++;
-		}
-
-		if ($params->get('series_list_teachers') > 0)
-		{
-			$go++;
-		}
-
-		if ($params->get('search_series') > 0)
-		{
-			$go++;
-		}
-
-		$this->go = $go;
-*/
 
 		// Only load PageBuilder if the default template is NOT being used
 		if ($params->get('useexpert_list') > 0
