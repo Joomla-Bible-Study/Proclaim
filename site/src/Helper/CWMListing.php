@@ -1789,8 +1789,8 @@ class CWMListing
 			}
 		}
 
-		$frow = '<div class="col-' . $row->colspan;
-
+		//$frow = '<div class="col-' . $row->colspan;
+		$frow = '<div class="col';
 		if ($customclass)
 		{
 			$frow .= ' ' . $customclass;
