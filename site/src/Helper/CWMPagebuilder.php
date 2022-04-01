@@ -240,7 +240,7 @@ class CWMPagebuilder
 	 * @param   Registry          $params    Item Params
 	 * @param   CWMTemplateTable  $template  template date
 	 * @param   object            $item      Item Params
-	 *
+	 * @param   string            $template
 	 * @return string
 	 *
 	 * @throws \Exception

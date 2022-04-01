@@ -28,7 +28,7 @@ $listing = new CWMListing;
 		?>
 		<div class="row">
 			<div class="span12">
-				<?php $teacherstudies = $listing->getFluidListing($this->teacherstudies, $this->params, $this->template, $type = 'sermons');
+				<?php $teacherstudies = $listing->getFluidListing($this->teacherstudies, $this->params, $this->state->template, $type = 'sermons');
 				echo $teacherstudies; ?>
 			</div>
 		</div>

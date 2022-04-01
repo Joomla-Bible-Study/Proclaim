@@ -182,7 +182,7 @@ class HtmlView extends BaseHtmlView
 		$wherefield = 'study.teacher_id';
 		$limit      = $params->get('studies', '20');
 		$order      = 'DESC';
-		$template      = $this->get('template');
+		$template      = $input->get('template');
 
 		if ($params->get('show_teacher_studies') > 0)
 		{
@@ -194,7 +194,7 @@ class HtmlView extends BaseHtmlView
 				$order,
 				$template
 			);
-
+			$template = $this->state->template;
 			foreach ($studies as $i => $study)
 			{
 				$pelements               = $pagebuilder->buildPage($study, $params, $template);
