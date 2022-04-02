@@ -208,7 +208,7 @@ class HtmlView extends BaseHtmlView
 
 		// Get filter form.
 		$this->filterForm = $this->get('FilterForm');
-		$mainframe        = Factory::getApplication('site');
+		$mainframe        = Factory::getApplication();
 		$this->admin      = $this->state->get('administrator');
 
 		$params              = $this->state->params;
@@ -230,9 +230,9 @@ class HtmlView extends BaseHtmlView
 		{
 			$page_builder = new CWMPageBuilder;
 
-			foreach ($items as $i => $iValue)
+			foreach ($items as $iValue)
 			{
-				$item = &$items[$i];
+				$item = &$iValue;
 
 				if ($item->access > 1 && !in_array($item->access, $groups, true))
 				{
@@ -297,8 +297,7 @@ class HtmlView extends BaseHtmlView
 		}
 
 		// Get the podcast subscription
-
-		$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+		$wa = $mainframe->getDocument()->getWebAssetManager();
 		$wa->useStyle('com_proclaim.cwmcore');
 		$wa->useStyle('com_proclaim.general');
 		$wa->useStyle('com_proclaim.podcast');
