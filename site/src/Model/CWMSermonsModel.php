@@ -31,7 +31,7 @@ defined('_JEXEC') or die;
 class CWMSermonsModel extends ListModel
 {
 	/**
-	 * @var   Input $imput Inpute
+	 * @var   Input
 	 *
 	 * @since 7.0.0
 	 */
@@ -719,11 +719,12 @@ class CWMSermonsModel extends ListModel
 	{
 		return $this->getState('list.start');
 	}
+
 	/**
 	 * Get a list of teachers associated with series
 	 *
-	 * @since 9.0.0
 	 * @return mixed
+	 * @since 9.0.0
 	 */
 	public function getTeachers()
 	{
@@ -745,8 +746,8 @@ class CWMSermonsModel extends ListModel
 	/**
 	 * Get a list of teachers associated with series
 	 *
-	 * @since 9.0.0
 	 * @return mixed
+	 * @since 9.0.0
 	 */
 	public function getYears()
 	{
@@ -759,16 +760,15 @@ class CWMSermonsModel extends ListModel
 		$query->order('value');
 
 		$db->setQuery($query->__toString());
-		$items = $db->loadObjectList();
 
-		return $items;
+		return $db->loadObjectList();
 	}
 
 	/**
 	 * Get a list of all used series
 	 *
-	 * @since 7.0
 	 * @return object
+	 * @since 7.0
 	 */
 	public function getSeries()
 	{
@@ -805,6 +805,7 @@ class CWMSermonsModel extends ListModel
 
 		return $items;
 	}
+
 	public function getBooks()
 	{
 		$db    = $this->getDbo();
@@ -816,10 +817,12 @@ class CWMSermonsModel extends ListModel
 
 		$db->setQuery($query->__toString());
 		$books = $db->loadObjectList();
+
 		foreach ($books as $book)
 		{
 			$book->text = Text::_($book->text);
 		}
+
 		return $books;
 	}
 }

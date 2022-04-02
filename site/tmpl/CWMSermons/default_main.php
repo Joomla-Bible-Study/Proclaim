@@ -11,23 +11,18 @@
 defined('_JEXEC') or die;
 
 use CWM\Component\Proclaim\Site\Helper\CWMListing;
+use CWM\Component\Proclaim\Site\Helper\CWMTeacher;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Layout\LayoutHelper;
-use CWM\Component\Proclaim\Site\Helper\CWMTeacher;
-use Joomla\CMS\Html\HTMLHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 
-HtmlHelper::_('bootstrap.framework');
-HtmlHelper::_('dropdown.init');
-HtmlHelper::_('formbehavior.chosen', 'select');
-
-$CWMTeacher  = new CWMTeacher;
+$CWMTeacher   = new CWMTeacher;
 $teachers     = $CWMTeacher->getTeachersFluid($this->params);
 $listing      = new CWMListing;
 $classelement = $listing->createelement($this->params->get('studies_element'));
-$app = Factory::getApplication();
-$itemid = $app->input->get('Itemid');
+$app          = Factory::getApplication();
+$itemid       = $app->input->get('Itemid');
 ?>
 
 <div class="container">
@@ -47,40 +42,46 @@ $itemid = $app->input->get('Itemid');
 			<div class="hero-unit" style="padding-top:30px; padding-bottom:20px;">
 				<div class="row">
 
-						<?php
-						foreach ($teachers as $teacher)
+					<?php
+					foreach ($teachers as $teacher)
+					{
+						echo '<div class="col">';
+						if ($this->params->get('teacherlink') > 0)
 						{
-							echo '<div class="col">';
-							if ($this->params->get('teacherlink') > 0)
-							{
-								echo '<a href="'.Route::_('index.php?option=com_proclaim&view=CWMTeacher&id=' . $teacher['id'] . '&t=' . $teacher['t'].'&Itemid='.$itemid) . '" >
-							<img class="img-polaroid" src="' . Uri::base() . 'media/com_proclaim/'.$teacher['image'] . '" alt="Teachers Image"></a>';
-							}
-							else
-							{
-								echo '<img class="img-polaroid" src="' . Uri::base() . 'media/com_proclaim/'. $teacher['image'] . '">';
-							}
-							if ($this->params->get('teacherlink') > 0)
-							{
-								echo '<div class="caption"><p><a href="'.Route::_('index.php?option=com_proclaim&view=CWMTeacher&id=' .
-									$teacher['id'] . '&t=' . $teacher['t'].'&Itemid='.$itemid) . '">' . $teacher['name'] . '</a></p></div>';
-							}
-							else
-							{
-								echo '<div class="caption"><p>' . $teacher['name'] . '</p></div>';
-							}
-							echo '</div>';
+							echo '<a href="' . Route::_('index.php?option=com_proclaim&view=CWMTeacher&id=' . $teacher['id'] . '&t=' . $teacher['t'] . '&Itemid=' . $itemid) . '" >
+							<img class="img-polaroid" src="' . Uri::base() . 'media/com_proclaim/' . $teacher['image'] . '" alt="Teachers Image"></a>';
 						}
-						?>
+						else
+						{
+							echo '<img class="img-polaroid" src="' . Uri::base() . 'media/com_proclaim/' . $teacher['image'] . '">';
+						}
+						if ($this->params->get('teacherlink') > 0)
+						{
+							echo '<div class="caption"><p><a href="' . Route::_('index.php?option=com_proclaim&view=CWMTeacher&id=' .
+									$teacher['id'] . '&t=' . $teacher['t'] . '&Itemid=' . $itemid) . '">' . $teacher['name'] . '</a></p></div>';
+						}
+						else
+						{
+							echo '<div class="caption"><p>' . $teacher['name'] . '</p></div>';
+						}
+						echo '</div>';
+					}
+					?>
 
 				</div>
 			</div>
 		<?php } ?>
-            <div class="row">
-                <?php if ($this->params->get('show_page_image') > 0){echo '<div class="col">'.$this->mainimage.'</div>';}
-	if ($this->params->get('show_page_title') > 0){echo '<h2><div class="col">'.$this->params->get('list_page_title').'</div></h2>';}
-?>
-            </div>
+		<div class="row">
+			<?php if ($this->params->get('show_page_image') > 0)
+			{
+				echo '<div class="col">' . $this->mainimage . '</div>';
+			}
+			if ($this->params->get('show_page_title') > 0)
+			{
+				echo '<h2><div class="col">' . $this->params->get('list_page_title') . '</div></h2>';
+			}
+			?>
+		</div>
 		<div class="row">
 			<div class="col-12">
 				<?php
@@ -100,7 +101,7 @@ $itemid = $app->input->get('Itemid');
 
 <div class="container">
 	<?php
-		// Search tools bar
+	// Search tools bar
 	echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 	?>
 

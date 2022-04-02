@@ -8,16 +8,20 @@
  * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\Input\Input;
+
 defined('_JEXEC') or die;
 ?>
 <div class="listingfooter">
 	<?php
-	$input = new JInput;
+	$input     = new Input;
 	$link_text = $this->item->params->get('link_text');
 
 	if (!$link_text)
 	{
-		$link_text = JText::_('JBS_STY_RETURN_STUDIES_LIST');
+		$link_text = Text::_('JBS_STY_RETURN_STUDIES_LIST');
 	}
 
 	if ($this->item->params->get('view_link') > 0)
@@ -32,16 +36,8 @@ defined('_JEXEC') or die;
 		{
 			$returnmenu = 1;
 		}
-		$Itemid = $input->get('Itemid', '', 'int');
 
-		if (!$Itemid)
-		{
-			$link = JRoute::_('index.php?option=com_biblestudy&view=CWMSermons&t=' . $t);
-		}
-		else
-		{
-			$link = JRoute::_('index.php?option=com_biblestudy&view=CWMSermons&t=' . $t);
-		}
+		$link = Route::_('index.php?option=com_biblestudy&view=CWMSermons&t=' . $t);
 		?>
 		<a href="<?php echo $link; ?>"> <?php echo $link_text; ?> </a> <?php } // End of if view_link not 0 ?>
 </div><!--end of footer div-->

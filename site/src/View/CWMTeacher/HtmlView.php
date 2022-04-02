@@ -105,7 +105,7 @@ class HtmlView extends BaseHtmlView
 		$wa->useStyle('com_proclaim.cwmcore');
 		$wa->useStyle('com_proclaim.general');
 
-        $input = Factory::getApplication();
+        $input = Factory::getApplication()->input;
 		$item = $this->get('Item');
 
 		// Add the slug
