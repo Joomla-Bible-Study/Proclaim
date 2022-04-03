@@ -201,7 +201,7 @@ if ($saveOrder)
 								<td class="nowrap has-context">
 									<div class="pull-left">
 										<?php if ($canEdit || $canEditOwn) : ?>
-											<a href="<?php echo JRoute::_(
+											<a href="<?php echo Route::_(
 												'index.php?option=com_proclaim&task=cwmmessage.edit&id=' . (int) $item->id
 											); ?>">
 												<?php echo $this->escape($item->studytitle); ?>
