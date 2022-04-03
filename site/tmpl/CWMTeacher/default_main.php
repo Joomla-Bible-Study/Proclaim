@@ -12,15 +12,19 @@ use Joomla\CMS\Router\Route;
 use CWM\Component\Proclaim\Site\Helper\CWMListing;
 use Joomla\CMS\Html\HtmlHelper;
 use Joomla\CMS\Language\Text;
+use CWM\Component\Proclaim\Site\Helper\CWMTeacher;
 defined('_JEXEC') or die;
 
+
 $listing = new CWMListing;
+$teacher = new CWMListing;
 ?>
 <div class="container">
 
 	<?php
-	$list = $listing->getFluidListing($this->item, $this->params, $this->template, $type = 'teacher');
-	echo $list;
+	$teacherdisplay = $teacher->getFluidListing($this->item, $this->params, $this->template, $type = 'teacher');
+	echo $teacherdisplay;
+
 	?>
 	<?php
 	if ($this->params->get('show_teacher_studies') > 0)

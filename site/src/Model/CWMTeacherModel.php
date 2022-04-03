@@ -129,7 +129,7 @@ class CWMTeacherModel extends ItemModel
 
 		$this->setState('template', $template);
 		$this->setState('administrator', $admin);
-
+		$this->setState('params',$params);
 		$user = Factory::getUser();
 
 		if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise('core.edit', 'com_proclaim')))

@@ -142,12 +142,12 @@ class CWMTeacher extends CWMListing
 
 		$viewtype = $input->get('view');
 
-		if ($viewtype == 'CWMSermons')
+		if ($viewtype == 'sermons')
 		{
 			$teacherids = explode(",", $params->get('listteachers'));
 		}
 
-		if ($viewtype == 'CWMSermon' && $id != 0)
+		if ($viewtype == 'sermon' && $id != 0)
 		{
 			$teacherids->id = $id;
 		}

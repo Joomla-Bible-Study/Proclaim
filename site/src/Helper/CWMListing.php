@@ -439,9 +439,11 @@ class CWMListing
 			{
 				$oddeven = $params->get('teacherdisplay_color', 'white');
 				$list    .= $this->getFluidRow($listrows, $listsorts, $items, $params, $template, $oddeven, $header = 1, $type);
+
 			}
 
 			$list .= $this->getFluidRow($listrows, $listsorts, $items, $params, $template, $oddeven, $header = 0, $type);
+
 		}
 
 		if ($type === 'teachers')
@@ -1814,6 +1816,7 @@ class CWMListing
 		}
 
 		$frow .= $classclose . '</div>';
+
 
 		return $frow;
 	}

@@ -658,16 +658,66 @@ $wa->useScript('keepalive')
                     </div>
                 </div>
                 <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading19">
+                    <h2 class="accordion-header" id="heading318">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse19" aria-expanded="false" aria-controls="collapse19">
+                                data-bs-target="#collapse318" aria-expanded="false" aria-controls="collapse318">
+				            <?php echo Text::_('JBS_TPL_TEACHER'); ?>
+                        </button>
+                    </h2>
+                    <div id="collapse318" class="accordion-collapse collapse" aria-labelledby="heading318"
+                         data-bs-parent="#accordionlist">
+                        <div class="accordion-body">
+				            <?php foreach ($this->form->getFieldset('TEACHER') as $field): ?>
+
+                                <div class="control-group">
+                                    <div class="control-label">
+							            <?php echo $field->label; ?>
+                                    </div>
+                                    <div class="controls">
+							            <?php echo $field->input; ?>
+                                    </div>
+                                </div>
+
+				            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading219">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse219" aria-expanded="false" aria-controls="collapse219">
 				            <?php echo Text::_('JBS_TPL_TEACHERDISPLAY'); ?>
                         </button>
                     </h2>
-                    <div id="collapse19" class="accordion-collapse collapse" aria-labelledby="heading19"
+                    <div id="collapse219" class="accordion-collapse collapse" aria-labelledby="heading219"
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
 				            <?php foreach ($this->form->getFieldset('TEACHERDISPLAY') as $field): ?>
+
+                                <div class="control-group">
+                                    <div class="control-label">
+							            <?php echo $field->label; ?>
+                                    </div>
+                                    <div class="controls">
+							            <?php echo $field->input; ?>
+                                    </div>
+                                </div>
+
+				            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading119">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse119" aria-expanded="false" aria-controls="collapse119">
+				            <?php echo Text::_('JBS_TPL_TEACHERDETAILSDISPLAY'); ?>
+                        </button>
+                    </h2>
+                    <div id="collapse119" class="accordion-collapse collapse" aria-labelledby="heading119"
+                         data-bs-parent="#accordionlist">
+                        <div class="accordion-body">
+				            <?php foreach ($this->form->getFieldset('TEACHERDETAILSDISPLAY') as $field): ?>
 
                                 <div class="control-group">
                                     <div class="control-label">

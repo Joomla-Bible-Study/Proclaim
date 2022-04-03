@@ -1148,7 +1148,7 @@
 			<field name="teacherdisplay_color" type="color" label="JBS_TPL_SERIESDISPLAY_COLOR"
 			       description="JBS_TPL_SERIESDISPLAY_COLOR"/>
 		</fieldset>
-		<fieldset name="TEACHERDETAILSDISPALY" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
+		<fieldset name="TEACHERDETAILSDISPLAY" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
 			<field name="tdteacherrow" type="rowoptions" size="1" default="1" label="JBS_CMN_TEACHER"
 			       description="JBS_TPL_ROW_DESC"/>
 			<field name="tdteachercol" type="spanoptions" default="1" label="JBS_TPL_COLUMN"

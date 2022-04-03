@@ -17,6 +17,7 @@ use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormHelper;
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\Registry\Registry;
@@ -44,7 +45,7 @@ class HTMLView extends BaseHtmlView
 	/** @var object
 	 * @since    7.0.0
 	 */
-	public mixed $form;
+	//public mixed $form;
 
 	/** @var object
 	 * @since    7.0.0
