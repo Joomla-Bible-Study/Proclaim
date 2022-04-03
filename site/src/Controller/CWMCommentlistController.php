@@ -16,12 +16,11 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Controller\BaseController;
 use CWM\Component\Proclaim\Administrator\Controller\CWMCommentsController;
+
 // No Direct Access
 defined('_JEXEC') or die;
 
 // Base this model on the backend version.
-//JLoader::register('ProclaimControllerComments', JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Controllers/CWMCommentsController.php');
-
 /**
  * Controller for Comments
  *

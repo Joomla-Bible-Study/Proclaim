@@ -95,7 +95,7 @@ class HtmlView extends BaseHtmlView
 	{
 		/** @type JApplicationSite $mainframe */
 		$mainframe = Factory::getApplication('site');
-		$input     = Factory::getApplication();
+		$input     = $mainframe->input;
 		$option    = $input->get('option', '');
 		$this->state = $this->get('state');
 		/** @var  $params Registry */

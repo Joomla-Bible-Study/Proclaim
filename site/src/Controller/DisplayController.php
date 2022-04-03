@@ -119,7 +119,7 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
 		if ($vName === 'form' && !$this->checkEditId('com_proclaim.edit.message', $id))
 		{
 			// Somehow the person just went to the form - we don't allow that.
-			throw new \Exception(Text::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id), 403);
+			throw new \RuntimeException(Text::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id), 403);
 		}
 
 		parent::display($cachable, $safeurlparams);

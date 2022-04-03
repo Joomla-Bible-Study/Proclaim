@@ -29,7 +29,6 @@ use Joomla\Registry\Registry;
  */
 class CWMTeacher extends CWMListing
 {
-	private $contact;
 
 	/**
 	 * Get Teacher for Fluid layout
@@ -43,34 +42,24 @@ class CWMTeacher extends CWMListing
 	 */
 	public function getTeachersFluid($params)
 	{
-		$input      = Factory::getApplication();
+		$input      = Factory::getApplication()->input;
 		$id         = $input->get('id', '', 'int');
 		$teachers   = array();
 		$teacherid  = null;
-		//$teacherids = new \stdClass;
+		$teacherIDs = [];
 		$t          = $params->get('teachertemplateid');
 
 		if (!$t)
 		{
 			$t = $input->get('t', 1, 'int');
 		}
-/*
-		$viewtype = $input->get('view');
 
-		if ($viewtype == 'sermons')
+		if ($params->get('listteachers', '0'))
 		{
-			$teacherids = $params->get('listteachers');
+			$teacherIDs = $params->get('listteachers');
 		}
 
-		if ($viewtype == 'sermon' && $id != 0)
-		{
-			$teacherids->id = $id;
-		} */
-
-		$teacherids = $params->get('listteachers');
-
-
-		foreach ($teacherids as $teach)
+		foreach ($teacherIDs as $teach)
 		{
 			$database = Factory::getDbo();
 			$query    = $database->getQuery(true);
@@ -82,12 +71,12 @@ class CWMTeacher extends CWMListing
 			if ($result->contact)
 			{
 				/** @var ContactModel $contactmodel */
-				$contactmodel  = ItemModel::getInstance('contact', 'contactModel');
-				$this->contact = $contactmodel->getItem($pk = $result->contact);
+				$contactmodel = ItemModel::getInstance('contact', 'contactModel');
+				$contact      = $contactmodel->getItem($pk = $result->contact);
 
 				// Substitute contact info from com_contacts for duplicate fields
-				$result->title       = $this->contact->con_position;
-				$result->teachername = $this->contact->name;
+				$result->title       = $contact->con_position;
+				$result->teachername = $contact->name;
 			}
 
 			if ($result->teacher_thumbnail)
@@ -122,12 +111,13 @@ class CWMTeacher extends CWMListing
 	 *
 	 * @return string
 	 *
-	 * @since    8.0.0
+	 * @throws \Exception
 	 * @todo     need to redo to bootstrap
+	 * @since    8.0.0
 	 */
 	public function getTeacher($params, $id)
 	{
-		$input       = Factory::getApplication();
+		$input       = Factory::getApplication()->input;
 		$JViewLegacy = new HtmlView;
 		$JViewLegacy->loadHelper('image');
 		$teacher    = null;
@@ -303,7 +293,7 @@ class CWMTeacher extends CWMListing
 	public function getTeacherStudiesExp($id, $params)
 	{
 		$limit   = '';
-		$input   = Factory::getApplication();
+		$input   = Factory::getApplication()->input;
 		$nolimit = $input->get('nolimit', '', 'int');
 
 		if ($params->get('series_detail_limit'))

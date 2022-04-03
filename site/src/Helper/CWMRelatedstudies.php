@@ -974,7 +974,7 @@ class CWMRelatedstudies
 		}
 
 		$related = '<select onchange="goTo()" id="urlList"><option value="">' . Text::_('JBS_CMN_SELECT_RELATED_STUDY') . '</option>';
-		$input   = Factory::getApplication();
+		$input   = Factory::getApplication()->input;
 
 		foreach ($studyrecords as $studyrecord)
 		{

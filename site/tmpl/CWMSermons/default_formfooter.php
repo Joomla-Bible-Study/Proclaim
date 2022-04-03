@@ -14,5 +14,5 @@ defined('_JEXEC') or die;
 <input name="option" value="com_proclaim" type="hidden"/>
 <input name="task" value="" type="hidden"/>
 <input name="boxchecked" value="0" type="hidden"/>
-<input name="controller" value="sermons" type="hidden"/>
+<input name="controller" value="CWMSermons" type="hidden"/>
 </form>

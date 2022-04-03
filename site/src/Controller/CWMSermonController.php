@@ -7,17 +7,20 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Site\CWMSermonController;
-use Joomla\CMS\Component\ComponentHelper;
+
+use CWM\Component\Proclaim\Site\Helper\CWMDownload;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
-use Joomla\Registry\Registry;
+use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
+
 // No Direct Access
 defined('_JEXEC') or die;
-
-
 
 
 /**
@@ -26,18 +29,19 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class CWMSermonController extends BaseController
+class CWMSermonController extends FormController
 {
 	/**
 	 * View item
 	 *
+	 * @var string
 	 * @since    1.6
 	 */
 	protected $view_item = 'sermon';
 
 	/**
 	 * View list
-	 *
+	 * @var string
 	 * @since    1.6
 	 */
 	protected $view_list = 'sermons';
@@ -71,9 +75,9 @@ class CWMSermonController extends BaseController
 	{
 		$return = Factory::getApplication()->input->get('return', null, 'base64');
 
-		if (empty($return) || !JUri::isInternal(base64_decode($return)))
+		if (empty($return) || !Uri::isInternal(base64_decode($return)))
 		{
-			return JUri::base() . 'index.php?option=com_proclaim&view=sermon';
+			return Uri::base() . 'index.php?option=com_proclaim&view=sermon';
 		}
 
 		return base64_decode($return);
@@ -103,7 +107,7 @@ class CWMSermonController extends BaseController
 	 * @param   string  $key     The name of the primary key of the URL variable.
 	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
 	 *
-	 * @return    Boolean    True if access level check and checkout passes, false otherwise.
+	 * @return    boolean    True if access level check and checkout passes, false otherwise.
 	 *
 	 * @since    1.6
 	 */
@@ -118,7 +122,7 @@ class CWMSermonController extends BaseController
 	 * @param   string  $key     The name of the primary key of the URL variable.
 	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
 	 *
-	 * @return    Boolean    True if successful, false otherwise.
+	 * @return    boolean    True if successful, false otherwise.
 	 *
 	 * @since    1.6
 	 */
@@ -138,15 +142,16 @@ class CWMSermonController extends BaseController
 	/**
 	 * Comment
 	 *
-	 * @return void
+	 * @return void|null
 	 *
+	 * @throws \PHPMailer\PHPMailer\Exception
 	 * @since 7.0
 	 */
 	public function comment()
 	{
-		$input = Factory::getApplication();
-		$model     = $this->getModel('sermon');
-		$t         = '';
+		$input = Factory::getApplication()->input;
+		$model = $this->getModel('sermon');
+		$t     = '';
 
 		if (!$t)
 		{
@@ -166,7 +171,7 @@ class CWMSermonController extends BaseController
 		{
 			// Begin reCaptcha
 			PluginHelper::importPlugin('captcha');
-			$res        = Factory::getApplication()->triggerEvent('onCheckAnswer', $_POST['recaptcha_response_field']);
+			$res = Factory::getApplication()->triggerEvent('onCheckAnswer', $_POST['recaptcha_response_field']);
 
 			if (!$res[0])
 			{
@@ -204,7 +209,6 @@ class CWMSermonController extends BaseController
 				'Comment Added'
 			);
 		}
-		// End of $cap
 	}
 
 	/**
@@ -226,15 +230,16 @@ class CWMSermonController extends BaseController
 	/**
 	 * Email comment out.
 	 *
-	 * @param   Joomla\Registry\Registry  $params  Params of to parse
+	 * @param   Registry  $params  Params of to parse
 	 *
-	 * @return null
+	 * @return void
 	 *
+	 * @throws \PHPMailer\PHPMailer\Exception
 	 * @since 7.0
 	 */
 	public function commentsEmail($params)
 	{
-		$input = Factory::getApplication();
+		$input = Factory::getApplication()->input;
 
 		$comment_author    = $input->get('full_name', 'Anonymous', 'string');
 		$comment_study_id  = $input->get('study_detail_id', 0, 'int');
@@ -243,7 +248,7 @@ class CWMSermonController extends BaseController
 		$config            = Factory::getConfig();
 		$comment_mailfrom  = $config->get('mailfrom');
 
-		$comment_livesite = JUri::root();
+		$comment_livesite = Uri::root();
 		$db               = Factory::getDbo();
 		$query            = $db->getQuery(true);
 		$query->select('id, studytitle, studydate')->from('#__bsms_studies')->where('id = ' . (int) $comment_study_id);
@@ -251,7 +256,7 @@ class CWMSermonController extends BaseController
 		$comment_details    = $db->loadObject();
 		$comment_title      = $comment_details->studytitle;
 		$comment_study_date = $comment_details->studydate;
-		$mail               = JFactory::getMailer();
+		$mail               = Factory::getMailer();
 		$ToEmail            = $params->get('recipient', '');
 		$Subject            = $params->get('subject', 'Comments');
 
@@ -261,8 +266,8 @@ class CWMSermonController extends BaseController
 		}
 
 		$Body = $comment_author . ' ' . Text::_(
-				'JBS_STY_HAS_ENTERED_COMMENT'
-			) . ': ' . $comment_title . ' - ' . $comment_study_date . ' ' . Text::_('JBS_STY_ON') . ': ' . $comment_date;
+			'JBS_STY_HAS_ENTERED_COMMENT'
+		) . ': ' . $comment_title . ' - ' . $comment_study_date . ' ' . Text::_('JBS_STY_ON') . ': ' . $comment_date;
 
 		if ($comment_published > 0)
 		{
@@ -285,17 +290,18 @@ class CWMSermonController extends BaseController
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function download()
 	{
-		$input = Factory::getApplication();
+		$input = Factory::getApplication()->input;
 		$task  = $input->get('task');
 		$mid   = $input->getInt('id');
 
-		if ($task == 'download')
+		if ($task === 'download')
 		{
-			$downloader = new JBSMDownload;
+			$downloader = new CWMDownload;
 			$downloader->download($mid);
 			die;
 		}
@@ -346,11 +352,12 @@ class CWMSermonController extends BaseController
 	 *
 	 * @return    string    The arguments to append to the redirect URL.
 	 *
+	 * @throws \Exception
 	 * @since    1.6
 	 */
 	protected function getRedirectToItemAppend($recordId = null, $urlVar = 'a_id')
 	{
-		$this->input = Factory::getApplication();
+		$this->input = Factory::getApplication()->input;
 
 		// Need to override the parent method completely.
 		$tmpl   = $this->input->get('tmpl');
@@ -369,19 +376,13 @@ class CWMSermonController extends BaseController
 			$append .= '&' . $urlVar . '=' . $recordId;
 		}
 
-		$itemId = $this->input->getInt('Itemid');
+//		$itemId = $this->input->getInt('Itemid');
 		$return = $this->getReturnPage();
-		$catId  = $this->input->getInt('catid', null);
 
-		if ($itemId)
-		{
-			$append .= '&Itemid=' . $itemId;
-		}
-
-		if ($catId)
-		{
-			$append .= '&catid=' . $catId;
-		}
+//		if ($itemId)
+//		{
+//			$append .= '&Itemid=' . $itemId;
+//		}
 
 		if ($return)
 		{

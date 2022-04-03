@@ -56,8 +56,8 @@ class HtmlView extends BaseHtmlView
 	public function display($tpl = null)
 	{
 		$mainframe = Factory::getApplication();
-		$input     = Factory::getApplication();
-		$document = Factory::getApplication()->getDocument();
+		$input     = $mainframe->input;
+		$document  = $mainframe->getDocument();
 
 		// Get the menu item object
 		// Load the Admin settings and params from the template

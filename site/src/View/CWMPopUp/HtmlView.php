@@ -160,7 +160,7 @@ class HtmlView extends BaseHtmlView
 	 */
 	public function display($tpl = null)
 	{
-		$input = Factory::getApplication();
+		$input = Factory::getApplication()->input;
 		$input->get('tmpl', 'component', 'string');
 		$mediaid      = $input->get('mediaid', '', 'int');
 		$close        = $input->get('close', '0', 'int');

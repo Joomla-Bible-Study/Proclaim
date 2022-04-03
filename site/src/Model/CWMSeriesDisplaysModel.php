@@ -52,7 +52,7 @@ class CWMSeriesDisplaysModel extends ListModel
 		$app = Factory::getApplication('site');
 
 		// Adjust the context to support modal layouts.
-		$input  = Factory::getApplication();
+		$input  = Factory::getApplication()->input;
 		$layout = $input->get('layout');
 
 		if ($layout)

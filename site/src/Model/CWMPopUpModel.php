@@ -51,7 +51,7 @@ class CWMPopUpModel extends ListModel
 
 		if (!$t)
 		{
-			$input = Factory::getApplication();
+			$input = Factory::getApplication()->input;
 			$t     = $input->get('t', 1, 'int');
 		}
 

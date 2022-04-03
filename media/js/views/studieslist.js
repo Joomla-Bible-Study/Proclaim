@@ -25,11 +25,5 @@ function stateListener (obj)
 			url: 'index.php?option=com_proclaim&controller=studieslist&task=playHit&tmpl=component&id=' +
 				obj.id,
 		})
-		// Need "mywin ="  IE and google popup blocker will prevent
-		// mywin =
-		// window.open('index.php?option=com_proclaim&view=popup&Itemid=7&mediaid='+obj.id+'&close=true',
-		// 'newwindow','width=100,height=100');
-
-		//alert('Playing ' + obj.id);
 	}
 }
