@@ -35,7 +35,7 @@ class HTMLView extends BaseHtmlView
 	 * @var mixed
 	 * @since    7.0.0
 	 */
-	public mixed $form;
+	//public mixed $form;
 
 	/**
 	 * Item

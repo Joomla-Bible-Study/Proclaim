@@ -95,6 +95,11 @@
 				<option value="false">JNO</option>
 				<option value="true">JYES</option>
 			</field>
+			<field name="listheadertype" type="list" default="table-light"
+				   label="JBS_TPL_HEADER" description="JBS_TPL_HEADER_DESC">
+				<option value="table-light">JBS_TPL_HEADER_LIGHT</option>
+				<option value="table-dark">JBS_TPL_HEADER_DARK</option>
+			</field>
 		</fieldset>
 		<fieldset name="FILTERS" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
 			<field name="teacher_id" type="sql"

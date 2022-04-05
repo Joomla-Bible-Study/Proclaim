@@ -397,12 +397,16 @@ class CWMListing
 		$class1  = $params->get($extra . 'listcolor1', '');
 		$class2  = $params->get($extra . 'listcolor2', '');
 		$oddeven = $class1;
-
+//Start the table
+		$list .= '<div class="table-responsive" about="' . $type . '"><table class="table w-auto table-borderless">';
 		if ($type === 'sermons')
 		{
 			if ($params->get('use_headers_list') > 0)
 			{
+				//Start the header
+				$list .= '<thead class="'.$params->get('listheadertype').'">';
 				$list .= $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header = 1, $type);
+				$list .= '</thead>';
 			}
 		}
 
@@ -410,7 +414,10 @@ class CWMListing
 		{
 			if ($params->get('use_headers_view') > 0)
 			{
+				//Start the header
+				$list .= '<thead class="'.$params->get('listheadertype').'">';
 				$list .= $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header = 1, $type);
+				$list .= '</thead>';
 			}
 		}
 
@@ -418,7 +425,10 @@ class CWMListing
 		{
 			if ($params->get('use_headers_series') > 0 && is_object($items))
 			{
+				//Start the header
+				$list .= '<thead class="'.$params->get('listheadertype').'">';
 				$list .= $this->getFluidRow($listrows, $listsorts, $items[0], $params, $template, $oddeven, $header = 1, $type);
+				$list .= '</thead>';
 			}
 		}
 
@@ -427,7 +437,10 @@ class CWMListing
 			if ($params->get('use_header_seriesdisplay') > 0)
 			{
 				$oddeven = $params->get('seriesdisplay_color');
+				//Start the header
+				$list .= '<thead class="'.$params->get('listheadertype').'">';
 				$list    .= $this->getFluidRow($listrows, $listsorts, $items, $params, $template, $oddeven, $header = 1, $type);
+				$list .= '</thead>';
 			}
 
 			$list .= $this->getFluidRow($listrows, $listsorts, $items, $params, $template, $oddeven, $header = 0, $type);
@@ -438,7 +451,10 @@ class CWMListing
 			if ($params->get('use_headers_teacher_details') > 0)
 			{
 				$oddeven = $params->get('teacherdisplay_color', 'white');
+				//Start the header
+				$list .= '<thead class="'.$params->get('listheadertype').'">';
 				$list    .= $this->getFluidRow($listrows, $listsorts, $items, $params, $template, $oddeven, $header = 1, $type);
+				$list .= '</thead>';
 
 			}
 
@@ -450,7 +466,10 @@ class CWMListing
 		{
 			if ($params->get('use_headers_teacher_list') > 0)
 			{
+				//Start the header
+				$list .= '<thead class="'.$params->get('listheadertype').'">';
 				$list .= $this->getFluidRow($listrows, $listsorts, $items, $params, $template, $oddeven, $header = 1, $type);
+				$list .= '</thead>';
 			}
 		}
 
@@ -526,9 +545,12 @@ class CWMListing
 
 		foreach ($row as $value)
 		{
-			$list .= "\n\t" . $value;
+
+			$list .=  $value;
 		}
 
+		$list .= '</tbody></table></div>';
+		//$list .= '<hr>' . $value;
 		return $list;
 	}
 
@@ -843,14 +865,11 @@ class CWMListing
 		{
 			$background = "";
 		}
-
+		$frow = '';
+		//$frow = '<div class="table-responsive" about="' . $type . '"><table class="table w-auto table-borderless">';
 		if ($header === 1)
 		{
-			$frow = '<div class="row" style="' . $background . 'padding:5px; white-space:nowrap; font-weight:bold;" about="' . $type . '">';
-		}
-		else
-		{
-			$frow = '<div class="row" style="' . $background . 'padding:5px;" about="' . $type . '">';
+			//$frow .= '<thead class="'.$params->get('listheadertype').'">';
 		}
 
 		$row1count  = 0;
@@ -922,14 +941,14 @@ class CWMListing
 		{
 			if ($row->row === '1')
 			{
-				if ($row1count === $row1count2)
+				if ($row1count === $row1count2 & $header === 0 )
 				{
-					$frow .= '<div class="row JBSM" about="row1-' . $row1count . '">';
+					$frow .= '<tr>';
 				}
 
 				if ($header === 1)
 				{
-					$frow .= $this->getFluidData($item, $row, $params, $template, $header = 1, $type);
+					$frow .= '<th>'.$this->getFluidData($item, $row, $params, $template, $header = 1, $type);
 				}
 				else
 				{
@@ -938,22 +957,26 @@ class CWMListing
 
 				$row1count--;
 
-				if ($row1count === 0)
+				if ($row1count === 0 && !$header)
 				{
-					$frow .= '</div>';
+					$frow .= '</tr>';
+				}
+				if ($row1count === 0 && $header === 1)
+				{
+					//$frow .= '</th>';
 				}
 			}
 
 			if ($row->row === '2')
 			{
-				if ($row2count === $row2count2)
+				if ($row2count === $row2count2 && $header === 0)
 				{
-					$frow .= '<div class="row JBSM" about="row2-' . $row2count . '">';
+					$frow .= '<tr>';
 				}
 
 				if ($header === 1)
 				{
-					$frow .= $this->getFluidData($item, $row, $params, $template, $header = 1, $type);
+					//$frow .= '<th>'.$this->getFluidData($item, $row, $params, $template, $header = 1, $type);
 				}
 				else
 				{
@@ -962,22 +985,26 @@ class CWMListing
 
 				$row2count--;
 
-				if ($row2count === 0)
+				if ($row2count === 0 && $header === 0)
 				{
-					$frow .= '</div>';
+					$frow .= '</tr>';
+				}
+				if ($row2count === 0 && $header === 1)
+				{
+					//$frow .= '</th>';
 				}
 			}
 
 			if ($row->row === '3')
 			{
-				if ($row3count === $row3count2)
+				if ($row3count === $row3count2 && $header === 0)
 				{
-					$frow .= '<div class="row JBSM" about="row3-' . $row3count . '">';
+					$frow .= '<tr>';
 				}
 
 				if ($header === 1)
 				{
-					$frow .= $this->getFluidData($item, $row, $params, $template, $header = 1, $type);
+					//$frow .= '<th>'.$this->getFluidData($item, $row, $params, $template, $header = 1, $type);
 				}
 				else
 				{
@@ -986,22 +1013,26 @@ class CWMListing
 
 				$row3count--;
 
-				if ($row3count === 0)
+				if ($row3count === 0 && $header === 0)
 				{
-					$frow .= '</div>';
+					$frow .= '</tr>';
+				}
+				if ($row3count === 0 && $header === 1)
+				{
+					//$frow .= '</th>';
 				}
 			}
 
 			if ($row->row === '4')
 			{
-				if ($row4count === $row4count2)
+				if ($row4count === $row4count2 && $header === 0)
 				{
-					$frow .= '<div class="row JBSM" about="row4-' . $row4count . '">';
+					$frow .= '<tr>';
 				}
 
 				if ($header === 1)
 				{
-					$frow .= $this->getFluidData($item, $row, $params, $template, $header = 1, $type);
+					//$frow .= '<th>'.$this->getFluidData($item, $row, $params, $template, $header = 1, $type);
 				}
 				else
 				{
@@ -1010,22 +1041,26 @@ class CWMListing
 
 				$row4count--;
 
-				if ($row4count === 0)
+				if ($row4count === 0 && $header === 0)
 				{
-					$frow .= '</div>';
+					$frow .= '</tr>';
+				}
+				if ($row4count === 0 && $header === 1)
+				{
+					//$frow .= '</th>';
 				}
 			}
 
 			if ($row->row === '5')
 			{
-				if ($row5count === $row5count2)
+				if ($row5count === $row5count2 && $header === 0)
 				{
-					$frow .= '<div class="row JBSM" about="row5-' . $row5count . '">';
+					$frow .= '<tr>';
 				}
 
 				if ($header === 1)
 				{
-					$frow .= '<b>' . $this->getFluidData($item, $row, $params, $template, $header = 1, $type) . '</b>';
+					//$frow .= '<th>' . $this->getFluidData($item, $row, $params, $template, $header = 1, $type);
 				}
 				else
 				{
@@ -1034,22 +1069,26 @@ class CWMListing
 
 				$row5count--;
 
-				if ($row5count === 0)
+				if ($row5count === 0 && $header === 0)
 				{
-					$frow .= '</div>';
+					$frow .= '</tr>';
+				}
+				if ($row5count === 0 && $header === 1)
+				{
+					//$frow .= '</th>';
 				}
 			}
 
 			if ($row->row === '6')
 			{
-				if ($row6count === $row6count2)
+				if ($row6count === $row6count2 && $header === 0)
 				{
-					$frow .= '<div class="row JBSM" about="row5-' . $row5count . '">';
+					$frow .= '<tr>';
 				}
 
 				if ($header === 1)
 				{
-					$frow .= '<b>' . $this->getFluidData($item, $row, $params, $template, $header = 1, $type) . '</b>';
+					//$frow .= '<th>' . $this->getFluidData($item, $row, $params, $template, $header = 1, $type) ;
 				}
 				else
 				{
@@ -1058,20 +1097,27 @@ class CWMListing
 
 				$row6count--;
 
-				if ($row6count === 0)
+				if ($row6count === 0 && $header === 0)
 				{
-					$frow .= '</div>';
+					$frow .= '</tr>';
+				}
+				if ($row6count === 0 && $header === 1)
+				{
+					//$frow .= '</th>';
 				}
 			}
 		}
-
 		// Close out if header is used.
 		if ($span)
 		{
-			$frow .= '</div></div>';
+			//$frow .= '</thead>';
+		}
+		if ($header === 1)
+		{
+			//$frow .= '</thead>';
 		}
 		// Close out div.
-		$frow .= '</div>';
+		//$frow .= '</table></div>';
 
 		return $frow;
 	}
@@ -1748,12 +1794,12 @@ class CWMListing
 
 		$classelement = $this->createelement($row->element);
 
-		if ($header === '1')
+		/*if ($header === '1')
 		{
 			$classelement = '';
 			$style        = 'style="font-weight:bold;"';
 		}
-
+		*/
 		if ($classelement)
 		{
 			if (isset($style))
@@ -1792,21 +1838,26 @@ class CWMListing
 		}
 
 		//$frow = '<div class="col-' . $row->colspan;
-		$frow = '<div class="col';
+		if ($header === 0) {$frow = '<td>';}
+		//if ($header === 1) {$frow = '<th>';}
+		if ($header === 1) {$frow = '';}
 		if ($customclass)
 		{
 			$frow .= ' ' . $customclass;
 		}
 
-		$frow .= '" about="' . $row->name . '">' . $classopen;
+		//$frow .= '" about="' . $row->name . '">' . $classopen;
 
 		if ($link)
 		{
 			$frow .= $link;
 		}
 
-		if ($data)
+		if ($data && $header === 0)
 		{
+			$frow .= $classopen.$data;
+		}
+		if ($data && $header === 1){
 			$frow .= $data;
 		}
 
@@ -1815,8 +1866,9 @@ class CWMListing
 			$frow .= '</a>';
 		}
 
-		$frow .= $classclose . '</div>';
-
+		//if ($header === 0){ $frow .= $classclose . '</td>';}
+		if ($header === 0){ $frow .= '</'.$classclose.'</td>';}
+		if ($header === 1) {$frow .= '</th>';}
 
 		return $frow;
 	}
