@@ -49,12 +49,12 @@ $classelement = $listing->createelement($this->params->get('teachers_element'));
     <div class="table-responsive">
         <table class="table w-auto table-borderless">
             <tr><td rowspan="6"><img src="<?php echo Uri::base().$item->teacher_thumbnail; ?>"></td></tr>
-            <tr><td>Tom Fuller, Pastor</td></tr>
-            <tr><td>Calvary Chapel</td></tr>
-            <tr><td>email address here</td></tr>
+            <tr><td>Tom Fuller, Pastor</td><td>Calvary Chapel</td><td>email address here</td></tr>
+            <tr><td colspan="3">The end, row 6 The end, row 6 The end, row 6 The end, row 6 The end, row 6 The end, row 6 The end, row 6 The end, row 6 The end, row 6</td></tr>
+            <tr></tr>
+            <tr></tr>
             <tr><td>Something in row 5</td></tr>
-            <tr><td>The end, row 6</td></tr>
-        </table>
+                    </table>
     </div>
 </div>
     <hr>

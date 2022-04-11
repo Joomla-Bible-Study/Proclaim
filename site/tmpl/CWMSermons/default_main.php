@@ -100,6 +100,8 @@ $itemid       = $app->input->get('Itemid');
 </div>
 
 <div class="container">
+    <div class="row">
+        <div class="col1-12">
 	<?php
 	// Search tools bar
 	echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
@@ -133,4 +135,6 @@ $itemid       = $app->input->get('Itemid');
 		echo $this->subscribe;
 	}
 	?>
+</div>
+    </div>
 </div>

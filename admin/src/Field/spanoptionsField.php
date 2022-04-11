@@ -43,6 +43,7 @@ class spanoptionsField extends ListField
 	 */
 	protected function getOptions()
 	{
+		$options[] = HTMLHelper::_('select.option', '0', 0);
 		$options[] = HTMLHelper::_('select.option', '1', 1);
 		$options[] = HTMLHelper::_('select.option', '2', 2);
 		$options[] = HTMLHelper::_('select.option', '3', 3);
