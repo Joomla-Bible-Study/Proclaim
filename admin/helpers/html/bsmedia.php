@@ -1,10 +1,13 @@
 <?php
 /**
  * @package    Proclaim.Admin
- * @copyright  2007 - 2019 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2022 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  */
+
+use Joomla\CMS\HTML\HTMLHelper;
+
 defined('JPATH_PLATFORM') or die;
 
 /**
@@ -33,7 +36,7 @@ abstract class JHtmlbsMedia
 	 *
 	 * @since   9.0.0
 	 */
-	public static function framework($noConflict = true, $debug = null)
+	public static function framework(bool $noConflict = true, $debug = null): void
 	{
 		// Only load once
 		if (!empty(self::$loaded[__METHOD__]))
@@ -42,11 +45,9 @@ abstract class JHtmlbsMedia
 		}
 
 		// Load jQuery
-		JHtml::_('jquery.framework');
+		HTMLHelper::_('jquery.framework');
 
 		self::$loaded[__METHOD__] = true;
-
-		return;
 	}
 
 	/**
@@ -60,14 +61,14 @@ abstract class JHtmlbsMedia
 	 *
 	 * @since   3.0
 	 */
-	public static function lytebox($selector = 'lytebox', $params = array())
+	public static function lytebox(string $selector = 'lytebox', array $params = array())
 	{
 		$sig = md5(serialize(array($selector, $params)));
 
 		if (!isset(self::$loaded[__METHOD__][$sig]))
 		{
 			// Attach the carousel to document
-			JHtml::_('script', 'media/com_biblestudy/lytebox/lytebox.js', false, true, false, false);
+			HTMLHelper::_('script', 'media/com_proclaim/lytebox/lytebox.min.js', false, true, false, false);
 
 			// Set static array
 			self::$loaded[__METHOD__][$sig] = true;
@@ -79,35 +80,35 @@ abstract class JHtmlbsMedia
 	/**
 	 * Loads CSS files needed by Bootstrap
 	 *
-	 * @param   boolean  $includeMainCss  If true, main bootstrap.css files are loaded
-	 * @param   string   $cssName         Name of css to use for view.
-	 * @param   string   $cssSet          what css to load
-	 * @param   array    $attribs         Optional array of attributes to be passed to JHtml::_('stylesheet')
+	 * @param   boolean      $includeMainCss  If true, main bootstrap.css files are loaded
+	 * @param   string|null  $cssName         Name of css to use for view.
+	 * @param   string       $cssSet          what css to load
+	 * @param   array        $attribs         Optional array of attributes to be passed to HTMLHelper::_('stylesheet')
 	 *
 	 * @return  void
 	 *
 	 * @since   3.0
 	 */
-	public static function loadCss($includeMainCss = true, $cssName = null, $cssSet = 'default', $attribs = array())
+	public static function loadCss(bool $includeMainCss = true, string $cssName = null, string $cssSet = 'default', array $attribs = array()): void
 	{
 		// Load Bootstrap main CSS
 		if ($includeMainCss)
 		{
 			if ($cssName != null && $cssName <= "-1")
 			{
-				JHtml::_('stylesheet', 'media/com_biblestudy/css/biblestudy.css', $attribs, true);
+				HTMLHelper::_('stylesheet', 'media/com_proclaim/css/biblestudy.min.css', $attribs, true);
 			}
 			else
 			{
-				JHtml::_('stylesheet', 'media/com_biblestudy/css/site/' . $cssName, $attribs, true);
+				HTMLHelper::_('stylesheet', 'media/com_proclaim/css/site/' . $cssName, $attribs, true);
 			}
 
-			JHtml::_('stylesheet', 'media/com_biblestudy/css/general.css', $attribs, true);
+			HTMLHelper::_('stylesheet', 'media/com_proclaim/css/general.min.css', $attribs, true);
 		}
 
 		if ($cssSet === 'lytebox')
 		{
-			JHtml::_('stylesheet', 'media/com_biblestudy/lytebox/lytebox.css', $attribs, true);
+			HTMLHelper::_('stylesheet', 'media/com_proclaim/lytebox/lytebox.min.css', $attribs, true);
 		}
 	}
 }

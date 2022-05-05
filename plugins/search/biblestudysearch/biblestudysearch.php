@@ -33,7 +33,7 @@ class PlgSearchBiblestudysearch extends JPlugin
 		parent::__construct($subject, $config);
 
 		// Always load JBSM API if it exists.
-		$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+		$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
 		if (file_exists($api))
 		{
@@ -77,9 +77,9 @@ class PlgSearchBiblestudysearch extends JPlugin
 	 */
 	public function onContentSearch($text, $phrase = '', $ordering = '', $areas = null)
 	{
-		$db        = JFactory::getDbo();
-		$jinput    = JFactory::getApplication()->input;
-		$user      = JFactory::getUser();
+		$db        = Factory::getDbo();
+		$jinput    = Factory::getApplication()->input;
+		$user      = Factory::getUser();
 		$groups    = implode(',', $user->getAuthorisedViewLevels());
 		$limit     = $this->params->def('search_limit');
 		$sContent  = $this->params->get('search_content', 1);
@@ -167,9 +167,9 @@ class PlgSearchBiblestudysearch extends JPlugin
 		if (!empty($state))
 		{
 			// Load language files (english language file as fallback)
-			$language = JFactory::getLanguage();
-			$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
-			$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, null, true);
+			$language = Factory::getLanguage();
+			$language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
+			$language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, null, true);
 
 			$query     = $db->getQuery(true);
 			$set_title = $this->params->get('set_title');
@@ -185,7 +185,7 @@ class PlgSearchBiblestudysearch extends JPlugin
 							" a.studydate AS created, #__bsms_books.id AS bid, #__bsms_books.bookname, a.id AS sid, a.published AS spub," .
 							" #__bsms_books.published AS bpub, #__bsms_series.id AS seriesid, #__bsms_series.series_text, " .
 							"  #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, a.id as id, 'Bible Studies' AS section," .
-							" CONCAT('index.php?option=com_biblestudy&view=sermon&id=', a.id,'&t=" . $template . "') AS href," .
+							" CONCAT('index.php?option=com_proclaim&view=sermon&id=', a.id,'&t=" . $template . "') AS href," .
 							" '2' AS browsernav"
 						);
 					}
@@ -195,7 +195,7 @@ class PlgSearchBiblestudysearch extends JPlugin
 							" #__bsms_books.id AS bid, #__bsms_books.bookname, a.id AS sid, a.published AS spub, #__bsms_books.published AS bpub," .
 							" #__bsms_series.id AS seriesid, #__bsms_series.series_text, " .
 							" #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, 'Bible Studies' AS section," .
-							" CONCAT('index.php?option=com_biblestudy&view=sermon&id=', a.id,'&t=" . $template . "') AS href, '2' AS browsernav");
+							" CONCAT('index.php?option=com_proclaim&view=sermon&id=', a.id,'&t=" . $template . "') AS href, '2' AS browsernav");
 					}
 					break;
 				case 1 :
@@ -206,7 +206,7 @@ class PlgSearchBiblestudysearch extends JPlugin
 							" a.studydate AS created, #__bsms_books.id AS bid, #__bsms_books.bookname, a.id AS sid, a.published AS spub," .
 							" #__bsms_books.published AS bpub, #__bsms_series.id AS seriesid, #__bsms_series.series_text," .
 							" #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, a.id as id," .
-							" 'Bible Studies' AS section, CONCAT('index.php?option=com_biblestudy&view=sermon&id=', a.id," .
+							" 'Bible Studies' AS section, CONCAT('index.php?option=com_proclaim&view=sermon&id=', a.id," .
 							" '&t=" . $template . "') AS href, '2' AS browsernav");
 					}
 					else
@@ -215,7 +215,7 @@ class PlgSearchBiblestudysearch extends JPlugin
 							" #__bsms_books.id AS bid, #__bsms_books.bookname, a.id AS sid, a.published AS spub, #__bsms_books.published AS bpub," .
 							"  #__bsms_series.id AS seriesid, #__bsms_series.series_text, " .
 							" #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, a.id as id, 'Bible Studies' AS section," .
-							" CONCAT('index.php?option=com_biblestudy&view=sermon&id=', a.id,'&t=" . $template . "') AS href, '2' AS browsernav");
+							" CONCAT('index.php?option=com_proclaim&view=sermon&id=', a.id,'&t=" . $template . "') AS href, '2' AS browsernav");
 					}
 					break;
 			}

@@ -1,6 +1,6 @@
 <?php
 /**
- * sh404SEF support for com_biblestudy component.
+ * sh404SEF support for com_proclaim component.
  *
  * @package     Proclaim.Site
  * @subpackage  sh404SEF.BibleStudy

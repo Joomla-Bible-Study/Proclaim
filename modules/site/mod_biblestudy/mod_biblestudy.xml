@@ -18,7 +18,7 @@
 	<config>
 		<fields name="params">
 			<fieldset name="basic"
-			          addfieldpath="/administrator/components/com_biblestudy/models/fields">
+			          addfieldpath="/administrator/components/com_proclaim/models/fields">
 				<field name="dummy" type="loadlanguagefile" default=""/>
 				<field name="t" type="sql" label="JBS_MDL_SELECT_TEMPLATE"
 				       description="JBS_MDL_SELECT_TEMPLATE_DESC" default="1"
@@ -52,7 +52,7 @@
 				</field>
 			</fieldset>
 			<fieldset name="JBS_MDL_FILTERS" label="JBS_MDL_FILTERS"
-			          addfieldpath="/administrator/components/com_biblestudy/models/fields">
+			          addfieldpath="/administrator/components/com_proclaim/models/fields">
 				<field name="condition" type="radio" default="" label="JBS_MDL_AND_OR"
 				       description="JBS_MDL_AND_OR_DESC">
 					<option value="">JGLOBAL_USE_GLOBAL</option>
@@ -181,7 +181,7 @@
 				<field name="popupbackground" type="text" default="black"
 				       label="JBS_TPL_MEDIA_POPUPBACKGROUND" description="JBS_TPL_MEDIA_POPUPBACKGROUND_DESC"/>
 				<field name="popupimage" type="text" size="150"
-				       default="media/com_biblestudy/images/speaker24.png" label="JBS_TPL_MEDIA_POPUPIMAGE"
+				       default="media/com_proclaim/images/speaker24.png" label="JBS_TPL_MEDIA_POPUPIMAGE"
 				       description="JBS_TPL_MEDIA_POPUPIMAGE_DESC"/>
 				<field name="media_popout_yes" type="radio" default="1" class="btn-group"
 				       label="JBS_MED_MEDIA_POPOUT_YES" description="JBS_MED_MEDIA_POPOUT_YES_DESC" >
@@ -241,7 +241,7 @@
 				</field>
 			</fieldset>
 			<fieldset name="JBS_TPL_DISPLAY_ITEMS1" label="JBS_TPL_DISPLAY_ITEMS1"
-			          addfieldpath="/administrator/components/com_biblestudy/models/fields">
+			          addfieldpath="/administrator/components/com_proclaim/models/fields">
 				<field name="listcolor1" type="color" default="" label="JBS_TPL_LISTCOLOR1" description="JBS_TPL_LISTCOLOR_DESC"/>
 				<field name="listcolor2" type="color" default="" label="JBS_TPL_LISTCOLOR2" description="JBS_TPL_LISTCOLOR_DESC"/>
 
@@ -291,7 +291,7 @@
 				<field name="jbsmediacustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
 				<field name="jbsmedialinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 			</fieldset>
-			<fieldset name="JBS_TPL_DISPLAY_ITEMS2" label="JBS_TPL_DISPLAY_ITEMS2" addfieldpath="/administrator/components/com_biblestudy/models/fields">
+			<fieldset name="JBS_TPL_DISPLAY_ITEMS2" label="JBS_TPL_DISPLAY_ITEMS2" addfieldpath="/administrator/components/com_proclaim/models/fields">
 				<field name="titlerow" type="rowoptions" size="1" default="1" label="JBS_CMN_TITLE" description="JBS_TPL_ROW_DESC"/>
 				<field name="titlecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
 				<field name="titlecolspan" type="spanoptions" default="2" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
@@ -327,7 +327,7 @@
 				<field name="teacher-titlecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
 				<field name="teacher-titlelinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 			</fieldset>
-			<fieldset name="JBS_TPL_DISPLAY_ITEMS3" label="JBS_TPL_DISPLAY_ITEMS3" addfieldpath="/administrator/components/com_biblestudy/models/fields">
+			<fieldset name="JBS_TPL_DISPLAY_ITEMS3" label="JBS_TPL_DISPLAY_ITEMS3" addfieldpath="/administrator/components/com_proclaim/models/fields">
 				<field name="durationrow" type="rowoptions" size="1" default="0" label="JBS_CMN_DURATION" description="JBS_TPL_ROW_DESC"/>
 				<field name="durationcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
 				<field name="durationcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
@@ -363,7 +363,7 @@
 				<field name="seriesdescriptioncustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
 				<field name="seriesdescriptionlinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 			</fieldset>
-			<fieldset name="JBS_TPL_DISPLAY_ITEMS4" label="JBS_TPL_DISPLAY_ITEMS4" addfieldpath="/administrator/components/com_biblestudy/models/fields">
+			<fieldset name="JBS_TPL_DISPLAY_ITEMS4" label="JBS_TPL_DISPLAY_ITEMS4" addfieldpath="/administrator/components/com_proclaim/models/fields">
 				<field name="submittedrow" type="rowoptions" size="1" default="0" label="JBS_CMN_SUBMITTED_BY" description="JBS_TPL_ROW_DESC"/>
 				<field name="submittedcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
 				<field name="submittedcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
@@ -385,7 +385,7 @@
 				<field name="downloadscustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
 				<field name="downloadslinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 			</fieldset>
-			<fieldset name="JBS_TPL_DISPLAY_ITEMS5" label="JBS_TPL_DISPLAY_ITEMS5" addfieldpath="/administrator/components/com_biblestudy/models/fields">
+			<fieldset name="JBS_TPL_DISPLAY_ITEMS5" label="JBS_TPL_DISPLAY_ITEMS5" addfieldpath="/administrator/components/com_proclaim/models/fields">
 				<field name="studynumberrow" type="rowoptions" size="1" default="0" label="JBS_CMN_STUDYNUMBER" description="JBS_TPL_ROW_DESC"/>
 				<field name="studynumbercol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
 				<field name="studynumbercolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
@@ -407,7 +407,7 @@
 				<field name="locationscustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
 				<field name="locationslinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 			</fieldset>
-			<fieldset name="JBS_TPL_DISPLAY_ITEMS6" label="JBS_TPL_DISPLAY_ITEMS6" addfieldpath="/administrator/components/com_biblestudy/models/fields">
+			<fieldset name="JBS_TPL_DISPLAY_ITEMS6" label="JBS_TPL_DISPLAY_ITEMS6" addfieldpath="/administrator/components/com_proclaim/models/fields">
 				<field name="messagetyperow" type="rowoptions" size="1" default="0" label="JBS_CMN_MESSAGETYPE" description="JBS_TPL_ROW_DESC"/>
 				<field name="messagetypecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
 				<field name="messagetypecolspan" type="spanoptions" default="6" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>

@@ -1,10 +1,12 @@
 <?php
 /**
  * @package    Proclaim.Admin
- * @copyright  2007 - 2019 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2022 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  */
+
+use Joomla\CMS\HTML\HTMLHelper;
 
 defined('JPATH_PLATFORM') or die;
 
@@ -42,14 +44,14 @@ abstract class JHtmlFancybox
 			return;
 		}
 
-		JHtml::_('jquery.framework');
-		JHtml::_('jwplayer.framework');
-		JHtml::script('https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js');
-		JHtml::script('media/com_biblestudy/js/fancybox.js');
+		HTMLHelper::_('jquery.framework');
+		HTMLHelper::_('jwplayer.framework');
+		HTMLHelper::script('https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js');
+		HTMLHelper::script('media/com_proclaim/js/fancybox.min.js');
 
 		if ($mouseweel)
 		{
-			JHtml::script('media/com_biblestudy/js/jquery.mousewheel.pack.js');
+			HTMLHelper::script('media/com_proclaim/js/jquery.mousewheel.pack.min.js');
 		}
 
 		self::loadCss($option);
@@ -68,7 +70,7 @@ abstract class JHtmlFancybox
 	 */
 	public static function loadCss($option = false)
 	{
-		JHtml::stylesheet('https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css');
-		JHtml::stylesheet('media/com_biblestudy/css/bsms.fancybox.css');
+		HTMLHelper::stylesheet('https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css');
+		HTMLHelper::stylesheet('media/com_proclaim/css/bsms.fancybox.min.css');
 	}
 }

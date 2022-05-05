@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    Proclaim.Admin
- * @copyright  2007 - 2019 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2022 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  */
@@ -88,7 +88,7 @@ class Migration914
 		$path = array(
 			BIBLESTUDY_PATH_ADMIN . '/addons/servers/legacy/fields/filesize.php',
 			BIBLESTUDY_PATH_ADMIN . '/addons/servers/local/fields/filesize.php',
-			BIBLESTUDY_PATH_ADMIN . '/models/upload.php',
+			BIBLESTUDY_PATH_ADMIN . '/models/UploadController.php',
 			BIBLESTUDY_PATH_ADMIN . '/convert1.htm',
 			BIBLESTUDY_PATH . '/convert1.htm',
 		);

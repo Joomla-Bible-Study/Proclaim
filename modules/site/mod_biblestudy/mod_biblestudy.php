@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 use Joomla\Registry\Registry;
 
 // Always load JBSM API if it exists.
-$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
 if (file_exists($api))
 {
@@ -25,7 +25,7 @@ else
 }
 
 // Need for inline player
-$document = JFactory::getDocument();
+$document = Factory::getApplication()->getDocument();
 
 /** @var $params Registry */
 $templatemenuid = $params->get('t');
@@ -44,7 +44,7 @@ require_once __DIR__ . '/helper.php';
 $items = ModJBSMHelper::getLatest($params);
 
 // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-$user   = JFactory::getUser();
+$user   = Factory::getUser();
 $groups = $user->getAuthorisedViewLevels();
 $count  = count($items);
 
@@ -110,16 +110,16 @@ if (!$templatemenuid)
 	$templatemenuid = $jinput->getInt('templatemenuid', 1);
 }
 
-$linkurl  = JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $templatemenuid);
+$linkurl  = JRoute::_('index.php?option=com_proclaim&view=sermons&t=' . $templatemenuid);
 $link     = '<a href="' . $linkurl . '"><button class="btn">' . $link_text . '</button></a>';
-$document = JFactory::getDocument();
+$document = Factory::getApplication()->getDocument();
 
-JHtml::_('biblestudy.framework');
+JHtml::_('proclaim.framework');
 JHtml::_('biblestudy.loadcss', $params);
-$config = JComponentHelper::getParams('com_biblestudy');
+$config = JComponentHelper::getParams('com_proclaim');
 
 // We need to load the path to the helper files
-$path1 = JPATH_BASE . '/components/com_biblestudy/helpers/';
+$path1 = JPATH_BASE . '/components/com_proclaim/helpers/';
 $url   = $params->get('stylesheet');
 
 if ($url)

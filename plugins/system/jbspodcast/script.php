@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2019 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2022 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -89,7 +89,7 @@ class PlgSystemJBSPodcastInstallerScript
 	 */
 	public function postflight($type, $parent)
 	{
-		JFactory::getDbo()->setQuery('DROP TABLE IF EXISTS `#__jbspodcast_update`')->execute();
+		Factory::getDbo()->setQuery('DROP TABLE IF EXISTS `#__jbspodcast_update`')->execute();
 	}
 
 	/**
@@ -103,7 +103,7 @@ class PlgSystemJBSPodcastInstallerScript
 	{
 		// $parent is the class calling this method
 		// check to see if we are dealing with version 7.0.0 and create the update table if needed
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 
 		// First see if there is an update table
 		$tables      = $db->getTableList();

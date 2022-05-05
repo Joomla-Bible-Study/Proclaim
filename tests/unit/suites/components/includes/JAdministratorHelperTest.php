@@ -27,11 +27,11 @@ class JAdministratorHelperTest extends TestCase
 		//$this->object = new JErrorPage;
 		$this->saveFactoryState();
 
-		JFactory::$application = $this->getMockApplication();
-		JFactory::$application->input = new JInput(array());
+		Factory::$application = $this->getMockApplication();
+		Factory::$application->input = new JInput(array());
 		$this->user = $this->getMock('Observer', array('get', 'authorise'));
 
-		JFactory::$application->expects($this->once())
+		Factory::$application->expects($this->once())
 			->method('getIdentity')
 			->will($this->returnValue($this->user));
 	}
@@ -64,12 +64,12 @@ class JAdministratorHelperTest extends TestCase
 
 		$this->assertEquals(
 			'com_login',
-			JFactory::$application->input->get('option')
+			Factory::$application->input->get('option')
 		);
 	}
 
 	/**
-	 * Tests the findOption() method simulating an user without login admin permissions.
+	 * Tests the findOption() method simulating an user without login administrator permissions.
 	 */
 	public function testFindOptionCanNotLoginAdmin()
 	{
@@ -79,7 +79,7 @@ class JAdministratorHelperTest extends TestCase
 			->will($this->returnValue(false));
 		$this->user->expects($this->once())
 			->method('authorise')
-			->with($this->equalTo('core.login.admin'))
+			->with($this->equalTo('core.login.cwmadmin'))
 			->will($this->returnValue(false));
 
 		$this->assertEquals(
@@ -89,12 +89,12 @@ class JAdministratorHelperTest extends TestCase
 
 		$this->assertEquals(
 			'com_login',
-			JFactory::$application->input->get('option')
+			Factory::$application->input->get('option')
 		);
 	}
 
 	/**
-	 * Tests the findOption() method simulating an user who is able to log in to admin.
+	 * Tests the findOption() method simulating an user who is able to log in to administration.
 	 */
 	public function testFindOptionCanLoginAdmin()
 	{
@@ -104,7 +104,7 @@ class JAdministratorHelperTest extends TestCase
 			->will($this->returnValue(false));
 		$this->user->expects($this->once())
 			->method('authorise')
-			->with($this->equalTo('core.login.admin'))
+			->with($this->equalTo('core.login.cwmadmin'))
 			->will($this->returnValue(true));
 
 		$this->assertEquals(
@@ -114,7 +114,7 @@ class JAdministratorHelperTest extends TestCase
 
 		$this->assertEquals(
 			'com_cpanel',
-			JFactory::$application->input->get('option')
+			Factory::$application->input->get('option')
 		);
 	}
 
@@ -129,10 +129,10 @@ class JAdministratorHelperTest extends TestCase
 			->will($this->returnValue(false));
 		$this->user->expects($this->once())
 			->method('authorise')
-			->with($this->equalTo('core.login.admin'))
+			->with($this->equalTo('core.login.cwmadmin'))
 			->will($this->returnValue(true));
 
-		JFactory::$application->input->set('option', 'foo');
+		Factory::$application->input->set('option', 'foo');
 
 		$this->assertEquals(
 			'foo',
@@ -141,7 +141,7 @@ class JAdministratorHelperTest extends TestCase
 
 		$this->assertEquals(
 			'foo',
-			JFactory::$application->input->get('option')
+			Factory::$application->input->get('option')
 		);
 	}
 }

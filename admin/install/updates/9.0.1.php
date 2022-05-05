@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    Proclaim.Admin
- * @copyright  2007 - 2019 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2022 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  */
@@ -57,14 +57,14 @@ class Migration901
 			BIBLESTUDY_PATH_ADMIN . '/controllers/mimetype.php',
 			BIBLESTUDY_PATH_ADMIN . '/controllers/mimetypes.php',
 			BIBLESTUDY_PATH_ADMIN . '/views/style/index.html',
-			BIBLESTUDY_PATH_ADMIN . '/views/style/view.html.php',
+			BIBLESTUDY_PATH_ADMIN . '/views/style/HtmlView.php',
 			BIBLESTUDY_PATH_ADMIN . '/views/style/tmpl/index.html',
-			BIBLESTUDY_PATH_ADMIN . '/views/style/view.html.php',
+			BIBLESTUDY_PATH_ADMIN . '/views/style/HtmlView.php',
 			BIBLESTUDY_PATH_ADMIN . '/views/style/tmpl/edit.php',
 			BIBLESTUDY_PATH_ADMIN . '/views/styles/index.html',
-			BIBLESTUDY_PATH_ADMIN . '/views/styles/view.html.php',
+			BIBLESTUDY_PATH_ADMIN . '/views/styles/HtmlView.php',
 			BIBLESTUDY_PATH_ADMIN . '/views/styles/tmpl/index.html',
-			BIBLESTUDY_PATH_ADMIN . '/views/styles/view.html.php',
+			BIBLESTUDY_PATH_ADMIN . '/views/styles/HtmlView.php',
 			BIBLESTUDY_PATH_ADMIN . '/views/styles/tmpl/default.php',
 			BIBLESTUDY_PATH_ADMIN . '/models/share.php',
 			BIBLESTUDY_PATH_ADMIN . '/models/shares.php',
@@ -73,14 +73,14 @@ class Migration901
 			BIBLESTUDY_PATH_ADMIN . '/controllers/share.php',
 			BIBLESTUDY_PATH_ADMIN . '/controllers/shares.php',
 			BIBLESTUDY_PATH_ADMIN . '/views/share/index.html',
-			BIBLESTUDY_PATH_ADMIN . '/views/share/view.html.php',
+			BIBLESTUDY_PATH_ADMIN . '/views/share/HtmlView.php',
 			BIBLESTUDY_PATH_ADMIN . '/views/share/tmpl/index.html',
-			BIBLESTUDY_PATH_ADMIN . '/views/share/view.html.php',
+			BIBLESTUDY_PATH_ADMIN . '/views/share/HtmlView.php',
 			BIBLESTUDY_PATH_ADMIN . '/views/share/tmpl/edit.php',
 			BIBLESTUDY_PATH_ADMIN . '/views/shares/index.html',
-			BIBLESTUDY_PATH_ADMIN . '/views/shares/view.html.php',
+			BIBLESTUDY_PATH_ADMIN . '/views/shares/HtmlView.php',
 			BIBLESTUDY_PATH_ADMIN . '/views/shares/tmpl/index.html',
-			BIBLESTUDY_PATH_ADMIN . '/views/shares/view.html.php',
+			BIBLESTUDY_PATH_ADMIN . '/views/shares/HtmlView.php',
 			BIBLESTUDY_PATH_ADMIN . '/views/shares/tmpl/default.php',
 			BIBLESTUDY_PATH_ADMIN . '/moduels/migration.php',
 			BIBLESTUDY_PATH_ADMIN . '/controllers/migration.php',

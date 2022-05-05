@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2019 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2022 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -89,7 +89,7 @@ class Pkg_Biblestudy_PackageInstallerScript
 		$controller = JControllerLegacy::getInstance('Biblestudy');
 		$controller->setRedirect(
 			JUri::base() .
-			'index.php?option=com_biblestudy&view=install&task=install.browse&scanstate=start&' .
+			'index.php?option=com_proclaim&view=install&task=install.browse&scanstate=start&' .
 			JSession::getFormToken() . '=1');
 		$controller->redirect();
 	}
