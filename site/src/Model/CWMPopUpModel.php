@@ -10,6 +10,8 @@
 namespace CWM\Component\Proclaim\Site\Model;
 // No Direct Access
 defined('_JEXEC') or die;
+
+use JApplicationSite;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
@@ -32,7 +34,7 @@ class CWMPopUpModel extends ListModel
 	 *
 	 * @since    1.6
 	 */
-	protected function populateState()
+	protected function populateState($ordering = NULL, $direction = NULL)
 	{
 		/** @type JApplicationSite $app */
 		$app = Factory::getApplication('site');
