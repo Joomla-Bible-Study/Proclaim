@@ -39,7 +39,7 @@ class CWMPopUpModel extends ListModel
 		/** @type JApplicationSite $app */
 		$app = Factory::getApplication('site');
 
-		// Load the parameters.
+		// Load the parameters
 		/** @var Registry $params */
 		$params   = $app->getParams();
 		$this->setState('params', $params);
