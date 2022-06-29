@@ -13,6 +13,9 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use JAccessRules;
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Factory\MVCFactory;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseDriver;
 use Joomla\Registry\Registry;
@@ -489,7 +492,8 @@ class CWMMessageTable extends Table
 	 */
 	protected function _getAssetParentId(Table $table = null, $id = null)
 	{
-		$asset = Table::getInstance('Asset');
+		$asset = (new \Joomla\CMS\MVC\Factory\MVCFactory)->createTable("Asset");
+        //$asset = Table::getInstance('Asset');
 		$asset->loadByName('com_biblestudy');
 
 		return $asset->id;
