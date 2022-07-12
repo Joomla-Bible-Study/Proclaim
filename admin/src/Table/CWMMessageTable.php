@@ -492,10 +492,11 @@ class CWMMessageTable extends Table
 	 */
 	protected function _getAssetParentId(Table $table = null, $id = null)
 	{
-		$asset = (new \Joomla\CMS\MVC\Factory\MVCFactory)->createTable("Asset");
+        /** @var \Joomla\CMS\Table\Asset $asset */
+        //$asset = (new \Joomla\CMS\MVC\Factory\MVCFactory)->createTable("Asset");
         //$asset = Table::getInstance('Asset');
-		$asset->loadByName('com_biblestudy');
-
+		//$asset->loadByName('com_biblestudy');
+        $asset->id = 1;
 		return $asset->id;
 	}
 }
