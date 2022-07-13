@@ -116,8 +116,8 @@ class CWMSeriesDisplaysModel extends ListModel
 	/**
 	 * Build an SQL query to load the list data
 	 *
-	 * @return  DatabaseQuery
-	 *
+	 * @return  \Joomla\Database\QueryInterface
+     *
 	 * @since   7.0
 	 */
 	protected function getListQuery()

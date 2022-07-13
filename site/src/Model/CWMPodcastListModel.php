@@ -10,6 +10,8 @@
 namespace CWM\Component\Proclaim\Site\Model;
 // No Direct Access
 defined('_JEXEC') or die;
+
+use JApplicationSite;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;

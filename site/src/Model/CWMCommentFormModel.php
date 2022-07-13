@@ -72,7 +72,7 @@ class CWMCommentFormModel extends CWMCommentModel
 	 */
 	public function getTable($name = '', $prefix = '', $options = array())
 	{
-		$db = Factory::getDbo();
+		$db = $this->getDbo();
 
 		return new CWMCommentTable($db);
 	}

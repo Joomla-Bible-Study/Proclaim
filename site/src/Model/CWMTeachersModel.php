@@ -8,6 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 namespace CWM\Component\Proclaim\Site\Model;
+use JApplicationSite;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
@@ -27,13 +28,13 @@ class CWMTeachersModel extends ListModel
 	/**
 	 * Build an SQL query to load the list data
 	 *
-	 * @return  JDatabaseQuery
-	 *
+	 * @return  \Joomla\Database\QueryInterface
+     *
 	 * @since   7.0.0
 	 */
 	protected function getListQuery()
 	{
-		$db = Factory::getDbo();
+		$db = $this->getDbo();
 
 		// See if this view is being filtered by language in the menu
 		$app  = Factory::getApplication();

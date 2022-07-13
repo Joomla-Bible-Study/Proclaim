@@ -10,6 +10,8 @@
 namespace CWM\Component\Proclaim\Site\Model;
 // No Direct Access
 defined('_JEXEC') or die;
+
+use JApplicationSite;
 use Joomla\CMS\MVC\Model\ItemModel;
 Use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
@@ -75,7 +77,7 @@ class CWMMediaFileFormModel extends CWMMediafileModel
 		$this->setState('return_page', base64_decode($return));
 
 		// Load the parameters
-		/** @var Joomla\Registry\Registry $params */
+		/** @var Joomla\CMS\Registry\Registry $params */
 		$params = $app->getParams();
 		$this->setState('params', $params);
 		$admin    = CWMParams::getAdmin();

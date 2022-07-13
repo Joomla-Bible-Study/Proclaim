@@ -11,6 +11,8 @@ namespace CWM\Component\Proclaim\Site\Model;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use JApplicationSite;
+use Joomla\CMS\Language\Text;
 use Joomla\Registry\Registry;
 use Joomla\CMS\MVC\Model\ItemModel;
 use Joomla\CMS\Factory;
@@ -127,7 +129,7 @@ class CWMPodcastDisplayModel extends ItemModel
 
 			if (empty($data))
 			{
-				Factory::getApplication()->enqueueMessage(JText::_('JBS_CMN_SERIES_NOT_FOUND'), 'message');
+				Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_SERIES_NOT_FOUND'), 'message');
 
 				return false;
 			}

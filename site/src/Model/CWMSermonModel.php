@@ -15,6 +15,7 @@ defined('_JEXEC') or die;
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 use CWM\Component\Proclaim\Administrator\Helper\CWMTranslated;
+use JApplicationSite;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\ItemModel;

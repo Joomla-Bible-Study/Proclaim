@@ -141,7 +141,7 @@ class CWMSermonsModel extends ListModel
 	public function getFiles()
 	{
 		$mediaFiles = null;
-		$db         = Factory::getDbo();
+		$db         = $this->getDbo();
 		$i          = 0;
 
 		foreach ($this->_data as $sermon)
