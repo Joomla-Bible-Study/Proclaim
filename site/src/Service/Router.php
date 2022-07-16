@@ -144,19 +144,19 @@ class Router extends RouterView
 
 		$this->attachRule(new MenuRules($this));
 		$this->attachRule(new StandardRules($this));
-		$this->attachRule(new NomenuRules($this));
+		$this->attachRule(new NoMenuRules($this));
 	}
 
 	/**
 	 * Method to get the segment(s) for a sermon
 	 *
 	 * @param   integer  $id     ID of the article to retrieve the segments for
-	 * @param   array    $query  The request that is built right now
+	 * @param array $query  The request that is built right now
 	 *
 	 * @return  array  The segments of this item
 	 * @since 10.0.0
 	 */
-	public function getCWMSermonSegment($id, $query)
+	public function getCWMSermonSegment($id, array $query)
 	{
 		if (!strpos($id, ':'))
 		{
@@ -170,11 +170,9 @@ class Router extends RouterView
 
 			$id .= ':' . $this->db->loadResult();
 		}
-
 		if ($this->noIDs)
 		{
 			list($void, $segment) = explode(':', $id, 2);
-
 			return array($void => $segment);
 		}
 
@@ -191,13 +189,26 @@ class Router extends RouterView
 	 *
 	 * @since   3.7.3
 	 */
-	public function getFormSegment($id, $query)
-	{
+	public function getFormSegment($id, $query): array
+    {
 		return $this->getCWMSermonSegment($id, $query);
 	}
-
+    /**
+     * Method to get the segment(s) for a form
+     *
+     * @param   string  $id     ID of the article form to retrieve the segments for
+     * @param   array   $query  The request that is built right now
+     *
+     * @return  array  The segments of this item
+     *
+     * @since   3.7.3
+     */
+    public function getCWMSermonsSegment($id, $query): array
+    {
+        return $this->getCWMSermonSegment($id, $query);
+    }
 	/**
-	 * Method to get the segment(s) for an article
+	 * Method to get the segment(s) for a sermon
 	 *
 	 * @param   string  $segment  Segment of the article to retrieve the ID for
 	 * @param   array   $query    The request that is parsed right now
@@ -227,4 +238,17 @@ class Router extends RouterView
 
 		return (int) $segment;
 	}
+
+    /**
+     * Method to get the segment(s) for a sermon
+     *
+     * @param   string  $segment  Segment to retrieve the ID for
+     * @param   array   $query    The request that is parsed right now
+     *
+     * @return  mixed   The id of this item or false
+     */
+    public function getCWMSermonsId($segment, $query)
+    {
+        return $this->getCWMSermonId($segment, $query);
+    }
 }

@@ -1145,8 +1145,8 @@ $thadd = '';
 	 */
 	public function getFluidData($item, $row, $params, $template, int $header, $type)
 	{
-		$smenu = $params->get('detailsitemid');
-		$tmenu = $params->get('teacheritemid');
+		$smenu = '';
+		$tmenu = '';
 		/** @var string $data */
 		$data = '';
 
@@ -2483,8 +2483,6 @@ $thadd = '';
 	 * @param   bool              $islink      True is a link, False is not
 	 * @param   string            $id3         Id3 data
 	 * @param   int               $tid         Template ID
-	 * @param   object            $smenu       Menu data
-	 * @param   object            $tmenu       Itemid
 	 * @param   Registry          $params      Params
 	 * @param   object            $row         Row data
 	 * @param   CWMTemplateTable  $templateid  Template Table Data
@@ -2493,36 +2491,23 @@ $thadd = '';
 	 *
 	 * @since 7.0
 	 */
-	private function getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $row, $templateid)
+	private function getLink($islink, $id3, $tid, $smenu = null, $tmenu = null, $params, $row, $templateid)
 	{
 		$input = new Input;
-		//$Itemid = $input->get('Itemid', '', 'int');
 		$view   = $input->getString('view', '');
 		$column = '';
 
 		switch ($islink)
 		{
 			case 1 :
-				//$Itemid = $input->get('Itemid', '', 'int');
-				$Itemid = '';
-				if (!$Itemid)
-				{
-					$link = Route::_('index.php?option=com_proclaim&view=CWMSermon&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
 
-					if ($view === 'seriesdisplays')
-					{
-						$link = Route::_('index.php?option=com_proclaim&view=CWMSeriesiDsplay&id=' . $row->slug . '&t=' . $params->get('seriesdetailtemplateid'));
-					}
-				}
-				else
-				{
 					$link = Route::_('index.php?option=com_proclaim&view=CWMSermon&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
 
 					if ($view === 'seriesdisplays')
 					{
 						$link = Route::_('index.php?option=com_proclaim&view=CWMSeriesDisplay&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
 					}
-				}
+
 
 				$column = '<a href="' . $link . '">';
 				break;

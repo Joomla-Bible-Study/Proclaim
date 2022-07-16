@@ -58,7 +58,7 @@ $itemid       = $app->input->get('Itemid');
 						if ($this->params->get('teacherlink') > 0)
 						{
 							echo '<div class="caption"><p><a href="' . Route::_('index.php?option=com_proclaim&view=CWMTeacher&id=' .
-									$teacher['id'] . '&t=' . $teacher['t'] . '&Itemid=' . $itemid) . '">' . $teacher['name'] . '</a></p></div>';
+									$teacher['id'] . '&t=' . $teacher['t']) . '">' . $teacher['name'] . '</a></p></div>';
 						}
 						else
 						{

@@ -61,7 +61,7 @@ class ProclaimNomenuRules implements RulesInterface
 	 * @param   array  &$segments  The URL segments to parse
 	 * @param   array  &$vars      The vars that result from the segments
 	 *
-	 * @return  array
+	 * @return  void
 	 *
 	 * @since   3.4
 	 */
@@ -71,7 +71,6 @@ class ProclaimNomenuRules implements RulesInterface
 
 		// Count route segments
 		$count = count($segments);
-
 		if ($count == 3)
 		{
 			$vars['view'] = $segments[0];
@@ -80,7 +79,7 @@ class ProclaimNomenuRules implements RulesInterface
 				$vars['id'] = (int) $id[0];
 			$vars['t']    = $segments[$count - 1];
 
-			//return;
+			return;
 		}
 		if ($count == 2)
 		{
@@ -97,7 +96,7 @@ class ProclaimNomenuRules implements RulesInterface
 				$vars['t']    = $segments[$count - 1];
 			}
 
-			//return;
+			return;
 		}
 		else
 		{
@@ -105,7 +104,8 @@ class ProclaimNomenuRules implements RulesInterface
 
 
 		}
-		return $vars;
+
+		return;
 
 		/*
 		//with this url: http://localhost/j4x/my-walks/mywalk-n/walk-title.html
@@ -155,7 +155,7 @@ class ProclaimNomenuRules implements RulesInterface
 		unset($query['id']);
 		unset($query['t']);
 */
-		$segments = array();
+		//$segments = array();
 		if (isset($query['view']))
 		{
 			$segments[] = $query['view'];
@@ -171,6 +171,7 @@ class ProclaimNomenuRules implements RulesInterface
 			$segments[] = $query['t'];
 			unset($query['t']);
 		}
+
 		return $segments;
 	}
 }

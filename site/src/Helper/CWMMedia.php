@@ -1042,12 +1042,8 @@ class CWMMedia
 	public function getDocman($media, $image)
 	{
 		$url = 'com_docman';
-
-		$getmenu  = Factory::getApplication();
-		$menuItem = $getmenu->getMenu()->getItems('component', $url, true);
-		$Itemid   = $menuItem->id;
 		$docman   = '<a href="index.php?option=com_docman&amp;view=document&amp;slug=' .
-			$media->docMan_id . '&amp;Itemid=' . $Itemid . '" alt="' . $media->malttext . ' - ' . $media->comment .
+			$media->docMan_id . '" alt="' . $media->malttext . ' - ' . $media->comment .
 			'" target="' . $media->special . '">' . $image . '</a>';
 
 		return $docman;
