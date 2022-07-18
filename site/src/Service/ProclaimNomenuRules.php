@@ -55,6 +55,20 @@ class ProclaimNomenuRules implements RulesInterface
 		$test = 'Test';
 	}
 
+    /**
+     * Dummymethod to fullfill the interface requirements
+     *
+     * @param   array  &$query  The query array to process
+     *
+     * @return  void
+     *
+     * @since   3.4
+     * @codeCoverageIgnore
+     */
+    public function postprocess(&$query)
+    {
+        $test = 'Test';
+    }
 	/**
 	 * Parse a menu-less URL
 	 *
@@ -67,16 +81,15 @@ class ProclaimNomenuRules implements RulesInterface
 	 */
 	public function parse(&$segments, &$vars)
 	{
-		$vars = array();
-
+		//$vars = array();
 		// Count route segments
 		$count = count($segments);
 		if ($count == 3)
 		{
 			$vars['view'] = $segments[0];
 			//$vars['id']   = (int) $segments[$count - 2];
-		$id = explode('/', $segments[1]);
-				$vars['id'] = (int) $id[0];
+		    $id = explode('/', $segments[1]);
+            $vars['id'] = (int) $id[0];
 			$vars['t']    = $segments[$count - 1];
 
 			return;
@@ -87,7 +100,7 @@ class ProclaimNomenuRules implements RulesInterface
 			{
 				$vars['view'] = $segments[0];
 				//$vars['id']   = (int) $segments[1];
-		$id = explode('/', $segments[1]);
+		        $id = explode('/', $segments[1]);
 				$vars['id'] = (int) $id[0];
 			}
 			else
@@ -156,6 +169,7 @@ class ProclaimNomenuRules implements RulesInterface
 		unset($query['t']);
 */
 		//$segments = array();
+
 		if (isset($query['view']))
 		{
 			$segments[] = $query['view'];
@@ -171,7 +185,11 @@ class ProclaimNomenuRules implements RulesInterface
 			$segments[] = $query['t'];
 			unset($query['t']);
 		}
-
+        if (isset($query['Itemid']))
+        {
+            //$segments[] = $query['Itemid'];
+            unset($query['Itemid']);
+        }
 		return $segments;
 	}
 }

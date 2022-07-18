@@ -2570,7 +2570,7 @@ $thadd = '';
 	public function getOtherlinks($id3, $islink, $params)
 	{
 		$link  = '';
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('#__bsms_mediafiles.*')
 			->from('#__bsms_mediafiles')

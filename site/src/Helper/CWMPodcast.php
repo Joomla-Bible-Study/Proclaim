@@ -402,7 +402,7 @@ class CWMPodcast
 						}
 						else
 						{
-							$episodedetailtemp .= '<link>' . $protocol . $podinfo->website . '/index.php?option=com_proclaim&amp;view=sermon&amp;id='
+							$episodedetailtemp .= '<link>' . $protocol . $podinfo->website . '/index.php?option=com_proclaim&amp;view=CWMSermon&amp;id='
 								. $episode->slug . '&amp;t=' . $detailstemplateid . '</link>';
 						}
 
@@ -421,7 +421,7 @@ class CWMPodcast
 							$duration = '';
 						}
 
-						$episodedetailtemp .= '<comments>' . $protocol . $podinfo->website . '/index.php?option=com_proclaim&amp;view=sermon&amp;id='
+						$episodedetailtemp .= '<comments>' . $protocol . $podinfo->website . '/index.php?option=com_proclaim&amp;view=CWMSermon&amp;id='
 							. $episode->slug . '&amp;t=' . $detailstemplateid . '</comments>
                         		<itunes:author>' . $this->escapeHTML($episode->teachername) . '</itunes:author>
                         		<dc:creator>' . $this->escapeHTML($episode->teachername) . '</dc:creator>

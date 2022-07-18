@@ -240,8 +240,8 @@ class Router extends RouterView
 	}
 
     /**
-     * Method to get the segment(s) for a sermon
-     *
+     * @Method to get the segment(s) for a sermon
+     * @since 10.0.0
      * @param   string  $segment  Segment to retrieve the ID for
      * @param   array   $query    The request that is parsed right now
      *
@@ -251,4 +251,6 @@ class Router extends RouterView
     {
         return $this->getCWMSermonId($segment, $query);
     }
+
+
 }

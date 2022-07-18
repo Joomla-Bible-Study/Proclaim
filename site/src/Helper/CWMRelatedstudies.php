@@ -85,9 +85,9 @@ class CWMRelatedstudies
 				if (is_string($study->params) && !empty($study->params))
 				{
 					$registry      = new Registry;
-//					$errors        = ['{\\"', '{\"', ',\\"', '\",', ',\"', '\":', ':\"\"', ':\"', '\"}"', '\"}', "\'"];
-//					$correct       = ['{"', '{"', ',"', '",', ',"', '":', ':""', ':"', '"}"', '"}', "'"];
-//					$study->params = str_replace($errors, $correct, $study->params);
+					$errors        = ['{\\"', '{\"', ',\\"', '\",', ',\"', '\":', ':\"\"', ':\"', '\"}"', '\"}', "\'"];
+					$correct       = ['{"', '{"', ',"', '",', ',"', '":', ':""', ':"', '"}"', '"}', "'"];
+					$study->params = str_replace($errors, $correct, $study->params);
 					$registry->loadString($study->params);
 					$sparams = $registry;
 					$compare = $sparams->get('metakey');
@@ -979,7 +979,7 @@ class CWMRelatedstudies
 		foreach ($studyrecords as $studyrecord)
 		{
 			$related .= '<option value="'
-				. Route::_('index.php?option=com_proclaim&view=sermon&id=' . $studyrecord->id . '&t=' . $input->get('t', '1', 'int'))
+				. Route::_('index.php?option=com_proclaim&view=CWMSermon&id=' . $studyrecord->id . '&t=' . $input->get('t', '1', 'int'))
 				. '">' . $studyrecord->studytitle;
 
 			if (!empty($studyrecord->bookname))
