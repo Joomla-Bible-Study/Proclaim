@@ -178,7 +178,37 @@ class Router extends RouterView
 
 		return array((int) $id => $id);
 	}
+    /**
+     * Method to get the segment(s) for a teacher
+     *
+     * @param   integer  $id     ID of the article to retrieve the segments for
+     * @param array $query  The request that is built right now
+     *
+     * @return  array  The segments of this item
+     * @since 10.0.0
+     */
+    public function getCWMTeacherSegment($id, array $query)
+    {
+        if (!strpos($id, ':'))
+        {
+            $id      = (int) $id;
+            $dbquery = $this->db->getQuery(true);
+            $dbquery->select($this->db->quoteName('alias'))
+                ->from($this->db->quoteName('#__bsms_teachers'))
+                ->where($this->db->quoteName('id') . ' = :id')
+                ->bind(':id', $id, ParameterType::INTEGER);
+            $this->db->setQuery($dbquery);
 
+            $id .= ':' . $this->db->loadResult();
+        }
+        if ($this->noIDs)
+        {
+            list($void, $segment) = explode(':', $id, 2);
+            return array($void => $segment);
+        }
+
+        return array((int) $id => $id);
+    }
 	/**
 	 * Method to get the segment(s) for a form
 	 *
@@ -216,6 +246,30 @@ class Router extends RouterView
 	 * @return  mixed   The id of this item or false
 	 * @since   10.0.0
 	 */
+
+    /**
+     * Method to get the segment(s) for a form
+     *
+     * @param   string  $id     ID of the article form to retrieve the segments for
+     * @param   array   $query  The request that is built right now
+     *
+     * @return  array  The segments of this item
+     *
+     * @since   3.7.3
+     */
+    public function getCWMTeachersSegment($id, $query): array
+    {
+        return $this->getCWMTeacherSegment($id, $query);
+    }
+    /**
+     * Method to get the segment(s) for a sermon
+     *
+     * @param   string  $segment  Segment of the article to retrieve the ID for
+     * @param   array   $query    The request that is parsed right now
+     *
+     * @return  mixed   The id of this item or false
+     * @since   10.0.0
+     */
 	public function getCWMSermonId($segment, $query)
 	{
 		if ($this->noIDs)
@@ -240,6 +294,37 @@ class Router extends RouterView
 	}
 
     /**
+     * Method to get the segment(s) for a teacher
+     *
+     * @param   string  $segment  Segment of the article to retrieve the ID for
+     * @param   array   $query    The request that is parsed right now
+     *
+     * @return  mixed   The id of this item or false
+     * @since   10.0.0
+     */
+    public function getCWMTeacherId($segment, $query)
+    {
+        if ($this->noIDs)
+        {
+            $dbquery = $this->db->getQuery(true);
+            $dbquery->select($this->db->quoteName('id'))
+                ->from($this->db->quoteName('#__bsms_teachers'))
+                ->where(
+                    [
+                        $this->db->quoteName('alias') . ' = :alias',
+
+                    ]
+                )
+                ->bind(':alias', $segment);
+
+            $this->db->setQuery($dbquery);
+
+            return (int) $this->db->loadResult();
+        }
+
+        return (int) $segment;
+    }
+    /**
      * @Method to get the segment(s) for a sermon
      * @since 10.0.0
      * @param   string  $segment  Segment to retrieve the ID for
@@ -252,5 +337,17 @@ class Router extends RouterView
         return $this->getCWMSermonId($segment, $query);
     }
 
+    /**
+     * @Method to get the segment(s) for a Teacher
+     * @since 10.0.0
+     * @param   string  $segment  Segment to retrieve the ID for
+     * @param   array   $query    The request that is parsed right now
+     *
+     * @return  mixed   The id of this item or false
+     */
+    public function getCWMTeachersId($segment, $query)
+    {
+        return $this->getCWMTeacherId($segment, $query);
+    }
 
 }

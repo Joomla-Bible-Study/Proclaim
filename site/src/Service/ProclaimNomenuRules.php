@@ -55,20 +55,7 @@ class ProclaimNomenuRules implements RulesInterface
 		$test = 'Test';
 	}
 
-    /**
-     * Dummymethod to fullfill the interface requirements
-     *
-     * @param   array  &$query  The query array to process
-     *
-     * @return  void
-     *
-     * @since   3.4
-     * @codeCoverageIgnore
-     */
-    public function postprocess(&$query)
-    {
-        $test = 'Test';
-    }
+
 	/**
 	 * Parse a menu-less URL
 	 *
@@ -81,9 +68,10 @@ class ProclaimNomenuRules implements RulesInterface
 	 */
 	public function parse(&$segments, &$vars)
 	{
-		//$vars = array();
+		$vars = array();
 		// Count route segments
 		$count = count($segments);
+
 		if ($count == 3)
 		{
 			$vars['view'] = $segments[0];
@@ -91,12 +79,15 @@ class ProclaimNomenuRules implements RulesInterface
 		    $id = explode('/', $segments[1]);
             $vars['id'] = (int) $id[0];
 			$vars['t']    = $segments[$count - 1];
+            array_shift($segments);
+            array_shift($segments);
+            array_shift($segments);
 
-			return;
+			return          ;
 		}
 		if ($count == 2)
 		{
-			if ($segments[0] === 'podcastdisplay')
+			if ($segments[0] === 'CWMPodcastdisplay')
 			{
 				$vars['view'] = $segments[0];
 				//$vars['id']   = (int) $segments[1];
@@ -108,14 +99,15 @@ class ProclaimNomenuRules implements RulesInterface
 				$vars['view'] = $segments[0];
 				$vars['t']    = $segments[$count - 1];
 			}
+            array_shift($segments);
+            array_shift($segments);
 
 			return;
 		}
 		else
 		{
 			$vars['view'] = $segments[0];
-
-
+            array_shift($segments);
 		}
 
 		return;
