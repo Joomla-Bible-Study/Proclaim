@@ -141,11 +141,11 @@ class CWMTemplateCodeTable extends Table
 				break;
 			case 5:
 				// Seriesdisplays
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/CWMSeriesdisplays' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/CWMSeriesDisplays' . DIRECTORY_SEPARATOR . $filename;
 				break;
 			case 6:
 				// Seriesdisplay
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/CWMSeriesdisplay' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/CWMSeriesDisplay' . DIRECTORY_SEPARATOR . $filename;
 				break;
 			case 7:
 				// Module's Display
@@ -214,11 +214,11 @@ class CWMTemplateCodeTable extends Table
 				break;
 			case 5:
 				// Seriesdisplays
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/CWMSeriesdisplays' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/CWMSeriesDisplays' . DIRECTORY_SEPARATOR . $filename;
 				break;
 			case 6:
 				// Seriesdisplay
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/CWMSeriesdisplay' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/CWMSeriesDisplay' . DIRECTORY_SEPARATOR . $filename;
 				break;
 			case 7:
 				// Module's Display

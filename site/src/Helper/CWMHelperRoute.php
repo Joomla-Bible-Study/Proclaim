@@ -171,7 +171,7 @@ class CWMHelperRoute
 	public static function getSeriesRoute($id): string
 	{
 		// Create the link
-		return 'index.php?option=com_proclaim&view=cwmseriesdisplay&id=' . $id;
+		return 'index.php?option=com_proclaim&view=CWMSeriesDisplay&id=' . $id;
 	}
 
 	/**

@@ -329,7 +329,7 @@ class CWMPagebuilder
 	 */
 	public function studyBuilder($whereitem = null, $wherefield = null, $params = null, $limit = 10, $order = 'DESC', $template = null)
 	{
-		$db = Factory::getDbo();
+        $db = Factory::getContainer()->get('DatabaseDriver');
 
 		$orderparam = $params->get('order', '1');
 
@@ -339,7 +339,7 @@ class CWMPagebuilder
 		}
 
 		// Compute view access permissions.
-		$user   = Factory::getUser();
+		$user   = \Joomla\CMS\Factory::getApplication()->getSession()->get('user');
 		$groups = implode(',', $user->getAuthorisedViewLevels());
 
 		$query = $db->getQuery(true);

@@ -41,12 +41,12 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
 
 		if ($this->input->get('view') === 'cwmlandingpage' && $this->input->get('layout') === 'modal')
 		{
-			$config['base_path'] = JPATH_COMPONENT_ADMINISTRATOR;
+			$config['base_path'] = JPATH_ADMINISTRATOR . '/components';
 		}
 		// Sermion frontpage Editor article proxying:
 		elseif ($this->input->get('view') === 'sermons' && $this->input->get('layout') === 'modal')
 		{
-			$config['base_path'] = JPATH_COMPONENT_ADMINISTRATOR;
+			$config['base_path'] = JPATH_ADMINISTRATOR . '/components';
 		}
 
 		parent::__construct($config, $factory, $app, $input);

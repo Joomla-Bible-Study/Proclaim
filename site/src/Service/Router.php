@@ -407,7 +407,7 @@ class Router extends RouterView
      * @return  mixed   The id of this item or false
      * @since   10.0.0
      */
-    public function getCWMSeriesDisplayId($segment, $query)
+    public function getCWMSeriesDisplayId($segment, $query) :array
     {
         if ($this->noIDs)
         {

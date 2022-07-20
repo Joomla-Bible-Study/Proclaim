@@ -549,7 +549,7 @@ class CWMLanding
 						else
 						{
 							$series .= '<div class="span4">';
-							$series .= '<a href="index.php?option=com_proclaim&amp;sendingview=landing&amp;view=CWMSeriesdisplay&amp;id=' .
+							$series .= '<a href="index.php?option=com_proclaim&amp;sendingview=landing&amp;view=CWMSeriesDisplay&amp;id=' .
 									$b->id . '&amp;t=' . $template . '">';
 						}
 
