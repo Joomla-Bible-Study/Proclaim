@@ -156,7 +156,7 @@ class CWMHelperRoute
 	public static function getTeacherRoute($id): string
 	{
 		// Create the link
-		return 'index.php?option=com_proclaim&view=cwmteacher&id=' . $id;
+		return 'index.php?option=com_proclaim&view=CWMTeacher&id=' . $id;
 	}
 
 	/**

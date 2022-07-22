@@ -43,7 +43,7 @@ class HtmlView extends BaseHtmlView
 	 */
 	public $pageclass_sfx;
 
-	/** @var JForm Form
+	/** @var \Joomla\CMS\Form\Form Form
 	 *
 	 * @since 7.0 */
 	protected $form;

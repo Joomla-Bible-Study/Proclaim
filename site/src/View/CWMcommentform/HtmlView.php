@@ -24,14 +24,10 @@ use Joomla\CMS\Language\Text;
  */
 class HtmlView extends BaseHtmlView
 {
-	/**
-	 * Form
-	 *
-	 * @var array
-	 *
-	 * @since 7.0
-	 */
-	protected mixed $form;
+    /** @var \Joomla\CMS\Form\Form Form
+     *
+     * @since 7.0 */
+    protected $form;
 
 	/**
 	 * Item

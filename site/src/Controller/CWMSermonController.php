@@ -77,7 +77,7 @@ class CWMSermonController extends FormController
 
 		if (empty($return) || !Uri::isInternal(base64_decode($return)))
 		{
-			return Uri::base() . 'index.php?option=com_proclaim&view=sermon';
+			return Uri::base() . 'index.php?option=com_proclaim&view=CWMSermon';
 		}
 
 		return base64_decode($return);
@@ -205,7 +205,7 @@ class CWMSermonController extends FormController
 			$study_detail_id = $input->get('study_detail_id', 0, 'int');
 
 			$input->redirect(
-				'index.php?option=com_proclaim&id=' . $study_detail_id . '&view=sermon&t=' . $t . '&msg=' . $msg,
+				'index.php?option=com_proclaim&id=' . $study_detail_id . '&view=CWMSermon&t=' . $t . '&msg=' . $msg,
 				'Comment Added'
 			);
 		}

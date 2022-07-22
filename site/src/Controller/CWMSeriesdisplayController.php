@@ -23,5 +23,19 @@ defined('_JEXEC') or die;
  */
 class CWMSeriesDisplayController extends BaseController
 {
-	// Holder.
+    /**
+     * Display the edit form
+     *
+     * @return void
+     *
+     * @since 7.0
+     */
+    public function view()
+    {
+        $input = Factory::getApplication('site');
+        $input->set('view', 'CWMSeriesDisplay');
+        $input->set('layout', 'default');
+
+        parent::display();
+    }
 }

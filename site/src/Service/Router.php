@@ -392,7 +392,7 @@ class Router extends RouterView
      *
      * @since   3.7.3
      */
-    public function getCWMSeriesDisplaysSegment($id, $query): array
+    public function getCWMSeriesDisplaysSegment($id, $query)
     {
         return $this->getCWMSeriesDisplaySegment($id, $query);
     }
@@ -407,7 +407,7 @@ class Router extends RouterView
      * @return  mixed   The id of this item or false
      * @since   10.0.0
      */
-    public function getCWMSeriesDisplayId($segment, $query) :array
+    public function getCWMSeriesDisplayId($segment, $query)
     {
         if ($this->noIDs)
         {

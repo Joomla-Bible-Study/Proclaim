@@ -33,7 +33,7 @@ class CWMTeacherController extends BaseController
 	public function view()
 	{
 		$input = Factory::getApplication('site');
-		$input->set('view', 'teacher');
+		$input->set('view', 'CWMTeacher');
 		$input->set('layout', 'default');
 
 		parent::display();
