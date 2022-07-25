@@ -42,7 +42,7 @@ class SeriesField extends ListField
 	 */
 	protected function getOptions()
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('id,series_text');
 		$query->from('#__bsms_series');

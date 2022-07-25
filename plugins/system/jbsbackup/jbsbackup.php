@@ -96,7 +96,7 @@ class PlgSystemJBSBackup extends JPlugin
 	public function checktime($params)
 	{
 		$now   = time();
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('backup')->from('#__jbsbackup_timeset');
 		$db->setQuery($query, 0, 1);
@@ -132,7 +132,7 @@ class PlgSystemJBSBackup extends JPlugin
 		$offset    = $config->get('config.offset');
 
 		$now   = time();
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('backup')->from('#__jbsbackup_timeset');
 		$db->setQuery($query, 0, 1);
@@ -257,7 +257,7 @@ class PlgSystemJBSBackup extends JPlugin
 	public function updatetime()
 	{
 		$time  = time();
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->update('#__jbsbackup_timeset')->set($db->qn('backup') . ' = ' . $db->q($time));
 		$db->setQuery($query);

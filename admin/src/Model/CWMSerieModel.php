@@ -408,7 +408,7 @@ class CWMSerieModel extends AdminModel
 			// Set ordering to the last item if not set
 			if (empty($table->ordering))
 			{
-				$db    = Factory::getDbo();
+				$db = Factory::getContainer()->get('DatabaseDriver');
 				$query = $db->getQuery(true);
 				$query->select('MAX(ordering)')->from('#__bsms_series');
 				$db->setQuery($query);

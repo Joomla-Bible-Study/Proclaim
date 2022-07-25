@@ -55,7 +55,7 @@ class templatelistField extends ListField
 
 		if (!self::$templates)
 		{
-			$db    = Factory::getDbo();
+			$db = Factory::getContainer()->get('DatabaseDriver');
 			$query = $db->getQuery(true);
 			$query->select('id,title');
 			$query->from('#__bsms_templates');

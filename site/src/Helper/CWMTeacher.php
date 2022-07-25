@@ -306,7 +306,7 @@ class CWMTeacher extends CWMListing
 			$limit = '';
 		}
 
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('#__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
 			. ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'

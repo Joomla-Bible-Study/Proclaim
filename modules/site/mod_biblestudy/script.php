@@ -59,7 +59,7 @@ class Mod_BiblestudyInstallerScript
 	 */
 	public function update($parent)
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('*')
 			->from('#__modules')

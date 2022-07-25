@@ -113,7 +113,7 @@ class TeacherDisplayField extends FormField
 
 		if ($value)
 		{
-			$db    = Factory::getDbo();
+			$db = Factory::getContainer()->get('DatabaseDriver');
 			$query = $db->getQuery(true)
 				->select($db->quoteName('teachername') . 'AS name')
 				->from($db->quoteName('#__bsms_teachers'))

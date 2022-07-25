@@ -96,7 +96,7 @@ class CWMSerieslist extends CWMListing
 		$label = str_replace('{{title}}', $row->series_text, $label);
 		$label = str_replace('{{description}}', $row->description, $label);
 		$label = str_replace('{{thumbnail}}', '<img src="' . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" />', $label);
-		$label = str_replace('{{url}}', 'index.php?option=com_proclaim&amp;view=seriesdisplay&amp;t=' . $template . '&amp;id=' . $row->id, $label);
+		$label = str_replace('{{url}}', 'index.php?option=com_proclaim&amp;view=CWMSeriesDisplay&amp;t=' . $template . '&amp;id=' . $row->id, $label);
 
 		return $label;
 	}

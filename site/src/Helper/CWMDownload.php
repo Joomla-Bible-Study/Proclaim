@@ -155,7 +155,7 @@ class CWMDownload
 	 */
 	protected function hitDownloads($mid)
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
 			->set('downloads = downloads + 1 ')

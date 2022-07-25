@@ -131,7 +131,7 @@ class CWMRelatedstudies
 	 */
 	public function getTopics()
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery('true');
 		$query->select('id');
 		$query->from('#__bsms_topics');
@@ -843,7 +843,7 @@ class CWMRelatedstudies
 	 */
 	public function getStudies()
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery('true');
 		$query->select('s.id, s.params, s.access');
 		$query->from('#__bsms_studies as s');

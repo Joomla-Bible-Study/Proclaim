@@ -563,7 +563,7 @@ class CWMPodcast
 		}
 
 		// Here's where we look at each mediafile to see if they are connected to this podcast
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('p.id AS pid, p.podcastlimit,'
 			. ' mf.id AS mfid, mf.study_id, mf.server_id, mf.podcast_id,'

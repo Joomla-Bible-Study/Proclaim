@@ -45,7 +45,7 @@ class locationsField extends ListField
 	 */
 	protected function getOptions()
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('id,location_text');
 		$query->from('#__bsms_locations');

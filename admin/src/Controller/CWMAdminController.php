@@ -436,7 +436,7 @@ class CWMAdminController extends FormController
 		// Check for request forgeries.
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$msg   = null;
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
@@ -469,7 +469,7 @@ class CWMAdminController extends FormController
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
 		$msg   = null;
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
 			->set('downloads = ' . 0)
@@ -502,7 +502,7 @@ class CWMAdminController extends FormController
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
 		$msg   = null;
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
 			->set('plays = ' . 0)

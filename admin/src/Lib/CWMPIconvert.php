@@ -199,7 +199,7 @@ class CWMPIconvert
 
 		$uri   = Uri::getInstance();
 		$url   = $uri->getHost();
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('*')->from('#__bsms_servers');
 		$db->setQuery($query);
@@ -217,7 +217,7 @@ class CWMPIconvert
 			$db->execute();
 		}
 		//Convert comments
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('*')->from('#__picomments');
 		$db->setQuery($query);
@@ -757,7 +757,7 @@ class CWMPIconvert
 	 */
 	public function insertMedia($pi, $type, $newid, $oldid)
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('*')->from('#__pifilepath');
 		$db->setQuery($query);

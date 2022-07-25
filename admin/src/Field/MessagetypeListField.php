@@ -42,7 +42,7 @@ class MessagetypeListField extends ListField
 	 */
 	protected function getOptions()
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('id,message_type');
 		$query->from('#__bsms_message_type');

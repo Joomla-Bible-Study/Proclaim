@@ -113,7 +113,7 @@ class SeriesField extends FormField
 
 		if ($value)
 		{
-			$db    = Factory::getDbo();
+			$db = Factory::getContainer()->get('DatabaseDriver');
 			$query = $db->getQuery(true)
 				->select($db->quoteName('series_text') . 'AS name')
 				->from($db->quoteName('#__bsms_series'))

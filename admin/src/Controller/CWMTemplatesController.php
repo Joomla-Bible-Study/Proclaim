@@ -300,7 +300,7 @@ class CWMTemplatesController extends AdminController
 		}
 
 		jimport('joomla.filesystem.file');
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('t.id, t.type, t.params, t.title, t.text');
 		$query->from('#__bsms_templates as t');
@@ -432,7 +432,7 @@ class CWMTemplatesController extends AdminController
 	 */
 	public function getTemplate($template)
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('tc.id, tc.templatecode,tc.type,tc.filename');
 		$query->from('#__bsms_templatecode as tc');

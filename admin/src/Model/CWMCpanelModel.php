@@ -85,7 +85,7 @@ class CWMCpanelModel extends BaseModel
 
 		// Get the extension ID
 		// Get the extension ID for our component
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('extension_id')
 			->from('#__extensions')

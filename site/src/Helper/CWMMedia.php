@@ -932,7 +932,7 @@ class CWMMedia
 	 */
 	public function hitPlay($id)
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
 			->set('plays = plays + 1')
@@ -959,7 +959,7 @@ class CWMMedia
 	public function getMediaRows2($id)
 	{
 		// We use this for the popup view because it relies on the media file's id rather than the study_id field above
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('#__bsms_mediafiles.*, #__bsms_servers.params AS sparams,'
 			. ' s.studyintro, s.series_id, s.studytitle, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin,'

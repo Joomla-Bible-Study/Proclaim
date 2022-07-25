@@ -61,7 +61,7 @@ class CWMMessageModel extends AdminModel
 	 */
 	public function isDuplicate($study_id, $topic_id)
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('*')
 			->from('#__bsms_studytopics')
@@ -709,7 +709,7 @@ class CWMMessageModel extends AdminModel
 			// Set ordering to the last item if not set
 			if (empty($table->ordering))
 			{
-				$db    = Factory::getDbo();
+				$db = Factory::getContainer()->get('DatabaseDriver');
 				$query = $db->getQuery(true)
 					->select('MAX(ordering)')
 					->from($db->quoteName('#__bsms_studies'));

@@ -52,7 +52,7 @@ class CWMHelperRoute
 
 		if ($language && $language !== "*" && Multilanguage::isEnabled())
 		{
-			$db    = Factory::getDbo();
+			$db = Factory::getContainer()->get('DatabaseDriver');
 			$query = $db->getQuery(true);
 			$query->select('a.sef AS sef');
 			$query->select('a.lang_code AS lang_code');

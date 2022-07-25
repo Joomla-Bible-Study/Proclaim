@@ -30,7 +30,7 @@ class Dispatcher extends ComponentDispatcher
 	 */
 	public function dispatch()
 	{
-		if ($this->input->get('view') === 'cwmlandingpage' && $this->input->get('layout') === 'modal')
+		if ($this->input->get('view') === 'CWMLandingPage' && $this->input->get('layout') === 'modal')
 		{
 			if (!$this->app->getIdentity()->authorise('core.create', 'com_proclaim'))
 			{

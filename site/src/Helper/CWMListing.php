@@ -587,7 +587,7 @@ class CWMListing
 	 */
 	public function getMediaFiles($medias)
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('#__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.params AS sparams, #__bsms_servers.media AS smedia,'
 			. ' s.studytitle, s.studydate, s.studyintro, s.teacher_id,'

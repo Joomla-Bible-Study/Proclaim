@@ -52,7 +52,7 @@ class CWMSermonModel extends ItemModel
 	public function hit($pk = null)
 	{
 		$pk    = (!empty($pk)) ? $pk : (int) $this->getState('study.id');
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_studies')->set('hits = hits  + 1')->where('id = ' . (int) $pk);
 		$db->setQuery($query);
@@ -269,7 +269,7 @@ class CWMSermonModel extends ItemModel
 		$app = Factory::getApplication('site');
 		$id  = $app->input->get('id', '', 'int');
 
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('c.*')->from('#__bsms_comments AS c')->where('c.published = 1')->where('c.study_id = ' . $id)->order('c.comment_date asc');
 		$db->setQuery($query);

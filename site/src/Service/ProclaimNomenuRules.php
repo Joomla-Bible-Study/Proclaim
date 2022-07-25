@@ -164,7 +164,7 @@ class ProclaimNomenuRules implements RulesInterface
 
 		if (isset($query['view']))
 		{
-			$segments[] = $query['view'];
+			$segments[] = $query['view']; var_dump($query['view']);
 			unset($query['view']);
 		}
 		if (isset($query['id']))

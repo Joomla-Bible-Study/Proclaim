@@ -46,7 +46,7 @@ class mediafileimagesField extends ListField
 	 */
 	protected function getOptions()
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('*');
 		$query->from('#__bsms_mediafiles');

@@ -203,7 +203,7 @@ class CWMAdminModel extends AdminModel
 	 */
 	public function getMediaFiles()
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('*');
 		$query->from('#__bsms_mediafiles');
@@ -370,7 +370,7 @@ class CWMAdminModel extends AdminModel
 	 */
 	public function getExtentionId()
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('extension_id')->from($db->qn('#__extensions'))
 			->where('element = ' . $db->q('com_proclaim'));
@@ -583,7 +583,7 @@ class CWMAdminModel extends AdminModel
 	 */
 	public function getSSorPI()
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('extension_id, name, element')->from('#__extensions');
 		$db->setQuery($query);
