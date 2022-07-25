@@ -7,7 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-namespace CWM\Component\Proclaim\Site\CWMMessagelistController;
+namespace CWM\Component\Proclaim\Site\Controller;
 use JLoader;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;

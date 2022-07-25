@@ -7,7 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-namespace CWM\Component\Proclaim\Site\CWMCommentlistController;
+namespace CWM\Component\Proclaim\Site\Controller;
 use JLoader;
 use JModelLegacy;
 use Joomla\CMS\Component\ComponentHelper;

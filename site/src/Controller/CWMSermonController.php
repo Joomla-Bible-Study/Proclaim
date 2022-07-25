@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Site\CWMSermonController;
+namespace CWM\Component\Proclaim\Site\Controller;
 
 use CWM\Component\Proclaim\Site\Helper\CWMDownload;
 use Joomla\CMS\Factory;

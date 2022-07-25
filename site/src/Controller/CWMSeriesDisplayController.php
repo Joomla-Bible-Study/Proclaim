@@ -7,7 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-namespace CWM\Component\Proclaim\Site\CWMSeriesDisplayController;
+namespace CWM\Component\Proclaim\Site\Controller;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -23,19 +23,5 @@ defined('_JEXEC') or die;
  */
 class CWMSeriesDisplayController extends BaseController
 {
-    /**
-     * Display the edit form
-     *
-     * @return void
-     *
-     * @since 7.0
-     */
-    public function view()
-    {
-        $input = Factory::getApplication('site');
-        $input->set('view', 'CWMSeriesDisplay');
-        $input->set('layout', 'default');
 
-        parent::display();
-    }
 }

@@ -39,7 +39,7 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
 		// Contact frontpage Editor contacts proxying.
 		$this->input = Factory::getApplication()->input;
 
-		if ($this->input->get('view') === 'cwmlandingpage' && $this->input->get('layout') === 'modal')
+		if ($this->input->get('view') === 'CWMLandingPage' && $this->input->get('layout') === 'modal')
 		{
 			$config['base_path'] = JPATH_ADMINISTRATOR . '/components';
 		}
