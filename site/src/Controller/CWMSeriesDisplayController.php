@@ -24,4 +24,11 @@ defined('_JEXEC') or die;
 class CWMSeriesDisplayController extends BaseController
 {
 
+    protected $default_view = 'CWMSeriesDisplay';
+
+    public function display($cachable = false, $urlparams = array())
+    {
+        return parent::display();
+    }
+
 }

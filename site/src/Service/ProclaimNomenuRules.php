@@ -68,10 +68,58 @@ class ProclaimNomenuRules implements RulesInterface
 	 */
 	public function parse(&$segments, &$vars)
 	{
-		$vars = array();
+
+        $vars = array();
 		// Count route segments
 		$count = count($segments);
 
+        if ($count == 6) {
+            $vars['option'] = $segments[0];
+            $vars['sendingview'] = $segments[1];
+            $vars['view'] = $segments[2];
+            $id = explode('/', $segments[3]);
+            $vars['id'] = (int)$id[0];
+            $vars['t'] = $segments[$count - 2];
+            $vars['Itemid'] = $segments[$count - 1];
+            array_shift($segments);
+            array_shift($segments);
+            array_shift($segments);
+            array_shift($segments);
+            array_shift($segments);
+            array_shift($segments);
+
+            return;
+        }
+        if ($count == 5) {
+            $vars['option'] = $segments[0];
+            $vars['view'] = $segments[1];
+            $id = explode('/', $segments[2]);
+            $vars['id'] = (int)$id[0];
+            $vars['t'] = $segments[$count - 2];
+            $vars['Itemid'] = $segments[$count - 1];
+            array_shift($segments);
+            array_shift($segments);
+            array_shift($segments);
+            array_shift($segments);
+            array_shift($segments);
+
+            return;
+        }
+        if ($count == 4)
+        {
+            $vars['view'] = $segments[1];
+            //$vars['id']   = (int) $segments[$count - 2];
+            $id = explode('/', $segments[2]);
+            $vars['id'] = (int) $id[0];
+            $vars['t']    = $segments[$count - 2];
+            $vars['Itemid'] = $segments[$count -1];
+            array_shift($segments);
+            array_shift($segments);
+            array_shift($segments);
+            array_shift($segments);
+
+            return;
+        }
 		if ($count == 3)
 		{
 			$vars['view'] = $segments[0];
@@ -83,15 +131,15 @@ class ProclaimNomenuRules implements RulesInterface
             array_shift($segments);
             array_shift($segments);
 
-			return          ;
+			return;
 		}
 		if ($count == 2)
 		{
-			if ($segments[0] === 'CWMPodcastdisplay')
+			if ($segments[1] === 'CWMPodcastdisplay')
 			{
-				$vars['view'] = $segments[0];
+				$vars['view'] = $segments[1];
 				//$vars['id']   = (int) $segments[1];
-		        $id = explode('/', $segments[1]);
+		        $id = explode('/', $segments[2]);
 				$vars['id'] = (int) $id[0];
 			}
 			else
@@ -163,8 +211,9 @@ class ProclaimNomenuRules implements RulesInterface
 		//$segments = array();
 
 		if (isset($query['view']))
-		{
-			$segments[] = $query['view']; var_dump($query['view']);
+		{ var_dump($query);
+			$segments[] = $query['view'];
+            //var_dump($query['view']);
 			unset($query['view']);
 		}
 		if (isset($query['id']))
@@ -182,6 +231,7 @@ class ProclaimNomenuRules implements RulesInterface
             //$segments[] = $query['Itemid'];
             unset($query['Itemid']);
         }
+
 		return $segments;
 	}
 }

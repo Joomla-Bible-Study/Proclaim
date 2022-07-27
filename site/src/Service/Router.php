@@ -289,7 +289,7 @@ class Router extends RouterView
 
 			return (int) $this->db->loadResult();
 		}
-
+//var_dump($segment);
 		return (int) $segment;
 	}
 
