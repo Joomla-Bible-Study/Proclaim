@@ -71,10 +71,10 @@ class ProclaimNomenuRules implements RulesInterface
 
         $vars = array();
 		// Count route segments
-		$count = count($segments);
+		$count = count($segments); var_dump($count);
 
         if ($count == 6) {
-            $vars['option'] = $segments[0];
+            //$vars['option'] = $segments[0];
             $vars['sendingview'] = $segments[1];
             $vars['view'] = $segments[2];
             $id = explode('/', $segments[3]);
@@ -91,7 +91,7 @@ class ProclaimNomenuRules implements RulesInterface
             return;
         }
         if ($count == 5) {
-            $vars['option'] = $segments[0];
+            //$vars['option'] = $segments[0];
             $vars['view'] = $segments[1];
             $id = explode('/', $segments[2]);
             $vars['id'] = (int)$id[0];
@@ -211,9 +211,8 @@ class ProclaimNomenuRules implements RulesInterface
 		//$segments = array();
 
 		if (isset($query['view']))
-		{ var_dump($query);
+		{
 			$segments[] = $query['view'];
-            //var_dump($query['view']);
 			unset($query['view']);
 		}
 		if (isset($query['id']))
@@ -231,7 +230,12 @@ class ProclaimNomenuRules implements RulesInterface
             //$segments[] = $query['Itemid'];
             unset($query['Itemid']);
         }
+        $total = \count($segments);
 
+        for ($i = 0; $i < $total; $i++)
+        {
+            $segments[$i] = str_replace(':', '-', $segments[$i]);
+        }
 		return $segments;
 	}
 }

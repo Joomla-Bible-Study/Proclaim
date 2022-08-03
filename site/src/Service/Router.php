@@ -423,7 +423,7 @@ class Router extends RouterView
                 ->bind(':alias', $segment);
 
             $this->db->setQuery($dbquery);
-
+//var_dump(($this->db->loadResult()));
             return (int) $this->db->loadResult();
         }
 
@@ -523,6 +523,33 @@ class Router extends RouterView
         return (int) $segment;
     }
 
+    /**
+     * Method to get the segment(s) for a Comment
+     *
+     * @param   string  $segment  Segment of the article to retrieve the ID for
+     * @param   array   $query    The request that is parsed right now
+     *
+     * @return  mixed   The id of this item or false
+     * @since   10.0.0
+     */
+    public function getCWMLatestId($segment, $query)
+    {
+        if ($this->noIDs)
+        {
+            $dbquery = $this->db->getQuery(true);
+            $dbquery->select($this->db->quoteName('id'))
+                ->from($this->db->quoteName('#__bsms_studies'))
+                ->where('published = 1')
+                ->order('studydate DESC LIMIT 1')
+                ->bind(':alias', $segment);
+
+            $this->db->setQuery($dbquery);
+
+            return (int) $this->db->loadResult();
+        }
+
+        return (int) $segment;
+    }
 
     /**
      * @Method to get the segment(s) for a sermon
