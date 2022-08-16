@@ -71,7 +71,7 @@ class ProclaimNomenuRules implements RulesInterface
 
         $vars = array();
 		// Count route segments
-		$count = count($segments); var_dump($count);
+		$count = count($segments);
 
         if ($count == 6) {
             //$vars['option'] = $segments[0];

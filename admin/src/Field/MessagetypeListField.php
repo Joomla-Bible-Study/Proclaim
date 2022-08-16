@@ -13,7 +13,9 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
+use JFormHelper;
 
+JFormHelper::loadFieldClass('list');
 defined('_JEXEC') or die;
 
 /**

@@ -166,9 +166,12 @@
 		       value_field="bookname" labelclass="control-label">
 			<option value="-1">JBS_CMN_SELECT_BOOK</option>
 		</field>
-		<field name="messagetype" type="messagetypelist" default="-1" label="JBS_CMN_MESSAGETYPE"
-		       description="JBS_ADM_FILLIN_STUDY_DESC" class="inputbox" labelclass="control-label">
-			<option value="-1">JBS_CMN_SELECT_MESSAGETYPE</option>
+		<field name="messagetype" type="sql"
+			   query="SELECT * FROM #__bsms_message_type WHERE published = 1"
+			   class="inputbox"
+			   key_field="id" value_field="message_type" default="-1" labelclass="control-label"
+			   label="JBS_CMN_FILTERS_MESSAGETYPES" description="JBS_CMN_FILTERS_DESC">
+			<option value="-1">JBS_CMN_SHOW_ALL</option>
 		</field>
 		<field name="default_study_image" type="media" size="50"
 		       label="JBS_ADM_FILLIN_STUDY_IMAGE" description="JBS_ADM_FILLIN_STUDY_DESC" labelclass="control-label"/>
@@ -181,7 +184,7 @@
 		</field>
 		<field name="target" type="list" default="0"
 		       label="JBS_ADM_FILLIN_MEDIAFILE_TARGET" description="JBS_ADM_FILLIN_MEDIAFILE_TARGET_DESC"
-		       class="span12 small" labelclass="control-label">
+		       class="inputbox" labelclass="control-label">
 			<option value=" ">JBS_ADM_NO_DEFAULT</option>
 			<option value="_blank">JBS_ADM_NEW_WINDOW</option>
 			<option value="_self">JBS_ADM_SAME_WINDOW</option>
