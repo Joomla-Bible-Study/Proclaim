@@ -10,6 +10,7 @@
 namespace CWM\Component\Proclaim\Site\View\CWMSermon;
 defined('_JEXEC') or die;
 // No Direct Access
+use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Plugin\PluginHelper;
 use CWM\Component\Proclaim\Site\Helper\CWMListing;
@@ -141,15 +142,17 @@ class HtmlView extends BaseHtmlView
 	 */
 	public function display($tpl = null)
 	{
-		$app         = Factory::getApplication();
-		$user        = Factory::getUser();
+        $container = Factory::getContainer();
+        $app = $container->get(SiteApplication::class);
+        Factory::$application = $app;
+        $user           = Factory::getApplication()->getSession()->get('user');
 		$CWMListing = new CWMListing;
 		$this->item     = $this->get('Item');
 		$this->print    = $app->input->getBool('print');
 		$this->state    = $this->get('State');
 		$this->user     = $user;
 		$this->comments = $this->get('comments');
-
+        $this->simple = CWMHelper::getSimpleView();
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{

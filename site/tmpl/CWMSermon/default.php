@@ -8,17 +8,18 @@
  * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
+use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Factory;
 
 defined('_JEXEC') or die;
 ?>
 <div class="container-fluid"> <!-- This div is the container for the whole page --><?php
 
-	if ($this->item->params->get('sermontemplate') && !$this->simple)
+	if ($this->item->params->get('sermontemplate') && !$this->simple->mode)
 	{
 		echo $this->loadTemplate($this->item->params->get('sermontemplate'));
 	}
-    elseif ($this->simple === 1)
+    elseif ($this->simple->mode === 1)
 	{
 		echo $this->loadTemplate('simple');
 	}
@@ -30,7 +31,10 @@ defined('_JEXEC') or die;
 
 	if ($show_comments >= 1)
 	{
-		$user           = Factory::getUser();
+        $container = Factory::getContainer();
+        $app = $container->get(SiteApplication::class);
+        Factory::$application = $app;
+        $user           = Factory::getApplication()->getSession()->get('user');
 		$groups         = $user->getAuthorisedViewLevels();
 		$comment_access = $this->item->params->get('comment_access');
 
