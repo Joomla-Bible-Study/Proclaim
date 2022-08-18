@@ -37,12 +37,12 @@ class CWMDownload
 	{
 		// Clears file status cache
 		clearstatcache();
-
+//var_dump($mid);
 		$this->hitDownloads($mid);
 		$input    = new Input;
 		$template = $input->get('t', '1', 'int');
         $db = Factory::getContainer()->get('DatabaseDriver');
-
+        $mid = $input->get('mid', '1', 'int');
 		// Get the template so we can find a protocol
 		$query = $db->getQuery(true);
 		$query->select('id, params')
