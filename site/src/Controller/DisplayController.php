@@ -43,8 +43,8 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
 		{
 			$config['base_path'] = JPATH_ADMINISTRATOR . '/components';
 		}
-		// Sermion frontpage Editor article proxying:
-		elseif ($this->input->get('view') === 'sermons' && $this->input->get('layout') === 'modal')
+		// Sermon frontpage Editor article proxying:
+		elseif ($this->input->get('view') === 'CWMSermons' && $this->input->get('layout') === 'modal')
 		{
 			$config['base_path'] = JPATH_ADMINISTRATOR . '/components';
 		}

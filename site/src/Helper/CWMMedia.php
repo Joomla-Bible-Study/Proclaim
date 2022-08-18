@@ -265,7 +265,7 @@ class CWMMedia
 
 			if ($compat_mode === 0)
 			{
-				$downloadlink = '<a href="index.php?option=com_proclaim&amp;view=CWMSermon&amp;mid=' .
+				$downloadlink = '<a href="index.php?option=com_proclaim&amp;view=CWMSermon&amp;id='.$media->study_id.'&amp;mid=' .
 					$media->id . '&amp;task=download">';
 			}
 			else

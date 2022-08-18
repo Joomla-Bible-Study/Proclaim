@@ -82,9 +82,9 @@ class CWMSermonModel extends ItemModel
 		{
 			$this->_item = array();
 		}
-        $input = Factory::getApplication()->input;
-        $mid   = $input->getInt('mid');
-        if ($mid){return $mid;}
+        //$input = Factory::getApplication()->input;
+       // $mid   = $input->getInt('mid');
+       // if ($mid){return $mid;}
 		if (!isset($this->_item[$pk]))
 		{
 			try
