@@ -600,7 +600,7 @@ class CWMAdminController extends FormController
 	 */
 	public function dbReset()
 	{
-		$user = Factory::getUser();
+		$user = $user = Factory::getApplication()->getSession()->get('user');
 
 		if (in_array('8', $user->groups, true))
 		{

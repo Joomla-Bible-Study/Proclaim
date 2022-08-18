@@ -132,7 +132,7 @@ class CWMTeachersModel extends ListModel
 	{
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
-		$user  = Factory::getUser();
+		$user  = $user = Factory::getApplication()->getSession()->get('user');
 
 		$query->select($this->getState('list.select', 'teacher.*'));
 		$query->from('#__bsms_teachers AS teacher');

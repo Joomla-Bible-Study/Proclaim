@@ -44,7 +44,7 @@ require_once __DIR__ . '/helper.php';
 $items = ModJBSMHelper::getLatest($params);
 
 // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-$user   = Factory::getUser();
+$user   = $user = Factory::getApplication()->getSession()->get('user');
 $groups = $user->getAuthorisedViewLevels();
 $count  = count($items);
 

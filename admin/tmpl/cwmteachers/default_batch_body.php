@@ -20,7 +20,7 @@ $params = ComponentHelper::getParams('com_proclaim');
 
 $published = (int) $this->state->get('filter.published');
 
-$user = Factory::getUser();
+$user = $user = Factory::getApplication()->getSession()->get('user');
 ?>
 <div class="p-3">
 	<div class="row">

@@ -259,7 +259,7 @@ class HtmlView extends BaseHtmlView
 	{
 		Factory::getApplication()->input->set('hidemainmenu', true);
 		$this->sidebar = \JHtmlSidebar::render();
-		$user          = Factory::getUser();
+		$user          = $user = Factory::getApplication()->getSession()->get('user');
 		// Get the toolbar object instance
 		$toolbar = Toolbar::getInstance('toolbar');
 		$isNew   = ($this->item->id == 0);

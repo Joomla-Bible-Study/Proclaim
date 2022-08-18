@@ -40,7 +40,7 @@ class CWMLanding
 	public function getLocationsLandingPage($params, $id = 0)
 	{
 		$mainframe   = Factory::getApplication();
-		$user        = Factory::getUser();
+		$user        = $user = Factory::getApplication()->getSession()->get('user');
 		$db          = Factory::getContainer()->get('DatabaseDriver');
 		$location    = null;
 		$teacherid   = null;
@@ -237,7 +237,7 @@ class CWMLanding
 	{
 		$mainframe = Factory::getApplication();
 		$db        = Factory::getContainer()->get('DatabaseDriver');
-		$user      = Factory::getUser();
+		$user      = $user = Factory::getApplication()->getSession()->get('user');
 		$langlink  = Multilanguage::isEnabled();
 		$order     = null;
 		$teacher   = null;
@@ -447,7 +447,7 @@ class CWMLanding
 	public function getSeriesLandingPage($params, $id = 0)
 	{
 		$mainframe = Factory::getApplication();
-		$user      = Factory::getUser();
+		$user      = $user = Factory::getApplication()->getSession()->get('user');
 		$db        = Factory::getContainer()->get('DatabaseDriver');
 		$order     = 'ASC';
 		$series    = null;
@@ -671,7 +671,7 @@ class CWMLanding
 	{
 		$mainframe = Factory::getApplication();
 		$db        = Factory::getContainer()->get('DatabaseDriver');
-		$user      = Factory::getUser();
+		$user      = $user = Factory::getApplication()->getSession()->get('user');
 		$order     = 'ASC';
 		$year      = null;
 		$teacherid = null;
@@ -806,7 +806,7 @@ class CWMLanding
 	public function getTopicsLandingPage($params, $id = 0)
 	{
 		$mainframe = Factory::getApplication();
-		$user      = Factory::getUser();
+		$user      = $user = Factory::getApplication()->getSession()->get('user');
 		$db        = Factory::getContainer()->get('DatabaseDriver');
 		$input     = Factory::getApplication();
 		$order     = 'ASC';
@@ -945,7 +945,7 @@ class CWMLanding
 	{
 		$mainframe   = Factory::getApplication();
 		$db          = Factory::getContainer()->get('DatabaseDriver');
-		$user        = Factory::getUser();
+		$user        = $user = Factory::getApplication()->getSession()->get('user');
 		$messagetype = null;
 		$order       = 'ASC';
 		$teacherid   = null;
@@ -1137,7 +1137,7 @@ class CWMLanding
 	 */
 	public function getBooksLandingPage($params, $id = 0)
 	{
-		$user     = Factory::getUser();
+		$user     = $user = Factory::getApplication()->getSession()->get('user');
 		$db       = Factory::getContainer()->get('DatabaseDriver');
 		$order    = 'ASC';
 		$book     = null;

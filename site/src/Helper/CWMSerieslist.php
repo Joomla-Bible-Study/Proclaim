@@ -178,7 +178,7 @@ class CWMSerieslist extends CWMListing
 		echo $params->get('series_headercode');
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-		$user   = Factory::getUser();
+		$user   = $user = Factory::getApplication()->getSession()->get('user');
 		$groups = $user->getAuthorisedViewLevels();
 		$count  = count($items);
 
@@ -233,7 +233,7 @@ class CWMSerieslist extends CWMListing
 	public function getSeriesstudiesDBO($id, $params, $limit = null)
 	{
 		$db        = Factory::getContainer()->get('DatabaseDriver');
-		$user      = Factory::getUser();
+		$user      = $user = Factory::getApplication()->getSession()->get('user');
 		$language  = $language = $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*');
 		$set_limit = null;
 

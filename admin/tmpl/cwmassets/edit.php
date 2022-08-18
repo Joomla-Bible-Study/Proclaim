@@ -19,7 +19,7 @@ ToolbarHelper::title(JText::_('JBS_ADM_ASSET_TABLE_NAME'), 'administration');
 defined('_JEXEC') or die;
 
 $app  = Factory::getApplication();
-$user = Factory::getUser();
+$user = $user = Factory::getApplication()->getSession()->get('user');
 
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();

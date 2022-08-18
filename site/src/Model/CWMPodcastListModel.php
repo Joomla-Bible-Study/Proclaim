@@ -76,7 +76,7 @@ class CWMPodcastListModel extends ListModel
 
 		$params = $app->getParams();
 
-		$user = Factory::getUser();
+		$user = $user = Factory::getApplication()->getSession()->get('user');
 
 		if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise('core.edit', 'com_proclaim')))
 		{
@@ -127,7 +127,7 @@ class CWMPodcastListModel extends ListModel
 	protected function getListQuery()
 	{
 		// Get the current user for authorisation checks
-		$user = Factory::getUser();
+		$user = $user = Factory::getApplication()->getSession()->get('user');
 
 		// Create a new query object.
 		$db = $this->getDbo();
@@ -190,7 +190,7 @@ class CWMPodcastListModel extends ListModel
 	public function getItems()
 	{
 		$items = parent::getItems();
-		$user = Factory::getUser();
+		$user = $user = Factory::getApplication()->getSession()->get('user');
 		$userId = $user->get('id');
 		$guest = $user->get('guest');
 		$groups = $user->getAuthorisedViewLevels();

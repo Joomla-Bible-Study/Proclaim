@@ -233,7 +233,7 @@ class CWMSermonModel extends ItemModel
 				else
 				{
 					// If no access filter is set, the layout takes some responsibility for display of limited information.
-					$user   = Factory::getUser();
+					$user   = $user = Factory::getApplication()->getSession()->get('user');
 					$groups = $user->getAuthorisedViewLevels();
 
 					$data->params->set('access-view', in_array($data->access, $groups));
@@ -358,7 +358,7 @@ class CWMSermonModel extends ItemModel
 		$this->setState('template', $template);
 		$this->setState('administrator', $admin);
 
-		$user = Factory::getUser();
+		$user = $user = Factory::getApplication()->getSession()->get('user');
 
 		if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise('core.edit', 'com_proclaim')))
 		{

@@ -20,7 +20,7 @@ HTMLHelper::_('behavior.multiselect');
 HTMLHelper::_('formbehavior.chosen', 'select');
 
 $app       = JFactory::getApplication();
-$user      = JFactory::getUser();
+$user      = J$user = Factory::getApplication()->getSession()->get('user');
 $userId    = $user->get('id');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));

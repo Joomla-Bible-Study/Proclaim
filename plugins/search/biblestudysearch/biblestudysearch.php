@@ -79,7 +79,7 @@ class PlgSearchBiblestudysearch extends JPlugin
 	{
 		$db        = Factory::getContainer()->get('DatabaseDriver');
 		$jinput    = Factory::getApplication()->input;
-		$user      = Factory::getUser();
+		$user      = $user = Factory::getApplication()->getSession()->get('user');
 		$groups    = implode(',', $user->getAuthorisedViewLevels());
 		$limit     = $this->params->def('search_limit');
 		$sContent  = $this->params->get('search_content', 1);

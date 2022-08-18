@@ -80,7 +80,7 @@ class CWMSeriesDisplayModel extends ItemModel
 		$this->setState('template', $template);
 		$this->setState('administrator', $admin);
 
-		$user = Factory::getUser();
+		$user = $user = Factory::getApplication()->getSession()->get('user');
 
 		if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise('core.edit', 'com_proclaim')))
 		{
@@ -155,7 +155,7 @@ class CWMSeriesDisplayModel extends ItemModel
 
 		/** @var Registry $params */
 		$params          = $app->getParams();
-		$user            = Factory::getUser();
+		$user            = $user = Factory::getApplication()->getSession()->get('user');
 		$groups          = implode(',', $user->getAuthorisedViewLevels());
 		$db              = $this->getDbo();
 		$query           = $db->getQuery(true);

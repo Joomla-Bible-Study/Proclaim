@@ -96,7 +96,7 @@ class CWMPodcastsubscribe
 	 */
 	public function getPodcasts()
 	{
-		$user   = Factory::getUser();
+		$user   = $user = Factory::getApplication()->getSession()->get('user');
 		$groups = implode(',', $user->getAuthorisedViewLevels());
 		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery('true');

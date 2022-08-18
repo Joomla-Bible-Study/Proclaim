@@ -379,7 +379,7 @@ class CWMSermonsModel extends ListModel
 	 */
 	protected function getListQuery()
 	{
-		$user   = Factory::getUser();
+		$user   = $user = Factory::getApplication()->getSession()->get('user');
 		$groups = implode(',', $user->getAuthorisedViewLevels());
 		$db     = $this->getDbo();
 		$query  = parent::getListQuery();
@@ -785,7 +785,7 @@ class CWMSermonsModel extends ListModel
 		$items = $db->loadObjectList();
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-		$user   = Factory::getUser();
+		$user   = $user = Factory::getApplication()->getSession()->get('user');
 		$groups = $user->getAuthorisedViewLevels();
 		$count  = count($items);
 

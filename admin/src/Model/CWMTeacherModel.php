@@ -103,7 +103,7 @@ class CWMTeacherModel extends AdminModel
 			$id = $jinput->get('id', 0);
 		}
 
-		$user = Factory::getUser();
+		$user = $user = Factory::getApplication()->getSession()->get('user');
 
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
@@ -138,7 +138,7 @@ class CWMTeacherModel extends AdminModel
 	{
 		$tmp        = (array) $record;
 		$db         = Factory::getContainer()->get('DatabaseDriver');
-		$user       = Factory::getUser();
+		$user       = $user = Factory::getApplication()->getSession()->get('user');
 		$canDoState = $user->authorise('core.edit.state', $this->option);
 		$text       = '';
 

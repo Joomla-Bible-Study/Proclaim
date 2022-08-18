@@ -196,7 +196,7 @@ class CWMMessageListModel extends ListModel
 	{
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
-		$user  = Factory::getUser();
+		$user  = $user = Factory::getApplication()->getSession()->get('user');
 
 		$query->select(
 			$this->getState(

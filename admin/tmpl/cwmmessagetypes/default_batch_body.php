@@ -17,7 +17,7 @@ $params = ComponentHelper::getParams('com_proclaim');
 
 $published = (int) $this->state->get('filter.published');
 
-$user = Factory::getUser();
+$user = $user = Factory::getApplication()->getSession()->get('user');
 ?>
 <div class="modal hide fade" id="collapseModal">
 	<div class="modal-header">

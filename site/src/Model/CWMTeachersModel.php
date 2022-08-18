@@ -108,7 +108,7 @@ class CWMTeachersModel extends ListModel
 		$this->setState('template', $template);
 		$this->setState('administrator', $admin);
 
-		$user = Factory::getUser();
+		$user = $user = Factory::getApplication()->getSession()->get('user');
 
 		if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise('core.edit', 'com_proclaim')))
 		{
@@ -133,7 +133,7 @@ class CWMTeachersModel extends ListModel
 
 		if (Factory::getApplication()->isClient('site'))
 		{
-			$user   = Factory::getUser();
+			$user   = $user = Factory::getApplication()->getSession()->get('user');
 			$groups = $user->getAuthorisedViewLevels();
 
 			for ($x = 0, $count = count($items); $x < $count; $x++)

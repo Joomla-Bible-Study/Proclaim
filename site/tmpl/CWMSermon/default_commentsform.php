@@ -112,7 +112,7 @@ else
 <?php
 // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 $allow          = 0;
-$user           = JFactory::getUser();
+$user           = J$user = Factory::getApplication()->getSession()->get('user');
 $groups         = $user->getAuthorisedViewLevels();
 $show_comments  = $this->item->params->get('show_comments');
 $comment_access = $this->item->params->get('comment_access');

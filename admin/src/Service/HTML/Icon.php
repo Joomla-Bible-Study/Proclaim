@@ -109,7 +109,7 @@ class Icon
 	 */
 	public function edit($article, $params, $attribs = array(), $legacy = false)
 	{
-		$user = Factory::getUser();
+		$user = $user = Factory::getApplication()->getSession()->get('user');
 		$uri  = Uri::getInstance();
 
 		// Ignore if in a popup window.

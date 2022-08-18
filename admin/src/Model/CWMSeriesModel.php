@@ -71,7 +71,7 @@ class CWMSeriesModel extends ListModel
 		$items = parent::getItems();
 		$app   = Factory::getApplication();
 
-		$user   = Factory::getUser();
+		$user   = $user = Factory::getApplication()->getSession()->get('user');
 		$groups = $user->getAuthorisedViewLevels();
 
 		foreach ($items as $x => $xValue)
@@ -176,7 +176,7 @@ class CWMSeriesModel extends ListModel
 		// Create a new query object.
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
-		$user  = Factory::getUser();
+		$user  = $user = Factory::getApplication()->getSession()->get('user');
 
 		// Select the required fields from the table.
 		$query->select(

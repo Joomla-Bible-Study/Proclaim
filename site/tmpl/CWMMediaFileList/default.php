@@ -24,7 +24,7 @@ $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
 $wa->useStyle('com_proclaim.cwmcore');
 $wa->useStyle('com_proclaim.general');
 $app = Factory::getApplication();
-$user = Factory::getUser();
+$user = $user = Factory::getApplication()->getSession()->get('user');
 $userId = $user->get('id');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn = $this->escape($this->state->get('list.direction'));

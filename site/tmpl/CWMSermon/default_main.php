@@ -23,7 +23,7 @@ defined('_JEXEC') or die;
 
 /** @type Joomla\Registry\Registry $params */
 $params = $this->item->params;
-$user = Factory::getUser();
+$user = $user = Factory::getApplication()->getSession()->get('user');
 $canEdit = $params->get('access-edit');
 
 $JViewLegacy = new JViewLegacy;
