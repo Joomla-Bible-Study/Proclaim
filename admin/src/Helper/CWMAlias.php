@@ -42,7 +42,7 @@ class CWMAlias
 	public static function updateAlias()
 	{
 		$done    = 0;
-		$db      = Factory::getDbo();
+		$db      = Factory::getContainer()->get('DatabaseDriver');
 		$objects = self::getObjects();
 		$results = array();
 
@@ -114,7 +114,7 @@ class CWMAlias
 			return false;
 		}
 
-		$db     = Factory::getDbo();
+		$db     = Factory::getContainer()->get('DatabaseDriver');
 		$query  = $db->getQuery(true);
 		$query->select('id, alias, ' . $title)
 			->from($table);

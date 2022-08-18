@@ -83,7 +83,7 @@ class CWMAdminController extends FormController
 	{
 		$post    = $_POST['jform'];
 		$decoded = json_decode($post['mediaimage'], true, 512, JSON_THROW_ON_ERROR);
-		$db      = Factory::getDbo();
+		$db      = Factory::getContainer()->get('DatabaseDriver');
 		$query   = $db->getQuery(true);
 		$query->select('id, params')
 			->from('#__bsms_mediafiles');
@@ -317,7 +317,7 @@ class CWMAdminController extends FormController
 		// Check for request forgeries.
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
-		$db   = Factory::getDbo();
+		$db   = Factory::getContainer()->get('DatabaseDriver');
 		$msg  = Text::_('JBS_CMN_OPERATION_SUCCESSFUL');
 		$post = $_POST['jform'];
 		$reg  = new Registry;
@@ -375,7 +375,7 @@ class CWMAdminController extends FormController
 		// Check for request forgeries.
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
-		$db   = Factory::getDbo();
+		$db   = Factory::getContainer()->get('DatabaseDriver');
 		$post = $_POST['jform'];
 		$reg  = new Registry;
 		$reg->loadArray($post['params']);
@@ -704,7 +704,7 @@ class CWMAdminController extends FormController
 
 		// Create table tablename_new like tablename; -> this will copy the structure...
 		// Insert into tablename_new select * from tablename; -> this would copy all the data
-		$db     = Factory::getDbo();
+		$db     = Factory::getContainer()->get('DatabaseDriver');
 		$tables = $db->getTableList();
 		$prefix = $db->getPrefix();
 

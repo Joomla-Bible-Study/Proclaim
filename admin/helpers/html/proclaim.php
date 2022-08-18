@@ -300,7 +300,7 @@ abstract class JHtmlProclaim
 	public static function MediaTypeList(): ?array
 	{
 		$options = null;
-		$db      = Factory::getDbo();
+		$db      = Factory::getContainer()->get('DatabaseDriver');
 		$query   = $db->getQuery(true);
 
 		$query->select('id As value, media_text As text');
@@ -356,7 +356,7 @@ abstract class JHtmlProclaim
 	public static function TeacherList(): ?array
 	{
 		$options = null;
-		$db      = Factory::getDbo();
+		$db      = Factory::getContainer()->get('DatabaseDriver');
 		$query   = $db->getQuery(true);
 
 		$query->select('id As value, teachername As text');
@@ -412,7 +412,7 @@ abstract class JHtmlProclaim
 	public static function MessageTypeList(): ?array
 	{
 		$options = null;
-		$db      = Factory::getDbo();
+		$db      = Factory::getContainer()->get('DatabaseDriver');
 		$query   = $db->getQuery(true);
 
 		$query->select('id As value, message_type As text');
@@ -468,7 +468,7 @@ abstract class JHtmlProclaim
 	public static function SeriesList(): ?array
 	{
 		$options = null;
-		$db      = Factory::getDbo();
+		$db      = Factory::getContainer()->get('DatabaseDriver');
 		$query   = $db->getQuery(true);
 
 		$query->select('id As value, series_text As text');

@@ -77,7 +77,7 @@ class PlgSearchBiblestudysearch extends JPlugin
 	 */
 	public function onContentSearch($text, $phrase = '', $ordering = '', $areas = null)
 	{
-		$db        = Factory::getDbo();
+		$db        = Factory::getContainer()->get('DatabaseDriver');
 		$jinput    = Factory::getApplication()->input;
 		$user      = Factory::getUser();
 		$groups    = implode(',', $user->getAuthorisedViewLevels());

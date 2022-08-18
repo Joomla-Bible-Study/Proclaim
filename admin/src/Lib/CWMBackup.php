@@ -180,7 +180,7 @@ class CWMBackup
 			set_time_limit(3000);
 		}
 
-		$db = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 
 		// Get the prefix
 		$prefix = $db->getPrefix();

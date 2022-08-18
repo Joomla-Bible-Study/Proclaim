@@ -397,7 +397,7 @@ class HtmlView extends BaseHtmlView
 		}
 
 		// Added database queries from the default template - moved here instead
-		$database = Factory::getDbo();
+		$database = Factory::getContainer()->get('DatabaseDriver');
 		$query    = $database->getQuery(true);
 		$query->select('id')->from('#__menu')->where('link =' . $database->q('index.php?option=com_proclaim&view=CWMSermons'))->where('published = 1');
 		$database->setQuery($query);

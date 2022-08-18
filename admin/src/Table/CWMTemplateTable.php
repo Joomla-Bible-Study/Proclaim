@@ -159,7 +159,7 @@ class CWMTemplateTable extends Table
 	 */
 	public function store($updateNulls = false): bool
 	{
-		$db = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 
 		// Attempt to store the user data.
 		$oldrow = new CWMTemplateTable($db);

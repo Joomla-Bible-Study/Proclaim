@@ -41,7 +41,7 @@ class CWMImages
 
 		if ($params === null)
 		{
-			$database = Factory::getDbo();
+			$database = Factory::getContainer()->get('DatabaseDriver');
 			$query    = $database->getQuery(true);
 			$query->select('*')->from('#__bsms_admin')->where('id = ' . 1);
 			$database->setQuery($query);

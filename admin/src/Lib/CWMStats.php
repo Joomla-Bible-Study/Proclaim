@@ -279,7 +279,7 @@ class CWMStats
 	{
 		$month      = mktime(0, 0, 0, date("m") - 3, date("d"), date("Y"));
 		$last_month = date("Y-m-d 00:00:01", $month);
-		$db         = Factory::getDbo();
+		$db         = Factory::getContainer()->get('DatabaseDriver');
 		$query      = $db->getQuery(true);
 		$query
 			->select('*')
@@ -376,7 +376,7 @@ class CWMStats
 	{
 		$month     = mktime(0, 0, 0, date("m") - 3, date("d"), date("Y"));
 		$lastmonth = date("Y-m-d 00:00:01", $month);
-		$db        = Factory::getDbo();
+		$db        = Factory::getContainer()->get('DatabaseDriver');
 		$query     = $db->getQuery(true);
 		$query
 			->select(
@@ -444,7 +444,7 @@ class CWMStats
 		$final        = [];
 		$admin_params = CWMParams::getAdmin();
 		$format       = $admin_params->params->get('format_popular', '0');
-		$db           = Factory::getDbo();
+		$db           = Factory::getContainer()->get('DatabaseDriver');
 		$query        = $db->getQuery(true);
 		$query
 			->select('study_id, sum(downloads + plays) as added ')
@@ -515,7 +515,7 @@ class CWMStats
 		$count_av_player       = 0;
 		$count_legacy_player   = 0;
 		$count_embed_code      = 0;
-		$db                    = Factory::getDbo();
+		$db                    = Factory::getContainer()->get('DatabaseDriver');
 		$query                 = $db->getQuery(true);
 		$query
 			->select('params')
@@ -585,7 +585,7 @@ class CWMStats
 		$sq_count     = 0;
 		$inline_count = 0;
 		$global_count = 0;
-		$db           = Factory::getDbo();
+		$db           = Factory::getContainer()->get('DatabaseDriver');
 		$query        = $db->getQuery(true);
 		$query
 			->select('params')

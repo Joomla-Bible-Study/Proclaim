@@ -66,7 +66,7 @@ class CWMParams
 		if (!self::$admin)
 		{
 			$app    = Factory::getApplication();
-			$db     = Factory::getDbo();
+			$db     = Factory::getContainer()->get('DatabaseDriver');
 			$query  = $db->getQuery(true);
 			$query->select('*')
 				->from('#__bsms_admin')
@@ -114,7 +114,7 @@ class CWMParams
 	 */
 	public static function getTemplateparams($pk = null)
 	{
-		$db     = Factory::getDbo();
+		$db     = Factory::getContainer()->get('DatabaseDriver');
 
 		if (!$pk)
 		{
@@ -177,7 +177,7 @@ class CWMParams
 		if (count($param_array) > 0)
 		{
 			// Read the existing component value(s)
-			$db     = Factory::getDbo();
+			$db     = Factory::getContainer()->get('DatabaseDriver');
 			$query  = $db->getQuery(true);
 			$query->select('params')
 				->from('#__extensions')

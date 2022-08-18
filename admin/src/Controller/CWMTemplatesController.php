@@ -92,7 +92,7 @@ class CWMTemplatesController extends AdminController
 		jimport('joomla.filesystem.file');
 		move_uploaded_file($tmp_src, $tmp_dest);
 
-		$db = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 
 		$query   = file_get_contents(JPATH_SITE . '/tmp/' . $userfile['name']);
 		$queries = DatabaseDriver::splitSql($query);
@@ -266,7 +266,7 @@ class CWMTemplatesController extends AdminController
 	 */
 	private function performDB(string $query)
 	{
-		$db = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$db->setQuery($query);
 
 		if (!$db->execute())
@@ -340,7 +340,7 @@ class CWMTemplatesController extends AdminController
 		$registry = new Registry;
 		$registry->loadString($result->params);
 		$params  = $registry;
-		$db      = Factory::getDbo();
+		$db      = Factory::getContainer()->get('DatabaseDriver');
 		$objects = '';
 		$css     = $params->get('css');
 		$css     = substr($css, 0, -4);

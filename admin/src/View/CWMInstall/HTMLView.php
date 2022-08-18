@@ -276,7 +276,7 @@ class HTMLView extends BaseHtmlView
 
 		// -- General settings
 		jimport('joomla.installer.installer');
-		$db                    = Factory::getDbo();
+		$db                    = Factory::getContainer()->get('DatabaseDriver');
 		$this->status          = new \stdClass;
 		$this->status->cwmmodules = array();
 		$this->status->cwmplugins = array();

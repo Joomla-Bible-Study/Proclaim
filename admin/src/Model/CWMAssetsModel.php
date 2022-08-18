@@ -375,7 +375,7 @@ class CWMAssetsModel extends ListModel
 	public function checkAssets()
 	{
 		$return = array();
-		$db     = Factory::getDbo();
+		$db     = Factory::getContainer()->get('DatabaseDriver');
 		$result = new \stdClass;
 
 		// First get the new parent_id

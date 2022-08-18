@@ -137,7 +137,7 @@ class CWMTeacherModel extends AdminModel
 	protected function canEditState($record)
 	{
 		$tmp        = (array) $record;
-		$db         = Factory::getDbo();
+		$db         = Factory::getContainer()->get('DatabaseDriver');
 		$user       = Factory::getUser();
 		$canDoState = $user->authorise('core.edit.state', $this->option);
 		$text       = '';

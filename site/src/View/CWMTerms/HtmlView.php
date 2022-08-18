@@ -75,7 +75,7 @@ class HtmlView extends BaseHtmlView
 		$template     = CWMParams::getTemplateparams();
 		$this->params = $template->params;
 		$termstext    = $this->params->get('terms');
-		$db           = Factory::getDbo();
+		$db           = Factory::getContainer()->get('DatabaseDriver');
 		$query        = $db->getQuery('true');
 		$query->select('*');
 		$query->from('#__bsms_mediafiles');

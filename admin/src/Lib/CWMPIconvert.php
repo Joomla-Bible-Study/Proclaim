@@ -187,7 +187,7 @@ class CWMPIconvert
 		$oldid               = 0;
 
 		//drop sample table entries in Proclaim!
-		$db = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$db->truncateTable('#__bsms_studies');
 		$db->truncateTable('#__bsms_teachers');
 		$db->truncateTable('#__bsms_mediafiles');
@@ -998,7 +998,7 @@ class CWMPIconvert
 			return false;
 		}
 
-		$db = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 
 		foreach ($this->picomments as $pi)
 		{
@@ -1037,7 +1037,7 @@ class CWMPIconvert
 	 */
 	private function insertMediaRecord($mediafiles)
 	{
-		$db = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		if (!$db->insertObject('#__bsms_mediafiles', $mediafiles, 'id'))
 		{
 			return false;
@@ -1056,7 +1056,7 @@ class CWMPIconvert
 	private function insertPodcast($pi)
 	{
 		$podtest = 0;
-		$db      = Factory::getDbo();
+		$db      = Factory::getContainer()->get('DatabaseDriver');
 		$query   = $db->getQuery(true);
 		$query->select('*')->from('#__pipodcast')->where('published = 1');
 		$db->setQuery($query);

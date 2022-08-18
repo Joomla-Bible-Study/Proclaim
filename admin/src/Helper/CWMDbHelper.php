@@ -49,7 +49,7 @@ class CWMDbHelper
 	 */
 	public static function checkIfTable($cktable)
 	{
-		$db     = Factory::getDbo();
+		$db     = Factory::getContainer()->get('DatabaseDriver');
 		$tables = $db->getTableList();
 		$prefix = $db->getPrefix();
 
@@ -80,7 +80,7 @@ class CWMDbHelper
 	 */
 	public static function alterDB($tables, $from = null)
 	{
-		$db     = Factory::getDbo();
+		$db     = Factory::getContainer()->get('DatabaseDriver');
 
 		foreach ($tables as $t)
 		{
@@ -208,7 +208,7 @@ class CWMDbHelper
 	 */
 	public static function checkTables($table, $field)
 	{
-		$db     = Factory::getDbo();
+		$db     = Factory::getContainer()->get('DatabaseDriver');
 
 		$fields = $db->getTableColumns($table, 'false');
 
@@ -242,7 +242,7 @@ class CWMDbHelper
 			return false;
 		}
 
-		$db     = Factory::getDbo();
+		$db     = Factory::getContainer()->get('DatabaseDriver');
 		$db->setQuery($query, 0, $limit);
 
 		if (!$db->execute())
@@ -293,7 +293,7 @@ class CWMDbHelper
 	 */
 	public static function getObjects()
 	{
-		$db        = Factory::getDbo();
+		$db        = Factory::getContainer()->get('DatabaseDriver');
 		$tables    = $db->getTableList();
 		$prefix    = $db->getPrefix();
 		$prelength = strlen($prefix);
@@ -323,7 +323,7 @@ class CWMDbHelper
 	{
 		if (!is_bool(self::$install_state))
 		{
-			$db     = Factory::getDbo();
+			$db     = Factory::getContainer()->get('DatabaseDriver');
 
 			// Check if JBSM can be found from the database
 			$table = $db->getPrefix() . 'bsms_admin';
@@ -356,7 +356,7 @@ class CWMDbHelper
 		$app = Factory::getApplication();
 
 		// Start by getting existing Style
-		$db     = Factory::getDbo();
+		$db     = Factory::getContainer()->get('DatabaseDriver');
 		$query  = $db->getQuery(true);
 		$query->select('*')->from('#__bsms_styles');
 
@@ -444,7 +444,7 @@ class CWMDbHelper
 	 */
 	public static function reloadtable(object $result, string $table = 'Style')
 	{
-		$db     = Factory::getDbo();
+		$db     = Factory::getContainer()->get('DatabaseDriver');
 
 		// Store new Recorder so it can be seen.
 		JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
@@ -478,7 +478,7 @@ class CWMDbHelper
 	public static function resetdb($install = false)
 	{
 		$app    = Factory::getApplication();
-		$db     = Factory::getDbo();
+		$db     = Factory::getContainer()->get('DatabaseDriver');
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');
 		$path = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_proclaim/install/sql';
@@ -565,7 +565,7 @@ class CWMDbHelper
 	public static function CleanStudyTopics()
 	{
 		$app    = Factory::getApplication();
-		$db     = Factory::getDbo();
+		$db     = Factory::getContainer()->get('DatabaseDriver');
 		$query  = $db->getQuery(true);
 		$query->select('id')->from('#__bsms_studies');
 		$db->setQuery($query);

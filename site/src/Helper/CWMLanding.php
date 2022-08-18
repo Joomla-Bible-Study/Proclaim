@@ -41,7 +41,7 @@ class CWMLanding
 	{
 		$mainframe   = Factory::getApplication();
 		$user        = Factory::getUser();
-		$db          = Factory::getDbo();
+		$db          = Factory::getContainer()->get('DatabaseDriver');
 		$location    = null;
 		$teacherid   = null;
 		$template    = $params->get('studieslisttemplateid', 1);
@@ -236,7 +236,7 @@ class CWMLanding
 	public function getTeacherLandingPage($params, $id = 0)
 	{
 		$mainframe = Factory::getApplication();
-		$db        = Factory::getDbo();
+		$db        = Factory::getContainer()->get('DatabaseDriver');
 		$user      = Factory::getUser();
 		$langlink  = Multilanguage::isEnabled();
 		$order     = null;
@@ -448,7 +448,7 @@ class CWMLanding
 	{
 		$mainframe = Factory::getApplication();
 		$user      = Factory::getUser();
-		$db        = Factory::getDbo();
+		$db        = Factory::getContainer()->get('DatabaseDriver');
 		$order     = 'ASC';
 		$series    = null;
 		$seriesid  = null;
@@ -670,7 +670,7 @@ class CWMLanding
 	public function getYearsLandingPage($params, $id = 0)
 	{
 		$mainframe = Factory::getApplication();
-		$db        = Factory::getDbo();
+		$db        = Factory::getContainer()->get('DatabaseDriver');
 		$user      = Factory::getUser();
 		$order     = 'ASC';
 		$year      = null;
@@ -807,7 +807,7 @@ class CWMLanding
 	{
 		$mainframe = Factory::getApplication();
 		$user      = Factory::getUser();
-		$db        = Factory::getDbo();
+		$db        = Factory::getContainer()->get('DatabaseDriver');
 		$input     = Factory::getApplication();
 		$order     = 'ASC';
 		$topic     = null;
@@ -944,7 +944,7 @@ class CWMLanding
 	public function getMessageTypesLandingPage($params, $id = 0)
 	{
 		$mainframe   = Factory::getApplication();
-		$db          = Factory::getDbo();
+		$db          = Factory::getContainer()->get('DatabaseDriver');
 		$user        = Factory::getUser();
 		$messagetype = null;
 		$order       = 'ASC';
@@ -1138,7 +1138,7 @@ class CWMLanding
 	public function getBooksLandingPage($params, $id = 0)
 	{
 		$user     = Factory::getUser();
-		$db       = Factory::getDbo();
+		$db       = Factory::getContainer()->get('DatabaseDriver');
 		$order    = 'ASC';
 		$book     = null;
 		$template = $params->get('studieslisttemplateid');

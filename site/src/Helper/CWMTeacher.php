@@ -61,7 +61,7 @@ class CWMTeacher extends CWMListing
 
 		foreach ($teacherIDs as $teach)
 		{
-			$database = Factory::getDbo();
+			$database = Factory::getContainer()->get('DatabaseDriver');
 			$query    = $database->getQuery(true);
 			$query->select('*')->from('#__bsms_teachers')->where('id = ' . $teach);
 			$database->setQuery($query);
@@ -151,7 +151,7 @@ class CWMTeacher extends CWMListing
 
 		foreach ($teacherids as $teachers)
 		{
-			$database = Factory::getDbo();
+			$database = Factory::getContainer()->get('DatabaseDriver');
 			$query    = $database->getQuery(true);
 			$query->select('*')->from('#__bsms_teachers')->where('id = ' . $teachers);
 			$database->setQuery($query);

@@ -395,7 +395,7 @@ class CWMAdminModel extends AdminModel
 	 */
 	public function getSchemaVersion()
 	{
-		$db              = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query           = $db->getQuery(true);
 		$extensionresult = $this->getExtentionId();
 		$query->select('version_id')->from($db->qn('#__schemas'))
@@ -603,7 +603,7 @@ class CWMAdminModel extends AdminModel
 		// Check for request forgeries.
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
-		$db   = Factory::getDbo();
+		$db   = Factory::getContainer()->get('DatabaseDriver');
 		$msg  = Text::_('JBS_CMN_OPERATION_SUCCESSFUL');
 		$post = $_POST['jform'];
 		$reg  = new Registry;

@@ -98,7 +98,7 @@ class CWMMediafileModel extends AdminModel
 			$params = new Registry;
 			$params->loadArray($data['params']);
 
-			$jdb   = Factory::getDbo();
+			$jdb   = Factory::getContainer()->get('DatabaseDriver');
 			$table = new CWMServerTable($jdb);
 			$table->load($data['server_id']);
 

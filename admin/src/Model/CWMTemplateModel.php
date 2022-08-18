@@ -65,7 +65,7 @@ class CWMTemplateModel extends AdminModel
 	{
 		foreach ($cid as $id)
 		{
-			$db       = Factory::getDbo();
+			$db       = Factory::getContainer()->get('DatabaseDriver');
 			$tmplCurr = new CWMTemplateTable($db);
 
 			$tmplCurr->load($id);

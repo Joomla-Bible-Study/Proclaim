@@ -950,7 +950,7 @@ class CWMRelatedstudies
 	 */
 	public function getRelatedLinks()
 	{
-		$db           = Factory::getDbo();
+		$db           = Factory::getContainer()->get('DatabaseDriver');
 		$scored       = array_count_values($this->score);
 		$output       = array_slice($scored, 0, 20, true);
 		$links        = array();

@@ -48,7 +48,7 @@ class CWMAssets
 	 */
 	public function build()
 	{
-		$db = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 
 		// Get the names of the JBS tables
 		$objects = self::getassetObjects();
@@ -121,7 +121,7 @@ class CWMAssets
 	{
 		if (!self::$parent_id)
 		{
-			$db = Factory::getDbo();
+			$db = Factory::getContainer()->get('DatabaseDriver');
 
 			// First get the new parent_id
 			$query = $db->getQuery(true);
@@ -284,7 +284,7 @@ class CWMAssets
 	 */
 	private static function deleteasset($data)
 	{
-		$db = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 
 		if (isset($data->asset_id))
 		{
@@ -313,7 +313,7 @@ class CWMAssets
 	public static function checkAssets()
 	{
 		$return = array();
-		$db     = Factory::getDbo();
+		$db     = Factory::getContainer()->get('DatabaseDriver');
 		$result = new \stdClass;
 
 		// First get the new parent_id

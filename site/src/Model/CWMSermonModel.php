@@ -73,7 +73,7 @@ class CWMSermonModel extends ItemModel
 	 */
 	public function &getItem($pk = null)
 	{
-		$user = Factory::getUser();
+        $user     = Factory::getApplication()->getIdentity();
 
 		// Initialise variables.
 		$pk = (!empty($pk)) ? $pk : (int) $this->getState('study.id');
@@ -82,7 +82,9 @@ class CWMSermonModel extends ItemModel
 		{
 			$this->_item = array();
 		}
-
+        $input = Factory::getApplication()->input;
+        $mid   = $input->getInt('mid');
+        if ($mid){return $mid;}
 		if (!isset($this->_item[$pk]))
 		{
 			try
@@ -163,7 +165,8 @@ class CWMSermonModel extends ItemModel
 
 				if (empty($data))
 				{
-					Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_STUDY_NOT_FOUND', 'error'));
+
+                    Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_STUDY_NOT_FOUND', 'error'));
 
 					return $data;
 				}
@@ -260,7 +263,7 @@ class CWMSermonModel extends ItemModel
 	 * Method to retrieve comments for a study
 	 *
 	 * @access  public
-	 * @return object
+     * @return    mixed    data object on success, false on failure.
 	 *
 	 * @since   7.0
 	 */
@@ -268,7 +271,7 @@ class CWMSermonModel extends ItemModel
 	{
 		$app = Factory::getApplication('site');
 		$id  = $app->input->get('id', '', 'int');
-
+        if (empty($id)){return false;}
 		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('c.*')->from('#__bsms_comments AS c')->where('c.published = 1')->where('c.study_id = ' . $id)->order('c.comment_date asc');

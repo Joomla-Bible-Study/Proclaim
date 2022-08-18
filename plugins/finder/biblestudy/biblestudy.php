@@ -345,7 +345,7 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 	 */
 	protected function getListQuery($sql = null)
 	{
-		$db = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 
 		// Check if we can use the supplied SQL query.
 		$sql = $sql instanceof JDatabaseQuery ? $sql : $db->getQuery(true);

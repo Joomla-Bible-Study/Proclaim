@@ -34,7 +34,7 @@ class CWMCpanelModel extends BaseModel
 	public function getData()
 	{
 		// Get version information
-		$db     = Factory::getDbo();
+		$db     = Factory::getContainer()->get('DatabaseDriver');
 		$return = new \stdClass;
 		$query  = $db->getQuery(true);
 		$query->select('*');

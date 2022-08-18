@@ -41,7 +41,7 @@ class CWMDownload
 		$this->hitDownloads($mid);
 		$input    = new Input;
 		$template = $input->get('t', '1', 'int');
-		$db       = Factory::getDbo();
+        $db = Factory::getContainer()->get('DatabaseDriver');
 
 		// Get the template so we can find a protocol
 		$query = $db->getQuery(true);

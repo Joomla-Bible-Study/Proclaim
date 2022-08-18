@@ -440,7 +440,7 @@ class CWMProclaimHelper
 	public static function getMediaYears()
 	{
 		$options = array();
-		$db  = Factory::getDbo();
+		$db  = Factory::getContainer()->get('DatabaseDriver');
 		//$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
@@ -474,7 +474,7 @@ class CWMProclaimHelper
 	public static function getMessageTypes()
 	{
 		$options = array();
-		$db  = Factory::getDbo();
+		$db  = Factory::getContainer()->get('DatabaseDriver');
 		//$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
@@ -510,7 +510,7 @@ class CWMProclaimHelper
 	public static function getStudyYears()
 	{
 		$options = array();
-		$db  = Factory::getDbo();
+		$db  = Factory::getContainer()->get('DatabaseDriver');
 		//$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
@@ -544,7 +544,7 @@ class CWMProclaimHelper
 	public static function getTeachers()
 	{
 		$options = array();
-		$driver  = Factory::getDbo();
+		$driver  = Factory::getContainer()->get('DatabaseDriver');
 		$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
@@ -580,7 +580,7 @@ class CWMProclaimHelper
 	public static function getStudyBooks()
 	{
 		$options = array();
-		$db  = Factory::getDbo();
+		$db  = Factory::getContainer()->get('DatabaseDriver');
 		//$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
@@ -621,7 +621,7 @@ class CWMProclaimHelper
 	public static function getStudyMediaTypes()
 	{
 		$options = array();
-		$db  = Factory::getDbo();
+		$db  = Factory::getContainer()->get('DatabaseDriver');
 		//$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
@@ -657,7 +657,7 @@ class CWMProclaimHelper
 	public static function getStudyLocations()
 	{
 		$options = array();
-		$db  = Factory::getDbo();
+		$db  = Factory::getContainer()->get('DatabaseDriver');
 		//$db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
@@ -764,7 +764,7 @@ class CWMProclaimHelper
 	{
 		$options = array();
 
-		$db = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		//$db     = $driver->getDriver();
 		$query  = $db->getQuery(true);
 

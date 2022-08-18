@@ -36,7 +36,7 @@ class ModJBSMHelper
 		$user   = Factory::getUser();
 		$groups = implode(',', $user->getAuthorisedViewLevels());
 
-		$db = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$db->setQuery('SET SQL_BIG_SELECTS=1');
 		$db->execute();
 		$query            = $db->getQuery(true);

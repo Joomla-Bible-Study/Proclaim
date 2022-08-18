@@ -70,7 +70,7 @@ class CWMPodcast
 	public function makePodcasts()
 	{
 		$msg = array();
-		$db  = Factory::getDbo();
+		$db  = Factory::getContainer()->get('DatabaseDriver');
 		jimport('joomla.utilities.date');
 		$year = '(' . date('Y') . ')';
 		$date = date('r');

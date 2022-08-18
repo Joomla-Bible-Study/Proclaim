@@ -232,7 +232,7 @@ class CWMSerieslist extends CWMListing
 	 */
 	public function getSeriesstudiesDBO($id, $params, $limit = null)
 	{
-		$db        = Factory::getDbo();
+		$db        = Factory::getContainer()->get('DatabaseDriver');
 		$user      = Factory::getUser();
 		$language  = $language = $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*');
 		$set_limit = null;

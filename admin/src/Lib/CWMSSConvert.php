@@ -35,7 +35,7 @@ class CWMSSConvert
 	 */
 	public function convertSS()
 	{
-		$db = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query       = $db->getQuery(true);
 		$query->select('*')
 			->from('#__sermon_sermons');
@@ -249,7 +249,7 @@ class CWMSSConvert
 	 */
 	public function newStudies($sermon, $seriesspeakers)
 	{
-		$db   = Factory::getDbo();
+		$db   = Factory::getContainer()->get('DatabaseDriver');
 		$data = new \stdClass;
 
 		foreach ($seriesspeakers as $speakers)
