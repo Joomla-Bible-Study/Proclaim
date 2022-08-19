@@ -397,7 +397,7 @@ class CWMListing
 		$class1  = $params->get($extra . 'listcolor1', '');
 		$class2  = $params->get($extra . 'listcolor2', '');
 		$oddeven = $class1;
-//Start the table
+//Start the table for the entire list
 		$list .= '<div class="table-responsive" about="' . $type . '"><table class="table w-auto table-borderless">';
 		if ($type === 'sermons')
 		{
@@ -457,7 +457,7 @@ class CWMListing
 				$list .= '</thead>';
 
 			}
-
+            //$list .= "<hr/>";
 			$list .= $this->getFluidRow($listrows, $listsorts, $items, $params, $template, $oddeven, $header = 0, $type);
 
 		}
@@ -539,7 +539,10 @@ class CWMListing
 			foreach ($items as $item)
 			{
 				$oddeven = ($oddeven === $class1) ? $class2 : $class1;
-				$row[]   = $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header = 0, $type);
+                $row[] = '<table style="width: 100%; display: table; border-bottom: 2px;" class="table w-auto table-borderless"><tbody style="width: 100%; display: table;"><tr><td></td></tr><tr><td>';
+                $row[]   = $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header = 0, $type);
+                $row[] = '</td></tr><tr style="width: 100%; border-bottom: 2px;"><hr/></tr></tbody></table>';
+
 			}
 		}
 
@@ -547,6 +550,7 @@ class CWMListing
 		{
 
 			$list .=  $value;
+            //$list .=  $value . '<tr><hr/></tr>';
 		}
 
 		$list .= '</tbody></table></div>';
@@ -1877,7 +1881,6 @@ $thadd = '';
 		//if ($header === 0){ $frow .= $classclose . '</td>';}
 		if ($header === 0){ $frow .= '</'.$classclose.'</td>';}
 		if ($header === 1) {$frow .= '</th>';}
-
 		return $frow;
 	}
 

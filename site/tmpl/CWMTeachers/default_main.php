@@ -44,21 +44,8 @@ $classelement = $listing->createelement($this->params->get('teachers_element'));
 		?>
 	</div>
 </div>
-<?php foreach ($this->items as $item){ ?>
-<div class="row">
-    <div class="table-responsive">
-        <table class="table w-auto table-borderless">
-            <tr><td rowspan="6"><img src="<?php echo Uri::base().$item->teacher_thumbnail; ?>"></td></tr>
-            <tr><td>Tom Fuller, Pastor</td><td>Calvary Chapel</td><td>email address here</td></tr>
-            <tr><td colspan="3">The end, row 6 The end, row 6 The end, row 6 The end, row 6 The end, row 6 The end, row 6 The end, row 6 The end, row 6 The end, row 6</td></tr>
-            <tr></tr>
-            <tr></tr>
-            <tr><td>Something in row 5</td></tr>
-                    </table>
-    </div>
-</div>
     <hr>
-<?php } ?>
+
 <div class="listingfooter">
 	<?php
 	echo $this->page->pagelinks;

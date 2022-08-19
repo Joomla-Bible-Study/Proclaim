@@ -117,7 +117,7 @@ $params = $this->params;
 			}
 			?>
 			<!-- Wrap each in a DIV... -->
-			<div class="landing_item">
+			<div class="landing_item ">
 				<div class="landing_title">
 					<?php
 					echo $params->get($showIt . 'label');
@@ -125,7 +125,7 @@ $params = $this->params;
 					?>
 				</div>
 				<!-- end div id="landing_title" -->
-				<div class="landinglist">
+				<div class="landinglist" style="display: inline-block;">
 					<?php
 					if (isset($showhideall))
 					{

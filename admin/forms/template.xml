@@ -2333,6 +2333,7 @@
 			       label="JBS_CMN_SERIES_ORDERING"
 			       description="JBS_CMN_ORDERING_DESC"
 			       default="2">
+				<option value="0">JBS_TPL_FILTERS_DEFAULTORDER</option>
 				<option value="1">JBS_CMN_DESCENDING</option>
 				<option value="2">JBS_CMN_ASCENDING</option>
 			</field>
@@ -2341,6 +2342,7 @@
 			       label="JBS_CMN_BOOKS_ORDERING"
 			       description="JBS_CMN_ORDERING_DESC"
 			       default="2">
+				<option value="0">JBS_TPL_FILTERS_DEFAULTORDER</option>
 				<option value="1">JBS_CMN_DESCENDING</option>
 				<option value="2">JBS_CMN_ASCENDING</option>
 			</field>
@@ -2349,6 +2351,7 @@
 			       label="JBS_CMN_TEACHERS_ORDERING"
 			       description="JBS_CMN_TEACHER_ORDERING_DESC"
 			       default="2">
+				<option value="0">JBS_TPL_FILTERS_DEFAULTORDER</option>
 				<option value="1">JBS_CMN_DESCENDING</option>
 				<option value="2">JBS_CMN_ASCENDING</option>
 			</field>
@@ -2357,6 +2360,7 @@
 			       label="JBS_CMN_YEARS_ORDERING"
 			       description="JBS_CMN_ORDERING_DESC"
 			       default="1">
+				<option value="0">JBS_TPL_FILTERS_DEFAULTORDER</option>
 				<option value="1">JBS_CMN_DESCENDING</option>
 				<option value="2">JBS_CMN_ASCENDING</option>
 			</field>
@@ -2365,6 +2369,7 @@
 			       label="JBS_CMN_TOPICS_ORDERING"
 			       description="JBS_CMN_ORDERING_DESC"
 			       default="2">
+				<option value="0">JBS_TPL_FILTERS_DEFAULTORDER</option>
 				<option value="1">JBS_CMN_DESCENDING</option>
 				<option value="2">JBS_CMN_ASCENDING</option>
 			</field>
@@ -2373,6 +2378,7 @@
 			       label="JBS_CMN_LOCATIONS_ORDERING"
 			       description="JBS_CMN_ORDERING_DESC"
 			       default="2">
+				<option value="0">JBS_TPL_FILTERS_DEFAULTORDER</option>
 				<option value="1">JBS_CMN_DESCENDING</option>
 				<option value="2">JBS_CMN_ASCENDING</option>
 			</field>
@@ -2381,6 +2387,7 @@
 			       label="JBS_CMN_MESSAGETYPE_ORDERING"
 			       description="JBS_CMN_ORDERING_DESC"
 			       default="2">
+				<option value="0">JBS_TPL_FILTERS_DEFAULTORDER</option>
 				<option value="1">JBS_CMN_DESCENDING</option>
 				<option value="2">JBS_CMN_ASCENDING</option>
 			</field>
