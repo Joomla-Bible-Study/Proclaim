@@ -52,7 +52,10 @@
 			<option value="0">JBS_ADM_HITS_PLAYS_DOWNLOAD</option>
 			<option value="1">JBS_ADM_PLAYS_DOWNLOAD</option>
 		</field>
-
+		<field name="main_image_icon_or_image" type="list" default="0" label="JBS_ADM_MAIN_IMAGE_OR_ICON" description="JBS_ADM_MAIN_IMAGE_OR_ICON_DESC" labelclass="control-label">
+			<option value="0">JBS_ADM_MAIN_IMAGE_USE_ICON</option>
+			<option value="1">JBS_ADM_MAIN_IMAGE_USE_IMAGE</option>
+		</field>
 		<field name="default_main_image" type="media" size="50" label="JBS_ADM_DEFAULT_MAIN_IMAGE"
 		       description="JBS_ADM_DEFAULT_MAIN_IMAGE_DESC" labelclass="control-label"/>
 		<field name="default_series_image" type="media" size="50" label="JBS_ADM_DEFAULT_SERIES_IMAGE"

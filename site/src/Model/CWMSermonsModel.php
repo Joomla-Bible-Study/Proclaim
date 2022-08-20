@@ -689,7 +689,7 @@ class CWMSermonsModel extends ListModel
 		if (empty($orderCol) || $orderCol === " ")
 		{
 			$orderCol = $this->state->get('list.ordering', 'study.studydate');
-
+            $this->state->set('list.direction', $this->state->params->get('default_order'));
 			// Set order by menu if set. New Default is blank as of 9.2.5
 			if ($this->state->params->get('order') === '2')
 			{

@@ -71,17 +71,22 @@ $itemid       = $app->input->get('Itemid');
 				</div>
 			</div>
 		<?php } ?>
-		<div class="row">
-			<?php if ($this->params->get('show_page_image') > 0)
-			{
-				echo '<div class="col">' . $this->mainimage . '</div>';
-			}
-			if ($this->params->get('show_page_title') > 0)
-			{
-				echo '<h2><div class="col">' . $this->params->get('list_page_title') . '</div></h2>';
-			}
-			?>
-		</div>
+		<?php if ($this->params->get('show_page_image == 1') || $this->params->get('show_page_title') > 0){ ?>
+            <div class="col" style="display: inline-flex;">
+
+                <?php if ($this->params->get('show_page_image') > 0)
+                {
+                    if ($this->params->get('main_image_icon_or_image') == 1)
+                    {echo '<div class="col" style="display: flex;>' . $this->mainimage . '</div>';}
+                    else {echo '<i class="fas fa-bible fa-3x" style="display: flex; margin-right: 10px;"></i>';}
+                }
+                if ($this->params->get('show_page_title') > 0)
+                {
+                    echo '<h2 style="display: flex; list-style: none; align-items: center;"> ' . $this->params->get('list_page_title') . '</h2>';
+                }
+                ?>
+            </div>
+        <?php } ?>
 		<div class="row">
 			<div class="col-12">
 				<?php
