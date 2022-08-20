@@ -13,16 +13,27 @@ use Joomla\CMS\Html\HTMLHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
-// Include the component HTML helpers.
-HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 // Load the tooltip behavior.
-HtmlHelper::_('formbehavior.chosen', 'select');
 HtmlHelper::_('proclaim.framework');
 HTMLHelper::_('proclaim.loadcss', $this->state->params);
 
-HtmlHelper::_('behavior.formvalidator');
-HtmlHelper::_('behavior.keepalive');
+$wa = $this->document->getWebAssetManager();
+$wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
+$wa->useScript('keepalive')
+	->useScript('form.validate')
+	->addInlineScript('
+	Joomla.submitbutton = function (task) {
+		if (task == "cwmcommentfrom.cancel" || document.formvalidator.isValid(document.getElementById("adminForm")))
+		{
+			Joomla.submitform(task, document.getElementById("adminForm"));
+		}
+		else
+		{
+			alert("' . $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')) . '")
+		}
+	}
+');
 
 $app = Factory::getApplication();
 $input = $app->input;
@@ -33,12 +44,12 @@ $input = $app->input;
 		method="post" name="adminForm" id="adminForm" class="form-validate form-vertical">
 		<div class="btn-toolbar">
 			<div class="btn-group">
-				<button type="button" class="btn btn-primary" onclick="submitbutton('commentform.save');  ">
+				<button type="button" class="btn btn-primary" onclick="Joomla.submitbutton('cwmcommentform.save');  ">
 					<i class="icon-ok"></i> <?php echo Text::_('JSAVE') ?>
 				</button>
 			</div>
 			<div class="btn-group">
-				<button type="button" class="btn" onclick="submitbutton('commentform.cancel');  ">
+				<button type="button" class="btn" onclick="Joomla.submitbutton('cwmcommentform.cancel');  ">
 					<i class="icon-cancel"></i> <?php echo Text::_('JCANCEL') ?>
 				</button>
 			</div>

@@ -8,12 +8,12 @@
 	<copyright>(C) 2007 - 2022 Proclaim All rights reserved.</copyright>
 	<version>10.0.0.DEV</version>
 	<creationDate>December 1, 2021</creationDate>
-	<license>http://www.gnu.org/licenses/gpl.html</license>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<description>JBS_INS_XML_DESCRIPTION</description>
 	<namespace path="src">CWM\Component\Proclaim</namespace>
 
 	<!-- Installer Hooks -->
-	<scriptfile>biblestudy.script.php</scriptfile>
+	<scriptfile>proclaim.script.php</scriptfile>
 
 	<!-- Installer Hooks -->
 	<install>
