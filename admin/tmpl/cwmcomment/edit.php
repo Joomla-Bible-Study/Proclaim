@@ -32,7 +32,7 @@ $wa->useScript('keepalive')
 			alert(' . $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')) . ')
 		}
 	}
-');;
+');
 
 // Create shortcut to parameters.
 
