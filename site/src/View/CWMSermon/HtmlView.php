@@ -145,10 +145,13 @@ class HtmlView extends BaseHtmlView
         $container = Factory::getContainer();
         $app = $container->get(SiteApplication::class);
         Factory::$application = $app;
+        HTMLHelper::script('media/com_proclaim/js/cwmcore.js');
+
+
         $user           = Factory::getApplication()->getSession()->get('user');
 		$CWMListing = new CWMListing;
 		$this->item     = $this->get('Item');
-		$this->print    = $app->input->getBool('print');
+		//$this->print    = $app->input->getBool('print'); removing this as also remomved in Joomla 4. Browser will do this.
 		$this->state    = $this->get('State');
 		$this->user     = $user;
 		$this->comments = $this->get('comments');
@@ -446,7 +449,7 @@ class HtmlView extends BaseHtmlView
 
 		$this->page         = new \stdClass;
 		$this->page->social = $CWMListing->getShare($detailslink, $this->item, $this->item->params);
-
+//var_dump($this->page->social);
 		// End process prepare content plugins
 		$this->template = $template;
 		$this->article  = $article;

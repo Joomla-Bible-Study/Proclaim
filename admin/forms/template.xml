@@ -102,40 +102,46 @@
 			</field>
 		</fieldset>
 		<fieldset name="FILTERS" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-			<field name="teacher_id" type="sql"
+			<field name="lteacher_id" type="sql"
 			       query="SELECT * FROM #__bsms_teachers WHERE published = 1"
 			       key_field="id" value_field="teachername" default="-1" multiple="true"
 			       size="10" label="JBS_CMN_FILTERS_TEACHER" description="JBS_CMN_FILTERS_DESC">
 				<option value="-1">JBS_CMN_SHOW_ALL</option>
 			</field>
-			<field name="series_id" type="sql"
+			<field name="lseries_id" type="sql"
 			       query="SELECT #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_series.published AS srpub, #__bsms_studies.series_id, #__bsms_studies.published AS spub FROM #__bsms_series LEFT JOIN #__bsms_studies ON ( #__bsms_studies.id = #__bsms_series.id ) WHERE #__bsms_series.published = 1"
 			       key_field="sid" value_field="series_text" default="-1" multiple="true"
 			       size="10" label="JBS_CMN_FILTERS_SERIES" description="JBS_CMN_FILTERS_DESC">
 				<option value="-1">JBS_CMN_SHOW_ALL</option>
 			</field>
-			<field name="booknumber" type="sql"
+			<field name="lbooknumber" type="sql"
 			       query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC"
 			       key_field="booknumber" value_field="bookname" default="-1" multiple="true"
 			       size="10" translate="true" label="JBS_CMN_FILTERS_BOOKS"
 			       description="JBS_CMN_FILTERS_DESC">
 				<option value="-1">JBS_CMN_SHOW_ALL</option>
 			</field>
-			<field name="topic_id" type="topicslist" default="-1" multiple="true"
+			<field name="ltopic_id" type="topicslist" default="-1" multiple="true"
 			       size="10" label="JBS_CMN_FILTERS_TOPICS" description="JBS_CMN_FILTERS_DESC"
 			       class="inputbox">
 				<option value="-1">JBS_CMN_SHOW_ALL</option>
 			</field>
-			<field name="messagetype" type="sql"
+			<field name="lmessagetype" type="sql"
 			       query="SELECT * FROM #__bsms_message_type WHERE published = 1"
 			       key_field="id" value_field="message_type" default="-1" multiple="true"
 			       size="5" label="JBS_CMN_FILTERS_MESSAGETYPES" description="JBS_CMN_FILTERS_DESC">
 				<option value="-1">JBS_CMN_SHOW_ALL</option>
 			</field>
-			<field name="locations" type="sql"
+			<field name="llocations" type="sql"
 			       query="SELECT * FROM #__bsms_locations WHERE published = 1"
 			       key_field="id" value_field="location_text" default="-1" multiple="true"
 			       size="5" label="JBS_CMN_FILTERS_LOCATIONS" description="JBS_CMN_FILTERS_DESC">
+				<option value="-1">JBS_CMN_SHOW_ALL</option>
+			</field>
+			<field name="lyears" type="sql"
+				   query="SELECT DISTINCT YEAR(studydate) FROM #__bsms_studies WHERE published = 1 ORDER BY YEAR(studydate) DESC"
+				   key_field="YEAR(studydate)" value_field="YEAR(studydate)" default="-1" multiple="true"
+				   size="5" label="JBS_CMN_FILTERS_YEARS" description="JBS_CMN_FILTERS_DESC">
 				<option value="-1">JBS_CMN_SHOW_ALL</option>
 			</field>
 		</fieldset>
@@ -288,12 +294,6 @@
 			</field>
 			<field name="list_page_title" type="text" default="Bible Studies"
 			       label="JBS_TPL_PAGE_TITLE"/>
-			<field name="list_title_align" type="list" default="text-align:center" translate="true" multiple="false"
-			       label="JBS_TPL_ALIGN" description="JBS_TPL_ALIGN_DESC">
-				<option value="text-align:center">JBS_CMN_CENTER</option>
-				<option value="text-align:right">JBS_CMN_RIGHT</option>
-				<option value="text-align:left">JBS_CMN_LEFT</option>
-			</field>
 			<field name="use_headers_list" type="list" default="1"
 			       label="JBS_TPL_LISTITEMS_USE_HEADERS_LIST" description="JBS_TPL_LISTITEMS_USE_HEADERS_LIST_DESC">
 				<option value="0">JBS_TPL_NO_HEADER_ROW</option>
@@ -350,12 +350,6 @@
 				<option value="0">JBS_TPL_SHOW_ALL_BOOKS</option>
 				<option value="1">JBS_TPL_SHOW_BOOKS_W_STUDIES</option>
 			</field>
-			<field name="use_go_button" type="list" default="1"
-			       label="JBS_TPL_LISTITEMS_USE_GO_BUTTON" description="JBS_TPL_LISTITEMS_USE_GO_BUTTON_DESC">
-				<option value="0">JBS_CMN_DONT_USE</option>
-				<option value="1">JBS_TPL_LISTITEMS_USE_GO_BUTTON</option>
-			</field>
-
 			<field name="show_teacher_search" type="list" default="1"
 			       label="JBS_TPL_LISTITEMS_SHOW_TEACHER_SEARCH"
 			       description="JBS_TPL_LISTITEMS_SHOW_TEACHER_SEARCH_DESC">
@@ -425,10 +419,6 @@
 				<option value="1">JBS_TPL_LISTITEMS_SHOW_TOP</option>
 				<option value="2">JBS_TPL_LISTITEMS_SHOW_BOTTOM</option>
 			</field>
-			<field name="listcolor1" type="color" default="" label="JBS_TPL_LISTCOLOR1"
-			       description="JBS_TPL_LISTCOLOR_DESC"/>
-			<field name="listcolor2" type="color" default="" label="JBS_TPL_LISTCOLOR2"
-			       description="JBS_TPL_LISTCOLOR_DESC"/>
 		</fieldset>
 		<fieldset name="DISPLAYELEMENTS1" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
 			<field name="rowspanitem" type="list" default="0" label="JBS_TPL_ROWSPANITEM"
@@ -757,11 +747,7 @@
 
 		</fieldset>
 		<fieldset name="DETAILS" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-			<field name="show_print_view" type="list" default="1"
-			       label="JBS_TPL_DETAILS_SHOW_PRINT_VIEW">
-				<option value="0">JBS_CMN_HIDE</option>
-				<option value="1">JBS_CMN_SHOW</option>
-			</field>
+
 			<field name="link_text" type="text" size="75"
 			       default="Return to Studies List" label="JBS_TPL_DETAILS_LINK_TEXT"
 			       description="JBS_TPL_DETAILS_LINK_TEXT_DESC"/>

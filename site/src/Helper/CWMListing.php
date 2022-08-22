@@ -498,6 +498,7 @@ class CWMListing
 				}
 
 				$row[] = $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header = 0, $type);
+                $row[] = '</td></tr><tr style="width: 100%; border-bottom: 2px;"><hr/></tr></tbody></table>';
 			}
 		}
 
@@ -531,6 +532,7 @@ class CWMListing
 			{
 				$oddeven = ($oddeven === $class1) ? $class2 : $class1;
 				$row[]   = $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header = 0, $type);
+                $row[] = '</td></tr><tr style="width: 100%; border-bottom: 2px;"><hr/></tr></tbody></table>';
 			}
 		}
 
@@ -2727,22 +2729,19 @@ $thadd = '';
 	 */
 	public function getShare($link, $row, $params)
 	{
-		$sharetype = $params->get('socialnetworking', 1);
 
 		$shareit = '<div class="row">';
 
-		if ($sharetype === 1)
-		{
 			$shareit .= '<div class="pull-right">
 						<!-- AddThis Button BEGIN -->
-						<a class="addthis_button" href="//www.addthis.com/bookmark.php?v=250">
-						<img src="//s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" border="0" alt="Share" />
+						<a class="addthis_button" href="//www.addthis.com/bookmark.php?v=300">
+						<img src="//s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Share" />
 						</a>
 						<script type="text/javascript">var addthis_config = {"data_track_clickback":true};</script>
-						<script type="text/javascript" src="//s7.addthis.com/js/250/addthis_widget.js"></script>
+						<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js"></script>
 						<!-- AddThis Button END -->
 						</div>';
-		}
+
 
 		$shareit .= '</div>';
 
