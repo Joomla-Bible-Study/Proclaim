@@ -37,7 +37,7 @@ defined('_JEXEC') or die;
         $user           = Factory::getApplication()->getSession()->get('user');
 		$groups         = $user->getAuthorisedViewLevels();
 		$comment_access = $this->item->params->get('comment_access');
-
+        echo $this->loadTemplate('commentsform');
 		if (in_array($show_comments, $groups, true))
 		{
 			// Determine what kind of comments component to use

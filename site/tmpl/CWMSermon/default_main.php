@@ -101,6 +101,8 @@ if ($this->item->params->get('showrelated') === '2')
 {
 	echo $this->related;
 }
+
+
 ?>
 <?php
 if ($this->item->params->get('showpodcastsubscribedetails') === '2')

@@ -10,7 +10,9 @@
 namespace CWM\Component\Proclaim\Site\View\CWMSermon;
 defined('_JEXEC') or die;
 // No Direct Access
+use JForm;
 use Joomla\CMS\Application\SiteApplication;
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Plugin\PluginHelper;
 use CWM\Component\Proclaim\Site\Helper\CWMListing;
@@ -146,8 +148,7 @@ class HtmlView extends BaseHtmlView
         $app = $container->get(SiteApplication::class);
         Factory::$application = $app;
         HTMLHelper::script('media/com_proclaim/js/cwmcore.js');
-
-
+        $this->form = Form::getInstance('customForm','components/com_proclaim/tmpl/CWMSermon/default.xml',array('control' => 'jform'));
         $user           = Factory::getApplication()->getSession()->get('user');
 		$CWMListing = new CWMListing;
 		$this->item     = $this->get('Item');
@@ -266,7 +267,7 @@ class HtmlView extends BaseHtmlView
 				}
 			}
 		}
-
+        $this->captchaEnabled = true;
 		$this->simple = CWMHelper::getSimpleView();
 
 		$offset = $this->state->get('list.offset');

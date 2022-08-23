@@ -275,6 +275,7 @@ class CWMPagebuilder
 		// Run content plugins
 		$dispatcher = Factory::getApplication();
 
+
 		$dispatcher->triggerEvent('onContentPrepare', array(
 				'com_proclaim.sermon',
 				& $item,

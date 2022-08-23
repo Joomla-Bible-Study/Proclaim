@@ -11,6 +11,9 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Router\Route;
+use Joomla\Event\Event;
 
 defined('_JEXEC') or die;
 HtmlHelper::_('behavior.keepalive');
@@ -35,9 +38,10 @@ HtmlHelper::_('behavior.keepalive');
 $commentjava = "javascript:ReverseDisplay('JBScomments')";
 
 //php code
-JPluginHelper::importPlugin('captcha');
-$dispatcher = JEventDispatcher::getInstance();
-$dispatcher->trigger('onInit', 'dynamic_recaptcha_1');
+PluginHelper::importPlugin('captcha');
+$dispatcher = Factory::getApplication()->getDispatcher();
+//$dispatcher = JEventDispatcher::getInstance();
+//$dispatcher->dispatch('onInit', $id='dynamic_recaptcha_1');
 
 switch ($this->item->params->get('link_comments', 0))
 {
@@ -64,7 +68,7 @@ switch ($this->item->params->get('link_comments', 0))
     </div>
 
 <?php
-$input = new JInput;
+$input = Factory::getApplication()->input;
 
 if (!$this->item->id)
 {
@@ -112,7 +116,7 @@ else
 <?php
 // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 $allow          = 0;
-$user           = J$user = Factory::getApplication()->getSession()->get('user');
+$user           = $user = Factory::getApplication()->getSession()->get('user');
 $groups         = $user->getAuthorisedViewLevels();
 $show_comments  = $this->item->params->get('show_comments');
 $comment_access = $this->item->params->get('comment_access');
@@ -215,7 +219,7 @@ if ($allow > 9)
             <div class="row-fluid">
             <div class="span12">
           <?php      /* @todo fix getString method */ ?>
-<?php $input = Factory::getApplication(); $t = $input->getString('t'); ?>
+<?php $input = Factory::getApplication()->input; $t = $input->get('t'); ?>
                 <input type="hidden" name="study_id" id="study_id" value="<?php echo $this->item->id ?>"/>
                 <input type="hidden" name="t" value="<?php echo $t;?>">
                 <input type="hidden" name="task" value="comment"/>
@@ -240,6 +244,20 @@ if ($allow > 9)
 </div>
 	<?php
 } // End if $allow > 9
+
+$fieldSets = $this->form->getFieldsets();
+foreach ($fieldSets as $name => $fieldSet) :
+    foreach ($this->form->getFieldset($name) as $field):
+        echo $field->getControlGroup();
+    endforeach;
+endforeach;
 ?>
+<div class="control-group">
+                <div class="control-label"><?php echo $this->form->getLabel('captcha'); ?></div>
+<div class="controls"><?php echo $this->form->getInput('captcha'); ?></div>
+</div>
+
+            </form>
+        </div>
 </div>
 
