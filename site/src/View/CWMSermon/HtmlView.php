@@ -449,7 +449,7 @@ class HtmlView extends BaseHtmlView
 
 		$this->page         = new \stdClass;
 		$this->page->social = $CWMListing->getShare($detailslink, $this->item, $this->item->params);
-//var_dump($this->page->social);
+
 		// End process prepare content plugins
 		$this->template = $template;
 		$this->article  = $article;

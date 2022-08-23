@@ -2712,7 +2712,7 @@ $thadd = '';
 		{
 			$response = Text::_('JBS_STY_NO_PASSAGE_INCLUDED');
 		}
-
+var_dump($response);
 		return $response;
 	}
 
@@ -2734,11 +2734,11 @@ $thadd = '';
 
 			$shareit .= '<div class="pull-right">
 						<!-- AddThis Button BEGIN -->
-						<a class="addthis_button" href="//www.addthis.com/bookmark.php?v=300">
+						<a class="addthis_button" href="//www.addthis.com/bookmark.php?v=250">
 						<img src="//s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Share" />
 						</a>
 						<script type="text/javascript">var addthis_config = {"data_track_clickback":true};</script>
-						<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js"></script>
+						<script type="text/javascript" src="//s7.addthis.com/js/250/addthis_widget.js"></script>
 						<!-- AddThis Button END -->
 						</div>';
 

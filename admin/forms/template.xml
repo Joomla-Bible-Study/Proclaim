@@ -747,7 +747,13 @@
 
 		</fieldset>
 		<fieldset name="DETAILS" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-
+			<field name="details_show_header" type="list" default="1"
+				   label="JBS_TPL_DETAILS_SHOW_HEADER"
+				   description="JBS_TPL_DETAILS_SHOW_HEADER_DESC">
+			<option value="0">JBS_TPL_DETAILS_SHOW_HEADER_NONE</option>
+			<option value="1">JBS_TPL_DETAILS_SHOW_HEADER_TITLE</option>
+			<option value="2">JBS_TPL_DETAILS_SHOW_HEADER_SCRIPTURE</option>
+			</field>
 			<field name="link_text" type="text" size="75"
 			       default="Return to Studies List" label="JBS_TPL_DETAILS_LINK_TEXT"
 			       description="JBS_TPL_DETAILS_LINK_TEXT_DESC"/>
@@ -758,6 +764,7 @@
 				<option value="1">JBS_TPL_RELATED_TOP</option>
 				<option value="2">JBS_TPL_RELATED_BOTTOM</option>
 			</field>
+
 			<field name="showpodcastsubscribedetails" type="list" default="1"
 			       label="JBS_TPL_PODCAST_SHOW" description="JBS_TPL_PODCAST_SHOW_DESC">
 				<option value="0">JBS_CMN_HIDE</option>
@@ -769,6 +776,12 @@
 			       label="JBS_TPL_DETAILS_SHOW_SCRIPTURE_LINK" description="JBS_TPL_DETAILS_SHOW_SCRIPTURE_LINK_DESC">
 				<option value="0">JBS_TPL_NO_PLUGINS</option>
 				<option value="1">JBS_TPL_ALL_PLUGINS</option>
+			</field>
+			<field name="showpassage_icon" type="list" default="1"
+				   label="JBS_TPL_SHOW_PASSAGE_ICON" description="JBS_TPL_SHOW_PASSAGE_ICON_DESC">
+				<option value="0">JBS_TPL_NONE_ICON</option>
+				<option value="1">JBS_TPL_PASSAGE_ICON</option>
+				<option value="2">JBS_TPL_PASSAGE_TEXT</option>
 			</field>
 			<field name="show_passage_view" type="list" default="3"
 			       label="JBS_TPL_DETAILS_SHOW_PASSAGE_VIEW" description="JBS_TPL_DETAILS_SHOW_PASSAGE_VIEW_DESC">

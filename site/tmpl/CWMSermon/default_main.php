@@ -44,7 +44,19 @@ if ($this->item->params->get('showpodcastsubscribedetails') === '1')
 	</div>
 <?php
 }
-if ($this->item->params->get('showrelated') === '1')
+?>
+    <div class="page-header">
+        <h1 itemprop="headline">
+            <?php if ($this->item->params->get('details_show_header') > 0) {
+                if ($this->item->params->get('details_show_header') == 1) {
+                    echo $this->item->studytitle;
+                } else {
+                    echo $this->item->scripture1;
+                }
+            }?>		</h1>
+    </div>
+<?php
+    if ($this->item->params->get('showrelated') === '1')
 {
 	?>
 	<div class="row-fluid">
@@ -78,6 +90,8 @@ echo $list;
 
 <?php
 echo $this->passage;
+?>
+    <hr/> <?php
 
 echo $this->item->studytext;
 
