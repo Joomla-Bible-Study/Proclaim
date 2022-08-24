@@ -51,10 +51,10 @@ if ($url)
 				<?php
 				if ($this->params->get('show_series_title') > 0)
 				{
-					echo $this->params->get('series_title');
+					echo '<h1>'.$this->params->get('series_title').'</h1>';
 				}
 				?>
-			</<?php echo $classelement; ?> </div>
+
 		</div>
 		<!--header-->
 

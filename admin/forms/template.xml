@@ -1372,8 +1372,6 @@
 				<option value="0">JBS_CMN_HIDE</option>
 				<option value="1">JBS_CMN_SHOW</option>
 			</field>
-			<field name="series_element" type="elementoptions" default="1" translate="true" multiple="false"
-			       label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 			<field name="use_headers_series" type="list" default="1"
 			       label="JBS_TPL_LISTITEMS_USE_HEADERS_LIST" description="JBS_TPL_LISTITEMS_USE_HEADERS_LIST_DESC">
 				<option value="0">JBS_TPL_NO_HEADER_ROW</option>

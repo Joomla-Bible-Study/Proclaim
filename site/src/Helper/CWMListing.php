@@ -423,10 +423,10 @@ class CWMListing
 
 		if ($type === 'seriesdisplays')
 		{
-			if ($params->get('use_headers_series') > 0 && is_object($items))
+			if ($params->get('use_headers_series') == 1)
 			{
 				//Start the header
-				$list .= '<thead class="'.$params->get('listheadertype').'">';
+				$list .= '<thead class="'.$params->get('listheadertype').'" colspan="12">';
 				$list .= $this->getFluidRow($listrows, $listsorts, $items[0], $params, $template, $oddeven, $header = 1, $type);
 				$list .= '</thead>';
 			}
@@ -498,7 +498,7 @@ class CWMListing
 				}
 
 				$row[] = $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header = 0, $type);
-                $row[] = '</td></tr><tr style="width: 100%; border-bottom: 2px;"><hr/></tr></tbody></table>';
+                $row[] = '</td></tr><tr style="width: 100%; border-bottom: 2px;"></tr><tr style="border-bottom: 1px solid darkgrey; padding-bottom: 5px;"</tr>';
 			}
 		}
 
@@ -532,7 +532,7 @@ class CWMListing
 			{
 				$oddeven = ($oddeven === $class1) ? $class2 : $class1;
 				$row[]   = $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header = 0, $type);
-                $row[] = '</td></tr><tr style="width: 100%; border-bottom: 2px;"><hr/></tr></tbody></table>';
+                $row[] = '</td></tr><tr style="border-bottom: 1px solid darkgrey; padding-bottom: 5px;"</tr>';
 			}
 		}
 
@@ -541,9 +541,9 @@ class CWMListing
 			foreach ($items as $item)
 			{
 				$oddeven = ($oddeven === $class1) ? $class2 : $class1;
-                $row[] = '<table style="width: 100%; display: table; border-bottom: 2px;" class="table w-auto table-borderless"><tbody style="width: 100%; display: table;"><tr><td></td></tr><tr><td>';
+                $row[] = '<table style="width: 100%; display: table; border-bottom: 2px;" class="table w-auto table-borderless"><tbody style="width: 100%; display: table;"><tr><td>';
                 $row[]   = $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header = 0, $type);
-                $row[] = '</td></tr><tr style="width: 100%; border-bottom: 2px;"><hr/></tr></tbody></table>';
+                $row[] = '</td></tr><tr style="border-bottom: 1px solid darkgrey; padding-bottom: 5px;"</tr>';
 
 			}
 		}
@@ -865,13 +865,8 @@ class CWMListing
 
 
 		$frow = '';
-		//$frow = '<div class="table-responsive" about="' . $type . '"><table class="table w-auto table-borderless">';
-		if ($header === 1)
-		{
-			//$frow .= '<thead class="'.$params->get('listheadertype').'">';
-		}
 
-		$row1count  = 0;
+        $row1count  = 0;
 		$row2count  = 0;
 		$row3count  = 0;
 		$row4count  = 0;
@@ -948,6 +943,7 @@ $thadd = '';
 				if ($header === 1)
 				{
 					if ($row->colspan >0) {$thadd = 'colspan="'.$row->colspan.'"';}
+                    if ($extra == 's'){$thadd = 'class="col-12"';}
 					$frow .= '<th scope="col"'.$thadd.' scope="col">'.$this->getFluidData($item, $row, $params, $template, $header = 1, $type);
 				}
 				else
@@ -1112,17 +1108,7 @@ $thadd = '';
 				}
 			}
 		}
-		// Close out if header is used.
-		if ($span)
-		{
-			//$frow .= '</thead>';
-		}
-		if ($header === 1)
-		{
-			//$frow .= '</thead>';
-		}
-		// Close out div.
-		//$frow .= '</table></div>';
+
 
 		return $frow;
 	}
@@ -1560,6 +1546,7 @@ $thadd = '';
 				else
 				{
 					isset($item->studyintro) ? $data = HtmlHelper::_('content.prepare', $item->studyintro, '', 'com_proclaim.' . $type) : $data = '';
+                    if ($params->get('series_characters')){substr($item->studyintro, 0, $params->get('series_characters'));}
 				}
 				break;
 			case $extra . 'series':
