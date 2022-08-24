@@ -863,14 +863,7 @@ class CWMListing
 		$rowspanitemspan = $params->get($extra . 'rowspanitemspan');
 		$rowspanbalance  = 12 - $rowspanitemspan;
 
-		if (!empty($oddeven))
-		{
-			$background = "background-color: " . $oddeven . ";";
-		}
-		else
-		{
-			$background = "";
-		}
+
 		$frow = '';
 		//$frow = '<div class="table-responsive" about="' . $type . '"><table class="table w-auto table-borderless">';
 		if ($header === 1)
@@ -1193,104 +1186,78 @@ $thadd = '';
 				break;
 
 			case $extra . 'teacherallinone':
-				if (isset($item->email))
-				{
-					($item->email ? $data = '<a href="mailto:' . $item->email . '">
+                if ($header == 1){$data .='Teacher Contact';}
+                else {
+                    if (isset($item->email)) {
+                        ($item->email ? $data = '<a href="mailto:' . $item->email . '">
 				<span class="fas fa-envelope" style="font-size:20px;" title="Website"></span></a>' : $data = '');
 
-					if ($item->website)
-					{
-						if (substr_count($item->website, 'http://', 0))
-						{
-							$data .= '<a href="' . $item->website . '" target="_blank">
+                        if ($item->website) {
+                            if (substr_count($item->website, 'http://', 0)) {
+                                $data .= '<a href="' . $item->website . '" target="_blank">
 						<span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
-						}
-						else
-						{
-							$data .= '<a href="http://' . $item->website . '" target="_blank">
+                            } else {
+                                $data .= '<a href="http://' . $item->website . '" target="_blank">
 						<span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
-						}
-					}
+                            }
+                        }
 
-					if ($item->facebooklink)
-					{
-						if (substr_count($item->facebooklink, 'http://', 0))
-						{
-							$data .= '<a href="' . $item->facebooklink . '" target="_blank">
+                        if ($item->facebooklink) {
+                            if (substr_count($item->facebooklink, 'http://', 0)) {
+                                $data .= '<a href="' . $item->facebooklink . '" target="_blank">
 						<span class="fab fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
-						}
-						else
-						{
-							$data .= '<a href="http://' . $item->facebooklink . '" target="_blank">
+                            } else {
+                                $data .= '<a href="http://' . $item->facebooklink . '" target="_blank">
 						<span class="fab fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
-						}
-					}
+                            }
+                        }
 
-					if ($item->twitterlink)
-					{
-						if (substr_count($item->twitterlink, 'http://', 0))
-						{
-							$data .= '<a href="' . $item->twitterlink . '" target="_blank">
+                        if ($item->twitterlink) {
+                            if (substr_count($item->twitterlink, 'http://', 0)) {
+                                $data .= '<a href="' . $item->twitterlink . '" target="_blank">
 						<span class="fab fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
-						}
-						else
-						{
-							$data .= '<a href="http://' . $item->twitterlink . '" target="_blank">
+                            } else {
+                                $data .= '<a href="http://' . $item->twitterlink . '" target="_blank">
 						<span class="fab fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
-						}
-					}
+                            }
+                        }
 
-					if ($item->bloglink)
-					{
-						if (substr_count($item->bloglink, 'http://', 0, 7))
-						{
-							$data .= '<a href="' . $item->bloglink . '" target="_blank">
+                        if ($item->bloglink) {
+                            if (substr_count($item->bloglink, 'http://', 0, 7)) {
+                                $data .= '<a href="' . $item->bloglink . '" target="_blank">
 						<span class="fas fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
-						}
-						else
-						{
-							$data .= '<a href="http://' . $item->bloglink . '" target="_blank">
+                            } else {
+                                $data .= '<a href="http://' . $item->bloglink . '" target="_blank">
 						<span class="fas fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
-						}
-					}
+                            }
+                        }
 
-					if ($item->link1)
-					{
-						if (substr_count($item->link1, 'http://', 0))
-						{
-							$data .= '<a href="' . $item->link1 . '" target="_blank">' . $item->link1label . '</a>';
-						}
-						else
-						{
-							$data .= '<a href="http://' . $item->link1 . '" target="_blank">' . $item->link1label . '</a>';
-						}
-					}
+                        if ($item->link1) {
+                            if (substr_count($item->link1, 'http://', 0)) {
+                                $data .= '<a href="' . $item->link1 . '" target="_blank">' . $item->link1label . '</a>';
+                            } else {
+                                $data .= '<a href="http://' . $item->link1 . '" target="_blank">' . $item->link1label . '</a>';
+                            }
+                        }
 
-					if ($item->link2)
-					{
-						if (substr_count($item->link2, 'http://', 0))
-						{
-							$data .= '<a href="' . $item->link2 . '" target="_blank">' . $item->link2label . '</a>';
-						}
-						else
-						{
-							$data .= '<a href="http://' . $item->link2 . '" target="_blank">' . $item->link2label . '</a>';
-						}
-					}
+                        if ($item->link2) {
+                            if (substr_count($item->link2, 'http://', 0)) {
+                                $data .= '<a href="' . $item->link2 . '" target="_blank">' . $item->link2label . '</a>';
+                            } else {
+                                $data .= '<a href="http://' . $item->link2 . '" target="_blank">' . $item->link2label . '</a>';
+                            }
+                        }
 
-					if ($item->link3)
-					{
-						if (substr_count($item->link3, 'http://', 0))
-						{
-							$data .= '<a href="' . $item->link3 . '" target="_blank">' . $item->link3label . '</a>';
-						}
-						else
-						{
-							$data .= '<a href="http://' . $item->link3 . '" target="_blank">' . $item->link3label . '</a>';
-						}
-					}
-				}
-				break;
+                        if ($item->link3) {
+                            if (substr_count($item->link3, 'http://', 0)) {
+                                $data .= '<a href="' . $item->link3 . '" target="_blank">' . $item->link3label . '</a>';
+                            } else {
+                                $data .= '<a href="http://' . $item->link3 . '" target="_blank">' . $item->link3label . '</a>';
+                            }
+                        }
+                    }
+                }
+                    break;
 
 			case $extra . 'teacherlong':
 				if ($header === 1)
@@ -2712,7 +2679,7 @@ $thadd = '';
 		{
 			$response = Text::_('JBS_STY_NO_PASSAGE_INCLUDED');
 		}
-var_dump($response);
+
 		return $response;
 	}
 
