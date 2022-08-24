@@ -55,7 +55,7 @@ if ($url)
 				}
 				?>
 			</<?php echo $classelement; ?> </div>
-		</div></div>
+		</div>
 		<!--header-->
 
 		<div id="bsdropdownmenu">
@@ -64,7 +64,8 @@ if ($url)
 
 			if ($this->params->get('series_list_show_pagination') == 1)
 			{
-				echo '<span class="display-limit">' . Text::_('JGLOBAL_DISPLAY_NUM') . $this->pagination->getLimitBox() . '</span>';
+				?> <div style="max-width: 150px"> <?php
+                echo '<span class="display-limit">' . Text::_('JGLOBAL_DISPLAY_NUM') . $this->pagination->getLimitBox() . '</span></div>';
 			}
 			if ($this->params->get('search_series') == 1)
 			{
