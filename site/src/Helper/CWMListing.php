@@ -1598,7 +1598,7 @@ $thadd = '';
                         $d = substr($data, 0, $params->get('series_characters'));
                         $d = strip_tags($d);
                         $data = substr($d, 0, strrpos($d, '. '));}
-                        $data .= '.';
+                    if ($data){$data .= '.';}
                 }
 
 				else
@@ -1608,7 +1608,7 @@ $thadd = '';
                         $d = substr($data, 0, $params->get('series_characters'));
                         $d = strip_tags($d);
                         $data = substr($d, 0, strrpos($d, '. '));}
-                        $data .= '.';
+                        if ($data){$data .= '.';}
                 }
 
 
@@ -1619,7 +1619,7 @@ $thadd = '';
                         $d = substr($data, 0, $params->get('series_characters'));
                         $d = strip_tags($d);
                         $data = substr($d, 0, strrpos($d, '. '));}
-                        $data .= '.';
+                    if ($data){$data .= '.';}
 				}
 				break;
 			case $extra . 'submitted':

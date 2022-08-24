@@ -1391,16 +1391,6 @@
 				<option value="0">JBS_CMN_HIDE</option>
 				<option value="1">JBS_CMN_SHOW</option>
 			</field>
-			<field name="series_list_teachers" default="1" type="list"
-			       label="JBS_TPL_SERIES_SEARCH_TEACHERS" description="JBS_TPL_SERIES_SEARCH_TEACHERS_DESC">
-				<option value="0">JBS_CMN_HIDE</option>
-				<option value="1">JBS_CMN_SHOW</option>
-			</field>
-			<field name="series_list_years" default="1" type="list"
-			       label="JBS_TPL_SERIES_SEARCH_YEARS" description="JBS_TPL_SERIES_SEARCH_YEARS_DESC">
-				<option value="0">JBS_CMN_HIDE</option>
-				<option value="1">JBS_CMN_SHOW</option>
-			</field>
 			<field name="series_list_show_pagination" type="list" default="1"
 			       label="JBS_TPL_LISTITEMS_SHOW_PAGINATION" description="JBS_TPL_LISTITEMS_SHOW_PAGINATION_DESC">
 				<option value="1">JBS_TPL_LISTITEMS_SHOW_TOP</option>

@@ -10,10 +10,12 @@
 // No Direct Access
 defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\MVC\View\HtmlView;
 use CWM\Component\Proclaim\Site\Helper\CWMListing;
 use CWM\Component\Proclaim\Site\Helper\CWMSerieslist;
 use Joomla\CMS\Html\HTMLHelper;
+use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Language\Text;
 HtmlHelper::_('bootstrap.framework');
@@ -35,9 +37,10 @@ if ($url)
 {
     HtmlHelper::_('stylesheet', $url);
 }
+//echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 ?>
 <div class="container-fluid">
-	<form action="<?php echo str_replace("&", "&amp;", $this->request_url); ?>" method="post" name="adminForm">
+	<form action="<?php Route::_('index.php?option=com_proclaim&view=cwmseriesdisplay') ?>" method="post" name="adminForm">
         <div class="hero-unit" style="padding-top:30px; padding-bottom:20px;"> <!-- This div is the header container -->
 			<div <?php echo $classelement; ?> class="componentheading">
 				<?php
@@ -67,22 +70,7 @@ if ($url)
 				?> <div style="max-width: 150px"> <?php
                 echo '<span class="display-limit">' . Text::_('JGLOBAL_DISPLAY_NUM') . $this->pagination->getLimitBox() . '</span></div>';
 			}
-			if ($this->params->get('search_series') == 1)
-			{
-				echo $this->page->series;
-			}
-			if ($this->params->get('series_list_teachers') == 1)
-			{
-				echo $this->page->teachers;
-			}
-			if ($this->params->get('series_list_years') == 1)
-			{
-				echo $this->page->years;
-			}
-			if ($this->go > 0)
-			{
-				echo $this->page->gobutton;
-			}
+
 			?>
 		</div>
 
