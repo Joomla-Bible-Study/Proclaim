@@ -1546,7 +1546,7 @@ $thadd = '';
 				else
 				{
 					isset($item->studyintro) ? $data = HtmlHelper::_('content.prepare', $item->studyintro, '', 'com_proclaim.' . $type) : $data = '';
-                    if ($params->get('series_characters')){substr($item->studyintro, 0, $params->get('series_characters'));}
+
 				}
 				break;
 			case $extra . 'series':
@@ -1594,15 +1594,32 @@ $thadd = '';
 				if ($type === 'seriesdisplays' || ($type === 'seriesdisplay' && $header !== 1))
 				{
 					(isset($item->description) ? $data = HTMLHelper::_('content.prepare', $item->description, '', 'com_proclaim.' . $type) : $data = '');
-				}
+                    if ($params->get('series_characters')){
+                        $d = substr($data, 0, $params->get('series_characters'));
+                        $d = strip_tags($d);
+                        $data = substr($d, 0, strrpos($d, '. '));}
+                        $data .= '.';
+                }
+
 				else
 				{
 					(isset($item->sdescription) ? $data = HtmlHelper::_('content.prepare', $item->sdescription, '', 'com_proclaim.' . $type) : $data = '');
-				}
+                    if ($params->get('series_characters')){
+                        $d = substr($data, 0, $params->get('series_characters'));
+                        $d = strip_tags($d);
+                        $data = substr($d, 0, strrpos($d, '. '));}
+                        $data .= '.';
+                }
+
 
 				if ($type === 'seriesdisplays' && !$header)
 				{
 					(isset($item->description) ? $data = stripslashes($item->description) : $data = '');
+                    if ($params->get('series_characters')){
+                        $d = substr($data, 0, $params->get('series_characters'));
+                        $d = strip_tags($d);
+                        $data = substr($d, 0, strrpos($d, '. '));}
+                        $data .= '.';
 				}
 				break;
 			case $extra . 'submitted':
