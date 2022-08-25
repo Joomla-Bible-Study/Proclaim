@@ -879,13 +879,13 @@ class CWMListing
 		$row5count2 = 0;
 		$row6count2 = 0;
 
-		if ($span)
+	/*	if ($span)
 		{
 			$frow .= '<div class="row" about="' . $type . '">';
 			$frow .= '<div class="span' . $rowspanitemspan . ' ' . $pull . '" id="jbsmspan-image"><div ' . $headerstyle . '>' . $span . '</div></div>';
 			$frow .= '<div class="span' . $rowspanbalance . '" about="' . $type . '">';
 		}
-
+*/
 		foreach ($listsorts as $sort)
 		{
 			if (count($sort))

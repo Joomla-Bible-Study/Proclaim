@@ -421,26 +421,6 @@
 			</field>
 		</fieldset>
 		<fieldset name="DISPLAYELEMENTS1" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-			<field name="rowspanitem" type="list" default="0" label="JBS_TPL_ROWSPANITEM"
-			       description="JBS_TPL_ROWSPANITEM_DESC">
-				<option value="0">JBS_TPL_NO_ITEM</option>
-				<option value="1">JBS_TPL_TEACHERAIMGE</option>
-				<option value="2">JBS_TPL_STUDYIMAGE</option>
-				<option value="3">JBS_TPL_SERIESIMAGE</option>
-			</field>
-			<field name="rowspanitemspan" type="spanoptions" default="4" label="JBS_TPL_COLSPAN"
-			       description="JBS_TPL_COLSPAN_DESC"/>
-			<field name="rowspanitemimage" type="list" default="img-polaroid" label="JBS_TPL_ROWSPANITEMIMAGE"
-			       description="JBS_TPL_ROWSPANITEMIMAGE_DESC">
-				<option value="">JBS_TPL_ROWSPANITEMIMAGENONE</option>
-				<option value="img-polaroid">JBS_TPL_ROWSPANITEMIMAGEPOLAROID</option>
-				<option value="img-rounded">JBS_TPL_ROWSPANITEMIMAGEROUNDED</option>
-			</field>
-			<field name="rowspanitempull" type="list" default="pull-left" label="JBS_TPL_ROWSPANITEMPULL"
-			       description="JBS_TPL_ROWSPANITEMPULL_DESC">
-				<option value="pull-left">JBS_TPL_PULLLEFT</option>
-				<option value="pull-right">JBS_TPL_PULLRIGHT</option>
-			</field>
 			<field name="scripture1row" type="rowoptions" default="0" label="JBS_CMN_SCRIPTURE"
 			       description="JBS_TPL_ROW_DESC"/>
 			<field name="scripture1col" type="spanoptions" default="1" label="JBS_TPL_COLUMN"
@@ -948,25 +928,6 @@
 			       label="JBS_TPL_TEACHER_TEACHER_TITLE" description="JBS_TPL_TEACHER_TEACHER_TITLE_DESC"/>
 			<field name="teachers_element" type="elementoptions" default="1" translate="true" multiple="false"
 			       label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-			<field name="tsrowspanitem" type="list" default="0" label="JBS_TPL_ROWSPANITEM"
-			       description="JBS_TPL_ROWSPANITEM_DESC">
-				<option value="0">JBS_TPL_NO_ITEM</option>
-				<option value="1">JBS_TPL_TEACHERAIMGE</option>
-			</field>
-			<field name="tsrowspanitemspan" type="spanoptions" default="4" label="JBS_TPL_COLSPAN"
-			       description="JBS_TPL_COLSPAN_DESC"/>
-			<field type="spacer" name="myspacer1" hr="true" />
-			<field name="tsrowspanitemimage" type="list" default="img-polaroid" label="JBS_TPL_ROWSPANITEMIMAGE"
-			       description="JBS_TPL_ROWSPANITEMIMAGE_DESC">
-				<option value="">JBS_TPL_ROWSPANITEMIMAGENONE</option>
-				<option value="img-polaroid">JBS_TPL_ROWSPANITEMIMAGEPOLAROID</option>
-				<option value="img-rounded">JBS_TPL_ROWSPANITEMIMAGEROUNDED</option>
-			</field>
-			<field name="tsrowspanitempull" type="list" default="pull-left" label="JBS_TPL_ROWSPANITEMPULL"
-			       description="JBS_TPL_ROWSPANITEMPULL_DESC">
-				<option value="pull-left">JBS_TPL_PULLLEFT</option>
-				<option value="pull-right">JBS_TPL_PULLRIGHT</option>
-			</field>
 			<field type="spacer" name="myspacer2" hr="true" />
 			<field name="use_headers_teacher_list" type="list" default="1"
 			       label="JBS_TPL_LISTITEMS_USE_HEADERS_LIST" description="JBS_TPL_LISTITEMS_USE_HEADERS_LIST_DESC">
@@ -1132,25 +1093,6 @@
 			       label="JBS_TPL_TEACHER_TEACHERLINK" description="JBS_TPL_TEACHER_TEACHERLINK_DESC">
 				<option value="0">JBS_TPL_HIDE_LINK</option>
 				<option value="1">JBS_TPL_SHOW_LINK</option>
-			</field>
-			<field name="tdrowspanitem" type="list" default="0" label="JBS_TPL_ROWSPANITEM"
-			       description="JBS_TPL_ROWSPANITEM_DESC">
-				<option value="0">JBS_TPL_NO_ITEM</option>
-				<option value="1">JBS_TPL_TEACHERAIMGE</option>
-				<option value="4">JBS_TCH_TEACHER_IMAGE_LARGE</option>
-			</field>
-			<field name="tdrowspanitemspan" type="spanoptions" default="4" label="JBS_TPL_COLSPAN"
-			       description="JBS_TPL_COLSPAN_DESC"/>
-			<field name="tdrowspanitemimage" type="list" default="img-polaroid" label="JBS_TPL_ROWSPANITEMIMAGE"
-			       description="JBS_TPL_ROWSPANITEMIMAGE_DESC">
-				<option value="">JBS_TPL_ROWSPANITEMIMAGENONE</option>
-				<option value="img-polaroid">JBS_TPL_ROWSPANITEMIMAGEPOLAROID</option>
-				<option value="img-rounded">JBS_TPL_ROWSPANITEMIMAGEROUNDED</option>
-			</field>
-			<field name="tdrowspanitempull" type="list" default="pull-left" label="JBS_TPL_ROWSPANITEMPULL"
-			       description="JBS_TPL_ROWSPANITEMPULL_DESC">
-				<option value="pull-left">JBS_TPL_PULLLEFT</option>
-				<option value="pull-right">JBS_TPL_PULLRIGHT</option>
 			</field>
 			<field type="spacer" name="myspacer15" hr="true" />
 			<field name="use_headers_teacher_details" type="list" default="1"
@@ -1386,11 +1328,6 @@
 			</field>
 			<field name="series_characters" type="int" default=""
 			       label="JBS_TPL_SERIES_SERIES_CHARACTERS" description="JBS_TPL_SERIES_SERIES_CHARACTERS_DESC"/>
-			<field name="search_series" default="1" type="list"
-			       label="JBS_TPL_SERIES_SEARCH_SERIES" description="JBS_TPL_SERIES_SEARCH_SERIES_DESC">
-				<option value="0">JBS_CMN_HIDE</option>
-				<option value="1">JBS_CMN_SHOW</option>
-			</field>
 			<field name="series_list_show_pagination" type="list" default="1"
 			       label="JBS_TPL_LISTITEMS_SHOW_PAGINATION" description="JBS_TPL_LISTITEMS_SHOW_PAGINATION_DESC">
 				<option value="1">JBS_TPL_LISTITEMS_SHOW_TOP</option>
@@ -1406,25 +1343,6 @@
 				<option value="series_text">JBS_TPL_SERIES_TITLE_TEXT</option>
 				<option value="id">JBS_CMN_ID</option>
 				<option value="t.teachername">JBS_CMN_TEACHER_NAME</option>
-			</field>
-			<field name="srowspanitem" type="list" default="0" label="JBS_TPL_ROWSPANITEM"
-			       description="JBS_TPL_ROWSPANITEM_DESC">
-				<option value="0">JBS_TPL_NO_ITEM</option>
-				<option value="1">JBS_TPL_TEACHERAIMGE</option>
-				<option value="3">JBS_TPL_SERIESIMAGE</option>
-			</field>
-			<field name="srowspanitemspan" type="spanoptions" default="4" label="JBS_TPL_COLSPAN"
-			       description="JBS_TPL_COLSPAN_DESC"/>
-			<field name="srowspanitemimage" type="list" default="img-polaroid" label="JBS_TPL_ROWSPANITEMIMAGE"
-			       description="JBS_TPL_ROWSPANITEMIMAGE_DESC">
-				<option value="">JBS_TPL_ROWSPANITEMIMAGENONE</option>
-				<option value="img-polaroid">JBS_TPL_ROWSPANITEMIMAGEPOLAROID</option>
-				<option value="img-rounded">JBS_TPL_ROWSPANITEMIMAGEROUNDED</option>
-			</field>
-			<field name="srowspanitempull" type="list" default="pull-left" label="JBS_TPL_ROWSPANITEMPULL"
-			       description="JBS_TPL_ROWSPANITEMPULL_DESC">
-				<option value="pull-left">JBS_TPL_PULLLEFT</option>
-				<option value="pull-right">JBS_TPL_PULLRIGHT</option>
 			</field>
 			<field name="show_page_image_series" type="media" directory="/"
 			       label="JBS_TPL_SERIES_SHOW_PAGE_IMAGE_SERIES"
@@ -1547,25 +1465,6 @@
 			       description="JBS_TPL_SERIESDETAIL_SERIES_LIST_RETURN_DESC">
 				<option value="0">JBS_TPL_HIDE_LINK</option>
 				<option value="1">JBS_TPL_SHOW_LINK</option>
-			</field>
-			<field name="sdrowspanitem" type="list" default="0" label="JBS_TPL_ROWSPANITEM"
-			       description="JBS_TPL_ROWSPANITEM_DESC">
-				<option value="0">JBS_TPL_NO_ITEM</option>
-				<option value="1">JBS_TPL_TEACHERAIMGE</option>
-				<option value="3">JBS_TPL_SERIESIMAGE</option>
-			</field>
-			<field name="sdrowspanitemspan" type="spanoptions" default="4" label="JBS_TPL_COLSPAN"
-			       description="JBS_TPL_COLSPAN_DESC"/>
-			<field name="sdrowspanitemimage" type="list" default="img-polaroid" label="JBS_TPL_ROWSPANITEMIMAGE"
-			       description="JBS_TPL_ROWSPANITEMIMAGE_DESC">
-				<option value="">JBS_TPL_ROWSPANITEMIMAGENONE</option>
-				<option value="img-polaroid">JBS_TPL_ROWSPANITEMIMAGEPOLAROID</option>
-				<option value="img-rounded">JBS_TPL_ROWSPANITEMIMAGEROUNDED</option>
-			</field>
-			<field name="sdrowspanitempull" type="list" default="pull-left" label="JBS_TPL_ROWSPANITEMPULL"
-			       description="JBS_TPL_ROWSPANITEMPULL_DESC">
-				<option value="pull-left">JBS_TPL_PULLLEFT</option>
-				<option value="pull-right">JBS_TPL_PULLRIGHT</option>
 			</field>
 			<field name="seriesdisplay_color" type="color" label="JBS_TPL_SERIESDISPLAY_COLOR"
 			       description="JBS_TPL_SERIESDISPLAY_COLOR"/>
@@ -1785,27 +1684,6 @@
 			</field>
 		</fieldset>
 		<fieldset name="DDISPLAYELEMENTS1" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-			<field name="drowspanitem" type="list" default="0" label="JBS_TPL_ROWSPANITEM"
-			       description="JBS_TPL_ROWSPANITEM_DESC">
-				<option value="0">JBS_TPL_NO_ITEM</option>
-				<option value="1">JBS_TPL_TEACHERAIMGE</option>
-				<option value="2">JBS_TPL_STUDYIMAGE</option>
-				<option value="3">JBS_TPL_SERIESIMAGE</option>
-			</field>
-			<field name="drowspanitemspan" type="spanoptions" default="4" label="JBS_TPL_ROWSPANITEMSPAN"
-			       description="JBS_TPL_ROWSPANITEMSPAN_DESC"/>
-			<field name="drowspanitemimage" type="list" default="img-polaroid" label="JBS_TPL_ROWSPANITEMIMAGE"
-			       description="JBS_TPL_ROWSPANITEMIMAGE_DESC">
-				<option value="">JBS_TPL_ROWSPANITEMIMAGENONE</option>
-				<option value="img-polaroid">JBS_TPL_ROWSPANITEMIMAGEPOLAROID</option>
-				<option value="img-rounded">JBS_TPL_ROWSPANITEMIMAGEROUNDED</option>
-			</field>
-			<field name="drowspanitempull" type="list" default="pull-left" label="JBS_TPL_ROWSPANITEMPULL"
-			       description="JBS_TPL_ROWSPANITEMPULL_DESC">
-				<option value="pull-left">JBS_TPL_PULLLEFT</option>
-				<option value="pull-right">JBS_TPL_PULLRIGHT</option>
-			</field>
-
 			<field name="dscripture1row" type="rowoptions" default="1" label="JBS_CMN_SCRIPTURE"
 			       description="JBS_TPL_ROW_DESC"/>
 			<field name="dscripture1col" type="spanoptions" default="0" label="JBS_TPL_COLUMN"
