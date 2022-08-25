@@ -38,10 +38,15 @@ HtmlHelper::_('behavior.keepalive');
 $commentjava = "javascript:ReverseDisplay('JBScomments')";
 
 //php code
-PluginHelper::importPlugin('captcha');
-$dispatcher = Factory::getApplication()->getDispatcher();
-//$dispatcher = JEventDispatcher::getInstance();
-//$dispatcher->dispatch('onInit', $id='dynamic_recaptcha_1');
+PluginHelper::importPlugin('captcha', 'recaptcha');
+$dispatcher = Joomla\CMS\Factory::getApplication()->getDispatcher();
+$post = Factory::getApplication()->input->post;
+$recap = new Joomla\Event\Event('onInit', array(null, 'dynamic_recaptcha_1', 'class=""'));
+$recaptcha = new Joomla\Event\Event('onDisplay', array(null, 'dynamic_recaptcha_1', 'class=""'));
+echo (isset($recaptcha[0])) ? $recaptcha[0] : '';
+//$event = new Joomla\Event\Event('onCheckAnswer', [$post['recaptcha_response_field']]);
+//$res = $dispatcher->dispatch('onCheckAnswer', $event);
+
 
 switch ($this->item->params->get('link_comments', 0))
 {
@@ -140,9 +145,7 @@ if ($allow > 9)
 		<?php
 		if ($allow < 10)
 		{
-			?>
-
-                    <strong><div class="span12"><?php echo Text::_('JBS_CMT_REGISTER_TO_POST_COMMENTS') ?></div></strong>
+			echo Text::_('JBS_CMT_REGISTER_TO_POST_COMMENTS') ?>
 
 			<?php
 		}
@@ -213,6 +216,7 @@ if ($allow > 9)
 							echo Text::_('JBS_CMN_NO_KEY');
 						}
 					}
+                    echo '<div id="dynamic_recaptcha_1"></div>';
 					?>
                 </div>
             </div>
@@ -243,21 +247,8 @@ if ($allow > 9)
 </form>
 </div>
 	<?php
-} // End if $allow > 9
+        } // End if $allow > 9
+    ?>
 
-$fieldSets = $this->form->getFieldsets();
-foreach ($fieldSets as $name => $fieldSet) :
-    foreach ($this->form->getFieldset($name) as $field):
-        echo $field->getControlGroup();
-    endforeach;
-endforeach;
-?>
-<div class="control-group">
-                <div class="control-label"><?php echo $this->form->getLabel('captcha'); ?></div>
-<div class="controls"><?php echo $this->form->getInput('captcha'); ?></div>
-</div>
 
-            </form>
-        </div>
-</div>
 

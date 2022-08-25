@@ -268,6 +268,7 @@ class HtmlView extends BaseHtmlView
 			}
 		}
         $this->captchaEnabled = true;
+
 		$this->simple = CWMHelper::getSimpleView();
 
 		$offset = $this->state->get('list.offset');
