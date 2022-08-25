@@ -44,7 +44,7 @@ if ($url)
         <div class="hero-unit" style="padding-top:30px; padding-bottom:20px;"> <!-- This div is the header container -->
 			<div <?php echo $classelement; ?> class="componentheading">
 				<?php
-				if ($this->params->get('show_page_image_series'))
+				if ($this->params->get('show_page_image_series') && $this->params->get('series_show_image') > 0)
 				{
 					echo '<img src="' . Uri::base() . $this->params->get('show_page_image_series') . '" alt="' . $this->params->get('show_series_title') . '" />';
 

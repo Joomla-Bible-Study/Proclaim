@@ -1347,6 +1347,12 @@
 			<field name="show_page_image_series" type="media" directory="/"
 			       label="JBS_TPL_SERIES_SHOW_PAGE_IMAGE_SERIES"
 			       description="JBS_TPL_SERIES_SHOW_PAGE_IMAGE_SERIES_DESC"/>
+			<field name="series_show_image" default="1" type="list"
+				   label="JBS_TPL_SERIES_SHOW_IMAGE"
+				   description="JBS_TPL_SERIES_SHOW_IMAGE_DESC">
+				<option value="0">JBS_CMN_HIDE</option>
+				<option value="1">JBS_CMN_SHOW</option>
+			</field>
 		</fieldset>
 		<fieldset name="SERIESDISPALY" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
 			<field name="sseriesrow" type="rowoptions" size="1" default="2" label="JBS_TPL_SERIESTITLE"

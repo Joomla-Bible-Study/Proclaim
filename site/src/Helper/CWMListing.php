@@ -498,7 +498,7 @@ class CWMListing
 				}
 
 				$row[] = $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header = 0, $type);
-                $row[] = '</td></tr><tr style="width: 100%; border-bottom: 2px;"></tr><tr style="border-bottom: 1px solid darkgrey; padding-bottom: 5px;"</tr>';
+                $row[] = '</td></tr><tr style="border-bottom: 1px solid darkgrey; padding-bottom: 5px;"</tr>';
 			}
 		}
 
@@ -540,8 +540,6 @@ class CWMListing
 		{
 			foreach ($items as $item)
 			{
-				$oddeven = ($oddeven === $class1) ? $class2 : $class1;
-                $row[] = '<table style="width: 100%; display: table; border-bottom: 2px;" class="table w-auto table-borderless"><tbody style="width: 100%; display: table;"><tr><td>';
                 $row[]   = $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header = 0, $type);
                 $row[] = '</td></tr><tr style="border-bottom: 1px solid darkgrey; padding-bottom: 5px;"</tr>';
 
@@ -552,11 +550,11 @@ class CWMListing
 		{
 
 			$list .=  $value;
-            //$list .=  $value . '<tr><hr/></tr>';
+
 		}
 
 		$list .= '</tbody></table></div>';
-		//$list .= '<hr>' . $value;
+
 		return $list;
 	}
 
@@ -937,14 +935,16 @@ $thadd = '';
 			{
 				if ($row1count === $row1count2 & $header === 0 )
 				{
-					$frow .= '<tr>';
+					$frow .= '<tr scope="row">';
 				}
 
 				if ($header === 1)
 				{
 					if ($row->colspan >0) {$thadd = 'colspan="'.$row->colspan.'"';}
-                    if ($extra == 's'){$thadd = 'class="col-12"';}
-					$frow .= '<th scope="col"'.$thadd.' scope="col">'.$this->getFluidData($item, $row, $params, $template, $header = 1, $type);
+                   // if ($extra == 's'){$thadd = 'class="col-12"';}
+                   // $thadd = '';
+					$frow .= '<th scope="col"'.$thadd.'>'.$this->getFluidData($item, $row, $params, $template, $header = 1, $type);
+
 				}
 				else
 				{
@@ -967,13 +967,14 @@ $thadd = '';
 			{
 				if ($row2count === $row2count2 && $header === 0)
 				{
-					$frow .= '<tr>';
+					$frow .= '<tr scope="row">';
 				}
 
 				if ($header === 1)
 				{
 					if ($row->colspan >0) {$thadd = 'colspan="'.$row->colspan.'"';}
-					$frow .= '<tr> <th '.$thadd.' scope="col">'.$this->getFluidData($item, $row, $params, $template, $header = 1, $type);
+                   // $thadd = '';
+					$frow .= '<tr scope="row"> <th '.$thadd.' scope="col">'.$this->getFluidData($item, $row, $params, $template, $header = 1, $type);
 				}
 				else
 				{
@@ -996,13 +997,14 @@ $thadd = '';
 			{
 				if ($row3count === $row3count2 && $header === 0)
 				{
-					$frow .= '<tr>';
+					$frow .= '<tr scope="row">';
 				}
 
 				if ($header === 1)
 				{
 					if ($row->colspan >0) {$thadd = 'colspan="'.$row->colspan.'"';}
-					$frow .= '<tr><th '.$thadd.' scope="col">'.$this->getFluidData($item, $row, $params, $template, $header = 1, $type);
+                   // $thadd = '';
+					$frow .= '<tr scope="row"><th '.$thadd.' scope="col">'.$this->getFluidData($item, $row, $params, $template, $header = 1, $type);
 				}
 				else
 				{
@@ -1025,13 +1027,14 @@ $thadd = '';
 			{
 				if ($row4count === $row4count2 && $header === 0)
 				{
-					$frow .= '<tr>';
+					$frow .= '<tr scope="row">';
 				}
 
 				if ($header === 1)
 				{
 					if ($row->colspan >0) {$thadd = 'colspan="'.$row->colspan.'"';}
-					$frow .= '<tr><th '.$thadd.' scope="col">'.$this->getFluidData($item, $row, $params, $template, $header = 1, $type);
+                    //$thadd = '';
+					$frow .= '<tr scope="row"><th '.$thadd.' scope="col">'.$this->getFluidData($item, $row, $params, $template, $header = 1, $type);
 				}
 				else
 				{
@@ -1054,13 +1057,14 @@ $thadd = '';
 			{
 				if ($row5count === $row5count2 && $header === 0)
 				{
-					$frow .= '<tr>';
+					$frow .= '<tr scope="row">';
 				}
 
 				if ($header === 1)
 				{
 					if ($row->colspan >0) {$thadd = 'colspan="'.$row->colspan.'"';}
-					$frow .= '<tr><th '.$thadd.' scope="col">' . $this->getFluidData($item, $row, $params, $template, $header = 1, $type);
+                   // $thadd = '';
+					$frow .= '<tr scope="row"><th '.$thadd.' scope="col">' . $this->getFluidData($item, $row, $params, $template, $header = 1, $type);
 				}
 				else
 				{
@@ -1083,13 +1087,14 @@ $thadd = '';
 			{
 				if ($row6count === $row6count2 && $header === 0)
 				{
-					$frow .= '<tr>';
+					$frow .= '<tr scope="row">';
 				}
 
 				if ($header === 1)
 				{
 					if ($row->colspan >0) {$thadd = 'colspan="'.$row->colspan.'"';}
-					$frow .= '<tr><th '.$thadd.' scope="col">' . $this->getFluidData($item, $row, $params, $template, $header = 1, $type) ;
+                    //$thadd = '';
+					$frow .= '<tr scope="row"><th '.$thadd.' scope="col">' . $this->getFluidData($item, $row, $params, $template, $header = 1, $type) ;
 				}
 				else
 				{
@@ -1596,7 +1601,6 @@ $thadd = '';
 					(isset($item->description) ? $data = HTMLHelper::_('content.prepare', $item->description, '', 'com_proclaim.' . $type) : $data = '');
                     if ($params->get('series_characters')){
                         $d = substr($data, 0, $params->get('series_characters'));
-                        $d = strip_tags($d);
                         $data = substr($d, 0, strrpos($d, '. '));}
                     if ($data){$data .= '.';}
                 }
@@ -1606,7 +1610,6 @@ $thadd = '';
 					(isset($item->sdescription) ? $data = HtmlHelper::_('content.prepare', $item->sdescription, '', 'com_proclaim.' . $type) : $data = '');
                     if ($params->get('series_characters')){
                         $d = substr($data, 0, $params->get('series_characters'));
-                        $d = strip_tags($d);
                         $data = substr($d, 0, strrpos($d, '. '));}
                         if ($data){$data .= '.';}
                 }
@@ -1617,7 +1620,6 @@ $thadd = '';
 					(isset($item->description) ? $data = stripslashes($item->description) : $data = '');
                     if ($params->get('series_characters')){
                         $d = substr($data, 0, $params->get('series_characters'));
-                        $d = strip_tags($d);
                         $data = substr($d, 0, strrpos($d, '. '));}
                     if ($data){$data .= '.';}
 				}
@@ -1822,8 +1824,8 @@ $thadd = '';
 
 		//$frow = '<div class="col-' . $row->colspan;
 		$tdadd = '';
-		if ($row->colspan > 0){$tdadd = ' colspan = "'.$row->colspan.'"';}
-		if ($header === 0) {$frow = '<td scope="row"'.$tdadd.'>';}
+		if ($row->colspan > 0){$tdadd = 'colspan="'.$row->colspan.'"';}
+		if ($header === 0) {$frow = '<td scope="col"'.$tdadd.'>';}
 		//if ($header === 1) {$frow = '<th>';}
 		if ($header === 1) {$frow = '';}
 		if ($customclass)
