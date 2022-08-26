@@ -49,7 +49,7 @@
                 />
         <field name="title" type="text" class="inputbox" size="60"
                label="JBS_CMN_TITLE" description="JBS_TCH_TITLE_DESC"/>
-        <field name="image" type="media" accept="images/*" label="JBS_TCH_TEACHER_IMAGE_LARGE" class="span10 small"/>
+        <field name="image" type="media" directory="biblestudy" accept="images/*" label="JBS_TCH_TEACHER_IMAGE_LARGE" class="span10 small"/>
         <field name="teacher_image" type="hidden"/>
         <field name="phone" type="tel" class="inputbox" size="60"
                label="JBS_TCH_PHONE"/>

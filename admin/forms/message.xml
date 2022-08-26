@@ -129,7 +129,7 @@
 			<option value="-1">JBS_CMN_SELECT_MESSAGETYPE</option>
 		</field>
 		<field name="thumbnailm" type="hidden"/>
-		<field name="image" type="media" label="JBS_STY_STUDY_IMAGE" accept="image/*"/>
+		<field name="image" type="media" label="JBS_STY_STUDY_IMAGE" accept="image/*" directory="biblestudy"/>
 
 		<field name="rules" type="rules" label="JFIELD_RULES_LABEL"
 		       translate_label="false" class="inputbox" filter="rules" component="com_proclaim"
