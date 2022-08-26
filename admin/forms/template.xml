@@ -20,7 +20,7 @@
 		</field>
 		<field name="title" type="text" size="50" label="JBS_TPL_TEMPLATE_NAME"
 		       required="true"/>
-		<field name="text" type="media" directory="/" size="75"
+		<field name="text" type="media" directory="biblestudy" size="75"
 		       label="JBS_TPL_DETAILS_LINK_IMAGE" description="JBS_TPL_DETAILS_LINK_IMAGE_DESC"/>
 
 		<field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
@@ -240,7 +240,7 @@
 			       label="JBS_MED_MEDIA_POPUPMARGIN" description="JBS_TPL_MEDIA_POPUPMARGIN_DESC"/>
 			<field name="popupbackground" type="text" default="black"
 			       label="JBS_TPL_MEDIA_POPUPBACKGROUND" description="JBS_TPL_MEDIA_POPUPBACKGROUND_DESC"/>
-			<field name="popupimage" type="media" size="75"
+			<field name="popupimage" type="media" size="75" directory="biblestudy"
 			       default="/images/biblestudy/speaker24.png" label="JBS_TPL_MEDIA_POPUPIMAGE"
 			       description="JBS_TPL_MEDIA_POPUPIMAGE_DESC"/>
 			<field name="media_popout_yes" type="radio" default="1" class="btn-group"
@@ -1317,7 +1317,7 @@
 				<option value="id">JBS_CMN_ID</option>
 				<option value="t.teachername">JBS_CMN_TEACHER_NAME</option>
 			</field>
-			<field name="show_page_image_series" type="media" directory="/"
+			<field name="show_page_image_series" type="media" directory="biblestudy"
 			       label="JBS_TPL_SERIES_SHOW_PAGE_IMAGE_SERIES"
 			       description="JBS_TPL_SERIES_SHOW_PAGE_IMAGE_SERIES_DESC"/>
 			<field name="series_show_image" default="1" type="list"
