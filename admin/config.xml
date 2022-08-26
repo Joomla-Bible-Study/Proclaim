@@ -5,6 +5,16 @@
 			name="component"
 			label="JBS_ADM_FIELDSET_OPTIONS_LABEL">
 		<field
+				name="captcha"
+				type="plugins"
+				label="COM_CONTACT_FIELD_CAPTCHA_LABEL"
+				folder="captcha"
+				filter="cmd"
+				useglobal="true"
+		>
+			<option value="0">JOPTION_DO_NOT_USE</option>
+		</field>
+		<field
 				name="upload_extensions"
 				type="text"
 				size="50"

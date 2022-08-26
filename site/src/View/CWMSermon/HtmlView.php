@@ -148,7 +148,7 @@ class HtmlView extends BaseHtmlView
         $app = $container->get(SiteApplication::class);
         Factory::$application = $app;
         HTMLHelper::script('media/com_proclaim/js/cwmcore.js');
-        $this->form = Form::getInstance('customForm','components/com_proclaim/tmpl/CWMSermon/default.xml',array('control' => 'jform'));
+        $this->form = $this->get('Form');
         $user           = Factory::getApplication()->getSession()->get('user');
 		$CWMListing = new CWMListing;
 		$this->item     = $this->get('Item');

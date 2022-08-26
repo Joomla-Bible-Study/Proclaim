@@ -45,4 +45,13 @@
     <field name="id" type="text" class="readonly" label="JGLOBAL_FIELD_ID_LABEL"
            description="JGLOBAL_FIELD_ID_DESC" size="10" default="0"
            readonly="true"/>
+    <fieldset name="captcha">
+        <field
+                name="captcha"
+                type="captcha"
+                label="JBS_CMN_CAPTCHA_LABEL"
+                validate="captcha"
+                namespace="contact"
+        />
+    </fieldset>
 </form>

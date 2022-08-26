@@ -868,22 +868,6 @@
 				<option value="0">JBS_CMN_HIDE</option>
 				<option value="1">JBS_CMN_SHOW</option>
 			</field>
-			<field
-					name="captcha"
-					type="plugins"
-					label="COM_CONTACT_FIELD_CAPTCHA_LABEL"
-					folder="captcha"
-					filter="cmd"
-					useglobal="true"
-			>
-			<option value="0">JOPTION_DO_NOT_USE</option>
-			</field>
-			<field name="comments_type" type="list" default="0"
-			       label="JBS_TPL_COMMENT_TYPE" description="JBS_TPL_COMMENT_TYPE_DESC">
-				<option value="0">JBS_TPL_JBS_COMMENTS</option>
-				<option value="1">JBS_TPL_JCOMMENTS</option>
-				<option value="2">JBS_TPL_BOTH_COMMENTS</option>
-			</field>
 			<field name="show_comments" type="accesslevel" default=""
 			       label="JBS_TPL_DETAILS_SHOW_COMMENTS" description="JBS_TPL_DETAILS_SHOW_COMMENTS_DESC">
 				<option value="0">JBS_CMN_HIDE</option>
@@ -900,17 +884,6 @@
 				<option value="0">JBS_TPL_APPROVAL_BACKEND</option>
 				<option value="1">JBS_TPL_NO_APPROVAL</option>
 			</field>
-			<field name="use_captcha" type="list" default="1"
-			       label="JBS_TPL_DETAILS_USE_CAPTCHA" description="JBS_TPL_DETAILS_USE_CAPTCHA_DESC">
-				<option value="0">JBS_TPL_NO_CAPTCHA</option>
-				<option value="1">JBS_TPL_CAPTCHA_USE</option>
-			</field>
-			<field name="public_key" type="text" size="50"
-			       label="JBS_TPL_CAPTCHA_PUBLIC_KEY" description="JBS_TPL_CAPTCHA_PUBLIC_KEY_DESC"
-			       default=""/>
-			<field name="private_key" type="text" size="50"
-			       label="JBS_TPL_CAPTCHA_PRIVATE_KEY" description="JBS_TPL_CAPTCHA_PRIVATE_KEY_DESC"
-			       default=""/>
 			<field name="email_comments" type="list" default="1"
 			       label="JBS_TPL_DETAILS_EMAIL_COMMENTS" description="JBS_TPL_DETAILS_EMAIL_COMMENTS_DESC">
 				<option value="0">JBS_TPL_NO_EMAIL</option>

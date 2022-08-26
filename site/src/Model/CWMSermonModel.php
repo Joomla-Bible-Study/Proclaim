@@ -17,9 +17,12 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 use CWM\Component\Proclaim\Administrator\Helper\CWMTranslated;
 use JApplicationSite;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Model\FormModel;
 use Joomla\CMS\MVC\Model\ItemModel;
 use Joomla\Registry\Registry;
+use Joomla\CMS\Form\Form;
 
 /**
  * Model class for Sermon
@@ -27,7 +30,7 @@ use Joomla\Registry\Registry;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class CWMSermonModel extends ItemModel
+class CWMSermonModel extends FormModel
 {
 	/**
 	 * Model context string.
@@ -78,10 +81,10 @@ class CWMSermonModel extends ItemModel
 		// Initialise variables.
 		$pk = (!empty($pk)) ? $pk : (int) $this->getState('study.id');
 
-		if ($this->_item === null)
-		{
-			$this->_item = array();
-		}
+		//if ($this->_item === null)
+		//{
+		//	$this->_item = array();
+	//	}
         //$input = Factory::getApplication()->input;
        // $mid   = $input->getInt('mid');
        // if ($mid){return $mid;}
@@ -366,4 +369,15 @@ class CWMSermonModel extends ItemModel
 			$this->setState('filter.archived', 2);
 		}
 	}
+    public function getForm($data = array(), $loadData = true)
+    {
+        $form = $this->loadForm('com_proclaim.comment', 'comment', array('control' => 'jform', 'load_data' => true));
+
+        if (empty($form)) {
+            return false;
+        }
+        return $form;
+    }
+
+
 }
