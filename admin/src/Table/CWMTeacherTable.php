@@ -167,7 +167,7 @@ class CWMTeacherTable extends Table
         //$asset = (new \Joomla\CMS\MVC\Factory\MVCFactory)->createTable("Asset");
         //$asset = Table::getInstance('Asset');
 		//$asset->loadByName('com_proclaim');
-        $asset->id = 1;
-		return $asset->id;
+       //$asset->id = 1;
+		//return $asset->id;
 	}
 }

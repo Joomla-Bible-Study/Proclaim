@@ -114,7 +114,7 @@
 		       description="JBS_ADDON_CUSTOM_ICON_DESC" labelclass="control-label"/>
 		<field name="download_icon_text_size" type="text" default="24" label="JBS_ADDON_FONT_SIZE"
 		       description="JBS_ADDON_FONT_SIZE_DESC" labelclass="control-label"/>
-		<field name="default_download_image" type="media" directory="biblestudy" size="50" label="JBS_ADM_DOWNLOAD_IMAGE"
+		<field name="default_download_image" type="media" directory="biblestudy" label="JBS_ADM_DOWNLOAD_IMAGE"
 		       description="JBS_ADM_DOWNLOAD_IMAGE_DESC" labelclass="control-label"/>
 
 		<!--Show Hide on Landing Page-->

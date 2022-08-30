@@ -213,8 +213,12 @@ class CWMMessageModel extends AdminModel
 		$app    = Factory::getApplication();
 		$params = CWMParams::getAdmin()->params;
 		$input  = $app->input;
-		$path   = 'images/biblestudy/studies/' . $data['id'];
-
+		$path   =  'images/biblestudy/studies/'.$data['id'];
+//var_dump($data); die;
+        $variable = $data['image'];
+        $variable = substr($variable, 0, strpos($variable, "#"));
+        $data['image'] = $variable;
+        //var_dump($data); die;
 		$this->cleanCache();
 
 		if ($input->get('a_id'))
