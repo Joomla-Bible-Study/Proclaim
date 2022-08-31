@@ -24,6 +24,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Workflow\WorkflowServiceInterface;
 use Joomla\CMS\Workflow\WorkflowServiceTrait;
 use CWM\Component\Proclaim\Administrator\Helper\ProclaimHelper;
+use Joomla\Component\Content\Administrator\Helper\ContentHelper;
 use Psr\Container\ContainerInterface;
 use CWM\Component\Proclaim\Administrator\Service\HTML\CWMAdministratorService;
 use CWM\Component\Proclaim\Administrator\Service\HTML\Icon;

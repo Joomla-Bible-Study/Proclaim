@@ -240,8 +240,9 @@ class CWMAssets
 	 */
 	private static function setasset($data, $assetName)
 	{
-		$AssetTable = '\CWM\Component\Proclaim\Administrator\Table\CWM' . $assetName . 'Table';
-		$table      = new $AssetTable(Factory::getDbo());
+        $db = Factory::getContainer()->get('DatabaseDriver');
+        $AssetTable = '\CWM\Component\Proclaim\Administrator\Table\CWM' . $assetName . 'Table';
+		$table      = new $AssetTable($db);
 
 		if ($data->id)
 		{

@@ -164,8 +164,8 @@ class CWMLocationTable extends Table
 	{
 		// For simple cases, parent to the asset root.
 		/** @var \Joomla\CMS\Table\Asset $asset */
-		//$asset = Table::getInstance('Asset');
-		//$asset->loadByName('com_proclaim');
+		$asset = Table::getInstance('Asset');
+		$asset->loadByName('com_proclaim');
         $asset->id = 1;
 		return $asset->id;
 	}

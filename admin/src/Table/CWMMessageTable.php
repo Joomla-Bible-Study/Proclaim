@@ -460,7 +460,7 @@ class CWMMessageTable extends Table
 	{
 		$k = $this->_tbl_key;
 
-		return 'com_biblestudy.message.' . (int) $this->$k;
+		return 'com_proclaim.message.' . (int) $this->$k;
 	}
 
 	/**
@@ -493,10 +493,12 @@ class CWMMessageTable extends Table
 	protected function _getAssetParentId(Table $table = null, $id = null)
 	{
         /** @var \Joomla\CMS\Table\Asset $asset */
-        //$asset = (new \Joomla\CMS\MVC\Factory\MVCFactory)->createTable("Asset");
-        //$asset = Table::getInstance('Asset');
-		//$asset->loadByName('com_biblestudy');
-        //$asset->id = 1;
-		//return $asset->id;
+       //$asset = (new \Joomla\CMS\MVC\Factory\MVCFactory)->createTable("Asset");
+       $asset = Table::getInstance('Asset');
+        //$db = $this->getDbo();
+        //$asset = Table::getInstance('MessageTable', __NAMESPACE__ . '\\', array('dbo' => $db));
+		$asset->loadByName('com_proclaim');
+        $asset->id = 1;
+		return $asset->id;
 	}
 }
