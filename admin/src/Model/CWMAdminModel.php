@@ -171,24 +171,29 @@ class CWMAdminModel extends AdminModel
 	 */
 	public function save($data)
 	{
-        $image = HTMLHelper::cleanImageURL($data['media_image']);
-        $data['media_image'] = $image->url;
-        $image = HTMLHelper::cleanImageURL($data['jwplayer_logo']);
-        $data['jwplayer_logo'] = $image->url;
-        $image = HTMLHelper::cleanImageURL($data['jwplayer_image']);
-        $data['jwplayer_image'] = $image->url;
-        $image = HTMLHelper::cleanImageURL($data['default_study_image']);
-        $data['default_study_image'] = $image->url;
-        $image = HTMLHelper::cleanImageURL($data['default_showHide_image']);
-        $data['default_showHide_image'] = $image->url;
-        $image = HTMLHelper::cleanImageURL($data['default_download_image']);
-        $data['default_download_image'] = $image->url;
-        $image = HTMLHelper::cleanImageURL($data['default_teacher_image']);
-        $data['default_teacher_image'] = $image->url;
-        $image = HTMLHelper::cleanImageURL($data['default_series_image']);
-        $data['default_series_image'] = $image->url;
-        $image = HTMLHelper::cleanImageURL($data['default_main_image']);
-        $data['default_main_image'] = $image->url;
+        $params = new Registry;
+        $params->loadArray($data['params']);
+        //load the image, then turn it into an array because Joomla's mediafield attaches metadata to the end. Then grab the URL from the array and save it.
+        $image = HTMLHelper::cleanImageURL($params->get('media_image'));
+        $params->set('media_image', $image->url);
+        $image = HTMLHelper::cleanImageURL($params->get('jwplayer_logo'));
+        $params->set('jwplayer_logo', $image->url);
+        $image = HTMLHelper::cleanImageURL($params->get('jwplayer_image'));
+        $params->set('jwplayer_image', $image->url);
+        $image = HTMLHelper::cleanImageURL($params->get('default_study_image'));
+        $params->set('default_study_image', $image->url);
+        $image = HTMLHelper::cleanImageURL($params->get('default_showHide_image'));
+        $params->set('default_showHide_image', $image->url);
+        $image = HTMLHelper::cleanImageURL($params->get('default_download_image'));
+        $params->set('default_download_image', $image->url);
+        $image = HTMLHelper::cleanImageURL($params->get('default_teacher_image'));
+        $params->set('default_teacher_image', $image->url);
+        $image = HTMLHelper::cleanImageURL($params->get('default_series_image'));
+        $params->set('default_series_image', $image->url);
+        $image = HTMLHelper::cleanImageURL($params->get('default_main_image'));
+        $params->set('default_main_image', $image->url);
+
+        $data['params'] = $params->toArray();
 
 		return parent::save($data);
 	}
