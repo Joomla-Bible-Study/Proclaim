@@ -44,11 +44,11 @@ class DisplayController extends BaseController
 	public function display($cachable = false, $urlparams = array())
 	{
 		$view   = $this->input->get('view', 'cwmcpanel');
-		$layout = $this->input->get('layout', 'cwmcpanel');
+		$layout = $this->input->get('layout', 'edit');
 		$id     = $this->input->getInt('id');
 
 		// Check for edit form.
-		if ($view == 'sermin' && $layout == 'edit' && !$this->checkEditId('com_proclaim.edit.sermon', $id))
+		if ($view === 'sermin' && $layout === 'edit' && !$this->checkEditId('com_proclaim.edit.sermon', $id))
 		{
 			// Somehow the person just went to the form - we don't allow that.
 			if (!\count($this->app->getMessageQueue()))

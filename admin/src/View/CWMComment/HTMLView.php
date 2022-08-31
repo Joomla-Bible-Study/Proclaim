@@ -67,14 +67,14 @@ class HTMLView extends BaseHtmlView
 	/**
 	 * Display the view
 	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @param   string|null  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  false|void  A string if successful, otherwise a Error object.
+	 * @return  void  A string if successful, otherwise a Error object.
 	 *
 	 * @throws \Exception
 	 * @since  9.0.0
 	 */
-	public function display($tpl = null)
+	public function display(string $tpl = null)
 	{
 		$this->form  = $this->get("Form");
 		$this->item  = $this->get("Item");
@@ -139,6 +139,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since    7.1.0
 	 */
 	protected function setDocument()
