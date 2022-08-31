@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMTranslated;
 use CWM\Component\Proclaim\Administrator\Table\CWMMessageTable;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Workflow\Workflow;
@@ -214,11 +215,8 @@ class CWMMessageModel extends AdminModel
 		$params = CWMParams::getAdmin()->params;
 		$input  = $app->input;
 		$path   =  'images/biblestudy/studies/'.$data['id'];
-//var_dump($data); die;
-        $variable = $data['image'];
-        $variable = substr($variable, 0, strpos($variable, "#"));
-        $data['image'] = $variable;
-        //var_dump($data); die;
+        $image = HTMLHelper::cleanImageURL($data['image']);
+        $data['image'] = $image->url;
 		$this->cleanCache();
 
 		if ($input->get('a_id'))

@@ -17,6 +17,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMThumbnail;
 use CWM\Component\Proclaim\Administrator\Table\CWMTeacherTable;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\Input\Input;
@@ -203,7 +204,8 @@ class CWMTeacherModel extends AdminModel
 		$params = CWMParams::getAdmin()->params;
 		$path   = 'images/biblestudy/teachers/' . $data['id'];
 		$prefix = 'thumb_';
-
+        $image = HTMLHelper::cleanImageURL($data['image']);
+        $data['image'] = $image->url;
 		// If no image uploaded, just save data as usual
 		if (empty($data['image']) || strpos($data['image'], $prefix) !== false)
 		{

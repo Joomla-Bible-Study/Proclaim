@@ -17,6 +17,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMThumbnail;
 use CWM\Component\Proclaim\Administrator\Table\CWMSerieTable;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
@@ -160,7 +161,8 @@ class CWMSerieModel extends AdminModel
 		$app    = Factory::getApplication();
 		$path   = 'images/biblestudy/series/' . $data['id'];
 		$prefix = 'thumb_';
-
+        $image = HTMLHelper::cleanImageURL($data['image']);
+        $data['image'] = $image->url;
 		// Alter the title for save as copy
 		if ($app->input->get('task') == 'save2copy')
 		{
