@@ -159,7 +159,7 @@ class CWMTemplateTable extends Table
 	 */
 	public function store($updateNulls = false): bool
 	{
-		$db = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 
 		// Attempt to store the user data.
 		$oldrow = new CWMTemplateTable($db);
@@ -223,7 +223,7 @@ class CWMTemplateTable extends Table
 		/** @var \Joomla\CMS\Table\Asset $asset */
 		$asset = Table::getInstance('Asset');
 		$asset->loadByName('com_proclaim');
-
+        $asset->id = 1;
 		return $asset->id;
 	}
 }

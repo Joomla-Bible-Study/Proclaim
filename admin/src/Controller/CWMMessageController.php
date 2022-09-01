@@ -109,7 +109,7 @@ class CWMMessageController extends FormController
 		$msg   = null;
 		$input = new Input;
 		$id    = $input->get('id', 0, 'int');
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_studies')
 			->set('hits = ' . $db->q('0'))
@@ -171,7 +171,7 @@ class CWMMessageController extends FormController
 		$iTags = explode(",", $vTags);
 
 		// Remove Exerting StudyTopics tags
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$qurey = $db->getQuery(true);
 		$qurey->delete('#__bsms_studytopics')
 			->where('study_id =' . $data['id']);

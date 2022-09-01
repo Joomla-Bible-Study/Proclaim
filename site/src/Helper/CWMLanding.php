@@ -40,8 +40,8 @@ class CWMLanding
 	public function getLocationsLandingPage($params, $id = 0)
 	{
 		$mainframe   = Factory::getApplication();
-		$user        = Factory::getUser();
-		$db          = Factory::getDbo();
+		$user        = Factory::getApplication()->getSession()->get('user');
+		$db          = Factory::getContainer()->get('DatabaseDriver');
 		$location    = null;
 		$teacherid   = null;
 		$template    = $params->get('studieslisttemplateid', 1);
@@ -58,16 +58,17 @@ class CWMLanding
 		$item             = $menu->getActive();
 		$registry         = new Registry;
 
-		if (isset($item->params))
+		if (isset($params))
 		{
-			$registry->loadString($item->params);
+			$registry->loadString($params);
 			$m_params   = $registry;
 			$language   = $db->quote($item->language) . ',' . $db->quote('*');
 			$menu_order = $params->get('locations_order');
+
 		}
 		else
 		{
-			$language   = $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*');
+			$language   = $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*');
 			$menu_order = null;
 		}
 
@@ -90,9 +91,11 @@ class CWMLanding
 				case 1:
 					$order = 'DESC';
 					break;
+                case 0:
+                    $order = null;
 			}
 		}
-		else
+		if (!$order)
 		{
 			$order = $params->get('landing_default_order', 'ASC');
 		}
@@ -139,7 +142,7 @@ class CWMLanding
 							}
 						}
 
-						$location .= '<div class="span4">';
+						$location .= '<div class="span4 style="display: inline-block; margin-right:7px"">';
 						$location .= '<a href="index.php?option=com_proclaim&amp;view=CWMSermons&amp;filter_location=' . $b->id . '&amp;sendingview=CWMLanding' .
 						'&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
 							. $template . '">';
@@ -236,8 +239,8 @@ class CWMLanding
 	public function getTeacherLandingPage($params, $id = 0)
 	{
 		$mainframe = Factory::getApplication();
-		$db        = Factory::getDbo();
-		$user      = Factory::getUser();
+		$db        = Factory::getContainer()->get('DatabaseDriver');
+		$user      = $user = Factory::getApplication()->getSession()->get('user');
 		$langlink  = Multilanguage::isEnabled();
 		$order     = null;
 		$teacher   = null;
@@ -250,16 +253,16 @@ class CWMLanding
 		$item            = $menu->getActive();
 		$registry        = new Registry;
 
-		if (isset($item->params))
+		if (isset($params))
 		{
-			$registry->loadString($item->params);
+			$registry->loadString($params);
 			$m_params   = $registry;
 			$language   = $db->quote($item->language) . ',' . $db->quote('*');
 			$menu_order = $params->get('teachers_order');
 		}
 		else
 		{
-			$language   = $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*');
+			$language   = $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*');
 			$menu_order = null;
 		}
 
@@ -282,9 +285,11 @@ class CWMLanding
 				case 1:
 					$order = 'DESC';
 					break;
+                case 0:
+                    $order = null;
 			}
 		}
-		else
+        if (!$order)
 		{
 			$order = $params->get('landing_default_order', 'ASC');
 		}
@@ -332,14 +337,14 @@ class CWMLanding
 
 						if ($params->get('linkto') == 0)
 						{
-							$teacher .= '<div class="span4">';
+							$teacher .= '<div class="span4" style="display: inline-block; margin-right:7px">';
 							$teacher .= '<a href="' . Route::_('index.php?option=com_proclaim&amp;view=CWMSermons&amp;t=' . $template)
 								. '&amp;sendingview=landing&amp;filter_teacher=' . $b->id
 								. $langlink . '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
 						}
 						else
 						{
-							$teacher .= '<div class="span4">';
+							$teacher .= '<div class="span4" style="display: inline-block; margin-right:7px">';
 							$teacher .= '<a href="' . Route::_('index.php?option=com_proclaim&amp;view=CWMTeacher&id=' . $b->id . $langlink . '&t=' . $template) . '">';
 						}
 
@@ -376,14 +381,14 @@ class CWMLanding
 						{
 							if ($params->get('linkto') == 0)
 							{
-								$teacher .= '<div class="span4"> <a '
+								$teacher .= '<div class="span4" style="display: inline-block; margin-right:7px"> <a '
 									. Route::_('index.php?option=com_proclaim&amp;view=CWMSermons&amp;t=' . $template)
 									. '&amp;sendingview=landing&amp;filter_teacher=' . $b->id
 									. '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
 							}
 							else
 							{
-								$teacher .= '<div class="span4"><a href="'
+								$teacher .= '<div class="span4" style="display: inline-block; margin-right:7px"><a href="'
 									. Route::_('index.php?option=com_proclaim&amp;view=CWMTeacher&amp;id=' . $b->id . '&amp;t=' . $template) . '">';
 							}
 
@@ -447,8 +452,8 @@ class CWMLanding
 	public function getSeriesLandingPage($params, $id = 0)
 	{
 		$mainframe = Factory::getApplication();
-		$user      = Factory::getUser();
-		$db        = Factory::getDbo();
+		$user      = $user = Factory::getApplication()->getSession()->get('user');
+		$db        = Factory::getContainer()->get('DatabaseDriver');
 		$order     = 'ASC';
 		$series    = null;
 		$seriesid  = null;
@@ -467,15 +472,15 @@ class CWMLanding
 		$item           = $menu->getActive();
 		$registry       = new Registry;
 
-		if (isset($item->params))
+		if (isset($params))
 		{
-			$registry->loadString($item->params);
+			$registry->loadString($params);
 			$language   = $db->quote($item->language) . ',' . $db->quote('*');
 			$menu_order = $params->get('series_order');
 		}
 		else
 		{
-			$language   = $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*');
+			$language   = $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*');
 			$menu_order = null;
 		}
 
@@ -489,9 +494,11 @@ class CWMLanding
 				case 1:
 					$order = 'DESC';
 					break;
+                case 0:
+                    $order = null;
 			}
 		}
-		else
+        if (!$order)
 		{
 			$order = $params->get('landing_default_order', 'ASC');
 		}
@@ -548,8 +555,8 @@ class CWMLanding
 						}
 						else
 						{
-							$series .= '<div class="span4">';
-							$series .= '<a href="index.php?option=com_proclaim&amp;sendingview=landing&amp;view=CWMSeriesdisplay&amp;id=' .
+							$series .= '<div class="span4" style="display: inline-block; margin-right:7px">';
+							$series .= '<a href="index.php?option=com_proclaim&amp;sendingview=landing&amp;view=CWMSeriesDisplay&amp;id=' .
 									$b->id . '&amp;t=' . $template . '">';
 						}
 
@@ -670,8 +677,8 @@ class CWMLanding
 	public function getYearsLandingPage($params, $id = 0)
 	{
 		$mainframe = Factory::getApplication();
-		$db        = Factory::getDbo();
-		$user      = Factory::getUser();
+		$db        = Factory::getContainer()->get('DatabaseDriver');
+		$user      = $user = Factory::getApplication()->getSession()->get('user');
 		$order     = 'ASC';
 		$year      = null;
 		$teacherid = null;
@@ -687,16 +694,16 @@ class CWMLanding
 		$item     = $menu->getActive();
 		$registry = new Registry;
 
-		if (isset($item->params))
+		if (isset($params))
 		{
-			$registry->loadString($item->params);
+			$registry->loadString($params);
 			$m_params   = $registry;
 			$language   = $db->quote($item->language) . ',' . $db->quote('*');
 			$menu_order = $params->get('years_order');
 		}
 		else
 		{
-			$language   = $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*');
+			$language   = $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*');
 			$menu_order = null;
 		}
 
@@ -710,9 +717,11 @@ class CWMLanding
 				case 1:
 					$order = 'DESC';
 					break;
+                case 0:
+                    $order = null;
 			}
 		}
-		else
+        if (!$order)
 		{
 			$order = $params->get('landing_default_order', 'ASC');
 		}
@@ -752,7 +761,7 @@ class CWMLanding
 					}
 				}
 
-				$year .= '<div class="span2">';
+				$year .= '<div class="span2" style="display: inline-block; margin-right:7px">';
 				$year .= '<a href="index.php?option=com_proclaim&amp;view=CWMSermons&amp;filter_year='
 					. $b->theYear . '&amp;sendingview=CWMLanding&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;'
 					. 'filter_book=0&amp;filter_messagetype=0&amp;t='
@@ -806,8 +815,8 @@ class CWMLanding
 	public function getTopicsLandingPage($params, $id = 0)
 	{
 		$mainframe = Factory::getApplication();
-		$user      = Factory::getUser();
-		$db        = Factory::getDbo();
+		$user      = $user = Factory::getApplication()->getSession()->get('user');
+		$db        = Factory::getContainer()->get('DatabaseDriver');
 		$input     = Factory::getApplication();
 		$order     = 'ASC';
 		$topic     = null;
@@ -824,16 +833,16 @@ class CWMLanding
 		$item     = $menu->getActive();
 		$registry = new Registry;
 
-		if (isset($item->params))
+		if (isset($params))
 		{
-			$registry->loadString($item->params);
+			$registry->loadString($params);
 			$m_params   = $registry;
 			$language   = $db->quote($item->language) . ',' . $db->quote('*');
 			$menu_order = $params->get('topics_order');
 		}
 		else
 		{
-			$language   = $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*');
+			$language   = $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*');
 			$menu_order = null;
 		}
 
@@ -847,9 +856,11 @@ class CWMLanding
 				case 1:
 					$order = 'DESC';
 					break;
+                case 0:
+                    $order = null;
 			}
 		}
-		else
+        if (!$order)
 		{
 			$order = $params->get('landing_default_order', 'ASC');
 		}
@@ -892,7 +903,7 @@ class CWMLanding
 					}
 				}
 
-				$topic .= '<div class="span2">';
+				$topic .= '<div class="span2" style="display: inline-block; margin-right:7px">';
 				$topic .= '<a href="index.php?option=com_proclaim&amp;view=CWMSermons&amp;filter_topic=' .
 						$b->id . '&amp;sendingview=CWMLanding&amp;filter_teacher=0'
 					. '&amp;filter_series=0&amp;filter_location=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
@@ -944,8 +955,8 @@ class CWMLanding
 	public function getMessageTypesLandingPage($params, $id = 0)
 	{
 		$mainframe   = Factory::getApplication();
-		$db          = Factory::getDbo();
-		$user        = Factory::getUser();
+		$db          = Factory::getContainer()->get('DatabaseDriver');
+		$user        = $user = Factory::getApplication()->getSession()->get('user');
 		$messagetype = null;
 		$order       = 'ASC';
 		$teacherid   = null;
@@ -962,16 +973,16 @@ class CWMLanding
 		$item                = $menu->getActive();
 		$registry            = new Registry;
 
-		if (isset($item->params))
+		if (isset($params))
 		{
-			$registry->loadString($item->params);
+			$registry->loadString($params);
 			$m_params   = $registry;
 			$language   = $db->quote($item->language) . ',' . $db->quote('*');
 			$menu_order = $params->get('messagetypes_order');
 		}
 		else
 		{
-			$language   = $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*');
+			$language   = $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*');
 			$menu_order = null;
 		}
 
@@ -994,9 +1005,11 @@ class CWMLanding
 				case 1:
 					$order = 'DESC';
 					break;
+                case 0:
+                    $order = null;
 			}
 		}
-		else
+        if (!$order)
 		{
 			$order = $params->get('landing_default_order', 'ASC');
 		}
@@ -1041,7 +1054,7 @@ class CWMLanding
 							}
 						}
 
-						$messagetype .= '<div class="span2">';
+						$messagetype .= '<div class="span2 style="display: inline-block; margin-right:7px"">';
 						$messagetype .= '<a href="index.php?option=com_proclaim&amp;view=CWMSermons&amp;filter_messagetype=' .
 								$b->id . '&amp;sendingview=CWMLanding&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0' .
 						'&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;t=' . $template . '">';
@@ -1137,8 +1150,8 @@ class CWMLanding
 	 */
 	public function getBooksLandingPage($params, $id = 0)
 	{
-		$user     = Factory::getUser();
-		$db       = Factory::getDbo();
+		$user     = $user = Factory::getApplication()->getSession()->get('user');
+		$db       = Factory::getContainer()->get('DatabaseDriver');
 		$order    = 'ASC';
 		$book     = null;
 		$template = $params->get('studieslisttemplateid');
@@ -1154,16 +1167,16 @@ class CWMLanding
 		$item     = $menu->getActive();
 		$registry = new Registry;
 
-		if (isset($item->params))
+		if (isset($params))
 		{
-			$registry->loadString($item->params);
+			$registry->loadString($params);
 			$m_params   = $registry;
 			$language   = $db->quote($item->language) . ',' . $db->quote('*');
 			$menu_order = $params->get('books_order');
 		}
 		else
 		{
-			$language   = $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*');
+			$language   = $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*');
 			$menu_order = null;
 		}
 
@@ -1186,9 +1199,11 @@ class CWMLanding
 				case 1:
 					$order = 'DESC';
 					break;
+                case 0:
+                    $order = null;
 			}
 		}
-		else
+        if (!$order)
 		{
 			$order = $params->get('landing_default_order', 'ASC');
 		}
@@ -1230,7 +1245,7 @@ class CWMLanding
 					}
 				}
 
-				$book .= '<div class="span2">';
+				$book .= '<div class="span2" style="display: inline-block; margin-right:7px">';
 				$book .= '<a href="index.php?option=com_proclaim&amp;sendingview=landing&amp;view=CWMSermons&amp;filter_book=' . $b->booknumber
 					. '&amp;sendingview=CWMLanding&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0' .
 				'&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';

@@ -31,15 +31,6 @@ use Joomla\Component\Content\Administrator\Extension\ContentComponent;
 class HTMLView extends BaseHtmlView
 {
 	/**
-	 * Side Bar
-	 *
-	 * @var string
-	 *
-	 * @since 9.0.0
-	 */
-	public $sidebar;
-
-	/**
 	 * Items
 	 *
 	 * @var array
@@ -84,7 +75,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  mixed  A string if successful, otherwise a JError object.
+	 * @return  void  A string if successful, otherwise a JError object.
 	 *
 	 * @throws \Exception
 	 * @since   11.1
@@ -103,8 +94,6 @@ class HTMLView extends BaseHtmlView
 		if (count($errors = $this->get('Errors')))
 		{
 			Factory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
-
-			return false;
 		}
 
 		// Levels filter.
@@ -140,11 +129,12 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	protected function addToolbar()
 	{
-		$user = Factory::getUser();
+		$user = $user = Factory::getApplication()->getSession()->get('user');
 
 		// Get the toolbar object instance
 		$toolbar = Toolbar::getInstance('toolbar');
@@ -207,6 +197,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since    7.1.0
 	 */
 	protected function setDocument()

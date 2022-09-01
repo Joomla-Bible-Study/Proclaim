@@ -287,7 +287,7 @@ class com_proclaimInstallerScript
 			'com_proclaim'
 		);
 
-		$db   = Factory::getDbo();
+		$db   = Factory::getContainer()->get('DatabaseDriver');
 		$pass = $this->checkVersion('PHP', PHP_VERSION);
 		$pass &= $this->checkVersion('MySQL', $db->getVersion());
 		$pass &= $this->checkDbo($db->name, array('mysql', 'mysqli', 'pdo'));
@@ -431,7 +431,7 @@ class com_proclaimInstallerScript
 	{
 		$app = Factory::getApplication();
 
-		$db = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 
 		// Check if JBSM can be found from the database
 		$table = $db->getPrefix() . 'bsms_update';
@@ -756,7 +756,7 @@ class com_proclaimInstallerScript
 	private function installSubextensions($parent)
 	{
 		$src                   = $parent->getParent()->getPath('source');
-		$db                    = Factory::getDbo();
+		$db                    = Factory::getContainer()->get('DatabaseDriver');
 		$this->status          = new stdClass;
 		$this->status->modules = array();
 		$this->status->plugins = array();
@@ -958,7 +958,7 @@ class com_proclaimInstallerScript
 	 */
 	private function uninstallSubextensions($parent)
 	{
-		$db = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 
 		// Modules uninstalling
 		if (count(self::$installActionQueue['modules']))

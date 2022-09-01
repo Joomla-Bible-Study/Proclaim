@@ -96,7 +96,7 @@ class CWMSerieslist extends CWMListing
 		$label = str_replace('{{title}}', $row->series_text, $label);
 		$label = str_replace('{{description}}', $row->description, $label);
 		$label = str_replace('{{thumbnail}}', '<img src="' . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" />', $label);
-		$label = str_replace('{{url}}', 'index.php?option=com_proclaim&amp;view=seriesdisplay&amp;t=' . $template . '&amp;id=' . $row->id, $label);
+		$label = str_replace('{{url}}', 'index.php?option=com_proclaim&amp;view=CWMSeriesDisplay&amp;t=' . $template . '&amp;id=' . $row->id, $label);
 
 		return $label;
 	}
@@ -178,7 +178,7 @@ class CWMSerieslist extends CWMListing
 		echo $params->get('series_headercode');
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-		$user   = Factory::getUser();
+		$user   = $user = Factory::getApplication()->getSession()->get('user');
 		$groups = $user->getAuthorisedViewLevels();
 		$count  = count($items);
 
@@ -232,8 +232,8 @@ class CWMSerieslist extends CWMListing
 	 */
 	public function getSeriesstudiesDBO($id, $params, $limit = null)
 	{
-		$db        = Factory::getDbo();
-		$user      = Factory::getUser();
+		$db        = Factory::getContainer()->get('DatabaseDriver');
+		$user      = $user = Factory::getApplication()->getSession()->get('user');
 		$language  = $language = $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*');
 		$set_limit = null;
 

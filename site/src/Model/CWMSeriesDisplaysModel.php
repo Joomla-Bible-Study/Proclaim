@@ -116,8 +116,8 @@ class CWMSeriesDisplaysModel extends ListModel
 	/**
 	 * Build an SQL query to load the list data
 	 *
-	 * @return  DatabaseQuery
-	 *
+	 * @return  \Joomla\Database\QueryInterface
+     *
 	 * @since   7.0
 	 */
 	protected function getListQuery()
@@ -317,7 +317,7 @@ class CWMSeriesDisplaysModel extends ListModel
 		$items = $db->loadObjectList();
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-		$user   = Factory::getUser();
+		$user   = $user = Factory::getApplication()->getSession()->get('user');
 		$groups = $user->getAuthorisedViewLevels();
 		$count  = count($items);
 

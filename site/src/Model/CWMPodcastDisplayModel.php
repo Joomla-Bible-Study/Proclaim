@@ -11,6 +11,8 @@ namespace CWM\Component\Proclaim\Site\Model;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use JApplicationSite;
+use Joomla\CMS\Language\Text;
 use Joomla\Registry\Registry;
 use Joomla\CMS\MVC\Model\ItemModel;
 use Joomla\CMS\Factory;
@@ -78,7 +80,7 @@ class CWMPodcastDisplayModel extends ItemModel
 		$this->setState('template', $template);
 		$this->setState('administrator', $admin);
 
-		$user = Factory::getUser();
+		$user = $user = Factory::getApplication()->getSession()->get('user');
 
 		if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise('core.edit', 'com_proclaim')))
 		{
@@ -127,7 +129,7 @@ class CWMPodcastDisplayModel extends ItemModel
 
 			if (empty($data))
 			{
-				Factory::getApplication()->enqueueMessage(JText::_('JBS_CMN_SERIES_NOT_FOUND'), 'message');
+				Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_SERIES_NOT_FOUND'), 'message');
 
 				return false;
 			}
@@ -154,7 +156,7 @@ class CWMPodcastDisplayModel extends ItemModel
 
 		/** @var Registry $params */
 		$params          = $app->getParams();
-		$user            = Factory::getUser();
+		$user            = $user = Factory::getApplication()->getSession()->get('user');
 		$groups          = implode(',', $user->getAuthorisedViewLevels());
 		$db              = $this->getDbo();
 		$query           = $db->getQuery(true);

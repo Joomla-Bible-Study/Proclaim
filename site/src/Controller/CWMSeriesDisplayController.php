@@ -7,7 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-namespace CWM\Component\Proclaim\Site\CWMSeriesdisplayController;
+namespace CWM\Component\Proclaim\Site\Controller;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -21,7 +21,14 @@ defined('_JEXEC') or die;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class CWMSeriesdisplayController extends BaseController
+class CWMSeriesDisplayController extends BaseController
 {
-	// Holder.
+
+    protected $default_view = 'CWMSeriesDisplay';
+
+    public function display($cachable = false, $urlparams = array())
+    {
+        return parent::display();
+    }
+
 }

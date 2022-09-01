@@ -178,7 +178,7 @@ class CWMCommentTable extends Table
 		/** @var \Joomla\CMS\Table\Asset $asset */
 		$asset = Table::getInstance('Asset');
 		$asset->loadByName('com_proclaim');
-
+        $asset->id = 1;
 		return $asset->id;
 	}
 }

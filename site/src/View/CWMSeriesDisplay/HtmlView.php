@@ -246,7 +246,7 @@ class HtmlView extends BaseHtmlView
 		}
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-		$user   = Factory::getUser();
+		$user   = $user = Factory::getApplication()->getSession()->get('user');
 		$groups = $user->getAuthorisedViewLevels();
 
 		if (!in_array($items->access, $groups) && $items->access)

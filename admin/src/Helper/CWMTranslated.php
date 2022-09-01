@@ -129,7 +129,7 @@ class CWMTranslated
 			// Check if there should be topics at all to save time
 			if ($topicItem->tp_id)
 			{
-                $db = Factory::getDbo();
+                $db = Factory::getContainer()->get('DatabaseDriver');
 				$query = $db->getQuery(true);
 				$query->select('#__bsms_topics.topic_text, #__bsms_topics.params AS topic_params')
 					->from('#__bsms_topics')

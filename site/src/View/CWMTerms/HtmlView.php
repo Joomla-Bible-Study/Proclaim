@@ -75,7 +75,7 @@ class HtmlView extends BaseHtmlView
 		$template     = CWMParams::getTemplateparams();
 		$this->params = $template->params;
 		$termstext    = $this->params->get('terms');
-		$db           = Factory::getDbo();
+		$db           = Factory::getContainer()->get('DatabaseDriver');
 		$query        = $db->getQuery('true');
 		$query->select('*');
 		$query->from('#__bsms_mediafiles');
@@ -102,7 +102,7 @@ class HtmlView extends BaseHtmlView
 			}
 			else
 			{
-				echo '<a href="index.php?option=com_proclaim&task=CWMSermons.download&mid=' . $this->media->id . '">'
+				echo '<a href="index.php?option=com_proclaim&task=CWMSermons.download&id='.$this->media->study_id.'&mid=' . $this->media->id . '">'
 					. Text::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a>';
 			}
 			?>

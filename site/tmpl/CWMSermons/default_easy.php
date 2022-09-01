@@ -22,7 +22,7 @@ HtmlHelper::_('behavior.multiselect');
 HtmlHelper::_('formbehavior.chosen', 'select');
 
 $app       = Factory::getApplication();
-$user      = Factory::getUser();
+$user      = $user = Factory::getApplication()->getSession()->get('user');
 $userId    = $user->get('id');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));

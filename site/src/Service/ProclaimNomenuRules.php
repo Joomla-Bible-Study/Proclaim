@@ -55,40 +55,91 @@ class ProclaimNomenuRules implements RulesInterface
 		$test = 'Test';
 	}
 
+
 	/**
 	 * Parse a menu-less URL
 	 *
 	 * @param   array  &$segments  The URL segments to parse
 	 * @param   array  &$vars      The vars that result from the segments
 	 *
-	 * @return  array
+	 * @return  void
 	 *
 	 * @since   3.4
 	 */
 	public function parse(&$segments, &$vars)
 	{
-		$vars = array();
 
+        $vars = array();
 		// Count route segments
 		$count = count($segments);
 
+        if ($count == 6) {
+            //$vars['option'] = $segments[0];
+            $vars['sendingview'] = $segments[1];
+            $vars['view'] = $segments[2];
+            $id = explode('/', $segments[3]);
+            $vars['id'] = (int)$id[0];
+            $vars['t'] = $segments[$count - 2];
+            $vars['Itemid'] = $segments[$count - 1];
+            array_shift($segments);
+            array_shift($segments);
+            array_shift($segments);
+            array_shift($segments);
+            array_shift($segments);
+            array_shift($segments);
+
+            return;
+        }
+        if ($count == 5) {
+            //$vars['option'] = $segments[0];
+            $vars['view'] = $segments[1];
+            $id = explode('/', $segments[2]);
+            $vars['id'] = (int)$id[0];
+            $vars['t'] = $segments[$count - 2];
+            $vars['Itemid'] = $segments[$count - 1];
+            array_shift($segments);
+            array_shift($segments);
+            array_shift($segments);
+            array_shift($segments);
+            array_shift($segments);
+
+            return;
+        }
+        if ($count == 4)
+        {
+            $vars['view'] = $segments[1];
+            //$vars['id']   = (int) $segments[$count - 2];
+            $id = explode('/', $segments[2]);
+            $vars['id'] = (int) $id[0];
+            $vars['t']    = $segments[$count - 2];
+            $vars['Itemid'] = $segments[$count -1];
+            array_shift($segments);
+            array_shift($segments);
+            array_shift($segments);
+            array_shift($segments);
+
+            return;
+        }
 		if ($count == 3)
 		{
 			$vars['view'] = $segments[0];
 			//$vars['id']   = (int) $segments[$count - 2];
-		$id = explode('/', $segments[1]);
-				$vars['id'] = (int) $id[0];
+		    $id = explode('/', $segments[1]);
+            $vars['id'] = (int) $id[0];
 			$vars['t']    = $segments[$count - 1];
+            array_shift($segments);
+            array_shift($segments);
+            array_shift($segments);
 
-			//return;
+			return;
 		}
 		if ($count == 2)
 		{
-			if ($segments[0] === 'podcastdisplay')
+			if ($segments[1] === 'CWMPodcastdisplay')
 			{
-				$vars['view'] = $segments[0];
+				$vars['view'] = $segments[1];
 				//$vars['id']   = (int) $segments[1];
-		$id = explode('/', $segments[1]);
+		        $id = explode('/', $segments[2]);
 				$vars['id'] = (int) $id[0];
 			}
 			else
@@ -96,16 +147,18 @@ class ProclaimNomenuRules implements RulesInterface
 				$vars['view'] = $segments[0];
 				$vars['t']    = $segments[$count - 1];
 			}
+            array_shift($segments);
+            array_shift($segments);
 
-			//return;
+			return;
 		}
 		else
 		{
 			$vars['view'] = $segments[0];
-
-
+            array_shift($segments);
 		}
-		return $vars;
+
+		return;
 
 		/*
 		//with this url: http://localhost/j4x/my-walks/mywalk-n/walk-title.html
@@ -155,7 +208,8 @@ class ProclaimNomenuRules implements RulesInterface
 		unset($query['id']);
 		unset($query['t']);
 */
-		$segments = array();
+		//$segments = array();
+
 		if (isset($query['view']))
 		{
 			$segments[] = $query['view'];
@@ -171,6 +225,17 @@ class ProclaimNomenuRules implements RulesInterface
 			$segments[] = $query['t'];
 			unset($query['t']);
 		}
+        if (isset($query['Itemid']))
+        {
+            //$segments[] = $query['Itemid'];
+            unset($query['Itemid']);
+        }
+        $total = \count($segments);
+
+        for ($i = 0; $i < $total; $i++)
+        {
+            $segments[$i] = str_replace(':', '-', $segments[$i]);
+        }
 		return $segments;
 	}
 }

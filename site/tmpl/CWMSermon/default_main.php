@@ -23,7 +23,7 @@ defined('_JEXEC') or die;
 
 /** @type Joomla\Registry\Registry $params */
 $params = $this->item->params;
-$user = Factory::getUser();
+$user = $user = Factory::getApplication()->getSession()->get('user');
 $canEdit = $params->get('access-edit');
 
 $JViewLegacy = new JViewLegacy;
@@ -44,7 +44,19 @@ if ($this->item->params->get('showpodcastsubscribedetails') === '1')
 	</div>
 <?php
 }
-if ($this->item->params->get('showrelated') === '1')
+?>
+    <div class="page-header">
+        <h1 itemprop="headline">
+            <?php if ($this->item->params->get('details_show_header') > 0) {
+                if ($this->item->params->get('details_show_header') == 1) {
+                    echo $this->item->studytitle;
+                } else {
+                    echo $this->item->scripture1;
+                }
+            }?>		</h1>
+    </div>
+<?php
+    if ($this->item->params->get('showrelated') === '1')
 {
 	?>
 	<div class="row-fluid">
@@ -55,30 +67,7 @@ if ($this->item->params->get('showrelated') === '1')
 <?php
 }
 ?>
-<?php if (!$this->print) : ?>
-	<?php if ($canEdit || $params->get('show_print_view') || $params->get('show_email_icon')) : ?>
-		<div class="btn-group pull-right buttonheading">
-			<a class="btn dropdown-toggle" data-toggle="dropdown" href="#"> <i class="icon-cog"></i>
-				<span class="caret"></span> </a>
-			<?php // Note the actions class is deprecated. Use dropdown-menu instead. ?>
-			<ul class="dropdown-menu actions">
-				<?php if ($params->get('show_print_view')) : ?>
-					<li class="print-icon"> <?php echo CWMIcon::print_popup($this->item, $params); ?> </li>
-				<?php endif; ?>
-				<?php if ($params->get('show_email_icon')) : ?>
-					<li class="email-icon"> <?php echo CWMIcon::email( $this->item, $params); ?> </li>
-				<?php endif; ?>
-				<?php if ($canEdit) : ?>
-					<li class="edit-icon"> <?php echo CWMIcon::edit( $this->item, $params); ?> </li>
-				<?php endif; ?>
-			</ul>
-		</div>
-	<?php endif; ?>
-<?php else : ?>
-	<div id="pop-print" class="btn hidden-print">
-		<?php echo HtmlHelper::_('icon.print_screen', $this->item, $params); ?>
-	</div>
-<?php endif; ?>
+
 
 <?php
 // Social Networking begins here
@@ -101,6 +90,8 @@ echo $list;
 
 <?php
 echo $this->passage;
+?>
+    <hr/> <?php
 
 echo $this->item->studytext;
 
@@ -110,9 +101,6 @@ if ($this->item->params->get('showrelated') === '2')
 {
 	echo $this->related;
 }
-?>
-<?php
-if ($this->item->params->get('showpodcastsubscribedetails') === '2')
-{
-	echo $this->subscribe;
-}
+
+
+

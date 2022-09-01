@@ -39,14 +39,14 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
 		// Contact frontpage Editor contacts proxying.
 		$this->input = Factory::getApplication()->input;
 
-		if ($this->input->get('view') === 'cwmlandingpage' && $this->input->get('layout') === 'modal')
+		if ($this->input->get('view') === 'CWMLandingPage' && $this->input->get('layout') === 'modal')
 		{
-			$config['base_path'] = JPATH_COMPONENT_ADMINISTRATOR;
+			$config['base_path'] = JPATH_ADMINISTRATOR . '/components';
 		}
-		// Sermion frontpage Editor article proxying:
-		elseif ($this->input->get('view') === 'sermons' && $this->input->get('layout') === 'modal')
+		// Sermon frontpage Editor article proxying:
+		elseif ($this->input->get('view') === 'CWMSermons' && $this->input->get('layout') === 'modal')
 		{
-			$config['base_path'] = JPATH_COMPONENT_ADMINISTRATOR;
+			$config['base_path'] = JPATH_ADMINISTRATOR . '/components';
 		}
 
 		parent::__construct($config, $factory, $app, $input);

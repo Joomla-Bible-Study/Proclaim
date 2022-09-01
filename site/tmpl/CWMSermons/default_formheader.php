@@ -20,6 +20,5 @@ use Joomla\CMS\Router\Route;
 defined('_JEXEC') or die;
 $input = Factory::getApplication()->input;
 ?>
-<form action="<?php echo Route::_('index.php?option=com_proclaim&view=CWMSermons&t=' . $input->get('t', '1', 'int')
-	. '&Itemid=' . $input->get('Itemid', '', 'int')); ?>"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=CWMSermons&t=' . $input->get('t', '1', 'int')); ?>"
       method="post" name="adminForm" id="adminForm">

@@ -52,12 +52,15 @@
 			<option value="0">JBS_ADM_HITS_PLAYS_DOWNLOAD</option>
 			<option value="1">JBS_ADM_PLAYS_DOWNLOAD</option>
 		</field>
-
-		<field name="default_main_image" type="media" size="50" label="JBS_ADM_DEFAULT_MAIN_IMAGE"
+		<field name="main_image_icon_or_image" type="list" default="0" label="JBS_ADM_MAIN_IMAGE_OR_ICON" description="JBS_ADM_MAIN_IMAGE_OR_ICON_DESC" labelclass="control-label">
+			<option value="0">JBS_ADM_MAIN_IMAGE_USE_ICON</option>
+			<option value="1">JBS_ADM_MAIN_IMAGE_USE_IMAGE</option>
+		</field>
+		<field name="default_main_image" type="media" directory="biblestudy" size="50" label="JBS_ADM_DEFAULT_MAIN_IMAGE"
 		       description="JBS_ADM_DEFAULT_MAIN_IMAGE_DESC" labelclass="control-label"/>
-		<field name="default_series_image" type="media" size="50" label="JBS_ADM_DEFAULT_SERIES_IMAGE"
+		<field name="default_series_image" type="media" directory="biblestudy" size="50" label="JBS_ADM_DEFAULT_SERIES_IMAGE"
 		       description="JBS_ADM_DEFAULT_SERIES_IMAGE_DESC" labelclass="control-label"/>
-		<field name="default_teacher_image" type="media" size="50" label="JBS_ADM_DEFAULT_TEACHER_IMAGE"
+		<field name="default_teacher_image" type="media" directory="biblestudy" size="50" label="JBS_ADM_DEFAULT_TEACHER_IMAGE"
 		       description="JBS_ADM_DEFAULT_TEACHER_IMAGE_DESC" labelclass="control-label"/>
 
 		<!-- Download image/button/icon-->
@@ -70,9 +73,7 @@
 		</field>
 		<field name="download_use_button_icon" label="JBS_ADDON_DOWNLOAD_USE_BUTTON"
 		       description="JBS_ADDON_DOWNLOAD_USE_BUTTON_DESC" type="list"
-		       useglobal="true"
-		       validate="options"
-		       size="15" default=""
+		      default=""
 		       labelclass="control-label">
 			<option value="">JBS_CMN_DEFAULT_DOWNLOAD</option>
 			<option value="1">JBS_MED_NONE</option>
@@ -87,7 +88,6 @@
 		       type="list"
 		       useglobal="true"
 		       validate="options"
-		       size="15"
 		       default=""
 		       label="JBS_ADDON_BUTTON_TYPE"
 		       description="JBS_ADDON_BUTTON_TYPE_DESC"
@@ -101,7 +101,7 @@
 		</field>
 		<field name="download_button_color" type="color" description="JBS_ADDON_BUTTON_COLOR_DESC"
 		       label="JBS_ADDON_BUTTON_COLOR" labelclass="control-label"/>
-		<field name="download_icon_type" type="list" class="inputbox" size="15" default=""
+		<field name="download_icon_type" type="list" class="inputbox" default=""
 		       label="JBS_ADDON_ICON_TYPE"
 		       description="JBS_ADDON_ICON_TYPE_DESC" labelclass="control-label">
 			<option value="fas fa-download">JBS_DOWNLOAD_1</option>
@@ -114,11 +114,11 @@
 		       description="JBS_ADDON_CUSTOM_ICON_DESC" labelclass="control-label"/>
 		<field name="download_icon_text_size" type="text" default="24" label="JBS_ADDON_FONT_SIZE"
 		       description="JBS_ADDON_FONT_SIZE_DESC" labelclass="control-label"/>
-		<field name="default_download_image" type="media" size="50" label="JBS_ADM_DOWNLOAD_IMAGE"
+		<field name="default_download_image" type="media" directory="biblestudy" label="JBS_ADM_DOWNLOAD_IMAGE"
 		       description="JBS_ADM_DOWNLOAD_IMAGE_DESC" labelclass="control-label"/>
 
 		<!--Show Hide on Landing Page-->
-		<field name="default_showHide_image" type="media" label="JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE"
+		<field name="default_showHide_image" type="media" directory="biblestudy" label="JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE"
 		       description="JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE_DESC" labelclass="control-label">
 			<option>JBS_CMN_DEFAULT_IMAGE</option>
 		</field>
@@ -166,11 +166,14 @@
 		       value_field="bookname" labelclass="control-label">
 			<option value="-1">JBS_CMN_SELECT_BOOK</option>
 		</field>
-		<field name="messagetype" type="messagetypelist" default="-1" label="JBS_CMN_MESSAGETYPE"
-		       description="JBS_ADM_FILLIN_STUDY_DESC" class="inputbox" labelclass="control-label">
-			<option value="-1">JBS_CMN_SELECT_MESSAGETYPE</option>
+		<field name="messagetype" type="sql"
+			   query="SELECT * FROM #__bsms_message_type WHERE published = 1"
+			   class="inputbox"
+			   key_field="id" value_field="message_type" default="-1" labelclass="control-label"
+			   label="JBS_CMN_FILTERS_MESSAGETYPES" description="JBS_CMN_FILTERS_DESC">
+			<option value="-1">JBS_CMN_SHOW_ALL</option>
 		</field>
-		<field name="default_study_image" type="media" size="50"
+		<field name="default_study_image" type="media" size="50" directory="biblestudy"
 		       label="JBS_ADM_FILLIN_STUDY_IMAGE" description="JBS_ADM_FILLIN_STUDY_DESC" labelclass="control-label"/>
 
 		<field name="download" type="radio" default="0"
@@ -181,7 +184,7 @@
 		</field>
 		<field name="target" type="list" default="0"
 		       label="JBS_ADM_FILLIN_MEDIAFILE_TARGET" description="JBS_ADM_FILLIN_MEDIAFILE_TARGET_DESC"
-		       class="span12 small" labelclass="control-label">
+		       class="inputbox" labelclass="control-label">
 			<option value=" ">JBS_ADM_NO_DEFAULT</option>
 			<option value="_blank">JBS_ADM_NEW_WINDOW</option>
 			<option value="_self">JBS_ADM_SAME_WINDOW</option>
@@ -274,7 +277,7 @@
 		</fieldset>
 		<fieldset name="jwplayer_pro_standard" label="JBS_ADM_PLAYER_ADMIN_LABLE"
 		          description="JBS_ADM_PLAYER_ADMIN_DESC">
-			<field name="jwplayer_image" type="media" label="JBS_ADM_JWPLAYER_IMAGE"
+			<field name="jwplayer_image" type="media" directory="biblestudy" label="JBS_ADM_JWPLAYER_IMAGE"
 			       description="JBS_ADM_JWPLAYER_IMAGE_DESC" labelclass="control-label"/>
 			<field name="jwplayer_skin" type="skin"
 			       label="JBS_ADM_JWPLAYER_SKIN"
@@ -343,7 +346,7 @@
 				<option value="false">JBS_CMN_NO</option>
 				<option value="true">JBS_CMN_YES</option>
 			</field>
-			<field name="jwplayer_logo" type="media"
+			<field name="jwplayer_logo" type="media" directory="biblestudy"
 			       label="JBS_ADM_JWPLAYER_LOGO" description="JBS_ADM_JWPLAYER_LOGO_DESC"/>
 			<field name="sharing" type="radio"
 			       label="JBS_ADM_JWPLAYER_SHARING" description="JBS_ADM_JWPLAYER_SHARING_DESC"

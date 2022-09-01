@@ -164,9 +164,10 @@ class CWMTeacherTable extends Table
 	protected function _getAssetParentId(Table $table = null, $id = null)
 	{
 		/** @var \Joomla\CMS\Table\Asset $asset */
-		$asset = Table::getInstance('Asset');
+        //$asset = (new \Joomla\CMS\MVC\Factory\MVCFactory)->createTable("Asset");
+        $asset = Table::getInstance('Asset');
 		$asset->loadByName('com_proclaim');
-
-		return $asset->id;
+        $asset->id = 1;
+        return $asset->id;
 	}
 }

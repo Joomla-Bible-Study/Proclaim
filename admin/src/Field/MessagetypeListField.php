@@ -13,7 +13,9 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
+use JFormHelper;
 
+JFormHelper::loadFieldClass('list');
 defined('_JEXEC') or die;
 
 /**
@@ -42,7 +44,7 @@ class MessagetypeListField extends ListField
 	 */
 	protected function getOptions()
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('id,message_type');
 		$query->from('#__bsms_message_type');

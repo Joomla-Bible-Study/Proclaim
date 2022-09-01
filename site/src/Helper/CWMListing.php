@@ -397,7 +397,7 @@ class CWMListing
 		$class1  = $params->get($extra . 'listcolor1', '');
 		$class2  = $params->get($extra . 'listcolor2', '');
 		$oddeven = $class1;
-//Start the table
+//Start the table for the entire list
 		$list .= '<div class="table-responsive" about="' . $type . '"><table class="table w-auto table-borderless">';
 		if ($type === 'sermons')
 		{
@@ -423,10 +423,10 @@ class CWMListing
 
 		if ($type === 'seriesdisplays')
 		{
-			if ($params->get('use_headers_series') > 0 && is_object($items))
+			if ($params->get('use_headers_series') == 1)
 			{
 				//Start the header
-				$list .= '<thead class="'.$params->get('listheadertype').'">';
+				$list .= '<thead class="'.$params->get('listheadertype').'" colspan="12">';
 				$list .= $this->getFluidRow($listrows, $listsorts, $items[0], $params, $template, $oddeven, $header = 1, $type);
 				$list .= '</thead>';
 			}
@@ -457,7 +457,7 @@ class CWMListing
 				$list .= '</thead>';
 
 			}
-
+            //$list .= "<hr/>";
 			$list .= $this->getFluidRow($listrows, $listsorts, $items, $params, $template, $oddeven, $header = 0, $type);
 
 		}
@@ -498,6 +498,7 @@ class CWMListing
 				}
 
 				$row[] = $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header = 0, $type);
+                $row[] = '</td></tr><tr style="border-bottom: 1px solid darkgrey; padding-bottom: 5px;"</tr>';
 			}
 		}
 
@@ -531,6 +532,7 @@ class CWMListing
 			{
 				$oddeven = ($oddeven === $class1) ? $class2 : $class1;
 				$row[]   = $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header = 0, $type);
+                $row[] = '</td></tr><tr style="border-bottom: 1px solid darkgrey; padding-bottom: 5px;"</tr>';
 			}
 		}
 
@@ -538,8 +540,9 @@ class CWMListing
 		{
 			foreach ($items as $item)
 			{
-				$oddeven = ($oddeven === $class1) ? $class2 : $class1;
-				$row[]   = $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header = 0, $type);
+                $row[]   = $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header = 0, $type);
+                $row[] = '</td></tr><tr style="border-bottom: 1px solid darkgrey; padding-bottom: 5px;"</tr>';
+
 			}
 		}
 
@@ -547,10 +550,11 @@ class CWMListing
 		{
 
 			$list .=  $value;
+
 		}
 
 		$list .= '</tbody></table></div>';
-		//$list .= '<hr>' . $value;
+
 		return $list;
 	}
 
@@ -587,7 +591,7 @@ class CWMListing
 	 */
 	public function getMediaFiles($medias)
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('#__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.params AS sparams, #__bsms_servers.media AS smedia,'
 			. ' s.studytitle, s.studydate, s.studyintro, s.teacher_id,'
@@ -857,22 +861,10 @@ class CWMListing
 		$rowspanitemspan = $params->get($extra . 'rowspanitemspan');
 		$rowspanbalance  = 12 - $rowspanitemspan;
 
-		if (!empty($oddeven))
-		{
-			$background = "background-color: " . $oddeven . ";";
-		}
-		else
-		{
-			$background = "";
-		}
-		$frow = '';
-		//$frow = '<div class="table-responsive" about="' . $type . '"><table class="table w-auto table-borderless">';
-		if ($header === 1)
-		{
-			//$frow .= '<thead class="'.$params->get('listheadertype').'">';
-		}
 
-		$row1count  = 0;
+		$frow = '';
+
+        $row1count  = 0;
 		$row2count  = 0;
 		$row3count  = 0;
 		$row4count  = 0;
@@ -885,13 +877,13 @@ class CWMListing
 		$row5count2 = 0;
 		$row6count2 = 0;
 
-		if ($span)
+	/*	if ($span)
 		{
 			$frow .= '<div class="row" about="' . $type . '">';
 			$frow .= '<div class="span' . $rowspanitemspan . ' ' . $pull . '" id="jbsmspan-image"><div ' . $headerstyle . '>' . $span . '</div></div>';
 			$frow .= '<div class="span' . $rowspanbalance . '" about="' . $type . '">';
 		}
-
+*/
 		foreach ($listsorts as $sort)
 		{
 			if (count($sort))
@@ -943,13 +935,16 @@ $thadd = '';
 			{
 				if ($row1count === $row1count2 & $header === 0 )
 				{
-					$frow .= '<tr>';
+					$frow .= '<tr scope="row">';
 				}
 
 				if ($header === 1)
 				{
 					if ($row->colspan >0) {$thadd = 'colspan="'.$row->colspan.'"';}
-					$frow .= '<th scope="col"'.$thadd.' scope="col">'.$this->getFluidData($item, $row, $params, $template, $header = 1, $type);
+                   // if ($extra == 's'){$thadd = 'class="col-12"';}
+                   // $thadd = '';
+					$frow .= '<th scope="col"'.$thadd.'>'.$this->getFluidData($item, $row, $params, $template, $header = 1, $type);
+
 				}
 				else
 				{
@@ -972,13 +967,14 @@ $thadd = '';
 			{
 				if ($row2count === $row2count2 && $header === 0)
 				{
-					$frow .= '<tr>';
+					$frow .= '<tr scope="row">';
 				}
 
 				if ($header === 1)
 				{
 					if ($row->colspan >0) {$thadd = 'colspan="'.$row->colspan.'"';}
-					$frow .= '<tr> <th '.$thadd.' scope="col">'.$this->getFluidData($item, $row, $params, $template, $header = 1, $type);
+                   // $thadd = '';
+					$frow .= '<tr scope="row"> <th '.$thadd.' scope="col">'.$this->getFluidData($item, $row, $params, $template, $header = 1, $type);
 				}
 				else
 				{
@@ -1001,13 +997,14 @@ $thadd = '';
 			{
 				if ($row3count === $row3count2 && $header === 0)
 				{
-					$frow .= '<tr>';
+					$frow .= '<tr scope="row">';
 				}
 
 				if ($header === 1)
 				{
 					if ($row->colspan >0) {$thadd = 'colspan="'.$row->colspan.'"';}
-					$frow .= '<tr><th '.$thadd.' scope="col">'.$this->getFluidData($item, $row, $params, $template, $header = 1, $type);
+                   // $thadd = '';
+					$frow .= '<tr scope="row"><th '.$thadd.' scope="col">'.$this->getFluidData($item, $row, $params, $template, $header = 1, $type);
 				}
 				else
 				{
@@ -1030,13 +1027,14 @@ $thadd = '';
 			{
 				if ($row4count === $row4count2 && $header === 0)
 				{
-					$frow .= '<tr>';
+					$frow .= '<tr scope="row">';
 				}
 
 				if ($header === 1)
 				{
 					if ($row->colspan >0) {$thadd = 'colspan="'.$row->colspan.'"';}
-					$frow .= '<tr><th '.$thadd.' scope="col">'.$this->getFluidData($item, $row, $params, $template, $header = 1, $type);
+                    //$thadd = '';
+					$frow .= '<tr scope="row"><th '.$thadd.' scope="col">'.$this->getFluidData($item, $row, $params, $template, $header = 1, $type);
 				}
 				else
 				{
@@ -1059,13 +1057,14 @@ $thadd = '';
 			{
 				if ($row5count === $row5count2 && $header === 0)
 				{
-					$frow .= '<tr>';
+					$frow .= '<tr scope="row">';
 				}
 
 				if ($header === 1)
 				{
 					if ($row->colspan >0) {$thadd = 'colspan="'.$row->colspan.'"';}
-					$frow .= '<tr><th '.$thadd.' scope="col">' . $this->getFluidData($item, $row, $params, $template, $header = 1, $type);
+                   // $thadd = '';
+					$frow .= '<tr scope="row"><th '.$thadd.' scope="col">' . $this->getFluidData($item, $row, $params, $template, $header = 1, $type);
 				}
 				else
 				{
@@ -1088,13 +1087,14 @@ $thadd = '';
 			{
 				if ($row6count === $row6count2 && $header === 0)
 				{
-					$frow .= '<tr>';
+					$frow .= '<tr scope="row">';
 				}
 
 				if ($header === 1)
 				{
 					if ($row->colspan >0) {$thadd = 'colspan="'.$row->colspan.'"';}
-					$frow .= '<tr><th '.$thadd.' scope="col">' . $this->getFluidData($item, $row, $params, $template, $header = 1, $type) ;
+                    //$thadd = '';
+					$frow .= '<tr scope="row"><th '.$thadd.' scope="col">' . $this->getFluidData($item, $row, $params, $template, $header = 1, $type) ;
 				}
 				else
 				{
@@ -1113,17 +1113,7 @@ $thadd = '';
 				}
 			}
 		}
-		// Close out if header is used.
-		if ($span)
-		{
-			//$frow .= '</thead>';
-		}
-		if ($header === 1)
-		{
-			//$frow .= '</thead>';
-		}
-		// Close out div.
-		//$frow .= '</table></div>';
+
 
 		return $frow;
 	}
@@ -1145,8 +1135,8 @@ $thadd = '';
 	 */
 	public function getFluidData($item, $row, $params, $template, int $header, $type)
 	{
-		$smenu = $params->get('detailsitemid');
-		$tmenu = $params->get('teacheritemid');
+		$smenu = '';
+		$tmenu = '';
 		/** @var string $data */
 		$data = '';
 
@@ -1187,104 +1177,78 @@ $thadd = '';
 				break;
 
 			case $extra . 'teacherallinone':
-				if (isset($item->email))
-				{
-					($item->email ? $data = '<a href="mailto:' . $item->email . '">
+                if ($header == 1){$data .='Teacher Contact';}
+                else {
+                    if (isset($item->email)) {
+                        ($item->email ? $data = '<a href="mailto:' . $item->email . '">
 				<span class="fas fa-envelope" style="font-size:20px;" title="Website"></span></a>' : $data = '');
 
-					if ($item->website)
-					{
-						if (substr_count($item->website, 'http://', 0))
-						{
-							$data .= '<a href="' . $item->website . '" target="_blank">
+                        if ($item->website) {
+                            if (substr_count($item->website, 'http://', 0)) {
+                                $data .= '<a href="' . $item->website . '" target="_blank">
 						<span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
-						}
-						else
-						{
-							$data .= '<a href="http://' . $item->website . '" target="_blank">
+                            } else {
+                                $data .= '<a href="http://' . $item->website . '" target="_blank">
 						<span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
-						}
-					}
+                            }
+                        }
 
-					if ($item->facebooklink)
-					{
-						if (substr_count($item->facebooklink, 'http://', 0))
-						{
-							$data .= '<a href="' . $item->facebooklink . '" target="_blank">
+                        if ($item->facebooklink) {
+                            if (substr_count($item->facebooklink, 'http://', 0)) {
+                                $data .= '<a href="' . $item->facebooklink . '" target="_blank">
 						<span class="fab fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
-						}
-						else
-						{
-							$data .= '<a href="http://' . $item->facebooklink . '" target="_blank">
+                            } else {
+                                $data .= '<a href="http://' . $item->facebooklink . '" target="_blank">
 						<span class="fab fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
-						}
-					}
+                            }
+                        }
 
-					if ($item->twitterlink)
-					{
-						if (substr_count($item->twitterlink, 'http://', 0))
-						{
-							$data .= '<a href="' . $item->twitterlink . '" target="_blank">
+                        if ($item->twitterlink) {
+                            if (substr_count($item->twitterlink, 'http://', 0)) {
+                                $data .= '<a href="' . $item->twitterlink . '" target="_blank">
 						<span class="fab fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
-						}
-						else
-						{
-							$data .= '<a href="http://' . $item->twitterlink . '" target="_blank">
+                            } else {
+                                $data .= '<a href="http://' . $item->twitterlink . '" target="_blank">
 						<span class="fab fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
-						}
-					}
+                            }
+                        }
 
-					if ($item->bloglink)
-					{
-						if (substr_count($item->bloglink, 'http://', 0, 7))
-						{
-							$data .= '<a href="' . $item->bloglink . '" target="_blank">
+                        if ($item->bloglink) {
+                            if (substr_count($item->bloglink, 'http://', 0, 7)) {
+                                $data .= '<a href="' . $item->bloglink . '" target="_blank">
 						<span class="fas fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
-						}
-						else
-						{
-							$data .= '<a href="http://' . $item->bloglink . '" target="_blank">
+                            } else {
+                                $data .= '<a href="http://' . $item->bloglink . '" target="_blank">
 						<span class="fas fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
-						}
-					}
+                            }
+                        }
 
-					if ($item->link1)
-					{
-						if (substr_count($item->link1, 'http://', 0))
-						{
-							$data .= '<a href="' . $item->link1 . '" target="_blank">' . $item->link1label . '</a>';
-						}
-						else
-						{
-							$data .= '<a href="http://' . $item->link1 . '" target="_blank">' . $item->link1label . '</a>';
-						}
-					}
+                        if ($item->link1) {
+                            if (substr_count($item->link1, 'http://', 0)) {
+                                $data .= '<a href="' . $item->link1 . '" target="_blank">' . $item->link1label . '</a>';
+                            } else {
+                                $data .= '<a href="http://' . $item->link1 . '" target="_blank">' . $item->link1label . '</a>';
+                            }
+                        }
 
-					if ($item->link2)
-					{
-						if (substr_count($item->link2, 'http://', 0))
-						{
-							$data .= '<a href="' . $item->link2 . '" target="_blank">' . $item->link2label . '</a>';
-						}
-						else
-						{
-							$data .= '<a href="http://' . $item->link2 . '" target="_blank">' . $item->link2label . '</a>';
-						}
-					}
+                        if ($item->link2) {
+                            if (substr_count($item->link2, 'http://', 0)) {
+                                $data .= '<a href="' . $item->link2 . '" target="_blank">' . $item->link2label . '</a>';
+                            } else {
+                                $data .= '<a href="http://' . $item->link2 . '" target="_blank">' . $item->link2label . '</a>';
+                            }
+                        }
 
-					if ($item->link3)
-					{
-						if (substr_count($item->link3, 'http://', 0))
-						{
-							$data .= '<a href="' . $item->link3 . '" target="_blank">' . $item->link3label . '</a>';
-						}
-						else
-						{
-							$data .= '<a href="http://' . $item->link3 . '" target="_blank">' . $item->link3label . '</a>';
-						}
-					}
-				}
-				break;
+                        if ($item->link3) {
+                            if (substr_count($item->link3, 'http://', 0)) {
+                                $data .= '<a href="' . $item->link3 . '" target="_blank">' . $item->link3label . '</a>';
+                            } else {
+                                $data .= '<a href="http://' . $item->link3 . '" target="_blank">' . $item->link3label . '</a>';
+                            }
+                        }
+                    }
+                }
+                    break;
 
 			case $extra . 'teacherlong':
 				if ($header === 1)
@@ -1587,6 +1551,7 @@ $thadd = '';
 				else
 				{
 					isset($item->studyintro) ? $data = HtmlHelper::_('content.prepare', $item->studyintro, '', 'com_proclaim.' . $type) : $data = '';
+
 				}
 				break;
 			case $extra . 'series':
@@ -1634,15 +1599,29 @@ $thadd = '';
 				if ($type === 'seriesdisplays' || ($type === 'seriesdisplay' && $header !== 1))
 				{
 					(isset($item->description) ? $data = HTMLHelper::_('content.prepare', $item->description, '', 'com_proclaim.' . $type) : $data = '');
-				}
+                    if ($params->get('series_characters')){
+                        $d = substr($data, 0, $params->get('series_characters'));
+                        $data = substr($d, 0, strrpos($d, '. '));}
+                    if ($data){$data .= '.';}
+                }
+
 				else
 				{
 					(isset($item->sdescription) ? $data = HtmlHelper::_('content.prepare', $item->sdescription, '', 'com_proclaim.' . $type) : $data = '');
-				}
+                    if ($params->get('series_characters')){
+                        $d = substr($data, 0, $params->get('series_characters'));
+                        $data = substr($d, 0, strrpos($d, '. '));}
+                        if ($data){$data .= '.';}
+                }
+
 
 				if ($type === 'seriesdisplays' && !$header)
 				{
 					(isset($item->description) ? $data = stripslashes($item->description) : $data = '');
+                    if ($params->get('series_characters')){
+                        $d = substr($data, 0, $params->get('series_characters'));
+                        $data = substr($d, 0, strrpos($d, '. '));}
+                    if ($data){$data .= '.';}
 				}
 				break;
 			case $extra . 'submitted':
@@ -1845,8 +1824,8 @@ $thadd = '';
 
 		//$frow = '<div class="col-' . $row->colspan;
 		$tdadd = '';
-		if ($row->colspan > 0){$tdadd = ' colspan = "'.$row->colspan.'"';}
-		if ($header === 0) {$frow = '<td scope="row"'.$tdadd.'>';}
+		if ($row->colspan > 0){$tdadd = 'colspan="'.$row->colspan.'"';}
+		if ($header === 0) {$frow = '<td scope="col"'.$tdadd.'>';}
 		//if ($header === 1) {$frow = '<th>';}
 		if ($header === 1) {$frow = '';}
 		if ($customclass)
@@ -1877,7 +1856,6 @@ $thadd = '';
 		//if ($header === 0){ $frow .= $classclose . '</td>';}
 		if ($header === 0){ $frow .= '</'.$classclose.'</td>';}
 		if ($header === 1) {$frow .= '</th>';}
-
 		return $frow;
 	}
 
@@ -2483,8 +2461,6 @@ $thadd = '';
 	 * @param   bool              $islink      True is a link, False is not
 	 * @param   string            $id3         Id3 data
 	 * @param   int               $tid         Template ID
-	 * @param   object            $smenu       Menu data
-	 * @param   object            $tmenu       Itemid
 	 * @param   Registry          $params      Params
 	 * @param   object            $row         Row data
 	 * @param   CWMTemplateTable  $templateid  Template Table Data
@@ -2493,36 +2469,23 @@ $thadd = '';
 	 *
 	 * @since 7.0
 	 */
-	private function getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $row, $templateid)
+	private function getLink($islink, $id3, $tid, $smenu = null, $tmenu = null, $params, $row, $templateid)
 	{
 		$input = new Input;
-		//$Itemid = $input->get('Itemid', '', 'int');
 		$view   = $input->getString('view', '');
 		$column = '';
 
 		switch ($islink)
 		{
 			case 1 :
-				//$Itemid = $input->get('Itemid', '', 'int');
-				$Itemid = '';
-				if (!$Itemid)
-				{
-					$link = Route::_('index.php?option=com_proclaim&view=CWMSermon&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
 
-					if ($view === 'seriesdisplays')
-					{
-						$link = Route::_('index.php?option=com_proclaim&view=CWMSeriesiDsplay&id=' . $row->slug . '&t=' . $params->get('seriesdetailtemplateid'));
-					}
-				}
-				else
-				{
 					$link = Route::_('index.php?option=com_proclaim&view=CWMSermon&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
 
 					if ($view === 'seriesdisplays')
 					{
 						$link = Route::_('index.php?option=com_proclaim&view=CWMSeriesDisplay&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
 					}
-				}
+
 
 				$column = '<a href="' . $link . '">';
 				break;
@@ -2585,7 +2548,7 @@ $thadd = '';
 	public function getOtherlinks($id3, $islink, $params)
 	{
 		$link  = '';
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('#__bsms_mediafiles.*')
 			->from('#__bsms_mediafiles')
@@ -2739,22 +2702,19 @@ $thadd = '';
 	 */
 	public function getShare($link, $row, $params)
 	{
-		$sharetype = $params->get('socialnetworking', 1);
 
 		$shareit = '<div class="row">';
 
-		if ($sharetype === 1)
-		{
 			$shareit .= '<div class="pull-right">
 						<!-- AddThis Button BEGIN -->
 						<a class="addthis_button" href="//www.addthis.com/bookmark.php?v=250">
-						<img src="//s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" border="0" alt="Share" />
+						<img src="//s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Share" />
 						</a>
 						<script type="text/javascript">var addthis_config = {"data_track_clickback":true};</script>
 						<script type="text/javascript" src="//s7.addthis.com/js/250/addthis_widget.js"></script>
 						<!-- AddThis Button END -->
 						</div>';
-		}
+
 
 		$shareit .= '</div>';
 

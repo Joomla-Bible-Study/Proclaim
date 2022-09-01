@@ -10,10 +10,12 @@
 // No Direct Access
 defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\MVC\View\HtmlView;
 use CWM\Component\Proclaim\Site\Helper\CWMListing;
 use CWM\Component\Proclaim\Site\Helper\CWMSerieslist;
 use Joomla\CMS\Html\HTMLHelper;
+use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Language\Text;
 HtmlHelper::_('bootstrap.framework');
@@ -35,13 +37,14 @@ if ($url)
 {
     HtmlHelper::_('stylesheet', $url);
 }
+//echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 ?>
 <div class="container-fluid">
-	<form action="<?php echo str_replace("&", "&amp;", $this->request_url); ?>" method="post" name="adminForm">
+	<form action="<?php Route::_('index.php?option=com_proclaim&view=cwmseriesdisplay') ?>" method="post" name="adminForm">
         <div class="hero-unit" style="padding-top:30px; padding-bottom:20px;"> <!-- This div is the header container -->
 			<div <?php echo $classelement; ?> class="componentheading">
 				<?php
-				if ($this->params->get('show_page_image_series'))
+				if ($this->params->get('show_page_image_series') && $this->params->get('series_show_image') > 0)
 				{
 					echo '<img src="' . Uri::base() . $this->params->get('show_page_image_series') . '" alt="' . $this->params->get('show_series_title') . '" />';
 
@@ -51,11 +54,11 @@ if ($url)
 				<?php
 				if ($this->params->get('show_series_title') > 0)
 				{
-					echo $this->params->get('series_title');
+					echo '<h1>'.$this->params->get('series_title').'</h1>';
 				}
 				?>
-			</<?php echo $classelement; ?> </div>
-		</div></div>
+
+		</div>
 		<!--header-->
 
 		<div id="bsdropdownmenu">
@@ -64,24 +67,10 @@ if ($url)
 
 			if ($this->params->get('series_list_show_pagination') == 1)
 			{
-				echo '<span class="display-limit">' . Text::_('JGLOBAL_DISPLAY_NUM') . $this->pagination->getLimitBox() . '</span>';
+				?> <div style="max-width: 150px"> <?php
+                echo '<span class="display-limit">' . Text::_('JGLOBAL_DISPLAY_NUM') . $this->pagination->getLimitBox() . '</span></div>';
 			}
-			if ($this->params->get('search_series') == 1)
-			{
-				echo $this->page->series;
-			}
-			if ($this->params->get('series_list_teachers') == 1)
-			{
-				echo $this->page->teachers;
-			}
-			if ($this->params->get('series_list_years') == 1)
-			{
-				echo $this->page->years;
-			}
-			if ($this->go > 0)
-			{
-				echo $this->page->gobutton;
-			}
+
 			?>
 		</div>
 

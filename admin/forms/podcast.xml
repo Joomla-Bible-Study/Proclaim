@@ -50,11 +50,11 @@
 	</field>
 	<field name="detailstemplateid" type="templatelist"
 	       label="JBS_PDC_TEMPLATE_FOR_DETAILS_VIEW_LINK"/>
-	<field name="image" type="media" label="JBS_PDC_IMAGE"
+	<field name="image" type="media" label="JBS_PDC_IMAGE" directory="biblestudy"
 	       description="JBS_PDC_IMAGE_DESC"/>
-	<field name="podcastimage" type="media" label="JBS_PDC_PODCAST_LOGO"
+	<field name="podcastimage" type="media" label="JBS_PDC_PODCAST_LOGO" directory="biblestudy"
 	       description="JBS_PDC_PODCAST_LOGO_DESC"/>
-	<field name="podcast_image_subscribe" type="media"
+	<field name="podcast_image_subscribe" type="media" directory="biblestudy"
 	       label="JBS_PDC_SUBSCRIBE_IMAGE" description="JBS_PDC_SUBSCRIBE_IMAGE_DESC"/>
 
 	<field name="filename" type="text" label="JBS_PDC_PODCAST_XML_FILENAME"
@@ -103,7 +103,7 @@
 	       description="JBS_PDC_SUBSCRIBE_WORDS_DESC" size="20" default=""/>
 	<field name="alternatelink" type="text" label="JBS_PDC_ALTERNATE_LINK" description="JBS_PDC_ALTERNATE_LINK_DESC"
 	       size="65"/>
-	<field name="alternateimage" type="media" label="JBS_PDC_ALTERNATE_IMAGE"
+	<field name="alternateimage" type="media" label="JBS_PDC_ALTERNATE_IMAGE" directory="biblestudy"
 	       description="JBS_PDC_ALTERNATE_IMAGE_DESC"/>
 	<field name="alternatewords" type="text" size="20" label="JBS_PDC_ALTERNATE_WORDS"
 	       description="JBS_PDC_ALTERNATE_WORDS_DESC"/>

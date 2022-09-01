@@ -40,7 +40,7 @@ class CWMRestore
 	{
 		$backuptables = self::getObjects();
 
-		$db = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 
 		foreach ($backuptables as $backuptable)
 		{
@@ -89,7 +89,7 @@ class CWMRestore
 	 */
 	protected static function getObjects()
 	{
-		$db        = Factory::getDbo();
+		$db        = Factory::getContainer()->get('DatabaseDriver');
 		$tables    = $db->getTableList();
 		$prefix    = $db->getPrefix();
 		$prelength = strlen($prefix);
@@ -119,7 +119,7 @@ class CWMRestore
 	{
 		$backuptables = self::getObjects();
 
-		$db = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 
 		foreach ($backuptables as $backuptable)
 		{
@@ -260,7 +260,7 @@ class CWMRestore
 	public static function restoreDB($backuprestore)
 	{
 		$app = Factory::getApplication();
-		$db  = Factory::getDbo();
+		$db  = Factory::getContainer()->get('DatabaseDriver');
 		/**
 		 * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
 		 */
@@ -460,7 +460,7 @@ class CWMRestore
 		}
 
 		$app = Factory::getApplication();
-		$db  = Factory::getDbo();
+		$db  = Factory::getContainer()->get('DatabaseDriver');
 
 		$query = file_get_contents($tmp_src);
 

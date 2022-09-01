@@ -277,7 +277,7 @@ class CWMServerModel extends AdminModel
 	 */
 	protected function canDelete($record)
 	{
-		$user = Factory::getUser();
+		$user = $user = Factory::getApplication()->getSession()->get('user');
 
 		return $user->authorise('core.delete', 'com_proclaim.server.' . (int) $record->id);
 	}
@@ -294,7 +294,7 @@ class CWMServerModel extends AdminModel
 	 */
 	protected function canEditState($record)
 	{
-		$user = Factory::getUser();
+		$user = $user = Factory::getApplication()->getSession()->get('user');
 
 		// Check for existing article.
 		if (!empty($record->id))

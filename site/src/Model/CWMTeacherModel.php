@@ -51,7 +51,7 @@ class CWMTeacherModel extends ItemModel
 		{
 			try
 			{
-				$db    = Factory::getDbo();
+				$db    = $this->getDbo();
 				$query = $db->getQuery(true);
 				$query->select($this->getState('item.select', 't.*,CASE WHEN CHAR_LENGTH(t.alias) THEN CONCAT_WS(\':\', t.id, t.alias) ELSE t.id END as slug'));
 				$query->from('#__bsms_teachers AS t');
@@ -130,7 +130,7 @@ class CWMTeacherModel extends ItemModel
 		$this->setState('template', $template);
 		$this->setState('administrator', $admin);
 		$this->setState('params',$params);
-		$user = Factory::getUser();
+		$user = $user = Factory::getApplication()->getSession()->get('user');
 
 		if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise('core.edit', 'com_proclaim')))
 		{

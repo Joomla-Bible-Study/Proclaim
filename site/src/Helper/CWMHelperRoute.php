@@ -52,7 +52,7 @@ class CWMHelperRoute
 
 		if ($language && $language !== "*" && Multilanguage::isEnabled())
 		{
-			$db    = Factory::getDbo();
+			$db = Factory::getContainer()->get('DatabaseDriver');
 			$query = $db->getQuery(true);
 			$query->select('a.sef AS sef');
 			$query->select('a.lang_code AS lang_code');
@@ -156,7 +156,7 @@ class CWMHelperRoute
 	public static function getTeacherRoute($id): string
 	{
 		// Create the link
-		return 'index.php?option=com_proclaim&view=cwmteacher&id=' . $id;
+		return 'index.php?option=com_proclaim&view=CWMTeacher&id=' . $id;
 	}
 
 	/**
@@ -171,7 +171,7 @@ class CWMHelperRoute
 	public static function getSeriesRoute($id): string
 	{
 		// Create the link
-		return 'index.php?option=com_proclaim&view=cwmseriesdisplay&id=' . $id;
+		return 'index.php?option=com_proclaim&view=CWMSeriesDisplay&id=' . $id;
 	}
 
 	/**

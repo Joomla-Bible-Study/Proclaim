@@ -58,7 +58,7 @@ $itemid       = $app->input->get('Itemid');
 						if ($this->params->get('teacherlink') > 0)
 						{
 							echo '<div class="caption"><p><a href="' . Route::_('index.php?option=com_proclaim&view=CWMTeacher&id=' .
-									$teacher['id'] . '&t=' . $teacher['t'] . '&Itemid=' . $itemid) . '">' . $teacher['name'] . '</a></p></div>';
+									$teacher['id'] . '&t=' . $teacher['t']) . '">' . $teacher['name'] . '</a></p></div>';
 						}
 						else
 						{
@@ -71,17 +71,22 @@ $itemid       = $app->input->get('Itemid');
 				</div>
 			</div>
 		<?php } ?>
-		<div class="row">
-			<?php if ($this->params->get('show_page_image') > 0)
-			{
-				echo '<div class="col">' . $this->mainimage . '</div>';
-			}
-			if ($this->params->get('show_page_title') > 0)
-			{
-				echo '<h2><div class="col">' . $this->params->get('list_page_title') . '</div></h2>';
-			}
-			?>
-		</div>
+		<?php if ($this->params->get('show_page_image == 1') || $this->params->get('show_page_title') > 0){ ?>
+            <div class="col" style="display: inline-flex; align-items: center;">
+
+                <?php if ($this->params->get('show_page_image') > 0)
+                {
+                    if ($this->params->get('main_image_icon_or_image') == 1)
+                    {echo '<div class="col" style="display: flex;>' . $this->mainimage . '</div>';}
+                    else {echo '<i class="fas fa-bible fa-3x" style="display: flex; margin-right: 10px;"></i>';}
+                }
+                if ($this->params->get('show_page_title') > 0)
+                {
+                    echo '<h2 style="display: flex; list-style: none;"> ' . $this->params->get('list_page_title') . '</h2>';
+                }
+                ?>
+            </div>
+        <?php } ?>
 		<div class="row">
 			<div class="col-12">
 				<?php
@@ -89,9 +94,9 @@ $itemid       = $app->input->get('Itemid');
 				if (!empty($this->params->get('list_intro')))
 				{
 					?>
-					<p>
+					<div style="display: block;">
 						<?php echo $this->params->get('list_intro'); ?>
-					</p>
+					</div>
 				<?php } ?>
 
 			</div>
@@ -107,7 +112,21 @@ $itemid       = $app->input->get('Itemid');
 	echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 	?>
 
-	<hr/>
+            <?php // Add pagination links ?>
+            <?php if (!empty($this->items)) : ?>
+                <?php if (($this->pagination->pagesTotal > 1) &&
+                    ($this->params->def('show_pagination', 1) === '1' || ($this->params->get('show_pagination') === '1'))) : ?>
+                    <div class="pagination">
+                        <?php if ($this->params->def('show_pagination_results', 1)) : ?>
+                            <p class="counter pull-right">
+                                <?php echo $this->pagination->getPagesCounter(); ?>
+                            </p>
+                        <?php endif; ?>
+
+                        <?php echo $this->pagination->getPagesLinks(); ?>
+                    </div>
+                <?php endif; ?>
+            <?php endif; ?>
 	<?php
 	if ($this->items)
 	{
@@ -117,7 +136,7 @@ $itemid       = $app->input->get('Itemid');
 	<?php // Add pagination links ?>
 	<?php if (!empty($this->items)) : ?>
 		<?php if (($this->pagination->pagesTotal > 1) &&
-			($this->params->def('show_pagination', 2) === '1' || ($this->params->get('show_pagination') === '2'))) : ?>
+			($this->params->def('show_pagination', 2) === '2' || ($this->params->get('show_pagination') === '2'))) : ?>
 			<div class="pagination">
 				<?php if ($this->params->def('show_pagination_results', 1)) : ?>
 					<p class="counter pull-right">

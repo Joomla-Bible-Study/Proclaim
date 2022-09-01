@@ -9,3 +9,10 @@
  * */
 // No Direct Access
 defined('_JEXEC') or die;
+?>
+<?php
+if ($this->item->params->get('showpodcastsubscribedetails') === '2')
+{
+    echo '<hr/>';
+    echo $this->subscribe;
+}

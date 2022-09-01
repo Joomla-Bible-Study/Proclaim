@@ -17,6 +17,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMThumbnail;
 use CWM\Component\Proclaim\Administrator\Table\CWMTeacherTable;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\Input\Input;
@@ -103,7 +104,7 @@ class CWMTeacherModel extends AdminModel
 			$id = $jinput->get('id', 0);
 		}
 
-		$user = Factory::getUser();
+		$user = $user = Factory::getApplication()->getSession()->get('user');
 
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
@@ -137,8 +138,8 @@ class CWMTeacherModel extends AdminModel
 	protected function canEditState($record)
 	{
 		$tmp        = (array) $record;
-		$db         = Factory::getDbo();
-		$user       = Factory::getUser();
+		$db         = Factory::getContainer()->get('DatabaseDriver');
+		$user       = $user = Factory::getApplication()->getSession()->get('user');
 		$canDoState = $user->authorise('core.edit.state', $this->option);
 		$text       = '';
 
@@ -203,7 +204,8 @@ class CWMTeacherModel extends AdminModel
 		$params = CWMParams::getAdmin()->params;
 		$path   = 'images/biblestudy/teachers/' . $data['id'];
 		$prefix = 'thumb_';
-
+        $image = HTMLHelper::cleanImageURL($data['image']);
+        $data['image'] = $image->url;
 		// If no image uploaded, just save data as usual
 		if (empty($data['image']) || strpos($data['image'], $prefix) !== false)
 		{
@@ -337,7 +339,7 @@ class CWMTeacherModel extends AdminModel
 			// Set ordering to the last item if not set
 			if (empty($table->ordering))
 			{
-				$db    = Factory::getDbo();
+				$db = Factory::getContainer()->get('DatabaseDriver');
 				$query = $db->getQuery(true);
 				$query->select('MAX(ordering)')->from('#__bsms_teachers');
 				$db->setQuery($query);

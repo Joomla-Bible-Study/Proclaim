@@ -7,6 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Site\Helper;
 
 defined('_JEXEC') or die;
@@ -42,7 +43,7 @@ if (file_exists($api))
 class CWMPodcast
 {
 	/**
-	 * @var int
+	 * @var integer
 	 * @since version
 	 */
 	private int $templateid = 0;
@@ -70,13 +71,13 @@ class CWMPodcast
 	public function makePodcasts()
 	{
 		$msg = array();
-		$db  = Factory::getDbo();
+		$db  = Factory::getContainer()->get('DatabaseDriver');
 		jimport('joomla.utilities.date');
 		$year = '(' . date('Y') . ')';
 		$date = date('r');
 
 		// Get english language file as fallback
-		$language = Factory::getLanguage();
+		$language = Factory::getApplication()->getLanguage();
 		$language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
 
 		// First get all of the podcast that are published
@@ -85,10 +86,10 @@ class CWMPodcast
 			->from('#__bsms_podcast')
 			->where('#__bsms_podcast.published = ' . 1);
 		$db->setQuery($query);
-		$podids      = $db->loadObjectList();
-		$custom      = new CWMCustom;
+		$podids     = $db->loadObjectList();
+		$custom     = new CWMCustom;
 		$CWMlisting = new CWMListing;
-		$title       = null;
+		$title      = null;
 
 		// Now iterate through the podcasts, and pick up the mediafiles
 		if ($podids)
@@ -116,7 +117,6 @@ class CWMPodcast
 
 				if ($checkresult)
 				{
-
 					// Now let's get the podcast episodes
 					$limit = $podinfo->podcastlimit;
 
@@ -135,7 +135,7 @@ class CWMPodcast
 					$registry->merge(CWMParams::getTemplateparams()->params);
 					$params = $registry;
 					$params->set('show_verses', '1');
-					$protocol = $params->get('protocol', 'http://');
+					$protocol          = $params->get('protocol', 'http://');
 					$detailstemplateid = $podinfo->detailstemplateid;
 
 					if (!$detailstemplateid)
@@ -153,7 +153,7 @@ class CWMPodcast
 						$podinfo->subtitle = $podinfo->title;
 					}
 
-					$podhead           = '<?xml version="1.0" encoding="utf-8"?>
+					$podhead = '<?xml version="1.0" encoding="utf-8"?>
                 <rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/"
                  xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
                 <channel>
@@ -199,7 +199,8 @@ class CWMPodcast
 					}
 
 					$episodedetail = '';
-                    $list = new CWMListing;
+					$list          = new CWMListing;
+
 					foreach ($episodes as $episode)
 					{
 						$episodedate = date("r", strtotime($episode->createdate));
@@ -280,7 +281,7 @@ class CWMPodcast
 									$this->template   = CWMParams::getTemplateparams($detailstemplateid);
 									$this->templateid = (int) $detailstemplateid;
 								}
-                                
+
 								$element = $list->getFluidCustom(
 									$podinfo->custom,
 									$episode,
@@ -374,7 +375,7 @@ class CWMPodcast
 								break;
 						}
 
-						$title       = $this->escapeHTML($title);
+						$title = $this->escapeHTML($title);
 
 						$episodedetailtemp = '
                         	   <item>
@@ -397,12 +398,12 @@ class CWMPodcast
 						}
 						elseif ($podinfo->linktype == '2')
 						{
-							$episodedetailtemp .= '<link>'  . $protocol . $podinfo->website . '/index.php?option=com_proclaim&amp;view=popup&amp;player=1&amp;id=' .
+							$episodedetailtemp .= '<link>' . $protocol . $podinfo->website . '/index.php?option=com_proclaim&amp;view=popup&amp;player=1&amp;id=' .
 								$episode->slug . '&amp;t=' . $detailstemplateid . '</link>';
 						}
 						else
 						{
-							$episodedetailtemp .= '<link>' . $protocol . $podinfo->website . '/index.php?option=com_proclaim&amp;view=sermon&amp;id='
+							$episodedetailtemp .= '<link>' . $protocol . $podinfo->website . '/index.php?option=com_proclaim&amp;view=CWMSermon&amp;id='
 								. $episode->slug . '&amp;t=' . $detailstemplateid . '</link>';
 						}
 
@@ -421,7 +422,7 @@ class CWMPodcast
 							$duration = '';
 						}
 
-						$episodedetailtemp .= '<comments>' . $protocol . $podinfo->website . '/index.php?option=com_proclaim&amp;view=sermon&amp;id='
+						$episodedetailtemp .= '<comments>' . $protocol . $podinfo->website . '/index.php?option=com_proclaim&amp;view=CWMSermon&amp;id='
 							. $episode->slug . '&amp;t=' . $detailstemplateid . '</comments>
                         		<itunes:author>' . $this->escapeHTML($episode->teachername) . '</itunes:author>
                         		<dc:creator>' . $this->escapeHTML($episode->teachername) . '</dc:creator>
@@ -479,7 +480,7 @@ class CWMPodcast
 					$podfoot     = '
                         </channel>
                         </rss>';
-					$$input       = Factory::getApplication()->input;
+					$$input      = Factory::getApplication()->input;
 					$client      = ApplicationHelper::getClientInfo()($input->get('client', '0', 'int'));
 					$file_path   = $client->path . '/' . $podinfo->filename;
 					$filecontent = $podhead . $episodedetail . $podfoot;
@@ -495,12 +496,15 @@ class CWMPodcast
 					{
 						$msg[] = $file . ' - ' . Text::_('JBS_PDC_XML_FILES_WRITTEN');
 					}
-				} // End if $checkresult if positive
+
+					// End if $checkresult if positive
+				}
 				else
 				{
 					$msg[] = Text::_('JBS_CMN_NO_MEDIA_FILES');
 				}
 			}
+
 			// End foreach podids as podinfo
 		}
 
@@ -524,13 +528,12 @@ class CWMPodcast
 	 *
 	 * @param   null|string  $string  HTML string to make safe
 	 *
-	 * @return mixed|string
+	 * @return string
 	 *
 	 * @since 9.0.0
 	 */
 	protected function escapeHTML(?string $string)
 	{
-
 		if (empty($string))
 		{
 			return $string;
@@ -563,7 +566,7 @@ class CWMPodcast
 		}
 
 		// Here's where we look at each mediafile to see if they are connected to this podcast
-		$db    = Factory::getDbo();
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('p.id AS pid, p.podcastlimit,'
 			. ' mf.id AS mfid, mf.study_id, mf.server_id, mf.podcast_id,'
@@ -573,7 +576,8 @@ class CWMPodcast
 			. ' se.series_text, se.published,'
 			. ' sr.id AS srid, sr.params as srparams,'
 			. ' t.id AS tid, t.teachername,'
-			. ' b.id AS bid, b.booknumber AS bnumber, b.bookname')
+			. ' b.id AS bid, b.booknumber AS bnumber, b.bookname'
+		)
 			->from('#__bsms_mediafiles AS mf')
 			->leftJoin('#__bsms_studies AS s ON (s.id = mf.study_id)')
 			->leftJoin('#__bsms_series AS se ON (se.id = s.series_id)')
@@ -620,7 +624,7 @@ class CWMPodcast
 	 * @param   string  $file         File Name
 	 * @param   string  $filecontent  File Content
 	 *
-	 * @return boolean|string
+	 * @return boolean
 	 *
 	 * @throws \Exception
 	 * @since 7.0.0
@@ -657,15 +661,15 @@ class CWMPodcast
 	/**
 	 * Brake out time from seconds to (Array of hours, minutes, seconds).
 	 *
-	 * @param   int  $duration  Time in seconds
+	 * @param   int  $duration  Time in seconds as hh:mm:ss
 	 *
 	 * @return  object  Returns hours, minutes, seconds
 	 *
 	 * @since 9.2.4
 	 */
-	public function formatTime(int $duration): object //as hh:mm:ss
+	public function formatTime(int $duration): object
 	{
-		$time          = new \stdClass();
+		$time          = new \stdClass;
 		$time->hours   = floor($duration / 3600);
 		$time->minutes = floor(($duration - ($time->hours * 3600)) / 60);
 		$time->seconds = $duration - ($time->hours * 3600) - ($time->minutes * 60);
@@ -678,7 +682,7 @@ class CWMPodcast
 	 *
 	 * @param   string  $filename  File name of media.
 	 *
-	 * @return int
+	 * @return integer
 	 *
 	 * @since 9.2.4
 	 */
@@ -690,14 +694,17 @@ class CWMPodcast
 		$block    = fread($fd, 100);
 		$offset   = $this->skipID3v2Tag($block);
 		@fseek($fd, $offset, SEEK_SET);
+
 		while (!feof($fd))
 		{
 			$block = fread($fd, 10);
+
 			if (strlen($block) < 10)
 			{
 				break;
 			}
-			//looking for 1111 1111 111 (frame synchronization bits)
+
+			// Looking for 1111 1111 111 (frame synchronization bits)
 
 			if ($block[0] === "\xff" && (ord($block[1]) & 0xe0))
 			{
@@ -706,13 +713,18 @@ class CWMPodcast
 				if (empty($info['Framesize']))
 				{
 					return (int) $duration;
-				} //some corrupt mp3 files
+
+					// Some corrupt mp3 files
+				}
+
 				fseek($fd, $info['Framesize'] - 10, SEEK_CUR);
 				$duration += ($info['Samples'] / $info['Sampling Rate']);
 			}
-			else if (strpos($block, 'TAG') === 0)
+			elseif (strpos($block, 'TAG') === 0)
 			{
-				fseek($fd, 128 - 10, SEEK_CUR);//skip over id3v1 tag size
+				fseek($fd, 128 - 10, SEEK_CUR);
+
+				// Skip over id3v1 tag size
 			}
 			else
 			{
@@ -724,7 +736,9 @@ class CWMPodcast
 	}
 
 	/**
-	 * @param   string  $url
+	 * Remove Http from urel
+	 *
+	 * @param   string  $url  Url of website
 	 *
 	 * @return string
 	 *
@@ -733,6 +747,7 @@ class CWMPodcast
 	public function remove_http(string $url): string
 	{
 		$disallowed = array('http://', 'https://');
+
 		foreach ($disallowed as $d)
 		{
 			if (strpos($url, $d) === 0)
@@ -749,7 +764,7 @@ class CWMPodcast
 	 *
 	 * @param   array|string  $block  ID3 info block
 	 *
-	 * @return int
+	 * @return integer
 	 *
 	 * @since 9.2.4
 	 */
@@ -769,13 +784,16 @@ class CWMPodcast
 			$z1                     = ord($block[7]);
 			$z2                     = ord($block[8]);
 			$z3                     = ord($block[9]);
+
 			if ((($z0 & 0x80) === 0) && (($z1 & 0x80) === 0) && (($z2 & 0x80) === 0) && (($z3 & 0x80) === 0))
 			{
 				$header_size = 10;
 				$tag_size    = (($z0 & 0x7f) * 2097152) + (($z1 & 0x7f) * 16384) + (($z2 & 0x7f) * 128) + ($z3 & 0x7f);
 				$footer_size = $flag_footer_present ? 10 : 0;
 
-				return $header_size + $tag_size + $footer_size;//bytes to skip
+				return $header_size + $tag_size + $footer_size;
+
+				// Bytes to skip
 			}
 		}
 
@@ -794,10 +812,10 @@ class CWMPodcast
 	public function parseFrameHeader($fourbytes): array
 	{
 		static $versions = array(
-			0x0 => '2.5', 0x1 => 'x', 0x2 => '2', 0x3 => '1', // x=>'reserved'
+			0x0 => '2.5', 0x1 => 'x', 0x2 => '2', 0x3 => '1'
 		);
 		static $layers = array(
-			0x0 => 'x', 0x1 => '3', 0x2 => '2', 0x3 => '1', // x=>'reserved'
+			0x0 => 'x', 0x1 => '3', 0x2 => '2', 0x3 => '1'
 		);
 		static $bitrates = array(
 			'V1L1' => array(0, 32, 64, 96, 128, 160, 192, 224, 256, 288, 320, 352, 384, 416, 448),
@@ -813,8 +831,8 @@ class CWMPodcast
 			'2.5' => array(11025, 12000, 8000),
 		);
 		static $samples = array(
-			1 => array(1 => 384, 2 => 1152, 3 => 1152,), //MPEGv1,     Layers 1,2,3
-			2 => array(1 => 384, 2 => 1152, 3 => 576,), //MPEGv2/2.5, Layers 1,2,3
+			1 => array(1 => 384, 2 => 1152, 3 => 1152,),
+			2 => array(1 => 384, 2 => 1152, 3 => 576,),
 		);
 
 		$b1 = ord($fourbytes[1]);
@@ -833,7 +851,7 @@ class CWMPodcast
 		$bitrate_idx    = ($b2 & 0xf0) >> 4;
 		$bitrate        = $bitrates[$bitrate_key][$bitrate_idx] ?? 0;
 
-		$sample_rate_idx     = ($b2 & 0x0c) >> 2;//0xc => b1100
+		$sample_rate_idx     = ($b2 & 0x0c) >> 2;
 		$sample_rate         = $sample_rates[$version][$sample_rate_idx] ?? 0;
 		$padding_bit         = ($b2 & 0x02) >> 1;
 		$private_bit         = ($b2 & 0x01);
@@ -844,7 +862,7 @@ class CWMPodcast
 		$emphasis            = ($b3 & 0x03);
 
 		$info                  = array();
-		$info['Version']       = $version;//MPEGVersion
+		$info['Version']       = $version;
 		$info['Layer']         = $layer;
 		$info['Bitrate']       = $bitrate;
 		$info['Sampling Rate'] = $sample_rate;
@@ -862,7 +880,7 @@ class CWMPodcast
 	 * @param   integer  $sample_rate  Sample rate
 	 * @param   integer  $padding_bit  Padding
 	 *
-	 * @return int
+	 * @return integer
 	 *
 	 * @since 9.2.4
 	 */
@@ -873,7 +891,7 @@ class CWMPodcast
 			return (int) (((12 * $bitrate * 1000 / $sample_rate) + $padding_bit) * 4);
 		}
 
-		//layer 2, 3
+		// Layer 2, 3
 		return (int) (((144 * $bitrate * 1000) / $sample_rate) + $padding_bit);
 	}
 }

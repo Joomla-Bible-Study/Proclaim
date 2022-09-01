@@ -17,6 +17,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMThumbnail;
 use CWM\Component\Proclaim\Administrator\Table\CWMSerieTable;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
@@ -104,7 +105,7 @@ class CWMSerieModel extends AdminModel
 			$id = $jinput->get('id', 0);
 		}
 
-		$user = Factory::getUser();
+		$user = $user = Factory::getApplication()->getSession()->get('user');
 
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
@@ -160,7 +161,8 @@ class CWMSerieModel extends AdminModel
 		$app    = Factory::getApplication();
 		$path   = 'images/biblestudy/series/' . $data['id'];
 		$prefix = 'thumb_';
-
+        $image = HTMLHelper::cleanImageURL($data['image']);
+        $data['image'] = $image->url;
 		// Alter the title for save as copy
 		if ($app->input->get('task') == 'save2copy')
 		{
@@ -245,7 +247,7 @@ class CWMSerieModel extends AdminModel
 
 		// Check that the user has create permission for the component
 		$extension = $app->input->get('option', '');
-		$user      = Factory::getUser();
+		$user      = $user = Factory::getApplication()->getSession()->get('user');
 
 		if (!$user->authorise('core.create', $extension))
 		{
@@ -351,7 +353,7 @@ class CWMSerieModel extends AdminModel
 				return false;
 			}
 
-			$user = Factory::getUser();
+			$user = $user = Factory::getApplication()->getSession()->get('user');
 
 			return $user->authorise('core.delete', 'com_proclaim.serie.' . (int) $record->id);
 		}
@@ -370,7 +372,7 @@ class CWMSerieModel extends AdminModel
 	 */
 	protected function canEditState($record)
 	{
-		$user = Factory::getUser();
+		$user = $user = Factory::getApplication()->getSession()->get('user');
 
 		// Check for existing article.
 		if (!empty($record->id))
@@ -408,7 +410,7 @@ class CWMSerieModel extends AdminModel
 			// Set ordering to the last item if not set
 			if (empty($table->ordering))
 			{
-				$db    = Factory::getDbo();
+				$db = Factory::getContainer()->get('DatabaseDriver');
 				$query = $db->getQuery(true);
 				$query->select('MAX(ordering)')->from('#__bsms_series');
 				$db->setQuery($query);

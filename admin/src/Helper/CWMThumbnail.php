@@ -30,11 +30,12 @@ class CWMThumbnail
 	 * @param   string  $file  File name
 	 * @param   string  $path  Path to file
 	 * @param   int     $size  Size of image with default of 100
-	 *
+     *
 	 * @return void
 	 *
 	 * @since 9.0.0
 	 */
+    const SCALE_INSIDE = 2;
 	public static function create($file, $path, $size = 100)
 	{
 		$name     = basename($file);
@@ -46,13 +47,13 @@ class CWMThumbnail
 		{
 			Folder::delete(JPATH_ROOT . '/' . $path);
 		}
-
+        //$path = JPATH_ROOT .'images/biblestudy/studies/CapitolBuildings.jpg'; var_dump($path);
 		// Move uploaded image to destination
 		Folder::create(JPATH_ROOT . '/' . $path);
 
 		// Create thumbnail
 		$image     = new Image($original);
-		$thumbnail = $image->resize($size, $size, true);
+		$thumbnail = $image->resize($size, $size, true, $scaleMethod = self::SCALE_INSIDE);
 		$thumbnail->toFile($thumb, IMAGETYPE_JPEG);
 	}
 
@@ -79,13 +80,14 @@ class CWMThumbnail
 		}
 
 		// Create new thumbnail
+        $path = '/Users/tomfuller/Sites/localhost/j4/images/biblestudy/studies/CapitolBuildings.jpg';
 		$image     = new Image($path);
 		$thumbnail = $image->resize($new_size, $new_size);
 		$thumbnail->toFile(dirname($path) . '/thumb_' . $filename, IMAGETYPE_PNG);
 	}
 
 	/**
-	 * Resize image
+	 * Check image path
 	 *
 	 * @param   string  $path  Path to file
 	 * @param   string  $file  file to check

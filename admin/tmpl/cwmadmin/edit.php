@@ -361,6 +361,12 @@ $this->useCoreUI = true;
 						<?php echo $this->form->getInput('messagetype', 'params'); ?>
 					</div>
 				</div>
+                <div class="control-group">
+                    <?php echo $this->form->getLabel('main_image_icon_or_image', 'params'); ?>
+                    <div class="controls">
+                        <?php echo $this->form->getInput('main_image_icon_or_image', 'params'); ?>
+                    </div>
+                </div>
 				<div class="control-group">
 					<?php echo $this->form->getLabel('default_study_image', 'params'); ?>
 					<div class="controls">

@@ -45,7 +45,7 @@ class mediafileField extends ListField
 	{
 		if ($this->form->getValue('id'))
 		{
-			$db    = Factory::getDbo();
+			$db = Factory::getContainer()->get('DatabaseDriver');
 			$query = $db->getQuery(true);
 			$query->select('a.id, a.params');
 			$query->from('#__bsms_mediafiles as a');

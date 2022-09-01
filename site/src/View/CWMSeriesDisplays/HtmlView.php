@@ -100,6 +100,7 @@ class HtmlView extends BaseHtmlView
 		$this->state = $this->get('state');
 		/** @var  $params Registry */
 		$params = $this->state->template->params;
+        $this->params = $params;
 		$this->template = $this->state->get('template');
 
 		$document = Factory::getApplication()->getDocument();
@@ -148,7 +149,7 @@ class HtmlView extends BaseHtmlView
 				. str_replace(' ', '-', htmlspecialchars_decode($item->series_text, ENT_QUOTES));
 			$seriesimage        = $images->getSeriesThumbnail($item->series_thumbnail);
 			$item->image        = '<img src="' . $seriesimage->path . '" height="' . $seriesimage->height . '" width="' . $seriesimage->width . '" alt="" />';
-			$item->serieslink   = Route::_('index.php?option=com_proclaim&view=seriesdisplay&id=' . $item->slug . '&t=' . $this->template->id);
+			$item->serieslink   = Route::_('index.php?option=com_proclaim&view=cwmseriesdisplay&id=' . $item->slug . '&t=' . $this->template->id);
 			$teacherimage       = $images->getTeacherImage($item->thumb, $image2 = null);
 			$item->teacherimage = '<img src="' . $teacherimage->path . '" height="' . $teacherimage->height .
 				'" width="' . $teacherimage->width . '" alt="" />';
@@ -177,47 +178,6 @@ class HtmlView extends BaseHtmlView
 		$mainimage        = $images->mainStudyImage();
 		$this->page->main = '<img src="' . $mainimage->path . '" height="' . $mainimage->height . '" width="' . $mainimage->width . '" alt="" />';
 
-		// Build go button
-		$this->page->gobutton = '<input class="btn btn-primary" type="submit" value="' . Text::_('JBS_STY_GO_BUTTON') . '">';
-
-		// Build Series List for drop down menu
-		$seriesarray[]      = HtmlHelper::_('select.option', '0', Text::_('JBS_CMN_SELECT_SERIES'));
-		$seriesarray        = array_merge($seriesarray, $series);
-		$this->page->series = HtmlHelper::_('select.genericlist', $seriesarray, 'filter_series', 'class="inputbox" size="1" ',
-			'value', 'text', "$filter_series"
-		);
-
-		// Build Years List for drop down menu
-		$yeararray[]       = HtmlHelper::_('select.option', '0', Text::_('JBS_CMN_SELECT_YEAR'));
-		$yeararray         = array_merge($yeararray, $years);
-		$this->page->years = HtmlHelper::_('select.genericlist', $yeararray, 'filter_year', 'class="inputbox" size="1" ',
-			'value', 'text', "$filter_year"
-		);
-
-		// Build Teachers List for drop down menu
-		$teacherarray[]       = HtmlHelper::_('select.option', '0', Text::_('JBS_CMN_SELECT_TEACHER'));
-		$teacherarray         = array_merge($teacherarray, $teachers);
-		$this->page->teachers = HtmlHelper::_('select.genericlist', $teacherarray, 'filter_teacher', 'class="inputbox" size="1" ',
-			'value', 'text', "$filter_teacher"
-		);
-		$go                   = 0;
-
-		if ($params->get('series_list_years') > 0)
-		{
-			$go++;
-		}
-
-		if ($params->get('series_list_teachers') > 0)
-		{
-			$go++;
-		}
-
-		if ($params->get('search_series') > 0)
-		{
-			$go++;
-		}
-
-		$this->go = $go;
 
 		if ($params->get('series_list_show_pagination') == 1)
 		{
@@ -229,8 +189,10 @@ class HtmlView extends BaseHtmlView
 
 		// $this->lists = $lists;
 		$this->request_url = $uri_tostring;
-		$this->params      = $params;
+
 
 		parent::display($tpl);
 	}
+
+
 }

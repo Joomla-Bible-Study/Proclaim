@@ -48,7 +48,7 @@ class JFormFieldDocman extends JFormFieldList
 			return JText::_('JBS_CMN_DOCMAN_NOT_INSTALLED');
 		}
 
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('dm.docman_document_id, dm.title');
 		$query->from('#__docman_documents AS dm');

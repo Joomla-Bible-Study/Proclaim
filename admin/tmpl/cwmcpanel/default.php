@@ -51,12 +51,6 @@ $simple = CWMHelper::getSimpleView();
 				<div class="fbmainmenu"><?php echo $this->xml->version . ' (' . $this->xml->creationDate . ')'; ?></div>
 			</div>
 
-			<div id="jbspaypal">
-				<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7R9D3SCEYNAHE"
-				   target="_blank"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0"
-				                        alt="PayPal - The safer, easier way to pay online!"> </a>
-			</div>
-			<hr/>
 			<?php //echo $this->sidebar; ?>
 			<hr/>
 		</div>
@@ -134,59 +128,58 @@ $simple = CWMHelper::getSimpleView();
 									<a href="index.php?option=com_proclaim&amp;task=cwmadmin.edit&amp;id=1"
 									   title="<?php echo Text::_('JBS_CMN_ADMINISTRATION'); ?>" class="btn"> <i
 												class="icon-big icon-options"> </i>
-										<span><br/> <?php echo Text::_('JBS_CMN_ADMINISTRATION'); ?> </span></a>
+										<span><?php echo Text::_('JBS_CMN_ADMINISTRATION'); ?></span></a>
 									<a href="index.php?option=com_proclaim&amp;view=cwmmessages"
 									   title="<?php echo Text::_('JBS_CMN_STUDIES'); ?>" class="btn"> <i
 												class="icon-big icon-book"></i>
-										<span><br/> <?php echo Text::_('JBS_CMN_STUDIES'); ?> </span></a>
+										<span><?php echo Text::_('JBS_CMN_STUDIES'); ?></span></a>
 									<a href="index.php?option=com_proclaim&amp;view=cwmmediafiles"
 									   title="<?php echo Text::_('JBS_CMN_MEDIA_FILES'); ?>" class="btn"> <i
 												class="icon-big icon-video"></i>
-										<span><br/> <?php echo Text::_('JBS_CMN_MEDIA_FILES'); ?> </span></a>
+										<span><?php echo Text::_('JBS_CMN_MEDIA_FILES'); ?> </span></a>
 									<a href="index.php?option=com_proclaim&amp;view=cwmteachers"
 									   title="<?php echo Text::_('JBS_CMN_TEACHERS'); ?>" class="btn"> <i
 												class="icon-user icon-big"></i>
-										<span><br/> <?php echo Text::_('JBS_CMN_TEACHERS'); ?> </span></a>
+										<span><?php echo Text::_('JBS_CMN_TEACHERS'); ?></span></a>
 									<a href="index.php?option=com_proclaim&amp;view=cwmseries"
 									   title="<?php echo Text::_('JBS_CMN_SERIES'); ?>" class="btn"> <i
 												class="icon-big icon-tree-2"></i>
-										<span><br/> <?php echo Text::_('JBS_CMN_SERIES'); ?> </span></a>
+										<span><?php echo Text::_('JBS_CMN_SERIES'); ?></span></a>
 									<?php if (!$simple->mode): ?>
 										<a href="index.php?option=com_proclaim&amp;view=cwmmessagetypes"
 										   title="<?php echo Text::_('JBS_CMN_MESSAGETYPES'); ?>" class="btn"> <i
-													class="icon-big icon-list-2"></i><br/>
-											<span> <?php echo Text::_('JBS_CMN_MESSAGETYPES'); ?> </span></a>
+													class="icon-big icon-list-2"></i>
+											<span><?php echo Text::_('JBS_CMN_MESSAGETYPES'); ?></span></a>
 										<a href="index.php?option=com_proclaim&amp;view=cwmlocations"
 										   title="<?php echo Text::_('JBS_CMN_LOCATIONS'); ?>" class="btn"> <i
 													class="icon-big icon-home"></i>
-											<span><br/> <?php echo Text::_('JBS_CMN_LOCATIONS'); ?> </span></a>
+											<span><?php echo Text::_('JBS_CMN_LOCATIONS'); ?></span></a>
 										<a href="index.php?option=com_proclaim&amp;view=cwmtopics"
 										   title="<?php echo Text::_('JBS_CMN_TOPICS'); ?>" class="btn"> <i
 													class="icon-big icon-tags"></i>
-											<span><br/> <?php echo Text::_('JBS_CMN_TOPICS'); ?> </span></a>
+											<span><?php echo Text::_('JBS_CMN_TOPICS'); ?></span></a>
 										<a href="index.php?option=com_proclaim&amp;view=cwmcomments"
-										   title="<?php echo Text::_('JBS_CMN_COMMENTS'); ?>" class="btn"> <span
-													class="icon-big icon-comments-2"></span><br/>
-											<span> <?php echo Text::_('JBS_CMN_COMMENTS'); ?> </span></a>
+										   title="<?php echo Text::_('JBS_CMN_COMMENTS'); ?>" class="btn"><span
+													class="icon-big icon-comments-2"></span>
+											<span><?php echo Text::_('JBS_CMN_COMMENTS'); ?></span></a>
 									<?php endif; ?>
 									<a href="index.php?option=com_proclaim&amp;view=cwmservers"
-									   title="<?php echo Text::_('JBS_CMN_SERVERS'); ?>" class="btn"> <span
+									   title="<?php echo Text::_('JBS_CMN_SERVERS'); ?>" class="btn"><span
 												class="icon-big icon-database"></span>
-										<span><br/> <?php echo Text::_('JBS_CMN_SERVERS'); ?> </span></a>
+										<span><?php echo Text::_('JBS_CMN_SERVERS'); ?></span></a>
 									<a href="index.php?option=com_proclaim&amp;view=cwmpodcasts"
-									   title="<?php echo Text::_('JBS_CMN_PODCASTS'); ?>" class="btn"> <span
-												class="icon-big icon-stack"></span>
-										<span><br/> <?php echo Text::_('JBS_CMN_PODCASTS'); ?> </span></a>
-
+									   title="<?php echo Text::_('JBS_CMN_PODCASTS'); ?>" class="btn"><span
+												class="icon-big fa-solid fa-podcast"></span>
+										<span><?php echo Text::_('JBS_CMN_PODCASTS'); ?></span></a>
 									<?php if (!$simple->mode): ?>
 										<a href="index.php?option=com_proclaim&amp;view=cwmtemplates"
-										   title="<?php echo Text::_('JBS_CMN_TEMPLATES'); ?>" class="btn"> <span
+										   title="<?php echo Text::_('JBS_CMN_TEMPLATES'); ?>" class="btn"><span
 													class="icon-big icon-grid"></span>
-											<span><br/> <?php echo Text::_('JBS_CMN_TEMPLATES'); ?> </span></a>
+											<span><?php echo Text::_('JBS_CMN_TEMPLATES'); ?></span></a>
 										<a href="index.php?option=com_proclaim&amp;view=cwmtemplatecodes"
 										   title="<?php echo Text::_('JBS_CMN_TEMPLATECODE'); ?>" class="btn"> <span
-													class="icon-big icon-stack"></span>
-											<span><br/> <?php echo Text::_('JBS_CMN_TEMPLATECODE'); ?> </span></a>
+													class="icon-big fa-solid fa-file-code"></span>
+											<span><?php echo Text::_('JBS_CMN_TEMPLATECODE'); ?></span></a>
 									<?php endif; ?>
 								</div>
 							</div>
@@ -197,15 +190,14 @@ $simple = CWMHelper::getSimpleView();
 				<div class="clearfix"></div>
 				<!-- BEGIN: STATS -->
 				<div class="fbstatscover hidden-phone">
-					<table cellspacing="1" border="0" width="100%" class="fbstat table">
-						<caption>
-							<?php echo Text::_('JBS_CPL_GENERAL_STAT'); ?>
-						</caption>
+					<table class="fbstat table table-striped table-responsive">
+
 						<col class="col1">
 						<col class="col2">
 						<col class="col1">
 						<col class="col2">
-						<thead>
+						<thead class="thead-light">
+                        <tr><h3 style="text-align: center;"><?php echo Text::_('JBS_CPL_GENERAL_STAT'); ?> </h3></tr>
 						<tr>
 							<th><?php echo Text::_('JBS_CPL_STATISTIC'); ?></th>
 							<th><?php echo Text::_('JBS_CPL_VALUE'); ?></th>

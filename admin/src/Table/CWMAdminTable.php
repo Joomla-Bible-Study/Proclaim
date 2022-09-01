@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use JAccessRules;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseDriver;
 use Joomla\Database\DatabaseQuery;
@@ -249,7 +250,7 @@ class CWMAdminTable extends Table
 		/** @var \Joomla\CMS\Table\Asset $asset */
 		$asset = Table::getInstance('Asset');
 		$asset->loadByName('com_proclaim');
-
+        $asset->id = 1;
 		return $asset->id;
 	}
 }

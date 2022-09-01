@@ -10,6 +10,9 @@
 namespace CWM\Component\Proclaim\Site\View\CWMSermon;
 defined('_JEXEC') or die;
 // No Direct Access
+use JForm;
+use Joomla\CMS\Application\SiteApplication;
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Plugin\PluginHelper;
 use CWM\Component\Proclaim\Site\Helper\CWMListing;
@@ -141,15 +144,19 @@ class HtmlView extends BaseHtmlView
 	 */
 	public function display($tpl = null)
 	{
-		$app         = Factory::getApplication();
-		$user        = Factory::getUser();
+        $container = Factory::getContainer();
+        $app = $container->get(SiteApplication::class);
+        Factory::$application = $app;
+        HTMLHelper::script('media/com_proclaim/js/cwmcore.js');
+        $this->form = $this->get('Form');
+        $user           = Factory::getApplication()->getSession()->get('user');
 		$CWMListing = new CWMListing;
 		$this->item     = $this->get('Item');
-		$this->print    = $app->input->getBool('print');
+		//$this->print    = $app->input->getBool('print'); removing this as also remomved in Joomla 4. Browser will do this.
 		$this->state    = $this->get('State');
 		$this->user     = $user;
 		$this->comments = $this->get('comments');
-
+        $this->simple = CWMHelper::getSimpleView();
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
@@ -260,6 +267,7 @@ class HtmlView extends BaseHtmlView
 				}
 			}
 		}
+        $this->captchaEnabled = true;
 
 		$this->simple = CWMHelper::getSimpleView();
 
@@ -394,7 +402,7 @@ class HtmlView extends BaseHtmlView
 		}
 
 		// Added database queries from the default template - moved here instead
-		$database = Factory::getDbo();
+		$database = Factory::getContainer()->get('DatabaseDriver');
 		$query    = $database->getQuery(true);
 		$query->select('id')->from('#__menu')->where('link =' . $database->q('index.php?option=com_proclaim&view=CWMSermons'))->where('published = 1');
 		$database->setQuery($query);

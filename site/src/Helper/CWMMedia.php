@@ -265,8 +265,8 @@ class CWMMedia
 
 			if ($compat_mode === 0)
 			{
-				$downloadlink = '<a href="index.php?option=com_proclaim&amp;view=sermon&amp;mid=' .
-					$media->id . '&amp;task=download">';
+				$downloadlink = '<a href="index.php?option=com_proclaim&amp;view=CWMSermon&amp;id='.$media->study_id.'&amp;mid=' .
+					$media->id . '&amp;task=CWMSermon.download">';
 			}
 			else
 			{
@@ -932,7 +932,7 @@ class CWMMedia
 	 */
 	public function hitPlay($id)
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
 			->set('plays = plays + 1')
@@ -959,7 +959,7 @@ class CWMMedia
 	public function getMediaRows2($id)
 	{
 		// We use this for the popup view because it relies on the media file's id rather than the study_id field above
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('#__bsms_mediafiles.*, #__bsms_servers.params AS sparams,'
 			. ' s.studyintro, s.series_id, s.studytitle, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin,'
@@ -1042,12 +1042,8 @@ class CWMMedia
 	public function getDocman($media, $image)
 	{
 		$url = 'com_docman';
-
-		$getmenu  = Factory::getApplication();
-		$menuItem = $getmenu->getMenu()->getItems('component', $url, true);
-		$Itemid   = $menuItem->id;
 		$docman   = '<a href="index.php?option=com_docman&amp;view=document&amp;slug=' .
-			$media->docMan_id . '&amp;Itemid=' . $Itemid . '" alt="' . $media->malttext . ' - ' . $media->comment .
+			$media->docMan_id . '" alt="' . $media->malttext . ' - ' . $media->comment .
 			'" target="' . $media->special . '">' . $image . '</a>';
 
 		return $docman;

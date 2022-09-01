@@ -15,10 +15,14 @@ defined('_JEXEC') or die;
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 use CWM\Component\Proclaim\Administrator\Helper\CWMTranslated;
+use JApplicationSite;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Model\FormModel;
 use Joomla\CMS\MVC\Model\ItemModel;
 use Joomla\Registry\Registry;
+use Joomla\CMS\Form\Form;
 
 /**
  * Model class for Sermon
@@ -26,7 +30,7 @@ use Joomla\Registry\Registry;
  * @package  BibleStudy.Site
  * @since    7.0.0
  */
-class CWMSermonModel extends ItemModel
+class CWMSermonModel extends FormModel
 {
 	/**
 	 * Model context string.
@@ -51,7 +55,7 @@ class CWMSermonModel extends ItemModel
 	public function hit($pk = null)
 	{
 		$pk    = (!empty($pk)) ? $pk : (int) $this->getState('study.id');
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_studies')->set('hits = hits  + 1')->where('id = ' . (int) $pk);
 		$db->setQuery($query);
@@ -72,16 +76,18 @@ class CWMSermonModel extends ItemModel
 	 */
 	public function &getItem($pk = null)
 	{
-		$user = Factory::getUser();
+        $user     = Factory::getApplication()->getIdentity();
 
 		// Initialise variables.
 		$pk = (!empty($pk)) ? $pk : (int) $this->getState('study.id');
 
-		if ($this->_item === null)
-		{
-			$this->_item = array();
-		}
-
+		//if ($this->_item === null)
+		//{
+		//	$this->_item = array();
+	//	}
+        //$input = Factory::getApplication()->input;
+       // $mid   = $input->getInt('mid');
+       // if ($mid){return $mid;}
 		if (!isset($this->_item[$pk]))
 		{
 			try
@@ -162,7 +168,8 @@ class CWMSermonModel extends ItemModel
 
 				if (empty($data))
 				{
-					Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_STUDY_NOT_FOUND', 'error'));
+
+                    Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_STUDY_NOT_FOUND', 'error'));
 
 					return $data;
 				}
@@ -229,7 +236,7 @@ class CWMSermonModel extends ItemModel
 				else
 				{
 					// If no access filter is set, the layout takes some responsibility for display of limited information.
-					$user   = Factory::getUser();
+					$user   = $user = Factory::getApplication()->getSession()->get('user');
 					$groups = $user->getAuthorisedViewLevels();
 
 					$data->params->set('access-view', in_array($data->access, $groups));
@@ -259,7 +266,7 @@ class CWMSermonModel extends ItemModel
 	 * Method to retrieve comments for a study
 	 *
 	 * @access  public
-	 * @return object
+     * @return    mixed    data object on success, false on failure.
 	 *
 	 * @since   7.0
 	 */
@@ -267,8 +274,8 @@ class CWMSermonModel extends ItemModel
 	{
 		$app = Factory::getApplication('site');
 		$id  = $app->input->get('id', '', 'int');
-
-		$db    = Factory::getDbo();
+        if (empty($id)){return false;}
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('c.*')->from('#__bsms_comments AS c')->where('c.published = 1')->where('c.study_id = ' . $id)->order('c.comment_date asc');
 		$db->setQuery($query);
@@ -354,7 +361,7 @@ class CWMSermonModel extends ItemModel
 		$this->setState('template', $template);
 		$this->setState('administrator', $admin);
 
-		$user = Factory::getUser();
+		$user = $user = Factory::getApplication()->getSession()->get('user');
 
 		if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise('core.edit', 'com_proclaim')))
 		{
@@ -362,4 +369,15 @@ class CWMSermonModel extends ItemModel
 			$this->setState('filter.archived', 2);
 		}
 	}
+    public function getForm($data = array(), $loadData = true)
+    {
+        $form = $this->loadForm('com_proclaim.comment', 'comment', array('control' => 'jform', 'load_data' => true));
+
+        if (empty($form)) {
+            return false;
+        }
+        return $form;
+    }
+
+
 }

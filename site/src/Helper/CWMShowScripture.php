@@ -47,7 +47,7 @@ class CWMShowScripture
 
 		$reference  = $this->formReference($row);
 		$version    = $params->get('bible_version', '77');
-		$this->link = $this->getBiblegateway($reference, $version);
+		$this->link = $this->getBiblegateway($reference, $version, $params);
 		$choice     = $params->get('show_passage_view');
 		$passage    = null;
 		$css        = false;
@@ -70,7 +70,7 @@ class CWMShowScripture
 				break;
 
 			case 3:
-				$passage = $this->getLink();
+				$passage = $this->getLink($params);
 
 				break;
 		}
@@ -127,7 +127,7 @@ class CWMShowScripture
 	 *
 	 * @since    7.1
 	 */
-	public function getBiblegateway($reference, $version)
+	public function getBiblegateway($reference, $version, $params)
 	{
 		$link = "http://classic.biblegateway.com/passage/index.php?search=" . $reference . ";&version=" . $version . ";&interface=print";
 
@@ -190,7 +190,7 @@ class CWMShowScripture
 	 *
 	 * @since    7.1
 	 */
-	public function getLink()
+	public function getLink($params)
 	{
 		$passage = '<div class = passage>';
 
@@ -201,8 +201,15 @@ class CWMShowScripture
 		$passage .= "return false;";
 
 		// $rel = "{handler: 'iframe', size: {x: 800, y: 500}}";
-		$passage .= '">' . Text::_('JBS_STY_CLICK_TO_OPEN_PASSAGE') . '</a>';
-		$passage .= '</div>';
+		$passage .= '" title="'. Text::_('JBS_STY_CLICK_TO_OPEN_PASSAGE').'">'; ?>
+<?php
+        if ($params->get('showpassage_icon') >0 ) {
+            if ($params->get('showpassage_icon') == 1) {
+                $passage .= '<i class="fas fa-bible fa-3x" style="display: flex; margin-right: 10px;"></i>';
+            }
+            else $passage .= Text::_('JBS_STY_CLICK_TO_OPEN_PASSAGE');
+        }
+		$passage .= '</a></div>';
 
 		return $passage;
 	}

@@ -5,15 +5,15 @@
 	<author>CWM Team</author>
 	<authorEmail>info@christianwebministries.org</authorEmail>
 	<authorUrl>www.christianwebministries.org</authorUrl>
-	<copyright>(C) 2007 - 2019 Proclaim All rights reserved.</copyright>
+	<copyright>(C) 2007 - 2022 Proclaim All rights reserved.</copyright>
 	<version>10.0.0.DEV</version>
-	<creationDate>June 2, 2021</creationDate>
-	<license>http://www.gnu.org/licenses/gpl.html</license>
+	<creationDate>December 1, 2021</creationDate>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<description>JBS_INS_XML_DESCRIPTION</description>
 	<namespace path="src">CWM\Component\Proclaim</namespace>
 
 	<!-- Installer Hooks -->
-	<scriptfile>biblestudy.script.php</scriptfile>
+	<scriptfile>proclaim.script.php</scriptfile>
 
 	<!-- Installer Hooks -->
 	<install>

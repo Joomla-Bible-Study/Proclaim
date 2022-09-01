@@ -7,7 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-namespace CWM\Component\Proclaim\Site\CWMTeacherController;
+namespace CWM\Component\Proclaim\Site\Controller;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -33,7 +33,7 @@ class CWMTeacherController extends BaseController
 	public function view()
 	{
 		$input = Factory::getApplication('site');
-		$input->set('view', 'teacher');
+		$input->set('view', 'CWMTeacher');
 		$input->set('layout', 'default');
 
 		parent::display();

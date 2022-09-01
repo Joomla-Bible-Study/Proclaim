@@ -7,7 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-namespace CWM\Component\Proclaim\Site\SeriesDisplaysController;
+namespace CWM\Component\Proclaim\Site\Controller;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -21,7 +21,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Site
  * @since    7.0.0
  */
-class CWMSeriesdisplaysController extends BaseController
+class CWMSeriesDisplaysController extends BaseController
 {
 	/**
 	 * Proxy for getModel
@@ -34,7 +34,7 @@ class CWMSeriesdisplaysController extends BaseController
 	 *
 	 * @since 7.0
 	 */
-	public function &getModel($name = 'Teacher', $prefix = 'ProclaimModel', $config = array('ignore_request' => true))
+	public function &getModel($name = 'CWMSeriesDisplays', $prefix = 'Model', $config = array('ignore_request' => true))
 	{
 		$model = parent::getModel($name, $prefix, $config);
 

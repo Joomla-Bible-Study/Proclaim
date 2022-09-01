@@ -45,7 +45,7 @@ class TeacherListField extends ListField
 	 */
 	protected function getOptions()
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('id,teachername');
 		$query->from('#__bsms_teachers');

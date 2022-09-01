@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Site\CWMSermonController;
+namespace CWM\Component\Proclaim\Site\Controller;
 
 use CWM\Component\Proclaim\Site\Helper\CWMDownload;
 use Joomla\CMS\Factory;
@@ -77,7 +77,7 @@ class CWMSermonController extends FormController
 
 		if (empty($return) || !Uri::isInternal(base64_decode($return)))
 		{
-			return Uri::base() . 'index.php?option=com_proclaim&view=sermon';
+			return Uri::base() . 'index.php?option=com_proclaim&view=CWMSermon';
 		}
 
 		return base64_decode($return);
@@ -205,7 +205,7 @@ class CWMSermonController extends FormController
 			$study_detail_id = $input->get('study_detail_id', 0, 'int');
 
 			$input->redirect(
-				'index.php?option=com_proclaim&id=' . $study_detail_id . '&view=sermon&t=' . $t . '&msg=' . $msg,
+				'index.php?option=com_proclaim&id=' . $study_detail_id . '&view=CWMSermon&t=' . $t . '&msg=' . $msg,
 				'Comment Added'
 			);
 		}
@@ -245,11 +245,11 @@ class CWMSermonController extends FormController
 		$comment_study_id  = $input->get('study_detail_id', 0, 'int');
 		$comment_published = $input->get('published', 0, 'int');
 		$comment_date      = date('Y-m-d H:i:s');
-		$config            = Factory::getConfig();
+        $config         = Factory::getApplication();
 		$comment_mailfrom  = $config->get('mailfrom');
 
 		$comment_livesite = Uri::root();
-		$db               = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query            = $db->getQuery(true);
 		$query->select('id, studytitle, studydate')->from('#__bsms_studies')->where('id = ' . (int) $comment_study_id);
 		$db->setQuery($query);
@@ -297,7 +297,7 @@ class CWMSermonController extends FormController
 	{
 		$input = Factory::getApplication()->input;
 		$task  = $input->get('task');
-		$mid   = $input->getInt('id');
+		$mid   = $input->getInt('mid');
 
 		if ($task === 'download')
 		{

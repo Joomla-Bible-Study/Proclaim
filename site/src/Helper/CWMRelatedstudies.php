@@ -85,9 +85,9 @@ class CWMRelatedstudies
 				if (is_string($study->params) && !empty($study->params))
 				{
 					$registry      = new Registry;
-//					$errors        = ['{\\"', '{\"', ',\\"', '\",', ',\"', '\":', ':\"\"', ':\"', '\"}"', '\"}', "\'"];
-//					$correct       = ['{"', '{"', ',"', '",', ',"', '":', ':""', ':"', '"}"', '"}', "'"];
-//					$study->params = str_replace($errors, $correct, $study->params);
+					$errors        = ['{\\"', '{\"', ',\\"', '\",', ',\"', '\":', ':\"\"', ':\"', '\"}"', '\"}', "\'"];
+					$correct       = ['{"', '{"', ',"', '",', ',"', '":', ':""', ':"', '"}"', '"}', "'"];
+					$study->params = str_replace($errors, $correct, $study->params);
 					$registry->loadString($study->params);
 					$sparams = $registry;
 					$compare = $sparams->get('metakey');
@@ -131,7 +131,7 @@ class CWMRelatedstudies
 	 */
 	public function getTopics()
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery('true');
 		$query->select('id');
 		$query->from('#__bsms_topics');
@@ -843,7 +843,7 @@ class CWMRelatedstudies
 	 */
 	public function getStudies()
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery('true');
 		$query->select('s.id, s.params, s.access');
 		$query->from('#__bsms_studies as s');
@@ -856,7 +856,7 @@ class CWMRelatedstudies
 		$studies = $db->loadObjectList();
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-		$user   = Factory::getUser();
+		$user   = $user = Factory::getApplication()->getSession()->get('user');
 		$groups = $user->getAuthorisedViewLevels();
 
 		foreach ($studies as $i => $iValue)
@@ -950,7 +950,7 @@ class CWMRelatedstudies
 	 */
 	public function getRelatedLinks()
 	{
-		$db           = Factory::getDbo();
+		$db           = Factory::getContainer()->get('DatabaseDriver');
 		$scored       = array_count_values($this->score);
 		$output       = array_slice($scored, 0, 20, true);
 		$links        = array();
@@ -979,7 +979,7 @@ class CWMRelatedstudies
 		foreach ($studyrecords as $studyrecord)
 		{
 			$related .= '<option value="'
-				. Route::_('index.php?option=com_proclaim&view=sermon&id=' . $studyrecord->id . '&t=' . $input->get('t', '1', 'int'))
+				. Route::_('index.php?option=com_proclaim&view=CWMSermon&id=' . $studyrecord->id . '&t=' . $input->get('t', '1', 'int'))
 				. '">' . $studyrecord->studytitle;
 
 			if (!empty($studyrecord->bookname))

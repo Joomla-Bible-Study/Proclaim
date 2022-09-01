@@ -34,12 +34,12 @@ class CWMPopUpModel extends ListModel
 	 *
 	 * @since    1.6
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = NULL, $direction = NULL)
 	{
 		/** @type JApplicationSite $app */
 		$app = Factory::getApplication('site');
 
-		// Load the parameters.
+		// Load the parameters
 		/** @var Registry $params */
 		$params   = $app->getParams();
 		$this->setState('params', $params);

@@ -184,7 +184,7 @@ class CWMServersModel extends ListModel
 	{
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
-		$user  = Factory::getUser();
+		$user  = $user = Factory::getApplication()->getSession()->get('user');
 
 		$query->select($this->getState('list.select', 'server.id, server.published, server.server_name, server.type'));
 		$query->from('#__bsms_servers AS server');

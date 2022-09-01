@@ -190,7 +190,7 @@ class CWMHelper
 	 */
 	public static function SetFileSize($id, $size)
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('id, params')
 			->from('#__bsms_mediafiles')

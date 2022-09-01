@@ -54,7 +54,7 @@ class CWMStats
 	 */
 	public static function total_plays($id)
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query
 			->select('sum(m.plays), m.study_id, m.published, s.id FROM #__bsms_mediafiles AS m')
@@ -83,7 +83,7 @@ class CWMStats
 			self::$total_messages_start = $start;
 			self::$total_messages_end   = $end;
 
-			$db    = Factory::getDbo();
+			$db = Factory::getContainer()->get('DatabaseDriver');
 			$where = array();
 
 			if (!empty($start))
@@ -126,7 +126,7 @@ class CWMStats
 	 */
 	public static function get_total_topics($start = '', $end = '')
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query
 			->select('COUNT(*)')
@@ -159,7 +159,7 @@ class CWMStats
 	 */
 	public static function get_top_studies()
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query
 			->select('*')
@@ -190,7 +190,7 @@ class CWMStats
 	 */
 	public static function get_total_categories()
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query
 			->select('*')
@@ -212,7 +212,7 @@ class CWMStats
 	 */
 	public static function get_top_books()
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query
 			->select('booknumber, COUNT( hits ) AS totalmsg')
@@ -257,7 +257,7 @@ class CWMStats
 	 */
 	public static function get_total_comments()
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query
 			->select('COUNT(*)')
@@ -279,7 +279,7 @@ class CWMStats
 	{
 		$month      = mktime(0, 0, 0, date("m") - 3, date("d"), date("Y"));
 		$last_month = date("Y-m-d 00:00:01", $month);
-		$db         = Factory::getDbo();
+		$db         = Factory::getContainer()->get('DatabaseDriver');
 		$query      = $db->getQuery(true);
 		$query
 			->select('*')
@@ -318,7 +318,7 @@ class CWMStats
 	 */
 	public static function total_media_files()
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query
 			->select('COUNT(*)')
@@ -338,7 +338,7 @@ class CWMStats
 	 */
 	public static function get_top_downloads()
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query
 			->select(
@@ -376,7 +376,7 @@ class CWMStats
 	{
 		$month     = mktime(0, 0, 0, date("m") - 3, date("d"), date("Y"));
 		$lastmonth = date("Y-m-d 00:00:01", $month);
-		$db        = Factory::getDbo();
+		$db        = Factory::getContainer()->get('DatabaseDriver');
 		$query     = $db->getQuery(true);
 		$query
 			->select(
@@ -418,7 +418,7 @@ class CWMStats
 	 */
 	public static function total_downloads()
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query
 			->select('SUM(downloads)')
@@ -444,7 +444,7 @@ class CWMStats
 		$final        = [];
 		$admin_params = CWMParams::getAdmin();
 		$format       = $admin_params->params->get('format_popular', '0');
-		$db           = Factory::getDbo();
+		$db           = Factory::getContainer()->get('DatabaseDriver');
 		$query        = $db->getQuery(true);
 		$query
 			->select('study_id, sum(downloads + plays) as added ')
@@ -515,7 +515,7 @@ class CWMStats
 		$count_av_player       = 0;
 		$count_legacy_player   = 0;
 		$count_embed_code      = 0;
-		$db                    = Factory::getDbo();
+		$db                    = Factory::getContainer()->get('DatabaseDriver');
 		$query                 = $db->getQuery(true);
 		$query
 			->select('params')
@@ -585,7 +585,7 @@ class CWMStats
 		$sq_count     = 0;
 		$inline_count = 0;
 		$global_count = 0;
-		$db           = Factory::getDbo();
+		$db           = Factory::getContainer()->get('DatabaseDriver');
 		$query        = $db->getQuery(true);
 		$query
 			->select('params')
@@ -651,7 +651,7 @@ class CWMStats
 			Text::_('JBS_CMN_SELECT_POPULAR_STUDY') . '</option>';
 		$final        = array();
 
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('m.study_id, s.access, s.published AS spub, sum(m.downloads + m.plays) as added')
 			->from('#__bsms_mediafiles AS m')
@@ -663,7 +663,7 @@ class CWMStats
 		$items = $db->loadObjectList();
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-		$user   = Factory::getUser();
+		$user   = $user = Factory::getApplication()->getSession()->get('user');
 		$groups = $user->getAuthorisedViewLevels();
 		$count  = count($items);
 

@@ -67,7 +67,7 @@ abstract class CWMRouteHelper
 			return '';
 		}
 
-		$link = 'index.php?option=com_proclaim&view=cwmseriesdisplay&id=' . $seriesid;
+		$link = 'index.php?option=com_proclaim&view=CWMSeriesDisplay&id=' . $seriesid;
 
 		if ($language && $language !== '*' && Multilanguage::isEnabled())
 		{

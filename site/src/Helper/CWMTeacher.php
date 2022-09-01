@@ -61,7 +61,7 @@ class CWMTeacher extends CWMListing
 
 		foreach ($teacherIDs as $teach)
 		{
-			$database = Factory::getDbo();
+			$database = Factory::getContainer()->get('DatabaseDriver');
 			$query    = $database->getQuery(true);
 			$query->select('*')->from('#__bsms_teachers')->where('id = ' . $teach);
 			$database->setQuery($query);
@@ -151,7 +151,7 @@ class CWMTeacher extends CWMListing
 
 		foreach ($teacherids as $teachers)
 		{
-			$database = Factory::getDbo();
+			$database = Factory::getContainer()->get('DatabaseDriver');
 			$query    = $database->getQuery(true);
 			$query->select('*')->from('#__bsms_teachers')->where('id = ' . $teachers);
 			$database->setQuery($query);
@@ -306,7 +306,7 @@ class CWMTeacher extends CWMListing
 			$limit = '';
 		}
 
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('#__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
 			. ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
@@ -327,7 +327,7 @@ class CWMTeacher extends CWMListing
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 
-		$user   = Factory::getUser();
+		$user   = $user = Factory::getApplication()->getSession()->get('user');
 		$groups = $user->getAuthorisedViewLevels();
 
 		foreach ($items as $i => $iValue)

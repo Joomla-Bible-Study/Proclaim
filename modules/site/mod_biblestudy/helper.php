@@ -33,10 +33,10 @@ class ModJBSMHelper
 	 */
 	public static function getLatest($params)
 	{
-		$user   = Factory::getUser();
+		$user   = $user = Factory::getApplication()->getSession()->get('user');
 		$groups = implode(',', $user->getAuthorisedViewLevels());
 
-		$db = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$db->setQuery('SET SQL_BIG_SELECTS=1');
 		$db->execute();
 		$query            = $db->getQuery(true);

@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMTranslated;
 use CWM\Component\Proclaim\Administrator\Table\CWMMessageTable;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Workflow\Workflow;
@@ -61,7 +62,7 @@ class CWMMessageModel extends AdminModel
 	 */
 	public function isDuplicate($study_id, $topic_id)
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('*')
 			->from('#__bsms_studytopics')
@@ -213,8 +214,9 @@ class CWMMessageModel extends AdminModel
 		$app    = Factory::getApplication();
 		$params = CWMParams::getAdmin()->params;
 		$input  = $app->input;
-		$path   = 'images/biblestudy/studies/' . $data['id'];
-
+		$path   =  'images/biblestudy/studies/'.$data['id'];
+        $image = HTMLHelper::cleanImageURL($data['image']);
+        $data['image'] = $image->url;
 		$this->cleanCache();
 
 		if ($input->get('a_id'))
@@ -524,7 +526,7 @@ class CWMMessageModel extends AdminModel
 	protected function batchTeacher($value, $pks, $contexts)
 	{
 		// Set the variables
-		$user = Factory::getUser();
+		$user = $user = Factory::getApplication()->getSession()->get('user');
 		/** @var CWMMessageTable $table */
 		$table = $this->getTable();
 
@@ -571,7 +573,7 @@ class CWMMessageModel extends AdminModel
 	protected function batchSeries($value, $pks, $contexts)
 	{
 		// Set the variables
-		$user = Factory::getUser();
+		$user = $user = Factory::getApplication()->getSession()->get('user');
 		/** @var CWMMessageTable $table */
 		$table = $this->getTable();
 
@@ -618,7 +620,7 @@ class CWMMessageModel extends AdminModel
 	protected function batchMessagetype($value, $pks, $contexts)
 	{
 		// Set the variables
-		$user = Factory::getUser();
+		$user = $user = Factory::getApplication()->getSession()->get('user');
 		/** @var CWMMessageTable $table */
 		$table = $this->getTable();
 
@@ -683,7 +685,7 @@ class CWMMessageModel extends AdminModel
 	protected function prepareTable($table)
 	{
 		$date = Factory::getDate();
-		$user = Factory::getUser();
+		$user = $user = Factory::getApplication()->getSession()->get('user');
 
 		// Set the publishing date to now
 		if ($table->published === Workflow::CONDITION_PUBLISHED && (int) $table->publish_up === 0)
@@ -709,7 +711,7 @@ class CWMMessageModel extends AdminModel
 			// Set ordering to the last item if not set
 			if (empty($table->ordering))
 			{
-				$db    = Factory::getDbo();
+				$db = Factory::getContainer()->get('DatabaseDriver');
 				$query = $db->getQuery(true)
 					->select('MAX(ordering)')
 					->from($db->quoteName('#__bsms_studies'));

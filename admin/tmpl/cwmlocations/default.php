@@ -23,7 +23,7 @@ HTMLHelper::_('dropdown.init');
 HTMLHelper::_('behavior.multiselect');
 
 $app       = Factory::getApplication();
-$user      = Factory::getUser();
+$user      = $user = Factory::getApplication()->getSession()->get('user');
 $userId    = $user->get('id');
 $listOrder = $this->escape($this->state->get('list.ordering', 'location.id'));
 $listDirn  = $this->escape($this->state->get('list.direction', 'desc'));

@@ -21,6 +21,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Form\FormFactoryInterface;
 use Joomla\CMS\Helper\TagsHelper;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Language\Text;
@@ -170,12 +171,31 @@ class CWMAdminModel extends AdminModel
 	 */
 	public function save($data)
 	{
-		if (parent::save($data))
-		{
-			return true;
-		}
+        $params = new Registry;
+        $params->loadArray($data['params']);
+        //load the image, then turn it into an array because Joomla's mediafield attaches metadata to the end. Then grab the URL from the array and save it.
+        $image = HTMLHelper::cleanImageURL($params->get('media_image'));
+        $params->set('media_image', $image->url);
+        $image = HTMLHelper::cleanImageURL($params->get('jwplayer_logo'));
+        $params->set('jwplayer_logo', $image->url);
+        $image = HTMLHelper::cleanImageURL($params->get('jwplayer_image'));
+        $params->set('jwplayer_image', $image->url);
+        $image = HTMLHelper::cleanImageURL($params->get('default_study_image'));
+        $params->set('default_study_image', $image->url);
+        $image = HTMLHelper::cleanImageURL($params->get('default_showHide_image'));
+        $params->set('default_showHide_image', $image->url);
+        $image = HTMLHelper::cleanImageURL($params->get('default_download_image'));
+        $params->set('default_download_image', $image->url);
+        $image = HTMLHelper::cleanImageURL($params->get('default_teacher_image'));
+        $params->set('default_teacher_image', $image->url);
+        $image = HTMLHelper::cleanImageURL($params->get('default_series_image'));
+        $params->set('default_series_image', $image->url);
+        $image = HTMLHelper::cleanImageURL($params->get('default_main_image'));
+        $params->set('default_main_image', $image->url);
 
-		return false;
+        $data['params'] = $params->toArray();
+
+		return parent::save($data);
 	}
 
 	/**
@@ -203,7 +223,7 @@ class CWMAdminModel extends AdminModel
 	 */
 	public function getMediaFiles()
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('*');
 		$query->from('#__bsms_mediafiles');
@@ -370,7 +390,7 @@ class CWMAdminModel extends AdminModel
 	 */
 	public function getExtentionId()
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('extension_id')->from($db->qn('#__extensions'))
 			->where('element = ' . $db->q('com_proclaim'));
@@ -395,7 +415,7 @@ class CWMAdminModel extends AdminModel
 	 */
 	public function getSchemaVersion()
 	{
-		$db              = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query           = $db->getQuery(true);
 		$extensionresult = $this->getExtentionId();
 		$query->select('version_id')->from($db->qn('#__schemas'))
@@ -583,7 +603,7 @@ class CWMAdminModel extends AdminModel
 	 */
 	public function getSSorPI()
 	{
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('extension_id, name, element')->from('#__extensions');
 		$db->setQuery($query);
@@ -603,7 +623,7 @@ class CWMAdminModel extends AdminModel
 		// Check for request forgeries.
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
-		$db   = Factory::getDbo();
+		$db   = Factory::getContainer()->get('DatabaseDriver');
 		$msg  = Text::_('JBS_CMN_OPERATION_SUCCESSFUL');
 		$post = $_POST['jform'];
 		$reg  = new Registry;
@@ -690,7 +710,7 @@ class CWMAdminModel extends AdminModel
 
 				if (!$db->execute())
 				{
-					return JText::_('JBS_ADM_ERROR_OCCURED');
+					return Text::_('JBS_ADM_ERROR_OCCURED');
 				}
 			}
 		}

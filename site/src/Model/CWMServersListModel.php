@@ -11,7 +11,7 @@ namespace CWM\Component\Proclaim\Site\Model;
 // No Direct Access
 defined('_JEXEC') or die;
 
-use CWM\Component\Proclaim\Administrator\Model\servers;
+use CWM\Component\Proclaim\Administrator\Model;
 // Base this model on the backend version.
 //JLoader::register('BiblestudyModelServers', JPATH_ADMINISTRATOR . '/components/com_proclaim/models/ServersController.php');
 /**

@@ -11,11 +11,14 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Router\Route;
+use Joomla\Event\Event;
 
 defined('_JEXEC') or die;
 HtmlHelper::_('behavior.keepalive');
 ?>
-<script type="text/javascript" language="JavaScript">
+<script type="text/javascript" >
     function HideContent(d) {
         document.getElementById(d).style.display = "none";
     }
@@ -34,19 +37,14 @@ HtmlHelper::_('behavior.keepalive');
 <?php
 $commentjava = "javascript:ReverseDisplay('JBScomments')";
 
-//php code
-JPluginHelper::importPlugin('captcha');
-$dispatcher = JEventDispatcher::getInstance();
-$dispatcher->trigger('onInit', 'dynamic_recaptcha_1');
-
 switch ($this->item->params->get('link_comments', 0))
 {
 	case 0:
-		echo '<strong><a class="heading' . $this->item->params->get('pageclass_sfx') . '" href="' . $commentjava . '">>>'
-			. Text::_('JBS_CMT_SHOW_HIDE_COMMENTS') . '<<</a></strong>';
+		echo '<div style="margin: auto;"></div><strong><a class="heading' . $this->item->params->get('pageclass_sfx') . '" href="' . $commentjava . '"><i class="fas fa-comment fa-3x"></i>'
+			. Text::_('JBS_CMT_SHOW_HIDE_COMMENTS') . '</a></strong></div>';
 		?>
         <div id="JBScomments" style="display:none;">
-            <br/>
+
 		<?php
 		break;
 	case 1:
@@ -55,16 +53,16 @@ switch ($this->item->params->get('link_comments', 0))
 }
 ?>
 <div id="commentstable">
-<div class="container-fluid">
+<div class="container-fluid" style="padding-bottom: 10px;">
 
     <div class="row-fluid">
-        <div class="span12">
+        <div class="span12" style="padding-bottom: 10px;">
 			<h2><?php echo Text::_('JBS_CMN_COMMENTS'); ?></h2>
         </div>
     </div>
 
 <?php
-$input = new JInput;
+$input = Factory::getApplication()->input;
 
 if (!$this->item->id)
 {
@@ -78,7 +76,7 @@ if (!count($this->comments))
     <div class="row-fluid">
         <div class="span12"><?php echo Text::_('JBS_STY_NO_COMMENT') ?></div>
     </div>
-		</div>
+
 			<?php
 }
 else
@@ -105,14 +103,14 @@ else
 	} // End of foreach
 	?>
 
-</div>
+
 	<?php
 }
 ?>
 <?php
 // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 $allow          = 0;
-$user           = JFactory::getUser();
+$user           = $user = Factory::getApplication()->getSession()->get('user');
 $groups         = $user->getAuthorisedViewLevels();
 $show_comments  = $this->item->params->get('show_comments');
 $comment_access = $this->item->params->get('comment_access');
@@ -129,16 +127,15 @@ if (in_array($comment_access, $groups))
 if ($allow > 9)
 {
 	?>
+</div>
 <div class="container-fluid">
-<form action="index.php" method="post">
+<form action="index.php" method="post" class="form-validate form-horizontal well">
 
     <div class="row-fluid">
 		<?php
 		if ($allow < 10)
 		{
-			?>
-
-                    <strong><div class="span12"><?php echo Text::_('JBS_CMT_REGISTER_TO_POST_COMMENTS') ?></div></strong>
+			echo Text::_('JBS_CMT_REGISTER_TO_POST_COMMENTS') ?>
 
 			<?php
 		}
@@ -195,27 +192,28 @@ if ($allow > 9)
                     </textarea>
                 </div>
             </div>
-            <div class="row-fluid">
-               <div class="span12">
-					<?php
-					if ($this->item->params->get('use_captcha') > 0)
-					{
-						if ($this->item->params->get('public_key'))
-						{
-							echo '<div id="dynamic_recaptcha_1"></div>';
-						}
-						else
-						{
-							echo Text::_('JBS_CMN_NO_KEY');
-						}
-					}
-					?>
-                </div>
-            </div>
+
             <div class="row-fluid">
             <div class="span12">
-          <?php      /* @todo fix getString method */ ?>
-<?php $input = Factory::getApplication(); $t = $input->getString('t'); ?>
+
+          <?php foreach ($this->form->getFieldsets() as $fieldset) : ?>
+                <?php if ($fieldset->name === 'captcha' && !$this->captchaEnabled) : ?>
+                <?php continue; ?>
+                <?php endif; ?>
+                <?php $fields = $this->form->getFieldset($fieldset->name); ?>
+                <?php if (count($fields)) : ?>
+                <fieldset class="m-0">
+                    <?php if (isset($fieldset->label) && ($legend = trim(Text::_($fieldset->label))) !== '') : ?>
+                        <legend><?php echo $legend; ?></legend>
+                    <?php endif; ?>
+                    <?php foreach ($fields as $field) : ?>
+                        <?php echo $field->renderField(); ?>
+                    <?php endforeach; ?>
+                </fieldset>
+                <?php endif; ?>
+                <?php endforeach; ?>
+
+<?php $input = Factory::getApplication()->input; $t = $input->get('t'); ?>
                 <input type="hidden" name="study_id" id="study_id" value="<?php echo $this->item->id ?>"/>
                 <input type="hidden" name="t" value="<?php echo $t;?>">
                 <input type="hidden" name="task" value="comment"/>
@@ -237,9 +235,12 @@ if ($allow > 9)
         </div>
     </div>
 </form>
-</div>
+
 	<?php
-} // End if $allow > 9
-?>
+        } // End if $allow > 9
+    ?>
 </div>
+</div>
+
+
 

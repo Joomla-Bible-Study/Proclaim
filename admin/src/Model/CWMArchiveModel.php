@@ -60,7 +60,7 @@ class CWMArchiveModel extends AdminModel
 	 */
 	public function doArchive()
 	{
-		$db   = Factory::getDbo();
+		$db   = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$studies = 0;
 		$mediafiles = 0;

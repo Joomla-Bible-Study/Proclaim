@@ -105,7 +105,7 @@ class PlgSystemJBSPodcast extends JPlugin
 	public function checktime($params)
 	{
 		$now   = time();
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('timeset')
 			->from('#__jbspodcast_timeset');
@@ -135,7 +135,7 @@ class PlgSystemJBSPodcast extends JPlugin
 		$offset    = $config->get('config.offset');
 
 		$now   = time();
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('timeset')
 			->from('#__jbspodcast_timeset');
@@ -261,7 +261,7 @@ class PlgSystemJBSPodcast extends JPlugin
 	public function updatetime()
 	{
 		$time  = time();
-		$db    = Factory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->update('#__jbspodcast_timeset')
 			->set('timeset = ' . $time);
