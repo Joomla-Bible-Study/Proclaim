@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" method="upgrade">
+	<!-- Generic Metadata -->
+	<name>com_proclaim</name>
+	<author>CWM Team</author>
+	<authorEmail>info@christianwebministries.org</authorEmail>
+	<authorUrl>www.christianwebministries.org</authorUrl>
+	<copyright>(C) 2007 - 2022 Proclaim All rights reserved.</copyright>
+	<version>10.0.0.DEV</version>
+	<creationDate>December 1, 2021</creationDate>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<description>JBS_INS_XML_DESCRIPTION</description>
+	<namespace path="src">CWM\Component\Proclaim</namespace>
+
+	<!-- Installer Hooks -->
+	<scriptfile>proclaim.script.php</scriptfile>
+
+	<!-- Installer Hooks -->
+	<install>
+		<sql>
+			<file driver="mysql" charset="utf8">install/sql/install.sql</file>
+		</sql>
+	</install>
+	<!-- Front end translation files -->
+	<languages folder="admin/language">
+		<language tag="en-GB">en-GB/en-GB.com_proclaim.ini</language>
+	</languages>
+	<updateservers>
+		<server type="extension" priority="1" name="CWM Proclaim Package">https://www.christianwebministries.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=1&amp;dummy=extension.xml</server>
+	</updateservers>
+
+	<files folder="site">
+		<filename>proclaim.php</filename>
+		<filename>controller.php</filename>
+		<filename>router.php</filename>
+		<folder>forms</folder>
+		<folder>helpers</folder>
+		<folder>layouts</folder>
+		<folder>sef_ext</folder>
+		<folder>src</folder>
+		<folder>tmpl</folder>
+	</files>
+
+	<!-- Media files -->
+	<media destination="com_proclaim" folder="media">
+		<filename>joomla.asset.json</filename>
+		<folder>backup</folder>
+		<folder>css</folder>
+		<folder>fancybox</folder>
+		<folder>images</folder>
+		<folder>js</folder>
+		<folder>less</folder>
+		<folder>player</folder>
+	</media>
+
+	<administration>
+		<menu img="../media/com_proclaim/images/menu/icon-16-biblemenu.png">JBS_CMN_COM_PROCLAIM</menu>
+		<submenu>
+			<!-- Note that all & must be escaped to &amp; for the file to be valid XML and be parsed by the installer -->
+			<menu link="option=com_proclaim&amp;view=cwmcpanel" img="../media/com_proclaim/images/menu/icon-16-biblemenu.png">JBS_MNU_CONTROL_PANEL</menu>
+			<menu link="option=com_proclaim&amp;task=cwmadmin.edit&amp;id=1" img="../media/com_proclaim/images/menu/icon-16-cwmadmin.png">JBS_MNU_ADMINISTRATION</menu>
+			<menu link="option=com_proclaim&amp;view=cwmmessages" img="../media/com_proclaim/images/menu/icon-16-studies.png">JBS_MNU_STUDIES</menu>
+			<menu link="option=com_proclaim&amp;view=cwmmediafiles" img="../media/com_proclaim/images/menu/icon-16-mp3.png">JBS_MNU_MEDIA_FILES</menu>
+			<menu link="option=com_proclaim&amp;view=cwmteachers" img="../media/com_proclaim/images/menu/icon-16-teachers.png">JBS_MNU_TEACHERS</menu>
+			<menu link="option=com_proclaim&amp;view=cwmseries" img="../media/com_proclaim/images/menu/icon-16-series.png">JBS_MNU_SERIES</menu>
+			<menu link="option=com_proclaim&amp;view=cwmmessagetypes" img="../media/com_proclaim/images/menu/icon-16-messagetype.png">JBS_MNU_MESSAGETYPES</menu>
+			<menu link="option=com_proclaim&amp;view=cwmlocations" img="../media/com_proclaim/images/menu/icon-16-locations.png">JBS_MNU_LOCATIONS</menu>
+			<menu link="option=com_proclaim&amp;view=cwmtopics" img="../media/com_proclaim/images/menu/icon-16-topics.png">JBS_MNU_TOPICS</menu>
+			<menu link="option=com_proclaim&amp;view=cwmcomments" img="../media/com_proclaim/images/menu/icon-16-comments.png">JBS_MNU_STUDY_COMMENTS</menu>
+			<menu link="option=com_proclaim&amp;view=cwmservers" img="../media/com_proclaim/images/menu/icon-16-servers.png">JBS_MNU_SERVERS</menu>
+			<menu link="option=com_proclaim&amp;view=cwmpodcasts" img="../media/com_proclaim/images/menu/icon-16-podcast.png">JBS_MNU_PODCASTS</menu>
+			<menu link="option=com_proclaim&amp;view=cwmtemplates" img="../media/com_proclaim/images/menu/icon-16-templates.png">JBS_MNU_TEMPLATE_DISPLAY</menu>
+			<menu link="option=com_proclaim&amp;view=cwmtemplatecodes" img="../media/com_proclaim/images/menu/icon-16-templates.png">JBS_MNU_TEMPLATE_CODE_DISPLAY</menu>
+			<!-- Instead of link you can specify individual link attributes -->
+		</submenu>
+
+		<!-- Administration Main File Copy Section -->
+		<files folder="admin">
+			<filename>access.xml</filename>
+			<filename>api.php</filename>
+			<filename>proclaim.php</filename>
+			<filename>config.xml</filename>
+			<folder>forms</folder>
+			<folder>help</folder>
+			<folder>helper</folder>
+			<folder>install</folder>
+			<folder>language</folder>
+			<folder>models</folder>
+			<folder>postinstall</folder>
+			<folder>services</folder>
+			<folder>src</folder>
+			<folder>tmpl</folder>
+		</files>
+	</administration>
+</extension>

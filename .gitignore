@@ -7,12 +7,12 @@ out
 gen
 bin/
 build/reports/pmd.html
-com_biblestudy/media/css/site/
+com_proclaim/media/css/site/
 composer.phar
 .DS_Store
 node_modules/
 /admin/biblestudy.script.php
-/admin/biblestudy.xml
+/admin/proclaim.xml
 build/reports/cpd-code.xml
 build/reports/jdepend-dependencies.svg
 build/reports/jdepend-pyramid.svg

@@ -1,0 +1,406 @@
+{
+  "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
+  "name": "com_proclaim",
+  "version": "10.0.0",
+  "description": "Proclaim",
+  "license": "GPL-2.0-or-later",
+  "assets": [
+	{
+	  "name": "com_proclaim.cwmadmin-message-pagebreak.es5",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmadmin-message-pagebreak-es5.min.js",
+	  "dependencies": [
+		"core"
+	  ],
+	  "attributes": {
+		"nomodule": true,
+		"defer": true
+	  },
+	  "version": "dfda2cadb929cf361efab69cd56c9ef003a65dbe"
+	},
+	  {
+		  "name": "com_proclaim.cwmcore",
+		  "type": "script",
+		  "uri": "com_proclaim/cwmcore.min.js",
+		  "version": "dfda2cadb929cf361efab69cd56c9ef003a65dbe"
+	  },
+	{
+	  "name": "com_proclaim.administrator-message-pagebreak",
+	  "type": "script",
+	  "uri": "com_proclaim/administrator-message-pagebreak.min.js",
+	  "dependencies": [
+		"com_proclaim.administrator-message-pagebreak.es5"
+	  ],
+	  "attributes": {
+		"type": "module",
+		"defer": true
+	  },
+	  "version": "3a6400cb085212bd7f5f2f43ab8bfadfb405b7fd"
+	},
+	{
+	  "name": "com_proclaim.administrator-message-readmore.es5",
+	  "type": "script",
+	  "uri": "com_proclaim/administrator-message-readmore-es5.min.js",
+	  "dependencies": [
+		"core"
+	  ],
+	  "attributes": {
+		"nomodule": true,
+		"defer": true
+	  },
+	  "version": "3caf2bd836dad54185a2fbb3c9a625b7576d677c"
+	},
+	{
+	  "name": "com_proclaim.administrator-message-readmore",
+	  "type": "script",
+	  "uri": "com_proclaim/administrator-message-readmore.min.js",
+	  "dependencies": [
+		"com_proclaim.administrator-message-readmore.es5"
+	  ],
+	  "attributes": {
+		"type": "module"
+	  },
+	  "version": "3e285e1e49b30182e409d2d82de5a337fa3a6c89"
+	},
+	{
+	  "name": "com_proclaim.cwmadmin-messages-batch.es5",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmadmin-messages-default-batch-footer-es5.min.js",
+	  "dependencies": [
+		"core"
+	  ],
+	  "attributes": {
+		"nomodule": true,
+		"defer": true
+	  },
+	  "version": "3660f7dadca40d79416fff13b55596f0cec73cd9"
+	},
+	{
+	  "name": "com_proclaim.cwmadmin-messages-batch",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmadmin-messages-default-batch-footer.min.js",
+	  "dependencies": [
+		"com_proclaim.cwmadmin-messages-batch.es5"
+	  ],
+	  "attributes": {
+		"type": "module"
+	  },
+	  "version": "9ac1245a9dd2a9bf7e7f95c6e7e24f6075eef0ae"
+	},
+	{
+	  "name": "com_proclaim.administrator-teachers-batch.es5",
+	  "type": "script",
+	  "uri": "com_proclaim/administrator-teachers-default-batch-footer-es5.min.js",
+	  "dependencies": [
+		"core"
+	  ],
+	  "attributes": {
+		"nomodule": true,
+		"defer": true
+	  },
+	  "version": "3660f7dadca40d79416fff13b55596f0cec73cd9"
+	},
+	{
+	  "name": "com_proclaim.administrator-teachers-batch",
+	  "type": "script",
+	  "uri": "com_proclaim/administrator-teachers-default-batch-footer.min.js",
+	  "dependencies": [
+		"com_proclaim.administrator-teachers-batch.es5"
+	  ],
+	  "attributes": {
+		"type": "module"
+	  },
+	  "version": "9ac1245a9dd2a9bf7e7f95c6e7e24f6075eef0ae"
+	},
+	{
+	  "name": "com_proclaim.administrator-series-batch.es5",
+	  "type": "script",
+	  "uri": "com_proclaim/administrator-series-default-batch-footer-es5.min.js",
+	  "dependencies": [
+		"core"
+	  ],
+	  "attributes": {
+		"nomodule": true,
+		"defer": true
+	  },
+	  "version": "3660f7dadca40d79416fff13b55596f0cec73cd9"
+	},
+	{
+	  "name": "com_proclaim.administrator-series-batch",
+	  "type": "script",
+	  "uri": "com_proclaim/administrator-series-default-batch-footer.min.js",
+	  "dependencies": [
+		"com_proclaim.administrator-series-batch.es5"
+	  ],
+	  "attributes": {
+		"type": "module"
+	  },
+	  "version": "9ac1245a9dd2a9bf7e7f95c6e7e24f6075eef0ae"
+	},
+	{
+	  "name": "com_proclaim.cwmadmin-messages-stage.es5",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmadmin-messages-default-stage-footer-es5.min.js",
+	  "dependencies": [
+		"core"
+	  ],
+	  "attributes": {
+		"nomodule": true,
+		"defer": true
+	  },
+	  "version": "361f99af1774ed60da28e3c2b8c6089c1e020b3f"
+	},
+	{
+	  "name": "com_proclaim.cwmadmin-messages-stage",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmadmin-messages-default-stage-footer.min.js",
+	  "dependencies": [
+		"com_proclaim.cwmadmin-messages-stage.es5"
+	  ],
+	  "attributes": {
+		"type": "module"
+	  },
+	  "version": "08fce4ef3c52022ecd9f512a44d64299dc9e89ed"
+	},
+	{
+	  "name": "com_proclaim.cwmadmin-messages-modal",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmadmin-messages-modal.min.js",
+	  "dependencies": [
+		"com_proclaim.cwmadmin-messages-modal.es5"
+	  ],
+	  "attributes": {
+		"type": "module"
+	  },
+	  "version": "b0a8df19948936e693d5c710d22673ed9ad760a3"
+	},
+	{
+	  "name": "com_proclaim.form-edit.es5",
+	  "type": "script",
+	  "uri": "com_proclaim/form-edit-es5.min.js",
+	  "dependencies": [
+		"core"
+	  ],
+	  "attributes": {
+		"nomodule": true,
+		"defer": true
+	  },
+	  "version": "e7c98071755bbe4d4ad185fa342d361d56892073"
+	},
+	{
+	  "name": "com_proclaim.form-edit",
+	  "type": "script",
+	  "uri": "com_proclaim/form-edit.min.js",
+	  "dependencies": [
+		"com_proclaim.form-edit.es5"
+	  ],
+	  "attributes": {
+		"type": "module"
+	  },
+	  "version": "405b01d00df544c5790201546a69f79d485a500d"
+	},
+	{
+	  "name": "com_proclaim.cwmmessages-list.es5",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmmessages-list-es5.min.js",
+	  "dependencies": [
+		"core"
+	  ],
+	  "attributes": {
+		"nomodule": true,
+		"defer": true
+	  },
+	  "version": "4d40a071d6672febde9190f361c8adecc94917d8"
+	},
+	{
+	  "name": "com_proclaim.cwmadmin-messages-modal.es5",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmadmin-messages-modal-es5.min.js",
+	  "dependencies": [
+		"core"
+	  ],
+	  "attributes": {
+		"nomodule": true,
+		"defer": true
+	  },
+	  "version": "872a497cd19612c3e1940b5feefdc0e14c08d4b9"
+	},
+	{
+	  "name": "com_proclaim.cwmmessages-list",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmmessages-list.min.js",
+	  "dependencies": [
+		"com_proclaim.cwmmessages-list.es5"
+	  ],
+	  "attributes": {
+		"type": "module"
+	  },
+	  "version": "4efda122de260213f85aceee619bfc3ea5b4a0aa"
+	},
+	{
+	  "name": "com_proclaim.cwmadmin-series-modal.es5",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmadmin-series-modal-es5.min.js",
+	  "dependencies": [
+		"core"
+	  ],
+	  "attributes": {
+		"nomodule": true,
+		"defer": true
+	  },
+	  "version": "872a497cd19612c3e1940b5feefdc0e14c08d4b9"
+	},
+	{
+	  "name": "com_proclaim.cwmadmin-series-modal",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmadmin-series-modal.min.js",
+	  "dependencies": [
+		"com_proclaim.cwmadmin-series-modal.es5"
+	  ],
+	  "attributes": {
+		"type": "module"
+	  },
+	  "version": "b0a8df19948936e693d5c710d22673ed9ad760a3"
+	},
+	{
+	  "name": "com_proclaim.cwmadmin-teachers-modal.es5",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmadmin-teachers-modal-es5.min.js",
+	  "dependencies": [
+		"core"
+	  ],
+	  "attributes": {
+		"nomodule": true,
+		"defer": true
+	  },
+	  "version": "872a497cd19612c3e1940b5feefdc0e14c08d4b9"
+	},
+	{
+	  "name": "com_proclaim.cwmadmin-teachers-modal",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmadmin-teachers-modal.min.js",
+	  "dependencies": [
+		"com_proclaim.cwmadmin-teachers-modal.es5"
+	  ],
+	  "attributes": {
+		"type": "module"
+	  },
+	  "version": "b0a8df19948936e693d5c710d22673ed9ad760a3"
+	},
+	{
+	  "name": "com_proclaim.cwmadmin-locations-modal.es5",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmadmin-locations-modal-es5.min.js",
+	  "dependencies": [
+		"core"
+	  ],
+	  "attributes": {
+		"nomodule": true,
+		"defer": true
+	  },
+	  "version": "872a497cd19612c3e1940b5feefdc0e14c08d4b9"
+	},
+	{
+	  "name": "com_proclaim.cwmadmin-locations-modal",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmadmin-locations-modal.min.js",
+	  "dependencies": [
+		"com_proclaim.cwmadmin-locations-modal.es5"
+	  ],
+	  "attributes": {
+		"type": "module"
+	  },
+	  "version": "b0a8df19948936e693d5c710d22673ed9ad760a3"
+	},
+	{
+	  "name": "com_proclaim.cwmadmin-locations-batch.es5",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmadmin-locations-default-batch-footer-es5.min.js",
+	  "dependencies": [
+		"core"
+	  ],
+	  "attributes": {
+		"type": "module"
+	  },
+	  "version": "3660f7dadca40d79416fff13b55596f0cec73cd9"
+	},
+	{
+	  "name": "com_proclaim.cwmadmin-locations-batch",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmadmin-locations-default-batch-footer.min.js",
+	  "dependencies": [
+		"com_proclaim.cwmadmin-locations-batch.es5"
+	  ],
+	  "attributes": {
+		"nomodule": true,
+		"defer": true
+	  },
+	  "version": "9ac1245a9dd2a9bf7e7f95c6e7e24f6075eef0ae"
+	},
+	{
+	  "name": "com_proclaim.cwmcore",
+	  "type": "style",
+	  "uri": "com_proclaim/cwmcore.min.css",
+	  "dependencies": [
+		"com_proclaim.general"
+	  ],
+	  "js": [
+		"come_proclaim.CWMCoreJS"
+	  ],
+	  "attributes": {
+		"nomodule": true,
+		"defer": true
+	  },
+	  "version": "dfda2cadb929cf361efab69cd56c9ef003a65dbe"
+	},
+	{
+	  "name": "com_proclaim.cwmcorejs",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmcore.min.js",
+	  "dependencies":[
+		"core",
+		"jquery-noconflict",
+		"com_proclaim.modernizr",
+		"bootstrap.popover",
+		"bootstrap.es5",
+		"com_proclaim.popper"
+	  ],
+	  "class": "com_proclaim.cwmcore",
+	  "version": "dfda2cadb929cf361efab69cd56c9ef003a65dbe"
+
+	},
+	{
+	  "name": "com_proclaim.cwmpodcast",
+	  "type": "style",
+	  "uri": "com_proclaim/cwmpodcast.min.css",
+	  "dependencies": [
+		"com_proclaim.CWMCore"
+	  ],
+	  "version": "dfda2cadb929cf361efab69cd56c9ef003a65dbe"
+	},
+	{
+	  "name": "com_proclaim.general",
+	  "type": "style",
+	  "uri": "com_proclaim/general.min.css",
+	  "version": "dfda2cadb929cf361efab69cd56c9ef003a65dbe"
+	},
+	{
+	  "name": "com_proclaim.podcast",
+	  "type": "style",
+	  "uri": "com_proclaim/podcast.min.css",
+	  "version": "dfda2cadb929cf361efab69cd56c9ef003a65dbe"
+	},
+	{
+	  "name": "com_proclaim.popper",
+	  "type": "script",
+	  "uri": "com_proclaim/popper.min.js",
+	  "version": "dfda2cadb929cf361efab69cd56c9ef003a65dbe"
+	},
+	{
+	  "name": "com_proclaim.modernizr",
+	  "type": "script",
+	  "uri": "com_proclaim/modernizr.min.js",
+	  "version": "dfda2cadb929cf361efab69cd56c9ef003a65dbe"
+	}
+  ]
+}

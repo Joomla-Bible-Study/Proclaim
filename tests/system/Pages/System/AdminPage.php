@@ -52,13 +52,13 @@ abstract class AdminPage
 
 	/**
 	 *
-	 * @var  array of top menu text that is initially visible in all admin menus
+	 * @var  array of top menu text that is initially visible in all administrator menus
 	 */
 	public $visibleMenuText = array ('System', 'Users', 'Menus', 'Content', 'Components', 'Extensions', 'Help');
 
 	/**
 	 *
-	 * @var  array  All top menu links in admin screens. These are common in all admin screens.
+	 * @var  array  All top menu links in administrator screens. These are common in all administrator screens.
 	 */
 	public  $allMenuLinks = array(
 			'System' 				=> 'administrator/index.php#',
@@ -268,7 +268,7 @@ abstract class AdminPage
 	}
 
 	/**
-	 * Finds all menu links in the top menu of an admin screen
+	 * Finds all menu links in the top menu of an administrator screen
 	 *
 	 * @return  array of stdClass objects
 	 */

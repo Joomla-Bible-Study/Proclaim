@@ -29,7 +29,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
 	private $_stashedErrorState = array();
 
 	/**
-	 * @var    array  Various JFactory static instances stashed away to be restored later.
+	 * @var    array  Various Factory static instances stashed away to be restored later.
 	 * @since  12.1
 	 */
 	private $_stashedFactoryState = array(
@@ -357,15 +357,15 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
 	 */
 	protected function restoreFactoryState()
 	{
-		JFactory::$application = $this->_stashedFactoryState['application'];
-		JFactory::$config = $this->_stashedFactoryState['config'];
-		JFactory::$dates = $this->_stashedFactoryState['dates'];
-		JFactory::$session = $this->_stashedFactoryState['session'];
-		JFactory::$language = $this->_stashedFactoryState['language'];
-		JFactory::$document = $this->_stashedFactoryState['document'];
-		JFactory::$acl = $this->_stashedFactoryState['acl'];
-		JFactory::$mailer = $this->_stashedFactoryState['mailer'];
-		JFactory::$database = $this->_stashedFactoryState['database'];
+		Factory::$application = $this->_stashedFactoryState['application'];
+		Factory::$config = $this->_stashedFactoryState['config'];
+		Factory::$dates = $this->_stashedFactoryState['dates'];
+		Factory::$session = $this->_stashedFactoryState['session'];
+		Factory::$language = $this->_stashedFactoryState['language'];
+		Factory::$document = $this->_stashedFactoryState['document'];
+		Factory::$acl = $this->_stashedFactoryState['acl'];
+		Factory::$mailer = $this->_stashedFactoryState['mailer'];
+		Factory::$database = $this->_stashedFactoryState['database'];
 	}
 
 	/**
@@ -398,15 +398,15 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
 	 */
 	protected function saveFactoryState()
 	{
-		$this->_stashedFactoryState['application'] = JFactory::$application;
-		$this->_stashedFactoryState['config'] = JFactory::$config;
-		$this->_stashedFactoryState['dates'] = JFactory::$dates;
-		$this->_stashedFactoryState['session'] = JFactory::$session;
-		$this->_stashedFactoryState['language'] = JFactory::$language;
-		$this->_stashedFactoryState['document'] = JFactory::$document;
-		$this->_stashedFactoryState['acl'] = JFactory::$acl;
-		$this->_stashedFactoryState['mailer'] = JFactory::$mailer;
-		$this->_stashedFactoryState['database'] = JFactory::$database;
+		$this->_stashedFactoryState['application'] = Factory::$application;
+		$this->_stashedFactoryState['config'] = Factory::$config;
+		$this->_stashedFactoryState['dates'] = Factory::$dates;
+		$this->_stashedFactoryState['session'] = Factory::$session;
+		$this->_stashedFactoryState['language'] = Factory::$language;
+		$this->_stashedFactoryState['document'] = Factory::$document;
+		$this->_stashedFactoryState['acl'] = Factory::$acl;
+		$this->_stashedFactoryState['mailer'] = Factory::$mailer;
+		$this->_stashedFactoryState['database'] = Factory::$database;
 	}
 
 	/**

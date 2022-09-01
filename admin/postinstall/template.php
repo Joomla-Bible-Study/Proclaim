@@ -3,7 +3,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2019 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2022 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 use Joomla\Registry\Registry;
 
 // Always load JBSM API if it exists.
-$api = JPATH_ADMINISTRATOR . '/components/com_biblestudy/api.php';
+$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
 if (file_exists($api))
 {
@@ -33,7 +33,7 @@ function Admin_Postinstall_Template_condition()
 {
 	$results = null;
 
-	$db = JFactory::getDbo();
+	$db = Factory::getContainer()->get('DatabaseDriver');
 	$qurey = $db->getQuery(true);
 	$qurey->select('*')->from('#__bsms_templates');
 	$db->setQuery($qurey);
@@ -75,6 +75,6 @@ function Admin_Postinstall_Template_condition()
  */
 function Admin_Postinstall_Template_action()
 {
-	$url = 'index.php?option=com_biblestudy&view=templates';
-	JFactory::getApplication()->redirect($url);
+	$url = 'index.php?option=com_proclaim&view=templates';
+	Factory::getApplication()->redirect($url);
 }

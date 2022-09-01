@@ -1,6 +1,8 @@
 {
   "dependencies": {
+    "@hapi/cryptiles": ">=5.1.0",
     "csso": "^5.0.2",
+    "@hapi/hoek": "<=9.2.1",
     "less": "^4.1.2"
   }
 }

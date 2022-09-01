@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    BibleStudy.Module
- * @copyright  2007 - 2019 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2022 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
@@ -59,7 +59,7 @@ class Mod_BiblestudyInstallerScript
 	 */
 	public function update($parent)
 	{
-		$db    = JFactory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('*')
 			->from('#__modules')

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="JBS_MNU_SINGLE_STUDY_LAYOUT">
+		<message>
+			<![CDATA[JBS_MNU_SINGLE_STUDY_LAYOUT_DESC]]>
+		</message>
+	</layout>
+	<fields name="request">
+		<fieldset name="request"
+		          addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
+		>
+			<field name="id" type="Modal_Study"
+			       description="JBS_MNU_SELECT_STUDY_DESC"
+			       label="JBS_CMN_SELECT_STUDY"
+			       required="true"
+			/>
+			<field name="t" type="sql"
+			       description="JBS_MNU_SELECT_TEMPLATE_DESC"
+			       label="JBS_MNU_SELECT_TEMPLATE"
+			       default="1"
+			       query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
+			       key_field="id"
+			       value_field="title"
+			       required="true"
+			/>
+			<field
+					name="captcha"
+					type="captcha"
+					label="COM_USERS_CAPTCHA_LABEL"
+					description="COM_USERS_CAPTCHA_DESC"
+					validate="captcha"
+			/>
+		</fieldset>
+	</fields>
+</metadata>
+

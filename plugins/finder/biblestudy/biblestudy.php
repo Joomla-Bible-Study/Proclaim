@@ -39,7 +39,7 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 	 * @var    string
 	 * @since  7.1.0
 	 */
-	protected $extension = 'com_biblestudy';
+	protected $extension = 'com_proclaim';
 
 	/**
 	 * The sublayout to use when rendering the results.
@@ -111,7 +111,7 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 	 */
 	public function onFinderAfterDelete($context, $table)
 	{
-		if ($context == 'com_biblestudy.message')
+		if ($context == 'com_proclaim.message')
 		{
 			$id = $table->id;
 		}
@@ -142,7 +142,7 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 	 */
 	public function onFinderAfterSave($context, $row, $isNew)
 	{
-		if ($context == 'com_biblestudy.message' || $context == 'com_biblestudy.messageform')
+		if ($context == 'com_proclaim.message' || $context == 'com_proclaim.messageform')
 		{
 			// Check if the access levels are different
 
@@ -176,7 +176,7 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 	public function onFinderBeforeSave($context, $row, $isNew)
 	{
 		// We only want to handle sermons here
-		if ($context == 'com_biblestudy.message' || $context == 'com_biblestudy.messageform')
+		if ($context == 'com_proclaim.message' || $context == 'com_proclaim.messageform')
 		{
 			// Query the database for the old access level if the item isn't new
 			if (!$isNew)
@@ -204,7 +204,7 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 	public function onFinderChangeState($context, $pks, $value)
 	{
 		// We only want to handle sermons here
-		if ($context == 'com_biblestudy.message' || $context == 'com_biblestudy.messageform')
+		if ($context == 'com_proclaim.message' || $context == 'com_proclaim.messageform')
 		{
 			$this->itemStateChange($pks, $value);
 		}
@@ -240,7 +240,7 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 		// Initialize the item parameters.
 		$registry = new Registry;
 		$registry->loadString($item->params);
-		$item->params = JComponentHelper::getParams('com_biblestudy', true);
+		$item->params = JComponentHelper::getParams('com_proclaim', true);
 		$item->params->merge($registry);
 
 		$registry = new Registry;
@@ -301,10 +301,10 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 	protected function setup()
 	{
 		// Load dependent classes.
-		JLoader::register('JBSMHelperRoute', JPATH_SITE . '/components/com_biblestudy/helpers/route.php');
+		JLoader::register('JBSMHelperRoute', JPATH_SITE . '/components/com_proclaim/helpers/route.php');
 
 		// This is a hack to get around the lack of a route helper.
-		FinderIndexerHelper::getContentPath('index.php?option=com_biblestudy');
+		FinderIndexerHelper::getContentPath('index.php?option=com_proclaim');
 
 		return true;
 	}
@@ -345,7 +345,7 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 	 */
 	protected function getListQuery($sql = null)
 	{
-		$db = JFactory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 
 		// Check if we can use the supplied SQL query.
 		$sql = $sql instanceof JDatabaseQuery ? $sql : $db->getQuery(true);

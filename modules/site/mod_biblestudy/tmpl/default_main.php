@@ -12,12 +12,12 @@ defined('_JEXEC') or die;
 
 $show_link = $params->get('show_link', 1);
 
-JLoader::register('JBSMHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . 'helper.php');
-JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/listing.php');
+JLoader::register('CWMHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . 'helper.php');
+JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/CWMListing.php');
 $JBSMListing = new JBSMListing;
 
 // Load CSS framework for displaying properly.
-JHtml::_('biblestudy.framework');
+JHtml::_('proclaim.framework');
 JHtml::_('biblestudy.loadCss', $params, null, 'font-awesome');
 
 ?>
@@ -27,7 +27,7 @@ JHtml::_('biblestudy.loadCss', $params, null, 'font-awesome');
 		?>
 		<div class="row-fluid">
 			<div class="span12">
-				<?php echo JHtml::_('content.prepare', $params->get('pageheader'), '', 'com_biblestudy.module'); ?>
+				<?php echo JHtml::_('content.prepare', $params->get('pageheader'), '', 'com_proclaim.module'); ?>
 			</div>
 		</div>
 	<?php

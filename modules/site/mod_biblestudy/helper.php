@@ -33,10 +33,10 @@ class ModJBSMHelper
 	 */
 	public static function getLatest($params)
 	{
-		$user   = JFactory::getUser();
+		$user   = $user = Factory::getApplication()->getSession()->get('user');
 		$groups = implode(',', $user->getAuthorisedViewLevels());
 
-		$db = JFactory::getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$db->setQuery('SET SQL_BIG_SELECTS=1');
 		$db->execute();
 		$query            = $db->getQuery(true);
@@ -136,10 +136,10 @@ class ModJBSMHelper
 
 		// Define null and now dates
 		$nullDate = $db->quote($db->getNullDate());
-		$nowDate  = $db->quote(JFactory::getDate()->toSql(true));
+		$nowDate  = $db->quote(Factory::getDate()->toSql(true));
 
 		// Filter by start and end dates.
-		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) && (!$user->authorise('core.edit', 'com_biblestudy')))
+		if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise('core.edit', 'com_proclaim')))
 		{
 			$query->where('(study.publish_up = ' . $nullDate . ' OR study.publish_up <= ' . $nowDate . ')')
 				->where('(study.publish_down = ' . $nullDate . ' OR study.publish_down >= ' . $nowDate . ')');
@@ -313,11 +313,11 @@ class ModJBSMHelper
 		}
 
 		// Filter by language
-		$lang = JFactory::getLanguage();
+		$lang = Factory::getLanguage();
 
 		if ($lang || $language != '*')
 		{
-			$query->where('study.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
+			$query->where('study.language in (' . $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
 		}
 
 		$filters = $messagetype_menu;

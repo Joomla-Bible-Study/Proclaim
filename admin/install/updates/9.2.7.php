@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    Proclaim.Admin
- * @copyright  2007 - 2019 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2022 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  */
@@ -73,7 +73,7 @@ class Migration927
 		jimport('joomla.filesystem.file');
 
 		$path = array(
-			'/administrator/components/com_biblestudy/addons/servers/local/local.php'
+			'/administrator/components/com_proclaim/addons/servers/local/local.php'
 		);
 
 		foreach ($path as $file)

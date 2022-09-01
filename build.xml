@@ -200,10 +200,10 @@
 		<echo message="Linking component to Joomla!"/>
 
 		<!-- Create symbolic links for component in the Joomla directory -->
-		<symlink target="${basedir}/media" link="${joomla_path}${joomla_dir}/media/com_biblestudy" overwrite="true"/>
-		<symlink target="${basedir}/admin" link="${joomla_path}${joomla_dir}/administrator/components/com_biblestudy"
+		<symlink target="${basedir}/media" link="${joomla_path}${joomla_dir}/media/com_proclaim" overwrite="true"/>
+		<symlink target="${basedir}/admin" link="${joomla_path}${joomla_dir}/administrator/components/com_proclaim"
 		         overwrite="true"/>
-		<symlink target="${basedir}/site" link="${joomla_path}${joomla_dir}/components/com_biblestudy"
+		<symlink target="${basedir}/site" link="${joomla_path}${joomla_dir}/components/com_proclaim"
 		         overwrite="true"/>
 		<symlink target="${basedir}/modules/site/mod_biblestudy"
 		         link="${joomla_path}${joomla_dir}/modules/mod_biblestudy" overwrite="true"/>
@@ -232,10 +232,10 @@
 		<echo message="Linking component, modules, and plugins to Joomla!"/>
 
 		<!-- Create symbolic links for component in the Joomla directory -->
-		<symlink target="${basedir}/media" link="${joomla_path}${joomla_dir}/media/com_biblestudy" overwrite="true"/>
-		<symlink target="${basedir}/admin" link="${joomla_path}${joomla_dir}/administrator/components/com_biblestudy"
+		<symlink target="${basedir}/media" link="${joomla_path}${joomla_dir}/media/com_proclaim" overwrite="true"/>
+		<symlink target="${basedir}/admin" link="${joomla_path}${joomla_dir}/administrator/components/com_proclaim"
 		         overwrite="true"/>
-		<symlink target="${basedir}/site" link="${joomla_path}${joomla_dir}/components/com_biblestudy"
+		<symlink target="${basedir}/site" link="${joomla_path}${joomla_dir}/components/com_proclaim"
 		         overwrite="true"/>
 		<symlink target="${basedir}/modules/site/mod_biblestudy"
 		         link="${joomla_path}${joomla_dir}/modules/mod_biblestudy" overwrite="true"/>
@@ -255,9 +255,9 @@
 	<!-- Create symbolic links for the development state -->
 	<target name="dev.init">
 		<echo message="Initializing a development state"/>
-		<symlink target="${basedir}/biblestudy.xml" link="${basedir}/admin/biblestudy.xml" overwrite="true"/>
-		<symlink target="${basedir}/biblestudy.script.php" link="${basedir}/admin/biblestudy.script.php"
-		         overwrite="true"/>
+		<symlink target="${basedir}/biblestudy.xml" link="/admin/proclaim.xml" overwrite="true"/>
+		<symlink target="/proclaim.script.php" link="${basedir}/admin/biblestudy.script.php"
+                 overwrite="true"/>
 		<mkdir dir="${basedir}/media/css/site"/>
 		<symlink target="${basedir}/media/css/biblestudy.css" link="${basedir}/media/css/site/biblestudy.css"
 		         overwrite="true"/>
@@ -266,7 +266,7 @@
 	<!-- Clean up symbolic links from the development state -->
 	<target name="dev.clean">
 		<echo message="Cleaning up development state"/>
-		<delete file="${basedir}/admin/biblestudy.xml"/>
+		<delete file="/admin/proclaim.xml"/>
 		<delete file="${basedir}/admin/biblestudy.script.php"/>
 		<delete file="${basedir}/media/css/site/biblestudy.css"/>
 

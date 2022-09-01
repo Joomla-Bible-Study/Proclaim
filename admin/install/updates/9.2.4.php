@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    Proclaim.Admin
- * @copyright  2007 - 2019 (C) CWM Team All rights reserved
+ * @copyright  2007 - 2022 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  */
@@ -73,12 +73,12 @@ class Migration924
 		jimport('joomla.filesystem.file');
 
 		$path = array(
-			'/administrator/components/com_biblestudy/addons/servers/legacy/fields/filesize.php',
-			'/administrator/components/com_biblestudy/addons/servers/local/fields/filesize.php',
-			'/administrator/components/com_biblestudy/models/upload.php',
-			'/administrator/components/com_biblestudy/convert1.htm',
-			'/components/com_biblestudy/convert1.htm',
-			'/media/com_biblestudy/js/filesize.js',
+			'/administrator/components/com_proclaim/addons/servers/legacy/fields/filesize.php',
+			'/administrator/components/com_proclaim/addons/servers/local/fields/filesize.php',
+			'/administrator/components/com_proclaim/models/UploadController.php',
+			'/administrator/components/com_proclaim/convert1.htm',
+			'/components/com_proclaim/convert1.htm',
+			'/media/com_proclaim/js/filesize.js',
 		);
 
 		foreach ($path as $file)

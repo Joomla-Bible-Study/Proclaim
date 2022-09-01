@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<field
+			name="published"
+			type="list"
+			class="span12 small"
+			id="published"
+			label="JSTATUS"
+			description="JFIELD_PUBLISHED_DESC"
+			size="1"
+			default="1"
+			filter="integer">
+		<option
+				value="1">
+			JPUBLISHED
+		</option>
+		<option
+				value="0">
+			JUNPUBLISHED
+		</option>
+
+		<option
+				value="-2">
+			JTRASHED
+		</option>
+	</field>
+	<field name="title" type="text" label="JBS_PDC_PODCAST_NAME"
+	       description="JBS_PDC_PODCAST_NAME_DESC" size="65" required="true"/>
+	<field name="description" type="textarea" label="JBS_PDC_PODCAST_DESCRIPTION"
+	       size="20" cols="60" rows="5"/>
+	<field name="subtitle" type="textarea" label="JBS_PDC_PODCAST_SUBTITLE"
+	       description="JBS_PDC_PODCAST_SUBTITLE_DESC"
+	       size="20" cols="60" rows="5"/>
+	<field name="website" type="text" label="JBS_PDC_WEBSITE_URL"
+	       size="80"/>
+	<field name="podcastlink" type="text" label="JBS_PDC_PODCAST_URL"
+	       size="80"/>
+	<field name="author" type="text" label="JBS_PDC_PODCAST_AUTHOR"
+	       size="50"/>
+	<field name="editor_name" type="text" label="JBS_PDC_EDITORS_NAME"
+	       size="50"/>
+	<field name="editor_email" type="text" label="JBS_PDC_EDITORS_EMAIL"
+	       size="50"/>
+	<field name="podcastsearch" type="text" label="JBS_PDC_PODCAST_SEARCH_WORDS"
+	       size="80"/>
+	<field name="podcastlanguage" type="language" label="JBS_PDC_PODCAST_LANGUAGE"/>
+	<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
+	       description="JBS_CMN_SELECT_LANGUAGE_DESC" class="inputbox span12">
+		<option value="*">JALL</option>
+	</field>
+	<field name="detailstemplateid" type="templatelist"
+	       label="JBS_PDC_TEMPLATE_FOR_DETAILS_VIEW_LINK"/>
+	<field name="image" type="media" label="JBS_PDC_IMAGE" directory="biblestudy"
+	       description="JBS_PDC_IMAGE_DESC"/>
+	<field name="podcastimage" type="media" label="JBS_PDC_PODCAST_LOGO" directory="biblestudy"
+	       description="JBS_PDC_PODCAST_LOGO_DESC"/>
+	<field name="podcast_image_subscribe" type="media" directory="biblestudy"
+	       label="JBS_PDC_SUBSCRIBE_IMAGE" description="JBS_PDC_SUBSCRIBE_IMAGE_DESC"/>
+
+	<field name="filename" type="text" label="JBS_PDC_PODCAST_XML_FILENAME"
+	       description="JBS_PDC_PODCAST_XML_FILENAME_DESC" size="50" class="span12"/>
+	<field name="podcastlimit" type="text" label="JBS_PDC_NUM_RECORDS_INCLUDE"
+	       size="3" description="JBS_PDC_NUM_RECORDS_INCLUDE_DESC" class="span12"/>
+	<field name="episodetitle" type="list" default="0"
+	       label="JBS_PDC_EPISODE_TITLE" class="span12 small">
+		<option value="0">JBS_PDC_EPISODE_SCRIPTURE_TITLE</option>
+		<option value="1">JBS_PDC_EPISODE_TITLE_ONLY</option>
+		<option value="2">JBS_PDC_EPISODE_SCRIPTURE_ONLY</option>
+		<option value="3">JBS_PDC_EPISODE_TITLE_SCRIPTURE</option>
+		<option value="4">JBS_PDC_EPISODE_DATE_SCRIPTURE_TITLE</option>
+		<option value="6">JBS_PDC_BOOK_CHAPTER</option>
+		<option value="5">JBS_CMN_CUSTOM</option>
+	</field>
+	<field name="custom" type="textarea" label="JBS_CMN_CUSTOM"
+	       description="JBS_PDC_EPISODES_CUSTOM_DESC" size="20" cols="48" rows="2" class="span12"/>
+	<field name="episodesubtitle" type="list" default="0"
+	       label="JBS_PDC_EPISODE_SUBTITLE" class="span12 small">
+		<option value="0">JBS_CMN_TEACHER</option>
+		<option value="1">JBS_PDC_EPISODE_TEACHER_SCRIPTURE</option>
+		<option value="2">JBS_PDC_EPISODE_SCRIPTURE_ONLY</option>
+		<option value="3">JBS_PDC_EPISODE_TITLE_ONLY</option>
+		<option value="4">JBS_PDC_EPISODE_DATE_SCRIPTURE_TITLE</option>
+		<option value="5">JBS_PDC_EPISODE_SCRIPTURE_TITLE</option>
+		<option value="6">JBS_PDC_BOOK_CHAPTER</option>
+		<option value="7">JBS_CMN_CUSTOM</option>
+	</field>
+	<field name="linktype" type="list" default="0"
+	       label="JBS_PDC_LINKTYPE" description="JBS_PDC_LINKTYPE_DESC">
+		<option value="0">JBS_PDC_LINK_EPISODE</option>
+		<option value="1">JBS_PDC_LINK_DIRECT_MEDIA</option>
+		<option value="2">JBS_PDC_LINK_MEDIA_PLAYER</option>
+	</field>
+	<field name="customsubtitle" type="textarea" label="JBS_CMN_CUSTOM"
+	       description="JBS_PDC_EPISODES_CUSTOM_DESC" size="20" cols="48" rows="2" class="span12"/>
+	<field name="rules" type="rules" label="JFIELD_RULES_LABEL"
+	       translate_label="false" class="inputbox" filter="rules" component="com_proclaim"
+	       section="podcast" validate="rules"/>
+	<field name="asset_id" type="hidden" filter="unset"/>
+	<field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
+	       description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"
+	       class="readonly span12 small"/>
+	<field name="podcast_subscribe_desc" type="text" label="JBS_PDC_SUBSCRIBE_WORDS"
+	       description="JBS_PDC_SUBSCRIBE_WORDS_DESC" size="20" default=""/>
+	<field name="alternatelink" type="text" label="JBS_PDC_ALTERNATE_LINK" description="JBS_PDC_ALTERNATE_LINK_DESC"
+	       size="65"/>
+	<field name="alternateimage" type="media" label="JBS_PDC_ALTERNATE_IMAGE" directory="biblestudy"
+	       description="JBS_PDC_ALTERNATE_IMAGE_DESC"/>
+	<field name="alternatewords" type="text" size="20" label="JBS_PDC_ALTERNATE_WORDS"
+	       description="JBS_PDC_ALTERNATE_WORDS_DESC"/>
+	<field name="podcast_subscribe_show" type="list" default="1" label="JBS_PDC_PODCAST_SHOW"
+	       description="JBS_PDC_PODCAST_SHOW_DESC">
+		<option value="1">JBS_PDC_PODCAST_SHOW_NO</option>
+		<option value="2">JBS_PDC_PODCAST_SHOW_MAIN</option>
+		<option value="3">JBS_PDC_PODCAST_SHOW_ALTERNATE</option>
+		<option value="4">JBS_PDC_PODCAST_SHOW_BOTH</option>
+	</field>
+</form>

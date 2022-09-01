@@ -21,6 +21,13 @@ on:
     - cron: '28 2 * * 6'
 
 jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: bubkoo/auto-assign@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CONFIG_FILE: .github/auto-assign.yml
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
