@@ -407,14 +407,14 @@ class CWMPodcast
 						}
 
 						// Make a duration build from Params of media.
-						if (($params->toObject()->media_hours !== '00' && !empty($params->toObject()->media_hours))
-							&& ($params->toObject()->media_minutes !== '00' && !empty($params->toObject()->media_minutes))
-							&& ($params->toObject()->media_seconds !== '00' && !empty($params->toObject()->media_seconds))
+						if (($episode->params->toObject()->media_hours !== '00' && !empty($episode->params->toObject()->media_hours))
+							|| ($episode->params->toObject()->media_minutes !== '00' && !empty($episode->params->toObject()->media_minutes))
+							|| ($episode->params->toObject()->media_seconds !== '00' && !empty($episode->params->toObject()->media_seconds))
 						)
 						{
-							$duration = $episode->params->get('media_hours') . ':' .
-								$episode->params->get('media_minutes') .
-								':' . $episode->params->get('media_seconds');
+							$duration = $episode->params->get('media_hours', '00') . ':' .
+								$episode->params->get('media_minutes', '00') .
+								':' . $episode->params->get('media_seconds', '00');
 						}
 						else
 						{
