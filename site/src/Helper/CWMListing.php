@@ -1135,8 +1135,7 @@ $thadd = '';
 	 */
 	public function getFluidData($item, $row, $params, $template, int $header, $type)
 	{
-		$smenu = '';
-		$tmenu = '';
+
 		/** @var string $data */
 		$data = '';
 
@@ -1818,7 +1817,7 @@ $thadd = '';
 					$item->teacher_id = $item->id;
 				}
 
-				$link = $this->getLink($row->linktype, $item->id, $item->teacher_id, $smenu, $tmenu, $params, $item, $template);
+				$link = $this->getLink($row->linktype, $item->id, $item->teacher_id, $params, $item, $template);
 			}
 		}
 
@@ -2469,7 +2468,7 @@ $thadd = '';
 	 *
 	 * @since 7.0
 	 */
-	private function getLink($islink, $id3, $tid, $smenu = null, $tmenu = null, $params, $row, $templateid)
+	private function getLink($islink, $id3, $tid, $params, $row, $templateid)
 	{
 		$input = new Input;
 		$view   = $input->getString('view', '');
