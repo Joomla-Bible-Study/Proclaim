@@ -14,6 +14,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 use CWM\Component\Proclaim\Administrator\Table\CWMTemplateTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
@@ -47,7 +48,12 @@ class CWMTemplateModel extends AdminModel
 
 			return false;
 		}
-
+        $image = HTMLHelper::cleanImageURL($data['text']);
+        $data['text'] = $image->url;
+        $image = HTMLHelper::cleanImageURL($data['show_page_image_series']);
+        $data['show_page_image_series'] = $image->url;
+        $image = HTMLHelper::cleanImageURL($data['popupimage']);
+        $data['popupimage'] = $image->url;
 		return parent::save($data);
 	}
 

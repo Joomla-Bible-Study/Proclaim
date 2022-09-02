@@ -13,9 +13,11 @@ defined('_JEXEC') or die;
 use CWM\Component\Proclaim\Site\Helper\CWMListing;
 use CWM\Component\Proclaim\Site\Helper\CWMTeacher;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\HTML\HTMLHelper;
 
 $CWMTeacher   = new CWMTeacher;
 $teachers     = $CWMTeacher->getTeachersFluid($this->params);
@@ -23,6 +25,8 @@ $listing      = new CWMListing;
 $classelement = $listing->createelement($this->params->get('studies_element'));
 $app          = Factory::getApplication();
 $itemid       = $app->input->get('Itemid');
+
+
 ?>
 
 <div class="container">
@@ -49,11 +53,11 @@ $itemid       = $app->input->get('Itemid');
 						if ($this->params->get('teacherlink') > 0)
 						{
 							echo '<a href="' . Route::_('index.php?option=com_proclaim&view=CWMTeacher&id=' . $teacher['id'] . '&t=' . $teacher['t'] . '&Itemid=' . $itemid) . '" >
-							<img class="img-polaroid" src="' . Uri::base() . 'media/com_proclaim/' . $teacher['image'] . '" alt="Teachers Image"></a>';
+							<img class="img-polaroid" src="' . Uri::base() . $teacher['image'] . '" alt="Teachers Image"></a>';
 						}
 						else
 						{
-							echo '<img class="img-polaroid" src="' . Uri::base() . 'media/com_proclaim/' . $teacher['image'] . '">';
+							echo '<img class="img-polaroid" src="' . Uri::base() . $teacher['image'] . '">';
 						}
 						if ($this->params->get('teacherlink') > 0)
 						{
