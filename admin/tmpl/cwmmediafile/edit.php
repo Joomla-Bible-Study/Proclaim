@@ -59,7 +59,7 @@ $this->useCoreUI = true;
 		<?php echo HTMLHelper::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
 
 		<!-- Begin Content -->
-		<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'general', JText::_('JBS_CMN_GENERAL')); ?>
+		<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'general', Text::_('JBS_CMN_GENERAL')); ?>
 		<div class="row">
 			<div class="col-lg-7">
 				<div class="control-group">

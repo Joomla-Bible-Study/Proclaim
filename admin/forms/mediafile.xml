@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
+	<fieldset addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
 	<field name="id" type="text" readonly="readonly" class="inputbox"/>
 	<field name="createdate" type="calendar" label="JBS_CMN_CREATE_DATE"
 	       description="JBS_MED_CREATE_DATE_DESC" class="inputbox" size="22"
 	       format="%Y-%m-%d %H:%M:%S" filter="user_utc" required="true"/>
 	<field name="study_id" type="Modal_Study" label="JBS_CMN_STUDY"
-	       description="JBS_MED_CHOOSE_STUDY_DESC" class="inputbox" required="true"/>
+	       description="JBS_MED_CHOOSE_STUDY_DESC" class="list" required="true"/>
 	<field name="comment" type="textarea" rows="4" label="JBS_CMN_COMMENT"
 	       description="JBS_MED_APPEARS_UNDER_FILE_OR_TOOLTIP" class="inputbox"/>
 	<field name="server_id" type="server" label="JBS_CMN_SERVER"
 	       description="JBS_MED_SERVER_DESC" required="true"/>
-	<field name="podcast_id" size="15" type="sql" label="JBS_MED_CHOOSE_PODCAST"
+	<field name="podcast_id"  type="sql" label="JBS_MED_CHOOSE_PODCAST"
 	       description="JBS_MED_CHOOSE_PODCAST_DESC"
 	       query="SELECT id, title FROM #__bsms_podcast WHERE published = 1 ORDER BY title ASC"
 	       key_field="id" value_field="title" multiple="true" default="">
@@ -48,4 +49,5 @@
 
 	<!--Server media specific fields-->
 	<field name="params"/>
+	</fieldset>
 </form>

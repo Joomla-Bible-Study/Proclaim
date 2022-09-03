@@ -399,15 +399,15 @@
 			<option value="1">JBS_CMN_YES</option>
 		</field>
 	</fieldset>
-	<fieldset addfieldpath="/administrator/components/com_proclaim/models/fields"
+	<fieldset addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
 	          addrulepath="/administrator/components/com_proclaim/models/rules">
-		<field name="mediaimage" type="mediafileimages" class="inputbox" labelclass="control-label"
-		       label="JBS_ADM_MEDIA_IMAGES" size="20">
+		<field name="mediaimage" type="mediafileimages" class="list" labelclass="control-label"
+		       label="JBS_ADM_MEDIA_IMAGES" >
 			<option value="-1">JBS_SELECT_IMAGE</option>
 		</field>
 		<field name="media_use_button_icon" label="JBS_ADDON_MEDIA_USE_BUTTON"
-		       description="JBS_ADDON_MEDIA_USE_BUTTON_DESC" class="inputbox" labelclass="control-label"
-		       type="list" size="15" required="true" default="x"
+		       description="JBS_ADDON_MEDIA_USE_BUTTON_DESC" class="list" labelclass="control-label"
+		       type="list" required="true" default="x"
 		       message="You must choose image, icon, button or button and icon">
 			<option value="x">JBS_ADM_SELECT_NEW_OPTION</option>
 			<option value="">JBS_MED_NONE</option>
@@ -417,7 +417,7 @@
 		</field>
 		<field name="media_button_text" type="text" default="Audio" label="JBS_ADDON_BUTTON_TEXT"
 		       description="JBS_ADDON_BUTTON_TEXT_DESC" class="inputbox" labelclass="control-label"/>
-		<field name="media_button_type" type="list" class="inputbox" labelclass="control-label" size="15" default=""
+		<field name="media_button_type" type="list" class="list" labelclass="control-label" default=""
 		       label="JBS_ADDON_BUTTON_TYPE"
 		       description="JBS_ADDON_BUTTON_TYPE_DESC">
 			<option value="btn-link">JBS_MED_NO_COLOR</option>
@@ -429,7 +429,7 @@
 		</field>
 		<field name="media_button_color" type="color" description="JBS_ADDON_BUTTON_COLOR_DESC"
 		       label="JBS_ADDON_BUTTON_COLOR" class="inputbox" labelclass="control-label"/>
-		<field name="media_icon_type" type="IconType" class="inputbox" labelclass="control-label" size="15" default=""
+		<field name="media_icon_type" type="icontype" class="list" labelclass="control-label" default=""
 		       label="JBS_ADDON_ICON_TYPE"
 		       description="JBS_ADDON_ICON_TYPE_DESC">
 		</field>

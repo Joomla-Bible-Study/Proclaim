@@ -32,7 +32,7 @@ class icontypeField extends ListField
 	 *
 	 * @since 7.0
 	 */
-	protected $type = 'IconType';
+	protected $type = 'icontype';
 
 	/**
 	 * Method to get the field input markup for a generic list.

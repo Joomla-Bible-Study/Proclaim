@@ -18,6 +18,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\MVC\Model\ListModel;
+use CWM\Component\Proclaim\Administrator\Model\CWMServersModel;
 
 /**
  * Field class for Server
@@ -47,8 +48,26 @@ class serverField extends ListField
 		$size = ($v = $this->element['size']) ? ' size="' . $v . '"' : '';
 
 		// Get a reverse lookup of the server id to server name
-		$model  = ListModel::getInstance('CWMServers', 'Model');
-		$rlu    = $model->getIdToNameReverseLookup();
+        $db = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery('true');
+        $query->select('*')
+            ->from('#__bsms_servers as s')
+            ->where('s.published = 1');
+        $db->setQuery($query);
+        $servs = $db->loadObjectList();
+        $rlu = array();
+
+        foreach ($servs as $serv)
+        {
+            $rlu[$serv->id] = array(
+                'name' => $serv->server_name,
+                'type' => $serv->type
+            );
+        }
+
+		//$model  = ListModel::getInstance('CWMServers', 'Model');
+       //$rlu = CWMServersModel::getInstance('List')->getIdToNameReverseLookup();
+		//$rlu    = $model->get->IdToNameReverseLookup();
 		$server = ArrayHelper::getValue($rlu, $this->value);
 
 		// Build the script.

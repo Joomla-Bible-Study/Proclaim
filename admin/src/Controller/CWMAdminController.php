@@ -14,8 +14,13 @@ defined('_JEXEC') or die;
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMAlias;
 use CWM\Component\Proclaim\Administrator\Helper\CWMDbHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CWMThumbnail;
 use CWM\Component\Proclaim\Administrator\Lib\CWMBackup;
+use CWM\Component\Proclaim\Administrator\Lib\CWMPIconvert;
+use CWM\Component\Proclaim\Administrator\Lib\CWMRestore;
+use CWM\Component\Proclaim\Administrator\Lib\CWMSSConvert;
 use CWM\Component\Proclaim\Administrator\Model\AdminModel;
+use JLoader;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Language\Text;

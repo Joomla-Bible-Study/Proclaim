@@ -333,7 +333,7 @@ class CWMAdminModel extends AdminModel
 		}
 
 		// Delete old row
-		$db    = $this->getDbo();
+        $db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true)
 			->delete($db->qn('#__schemas'))
 			->where($db->qn('extension_id') . ' = ' . $db->q($extensionresult));
@@ -369,7 +369,7 @@ class CWMAdminModel extends AdminModel
 	public function getCompVersion()
 	{
 		$jversion = null;
-		$file     = JPATH_ADMINISTRATOR . '/components/com_proclaim/biblestudy.xml';
+		$file     = JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.xml';
 		$xml      = simplexml_load_string(file_get_contents($file));
 
 		if ($xml)
@@ -484,7 +484,7 @@ class CWMAdminModel extends AdminModel
 	 */
 	public function fixUpdateJBSMVersion()
 	{
-		$db    = $this->getDbo();
+        $db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('id, version')
 			->from('#__bsms_update')
