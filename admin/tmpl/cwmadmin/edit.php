@@ -605,7 +605,11 @@ $this->useCoreUI = true;
 		<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'convert', Text::_('JBS_IBM_CONVERT')); ?>
 		<div class="row" id="convert">
 			<h4><?php echo Text::_('JBS_IBM_CONVERT'); ?></h4>
-			<h3><?php echo Text::_('CONVERSION_NOT_AVAILABLE_IN_900'); ?></h3>
+            <a href="<?php echo Route::_('index.php?option=com_proclaim&view=assets&task=cwmadmin.convertSermonSpeaker&' .
+                JSession::getFormToken() . '=1'); ?>"
+               title="<?php echo Text::_('JBS_IBM_CONVERT_SERMON_SPEAKER'); ?>" class="btn"> <i
+                        class="icon-big icon-book"> </i>
+                <span><br/> <?php echo Text::_('JBS_IBM_CONVERT_SERMON_SPEAKER'); ?> </span></a>
 			<a href="<?php echo Route::_('index.php?option=com_proclaim&view=assets&task=cwmadmin.convertPreachIt&' .
 				JSession::getFormToken() . '=1'); ?>"
 			   title="<?php echo Text::_('JBS_ADM_PREACHIT'); ?>" class="btn"> <i
@@ -614,76 +618,6 @@ $this->useCoreUI = true;
 		</div>
 		<?php echo HTMLHelper::_('uitab.endTab'); ?>
 
-		<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'images', Text::_('JBS_IBM_IMAGES')); ?>
-		<div class="row" id="images">
-			<div class="span12"><h3><?php echo Text::_('JBS_IBM_IMAGES'); ?></h3></div>
-			<div class="span6">
-				<h4 class="tab-description"><?php echo Text::_('JBS_IBM_OLD_IMAGES'); ?></h4>
-				<div class="control-group">
-					<?php echo $this->form->getLabel('mediaimage'); ?>
-					<div class="controls">
-						<?php echo $this->form->getInput('mediaimage'); ?>
-					</div>
-				</div>
-			</div>
-			<div class="span6">
-				<h4 class="tab-description"><?php echo Text::_('JBS_IBM_NEW_IMAGES'); ?></h4>
-				<div class="control-group">
-					<?php echo $this->form->getLabel('media_use_button_icon'); ?>
-					<div class="controls">
-						<?php echo $this->form->getInput('media_use_button_icon'); ?>
-					</div>
-				</div>
-				<div class="control-group">
-					<?php echo $this->form->getLabel('media_button_text'); ?>
-					<div class="controls">
-						<?php echo $this->form->getInput('media_button_text'); ?>
-					</div>
-				</div>
-				<div class="control-group">
-					<?php echo $this->form->getLabel('media_button_type'); ?>
-					<div class="controls">
-						<?php echo $this->form->getInput('media_button_type'); ?>
-					</div>
-				</div>
-				<div class="control-group">
-					<?php echo $this->form->getLabel('media_button_color'); ?>
-					<div class="controls">
-						<?php echo $this->form->getInput('media_button_color'); ?>
-					</div>
-				</div>
-				<div class="control-group">
-					<?php echo $this->form->getLabel('media_icon_type'); ?>
-					<div class="controls">
-						<?php echo $this->form->getInput('media_icon_type'); ?>
-					</div>
-				</div>
-				<div class="control-group">
-					<?php echo $this->form->getLabel('media_custom_icon'); ?>
-					<div class="controls">
-						<?php echo $this->form->getInput('media_custom_icon'); ?>
-					</div>
-				</div>
-				<div class="control-group">
-					<?php echo $this->form->getLabel('media_icon_text_size'); ?>
-					<div class="controls">
-						<?php echo $this->form->getInput('media_icon_text_size'); ?>
-					</div>
-				</div>
-				<div class="control-group">
-					<?php echo $this->form->getLabel('media_image'); ?>
-					<div class="controls">
-						<?php echo $this->form->getInput('media_image'); ?>
-					</div>
-				</div>
-				<div class="control-group">
-					<button type="button" class="btn btn-primary" onclick="jQuery.submitbutton5(task)">
-						<i class="icon-user icon-white"></i> <?php echo Text::_('JBS_CMN_SUBMIT'); ?>
-					</button>
-				</div>
-			</div>
-		</div>
-		<?php echo HTMLHelper::_('uitab.endTab'); ?>
 
 		<!-- Track thumbnail sizes to fire event if they are changed -->
 		<input type="hidden" id="thumbnail_teacher_size_old"

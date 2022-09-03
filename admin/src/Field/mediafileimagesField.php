@@ -219,7 +219,8 @@ class mediafileimagesField extends ListField
 			&& !empty($media->params->get('media_icon_type'))
 		)
 		{
-			return Text::_($mimetypes[$media->params->get('media_icon_type')]);
+			$mime = Text::_($mimetypes[$media->params->get('media_icon_type')]) ?? "";
+            return $mime;
 		}
 
 		return $media->params->get('media_custom_icon');
