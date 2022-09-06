@@ -7,6 +7,8 @@
  * */
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
 use Joomla\Registry\Registry;
 
 /**
@@ -15,7 +17,7 @@ use Joomla\Registry\Registry;
  * @package  Proclaim.Admin
  * @since    9.0.1
  */
-class Mod_BiblestudyInstallerScript
+class JoomlaInstallerScript
 {
 	/**
 	 * Method to install the extension
@@ -82,8 +84,8 @@ class Mod_BiblestudyInstallerScript
 				$filecontent           = '<?php defined(\'_JEXEC\') or die; ?>' . $dataheaderlist . '<?php foreach ($list as $study){ ?>' .
 					$dataitemlist . '<?php } ?>';
 				$filename              = 'default_moduletemplate_' . $filenumber;
-				$file                  = JPATH_ROOT . '/modules/mod_biblestudy/tmpl/' . $filename . '.php';
-				JFile::write($file, $filecontent);
+				$file                  = JPATH_ROOT . '/modules/mod_proclaim/tmpl/' . $filename . '.php';
+				File::write($file, $filecontent);
 				$profile               = new stdClass;
 				$profile->published    = 1;
 				$profile->type         = 7;

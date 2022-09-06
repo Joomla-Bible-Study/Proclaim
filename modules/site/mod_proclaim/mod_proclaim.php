@@ -10,7 +10,11 @@
  * */
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
+use Joomla\CMS\Helper\ModuleHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
+use CWM\Component\Proclaim\Site\Helper\CWMPagebuilder;
 
 // Always load JBSM API if it exists.
 $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
@@ -29,17 +33,17 @@ $document = Factory::getApplication()->getDocument();
 
 /** @var $params Registry */
 $templatemenuid = $params->get('t');
-$template       = JBSMParams::getTemplateparams($templatemenuid);
-$pagebuilder    = new JBSMPageBuilder;
+$template       = CWMParams::getTemplateparams($templatemenuid);
+$pagebuilder    = new CWMPageBuilder;
 
-$admin        = JBSMParams::getAdmin();
+$admin        = CWMParams::getAdmin();
 /** @var Registry $admin_params */
 $admin_params = $admin->params;
 $admin_params->merge($template->params);
 $admin_params->merge($params);
 $params = $admin_params;
 
-require_once __DIR__ . '/helper.php';
+require_once __DIR__ . '/ModProclaimHelper.php';
 
 $items = ModJBSMHelper::getLatest($params);
 
@@ -143,4 +147,4 @@ else
 	$template = 'default_main';
 }
 
-require JModuleHelper::getLayoutPath('mod_biblestudy', $template);
+require ModuleHelper::getLayoutPath('mod_biblestudy', $template);

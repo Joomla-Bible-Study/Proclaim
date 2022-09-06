@@ -1,5 +1,5 @@
 <?php
-
+namespace CWM\Module\Proclaim\Site\Helper;
 /**
  * Helper for mod_biblestudy.php
  *
@@ -11,6 +11,7 @@
  * */
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 
 /**
@@ -20,7 +21,7 @@ use Joomla\Registry\Registry;
  * @subpackage  Model.BibleStudy
  * @since       7.1.0
  */
-class ModJBSMHelper
+class ModProclaimMHelper
 {
 	/**
 	 * Get Latest

@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="module" version="3.3" method="upgrade" client="site">
-	<name>mod_biblestudy</name>
+
+<extension type="module" version="10.0" method="upgrade" client="site">
+	<name>mod_proclaim</name>
 	<author>CWM Team</author>
 	<authorEmail>info@christianwebministries.org</authorEmail>
 	<authorUrl>https://www.christianwebministries.org</authorUrl>
-	<copyright>(C) 2007 - 2019 Proclaim All rights reserved.</copyright>
-	<version>9.2.6</version>
-	<creationDate>April 6, 2021</creationDate>
+	<copyright>(C) 2007 - 2022 Proclaim All rights reserved.</copyright>
+	<version>10.0.0</version>
+	<creationDate>October 1, 2022</creationDate>
 	<license>http://www.gnu.org/licenses/gpl.html</license>
 	<description>JBS_MDL_DESCRIPTION</description>
+	<namespace>CWM\Module\Proclaim</namespace>
 	<files>
-		<filename module="mod_biblestudy">mod_biblestudy.php</filename>
-		<filename>helper.php</filename>
+		<filename module="mod_proclaim">mod_proclaim.php</filename>
+		<filename>ModProclaimHelper.php</filename>
 		<folder>tmpl</folder>
 		<folder>language</folder>
 	</files>
 	<config>
 		<fields name="params">
 			<fieldset name="basic"
-			          addfieldpath="/administrator/components/com_proclaim/models/fields">
+					  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
 				<field name="dummy" type="loadlanguagefile" default=""/>
 				<field name="t" type="sql" label="JBS_MDL_SELECT_TEMPLATE"
 				       description="JBS_MDL_SELECT_TEMPLATE_DESC" default="1"
@@ -52,7 +54,7 @@
 				</field>
 			</fieldset>
 			<fieldset name="JBS_MDL_FILTERS" label="JBS_MDL_FILTERS"
-			          addfieldpath="/administrator/components/com_proclaim/models/fields">
+					  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
 				<field name="condition" type="radio" default="" label="JBS_MDL_AND_OR"
 				       description="JBS_MDL_AND_OR_DESC">
 					<option value="">JGLOBAL_USE_GLOBAL</option>
@@ -90,7 +92,7 @@
 					<option value="">JGLOBAL_USE_GLOBAL</option>
 					<option value="-1">JBS_CMN_SHOW_ALL</option>
 				</field>
-				<field name="topic_id" type="topicslist" multiple="true" size="10"
+				<field name="topic_id" type="topicslist" multiple="true"
 				       label="JBS_CMN_FILTERS_TOPICS" description="JBS_CMN_FILTERS_DESC"
 				       default="">
 					<option value="">JGLOBAL_USE_GLOBAL</option>
@@ -241,7 +243,7 @@
 				</field>
 			</fieldset>
 			<fieldset name="JBS_TPL_DISPLAY_ITEMS1" label="JBS_TPL_DISPLAY_ITEMS1"
-			          addfieldpath="/administrator/components/com_proclaim/models/fields">
+					  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
 				<field name="listcolor1" type="color" default="" label="JBS_TPL_LISTCOLOR1" description="JBS_TPL_LISTCOLOR_DESC"/>
 				<field name="listcolor2" type="color" default="" label="JBS_TPL_LISTCOLOR2" description="JBS_TPL_LISTCOLOR_DESC"/>
 
@@ -291,7 +293,7 @@
 				<field name="jbsmediacustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
 				<field name="jbsmedialinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 			</fieldset>
-			<fieldset name="JBS_TPL_DISPLAY_ITEMS2" label="JBS_TPL_DISPLAY_ITEMS2" addfieldpath="/administrator/components/com_proclaim/models/fields">
+			<fieldset name="JBS_TPL_DISPLAY_ITEMS2" label="JBS_TPL_DISPLAY_ITEMS2" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
 				<field name="titlerow" type="rowoptions" size="1" default="1" label="JBS_CMN_TITLE" description="JBS_TPL_ROW_DESC"/>
 				<field name="titlecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
 				<field name="titlecolspan" type="spanoptions" default="2" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
@@ -327,7 +329,7 @@
 				<field name="teacher-titlecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
 				<field name="teacher-titlelinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 			</fieldset>
-			<fieldset name="JBS_TPL_DISPLAY_ITEMS3" label="JBS_TPL_DISPLAY_ITEMS3" addfieldpath="/administrator/components/com_proclaim/models/fields">
+			<fieldset name="JBS_TPL_DISPLAY_ITEMS3" label="JBS_TPL_DISPLAY_ITEMS3" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
 				<field name="durationrow" type="rowoptions" size="1" default="0" label="JBS_CMN_DURATION" description="JBS_TPL_ROW_DESC"/>
 				<field name="durationcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
 				<field name="durationcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
@@ -363,7 +365,7 @@
 				<field name="seriesdescriptioncustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
 				<field name="seriesdescriptionlinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 			</fieldset>
-			<fieldset name="JBS_TPL_DISPLAY_ITEMS4" label="JBS_TPL_DISPLAY_ITEMS4" addfieldpath="/administrator/components/com_proclaim/models/fields">
+			<fieldset name="JBS_TPL_DISPLAY_ITEMS4" label="JBS_TPL_DISPLAY_ITEMS4" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
 				<field name="submittedrow" type="rowoptions" size="1" default="0" label="JBS_CMN_SUBMITTED_BY" description="JBS_TPL_ROW_DESC"/>
 				<field name="submittedcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
 				<field name="submittedcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
@@ -385,7 +387,7 @@
 				<field name="downloadscustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
 				<field name="downloadslinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 			</fieldset>
-			<fieldset name="JBS_TPL_DISPLAY_ITEMS5" label="JBS_TPL_DISPLAY_ITEMS5" addfieldpath="/administrator/components/com_proclaim/models/fields">
+			<fieldset name="JBS_TPL_DISPLAY_ITEMS5" label="JBS_TPL_DISPLAY_ITEMS5" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
 				<field name="studynumberrow" type="rowoptions" size="1" default="0" label="JBS_CMN_STUDYNUMBER" description="JBS_TPL_ROW_DESC"/>
 				<field name="studynumbercol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
 				<field name="studynumbercolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
@@ -407,7 +409,7 @@
 				<field name="locationscustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
 				<field name="locationslinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 			</fieldset>
-			<fieldset name="JBS_TPL_DISPLAY_ITEMS6" label="JBS_TPL_DISPLAY_ITEMS6" addfieldpath="/administrator/components/com_proclaim/models/fields">
+			<fieldset name="JBS_TPL_DISPLAY_ITEMS6" label="JBS_TPL_DISPLAY_ITEMS6" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
 				<field name="messagetyperow" type="rowoptions" size="1" default="0" label="JBS_CMN_MESSAGETYPE" description="JBS_TPL_ROW_DESC"/>
 				<field name="messagetypecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
 				<field name="messagetypecolspan" type="spanoptions" default="6" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
