@@ -10,13 +10,14 @@
 // No Direct Access
 namespace CWM\Component\Proclaim\Administrator\Field;
 
+use JFormHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 
 defined('_JEXEC') or die;
-
+JFormHelper::loadFieldClass('list');
 /**
  * Location List Form Field class for the Proclaim component
  *

@@ -407,7 +407,7 @@
 		</field>
 		<field name="media_use_button_icon" label="JBS_ADDON_MEDIA_USE_BUTTON"
 		       description="JBS_ADDON_MEDIA_USE_BUTTON_DESC" class="list" labelclass="control-label"
-		       type="list" required="true" default="x"
+		       type="list" required="false" default="x"
 		       message="You must choose image, icon, button or button and icon">
 			<option value="x">JBS_ADM_SELECT_NEW_OPTION</option>
 			<option value="">JBS_MED_NONE</option>

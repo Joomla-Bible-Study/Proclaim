@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Mod_Biblestudy core file
  *
@@ -11,11 +12,13 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Router\Route;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Helper\ModuleHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 use CWM\Component\Proclaim\Site\Helper\CWMPagebuilder;
-
+use CWM\Module\Proclaim\Site\Helper\ModProclaimHelper;
 // Always load JBSM API if it exists.
 $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
@@ -43,9 +46,7 @@ $admin_params->merge($template->params);
 $admin_params->merge($params);
 $params = $admin_params;
 
-require_once __DIR__ . '/ModProclaimHelper.php';
-
-$items = ModJBSMHelper::getLatest($params);
+$items = ModProclaimHelper::getLatest($params);
 
 // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 $user   = $user = Factory::getApplication()->getSession()->get('user');
@@ -107,23 +108,24 @@ if ($params->get('useexpert_module') > 0 || is_string($params->get('moduletempla
 
 $list      = $items;
 $link_text = $params->get('pagetext');
-$jinput    = new JInput;
 
+$input = Factory::getApplication()->input;
 if (!$templatemenuid)
 {
-	$templatemenuid = $jinput->getInt('templatemenuid', 1);
+	$templatemenuid = $input->getInt('templatemenuid', 1);
 }
 
-$linkurl  = JRoute::_('index.php?option=com_proclaim&view=sermons&t=' . $templatemenuid);
+$linkurl  = Route::_('index.php?option=com_proclaim&view=cwmsermons&t=' . $templatemenuid);
 $link     = '<a href="' . $linkurl . '"><button class="btn">' . $link_text . '</button></a>';
 $document = Factory::getApplication()->getDocument();
-
-JHtml::_('proclaim.framework');
-JHtml::_('biblestudy.loadcss', $params);
+HtmlHelper::_('proclaim.framework');
+//$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+//$wa->useStyle('com_proclaim.cwmcore');
+//$wa->useStyle('com_proclaim.general');
 $config = JComponentHelper::getParams('com_proclaim');
 
 // We need to load the path to the helper files
-$path1 = JPATH_BASE . '/components/com_proclaim/helpers/';
+//$path1 = JPATH_BASE . '/components/com_proclaim/helpers/';
 $url   = $params->get('stylesheet');
 
 if ($url)
@@ -131,7 +133,7 @@ if ($url)
 	$document->addStyleSheet($url);
 }
 
-JHtml::_('biblestudy.loadCss', $params, null, 'font-awesome');
+//HtmlHelper::_('biblestudy.loadCss', $params, null, 'font-awesome');
 $pageclass_sfx = $params->get('pageclass_sfx');
 
 if ($params->get('simple_mode') === '1')
@@ -147,4 +149,4 @@ else
 	$template = 'default_main';
 }
 
-require ModuleHelper::getLayoutPath('mod_biblestudy', $template);
+require ModuleHelper::getLayoutPath('mod_proclaim', $template);

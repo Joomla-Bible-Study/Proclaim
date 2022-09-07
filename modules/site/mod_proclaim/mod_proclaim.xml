@@ -10,17 +10,16 @@
 	<creationDate>October 1, 2022</creationDate>
 	<license>http://www.gnu.org/licenses/gpl.html</license>
 	<description>JBS_MDL_DESCRIPTION</description>
-	<namespace>CWM\Module\Proclaim</namespace>
+	<namespace path="src">CWM\Module\Proclaim</namespace>
 	<files>
 		<filename module="mod_proclaim">mod_proclaim.php</filename>
-		<filename>ModProclaimHelper.php</filename>
 		<folder>tmpl</folder>
+		<folder>Helper</folder>
 		<folder>language</folder>
 	</files>
 	<config>
 		<fields name="params">
-			<fieldset name="basic"
-					  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
+			<fieldset name="basic" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
 				<field name="dummy" type="loadlanguagefile" default=""/>
 				<field name="t" type="sql" label="JBS_MDL_SELECT_TEMPLATE"
 				       description="JBS_MDL_SELECT_TEMPLATE_DESC" default="1"
@@ -53,14 +52,7 @@
 					<option value="1">JBS_TPL_SHOW_VERSES_AND_CHAPTERS</option>
 				</field>
 			</fieldset>
-			<fieldset name="JBS_MDL_FILTERS" label="JBS_MDL_FILTERS"
-					  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-				<field name="condition" type="radio" default="" label="JBS_MDL_AND_OR"
-				       description="JBS_MDL_AND_OR_DESC">
-					<option value="">JGLOBAL_USE_GLOBAL</option>
-					<option value="0">JBS_MDL_OR</option>
-					<option value="1">JBS_MDL_AND</option>
-				</field>
+			<fieldset name="JBS_MDL_FILTERS" label="JBS_MDL_FILTERS" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
 				<field name="order"
 				       type="list"
 				       label="JBS_CMN_ORDERING"
@@ -79,7 +71,7 @@
 					<option value="">JGLOBAL_USE_GLOBAL</option>
 					<option value="-1">JBS_CMN_SHOW_ALL</option>
 				</field>
-				<field name="series_id" type="serieslist" multiple="true" default=""
+				<field name="series_id" type="series" multiple="true" default=""
 				       label="JBS_CMN_FILTERS_SERIES" description="JBS_CMN_FILTERS_DESC">
 					<option value="">JGLOBAL_USE_GLOBAL</option>
 					<option value="-1">JBS_CMN_SHOW_ALL</option>
@@ -98,18 +90,20 @@
 					<option value="">JGLOBAL_USE_GLOBAL</option>
 					<option value="-1">JBS_CMN_SHOW_ALL</option>
 				</field>
-				<field name="messagetype" type="messagetypelist" multiple="true"
-				       label="JBS_CMN_FILTERS_MESSAGETYPES" description="JBS_CMN_FILTERS_DESC"
-				       default="">
-					<option value="">JGLOBAL_USE_GLOBAL</option>
-					<option value="-1">JBS_CMN_SHOW_ALL</option>
-				</field>
-				<field name="locations" type="locationslist" multiple="true"
+
+				<field name="locations" type="locations" multiple="true"
 				       label="JBS_CMN_FILTERS_LOCATIONS" description="JBS_CMN_FILTERS_DESC"
 				       default="">
 					<option value="">JGLOBAL_USE_GLOBAL</option>
 					<option value="-1">JBS_CMN_SHOW_ALL</option>
 				</field>
+				<field name="messagetype" type="messagetypeList" multiple="true"
+					   label="JBS_CMN_FILTERS_MESSAGETYPES" description="JBS_CMN_FILTERS_DESC"
+					   default="">
+					<option value="">JGLOBAL_USE_GLOBAL</option>
+					<option value="-1">JBS_CMN_SHOW_ALL</option>
+				</field>
+
 				<field name="year" type="sql" default="" multiple="true"
 				       label="JBS_CMN_FILTERS_YEARS" description="JBS_CMN_FILTERS_DESC"
 				       query="SELECT DISTINCT(YEAR(studydate)) as date FROM #__bsms_studies ORDER BY studydate DESC"
@@ -207,15 +201,11 @@
 			<fieldset name="JBS_MDL_MORE_SETTINGS" label="JBS_MDL_MORE_SETTINGS">
 				<field name="use_headers_module" type="list" default=""
 				       label="JBS_TPL_LISTITEMS_USE_HEADERS_LIST" description="JBS_TPL_LISTITEMS_USE_HEADERS_LIST_DESC">
-					<option value="">JGLOBAL_USE_GLOBAL</option>
 					<option value="0">JBS_TPL_NO_HEADER_ROW</option>
 					<option value="1">JBS_TPL_USE_HEADER_ROW</option>
 				</field>
 				<field name="pageheader" filter="raw" type="editor" rows="10" buttons="true"
 				       cols="75" label="JBS_MDL_HEADER_TEXT" description="JBS_MDL_HEADER_TEXT_DESC"/>
-				<field name="store_page" type="text" default="flypage.tpl"
-				       label="JBS_MDL_MEDIA_STORE_PAGE" description="JBS_MDL_MEDIA_STORE_PAGE_DESC"
-				       size="60"/>
 				<field name="duration_type" type="list" default=""
 				       label="JBS_TPL_VERSES_DURATION_TYPE" description="JBS_TPL_VERSES_DURATION_TYPE_DESC">
 					<option value="">JGLOBAL_USE_GLOBAL</option>
@@ -242,29 +232,7 @@
 					<option value="9">JBS_TPL_DATE_FORMAT_YYYY_MM_DD</option>
 				</field>
 			</fieldset>
-			<fieldset name="JBS_TPL_DISPLAY_ITEMS1" label="JBS_TPL_DISPLAY_ITEMS1"
-					  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-				<field name="listcolor1" type="color" default="" label="JBS_TPL_LISTCOLOR1" description="JBS_TPL_LISTCOLOR_DESC"/>
-				<field name="listcolor2" type="color" default="" label="JBS_TPL_LISTCOLOR2" description="JBS_TPL_LISTCOLOR_DESC"/>
-
-				<field name="rowspanitem" type="list" default="" label="JBS_TPL_ROWSPANITEM" description="JBS_TPL_ROWSPANITEM_DESC">
-					<option value="">JGLOBAL_USE_GLOBAL</option>
-					<option value="0">JBS_TPL_NO_ITEM</option>
-					<option value="1">JBS_TPL_TEACHERAIMGE</option>
-					<option value="2">JBS_TPL_STUDYIMAGE</option>
-					<option value="3">JBS_TPL_SERIESIMAGE</option>
-				</field>
-				<field name="rowspanitemspan" type="spanoptions" default="" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
-				<field name="rowspanitemimage" type="list" default="img-polaroid" label="JBS_TPL_ROWSPANITEMIMAGE" description="JBS_TPL_ROWSPANITEMIMAGE_DESC">
-					<option value="">JBS_TPL_ROWSPANITEMIMAGENONE</option>
-					<option value="img-polaroid">JBS_TPL_ROWSPANITEMIMAGEPOLAROID</option>
-					<option value="img-rounded">JBS_TPL_ROWSPANITEMIMAGEROUNDED</option>
-				</field>
-				<field name="rowspanitempull" type="list" default="pull-left" label="JBS_TPL_ROWSPANITEMPULL" description="JBS_TPL_ROWSPANITEMPULL_DESC">
-					<option value="pull-left">JBS_TPL_PULLLEFT</option>
-					<option value="pull-right">JBS_TPL_PULLRIGHT</option>
-				</field>
-				<field type="spacer" name="myspacera" hr="true"/>
+			<fieldset name="JBS_TPL_DISPLAY_ITEMS1" label="JBS_TPL_DISPLAY_ITEMS1" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
 				<field name="scripture1row" type="rowoptions" default="1" label="JBS_CMN_SCRIPTURE" description="JBS_TPL_ROW_DESC"/>
 				<field name="scripture1col" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
 				<field name="scripture1colspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>

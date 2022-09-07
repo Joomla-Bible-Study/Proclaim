@@ -294,7 +294,7 @@ class CWMMedia
 			{
 				$downloadlink = '<a href="index.php?option=com_proclaim&amp;view=CWMTerms&amp;' .
 					'tmpl=component&amp;layout=modal&amp;compat_mode='
-					. $compat_mode . '&amp;mid=' . $media->id . '&amp;t=' . $template->id
+					. $compat_mode . '&amp;mid=' . intval($media->id) . '&amp;t=' . ($template->id)
 					. '" rel="{handler: \'iframe\', size: {x: 640, y: 480}}">';
 			}
 

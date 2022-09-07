@@ -13,7 +13,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Html\HtmlHelper;
 use Joomla\CMS\Language\Text;
 
-HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 HtmlHelper::_('dropdown.init');
 HtmlHelper::_('behavior.multiselect');
@@ -45,17 +44,11 @@ $columns   = 12;
 
   <div class="row-fluid span12 dropdowns" style="background-color:#A9A9A9; margin:0 -5px; padding:8px 8px; border:1px solid #C5C1BE; position:relative; -webkit-border-radius:10px;">
 
-    <?php
-    //echo $this->page->books;
-    //echo $this->page->teachers;
-    //echo $this->page->series;
-    $oddeven = '';
-	$class1 = '#d3d3d3';
-    $class2 = '';?>
+
 </div>
 <?php foreach ($this->items as $this->item)
 {
-	$oddeven = ($oddeven == $class1) ? $class2 : $class1;
+
 	?>
     <div class="page-header">
         <h3 itemprop="headline">

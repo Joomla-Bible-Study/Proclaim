@@ -21,7 +21,7 @@ use Joomla\Registry\Registry;
  * @subpackage  Model.BibleStudy
  * @since       7.1.0
  */
-class ModProclaimMHelper
+class ModProclaimHelper
 {
 	/**
 	 * Get Latest
@@ -34,8 +34,8 @@ class ModProclaimMHelper
 	 */
 	public static function getLatest($params)
 	{
-		$user   = $user = Factory::getApplication()->getSession()->get('user');
-		$groups = implode(',', $user->getAuthorisedViewLevels());
+		$user   = Factory::getApplication()->getSession()->get('user');
+		if (isset($user)){$groups = implode(',', $user->getAuthorisedViewLevels());}
 
 		$db = Factory::getContainer()->get('DatabaseDriver');
 		$db->setQuery('SET SQL_BIG_SELECTS=1');
@@ -111,7 +111,7 @@ class ModProclaimMHelper
 			' SUM(mediafile.downloads) as totaldownloads, mediafile.study_id'
 		);
 		$query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
-		$query->group('study.id');
+		$query->group('study.id, book.bookname, book2.bookname');
 
 		// Join over topics
 		$query->select('GROUP_CONCAT(DISTINCT st.topic_id)');
@@ -156,7 +156,7 @@ class ModProclaimMHelper
 
 			foreach ($filters as $filter)
 			{
-				$where2[] = 'study.teacher_id = ' . (int) $filter;
+				if ($filter > 0){$where2[] = 'study.teacher_id = ' . (int) $filter;}
 			}
 
 			$subquery .= implode(' OR ', $where2);
@@ -173,7 +173,7 @@ class ModProclaimMHelper
 
 			foreach ($filters as $filter)
 			{
-				if ($filter != -1 && $filter != 0)
+				if ($filter != -1 && $filter != 0 && $filter > 0)
 				{
 					$query->where('study.teacher_id = ' . (int) $filter, $condition);
 				}
@@ -190,7 +190,7 @@ class ModProclaimMHelper
 
 			foreach ($filters as $filter)
 			{
-				$where2[] = 'study.location_id = ' . (int) $filter;
+				if ($filter > 0){$where2[] = 'study.location_id = ' . (int) $filter;}
 			}
 
 			$subquery .= implode(' OR ', $where2);
@@ -207,7 +207,7 @@ class ModProclaimMHelper
 
 			foreach ($filters AS $filter)
 			{
-				if ($filter != -1 && $filter != 0)
+				if ($filter != -1 && $filter != 0 && $filter > 0)
 				{
 					$query->where('study.location_id = ' . (int) $filter, $condition);
 				}
@@ -224,7 +224,7 @@ class ModProclaimMHelper
 
 			foreach ($filters as $filter)
 			{
-				$where2[] = 'study.booknumber = ' . (int) $filter;
+				if ($filter > 0){$where2[] = 'study.booknumber = ' . (int) $filter;}
 			}
 
 			$subquery .= implode(' OR ', $where2);
@@ -241,7 +241,7 @@ class ModProclaimMHelper
 
 			foreach ($filters AS $filter)
 			{
-				if ($filter != -1 && $filter != 0)
+				if ($filter != -1 && $filter != 0 && $filter > 0)
 				{
 					$query->where('study.booknumber = ' . (int) $filter, $condition);
 				}
@@ -257,7 +257,7 @@ class ModProclaimMHelper
 
 			foreach ($filters as $filter)
 			{
-				$where2[] = 'study.series_id = ' . (int) $filter;
+				if ($filter > 0){$where2[] = 'study.series_id = ' . (int) $filter;}
 			}
 
 			$subquery .= implode(' OR ', $where2);
@@ -274,7 +274,7 @@ class ModProclaimMHelper
 
 			foreach ($filters AS $filter)
 			{
-				if ($filter != -1 && $filter != 0)
+				if ($filter != -1 && $filter != 0 && $filter > 0)
 				{
 					$query->where('study.series_id = ' . (int) $filter, $condition);
 				}
@@ -290,7 +290,7 @@ class ModProclaimMHelper
 
 			foreach ($filters as $filter)
 			{
-				$where2[] = 'st.topic_id = ' . (int) $filter;
+				if ($filter > 0){$where2[] = 'st.topic_id = ' . (int) $filter;}
 			}
 
 			$subquery .= implode(' OR ', $where2);
@@ -306,7 +306,7 @@ class ModProclaimMHelper
 
 			foreach ($filters AS $filter)
 			{
-				if ($filter != -1 && $filter != 0)
+				if ($filter != -1 && $filter != 0 && $filter > 0)
 				{
 					$query->where('st.topic_id = ' . (int) $filter, $condition);
 				}
@@ -330,7 +330,7 @@ class ModProclaimMHelper
 
 			foreach ($filters as $filter)
 			{
-				$where2[] = 'study.messagetype = ' . (int) $filter;
+				if ($filter > 0){$where2[] = 'study.messagetype = ' . (int) $filter;}
 			}
 
 			$subquery .= implode(' OR ', $where2);
@@ -349,7 +349,7 @@ class ModProclaimMHelper
 			{
 				if ($filter != -1 && $filter != 0)
 				{
-					$query->where('study.messagetype = ' . (int) $filter, $condition);
+					if ($filter > 0){$query->where('study.messagetype = ' . (int) $filter, $condition);}
 				}
 			}
 		}
@@ -363,7 +363,7 @@ class ModProclaimMHelper
 
 			foreach ($filters as $filter)
 			{
-				$where2[] = 'YEAR(study.studydate) = ' . (int) $filter;
+				if ($filter > 0){$where2[] = 'YEAR(study.studydate) = ' . (int) $filter;}
 			}
 
 			$subquery .= implode(' OR ', $where2);
@@ -382,7 +382,7 @@ class ModProclaimMHelper
 			{
 				foreach ($filters AS $filter)
 				{
-					if ($filter != -1 && $filter != 0)
+					if ($filter != -1 && $filter != 0 && $filter > 0)
 					{
 						$query->where('YEAR(study.studydate) = ' . (int) $filter, $condition);
 					}

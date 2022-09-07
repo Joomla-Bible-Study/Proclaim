@@ -25,7 +25,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class locationsField extends ListField
+class LocationsField extends ListField
 {
 	/**
 	 * The field type.

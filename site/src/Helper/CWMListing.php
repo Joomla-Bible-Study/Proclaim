@@ -859,7 +859,7 @@ class CWMListing
 		}
 
 		$rowspanitemspan = $params->get($extra . 'rowspanitemspan');
-		$rowspanbalance  = 12 - $rowspanitemspan;
+		$rowspanbalance  = 12 - intval($rowspanitemspan);
 
 
 		$frow = '';

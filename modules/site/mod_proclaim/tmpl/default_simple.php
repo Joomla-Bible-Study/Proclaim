@@ -8,36 +8,61 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        https://www.christianwebministries.org
  * */
+use Joomla\CMS\HTML\HTMLHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
+use CWM\Component\Proclaim\Site\Helper\CWMListing;
+use Joomla\CMS\Language\Text;
+
 defined('_JEXEC') or die;
 $show_link = $params->get('show_link', 1);
 
-JLoader::register('CWMHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . 'helper.php');
-JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/CWMListing.php');
-$JBSMListing = new JBSMListing;
 
-// Load CSS framework for displaying properly.
-JHtml::_('proclaim.framework');
-JHtml::_('biblestudy.loadCss', $params, null, 'font-awesome');
-foreach ($list as $study)
-{?>
-	<div style="width:100%;">
-		<div class="span3"><div style="padding:12px 8px;line-height:22px;height:200px;">
-				<?php if ($study->study_thumbnail) {echo '<span style="max-width:250px; height:auto;">'.$study->study_thumbnail .'</span>'; echo '<br />';} ?>
-				<strong><?php echo $study->studytitle;?></strong><br />
-				<span style="color:#9b9b9b;"><?php echo $study->scripture1;?> | <?php echo $study->studydate;?></span><br />
-				<div style="font-size:85%;margin-bottom:-17px;max-height:122px;overflow:hidden;"><?php echo $study->teachername;?></div><br /><div style="background: rgba(0, 0, 0, 0) linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, white 100%) repeat scroll 0 0;bottom: 0;height: 32px;margin-top: -32px; position: relative;width: 100%;"></div>
-				<?php echo $study->media; ?>
-			</div></div>
+$Listing = new CWMListing; ?>
 
 
-	</div>
+
+
+  <div class="row-fluid span12">
+    <h5>
+      <?php echo Text::_('JBS_CMN_TEACHINGS'); ?>
+    </h5>
+  </div>
+
+<?php foreach ($list as $study)
+{
+
+	?>
+    <div class="page-header">
+        <p itemprop="headline">
+            <?php echo $study->studytitle; ?>		</p>
+    </div>
+    <dl class="article-info text-muted">
+
+        <dd class="createdby" itemprop="author" itemscope="" itemtype="https://schema.org/Person">
+            <span class="icon-user icon-fw" aria-hidden="true"></span>
+           <span itemprop="name"><?php echo $study->teachername;?></span>	</dd>
+
+        <dd class="category-name">
+            <span class="fas fa-bible" aria-hidden="true"></span>
+             <?php echo $study->scripture1;?>	</dd>
+
+        <dd class="published">
+            <span class="icon-calendar icon-fw" aria-hidden="true"></span>
+            <time datetime="2022-07-14T12:19:37-07:00" itemprop="datePublished">
+                 <?php echo $study->studydate;?>	</time>
+        </dd>
+    </dl>
+    <div itemprop="articleBody" class="com-content-article__body">
+        <?php echo $study->media; ?> 	</div>
+    <div><hr/></div>
 <?php }?>
+
 <div class="row-fluid">
 	<div class="span12">
 		<?php
 		if ($params->get('show_link') > 0)
 		{
-			echo $link;
+			echo '<span class="fas fa-bible" aria-hidden="true"></span>'.$link;
 		}
 		?>
 	</div>

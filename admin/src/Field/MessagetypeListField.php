@@ -15,9 +15,9 @@ use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
 use JFormHelper;
 
-JFormHelper::loadFieldClass('list');
-defined('_JEXEC') or die;
 
+defined('_JEXEC') or die;
+JFormHelper::loadFieldClass('list');
 /**
  * Message Type List Form Field class for the Proclaim component
  *

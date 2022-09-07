@@ -8,17 +8,20 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        https://www.christianwebministries.org
  * */
+
+use Joomla\CMS\HTML\HTMLHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
+use CWM\Component\Proclaim\Site\Helper\CWMListing;
 defined('_JEXEC') or die;
 
 $show_link = $params->get('show_link', 1);
 
-JLoader::register('CWMHelper', BIBLESTUDY_PATH_ADMIN_HELPERS . 'helper.php');
-JLoader::register('JBSMListing', BIBLESTUDY_PATH_LIB . '/CWMListing.php');
-$JBSMListing = new JBSMListing;
+
+$Listing = new CWMListing;
 
 // Load CSS framework for displaying properly.
-JHtml::_('proclaim.framework');
-JHtml::_('biblestudy.loadCss', $params, null, 'font-awesome');
+//JHtml::_('proclaim.framework');
+//JHtml::_('biblestudy.loadCss', $params, null, 'font-awesome');
 
 ?>
 <div class="container-fluid JBSM">
@@ -27,7 +30,7 @@ JHtml::_('biblestudy.loadCss', $params, null, 'font-awesome');
 		?>
 		<div class="row-fluid">
 			<div class="span12">
-				<?php echo JHtml::_('content.prepare', $params->get('pageheader'), '', 'com_proclaim.module'); ?>
+				<?php echo HtmlHelper::_('content.prepare', $params->get('pageheader'), '', 'com_proclaim.module'); ?>
 			</div>
 		</div>
 	<?php
@@ -36,7 +39,7 @@ JHtml::_('biblestudy.loadCss', $params, null, 'font-awesome');
 	<div class="row-fluid">
 		<div class="span12">
 			<?php
-			$list = $JBSMListing->getFluidListing($items, $params, $template, $type = "sermons");
+			$list = $Listing->getFluidListing($items, $params, $template, $type = "sermons");
 			echo $list;
 			?>
 		</div>
