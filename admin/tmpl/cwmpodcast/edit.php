@@ -42,23 +42,12 @@ $wa->useScript('keepalive')
 ?>
 
 <form action="<?php echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int) $this->item->id); ?>"
-      method="post" name="adminForm" id="item-form" class="form-validate form-horizontal">
-	<div class="row-fluid">
-		<!-- Begin Content -->
-		<div class="span9 form-horizontal">
-			<ul class="nav nav-tabs">
-				<li class="active"><a href="#general" data-toggle="tab"><?php echo JText::_('JBS_CMN_DETAILS'); ?></a>
-				</li>
-				<li><a href="#images" data-toggle="tab"><?php echo JText::_('JBS_PDC_PODCAST_IMAGES'); ?></a></li>
+      method="post" name="adminForm" id="item-form" class="form-validate">
 
-				<?php if ($this->canDo->get('core.admin')): ?>
-					<li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a>
-					</li>
-				<?php endif ?>
-			</ul>
-			<div class="tab-content">
-				<!-- Begin Tabs -->
-				<div class="tab-pane active" id="general">
+
+		<!-- Begin Content -->
+
+
 					<div class="control-group">
 						<div class="control-label">
 							<?php echo $this->form->getLabel('title'); ?>
@@ -139,8 +128,11 @@ $wa->useScript('keepalive')
 							<?php echo $this->form->getInput('detailstemplateid'); ?>
 						</div>
 					</div>
-				</div>
-				<div class="tab-pane" id="images">
+
+
+    <?php echo HTMLHelper::_('bootstrap.startTabSet', 'myTab', array('active' => 'images')); ?>
+
+        <?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'images', Text::_('JBS_STY_IMAGES')); ?>
 					<div class="control-group">
 						<div class="control-label">
 							<?php echo $this->form->getLabel('image'); ?>
@@ -213,25 +205,21 @@ $wa->useScript('keepalive')
 							<?php echo $this->form->getInput('alternatewords'); ?>
 						</div>
 					</div>
-				</div>
 
+    <?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 				<?php if ($this->canDo->get('core.admin')): ?>
-					<div class="tab-pane" id="permissions">
+                    <?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'Permissions', Text::_('JBS_CMN_PERMISSIONS')); ?>
 
 						<?php echo $this->form->getInput('rules'); ?>
 
-					</div>
+                    <?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 				<?php endif; ?>
-			</div>
-			<input type="hidden" name="task" value=""/>
-			<input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
-			<?php echo HTMLHelper::_('form.token'); ?>
+
+
 			<!-- End Content -->
-		</div>
-		<!-- Begin Sidebar -->
-		<div class="span3 form-vertical">
-			<h4><?php echo JText::_('JDETAILS'); ?></h4>
-			<hr/>
+
+		<!-- Begin Tab -->
+    <?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'details', Text::_('JBS_CMN_DETAILS')); ?>
 			<div class="tab-pane" id="publishing">
 				<div class="control-group">
 					<div class="control-label">
@@ -305,8 +293,31 @@ $wa->useScript('keepalive')
 						<?php echo $this->form->getInput('language'); ?>
 					</div>
 				</div>
+                <div class="control-group">
+                    <div class="control-label">
+                        <?php echo $this->form->getLabel('linktype'); ?>
+                    </div>
+                    <div class="controls">
+                        <?php echo $this->form->getInput('linktype'); ?>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label">
+                        <?php echo $this->form->getLabel('podcast_subscribe_show'); ?>
+                    </div>
+                    <div class="controls">
+                        <?php echo $this->form->getInput('podcast_subscribe_show'); ?>
+                    </div>
+                </div>
 			</div>
-		</div>
+
+    <?php echo HTMLHelper::_('bootstrap.endTab'); ?>
+    <?php echo HTMLHelper::_('bootstrap.endTabSet'); ?>
+
 		<!-- End Sidebar -->
-	</div>
+
+    <input type="hidden" name="task" value=""/>
+    <input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
+    <?php echo HTMLHelper::_('form.token'); ?>
+
 </form>

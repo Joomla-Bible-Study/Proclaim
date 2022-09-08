@@ -39,7 +39,7 @@ class CWMPodcastsubscribe
 
 		if ($podcasts)
 		{
-			$subscribe .= '<div class="podcastheader" ><h3>' . $introtext . '</h3></div>';
+			$subscribe .= '<div class="podcastheader" ><h4>' . $introtext . '</h4></div>';
 			$subscribe .= '<div class="prow row-fluid">';
 
 			foreach ($podcasts AS $podcast)
@@ -57,23 +57,23 @@ class CWMPodcastsubscribe
 						break;
 
 					case 2:
-						$subscribe .= '<div class="pcell span6"><h4>' . $podcast->title . '</h4><hr />';
+						$subscribe .= '<div class="pcell span6"><h5>' . $podcast->title . '</h5>';
 						$subscribe .= $this->buildStandardPodcast($podcast);
-						$subscribe .= '</div>';
+						$subscribe .= '<hr /></div>';
 						break;
 
 					case 3:
-						$subscribe .= '<div class="pcell span6"><h4>' . $podcast->title . '</h4><hr />';
+						$subscribe .= '<div class="pcell span6"><h5>' . $podcast->title . '</h5>';
 						$subscribe .= $this->buildAlternatePodcast($podcast);
-						$subscribe .= '</div>';
+						$subscribe .= '<hr /></div>';
 						break;
 
 					case 4:
-						$subscribe .= '<div class="pcell span6"><h4>' . $podcast->title . '</h4><hr /><div class="span2">';
+						$subscribe .= '<div class="pcell span6"><h5>' . $podcast->title . '</h5><div class="span2">';
 						$subscribe .= $this->buildStandardPodcast($podcast);
 						$subscribe .= '</div><div class="span2">';
 						$subscribe .= $this->buildAlternatePodcast($podcast);
-						$subscribe .= '</div></div>';
+						$subscribe .= '<hr /></div></div>';
 						break;
 				}
 			}
