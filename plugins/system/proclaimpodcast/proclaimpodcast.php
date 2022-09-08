@@ -6,6 +6,12 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        https://www.christianwebministries.org
  * */
+
+use CWM\Component\Proclaim\Site\Helper\CWMPodcast;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\CMSPlugin;
+
 defined('_JEXEC') or die;
 
 /**
@@ -15,7 +21,7 @@ defined('_JEXEC') or die;
  * @subpackage  Plugin.JBSPodcast
  * @since       7.0.0
  */
-class PlgSystemJBSPodcast extends JPlugin
+class PlgSystemProclaimPodcast extends CMSPlugin
 {
 	/**
 	 * Constructor
@@ -245,8 +251,7 @@ class PlgSystemJBSPodcast extends JPlugin
 	 */
 	public function doPodcast()
 	{
-		JLoader::register('JBSMPodcast', JPATH_SITE . '/components/com_proclaim/lib/PodcastController.php');
-		$podcasts = new JBSMPodcast;
+		$podcasts = new CWMPodcast;
 
 		return $podcasts->makePodcasts();
 	}
@@ -292,7 +297,7 @@ class PlgSystemJBSPodcast extends JPlugin
 		jimport('joomla.utilities.date');
 		$date = date('r');
 		$Body = $params->get('body') . '<br />';
-		$Body .= JText::_('JBS_PLG_PODCAST_EMAIL_BODY_RUN') . $date . '<br />';
+		$Body .= Text::_('JBS_PLG_PODCAST_EMAIL_BODY_RUN') . $date . '<br />';
 		$Body2    = $dopodcast;
 		$Body3    = $Body . $Body2;
 		$Subject  = $params->get('subject');

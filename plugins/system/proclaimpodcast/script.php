@@ -8,6 +8,9 @@
  * @link       https://www.christianwebministries.org
  * */
 // No direct access to this file
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+
 defined('_JEXEC') or die;
 
 /**
@@ -45,7 +48,7 @@ class PlgSystemJBSPodcastInstallerScript
 	public function uninstall($parent)
 	{
 		// $parent is the class calling this method
-		echo '<p>' . JText::_('JBS_PLG_PODCAST_UNINSTALL_TEXT') . '</p>';
+		echo '<p>' . Text::_('JBS_PLG_PODCAST_UNINSTALL_TEXT') . '</p>';
 	}
 
 	/**
@@ -60,7 +63,7 @@ class PlgSystemJBSPodcastInstallerScript
 	public function update($parent)
 	{
 		$this->dbupdate();
-		echo '<p>' . JText::_('JBS_PLG_PODCAST_UPDATE_TEXT') . '</p>';
+		echo '<p>' . Text::_('JBS_PLG_PODCAST_UPDATE_TEXT') . '</p>';
 	}
 
 	/**
@@ -89,7 +92,8 @@ class PlgSystemJBSPodcastInstallerScript
 	 */
 	public function postflight($type, $parent)
 	{
-		Factory::getDbo()->setQuery('DROP TABLE IF EXISTS `#__jbspodcast_update`')->execute();
+        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db->setQuery('DROP TABLE IF EXISTS `#__jbspodcast_update`')->execute();
 	}
 
 	/**

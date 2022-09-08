@@ -10,6 +10,13 @@
 
 namespace CWM\Component\Proclaim\Administrator\Helper;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Log\Log;
+use Joomla\CMS\MVC\Model\AdminModel;
+use CWM\Component\Proclaim\Administrator\Model;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+
 defined('_JEXEC') or die;
 
 /**
@@ -247,12 +254,12 @@ class CWMDbHelper
 
 		if (!$db->execute())
 		{
-			Factory::getApplication()->enqueueMessage($from . JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'warning');
+			Factory::getApplication()->enqueueMessage($from . Text::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)), 'warning');
 
 			return false;
 		}
 
-		JLog::add($from . $query, JLog::INFO, 'com_proclaim');
+		Log::add($from . $query, Log::INFO, 'com_proclaim');
 
 		return true;
 	}
@@ -275,7 +282,7 @@ class CWMDbHelper
 		if (!$done)
 		{
 			/** @var BiblestudyModelAdmin $admin */
-			$admin = JModelLegacy::getInstance('Admin', 'BiblestudyModel');
+			$admin = BaseDatabaseModel::getInstance('CWMAdmin', 'Model');
 			$admin->fix();
 
 			return true;

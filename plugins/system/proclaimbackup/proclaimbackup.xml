@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="3.3" type="plugin" group="system" method="upgrade">
-	<name>JBS_PLG_BACKUP</name>
+<extension version="10.0.0" type="plugin" group="system" method="upgrade">
+	<name>plg_system_proclaimbackup</name>
 	<author>CWM Team</author>
 	<authorEmail>info@christianwebministries.org</authorEmail>
 	<authorUrl>https://www.christianwebministries.org</authorUrl>
@@ -9,6 +9,7 @@
 	<creationDate>October 22, 2022</creationDate>
 	<license>http://www.gnu.org/licenses/gpl.html</license>
 	<description>JBS_PLG_BACKUP_XML_DESCRIPTION</description>
+	<namespace>CWM\Plugin\System\Proclaimbackup</namespace>
 
 	<!-- Runs on install/uninstall/update; New in 1.7 -->
 	<scriptfile>script.php</scriptfile>

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="3.2" type="plugin" group="system" method="upgrade">
-    <name>JBS_PLG_PODCAST</name>
+<extension version="10.0.0" type="plugin" group="system" method="upgrade">
+    <name>plg_system_proclaimpodcast</name>
     <author>CWM Team</author>
     <authorEmail>info@christianwebministries.org</authorEmail>
     <authorUrl>https://www.christianwebministries.org</authorUrl>
     <copyright>(C) 2007 - 2019 Proclaim All rights reserved.</copyright>
-    <version>9.2.6</version>
-    <creationDate>April 6, 2021</creationDate>
+    <version>10.0.0</version>
+    <creationDate>October 1, 2022</creationDate>
     <license>http://www.gnu.org/licenses/gpl.html</license>
     <description>JBS_PLG_PODCAST_XML_DESCRIPTION</description>
-
+    <namespace >CWM\Plugin\System\Proclaimpodcast</namespace>
     <!-- Runs on install/uninstall/update; New in 1.7 -->
     <scriptfile>script.php</scriptfile>
     <uninstall> <!-- Runs on uninstall -->
@@ -18,7 +18,7 @@
         </sql>
     </uninstall>
     <files>
-        <filename plugin="jbspodcast">jbspodcast.php</filename>
+        <filename plugin="proclaimpodcast">proclaimpodcast.php</filename>
         <filename>script.php</filename>
         <folder>language</folder>
         <folder>sql</folder>
@@ -26,7 +26,7 @@
     <config>
         <fields name="params">
             <fieldset name="basic"
-                      addfieldpath="/administrator/components/com_proclaim/models/fields">
+                      addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
                 <field name="dummy" type="loadlanguagefile" default=""/>   <!-- load common language file -->
                 <field name="email" type="list" default="0"
                        label="JBS_PLG_PODCASTBACKUP_EMAIL_SEND" description="JBS_PLG_PODCASTBACKUP_EMAIL_SEND_DESC">

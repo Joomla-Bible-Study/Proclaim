@@ -480,8 +480,8 @@ class CWMPodcast
 					$podfoot     = '
                         </channel>
                         </rss>';
-					$$input      = Factory::getApplication()->input;
-					$client      = ApplicationHelper::getClientInfo()($input->get('client', '0', 'int'));
+					$input      = Factory::getApplication()->input;
+					$client      = ApplicationHelper::getClientInfo($input->get('client', '0', 'int'));
 					$file_path   = $client->path . '/' . $podinfo->filename;
 					$filecontent = $podhead . $episodedetail . $podfoot;
 					$filewritten = $this->writeFile($file_path, $filecontent);
