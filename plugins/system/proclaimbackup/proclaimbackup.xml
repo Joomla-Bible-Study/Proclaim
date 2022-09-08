@@ -4,9 +4,9 @@
 	<author>CWM Team</author>
 	<authorEmail>info@christianwebministries.org</authorEmail>
 	<authorUrl>https://www.christianwebministries.org</authorUrl>
-	<copyright>(C) 2007 - 2019 Proclaim All rights reserved.</copyright>
-	<version>9.2.6</version>
-	<creationDate>April 6, 2021</creationDate>
+	<copyright>(C) 2007 - 2022 Proclaim All rights reserved.</copyright>
+	<version>10.0.0</version>
+	<creationDate>October 22, 2022</creationDate>
 	<license>http://www.gnu.org/licenses/gpl.html</license>
 	<description>JBS_PLG_BACKUP_XML_DESCRIPTION</description>
 
@@ -19,14 +19,14 @@
 		</sql>
 	</uninstall>
 	<files>
-		<filename plugin="jbsbackup">jbsbackup.php</filename>
+		<filename plugin="proclaimbackup">proclaimbackup.php</filename>
 		<folder>language</folder>
 		<folder>sql</folder>
 	</files>
 	<config>
 		<fields name="params">
 			<fieldset name="basic"
-			          addfieldpath="/administrator/components/com_proclaim/models/fields">
+			          addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
 				<field name="dummy" type="loadlanguagefile" default=""/>   <!-- load common language file -->
 				<field name="email" type="list" default="0"
 				       label="JBS_PLG_PODCASTBACKUP_EMAIL_SEND" description="JBS_PLG_PODCASTBACKUP_EMAIL_SEND_DESC">

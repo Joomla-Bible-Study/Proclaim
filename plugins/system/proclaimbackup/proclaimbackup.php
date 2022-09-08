@@ -6,6 +6,15 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        https://www.christianwebministries.org
  * */
+
+use CWM\Component\Proclaim\Administrator\Lib\CWMBackup;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\CMSPlugin;
+
 defined('_JEXEC') or die;
 
 /**
@@ -15,7 +24,7 @@ defined('_JEXEC') or die;
  * @subpackage  Plugin.JBSBackup
  * @since       7.1.0
  */
-class PlgSystemJBSBackup extends JPlugin
+class PlgSystemProclaimBackup extends CMSPlugin
 {
 	/**
 	 * Constructor
@@ -241,7 +250,7 @@ class PlgSystemJBSBackup extends JPlugin
 	 */
 	public function doBackup()
 	{
-		$dbbackup = new JBSMBackup;
+		$dbbackup = new CWMBackup;
 		$backup   = $dbbackup->exportdb($run = 2);
 
 		return $backup;
@@ -293,15 +302,15 @@ class PlgSystemJBSBackup extends JPlugin
 		jimport('joomla.filesystem.file');
 
 		// Check for existence of backup file, then attach to email
-		$backupexists = JFile::exists($dobackup);
+		$backupexists = File::exists($dobackup);
 
 		if (!$backupexists)
 		{
-			$msg = JText::_('JBS_PLG_BACKUP_EMAIL_MSG_ERROR');
+			$msg = Text::_('JBS_PLG_BACKUP_EMAIL_MSG_ERROR');
 		}
 		else
 		{
-			$msg = JText::_('JBS_PLG_BACKUP_EMAIL_MSG_SUCCESS');
+			$msg = Text::_('JBS_PLG_BACKUP_EMAIL_MSG_SUCCESS');
 		}
 
 		if ($params->def('fromname', $fromname))
@@ -316,11 +325,11 @@ class PlgSystemJBSBackup extends JPlugin
 			$mailfrom,
 			$fromname);
 		$mail->setSender($sender);
-		$Body = $params->def('Body', '<strong>' . JText::_('PLG_JBSBACKUP_HEADER') . ' ' . $fromname . '</strong><br />');
-		$Body .= JText::_('Process run at: ') . JHtml::date($input = 'now', 'm/d/Y h:i:s a', false) . '<br />';
+		$Body = $params->def('Body', '<strong>' . Text::_('PLG_JBSBACKUP_HEADER') . ' ' . $fromname . '</strong><br />');
+		$Body .= Text::_('Process run at: ') . HTMLHelper::date($input = 'now', 'm/d/Y h:i:s a', false) . '<br />';
 		$Body .= '';
 		$Body .= $msg;
-		$Subject = $params->def('subject', JText::_('PLG_JBSBACKUP_REPORT'));
+		$Subject = $params->def('subject', Text::_('PLG_JBSBACKUP_REPORT'));
 
 		$recipients = explode(',', $params->get('recipients'));
 
@@ -342,7 +351,7 @@ class PlgSystemJBSBackup extends JPlugin
 
 		if (!$mail->Send())
 		{
-			JLog::add('JBSM Bakup Plugin email faild.', JLog::ERROR, 'com_proclaim', DateTime::W3C);
+			JLog::add('CWM Backup Plugin email failed.', JLog::ERROR, 'com_proclaim', DateTime::W3C);
 		}
 	}
 
@@ -362,7 +371,7 @@ class PlgSystemJBSBackup extends JPlugin
 		$path          = JPATH_SITE . '/media/com_proclaim/database';
 		$exclude = array('.git', '.svn', 'CVS', '.DS_Store', '__MACOSX', '.html');
 		$excludefilter = array('^\..*', '.*~');
-		$files         = JFolder::files($path, '.', 'false', 'true', $exclude, $excludefilter);
+		$files         = Folder::files($path, '.', 'false', 'true', $exclude, $excludefilter);
 		arsort($files, SORT_STRING);
 		$parts       = array();
 		$numfiles    = count($files);
@@ -375,7 +384,7 @@ class PlgSystemJBSBackup extends JPlugin
 
 		foreach ($parts as $part)
 		{
-			JFile::delete($part);
+			File::delete($part);
 		}
 	}
 }

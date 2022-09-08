@@ -209,11 +209,11 @@
 		         link="${joomla_path}${joomla_dir}/modules/mod_biblestudy" overwrite="true"/>
 		<symlink target="${basedir}/modules/site/mod_biblestudy_podcast"
 		         link="${joomla_path}${joomla_dir}/modules/mod_biblestudy_podcast" overwrite="true"/>
-		<symlink target="${basedir}/plugins/system/jbsbackup"
+		<symlink target="/plugins/system/proclaimbackup"
 		         link="${joomla_path}${joomla_dir}/plugins/system/jbsbackup" overwrite="true"/>
 		<symlink target="/plugins/finder/proclaim"
 		         link="${joomla_path}${joomla_dir}/plugins/finder/biblestudy" overwrite="true"/>
-		<symlink target="${basedir}/plugins/system/jbspodcast"
+		<symlink target="/plugins/system/proclaimpodcast"
 		         link="${joomla_path}${joomla_dir}/plugins/system/jbspodcast" overwrite="true"/>
 		<symlink target="${basedir}/plugins/search/biblestudysearch"
 		         link="${joomla_path}${joomla_dir}/plugins/search/biblestudysearch" overwrite="true"/>
@@ -241,11 +241,11 @@
 		         link="${joomla_path}${joomla_dir}/modules/mod_biblestudy" overwrite="true"/>
 		<symlink target="${basedir}/modules/site/mod_biblestudy_podcast"
 		         link="${joomla_path}${joomla_dir}/modules/mod_biblestudy_podcast" overwrite="true"/>
-		<symlink target="${basedir}/plugins/system/jbsbackup"
+		<symlink target="/plugins/system/proclaimbackup"
 		         link="${joomla_path}${joomla_dir}/plugins/system/jbsbackup" overwrite="true"/>
 		<symlink target="/plugins/finder/proclaim"
 		         link="${joomla_path}${joomla_dir}/plugins/finder/biblestudy" overwrite="true"/>
-		<symlink target="${basedir}/plugins/system/jbspodcast"
+		<symlink target="/plugins/system/proclaimpodcast"
 		         link="${joomla_path}${joomla_dir}/plugins/system/jbspodcast" overwrite="true"/>
 		<symlink target="${basedir}/plugins/search/biblestudysearch"
 		         link="${joomla_path}${joomla_dir}/plugins/search/biblestudysearch" overwrite="true"/>

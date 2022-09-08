@@ -8,6 +8,9 @@
  * @link       https://www.christianwebministries.org
  * */
 // No direct access to this file
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+
 defined('_JEXEC') or die;
 
 /**
@@ -17,7 +20,7 @@ defined('_JEXEC') or die;
  * @subpackage  Plugin.JBSBackup
  * @since       7.1.0
  */
-class PlgSystemJBSBackupInstallerScript
+class PlgSystemProclaimBackupInstallerScript
 {
 	/**
 	 * method to install the component
@@ -45,7 +48,7 @@ class PlgSystemJBSBackupInstallerScript
 	public function uninstall($parent)
 	{
 		// $parent is the class calling this method
-		echo '<p>' . JText::_('JBS_PLG_BACKUP_UNINSTALL_TEXT') . '</p>';
+		echo '<p>' . Text::_('JBS_PLG_BACKUP_UNINSTALL_TEXT') . '</p>';
 	}
 
 	/**
@@ -60,7 +63,7 @@ class PlgSystemJBSBackupInstallerScript
 	public function update($parent)
 	{
 		$this->dbupdate();
-		echo '<p>' . JText::_('JBS_PLG_BACKUP_UPDATE_TEXT') . '</p>';
+		echo '<p>' . Text::_('JBS_PLG_BACKUP_UPDATE_TEXT') . '</p>';
 	}
 
 	/**
@@ -89,7 +92,8 @@ class PlgSystemJBSBackupInstallerScript
 	 */
 	public function postflight($type, $parent)
 	{
-		Factory::getDbo()->setQuery('DROP TABLE IF EXISTS `#__jbsbackup_update`')->execute();
+        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db->setQuery('DROP TABLE IF EXISTS `#__jbsbackup_update`')->execute();
 	}
 
 	/**
