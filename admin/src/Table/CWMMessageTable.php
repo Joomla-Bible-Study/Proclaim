@@ -376,6 +376,7 @@ class CWMMessageTable extends Table
 	 */
 	public function __construct(&$db)
 	{
+
 		parent::__construct('#__bsms_studies', 'id', $db);
 	}
 
@@ -427,7 +428,8 @@ class CWMMessageTable extends Table
 	 */
 	public function store($updateNulls = false)
 	{
-		if (!$this->_rules)
+
+        if (!$this->_rules)
 		{
 			$this->setRules('{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}');
 		}

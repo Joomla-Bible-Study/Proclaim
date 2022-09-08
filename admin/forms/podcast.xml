@@ -3,7 +3,7 @@
 	<field
 			name="published"
 			type="list"
-			class="span12 small"
+			class="list"
 			id="published"
 			label="JSTATUS"
 			description="JFIELD_PUBLISHED_DESC"
@@ -45,7 +45,7 @@
 	       size="80"/>
 	<field name="podcastlanguage" type="language" label="JBS_PDC_PODCAST_LANGUAGE"/>
 	<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
-	       description="JBS_CMN_SELECT_LANGUAGE_DESC" class="inputbox span12">
+	       description="JBS_CMN_SELECT_LANGUAGE_DESC" class="inputbox">
 		<option value="*">JALL</option>
 	</field>
 	<field name="detailstemplateid" type="sql"
@@ -62,11 +62,11 @@
 	       label="JBS_PDC_SUBSCRIBE_IMAGE" description="JBS_PDC_SUBSCRIBE_IMAGE_DESC"/>
 
 	<field name="filename" type="text" label="JBS_PDC_PODCAST_XML_FILENAME"
-	       description="JBS_PDC_PODCAST_XML_FILENAME_DESC" size="50" class="span12"/>
+	       description="JBS_PDC_PODCAST_XML_FILENAME_DESC" size="50" class="inputbox"/>
 	<field name="podcastlimit" type="text" label="JBS_PDC_NUM_RECORDS_INCLUDE"
-	       size="3" description="JBS_PDC_NUM_RECORDS_INCLUDE_DESC" class="span12"/>
+	       size="3" description="JBS_PDC_NUM_RECORDS_INCLUDE_DESC" class="inputbox"/>
 	<field name="episodetitle" type="list" default="0"
-	       label="JBS_PDC_EPISODE_TITLE" class="span12 small">
+	       label="JBS_PDC_EPISODE_TITLE" class="list">
 		<option value="0">JBS_PDC_EPISODE_SCRIPTURE_TITLE</option>
 		<option value="1">JBS_PDC_EPISODE_TITLE_ONLY</option>
 		<option value="2">JBS_PDC_EPISODE_SCRIPTURE_ONLY</option>
@@ -76,9 +76,9 @@
 		<option value="5">JBS_CMN_CUSTOM</option>
 	</field>
 	<field name="custom" type="textarea" label="JBS_CMN_CUSTOM"
-	       description="JBS_PDC_EPISODES_CUSTOM_DESC" size="20" cols="48" rows="2" class="span12"/>
+	       description="JBS_PDC_EPISODES_CUSTOM_DESC" size="20" cols="48" rows="2" class="inputbox"/>
 	<field name="episodesubtitle" type="list" default="0"
-	       label="JBS_PDC_EPISODE_SUBTITLE" class="span12 small">
+	       label="JBS_PDC_EPISODE_SUBTITLE" class="list">
 		<option value="0">JBS_CMN_TEACHER</option>
 		<option value="1">JBS_PDC_EPISODE_TEACHER_SCRIPTURE</option>
 		<option value="2">JBS_PDC_EPISODE_SCRIPTURE_ONLY</option>
@@ -95,14 +95,14 @@
 		<option value="2">JBS_PDC_LINK_MEDIA_PLAYER</option>
 	</field>
 	<field name="customsubtitle" type="textarea" label="JBS_CMN_CUSTOM"
-	       description="JBS_PDC_EPISODES_CUSTOM_DESC" size="20" cols="48" rows="2" class="span12"/>
+	       description="JBS_PDC_EPISODES_CUSTOM_DESC" size="20" cols="48" rows="2" class="inputbox"/>
 	<field name="rules" type="rules" label="JFIELD_RULES_LABEL"
 	       translate_label="false" class="inputbox" filter="rules" component="com_proclaim"
 	       section="podcast" validate="rules"/>
 	<field name="asset_id" type="hidden" filter="unset"/>
 	<field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
 	       description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"
-	       class="readonly span12 small"/>
+	       class="readonly"/>
 	<field name="podcast_subscribe_desc" type="text" label="JBS_PDC_SUBSCRIBE_WORDS"
 	       description="JBS_PDC_SUBSCRIBE_WORDS_DESC" size="20" default=""/>
 	<field name="alternatelink" type="text" label="JBS_PDC_ALTERNATE_LINK" description="JBS_PDC_ALTERNATE_LINK_DESC"

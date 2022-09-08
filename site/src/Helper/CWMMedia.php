@@ -289,15 +289,18 @@ class CWMMedia
 			}
 
 			// Check to see if they want to use a popup
-
-			if ($params->get('useterms') > 0)
-			{
-				$downloadlink = '<a href="index.php?option=com_proclaim&amp;view=CWMTerms&amp;' .
-					'tmpl=component&amp;layout=modal&amp;compat_mode='
-					. $compat_mode . '&amp;mid=' . intval($media->id) . '&amp;t=' . ($template->id)
-					. '" rel="{handler: \'iframe\', size: {x: 640, y: 480}}">';
-			}
-
+            $app = Factory::getApplication();   // equivalent of $app = JFactory::getApplication();
+            $input = $app->input;
+            $opt = $input->get('option');
+            if ($opt == 'com_proclaim') {
+                if ($params->get('useterms') > 0) {
+                    $downloadlink = '<a href="index.php?option=com_proclaim&amp;view=CWMTerms&amp;';
+                    $downloadlink .=   'tmpl=component&amp;layout=modal&amp;compat_mode=';
+                    //$downloadlink .= intval($compat_mode) . '&amp;mid=' . intval($media->id) . '&amp;t=' . intval($template->id);
+                    $downloadlink .= intval($compat_mode) . '&amp;mid=' . intval($media->id) . '&amp;t=' . intval($input->get('t'));
+                    $downloadlink .= '" rel="{handler: \'iframe\', size: {x: 640, y: 480}}">';
+                }
+            }
 			$downloadlink .= $download_image . '</a>';
 		}
 

@@ -44,280 +44,74 @@ $wa->useScript('keepalive')
 <form action="<?php echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int) $this->item->id); ?>"
       method="post" name="adminForm" id="item-form" class="form-validate">
 
-
+    <?php echo HTMLHelper::_('uitab.startTabSet', 'myTab', array('active' => 'general')); ?>
+    <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'general', Text::_('JBS_STY_GENERAL')); ?>
 		<!-- Begin Content -->
-
-
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('title'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('title'); ?>
-						</div>
-					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('description'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('description'); ?>
-						</div>
-					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('website'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('website'); ?>
-						</div>
-					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('podcastlink'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('podcastlink'); ?>
-						</div>
-					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('author'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('author'); ?>
-						</div>
-					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('editor_name'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('editor_name'); ?>
-						</div>
-					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('editor_email'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('editor_email'); ?>
-						</div>
-					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('podcastsearch'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('podcastsearch'); ?>
-						</div>
-					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('podcastlanguage'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('podcastlanguage'); ?>
-						</div>
-					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('detailstemplateid'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('detailstemplateid'); ?>
-						</div>
-					</div>
-
-
-    <?php echo HTMLHelper::_('bootstrap.startTabSet', 'myTab', array('active' => 'images')); ?>
-
-        <?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'images', Text::_('JBS_STY_IMAGES')); ?>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('image'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('image'); ?>
-						</div>
-					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('podcastimage'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('podcastimage'); ?>
-						</div>
-					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('podcast_image_subscribe'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('podcast_image_subscribe'); ?>
-						</div>
-					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('podcast_subscribe_desc'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('podcast_subscribe_desc'); ?>
-						</div>
-					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('linktype'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('linktype'); ?>
-						</div>
-					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('alternatelink'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('alternatelink'); ?>
-						</div>
-					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('alternateimage'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('alternateimage'); ?>
-						</div>
-					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('podcast_subscribe_show'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('podcast_subscribe_show'); ?>
-						</div>
-					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('alternatewords'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('alternatewords'); ?>
-						</div>
-					</div>
-
-    <?php echo HTMLHelper::_('bootstrap.endTab'); ?>
-				<?php if ($this->canDo->get('core.admin')): ?>
-                    <?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'Permissions', Text::_('JBS_CMN_PERMISSIONS')); ?>
-
-						<?php echo $this->form->getInput('rules'); ?>
-
-                    <?php echo HTMLHelper::_('bootstrap.endTab'); ?>
-				<?php endif; ?>
-
-
-			<!-- End Content -->
-
-		<!-- Begin Tab -->
-    <?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'details', Text::_('JBS_CMN_DETAILS')); ?>
-			<div class="tab-pane" id="publishing">
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo $this->form->getLabel('id'); ?>
-					</div>
-					<div class="controls">
-						<?php echo $this->form->getInput('id'); ?>
-					</div>
-				</div>
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo $this->form->getLabel('published'); ?>
-					</div>
-					<div class="controls">
-						<?php echo $this->form->getInput('published'); ?>
-					</div>
-				</div>
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo $this->form->getLabel('filename'); ?>
-					</div>
-					<div class="controls">
-						<?php echo $this->form->getInput('filename'); ?>
-					</div>
-				</div>
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo $this->form->getLabel('podcastlimit'); ?>
-					</div>
-					<div class="controls">
-						<?php echo $this->form->getInput('podcastlimit'); ?>
-					</div>
-				</div>
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo $this->form->getLabel('episodetitle'); ?>
-					</div>
-					<div class="controls">
-						<?php echo $this->form->getInput('episodetitle'); ?>
-					</div>
-				</div>
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo $this->form->getLabel('custom'); ?>
-					</div>
-					<div class="controls">
-						<?php echo $this->form->getInput('custom'); ?>
-					</div>
-				</div>
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo $this->form->getLabel('episodesubtitle'); ?>
-					</div>
-					<div class="controls">
-						<?php echo $this->form->getInput('episodesubtitle'); ?>
-					</div>
-				</div>
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo $this->form->getLabel('customsubtitle'); ?>
-					</div>
-					<div class="controls">
-						<?php echo $this->form->getInput('customsubtitle'); ?>
-					</div>
-				</div>
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo $this->form->getLabel('language'); ?>
-					</div>
-					<div class="controls">
-						<?php echo $this->form->getInput('language'); ?>
-					</div>
-				</div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php echo $this->form->getLabel('linktype'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php echo $this->form->getInput('linktype'); ?>
-                    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <?php echo $this->form->renderField('title'); ?>
+                    <?php echo $this->form->renderField('description'); ?>
+                    <?php echo $this->form->renderField('website'); ?>
+                    <?php echo $this->form->renderField('podcastlink'); ?>
+                    <?php echo $this->form->renderField('author'); ?>
+                    <?php echo $this->form->renderField('editor_name'); ?>
+                    <?php echo $this->form->renderField('editor_email'); ?>
+                    <?php echo $this->form->renderField('podcastsearch'); ?>
+                    <?php echo $this->form->renderField('podcastlanguage'); ?>
+                    <?php echo $this->form->renderField('detailstemplateid'); ?>
+                    <?php echo $this->form->renderField('podcast_subscribe_show'); ?>
                 </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php echo $this->form->getLabel('podcast_subscribe_show'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php echo $this->form->getInput('podcast_subscribe_show'); ?>
-                    </div>
+            </div>
+        </div>
+    </div>
+    <?php echo HTMLHelper::_('uitab.endTab'); ?>
+    <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'images', Text::_('JBS_STY_IMAGES')); ?>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <?php echo $this->form->renderField('image'); ?>
+                    <?php echo $this->form->renderField('podcastimage'); ?>
+                    <?php echo $this->form->renderField('podcast_image_subscribe'); ?>
+                    <?php echo $this->form->renderField('podcast_subscribe_desc'); ?>
+                    <?php echo $this->form->renderField('linktype'); ?>
+                    <?php echo $this->form->renderField('alternatelink'); ?>
+                    <?php echo $this->form->renderField('alternateimage'); ?>
+                    <?php echo $this->form->renderField('alternatewords'); ?>
                 </div>
-			</div>
-
-    <?php echo HTMLHelper::_('bootstrap.endTab'); ?>
-    <?php echo HTMLHelper::_('bootstrap.endTabSet'); ?>
-
-		<!-- End Sidebar -->
-
+            </div>
+        </div>
+    </div>
+    <?php echo HTMLHelper::_('uitab.endTab'); ?>
+    <?php if ($this->canDo->get('core.admin')): ?>
+        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'Permissions', Text::_('JBS_CMN_PERMISSIONS')); ?>
+        <?php echo $this->form->renderField('rules'); ?>
+        <?php echo HTMLHelper::_('uitab.endTab'); ?>
+    <?php endif; ?>
+    <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'details', Text::_('JBS_CMN_DETAILS')); ?>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <?php echo $this->form->renderField('id'); ?>
+                    <?php echo $this->form->renderField('published'); ?>
+                    <?php echo $this->form->renderField('filename'); ?>
+                    <?php echo $this->form->renderField('podcastlimit'); ?>
+                    <?php echo $this->form->renderField('episodetitle'); ?>
+                    <?php echo $this->form->renderField('custom'); ?>
+                    <?php echo $this->form->renderField('episodesubtitle'); ?>
+                    <?php echo $this->form->renderField('customsubtitle'); ?>
+                    <?php echo $this->form->renderField('language'); ?>
+                    <?php echo $this->form->renderField('linktype'); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php echo HTMLHelper::_('uitab.endTab'); ?>
+    <?php echo HTMLHelper::_('uitab.endTabSet'); ?>
     <input type="hidden" name="task" value=""/>
     <input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
     <?php echo HTMLHelper::_('form.token'); ?>
-
 </form>
