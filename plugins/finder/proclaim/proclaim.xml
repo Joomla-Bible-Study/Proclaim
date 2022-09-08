@@ -4,13 +4,13 @@
 	<author>CWM Team</author>
 	<authorEmail>info@christianwebministries.org</authorEmail>
 	<authorUrl>https://www.christianwebministries.org</authorUrl>
-	<copyright>(C) 2007 - 2019 Proclaim All rights reserved.</copyright>
-	<version>9.2.6</version>
-	<creationDate>April 6, 2021</creationDate>
+	<copyright>(C) 2007 - 2022 Proclaim All rights reserved.</copyright>
+	<version>10.0.0</version>
+	<creationDate>October 1, 2022</creationDate>
 	<license>http://www.gnu.org/licenses/gpl.html</license>
 	<description>JBS_PLG_FINDER_XML_DESCRIPTION</description>
 	<files>
-		<file plugin="biblestudy">biblestudy.php</file>
+		<file plugin="proclaim">proclaim.php</file>
 		<folder>language</folder>
 	</files>
 </extension>

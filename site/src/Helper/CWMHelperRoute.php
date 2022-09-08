@@ -45,7 +45,7 @@ class CWMHelperRoute
 	 *
 	 * @since    7.2
 	 */
-	public static function getArticleRoute(int $id, string $language = '0'): string
+	public static function getArticleRoute($id, string $language = '0'): string
 	{
 		// Create the link
 		$link = 'index.php?option=com_proclaim&view=cwmsermon&id=' . $id;

@@ -11,10 +11,19 @@
  * */
 defined('JPATH_BASE') or die;
 
+use CWM\Component\Proclaim\Site\Helper\CWMHelperRoute;
+use Joomla\CMS\Categories\Categories;
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Table\Table;
+use Joomla\Component\Contact\Site\Helper\RouteHelper;
+use Joomla\Component\Finder\Administrator\Indexer\Adapter;
+use Joomla\Component\Finder\Administrator\Indexer\Helper;
+use Joomla\Component\Finder\Administrator\Indexer\Indexer;
+use Joomla\Component\Finder\Administrator\Indexer\Result;
+use Joomla\Database\DatabaseQuery;
 use Joomla\Registry\Registry;
 
-// Load the base adapter.
-require_once JPATH_ADMINISTRATOR . '/components/com_finder/helpers/indexer/adapter.php';
 
 /**
  * Finder adapter for Biblestudy.
@@ -23,7 +32,7 @@ require_once JPATH_ADMINISTRATOR . '/components/com_finder/helpers/indexer/adapt
  * @subpackage  Finder.BibleStudy
  * @since       7.1.0
  */
-class PlgFinderBiblestudy extends FinderIndexerAdapter
+class PlgFinderProclaim extends FinderIndexerAdapter
 {
 	/**
 	 * The plugin identifier.
@@ -31,7 +40,7 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 	 * @var    string
 	 * @since  7.1.0
 	 */
-	protected $context = 'Biblestudy';
+	protected $context = 'Proclaim';
 
 	/**
 	 * The extension name.
@@ -253,8 +262,8 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 
 		// Build the necessary route and path information.
 		$item->url   = $this->getUrl($item->id, $this->extension, $this->layout);
-		$item->route = JBSMHelperRoute::getArticleRoute($item->slug, $item->language);
-		$item->path  = FinderIndexerHelper::getContentPath($item->route);
+		$item->route = CWMHelperRoute::getArticleRoute($item->slug, $item->language);
+		//$item->path  = FinderIndexerHelper::getContentPath($item->route);
 
 		// Get the menu title if it exists.
 		$title = $this->getItemMenuTitle($item->url);
@@ -301,10 +310,10 @@ class PlgFinderBiblestudy extends FinderIndexerAdapter
 	protected function setup()
 	{
 		// Load dependent classes.
-		JLoader::register('JBSMHelperRoute', JPATH_SITE . '/components/com_proclaim/helpers/route.php');
+		//JLoader::register('JBSMHelperRoute', JPATH_SITE . '/components/com_proclaim/helpers/route.php');
 
 		// This is a hack to get around the lack of a route helper.
-		FinderIndexerHelper::getContentPath('index.php?option=com_proclaim');
+		//FinderIndexerHelper::getContentPath('index.php?option=com_proclaim');
 
 		return true;
 	}
