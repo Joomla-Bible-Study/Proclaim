@@ -296,7 +296,6 @@ class CWMMedia
                 if ($params->get('useterms') > 0) {
                     $downloadlink = '<a href="index.php?option=com_proclaim&amp;view=CWMTerms&amp;';
                     $downloadlink .=   'tmpl=component&amp;layout=modal&amp;compat_mode=';
-                    //$downloadlink .= intval($compat_mode) . '&amp;mid=' . intval($media->id) . '&amp;t=' . intval($template->id);
                     $downloadlink .= intval($compat_mode) . '&amp;mid=' . intval($media->id) . '&amp;t=' . intval($input->get('t'));
                     $downloadlink .= '" rel="{handler: \'iframe\', size: {x: 640, y: 480}}">';
                 }

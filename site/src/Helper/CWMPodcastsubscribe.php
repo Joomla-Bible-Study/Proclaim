@@ -57,19 +57,19 @@ class CWMPodcastsubscribe
 						break;
 
 					case 2:
-						$subscribe .= '<div class="pcell span6"><h5>' . $podcast->title . '</h5>';
+						$subscribe .= '<div class="pcell span6"><h5><i class="fa fa-podcast"></i>' .' '. $podcast->title . '</h5>';
 						$subscribe .= $this->buildStandardPodcast($podcast);
 						$subscribe .= '<hr /></div>';
 						break;
 
 					case 3:
-						$subscribe .= '<div class="pcell span6"><h5>' . $podcast->title . '</h5>';
+						$subscribe .= '<div class="pcell span6"><h5><i class="fa fa-podcast"></i>' .' '. $podcast->title . '</h5>';
 						$subscribe .= $this->buildAlternatePodcast($podcast);
 						$subscribe .= '<hr /></div>';
 						break;
 
 					case 4:
-						$subscribe .= '<div class="pcell span6"><h5>' . $podcast->title . '</h5><div class="span2">';
+						$subscribe .= '<div class="pcell span6"><h5><i class="fa fa-podcast"></i>' .' '. $podcast->title . '</h5><div class="span2">';
 						$subscribe .= $this->buildStandardPodcast($podcast);
 						$subscribe .= '</div><div class="span2">';
 						$subscribe .= $this->buildAlternatePodcast($podcast);
