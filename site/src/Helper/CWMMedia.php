@@ -294,13 +294,31 @@ class CWMMedia
             $opt = $input->get('option');
             if ($opt == 'com_proclaim') {
                 if ($params->get('useterms') > 0) {
-                    $downloadlink = '<a href="index.php?option=com_proclaim&amp;view=CWMTerms&amp;';
-                    $downloadlink .=   'tmpl=component&amp;layout=modal&amp;compat_mode=';
-                    $downloadlink .= intval($compat_mode) . '&amp;mid=' . intval($media->id) . '&amp;t=' . intval($input->get('t'));
-                    $downloadlink .= '" rel="{handler: \'iframe\', size: {x: 640, y: 480}}">';
+                    $downloadlink = '<a href="#modal-test-modal" data-bs-toggle="modal" class="btn btn-default btn-small btn-sm">
+                        '.$download_image.'</a>';
+$modalParams = array(
+    'title'       => Text::_('JBS_TERMS_TITLE'),
+    'closeButton' => true,
+    'height'      => '300px',
+    'width'       => '300px',
+    'backdrop'    => 'static',
+    'keyboard'    => true,
+    'modalWidth' => 30,
+    'bodyHeight' => 30,
+    'footer'      => '<div class="alert alert-info">'.Text::_('JBS_TERMS_FOOTER').'</div>'
+);
+
+$modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a href="index.php?option=com_proclaim&task=CWMSermons.download&id='.$media->study_id.'&mid=' . $media->id . '">'
+					. Text::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a></div>';
+
+ $downloadlink .= HTMLHelper::_('bootstrap.renderModal', 'modal-test-modal', $modalParams, $modalBody);
+                    //$downloadlink = '<a href="index.php?option=com_proclaim&amp;view=CWMTerms&amp;';
+                    //$downloadlink .=   'tmpl=component&amp;layout=modal&amp;compat_mode=';
+                   // $downloadlink .= intval($compat_mode) . '&amp;mid=' . intval($media->id) . '&amp;t=' . intval($input->get('t'));
+                    //$downloadlink .= '" rel="{handler: \'iframe\', size: {x: 640, y: 480}}">';
                 }
             }
-			$downloadlink .= $download_image . '</a>';
+			//$downloadlink .= $download_image . '</a>';
 		}
 
 		return $downloadlink;

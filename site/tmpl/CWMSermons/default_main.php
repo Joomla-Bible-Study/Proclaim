@@ -19,6 +19,7 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\HTML\HTMLHelper;
 
+
 $CWMTeacher   = new CWMTeacher;
 $teachers     = $CWMTeacher->getTeachersFluid($this->params);
 $listing      = new CWMListing;
