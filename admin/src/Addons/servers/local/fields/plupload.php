@@ -8,6 +8,9 @@
  * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
+use Joomla\CMS\Factory;
+
 defined('JPATH_PLATFORM') or die;
 
 jimport('joomla.html.html');
@@ -39,7 +42,7 @@ class JFormFieldPlupload extends JFormField
 		$document->addScript(JUri::root() . 'administrator/components/com_proclaim/addons/servers/legacy/includes/js/plupload.full.min.js');
 		$document->addScript(JUri::root() . 'administrator/components/com_proclaim/addons/servers/legacy/includes/js/legacy.js');
 		$view = $app->input->get('view');
-		$admin = JBSMParams::getAdmin();
+		$admin = CWMParams::getAdmin();
 
 		if (isset($this->form->s_params['uploadpath']))
 		{

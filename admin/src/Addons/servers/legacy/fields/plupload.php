@@ -11,7 +11,8 @@
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Session\Session;
-
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Form\FormField;
 defined('_JEXEC') or die;
 
 jimport('joomla.html.html');
@@ -23,7 +24,7 @@ jimport('joomla.form.formfield');
  * @package  Proclaim.Admin
  * @since    9.0.0
  */
-class JFormFieldPlupload extends JFormField
+class JFormFieldPlupload extends FormField
 {
 	public $type = 'Plupload';
 
