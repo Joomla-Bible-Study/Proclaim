@@ -9,6 +9,8 @@
  * */
 // No Direct Access
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die;
 
@@ -109,7 +111,7 @@ class CWMAddonYouTube extends CWMAddon
 	public function render($media_form, $new)
 	{
 		$html = '';
-		$html .= JHtml::_('bootstrap.addTab', 'myTab', 'options', JText::_('Options'));
+		$html .= HtmlHelper::_('bootstrap.addTab', 'myTab', 'options', Text::_('Options'));
 
 		$html .= '<div class="row-fluid">';
 
@@ -148,7 +150,7 @@ class CWMAddonYouTube extends CWMAddon
 		}
 
 		$html .= '</div>';
-		$html .= JHtml::_('bootstrap.endTab');
+		$html .= HtmlHelper::_('bootstrap.endTab');
 
 		return $html;
 	}

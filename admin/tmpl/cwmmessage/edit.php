@@ -30,7 +30,7 @@ $params = $this->form->getFieldsets('params');
 $app   = Factory::getApplication();
 $input = $app->input;
 
-$return  = base64_encode('index.php?option=com_proclaim&task=message.edit&id=' . (int) $this->item->id);
+$return  = base64_encode('index.php?option=com_proclaim&task=cwmmessage.edit&id=' . (int) $this->item->id);
 $options = base64_encode('study_id=' . $this->item->id . '&createdate=' . $this->item->studydate);
 
 // Set up defaults
@@ -128,7 +128,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
 						?>
 						<tr class="row<?php echo $i % 2; ?>">
 							<td>
-								<?php $link = 'index.php?option=com_proclaim&amp;task=mediafile.edit&amp;id='
+								<?php $link = 'index.php?option=com_proclaim&amp;task=cwmmediafile.edit&amp;id='
 									. (int) $item->id . '&amp;return=' . $return . '&amp;options=' . $options; ?>
 								<a class="btn btn-primary" href="<?php echo $link; ?>"
 								   title="<?php echo $this->escape($item->params->get('filename'))
@@ -169,7 +169,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
 				<tfoot>
 				<tr>
 					<td colspan="6">
-						<?php $link = 'index.php?option=com_proclaim&amp;task=mediafile.edit&amp;sid='
+						<?php $link = 'index.php?option=com_proclaim&amp;task=cwmmediafile.edit&amp;sid='
 							. $this->form->getValue('id') . '&amp;options=' . $options . '&amp;return=' .
 							$return . '&amp;' . Session::getFormToken() . '=1'; ?>
 						<?php

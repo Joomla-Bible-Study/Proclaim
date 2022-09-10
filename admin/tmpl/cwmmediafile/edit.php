@@ -138,7 +138,7 @@ $this->useCoreUI = true;
 		<?php echo $this->addon->render($this->media_form, $new); ?>
 
 		<?php if ($this->canDo->get('core.admin')): ?>
-			<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'permissions', JText::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
+			<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
 			<div class="row-fluid">
 				<?php echo $this->form->getInput('rules'); ?>
 			</div>
@@ -152,7 +152,7 @@ $this->useCoreUI = true;
 			'bootstrap.renderModal',
 			'collapseModal',
 			array(
-				'title'  => JText::_('JBS_CMN_BATCH_OPTIONS'),
+				'title'  => Text::_('JBS_CMN_BATCH_OPTIONS'),
 				'footer' => $this->loadTemplate('converter_footer')
 			),
 			$this->loadTemplate('converter_body')

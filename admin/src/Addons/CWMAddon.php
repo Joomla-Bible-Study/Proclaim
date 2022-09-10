@@ -17,7 +17,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\Input\Input;
 use SimpleXMLElement;
-
+use CWM\Component\Proclaim\Administrator\Addons;
 defined('_JEXEC') or die;
 
 JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_ADDON . '/servers/', 'true', 'true');

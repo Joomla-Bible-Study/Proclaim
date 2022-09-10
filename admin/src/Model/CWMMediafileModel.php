@@ -740,7 +740,7 @@ class CWMMediafileModel extends AdminModel
 				return false;
 			}
 
-			$user = $user = Factory::getApplication()->getSession()->get('user');
+			$user = Factory::getApplication()->getSession()->get('user');
 
 			return $user->authorise('core.delete', 'com_proclaim.mediafile.' . (int) $record->id);
 		}

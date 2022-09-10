@@ -9,6 +9,8 @@
  * */
 // No Direct Access
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Administrator\Helper\CWMUploadScript;
+use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die;
 
@@ -46,7 +48,7 @@ class CWMAddonLegacy extends CWMAddon
 	 */
 	public function upload($data)
 	{
-		$upload = new JBSMUploadScript;
+		$upload = new CWMUploadScript;
 
 		return $upload->upload($data);
 	}
@@ -106,7 +108,7 @@ class CWMAddonLegacy extends CWMAddon
 	{
 		$html = '';
 
-		$html .= JHtml::_('bootstrap.addTab', 'myTab', 'options', JText::_('Options'));
+		$html .= JHtml::_('bootstrap.addTab', 'myTab', 'options', Text::_('Options'));
 
 		$html .= '<div class="row-fluid">';
 

@@ -312,13 +312,10 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a href=
 					. Text::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a></div>';
 
  $downloadlink .= HTMLHelper::_('bootstrap.renderModal', 'modal-test-modal', $modalParams, $modalBody);
-                    //$downloadlink = '<a href="index.php?option=com_proclaim&amp;view=CWMTerms&amp;';
-                    //$downloadlink .=   'tmpl=component&amp;layout=modal&amp;compat_mode=';
-                   // $downloadlink .= intval($compat_mode) . '&amp;mid=' . intval($media->id) . '&amp;t=' . intval($input->get('t'));
-                    //$downloadlink .= '" rel="{handler: \'iframe\', size: {x: 640, y: 480}}">';
+
                 }
             }
-			//$downloadlink .= $download_image . '</a>';
+
 		}
 
 		return $downloadlink;
