@@ -77,7 +77,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  mixed  A string if successful, otherwise a JError object.
+	 * @return  void  A string if successful, otherwise a JError object.
 	 *
 	 * @throws  \Exception
 	 * @since   11.1
@@ -141,30 +141,30 @@ class HTMLView extends BaseHtmlView
 
 		if ($canDo->get('core.create'))
 		{
-			ToolbarHelper::addNew('server.add');
+			ToolbarHelper::addNew('cwmserver.add');
 		}
 
 		if ($canDo->get('core.edit'))
 		{
-			ToolbarHelper::editList('server.edit');
+			ToolbarHelper::editList('cwmserver.edit');
 		}
 
 		if ($canDo->get('core.edit.state'))
 		{
 			ToolbarHelper::divider();
-			ToolbarHelper::publishList('servers.publish');
-			ToolbarHelper::unpublishList('servers.unpublish');
+			ToolbarHelper::publishList('cwmservers.publish');
+			ToolbarHelper::unpublishList('cwmservers.unpublish');
 			ToolbarHelper::divider();
-			ToolbarHelper::archiveList('servers.archive');
+			ToolbarHelper::archiveList('cwmservers.archive');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete'))
 		{
-			ToolbarHelper::deleteList('', 'servers.delete', 'JTOOLBAR_EMPTY_TRASH');
+			ToolbarHelper::deleteList('', 'cwmservers.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
 		elseif ($canDo->get('core.delete'))
 		{
-			ToolbarHelper::trash('servers.trash');
+			ToolbarHelper::trash('cwmservers.trash');
 		}
 	}
 
@@ -173,6 +173,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since    7.1.0
 	 */
 	protected function setDocument()

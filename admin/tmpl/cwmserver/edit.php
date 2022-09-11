@@ -16,112 +16,115 @@ use Joomla\CMS\Language\Text;
 defined('_JEXEC') or die;
 
 // Create shortcut to parameters.
-$app = Factory::getApplication();
+$app   = Factory::getApplication();
 $input = $app->input;
 
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('keepalive')
 	->useScript('form.validate')
-	->addInlineScript("
-	Joomla.submitbutton = function (task, type) {
-		if (task == 'cwmserver.setType') {
-			document.id('server-form').elements['jform[type]'].value = type;
-			Joomla.submitform(task, document.id('server-form'));
-		} else if (task == 'cwmserver.cancel') {
-			Joomla.submitform(task, document.getElementById('server-form'));
-		} else if (task == 'cwmserver.apply' || document.formvalidator.isValid(document.id('server-form'))) {
-			Joomla.submitform(task, document.getElementById('server-form'));
-		} else {
-			alert('" . $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')) . "');
-		}
-	}
-");
+	->useStyle('com_proclaim.cwmcore');
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_proclaim&layout=edit&id=' . (int) $this->item->id); ?>"
+<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmserver&layout=edit&id=' . (int) $this->item->id); ?>"
       method="post" name="adminForm" id="server-form" class="form-validate">
-	<div class="row-fluid">
-		<!-- Begin Content -->
-		<div class="span8 form-horizontal">
-			<ul class="nav nav-tabs">
-				<li class="active"><a href="#general" data-toggle="tab"><?php echo Text::_('JBS_CMN_DETAILS'); ?></a>
-				</li>
-				<?php foreach ($this->server_form->getFieldsets('params') as $fieldsets): ?>
-				<li>
-					<a href="#<?php echo $fieldsets->name; ?>" data-toggle="tab">
-						<?php echo Text::_($fieldsets->label); ?>
-					</a>
-				</li>
-				<?php endforeach; ?>
-				<?php if (count($this->server_form->getFieldsets('media')) > 0): ?>
-				<li>
-					<a href="#media_settings" data-toggle="tab">
-						<?php echo Text::_("JBS_SVR_MEDIA_SETTINGS"); ?>
-					</a>
-				</li>
-				<?php endif; ?>
-				<?php if ($this->canDo->get('core.admin')): ?>
-				<li><a href="#permissions" data-toggle="tab"><?php echo JText::_('JBS_CMN_FIELDSET_RULES'); ?></a>
-				</li>
-				<?php endif ?>
-			</ul>
-			<div class="tab-content">
-				<!-- Begin Tabs -->
-				<div class="tab-pane active" id="general">
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('server_name'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('server_name'); ?>
-						</div>
+	<div class="form-horizontal">
+		<?php echo HTMLHelper::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
+
+		<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'general', Text::_('JBS_CMN_GENERAL')); ?>
+		<div class="row">
+			<div class="col-lg-7">
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('server_name'); ?>
 					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('type'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('type'); ?>
-						</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('server_name'); ?>
 					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('published'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('published'); ?>
-						</div>
+				</div>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('type'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('type'); ?>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('published'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('published'); ?>
 					</div>
 				</div>
 				<?php foreach ($this->server_form->getFieldsets('params') as $fieldset): ?>
-				<div class="tab-pane" id="<?php echo $fieldset->name; ?>">
-					<?php foreach ($this->server_form->getFieldset($fieldset->name) as $field): ?>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $field->label; ?>
-						</div>
-						<div class="controls">
-							<?php echo $field->input; ?>
-						</div>
-					</div>
-					<?php endforeach; ?>
-				</div>
-				<?php endforeach; ?>
-				<div class="tab-pane" id="media_settings">
-					<div class="accordion" id="accordion">
-						<?php $first = true; ?>
-						<?php foreach ($this->server_form->getFieldsets('media') as $name => $fieldset): ?>
-						<div class="accordion-group">
-							<div class="accordion-heading">
-								<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion"
-								   href="#<?php echo $name; ?>">
-									<?php echo JText::_($fieldset->label); ?>
-								</a>
+					<div class="tab-pane" id="<?php echo $fieldset->name; ?>">
+						<?php foreach ($this->server_form->getFieldset($fieldset->name) as $field): ?>
+							<div class="control-group">
+								<div class="control-label">
+									<?php echo $field->label; ?>
+								</div>
+								<div class="controls">
+									<?php echo $field->input; ?>
+								</div>
 							</div>
-							<div id="<?php echo $name; ?>"
-							     class="accordion-body collapse <?php echo $first ? "in" : ""; ?>">
-								<div class="accordion-inner">
-									<?php foreach ($this->server_form->getFieldset($name) as $field): ?>
+						<?php endforeach; ?>
+					</div>
+				<?php endforeach; ?>
+			</div>
+
+			<div class="col-lg-5 form-vertical">
+				<h4>
+					<?php
+					if (isset($this->item->id) && isset($this->itemaddon))
+					{
+						echo $this->escape($this->item->addon->name);
+					}
+					?>
+				</h4>
+
+				<p>
+					<?php
+					if (isset($this->item->id) && isset($this->itemaddon))
+					{
+						echo $this->escape($this->item->addon->description);
+					}
+					?>
+				</p>
+			</div>
+		</div>
+		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
+		<?php foreach ($this->server_form->getFieldsets('params') as $fieldsets): ?>
+			<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', strtolower(Text::_($fieldsets->label)), Text::_($fieldsets->label)); ?>
+			<?php foreach ($this->server_form->getFieldset($fieldset->name) as $field): ?>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $field->label; ?>
+					</div>
+					<div class="controls">
+						<?php echo $field->input; ?>
+					</div>
+				</div>
+			<?php endforeach; ?>
+			<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
+		<?php endforeach; ?>
+		<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'media_settings', Text::_('JBS_SVR_MEDIA_SETTINGS')); ?>
+		<div class="row">
+			<div class="accordion" id="accordionlist">
+				<?php foreach ($this->server_form->getFieldsets('media') as $name => $fieldset): ?>
+					<div class="accordion-item">
+						<h2 class="accordion-heading" id="<?php echo Text::_($name) ?>">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+							        data-bs-target="#collapse<?php echo Text::_($name) ?>" aria-expanded="false"
+							        aria-controls="collapse<?php echo Text::_($name) ?>">
+								<?php echo Text::_($fieldset->label); ?>
+							</button>
+						</h2>
+						<div id="collapse<?php echo Text::_($name) ?>" class="accordion-collapse collapse"
+						     aria-labelledby="heading<?php echo $name; ?>"
+						     data-bs-parent="#accordionlist">
+							<div class="accordion-body">
+								<?php foreach ($this->server_form->getFieldset($name) as $field): ?>
 									<div class="control-group">
 										<div class="control-label">
 											<?php echo $field->label; ?>
@@ -130,45 +133,23 @@ $wa->useScript('keepalive')
 											<?php echo $field->input; ?>
 										</div>
 									</div>
-									<?php endforeach; ?>
-								</div>
+								<?php endforeach; ?>
 							</div>
 						</div>
-						<?php $first = false; ?>
-						<?php endforeach; ?>
 					</div>
-				</div>
-				<?php if ($this->canDo->get('core.admin')): ?>
-				<div class="tab-pane" id="permissions">
-					<?php echo $this->form->getInput('rules'); ?>
-				</div>
-				<?php endif; ?>
+				<?php endforeach; ?>
 			</div>
-			<input type="hidden" name="task" value=""/>
-			<input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
-			<?php echo HTMLHelper::_('form.token'); ?>
 		</div>
-		<!-- End Content -->
-		<!-- Begin Sidebar -->
-		<div class="span3 form-vertical">
-			<h4>
-				<?php
-				if (isset($this->item->id) && isset($this->itemaddon))
-				{
-					echo $this->escape($this->item->addon->name);
-				}
-				?>
-			</h4>
-
-			<p>
-				<?php
-				if (isset($this->item->id) && isset($this->itemaddon))
-				{
-					echo $this->escape($this->item->addon->description);
-				}
-				?>
-			</p>
-		</div>
-		<!-- End Sidebar -->
+		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
+		<?php if ($this->canDo->get('core.admin')): ?>
+			<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
+			<div class="row-fluid">
+				<?php echo $this->form->getInput('rules'); ?>
+			</div>
+			<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
+		<?php endif; ?>
 	</div>
+	<input type="hidden" name="task" value=""/>
+	<input type="hidden" name="return" value="<?php echo $input->getBase64('return'); ?>"/>
+	<?php echo HTMLHelper::_('form.token'); ?>
 </form>

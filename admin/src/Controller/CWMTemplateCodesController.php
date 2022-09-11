@@ -34,7 +34,7 @@ class CWMTemplateCodesController extends AdminController
 	 *
 	 * @since 7.1.0
 	 */
-	public function getModel($name = 'CWMTemplateCodeModel', $prefix = '', $config = array('ignore_request' => true))
+	public function getModel($name = 'CWMTemplateCode', $prefix = 'Administrator', $config = array('ignore_request' => true))
 	{
 		return parent::getModel($name, $prefix, $config);
 	}

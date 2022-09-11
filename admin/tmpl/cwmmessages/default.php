@@ -189,7 +189,7 @@ if ($saveOrder)
 								<td class="text-center d-none d-md-table-cell">
 									<?php
 									$options = [
-										'task_prefix' => 'messages.',
+										'task_prefix' => 'cwmmessages.',
 										'disabled'    => $workflow_state || !$canChange,
 										'id'          => 'state-' . $item->id
 									];

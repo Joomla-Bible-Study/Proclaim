@@ -9,6 +9,8 @@
  * */
 
 // No Direct Access
+use Joomla\CMS\Button\PublishedButton;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -29,123 +31,135 @@ $archived  = $this->state->get('filter.published') == 2 ? true : false;
 $trashed   = $this->state->get('filter.published') == -2 ? true : false;
 $columns   = 4;
 
+/** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
+$wa = $this->document->getWebAssetManager();
+$wa->useScript('multiselect')
+	->useStyle('com_proclaim.cwmcore')
+	->useScript('com_proclaim.cwmcorejs');
+
+$workflow_enabled  = ComponentHelper::getParams('com_proclaim')->get('workflow_enabled');
+$workflow_state    = false;
+$workflow_featured = false;
+if ($workflow_enabled) :
+
+// @todo move the script to a file
+	$js = <<<JS
+	(function() {
+		document.addEventListener('DOMContentLoaded', function() {
+		  var elements = [].slice.call(document.querySelectorAll('.message-status'));
+	
+		  elements.forEach(function (element) {
+			element.addEventListener('click', function(event) {
+				event.stopPropagation();
+			});
+		  });
+		});
+	})();
+	JS;
+
+	$wa->getRegistry()->addExtensionRegistryFile('com_workflow');
+	$wa->useScript('com_workflow.admin-items-workflow-buttons')
+		->addInlineScript($js, [], ['type' => 'module']);
+
+
+	$workflow_state    = Factory::getApplication()->bootComponent('com_proclaim')->isFunctionalityUsed('core.state', 'com_proclaim.server');
+	$workflow_featured = Factory::getApplication()->bootComponent('com_prcolaim')->isFunctionalityUsed('core.featured', 'com_proclaim.server');
+endif;
+
 $sortFields = $this->getSortFields();
 ?>
 <form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmservers'); ?>" method="post" name="adminForm"
       id="adminForm">
-	<?php if (!empty($this->sidebar)): ?>
-	<div id="j-sidebar-container" class="span2">
-		<?php echo $this->sidebar; ?>
-		<hr/>
-	</div>
-	<div id="j-main-container" class="span10">
-		<?php else : ?>
-		<div id="j-main-container">
-			<?php endif; ?>
-			<?php
-			// Search tools bar
-			echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
-			?>
+	<div class="row">
+		<div class="col-md-12">
+			<div id="j-main-container" class="j-main-container">
+				<?php echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
+				<?php if (empty($this->items)) : ?>
+					<div class="alert alert-info">
+						<span class="icon-info-circle" aria-hidden="true"></span><span
+								class="visually-hidden"><?php echo Text::_('INFO'); ?></span>
+						<?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+					</div>
+				<?php else : ?>
+					<table class="table itemList" id="messagesList">
+						<caption class="visually-hidden">
+							<?php echo Text::_('JBS_STY_TABLE_CAPTION'); ?>,
+							<span id="orderedBy"><?php echo Text::_('JGLOBAL_SORTED_BY'); ?> </span>,
+							<span id="filteredBy"><?php echo Text::_('JGLOBAL_FILTERED_BY'); ?></span>
+						</caption>
+						<thead>
+						<tr>
+							<th class="w-1 text-center">
+								<?php echo HTMLHelper::_('grid.checkall'); ?>
+							</th>
+							<th scope="col" class="w-1 text-center">
+								<?php echo HTMLHelper::_('grid.sort', 'JPUBLISHED', 'cwmservers.published', $listDirn, $listOrder); ?>
+							</th>
+							<th scope="col" style="min-width:100px">
+								<?php echo HTMLHelper::_('grid.sort', 'JBS_CMN_SERVERS', 'cwmservers.server_name', $listDirn, $listOrder); ?>
+							</th>
+							<th scope="col" class="w-3 d-none d-lg-table-cell">
+								<?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_ID', 'cwmservers.id', $listDirn, $listOrder); ?>
+							</th>
+						</tr>
+						</thead>
+						<tfoot>
+						<tr>
+							<td colspan="<?php echo $columns; ?>">
+							</td>
+						</tr>
+						</tfoot>
+						<tbody>
+						<?php
+						foreach ($this->items as $i => $item) :
+							$item->max_ordering = 0;
+							$canCreate = $user->authorise('core.create');
+							$canEdit = $user->authorise('core.edit', 'com_proclaim.cwmserver.' . $item->id);
+							$canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.cwmserver.' . $item->id);
+							$canChange = $user->authorise('core.edit.state', 'com_proclaim.cwmserver.' . $item->id);
+							?>
+							<tr class="row<?php echo $i % 2; ?>" data-draggable-group="<?php echo $item->id ?>">
 
-			<table class="table table-striped" id="serversList">
-				<thead>
-				<tr>
+								<td class="center hidden-phone">
+									<?php echo HTMLHelper::_('grid.id', $i, $item->id); ?>
+								</td>
+								<td class="text-center d-none d-md-table-cell">
+									<?php
+									$options = [
+										'task_prefix' => 'cwmservers.',
+										'disabled'    => $workflow_state || !$canChange,
+										'id'          => 'state-' . $item->id
+									];
 
-					<th width="1%">
-						<input type="checkbox" name="checkall-toggle" value=""
-						       title="<?php echo Text::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
-					</th>
-					<th width="1%" style="min-width:55px;" class="nowrap center">
-						<?php echo HTMLHelper::_('grid.sort', 'JPUBLISHED', 'cwmservers.published', $listDirn, $listOrder); ?>
-					</th>
-					<th>
-						<?php echo HTMLHelper::_('grid.sort', 'JBS_CMN_SERVERS', 'cwmservers.server_name', $listDirn, $listOrder); ?>
-					</th>
+									echo (new PublishedButton)->render((int) $item->published, $i, $options, '', '');
+									?>
+								</td>
+								<td class="nowrap has-context">
+									<div class="pull-left">
 
-					<th width="1%" class="nowrap hidden-phone">
-						<?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_ID', 'cwmservers.id', $listDirn, $listOrder); ?>
-					</th>
-				</tr>
-				</thead>
-				<tfoot>
-				<tr>
-					<td colspan="<?php echo $columns; ?>">
-					</td>
-				</tr>
-				</tfoot>
-				<tbody>
-				<?php
-				foreach ($this->items as $i => $item) :
-					$item->max_ordering = 0;
-					$canCreate = $user->authorise('core.create');
-					$canEdit = $user->authorise('core.edit', 'com_proclaim.cwmserver.' . $item->id);
-					$canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.cwmserver.' . $item->id);
-					$canChange = $user->authorise('core.edit.state', 'com_proclaim.cwmserver.' . $item->id);
-					?>
-					<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->id ?>">
-
-						<td class="center hidden-phone">
-							<?php echo HTMLHelper::_('grid.id', $i, $item->id); ?>
-						</td>
-						<td class="center">
-							<div class="btn-group">
-								<?php echo HTMLHelper::_('jgrid.published', $item->published, $i, 'cwmservers.', $canChange, 'cb', '', ''); ?>
-							</div>
-						</td>
-						<td class="nowrap has-context">
-							<div class="pull-left">
-
-								<?php if ($canEdit || $canEditOwn) : ?>
-									<a href="<?php echo Route::_('index.php?option=com_proclaim&task=cwmserver.edit&id=' . (int) $item->id); ?>"
-									   title="<?php echo Text::_('JACTION_EDIT'); ?>">
-										<?php echo $this->escape($item->server_name); ?></a>
-								<?php else : ?>
-									<span
-											title="<?php echo Text::sprintf('JFIELD_ALIAS_LABEL', $this->escape($item->server_name)); ?>"><?php echo $this->escape($item->server_name); ?></span>
-								<?php endif; ?>
-							</div>
-							<div class="pull-left">
-								<?php
-								// Create dropdown items
-								HTMLHelper::_('dropdown.edit', $item->id, 'server.');
-								HTMLHelper::_('dropdown.divider');
-								if ($item->published) :
-									HTMLHelper::_('dropdown.unpublish', 'cb' . $i, 'cwmservers.');
-								else :
-									HTMLHelper::_('dropdown.publish', 'cb' . $i, 'cwmservers.');
-								endif;
-
-								HTMLHelper::_('dropdown.divider');
-
-								if ($archived) :
-									HTMLHelper::_('dropdown.unarchive', 'cb' . $i, 'cwmservers.');
-								else :
-									HTMLHelper::_('dropdown.archive', 'cb' . $i, 'cwmservers.');
-								endif;
-
-								if ($trashed) :
-									HTMLHelper::_('dropdown.untrash', 'cb' . $i, 'cwmservers.');
-								else :
-									HTMLHelper::_('dropdown.trash', 'cb' . $i, 'cwmservers.');
-								endif;
-
-								// Render dropdown list
-								echo HTMLHelper::_('dropdown.render');
-								?>
-							</div>
-						</td>
-						<td class="center hidden-phone">
-							<?php echo (int) $item->id; ?>
-						</td>
-					</tr>
-				<?php endforeach; ?>
-				</tbody>
-			</table>
-			<?php echo $this->pagination->getListFooter(); ?>
-			<input type="hidden" name="task" value=""/>
-			<input type="hidden" name="boxchecked" value="0"/>
-			<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
-			<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
-			<?php echo HTMLHelper::_('form.token'); ?>
-		</div>
+										<?php if ($canEdit || $canEditOwn) : ?>
+											<a href="<?php echo Route::_('index.php?option=com_proclaim&task=cwmserver.edit&id=' . (int) $item->id); ?>"
+											   title="<?php echo Text::_('JACTION_EDIT'); ?>">
+												<?php echo $this->escape($item->server_name); ?></a>
+										<?php else : ?>
+											<span
+													title="<?php echo Text::sprintf('JFIELD_ALIAS_LABEL', $this->escape($item->server_name)); ?>"><?php echo $this->escape($item->server_name); ?></span>
+										<?php endif; ?>
+									</div>
+								</td>
+								<td class="center hidden-phone">
+									<?php echo (int) $item->id; ?>
+								</td>
+							</tr>
+						<?php endforeach; ?>
+						</tbody>
+					</table>
+				<?php endif; ?>
+				<?php echo $this->pagination->getListFooter(); ?>
+				<input type="hidden" name="task" value=""/>
+				<input type="hidden" name="boxchecked" value="0"/>
+				<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
+				<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
+				<?php echo HTMLHelper::_('form.token'); ?>
+			</div>
 </form>
