@@ -68,7 +68,7 @@ class CWMSeriesController extends AdminController
 	 *
 	 * @since 7.0.0
 	 */
-	public function getModel($name = 'CWMSerie', $prefix = '', $config = array('ignore_request' => true))
+	public function getModel($name = 'CWMSerie', $prefix = 'Administrator', $config = array('ignore_request' => true))
 	{
 		return parent::getModel($name, $prefix, $config);
 	}

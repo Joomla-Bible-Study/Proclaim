@@ -100,12 +100,12 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0.0
 	 */
 	protected function addToolbar()
 	{
-		$input = new Input;
-		$input->set('hidemainmenu', true);
+		Factory::getApplication()->input->set('hidemainmenu', true);
 		$isNew = ((int) $this->item->id === 0);
 		$title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
 		ToolbarHelper::title(Text::_('JBS_CMN_PODCASTS') . ': <small><small>[' . $title . ']</small></small>', 'feed feed');
@@ -149,6 +149,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since    7.1.0
 	 */
 	protected function setDocument()

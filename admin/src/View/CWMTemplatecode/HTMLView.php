@@ -137,7 +137,6 @@ class HTMLView extends BaseHtmlView
 	 */
 	protected function addToolbar()
 	{
-		$input = new Input;
 		Factory::getApplication()->input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);
 		$title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');

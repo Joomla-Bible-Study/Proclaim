@@ -98,18 +98,16 @@ class CWMMediaFilesController extends AdminController
 	/**
 	 * Proxy for getModel
 	 *
-	 * @param   string  $name    The name of the model
-	 * @param   string  $prefix  The prefix for the PHP class name
-	 * @param   array   $config  Set ignore request
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return \BiblestudyModelMediafile|boolean|\Joomla\CMS\MVC\Model\BaseDatabaseModel
+	 * @return boolean|\Joomla\CMS\MVC\Model\BaseDatabaseModel
 	 *
-	 * @since 7.0
+	 * @since 7.0.0
 	 */
-	public function &getModel($name = 'CWMMediaFile', $prefix = '', $config = array('ignore_request' => true))
+	public function getModel($name = 'CWMMediaFile', $prefix = 'Administrator', $config = array('ignore_request' => true))
 	{
-		$model = parent::getModel($name, $prefix, $config);
-
-		return $model;
+		return parent::getModel($name, $prefix, $config);
 	}
 }

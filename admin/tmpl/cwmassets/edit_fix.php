@@ -43,10 +43,7 @@ defined('_JEXEC') or die();
 		</div>
 
 		<form action="<?php JRoute::_('index.php?option=com_proclaim&view=cwmassets'); ?>" name="adminForm"
-		      id="adminForm"
-		      method="get">
-			<input type="hidden" name="option" value="com_proclaim"/>
-			<input type="hidden" name="view" value="assets"/>
+		      id="adminForm" class="form-inline">
 			<?php if ($this->state === 'start')
 			{ ?>
 				<input type="hidden" name="task" value="assets.browse"/>
@@ -55,7 +52,6 @@ defined('_JEXEC') or die();
 			{ ?>
 				<input type="hidden" name="task" value="assets.run"/>
 			<?php } ?>
-			<input type="hidden" name="tmpl" value="component"/>
 			<?php echo HTMLHelper::_('form.token'); ?>
 		</form>
 

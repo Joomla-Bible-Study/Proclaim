@@ -184,7 +184,7 @@ class HTMLView extends BaseHtmlView
 	 */
 	protected function addToolbar()
 	{
-		$canDo = ContentHelper::getActions('com_proclaim');
+		Factory::getApplication()->input->set('hidemainmenu', true);
 		$user = Factory::getApplication()->getIdentity();
 
 		ToolbarHelper::title(Text::_('JBS_CMN_ADMINISTRATION'), 'administration');

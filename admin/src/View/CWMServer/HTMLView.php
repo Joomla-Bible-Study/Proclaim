@@ -124,8 +124,7 @@ class HTMLView extends BaseHtmlView
 	 */
 	protected function addToolbar()
 	{
-		$input = new Input;
-		$input->set('hidemainmenu', true);
+		Factory::getApplication()->input->set('hidemainmenu', true);
 		$isNew = ($this->item->id < 1);
 		$canDo = ContentHelper::getActions('com_proclaim');
 		$title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');

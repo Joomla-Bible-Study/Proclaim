@@ -8,6 +8,8 @@
  * @link       https://www.christianwebministries.org
  * */
 // Check to ensure this file is included in Joomla!
+use Joomla\CMS\Factory;
+
 defined('_JEXEC') or die;
 
 $app = Factory::getApplication();
@@ -30,7 +32,7 @@ $this->recordId = $app->input->get('recordId');
             <div class="accordion-inner">
                 <?php foreach($servers as $server): ?>
                     <div>
-                        <img class="pull-left" style="padding: 5px;" src="<?php echo $server->image_url; ?>"/>
+                        <img class="pull-left" style="padding: 5px;" src="<?php echo $server->image_url; ?>" alt=""/>
                         <a href="#" title="<?php echo $server->title; ?>"
                            onclick="setServer('<?php echo base64_encode(json_encode(array('id' => $this->recordId, 'name' => $server->name))); ?>')">
                             <?php echo $server->title; ?>

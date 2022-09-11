@@ -68,7 +68,7 @@ class CWMTeachersController extends AdminController
 	 *
 	 * @since 7.0.0
 	 */
-	public function getModel($name = 'CWMTeacherModel', $prefix = '', $config = array('ignore_request' => true))
+	public function getModel($name = 'CWMTeacher', $prefix = 'Administrator', $config = array('ignore_request' => true))
 	{
 		return parent::getModel($name, $prefix, $config);
 	}
