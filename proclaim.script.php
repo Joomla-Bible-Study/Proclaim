@@ -91,13 +91,13 @@ class com_proclaimInstallerScript
 		// -- modules => { (folder) => { (module) => { (position), (published) } }* }*
 		'modules' => array(
 			'administrator' => array(),
-			'site'          => array('biblestudy' => 0, 'biblestudy_podcast' => 0,),
+			'site'          => array('proclaim' => 0, 'proclaim_podcast' => 0,),
 		),
 		// -- plugins => { (folder) => { (element) => (published) }* }*
 		'plugins' => array(
-			'finder' => array('biblestudy' => 1,),
-			'search' => array('biblestudysearch' => 0,),
-			'system' => array('jbspodcast' => 0, 'jbsbackup' => '0'),
+			'finder' => array('proclaim' => 1,),
+			'system' => array('proclaimpodcast' => 0, 'proclaimpodcast' => '0'),
+            'system' => array('proclaimbackup' => 0, 'proclaimbackup' => '0'),
 		),
 	);
 
@@ -683,7 +683,7 @@ class com_proclaimInstallerScript
 			</tfoot>
 			<tbody>
 			<tr class="row0">
-				<td class="key" colspan="2">' . Text::_('JBS_CMN_com_proclaim') . '</td>
+				<td class="key" colspan="2">' . Text::_('JBS_CMN_COM_PROCLAIM') . '</td>
 				<td><strong style="color: green;">' . Text::_('JBS_INS_REMOVED') . '</strong></td>
 			</tr>';
 
