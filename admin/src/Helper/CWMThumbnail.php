@@ -80,7 +80,6 @@ class CWMThumbnail
 		}
 
 		// Create new thumbnail
-        $path = '/Users/tomfuller/Sites/localhost/j4/images/biblestudy/studies/CapitolBuildings.jpg';
 		$image     = new Image($path);
 		$thumbnail = $image->resize($new_size, $new_size);
 		$thumbnail->toFile(dirname($path) . '/thumb_' . $filename, IMAGETYPE_PNG);

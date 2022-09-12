@@ -200,6 +200,7 @@ class CWMTeacherModel extends AdminModel
 	 */
 	public function save($data)
 	{
+        //var_dump($data); die;
 		/** @var Registry $params */
 		$params = CWMParams::getAdmin()->params;
 		$path   = 'images/biblestudy/teachers/' . $data['id'];
@@ -241,23 +242,24 @@ class CWMTeacherModel extends AdminModel
 			}
 
 			// Set contact to be a Int to work with Database
-			$data['contact'] = (int) $data['contact'];
+			if (is_string($data['contact'])){
+            $data['contact'] = (int) $data['contact'];}
 
 			// Fix Save of update file to match path.
-			if ($data['teacher_image'] != $data['image'])
-			{
-				$data['teacher_thumbnail'] = $data['image'];
-				$data['teacher_image']     = $data['image'];
-			}
+		//	if ($data['teacher_image'] != $data['image'])
+		//	{
+			//	$data['teacher_thumbnail'] = $data['image'];
+			//	$data['teacher_image']     = $data['image'];
+			//}
 
 			return parent::save($data);
 		}
 
-		CWMThumbnail::create($data['image'], $path, $params->get('thumbnail_teacher_size', 100));
+		//CWMThumbnail::create($data['image'], $path, $params->get('thumbnail_teacher_size', 100));
 
 		// Modify model data
-		$data['teacher_image']     = $data['image'];
-		$data['teacher_thumbnail'] = $path . '/thumb_' . basename($data['image']);
+		//$data['teacher_image']     = $data['image'];
+		//$data['teacher_thumbnail'] = $path . '/thumb_' . basename($data['image']);
 
 		return parent::save($data);
 	}
