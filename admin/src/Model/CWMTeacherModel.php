@@ -199,67 +199,50 @@ class CWMTeacherModel extends AdminModel
 	 * @since 9.0.0
 	 */
 	public function save($data)
-	{
+    {
         //var_dump($data); die;
-		/** @var Registry $params */
-		$params = CWMParams::getAdmin()->params;
-		$path   = 'images/biblestudy/teachers/' . $data['id'];
-		$prefix = 'thumb_';
+        /** @var Registry $params */
+        $params = CWMParams::getAdmin()->params;
+        $path = 'images/biblestudy/teachers/' . $data['id'];
+        $prefix = 'thumb_';
         $image = HTMLHelper::cleanImageURL($data['image']);
         $data['image'] = $image->url;
-		// If no image uploaded, just save data as usual
-		if (empty($data['image']) || strpos($data['image'], $prefix) !== false)
-		{
-			if (empty($data['image']))
-			{
-				// Modify model data if no image is set.
-				$data['teacher_image']     = "";
-				$data['teacher_thumbnail'] = "";
-			}
-			elseif (!CWMProclaimHelper::startsWith(basename($data['image']), $prefix))
-			{
-				// Modify model data
-				$data['teacher_image']     = $data['image'];
-				$data['teacher_thumbnail'] = $path . '/thumb_' . basename($data['image']);
-			}
-			elseif (substr_count(basename($data['image']), $prefix) > 1)
-			{
-				// Out Fix removing redundent 'thumb_' in path.
-				$x = substr_count(basename($data['image']), $prefix);
+        // If no image uploaded, just save data as usual
+        if (empty($data['image']) || strpos($data['image'], $prefix) !== false) {
+            if (empty($data['image'])) {
+                // Modify model data if no image is set.
+                $data['teacher_image'] = "";
+                $data['teacher_thumbnail'] = "";
+            } elseif (!CWMProclaimHelper::startsWith(basename($data['image']), $prefix)) {
+                // Modify the image and model data
+                CWMThumbnail::create($data['image'], $path, $params->get('thumbnail_teacher_size', 100));
+                $data['teacher_image'] = $data['image'];
+                $data['teacher_thumbnail'] = $path . '/thumb_' . basename($data['image']);
+            } elseif (substr_count(basename($data['image']), $prefix) > 1) {
+                // Out Fix removing redundent 'thumb_' in path.
+                $x = substr_count(basename($data['image']), $prefix);
 
-				while ($x > 1)
-				{
-					if (substr(basename($data['image']), 0, strlen($prefix)) == $prefix)
-					{
-						$str                       = substr(basename($data['image']), strlen($prefix));
-						$data['teacher_image']     = $path . '/' . $str;
-						$data['teacher_thumbnail'] = $path . '/' . $str;
-						$data['image']             = $path . '/' . $str;
-					}
+                while ($x > 1) {
+                    if (substr(basename($data['image']), 0, strlen($prefix)) == $prefix) {
+                        $str = substr(basename($data['image']), strlen($prefix));
+                        $data['teacher_image'] = $path . '/' . $str;
+                        $data['teacher_thumbnail'] = $path . '/' . $str;
+                        $data['image'] = $path . '/' . $str;
+                    }
 
-					$x--;
-				}
-			}
+                    $x--;
+                }
+            }
+        }
+        // Set contact to be a Int to work with Database
 
-			// Set contact to be a Int to work with Database
-			if (is_string($data['contact'])){
-            $data['contact'] = (int) $data['contact'];}
+        $data['contact'] = intval($data['contact']);
 
-			// Fix Save of update file to match path.
-		//	if ($data['teacher_image'] != $data['image'])
-		//	{
-			//	$data['teacher_thumbnail'] = $data['image'];
-			//	$data['teacher_image']     = $data['image'];
-			//}
-
-			return parent::save($data);
-		}
-
-		//CWMThumbnail::create($data['image'], $path, $params->get('thumbnail_teacher_size', 100));
-
-		// Modify model data
-		//$data['teacher_image']     = $data['image'];
-		//$data['teacher_thumbnail'] = $path . '/thumb_' . basename($data['image']);
+        //Fix Save of update file to match path.
+        if ($data['teacher_image'] != $data['image']) {
+            $data['teacher_thumbnail'] = $data['image'];
+            $data['teacher_image'] = $data['image'];
+        }
 
 		return parent::save($data);
 	}
