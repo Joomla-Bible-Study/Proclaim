@@ -28,7 +28,7 @@ class CWMServerController extends FormController
 	/**
 	 * Method to add a new record.
 	 *
-	 * @return  mixed  True if the record can be added, a error object if not.
+	 * @return  boolean  True if the record can be added, a error object if not.
 	 *
 	 * @throws \Exception
 	 * @since   12.2

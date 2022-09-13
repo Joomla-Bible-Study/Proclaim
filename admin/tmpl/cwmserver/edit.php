@@ -57,20 +57,20 @@ $wa->useScript('keepalive')
 						<?php echo $this->form->getInput('published'); ?>
 					</div>
 				</div>
-				<?php foreach ($this->server_form->getFieldsets('params') as $fieldset): ?>
-					<div class="tab-pane" id="<?php echo $fieldset->name; ?>">
-						<?php foreach ($this->server_form->getFieldset($fieldset->name) as $field): ?>
-							<div class="control-group">
-								<div class="control-label">
-									<?php echo $field->label; ?>
-								</div>
-								<div class="controls">
-									<?php echo $field->input; ?>
-								</div>
-							</div>
-						<?php endforeach; ?>
-					</div>
-				<?php endforeach; ?>
+<!--				--><?php //foreach ($this->server_form->getFieldsets('params') as $fieldset): ?>
+<!--					<div class="tab-pane" id="--><?php //echo $fieldset->name; ?><!--">-->
+<!--						--><?php //foreach ($this->server_form->getFieldset($fieldset->name) as $field): ?>
+<!--							<div class="control-group">-->
+<!--								<div class="control-label">-->
+<!--									--><?php //echo $field->label; ?>
+<!--								</div>-->
+<!--								<div class="controls">-->
+<!--									--><?php //echo $field->input; ?>
+<!--								</div>-->
+<!--							</div>-->
+<!--						--><?php //endforeach; ?>
+<!--					</div>-->
+<!--				--><?php //endforeach; ?>
 			</div>
 
 			<div class="col-lg-5 form-vertical">
@@ -94,53 +94,53 @@ $wa->useScript('keepalive')
 			</div>
 		</div>
 		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
-		<?php foreach ($this->server_form->getFieldsets('params') as $fieldsets): ?>
-			<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', strtolower(Text::_($fieldsets->label)), Text::_($fieldsets->label)); ?>
-			<?php foreach ($this->server_form->getFieldset($fieldset->name) as $field): ?>
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo $field->label; ?>
-					</div>
-					<div class="controls">
-						<?php echo $field->input; ?>
-					</div>
-				</div>
-			<?php endforeach; ?>
-			<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
-		<?php endforeach; ?>
-		<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'media_settings', Text::_('JBS_SVR_MEDIA_SETTINGS')); ?>
-		<div class="row">
-			<div class="accordion" id="accordionlist">
-				<?php foreach ($this->server_form->getFieldsets('media') as $name => $fieldset): ?>
-					<div class="accordion-item">
-						<h2 class="accordion-heading" id="<?php echo Text::_($name) ?>">
-							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-							        data-bs-target="#collapse<?php echo Text::_($name) ?>" aria-expanded="false"
-							        aria-controls="collapse<?php echo Text::_($name) ?>">
-								<?php echo Text::_($fieldset->label); ?>
-							</button>
-						</h2>
-						<div id="collapse<?php echo Text::_($name) ?>" class="accordion-collapse collapse"
-						     aria-labelledby="heading<?php echo $name; ?>"
-						     data-bs-parent="#accordionlist">
-							<div class="accordion-body">
-								<?php foreach ($this->server_form->getFieldset($name) as $field): ?>
-									<div class="control-group">
-										<div class="control-label">
-											<?php echo $field->label; ?>
-										</div>
-										<div class="controls">
-											<?php echo $field->input; ?>
-										</div>
-									</div>
-								<?php endforeach; ?>
-							</div>
-						</div>
-					</div>
-				<?php endforeach; ?>
-			</div>
-		</div>
-		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
+<!--		--><?php //foreach ($this->server_form->getFieldsets('params') as $fieldsets): ?>
+<!--			--><?php //echo HTMLHelper::_('bootstrap.addTab', 'myTab', strtolower(Text::_($fieldsets->label)), Text::_($fieldsets->label)); ?>
+<!--			--><?php //foreach ($this->server_form->getFieldset($fieldset->name) as $field): ?>
+<!--				<div class="control-group">-->
+<!--					<div class="control-label">-->
+<!--						--><?php //echo $field->label; ?>
+<!--					</div>-->
+<!--					<div class="controls">-->
+<!--						--><?php //echo $field->input; ?>
+<!--					</div>-->
+<!--				</div>-->
+<!--			--><?php //endforeach; ?>
+<!--			--><?php //echo HTMLHelper::_('bootstrap.endTab'); ?>
+<!--		--><?php //endforeach; ?>
+<!--		--><?php //echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'media_settings', Text::_('JBS_SVR_MEDIA_SETTINGS')); ?>
+<!--		<div class="row">-->
+<!--			<div class="accordion" id="accordionlist">-->
+<!--				--><?php //foreach ($this->server_form->getFieldsets('media') as $name => $fieldset): ?>
+<!--					<div class="accordion-item">-->
+<!--						<h2 class="accordion-heading" id="--><?php //echo Text::_($name) ?><!--">-->
+<!--							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"-->
+<!--							        data-bs-target="#collapse--><?php //echo Text::_($name) ?><!--" aria-expanded="false"-->
+<!--							        aria-controls="collapse--><?php //echo Text::_($name) ?><!--">-->
+<!--								--><?php //echo Text::_($fieldset->label); ?>
+<!--							</button>-->
+<!--						</h2>-->
+<!--						<div id="collapse--><?php //echo Text::_($name) ?><!--" class="accordion-collapse collapse"-->
+<!--						     aria-labelledby="heading--><?php //echo $name; ?><!--"-->
+<!--						     data-bs-parent="#accordionlist">-->
+<!--							<div class="accordion-body">-->
+<!--								--><?php //foreach ($this->server_form->getFieldset($name) as $field): ?>
+<!--									<div class="control-group">-->
+<!--										<div class="control-label">-->
+<!--											--><?php //echo $field->label; ?>
+<!--										</div>-->
+<!--										<div class="controls">-->
+<!--											--><?php //echo $field->input; ?>
+<!--										</div>-->
+<!--									</div>-->
+<!--								--><?php //endforeach; ?>
+<!--							</div>-->
+<!--						</div>-->
+<!--					</div>-->
+<!--				--><?php //endforeach; ?>
+<!--			</div>-->
+<!--		</div>-->
+<!--		--><?php //echo HTMLHelper::_('bootstrap.endTab'); ?>
 		<?php if ($this->canDo->get('core.admin')): ?>
 			<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
 			<div class="row-fluid">

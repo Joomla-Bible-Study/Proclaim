@@ -220,7 +220,7 @@ class CWMServerModel extends AdminModel
 		Form::addFieldPath($path . '/fields');
 
 		// Add language files
-		$lang = Factory::getLanguage();
+		$lang = Factory::getApplication()->getLanguage();
 
 		if (!$lang->load('jbs_addon_' . $type, $path))
 		{
@@ -229,12 +229,7 @@ class CWMServerModel extends AdminModel
 
 		$form = $this->loadForm('com_proclaim.server.' . $type, $type, array('control' => 'jform', 'load_data' => true), true, "/server");
 
-		if ($form === null)
-		{
-			return false;
-		}
-
-		return $form;
+		return $form ?? false;
 	}
 
 	/**
@@ -258,12 +253,7 @@ class CWMServerModel extends AdminModel
 		// Get the forms.
 		$form = $this->loadForm('com_proclaim.server', 'server', array('control' => 'jform', 'load_data' => $loadData));
 
-		if ($form === null)
-		{
-			return false;
-		}
-
-		return $form;
+		return $form ?? false;
 	}
 
 	/**
@@ -273,6 +263,7 @@ class CWMServerModel extends AdminModel
 	 *
 	 * @return  boolean  True if allowed to delete the record. Defaults to the permission for the component.
 	 *
+	 * @throws \Exception
 	 * @since    1.6
 	 */
 	protected function canDelete($record)
@@ -355,12 +346,12 @@ class CWMServerModel extends AdminModel
 		$input = $app->input;
 
 		$pk = $input->get('id', null, 'INTEGER');
-		$this->setState('cwmserver.id', $pk);
+		$this->setState('server.id', $pk);
 
 		$sname = $app->getUserState('com_proclaim.edit.server.server_name');
-		$this->setState('cwmserver.server_name', $sname);
+		$this->setState('server.server_name', $sname);
 
 		$type = $app->getUserState('com_proclaim.edit.server.type');
-		$this->setState('cwmserver.type', $type);
+		$this->setState('server.type', $type);
 	}
 }
