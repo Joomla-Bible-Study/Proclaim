@@ -175,6 +175,18 @@
 	  "version": "b0a8df19948936e693d5c710d22673ed9ad760a3"
 	},
 	{
+	  "name": "com_proclaim.cwmadmin-types-modal",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmadmin-types-modal.min.js",
+	  "dependencies": [
+		"com_proclaim.cwmadmin-types-modal.es5"
+	  ],
+	  "attributes": {
+		"type": "module"
+	  },
+	  "version": "b0a8df19948936e693d5c710d22673ed9ad760a3"
+	},
+	{
 	  "name": "com_proclaim.form-edit.es5",
 	  "type": "script",
 	  "uri": "com_proclaim/form-edit-es5.min.js",
@@ -216,6 +228,19 @@
 	  "name": "com_proclaim.cwmadmin-messages-modal.es5",
 	  "type": "script",
 	  "uri": "com_proclaim/cwmadmin-messages-modal-es5.min.js",
+	  "dependencies": [
+		"core"
+	  ],
+	  "attributes": {
+		"nomodule": true,
+		"defer": true
+	  },
+	  "version": "872a497cd19612c3e1940b5feefdc0e14c08d4b9"
+	},
+	{
+	  "name": "com_proclaim.cwmadmin-types-modal.es5",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmadmin-types-modal-es5.min.js",
 	  "dependencies": [
 		"core"
 	  ],

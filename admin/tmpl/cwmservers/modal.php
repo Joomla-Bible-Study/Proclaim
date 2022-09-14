@@ -9,13 +9,14 @@
  * */
 // No Direct Access
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 
 defined('_JEXEC') or die;
 
-HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-
-HTMLHelper::_('behavior.framework', true);
-HTMLHelper::_('formbehavior.chosen', 'select');
+/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
+$wa = $this->document->getWebAssetManager();
+$wa->useScript('core')
+	->useScript('com_proclaim.cwmadmin-servers-modal');
 
 $input     = Factory::getApplication()->input;
 $function  = $input->getCmd('function', 'jSelectServer');

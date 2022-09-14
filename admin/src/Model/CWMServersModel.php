@@ -99,7 +99,7 @@ class CWMServersModel extends ListModel
 		$options = array();
 
 		// Path to endpoints
-		$path = JPATH_ADMINISTRATOR . '/components/com_proclaim/addons/servers';
+		$path = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/servers';
 
 		if (Folder::exists($path))
 		{
@@ -110,28 +110,28 @@ class CWMServersModel extends ListModel
 			return false;
 		}
 
+		$i = 0;
+
 		foreach ($servers as $server)
 		{
 			$file = $path . '/' . $server . '/' . $server . '.xml';
 
-			if (is_file($file))
+			if (is_file($file) && $xml = simplexml_load_string(file_get_contents($file)))
 			{
-				if ($xml = simplexml_load_string(file_get_contents($file)))
-				{
-					// Create the reverse lookup for Endpoint type to Endpoint name
-					$this->rlu_type[$server] = (string) $xml->name;
+				// Create the reverse lookup for Endpoint type to Endpoint name
+				$this->rlu_type[$server] = (string) $xml->name;
 
-					$o              = new \stdClass;
-					$o->type        = (string) $xml['type'];
-					$o->name        = (string) $server;
-					$o->image_url   = Uri::base() . '/components/com_proclaim/src/addons/servers/' . $server . '/' . $server . '.png';
-					$o->title       = (string) $xml->name;
-					$o->description = (string) $xml->description;
-					$o->path        = $path . '/' . $server . '/';
+				$o              = new \stdClass;
+				$o->id          = $i;
+				$o->type        = (string) $xml['type'];
+				$o->name        = (string) $server;
+				$o->image_url   = Uri::base() . 'components/com_proclaim/src/addons/servers/' . $server . '/' . $server . '.png';
+				$o->title       = (string) $xml->name;
+				$o->description = (string) $xml->description;
+				$o->path        = $path . '/' . $server . '/';
 
-					$options[$o->type][] = $o;
-					unset($xml);
-				}
+				$options[$i++] = $o;
+				unset($xml);
 			}
 		}
 

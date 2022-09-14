@@ -39,6 +39,12 @@ class HTMLView extends BaseHtmlView
 	protected $items;
 
 	/**
+	 * @var object
+	 * @since 7.0.0
+	 */
+	protected $types;
+
+	/**
 	 * Pagination
 	 *
 	 * @var object
