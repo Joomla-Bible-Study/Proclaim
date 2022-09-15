@@ -99,7 +99,7 @@
 
 	<!-- Create com_proclaim-x.x.x.zip -->
 	<target name="component" depends="init,dev.clean" description="Builds the component">
-		<propertyprompt propertyName="version" defaultValue="9.2.x"
+		<propertyprompt propertyName="version" defaultValue="10.0.x"
 		                promptText="Enter the version you are building."/>
 		<delete file="${basedir}/build/com_proclaim-${version}.zip"/>
 		<zip destfile="${basedir}/build/com_proclaim-${version}.zip" basedir="${basedir}">
