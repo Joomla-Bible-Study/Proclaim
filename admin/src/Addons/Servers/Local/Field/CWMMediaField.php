@@ -6,6 +6,10 @@
  * @copyright   Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
+namespace CWM\Component\Proclaim\Administrator\Field;
+
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
 
 defined('JPATH_PLATFORM') or die;
 
@@ -15,7 +19,7 @@ defined('JPATH_PLATFORM') or die;
  *
  * @since  1.6
  */
-class JFormFieldJBSMMedia extends JFormField
+class CWMMediaField extends JFormField
 {
 	/**
 	 * The form field type.
@@ -178,7 +182,7 @@ class JFormFieldJBSMMedia extends JFormField
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @see 	JFormField::setup()
+	 * @see     JFormField::setup()
 	 * @since   3.2
 	 */
 	public function setup(SimpleXMLElement $element, $value, $group = null)
@@ -192,8 +196,8 @@ class JFormFieldJBSMMedia extends JFormField
 			$this->authorField   = $this->element['created_by_field'] ? (string) $this->element['created_by_field'] : 'created_by';
 			$this->asset         = $this->form->getValue($assetField) ? $this->form->getValue($assetField) : (string) $this->element['asset_id'];
 			$this->link          = (string) $this->element['link'];
-			$this->width  	     = isset($this->element['width']) ? (int) $this->element['width'] : 800;
-			$this->height 	     = isset($this->element['height']) ? (int) $this->element['height'] : 500;
+			$this->width         = isset($this->element['width']) ? (int) $this->element['width'] : 800;
+			$this->height        = isset($this->element['height']) ? (int) $this->element['height'] : 500;
 			$this->preview       = (string) $this->element['preview'];
 			$this->directory     = (string) $this->element['directory'];
 			$this->previewWidth  = isset($this->element['preview_width']) ? (int) $this->element['preview_width'] : 200;
@@ -209,6 +213,7 @@ class JFormFieldJBSMMedia extends JFormField
 	 *
 	 * @return  string  The field input markup.
 	 *
+	 * @throws \Exception
 	 * @since   1.6
 	 */
 	protected function getInput()
@@ -225,6 +230,8 @@ class JFormFieldJBSMMedia extends JFormField
 	 * Get the data that is going to be passed to the layout
 	 *
 	 * @return  array
+	 * @throws \Exception
+	 * @since 7.0.0
 	 */
 	public function getLayoutData()
 	{
@@ -241,11 +248,11 @@ class JFormFieldJBSMMedia extends JFormField
 		if ($this->value && file_exists(JPATH_ROOT . '/' . $this->value))
 		{
 			$this->folder = explode('/', $this->value);
-			$this->folder = array_diff_assoc($this->folder, explode('/', JComponentHelper::getParams('com_media')->get('image_path', 'images')));
+			$this->folder = array_diff_assoc($this->folder, explode('/', ComponentHelper::getParams('com_media')->get('image_path', 'images')));
 			array_pop($this->folder);
 			$this->folder = implode('/', $this->folder);
 		}
-		elseif (file_exists(JPATH_ROOT . '/' . JComponentHelper::getParams('com_media')->get('image_path', 'images') . '/' . $this->directory))
+		elseif (file_exists(JPATH_ROOT . '/' . ComponentHelper::getParams('com_media')->get('image_path', 'images') . '/' . $this->directory))
 		{
 			$this->folder = $this->directory;
 		}

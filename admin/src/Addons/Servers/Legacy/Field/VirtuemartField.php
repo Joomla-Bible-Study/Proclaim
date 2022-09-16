@@ -7,13 +7,17 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Administrator\Field;
+
 // No Direct Access
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Form\Field\ListField;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+
 defined('_JEXEC') or die;
-
-// Import the list field type
-jimport('joomla.form.helper');
-
-JFormHelper::loadFieldClass('list');
 
 /**
  * Virtuemart Category List Form Field class for the Proclaim component
@@ -21,7 +25,7 @@ JFormHelper::loadFieldClass('list');
  * @package  Proclaim.Admin
  * @since    7.0.4
  */
-class JFormFieldVirtuemart extends JFormFieldList
+class VirtuemartField extends ListField
 {
 	/**
 	 * The field type.
@@ -41,7 +45,7 @@ class JFormFieldVirtuemart extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		$params = JComponentHelper::getParams('com_languages');
+		$params = ComponentHelper::getParams('com_languages');
 
 		// Use default joomla
 		$siteLang = $params->get('site', 'en-GB');
@@ -51,9 +55,9 @@ class JFormFieldVirtuemart extends JFormFieldList
 		// Check to see if component installed
 		jimport('joomla.filesystem.folder');
 
-		if (!JFolder::exists(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_virtuemart'))
+		if (!Folder::exists(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_virtuemart'))
 		{
-			return JText::_('JBS_CMN_VIRTUEMART_NOT_INSTALLED');
+			return [Text::_('JBS_CMN_VIRTUEMART_NOT_INSTALLED')];
 		}
 
 		$db = Factory::getContainer()->get('DatabaseDriver');
@@ -71,7 +75,9 @@ class JFormFieldVirtuemart extends JFormFieldList
 		{
 			foreach ($products as $product)
 			{
-				$options[] = JHtml::_('select.option', $product->virtuemart_product_id, $product->product_name . ' (' . $product->product_sku . ')');
+				$options[] = HTMLHelper::_('select.option', $product->virtuemart_product_id, $product->product_name .
+					' (' . $product->product_sku . ')'
+				);
 			}
 		}
 

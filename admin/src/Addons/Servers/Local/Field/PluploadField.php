@@ -7,9 +7,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+namespace CWM\Component\Proclaim\Administrator\Field;
+
 // No Direct Access
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\FormField;
 
 defined('JPATH_PLATFORM') or die;
 
@@ -22,7 +25,7 @@ jimport('joomla.form.formfield');
  * @package  Proclaim.Admin
  * @since    9.0.0
  */
-class JFormFieldPlupload extends JFormField
+class PluploadField extends FormField
 {
 	public $type = 'Plupload';
 
@@ -39,8 +42,8 @@ class JFormFieldPlupload extends JFormField
 		// Include Plupload libraries
 		$document = Factory::getApplication()->getDocument();
 		$app = Factory::getApplication();
-		$document->addScript(JUri::root() . 'administrator/components/com_proclaim/addons/servers/legacy/includes/js/plupload.full.min.js');
-		$document->addScript(JUri::root() . 'administrator/components/com_proclaim/addons/servers/legacy/includes/js/legacy.js');
+		$document->addScript(JUri::root() . 'administrator/components/com_proclaim/src/Addons/Servers/Legacy/includes/js/plupload.full.min.js');
+		$document->addScript(JUri::root() . 'administrator/components/com_proclaim/src/Addons/Servers/Legacy/includes/js/legacy.js');
 		$view = $app->input->get('view');
 		$admin = CWMParams::getAdmin();
 
@@ -63,8 +66,8 @@ class JFormFieldPlupload extends JFormField
 					});
 				});
 				uploader.init();
-			});
-		');
+			});'
+		);
 
 		$class = $this->element['class'] ? ' class="' . (string) $this->element['class'] . '"' : '';
 

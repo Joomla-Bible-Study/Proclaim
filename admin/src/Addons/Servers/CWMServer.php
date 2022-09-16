@@ -66,7 +66,7 @@ abstract class CWMServer
 		foreach ($types as $type)
 		{
 			// Derive the class name from the type.
-			$class = 'JBSServer' . ucfirst(trim($type));
+			$class = 'CWMServer' . ucfirst(trim($type));
 
 			if (!class_exists($class))
 			{

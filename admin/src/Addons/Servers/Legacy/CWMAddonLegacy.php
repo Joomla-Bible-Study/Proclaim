@@ -37,6 +37,7 @@ class CWMAddonLegacy extends CWMAddon
 	 * @since   9.0.0
 	 */
 	protected $description = 'Legacy Server that we brought over from 8.x.x version of proclaim';
+
 	/**
 	 * Upload
 	 *
@@ -44,13 +45,12 @@ class CWMAddonLegacy extends CWMAddon
 	 *
 	 * @return array|boolean
 	 *
+	 * @throws \Exception
 	 * @since 9.0.0
 	 */
 	public function upload($data)
 	{
-		$upload = new CWMUploadScript;
-
-		return $upload->upload($data);
+		return (new CWMUploadScript)->upload($data);
 	}
 
 	/**

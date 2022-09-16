@@ -20,8 +20,6 @@ use SimpleXMLElement;
 use CWM\Component\Proclaim\Administrator\Addons;
 defined('_JEXEC') or die;
 
-JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_ADDON . '/servers/', 'true', 'true');
-
 /**
  * Abstract Server class
  *
@@ -140,7 +138,7 @@ abstract class CWMAddon
 	 */
 	public function getXml()
 	{
-		$path = Path::find(BIBLESTUDY_PATH_ADMIN . '/src/Addons/servers/' . $this->type, $this->type . '.xml');
+		$path = Path::find(BIBLESTUDY_PATH_ADMIN . '/src/Addons/Servers/' . ucfirst($this->type), $this->type . '.xml');
 
 		if ($path)
 		{
@@ -166,13 +164,13 @@ abstract class CWMAddon
 	 */
 	public static function getInstance($type, $config = array())
 	{
-		$type       = strtolower(preg_replace('/[^A-Z0-9_\.-]/i', '', $type));
+		$type       = ucfirst(preg_replace('/[^A-Z0-9_\.-]/i', '', $type));
 		$addonClass = "CWMAddon" . ucfirst($type);
 
 		if (!class_exists($addonClass))
 		{
 			jimport('joomla.filesystem.path');
-			$path = Path::find(BIBLESTUDY_PATH_ADMIN . '/src/addons/servers/' . $type . '/', 'CWMAddon' . $type . '.php');
+			$path = Path::find(BIBLESTUDY_PATH_ADMIN . '/src/Addons/Servers/' . $type . '/', 'CWMAddon' . $type . '.php');
 
 			// Try and load missing class
 			JLoader::register($addonClass, $path);

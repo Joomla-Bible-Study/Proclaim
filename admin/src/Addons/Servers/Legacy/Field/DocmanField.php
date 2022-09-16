@@ -7,12 +7,17 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-// No Direct Access
-defined('_JEXEC') or die;
+namespace CWM\Component\Proclaim\Administrator\Field;
 
-// Import the list field type
-jimport('joomla.form.helper');
-JFormHelper::loadFieldClass('list');
+// No Direct Access
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Form\Field\ListField;
+use Joomla\CMS\Form\FormHelper;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+
+defined('_JEXEC') or die;
 
 /**
  * Virtuemart Category List Form Field class for the Proclaim component
@@ -20,12 +25,12 @@ JFormHelper::loadFieldClass('list');
  * @package  Proclaim.Admin
  * @since    7.0.4
  */
-class JFormFieldDocman extends JFormFieldList
+class DocmanField extends ListField
 {
 	/**
 	 * The field type.
 	 *
-	 * @var         string
+	 * @var  string
 	 *
 	 * @since 9.0.0
 	 */
@@ -43,9 +48,10 @@ class JFormFieldDocman extends JFormFieldList
 		// Check to see if Docman is installed
 		jimport('joomla.filesystem.folder');
 
-		if (!JFolder::exists(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_docman'))
+		if (!Folder::exists(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_docman'))
 		{
-			return JText::_('JBS_CMN_DOCMAN_NOT_INSTALLED');
+			// @Todo Need to find different solutions.
+			return [Text::_('JBS_CMN_DOCMAN_NOT_INSTALLED')];
 		}
 
 		$db = Factory::getContainer()->get('DatabaseDriver');
@@ -59,11 +65,11 @@ class JFormFieldDocman extends JFormFieldList
 
 		if ($docs)
 		{
-			$options[] = JHtml::_('select.option', '-1', JText::_('JBS_MED_DOCMAN_SELECT'));
+			$options[] = HTMLHelper::_('select.option', '-1', Text::_('JBS_MED_DOCMAN_SELECT'));
 
 			foreach ($docs as $doc)
 			{
-				$options[] = JHtml::_('select.option', $doc->id, $doc->title);
+				$options[] = HTMLHelper::_('select.option', $doc->id, $doc->title);
 			}
 		}
 
