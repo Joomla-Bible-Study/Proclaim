@@ -24,14 +24,15 @@ $user      = $app->getIdentity();
 $userId    = $user->get('id');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
-$archived   = $this->state->get('filter.published') == 2 ? true : false;
-$trashed    = $this->state->get('filter.published') == -2 ? true : false;
+$archived  = $this->state->get('filter.published') == 2 ? true : false;
+$trashed   = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder === 'study.ordering';
 $columns   = 12;
 
 /** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
-$wa->useScript('multiselect')
+$wa->useScript('table.columns')
+	->useScript('multiselect')
 	->useStyle('com_proclaim.cwmcore')
 	->useScript('com_proclaim.cwmcorejs');
 
@@ -227,13 +228,16 @@ if ($saveOrder)
 									<?php echo $this->escape($item->series_text); ?>
 								</td>
 								<td class="small d-none d-md-table-cell text-center">
-									<button type="button" class="btn btn-sm btn-info" data-toggle="tooltip" data-placement="top"
+									<button type="button" class="btn btn-sm btn-info" data-toggle="tooltip"
+									        data-placement="top"
 									        title="<?php echo $this->escape($item->hits); ?>"><?php echo Text::_('JBS_CMN_HITS'); ?></button>
 									<br/>
-									<button type="button" class="btn btn-sm btn-info" data-toggle="tooltip" data-placement="top"
+									<button type="button" class="btn btn-sm btn-info" data-toggle="tooltip"
+									        data-placement="top"
 									        title="<?php echo $this->escape($item->totalplays); ?>"><?php echo Text::_('JBS_CMN_PLAYS'); ?></button>
 									<br/>
-									<button type="button" class="btn btn-sm btn-info" data-toggle="tooltip" data-placement="top"
+									<button type="button" class="btn btn-sm btn-info" data-toggle="tooltip"
+									        data-placement="top"
 									        title="<?php echo $this->escape($item->totaldownloads); ?>"><?php echo Text::_('JBS_CMN_DOWNLOADS'); ?></button>
 								</td>
 								<?php if (Multilanguage::isEnabled()) : ?>

@@ -334,7 +334,7 @@ class HTMLView extends BaseHtmlView
 		ToolbarHelper::custom('cwmadmin.resetDownloads', 'download.png', 'Reset All Download Hits', 'JBS_ADM_RESET_ALL_DOWNLOAD_HITS', false);
 		ToolbarHelper::custom('cwmadmin.resetPlays', 'play.png', 'Reset All Plays', 'JBS_ADM_RESET_ALL_PLAYS', false);
 		ToolbarHelper::divider();
-		ToolbarHelper::help('biblestudy', true);
+		ToolbarHelper::help('proclaim', true);
 	}
 
 	/**
