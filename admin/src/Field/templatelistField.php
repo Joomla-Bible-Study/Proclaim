@@ -37,7 +37,7 @@ class templatelistField extends ListField
 	 */
 	protected $type = 'Templates';
 
-	/** @var  Object Template Table
+	/** @var  object Template Table
 	 *
 	 * @since 9.0.13 */
 	public static $templates;

@@ -7,6 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Administrator\Field;
 // No Direct Access
 defined('_JEXEC') or die;
@@ -48,25 +49,25 @@ class serverField extends ListField
 		$size = ($v = $this->element['size']) ? ' size="' . $v . '"' : '';
 
 		// Get a reverse lookup of the server id to server name
-        $db = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery('true');
-        $query->select('*')
-            ->from('#__bsms_servers as s')
-            ->where('s.published = 1');
-        $db->setQuery($query);
-        $servs = $db->loadObjectList();
-        $rlu = array();
+		$db    = Factory::getContainer()->get('DatabaseDriver');
+		$query = $db->getQuery('true');
+		$query->select('*')
+			->from('#__bsms_servers as s')
+			->where('s.published = 1');
+		$db->setQuery($query);
+		$servs = $db->loadObjectList();
+		$rlu   = array();
 
-        foreach ($servs as $serv)
-        {
-            $rlu[$serv->id] = array(
-                'name' => $serv->server_name,
-                'type' => $serv->type
-            );
-        }
+		foreach ($servs as $serv)
+		{
+			$rlu[$serv->id] = array(
+				'name' => $serv->server_name,
+				'type' => $serv->type
+			);
+		}
 
 		//$model  = ListModel::getInstance('CWMServers', 'Model');
-       //$rlu = CWMServersModel::getInstance('List')->getIdToNameReverseLookup();
+		//$rlu = CWMServersModel::getInstance('List')->getIdToNameReverseLookup();
 		//$rlu    = $model->get->IdToNameReverseLookup();
 		$server = ArrayHelper::getValue($rlu, $this->value);
 
@@ -124,7 +125,7 @@ class serverField extends ListField
 		}
 
 		// Add the script to the document head.
-		Factory::getDocument()->addScriptDeclaration(implode("\n", $script));
+		Factory::getApplication()->getDocument()->addScriptDeclaration(implode("\n", $script));
 
 		// Setup variables for display.
 		$html = array();

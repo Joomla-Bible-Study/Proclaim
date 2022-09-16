@@ -21,12 +21,11 @@
 		</field>
 		<field
 				name="type"
-				type="ServerType"
+				type="Modal_ServerType"
 				label="JBS_CMN_SERVER"
 				description="JBS_MED_SERVER_DESC"
-				class="inputbox"
-				required="true"
-				size="40"/>
+				class="list"
+				required="true"/>
 		<field name="server_name" type="text" label="JBS_SVR_SERVER_NAME"
 		       description="JBS_SVR_SERVER_NAME_DESC" size="50" required="true"/>
 		<field name="rules" type="rules" label="JFIELD_RULES_LABEL"

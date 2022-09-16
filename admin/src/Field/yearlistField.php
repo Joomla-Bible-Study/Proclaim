@@ -36,6 +36,7 @@ class yearlistField extends ListField
 	 *
 	 * @return  array  An array of JHtml options.
 	 *
+	 * @throws \Exception
 	 * @since 9.0.0
 	 */
 	protected function getOptions()

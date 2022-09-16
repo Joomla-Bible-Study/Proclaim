@@ -8,6 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 namespace CWM\Component\Proclaim\Administrator\Field;
+
 // No Direct Access
 defined('_JEXEC') or die;
 use Joomla\CMS\Form\Field\ListField;
@@ -75,7 +76,7 @@ class TopicsListField extends ListField
 	 * @param   object  $a  Start.
 	 * @param   object  $b  End.
 	 *
-	 * @return int Used to place in new sort.
+	 * @return integer Used to place in new sort.
 	 *
 	 * @since 7.0
 	 */

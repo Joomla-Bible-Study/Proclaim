@@ -54,7 +54,7 @@
 				} = event
 				const functionName = target.getAttribute('data-function')
 
-				if (functionName === 'jSelectTypes')
+				if (functionName === 'jSelectType')
 				{
 					// Used in xtd_contacts
 					window[functionName](target.getAttribute('data-id'),

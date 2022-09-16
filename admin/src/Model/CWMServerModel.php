@@ -42,7 +42,7 @@ class CWMServerModel extends AdminModel
 	 * @var    string
 	 * @since  3.2
 	 */
-	public $typeAlias = 'com_proclaim.server';
+	public $typeAlias = 'com_proclaim.cwmserver';
 
 	/**
 	 * Data
@@ -211,7 +211,7 @@ class CWMServerModel extends AdminModel
 		if (empty($type))
 		{
 			// @TODO This may not be optimal, seems like a hack
-			return new Form("No-op");
+			return "no-data-type";
 		}
 
 		$path = Path::clean(JPATH_ADMINISTRATOR . '/components/com_proclaim/src/addons/servers/' . $type);
@@ -227,7 +227,7 @@ class CWMServerModel extends AdminModel
 			throw new \Exception(Text::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'));
 		}
 
-		$form = $this->loadForm('com_proclaim.server.' . $type, $type, array('control' => 'jform', 'load_data' => true), true, "/server");
+		$form = $this->loadForm('com_proclaim.cwmserver.' . $type, $type, array('control' => 'jform', 'load_data' => true), true, "/server");
 
 		return $form ?? false;
 	}
@@ -251,7 +251,7 @@ class CWMServerModel extends AdminModel
 		}
 
 		// Get the forms.
-		$form = $this->loadForm('com_proclaim.server', 'server', array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_proclaim.cwmserver', 'server', array('control' => 'jform', 'load_data' => $loadData));
 
 		return $form ?? false;
 	}
@@ -270,7 +270,7 @@ class CWMServerModel extends AdminModel
 	{
 		$user = $user = Factory::getApplication()->getSession()->get('user');
 
-		return $user->authorise('core.delete', 'com_proclaim.server.' . (int) $record->id);
+		return $user->authorise('core.delete', 'com_proclaim.cwmserver.' . (int) $record->id);
 	}
 
 	/**
@@ -281,6 +281,7 @@ class CWMServerModel extends AdminModel
 	 * @return   boolean  True if allowed to change the state of the record. Defaults to the permission set in the
 	 *                    component.
 	 *
+	 * @throws \Exception
 	 * @since    1.6
 	 */
 	protected function canEditState($record)
@@ -290,7 +291,7 @@ class CWMServerModel extends AdminModel
 		// Check for existing article.
 		if (!empty($record->id))
 		{
-			return $user->authorise('core.edit.state', 'com_proclaim.server.' . (int) $record->id);
+			return $user->authorise('core.edit.state', 'com_proclaim.cwmserver.' . (int) $record->id);
 		}
 
 		// Default to component settings if neither article nor category known.
@@ -311,7 +312,7 @@ class CWMServerModel extends AdminModel
 	protected function loadFormData()
 	{
 		// If current state has data, use it instead of data from db
-		$session = Factory::getApplication()->getUserState('com_proclaim.edit.server.data', array());
+		$session = Factory::getApplication()->getUserState('com_proclaim.edit.cwmserver.data', array());
 
 		return empty($session) ? $this->data : $session;
 	}
@@ -346,12 +347,12 @@ class CWMServerModel extends AdminModel
 		$input = $app->input;
 
 		$pk = $input->get('id', null, 'INTEGER');
-		$this->setState('server.id', $pk);
+		$this->setState('cwmserver.id', $pk);
 
-		$sname = $app->getUserState('com_proclaim.edit.server.server_name');
-		$this->setState('server.server_name', $sname);
+		$sname = $app->getUserState('com_proclaim.edit.cwmserver.server_name');
+		$this->setState('cwmserver.server_name', $sname);
 
-		$type = $app->getUserState('com_proclaim.edit.server.type');
-		$this->setState('server.type', $type);
+		$type = $app->getUserState('com_proclaim.edit.cwmserver.type');
+		$this->setState('cwmserver.type', $type);
 	}
 }

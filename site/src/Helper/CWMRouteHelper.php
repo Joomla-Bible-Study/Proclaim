@@ -114,11 +114,12 @@ abstract class CWMRouteHelper
 
 		return $link;
 	}
+
 	/**
 	 * Get the Teacher route.
 	 *
-	 * @param   integer      $seriesid  The Series ID.
-	 * @param   integer      $language  The language code.
+	 * @param   int          $id        ID of the Teacher record
+	 * @param   int          $language  The language code.
 	 * @param   string|null  $layout    The layout value.
 	 *
 	 * @return  string  The article route.
@@ -146,6 +147,7 @@ abstract class CWMRouteHelper
 
 		return $link;
 	}
+
 	/**
 	 * Get the form route.
 	 *
@@ -158,5 +160,26 @@ abstract class CWMRouteHelper
 	public static function getFormRoute($id)
 	{
 		return 'index.php?option=com_proclaim&task=cwmmessageform.edit&a_id=' . (int) $id;
+	}
+
+	/**
+	 * Get the Teacher route.
+	 *
+	 * @param   string       $type      Type of server offerd
+	 * @param   int          $language  The language code.
+	 * @param   string|null  $layout    The layout value.
+	 *
+	 * @return  string  The article route.
+	 *
+	 * @since   1.5
+	 */
+	public static function getTypeRoute(string $type, int $language = 0, string $layout = null): string
+	{
+		if (!empty($type))
+		{
+			return '';
+		}
+
+		return $type;
 	}
 }

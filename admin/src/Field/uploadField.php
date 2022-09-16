@@ -7,6 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Administrator\Field;
 // No Direct Access
 use Joomla\CMS\Factory;
@@ -15,7 +16,6 @@ use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
 
 defined('_JEXEC') or die;
-
 
 
 /**
@@ -41,6 +41,7 @@ class uploadField extends FormField
 		$wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
 		$wa->useScript('/administrator/components/com_proclaim/addons/servers/legacy/includes/js/plupload.full.min.js')
 			->useScript('/administrator/components/com_proclaim/addons/servers/legacy/includes/js/legacy.js');
+
 		// Include Plupload libraries
 		$document = Factory::getApplication()->getDocument();
 		//$document->addScript(Uri::root() . 'administrator/components/com_proclaim/addons/servers/legacy/includes/js/plupload.full.min.js');

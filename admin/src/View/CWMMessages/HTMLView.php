@@ -220,7 +220,7 @@ class HTMLView extends BaseHtmlView
 
 		if ($canDo->get('core.create'))
 		{
-			$toolbar->addNew('message.add');
+			$toolbar->addNew('cwmmessage.add');
 		}
 
 		$dropdown = $toolbar->dropdownButton('status-group')
@@ -233,21 +233,21 @@ class HTMLView extends BaseHtmlView
 
 		if ($canDo->get('core.edit'))
 		{
-			$toolbar->edit('message.edit');
+			$toolbar->edit('cwmmessage.edit');
 		}
 
 		if ($canDo->get('core.edit.state'))
 		{
 			$toolbar->divider();
-			$toolbar->publish('messages.publish');
-			$toolbar->unpublish('messages.unpublish');
+			$toolbar->publish('cwmmessages.publish');
+			$toolbar->unpublish('cwmmessages.unpublish');
 			$toolbar->divider();
-			$toolbar->archive('messages.archive');
+			$toolbar->archive('cwmmessages.archive');
 		}
 
 		if ($this->state->get('filter.published') === ContentComponent::CONDITION_TRASHED && $canDo->get('core.delete'))
 		{
-			$toolbar->delete('messages.delete')
+			$toolbar->delete('cwmmessages.delete')
 				->text('JTOOLBAR_EMPTY_TRASH')
 				->message('JGLOBAL_CONFIRM_DELETE')
 				->listCheck(true);

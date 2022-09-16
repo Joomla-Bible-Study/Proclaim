@@ -30,26 +30,33 @@ if ($app->isClient('site'))
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('core')
-	->useScript('com_proclaim.cwmadmin-types-modal');
+	->useScript('multiselect')
+	->useScript('com_proclaim.cwmadmin-types-modal')
+	->addInlineScript("setType = function(type) {
+		window.parent.Joomla.submitbutton('cwmserver.setType', type);
+		window.parent.SqueezeBox.close();
+	}");
 
-$function  = $app->input->getCmd('function', 'jSelectTypes');
+$function  = $app->input->getCmd('function', 'jSelectType');
 $editor    = $app->input->getCmd('editor', '');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 $onclick   = $this->escape($function);
 $multilang = Multilanguage::isEnabled();
 
+$this->recordId = $app->input->getInt('recordId');
+
 if (!empty($editor))
 {
 	// This view is used also in com_menus. Load the xtd script only if the editor is set!
 	$this->document->addScriptOptions('xtd-types', array('editor' => $editor));
-	$onclick = "jSelectTypes";
+	$onclick = "jSelectType";
 }
 ?>
 <div class="container-popup">
 	<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmservers&layout=types&tmpl=component&function=' .
 		$function . '&' . Session::getFormToken() . '=1&editor=' . $editor); ?>" method="post" name="adminForm"
-	      id="adminForm" class="form-inline">
+	      id="adminForm">
 
 		<?php echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
 
@@ -89,13 +96,15 @@ if (!empty($editor))
 						</td>
 						<th scope="row">
 							<?php $attribs = 'data-function="' . $this->escape($onclick) . '"'
-								. ' data-id="' . $item->type . '"'
+								. ' data-id="' . $item->name . '"'
 								. ' data-title="' . $this->escape($item->title) . '"'
-								. ' data-uri="' . $this->escape(CWMRouteHelper::getTypeRoute($item->type, '*')) . '"'
-								. ' data-language="*"';
+								. ' data-uri="' . $this->escape(CWMRouteHelper::getTypeRoute($item->name, 0)) . '"'
+								. ' data-language="0"';
 							?>
-							<a class="select-link" href="javascript:void(0)" <?php echo $attribs; ?>">
-							<?php echo $this->escape($item->title); ?>
+							<a class="select-link" href="javascript:void(0)" <?php echo $attribs; ?>
+							   onclick="setType('<?php echo base64_encode(json_encode(array('id' => $this->recordId, 'name' => $item->name))); ?>')">
+								<?php echo $this->escape($item->title); ?>
+							</a>
 						</th>
 						<td class="small hidden-phone">
 							<?php echo $this->escape($item->description); ?>
