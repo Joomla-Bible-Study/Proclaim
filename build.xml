@@ -205,18 +205,16 @@
 		         overwrite="true"/>
 		<symlink target="${basedir}/site" link="${joomla_path}${joomla_dir}/components/com_proclaim"
 		         overwrite="true"/>
-		<symlink target="${basedir}/modules/site/mod_biblestudy"
-		         link="${joomla_path}${joomla_dir}/modules/mod_biblestudy" overwrite="true"/>
-		<symlink target="${basedir}/modules/site/mod_biblestudy_podcast"
-		         link="${joomla_path}${joomla_dir}/modules/mod_biblestudy_podcast" overwrite="true"/>
+		<symlink target="${basedir}/modules/site/mod_proclaim"
+		         link="${joomla_path}${joomla_dir}/modules/mod_proclaim" overwrite="true"/>
+		<symlink target="${basedir}/modules/site/mod_proclaim_podcast"
+		         link="${joomla_path}${joomla_dir}/modules/proclaim_podcast" overwrite="true"/>
 		<symlink target="/plugins/system/proclaimbackup"
-		         link="${joomla_path}${joomla_dir}/plugins/system/jbsbackup" overwrite="true"/>
+		         link="${joomla_path}${joomla_dir}/plugins/system/proclaimbackup" overwrite="true"/>
 		<symlink target="/plugins/finder/proclaim"
-		         link="${joomla_path}${joomla_dir}/plugins/finder/biblestudy" overwrite="true"/>
+		         link="${joomla_path}${joomla_dir}/plugins/finder/proclaim" overwrite="true"/>
 		<symlink target="/plugins/system/proclaimpodcast"
-		         link="${joomla_path}${joomla_dir}/plugins/system/jbspodcast" overwrite="true"/>
-		<symlink target="${basedir}/plugins/search/biblestudysearch"
-		         link="${joomla_path}${joomla_dir}/plugins/search/biblestudysearch" overwrite="true"/>
+		         link="${joomla_path}${joomla_dir}/plugins/system/proclaimpodcast" overwrite="true"/>
 
 		<phingcall target="dev.init"/>
 	</target>
@@ -237,26 +235,25 @@
 		         overwrite="true"/>
 		<symlink target="${basedir}/site" link="${joomla_path}${joomla_dir}/components/com_proclaim"
 		         overwrite="true"/>
-		<symlink target="${basedir}/modules/site/mod_biblestudy"
-		         link="${joomla_path}${joomla_dir}/modules/mod_biblestudy" overwrite="true"/>
-		<symlink target="${basedir}/modules/site/mod_biblestudy_podcast"
-		         link="${joomla_path}${joomla_dir}/modules/mod_biblestudy_podcast" overwrite="true"/>
+		<symlink target="${basedir}/modules/site/mod_proclaim"
+		         link="${joomla_path}${joomla_dir}/modules/mod_proclaim" overwrite="true"/>
+		<symlink target="${basedir}/modules/site/mod_proclaim_podcast"
+		         link="${joomla_path}${joomla_dir}/modules/mod_proclaim_podcast" overwrite="true"/>
 		<symlink target="/plugins/system/proclaimbackup"
-		         link="${joomla_path}${joomla_dir}/plugins/system/jbsbackup" overwrite="true"/>
+		         link="${joomla_path}${joomla_dir}/plugins/system/proclaimbackup" overwrite="true"/>
 		<symlink target="/plugins/finder/proclaim"
-		         link="${joomla_path}${joomla_dir}/plugins/finder/biblestudy" overwrite="true"/>
+		         link="${joomla_path}${joomla_dir}/plugins/finder/proclaim" overwrite="true"/>
 		<symlink target="/plugins/system/proclaimpodcast"
-		         link="${joomla_path}${joomla_dir}/plugins/system/jbspodcast" overwrite="true"/>
-		<symlink target="${basedir}/plugins/search/biblestudysearch"
-		         link="${joomla_path}${joomla_dir}/plugins/search/biblestudysearch" overwrite="true"/>
+		         link="${joomla_path}${joomla_dir}/plugins/system/proclaimpodcast" overwrite="true"/>
+
 		<phingcall target="dev.init"/>
 	</target>
 
 	<!-- Create symbolic links for the development state -->
 	<target name="dev.init">
 		<echo message="Initializing a development state"/>
-		<symlink target="${basedir}/biblestudy.xml" link="/admin/proclaim.xml" overwrite="true"/>
-		<symlink target="/proclaim.script.php" link="${basedir}/admin/biblestudy.script.php"
+		<symlink target="${basedir}/proclaim.xml" link="/admin/proclaim.xml" overwrite="true"/>
+		<symlink target="/proclaim.script.php" link="${basedir}/admin/proclaim.script.php"
                  overwrite="true"/>
 		<mkdir dir="${basedir}/media/css/site"/>
 		<symlink target="${basedir}/media/css/biblestudy.css" link="${basedir}/media/css/site/biblestudy.css"
@@ -267,7 +264,7 @@
 	<target name="dev.clean">
 		<echo message="Cleaning up development state"/>
 		<delete file="/admin/proclaim.xml"/>
-		<delete file="${basedir}/admin/biblestudy.script.php"/>
+		<delete file="${basedir}/admin/proclaim.script.php"/>
 		<delete file="${basedir}/media/css/site/biblestudy.css"/>
 
 		<!-- Undoing the creation of the dir -->
