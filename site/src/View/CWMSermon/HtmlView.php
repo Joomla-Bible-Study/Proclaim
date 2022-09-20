@@ -10,6 +10,7 @@
 namespace CWM\Component\Proclaim\Site\View\CWMSermon;
 defined('_JEXEC') or die;
 // No Direct Access
+use JForm;
 use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;

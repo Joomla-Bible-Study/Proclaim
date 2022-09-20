@@ -30,9 +30,13 @@
 	</updateservers>
 
 	<files folder="site">
+		<filename>proclaim.php</filename>
+		<filename>controller.php</filename>
+		<filename>router.php</filename>
 		<folder>forms</folder>
 		<folder>helpers</folder>
 		<folder>layouts</folder>
+		<folder>sef_ext</folder>
 		<folder>src</folder>
 		<folder>tmpl</folder>
 	</files>
@@ -74,11 +78,14 @@
 		<files folder="admin">
 			<filename>access.xml</filename>
 			<filename>api.php</filename>
+			<filename>proclaim.php</filename>
 			<filename>config.xml</filename>
 			<folder>forms</folder>
 			<folder>help</folder>
-			<folder>helpers</folder>
+			<folder>helper</folder>
+			<folder>install</folder>
 			<folder>language</folder>
+			<folder>models</folder>
 			<folder>postinstall</folder>
 			<folder>services</folder>
 			<folder>src</folder>
