@@ -100,7 +100,7 @@ class CWMAssetsController extends BaseController
 	public function browse()
 	{
 		// Check for request forgeries.
-		Session::checkToken('get') or jexit(Text::_('JINVALID_TOKEN'));
+//		Session::checkToken('get') or jexit(Text::_('JINVALID_TOKEN'));
 
 		$app = Factory::getApplication();
 		$session = $app->getSession();

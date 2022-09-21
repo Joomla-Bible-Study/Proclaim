@@ -29,15 +29,15 @@ $wa->useScript('keepalive')
 		Joomla.submitbutton = function(task)
 		{
 			var form = document.getElementById('item-assets');
-			if (task == 'cwmasset.back' || document.formvalidator.isValid(form))
+			if (task == 'cwmassets.back' || document.formvalidator.isValid(form))
 			{
 				Joomla.submitform(task, form);
 			}
-			elseif (task == 'cwmasset.checkassets' || document.formvalidator.isValid(form))
+			elseif (task == 'cwmassets.checkassets' || document.formvalidator.isValid(form))
 			{
 				Joomla.submitform(task, form);
 			}
-			elseif (task == 'cwmasset.browse' || document.formvalidator.isValid(form))
+			elseif (task == 'cwmassets.browse' || document.formvalidator.isValid(form))
 			{
 				Joomla.submitform(task, form);
 			}
@@ -116,21 +116,22 @@ $wa->useScript('keepalive')
 			echo '</table>';
 		}
 		?>
-		<?php if ($user->authorise('core.create', 'com_proclaim')
-			&& $user->authorise('core.edit', 'com_proclaim')
-			&& $user->authorise('core.edit.state', 'com_proclaim')
-		) : ?>
-			<?php echo HTMLHelper::_(
-				'bootstrap.renderModal',
-				'collapseModal',
-				array(
-					'title'  => Text::_('JBS_ADM_FIX'),
-					'footer' => $this->loadTemplate('fix'),
-				),
-			); ?>
-		<?php endif; ?>
+<!--		--><?php //if ($user->authorise('core.create', 'com_proclaim')
+//			&& $user->authorise('core.edit', 'com_proclaim')
+//			&& $user->authorise('core.edit.state', 'com_proclaim')
+//		) : ?>
+<!--			--><?php //echo HTMLHelper::_(
+//				'bootstrap.renderModal',
+//				'collapseModal',
+//				array(
+//					'title'  => Text::_('JBS_ADM_FIX'),
+//					'footer' => $this->loadTemplate('fix'),
+//				),
+//			); ?>
+<!--		--><?php //endif; ?>
 		<input type="hidden" name="task" value=""/>
 		<input type="hidden" name="tooltype" value=""/>
+		<input type="hidden" name="component" value="com_proclaim"/>
 		<?php echo HTMLHelper::_('form.token'); ?>
 	</div>
 </form>

@@ -59,7 +59,7 @@ class HTMLView extends BaseHtmlView
 	 * @since 9.0.0 */
 	protected $percentage;
 
-	/** @var string Start of install
+	/** @var object Start of install
 	 *
 	 * @since 9.0.0 */
 	public $state;
@@ -88,7 +88,9 @@ class HTMLView extends BaseHtmlView
 	public function display($tpl = null)
 	{
 		$app         = Factory::getApplication();
-		$this->state = $app->input->getBool('scanstate', false);
+		$this->scanstate = $app->input->get('scanstate', false);
+		// Get data from the model
+		$this->state  = $this->get("State");
 		$layout      = $app->input->get('layout', 'edit');
 		$task        = $app->input->get('task', 'checkassets');
 
@@ -125,7 +127,7 @@ class HTMLView extends BaseHtmlView
 
 		$percent = 0;
 
-		if ($this->state)
+		if ($this->scanstate)
 		{
 			if ($this->totalSteps > 0)
 			{
@@ -162,9 +164,6 @@ class HTMLView extends BaseHtmlView
 			$this->setLayout('edit');
 		}
 
-		// Get data from the model
-		$this->state  = $this->get("State");
-
 		// Set the toolbar
 		$this->addToolbar();
 
@@ -186,26 +185,13 @@ class HTMLView extends BaseHtmlView
 	protected function addToolbar()
 	{
 		Factory::getApplication()->input->set('hidemainmenu', true);
-		$user = Factory::getApplication()->getIdentity();
 
 		ToolbarHelper::title(Text::_('JBS_CMN_ADMINISTRATION'), 'administration');
 		ToolbarHelper::custom('cwmadmin.back', 'home', 'home', 'JTOOLBAR_BACK', false);
 
-		ToolbarHelper::custom('cwmadmin.checkassets', 'refresh', 'refresh', 'JBS_ADM_CHECK_ASSETS', false);
+		ToolbarHelper::custom('cwmassets.checkassets', 'refresh', 'refresh', 'JBS_ADM_CHECK_ASSETS', false);
 
-		// Get the toolbar object instance
-		$toolbar = Toolbar::getInstance('toolbar');
-
-		// Add a batch button
-		if ($user->authorise('core.create', 'com_proclaim')
-			&& $user->authorise('core.edit', 'com_proclaim')
-			&& $user->authorise('core.edit.state', 'com_proclaim'))
-		{
-			$toolbar->popupButton('fix')
-				->text('JBS_ADM_FIX')
-				->selector('collapseModal')
-				->listCheck(false);
-		}
+		ToolbarHelper::custom('cwmassets.browse', 'fix', 'fix', 'JBS_ADM_FIX', false);
 
 		ToolbarHelper::help('biblestudy', true);
 	}

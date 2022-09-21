@@ -46,13 +46,16 @@ $wa->addInlineScript("if (typeof jQuery == 'function')
 		      id="adminForm" class="form-inline">
 			<?php if ($this->state === 'start')
 			{ ?>
-				<input type="hidden" name="task" value="assets.browse"/>
+				<input type="hidden" name="task" value="cwmassets.browse"/>
 			<?php }
-			else
+			elseif ($this->more)
 			{ ?>
-				<input type="hidden" name="task" value="assets.run"/>
+				<input type="hidden" name="task" value="cwmassets.run"/>
 			<?php } ?>
 			<?php echo HTMLHelper::_('form.token'); ?>
+			<input type="hidden" name="task" value=""/>
+			<input type="hidden" name="tooltype" value=""/>
+			<input type="hidden" name="option" value="com_proclaim"/>
 		</form>
 
 		<?php if ($this->more === true): ?>
