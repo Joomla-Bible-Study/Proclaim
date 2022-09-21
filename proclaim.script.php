@@ -452,7 +452,7 @@ class com_proclaimInstallerScript
 
 		if (!$installed)
 		{
-			Log::add('Found No installd version.', Log::NOTICE, $this->extension);
+			Log::add('Found No installed version.', Log::NOTICE, $this->extension);
 
 			return true;
 		}
@@ -626,29 +626,6 @@ class com_proclaimInstallerScript
 				echo '</strong>';
 				echo '</td>';
 				echo '</tr>';
-			}
-		}
-
-		if (count($status->libraries))
-		{
-			?>
-			<tr>
-				<th>Libraries</th>
-				<th>Version</th>
-				<th><?php echo Text::_('JBS_INS_STATUS'); ?></th>
-			</tr>
-			<?php
-			foreach ($status->libraries as $library)
-			{
-				echo '<tr>
-					<td class="key">' . ucfirst($library['name']) . '</td>
-					<td class="key">' . ucfirst($library['version']) . '</td>
-					<td>
-						<strong style="color: ' . ($library['result'] ? 'green' : 'red') . ';">
-						' . $library['result'] . '
-						</strong>
-					</td>
-				</tr>';
 			}
 		}
 

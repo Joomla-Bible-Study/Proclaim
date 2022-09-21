@@ -88,7 +88,7 @@ class HTMLView extends BaseHtmlView
 	{
 		$this->state = $this->get('State');
 		$model       = $this->getModel();
-		$component = JPATH_ADMINISTRATOR . '/components/com_proclaim/biblestudy.xml';
+		$component = JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.xml';
 
 		if (file_exists($component))
 		{
@@ -96,9 +96,8 @@ class HTMLView extends BaseHtmlView
 		}
 
 		$this->total_messages = CWMStats::get_total_messages();
-
-		// Post-installation messages information
-		$this->hasPostInstallationMessages = $model->hasPostInstallMessages();
+//@todo fix this - hasPostInstallMessages does not work
+		//$this->hasPostInstallationMessages = $model->hasPostInstallMessages();
 		$this->extension_id                = $this->state->get('extension_id', 0, 'int');
 
 		// Set the document

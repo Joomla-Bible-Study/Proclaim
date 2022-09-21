@@ -7,7 +7,7 @@
 	<authorUrl>www.christianwebministries.org</authorUrl>
 	<copyright>(C) 2007 - 2022 Proclaim All rights reserved.</copyright>
 	<version>10.0.0.DEV</version>
-	<creationDate>December 1, 2021</creationDate>
+	<creationDate>October 1, 2022</creationDate>
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<description>JBS_INS_XML_DESCRIPTION</description>
 	<namespace path="src">CWM\Component\Proclaim</namespace>
@@ -30,13 +30,9 @@
 	</updateservers>
 
 	<files folder="site">
-		<filename>proclaim.php</filename>
-		<filename>controller.php</filename>
-		<filename>router.php</filename>
 		<folder>forms</folder>
 		<folder>helpers</folder>
 		<folder>layouts</folder>
-		<folder>sef_ext</folder>
 		<folder>src</folder>
 		<folder>tmpl</folder>
 	</files>
@@ -78,14 +74,12 @@
 		<files folder="admin">
 			<filename>access.xml</filename>
 			<filename>api.php</filename>
-			<filename>proclaim.php</filename>
 			<filename>config.xml</filename>
 			<folder>forms</folder>
 			<folder>help</folder>
-			<folder>helper</folder>
+			<folder>helpers</folder>
 			<folder>install</folder>
 			<folder>language</folder>
-			<folder>models</folder>
 			<folder>postinstall</folder>
 			<folder>services</folder>
 			<folder>src</folder>
