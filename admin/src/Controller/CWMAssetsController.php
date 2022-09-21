@@ -83,8 +83,8 @@ class CWMAssetsController extends BaseController
 		$model = new CWMAssetsModel;
 		$checkassets = $model->checkAssets();
 		$session = Factory::getApplication()->getSession();
-		$session->set('assat_stack', '', 'JBSM');
-		$session->set('checkassets', $checkassets, 'JBSM');
+		$session->set('assat_stack', '', 'CWM');
+		$session->set('checkassets', $checkassets, 'CWM');
 
 		$this->display(false);
 	}
@@ -104,13 +104,13 @@ class CWMAssetsController extends BaseController
 
 		$app = Factory::getApplication();
 		$session = $app->getSession();
-		$stack = $session->get('asset_stack', '', 'JBSM');
+		$stack = $session->get('asset_stack', '', 'CWM');
 
 		if (empty($stack) || !is_array($stack))
 		{
 			CWMHelper::clearcache('site');
 			CWMHelper::clearcache('administrator');
-			$session->set('asset_stack', '', 'JBSM');
+			$session->set('asset_stack', '', 'CWM');
 
 			$model = new CWMAssetsModel;
 			$state = $model->startScanning();
@@ -141,7 +141,7 @@ class CWMAssetsController extends BaseController
 		CWMHelper::clearcache('administrator');
 		CWMHelper::clearcache('site');
 		$session = Factory::getSession();
-		$session->set('assat_stack', '', 'JBSM');
+		$session->set('assat_stack', '', 'CWM');
 		$app = Factory::getApplication();
 		$app->input->set('view', 'cwmassets');
 		$this->display(false);

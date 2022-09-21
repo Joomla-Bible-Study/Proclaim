@@ -11,6 +11,7 @@
 
 // Load the tooltip behavior.
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 
 HTMLHelper::_('behavior.formvalidator');
 HTMLHelper::_('jquery.framework');
@@ -22,14 +23,14 @@ Factory::getDocument()->addScriptDeclaration("
 		Joomla.submitbutton = function(task)
 		{
 			var form = document.getElementById('item-assets');
-			if (task == 'administration.back' || document.formvalidator.isValid(form))
+			if (task == 'cwmadmin.back' || document.formvalidator.isValid(form))
 			{
 				Joomla.submitform(task, form);
 			}
 		};
 ");
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=cpanel'); ?>" enctype="multipart/form-data"
+<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmcpanel'); ?>" enctype="multipart/form-data"
       method="post" name="adminForm" id="adminForm">
 	<div class="row-fluid" style="margin-top: 50px;">
 		<div class="span12 form-horizontal">

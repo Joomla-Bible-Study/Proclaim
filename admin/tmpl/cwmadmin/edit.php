@@ -179,7 +179,7 @@ $this->useCoreUI = true;
 	</div>
 </div>
 
-<form action="<?php echo Route::_('index.php?option=com_proclaim&view=administration&layout=edit&id=' . (int) $this->item->id); ?>"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmadministration&layout=edit&id=' . (int) $this->item->id); ?>"
       method="post" name="adminForm" id="item-admin"
       aria-label="<?php echo Text::_('COM_CONTENT_FORM_TITLE_' . ((int) $this->item->id === 0 ? 'NEW' : 'EDIT'), true); ?>"
       class="form-validate">

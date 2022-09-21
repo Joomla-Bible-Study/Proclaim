@@ -93,8 +93,8 @@ class HTMLView extends BaseHtmlView
 		$task        = $app->input->get('task', 'checkassets');
 
 		$session      = $app->getSession();
-		$this->assets = $session->get('checkassets', null, 'JBSM');
-		$stack        = $session->get('asset_stack', '', 'JBSM');
+		$this->assets = $session->get('checkassets', null, 'CWM');
+		$stack        = $session->get('asset_stack', '', 'CWM');
 
 		if (empty($stack))
 		{
@@ -180,6 +180,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0.0
 	 */
 	protected function addToolbar()

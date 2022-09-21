@@ -23,7 +23,7 @@ use Joomla\Database\DatabaseDriver;
 
 defined('_JEXEC') or die;
 
-// Always load JBSM API if it exists.
+// Always load CWM API if it exists.
 $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
 if (file_exists($api))
@@ -154,6 +154,12 @@ class CWMInstallModel extends BaseModel
 	public array $query = array();
 
 	/**
+	 * @var \Joomla\Database\DatabaseDriver|null
+	 * @since 10.0.0
+	 */
+	public ?DatabaseDriver $_db;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
@@ -164,6 +170,9 @@ class CWMInstallModel extends BaseModel
 	public function __construct($config = array())
 	{
 		parent::__construct($config);
+
+		// Joomla 4 drop including db driver.
+		$this->_db = Factory::getDbo();
 
 		$this->name = 'install';
 	}
@@ -468,7 +477,7 @@ class CWMInstallModel extends BaseModel
 			}
 		}
 
-		$this->isimport = Factory::getApplication()->input->getInt('jbsmalt', 0);
+		$this->isimport = Factory::getApplication()->input->getInt('cwmalt', 0);
 		++$this->totalSteps;
 
 		return true;
@@ -634,7 +643,7 @@ class CWMInstallModel extends BaseModel
 		}
 
 		$session = Factory::getApplication()->getSession();
-		$session->set('migration_stack', $stack, 'JBSM');
+		$session->set('migration_stack', $stack, 'CWM');
 	}
 
 	/**
@@ -647,7 +656,7 @@ class CWMInstallModel extends BaseModel
 	private function resetStack()
 	{
 		$session = Factory::getApplication()->getSession();
-		$session->set('migration_stack', '', 'JBSM');
+		$session->set('migration_stack', '', 'CWM');
 		$this->version       = '0.0.0';
 		$this->versionStack  = array();
 		$this->versionSwitch = null;
@@ -675,7 +684,7 @@ class CWMInstallModel extends BaseModel
 	private function loadStack()
 	{
 		$session = Factory::getApplication()->getSession();
-		$stack   = $session->get('migration_stack', '', 'JBSM');
+		$stack   = $session->get('migration_stack', '', 'CWM');
 
 		if (empty($stack))
 		{
@@ -872,13 +881,13 @@ class CWMInstallModel extends BaseModel
 							{
 								unset($this->subQuery[$this->version][$step]);
 								$this->versionSwitch = null;
-								Log::add('Uset Sub Query if empty : ' . $step . ' ' . $this->version, Log::INFO, 'com_proclaim');
+								Log::add('UnSet Sub Query if empty : ' . $step . ' ' . $this->version, Log::INFO, 'com_proclaim');
 							}
 
 							if (empty($step) && empty($query))
 							{
 								unset($this->subFiles[$this->version], $this->subSteps[$this->version]);
-								Log::add('Uset Version in All updates : ' . $this->version, Log::INFO, 'com_proclaim');
+								Log::add('UnSet Version in All updates : ' . $this->version, Log::INFO, 'com_proclaim');
 							}
 							else
 							{
@@ -910,7 +919,7 @@ class CWMInstallModel extends BaseModel
 				else
 				{
 					unset($this->allupdates[$this->version]);
-					Log::add('Unset Version if no steps : ' . $this->version, Log::INFO, 'com_proclaim');
+					Log::add('UnSet Version if no steps : ' . $this->version, Log::INFO, 'com_proclaim');
 				}
 
 				if ($run === false)
@@ -983,7 +992,7 @@ class CWMInstallModel extends BaseModel
 	}
 
 	/**
-	 * Uninstall of JBSM
+	 * Uninstall of CWM
 	 *
 	 * @return boolean
 	 *
@@ -992,7 +1001,7 @@ class CWMInstallModel extends BaseModel
 	 */
 	public function uninstall()
 	{
-		// Check if JBSM can be found from the database
+		// Check if CWM can be found from the database
 		$table = $this->_db->getPrefix() . 'bsms_admin';
 		$this->_db->setQuery("SHOW TABLES LIKE {$this->_db->quote($table)}");
 		$drop_result = '';
@@ -1510,7 +1519,7 @@ class CWMInstallModel extends BaseModel
 		);
 
 		// Get Public id
-		$id = Factory::getConfig()->get('access', 1);
+		$id = Factory::getApplication()->getConfig()->get('access', 1);
 
 		// Correct blank or not set records
 		foreach ($tables as $table)

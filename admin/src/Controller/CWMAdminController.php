@@ -20,6 +20,8 @@ use CWM\Component\Proclaim\Administrator\Lib\CWMPIconvert;
 use CWM\Component\Proclaim\Administrator\Lib\CWMRestore;
 use CWM\Component\Proclaim\Administrator\Lib\CWMSSConvert;
 use CWM\Component\Proclaim\Administrator\Model\AdminModel;
+use CWM\Component\Proclaim\Administrator\Model\CWMAdminModel;
+use CWMArchiveModel;
 use JLoader;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\Folder;
@@ -27,6 +29,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
+use Joomla\Component\Content\Site\Model\ArchiveModel;
 use Joomla\Registry\Registry;
 
 /**
@@ -441,7 +444,7 @@ class CWMAdminController extends FormController
 		// Check for request forgeries.
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$msg   = null;
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
@@ -474,7 +477,7 @@ class CWMAdminController extends FormController
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
 		$msg   = null;
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
 			->set('downloads = ' . 0)
@@ -507,7 +510,7 @@ class CWMAdminController extends FormController
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
 		$msg   = null;
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
 			->set('plays = ' . 0)
@@ -524,7 +527,7 @@ class CWMAdminController extends FormController
 			$msg     = Text::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . Text::_('JBS_CMN_ROWS_RESET');
 		}
 
-		$this->setRedirect('index.php?option=com_proclaim&view=ccwmadministration&layout=edit&id=1', $msg);
+		$this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $msg);
 	}
 
 	/**
@@ -586,13 +589,9 @@ class CWMAdminController extends FormController
 		// Check for request forgeries.
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
-		// Needed for DB fixer
-		JLoader::register('BiblestudyModelInstall', BIBLESTUDY_PATH_ADMIN_MODELS . '/InstallController.php');
-
-		/** @var AdminModel $model */
-		$model = $this->getModel('administrator');
+		$model = new CWMAdminModel;
 		$model->fix();
-		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=database', false));
+		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmdatabase', false));
 	}
 
 	/**
@@ -610,7 +609,7 @@ class CWMAdminController extends FormController
 		if (in_array('8', $user->groups, true))
 		{
 			CWMDbHelper::resetdb();
-			$this->setRedirect(Route::_('index.php?option=com_proclaim&view=assats&task=assets.browse&' . Session::getFormToken() . '=1', false));
+			$this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmassats&task=assets.browse&' . Session::getFormToken() . '=1', false));
 		}
 		else
 		{
@@ -657,7 +656,7 @@ class CWMAdminController extends FormController
 
 		// This should be where the form administrator/form_migrate comes to with either the file select box or the tmp folder input field
 		$app   = Factory::getApplication();
-		$input = new Joomla\Input\Input;
+		$input = $app->getInput();
 		$input->set('view', $input->get('view', 'administrator', 'cmd'));
 
 		// Add commands to move tables from old prefix to new
@@ -679,16 +678,16 @@ class CWMAdminController extends FormController
 		{
 			$import = new CWMRestore;
 			$result = $import->importdb($parent);
-			$alt    = '&jbsmalt=1';
+			$alt    = '&cwmalt=1';
 		}
 
 		if ($result || $copysuccess)
 		{
-			$this->setRedirect('index.php?option=com_proclaim&view=install&scanstate=start&jbsimport=1' . $alt);
+			$this->setRedirect('index.php?option=com_proclaim&view=cwminstall&scanstate=start&cwmimport=1' . $alt);
 		}
 		else
 		{
-			$this->setRedirect('index.php?option=com_proclaim&view=migrate');
+			$this->setRedirect('index.php?option=com_proclaim&view=cwmmigrate');
 		}
 	}
 
@@ -779,7 +778,7 @@ class CWMAdminController extends FormController
 			$application->enqueueMessage('' . $result . '');
 		}
 
-		$this->setRedirect('index.php?option=com_proclaim&view=backup');
+		$this->setRedirect('index.php?option=com_proclaim&view=cwmbackup');
 	}
 
 	/**
@@ -794,14 +793,14 @@ class CWMAdminController extends FormController
 		// Check for request forgeries.
 		Session::checkToken('get') || Session::checkToken() || jexit(Text::_('JINVALID_TOKEN'));
 
-		$input  = new Joomla\Input\Input;
+		$input  = Factory::getApplication()->getInput();
 		$run    = (int) $input->get('run', '', 'int');
 		$export = new CWMBackup;
 
 		if (!$result = $export->exportdb($run))
 		{
 			$msg = Text::_('JBS_CMN_OPERATION_FAILED');
-			$this->setRedirect('index.php?option=com_proclaim&view=backup', $msg);
+			$this->setRedirect('index.php?option=com_proclaim&view=cwmbackup', $msg);
 		}
 		elseif ($run === 2)
 		{
@@ -814,7 +813,7 @@ class CWMAdminController extends FormController
 				$msg = Text::_('JBS_CMN_OPERATION_SUCCESSFUL');
 			}
 
-			$this->setRedirect('index.php?option=com_proclaim&view=backup', $msg);
+			$this->setRedirect('index.php?option=com_proclaim&view=cwmbackup', $msg);
 		}
 	}
 
@@ -840,6 +839,7 @@ class CWMAdminController extends FormController
 
 		foreach ($image_types as $image_type)
 		{
+			// @todo will need to move from biblestudy folder to com_proclaim at some point.
 			$images = Folder::files(JPATH_ROOT . '/images/biblestudy/' . $image_type, 'original_', true, true);
 
 			if ($images != false)
@@ -892,12 +892,22 @@ class CWMAdminController extends FormController
 		// Check for request forgeries.
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
-		/** @var ArchiveModel $model */
-		$model = $this->getModel('archive');
+		$model = new CWMArchiveModel;
 		$msg   = $model->doArchive();
-		$this->setRedirect('index.php?option=com_proclaim&view=cpanel', $msg);
+		$this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', $msg);
 	}
 
+	/**
+	 * Submit function
+	 *
+	 * @param   int     $key     ID
+	 * @param   string  $urlVar  URL variable
+	 *
+	 * @return boolean
+	 *
+	 * @throws \Exception
+	 * @since version
+	 */
 	public function submit($key = null, $urlVar = null)
 	{
 		$this->checkToken();
@@ -948,6 +958,8 @@ class CWMAdminController extends FormController
 		}
 
 		// Redirect back to the form in all cases
-		$this->setRedirect(Route::_('index.php?option=com_biblestudy&view=cwmadmin&layout=edit', false));
+		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit', false));
+
+		return true;
 	}
 }

@@ -8,11 +8,14 @@
  * @link       https://www.christianwebministries.org
  * */
 // No Direct Access
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+
 defined('_JEXEC') or die;
 
 // Clear Session after finish
-$session = Factory::getSession();
-$session->set('migration_stack', '', 'JBSM');
+$session = Factory::getApplication()->getSession();
+$session->set('migration_stack', '', 'CWM');
 ?>
 <?php if (!empty($errors)): ?>
 	<!--suppress HtmlUnknownTarget -->
@@ -21,7 +24,7 @@ $session->set('migration_stack', '', 'JBSM');
 
 		<p>The installation script detected MySQL error which will
 			prevent the component from working properly. We suggest uninstalling
-			any previous version of Akeeba Backup and trying a clean installation.
+			any previous version of Proclaim and trying a clean installation.
 		</p>
 
 		<p>
@@ -35,8 +38,8 @@ $session->set('migration_stack', '', 'JBSM');
 <?php endif; ?>
 
 <h1>
-	<img src="../media/com_proclaim/images/openbible.png" alt="Bible Study" border="0" class="float: left"/>
-	<?php echo JText::sprintf('JBS_INS_INSTALLATION_RESULTS', JText::_('JBS_MIG_MIGRATION_DONE')); ?>
+	<img src="../media/com_proclaim/images/openbible.png" alt="Proclaim Study System" class="float: left"/>
+	<?php echo Text::sprintf('JBS_INS_INSTALLATION_RESULTS', Text::_('JBS_MIG_MIGRATION_DONE')); ?>
 </h1>
 
 <?php $rows = 0; ?>
@@ -101,7 +104,7 @@ $session->set('migration_stack', '', 'JBSM');
 			<a href="index.php?option=com_proclaim">
 				<img src="../media/com_proclaim/images/done-icon.jpg" alt="Done"/>
 
-				<h3 style="text-align: left;"><?php echo JText::_('JBS_INS_CLICK_TO_FINISH'); ?></h3>
+				<h3 style="text-align: left;"><?php echo Text::_('JBS_INS_CLICK_TO_FINISH'); ?></h3>
 			</a>
 
 		</td>

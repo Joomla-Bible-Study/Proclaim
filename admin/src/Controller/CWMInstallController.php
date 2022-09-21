@@ -13,6 +13,9 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
+use CWM\Component\Proclaim\Administrator\Model\CWMInstallModel;
+use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\FormController;
 
 /**
@@ -23,7 +26,11 @@ use Joomla\CMS\MVC\Controller\FormController;
  */
 class CWMInstallController extends FormController
 {
-	public $modelName;
+	/**
+	 * @var string
+	 * @since 7.0.0
+	 */
+	public string $modelName;
 
 	/**
 	 * The context for storing internal data, e.g. record.
@@ -95,17 +102,16 @@ class CWMInstallController extends FormController
 	public function browse()
 	{
 		$app = Factory::getApplication();
-		$session = Factory::getSession();
-		$stack = $session->get('migration_stack', '', 'JBSM');
+		$session = $app->getSession();
+		$stack = $session->get('migration_stack', '', 'CWM');
 
 		if (empty($stack))
 		{
 			CWMHelper::clearcache('site');
 			CWMHelper::clearcache('administrator');
-			$session->set('migration_stack', '', 'JBSM');
+			$session->set('migration_stack', '', 'CWM');
 
-			/** @var BibleStudyModelInstall $model */
-			$model = $this->getModel('install');
+			$model = new CWMInstallModel;
 			$state = $model->startScanning();
 			$app->input->set('scanstate', $state);
 			$app->input->set('view', 'install');
@@ -130,8 +136,8 @@ class CWMInstallController extends FormController
 	{
 		CWMHelper::clearcache('site');
 		CWMHelper::clearcache('administrator');
-		$session = Factory::getSession();
-		$session->set('migration_stack', '', 'JBSM');
+		$session = Factory::getApplication()->getSession();
+		$session->set('migration_stack', '', 'CWM');
 		$this->browse();
 	}
 
@@ -146,8 +152,7 @@ class CWMInstallController extends FormController
 	public function run()
 	{
 		$app   = Factory::getApplication();
-		/** @var BibleStudyModelInstall $model */
-		$model = $this->getModel('install');
+		$model = new CWMInstallModel;
 		$state = $model->run();
 		$app->input->set('scanstate', $state);
 		$app->input->set('view', 'install');

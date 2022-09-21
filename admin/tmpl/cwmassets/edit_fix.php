@@ -10,19 +10,19 @@
 
 // Protect from unauthorized access
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Session\Session;
 
 defined('_JEXEC') or die();
-?>
 
-<script type="text/javascript">
-	if (typeof jQuery == 'function')
+$wa = $this->document->getWebAssetManager();
+$wa->addInlineScript("if (typeof jQuery == 'function')
 	{
 		if (typeof jQuery.ui == 'object')
 		{
 			jQuery('#nojquerywarning').css('display', 'none')
 		}
-	}
-</script>
+	}")
+?>
 <div class="p-3">
 	<div class="row">
 		<?php if ($this->more)
@@ -64,7 +64,7 @@ defined('_JEXEC') or die();
 
 							function closeme ()
 							{
-								window.parent.document.location = 'index.php?option=com_proclaim&view=cwmassets&task=cwmassets.checkassets&<?php echo JSession::getFormToken(); ?>=1'
+								window.parent.document.location = 'index.php?option=com_proclaim&view=cwmassets&task=cwmassets.checkassets&<?php echo Session::getFormToken(); ?>=1'
 								window.location.reload()
 								parent.SqueezeBox.close()
 							}

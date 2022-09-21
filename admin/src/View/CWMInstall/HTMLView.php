@@ -168,12 +168,13 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return boolean
 	 *
+	 * @throws \Exception
 	 * @since    7.0.0
 	 */
 	private function loadStack()
 	{
-		$session = Factory::getSession();
-		$stack   = $session->get('migration_stack', '', 'JBSM');
+		$session = Factory::getApplication()->getSession();
+		$stack   = $session->get('migration_stack', '', 'CWM');
 
 		if (empty($stack))
 		{

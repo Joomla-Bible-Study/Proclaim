@@ -88,7 +88,7 @@ class CWMAssetsModel extends ListModel
 	{
 		parent::__construct($config, $factory);
 
-		$this->name = 'assets';
+		$this->name = 'cwmassets';
 	}
 
 	/**
@@ -226,8 +226,8 @@ class CWMAssetsModel extends ListModel
 			$stack = base64_encode($stack);
 		}
 
-		$session = Factory::getSession();
-		$session->set('asset_stack', $stack, 'JBSM');
+		$session = Factory::getApplication()->getSession();
+		$session->set('asset_stack', $stack, 'CWM');
 	}
 
 	/**
@@ -240,7 +240,7 @@ class CWMAssetsModel extends ListModel
 	private function resetStack()
 	{
 		$session = Factory::getSession();
-		$session->set('asset_stack', '', 'JBSM');
+		$session->set('asset_stack', '', 'CWM');
 		$this->versionStack  = array();
 		$this->versionSwitch = null;
 		$this->allupdates    = array();
@@ -259,8 +259,8 @@ class CWMAssetsModel extends ListModel
 	 */
 	private function loadStack()
 	{
-		$session = Factory::getSession();
-		$stack   = $session->get('asset_stack', '', 'JBSM');
+		$session = Factory::getApplication()->getSession();
+		$stack   = $session->get('asset_stack', '', 'CWM');
 
 		if (empty($stack))
 		{

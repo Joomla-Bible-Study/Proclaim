@@ -9,6 +9,10 @@
  * */
 
 // Protect from unauthorized access
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Session\Session;
+
 defined('_JEXEC') or die();
 
 HTMLHelper::_('behavior.framework');
@@ -36,7 +40,7 @@ else
 	<?php
 }
 ?>
-<script type="text/javascript" language="javascript">
+<script type="text/javascript">
 	if (typeof jQuery == 'function') {
 		if (typeof jQuery.ui == 'object') {
 			jQuery('#nojquerywarning').css('display', 'none');
@@ -69,7 +73,7 @@ else
 	<?php
 	}
 	?>
-	<input type="hidden" name="<?php echo Factory::getSession()->getFormToken() ?>" value="1"/>
+	<input type="hidden" name="<?php echo Factory::getApplication()->getSession()->getFormToken() ?>" value="1"/>
 </form>
 
 <div id="backup-complete">
@@ -83,7 +87,7 @@ else
 		<script type="text/javascript">
 			window.setTimeout('redirect();', 3000);
 			function redirect() {
-				window.location.replace("index.php?option=com_proclaim&view=install&layout=install_finished&<?php echo JSession::getFormToken() ?>=1");
+				window.location.replace("index.php?option=com_proclaim&view=cwminstall&layout=install_finished&<?php echo Session::getFormToken() ?>=1");
 			}
 		</script>
 	<?php
