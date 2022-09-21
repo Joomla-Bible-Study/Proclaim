@@ -7,7 +7,7 @@
 	<copyright>(C) 2007 - 2022 Proclaim All rights reserved.</copyright>
 	<version>10.0.0</version>
 	<creationDate>October 1, 2022</creationDate>
-	<license>http://www.gnu.org/licenses/gpl.html</license>
+	<license>https://www.gnu.org/licenses/gpl.html</license>
 	<description>JBS_PLG_FINDER_XML_DESCRIPTION</description>
 	<files>
 		<file plugin="proclaim">proclaim.php</file>

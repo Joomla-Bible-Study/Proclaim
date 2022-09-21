@@ -9,7 +9,7 @@
     <creationDate>October 1, 2022</creationDate>
     <license>http://www.gnu.org/licenses/gpl.html</license>
     <description>JBS_PLG_PODCAST_XML_DESCRIPTION</description>
-    <namespace >CWM\Plugin\System\Proclaimpodcast</namespace>
+    <namespace path="src">Joomla\Plugin\System\ProclaimPodcast</namespace>
     <!-- Runs on install/uninstall/update; New in 1.7 -->
     <scriptfile>script.php</scriptfile>
     <uninstall> <!-- Runs on uninstall -->

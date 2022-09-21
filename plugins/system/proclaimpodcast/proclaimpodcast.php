@@ -6,6 +6,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        https://www.christianwebministries.org
  * */
+namespace Joomla\Plugin\System\ProclaimPodcast;
 
 use CWM\Component\Proclaim\Site\Helper\CWMPodcast;
 use Joomla\CMS\Factory;

@@ -171,7 +171,7 @@ class com_proclaimInstallerScript
 	public function install($parent)
 	{
 		// Delete all cached files.
-		$cacheDir = JPATH_CACHE . '/biblestudy';
+		$cacheDir = JPATH_CACHE . '/cwmproclaim';
 
 		if (is_dir($cacheDir))
 		{
@@ -250,18 +250,6 @@ class com_proclaimInstallerScript
 		// Install subExtensions
 		$this->installSubextensions($parent);
 
-		if ($type === 'install')
-		{
-			// Redirect to a new location after the installer is completed.
-			$controller = BaseController::getInstance('Proclaim');
-			$controller->setRedirect(
-				Uri::base() .
-				'index.php?option=com_proclaim&view=install&task=install.browse&scanstate=start&' .
-				Session::getFormToken() . '=1'
-			);
-			$controller->redirect();
-		}
-
 		// Show the post-installation page
 		$this->renderPostInstallation($this->status, $parent);
 	}
@@ -269,7 +257,7 @@ class com_proclaimInstallerScript
 	/**
 	 * Check Requirements
 	 *
-	 * @param   string  $version  JBSM version to check for.
+	 * @param   string  $version  CWM version to check for.
 	 *
 	 * @return boolean
 	 *
