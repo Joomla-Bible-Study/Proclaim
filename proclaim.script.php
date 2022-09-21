@@ -95,9 +95,9 @@ class com_proclaimInstallerScript
 		),
 		// -- plugins => { (folder) => { (element) => (published) }* }*
 		'plugins' => array(
-			'finder' => array('proclaim' => 1,),
-			'system' => array('proclaimpodcast' => 0, 'proclaimpodcast' => '0'),
-            'system' => array('proclaimbackup' => 0, 'proclaimbackup' => '0'),
+			'proclaim' => array('finder' => 1),
+			'proclaimpodcast' => array('system' => 0, 'proclaimpodcast' => '0'),
+            'proclaimbackup' => array('system' => 0, 'proclaimbackup' => '0'),
 		),
 	);
 
@@ -851,7 +851,7 @@ class com_proclaimInstallerScript
 		// Plugins installation
 		if (count(self::$installActionQueue['plugins']))
 		{
-			foreach (self::$installActionQueue['plugins'] as $folder => $plugins)
+			foreach (self::$installActionQueue['plugins'] as $plugins => $folder)
 			{
 				if (count($plugins))
 				{
