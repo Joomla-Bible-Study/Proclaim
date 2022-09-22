@@ -1,3 +1,6 @@
+DROP TABLE IF EXISTS `#__bsms_install`;
+DROP TABLE IF EXISTS `#__bsms_update`;
+DROP TABLE IF EXISTS `#__bsms_storage`;
 DROP TABLE IF EXISTS `#__bsms_studies`;
 DROP TABLE IF EXISTS `#__bsms_teachers`;
 DROP TABLE IF EXISTS `#__bsms_topics`;
