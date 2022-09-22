@@ -37,6 +37,7 @@
 	<!-- Front end translation files -->
 	<languages folder="admin/language">
 		<language tag="en-GB">en-GB/en-GB.com_proclaim.ini</language>
+		<language tag="en-GB">en-GB/en-GB.com_proclaim.sys.ini</language>
 	</languages>
 	<updateservers>
 		<server type="extension" priority="1" name="CWM Proclaim Package">https://www.christianwebministries.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=1&amp;dummy=extension.xml</server>
@@ -91,10 +92,10 @@
 			<folder>forms</folder>
 			<folder>help</folder>
 			<folder>helpers</folder>
-			<folder>install</folder>
 			<folder>language</folder>
 			<folder>postinstall</folder>
 			<folder>services</folder>
+			<folder>sql</folder>
 			<folder>src</folder>
 			<folder>tmpl</folder>
 		</files>

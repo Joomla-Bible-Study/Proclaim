@@ -10,14 +10,12 @@ use CWM\Component\Proclaim\Administrator\Model\CWMInstallModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Installer\Adapter\ComponentAdapter;
 use Joomla\CMS\Installer\Adapter\FileAdapter;
 use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Installer\InstallerAdapter;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
-use Joomla\CMS\MVC\Controller\BaseController;
-use Joomla\CMS\Session\Session;
-use Joomla\CMS\Uri\Uri;
 
 defined('_JEXEC') or die;
 
@@ -95,9 +93,8 @@ class com_proclaimInstallerScript
 		),
 		// -- plugins => { (folder) => { (element) => (published) }* }*
 		'plugins' => array(
-			'proclaim' => array('finder' => 1),
-			'proclaimpodcast' => array('system' => 0, 'proclaimpodcast' => '0'),
-            'proclaimbackup' => array('system' => 0, 'proclaimbackup' => '0'),
+			'finder' => array('proclaim' => 1,),
+			'system' => array('proclaimpodcast' => 0, 'proclaimbackup' => '0'),
 		),
 	);
 
@@ -115,15 +112,21 @@ class com_proclaimInstallerScript
 	 * If preflight returns false, Joomla will abort the update and undo everything already done.
 	 *
 	 * @param   string            $type    Type of install
-	 * @param   InstallerAdapter  $parent  Where it is coming from
+	 * @param   ComponentAdapter  $parent  Where it is coming from
 	 *
 	 * @return boolean
 	 *
-	 * @throws  Exception
+	 * @throws \Exception
 	 * @since   1.5
 	 */
-	public function preflight($type, $parent)
+	public function preflight(string $type, ComponentAdapter $parent): bool
 	{
+		// Do not run on uninstall.
+		if ($type === 'uninstall')
+		{
+			return true;
+		}
+
 		$manifest = $parent->getManifest();
 
 		// Check the minimum Joomla! version
@@ -150,51 +153,7 @@ class com_proclaimInstallerScript
 			return false;
 		}
 
-		// Remove all old install files before install/upgrade
-		if (Folder::exists(JPATH_ADMINISTRATOR . '/components/com_proclaim/install'))
-		{
-			Folder::delete(JPATH_ADMINISTRATOR . '/components/com_proclaim/install');
-		}
-
 		return true;
-	}
-
-	/**
-	 * Install
-	 *
-	 * @param   FileAdapter  $parent  Where call is coming from
-	 *
-	 * @return  boolean
-	 *
-	 * @since 1.5
-	 */
-	public function install($parent)
-	{
-		// Delete all cached files.
-		$cacheDir = JPATH_CACHE . '/cwmproclaim';
-
-		if (is_dir($cacheDir))
-		{
-			Folder::delete($cacheDir);
-		}
-
-		Folder::create($cacheDir);
-
-		return true;
-	}
-
-	/**
-	 * Update will go to install
-	 *
-	 * @param   FileAdapter  $parent  ?
-	 *
-	 * @return boolean
-	 *
-	 * @since 1.5
-	 */
-	public function update($parent)
-	{
-		return $this->install($parent);
 	}
 
 	/**
@@ -209,16 +168,6 @@ class com_proclaimInstallerScript
 	 */
 	public function uninstall($parent)
 	{
-		$adminpath = $parent->getParent()->getPath('extension_administrator');
-		$model     = "{$adminpath}/models/InstallController.php";
-
-		if (file_exists($model))
-		{
-			require_once $model;
-			$installer = new CWMInstallModel;
-			$installer->uninstall();
-		}
-
 		// Uninstall sub-extensions
 		$this->uninstallSubextensions($parent);
 
@@ -231,22 +180,15 @@ class com_proclaimInstallerScript
 	/**
 	 * Post Flight
 	 *
-	 * @param   string       $type    Type of install
-	 * @param   FileAdapter  $parent  Where it is coming from
+	 * @param   string            $type    Type of install
+	 * @param   ComponentAdapter  $parent  Where it is coming from
 	 *
 	 * @return   void
 	 *
-	 * @throws  Exception
 	 * @since   1.5
 	 */
-	public function postflight($type, $parent)
+	public function postflight(string $type, ComponentAdapter $parent)
 	{
-		if (!File::exists(JPATH_SITE . '/images/com_proclaim/logo.png'))
-		{
-			// Copy the images to the new folder
-			Folder::copy('/media/com_proclaim/images', 'images/com_proclaim/', JPATH_SITE, true);
-		}
-
 		// Install subExtensions
 		$this->installSubextensions($parent);
 
@@ -280,7 +222,6 @@ class com_proclaimInstallerScript
 		$pass &= $this->checkVersion('MySQL', $db->getVersion());
 		$pass &= $this->checkDbo($db->name, array('mysql', 'mysqli', 'pdo'));
 		$pass &= $this->checkExtensions(self::$extensions);
-		$pass &= $this->checkJBSM($version);
 
 		return $pass;
 	}
@@ -417,48 +358,6 @@ class com_proclaimInstallerScript
 	 */
 	protected function checkJBSM($version)
 	{
-		$app = Factory::getApplication();
-
-		$db = Factory::getContainer()->get('DatabaseDriver');
-
-		// Check if JBSM can be found from the database
-		$table = $db->getPrefix() . 'bsms_update';
-		$db->setQuery("SHOW TABLES LIKE {$db->q($table)}");
-
-		if ($db->loadResult() !== $table)
-		{
-			return true;
-		}
-
-		// Get installed JBSM version
-		$query = $db->getQuery(true);
-		$query->select('version')
-			->from($db->qn($table))
-			->order('id DESC');
-		$db->setQuery($query, 0, 1);
-		$installed = $db->loadResult();
-
-		if (!$installed)
-		{
-			Log::add('Found No installed version.', Log::NOTICE, $this->extension);
-
-			return true;
-		}
-
-		// Always allow upgrade to the newer version
-		if (version_compare($version, $installed, '>='))
-		{
-			return true;
-		}
-
-		// @todo need to move to language string.
-		$app->enqueueMessage(sprintf('Sorry, it is not possible to downgrade BibleStudy %s to version %s.', $installed, $version), 'notice');
-		Log::add(
-			sprintf('Sorry, it is not possible to downgrade BibleStudy %s to version %s.', $installed, $version),
-			Log::NOTICE,
-			$this->extension
-		);
-
 		return false;
 	}
 
@@ -538,9 +437,10 @@ class com_proclaimInstallerScript
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
+	 * @todo  need to add version check system.
 	 * @since 1.7.0
 	 *
-	 * @todo  need to add version check system.
 	 */
 	private function renderPostInstallation($status, $parent)
 	{
@@ -851,9 +751,9 @@ class com_proclaimInstallerScript
 		// Plugins installation
 		if (count(self::$installActionQueue['plugins']))
 		{
-			foreach (self::$installActionQueue['plugins'] as $plugins => $folder)
+			foreach (self::$installActionQueue['plugins'] as $folder => $plugins)
 			{
-				if (count($plugins))
+				if (count($plugins) !== 0)
 				{
 					foreach ($plugins as $plugin => $published)
 					{
@@ -923,7 +823,10 @@ class com_proclaimInstallerScript
 	 */
 	private function uninstallSubextensions($parent)
 	{
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		$db                    = Factory::getContainer()->get('DatabaseDriver');
+		$this->status          = new stdClass;
+		$this->status->modules = array();
+		$this->status->plugins = array();
 
 		// Modules uninstalling
 		if (count(self::$installActionQueue['modules']))
@@ -944,7 +847,7 @@ class com_proclaimInstallerScript
 						$id = $db->loadResult();
 
 						// Uninstall the module
-						if ($id)
+						if ($id !== null)
 						{
 							$installer               = new Installer;
 							$result                  = $installer->uninstall('module', $id, 1);
@@ -978,7 +881,7 @@ class com_proclaimInstallerScript
 
 						$id = $db->loadResult();
 
-						if ($id)
+						if ($id !== null)
 						{
 							$installer               = new Installer;
 							$result                  = $installer->uninstall('plugin', $id, 1);
