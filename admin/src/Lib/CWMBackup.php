@@ -12,10 +12,12 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMDbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
+use Joomla\Application\WebApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Uri\Uri;
+
 
 defined('_JEXEC') or die;
 
@@ -317,8 +319,9 @@ class CWMBackup
 	{
 		// Clears file status cache
 		clearstatcache();
-		$jweb = new JApplicationWeb;
-		$jweb->clearHeaders();
+		// @todo fix this issue
+		//$jweb = new JApplicationWeb;
+		//(new WebApplication($controllerResolver, $router))->clearHeaders();
 
 		// Turn off output buffering to decrease cpu usage
 		@ob_end_clean();
@@ -379,7 +382,7 @@ class CWMBackup
 
 		// Test for protocol and set the appropriate headers
 		jimport('joomla.environment.uri');
-		$_tmp_uri      = JUri::getInstance(JUri::current());
+		$_tmp_uri      = Uri::getInstance(Uri::current());
 		$_tmp_protocol = $_tmp_uri->getScheme();
 
 		if ($_tmp_protocol == "https")

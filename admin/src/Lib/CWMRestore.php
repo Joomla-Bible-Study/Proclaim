@@ -181,7 +181,7 @@ class CWMRestore
 			set_time_limit(3000);
 		}
 
-		$input         = new Joomla\Input\Input;
+		$input = Factory::getApplication()->input;
 		$installtype   = $input->getPath('install_directory');
 		$backuprestore = $input->getWord('backuprestore', '');
 
@@ -238,8 +238,8 @@ class CWMRestore
 
 			if (($parent !== true) && $result)
 			{
-				$controlser = BaseController::getInstance('Biblestudy');
-				$controlser->setRedirect('index.php?option=com_proclaim&task=administration.fixasset');
+				$controlser = BaseController::getInstance('Proclaim');
+				$controlser->setRedirect('index.php?option=com_proclaim&task=cwmadmin.fixasset');
 				$controlser->redirect();
 			}
 		}

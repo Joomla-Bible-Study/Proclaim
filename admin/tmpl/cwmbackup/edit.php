@@ -11,6 +11,8 @@
 // Load the tooltip behavior.
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
 
 HTMLHelper::_('behavior.formvalidator');
 HTMLHelper::_('jquery.framework');
@@ -19,7 +21,7 @@ HTMLHelper::_('formbehavior.chosen', 'select');
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
 ?>
-<form action="<?php echo Route::_('index.php?option=com_proclaim&view=migrate'); ?>" enctype="multipart/form-data"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmmigrate'); ?>" enctype="multipart/form-data"
       method="post" name="adminForm" id="adminForm">
     <div class="row-fluid">
         <div class="span10 form-horizontal">
@@ -52,7 +54,7 @@ defined('_JEXEC') or die;
             </div>
             <div class="control-group">
                 <div class="control-label">
-                    <img src="<?php echo JUri::base() . '../media/com_proclaim/images/icons/import.png'; ?>"
+                    <img src="<?php echo Uri::base() . '../media/com_proclaim/images/icons/import.png'; ?>"
                          alt="Import" height="48" width="48"/>
                 </div>
                 <div class="controls">
@@ -99,7 +101,7 @@ defined('_JEXEC') or die;
         </div>
     </div>
     <input type="hidden" name="option" value="com_proclaim"/>
-    <input type="hidden" name="task" value="admin.doimport"/>
+    <input type="hidden" name="task" value="cwmadmin.doimport"/>
     <input type="hidden" name="controller" value="admin"/>
 	<?php echo HTMLHelper::_('form.token'); ?>
 </form>

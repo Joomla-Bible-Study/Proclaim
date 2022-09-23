@@ -35,7 +35,7 @@ Factory::getDocument()->addScriptDeclaration("
 		};
 ");
 ?>
-<form action="<?php echo Route::_('index.php?option=com_proclaim&view=migrate'); ?>" enctype="multipart/form-data"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmmigrate'); ?>" enctype="multipart/form-data"
       method="post" name="adminForm" id="adminForm">
 	<div class="row-fluid">
 		<div class="span12 form-horizontal">
@@ -94,7 +94,7 @@ Factory::getDocument()->addScriptDeclaration("
 		</div>
 	</div>
 	<input type="hidden" name="option" value="com_proclaim"/>
-	<input type="hidden" name="task" value="admin.doimport"/>
+	<input type="hidden" name="task" value="cwmadmin.doimport"/>
 	<input type="hidden" name="controller" value="admin"/>
 	<?php echo HTMLHelper::_('form.token'); ?>
 </form>
