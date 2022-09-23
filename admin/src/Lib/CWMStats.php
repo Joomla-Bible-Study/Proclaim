@@ -30,18 +30,21 @@ class CWMStats
 {
 	/** @var int used to store query of messages
 	 *
-	 * @since 9.0.0 */
-	private static $total_messages = 0;
+	 * @since 9.0.0
+	 */
+	private static int $total_messages = 0;
 
 	/** @var string Start Date
 	 *
-	 * @since 9.0.0 */
-	private static $total_messages_start = '';
+	 * @since 9.0.0
+	 */
+	private static string $total_messages_start = '';
 
 	/** @var string End Date
 	 *
-	 * @since 9.0.0 */
-	private static $total_messages_end   = '';
+	 * @since 9.0.0
+	 */
+	private static string $total_messages_end = '';
 
 	/**
 	 * Total plays of media files per study
@@ -52,9 +55,9 @@ class CWMStats
 	 *
 	 * @since 9.0.0
 	 */
-	public static function total_plays($id)
+	public static function total_plays(int $id): int
 	{
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query
 			->select('sum(m.plays), m.study_id, m.published, s.id FROM #__bsms_mediafiles AS m')
@@ -76,14 +79,14 @@ class CWMStats
 	 *
 	 * @since 9.0.0
 	 */
-	public static function get_total_messages($start = '', $end = '')
+	public static function get_total_messages(string $start = '', string $end = ''): int
 	{
 		if ($start != self::$total_messages_start || $end != self::$total_messages_end || !self::$total_messages)
 		{
 			self::$total_messages_start = $start;
 			self::$total_messages_end   = $end;
 
-			$db = Factory::getContainer()->get('DatabaseDriver');
+			$db    = Factory::getContainer()->get('DatabaseDriver');
 			$where = array();
 
 			if (!empty($start))
@@ -124,9 +127,9 @@ class CWMStats
 	 *
 	 * @since 9.0.0
 	 */
-	public static function get_total_topics($start = '', $end = '')
+	public static function get_total_topics(string $start = '', string $end = ''): int
 	{
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query
 			->select('COUNT(*)')
@@ -157,9 +160,9 @@ class CWMStats
 	 *
 	 * @since 9.0.0
 	 */
-	public static function get_top_studies()
+	public static function get_top_studies(): string
 	{
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query
 			->select('*')
@@ -169,7 +172,7 @@ class CWMStats
 			->order('hits desc');
 		$db->setQuery($query, 0, 1);
 		$results     = $db->loadObjectList();
-		$top_studies = null;
+		$top_studies = '';
 
 		foreach ($results as $result)
 		{
@@ -188,9 +191,9 @@ class CWMStats
 	 *
 	 * @since 9.0.0
 	 */
-	public static function get_total_categories()
+	public static function get_total_categories(): int
 	{
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query
 			->select('*')
@@ -212,7 +215,7 @@ class CWMStats
 	 */
 	public static function get_top_books()
 	{
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query
 			->select('booknumber, COUNT( hits ) AS totalmsg')
@@ -242,7 +245,7 @@ class CWMStats
 		}
 		else
 		{
-			$results = new stdClass;
+			$results = new \stdClass;
 		}
 
 		return $results;
@@ -255,9 +258,9 @@ class CWMStats
 	 *
 	 * @since 9.0.0
 	 */
-	public static function get_total_comments()
+	public static function get_total_comments(): int
 	{
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query
 			->select('COUNT(*)')
@@ -275,7 +278,7 @@ class CWMStats
 	 *
 	 * @since 9.0.0
 	 */
-	public static function get_top_thirty_days()
+	public static function get_top_thirty_days(): string
 	{
 		$month      = mktime(0, 0, 0, date("m") - 3, date("d"), date("Y"));
 		$last_month = date("Y-m-d 00:00:01", $month);
@@ -290,7 +293,7 @@ class CWMStats
 			->order('hits desc');
 		$db->setQuery($query, 0, 5);
 		$results     = $db->loadObjectList();
-		$top_studies = null;
+		$top_studies = '';
 
 		if (!$results)
 		{
@@ -316,9 +319,9 @@ class CWMStats
 	 *
 	 * @since 9.0.0
 	 */
-	public static function total_media_files()
+	public static function total_media_files(): int
 	{
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query
 			->select('COUNT(*)')
@@ -336,9 +339,9 @@ class CWMStats
 	 *
 	 * @since 9.0.0
 	 */
-	public static function get_top_downloads()
+	public static function get_top_downloads(): string
 	{
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query
 			->select(
@@ -352,7 +355,7 @@ class CWMStats
 
 		$db->setQuery($query, 0, 5);
 		$results     = $db->loadObjectList();
-		$top_studies = null;
+		$top_studies = '';
 
 		foreach ($results as $result)
 		{
@@ -372,7 +375,7 @@ class CWMStats
 	 *
 	 * @since 9.0.0
 	 */
-	public static function get_downloads_ninety()
+	public static function get_downloads_ninety(): string
 	{
 		$month     = mktime(0, 0, 0, date("m") - 3, date("d"), date("Y"));
 		$lastmonth = date("Y-m-d 00:00:01", $month);
@@ -390,7 +393,7 @@ class CWMStats
 			->order('downloads DESC');
 		$db->setQuery($query, 0, 5);
 		$results     = $db->loadObjectList();
-		$top_studies = null;
+		$top_studies = '';
 
 		if (!$results)
 		{
@@ -416,9 +419,9 @@ class CWMStats
 	 *
 	 * @since 9.0.0
 	 */
-	public static function total_downloads()
+	public static function total_downloads(): int
 	{
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query
 			->select('SUM(downloads)')
@@ -433,13 +436,14 @@ class CWMStats
 	/**
 	 * Top Score ???
 	 *
-	 * @var   Registry  $admin_params  Admin Prams
+	 * @return string number of scores
 	 *
-	 * @return int number of scores
-	 *
+	 * @throws \Exception
 	 * @since 9.0.0
+	 * @var   Registry $admin_params Admin Prams
+	 *
 	 */
-	public static function top_score()
+	public static function top_score(): string
 	{
 		$final        = [];
 		$admin_params = CWMParams::getAdmin();
@@ -487,14 +491,10 @@ class CWMStats
 
 		rsort($final);
 		array_splice($final, 5);
-		$top_score_table = '';
 
 		foreach ($final as $value)
 		{
-			foreach ($value as $scores)
-			{
-				$top_score_table .= $scores;
-			}
+			$top_score_table = implode('', $value);
 		}
 
 		return $top_score_table;
@@ -507,7 +507,7 @@ class CWMStats
 	 *
 	 * @since 9.0.0
 	 */
-	public static function players()
+	public static function players(): ?string
 	{
 		$count_no_player       = 0;
 		$count_global_player   = 0;
@@ -522,9 +522,9 @@ class CWMStats
 			->from('#__bsms_mediafiles')
 			->where('published = ' . $db->q('1'));
 		$db->setQuery($query);
-		$params         = $db->loadObjectList();
+		$params = $db->loadObjectList();
 
-		$registry = new Registry;
+		$registry      = new Registry;
 		$media_players = null;
 
 		if ($params)
@@ -578,7 +578,7 @@ class CWMStats
 	 *
 	 * @since 9.0.0
 	 */
-	public static function popups()
+	public static function popups(): string
 	{
 		$no_player    = 0;
 		$pop_count    = 0;
@@ -638,20 +638,21 @@ class CWMStats
 	 *
 	 * @return string
 	 *
+	 * @throws \Exception
 	 * @since 9.0.0
 	 */
 	public function top_score_site()
 	{
-		$input     = Factory::getApplication();
+		$input = Factory::getApplication()->input;
 		$t     = $input->get('t', 1, 'int');
 
 		$admin = CWMParams::getAdmin();
-		$limit        = $admin->params->get('popular_limit', '25');
-		$top          = '<select onchange="goTo()" id="urlList"><option value="">' .
+		$limit = $admin->params->get('popular_limit', '25');
+		$top   = '<select onchange="goTo()" id="urlList"><option value="">' .
 			Text::_('JBS_CMN_SELECT_POPULAR_STUDY') . '</option>';
-		$final        = array();
+		$final = array();
 
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('m.study_id, s.access, s.published AS spub, sum(m.downloads + m.plays) as added')
 			->from('#__bsms_mediafiles AS m')
@@ -665,16 +666,12 @@ class CWMStats
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 		$user   = $user = Factory::getApplication()->getSession()->get('user');
 		$groups = $user->getAuthorisedViewLevels();
-		$count  = count($items);
 
-		for ($i = 0; $i < $count; $i++)
+		foreach ($items as $i => $iValue)
 		{
-			if ($items[$i]->access > 1)
+			if (($iValue->access > 1) && !in_array($iValue->access, $groups, true))
 			{
-				if (!in_array($items[$i]->access, $groups))
-				{
-					unset($items[$i]);
-				}
+				unset($items[$i]);
 			}
 		}
 

@@ -16,6 +16,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
+use SimpleXMLElement;
 
 defined('_JEXEC') or die;
 
@@ -30,7 +31,7 @@ class HTMLView extends BaseHtmlView
 	/**
 	 * Data from Model
 	 *
-	 * @var object
+	 * @var SimpleXMLElement|false
 	 * @since    7.0.0
 	 */
 	public $xml;
@@ -41,20 +42,12 @@ class HTMLView extends BaseHtmlView
 	 * @var string
 	 * @since    7.0.0
 	 */
-	public $total_messages;
-
-	/**
-	 * Side Bar
-	 *
-	 * @var string
-	 * @since    7.0.0
-	 */
-	public $sidebar;
+	public string $total_messages;
 
 	/**
 	 * State
 	 *
-	 * @var string
+	 * @var mixed
 	 * @since    7.0.0
 	 */
 	protected $state;
@@ -62,10 +55,10 @@ class HTMLView extends BaseHtmlView
 	/**
 	 * Post Installation Messages
 	 *
-	 * @var    string
+	 * @var    boolean
 	 * @since  7.0.0
 	 */
-	protected $hasPostInstallationMessages;
+	protected bool $hasPostInstallationMessages;
 
 	/**
 	 * Extension ID
@@ -73,7 +66,7 @@ class HTMLView extends BaseHtmlView
 	 * @var    integer
 	 * @since  7.0.0
 	 */
-	protected $extension_id;
+	protected int $extension_id;
 
 	/**
 	 * Display
@@ -82,13 +75,15 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return  void  A string if successful, otherwise a Error object.
 	 *
+	 * @throws \Exception
 	 * @since    7.0.0
 	 */
-	public function display($tpl = null)
+	public function display($tpl = null): void
 	{
 		$this->state = $this->get('State');
-		$model       = $this->getModel();
-		$component   = JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.xml';
+		/** @var \CWM\Component\Proclaim\Administrator\Model\CWMCpanelModel $model */
+		$model     = $this->getModel();
+		$component = JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.xml';
 
 		if (file_exists($component))
 		{
@@ -98,7 +93,7 @@ class HTMLView extends BaseHtmlView
 		$this->total_messages = CWMStats::get_total_messages();
 
 		$this->hasPostInstallationMessages = $model->hasPostInstallMessages();
-		$this->extension_id                = $this->state->get('extension_id', 0, 'int');
+		$this->extension_id                = (int) $this->state->get('extension_id', 0, 'int');
 
 		// Set the document
 		$this->setDocument();
@@ -115,7 +110,7 @@ class HTMLView extends BaseHtmlView
 	 * @since    7.1.0
 	 *
 	 */
-	protected function setDocument()
+	protected function setDocument(): void
 	{
 		$this->document->setTitle(Text::_('JBS_TITLE_CONTROL_PANEL'));
 	}

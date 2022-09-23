@@ -10,8 +10,6 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\MVC\Controller\BaseController;
-use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\MVC\Model\BaseModel;
 use Joomla\Component\Postinstall\Administrator\Model\MessagesModel;
 use Joomla\Registry\Registry;
@@ -71,11 +69,11 @@ class CWMCpanelModel extends BaseModel
 	 * Returns null if the com_postinstall component is broken because the user screwed up his Joomla! site following
 	 * some idiot's advice. Apparently there's no shortage of idiots giving terribly bad advice to Joomla! users.
 	 *
-	 * @return boolean|null
+	 * @return boolean
 	 *
 	 * @since 7.0
 	 */
-	public function hasPostInstallMessages()
+	public function hasPostInstallMessages(): bool
 	{
 		// Make sure we have Joomla! 3.2.0 or later
 		if (!version_compare(JVERSION, '3.2.0', 'ge'))
@@ -121,9 +119,9 @@ class CWMCpanelModel extends BaseModel
 		}
 		catch (\Exception $e)
 		{
-			$result = null;
+			$result = true;
 		}
 
-		return ($result);
+		return $result;
 	}
 }
