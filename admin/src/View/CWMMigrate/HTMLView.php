@@ -182,7 +182,7 @@ class HTMLView extends BaseHtmlView
 	 * @var array
 	 * @since    7.0.0
 	 */
-	protected mixed $form;
+	protected $form;
 
 	/**
 	 * Item

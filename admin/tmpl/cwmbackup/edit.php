@@ -9,6 +9,9 @@
  * */
 
 // Load the tooltip behavior.
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+
 HTMLHelper::_('behavior.formvalidator');
 HTMLHelper::_('jquery.framework');
 HTMLHelper::_('formbehavior.chosen', 'select');
@@ -20,7 +23,7 @@ defined('_JEXEC') or die;
       method="post" name="adminForm" id="adminForm">
     <div class="row-fluid">
         <div class="span10 form-horizontal">
-            <h3><?php echo JText::_('JBS_CMN_EXPORT'); ?></h3>
+            <h3><?php echo Text::_('JBS_CMN_EXPORT'); ?></h3>
 
             <div class="control-group">
                 <div class="control-label">
@@ -30,22 +33,22 @@ defined('_JEXEC') or die;
                     <!--suppress HtmlUnknownTarget -->
                     <a href="<?php echo JRoute::_("index.php?option=com_proclaim&task=administration.export&run=1&" .
 						JSession::getFormToken() . "=1"); ?>" class="btn btn-primary">
-						<?php echo JText::_('JBS_CMN_EXPORT'); ?>
+						<?php echo Text::_('JBS_CMN_EXPORT'); ?>
                     </a>
 					<?php echo '<br /><br />'; ?>
                     <!--suppress HtmlUnknownTarget -->
                     <a href="index.php?option=com_proclaim&task=cwmadmin.export&run=2&<?php echo JSession::getFormToken(); ?>=1"
                        class="btn">
-						<?php echo JText::_('JBS_IBM_SAVE_DB'); ?>
+						<?php echo Text::_('JBS_IBM_SAVE_DB'); ?>
                     </a>
                 </div>
             </div>
             <hr/>
-            <h3><?php echo JText::_('JBS_CMN_IMPORT'); ?></h3>
+            <h3><?php echo Text::_('JBS_CMN_IMPORT'); ?></h3>
 
             <div class="control-group">
-				<?php echo JText::_('JBS_IBM_MAX_UPLOAD') . ': ' . ini_get('upload_max_filesize'); ?><br/>
-				<?php echo JText::_('JBS_IBM_MAX_EXECUTION_TIME') . ': ' . ini_get('max_execution_time'); ?>
+				<?php echo Text::_('JBS_IBM_MAX_UPLOAD') . ': ' . ini_get('upload_max_filesize'); ?><br/>
+				<?php echo Text::_('JBS_IBM_MAX_EXECUTION_TIME') . ': ' . ini_get('max_execution_time'); ?>
             </div>
             <div class="control-group">
                 <div class="control-label">
@@ -72,7 +75,7 @@ defined('_JEXEC') or die;
 
                 </div>
                 <div class="controls">
-					<?php echo $this->lists['backedupfiles'] . ' - ' . JText::_('JBS_IBM_IMPORT_FROM_BACKUP_FOLDER'); ?>
+					<?php echo $this->lists['backedupfiles'] . ' - ' . Text::_('JBS_IBM_IMPORT_FROM_BACKUP_FOLDER'); ?>
                 </div>
             </div>
             <div class="control-group">
@@ -81,16 +84,16 @@ defined('_JEXEC') or die;
                          alt="Tmp Folder" height="48" width="48"/>
                 </div>
                 <div class="controls">
-					<?php echo ' - ' . JText::_('JBS_IBM_IMPORT_FROM_TMP_FOLDER'); ?>
+					<?php echo ' - ' . Text::_('JBS_IBM_IMPORT_FROM_TMP_FOLDER'); ?>
                     <input type="text" id="install_directory" name="install_directory" class="input_box" size="70"
                            value="<?php echo $this->tmp_dest . DIRECTORY_SEPARATOR; ?>"/>
                 </div>
             </div>
             <div class="control-group">
-                <input class="btn btn-primary" type="submit" value="<?php echo JText::_('JBS_CMN_SUBMIT'); ?>"
+                <input class="btn btn-primary" type="submit" value="<?php echo Text::_('JBS_CMN_SUBMIT'); ?>"
                        name="submit"/>
                 <a href="index.php?option=com_proclaim&task=cwmadmin.edit&id=1">
-                    <button type="button" class="btn btn-default"><?php echo JText::_('JTOOLBAR_BACK'); ?></button>
+                    <button type="button" class="btn btn-default"><?php echo Text::_('JTOOLBAR_BACK'); ?></button>
                 </a>
             </div>
         </div>
