@@ -19,17 +19,13 @@ use CWM\Component\Proclaim\Administrator\Lib\CWMBackup;
 use CWM\Component\Proclaim\Administrator\Lib\CWMPIconvert;
 use CWM\Component\Proclaim\Administrator\Lib\CWMRestore;
 use CWM\Component\Proclaim\Administrator\Lib\CWMSSConvert;
-use CWM\Component\Proclaim\Administrator\Model\AdminModel;
-use CWM\Component\Proclaim\Administrator\Model\CWMAdminModel;
 use CWMArchiveModel;
-use JLoader;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
-use Joomla\Component\Content\Site\Model\ArchiveModel;
 use Joomla\Registry\Registry;
 
 /**
@@ -56,7 +52,7 @@ class CWMAdminController extends FormController
 	 * @throws  \Exception
 	 * @since   7.0.0
 	 */
-	public function tools()
+	public function tools(): void
 	{
 		$tool = Factory::getApplication()->input->get('tooltype', '', 'post');
 
@@ -87,7 +83,7 @@ class CWMAdminController extends FormController
 	 * @throws \JsonException
 	 * @since 7.0.0
 	 */
-	public function mediaimages()
+	public function mediaimages(): void
 	{
 		$post    = $_POST['jform'];
 		$decoded = json_decode($post['mediaimage'], true, 512, JSON_THROW_ON_ERROR);
@@ -292,7 +288,7 @@ class CWMAdminController extends FormController
 								->where('id = ' . (int) $media->id);
 							$db->execute();
 							$rows  = $db->getAffectedRows();
-							$added = $added + $rows;
+							$added += $rows;
 						}
 						catch (\RuntimeException $e)
 						{
@@ -320,7 +316,7 @@ class CWMAdminController extends FormController
 	 *
 	 * @since 7.0.0
 	 */
-	public function changePlayers()
+	public function changePlayers(): void
 	{
 		// Check for request forgeries.
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
@@ -378,7 +374,7 @@ class CWMAdminController extends FormController
 	 *
 	 * @since 7.0.0
 	 */
-	public function changePopup()
+	public function changePopup(): void
 	{
 		// Check for request forgeries.
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
@@ -439,7 +435,7 @@ class CWMAdminController extends FormController
 	 *
 	 * @since 7.0.0
 	 */
-	public function resetHits()
+	public function resetHits(): void
 	{
 		// Check for request forgeries.
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
@@ -471,7 +467,7 @@ class CWMAdminController extends FormController
 	 *
 	 * @since 7.0.0
 	 */
-	public function resetDownloads()
+	public function resetDownloads(): void
 	{
 		// Check for request forgeries.
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
@@ -504,7 +500,7 @@ class CWMAdminController extends FormController
 	 *
 	 * @since 7.0.0
 	 */
-	public function resetPlays()
+	public function resetPlays(): void
 	{
 		// Check for request forgeries.
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
@@ -537,7 +533,7 @@ class CWMAdminController extends FormController
 	 *
 	 * @since 7.0.0
 	 */
-	public function back()
+	public function back(): void
 	{
 		$this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1');
 	}
@@ -549,7 +545,7 @@ class CWMAdminController extends FormController
 	 *
 	 * @since 7.0.0
 	 */
-	public function convertSermonSpeaker()
+	public function convertSermonSpeaker(): void
 	{
 		// Check for request forgeries.
 		Session::checkToken('get') || Session::checkToken() || jexit(Text::_('JINVALID_TOKEN'));
@@ -566,7 +562,7 @@ class CWMAdminController extends FormController
 	 *
 	 * @since 7.0.0
 	 */
-	public function convertPreachIt()
+	public function convertPreachIt(): void
 	{
 		// Check for request forgeries.
 		Session::checkToken('get') || Session::checkToken() || jexit(Text::_('JINVALID_TOKEN'));
@@ -577,24 +573,6 @@ class CWMAdminController extends FormController
 	}
 
 	/**
-	 * Tries to fix missing database updates
-	 *
-	 * @return void
-	 *
-	 * @throws  \Exception
-	 * @since   7.1.0
-	 */
-	public function fix()
-	{
-		// Check for request forgeries.
-		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
-
-		$model = new CWMAdminModel;
-		$model->fix();
-		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmdatabase', false));
-	}
-
-	/**
 	 * Reset Db to install
 	 *
 	 * @return void
@@ -602,7 +580,7 @@ class CWMAdminController extends FormController
 	 * @throws  \Exception
 	 * @since   7.1.0
 	 */
-	public function dbReset()
+	public function dbReset(): void
 	{
 		$user = $user = Factory::getApplication()->getSession()->get('user');
 
@@ -625,7 +603,7 @@ class CWMAdminController extends FormController
 	 *
 	 * @since 7.1.0
 	 */
-	public function aliasUpdate()
+	public function aliasUpdate(): void
 	{
 		// Check for request forgeries.
 		Session::checkToken('get') or jexit(Text::_('JINVALID_TOKEN'));
@@ -645,7 +623,7 @@ class CWMAdminController extends FormController
 	 * @throws  \Exception
 	 * @since   7.0.0
 	 */
-	public function doimport($parent = true)
+	public function doimport(bool $parent = true): void
 	{
 		// Check for request forgeries.
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
@@ -671,7 +649,6 @@ class CWMAdminController extends FormController
 			else
 			{
 				$app->enqueueMessage(Text::_('JBS_CMN_DATABASE_NOT_COPIED'), 'worning');
-				$copysuccess = false;
 			}
 		}
 		else
@@ -701,7 +678,7 @@ class CWMAdminController extends FormController
 	 * @throws  \Exception
 	 * @since   7.0.0
 	 */
-	public function copyTables($oldprefix)
+	public function copyTables(string $oldprefix): bool
 	{
 		// Check for request forgeries.
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
@@ -755,7 +732,7 @@ class CWMAdminController extends FormController
 	 * @throws  \Exception
 	 * @since   7.1.0
 	 */
-	public function import()
+	public function import(): void
 	{
 		// Check for request forgeries.
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
@@ -786,9 +763,10 @@ class CWMAdminController extends FormController
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0.0
 	 */
-	public function export()
+	public function export(): void
 	{
 		// Check for request forgeries.
 		Session::checkToken('get') || Session::checkToken() || jexit(Text::_('JINVALID_TOKEN'));
@@ -826,10 +804,11 @@ class CWMAdminController extends FormController
 	 *
 	 * @since 9.0.0
 	 */
-	public function getThumbnailListXHR()
+	public function getThumbnailListXHR(): void
 	{
-		$document     = Factory::getDocument();
-		$input        = Factory::getApplication()->input;
+		$app          = Factory::getApplication();
+		$document     = $app->getDocument();
+		$input        = $app->getInput();
 		$images_paths = array();
 
 		$document->setMimeEncoding('application/json');
@@ -852,7 +831,7 @@ class CWMAdminController extends FormController
 
 		echo json_encode(array('total' => $count, 'paths' => $images_paths), JSON_THROW_ON_ERROR);
 
-		Factory::getApplication()->close();
+		$app->close();
 	}
 
 	/**
@@ -864,11 +843,11 @@ class CWMAdminController extends FormController
 	 *
 	 * @since 9.0.0
 	 */
-	public function createThumbnailXHR()
+	public function createThumbnailXHR(): void
 	{
 		$app      = Factory::getApplication();
 		$document = $app->getDocument();
-		$input    = Factory::getApplication()->input;
+		$input    = $app->getInput();
 
 		$document->setMimeEncoding('application/json');
 
@@ -877,7 +856,7 @@ class CWMAdminController extends FormController
 
 		CWMThumbnail::resize($image_path, $new_size);
 
-		Factory::getApplication()->close();
+		$app->close();
 	}
 
 	/**
@@ -887,7 +866,7 @@ class CWMAdminController extends FormController
 	 *
 	 * @since 9.0.1
 	 */
-	public function doArchive()
+	public function doArchive(): void
 	{
 		// Check for request forgeries.
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
@@ -900,15 +879,15 @@ class CWMAdminController extends FormController
 	/**
 	 * Submit function
 	 *
-	 * @param   int     $key     ID
-	 * @param   string  $urlVar  URL variable
+	 * @param   int|null     $key     ID
+	 * @param   string|null  $urlVar  URL variable
 	 *
 	 * @return boolean
 	 *
 	 * @throws \Exception
 	 * @since version
 	 */
-	public function submit($key = null, $urlVar = null)
+	public function submit(int $key = null, string $urlVar = null): bool
 	{
 		$this->checkToken();
 

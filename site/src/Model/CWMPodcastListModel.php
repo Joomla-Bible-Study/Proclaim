@@ -130,7 +130,7 @@ class CWMPodcastListModel extends ListModel
 		$user = $user = Factory::getApplication()->getSession()->get('user');
 
 		// Create a new query object.
-		$db = $this->getDbo();
+		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 
 		$query->select(

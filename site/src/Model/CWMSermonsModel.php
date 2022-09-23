@@ -141,7 +141,7 @@ class CWMSermonsModel extends ListModel
 	public function getFiles()
 	{
 		$mediaFiles = null;
-		$db         = $this->getDbo();
+		$db         = Factory::getContainer()->get('DatabaseDriver');
 		$i          = 0;
 
 		foreach ($this->_data as $sermon)
@@ -381,7 +381,7 @@ class CWMSermonsModel extends ListModel
 	{
 		$user   = $user = Factory::getApplication()->getSession()->get('user');
 		$groups = implode(',', $user->getAuthorisedViewLevels());
-		$db     = $this->getDbo();
+		$db     = Factory::getContainer()->get('DatabaseDriver');
 		$query  = parent::getListQuery();
 		$query->select(
 			$this->getState(
@@ -828,7 +828,7 @@ class CWMSermonsModel extends ListModel
 	 */
 	public function getTeachers()
 	{
-		$db    = $this->getDbo();
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('t.id AS value, t.teachername AS text');
 		$query->from('#__bsms_teachers AS t');
@@ -851,7 +851,7 @@ class CWMSermonsModel extends ListModel
 	 */
 	public function getYears()
 	{
-		$db    = $this->getDbo();
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('DISTINCT YEAR(s.studydate) as value, YEAR(s.studydate) as text');
 		$query->from('#__bsms_studies as s');
@@ -872,7 +872,7 @@ class CWMSermonsModel extends ListModel
 	 */
 	public function getSeries()
 	{
-		$db    = $this->getDbo();
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 
 		$query->select('series.id AS value, series.series_text AS text, series.access');
@@ -908,7 +908,7 @@ class CWMSermonsModel extends ListModel
 
 	public function getBooks()
 	{
-		$db    = $this->getDbo();
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 
 		$query->select('books.id AS value, books.bookname AS text, books.id as value');

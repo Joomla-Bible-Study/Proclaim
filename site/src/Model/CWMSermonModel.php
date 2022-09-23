@@ -92,7 +92,7 @@ class CWMSermonModel extends FormModel
 		{
 			try
 			{
-				$db    = $this->getDbo();
+				$db    = Factory::getContainer()->get('DatabaseDriver');
 				$query = $db->getQuery(true);
 				$query->select($this->getState('item.select', 's.*,CASE WHEN CHAR_LENGTH(s.alias) THEN CONCAT_WS(\':\', s.id, s.alias) ELSE s.id END as slug'));
 				$query->from('#__bsms_studies AS s');

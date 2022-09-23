@@ -101,7 +101,7 @@ class CWMMessageModel extends AdminModel
 
 		if ($id > 0)
 		{
-			$db    = $this->getDbo();
+			$db    = Factory::getContainer()->get('DatabaseDriver');
 			$query = $db->getQuery(true);
 
 			$query->select('topic.id, topic.topic_text, topic.params AS topic_params');
@@ -139,7 +139,7 @@ class CWMMessageModel extends AdminModel
 	 */
 	public function getAlltopics()
 	{
-		$db    = $this->getDbo();
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 
 		$query->select('topic.id, topic.topic_text, topic.params AS topic_params');
@@ -172,7 +172,7 @@ class CWMMessageModel extends AdminModel
 	 */
 	public function getMediaFiles()
 	{
-		$db    = $this->getDbo();
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 
 		$query->select('m.id, m.language, m.published, m.createdate, m.params');

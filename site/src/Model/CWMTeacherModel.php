@@ -51,7 +51,7 @@ class CWMTeacherModel extends ItemModel
 		{
 			try
 			{
-				$db    = $this->getDbo();
+				$db    = Factory::getContainer()->get('DatabaseDriver');
 				$query = $db->getQuery(true);
 				$query->select($this->getState('item.select', 't.*,CASE WHEN CHAR_LENGTH(t.alias) THEN CONCAT_WS(\':\', t.id, t.alias) ELSE t.id END as slug'));
 				$query->from('#__bsms_teachers AS t');

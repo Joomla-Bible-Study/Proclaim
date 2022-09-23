@@ -101,7 +101,7 @@ class CWMLandingPageModel extends ListModel
 	 */
 	protected function getListQuery()
 	{
-		$db              = $this->getDbo();
+		$db              = Factory::getContainer()->get('DatabaseDriver');
 		$query           = $db->getQuery(true);
 		$template_params = CWMParams::getTemplateparams();
 		$registry        = new Registry;

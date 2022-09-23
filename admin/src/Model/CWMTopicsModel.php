@@ -123,7 +123,7 @@ class CWMTopicsModel extends ListModel
 	 */
 	protected function getListQuery()
 	{
-		$db    = $this->getDbo();
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 
 		$query->select($this->getState('list.select', 'topic.id, topic.topic_text, topic.published, topic.params AS topic_params'));

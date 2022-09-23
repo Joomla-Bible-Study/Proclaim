@@ -82,7 +82,7 @@ class CWMTemplatesModel extends ListModel
 	 */
 	public function getTypes()
 	{
-		$db    = $this->getDbo();
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 
 		$query->select('template.type AS text');
@@ -137,7 +137,7 @@ class CWMTemplatesModel extends ListModel
 	 */
 	protected function getListQuery()
 	{
-		$db    = $this->getDbo();
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 
 		$query->select(

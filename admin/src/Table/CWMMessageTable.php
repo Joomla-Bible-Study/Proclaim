@@ -497,7 +497,7 @@ class CWMMessageTable extends Table
         /** @var \Joomla\CMS\Table\Asset $asset */
        //$asset = (new \Joomla\CMS\MVC\Factory\MVCFactory)->createTable("Asset");
        $asset = Table::getInstance('Asset');
-        //$db = $this->getDbo();
+        //$db = Factory::getContainer()->get('DatabaseDriver');
         //$asset = Table::getInstance('MessageTable', __NAMESPACE__ . '\\', array('dbo' => $db));
 		$asset->loadByName('com_proclaim');
         $asset->id = 1;

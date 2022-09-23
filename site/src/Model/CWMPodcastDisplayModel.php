@@ -108,7 +108,7 @@ class CWMPodcastDisplayModel extends ItemModel
 
 		if (!isset($this->_item[$pk]))
 		{
-			$db    = $this->getDbo();
+			$db    = Factory::getContainer()->get('DatabaseDriver');
 			$query = $db->getQuery(true);
 			$query->select(
 				$this->getState(
@@ -158,7 +158,7 @@ class CWMPodcastDisplayModel extends ItemModel
 		$params          = $app->getParams();
 		$user            = $user = Factory::getApplication()->getSession()->get('user');
 		$groups          = implode(',', $user->getAuthorisedViewLevels());
-		$db              = $this->getDbo();
+		$db              = Factory::getContainer()->get('DatabaseDriver');
 		$query           = $db->getQuery(true);
 		$template_params = CWMParams::getTemplateparams();
 		$t_params        = $template_params->params;

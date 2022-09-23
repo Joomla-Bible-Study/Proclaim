@@ -122,7 +122,7 @@ class CWMSeriesDisplaysModel extends ListModel
 	 */
 	protected function getListQuery()
 	{
-		$db              = $this->getDbo();
+		$db              = Factory::getContainer()->get('DatabaseDriver');
 		$template_params = CWMParams::getTemplateparams();
 		$t_params        = $template_params->params;
 		$app             = Factory::getApplication('site');
@@ -259,7 +259,7 @@ class CWMSeriesDisplaysModel extends ListModel
 	 */
 	public function getTeachers()
 	{
-		$db    = $this->getDbo();
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('t.id AS value, t.teachername AS text');
 		$query->from('#__bsms_teachers AS t');
@@ -282,7 +282,7 @@ class CWMSeriesDisplaysModel extends ListModel
 	 */
 	public function getYears()
 	{
-		$db    = $this->getDbo();
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('DISTINCT YEAR(s.studydate) as value, YEAR(s.studydate) as text');
 		$query->from('#__bsms_studies as s');
@@ -304,7 +304,7 @@ class CWMSeriesDisplaysModel extends ListModel
 	 */
 	public function getSeries()
 	{
-		$db    = $this->getDbo();
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 
 		$query->select('series.id AS value, series.series_text AS text, series.access');

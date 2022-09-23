@@ -465,7 +465,7 @@ class CWMAdminModel extends AdminModel
 	 */
 	public function getUpdateJBSMVersion()
 	{
-		$db    = $this->getDbo();
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('version')
 			->from('#__bsms_update')

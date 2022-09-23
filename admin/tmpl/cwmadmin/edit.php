@@ -215,7 +215,7 @@ $this->useCoreUI = true;
 						   title="<?php echo Text::_('JBS_ADM_RESET_ALIAS'); ?>" class="btn"> <i
 									class="icon-big icon-tree-2"></i>
 							<span><br/> <?php echo Text::_('JBS_ADM_RESET_ALIAS'); ?> </span></a>
-						<a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmdatabase'); ?>"
+						<a href="<?php echo Route::_('index.php?option=com_installer&view=database'); ?>"
 						   title="<?php echo Text::_('JBS_ADM_DATABASE'); ?>" class="btn"> <i
 									class="icon-database icon-big"></i>
 							<span><br/> <?php echo Text::_('JBS_ADM_DATABASE'); ?> </span></a>
