@@ -44,6 +44,7 @@ use Joomla\Component\Fields\Administrator\Helper\FieldsHelper;
 use Joomla\Database\ParameterType;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
+use JoomlaInstallerScript;
 
 /**
  * Admin administrator model class
@@ -269,7 +270,7 @@ class CWMAdminModel extends AdminModel
 		 * Finally, if the schema updates succeeded, make sure the database is
 		 * converted to utf8mb4 or, if not suported by the server, compatible to it.
 		 */
-		$installerJoomla = new ScriptJoomlaInstaller;
+		$installerJoomla = new JoomlaInstallerScript;
 		$statusArray     = $changeSet->getStatus();
 
 		if (count($statusArray['error']) === 0)
@@ -290,7 +291,7 @@ class CWMAdminModel extends AdminModel
 	 */
 	public function getItems()
 	{
-		$folder = JPATH_ADMINISTRATOR . '/components/com_proclaim/install/sql/updates/';
+		$folder = JPATH_ADMINISTRATOR . '/components/com_proclaim/sql/updates/';
 
 		if ($this->changeSet !== null)
 		{
@@ -791,7 +792,7 @@ class CWMAdminModel extends AdminModel
 	 */
 	protected function cleanCache($group = null, $client_id = 0)
 	{
-		parent::cleanCache('com_biblestudy');
-		parent::cleanCache('mod_biblestudy');
+		parent::cleanCache('com_proclaim');
+		parent::cleanCache('mod_proclaim');
 	}
 }

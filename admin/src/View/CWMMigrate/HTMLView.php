@@ -284,7 +284,7 @@ class HTMLView extends BaseHtmlView
 			}
 		}
 
-		$jbsversion    = Installer::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_proclaim/biblestudy.xml');
+		$jbsversion    = Installer::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.xml');
 		$this->version = $jbsversion['version'];
 
 		if (!(strncmp($this->schemaVersion, $this->version, 5) === 0))
