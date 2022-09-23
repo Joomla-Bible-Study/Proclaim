@@ -9,6 +9,12 @@
  */
 defined('JPATH_BASE') or die;
 
+use CWM\Component\Proclaim\Site\Helper\CWMHelperRoute;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
 /**
@@ -41,16 +47,16 @@ abstract class JHtmlIcon
 		{
 			if ($legacy)
 			{
-				$text = JHtml::_('image', 'system/new.png', JText::_('JNEW'), null, true);
+				$text = HtmlHelper::_('image', 'system/new.png', Text::_('JNEW'), null, true);
 			}
 			else
 			{
-				$text = '<span class="icon-plus"></span>' . JText::_('JNEW');
+				$text = '<span class="icon-plus"></span>' . Text::_('JNEW');
 			}
 		}
 		else
 		{
-			$text = JText::_('JNEW') . '&#160;';
+			$text = Text::_('JNEW') . '&#160;';
 		}
 
 		// Add the button classes to the attribs array
@@ -63,9 +69,9 @@ abstract class JHtmlIcon
 			$attribs['class'] = 'btn btn-primary';
 		}
 
-		$button = JHtml::_('link', JRoute::_($url), $text, $attribs);
+		$button = HTMLHelper::_('link', Route::_($url), $text, $attribs);
 
-		$output = '<span class="hasTooltip" title="' . JHtml::tooltipText('JBS_CREATE_SERMON') . '">' . $button . '</span>';
+		$output = '<span class="hasTooltip" title="' . HTMLHelper::tooltipText('JBS_CREATE_SERMON') . '">' . $button . '</span>';
 
 		return $output;
 	}
@@ -85,12 +91,13 @@ abstract class JHtmlIcon
 	 */
 	public static function email($article, $params, $attribs = array(), $legacy = false)
 	{
+		// @todo need to find replacement or something.
 		require_once JPATH_SITE . '/components/com_mailto/helpers/mailto.php';
 
-		$uri      = JUri::getInstance();
+		$uri      = Uri::getInstance();
 		$base     = $uri->toString(array('scheme', 'host', 'port'));
 		$template = Factory::getApplication()->getTemplate();
-		$link     = $base . JRoute::_(JBSMHelperRoute::getArticleRoute($article->id, $article->language), false);
+		$link     = $base . Route::_(CWMHelperRoute::getArticleRoute($article->id, $article->language), false);
 		$url      = 'index.php?option=com_mailto&tmpl=component&template=' . $template . '&link=' . MailtoHelper::addLink($link);
 
 		$status = 'width=400,height=350,menubar=yes,resizable=yes';
@@ -99,23 +106,23 @@ abstract class JHtmlIcon
 		{
 			if ($legacy)
 			{
-				$text = JHtml::_('image', 'system/emailButton.png', JText::_('JGLOBAL_EMAIL'), null, true);
+				$text = HTMLHelper::_('image', 'system/emailButton.png', Text::_('JGLOBAL_EMAIL'), null, true);
 			}
 			else
 			{
-				$text = '<span class="icon-envelope"></span>' . JText::_('JGLOBAL_EMAIL');
+				$text = '<span class="icon-envelope"></span>' . Text::_('JGLOBAL_EMAIL');
 			}
 		}
 		else
 		{
-			$text = JText::_('JGLOBAL_EMAIL');
+			$text = Text::_('JGLOBAL_EMAIL');
 		}
 
-		$attribs['title']   = JText::_('JGLOBAL_EMAIL');
+		$attribs['title']   = Text::_('JGLOBAL_EMAIL');
 		$attribs['onclick'] = "window.open(this.href,'win2','" . $status . "'); return false;";
 		$attribs['rel']     = 'nofollow';
 
-		return JHtml::_('link', JRoute::_($url), $text, $attribs);
+		return HTMLHelper::_('link', Route::_($url), $text, $attribs);
 	}
 
 	/**
@@ -135,8 +142,8 @@ abstract class JHtmlIcon
 	 */
 	public static function edit($article, $params, $attribs = array(), $legacy = false)
 	{
-		$user = $user = Factory::getApplication()->getSession()->get('user');
-		$uri  = JUri::getInstance();
+		$user = Factory::getApplication()->getSession()->get('user');
+		$uri  = Uri::getInstance();
 
 		// Ignore if in a popup window.
 		if ($params && $params->get('popup'))
@@ -156,24 +163,24 @@ abstract class JHtmlIcon
 			&& $article->checked_out > 0
 			&& $article->checked_out != $user->get('id'))
 		{
-			$checkoutUser = Factory::getUser($article->checked_out);
-			$button       = JHtml::_('image', 'system/checked_out.png', null, null, true);
-			$date         = JHtml::_('date', $article->checked_out_time);
-			$tooltip      = JText::_('JLIB_HTML_CHECKED_OUT') . ' :: ' . JText::sprintf('COM_CONTENT_CHECKED_OUT_BY', $checkoutUser->name)
+			$checkoutUser = Factory::getApplication()->getIdentity($article->checked_out);
+			$button       = HTMLHelper::_('image', 'system/checked_out.png', null, null, true);
+			$date         = HTMLHelper::_('date', $article->checked_out_time);
+			$tooltip      = Text::_('JLIB_HTML_CHECKED_OUT') . ' :: ' . Text::sprintf('COM_CONTENT_CHECKED_OUT_BY', $checkoutUser->name)
 				. ' <br /> ' . $date;
 
-			return '<span class="hasTooltip" title="' . JHtml::tooltipText($tooltip . '', 0) . '">' . $button . '</span>';
+			return '<span class="hasTooltip" title="' . HTMLHelper::tooltipText($tooltip . '', 0) . '">' . $button . '</span>';
 		}
 
 		$url = 'index.php?option=com_proclaim&task=messageform.edit&a_id=' . $article->id . '&return=' . base64_encode($uri);
 
 		if ($article->published == 0)
 		{
-			$overlib = JText::_('JUNPUBLISHED');
+			$overlib = Text::_('JUNPUBLISHED');
 		}
 		else
 		{
-			$overlib = JText::_('JPUBLISHED');
+			$overlib = Text::_('JPUBLISHED');
 		}
 
 		if ($legacy)
@@ -186,7 +193,7 @@ abstract class JHtmlIcon
 				$icon = 'edit_unpublished.png';
 			}
 
-			$text = JHtml::_('image', 'system/' . $icon, JText::_('JGLOBAL_EDIT'), null, true);
+			$text = HTMLHelper::_('image', 'system/' . $icon, Text::_('JGLOBAL_EDIT'), null, true);
 		}
 		else
 		{
@@ -198,12 +205,12 @@ abstract class JHtmlIcon
 				$icon = 'eye-close';
 			}
 
-			$text = '<span class="hasTooltip icon-' . $icon . ' tip" title="' . JHtml::tooltipText(JText::_('COM_CONTENT_EDIT_ITEM'), $overlib, 0)
+			$text = '<span class="hasTooltip icon-' . $icon . ' tip" title="' . HTMLHelper::tooltipText(Text::_('COM_CONTENT_EDIT_ITEM'), $overlib, 0)
 				. '"></span>'
-				. JText::_('JGLOBAL_EDIT');
+				. Text::_('JGLOBAL_EDIT');
 		}
 
-		return JHtml::_('link', JRoute::_($url), $text, $attribs);
+		return HTMLHelper::_('link', Route::_($url), $text, $attribs);
 	}
 
 	/**
@@ -225,7 +232,7 @@ abstract class JHtmlIcon
 		$input   = $app->input;
 		$request = $input->request;
 
-		$url = JBSMHelperRoute::getArticleRoute($article->id, $article->language);
+		$url = CWMHelperRoute::getArticleRoute($article->id, $article->language);
 		$url .= '&tmpl=component&print=1&layout=default&page=' . @$request->limitstart;
 
 		$status = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';
@@ -235,23 +242,23 @@ abstract class JHtmlIcon
 		{
 			if ($legacy)
 			{
-				$text = JHtml::_('image', 'system/printButton.png', JText::_('JGLOBAL_PRINT'), null, true);
+				$text = HTMLHelper::_('image', 'system/printButton.png', Text::_('JGLOBAL_PRINT'), null, true);
 			}
 			else
 			{
-				$text = '<span class="icon-print"></span>' . JText::_('JGLOBAL_PRINT');
+				$text = '<span class="icon-print"></span>' . Text::_('JGLOBAL_PRINT');
 			}
 		}
 		else
 		{
-			$text = JText::_('JGLOBAL_PRINT');
+			$text = Text::_('JGLOBAL_PRINT');
 		}
 
-		$attribs['title']   = JText::_('JGLOBAL_PRINT');
+		$attribs['title']   = Text::_('JGLOBAL_PRINT');
 		$attribs['onclick'] = "window.open(this.href,'win2','" . $status . "'); return false;";
 		$attribs['rel']     = 'nofollow';
 
-		return JHtml::_('link', JRoute::_($url), $text, $attribs);
+		return HTMLHelper::_('link', Route::_($url), $text, $attribs);
 	}
 
 	/**
@@ -273,16 +280,16 @@ abstract class JHtmlIcon
 		{
 			if ($legacy)
 			{
-				$text = JHtml::_('image', 'system/printButton.png', JText::_('JGLOBAL_PRINT'), null, true);
+				$text = HTMLHelper::_('image', 'system/printButton.png', Text::_('JGLOBAL_PRINT'), null, true);
 			}
 			else
 			{
-				$text = '<span class="icon-print"></span>' . JText::_('JGLOBAL_PRINT');
+				$text = '<span class="icon-print"></span>' . Text::_('JGLOBAL_PRINT');
 			}
 		}
 		else
 		{
-			$text = JText::_('JGLOBAL_PRINT');
+			$text = Text::_('JGLOBAL_PRINT');
 		}
 
 		return '<a href="#" onclick="window.print();return false;">' . $text . '</a>';

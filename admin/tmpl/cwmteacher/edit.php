@@ -39,7 +39,7 @@ $wa->useScript('keepalive')
 			}
 			else
 			{
-				alert('" . $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')) . "')
+				alert('" . $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')) . "')
 			}
 		}
 
@@ -62,7 +62,7 @@ $isModal = $input->get('layout') === 'modal';
 $layout  = $isModal ? 'modal' : 'edit';
 $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=component' : '';
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_proclaim&layout=' . $layout . $tmpl . '&id=' . (int) $this->item->id); ?>"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&layout=' . $layout . $tmpl . '&id=' . (int) $this->item->id); ?>"
       method="post" name="adminForm" id="teacher-form" class="form-validate" enctype="multipart/form-data">
 	<div class="row-fluid">
 		<?php echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'general', 'recall' => true, 'breakpoint' => 768]); ?>
@@ -100,7 +100,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
 									<div class="blank">
 										<a href="index.php?option=com_contact&task=contact.edit&id=<?php echo (int) $this->form->getValue('contact'); ?>"
 										   target="blank"
-										   class="btn"><?php echo JText::_('JBS_TCH_EDIT_THIS_CONTACT'); ?>
+										   class="btn"><?php echo Text::_('JBS_TCH_EDIT_THIS_CONTACT'); ?>
 										</a>
 									</div>
 								</div>

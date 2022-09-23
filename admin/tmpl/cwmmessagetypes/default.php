@@ -13,10 +13,15 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Router\Route;
 
-HTMLHelper::_('dropdown.init');
-HTMLHelper::_('formbehavior.chosen', 'select');
-HTMLHelper::_('behavior.multiselect');
+/** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
+$wa = $this->document->getWebAssetManager();
+$wa->useScript('table.columns')
+	->useScript('multiselect')
+	->useStyle('com_proclaim.cwmcore')
+	->useScript('com_proclaim.cwmcorejs');
 
 $app       = Factory::getApplication();
 $user      = $user = Factory::getApplication()->getSession()->get('user');
@@ -28,21 +33,7 @@ $trashed   = $this->state->get('filter.published') == -2 ? true : false;
 
 $sortFields = $this->getSortFields();
 ?>
-<script type="text/javascript">
-	Joomla.orderTable = function () {
-		var table = document.getElementById("sortTable");
-		var direction = document.getElementById("directionTable");
-		var order = table.options[table.selectedIndex].value;
-		var dirn;
-		if (order != '<?php echo $listOrder; ?>') {
-			dirn = 'asc';
-		} else {
-			dirn = direction.options[direction.selectedIndex].value;
-		}
-		Joomla.tableOrdering(order, dirn, '');
-	}
-</script>
-<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmmessagetypes'); ?>" method="post"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmmessagetypes'); ?>" method="post"
       name="adminForm" id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
@@ -55,7 +46,7 @@ $sortFields = $this->getSortFields();
 			<?php endif; ?>
 			<?php
 			// Search tools bar
-			echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+			echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 			?>
 			<?php if (empty($this->items)) : ?>
 				<div class="alert alert-no-items">
@@ -91,7 +82,7 @@ $sortFields = $this->getSortFields();
 						$canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.messagetype.' . $item->id);
 						$canChange = $user->authorise('core.edit.state', 'com_proclaim.messagetype.' . $item->id);
 						?>
-						<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo '1' ?>">
+						<tr class="row<?php echo $i % 2; ?>" data-draggable-group="<?php echo '1' ?>">
 
 							<td class="center hidden-phone">
 								<?php echo HTMLHelper::_('grid.id', $i, $item->id); ?>
@@ -105,42 +96,13 @@ $sortFields = $this->getSortFields();
 								<div class="pull-left">
 
 									<?php if ($canEdit || $canEditOwn) : ?>
-										<a href="<?php echo JRoute::_('index.php?option=com_proclaim&task=cwmmessagetype.edit&id=' . (int) $item->id); ?>"
+										<a href="<?php echo Route::_('index.php?option=com_proclaim&task=cwmmessagetype.edit&id=' . (int) $item->id); ?>"
 										   title="<?php echo JText::_('JACTION_EDIT'); ?>">
 											<?php echo $this->escape($item->message_type); ?></a>
 									<?php else : ?>
 										<span
-												title="<?php echo JText::sprintf('JFIELD_ALIAS_LABEL', $this->escape($item->messsage_type)); ?>"><?php echo $this->escape($item->message_type); ?></span>
+												title="<?php echo Text::sprintf('JFIELD_ALIAS_LABEL', $this->escape($item->messsage_type)); ?>"><?php echo $this->escape($item->message_type); ?></span>
 									<?php endif; ?>
-								</div>
-								<div class="pull-left">
-									<?php
-									// Create dropdown items
-									HTMLHelper::_('dropdown.edit', $item->id, 'cwmmessagetype.');
-									HTMLHelper::_('dropdown.divider');
-									if ($item->published) :
-										HTMLHelper::_('dropdown.unpublish', 'cb' . $i, 'cwmmessagetypes.');
-									else :
-										HTMLHelper::_('dropdown.publish', 'cb' . $i, 'cwmmessagetypes.');
-									endif;
-
-									HTMLHelper::_('dropdown.divider');
-
-									if ($archived) :
-										HTMLHelper::_('dropdown.unarchive', 'cb' . $i, 'cwmmessagetypes.');
-									else :
-										HTMLHelper::_('dropdown.archive', 'cb' . $i, 'cwmmessagetypes.');
-									endif;
-
-									if ($trashed) :
-										HTMLHelper::_('dropdown.untrash', 'cb' . $i, 'cwmmessagetypes.');
-									else :
-										HTMLHelper::_('dropdown.trash', 'cb' . $i, 'cwmmessagetypes.');
-									endif;
-
-									// Render dropdown list
-									echo HTMLHelper::_('dropdown.render');
-									?>
 								</div>
 							</td>
 

@@ -12,19 +12,20 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 
 $params = ComponentHelper::getParams('com_proclaim');
 
 $published = (int) $this->state->get('filter.published');
 
-$user = $user = Factory::getApplication()->getSession()->get('user');
+$user = Factory::getApplication()->getSession()->get('user');
 ?>
 <div class="p-3">
 	<div class="row">
 		<div class="modal-header">
 			<button type="button" role="presentation" class="close" data-dismiss="modal">x</button>
-			<h3><?php echo JText::_('JBS_CMN_BATCH_OPTIONS'); ?></h3>
+			<h3><?php echo Text::_('JBS_CMN_BATCH_OPTIONS'); ?></h3>
 		</div>
 		<div class="row">
 			<?php if (Multilanguage::isEnabled()) : ?>

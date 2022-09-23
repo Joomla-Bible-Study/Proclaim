@@ -12,6 +12,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // No Direct Access
 use CWM\Component\Proclaim\Administrator\Helper\CWMTranslated;
+use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Input\Input;
 

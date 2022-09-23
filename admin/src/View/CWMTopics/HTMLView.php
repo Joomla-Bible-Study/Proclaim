@@ -94,7 +94,7 @@ class HTMLView extends BaseHtmlView
 	 * @since   11.1
 	 * @see     fetch()
 	 */
-	public function display($tpl = null)
+	public function display($tpl = null): void
 	{
 		$items            = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
@@ -104,28 +104,13 @@ class HTMLView extends BaseHtmlView
 		$this->canDo      = CWMProclaimHelper::getActions('', 'topic');
 
 		// Check for errors.
-		if (count($errors = $this->get('Errors')))
+		if (\count($errors = $this->get('Errors')))
 		{
-			throw new \RuntimeException(implode("\n", $errors), 500);
+			throw new GenericDataException(implode("\n", $errors), 500);
 		}
 
 		$modelView   = $this->getModel();
 		$this->items = $modelView->getTranslated($items);
-
-		// Levels filter.
-		$options   = [];
-		$options[] = HtmlHelper::_('select.option', '1', Text::_('J1'));
-		$options[] = HtmlHelper::_('select.option', '2', Text::_('J2'));
-		$options[] = HtmlHelper::_('select.option', '3', Text::_('J3'));
-		$options[] = HtmlHelper::_('select.option', '4', Text::_('J4'));
-		$options[] = HtmlHelper::_('select.option', '5', Text::_('J5'));
-		$options[] = HtmlHelper::_('select.option', '6', Text::_('J6'));
-		$options[] = HtmlHelper::_('select.option', '7', Text::_('J7'));
-		$options[] = HtmlHelper::_('select.option', '8', Text::_('J8'));
-		$options[] = HtmlHelper::_('select.option', '9', Text::_('J9'));
-		$options[] = HtmlHelper::_('select.option', '10', Text::_('J10'));
-
-		$this->f_levels = $options;
 
 		// We don't need toolbar in the modal window.
 		if ($this->getLayout() !== 'modal')
@@ -147,7 +132,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @since 7.0
 	 */
-	protected function addToolbar()
+	protected function addToolbar(): void
 	{
 		// Get the toolbar object instance
 		$toolbar = Toolbar::getInstance('toolbar');
@@ -156,7 +141,7 @@ class HTMLView extends BaseHtmlView
 
 		if ($this->canDo->get('core.create'))
 		{
-			$toolbar->addNew('topic.add');
+			$toolbar->addNew('cwmtopic.add');
 		}
 
 		$dropdown = $toolbar->dropdownButton('status-group')
@@ -169,21 +154,21 @@ class HTMLView extends BaseHtmlView
 
 		if ($this->canDo->get('core.edit'))
 		{
-			$toolbar->edit('topic.edit');
+			$toolbar->edit('cwmtopic.edit');
 		}
 
 		if ($this->canDo->get('core.edit.state'))
 		{
 			$toolbar->divider();
-			$toolbar->publish('topics.publish');
-			$toolbar->unpublish('topics.unpublish');
+			$toolbar->publish('cwmtopics.publish');
+			$toolbar->unpublish('cwmtopics.unpublish');
 			$toolbar->divider();
-			$toolbar->archive('topics.archive', 'JTOOLBAR_ARCHIVE');
+			$toolbar->archive('cwmtopics.archive', 'JTOOLBAR_ARCHIVE');
 		}
 
 		if ($this->state->get('filter.published') === ContentComponent::CONDITION_TRASHED && $this->canDo->get('core.delete'))
 		{
-			$toolbar->delete('topics.delete')
+			$toolbar->delete('cwmtopics.delete')
 				->text('JTOOLBAR_EMPTY_TRASH')
 				->message('JGLOBAL_CONFIRM_DELETE')
 				->listCheck(true);
@@ -191,7 +176,7 @@ class HTMLView extends BaseHtmlView
 
 		if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED)
 		{
-			$toolbar->trash('topics.trash')->listCheck(true);
+			$toolbar->trash('cwmtopics.trash')->listCheck(true);
 		}
 	}
 
@@ -200,9 +185,10 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since    7.1.0
 	 */
-	protected function setDocument()
+	protected function setDocument(): void
 	{
 		$document = Factory::getApplication()->getDocument();
 		$document->setTitle(Text::_('JBS_TITLE_TOPICS'));
@@ -215,7 +201,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @since   3.0
 	 */
-	protected function getSortFields()
+	protected function getSortFields(): array
 	{
 		return array(
 			'topic.topic_text' => Text::_('JBS_CMN_TOPICS'),

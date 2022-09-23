@@ -526,7 +526,7 @@ class CWMMessageModel extends AdminModel
 	protected function batchTeacher($value, $pks, $contexts)
 	{
 		// Set the variables
-		$user = $user = Factory::getApplication()->getSession()->get('user');
+		$user = Factory::getApplication()->getSession()->get('user');
 		/** @var CWMMessageTable $table */
 		$table = $this->getTable();
 
@@ -573,7 +573,7 @@ class CWMMessageModel extends AdminModel
 	protected function batchSeries($value, $pks, $contexts)
 	{
 		// Set the variables
-		$user = $user = Factory::getApplication()->getSession()->get('user');
+		$user = Factory::getApplication()->getSession()->get('user');
 		/** @var CWMMessageTable $table */
 		$table = $this->getTable();
 
@@ -620,7 +620,7 @@ class CWMMessageModel extends AdminModel
 	protected function batchMessagetype($value, $pks, $contexts)
 	{
 		// Set the variables
-		$user = $user = Factory::getApplication()->getSession()->get('user');
+		$user = Factory::getApplication()->getSession()->get('user');
 		/** @var CWMMessageTable $table */
 		$table = $this->getTable();
 
@@ -685,7 +685,7 @@ class CWMMessageModel extends AdminModel
 	protected function prepareTable($table)
 	{
 		$date = Factory::getDate();
-		$user = $user = Factory::getApplication()->getSession()->get('user');
+		$user = Factory::getApplication()->getSession()->get('user');
 
 		// Set the publishing date to now
 		if ($table->published === Workflow::CONDITION_PUBLISHED && (int) $table->publish_up === 0)

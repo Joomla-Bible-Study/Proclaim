@@ -89,7 +89,7 @@ class HTMLView extends BaseHtmlView
 	 * @since   11.1
 	 * @see     fetch()
 	 */
-	public function display($tpl = null)
+	public function display($tpl = null): void
 	{
 		$this->items         = $this->get('Items');
 		$this->pagination    = $this->get('Pagination');
@@ -100,25 +100,10 @@ class HTMLView extends BaseHtmlView
 		$this->activeFilters = $this->get('ActiveFilters');
 
 		// Check for errors.
-		if (count($errors = $this->get('Errors')))
+		if (\count($errors = $this->get('Errors')))
 		{
 			throw new GenericDataException(implode("\n", $errors), 500);
 		}
-
-		// Levels filter.
-		$options   = array();
-		$options[] = HTMLHelper::_('select.option', '1', Text::_('J1'));
-		$options[] = HTMLHelper::_('select.option', '2', Text::_('J2'));
-		$options[] = HTMLHelper::_('select.option', '3', Text::_('J3'));
-		$options[] = HTMLHelper::_('select.option', '4', Text::_('J4'));
-		$options[] = HTMLHelper::_('select.option', '5', Text::_('J5'));
-		$options[] = HTMLHelper::_('select.option', '6', Text::_('J6'));
-		$options[] = HTMLHelper::_('select.option', '7', Text::_('J7'));
-		$options[] = HTMLHelper::_('select.option', '8', Text::_('J8'));
-		$options[] = HTMLHelper::_('select.option', '9', Text::_('J9'));
-		$options[] = HTMLHelper::_('select.option', '10', Text::_('J10'));
-
-		$this->f_levels = $options;
 
 		// We don't need toolbar in the modal window.
 		if ($this->getLayout() !== 'modal')
@@ -140,7 +125,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @since 7.0
 	 */
-	protected function addToolbar()
+	protected function addToolbar(): void
 	{
 		$canDo = ContentHelper::getActions('com_proclaim');
 		ToolbarHelper::title(Text::_('JBS_CMN_SERVERS'), 'database database');
@@ -182,7 +167,7 @@ class HTMLView extends BaseHtmlView
 	 * @throws \Exception
 	 * @since    7.1.0
 	 */
-	protected function setDocument()
+	protected function setDocument(): void
 	{
 		$document = Factory::getApplication()->getDocument();
 		$document->setTitle(Text::_('JBS_TITLE_SERVERS'));
@@ -195,7 +180,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @since   3.0
 	 */
-	protected function getSortFields()
+	protected function getSortFields(): array
 	{
 		return array(
 			'servers.server_name' => Text::_('JGRID_HEADING_ORDERING'),

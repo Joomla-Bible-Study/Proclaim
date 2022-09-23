@@ -30,7 +30,7 @@ $this->templates  = HTMLHelper::_('select.genericlist', $types, 'template_export
  * @since    7.0.0
  */
 ?>
-<form enctype="multipart/form-data" action="<?php echo JRoute::_('index.php?option=com_proclaim&view=templates'); ?>"
+<form enctype="multipart/form-data" action="<?php echo Route::_('index.php?option=com_proclaim&view=templates'); ?>"
       method="post" name="adminForm" id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">

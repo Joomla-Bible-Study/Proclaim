@@ -18,10 +18,10 @@ defined('_JEXEC') or die();
         }
         else if (task == 'upload') {
             if (document.adminForm.upload_folder.value == '') {
-                alert("<?php echo JText::_('JBS_MED_SELECT_FOLDER'); ?>");
+                alert("<?php echo Text::_('JBS_MED_SELECT_FOLDER'); ?>");
             }
             else if (document.adminForm.upload_server.value == '') {
-                alert("<?php echo JText::_('JBS_MED_ENTER_SERVER'); ?>");
+                alert("<?php echo Text::_('JBS_MED_ENTER_SERVER'); ?>");
             }
             else {
                 document.submitform(task);
@@ -47,7 +47,7 @@ else
 {
     $url = 'index.php?option=com_proclaim&view=upload&layout=default';
 }
-echo JRoute::_($url);
+echo Route::_($url);
 ?>" method="post" name="adminForm" id="item-form" class=" form-horizontal">
     <div class="control-group">
         <div class="control-label">
@@ -70,7 +70,7 @@ echo JRoute::_($url);
 
     <div id="uploader">
 
-        <p><?php echo JText::_('JBS_UPLOADER_ERROR_RUNTIME_NOT_SUPORTED') . ' ' .  $this->runtime; ?></p>
+        <p><?php echo Text::_('JBS_UPLOADER_ERROR_RUNTIME_NOT_SUPORTED') . ' ' .  $this->runtime; ?></p>
 
 </div>
 <?php echo HTMLHelper::_('form.token'); ?>
@@ -79,6 +79,6 @@ echo JRoute::_($url);
 
 </form>
 <?php if($this->enableLog) : ?>
-	<button id="log_btn"><?php echo JText::_('JBS_UPLOADER_LOG_BTN'); ?></button>
+	<button id="log_btn"><?php echo Text::_('JBS_UPLOADER_LOG_BTN'); ?></button>
 	<div id="log"></div>
 <?php endif; ?>

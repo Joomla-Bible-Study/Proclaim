@@ -12,13 +12,17 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 
 defined('_JEXEC') or die;
 
-HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-HTMLHelper::_('behavior.multiselect');
-HTMLHelper::_('formbehavior.chosen', 'select');
+/** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
+$wa = $this->document->getWebAssetManager();
+$wa->useScript('table.columns')
+	->useScript('multiselect')
+	->useStyle('com_proclaim.cwmcore')
+	->useScript('com_proclaim.cwmcorejs');
 
 $app       = Factory::getApplication();
 $user      = $app->getIdentity();
@@ -50,11 +54,11 @@ $sortFields = $this->getSortFields();
 			<?php endif; ?>
 			<?php
 			// Search tools bar
-			echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+			echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 			?>
 			<?php if (empty($this->items)) : ?>
 				<div class="alert alert-no-items">
-					<?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+					<?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
 				</div>
 			<?php else : ?>
 				<table class="table table-striped adminlist" id="mediafileList">

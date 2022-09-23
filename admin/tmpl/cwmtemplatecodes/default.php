@@ -45,7 +45,7 @@ $columns    = 5;
 		Joomla.tableOrdering(order, dirn, '');
 	}
 </script>
-<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=templatecodes'); ?>" method="post"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=templatecodes'); ?>" method="post"
       name="adminForm" id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
@@ -58,7 +58,7 @@ $columns    = 5;
 			<?php endif; ?>
 			<?php
 			// Search tools bar
-			echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+			echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 			?>
 			<?php if (empty($this->items)) : ?>
 				<div class="alert alert-no-items">
@@ -103,7 +103,7 @@ $columns    = 5;
 						$canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.templatecode.' . $item->id);
 						$canChange = $user->authorise('core.edit.state', 'com_proclaim.templatecode.' . $item->id);
 						?>
-						<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo '1' ?>">
+						<tr class="row<?php echo $i % 2; ?>" data-draggable-group="<?php echo '1' ?>">
 
 							<td class="center hidden-phone">
 								<?php echo HTMLHelper::_('grid.id', $i, $item->id); ?>

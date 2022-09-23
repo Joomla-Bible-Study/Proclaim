@@ -233,7 +233,7 @@ class CWMTeacher extends CWMListing
 		$label = str_replace('{{thumbnail}}', '<img src="' . $imagesmall->path . '" width="' . $imagesmall->width .
 			'" height="' . $imagesmall->height . '" />', $label
 		);
-		$label = str_replace('{{url}}', JRoute::_('index.php?option=com_proclaim&amp;view=CWMTeacherDisplay&amp;id=' .
+		$label = str_replace('{{url}}', Route::_('index.php?option=com_proclaim&amp;view=CWMTeacherDisplay&amp;id=' .
 			$row->id . '&amp;t=' . $template
 		), $label
 		);

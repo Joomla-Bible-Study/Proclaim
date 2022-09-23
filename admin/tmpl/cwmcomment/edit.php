@@ -99,7 +99,7 @@ $input = $app->input;
 
 			<!-- Begin Sidebar -->
 			<div class="col-lg-2 form-vertical">
-				<h4><?php echo JText::_('JDETAILS'); ?></h4>
+				<h4><?php echo Text::_('JDETAILS'); ?></h4>
 				<hr/>
 				<div class="control-group">
 					<div class="control-label">

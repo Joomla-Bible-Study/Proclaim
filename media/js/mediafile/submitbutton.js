@@ -14,13 +14,13 @@ Joomla.submitbutton = function (task) {
 		{
 			if (document.adminForm.upload_folder.value == '')
 			{
-				alert('<?php echo JText::_(\'JBS_MED_PATH_OR_FOLDER\');?>')
+				alert('<?php echo Text::_(\'JBS_MED_PATH_OR_FOLDER\');?>')
 			}
 			else
 			{
 				if (document.adminForm.upload_server.value == '')
 				{
-					alert('<?php echo JText::_(\'JBS_CMN_SERVER\');?>')
+					alert('<?php echo Text::_(\'JBS_CMN_SERVER\');?>')
 				}
 				else
 				{

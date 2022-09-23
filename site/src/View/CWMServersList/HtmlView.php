@@ -10,6 +10,8 @@
 namespace CWM\Component\Proclaim\Site\View\CWMServersList;
 // No Direct Access
 defined('_JEXEC') or die;
+
+use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Plugin\PluginHelper;
 use CWM\Component\Proclaim\Site\Helper\CWMListing;
@@ -20,12 +22,15 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use CWM\Component\Proclaim\Site\Helper\CWMRelatedstudies;
 use CWM\Component\Proclaim\Site\Helper\CWMPagebuilder;
 use CWM\Component\Proclaim\Site\Helper\CWMPodcastsubscribe;
+use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
+use mysql_xdevapi\Exception;
 
 /**
  * View class for Servers
@@ -97,7 +102,7 @@ class HtmlView extends BaseHtmlView
 	 * @see     fetch()
 	 * @since   11.1
 	 */
-	public function display($tpl = null)
+	public function display($tpl = null): void
 	{
 		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
@@ -108,42 +113,23 @@ class HtmlView extends BaseHtmlView
 		$this->filterForm    = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');
 
-		// Check for errors
-		if (count($errors = $this->get('Errors')))
+		// Check for errors.
+		if (\count($errors = $this->get('Errors')))
 		{
-			Factory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
-
-			return false;
+			throw new GenericDataException(implode("\n", $errors), 500);
 		}
-
-		// Levels filter.
-		$options   = array();
-		$options[] = HtmlHelper::_('select.option', '1', Text::_('J1'));
-		$options[] = HtmlHelper::_('select.option', '2', Text::_('J2'));
-		$options[] = HtmlHelper::_('select.option', '3', Text::_('J3'));
-		$options[] = HtmlHelper::_('select.option', '4', Text::_('J4'));
-		$options[] = HtmlHelper::_('select.option', '5', Text::_('J5'));
-		$options[] = HtmlHelper::_('select.option', '6', Text::_('J6'));
-		$options[] = HtmlHelper::_('select.option', '7', Text::_('J7'));
-		$options[] = HtmlHelper::_('select.option', '8', Text::_('J8'));
-		$options[] = HtmlHelper::_('select.option', '9', Text::_('J9'));
-		$options[] = HtmlHelper::_('select.option', '10', Text::_('J10'));
-
-		$this->f_levels = $options;
 
 		// We don't need toolbar in the modal window.
 		if ($this->getLayout() !== 'modal')
 		{
 			$this->addToolbar();
-
-			//$this->sidebar = HtmlHelperSidebar::render();
 		}
 
 		// Set the document
 		$this->setDocument();
 
 		// Display the template
-		return parent::display($tpl);
+		parent::display($tpl);
 	}
 
 	/**
@@ -151,49 +137,50 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
-	protected function addToolbar()
+	protected function addToolbar(): void
 	{
-		$user = $user = Factory::getApplication()->getSession()->get('user');
+		$user = Factory::getApplication()->getSession()->get('user');
 
 		// Get the toolbar object instance
-		$bar = JToolbar::getInstance('toolbar');
+		$bar = Toolbar::getInstance('toolbar');
 
-		JToolbarHelper::title(Text::_('JBS_CMN_SERVERS'), 'servers.png');
+		ToolbarHelper::title(Text::_('JBS_CMN_SERVERS'), 'servers.png');
 
 		if ($this->canDo->get('core.create'))
 		{
-			JToolbarHelper::addNew('server.add');
+			ToolbarHelper::addNew('cwmserver.add');
 		}
 
 		if ($this->canDo->get('core.edit'))
 		{
-			JToolbarHelper::editList('server.edit');
+			ToolbarHelper::editList('cwmserver.edit');
 		}
 
 		if ($this->canDo->get('core.edit.state'))
 		{
-			JToolbarHelper::divider();
-			JToolbarHelper::publishList('servers.publish');
-			JToolbarHelper::unpublishList('servers.unpublish');
-			JToolbarHelper::divider();
-			JToolbarHelper::archiveList('servers.archive');
+			ToolbarHelper::divider();
+			ToolbarHelper::publishList('cwmservers.publish');
+			ToolbarHelper::unpublishList('cwmservers.unpublish');
+			ToolbarHelper::divider();
+			ToolbarHelper::archiveList('cwmservers.archive');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
-			JToolbarHelper::deleteList('', 'servers.delete', 'JTOOLBAR_EMPTY_TRASH');
+			ToolbarHelper::deleteList('', 'cwmservers.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
 		elseif ($this->canDo->get('core.delete'))
 		{
-			JToolbarHelper::trash('servers.trash');
+			ToolbarHelper::trash('cwmservers.trash');
 		}
 
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
-			JToolbarHelper::divider();
+			ToolbarHelper::divider();
 			HtmlHelper::_('bootstrap.modal', 'collapseModal');
 
 			$title = Text::_('JBS_CMN_BATCH_LABLE');
@@ -213,7 +200,7 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @since    7.1.0
 	 */
-	protected function setDocument()
+	protected function setDocument(): void
 	{
 		$document = Factory::getApplication()->getDocument();
 		$document->setTitle(Text::_('JBS_TITLE_SERVERS'));
@@ -226,7 +213,7 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @since   3.0
 	 */
-	protected function getSortFields()
+	protected function getSortFields(): array
 	{
 		return array(
 			'servers.server_name' => Text::_('JGRID_HEADING_ORDERING'),

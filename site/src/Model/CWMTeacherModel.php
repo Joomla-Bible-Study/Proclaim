@@ -7,13 +7,15 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Site\Model;
+
 // No Direct Access
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\ItemModel;
 use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
-//use CWM\Component\Proclaim\Administrator\CWMParams;
+
 defined('_JEXEC') or die;
 
 /**
@@ -39,6 +41,7 @@ class CWMTeacherModel extends ItemModel
 	 *
 	 * @return    mixed    Menu item data object on success, false on failure.
 	 *
+	 * @throws \Exception
 	 * @since 7.1.0
 	 */
 	public function &getItem($pk = null)
@@ -46,7 +49,8 @@ class CWMTeacherModel extends ItemModel
 		$app = Factory::getApplication();
 
 		// Initialise variables.
-        $pk  = $app->input->getInt('id');
+		$pk = $app->input->getInt('id');
+
 		if (!isset($this->_item[$pk]))
 		{
 			try
@@ -62,12 +66,11 @@ class CWMTeacherModel extends ItemModel
 				if (empty($data))
 				{
 					$app->enqueueMessage(Text::_('JBS_CMN_TEACHER_NOT_FOUND'), 'error');
-
 				}
 
 				$this->_item[$pk] = $data;
 			}
-			catch (Exception $e)
+			catch (\Exception $e)
 			{
 				if ($e->getCode() == 404)
 				{
@@ -92,16 +95,16 @@ class CWMTeacherModel extends ItemModel
 	 *
 	 * @return  void
 	 *
+	 * @throws \Exception
 	 * @since    1.6
 	 */
 	protected function populateState()
 	{
-		/** @type JApplicationSite $app */
 		$app = Factory::getApplication('site');
 
 		// Load state from the request.
-		//$input = new JInput;
-		$pk    = $app->get('id', '', 'int');
+		// $input = new JInput;
+		$pk = $app->get('id', '', 'int');
 		$this->setState('teacher.id', $pk);
 
 		$offset = $app->get('limitstart', '', 'int');
@@ -129,8 +132,8 @@ class CWMTeacherModel extends ItemModel
 
 		$this->setState('template', $template);
 		$this->setState('administrator', $admin);
-		$this->setState('params',$params);
-		$user = $user = Factory::getApplication()->getSession()->get('user');
+		$this->setState('params', $params);
+		$user = Factory::getApplication()->getSession()->get('user');
 
 		if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise('core.edit', 'com_proclaim')))
 		{
@@ -138,5 +141,5 @@ class CWMTeacherModel extends ItemModel
 			$this->setState('filter.archived', 2);
 		}
 	}
-// End class
+	// End class
 }

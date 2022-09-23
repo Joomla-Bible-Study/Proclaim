@@ -62,7 +62,7 @@ $wa->useScript('keepalive')
 			<?php endif; ?>
 			<?php
 			// Search tools bar
-			echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+			echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 			?>
 			<?php if (empty($this->items)) : ?>
 				<div class="alert alert-no-items">
@@ -116,7 +116,7 @@ $wa->useScript('keepalive')
 						$canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.comment.' . $item->id);
 						$canChange = $user->authorise('core.edit.state', 'com_proclaim.comment.' . $item->id);
 						?>
-						<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo '1' ?>">
+						<tr class="row<?php echo $i % 2; ?>" data-draggable-group="<?php echo '1' ?>">
 
 							<td class="center hidden-phone">
 								<?php echo HTMLHelper::_('grid.id', $i, $item->id); ?>

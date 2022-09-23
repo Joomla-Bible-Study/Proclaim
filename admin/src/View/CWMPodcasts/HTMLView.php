@@ -15,6 +15,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
@@ -75,10 +76,11 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return  void  A string if successful, otherwise a JError object.
 	 *
-	 * @see     fetch()
+	 * @throws \Exception
 	 * @since   11.1
+	 * @see     fetch()
 	 */
-	public function display($tpl = null)
+	public function display($tpl = null): void
 	{
 		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
@@ -88,20 +90,11 @@ class HTMLView extends BaseHtmlView
 		$this->filterForm    = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');
 
-		// Levels filter.
-		$options   = array();
-		$options[] = HTMLHelper::_('select.option', '1', Text::_('J1'));
-		$options[] = HTMLHelper::_('select.option', '2', Text::_('J2'));
-		$options[] = HTMLHelper::_('select.option', '3', Text::_('J3'));
-		$options[] = HTMLHelper::_('select.option', '4', Text::_('J4'));
-		$options[] = HTMLHelper::_('select.option', '5', Text::_('J5'));
-		$options[] = HTMLHelper::_('select.option', '6', Text::_('J6'));
-		$options[] = HTMLHelper::_('select.option', '7', Text::_('J7'));
-		$options[] = HTMLHelper::_('select.option', '8', Text::_('J8'));
-		$options[] = HTMLHelper::_('select.option', '9', Text::_('J9'));
-		$options[] = HTMLHelper::_('select.option', '10', Text::_('J10'));
-
-		$this->f_levels = $options;
+		// Check for errors.
+		if (\count($errors = $this->get('Errors')))
+		{
+			throw new GenericDataException(implode("\n", $errors), 500);
+		}
 
 		$this->addToolbar();
 
@@ -119,36 +112,36 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @since 7.0.0
 	 */
-	protected function addToolbar()
+	protected function addToolbar(): void
 	{
 		ToolbarHelper::title(Text::_('JBS_CMN_PODCASTS'), 'feed feed');
 
 		if ($this->canDo->get('core.create'))
 		{
-			ToolbarHelper::addNew('podcast.add');
+			ToolbarHelper::addNew('cwmpodcast.add');
 		}
 
 		if ($this->canDo->get('core.edit'))
 		{
-			ToolbarHelper::editList('podcast.edit');
+			ToolbarHelper::editList('cwmpodcast.edit');
 		}
 
 		if ($this->canDo->get('core.edit.state'))
 		{
 			ToolbarHelper::divider();
-			ToolbarHelper::publishList('podcasts.publish');
-			ToolbarHelper::unpublishList('podcasts.unpublish');
+			ToolbarHelper::publishList('cwmpodcasts.publish');
+			ToolbarHelper::unpublishList('cwmpodcasts.unpublish');
 			ToolbarHelper::divider();
-			ToolbarHelper::archiveList('podcasts.archive');
+			ToolbarHelper::archiveList('cwmpodcasts.archive');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
-			ToolbarHelper::deleteList('', 'podcasts.delete', 'JTOOLBAR_EMPTY_TRASH');
+			ToolbarHelper::deleteList('', 'cwmpodcasts.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
 		elseif ($this->canDo->get('core.delete'))
 		{
-			ToolbarHelper::trash('podcasts.trash');
+			ToolbarHelper::trash('cwmpodcasts.trash');
 		}
 
 		if ($this->canDo->get('core.create'))
@@ -163,9 +156,10 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since    7.1.0
 	 */
-	protected function setDocument()
+	protected function setDocument(): void
 	{
 		$document = Factory::getApplication()->getDocument();
 		$document->setTitle(Text::_('JBS_TITLE_PODCASTS'));
@@ -178,7 +172,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @since   3.0
 	 */
-	protected function getSortFields()
+	protected function getSortFields(): array
 	{
 		return array(
 			'podcast.title'     => Text::_('JBS_CMN_PODCAST'),

@@ -80,7 +80,7 @@ class CWMSeriesDisplayModel extends ItemModel
 		$this->setState('template', $template);
 		$this->setState('administrator', $admin);
 
-		$user = $user = Factory::getApplication()->getSession()->get('user');
+		$user = Factory::getApplication()->getSession()->get('user');
 
 		if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise('core.edit', 'com_proclaim')))
 		{

@@ -101,7 +101,7 @@ class HTMLView extends BaseHtmlView
 	 * @since   11.1
 	 * @see     fetch()
 	 */
-	public function display($tpl = null)
+	public function display($tpl = null): void
 	{
 		$this->items         = $this->get('Items');
 		$this->pagination    = $this->get('Pagination');
@@ -165,7 +165,7 @@ class HTMLView extends BaseHtmlView
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	protected function addToolbar()
+	protected function addToolbar(): void
 	{
 		$canDo = ContentHelper::getActions('com_proclaim');
 		$user  = $this->getCurrentUser();

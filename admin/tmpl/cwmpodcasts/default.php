@@ -109,7 +109,7 @@ $sortFields = $this->getSortFields();
 						$canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.podcast.' . $item->id);
 						$canChange = $user->authorise('core.edit.state', 'com_proclaim.podcast.' . $item->id);
 						?>
-						<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo '1' ?>">
+						<tr class="row<?php echo $i % 2; ?>" data-draggable-group="<?php echo '1' ?>">
 
 							<td class="center hidden-phone">
 								<?php echo HTMLHelper::_('grid.id', $i, $item->id); ?>
@@ -162,7 +162,7 @@ $sortFields = $this->getSortFields();
 								</div>
 							</td>
 							<td class="center nowrap hidden-phone">
-								<a href="<?php echo JRoute::_(JUri::root() . $this->escape($item->filename)); ?>"
+								<a href="<?php echo Route::_(JUri::root() . $this->escape($item->filename)); ?>"
 								   target="_blank">
 									<?php echo Text::_('JBS_PDC_XML'); ?>
 								</a>

@@ -114,15 +114,15 @@ $session->set('migration_stack', '', 'CWM');
 	<tr>
 		<td>
 			<p><a href="https://www.christianwebministries.org/support/user-help-forum.html"
-			      target="_blank"><?php echo JText::_('JBS_INS_VISIT_FORUM'); ?></a></p>
+			      target="_blank"><?php echo Text::_('JBS_INS_VISIT_FORUM'); ?></a></p>
 
 			<p><a href="https://www.christianwebministries.org"
-			      target="_blank"><?php echo JText::_('JBS_INS_GET_MORE_HELP'); ?></a></p>
+			      target="_blank"><?php echo Text::_('JBS_INS_GET_MORE_HELP'); ?></a></p>
 
 			<p><a href="https://www.christianwebministries.org/documentation.html"
-			      target="_blank"><?php echo JText::_('JBS_INS_VISIT_DOCUMENTATION'); ?></a></p>
+			      target="_blank"><?php echo Text::_('JBS_INS_VISIT_DOCUMENTATION'); ?></a></p>
 
-			<p><?php echo JText::_('JBS_INS_TITLE'); ?> &copy; by <a href="https://www.christianwebministries.org"
+			<p><?php echo Text::_('JBS_INS_TITLE'); ?> &copy; by <a href="https://www.christianwebministries.org"
 			                                                         target="_blank">www.ChristianWebMinistries.org</a>
 				All rights reserved.</p>
 

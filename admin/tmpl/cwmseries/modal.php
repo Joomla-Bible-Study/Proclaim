@@ -23,7 +23,7 @@ $app = Factory::getApplication();
 
 if ($app->isClient('site'))
 {
-	JSession::checkToken('get') or die(JText::_('JINVALID_TOKEN'));
+	JSession::checkToken('get') or die(Text::_('JINVALID_TOKEN'));
 }
 
 HTMLHelper::_('behavior.multiselect');

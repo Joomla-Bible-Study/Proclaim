@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 $published = $this->state->get('filter.published');
 ?>
 <a class="btn" type="button" data-dismiss="modal">
-	<?php echo JText::_('JCANCEL'); ?>
+	<?php echo Text::_('JCANCEL'); ?>
 </a>
 <button class="btn btn-success" type="button" onclick="transferFileSize()" data-dismiss="modal">
 	<?php echo JText::_('JBS_MED_CONVERTER'); ?>

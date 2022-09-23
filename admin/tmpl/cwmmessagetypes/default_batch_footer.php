@@ -22,5 +22,5 @@ $wa->useScript('com_proclaim.cwmadmin-messages-batch');
 	<?php echo Text::_('JCANCEL'); ?>
 </button>
 <button type="submit" id='batch-submit-button-id' class="btn btn-success"  data-submit-task='cwmmessagetype.batch'>
-	<?php echo JText::_('JGLOBAL_BATCH_PROCESS'); ?>
+	<?php echo Text::_('JGLOBAL_BATCH_PROCESS'); ?>
 </button>

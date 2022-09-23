@@ -143,7 +143,7 @@ if (!empty($editor))
 
 						</th>
 						<td class="nowrap small hidden-phone">
-							<?php echo HTMLHelper::_('date', $item->studydate, JText::_('DATE_FORMAT_LC4')); ?>
+							<?php echo HTMLHelper::_('date', $item->studydate, Text::_('DATE_FORMAT_LC4')); ?>
 						</td>
 						<td class="small hidden-phone">
 							<?php echo $this->escape($item->teachername); ?>

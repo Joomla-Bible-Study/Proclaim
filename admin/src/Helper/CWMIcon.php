@@ -139,11 +139,12 @@ class CWMIcon
 	 *
 	 * @return  string    The HTML for the article edit icon.
 	 *
+	 * @throws \Exception
 	 * @since   1.6
 	 */
 	public static function edit($article, $params, $attribs = array(), $legacy = false)
 	{
-		$user = $user = Factory::getApplication()->getSession()->get('user');
+		$user = Factory::getApplication()->getSession()->get('user');
 		$uri  = Uri::getInstance();
 
 		// Ignore if in a popup window.

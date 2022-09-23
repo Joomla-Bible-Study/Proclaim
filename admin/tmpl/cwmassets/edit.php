@@ -14,12 +14,12 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
-ToolbarHelper::title(JText::_('JBS_ADM_ASSET_TABLE_NAME'), 'administration');
+ToolbarHelper::title(Text::_('JBS_ADM_ASSET_TABLE_NAME'), 'administration');
 
 defined('_JEXEC') or die;
 
 $app  = Factory::getApplication();
-$user = $user = Factory::getApplication()->getSession()->get('user');
+$user = Factory::getApplication()->getSession()->get('user');
 
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
@@ -44,7 +44,7 @@ $wa->useScript('keepalive')
 		};
 ");
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmassets') ?>" method="post" name="assetsForm"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmassets') ?>" method="post" name="assetsForm"
       id="item-assets" class="form-horizontal">
 	<div class="row-fluid">
 		<?php
@@ -55,19 +55,19 @@ $wa->useScript('keepalive')
 			echo '<thead>';
 			echo '<tr class="table-primary">';
 
-			echo '<th style="width: 20%;" class="center">' . JText::_('JBS_ADM_TABLENAMES') . '</th>';
-			echo '<th class="center">' . JText::_('JBS_ADM_ROWCOUNT') . '</th>';
-			echo '<th class="center">' . JText::_('JBS_ADM_NULLROWS') . '</th>';
-			echo '<th class="center">' . JText::_('JBS_ADM_MATCHROWS') . '</th>';
-			echo '<th class="center">' . JText::_('JBS_ADM_ARULESROWS') . '</th>';
-			echo '<th class="center">' . JText::_('JBS_ADM_NOMATCHROWS') . '</th>';
+			echo '<th style="width: 20%;" class="center">' . Text::_('JBS_ADM_TABLENAMES') . '</th>';
+			echo '<th class="center">' . Text::_('JBS_ADM_ROWCOUNT') . '</th>';
+			echo '<th class="center">' . Text::_('JBS_ADM_NULLROWS') . '</th>';
+			echo '<th class="center">' . Text::_('JBS_ADM_MATCHROWS') . '</th>';
+			echo '<th class="center">' . Text::_('JBS_ADM_ARULESROWS') . '</th>';
+			echo '<th class="center">' . Text::_('JBS_ADM_NOMATCHROWS') . '</th>';
 			echo '</tr>';
 			echo '</thead>';
 			foreach ($this->assets as $asset)
 			{
 				echo '<tr>';
-				echo '<td>' . JText::_($asset['realname']) . '</td>';
-				echo '<td class="center">' . JText::_($asset['numrows']) . '</td>';
+				echo '<td>' . Text::_($asset['realname']) . '</td>';
+				echo '<td class="center">' . Text::_($asset['numrows']) . '</td>';
 				echo '<td class="center">';
 				if ($asset['nullrows'] > 0)
 				{
@@ -77,7 +77,7 @@ $wa->useScript('keepalive')
 				{
 					echo '<span>';
 				}
-				echo JText::_($asset['nullrows']) . '</span></td>';
+				echo Text::_($asset['nullrows']) . '</span></td>';
 				echo '<td class="center">';
 				if ($asset['matchrows'] > 0)
 				{
@@ -87,7 +87,7 @@ $wa->useScript('keepalive')
 				{
 					echo '<span>';
 				}
-				echo JText::_($asset['matchrows']) . '</span></td>';
+				echo Text::_($asset['matchrows']) . '</span></td>';
 				echo '<td class="center">';
 				if ($asset['arulesrows'] > 0)
 				{
@@ -97,7 +97,7 @@ $wa->useScript('keepalive')
 				{
 					echo '<sapn>';
 				}
-				echo JText::_($asset['arulesrows']) . '</span></td>';
+				echo Text::_($asset['arulesrows']) . '</span></td>';
 				echo '<td class="center">';
 				if ($asset['nomatchrows'] > 0)
 				{
@@ -107,11 +107,11 @@ $wa->useScript('keepalive')
 				{
 					echo '<span>';
 				}
-				echo JText::_($asset['nomatchrows']) . '</span></td>';
+				echo Text::_($asset['nomatchrows']) . '</span></td>';
 				echo '</tr>';
 			}
 			echo '<tr><td colspan="6">';
-			echo JText::_('JBS_ADM_ASSET_EXPLANATION');
+			echo Text::_('JBS_ADM_ASSET_EXPLANATION');
 			echo '</td></tr>';
 			echo '</table>';
 		}

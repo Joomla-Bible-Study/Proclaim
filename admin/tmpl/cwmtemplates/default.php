@@ -47,7 +47,7 @@ $columns    = 4;
 		Joomla.tableOrdering(order, dirn, '')
 	}
 </script>
-<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmtemplates'); ?>" method="post"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmtemplates'); ?>" method="post"
       name="adminForm"
       id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
@@ -61,7 +61,7 @@ $columns    = 4;
 			<?php endif; ?>
 			<?php
 			// Search tools bar
-			echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+			echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 			?>
 			<?php if (empty($this->items)) : ?>
 				<div class="alert alert-no-items">
@@ -96,7 +96,7 @@ $columns    = 4;
 					<tbody>
 					<?php
 					foreach ($this->items as $i => $item) :
-						$link = JRoute::_('index.php?option=com_proclaim&task=cwmtemplate.edit&id=' . (int) $item->id);
+						$link = Route::_('index.php?option=com_proclaim&task=cwmtemplate.edit&id=' . (int) $item->id);
 						$item->max_ordering = 0;
 						$canCreate = $user->authorise('core.create');
 						$canEdit = $user->authorise('core.edit', 'com_proclaim.template.' . $item->id);

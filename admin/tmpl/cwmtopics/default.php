@@ -12,13 +12,17 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 
 defined('_JEXEC') or die;
 
-HTMLHelper::_('dropdown.init');
-HTMLHelper::_('formbehavior.chosen', 'select');
-HTMLHelper::_('behavior.multiselect');
+/** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
+$wa = $this->document->getWebAssetManager();
+$wa->useScript('table.columns')
+	->useScript('multiselect')
+	->useStyle('com_proclaim.cwmcore')
+	->useScript('com_proclaim.cwmcorejs');
 
 $app       = Factory::getApplication();
 $user      = $user = Factory::getApplication()->getSession()->get('user');
@@ -31,7 +35,7 @@ $columns   = 4;
 
 $sortFields = $this->getSortFields();
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmtopics'); ?>" method="post" name="adminForm"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmtopics'); ?>" method="post" name="adminForm"
       id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
@@ -44,11 +48,11 @@ $sortFields = $this->getSortFields();
 			<?php endif; ?>
 			<?php
 			// Search tools bar
-			echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+			echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 			?>
 			<?php if (empty($this->items)) : ?>
 				<div class="alert alert-no-items">
-					<?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+					<?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
 				</div>
 			<?php else : ?>
 				<table class="table table-striped adminlist" id="topics">
@@ -85,7 +89,7 @@ $sortFields = $this->getSortFields();
 						$canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.topic.' . $item->id);
 						$canChange = $user->authorise('core.edit.state', 'com_proclaim.topic.' . $item->id);
 						?>
-						<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo '1' ?>">
+						<tr class="row<?php echo $i % 2; ?>" data-draggable-group="<?php echo '1' ?>">
 
 							<td class="center hidden-phone">
 								<?php echo HTMLHelper::_('grid.id', $i, $item->id); ?>
@@ -108,35 +112,6 @@ $sortFields = $this->getSortFields();
 										<span
 												title="<?php echo $this->escape($item->topic_text); ?>"><?php echo $this->escape($item->topic_text); ?></span>
 									<?php endif; ?>
-								</div>
-								<div class="pull-left">
-									<?php
-									// Create dropdown items
-									HTMLHelper::_('dropdown.edit', $item->id, 'cwmtopic.');
-									HTMLHelper::_('dropdown.divider');
-									if ($item->published) :
-										HTMLHelper::_('dropdown.unpublish', 'cb' . $i, 'cwmtopics.');
-									else :
-										HTMLHelper::_('dropdown.publish', 'cb' . $i, 'cwmtopics.');
-									endif;
-
-									HTMLHelper::_('dropdown.divider');
-
-									if ($archived) :
-										HTMLHelper::_('dropdown.unarchive', 'cb' . $i, 'cwmtopics.');
-									else :
-										HTMLHelper::_('dropdown.archive', 'cb' . $i, 'cwmtopics.');
-									endif;
-
-									if ($trashed) :
-										HTMLHelper::_('dropdown.untrash', 'cb' . $i, 'cwmtopics.');
-									else :
-										HTMLHelper::_('dropdown.trash', 'cb' . $i, 'cwmtopics.');
-									endif;
-
-									// Render dropdown list
-									echo HTMLHelper::_('dropdown.render');
-									?>
 								</div>
 							</td>
 

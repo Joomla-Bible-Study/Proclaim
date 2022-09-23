@@ -30,11 +30,11 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 	}
 </script>
 <form
-	action="<?php echo JRoute::_('index.php?option=com_proclaim&view=servers&layout=modal&tmpl=component&function=' . $function); ?>"
+	action="<?php echo Route::_('index.php?option=com_proclaim&view=servers&layout=modal&tmpl=component&function=' . $function); ?>"
 	method="post" name="adminForm" id="adminForm" class="form-inline">
 	<?php
 	// Search tools bar
-	echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+	echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 	?>
 	<table class="table table-striped table-condensed">
 		<thead>

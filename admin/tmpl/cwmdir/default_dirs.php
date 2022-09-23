@@ -52,17 +52,17 @@ $first = true;
 								     'ext/_folder.png' : $this->imgURL . 'ext/_folder_open.png'; ?>"/>
 						</div>
 						<div class="prev_right">
-							<span class="label"><?php echo JText::_('COM_MEDIAMU_FINFO_CONTAINS'); ?></span><br/>
+							<span class="label"><?php echo Text::_('COM_MEDIAMU_FINFO_CONTAINS'); ?></span><br/>
 							<?php echo $folder->fileCount; ?> <span
-								class="label"><?php echo JText::_('COM_MEDIAMU_FINFO_FILES_AND'); ?></span> <?php echo $folder->folderCount; ?>
-							<span class="label"><?php echo JText::_('COM_MEDIAMU_FINFO_FOLDERS'); ?></span> <br/>
+								class="label"><?php echo Text::_('COM_MEDIAMU_FINFO_FILES_AND'); ?></span> <?php echo $folder->folderCount; ?>
+							<span class="label"><?php echo Text::_('COM_MEDIAMU_FINFO_FOLDERS'); ?></span> <br/>
 
 						</div>
 						<div class="prev_footer">
 							<a href="index.php?option=com_proclaim&view=dir&tmpl=component&dir=<?php echo $folder->folderLink; ?>">
-								<?php echo JText::_('COM_MEDIAMU_FINFO_OPEN'); ?></a>
+								<?php echo Text::_('COM_MEDIAMU_FINFO_OPEN'); ?></a>
 							<span>|</span> <a class="path_rm_btn" name="<?php echo base64_encode($folder->basename); ?>"
-							                  href="#"><?php echo JText::_('COM_MEDIAMU_FINFO_DELETE'); ?></a>
+							                  href="#"><?php echo Text::_('COM_MEDIAMU_FINFO_DELETE'); ?></a>
 						</div>
 					</div>
 				</td>

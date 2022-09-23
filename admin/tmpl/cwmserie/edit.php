@@ -45,12 +45,12 @@ $wa->useScript('keepalive')
 ');
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_proclaim&layout=edit&id=' . (int) $this->item->id); ?>"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int) $this->item->id); ?>"
       method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
 	<div class="row-fluid">
 
 		<?php echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'general', 'recall' => true, 'breakpoint' => 768]); ?>
-		<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'general', JText::_('JBS_CMN_DETAILS')); ?>
+		<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'general', Text::_('JBS_CMN_DETAILS')); ?>
 
 		<!-- Begin Content -->
 		<div class="row">
@@ -137,7 +137,7 @@ $wa->useScript('keepalive')
 		</div>
 		<?php echo HTMLHelper::_('uitab.endTab'); ?>
 		<?php if ($this->canDo->get('core.admin')): ?>
-			<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', JText::_('JBS_CMN_FIELDSET_RULES')); ?>
+			<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_CMN_FIELDSET_RULES')); ?>
 			<div class="tab-pane" id="permissions">
 				<fieldset>
 					<?php echo $this->form->getInput('rules'); ?>

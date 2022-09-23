@@ -30,13 +30,13 @@ else
 if ($this->more)
 {
 	?>
-	<h1><?php echo JText::_('JBS_MIG_WORKING'); ?></h1>
+	<h1><?php echo Text::_('JBS_MIG_WORKING'); ?></h1>
 	<?php
 }
 else
 {
 	?>
-	<h1><?php echo JText::_('JBS_MIG_MIGRATION_DONE'); ?></h1>
+	<h1><?php echo Text::_('JBS_MIG_MIGRATION_DONE'); ?></h1>
 	<?php
 }
 ?>
@@ -50,7 +50,7 @@ else
 
 <div id="install-progress-pane">
 	<div class="migration-status">
-		<div class="status"><?php echo $pre . ' ' . JText::_('JBS_MIG_PROCESSING') . ' ' . $this->running; ?></div>
+		<div class="status"><?php echo $pre . ' ' . Text::_('JBS_MIG_PROCESSING') . ' ' . $this->running; ?></div>
 	</div>
 	<div class="progress progress-striped active">
 		<div class="bar" style="width: <?php echo $this->percentage ?>%;"></div> <?php echo $this->percentage; ?>%
@@ -82,7 +82,7 @@ else
 		:
 		?>
 		<div class="alert alert-info">
-			<p><?php echo JText::_('JBS_LBL_REDIRECT_IN_3S'); ?></p>
+			<p><?php echo Text::_('JBS_LBL_REDIRECT_IN_3S'); ?></p>
 		</div>
 		<script type="text/javascript">
 			window.setTimeout('redirect();', 3000);

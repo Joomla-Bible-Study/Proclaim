@@ -7,7 +7,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Site\Model;
+
 use JApplicationSite;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\ListModel;
@@ -29,7 +31,8 @@ class CWMTeachersModel extends ListModel
 	 * Build an SQL query to load the list data
 	 *
 	 * @return  \Joomla\Database\QueryInterface
-     *
+	 *
+	 * @throws \Exception
 	 * @since   7.0.0
 	 */
 	protected function getListQuery()
@@ -71,6 +74,7 @@ class CWMTeachersModel extends ListModel
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	protected function populateState($ordering = 'teachers.ordering', $direction = 'asc')
@@ -108,7 +112,7 @@ class CWMTeachersModel extends ListModel
 		$this->setState('template', $template);
 		$this->setState('administrator', $admin);
 
-		$user = $user = Factory::getApplication()->getSession()->get('user');
+		$user = Factory::getApplication()->getSession()->get('user');
 
 		if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise('core.edit', 'com_proclaim')))
 		{
@@ -125,6 +129,7 @@ class CWMTeachersModel extends ListModel
 	 *
 	 * @return  mixed  An array of data items on success, false on failure.
 	 *
+	 * @throws \Exception
 	 * @since   9.0.0
 	 */
 	public function getItems()

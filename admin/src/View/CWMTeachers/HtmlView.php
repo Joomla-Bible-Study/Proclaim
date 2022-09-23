@@ -18,6 +18,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
@@ -84,7 +85,7 @@ class HtmlView extends BaseHtmlView
 	 * @since   11.1
 	 * @see     fetch()
 	 */
-	public function display($tpl = null)
+	public function display($tpl = null): void
 	{
 		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
@@ -94,25 +95,10 @@ class HtmlView extends BaseHtmlView
 		$this->canDo      = CWMProclaimHelper::getActions('', 'teacher');
 
 		// Check for errors.
-		if (count($errors = $this->get('Errors')))
+		if (\count($errors = $this->get('Errors')))
 		{
-			throw new \RuntimeException(implode("\n", $errors), 500);
+			throw new GenericDataException(implode("\n", $errors), 500);
 		}
-
-		// Levels filter.
-		$options   = [];
-		$options[] = HtmlHelper::_('select.option', '1', Text::_('J1'));
-		$options[] = HtmlHelper::_('select.option', '2', Text::_('J2'));
-		$options[] = HtmlHelper::_('select.option', '3', Text::_('J3'));
-		$options[] = HtmlHelper::_('select.option', '4', Text::_('J4'));
-		$options[] = HtmlHelper::_('select.option', '5', Text::_('J5'));
-		$options[] = HtmlHelper::_('select.option', '6', Text::_('J6'));
-		$options[] = HtmlHelper::_('select.option', '7', Text::_('J7'));
-		$options[] = HtmlHelper::_('select.option', '8', Text::_('J8'));
-		$options[] = HtmlHelper::_('select.option', '9', Text::_('J9'));
-		$options[] = HtmlHelper::_('select.option', '10', Text::_('J10'));
-
-		$this->f_levels = $options;
 
 		// We don't need toolbar in the modal window.
 		if ($this->getLayout() !== 'modal')
@@ -138,9 +124,10 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
-	protected function addToolbar()
+	protected function addToolbar(): void
 	{
 		$canDo = ContentHelper::getActions('com_proclaim');
 		$user  = Factory::getApplication()->getIdentity();
@@ -186,7 +173,7 @@ class HtmlView extends BaseHtmlView
 		}
 		elseif ($canDo->get('core.edit.state'))
 		{
-			$childBar->trash('teachers.trash');
+			$childBar->trash('cwmteachers.trash');
 		}
 
 		// Add a batch button
@@ -208,7 +195,7 @@ class HtmlView extends BaseHtmlView
 	 * @since    7.1.0
 	 *
 	 */
-	protected function setDocument()
+	protected function setDocument(): void
 	{
 		$document = Factory::getApplication()->getDocument();
 		$document->setTitle(Text::_('JBS_TITLE_TEACHERS'));
@@ -221,7 +208,7 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @since   3.0
 	 */
-	protected function getSortFields()
+	protected function getSortFields(): array
 	{
 		return array(
 			'teacher.teachername' => Text::_('JBS_CMN_STUDY_TITLE'),

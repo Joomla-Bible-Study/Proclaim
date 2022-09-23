@@ -7,6 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Site\Model;
 // No Direct Access
 defined('_JEXEC') or die;
@@ -42,8 +43,8 @@ class CWMPodcastDisplayModel extends ItemModel
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since    1.6
-	 * @throws Exception
 	 */
 	protected function populateState()
 	{
@@ -58,7 +59,7 @@ class CWMPodcastDisplayModel extends ItemModel
 		$this->setState('list.offset', $offset);
 
 		// Load the parameters.
-		$params   = $app->getParams();
+		$params = $app->getParams();
 		$this->setState('params', $params);
 		$template = CWMParams::getTemplateparams();
 		$admin    = CWMParams::getAdmin();
@@ -80,7 +81,7 @@ class CWMPodcastDisplayModel extends ItemModel
 		$this->setState('template', $template);
 		$this->setState('administrator', $admin);
 
-		$user = $user = Factory::getApplication()->getSession()->get('user');
+		$user = Factory::getApplication()->getSession()->get('user');
 
 		if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise('core.edit', 'com_proclaim')))
 		{
@@ -94,11 +95,11 @@ class CWMPodcastDisplayModel extends ItemModel
 	 *
 	 * @param   int  $pk  The id of the study.
 	 *
-	 * @since 7.1.0
-	 * @throws Exception
-	 *
 	 * @return    mixed    Menu item data object on success, false on failure.
 	 *
+	 * @throws \Exception
+	 *
+	 * @since 7.1.0
 	 * @todo  look are removing this may not used. bcc
 	 */
 	public function getItem($pk = null)
@@ -145,8 +146,8 @@ class CWMPodcastDisplayModel extends ItemModel
 	 *
 	 * @return boolean|mixed
 	 *
+	 * @throws \Exception
 	 * @since 7.0
-	 * @throws Exception
 	 */
 	public function getStudies()
 	{

@@ -105,7 +105,7 @@ class CWMSerieModel extends AdminModel
 			$id = $jinput->get('id', 0);
 		}
 
-		$user = $user = Factory::getApplication()->getSession()->get('user');
+		$user = Factory::getApplication()->getSession()->get('user');
 
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
@@ -353,7 +353,7 @@ class CWMSerieModel extends AdminModel
 				return false;
 			}
 
-			$user = $user = Factory::getApplication()->getSession()->get('user');
+			$user = Factory::getApplication()->getSession()->get('user');
 
 			return $user->authorise('core.delete', 'com_proclaim.serie.' . (int) $record->id);
 		}
@@ -372,7 +372,7 @@ class CWMSerieModel extends AdminModel
 	 */
 	protected function canEditState($record)
 	{
-		$user = $user = Factory::getApplication()->getSession()->get('user');
+		$user = Factory::getApplication()->getSession()->get('user');
 
 		// Check for existing article.
 		if (!empty($record->id))

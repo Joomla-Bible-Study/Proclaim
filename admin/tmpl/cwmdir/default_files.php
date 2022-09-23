@@ -30,23 +30,23 @@ if (is_array($this->files))
 					<div class="prev_right">
 						<?php if (is_array($file->imgInfo))
 							: ?>
-							<span><?php echo JText::_('COM_MEDIAMU_FINFO_DIMS') . '</span> ' . JText::_('COM_MEDIAMU_FINFO_WIDTH'); ?>
-							<?php echo $file->imgInfo[0] . JText::_('COM_MEDIAMU_FINFO_HEIGHT') . ' ' . $file->imgInfo[1]; ?>
+							<span><?php echo Text::_('COM_MEDIAMU_FINFO_DIMS') . '</span> ' . Text::_('COM_MEDIAMU_FINFO_WIDTH'); ?>
+							<?php echo $file->imgInfo[0] . Text::_('COM_MEDIAMU_FINFO_HEIGHT') . ' ' . $file->imgInfo[1]; ?>
 							<br/>
 						<?php
 endif;
 						?>
-						<span><?php echo JText::_('COM_MEDIAMU_FINFO_SIZE') . '</span>' . $file->size; ?><br/>
-						<span><?php echo JText::_('COM_MEDIAMU_FINFO_L_ACCESSED') . '</span> ' . $file->accessTime; ?>
+						<span><?php echo Text::_('COM_MEDIAMU_FINFO_SIZE') . '</span>' . $file->size; ?><br/>
+						<span><?php echo Text::_('COM_MEDIAMU_FINFO_L_ACCESSED') . '</span> ' . $file->accessTime; ?>
 						<br/>
-						<span><?php echo JText::_('COM_MEDIAMU_FINFO_L_MODIFIED') . '</span> ' . $file->modifiedTime; ?>
+						<span><?php echo Text::_('COM_MEDIAMU_FINFO_L_MODIFIED') . '</span> ' . $file->modifiedTime; ?>
 						<br/>
 					</div>
 					<div class="prev_footer">
 						<a class="open_btn" target="_blank" href="<?php echo $file->link; ?>">
-							<?php echo JText::_('COM_MEDIAMU_FINFO_OPEN'); ?></a>
+							<?php echo Text::_('COM_MEDIAMU_FINFO_OPEN'); ?></a>
 						<span>|</span> <a class="path_rm_btn" name="<?php echo base64_encode($file->basename); ?>"
-						                  href="#"><?php echo JText::_('COM_MEDIAMU_FINFO_DELETE'); ?></a>
+						                  href="#"><?php echo Text::_('COM_MEDIAMU_FINFO_DELETE'); ?></a>
 					</div>
 				</div>
 			</td>

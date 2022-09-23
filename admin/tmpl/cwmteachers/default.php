@@ -13,12 +13,15 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 
-HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-HtmlHelper::_('dropdown.init');
-HtmlHelper::_('formbehavior.chosen', 'select');
-HtmlHelper::_('behavior.multiselect');
+/** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
+$wa = $this->document->getWebAssetManager();
+$wa->useScript('table.columns')
+	->useScript('multiselect')
+	->useStyle('com_proclaim.cwmcore')
+	->useScript('com_proclaim.cwmcorejs');
 
 $app        = Factory::getApplication();
 $user       = $app->getIdentity();
@@ -67,7 +70,7 @@ if ($saveOrder)
 			<?php endif; ?>
 			<?php
 			// Search tools bar
-			echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+			echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 			?>
 			<?php if (empty($this->items)) : ?>
 				<div class="alert alert-no-items">

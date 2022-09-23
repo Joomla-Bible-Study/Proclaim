@@ -12,6 +12,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\Registry\Registry;
 
 /**
@@ -198,7 +199,7 @@ abstract class JHtmlJwplayer
 
 		if ($params->get('media_popout_yes', true))
 		{
-			$popouttext = $params->get('media_popout_text', JText::_('JBS_CMN_POPOUT'));
+			$popouttext = $params->get('media_popout_text', Text::_('JBS_CMN_POPOUT'));
 		}
 		else
 		{

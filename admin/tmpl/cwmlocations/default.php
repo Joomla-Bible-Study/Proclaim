@@ -17,10 +17,12 @@ use Joomla\CMS\Router\Route;
 
 defined('_JEXEC') or die;
 
-HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-
-HTMLHelper::_('dropdown.init');
-HTMLHelper::_('behavior.multiselect');
+/** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
+$wa = $this->document->getWebAssetManager();
+$wa->useScript('table.columns')
+	->useScript('multiselect')
+	->useStyle('com_proclaim.cwmcore')
+	->useScript('com_proclaim.cwmcorejs');
 
 $app       = Factory::getApplication();
 $user      = $user = Factory::getApplication()->getSession()->get('user');
@@ -57,7 +59,7 @@ $sortFields = $this->getSortFields();
 			?>
 			<?php if (empty($this->items)) : ?>
 				<div class="alert alert-no-items">
-					<?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+					<?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
 				</div>
 			<?php else : ?>
 				<table class="table table-striped adminlist" id="locationsList">
@@ -96,7 +98,7 @@ $sortFields = $this->getSortFields();
 						$canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.location.' . $item->id);
 						$canChange = $user->authorise('core.edit.state', 'com_proclaim.location.' . $item->id);
 						?>
-						<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo '1' ?>">
+						<tr class="row<?php echo $i % 2; ?>" data-draggable-group="<?php echo '1' ?>">
 							<td class="center hidden-phone">
 								<?php echo HTMLHelper::_('grid.id', $i, $item->id); ?>
 							</td>
@@ -115,35 +117,6 @@ $sortFields = $this->getSortFields();
 										<span
 												title="<?php echo Text::sprintf('JFIELD_ALIAS_LABEL', $this->escape($item->location_text)); ?>"><?php echo $this->escape($item->location_text); ?></span>
 									<?php endif; ?>
-								</div>
-								<div class="pull-left">
-									<?php
-									// Create dropdown items
-									HTMLHelper::_('dropdown.edit', $item->id, 'cwmlocation.');
-									HTMLHelper::_('dropdown.divider');
-									if ($item->published) :
-										HTMLHelper::_('dropdown.unpublish', 'cb' . $i, 'cwmlocations.');
-									else :
-										HTMLHelper::_('dropdown.publish', 'cb' . $i, 'cwmlocations.');
-									endif;
-
-									HTMLHelper::_('dropdown.divider');
-
-									if ($archived) :
-										HTMLHelper::_('dropdown.unarchive', 'cb' . $i, 'cwmlocations.');
-									else :
-										HTMLHelper::_('dropdown.archive', 'cb' . $i, 'cwmlocations.');
-									endif;
-
-									if ($trashed) :
-										HTMLHelper::_('dropdown.untrash', 'cb' . $i, 'cwmlocations.');
-									else :
-										HTMLHelper::_('dropdown.trash', 'cb' . $i, 'cwmlocations.');
-									endif;
-
-									// Render dropdown list
-									echo HTMLHelper::_('dropdown.render');
-									?>
 								</div>
 							</td>
 							<td class="small hidden-phone">
@@ -165,7 +138,7 @@ $sortFields = $this->getSortFields();
 						'bootstrap.renderModal',
 						'collapseModal',
 						array(
-							'title'  => JText::_('JBS_CMN_BATCH_OPTIONS'),
+							'title'  => Text::_('JBS_CMN_BATCH_OPTIONS'),
 							'footer' => $this->loadTemplate('batch_footer')
 						),
 						$this->loadTemplate('batch_body')

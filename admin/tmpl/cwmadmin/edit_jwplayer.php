@@ -8,6 +8,8 @@
  * @link       https://www.christianwebministries.org
  * */
 // Check to ensure this file is included in Joomla!
+use Joomla\CMS\Language\Text;
+
 defined('_JEXEC') or die;
 
 // Start of Form
@@ -20,7 +22,7 @@ foreach ($fieldSets as $name => $fieldSet)
 		if (isset($fieldSet->description) && trim($fieldSet->description))
 		{
 			?>
-			<h3><?php echo $this->escape(JText::_($fieldSet->description)); ?></h3>
+			<h3><?php echo $this->escape(Text::_($fieldSet->description)); ?></h3>
 			<?php
 		}
 		foreach ($this->form->getFieldset($name) as $field)

@@ -34,7 +34,7 @@ Factory::getDocument()->addScriptDeclaration("
 		};
 ");
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=migrate'); ?>" enctype="multipart/form-data"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=migrate'); ?>" enctype="multipart/form-data"
       method="post" name="adminForm" id="adminForm">
 	<div class="row-fluid">
 		<div class="span12 form-horizontal">

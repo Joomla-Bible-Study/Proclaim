@@ -30,10 +30,10 @@ $first_bc = true;
 	<!---New Folder-->
 	<div id="folder_input_form">
 		<form id="input_form" action="" method="post">
-			<label for="folder_name"><?php echo JText::_('COM_MEDIAMU_DIR_BROSWER_LB_FOLDER_NAME'); ?></label>
+			<label for="folder_name"><?php echo Text::_('COM_MEDIAMU_DIR_BROSWER_LB_FOLDER_NAME'); ?></label>
 			<input id="folder_name" type="text" name="folder_name" value=""/>
 			<input id="create_folder" type="submit"
-			       value="<?php echo JText::_('COM_MEDIAMU_DIR_BROSWER_BTN_CREATE'); ?>"/>
+			       value="<?php echo Text::_('COM_MEDIAMU_DIR_BROSWER_BTN_CREATE'); ?>"/>
 			<input id="current_folder" type="hidden" name="current_folder" value="<?php echo $this->currentFolder; ?>"/>
 			<input id="token" type="hidden" name="<?php echo JSession::getFormToken(); ?>" value="1"/>
 		</form>
@@ -48,10 +48,10 @@ $first_bc = true;
 		<tr>
 			<th scope="row" class="file_icon"><span id="proccess"> </span></th>
 			<th scope="row" class="file_name">
-				<?php echo JText::_('COM_MEDIAMU_DIR_BROSWER_FILE_NAME'); ?>
+				<?php echo Text::_('COM_MEDIAMU_DIR_BROSWER_FILE_NAME'); ?>
 			</th>
 			<th scope="row" class="size">
-				<?php echo JText::_('COM_MEDIAMU_DIR_BROSWER_SIZE'); ?>
+				<?php echo Text::_('COM_MEDIAMU_DIR_BROSWER_SIZE'); ?>
 			</th>
 			<th scope="row" class="selection"><a class="select" id="select" href="#"></a></th>
 		</tr>

@@ -8,6 +8,7 @@
  * @link       http://www.christianwebministries.org
  * */
 namespace CWM\Component\Proclaim\Site\Model;
+
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -36,11 +37,11 @@ class CWMPodcastListModel extends ListModel
 	 *
 	 * @return    void
 	 *
+	 * @throws \Exception
 	 * @since    1.6
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		/** @type JApplicationSite $app */
 		$app = Factory::getApplication();
 
 		// List state information
@@ -76,7 +77,7 @@ class CWMPodcastListModel extends ListModel
 
 		$params = $app->getParams();
 
-		$user = $user = Factory::getApplication()->getSession()->get('user');
+		$user = Factory::getApplication()->getSession()->get('user');
 
 		if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise('core.edit', 'com_proclaim')))
 		{
@@ -122,12 +123,13 @@ class CWMPodcastListModel extends ListModel
 	 *
 	 * @return  \Joomla\Database\QueryInterface
 	 *
+	 * @throws \Exception
 	 * @since   7.0
 	 */
 	protected function getListQuery()
 	{
 		// Get the current user for authorisation checks
-		$user = $user = Factory::getApplication()->getSession()->get('user');
+		$user = Factory::getApplication()->getSession()->get('user');
 
 		// Create a new query object.
 		$db = Factory::getContainer()->get('DatabaseDriver');
@@ -185,12 +187,13 @@ class CWMPodcastListModel extends ListModel
 	 *
 	 * @return  mixed  An array of data items on success, false on failure.
 	 *
+	 * @throws \Exception
 	 * @since   9.0.0
 	 */
 	public function getItems()
 	{
 		$items = parent::getItems();
-		$user = $user = Factory::getApplication()->getSession()->get('user');
+		$user = Factory::getApplication()->getSession()->get('user');
 		$userId = $user->get('id');
 		$guest = $user->get('guest');
 		$groups = $user->getAuthorisedViewLevels();
@@ -246,7 +249,7 @@ class CWMPodcastListModel extends ListModel
 			// Get the tags
 			if ($item->params->get('show_tags'))
 			{
-				$item->tags = new TagsHelper();
+				$item->tags = new TagsHelper;
 				$item->tags->getItemTags('com_proclaim.series', $item->id);
 			}
 		}

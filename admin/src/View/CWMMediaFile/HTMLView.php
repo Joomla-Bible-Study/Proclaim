@@ -159,39 +159,39 @@ class HTMLView extends BaseHtmlView
 		$isNew      = (empty($this->item->id));
 		$checkedOut = !($this->item->checked_out === '0' || $this->item->checked_out == $userId);
 		$title      = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolbarHelper::title(JText::_('JBS_CMN_MEDIA_FILES') . ': <small><small>[' . $title . ']</small></small>', 'video video');
+		ToolbarHelper::title(JText::_('JBS_CMN_MEDIA_FILES') . ': <small><small>[' . $title . ']</small></small>', 'video video');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_proclaim'))
 		{
-			JToolbarHelper::apply('cwmmediafile.apply');
-			JToolbarHelper::save('cwmmediafile.save');
-			JToolbarHelper::cancel('cwmmediafile.cancel');
-			JToolbarHelper::checkin('cwmmediafile.checkin');
+			ToolbarHelper::apply('cwmmediafile.apply');
+			ToolbarHelper::save('cwmmediafile.save');
+			ToolbarHelper::cancel('cwmmediafile.cancel');
+			ToolbarHelper::checkin('cwmmediafile.checkin');
 		}
 		else
 		{
 			// Can't save the record if it's checked out.
 			if (!$checkedOut && $this->canDo->get('core.edit', 'com_proclaim'))
 			{
-				JToolbarHelper::apply('cwmmediafile.apply');
-				JToolbarHelper::save('cwmmediafile.save');
+				ToolbarHelper::apply('cwmmediafile.apply');
+				ToolbarHelper::save('cwmmediafile.save');
 
 				if ($this->canDo->get('core.create', 'com_proclaim'))
 				{
-					JToolbarHelper::save2new('cwmmediafile.save2new');
+					ToolbarHelper::save2new('cwmmediafile.save2new');
 				}
 			}
 
 			// If checked out, we can still save
 			if ($this->canDo->get('core.create', 'com_proclaim'))
 			{
-				JToolbarHelper::save2copy('cwmmediafile.save2copy');
+				ToolbarHelper::save2copy('cwmmediafile.save2copy');
 			}
 
-			JToolbarHelper::cancel('cwmmediafile.cancel', 'JTOOLBAR_CLOSE');
+			ToolbarHelper::cancel('cwmmediafile.cancel', 'JTOOLBAR_CLOSE');
 		}
 
-		JToolbarHelper::divider();
-		JToolbarHelper::help('biblestudy', true);
+		ToolbarHelper::divider();
+		ToolbarHelper::help('biblestudy', true);
 	}
 }

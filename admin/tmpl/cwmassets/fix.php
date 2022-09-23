@@ -28,13 +28,13 @@ $wa->addInlineScript("if (typeof jQuery == 'function')
 		<?php if ($this->more)
 		{
 			?>
-			<h1><?php echo JText::_('JBS_FIXASSETS_WORKING'); ?></h1>
+			<h1><?php echo Text::_('JBS_FIXASSETS_WORKING'); ?></h1>
 			<?php
 		}
 		else
 		{
 			?>
-			<h1><?php echo JText::_('JBS_FIXASSETS_DONE'); ?></h1>
+			<h1><?php echo Text::_('JBS_FIXASSETS_DONE'); ?></h1>
 			<?php
 		}
 		?>
@@ -42,7 +42,7 @@ $wa->addInlineScript("if (typeof jQuery == 'function')
 			<div class="bar" style="width: <?php echo $this->percentage ?>%;"></div> <?php echo $this->percentage; ?>%
 		</div>
 
-		<form action="<?php JRoute::_('index.php?option=com_proclaim&view=cwmassets'); ?>" name="adminForm"
+		<form action="<?php Route::_('index.php?option=com_proclaim&view=cwmassets'); ?>" name="adminForm"
 		      id="adminForm" class="form-inline">
 			<?php if ($this->state === 'start')
 			{ ?>
@@ -60,7 +60,7 @@ $wa->addInlineScript("if (typeof jQuery == 'function')
 
 		<?php if ($this->more === true): ?>
 			<div class="alert alert-info">
-				<p><?php echo JText::_('JBS_LBL_AUTOCLOSE_IN_3S'); ?></p>
+				<p><?php echo Text::_('JBS_LBL_AUTOCLOSE_IN_3S'); ?></p>
 			</div>
 			<script type="text/javascript">
 							window.setTimeout('closeme();', 3000)

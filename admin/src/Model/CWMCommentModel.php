@@ -106,7 +106,7 @@ class CWMCommentModel extends AdminModel
 			$id = $jinput->get('id', 0);
 		}
 
-		$user = $user = Factory::getApplication()->getSession()->get('user');
+		$user = Factory::getApplication()->getSession()->get('user');
 
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
@@ -253,7 +253,7 @@ class CWMCommentModel extends AdminModel
 				return false;
 			}
 
-			$user = $user = Factory::getApplication()->getSession()->get('user');
+			$user = Factory::getApplication()->getSession()->get('user');
 
 			return $user->authorise('core.delete', 'com_proclaim.comment.' . (int) $record->id);
 		}
@@ -272,7 +272,7 @@ class CWMCommentModel extends AdminModel
 	 */
 	protected function canEditState($record)
 	{
-		$user = $user = Factory::getApplication()->getSession()->get('user');
+		$user = Factory::getApplication()->getSession()->get('user');
 
 		// Check for existing article.
 		if (!empty($record->id))

@@ -18,6 +18,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
@@ -91,7 +92,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @see     fetch()
 	 */
-	public function display($tpl = null)
+	public function display($tpl = null): void
 	{
 		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
@@ -101,26 +102,11 @@ class HTMLView extends BaseHtmlView
 		$this->activeFilters = $this->get('ActiveFilters');
 		$this->canDo         = CWMProclaimHelper::getActions('', 'location');
 
-		// Check for errors
-		if (count($errors = $this->get('Errors')))
+		// Check for errors.
+		if (\count($errors = $this->get('Errors')))
 		{
-			Factory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
+			throw new GenericDataException(implode("\n", $errors), 500);
 		}
-
-		// Levels filter.
-		$options   = array();
-		$options[] = HtmlHelper::_('select.option', '1', Text::_('J1'));
-		$options[] = HtmlHelper::_('select.option', '2', Text::_('J2'));
-		$options[] = HtmlHelper::_('select.option', '3', Text::_('J3'));
-		$options[] = HtmlHelper::_('select.option', '4', Text::_('J4'));
-		$options[] = HtmlHelper::_('select.option', '5', Text::_('J5'));
-		$options[] = HtmlHelper::_('select.option', '6', Text::_('J6'));
-		$options[] = HtmlHelper::_('select.option', '7', Text::_('J7'));
-		$options[] = HtmlHelper::_('select.option', '8', Text::_('J8'));
-		$options[] = HtmlHelper::_('select.option', '9', Text::_('J9'));
-		$options[] = HtmlHelper::_('select.option', '10', Text::_('J10'));
-
-		$this->f_levels = $options;
 
 		// We don't need toolbar in the modal window.
 		if ($this->getLayout() !== 'modal')
@@ -140,11 +126,12 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
-	protected function addToolbar()
+	protected function addToolbar(): void
 	{
-		$user = $user = Factory::getApplication()->getSession()->get('user');
+		$user = Factory::getApplication()->getSession()->get('user');
 
 		// Get the toolbar object instance
 		$toolbar = Toolbar::getInstance('toolbar');
@@ -152,7 +139,7 @@ class HTMLView extends BaseHtmlView
 
 		if ($this->canDo->get('core.create'))
 		{
-			ToolBarHelper::addNew('location.add');
+			ToolBarHelper::addNew('cwmlocation.add');
 		}
 
 		$dropdown = $toolbar->dropdownButton('status-group')
@@ -165,21 +152,21 @@ class HTMLView extends BaseHtmlView
 
 		if ($this->canDo->get('core.edit'))
 		{
-			$toolbar->edit('location.edit');
+			$toolbar->edit('cwmlocation.edit');
 		}
 
 		if ($this->canDo->get('core.edit.state'))
 		{
 			$toolbar->divider();
-			$toolbar->publish('locations.publish');
-			$toolbar->unpublish('locations.unpublish');
+			$toolbar->publish('cwmlocations.publish');
+			$toolbar->unpublish('cwmlocations.unpublish');
 			$toolbar->divider();
-			$toolbar->archive('locations.archive');
+			$toolbar->archive('cwmlocations.archive');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
-			$toolbar->delete('', 'locations.delete')
+			$toolbar->delete('', 'cwmlocations.delete')
 				->text('JTOOLBAR_EMPTY_TRASH')
 				->message('JGLOBAL_CONFIRM_DELETE')
 				->listCheck(true);
@@ -187,7 +174,7 @@ class HTMLView extends BaseHtmlView
 
 		if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED)
 		{
-			$toolbar->trash('locations.trash')->listCheck(true);
+			$toolbar->trash('cwmlocations.trash')->listCheck(true);
 		}
 
 		// Add a batch button
@@ -207,9 +194,10 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since    7.1.0
 	 */
-	protected function setDocument()
+	protected function setDocument(): void
 	{
 		$document = Factory::getApplication()->getDocument();
 		$document->setTitle(Text::_('JBS_TITLE_LOCATIONS'));
@@ -222,7 +210,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @since   3.0
 	 */
-	protected function getSortFields()
+	protected function getSortFields(): array
 	{
 		return array(
 			'location.location_text' => Text::_('JGRID_HEADING_ORDERING'),

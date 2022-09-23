@@ -84,13 +84,13 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  mixed  A string if successful, otherwise a JError object.
+	 * @return  void  A string if successful, otherwise a JError object.
 	 *
 	 * @throws  \Exception
 	 * @since   11.1
 	 * @see     fetch()
 	 */
-	public function display($tpl = null)
+	public function display($tpl = null): void
 	{
 		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
@@ -100,25 +100,10 @@ class HTMLView extends BaseHtmlView
 		$this->canDo      = CWMProclaimHelper::getActions('', 'messagetype');
 
 		// Check for errors.
-		if (count($errors = $this->get('Errors')))
+		if (\count($errors = $this->get('Errors')))
 		{
 			throw new GenericDataException(implode("\n", $errors), 500);
 		}
-
-		// Levels filter.
-		$options   = array();
-		$options[] = HTMLHelper::_('select.option', '1', Text::_('J1'));
-		$options[] = HTMLHelper::_('select.option', '2', Text::_('J2'));
-		$options[] = HTMLHelper::_('select.option', '3', Text::_('J3'));
-		$options[] = HTMLHelper::_('select.option', '4', Text::_('J4'));
-		$options[] = HTMLHelper::_('select.option', '5', Text::_('J5'));
-		$options[] = HTMLHelper::_('select.option', '6', Text::_('J6'));
-		$options[] = HTMLHelper::_('select.option', '7', Text::_('J7'));
-		$options[] = HTMLHelper::_('select.option', '8', Text::_('J8'));
-		$options[] = HTMLHelper::_('select.option', '9', Text::_('J9'));
-		$options[] = HTMLHelper::_('select.option', '10', Text::_('J10'));
-
-		$this->f_levels = $options;
 
 		// We don't need toolbar in the modal window.
 		if ($this->getLayout() !== 'modal')
@@ -138,11 +123,12 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
-	protected function addToolbar()
+	protected function addToolbar(): void
 	{
-		$user = $user = Factory::getApplication()->getSession()->get('user');
+		$user = Factory::getApplication()->getSession()->get('user');
 
 		// Get the toolbar object instance
 		$toolbar = Toolbar::getInstance('toolbar');
@@ -151,7 +137,7 @@ class HTMLView extends BaseHtmlView
 
 		if ($this->canDo->get('core.create'))
 		{
-			$toolbar->addNew('messagetype.add');
+			$toolbar->addNew('cwmmessagetype.add');
 		}
 
 		$dropdown = $toolbar->dropdownButton('status-group')
@@ -164,21 +150,21 @@ class HTMLView extends BaseHtmlView
 
 		if ($this->canDo->get('core.edit'))
 		{
-			$toolbar->edit('messagetype.edit');
+			$toolbar->edit('cwmmessagetype.edit');
 		}
 
 		if ($this->canDo->get('core.edit.state'))
 		{
 			$toolbar->divider();
-			$toolbar->publish('messagetypes.publish');
-			$toolbar->unpublish('messagetypes.unpublish');
+			$toolbar->publish('cwmmessagetypes.publish');
+			$toolbar->unpublish('cwmmessagetypes.unpublish');
 			$toolbar->divider();
-			$toolbar->archive('messagetypes.archive');
+			$toolbar->archive('cwmmessagetypes.archive');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
-			$toolbar->delete('', 'messagetypes.delete')
+			$toolbar->delete('', 'cwmmessagetypes.delete')
 				->text('JTOOLBAR_EMPTY_TRASH')
 				->message('JGLOBAL_CONFIRM_DELETE')
 				->listCheck(true);
@@ -186,7 +172,7 @@ class HTMLView extends BaseHtmlView
 
 		if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED)
 		{
-			$toolbar->trash('messagetypes.trash')->listCheck(true);
+			$toolbar->trash('cwmmessagetypes.trash')->listCheck(true);
 		}
 
 		// Add a batch button
@@ -206,9 +192,10 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since    7.1.0
 	 */
-	protected function setDocument()
+	protected function setDocument(): void
 	{
 		$document = Factory::getApplication()->getDocument();
 		$document->setTitle(Text::_('JBS_TITLE_MESSAGETYPES'));
@@ -221,7 +208,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @since   3.0
 	 */
-	protected function getSortFields()
+	protected function getSortFields(): array
 	{
 		return array(
 			'messagetypes.message_type' => Text::_('JGRID_HEADING_ORDERING'),

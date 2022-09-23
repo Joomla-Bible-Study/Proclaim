@@ -30,7 +30,7 @@ Factory::getDocument()->addScriptDeclaration("
 		};
 ");
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmcpanel'); ?>" enctype="multipart/form-data"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmcpanel'); ?>" enctype="multipart/form-data"
       method="post" name="adminForm" id="adminForm">
 	<div class="row-fluid" style="margin-top: 50px;">
 		<div class="span12 form-horizontal">
@@ -44,7 +44,7 @@ Factory::getDocument()->addScriptDeclaration("
 				</div>
 			</div>
 			<div class="control-group">
-				<input class="btn btn-primary" type="submit" value="<?php echo JText::_('JBS_CMN_SUBMIT'); ?>"
+				<input class="btn btn-primary" type="submit" value="<?php echo Text::_('JBS_CMN_SUBMIT'); ?>"
 				       name="submit"/>
 				<button onclick="Joomla.submitbutton('administration.back')" class="btn btn-default">
 					<span class="icon-back"></span>

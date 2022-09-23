@@ -15,6 +15,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper as JHtml;
+use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
@@ -72,7 +73,7 @@ class HTMLView extends BaseHtmlView
 	/**
 	 * State
 	 *
-	 * @var object
+	 * @var mixed
 	 * @since    7.0.0
 	 */
 	protected $state;
@@ -82,13 +83,13 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  mixed  A string if successful, otherwise a JError object.
+	 * @return  void  A string if successful, otherwise a JError object.
 	 *
 	 * @see     fetch()
 	 * @since   11.1
 	 * @throws  \Exception
 	 */
-	public function display($tpl = null)
+	public function display($tpl = null): void
 	{
 		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
@@ -97,28 +98,11 @@ class HTMLView extends BaseHtmlView
 		$this->filterForm    = $this->get('FilterForm');
 		$this->canDo         = CWMProclaimHelper::getActions('', 'serie');
 
-		// Check for errors
-		if (count($errors = $this->get('Errors')))
+		// Check for errors.
+		if (\count($errors = $this->get('Errors')))
 		{
-			Factory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
-
-			return false;
+			throw new GenericDataException(implode("\n", $errors), 500);
 		}
-
-		// Levels filter.
-		$options   = array();
-		$options[] = JHtml::_('select.option', '1', Text::_('J1'));
-		$options[] = JHtml::_('select.option', '2', Text::_('J2'));
-		$options[] = JHtml::_('select.option', '3', Text::_('J3'));
-		$options[] = JHtml::_('select.option', '4', Text::_('J4'));
-		$options[] = JHtml::_('select.option', '5', Text::_('J5'));
-		$options[] = JHtml::_('select.option', '6', Text::_('J6'));
-		$options[] = JHtml::_('select.option', '7', Text::_('J7'));
-		$options[] = JHtml::_('select.option', '8', Text::_('J8'));
-		$options[] = JHtml::_('select.option', '9', Text::_('J9'));
-		$options[] = JHtml::_('select.option', '10', Text::_('J10'));
-
-		$this->f_levels = $options;
 
 		// We don't need toolbar in the modal window.
 		if ($this->getLayout() !== 'modal')
@@ -138,11 +122,12 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
-	protected function addToolbar()
+	protected function addToolbar(): void
 	{
-		$user = $user = Factory::getApplication()->getSession()->get('user');
+		$user = Factory::getApplication()->getSession()->get('user');
 
 		// Get the toolbar object instance
 		$bar = Toolbar::getInstance('toolbar');
@@ -151,30 +136,30 @@ class HTMLView extends BaseHtmlView
 
 		if ($this->canDo->get('core.create'))
 		{
-			ToolbarHelper::addNew('serie.add');
+			ToolbarHelper::addNew('cwmserie.add');
 		}
 
 		if ($this->canDo->get('core.edit'))
 		{
-			ToolbarHelper::editList('serie.edit');
+			ToolbarHelper::editList('cwmserie.edit');
 		}
 
 		if ($this->canDo->get('core.edit.state'))
 		{
 			ToolbarHelper::divider();
-			ToolbarHelper::publishList('series.publish');
-			ToolbarHelper::unpublishList('series.unpublish');
+			ToolbarHelper::publishList('cwmseries.publish');
+			ToolbarHelper::unpublishList('cwmseries.unpublish');
 			ToolbarHelper::divider();
-			ToolbarHelper::archiveList('series.archive');
+			ToolbarHelper::archiveList('cwmseries.archive');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
-			ToolbarHelper::deleteList('', 'series.delete', 'JTOOLBAR_EMPTY_TRASH');
+			ToolbarHelper::deleteList('', 'cwmseries.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
 		elseif ($this->canDo->get('core.delete'))
 		{
-			ToolbarHelper::trash('series.trash');
+			ToolbarHelper::trash('cmwseries.trash');
 		}
 
 		// Add a batch button
@@ -196,9 +181,10 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since    7.1.0
 	 */
-	protected function setDocument()
+	protected function setDocument(): void
 	{
 		$document = Factory::getApplication()->getDocument();
 		$document->setTitle(Text::_('JBS_TITLE_SERIES'));
@@ -211,7 +197,7 @@ class HTMLView extends BaseHtmlView
 	 *
 	 * @since   3.0
 	 */
-	protected function getSortFields()
+	protected function getSortFields(): array
 	{
 		return array(
 			'series.ordering'  => Text::_('JGRID_HEADING_ORDERING'),

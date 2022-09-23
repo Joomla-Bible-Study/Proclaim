@@ -39,7 +39,7 @@ $wa->useScript('keepalive')
 	}
 ');
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_proclaim&layout=edit&id=' . (int) $this->item->id); ?>"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int) $this->item->id); ?>"
       method="post" name="adminForm" id="messagetype-form" class="form-validate">
 	<div class="main-card">
 		<?php echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'general', 'recall' => true, 'breakpoint' => 768]); ?>

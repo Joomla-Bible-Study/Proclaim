@@ -39,7 +39,7 @@ $wa->useScript('keepalive')
 		}
 	}
 </script>
-<form action="<?php echo JRoute::_('index.php?option=com_proclaim&view=cwmserver&layout=edit&id=' . (int) $this->item->id); ?>"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmserver&layout=edit&id=' . (int) $this->item->id); ?>"
       method="post" name="adminForm" id="item-form" class="form-validate">
 	<div class="form-horizontal">
 		<?php echo HTMLHelper::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>

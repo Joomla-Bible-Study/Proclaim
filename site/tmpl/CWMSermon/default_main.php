@@ -15,15 +15,11 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMIcon;
 
 defined('_JEXEC') or die;
 
-//HtmlHelper::addIncludePath(JPATH_COMPONENT . '/helpers');
-//HtmlHelper::_('behavior.tooltip');
-//HtmlHelper::_('behavior.caption');
-
 // Create shortcuts to some parameters.
 
 /** @type Joomla\Registry\Registry $params */
 $params = $this->item->params;
-$user = $user = Factory::getApplication()->getSession()->get('user');
+$user = Factory::getApplication()->getSession()->get('user');
 $canEdit = $params->get('access-edit');
 
 $JViewLegacy = new JViewLegacy;
