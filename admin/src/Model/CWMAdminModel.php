@@ -770,7 +770,7 @@ class CWMAdminModel extends AdminModel
 	 */
 	protected function loadFormData()
 	{
-		$data = Factory::getApplication()->getUserState('com_proclaim.edit.administration.data', array());
+		$data = Factory::getApplication()->getUserState('com_proclaim.edit.cwmadmin.data', array());
 
 		if (empty($data))
 		{

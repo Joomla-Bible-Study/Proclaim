@@ -12,6 +12,8 @@
 // Load the tooltip behavior.
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 
 HTMLHelper::_('behavior.formvalidator');
 HTMLHelper::_('jquery.framework');
@@ -40,13 +42,13 @@ Factory::getDocument()->addScriptDeclaration("
 				</div>
 				<div class="controls">
 					<?php echo $this->form->getInput('timeframe'); ?>
-					<?php echo $this->form->getInput('swich'); ?>
+					<?php echo $this->form->getInput('switch'); ?>
 				</div>
 			</div>
 			<div class="control-group">
 				<input class="btn btn-primary" type="submit" value="<?php echo Text::_('JBS_CMN_SUBMIT'); ?>"
 				       name="submit"/>
-				<button onclick="Joomla.submitbutton('administration.back')" class="btn btn-default">
+				<button onclick="Joomla.submitbutton('cwmadmin.back')" class="btn btn-default">
 					<span class="icon-back"></span>
 					Back
 				</button>
@@ -54,7 +56,7 @@ Factory::getDocument()->addScriptDeclaration("
 		</div>
 	</div>
 	<input type="hidden" name="option" value="com_proclaim"/>
-	<input type="hidden" name="task" value="admin.doArchive"/>
+	<input type="hidden" name="task" value="cwmadmin.doArchive"/>
 	<input type="hidden" name="controller" value="admin"/>
 	<?php echo HTMLHelper::_('form.token'); ?>
 </form>

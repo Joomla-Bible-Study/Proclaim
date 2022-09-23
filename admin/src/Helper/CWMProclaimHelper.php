@@ -173,54 +173,54 @@ class CWMProclaimHelper
 		$simple_view = CWMHelper::getSimpleView();
 
 		self::rendermenu(
-			Text::_('JBS_CMN_CONTROL_PANEL'), 'index.php?option=com_proclaim&view=cpanel', $vName == 'cpanel'
+			Text::_('JBS_CMN_CONTROL_PANEL'), 'index.php?option=com_proclaim&view=cwmcpanel', $vName == 'cpanel'
 		);
 		self::rendermenu(
-			Text::_('JBS_CMN_ADMINISTRATION'), 'index.php?option=com_proclaim&task=administration.edit&id=1', $vName == 'administrator'
+			Text::_('JBS_CMN_ADMINISTRATION'), 'index.php?option=com_proclaim&task=cwmadmin.edit&id=1', $vName == 'administrator'
 		);
 		self::rendermenu(
-			Text::_('JBS_CMN_STUDIES'), 'index.php?option=com_proclaim&view=messages', $vName == 'messages'
+			Text::_('JBS_CMN_STUDIES'), 'index.php?option=com_proclaim&view=cwmmessages', $vName == 'messages'
 		);
 		self::rendermenu(
-			Text::_('JBS_CMN_MEDIA_FILES'), 'index.php?option=com_proclaim&view=mediafiles', $vName == 'mediafiles'
+			Text::_('JBS_CMN_MEDIA_FILES'), 'index.php?option=com_proclaim&view=cwmmediafiles', $vName == 'mediafiles'
 		);
 		self::rendermenu(
-			Text::_('JBS_CMN_TEACHERS'), 'index.php?option=com_proclaim&view=teachers', $vName == 'teachers'
+			Text::_('JBS_CMN_TEACHERS'), 'index.php?option=com_proclaim&view=cwmteachers', $vName == 'teachers'
 		);
 		self::rendermenu(
-			Text::_('JBS_CMN_SERIES'), 'index.php?option=com_proclaim&view=series', $vName == 'series'
+			Text::_('JBS_CMN_SERIES'), 'index.php?option=com_proclaim&view=cwmseries', $vName == 'series'
 		);
 
 		if (!$simple_view->mode)
 		{
 			self::rendermenu(
-				Text::_('JBS_CMN_MESSAGETYPES'), 'index.php?option=com_proclaim&view=messagetypes', $vName == 'messagetypes'
+				Text::_('JBS_CMN_MESSAGETYPES'), 'index.php?option=com_proclaim&view=cwmmessagetypes', $vName == 'messagetypes'
 			);
 			self::rendermenu(
-				Text::_('JBS_CMN_LOCATIONS'), 'index.php?option=com_proclaim&view=locations', $vName == 'locations'
+				Text::_('JBS_CMN_LOCATIONS'), 'index.php?option=com_proclaim&view=cwmlocations', $vName == 'locations'
 			);
 			self::rendermenu(
-				Text::_('JBS_CMN_TOPICS'), 'index.php?option=com_proclaim&view=topics', $vName == 'topics'
+				Text::_('JBS_CMN_TOPICS'), 'index.php?option=com_proclaim&view=cwmtopics', $vName == 'topics'
 			);
 			self::rendermenu(
-				Text::_('JBS_CMN_COMMENTS'), 'index.php?option=com_proclaim&view=comments', $vName == 'comments'
+				Text::_('JBS_CMN_COMMENTS'), 'index.php?option=com_proclaim&view=cwmcomments', $vName == 'comments'
 			);
 		}
 
 		self::rendermenu(
-			Text::_('JBS_CMN_SERVERS'), 'index.php?option=com_proclaim&view=servers', $vName == 'servers'
+			Text::_('JBS_CMN_SERVERS'), 'index.php?option=com_proclaim&view=cwmservers', $vName == 'servers'
 		);
 		self::rendermenu(
-			Text::_('JBS_CMN_PODCASTS'), 'index.php?option=com_proclaim&view=podcasts', $vName == 'podcasts'
+			Text::_('JBS_CMN_PODCASTS'), 'index.php?option=com_proclaim&view=cwmpodcasts', $vName == 'podcasts'
 		);
 
 		if (!$simple_view->mode)
 		{
 			self::rendermenu(
-				Text::_('JBS_CMN_TEMPLATES'), 'index.php?option=com_proclaim&view=templates', $vName == 'templates'
+				Text::_('JBS_CMN_TEMPLATES'), 'index.php?option=com_proclaim&view=cwmtemplates', $vName == 'templates'
 			);
 			self::rendermenu(
-				Text::_('JBS_CMN_TEMPLATECODE'), 'index.php?option=com_proclaim&view=templatecodes', $vName == 'templatecodes'
+				Text::_('JBS_CMN_TEMPLATECODE'), 'index.php?option=com_proclaim&view=cwmtemplatecodes', $vName == 'templatecodes'
 			);
 		}
 	}

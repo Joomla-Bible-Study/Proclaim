@@ -24,11 +24,11 @@ Factory::getDocument()->addScriptDeclaration("
 		Joomla.submitbutton = function(task)
 		{
 			var form = document.getElementById('item-assets');
-			if (task == 'administration.back' || document.formvalidator.isValid(form))
+			if (task == 'cwmadmin.back' || document.formvalidator.isValid(form))
 			{
 				Joomla.submitform(task, form);
 			}
-			elseif (task == 'administration.doimport' || document.formvalidator.isValid(form))
+			elseif (task == 'cwmadmin.doimport' || document.formvalidator.isValid(form))
 			{
 				Joomla.submitform(task, form);
 			}
@@ -95,6 +95,6 @@ Factory::getDocument()->addScriptDeclaration("
 	</div>
 	<input type="hidden" name="option" value="com_proclaim"/>
 	<input type="hidden" name="task" value="cwmadmin.doimport"/>
-	<input type="hidden" name="controller" value="admin"/>
+	<input type="hidden" name="controller" value="cwmadmin"/>
 	<?php echo HTMLHelper::_('form.token'); ?>
 </form>
