@@ -38,13 +38,13 @@ class HTMLView extends BaseHtmlView
 
 	/** @var string Running Now
 	 * @since    7.0.0 */
-	public string $running;
+	public string $running = '';
 
 	/** @var array Call stack for the Visioning System.
 	 * @since    7.0.0 */
 	public array $callstack = [];
 
-	public string $subSteps;
+	public string $subSteps = '';
 
 	public array $subQuery = [];
 
