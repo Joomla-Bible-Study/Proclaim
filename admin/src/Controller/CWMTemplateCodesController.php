@@ -10,10 +10,11 @@
 
 namespace CWM\Component\Proclaim\Administrator\Controller;
 
-// No direct access to this file
 use Joomla\CMS\MVC\Controller\AdminController;
 
-defined('_JEXEC') or die;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 /**
  * TemplateCodes list controller class.

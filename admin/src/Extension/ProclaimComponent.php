@@ -9,7 +9,9 @@
 
 namespace CWM\Component\Proclaim\Administrator\Extension;
 
-\defined('JPATH_PLATFORM') or die;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Service\HTML\Proclaim;
 use Joomla\CMS\Application\SiteApplication;

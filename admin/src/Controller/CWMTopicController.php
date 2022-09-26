@@ -10,10 +10,11 @@
 
 namespace CWM\Component\Proclaim\Administrator\Controller;
 
-// No Direct Access
 use Joomla\CMS\MVC\Controller\FormController;
 
-defined('_JEXEC') or die;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 /**
  * Topic controller class

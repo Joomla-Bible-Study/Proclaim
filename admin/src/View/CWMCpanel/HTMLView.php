@@ -10,7 +10,6 @@
 
 namespace CWM\Component\Proclaim\Administrator\View\CWMCpanel;
 
-// No Direct Access
 use CWM\Component\Proclaim\Administrator\Lib\CWMStats;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -18,7 +17,9 @@ use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use SimpleXMLElement;
 
-defined('_JEXEC') or die;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 /**
  * JView class for Cpanel

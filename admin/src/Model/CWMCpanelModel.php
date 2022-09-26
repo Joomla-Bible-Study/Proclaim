@@ -8,11 +8,14 @@
 
 namespace CWM\Component\Proclaim\Administrator\Model;
 
-
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\BaseModel;
 use Joomla\Component\Postinstall\Administrator\Model\MessagesModel;
 use Joomla\Registry\Registry;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 /**
  * JModel class for Cpanel

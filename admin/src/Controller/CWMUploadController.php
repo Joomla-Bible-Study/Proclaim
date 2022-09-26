@@ -10,20 +10,22 @@
 
 namespace CWM\Component\Proclaim\Administrator\Controller;
 
-// No direct access
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Path;
+use Joomla\Input\Input;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
 
-defined('_JEXEC') or die();
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 /**
- * Class BiblestudyControllerUpload
+ * Class CWMUploadController
  *
  * @package  Proclaim.Admin
  * @since    9.0.0
@@ -55,7 +57,7 @@ class CWMUploadController extends AdminController
 			error_reporting(0);
 		}
 
-		$input   = new Joomla\Input\Input;
+		$input   = new Input;
 		$params  = ComponentHelper::getParams('com_proclaim');
 		$app     = Factory::getApplication();
 		$session = $app->getSession();

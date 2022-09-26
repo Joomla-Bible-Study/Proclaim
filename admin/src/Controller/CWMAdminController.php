@@ -10,7 +10,9 @@
 
 namespace CWM\Component\Proclaim\Administrator\Controller;
 
-defined('_JEXEC') or die;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMAlias;
 use CWM\Component\Proclaim\Administrator\Helper\CWMDbHelper;
