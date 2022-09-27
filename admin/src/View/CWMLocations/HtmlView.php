@@ -1,6 +1,6 @@
 <?php
 /**
- * HtmlView
+ * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
  * @copyright  2007 - 2022 (C) CWM Team All rights reserved
@@ -8,28 +8,27 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMTeachers;
+namespace CWM\Component\Proclaim\Administrator\View\CWMLocations;
 
-// phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
-// phpcs:enable PSR1.Files.SideEffects
+// No Direct Access
+defined('_JEXEC') or die;
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
-use Joomla\Component\Content\Administrator\Helper\ContentHelper;
+use Joomla\Component\Content\Administrator\Extension\ContentComponent;
 
 /**
- * View class for Teachers
+ * View class for Locations
  *
  * @package  Proclaim.Admin
- * @since    7.0.0
+ * @since    7.0
  */
 class HtmlView extends BaseHtmlView
 {
@@ -63,17 +62,23 @@ class HtmlView extends BaseHtmlView
 	 * @var object
 	 * @since    7.0.0
 	 */
-	protected $canDo;
+	public $canDo;
 
-	/** @var  array Filter Levels
+	/**
+	 * Filter Levels
+	 *
+	 * @var object
 	 * @since    7.0.0
 	 */
-	protected $f_levels;
+	public $f_levels;
 
-	/** @var  object Side Bar
-	 * @since    7.0.0
+	/**
+	 * Side Bar
+	 *
+	 * @var string
+	 * @since 9.0.0
 	 */
-	protected $sidebar;
+	public $sidebar;
 
 	/**
 	 * Execute and display a template script.
@@ -82,8 +87,9 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return  void  A string if successful, otherwise a JError object.
 	 *
-	 * @throws  \Exception
+	 * @throws \Exception
 	 * @since   11.1
+	 *
 	 * @see     fetch()
 	 */
 	public function display($tpl = null): void
@@ -91,9 +97,10 @@ class HtmlView extends BaseHtmlView
 		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
-
-		$this->filterForm = $this->get('FilterForm');
-		$this->canDo      = CWMProclaimHelper::getActions('', 'teacher');
+		$this->form        = $this->get('form');
+		$this->filterForm    = $this->get('FilterForm');
+		$this->activeFilters = $this->get('ActiveFilters');
+		$this->canDo         = CWMProclaimHelper::getActions('', 'location');
 
 		// Check for errors.
 		if (\count($errors = $this->get('Errors')))
@@ -105,12 +112,6 @@ class HtmlView extends BaseHtmlView
 		if ($this->getLayout() !== 'modal')
 		{
 			$this->addToolbar();
-
-			// We do not need to filter by language when multilingual is disabled
-			if (!Multilanguage::isEnabled())
-			{
-				$this->filterForm->removeField('language', 'filter');
-			}
 		}
 
 		// Set the document
@@ -130,17 +131,15 @@ class HtmlView extends BaseHtmlView
 	 */
 	protected function addToolbar(): void
 	{
-		$canDo = ContentHelper::getActions('com_proclaim');
-		$user  = Factory::getApplication()->getIdentity();
+		$user = Factory::getApplication()->getSession()->get('user');
 
 		// Get the toolbar object instance
 		$toolbar = Toolbar::getInstance('toolbar');
+		ToolbarHelper::title(Text::_('JBS_CMN_LOCATIONS'), 'home home');
 
-		ToolbarHelper::title(Text::_('JBS_CMN_TEACHERS'), 'users users');
-
-		if ($canDo->get('core.create'))
+		if ($this->canDo->get('core.create'))
 		{
-			$toolbar->addNew('cwmteacher.add');
+			ToolBarHelper::addNew('cwmlocation.add');
 		}
 
 		$dropdown = $toolbar->dropdownButton('status-group')
@@ -151,30 +150,31 @@ class HtmlView extends BaseHtmlView
 			->listCheck(true);
 		$childBar = $dropdown->getChildToolbar();
 
-		if ($canDo->get('core.edit'))
+		if ($this->canDo->get('core.edit'))
 		{
-			$toolbar->edit('teacher.edit');
+			$toolbar->edit('cwmlocation.edit');
 		}
 
-		if ($canDo->get('core.edit.state'))
+		if ($this->canDo->get('core.edit.state'))
 		{
 			$toolbar->divider();
-			$toolbar->publish('cwmteachers.publish');
-			$toolbar->unpublish('cwmteachers.unpublish');
+			$toolbar->publish('cwmlocations.publish');
+			$toolbar->unpublish('cwmlocations.unpublish');
 			$toolbar->divider();
-			$toolbar->archive('cwmteachers.archive');
+			$toolbar->archive('cwmlocations.archive');
 		}
 
-		if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete'))
+		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
 		{
-			$toolbar->delete('cwmteachers.delete')
+			$toolbar->delete('', 'cwmlocations.delete')
 				->text('JTOOLBAR_EMPTY_TRASH')
 				->message('JGLOBAL_CONFIRM_DELETE')
 				->listCheck(true);
 		}
-		elseif ($canDo->get('core.edit.state'))
+
+		if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED)
 		{
-			$childBar->trash('cwmteachers.trash');
+			$toolbar->trash('cwmlocations.trash')->listCheck(true);
 		}
 
 		// Add a batch button
@@ -193,13 +193,14 @@ class HtmlView extends BaseHtmlView
 	 * Add the page title to browser.
 	 *
 	 * @return void
-	 * @since    7.1.0
 	 *
+	 * @throws \Exception
+	 * @since    7.1.0
 	 */
 	protected function setDocument(): void
 	{
 		$document = Factory::getApplication()->getDocument();
-		$document->setTitle(Text::_('JBS_TITLE_TEACHERS'));
+		$document->setTitle(Text::_('JBS_TITLE_LOCATIONS'));
 	}
 
 	/**
@@ -212,12 +213,10 @@ class HtmlView extends BaseHtmlView
 	protected function getSortFields(): array
 	{
 		return array(
-			'teacher.teachername' => Text::_('JBS_CMN_STUDY_TITLE'),
-			'teacher.language'    => Text::_('JGRID_HEADING_LANGUAGE'),
-			'teacher.ordering'    => Text::_('JGRID_HEADING_ORDERING'),
-			'teacher.published'   => Text::_('JSTATUS'),
-			'access_level'        => Text::_('JGRID_HEADING_ACCESS'),
-			'teacher.id'          => Text::_('JGRID_HEADING_ID')
+			'location.location_text' => Text::_('JGRID_HEADING_ORDERING'),
+			'location.published'     => Text::_('JSTATUS'),
+			'access_level'           => Text::_('JGRID_HEADING_ACCESS'),
+			'location.id'            => Text::_('JGRID_HEADING_ID')
 		);
 	}
 }

@@ -1,7 +1,7 @@
 <?php
 /**
- * @package     Mywalks.Administrator
- * @subpackage  com_mywalks
+ * @package     Proclaim.Administrator
+ * @subpackage  com_proclaim
  *
  * @copyright   Copyright (C) 2005 - 2019 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -63,6 +63,6 @@ class DisplayController extends BaseController
 			return false;
 		}
 
-		return parent::display();
+		return parent::display($cachable, $urlparams);
 	}
 }

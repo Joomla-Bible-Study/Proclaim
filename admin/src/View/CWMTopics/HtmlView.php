@@ -1,6 +1,6 @@
 <?php
 /**
- * HtmlView
+ * Topics html
  *
  * @package    Proclaim.Admin
  * @copyright  2007 - 2022 (C) CWM Team All rights reserved
@@ -8,35 +8,53 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMTeachers;
+namespace CWM\Component\Proclaim\Administrator\View\CWMTopics;
 
-// phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
-// phpcs:enable PSR1.Files.SideEffects
+// No Direct Access
+defined('_JEXEC') or die;
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\Component\Content\Administrator\Extension\ContentComponent;
 use Joomla\Component\Content\Administrator\Helper\ContentHelper;
 
 /**
- * View class for Teachers
+ * View class for Topics
  *
  * @package  Proclaim.Admin
- * @since    7.0.0
+ * @since    7.0
  */
 class HtmlView extends BaseHtmlView
 {
 	/**
+	 * Filter Levels
+	 *
+	 * @var array
+	 * @since    7.0.0
+	 */
+	public $f_levels;
+
+	/**
+	 * Side Bar
+	 *
+	 * @var string
+	 * @since    7.0.0
+	 */
+	public $sidebar;
+
+	/**
 	 * Items
 	 *
-	 * @var object
+	 * @var array
 	 * @since    7.0.0
 	 */
 	protected $items;
@@ -65,16 +83,6 @@ class HtmlView extends BaseHtmlView
 	 */
 	protected $canDo;
 
-	/** @var  array Filter Levels
-	 * @since    7.0.0
-	 */
-	protected $f_levels;
-
-	/** @var  object Side Bar
-	 * @since    7.0.0
-	 */
-	protected $sidebar;
-
 	/**
 	 * Execute and display a template script.
 	 *
@@ -88,12 +96,12 @@ class HtmlView extends BaseHtmlView
 	 */
 	public function display($tpl = null): void
 	{
-		$this->items      = $this->get('Items');
+		$items            = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
 
 		$this->filterForm = $this->get('FilterForm');
-		$this->canDo      = CWMProclaimHelper::getActions('', 'teacher');
+		$this->canDo      = CWMProclaimHelper::getActions('', 'topic');
 
 		// Check for errors.
 		if (\count($errors = $this->get('Errors')))
@@ -101,16 +109,13 @@ class HtmlView extends BaseHtmlView
 			throw new GenericDataException(implode("\n", $errors), 500);
 		}
 
+		$modelView   = $this->getModel();
+		$this->items = $modelView->getTranslated($items);
+
 		// We don't need toolbar in the modal window.
 		if ($this->getLayout() !== 'modal')
 		{
 			$this->addToolbar();
-
-			// We do not need to filter by language when multilingual is disabled
-			if (!Multilanguage::isEnabled())
-			{
-				$this->filterForm->removeField('language', 'filter');
-			}
 		}
 
 		// Set the document
@@ -125,22 +130,18 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
-	 * @throws \Exception
 	 * @since 7.0
 	 */
 	protected function addToolbar(): void
 	{
-		$canDo = ContentHelper::getActions('com_proclaim');
-		$user  = Factory::getApplication()->getIdentity();
-
 		// Get the toolbar object instance
 		$toolbar = Toolbar::getInstance('toolbar');
 
-		ToolbarHelper::title(Text::_('JBS_CMN_TEACHERS'), 'users users');
+		ToolbarHelper::title(Text::_('JBS_CMN_TOPICS'), 'tags tags');
 
-		if ($canDo->get('core.create'))
+		if ($this->canDo->get('core.create'))
 		{
-			$toolbar->addNew('cwmteacher.add');
+			$toolbar->addNew('cwmtopic.add');
 		}
 
 		$dropdown = $toolbar->dropdownButton('status-group')
@@ -151,41 +152,31 @@ class HtmlView extends BaseHtmlView
 			->listCheck(true);
 		$childBar = $dropdown->getChildToolbar();
 
-		if ($canDo->get('core.edit'))
+		if ($this->canDo->get('core.edit'))
 		{
-			$toolbar->edit('teacher.edit');
+			$toolbar->edit('cwmtopic.edit');
 		}
 
-		if ($canDo->get('core.edit.state'))
+		if ($this->canDo->get('core.edit.state'))
 		{
 			$toolbar->divider();
-			$toolbar->publish('cwmteachers.publish');
-			$toolbar->unpublish('cwmteachers.unpublish');
+			$toolbar->publish('cwmtopics.publish');
+			$toolbar->unpublish('cwmtopics.unpublish');
 			$toolbar->divider();
-			$toolbar->archive('cwmteachers.archive');
+			$toolbar->archive('cwmtopics.archive', 'JTOOLBAR_ARCHIVE');
 		}
 
-		if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete'))
+		if ($this->state->get('filter.published') === ContentComponent::CONDITION_TRASHED && $this->canDo->get('core.delete'))
 		{
-			$toolbar->delete('cwmteachers.delete')
+			$toolbar->delete('cwmtopics.delete')
 				->text('JTOOLBAR_EMPTY_TRASH')
 				->message('JGLOBAL_CONFIRM_DELETE')
 				->listCheck(true);
 		}
-		elseif ($canDo->get('core.edit.state'))
-		{
-			$childBar->trash('cwmteachers.trash');
-		}
 
-		// Add a batch button
-		if ($user->authorise('core.create', 'com_proclaim')
-			&& $user->authorise('core.edit', 'com_proclaim')
-			&& $user->authorise('core.edit.state', 'com_proclaim'))
+		if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED)
 		{
-			$childBar->popupButton('batch')
-				->text('JTOOLBAR_BATCH')
-				->selector('collapseModal')
-				->listCheck(true);
+			$toolbar->trash('cwmtopics.trash')->listCheck(true);
 		}
 	}
 
@@ -193,13 +184,14 @@ class HtmlView extends BaseHtmlView
 	 * Add the page title to browser.
 	 *
 	 * @return void
-	 * @since    7.1.0
 	 *
+	 * @throws \Exception
+	 * @since    7.1.0
 	 */
 	protected function setDocument(): void
 	{
 		$document = Factory::getApplication()->getDocument();
-		$document->setTitle(Text::_('JBS_TITLE_TEACHERS'));
+		$document->setTitle(Text::_('JBS_TITLE_TOPICS'));
 	}
 
 	/**
@@ -212,12 +204,9 @@ class HtmlView extends BaseHtmlView
 	protected function getSortFields(): array
 	{
 		return array(
-			'teacher.teachername' => Text::_('JBS_CMN_STUDY_TITLE'),
-			'teacher.language'    => Text::_('JGRID_HEADING_LANGUAGE'),
-			'teacher.ordering'    => Text::_('JGRID_HEADING_ORDERING'),
-			'teacher.published'   => Text::_('JSTATUS'),
-			'access_level'        => Text::_('JGRID_HEADING_ACCESS'),
-			'teacher.id'          => Text::_('JGRID_HEADING_ID')
+			'topic.topic_text' => Text::_('JBS_CMN_TOPICS'),
+			'topic.published'  => Text::_('JSTATUS'),
+			'topic.id'         => Text::_('JGRID_HEADING_ID')
 		);
 	}
 }

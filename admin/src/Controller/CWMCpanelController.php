@@ -14,10 +14,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Application\CMSApplication;
-use Joomla\CMS\Form\FormFactoryInterface;
 use Joomla\CMS\MVC\Controller\FormController;
-use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 
 /**
  * Controller for the cPanel

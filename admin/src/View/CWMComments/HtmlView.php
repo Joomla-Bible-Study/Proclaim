@@ -1,32 +1,30 @@
 <?php
 /**
- * HtmlView
+ * View html
  *
- * @package    Proclaim.Admin
+ * @package    BibleStudy
  * @copyright  2007 - 2022 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMTeachers;
+namespace CWM\Component\Proclaim\Administrator\View\CWMComments;
 
-// phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
-// phpcs:enable PSR1.Files.SideEffects
+// No Direct Access
+defined('_JEXEC') or die;
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
-use Joomla\Component\Content\Administrator\Helper\ContentHelper;
+use Joomla\Component\Content\Administrator\Extension\ContentComponent;
 
 /**
- * View class for Teachers
+ * View class for Comments
  *
  * @package  Proclaim.Admin
  * @since    7.0.0
@@ -36,8 +34,9 @@ class HtmlView extends BaseHtmlView
 	/**
 	 * Items
 	 *
-	 * @var object
-	 * @since    7.0.0
+	 * @var array
+	 *
+	 * @since 9.0.0
 	 */
 	protected $items;
 
@@ -45,7 +44,8 @@ class HtmlView extends BaseHtmlView
 	 * Pagination
 	 *
 	 * @var object
-	 * @since    7.0.0
+	 *
+	 * @since 9.0.0
 	 */
 	protected $pagination;
 
@@ -53,27 +53,23 @@ class HtmlView extends BaseHtmlView
 	 * State
 	 *
 	 * @var object
-	 * @since    7.0.0
+	 *
+	 * @since 9.0.0
 	 */
 	protected $state;
 
 	/**
-	 * Can Do
+	 * Filter Levels
 	 *
-	 * @var object
-	 * @since    7.0.0
-	 */
-	protected $canDo;
-
-	/** @var  array Filter Levels
-	 * @since    7.0.0
+	 * @var string
+	 *
+	 * @since 9.0.0
 	 */
 	protected $f_levels;
 
-	/** @var  object Side Bar
-	 * @since    7.0.0
-	 */
-	protected $sidebar;
+	public $filterForm;
+
+	public $activeFilters;
 
 	/**
 	 * Execute and display a template script.
@@ -82,7 +78,7 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return  void  A string if successful, otherwise a JError object.
 	 *
-	 * @throws  \Exception
+	 * @throws \Exception
 	 * @since   11.1
 	 * @see     fetch()
 	 */
@@ -92,8 +88,8 @@ class HtmlView extends BaseHtmlView
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
 
-		$this->filterForm = $this->get('FilterForm');
-		$this->canDo      = CWMProclaimHelper::getActions('', 'teacher');
+		$this->filterForm    = $this->get('FilterForm');
+		$this->activeFilters = $this->get('ActiveFilters');
 
 		// Check for errors.
 		if (\count($errors = $this->get('Errors')))
@@ -105,12 +101,6 @@ class HtmlView extends BaseHtmlView
 		if ($this->getLayout() !== 'modal')
 		{
 			$this->addToolbar();
-
-			// We do not need to filter by language when multilingual is disabled
-			if (!Multilanguage::isEnabled())
-			{
-				$this->filterForm->removeField('language', 'filter');
-			}
 		}
 
 		// Set the document
@@ -130,17 +120,16 @@ class HtmlView extends BaseHtmlView
 	 */
 	protected function addToolbar(): void
 	{
-		$canDo = ContentHelper::getActions('com_proclaim');
-		$user  = Factory::getApplication()->getIdentity();
+		$user = Factory::getApplication()->getSession()->get('user');
 
 		// Get the toolbar object instance
 		$toolbar = Toolbar::getInstance('toolbar');
-
-		ToolbarHelper::title(Text::_('JBS_CMN_TEACHERS'), 'users users');
+		$canDo   = CWMProclaimHelper::getActions('', 'comment');
+		ToolbarHelper::title(Text::_('JBS_CMN_COMMENTS'), 'comments-2 comments-2');
 
 		if ($canDo->get('core.create'))
 		{
-			$toolbar->addNew('cwmteacher.add');
+			$toolbar->addNew('cwmcomment.add');
 		}
 
 		$dropdown = $toolbar->dropdownButton('status-group')
@@ -153,28 +142,28 @@ class HtmlView extends BaseHtmlView
 
 		if ($canDo->get('core.edit'))
 		{
-			$toolbar->edit('teacher.edit');
+			$toolbar->edit('cwmcomment.edit');
 		}
 
 		if ($canDo->get('core.edit.state'))
 		{
 			$toolbar->divider();
-			$toolbar->publish('cwmteachers.publish');
-			$toolbar->unpublish('cwmteachers.unpublish');
-			$toolbar->divider();
-			$toolbar->archive('cwmteachers.archive');
+			$toolbar->publish('cwmcomments.publish');
+			$toolbar->unpublish('cwmcomments.unpublish');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete'))
 		{
-			$toolbar->delete('cwmteachers.delete')
+			$toolbar->divider();
+			$toolbar->delete('', 'cwmcomments.delete')
 				->text('JTOOLBAR_EMPTY_TRASH')
 				->message('JGLOBAL_CONFIRM_DELETE')
 				->listCheck(true);
 		}
-		elseif ($canDo->get('core.edit.state'))
+
+		if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED)
 		{
-			$childBar->trash('cwmteachers.trash');
+			$childBar->trash('cwmcomments.trash');
 		}
 
 		// Add a batch button
@@ -193,13 +182,14 @@ class HtmlView extends BaseHtmlView
 	 * Add the page title to browser.
 	 *
 	 * @return void
-	 * @since    7.1.0
 	 *
+	 * @throws \Exception
+	 * @since    7.1.0
 	 */
-	protected function setDocument(): void
+	protected function setDocument()
 	{
 		$document = Factory::getApplication()->getDocument();
-		$document->setTitle(Text::_('JBS_TITLE_TEACHERS'));
+		$document->setTitle(Text::_('JBS_TITLE_COMMENTS'));
 	}
 
 	/**
@@ -212,12 +202,12 @@ class HtmlView extends BaseHtmlView
 	protected function getSortFields(): array
 	{
 		return array(
-			'teacher.teachername' => Text::_('JBS_CMN_STUDY_TITLE'),
-			'teacher.language'    => Text::_('JGRID_HEADING_LANGUAGE'),
-			'teacher.ordering'    => Text::_('JGRID_HEADING_ORDERING'),
-			'teacher.published'   => Text::_('JSTATUS'),
-			'access_level'        => Text::_('JGRID_HEADING_ACCESS'),
-			'teacher.id'          => Text::_('JGRID_HEADING_ID')
+			'comment.full_name' => Text::_('JBS_CMT_FULL_NAME'),
+			'comment.published' => Text::_('JSTATUS'),
+			'study.studytitle'  => Text::_('JBS_CMN_TITLE'),
+			'comment.language'  => Text::_('JGRID_HEADING_LANGUAGE'),
+			'access_level'      => Text::_('JGRID_HEADING_ACCESS'),
+			'comment.id'        => Text::_('JGRID_HEADING_ID')
 		);
 	}
 }

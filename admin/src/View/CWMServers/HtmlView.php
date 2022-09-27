@@ -1,6 +1,6 @@
 <?php
 /**
- * HtmlView
+ * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
  * @copyright  2007 - 2022 (C) CWM Team All rights reserved
@@ -8,28 +8,25 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMTeachers;
+namespace CWM\Component\Proclaim\Administrator\View\CWMServers;
 
-// phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
-// phpcs:enable PSR1.Files.SideEffects
-
+// No Direct Access
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
-use Joomla\Component\Content\Administrator\Helper\ContentHelper;
+
+defined('_JEXEC') or die;
 
 /**
- * View class for Teachers
+ * View class for Servers
  *
  * @package  Proclaim.Admin
- * @since    7.0.0
+ * @since    7.0
  */
 class HtmlView extends BaseHtmlView
 {
@@ -40,6 +37,12 @@ class HtmlView extends BaseHtmlView
 	 * @since    7.0.0
 	 */
 	protected $items;
+
+	/**
+	 * @var object
+	 * @since 7.0.0
+	 */
+	protected $types;
 
 	/**
 	 * Pagination
@@ -88,12 +91,13 @@ class HtmlView extends BaseHtmlView
 	 */
 	public function display($tpl = null): void
 	{
-		$this->items      = $this->get('Items');
-		$this->pagination = $this->get('Pagination');
-		$this->state      = $this->get('State');
-
-		$this->filterForm = $this->get('FilterForm');
-		$this->canDo      = CWMProclaimHelper::getActions('', 'teacher');
+		$this->items         = $this->get('Items');
+		$this->pagination    = $this->get('Pagination');
+		$this->state         = $this->get('State');
+		$this->canDo         = CWMProclaimHelper::getActions('', 'server');
+		$this->types         = $this->get('ServerOptions');
+		$this->filterForm    = $this->get('FilterForm');
+		$this->activeFilters = $this->get('ActiveFilters');
 
 		// Check for errors.
 		if (\count($errors = $this->get('Errors')))
@@ -105,12 +109,6 @@ class HtmlView extends BaseHtmlView
 		if ($this->getLayout() !== 'modal')
 		{
 			$this->addToolbar();
-
-			// We do not need to filter by language when multilingual is disabled
-			if (!Multilanguage::isEnabled())
-			{
-				$this->filterForm->removeField('language', 'filter');
-			}
 		}
 
 		// Set the document
@@ -125,67 +123,39 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
-	 * @throws \Exception
 	 * @since 7.0
 	 */
 	protected function addToolbar(): void
 	{
 		$canDo = ContentHelper::getActions('com_proclaim');
-		$user  = Factory::getApplication()->getIdentity();
-
-		// Get the toolbar object instance
-		$toolbar = Toolbar::getInstance('toolbar');
-
-		ToolbarHelper::title(Text::_('JBS_CMN_TEACHERS'), 'users users');
+		ToolbarHelper::title(Text::_('JBS_CMN_SERVERS'), 'database database');
 
 		if ($canDo->get('core.create'))
 		{
-			$toolbar->addNew('cwmteacher.add');
+			ToolbarHelper::addNew('cwmserver.add');
 		}
-
-		$dropdown = $toolbar->dropdownButton('status-group')
-			->text('JTOOLBAR_CHANGE_STATUS')
-			->toggleSplit(false)
-			->icon('icon-ellipsis-h')
-			->buttonClass('btn btn-action')
-			->listCheck(true);
-		$childBar = $dropdown->getChildToolbar();
 
 		if ($canDo->get('core.edit'))
 		{
-			$toolbar->edit('teacher.edit');
+			ToolbarHelper::editList('cwmserver.edit');
 		}
 
 		if ($canDo->get('core.edit.state'))
 		{
-			$toolbar->divider();
-			$toolbar->publish('cwmteachers.publish');
-			$toolbar->unpublish('cwmteachers.unpublish');
-			$toolbar->divider();
-			$toolbar->archive('cwmteachers.archive');
+			ToolbarHelper::divider();
+			ToolbarHelper::publishList('cwmservers.publish');
+			ToolbarHelper::unpublishList('cwmservers.unpublish');
+			ToolbarHelper::divider();
+			ToolbarHelper::archiveList('cwmservers.archive');
 		}
 
 		if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete'))
 		{
-			$toolbar->delete('cwmteachers.delete')
-				->text('JTOOLBAR_EMPTY_TRASH')
-				->message('JGLOBAL_CONFIRM_DELETE')
-				->listCheck(true);
+			ToolbarHelper::deleteList('', 'cwmservers.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
-		elseif ($canDo->get('core.edit.state'))
+		elseif ($canDo->get('core.delete'))
 		{
-			$childBar->trash('cwmteachers.trash');
-		}
-
-		// Add a batch button
-		if ($user->authorise('core.create', 'com_proclaim')
-			&& $user->authorise('core.edit', 'com_proclaim')
-			&& $user->authorise('core.edit.state', 'com_proclaim'))
-		{
-			$childBar->popupButton('batch')
-				->text('JTOOLBAR_BATCH')
-				->selector('collapseModal')
-				->listCheck(true);
+			ToolbarHelper::trash('cwmservers.trash');
 		}
 	}
 
@@ -193,13 +163,14 @@ class HtmlView extends BaseHtmlView
 	 * Add the page title to browser.
 	 *
 	 * @return void
-	 * @since    7.1.0
 	 *
+	 * @throws \Exception
+	 * @since    7.1.0
 	 */
 	protected function setDocument(): void
 	{
 		$document = Factory::getApplication()->getDocument();
-		$document->setTitle(Text::_('JBS_TITLE_TEACHERS'));
+		$document->setTitle(Text::_('JBS_TITLE_SERVERS'));
 	}
 
 	/**
@@ -212,12 +183,9 @@ class HtmlView extends BaseHtmlView
 	protected function getSortFields(): array
 	{
 		return array(
-			'teacher.teachername' => Text::_('JBS_CMN_STUDY_TITLE'),
-			'teacher.language'    => Text::_('JGRID_HEADING_LANGUAGE'),
-			'teacher.ordering'    => Text::_('JGRID_HEADING_ORDERING'),
-			'teacher.published'   => Text::_('JSTATUS'),
-			'access_level'        => Text::_('JGRID_HEADING_ACCESS'),
-			'teacher.id'          => Text::_('JGRID_HEADING_ID')
+			'servers.server_name' => Text::_('JGRID_HEADING_ORDERING'),
+			'servers.published'   => Text::_('JSTATUS'),
+			'servers.id'          => Text::_('JGRID_HEADING_ID')
 		);
 	}
 }

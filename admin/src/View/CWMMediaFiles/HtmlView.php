@@ -1,6 +1,6 @@
 <?php
 /**
- * HtmlView
+ * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
  * @copyright  2007 - 2022 (C) CWM Team All rights reserved
@@ -8,35 +8,68 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMTeachers;
+namespace CWM\Component\Proclaim\Administrator\View\CWMMediaFiles;
 
-// phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
-// phpcs:enable PSR1.Files.SideEffects
-
+// No Direct Access
+use CWM\Component\Proclaim\Administrator\Extension\ProclaimComponent;
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use JHtml;
+use JHtmlSidebar;
 use Joomla\CMS\Factory;
-use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\Component\Content\Administrator\Extension\ContentComponent;
 use Joomla\Component\Content\Administrator\Helper\ContentHelper;
 
+defined('_JEXEC') or die;
+
 /**
- * View class for Teachers
+ * View class for Mediafiles
  *
  * @package  Proclaim.Admin
- * @since    7.0.0
+ * @since    7.0
  */
 class HtmlView extends BaseHtmlView
 {
 	/**
-	 * Items
+	 * Media Types
+	 *
+	 * @var string
+	 * @since    7.0.0
+	 */
+	public $mediatypes;
+
+	/**
+	 * Can Do
 	 *
 	 * @var object
+	 * @since    7.0.0
+	 */
+	public $canDo;
+
+	/**
+	 * Filter Levers
+	 *
+	 * @var string
+	 * @since    7.0.0
+	 */
+	public $f_levels;
+
+	/**
+	 * Side Bare
+	 *
+	 * @var string
+	 * @since    7.0.0
+	 */
+	public $sidebar;
+
+	/**
+	 * Items
+	 *
+	 * @var array
 	 * @since    7.0.0
 	 */
 	protected $items;
@@ -44,7 +77,7 @@ class HtmlView extends BaseHtmlView
 	/**
 	 * Pagination
 	 *
-	 * @var object
+	 * @var array
 	 * @since    7.0.0
 	 */
 	protected $pagination;
@@ -58,42 +91,28 @@ class HtmlView extends BaseHtmlView
 	protected $state;
 
 	/**
-	 * Can Do
-	 *
-	 * @var object
-	 * @since    7.0.0
-	 */
-	protected $canDo;
-
-	/** @var  array Filter Levels
-	 * @since    7.0.0
-	 */
-	protected $f_levels;
-
-	/** @var  object Side Bar
-	 * @since    7.0.0
-	 */
-	protected $sidebar;
-
-	/**
 	 * Execute and display a template script.
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void  A string if successful, otherwise a JError object.
 	 *
-	 * @throws  \Exception
-	 * @since   11.1
 	 * @see     fetch()
+	 * @since   11.1
+	 * @throws  \Exception
 	 */
 	public function display($tpl = null): void
 	{
 		$this->items      = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
+		$this->mediatypes = $this->get('Mediatypes');
 
-		$this->filterForm = $this->get('FilterForm');
-		$this->canDo      = CWMProclaimHelper::getActions('', 'teacher');
+		$this->filterForm    = $this->get('FilterForm');
+		$this->activeFilters = $this->get('ActiveFilters');
+
+		$this->sortDirection = $this->state->get('list.direction');
+		$this->sortColumn    = $this->state->get('list.ordering');
 
 		// Check for errors.
 		if (\count($errors = $this->get('Errors')))
@@ -105,12 +124,6 @@ class HtmlView extends BaseHtmlView
 		if ($this->getLayout() !== 'modal')
 		{
 			$this->addToolbar();
-
-			// We do not need to filter by language when multilingual is disabled
-			if (!Multilanguage::isEnabled())
-			{
-				$this->filterForm->removeField('language', 'filter');
-			}
 		}
 
 		// Set the document
@@ -131,16 +144,16 @@ class HtmlView extends BaseHtmlView
 	protected function addToolbar(): void
 	{
 		$canDo = ContentHelper::getActions('com_proclaim');
-		$user  = Factory::getApplication()->getIdentity();
+		$user = Factory::getApplication()->getIdentity();
 
 		// Get the toolbar object instance
 		$toolbar = Toolbar::getInstance('toolbar');
 
-		ToolbarHelper::title(Text::_('JBS_CMN_TEACHERS'), 'users users');
+		ToolbarHelper::title(Text::_('JBS_CMN_MEDIA_FILES'), 'video video');
 
 		if ($canDo->get('core.create'))
 		{
-			$toolbar->addNew('cwmteacher.add');
+			$toolbar->addNew('cwmmediafile.add');
 		}
 
 		$dropdown = $toolbar->dropdownButton('status-group')
@@ -149,32 +162,34 @@ class HtmlView extends BaseHtmlView
 			->icon('icon-ellipsis-h')
 			->buttonClass('btn btn-action')
 			->listCheck(true);
+
 		$childBar = $dropdown->getChildToolbar();
 
-		if ($canDo->get('core.edit'))
+		if ($canDo->get('core.edit.state'))
 		{
-			$toolbar->edit('teacher.edit');
+			$toolbar->edit('cwmmediafile.edit');
 		}
 
 		if ($canDo->get('core.edit.state'))
 		{
 			$toolbar->divider();
-			$toolbar->publish('cwmteachers.publish');
-			$toolbar->unpublish('cwmteachers.unpublish');
+			$toolbar->publish('cwmmediafiles.publish');
+			$toolbar->unpublish('cwmmediafiles.unpublish');
 			$toolbar->divider();
-			$toolbar->archive('cwmteachers.archive');
+			$toolbar->archive('cwmmediafiles.archive');
 		}
 
-		if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete'))
+		if ($this->state->get('filter.published') == ProclaimComponent::CONDITION_TRASHED && $canDo->get('core.delete'))
 		{
-			$toolbar->delete('cwmteachers.delete')
+			$toolbar->delete('cwmmediafiles.delete')
 				->text('JTOOLBAR_EMPTY_TRASH')
 				->message('JGLOBAL_CONFIRM_DELETE')
 				->listCheck(true);
 		}
-		elseif ($canDo->get('core.edit.state'))
+
+		if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED)
 		{
-			$childBar->trash('cwmteachers.trash');
+			$childBar->trash('cwmmediafiles.trash')->listCheck(true);
 		}
 
 		// Add a batch button
@@ -187,19 +202,22 @@ class HtmlView extends BaseHtmlView
 				->selector('collapseModal')
 				->listCheck(true);
 		}
+
+		$toolbar->help('JHELP_CONTENT_ARTICLE_MANAGER');
 	}
 
 	/**
 	 * Add the page title to browser.
 	 *
 	 * @return void
-	 * @since    7.1.0
 	 *
+	 * @throws \Exception
+	 * @since    7.1.0
 	 */
 	protected function setDocument(): void
 	{
 		$document = Factory::getApplication()->getDocument();
-		$document->setTitle(Text::_('JBS_TITLE_TEACHERS'));
+		$document->setTitle(Text::_('JBS_TITLE_MEDIA_FILES'));
 	}
 
 	/**
@@ -212,12 +230,12 @@ class HtmlView extends BaseHtmlView
 	protected function getSortFields(): array
 	{
 		return array(
-			'teacher.teachername' => Text::_('JBS_CMN_STUDY_TITLE'),
-			'teacher.language'    => Text::_('JGRID_HEADING_LANGUAGE'),
-			'teacher.ordering'    => Text::_('JGRID_HEADING_ORDERING'),
-			'teacher.published'   => Text::_('JSTATUS'),
-			'access_level'        => Text::_('JGRID_HEADING_ACCESS'),
-			'teacher.id'          => Text::_('JGRID_HEADING_ID')
+			'study.studytitle'     => Text::_('JBS_CMN_STUDY_TITLE'),
+			'mediatype.media_text' => Text::_('JBS_MED_MEDIA_TYPE'),
+			'mediafile.filename'   => Text::_('JBS_MED_FILENAME'),
+			'mediafile.ordering'   => Text::_('JGRID_HEADING_ORDERING'),
+			'mediafile.published'  => Text::_('JSTATUS'),
+			'mediafile.id'         => Text::_('JGRID_HEADING_ID')
 		);
 	}
 }
