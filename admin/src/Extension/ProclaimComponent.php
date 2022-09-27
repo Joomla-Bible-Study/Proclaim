@@ -44,7 +44,7 @@ class ProclaimComponent extends MVCComponent implements
 	use WorkflowServiceTrait;
 
 	/** @var array Supported functionality */
-	protected $supportedFunctionality = [
+	protected array $supportedFunctionality = [
 		'core.featured' => true,
 		'core.state'    => true,
 	];
@@ -54,7 +54,7 @@ class ProclaimComponent extends MVCComponent implements
 	 *
 	 * @since   4.0.0
 	 */
-	const CONDITION_NAMES = [
+	public const CONDITION_NAMES = [
 		self::CONDITION_PUBLISHED   => 'JPUBLISHED',
 		self::CONDITION_UNPUBLISHED => 'JUNPUBLISHED',
 		self::CONDITION_ARCHIVED    => 'JARCHIVED',
@@ -66,28 +66,28 @@ class ProclaimComponent extends MVCComponent implements
 	 *
 	 * @since   4.0.0
 	 */
-	const CONDITION_ARCHIVED = 2;
+	public const CONDITION_ARCHIVED = 2;
 
 	/**
 	 * The published condition
 	 *
 	 * @since   4.0.0
 	 */
-	const CONDITION_PUBLISHED = 1;
+	public const CONDITION_PUBLISHED = 1;
 
 	/**
 	 * The unpublished condition
 	 *
 	 * @since   4.0.0
 	 */
-	const CONDITION_UNPUBLISHED = 0;
+	public const CONDITION_UNPUBLISHED = 0;
 
 	/**
 	 * The trashed condition
 	 *
 	 * @since   4.0.0
 	 */
-	const CONDITION_TRASHED = -2;
+	public const CONDITION_TRASHED = -2;
 
 	/**
 	 * Booting the extension. This is the function to set up the environment of the extension like
@@ -105,10 +105,6 @@ class ProclaimComponent extends MVCComponent implements
 	public function boot(ContainerInterface $container)
 	{
 		$this->getRegistry()->register('proclaimadministrator', new CWMAdministratorService);
-		$this->getRegistry()->register('proclaimicon', new Icon($container->get(SiteApplication::class)));
-
-		// The layout cwm.proclaim.icons does need a general icon service
-		$this->getRegistry()->register('icon', $this->getRegistry()->getService('proclaimicon'));
 	}
 
 	/**
@@ -149,18 +145,17 @@ class ProclaimComponent extends MVCComponent implements
 	 *
 	 * @return  array
 	 *
+	 * @throws \Exception
 	 * @since   4.0.0
 	 */
 	public function getContexts(): array
 	{
-		Factory::getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
+		Factory::getApplication()->getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
 
-		$contexts = array(
+		return array(
 			'com_proclaim.cwmcpanel' => Text::_('com_proclaim'),
 			'com_proclaim.cwmadmin'  => Text::_('JCATEGORY')
 		);
-
-		return $contexts;
 	}
 
 	/**
@@ -197,17 +192,16 @@ class ProclaimComponent extends MVCComponent implements
 	 *
 	 * @return  array
 	 *
+	 * @throws \Exception
 	 * @since   4.0.0
 	 */
 	public function getWorkflowContexts(): array
 	{
-		Factory::getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
+		Factory::getApplication()->getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
 
-		$contexts = array(
+		return array(
 			'com_proclaim.cwmadmin' => Text::_('COM_CONTENT')
 		);
-
-		return $contexts;
 	}
 
 	/**

@@ -11,6 +11,7 @@
 namespace CWM\Component\Proclaim\Administrator\View\CWMCpanel;
 
 use CWM\Component\Proclaim\Administrator\Lib\CWMStats;
+use CWM\Component\Proclaim\Administrator\Model\CWMCpanelModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -22,7 +23,7 @@ use SimpleXMLElement;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
- * JView class for Cpanel
+ * HTMLView class for Cpanel
  *
  * @package  Proclaim.Admin
  * @since    7.0.0
@@ -82,9 +83,8 @@ class HTMLView extends BaseHtmlView
 	public function display($tpl = null): void
 	{
 		$this->state = $this->get('State');
-		/** @var \CWM\Component\Proclaim\Administrator\Model\CWMCpanelModel $model */
-		$model     = $this->getModel();
-		$component = JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.xml';
+		$model       = new CWMCpanelModel;
+		$component   = JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.xml';
 
 		if (file_exists($component))
 		{

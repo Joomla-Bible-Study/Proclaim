@@ -1,6 +1,6 @@
 <?php
 /**
- * JView html
+ * HTMLView
  *
  * @package    Proclaim.Admin
  * @copyright  2007 - 2022 (C) CWM Team All rights reserved
@@ -10,8 +10,9 @@
 
 namespace CWM\Component\Proclaim\Administrator\View\CWMTeachers;
 
-// No Direct Access
-defined('_JEXEC') or die;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;

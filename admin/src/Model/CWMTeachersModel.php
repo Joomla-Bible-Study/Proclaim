@@ -12,6 +12,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // No Direct Access
 use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\Input\Input;
 use Joomla\CMS\MVC\Model\ListModel;
 
@@ -28,13 +29,13 @@ class CWMTeachersModel extends ListModel
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @param   array                                             $config   An optional associative array of configuration settings.
+	 * @param   \Joomla\CMS\MVC\Factory\MVCFactoryInterface|null  $factory  Factory
 	 *
 	 * @throws \Exception
 	 * @since      1.7.0
-	 * @see        JController
 	 */
-	public function __construct($config = array())
+	public function __construct($config = array(), MVCFactoryInterface $factory = null)
 	{
 		if (empty($config['filter_fields']))
 		{
@@ -52,7 +53,7 @@ class CWMTeachersModel extends ListModel
 			);
 		}
 
-		parent::__construct($config);
+		parent::__construct($config, $factory);
 	}
 
 	/**
