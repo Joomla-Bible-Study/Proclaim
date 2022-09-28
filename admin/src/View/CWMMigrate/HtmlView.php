@@ -265,7 +265,7 @@ class HtmlView extends BaseHtmlView
 		{
 			if ($extension->element == 'com_sermonspeaker')
 			{
-				$this->ss = '<a href="index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1&task=cwmadmin.convertSermonSpeaker">'
+				$this->ss = '<a href="index.php?option=com_proclaim&view=CWMAdmin&layout=edit&id=1&task=cwmadmin.convertSermonSpeaker">'
 					. Text::_('JBS_IBM_CONVERT_SERMON_SPEAKER') . '</a>';
 			}
 			else
@@ -275,7 +275,7 @@ class HtmlView extends BaseHtmlView
 
 			if ($extension->element == 'com_preachit')
 			{
-				$this->pi = '<a href="index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1&task=cwmadmin.convertPreachIt">'
+				$this->pi = '<a href="index.php?option=com_proclaim&view=CWMAdmin&layout=edit&id=1&task=cwmadmin.convertPreachIt">'
 					. Text::_('JBS_IBM_CONVERT_PREACH_IT') . '</a>';
 			}
 			else

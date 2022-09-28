@@ -25,7 +25,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CWMMessagetypeModel extends AdminModel
+class CWMMessageTypeModel extends AdminModel
 {
 	/**
 	 * Method to store a record

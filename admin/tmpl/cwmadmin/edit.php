@@ -179,7 +179,7 @@ $this->useCoreUI = true;
 	</div>
 </div>
 
-<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmadministration&layout=edit&id=' . (int) $this->item->id); ?>"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (int) $this->item->id); ?>"
       method="post" name="adminForm" id="item-admin"
       aria-label="<?php echo Text::_('COM_CONTENT_FORM_TITLE_' . ((int) $this->item->id === 0 ? 'NEW' : 'EDIT'), true); ?>"
       class="form-validate">
@@ -210,7 +210,7 @@ $this->useCoreUI = true;
 						   title="<?php echo Text::_('JBS_ADM_ARCHIVE'); ?>" class="btn"> <i
 									class="icon-archive icon-big"></i>
 							<span><br/> <?php echo Text::_('JBS_ADM_ARCHIVE'); ?> </span></a>
-						<a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmadmin&task=cwmadmin.aliasUpdate&' .
+						<a href="<?php echo Route::_('index.php?option=com_proclaim&view=CWMAdmin&task=cwmadmin.aliasUpdate&' .
 							JSession::getFormToken() . '=1') ?>"
 						   title="<?php echo Text::_('JBS_ADM_RESET_ALIAS'); ?>" class="btn"> <i
 									class="icon-big icon-tree-2"></i>

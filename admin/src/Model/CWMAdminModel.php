@@ -45,6 +45,7 @@ use Joomla\Database\ParameterType;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 use JoomlaInstallerScript;
+use JSchemaChangeset;
 
 /**
  * Admin administrator model class
@@ -68,7 +69,7 @@ class CWMAdminModel extends AdminModel
 	 * @var    string
 	 * @since  3.2
 	 */
-	public $typeAlias = 'com_proclaim.admin';
+	public $typeAlias = 'com_proclaim.cwmadmin';
 
 	/**
 	 * The context used for the associations table
@@ -84,7 +85,7 @@ class CWMAdminModel extends AdminModel
 	 * @var string
 	 * @since  4.0.0
 	 */
-	protected $formName = 'cpanel';
+	protected $formName = 'cwmcpanel';
 
 	/**
 	 * @var null
@@ -108,7 +109,7 @@ class CWMAdminModel extends AdminModel
 			return false;
 		}
 
-		return Factory::getUser()->authorise('core.delete');
+		return Factory::getApplication()->getIdentity()->authorise('core.delete');
 	}
 
 	/**
@@ -125,7 +126,7 @@ class CWMAdminModel extends AdminModel
 		// Check against the category.
 		if (!empty($record->catid))
 		{
-			return Factory::getUser()->authorise('core.edit.state');
+			return Factory::getApplication()->getIdentity()->authorise('core.edit.state');
 		}
 
 		// Default to component settings if category not known.
@@ -161,6 +162,24 @@ class CWMAdminModel extends AdminModel
 		return $form;
 	}
 
+
+	/**
+	 * Method to get a table object, load it if necessary.
+	 *
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
+	 *
+	 * @return  Table  A Table object
+	 *
+	 * @since   3.0
+	 * @throws  \Exception
+	 */
+	public function getTable($name = 'CWMAdmin', $prefix = '', $options = array())
+	{
+		return parent::getTable($name, $prefix, $options);
+	}
+
 	/**
 	 * Method to save the form data.
 	 *
@@ -172,29 +191,31 @@ class CWMAdminModel extends AdminModel
 	 */
 	public function save($data)
 	{
-        $params = new Registry;
-        $params->loadArray($data['params']);
-        //load the image, then turn it into an array because Joomla's mediafield attaches metadata to the end. Then grab the URL from the array and save it.
-        $image = HTMLHelper::cleanImageURL($params->get('media_image'));
-        $params->set('media_image', $image->url);
-        $image = HTMLHelper::cleanImageURL($params->get('jwplayer_logo'));
-        $params->set('jwplayer_logo', $image->url);
-        $image = HTMLHelper::cleanImageURL($params->get('jwplayer_image'));
-        $params->set('jwplayer_image', $image->url);
-        $image = HTMLHelper::cleanImageURL($params->get('default_study_image'));
-        $params->set('default_study_image', $image->url);
-        $image = HTMLHelper::cleanImageURL($params->get('default_showHide_image'));
-        $params->set('default_showHide_image', $image->url);
-        $image = HTMLHelper::cleanImageURL($params->get('default_download_image'));
-        $params->set('default_download_image', $image->url);
-        $image = HTMLHelper::cleanImageURL($params->get('default_teacher_image'));
-        $params->set('default_teacher_image', $image->url);
-        $image = HTMLHelper::cleanImageURL($params->get('default_series_image'));
-        $params->set('default_series_image', $image->url);
-        $image = HTMLHelper::cleanImageURL($params->get('default_main_image'));
-        $params->set('default_main_image', $image->url);
+		$params = new Registry;
+		$params->loadArray($data['params']);
 
-        $data['params'] = $params->toArray();
+		// Load the image, then turn it into an array because Joomla's mediafield
+		// attaches metadata to the end. Then grab the URL from the array and save it.
+		$image = HTMLHelper::cleanImageURL($params->get('media_image'));
+		$params->set('media_image', $image->url);
+		$image = HTMLHelper::cleanImageURL($params->get('jwplayer_logo'));
+		$params->set('jwplayer_logo', $image->url);
+		$image = HTMLHelper::cleanImageURL($params->get('jwplayer_image'));
+		$params->set('jwplayer_image', $image->url);
+		$image = HTMLHelper::cleanImageURL($params->get('default_study_image'));
+		$params->set('default_study_image', $image->url);
+		$image = HTMLHelper::cleanImageURL($params->get('default_showHide_image'));
+		$params->set('default_showHide_image', $image->url);
+		$image = HTMLHelper::cleanImageURL($params->get('default_download_image'));
+		$params->set('default_download_image', $image->url);
+		$image = HTMLHelper::cleanImageURL($params->get('default_teacher_image'));
+		$params->set('default_teacher_image', $image->url);
+		$image = HTMLHelper::cleanImageURL($params->get('default_series_image'));
+		$params->set('default_series_image', $image->url);
+		$image = HTMLHelper::cleanImageURL($params->get('default_main_image'));
+		$params->set('default_main_image', $image->url);
+
+		$data['params'] = $params->toArray();
 
 		return parent::save($data);
 	}
@@ -224,7 +245,7 @@ class CWMAdminModel extends AdminModel
 	 */
 	public function getMediaFiles()
 	{
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('*');
 		$query->from('#__bsms_mediafiles');
@@ -284,7 +305,7 @@ class CWMAdminModel extends AdminModel
 	/**
 	 * Gets the ChangeSet object
 	 *
-	 * @return \Joomla\CMS\Schema\ChangeSet JSchema  ChangeSet
+	 * @return \Joomla\CMS\Schema\ChangeSet|boolean JSchema  ChangeSet
 	 *
 	 * @throws \Exception
 	 * @since 7.0
@@ -334,7 +355,7 @@ class CWMAdminModel extends AdminModel
 		}
 
 		// Delete old row
-        $db = Factory::getContainer()->get('DatabaseDriver');
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true)
 			->delete($db->qn('#__schemas'))
 			->where($db->qn('extension_id') . ' = ' . $db->q($extensionresult));
@@ -391,7 +412,7 @@ class CWMAdminModel extends AdminModel
 	 */
 	public function getExtentionId()
 	{
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('extension_id')->from($db->qn('#__extensions'))
 			->where('element = ' . $db->q('com_proclaim'));
@@ -416,7 +437,7 @@ class CWMAdminModel extends AdminModel
 	 */
 	public function getSchemaVersion()
 	{
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		$db              = Factory::getContainer()->get('DatabaseDriver');
 		$query           = $db->getQuery(true);
 		$extensionresult = $this->getExtentionId();
 		$query->select('version_id')->from($db->qn('#__schemas'))
@@ -485,7 +506,7 @@ class CWMAdminModel extends AdminModel
 	 */
 	public function fixUpdateJBSMVersion()
 	{
-        $db = Factory::getContainer()->get('DatabaseDriver');
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('id, version')
 			->from('#__bsms_update')
@@ -575,9 +596,8 @@ class CWMAdminModel extends AdminModel
 	{
 		$table = Table::getInstance('Extension');
 		$table->load($this->getExtentionId());
-		$cache = new Registry($table->manifest_cache);
 
-		return $cache->get('version');
+		return (new Registry($table->manifest_cache))->get('version');
 	}
 
 	/**
@@ -604,7 +624,7 @@ class CWMAdminModel extends AdminModel
 	 */
 	public function getSSorPI()
 	{
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('extension_id, name, element')->from('#__extensions');
 		$db->setQuery($query);

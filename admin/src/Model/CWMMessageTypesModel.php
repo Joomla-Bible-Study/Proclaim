@@ -23,7 +23,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CWMMessagetypesModel extends ListModel
+class CWMMessageTypesModel extends ListModel
 {
 	/**
 	 * Number of Deletions
