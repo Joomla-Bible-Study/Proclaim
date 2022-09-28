@@ -16,6 +16,7 @@ use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Input\Input;
 use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Table\Table;
 
 defined('_JEXEC') or die;
 
@@ -175,5 +176,22 @@ class CWMMessageTypeModel extends AdminModel
 	{
 		parent::cleanCache('com_proclaim');
 		parent::cleanCache('mod_biblestudy');
+	}
+
+	/**
+	 * Method to get a table object, load it if necessary.
+	 *
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
+	 *
+	 * @return  Table  A Table object
+	 *
+	 * @since   3.0
+	 * @throws  \Exception
+	 */
+	public function getTable($name = 'CWMMessageType', $prefix = '', $options = array()): Table
+	{
+		return parent::getTable($name, $prefix, $options);
 	}
 }

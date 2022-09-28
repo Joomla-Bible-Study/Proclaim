@@ -12,6 +12,7 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 
 defined('_JEXEC') or die;
 
@@ -98,7 +99,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
 								?>
 								<div class="button2-left">
 									<div class="blank">
-										<a href="index.php?option=com_contact&task=contact.edit&id=<?php echo (int) $this->form->getValue('contact'); ?>"
+										<a href="<?php echo Route::_('index.php?option=com_contact&task=contact.edit&id=' . (int) $this->form->getValue('contact')); ?>"
 										   target="blank"
 										   class="btn"><?php echo Text::_('JBS_TCH_EDIT_THIS_CONTACT'); ?>
 										</a>

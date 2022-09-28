@@ -15,15 +15,6 @@ use Joomla\CMS\Router\Route;
 
 defined('_JEXEC') or die;
 
-// Load the tooltip behavior.
-HTMLHelper::_('behavior.formvalidator');
-HTMLHelper::_('behavior.keepalive');
-
-// Create shortcut to parameters.
-
-/** @type Joomla\Registry\Registry $params */
-$params = $this->state->get('params');
-$params = $params->toArray();
 $app    = Factory::getApplication();
 $input  = $app->input;
 

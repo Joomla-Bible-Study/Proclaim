@@ -12,7 +12,10 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // No Direct Access
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Object\CMSObject;
+use Joomla\CMS\Table\Table;
 
 defined('_JEXEC') or die;
 
@@ -38,21 +41,15 @@ class CWMPodcastModel extends AdminModel
 	 * @param   array    $data      Data for the form.
 	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
-	 * @return  mixed  A JForm object on success, false on failure
+	 * @return  Form  A JForm object on success, false on failure
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function getForm($data = array(), $loadData = true)
+	public function getForm($data = array(), $loadData = true): Form
 	{
 		// Get the form.
-		$form = $this->loadForm('com_proclaim.podcast', 'podcast', array('control' => 'jform', 'load_data' => $loadData));
-
-		if (empty($form))
-		{
-			return false;
-		}
-
-		return $form;
+		return $this->loadForm('com_proclaim.podcast', 'podcast', array('control' => 'jform', 'load_data' => $loadData));
 	}
 
 	/**
@@ -60,20 +57,21 @@ class CWMPodcastModel extends AdminModel
 	 *
 	 * @param   integer  $pk  The numeric id of the primary key.
 	 *
-	 * @return  boolean  False on failure or error, true otherwise.
+	 * @return  integer  False on failure or error, true otherwise.
 	 *
 	 * @since   11.1
 	 */
-	public function checkout($pk = null)
+	public function checkout($pk = null): ?int
 	{
-		return $pk;
+		return (int) $pk;
 	}
 
 	/**
 	 * Method to get the data that should be injected in the form.
 	 *
-	 * @return  array    The default data is an empty array.
+	 * @return  CMSObject|array   The default data is an empty array.
 	 *
+	 * @throws \Exception
 	 * @since   7.0
 	 */
 	protected function loadFormData()
@@ -89,20 +87,6 @@ class CWMPodcastModel extends AdminModel
 	}
 
 	/**
-	 * Method to get a single record.
-	 *
-	 * @param   integer  $pk  The id of the primary key.
-	 *
-	 * @return    mixed    Object on success, false on failure.
-	 *
-	 * @since    1.6
-	 */
-	public function getItem($pk = null)
-	{
-		return parent::getItem($pk);
-	}
-
-	/**
 	 * Custom clean the cache of com_proclaim and biblestudy modules
 	 *
 	 * @param   string   $group      The cache group
@@ -112,9 +96,26 @@ class CWMPodcastModel extends AdminModel
 	 *
 	 * @since    1.6
 	 */
-	protected function cleanCache($group = null, $client_id = 0)
+	protected function cleanCache($group = null, int $client_id = 0): void
 	{
 		parent::cleanCache('com_proclaim');
 		parent::cleanCache('mod_proclaim');
+	}
+
+	/**
+	 * Method to get a table object, load it if necessary.
+	 *
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
+	 *
+	 * @return  Table  A Table object
+	 *
+	 * @throws  \Exception
+	 * @since   3.0
+	 */
+	public function getTable($name = 'CWMPodcast', $prefix = '', $options = array()): Table
+	{
+		return parent::getTable($name, $prefix, $options);
 	}
 }

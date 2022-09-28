@@ -12,6 +12,7 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 
 defined('_JEXEC') or die;
 
@@ -92,7 +93,7 @@ $wa->useScript('keepalive')
 			<div class="col-lg-5 form-vertical">
 				<h4>
 					<?php
-					if (isset($this->item->id) && isset($this->itemaddon))
+					if (isset($this->item->id, $this->itemaddon))
 					{
 						echo $this->escape($this->item->addon->name);
 					}
@@ -101,7 +102,7 @@ $wa->useScript('keepalive')
 
 				<p>
 					<?php
-					if (isset($this->item->id) && isset($this->itemaddon))
+					if (isset($this->item->id, $this->itemaddon))
 					{
 						echo $this->escape($this->item->addon->description);
 					}
@@ -113,7 +114,7 @@ $wa->useScript('keepalive')
 		<?php if($this->server_form !== "no-data-type"): ?>
 		<?php foreach ($this->server_form->getFieldsets('params') as $fieldsets): ?>
 			<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', strtolower(Text::_($fieldsets->label)), Text::_($fieldsets->label)); ?>
-			<?php foreach ($this->server_form->getFieldset($fieldset->name) as $field): ?>
+			<?php foreach ($this->server_form->getFieldset($fieldsets->name) as $field): ?>
 				<div class="control-group">
 					<div class="control-label">
 						<?php echo $field->label; ?>

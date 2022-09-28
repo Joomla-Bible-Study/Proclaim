@@ -34,12 +34,6 @@ $wa->useScript('keepalive')
 	}
 ');
 
-// Create shortcut to parameters.
-
-/** @type Joomla\Registry\Registry $params */
-$params = $this->state->get('params');
-$params = $params->toArray();
-
 $app   = Factory::getApplication();
 $input = $app->input;
 ?>
@@ -150,7 +144,5 @@ $input = $app->input;
 		<input type="hidden" name="task" value=""/>
 		<input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>"/>
 		<?php echo HTMLHelper::_('form.token'); ?>
-	</div>
-	<!-- End Sidebar -->
 	</div>
 </form>

@@ -36,7 +36,7 @@ class HtmlView extends BaseHtmlView
 	 * @var object
 	 * @since    7.0.0
 	 */
-	protected mixed $form;
+	protected $form;
 
 	/**
 	 * Server form
@@ -89,7 +89,7 @@ class HtmlView extends BaseHtmlView
 	 * @since   11.1
 	 * @see     fetch()
 	 */
-	public function display($tpl = null)
+	public function display($tpl = null): void
 	{
 		$this->form        = $this->get("form");
 		$this->state       = $this->get("State");
@@ -120,6 +120,7 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0.0
 	 */
 	protected function addToolbar()
@@ -172,7 +173,7 @@ class HtmlView extends BaseHtmlView
 	 * @throws \Exception
 	 * @since    7.1.0
 	 */
-	protected function setDocument()
+	protected function setDocument(): void
 	{
 		$isNew    = ($this->item->id < 1);
 		$document = Factory::getApplication()->getDocument();

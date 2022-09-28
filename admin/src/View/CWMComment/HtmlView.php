@@ -74,7 +74,7 @@ class HtmlView extends BaseHtmlView
 	 * @throws \Exception
 	 * @since  9.0.0
 	 */
-	public function display(string $tpl = null)
+	public function display($tpl = null): void
 	{
 		$this->form  = $this->get("Form");
 		$this->item  = $this->get("Item");
@@ -105,7 +105,7 @@ class HtmlView extends BaseHtmlView
 	 * @throws \Exception
 	 * @since  7.0
 	 */
-	protected function addToolbar()
+	protected function addToolbar(): void
 	{
 		Factory::getApplication()->input->set('hidemainmenu', true);
 		$isNew = ($this->item->id == 0);

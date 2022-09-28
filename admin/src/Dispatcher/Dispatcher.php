@@ -37,6 +37,7 @@ class Dispatcher extends ComponentDispatcher
 	protected array $viewMap = [
 		'cwmadmin'         => 'CWMAdmin',
 		'cwmachive'        => 'CWMAchive',
+		'cwmassets'        => 'CWMAssets',
 		'cwmbackup'        => 'CWMBackup',
 		'cwmcomment'       => 'CWMComment',
 		'cwmcomments'      => 'CWMComments',

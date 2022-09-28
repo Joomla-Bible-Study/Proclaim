@@ -205,4 +205,21 @@ class CWMTemplateCodeModel extends AdminModel
 
 		return $data;
 	}
+
+	/**
+	 * Method to get a table object, load it if necessary.
+	 *
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
+	 *
+	 * @return  Table  A Table object
+	 *
+	 * @throws  \Exception
+	 * @since   3.0
+	 */
+	public function getTable($name = 'CWMTemplateCode', $prefix = '', $options = array()): Table
+	{
+		return parent::getTable($name, $prefix, $options);
+	}
 }

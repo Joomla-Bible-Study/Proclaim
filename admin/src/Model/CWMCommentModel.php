@@ -11,6 +11,7 @@
 namespace CWM\Component\Proclaim\Administrator\Model;
 
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Table\CWMCommentTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
@@ -38,7 +39,7 @@ class CWMCommentModel extends AdminModel
 	 * @var      string
 	 * @since    3.2
 	 */
-	public $typeAlias = 'com_proclaim.cwmcomment';
+	public $typeAlias = 'com_proclaim.comment';
 
 	/**
 	 * Overrides the JModelAdmin save routine to save the topics(tags)
@@ -81,6 +82,7 @@ class CWMCommentModel extends AdminModel
 	 *
 	 * @return  mixed  A JForm object on success, false on failure
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function getForm($data = array(), $loadData = true)
@@ -135,6 +137,7 @@ class CWMCommentModel extends AdminModel
 	 *
 	 * @return  mixed  An array of new IDs on success, boolean false on failure.
 	 *
+	 * @throws \Exception
 	 * @since    11.1
 	 */
 	protected function batchCopy($value, $pks, $contexts)
@@ -175,16 +178,14 @@ class CWMCommentModel extends AdminModel
 
 					return false;
 				}
-				else
-				{
-					// Not fatal error
-					$this->setError(Text::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
-					continue;
-				}
+
+				// Not fatal error
+				$this->setError(Text::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
+				continue;
 			}
 
 			// Alter the title & alias
-			$data         = $this->generateNewTitle($categoryId, '', '');
+			$data = $this->generateNewTitle($categoryId, '', '');
 
 			// Reset the ID because we are making a copy
 			$table->id = 0;
@@ -268,6 +269,7 @@ class CWMCommentModel extends AdminModel
 	 *
 	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the component.
 	 *
+	 * @throws \Exception
 	 * @since    1.6
 	 */
 	protected function canEditState($record)
@@ -306,7 +308,7 @@ class CWMCommentModel extends AdminModel
 	 * @throws \Exception
 	 * @since   7.0
 	 */
-	protected function loadFormData()
+	protected function loadFormData(): object
 	{
 		$data = Factory::getApplication()->getUserState('com_proclaim.edit.comment.data', array());
 
@@ -316,5 +318,22 @@ class CWMCommentModel extends AdminModel
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Method to get a table object, load it if necessary.
+	 *
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
+	 *
+	 * @return  Table  A Table object
+	 *
+	 * @throws  \Exception
+	 * @since   3.0
+	 */
+	public function getTable($name = 'CWMComment', $prefix = '', $options = array()): Table
+	{
+		return parent::getTable($name, $prefix, $options);
 	}
 }

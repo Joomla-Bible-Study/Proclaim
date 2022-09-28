@@ -482,4 +482,21 @@ class CWMSerieModel extends AdminModel
 	{
 		return array();
 	}
+
+	/**
+	 * Method to get a table object, load it if necessary.
+	 *
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
+	 *
+	 * @return  Table  A Table object
+	 *
+	 * @since   3.0
+	 * @throws  \Exception
+	 */
+	public function getTable($name = 'CWMSerie', $prefix = '', $options = array()): Table
+	{
+		return parent::getTable($name, $prefix, $options);
+	}
 }

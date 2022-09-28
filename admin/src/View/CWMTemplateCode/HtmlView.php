@@ -103,8 +103,6 @@ class HtmlView extends BaseHtmlView
 
 		if ((int) $item->id === 0)
 		{
-			jimport('joomla.client.helper');
-			jimport('joomla.filesystem.file');
 			ClientHelper::setCredentialsFromRequest('ftp');
 			$ftp               = ClientHelper::getCredentials('ftp');
 			$file              = JPATH_ADMINISTRATOR . '/components/com_proclaim/helpers/defaulttemplatecode.php';
@@ -133,12 +131,13 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0.0
 	 */
 	protected function addToolbar()
 	{
 		Factory::getApplication()->input->set('hidemainmenu', true);
-		$isNew = ($this->item->id == 0);
+		$isNew = ((int) $this->item->id === 0);
 		$title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
 		ToolbarHelper::title(Text::_('JBS_CMN_TEMPLATECODE') . ': <small><small>[' . $title . ']</small></small>', 'file file');
 

@@ -14,6 +14,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Model\CWMTemplateModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
@@ -75,13 +76,6 @@ class CWMTemplateController extends FormController
 			$app->enqueueMessage(Text::_('JBS_CMN_SELECT_ITEM_UNPUBLISH'), 'error');
 		}
 
-		$model = $this->getModel('template');
-
-		if (!$model->makeDefault($cid, 0))
-		{
-			echo "<script> alert('" . $model->getError(true) . "'); window.history.go(-1); </script>\n";
-		}
-
 		$this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates');
 	}
 
@@ -117,5 +111,20 @@ class CWMTemplateController extends FormController
                         `published` = ' . $db->q('1');
 
 		return $templatereturn;
+	}
+	/**
+	 * Proxy for getModel
+	 *
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 *
+	 * @return boolean|\Joomla\CMS\MVC\Model\BaseDatabaseModel
+	 *
+	 * @since 7.0.0
+	 */
+	public function getModel($name = 'CWMTemplate', $prefix = '', $config = array('ignore_request' => true))
+	{
+		return parent::getModel($name, $prefix, $config);
 	}
 }

@@ -109,7 +109,7 @@ class CWMCommentController extends FormController
 	 *
 	 * @since   12.2
 	 */
-	public function getModel($name = 'CWMComment', $prefix = '', $config = array('ignore_request' => true))
+	public function getModel($name = 'CWMComment', $prefix = '', $config = array('ignore_request' => true)): BaseDatabaseModel
 	{
 		return parent::getModel($name, $prefix, array('ignore_request' => true));
 	}

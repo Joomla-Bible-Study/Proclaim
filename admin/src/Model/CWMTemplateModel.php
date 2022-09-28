@@ -48,12 +48,14 @@ class CWMTemplateModel extends AdminModel
 
 			return false;
 		}
-        $image = HTMLHelper::cleanImageURL($data['text']);
-        $data['text'] = $image->url;
-        $image = HTMLHelper::cleanImageURL($data['show_page_image_series']);
-        $data['show_page_image_series'] = $image->url;
-        $image = HTMLHelper::cleanImageURL($data['popupimage']);
-        $data['popupimage'] = $image->url;
+
+		$image                          = HTMLHelper::cleanImageURL($data['text']);
+		$data['text']                   = $image->url;
+		$image                          = HTMLHelper::cleanImageURL($data['show_page_image_series']);
+		$data['show_page_image_series'] = $image->url;
+		$image                          = HTMLHelper::cleanImageURL($data['popupimage']);
+		$data['popupimage']             = $image->url;
+
 		return parent::save($data);
 	}
 
@@ -181,5 +183,22 @@ class CWMTemplateModel extends AdminModel
 	{
 		parent::cleanCache('com_proclaim');
 		parent::cleanCache('mod_proclaim');
+	}
+
+	/**
+	 * Method to get a table object, load it if necessary.
+	 *
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
+	 *
+	 * @return  Table  A Table object
+	 *
+	 * @throws  \Exception
+	 * @since   3.0
+	 */
+	public function getTable($name = 'CWMTemplate', $prefix = '', $options = array()): Table
+	{
+		return parent::getTable($name, $prefix, $options);
 	}
 }

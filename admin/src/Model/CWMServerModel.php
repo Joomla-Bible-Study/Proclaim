@@ -215,7 +215,7 @@ class CWMServerModel extends AdminModel
 			return "no-data-type";
 		}
 
-		$path = Path::clean(JPATH_ADMINISTRATOR . '/components/com_proclaim/src/addons/servers/' . $type);
+		$path = Path::clean(JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/' . ucfirst($type));
 
 		Form::addFormPath($path);
 		Form::addFieldPath($path . '/fields');

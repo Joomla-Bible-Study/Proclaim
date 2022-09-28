@@ -10,6 +10,8 @@
 
 // Protect from unauthorized access
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 
 defined('_JEXEC') or die();
