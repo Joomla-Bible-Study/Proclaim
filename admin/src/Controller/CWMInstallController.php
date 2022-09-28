@@ -18,6 +18,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
 use CWM\Component\Proclaim\Administrator\Model\CWMInstallModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 /**
  * Controller for Admin
@@ -70,6 +71,22 @@ class CWMInstallController extends FormController
 		parent::__construct($config);
 
 		$this->modelName = 'install';
+	}
+
+	/**
+	 * Method to get a model object, loading it if required.
+	 *
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 *
+	 * @return  BaseDatabaseModel  The model.
+	 *
+	 * @since   1.6
+	 */
+	public function getModel($name = 'CWMInstall', $prefix = '', $config = array('ignore_request' => true)): BaseDatabaseModel
+	{
+		return parent::getModel($name, $prefix, $config);
 	}
 
 	/**

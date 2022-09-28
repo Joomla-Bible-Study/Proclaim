@@ -7,6 +7,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
+use Joomla\CMS\Language\Text;
+
 defined('_JEXEC') or die;
 
 $published = $this->state->get('filter.published');
@@ -15,5 +18,5 @@ $published = $this->state->get('filter.published');
 	<?php echo Text::_('JCANCEL'); ?>
 </a>
 <button class="btn btn-success" type="button" onclick="transferFileSize()" data-dismiss="modal">
-	<?php echo JText::_('JBS_MED_CONVERTER'); ?>
+	<?php echo Text::_('JBS_MED_CONVERTER'); ?>
 </button>

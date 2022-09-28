@@ -162,7 +162,6 @@ class CWMAdminModel extends AdminModel
 		return $form;
 	}
 
-
 	/**
 	 * Method to get a table object, load it if necessary.
 	 *

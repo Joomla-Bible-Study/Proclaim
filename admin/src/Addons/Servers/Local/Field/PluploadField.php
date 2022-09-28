@@ -7,7 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-namespace CWM\Component\Proclaim\Administrator\Field;
+namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Local\Field;
 
 // No Direct Access
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;

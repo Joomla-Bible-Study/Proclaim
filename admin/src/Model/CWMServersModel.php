@@ -99,7 +99,7 @@ class CWMServersModel extends ListModel
 		$options = array();
 
 		// Path to endpoints
-		$path = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/servers';
+		$path = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers';
 
 		if (Folder::exists($path))
 		{

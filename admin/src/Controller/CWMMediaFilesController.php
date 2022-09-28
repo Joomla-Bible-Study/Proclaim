@@ -107,7 +107,7 @@ class CWMMediaFilesController extends AdminController
 	 *
 	 * @since 7.0.0
 	 */
-	public function getModel($name = 'CWMMediaFile', $prefix = 'Administrator', $config = array('ignore_request' => true))
+	public function getModel($name = 'CWMMediaFile', $prefix = '', $config = array('ignore_request' => true))
 	{
 		return parent::getModel($name, $prefix, $config);
 	}

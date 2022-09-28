@@ -35,7 +35,7 @@ class CWMCommentsController extends AdminController
 	 *
 	 * @since 7.0.0
 	 */
-	public function getModel($name = 'CWMComment', $prefix = 'Administrator', $config = array('ignore_request' => true))
+	public function getModel($name = 'CWMComments', $prefix = '', $config = array('ignore_request' => true))
 	{
 		return parent::getModel($name, $prefix, $config);
 	}

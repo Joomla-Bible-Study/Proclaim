@@ -17,7 +17,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\Input\Input;
 use SimpleXMLElement;
-use CWM\Component\Proclaim\Administrator\Addons;
+
 defined('_JEXEC') or die;
 
 /**
@@ -170,7 +170,7 @@ abstract class CWMAddon
 		if (!class_exists($addonClass))
 		{
 			jimport('joomla.filesystem.path');
-			$path = Path::find(BIBLESTUDY_PATH_ADMIN . '/src/Addons/Servers/' . $type . '/', 'CWMAddon' . $type . '.php');
+			$path = Path::find(BIBLESTUDY_PATH_ADMIN . '/src/Addons/Servers/' . ucfirst($type) . '/', 'CWMAddon' . $type . '.php');
 
 			// Try and load missing class
 			JLoader::register($addonClass, $path);

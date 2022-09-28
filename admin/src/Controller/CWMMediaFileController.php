@@ -12,16 +12,20 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Model\CWMMediafileModel;
+use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Administrator\Model\CWMMediaFileModel;
 use CWM\Component\Proclaim\Administrator\Table\CWMMediaFileTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\MVC\Model\BaseModel;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
+use Joomla\CMS\Table\Table;
 
 /**
  * Controller For MediaFile
@@ -132,7 +136,7 @@ class CWMMediaFileController extends FormController
 	/**
 	 * Method to run batch operations.
 	 *
-	 * @param   CWMMediafileModel  $model  The model.
+	 * @param   CWMMediaFileModel  $model  The model.
 	 *
 	 * @return  boolean     True if successful, false otherwise and internal error is set.
 	 *
@@ -140,9 +144,6 @@ class CWMMediaFileController extends FormController
 	 */
 	public function batch($model = null)
 	{
-		/** @type CWMMediafileModel $model */
-		$model = $this->getModel('CWMMediafile', '', array());
-
 		// Preset the redirect
 		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmmediafiles' . $this->getRedirectToListAppend(), false));
 
@@ -156,6 +157,7 @@ class CWMMediaFileController extends FormController
 	 *
 	 * @return  boolean  True if access level checks pass, false otherwise.
 	 *
+	 * @throws \Exception
 	 * @since   12.2
 	 */
 	public function cancel($key = null)
@@ -310,5 +312,21 @@ class CWMMediaFileController extends FormController
 		}
 
 		return $append;
+	}
+
+	/**
+	 * Method to get a model object, loading it if required.
+	 *
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 *
+	 * @return  BaseDatabaseModel  The model.
+	 *
+	 * @since   1.6
+	 */
+	public function getModel($name = 'CWMMediaFile', $prefix = '', $config = array('ignore_request' => true)): BaseDatabaseModel
+	{
+		return parent::getModel($name, $prefix, $config);
 	}
 }

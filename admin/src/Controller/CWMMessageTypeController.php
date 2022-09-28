@@ -15,6 +15,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
 
 /**
@@ -40,5 +41,21 @@ class CWMMessageTypeController extends FormController
 		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmmessagetypes' . $this->getRedirectToListAppend(), false));
 
 		return parent::batch($this->getModel('Messagetype', '', array()));
+	}
+
+	/**
+	 * Method to get a model object, loading it if required.
+	 *
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 *
+	 * @return  BaseDatabaseModel  The model.
+	 *
+	 * @since   1.6
+	 */
+	public function getModel($name = 'CWMMessageType', $prefix = '', $config = array('ignore_request' => true)): BaseDatabaseModel
+	{
+		return parent::getModel($name, $prefix, $config);
 	}
 }

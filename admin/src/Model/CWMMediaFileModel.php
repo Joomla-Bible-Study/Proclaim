@@ -22,6 +22,7 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\MVC\Model\BaseModel;
+use Joomla\CMS\Table\Table;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
@@ -36,13 +37,21 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CWMMediafileModel extends AdminModel
+class CWMMediaFileModel extends AdminModel
 {
 	/**
 	 * @var    string  The prefix to use with controller messages.
 	 * @since  1.6
 	 */
 	protected $text_prefix = 'com_proclaim';
+
+	/**
+	 * The type alias for this content type (for example, 'com_content.article').
+	 *
+	 * @var    string
+	 * @since  3.2
+	 */
+	public $typeAlias = 'com_proclaim.mediafile';
 
 	/**
 	 * Data
@@ -60,6 +69,7 @@ class CWMMediafileModel extends AdminModel
 	 * @access    public
 	 * @return    boolean    True on success
 	 *
+	 * @throws \Exception
 	 * @since     1.5
 	 */
 	public function move($direction)
@@ -177,9 +187,6 @@ class CWMMediafileModel extends AdminModel
 	 */
 	public function getMediaForm()
 	{
-		// Needed for site view
-		BaseModel::addIncludePath(BIBLESTUDY_PATH_ADMIN_MODELS);
-
 		// If user hasn't selected a server yet, just return an empty form
 		$server_id = $this->data->server_id;
 
@@ -200,7 +207,6 @@ class CWMMediafileModel extends AdminModel
 		}
 
 		// Reverse lookup server_id to server type
-		/** @type CWMServerModel $model */
 		$model       = new CWMServerModel;
 		$server_type = $model->getType($server_id, true);
 		$s_item      = $model->getItem($server_id);
@@ -214,15 +220,15 @@ class CWMMediafileModel extends AdminModel
 
 		if ($server_type)
 		{
-			$path = Path::clean(JPATH_ADMINISTRATOR . '/components/com_proclaim/src/addons/servers/' . $server_type);
+			$path = Path::clean(JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/' . ucfirst($server_type));
 
 			Form::addFormPath($path);
-			Form::addFieldPath($path . '/fields');
+			Form::addFieldPath($path . '/Field');
 
 			// Add language files
-			$lang = Factory::getLanguage();
+			$lang = Factory::getApplication()->getLanguage();
 
-			if (!$lang->load('jbs_addon_' . $server_type, JPATH_ADMINISTRATOR . '/components/com_proclaim/src/addons/servers/' . $server_type) && !$server_type)
+			if (!$lang->load('jbs_addon_' . $server_type, JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/' . ucfirst($server_type)) && !$server_type)
 			{
 				Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'), 'error');
 			}
@@ -268,7 +274,7 @@ class CWMMediafileModel extends AdminModel
 		// @TODO Rename the form to "media" instead of mediafile
 		$form = $this->loadForm('com_proclaim.mediafile', 'mediafile', array('control' => 'jform', 'load_data' => $loadData));
 
-		if (empty($form))
+		if ($form === null)
 		{
 			return false;
 		}
@@ -316,7 +322,7 @@ class CWMMediafileModel extends AdminModel
 	 * @throws  \Exception
 	 * @since   9.0.0
 	 */
-	public function getItem($pk = null)
+	public function getItem($pk = null): mixed
 	{
 		$jinput = Factory::getApplication()->input;
 
@@ -522,6 +528,23 @@ class CWMMediafileModel extends AdminModel
 	{
 		parent::cleanCache('com_proclaim');
 		parent::cleanCache('mod_biblestudy');
+	}
+
+	/**
+	 * Method to get a table object, load it if necessary.
+	 *
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
+	 *
+	 * @return  Table  A Table object
+	 *
+	 * @since   3.0
+	 * @throws  \Exception
+	 */
+	public function getTable($name = 'CWMMediaFile', $prefix = '', $options = array()): Table
+	{
+		return parent::getTable($name, $prefix, $options);
 	}
 
 	/**

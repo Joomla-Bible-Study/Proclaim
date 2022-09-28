@@ -6,10 +6,12 @@
  * @copyright   Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
-namespace CWM\Component\Proclaim\Administrator\Field;
+namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Local\Field;
 
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\FormField;
+use SimpleXMLElement;
 
 defined('JPATH_PLATFORM') or die;
 
@@ -19,7 +21,7 @@ defined('JPATH_PLATFORM') or die;
  *
  * @since  1.6
  */
-class CWMMediaField extends JFormField
+class CWMMediaField extends FormField
 {
 	/**
 	 * The form field type.
@@ -220,7 +222,7 @@ class CWMMediaField extends JFormField
 	{
 		if (empty($this->layout))
 		{
-			throw new UnexpectedValueException(sprintf('%s has no layout assigned.', $this->name));
+			throw new \UnexpectedValueException(sprintf('%s has no layout assigned.', $this->name));
 		}
 
 		return $this->getRenderer($this->layout)->render($this->getLayoutData());

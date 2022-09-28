@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Model\CWMAssetsModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 
@@ -168,5 +169,21 @@ class CWMAssetsController extends BaseController
 		$app->input->set('view', 'cwmassets');
 
 		$this->display(false);
+	}
+
+	/**
+	 * Method to get a model object, loading it if required.
+	 *
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 *
+	 * @return  BaseDatabaseModel  The model.
+	 *
+	 * @since   1.6
+	 */
+	public function getModel($name = 'CWMAssets', $prefix = '', $config = array('ignore_request' => true))
+	{
+		return parent::getModel($name, $prefix, $config);
 	}
 }

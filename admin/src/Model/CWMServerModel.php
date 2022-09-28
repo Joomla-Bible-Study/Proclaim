@@ -18,6 +18,7 @@ use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Table\Table;
 use Joomla\Registry\Registry;
 
 /**
@@ -42,7 +43,7 @@ class CWMServerModel extends AdminModel
 	 * @var    string
 	 * @since  3.2
 	 */
-	public $typeAlias = 'com_proclaim.cwmserver';
+	public $typeAlias = 'com_proclaim.server';
 
 	/**
 	 * Data
@@ -151,7 +152,7 @@ class CWMServerModel extends AdminModel
 	 */
 	public function getConfig($addon)
 	{
-		$path = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/addons/servers/' . $addon . '/' . $addon . '.xml';
+		$path = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/' . ucfirst($addon) . '/' . $addon . '.xml';
 
 		return simplexml_load_string(file_get_contents($path));
 	}
@@ -227,7 +228,7 @@ class CWMServerModel extends AdminModel
 			throw new \Exception(Text::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'));
 		}
 
-		$form = $this->loadForm('com_proclaim.cwmserver.' . $type, $type, array('control' => 'jform', 'load_data' => true), true, "/server");
+		$form = $this->loadForm('com_proclaim.server.' . $type, $type, array('control' => 'jform', 'load_data' => true), true, "/server");
 
 		return $form ?? false;
 	}
@@ -354,5 +355,22 @@ class CWMServerModel extends AdminModel
 
 		$type = $app->getUserState('com_proclaim.edit.cwmserver.type');
 		$this->setState('cwmserver.type', $type);
+	}
+
+	/**
+	 * Method to get a table object, load it if necessary.
+	 *
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
+	 *
+	 * @return  Table  A Table object
+	 *
+	 * @since   3.0
+	 * @throws  \Exception
+	 */
+	public function getTable($name = 'CWMServer', $prefix = '', $options = array()): Table
+	{
+		return parent::getTable($name, $prefix, $options);
 	}
 }

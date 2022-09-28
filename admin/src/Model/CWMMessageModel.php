@@ -23,7 +23,9 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Table\Table;
 use Joomla\CMS\Workflow\Workflow;
+use Joomla\Database\DatabaseDriver;
 use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
@@ -62,7 +64,7 @@ class CWMMessageModel extends AdminModel
 	 */
 	public function isDuplicate($study_id, $topic_id)
 	{
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('*')
 			->from('#__bsms_studytopics')
@@ -211,12 +213,12 @@ class CWMMessageModel extends AdminModel
 	public function save($data)
 	{
 		/** @var Registry $params */
-		$app    = Factory::getApplication();
-		$params = CWMParams::getAdmin()->params;
-		$input  = $app->input;
-		$path   =  'images/biblestudy/studies/'.$data['id'];
-        $image = HTMLHelper::cleanImageURL($data['image']);
-        $data['image'] = $image->url;
+		$app           = Factory::getApplication();
+		$params        = CWMParams::getAdmin()->params;
+		$input         = $app->input;
+		$path          = 'images/biblestudy/studies/' . $data['id'];
+		$image         = HTMLHelper::cleanImageURL($data['image']);
+		$data['image'] = $image->url;
 		$this->cleanCache();
 
 		if ($input->get('a_id'))
@@ -374,8 +376,8 @@ class CWMMessageModel extends AdminModel
 	 */
 	public function saveorder($pks = null, $order = null)
 	{
-		/** @var CWMMessageTable $row */
-		$row        = $this->getTable();
+		$db         = Factory::getContainer()->get('DatabaseDriver');
+		$row        = new CWMMessageTable($db);
 		$conditions = array();
 
 		// Update ordering values
@@ -711,7 +713,7 @@ class CWMMessageModel extends AdminModel
 			// Set ordering to the last item if not set
 			if (empty($table->ordering))
 			{
-				$db = Factory::getContainer()->get('DatabaseDriver');
+				$db    = Factory::getContainer()->get('DatabaseDriver');
 				$query = $db->getQuery(true)
 					->select('MAX(ordering)')
 					->from($db->quoteName('#__bsms_studies'));
@@ -727,5 +729,22 @@ class CWMMessageModel extends AdminModel
 			$table->modified    = $date->toSql();
 			$table->modified_by = $user->get('id');
 		}
+	}
+
+	/**
+	 * Method to get a table object, load it if necessary.
+	 *
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
+	 *
+	 * @return  Table  A Table object
+	 *
+	 * @since   3.0
+	 * @throws  \Exception
+	 */
+	public function getTable($name = 'CWMMessage', $prefix = '', $options = array()): Table
+	{
+		return parent::getTable($name, $prefix, $options);
 	}
 }

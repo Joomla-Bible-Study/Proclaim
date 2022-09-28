@@ -24,7 +24,7 @@ use Joomla\Registry\Registry;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CWMMediafilesModel extends ListModel
+class CWMMediaFilesModel extends ListModel
 {
 	/**
 	 * @var    string  The prefix to use with controller messages.
@@ -39,7 +39,7 @@ class CWMMediafilesModel extends ListModel
 	 *
 	 * @since 7.0
 	 */
-	public $context = 'com_proclaim.mediafiles';
+	public $context = 'com_proclaim.cwmmediafiles';
 
 	/**
 	 * The type alias for this content type (for example, 'com_content.article').

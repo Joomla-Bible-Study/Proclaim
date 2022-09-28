@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
 
 /**
@@ -100,11 +101,11 @@ class CWMSerieController extends FormController
 	 * @param   string  $prefix  The class prefix. Optional.
 	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return \Joomla\CMS\MVC\Model\BaseDatabaseModel
+	 * @return BaseDatabaseModel|null
 	 *
 	 * @since 7.0
 	 */
-	public function getModel($name = 'CWMSerie', $prefix = '', $config = array('ignore_request' => true))
+	public function getModel($name = 'CWMSerie', $prefix = '', $config = array('ignore_request' => true)): ?BaseDatabaseModel
 	{
 		return parent::getModel($name, $prefix, $config);
 	}

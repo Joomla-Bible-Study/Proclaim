@@ -144,7 +144,7 @@ class CWMMessageController extends FormController
 		// Preset the redirect
 		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmmessages' . $this->getRedirectToListAppend(), false));
 
-		return parent::batch($this->getModel('Message', '', array()));
+		return parent::batch($this->getModel());
 	}
 
 	/**
@@ -225,5 +225,21 @@ class CWMMessageController extends FormController
 		}
 
 		return parent::save($key, $urlVar);
+	}
+
+	/**
+	 * Proxy for getModel
+	 *
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 *
+	 * @return boolean|BaseDatabaseModel
+	 *
+	 * @since 7.0.0
+	 */
+	public function getModel($name = 'CWMMessage', $prefix = '', $config = array('ignore_request' => true)): BaseDatabaseModel|bool
+	{
+		return parent::getModel($name, $prefix, $config);
 	}
 }
