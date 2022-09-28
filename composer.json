@@ -16,7 +16,7 @@
   "config": {
 	"optimize-autoloader": true,
 	"platform": {
-	  "php": "8.0.0"
+	  "php": "7.4.30"
 	},
 	"vendor-dir": "libraries/vendor",
 	"github-protocols": ["https"]
@@ -27,7 +27,7 @@
 	"docs": "https://www.christianwebministries.org/docs"
   },
   "require": {
-	"php": ">=8.0.0",
+	"php": ">=7.4.30",
 	"ircmaxell/password-compat": "1.*",
 	"leafo/lessphp": "dev-master",
 	"phpmailer/phpmailer": "6.*",

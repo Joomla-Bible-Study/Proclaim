@@ -13,11 +13,10 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Local\Field;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Uri\Uri;
 
 defined('JPATH_PLATFORM') or die;
-
-jimport('joomla.html.html');
-jimport('joomla.form.formfield');
 
 /**
  * Class JFormFieldPlupload
@@ -42,8 +41,8 @@ class PluploadField extends FormField
 		// Include Plupload libraries
 		$document = Factory::getApplication()->getDocument();
 		$app = Factory::getApplication();
-		$document->addScript(JUri::root() . 'administrator/components/com_proclaim/src/Addons/Servers/Legacy/includes/js/plupload.full.min.js');
-		$document->addScript(JUri::root() . 'administrator/components/com_proclaim/src/Addons/Servers/Legacy/includes/js/legacy.js');
+		$document->addScript(Uri::root() . 'administrator/components/com_proclaim/src/Addons/Servers/Legacy/includes/js/plupload.full.min.js');
+		$document->addScript(Uri::root() . 'administrator/components/com_proclaim/src/Addons/Servers/Legacy/includes/js/legacy.js');
 		$view = $app->input->get('view');
 		$admin = CWMParams::getAdmin();
 
@@ -58,7 +57,7 @@ class PluploadField extends FormField
 
 		$document->addScriptDeclaration('
 			jQuery(document).ready(function() {
-				uploader.setOption("url", "index.php?option=com_proclaim&task=' . $view . '.xhr&' . JSession::getFormToken() . '=1");
+				uploader.setOption("url", "index.php?option=com_proclaim&task=' . $view . '.xhr&' . Session::getFormToken() . '=1");
 				uploader.bind("BeforeUpload", function() {
 					uploader.setOption("multipart_params", {
 						handler: "' . $this->element["handler"] . '",

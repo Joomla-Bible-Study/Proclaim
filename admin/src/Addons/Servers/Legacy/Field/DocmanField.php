@@ -45,9 +45,6 @@ class DocmanField extends ListField
 	 */
 	protected function getOptions()
 	{
-		// Check to see if Docman is installed
-		jimport('joomla.filesystem.folder');
-
 		if (!Folder::exists(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_docman'))
 		{
 			// @Todo Need to find different solutions.
@@ -73,8 +70,6 @@ class DocmanField extends ListField
 			}
 		}
 
-		$options = array_merge(parent::getOptions(), $options);
-
-		return $options;
+		return array_merge(parent::getOptions(), $options);
 	}
 }
