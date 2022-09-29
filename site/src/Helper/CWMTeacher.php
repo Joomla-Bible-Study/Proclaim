@@ -327,7 +327,7 @@ class CWMTeacher extends CWMListing
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 
-		$user   = $user = Factory::getApplication()->getSession()->get('user');
+		$user     = Factory::getApplication()->getIdentity();
 		$groups = $user->getAuthorisedViewLevels();
 
 		foreach ($items as $i => $iValue)

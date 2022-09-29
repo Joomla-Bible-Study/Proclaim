@@ -236,7 +236,7 @@ class CWMSermonModel extends FormModel
 				else
 				{
 					// If no access filter is set, the layout takes some responsibility for display of limited information.
-					$user   = $user = Factory::getApplication()->getSession()->get('user');
+					$user     = Factory::getApplication()->getIdentity();
 					$groups = $user->getAuthorisedViewLevels();
 
 					$data->params->set('access-view', in_array($data->access, $groups));

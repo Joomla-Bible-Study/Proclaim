@@ -138,7 +138,7 @@ class CWMTeachersModel extends ListModel
 
 		if (Factory::getApplication()->isClient('site'))
 		{
-			$user   = $user = Factory::getApplication()->getSession()->get('user');
+			$user     = Factory::getApplication()->getIdentity();
 			$groups = $user->getAuthorisedViewLevels();
 
 			for ($x = 0, $count = count($items); $x < $count; $x++)

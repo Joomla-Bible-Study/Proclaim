@@ -71,7 +71,7 @@ class CWMSeriesModel extends ListModel
 		$items = parent::getItems();
 		$app   = Factory::getApplication();
 
-		$user   = $user = Factory::getApplication()->getSession()->get('user');
+		$user     = Factory::getApplication()->getIdentity();
 		$groups = $user->getAuthorisedViewLevels();
 
 		foreach ($items as $x => $xValue)
