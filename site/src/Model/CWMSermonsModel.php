@@ -379,7 +379,7 @@ class CWMSermonsModel extends ListModel
 	 */
 	protected function getListQuery()
 	{
-		$user   = $user = Factory::getApplication()->getSession()->get('user');
+		$user     = Factory::getApplication()->getIdentity();
 		$groups = implode(',', $user->getAuthorisedViewLevels());
 		$db     = Factory::getContainer()->get('DatabaseDriver');
 		$query  = parent::getListQuery();
