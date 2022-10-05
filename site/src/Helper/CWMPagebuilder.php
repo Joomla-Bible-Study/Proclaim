@@ -143,7 +143,7 @@ class CWMPagebuilder
 			$page->series_thumnail = '';
 		}
 
-		$page->detailslink = Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . $item->slug . '&t=' . $params->get('detailstemplateid'));
+		$page->detailslink = Route::_('index.php?option=com_proclaim&view=CWMSermon&id=' . $item->slug . '&t=' . $params->get('detailstemplateid'));
 
 		if (!isset($item->image))
 		{

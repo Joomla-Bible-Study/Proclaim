@@ -2477,7 +2477,6 @@ $thadd = '';
 		switch ($islink)
 		{
 			case 1 :
-
 					$link = Route::_('index.php?option=com_proclaim&view=CWMSermon&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
 
 					if ($view === 'seriesdisplays')
