@@ -2313,7 +2313,7 @@ $thadd = '';
 	{
 		$med = new CWMMedia;
 
-		$mediarow = '<div class="bsms_media_container row "  >';
+		$mediarow = '<div class="bsms_media_container row" style="float:left;"  >';
 
 		foreach ($item->mediafiles as $media)
 		{
@@ -2322,7 +2322,7 @@ $thadd = '';
 		}
 
 		$mediarow .= '</div>';
-
+		$mediarow .= '<div style="clear:both;"></div>';
 		return $mediarow;
 	}
 
