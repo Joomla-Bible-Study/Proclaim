@@ -28,31 +28,21 @@ $trashed   = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder == 'study.ordering';
 $columns   = 12;
 
-
-
 ?>
 <style>img{border-radius:4px;}</style>
-
-
   <div class="row-fluid span12">
-    <h2>
+    <h3>
       <?php echo Text::_('JBS_CMN_TEACHINGS'); ?>
-    </h2>
+    </h3>
   </div>
-
-
-
   <div class="row-fluid span12 dropdowns" style="background-color:#A9A9A9; margin:0 -5px; padding:8px 8px; border:1px solid #C5C1BE; position:relative; -webkit-border-radius:10px;">
-
-
 </div>
 <?php foreach ($this->items as $this->item)
 {
-
 	?>
     <div class="page-header">
-        <h3 itemprop="headline">
-            <?php echo $this->item->studytitle; ?>		</h3>
+        <h4 itemprop="headline">
+            <?php echo $this->item->studytitle; ?>		</h4>
     </div>
     <dl class="article-info text-muted">
 

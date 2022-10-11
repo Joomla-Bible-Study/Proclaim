@@ -334,6 +334,7 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a href=
 	 */
 	public function mediaButton($imageparams, $params, $media)
 	{
+
 		$mediaimage = null;
 		$button     = $imageparams->get('media_button_type', 'btn-link');
 		$buttontext = $imageparams->get('media_button_text', 'Audio');
@@ -352,7 +353,7 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a href=
 		{
 			case 1:
 				// Button only
-				$mediaimage = '<div  type="button" class="btn ' . $button . ' title="' . $buttontext . '" ' . $color . '>' . $buttontext . '</div>';
+				$mediaimage = '<div  class="btn ' . $button . ' title="' . $buttontext . '" ' . $color . '>' . $buttontext . '</div>';
 				break;
 			case 2:
 				// Button and icon

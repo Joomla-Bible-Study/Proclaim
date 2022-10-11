@@ -62,6 +62,7 @@ class CWMPagebuilder
 		if ($mids)
 		{
 			$page->media = $this->mediaBuilder($mids, $params, $template, $item);
+
 		}
 		else
 		{
@@ -252,7 +253,7 @@ class CWMPagebuilder
 		$mediaIDs         = $listing->getFluidMediaids($item);
 		$media            = $listing->getMediaFiles($mediaIDs);
 		$item->mediafiles = $media;
-
+//var_dump($media); die;
 		return $listing->getFluidMediaFiles($item, $params, $template);
 	}
 

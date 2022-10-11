@@ -307,7 +307,9 @@ class HtmlView extends BaseHtmlView
 		$wa->useStyle('com_proclaim.general');
 
 		// Only load page builder if the default template is NOT being used
-		if ($this->item->params->get('useexpert_details', '0') !== '0' || $this->params->get('sermontemplate', '0') !== '0')
+		if ($item->params->get('useexpert_list') > 0
+			|| ($item->params->get('simple_mode') === '1')
+			|| (is_string($item->params->get('sermontemplate')) === true && $item->params->get('sermontemplate') !== '0'))
 		{
 			$pagebuilder            = new CWMPageBuilder;
 			$pelements              = $pagebuilder->buildPage($this->item, $this->item->params, $template);
@@ -315,7 +317,6 @@ class HtmlView extends BaseHtmlView
 			$this->item->scripture2 = $pelements->scripture2;
 			$this->item->media      = $pelements->media;
 			$this->item->studydate  = $pelements->studydate;
-
 			if (isset($pelements->secondary_reference))
 			{
 				$this->item->secondary_reference = $pelements->secondary_reference;
