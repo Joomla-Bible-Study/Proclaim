@@ -31,33 +31,33 @@ $columns   = 12;
 ?>
 <style>img{border-radius:4px;}</style>
   <div class="row-fluid span12">
-    <h3>
+    <h4>
       <?php echo Text::_('JBS_CMN_TEACHINGS'); ?>
-    </h3>
+    </h4>
   </div>
-  <div class="row-fluid span12 dropdowns" style="background-color:#A9A9A9; margin:0 -5px; padding:8px 8px; border:1px solid #C5C1BE; position:relative; -webkit-border-radius:10px;">
+  <div class="row-fluid span12 dropdowns" style="background-color:#A9A9A9; margin:0 -5px; padding:4px 4px; border:1px solid #C5C1BE; position:relative; -webkit-border-radius:10px;">
 </div>
 <?php foreach ($this->items as $this->item)
 {
 	?>
     <div class="page-header">
-        <h4 itemprop="headline">
-            <?php echo $this->item->studytitle; ?>		</h4>
+        <h5 itemprop="headline">
+            <?php echo $this->item->studytitle; ?>		</h5>
     </div>
     <dl class="article-info text-muted" style="display: grid;">
 
         <dd class="createdby" itemprop="author" itemscope="" itemtype="https://schema.org/Person">
             <i class="icon-user icon-fw" aria-hidden="true"></i>
-            <?php echo Text::_('JBS_CMN_TEACHER'); ?> <span itemprop="name"><?php echo $this->item->teachername;?></span>	</dd>
+            <span itemprop="name"><?php echo $this->item->teachername;?></span>	</dd>
 
         <dd class="category-name">
             <i class="fas fa-bible" aria-hidden="true"></i>
-            <?php echo Text::_('JBS_CMN_SCRIPTURE'); ?>: <?php echo $this->item->scripture1;?>	</dd>
+             <?php echo $this->item->scripture1;?>	</dd>
 
         <dd class="published">
             <i class="icon-calendar icon-fw" aria-hidden="true"></i>
             <time datetime="2022-07-14T12:19:37-07:00" itemprop="datePublished">
-                <?php echo Text::_('JBS_CMN_ITEM_PUBLISHED'); ?>: <?php echo $this->item->studydate;?>	</time>
+                 <?php echo $this->item->studydate;?>	</time>
         </dd>
     </dl>
     <div itemprop="articleBody" class="com-content-article__body">

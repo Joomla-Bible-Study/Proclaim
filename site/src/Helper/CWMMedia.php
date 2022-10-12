@@ -673,12 +673,17 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a href=
 
 				switch ($player->type)
 				{
-					case 2: // New window
-						$return     = base64_encode($path);
+					case 2: // New window - popup code added here because new window code does not work (Tom 10-12-2022)
+						/*$return     = base64_encode($path);
 						$playercode = '<a href="javascript:;" onclick="window.open(\'index.php?option=com_proclaim&amp;task=playHit&amp;return=' .
 							$return . '&amp;' . Session::getFormToken() . '=1\')" title="' .
 							$media->params->get("media_button_text") . ' - ' . $media->comment . ' '
-							. $filesize . '">' . $image . '</a>';
+							. $filesize . '">' . $image . '</a>'; */
+						$playercode = "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim&amp;player="
+							. $params->toObject()->player .
+							"&amp;view=CWMPopUp&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" .
+							$player->playerwidth . ",height=" . $player->playerheight . "'); return false\"  class=\"jbsmplayerlink\">"
+							. $image . "</a>";
 						break;
 
 					case 3: // Squeezebox view

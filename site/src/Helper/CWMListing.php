@@ -457,7 +457,6 @@ class CWMListing
 				$list .= '</thead>';
 
 			}
-            //$list .= "<hr/>";
 			$list .= $this->getFluidRow($listrows, $listsorts, $items, $params, $template, $oddeven, $header = 0, $type);
 
 		}
@@ -877,13 +876,6 @@ class CWMListing
 		$row5count2 = 0;
 		$row6count2 = 0;
 
-	/*	if ($span)
-		{
-			$frow .= '<div class="row" about="' . $type . '">';
-			$frow .= '<div class="span' . $rowspanitemspan . ' ' . $pull . '" id="jbsmspan-image"><div ' . $headerstyle . '>' . $span . '</div></div>';
-			$frow .= '<div class="span' . $rowspanbalance . '" about="' . $type . '">';
-		}
-*/
 		foreach ($listsorts as $sort)
 		{
 			if (count($sort))
@@ -1821,7 +1813,6 @@ $thadd = '';
 			}
 		}
 
-		//$frow = '<div class="col-' . $row->colspan;
 		$tdadd = '';
 		if ($row->colspan > 0){$tdadd = 'colspan="'.$row->colspan.'"';}
 		if ($header === 0) {$frow = '<td scope="col"'.$tdadd.'>';}
