@@ -200,7 +200,7 @@ class CWMMedia
 				break;
 
 			case 3:
-				$mediafile = $playercode . $downloadlink;
+				$mediafile = $playercode;// . $downloadlink;
 				break;
 		}
 
@@ -253,8 +253,9 @@ class CWMMedia
 
 		if (($params->get('download_show')
 				&& (!$media->params->get('link_type')))
-			|| $params->get('simple_mode') === '1'
-			|| $params->get('sermonstemplate') === 'easy')
+			//|| $params->get('simple_mode') === '1'
+			//|| $params->get('sermonstemplate') === 'easy'
+		)
 		{
 			$link_type = 2;
 		}
@@ -394,17 +395,30 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a href=
 		{
 			$filename = $media->get('filename');
 
-			if ((preg_match('(youtube.com|youtu.be)', $filename) === 1))
-			{
-				$mediaimage = '<span class="fab fa-youtube" title="play" style="font-size:24px;"></span>';
-			}
-			elseif ((preg_match('(pdf|PDF)', $filename) === 1))
-			{
-				$mediaimage = '<span class="fas fa-file-pdf" title="play" style="font-size:24px;"></span>';
-			}
-			else
-			{
-				$mediaimage = '<span class="fas fa-play-circle" title="play" style="font-size:24px;"></span>';
+			switch ($filename){
+				case preg_match('(youtube.com|youtu.be)', $filename) === 1:
+					$mediaimage = '<span class="fab fa-youtube" title="YouTube" style="font-size:24px;"></span>';
+					break;
+
+				case preg_match('(pdf|PDF)', $filename) === 1:
+					$mediaimage = '<span class="fas fa-file-pdf" title="PDF" style="font-size:24px;"></span>';
+					break;
+
+				case preg_match('(mp3|MP3)', $filename) === 1:
+					$mediaimage = '<span class="fas fa-play" title="Audio" style="font-size:24px;"></span>';
+					break;
+
+				case preg_match('(m4v|M4V)', $filename) === 1:
+					$mediaimage = '<span class="fas fa-television" title="Video" style="font-size:24px;"></span>';
+					break;
+
+				case preg_match('(mp4|MP4)', $filename) === 1:
+					$mediaimage = '<span class="fas fa-television" title="Video" style="font-size:24px;"></span>';
+					break;
+
+				default:
+					$mediaimage = '<span class="fas fa-play" title="Play" style="font-size:24px;"></span>';
+					break;
 			}
 		}
 
