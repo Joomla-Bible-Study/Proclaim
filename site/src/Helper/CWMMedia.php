@@ -415,9 +415,14 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a href=
 				case preg_match('(mp4|MP4)', $filename) === 1:
 					$mediaimage = '<span class="fas fa-television" title="Video" style="font-size:24px;"></span>';
 					break;
-
+				case preg_match('(pptx|ppt|PPTX|PPT)', $filename) === 1:
+					$mediaimage = '<span class="fas fa-file-powerpoint" title="Powerpoint" style="font-size:24px;"></span>';
+					break;
+				case preg_match('(docx|DOCX)', $filename) === 1:
+					$mediaimage = '<span class="fas fa-word" title="Word" style="font-size:24px;"></span>';
+					break;
 				default:
-					$mediaimage = '<span class="fas fa-play" title="Play" style="font-size:24px;"></span>';
+					$mediaimage = '<span class="fas fa-file" title="'.$filename.'" style="font-size:24px;"></span>';
 					break;
 			}
 		}
