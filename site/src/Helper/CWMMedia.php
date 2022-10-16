@@ -200,7 +200,7 @@ class CWMMedia
 				break;
 
 			case 3:
-				$mediafile = $playercode;// . $downloadlink;
+				$mediafile = $playercode . $downloadlink;
 				break;
 		}
 
@@ -231,7 +231,11 @@ class CWMMedia
 
 		$downloadlink = '';
 
-		if ($params->get('download_use_button_icon') >= 2 || $params->get('simple_mode') === '1' || $params->get('sermonstemplate') === 'easy')
+		if ($params->get('download_use_button_icon') >= 2 && $params->get('simple_mode') === '0' && $params->get('sermonstemplate') != 'easy')
+		{
+			$download_image = $this->downloadButton($params);
+		}
+		if ($params->get('download_use_button_icon') >= 2 && ($params->get('simple_mode') === '1' || $params->get('sermonstemplate') === 'easy'))
 		{
 			$download_image = $this->downloadButton($params);
 		}
@@ -267,7 +271,7 @@ class CWMMedia
 			if ($compat_mode === 0)
 			{
 				$downloadlink = '<a href="index.php?option=com_proclaim&amp;view=CWMSermon&amp;id='.$media->study_id.'&amp;mid=' .
-					$media->id . '&amp;task=CWMSermon.download">';
+					$media->id . '&amp;task=CWMSermon.download"></a>';
 			}
 			else
 			{
