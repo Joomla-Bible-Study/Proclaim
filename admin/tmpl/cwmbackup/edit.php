@@ -33,7 +33,7 @@ defined('_JEXEC') or die;
                          alt="Export" height="48" width="48"/></div>
                 <div class="controls">
                     <!--suppress HtmlUnknownTarget -->
-                    <a href="<?php echo Route::_("index.php?option=com_proclaim&task=administration.export&run=1&" .
+                    <a href="<?php echo Route::_("index.php?option=com_proclaim&task=cwmadmin.export&run=1&" .
 						JSession::getFormToken() . "=1"); ?>" class="btn btn-primary">
 						<?php echo Text::_('JBS_CMN_EXPORT'); ?>
                     </a>

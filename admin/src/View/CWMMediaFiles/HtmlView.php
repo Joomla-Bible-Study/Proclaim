@@ -108,6 +108,7 @@ class HtmlView extends BaseHtmlView
 		$this->state      = $this->get('State');
 		$this->mediatypes = $this->get('Mediatypes');
 
+
 		$this->filterForm    = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');
 

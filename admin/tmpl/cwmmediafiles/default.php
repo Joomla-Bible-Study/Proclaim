@@ -41,7 +41,7 @@ if ($saveOrder)
 }
 $sortFields = $this->getSortFields();
 ?>
-<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmmediafiles'); ?>" method="post"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=CWMMediaFiles'); ?>" method="post"
       name="adminForm" id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
@@ -80,13 +80,13 @@ $sortFields = $this->getSortFields();
 							<?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'cwmmediafile.published', $listDirn, $listOrder); ?>
 						</th>
 						<th scope="col" class="w-1 text-center">
-							<?php echo JText::_('JBS_MED_RESOURCE_NAME'); ?>
+							<?php echo Text::_('JBS_MED_RESOURCE_NAME'); ?>
 						</th>
 						<th scope="col" style="min-width:100px">
 							<?php echo HTMLHelper::_('searchtools.sort', 'JBS_CMN_STUDY_TITLE', 'study.studytitle', $listDirn, $listOrder); ?>
 						</th>
 						<th scope="col" class="w-1 text-center">
-							<?php echo JText::_('JBS_MED_MEDIA_TYPE'); ?>
+							<?php echo Text::_('JBS_MED_MEDIA_TYPE'); ?>
 						</th>
 						<th scope="col" class="w-10 d-none d-md-table-cell text-center">
 							<?php echo HTMLHelper::_('searchtools.sort', 'JBS_MED_CREATE_DATE', 'cwmmediafile.createdate', $listDirn, $listOrder); ?>
@@ -158,7 +158,7 @@ $sortFields = $this->getSortFields();
 									<?php if ($item->language == '*'): ?>
 										<?php $language = Text::alt('JALL', 'language'); ?>
 									<?php else: ?>
-										<?php $language = $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
+										<?php $language = $item->language_title ? $this->escape($item->language_title) : Text::_('JUNDEFINED'); ?>
 									<?php endif; ?>
 									<?php if ($canEdit || $canEditOwn) : ?>
 										<a href="<?php echo Route::_('index.php?option=com_proclaim&task=cwmmediafile.edit&id=' . (int) $item->id); ?>">
@@ -185,7 +185,7 @@ $sortFields = $this->getSortFields();
 								<?php echo $this->escape($item->serverConfig->name->__toString()); ?>
 							</td>
 							<td class="small d-none d-md-table-cell">
-								<?php echo HTMLHelper::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
+								<?php echo HTMLHelper::_('date', $item->createdate, Text::_('DATE_FORMAT_LC4')); ?>
 							</td>
 							<td class="small d-none d-md-table-cell">
 								<?php echo $this->escape($item->access_level); ?>
@@ -209,7 +209,7 @@ $sortFields = $this->getSortFields();
 						'bootstrap.renderModal',
 						'collapseModal',
 						array(
-							'title'  => JText::_('JBS_CMN_BATCH_OPTIONS'),
+							'title'  => Text::_('JBS_CMN_BATCH_OPTIONS'),
 							'footer' => $this->loadTemplate('batch_footer')
 						),
 					//$this->loadTemplate('batch_body')
@@ -218,6 +218,8 @@ $sortFields = $this->getSortFields();
 			<?php endif; ?>
 			<input type="hidden" name="task" value=""/>
 			<input type="hidden" name="boxchecked" value="0"/>
+            <input type="hidden" name="view" value="CWMMediaFiles" />
+            <input type="hidden" name="limitstart" value="">
 			<?php echo HTMLHelper::_('form.token'); ?>
 		</div>
 </form>

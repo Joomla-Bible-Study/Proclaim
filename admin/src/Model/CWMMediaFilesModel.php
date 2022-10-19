@@ -66,6 +66,17 @@ class CWMMediaFilesModel extends ListModel
 	 * @throws \Exception
 	 * @since 7.0
 	 */
+	/**
+	 * Items total
+	 * @var integer
+	 */
+	var $_total = null;
+
+	/**
+	 * Pagination object
+	 * @var object
+	 */
+	var $_pagination = null;
 	public function __construct($config = array())
 	{
 		if (empty($config['filter_fields']))
@@ -79,7 +90,17 @@ class CWMMediaFilesModel extends ListModel
 				'language', 'mediafile.language'
 			);
 		}
+		/*$mainframe = Factory::getApplication();
+		$input  = new Input;
+		// Get pagination request variables
+		$limit = $mainframe->getUserStateFromRequest('global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int');
+		$limitstart = $input->get('limitstart', 0, '', 'int');
 
+		// In case limit has been changed, adjust it
+		$limitstart = ($limit != 0 ? (floor($limitstart / $limit) * $limit) : 0);
+
+		$this->setState('limit', $limit);
+		$this->setState('limitstart', $limitstart); */
 		parent::__construct($config);
 	}
 
@@ -197,7 +218,20 @@ class CWMMediaFilesModel extends ListModel
 	protected function populateState($ordering = null, $direction = null)
 	{
 		$app = Factory::getApplication();
+		$input  = new Input;
+		// List state information
+		$limit = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));
+		$this->setState('list.limit', $limit);
 
+		$limitstart = $input->get('limitstart', 0, '', 'int');
+		$this->setState('list.start', $limitstart);
+		// List state information
+		//$value = $app->input->get('limit', $app->get('list_limit', 0), 'uint');
+		//$this->setState('list.limit', $value);
+
+		//$value = $app->input->get('limitstart', 0, 'uint');
+		//$this->setState('list.start', $value);
+//var_dump($value);
 		// Adjust the context to support modal layouts.
 		$input  = new Input;
 		$layout = $input->get('layout');
@@ -232,6 +266,9 @@ class CWMMediaFilesModel extends ListModel
 			$this->setState('filter.language', $forcedLanguage);
 			$this->setState('filter.forcedLanguage', $forcedLanguage);
 		}
+		$this->setState('limitstart');
+		$this->setState('limit');
+		//var_dump($this->state);
 	}
 
 	/**
@@ -253,7 +290,17 @@ class CWMMediaFilesModel extends ListModel
 
 		return parent::getStoreId($id);
 	}
-
+/**
+* Method to get the starting number of items for the data set.
+*
+* @return  integer  The starting number of items available in the data set.
+*
+* @since   3.0.1
+*/
+	public function getStart()
+	{
+		return $this->getState('list.start');
+	}
 	/**
 	 * Build an SQL query to load the list data
 	 *
@@ -265,7 +312,7 @@ class CWMMediaFilesModel extends ListModel
 	{
 		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
-		$user  = $user = Factory::getApplication()->getSession()->get('user');
+		$user  = Factory::getApplication()->getSession()->get('user');
 
 		$query->select(
 			$this->getState(
@@ -294,6 +341,10 @@ class CWMMediaFilesModel extends ListModel
 		// Join over the users for the checked out user.
 		$query->select('uc.name AS editor')
 			->join('LEFT', '#__users AS uc ON uc.id=mediafile.checked_out');
+		// Filter by limit and limitstart
+		$limit = $this->getState('limit');
+		$limitstart = $this->getState('limitstart');
+		$query->setLimit($limit, $limitstart);
 
 		// Filter by published state
 		$published = $this->getState('filter.published');
@@ -396,4 +447,5 @@ class CWMMediaFilesModel extends ListModel
 
 		return $query;
 	}
+
 }
