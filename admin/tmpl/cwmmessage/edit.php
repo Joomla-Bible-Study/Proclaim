@@ -238,6 +238,14 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
 						<?php echo $this->form->getInput('image', null, $thumbnailm); ?>
 					</div>
 				</div>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $this->form->getLabel('studyimage'); ?>
+                    </div>
+                    <div class="controls">
+						<?php echo $this->form->getInput('studyimage'); ?>
+                    </div>
+                </div>
 				<div class="control-group">
 					<div class="control-label">
 						<?php echo $this->form->getLabel('teacher_id'); ?>

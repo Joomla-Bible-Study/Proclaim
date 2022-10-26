@@ -270,7 +270,7 @@ class CWMMedia
 
 			if ($compat_mode === 0)
 			{
-				$downloadlink = '<a href="index.php?option=com_proclaim&amp;view=CWMSermon&amp;id='.$media->study_id.'&amp;mid=' .
+				$downloadlink = '<a style="color: #5F5A58;" href="index.php?option=com_proclaim&amp;view=CWMSermon&amp;id='.$media->study_id.'&amp;mid=' .
 					$media->id . '&amp;task=CWMSermon.download">'.$download_image.'</a>';
 			}
 			else
@@ -289,7 +289,7 @@ class CWMMedia
 
 				$url = CWMHelper::remove_http($url);
 
-				$downloadlink = '<a href="http://christianwebministries.org/router.php?file=' .
+				$downloadlink = '<a style="color: #5F5A58;" href="http://christianwebministries.org/router.php?file=' .
 					$url . '&amp;size=' . $size . '">';
 			}
 
@@ -299,7 +299,7 @@ class CWMMedia
             $opt = $input->get('option');
             if ($opt == 'com_proclaim') {
                 if ($params->get('useterms') > 0) {
-                    $downloadlink = '<a href="#modal-test-modal" data-bs-toggle="modal" class="btn btn-default btn-small btn-sm">
+                    $downloadlink = '<a style="color: #5F5A58;" href="#modal-test-modal" data-bs-toggle="modal" class="btn btn-default btn-small btn-sm">
                         '.$download_image.'</a>';
 $modalParams = array(
     'title'       => Text::_('JBS_TERMS_TITLE'),
@@ -313,7 +313,7 @@ $modalParams = array(
     'footer'      => '<div class="alert alert-info">'.Text::_('JBS_TERMS_FOOTER').'</div>'
 );
 
-$modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a href="index.php?option=com_proclaim&task=CWMSermons.download&id='.$media->study_id.'&mid=' . $media->id . '">'
+$modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style="color: #5F5A58;" href="index.php?option=com_proclaim&task=CWMSermons.download&id='.$media->study_id.'&mid=' . $media->id . '">'
 					. Text::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a></div>';
 
  $downloadlink .= HTMLHelper::_('bootstrap.renderModal', 'modal-test-modal', $modalParams, $modalBody);
@@ -351,7 +351,7 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a href=
 		}
 		else
 		{
-			$color = '';
+			$color = '#1e3e48';
 		}
 
 		switch ($imageparams->get('media_use_button_icon'))
@@ -702,7 +702,7 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a href=
 							$return . '&amp;' . Session::getFormToken() . '=1\')" title="' .
 							$media->params->get("media_button_text") . ' - ' . $media->comment . ' '
 							. $filesize . '">' . $image . '</a>'; */
-						$playercode = "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim&amp;player="
+						$playercode = "<a style='color: #5F5A58;' href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim&amp;player="
 							. $params->toObject()->player .
 							"&amp;view=CWMPopUp&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" .
 							$player->playerwidth . ",height=" . $player->playerheight . "'); return false\"  class=\"jbsmplayerlink\">"
@@ -714,7 +714,7 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a href=
 						break;
 
 					case 1: // Popup window
-						$playercode = "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim&amp;player="
+						$playercode = "<a style='color: #5F5A58;' href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim&amp;player="
 							. $params->toObject()->player .
 							"&amp;view=CWMPopUp&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" .
 							$player->playerwidth . ",height=" . $player->playerheight . "'); return false\"  class=\"jbsmplayerlink\">"
@@ -774,7 +774,7 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a href=
 						$diff                 = $params->get('player_width') - $params->get('playerwidth');
 						$player->playerwidth  += abs($diff) + 10;
 						$player->playerheight += $params->get('popupmargin', '50');
-						$playercode           = "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim&amp;player="
+						$playercode           = "<a style='color: #5F5A58;' href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim&amp;player="
 							. $player->player
 							. "&amp;view=CWMPopUp&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width="
 							. $player->playerwidth . ", height=" .
@@ -791,7 +791,7 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a href=
 				switch ($player->type)
 				{
 					case 1: // This goes to the popup view
-						$playercode = "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim"
+						$playercode = "<a style='color: #5F5A58;' href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim"
 							. "&amp;view=CWMPopUp&amp;player=3&amp;t=" . $template .
 							"&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
 							. $player->playerheight . "'); return false\"  class=\"jbsmplayerlink\">" . $image . "</a>";
@@ -815,7 +815,7 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a href=
 				return $this->getVirtuemart($media, $image);
 
 			case 8: // Embed code
-				return "<a href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim"
+				return "<a style='color: #5F5A58;' href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim"
 					. "&amp;view=CWMPopUp&amp;player=8&amp;t=" . $template .
 					"&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
 					. $player->playerheight . "'); return false\">" . $image . "</a>";

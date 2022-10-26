@@ -8,6 +8,16 @@
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
 		</field>
+		<field name="simple_mode_template" type="list" default="simple_mode1" label="CWM_SIMPLE_MODE_TEMP_CHOICE"
+			   description="CWM_SIMPLE_MODE_TEMP_CHOICE_DESC" labelclass="control-label">
+			<option value="simple_mode1">CWM_SIMPLE_TEMPLATE1</option>
+			<option value="simple_mode2">CWM_SIMPLE_TEMPLATE2</option>
+		</field>
+		<field name="simplegridtextoverlay" type="radio" default="1" label="CWM_SIMPLE_MODE_TEXT_OVERLAY"
+			   description="CWM_SIMPLE_MODE_TEXT_OVERLAY_DESC" labelclass="control-label">
+			<option value="1">CWM_SIMPLE_TEXTOVERLAY</option>
+			<option value="0">CWM_SIMPLE_NOTEXTOVERLAY</option>
+		</field>
 		<field name="simple_mode_display" type="radio" class="btn-group" default="0" label="JBS_ADM_SIMPLE_MODE_DISPLAY"
 		       description="JBS_ADM_SIMPLE_MODE_DISPLAY_DESC" labelclass="control-label"
 		       layout="joomla.form.field.radio.switcher">

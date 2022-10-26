@@ -99,9 +99,9 @@ class ImageMagickLib extends CWMImageLib
 	public static function resize_image(
 		$targetFile,
 		$originalFile,
-		$newWidth = 200,
-		$canv_width = 200,
-		$canv_height = 112.5
+		$newWidth = 300,
+		$canv_width = 300,
+		$canv_height = 169
 	)
 	{
 		try
@@ -166,9 +166,9 @@ class GDLib extends CWMImageLib
 	public static function resize_image(
 		string $targetFile,
 		string $originalFile,
-		int $newWidth = 200,
-		float $canv_width = 200,
-		float $canv_height = 112.5
+		int $newWidth = 300,
+		float $canv_width = 300,
+		float $canv_height = 169
 	): void
 	{
 		$info = getimagesize($originalFile);

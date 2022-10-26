@@ -36,12 +36,13 @@ class CWMThumbnail
 	 * @since 9.0.0
 	 */
     const SCALE_INSIDE = 2;
-	public static function create($file, $path, $size = 100)
+	public static function create($file, $path, $size = 300)
 	{
 		$name     = basename($file);
 		$original = JPATH_ROOT . '/' . $file;
 		$thumb    = JPATH_ROOT . '/' . $path . '/thumb_' . $name;
-
+		$w = 300;
+		$h = 169;
 		// Delete destination folder if it exists
 		if (Folder::exists(JPATH_ROOT . '/' . $path))
 		{
@@ -53,7 +54,7 @@ class CWMThumbnail
 
 		// Create thumbnail
 		$image     = new Image($original);
-		$thumbnail = $image->resize($size, $size, true, $scaleMethod = self::SCALE_INSIDE);
+		$thumbnail = $image->resize($w, $h, true, $scaleMethod = self::SCALE_INSIDE);
 		$thumbnail->toFile($thumb, IMAGETYPE_JPEG);
 	}
 
