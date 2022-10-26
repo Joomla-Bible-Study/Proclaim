@@ -11,7 +11,8 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-echo $this->loadTemplate('formheader');
+//echo $this->loadTemplate('formheader');
+//echo $this->loadTemplate('simple2');
 
 if ($this->params->get('sermonstemplate'))
 {
@@ -19,7 +20,14 @@ if ($this->params->get('sermonstemplate'))
 }
 elseif ($this->params->get('simple_mode') == 1)
 {
-	echo $this->loadTemplate('simple');
+	if ($this->params->get('simple_mode_template') == 'simple_mode1')
+	{
+		echo $this->loadTemplate('simple');
+	}
+	if ($this->params->get('simple_mode_template') == 'simple_mode2')
+	{
+		echo $this->loadTemplate('simple2');
+	}
 }
 else
 {

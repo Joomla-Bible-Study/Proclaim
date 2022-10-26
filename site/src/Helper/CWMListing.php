@@ -2001,6 +2001,7 @@ $thadd = '';
 			case 'thumbnail':
 				// Assume study thumbnail
 				$element = $this->useJImage($row->thumbnailm, $row->studytitle);
+				if ($params->get('studyimage') ){$element = $this->useJImage(JPATH_SITE.'/media/com_proclaim/images/stockimages/'.$params->get('studyimage'), $row->studytitle);}
 				break;
 			case 'studytitle':
 				(isset($row->studytitle) ? $element = $row->studytitle : $element = '');
@@ -2603,7 +2604,7 @@ $thadd = '';
 		$label  = $params->get('templatecode');
 		$label  = str_replace('{{teacher}}', $row->teachername, $label);
 		$label  = str_replace('{{title}}', $row->studytitle, $label);
-		$label  = str_replace('{{date}}', $this->getStudyDate($params, $row->studydate), $label);
+		$label  = str_replace('{{date}}', $this->$params, $row->studydate, $label);
 		$label  = str_replace('{{studyintro}}', $row->studyintro, $label);
 		$label  = str_replace('{{scripture}}', $this->getScripture($params, $row, 0, 1), $label);
 		$label  = str_replace('{{topics}}', $row->topic_text, $label);
