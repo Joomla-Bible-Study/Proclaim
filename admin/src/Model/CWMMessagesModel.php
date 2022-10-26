@@ -202,7 +202,7 @@ class CWMMessagesModel extends ListModel
 			$this->getState(
 				'list.select',
 				'study.id, study.published, study.studydate, study.studytitle, study.ordering, study.hits, study.alias' .
-				', study.language, study.access, study.publish_up, study.publish_down'
+				', study.language, study.access, study.publish_up, study.publish_down, study.params'
 			)
 		);
 		$query->from('#__bsms_studies AS study');

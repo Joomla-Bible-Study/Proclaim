@@ -130,9 +130,8 @@
 		</field>
 		<field name="thumbnailm" type="hidden"/>
 		<field name="image" type="media" directory="biblestudy/studies" label="JBS_STY_STUDY_IMAGE" />
-		<field name="studyimage" type="StudyImage" label="CWM_STOCK_IMAGE" key_field="key" value_field="value">
-			<option value="-1">CWM_CHOOSE_STOCK_IMAGE</option>
-		</field>
+
+
 		<field name="rules" type="rules" label="JFIELD_RULES_LABEL"
 		       translate_label="false" class="inputbox" filter="rules" component="com_proclaim"
 		       section="message" validate="rules"/>
@@ -182,6 +181,7 @@
 
 	<fields name="params">
 		<fieldset name="params">
+			<field name="studyimage" type="Imagelist" directory="/media/com_proclaim/images/stockimages" label="CWM_STOCK_IMAGE" hide_default="true" />
 			<field name="metakey" type="textarea" label="JBS_STY_METAKEYWORDS"
 			       description="JBS_STY_METAKEYWORDS_DESC" class="inputbox" rows="3" size="30"/>
 			<field name="metadesc" type="textarea" label="JBS_STY_METADESCRIPTION"

@@ -240,10 +240,10 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
 				</div>
                 <div class="control-group">
                     <div class="control-label">
-						<?php echo $this->form->getLabel('studyimage'); ?>
+						<?php echo $this->form->getLabel('studyimage', 'params'); ?>
                     </div>
                     <div class="controls">
-						<?php echo $this->form->getInput('studyimage'); ?>
+						<?php echo $this->form->getInput('studyimage', 'params'); ?>
                     </div>
                 </div>
 				<div class="control-group">

@@ -72,7 +72,7 @@ class ModProclaimHelper
 
 		$query->select('study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
 		                study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.studyintro,
-		                study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, ' .
+		                study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, study.params, ' .
 				// Use created if modified is 0
 				'CASE WHEN study.modified = ' . $db->quote($db->getNullDate()) . ' THEN study.studydate ELSE study.modified END as modified, ' .
 				'study.modified_by, uam.name as modified_by_name,' .

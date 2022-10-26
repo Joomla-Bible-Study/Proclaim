@@ -394,9 +394,7 @@ class CWMListing
 		$listsorts[] = $row5sorted;
 		$listsorts[] = $row6sorted;
 
-		$class1  = $params->get($extra . 'listcolor1', '');
-		$class2  = $params->get($extra . 'listcolor2', '');
-		$oddeven = $class1;
+		$oddeven = 1;
 //Start the table for the entire list
 		$list .= '<div class="table-responsive" about="' . $type . '"><table class="table w-auto table-borderless">';
 		if ($type === 'sermons')
@@ -477,7 +475,6 @@ class CWMListing
 		{
 			foreach ($items as $item)
 			{
-				$oddeven    = ($oddeven === $class1) ? $class2 : $class1;
 				$studymedia = array();
 
 				if (isset($mediafiles))
@@ -503,7 +500,6 @@ class CWMListing
 
 		if ($type === 'sermon')
 		{
-			$oddeven    = ($oddeven === $class1) ? $class2 : $class1;
 			$studymedia = array();
 
 			if (isset($mediafiles))
@@ -828,10 +824,15 @@ class CWMListing
 				{
 					$span = $this->useJImage($item->thumbnailm, Text::_('JBS_CMN_THUMBNAIL'), '', '', '', $params->get('rowspanitemimage'));
 				}
+				if ($params->get('studyimage') !== '-1')
+				{
+					$span = $this->useJImage(JPATH_SITE.'/media/com_proclaim/images/stockimages/'.$params->get('studyimage'), Text::_('JBS_CMN_THUMBNAIL'), '', '', '', $params->get('rowspanitemimage'));
+				}
 				else
 				{
 					$span = '';
 				}
+
 				break;
 			// Series Thumbnail
 			case 3:
@@ -1127,7 +1128,8 @@ $thadd = '';
 	 */
 	public function getFluidData($item, $row, $params, $template, int $header, $type)
 	{
-
+		$registry = new Registry();
+		$registry->loadString($item->params);
 		/** @var string $data */
 		$data = '';
 
@@ -1714,9 +1716,13 @@ $thadd = '';
 				{
 					$data = Text::_('JBS_CMN_THUMBNAIL');
 				}
-				elseif ($item->thumbnailm)
+				elseif ($item->thumbnailm || $params->get('studyimage') !== '-1')
 				{
 					$data = $this->useJImage($item->thumbnailm, Text::_('JBS_CMN_THUMBNAIL'));
+					if ($params->get('studyimage') !== '-1')
+					{
+						$data = $this->useJImage('media/com_proclaim/images/stockimages/'.$registry->get('studyimage'), Text::_('JBS_CMN_THUMBNAIL'));
+					}
 				}
 				else
 				{
@@ -2001,7 +2007,8 @@ $thadd = '';
 			case 'thumbnail':
 				// Assume study thumbnail
 				$element = $this->useJImage($row->thumbnailm, $row->studytitle);
-				if ($params->get('studyimage') ){$element = $this->useJImage(JPATH_SITE.'/media/com_proclaim/images/stockimages/'.$params->get('studyimage'), $row->studytitle);}
+				if ($params->get('studyimage')!== '-1'){$element = $this->useJImage(JPATH_SITE.'/media/com_proclaim/images/stockimages/'.$params->get('studyimage'), $row->studytitle);}
+
 				break;
 			case 'studytitle':
 				(isset($row->studytitle) ? $element = $row->studytitle : $element = '');
