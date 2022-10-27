@@ -182,6 +182,12 @@
 	<fields name="params">
 		<fieldset name="params">
 			<field name="studyimage" type="Imagelist" directory="/media/com_proclaim/images/stockimages" label="CWM_STOCK_IMAGE" hide_default="true" />
+			<field name="nooverlaysimplemode" type="list" label="CWM_SIMPLE_MODE_TEXT_OVERLAY"
+				   description="CWM_SIMPLE_MODE_TEXT_OVERLAY_DESC"
+				   default="yes">
+				<option value="no">JBS_CMN_NO</option>
+				<option value="yes">JBS_CMN_YES</option>
+			</field>
 			<field name="metakey" type="textarea" label="JBS_STY_METAKEYWORDS"
 			       description="JBS_STY_METAKEYWORDS_DESC" class="inputbox" rows="3" size="30"/>
 			<field name="metadesc" type="textarea" label="JBS_STY_METADESCRIPTION"
