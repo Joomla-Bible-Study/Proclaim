@@ -175,34 +175,48 @@ $reg = new Registry;
 	grid-template-columns: repeat(4, 1fr);
 	gap: 15px;">
 					<?php foreach($this->items as $item){
+						$itemparams = new Registry;
+						$params = $itemparams->loadString($item->params);
+                        $studyimage = $params->get('studyimage');
                         if (!empty($item->thumbnailm))
                         {
                             $image = $item->thumbnailm;
                         }
-                        else
+                        if ($params->get('studyimage') !== -1)
+                        {
+                            $image = 'media/com_proclaim/images/stockimages/'.$params->get('studyimage');
+                        }
+                        if (empty($item->thumbnailm) && ($params->get('studyimage') == -1) || is_null($studyimage))
                         {
                             $random = rand(0, $count);
                             if (array_key_exists($random, $folder))
                             {
 	                            $image = 'media/com_proclaim/images/rotating/' . $folder[$random];
                             }
+                            if ($image == 'media/com_proclaim/images/stockimages/')
+                            {
+                                $image = 'media/com_proclaim/images/rotating/bible01.jpg';
+                            }
+	                        if ($image == 'media/com_proclaim/images/stockimages/-1')
+	                        {
+		                        $image = 'media/com_proclaim/images/rotating/bible01.jpg';
+	                        }
                         }
-
-					if (isset($item->mids))
-					{
-						$medias[] = $listing->getFluidMediaids($item);
-					}if (isset($medias))
-					{
-						$mediafiles = $listing->getMediaFiles($medias);
-					}
-
+                    if ($this->params->get('simplegridtextoverlay') == 1 || $params->get('nooverlaysimplemode') == 'yes')
+                    {
+	                    $overlaytext = '<h5 class="card-title text-uppercase overlay-text">' . $item->studytitle . '</h5>';
+                    }
+                    if ($params->get('nooverlaysimplemode') == 'no')
+                    {
+                        $overlaytext = '';
+                    }
 					?>
 					<article class="media__item__wrapper">
                         <div class="thumbnail text-center">
                             <div class="card overflow-hidden border-0 rounded-0 text-center text-white">
                                 <img src="<?php echo $image; ?>" class="card-img rounded-0" alt="...">
                                 <div class="card-img-overlay d-flex flex-column justify-content-center">
-                                    <?php if ($this->params->get('simplegridtextoverlay') == 1) { ?>   <h5 class="card-title text-uppercase overlay-text"><?php echo $item->studytitle; ?></h5><?php } ?>
+                                    <?php echo $overlaytext; ?>
                                 </div>
                             </div>
                         </div>
