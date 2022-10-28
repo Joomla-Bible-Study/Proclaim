@@ -44,12 +44,9 @@
 			<field name="studieslisttemplateid" type="templatelist" default=""
 			       label="JBS_TPL_TEMPLATE_STUDIES_LIST" description="JBS_TPL_TEMPLATE_STUDIES_LIST_DESC"
 			       required="true"/>
-			<field name="sermonstemplate" type="sql" label="JBS_TPL_SERMONS_TEMPLATE"
-			       description="JBS_TPL_SERMONS_TEMPLATE_DESC" hide_none="true" filter="type=1"
-			       query="SELECT id, type, filename FROM #__bsms_templatecode WHERE type=1 AND published =1 ORDER BY filename ASC"
-			       key_field="filename" value_field="filename">
+			<field name="sermonstemplate" type="SermonsTemplateFile" label="JBS_TPL_SERMONS_TEMPLATE"
+			       description="JBS_TPL_SERMONS_TEMPLATE_DESC" default="0" />
 				<option value="0">JBS_CMN_USE_DEFAULT</option>
-			</field>
 			<field name="detailstemplateid" type="templatelist" default=""
 			       label="JBS_TPL_TEMPLATE_STUDY_DETAIL" description="JBS_TPL_TEMPLATE_STUDY_DETAIL_DESC"
 			       required="true"/>
