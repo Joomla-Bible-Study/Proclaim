@@ -155,9 +155,7 @@ $listing      = new CWMListing;
 $files = new File;
 $folder = Folder::files('media/com_proclaim/images/rotating');
 $count = count($folder);
-$lastrandom = '';
-$currentrandom = '';
-$reg = new Registry;
+
 
 ?>
 
@@ -184,7 +182,17 @@ $reg = new Registry;
                         }
                         if ($params->get('studyimage') !== -1)
                         {
-                            $image = 'media/com_proclaim/images/stockimages/'.$params->get('studyimage');
+                            //clean up extra data in the image
+                            $hash = str_contains($params->get('studyimage'), '#');
+                            if ($hash == 1)
+                            {
+                               $imageparam = $params->get('studyimage');
+                               $hashlocation = strpos($imageparam, '#');
+                               $image = substr($imageparam, 0,$hashlocation);
+                            }
+                            else{
+	                            $image = 'media/com_proclaim/images/stockimages/'.$params->get('studyimage');
+                            }
                         }
                         if (empty($item->thumbnailm) && ($params->get('studyimage') == -1) || is_null($studyimage))
                         {

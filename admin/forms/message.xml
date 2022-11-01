@@ -181,7 +181,7 @@
 
 	<fields name="params">
 		<fieldset name="params">
-			<field name="studyimage" type="Imagelist" directory="/media/com_proclaim/images/stockimages" label="CWM_STOCK_IMAGE" hide_default="true" />
+			<field name="studyimage" type="StudyImage" directory="/media/com_proclaim/images/stockimages" label="CWM_STOCK_IMAGE" hide_default="true" />
 			<field name="nooverlaysimplemode" type="list" label="CWM_SIMPLE_MODE_TEXT_OVERLAY"
 				   description="CWM_SIMPLE_MODE_TEXT_OVERLAY_DESC"
 				   default="yes">

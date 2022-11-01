@@ -9,6 +9,7 @@
  * */
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 
 // Always load JBSM API if it exists.

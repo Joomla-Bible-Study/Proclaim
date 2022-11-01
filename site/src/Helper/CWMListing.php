@@ -2007,7 +2007,19 @@ $thadd = '';
 			case 'thumbnail':
 				// Assume study thumbnail
 				$element = $this->useJImage($row->thumbnailm, $row->studytitle);
-				if ($params->get('studyimage')!== '-1'){$element = $this->useJImage(JPATH_SITE.'/media/com_proclaim/images/stockimages/'.$params->get('studyimage'), $row->studytitle);}
+				if ($params->get('studyimage')!== '-1')
+				{
+					//clean up extra data in the image
+					$hash = str_contains($params->get('studyimage'), '#');
+					if ($hash == 1)
+					{
+						$imageparam = $params->get('studyimage');
+						$hashlocation = strpos($imageparam, '#');
+						$image = substr($imageparam, 0,$hashlocation);
+						$element = $this->useJImage($image, $row->studytitle);
+					}
+
+				}
 
 				break;
 			case 'studytitle':

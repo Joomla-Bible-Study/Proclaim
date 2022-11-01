@@ -13,7 +13,11 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
+use Joomla\CMS\Form\Field\MediaField;
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
@@ -25,49 +29,48 @@ use Joomla\CMS\Filesystem\Folder;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class StudyImageField extends ListField
+class StudyImageField extends MediaField
 {
-	/**
-	 * The field type.
-	 *
-	 * @var         string
-	 *
-	 * @since 7.0
-	 */
-	protected $type = 'Studyimage';
 
-	/**
-	 * Method to get a list of options for a list input.
-	 *
-	 * @return      array           An array of JHtml options.
-	 *
-	 * @since 7.0
-	 */
-	protected function getOptions()
-	{
-		if ($this->form->getValue('id'))
-		{
-			$images = Folder::files(JPATH_SITE.'/media/com_proclaim/images/stockimages');
-		}
-		else
-		{
-			$images = null;
-		}
+//The field class must know its own type through the variable $type.
+	protected $type = 'StudyImageField';
 
-		$options = array();
+	public function getInput() {
+		// code that returns HTML that will be shown as the form field
+	$form = 	FormHelper::loadFieldClass('media');
 
-		if ($images)
-		{
-			foreach ($images as $key=>$value)
+			$db = Factory::getContainer()->get('DatabaseDriver');
+			$query  = $db->getQuery(true);
+			$query->select('*')
+				->from('#__extensions')
+				->where('name = "plg_filesystem_local"');
+			$db->setQuery($query);
+			$local = $db->loadObject();
+			$pparams = $local->params;
+			$ismedia = substr_count($pparams, 'media');
+			if ($ismedia !== 1)
 			{
-				$image = HTMLHelper::_('image','com_proclaim/stockimages/'.$value, 'alt text',null, true);
-				$options[]       = HTMLHelper::_('select.option', $value, $image
-				);
+				if ($pparams == '{}' || is_null($pparams))
+				{
+					$newmedia = '{"directories":{"directories0":{"directory":"media"}}}';
+					$newmedia = addslashes($newmedia);
+				}
+				else{
+					$dircount = substr_count($pparams, 'directory');
+					$end = strlen($pparams);
+					$getstring = substr($pparams, 0, $end - 2);
+					$newmedia = $getstring.', "directories'.$dircount.'":{"directory":"media"}}}';
+					$newmedia = addslashes($newmedia);
+				}
+				$query = $db->getQuery(true);
+				$query->update('#__extensions')
+					->set('params = "'.$newmedia.'"')
+					->where('name = "plg_filesystem_local"');
+				$db->setQuery($query);
+				$db->execute();
 			}
-		}
-
-		$options = array_merge(parent::getOptions(), $options);
-
-		return $options;
+			//$form = '<field name="studyimage" type="media" directory="/media/com_proclaim/images/stockimages" label="CWM_STOCK_IMAGE" hide_default="true" />';
+			return parent::getInput();
 	}
+
 }
