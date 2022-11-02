@@ -423,7 +423,10 @@ class HtmlView extends BaseHtmlView
 		{
 
 			$set  = $input->getInt('filter_' . $filter);
-			$from = $this->filterForm->getValue($filter, 'filter');
+			if ($set !== null)
+			{
+				$from = $this->filterForm->getValue($filter, 'filter');
+			}
 
 			// Update value from landing page call.
 			if ($set !== 0 && $set !== null)
@@ -440,7 +443,10 @@ class HtmlView extends BaseHtmlView
 			// Remove from view if set to hid in template.
 			if ((int) $this->params->get('show_' . $filter . '_search', 1) === 0 && $filter !== 'language')
 			{
-				$this->filterForm->removeField($filter, 'filter');
+				if ($filter !== null)
+				{
+					$this->filterForm->removeField($filter, 'filter');
+				}
 			}
 		}
 
