@@ -421,6 +421,7 @@ class HtmlView extends BaseHtmlView
 
 		foreach ($filters as $filter)
 		{
+
 			$set  = $input->getInt('filter_' . $filter);
 			$from = $this->filterForm->getValue($filter, 'filter');
 
