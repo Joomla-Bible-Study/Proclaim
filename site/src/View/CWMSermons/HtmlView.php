@@ -198,16 +198,21 @@ class HtmlView extends BaseHtmlView
 	public function display($tpl = null)
 	{
 		$this->state           = $this->get('State');
+
 		$this->template        = $this->state->get('template');
+
 		$items                 = $this->get('Items');
 		$pagination            = $this->get('Pagination');
 		$this->page            = new \stdClass;
 		$this->page->pagelinks = $pagination->getPagesLinks();
 		$this->page->counter   = $pagination->getPagesCounter();
-		$this->activeFilters   = $this->get('ActiveFilters');
+		//$this->activeFilters   = $this->get('ActiveFilters');
 
 		// Get filter form.
-		$this->filterForm = $this->get('FilterForm');
+		//$this->filterForm = $this->get('FilterForm');
+		$model               = $this->getModel();
+		$this->filterForm    = $model->getFilterForm();
+		$this->activeFilters = $model->getActiveFilters();
 		$mainframe        = Factory::getApplication();
 		$this->admin      = $this->state->get('administrator');
 
@@ -312,10 +317,10 @@ class HtmlView extends BaseHtmlView
 		$this->request_url = $stringuri;
 		$this->params      = &$params;
 
-		$this->updateFilters();
+		//$this->updateFilters();
 
 		$this->_prepareDocument();
-
+//var_dump($tpl); die;
 		parent::display($tpl);
 	}
 
@@ -421,12 +426,8 @@ class HtmlView extends BaseHtmlView
 
 		foreach ($filters as $filter)
 		{
-
 			$set  = $input->getInt('filter_' . $filter);
-			if ($set !== null)
-			{
-				$from = $this->filterForm->getValue($filter, 'filter');
-			}
+			$from = $this->filterForm->getValue($filter, 'filter');
 
 			// Update value from landing page call.
 			if ($set !== 0 && $set !== null)
@@ -443,10 +444,7 @@ class HtmlView extends BaseHtmlView
 			// Remove from view if set to hid in template.
 			if ((int) $this->params->get('show_' . $filter . '_search', 1) === 0 && $filter !== 'language')
 			{
-				if ($filter !== null)
-				{
-					$this->filterForm->removeField($filter, 'filter');
-				}
+				$this->filterForm->removeField($filter, 'filter');
 			}
 		}
 

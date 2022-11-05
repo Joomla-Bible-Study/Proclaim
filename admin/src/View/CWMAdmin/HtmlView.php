@@ -292,7 +292,11 @@ class HtmlView extends BaseHtmlView
 		}
 
 		$jbsversion    = Installer::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.xml');
-		$this->version = $jbsversion['version'];
+		foreach ($jbsversion as $key=>$value)
+			{
+				if ($key == 'version'){ $version = $value;}
+			}
+		$this->version = $version;
 
 		if (!$this->filterParams)
 		{
