@@ -206,13 +206,10 @@ class HtmlView extends BaseHtmlView
 		$this->page            = new \stdClass;
 		$this->page->pagelinks = $pagination->getPagesLinks();
 		$this->page->counter   = $pagination->getPagesCounter();
-		//$this->activeFilters   = $this->get('ActiveFilters');
+		$this->activeFilters   = $this->get('ActiveFilters');
 
 		// Get filter form.
-		//$this->filterForm = $this->get('FilterForm');
-		$model               = $this->getModel();
-		$this->filterForm    = $model->getFilterForm();
-		$this->activeFilters = $model->getActiveFilters();
+		$this->filterForm = $this->get('FilterForm');
 		$mainframe        = Factory::getApplication();
 		$this->admin      = $this->state->get('administrator');
 
@@ -317,10 +314,10 @@ class HtmlView extends BaseHtmlView
 		$this->request_url = $stringuri;
 		$this->params      = &$params;
 
-		//$this->updateFilters();
+		$this->updateFilters();
 
 		$this->_prepareDocument();
-//var_dump($tpl); die;
+
 		parent::display($tpl);
 	}
 
