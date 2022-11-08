@@ -70,7 +70,7 @@ class CWMSermonsModel extends ListModel
 				'access', 'series.access', 'access_level',
 				'location', 'location.location_text',
 				'bookname2', 'book.bookname2',
-				'language', 'study.language'
+				'language', 'study.language', 'book', 'series', 'search', 'messagetype', 'series', 'topic'
 			);
 		}
 
