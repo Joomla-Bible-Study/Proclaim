@@ -112,6 +112,8 @@ svg {
 .media__item__image--wrapper{position: relative;
         display: inline-block;}
         
+ .h5 {-webkit-text-stroke: 4px black;}
+ 
 .img-container img{
 margin-left:36%;
    display: inline-block;
@@ -212,7 +214,7 @@ $count = count($folder);
                         }
                     if ($this->params->get('simplegridtextoverlay') == 1 || $params->get('nooverlaysimplemode') == 'yes')
                     {
-	                    $overlaytext = '<h5 class="card-title text-uppercase overlay-text">' . $item->studytitle . '</h5>';
+	                    $overlaytext = '<h5 class="card-title text-uppercase overlay-text -webkit-text-stroke" style="text-shadow: 2px 2px #000000;">' . $item->studytitle . '</h5>';
                     }
                     if ($params->get('nooverlaysimplemode') == 'no')
                     {
