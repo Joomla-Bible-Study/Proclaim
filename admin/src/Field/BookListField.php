@@ -22,7 +22,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class booklistField extends ListField
+class bookListField extends ListField
 {
 	/**
 	 * The field type.

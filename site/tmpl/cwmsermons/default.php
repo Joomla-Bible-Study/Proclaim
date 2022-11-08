@@ -11,6 +11,7 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
+echo $this->loadTemplate('formheader');
 if ($this->params->get('sermonstemplate'))
 {
 	echo $this->loadTemplate($this->params->get('sermonstemplate'));

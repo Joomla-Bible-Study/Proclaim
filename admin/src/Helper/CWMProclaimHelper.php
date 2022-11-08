@@ -516,7 +516,7 @@ class CWMProclaimHelper
 
 		$query->select('DISTINCT YEAR(studydate) as value, YEAR(studydate) as text');
 		$query->from('#__bsms_studies');
-		$query->order('value');
+		$query->order('value DESC');
 
 		// Get the options.
 		$db->setQuery($query);
@@ -527,7 +527,7 @@ class CWMProclaimHelper
 		}
 		catch (\RuntimeException $e)
 		{
-			Factory::getApplication()->enqueueMessage($e->getMessage(), 'worning');
+			Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
 		}
 
 		return $options;
@@ -552,7 +552,7 @@ class CWMProclaimHelper
 		$query->from('#__bsms_teachers AS teacher');
 		$query->join('INNER', '#__bsms_studies AS study ON study.teacher_id = teacher.id');
 		$query->group('teacher.id');
-		$query->order('teacher.teachername');
+		$query->order('value ASC');
 
 		// Get the options.
 		$db->setQuery($query);
@@ -563,7 +563,7 @@ class CWMProclaimHelper
 		}
 		catch (\RuntimeException $e)
 		{
-			Factory::getApplication()->enqueueMessage($e->getMessage(), 'worning');
+			Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
 		}
 
 		return $options;
@@ -588,7 +588,7 @@ class CWMProclaimHelper
 		$query->from('#__bsms_books AS book');
 		$query->join('INNER', '#__bsms_studies AS study ON study.booknumber = book.booknumber');
 		$query->group('book.id');
-		$query->order('book.booknumber');
+		$query->order('value ASC');
 
 		// Get the options.
 		$db->setQuery($query);
@@ -629,7 +629,7 @@ class CWMProclaimHelper
 		$query->from('#__bsms_message_type AS messageType');
 		$query->join('INNER', '#__bsms_studies AS study ON study.messagetype = messageType.id');
 		$query->group('messageType.id');
-		$query->order('messageType.message_type');
+		$query->order('text ASC');
 
 		// Get the options.
 		$db->setQuery($query);
