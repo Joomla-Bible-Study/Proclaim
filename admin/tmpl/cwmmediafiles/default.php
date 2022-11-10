@@ -218,8 +218,6 @@ $sortFields = $this->getSortFields();
 			<?php endif; ?>
 			<input type="hidden" name="task" value=""/>
 			<input type="hidden" name="boxchecked" value="0"/>
-            <input type="hidden" name="view" value="CWMMediaFiles" />
-            <input type="hidden" name="limitstart" value="">
 			<?php echo HTMLHelper::_('form.token'); ?>
 		</div>
 </form>
