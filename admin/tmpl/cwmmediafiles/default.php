@@ -32,7 +32,6 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 $archived  = $this->state->get('filter.published') == 2 ? true : false;
 $trashed   = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder === 'mediafile.ordering';
-$columns   = 10;
 
 if ($saveOrder)
 {
@@ -99,13 +98,7 @@ $sortFields = $this->getSortFields();
 						</th>
 					</tr>
 					</thead>
-					<tfoot>
-					<tr>
-						<td colspan="<?php echo $columns; ?>">
-							<?php echo $this->pagination->getListFooter(); ?>
-						</td>
-					</tr>
-					</tfoot>
+
 					<tbody>
 					<?php
 					foreach ($this->items as $i => $item) :
@@ -200,6 +193,9 @@ $sortFields = $this->getSortFields();
 					<?php endforeach; ?>
 					</tbody>
 				</table>
+
+                <?php echo $this->pagination->getListFooter(); ?>
+
 				<?php // Load the batch processing form. ?>
 				<?php if ($user->authorise('core.create', 'com_proclaim')
 					&& $user->authorise('core.edit', 'com_proclaim')
