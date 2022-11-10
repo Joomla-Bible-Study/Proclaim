@@ -46,7 +46,7 @@ $columns    = 5;
 		Joomla.tableOrdering(order, dirn, '');
 	}
 </script>
-<form action="<?php echo Route::_('index.php?option=com_proclaim&view=templatecodes'); ?>" method="post"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmtemplatecodes'); ?>" method="post"
       name="adminForm" id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
