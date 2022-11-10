@@ -40,7 +40,7 @@ if ($saveOrder)
 }
 $sortFields = $this->getSortFields();
 ?>
-<form action="<?php echo Route::_('index.php?option=com_proclaim&view=CWMMediaFiles'); ?>" method="post"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmmediafiles'); ?>" method="post"
       name="adminForm" id="adminForm">
 	<?php if (!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">

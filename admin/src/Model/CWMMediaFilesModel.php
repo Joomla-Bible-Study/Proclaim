@@ -307,10 +307,6 @@ class CWMMediaFilesModel extends ListModel
 		// Join over the users for the checked out user.
 		$query->select('uc.name AS editor')
 			->join('LEFT', '#__users AS uc ON uc.id=mediafile.checked_out');
-		// Filter by limit and limitstart
-		$limit = $this->getState('limit');
-		$limitstart = $this->getState('limitstart');
-		$query->setLimit($limit, $limitstart);
 
 		// Filter by published state
 		$published = $this->getState('filter.published');
