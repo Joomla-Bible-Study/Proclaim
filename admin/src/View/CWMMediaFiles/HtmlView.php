@@ -129,6 +129,9 @@ class HtmlView extends BaseHtmlView
 
 		// Set the document
 		$this->setDocument();
+		$this->pagination  = &$pagination;
+		$this->limitbox    = $this->pagination->getLimitBox();
+		$this->items       = &$items;
 
 		// Display the template
 		parent::display($tpl);
