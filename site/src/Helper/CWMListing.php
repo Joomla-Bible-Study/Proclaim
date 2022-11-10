@@ -525,7 +525,6 @@ class CWMListing
 		{
 			foreach ($items as $item)
 			{
-				$oddeven = ($oddeven === $class1) ? $class2 : $class1;
 				$row[]   = $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header = 0, $type);
                 $row[] = '</td></tr><tr style="border-bottom: 1px solid darkgrey; padding-bottom: 5px;"</tr>';
 			}
@@ -1129,7 +1128,7 @@ $thadd = '';
 	public function getFluidData($item, $row, $params, $template, int $header, $type)
 	{
 		$registry = new Registry();
-		$registry->loadString($item->params);
+		if (isset($item->params)){$registry->loadString($item->params);}
 		/** @var string $data */
 		$data = '';
 
