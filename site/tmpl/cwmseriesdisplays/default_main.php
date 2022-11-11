@@ -94,6 +94,6 @@ if ($url)
 		<input name="option" value="com_proclaim" type="hidden">
 		<input name="task" value="" type="hidden">
 		<input name="boxchecked" value="0" type="hidden">
-		<input name="controller" value="seriesdisplays" type="hidden">
+		<input name="controller" value="cwmseriesdisplays" type="hidden">
 </form>
 </div> <!-- end of container-fluid div -->

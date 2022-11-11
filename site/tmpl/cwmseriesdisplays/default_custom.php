@@ -110,6 +110,6 @@ $CWMSerieslist = new CWMSerieslist;
 		<input name="option" value="com_proclaim" type="hidden">
 		<input name="task" value="" type="hidden">
 		<input name="boxchecked" value="0" type="hidden">
-		<input name="controller" value="seriesdisplays" type="hidden">
+		<input name="controller" value="cwmseriesdisplays" type="hidden">
 	</div>
 </form>
