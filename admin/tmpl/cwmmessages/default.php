@@ -27,7 +27,7 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 $archived  = $this->state->get('filter.published') == 2 ? true : false;
 $trashed   = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder === 'study.ordering';
-$columns   = 12;
+$columns   = 11;
 
 /** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
@@ -277,4 +277,6 @@ if ($saveOrder)
 				<input type="hidden" name="boxchecked" value="0"/>
 				<?php echo HTMLHelper::_('form.token'); ?>
 			</div>
+		</div>
+	</div>
 </form>
