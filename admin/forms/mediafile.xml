@@ -1,53 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
 	<fieldset addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-	<field name="id" type="text" readonly="readonly" class="inputbox"/>
-	<field name="createdate" type="calendar" label="JBS_CMN_CREATE_DATE"
-	       description="JBS_MED_CREATE_DATE_DESC" class="inputbox" size="22"
-	       format="%Y-%m-%d %H:%M:%S" filter="user_utc" required="true"/>
-	<field name="study_id" type="Modal_Study" label="JBS_CMN_STUDY"
-	       description="JBS_MED_CHOOSE_STUDY_DESC" class="list" required="true"/>
-	<field name="comment" type="textarea" rows="4" label="JBS_CMN_COMMENT"
-	       description="JBS_MED_APPEARS_UNDER_FILE_OR_TOOLTIP" class="inputbox"/>
-	<field name="server_id" type="server" label="JBS_CMN_SERVER"
-	       description="JBS_MED_SERVER_DESC" required="true"/>
-	<field name="podcast_id"  type="sql" label="JBS_MED_CHOOSE_PODCAST"
-	       description="JBS_MED_CHOOSE_PODCAST_DESC"
-	       query="SELECT id, title FROM #__bsms_podcast WHERE published = 1 ORDER BY title ASC"
-	       key_field="id" value_field="title" multiple="true" default="">
-	</field>
-	<field name="published"
-	       type="list"
-	       id="published"
-	       label="JSTATUS"
-	       description="JFIELD_PUBLISHED_DESC"
-	       class="chzn-color-state"
-	       size="1"
-	       default="1"
-	       filter="intval">
-		<option value="1">
-			JPUBLISHED
-		</option>
-		<option value="0">
-			JUNPUBLISHED
-		</option>
-		<option value="-2">
-			JTRASHED
-		</option>
-	</field>
-	<field name="language"
-	       type="contentlanguage"
-	       label="JFIELD_LANGUAGE_LABEL"
-	       description="JBS_CMN_SELECT_LANGUAGE_DESC"
-	       class="chzn-color-state">
-		<option value="*">JALL</option>
-	</field>
-	<field name="asset_id" type="hidden" filter="unset"/>
-	<field name="rules" type="rules" label="JFIELD_RULES_LABEL"
-	       translate_label="false" class="inputbox" filter="rules" component="com_proclaim"
-	       section="mediafile" validate="rules"/>
+		<field name="id" type="text" readonly="readonly" class="inputbox"/>
+		<field name="createdate" type="calendar" label="JBS_CMN_CREATE_DATE"
+		       description="JBS_MED_CREATE_DATE_DESC" class="inputbox" size="22"
+		       format="%Y-%m-%d %H:%M:%S" filter="user_utc" required="true"/>
+		<field name="study_id" type="Modal_Study" label="JBS_CMN_STUDY"
+		       description="JBS_MED_CHOOSE_STUDY_DESC" class="list" required="true"/>
+		<field name="comment" type="textarea" rows="4" label="JBS_CMN_COMMENT"
+		       description="JBS_MED_APPEARS_UNDER_FILE_OR_TOOLTIP" class="inputbox"/>
+		<field name="server_id" type="Server" label="JBS_CMN_SERVER"
+		       description="JBS_MED_SERVER_DESC" required="true"/>
+		<field name="podcast_id" type="sql" label="JBS_MED_CHOOSE_PODCAST"
+		       description="JBS_MED_CHOOSE_PODCAST_DESC"
+		       query="SELECT id, title FROM #__bsms_podcast WHERE published = 1 ORDER BY title ASC"
+		       key_field="id" value_field="title" multiple="true" default="">
+		</field>
+		<field name="published"
+		       type="list"
+		       id="published"
+		       label="JSTATUS"
+		       description="JFIELD_PUBLISHED_DESC"
+		       class="chzn-color-state"
+		       size="1"
+		       default="1"
+		       filter="intval">
+			<option value="1">
+				JPUBLISHED
+			</option>
+			<option value="0">
+				JUNPUBLISHED
+			</option>
+			<option value="-2">
+				JTRASHED
+			</option>
+		</field>
+		<field name="language"
+		       type="contentlanguage"
+		       label="JFIELD_LANGUAGE_LABEL"
+		       description="JBS_CMN_SELECT_LANGUAGE_DESC"
+		       class="chzn-color-state">
+			<option value="*">JALL</option>
+		</field>
+		<field name="asset_id" type="hidden" filter="unset"/>
+		<field name="rules" type="rules" label="JFIELD_RULES_LABEL"
+		       translate_label="false" class="inputbox" filter="rules" component="com_proclaim"
+		       section="mediafile" validate="rules"/>
 
-	<!--Server media specific fields-->
-	<field name="params"/>
+		<!--Server media specific fields-->
+		<field name="params"/>
 	</fieldset>
 </form>

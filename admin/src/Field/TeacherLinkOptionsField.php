@@ -10,18 +10,19 @@
 
 namespace CWM\Component\Proclaim\Administrator\Field;
 
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Form\Field\ListField;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die;
 
 /**
- * Location List Form Field class for the Proclaim component
+ * Books List Form Field class for the Proclaim component
  *
  * @package  Proclaim.Admin
- * @since    7.0.0
+ * @since    7.0.4
  */
-class BookListField extends ListField
+class TeacherLinkOptionsField extends ListField
 {
 	/**
 	 * The field type.
@@ -30,18 +31,20 @@ class BookListField extends ListField
 	 *
 	 * @since 7.0
 	 */
-	protected $type = 'BookList';
+	protected $type = 'TeacherLinkOptions';
 
 	/**
 	 * Method to get a list of options for a list input.
 	 *
-	 * @return  array   An array of JHtml options.
+	 * @return  array  An array of JHtml options.
 	 *
-	 * @throws \Exception
 	 * @since 7.0
 	 */
-	protected function getOptions()
+	protected function getOptions(): array
 	{
-		return array_merge(parent::getOptions(), CWMProclaimHelper::getStudyBooks());
+		$options[] = HtmlHelper::_('select.option', '0', Text::_('JBS_TPL_NO_LINK'));
+		$options[] = HtmlHelper::_('select.option', '3', Text::_('JBS_TPL_LINK_TO_TEACHERS_PROFILE'));
+
+		return array_merge(parent::getOptions(), $options);
 	}
 }

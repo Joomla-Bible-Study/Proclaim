@@ -47,7 +47,7 @@ class ServerTypeField extends FormField
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	protected function getInput()
+	protected function getInput(): string
 	{
 		$allowNew       = ((string) $this->element['new'] === 'true');
 		$allowEdit      = ((string) $this->element['edit'] === 'true');
@@ -286,7 +286,7 @@ class ServerTypeField extends FormField
 	 *
 	 * @since   3.4
 	 */
-	protected function getLabel()
+	protected function getLabel(): string
 	{
 		return str_replace($this->id, $this->id . '_name', parent::getLabel());
 	}

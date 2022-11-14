@@ -7,8 +7,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Administrator\Field;
-// No Direct Access
+
 defined('_JEXEC') or die;
 
 use CWM\Component\Proclaim\Site\Helper\CWMMedia;
@@ -19,23 +20,22 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\Registry\Registry;
 
-
 /**
  * Location List Form Field class for the Proclaim component
  *
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class mediafileimagesField extends ListField
+class MediaFileImagesField extends ListField
 {
 	/**
 	 * The field type.
 	 *
-	 * @var         string
+	 * @var  string
 	 *
 	 * @since 7.0
 	 */
-	protected $type = 'Mediafileimages';
+	protected $type = 'MediaFileImages';
 
 	/**
 	 * Method to get a list of options for a list input.
@@ -44,15 +44,15 @@ class mediafileimagesField extends ListField
 	 *
 	 * @since 7.0
 	 */
-	protected function getOptions()
+	protected function getOptions(): array
 	{
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('*');
 		$query->from('#__bsms_mediafiles');
 		$db->setQuery((string) $query);
 		$mediafiles = $db->loadObjectList();
-		$options = array();
+		$options    = array();
 
 		if ($mediafiles)
 		{
@@ -69,11 +69,12 @@ class mediafileimagesField extends ListField
 						case 1:
 							$button             = $this->getButton($media);
 							$media->media_image = Text::_('JBS_MED_BUTTON') . ': ' . $button . ' - ' . Text::_('JBS_MED_TEXT') .
-									': ' . $media->params->get('media_button_text');
-							$options[] = HTMLHelper::_('select.option', '{"media_use_button_icon":"' . $media->params->get('media_use_button_icon') .
-									'","media_button_type":"' . $media->params->get('media_button_type') . '","media_button_text":"' .
-									$media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get('media_icon_type') .
-									'","media_icon_text_size":"' . $media->params->get('media_icon_text_size') .
+								': ' . $media->params->get('media_button_text');
+							$options[]          = HTMLHelper::_('select.option', '{"media_use_button_icon":"' .
+								$media->params->get('media_use_button_icon') .
+								'","media_button_type":"' . $media->params->get('media_button_type') . '","media_button_text":"' .
+								$media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get('media_icon_type') .
+								'","media_icon_text_size":"' . $media->params->get('media_icon_text_size') .
 								'","media_image":""}', $media->media_image
 							);
 							break;
@@ -83,9 +84,9 @@ class mediafileimagesField extends ListField
 							$media->media_image = Text::_('JBS_MED_BUTTON') . ': ' . $button . ' - ' . Text::_('JBS_MED_ICON') . ': ' . $icon;
 							$options[]          = HTMLHelper::_('select.option', '{"media_use_button_icon":"' .
 								$media->params->get('media_use_button_icon') .
-									'","media_button_type":"' . $media->params->get('media_button_type') . '","media_button_text":"' .
-									$media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get('media_icon_type') .
-									'","media_icon_text_size":"' . $media->params->get('media_icon_text_size') .
+								'","media_button_type":"' . $media->params->get('media_button_type') . '","media_button_text":"' .
+								$media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get('media_icon_type') .
+								'","media_icon_text_size":"' . $media->params->get('media_icon_text_size') .
 								'","media_image":""}', $media->media_image
 							);
 							break;
@@ -94,9 +95,9 @@ class mediafileimagesField extends ListField
 							$media->media_image = Text::_('JBS_MED_ICON') . ': ' . $icon;
 							$options[]          = HTMLHelper::_('select.option', '{"media_use_button_icon":"' .
 								$media->params->get('media_use_button_icon') .
-									'","media_button_type":"' . $media->params->get('media_button_type') . '","media_button_text":"' .
-									$media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get('media_icon_type') .
-									'","media_icon_text_size":"' . $media->params->get('media_icon_text_size') .
+								'","media_button_type":"' . $media->params->get('media_button_type') . '","media_button_text":"' .
+								$media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get('media_icon_type') .
+								'","media_icon_text_size":"' . $media->params->get('media_icon_text_size') .
 								'","media_image":""}', $media->media_image
 							);
 							break;
@@ -110,10 +111,10 @@ class mediafileimagesField extends ListField
 					$imagecount         = $totalcount - $slash;
 					$media->media_image = Text::_('JBS_MED_IMAGE') . ': ' . substr($image, $slash + 1, $imagecount);
 					$options[]          = HTMLHelper::_('select.option', '{"media_use_button_icon":"' . $media->params->get('media_use_button_icon') .
-							'","media_button_type":"' . $media->params->get('media_button_type') . '","media_button_text":"' .
-							$media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get('media_icon_type') .
-							'","media_icon_text_size":"' . $media->params->get('media_icon_text_size') . '","media_image":"' .
-							$media->params->get('media_image') . '"}', $media->media_image
+						'","media_button_type":"' . $media->params->get('media_button_type') . '","media_button_text":"' .
+						$media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get('media_icon_type') .
+						'","media_icon_text_size":"' . $media->params->get('media_icon_text_size') . '","media_image":"' .
+						$media->params->get('media_image') . '"}', $media->media_image
 					);
 				}
 			}
@@ -152,9 +153,7 @@ class mediafileimagesField extends ListField
 			}
 		}
 
-		$options = array_merge(parent::getOptions(), $options);
-
-		return $options;
+		return array_merge(parent::getOptions(), $options);
 	}
 
 	/**
@@ -212,15 +211,14 @@ class mediafileimagesField extends ListField
 	public function getIcon($media)
 	{
 		$MediaHelper = new CWMMedia;
-		$mimetypes = $MediaHelper->getIcons();
+		$mimetypes   = $MediaHelper->getIcons();
 
 		if ($media->params->get('media_icon_type') !== '1'
 			&& substr($media->params->get('media_icon_type'), 0, 2) !== 'fa'
 			&& !empty($media->params->get('media_icon_type'))
 		)
 		{
-			$mime = Text::_($mimetypes[$media->params->get('media_icon_type')]) ?? "";
-            return $mime;
+			return Text::_($mimetypes[$media->params->get('media_icon_type')]) ?? "";
 		}
 
 		return $media->params->get('media_custom_icon');

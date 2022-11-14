@@ -7,8 +7,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Administrator\Field;
-// No Direct Access
+
 defined('_JEXEC') or die;
 
 use CWM\Component\Proclaim\Site\Helper\CWMMedia;
@@ -16,23 +17,22 @@ use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
-
 /**
  * Icons List Form Field class for the Proclaim component
  *
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class icontypeField extends ListField
+class IconTypeField extends ListField
 {
 	/**
 	 * The field type.
 	 *
-	 * @var         string
+	 * @var  string
 	 *
 	 * @since 7.0
 	 */
-	protected $type = 'icontype';
+	protected $type = 'IconType';
 
 	/**
 	 * Method to get the field input markup for a generic list.
@@ -42,7 +42,7 @@ class icontypeField extends ListField
 	 *
 	 * @since   9.1.3
 	 */
-	protected function getInput()
+	protected function getInput(): string
 	{
 		$data = $this->getLayoutData();
 
@@ -69,25 +69,23 @@ class icontypeField extends ListField
 	/**
 	 * Method to get a list of options for a list input.
 	 *
-	 * @return      array           An array of JHtml options.
+	 * @return  array   An array of JHtml options.
 	 *
 	 * @since 7.0
 	 */
-	protected function getOptions()
+	protected function getOptions(): array
 	{
 		$MediaHelper = new CWMMedia;
-		$icontypes = $MediaHelper->getIcons();
+		$icontypes   = $MediaHelper->getIcons();
 
 		$options = array();
 
 		foreach ($icontypes as $key => $message)
 		{
-			$key = Text::_($key);
+			$key       = Text::_($key);
 			$options[] = HTMLHelper::_('select.option', $message, $key);
 		}
 
-		$options = array_merge(parent::getOptions(), $options);
-
-		return $options;
+		return array_merge(parent::getOptions(), $options);
 	}
 }

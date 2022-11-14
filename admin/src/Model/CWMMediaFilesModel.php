@@ -66,17 +66,6 @@ class CWMMediaFilesModel extends ListModel
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	/**
-	 * Items total
-	 * @var integer
-	 */
-	var $_total = null;
-
-	/**
-	 * Pagination object
-	 * @var object
-	 */
-	var $_pagination = null;
 	public function __construct($config = array())
 	{
 		if (empty($config['filter_fields']))
@@ -118,7 +107,7 @@ class CWMMediaFilesModel extends ListModel
 			// This is to load the server model into the Media Files Variable.
 			$serverModel = new CWMServerModel;
 
-			$items = parent::getItems();
+			$items = $this->_getList($this->_getListQuery(), $this->getStart(), $this->getState('list.limit'));
 
 			if (!$items)
 			{
@@ -208,7 +197,6 @@ class CWMMediaFilesModel extends ListModel
 	protected function populateState($ordering = null, $direction = null)
 	{
 		$app = Factory::getApplication();
-		$input  = new Input;
 
 		// Adjust the context to support modal layouts.
 		$input  = new Input;
@@ -260,8 +248,10 @@ class CWMMediaFilesModel extends ListModel
 	{
 		// Compile the store id.
 		$id .= ':' . $this->getState('filter.search');
+		$id .= ':' . serialize($this->getState('filter.access'));
 		$id .= ':' . $this->getState('filter.published');
-		$id .= ':' . $this->getState('filter.study_id');
+		$id .= ':' . $this->getState('filter.mediaYears');
+		$id .= ':' . serialize($this->getState('filter.study_id'));
 		$id .= ':' . $this->getState('filter.language');
 
 		return parent::getStoreId($id);

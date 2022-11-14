@@ -17,7 +17,7 @@ use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
 
 defined('_JEXEC') or die;
-JFormHelper::loadFieldClass('list');
+
 /**
  * Series List Form Field class for the Proclaim component
  *
@@ -29,7 +29,7 @@ class SeriesField extends ListField
 	/**
 	 * The field type.
 	 *
-	 * @var         string
+	 * @var  string
 	 * @since    7.0.4
 	 */
 	protected $type = 'Series';
@@ -37,13 +37,13 @@ class SeriesField extends ListField
 	/**
 	 * Method to get a list of options for a list input.
 	 *
-	 * @return      array           An array of JHtml options.
+	 * @return  array   An array of JHtml options.
 	 *
 	 * @since    7.0.4
 	 */
-	protected function getOptions()
+	protected function getOptions(): array
 	{
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('id,series_text');
 		$query->from('#__bsms_series');

@@ -62,18 +62,18 @@
 			</field>
 			<field name="media_button_color" type="color" description="JBS_ADDON_LOCAL_BUTTON_COLOR_DESC"
 			       label="JBS_ADDON_LOCAL_BUTTON_COLOR"/>
-			<field name="media_icon_type" type="icontype" class="inputbox" default="" label="JBS_ADDON_LOCAL_ICON_TYPE"
+			<field name="media_icon_type" type="IconType" class="inputbox" default="" label="JBS_ADDON_LOCAL_ICON_TYPE"
 			       description="JBS_ADDON_LOCAL_ICON_TYPE_DESC">
 			</field>
 			<field name="media_custom_icon" type="text" default="" label="JBS_ADDON_LOCAL_CUSTOM_ICON"
 			       description="JBS_ADDON_LOCAL_CUSTOM_ICON_DESC"/>
 			<field name="media_icon_text_size" type="text" default="24" label="JBS_ADDON_LOCAL_FONT_SIZE"
 			       description="JBS_ADDON_LOCAL_FONT_SIZE_DESC"/>
-			<field name="mime_type" type="mimetype" extension="com_proclaim"
+			<field name="mime_type" type="MimeType" extension="com_proclaim"
 			       label="JBS_MED_CHOOSE_MIMETYPE" description="JBS_MED_CHOOSE_MIMETYPE_DESC"
 			       class="inputbox" default="">
 			</field>
-			<field name="mime_type" type="mimetype" extension="com_proclaim"
+			<field name="mime_type" type="MimeType" extension="com_proclaim"
 			       label="JBS_MED_CHOOSE_MIMETYPE" description="JBS_MED_CHOOSE_MIMETYPE_DESC"
 			       class="inputbox"/>
 		</fieldset>

@@ -7,10 +7,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.HtmlHelper GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Administrator\Field;
 
-// No Direct Access
 defined('_JEXEC') or die;
+
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMTranslated;
@@ -41,9 +42,9 @@ class TopicsListField extends ListField
 	 *
 	 * @since 9.0.0
 	 */
-	protected function getOptions()
+	protected function getOptions(): array
 	{
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('DISTINCT #__bsms_topics.id, #__bsms_topics.topic_text, #__bsms_topics.params as topic_params')
 			->from('#__bsms_studies')
@@ -52,7 +53,7 @@ class TopicsListField extends ListField
 			->where('#__bsms_topics.published = 1')
 			->order('#__bsms_topics.topic_text ASC');
 		$db->setQuery($query);
-		$topics = $db->loadObjectList();
+		$topics  = $db->loadObjectList();
 		$options = array();
 
 		if ($topics)
@@ -80,7 +81,7 @@ class TopicsListField extends ListField
 	 *
 	 * @since 7.0
 	 */
-	private function order_new($a, $b)
+	private function order_new(object $a, object $b): int
 	{
 		$a = (array) $a;
 		$b = (array) $b;

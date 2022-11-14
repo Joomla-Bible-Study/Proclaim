@@ -8,7 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 namespace CWM\Component\Proclaim\Administrator\Field;
-// No Direct Access
+
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
@@ -23,7 +23,7 @@ use Joomla\Registry\Registry;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class mediafileField extends ListField
+class MediaFileField extends ListField
 {
 	/**
 	 * The field type.
@@ -32,7 +32,7 @@ class mediafileField extends ListField
 	 *
 	 * @since 7.0
 	 */
-	protected $type = 'Mediafile';
+	protected $type = 'MediaFile';
 
 	/**
 	 * Method to get a list of options for a list input.
@@ -41,7 +41,7 @@ class mediafileField extends ListField
 	 *
 	 * @since 7.0
 	 */
-	protected function getOptions()
+	protected function getOptions(): array
 	{
 		if ($this->form->getValue('id'))
 		{

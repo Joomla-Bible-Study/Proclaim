@@ -3,7 +3,8 @@
 	<fieldset>
 		<field name="timeframe" type="int" default=""
 		       label="JBS_ARCHIVE_TIMEFRAME_LABEL"
-		       description="JBS_ARCHIVE_TIMEFRAME_DESC" size="5" labelclass="control-label" class="span2" required="required">
+		       description="JBS_ARCHIVE_TIMEFRAME_DESC" size="5" labelclass="control-label" class="span2"
+		       required="required">
 		</field>
 		<field name="swich" type="radio" default="year"
 		       label="JBS_ARCHIVE_SWICH_LABEL" description="JBS_ARCHIVE_SWICH_DESC"

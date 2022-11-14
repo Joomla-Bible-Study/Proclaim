@@ -96,7 +96,7 @@
 		<field
 				name="filters"
 				type="filters"
-		        filter=""
+				filter=""
 		/>
 	</fieldset>
 </config>

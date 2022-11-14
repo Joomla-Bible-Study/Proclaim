@@ -18,7 +18,7 @@
 		<fields name="params">
 			<fieldset name="basic"
 					  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-				<field name="dummy" type="loadlanguagefile" default=""/>   <!-- load common language file -->
+				<field name="dummy" type="LoadLanguageFile" default=""/>   <!-- load common language file -->
 				<field name="t" type="sql" default="1"
 				       label="JBS_MDL_SELECT_TEMPLATE" description="JBS_MDL_SELECT_TEMPLATE_DESC"
 				       query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"

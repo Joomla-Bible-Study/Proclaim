@@ -7,18 +7,17 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Administrator\Field;
 
-// No Direct Access
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
 use JFormHelper;
 use Joomla\CMS\Filesystem\Folder;
 
-
 defined('_JEXEC') or die;
-JFormHelper::loadFieldClass('list');
+
 /**
  * Message Type List Form Field class for the Proclaim component
  *
@@ -30,7 +29,7 @@ class SermonsTemplateFileField extends ListField
 	/**
 	 * The field type.
 	 *
-	 * @var         string
+	 * @var  string
 	 *
 	 * @since 7.0
 	 */
@@ -39,26 +38,49 @@ class SermonsTemplateFileField extends ListField
 	/**
 	 * Method to get a list of options for a list input.
 	 *
-	 * @return      array           An array of JHtml options.
+	 * @return  array   An array of JHtml options.
 	 *
 	 * @since 7.0
 	 */
-	protected function getOptions()
+	protected function getOptions(): array
 	{
-		$folder = Folder::files(JPATH_SITE.'/components/com_proclaim/tmpl/cwmsermons');
+		$folder = Folder::files(JPATH_SITE . '/components/com_proclaim/tmpl/cwmsermons');
 
-		foreach ($folder as $key=>$value)
+		foreach ($folder as $key => $value)
 		{
-			if ($value == 'default.php'){unset($folder[$key]);}
-			if ($value == 'default_easy.php'){unset($folder[$key]);}
-			if ($value == 'default_main.php'){unset($folder[$key]);}
-			if ($value == 'default_formfooter.php'){unset($folder[$key]);}
-			if ($value == 'default_formheader.php'){unset($folder[$key]);}
-			if ($value == 'default.xml'){unset($folder[$key]);}
+			if ($value == 'default.php')
+			{
+				unset($folder[$key]);
+			}
+
+			if ($value == 'default_easy.php')
+			{
+				unset($folder[$key]);
+			}
+
+			if ($value == 'default_main.php')
+			{
+				unset($folder[$key]);
+			}
+
+			if ($value == 'default_formfooter.php')
+			{
+				unset($folder[$key]);
+			}
+
+			if ($value == 'default_formheader.php')
+			{
+				unset($folder[$key]);
+			}
+
+			if ($value == 'default.xml')
+			{
+				unset($folder[$key]);
+			}
 		}
-		$folder = str_replace('.php','', $folder);
-		$folder = str_replace('default_','', $folder);
-		$options  = array();
+
+		$folder  = str_replace(array('.php', 'default_'), '', $folder);
+		$options = array();
 
 		if ($folder)
 		{
@@ -68,8 +90,6 @@ class SermonsTemplateFileField extends ListField
 			}
 		}
 
-		$options = array_merge(parent::getOptions(), $options);
-
-		return $options;
+		return array_merge(parent::getOptions(), $options);
 	}
 }

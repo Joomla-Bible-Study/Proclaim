@@ -247,7 +247,7 @@
 			<option value="3">JBS_CMN_SQUEEZEBOX</option>
 			<option value="100">JBS_CMN_USE_GLOBAL</option>
 		</field>
-		<field name="mtFrom" type="Mimetype" label="JBS_ADM_CHANGE_PLAYERS" description="JBS_ADM_MEDIATYPES_DESC"
+		<field name="mtFrom" type="MimeType" label="JBS_ADM_CHANGE_PLAYERS" description="JBS_ADM_MEDIATYPES_DESC"
 		       labelclass="control-label">
 			<option value="x">JBS_ADM_SELECT_NEW_OPTION</option>
 			<option value="http">URL</option>
@@ -411,7 +411,7 @@
 	</fieldset>
 	<fieldset addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
 	          addrulepath="/administrator/components/com_proclaim/models/rules">
-		<field name="mediaimage" type="mediafileimages" class="list" labelclass="control-label"
+		<field name="mediaimage" type="MediaFileImages" class="list" labelclass="control-label"
 		       label="JBS_ADM_MEDIA_IMAGES" >
 			<option value="-1">JBS_SELECT_IMAGE</option>
 		</field>
@@ -439,7 +439,7 @@
 		</field>
 		<field name="media_button_color" type="color" description="JBS_ADDON_BUTTON_COLOR_DESC"
 		       label="JBS_ADDON_BUTTON_COLOR" class="inputbox" labelclass="control-label"/>
-		<field name="media_icon_type" type="icontype" class="list" labelclass="control-label" default=""
+		<field name="media_icon_type" type="IconType" class="list" labelclass="control-label" default=""
 		       label="JBS_ADDON_ICON_TYPE"
 		       description="JBS_ADDON_ICON_TYPE_DESC">
 		</field>

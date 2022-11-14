@@ -7,24 +7,23 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Administrator\Field;
 
-// No Direct Access
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
 use JFormHelper;
 
-
 defined('_JEXEC') or die;
-JFormHelper::loadFieldClass('list');
+
 /**
  * Message Type List Form Field class for the Proclaim component
  *
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class MessagetypeListField extends ListField
+class MessageTypeListField extends ListField
 {
 	/**
 	 * The field type.
@@ -33,7 +32,7 @@ class MessagetypeListField extends ListField
 	 *
 	 * @since 7.0
 	 */
-	protected $type = 'Messagetypes';
+	protected $type = 'MessageTypeList';
 
 	/**
 	 * Method to get a list of options for a list input.
@@ -42,9 +41,9 @@ class MessagetypeListField extends ListField
 	 *
 	 * @since 7.0
 	 */
-	protected function getOptions()
+	protected function getOptions(): array
 	{
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('id,message_type');
 		$query->from('#__bsms_message_type');
@@ -61,8 +60,6 @@ class MessagetypeListField extends ListField
 			}
 		}
 
-		$options = array_merge(parent::getOptions(), $options);
-
-		return $options;
+		return array_merge(parent::getOptions(), $options);
 	}
 }

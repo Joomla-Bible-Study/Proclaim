@@ -7,15 +7,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Administrator\Field;
-// No Direct Access
+
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\HTML\HTMLHelper;
-
-
 
 /**
  * Books List Form Field class for the Proclaim component
@@ -23,25 +22,25 @@ use Joomla\CMS\HTML\HTMLHelper;
  * @package  Proclaim.Admin
  * @since    7.0.4
  */
-class spanoptionsField extends ListField
+class SpanOptionsField extends ListField
 {
 	/**
 	 * The field type.
 	 *
-	 * @var         string
+	 * @var  string
 	 *
 	 * @since 7.0
 	 */
-	protected $type = 'Spanoptions';
+	protected $type = 'SpanOptions';
 
 	/**
 	 * Method to get a list of options for a list input.
 	 *
-	 * @return      array           An array of HTMLHelper options.
+	 * @return  array   An array of HTMLHelper options.
 	 *
 	 * @since 7.0
 	 */
-	protected function getOptions()
+	protected function getOptions(): array
 	{
 		$options[] = HTMLHelper::_('select.option', 'None', 0);
 		$options[] = HTMLHelper::_('select.option', '1', 1);
@@ -56,8 +55,7 @@ class spanoptionsField extends ListField
 		$options[] = HTMLHelper::_('select.option', '10', 10);
 		$options[] = HTMLHelper::_('select.option', '11', 11);
 		$options[] = HTMLHelper::_('select.option', '12', 12);
-		$options   = array_merge(parent::getOptions(), $options);
 
-		return $options;
+		return array_merge(parent::getOptions(), $options);
 	}
 }

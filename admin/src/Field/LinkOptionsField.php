@@ -7,15 +7,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Administrator\Field;
-// No Direct Access
+
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die;
-
-
 
 /**
  * Books List Form Field class for the Proclaim component
@@ -23,7 +22,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.4
  */
-class linkoptionsField extends ListField
+class LinkOptionsField extends ListField
 {
 	/**
 	 * The field type.
@@ -32,16 +31,16 @@ class linkoptionsField extends ListField
 	 *
 	 * @since 7.0
 	 */
-	protected $type = 'Linkoptions';
+	protected $type = 'LinkOptions';
 
 	/**
 	 * Method to get a list of options for a list input.
 	 *
-	 * @return      array           An array of HTMLHelper options.
+	 * @return  array  An array of HTMLHelper options.
 	 *
 	 * @since 7.0
 	 */
-	protected function getOptions()
+	protected function getOptions(): array
 	{
 		$options[] = HTMLHelper::_('select.option', '0', Text::_('JBS_TPL_NO_LINK'));
 		$options[] = HTMLHelper::_('select.option', '1', Text::_('JBS_TPL_LINK_TO_DETAILS'));
@@ -53,8 +52,7 @@ class linkoptionsField extends ListField
 		$options[] = HTMLHelper::_('select.option', '6', Text::_('JBS_TPL_LINK_TO_FIRST_ARTICLE'));
 		$options[] = HTMLHelper::_('select.option', '7', Text::_('JBS_TPL_LINK_TO_VIRTUEMART'));
 		$options[] = HTMLHelper::_('select.option', '8', Text::_('JBS_TPL_LINK_TO_DOCMAN'));
-		$options   = array_merge(parent::getOptions(), $options);
 
-		return $options;
+		return array_merge(parent::getOptions(), $options);
 	}
 }

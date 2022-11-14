@@ -7,8 +7,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Administrator\Field;
-// No Direct Access
+
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Form\Field\ListField;
 
@@ -20,7 +21,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class yearListField extends ListField
+class YearListField extends ListField
 {
 	/**
 	 * The field type.
@@ -29,7 +30,7 @@ class yearListField extends ListField
 	 *
 	 * @since 9.0.0
 	 */
-	protected $type = 'Yearlist';
+	protected $type = 'YearList';
 
 	/**
 	 * Method to get a list of options for a list input.
@@ -39,7 +40,7 @@ class yearListField extends ListField
 	 * @throws \Exception
 	 * @since 9.0.0
 	 */
-	protected function getOptions()
+	protected function getOptions(): array
 	{
 		return array_merge(parent::getOptions(), CWMProclaimHelper::getStudyYears());
 	}

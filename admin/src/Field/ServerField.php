@@ -9,7 +9,7 @@
  * */
 
 namespace CWM\Component\Proclaim\Administrator\Field;
-// No Direct Access
+
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
@@ -27,8 +27,12 @@ use CWM\Component\Proclaim\Administrator\Model\CWMServersModel;
  * @package  Proclaim.Admin
  * @since    9.0.0
  */
-class serverField extends ListField
+class ServerField extends ListField
 {
+	/**
+	 * @var string
+	 * @since 9.0.0
+	 */
 	protected $type = 'Server';
 
 	/**
@@ -39,7 +43,7 @@ class serverField extends ListField
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	protected function getInput()
+	protected function getInput(): string
 	{
 		$allowEdit  = (string) $this->element['edit'] === 'true';
 		$allowClear = (string) $this->element['clear'] !== 'false';
@@ -66,9 +70,6 @@ class serverField extends ListField
 			);
 		}
 
-		//$model  = ListModel::getInstance('CWMServers', 'Model');
-		//$rlu = CWMServersModel::getInstance('List')->getIdToNameReverseLookup();
-		//$rlu    = $model->get->IdToNameReverseLookup();
 		$server = ArrayHelper::getValue($rlu, $this->value);
 
 		// Build the script.

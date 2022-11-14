@@ -19,7 +19,7 @@
 			</field>
 			<field
 					name="year"
-					type="Yearlist"
+					type="YearList"
 					label="JBS_CMN_SELECT_YEAR"
 					description="JBS_CMN_SELECT_YEAR_DESC"
 					onchange="this.form.submit();"
@@ -28,7 +28,7 @@
 			</field>
 			<field
 					name="teacher"
-					type="Teacherlist"
+					type="TeacherList"
 					label="JBS_CMN_SELECT_TEACHER"
 					description="JBS_CMN_SELECT_TEACHER_DESC"
 					onchange="this.form.submit();"
@@ -37,7 +37,7 @@
 			</field>
 			<field
 					name="series"
-					type="SeriesList"
+					type="Series"
 					label="JBS_CMN_SELECT_SERIES"
 					description="JBS_CMN_SELECT_SERIES_DESC"
 					onchange="this.form.submit();"
@@ -46,7 +46,7 @@
 			</field>
 			<field
 					name="messagetype"
-					type="Messagetypelist"
+					type="MessageTypeList"
 					label="JBS_CMN_SELECT_MESSAGETYPE"
 					description="JBS_CMN_SELECT_MESSAGETYPE_DESC"
 					onchange="this.form.submit();"
@@ -55,7 +55,7 @@
 			</field>
 			<field
 					name="location"
-					type="Locationlist"
+					type="LocationList"
 					label="JBS_CMN_SELECT_LOCATION"
 					description="JBS_CMN_SELECT_LOCATION_DESC"
 					onchange="this.form.submit();"

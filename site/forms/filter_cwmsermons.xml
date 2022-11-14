@@ -1,101 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
 	<fieldset addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-	<fields name="filter">
-		<field
-				name="search"
-				inputmode="search"
-				type="text"
-				label="COM_CONTENT_FILTER_SEARCH_DESC"
-				hint="JSEARCH_FILTER"
-				/>
-		<field
-				name="book"
-				type="BookList"
-				label="JBS_CMN_SELECT_BOOK"
-				description="JBS_CMN_SELECT_BOOK_DESC"
-				onchange="this.form.submit();"
-				>
-			<option value="">JBS_CMN_SELECT_BOOK</option>
-		</field>
-		<field
-				name="teacher"
-				type="TeacherList"
-				label="JBS_CMN_SELECT_TEACHER"
-				description="JBS_CMN_SELECT_TEACHER_DESC"
-				onchange="this.form.submit();"
-				>
-			<option value="">JBS_CMN_SELECT_TEACHER</option>
-		</field>
-		<field
-				name="series"
-				type="Series"
-				label="JBS_CMN_SELECT_SERIES"
-				description="JBS_CMN_SELECT_SERIES_DESC"
-				onchange="this.form.submit();"
-		>
-			<option value="">JBS_CMN_SELECT_SERIES</option>
-		</field>
-		<field
-				name="messagetype"
-				type="MessagetypeList"
-				label="JBS_CMN_SELECT_MESSAGETYPE"
-				description="JBS_CMN_SELECT_MESSAGETYPE_DESC"
-				onchange="this.form.submit();"
-				>
-			<option value="">JBS_CMN_SELECT_MESSAGETYPE</option>
-		</field>
-		<field
-				name="year"
-				type="YearList"
-				label="JBS_CMN_SELECT_YEAR"
-				description="JBS_CMN_SELECT_YEAR_DESC"
-				onchange="this.form.submit();"
-		>
-			<option value="">JBS_CMN_SELECT_YEAR</option>
-		</field>
-		<field
-				name="topic"
-				type="TopicsList"
-				label="JBS_CMN_SELECT_TOPIC"
-				description="JBS_CMN_SELECT_TOPIC_DESC"
-				onchange="this.form.submit();"
-		>
-			<option value="">JBS_CMN_SELECT_TOPIC</option>
-		</field>
-		<field
-				name="location"
-				type="LocationList"
-				label="JBS_CMN_SELECT_LOCATION"
-				description="JBS_CMN_SELECT_LOCATION_DESC"
-				onchange="this.form.submit();"
-				>
-			<option value="">JBS_CMN_SELECT_LOCATION</option>
-		</field>
-		<field
-				name="level"
-				type="integer"
-				first="1"
-				last="10"
-				step="1"
-				label="JOPTION_FILTER_LEVEL"
-				languages="*"
-				description="JOPTION_FILTER_LEVEL_DESC"
-				onchange="this.form.submit();"
-				>
-			<option value="">JOPTION_SELECT_MAX_LEVELS</option>
-		</field>
-		<field
-				name="language"
-				type="contentlanguage"
-				label="JOPTION_FILTER_LANGUAGE"
-				description="JOPTION_FILTER_LANGUAGE_DESC"
-				onchange="this.form.submit();"
-				>
-			<option value="">JOPTION_SELECT_LANGUAGE</option>
-			<option value="*">JALL</option>
-		</field>
-	</fields>
+		<fields name="filter">
+			<field
+					name="search"
+					inputmode="search"
+					type="text"
+					label="COM_CONTENT_FILTER_SEARCH_DESC"
+					hint="JSEARCH_FILTER"
+			/>
+			<field
+					name="book"
+					type="BookList"
+					label="JBS_CMN_SELECT_BOOK"
+					description="JBS_CMN_SELECT_BOOK_DESC"
+					onchange="this.form.submit();"
+			>
+				<option value="">JBS_CMN_SELECT_BOOK</option>
+			</field>
+			<field
+					name="teacher"
+					type="TeacherList"
+					label="JBS_CMN_SELECT_TEACHER"
+					description="JBS_CMN_SELECT_TEACHER_DESC"
+					onchange="this.form.submit();"
+			>
+				<option value="">JBS_CMN_SELECT_TEACHER</option>
+			</field>
+			<field
+					name="series"
+					type="Series"
+					label="JBS_CMN_SELECT_SERIES"
+					description="JBS_CMN_SELECT_SERIES_DESC"
+					onchange="this.form.submit();"
+			>
+				<option value="">JBS_CMN_SELECT_SERIES</option>
+			</field>
+			<field
+					name="messagetype"
+					type="MessageTypeList"
+					label="JBS_CMN_SELECT_MESSAGETYPE"
+					description="JBS_CMN_SELECT_MESSAGETYPE_DESC"
+					onchange="this.form.submit();"
+			>
+				<option value="">JBS_CMN_SELECT_MESSAGETYPE</option>
+			</field>
+			<field
+					name="year"
+					type="YearList"
+					label="JBS_CMN_SELECT_YEAR"
+					description="JBS_CMN_SELECT_YEAR_DESC"
+					onchange="this.form.submit();"
+			>
+				<option value="">JBS_CMN_SELECT_YEAR</option>
+			</field>
+			<field
+					name="topic"
+					type="TopicsList"
+					label="JBS_CMN_SELECT_TOPIC"
+					description="JBS_CMN_SELECT_TOPIC_DESC"
+					onchange="this.form.submit();"
+			>
+				<option value="">JBS_CMN_SELECT_TOPIC</option>
+			</field>
+			<field
+					name="location"
+					type="LocationList"
+					label="JBS_CMN_SELECT_LOCATION"
+					description="JBS_CMN_SELECT_LOCATION_DESC"
+					onchange="this.form.submit();"
+			>
+				<option value="">JBS_CMN_SELECT_LOCATION</option>
+			</field>
+			<field
+					name="level"
+					type="integer"
+					first="1"
+					last="10"
+					step="1"
+					label="JOPTION_FILTER_LEVEL"
+					languages="*"
+					description="JOPTION_FILTER_LEVEL_DESC"
+					onchange="this.form.submit();"
+			>
+				<option value="">JOPTION_SELECT_MAX_LEVELS</option>
+			</field>
+			<field
+					name="language"
+					type="contentlanguage"
+					label="JOPTION_FILTER_LANGUAGE"
+					description="JOPTION_FILTER_LANGUAGE_DESC"
+					onchange="this.form.submit();"
+			>
+				<option value="">JOPTION_SELECT_LANGUAGE</option>
+				<option value="*">JALL</option>
+			</field>
+		</fields>
 	</fieldset>
 	<fields name="list">
 		<field
@@ -120,6 +120,6 @@
 				description="COM_CONTENT_LIST_LIMIT_DESC"
 				default="25"
 				onchange="this.form.submit();"
-				/>
+		/>
 	</fields>
 </form>

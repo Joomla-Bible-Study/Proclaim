@@ -8,7 +8,6 @@
  * @link       https://www.christianwebministries.org
  * */
 
-// No Direct Access
 namespace CWM\Component\Proclaim\Administrator\Field\Modal;
 
 use Joomla\CMS\Factory;
@@ -18,7 +17,6 @@ use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
 use Joomla\Database\ParameterType;
-
 
 defined('_JEXEC') or die;
 
@@ -37,7 +35,14 @@ class LocationField extends FormField
 	 */
 	protected $type = 'Modal_Location';
 
-	protected function getInput()
+	/**
+	 *
+	 * @return string
+	 *
+	 * @throws \Exception
+	 * @since 7.0.0
+	 */
+	protected function getInput(): string
 	{
 		$allowNew       = ((string) $this->element['new'] == 'true');
 		$allowEdit      = ((string) $this->element['edit'] == 'true');
@@ -109,7 +114,7 @@ class LocationField extends FormField
 
 		if ($value)
 		{
-			$db = Factory::getContainer()->get('DatabaseDriver');
+			$db    = Factory::getContainer()->get('DatabaseDriver');
 			$query = $db->getQuery(true)
 				->select($db->quoteName('location_text'))
 				->from($db->quoteName('#__bsms_locations'))
@@ -305,7 +310,7 @@ class LocationField extends FormField
 	 *
 	 * @since   3.4
 	 */
-	protected function getLabel()
+	protected function getLabel(): string
 	{
 		return str_replace($this->id, $this->id . '_name', parent::getLabel());
 	}

@@ -7,14 +7,13 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Administrator\Field;
-// No Direct Access
+
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die;
-
-
 
 /**
  * Form Field class for the FileSize
@@ -22,7 +21,7 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class filesizeField extends ListField
+class FilesizeField extends ListField
 {
 	/**
 	 *  Set Naming of type
@@ -40,7 +39,7 @@ class filesizeField extends ListField
 	 *
 	 * @since 1.5
 	 */
-	protected function getInput()
+	protected function getInput(): string
 	{
 		// Initialize some field attributes.
 		$size      = $this->element['size'] ? ' size="' . (int) $this->element['size'] . '"' : '';
@@ -53,8 +52,8 @@ class filesizeField extends ListField
 		$onchange = $this->element['onchange'] ? ' onchange="' . (string) $this->element['onchange'] . '"' : '';
 
 		return '<input type="text" name="' . $this->name . '" id="' . $this->id . '"' .
-		' value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"' .
-		$class . $size . $disabled . $readonly . $onchange . $maxLength . '/>' . $this->sizeConverter();
+			' value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"' .
+			$class . $size . $disabled . $readonly . $onchange . $maxLength . '/>' . $this->sizeConverter();
 	}
 
 	/**
@@ -64,7 +63,7 @@ class filesizeField extends ListField
 	 *
 	 * @since 9.0.0
 	 */
-	private function sizeConverter()
+	private function sizeConverter(): string
 	{
 		return "<button data-toggle=\"modal\" onclick=\"jQuery( '#collapseModal' ).modal('show'); return true;\" class=\"btn btn-primary\">
 	<span class=\"icon-checkbox-partial\" aria-hidden=\"true\"></span>" . Text::_('JBS_MED_FILESIZE_CONVERTER') .

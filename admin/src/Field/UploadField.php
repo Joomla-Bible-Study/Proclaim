@@ -9,7 +9,7 @@
  * */
 
 namespace CWM\Component\Proclaim\Administrator\Field;
-// No Direct Access
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\Session\Session;
@@ -17,25 +17,29 @@ use Joomla\CMS\Uri\Uri;
 
 defined('_JEXEC') or die;
 
-
 /**
  * Upload Field class
  *
  * @package  Proclaim.Admin
  * @since    9.0.0
  */
-class uploadField extends FormField
+class UploadField extends FormField
 {
-	public $type = 'upload';
+	/**
+	 * @var string
+	 * @since 9.0.0
+	 */
+	public $type = 'Uploads';
 
 	/**
 	 * Get Input
 	 *
 	 * @return string
 	 *
+	 * @throws \Exception
 	 * @since 9.0.0
 	 */
-	protected function getInput()
+	protected function getInput(): string
 	{
 		$wa = $this->document->getWebAssetManager();
 		$wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
@@ -44,9 +48,6 @@ class uploadField extends FormField
 
 		// Include Plupload libraries
 		$document = Factory::getApplication()->getDocument();
-		//$document->addScript(Uri::root() . 'administrator/components/com_proclaim/addons/servers/legacy/includes/js/plupload.full.min.js');
-
-		//$document->addScript(JUri::root() . 'administrator/components/com_proclaim/addons/servers/legacy/includes/js/legacy.js');
 
 		$document->addScriptDeclaration('
             jQuery(document).ready(function() {
@@ -62,7 +63,7 @@ class uploadField extends FormField
                 });
                 uploader.init();
             });
-        ');
+            ');
 
 		$class = $this->getAttribute('class') ? (string) $this->getAttribute('class') : '';
 

@@ -9,7 +9,7 @@
 		       description="JBS_MED_CHOOSE_STUDY_DESC" class="inputbox" required="true"/>
 		<field name="comment" type="textarea" rows="4" label="JBS_CMN_COMMENT"
 		       description="JBS_MED_APPEARS_UNDER_FILE_OR_TOOLTIP" class="inputbox"/>
-		<field name="server_id" type="server" label="JBS_CMN_SERVER"
+		<field name="server_id" type="Server" label="JBS_CMN_SERVER"
 		       description="JBS_MED_SERVER_DESC" required="true"/>
 		<field name="podcast_id" size="15" type="sql" label="JBS_MED_CHOOSE_PODCAST"
 		       description="JBS_MED_CHOOSE_PODCAST_DESC"

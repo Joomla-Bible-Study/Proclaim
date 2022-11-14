@@ -6,14 +6,14 @@
 				type="text"
 				label="COM_CONTENT_FILTER_SEARCH_DESC"
 				hint="JSEARCH_FILTER"
-				/>
+		/>
 		<field
 				name="published"
 				type="status"
 				label="COM_CONTENT_FILTER_PUBLISHED"
 				description="COM_CONTENT_FILTER_PUBLISHED_DESC"
 				onchange="this.form.submit();"
-				>
+		>
 			<option value="">JOPTION_SELECT_PUBLISHED</option>
 		</field>
 		<field
@@ -26,7 +26,7 @@
 				languages="*"
 				description="JOPTION_FILTER_LEVEL_DESC"
 				onchange="this.form.submit();"
-				>
+		>
 			<option value="">JOPTION_SELECT_MAX_LEVELS</option>
 		</field>
 		<field
@@ -35,7 +35,7 @@
 				label="JOPTION_FILTER_ACCESS"
 				description="JOPTION_FILTER_ACCESS_DESC"
 				onchange="this.form.submit();"
-				>
+		>
 			<option value="">JOPTION_SELECT_ACCESS</option>
 		</field>
 		<field
@@ -44,7 +44,7 @@
 				label="JOPTION_FILTER_LANGUAGE"
 				description="JOPTION_FILTER_LANGUAGE_DESC"
 				onchange="this.form.submit();"
-				>
+		>
 			<option value="">JOPTION_SELECT_LANGUAGE</option>
 			<option value="*">JALL</option>
 		</field>
@@ -58,6 +58,6 @@
 				label="COM_CONTENT_LIST_LIMIT"
 				description="COM_CONTENT_LIST_LIMIT_DESC"
 				onchange="this.form.submit();"
-				/>
+		/>
 	</fields>
 </form>

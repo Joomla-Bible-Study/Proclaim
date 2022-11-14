@@ -7,14 +7,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Administrator\Field;
-// No Direct Access
+
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die;
-
 
 /**
  * Books List Form Field class for the Proclaim component
@@ -22,25 +22,25 @@ defined('_JEXEC') or die;
  * @package  Proclaim.Admin
  * @since    7.0.4
  */
-class elementoptionsField extends ListField
+class ElementOptionsField extends ListField
 {
 	/**
 	 * The field type.
 	 *
-	 * @var         string
+	 * @var  string
 	 *
 	 * @since 7.0
 	 */
-	protected $type = 'Elementoptions';
+	protected $type = 'ElementOptions';
 
 	/**
 	 * Method to get a list of options for a list input.
 	 *
-	 * @return      array           An array of HTMLHelper options.
+	 * @return  array   An array of HTMLHelper options.
 	 *
 	 * @since 7.0
 	 */
-	protected function getOptions()
+	protected function getOptions(): array
 	{
 		$options[] = HTMLHelper::_('select.option', '0', Text::_('JBS_CMN_NONE'));
 		$options[] = HTMLHelper::_('select.option', '1', Text::_('JBS_TPL_PARAGRAPH'));
@@ -50,8 +50,7 @@ class elementoptionsField extends ListField
 		$options[] = HTMLHelper::_('select.option', '5', Text::_('JBS_TPL_HEADER4'));
 		$options[] = HTMLHelper::_('select.option', '6', Text::_('JBS_TPL_HEADER5'));
 		$options[] = HTMLHelper::_('select.option', '7', Text::_('JBS_TPL_BLOCKQUOTE'));
-		$options   = array_merge(parent::getOptions(), $options);
 
-		return $options;
+		return array_merge(parent::getOptions(), $options);
 	}
 }

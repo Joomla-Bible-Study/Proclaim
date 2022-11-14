@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-    <fieldset addfieldpath="/administrator/components/com_proclaim/models/fields">
+    <fieldset addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
         <field name="server" type="sql" extension="com_proclaim" label="JBS_CMN_SERVER"
                description="JBS_MED_SERVER_DESC" class="inputbox" default="-1"
                query="SELECT id, server_name FROM #__bsms_servers WHERE published=1 ORDER BY server_name ASC"
@@ -31,7 +31,7 @@
             <option value="*">JALL</option>
         </field>
 
-        <field name="download_id" type="mediafile" label="JBS_STY_DOWNLOAD_LINK" description="JBS_STY_DOWNLOAD_LINK_DESC" default="0"
+        <field name="download_id" type="MediaFile" label="JBS_STY_DOWNLOAD_LINK" description="JBS_STY_DOWNLOAD_LINK_DESC" default="0"
                 >
             <option value="-1">JBS_STY_SELECT_DOWNLOAD_LINK</option>
                 </field>

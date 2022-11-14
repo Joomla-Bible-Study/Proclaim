@@ -12,7 +12,7 @@
 			<field name="mediacode" type="textarea" label="JBS_CMN_AVR"
 			       description="JBS_MED_AVRELOADED_DESC" class="inputbox" cols="64" rows="5"
 			       filter="raw"/>
-			<field name="size" type="filesize" label="JBS_CMN_FILESIZE"
+			<field name="size" type="Filesize" label="JBS_CMN_FILESIZE"
 			       description="JBS_MED_FILESIZE_DESC" class="inputbox" size="15"/>
 			<field name="special"
 			       type="list"
@@ -122,7 +122,7 @@
 			</field>
 			<field name="media_button_color" type="color" description="JBS_ADDON_LEGACY_BUTTON_COLOR_DESC"
 			       label="JBS_ADDON_LEGACY_BUTTON_COLOR"/>
-			<field name="media_icon_type" type="icontype" extension="com_proclaim" class="inputbox"
+			<field name="media_icon_type" type="IconType" extension="com_proclaim" class="inputbox"
 			       default=""
 			       label="JBS_ADDON_LEGACY_ICON_TYPE"
 			       description="JBS_ADDON_LEGACY_ICON_TYPE_DESC">
@@ -131,7 +131,7 @@
 			       description="JBS_ADDON_LEGACY_CUSTOM_ICON_DESC"/>
 			<field name="media_icon_text_size" type="text" default="24" label="JBS_ADDON_LEGACY_FONT_SIZE"
 			       description="JBS_ADDON_LEGACY_FONT_SIZE_DESC"/>
-			<field name="mime_type" type="mimetype" extension="com_proclaim"
+			<field name="mime_type" type="MimeType" extension="com_proclaim"
 			       label="JBS_MED_CHOOSE_MIMETYPE" description="JBS_MED_CHOOSE_MIMETYPE_DESC"
 			       class="inputbox" default="">
 			</field>

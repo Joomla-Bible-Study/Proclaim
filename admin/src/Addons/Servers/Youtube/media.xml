@@ -56,7 +56,7 @@
 			</field>
 			<field name="media_button_color" type="color" description="JBS_ADDON_YOUTUBE_BUTTON_COLOR_DESC"
 			       label="JBS_ADDON_YOUTUBE_BUTTON_COLOR"/>
-			<field name="media_icon_type" type="icontype" class="inputbox" size="15" default="fa fa-youtube"
+			<field name="media_icon_type" type="IconType" class="inputbox" size="15" default="fa fa-youtube"
 			       label="JBS_ADDON_YOUTUBE_ICON_TYPE"
 			       description="JBS_ADDON_YOUTUBE_ICON_TYPE_DESC">
 			</field>

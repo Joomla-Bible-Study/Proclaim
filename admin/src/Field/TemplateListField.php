@@ -8,17 +8,13 @@
  * @link       https://www.christianwebministries.org
  * */
 
-// No Direct Access
-
 namespace CWM\Component\Proclaim\Administrator\Field;
 defined('_JEXEC') or die;
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Form\Form;
-
-
-
 
 /**
  * Teachers List Form Field class for the Proclaim component
@@ -26,7 +22,7 @@ use Joomla\CMS\Form\Form;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class templatelistField extends ListField
+class TemplateListField extends ListField
 {
 	/**
 	 * The field type.
@@ -37,10 +33,11 @@ class templatelistField extends ListField
 	 */
 	protected $type = 'Templates';
 
-	/** @var  object Template Table
+	/** @var  array Template Table
 	 *
-	 * @since 9.0.13 */
-	public static $templates;
+	 * @since 9.0.13
+	 */
+	public static array $templates = array();
 
 	/**
 	 * Method to get a list of options for a list input.
@@ -49,13 +46,13 @@ class templatelistField extends ListField
 	 *
 	 * @since 9.0.0
 	 */
-	protected function getOptions()
+	protected function getOptions(): array
 	{
 		$options = [];
 
 		if (!self::$templates)
 		{
-			$db = Factory::getContainer()->get('DatabaseDriver');
+			$db    = Factory::getContainer()->get('DatabaseDriver');
 			$query = $db->getQuery(true);
 			$query->select('id,title');
 			$query->from('#__bsms_templates');

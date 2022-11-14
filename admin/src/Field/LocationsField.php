@@ -7,8 +7,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-// No Direct Access
+
 namespace CWM\Component\Proclaim\Administrator\Field;
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\Form\FormField;
@@ -17,7 +18,6 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die;
-
 
 /**
  * Location List Form Field class for the Proclaim component
@@ -30,7 +30,7 @@ class LocationsField extends ListField
 	/**
 	 * The field type.
 	 *
-	 * @var         string
+	 * @var  string
 	 *
 	 * @since 7.0
 	 */
@@ -39,19 +39,19 @@ class LocationsField extends ListField
 	/**
 	 * Method to get a list of options for a list input.
 	 *
-	 * @return      array           An array of JHtml options.
+	 * @return  array   An array of JHtml options.
 	 *
 	 * @since 7.0
 	 */
-	protected function getOptions()
+	protected function getOptions(): array
 	{
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('id,location_text');
 		$query->from('#__bsms_locations');
 		$db->setQuery((string) $query);
 		$messages = $db->loadObjectList();
-				$options = array();
+		$options  = array();
 
 		if ($messages)
 		{
@@ -61,8 +61,6 @@ class LocationsField extends ListField
 			}
 		}
 
-		$options = array_merge(parent::getOptions(), $options);
-
-		return $options;
+		return array_merge(parent::getOptions(), $options);
 	}
 }

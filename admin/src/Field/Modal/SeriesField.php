@@ -7,6 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Administrator\Field\Modal;
 
 // No Direct Access
@@ -41,9 +42,10 @@ class SeriesField extends FormField
 	 *
 	 * @return    string  The field input markup.
 	 *
+	 * @throws \Exception
 	 * @since    1.6
 	 */
-	protected function getInput()
+	protected function getInput(): string
 	{
 		$allowNew       = ((string) $this->element['new'] == 'true');
 		$allowEdit      = ((string) $this->element['edit'] == 'true');
@@ -100,11 +102,11 @@ class SeriesField extends FormField
 		{
 			$linkSeries .= '&amp;forcedLanguage=' . $this->element['language'];
 			$linkSerie  .= '&amp;forcedLanguage=' . $this->element['language'];
-			$modalTitle    = Text::_('JBS_CMN_SELECT_SERIES') . ' &#8212; ' . $this->element['label'];
+			$modalTitle = Text::_('JBS_CMN_SELECT_SERIES') . ' &#8212; ' . $this->element['label'];
 		}
 		else
 		{
-			$modalTitle    = Text::_('JBS_CMN_SELECT_SERIES');
+			$modalTitle = Text::_('JBS_CMN_SELECT_SERIES');
 		}
 
 		$urlSelect = $linkSeries . '&amp;function=jSelectSeries_' . $this->id;
@@ -113,7 +115,7 @@ class SeriesField extends FormField
 
 		if ($value)
 		{
-			$db = Factory::getContainer()->get('DatabaseDriver');
+			$db    = Factory::getContainer()->get('DatabaseDriver');
 			$query = $db->getQuery(true)
 				->select($db->quoteName('series_text') . 'AS name')
 				->from($db->quoteName('#__bsms_series'))
@@ -134,7 +136,7 @@ class SeriesField extends FormField
 		$title = empty($title) ? Text::_('JBS_CMN_SELECT_SERIES') : htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
 
 		// The current series display field.
-		$html  = '';
+		$html = '';
 
 		if ($allowSelect || $allowNew || $allowEdit || $allowClear)
 		{
@@ -206,13 +208,13 @@ class SeriesField extends FormField
 				'bootstrap.renderModal',
 				'ModalSelect' . $modalId,
 				array(
-					'title'       => $modalTitle,
-					'url'         => $urlSelect,
-					'height'      => '400px',
-					'width'       => '800px',
-					'bodyHeight'  => 70,
-					'modalWidth'  => 80,
-					'footer'      => '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">'
+					'title'      => $modalTitle,
+					'url'        => $urlSelect,
+					'height'     => '400px',
+					'width'      => '800px',
+					'bodyHeight' => 70,
+					'modalWidth' => 80,
+					'footer'     => '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">'
 						. Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>',
 				)
 			);

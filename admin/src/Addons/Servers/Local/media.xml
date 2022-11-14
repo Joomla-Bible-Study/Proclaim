@@ -10,7 +10,7 @@
 			       description="JBS_MED_USE_FILENAME_AS_PATH"
 			       class="inputbox required"
 			       required="true"/>
-			<field name="size" type="filesize" label="JBS_CMN_FILESIZE"
+			<field name="size" type="Filesize" label="JBS_CMN_FILESIZE"
 			       description="JBS_MED_FILESIZE_DESC" class="inputbox" size="15"/>
 			<field name="media_hours" type="text" label="JBS_CMN_HOURS" description="" default="00" size="2">
 			</field>
@@ -103,7 +103,7 @@
 			</field>
 			<field name="media_button_color" type="color" description="JBS_ADDON_LOCAL_BUTTON_COLOR_DESC"
 			       label="JBS_ADDON_LOCAL_BUTTON_COLOR"/>
-			<field name="media_icon_type" type="icontype" class="inputbox" size="15" default=""
+			<field name="media_icon_type" type="IconType" class="inputbox" size="15" default=""
 			       label="JBS_ADDON_LOCAL_ICON_TYPE"
 			       description="JBS_ADDON_LOCAL_ICON_TYPE_DESC">
 			</field>
@@ -111,7 +111,7 @@
 			       description="JBS_ADDON_LOCAL_CUSTOM_ICON_DESC"/>
 			<field name="media_icon_text_size" type="text" default="24" label="JBS_ADDON_LOCAL_FONT_SIZE"
 			       description="JBS_ADDON_LOCAL_FONT_SIZE_DESC"/>
-			<field name="mime_type" type="mimetype" extension="com_proclaim"
+			<field name="mime_type" type="MimeType" extension="com_proclaim"
 			       label="JBS_MED_CHOOSE_MIMETYPE" description="JBS_MED_CHOOSE_MIMETYPE_DESC"
 			       class="inputbox" default="">
 			</field>

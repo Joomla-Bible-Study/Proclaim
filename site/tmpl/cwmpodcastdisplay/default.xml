@@ -9,10 +9,10 @@
     <fields name="params">
         <fieldset name="basic"
                   label="JBS_MNU_PODCASTS_LIST_LAYOUT"
-                  addfieldpath="/administrator/components/com_proclaim/src/Field">
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
 
             <field name="mteacher_id"
-                   type="teacherlist"
+                   type="TeacherList"
                    label="JBS_CMN_FILTERS_TEACHER"
                    description="JBS_CMN_FILTERS_DESC"
                    multiple="true"
@@ -21,7 +21,7 @@
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
             <field name="mseries_id"
-                   type="serieslist"
+                   type="SeriesList"
                    multiple="true"
                    label="JBS_CMN_FILTERS_SERIES"
                    description="JBS_CMN_FILTERS_DESC"
@@ -42,14 +42,14 @@
                    default="-1">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
-            <field name="mtopic_id" type="topicslist" default="-1" multiple="true" size="10"
+            <field name="mtopic_id" type="TopicsList" default="-1" multiple="true" size="10"
                    label="JBS_CMN_FILTERS_TOPICS"
                    description="JBS_CMN_FILTERS_DESC"
                    class="inputbox">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
             <field name="mmessagetype"
-                   type="messagetypelist"
+                   type="MessageTypeList"
                    multiple="true"
                    label="JBS_CMN_FILTERS_MESSAGETYPES"
                    description="JBS_CMN_FILTERS_DESC"
@@ -57,7 +57,7 @@
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
             <field name="mlocations"
-                   type="locationslist"
+                   type="LocationsList"
                    multiple="true"
                    label="JBS_CMN_FILTERS_LOCATIONS"
                    description="JBS_CMN_FILTERS_DESC"

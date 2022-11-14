@@ -7,46 +7,51 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Administrator\Field;
-// No Direct Access
+
+use CWM\Component\Proclaim\Site\Helper\CWMMedia;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die;
 
-
-
 /**
- * Books List Form Field class for the Proclaim component
+ * Mime Type List Form Field class for the Proclaim component
  *
  * @package  Proclaim.Admin
- * @since    7.0.4
+ * @since    7.0.0
  */
-class teacherlinkoptionsField extends ListField
+class MimeTypeField extends ListField
 {
 	/**
 	 * The field type.
 	 *
-	 * @var         string
+	 * @var  string
 	 *
 	 * @since 7.0
 	 */
-	protected $type = 'TeacherLinkoptions';
+	protected $type = 'MimeType';
 
 	/**
 	 * Method to get a list of options for a list input.
 	 *
-	 * @return      array           An array of JHtml options.
+	 * @return  array   An array of JHtml options.
 	 *
 	 * @since 7.0
 	 */
-	protected function getOptions()
+	protected function getOptions(): array
 	{
-		$options[] = HtmlHelper::_('select.option', '0', Text::_('JBS_TPL_NO_LINK'));
-		$options[] = HtmlHelper::_('select.option', '3', Text::_('JBS_TPL_LINK_TO_TEACHERS_PROFILE'));
-		$options   = array_merge(parent::getOptions(), $options);
+		$MediaHelper = new CWMMedia;
+		$mimetypes   = $MediaHelper->getMimetypes();
 
-		return $options;
+		$options = array();
+
+		foreach ($mimetypes as $key => $message)
+		{
+			$options[] = HTMLHelper::_('select.option', $message, $key);
+		}
+
+		return array_merge(parent::getOptions(), $options);
 	}
 }

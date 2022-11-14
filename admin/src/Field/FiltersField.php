@@ -26,7 +26,7 @@ class FiltersField extends FormField
 	/**
 	 * The form field type.
 	 *
-	 * @var        string
+	 * @var  string
 	 * @since    1.6
 	 */
 	public $type = 'Filters';
@@ -36,11 +36,11 @@ class FiltersField extends FormField
 	 *
 	 * TODO: Add access check.
 	 *
-	 * @return    string    The field input markup.
+	 * @return  string   The field input markup.
 	 *
 	 * @since    1.6
 	 */
-	protected function getInput()
+	protected function getInput(): string
 	{
 		// Add translation string for notification
 		Text::script('COM_CONFIG_TEXT_FILTERS_NOTE');
@@ -82,7 +82,7 @@ class FiltersField extends FormField
 		{
 			if (!isset($this->value[$group->value]))
 			{
-				$this->value = [];
+				$this->value                = [];
 				$this->value[$group->value] = array('filter_type' => 'BL', 'filter_tags' => '', 'filter_attributes' => '');
 			}
 
@@ -151,11 +151,11 @@ class FiltersField extends FormField
 	/**
 	 * A helper to get the list of user groups.
 	 *
-	 * @return    array
+	 * @return  array
 	 *
 	 * @since    1.6
 	 */
-	protected function getUserGroups()
+	protected function getUserGroups(): array
 	{
 		// Get a database object.
 		$db = Factory::getContainer()->get('DatabaseDriver');

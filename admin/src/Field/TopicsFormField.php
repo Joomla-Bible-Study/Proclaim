@@ -7,15 +7,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Administrator\Field;
-// No Direct Access
+
 use Joomla\CMS\Form\FormField;
 
 defined('_JEXEC') or die;
-
-jimport('joomla.html.html');
-jimport('joomla.access.access');
-jimport('joomla.form.formfield');
 
 /**
  * Form Field class for the Topics
@@ -41,7 +38,7 @@ class TopicsFormField extends FormField
 	 *
 	 * @since 9.0.0
 	 */
-	protected function getInput()
+	protected function getInput(): string
 	{
 		return '<input type="hidden" id="topics" name="jform[topics]"/>';
 	}

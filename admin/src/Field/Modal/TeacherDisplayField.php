@@ -43,7 +43,7 @@ class TeacherDisplayField extends FormField
 	 * @throws \Exception
 	 * @since    1.6
 	 */
-	protected function getInput()
+	protected function getInput(): string
 	{
 		$allowNew       = ((string) $this->element['new'] == 'true');
 		$allowEdit      = ((string) $this->element['edit'] == 'true');

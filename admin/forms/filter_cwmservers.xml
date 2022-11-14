@@ -6,14 +6,14 @@
 				type="text"
 				label="JBS_CMN_FILTER_SEARCH_DESC"
 				hint="JSEARCH_FILTER"
-				/>
+		/>
 		<field
 				name="published"
 				type="status"
 				label="COM_CONTENT_FILTER_PUBLISHED"
 				description="COM_CONTENT_FILTER_PUBLISHED_DESC"
 				onchange="this.form.submit();"
-				>
+		>
 			<option value="">JOPTION_SELECT_PUBLISHED</option>
 		</field>
 		<field
@@ -22,7 +22,7 @@
 				label="JOPTION_FILTER_ACCESS"
 				description="JOPTION_FILTER_ACCESS_DESC"
 				onchange="this.form.submit();"
-				>
+		>
 			<option value="">JOPTION_SELECT_ACCESS</option>
 		</field>
 	</fields>
@@ -35,6 +35,6 @@
 				label="COM_CONTENT_LIST_LIMIT"
 				description="COM_CONTENT_LIST_LIMIT_DESC"
 				onchange="this.form.submit();"
-				/>
+		/>
 	</fields>
 </form>

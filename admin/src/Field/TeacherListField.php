@@ -7,7 +7,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Administrator\Field;
+
 use JFormFieldList;
 use JFormHelper;
 use JHtml;
@@ -15,9 +17,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
 
-// No Direct Access
 defined('_JEXEC') or die;
-JFormHelper::loadFieldClass('list');
 
 /**
  * Teachers List Form Field class for the Proclaim component
@@ -43,9 +43,9 @@ class TeacherListField extends ListField
 	 *
 	 * @since 9.0.0
 	 */
-	protected function getOptions()
+	protected function getOptions(): array
 	{
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('id,teachername');
 		$query->from('#__bsms_teachers');

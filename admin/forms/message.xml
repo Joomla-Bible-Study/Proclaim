@@ -37,7 +37,7 @@
 			<option value="*">JALL</option>
 		</field>
 
-		<field name="download_id" type="mediafile" label="JBS_STY_DOWNLOAD_LINK"
+		<field name="download_id" type="MediaFile" label="JBS_STY_DOWNLOAD_LINK"
 		       description="JBS_STY_DOWNLOAD_LINK_DESC" default="0">
 			<option value="-1">JBS_STY_SELECT_DOWNLOAD_LINK</option>
 		</field>
@@ -129,7 +129,7 @@
 			<option value="-1">JBS_CMN_SELECT_MESSAGETYPE</option>
 		</field>
 		<field name="thumbnailm" type="hidden"/>
-		<field name="image" type="media" directory="biblestudy/studies" label="JBS_STY_STUDY_IMAGE" />
+		<field name="image" type="media" directory="biblestudy/studies" label="JBS_STY_STUDY_IMAGE"/>
 
 
 		<field name="rules" type="rules" label="JFIELD_RULES_LABEL"
@@ -181,10 +181,11 @@
 
 	<fields name="params">
 		<fieldset name="params">
-			<field name="studyimage" type="StudyImage" directory="/media/com_proclaim/images/stockimages" label="CWM_STOCK_IMAGE" hide_default="true" />
+			<field name="studyimage" type="StudyImage" directory="/media/com_proclaim/images/stockimages"
+			       label="CWM_STOCK_IMAGE" hide_default="true"/>
 			<field name="nooverlaysimplemode" type="list" label="CWM_SIMPLE_MODE_TEXT_OVERLAY"
-				   description="CWM_SIMPLE_MODE_TEXT_OVERLAY_DESC"
-				   default="yes">
+			       description="CWM_SIMPLE_MODE_TEXT_OVERLAY_DESC"
+			       default="yes">
 				<option value="no">JBS_CMN_NO</option>
 				<option value="yes">JBS_CMN_YES</option>
 			</field>

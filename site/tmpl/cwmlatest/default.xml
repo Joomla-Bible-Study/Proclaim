@@ -7,7 +7,7 @@
         </message>
     </layout>
     <fields name="request">
-        <fieldset name="request" addfieldpath="/administrator/components/com_proclaim/src/Field">
+        <fieldset name="request" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="t" type="sql"
                    description="JBS_MNU_SELECT_TEMPLATE_DESC"
                    label="JBS_MNU_SELECT_TEMPLATE"

@@ -7,8 +7,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Administrator\Field;
-// No Direct Access
+
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
@@ -22,7 +23,6 @@ use Joomla\Registry\Registry;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
 
-
 /**
  * Location List Form Field class for the Proclaim component
  *
@@ -31,46 +31,58 @@ use Joomla\CMS\Filesystem\Folder;
  */
 class StudyImageField extends MediaField
 {
-
-//The field class must know its own type through the variable $type.
+	/**
+	 * @var string
+	 * @since 7.0.0
+	 */
 	protected $type = 'StudyImageField';
 
-	public function getInput() {
-		// code that returns HTML that will be shown as the form field
-	$form = 	FormHelper::loadFieldClass('media');
+	/**
+	 *
+	 * @return string
+	 *
+	 * @since 7.0.0
+	 */
+	public function getInput(): string
+	{
+		// Code that returns HTML that will be shown as the form field
+		$form = FormHelper::loadFieldClass('media');
 
-			$db = Factory::getContainer()->get('DatabaseDriver');
-			$query  = $db->getQuery(true);
-			$query->select('*')
-				->from('#__extensions')
+		$db    = Factory::getContainer()->get('DatabaseDriver');
+		$query = $db->getQuery(true);
+		$query->select('*')
+			->from('#__extensions')
+			->where('name = "plg_filesystem_local"');
+		$db->setQuery($query);
+		$local   = $db->loadObject();
+		$pparams = $local->params;
+		$ismedia = substr_count($pparams, 'media');
+
+		if ($ismedia !== 1)
+		{
+			if ($pparams === '{}' || is_null($pparams))
+			{
+				$newmedia = '{"directories":{"directories0":{"directory":"media"}}}';
+			}
+			else
+			{
+				$dircount  = substr_count($pparams, 'directory');
+				$end       = strlen($pparams);
+				$getstring = substr($pparams, 0, $end - 2);
+				$newmedia  = $getstring . ', "directories' . $dircount . '":{"directory":"media"}}}';
+			}
+
+			$newmedia = addslashes($newmedia);
+
+			$query = $db->getQuery(true);
+			$query->update('#__extensions')
+				->set('params = "' . $newmedia . '"')
 				->where('name = "plg_filesystem_local"');
 			$db->setQuery($query);
-			$local = $db->loadObject();
-			$pparams = $local->params;
-			$ismedia = substr_count($pparams, 'media');
-			if ($ismedia !== 1)
-			{
-				if ($pparams == '{}' || is_null($pparams))
-				{
-					$newmedia = '{"directories":{"directories0":{"directory":"media"}}}';
-					$newmedia = addslashes($newmedia);
-				}
-				else{
-					$dircount = substr_count($pparams, 'directory');
-					$end = strlen($pparams);
-					$getstring = substr($pparams, 0, $end - 2);
-					$newmedia = $getstring.', "directories'.$dircount.'":{"directory":"media"}}}';
-					$newmedia = addslashes($newmedia);
-				}
-				$query = $db->getQuery(true);
-				$query->update('#__extensions')
-					->set('params = "'.$newmedia.'"')
-					->where('name = "plg_filesystem_local"');
-				$db->setQuery($query);
-				$db->execute();
-			}
-			//$form = '<field name="studyimage" type="media" directory="/media/com_proclaim/images/stockimages" label="CWM_STOCK_IMAGE" hide_default="true" />';
-			return parent::getInput();
+			$db->execute();
+		}
+
+		return parent::getInput();
 	}
 
 }

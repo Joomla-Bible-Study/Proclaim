@@ -27,7 +27,7 @@
         <fields name="params">
             <fieldset name="basic"
                       addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-                <field name="dummy" type="loadlanguagefile" default=""/>   <!-- load common language file -->
+                <field name="dummy" type="LoadLanguageFile" default=""/>   <!-- load common language file -->
                 <field name="email" type="list" default="0"
                        label="JBS_PLG_PODCASTBACKUP_EMAIL_SEND" description="JBS_PLG_PODCASTBACKUP_EMAIL_SEND_DESC">
                     <option value="0">JNO</option>

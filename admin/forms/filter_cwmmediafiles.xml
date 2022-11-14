@@ -19,7 +19,7 @@
 			</field>
 			<field
 					name="mediaYear"
-					type="Yearlist"
+					type="YearList"
 					label="JBS_CMN_SELECT_YEAR"
 					description="JBS_CMN_SELECT_YEAR_DESC"
 					onchange="this.form.submit();"

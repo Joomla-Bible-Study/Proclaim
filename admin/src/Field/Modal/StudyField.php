@@ -45,7 +45,7 @@ class StudyField extends FormField
 	 * @throws \Exception
 	 * @since 9.0.0
 	 */
-	protected function getInput()
+	protected function getInput(): string
 	{
 		$allowNew       = ((string) $this->element['new'] == 'true');
 		$allowEdit      = ((string) $this->element['edit'] == 'true');
@@ -102,11 +102,11 @@ class StudyField extends FormField
 		{
 			$linkSeries .= '&amp;forcedLanguage=' . $this->element['language'];
 			$linkSerie  .= '&amp;forcedLanguage=' . $this->element['language'];
-			$modalTitle    = Text::_('JBS_CMN_SELECT_STUDY') . ' &#8212; ' . $this->element['label'];
+			$modalTitle = Text::_('JBS_CMN_SELECT_STUDY') . ' &#8212; ' . $this->element['label'];
 		}
 		else
 		{
-			$modalTitle    = Text::_('JBS_CMN_SELECT_STUDY');
+			$modalTitle = Text::_('JBS_CMN_SELECT_STUDY');
 		}
 
 		$urlSelect = $linkSeries . '&amp;function=jSelectMessages_' . $this->id;
@@ -115,7 +115,7 @@ class StudyField extends FormField
 
 		if ($value)
 		{
-			$db = Factory::getContainer()->get('DatabaseDriver');
+			$db    = Factory::getContainer()->get('DatabaseDriver');
 			$query = $db->getQuery(true)
 				->select($db->quoteName('studytitle') . 'AS name')
 				->from($db->quoteName('#__bsms_studies'))
@@ -136,7 +136,7 @@ class StudyField extends FormField
 		$title = empty($title) ? Text::_('JBS_CMN_SELECT_STUDY') : htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
 
 		// The current series display field.
-		$html  = '';
+		$html = '';
 
 		if ($allowSelect || $allowNew || $allowEdit || $allowClear)
 		{
@@ -208,13 +208,13 @@ class StudyField extends FormField
 				'bootstrap.renderModal',
 				'ModalSelect' . $modalId,
 				array(
-					'title'       => $modalTitle,
-					'url'         => $urlSelect,
-					'height'      => '400px',
-					'width'       => '800px',
-					'bodyHeight'  => 70,
-					'modalWidth'  => 80,
-					'footer'      => '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">'
+					'title'      => $modalTitle,
+					'url'        => $urlSelect,
+					'height'     => '400px',
+					'width'      => '800px',
+					'bodyHeight' => 70,
+					'modalWidth' => 80,
+					'footer'     => '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">'
 						. Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>',
 				)
 			);

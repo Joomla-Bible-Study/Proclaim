@@ -20,7 +20,7 @@
 	<config>
 		<fields name="params">
 			<fieldset name="basic" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-				<field name="dummy" type="loadlanguagefile" default=""/>
+				<field name="dummy" type="LoadLanguageFile" default=""/>
 				<field name="t" type="sql" label="JBS_MDL_SELECT_TEMPLATE"
 				       description="JBS_MDL_SELECT_TEMPLATE_DESC" default="1"
 				       query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
@@ -66,12 +66,12 @@
 				       label="JFIELD_LANGUAGE_LABEL" description="JBS_MDL_LANGUAGE_DESC">
 					<option value="*">JALL</option>
 				</field>
-				<field name="teacher_id" type="teacherlist" multiple="true" default=""
+				<field name="teacher_id" type="TeacherList" multiple="true" default=""
 				       label="JBS_CMN_FILTERS_TEACHER" description="JBS_CMN_FILTERS_DESC">
 					<option value="">JGLOBAL_USE_GLOBAL</option>
 					<option value="-1">JBS_CMN_SHOW_ALL</option>
 				</field>
-				<field name="series_id" type="series" multiple="true" default=""
+				<field name="series_id" type="Series" multiple="true" default=""
 				       label="JBS_CMN_FILTERS_SERIES" description="JBS_CMN_FILTERS_DESC">
 					<option value="">JGLOBAL_USE_GLOBAL</option>
 					<option value="-1">JBS_CMN_SHOW_ALL</option>
@@ -91,7 +91,7 @@
 					<option value="-1">JBS_CMN_SHOW_ALL</option>
 				</field>
 
-				<field name="locations" type="locations" multiple="true"
+				<field name="locations" type="Locations" multiple="true"
 				       label="JBS_CMN_FILTERS_LOCATIONS" description="JBS_CMN_FILTERS_DESC"
 				       default="">
 					<option value="">JGLOBAL_USE_GLOBAL</option>
@@ -233,169 +233,169 @@
 				</field>
 			</fieldset>
 			<fieldset name="JBS_TPL_DISPLAY_ITEMS1" label="JBS_TPL_DISPLAY_ITEMS1" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-				<field name="scripture1row" type="rowoptions" default="1" label="JBS_CMN_SCRIPTURE" description="JBS_TPL_ROW_DESC"/>
-				<field name="scripture1col" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
-				<field name="scripture1colspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
-				<field name="scripture1element" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+				<field name="scripture1row" type="RowOptions" default="1" label="JBS_CMN_SCRIPTURE" description="JBS_TPL_ROW_DESC"/>
+				<field name="scripture1col" type="SpanOptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
+				<field name="scripture1colspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
+				<field name="scripture1element" type="ElementOptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 				<field name="scripture1custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
-				<field name="scripture1linktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+				<field name="scripture1linktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 				<field type="spacer" name="myspacer1" hr="true"/>
-				<field name="scripture2row" type="rowoptions" size="1" default="0" label="JBS_CMN_SCRIPTURE2" description="JBS_TPL_ROW_DESC"/>
-				<field name="scripture2col" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
-				<field name="scripture2colspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
-				<field name="scripture2element" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+				<field name="scripture2row" type="RowOptions" size="1" default="0" label="JBS_CMN_SCRIPTURE2" description="JBS_TPL_ROW_DESC"/>
+				<field name="scripture2col" type="SpanOptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
+				<field name="scripture2colspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
+				<field name="scripture2element" type="ElementOptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 				<field name="scripture2custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
-				<field name="scripture2linktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+				<field name="scripture2linktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 				<field type="spacer" name="myspacer2" hr="true"/>
-				<field name="secondaryrow" type="rowoptions" size="1" default="0" label="JBS_CMN_SECONDARY_REFERENCES" description="JBS_TPL_ROW_DESC"/>
-				<field name="secondarycol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
-				<field name="secondarycolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
-				<field name="secondaryelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+				<field name="secondaryrow" type="RowOptions" size="1" default="0" label="JBS_CMN_SECONDARY_REFERENCES" description="JBS_TPL_ROW_DESC"/>
+				<field name="secondarycol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
+				<field name="secondarycolspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
+				<field name="secondaryelement" type="ElementOptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 				<field name="secondarycustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
-				<field name="secondarylinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+				<field name="secondarylinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 				<field type="spacer" name="myspacer3" hr="true"/>
-				<field name="jbsmediarow" type="rowoptions" size="1" default="1" label="JBS_CMN_MEDIA" description="JBS_TPL_ROW_DESC"/>
-				<field name="jbsmediacol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
-				<field name="jbsmediacolspan" type="spanoptions" default="1" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
-				<field name="jbsmediaelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+				<field name="jbsmediarow" type="RowOptions" size="1" default="1" label="JBS_CMN_MEDIA" description="JBS_TPL_ROW_DESC"/>
+				<field name="jbsmediacol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
+				<field name="jbsmediacolspan" type="SpanOptions" default="1" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
+				<field name="jbsmediaelement" type="ElementOptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 				<field name="jbsmediacustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
-				<field name="jbsmedialinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+				<field name="jbsmedialinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 			</fieldset>
 			<fieldset name="JBS_TPL_DISPLAY_ITEMS2" label="JBS_TPL_DISPLAY_ITEMS2" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-				<field name="titlerow" type="rowoptions" size="1" default="1" label="JBS_CMN_TITLE" description="JBS_TPL_ROW_DESC"/>
-				<field name="titlecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
-				<field name="titlecolspan" type="spanoptions" default="2" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
-				<field name="titleelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+				<field name="titlerow" type="RowOptions" size="1" default="1" label="JBS_CMN_TITLE" description="JBS_TPL_ROW_DESC"/>
+				<field name="titlecol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
+				<field name="titlecolspan" type="SpanOptions" default="2" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
+				<field name="titleelement" type="ElementOptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 				<field name="titlecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
-				<field name="titlelinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+				<field name="titlelinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 				<field type="spacer" name="myspacer4" hr="true"/>
-				<field name="daterow" type="rowoptions" size="1" default="1" label="JBS_CMN_DATE" description="JBS_TPL_ROW_DESC"/>
-				<field name="datecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
-				<field name="datecolspan" type="spanoptions" default="1" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
-				<field name="dateelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+				<field name="daterow" type="RowOptions" size="1" default="1" label="JBS_CMN_DATE" description="JBS_TPL_ROW_DESC"/>
+				<field name="datecol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
+				<field name="datecolspan" type="SpanOptions" default="1" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
+				<field name="dateelement" type="ElementOptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 				<field name="datecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
-				<field name="datelinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+				<field name="datelinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 				<field type="spacer" name="myspacer5" hr="true"/>
-				<field name="teacherrow" type="rowoptions" size="1" default="0" label="JBS_CMN_TEACHER" description="JBS_TPL_ROW_DESC"/>
-				<field name="teachercol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
-				<field name="teachercolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
-				<field name="teacherelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+				<field name="teacherrow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER" description="JBS_TPL_ROW_DESC"/>
+				<field name="teachercol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
+				<field name="teachercolspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
+				<field name="teacherelement" type="ElementOptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 				<field name="teachercustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
-				<field name="teacherlinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+				<field name="teacherlinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 				<field type="spacer" name="myspacer6" hr="true"/>
-				<field name="teacherimagerrow" type="rowoptions" size="1" default="0" label="JBS_CMN_TEACHER_IMAGE" description="JBS_TPL_ROW_DESC"/>
-				<field name="teacherimagecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
-				<field name="teacherimagecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
-				<field name="teacherimageelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+				<field name="teacherimagerrow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_IMAGE" description="JBS_TPL_ROW_DESC"/>
+				<field name="teacherimagecol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
+				<field name="teacherimagecolspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
+				<field name="teacherimageelement" type="ElementOptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 				<field name="teacherimagecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
-				<field name="teacherlinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+				<field name="teacherlinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 				<field type="spacer" name="myspacer7" hr="true"/>
-				<field name="teacher-titlerow" type="rowoptions" size="1" default="0" label="JBS_CMN_TEACHER_TITLE" description="JBS_TPL_ROW_DESC"/>
-				<field name="teacher-titlecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
-				<field name="teacher-titlecolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
-				<field name="teacher-titleelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+				<field name="teacher-titlerow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_TITLE" description="JBS_TPL_ROW_DESC"/>
+				<field name="teacher-titlecol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
+				<field name="teacher-titlecolspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
+				<field name="teacher-titleelement" type="ElementOptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 				<field name="teacher-titlecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
-				<field name="teacher-titlelinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+				<field name="teacher-titlelinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 			</fieldset>
 			<fieldset name="JBS_TPL_DISPLAY_ITEMS3" label="JBS_TPL_DISPLAY_ITEMS3" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-				<field name="durationrow" type="rowoptions" size="1" default="0" label="JBS_CMN_DURATION" description="JBS_TPL_ROW_DESC"/>
-				<field name="durationcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
-				<field name="durationcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
-				<field name="durationelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+				<field name="durationrow" type="RowOptions" size="1" default="0" label="JBS_CMN_DURATION" description="JBS_TPL_ROW_DESC"/>
+				<field name="durationcol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
+				<field name="durationcolspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
+				<field name="durationelement" type="ElementOptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 				<field name="durationcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
-				<field name="durationlinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+				<field name="durationlinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 				<field type="spacer" name="myspacer8" hr="true"/>
-				<field name="studyintrorow" type="rowoptions" size="1" default="2" label="JBS_CMN_STUDY_INTRO" description="JBS_TPL_ROW_DESC"/>
-				<field name="studyintrocol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
-				<field name="studyintrocolspan" type="spanoptions" default="6" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
-				<field name="studyintroelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+				<field name="studyintrorow" type="RowOptions" size="1" default="2" label="JBS_CMN_STUDY_INTRO" description="JBS_TPL_ROW_DESC"/>
+				<field name="studyintrocol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
+				<field name="studyintrocolspan" type="SpanOptions" default="6" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
+				<field name="studyintroelement" type="ElementOptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 				<field name="studyintrocustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
-				<field name="studyintrolinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+				<field name="studyintrolinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 				<field type="spacer" name="myspacer9" hr="true"/>
-				<field name="seriesrow" type="rowoptions" size="1" default="0" label="JBS_CMN_SERIES" description="JBS_TPL_ROW_DESC"/>
-				<field name="seriescol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
-				<field name="seriescolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
-				<field name="serieselement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+				<field name="seriesrow" type="RowOptions" size="1" default="0" label="JBS_CMN_SERIES" description="JBS_TPL_ROW_DESC"/>
+				<field name="seriescol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
+				<field name="seriescolspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
+				<field name="serieselement" type="ElementOptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 				<field name="seriescustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
-				<field name="serieslinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+				<field name="serieslinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 				<field type="spacer" name="myspacer10" hr="true"/>
-				<field name="seriesthumbnailrow" type="rowoptions" size="1" default="0" label="JBS_CMN_SERIES_THUMBNAIL" description="JBS_TPL_ROW_DESC"/>
-				<field name="seriesthumbnailcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
-				<field name="seriesthumbnailcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
-				<field name="seriesthumbnailelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+				<field name="seriesthumbnailrow" type="RowOptions" size="1" default="0" label="JBS_CMN_SERIES_THUMBNAIL" description="JBS_TPL_ROW_DESC"/>
+				<field name="seriesthumbnailcol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
+				<field name="seriesthumbnailcolspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
+				<field name="seriesthumbnailelement" type="ElementOptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 				<field name="seriesthumbnailcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
-				<field name="seriesthumbnaillinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+				<field name="seriesthumbnaillinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 				<field type="spacer" name="myspacer11" hr="true"/>
-				<field name="seriesdescriptionrow" type="rowoptions" size="1" default="0" label="JBS_CMN_SERIES_DESCRIPTION" description="JBS_TPL_ROW_DESC"/>
-				<field name="seriesdescriptioncol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
-				<field name="seriesdescriptioncolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
-				<field name="seriesdescriptionelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+				<field name="seriesdescriptionrow" type="RowOptions" size="1" default="0" label="JBS_CMN_SERIES_DESCRIPTION" description="JBS_TPL_ROW_DESC"/>
+				<field name="seriesdescriptioncol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
+				<field name="seriesdescriptioncolspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
+				<field name="seriesdescriptionelement" type="ElementOptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 				<field name="seriesdescriptioncustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
-				<field name="seriesdescriptionlinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+				<field name="seriesdescriptionlinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 			</fieldset>
 			<fieldset name="JBS_TPL_DISPLAY_ITEMS4" label="JBS_TPL_DISPLAY_ITEMS4" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-				<field name="submittedrow" type="rowoptions" size="1" default="0" label="JBS_CMN_SUBMITTED_BY" description="JBS_TPL_ROW_DESC"/>
-				<field name="submittedcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
-				<field name="submittedcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
-				<field name="submittedelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+				<field name="submittedrow" type="RowOptions" size="1" default="0" label="JBS_CMN_SUBMITTED_BY" description="JBS_TPL_ROW_DESC"/>
+				<field name="submittedcol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
+				<field name="submittedcolspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
+				<field name="submittedelement" type="ElementOptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 				<field name="submittedcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
-				<field name="submittedlinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+				<field name="submittedlinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 				<field type="spacer" name="myspacer12" hr="true"/>
-				<field name="hitsrow" type="rowoptions" size="1" default="0" label="JBS_CMN_HITS" description="JBS_TPL_ROW_DESC"/>
-				<field name="hitscol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
-				<field name="hitscolspan" type="spanoptions" default="6" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
-				<field name="hitselement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+				<field name="hitsrow" type="RowOptions" size="1" default="0" label="JBS_CMN_HITS" description="JBS_TPL_ROW_DESC"/>
+				<field name="hitscol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
+				<field name="hitscolspan" type="SpanOptions" default="6" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
+				<field name="hitselement" type="ElementOptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 				<field name="hitscustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
-				<field name="hitslinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+				<field name="hitslinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 				<field type="spacer" name="myspacer13" hr="true"/>
-				<field name="downloadsrow" type="rowoptions" size="1" default="0" label="JBS_CMN_DOWNLOADS" description="JBS_TPL_ROW_DESC"/>
-				<field name="downloadscol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
-				<field name="downloadscolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
-				<field name="downloadselement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+				<field name="downloadsrow" type="RowOptions" size="1" default="0" label="JBS_CMN_DOWNLOADS" description="JBS_TPL_ROW_DESC"/>
+				<field name="downloadscol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
+				<field name="downloadscolspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
+				<field name="downloadselement" type="ElementOptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 				<field name="downloadscustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
-				<field name="downloadslinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+				<field name="downloadslinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 			</fieldset>
 			<fieldset name="JBS_TPL_DISPLAY_ITEMS5" label="JBS_TPL_DISPLAY_ITEMS5" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-				<field name="studynumberrow" type="rowoptions" size="1" default="0" label="JBS_CMN_STUDYNUMBER" description="JBS_TPL_ROW_DESC"/>
-				<field name="studynumbercol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
-				<field name="studynumbercolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
-				<field name="studynumberelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+				<field name="studynumberrow" type="RowOptions" size="1" default="0" label="JBS_CMN_STUDYNUMBER" description="JBS_TPL_ROW_DESC"/>
+				<field name="studynumbercol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
+				<field name="studynumbercolspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
+				<field name="studynumberelement" type="ElementOptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 				<field name="studynumbercustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
-				<field name="studynumberlinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+				<field name="studynumberlinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 				<field type="spacer" name="myspacer14" hr="true"/>
-				<field name="topicrow" type="rowoptions" size="1" default="0" label="JBS_CMN_TOPICS" description="JBS_TPL_ROW_DESC"/>
-				<field name="topiccol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
-				<field name="topiccolspan" type="spanoptions" default="6" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
-				<field name="topicelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+				<field name="topicrow" type="RowOptions" size="1" default="0" label="JBS_CMN_TOPICS" description="JBS_TPL_ROW_DESC"/>
+				<field name="topiccol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
+				<field name="topiccolspan" type="SpanOptions" default="6" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
+				<field name="topicelement" type="ElementOptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 				<field name="topiccustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
-				<field name="topiclinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+				<field name="topiclinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 				<field type="spacer" name="myspacer15" hr="true"/>
-				<field name="locationsrow" type="rowoptions" size="1" default="0" label="JBS_CMN_LOCATION" description="JBS_TPL_ROW_DESC"/>
-				<field name="locationscol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
-				<field name="locationscolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
-				<field name="locationselement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+				<field name="locationsrow" type="RowOptions" size="1" default="0" label="JBS_CMN_LOCATION" description="JBS_TPL_ROW_DESC"/>
+				<field name="locationscol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
+				<field name="locationscolspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
+				<field name="locationselement" type="ElementOptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 				<field name="locationscustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
-				<field name="locationslinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+				<field name="locationslinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 			</fieldset>
 			<fieldset name="JBS_TPL_DISPLAY_ITEMS6" label="JBS_TPL_DISPLAY_ITEMS6" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-				<field name="messagetyperow" type="rowoptions" size="1" default="0" label="JBS_CMN_MESSAGETYPE" description="JBS_TPL_ROW_DESC"/>
-				<field name="messagetypecol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
-				<field name="messagetypecolspan" type="spanoptions" default="6" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
-				<field name="messagetypeelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+				<field name="messagetyperow" type="RowOptions" size="1" default="0" label="JBS_CMN_MESSAGETYPE" description="JBS_TPL_ROW_DESC"/>
+				<field name="messagetypecol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
+				<field name="messagetypecolspan" type="SpanOptions" default="6" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
+				<field name="messagetypeelement" type="ElementOptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 				<field name="messagetypecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
-				<field name="messagetypelinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+				<field name="messagetypelinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 				<field type="spacer" name="myspacer16" hr="true"/>
-				<field name="thumbnailrow" type="rowoptions" size="1" default="0" label="JBS_CMN_THUMBNAIL" description="JBS_TPL_ROW_DESC"/>
-				<field name="thumbnailcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
-				<field name="thumbnailcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
-				<field name="thumbnailelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+				<field name="thumbnailrow" type="RowOptions" size="1" default="0" label="JBS_CMN_THUMBNAIL" description="JBS_TPL_ROW_DESC"/>
+				<field name="thumbnailcol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
+				<field name="thumbnailcolspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
+				<field name="thumbnailelement" type="ElementOptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 				<field name="thumbnailcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
-				<field name="thumbnaillinktype" type="linkoptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+				<field name="thumbnaillinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 				<field type="spacer" name="myspacer17" hr="true"/>
-				<field name="customrow" type="rowoptions" size="1" default="" label="JBS_TPL_CUSTOM_TEXT" description="JBS_TPL_ROW_DESC"/>
-				<field name="customcol" type="spanoptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
-				<field name="customcolspan" type="spanoptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
-				<field name="customelement" type="elementoptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+				<field name="customrow" type="RowOptions" size="1" default="" label="JBS_TPL_CUSTOM_TEXT" description="JBS_TPL_ROW_DESC"/>
+				<field name="customcol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN" description="JBS_TPL_COLUMN_DESC"/>
+				<field name="customcolspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN" description="JBS_TPL_COLSPAN_DESC"/>
+				<field name="customelement" type="ElementOptions" default="1" translate="true" multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
 				<field name="customcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"/>
 				<field name="customtext" type="text" size="100" default="" label="JBS_TPL_CUSTOM_TEXT" description="JBS_TPL_CUSTOM_TEXT_DESC"/>
 
