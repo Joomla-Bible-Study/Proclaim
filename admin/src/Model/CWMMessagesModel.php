@@ -99,19 +99,17 @@ class CWMMessagesModel extends ListModel
 	 *
 	 * @return    void
 	 *
-	 * @since 7.1.0
 	 * @throws \Exception
+	 * @since 7.1.0
 	 */
 	protected function populateState($ordering = 'study.studydate', $direction = 'desc')
 	{
-		$app = Factory::getApplication('administrator');
+		$app = Factory::getApplication();
 
 		$forcedLanguage = $app->input->get('forcedLanguage', '', 'cmd');
 
 		// Adjust the context to support modal layouts.
-		$layout = $app->input->get('layout');
-
-		if ($layout)
+		if ($layout = $app->input->get('layout'))
 		{
 			$this->context .= '.' . $layout;
 		}
@@ -155,10 +153,9 @@ class CWMMessagesModel extends ListModel
 
 		$formSubmited = $app->input->post->get('form_submited');
 
-		$access     = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
-		$authorId   = $this->getUserStateFromRequest($this->context . '.filter.author_id', 'filter_author_id');
-		$categoryId = $this->getUserStateFromRequest($this->context . '.filter.category_id', 'filter_category_id');
-		$tag        = $this->getUserStateFromRequest($this->context . '.filter.tag', 'filter_tag', '');
+		// Gets the value of a user state variable and sets it in the session
+		$this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
+		$this->getUserStateFromRequest($this->context . '.filter.author_id', 'filter_author_id');
 
 		if ($formSubmited)
 		{
@@ -167,12 +164,6 @@ class CWMMessagesModel extends ListModel
 
 			$authorId = $app->input->post->get('author_id');
 			$this->setState('filter.author_id', $authorId);
-
-			$categoryId = $app->input->post->get('category_id');
-			$this->setState('filter.category_id', $categoryId);
-
-			$tag = $app->input->post->get('tag');
-			$this->setState('filter.tag', $tag);
 		}
 
 		// List state information.
@@ -190,13 +181,14 @@ class CWMMessagesModel extends ListModel
 	 *
 	 * @return  \Joomla\Database\QueryInterface
 	 *
+	 * @throws \Exception
 	 * @since   7.0
 	 */
 	protected function getListQuery()
 	{
 		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
-		$user  = $user = Factory::getApplication()->getSession()->get('user');
+		$user  = Factory::getApplication()->getSession()->get('user');
 
 		$query->select(
 			$this->getState(

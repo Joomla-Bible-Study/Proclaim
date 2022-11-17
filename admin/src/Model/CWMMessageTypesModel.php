@@ -93,15 +93,22 @@ class CWMMessageTypesModel extends ListModel
 	 *
 	 * @since   7.0.0
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = 'messagetype.message_type', $direction = 'asc'): void
 	{
-		// Adjust the context to support modal layouts.
-		$input  = new Input;
-		$layout = $input->get('layout');
+		$app = Factory::getApplication();
 
-		if ($layout)
+		$forcedLanguage = $app->input->get('forcedLanguage', '', 'cmd');
+
+		// Adjust the context to support modal layouts.
+		if ($layout = $app->input->get('layout'))
 		{
 			$this->context .= '.' . $layout;
+		}
+
+		// Adjust the context to support forced languages.
+		if ($forcedLanguage)
+		{
+			$this->context .= '.' . $forcedLanguage;
 		}
 
 		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
@@ -116,7 +123,29 @@ class CWMMessageTypesModel extends ListModel
 		$access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
 		$this->setState('filter.access', $access);
 
-		parent::populateState('messagetype.message_type', 'asc');
+		$formSubmited = $app->input->post->get('form_submited');
+
+		// Gets the value of a user state variable and sets it in the session
+		$this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
+		$this->getUserStateFromRequest($this->context . '.filter.author_id', 'filter_author_id');
+
+		if ($formSubmited)
+		{
+			$access = $app->input->post->get('access');
+			$this->setState('filter.access', $access);
+
+			$authorId = $app->input->post->get('author_id');
+			$this->setState('filter.author_id', $authorId);
+		}
+
+		// List state information.
+		parent::populateState($ordering, $direction);
+
+		if (!empty($forcedLanguage))
+		{
+			$this->setState('filter.language', $forcedLanguage);
+			$this->setState('filter.forcedLanguage', $forcedLanguage);
+		}
 	}
 
 	/**
@@ -132,7 +161,7 @@ class CWMMessageTypesModel extends ListModel
 	 *
 	 * @since   7.1.0
 	 */
-	protected function getStoreId($id = '')
+	protected function getStoreId($id = ''): string
 	{
 		// Compile the store id.
 		$id .= ':' . $this->getState('filter.search');
@@ -148,13 +177,14 @@ class CWMMessageTypesModel extends ListModel
 	 *
 	 * @return  \Joomla\Database\QueryInterface   A JDatabaseQuery object to retrieve the data set.
 	 *
+	 * @throws \Exception
 	 * @since   7.0.0
 	 */
 	protected function getListQuery()
 	{
 		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
-		$user  = $user = Factory::getApplication()->getSession()->get('user');
+		$user  = Factory::getApplication()->getSession()->get('user');
 
 		$query->select(
 			$this->getState(
@@ -209,7 +239,7 @@ class CWMMessageTypesModel extends ListModel
 		// Add the list ordering clause.
 		$orderCol  = $this->state->get('list.ordering', 'messagetype.message_type');
 		$orderDirn = $this->state->get('list.direction', 'acs');
-		$query->order($db->escape($orderCol . ' ' . $orderDirn));
+		$query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
 
 		return $query;
 	}

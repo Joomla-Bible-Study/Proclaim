@@ -26,54 +26,54 @@ defined('_JEXEC') or die;
 class CWMAssetsModel extends ListModel
 {
 	/**
-	 * Parant ID
+	 * Parent ID
 	 *
-	 * @var null
+	 * @var integer Parent ID of asset
 	 * @since 7.0
 	 */
-	public $parent_id = null;
+	public int $parent_id;
 
 	/** @var integer Total numbers of Versions
 	 * @since 7.0
 	 */
-	public $totalSteps = 0;
+	public int $totalSteps = 0;
 
 	/** @var integer Numbers of Versions already processed
 	 * @since 7.0
 	 */
-	public $doneSteps = 0;
+	public int $doneSteps = 0;
 
 	/**
-	 * @var null
+	 * @var string
 	 * @since 7.0
 	 */
-	public $step = null;
+	public ?string $step = null;
 
 	/**
 	 * @var array
 	 * @since 7.0
 	 */
-	public $assets = array();
+	public array $assets = array();
 
 	/** @var float The time the process started
 	 * @since 7.0
 	 */
-	private $startTime = null;
+	private ?float $startTime = null;
 
 	/** @var array The pre versions to process
 	 * @since 7.0
 	 */
-	private $versionStack = array();
+	private array $versionStack = array();
 
 	/** @var array The pre versions sub sql array to process
 	 * @since 7.0
 	 */
-	private $allupdates = array();
+	private array $allupdates = array();
 
 	/** @var string Version of BibleStudy
 	 * @since 7.0
 	 */
-	private $versionSwitch = null;
+	private ?string $versionSwitch = null;
 
 	/**
 	 * Constructor.
@@ -99,7 +99,7 @@ class CWMAssetsModel extends ListModel
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function startScanning()
+	public function startScanning(): bool
 	{
 		$this->resetStack();
 		$this->resetTimer();
@@ -129,7 +129,7 @@ class CWMAssetsModel extends ListModel
 	 *
 	 * @since 7.0
 	 */
-	private function resetTimer()
+	private function resetTimer(): void
 	{
 		$this->startTime = $this->microtime_float();
 	}
@@ -151,18 +151,17 @@ class CWMAssetsModel extends ListModel
 	/**
 	 * Get migrate versions of DB after import/copy has finished.
 	 *
-	 * @return boolean
+	 * @return void
 	 *
 	 * @since 7.0
 	 */
-	private function getSteps()
+	private function getSteps(): void
 	{
 		$fix = new CWMAssets;
 		$fix->build();
 		$this->versionStack = $fix->query;
 		$this->totalSteps   = $fix->count;
 
-		return true;
 	}
 
 	/**
@@ -175,7 +174,7 @@ class CWMAssetsModel extends ListModel
 	 * @throws \JsonException
 	 * @since 7.0
 	 */
-	public function run(bool $resetTimer = true)
+	public function run(bool $resetTimer = true): bool
 	{
 		if ($resetTimer)
 		{
@@ -204,7 +203,7 @@ class CWMAssetsModel extends ListModel
 	 * @throws \JsonException
 	 * @since 7.0
 	 */
-	private function saveStack()
+	private function saveStack(): void
 	{
 		$stack = array(
 			'version'    => $this->versionStack,
@@ -237,7 +236,7 @@ class CWMAssetsModel extends ListModel
 	 *
 	 * @since 7.0
 	 */
-	private function resetStack()
+	private function resetStack(): void
 	{
 		$session = Factory::getSession();
 		$session->set('asset_stack', '', 'CWM');
@@ -257,7 +256,7 @@ class CWMAssetsModel extends ListModel
 	 * @throws \JsonException
 	 * @since 7.0
 	 */
-	private function loadStack()
+	private function loadStack(): bool
 	{
 		$session = Factory::getApplication()->getSession();
 		$stack   = $session->get('asset_stack', '', 'CWM');
@@ -303,7 +302,7 @@ class CWMAssetsModel extends ListModel
 	 *
 	 * @since 7.0
 	 */
-	private function haveEnoughTime()
+	private function haveEnoughTime(): bool
 	{
 		$now     = $this->microtime_float();
 		$elapsed = abs($now - $this->startTime);
@@ -318,7 +317,7 @@ class CWMAssetsModel extends ListModel
 	 *
 	 * @since 7.0
 	 */
-	private function RealRun()
+	private function RealRun(): bool
 	{
 		if (!empty($this->versionStack))
 		{
@@ -360,7 +359,7 @@ class CWMAssetsModel extends ListModel
 	 *
 	 * @since 7.0
 	 */
-	public function parentid()
+	public function parentid(): void
 	{
 		$this->parent_id = CWMAssets::parentid();
 	}
@@ -372,7 +371,7 @@ class CWMAssetsModel extends ListModel
 	 *
 	 * @since 7.0
 	 */
-	public function checkAssets()
+	public function checkAssets(): array
 	{
 		$return = array();
 		$db     = Factory::getContainer()->get('DatabaseDriver');

@@ -661,7 +661,7 @@ class CWMMediaFileModel extends AdminModel
 	protected function batchMediatype($value, $pks, $contexts)
 	{
 		// Set the variables
-		$user  = $user = Factory::getApplication()->getSession()->get('user');
+		$user  = Factory::getApplication()->getSession()->get('user');
 		$table = $this->getTable();
 
 		foreach ($pks as $pk)
@@ -710,7 +710,7 @@ class CWMMediaFileModel extends AdminModel
 	protected function batchPopup($value, $pks, $contexts)
 	{
 		// Set the variables
-		$user  = $user = Factory::getApplication()->getSession()->get('user');
+		$user  = Factory::getApplication()->getSession()->get('user');
 		$table = $this->getTable();
 
 		foreach ($pks as $pk)

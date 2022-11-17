@@ -31,6 +31,7 @@ class CWMTemplateCodesModel extends ListModel
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
+	 * @throws \Exception
 	 * @since 7.1
 	 */
 	public function __construct($config = array())
@@ -56,15 +57,15 @@ class CWMTemplateCodesModel extends ListModel
 	 *
 	 * @return  void
 	 *
+	 * @throws \Exception
 	 * @since   7.1
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = 'templatecode.filename', $direction = 'ASC')
 	{
-		// Adjust the context to support modal layouts.
-		$input  = new Input;
-		$layout = $input->get('layout');
+		$app = Factory::getApplication();
 
-		if ($layout)
+		// Adjust the context to support modal layouts.
+		if ($layout = $app->input->get('layout'))
 		{
 			$this->context .= '.' . $layout;
 		}
@@ -75,7 +76,8 @@ class CWMTemplateCodesModel extends ListModel
 		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
 
-		parent::populateState('templatecode.filename', 'ASC');
+		// List state information.
+		parent::populateState($ordering, $direction);
 	}
 
 	/**
@@ -124,6 +126,11 @@ class CWMTemplateCodesModel extends ListModel
 		{
 			$query->where('(templatecode.published = 0 OR templatecode.published = 1)');
 		}
+
+		// Add the list ordering clause
+		$orderCol  = $this->state->get('list.ordering', 'templatecode.filename');
+		$orderDirn = $this->state->get('list.direction', 'ASC');
+		$query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
 
 		return $query;
 	}

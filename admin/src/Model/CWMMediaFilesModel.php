@@ -194,17 +194,23 @@ class CWMMediaFilesModel extends ListModel
 	 * @throws  \Exception
 	 * @since   7.0
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = 'mediafile.createdate', $direction = 'desc')
 	{
 		$app = Factory::getApplication();
 
-		// Adjust the context to support modal layouts.
-		$input  = new Input;
-		$layout = $input->get('layout');
+		// Force a language
+		$forcedLanguage = $app->input->get('forcedLanguage', '', 'cmd');
 
-		if ($layout)
+		// Adjust the context to support modal layouts.
+		if ($layout = $app->input->get('layout'))
 		{
 			$this->context .= '.' . $layout;
+		}
+
+		// Adjust the context to support forced languages.
+		if ($forcedLanguage)
+		{
+			$this->context .= '.' . $forcedLanguage;
 		}
 
 		$access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
@@ -222,10 +228,22 @@ class CWMMediaFilesModel extends ListModel
 		$language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $language);
 
-		parent::populateState('mediafile.createdate', 'DESC');
+		$formSubmitted = $app->input->post->get('form_submitted');
 
-		// Force a language
-		$forcedLanguage = $app->input->get('forcedLanguage');
+		// Gets the value of a user state variable and sets it in the session
+		$this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
+		$this->getUserStateFromRequest($this->context . '.filter.author_id', 'filter_author_id');
+
+		if ($formSubmitted)
+		{
+			$access = $app->input->post->get('access');
+			$this->setState('filter.access', $access);
+
+			$authorId = $app->input->post->get('author_id');
+			$this->setState('filter.author_id', $authorId);
+		}
+
+		parent::populateState($ordering, $direction);
 
 		if (!empty($forcedLanguage))
 		{
@@ -395,7 +413,7 @@ class CWMMediaFilesModel extends ListModel
 			$orderCol = 'mediafile.study_id ' . $orderDirn . ', mediafile.ordering';
 		}
 
-		$query->order($db->escape($orderCol . ' ' . $orderDirn));
+		$query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
 
 		return $query;
 	}

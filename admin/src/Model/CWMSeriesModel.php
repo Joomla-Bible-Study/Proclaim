@@ -69,7 +69,6 @@ class CWMSeriesModel extends ListModel
 	public function getItems()
 	{
 		$items = parent::getItems();
-		$app   = Factory::getApplication();
 
 		$user     = Factory::getApplication()->getIdentity();
 		$groups = $user->getAuthorisedViewLevels();
@@ -100,17 +99,25 @@ class CWMSeriesModel extends ListModel
 	 *
 	 * @return  void
 	 *
+	 * @throws \Exception
 	 * @since   7.0
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = 'series.series_text', $direction = 'asc'): void
 	{
-		$app    = Factory::getApplication();
-		$layout = $app->input->get('layout');
+		$app = Factory::getApplication();
+
+		$forcedLanguage = $app->input->get('forcedLanguage', '', 'cmd');
 
 		// Adjust the context to support modal layouts.
-		if ($layout)
+		if ($layout = $app->input->get('layout'))
 		{
 			$this->context .= '.' . $layout;
+		}
+
+		// Adjust the context to support forced languages.
+		if ($forcedLanguage)
+		{
+			$this->context .= '.' . $forcedLanguage;
 		}
 
 		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
@@ -128,16 +135,29 @@ class CWMSeriesModel extends ListModel
 		$language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $language);
 
-		// Force a language
-		$forcedLanguage = $app->input->get('forcedLanguage');
+		$formSubmited = $app->input->post->get('form_submited');
+
+		// Gets the value of a user state variable and sets it in the session
+		$this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
+		$this->getUserStateFromRequest($this->context . '.filter.author_id', 'filter_author_id');
+
+		if ($formSubmited)
+		{
+			$access = $app->input->post->get('access');
+			$this->setState('filter.access', $access);
+
+			$authorId = $app->input->post->get('author_id');
+			$this->setState('filter.author_id', $authorId);
+		}
+
+		// List state information.
+		parent::populateState($ordering, $direction);
 
 		if (!empty($forcedLanguage))
 		{
 			$this->setState('filter.language', $forcedLanguage);
 			$this->setState('filter.forcedLanguage', $forcedLanguage);
 		}
-
-		parent::populateState('series.series_text', 'asc');
 	}
 
 	/**
@@ -153,7 +173,7 @@ class CWMSeriesModel extends ListModel
 	 *
 	 * @since    1.6
 	 */
-	protected function getStoreId($id = '')
+	protected function getStoreId($id = ''): string
 	{
 		// Compile the store id.
 		$id .= ':' . $this->getState('filter.search');
@@ -169,6 +189,7 @@ class CWMSeriesModel extends ListModel
 	 *
 	 * @return  \Joomla\Database\QueryInterface
 	 *
+	 * @throws \Exception
 	 * @since   7.1.0
 	 */
 	protected function getListQuery()
@@ -176,7 +197,7 @@ class CWMSeriesModel extends ListModel
 		// Create a new query object.
 		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
-		$user  = $user = Factory::getApplication()->getSession()->get('user');
+		$user  = Factory::getApplication()->getSession()->get('user');
 
 		// Select the required fields from the table.
 		$query->select(
@@ -269,7 +290,7 @@ class CWMSeriesModel extends ListModel
 			$orderCol = 'ag.title';
 		}
 
-		$query->order($db->escape($orderCol . ' ' . $orderDirn));
+		$query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
 
 		return $query;
 	}

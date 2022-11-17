@@ -106,13 +106,12 @@ class CWMTemplatesModel extends ListModel
 	 *
 	 * @since   7.0
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = 'template.title', $direction = 'ASC'): void
 	{
-		// Adjust the context to support modal layouts.
-		$input  = new Input;
-		$layout = $input->get('layout');
+		$app = Factory::getApplication();
 
-		if ($layout)
+		// Adjust the context to support modal layouts.
+		if ($layout = $app->input->get('layout'))
 		{
 			$this->context .= '.' . $layout;
 		}
@@ -126,7 +125,8 @@ class CWMTemplatesModel extends ListModel
 		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
 
-		parent::populateState('template.title', 'ASC');
+		// List state information.
+		parent::populateState($ordering, $direction);
 	}
 
 	/**
@@ -179,7 +179,7 @@ class CWMTemplatesModel extends ListModel
 		// Add the list ordering clause
 		$orderCol  = $this->state->get('list.ordering', 'template.id');
 		$orderDirn = $this->state->get('list.direction', 'ACS');
-		$query->order($db->escape($orderCol . ' ' . $orderDirn));
+		$query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
 
 		return $query;
 	}

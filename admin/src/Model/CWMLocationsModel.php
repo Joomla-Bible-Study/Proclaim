@@ -120,16 +120,22 @@ class CWMLocationsModel extends ListModel
 	 * @since   7.0
 	 * @throws  \Exception
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = 'location.id', $direction = 'desc')
 	{
 		$app = Factory::getApplication();
 
-		// Adjust the context to support modal layouts.
-		$layout = $app->input->get('layout');
+		$forcedLanguage = $app->input->get('forcedLanguage', '', 'cmd');
 
-		if ($layout)
+		// Adjust the context to support modal layouts.
+		if ($layout = $app->input->get('layout'))
 		{
 			$this->context .= '.' . $layout;
+		}
+
+		// Adjust the context to support forced languages.
+		if ($forcedLanguage)
+		{
+			$this->context .= '.' . $forcedLanguage;
 		}
 
 		// Load the parameters.
@@ -145,7 +151,29 @@ class CWMLocationsModel extends ListModel
 		$access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '', 'int');
 		$this->setState('filter.access', $access);
 
-		parent::populateState('location.id', 'desc');
+		$formSubmited = $app->input->post->get('form_submited');
+
+		// Gets the value of a user state variable and sets it in the session
+		$this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
+		$this->getUserStateFromRequest($this->context . '.filter.author_id', 'filter_author_id');
+
+		if ($formSubmited)
+		{
+			$access = $app->input->post->get('access');
+			$this->setState('filter.access', $access);
+
+			$authorId = $app->input->post->get('author_id');
+			$this->setState('filter.author_id', $authorId);
+		}
+
+		// List state information.
+		parent::populateState($ordering, $direction);
+
+		if (!empty($forcedLanguage))
+		{
+			$this->setState('filter.language', $forcedLanguage);
+			$this->setState('filter.forcedLanguage', $forcedLanguage);
+		}
 	}
 
 	/**
@@ -153,13 +181,14 @@ class CWMLocationsModel extends ListModel
 	 *
 	 * @return  \Joomla\Database\QueryInterface   A JDatabaseQuery object to retrieve the data set.
 	 *
+	 * @throws \Exception
 	 * @since   12.2
 	 */
 	protected function getListQuery()
 	{
 		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
-		$user  = $user = Factory::getApplication()->getSession()->get('user');
+		$user  = Factory::getApplication()->getSession()->get('user');
 
 		$query->select(
 			$this->getState(
@@ -216,7 +245,7 @@ class CWMLocationsModel extends ListModel
 		// Add the list ordering clause
 		$orderCol  = $this->state->get('list.ordering', 'location.id');
 		$orderDirn = $this->state->get('list.direction', 'desc');
-		$query->order($db->escape($orderCol . ' ' . $orderDirn));
+		$query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
 
 		return $query;
 	}

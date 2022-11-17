@@ -78,7 +78,7 @@ class CWMTopicsModel extends ListModel
 	 *
 	 * @since   7.0
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = 'topic.topic_text', $direction = 'ASC')
 	{
 		// Adjust the context to support modal layouts.
 		$input  = new Input;
@@ -95,7 +95,8 @@ class CWMTopicsModel extends ListModel
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
 
-		parent::populateState('topic.topic_text', 'ASC');
+		// List state information.
+		parent::populateState($ordering, $direction);
 	}
 
 	/**
@@ -107,7 +108,7 @@ class CWMTopicsModel extends ListModel
 	 *
 	 * @since 7.0
 	 */
-	protected function getStoreId($id = '')
+	protected function getStoreId($id = ''): string
 	{
 		// Compile the store id.
 		$id .= ':' . $this->getState('filter.search');
@@ -161,7 +162,7 @@ class CWMTopicsModel extends ListModel
 		// Add the list ordering clause
 		$orderCol  = $this->state->get('list.ordering', 'topic.topic_text');
 		$orderDirn = $this->state->get('list.direction', 'asc');
-		$query->order($db->escape($orderCol . ' ' . $orderDirn));
+		$query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
 
 		return $query;
 	}

@@ -59,18 +59,25 @@ class CWMCommentsModel extends ListModel
 	 *
 	 * @return  void
 	 *
-	 * @since 7.0
 	 * @throws \Exception
+	 * @since 7.0
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = 'comment.comment_date', $direction = 'desc')
 	{
-		$app    = Factory::getApplication();
-		$layout = $app->input->get('layout');
+		$app = Factory::getApplication();
+
+		$forcedLanguage = $app->input->get('forcedLanguage', '', 'cmd');
 
 		// Adjust the context to support modal layouts.
-		if ($layout)
+		if ($layout = $app->input->get('layout'))
 		{
 			$this->context .= '.' . $layout;
+		}
+
+		// Adjust the context to support forced languages.
+		if ($forcedLanguage)
+		{
+			$this->context .= '.' . $forcedLanguage;
 		}
 
 		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
@@ -82,8 +89,29 @@ class CWMCommentsModel extends ListModel
 		$language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $language);
 
+		$formSubmited = $app->input->post->get('form_submited');
+
+		// Gets the value of a user state variable and sets it in the session
+		$this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
+		$this->getUserStateFromRequest($this->context . '.filter.author_id', 'filter_author_id');
+
+		if ($formSubmited)
+		{
+			$access = $app->input->post->get('access');
+			$this->setState('filter.access', $access);
+
+			$authorId = $app->input->post->get('author_id');
+			$this->setState('filter.author_id', $authorId);
+		}
+
 		// List state information.
-		parent::populateState('comment.comment_date', 'desc');
+		parent::populateState($ordering, $direction);
+
+		if (!empty($forcedLanguage))
+		{
+			$this->setState('filter.language', $forcedLanguage);
+			$this->setState('filter.forcedLanguage', $forcedLanguage);
+		}
 	}
 
 	/**
@@ -95,10 +123,11 @@ class CWMCommentsModel extends ListModel
 	 *
 	 * @since 7.0
 	 */
-	protected function getStoreId($id = '')
+	protected function getStoreId($id = ''): string
 	{
 		// Compile the store id.
 		$id .= ':' . $this->getState('filter.search');
+		$id .= ':' . serialize($this->getState('filter.access'));
 		$id .= ':' . $this->getState('filter.published');
 		$id .= ':' . $this->getState('filter.language');
 
@@ -115,7 +144,7 @@ class CWMCommentsModel extends ListModel
 	protected function getListQuery()
 	{
 		// Create a new query object.
-		$db    = Factory::getContainer()->get('DatabaseDriver');
+		$db = Factory::getContainer()->get('DatabaseDriver');
 
 		// Select the required fields from the table.
 		$query = $db->getQuery(true);
@@ -173,7 +202,7 @@ class CWMCommentsModel extends ListModel
 		// Add the list ordering clause
 		$orderCol  = $this->state->get('list.ordering', 'study.studytitle');
 		$orderDirn = $this->state->get('list.direction', 'asc');
-		$query->order($db->escape($orderCol . ' ' . $orderDirn));
+		$query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
 
 		return $query;
 	}

@@ -155,13 +155,12 @@ class CWMServersModel extends ListModel
 	 * @throws \Exception
 	 * @since   7.0.0
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = 'server.server_name', $direction = 'DESC'): void
 	{
-		// Adjust the context to support modal layouts.
-		$input  = Factory::getApplication();
-		$layout = $input->get('layout');
+		$app = Factory::getApplication();
 
-		if ($layout)
+		// Adjust the context to support modal layouts.
+		if ($layout = $app->input->get('layout'))
 		{
 			$this->context .= '.' . $layout;
 		}
@@ -169,7 +168,8 @@ class CWMServersModel extends ListModel
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
 
-		parent::populateState('server.server_name', 'DESC');
+		// List state information.
+		parent::populateState($ordering, $direction);
 	}
 
 	/**
@@ -184,7 +184,7 @@ class CWMServersModel extends ListModel
 	{
 		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
-		$user  = $user = Factory::getApplication()->getSession()->get('user');
+		$user  = Factory::getApplication()->getSession()->get('user');
 
 		$query->select($this->getState('list.select', 'server.id, server.published, server.server_name, server.type'));
 		$query->from('#__bsms_servers AS server');
@@ -216,7 +216,7 @@ class CWMServersModel extends ListModel
 		// Add the list ordering clause
 		$orderCol  = $this->state->get('list.ordering', 'server.server_name');
 		$orderDirn = $this->state->get('list.direction', 'DESC');
-		$query->order($db->escape($orderCol . ' ' . $orderDirn));
+		$query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
 
 		return $query;
 	}

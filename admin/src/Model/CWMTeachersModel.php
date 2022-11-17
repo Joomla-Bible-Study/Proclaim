@@ -70,15 +70,15 @@ class CWMTeachersModel extends ListModel
 	 *
 	 * @return  void
 	 *
+	 * @throws \Exception
 	 * @since   7.0
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = 'teacher.teachername', $direction = 'asc')
 	{
-		// Adjust the context to support modal layouts.
-		$input  = new Input;
-		$layout = $input->get('layout');
+		$app = Factory::getApplication();
 
-		if ($layout)
+		// Adjust the context to support modal layouts.
+		if ($layout = $app->input->get('layout'))
 		{
 			$this->context .= '.' . $layout;
 		}
@@ -96,7 +96,7 @@ class CWMTeachersModel extends ListModel
 		$this->setState('filter.search', $search);
 
 		// List state information.
-		parent::populateState('teacher.teachername', 'asc');
+		parent::populateState($ordering, $direction);
 	}
 
 	/**
@@ -112,7 +112,7 @@ class CWMTeachersModel extends ListModel
 	 *
 	 * @since 7.0
 	 */
-	protected function getStoreId($id = '')
+	protected function getStoreId($id = ''): string
 	{
 		// Compile the store id.
 		$id .= ':' . $this->getState('filter.search');
@@ -133,7 +133,7 @@ class CWMTeachersModel extends ListModel
 	{
 		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
-		$user  = $user = Factory::getApplication()->getSession()->get('user');
+		$user  = Factory::getApplication()->getSession()->get('user');
 
 		$query->select($this->getState('list.select', 'teacher.*'));
 		$query->from('#__bsms_teachers AS teacher');
@@ -190,7 +190,7 @@ class CWMTeachersModel extends ListModel
 		// Add the list ordering clause
 		$orderCol  = $this->state->get('list.ordering', 'teacher.teachername');
 		$orderDirn = $this->state->get('list.direction', 'asc');
-		$query->order($db->escape($orderCol . ' ' . $orderDirn));
+		$query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
 
 		return $query;
 	}

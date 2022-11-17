@@ -63,11 +63,11 @@ class CWMPodcastsModel extends ListModel
 	 *
 	 * @since 7.0
 	 */
-	protected function getStoreId($id = '')
+	protected function getStoreId($id = ''): string
 	{
 		// Compile the store id.
 		$id .= ':' . $this->getState('filter.search');
-		$id .= ':' . $this->getState('filter.access');
+		$id .= ':' . serialize($this->getState('filter.access'));
 		$id .= ':' . $this->getState('filter.published');
 		$id .= ':' . $this->getState('filter.language');
 
@@ -90,15 +90,22 @@ class CWMPodcastsModel extends ListModel
 	 *
 	 * @since   7.0
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = 'podcast.title', $direction = 'ASC')
 	{
-		// Adjust the context to support modal layouts.
-		$input  = new Input;
-		$layout = $input->get('layout');
+		$app = Factory::getApplication();
 
-		if ($layout)
+		$forcedLanguage = $app->input->get('forcedLanguage', '', 'cmd');
+
+		// Adjust the context to support modal layouts.
+		if ($layout = $app->input->get('layout'))
 		{
 			$this->context .= '.' . $layout;
+		}
+
+		// Adjust the context to support forced languages.
+		if ($forcedLanguage)
+		{
+			$this->context .= '.' . $forcedLanguage;
 		}
 
 		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
@@ -113,7 +120,13 @@ class CWMPodcastsModel extends ListModel
 		$language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $language);
 
-		parent::populateState('podcast.title', 'ASC');
+		parent::populateState($ordering, $direction);
+
+		if (!empty($forcedLanguage))
+		{
+			$this->setState('filter.language', $forcedLanguage);
+			$this->setState('filter.forcedLanguage', $forcedLanguage);
+		}
 	}
 
 	/**
@@ -121,13 +134,14 @@ class CWMPodcastsModel extends ListModel
 	 *
 	 * @return  \Joomla\Database\QueryInterface   A JDatabaseQuery object to retrieve the data set.
 	 *
+	 * @throws \Exception
 	 * @since   7.0
 	 */
 	protected function getListQuery()
 	{
 		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
-		$user  = $user = Factory::getApplication()->getSession()->get('user');
+		$user  = Factory::getApplication()->getSession()->get('user');
 
 		$query->select(
 			$this->getState(
@@ -141,7 +155,7 @@ class CWMPodcastsModel extends ListModel
 
 		// Join over the asset groups.
 		$query->select('ag.title AS access_level')
-				->join('LEFT', '#__viewlevels AS ag ON ag.id = podcast.access');
+			->join('LEFT', '#__viewlevels AS ag ON ag.id = podcast.access');
 
 		// Filter by access level.
 		if ($access = $this->getState('filter.access'))
@@ -193,7 +207,7 @@ class CWMPodcastsModel extends ListModel
 		// Add the list ordering clause
 		$orderCol  = $this->state->get('list.ordering', 'podcast.id');
 		$orderDirn = $this->state->get('list.direction', 'desc');
-		$query->order($db->escape($orderCol . ' ' . $orderDirn));
+		$query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
 
 		return $query;
 	}
