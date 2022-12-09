@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="proclaim" default="build" basedir=".">
-	<php expression="include('${joomla_path}${joomla_dir}/libraries/vendor/autoload.php')"/>
+	<autoloader autoloaderpath="${project.basedir}/libraries/vendor/autoload.php"/>
 
 	<property name="basedir" value="${project.basedir}"/>
 	<property name="project.name" value="Proclaim"/>
