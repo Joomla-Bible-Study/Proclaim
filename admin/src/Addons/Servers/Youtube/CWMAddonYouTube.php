@@ -111,7 +111,7 @@ class CWMAddonYouTube extends CWMAddon
 	public function render($media_form, $new)
 	{
 		$html = '';
-		$html .= HtmlHelper::_('bootstrap.addTab', 'myTab', 'options', Text::_('Options'));
+		$html .= HtmlHelper::_('uitab.addTab', 'myTab', 'options', Text::_('Options'));
 
 		$html .= '<div class="row-fluid">';
 
@@ -150,7 +150,7 @@ class CWMAddonYouTube extends CWMAddon
 		}
 
 		$html .= '</div>';
-		$html .= HtmlHelper::_('bootstrap.endTab');
+		$html .= HtmlHelper::_('uitab.endTab');
 
 		return $html;
 	}

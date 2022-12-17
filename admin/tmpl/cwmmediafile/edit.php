@@ -56,10 +56,10 @@ $this->useCoreUI = true;
       id="media-form"
       class="form-validate">
 	<div class="form-horizontal">
-		<?php echo HTMLHelper::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
+		<?php echo HTMLHelper::_('uitab.startTabSet', 'myTab', array('active' => 'general')); ?>
 
 		<!-- Begin Content -->
-		<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'general', Text::_('JBS_CMN_GENERAL')); ?>
+		<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'general', Text::_('JBS_CMN_GENERAL')); ?>
 		<div class="row">
 			<div class="col-lg-7">
 				<div class="control-group">
@@ -133,19 +133,19 @@ $this->useCoreUI = true;
 				</div>
 			</div>
 		</div>
-		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
+		<?php echo HTMLHelper::_('uitab.endTab'); ?>
 
 		<?php echo $this->addon->render($this->media_form, $new); ?>
 
 		<?php if ($this->canDo->get('core.admin')): ?>
-			<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
+			<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
 			<div class="row-fluid">
 				<?php echo $this->form->getInput('rules'); ?>
 			</div>
-			<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
+			<?php echo HTMLHelper::_('uitab.endTab'); ?>
 		<?php endif; ?>
 
-		<?php echo HTMLHelper::_('bootstrap.endTabSet'); ?>
+		<?php echo HTMLHelper::_('uitab.endTabSet'); ?>
 
 		<?php // Load the batch processing form. ?>
 		<?php echo HTMLHelper::_(

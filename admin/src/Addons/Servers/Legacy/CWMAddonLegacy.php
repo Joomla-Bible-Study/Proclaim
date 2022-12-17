@@ -108,7 +108,7 @@ class CWMAddonLegacy extends CWMAddon
 	{
 		$html = '';
 
-		$html .= JHtml::_('bootstrap.addTab', 'myTab', 'options', Text::_('Options'));
+		$html .= JHtml::_('uitab.addTab', 'myTab', 'options', Text::_('Options'));
 
 		$html .= '<div class="row-fluid">';
 
@@ -147,7 +147,7 @@ class CWMAddonLegacy extends CWMAddon
 		}
 
 		$html .= '</div>';
-		$html .= JHtml::_('bootstrap.endTab');
+		$html .= JHtml::_('uitab.endTab');
 
 		return $html;
 	}

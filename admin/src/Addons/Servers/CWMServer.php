@@ -10,6 +10,7 @@
 // No Direct Access
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\Input\Input;
+use Symfony\Component\Config\Loader\Loader;
 
 defined('_JEXEC') or die;
 
@@ -57,7 +58,7 @@ abstract class CWMServer
 	 *
 	 * @since       9.0.0
 	 */
-	public static function getServers()
+	public static function getServers(): array
 	{
 		$servers = array();
 
@@ -106,7 +107,7 @@ abstract class CWMServer
 	 *
 	 * @since 9.0.0
 	 */
-	public static function getInstance($options = array())
+	public static function getInstance(array $options = array())
 	{
 		$options['type'] = $options['type'] ?? 'amazons3';
 		$instance = null;
@@ -124,7 +125,7 @@ abstract class CWMServer
 
 				if (file_exists($path))
 				{
-					JLoader::register($class, $path);
+					Loader::register($class, $path);
 				}
 			}
 
@@ -134,6 +135,7 @@ abstract class CWMServer
 			}
 			catch (Exception $e)
 			{
+				JFactory::getApplication()->enqueueMessage("Error obtaining Class '" . $options['type'] . "'", Error);
 			}
 
 			self::$instances[$signature] = $instance;

@@ -80,29 +80,14 @@ $layout  = $isModal ? 'modal' : 'edit';
 $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=component' : '';
 ?>
 <form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmmessage&layout=' . $layout . $tmpl . '&id=' . (int) $this->item->id); ?>"
-      method="post" name="adminForm" id="message-form" class="form-validate" enctype="multipart/form-data">
+      method="post" name="adminForm" id="message-form" aria-label="<?php echo Text::_('JBS_CMN_' . ((int) $this->item->id === 0 ? 'NEW' : 'EDIT'), true); ?>"  class="form-validate" enctype="multipart/form-data">
+	<?php echo LayoutHelper::render('edit.studytitle_alias', $this); ?>
 	<div class="form-inline form-inline-header">
-		<div class="control-group">
-			<div class="control-label">
-				<?php echo $this->form->getLabel('studytitle'); ?>
-			</div>
-			<div class="controls">
-				<?php echo $this->form->getInput('studytitle'); ?>
-			</div>
-		</div>
-		<div class="control-group">
-			<div class="control-label">
-				<?php echo $this->form->getLabel('alias'); ?>
-			</div>
-			<div class="controls">
-				<?php echo $this->form->getInput('alias'); ?>
-			</div>
-		</div>
 		<div class="control-group">
 			<div class="control-label">
 				<?php echo Text::_('JBS_STY_HITS'); ?>
 			</div>
-			<div class="controls small">
+			<div class="controls">
 				<?php echo '<input type="text" name="jform[hits]" id="jform_hits" value="' . $this->item->hits .
 					'" class="readonly" size="10" readonly="" aria-invalid="false">';
 				?>
@@ -193,11 +178,11 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
 		</div>
 	</div>
 
-	<div class="form-horizontal">
-		<?php echo HTMLHelper::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
+	<div class="main-card">
+		<?php echo HTMLHelper::_('uitab.startTabSet', 'myTab', array('active' => 'general')); ?>
 
 		<!-- Begin Content -->
-		<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'general', Text::_('JBS_STY_DETAILS')); ?>
+		<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'general', Text::_('JBS_STY_DETAILS')); ?>
 		<div class="row">
 			<?php if (!$this->simple->mode) { ?>
 				<div class="col-lg-7">
@@ -285,9 +270,9 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
 
 			</div>
 		</div>
-		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
+		<?php echo HTMLHelper::_('uitab.endTab'); ?>
 		<?php if (!$this->simple->mode) { ?>
-			<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'info', Text::_('JBS_CMN_INFO')); ?>
+			<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'info', Text::_('JBS_CMN_INFO')); ?>
 			<div class="row">
 				<div class="col-lg-12">
 					<div class="control-group">
@@ -369,10 +354,10 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
 					</div>
 				</div>
 			</div>
-			<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
+			<?php echo HTMLHelper::_('uitab.endTab'); ?>
 		<?php } ?>
 
-		<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'publish', Text::_('JBS_STY_PUBLISH')); ?>
+		<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'publish', Text::_('JBS_STY_PUBLISH')); ?>
 		<div class="row">
 			<div class="col-lg-12">
 				<?php echo LayoutHelper::render('joomla.edit.publishingdata', $this); ?>
@@ -399,21 +384,23 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
 				<?php echo LayoutHelper::render('joomla.edit.metadata', $this); ?>
 			</div>
 		</div>
-		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
+		<?php echo HTMLHelper::_('uitab.endTab'); ?>
 
 		<?php if ($this->canDo->get('core.admin')): ?>
-			<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'permissions', Text::_('JBS_CMN_FIELDSET_RULES')); ?>
+			<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_CMN_FIELDSET_RULES')); ?>
 			<div class="row">
 				<?php echo $this->form->getInput('rules'); ?>
 			</div>
-			<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
+			<?php echo HTMLHelper::_('uitab.endTab'); ?>
 		<?php endif; ?>
-		<?php echo HTMLHelper::_('bootstrap.endTabSet'); ?>
+		<?php echo HTMLHelper::_('uitab.endTabSet'); ?>
 
 		<!-- Hidden fields -->
 		<?php echo $this->form->getInput('thumbnailm'); ?>
-		<input type="hidden" name="task" value=""/>
+
+		<input type="hidden" name="task" value="">
 		<input type="hidden" name="return" value="<?php echo $input->getBase64('return'); ?>">
+		<input type="hidden" name="forcedLanguage" value="<?php echo $input->get('forcedLanguage', '', 'cmd'); ?>">
 		<?php echo HTMLHelper::_('form.token'); ?>
 	</div>
 </form>

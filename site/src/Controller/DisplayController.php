@@ -50,9 +50,18 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
 		{
 			$config['base_path'] = JPATH_ADMINISTRATOR . '/components';
 		}
-//Fixing case sensitive issues
-		if ($this->input->get('view') === 'cwmsermons'){ $this->input->set('view', 'CWMSermons');}
-		if ($this->input->get('view') === 'cwmteachers'){ $this->input->set('view', 'CWMTeachers');}
+
+		// Fixing case-sensitive issues
+		if ($this->input->get('view') === 'cwmsermons')
+		{
+			$this->input->set('view', 'CWMSermons');
+		}
+
+		if ($this->input->get('view') === 'cwmteachers')
+		{
+			$this->input->set('view', 'CWMTeachers');
+		}
+
 		parent::__construct($config, $factory, $app, $input);
 	}
 
