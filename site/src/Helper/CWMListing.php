@@ -2310,13 +2310,13 @@ $thadd = '';
 	/**
 	 * Get Fluid Media Files
 	 *
-	 * @param   Object         $item      Study item
-	 * @param   Registry       $params    Params
-	 * @param   TemplateTable  $template  Template return
+	 * @param   Object            $item      Study item
+	 * @param   Registry          $params    Params
+	 * @param   CWMTemplateTable  $template  Template return
 	 *
 	 * @return string
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 9.0.0
 	 */
 	public function getFluidMediaFiles($item, $params, $template)
@@ -2333,6 +2333,7 @@ $thadd = '';
 
 		$mediarow .= '</div>';
 		$mediarow .= '<div style="clear:both;"></div>';
+
 		return $mediarow;
 	}
 
