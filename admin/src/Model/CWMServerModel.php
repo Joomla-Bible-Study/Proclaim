@@ -50,7 +50,7 @@ class CWMServerModel extends AdminModel
 	 * @var object
 	 * @since   9.0.0
 	 */
-	private $data;
+	private object $data;
 
 	/**
 	 * @var boolean
