@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Administrator\Lib\CWMAssets;
 use Joomla\CMS\Access\Rules;
 use Joomla\CMS\Table\Asset;
 use Joomla\CMS\Table\Table;
@@ -161,13 +162,9 @@ class CWMTeacherTable extends Table
 	 *
 	 * @since   11.1
 	 */
-	protected function _getAssetParentId(Table $table = null, $id = null)
+	protected function _getAssetParentId(Table $table = null, $id = null): int
 	{
-		/** @var \Joomla\CMS\Table\Asset $asset */
-        //$asset = (new \Joomla\CMS\MVC\Factory\MVCFactory)->createTable("Asset");
-        $asset = Table::getInstance('Asset');
-		$asset->loadByName('com_proclaim');
-        $asset->id = 1;
-        return $asset->id;
+		// Get Proclaim Root ID
+		return CWMAssets::parentId();
 	}
 }

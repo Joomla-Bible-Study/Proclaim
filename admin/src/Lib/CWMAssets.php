@@ -92,14 +92,14 @@ class CWMAssets
 		$result          = (object) $result;
 		self::$parent_id = self::parentid();
 
-		// If there is no jasset_id it means that this has not been set and should be
+		// If there is no asset_id it means that this has not been set and should be
 		if (!$result->asset_id)
 		{
 			self::setAsset($result, $key);
 			Log::add('Set Asset Under Key: ' . $key, Log::NOTICE, 'com_proclaim');
 		}
 
-		// If there is a jasset_id but no match to the parent_id then a mismatch has occured
+		// If there is a asset_id but no match to the parent_id then a mismatch has occurred
 		if ((self::$parent_id !== $result->parent_id || $result->rules === "") && $result->asset_id)
 		{
 			Log::add('Reset Asset ID: ' . $result->asset_id, Log::NOTICE, 'com_biblstudy');

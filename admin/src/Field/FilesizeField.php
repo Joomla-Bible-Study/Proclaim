@@ -42,18 +42,18 @@ class FilesizeField extends ListField
 	protected function getInput(): string
 	{
 		// Initialize some field attributes.
-		$size      = $this->element['size'] ? ' size="' . (int) $this->element['size'] . '"' : '';
+		$size      = $this->element['size'] ? ' size="' . (int) $this->element['size'] . '"' : 'size="35"';
 		$maxLength = $this->element['maxlength'] ? ' maxlength="' . (int) $this->element['maxlength'] . '"' : '';
 		$class     = $this->element['class'] ? ' class="' . (string) $this->element['class'] . '"' : '';
-		$readonly  = ((string) $this->element['readonly'] === 'true') ? ' readonly="readonly"' : '';
+		$readonly  = ((string) $this->element['readonly'] === 'true') ? ' readonly="readonly"' : 'class="form-control"';
 		$disabled  = ((string) $this->element['disabled'] === 'true') ? ' disabled="disabled"' : '';
 
 		// Initialize JavaScript field attributes.
 		$onchange = $this->element['onchange'] ? ' onchange="' . (string) $this->element['onchange'] . '"' : '';
 
-		return '<input type="text" name="' . $this->name . '" id="' . $this->id . '"' .
+		return '<span class="input-group"><input type="text" name="' . $this->name . '" id="' . $this->id . '"' .
 			' value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"' .
-			$class . $size . $disabled . $readonly . $onchange . $maxLength . '/>' . $this->sizeConverter();
+			$class . $size . $disabled . $readonly . $onchange . $maxLength . '/> ' . $this->sizeConverter() . '</span>';
 	}
 
 	/**
@@ -66,7 +66,7 @@ class FilesizeField extends ListField
 	private function sizeConverter(): string
 	{
 		return "<button data-toggle=\"modal\" onclick=\"jQuery( '#collapseModal' ).modal('show'); return true;\" class=\"btn btn-primary\">
-	<span class=\"icon-checkbox-partial\" aria-hidden=\"true\"></span>" . Text::_('JBS_MED_FILESIZE_CONVERTER') .
+	<span class=\"icon-checkbox-partial\" aria-hidden=\"true\"></span> " . Text::_('JBS_MED_FILESIZE_CONVERTER') .
 			"</button>";
 	}
 }

@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Administrator\Lib\CWMAssets;
 use Joomla\CMS\Access\Rules;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseDriver;
@@ -132,7 +133,7 @@ class CWMTopicTable extends Table
 	 * @link    https://docs.joomla.org/Table/store
 	 * @since   11.1
 	 */
-	public function store($updateNulls = false)
+	public function store($updateNulls = false): bool
 	{
 		if (!$this->_rules)
 		{
@@ -264,12 +265,9 @@ class CWMTopicTable extends Table
 	 *
 	 * @since   11.1
 	 */
-	protected function _getAssetParentId(Table $table = null, $id = null)
+	protected function _getAssetParentId(Table $table = null, $id = null): int
 	{
-		/** @var \Joomla\CMS\Table\Asset $asset */
-		$asset = Table::getInstance('Asset');
-		$asset->loadByName('com_proclaim');
-        $asset->id = 1;
-		return $asset->id;
+		// Get Proclaim Root ID
+		return CWMAssets::parentId();
 	}
 }

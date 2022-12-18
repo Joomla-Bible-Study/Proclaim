@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Administrator\Lib\CWMAssets;
 use JAccessRules;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Factory\MVCFactory;
@@ -492,15 +493,9 @@ class CWMMessageTable extends Table
 	 *
 	 * @since   11.1
 	 */
-	protected function _getAssetParentId(Table $table = null, $id = null)
+	protected function _getAssetParentId(Table $table = null, $id = null): int
 	{
-        /** @var \Joomla\CMS\Table\Asset $asset */
-       //$asset = (new \Joomla\CMS\MVC\Factory\MVCFactory)->createTable("Asset");
-       $asset = Table::getInstance('Asset');
-        //$db = Factory::getContainer()->get('DatabaseDriver');
-        //$asset = Table::getInstance('MessageTable', __NAMESPACE__ . '\\', array('dbo' => $db));
-		$asset->loadByName('com_proclaim');
-        $asset->id = 1;
-		return $asset->id;
+		// Get Proclaim Root ID
+		return CWMAssets::parentId();
 	}
 }

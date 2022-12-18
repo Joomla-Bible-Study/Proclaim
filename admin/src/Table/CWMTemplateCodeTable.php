@@ -11,6 +11,7 @@
 namespace CWM\Component\Proclaim\Administrator\Table;
 
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Lib\CWMAssets;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Language\Text;
@@ -279,12 +280,9 @@ class CWMTemplateCodeTable extends Table
 	 *
 	 * @since   11.1
 	 */
-	protected function _getAssetParentId(Table $table = null, $id = null)
+	protected function _getAssetParentId(Table $table = null, $id = null): int
 	{
-		/** @var \Joomla\CMS\Table\Asset $asset */
-		$asset = Table::getInstance('Asset');
-		$asset->loadByName('com_proclaim');
-        $asset->id = 1;
-		return $asset->id;
+		// Get Proclaim Root ID
+		return CWMAssets::parentId();
 	}
 }
