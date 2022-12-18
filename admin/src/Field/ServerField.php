@@ -13,13 +13,12 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Form\Field\ListField;
+use Joomla\CMS\Form\FormField;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
-use Joomla\Utilities\ArrayHelper;
-use Joomla\CMS\MVC\Model\ListModel;
-use CWM\Component\Proclaim\Administrator\Model\CWMServersModel;
+use Joomla\Database\ParameterType;
 
 /**
  * Field class for Server
@@ -27,13 +26,13 @@ use CWM\Component\Proclaim\Administrator\Model\CWMServersModel;
  * @package  Proclaim.Admin
  * @since    9.0.0
  */
-class ServerField extends ListField
+class ServerField extends FormField
 {
 	/**
 	 * @var string
 	 * @since 9.0.0
 	 */
-	protected $type = 'Server';
+	protected $type = 'Modal_Server';
 
 	/**
 	 * Get input form form
@@ -45,165 +44,278 @@ class ServerField extends ListField
 	 */
 	protected function getInput(): string
 	{
-		$allowEdit  = (string) $this->element['edit'] === 'true';
-		$allowClear = (string) $this->element['clear'] !== 'false';
+		$allowNew       = ((string) $this->element['new'] == 'true');
+		$allowEdit      = ((string) $this->element['edit'] == 'true');
+		$allowClear     = ((string) $this->element['clear'] != 'false');
+		$allowSelect    = ((string) $this->element['select'] != 'false');
+		$allowPropagate = ((string) $this->element['propagate'] == 'true');
 
-		// Build the script.
-		$view = Factory::getApplication()->input->get('view');
-		$size = ($v = $this->element['size']) ? ' size="' . $v . '"' : '';
+		$languages = LanguageHelper::getContentLanguages(array(0, 1), false);
 
-		// Get a reverse lookup of the server id to server name
-		$db    = Factory::getContainer()->get('DatabaseDriver');
-		$query = $db->getQuery('true');
-		$query->select('*')
-			->from('#__bsms_servers as s')
-			->where('s.published = 1');
-		$db->setQuery($query);
-		$servs = $db->loadObjectList();
-		$rlu   = array();
+		// The active Server id field.
+		$value = (int) $this->value ?: '';
 
-		foreach ($servs as $serv)
+		// Create the modal id.
+		$modalId = 'Server_' . $this->id;
+
+		/** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
+		$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+
+		// Add the modal field script to the document head.
+		$wa->useScript('field.modal-fields');
+
+		// Script to proxy the select modal function to the modal-fields.js file.
+		if ($allowSelect)
 		{
-			$rlu[$serv->id] = array(
-				'name' => $serv->server_name,
-				'type' => $serv->type
-			);
+			static $scriptSelect = null;
+
+			if (is_null($scriptSelect))
+			{
+				$scriptSelect = array();
+			}
+
+			if (!isset($scriptSelect[$this->id]))
+			{
+				$wa->addInlineScript(
+					"
+				window.jSelectServer_" . $this->id . " = function (id, title, catid, object, url, language) {
+					window.processModalSelect('Server', '" . $this->id . "', id, title, catid, object, url, language);
+				}",
+					[],
+					['type' => 'module']
+				);
+
+				Text::script('JGLOBAL_ASSOCIATIONS_PROPAGATE_FAILED');
+
+				$scriptSelect[$this->id] = true;
+			}
 		}
-
-		$server = ArrayHelper::getValue($rlu, $this->value);
-
-		// Build the script.
-		$script = array();
-
-		if ($view === 'mediafileform')
-		{
-			$sview = 'mediafileform.setServer';
-		}
-		else
-		{
-			$sview = 'mediafile.setServer';
-		}
-
-		// Select button script
-		$script[] = '       jSelectServer_jform_server_id = function(server_id) {
-        window.parent.Joomla.submitbutton(\'' . $sview . '\', server_id);
-        window.parent.SqueezeBox.close();
-        }';
-		$script[] = '	function jSelectServer_' . $this->id . '(id, name, object) {';
-		$script[] = '		document.getElementById("' . $this->id . '").value = id;';
-		$script[] = '		document.getElementById("' . $this->id . '_name").value = name;';
-
-		if ($allowEdit)
-		{
-			$script[] = '		jQuery("#' . $this->id . '_edit").removeClass("hidden");';
-		}
-
-		if ($allowClear)
-		{
-			$script[] = '		jQuery("#' . $this->id . '_clear").removeClass("hidden");';
-		}
-
-		$script[] = '		jModalClose();';
-		$script[] = '	}';
-
-		// Clear button script
-		static $scriptClear;
-
-		if ($allowClear && !$scriptClear)
-		{
-			$scriptClear = true;
-
-			$script[] = '	function jClearServer(id) {';
-			$script[] = '		document.getElementById(id).value = "";';
-			$script[] = '		document.getElementById(id + "_name").value = "'
-				. htmlspecialchars(Text::_('JBS_SVR_SERVER_NAME', true), ENT_COMPAT, 'UTF-8') . '";';
-			$script[] = '		jQuery("#"+id + "_clear").addClass("hidden");';
-			$script[] = '		if (document.getElementById(id + "_edit")) {';
-			$script[] = '			jQuery("#"+id + "_edit").addClass("hidden");';
-			$script[] = '		}';
-			$script[] = '		return false;';
-			$script[] = '	}';
-		}
-
-		// Add the script to the document head.
-		Factory::getApplication()->getDocument()->addScriptDeclaration(implode("\n", $script));
 
 		// Setup variables for display.
-		$html = array();
-
-		if ($view === 'mediafileform')
-		{
-			$sview = 'serverslist';
-		}
-		else
-		{
-			$sview = 'servers';
-		}
-
-		$link = 'index.php?option=com_proclaim&amp;view=' . $sview . '&amp;layout=modal&amp;tmpl=component&amp;function=jSelectServer_' . $this->id;
+		$linkServers = 'index.php?option=com_proclaim&amp;view=CWMServers&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken() . '=1';
+		$linkServer  = 'index.php?option=com_proclaim&amp;view=CWMServer&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken() . '=1';
 
 		if (isset($this->element['language']))
 		{
-			$link .= '&amp;forcedLanguage=' . $this->element['language'];
-		}
-
-		// The active server id field.
-		if (0 === (int) $this->value)
-		{
-			$value = '';
+			$linkServers .= '&amp;forcedLanguage=' . $this->element['language'];
+			$linkServers .= '&amp;forcedLanguage=' . $this->element['language'];
+			$modalTitle   = Text::_('COM_CONTENT_SELECT_AN_ARTICLE') . ' &#8212; ' . $this->element['label'];
 		}
 		else
 		{
-			$value = (int) $this->value;
+			$modalTitle = Text::_('COM_CONTENT_SELECT_AN_ARTICLE');
 		}
 
-		// The current server display field.
-		$html[] = '<span class="input-append">';
-		$html[] = '<input type="text" class="input-large" id="' . $this->id . '_name" value="' . $server['name'] . '"' .
-			$size . ' disabled="disabled" size="55" />';
-		$html[] = '<a'
-			. ' class="modal btn hasTooltip"'
-			. ' title="' . HTMLHelper::tooltipText('JBS_SVR_SERVER_NAME') . '"'
-			. ' href="' . $link . '&amp;' . Session::getFormToken() . '=1"'
-			. ' rel="{handler: \'iframe\', size: {x: 800, y: 450}}">'
-			. '<i class="icon-file"></i> ' . Text::_('JSELECT')
-			. '</a>';
+		$urlSelect = $linkServers . '&amp;function=jSelectServer_' . $this->id;
+		$urlEdit   = $linkServer . '&amp;task=CWMServer.edit&amp;id=\' + document.getElementById(&quot;' . $this->id . '_id&quot;).value + \'';
+		$urlNew    = $linkServer . '&amp;task=CWMServer.add';
 
-		// Edit Server button.
-		if ($allowEdit)
+		if ($value)
 		{
-			$html[] = '<a'
-				. ' class="btn hasTooltip' . ($value ? '' : ' hidden') . '"'
-				. ' href="index.php?option=com_proclaim&layout=modal&tmpl=component&task=server.edit&id=' . $value . '"'
-				. ' target="_blank"'
-				. ' title="' . HTMLHelper::tooltipText('JBS_SVR_SERVER_NAME') . '" >'
-				. '<span class="icon-edit"></span>' . Text::_('JACTION_EDIT')
-				. '</a>';
+			// Get a reverse lookup of the server id to server name
+			$db    = Factory::getContainer()->get('DatabaseDriver');
+			$query = $db->getQuery('true');
+			$query->select($db->quoteName('server_name'))
+				->from('#__bsms_servers')
+				->where($db->quoteName('id') . ' = :value')
+				->bind(':value', $value, ParameterType::INTEGER);
+			$db->setQuery($query);
+
+			try
+			{
+				$title = $db->loadResult();
+			}
+			catch (\RuntimeException $e)
+			{
+				Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+			}
+
+			if (empty($title))
+			{
+				$value = '';
+			}
 		}
 
-		// Clear Server button
-		if ($allowClear)
+		$title = empty($title) ? Text::_('COM_CONTENT_SELECT_AN_ARTICLE') : htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
+
+		// The current article display field.
+		$html = "";
+
+		if ($allowSelect || $allowNew || $allowEdit || $allowClear)
 		{
-			$html[] = '<button'
-				. ' id="' . $this->id . '_clear"'
-				. ' class="btn' . ($value ? '' : ' hidden') . '"'
-				. ' onclick="return jClearServer(\'' . $this->id . '\')">'
-				. '<span class="icon-remove"></span>' . Text::_('JCLEAR')
+			$html .= '<span class="input-group">';
+		}
+
+		$html .= '<input class="form-control" id="' . $this->id . '_name" type="text" value="' . $title . '" readonly size="35">';
+
+		// Select article button
+		if ($allowSelect)
+		{
+			$html .= '<button'
+				. ' class="btn btn-primary' . ($value ? ' hidden' : '') . '"'
+				. ' id="' . $this->id . '_select"'
+				. ' data-bs-toggle="modal"'
+				. ' type="button"'
+				. ' data-bs-target="#ModalSelect' . $modalId . '">'
+				. '<span class="icon-file" aria-hidden="true"></span> ' . Text::_('JSELECT')
 				. '</button>';
 		}
 
-		$html[] = '</span>';
-
-		// Note: class='required' for client side validation.
-		$class = '';
-
-		if ($this->required)
+		// New server button
+		if ($allowNew)
 		{
-			$class = ' class="required modal-value"';
+			$html .= '<button'
+				. ' class="btn btn-secondary' . ($value ? ' hidden' : '') . '"'
+				. ' id="' . $this->id . '_new"'
+				. ' data-bs-toggle="modal"'
+				. ' type="button"'
+				. ' data-bs-target="#ModalNew' . $modalId . '">'
+				. '<span class="icon-plus" aria-hidden="true"></span> ' . Text::_('JACTION_CREATE')
+				. '</button>';
 		}
 
-		$html[] = '<input type="hidden" id="' . $this->id . '" ' . $class . ' name="' . $this->name . '" value="' . $value . '" />';
+		// Edit server button
+		if ($allowEdit)
+		{
+			$html .= '<button'
+				. ' class="btn btn-primary' . ($value ? '' : ' hidden') . '"'
+				. ' id="' . $this->id . '_edit"'
+				. ' data-bs-toggle="modal"'
+				. ' type="button"'
+				. ' data-bs-target="#ModalEdit' . $modalId . '">'
+				. '<span class="icon-pen-square" aria-hidden="true"></span> ' . Text::_('JACTION_EDIT')
+				. '</button>';
+		}
 
-		return implode("\n", $html);
+		// Clear server button
+		if ($allowClear)
+		{
+			$html .= '<button'
+				. ' class="btn btn-secondary' . ($value ? '' : ' hidden') . '"'
+				. ' id="' . $this->id . '_clear"'
+				. ' type="button"'
+				. ' onclick="window.processModalParent(\'' . $this->id . '\'); return false;">'
+				. '<span class="icon-times" aria-hidden="true"></span> ' . Text::_('JCLEAR')
+				. '</button>';
+		}
+
+		// Propagate server button
+		if ($allowPropagate && count($languages) > 2)
+		{
+			// Strip off language tag at the end
+			$tagLength            = (int) strlen($this->element['language']);
+			$callbackFunctionStem = substr("jSelectServer_" . $this->id, 0, -$tagLength);
+
+			$html .= '<button'
+				. ' class="btn btn-primary' . ($value ? '' : ' hidden') . '"'
+				. ' type="button"'
+				. ' id="' . $this->id . '_propagate"'
+				. ' title="' . Text::_('JGLOBAL_ASSOCIATIONS_PROPAGATE_TIP') . '"'
+				. ' onclick="Joomla.propagateAssociation(\'' . $this->id . '\', \'' . $callbackFunctionStem . '\');">'
+				. '<span class="icon-sync" aria-hidden="true"></span> ' . Text::_('JGLOBAL_ASSOCIATIONS_PROPAGATE_BUTTON')
+				. '</button>';
+		}
+
+		if ($allowSelect || $allowNew || $allowEdit || $allowClear)
+		{
+			$html .= '</span>';
+		}
+
+		// Select server modal
+		if ($allowSelect)
+		{
+			$html .= HTMLHelper::_(
+				'bootstrap.renderModal',
+				'ModalSelect' . $modalId,
+				array(
+					'title'      => $modalTitle,
+					'url'        => $urlSelect,
+					'height'     => '400px',
+					'width'      => '800px',
+					'bodyHeight' => 70,
+					'modalWidth' => 80,
+					'footer'     => '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">'
+						. Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>',
+				)
+			);
+		}
+
+		// New server modal
+		if ($allowNew)
+		{
+			$html .= HTMLHelper::_(
+				'bootstrap.renderModal',
+				'ModalNew' . $modalId,
+				array(
+					'title'       => Text::_('COM_CONTENT_NEW_ARTICLE'),
+					'backdrop'    => 'static',
+					'keyboard'    => false,
+					'closeButton' => false,
+					'url'         => $urlNew,
+					'height'      => '400px',
+					'width'       => '800px',
+					'bodyHeight'  => 70,
+					'modalWidth'  => 80,
+					'footer'      => '<button type="button" class="btn btn-secondary"'
+						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'article\', \'cancel\', \'item-form\'); return false;">'
+						. Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>'
+						. '<button type="button" class="btn btn-primary"'
+						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'article\', \'save\', \'item-form\'); return false;">'
+						. Text::_('JSAVE') . '</button>'
+						. '<button type="button" class="btn btn-success"'
+						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'article\', \'apply\', \'item-form\'); return false;">'
+						. Text::_('JAPPLY') . '</button>',
+				)
+			);
+		}
+
+		// Edit server modal
+		if ($allowEdit)
+		{
+			$html .= HTMLHelper::_(
+				'bootstrap.renderModal',
+				'ModalEdit' . $modalId,
+				array(
+					'title'       => Text::_('COM_CONTENT_EDIT_ARTICLE'),
+					'backdrop'    => 'static',
+					'keyboard'    => false,
+					'closeButton' => false,
+					'url'         => $urlEdit,
+					'height'      => '400px',
+					'width'       => '800px',
+					'bodyHeight'  => 70,
+					'modalWidth'  => 80,
+					'footer'      => '<button type="button" class="btn btn-secondary"'
+						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'article\', \'cancel\', \'item-form\'); return false;">'
+						. Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>'
+						. '<button type="button" class="btn btn-primary"'
+						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'article\', \'save\', \'item-form\'); return false;">'
+						. Text::_('JSAVE') . '</button>'
+						. '<button type="button" class="btn btn-success"'
+						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'article\', \'apply\', \'item-form\'); return false;">'
+						. Text::_('JAPPLY') . '</button>',
+				)
+			);
+		}
+
+		// Note: class='required' for client side validation.
+		$class = $this->required ? ' class="required modal-value"' : '';
+
+		$html .= '<input type="hidden" id="' . $this->id . '_id" ' . $class . ' data-required="' . (int) $this->required . '" name="' . $this->name
+			. '" data-text="' . htmlspecialchars(Text::_('COM_CONTENT_SELECT_AN_ARTICLE'), ENT_COMPAT, 'UTF-8') . '" value="' . $value . '">';
+
+		return $html;
+	}
+
+	/**
+	 * Method to get the field label markup.
+	 *
+	 * @return  string  The field label markup.
+	 *
+	 * @since   3.4
+	 */
+	protected function getLabel()
+	{
+		return str_replace($this->id, $this->id . '_name', parent::getLabel());
 	}
 }

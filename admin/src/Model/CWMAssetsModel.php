@@ -31,7 +31,7 @@ class CWMAssetsModel extends ListModel
 	 * @var integer Parent ID of asset
 	 * @since 7.0
 	 */
-	public int $parent_id;
+	public int $parent_id = 0;
 
 	/** @var integer Total numbers of Versions
 	 * @since 7.0
@@ -47,7 +47,7 @@ class CWMAssetsModel extends ListModel
 	 * @var string
 	 * @since 7.0
 	 */
-	public ?string $step = null;
+	public string $step = '';
 
 	/**
 	 * @var array
@@ -58,7 +58,7 @@ class CWMAssetsModel extends ListModel
 	/** @var float The time the process started
 	 * @since 7.0
 	 */
-	private ?float $startTime = null;
+	private float $startTime;
 
 	/** @var array The pre versions to process
 	 * @since 7.0
@@ -73,7 +73,7 @@ class CWMAssetsModel extends ListModel
 	/** @var string Version of BibleStudy
 	 * @since 7.0
 	 */
-	private ?string $versionSwitch = null;
+	private string $versionSwitch = '';
 
 	/**
 	 * Constructor.
@@ -137,11 +137,11 @@ class CWMAssetsModel extends ListModel
 	/**
 	 * Returns the current timestamps in decimal seconds
 	 *
-	 * @return string
+	 * @return float
 	 *
 	 * @since 7.0
 	 */
-	private function microtime_float()
+	private function microtime_float(): float
 	{
 		[$usec, $sec] = explode(" ", microtime());
 
@@ -157,10 +157,11 @@ class CWMAssetsModel extends ListModel
 	 */
 	private function getSteps(): void
 	{
-		$fix = new CWMAssets;
-		$fix->build();
-		$this->versionStack = $fix->query;
-		$this->totalSteps   = $fix->count;
+		$fix     = new CWMAssets;
+		$results = $fix->build();
+
+		$this->versionStack = $results->query;
+		$this->totalSteps   = $results->count;
 
 	}
 
@@ -171,7 +172,7 @@ class CWMAssetsModel extends ListModel
 	 *
 	 * @return boolean
 	 *
-	 * @throws \JsonException
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function run(bool $resetTimer = true): bool
@@ -200,7 +201,7 @@ class CWMAssetsModel extends ListModel
 	 *
 	 * @return void
 	 *
-	 * @throws \JsonException
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	private function saveStack(): void
@@ -234,16 +235,17 @@ class CWMAssetsModel extends ListModel
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	private function resetStack(): void
 	{
-		$session = Factory::getSession();
+		$session = Factory::getApplication()->getSession();
 		$session->set('asset_stack', '', 'CWM');
 		$this->versionStack  = array();
-		$this->versionSwitch = null;
+		$this->versionSwitch = '';
 		$this->allupdates    = array();
-		$this->step          = null;
+		$this->step          = '';
 		$this->totalSteps    = 0;
 		$this->doneSteps     = 0;
 	}
@@ -251,12 +253,12 @@ class CWMAssetsModel extends ListModel
 	/**
 	 * Loads the Versions/SQL/After stack from the session
 	 *
-	 * @return boolean
+	 * @return void
 	 *
-	 * @throws \JsonException
+	 * @throws \Exception
 	 * @since 7.0
 	 */
-	private function loadStack(): bool
+	private function loadStack(): void
 	{
 		$session = Factory::getApplication()->getSession();
 		$stack   = $session->get('asset_stack', '', 'CWM');
@@ -264,13 +266,13 @@ class CWMAssetsModel extends ListModel
 		if (empty($stack))
 		{
 			$this->versionStack  = array();
-			$this->versionSwitch = null;
+			$this->versionSwitch = '';
 			$this->allupdates    = array();
-			$this->step          = null;
+			$this->step          = '';
 			$this->totalSteps    = 0;
 			$this->doneSteps     = 0;
 
-			return false;
+			return;
 		}
 
 		if (function_exists('base64_encode') && function_exists('base64_decode'))
@@ -285,14 +287,13 @@ class CWMAssetsModel extends ListModel
 
 		$stack = json_decode($stack, true, 512, JSON_THROW_ON_ERROR);
 
-		$this->versionStack  = $stack['version'];
-		$this->versionSwitch = $stack['switch'];
+		$this->versionStack  = (array) $stack['version'];
+		$this->versionSwitch = (string) $stack['switch'];
 		$this->allupdates    = $stack['allupdates'];
-		$this->step          = $stack['step'];
-		$this->totalSteps    = $stack['total'];
-		$this->doneSteps     = $stack['done'];
+		$this->step          = (string) $stack['step'];
+		$this->totalSteps    = (int) $stack['total'];
+		$this->doneSteps     = (int) $stack['done'];
 
-		return true;
 	}
 
 	/**
@@ -315,6 +316,7 @@ class CWMAssetsModel extends ListModel
 	 *
 	 * @return boolean
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	private function RealRun(): bool
@@ -359,9 +361,9 @@ class CWMAssetsModel extends ListModel
 	 *
 	 * @since 7.0
 	 */
-	public function parentid(): void
+	public function parentId(): void
 	{
-		$this->parent_id = CWMAssets::parentid();
+		$this->parent_id = CWMAssets::parentId();
 	}
 
 	/**
@@ -375,12 +377,11 @@ class CWMAssetsModel extends ListModel
 	{
 		$return = array();
 		$db     = Factory::getContainer()->get('DatabaseDriver');
-		$result = new \stdClass;
 
 		// First get the new parent_id
-		if (!$this->parent_id)
+		if ($this->parent_id === 0)
 		{
-			$this->parentid();
+			$this->parentId();
 		}
 
 		// Get the names of the JBS tables
@@ -413,19 +414,19 @@ class CWMAssetsModel extends ListModel
 				}
 
 				// If there is a jasset_id but no match to the parent_id then a mismatch has occurred
-				if ($this->parent_id != $result->parent_id && $result->jasset_id)
+				if ($this->parent_id !== (int) (int) $result->parent_id && $result->jasset_id)
 				{
 					$nomatchrows++;
 				}
 
 				// If $parent_id and $result->parent_id match and the Asset rules are not blank then everything is okay
-				if ($this->parent_id == $result->parent_id && $result->arules !== "")
+				if ($this->parent_id === (int) $result->parent_id && $result->arules !== "")
 				{
 					$matchrows++;
 				}
 
 				// If $parent_id and $result->parent_id match and the Asset rules is blank we need to fix
-				if ($this->parent_id == $result->parent_id && $result->arules === "")
+				if ($this->parent_id === (int) $result->parent_id && $result->arules === "")
 				{
 					$arulesrows++;
 				}

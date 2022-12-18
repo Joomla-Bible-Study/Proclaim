@@ -10,6 +10,8 @@
 // No Direct Access
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Router\Route;
 
 defined('_JEXEC') or die;
 
@@ -24,14 +26,14 @@ $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 ?>
 <script type="text/javascript">
-	jSelectServer_jform_server_id = function(server_id) {
-		window.parent.Joomla.submitbutton('mediafile.setServer', server_id);
-		window.parent.SqueezeBox.close();
+	jSelectServer_jform_server_id = function (server_id) {
+		window.parent.Joomla.submitbutton('mediafile.setServer', server_id)
+		window.parent.SqueezeBox.close()
 	}
 </script>
 <form
-	action="<?php echo Route::_('index.php?option=com_proclaim&view=servers&layout=modal&tmpl=component&function=' . $function); ?>"
-	method="post" name="adminForm" id="adminForm" class="form-inline">
+		action="<?php echo Route::_('index.php?option=com_proclaim&view=CWMServers&layout=modal&tmpl=component&function=' . $function); ?>"
+		method="post" name="adminForm" id="adminForm" class="form-inline">
 	<?php
 	// Search tools bar
 	echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));

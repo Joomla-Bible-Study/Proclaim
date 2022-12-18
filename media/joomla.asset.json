@@ -338,6 +338,31 @@
 	  "version": "b0a8df19948936e693d5c710d22673ed9ad760a3"
 	},
 	{
+	  "name": "com_proclaim.cwmadmin-servers-modal.es5",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmadmin-servers-modal-es5.min.js",
+	  "dependencies": [
+		"core"
+	  ],
+	  "attributes": {
+		"nomodule": true,
+		"defer": true
+	  },
+	  "version": "872a497cd19612c3e1940b5feefdc0e14c08d4b9"
+	},
+	{
+	  "name": "com_proclaim.cwmadmin-servers-modal",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmadmin-servers-modal.min.js",
+	  "dependencies": [
+		"com_proclaim.cwmadmin-servers-modal.es5"
+	  ],
+	  "attributes": {
+		"type": "module"
+	  },
+	  "version": "b0a8df19948936e693d5c710d22673ed9ad760a3"
+	},
+	{
 	  "name": "com_proclaim.cwmadmin-locations-batch.es5",
 	  "type": "script",
 	  "uri": "com_proclaim/cwmadmin-locations-default-batch-footer-es5.min.js",
