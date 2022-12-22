@@ -63,7 +63,7 @@ class CWMAddonLegacy extends CWMAddon
 	 *
 	 * @since 9.1.3
 	 */
-	public function renderGeneral($media_form, $new)
+	public function renderGeneral($media_form, $new): string
 	{
 		$html = '';
 
@@ -104,7 +104,7 @@ class CWMAddonLegacy extends CWMAddon
 	 *
 	 * @since 9.1.3
 	 */
-	public function render($media_form, $new)
+	public function render($media_form, $new): string
 	{
 		$html = '';
 
