@@ -17,7 +17,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Uri\Uri;
-use Joomla\Database\DatabaseQuery;
 
 /**
  * Servers model class
@@ -33,7 +32,7 @@ class CWMServersModel extends ListModel
 	 * @var     array
 	 * @since   9.0.0
 	 */
-	protected $rlu_id = array();
+	protected array $rlu_id = array();
 
 	/**
 	 * A reverse lookup of the Endpoint type to Endpoint name
@@ -41,7 +40,7 @@ class CWMServersModel extends ListModel
 	 * @var     array
 	 * @since    9.0.0
 	 */
-	protected $rlu_type = array();
+	protected array $rlu_type = array();
 
 	/**
 	 * Method to get the reverse lookup of the server_id to server_name
@@ -119,7 +118,7 @@ class CWMServersModel extends ListModel
 			if (is_file($file) && $xml = simplexml_load_string(file_get_contents($file)))
 			{
 				// Create the reverse lookup for Endpoint type to Endpoint name
-				$this->rlu_type[$server] = (string) $xml->name;
+				$this->rlu_type[strtolower($server)] = (string) $xml->name;
 
 				$o              = new \stdClass;
 				$o->id          = $i;

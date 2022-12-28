@@ -19,7 +19,6 @@ use Joomla\CMS\Form\FormField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
-use Joomla\Database\ParameterType;
 use Joomla\Utilities\ArrayHelper;
 
 /**
