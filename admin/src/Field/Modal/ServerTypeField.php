@@ -59,8 +59,9 @@ class ServerTypeField extends FormField
 		// Load language
 		Factory::getApplication()->getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
 
-		// The active article id field.
-		$value = (string) $this->value ?: '';
+		// The active server id field making sure it uses the lower case naming for namespace corrections.
+		$value       = (string) strtolower($this->value) ?: '';
+		$this->value = strtolower($this->value);
 
 		// Create the modal id.
 		$modalId = 'Types_' . $this->id;
