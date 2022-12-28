@@ -8,15 +8,16 @@
  * @link       https://www.christianwebministries.org
  * */
 namespace CWM\Component\Proclaim\Site\Helper;
+
 // No Direct Access
 defined('_JEXEC') or die;
 
-use Joomla\Registry\Registry;
+use CWM\Component\Proclaim\Administrator\Helper\CWMTranslated;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
-use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Text;
-use CWM\Component\Proclaim\Administrator\Helper\CWMTranslated;
+use Joomla\CMS\Router\Route;
+use Joomla\Registry\Registry;
 
 /**
  * Class for JBSMLanding
@@ -30,14 +31,14 @@ class CWMLanding
 	 * Get Locations for Landing Page
 	 *
 	 * @param   Registry  $params  Item Params
-	 * @param   int                       $id      Item ID
+	 * @param   int       $id      Item ID
 	 *
 	 * @return string
 	 *
 	 * @throws   \Exception
 	 * @since    8.0.0
 	 */
-	public function getLocationsLandingPage($params, $id = 0)
+	public function getLocationsLandingPage(Registry $params, int $id = 0): string
 	{
 		$mainframe   = Factory::getApplication();
 		$user        = Factory::getApplication()->getSession()->get('user');
@@ -64,7 +65,6 @@ class CWMLanding
 			$m_params   = $registry;
 			$language   = $db->quote($item->language) . ',' . $db->quote('*');
 			$menu_order = $params->get('locations_order');
-
 		}
 		else
 		{
@@ -91,14 +91,16 @@ class CWMLanding
 				case 1:
 					$order = 'DESC';
 					break;
-                case 0:
-                    $order = null;
+				case 0:
+					$order = null;
 			}
 		}
+
 		if (!$order)
 		{
 			$order = $params->get('landing_default_order', 'ASC');
 		}
+
 		// Compute view access permissions.
 		$groups = implode(',', $user->getAuthorisedViewLevels());
 
@@ -229,14 +231,14 @@ class CWMLanding
 	 * Get Teacher for LandingPage
 	 *
 	 * @param   Registry  $params  Item Params
-	 * @param   int                       $id      Item ID
+	 * @param   int       $id      Item ID
 	 *
 	 * @return string
 	 *
 	 * @throws   \Exception
 	 * @since    8.0.0
 	 */
-	public function getTeacherLandingPage($params, $id = 0)
+	public function getTeacherLandingPage(Registry $params, int $id = 0): string
 	{
 		$mainframe = Factory::getApplication();
 		$db        = Factory::getContainer()->get('DatabaseDriver');
@@ -285,11 +287,12 @@ class CWMLanding
 				case 1:
 					$order = 'DESC';
 					break;
-                case 0:
-                    $order = null;
+				case 0:
+					$order = null;
 			}
 		}
-        if (!$order)
+
+		if (!$order)
 		{
 			$order = $params->get('landing_default_order', 'ASC');
 		}
@@ -414,8 +417,8 @@ class CWMLanding
 							{
 								$teacher .= '<div class="span4"><a href="'
 									. Route::_('index.php?option=com_proclaim&amp;sendingview=landing&amp;view=teacher&amp;id=' .
-												$b->id . '&amp;t=' . $template
-										) . '">';
+										$b->id . '&amp;t=' . $template
+									) . '">';
 							}
 
 							$teacher .= $b->teachername;
@@ -442,14 +445,14 @@ class CWMLanding
 	 * Get Series for LandingPage
 	 *
 	 * @param   Registry  $params  Item Params
-	 * @param   int                       $id      ID
+	 * @param   int       $id      ID
 	 *
 	 * @return string
 	 *
 	 * @throws   \Exception
 	 * @since    8.0.0
 	 */
-	public function getSeriesLandingPage($params, $id = 0)
+	public function getSeriesLandingPage(Registry $params, int $id = 0): string
 	{
 		$mainframe = Factory::getApplication();
 		$user      = $user = Factory::getApplication()->getSession()->get('user');
@@ -494,14 +497,16 @@ class CWMLanding
 				case 1:
 					$order = 'DESC';
 					break;
-                case 0:
-                    $order = null;
+				case 0:
+					$order = null;
 			}
 		}
-        if (!$order)
+
+		if (!$order)
 		{
 			$order = $params->get('landing_default_order', 'ASC');
 		}
+
 		// Compute view access permissions.
 		$groups = implode(',', $user->getAuthorisedViewLevels());
 
@@ -667,14 +672,14 @@ class CWMLanding
 	 * Get Years for Landing Page
 	 *
 	 * @param   Registry  $params  Item Params
-	 * @param   int                       $id      Item ID
+	 * @param   int       $id      Item ID
 	 *
 	 * @return string
 	 *
 	 * @throws   \Exception
 	 * @since    8.0.0
 	 */
-	public function getYearsLandingPage($params, $id = 0)
+	public function getYearsLandingPage(Registry $params, int $id = 0): string
 	{
 		$mainframe = Factory::getApplication();
 		$db        = Factory::getContainer()->get('DatabaseDriver');
@@ -717,14 +722,16 @@ class CWMLanding
 				case 1:
 					$order = 'DESC';
 					break;
-                case 0:
-                    $order = null;
+				case 0:
+					$order = null;
 			}
 		}
-        if (!$order)
+
+		if (!$order)
 		{
 			$order = $params->get('landing_default_order', 'ASC');
 		}
+
 		// Compute view access permissions.
 		$groups = implode(',', $user->getAuthorisedViewLevels());
 
@@ -805,14 +812,14 @@ class CWMLanding
 	 * Get Topics for LandingPage
 	 *
 	 * @param   Registry  $params  Item Params
-	 * @param   int                       $id      ID
+	 * @param   int       $id      ID
 	 *
 	 * @return string
 	 *
 	 * @throws   \Exception
 	 * @since    8.0.0
 	 */
-	public function getTopicsLandingPage($params, $id = 0)
+	public function getTopicsLandingPage(Registry $params, int $id = 0): string
 	{
 		$mainframe = Factory::getApplication();
 		$user      = $user = Factory::getApplication()->getSession()->get('user');
@@ -856,14 +863,16 @@ class CWMLanding
 				case 1:
 					$order = 'DESC';
 					break;
-                case 0:
-                    $order = null;
+				case 0:
+					$order = null;
 			}
 		}
-        if (!$order)
+
+		if (!$order)
 		{
 			$order = $params->get('landing_default_order', 'ASC');
 		}
+
 		// Compute view access permissions.
 		$groups = implode(',', $user->getAuthorisedViewLevels());
 
@@ -945,14 +954,14 @@ class CWMLanding
 	 * Get MessageType for Landing Page
 	 *
 	 * @param   Registry  $params  Item Params
-	 * @param   int                       $id      ID
+	 * @param   int       $id      ID
 	 *
 	 * @return string
 	 *
 	 * @throws   \Exception
 	 * @since    8.0.0
 	 */
-	public function getMessageTypesLandingPage($params, $id = 0)
+	public function getMessageTypesLandingPage(Registry $params, int $id = 0): string
 	{
 		$mainframe   = Factory::getApplication();
 		$db          = Factory::getContainer()->get('DatabaseDriver');
@@ -1005,14 +1014,16 @@ class CWMLanding
 				case 1:
 					$order = 'DESC';
 					break;
-                case 0:
-                    $order = null;
+				case 0:
+					$order = null;
 			}
 		}
-        if (!$order)
+
+		if (!$order)
 		{
 			$order = $params->get('landing_default_order', 'ASC');
 		}
+
 		// Compute view access permissions.
 		$groups = implode(',', $user->getAuthorisedViewLevels());
 
@@ -1141,14 +1152,14 @@ class CWMLanding
 	 * Get Books for Landing Page.
 	 *
 	 * @param   Registry  $params  Item Params
-	 * @param   int                       $id      ID
+	 * @param   int       $id      ID
 	 *
 	 * @return string
 	 *
-	 * @since    8.0.0
 	 * @throws   \Exception
+	 * @since    8.0.0
 	 */
-	public function getBooksLandingPage($params, $id = 0)
+	public function getBooksLandingPage(Registry $params, int $id = 0): string
 	{
 		$user     = $user = Factory::getApplication()->getSession()->get('user');
 		$db       = Factory::getContainer()->get('DatabaseDriver');
@@ -1199,19 +1210,21 @@ class CWMLanding
 				case 1:
 					$order = 'DESC';
 					break;
-                case 0:
-                    $order = null;
+				case 0:
+					$order = null;
 			}
 		}
-        if (!$order)
+
+		if (!$order)
 		{
 			$order = $params->get('landing_default_order', 'ASC');
 		}
+
 		// Compute view access permissions.
 		$groups = $user->getAuthorisedViewLevels();
 		$groups = array_unique($groups);
 		$groups = implode(',', $groups);
-		$query = $db->getQuery(true);
+		$query  = $db->getQuery(true);
 		$query->select('distinct a.*')
 			->from('#__bsms_books a')
 			->select('b.access AS access')
@@ -1250,7 +1263,7 @@ class CWMLanding
 					. '&amp;sendingview=CWMLanding&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0' .
 				'&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
 
-				$book .= Text::sprintf($b->bookname);
+				$book .= Text::_($b->bookname);
 
 				$book .= '</a>';
 				$book .= '</div>';

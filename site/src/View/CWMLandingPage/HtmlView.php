@@ -12,12 +12,11 @@ namespace CWM\Component\Proclaim\Site\View\CWMLandingPage;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Object\CMSObject;
 use Joomla\Registry\Registry;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
 use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Html\HTMLHelper;
 use CWM\Component\Proclaim\Site\Helper\CWMImages;
 use Joomla\CMS\Uri\Uri;
 /**
@@ -41,16 +40,16 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @since 7.0
 	 */
-	public $params;
+	public Registry $params;
 
 	/**
 	 * Params
 	 *
-	 * @var Registry
+	 * @var CMSObject
 	 *
 	 * @since 7.0
 	 */
-	public $state;
+	public CMSObject $state;
 
 	public $main;
 

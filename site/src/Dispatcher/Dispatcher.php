@@ -78,17 +78,12 @@ class Dispatcher extends ComponentDispatcher
 			$controller = $this->defaultController;
 			$view       = $this->defaultController;
 		}
-		elseif (empty($controller) && !empty($view))
-		{
-			$controller = $view;
-		}
 		elseif (!empty($controller) && empty($view))
 		{
 			$view = $controller;
 		}
 
-		$controller = $this->mapView($controller);
-		$view       = $this->mapView($view);
+		$view = $this->mapView($view);
 
 		$this->input->set('view', $view);
 		$this->input->set('controller', $controller);
