@@ -1,7 +1,7 @@
 <?php
 /**
- * @package         Joomla.Administrator
- * @subpackage      com_users
+ * @package         CWM.Administrator
+ * @subpackage      com_proclaim
  *
  * @copyright   (C) 2021 Open Source Matters, Inc. <https://www.joomla.org>
  * @license         GNU General Public License version 2 or later; see LICENSE.txt
@@ -27,48 +27,7 @@ class Dispatcher extends ComponentDispatcher
 	 * @var string
 	 * @since 10.0.0
 	 */
-	protected $defaultController = 'CWMCpanel';
-
-	/**
-	 * Array of Views to namespace names
-	 * @var array
-	 * @since 10.0.0
-	 */
-	protected array $viewMap = [
-		'cwmadmin'         => 'CWMAdmin',
-		'cwmachive'        => 'CWMAchive',
-		'cwmassets'        => 'CWMAssets',
-		'cwmbackup'        => 'CWMBackup',
-		'cwmcomment'       => 'CWMComment',
-		'cwmcomments'      => 'CWMComments',
-		'cwmcpanel'        => 'CWMCpanel',
-		'cwmdir'           => 'CWMDir',
-		'cwminstall'       => 'CWMInstall',
-		'cwmlocation'      => 'CWMLocation',
-		'cwmlocations'     => 'CWMLocations',
-		'cwmmediafile'     => 'CWMMediaFile',
-		'cwmmediafiles'    => 'CWMMediaFiles',
-		'cwmmessage'       => 'CWMMessage',
-		'cwmmessages'      => 'CWMMessages',
-		'cwmmessagetype'   => 'CWMMessageType',
-		'cwmmessagetypes'  => 'CWMMessageTypes',
-		'cwmmigrate'       => 'CWMMigrate',
-		'cwmpodcast'       => 'CWMPodcast',
-		'cwmpodcasts'      => 'CWMPodcasts',
-		'cwmserie'         => 'CWMSerie',
-		'cwmseries'        => 'CWMSeries',
-		'cwmserver'        => 'CWMServer',
-		'cwmservers'       => 'CWMServers',
-		'cwmteacher'       => 'CWMTeacher',
-		'cwmteachers'      => 'CWMTeachers',
-		'cwmtemplatecode'  => 'CWMTemplateCode',
-		'cwmtemplatecodes' => 'CWMTemplateCodes',
-		'cwmtemplate'      => 'CWMTemplate',
-		'cwmtemplates'     => 'CWMTemplates',
-		'cwmtopic'         => 'CWMTopic',
-		'cwmtopics'        => 'CWMTopics',
-		'cwmupload'        => 'CWMUpload',
-	];
+	protected string $defaultController = 'cwmcpanel';
 
 	/**
 	 * @return void
@@ -152,10 +111,17 @@ class Dispatcher extends ComponentDispatcher
 		$this->input->set('task', $task);
 	}
 
-	private function mapView(string $view)
+	/**
+	 * System to set all urls to lower case
+	 *
+	 * @param   string  $view  URL View String
+	 *
+	 * @return string
+	 *
+	 * @since 10.0.0
+	 */
+	private function mapView(string $view): string
 	{
-		$view = strtolower($view);
-
-		return $this->viewMap[$view] ?? $view;
+		return strtolower($view);
 	}
 }

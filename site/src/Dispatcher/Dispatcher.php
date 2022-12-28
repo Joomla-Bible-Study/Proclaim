@@ -24,6 +24,12 @@ use Joomla\CMS\Language\Text;
 class Dispatcher extends ComponentDispatcher
 {
 	/**
+	 * @var string
+	 * @since 10.0.0
+	 */
+	protected string $defaultController = 'cwmlandingpage';
+
+	/**
 	 * Dispatch a controller task. Redirecting the user if appropriate.
 	 *
 	 * @return  void
@@ -32,7 +38,9 @@ class Dispatcher extends ComponentDispatcher
 	 */
 	public function dispatch()
 	{
-		if ($this->input->get('view') === 'CWMLandingPage' && $this->input->get('layout') === 'modal')
+		$this->applyViewAndController();
+
+		if ($this->input->get('view') === 'cwmlandingpage' && $this->input->get('layout') === 'modal')
 		{
 			if (!$this->app->getIdentity()->authorise('core.create', 'com_proclaim'))
 			{
@@ -45,5 +53,59 @@ class Dispatcher extends ComponentDispatcher
 		}
 
 		parent::dispatch();
+	}
+
+	/**
+	 * Update View and Controller to work with Namespace Case-Sensitive
+	 *
+	 * @return void
+	 * @since 10.0.0
+	 */
+	protected function applyViewAndController(): void
+	{
+		$controller = $this->input->getCmd('controller', null);
+		$view       = $this->input->getCmd('view', null);
+		$task       = $this->input->getCmd('task', 'display');
+
+		if (str_contains($task, '.'))
+		{
+			// Explode the controller.task command.
+			[$controller, $task] = explode('.', $task);
+		}
+
+		if (empty($controller) && empty($view))
+		{
+			$controller = $this->defaultController;
+			$view       = $this->defaultController;
+		}
+		elseif (empty($controller) && !empty($view))
+		{
+			$controller = $view;
+		}
+		elseif (!empty($controller) && empty($view))
+		{
+			$view = $controller;
+		}
+
+		$controller = $this->mapView($controller);
+		$view       = $this->mapView($view);
+
+		$this->input->set('view', $view);
+		$this->input->set('controller', $controller);
+		$this->input->set('task', $task);
+	}
+
+	/**
+	 * System to set all urls to lower case
+	 *
+	 * @param   string  $view  URL View String
+	 *
+	 * @return string
+	 *
+	 * @since 10.0.0
+	 */
+	private function mapView(string $view): string
+	{
+		return strtolower($view);
 	}
 }

@@ -70,52 +70,52 @@
 		<menu>JBS_CMN_COM_PROCLAIM</menu>
 		<submenu>
 			<!-- Note that all & must be escaped to &amp; for the file to be valid XML and be parsed by the installer -->
-			<menu link="option=com_proclaim&amp;view=CWMCpanel"
+			<menu link="option=com_proclaim&amp;view=cwmcpanel"
 			      view="cwmcpanel"
 			      alt="Proclaim/Controlpanel">
 				JBS_MNU_CONTROL_PANEL
 			</menu>
-			<menu link="option=com_proclaim&amp;task=CWMAdmin.edit&amp;id=1"
+			<menu link="option=com_proclaim&amp;task=cwmadmin.edit&amp;id=1"
 			      view="cwmadmin"
 			      alt="Proclaim/AdminCenter">
 				JBS_MNU_ADMINISTRATION
 			</menu>
-			<menu link="option=com_proclaim&amp;view=CWMMessages"
+			<menu link="option=com_proclaim&amp;view=cwmmessages"
 			      view="cwmmessages"
 			      alt="Proclaim/Messages">
 				JBS_MNU_STUDIES
 			</menu>
-			<menu link="option=com_proclaim&amp;view=CWMMediaFiles"
+			<menu link="option=com_proclaim&amp;view=cwmediaFiles"
 			      view="cwmmediafiles"
 			      alt="Proclaim/MediaFiles">
 				JBS_MNU_MEDIA_FILES
 			</menu>
-			<menu link="option=com_proclaim&amp;view=CWMTeachers"
+			<menu link="option=com_proclaim&amp;view=cwmteachers"
 			      view="cwmteachers"
 			      alt="Proclaim/Teachers">
 				JBS_MNU_TEACHERS
 			</menu>
-			<menu link="option=com_proclaim&amp;view=CWMSeries"
+			<menu link="option=com_proclaim&amp;view=cwmseries"
 			      view="cwmseries"
 			      alt="Proclaim/Series">
 				JBS_MNU_SERIES
 			</menu>
-			<menu link="option=com_proclaim&amp;view=CWMMessageTypes"
+			<menu link="option=com_proclaim&amp;view=cwmmessagetypes"
 			      view="cwmmessagetypes"
 			      alt="Proclaim/MessageType">
 				JBS_MNU_MESSAGETYPES
 			</menu>
-			<menu link="option=com_proclaim&amp;view=CWMLocations"
+			<menu link="option=com_proclaim&amp;view=cwmlocations"
 			      view="cwmlocations"
 			      alt="Proclaim/Locations">
 				JBS_MNU_LOCATIONS
 			</menu>
-			<menu link="option=com_proclaim&amp;view=CWMTopics"
+			<menu link="option=com_proclaim&amp;view=cwmtopics"
 			      view="cwmtopics"
 			      alt="Proclaim/Topics">
 				JBS_MNU_TOPICS
 			</menu>
-			<menu link="option=com_proclaim&amp;view=CWMComments"
+			<menu link="option=com_proclaim&amp;view=cwmcomments"
 			      view="cwmcomments"
 			      alt="Proclaim/Comments">
 				JBS_MNU_STUDY_COMMENTS
@@ -125,17 +125,17 @@
 			      alt="Proclaim/Servers">
 				JBS_MNU_SERVERS
 			</menu>
-			<menu link="option=com_proclaim&amp;view=CWMPodcasts"
+			<menu link="option=com_proclaim&amp;view=cwmpodcasts"
 			      view="cwmpodcasts"
 			      alt="Proclaim/Podcasts">
 				JBS_MNU_PODCASTS
 			</menu>
-			<menu link="option=com_proclaim&amp;view=CWMTemplates"
+			<menu link="option=com_proclaim&amp;view=cwmtemplates"
 			      view="cwmtemplates"
 			      alt="Proclaim/Templates">
 				JBS_MNU_TEMPLATE_DISPLAY
 			</menu>
-			<menu link="option=com_proclaim&amp;view=CWMTemplateCodes"
+			<menu link="option=com_proclaim&amp;view=cwmtemplatecodes"
 			      view="ccwmtemplatecodes"
 			      alt="Proclaim/TemplateCodes">
 				JBS_MNU_TEMPLATE_CODE_DISPLAY
