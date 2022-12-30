@@ -122,7 +122,7 @@ class CWMParams
 			$pk = Factory::getApplication()->input->getInt('t', '1');
 		}
 
-		if (self::$templateId !== $pk || !self::$templateTable)
+		if (self::$templateId !== $pk || !isset(self::$templateTable))
 		{
 			self::$templateId = $pk;
 			$query      = $db->getQuery(true);
@@ -133,6 +133,7 @@ class CWMParams
 			$db->setQuery($query);
 			$template = $db->loadObject();
 
+			// This is a fall back to default template if specified template has been deleted.
 			if (!$template)
 			{
 				self::$templateId = 1;
