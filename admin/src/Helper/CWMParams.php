@@ -146,6 +146,7 @@ class CWMParams
 			$db->setQuery($query);
 			$template = $db->loadObject();
 
+			// This is a fall back to default template if specified template has been deleted.
 			if (!$template)
 			{
 				self::$templateId = 1;
