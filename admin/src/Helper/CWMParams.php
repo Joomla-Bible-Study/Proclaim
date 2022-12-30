@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Administrator\Table\CWMTemplateTable;
 use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 
@@ -39,7 +40,7 @@ class CWMParams
 	 *
 	 * @since 1.5
 	 */
-	public static $admin;
+	public static object $admin;
 
 	/** @var  object Template Table
 	 *
@@ -53,6 +54,12 @@ class CWMParams
 	 */
 	public static int $t_id = 1;
 
+	public function __construct()
+	{
+		// $this->$callable is callable here
+		self::$admin = new \stdClass;
+	}
+
 	/**
 	 * Gets the settings from Admin
 	 *
@@ -63,7 +70,7 @@ class CWMParams
 	 */
 	public static function getAdmin()
 	{
-		if (!self::$admin)
+		if (!isset(self::$admin))
 		{
 			$app    = Factory::getApplication();
 			$db     = Factory::getContainer()->get('DatabaseDriver');
@@ -107,7 +114,7 @@ class CWMParams
 	 *
 	 * @param   int  $pk  Id of Template to look for
 	 *
-	 * @return TableTemplate Return active template info
+	 * @return CWMTemplateTable Return active template info
 	 *
 	 * @throws \Exception
 	 * @since 7.0
