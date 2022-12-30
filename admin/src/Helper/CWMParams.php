@@ -54,12 +54,6 @@ class CWMParams
 	 */
 	public static int $t_id = 1;
 
-	public function __construct()
-	{
-		// $this->$callable is callable here
-		self::$admin = new \stdClass;
-	}
-
 	/**
 	 * Gets the settings from Admin
 	 *
@@ -90,7 +84,7 @@ class CWMParams
 				{
 					$registry->loadString($admin->params);
 				}
-				catch (Exception $e)
+				catch (\Exception $e)
 				{
 					$msg = $e->getMessage();
 					$app->enqueueMessage('Can\'t load Admin Params - ' . $msg, 'error');
@@ -114,7 +108,7 @@ class CWMParams
 	 *
 	 * @param   int  $pk  Id of Template to look for
 	 *
-	 * @return CWMTemplateTable Return active template info
+	 * @return object Return active template info
 	 *
 	 * @throws \Exception
 	 * @since 7.0
