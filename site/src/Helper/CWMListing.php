@@ -1857,11 +1857,11 @@ $thadd = '';
 	/**
 	 * Get Fluid Custom
 	 *
-	 * @param   String         $custom    Custom String
-	 * @param   Object         $item      Study Item
-	 * @param   Registry       $params    Params
-	 * @param   TemplateTable  $template  Template Table Data
-	 * @param   String         $type      Type of data
+	 * @param   String            $custom    Custom String
+	 * @param   Object            $item      Study Item
+	 * @param   Registry          $params    Params
+	 * @param   CWMTemplateTable  $template  Template Table Data
+	 * @param   String            $type      Type of data
 	 *
 	 * @return mixed
 	 *
