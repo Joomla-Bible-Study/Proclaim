@@ -14,15 +14,15 @@ defined('_JEXEC') or die;
 jimport('joomla.html.parameter');
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
-use Joomla\Registry\Registry;
-use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
-use Joomla\CMS\Language\Text;
 use Joomla\CMS\Application\ApplicationHelper;
-use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Client\ClientHelper;
+use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Path;
-use Joomla\CMS\Client\ClientHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
 
 /* Put in do to this file is used in a plugin. */
 
@@ -58,7 +58,7 @@ class CWMPodcast
 	 * @var string
 	 * @since version
 	 */
-	private $filename;
+	private string $filename;
 
 	/**
 	 * Make Podcasts
@@ -72,7 +72,6 @@ class CWMPodcast
 	{
 		$msg = array();
 		$db  = Factory::getContainer()->get('DatabaseDriver');
-		jimport('joomla.utilities.date');
 		$year = '(' . date('Y') . ')';
 		$date = date('r');
 
@@ -632,8 +631,6 @@ class CWMPodcast
 	public function writeFile(string $file, string $filecontent)
 	{
 		// Set FTP credentials, if given
-		jimport('joomla.client.helper');
-		jimport('joomla.filesystem.file');
 		ClientHelper::setCredentialsFromRequest('ftp');
 		$ftp = ClientHelper::getCredentials('ftp');
 
@@ -645,8 +642,7 @@ class CWMPodcast
 
 		$fileIt = File::write($file, $filecontent);
 
-		// Try to make the template file un-writeable
-		// @todo not sure what we are doing here but looks like we need to rework this.
+		// Try to make the template file un-writeable so other applications can't update it
 		if (!$fileIt || (!$ftp['enabled'] && !Path::setPermissions($file, '0555')))
 		{
 			Factory::getApplication()
