@@ -46,13 +46,13 @@ class CWMParams
 	 *
 	 * @since 1.5
 	 */
-	public static $template_table;
+	public static object $templateTable;
 
 	/** @var integer Default template id and used to check if changed form from last query
 	 *
 	 * @since 1.5
 	 */
-	public static int $t_id = 1;
+	public static int $templateId = 1;
 
 	/**
 	 * Gets the settings from Admin
@@ -62,7 +62,7 @@ class CWMParams
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public static function getAdmin()
+	public static function getAdmin(): object
 	{
 		if (!isset(self::$admin))
 		{
@@ -106,41 +106,54 @@ class CWMParams
 	/**
 	 * Get Template Params
 	 *
-	 * @param   int  $pk  Id of Template to look for
+	 * @param   int|null  $pk  Id of Template to look for
 	 *
 	 * @return object Return active template info
 	 *
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public static function getTemplateparams($pk = null)
+	public static function getTemplateparams(int $pk = null): object
 	{
-		$db     = Factory::getContainer()->get('DatabaseDriver');
+		$db       = Factory::getContainer()->get('DatabaseDriver');
+		$runner = false;
 
 		if (!$pk)
 		{
 			$pk = Factory::getApplication()->input->getInt('t', '1');
 		}
 
-		if (self::$t_id !== $pk || !self::$template_table)
+		if (!isset(self::$templateTable))
 		{
-			self::$t_id = $pk;
-			$query      = $db->getQuery(true);
+			$runner = true;
+		}
+		elseif (isset(self::$templateTable))
+		{
+			if (self::$templateId !== $pk)
+			{
+				$runner = true;
+			}
+		}
+
+		if ($runner)
+		{
+			self::$templateId = $pk;
+			$query            = $db->getQuery(true);
 			$query->select('*')
 				->from('#__bsms_templates')
 				->where('published = ' . (int) 1)
-				->where('id = ' . (int) self::$t_id);
+				->where('id = ' . (int) self::$templateId);
 			$db->setQuery($query);
 			$template = $db->loadObject();
 
 			if (!$template)
 			{
-				self::$t_id = 1;
-				$query      = $db->getQuery(true);
+				self::$templateId = 1;
+				$query            = $db->getQuery(true);
 				$query->select('*')
 					->from('#__bsms_templates')
 					->where('published = ' . (int) 1)
-					->where('id = ' . (int) self::$t_id);
+					->where('id = ' . (int) self::$templateId);
 				$db->setQuery($query);
 				$template = $db->loadObject();
 			}
@@ -157,25 +170,25 @@ class CWMParams
 				$template->params = new Registry;
 			}
 
-			self::$template_table = $template;
+			self::$templateTable = $template;
 		}
 
-		return self::$template_table;
+		return self::$templateTable;
 	}
 
 	/**
 	 * Update Component Params
 	 *
-	 * @param   array  $param_array  Array ('name' => 'params')
+	 * @param   array  $paramArray  Array ('name' => 'params')
 	 *
 	 * @return void
 	 *
-	 * @throws \JsonException
+	 * @throws \Exception
 	 * @since 9.1.5
 	 */
-	public static function setCompParams($param_array)
+	public static function setCompParams(array $paramArray): void
 	{
-		if (count($param_array) > 0)
+		if (count($paramArray) > 0)
 		{
 			// Read the existing component value(s)
 			$db     = Factory::getContainer()->get('DatabaseDriver');
@@ -187,7 +200,7 @@ class CWMParams
 			$params = json_decode($db->loadResult(), true, 512, JSON_THROW_ON_ERROR);
 
 			// Add the new variable(s) to the existing one(s)
-			foreach ($param_array as $name => $value)
+			foreach ($paramArray as $name => $value)
 			{
 				$params[(string) $name] = (string) $value;
 			}
