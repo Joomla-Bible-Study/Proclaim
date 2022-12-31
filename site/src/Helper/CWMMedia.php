@@ -132,47 +132,7 @@ class CWMMedia
 				CWMHelper::SetFilesize($media->id, $file_size);
 			}
 
-			// Todo may be able to run this through a functions as this looks like duplicate code of 849
-			switch ($file_size)
-			{
-				case  $file_size < 1024 :
-					$file_size = ' Bytes';
-					break;
-				case $file_size < 1048576 :
-					$file_size /= 1024;
-					$file_size = number_format($file_size, 0);
-					$file_size .= ' KB';
-					break;
-				case $file_size < 1073741824 :
-					$file_size /= 1024;
-					$file_size /= 1024;
-					$file_size = number_format($file_size, 1);
-					$file_size .= ' MB';
-					break;
-				case $file_size > 1073741824 :
-					$file_size /= 1024;
-					$file_size /= 1024;
-					$file_size /= 1024;
-					$file_size = number_format($file_size, 1);
-					$file_size .= ' GB';
-					break;
-			}
-
-			switch ($params->get('show_filesize'))
-			{
-				case 1:
-
-					break;
-				case 2:
-					$file_size = $media->comment;
-					break;
-				case 3:
-					if ($media->comment)
-					{
-						$file_size = $media->comment;
-					}
-					break;
-			}
+			$file_size = $this->convertFileSize((int) $file_size, $params, $media);
 
 			$filesize = '<span class="JBSMFilesize" style="font-size: 0.6em;display:inline;padding-left: 5px;">' .
 				$file_size . '</span>';
@@ -675,7 +635,7 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 	 * @throws \Exception
 	 * @since 9.0.0
 	 */
-	public function getPlayerCode($params, $player, $image, $media)
+	public function getPlayerCode($params, $player, $image, $media): string
 	{
 		// Merging the item params into the global.
 		$params = clone $params;
@@ -833,7 +793,7 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 	 *
 	 * @since 9.1.2
 	 */
-	public function rendersb($media, $params, $player, $image, $path, $direct = false)
+	public function rendersb($media, $params, $player, $image, $path, $direct = false): string
 	{
 		HtmlHelper::_('fancybox.framework', true, true);
 
@@ -879,7 +839,7 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 	 *
 	 * @since 9.0.0
 	 */
-	public function getFluidFilesize($media, $params)
+	public function getFluidFilesize(object $media, Registry $params)
 	{
 		$filesize = 0;
 
@@ -901,47 +861,7 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 
 		if ($file_size !== 0)
 		{
-			switch ($file_size)
-			{
-				case  $file_size < 1024 :
-					$this->fsize = $file_size;
-					$file_size   .= ' Bytes';
-					break;
-				case $file_size < 1048576 :
-					$file_size   /= 1024;
-					$file_size   = number_format($file_size, 0);
-					$this->fsize = $file_size;
-					$file_size   .= ' KB';
-					break;
-				case $file_size < 1073741824 :
-					$file_size   /= 1024;
-					$file_size   /= 1024;
-					$file_size   = number_format($file_size, 1);
-					$this->fsize = $file_size;
-					$file_size   .= ' MB';
-					break;
-				case $file_size > 1073741824 :
-					$file_size   /= 1024;
-					$file_size   /= 1024;
-					$file_size   /= 1024;
-					$file_size   = number_format($file_size, 1);
-					$this->fsize = $file_size;
-					$file_size   .= ' GB';
-					break;
-			}
-
-			switch ($params->get('show_filesize'))
-			{
-				case 2:
-					$file_size = $media->comment;
-					break;
-				case 3:
-					if ($media->comment)
-					{
-						$file_size = $media->comment;
-					}
-					break;
-			}
+			$file_size = $this->convertFileSize((int) $file_size, $params, $media);
 		}
 
 		return $file_size;
@@ -1296,5 +1216,61 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 			'JBS_MED_VIMEO'     => 'fab fa-vimeo',
 			'JBS_MED_CUSTOM'    => '1'
 		];
+	}
+
+	/**
+	 * Build File Size String Display
+	 *
+	 * @param   int  $file_size  Size of the file
+	 *
+	 * @return string
+	 *
+	 * @since 10.0.0
+	 */
+	public function convertFileSize(int $file_size, $params, $media): string
+	{
+		switch ($file_size)
+		{
+			case  $file_size < 1024 :
+				$this->fsize = $file_size;
+				$file_size   .= ' Bytes';
+				break;
+			case $file_size < 1048576 :
+				$file_size   /= 1024;
+				$file_size   = number_format($file_size, 0);
+				$this->fsize = $file_size;
+				$file_size   .= ' KB';
+				break;
+			case $file_size < 1073741824 :
+				$file_size   /= 1024;
+				$file_size   /= 1024;
+				$file_size   = number_format($file_size, 1);
+				$this->fsize = $file_size;
+				$file_size   .= ' MB';
+				break;
+			case $file_size > 1073741824 :
+				$file_size   /= 1024;
+				$file_size   /= 1024;
+				$file_size   /= 1024;
+				$file_size   = number_format($file_size, 1);
+				$this->fsize = $file_size;
+				$file_size   .= ' GB';
+				break;
+		}
+
+		switch ($params->get('show_filesize'))
+		{
+			case 2:
+				$file_size = $media->comment;
+				break;
+			case 3:
+				if ($media->comment)
+				{
+					$file_size = $media->comment;
+				}
+				break;
+		}
+
+		return $file_size;
 	}
 }
