@@ -26,7 +26,7 @@ if (file_exists($api))
  * This check returns true Templates is not setup yet, meaning
  * that the message concerning it should be displayed.
  *
- * @return  integer
+ * @return  boolean|null
  *
  * @since   3.2
  */
