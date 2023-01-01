@@ -10,11 +10,11 @@
 
 namespace CWM\Component\Proclaim\Administrator\Helper;
 
+use CWM\Component\Proclaim\Administrator\Model\CWMAdminModel;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
-use Joomla\CMS\MVC\Model\AdminModel;
-use CWM\Component\Proclaim\Administrator\Model;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 defined('_JEXEC') or die;
@@ -82,7 +82,7 @@ class CWMDbHelper
 	 *
 	 * @return boolean
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   7.0
 	 */
 	public static function alterDB($tables, $from = null)
@@ -239,7 +239,7 @@ class CWMDbHelper
 	 *
 	 * @return boolean true if success, or error string if failed
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   7.0
 	 */
 	public static function performDB($query, string $from = null, int $limit = null)
@@ -272,7 +272,7 @@ class CWMDbHelper
 	 *
 	 * @return boolean
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public static function checkDB($table, $field)
@@ -281,7 +281,7 @@ class CWMDbHelper
 
 		if (!$done)
 		{
-			/** @var BiblestudyModelAdmin $admin */
+			/** @var CWMAdminModel $admin */
 			$admin = BaseDatabaseModel::getInstance('CWMAdmin', 'Model');
 			$admin->fix();
 
@@ -355,7 +355,7 @@ class CWMDbHelper
 	 *
 	 * @return boolean
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   7.1.0
 	 */
 	public static function fixupcss(string $filename, bool $parent, string $newcss, int $id = null)
@@ -421,7 +421,7 @@ class CWMDbHelper
 
 		if (!$db->execute())
 		{
-			$app->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', ''), 'error');
+			$app->enqueueMessage(Text::sprintf('JBS_INS_SQL_UPDATE_ERRORS', ''), 'error');
 
 			return false;
 		}
@@ -431,7 +431,7 @@ class CWMDbHelper
 		if (!$parent)
 		{
 			self::reloadtable($result, 'Style');
-			$app->enqueueMessage(JText::_('JBS_STYLE_CSS_FIX_COMPLETE') . ': ' . $result->filename, 'notice');
+			$app->enqueueMessage(Text::_('JBS_STYLE_CSS_FIX_COMPLETE') . ': ' . $result->filename, 'notice');
 		}
 
 		return true;
@@ -445,7 +445,7 @@ class CWMDbHelper
 	 *
 	 * @return boolean
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 *
 	 * @since 7.0
 	 */
@@ -464,9 +464,9 @@ class CWMDbHelper
 			// This is a Joomla bug for currentAssetId being missing in table.php. When fixed in Joomla should be removed
 			@$table->store();
 		}
-		catch (Exception $e)
+		catch (\Exception $e)
 		{
-			throw new Exception('Caught exception: ' . $e->getMessage(), 500);
+			throw new \RuntimeException('Caught exception: ' . $e->getMessage(), 500);
 		}
 
 		return true;
@@ -479,7 +479,7 @@ class CWMDbHelper
 	 *
 	 * @return boolean|integer
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since  7.0
 	 */
 	public static function resetdb($install = false)
@@ -490,7 +490,7 @@ class CWMDbHelper
 		jimport('joomla.filesystem.file');
 		$path = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_proclaim/install/sql';
 
-		$files = str_replace('.sql', '', JFolder::files($path, '\.sql$'));
+		$files = str_replace('.sql', '', Folder::files($path, '\.sql$'));
 		$files = array_reverse($files, true);
 
 		if ($install === true)
@@ -512,7 +512,7 @@ class CWMDbHelper
 			// Graceful exit and rollback if read not successful
 			if ($buffer === false)
 			{
-				$app->enqueueMessage(JText::_('JBS_INS_ERROR_SQL_READBUFFER'), 'error');
+				$app->enqueueMessage(Text::_('JBS_INS_ERROR_SQL_READBUFFER'), 'error');
 
 				return false;
 			}
@@ -537,7 +537,7 @@ class CWMDbHelper
 
 					if (!$db->execute())
 					{
-						$app->enqueueMessage(JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', ' in ' . $value), 'error');
+						$app->enqueueMessage(Text::sprintf('JBS_INS_SQL_UPDATE_ERRORS', ' in ' . $value), 'error');
 
 						return false;
 					}
@@ -554,7 +554,7 @@ class CWMDbHelper
 
 		if (!$install)
 		{
-			$app->enqueueMessage(JText::_('JBS_INS_RESETDB'), 'message');
+			$app->enqueueMessage(Text::_('JBS_INS_RESETDB'), 'message');
 		}
 
 		return true;
@@ -565,7 +565,7 @@ class CWMDbHelper
 	 *
 	 * @return  void
 	 *
-	 * @throws  Exception
+	 * @throws  \Exception
 	 * @since   8.0.0
 	 *
 	 */

@@ -27,11 +27,11 @@ class CWMCustom
 	/**
 	 * Get Custom page
 	 *
-	 * @param   int            $rowid     ID of Row
-	 * @param   string         $custom    Custom String
-	 * @param   object         $row       Row info
-	 * @param   Registry       $params    Params for intro
-	 * @param   CWMTemplateTable  $template  Template ID
+	 * @param   int                      $rowid     ID of Row
+	 * @param   string                   $custom    Custom String
+	 * @param   object                   $row       Row info
+	 * @param   Registry                 $params    Params for intro
+	 * @param   CWMTemplateTable|Object  $template  Template ID
 	 *
 	 * @return array
 	 *

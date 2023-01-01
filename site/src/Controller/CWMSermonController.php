@@ -70,6 +70,7 @@ class CWMSermonController extends FormController
 	 *
 	 * @return    string    The return URL.
 	 *
+	 * @throws \Exception
 	 * @since    1.6
 	 */
 	protected function getReturnPage()
@@ -92,6 +93,7 @@ class CWMSermonController extends FormController
 	 *
 	 * @return    void  True if access level checks pass, false otherwise.
 	 *
+	 * @throws \Exception
 	 * @since    1.6
 	 */
 	public function cancel($key = 'a_id')
@@ -125,6 +127,7 @@ class CWMSermonController extends FormController
 	 *
 	 * @return    boolean    True if successful, false otherwise.
 	 *
+	 * @throws \Exception
 	 * @since    1.6
 	 */
 	public function save($key = null, $urlVar = 'a_id')

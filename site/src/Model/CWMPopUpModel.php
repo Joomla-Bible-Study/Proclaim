@@ -8,6 +8,7 @@
  * @link       https://www.christianwebministries.org
  * */
 namespace CWM\Component\Proclaim\Site\Model;
+
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -30,8 +31,12 @@ class CWMPopUpModel extends ListModel
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
+	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since    1.6
 	 */
 	protected function populateState($ordering = NULL, $direction = NULL)
