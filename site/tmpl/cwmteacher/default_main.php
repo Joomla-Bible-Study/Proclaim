@@ -43,14 +43,14 @@ $teacher = new CWMListing;
 
 	<div class="row">
 		<div class="span12">
-			<a href="<?php echo Route::_('index.php?option=com_proclaim&view=CWMTeachers&t=' . $this->template->id) ?>">
+			<a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmteachers&t=' . $this->template->id) ?>">
 				<button class="btn"><?php echo '&lt;-- ' . Text::_('JBS_TCH_RETURN_TEACHER_LIST'); ?></button>
 			</a>
 			<?php
 			if ($this->params->get('teacherlink', '1') > 0)
 			{
 				echo '<a href="' .
-					Route::_('index.php?option=com_proclaim&view=CWMSermons&filter_teacher=' . (int) $this->item->id . '&t=' . (int) $this->template->id
+					Route::_('index.php?option=com_proclaim&view=cwmsermons&filter_teacher=' . (int) $this->item->id . '&t=' . (int) $this->template->id
 					) .
 					'"><button class="btn">' . Text::_('JBS_TCH_MORE_FROM_THIS_TEACHER') . ' --></button></a>';
 			}

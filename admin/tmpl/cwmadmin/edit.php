@@ -210,7 +210,7 @@ $this->useCoreUI = true;
 						   title="<?php echo Text::_('JBS_ADM_ARCHIVE'); ?>" class="btn"> <i
 									class="icon-archive icon-big"></i>
 							<span><br/> <?php echo Text::_('JBS_ADM_ARCHIVE'); ?> </span></a>
-						<a href="<?php echo Route::_('index.php?option=com_proclaim&view=CWMAdmin&task=cwmadmin.aliasUpdate&' .
+						<a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmadmin&task=cwmadmin.aliasUpdate&' .
 							JSession::getFormToken() . '=1') ?>"
 						   title="<?php echo Text::_('JBS_ADM_RESET_ALIAS'); ?>" class="btn"> <i
 									class="icon-big icon-tree-2"></i>

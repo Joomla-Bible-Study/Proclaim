@@ -146,7 +146,7 @@ class CWMLanding
 						}
 
 						$location .= '<div class="span4 style="display: inline-block; margin-right:7px"">';
-						$location .= '<a href="index.php?option=com_proclaim&amp;view=CWMSermons&amp;filter_location=' . $b->id . '&amp;sendingview=CWMLanding' .
+						$location .= '<a href="index.php?option=com_proclaim&amp;view=cwmsermons&amp;filter_location=' . $b->id . '&amp;sendingview=cwmlanding' .
 						'&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
 							. $template . '">';
 
@@ -186,7 +186,7 @@ class CWMLanding
 						{
 							$location .= '<div class="landingrow">';
 							$location .= '<div class="landingcell">
-							<a class="landinglink" href="index.php?option=com_proclaim&amp;sendingview=CWMLlanding&amp;view=CWMSermons&amp;filter_location='
+							<a class="landinglink" href="index.php?option=com_proclaim&amp;sendingview=cwmlanding&amp;view=cwmsermons&amp;filter_location='
 								. $b->id . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
 								. $template . '">';
 							$location .= $b->location_text;
@@ -204,7 +204,7 @@ class CWMLanding
 						{
 							$location .= '<div class="landingrow">';
 							$location .= '<div class="landingcell">
-							<a class="landinglink" href="index.php?option=com_proclaim&amp;sendingview=CWMLanding&amp;view=CWMSermons&amp;filter_location='
+							<a class="landinglink" href="index.php?option=com_proclaim&amp;sendingview=cwmlanding&amp;view=cwmsermons&amp;filter_location='
 								. $b->id . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
 								. $template . '">';
 							$location .= $b->location_text;
@@ -342,14 +342,14 @@ class CWMLanding
 						if ($params->get('linkto') == 0)
 						{
 							$teacher .= '<div class="span4" style="display: inline-block; margin-right:7px">';
-							$teacher .= '<a href="' . Route::_('index.php?option=com_proclaim&amp;view=CWMSermons&amp;t=' . $template)
+							$teacher .= '<a href="' . Route::_('index.php?option=com_proclaim&amp;view=cwmsermons&amp;t=' . $template)
 								. '&amp;sendingview=landing&amp;filter_teacher=' . $b->id
 								. $langlink . '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
 						}
 						else
 						{
 							$teacher .= '<div class="span4" style="display: inline-block; margin-right:7px">';
-							$teacher .= '<a href="' . Route::_('index.php?option=com_proclaim&amp;view=CWMTeacher&id=' . $b->id . $langlink . '&t=' . $template) . '">';
+							$teacher .= '<a href="' . Route::_('index.php?option=com_proclaim&amp;view=cwmteacher&id=' . $b->id . $langlink . '&t=' . $template) . '">';
 						}
 
 						$teacher .= $b->teachername;
@@ -386,14 +386,14 @@ class CWMLanding
 							if ($params->get('linkto') == 0)
 							{
 								$teacher .= '<div class="span4" style="display: inline-block; margin-right:7px"> <a '
-									. Route::_('index.php?option=com_proclaim&amp;view=CWMSermons&amp;t=' . $template)
+									. Route::_('index.php?option=com_proclaim&amp;view=cwmsermons&amp;t=' . $template)
 									. '&amp;sendingview=landing&amp;filter_teacher=' . $b->id
 									. '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
 							}
 							else
 							{
 								$teacher .= '<div class="span4" style="display: inline-block; margin-right:7px"><a href="'
-									. Route::_('index.php?option=com_proclaim&amp;view=CWMTeacher&amp;id=' . $b->id . '&amp;t=' . $template) . '">';
+									. Route::_('index.php?option=com_proclaim&amp;view=cwmteacher&amp;id=' . $b->id . '&amp;t=' . $template) . '">';
 							}
 
 							$teacher .= $b->teachername;
@@ -410,7 +410,7 @@ class CWMLanding
 							if ($params->get('linkto') == 0)
 							{
 								$teacher .= '<div class="span4"><a href="'
-									. Route::_('index.php?option=com_proclaim&amp;view=CWMSermons&amp;t=' . $template)
+									. Route::_('index.php?option=com_proclaim&amp;view=cwmsermons&amp;t=' . $template)
 									. '&amp;sendingview=landing&amp;filter_teacher=' . $b->id
 									. '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
 							}
@@ -554,7 +554,7 @@ class CWMLanding
 						if ($params->get('series_linkto') == '0')
 						{
 							$series .= '<div class="span4">';
-							$series .= '<a href="index.php?option=com_proclaim&amp;view=CWMSermons&amp;filter_series=' . $b->id
+							$series .= '<a href="index.php?option=com_proclaim&amp;view=cwmsermons&amp;filter_series=' . $b->id
 								. '&amp;sendingview=landing&amp;filter_book=0&amp;filter_teacher=0'
 								. '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
 								. $template . '">';
@@ -562,7 +562,7 @@ class CWMLanding
 						else
 						{
 							$series .= '<div class="span4" style="display: inline-block; margin-right:7px">';
-							$series .= '<a href="index.php?option=com_proclaim&amp;sendingview=landing&amp;view=CWMSeriesDisplay&amp;id=' .
+							$series .= '<a href="index.php?option=com_proclaim&amp;sendingview=landing&amp;view=cwmseriesdisplay&amp;id=' .
 									$b->id . '&amp;t=' . $template . '">';
 						}
 
@@ -607,13 +607,13 @@ class CWMLanding
 							if ($params->get('series_linkto') == '0')
 							{
 								$series .= '<div class="landingcell">
-									<a href="index.php?option=com_proclaim&amp;view=CWMSermons&amp;filter_series='
-									. $b->id . '&amp;sendingview=CWMLanding&amp;filter_book=0&amp;filter_teacher=0'
+									<a href="index.php?option=com_proclaim&amp;view=cwmsermons&amp;filter_series='
+									. $b->id . '&amp;sendingview=cwmlanding&amp;filter_book=0&amp;filter_teacher=0'
 									. '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
 							}
 							else
 							{
-								$series .= '<div class="landingcell"><a href="index.php?option=com_proclaim&amp;sendingview=CWMLanding&amp;view=seriesdisplay&amp;id='
+								$series .= '<div class="landingcell"><a href="index.php?option=com_proclaim&amp;sendingview=cwmlanding&amp;view=seriesdisplay&amp;id='
 									. $b->id . '&amp;t=' . $template . '">';
 							}
 
@@ -636,14 +636,14 @@ class CWMLanding
 							if ($params->get('series_linkto') == '0')
 							{
 								$series .= '<div class="landingcell">
-									<a href="index.php?option=com_proclaim&amp;view=CWMSermons&amp;filter_series='
-									. $b->id . '&amp;sendingview=CWMLanding&amp;filter_book=0&amp;filter_teacher=0'
+									<a href="index.php?option=com_proclaim&amp;view=cwmsermons&amp;filter_series='
+									. $b->id . '&amp;sendingview=cwmlanding&amp;filter_book=0&amp;filter_teacher=0'
 									. '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
 							}
 							else
 							{
 								$series .= '<div class="landingcell">
-									<a href="index.php?option=com_proclaim&amp;sendingview=CWMLanding&amp;view=CWMSeriesDisplay&amp;id='
+									<a href="index.php?option=com_proclaim&amp;sendingview=cwmlanding&amp;view=cwmseriesdisplay&amp;id='
 									. $b->id . '&amp;t=' . $template . '">';
 							}
 
@@ -770,8 +770,8 @@ class CWMLanding
 				}
 
 				$year .= '<div class="span2" style="display: inline-block; margin-right:7px">';
-				$year .= '<a href="index.php?option=com_proclaim&amp;view=CWMSermons&amp;filter_year='
-					. $b->theYear . '&amp;sendingview=CWMLanding&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;'
+				$year .= '<a href="index.php?option=com_proclaim&amp;view=cwmsermons&amp;filter_year='
+					. $b->theYear . '&amp;sendingview=cwmlanding&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;'
 					. 'filter_book=0&amp;filter_messagetype=0&amp;t='
 					. $template . '">';
 
@@ -914,8 +914,8 @@ class CWMLanding
 				}
 
 				$topic .= '<div class="span2" style="display: inline-block; margin-right:7px">';
-				$topic .= '<a href="index.php?option=com_proclaim&amp;view=CWMSermons&amp;filter_topic=' .
-						$b->id . '&amp;sendingview=CWMLanding&amp;filter_teacher=0'
+				$topic .= '<a href="index.php?option=com_proclaim&amp;view=cwmsermons&amp;filter_topic=' .
+						$b->id . '&amp;sendingview=cwmlanding&amp;filter_teacher=0'
 					. '&amp;filter_series=0&amp;filter_location=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
 				$trans = new CWMTranslated;
 				$topic .= $trans::getTopicItemTranslated($b);
@@ -1067,8 +1067,8 @@ class CWMLanding
 						}
 
 						$messagetype .= '<div class="span2 style="display: inline-block; margin-right:7px"">';
-						$messagetype .= '<a href="index.php?option=com_proclaim&amp;view=CWMSermons&amp;filter_messagetype=' .
-								$b->id . '&amp;sendingview=CWMLanding&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0' .
+						$messagetype .= '<a href="index.php?option=com_proclaim&amp;view=cwmsermons&amp;filter_messagetype=' .
+								$b->id . '&amp;sendingview=cwmlanding&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0' .
 						'&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;t=' . $template . '">';
 
 						$messagetype .= $b->message_type;
@@ -1107,8 +1107,8 @@ class CWMLanding
 						{
 							$messagetype .= '<div class="landingrow">';
 							$messagetype .= '<div class="landingcell">
-							<a class="landinglink" href="index.php?option=com_proclaim&amp;view=CWMSermons&amp;filter_messagetype='
-								. $b->id . '&amp;sendingview=CWMLanding&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0' .
+							<a class="landinglink" href="index.php?option=com_proclaim&amp;view=cwmsermons&amp;filter_messagetype='
+								. $b->id . '&amp;sendingview=cwmlanding&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0' .
 							'&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;t=' . $template . '">';
 							$messagetype .= $b->message_type;
 							$messagetype .= '</a></div>';
@@ -1125,8 +1125,8 @@ class CWMLanding
 						{
 							$messagetype .= '<div class="landingrow">';
 							$messagetype .= '<div class="landingcell">
-							<a class="landinglink" href="index.php?option=com_proclaim&amp;view=CWMSermons&amp;filter_messagetype=' . $b->id
-								. '&amp;sendingview=CWMLanding&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0' .
+							<a class="landinglink" href="index.php?option=com_proclaim&amp;view=cwmsermons&amp;filter_messagetype=' . $b->id
+								. '&amp;sendingview=cwmlanding&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0' .
 							'&amp;filter_location=0&amp;filter_year=0&amp;t=' . $template . '">';
 							$messagetype .= $b->message_type;
 							$messagetype .= '</a></div>';
@@ -1260,8 +1260,8 @@ class CWMLanding
 				}
 
 				$book .= '<div class="span2" style="display: inline-block; margin-right:7px">';
-				$book .= '<a href="index.php?option=com_proclaim&amp;sendingview=landing&amp;view=CWMSermons&amp;filter_book=' . $b->booknumber
-					. '&amp;sendingview=CWMLanding&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0' .
+				$book .= '<a href="index.php?option=com_proclaim&amp;sendingview=landing&amp;view=cwmsermons&amp;filter_book=' . $b->booknumber
+					. '&amp;sendingview=cwmlanding&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0' .
 				'&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
 
 				$book .= Text::_($b->bookname);

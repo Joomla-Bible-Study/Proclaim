@@ -709,7 +709,7 @@ class CWMStats
 				$total = $result->added;
 			}
 
-			$selectvalue   = Route::_('index.php?option=com_proclaim&view=CWMSermon&id=' . $hits->id . '&t=' . $t);
+			$selectvalue   = Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . $hits->id . '&t=' . $t);
 			$selectdisplay = $name . ' - ' . Text::_('JBS_CMN_SCORE') . ': ' . $total;
 			$final2        = array(
 				'score'   => $total,

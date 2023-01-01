@@ -200,7 +200,7 @@ class HtmlView extends BaseHtmlView
 			$currentLink = $active->link;
 
 			// If the current view is the active item and an article view for this article, then the menu item params take priority
-			if (strpos($currentLink, 'view=CWMSermon') && (strpos($currentLink, '&id=' . (string) $item->id)))
+			if (strpos($currentLink, 'view=cwmsermon') && (strpos($currentLink, '&id=' . (string) $item->id)))
 			{
 				// $item->params are the article params, $temp are the menu item params
 				// Merge so that the menu item params take priority
@@ -400,7 +400,7 @@ class HtmlView extends BaseHtmlView
 		// Added database queries from the default template - moved here instead
 		$database = Factory::getContainer()->get('DatabaseDriver');
 		$query    = $database->getQuery(true);
-		$query->select('id')->from('#__menu')->where('link =' . $database->q('index.php?option=com_proclaim&view=CWMSermons'))->where('published = 1');
+		$query->select('id')->from('#__menu')->where('link =' . $database->q('index.php?option=com_proclaim&view=cwmsermons'))->where('published = 1');
 		$database->setQuery($query);
 		$menuid       = $database->loadResult();
 		$this->menuid = $menuid;

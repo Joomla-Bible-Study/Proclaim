@@ -32,7 +32,7 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 	}
 </script>
 <form
-		action="<?php echo Route::_('index.php?option=com_proclaim&view=CWMServers&layout=modal&tmpl=component&function=' . $function); ?>"
+		action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmservers&layout=modal&tmpl=component&function=' . $function); ?>"
 		method="post" name="adminForm" id="adminForm" class="form-inline">
 	<?php
 	// Search tools bar

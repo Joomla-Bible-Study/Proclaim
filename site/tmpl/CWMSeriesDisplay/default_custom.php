@@ -46,9 +46,9 @@ $t = $this->template->id;
 			<table class="table table-striped">
 				<tr class="seriesreturnlink">
 					<td>
-						<?php echo '<a href="' . Route::_('index.php?option=com_proclaim&view=CWMSeriesDisplays&t=' . $t)
+						<?php echo '<a href="' . Route::_('index.php?option=com_proclaim&view=cwmseriesdisplays&t=' . $t)
 							. '"><< ' . Text::_('JBS_SER_RETURN_SERIES_LIST') . '</a> | <a href="'
-							. Route::_('index.php?option=com_proclaim&view=CWMSermons&filter_series=' . $this->items->id . '&t=' . $t)
+							. Route::_('index.php?option=com_proclaim&view=cwmsermons&filter_series=' . $this->items->id . '&t=' . $t)
 							. '">' . Text::_('JBS_CMN_SHOW_ALL') . ' ' . Text::_('JBS_SER_STUDIES_FROM_THIS_SERIES') . ' >>'
 							. '</a>';
 						?>

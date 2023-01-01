@@ -94,8 +94,8 @@ class LocationField extends FormField
 		}
 
 		// Setup variables for display.
-		$linkArticles = 'index.php?option=com_proclaim&amp;view=CWMLocations&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken() . '=1';
-		$linkArticle  = 'index.php?option=com_proclaim&amp;view=CWMLocation&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken() . '=1';
+		$linkArticles = 'index.php?option=com_proclaim&amp;view=cwmlocations&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken() . '=1';
+		$linkArticle  = 'index.php?option=com_proclaim&amp;view=cwmlocation&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken() . '=1';
 
 		if (isset($this->element['language']))
 		{

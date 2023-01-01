@@ -49,7 +49,7 @@ class CWMHelperRoute
 	public static function getArticleRoute($id, string $language = '0'): string
 	{
 		// Create the link
-		$link = 'index.php?option=com_proclaim&view=CWMSermon&id=' . $id;
+		$link = 'index.php?option=com_proclaim&view=cwmsermon&id=' . $id;
 
 		if ($language && $language !== "*" && Multilanguage::isEnabled())
 		{
@@ -157,7 +157,7 @@ class CWMHelperRoute
 	public static function getTeacherRoute($id): string
 	{
 		// Create the link
-		return 'index.php?option=com_proclaim&view=CWMTeacher&id=' . $id;
+		return 'index.php?option=com_proclaim&view=cwmteacher&id=' . $id;
 	}
 
 	/**
@@ -172,7 +172,7 @@ class CWMHelperRoute
 	public static function getSeriesRoute($id): string
 	{
 		// Create the link
-		return 'index.php?option=com_proclaim&view=CWMSeriesDisplay&id=' . $id;
+		return 'index.php?option=com_proclaim&view=cwmseriesdisplay&id=' . $id;
 	}
 
 	/**

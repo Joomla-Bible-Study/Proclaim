@@ -85,7 +85,7 @@
 			      alt="Proclaim/Messages">
 				JBS_MNU_STUDIES
 			</menu>
-			<menu link="option=com_proclaim&amp;view=cwmediaFiles"
+			<menu link="option=com_proclaim&amp;view=cwmmediafiles"
 			      view="cwmmediafiles"
 			      alt="Proclaim/MediaFiles">
 				JBS_MNU_MEDIA_FILES
@@ -136,7 +136,7 @@
 				JBS_MNU_TEMPLATE_DISPLAY
 			</menu>
 			<menu link="option=com_proclaim&amp;view=cwmtemplatecodes"
-			      view="ccwmtemplatecodes"
+			      view="cwmtemplatecodes"
 			      alt="Proclaim/TemplateCodes">
 				JBS_MNU_TEMPLATE_CODE_DISPLAY
 			</menu>

@@ -177,7 +177,7 @@ class CWMTeacher extends CWMListing
 
 			if ($params->get('teacherlink') > 0)
 			{
-				$teacher .= '<a href="' . Route::_('index.php?option=com_proclaim&amp;view=CWMTeacher&amp;id=' . $tresult->id . '&amp;t=' . $t) . '">';
+				$teacher .= '<a href="' . Route::_('index.php?option=com_proclaim&amp;view=cwmteacher&amp;id=' . $tresult->id . '&amp;t=' . $t) . '">';
 			}
 
 			$teacher .= $tresult->teachername;
@@ -234,7 +234,7 @@ class CWMTeacher extends CWMListing
 		$label = str_replace('{{thumbnail}}', '<img src="' . $imagesmall->path . '" width="' . $imagesmall->width .
 			'" height="' . $imagesmall->height . '" />', $label
 		);
-		$label = str_replace('{{url}}', Route::_('index.php?option=com_proclaim&amp;view=CWMTeacherDisplay&amp;id=' .
+		$label = str_replace('{{url}}', Route::_('index.php?option=com_proclaim&amp;view=cwmteacherdisplay&amp;id=' .
 			$row->id . '&amp;t=' . $template
 		), $label
 		);

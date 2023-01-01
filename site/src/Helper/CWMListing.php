@@ -2489,11 +2489,11 @@ $thadd = '';
 		switch ($islink)
 		{
 			case 1 :
-					$link = Route::_('index.php?option=com_proclaim&view=CWMSermon&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
+					$link = Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
 
 					if ($view === 'seriesdisplays')
 					{
-						$link = Route::_('index.php?option=com_proclaim&view=CWMSeriesDisplay&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
+						$link = Route::_('index.php?option=com_proclaim&view=cwmseriesdisplay&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
 					}
 
 
@@ -2501,7 +2501,7 @@ $thadd = '';
 				break;
 
 			case 3 :
-				$link   = Route::_('index.php?option=com_proclaim&view=CWMTeacher&id=' . $tid . '&t=' . $params->get('teachertemplateid'));
+				$link   = Route::_('index.php?option=com_proclaim&view=cwmteacher&id=' . $tid . '&t=' . $params->get('teachertemplateid'));
 				$column .= '<a href="' . $link . '">';
 				break;
 
@@ -2537,7 +2537,7 @@ $thadd = '';
 
 			case 9 :
 				// Case 9 is a link to download
-				$column .= '<a href="index.php?option=com_proclaim&amp;view=CWMSermon&amp;mid=' .
+				$column .= '<a href="index.php?option=com_proclaim&amp;view=cwmsermon&amp;mid=' .
 					$row->download_id . '&amp;task=download">';
 		}
 
@@ -2628,7 +2628,7 @@ $thadd = '';
 		$label  = str_replace('{{studyintro}}', $row->studyintro, $label);
 		$label  = str_replace('{{scripture}}', $this->getScripture($params, $row, 0, 1), $label);
 		$label  = str_replace('{{topics}}', $row->topic_text, $label);
-		$label  = str_replace('{{url}}', Route::_('index.php?option=com_proclaim&view=CWMSermon&id=' . $row->id . '&t=' . $template->id), $label);
+		$label  = str_replace('{{url}}', Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . $row->id . '&t=' . $template->id), $label);
 		$label  = str_replace('{{thumbnail}}', $this->useJImage($image->path, "", "bsms_studyThumbnail" . $row->id, $image->width, $image->height), $label);
 		$label  = str_replace('{{seriestext}}', $row->series_text, $label);
 		$label  = str_replace('{{messagetype}}', $row->message_type, $label);

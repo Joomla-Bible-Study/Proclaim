@@ -43,7 +43,7 @@ class CWMIcon
 
 		$uri = Uri::getInstance();
 
-		$url = 'index.php?option=com_proclaim&task=CWMMessageform.add&return=' . base64_encode($uri) . '&a_id=0';
+		$url = 'index.php?option=com_proclaim&task=cwmmessageform.add&return=' . base64_encode($uri) . '&a_id=0';
 
 		if ($params->get('show_icons'))
 		{
@@ -174,7 +174,7 @@ class CWMIcon
 			return '<span class="hasTooltip" title="' . HtmlHelper::tooltipText($tooltip . '', 0) . '">' . $button . '</span>';
 		}
 
-		$url = 'index.php?option=com_proclaim&task=CWMessageform.edit&a_id=' . $article->id . '&return=' . base64_encode($uri);
+		$url = 'index.php?option=com_proclaim&task=cwmmessageform.edit&a_id=' . $article->id . '&return=' . base64_encode($uri);
 
 		if ($article->published == 0)
 		{

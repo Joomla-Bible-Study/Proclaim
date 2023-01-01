@@ -92,8 +92,8 @@ class ServerField extends FormField
 		}
 
 		// Setup variables for display.
-		$linkServers = 'index.php?option=com_proclaim&amp;view=CWMServers&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken() . '=1';
-		$linkServer  = 'index.php?option=com_proclaim&amp;view=CWMServer&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken() . '=1';
+		$linkServers = 'index.php?option=com_proclaim&amp;view=cwmservers&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken() . '=1';
+		$linkServer  = 'index.php?option=com_proclaim&amp;view=cwmserver&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken() . '=1';
 
 		if (isset($this->element['language']))
 		{
@@ -107,8 +107,8 @@ class ServerField extends FormField
 		}
 
 		$urlSelect = $linkServers . '&amp;function=jSelectServer_' . $this->id;
-		$urlEdit   = $linkServer . '&amp;task=CWMServer.edit&amp;id=\' + document.getElementById(&quot;' . $this->id . '_id&quot;).value + \'';
-		$urlNew    = $linkServer . '&amp;task=CWMServer.add';
+		$urlEdit   = $linkServer . '&amp;task=cwmserver.edit&amp;id=\' + document.getElementById(&quot;' . $this->id . '_id&quot;).value + \'';
+		$urlNew    = $linkServer . '&amp;task=cwmserver.add';
 
 		if ($value)
 		{
