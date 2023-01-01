@@ -16,7 +16,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\Registry\Registry;
 
 /**
- * Utility class for JWplayer behaviors
+ * Utility class for JWPlayer behaviors
  *
  * @package     Proclaim.Admin
  * @subpackage  HTML
@@ -28,7 +28,7 @@ abstract class JHtmlJwplayer
 	 * @var    array  Array containing information for loaded files
 	 * @since  3.0
 	 */
-	protected static $loaded = array();
+	protected static array $loaded = array();
 
 	/**
 	 * Method to load the JWplayer JavaScript framework into the document head
@@ -40,7 +40,7 @@ abstract class JHtmlJwplayer
 	 * @throws \Exception
 	 * @since   3.0
 	 */
-	public static function framework()
+	public static function framework(): void
 	{
 		// Only load once
 		if (!empty(self::$loaded[__METHOD__]))
@@ -51,18 +51,10 @@ abstract class JHtmlJwplayer
 		$doc    = Factory::getApplication()->getDocument();
 		$params = CWMParams::getAdmin()->params;
 		$key    = $params->get('jwplayer_key', '8eJ+ik6aOUabfOisJzomcM2Z3h1VZ9+6cufBXQ==');
-		$cdn    = $params->get('jwplayer_cdn', 'https://content.jwplatform.com/libraries/HPyI6990.js');
+		$cdn    = $params->get('jwplayer_cdn', 'https://cdn.jwplayer.com/libraries/HPyI6990.js');
 
-		if ($cdn)
-		{
-			$doc->addScriptDeclaration('jwplayer.key="' . $key . '";');
-			HtmlHelper::script($cdn);
-		}
-		else
-		{
-			HtmlHelper::script('media/com_proclaim/player/jwplayer.js');
-			$doc->addScriptDeclaration('jwplayer.key="' . $key . '";');
-		}
+		$doc->addScriptDeclaration('jwplayer.key="' . $key . '";');
+		HtmlHelper::script($cdn);
 
 		self::$loaded[__METHOD__] = true;
 	}
@@ -74,13 +66,13 @@ abstract class JHtmlJwplayer
 	 * @param   Registry  $params  Params from media have to be in object for do to protection.
 	 * @param   bool      $popup   If from a popup
 	 * @param   object    $player  To make player for audio like (MP3, M4A, etc..)
-	 * @param   int       $t       Template id.
+	 * @param   int       $t       Template id. Defaults to '1'.
 	 *
 	 * @return  string
 	 *
 	 * @since 9.0.0
 	 */
-	public static function render($media, $params, $popup = false, $player = null, $t = null)
+	public static function render(object $media, Registry $params, bool $popup, object $player, int $t = 1): string
 	{
 		$popupmarg = 0;
 
@@ -96,7 +88,7 @@ abstract class JHtmlJwplayer
 
 		$media->path1 = CWMHelper::MediaBuildUrl($media->sparams->get('path'), $params->get('filename'), $params, true);
 
-		// Fall back check to see if JWplayer can play the media. if not will try and return a link to the file.
+		// Fall back check to see if JWPlayer can play the media. if not will try and return a link to the file.
 		$acceptedFormats = array('aac', 'm4a', 'f4a', 'mp3', 'ogg', 'oga', 'mp4', 'm4v', 'f4v', 'mov', 'flv', 'webm', 'm3u8', 'mpd', 'DVR');
 
 		if (!in_array(pathinfo($media->path1, PATHINFO_EXTENSION), $acceptedFormats, true)
@@ -120,7 +112,7 @@ abstract class JHtmlJwplayer
 		{
 			$media->playerwidth = $params->get('playerwidth');
 		}
-		elseif (isset($player->mp3) && isset($player->playerwidth))
+		elseif (isset($player->mp3, $player->playerwidth))
 		{
 			$media->playerwidth = $player->playerwidth;
 		}
@@ -144,7 +136,7 @@ abstract class JHtmlJwplayer
 		$media->lightcolor  = $params->get('lightcolor', '0x000000');
 		$media->screencolor = $params->get('screencolor', '0xFFFFFF');
 
-		if ($params->get('autostart', 1) === 1)
+		if ($params->get('autostart', 1) === "1")
 		{
 			$media->autostart = 'true';
 		}
@@ -162,11 +154,11 @@ abstract class JHtmlJwplayer
 			$media->playeridlehide = 'false';
 		}
 
-		if ($params->get('autostart') === 1)
+		if ($params->get('autostart') === "1")
 		{
 			$media->autostart = 'true';
 		}
-		elseif ($params->get('autostart') === 2)
+		elseif ($params->get('autostart') === "2")
 		{
 			$media->autostart = 'false';
 		}
@@ -181,7 +173,7 @@ abstract class JHtmlJwplayer
 
 		if ($popup)
 		{
-			if ($params->get('playerresponsive') !== 0)
+			if ($params->get('playerresponsive') !== "0")
 			{
 				$media->playerwidth = '100%';
 				$render             .= "<div class='playeralign' style=\"margin-left: auto; margin-right: auto; width:100%;\">";

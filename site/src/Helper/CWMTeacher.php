@@ -204,12 +204,12 @@ class CWMTeacher extends CWMListing
 	/**
 	 * Get TeacherList Exp
 	 *
-	 * @param   object            $row       Table info
-	 * @param   object            $params    Item Params
-	 * @param   string            $oddeven   Odd Even
-	 * @param   CWMTemplateTable  $template  Template
+	 * @param   object                   $row       Table info
+	 * @param   object                   $params    Item Params
+	 * @param   string                   $oddeven   Odd Even
+	 * @param   CWMTemplateTable|Object  $template  Template
 	 *
-	 * @return object
+	 * @return array|string|string[]
 	 *
 	 * @since    8.0.0
 	 */
