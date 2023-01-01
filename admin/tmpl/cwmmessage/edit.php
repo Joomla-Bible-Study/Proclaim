@@ -83,16 +83,6 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
       method="post" name="adminForm" id="message-form" aria-label="<?php echo Text::_('JBS_CMN_' . ((int) $this->item->id === 0 ? 'NEW' : 'EDIT'), true); ?>"  class="form-validate" enctype="multipart/form-data">
 	<?php echo LayoutHelper::render('edit.studytitle_alias', $this); ?>
 	<div class="form-inline form-inline-header">
-		<div class="control-group">
-			<div class="control-label">
-				<?php echo Text::_('JBS_STY_HITS'); ?>
-			</div>
-			<div class="controls">
-				<?php echo '<input type="text" name="jform[hits]" id="jform_hits" value="' . $this->item->hits .
-					'" class="readonly" size="10" readonly="" aria-invalid="false">';
-				?>
-			</div>
-		</div>
 		<div class="row-fluid" id="media">
 			<table class="table table-striped">
 				<thead>
@@ -199,6 +189,14 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
 				</div>
 			<?php } ?>
 			<div class="col-lg-5">
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo Text::_('JBS_STY_HITS'); ?>
+					</div>
+					<div class="controls">
+						<input type="text" id="jform_hits" value="<?php echo $this->item->hits; ?>" class="form-control field-user-input-name readonly valid form-control-success" size="10" readonly="" aria-invalid="false">
+					</div>
+				</div>
 				<div class="control-group">
 					<div class="control-label">
 						<?php echo $this->form->getLabel('published'); ?>
