@@ -44,7 +44,7 @@ class CWMSermonModel extends FormModel
 	/**
 	 * Method to increment the hit counter for the study
 	 *
-	 * @param   int  $pk  ID
+	 * @param   int|null  $pk  ID
 	 *
 	 * @access    public
 	 * @return    boolean    True on success
@@ -52,9 +52,9 @@ class CWMSermonModel extends FormModel
 	 * @todo      this look like it could be moved to a helper.
 	 * @since     1.5
 	 */
-	public function hit($pk = null)
+	public function hit(int $pk = null): bool
 	{
-		$pk    = (!empty($pk)) ? $pk : (int) $this->getState('study.id');
+		$pk    = $pk ?? (int) $this->getState('study.id');
 		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_studies')->set('hits = hits  + 1')->where('id = ' . (int) $pk);
@@ -80,15 +80,8 @@ class CWMSermonModel extends FormModel
 		$user = Factory::getApplication()->getIdentity();
 
 		// Initialise variables.
-		$pk = (!empty($pk)) ? $pk : (int) $this->getState('study.id');
+		$pk = $pk ?? (int) $this->getState('study.id');
 
-		//if ($this->_item === null)
-		//{
-		//	$this->_item = array();
-		//	}
-		//$input = Factory::getApplication()->input;
-		// $mid   = $input->getInt('mid');
-		// if ($mid){return $mid;}
 		if (!isset($this->_item[$pk]))
 		{
 			try
@@ -100,7 +93,8 @@ class CWMSermonModel extends FormModel
 
 				// Join over teachers
 				$query->select('t.id AS tid, t.teachername AS teachername, t.title AS teachertitle, t.image, t.imagew, t.imageh,' .
-					't.teacher_thumbnail as thumb, t.thumbw, t.thumbh');
+					't.teacher_thumbnail as thumb, t.thumbw, t.thumbh'
+				);
 
 				$query->join('LEFT', '#__bsms_teachers as t on s.teacher_id = t.id');
 
@@ -125,7 +119,8 @@ class CWMSermonModel extends FormModel
 
 				// Join over topics
 				$query->select('group_concat(stp.id separator ", ") AS tp_id, group_concat(stp.topic_text separator ", ")
-					 as topic_text, group_concat(stp.params separator ", ") as topic_params');
+					 as topic_text, group_concat(stp.params separator ", ") as topic_params'
+				);
 				$query->join('LEFT', '#__bsms_studytopics as tp on s.id = tp.study_id');
 				$query->join('LEFT', '#__bsms_topics as stp on stp.id = tp.topic_id');
 
