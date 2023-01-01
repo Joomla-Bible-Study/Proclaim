@@ -15,6 +15,7 @@ defined('JPATH_PLATFORM') or die;
  *
  * @package  Proclaim.Admin
  * @since    9.0.0
+ * @deprecated 10.0.0
  */
 abstract class JHtmlbsMedia
 {
@@ -96,7 +97,7 @@ abstract class JHtmlbsMedia
 		{
 			if ($cssName != null && $cssName <= "-1")
 			{
-				HTMLHelper::_('stylesheet', 'media/com_proclaim/css/biblestudy.min.css', $attribs, true);
+				HTMLHelper::_('stylesheet', 'media/com_proclaim/css/proclaim.min.css', $attribs, true);
 			}
 			else
 			{

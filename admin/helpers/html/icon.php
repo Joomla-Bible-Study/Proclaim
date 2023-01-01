@@ -21,6 +21,7 @@ use Joomla\Registry\Registry;
  * Content Component HTML Helper
  *
  * @since  1.5
+ * @deprecated 10.0.0
  */
 abstract class JHtmlIcon
 {
@@ -35,6 +36,7 @@ abstract class JHtmlIcon
 	 * @return  string  The HTML markup for the create item link
 	 *
 	 * @since 7.0
+	 * @deprecated 10.0.0
 	 */
 	public static function create($category, $params, $attribs = array(), $legacy = false)
 	{
@@ -88,6 +90,7 @@ abstract class JHtmlIcon
 	 *
 	 * @throws \Exception
 	 * @since 7.0
+	 * @deprecated 10.0.0
 	 */
 	public static function email($article, $params, $attribs = array(), $legacy = false)
 	{
@@ -139,6 +142,7 @@ abstract class JHtmlIcon
 	 * @return  string    The HTML for the article edit icon.
 	 *
 	 * @since   1.6
+	 * @deprecated 10.0.0
 	 */
 	public static function edit($article, $params, $attribs = array(), $legacy = false)
 	{
@@ -225,6 +229,7 @@ abstract class JHtmlIcon
 	 *
 	 * @throws \Exception
 	 * @since 7.0
+	 * @deprecated 10.0.0
 	 */
 	public static function print_popup($article, $params, $attribs = array(), $legacy = false)
 	{
@@ -272,6 +277,7 @@ abstract class JHtmlIcon
 	 * @return  string  The HTML markup for the popup link
 	 *
 	 * @since 7.0
+	 * @deprecated 10.0.0
 	 */
 	public static function print_screen($article, $params, $attribs = array(), $legacy = false)
 	{
