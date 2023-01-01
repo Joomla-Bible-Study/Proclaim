@@ -83,6 +83,11 @@ class Dispatcher extends ComponentDispatcher
 			$view = $controller;
 		}
 
+		if ($view === 'featured')
+		{
+			$view = 'cwmsermons';
+		}
+
 		$view = $this->mapView($view);
 
 		$this->input->set('view', $view);
