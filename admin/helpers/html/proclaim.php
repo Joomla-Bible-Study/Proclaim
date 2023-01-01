@@ -97,7 +97,7 @@ abstract class JHtmlProclaim
 
 			if ($css <= "-1")
 			{
-				HtmlHelper::stylesheet('media/com_proclaim/css/biblestudy.min.css');
+				HtmlHelper::stylesheet('media/com_proclaim/css/proclaim.min.css');
 			}
 			else
 			{
@@ -112,6 +112,7 @@ abstract class JHtmlProclaim
 
 		if ($extra === 'font-awesome')
 		{
+			// @todo move to local option
 			HTMLHelper::script('https://use.fontawesome.com/releases/v5.12.0/js/all.js',
 				[],
 				['defer' => 'defer']
@@ -125,6 +126,14 @@ abstract class JHtmlProclaim
 		if ($extra === 'podcast')
 		{
 			HTMLHelper::stylesheet('media/com_proclaim/css/podcast.min.css');
+		}
+
+		if ($extra === 'modernizr')
+		{
+			HTMLHelper::script('media/com_proclaim/js/modernizr.min.js',
+				[],
+				['defer' => 'defer']
+			);
 		}
 	}
 
