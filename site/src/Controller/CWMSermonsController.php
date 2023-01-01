@@ -14,7 +14,6 @@ use CWM\Component\Proclaim\Site\Helper\CWMdownload;
 use CWM\Component\Proclaim\Site\Helper\CWMMedia;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
-use Joomla\Input\Input;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -34,7 +33,7 @@ class CWMSermonsController extends BaseController
 	 * @var string
 	 * @since 7.0
 	 */
-	public $mediaCode;
+	public string $mediaCode;
 
 	/**
 	 * Download?
@@ -44,7 +43,7 @@ class CWMSermonsController extends BaseController
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function download()
+	public function download(): void
 	{
 		$input = Factory::getApplication()->input;
 		$task  = $input->get('task');
@@ -64,30 +63,36 @@ class CWMSermonsController extends BaseController
 	 *
 	 * @throws \Exception
 	 * @since 7.0
+	 * @deprecated 10.0.0
 	 */
-	public function avplayer()
+	public function avplayer(): void
 	{
 		$input = Factory::getApplication()->input;
 		$task  = $input->get('task');
 
 		if ($task === 'avplayer')
 		{
-			$mediacode       = $input->get('code', '', 'string');
-			$this->mediaCode = $mediacode;
+			$this->mediaCode = $input->get('code', '', 'string');
 		}
 	}
 
 	/**
-	 * Add hits to the play count.
+	 * Add hits to the play count. Used in direct link redirects
 	 *
 	 * @return  void
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function playHit()
+	public function playHit(): void
 	{
+		$app      = Factory::getApplication();
 		$getMedia = new CWMMedia;
-		$input    = new Input;
-		$getMedia->hitPlay($input->get('id', '', 'int'));
+		$getMedia->hitPlay($app->input->get('id', '', 'int'));
+
+		// Now the hit has been updated will redirect to the url.
+		$return = $app->input->get('return');
+		$return = base64_decode($return);
+		$app->redirect($return);
 	}
 }
