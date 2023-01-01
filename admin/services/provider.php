@@ -37,7 +37,7 @@ return new class implements ServiceProviderInterface {
 	 *
 	 * @since   4.0.0
 	 */
-	public function register(Container $container)
+	public function register(Container $container): void
 	{
 		$container->registerServiceProvider(new CategoryFactory('\\CWM\\Component\\Proclaim'));
 		$container->registerServiceProvider(new MVCFactory('\\CWM\\Component\\Proclaim'));

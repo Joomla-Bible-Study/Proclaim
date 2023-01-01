@@ -394,19 +394,16 @@
 	  "dependencies": [
 		"com_proclaim.general"
 	  ],
-	  "js": [
-		"come_proclaim.CWMCoreJS"
-	  ],
-	  "attributes": {
-		"nomodule": true,
-		"defer": true
-	  },
 	  "version": "dfda2cadb929cf361efab69cd56c9ef003a65dbe"
 	},
 	{
 	  "name": "com_proclaim.cwmcorejs",
 	  "type": "script",
 	  "uri": "com_proclaim/cwmcore.min.js",
+	  "attributes": {
+		"nomodule": true,
+		"defer": true
+	  },
 	  "dependencies":[
 		"core",
 		"jquery-noconflict",
@@ -424,7 +421,7 @@
 	  "type": "style",
 	  "uri": "com_proclaim/cwmpodcast.min.css",
 	  "dependencies": [
-		"com_proclaim.CWMCore"
+		"com_proclaim.cwmcore"
 	  ],
 	  "version": "dfda2cadb929cf361efab69cd56c9ef003a65dbe"
 	},
@@ -444,12 +441,18 @@
 	  "name": "com_proclaim.popper",
 	  "type": "script",
 	  "uri": "com_proclaim/popper.min.js",
+	  "attributes": {
+		"defer": true
+	  },
 	  "version": "dfda2cadb929cf361efab69cd56c9ef003a65dbe"
 	},
 	{
 	  "name": "com_proclaim.modernizr",
 	  "type": "script",
 	  "uri": "com_proclaim/modernizr.min.js",
+	  "attributes": {
+		"defer": true
+	  },
 	  "version": "dfda2cadb929cf361efab69cd56c9ef003a65dbe"
 	}
   ]

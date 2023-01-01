@@ -9,25 +9,23 @@
  * */
 namespace CWM\Component\Proclaim\Site\View\CWMSermon;
 defined('_JEXEC') or die;
+
 // No Direct Access
-use JForm;
-use Joomla\CMS\Application\SiteApplication;
-use Joomla\CMS\Form\Form;
-use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use Joomla\CMS\Plugin\PluginHelper;
-use CWM\Component\Proclaim\Site\Helper\CWMListing;
-use CWM\Component\Proclaim\Site\Helper\CWMShowScripture;
-use CWM\Component\Proclaim\Site\Helper\CWMHelperRoute;
 use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
-use CWM\Component\Proclaim\Site\Helper\CWMRelatedstudies;
+use CWM\Component\Proclaim\Site\Helper\CWMListing;
 use CWM\Component\Proclaim\Site\Helper\CWMPagebuilder;
 use CWM\Component\Proclaim\Site\Helper\CWMPodcastsubscribe;
-use Joomla\CMS\Uri\Uri;
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\Registry\Registry;
+use CWM\Component\Proclaim\Site\Helper\CWMRelatedstudies;
+use CWM\Component\Proclaim\Site\Helper\CWMShowScripture;
+use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
 
 /**
  * View class for Sermon
@@ -300,11 +298,6 @@ class HtmlView extends BaseHtmlView
 
 		$template      = $this->get('template');
 		$this->related = $relatedstudies->getRelated($this->item, $item->params);
-
-		//HtmlHelper::_('proclaim.framework');
-		$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-		$wa->useStyle('com_proclaim.cwmcore');
-		$wa->useStyle('com_proclaim.general');
 
 		// Only load page builder if the default template is NOT being used
 		if ($item->params->get('useexpert_list') > 0

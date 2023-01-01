@@ -300,8 +300,6 @@ class HtmlView extends BaseHtmlView
 
 		// Get the podcast subscription
 		$wa = $mainframe->getDocument()->getWebAssetManager();
-		$wa->useStyle('com_proclaim.cwmcore');
-		$wa->useStyle('com_proclaim.general');
 		$wa->useStyle('com_proclaim.podcast');
 		$podcast         = new CWMPodcastSubscribe;
 		$this->subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
@@ -393,10 +391,6 @@ class HtmlView extends BaseHtmlView
 		{
 			$this->document->setMetadata('robots', $this->params->get('robots'));
 		}
-
-		$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-		$wa->useStyle('com_proclaim.cwmcore');
-		$wa->useStyle('com_proclaim.general');
 
 	}
 

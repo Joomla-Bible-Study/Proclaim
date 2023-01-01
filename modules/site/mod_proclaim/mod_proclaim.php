@@ -119,9 +119,7 @@ $linkurl  = Route::_('index.php?option=com_proclaim&view=cwmsermons&t=' . $templ
 $link     = '<a href="' . $linkurl . '"><button class="btn">' . $link_text . '</button></a>';
 $document = Factory::getApplication()->getDocument();
 HtmlHelper::_('proclaim.framework');
-//$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-//$wa->useStyle('com_proclaim.cwmcore');
-//$wa->useStyle('com_proclaim.general');
+
 $config = JComponentHelper::getParams('com_proclaim');
 
 // We need to load the path to the helper files

@@ -59,11 +59,6 @@ class HtmlView extends BaseHtmlView
 		$this->template   = $this->state->template;
 		$this->params     = $this->state->params;
 
-		HtmlHelper::_('proclaim.framework', '', 'modernizr');
-		$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-		$wa->useStyle('com_proclaim.cwmcore');
-		$wa->useStyle('com_proclaim.podcast');
-
 		$attribs = array(
 			'class' => "jbsmimg"
 		);

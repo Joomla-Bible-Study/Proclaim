@@ -22,9 +22,7 @@ defined('_JEXEC') or die;
 /** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('table.columns')
-	->useScript('multiselect')
-	->useStyle('com_proclaim.cwmcore')
-	->useScript('com_proclaim.cwmcorejs');
+	->useScript('multiselect');
 
 $app       = JFactory::getApplication();
 $user      = $user = Factory::getApplication()->getSession()->get('user');

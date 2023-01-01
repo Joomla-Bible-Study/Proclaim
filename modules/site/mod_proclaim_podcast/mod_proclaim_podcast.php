@@ -32,12 +32,6 @@ if (!ComponentHelper::isEnabled('com_proclaim'))
 	throw new Exception("Extension Proclaim not present or enabled");
 }
 
-//$templateparams = CWMParams::getTemplateparams($params);
-
-//$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-//$wa->useStyle('com_proclaim.cwmcore');
-//$wa->useStyle('com_proclaim.podcast');
-
 $podcast   = new CWMPodcastSubscribe;
 $subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
 

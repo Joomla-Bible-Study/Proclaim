@@ -91,6 +91,12 @@ $language = $app->getLanguage();
 $language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
 $language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, null, true);
 
+// Add to to api to load the core CSS and JS for the component to work.
+/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
+$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+$wa->useStyle('com_proclaim.cwmcore')
+	->useScript('com_proclaim.cwmcorejs');
+
 // Component debugging
 try
 {

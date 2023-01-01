@@ -32,9 +32,7 @@ $columns   = 11;
 /** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('table.columns')
-	->useScript('multiselect')
-	->useStyle('com_proclaim.cwmcore')
-	->useScript('com_proclaim.cwmcorejs');
+	->useScript('multiselect');
 
 $workflow_enabled  = ComponentHelper::getParams('com_proclaim')->get('workflow_enabled');
 $workflow_state    = false;

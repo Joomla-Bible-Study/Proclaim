@@ -10,17 +10,14 @@
 // No Direct Access
 defined('_JEXEC') or die;
 
-use Joomla\CMS\Factory;
+use CWM\Component\Proclaim\Site\Helper\CWMLanding;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use CWM\Component\Proclaim\Site\Helper\CWMLanding;
 use Joomla\CMS\Uri\Uri;
 
 // Load CSS for view.
 HTMLHelper::_('proclaim.loadcss', $this->params);
-$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-$wa->useScript('com_proclaim.cwmcore');
-$wa->useStyle('com_proclaim.general');
+
 $CWMLanding = new CWMLanding;
 $params = $this->params;
 ?>

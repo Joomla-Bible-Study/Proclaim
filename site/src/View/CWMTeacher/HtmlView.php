@@ -99,12 +99,6 @@ class HtmlView extends BaseHtmlView
 		/** @var Registry $params */
 		$params = $this->state->template->params;
 
-		//HtmlHelper::_('proclaim.framework');
-		//HTMLHelper::_('proclaim.loadCss', $params, null, 'font-awesome');
-		$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-		$wa->useStyle('com_proclaim.cwmcore');
-		$wa->useStyle('com_proclaim.general');
-
         $input = Factory::getApplication()->input;
 		$item = $this->get('Item');
 

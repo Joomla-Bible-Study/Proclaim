@@ -19,9 +19,7 @@ use Joomla\CMS\Router\Route;
 /** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('table.columns')
-	->useScript('multiselect')
-	->useStyle('com_proclaim.cwmcore')
-	->useScript('com_proclaim.cwmcorejs');
+	->useScript('multiselect');
 
 $app        = Factory::getApplication();
 $user       = $app->getIdentity();

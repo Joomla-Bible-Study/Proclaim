@@ -128,10 +128,6 @@ class HtmlView extends BaseHtmlView
 			$document->setDescription($params->get('metadesc'));
 		}
 */
-		//HtmlHelper::_('proclaim.framework');
-		$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-		$wa->useStyle('com_proclaim.cwmcore');
-		$wa->useStyle('com_proclaim.general');
 
 		$uri            = new Uri;
 		$filter_series  = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');

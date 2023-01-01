@@ -146,11 +146,6 @@ class HtmlView extends BaseHtmlView
 		$this->admin = $state->get('administrator');
 		$uri                = new Uri;
 
-		//HtmlHelper::_('proclaim.framework');
-		//HTMLHelper::_('proclaim.loadCss', $params, null, 'font-awesome');
-		$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-		$wa->useStyle('com_proclaim.cwmcore');
-		$wa->useStyle('com_proclaim.general');
 		$images = new CWMImages;
 
 		if ($params->get('useexpert_teacherdetail') > 0 || is_string($params->get('teacherstemplate')))

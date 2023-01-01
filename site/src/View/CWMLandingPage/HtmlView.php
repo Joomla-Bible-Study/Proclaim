@@ -90,10 +90,6 @@ class HtmlView extends BaseHtmlView
 			$document->setDescription($this->params->get('metadesc'));
 		}
 
-		$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-		$wa->useStyle('com_proclaim.cwmcore');
-		$wa->useStyle('com_proclaim.general');
-
 		CWMImages::getShowHide();
 
 		// Get the main study list image

@@ -66,7 +66,7 @@ abstract class JHtmlProclaim
 			HtmlHelper::_('bootstrap.loadCss');
 		}
 
-		HtmlHelper::script('media/com_proclaim/js/biblestudy.min.js');
+		HtmlHelper::script('media/com_proclaim/js/cwmcore.min.js');
 		HtmlHelper::script('media/com_proclaim/js/modernizr.min.js');
 
 		// @todo may need ot look at including this or offing CDN???
@@ -126,14 +126,6 @@ abstract class JHtmlProclaim
 		if ($extra === 'podcast')
 		{
 			HTMLHelper::stylesheet('media/com_proclaim/css/podcast.min.css');
-		}
-
-		if ($extra === 'modernizr')
-		{
-			HTMLHelper::script('media/com_proclaim/js/modernizr.min.js',
-				[],
-				['defer' => 'defer']
-			);
 		}
 	}
 

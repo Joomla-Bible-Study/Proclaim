@@ -21,8 +21,7 @@ defined('_JEXEC') or die;
 // Load the tooltip behavior.
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
-$wa->useScript('multiselect')
-	->useStyle('com_proclaim.cwmcore');
+$wa->useScript('multiselect');
 
 $msg   = '';
 $input = new Input;
