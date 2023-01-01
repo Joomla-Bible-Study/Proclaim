@@ -115,30 +115,17 @@ class CWMParams
 	 */
 	public static function getTemplateparams(int $pk = null): object
 	{
-		$db       = Factory::getContainer()->get('DatabaseDriver');
-		$runner = false;
+		$db     = Factory::getContainer()->get('DatabaseDriver');
 
 		if (!$pk)
 		{
 			$pk = Factory::getApplication()->input->getInt('t', '1');
 		}
 
-		if (!isset(self::$templateTable))
-		{
-			$runner = true;
-		}
-		elseif (isset(self::$templateTable))
-		{
-			if (self::$templateId !== $pk)
-			{
-				$runner = true;
-			}
-		}
-
-		if ($runner)
+		if (self::$templateId !== $pk || !isset(self::$templateTable))
 		{
 			self::$templateId = $pk;
-			$query            = $db->getQuery(true);
+			$query      = $db->getQuery(true);
 			$query->select('*')
 				->from('#__bsms_templates')
 				->where('published = ' . (int) 1)
@@ -150,7 +137,7 @@ class CWMParams
 			if (!$template)
 			{
 				self::$templateId = 1;
-				$query            = $db->getQuery(true);
+				$query      = $db->getQuery(true);
 				$query->select('*')
 					->from('#__bsms_templates')
 					->where('published = ' . (int) 1)

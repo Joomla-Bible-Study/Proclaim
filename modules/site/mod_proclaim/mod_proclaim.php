@@ -56,7 +56,7 @@ catch (\Exception $e)
 
 $pagebuilder = new CWMPageBuilder;
 
-$admin        = CWMParams::getAdmin();
+$admin = CWMParams::getAdmin();
 /** @var Registry $admin_params */
 $admin_params = $admin->params;
 $admin_params->merge($template->params);
@@ -74,7 +74,7 @@ if ($params->get('useexpert_module') > 0 || is_string($params->get('moduletempla
 {
 	foreach ($items AS $item)
 	{
-		$item->slug       = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
+		$item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
 			. str_replace(' ', '-', htmlspecialchars_decode($item->studytitle, ENT_QUOTES));
 
 		try
@@ -146,7 +146,10 @@ $linkurl = Route::_('index.php?option=com_proclaim&view=cwmsermons&t=' . $templa
 $link    = '<a href="' . $linkurl . '"><button class="btn">' . $link_text . '</button></a>';
 
 HtmlHelper::_('proclaim.framework');
-
+/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
+$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+$wa->useStyle('com_proclaim.cwmcore');
+$wa->useStyle('com_proclaim.general');
 $config = JComponentHelper::getParams('com_proclaim');
 
 // We need to load the path to the helper files
