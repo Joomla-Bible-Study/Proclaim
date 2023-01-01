@@ -319,9 +319,6 @@ class CWMBackup
 	{
 		// Clears file status cache
 		clearstatcache();
-		// @todo fix this issue
-		//$jweb = new JApplicationWeb;
-		//(new WebApplication($controllerResolver, $router))->clearHeaders();
 
 		// Turn off output buffering to decrease cpu usage
 		@ob_end_clean();

@@ -39,7 +39,7 @@ class CWMMessageController extends FormController
 	 * @var   string
 	 * @since 7.0
 	 */
-	protected $view_list = 'CWMMessages';
+	protected $view_list = 'cwmmessages';
 
 	/**
 	 * Method overrides to check if you can edit an existing record.

@@ -56,7 +56,7 @@ class CWMInstallController extends FormController
 	 * @var    string
 	 * @since  12.2
 	 */
-	protected $view_list = 'install';
+	protected $view_list = 'cwminstall';
 
 	/**
 	 * Constructor.
