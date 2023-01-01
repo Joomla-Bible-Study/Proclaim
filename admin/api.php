@@ -23,6 +23,8 @@ if (defined('JBSM_LOADED'))
 
 $app = Factory::getApplication();
 
+// @todo Clean up const usage.
+
 // Manually enable code profiling by setting value to 1
 const JBSM_PROFILER = 0;
 
