@@ -10,15 +10,16 @@
 
 namespace CWM\Component\Proclaim\Administrator\Model;
 
-// No Direct Access
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use CWM\Component\Proclaim\Administrator\Table\CWMMessageTable;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Input\Input;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
-
-defined('_JEXEC') or die;
 
 /**
  * MessageType model class

@@ -10,10 +10,11 @@
 
 namespace CWM\Component\Proclaim\Administrator\Helper;
 
-// No Direct Access
-use Joomla\CMS\Filesystem\File;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
-defined('_JEXEC') or die;
+use Joomla\CMS\Filesystem\File;
 
 /**
  * Class for Joomla! Bible Study Image

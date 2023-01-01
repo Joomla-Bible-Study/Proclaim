@@ -8,14 +8,15 @@
  * @link       https://www.christianwebministries.org
  * */
 
-// No Direct Access
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
-
-defined('_JEXEC') or die;
 
 /** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
@@ -53,13 +54,13 @@ $sortFields = $this->getSortFields();
 								<?php echo HTMLHelper::_('grid.checkall'); ?>
 							</th>
 							<th scope="col" class="w-1 text-center">
-								<?php echo HTMLHelper::_('grid.sort', 'JPUBLISHED', 'topic.published', $listDirn, $listOrder); ?>
+								<?php echo HTMLHelper::_('searchtools.sort', 'JPUBLISHED', 'topic.published', $listDirn, $listOrder); ?>
 							</th>
 							<th scope="col" style="min-width:100px">
-								<?php echo HTMLHelper::_('grid.sort', 'JBS_CMN_TOPICS', 'topic.topic_text', $listDirn, $listOrder); ?>
+								<?php echo HTMLHelper::_('searchtools.sort', 'JBS_CMN_TOPICS', 'topic.topic_text', $listDirn, $listOrder); ?>
 							</th>
 							<th scope="col" class="w-1 text-center">
-								<?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_ID', 'topic.id', $listDirn, $listOrder); ?>
+								<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'topic.id', $listDirn, $listOrder); ?>
 							</th>
 						</tr>
 						</thead>

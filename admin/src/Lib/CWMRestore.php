@@ -10,6 +10,10 @@
 
 namespace CWM\Component\Proclaim\Administrator\Lib;
 
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
@@ -18,8 +22,6 @@ use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\Installer\InstallerHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
-
-defined('_JEXEC') or die;
 
 /**
  * Restore class

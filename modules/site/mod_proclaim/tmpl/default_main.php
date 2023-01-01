@@ -9,10 +9,12 @@
  * @link        https://www.christianwebministries.org
  * */
 
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use Joomla\CMS\HTML\HTMLHelper;
-use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
 use CWM\Component\Proclaim\Site\Helper\CWMListing;
-defined('_JEXEC') or die;
 
 $show_link = $params->get('show_link', 1);
 

@@ -10,15 +10,14 @@
 
 namespace CWM\Component\Proclaim\Administrator\View\CWMAssets;
 
-// Check to ensure this file is included in Joomla!
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
-use Joomla\Component\Content\Administrator\Helper\ContentHelper;
-
-defined('_JEXEC') or die;
 
 /**
  * View class for Admin

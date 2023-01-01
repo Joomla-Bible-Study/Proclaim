@@ -10,10 +10,12 @@
 
 namespace CWM\Component\Proclaim\Administrator\Field;
 
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
-
-defined('_JEXEC') or die;
 
 // Always load JBSM API if it exists.
 $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';

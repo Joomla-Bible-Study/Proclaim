@@ -7,11 +7,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-// No Direct Access
-defined('_JEXEC') or die;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
@@ -64,17 +67,19 @@ if ($saveOrder)
 								<?php echo HTMLHelper::_('grid.checkall'); ?>
 							</th>
 							<th scope="col" class="w-1 text-center">
-								<?php echo HtmlHelper::_('grid.sort', 'JBS_CMN_PUBLISHED', 'cwmteacher.published', $listDirn, $listOrder); ?>
+								<?php echo HtmlHelper::_('searchtools.sort', 'JBS_CMN_PUBLISHED', 'cwmteacher.published', $listDirn, $listOrder); ?>
 							</th>
 							<th scope="col" style="min-width:100px">
-								<?php echo HtmlHelper::_('grid.sort', 'JBS_CMN_TEACHER', 'cwmteacher.teachername', $listDirn, $listOrder); ?>
+								<?php echo HtmlHelper::_('searchtools.sort', 'JBS_CMN_TEACHER', 'cwmteacher.teachername', $listDirn, $listOrder); ?>
 							</th>
 							<th scope="col" class="w-1 text-center">
-								<?php echo HtmlHelper::_('grid.sort', 'JGRID_HEADING_ACCESS', 'cwmteacher.access', $listDirn, $listOrder); ?>
+								<?php echo HtmlHelper::_('searchtools.sort', 'JGRID_HEADING_ACCESS', 'cwmteacher.access', $listDirn, $listOrder); ?>
 							</th>
-							<th scope="col" class="w-1 text-center">
-								<?php echo HtmlHelper::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'cwmlanguage', $listDirn, $listOrder); ?>
-							</th>
+							<?php if (Multilanguage::isEnabled()) : ?>
+								<th scope="col" class="w-10 d-none d-md-table-cell">
+									<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
+								</th>
+							<?php endif; ?>
 							<th scope="col" class="w-1 text-center">
 								<?php echo Text::_('JBS_TCH_SHOW_LIST'); ?>
 							</th>
@@ -82,7 +87,7 @@ if ($saveOrder)
 								<?php echo Text::_('JBS_TCH_SHOW_LANDING_PAGE'); ?>
 							</th>
 							<th scope="col" class="w-1 text-center">
-								<?php echo HtmlHelper::_('grid.sort', 'JGRID_HEADING_ID', 'cwmteacher.id', $listDirn, $listOrder); ?>
+								<?php echo HtmlHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'cwmteacher.id', $listDirn, $listOrder); ?>
 							</th>
 						</tr>
 						</thead>
@@ -127,15 +132,11 @@ if ($saveOrder)
 								<td class="small hidden-phone">
 									<?php echo $this->escape($item->access_level); ?>
 								</td>
-								<td class="small d-none d-md-table-cell">
-									<div class="pull-left">
-										<?php if ($item->language == '*'): ?>
-											<?php echo Text::alt('JALL', 'language'); ?>
-										<?php else: ?>
-											<?php echo $item->language_title ? $this->escape($item->language_title) : Text::_('JUNDEFINED'); ?>
-										<?php endif; ?>
-									</div>
-								</td>
+								<?php if (Multilanguage::isEnabled()) : ?>
+									<td class="small d-none d-md-table-cell">
+										<?php echo LayoutHelper::render('joomla.content.language', $item); ?>
+									</td>
+								<?php endif; ?>
 								<td class="small d-none d-md-table-cell">
 									<div class="pull-left">
 										<?php if (!$item->list_show)

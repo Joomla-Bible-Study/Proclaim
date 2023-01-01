@@ -8,14 +8,14 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        https://www.christianwebministries.org
  */
-use CWM\Component\Proclaim\Site\Helper\CWMPodcastsubscribe;
-use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
-use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Factory;
-use Joomla\CMS\Helper\ModuleHelper;
 
-// No direct access
-defined('_JEXEC') or die;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
+use CWM\Component\Proclaim\Site\Helper\CWMPodcastsubscribe;
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Helper\ModuleHelper;
 
 // Always load JBSM API if it exists.
 $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';

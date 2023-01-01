@@ -8,7 +8,10 @@
  * @link       https://www.christianwebministries.org
  * */
 
-// No Direct Access
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -16,8 +19,6 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 ToolbarHelper::title(Text::_('JBS_ADM_ASSET_TABLE_NAME'), 'administration');
-
-defined('_JEXEC') or die;
 
 $app  = Factory::getApplication();
 $user = Factory::getApplication()->getSession()->get('user');

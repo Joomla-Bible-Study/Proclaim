@@ -10,12 +10,12 @@
 
 namespace CWM\Component\Proclaim\Administrator\Model;
 
-// No Direct Access
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
-use Joomla\Input\Input;
-
-defined('_JEXEC') or die;
 
 /**
  * Templates model class

@@ -7,8 +7,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-// No Direct Access
-defined('_JEXEC') or die;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('behavior.multiselect');
@@ -37,20 +39,20 @@ $listDirn = $this->escape($this->state->get('list.direction'));
 				<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count($this->items); ?>);"/>
 			</th>
 			<th width="20" align="center">
-				<?php echo JHtml::_('grid.sort', 'JBS_CMN_PUBLISHED', 'messagetype.publish', $listDirn, $listOrder); ?>
+				<?php echo JHtml::_('searchtools.sort', 'JBS_CMN_PUBLISHED', 'messagetype.publish', $listDirn, $listOrder); ?>
 			</th>
 
 			<th width="10%">
-				<?php echo JHtml::_('grid.sort', 'JBS_CMN_ORDERING', 'messagetype.ordering', $listDirn, $listOrder); ?>
+				<?php echo JHtml::_('searchtools.sort', 'JBS_CMN_ORDERING', 'messagetype.ordering', $listDirn, $listOrder); ?>
 				<?php if ($saveOrder) : ?>
 					<?php echo JHtml::_('grid.order', $this->items, 'filesave.png', 'messagetype.saveorder'); ?>
 				<?php endif; ?>
 			</th>
 			<th>
-				<?php echo JHtml::_('grid.sort', 'JBS_CMN_MESSAGETYPE', 'messagetype.message_type', $listDirn, $listOrder); ?>
+				<?php echo JHtml::_('searchtools.sort', 'JBS_CMN_MESSAGETYPE', 'messagetype.message_type', $listDirn, $listOrder); ?>
 			</th>
 			<th width="1%" class="nowrap">
-				<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'messagetype.id', $listDirn, $listOrder); ?>
+				<?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'messagetype.id', $listDirn, $listOrder); ?>
 			</th>
 		</tr>
 		</thead>

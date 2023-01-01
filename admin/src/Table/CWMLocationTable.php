@@ -10,11 +10,11 @@
 
 namespace CWM\Component\Proclaim\Administrator\Table;
 
-// No Direct Access
-defined('_JEXEC') or die;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Lib\CWMAssets;
-use Joomla\CMS\Table\Asset;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Access\Rules;
 use Joomla\Database\DatabaseDriver;

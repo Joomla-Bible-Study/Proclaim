@@ -10,13 +10,12 @@
 
 namespace CWM\Component\Proclaim\Administrator\View\CWMLocations;
 
-// No Direct Access
-defined('_JEXEC') or die;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -94,13 +93,13 @@ class HtmlView extends BaseHtmlView
 	 */
 	public function display($tpl = null): void
 	{
-		$this->items      = $this->get('Items');
-		$this->pagination = $this->get('Pagination');
-		$this->state      = $this->get('State');
-		$this->form        = $this->get('form');
+		$this->items         = $this->get('Items');
+		$this->pagination    = $this->get('Pagination');
+		$this->state         = $this->get('State');
+		$this->form          = $this->get('form');
 		$this->filterForm    = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');
-		$this->canDo         = CWMProclaimHelper::getActions('', 'location');
+		$this->canDo         = ContentHelper::getActions('com_proclaim');
 
 		// Check for errors.
 		if (\count($errors = $this->get('Errors')))
@@ -135,11 +134,12 @@ class HtmlView extends BaseHtmlView
 
 		// Get the toolbar object instance
 		$toolbar = Toolbar::getInstance('toolbar');
+
 		ToolbarHelper::title(Text::_('JBS_CMN_LOCATIONS'), 'home home');
 
 		if ($this->canDo->get('core.create'))
 		{
-			ToolBarHelper::addNew('cwmlocation.add');
+			$toolbar->addNew('cwmlocation.add');
 		}
 
 		$dropdown = $toolbar->dropdownButton('status-group')
@@ -150,41 +150,34 @@ class HtmlView extends BaseHtmlView
 			->listCheck(true);
 		$childBar = $dropdown->getChildToolbar();
 
-		if ($this->canDo->get('core.edit'))
-		{
-			$toolbar->edit('cwmlocation.edit');
-		}
-
 		if ($this->canDo->get('core.edit.state'))
 		{
-			$toolbar->divider();
-			$toolbar->publish('cwmlocations.publish');
-			$toolbar->unpublish('cwmlocations.unpublish');
-			$toolbar->divider();
-			$toolbar->archive('cwmlocations.archive');
+			$childBar->publish('cwmlocations.publish');
+			$childBar->unpublish('cwmlocations.unpublish');
+			$childBar->archive('cwmlocations.archive');
+
+			if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED)
+			{
+				$childBar->trash('cwmlocations.trash')->listCheck(true);
+			}
+
+			// Add a batch button
+			if ($user->authorise('core.create', 'com_proclaim')
+				&& $user->authorise('core.edit', 'com_proclaim')
+				&& $user->authorise('core.edit.state', 'com_proclaim'))
+			{
+				$childBar->popupButton('batch')
+					->text('JTOOLBAR_BATCH')
+					->selector('collapseModal')
+					->listCheck(true);
+			}
 		}
 
-		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
+		if ($this->state->get('filter.published') === '-2' && $this->canDo->get('core.delete'))
 		{
 			$toolbar->delete('', 'cwmlocations.delete')
 				->text('JTOOLBAR_EMPTY_TRASH')
 				->message('JGLOBAL_CONFIRM_DELETE')
-				->listCheck(true);
-		}
-
-		if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED)
-		{
-			$toolbar->trash('cwmlocations.trash')->listCheck(true);
-		}
-
-		// Add a batch button
-		if ($user->authorise('core.create', 'com_proclaim')
-			&& $user->authorise('core.edit', 'com_proclaim')
-			&& $user->authorise('core.edit.state', 'com_proclaim'))
-		{
-			$childBar->popupButton('batch')
-				->text('JTOOLBAR_BATCH')
-				->selector('collapseModal')
 				->listCheck(true);
 		}
 	}

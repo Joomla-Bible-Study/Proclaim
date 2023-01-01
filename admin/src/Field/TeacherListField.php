@@ -10,14 +10,13 @@
 
 namespace CWM\Component\Proclaim\Administrator\Field;
 
-use JFormFieldList;
-use JFormHelper;
-use JHtml;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
-
-defined('_JEXEC') or die;
 
 /**
  * Teachers List Form Field class for the Proclaim component

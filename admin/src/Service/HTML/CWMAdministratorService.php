@@ -9,7 +9,9 @@
 
 namespace CWM\Component\Proclaim\Administrator\Service\HTML;
 
+// phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Associations;

@@ -10,18 +10,18 @@
 
 namespace CWM\Component\Proclaim\Administrator\View\CWMMessageTypes;
 
-// No Direct Access
-defined('_JEXEC') or die;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Component\Content\Administrator\Extension\ContentComponent;
+use Joomla\Component\Content\Administrator\Helper\ContentHelper;
 
 /**
  * View class for Messagetype
@@ -72,14 +72,6 @@ class HtmlView extends BaseHtmlView
 	protected $state;
 
 	/**
-	 * Can Do
-	 *
-	 * @var object
-	 * @since    7.0.0
-	 */
-	protected $canDo;
-
-	/**
 	 * Execute and display a template script.
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
@@ -97,7 +89,6 @@ class HtmlView extends BaseHtmlView
 		$this->state      = $this->get('State');
 
 		$this->filterForm = $this->get('FilterForm');
-		$this->canDo      = CWMProclaimHelper::getActions('', 'messagetype');
 
 		// Check for errors.
 		if (\count($errors = $this->get('Errors')))
@@ -128,14 +119,15 @@ class HtmlView extends BaseHtmlView
 	 */
 	protected function addToolbar(): void
 	{
-		$user = Factory::getApplication()->getSession()->get('user');
+		$canDo = ContentHelper::getActions('com_proclaim');
+		$user  = Factory::getApplication()->getIdentity();
 
 		// Get the toolbar object instance
 		$toolbar = Toolbar::getInstance('toolbar');
 
 		ToolbarHelper::title(Text::_('JBS_CMN_MESSAGETYPES'), 'list-2 list-2');
 
-		if ($this->canDo->get('core.create'))
+		if ($canDo->get('core.create'))
 		{
 			$toolbar->addNew('cwmmessagetype.add');
 		}
@@ -148,41 +140,34 @@ class HtmlView extends BaseHtmlView
 			->listCheck(true);
 		$childBar = $dropdown->getChildToolbar();
 
-		if ($this->canDo->get('core.edit'))
+		if ($canDo->get('core.edit.state'))
 		{
-			$toolbar->edit('cwmmessagetype.edit');
+			$childBar->publish('cwmmessagetypes.publish');
+			$childBar->unpublish('cwmmessagetypes.unpublish');
+			$childBar->archive('cwmmessagetypes.archive');
+
+			if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED)
+			{
+				$childBar->trash('cwmmessagetypes.trash')->listCheck(true);
+			}
+
+			// Add a batch button
+			if ($user->authorise('core.create', 'com_proclaim')
+				&& $user->authorise('core.edit', 'com_proclaim')
+				&& $user->authorise('core.edit.state', 'com_proclaim'))
+			{
+				$childBar->popupButton('batch')
+					->text('JTOOLBAR_BATCH')
+					->selector('collapseModal')
+					->listCheck(true);
+			}
 		}
 
-		if ($this->canDo->get('core.edit.state'))
-		{
-			$toolbar->divider();
-			$toolbar->publish('cwmmessagetypes.publish');
-			$toolbar->unpublish('cwmmessagetypes.unpublish');
-			$toolbar->divider();
-			$toolbar->archive('cwmmessagetypes.archive');
-		}
-
-		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
+		if ($this->state->get('filter.published') === '-2' && $canDo->get('core.delete'))
 		{
 			$toolbar->delete('', 'cwmmessagetypes.delete')
 				->text('JTOOLBAR_EMPTY_TRASH')
 				->message('JGLOBAL_CONFIRM_DELETE')
-				->listCheck(true);
-		}
-
-		if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED)
-		{
-			$toolbar->trash('cwmmessagetypes.trash')->listCheck(true);
-		}
-
-		// Add a batch button
-		if ($user->authorise('core.create', 'com_proclaim')
-			&& $user->authorise('core.edit', 'com_proclaim')
-			&& $user->authorise('core.edit.state', 'com_proclaim'))
-		{
-			$childBar->popupButton('batch')
-				->text('JTOOLBAR_BATCH')
-				->selector('collapseModal')
 				->listCheck(true);
 		}
 	}

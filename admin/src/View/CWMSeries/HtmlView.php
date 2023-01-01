@@ -14,11 +14,11 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMSeries;
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\HTML\HTMLHelper as JHtml;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\Component\Content\Administrator\Helper\ContentHelper;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -129,52 +129,56 @@ class HtmlView extends BaseHtmlView
 	 */
 	protected function addToolbar(): void
 	{
-		$user = Factory::getApplication()->getSession()->get('user');
+		$canDo = ContentHelper::getActions('com_proclaim');
+		$user  = Factory::getApplication()->getIdentity();
 
 		// Get the toolbar object instance
-		$bar = Toolbar::getInstance('toolbar');
+		$toolbar = Toolbar::getInstance('toolbar');
 
 		ToolbarHelper::title(Text::_('JBS_CMN_SERIES'), 'tree-2 tree-2');
 
 		if ($this->canDo->get('core.create'))
 		{
-			ToolbarHelper::addNew('cwmserie.add');
+			$toolbar->addNew('cwmserie.add');
 		}
 
-		if ($this->canDo->get('core.edit'))
+		$dropdown = $toolbar->dropdownButton('status-group')
+			->text('JTOOLBAR_CHANGE_STATUS')
+			->toggleSplit(false)
+			->icon('icon-ellipsis-h')
+			->buttonClass('btn btn-action')
+			->listCheck(true);
+		$childBar = $dropdown->getChildToolbar();
+
+		if ($canDo->get('core.edit.state'))
 		{
-			ToolbarHelper::editList('cwmserie.edit');
+			$childBar->publish('cwmseries.publish');
+			$childBar->unpublish('cwmseries.unpublish');
+			$childBar->archive('cwmseries.archive');
+
+			if ($canDo->get('core.edit.state'))
+			{
+				$childBar->trash('cwmseries.trash');
+			}
+
+			// Add a batch button
+			if ($user->authorise('core.create', 'com_proclaim')
+				&& $user->authorise('core.edit', 'com_proclaim')
+				&& $user->authorise('core.edit.state', 'com_proclaim'))
+			{
+				$childBar->popupButton('batch')
+					->text('JTOOLBAR_BATCH')
+					->selector('collapseModal')
+					->listCheck(true);
+			}
 		}
 
-		if ($this->canDo->get('core.edit.state'))
+		if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete'))
 		{
-			ToolbarHelper::divider();
-			ToolbarHelper::publishList('cwmseries.publish');
-			ToolbarHelper::unpublishList('cwmseries.unpublish');
-			ToolbarHelper::divider();
-			ToolbarHelper::archiveList('cwmseries.archive');
-		}
-
-		if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete'))
-		{
-			ToolbarHelper::deleteList('', 'cwmseries.delete', 'JTOOLBAR_EMPTY_TRASH');
-		}
-		elseif ($this->canDo->get('core.delete'))
-		{
-			ToolbarHelper::trash('cmwseries.trash');
-		}
-
-		// Add a batch button
-		if ($user->authorise('core.edit'))
-		{
-			ToolbarHelper::divider();
-			JHtml::_('bootstrap.modal', 'collapseModal');
-
-			$title = Text::_('JBS_CMN_BATCH_LABLE');
-			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
-						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
-						$title</button>";
-			$bar->appendButton('Custom', $dhtml, 'batch');
+			$toolbar->delete('cwmseries.delete')
+				->text('JTOOLBAR_EMPTY_TRASH')
+				->message('JGLOBAL_CONFIRM_DELETE')
+				->listCheck(true);
 		}
 	}
 

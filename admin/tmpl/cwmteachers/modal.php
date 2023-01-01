@@ -8,7 +8,10 @@
  * @link       https://www.christianwebministries.org
  * */
 
-// No Direct Access
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use CWM\Component\Proclaim\Site\Helper\CWMRouteHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -16,8 +19,6 @@ use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
-
-defined('_JEXEC') or die;
 
 $app = Factory::getApplication();
 
@@ -68,18 +69,18 @@ if (!empty($editor))
 						<?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'teacher.published', $listDirn, $listOrder); ?>
 					</th>
 					<th scope="col" class="title">
-						<?php echo HTMLHelper::_('grid.sort', 'JBS_CMN_TEACHERS', 'teacher.title', $listDirn, $listOrder); ?>
+						<?php echo HTMLHelper::_('searchtools.sort', 'JBS_CMN_TEACHERS', 'teacher.title', $listDirn, $listOrder); ?>
 					</th>
 					<th scope="col" class="w-10 d-none d-md-table-cell">
 						<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ACCESS', 'teacher.access', $listDirn, $listOrder); ?>
 					</th>
 					<?php if ($multilang) : ?>
 						<th scope="col" class="w-15">
-							<?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
+							<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
 						</th>
 					<?php endif; ?>
 					<th scope="col" class="w-1 d-none d-md-table-cell">
-						<?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_ID', 'teacher.id', $listDirn, $listOrder); ?>
+						<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'teacher.id', $listDirn, $listOrder); ?>
 					</th>
 				</tr>
 				</thead>

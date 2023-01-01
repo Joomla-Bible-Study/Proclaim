@@ -7,8 +7,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-// No Direct Access
-defined('_JEXEC') or die;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -52,13 +54,13 @@ $sortFields = $this->getSortFields();
 								<?php echo HTMLHelper::_('grid.checkall'); ?>
 							</th>
 							<th scope="col" class="w-1 text-center">
-								<?php echo HTMLHelper::_('grid.sort', 'JPUBLISHED', 'messagetypes.published', $listDirn, $listOrder); ?>
+								<?php echo HTMLHelper::_('searchtools.sort', 'JPUBLISHED', 'messagetypes.published', $listDirn, $listOrder); ?>
 							</th>
 							<th scope="col" style="min-width:100px">
-								<?php echo HTMLHelper::_('grid.sort', 'JBS_CMN_MESSAGETYPES', 'messagetypes.message_type', $listDirn, $listOrder); ?>
+								<?php echo HTMLHelper::_('searchtools.sort', 'JBS_CMN_MESSAGETYPES', 'messagetypes.message_type', $listDirn, $listOrder); ?>
 							</th>
 							<th scope="col" class="w-1 text-center">
-								<?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_ID', 'messagetypes.id', $listDirn, $listOrder); ?>
+								<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'messagetypes.id', $listDirn, $listOrder); ?>
 							</th>
 						</tr>
 						</thead>

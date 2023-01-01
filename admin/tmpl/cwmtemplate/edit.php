@@ -8,14 +8,15 @@
  * @link       https://www.christianwebministries.org
  * */
 
-// No Direct Access
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
-
-defined('_JEXEC') or die;
 
 // Create shortcut to parameters.
 /** @type \Joomla\Registry\Registry $params */
@@ -81,19 +82,19 @@ $wa->useScript('keepalive')
 				</div>
 			</div>
 		</div>
+		<hr/>
 		<div class="row">
 			<?php
 			$c     = 0;
 			$count = CWMProclaimHelper::halfarray($this->form->getFieldset('TEMPLATES'));
 			foreach ($this->form->getFieldset('TEMPLATES') as $field):
-
 				if ($c === 0)
 				{
-					echo '<div class="col-md-5">';
+					echo '<div class="col-12 col-lg-6">';
 				}
 				elseif ($c === (int) $count->half)
 				{
-					echo '</div><div class="col-md-5">';
+					echo '</div><div class="col-12 col-lg-6">';
 				}
 				?>
 				<div class="control-group">
@@ -111,6 +112,9 @@ $wa->useScript('keepalive')
 					echo '</div>';
 				}
 			endforeach; ?>
+		</div>
+		<hr/>
+		<div class="col-12 col-lg-12">
 			<?php foreach ($this->form->getFieldset('TERMS') as $field): ?>
 				<div class="control-group">
 					<div class="control-label">
@@ -132,11 +136,11 @@ $wa->useScript('keepalive')
 			foreach ($this->form->getFieldset('MEDIA') as $field):
 				if ($c === 0)
 				{
-					echo '<div class="col-md-5">';
+					echo '<div class="col-12 col-lg-6">';
 				}
 				elseif ($c === (int) $count->half)
 				{
-					echo '</div><div class="col-md-5">';
+					echo '</div><div class="col-12 col-lg-6">';
 				}
 				?>
 				<div class="control-group">
@@ -159,19 +163,18 @@ $wa->useScript('keepalive')
 
 		<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'landing', Text::_('JBS_TPL_LANDING_PAGE')); ?>
 		<div class="row">
-			<div class="col-lg-12">
 				<?php
 				$c     = 0;
 				$count = CWMProclaimHelper::halfarray($this->form->getFieldset('LANDINGPAGE'));
 				foreach ($this->form->getFieldset('LANDINGPAGE') as $field):
 
-					if ($c == 0)
+					if ($c === 0)
 					{
-						echo '<div class="col-md-5">';
+						echo '<div class="col-12 col-lg-7">';
 					}
-					elseif ($c == $count->half)
+					elseif ($c === $count->half)
 					{
-						echo '</div><div class="col-md-5">';
+						echo '</div><div class="col-12 col-lg-5">';
 					}
 					?>
 					<div class="control-group">
@@ -184,12 +187,11 @@ $wa->useScript('keepalive')
 					</div>
 					<?php
 					$c++;
-					if ($c == $count->count)
+					if ($c === $count->count)
 					{
 						echo '</div>';
 					}
 				endforeach; ?>
-			</div>
 		</div>
 		<?php echo HTMLHelper::_('uitab.endTab'); ?>
 

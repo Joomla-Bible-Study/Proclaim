@@ -8,7 +8,10 @@
  * @link       https://www.christianwebministries.org
  * */
 
-// Load the tooltip behavior.
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
@@ -18,8 +21,6 @@ HTMLHelper::_('behavior.formvalidator');
 HTMLHelper::_('jquery.framework');
 HTMLHelper::_('formbehavior.chosen', 'select');
 
-// Check to ensure this file is included in Joomla!
-defined('_JEXEC') or die;
 ?>
 <form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmmigrate'); ?>" enctype="multipart/form-data"
       method="post" name="adminForm" id="adminForm">

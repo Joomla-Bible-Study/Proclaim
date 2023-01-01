@@ -36,7 +36,7 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 		<thead>
 		<tr>
 			<th>
-				<?php echo HtmlHelper::_('grid.sort', 'JBS_SVR_SERVER_NAME', 'mediafile.name', $listDirn, $listOrder); ?>
+				<?php echo HtmlHelper::_('searchtools.sort', 'JBS_SVR_SERVER_NAME', 'mediafile.name', $listDirn, $listOrder); ?>
 			</th>
 		</tr>
 		</thead>

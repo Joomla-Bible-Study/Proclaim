@@ -24,6 +24,7 @@ use Joomla\CMS\HTML\HTMLHelper as JHtml;
 use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Registry\Registry;
 
@@ -214,7 +215,7 @@ class HtmlView extends BaseHtmlView
 	 * @since   11.1
 	 * @see     fetch()
 	 */
-	public function display($tpl = null)
+	public function display($tpl = null): void
 	{
 		$app = Factory::getApplication();
 		$language = $app->getLanguage();
@@ -229,7 +230,6 @@ class HtmlView extends BaseHtmlView
 		// End for database
 		$this->tmp_dest = $app->get('tmp_path');
 
-		$stats             = new CWMStats;
 		$this->playerstats = CWMStats::players();
 		$this->assets      = $app->input->get('checkassets', null, 'get');
 		$popups            = CWMStats::popups();
@@ -294,10 +294,15 @@ class HtmlView extends BaseHtmlView
 		}
 
 		$jbsversion    = Installer::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.xml');
-		foreach ($jbsversion as $key=>$value)
+
+		foreach ($jbsversion as $key => $value)
+		{
+			if ($key == 'version')
 			{
-				if ($key == 'version'){ $version = $value;}
+				$version = $value;
 			}
+		}
+
 		$this->version = $version;
 
 		if (!$this->filterParams)
@@ -328,19 +333,31 @@ class HtmlView extends BaseHtmlView
 	protected function addToolbar()
 	{
 		Factory::getApplication()->input->set('hidemainmenu', true);
+		$user       = $this->getCurrentUser();
+		$userId     = $user->id;
+
+		// Built the actions for new and existing records.
+		$canDo = $this->canDo;
+
+		$toolbar = Toolbar::getInstance();
+
 		/** @noinspection PhpMethodOrClassCallIsNotCaseSensitiveInspection */
-		ToolbarHelper::title(Text::_('JBS_CMN_ADMINISTRATION'), 'options options');
-		ToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
+		ToolbarHelper::title(Text::_('JBS_CMN_ADMINISTRATION'), 'options');
+		$toolbar->preferences('com_proclaim','JBS_ADM_PERMISSIONS');
 		ToolbarHelper::divider();
-		ToolbarHelper::apply('cwmadmin.apply');
-		ToolbarHelper::save('cwmadmin.save');
-		ToolbarHelper::cancel('cwmadmin.cancel', 'JTOOLBAR_CLOSE');
+		$toolbar->apply('cwmadmin.apply');
+		$toolbar->save('cwmadmin.save');
+		$toolbar->cancel('cwmadmin.cancel');
 		ToolbarHelper::divider();
-		ToolbarHelper::custom('cwmadmin.resetHits', 'reset.png', 'Reset All Hits', 'JBS_ADM_RESET_ALL_HITS', false);
+		ToolbarHelper::custom('cwmadmin.resetHits', 'hits', 'Reset All Hits', 'JBS_ADM_RESET_ALL_HITS', false);
 		ToolbarHelper::custom('cwmadmin.resetDownloads', 'download.png', 'Reset All Download Hits', 'JBS_ADM_RESET_ALL_DOWNLOAD_HITS', false);
 		ToolbarHelper::custom('cwmadmin.resetPlays', 'play.png', 'Reset All Plays', 'JBS_ADM_RESET_ALL_PLAYS', false);
-		ToolbarHelper::divider();
-		ToolbarHelper::help('proclaim', true);
+
+		$toolbar->divider();
+
+		ToolbarHelper::inlinehelp();
+
+		$toolbar->help('Proclaim', true);
 	}
 
 	/**

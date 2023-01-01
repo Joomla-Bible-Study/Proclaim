@@ -8,14 +8,15 @@
  * @link           https://www.christianwebministries.org
  * */
 
-// No Direct Access
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
-
-defined('_JEXEC') or die;
 
 /** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
@@ -54,7 +55,7 @@ $columns    = 5;
 								<?php echo HTMLHelper::_('grid.checkall'); ?>
 							</th>
 							<th scope="col" class="w-1 text-center">
-								<?php echo HTMLHelper::_('grid.sort', 'JPUBLISHED', 'templatecode.published', $listDirn, $listOrder); ?>
+								<?php echo HTMLHelper::_('searchtools.sort', 'JPUBLISHED', 'templatecode.published', $listDirn, $listOrder); ?>
 							</th>
 							<th scope="col" style="min-width:100px">
 								<?php echo Text::_('JBS_TPLCODE_FILENAME'); ?>
@@ -101,13 +102,13 @@ $columns    = 5;
 										<?php endif; ?>
 									</div>
 								</td>
-								<td class="nowrap has-context">
+								<td class="small d-none d-md-table-cell text-center">
 									<div class="pull-left">
-										<a href="<?php echo $link; ?>"><?php echo $item->typetext; ?></a>
+										<?php echo $item->typetext; ?>
 									</div>
 								</td>
 								<td class="d-none d-lg-table-cell">
-									<?php echo (int) $item->id; ?>
+									<?php echo $item->id; ?>
 								</td>
 							</tr>
 						<?php endforeach; ?>

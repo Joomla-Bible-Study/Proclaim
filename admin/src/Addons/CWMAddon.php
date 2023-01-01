@@ -10,15 +10,16 @@
 
 namespace CWM\Component\Proclaim\Administrator\Addons;
 
-// No Direct Access
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use JLoader;
 use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\Input\Input;
 use SimpleXMLElement;
-
-defined('_JEXEC') or die;
 
 /**
  * Abstract Server class

@@ -10,8 +10,9 @@
 
 namespace CWM\Component\Proclaim\Administrator\Model;
 
-// No Direct Access
-defined('_JEXEC') or die;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
@@ -25,7 +26,6 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Workflow\Workflow;
-use Joomla\Database\DatabaseDriver;
 use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;

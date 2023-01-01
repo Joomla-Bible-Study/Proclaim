@@ -8,9 +8,10 @@
  * @link       https://www.christianwebministries.org
  * */
 
-use Joomla\CMS\HTML\HTMLHelper;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
-defined('_JEXEC') or die;
 ?>
 <div class="row-fluid">
 	<div class="control-group">

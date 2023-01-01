@@ -8,9 +8,11 @@
  * @link       https://www.christianwebministries.org
  * */
 
-use Joomla\CMS\Language\Text;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
-defined('_JEXEC') or die;
+use Joomla\CMS\Language\Text;
 
 $published = $this->state->get('filter.published');
 ?>

@@ -8,9 +8,11 @@
  * @link       https://www.christianwebministries.org
  * */
 
-use Joomla\CMS\HTML\HTMLHelper;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
-defined('_JEXEC') or die;
+use Joomla\CMS\HTML\HTMLHelper;
 
 $published = $this->state->get('filter.published');
 HTMLHelper::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html');

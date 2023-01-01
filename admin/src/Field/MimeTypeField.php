@@ -10,11 +10,13 @@
 
 namespace CWM\Component\Proclaim\Administrator\Field;
 
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use CWM\Component\Proclaim\Site\Helper\CWMMedia;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
-
-defined('_JEXEC') or die;
 
 /**
  * Mime Type List Form Field class for the Proclaim component

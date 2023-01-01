@@ -10,14 +10,16 @@
 
 namespace CWM\Component\Proclaim\Administrator\Helper;
 
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use CWM\Component\Proclaim\Administrator\Model\CWMAdminModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
-
-defined('_JEXEC') or die;
 
 /**
  * Database Helper class for version 7.1.0

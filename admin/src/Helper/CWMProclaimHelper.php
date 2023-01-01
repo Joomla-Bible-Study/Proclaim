@@ -10,7 +10,10 @@
 
 namespace CWM\Component\Proclaim\Administrator\Helper;
 
-// No Direct Access
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use Joomla\CMS\Access\Access;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
@@ -19,9 +22,6 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\Registry\Registry;
 use stdClass;
-
-defined('_JEXEC') or die;
-
 
 /**
  * BibleStudy Helper class

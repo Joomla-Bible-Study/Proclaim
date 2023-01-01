@@ -10,15 +10,15 @@
 
 namespace CWM\Component\Proclaim\Administrator\View\CWMInstall;
 
-// No Direct Access
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Input\Input;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use Symfony\Component\Config\Loader\Loader;
-
-defined('_JEXEC') or die;
 
 /**
  * JView class for Install

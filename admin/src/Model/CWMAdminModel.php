@@ -10,8 +10,9 @@
 
 namespace CWM\Component\Proclaim\Administrator\Model;
 
-// No Direct Access
+// phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Table\CWMAdminTable;
 use CWM\Component\Proclaim\Site\Helper\CWMMedia;

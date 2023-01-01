@@ -406,7 +406,9 @@ Namespaces are formatted according to this flow. First there is the file docbloc
 
 namespace Joomla\Module\Quickicon\Administrator\Helper;
 
-defined('_JEXEC') or die;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;

@@ -9,10 +9,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.ChristianWebMinistries.org
  * */
-// No Direct Access
-defined('_JEXEC') or die;
 
-// Do not remove
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 ?>
 <div class="container-fluid">

@@ -8,15 +8,16 @@
  * @link       https://www.christianwebministries.org
  */
 
-// No Direct Access
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
 use CWM\Component\Proclaim\Administrator\Lib\CWMStats;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\Input\Input;
-
-defined('_JEXEC') or die;
 
 // Load the tooltip behavior.
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */

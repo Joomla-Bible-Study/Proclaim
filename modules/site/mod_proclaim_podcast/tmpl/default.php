@@ -8,6 +8,9 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        https://www.christianwebministries.org
  */
-// No direct access
-defined('_JEXEC') or die;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 echo $subscribe;

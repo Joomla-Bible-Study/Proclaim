@@ -16,7 +16,6 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMTeachers;
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
@@ -151,18 +150,27 @@ class HtmlView extends BaseHtmlView
 			->listCheck(true);
 		$childBar = $dropdown->getChildToolbar();
 
-		if ($canDo->get('core.edit'))
-		{
-			$toolbar->edit('teacher.edit');
-		}
-
 		if ($canDo->get('core.edit.state'))
 		{
-			$toolbar->divider();
-			$toolbar->publish('cwmteachers.publish');
-			$toolbar->unpublish('cwmteachers.unpublish');
-			$toolbar->divider();
-			$toolbar->archive('cwmteachers.archive');
+			$childBar->publish('cwmteachers.publish');
+			$childBar->unpublish('cwmteachers.unpublish');
+			$childBar->archive('cwmteachers.archive');
+
+			if ($canDo->get('core.edit.state'))
+			{
+				$childBar->trash('cwmteachers.trash');
+			}
+
+			// Add a batch button
+			if ($user->authorise('core.create', 'com_proclaim')
+				&& $user->authorise('core.edit', 'com_proclaim')
+				&& $user->authorise('core.edit.state', 'com_proclaim'))
+			{
+				$childBar->popupButton('batch')
+					->text('JTOOLBAR_BATCH')
+					->selector('collapseModal')
+					->listCheck(true);
+			}
 		}
 
 		if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete'))
@@ -172,27 +180,13 @@ class HtmlView extends BaseHtmlView
 				->message('JGLOBAL_CONFIRM_DELETE')
 				->listCheck(true);
 		}
-		elseif ($canDo->get('core.edit.state'))
-		{
-			$childBar->trash('cwmteachers.trash');
-		}
-
-		// Add a batch button
-		if ($user->authorise('core.create', 'com_proclaim')
-			&& $user->authorise('core.edit', 'com_proclaim')
-			&& $user->authorise('core.edit.state', 'com_proclaim'))
-		{
-			$childBar->popupButton('batch')
-				->text('JTOOLBAR_BATCH')
-				->selector('collapseModal')
-				->listCheck(true);
-		}
 	}
 
 	/**
 	 * Add the page title to browser.
 	 *
 	 * @return void
+	 * @throws \Exception
 	 * @since    7.1.0
 	 *
 	 */
