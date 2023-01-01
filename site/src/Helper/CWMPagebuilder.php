@@ -41,9 +41,9 @@ class CWMPagebuilder
 	/**
 	 * Build Page
 	 *
-	 * @param   object            $item      Item info
-	 * @param   Registry          $params    Item Params
-	 * @param   CWMTemplateTable  $template  Template data
+	 * @param   object                   $item      Item info
+	 * @param   Registry                 $params    Item Params
+	 * @param   CWMTemplateTable|Object  $template  Template data
 	 *
 	 * @return object
 	 *
@@ -237,11 +237,11 @@ class CWMPagebuilder
 	/**
 	 * Media Builder
 	 *
-	 * @param   array             $mediaids  ID of Media
-	 * @param   Registry          $params    Item Params
-	 * @param   CWMTemplateTable  $template  template date
-	 * @param   object            $item      Item Params
-	 * @param   string            $template
+	 * @param   array                    $mediaids  ID of Media
+	 * @param   Registry                 $params    Item Params
+	 * @param   CWMTemplateTable|Object  $template  template date
+	 * @param   object                   $item      Item Params
+	 *
 	 * @return string
 	 *
 	 * @throws \Exception
@@ -317,12 +317,12 @@ class CWMPagebuilder
 	/**
 	 * Study Builder
 	 *
-	 * @param   string            $whereitem   ?
-	 * @param   string            $wherefield  ?
-	 * @param   Registry          $params      Item params
-	 * @param   int               $limit       Limit of Records
-	 * @param   string            $order       DESC or ASC
-	 * @param   CWMTemplateTable  $template    Template Data
+	 * @param   string                   $whereitem   ?
+	 * @param   string                   $wherefield  ?
+	 * @param   Registry                 $params      Item params
+	 * @param   int                      $limit       Limit of Records
+	 * @param   string                   $order       DESC or ASC
+	 * @param   CWMTemplateTable|Object  $template    Template Data
 	 *
 	 * @return array
 	 *

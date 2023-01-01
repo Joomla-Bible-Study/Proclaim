@@ -246,19 +246,19 @@ class CWMImages
 	/**
 	 * Get Teacher Image
 	 *
-	 * @param   string  $image1  ?
-	 * @param   string  $image2  ?
+	 * @param   string|null  $image1  ?
+	 * @param   string|null  $image2  ?
 	 *
 	 * @return object
 	 *
 	 * @since 7.0
 	 */
-	public static function getTeacherImage($image1 = null, $image2 = null)
+	public static function getTeacherImage(string $image1 = null, string $image2 = null)
 	{
 		$folder = self::getTeacherImageFolder();
 		$path   = null;
 
-		if (!$image1 || $image1 === '0' || strncmp($image1, '- ', 2) === 0)
+		if ($image2 && (!$image1 || strncmp($image1, '- ', 2) === 0))
 		{
 			$path = $image2;
 

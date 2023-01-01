@@ -13,11 +13,11 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 // No Direct Access
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Administrator\Table\CWMTemplateTable;
 use CWM\Component\Proclaim\Site\Helper\CWMListing;
 use Joomla\CMS\Cache\Cache;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
-use Joomla\Component\Mails\Administrator\Table\TemplateTable;
 use Joomla\Registry\Registry;
 
 /**
@@ -40,16 +40,16 @@ class CWMHelper
 	/**
 	 * Get tooltip.
 	 *
-	 * @param   object         $row       JTable
-	 * @param   Registry       $params    Item Params
-	 * @param   TemplateTable  $template  ID
+	 * @param   object                   $row       JTable
+	 * @param   Registry                 $params    Item Params
+	 * @param   CWMTemplateTable|Object  $template  ID
 	 *
 	 * @return string
 	 *
 	 * @throws \Exception
 	 * @since  9.0.0
 	 */
-	public static function getTooltip($row, $params, $template)
+	public static function getTooltip(object $row, Registry $params, $template): string
 	{
 		$JBSMElements = new CWMListing;
 

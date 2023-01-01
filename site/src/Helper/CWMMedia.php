@@ -42,16 +42,16 @@ class CWMMedia
 	/**
 	 * Return Fluid Media row
 	 *
-	 * @param   Object            $media     Media info
-	 * @param   Registry          $params    Params
-	 * @param   CWMTemplateTable  $template  Template Table
+	 * @param   Object                   $media     Media info
+	 * @param   Registry                 $params    Params
+	 * @param   CWMTemplateTable|Object  $template  Template Table
 	 *
 	 * @return string
 	 *
 	 * @throws \Exception
 	 * @since 9.0.0
 	 */
-	public function getFluidMedia($media, $params, $template)
+	public function getFluidMedia($media, Registry $params, $template)
 	{
 		$mediafile = null;
 		$filesize  = null;
@@ -210,9 +210,9 @@ class CWMMedia
 	/**
 	 * Return download link
 	 *
-	 * @param   Object            $media     Media
-	 * @param   Registry          $params    Params
-	 * @param   CWMTemplateTable  $template  Template ID
+	 * @param   Object                   $media     Media
+	 * @param   Registry                 $params    Params
+	 * @param   CWMTemplateTable|Object  $template  Template ID
 	 *
 	 * @return string
 	 *
@@ -670,12 +670,12 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 	 * @param   String    $image   Image info
 	 * @param   object    $media   Media
 	 *
-	 * @return string
+	 * @return string|bool
 	 *
 	 * @throws \Exception
 	 * @since 9.0.0
 	 */
-	public function getPlayerCode($params, $player, $image, $media)
+	public function getPlayerCode(Registry $params, object $player, string $image, object $media)
 	{
 		// Merging the item params into the global.
 		$params = clone $params;
@@ -833,7 +833,7 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 	 *
 	 * @since 9.1.2
 	 */
-	public function rendersb($media, $params, $player, $image, $path, $direct = false)
+	public function rendersb(object $media, Registry $params, object $player, string $image, string $path, bool $direct = false): string
 	{
 		HtmlHelper::_('fancybox.framework', true, true);
 
