@@ -50,6 +50,107 @@ class CWMProclaimHelper
 	public static $extension = 'com_proclaim';
 
 	/**
+	 * Array of Views to namespace names
+	 * @var array
+	 * @since 10.0.0
+	 */
+	public static array $viewMap = [
+		'cwmadmin'         => 'CWMAdmin',
+		'cwmachive'        => 'CWMAchive',
+		'cwmbackup'        => 'CWMBackup',
+		'cwmcomment'       => 'CWMComment',
+		'cwmcomments'      => 'CWMComments',
+		'cwmcpanel'        => 'CWMCpanel',
+		'cwmdir'           => 'CWMDir',
+		'cwminstall'       => 'CWMInstall',
+		'cwmlocation'      => 'CWMLocation',
+		'cwmlocations'     => 'CWMLocations',
+		'cwmmediafile'     => 'CWMMediaFile',
+		'cwmmediafiles'    => 'CWMMediaFiles',
+		'cwmmessage'       => 'CWMMessage',
+		'cwmmessages'      => 'CWMMessages',
+		'cwmmessagetype'   => 'CWMMessageType',
+		'cwmmessagetypes'  => 'CWMMessageTypes',
+		'cwmmigrate'       => 'CWMMigrate',
+		'cwmpodcast'       => 'CWMPodcast',
+		'cwmpodcasts'      => 'CWMPodcasts',
+		'cwmserie'         => 'CWMSerie',
+		'cwmseries'        => 'CWMSeries',
+		'cwmserver'        => 'CWMServer',
+		'cwmservers'       => 'CWMServers',
+		'cwmteacher'       => 'CWMTeacher',
+		'cwmteachers'      => 'CWMTeachers',
+		'cwmtemplatecode'  => 'CWMTemplateCode',
+		'cwmtemplatecodes' => 'CWMTemplateCodes',
+		'cwmtemplate'      => 'CWMTemplate',
+		'cwmtemplates'     => 'CWMTemplates',
+		'cwmtopic'         => 'CWMTopic',
+		'cwmtopics'        => 'CWMTopics',
+		'cwmupload'        => 'CWMUpload',
+	];
+
+	/**
+	 * Update View and Controller to work with Namespace Case-Sensitive
+	 *
+	 * @param   string  $defaultController  Default Controller
+	 *
+	 * @return void
+	 * @throws \Exception
+	 * @since    10.0.0
+	 */
+	public static function applyViewAndController(string $defaultController): void
+	{
+		$input = Factory::getApplication()->input;
+		$controller = $input->getCmd('controller', null);
+		$view       = $input->getCmd('view', null);
+		$task       = $input->getCmd('task', 'display');
+
+		if (str_contains($task, '.'))
+		{
+			// Explode the controller.task command.
+			[$controller, $task] = explode('.', $task);
+		}
+
+		if (empty($controller) && empty($view))
+		{
+			$controller = $defaultController;
+			$view       = $defaultController;
+		}
+		elseif (!empty($controller) && empty($view))
+		{
+			$view = $controller;
+		}
+
+		if ($controller !== null)
+		{
+			$controller = self::mapView($controller);
+		}
+
+		$view       = self::mapView($view);
+
+		$input->set('view', $view);
+		$input->set('controller', $controller);
+		$input->set('task', $task);
+	}
+
+	/**
+	 * System to set all urls to lower case
+	 *
+	 * @param   string  $view  URL View String
+	 *
+	 * @return string
+	 *
+	 * @since 10.0.0
+	 */
+	private static function mapView(string $view): string
+	{
+		$view = strtolower($view);
+		$viewMap = CWMProclaimHelper::$viewMap;
+
+		return $viewMap[$view] ?? $view;
+	}
+
+	/**
 	 * Get Actions
 	 *
 	 * @param   int     $Itemid  ID

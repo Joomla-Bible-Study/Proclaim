@@ -1,6 +1,6 @@
 <?php
 /**
- * @package         CWM.Administrator
+ * @package         Proclaim.Admin
  * @subpackage      com_proclaim
  *
  * @copyright   (C) 2021 Open Source Matters, Inc. <https://www.joomla.org>
@@ -11,9 +11,9 @@ namespace CWM\Component\Proclaim\Administrator\Dispatcher;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
-
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Dispatcher\ComponentDispatcher;
 
 /**
@@ -37,7 +37,7 @@ class Dispatcher extends ComponentDispatcher
 	 */
 	public function dispatch(): void
 	{
-		$this->applyViewAndController();
+		CWMProclaimHelper::applyViewAndController($this->defaultController);
 
 		parent::dispatch();
 	}
@@ -69,53 +69,5 @@ class Dispatcher extends ComponentDispatcher
 		}
 
 		parent::checkAccess();
-	}
-
-	/**
-	 * Update View and Controller to work with Namespace Case-Sensitive
-	 *
-	 * @return void
-	 * @since 10.0.0
-	 */
-	protected function applyViewAndController(): void
-	{
-		$controller = $this->input->getCmd('controller', null);
-		$view       = $this->input->getCmd('view', null);
-		$task       = $this->input->getCmd('task', 'display');
-
-		if (str_contains($task, '.'))
-		{
-			// Explode the controller.task command.
-			[$controller, $task] = explode('.', $task);
-		}
-
-		if (empty($controller) && empty($view))
-		{
-			$view       = $this->defaultController;
-		}
-		elseif (!empty($controller) && empty($view))
-		{
-			$view = $controller;
-		}
-
-		$view       = $this->mapView($view);
-
-		$this->input->set('view', $view);
-		$this->input->set('controller', $controller);
-		$this->input->set('task', $task);
-	}
-
-	/**
-	 * System to set all urls to lower case
-	 *
-	 * @param   string  $view  URL View String
-	 *
-	 * @return string
-	 *
-	 * @since 10.0.0
-	 */
-	private function mapView(string $view): string
-	{
-		return strtolower($view);
 	}
 }

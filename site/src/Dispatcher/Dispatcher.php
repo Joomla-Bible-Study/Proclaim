@@ -1,6 +1,6 @@
 <?php
 /**
- * @package     Joomla.Site
+ * @package     Proclaim.Site
  * @subpackage  com_proclaim
  *
  * @copyright   (C) 2017 Open Source Matters, Inc. <https://www.joomla.org>
@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Site\Dispatcher;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Dispatcher\ComponentDispatcher;
 use Joomla\CMS\Language\Text;
 
@@ -34,11 +35,12 @@ class Dispatcher extends ComponentDispatcher
 	 *
 	 * @return  void
 	 *
+	 * @throws \Exception
 	 * @since   4.0.0
 	 */
-	public function dispatch()
+	public function dispatch(): void
 	{
-		$this->applyViewAndController();
+		CWMProclaimHelper::applyViewAndController($this->defaultController);
 
 		if ($this->input->get('view') === 'cwmlandingpage' && $this->input->get('layout') === 'modal')
 		{
@@ -53,59 +55,5 @@ class Dispatcher extends ComponentDispatcher
 		}
 
 		parent::dispatch();
-	}
-
-	/**
-	 * Update View and Controller to work with Namespace Case-Sensitive
-	 *
-	 * @return void
-	 * @since 10.0.0
-	 */
-	protected function applyViewAndController(): void
-	{
-		$controller = $this->input->getCmd('controller', null);
-		$view       = $this->input->getCmd('view', null);
-		$task       = $this->input->getCmd('task', 'display');
-
-		if (str_contains($task, '.'))
-		{
-			// Explode the controller.task command.
-			[$controller, $task] = explode('.', $task);
-		}
-
-		if (empty($controller) && empty($view))
-		{
-			$controller = $this->defaultController;
-			$view       = $this->defaultController;
-		}
-		elseif (!empty($controller) && empty($view))
-		{
-			$view = $controller;
-		}
-
-		if ($view === 'featured')
-		{
-			$view = 'cwmsermons';
-		}
-
-		$view = $this->mapView($view);
-
-		$this->input->set('view', $view);
-		$this->input->set('controller', $controller);
-		$this->input->set('task', $task);
-	}
-
-	/**
-	 * System to set all urls to lower case
-	 *
-	 * @param   string  $view  URL View String
-	 *
-	 * @return string
-	 *
-	 * @since 10.0.0
-	 */
-	private function mapView(string $view): string
-	{
-		return strtolower($view);
 	}
 }
