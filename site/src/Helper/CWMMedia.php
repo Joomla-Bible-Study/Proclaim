@@ -43,16 +43,16 @@ class CWMMedia
 	/**
 	 * Return Fluid Media row
 	 *
-	 * @param   Object            $media     Media info
-	 * @param   Registry          $params    Params
-	 * @param   CWMTemplateTable  $template  Template Table
+	 * @param   Object                   $media     Media info
+	 * @param   Registry                 $params    Params
+	 * @param   CWMTemplateTable|Object  $template  Template Table
 	 *
 	 * @return string
 	 *
 	 * @throws \Exception
 	 * @since 9.0.0
 	 */
-	public function getFluidMedia($media, $params, $template)
+	public function getFluidMedia(object $media, Registry $params, $template): ?string
 	{
 		$mediafile = null;
 		$filesize  = null;
@@ -171,15 +171,16 @@ class CWMMedia
 	/**
 	 * Return download link
 	 *
-	 * @param   Object            $media     Media
-	 * @param   Registry          $params    Params
-	 * @param   CWMTemplateTable  $template  Template ID
+	 * @param   Object                   $media     Media
+	 * @param   Registry                 $params    Params
+	 * @param   CWMTemplateTable|Object  $template  Template ID
 	 *
 	 * @return string
 	 *
+	 * @throws \Exception
 	 * @since 9.0.0
 	 */
-	public function getFluidDownloadLink($media, $params, $template)
+	public function getFluidDownloadLink(object $media, Registry $params, $template): string
 	{
 		// Remove download form Youtube links.
 		$filename  = $media->params->get('filename');
@@ -196,6 +197,7 @@ class CWMMedia
 		{
 			$download_image = $this->downloadButton($params);
 		}
+
 		if ($params->get('download_use_button_icon') >= 2 && ($params->get('simple_mode') === '1' || $params->get('sermonstemplate') === 'easy'))
 		{
 			$download_image = $this->downloadButton($params);
@@ -217,9 +219,9 @@ class CWMMedia
 		}
 
 		if (($params->get('download_show')
-				&& (!$media->params->get('link_type')))
-			//|| $params->get('simple_mode') === '1'
-			//|| $params->get('sermonstemplate') === 'easy'
+			&& (!$media->params->get('link_type')))
+			// || $params->get('simple_mode') === '1'
+			// || $params->get('sermonstemplate') === 'easy'
 		)
 		{
 			$link_type = 2;
@@ -231,8 +233,8 @@ class CWMMedia
 
 			if ($compat_mode === 0)
 			{
-				$downloadlink = '<a style="color: #5F5A58;" href="index.php?option=com_proclaim&amp;view=cwmsermon&amp;id='.$media->study_id.'&amp;mid=' .
-					$media->id . '&amp;task=cwmsermon.download">'.$download_image.'</a>';
+				$downloadlink = '<a style="color: #5F5A58;" href="index.php?option=com_proclaim&amp;view=cwmsermon&amp;id=' .
+					$media->study_id . '&amp;mid=' . $media->id . '&amp;task=cwmsermon.download">' . $download_image . '</a>';
 			}
 			else
 			{
@@ -255,33 +257,36 @@ class CWMMedia
 			}
 
 			// Check to see if they want to use a popup
-            $app = Factory::getApplication();   // equivalent of $app = JFactory::getApplication();
-            $input = $app->input;
-            $opt = $input->get('option');
-            if ($opt == 'com_proclaim') {
-                if ($params->get('useterms') > 0) {
-                    $downloadlink = '<a style="color: #5F5A58;" href="#modal-test-modal" data-bs-toggle="modal" class="btn btn-default btn-small btn-sm">
-                        '.$download_image.'</a>';
-$modalParams = array(
-    'title'       => Text::_('JBS_TERMS_TITLE'),
-    'closeButton' => true,
-    'height'      => '300px',
-    'width'       => '300px',
-    'backdrop'    => 'static',
-    'keyboard'    => true,
-    'modalWidth' => 30,
-    'bodyHeight' => 30,
-    'footer'      => '<div class="alert alert-info">'.Text::_('JBS_TERMS_FOOTER').'</div>'
-);
+			$app   = Factory::getApplication();
+			$input = $app->input;
+			$opt   = $input->get('option');
 
-$modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style="color: #5F5A58;" href="index.php?option=com_proclaim&task=cwmsermons.download&id='.$media->study_id.'&mid=' . $media->id . '">'
-					. Text::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a></div>';
+			if ($opt == 'com_proclaim')
+			{
+				if ($params->get('useterms') > 0)
+				{
+					$downloadlink = '<a style="color: #5F5A58;" href="#modal-test-modal" data-bs-toggle="modal"' .
+					'class="btn btn-default btn-small btn-sm">' . $download_image . '</a>';
+					$modalParams  = array(
+						'title'       => Text::_('JBS_TERMS_TITLE'),
+						'closeButton' => true,
+						'height'      => '300px',
+						'width'       => '300px',
+						'backdrop'    => 'static',
+						'keyboard'    => true,
+						'modalWidth'  => 30,
+						'bodyHeight'  => 30,
+						'footer'      => '<div class="alert alert-info">' . Text::_('JBS_TERMS_FOOTER') . '</div>'
+					);
 
- $downloadlink .= HTMLHelper::_('bootstrap.renderModal', 'modal-test-modal', $modalParams, $modalBody);
+					$modalBody = '<div class="alert alert-success">' . $params->get('terms') .
+						'<a style="color: #5F5A58;" href="index.php?option=com_proclaim&task=cwmsermons.download&id=' .
+						$media->study_id . '&mid=' . $media->id . '">'
+						. Text::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a></div>';
 
-                }
-            }
-
+					$downloadlink .= HTMLHelper::_('bootstrap.renderModal', 'modal-test-modal', $modalParams, $modalBody);
+				}
+			}
 		}
 
 		return $downloadlink;
@@ -298,7 +303,7 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 	 *
 	 * @since 9.0.0
 	 */
-	public function mediaButton($imageparams, $params, $media)
+	public function mediaButton(Registry $imageparams, Registry $params, object $media): ?string
 	{
 
 		$mediaimage = null;
@@ -360,7 +365,8 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 		{
 			$filename = $media->get('filename');
 
-			switch ($filename){
+			switch ($filename)
+			{
 				case preg_match('(youtube.com|youtu.be)', $filename) === 1:
 					$mediaimage = '<span class="fab fa-youtube" title="YouTube" style="font-size:24px;"></span>';
 					break;
@@ -373,13 +379,11 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 					$mediaimage = '<span class="fas fa-play" title="Audio" style="font-size:24px;"></span>';
 					break;
 
+				case preg_match('(mp4|MP4)', $filename) === 1:
 				case preg_match('(m4v|M4V)', $filename) === 1:
 					$mediaimage = '<span class="fas fa-television" title="Video" style="font-size:24px;"></span>';
 					break;
 
-				case preg_match('(mp4|MP4)', $filename) === 1:
-					$mediaimage = '<span class="fas fa-television" title="Video" style="font-size:24px;"></span>';
-					break;
 				case preg_match('(pptx|ppt|PPTX|PPT)', $filename) === 1:
 					$mediaimage = '<span class="fas fa-file-powerpoint" title="Powerpoint" style="font-size:24px;"></span>';
 					break;
@@ -387,7 +391,7 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 					$mediaimage = '<span class="fas fa-word" title="Word" style="font-size:24px;"></span>';
 					break;
 				default:
-					$mediaimage = '<span class="fas fa-file" title="'.$filename.'" style="font-size:24px;"></span>';
+					$mediaimage = '<span class="fas fa-file" title="' . $filename . '" style="font-size:24px;"></span>';
 					break;
 			}
 		}
@@ -400,11 +404,11 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 	 *
 	 * @param   Registry  $download  ?
 	 *
-	 * @return mixed
+	 * @return string|null
 	 *
 	 * @since 9.0.0
 	 */
-	public function downloadButton($download)
+	public function downloadButton(Registry $download): ?string
 	{
 		$downloadimage = null;
 		$button        = $download->get('download_button_type', 'btn-link');
@@ -473,7 +477,7 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 	 *
 	 * @since 9.0.0
 	 */
-	public function useJImage($path, $alt)
+	public function useJImage(string $path, string $alt): string
 	{
 		if (!$path)
 		{
@@ -502,7 +506,7 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 	 *
 	 * @since 9.0.0
 	 */
-	public function getPlayerAttributes($params, $media)
+	public function getPlayerAttributes(Registry $params, object $media): object
 	{
 		$player               = new \stdClass;
 		$player->playerwidth  = $params->get('player_width');
@@ -636,7 +640,7 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 	 * @throws \Exception
 	 * @since 9.0.0
 	 */
-	public function getPlayerCode($params, $player, $image, $media): string
+	public function getPlayerCode(Registry $params, object $player, string $image, object $media): string
 	{
 		// Merging the item params into the global.
 		$params = clone $params;
@@ -659,8 +663,8 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 				{
 					case 2: // New window - popup code added here because new window code does not work (Tom 10-12-2022)
 						$return     = base64_encode($path);
-						$playercode = '<a href="javascript:;" onclick="window.open(\'index.php?option=com_proclaim&amp;task=cwmsermons.playHit&amp;return=' .
-							$return . '&amp;' . Session::getFormToken() . '=1\')" title="' .
+						$playercode = '<a href="javascript:;" onclick="window.open(\'index.php?option=com_proclaim&amp;' .
+							'task=cwmsermons.playHit&amp;return=' . $return . '&amp;' . Session::getFormToken() . '=1\')" title="' .
 							$media->params->get("media_button_text") . ' - ' . $media->comment . ' '
 							. $filesize . '">' . $image . '</a>';
 						break;
@@ -670,7 +674,8 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 						break;
 
 					case 1: // Popup window
-						$playercode = "<a style='color: #5F5A58;' href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim&amp;player="
+						$playercode = "<a style='color: #5F5A58;' href=\"javascript:;\"" .
+							" onclick=\"window.open('index.php?option=com_proclaim&amp;player="
 							. $params->toObject()->player .
 							"&amp;view=cwmpopup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" .
 							$player->playerwidth . ",height=" . $player->playerheight . "'); return false\"  class=\"jbsmplayerlink\">"
@@ -730,7 +735,8 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 						$diff                 = $params->get('player_width') - $params->get('playerwidth');
 						$player->playerwidth  += abs($diff) + 10;
 						$player->playerheight += $params->get('popupmargin', '50');
-						$playercode           = "<a style='color: #5F5A58;' href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim&amp;player="
+						$playercode           = "<a style='color: #5F5A58;' href=\"javascript:;\"" .
+							" onclick=\"window.open('index.php?option=com_proclaim&amp;player="
 							. $player->player
 							. "&amp;view=cwmpopup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width="
 							. $player->playerwidth . ", height=" .
@@ -794,11 +800,11 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 	 *
 	 * @since 9.1.2
 	 */
-	public function rendersb($media, $params, $player, $image, $path, $direct = false): string
+	public function rendersb(object $media, Registry $params, object $player, string $image, string $path, bool $direct = false): string
 	{
 		HtmlHelper::_('fancybox.framework', true, true);
 
-		if ($player->player == 7 && !$direct)
+		if ($player->player === '7' && !$direct)
 		{
 			$player->playerheight = '40';
 		}
@@ -856,7 +862,13 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 
 		if ($file_size === 0)
 		{
-			$file_size = CWMHelper::getRemoteFileSize(CWMHelper::MediaBuildUrl($media->sparams->get('path'), $params->get('filename'), $params, true));
+			$file_size = CWMHelper::getRemoteFileSize(
+				CWMHelper::MediaBuildUrl($media->sparams->get('path'),
+					$params->get('filename'),
+					$params,
+					true
+				)
+			);
 			CWMHelper::SetFilesize($media->id, $file_size);
 		}
 
@@ -879,7 +891,7 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 	 * @since     9.0.0
 	 * @deprecate 9.2.7
 	 */
-	public function getFluidDuration($row, $params)
+	public function getFluidDuration(object $row, Registry $params): void
 	{
 	}
 
@@ -892,9 +904,9 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 	 *
 	 * @since 9.0.0
 	 */
-	public function hitPlay($id)
+	public function hitPlay(int $id): bool
 	{
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->update('#__bsms_mediafiles')
 			->set('plays = plays + 1')
@@ -971,7 +983,7 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 	 *
 	 * @since 9.0.0
 	 */
-	public function getAVmediacode($mediacode, $media)
+	public function getAVmediacode(string $mediacode, object $media): string
 	{
 		$bracketpos   = strpos($mediacode, '}');
 		$bracketend   = strpos($mediacode, '{', $bracketpos);
@@ -1001,14 +1013,11 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 	 * @throws \Exception
 	 * @since 9.0.0
 	 */
-	public function getDocman($media, $image)
+	public function getDocman(object $media, string $image): string
 	{
-		$url = 'com_docman';
-		$docman   = '<a href="index.php?option=com_docman&amp;view=document&amp;slug=' .
+		return '<a href="index.php?option=com_docman&amp;view=document&amp;slug=' .
 			$media->docMan_id . '" alt="' . $media->malttext . ' - ' . $media->comment .
 			'" target="' . $media->special . '">' . $image . '</a>';
-
-		return $docman;
 	}
 
 	/**
@@ -1021,12 +1030,10 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 	 *
 	 * @since 9.0.0
 	 */
-	public function getArticle($media, $image)
+	public function getArticle(object $media, string $image): string
 	{
-		$article = '<a href="index.php?option=com_content&amp;view=article&amp;id=' . $media->article_id . '"
+		return '<a href="index.php?option=com_content&amp;view=article&amp;id=' . $media->article_id . '"
 		target="' . $media->special . '">' . $image . '</a>';
-
-		return $article;
 	}
 
 	/**
@@ -1039,7 +1046,7 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 	 *
 	 * @since 9.0.0
 	 */
-	public function getVirtuemart($media, $image)
+	public function getVirtuemart(object $media, string $image): string
 	{
 		return '<a class="playhit" data-id="' . $media->id
 			. '" href="index.php?option=com_virtuemart&amp;view=productdetails&amp;virtuemart_product_id=' .
@@ -1054,7 +1061,7 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 	 *
 	 * @since 9.0.12
 	 */
-	public function getMimetypes()
+	public function getMimetypes(): array
 	{
 		$mimetype = array(
 			// Image formats
@@ -1171,7 +1178,7 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 	 *
 	 * @since 9.1.3
 	 */
-	public function convertYoutube($string)
+	public function convertYoutube(string $string)
 	{
 		return preg_replace(
 			"/\s*[a-zA-Z\/\/:\.]*youtu(be.com\/watch\?v=|.be\/)([a-zA-Z0-9\-_]+)([a-zA-Z0-9\/\*\-\_\?\&\;\%\=\.]*)/i",
@@ -1189,7 +1196,7 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 	 *
 	 * @since 9.1.3
 	 */
-	public function convertVimeo($string)
+	public function convertVimeo(string $string)
 	{
 		return preg_replace(
 			"/\s*[a-zA-Z\/\/:\.]*viemo.com\/([a-zA-Z0-9\-_]+)([a-zA-Z0-9\/\*\-\_\?\&\;\%\=\.]*)/i",
@@ -1205,7 +1212,7 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 	 *
 	 * @since 9.1.3
 	 */
-	public function getIcons()
+	public function getIcons(): array
 	{
 		return [
 			'JBS_MED_PLAY'      => 'fas fa-play',
@@ -1222,13 +1229,15 @@ $modalBody = '<div class="alert alert-success">'.$params->get('terms').'<a style
 	/**
 	 * Build File Size String Display
 	 *
-	 * @param   int  $file_size  Size of the file
+	 * @param   int       $file_size  Size of the file
+	 * @param   Registry  $params     Registry of parameters
+	 * @param   Object    $media      Media info
 	 *
 	 * @return string
 	 *
 	 * @since 10.0.0
 	 */
-	public function convertFileSize(int $file_size, $params, $media): string
+	public function convertFileSize(int $file_size, Registry $params, object $media): string
 	{
 		switch ($file_size)
 		{

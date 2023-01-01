@@ -201,16 +201,16 @@ class HtmlView extends BaseHtmlView
 		$this->scripture = $JBSMListing->getScripture($this->params, $this->media, $esv = '0', $scripturerow = '1');
 		$this->media->id = $saveid;
 		$this->date      = $JBSMListing->getStudyDate($this->params, $this->media->studydate);
+
 		/*
 		 *  The popup window call the counter function
 		 */
-		$this->getMedia->hitPlay($mediaid);
+		$this->getMedia->hitPlay((int) $mediaid);
 
-		$images                 = new CWMImages;
-		$seriesimage            = $images->getSeriesThumbnail($this->media->series_thumbnail);
+		$seriesimage            = CWMImages::getSeriesThumbnail($this->media->series_thumbnail);
 		$this->series_thumbnail = '<img src="' . Uri::base() . $seriesimage->path . '" width="' . $seriesimage->width . '" height="'
 			. $seriesimage->height . '" alt="' . $this->media->series_text . '" />';
-		$image                  = $images->getTeacherThumbnail($this->media->teacher_thumbnail, $this->media->thumb);
+		$image                  = CWMImages::getTeacherThumbnail($this->media->teacher_thumbnail, $this->media->thumb);
 		$this->teacherimage     = '<img src="' . Uri::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height
 			. '" alt="' . $this->media->teachername . '" />';
 
