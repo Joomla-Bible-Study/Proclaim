@@ -8,6 +8,7 @@
  * @link       http://www.christianwebministries.org
  * */
 namespace CWM\Component\Proclaim\Site\View\CWMPodcastList;
+
 // No Direct Access
 defined('_JEXEC') or die;
 
@@ -37,7 +38,7 @@ class HtmlView extends BaseHtmlView
 	protected $template;
 
 	/** @var  Registry */
-	protected $params;
+	protected Registry $params;
 
 	/**
 	 * Execute and display a template script.
@@ -79,14 +80,13 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
-	protected function _prepareDocument()
+	protected function _prepareDocument(): void
 	{
 		$app     = Factory::getApplication('site');
 		$menus   = $app->getMenu()->getActive();
 		$this->params->merge($menus->params);
-
-		$title   = null;
 	}
 }
