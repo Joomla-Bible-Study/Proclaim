@@ -429,8 +429,7 @@ class CWMMessageTable extends Table
 	 */
 	public function store($updateNulls = false)
 	{
-
-        if (!$this->_rules)
+		if (!$this->_rules)
 		{
 			$this->setRules('{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}');
 		}
@@ -475,9 +474,7 @@ class CWMMessageTable extends Table
 	 */
 	protected function _getAssetTitle()
 	{
-		$title = 'JBS Message: ' . $this->studytitle;
-
-		return $title;
+		return 'JBS Message: ' . $this->studytitle;
 	}
 
 	/**

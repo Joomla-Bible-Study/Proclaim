@@ -136,7 +136,7 @@ class CWMMessageModel extends AdminModel
 	 *
 	 * @return string JSON Object containing the topics
 	 *
-	 * @throws \JsonException
+	 * @throws \Exception
 	 * @since 7.0.1
 	 */
 	public function getAlltopics()

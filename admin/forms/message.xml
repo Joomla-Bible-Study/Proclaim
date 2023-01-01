@@ -136,9 +136,6 @@
 		       translate_label="false" class="inputbox" filter="rules" component="com_proclaim"
 		       section="message" validate="rules"/>
 
-		<field name="created_by" type="user"
-		       label="JGLOBAL_FIELD_CREATED_BY_LABEL" description=""/>
-
 		<field name="user_name" type="text"
 		       label="JGLOBAL_FIELD_CREATED_BY_ALIAS_LABEL" description=""
 		       class="inputbox" size="20"/>
