@@ -9,8 +9,9 @@
  * */
 namespace CWM\Component\Proclaim\Site\Model;
 
-// No Direct Access
-defined('_JEXEC') or die;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 use JApplicationSite;
 use Joomla\Database\DatabaseQuery;

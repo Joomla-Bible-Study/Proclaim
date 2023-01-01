@@ -8,25 +8,20 @@
  * @link       https://www.christianwebministries.org
  * */
 namespace CWM\Component\Proclaim\Site\View\CWMSeriesDisplays;
-// No Direct Access
-defined('_JEXEC') or die;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 use JApplicationSite;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Html\HTMLHelper;
 use CWM\Component\Proclaim\Site\Helper\CWMImages;
 use Joomla\CMS\Uri\Uri;
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Router\Route;
-use CWM\Component\Proclaim\Site\Helper\CWMMedia;
-use CWM\Component\Proclaim\Site\Helper\CWMListing;
-use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
 use CWM\Component\Proclaim\Site\Helper\CWMPagebuilder;
-use Joomla\CMS\Menu\SiteMenu;
 
 /**
  * View class for SeriesDisplays

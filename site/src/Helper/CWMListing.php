@@ -9,8 +9,10 @@
  * */
 
 namespace CWM\Component\Proclaim\Site\Helper;
-// No Direct Access
-defined('_JEXEC') or die;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 // Always load JBSM API if it exists.
 $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';

@@ -8,8 +8,11 @@
  * @link       https://www.christianwebministries.org
  * @since      7.1.0
  * */
-// No Direct Access
-defined('_JEXEC') or die;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 ?>
 <input name="option" value="com_proclaim" type="hidden"/>
 <input name="task" value="" type="hidden"/>

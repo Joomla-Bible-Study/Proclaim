@@ -8,29 +8,19 @@
  * @link       https://www.christianwebministries.org
  * */
 namespace CWM\Component\Proclaim\Site\View\CWMServersList;
-// No Direct Access
-defined('_JEXEC') or die;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use Joomla\CMS\Plugin\PluginHelper;
-use CWM\Component\Proclaim\Site\Helper\CWMListing;
-use CWM\Component\Proclaim\Site\Helper\CWMShowScripture;
-use CWM\Component\Proclaim\Site\Helper\CWMHelperRoute;
-use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
-use CWM\Component\Proclaim\Site\Helper\CWMRelatedstudies;
-use CWM\Component\Proclaim\Site\Helper\CWMPagebuilder;
-use CWM\Component\Proclaim\Site\Helper\CWMPodcastsubscribe;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
-use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\Registry\Registry;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Router\Route;
-use mysql_xdevapi\Exception;
 
 /**
  * View class for Servers

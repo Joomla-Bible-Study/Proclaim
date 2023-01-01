@@ -9,7 +9,9 @@
 
 namespace CWM\Component\Proclaim\Site\Service;
 
-defined('_JEXEC') or die;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Site\Service\ProclaimNomenuRules as NomenuRules;
 use Joomla\CMS\Application\SiteApplication;

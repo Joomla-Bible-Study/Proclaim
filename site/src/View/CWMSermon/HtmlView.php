@@ -8,9 +8,11 @@
  * @link       https://www.christianwebministries.org
  * */
 namespace CWM\Component\Proclaim\Site\View\CWMSermon;
-defined('_JEXEC') or die;
 
-// No Direct Access
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
 use CWM\Component\Proclaim\Site\Helper\CWMListing;
 use CWM\Component\Proclaim\Site\Helper\CWMPagebuilder;

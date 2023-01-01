@@ -7,14 +7,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-// No Direct Access
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use Joomla\CMS\Router\Route;
 use CWM\Component\Proclaim\Site\Helper\CWMListing;
-use Joomla\CMS\Html\HtmlHelper;
 use Joomla\CMS\Language\Text;
-use CWM\Component\Proclaim\Site\Helper\CWMTeacher;
-defined('_JEXEC') or die;
-
 
 $listing = new CWMListing;
 $teacher = new CWMListing;

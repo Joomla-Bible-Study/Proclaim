@@ -19,7 +19,9 @@ use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Input\Input;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 
-defined('_JEXEC') or die;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 /**
  * View class for Messagetype

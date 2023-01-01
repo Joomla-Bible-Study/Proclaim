@@ -9,14 +9,13 @@
  * */
 namespace CWM\Component\Proclaim\Site\Model;
 
-// No Direct Access
-defined('_JEXEC') or die;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
-use JApplicationSite;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
-use CWM\Component\Proclaim\Administrator\Controller\CWMMediaFilesController;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Helper\TagsHelper;
 /**

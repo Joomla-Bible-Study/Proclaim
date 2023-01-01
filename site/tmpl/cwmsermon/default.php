@@ -7,11 +7,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-// No Direct Access
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Factory;
 
-defined('_JEXEC') or die;
 ?>
 <div class="container-fluid"> <!-- This div is the container for the whole page --><?php
 

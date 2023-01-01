@@ -9,8 +9,9 @@
  * */
 namespace CWM\Component\Proclaim\Site\View\CWMLandingPage;
 
-// No Direct Access
-defined('_JEXEC') or die;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Object\CMSObject;
 use Joomla\Registry\Registry;
@@ -19,6 +20,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Component\ComponentHelper;
 use CWM\Component\Proclaim\Site\Helper\CWMImages;
 use Joomla\CMS\Uri\Uri;
+
 /**
  * Landing page list view class
  *

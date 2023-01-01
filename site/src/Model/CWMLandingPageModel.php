@@ -9,10 +9,11 @@
  * */
 namespace CWM\Component\Proclaim\Site\Model;
 
-// No Direct Access
-defined('_JEXEC') or die;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use Joomla\CMS\Factory;
-use Joomla\Database\DatabaseQuery;
 use Joomla\Registry\Registry;
 use Joomla\CMS\MVC\Model\ListModel;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;

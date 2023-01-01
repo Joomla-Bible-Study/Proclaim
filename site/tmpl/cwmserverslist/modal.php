@@ -7,13 +7,15 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-// No Direct Access
-defined('_JEXEC') or die;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use Joomla\CMS\Html\HtmlHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
-//HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 HtmlHelper::_('behavior.framework', true);
 HtmlHelper::_('formbehavior.chosen', 'select');

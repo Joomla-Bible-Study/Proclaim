@@ -8,19 +8,20 @@
  * @link       https://www.christianwebministries.org
  * */
 namespace CWM\Component\Proclaim\Site\Model;
-// No Direct Access
-defined('_JEXEC') or die;
 
-use CWM\Component\Proclaim\Administrator\Model;
-// Base this model on the backend version.
-//JLoader::register('BiblestudyModelServers', JPATH_ADMINISTRATOR . '/components/com_proclaim/models/ServersController.php');
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
+use CWM\Component\Proclaim\Administrator\Model\CWMServersModel;
+
 /**
  * Servers model class
  *
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CWMServersListModel extends servers
+class CWMServersListModel extends CWMServersModel
 {
 	// Holder.
 }

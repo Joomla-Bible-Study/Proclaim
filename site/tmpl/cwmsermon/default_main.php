@@ -7,16 +7,17 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-// No Direct Access
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use CWM\Component\Proclaim\Site\Helper\CWMListing;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CWMIcon;
 
-defined('_JEXEC') or die;
-
 // Create shortcuts to some parameters.
-
 /** @type Joomla\Registry\Registry $params */
 $params = $this->item->params;
 $user = Factory::getApplication()->getSession()->get('user');

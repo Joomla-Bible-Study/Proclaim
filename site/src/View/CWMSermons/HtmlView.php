@@ -10,8 +10,9 @@
 
 namespace CWM\Component\Proclaim\Site\View\CWMSermons;
 
-// No Direct Access
-defined('_JEXEC') or die;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Lib\CWMStats;
 use CWM\Component\Proclaim\Site\Helper\CWMImages;
@@ -23,8 +24,6 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
-use Joomla\CMS\Form\Filter;
-
 
 /**
  * View for Sermons class

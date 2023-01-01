@@ -10,8 +10,9 @@
 
 namespace CWM\Component\Proclaim\Site\Helper;
 
-defined('_JEXEC') or die;
-jimport('joomla.html.parameter');
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;

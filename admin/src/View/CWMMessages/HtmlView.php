@@ -10,7 +10,9 @@
 
 namespace CWM\Component\Proclaim\Administrator\View\CWMMessages;
 
-defined('_JEXEC') or die;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Extension\ProclaimComponent;
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;

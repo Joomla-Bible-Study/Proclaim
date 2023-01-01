@@ -7,18 +7,17 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-// No Direct Access
-defined('_JEXEC') or die;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Site\Helper\CWMListing;
 use CWM\Component\Proclaim\Site\Helper\CWMTeacher;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
-use Joomla\CMS\HTML\HTMLHelper;
-
 
 $CWMTeacher   = new CWMTeacher;
 $teachers     = $CWMTeacher->getTeachersFluid($this->params);
@@ -26,7 +25,6 @@ $listing      = new CWMListing;
 $classelement = $listing->createelement($this->params->get('studies_element'));
 $app          = Factory::getApplication();
 $itemid       = $app->input->get('Itemid');
-
 
 ?>
 
