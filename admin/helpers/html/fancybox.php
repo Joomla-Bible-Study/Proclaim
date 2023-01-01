@@ -22,7 +22,7 @@ abstract class JHtmlFancybox
 	 * @var    array  Array containing information for loaded files
 	 * @since  9.0.0
 	 */
-	protected static $loaded = array();
+	protected static array $loaded = array();
 
 	/**
 	 * Method to load the fancybox JavaScript framework into the document head
@@ -36,7 +36,7 @@ abstract class JHtmlFancybox
 	 *
 	 * @since   9.0.0
 	 */
-	public static function framework($option = false, $mouseweel = false)
+	public static function framework(bool $option = false, bool $mouseweel = false): void
 	{
 		// Only load once
 		if (!empty(self::$loaded[__METHOD__]))
@@ -68,7 +68,7 @@ abstract class JHtmlFancybox
 	 *
 	 * @since   3.0
 	 */
-	public static function loadCss($option = false)
+	public static function loadCss(bool $option = false): void
 	{
 		HTMLHelper::stylesheet('media/com_proclaim/fancybox/jquery.fancybox.min.css');
 		HTMLHelper::stylesheet('media/com_proclaim/css/bsms.fancybox.min.css');
