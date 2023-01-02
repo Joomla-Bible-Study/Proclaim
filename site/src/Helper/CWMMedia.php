@@ -661,6 +661,15 @@ class CWMMedia
 
 				switch ($player->type)
 				{
+					case 1: // Popup window
+						$playercode = "<a style='color: #5F5A58;' href=\"javascript:;\"" .
+							" onclick=\"window.open('index.php?option=com_proclaim&amp;player="
+							. $params->toObject()->player .
+							"&amp;view=cwmpopup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" .
+							$player->playerwidth . ",height=" . $player->playerheight . "'); return false\"  class=\"jbsmplayerlink\">"
+							. $image . "</a>";
+						break;
+
 					case 2: // New window - popup code added here because new window code does not work (Tom 10-12-2022)
 						$return     = base64_encode($path);
 						$playercode = '<a href="javascript:;" onclick="window.open(\'index.php?option=com_proclaim&amp;' .
@@ -672,28 +681,27 @@ class CWMMedia
 					case 3: // Squeezebox view
 						return $this->rendersb($media, $params, $player, $image, $path, true);
 						break;
-
-					case 1: // Popup window
-						$playercode = "<a style='color: #5F5A58;' href=\"javascript:;\"" .
-							" onclick=\"window.open('index.php?option=com_proclaim&amp;player="
-							. $params->toObject()->player .
-							"&amp;view=cwmpopup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" .
-							$player->playerwidth . ",height=" . $player->playerheight . "'); return false\"  class=\"jbsmplayerlink\">"
-							. $image . "</a>";
-						break;
 				}
 
 				return $playercode;
 
-			case 7:
+			case 7: // legacy internal player
 			case 1: // Internal
 				$playercode = '';
 
 				switch ($player->type)
 				{
-					case 3: // Squeezebox view
-
-						return $this->rendersb($media, $params, $player, $image, $path);
+					case 1: // Popup
+						// Add space for popup window
+						$diff                 = $params->get('player_width') - $params->get('playerwidth');
+						$player->playerwidth  += abs($diff) + 10;
+						$player->playerheight += $params->get('popupmargin', '50');
+						$playercode           = "<a style='color: #5F5A58;' href=\"javascript:;\"" .
+							" onclick=\"window.open('index.php?option=com_proclaim&amp;player="
+							. $player->player
+							. "&amp;view=cwmpopup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width="
+							. $player->playerwidth . ", height=" .
+							$player->playerheight . "'); return false\" class=\"jbsmplayerlink\">" . $image . "</a>";
 						break;
 
 					case 2: // Inline
@@ -730,17 +738,9 @@ class CWMMedia
 
 						break;
 
-					case 1: // Popup
-						// Add space for popup window
-						$diff                 = $params->get('player_width') - $params->get('playerwidth');
-						$player->playerwidth  += abs($diff) + 10;
-						$player->playerheight += $params->get('popupmargin', '50');
-						$playercode           = "<a style='color: #5F5A58;' href=\"javascript:;\"" .
-							" onclick=\"window.open('index.php?option=com_proclaim&amp;player="
-							. $player->player
-							. "&amp;view=cwmpopup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width="
-							. $player->playerwidth . ", height=" .
-							$player->playerheight . "'); return false\" class=\"jbsmplayerlink\">" . $image . "</a>";
+					case 3: // Squeezebox view
+
+						return $this->rendersb($media, $params, $player, $image, $path);
 						break;
 				}
 
@@ -763,6 +763,8 @@ class CWMMedia
 						$mediacode  = $this->getAVmediacode($media->mediacode, $media);
 						$playercode = HtmlHelper::_('content.prepare', $mediacode);
 						break;
+
+					// no squeezebox available
 				}
 
 				return $playercode;
@@ -804,7 +806,7 @@ class CWMMedia
 	{
 		HtmlHelper::_('fancybox.framework', true, true);
 
-		if ($player->player === '7' && !$direct)
+		if (($player->player === '7' && !$direct) || (preg_match('/audio/', $media->params->get('mime_type')) === 1 && $direct))
 		{
 			$player->playerheight = '40';
 		}
@@ -820,11 +822,26 @@ class CWMMedia
 
 		if (preg_match('(youtube.com|youtu.be|vimeo.com)', $path) === 1)
 		{
+			HTMLHelper::_('jwplayer.framework');
+
 			return '<a data-fancybox class="playhit" data-id="' . $media->id . '" data-options=\'{"src" : "' . $path . '", "autoplay" : "' .
 				(int) $params->get('autostart', false) . '", "controls" : "' . (int) $params->get('controls') .
 				'", "caption" : "' . $media->studytitle . ' - ' .
 				$media->teachername . '"}\'  href="javascript:;">' . $image . '</a>';
 		}
+
+		if ($direct)
+		{
+			// use data-type=video for both video and audio, this is a suggestion of fancyapps. See issue 2244 in github project fancybox
+			return '<a data-fancybox data-type="video" class="playhit" data-id="' . $media->id .
+				'" data-width="' . $player->playerwidth . '" data-height="' . $player->playerheight .
+				'" data-options=\'{"src" : "' . $path .
+				'", "controls" : "' . (int) $params->get('controls') .
+				'", "caption" : "' . $media->studytitle . ' - ' . $media->teachername .
+				'"}\'  href="javascript:;">' . $image . '</a>';
+		}
+		
+		HTMLHelper::_('jwplayer.framework');
 
 		return '<a data-src="' . $path . '" data-id="' . $media->id . '" id="linkmedia' . $media->id . '" title="' . $params->get('filename') .
 			'" class="fancybox fancybox_jwplayer hitplay" potext="' . $popout . '" ptype="' . $player->player .

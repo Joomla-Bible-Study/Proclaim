@@ -45,7 +45,7 @@ abstract class JHtmlFancybox
 		}
 
 		HTMLHelper::_('jquery.framework');
-		HTMLHelper::_('jwplayer.framework');
+		// HTMLHelper::_('jwplayer.framework');
 		HTMLHelper::script('media/com_proclaim/fancybox/jquery.fancybox.min.js');
 		HTMLHelper::script('media/com_proclaim/js/fancybox.min.js');
 
