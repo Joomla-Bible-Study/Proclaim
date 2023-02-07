@@ -190,7 +190,7 @@ $simple = CWMHelper::getSimpleView();
 				<col class="col1">
 				<col class="col2">
 				<thead class="thead-light">
-				<tr><p style="text-align: center;"><?php echo Text::_('JBS_CPL_GENERAL_STAT'); ?> </p></tr>
+				<tr><span style="text-align: center;"><?php echo Text::_('JBS_CPL_GENERAL_STAT'); ?> </span></tr>
 				<tr>
 					<th><?php echo Text::_('JBS_CPL_STATISTIC'); ?></th>
 					<th><?php echo Text::_('JBS_CPL_VALUE'); ?></th>

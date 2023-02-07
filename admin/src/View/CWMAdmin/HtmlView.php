@@ -341,7 +341,6 @@ class HtmlView extends BaseHtmlView
 
 		$toolbar = Toolbar::getInstance();
 
-		/** @noinspection PhpMethodOrClassCallIsNotCaseSensitiveInspection */
 		ToolbarHelper::title(Text::_('JBS_CMN_ADMINISTRATION'), 'options');
 		$toolbar->preferences('com_proclaim','JBS_ADM_PERMISSIONS');
 		ToolbarHelper::divider();
