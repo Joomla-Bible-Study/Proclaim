@@ -29,17 +29,14 @@ class CWMImages
 	/**
 	 * Main Study Image
 	 *
-	 * @param   Registry  $params  Sermon Params
+	 * @param   Registry|null  $params  Sermon Params
 	 *
 	 * @return object
 	 *
 	 * @since 7.0
 	 */
-	public static function mainStudyImage($params = null)
+	public static function mainStudyImage(Registry $params = null)
 	{
-		$path  = null;
-		$image = null;
-
 		if ($params === null)
 		{
 			$database = Factory::getContainer()->get('DatabaseDriver');
@@ -75,7 +72,7 @@ class CWMImages
 	 *
 	 * @since 7.0
 	 */
-	public static function getImagePath($path)
+	public static function getImagePath(string $path)
 	{
 		$tmp = new \stdClass;
 		jimport('joomla.filesystem.folder');
@@ -136,7 +133,7 @@ class CWMImages
 	 *
 	 * @since 7.0
 	 */
-	public static function getStudyThumbnail($image = 'openbible.png')
+	public static function getStudyThumbnail(string $image = 'openbible.png')
 	{
 		$folder = self::getStudiesImageFolder();
 		$path   = $folder . '/' . $image;
@@ -170,7 +167,7 @@ class CWMImages
 	 *
 	 * @since 7.0
 	 */
-	public static function getSeriesThumbnail($image = 'openbible.png')
+	public static function getSeriesThumbnail(string $image = 'openbible.png')
 	{
 		$folder = self::getSeriesImageFolder();
 		$path   = $folder . '/' . $image;
@@ -198,16 +195,21 @@ class CWMImages
 	/**
 	 * Get Teacher Thumbnail
 	 *
-	 * @param   string  $image1  ?
-	 * @param   string  $image2  ?
+	 * @param   string|null  $image1  ?
+	 * @param   string|null  $image2  ?
 	 *
 	 * @return object
 	 *
 	 * @since 7.0
 	 */
-	public static function getTeacherThumbnail($image1 = null, $image2 = null)
+	public static function getTeacherThumbnail(?string $image1 = '', ?string $image2 = '')
 	{
 		$folder = self::getTeacherImageFolder();
+
+		if ($image1 === null && $image2 === null)
+		{
+			return self::getImagePath('');
+		}
 
 		if (!$image1 || $image1 === '0' || strncmp($image1, '- ', 2) === 0)
 		{
@@ -246,19 +248,24 @@ class CWMImages
 	/**
 	 * Get Teacher Image
 	 *
-	 * @param   string  $image1  ?
-	 * @param   string  $image2  ?
+	 * @param   string|null  $image1  ?
+	 * @param   string|null  $image2  ?
 	 *
 	 * @return object
 	 *
 	 * @since 7.0
 	 */
-	public static function getTeacherImage($image1 = null, $image2 = null)
+	public static function getTeacherImage(string $image1 = null, string $image2 = null)
 	{
 		$folder = self::getTeacherImageFolder();
-		$path   = null;
+		$path   = '';
 
-		if (!$image1 || $image1 === '0' || strncmp($image1, '- ', 2) === 0)
+		if ($image1 === null && $image2 === null)
+		{
+			return self::getImagePath($path);
+		}
+
+		if (!$image1 || strncmp($image1, '- ', 2) === 0)
 		{
 			$path = $image2;
 
@@ -267,7 +274,7 @@ class CWMImages
 				$path = $folder . '/' . $image2;
 			}
 		}
-		elseif ($image1)
+		else
 		{
 			$path = $folder . '/' . $image1;
 
@@ -290,12 +297,16 @@ class CWMImages
 	 *
 	 * @since 7.0
 	 */
-	public static function getMediaImage($media1 = null, $media2 = null)
+	public static function getMediaImage(string $media1 = '', string $media2 = '')
 	{
 		$folder = self::getMediaImageFolder();
-		$path   = null;
 
-		if (!$media1 || $media1 === '0' || strncmp($media1, '- ', 2) === 0)
+		if ($media1 === null && $media2 === null)
+		{
+			return self::getImagePath('');
+		}
+
+		if (!$media1 || strncmp($media1, '- ', 2) === 0)
 		{
 			$path = $media2;
 
@@ -334,6 +345,7 @@ class CWMImages
 	 *
 	 * @return object
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public static function getShowHide()

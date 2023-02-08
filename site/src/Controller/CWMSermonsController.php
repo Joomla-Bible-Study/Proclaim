@@ -88,7 +88,7 @@ class CWMSermonsController extends BaseController
 	{
 		$app      = Factory::getApplication();
 		$getMedia = new CWMMedia;
-		$getMedia->hitPlay($app->input->get('id', '', 'int'));
+		$getMedia->hitPlay((int) $app->input->get('id', '', 'int'));
 
 		// Now the hit has been updated will redirect to the url.
 		$return = $app->input->get('return');
