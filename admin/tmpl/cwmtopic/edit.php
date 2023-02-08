@@ -8,14 +8,14 @@
  * @link       https://www.christianwebministries.org
  * */
 
-// No Direct Access
-use Joomla\CMS\Factory;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\Input\Input;
-
-defined('_JEXEC') or die;
 
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();

@@ -10,12 +10,14 @@
 
 namespace CWM\Component\Proclaim\Administrator\Model;
 
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use CWM\Component\Proclaim\Administrator\Lib\CWMAssets;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Model\ListModel;
-
-defined('_JEXEC') or die;
 
 /**
  * class Assets model

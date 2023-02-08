@@ -68,7 +68,7 @@ class CWMSermonModel extends FormModel
 	/**
 	 * Method to get study data.
 	 *
-	 * @param   int  $pk  The id of the study.
+	 * @param   int|null  $pk  The id of the study.
 	 *
 	 * @return    mixed    Menu item data object on success, false on failure.
 	 *
@@ -76,7 +76,7 @@ class CWMSermonModel extends FormModel
 	 * @todo  this look like it is not needed. bcc
 	 * @since 7.1.0
 	 */
-	public function &getItem($pk = null)
+	public function &getItem(?int $pk = null)
 	{
 		$user = Factory::getApplication()->getIdentity();
 
@@ -235,7 +235,7 @@ class CWMSermonModel extends FormModel
 					$user     = Factory::getApplication()->getIdentity();
 					$groups = $user->getAuthorisedViewLevels();
 
-					$data->params->set('access-view', in_array($data->access, $groups));
+					$data->params->set('access-view', in_array($data->access, $groups, true));
 				}
 
 				$this->_item[$pk] = $data;

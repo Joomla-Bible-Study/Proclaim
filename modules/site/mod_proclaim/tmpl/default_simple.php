@@ -8,19 +8,17 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        https://www.christianwebministries.org
  * */
-use Joomla\CMS\HTML\HTMLHelper;
-use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use CWM\Component\Proclaim\Site\Helper\CWMListing;
 use Joomla\CMS\Language\Text;
 
-defined('_JEXEC') or die;
 $show_link = $params->get('show_link', 1);
 
-
 $Listing = new CWMListing; ?>
-
-
-
 
   <div class="row-fluid span12">
     <h5>

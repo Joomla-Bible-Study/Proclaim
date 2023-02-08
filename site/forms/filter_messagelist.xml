@@ -28,7 +28,7 @@
 		</field>
 		<field
 				name="book"
-				type="type="RowOptions""
+				type="RowOptions"
 				label="JBS_CMN_SELECT_BOOK"
 				description="JBS_CMN_SELECT_BOOK_DESC"
 				onchange="this.form.submit();"

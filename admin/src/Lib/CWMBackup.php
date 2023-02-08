@@ -10,16 +10,16 @@
 
 namespace CWM\Component\Proclaim\Administrator\Lib;
 
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use CWM\Component\Proclaim\Administrator\Helper\CWMDbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
-use Joomla\Application\WebApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Uri\Uri;
-
-
-defined('_JEXEC') or die;
 
 /**
  * JBS Export class
@@ -319,9 +319,6 @@ class CWMBackup
 	{
 		// Clears file status cache
 		clearstatcache();
-		// @todo fix this issue
-		//$jweb = new JApplicationWeb;
-		//(new WebApplication($controllerResolver, $router))->clearHeaders();
 
 		// Turn off output buffering to decrease cpu usage
 		@ob_end_clean();

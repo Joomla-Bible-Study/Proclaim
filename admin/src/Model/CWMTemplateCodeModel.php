@@ -10,15 +10,16 @@
 
 namespace CWM\Component\Proclaim\Administrator\Model;
 
-// No Direct Access
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\Input\Input;
-
-defined('_JEXEC') or die;
 
 /**
  * HelloWorld Model

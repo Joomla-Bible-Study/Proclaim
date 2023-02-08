@@ -10,6 +10,10 @@
 
 namespace CWM\Component\Proclaim\Administrator\Model;
 
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use CWM\Component\Proclaim\Administrator\Helper\CWMDbHelper;
 use CWM\Component\Proclaim\Administrator\Lib\CWMAssets;
 use CWM\Component\Proclaim\Administrator\Lib\CWMBackup;
@@ -20,8 +24,6 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Model\BaseModel;
 use Joomla\Database\DatabaseDriver;
-
-defined('_JEXEC') or die;
 
 // Always load CWM API if it exists.
 $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';

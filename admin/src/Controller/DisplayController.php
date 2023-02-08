@@ -30,7 +30,7 @@ class DisplayController extends BaseController
 	 * @var    string
 	 * @since  1.6
 	 */
-	protected $default_view = 'CWMCpanel';
+	protected $default_view = 'cwmcpanel';
 
 	/**
 	 * Method to display a view.

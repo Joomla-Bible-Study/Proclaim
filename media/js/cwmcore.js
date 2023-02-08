@@ -1,3 +1,11 @@
+/**
+ * @package     Proclaim.Core
+ * @subpackage  com_proclaim
+ *
+ * @copyright   Copyright (C) 2005 - 2023 Open Source Matters, Inc. All rights
+ *   reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ */
 $(document).ready(function () {
 	$('.btnPlay').click(function () {
 		var mediaId = $(this).attr('alt')
@@ -74,7 +82,7 @@ $(document).ready(function () {
 		var activeDir = targetImage.attr('src').split('/')
 		activeDir.pop() //Remove the previous image
 
-		if ($(this).val().substr(0, 1) == 0)
+		if ($(this).val().substr(0, 1) === 0)
 		{
 			targetImage.hide()
 		}
@@ -95,7 +103,7 @@ $(document).ready(function () {
 		eval($('#type').find('option:selected').attr('value') + '()')
 	})
 
-	function canvasItemFunctions ()
+	function canvasItemFunctions()
 	{
 		$('#canvasDeleteItem').click(function () {
 			//Delete Item, and update JSON string
@@ -112,7 +120,7 @@ $(document).ready(function () {
 	/**
 	 * @desc Creates Controls for a item on the canvas.
 	 */
-	function canvasItemControls (itemLabel)
+	function canvasItemControls(itemLabel)
 	{
 		var itemOptions = '<div id="canvasItemOptions">&nbsp;</div>'
 		var moveItem = '<div id="canvasMoveItem">&nbsp;</div>'
@@ -127,7 +135,7 @@ $(document).ready(function () {
 		canvasItemFunctions()
 	}
 
-	function tmplList ()
+	function tmplList()
 	{
 		var canvasListItem = '<div id="canvasListItem" class="canvasItem"></div>'
 
@@ -135,53 +143,54 @@ $(document).ready(function () {
 		canvasItemControls('List Items')
 	}
 
-	function tmplListItem ()
+	function tmplListItem()
 	{
 		alert('this is the teacher list setup')
 	}
 
-	function tmplSingleItem ()
+	function tmplSingleItem()
 	{
 		alert('this is the teacher list setup')
 	}
 
-	function tmplModuleList ()
+	function tmplModuleList()
 	{
 		alert('this is the teacher list setup')
 	}
 
-	function tmplModuleItem ()
+	function tmplModuleItem()
 	{
 		alert('this is the teacher list setup')
 	}
 
-	function tmplPopup ()
+	function tmplPopup()
 	{
 		alert('this is the teacher list setup')
 	}
 })
 
-function goTo ()
+function goTo()
 {
-	var sE = null, url
+	let sE = null, url
 	if (document.getElementById)
 	{
 		sE = document.getElementById('urlList')
 	}
 	else
 	{
-		if (document.all)
+		if (document.getElementsByName('urlList'))
 		{
-			sE = document.all['urlList']
+			sE = document.getElementsByName('urlList')
 		}
 	}
+
 	if (sE && (url = sE.options[sE.selectedIndex].value))
 	{
 		location.href = url
 	}
 }
 
-function ReverseDisplay ()
+function ReverseDisplay()
 {
 	var ele = document.getElementById('scripture')
 	var text = document.getElementById('heading')
@@ -197,17 +206,17 @@ function ReverseDisplay ()
 	}
 }
 
-function HideContent (d)
+function HideContent(d)
 {
 	document.getElementById(d).style.display = 'none'
 }
 
-function ShowContent (d)
+function ShowContent(d)
 {
 	document.getElementById(d).style.display = 'block'
 }
 
-function ReverseDisplay2 (d)
+function ReverseDisplay2(d)
 {
 	if (document.getElementById(d).style.display == 'none')
 	{
@@ -219,7 +228,7 @@ function ReverseDisplay2 (d)
 	}
 }
 
-function decOnly (i)
+function decOnly(i)
 {
 	var t = i.value
 	if (t.length > 0)
@@ -235,7 +244,7 @@ function decOnly (i)
 	i.value = s.join('')
 }
 
-function bandwidth (bytees, type)
+function bandwidth(bytees, type)
 {
 	var value = bytees
 	var res
@@ -273,12 +282,12 @@ function bandwidth (bytees, type)
 	}
 }
 
-function transferFileSize ()
+function transferFileSize()
 {
 	var size = document.getElementById('Text1').value
 	var ty = document.getElementById('Select1').value
 	var ss = bandwidth(size, ty)
-	if (ss == 'error')
+	if (ss === 'error')
 	{
 		alert('Numbers only please.')
 		return false

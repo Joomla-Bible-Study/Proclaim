@@ -12,12 +12,15 @@
 namespace CWM\Component\Proclaim\Administrator\View\CWMTemplateCodes;
 
 // No Direct Access
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use CWM\Component\Proclaim\Administrator\Extension\ProclaimComponent;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\Component\Content\Administrator\Extension\ContentComponent;
+use Joomla\Component\Content\Administrator\Helper\ContentHelper;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -56,28 +59,12 @@ class HtmlView extends BaseHtmlView
 	protected $state;
 
 	/**
-	 * Can Do
+	 * Is this view an Empty State
 	 *
-	 * @var object
-	 * @since    7.0.0
+	 * @var   boolean
+	 * @since 4.0.0
 	 */
-	protected $canDo;
-
-	/**
-	 * Filter Levels
-	 *
-	 * @var array
-	 * @since    7.0.0
-	 */
-	public $f_levels;
-
-	/**
-	 * Side Bar
-	 *
-	 * @var string
-	 * @since    7.0.0
-	 */
-	public $sidebar;
+	private $isEmptyState = false;
 
 	/**
 	 * Execute and display a template script.
@@ -97,7 +84,6 @@ class HtmlView extends BaseHtmlView
 		$this->state      = $this->get('State');
 
 		$this->filterForm    = $this->get('FilterForm');
-		$this->canDo      = CWMProclaimHelper::getActions('', 'templatecode');
 
 		// Check for errors.
 		if (\count($errors = $this->get('Errors')))
@@ -155,35 +141,57 @@ class HtmlView extends BaseHtmlView
 	 */
 	protected function addToolbar(): void
 	{
+		$canDo = ContentHelper::getActions('com_proclaim');
+		$user  = $this->getCurrentUser();
+
+		// Get the toolbar object instance
+		$toolbar = Toolbar::getInstance('toolbar');
+
 		ToolbarHelper::title(Text::_('JBS_TPLCODE_TPLCODES'), 'stack stack');
 
-		if ($this->canDo->get('core.create'))
+		if ($canDo->get('core.create'))
 		{
-			ToolbarHelper::addNew('cwmtemplatecode.add');
+			$toolbar->addNew('cwmtemplatecode.add');
 		}
 
-		if ($this->canDo->get('core.edit'))
+		if (!$this->isEmptyState && $canDo->get('core.edit.state'))
 		{
-			ToolbarHelper::editList('cwmtemplatecode.edit');
+			$dropdown = $toolbar->dropdownButton('status-group')
+				->text('JTOOLBAR_CHANGE_STATUS')
+				->toggleSplit(false)
+				->icon('icon-ellipsis-h')
+				->buttonClass('btn btn-action')
+				->listCheck(true);
+
+			$childBar = $dropdown->getChildToolbar();
+
+			if ($canDo->get('core.edit.state'))
+			{
+				$childBar->publish('cwmtemplatecodes.publish');
+				$childBar->unpublish('cwmtemplatecodes.unpublish');
+				$childBar->archive('cwmtemplatecodes.archive');
+
+				if ($this->state->get('filter.published') !== ProclaimComponent::CONDITION_TRASHED)
+				{
+					$childBar->trash('cwmtemplatecodes.trash')->listCheck(true);
+				}
+			}
 		}
 
-		if ($this->canDo->get('core.edit.state'))
+		if (!$this->isEmptyState && $this->state->get('filter.published') == ContentComponent::CONDITION_TRASHED && $canDo->get('core.delete'))
 		{
-			ToolbarHelper::divider();
-			ToolbarHelper::publishList('cwmtemplatecodes.publish');
-			ToolbarHelper::unpublishList('cwmtemplatecodes.unpublish');
-			ToolbarHelper::divider();
-			ToolbarHelper::archiveList('cwmtemplatecodes.archive');
+			$toolbar->delete('cwmtemplatecodes.delete')
+				->text('JTOOLBAR_EMPTY_TRASH')
+				->message('JGLOBAL_CONFIRM_DELETE')
+				->listCheck(true);
 		}
 
-		if ($this->state->get('filter.published') === "-2" && $this->canDo->get('core.delete'))
+		if ($user->authorise('core.admin', 'com_proclaim') || $user->authorise('core.options', 'com_proclaim'))
 		{
-			ToolbarHelper::deleteList('', 'cwmtemplatecodes.delete', 'JTOOLBAR_EMPTY_TRASH');
+			$toolbar->preferences('com_proclaim');
 		}
-		elseif ($this->canDo->get('core.edit.state'))
-		{
-			ToolbarHelper::trash('cwmtemplatecodes.trash');
-		}
+
+		$toolbar->help('Messages', true);
 	}
 
 	/**

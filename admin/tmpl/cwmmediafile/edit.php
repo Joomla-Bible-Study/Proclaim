@@ -8,11 +8,14 @@
  * @link       https://www.christianwebministries.org
  * */
 
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
-defined('_JEXEC') or die;
 $input = Factory::getApplication()->input;
 
 // Set up defaults

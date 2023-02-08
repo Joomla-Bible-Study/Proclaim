@@ -7,14 +7,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-// No Direct Access
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\Input\Input;
 use Symfony\Component\Config\Loader\Loader;
-
-defined('_JEXEC') or die;
-
-jimport('joomla.filesystem.folder');
 
 /**
  * Abstract Server class

@@ -33,7 +33,7 @@ class CWMCommentController extends FormController
 	 * @var   string
 	 * @since 7.0
 	 */
-	protected $view_list = 'CWMComments';
+	protected $view_list = 'cwmcomments';
 
 	/**
 	 * Method to run batch operations.

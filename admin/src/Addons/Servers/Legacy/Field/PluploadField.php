@@ -9,15 +9,15 @@
  * */
 namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Legacy\Field;
 
-// No Direct Access
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Session\Session;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\Uri\Uri;
-
-defined('_JEXEC') or die;
 
 /**
  * Class JFormFieldPlupload

@@ -10,6 +10,10 @@
 
 namespace CWM\Component\Proclaim\Administrator\Field\Modal;
 
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -17,8 +21,6 @@ use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
 use Joomla\Database\ParameterType;
-
-defined('_JEXEC') or die;
 
 /**
  * Supports a modal article picker.

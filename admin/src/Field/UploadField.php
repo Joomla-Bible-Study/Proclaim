@@ -10,12 +10,13 @@
 
 namespace CWM\Component\Proclaim\Administrator\Field;
 
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\Session\Session;
-use Joomla\CMS\Uri\Uri;
-
-defined('_JEXEC') or die;
 
 /**
  * Upload Field class

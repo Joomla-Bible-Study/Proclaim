@@ -7,11 +7,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-// No Direct Access
-defined('_JEXEC') or die;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
@@ -59,19 +62,21 @@ $sortFields = $this->getSortFields();
 								<?php echo HTMLHelper::_('grid.checkall'); ?>
 							</th>
 							<th scope="col" class="w-1 text-center">
-								<?php echo HTMLHelper::_('grid.sort', 'JPUBLISHED', 'series.published', $listDirn, $listOrder); ?>
+								<?php echo HTMLHelper::_('searchtools.sort', 'JPUBLISHED', 'series.published', $listDirn, $listOrder); ?>
 							</th>
 							<th scope="col" style="min-width:100px">
-								<?php echo HTMLHelper::_('grid.sort', 'JBS_CMN_SERIES', 'series.series_text', $listDirn, $listOrder); ?>
+								<?php echo HTMLHelper::_('searchtools.sort', 'JBS_CMN_SERIES', 'series.series_text', $listDirn, $listOrder); ?>
 							</th>
 							<th scope="col" class="w-5 text-center">
-								<?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_ACCESS', 'series.access', $listDirn, $listOrder); ?>
+								<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ACCESS', 'series.access', $listDirn, $listOrder); ?>
 							</th>
-							<th scope="col" class="w-5 text-center">
-								<?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
-							</th>
+							<?php if (Multilanguage::isEnabled()) : ?>
+								<th scope="col" class="w-10 d-none d-md-table-cell">
+									<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
+								</th>
+							<?php endif; ?>
 							<th scope="col" class="w-3 d-none d-lg-table-cell">
-								<?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_ID', 'series.id', $listDirn, $listOrder); ?>
+								<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'series.id', $listDirn, $listOrder); ?>
 							</th>
 						</tr>
 						</thead>
@@ -120,13 +125,11 @@ $sortFields = $this->getSortFields();
 								<td class="small d-none d-md-table-cell">
 									<?php echo $this->escape($item->access_level); ?>
 								</td>
-								<td class="d-none d-lg-table-cell">
-									<?php if ($item->language == '*'): ?>
-										<?php echo Text::alt('JALL', 'language'); ?>
-									<?php else: ?>
-										<?php echo $item->language_title ? $this->escape($item->language_title) : Text::_('JUNDEFINED'); ?>
-									<?php endif; ?>
-								</td>
+								<?php if (Multilanguage::isEnabled()) : ?>
+									<td class="small d-none d-md-table-cell">
+										<?php echo LayoutHelper::render('joomla.content.language', $item); ?>
+									</td>
+								<?php endif; ?>
 								<td class="center hidden-phone">
 									<?php echo (int) $item->id; ?>
 								</td>

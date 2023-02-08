@@ -10,11 +10,13 @@
 
 namespace CWM\Component\Proclaim\Administrator\Helper;
 
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Image\Image;
-
-defined('_JEXEC') or die;
 
 /**
  * Thumbnail helper class

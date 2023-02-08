@@ -10,11 +10,12 @@
 
 namespace CWM\Component\Proclaim\Administrator\Helper;
 
-// No Direct Access
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filter\OutputFilter;
-
-defined('_JEXEC') or die;
 
 /**
  * Class for updating the alias in certain tables

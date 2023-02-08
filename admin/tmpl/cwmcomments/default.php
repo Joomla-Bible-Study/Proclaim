@@ -7,8 +7,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
-// No Direct Access
-defined('_JEXEC') or die;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -76,22 +78,22 @@ $wa->useScript('keepalive')
 								<?php echo HTMLHelper::_('grid.checkall'); ?>
 							</th>
 							<th scope="col" class="w-1 text-center">
-								<?php echo HTMLHelper::_('grid.sort', 'JBS_CMN_PUBLISHED', 'comment.published', $listDirn, $listOrder); ?>
+								<?php echo HTMLHelper::_('searchtools.sort', 'JBS_CMN_PUBLISHED', 'comment.published', $listDirn, $listOrder); ?>
 							</th>
 							<th scope="col" style="min-width:100px">
-								<?php echo HTMLHelper::_('grid.sort', 'JBS_CMN_TITLE', 'study.studytitle', $listDirn, $listOrder); ?>
+								<?php echo HTMLHelper::_('searchtools.sort', 'JBS_CMN_TITLE', 'study.studytitle', $listDirn, $listOrder); ?>
 							</th>
 							<th scope="col" class="w-1 text-center">
-								<?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_ACCESS', 'comment.access', $listDirn, $listOrder); ?>
+								<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ACCESS', 'comment.access', $listDirn, $listOrder); ?>
 							</th>
 							<th scope="col" class="w-1 text-center">
-								<?php echo HTMLHelper::_('grid.sort', 'JBS_CMT_FULL_NAME', 'comment.full_name', $listDirn, $listOrder); ?>
+								<?php echo HTMLHelper::_('searchtools.sort', 'JBS_CMT_FULL_NAME', 'comment.full_name', $listDirn, $listOrder); ?>
 							</th>
 							<th scope="col" class="w-1 text-center">
 								<?php echo Text::_('JBS_CMT_TEXT'); ?>
 							</th>
 							<th scope="col" class="w-1 text-center">
-								<?php echo HTMLHelper::_('grid.sort', 'JBS_CMT_CREATE_DATE', 'comment.studydate', $listDirn, $listOrder); ?>
+								<?php echo HTMLHelper::_('searchtools.sort', 'JBS_CMT_CREATE_DATE', 'comment.studydate', $listDirn, $listOrder); ?>
 							</th>
 							<?php if (Multilanguage::isEnabled()) : ?>
 								<th scope="col" class="w-10 d-none d-md-table-cell">
@@ -99,7 +101,7 @@ $wa->useScript('keepalive')
 								</th>
 							<?php endif; ?>
 							<th scope="col" class="w-3 d-none d-lg-table-cell">
-								<?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_ID', 'comment.id', $listDirn, $listOrder); ?>
+								<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'comment.id', $listDirn, $listOrder); ?>
 							</th>
 						</tr>
 						</thead>

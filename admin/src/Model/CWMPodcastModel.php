@@ -10,14 +10,15 @@
 
 namespace CWM\Component\Proclaim\Administrator\Model;
 
-// No Direct Access
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Table\Table;
-
-defined('_JEXEC') or die;
 
 /**
  * Podcast model class

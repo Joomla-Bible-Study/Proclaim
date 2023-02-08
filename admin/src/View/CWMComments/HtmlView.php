@@ -14,9 +14,8 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMComments;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -121,12 +120,13 @@ class HtmlView extends BaseHtmlView
 	 */
 	protected function addToolbar(): void
 	{
-		$user = Factory::getApplication()->getSession()->get('user');
+		$canDo = ContentHelper::getActions('com_proclaim');
+		$user  = Factory::getApplication()->getSession()->get('user');
 
 		// Get the toolbar object instance
 		$toolbar = Toolbar::getInstance('toolbar');
-		$canDo   = CWMProclaimHelper::getActions('', 'comment');
-		ToolbarHelper::title(Text::_('JBS_CMN_COMMENTS'), 'comments-2 comments-2');
+
+		ToolbarHelper::title(Text::_('JBS_CMN_COMMENTS'), 'comments-2');
 
 		if ($canDo->get('core.create'))
 		{
@@ -141,40 +141,33 @@ class HtmlView extends BaseHtmlView
 			->listCheck(true);
 		$childBar = $dropdown->getChildToolbar();
 
-		if ($canDo->get('core.edit'))
-		{
-			$toolbar->edit('cwmcomment.edit');
-		}
-
 		if ($canDo->get('core.edit.state'))
 		{
-			$toolbar->divider();
-			$toolbar->publish('cwmcomments.publish');
-			$toolbar->unpublish('cwmcomments.unpublish');
+			$childBar->publish('cwmcomments.publish');
+			$childBar->unpublish('cwmcomments.unpublish');
+
+			if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED)
+			{
+				$childBar->trash('cwmcomments.trash');
+			}
+
+			// Add a batch button
+			if ($user->authorise('core.create', 'com_proclaim')
+				&& $user->authorise('core.edit', 'com_proclaim')
+				&& $user->authorise('core.edit.state', 'com_proclaim'))
+			{
+				$childBar->popupButton('batch')
+					->text('JTOOLBAR_BATCH')
+					->selector('collapseModal')
+					->listCheck(true);
+			}
 		}
 
 		if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete'))
 		{
-			$toolbar->divider();
 			$toolbar->delete('', 'cwmcomments.delete')
 				->text('JTOOLBAR_EMPTY_TRASH')
 				->message('JGLOBAL_CONFIRM_DELETE')
-				->listCheck(true);
-		}
-
-		if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED)
-		{
-			$childBar->trash('cwmcomments.trash');
-		}
-
-		// Add a batch button
-		if ($user->authorise('core.create', 'com_proclaim')
-			&& $user->authorise('core.edit', 'com_proclaim')
-			&& $user->authorise('core.edit.state', 'com_proclaim'))
-		{
-			$childBar->popupButton('batch')
-				->text('JTOOLBAR_BATCH')
-				->selector('collapseModal')
 				->listCheck(true);
 		}
 	}

@@ -144,19 +144,21 @@ class HtmlView extends BaseHtmlView
 	 */
 	public function display($tpl = null)
 	{
-        $container = Factory::getContainer();
-        $app = $container->get(SiteApplication::class);
-        Factory::$application = $app;
-        HTMLHelper::script('media/com_proclaim/js/cwmcore.js');
-        $this->form = $this->get('Form');
-        $user           = Factory::getApplication()->getSession()->get('user');
+		$container = Factory::getContainer();
+		$app = $container->get(SiteApplication::class);
+		Factory::$application = $app;
+		HTMLHelper::script('media/com_proclaim/js/cwmcore.js');
+		$this->form = $this->get('Form');
+		$user           = Factory::getApplication()->getSession()->get('user');
 		$CWMListing = new CWMListing;
 		$this->item     = $this->get('Item');
-		//$this->print    = $app->input->getBool('print'); removing this as also remomved in Joomla 4. Browser will do this.
+
+		// $this->print    = $app->input->getBool('print'); removing this as also remomved in Joomla 4. Browser will do this.
 		$this->state    = $this->get('State');
 		$this->user     = $user;
 		$this->comments = $this->get('comments');
-        $this->simple = CWMHelper::getSimpleView();
+		$this->simple = CWMHelper::getSimpleView();
+
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
@@ -186,7 +188,7 @@ class HtmlView extends BaseHtmlView
 		// Add router helpers.
 		$item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;
 
-		//$item->readmore_link = Route::_(CWMHelperRoute::getArticleRoute($item->slug, ''));
+		// $item->readmore_link = Route::_(CWMHelperRoute::getArticleRoute($item->slug, ''));
 
 		// Merge article params. If this is single-article view, menu params override article params
 		// Otherwise, article params override menu item params
@@ -267,7 +269,8 @@ class HtmlView extends BaseHtmlView
 				}
 			}
 		}
-        $this->captchaEnabled = true;
+
+		$this->captchaEnabled = true;
 
 		$this->simple = CWMHelper::getSimpleView();
 
@@ -312,6 +315,7 @@ class HtmlView extends BaseHtmlView
 			$this->item->scripture2 = $pelements->scripture2;
 			$this->item->media      = $pelements->media;
 			$this->item->studydate  = $pelements->studydate;
+
 			if (isset($pelements->secondary_reference))
 			{
 				$this->item->secondary_reference = $pelements->secondary_reference;
@@ -360,25 +364,25 @@ class HtmlView extends BaseHtmlView
 			}
 		}
 
-        PluginHelper::importPlugin('content');
+		PluginHelper::importPlugin('content');
 		$article       = new \stdClass;
 		$article->text = $this->item->scripture1;
-        Factory::getApplication()->triggerEvent('onContentPrepare', array('com_proclaim.sermons', & $article, & $this->item->params, $limitstart = null));
+		Factory::getApplication()->triggerEvent('onContentPrepare', array('com_proclaim.sermons', & $article, & $this->item->params, $limitstart = null));
 		$this->item->scripture1 = $article->text;
 		$article->text          = $this->item->scripture2;
-        Factory::getApplication()->triggerEvent('onContentPrepare', array('com_proclaim.sermons', & $article, & $this->item->params, $limitstart = null));
+		Factory::getApplication()->triggerEvent('onContentPrepare', array('com_proclaim.sermons', & $article, & $this->item->params, $limitstart = null));
 		$this->item->scripture2 = $article->text;
 		$article->text          = $this->item->studyintro;
-        Factory::getApplication()->triggerEvent('onContentPrepare', array('com_proclaim.sermons', & $article, & $this->item->params, $limitstart = null));
+		Factory::getApplication()->triggerEvent('onContentPrepare', array('com_proclaim.sermons', & $article, & $this->item->params, $limitstart = null));
 		$this->item->studyintro = $article->text;
 		$article->text          = $this->item->secondary_reference;
-        Factory::getApplication()->triggerEvent('onContentPrepare', array('com_proclaim.sermons', & $article, & $this->item->params, $limitstart = null));
+		Factory::getApplication()->triggerEvent('onContentPrepare', array('com_proclaim.sermons', & $article, & $this->item->params, $limitstart = null));
 		$this->item->secondary_reference = $article->text;
 		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
 		$this->loadHelper('params');
 
 		// Get the podcast subscription
-        HtmlHelper::_('stylesheet','media/css/podcast.css');
+		HtmlHelper::_('stylesheet', 'media/css/podcast.css');
 		$podcast         = new CWMPodcastSubscribe;
 		$this->subscribe = $podcast->buildSubscribeTable($this->item->params->get('subscribeintro', 'Our Podcasts'));
 
@@ -400,7 +404,9 @@ class HtmlView extends BaseHtmlView
 		// Added database queries from the default template - moved here instead
 		$database = Factory::getContainer()->get('DatabaseDriver');
 		$query    = $database->getQuery(true);
-		$query->select('id')->from('#__menu')->where('link =' . $database->q('index.php?option=com_proclaim&view=cwmsermons'))->where('published = 1');
+		$query->select('id')->from('#__menu')->where('link =' .
+			$database->q('index.php?option=com_proclaim&view=cwmsermons')
+		)->where('published = 1');
 		$database->setQuery($query);
 		$menuid       = $database->loadResult();
 		$this->menuid = $menuid;
@@ -431,7 +437,7 @@ class HtmlView extends BaseHtmlView
 			}
 
 			$limitstart = $app->input->get('limitstart', 'int');
-            Factory::getApplication()->triggerEvent('onContentPrepare', array('com_proclaim.sermon', & $article, & $this->item->params, $limitstart));
+			Factory::getApplication()->triggerEvent('onContentPrepare', array('com_proclaim.sermon', & $article, & $this->item->params, $limitstart));
 			$article->studytext    = $article->text;
 			$this->item->studytext = $article->text;
 		}
@@ -471,6 +477,7 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	protected function _displayPagebreak($tpl)
@@ -484,7 +491,7 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	protected function _prepareDocument()

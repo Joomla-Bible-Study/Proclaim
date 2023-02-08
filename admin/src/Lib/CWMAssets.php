@@ -10,13 +10,12 @@
 
 namespace CWM\Component\Proclaim\Administrator\Lib;
 
-// No Direct Access
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
-
-// Set to use with add hock call.
-
-defined('_JEXEC') or die;
 
 /**
  * Asset Fix class

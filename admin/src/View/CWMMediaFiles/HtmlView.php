@@ -12,9 +12,6 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMMediaFiles;
 
 // No Direct Access
 use CWM\Component\Proclaim\Administrator\Extension\ProclaimComponent;
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
-use JHtml;
-use JHtmlSidebar;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
@@ -170,16 +167,25 @@ class HtmlView extends BaseHtmlView
 
 		if ($canDo->get('core.edit.state'))
 		{
-			$toolbar->edit('cwmmediafile.edit');
-		}
+			$childBar->publish('cwmmediafiles.publish');
+			$childBar->unpublish('cwmmediafiles.unpublish');
+			$childBar->archive('cwmmediafiles.archive');
 
-		if ($canDo->get('core.edit.state'))
-		{
-			$toolbar->divider();
-			$toolbar->publish('cwmmediafiles.publish');
-			$toolbar->unpublish('cwmmediafiles.unpublish');
-			$toolbar->divider();
-			$toolbar->archive('cwmmediafiles.archive');
+			if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED)
+			{
+				$childBar->trash('cwmmediafiles.trash')->listCheck(true);
+			}
+
+			// Add a batch button
+			if ($user->authorise('core.create', 'com_proclaim')
+				&& $user->authorise('core.edit', 'com_proclaim')
+				&& $user->authorise('core.edit.state', 'com_proclaim'))
+			{
+				$childBar->popupButton('batch')
+					->text('JTOOLBAR_BATCH')
+					->selector('collapseModal')
+					->listCheck(true);
+			}
 		}
 
 		if ($this->state->get('filter.published') == ProclaimComponent::CONDITION_TRASHED && $canDo->get('core.delete'))
@@ -187,22 +193,6 @@ class HtmlView extends BaseHtmlView
 			$toolbar->delete('cwmmediafiles.delete')
 				->text('JTOOLBAR_EMPTY_TRASH')
 				->message('JGLOBAL_CONFIRM_DELETE')
-				->listCheck(true);
-		}
-
-		if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED)
-		{
-			$childBar->trash('cwmmediafiles.trash')->listCheck(true);
-		}
-
-		// Add a batch button
-		if ($user->authorise('core.create', 'com_proclaim')
-			&& $user->authorise('core.edit', 'com_proclaim')
-			&& $user->authorise('core.edit.state', 'com_proclaim'))
-		{
-			$childBar->popupButton('batch')
-				->text('JTOOLBAR_BATCH')
-				->selector('collapseModal')
 				->listCheck(true);
 		}
 

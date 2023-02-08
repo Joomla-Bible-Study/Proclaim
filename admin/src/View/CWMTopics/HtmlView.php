@@ -10,18 +10,14 @@
 
 namespace CWM\Component\Proclaim\Administrator\View\CWMTopics;
 
-// No Direct Access
-defined('_JEXEC') or die;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
-use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Component\Content\Administrator\Extension\ContentComponent;
@@ -101,7 +97,7 @@ class HtmlView extends BaseHtmlView
 		$this->state      = $this->get('State');
 
 		$this->filterForm = $this->get('FilterForm');
-		$this->canDo      = CWMProclaimHelper::getActions('', 'topic');
+		$this->canDo      = ContentHelper::getActions('com_proclaim');
 
 		// Check for errors.
 		if (\count($errors = $this->get('Errors')))
@@ -137,7 +133,7 @@ class HtmlView extends BaseHtmlView
 		// Get the toolbar object instance
 		$toolbar = Toolbar::getInstance('toolbar');
 
-		ToolbarHelper::title(Text::_('JBS_CMN_TOPICS'), 'tags tags');
+		ToolbarHelper::title(Text::_('JBS_CMN_TOPICS'), 'tags');
 
 		if ($this->canDo->get('core.create'))
 		{
@@ -152,18 +148,16 @@ class HtmlView extends BaseHtmlView
 			->listCheck(true);
 		$childBar = $dropdown->getChildToolbar();
 
-		if ($this->canDo->get('core.edit'))
-		{
-			$toolbar->edit('cwmtopic.edit');
-		}
-
 		if ($this->canDo->get('core.edit.state'))
 		{
-			$toolbar->divider();
-			$toolbar->publish('cwmtopics.publish');
-			$toolbar->unpublish('cwmtopics.unpublish');
-			$toolbar->divider();
-			$toolbar->archive('cwmtopics.archive', 'JTOOLBAR_ARCHIVE');
+			$childBar->publish('cwmtopics.publish');
+			$childBar->unpublish('cwmtopics.unpublish');
+			$childBar->archive('cwmtopics.archive', 'JTOOLBAR_ARCHIVE');
+
+			if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED)
+			{
+				$childBar->trash('cwmtopics.trash')->listCheck(true);
+			}
 		}
 
 		if ($this->state->get('filter.published') === ContentComponent::CONDITION_TRASHED && $this->canDo->get('core.delete'))
@@ -172,11 +166,6 @@ class HtmlView extends BaseHtmlView
 				->text('JTOOLBAR_EMPTY_TRASH')
 				->message('JGLOBAL_CONFIRM_DELETE')
 				->listCheck(true);
-		}
-
-		if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED)
-		{
-			$toolbar->trash('cwmtopics.trash')->listCheck(true);
 		}
 	}
 

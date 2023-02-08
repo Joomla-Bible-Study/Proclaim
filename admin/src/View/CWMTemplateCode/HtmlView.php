@@ -10,16 +10,16 @@
 
 namespace CWM\Component\Proclaim\Administrator\View\CWMTemplateCode;
 
-// No Direct Access
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Client\ClientHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
-use Joomla\Input\Input;
-
-defined('_JEXEC') or die;
 
 /**
  * View class for TemplateCode
@@ -139,7 +139,7 @@ class HtmlView extends BaseHtmlView
 		Factory::getApplication()->input->set('hidemainmenu', true);
 		$isNew = ((int) $this->item->id === 0);
 		$title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
-		ToolbarHelper::title(Text::_('JBS_CMN_TEMPLATECODE') . ': <small><small>[' . $title . ']</small></small>', 'file file');
+		ToolbarHelper::title(Text::_('JBS_CMN_TEMPLATECODE') . ': <small><small>[' . $title . ']</small></small>', 'file');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_proclaim'))
 		{
@@ -161,7 +161,8 @@ class HtmlView extends BaseHtmlView
 		}
 
 		ToolbarHelper::divider();
-		ToolbarHelper::help('templatecodehelp', true);
+
+		ToolbarHelper::help('templatecode', true);
 	}
 
 	/**

@@ -10,13 +10,13 @@
 
 namespace CWM\Component\Proclaim\Administrator\Table;
 
-// No Direct Access
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use CWM\Component\Proclaim\Administrator\Lib\CWMAssets;
-use Joomla\CMS\Table\Asset;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseDriver;
-
-defined('_JEXEC') or die;
 
 /**
  * Seris Table class

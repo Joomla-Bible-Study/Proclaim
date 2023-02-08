@@ -39,7 +39,7 @@ class CWMAssetsController extends BaseController
 	 *
 	 * @since 7.0
 	 */
-	protected $view_list = 'CWMAdmin';
+	protected $view_list = 'cwmadmin';
 
 	/**
 	 * The default view for the display method.
@@ -47,7 +47,7 @@ class CWMAssetsController extends BaseController
 	 * @var    string
 	 * @since  3.0
 	 */
-	protected $default_view = 'CWMAssets';
+	protected $default_view = 'cwmassets';
 
 	/**
 	 * Constructor.

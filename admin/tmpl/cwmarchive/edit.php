@@ -9,7 +9,10 @@
  * @since      7.1.0
  * */
 
-// Load the tooltip behavior.
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -18,8 +21,6 @@ use Joomla\CMS\Router\Route;
 HTMLHelper::_('behavior.formvalidator');
 HTMLHelper::_('jquery.framework');
 HTMLHelper::_('formbehavior.chosen', 'select');
-
-defined('_JEXEC') or die;
 
 Factory::getDocument()->addScriptDeclaration("
 		Joomla.submitbutton = function(task)
