@@ -18,7 +18,6 @@ use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\Registry\Registry;
-use Joomla\Database\DatabaseFactory;
 
 /**
  * class for Translated Helper
@@ -66,24 +65,28 @@ class CWMTranslated
 	 *
 	 * @return string|NULL  translated string or null if topicItem is not initialised
 	 *
+	 * @throws \Exception
 	 * @since    7.0.0
 	 */
-	public static function getTopicItemTranslated($topicItem)
+	public static function getTopicItemTranslated(object $topicItem): ?string
 	{
 		// If there is no topic to translate, just return
 		if ($topicItem)
 		{
 			// First choice: evaluate language strings
-			$itemparams = new Registry;
-			$itemparams->loadString($topicItem->topic_params);
-			$currentLanguage = Factory::getLanguage()->getTag();
-
-			// First choice: string in current language
-			if ($currentLanguage)
+			if ($topicItem->topic_params)
 			{
-				if ($itemparams->get($currentLanguage))
+				$itemparams = new Registry;
+				$itemparams->loadString($topicItem->topic_params);
+				$currentLanguage = Factory::getApplication()->getLanguage()->getTag();
+
+				// First choice: string in current language
+				if ($currentLanguage)
 				{
-					return ($itemparams->get($currentLanguage));
+					if ($itemparams->get($currentLanguage))
+					{
+						return ($itemparams->get($currentLanguage));
+					}
 				}
 			}
 
