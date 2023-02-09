@@ -36,7 +36,7 @@ We appreciate contributions in various capacities, below are some ways that you 
 8. Push your changes: `git push`
 9. [Submit a pull request][pr]
 
-Please **make sure to make specific contributions** when submitting pull requests. For example, if fixing bugs across multiple features of the component, create a branch for each fix, and submit a separate pull request for each fix separately, instead of fixing everything in `master`, and then just trying to pull your `master` branch into `Joomla-Bible-Study:master`.
+Please **make sure to make specific contributions** when submitting pull requests. For example, if fixing bugs across multiple features of the component, create a branch for each fix, and submit a separate pull request for each fix separately, instead of fixing everything in `maain`, and then just trying to pull your `main` branch into `Joomla-Bible-Study:main`.
 
 
 ### Translation 
@@ -49,7 +49,7 @@ For every major release, we prefer to have an approximate 2-week testing window.
 [branch]: http://learn.github.com/p/branching.html
 [pr]: http://help.github.com/send-pull-requests/
 [phing]: http://www.phing.info/
-[setup]: https://github.com/Joomla-Bible-Study/Joomla-Bible-Study/wiki/Setting-up-your-development-environment
+[setup]: https://github.com/Joomla-Bible-Study/Proclaim/wiki/Setting-up-your-development-environment
 <!-- @IGNORE PREVIOUS: link -->
 [composer]: https://getcomposer.org/download/
 
