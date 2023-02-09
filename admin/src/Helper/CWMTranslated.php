@@ -33,7 +33,7 @@ class CWMTranslated
 	 * @var string
 	 * @since    7.0.0
 	 */
-	public static $extension = 'com_proclaim';
+	public static string $extension = 'com_proclaim';
 
 	/**
 	 * Translate a list of topicItems to clear text each
@@ -42,9 +42,10 @@ class CWMTranslated
 	 *
 	 * @return  array  list of topicItems containing translated strings in topic_text
 	 *
+	 * @throws \Exception
 	 * @since    7.0.0
 	 */
-	public static function getTopicItemsTranslated($topicItems = array())
+	public static function getTopicItemsTranslated(array $topicItems = array()): array
 	{
 		$output = array();
 
@@ -74,19 +75,23 @@ class CWMTranslated
 		if ($topicItem)
 		{
 			// First choice: evaluate language strings
-			if ($topicItem->topic_params)
-			{
-				$itemparams = new Registry;
-				$itemparams->loadString($topicItem->topic_params);
-				$currentLanguage = Factory::getApplication()->getLanguage()->getTag();
+			$itemparams = new Registry;
 
-				// First choice: string in current language
-				if ($currentLanguage)
+			// Here to catch the Topic Params value being null.
+			if ($topicItem->topic_params === null)
+			{
+				$topicItem->topic_params = '';
+			}
+
+			$itemparams->loadString($topicItem->topic_params);
+			$currentLanguage = Factory::getApplication()->getLanguage()->getTag();
+
+			// First choice: string in current language
+			if ($currentLanguage)
+			{
+				if ($itemparams->get($currentLanguage))
 				{
-					if ($itemparams->get($currentLanguage))
-					{
-						return ($itemparams->get($currentLanguage));
-					}
+					return ($itemparams->get($currentLanguage));
 				}
 			}
 
@@ -124,38 +129,36 @@ class CWMTranslated
 	 *
 	 * @return string:null  translated string with format '<text>[, <text>[, <text>]]' or null if topicItem is not initialised
 	 *
+	 * @throws \Exception
 	 * @since    7.0.0
 	 */
-	public static function getConcatTopicItemTranslated($topicItem)
+	public static function getConcatTopicItemTranslated(object $topicItem): ?string
 	{
-		if ($topicItem)
+		// Check if there should be topics at all to save time
+		if ($topicItem && $topicItem->tp_id)
 		{
-			// Check if there should be topics at all to save time
-			if ($topicItem->tp_id)
+			$db = Factory::getContainer()->get('DatabaseDriver');
+			$query = $db->getQuery(true);
+			$query->select('#__bsms_topics.topic_text, #__bsms_topics.params AS topic_params')
+				->from('#__bsms_topics')
+				->leftJoin('#__bsms_studytopics ON (#__bsms_studytopics.study_id = ' . $db->q($topicItem->id) . ') ')
+				->where('published = ' . 1)
+				->where('#__bsms_topics.id = #__bsms_studytopics.topic_id');
+			$db->setQuery($query);
+			$results = $db->loadObjectList();
+			$output  = '';
+
+			foreach ($results as $i => $iValue)
 			{
-                $db = Factory::getContainer()->get('DatabaseDriver');
-				$query = $db->getQuery(true);
-				$query->select('#__bsms_topics.topic_text, #__bsms_topics.params AS topic_params')
-					->from('#__bsms_topics')
-					->leftJoin('#__bsms_studytopics ON (#__bsms_studytopics.study_id = ' . $db->q($topicItem->id) . ') ')
-					->where('published = ' . 1)
-					->where('#__bsms_topics.id = #__bsms_studytopics.topic_id');
-				$db->setQuery($query);
-				$results = $db->loadObjectList();
-				$output  = '';
-
-				foreach ($results as $i => $iValue)
+				if ($i > 0)
 				{
-					if ($i > 0)
-					{
-						$output .= ', ';
-					}
-
-					$output .= self::getTopicItemTranslated($iValue);
+					$output .= ', ';
 				}
 
-				return $output;
+				$output .= self::getTopicItemTranslated($iValue);
 			}
+
+			return $output;
 		}
 
 		return null;
