@@ -36,7 +36,7 @@ We appreciate contributions in various capacities, below are some ways that you 
 8. Push your changes: `git push`
 9. [Submit a pull request][pr]
 
-Please **make sure to make specific contributions** when submitting pull requests. For example, if fixing bugs across multiple features of the component, create a branch for each fix, and submit a separate pull request for each fix separately, instead of fixing everything in `maain`, and then just trying to pull your `main` branch into `Joomla-Bible-Study:main`.
+Please **make sure to make specific contributions** when submitting pull requests. For example, if fixing bugs across multiple features of the component, create a branch for each fix, and submit a separate pull request for each fix separately, instead of fixing everything in `main`, and then just trying to pull your `main` branch into `Joomla-Bible-Study:main`.
 
 
 ### Translation 
