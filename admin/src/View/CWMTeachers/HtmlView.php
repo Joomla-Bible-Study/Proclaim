@@ -14,7 +14,6 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMTeachers;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
@@ -92,7 +91,7 @@ class HtmlView extends BaseHtmlView
 		$this->state      = $this->get('State');
 
 		$this->filterForm = $this->get('FilterForm');
-		$this->canDo      = CWMProclaimHelper::getActions('', 'teacher');
+		$this->canDo      = ContentHelper::getActions('com_proclaim', 'teacher');
 
 		// Check for errors.
 		if (\count($errors = $this->get('Errors')))

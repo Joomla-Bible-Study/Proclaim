@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMPodcasts;
 // No Direct Access
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
@@ -88,7 +89,7 @@ class HtmlView extends BaseHtmlView
 		$this->pagination = $this->get('Pagination');
 		$this->state      = $this->get('State');
 
-		$this->canDo         = CWMProclaimHelper::getActions('', 'podcast');
+		$this->canDo         = ContentHelper::getActions('com_proclaim', 'podcast');
 		$this->filterForm    = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');
 

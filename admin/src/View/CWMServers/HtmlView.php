@@ -14,7 +14,6 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMServers;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
@@ -94,7 +93,7 @@ class HtmlView extends BaseHtmlView
 		$this->items         = $this->get('Items');
 		$this->pagination    = $this->get('Pagination');
 		$this->state         = $this->get('State');
-		$this->canDo         = CWMProclaimHelper::getActions('', 'server');
+		$this->canDo         = ContentHelper::getActions('com_proclaim', 'server');
 		$this->types         = $this->get('ServerOptions');
 		$this->filterForm    = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');

@@ -11,7 +11,6 @@
 namespace CWM\Component\Proclaim\Administrator\View\CWMPodcast;
 
 // No Direct Access
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -85,7 +84,7 @@ class HtmlView extends BaseHtmlView
 		$this->form  = $this->get("Form");
 		$this->item  = $this->get("Item");
 		$this->state = $this->get("State");
-		$this->canDo = CWMProclaimHelper::getActions($this->item->id, 'podcast');
+		$this->canDo = ContentHelper::getActions('com_proclaim', 'podcast', (int) $this->item->id);
 		$this->setLayout("edit");
 		$this->addToolbar();
 

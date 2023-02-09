@@ -16,7 +16,6 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMMessage;
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -106,7 +105,7 @@ class HtmlView extends BaseHtmlView
 	{
 		$this->form       = $this->get("Form");
 		$this->item       = $this->get("Item");
-		$this->canDo      = CWMProclaimHelper::getActions($this->item->id, 'message');
+		$this->canDo      = ContentHelper::getActions('com_proclaim', 'message', (int) $this->item->id);
 		$input            = new Input;
 		$option           = $input->get('option', '', 'cmd');
 		$this->mediafiles = $this->get('MediaFiles');
