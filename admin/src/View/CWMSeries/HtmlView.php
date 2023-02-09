@@ -11,7 +11,6 @@
 namespace CWM\Component\Proclaim\Administrator\View\CWMSeries;
 
 // No Direct Access
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
@@ -98,7 +97,7 @@ class HtmlView extends BaseHtmlView
 		$this->state      = $this->get('State');
 
 		$this->filterForm    = $this->get('FilterForm');
-		$this->canDo         = CWMProclaimHelper::getActions('', 'serie');
+		$this->canDo         = ContentHelper::getActions('com_proclaim', 'serie');
 
 		// Check for errors.
 		if (\count($errors = $this->get('Errors')))

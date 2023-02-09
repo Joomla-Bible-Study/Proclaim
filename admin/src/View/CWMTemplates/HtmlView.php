@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMTemplates;
 // No Direct Access
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -106,7 +107,7 @@ class HtmlView extends BaseHtmlView
 		$this->state      = $this->get('State');
 
 		$this->filterForm = $this->get('FilterForm');
-		$this->canDo      = CWMProclaimHelper::getActions('', 'template');
+		$this->canDo      = ContentHelper::getActions('com_proclaim', 'template');
 
 		// Check for errors.
 		if (\count($errors = $this->get('Errors')))

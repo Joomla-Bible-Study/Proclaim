@@ -11,12 +11,12 @@
 namespace CWM\Component\Proclaim\Administrator\View\CWMServer;
 
 // No Direct Access
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Table\Content;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -95,7 +95,7 @@ class HtmlView extends BaseHtmlView
 		$this->form        = $this->get("form");
 		$this->state       = $this->get("State");
 		$this->item        = $this->get("Item");
-		$this->canDo       = CWMProclaimHelper::getActions($this->item->id, 'server');
+		$this->canDo       = ContentHelper::getActions('com_proclaim', 'server', (int) $this->item->id);
 		$this->server_form = $this->get('AddonServerForm');
 
 		// Check for errors.

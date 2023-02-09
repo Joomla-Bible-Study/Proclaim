@@ -15,16 +15,13 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMMediaFile;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormHelper;
-use Joomla\CMS\Form\Form;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Registry\Registry;
 use JText;
-use JToolbarHelper;
 
 /**
  * View class for MediaFile
@@ -97,7 +94,7 @@ class HtmlView extends BaseHtmlView
 		$this->media_form   = $this->get("MediaForm");
 		$this->item         = $this->get("Item");
 		$this->state        = $this->get("State");
-		$this->canDo        = CWMProclaimHelper::getActions($this->item->id, 'mediafile');
+		$this->canDo        = ContentHelper::getActions('com_proclaim', 'mediafile', (int) $this->item->id);
 		$this->admin_params = $this->state->get('administrator');
 
 		// Load the addon

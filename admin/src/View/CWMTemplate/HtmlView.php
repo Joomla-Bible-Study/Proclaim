@@ -14,8 +14,8 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMTemplate;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
@@ -94,7 +94,7 @@ class HtmlView extends BaseHtmlView
 		$this->state      = $this->get('State');
 		$this->types      = $this->get('Types');
 		$this->form       = $this->get("Form");
-		$this->canDo      = CWMProclaimHelper::getActions($this->item->id, 'template');
+		$this->canDo      = ContentHelper::getActions('com_proclaim', 'template', (int) $this->item->id);
 
 		$this->setLayout("edit");
 
