@@ -17,6 +17,8 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Language\Text;
+use JText;
 
 /**
  * Message Type List Form Field class for the Proclaim component
@@ -81,7 +83,7 @@ class SermonsTemplateFileField extends ListField
 
 		$folder  = str_replace(array('.php', 'default_'), '', $folder);
 		$options = array();
-
+		$options[] = HtmlHelper::_('select.option', '0', Text::_('JBS_CMN_USE_DEFAULT'));
 		if ($folder)
 		{
 			foreach ($folder as $file)
