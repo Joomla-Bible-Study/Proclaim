@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Finder adapter for Biblestudy.
+ * Finder adapter for Proclaim.
  *
- * @package     Proclaim
- * @subpackage  Finder.BibleStudy
+ * @package     Proclaim.Finder
+ * @subpackage  plg_finder_proclaim
  * @copyright   2007 - 2019 (C) CWM Team All rights reserved
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        https://www.christianwebministries.org
@@ -22,14 +22,15 @@ use Joomla\Component\Finder\Administrator\Indexer\Helper;
 use Joomla\Component\Finder\Administrator\Indexer\Indexer;
 use Joomla\Component\Finder\Administrator\Indexer\Result;
 use Joomla\Database\DatabaseQuery;
+use Joomla\Database\QueryInterface;
 use Joomla\Registry\Registry;
 
 
 /**
- * Finder adapter for Biblestudy.
+ * Finder adapter for Proclaim.
  *
  * @package     Proclaim
- * @subpackage  Finder.BibleStudy
+ * @subpackage  plg_finder_proclaim
  * @since       7.1.0
  */
 class PlgFinderProclaim extends FinderIndexerAdapter
@@ -103,7 +104,7 @@ class PlgFinderProclaim extends FinderIndexerAdapter
 	 *
 	 * @since   7.1.0
 	 */
-	public function onFinderCategoryChangeState($extension, $pks, $value)
+	public function onFinderCategoryChangeState(string $extension, array $pks, int $value): void
 	{
 	}
 
@@ -118,7 +119,7 @@ class PlgFinderProclaim extends FinderIndexerAdapter
 	 * @since   7.1.0
 	 * @throws  Exception on database error.
 	 */
-	public function onFinderAfterDelete($context, $table)
+	public function onFinderAfterDelete($context, $table): bool
 	{
 		if ($context == 'com_proclaim.message')
 		{
@@ -149,7 +150,7 @@ class PlgFinderProclaim extends FinderIndexerAdapter
 	 * @since   7.1.0
 	 * @throws  Exception on database error.
 	 */
-	public function onFinderAfterSave($context, $row, $isNew)
+	public function onFinderAfterSave($context, $row, $isNew): bool
 	{
 		if ($context == 'com_proclaim.message' || $context == 'com_proclaim.messageform')
 		{
@@ -182,7 +183,7 @@ class PlgFinderProclaim extends FinderIndexerAdapter
 	 * @since   7.1.0
 	 * @throws  Exception on database error.
 	 */
-	public function onFinderBeforeSave($context, $row, $isNew)
+	public function onFinderBeforeSave($context, $row, $isNew): bool
 	{
 		// We only want to handle sermons here
 		if ($context == 'com_proclaim.message' || $context == 'com_proclaim.messageform')
@@ -233,15 +234,15 @@ class PlgFinderProclaim extends FinderIndexerAdapter
 	 *
 	 * @return  void
 	 *
-	 * @since   7.1.0
 	 * @throws  Exception on database error.
+	 * @since   7.1.0
 	 */
-	protected function index(FinderIndexerResult $item, $format = 'html')
+	protected function index(FinderIndexerResult $item, string $format = 'html'): void
 	{
 		$item->setLanguage();
 
 		// Check if the extension is enabled
-		if (JComponentHelper::isEnabled($this->extension) == false)
+		if (!JComponentHelper::isEnabled($this->extension))
 		{
 			return;
 		}
@@ -263,7 +264,6 @@ class PlgFinderProclaim extends FinderIndexerAdapter
 		// Build the necessary route and path information.
 		$item->url   = $this->getUrl($item->id, $this->extension, $this->layout);
 		$item->route = CWMHelperRoute::getArticleRoute($item->slug, $item->language);
-		//$item->path  = FinderIndexerHelper::getContentPath($item->route);
 
 		// Get the menu title if it exists.
 		$title = $this->getItemMenuTitle($item->url);
@@ -273,6 +273,7 @@ class PlgFinderProclaim extends FinderIndexerAdapter
 		{
 			$item->title = $title;
 		}
+
 		/*
 		 * Add the meta-data processing instructions based on the newsfeeds
 		 * configuration parameters.
@@ -307,7 +308,7 @@ class PlgFinderProclaim extends FinderIndexerAdapter
 	 *
 	 * @since   7.1.0
 	 */
-	protected function setup()
+	protected function setup(): bool
 	{
 		// Load dependent classes.
 		//JLoader::register('JBSMHelperRoute', JPATH_SITE . '/components/com_proclaim/helpers/route.php');
@@ -322,11 +323,11 @@ class PlgFinderProclaim extends FinderIndexerAdapter
 	 * Method to get a SQL query to load the published and access states for
 	 * an biblestudy.
 	 *
-	 * @return  JDatabaseQuery  A database object.
+	 * @return  Joomla\Database\QueryInterface  A database object.
 	 *
 	 * @since   2.5
 	 */
-	protected function getStateQuery()
+	protected function getStateQuery(): QueryInterface
 	{
 		$query = $this->db->getQuery(true);
 
@@ -352,7 +353,7 @@ class PlgFinderProclaim extends FinderIndexerAdapter
 	 *
 	 * @since   7.1.0
 	 */
-	protected function getListQuery($sql = null)
+	protected function getListQuery($sql = null): JDatabaseQuery
 	{
 		$db = Factory::getContainer()->get('DatabaseDriver');
 
