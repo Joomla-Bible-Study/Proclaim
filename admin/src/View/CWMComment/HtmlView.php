@@ -14,8 +14,8 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMComment;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -80,7 +80,7 @@ class HtmlView extends BaseHtmlView
 		$this->form  = $this->get("Form");
 		$this->item  = $this->get("Item");
 		$this->state = $this->get("State");
-		$this->canDo = CWMProclaimHelper::getActions($this->item->id, 'comment');
+		$this->canDo = ContentHelper::getActions('com_proclaim', 'comment', (int) $this->item->id);
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))

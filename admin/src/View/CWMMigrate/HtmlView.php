@@ -14,7 +14,6 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMMigrate;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use CWM\Component\Proclaim\Administrator\Model\CWMAdminModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\Folder;
@@ -224,7 +223,7 @@ class HtmlView extends BaseHtmlView
 		$this->form  = $this->get("Form");
 		$this->item  = $this->get("Item");
 		$this->state = $this->get("State");
-		$this->canDo = CWMProclaimHelper::getActions($this->item->id);
+		$this->canDo = ContentHelper::getActions('com_proclaim');
 
 		$config         = Factory::getApplication();
 		$this->tmp_dest = $config->get('tmp_path');

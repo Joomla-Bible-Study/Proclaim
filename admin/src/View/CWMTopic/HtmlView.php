@@ -11,8 +11,8 @@
 namespace CWM\Component\Proclaim\Administrator\View\CWMTopic;
 
 // No Direct Access
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
@@ -86,7 +86,7 @@ class HtmlView extends BaseHtmlView
 		$this->form  = $this->get("Form");
 		$this->item  = $this->get("Item");
 		$this->state = $this->get("State");
-		$this->canDo = CWMProclaimHelper::getActions($this->item->id, 'topic');
+		$this->canDo = ContentHelper::getActions('com_proclaim', 'topic', (int) $this->item->id);
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))

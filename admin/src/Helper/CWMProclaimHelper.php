@@ -47,7 +47,7 @@ class CWMProclaimHelper
 	 *
 	 * @since 1.5
 	 */
-	public static $extension = 'com_proclaim';
+	public static string $extension = 'com_proclaim';
 
 	/**
 	 * Array of Views to namespace names
@@ -145,118 +145,9 @@ class CWMProclaimHelper
 	private static function mapView(string $view): string
 	{
 		$view = strtolower($view);
-		$viewMap = CWMProclaimHelper::$viewMap;
+		$viewMap = self::$viewMap;
 
 		return $viewMap[$view] ?? $view;
-	}
-
-	/**
-	 * Get Actions
-	 *
-	 * @param   int     $Itemid  ID
-	 * @param   string  $type    Type
-	 *
-	 * @return \Joomla\Registry\Registry
-	 *
-	 * @throws \Exception
-	 * @since 1.5
-	 */
-	public static function getActions($Itemid = 0, $type = '')
-	{
-		$result = new Registry;
-		$user   = Factory::getApplication()->getIdentity();
-
-		if (empty($Itemid))
-		{
-			$assetName = 'com_proclaim';
-		}
-		else
-		{
-			switch ($type)
-			{
-				case 'administrator':
-					$assetName = 'com_proclaim.administration.' . (int) $Itemid;
-					break;
-				case 'assets':
-					$assetName = 'com_proclaim.assets.' . (int) $Itemid;
-					break;
-				case 'backup':
-					$assetName = 'com_proclaim.backup.' . (int) $Itemid;
-					break;
-				case 'comment':
-					$assetName = 'com_proclaim.comment.' . (int) $Itemid;
-					break;
-				case 'database':
-					$assetName = 'com_proclaim.database.' . (int) $Itemid;
-					break;
-				case 'location':
-					$assetName = 'com_proclaim.location.' . (int) $Itemid;
-					break;
-				case 'messagetype':
-					$assetName = 'com_proclaim.messagetype.' . (int) $Itemid;
-					break;
-				case 'migrate':
-					$assetName = 'com_proclaim.migrate.' . (int) $Itemid;
-					break;
-
-				case 'podcast':
-					$assetName = 'com_proclaim.podcast.' . (int) $Itemid;
-					break;
-
-				case 'serie':
-					$assetName = 'com_proclaim.serie.' . (int) $Itemid;
-					break;
-
-				case 'server':
-					$assetName = 'com_proclaim.server.' . (int) $Itemid;
-					break;
-
-				case 'teacher':
-					$assetName = 'com_proclaim.teacher.' . (int) $Itemid;
-					break;
-
-				case 'template':
-					$assetName = 'com_proclaim.template.' . (int) $Itemid;
-					break;
-
-				case 'topic':
-					$assetName = 'com_proclaim.topic.' . (int) $Itemid;
-					break;
-
-				case 'message':
-					$assetName = 'com_proclaim.message.' . (int) $Itemid;
-					break;
-
-				case 'mediafile':
-					$assetName = 'com_proclaim.mediafile.' . (int) $Itemid;
-					break;
-
-				case 'templatecode':
-					$assetName = 'com_proclaim.templatecode' . (int) $Itemid;
-					break;
-
-				default:
-					$assetName = 'com_proclaim.studiesedit.' . (int) $Itemid;
-					break;
-			}
-		}
-
-		$actions = array(
-			'core.admin',
-			'core.manage',
-			'core.create',
-			'core.edit',
-			'core.edit.own',
-			'core.edit.state',
-			'core.delete'
-		);
-
-		foreach ($actions as $action)
-		{
-			$result->set($action, $user->authorise($action, $assetName));
-		}
-
-		return $result;
 	}
 
 	/**
@@ -269,7 +160,7 @@ class CWMProclaimHelper
 	 * @throws \Exception
 	 * @since    1.6
 	 */
-	public static function addSubmenu($vName)
+	public static function addSubmenu(string $vName): void
 	{
 		$simple_view = CWMHelper::getSimpleView();
 
@@ -337,21 +228,23 @@ class CWMProclaimHelper
 	 *
 	 * @since 1.5
 	 */
-	public static function rendermenu($text, $url, $vName)
+	public static function rendermenu(string $text, string $url, string $vName): void
 	{
-		//JHtmlSidebar::addEntry($text, $url, $vName);
+		// JHtmlSidebar::addEntry($text, $url, $vName);
 	}
 
 	/**
 	 * Applies the content tag filters to arbitrary text as per settings for current user group
+	 * This may show not to be used but is in the XML files.
 	 *
 	 * @param   string  $text  The string to filter
 	 *
 	 * @return string The filtered string
 	 *
+	 * @throws \Exception
 	 * @since 1.5
 	 */
-	public static function filterText($text)
+	public static function filterText(string $text): string
 	{
 		// Filter settings
 		jimport('joomla.application.component.helper');
@@ -387,7 +280,7 @@ class CWMProclaimHelper
 
 			if ($filterType !== 'NH')
 			{
-				if ($filterType == 'NONE')
+				if ($filterType === 'NONE')
 				{
 					// No HTML filtering.
 					$unfiltered = true;
@@ -426,16 +319,16 @@ class CWMProclaimHelper
 					if ($filterType == 'BL')
 					{
 						$blackList           = true;
-						$blackListTags       = array_merge($blackListTags, $tempTags);
-						$blackListAttributes = array_merge($blackListAttributes, $tempAttributes);
+						$blackListTags       = array_merge([], ...$tempTags);
+						$blackListAttributes = array_merge([], ...$tempAttributes);
 					}
 					else
 					{
 						if ($filterType == 'WL')
 						{
 							$whiteList           = true;
-							$whiteListTags       = array_merge($whiteListTags, $tempTags);
-							$whiteListAttributes = array_merge($whiteListAttributes, $tempAttributes);
+							$whiteListTags       = array_merge([], ...$tempTags);
+							$whiteListAttributes = array_merge([], ...$tempAttributes);
 						}
 					}
 				}
@@ -497,7 +390,7 @@ class CWMProclaimHelper
 	 * @throws \Exception
 	 * @since 7.1.0
 	 */
-	public static function debug()
+	public static function debug(): int
 	{
 		if (!CWMDbHelper::getInstallState())
 		{
@@ -516,21 +409,6 @@ class CWMProclaimHelper
 	}
 
 	/**
-	 * Media Types
-	 *
-	 * @return void
-	 * @throws \Exception For bad function
-	 * @since       8.0.0
-	 * @depreciated 9.0.0
-	 *
-	 */
-	public static function getMediaTypes()
-	{
-		Log::add('getMediaTypes is nologer supported', Log::NOTICE, 'com_proclaim');
-		throw new \Exception('Bad function getMediaTypes is nologer supported');
-	}
-
-	/**
 	 * Media Years
 	 *
 	 * @return array        Returns list of years of media files based on createdate
@@ -538,11 +416,12 @@ class CWMProclaimHelper
 	 * @throws \Exception
 	 * @since 8.0.0
 	 */
-	public static function getMediaYears()
+	public static function getMediaYears(): array
 	{
 		$options = array();
 		$db  = Factory::getContainer()->get('DatabaseDriver');
-		//$db      = $driver->getDriver();
+
+		// $db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
 		$query->select('DISTINCT YEAR(createdate) as value, YEAR(createdate) as text');
@@ -572,11 +451,12 @@ class CWMProclaimHelper
 	 * @throws \Exception
 	 * @since 8.0.0
 	 */
-	public static function getMessageTypes()
+	public static function getMessageTypes(): array
 	{
 		$options = array();
 		$db  = Factory::getContainer()->get('DatabaseDriver');
-		//$db      = $driver->getDriver();
+
+		// $db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
 		$query->select('messageType.id AS value, messageType.message_type AS text');
@@ -608,11 +488,12 @@ class CWMProclaimHelper
 	 * @throws \Exception
 	 * @since 8.0.0
 	 */
-	public static function getStudyYears()
+	public static function getStudyYears(): array
 	{
 		$options = array();
 		$db  = Factory::getContainer()->get('DatabaseDriver');
-		//$db      = $driver->getDriver();
+
+		// $db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
 		$query->select('DISTINCT YEAR(studydate) as value, YEAR(studydate) as text');
@@ -642,7 +523,7 @@ class CWMProclaimHelper
 	 * @throws \Exception
 	 * @since 8.0.0
 	 */
-	public static function getTeachers()
+	public static function getTeachers(): array
 	{
 		$options = array();
 		$driver  = Factory::getContainer()->get('DatabaseDriver');
@@ -678,11 +559,12 @@ class CWMProclaimHelper
 	 * @throws \Exception
 	 * @since 8.0.0
 	 */
-	public static function getStudyBooks()
+	public static function getStudyBooks(): array
 	{
 		$options = array();
 		$db  = Factory::getContainer()->get('DatabaseDriver');
-		//$db      = $driver->getDriver();
+
+		// $db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
 		$query->select('book.booknumber AS value, book.bookname AS text, book.id');
@@ -719,11 +601,12 @@ class CWMProclaimHelper
 	 * @throws \Exception
 	 * @since 8.0.0
 	 */
-	public static function getStudyMediaTypes()
+	public static function getStudyMediaTypes(): array
 	{
 		$options = array();
 		$db  = Factory::getContainer()->get('DatabaseDriver');
-		//$db      = $driver->getDriver();
+
+		// $db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
 		$query->select('messageType.id AS value, messageType.message_type AS text');
@@ -755,11 +638,12 @@ class CWMProclaimHelper
 	 * @throws \Exception
 	 * @since 8.0.0
 	 */
-	public static function getStudyLocations()
+	public static function getStudyLocations(): array
 	{
 		$options = array();
 		$db  = Factory::getContainer()->get('DatabaseDriver');
-		//$db      = $driver->getDriver();
+
+		// $db      = $driver->getDriver();
 		$query   = $db->getQuery(true);
 
 		$query->select('id AS value, location_text AS text');
@@ -792,7 +676,7 @@ class CWMProclaimHelper
 	 *
 	 * @since 1.5
 	 */
-	public static function array_sort_by_column(&$arr, $col, $dir = SORT_ASC)
+	public static function array_sort_by_column(array &$arr, string $col, int $dir = SORT_ASC): void
 	{
 		$sort_col = array();
 
@@ -815,7 +699,7 @@ class CWMProclaimHelper
 	 *
 	 * @since 1.5
 	 */
-	public static function stop($msg = '')
+	public static function stop(string $msg = ''): void
 	{
 		echo $msg;
 		Factory::getApplication()->close();
@@ -831,7 +715,7 @@ class CWMProclaimHelper
 	 *
 	 * @since 1.5
 	 */
-	public static function startsWith($haystack, $needle)
+	public static function startsWith(string $haystack, string $needle): bool
 	{
 		// Search backwards starting from haystack length characters from the end
 		return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== false;
@@ -847,47 +731,10 @@ class CWMProclaimHelper
 	 *
 	 * @since 1.5
 	 */
-	public static function endsWith($haystack, $needle)
+	public static function endsWith(string $haystack, string $needle): bool
 	{
 		// Search forward starting from end minus needle length characters
 		return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== false);
-	}
-
-	/**
-	 * Get user ids in an object
-	 *
-	 * @return array
-	 *
-	 * @throws \Exception
-	 * @since 9.1.4
-	 */
-	public static function getUsers()
-	{
-		$options = array();
-
-		$db = Factory::getContainer()->get('DatabaseDriver');
-		//$db     = $driver->getDriver();
-		$query  = $db->getQuery(true);
-
-		$query->select('id AS value, username AS text');
-		$query->from('#__users');
-		$query->order('id');
-
-		// Get the options.
-		$db->setQuery($query);
-
-		try
-		{
-			$options = $db->loadObjectList();
-		}
-		catch (\RuntimeException $e)
-		{
-			Factory::getApplication()->enqueueMessage($e->getMessage(), 'worning');
-
-			return $options;
-		}
-
-		return $options;
 	}
 
 	/**
@@ -908,28 +755,5 @@ class CWMProclaimHelper
 		$return->count = $count;
 
 		return $return;
-	}
-
-	/**
-	 * Method to filter transitions by given id of state
-	 *
-	 * @param   array  $transitions  Array of transitions
-	 * @param   int    $pk           Id of state
-	 * @param   int    $workflowId   Id of the workflow
-	 *
-	 * @return  array
-	 *
-	 * @since   4.0.0
-	 */
-	public static function filterTransitions(array $transitions, int $pk, int $workflowId = 0): array
-	{
-		return array_values(
-			array_filter(
-				$transitions,
-				function ($var) use ($pk, $workflowId) {
-					return in_array($var['from_stage_id'], [-1, $pk]) && $workflowId == $var['workflow_id'];
-				}
-			)
-		);
 	}
 }

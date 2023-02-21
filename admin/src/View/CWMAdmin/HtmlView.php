@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use CWM\Component\Proclaim\Administrator\Lib\CWMStats;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\HTML\HTMLHelper as JHtml;
 use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Language\Text;
@@ -225,7 +226,7 @@ class HtmlView extends BaseHtmlView
 		$this->form  = $this->get("Form");
 		$this->item  = $this->get("Item");
 		$this->state = $this->get("State");
-		$this->canDo = CWMProclaimHelper::getActions($this->item->id);
+		$this->canDo = ContentHelper::getActions('com_proclaim', 'cwmadmin', (int) $this->item->id);
 
 		// End for database
 		$this->tmp_dest = $app->get('tmp_path');

@@ -15,7 +15,6 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMMessages;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Extension\ProclaimComponent;
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
@@ -108,7 +107,7 @@ class HtmlView extends BaseHtmlView
 		$this->items         = $this->get('Items');
 		$this->pagination    = $this->get('Pagination');
 		$this->state         = $this->get('State');
-		$this->canDo         = CWMProclaimHelper::getActions('', 'message');
+		$this->canDo         = ContentHelper::getActions('com_proclaim', 'message');
 		$this->filterForm    = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');
 

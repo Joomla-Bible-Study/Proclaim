@@ -13,8 +13,6 @@ namespace CWM\Component\Proclaim\Administrator\Extension;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Service\HTML\Proclaim;
-use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Component\Router\RouterServiceInterface;
 use Joomla\CMS\Component\Router\RouterServiceTrait;
 use Joomla\CMS\Extension\BootableExtensionInterface;
@@ -25,11 +23,9 @@ use Joomla\CMS\HTML\HTMLRegistryAwareTrait;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Workflow\WorkflowServiceInterface;
 use Joomla\CMS\Workflow\WorkflowServiceTrait;
-use CWM\Component\Proclaim\Administrator\Helper\ProclaimHelper;
 use Joomla\Component\Content\Administrator\Helper\ContentHelper;
 use Psr\Container\ContainerInterface;
 use CWM\Component\Proclaim\Administrator\Service\HTML\CWMAdministratorService;
-use CWM\Component\Proclaim\Administrator\Service\HTML\Icon;
 
 /**
  * Component class for com_mywalks
@@ -102,7 +98,7 @@ class ProclaimComponent extends MVCComponent implements
 	 *
 	 * @since   4.0.0
 	 */
-	public function boot(ContainerInterface $container)
+	public function boot(ContainerInterface $container): void
 	{
 		$this->getRegistry()->register('proclaimadministrator', new CWMAdministratorService);
 	}
@@ -119,7 +115,7 @@ class ProclaimComponent extends MVCComponent implements
 	 * @throws \Exception
 	 * @since   4.0.0
 	 */
-	public function validateSection($section, $item = null)
+	public function validateSection($section, $item = null): ?string
 	{
 		if (Factory::getApplication()->isClient('site'))
 		{

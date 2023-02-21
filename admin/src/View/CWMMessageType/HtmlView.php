@@ -11,12 +11,10 @@
 namespace CWM\Component\Proclaim\Administrator\View\CWMMessageType;
 
 // No Direct Access
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\Toolbar\ToolbarHelper;
-use Joomla\Input\Input;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -86,7 +84,7 @@ class HtmlView extends BaseHtmlView
 		$this->form  = $this->get("Form");
 		$this->item  = $this->get("Item");
 		$this->state = $this->get("State");
-		$this->canDo = CWMProclaimHelper::getActions($this->item->id, 'messagetype');
+		$this->canDo = ContentHelper::getActions('com_proclaim', 'messagetype', (int) $this->item->id);
 		$this->setLayout("edit");
 
 		// Check for errors.
