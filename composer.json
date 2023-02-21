@@ -1,45 +1,62 @@
 {
-	"name": "joomla-bible-study/proclaim",
-	"type": "project",
-	"description": "CWM Proclaim",
-	"keywords": [
-		"bible",
-		"biblestudy",
-		"joomlabiblestudy",
-		"CWMProclaim",
-		"Proclaim"
+  "name": "joomla-bible-study/proclaim",
+  "type": "project",
+  "description": "CWM Proclaim",
+  "keywords": [
+	"bible",
+	"joomla",
+	"comments",
+	"CWMProclaim",
+	"Proclaim"
+  ],
+  "homepage": "https://github.com/Joomla-Bible-Study/Proclaim",
+  "authors": [
+	{
+	  "name": "Tom Fuller",
+	  "email": "info@christianwebministries.org",
+	  "homepage": "https://www.christianwebministries.org",
+	  "role": "Tech Writer & Developer"
+	},
+	{
+	  "name": "Brent Cordis",
+	  "email": "info@christianwebministries.org",
+	  "homepage": "https://www.christianwebministries.org",
+	  "role": "Lead Developer"
+	}
+  ],
+  "license": "GPL-3.0-or-later",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "config": {
+	"optimize-autoloader": true,
+	"platform": {
+	  "php": "7.4.999"
+	},
+	"vendor-dir": "libraries/vendor",
+	"github-protocols": [
+	  "https"
 	],
-	"homepage": "https://github.com/Joomla-Bible-Study/Proclaim",
-	"license": "GPL-2.0-or-later",
-	"minimum-stability": "dev",
-	"prefer-stable": true,
-	"config": {
-		"optimize-autoloader": true,
-		"platform": {
-			"php": "7.4.30"
-		},
-		"vendor-dir": "libraries/vendor",
-		"github-protocols": [
-			"https"
-		]
-	},
-	"support": {
-		"issues": "https://www.christianwebministries.org/issues",
-		"forum": "https://www.christianwebministries.org/forum",
-		"docs": "https://www.christianwebministries.org/docs"
-	},
-	"require": {
-	  "php": ">=7.4.30",
-	  "ircmaxell/password-compat": "1.*",
-	  "leafo/lessphp": "dev-master",
-	  "phpmailer/phpmailer": "6.*",
-	  "symfony/polyfill-php72": "~1.9",
-	  "symfony/polyfill-php73": "~1.9",
-	  "symfony/yaml": "3.*",
-	  "simplepie/simplepie": "1.*",
-	  "google/recaptcha": "^1.1",
-	  "typo3/phar-stream-wrapper": "^2.1",
-	  "ext-mbstring": "*",
+	"allow-plugins": {
+	  "dealerdirect/phpcodesniffer-composer-installer": true
+	}
+  },
+  "support": {
+	"issues": "https://www.christianwebministries.org/issues",
+	"forum": "https://www.christianwebministries.org/forum",
+	"docs": "https://www.christianwebministries.org/docs"
+  },
+  "require": {
+	"php": "^7.4.0||^8.0.0",
+	"ircmaxell/password-compat": "1.*",
+	"leafo/lessphp": "dev-master",
+	"phpmailer/phpmailer": "6.*",
+	"symfony/polyfill-php72": "~1.9",
+	"symfony/polyfill-php73": "~1.9",
+	"symfony/yaml": "3.*",
+	"simplepie/simplepie": "1.*",
+	"google/recaptcha": "^1.1",
+	"typo3/phar-stream-wrapper": "^2.1",
+	"ext-mbstring": "*",
 	  "ext-simplexml": "*",
 	  "ext-zip": "*",
 	  "ext-json": "*",
@@ -48,22 +65,20 @@
 	  "ext-gd": "*"
 	},
 	"require-dev": {
-		"roave/security-advisories": "dev-latest",
+	  "roave/security-advisories": "dev-latest",
 	  "phing/phing": "*",
 	  "pdepend/pdepend": "^2.4",
 	  "phpmd/phpmd": "^2.4",
-	  "mayflower/php-codebrowser": "^1.1",
-	  "sebastian/phpcpd": "^3.0",
 	  "pear/versioncontrol_git": "dev-master",
 	  "pear/pear_exception": "dev-master",
-	  "phpunit/phpunit": "*",
-	  "phpunit/dbunit": "*",
-	  "squizlabs/php_codesniffer": "3.*",
-	  "friendsofphp/php-cs-fixer": "*",
-	  "sebastian/diff": "4.*",
+	  "phpunit/phpunit": "^8.5",
+	  "squizlabs/php_codesniffer": "~3.0",
+	  "friendsofphp/php-cs-fixer": "^3.0",
+	  "sebastian/diff": "^3.0.2",
 	  "vimeo/psalm": "^3.17.1",
 	  "phploc/phploc": "*",
-	  "pear/cache_lite": "1.7.16"
+	  "pear/cache_lite": "1.7.16",
+	  "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0"
 	},
 	"extra": {
 		"branch-alias": {
