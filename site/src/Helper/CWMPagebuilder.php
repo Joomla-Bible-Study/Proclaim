@@ -44,9 +44,9 @@ class CWMPagebuilder
 	/**
 	 * Build Page
 	 *
-	 * @param   object            $item      Item info
-	 * @param   Registry          $params    Item Params
-	 * @param   CWMTemplateTable  $template  Template data
+	 * @param   object                   $item      Item info
+	 * @param   Registry                 $params    Item Params
+	 * @param   CWMTemplateTable|Object  $template  Template data
 	 *
 	 * @return object
 	 *
@@ -319,12 +319,12 @@ class CWMPagebuilder
 	/**
 	 * Study Builder
 	 *
-	 * @param   string            $whereitem   ?
-	 * @param   string            $wherefield  ?
-	 * @param   Registry          $params      Item params
-	 * @param   int               $limit       Limit of Records
-	 * @param   string            $order       DESC or ASC
-	 * @param   CWMTemplateTable  $template    Template Data
+	 * @param   string                   $whereitem   ?
+	 * @param   string                   $wherefield  ?
+	 * @param   Registry                 $params      Item params
+	 * @param   int                      $limit       Limit of Records
+	 * @param   string                   $order       DESC or ASC
+	 * @param   CWMTemplateTable|Object  $template    Template Data
 	 *
 	 * @return array
 	 *
