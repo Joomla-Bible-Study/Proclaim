@@ -18,13 +18,7 @@ use CWM\Component\Proclaim\Site\Helper\CWMListing;
 
 $show_link = $params->get('show_link', 1);
 
-
 $Listing = new CWMListing;
-
-// Load CSS framework for displaying properly.
-//JHtml::_('proclaim.framework');
-//JHtml::_('biblestudy.loadCss', $params, null, 'font-awesome');
-
 ?>
 <div class="container-fluid JBSM">
 	<?php if ($params->get('pageheader'))
