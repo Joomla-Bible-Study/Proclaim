@@ -20,7 +20,6 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
 HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 HtmlHelper::_('dropdown.init');
 HtmlHelper::_('formbehavior.chosen', 'select');
-HtmlHelper::_('proclaim.framework');
 HtmlHelper::_('behavior.multiselect');
 
 $app       = Factory::getApplication();
