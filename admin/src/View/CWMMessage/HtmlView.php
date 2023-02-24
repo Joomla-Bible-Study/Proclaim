@@ -131,7 +131,6 @@ class HtmlView extends BaseHtmlView
 
 		HTMLHelper::stylesheet('media/com_proclaim/css/token-input-jbs.min.css');
 
-		//HTMLHelper::_('proclaim.framework');
 		$script = "
             jQuery(document).ready(function() {
                 jQuery('#topics').tokenInput(" . $this->get('alltopics') . ",

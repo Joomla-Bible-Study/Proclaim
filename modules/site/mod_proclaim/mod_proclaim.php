@@ -148,7 +148,6 @@ if (!$templatemenuid)
 $linkurl = Route::_('index.php?option=com_proclaim&view=cwmsermons&t=' . $templatemenuid);
 $link    = '<a href="' . $linkurl . '"><button class="btn">' . $link_text . '</button></a>';
 
-HtmlHelper::_('proclaim.framework');
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
 $wa->useStyle('com_proclaim.cwmcore');

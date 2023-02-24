@@ -154,7 +154,6 @@ class HtmlView extends BaseHtmlView
 		$teacherimage        = CWMImages::getTeacherThumbnail($items->thumb);
 		$items->teacherimage = '<img src="' . $teacherimage->path . '" height="' . $teacherimage->height . '" width="'
 			. $teacherimage->width . '" alt="" />';
-		HtmlHelper::_('proclaim.framework');
 
 		$items->slug = $items->alias ? ($items->id . ':' . $items->alias) :
 			str_replace(' ', '-', htmlspecialchars_decode($items->series_text, ENT_QUOTES))
