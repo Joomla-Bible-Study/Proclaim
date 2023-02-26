@@ -7,7 +7,7 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 (function (window, document, $) {
-	$(document).ready(function () {
+	$(function () {
 		$('.fancybox_jwplayer').on('click', function () {
 			let tarGet
 			const contentPanelId = $(this).attr('id')
