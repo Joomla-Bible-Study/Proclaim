@@ -193,8 +193,6 @@ class HtmlView extends BaseHtmlView
 		$registry->loadString($this->media->params);
 		$this->params->merge($registry);
 
-		HtmlHelper::_('proclaim.framework');
-
 		$saveid          = $this->media->id;
 		$this->media->id = $this->media->study_id;
 		$JBSMListing   = new CWMListing;

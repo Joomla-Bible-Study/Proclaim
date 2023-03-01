@@ -1,5 +1,3 @@
-// noinspection JSAnnotator
-
 (function () {
 	'use strict';
 
@@ -9,8 +7,8 @@
 		 *   LICENSE.txt
 		 */
 		(function (document, submitForm) {
-			var buttonDataSelector = 'data-submit-task'
-			var formId = 'adminForm'
+			const buttonDataSelector = 'data-submit-task'
+			const formId = 'adminForm'
 			/**
 			 * Submit the task
 			 * @param task
@@ -19,7 +17,7 @@
 			var submitTask = function submitTask (task) {
 				var form = document.getElementById(formId)
 
-				if (form && task === 'cwmlocation.batch')
+				if (form && task === 'cwmteachers.batch')
 				{
 					submitForm(task, form)
 				}

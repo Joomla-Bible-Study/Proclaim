@@ -42,6 +42,14 @@ class Dispatcher extends ComponentDispatcher
 	{
 		CWMProclaimHelper::applyViewAndController($this->defaultController);
 
+		// Always load Proclaim API if it exists.
+		$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
+
+		if (file_exists($api))
+		{
+			require_once $api;
+		}
+
 		if ($this->input->get('view') === 'cwmlandingpage' && $this->input->get('layout') === 'modal')
 		{
 			if (!$this->app->getIdentity()->authorise('core.create', 'com_proclaim'))

@@ -33,7 +33,7 @@ HTMLHelper::_('behavior.multiselect');
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('core')
-	->useScript('com_content.cwmadmin-locations-modal');
+	->useScript('com_proclaim.cwmadmin-locations-modal');
 
 $function  = $app->input->getCmd('function', 'jSelectLocations');
 $editor    = $app->input->getCmd('editor', '');

@@ -84,9 +84,6 @@ class HtmlView extends BaseHtmlView
 		$item->teacherimage = '<img src="' . $teacherimage->path . '" height="' . $teacherimage->height . '" width="'
 			. $teacherimage->width . '" alt="" />';
 
-		HtmlHelper::_('proclaim.framework');
-		HTMLHelper::_('proclaim.loadCss', $params, null, 'font-awesome');
-
 		$media = [];
 
 		if ($this->studies)

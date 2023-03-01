@@ -39,6 +39,14 @@ class Dispatcher extends ComponentDispatcher
 	{
 		CWMProclaimHelper::applyViewAndController($this->defaultController);
 
+		// Always load Proclaim API if it exists.
+		$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
+
+		if (file_exists($api))
+		{
+			require_once $api;
+		}
+
 		parent::dispatch();
 	}
 
