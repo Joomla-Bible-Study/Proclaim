@@ -22,17 +22,17 @@
 	} // Register events
 
 	document.addEventListener('DOMContentLoaded', () => {
-			const button = document.getElementById('batch-submit-button-id')
+		const button = document.getElementById('batch-submit-button-id')
 
-			if (button)
+		if (button)
 			{
-				button.addEventListener('click', e => {
-						const task = e.target.getAttribute(buttonDataSelector)
-						submitTask(task)
-						return false
-					},
-				)
-			}
+			button.addEventListener('click', e => {
+				const task = e.target.getAttribute(buttonDataSelector)
+					submitTask(task)
+					return false
+				},
+			)
+		}
 
 		},
 	)

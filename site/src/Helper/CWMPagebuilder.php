@@ -9,6 +9,7 @@
  * */
 
 namespace CWM\Component\Proclaim\Site\Helper;
+
 // No Direct Access
 use CWM\Component\Proclaim\Administrator\Helper\CWMTranslated;
 use CWM\Component\Proclaim\Administrator\Table\CWMTemplateTable;
@@ -64,7 +65,6 @@ class CWMPagebuilder
 		if ($mids)
 		{
 			$page->media = $this->mediaBuilder($mids, $params, $template, $item);
-
 		}
 		else
 		{
@@ -90,7 +90,6 @@ class CWMPagebuilder
 		}
 
 		// Scripture 2
-		$esv          = 0;
 		$scripturerow = 2;
 
 		if ($item->booknumber2 >= 1)
@@ -243,7 +242,7 @@ class CWMPagebuilder
 	 * @param   Registry          $params    Item Params
 	 * @param   CWMTemplateTable  $template  template date
 	 * @param   object            $item      Item Params
-	 * @param   string            $template
+	 *
 	 * @return string
 	 *
 	 * @throws \Exception
@@ -255,7 +254,8 @@ class CWMPagebuilder
 		$mediaIDs         = $listing->getFluidMediaids($item);
 		$media            = $listing->getMediaFiles($mediaIDs);
 		$item->mediafiles = $media;
-//var_dump($media); die;
+
+		// Var_dump($media); die;
 		return $listing->getFluidMediaFiles($item, $params, $template);
 	}
 
@@ -267,6 +267,7 @@ class CWMPagebuilder
 	 *
 	 * @return object
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function runContentPlugins($item, $params)
@@ -277,7 +278,6 @@ class CWMPagebuilder
 
 		// Run content plugins
 		$dispatcher = Factory::getApplication();
-
 
 		$dispatcher->triggerEvent('onContentPrepare', array(
 				'com_proclaim.sermon',
@@ -333,7 +333,7 @@ class CWMPagebuilder
 	 */
 	public function studyBuilder($whereitem = null, $wherefield = null, $params = null, $limit = 10, $order = 'DESC', $template = null)
 	{
-        $db = Factory::getContainer()->get('DatabaseDriver');
+		$db = Factory::getContainer()->get('DatabaseDriver');
 
 		$orderparam = $params->get('order', '1');
 
@@ -358,8 +358,9 @@ class CWMPagebuilder
 			'study.publish_down,
 		                study.series_id, study.download_id, study.thumbnailm, study.thumbhm, study.thumbwm,
 		                study.access, study.user_name, study.user_id, study.studynumber, study.chapter_begin2, study.chapter_end2,
-		                study.verse_end2, study.verse_begin2, ' . ' ' . $query->length('study.studytext') . ' AS readmore' . ','
-			. ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug ');
+		                study.verse_end2, study.verse_begin2, ' . $query->length('study.studytext') . ' AS readmore ,'
+			. ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug '
+		);
 		$query->from('#__bsms_studies AS study');
 
 		// Join over Message Types
@@ -383,7 +384,8 @@ class CWMPagebuilder
 
 		// Join over Plays/Downloads
 		$query->select('GROUP_CONCAT(DISTINCT mediafile.id) as mids, SUM(mediafile.plays) AS totalplays,
-		SUM(mediafile.downloads) as totaldownloads, mediafile.study_id');
+		SUM(mediafile.downloads) as totaldownloads, mediafile.study_id'
+		);
 		$query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
 
 		// Join over Locations
@@ -393,7 +395,9 @@ class CWMPagebuilder
 		// Join over studytopics
 		$query->select('GROUP_CONCAT(DISTINCT st.topic_id)');
 		$query->join('LEFT', '#__bsms_studytopics AS st ON study.id = st.study_id');
-		$query->select('GROUP_CONCAT(DISTINCT t.id), GROUP_CONCAT(DISTINCT t.topic_text) as topic_text, GROUP_CONCAT(DISTINCT t.params) as topic_params');
+		$query->select('GROUP_CONCAT(DISTINCT t.id), GROUP_CONCAT(DISTINCT t.topic_text) as topic_text,' .
+			'GROUP_CONCAT(DISTINCT t.params) as topic_params'
+		);
 		$query->join('LEFT', '#__bsms_topics AS t ON t.id = st.topic_id');
 
 		// Join over the users for the author and modified_by names.

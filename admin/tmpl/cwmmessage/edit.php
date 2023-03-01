@@ -12,8 +12,8 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
@@ -23,7 +23,7 @@ use Joomla\CMS\Session\Session;
 $this->configFieldsets  = array('editorConfig');
 $this->hiddenFieldsets  = array('basic-limited');
 $this->ignore_fieldsets = array('jmetadata', 'item_associations');
-$this->canDo            = CWMProclaimHelper::getActions('', 'message');
+$this->canDo            = ContentHelper::getActions('com_proclaim', 'message');
 
 // Create shortcut to parameters.
 $params = $this->form->getFieldsets('params');

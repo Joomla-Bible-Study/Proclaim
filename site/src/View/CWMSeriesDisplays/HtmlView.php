@@ -11,17 +11,18 @@ namespace CWM\Component\Proclaim\Site\View\CWMSeriesDisplays;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Site\Helper\CWMImages;
+use CWM\Component\Proclaim\Site\Helper\CWMPagebuilder;
 use JApplicationSite;
-use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use CWM\Component\Proclaim\Site\Helper\CWMImages;
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
-use Joomla\CMS\Router\Route;
-use CWM\Component\Proclaim\Site\Helper\CWMPagebuilder;
 
 /**
  * View class for SeriesDisplays
@@ -136,14 +137,23 @@ class HtmlView extends BaseHtmlView
 
 		foreach ($items AS $item)
 		{
-			$item->slug         = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
+			$item->slug  = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
 				. str_replace(' ', '-', htmlspecialchars_decode($item->series_text, ENT_QUOTES));
-			$seriesimage        = $images->getSeriesThumbnail($item->series_thumbnail);
-			$item->image        = '<img src="' . $seriesimage->path . '" height="' . $seriesimage->height . '" width="' . $seriesimage->width . '" alt="" />';
-			$item->serieslink   = Route::_('index.php?option=com_proclaim&view=cwmseriesdisplay&id=' . $item->slug . '&t=' . $this->template->id);
-			$teacherimage       = $images->getTeacherImage($item->thumb, $image2 = null);
-			$item->teacherimage = '<img src="' . $teacherimage->path . '" height="' . $teacherimage->height .
-				'" width="' . $teacherimage->width . '" alt="" />';
+			$seriesimage = $images->getSeriesThumbnail($item->series_thumbnail);
+
+			if ($seriesimage->path)
+			{
+				$item->image = '<img src="' . $seriesimage->path . '" height="' . $seriesimage->height . '" width="' . $seriesimage->width . '" alt="" />';
+			}
+
+			$item->serieslink = Route::_('index.php?option=com_proclaim&view=cwmseriesdisplay&id=' . $item->slug . '&t=' . $this->template->id);
+			$teacherimage     = $images->getTeacherImage($item->thumb);
+
+			if ($teacherimage->path)
+			{
+				$item->teacherimage = '<img src="' . $teacherimage->path . '" height="' . $teacherimage->height .
+					'" width="' . $teacherimage->width . '" alt="" />';
+			}
 
 			if (isset($item->description))
 			{
@@ -166,11 +176,15 @@ class HtmlView extends BaseHtmlView
 		$this->pagination = $pagination;
 
 		// Get the main study list image
-		$mainimage        = $images->mainStudyImage();
-		$this->page->main = '<img src="' . $mainimage->path . '" height="' . $mainimage->height . '" width="' . $mainimage->width . '" alt="" />';
+		$mainimage = $images->mainStudyImage();
+
+		if ($mainimage->path)
+		{
+			$this->page->main = '<img src="' . $mainimage->path . '" height="' . $mainimage->height . '" width="' . $mainimage->width . '" alt="" />';
+		}
 
 
-		if ($params->get('series_list_show_pagination') == 1)
+		if ($params->get('series_list_show_pagination') === '1')
 		{
 			$this->page->limits = '<span class="display-limit">' . Text::_('JGLOBAL_DISPLAY_NUM') . $this->pagination->getLimitBox() . '</span>';
 			$dropdowns[]        = array('order' => '0', 'item' => $this->page->limits);

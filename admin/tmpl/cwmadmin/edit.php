@@ -17,6 +17,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
 
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
@@ -620,12 +621,12 @@ $this->useCoreUI = true;
 		<div class="row" id="convert">
 			<h4><?php echo Text::_('JBS_IBM_CONVERT'); ?></h4>
             <a href="<?php echo Route::_('index.php?option=com_proclaim&view=assets&task=cwmadmin.convertSermonSpeaker&' .
-                JSession::getFormToken() . '=1'); ?>"
+                Session::getFormToken() . '=1'); ?>"
                title="<?php echo Text::_('JBS_IBM_CONVERT_SERMON_SPEAKER'); ?>" class="btn"> <i
                         class="icon-big icon-book"> </i>
                 <span><br/> <?php echo Text::_('JBS_IBM_CONVERT_SERMON_SPEAKER'); ?> </span></a>
 			<a href="<?php echo Route::_('index.php?option=com_proclaim&view=assets&task=cwmadmin.convertPreachIt&' .
-				JSession::getFormToken() . '=1'); ?>"
+				Session::getFormToken() . '=1'); ?>"
 			   title="<?php echo Text::_('JBS_ADM_PREACHIT'); ?>" class="btn"> <i
 						class="icon-big icon-list"> </i>
 				<span><br/> <?php echo Text::_('JBS_ADM_PREACHIT'); ?> </span></a>

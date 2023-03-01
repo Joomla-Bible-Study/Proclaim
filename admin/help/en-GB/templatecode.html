@@ -53,7 +53,10 @@ and open the template in the editor.
 <form action="post">
 <div>
     <table class="sample">
+        <thead>
         <th colspan="2">Studies Codes (for all views)</th>
+        </thead>
+        <tbody>
         <tr>
             <td>To get the list, see each view</td>
             <td><input type="text" size="75" onClick="this.select();"
@@ -163,8 +166,7 @@ and open the template in the editor.
             <td>Location</td>
             <td><input type="text" size="75" onClick="this.select();" value="echo $study->location_text;"/></td>
         </tr>
-
-
+        </tbody>
     </table>
 </div>
 <br/>

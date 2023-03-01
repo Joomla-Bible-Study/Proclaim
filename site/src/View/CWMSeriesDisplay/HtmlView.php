@@ -11,18 +11,19 @@ namespace CWM\Component\Proclaim\Site\View\CWMSeriesDisplay;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Table\CWMTemplateTable;
-use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
-use CWM\Component\Proclaim\Site\Helper\CWMPagebuilder;
-use Joomla\CMS\Html\HTMLHelper;
 use CWM\Component\Proclaim\Site\Helper\CWMImages;
+use CWM\Component\Proclaim\Site\Helper\CWMPagebuilder;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Html\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
-use Joomla\CMS\Plugin\PluginHelper;
 
 /**
  * View class for SeriesDisplay
@@ -148,15 +149,14 @@ class HtmlView extends BaseHtmlView
 		$this->seriesstudies = $this->get('Studies');
 
 		// Get the series image
-		$images              = new CWMImages;
 		$image               = CWMImages::getSeriesThumbnail($items->series_thumbnail);
 		$items->image        = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="" />';
-		$teacherimage        = CWMImages::getTeacherThumbnail($items->thumb, $image2 = null);
+		$teacherimage        = CWMImages::getTeacherThumbnail($items->thumb);
 		$items->teacherimage = '<img src="' . $teacherimage->path . '" height="' . $teacherimage->height . '" width="'
 			. $teacherimage->width . '" alt="" />';
-				HtmlHelper::_('proclaim.framework');
 
-		$items->slug = $items->alias ? ($items->id . ':' . $items->alias) : str_replace(' ', '-', htmlspecialchars_decode($items->series_text, ENT_QUOTES))
+		$items->slug = $items->alias ? ($items->id . ':' . $items->alias) :
+			str_replace(' ', '-', htmlspecialchars_decode($items->series_text, ENT_QUOTES))
 			. ':' . $items->id;
 
 		if ($params->get('useexpert_list') > 0 || is_string($params->get('seriesdisplaytemplate')) == true)

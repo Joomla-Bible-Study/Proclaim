@@ -55,4 +55,3 @@ $classelement = $listing->createelement($this->params->get('teachers_element'));
 	?>
 </div>
 <!--end of bsfooter div-->
-</div>

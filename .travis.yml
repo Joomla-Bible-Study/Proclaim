@@ -15,7 +15,7 @@ env:
 matrix:
   fast_finish: true
   include:
-    - php: 7.4
+    - php: 8.0
       env: INSTALL_APCU="yes" INSTALL_MEMCACHE="no"
 
 services:

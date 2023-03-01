@@ -16,7 +16,6 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Input\Input;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\Registry\Registry;
@@ -166,7 +165,7 @@ class CWMStats
 		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query
-			->select('*')
+			->select('id, studytitle, studydate, hits')
 			->from('#__bsms_studies')
 			->where('published = ' . $db->q('1'))
 			->where('hits > ' . $db->q('0'))
@@ -190,7 +189,8 @@ class CWMStats
 	 *
 	 * @return int
 	 *
-	 * @since 9.0.0
+	 * @since      9.0.0
+	 * @deprecated 10.0.0
 	 */
 	public static function get_total_categories(): int
 	{
@@ -201,7 +201,7 @@ class CWMStats
 			->from('#__bsms_mediafiles')
 			->where('published = ' . $db->q('1'));
 		$db->setQuery($query);
-
+		die('need to see this why using this');
 		return (int) $db->loadResult();
 	}
 
@@ -286,7 +286,7 @@ class CWMStats
 		$db         = Factory::getContainer()->get('DatabaseDriver');
 		$query      = $db->getQuery(true);
 		$query
-			->select('*')
+			->select('id, studytitle, studydate, hits')
 			->from('#__bsms_studies')
 			->where('published = ' . $db->q('1'))
 			->where('hits > ' . $db->q('0'))

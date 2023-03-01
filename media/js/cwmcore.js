@@ -6,115 +6,130 @@
  *   reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
-$(document).ready(function () {
-	$('.btnPlay').click(function () {
-		var mediaId = $(this).attr('alt')
-		var url = $(this).attr('href')
-		var mediaid = $('#media-' + mediaId)
+$(function () {
+		$('.btnPlay').on('click', function () {
+				const mediaId = $(this).attr('alt')
+				const url = $(this).attr('href')
+				const mediaid = $('#media-' + mediaId)
 
-		$('.inlinePlayer:not(#media-' + mediaId + ')').hide()
-		$('.inlinePlayer').html('')
-		mediaid.toggle()
-		mediaid.load(
-			'index.php?option=com_proclaim&view=cwmstudieslist&controller=cwmstudieslist&task=inlinePlayer&tmpl=component')
-		return false
-	})
+				$('.inlinePlayer:not(#media-' + mediaId + ')').hide()
+				$('.inlinePlayer').html('')
+				mediaid.toggle()
+				mediaid.load(
+					'index.php?option=com_proclaim&view=cwmstudieslist&controller=cwmstudieslist&task=inlinePlayer&tmpl=component',
+				)
+				return false
+			},
+		)
 
 	if (Modernizr.touch)
 	{
+		const jbsmcloseoverlay = $('.jbsmclose-overlay')
+
 		// show the close overlay button
-		$('.jbsmclose-overlay').removeClass('hidden')
+		jbsmcloseoverlay.removeClass('hidden')
 		// handle the adding of hover class when clicked
-		$('.jbsmimg').click(function (e) {
-			if (!$(this).hasClass('hover'))
-			{
-				$(this).addClass('hover')
-			}
-		})
+		$('.jbsmimg').on('click', function (e) {
+				if (!$(this).hasClass('hover'))
+				{
+					$(this).addClass('hover')
+				}
+			},
+		)
 		// handle the closing of the overlay
-		$('.jbsmclose-overlay').click(function (e) {
-			e.preventDefault()
-			e.stopPropagation()
-			if ($(this).closest('.jbsmimg').hasClass('hover'))
-			{
-				$(this).closest('.jbsmimg').removeClass('hover')
-			}
-		})
+		jbsmcloseoverlay.on('click', function (e) {
+				e.preventDefault()
+				e.stopPropagation()
+				if ($(this).closest('.jbsmimg').hasClass('hover'))
+				{
+					$(this).closest('.jbsmimg').removeClass('hover')
+				}
+			},
+		)
 	}
 	else
 	{
 		// handle the mouseenter functionality
-		$('.jbsmimg').mouseenter(function () {
-			$(this).addClass('hover')
-		})
+		$('.jbsmimg').on('mouseenter', function () {
+				$(this).addClass('hover')
+			},
+		)
 			// handle the mouseleave functionality
 			.mouseleave(function () {
-				$(this).removeClass('hover')
-			})
-	}
-
-	/**
-	 * @title Add Study
-	 */
-	$('#addReference').click(function () {
-		var newReference = $('#reference').clone()
-		var deleteButton = '<a href="#" class="referenceDelete">Delete</a>'
-
-		$(newReference).children('#text').attr('value', '')
-		$(newReference).children('#scripture').selectOptions('0')
-
-		$(newReference).append(deleteButton)
-		$(newReference).appendTo('#references')
-
-		$('.referenceDelete').bind('click', function () {
-			$(this).parent('#reference').remove()
-			return false
-		})
-		return false
-	})
-	$('.referenceDelete').click(function () {
-		$(this).parent('#reference').remove()
-		return false
-	})
-
-	$('.imgChoose').change(function () {
-		var targetImage = $('#img' + $(this).attr('id'))
-		var activeDir = targetImage.attr('src').split('/')
-		activeDir.pop() //Remove the previous image
-
-		if ($(this).val().substr(0, 1) === 0)
-		{
-			targetImage.hide()
-		}
-		else
-		{
-			targetImage.show()
-		}
-
-		targetImage.attr('src', activeDir.join('/') + '/' + $(this).val())
-	})
-
-	/**
-	 * @title Templating Procedures
-	 */
-
-	//Determine the type of template, and route to that function
-	$('#type').change(function () {
-		eval($('#type').find('option:selected').attr('value') + '()')
-	})
-
-	function canvasItemFunctions()
-	{
-		$('#canvasDeleteItem').click(function () {
-			//Delete Item, and update JSON string
-
-			$(this).parent('#canvasListItem').draggable(
-				{
-					handle: 'div#canvasDeleteItem',
+					$(this).removeClass('hover')
 				},
 			)
+	}
 
-		})
+		/**
+		 * @title Add Study
+		 * @deprecated this function is no longer used.
+		 */
+		$('#addReference').on('click', function () {
+				const newReference = $('#reference').clone()
+				const deleteButton = '<a href="#" class="referenceDelete">Delete</a>'
+
+				$(newReference).children('#text').attr('value', '')
+				$(newReference).children('#scripture').selectOptions('0')
+
+				$(newReference).append(deleteButton)
+				$(newReference).appendTo('#references')
+
+				$('.referenceDelete').on('click', function () {
+						$(this).parent('#reference').remove()
+						return false
+					},
+				)
+				return false
+			},
+		)
+		$('.referenceDelete').on('click', function () {
+				$(this).parent('#reference').remove()
+				return false
+			},
+		)
+
+		$('.imgChoose').on('change', function () {
+				const targetImage = $('#img' + $(this).attr('id'))
+				const activeDir = targetImage.attr('src').split('/')
+				activeDir.pop() //Remove the previous image
+
+				if (parseInt($(this).val()) === 0)
+				{
+					targetImage.hide()
+				}
+				else
+				{
+					targetImage.show()
+				}
+
+				targetImage.attr('src', activeDir.join('/') + '/' + $(this).val())
+			},
+		)
+
+		/**
+		 * @title Templating Procedures
+		 */
+
+		//Determine the type of template, and route to that function
+		$('#type').on('change', function () {
+				eval($('#type').find('option:selected').attr('value') + '()')
+			},
+		)
+
+		function canvasItemFunctions()
+		{
+			$('#canvasDeleteItem').click(function () {
+					//Delete Item, and update JSON string
+
+					$(this).parent('#canvasListItem').draggable(
+						{
+							handle: 'div#canvasDeleteItem',
+						},
+					)
+
+				},
+			)
 	}
 
 	/**
@@ -135,39 +150,40 @@ $(document).ready(function () {
 		canvasItemFunctions()
 	}
 
-	function tmplList()
-	{
-		var canvasListItem = '<div id="canvasListItem" class="canvasItem"></div>'
+		function tmplList()
+		{
+			const canvasListItem = '<div id="canvasListItem" class="canvasItem"></div>'
 
-		$('#tmplCanvas').append(canvasListItem)
-		canvasItemControls('List Items')
-	}
+			$('#tmplCanvas').append(canvasListItem)
+			canvasItemControls('List Items')
+		}
 
-	function tmplListItem()
-	{
-		alert('this is the teacher list setup')
-	}
+		function tmplListItem()
+		{
+			alert('this is the teacher list setup')
+		}
 
-	function tmplSingleItem()
-	{
-		alert('this is the teacher list setup')
-	}
+		function tmplSingleItem()
+		{
+			alert('this is the teacher list setup')
+		}
 
-	function tmplModuleList()
-	{
-		alert('this is the teacher list setup')
-	}
+		function tmplModuleList()
+		{
+			alert('this is the teacher list setup')
+		}
 
-	function tmplModuleItem()
-	{
-		alert('this is the teacher list setup')
-	}
+		function tmplModuleItem()
+		{
+			alert('this is the teacher list setup')
+		}
 
-	function tmplPopup()
-	{
-		alert('this is the teacher list setup')
+		function tmplPopup()
+		{
+			alert('this is the teacher list setup')
+		}
 	}
-})
+)
 
 function goTo()
 {
@@ -192,9 +208,9 @@ function goTo()
 
 function ReverseDisplay()
 {
-	var ele = document.getElementById('scripture')
-	var text = document.getElementById('heading')
-	if (ele.style.display == 'block')
+	const ele = document.getElementById('scripture')
+	const text = document.getElementById('heading')
+	if (ele.style.display === 'block')
 	{
 		ele.style.display = 'none'
 		text.innerHTML = 'show'
@@ -218,7 +234,7 @@ function ShowContent(d)
 
 function ReverseDisplay2(d)
 {
-	if (document.getElementById(d).style.display == 'none')
+	if (document.getElementById(d).style.display === 'none')
 	{
 		document.getElementById(d).style.display = 'block'
 	}
@@ -230,39 +246,41 @@ function ReverseDisplay2(d)
 
 function decOnly(i)
 {
-	var t = i.value
+	let t = i.value
 	if (t.length > 0)
 	{
 		t = t.replace(/[^\d\.]+/g, '')
 	}
-	var s = t.split('.')
+
+	const s = t.split('.')
 	if (s.length > 1)
 	{
 		s[1] = s[0] + '.' + s[1]
 		s.shift(s)
 	}
+
 	i.value = s.join('')
 }
 
 function bandwidth(bytees, type)
 {
-	var value = bytees
-	var res
+	let value = bytees
+	let res
 	if (!isNaN(value) && (value != ''))
 	{
-		if (type == 'KB')
+		if (type.toUpperCase() === 'KB')
 		{
 			value *= 1024
 		}
 		else
 		{
-			if (type == 'MB')
+			if (type.toUpperCase() === 'MB')
 			{
 				value *= [Math.pow(1024, 2)]
 			}
 			else
 			{
-				if (type == 'GB')
+				if (type.toUpperCase() === 'GB')
 				{
 					value *= [Math.pow(1024, 3)]
 				}
@@ -284,9 +302,9 @@ function bandwidth(bytees, type)
 
 function transferFileSize()
 {
-	var size = document.getElementById('Text1').value
-	var ty = document.getElementById('Select1').value
-	var ss = bandwidth(size, ty)
+	const size = document.getElementById('Text1').value
+	const ty = document.getElementById('Select1').value
+	const ss = bandwidth(size, ty)
 	if (ss === 'error')
 	{
 		alert('Numbers only please.')

@@ -15,8 +15,8 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMSerie;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -77,7 +77,7 @@ class HtmlView extends BaseHtmlView
 	{
 		$this->form  = $this->get("Form");
 		$this->item  = $this->get("Item");
-		$this->canDo = CWMProclaimHelper::getActions($this->item->id, 'serie');
+		$this->canDo = ContentHelper::getActions('com_proclaim', 'serie', (int) $this->item->id);
 		$admin       = CWMParams::getAdmin();
 		$registry    = new Registry;
 		$registry->loadString($admin->params);

@@ -17,7 +17,6 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\Form\Form;
-use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\Registry\Registry;
@@ -52,7 +51,7 @@ class CWMServerModel extends AdminModel
 	 * @var object
 	 * @since   9.0.0
 	 */
-	private $data;
+	private object $data;
 
 	/**
 	 * @var boolean
@@ -199,7 +198,7 @@ class CWMServerModel extends AdminModel
 	/**
 	 * Get the server form
 	 *
-	 * @return boolean|mixed
+	 * @return \Joomla\CMS\Form\Form|string
 	 *
 	 * @throws \Exception
 	 *
@@ -223,15 +222,9 @@ class CWMServerModel extends AdminModel
 
 		// Add language files
 		$lang = Factory::getApplication()->getLanguage();
+		$lang->load('jbs_addon_' . $type, $path);
 
-		if (!$lang->load('jbs_addon_' . $type, $path))
-		{
-			throw new \Exception(Text::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'));
-		}
-
-		$form = $this->loadForm('com_proclaim.server.' . $type, $type, array('control' => 'jform', 'load_data' => true), true, "/server");
-
-		return $form ?? false;
+		return $this->loadForm('com_proclaim.server.' . $type, $type, array('control' => 'jform', 'load_data' => true), true, "/server");
 	}
 
 	/**

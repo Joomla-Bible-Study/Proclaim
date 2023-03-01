@@ -1,7 +1,7 @@
 // noinspection JSAnnotator
 
 (function () {
-	'use strict'
+	'use strict';
 
 	/**
 	 * @copyright  (C) 2018 Open Source Matters, Inc. <https://www.joomla.org>

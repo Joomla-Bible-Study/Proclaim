@@ -16,8 +16,8 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMMessage;
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
@@ -25,7 +25,6 @@ use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Input\Input;
 use Joomla\Registry\Registry;
-use JToolbarHelper;
 
 /**
  * View class for Message
@@ -106,7 +105,7 @@ class HtmlView extends BaseHtmlView
 	{
 		$this->form       = $this->get("Form");
 		$this->item       = $this->get("Item");
-		$this->canDo      = CWMProclaimHelper::getActions($this->item->id, 'message');
+		$this->canDo      = ContentHelper::getActions('com_proclaim', 'message', (int) $this->item->id);
 		$input            = new Input;
 		$option           = $input->get('option', '', 'cmd');
 		$this->mediafiles = $this->get('MediaFiles');
@@ -132,7 +131,6 @@ class HtmlView extends BaseHtmlView
 
 		HTMLHelper::stylesheet('media/com_proclaim/css/token-input-jbs.min.css');
 
-		//HTMLHelper::_('proclaim.framework');
 		$script = "
             jQuery(document).ready(function() {
                 jQuery('#topics').tokenInput(" . $this->get('alltopics') . ",

@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMLocation;
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
@@ -76,7 +77,7 @@ class HtmlView extends BaseHtmlView
 		$this->form  = $this->get("Form");
 		$this->item  = $this->get("Item");
 		$this->state = $this->get("State");
-		$this->canDo = CWMProclaimHelper::getActions($this->item->id, 'location');
+		$this->canDo = ContentHelper::getActions('com_proclaim', 'location', (int) $this->item->id);
 
 		$this->setLayout("edit");
 
@@ -95,6 +96,7 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0.0
 	 */
 	protected function addToolbar()

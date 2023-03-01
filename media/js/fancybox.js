@@ -1,28 +1,29 @@
 /**
- * Created with JetBrains PhpStorm.
- * User: bcordis
- * Date: 9/14/13
- * Time: 11:35 AM
- * To change this template use File | Settings | File Templates.
+ * @package     Proclaim.Fancybox
+ * @subpackage  com_proclaim
+ *
+ * @copyright   Copyright (C) 2005 - 2023 Open Source Matters, Inc. All rights
+ *   reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
-;(function (window, document, $) {
-	$(document).ready(function () {
+(function (window, document, $) {
+	$(function () {
 		$('.fancybox_jwplayer').on('click', function () {
-			var tarGet
-			var contentPanelId = $(this).attr('id')
-			var id = $('#' + contentPanelId)
-			var myVideo = id.attr('data-src')
-			var title = id.attr('title')
-			var height = id.attr('pheight')
-			var width = id.attr('pwidth')
-			var ptype = id.attr('ptype')
-			var potext = id.attr('potext')
-			var autostart = id.attr('autostart')
-			var controls = id.attr('data-controls') || true
-			var logo = id.attr('data-logo')
-			var logolink = id.attr('data-logolink') || '#'
-			var image = id.attr('data-image')
-			var mute = id.attr('data-mute') || false
+			let tarGet
+			const contentPanelId = $(this).attr('id')
+			const id = $('#' + contentPanelId)
+			const myVideo = id.attr('data-src')
+			const title = id.attr('title')
+			const height = id.attr('pheight')
+			const width = id.attr('pwidth')
+			const ptype = id.attr('ptype')
+			const potext = id.attr('potext')
+			const autostart = id.attr('autostart')
+			const controls = id.attr('data-controls') || true
+			const logo = id.attr('data-logo')
+			const logolink = id.attr('data-logolink') || '#'
+			const image = id.attr('data-image')
+			const mute = id.attr('data-mute') || false
 			$.fancybox.open({
 				content: '<div id="video_container"></div>',
 				type: 'html',
@@ -31,7 +32,7 @@
 				opts: {
 					smallBtn: false,
 					afterLoad: function () {
-						var playerInstance = jwplayer('video_container')
+						const playerInstance = jwplayer('video_container')
 						playerInstance.setup({
 							title: title,
 							logo: {
