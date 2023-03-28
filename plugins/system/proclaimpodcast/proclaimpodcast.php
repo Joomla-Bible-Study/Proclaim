@@ -16,6 +16,7 @@ use CWM\Component\Proclaim\Site\Helper\CWMPodcast;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
+use JUri;
 
 /**
  * JBSPodcast jPlugin class
@@ -140,7 +141,7 @@ class PlgSystemProclaimPodcast extends CMSPlugin
 	public function checkdays($params)
 	{
 		$checkdays = false;
-		$config    = Factory::getConfig();
+		$config    = Factory::getApplication()->get();
 		$offset    = $config->get('config.offset');
 
 		$now   = time();

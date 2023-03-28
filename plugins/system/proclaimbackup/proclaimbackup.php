@@ -43,13 +43,13 @@ class PlgSystemProclaimBackup extends CMSPlugin
 		parent::__construct($subject, $config);
 
 		// Always load JBSM API if it exists.
-		$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
+/*		$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
 		if (file_exists($api))
 		{
 			require_once $api;
 		}
-
+*/
 		$this->loadLanguage();
 	}
 
@@ -139,7 +139,7 @@ class PlgSystemProclaimBackup extends CMSPlugin
 	public function checkdays($params)
 	{
 		$checkdays = false;
-		$config    = Factory::getConfig();
+		$config    = Factory::getApplication()->get();
 		$offset    = $config->get('config.offset');
 
 		$now   = time();
@@ -298,7 +298,7 @@ class PlgSystemProclaimBackup extends CMSPlugin
 	public function doEmail($params, $dobackup)
 	{
 		$livesite = JUri::root();
-		$config   = Factory::getConfig();
+		$config   = Factory::getApplication()->get();
 		$mailfrom = $config->get('config.mailfrom');
 		$fromname = $config->get('config.fromname');
 		jimport('joomla.filesystem.file');
@@ -368,8 +368,8 @@ class PlgSystemProclaimBackup extends CMSPlugin
 	 */
 	public function updatefiles($params)
 	{
-		jimport('joomla.filesystem.folder');
-		jimport('joomla.filesystem.file');
+		//jimport('joomla.filesystem.folder');
+		//jimport('joomla.filesystem.file');
 		$path          = JPATH_SITE . '/media/com_proclaim/database';
 		$exclude = array('.git', '.svn', 'CVS', '.DS_Store', '__MACOSX', '.html');
 		$excludefilter = array('^\..*', '.*~');

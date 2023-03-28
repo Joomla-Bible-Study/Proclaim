@@ -191,7 +191,7 @@ class CWMBackup
 		// Used for Checking file is from the correct version of biblestudy component
 		if (strpos($table, 'bsms_admin'))
 		{
-			$export .= "\n--\n-- " . BIBLESTUDY_VERSION_UPDATEFILE . "\n--\n\n";
+			//$export .= "\n--\n-- " . BIBLESTUDY_VERSION_UPDATEFILE . "\n--\n\n";
 		}
 
 		// Start of Tables
