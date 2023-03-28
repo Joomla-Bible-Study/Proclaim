@@ -14,6 +14,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Log\Log;
 
+
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
@@ -96,6 +97,8 @@ $language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, null, true);
 // Add to to api to load the core CSS and JS for the component to work.
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+// We register the extension registry because in  modules and plugins the registry is not automatically loaded
+$wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
 $wa->useStyle('com_proclaim.cwmcore')
 	->useScript('com_proclaim.cwmcorejs');
 
