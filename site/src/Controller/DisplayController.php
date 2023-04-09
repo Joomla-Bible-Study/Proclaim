@@ -65,10 +65,8 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
 	 * @throws \Exception
 	 * @since   1.5
 	 */
-	public function display($cachable = false, $urlparams = array())
+	public function display($cachable = true, $urlparams = array()): DisplayController
 	{
-		$cachable = true;
-
 		/*
 		Set the default view name and format from the Request.
 		Note we are using a_id to avoid collisions with the router and the return page.

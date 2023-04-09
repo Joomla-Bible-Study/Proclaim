@@ -17,9 +17,6 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 
-// Load CSS for view.
-HTMLHelper::_('proclaim.loadcss', $this->params);
-
 $CWMLanding = new CWMLanding;
 $params = $this->params;
 ?>

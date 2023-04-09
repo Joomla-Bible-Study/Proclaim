@@ -63,78 +63,79 @@ class Router extends RouterView
 	{
 		$this->db              = $db;
 		$this->categoryFactory = $categoryFactory;
+
 		$params                = ComponentHelper::getParams('com_proclaim');
 		$this->noIDs           = (bool) $params->get('sef_ids');
 
-		$Sermons = new RouterViewConfiguration('CWMSermons');
+		$Sermons = new RouterViewConfiguration('cwmsermons');
 		$Sermons->setKey('id');
 		$this->registerView($Sermons);
 
-		$Sermon = new RouterViewConfiguration('CWMSermon');
+		$Sermon = new RouterViewConfiguration('cwmsermon');
 		$Sermon->setKey('id');
 		$this->registerView($Sermon);
 
-		$Teachers = new RouterViewConfiguration('CWMTeachers');
+		$Teachers = new RouterViewConfiguration('cwmteachers');
 		$Teachers->setKey('id');
 		$this->registerView($Teachers);
 
-		$Teacher = new RouterViewConfiguration('CWMTeacher');
+		$Teacher = new RouterViewConfiguration('cwmteacher');
 		$Teacher->setKey('id');
 		$this->registerView($Teacher);
 
-		$SeriesDisplay = new RouterViewConfiguration('CWMSeriesDisplay');
+		$SeriesDisplay = new RouterViewConfiguration('cwmseriesdisplay');
 		$SeriesDisplay->setKey('id');
 		$this->registerView($SeriesDisplay);
 
-		$SeriesDisplays = new RouterViewConfiguration('CWMSeriesDisplays');
+		$SeriesDisplays = new RouterViewConfiguration('cwmseriesdisplays');
 		$SeriesDisplays->setKey('id');
 		$this->registerView($SeriesDisplays);
 
-		$commentform = new RouterViewConfiguration('CWMCommentForm');
+		$commentform = new RouterViewConfiguration('cwmcommentform');
 		$commentform->setKey('id');
 		$this->registerView($commentform);
 
-		$CommentList = new RouterViewConfiguration('CWMCommentList');
+		$CommentList = new RouterViewConfiguration('cwmcommentlist');
 		$CommentList->setKey('id');
 		$this->registerView($CommentList);
 
-		$LandingPage = new RouterViewConfiguration('CWMLandingPage');
+		$LandingPage = new RouterViewConfiguration('cwmlandingpage');
 		$LandingPage->setKey('id');
 		$this->registerView($LandingPage);
 
-		$Latest = new RouterViewConfiguration('CWMLatest');
+		$Latest = new RouterViewConfiguration('cwmlatest');
 		$Latest->setKey('id');
 		$this->registerView($Latest);
 
-		$MediaFileForm = new RouterViewConfiguration('CWMMediaFileForm');
+		$MediaFileForm = new RouterViewConfiguration('cwmmediafileform');
 		$MediaFileForm->setKey('id');
 		$this->registerView($MediaFileForm);
 
-		$MediaFileList = new RouterViewConfiguration('CWMMediaFileList');
+		$MediaFileList = new RouterViewConfiguration('cwmmediafilelist');
 		$MediaFileList->setKey('id');
 		$this->registerView($MediaFileList);
 
-		$proclaim = new RouterViewConfiguration('CWMMessageForm');
+		$proclaim = new RouterViewConfiguration('cwmmessageform');
 		$proclaim->setKey('id');
 		$this->registerView($proclaim);
 
-		$proclaim = new RouterViewConfiguration('CWMMessageList');
+		$proclaim = new RouterViewConfiguration('cwmmessagelist');
 		$proclaim->setKey('id');
 		$this->registerView($proclaim);
 
-		$proclaim = new RouterViewConfiguration('CWMPodcastDisplay');
+		$proclaim = new RouterViewConfiguration('cwmpodcastdisplay');
 		$proclaim->setKey('id');
 		$this->registerView($proclaim);
 
-		$proclaim = new RouterViewConfiguration('CWMPopUp');
+		$proclaim = new RouterViewConfiguration('cwmpopup');
 		$proclaim->setKey('id');
 		$this->registerView($proclaim);
 
-		$proclaim = new RouterViewConfiguration('CWMSqueezeBox');
+		$proclaim = new RouterViewConfiguration('cwmsqueezebox');
 		$proclaim->setKey('id');
 		$this->registerView($proclaim);
 
-		$proclaim = new RouterViewConfiguration('CWMTerms');
+		$proclaim = new RouterViewConfiguration('cwmterms');
 		$proclaim->setKey('id');
 		$this->registerView($proclaim);
 
