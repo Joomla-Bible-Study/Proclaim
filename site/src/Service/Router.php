@@ -64,15 +64,19 @@ class Router extends RouterView
 		$this->db              = $db;
 		$this->categoryFactory = $categoryFactory;
 
-		$params                = ComponentHelper::getParams('com_proclaim');
-		$this->noIDs           = (bool) $params->get('sef_ids');
+		$params      = ComponentHelper::getParams('com_proclaim');
+		$this->noIDs = (bool) $params->get('sef_ids');
+
+		$landingPage = new RouterViewConfiguration('cwmlandingpage');
+		$landingPage->setKey('id');
+		$this->registerView($landingPage);
 
 		$Sermons = new RouterViewConfiguration('cwmsermons');
 		$Sermons->setKey('id');
 		$this->registerView($Sermons);
 
 		$Sermon = new RouterViewConfiguration('cwmsermon');
-		$Sermon->setKey('id');
+		$Sermon->setKey('id')->setParent($landingPage, 'a_id');
 		$this->registerView($Sermon);
 
 		$Teachers = new RouterViewConfiguration('cwmteachers');
@@ -98,10 +102,6 @@ class Router extends RouterView
 		$CommentList = new RouterViewConfiguration('cwmcommentlist');
 		$CommentList->setKey('id');
 		$this->registerView($CommentList);
-
-		$LandingPage = new RouterViewConfiguration('cwmlandingpage');
-		$LandingPage->setKey('id');
-		$this->registerView($LandingPage);
 
 		$Latest = new RouterViewConfiguration('cwmlatest');
 		$Latest->setKey('id');
@@ -176,7 +176,7 @@ class Router extends RouterView
 
 		if ($this->noIDs)
 		{
-			list($void, $segment) = explode(':', $id, 2);
+			[$void, $segment] = explode(':', $id, 2);
 
 			return array($void => $segment);
 		}
@@ -210,7 +210,7 @@ class Router extends RouterView
 
 		if ($this->noIDs)
 		{
-			list($void, $segment) = explode(':', $id, 2);
+			[$void, $segment] = explode(':', $id, 2);
 
 			return array($void => $segment);
 		}
@@ -301,7 +301,6 @@ class Router extends RouterView
 			return (int) $this->db->loadResult();
 		}
 
-//var_dump($segment);
 		return (int) $segment;
 	}
 

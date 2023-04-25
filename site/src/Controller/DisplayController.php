@@ -41,12 +41,12 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
 		// Contact frontpage Editor contacts proxying.
 		$this->input = Factory::getApplication()->input;
 
-		if ($this->input->get('view') === 'CWMLandingPage' && $this->input->get('layout') === 'modal')
+		if ($this->input->get('view') === 'cwmlandingpage' && $this->input->get('layout') === 'modal')
 		{
 			$config['base_path'] = JPATH_ADMINISTRATOR . '/components';
 		}
 		// Sermon frontpage Editor article proxying:
-		elseif ($this->input->get('view') === 'CWMSermons' && $this->input->get('layout') === 'modal')
+		elseif ($this->input->get('view') === 'cwmsermons' && $this->input->get('layout') === 'modal')
 		{
 			$config['base_path'] = JPATH_ADMINISTRATOR . '/components';
 		}
@@ -73,7 +73,7 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
 		Frontend is a bit messier than the backend.
 		*/
 		$id    = $this->input->getInt('a_id');
-		$vName = $this->input->getCmd('view', 'CWMLandingPage');
+		$vName = $this->input->getCmd('view', 'cwmlandingpage');
 		$this->input->set('view', $vName);
 
 		$user = $this->app->getIdentity();
@@ -88,12 +88,7 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
 		}
 
 		// Attempt to change mysql for error in large select
-		$t = $this->input->get('t', '', 'int');
-
-		if (!$t)
-		{
-			$t = 1;
-		}
+		$t = $this->input->get('t', '1', 'int');
 
 		$this->input->set('t', $t);
 
