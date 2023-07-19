@@ -14,6 +14,7 @@ namespace CWM\Component\Proclaim\Site\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Application\CMSApplication;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
@@ -94,7 +95,6 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
 
 		$safeurlparams = array(
 			'id'               => 'INT',
-			'cid'              => 'ARRAY',
 			'year'             => 'INT',
 			'month'            => 'INT',
 			'limit'            => 'INT',
