@@ -94,59 +94,54 @@ class ProclaimNomenuRules implements RulesInterface
 	 */
 	public function parse(&$segments, &$vars): void
 	{
-		$active = $this->router->menu->getActive();
+		$views = $this->router->getViews();
 
-		if (is_object($active))
+		if (isset($views[$segments[0]]))
 		{
-			$views = $this->router->getViews();
+			$vars['view'] = array_shift($segments);
+			$view         = $views[$vars['view']];
 
-			if (isset($views[$segments[0]]))
+			if (isset($view->key) && isset($segments[0]))
 			{
-				$vars['view'] = array_shift($segments);
-				$view         = $views[$vars['view']];
-
-				if (isset($view->key) && isset($segments[0]))
+				if (\is_callable([$this->router, 'get' . ucfirst($view->name) . 'Id']))
 				{
-					if (\is_callable([$this->router, 'get' . ucfirst($view->name) . 'Id']))
+					$input = $this->router->app->getInput();
+
+					if ($view->parent_key && $input->get($view->parent_key))
 					{
-						$input = $this->router->app->getInput();
+						$vars[$view->parent->key] = $input->get($view->parent_key);
+						$vars[$view->parent_key]  = $input->get($view->parent_key);
+					}
 
-						if ($view->parent_key && $input->get($view->parent_key))
-						{
-							$vars[$view->parent->key] = $input->get($view->parent_key);
-							$vars[$view->parent_key]  = $input->get($view->parent_key);
-						}
+					if ($view->nestable)
+					{
+						$vars[$view->key] = 0;
 
-						if ($view->nestable)
-						{
-							$vars[$view->key] = 0;
-
-							while (count($segments))
-							{
-								$segment = array_shift($segments);
-								$result  = call_user_func([$this->router, 'get' . ucfirst($view->name) . 'Id'], $segment, $vars);
-
-								if (!$result)
-								{
-									array_unshift($segments, $segment);
-									break;
-								}
-
-								$vars[$view->key] = preg_replace('/-/', ':', $result, 1);
-							}
-						}
-						else
+						while (count($segments))
 						{
 							$segment = array_shift($segments);
 							$result  = call_user_func([$this->router, 'get' . ucfirst($view->name) . 'Id'], $segment, $vars);
+
+							if (!$result)
+							{
+								array_unshift($segments, $segment);
+								break;
+							}
 
 							$vars[$view->key] = preg_replace('/-/', ':', $result, 1);
 						}
 					}
 					else
 					{
-						$vars[$view->key] = preg_replace('/-/', ':', array_shift($segments), 1);
+						$segment = array_shift($segments);
+						$result  = call_user_func([$this->router, 'get' . ucfirst($view->name) . 'Id'], $segment, $vars);
+
+						$vars[$view->key] = preg_replace('/-/', ':', $result, 1);
 					}
+				}
+				else
+				{
+					$vars[$view->key] = preg_replace('/-/', ':', array_shift($segments), 1);
 				}
 			}
 		}
