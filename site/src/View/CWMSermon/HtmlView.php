@@ -14,6 +14,7 @@ namespace CWM\Component\Proclaim\Site\View\CWMSermon;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 use CWM\Component\Proclaim\Site\Helper\CWMListing;
 use CWM\Component\Proclaim\Site\Helper\CWMPagebuilder;
 use CWM\Component\Proclaim\Site\Helper\CWMPodcastsubscribe;
@@ -106,11 +107,11 @@ class HtmlView extends BaseHtmlView
 	 */
 	protected $page;
 
-	/** @var  string Template
-	 *
-	 * @since 7.0
-	 */
-	protected $template;
+//	/** @var  \stdclass Template
+//	 *
+//	 * @since 7.0
+//	 */
+//	protected \stdClass $template;
 
 	/** @var  string Article
 	 *
@@ -157,7 +158,8 @@ class HtmlView extends BaseHtmlView
 		$this->state    = $this->get('State');
 		$this->user     = $user;
 		$this->comments = $this->get('comments');
-		$this->simple = CWMHelper::getSimpleView();
+		$this->template = CWMParams::getTemplateparams();
+		$this->simple   = CWMHelper::getSimpleView();
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))

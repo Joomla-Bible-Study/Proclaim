@@ -30,8 +30,6 @@ use Joomla\CMS\Image\Image;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
-use Joomla\Component\Mails\Administrator\Table\TemplateTable;
-use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
 /**
@@ -44,22 +42,22 @@ class CWMListing
 	/** @var  Registry
 	 * @since 7.0
 	 */
-	public $params;
+	public Registry $params;
 
 	/**
 	 * Get Fluid Listing
 	 *
-	 * @param   Object            $items     Items
-	 * @param   Registry          $params    Page Params
-	 * @param   CWMTemplateTable  $template  Template name
-	 * @param   String            $type      Type of Listing
+	 * @param   mixed      $items     Items
+	 * @param   Registry   $params    Page Params
+	 * @param   \stdClass  $template  Template name
+	 * @param   String     $type      Type of Listing
 	 *
 	 * @return string
 	 *
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function getFluidListing($items, $params, $template, $type)
+	public function getFluidListing($items, Registry $params, \stdClass $template, string $type): string
 	{
 		$list         = null;
 		$row          = array();
@@ -401,37 +399,28 @@ class CWMListing
 		// Start the table for the entire list
 		$list .= '<div class="table-responsive" about="' . $type . '"><table class="table w-auto table-borderless">';
 
-		if ($type === 'sermons')
+		if (($type === 'sermons') && $params->get('use_headers_list') > 0)
 		{
-			if ($params->get('use_headers_list') > 0)
-			{
-				// Start the header
-				$list .= '<thead class="' . $params->get('listheadertype') . '">';
-				$list .= $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header = 1, $type);
-				$list .= '</thead>';
-			}
+			// Start the header
+			$list .= '<thead class="' . $params->get('listheadertype') . '">';
+			$list .= $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header = 1, $type);
+			$list .= '</thead>';
 		}
 
-		if ($type === 'sermon')
+		if (($type === 'sermon') && $params->get('use_headers_view') > 0)
 		{
-			if ($params->get('use_headers_view') > 0)
-			{
-				// Start the header
-				$list .= '<thead class="' . $params->get('listheadertype') . '">';
-				$list .= $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header = 1, $type);
-				$list .= '</thead>';
-			}
+			// Start the header
+			$list .= '<thead class="' . $params->get('listheadertype') . '">';
+			$list .= $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header = 1, $type);
+			$list .= '</thead>';
 		}
 
-		if ($type === 'seriesdisplays')
+		if (($type === 'seriesdisplays') && $params->get('use_headers_series') == 1)
 		{
-			if ($params->get('use_headers_series') == 1)
-			{
-				// Start the header
-				$list .= '<thead class="' . $params->get('listheadertype') . '" colspan="12">';
-				$list .= $this->getFluidRow($listrows, $listsorts, $items[0], $params, $template, $oddeven, $header = 1, $type);
-				$list .= '</thead>';
-			}
+			// Start the header
+			$list .= '<thead class="' . $params->get('listheadertype') . '" colspan="12">';
+			$list .= $this->getFluidRow($listrows, $listsorts, $items[0], $params, $template, $oddeven, $header = 1, $type);
+			$list .= '</thead>';
 		}
 
 		if ($type === 'seriesdisplay')
@@ -442,11 +431,11 @@ class CWMListing
 
 				// Start the header
 				$list .= '<thead class="' . $params->get('listheadertype') . '">';
-				$list    .= $this->getFluidRow($listrows, $listsorts, $items, $params, $template, $oddeven, $header = 1, $type);
+				$list    .= $this->getFluidRow($listrows, $listsorts, $items[0], $params, $template, $oddeven, $header = 1, $type);
 				$list .= '</thead>';
 			}
 
-			$list .= $this->getFluidRow($listrows, $listsorts, $items, $params, $template, $oddeven, $header = 0, $type);
+			$list .= $this->getFluidRow($listrows, $listsorts, $items[0], $params, $template, $oddeven, $header = 0, $type);
 		}
 
 		if ($type === 'teacher')
@@ -457,22 +446,19 @@ class CWMListing
 
 				// Start the header
 				$list .= '<thead class="' . $params->get('listheadertype') . '">';
-				$list    .= $this->getFluidRow($listrows, $listsorts, $items, $params, $template, $oddeven, $header = 1, $type);
+				$list    .= $this->getFluidRow($listrows, $listsorts, $items[0], $params, $template, $oddeven, $header = 1, $type);
 				$list .= '</thead>';
 			}
 
-			$list .= $this->getFluidRow($listrows, $listsorts, $items, $params, $template, $oddeven, $header = 0, $type);
+			$list .= $this->getFluidRow($listrows, $listsorts, $items[0], $params, $template, $oddeven, $header = 0, $type);
 		}
 
-		if ($type === 'teachers')
+		if (($type === 'teachers') && $params->get('use_headers_teacher_list') > 0)
 		{
-			if ($params->get('use_headers_teacher_list') > 0)
-			{
-				// Start the header
-				$list .= '<thead class="' . $params->get('listheadertype') . '">';
-				$list .= $this->getFluidRow($listrows, $listsorts, $items, $params, $template, $oddeven, $header = 1, $type);
-				$list .= '</thead>';
-			}
+			// Start the header
+			$list .= '<thead class="' . $params->get('listheadertype') . '">';
+			$list .= $this->getFluidRow($listrows, $listsorts, $items[0], $params, $template, $oddeven, $header = 1, $type);
+			$list .= '</thead>';
 		}
 
 		// Go through and attach the media files as an array to their study
@@ -585,7 +571,7 @@ class CWMListing
 	 *
 	 * @since 7.0
 	 */
-	public function getMediaFiles($medias)
+	public function getMediaFiles(array $medias)
 	{
 		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
@@ -749,21 +735,21 @@ class CWMListing
 	/**
 	 * Get Fluid Row
 	 *
-	 * @param   array             $listrows   ?
-	 * @param   array             $listsorts  ?
-	 * @param   Object            $item       ?
-	 * @param   Registry          $params     Item Params
-	 * @param   CWMTemplateTable  $template   Template info
-	 * @param   string            $oddeven    ?
-	 * @param   integer           $header     ?
-	 * @param   string            $type       ?
+	 * @param   array      $listrows   ?
+	 * @param   array      $listsorts  ?
+	 * @param   Object     $item       ?
+	 * @param   Registry   $params     Item Params
+	 * @param   \stdClass  $template   Template info
+	 * @param   string     $oddeven    ?
+	 * @param   integer    $header     ?
+	 * @param   string     $type       ?
 	 *
 	 * @return string
 	 *
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, int $header, $type)
+	public function getFluidRow(array $listrows, array $listsorts, object $item, Registry $params, \stdClass $template, string $oddeven, int $header, string $type): string
 	{
 		$span        = '';
 		$headerstyle = '';
@@ -1166,7 +1152,7 @@ class CWMListing
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function getFluidData($item, $row, $params, $template, int $header, $type)
+	public function getFluidData(object $item, object $row, Registry $params, \stdClass $template, int $header, string $type): string
 	{
 		$registry = new Registry;
 
@@ -1914,7 +1900,7 @@ class CWMListing
 					$item->teacher_id = $item->id;
 				}
 
-				$link = $this->getLink($row->linktype, $item->id, $item->teacher_id, $params, $item, $template);
+				$link = $this->getLink($row->linktype, $item->id, $item->teacher_id, $params, $item, $template, $type);
 			}
 		}
 
@@ -1980,18 +1966,18 @@ class CWMListing
 	/**
 	 * Get Fluid Custom
 	 *
-	 * @param   String            $custom    Custom String
-	 * @param   Object            $item      Study Item
-	 * @param   Registry          $params    Params
-	 * @param   CWMTemplateTable  $template  Template Table Data
-	 * @param   String            $type      Type of data
+	 * @param   String     $custom    Custom String
+	 * @param   Object     $item      Study Item
+	 * @param   Registry   $params    Params
+	 * @param   \stdClass  $template  Template Table Data
+	 * @param   String     $type      Type of data
 	 *
 	 * @return mixed
 	 *
 	 * @throws Exception
 	 * @since 7.0
 	 */
-	public function getFluidCustom($custom, $item, $params, $template, $type)
+	public function getFluidCustom(string $custom, object $item, Registry $params, \stdClass $template, string $type)
 	{
 		$countbraces = substr_count($custom, '{');
 
@@ -2012,18 +1998,18 @@ class CWMListing
 	/**
 	 * Get Element
 	 *
-	 * @param   String         $custom    Custom String
-	 * @param   Object         $row       Row Data
-	 * @param   Registry       $params    Params
-	 * @param   TemplateTable  $template  Template Data
-	 * @param   String         $type      Type of element
+	 * @param   String     $custom    Custom String
+	 * @param   Object     $row       Row Data
+	 * @param   Registry   $params    Params
+	 * @param   \stdClass  $template  Template Data
+	 * @param   String     $type      Type of element
 	 *
 	 * @return mixed|null|string
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function getElement($custom, $row, $params, $template, $type)
+	public function getElement(string $custom, object $row, Registry $params, \stdClass $template, string $type)
 	{
 		$element = null;
 
@@ -2250,11 +2236,11 @@ class CWMListing
 	 * @param   int       $esv           ESV String
 	 * @param   int       $scripturerow  Scripture Row
 	 *
-	 * @return string
+	 * @return string|null
 	 *
 	 * @since 7.0
 	 */
-	public function getScripture(Registry $params, $row, int $esv, int $scripturerow)
+	public function getScripture(Registry $params, object $row, int $esv, int $scripturerow): ?string
 	{
 		$scripture = '';
 		$book      = '';
@@ -2264,7 +2250,7 @@ class CWMListing
 			return null;
 		}
 
-		if (!isset($row->booknumber) || empty($row->booknumber))
+		if (empty($row->booknumber))
 		{
 			$row->booknumber = 0;
 		}
@@ -2435,16 +2421,16 @@ class CWMListing
 	/**
 	 * Get Fluid Media Files
 	 *
-	 * @param   Object            $item      Study item
-	 * @param   Registry          $params    Params
-	 * @param   CWMTemplateTable  $template  Template return
+	 * @param   Object     $item      Study item
+	 * @param   Registry   $params    Params
+	 * @param   \stdClass  $template  Template return
 	 *
 	 * @return string
 	 *
 	 * @throws \Exception
 	 * @since 9.0.0
 	 */
-	public function getFluidMediaFiles($item, $params, $template)
+	public function getFluidMediaFiles(object $item, Registry $params, \stdClass $template): string
 	{
 		$med = new CWMMedia;
 
@@ -2472,7 +2458,7 @@ class CWMListing
 	 *
 	 * @since 7.0
 	 */
-	public function getStudyDate($params, $studydate)
+	public function getStudyDate(Registry $params, string $studydate): string
 	{
 		$customDate = $params->get('custom_date_format');
 
@@ -2537,18 +2523,18 @@ class CWMListing
 	/**
 	 * Use JImage Class
 	 *
-	 * @param   String  $path    Path to File
-	 * @param   String  $alt     Alternate Text
-	 * @param   String  $id      CSS ID for the image
-	 * @param   int     $width   Width
-	 * @param   int     $height  Height
-	 * @param   string  $class   CSS Class
+	 * @param   String       $path    Path to File
+	 * @param   string|null  $alt     Alternate Text
+	 * @param   null         $id      CSS ID for the image
+	 * @param   null         $width   Width
+	 * @param   null         $height  Height
+	 * @param   null         $class   CSS Class
 	 *
 	 * @return boolean|\stdClass
 	 *
 	 * @since 9.0.0
 	 */
-	public function useJImage($path, $alt = null, $id = null, $width = null, $height = null, $class = null)
+	public function useJImage(string $path, string $alt = null, $id = null, $width = null, $height = null, $class = null)
 	{
 		$return = false;
 
@@ -2558,7 +2544,6 @@ class CWMListing
 		}
 		catch (\Exception $e)
 		{
-			$return = false;
 		}
 
 		if ($id)
@@ -2593,31 +2578,32 @@ class CWMListing
 	/**
 	 *  Get Link
 	 *
-	 * @param   bool              $islink      True is a link, False is not
-	 * @param   string            $id3         Id3 data
-	 * @param   int               $tid         Template ID
-	 * @param   Registry          $params      Params
-	 * @param   object            $row         Row data
-	 * @param   CWMTemplateTable  $templateid  Template Table Data
+	 * @param   int        $islink    What type of link
+	 * @param   string     $id3       Id3 data
+	 * @param   int        $tid       Template ID
+	 * @param   Registry   $params    Params
+	 * @param   \stdClass  $row       Row data
+	 * @param   \stdClass  $template  Template Table Data
+	 * @param   string     $type      Type for Series display
 	 *
 	 * @return string
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
-	private function getLink($islink, $id3, $tid, $params, $row, $templateid)
+	private function getLink(int $islink, string $id3, int $tid, Registry $params, \stdClass $row, \stdClass $template, string $type): string
 	{
-		$input = new Input;
-		$view   = $input->getString('view', '');
 		$column = '';
 
 		switch ($islink)
 		{
 			case 1 :
-					$link = Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
+				$link = Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
 
-				if ($view === 'seriesdisplays')
+				if ($type === 'seriesdisplays')
 				{
-					$link = Route::_('index.php?option=com_proclaim&view=cwmseriesdisplay&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
+					$link = Route::_('index.php?option=com_proclaim&view=cwmseriesdisplay&id=' . $row->slug . '&t='
+						. $params->get('detailstemplateid'));
 				}
 
 				$column = '<a href="' . $link . '">';
@@ -2633,13 +2619,13 @@ class CWMListing
 
 				$link = Route::_(CWMHelperRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
 
-				$column = CWMHelper::getTooltip($row, $params, $templateid);
+				$column = CWMHelper::getTooltip($row, $params, $template);
 				$column .= '<a href="' . $link . '">';
 
 				break;
 
 			case 5 :
-				$column = CWMHelper::getTooltip($row, $params, $templateid);
+				$column = CWMHelper::getTooltip($row, $params, $template);
 				break;
 
 			case 6 :

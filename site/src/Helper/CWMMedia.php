@@ -1241,6 +1241,9 @@ class CWMMedia
 	{
 		switch ($file_size)
 		{
+			case $file_size = 0 :
+				$file_size   = '0 Bytes';
+				break;
 			case  $file_size < 1024 :
 				$this->fsize = $file_size;
 				$file_size   .= ' Bytes';

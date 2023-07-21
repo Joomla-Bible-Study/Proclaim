@@ -38,7 +38,7 @@ class CWMAssetsController extends BaseController
 	 *
 	 * @since 7.0
 	 */
-	protected $view_list = 'cwmadmin';
+	protected string $view_list = 'CWMAssets';
 
 	/**
 	 * The default view for the display method.
@@ -79,7 +79,7 @@ class CWMAssetsController extends BaseController
 	public function checkassets(): void
 	{
 		// Check for request forgeries.
-		Session::checkToken('get') || Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+		(Session::checkToken('get') || Session::checkToken()) or jexit(Text::_('JINVALID_TOKEN'));
 
 		$model = new CWMAssetsModel;
 		$checkassets = $model->checkAssets();
@@ -102,7 +102,7 @@ class CWMAssetsController extends BaseController
 	public function browse(): void
 	{
 		// Check for request forgeries.
-//		Session::checkToken('get') or jexit(Text::_('JINVALID_TOKEN'));
+		(Session::checkToken('get') || Session::checkToken()) or jexit(Text::_('JINVALID_TOKEN'));
 
 		$app = Factory::getApplication();
 		$session = $app->getSession();
@@ -138,11 +138,11 @@ class CWMAssetsController extends BaseController
 	public function clear(): void
 	{
 		// Check for request forgeries.
-		Session::checkToken('get') or jexit(Text::_('JINVALID_TOKEN'));
+		(Session::checkToken('get') || Session::checkToken()) or jexit(Text::_('JINVALID_TOKEN'));
 
 		CWMHelper::clearcache('administrator');
 		CWMHelper::clearcache('site');
-		$session = Factory::getSession();
+		$session = Factory::getApplication()->getSession();
 		$session->set('assat_stack', '', 'CWM');
 		$app = Factory::getApplication();
 		$app->input->set('view', 'CWMAssets');
@@ -160,7 +160,7 @@ class CWMAssetsController extends BaseController
 	public function run(): void
 	{
 		// Check for request forgeries.
-		Session::checkToken('get') || Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+		(Session::checkToken('get') || Session::checkToken()) or jexit(Text::_('JINVALID_TOKEN'));
 
 		$app   = Factory::getApplication();
 		$model = new CWMAssetsModel;

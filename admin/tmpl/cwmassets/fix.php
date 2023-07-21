@@ -50,7 +50,7 @@ $wa->addInlineScript("if (typeof jQuery == 'function')
 			{ ?>
 				<input type="hidden" name="task" value="cwmassets.browse"/>
 			<?php }
-			elseif ($this->more)
+			elseif ($this->more === true)
 			{ ?>
 				<input type="hidden" name="task" value="cwmassets.run"/>
 			<?php } ?>
@@ -60,20 +60,10 @@ $wa->addInlineScript("if (typeof jQuery == 'function')
 			<input type="hidden" name="option" value="com_proclaim"/>
 		</form>
 
-		<?php if ($this->more === true): ?>
+		<?php if ($this->more === false): ?>
 			<div class="alert alert-info">
-				<p><?php echo Text::_('JBS_LBL_AUTOCLOSE_IN_3S'); ?></p>
+				<p><?php echo Text::_('You may hit the back button now'); ?></p>
 			</div>
-			<script type="text/javascript">
-							window.setTimeout('closeme();', 3000)
-
-							function closeme ()
-							{
-								window.parent.document.location = 'index.php?option=com_proclaim&view=cwmassets&task=cwmassets.checkassets&<?php echo Session::getFormToken(); ?>=1'
-								window.location.reload()
-								parent.SqueezeBox.close()
-							}
-			</script>
 		<?php endif; ?>
 	</div>
 </div>
