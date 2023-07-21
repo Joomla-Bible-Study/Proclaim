@@ -928,17 +928,9 @@ class CWMRelatedstudies
 	public function getRelatedLinks(int $id): string
 	{
 		$db           = Factory::getContainer()->get('DatabaseDriver');
-		$scored       = array_count_values($this->score);
-		$output       = array_slice($scored, 0, 20, true);
-		$links        = [];
 		$studyrecords = [];
 
-		foreach ($output as $key => $value)
-		{
-			$links[] = $key;
-		}
-
-		foreach ($links as $link)
+		foreach ($this->score as $link)
 		{
 			$query = $db->getQuery('true');
 			$query->select('s.studytitle, s.alias, s.id, s.booknumber, s.chapter_begin');
@@ -952,7 +944,7 @@ class CWMRelatedstudies
 
 			if ($study)
 			{
-				$studyrecords = $study;
+				$studyrecords[] = $study;
 			}
 		}
 
