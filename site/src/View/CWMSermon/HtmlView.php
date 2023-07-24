@@ -301,7 +301,7 @@ class HtmlView extends BaseHtmlView
 
 		// @todo check to see if this works
 		$this->item->topics = $this->item->topic_text;
-		$relatedstudies     = new CWMRelatedStudies;
+		if ($item->params->get('showrelated') > 0) {$relatedstudies     = new CWMRelatedStudies;}
 
 		$template      = $this->get('template');
 		$this->related = $relatedstudies->getRelated($this->item, $item->params);
