@@ -370,7 +370,7 @@ class PlgSystemProclaimBackup extends CMSPlugin
 	{
 		//jimport('joomla.filesystem.folder');
 		//jimport('joomla.filesystem.file');
-		$path          = JPATH_SITE . '/media/com_proclaim/database';
+		$path          = JPATH_SITE . '/media/com_proclaim/backup';
 		$exclude = array('.git', '.svn', 'CVS', '.DS_Store', '__MACOSX', '.html');
 		$excludefilter = array('^\..*', '.*~');
 		$files         = Folder::files($path, '.', 'false', 'true', $exclude, $excludefilter);
