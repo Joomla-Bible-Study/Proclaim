@@ -77,12 +77,13 @@ class CWMRelatedstudies
 		{
 			foreach ($studies as $study)
 			{
-				if (is_string($study->params) && !empty($study->params))
+				if (is_string($study->params) && !empty($study->params) && $study->params != "{}")
 				{
-					$registry      = new Registry;
+					if (json_decode($study->params))
+					{$registry      = new Registry;
 					$registry->loadString($study->params);
 					$sparams = $registry;
-					$compare = $sparams->get('metakey');
+					$compare = $sparams->get('metakey');}
 				}
 				else
 				{
