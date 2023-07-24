@@ -301,11 +301,12 @@ class HtmlView extends BaseHtmlView
 
 		// @todo check to see if this works
 		$this->item->topics = $this->item->topic_text;
-		if ($item->params->get('showrelated') > 0) {$relatedstudies     = new CWMRelatedStudies;}
-
+		if ($item->params->get('showrelated') > 0)
+		{
+			$relatedstudies = new CWMRelatedStudies;
+			$this->related = $relatedstudies->getRelated($this->item, $item->params);
+		}
 		$template      = $this->get('template');
-		$this->related = $relatedstudies->getRelated($this->item, $item->params);
-
 		// Only load page builder if the default template is NOT being used
 		if ($item->params->get('useexpert_list') > 0
 			|| ($item->params->get('simple_mode') === '1')
