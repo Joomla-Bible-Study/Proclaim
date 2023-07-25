@@ -930,23 +930,17 @@ class CWMRelatedstudies
 		$db           = Factory::getContainer()->get('DatabaseDriver');
 		$studyrecords = [];
 
-		foreach ($this->score as $link)
-		{
-			$query = $db->getQuery('true');
-			$query->select('s.studytitle, s.alias, s.id, s.booknumber, s.chapter_begin');
-			$query->from('#__bsms_studies as s');
-			$query->select('b.bookname');
-			$query->join('LEFT', '#__bsms_books as b on b.booknumber = s.booknumber');
-			$query->where('s.id = ' . (int) $link);
-			$query->where('s.id != ' . $id);
-			$db->setQuery($query);
-			$study = $db->loadObject();
+		$link = implode(', ', $this->score);
 
-			if ($study)
-			{
-				$studyrecords[] = $study;
-			}
-		}
+		$query = $db->getQuery('true');
+		$query->select('s.studytitle, s.alias, s.id, s.booknumber, s.chapter_begin');
+		$query->from('#__bsms_studies as s');
+		$query->select('b.bookname');
+		$query->join('LEFT', '#__bsms_books as b on b.booknumber = s.booknumber');
+		$query->where($db->quoteName('s.id') . "IN (" . $link . ")");
+		$query->where('s.id != ' . $id);
+		$db->setQuery($query);
+		$studyrecords = $db->loadObjectList();
 
 		$related = '<select onchange="goTo()" id="urlList"><option value="">' . Text::_('JBS_CMN_SELECT_RELATED_STUDY') . '</option>';
 		$input   = Factory::getApplication()->input;
