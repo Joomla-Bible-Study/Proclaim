@@ -57,7 +57,7 @@ class CWMListing
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function getFluidListing($items, Registry $params, \stdClass $template, string $type): string
+	public function getFluidListing($items, Registry $params, $template, string $type): string
 	{
 		$list         = null;
 		$row          = array();
@@ -749,7 +749,7 @@ class CWMListing
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function getFluidRow(array $listrows, array $listsorts, object $item, Registry $params, \stdClass $template, string $oddeven, int $header, string $type): string
+	public function getFluidRow(array $listrows, array $listsorts, object $item, Registry $params, $template, string $oddeven, int $header, string $type): string
 	{
 		$span        = '';
 		$headerstyle = '';
@@ -1152,7 +1152,7 @@ class CWMListing
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function getFluidData(object $item, object $row, Registry $params, \stdClass $template, int $header, string $type): string
+	public function getFluidData(object $item, object $row, Registry $params, $template, int $header, string $type): string
 	{
 		$registry = new Registry;
 
@@ -1977,7 +1977,7 @@ class CWMListing
 	 * @throws Exception
 	 * @since 7.0
 	 */
-	public function getFluidCustom(string $custom, object $item, Registry $params, \stdClass $template, string $type)
+	public function getFluidCustom(string $custom, object $item, Registry $params, $template, string $type)
 	{
 		$countbraces = substr_count($custom, '{');
 
@@ -2009,7 +2009,7 @@ class CWMListing
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function getElement(string $custom, object $row, Registry $params, \stdClass $template, string $type)
+	public function getElement(string $custom, object $row, Registry $params, $template, string $type)
 	{
 		$element = null;
 
@@ -2430,7 +2430,7 @@ class CWMListing
 	 * @throws \Exception
 	 * @since 9.0.0
 	 */
-	public function getFluidMediaFiles(object $item, Registry $params, \stdClass $template): string
+	public function getFluidMediaFiles(object $item, Registry $params, $template): string
 	{
 		$med = new CWMMedia;
 
@@ -2591,7 +2591,7 @@ class CWMListing
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	private function getLink(int $islink, string $id3, int $tid, Registry $params, \stdClass $row, \stdClass $template, string $type): string
+	private function getLink(int $islink, string $id3, int $tid, Registry $params, \stdClass $row, $template, string $type): string
 	{
 		$column = '';
 
