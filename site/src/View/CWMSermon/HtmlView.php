@@ -107,11 +107,11 @@ class HtmlView extends BaseHtmlView
 	 */
 	protected $page;
 
-//	/** @var  \stdclass Template
-//	 *
-//	 * @since 7.0
-//	 */
-//	protected \stdClass $template;
+	//  /** @var  \stdclass Template
+	//   *
+	//   * @since 7.0
+	//   */
+	//  protected \stdClass $template;
 
 	/** @var  string Article
 	 *
@@ -140,10 +140,12 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return  void
 	 *
+	 * @todo Need to clean up the display function as there is stuff needed to change up.
+	 *
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function display($tpl = null)
+	public function display($tpl = null): void
 	{
 		$container = Factory::getContainer();
 		$app = $container->get(SiteApplication::class);
@@ -181,7 +183,7 @@ class HtmlView extends BaseHtmlView
 		{
 			$this->_displayPagebreak($tpl);
 
-			return null;
+			return;
 		}
 
 		$Biblepassage  = new CWMShowScripture;
@@ -289,7 +291,7 @@ class HtmlView extends BaseHtmlView
 
 		if ($this->item->access > 1)
 		{
-			if (!in_array($this->item->access, $groups))
+			if (!in_array($this->item->access, $groups, true))
 			{
 				$app->enqueueMessage(Text::_('JBS_CMN_ACCESS_FORBIDDEN'), 'error');
 			}
@@ -301,12 +303,15 @@ class HtmlView extends BaseHtmlView
 
 		// @todo check to see if this works
 		$this->item->topics = $this->item->topic_text;
+
 		if ($item->params->get('showrelated') > 0)
 		{
 			$relatedstudies = new CWMRelatedStudies;
 			$this->related = $relatedstudies->getRelated($this->item, $item->params);
 		}
+
 		$template      = $this->get('template');
+
 		// Only load page builder if the default template is NOT being used
 		if ($item->params->get('useexpert_list') > 0
 			|| ($item->params->get('simple_mode') === '1')
@@ -370,16 +375,24 @@ class HtmlView extends BaseHtmlView
 		PluginHelper::importPlugin('content');
 		$article       = new \stdClass;
 		$article->text = $this->item->scripture1;
-		Factory::getApplication()->triggerEvent('onContentPrepare', array('com_proclaim.sermons', & $article, & $this->item->params, $limitstart = null));
+		Factory::getApplication()->triggerEvent('onContentPrepare',
+			array('com_proclaim.sermons', & $article, & $this->item->params, $limitstart = null)
+		);
 		$this->item->scripture1 = $article->text;
 		$article->text          = $this->item->scripture2;
-		Factory::getApplication()->triggerEvent('onContentPrepare', array('com_proclaim.sermons', & $article, & $this->item->params, $limitstart = null));
+		Factory::getApplication()->triggerEvent('onContentPrepare',
+			array('com_proclaim.sermons', & $article, & $this->item->params, $limitstart = null)
+		);
 		$this->item->scripture2 = $article->text;
 		$article->text          = $this->item->studyintro;
-		Factory::getApplication()->triggerEvent('onContentPrepare', array('com_proclaim.sermons', & $article, & $this->item->params, $limitstart = null));
+		Factory::getApplication()->triggerEvent('onContentPrepare',
+			array('com_proclaim.sermons', & $article, & $this->item->params, $limitstart = null)
+		);
 		$this->item->studyintro = $article->text;
 		$article->text          = $this->item->secondary_reference;
-		Factory::getApplication()->triggerEvent('onContentPrepare', array('com_proclaim.sermons', & $article, & $this->item->params, $limitstart = null));
+		Factory::getApplication()->triggerEvent('onContentPrepare',
+			array('com_proclaim.sermons', & $article, & $this->item->params, $limitstart = null)
+		);
 		$this->item->secondary_reference = $article->text;
 		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
 		$this->loadHelper('params');
@@ -418,7 +431,7 @@ class HtmlView extends BaseHtmlView
 		{
 			$this->_displayPagebreak($tpl);
 
-			return null;
+			return;
 		}
 
 		// Process the prepare content plugins
@@ -483,7 +496,7 @@ class HtmlView extends BaseHtmlView
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	protected function _displayPagebreak($tpl)
+	protected function _displayPagebreak(string $tpl): void
 	{
 		$this->document->setTitle(Text::_('JBS_CMN_READ_MORE'));
 		parent::display($tpl);
@@ -497,7 +510,7 @@ class HtmlView extends BaseHtmlView
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	protected function _prepareDocument()
+	protected function _prepareDocument(): void
 	{
 		$app     = Factory::getApplication();
 		$menus   = $app->getMenu();
@@ -603,7 +616,7 @@ class HtmlView extends BaseHtmlView
 			$this->document->setMetaData('author', $this->item->teachername);
 		}
 
-		// If there is a pagebreak heading or title, add it to the page title
+		// If there is a page-break heading or title, add it to the page title
 		if (!empty($this->item->page_title))
 		{
 			$this->item->title .= ' - ' . $this->item->page_title;

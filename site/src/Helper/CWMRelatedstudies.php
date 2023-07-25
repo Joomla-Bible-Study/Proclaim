@@ -55,6 +55,7 @@ class CWMRelatedstudies
 		$keywords    = $params->get('metakey');
 		$topics      = $row->tp_id;
 		$topicslist  = $this->getTopics();
+		$compare     = null;
 
 		if (!$keywords && !$row->studyintro)
 		{
@@ -73,21 +74,19 @@ class CWMRelatedstudies
 
 		$studies = $this->getStudies();
 
-		if ($studies !== null)
+		if ($studies)
 		{
 			foreach ($studies as $study)
 			{
-				if (is_string($study->params) && !empty($study->params) && $study->params != "{}")
+				if (is_string($study->params) && !empty($study->params) && $study->params !== "{}")
 				{
-					if (json_decode($study->params))
-					{$registry      = new Registry;
-					$registry->loadString($study->params);
-					$sparams = $registry;
-					$compare = $sparams->get('metakey');}
-				}
-				else
-				{
-					$compare = null;
+					if (json_decode($study->params, false, 512, JSON_THROW_ON_ERROR))
+					{
+						$registry      = new Registry;
+						$registry->loadString($study->params);
+						$sparams = $registry;
+						$compare = $sparams->get('metakey');
+					}
 				}
 
 				if ($compare)
