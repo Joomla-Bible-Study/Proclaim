@@ -146,12 +146,15 @@ class HtmlView extends BaseHtmlView
 
 		$this->percentage = $percent;
 
-		if ($more)
+		if ($this->more)
 		{
-			$script = "window.addEvent( 'domready' ,  function() {\n";
-			$script .= "document.forms.adminForm.submit();\n";
-			$script .= "});\n";
-			$app->getDocument()->addScriptDeclaration($script);
+			/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
+			$wa = $this->document->getWebAssetManager();
+			$wa->useScript('form.validate')
+				->addInlineScript("setTimeout(function(){
+                                    jQuery('#adminForm').submit()
+								}, 3000);"
+				);
 		}
 
 		if ($task === 'browse' || $task === 'run')

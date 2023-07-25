@@ -47,6 +47,12 @@ class Dispatcher extends ComponentDispatcher
 			require_once $api;
 		}
 
+		// Fix for controller name
+		if ($this->input->get('controller') === 'cwmassets')
+		{
+			$this->input->set('controller', 'CWMAssets');
+		}
+
 		parent::dispatch();
 	}
 

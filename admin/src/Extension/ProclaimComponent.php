@@ -196,7 +196,7 @@ class ProclaimComponent extends MVCComponent implements
 		Factory::getApplication()->getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
 
 		return array(
-			'com_proclaim.cwmadmin' => Text::_('COM_CONTENT')
+			'com_proclaim.cwmadmin' => Text::_('COM_PROCLAIM')
 		);
 	}
 

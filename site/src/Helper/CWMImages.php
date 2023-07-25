@@ -265,7 +265,7 @@ class CWMImages
 			return self::getImagePath($path);
 		}
 
-		if (!$image1 || strncmp($image1, '- ', 2) === 0)
+		if ($image2 && (!$image1 || strncmp($image1, '- ', 2) === 0))
 		{
 			$path = $image2;
 

@@ -26,6 +26,33 @@ use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
 {
 	/**
+	 * Maps Proclaim Views 9.x to Proclaim Views 10x.
+	 *
+	 * @const array
+	 * @since 5.0.0
+	 */
+	private const VIEW_CASE_MAP = [
+		'cwmsermons'        => 'CWMSermons',
+		'cwmsermon'         => 'CWMSermon',
+		'cwmteachers'       => 'CWMTeachers',
+		'cwmteacher'        => 'CWMTeacher',
+		'cwmseriesdisplay'  => 'CWMSeriesDisplay',
+		'cwmseriesdisplays' => 'CWMSeriesDisplays',
+		'cwmcommentform'    => 'CWMCommentForm',
+		'cwmcommentlist'    => 'CWMCommentList',
+		'cwmlandingpage'    => 'CWMLandingPage',
+		'cwmlatest'         => 'CWMLatest',
+		'cwmmediafileform'  => 'CWMMediaFileForm',
+		'cwmmediafilelist'  => 'CWMMediaFileList',
+		'cwmmessageform'    => 'CWMMessageForm',
+		'cwmmessagelist'    => 'CWMMessageList',
+		'cwmpodcastdisplay' => 'CWMPodcastDisplay',
+		'cwmpopup'          => 'CWMPopUp',
+		'cwmsqueezebox'     => 'CWMSqueezebox',
+		'cwmterms'          => 'CWMTerms',
+	];
+
+	/**
 	 * @param   array                         $config   An optional associative array of configuration settings.
 	 *                                                  Recognized key values include 'name', 'default_task', 'model_path', and
 	 *                                                  'view_path' (this list is not meant to be comprehensive).
@@ -73,7 +100,7 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
 		Frontend is a bit messier than the backend.
 		*/
 		$id    = $this->input->getInt('a_id');
-		$vName = $this->input->getCmd('view', 'cwmlandingpage');
+		$vName = $this->translateOldViewName($this->input->getCmd('view', 'CWMLandingPage'));
 		$this->input->set('view', $vName);
 
 		$user = $this->app->getIdentity();
@@ -94,7 +121,6 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
 
 		$safeurlparams = array(
 			'id'               => 'INT',
-			'cid'              => 'ARRAY',
 			'year'             => 'INT',
 			'month'            => 'INT',
 			'limit'            => 'INT',
@@ -120,5 +146,20 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
 		parent::display($cachable, $safeurlparams);
 
 		return $this;
+	}
+
+	/**
+	 * Translates view names from older versions of the component to the ones currently in use.
+	 *
+	 * @param   string  $oldViewName  Old view name
+	 *
+	 * @return  string
+	 * @since   5.0.0
+	 */
+	private function translateOldViewName(string $oldViewName): string
+	{
+		$oldViewName = strtolower($oldViewName);
+
+		return self::VIEW_CASE_MAP[$oldViewName] ?? $oldViewName;
 	}
 }
