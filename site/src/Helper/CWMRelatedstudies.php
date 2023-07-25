@@ -80,7 +80,7 @@ class CWMRelatedstudies
 			{
 				if (is_string($study->params) && !empty($study->params) && $study->params !== "{}")
 				{
-					if (json_decode($study->params, false, 512, JSON_THROW_ON_ERROR))
+					if (json_decode($study->params, false, 512, JSON_INVALID_UTF8_IGNORE))
 					{
 						$registry      = new Registry;
 						$registry->loadString($study->params);
