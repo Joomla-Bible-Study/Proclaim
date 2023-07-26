@@ -55,7 +55,7 @@
 		$("#uploader").pluploadQueue({
 			// General settings
 			runtimes: 'html5,flash,silverlight,html4',
-			url: '../../../../../../administrator/components/com_proclaim/addons/servers/legacy/fields/upload.php',
+			url: '../../../../../../administrator/components/com_proclaim/src/Addons/Servers/Legacy/fields/upload.php',
 			chunk_size: '1mb',
 			rename: true,
 			dragdrop: true,
@@ -73,8 +73,8 @@
 			// Resize images on clientside if we can
 			resize: {width: 320, height: 240, quality: 90},
 
-			flash_swf_url: '../../../../../../administrator/components/com_proclaim/addons/servers/legacy/includes/js/Moxie.swf',
-			silverlight_xap_url: '../../../../../../administrator/components/com_proclaim/addons/servers/legacy/includes/js/Moxie.xap'
+			flash_swf_url: '../../../../../../administrator/components/com_proclaim/src/Addons/Servers/Legacy/includes/js/Moxie.swf',
+			silverlight_xap_url: '../../../../../../administrator/components/com_proclaim/src/Addons/Servers/Legacy/includes/js/Moxie.xap'
 		});
 
 	});

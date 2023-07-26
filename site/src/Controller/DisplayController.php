@@ -68,12 +68,12 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
 		// Contact frontpage Editor contacts proxying.
 		$this->input = Factory::getApplication()->input;
 
-		if ($this->input->get('view') === 'cwmlandingpage' && $this->input->get('layout') === 'modal')
+		if ($this->input->get('view') === 'CWMLandingpage' && $this->input->get('layout') === 'modal')
 		{
 			$config['base_path'] = JPATH_ADMINISTRATOR . '/components';
 		}
 		// Sermon frontpage Editor article proxying:
-		elseif ($this->input->get('view') === 'cwmsermons' && $this->input->get('layout') === 'modal')
+		elseif ($this->input->get('view') === 'CWMSermons' && $this->input->get('layout') === 'modal')
 		{
 			$config['base_path'] = JPATH_ADMINISTRATOR . '/components';
 		}
@@ -108,7 +108,7 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
 		if ($user->get('id')
 			|| ($this->input->getMethod() === 'POST'
 			&& strpos($vName, 'form') !== false)
-			|| $vName === 'popup'
+			|| $vName === 'CWMPopup'
 		)
 		{
 			$cachable = false;

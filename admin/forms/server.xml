@@ -21,8 +21,7 @@
 				JTRASHED
 			</option>
 		</field>
-		<field
-				name="type"
+		<field name="type"
 				type="Modal_ServerType"
 				label="JBS_CMN_SERVER"
 				description="JBS_MED_SERVER_DESC"

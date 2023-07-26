@@ -84,8 +84,8 @@ class CWMListing
 
 		if ($type === 'sermon')
 		{
-			$medias = $this->getFluidMediaids($items);
-			$item   = $items;
+			$medias = $this->getFluidMediaids($items[0]);
+			$item   = $items[0];
 		}
 
 		// Get the media files in one query

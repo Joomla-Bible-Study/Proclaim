@@ -19,18 +19,18 @@
 				<option value="3">JBS_CMN_SQUEEZEBOX</option>
 			</field>
 		</fieldset>
-		<fieldset name="details" label="JBS_ADDON_YOUTUBE_DETAILS"
-		          addfieldpath="/administrator/components/com_proclaim/addons/servers/youtube/fields">
+		<fieldset name="details" label="JBS_ADDON_YOUTUBE_DETAILS">
 			<field name="media_image" type="media" directory="biblestudy"
 			       label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
 			       class="inputbox">
 			</field>
-			<field name="media_use_button_icon" label="JBS_ADDON_YOUTUBE_MEDIA_USE_BUTTON"
-			       description="JBS_ADDON_YOUTUBE_MEDIA_USE_BUTTON_DESC"
-			       class="form-select-color-state"
-			       size="1"
-			       default="-1"
-			       validate="options">
+			<field name="media_use_button_icon" type="list"
+				   class="form-select-color-state"
+				   size="1"
+				   default=""
+				   validate="options"
+				   label="JBS_ADDON_YOUTUBE_MEDIA_USE_BUTTON"
+				   description="JBS_ADDON_YOUTUBE_MEDIA_USE_BUTTON_DESC">
 				<option value="-1">JBS_MED_SERVER_OPTIONS</option>
 				<option value="">JBS_MED_NONE</option>
 				<option value="1">JBS_MED_BUTTON_ONLY</option>
@@ -56,7 +56,7 @@
 			</field>
 			<field name="media_button_color" type="color" description="JBS_ADDON_YOUTUBE_BUTTON_COLOR_DESC"
 			       label="JBS_ADDON_YOUTUBE_BUTTON_COLOR"/>
-			<field name="media_icon_type" type="IconType" class="inputbox" size="15" default="fa fa-youtube"
+			<field name="media_icon_type" type="IconType" class="form-select-color-state" size="1" default="fa fa-youtube"
 			       label="JBS_ADDON_YOUTUBE_ICON_TYPE"
 			       description="JBS_ADDON_YOUTUBE_ICON_TYPE_DESC">
 			</field>
