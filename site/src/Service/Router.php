@@ -50,6 +50,8 @@ class Router extends RouterView
 	 */
 	private $db;
 
+	private $cacheiddata = '0';
+
 	/**
 	 * @var CategoryFactoryInterface|null
 	 * @since version
@@ -71,23 +73,18 @@ class Router extends RouterView
 		$this->db              = $db;
 
 		$params      = ComponentHelper::getParams('com_proclaim');
-
 		$this->noIDs = (bool) $params->get('sef_ids', true);
 
 		$landingPage = new RouterViewConfiguration('cwmlandingpage');
-		$landingPage->setKey('id');
 		$this->registerView($landingPage);
 
 		$landingPage = new RouterViewConfiguration('CWMLandingPage');
-		$landingPage->setKey('id');
 		$this->registerView($landingPage);
 
 		$Sermons = new RouterViewConfiguration('cwmsermons');
-		$Sermons->setKey('id');
 		$this->registerView($Sermons);
 
 		$Sermons = new RouterViewConfiguration('CWMSermons');
-		$Sermons->setKey('id');
 		$this->registerView($Sermons);
 
 		$Sermon = new RouterViewConfiguration('cwmsermon');
@@ -99,11 +96,9 @@ class Router extends RouterView
 		$this->registerView($Sermon);
 
 		$Teachers = new RouterViewConfiguration('cwmteachers');
-		$Teachers->setKey('id');
 		$this->registerView($Teachers);
 
 		$Teachers = new RouterViewConfiguration('CWMTeachers');
-		$Teachers->setKey('id');
 		$this->registerView($Teachers);
 
 		$Teacher = new RouterViewConfiguration('cwmteacher');
@@ -145,19 +140,15 @@ class Router extends RouterView
 		$this->registerView($proclaim);
 
 		$proclaim = new RouterViewConfiguration('cwmpopup');
-		$proclaim->setKey('id');
 		$this->registerView($proclaim);
 
 		$proclaim = new RouterViewConfiguration('CWMPopup');
-		$proclaim->setKey('id');
 		$this->registerView($proclaim);
 
 		$proclaim = new RouterViewConfiguration('cwmsqueezebox');
-		$proclaim->setKey('id');
 		$this->registerView($proclaim);
 
 		$proclaim = new RouterViewConfiguration('CWMSqueezeBox');
-		$proclaim->setKey('id');
 		$this->registerView($proclaim);
 
 		$proclaim = new RouterViewConfiguration('cwmterms');
@@ -178,15 +169,15 @@ class Router extends RouterView
 	/**
 	 * Method to get the segment(s) for a sermon
 	 *
-	 * @param   integer  $id     ID of the article to retrieve the segments for
-	 * @param   array    $query  The request that is built right now
+	 * @param   Integer|string  $id     ID of the article to retrieve the segments for
+	 * @param   array           $query  The request that is built right now
 	 *
 	 * @return  array  The segments of this item
 	 * @since 10.0.0
 	 */
-	public function getCWMSermonSegment($id, array $query)
+	public function getCWMSermonSegment($id, array $query): array
 	{
-		if (!strpos($id, ':'))
+		if ((int) $this->cacheiddata !== (int) $id && !strpos($id, ':'))
 		{
 			$id      = (int) $id;
 			$dbquery = $this->db->getQuery(true);
@@ -197,6 +188,13 @@ class Router extends RouterView
 			$this->db->setQuery($dbquery);
 
 			$id .= ':' . $this->db->loadResult();
+
+			$this->cacheiddata = $id;
+		}
+
+		if ((int) $this->cacheiddata === (int) $id)
+		{
+			$id = $this->cacheiddata;
 		}
 
 		if ($this->noIDs)
@@ -212,15 +210,15 @@ class Router extends RouterView
 	/**
 	 * Method to get the segment(s) for a teacher
 	 *
-	 * @param   integer  $id     ID of the article to retrieve the segments for
-	 * @param   array    $query  The request that is built right now
+	 * @param   integer|string  $id     ID of the article to retrieve the segments for
+	 * @param   array           $query  The request that is built right now
 	 *
 	 * @return  array  The segments of this item
 	 * @since 10.0.0
 	 */
-	public function getCWMTeacherSegment($id, array $query)
+	public function getCWMTeacherSegment($id, array $query): array
 	{
-		if (!strpos($id, ':'))
+		if ((int) $this->cacheiddata !== (int) $id && !strpos($id, ':'))
 		{
 			$id      = (int) $id;
 			$dbquery = $this->db->getQuery(true);
@@ -231,6 +229,13 @@ class Router extends RouterView
 			$this->db->setQuery($dbquery);
 
 			$id .= ':' . $this->db->loadResult();
+
+			$this->cacheiddata = $id;
+		}
+
+		if ((int) $this->cacheiddata === (int) $id)
+		{
+			$id = $this->cacheiddata;
 		}
 
 		if ($this->noIDs)
@@ -255,7 +260,7 @@ class Router extends RouterView
 	 */
 	public function getCWMSermonsSegment(string $id, array $query): array
 	{
-		return $this->getCWMSermonSegment($id, $query);
+		return []; // $this->getCWMSermonSegment($id, $query);
 	}
 	/**
 	 * Method to get the segment(s) for a sermon

@@ -47,6 +47,7 @@ class HtmlView extends BaseHtmlView
 		$input = Factory::getApplication()->input;
 		$t     = $input->get('t', '1');
 
+		// @todo move to slug asap
 		$link = Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . $id . '&t=' . $t);
 		$app  = Factory::getApplication();
 

@@ -57,12 +57,19 @@ class CWMListing
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function getFluidListing($items, Registry $params, $template, string $type): string
+	public function getFluidListing($items, Registry $params, \stdClass $template, string $type): string
 	{
 		$list         = null;
 		$row          = array();
 		$this->params = $params;
 		$item         = '';
+
+		if (!is_array($items))
+		{
+			$subarray = [];
+			$subarray[0] = $items;
+			$items = $subarray;
+		}
 
 		if ($type === 'sermons')
 		{
@@ -2544,6 +2551,7 @@ class CWMListing
 		}
 		catch (\Exception $e)
 		{
+			return false;
 		}
 
 		if ($id)
@@ -2598,19 +2606,18 @@ class CWMListing
 		switch ($islink)
 		{
 			case 1 :
-				$link = Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
+				$link = Route::_(CWMHelperRoute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
 
 				if ($type === 'seriesdisplays')
 				{
-					$link = Route::_('index.php?option=com_proclaim&view=cwmseriesdisplay&id=' . $row->slug . '&t='
-						. $params->get('detailstemplateid'));
+					$link = Route::_(CWMHelperRoute::getSeriesRoute($row->slug) . '&t=' . $params->get('detailstemplateid'));
 				}
 
 				$column = '<a href="' . $link . '">';
 				break;
 
 			case 3 :
-				$link   = Route::_('index.php?option=com_proclaim&view=cwmteacher&id=' . $tid . '&t=' . $params->get('teachertemplateid'));
+				$link   = Route::_(CWMHelperRoute::getTeacherRoute($tid) . '&t=' . $params->get('teachertemplateid'));
 				$column .= '<a href="' . $link . '">';
 				break;
 

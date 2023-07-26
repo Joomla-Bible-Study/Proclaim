@@ -49,7 +49,7 @@ class CWMHelper
 	 * @throws \Exception
 	 * @since  9.0.0
 	 */
-	public static function getTooltip(object $row, Registry $params, \stdClass $template)
+	public static function getTooltip(object $row, Registry $params, \stdClass $template): string
 	{
 		$JBSMElements = new CWMListing;
 
@@ -80,7 +80,7 @@ class CWMHelper
 	 *
 	 * @since      8.2.0
 	 */
-	public static function getShowhide()
+	public static function getShowhide(): string
 	{
 		return '
         function HideContent(d) {

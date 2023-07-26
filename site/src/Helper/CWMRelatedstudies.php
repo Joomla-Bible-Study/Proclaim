@@ -927,9 +927,7 @@ class CWMRelatedstudies
 	 */
 	public function getRelatedLinks(int $id): string
 	{
-		$db           = Factory::getContainer()->get('DatabaseDriver');
-		$studyrecords = [];
-
+		$db   = Factory::getContainer()->get('DatabaseDriver');
 		$link = implode(', ', $this->score);
 
 		$query = $db->getQuery('true');

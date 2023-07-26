@@ -710,6 +710,7 @@ class CWMStats
 				$total = $result->added;
 			}
 
+			// @todo need to build slug instead.
 			$selectvalue   = Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . $hits->id . '&t=' . $t);
 			$selectdisplay = $name . ' - ' . Text::_('JBS_CMN_SCORE') . ': ' . $total;
 			$final2        = array(
