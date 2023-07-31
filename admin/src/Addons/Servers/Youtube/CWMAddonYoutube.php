@@ -22,7 +22,7 @@ use Joomla\CMS\Language\Text;
  * @package  Proclaim.Admin
  * @since    9.0.0
  */
-class CWMAddonYouTube extends CWMAddon
+class CWMAddonYoutube extends CWMAddon
 {
 	/**
 	 * Name of Add-on
