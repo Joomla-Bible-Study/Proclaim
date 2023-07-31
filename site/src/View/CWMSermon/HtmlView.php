@@ -534,8 +534,12 @@ class HtmlView extends BaseHtmlView
 		}
 
 		$title = $this->params->get('page_title', '');
+		$id    = 0;
 
-		$id = (int) @$menu->query['id'];
+		if (isset($menu->query['id']))
+		{
+			$id = (int) @$menu->query['id'];
+		}
 
 		// If the menu item does not concern this Study
 		if ($menu && ($menu->query['option'] !== 'com_proclaim' || $menu->query['view'] !== 'sermon' || $id !== $this->item->id))

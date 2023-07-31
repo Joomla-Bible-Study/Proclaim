@@ -101,11 +101,11 @@ class CWMHelper
 	 *
 	 * @param   string  $url  URL
 	 *
-	 * @return  integer|boolean  Return size or false read.
+	 * @return  integer  Return size or false read.
 	 *
 	 * @since 9.0.0
 	 */
-	public static function getRemoteFileSize(string $url)
+	public static function getRemoteFileSize(string $url): int
 	{
 		if ($url === '')
 		{
@@ -175,7 +175,7 @@ class CWMHelper
 			$size = $head['content-length'];
 		}
 
-		return $size;
+		return (int) $size;
 	}
 
 	/**
@@ -359,18 +359,18 @@ class CWMHelper
 	/**
 	 * Get Simple View Sate
 	 *
-	 * @param   Registry|null  $params  AdminTable + parametors
+	 * @param   object|null  $params  AdminTable + parametors
 	 *
 	 * @return  object
 	 *
 	 * @throws \Exception
 	 * @since 9.1.6
 	 */
-	public static function getSimpleView(Registry $params = null)
+	public static function getSimpleView(object $params = null)
 	{
 		$simple = new \stdClass;
 
-		if (is_null($params))
+		if ($params === null)
 		{
 			$params = CWMParams::getAdmin();
 		}

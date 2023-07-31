@@ -69,7 +69,7 @@ $wa->useScript('keepalive')
 					</div>
 					<div class="controls">
 						<?php
-						if ($this->item->id == 0)
+						if ($this->item->id === 0)
 						{
 							echo $this->form->getInput('type');
 						}
