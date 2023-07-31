@@ -3,8 +3,8 @@
 	<fieldset addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
 		<field name="id" type="hidden"/>
 		<field name="createdate" type="calendar" label="JBS_CMN_CREATE_DATE"
-		       description="JBS_MED_CREATE_DATE_DESC" class="inputbox" size="22"
-		       format="%Y-%m-%d %H:%M:%S" filter="user_utc" required="true"/>
+		       description="JBS_MED_CREATE_DATE_DESC" translateformat="true"
+			   showtime="true" filter="user_utc" required="true"/>
 		<field name="study_id" type="Modal_Study" label="JBS_CMN_STUDY"
 		       description="JBS_MED_CHOOSE_STUDY_DESC" class="inputbox" required="true"/>
 		<field name="comment" type="textarea" rows="4" label="JBS_CMN_COMMENT"

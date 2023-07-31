@@ -36,9 +36,8 @@
             <option value="-1">JBS_STY_SELECT_DOWNLOAD_LINK</option>
                 </field>
         <field name="studydate" type="calendar" label="JBS_CMN_STUDY_DATE"
-               description="JBS_STY_CREATE_DATE_DESC" class="inputbox span12 small"
-               format="%Y-%m-%d %H:%M:%S" filter="user_utc" required="true" labelclass="control-label"/>
-
+               description="JBS_STY_CREATE_DATE_DESC" translateformat="true"
+               showtime="true" filter="user_utc" required="true"/>
         <field name="comments" type="list" class="inputbox" label="JBS_CMN_COMMENTS" description="JBS_STY_COMMENTS_DESC"
                default="0">
             <option value="0">JBS_CMN_NO</option>
@@ -141,7 +140,7 @@
 
             <field name="modified" type="calendar" class="readonly"
                    label="JGLOBAL_FIELD_MODIFIED_LABEL" description=""
-                   size="22" readonly="true" format="%Y-%m-%d %H:%M:%S" filter="user_utc"/>
+                   readonly="true" translateformat="true" showtime="true" filter="user_utc"/>
 
             <field name="modified_by" type="user"
                    label="JGLOBAL_FIELD_MODIFIED_BY_LABEL"
@@ -156,12 +155,14 @@
 
             <field name="publish_up" type="calendar"
                    label="JGLOBAL_FIELD_PUBLISH_UP_LABEL" description="JGLOBAL_FIELD_PUBLISH_UP_DESC"
-                   class="inputbox" format="%Y-%m-%d %H:%M:%S" size="22"
+                   translateformat="true"
+                   showtime="true"
                    filter="user_utc"/>
 
             <field name="publish_down" type="calendar"
                    label="JGLOBAL_FIELD_PUBLISH_DOWN_LABEL" description="JGLOBAL_FIELD_PUBLISH_DOWN_DESC"
-                   class="inputbox" format="%Y-%m-%d %H:%M:%S" size="22"
+                   translateformat="true"
+                   showtime="true"
                    filter="user_utc"/>
 
         <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL"

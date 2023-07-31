@@ -32,8 +32,8 @@
 		<field name="study_id" type="Modal_Study" label="JBS_CMN_STUDY"
 		       description="JBS_CMT_CHOOSE_STUDY_DESC" class="inputbox" required="true"/>
 		<field name="comment_date" type="calendar" label="JBS_CMT_CREATE_DATE"
-		       description="JBS_CMT_CREATE_DATE_DESC" class="inputbox" size="22"
-		       format="%Y-%m-%d %H:%M:%S" filter="user_utc" labelclass="control-label" required="true"/>
+		       description="JBS_CMT_CREATE_DATE_DESC"  translateformat="true"
+			   showtime="true" filter="user_utc" labelclass="control-label" required="true"/>
 		<field name="full_name" type="text" label="JBS_CMT_FULL_NAME"
 		       size="30"/>
 		<field name="user_email" type="text" label="JBS_CMT_EMAIL" size="40"/>
