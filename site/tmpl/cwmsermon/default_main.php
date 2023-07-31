@@ -79,7 +79,13 @@ if ($this->item->params->get('socialnetworking') > 0)
 	<!-- Begin Fluid layout -->
 
 <?php $listing = new CWMListing;
-$list = $listing->getFluidListing($this->item, $this->item->params, $this->template, $type = 'sermon');
+try
+{
+	$list = $listing->getFluidListing($this->item, $this->item->params, $this->template, $type = 'sermon');
+}
+catch (Exception $e)
+{
+}
 echo $list;
 ?>
 

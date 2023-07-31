@@ -146,7 +146,7 @@ class CWMLanding
 						}
 
 						$location .= '<div class="span4 style="display: inline-block; margin-right:7px"">';
-						$location .= '<a href="index.php?option=com_proclaim&amp;view=cwmsermons&amp;filter_location=' . $b->id . '&amp;sendingview=cwmlanding' .
+						$location .= '<a href="index.php?option=com_proclaim&amp;view=CWMSermons&amp;filter_location=' . $b->id . '&amp;sendingview=cwmlanding' .
 						'&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
 							. $template . '">';
 

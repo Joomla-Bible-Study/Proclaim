@@ -40,7 +40,7 @@ class CWMInstallController extends FormController
 	 * @var    string
 	 * @since  12.2
 	 */
-	protected $context = 'install';
+	protected $context = 'cwminstall';
 
 	/**
 	 * The URL view item variable.
@@ -48,7 +48,7 @@ class CWMInstallController extends FormController
 	 * @var    string
 	 * @since  12.2
 	 */
-	protected $view_item = 'install';
+	protected $view_item = 'cwminstall';
 
 	/**
 	 * The URL view list variable.
@@ -70,7 +70,7 @@ class CWMInstallController extends FormController
 	{
 		parent::__construct($config);
 
-		$this->modelName = 'install';
+		$this->modelName = 'cwminstall';
 	}
 
 	/**
@@ -99,7 +99,7 @@ class CWMInstallController extends FormController
 	 * @throws \Exception
 	 * @since 9.0.0
 	 */
-	public function execute($task)
+	public function execute($task): void
 	{
 		if ($task !== 'run' && $task !== 'clear' && $task !== 'browse')
 		{
@@ -132,7 +132,7 @@ class CWMInstallController extends FormController
 			$model = new CWMInstallModel;
 			$state = $model->startScanning();
 			$app->input->set('scanstate', $state);
-			$app->input->set('view', 'install');
+			$app->input->set('view', 'cwminstall');
 
 			$this->display(false);
 		}
@@ -173,7 +173,7 @@ class CWMInstallController extends FormController
 		$model = new CWMInstallModel;
 		$state = $model->run();
 		$app->input->set('scanstate', $state);
-		$app->input->set('view', 'install');
+		$app->input->set('view', 'cwminstall');
 
 		$this->display(false);
 	}

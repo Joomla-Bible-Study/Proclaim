@@ -92,100 +92,59 @@ class ProclaimNomenuRules implements RulesInterface
 	 *
 	 * @since   3.4
 	 */
-	public function parse(&$segments = array(), &$vars = array()): void
+	public function parse(&$segments, &$vars): void
 	{
-		$active = $this->router->menu->getActive();
+		$views = $this->router->getViews();
 
-//		// Count route segments
-//		$count = (int) count($segments);
-//
-//		if ($count === 6)
-//		{
-//			$vars['sendingview'] = $segments[1];
-//			$vars['view']        = $segments[2];
-//			$id                  = explode('/', $segments[3]);
-//			$vars['id']          = (int) $id[0];
-//			$vars['t']           = $segments[$count - 2];
-//			$vars['Itemid']      = $segments[$count - 1];
-//			array_shift($segments);
-//			array_shift($segments);
-//			array_shift($segments);
-//			array_shift($segments);
-//			array_shift($segments);
-//			array_shift($segments);
-//
-//			return;
-//		}
-//
-//		if ($count === 5)
-//		{
-//			$vars['view']   = $segments[1];
-//			$id             = explode('/', $segments[2]);
-//			$vars['id']     = (int) $id[0];
-//			$vars['t']      = $segments[$count - 2];
-//			$vars['Itemid'] = $segments[$count - 1];
-//			array_shift($segments);
-//			array_shift($segments);
-//			array_shift($segments);
-//			array_shift($segments);
-//			array_shift($segments);
-//
-//			return;
-//		}
-//
-//		if ($count === 4)
-//		{
-//			$vars['view']   = $segments[1];
-//			$id             = explode('/', $segments[2]);
-//			$vars['id']     = (int) $id[0];
-//			$vars['t']      = $segments[$count - 2];
-//			$vars['Itemid'] = $segments[$count - 1];
-//			array_shift($segments);
-//			array_shift($segments);
-//			array_shift($segments);
-//			array_shift($segments);
-//
-//			return;
-//		}
-//
-//		if ($count === 3)
-//		{
-//			$vars['view'] = $segments[0];
-//			$id           = explode('/', $segments[1]);
-//			$vars['id']   = (int) $id[0];
-//			$vars['t']    = $segments[$count - 1];
-//			array_shift($segments);
-//			array_shift($segments);
-//			array_shift($segments);
-//
-//			return;
-//		}
-//
-//		if ($count === 2)
-//		{
-//			if ($segments[1] === 'cwmpodcastdisplay')
-//			{
-//				$vars['view'] = $segments[1];
-//				$id           = explode('/', $segments[2]);
-//				$vars['id']   = (int) $id[0];
-//			}
-//			else
-//			{
-//				$vars['view'] = $segments[0];
-//				$vars['t']    = $segments[$count - 1];
-//			}
-//
-//			array_shift($segments);
-//			array_shift($segments);
-//
-//			return;
-//		}
-//
-//		$vars['view'] = $this->translateOldViewName($vars['view']);
-		$vars['id']   = substr($segments[0], strpos($segments[0], '-') + 1);
-		$vars['t']    = substr($segments[0], strpos($segments[0], '-') + 1);
-//		array_shift($segments);
-//		array_shift($segments);
+		if (isset($views[$segments[0]]))
+		{
+			$vars['view'] = array_shift($segments);
+			$view         = $views[$vars['view']];
+
+			if (isset($view->key) && isset($segments[0]))
+			{
+				if (\is_callable([$this->router, 'get' . ucfirst($view->name) . 'Id']))
+				{
+					$input = $this->router->app->getInput();
+
+					if ($view->parent_key && $input->get($view->parent_key))
+					{
+						$vars[$view->parent->key] = $input->get($view->parent_key);
+						$vars[$view->parent_key]  = $input->get($view->parent_key);
+					}
+
+					if ($view->nestable)
+					{
+						$vars[$view->key] = 0;
+
+						while (count($segments))
+						{
+							$segment = array_shift($segments);
+							$result  = call_user_func([$this->router, 'get' . ucfirst($view->name) . 'Id'], $segment, $vars);
+
+							if (!$result)
+							{
+								array_unshift($segments, $segment);
+								break;
+							}
+
+							$vars[$view->key] = preg_replace('/-/', ':', $result, 1);
+						}
+					}
+					else
+					{
+						$segment = array_shift($segments);
+						$result  = call_user_func([$this->router, 'get' . ucfirst($view->name) . 'Id'], $segment, $vars);
+
+						$vars[$view->key] = preg_replace('/-/', ':', $result, 1);
+					}
+				}
+				else
+				{
+					$vars[$view->key] = preg_replace('/-/', ':', array_shift($segments), 1);
+				}
+			}
+		}
 	}
 
 	/**
@@ -194,44 +153,58 @@ class ProclaimNomenuRules implements RulesInterface
 	 * @param   array  $query     The vars that should be converted
 	 * @param   array  $segments  The URL segments to create
 	 *
-	 * @return  array
+	 * @return  void
 	 *
 	 * @since   3.4
 	 */
-	public function build(&$query, &$segments): array
+	public function build(&$query, &$segments): void
 	{
 		if (isset($query['view']))
 		{
-			// @todo Need ot fix up the ails naming of the url.
-			$segments[] = $query['view'];
-			unset($query['view']);
-		}
+			$views = $this->router->getViews();
 
-		if (isset($query['id']))
-		{
-			$segments[] = $query['id'];
-			unset($query['id']);
+			if (isset($views[$query['view']]))
+			{
+				$view       = $views[$query['view']];
+				$segments[] = $query['view'];
+
+				if ($view->key && isset($query[$view->key]))
+				{
+					if (\is_callable([$this->router, 'get' . ucfirst($view->name) . 'Segment']))
+					{
+						$result = \call_user_func_array([$this->router, 'get' . ucfirst($view->name) . 'Segment'], [$query[$view->key], $query]);
+
+						if ($view->nestable)
+						{
+							array_pop($result);
+
+							while (count($result))
+							{
+								$segments[] = str_replace(':', '-', array_pop($result));
+							}
+						}
+						else
+						{
+							$segments[] = str_replace(':', '-', array_pop($result));
+						}
+					}
+					else
+					{
+						$segments[] = str_replace(':', '-', $query[$view->key]);
+					}
+
+					unset($query[$views[$query['view']]->key]);
+				}
+
+				unset($query['view']);
+			}
 		}
 
 		if (isset($query['t']))
 		{
 			// Remove do to we don't want to display it but will use it in a hidden format.
-			// $segments[] = $query['t'];
 			unset($query['t']);
 		}
-
-		if (isset($query['Itemid']))
-		{
-			// Remove do we are not using it uet.
-			unset($query['Itemid']);
-		}
-
-		foreach ($segments as $i => $iValue)
-		{
-			$segments[$i] = str_replace(':', '-', $iValue);
-		}
-
-		return $segments;
 	}
 
 	/**

@@ -22,7 +22,7 @@ use Joomla\Registry\Registry;
 /**
  * helper to get related studies to the current one
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    7.1.0
  */
 class CWMRelatedstudies
@@ -34,7 +34,7 @@ class CWMRelatedstudies
 	 *
 	 * @since    7.2
 	 */
-	public $score;
+	public array $score;
 
 	/**
 	 * Get Related
@@ -42,31 +42,24 @@ class CWMRelatedstudies
 	 * @param   object    $row     JTable
 	 * @param   Registry  $params  Item Params
 	 *
-	 * @return boolean
+	 * @return string|boolean
 	 *
+	 * @throws \Exception
 	 * @since    7.2
 	 */
 	public function getRelated(object $row, Registry $params)
 	{
-		$this->score = array();
+		$this->score = [];
 		$keygo       = true;
-		$topicsgo    = false;
+		$topicsgo    = true;
 		$keywords    = $params->get('metakey');
+		$topics      = $row->tp_id;
+		$topicslist  = $this->getTopics();
+		$compare     = null;
 
-		$topics = $row->tp_id;
-
-		$topicslist = $this->getTopics();
-
-		if (!$keywords)
+		if (!$keywords && !$row->studyintro)
 		{
-			if ($row->studyintro)
-			{
-				$keygo = true;
-			}
-			else
-			{
-				$keygo = false;
-			}
+			$keygo = false;
 		}
 
 		if (!$topics)
@@ -81,20 +74,19 @@ class CWMRelatedstudies
 
 		$studies = $this->getStudies();
 
-		if ($studies !== null)
+		if ($studies)
 		{
 			foreach ($studies as $study)
 			{
-				if (is_string($study->params) && !empty($study->params))
+				if (is_string($study->params) && !empty($study->params) && $study->params !== "{}")
 				{
-					$registry      = new Registry;
-					$registry->loadString($study->params);
-					$sparams = $registry;
-					$compare = $sparams->get('metakey');
-				}
-				else
-				{
-					$compare = null;
+					if (json_decode($study->params, false, 512, JSON_INVALID_UTF8_IGNORE))
+					{
+						$registry      = new Registry;
+						$registry->loadString($study->params);
+						$sparams = $registry;
+						$compare = $sparams->get('metakey');
+					}
 				}
 
 				if ($compare)
@@ -119,7 +111,7 @@ class CWMRelatedstudies
 			return false;
 		}
 
-		return $this->getRelatedLinks();
+		return $this->getRelatedLinks($row->id);
 	}
 
 	/**
@@ -129,16 +121,16 @@ class CWMRelatedstudies
 	 *
 	 * @since    7.2
 	 */
-	public function getTopics()
+	public function getTopics(): string
 	{
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery('true');
 		$query->select('id');
 		$query->from('#__bsms_topics');
 		$query->where('published = 1');
 		$db->setQuery($query);
 		$topics     = $db->loadObjectList();
-		$topicslist = array();
+		$topicslist = [];
 
 		foreach ($topics as $value)
 		{
@@ -160,7 +152,7 @@ class CWMRelatedstudies
 	 *
 	 * @since    7.2
 	 */
-	public function removeCommonWords(string $input)
+	public function removeCommonWords(string $input): array
 	{
 		$commonWords = array(
 			'a',
@@ -837,11 +829,12 @@ class CWMRelatedstudies
 	/**
 	 * Get Studies
 	 *
-	 * @return Object
+	 * @return array
 	 *
+	 * @throws \Exception
 	 * @since    7.2
 	 */
-	public function getStudies()
+	public function getStudies(): array
 	{
 		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery('true');
@@ -861,12 +854,9 @@ class CWMRelatedstudies
 
 		foreach ($studies as $i => $iValue)
 		{
-			if ($iValue->access > 1)
+			if (($iValue->access > 1) && !in_array($iValue->access, $groups, true))
 			{
-				if (!in_array($iValue->access, $groups, true))
-				{
-					unset($studies[$i]);
-				}
+				unset($studies[$i]);
 			}
 		}
 
@@ -876,20 +866,20 @@ class CWMRelatedstudies
 	/**
 	 * Parse keys
 	 *
-	 * @param   string  $source   ?
-	 * @param   string  $compare  ?
-	 * @param   int     $id       ?
+	 * @param   string  $source   String of source
+	 * @param   string  $compare  String to compare
+	 * @param   int     $id       ID of study
 	 *
 	 * @return boolean
 	 *
 	 * @since    7.2
 	 */
-	public function parseKeys($source, $compare, $id)
+	public function parseKeys(string $source, string $compare, int $id): bool
 	{
 		$sourceisarray  = false;
 		$compareisarray = false;
-		$sourcearray    = array();
-		$comparearray   = array();
+		$sourcearray    = [];
+		$comparearray   = [];
 
 		if (substr_count($source, ','))
 		{
@@ -914,28 +904,12 @@ class CWMRelatedstudies
 			}
 		}
 
-		if ($sourceisarray && !$compareisarray)
+		if (($sourceisarray && !$compareisarray && in_array($compare, $sourcearray, true))
+			|| (!$sourceisarray && $compareisarray && in_array($source, $comparearray, true))
+			|| (!$sourceisarray && !$compareisarray && strcmp($source, $compare))
+		)
 		{
-			if (in_array($compare, $sourcearray, true))
-			{
-				$this->score[] = $id;
-			}
-		}
-
-		if (!$sourceisarray && $compareisarray)
-		{
-			if (in_array($source, $comparearray, true))
-			{
-				$this->score[] = $id;
-			}
-		}
-
-		if (!$sourceisarray && !$compareisarray)
-		{
-			if (strcmp($source, $compare))
-			{
-				$this->score[] = $id;
-			}
+			$this->score[] = $id;
 		}
 
 		return true;
@@ -946,32 +920,25 @@ class CWMRelatedstudies
 	 *
 	 * @return string
 	 *
+	 * @throws \Exception
+	 * @var int $id ID of the related
+	 *
 	 * @since    7.2
 	 */
-	public function getRelatedLinks()
+	public function getRelatedLinks(int $id): string
 	{
-		$db           = Factory::getContainer()->get('DatabaseDriver');
-		$scored       = array_count_values($this->score);
-		$output       = array_slice($scored, 0, 20, true);
-		$links        = array();
-		$studyrecords = array();
+		$db   = Factory::getContainer()->get('DatabaseDriver');
+		$link = implode(', ', $this->score);
 
-		foreach ($output as $key => $value)
-		{
-			$links[] = $key;
-		}
-
-		foreach ($links as $link)
-		{
-			$query = $db->getQuery('true');
-			$query->select('s.studytitle, s.alias, s.id, s.booknumber, s.chapter_begin');
-			$query->from('#__bsms_studies as s');
-			$query->select('b.bookname');
-			$query->join('LEFT', '#__bsms_books as b on b.booknumber = s.booknumber');
-			$query->where('s.id = ' . $link);
-			$db->setQuery($query);
-			$studyrecords[] = $db->loadObject();
-		}
+		$query = $db->getQuery('true');
+		$query->select('s.studytitle, s.alias, s.id, s.booknumber, s.chapter_begin');
+		$query->from('#__bsms_studies as s');
+		$query->select('b.bookname');
+		$query->join('LEFT', '#__bsms_books as b on b.booknumber = s.booknumber');
+		$query->where($db->quoteName('s.id') . "IN (" . $link . ")");
+		$query->where('s.id != ' . $id);
+		$db->setQuery($query);
+		$studyrecords = $db->loadObjectList();
 
 		$related = '<select onchange="goTo()" id="urlList"><option value="">' . Text::_('JBS_CMN_SELECT_RELATED_STUDY') . '</option>';
 		$input   = Factory::getApplication()->input;
@@ -979,7 +946,7 @@ class CWMRelatedstudies
 		foreach ($studyrecords as $studyrecord)
 		{
 			$related .= '<option value="'
-				. Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . $studyrecord->id . '&t=' . $input->get('t', '1', 'int'))
+				. Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . (int) $studyrecord->id . '&t=' . $input->get('t', '1', 'int'))
 				. '">' . $studyrecord->studytitle;
 
 			if (!empty($studyrecord->bookname))

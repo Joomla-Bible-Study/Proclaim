@@ -34,12 +34,12 @@ class CWMPagebuilder
 	/** @var string Extension Name
 	 * @since 7.0
 	 */
-	public $extension = 'com_proclaim';
+	public string $extension = 'com_proclaim';
 
 	/** @var  string Event
 	 * @since 7.0
 	 */
-	public $event;
+	public string $event;
 
 	/**
 	 * Build Page

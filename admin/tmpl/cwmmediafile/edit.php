@@ -41,10 +41,10 @@ $wa->useScript('keepalive')
 	->addInlineScript('
 	Joomla.submitbutton = function (task, server_id) {
 		if (task == "cwmmediafile.setServer") {
-			document.getElementById("media-form").elements["jform[server_id]"].value = server_id;
-			Joomla.submitform(task, document.getElementById("media-form"));
-		} else if (task == "cwmmediafile.cancel"|| document.formvalidator.isValid(document.getElementById("media-form"))) {
-			Joomla.submitform(task, document.getElementById("media-form"));
+			document.getElementById("adminForm").elements["jform[server_id]"].value = server_id;
+			Joomla.submitform(task, document.getElementById("adminForm"));
+		} else if (task == "cwmmediafile.cancel"|| document.formvalidator.isValid(document.getElementById("adminForm"))) {
+			Joomla.submitform(task, document.getElementById("adminForm"));
 		} else {
 			alert("' . $this->escape(Text::_("JGLOBAL_VALIDATION_FORM_FAILED")) . '");
 		}
@@ -56,7 +56,7 @@ $this->useCoreUI = true;
 <form action="<?php echo 'index.php?option=com_proclaim&view=cwmmediafile&layout=edit&id=' . (int) $this->item->id; ?>"
       method="post"
       name="adminForm"
-      id="media-form"
+      id="adminForm"
       class="form-validate">
 	<div class="form-horizontal">
 		<?php echo HTMLHelper::_('uitab.startTabSet', 'myTab', array('active' => 'general')); ?>

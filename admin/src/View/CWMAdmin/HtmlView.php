@@ -25,6 +25,7 @@ use Joomla\CMS\HTML\HTMLHelper as JHtml;
 use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Registry\Registry;
@@ -83,7 +84,7 @@ class HtmlView extends BaseHtmlView
 	 * @var string
 	 * @since    7.0.0
 	 */
-	public $schemaVersion;
+	public string $schemaVersion;
 
 	/**
 	 * Update Version
@@ -91,15 +92,7 @@ class HtmlView extends BaseHtmlView
 	 * @var string
 	 * @since    7.0.0
 	 */
-	public $updateVersion;
-
-	/**
-	 * Filter Params
-	 *
-	 * @var Registry
-	 * @since    7.0.0
-	 */
-	public $filterParams;
+	public string $updateVersion;
 
 	/**
 	 * Pagination
@@ -107,7 +100,7 @@ class HtmlView extends BaseHtmlView
 	 * @var string
 	 * @since    7.0.0
 	 */
-	public $pagination;
+	public string $pagination;
 
 	/**
 	 * Error Count
@@ -115,7 +108,7 @@ class HtmlView extends BaseHtmlView
 	 * @var string
 	 * @since    7.0.0
 	 */
-	public $errorCount;
+	public string $errorCount;
 
 	/**
 	 * Joomla BibleStudy Version
@@ -123,7 +116,7 @@ class HtmlView extends BaseHtmlView
 	 * @var string
 	 * @since    7.0.0
 	 */
-	public $jversion;
+	public string $jversion;
 
 	/**
 	 * Temp Destination
@@ -131,7 +124,7 @@ class HtmlView extends BaseHtmlView
 	 * @var string
 	 * @since    7.0.0
 	 */
-	public $tmp_dest;
+	public string $tmp_dest;
 
 	/**
 	 * Player Stats
@@ -192,18 +185,18 @@ class HtmlView extends BaseHtmlView
 	/**
 	 * Item
 	 *
-	 * @var array
+	 * @var CMSObject
 	 * @since    7.0.0
 	 */
-	protected $item;
+	protected CMSObject $item;
 
 	/**
 	 * State
 	 *
-	 * @var array
+	 * @var CMSObject
 	 * @since    7.0.0
 	 */
-	protected $state;
+	protected CMSObject $state;
 
 	/**
 	 * Execute and display a template script.
@@ -305,11 +298,6 @@ class HtmlView extends BaseHtmlView
 		}
 
 		$this->version = $version;
-
-		if (!$this->filterParams)
-		{
-			$this->errorCount++;
-		}
 
 		$this->setLayout('edit');
 
