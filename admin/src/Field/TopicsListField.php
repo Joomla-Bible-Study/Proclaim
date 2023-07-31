@@ -42,6 +42,7 @@ class TopicsListField extends ListField
 	 *
 	 * @return  array  An array of JHtmlHelper options.
 	 *
+	 * @throws \Exception
 	 * @since 9.0.0
 	 */
 	protected function getOptions(): array
