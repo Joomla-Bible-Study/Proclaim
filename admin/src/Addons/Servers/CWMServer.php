@@ -29,7 +29,7 @@ abstract class CWMServer
 	 * @var     string
 	 * @since   9.0.0
 	 */
-	protected $type = '';
+	protected string $type = '';
 
 	/**
 	 * @var     resource    The server connection resource
@@ -105,6 +105,7 @@ abstract class CWMServer
 	 *
 	 * @return mixed
 	 *
+	 * @throws Exception
 	 * @since 9.0.0
 	 */
 	public static function getInstance(array $options = array())

@@ -30,7 +30,7 @@ class CWMAddonLegacy extends CWMAddon
 	 * @var     string
 	 * @since   9.0.0
 	 */
-	protected $name = 'lagacy';
+	protected $name = 'Legacy';
 
 	/**
 	 * Description of add-on
@@ -45,12 +45,12 @@ class CWMAddonLegacy extends CWMAddon
 	 *
 	 * @param   JInput|array  $data  Data to upload
 	 *
-	 * @return array|boolean
+	 * @return array
 	 *
 	 * @throws \Exception
 	 * @since 9.0.0
 	 */
-	public function upload($data)
+	public function upload($data): array
 	{
 		return (new CWMUploadScript)->upload($data);
 	}
@@ -58,7 +58,7 @@ class CWMAddonLegacy extends CWMAddon
 	/**
 	 * Render Fields for general view.
 	 *
-	 * @param   object  $media_form  Midea files form
+	 * @param   object  $media_form  Media files form
 	 * @param   bool    $new         If media is new
 	 *
 	 * @return string
@@ -99,7 +99,7 @@ class CWMAddonLegacy extends CWMAddon
 	/**
 	 * Render Layout and fields
 	 *
-	 * @param   object  $media_form  Midea files form
+	 * @param   object  $media_form  Media files form
 	 * @param   bool    $new         If media is new
 	 *
 	 * @return string

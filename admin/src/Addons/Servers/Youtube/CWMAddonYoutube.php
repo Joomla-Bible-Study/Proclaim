@@ -65,7 +65,7 @@ class CWMAddonYoutube extends CWMAddon
 	 *
 	 * @since 9.1.3
 	 */
-	public function renderGeneral($media_form, $new)
+	public function renderGeneral($media_form, $new): string
 	{
 		$html = '';
 		$fields = $media_form->getFieldset('general');
@@ -110,7 +110,7 @@ class CWMAddonYoutube extends CWMAddon
 	 *
 	 * @since 9.1.3
 	 */
-	public function render($media_form, $new)
+	public function render($media_form, $new): string
 	{
 		$html = '';
 		$html .= HtmlHelper::_('uitab.addTab', 'myTab', 'options', Text::_('Options'));
