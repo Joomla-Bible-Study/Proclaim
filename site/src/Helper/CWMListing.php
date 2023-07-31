@@ -1147,12 +1147,12 @@ class CWMListing
 	/**
 	 * Get Fluid Date
 	 *
-	 * @param   Object            $item      Study item
-	 * @param   Object            $row       Row Setup data
-	 * @param   Registry          $params    Parameters for the study
-	 * @param   CWMTemplateTable  $template  Template table
-	 * @param   integer           $header    Header will display if 1, Do not display if 0
-	 * @param   string            $type      Type of Fluid Data
+	 * @param   Object     $item      Study item
+	 * @param   Object     $row       Row Setup data
+	 * @param   Registry   $params    Parameters for the study
+	 * @param   \stdClass  $template  Template table
+	 * @param   integer    $header    Header will display if 1, Do not display if 0
+	 * @param   string     $type      Type of Fluid Data
 	 *
 	 * @return string
 	 *
@@ -1168,7 +1168,6 @@ class CWMListing
 			$registry->loadString($item->params);
 		}
 
-		/** @var string $data */
 		$data = '';
 
 		// Match the data in $item to a row/col in $row->name
@@ -1536,7 +1535,7 @@ class CWMListing
 				}
 				else
 				{
-					(isset($item->booknumber) ? $data = $this->getScripture($params, $item, $esv, $scripturerow) : $data = '');
+					(isset($item->booknumber) ? $data = $this->getScripture($params, $item, $esv, $scripturerow) : $data);
 				}
 				break;
 			case $extra . 'scripture2':
@@ -1549,7 +1548,7 @@ class CWMListing
 				}
 				else
 				{
-					(isset($item->booknumber2) ? $data = $this->getScripture($params, $item, $esv, $scripturerow) : $data = '');
+					(isset($item->booknumber2) ? $data = $this->getScripture($params, $item, $esv, $scripturerow) : $data);
 				}
 				break;
 			case $extra . 'secondary':
@@ -1569,7 +1568,7 @@ class CWMListing
 				}
 				else
 				{
-					isset($item->studytitle) ? $data = stripslashes($item->studytitle) : $data = '';
+					isset($item->studytitle) ? $data = stripslashes($item->studytitle) : $data;
 				}
 				break;
 			case $extra . 'date':
@@ -1579,7 +1578,7 @@ class CWMListing
 				}
 				else
 				{
-					isset($item->studydate) ? $data = $this->getStudyDate($params, $item->studydate) : $data = '';
+					isset($item->studydate) ? $data = $this->getStudyDate($params, $item->studydate) : $data;
 				}
 				break;
 			case $extra . 'teacher':
@@ -1589,7 +1588,7 @@ class CWMListing
 				}
 				else
 				{
-					(isset($item->teachername) ? $data = $item->teachername : $data = '');
+					(isset($item->teachername) ? $data = $item->teachername : $data);
 				}
 
 				break;
@@ -1598,7 +1597,7 @@ class CWMListing
 				{
 					$data = Text::_('JBS_CMN_TEACHER');
 				}
-				elseif (isset($item->title) && isset($item->teachername))
+				elseif (isset($item->title, $item->teachername))
 				{
 					$data = $item->title . ' ' . $item->teachername;
 				}
@@ -1614,7 +1613,7 @@ class CWMListing
 				}
 				else
 				{
-					isset($item->studyintro) ? $data = HtmlHelper::_('content.prepare', $item->studyintro, '', 'com_proclaim.' . $type) : $data = '';
+					isset($item->studyintro) ? $data = HtmlHelper::_('content.prepare', $item->studyintro, '', 'com_proclaim.' . $type) : $data;
 				}
 				break;
 			case $extra . 'series':
@@ -1624,7 +1623,7 @@ class CWMListing
 				}
 				else
 				{
-					(isset($item->series_text) ? $data = $item->series_text : $data = '');
+					(isset($item->series_text) ? $data = $item->series_text : $data);
 				}
 				break;
 			case $extra . 'seriesthumbnail':
@@ -1632,16 +1631,9 @@ class CWMListing
 				{
 					$data = Text::_('JBS_CMN_THUMBNAIL');
 				}
-				else
+				elseif ($item->series_thumbnail)
 				{
-					if ($item->series_thumbnail)
-					{
-						$data = $this->useJImage($item->series_thumbnail, Text::_('JBS_CMN_THUMBNAIL'));
-					}
-					else
-					{
-						$data = '';
-					}
+					$data = $this->useJImage($item->series_thumbnail, Text::_('JBS_CMN_THUMBNAIL'));
 				}
 				break;
 			case $extra . 'teacherlargeimage':
@@ -1653,15 +1645,11 @@ class CWMListing
 				{
 					$data = $this->useJImage($item->teacher_image, Text::_('JBS_CMN_THUMBNAIL'));
 				}
-				else
-				{
-					$data = '';
-				}
 				break;
 			case $extra . 'description':
 				if ($type === 'seriesdisplays' || ($type === 'seriesdisplay' && $header !== 1))
 				{
-					(isset($item->description) ? $data = HTMLHelper::_('content.prepare', $item->description, '', 'com_proclaim.' . $type) : $data = '');
+					(isset($item->description) ? $data = HTMLHelper::_('content.prepare', $item->description, '', 'com_proclaim.' . $type) : $data);
 
 					if ($params->get('series_characters'))
 					{
@@ -1674,10 +1662,9 @@ class CWMListing
 						$data .= '.';
 					}
 				}
-
 				else
 				{
-					(isset($item->sdescription) ? $data = HtmlHelper::_('content.prepare', $item->sdescription, '', 'com_proclaim.' . $type) : $data = '');
+					(isset($item->sdescription) ? $data = HtmlHelper::_('content.prepare', $item->sdescription, '', 'com_proclaim.' . $type) : $data);
 
 					if ($params->get('series_characters'))
 					{
@@ -1714,7 +1701,7 @@ class CWMListing
 				}
 				else
 				{
-					(isset($item->submitted) ? $data = $item->submitted : $data = '');
+					(isset($item->submitted) ? $data = $item->submitted : $data);
 				}
 				break;
 			case $extra . 'hits':
@@ -1724,7 +1711,7 @@ class CWMListing
 				}
 				else
 				{
-					(isset($item->hits) ? $data = $item->hits : $data = '');
+					(isset($item->hits) ? $data = $item->hits : $data);
 				}
 				break;
 			case $extra . 'downloads':
@@ -1734,7 +1721,7 @@ class CWMListing
 				}
 				else
 				{
-					(isset($item->downloads) ? $data = $item->downloads : $data = '');
+					(isset($item->downloads) ? $data = $item->downloads : $data);
 				}
 				break;
 			case $extra . 'studynumber':
@@ -1744,7 +1731,7 @@ class CWMListing
 				}
 				else
 				{
-					(isset($item->studynumber) ? $data = $item->studynumber : $data = '');
+					(isset($item->studynumber) ? $data = $item->studynumber : $data);
 				}
 				break;
 			case $extra . 'topic':
@@ -1798,7 +1785,7 @@ class CWMListing
 				}
 				else
 				{
-					(isset($item->message_type) ? $data = $item->message_type : $data = '');
+					(isset($item->message_type) ? $data = $item->message_type : $data);
 				}
 				break;
 			case $extra . 'thumbnail':
@@ -1812,12 +1799,10 @@ class CWMListing
 
 					if ($params->get('studyimage') !== '-1')
 					{
-						$data = $this->useJImage('media/com_proclaim/images/stockimages/' . $registry->get('studyimage'), Text::_('JBS_CMN_THUMBNAIL'));
+						$data = $this->useJImage('media/com_proclaim/images/stockimages/'
+							. $registry->get('studyimage'), Text::_('JBS_CMN_THUMBNAIL')
+						);
 					}
-				}
-				else
-				{
-					$data = '';
 				}
 				break;
 			case $extra . 'teacherimage':
@@ -1827,25 +1812,14 @@ class CWMListing
 				}
 				elseif ($type === 'seriesdisplays' || $type === 'seriesdisplay' || $type === 'teachers' || $type === 'teacher')
 				{
-					if (isset($item->teacher_thumbnail) && !empty($item->teacher_thumbnail))
+					if (!empty($item->teacher_thumbnail))
 					{
 						$data = $this->useJImage($item->teacher_thumbnail, Text::_('JBS_CMN_THUMBNAIL'));
 					}
-					else
-					{
-						$data = '';
-					}
 				}
-				else
+				elseif ($item->thumb)
 				{
-					if ($item->thumb)
-					{
-						$data = $this->useJImage($item->thumb, Text::_('JBS_CMN_THUMBNAIL'));
-					}
-					else
-					{
-						$data = '';
-					}
+					$data = $this->useJImage($item->thumb, Text::_('JBS_CMN_THUMBNAIL'));
 				}
 				break;
 		}
@@ -1867,13 +1841,6 @@ class CWMListing
 
 		$classelement = $this->createelement($row->element);
 
-		/*
-		if ($header === '1')
-		{
-			$classelement = '';
-			$style        = 'style="font-weight:bold;"';
-		}
-		*/
 		if ($classelement)
 		{
 			if (isset($style))
@@ -2247,14 +2214,14 @@ class CWMListing
 	 *
 	 * @since 7.0
 	 */
-	public function getScripture(Registry $params, object $row, int $esv, int $scripturerow): ?string
+	public function getScripture(Registry $params, object $row, int $esv, int $scripturerow): string
 	{
-		$scripture = '';
-		$book      = '';
+		$scripture      = '';
+		$book           = '';
 
-		if (!isset($row->id))
+		if (!isset($row->id) || ((int) $row->booknumber <= 0 && (int) $row->booknumber2 <= 0))
 		{
-			return null;
+			return '';
 		}
 
 		if (empty($row->booknumber))
@@ -2290,19 +2257,17 @@ class CWMListing
 			}
 		}
 
+		if (!isset($row->bookname))
+		{
+			return $scripture;
+		}
+
 		if (!isset($booknumber) || $booknumber === "-1")
 		{
 			return $scripture;
 		}
 
 		$show_verses = (int) $params->get('show_verses');
-
-		if (!isset($row->bookname))
-		{
-			$scripture = '';
-
-			return $scripture;
-		}
 
 		$b1  = ' ';
 		$b2  = ':';
