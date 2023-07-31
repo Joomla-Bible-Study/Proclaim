@@ -64,12 +64,12 @@ class CWMPodcast
 	/**
 	 * Make Podcasts
 	 *
-	 * @return boolean|string
+	 * @return string
 	 *
 	 * @throws \Exception
 	 * @since 8.0.0
 	 */
-	public function makePodcasts()
+	public function makePodcasts(): string
 	{
 		$msg = array();
 		$db  = Factory::getContainer()->get('DatabaseDriver');
@@ -99,7 +99,7 @@ class CWMPodcast
 				// Work Around all language
 				if ($podinfo->language === '*')
 				{
-					$podlanguage = Factory::getConfig()->get('language');
+					$podlanguage = Factory::getApplication()->getConfig()->get('language');
 				}
 				else
 				{
@@ -111,7 +111,10 @@ class CWMPodcast
 
 				// Check to see if there is a media file associated - if not, don't continue
 				$query = $db->getQuery(true);
-				$query->select('id')->from('#__bsms_mediafiles')->where('podcast_id LIKE  ' . $db->q('%' . $podinfo->id . '%'))->where('published = ' . 1);
+				$query->select('id')
+					->from('#__bsms_mediafiles')
+					->where('podcast_id LIKE  ' . $db->q('%' . $podinfo->id . '%'))
+					->where('published = ' . 1);
 				$db->setQuery($query);
 				$checkresult = $db->loadObjectList();
 
@@ -276,7 +279,7 @@ class CWMPodcast
 								}
 								break;
 							case 5:
-								if ($this->templateid !== $detailstemplateid || is_null($this->template))
+								if ($this->templateid !== $detailstemplateid || $this->template === null)
 								{
 									$this->template   = CWMParams::getTemplateparams($detailstemplateid);
 									$this->templateid = (int) $detailstemplateid;
@@ -398,12 +401,14 @@ class CWMPodcast
 						}
 						elseif ($podinfo->linktype == '2')
 						{
-							$episodedetailtemp .= '<link>' . $protocol . $podinfo->website . '/index.php?option=com_proclaim&amp;view=popup&amp;player=1&amp;id=' .
+							$episodedetailtemp .= '<link>' . $protocol . $podinfo->website
+								. '/index.php?option=com_proclaim&amp;view=popup&amp;player=1&amp;id=' .
 								$episode->slug . '&amp;t=' . $detailstemplateid . '</link>';
 						}
 						else
 						{
-							$episodedetailtemp .= '<link>' . $protocol . $podinfo->website . '/index.php?option=com_proclaim&amp;view=cwmsermon&amp;id='
+							$episodedetailtemp .= '<link>' . $protocol . $podinfo->website
+								. '/index.php?option=com_proclaim&amp;view=cwmsermon&amp;id='
 								. $episode->slug . '&amp;t=' . $detailstemplateid . '</link>';
 						}
 
@@ -422,7 +427,8 @@ class CWMPodcast
 							$duration = '';
 						}
 
-						$episodedetailtemp .= '<comments>' . $protocol . $podinfo->website . '/index.php?option=com_proclaim&amp;view=cwmsermon&amp;id='
+						$episodedetailtemp .= '<comments>' . $protocol . $podinfo->website
+							. '/index.php?option=com_proclaim&amp;view=cwmsermon&amp;id='
 							. $episode->slug . '&amp;t=' . $detailstemplateid . '</comments>
                         		<itunes:author>' . $this->escapeHTML($episode->teachername) . '</itunes:author>
                         		<dc:creator>' . $this->escapeHTML($episode->teachername) . '</dc:creator>
@@ -532,7 +538,7 @@ class CWMPodcast
 	 *
 	 * @since 9.0.0
 	 */
-	protected function escapeHTML(?string $string)
+	protected function escapeHTML(?string $string): string
 	{
 		if (empty($string))
 		{
@@ -554,7 +560,7 @@ class CWMPodcast
 	 *
 	 * @since 8.0.0
 	 */
-	public function getEpisodes(int $id, string $limit)
+	public function getEpisodes(int $id, string $limit): array
 	{
 		preg_match_all('!\d+!', $limit, $set_limit);
 		$set_limit = (int) implode(' ', $set_limit[0]);
@@ -629,7 +635,7 @@ class CWMPodcast
 	 * @throws \Exception
 	 * @since 7.0.0
 	 */
-	public function writeFile(string $file, string $filecontent)
+	public function writeFile(string $file, string $filecontent): bool
 	{
 		// Set FTP credentials, if given
 		ClientHelper::setCredentialsFromRequest('ftp');
@@ -683,7 +689,7 @@ class CWMPodcast
 	 *
 	 * @since 9.2.4
 	 */
-	public function getDuration(string $filename)
+	public function getDuration(string $filename): int
 	{
 		$fd = fopen($filename, 'rb');
 
@@ -733,7 +739,7 @@ class CWMPodcast
 	}
 
 	/**
-	 * Remove Http from urel
+	 * Remove Http from url
 	 *
 	 * @param   string  $url  Url of website
 	 *
@@ -765,7 +771,7 @@ class CWMPodcast
 	 *
 	 * @since 9.2.4
 	 */
-	public function skipID3v2Tag(&$block)
+	public function skipID3v2Tag(&$block): int
 	{
 		// Do not worry about string vs array work right.
 		if (strpos($block, "ID3") === 0)
@@ -800,13 +806,13 @@ class CWMPodcast
 	/**
 	 * Get Frame Header of the ID3 file
 	 *
-	 * @param   array|string  $fourbytes  array with four bytes
+	 * @param   array  $fourbytes  array with four bytes
 	 *
 	 * @return array
 	 *
 	 * @since 9.2.4
 	 */
-	public function parseFrameHeader($fourbytes): array
+	public function parseFrameHeader(array $fourbytes): array
 	{
 		static $versions = array(
 			0x0 => '2.5', 0x1 => 'x', 0x2 => '2', 0x3 => '1'
