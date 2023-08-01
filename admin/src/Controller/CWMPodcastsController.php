@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 use CWM\Component\Proclaim\Site\Helper\CWMPodcast;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Session\Session;
 
 /**
@@ -34,7 +35,7 @@ class CWMPodcastsController extends AdminController
 	 * @param   string  $prefix  The class prefix. Optional.
 	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return boolean|\Joomla\CMS\MVC\Model\BaseDatabaseModel
+	 * @return boolean|BaseDatabaseModel
 	 *
 	 * @since 7.0.0
 	 */
@@ -50,9 +51,9 @@ class CWMPodcastsController extends AdminController
 	 * @return void
 	 *
 	 * @throws \Exception
-	 * @since 9.0.0
+	 * @since 10.0.0
 	 */
-	public function writeXMLFile()
+	public function writeXMLFile(): void
 	{
 		// Check for request forgeries.
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
