@@ -12,7 +12,6 @@
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
-use Joomla\CMS\Session\Session;
 
 defined('_JEXEC') or die();
 
@@ -44,26 +43,31 @@ $wa->addInlineScript("if (typeof jQuery == 'function')
 			<div class="bar" style="width: <?php echo $this->percentage ?>%;"></div> <?php echo $this->percentage; ?>%
 		</div>
 
-		<form action="<?php Route::_('index.php?option=com_proclaim&view=cwmassets'); ?>" name="adminForm"
-		      id="adminForm" class="form-inline">
+        <form action="<?php Route::_('index.php?option=com_proclaim&view=cwmassets'); ?>" name="adminForm"
+              id="adminForm" class="form-inline">
 			<?php if ($this->state === 'start')
 			{ ?>
-				<input type="hidden" name="task" value="cwmassets.browse"/>
+                <input type="hidden" name="task" value="cwmassets.browse"/>
 			<?php }
-			elseif ($this->more === true)
+            elseif ($this->more === true)
 			{ ?>
-				<input type="hidden" name="task" value="cwmassets.run"/>
+                <input type="hidden" name="task" value="cwmassets.run"/>
 			<?php } ?>
-			<?php echo HTMLHelper::_('form.token'); ?>
-			<input type="hidden" name="task" value=""/>
-			<input type="hidden" name="tooltype" value=""/>
-			<input type="hidden" name="option" value="com_proclaim"/>
-		</form>
 
-		<?php if ($this->more === false): ?>
-			<div class="alert alert-info">
-				<p><?php echo Text::_('You may hit the back button now'); ?></p>
-			</div>
-		<?php endif; ?>
-	</div>
+			<?php if ($this->more === false): ?>
+                <div class="alert alert-info">
+                    <p><?php echo Text::_('Will refresh go back to Assets check in 3 seconds. If not press back button.');
+						$wa->useScript('form.validate')
+							->addInlineScript("setTimeout(function(){
+                                    jQuery('#adminForm').submit()
+								}, 3000);"
+							); ?></p>
+                    <input type="hidden" name="task" value="cwmassets.checkassets"/>
+                </div>
+			<?php endif; ?>
+			<?php echo HTMLHelper::_('form.token'); ?>
+            <input type="hidden" name="tooltype" value=""/>
+            <input type="hidden" name="option" value="com_proclaim"/>
+        </form>
+    </div>
 </div>
