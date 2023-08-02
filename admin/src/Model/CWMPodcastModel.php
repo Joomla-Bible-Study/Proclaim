@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Table\Table;
@@ -119,4 +120,27 @@ class CWMPodcastModel extends AdminModel
 	{
 		return parent::getTable($name, $prefix, $options);
 	}
+
+/**
+* Cleans image
+*
+* @param   array  $data  Data
+*
+* @return boolean
+*
+* @throws \Exception
+* @since 9.0.0
+*/
+	public function save($data)
+	{
+		$image = HTMLHelper::cleanImageURL($data['image']);
+		$data['image'] = $image->url;
+		$podcastimage = HTMLHelper::cleanImageURL($data['podcastimage']);
+		$data['podcastimage'] = $podcastimage->url;
+		$podcast_image_subscribe = HTMLHelper::cleanImageURL($data['podcast_image_subscribe']);
+		$data['podcast_image_subscribe'] = $podcast_image_subscribe->url;
+		return parent::save($data);
+
+	}
+
 }
