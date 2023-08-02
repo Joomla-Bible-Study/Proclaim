@@ -29,7 +29,7 @@
 				required="true"/>
 		<field name="server_name" type="text" label="JBS_SVR_SERVER_NAME"
 		       description="JBS_SVR_SERVER_NAME_DESC" size="50" required="true"/>
-		<field name="rules" type="rules" label="JFIELD_RULES_LABEL"
+		<field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL"
 		       translate_label="false" class="inputbox" filter="rules" component="com_proclaim"
 		       section="server" validate="rules"/>
 		<field name="asset_id" type="hidden" filter="unset"/>
