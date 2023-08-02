@@ -556,7 +556,7 @@ class CWMListing
 	 *
 	 * @since 7.0
 	 */
-	public function getFluidMediaids($item)
+	public function getFluidMediaids($item): array
 	{
 		$medias    = array();
 		$mediatemp = explode(',', $item->mids);
@@ -576,6 +576,7 @@ class CWMListing
 	 *
 	 * @return mixed
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function getMediaFiles(array $medias)
@@ -612,7 +613,9 @@ class CWMListing
 		$subquery .= ')';
 		$query->where($subquery);
 		$query->where('#__bsms_mediafiles.published = 1');
-		$query->where('#__bsms_mediafiles.language in (' . $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
+		$query->where('#__bsms_mediafiles.language in ('
+			. $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*') . ')'
+		);
 		$query->order('ordering ASC');
 		$db->setQuery($query);
 
@@ -628,7 +631,7 @@ class CWMListing
 	 *
 	 * @since 7.0
 	 */
-	public function getListParamsArray($paramtext)
+	public function getListParamsArray(string $paramtext): \stdClass
 	{
 		$l = new \stdClass;
 
@@ -670,7 +673,7 @@ class CWMListing
 	 *
 	 * @since 7.0
 	 */
-	public function sortArrayofObjectByProperty($array, $property, $order = "ASC")
+	public function sortArrayofObjectByProperty(array $array, string $property, string $order = "ASC"): array
 	{
 		$cur           = 1;
 		$stack[1]['l'] = 0;
@@ -691,7 +694,8 @@ class CWMListing
 				/*
 				 Split the array in to parts
 				// first: objects with "smaller" property $property
-				// second: objects with "bigger" property $property */
+				// second: objects with "bigger" property $property
+				*/
 				do
 				{
 					while ($array[$i]->{$property} < $tmp->{$property})
@@ -704,7 +708,7 @@ class CWMListing
 						$j--;
 					}
 
-					// Swap elements of two parts if necesary
+					// Swap elements of two parts if necessary
 					if ($i <= $j)
 					{
 						$w         = $array[$i];
@@ -797,7 +801,7 @@ class CWMListing
 		{
 			// Teacher Thumbnail
 			case 1:
-				if (isset($item->thumb) && !empty($item->thumb))
+				if (!empty($item->thumb))
 				{
 					$span = $this->useJImage($item->thumb, $item->teachername, '', '', '', $params->get('rowspanitemimage'));
 				}
@@ -806,64 +810,51 @@ class CWMListing
 					$span = null;
 				}
 
-				if (!empty($item->teacher_thumbnail) && is_null($span))
+				if (!empty($item->teacher_thumbnail) && $span === null)
 				{
-					if (isset($item->teacher_thumbnail))
-					{
-						$span = $this->useJImage($item->teacher_thumbnail, $item->teachername, '', '', '', $params->get('rowspanitemimage'));
-					}
-					else
-					{
-						$span = '';
-					}
+					$span = $this->useJImage($item->teacher_thumbnail, $item->teachername, '', '', '', $params->get('rowspanitemimage'));
 				}
 				break;
 
 			// Study Thumbnail
 			case 2:
-				if ((isset($item->thumbnailm) && !empty($item->thumbnailm)) || isset($item->thumbnailm))
+				if (isset($item->thumbnailm))
 				{
 					$span = $this->useJImage($item->thumbnailm, Text::_('JBS_CMN_THUMBNAIL'), '', '', '', $params->get('rowspanitemimage'));
 				}
 
-				if ($params->get('studyimage') !== '-1')
+				if ($params->get('studyimage', '-1') !== '-1')
 				{
-					$span = $this->useJImage(JPATH_SITE . '/media/com_proclaim/images/stockimages/' . $params->get('studyimage'), Text::_('JBS_CMN_THUMBNAIL'), '', '', '', $params->get('rowspanitemimage'));
-				}
-				else
-				{
-					$span = '';
+					$span = $this->useJImage(JPATH_SITE . '/media/com_proclaim/images/stockimages/' . $params->get('studyimage'),
+						Text::_('JBS_CMN_THUMBNAIL'),
+						'',
+						'',
+						'',
+						$params->get('rowspanitemimage')
+					);
 				}
 
 				break;
 
 			// Series Thumbnail
 			case 3:
-				if (isset($item->series_thumbnail) && !empty($item->series_thumbnail))
+				if (!empty($item->series_thumbnail))
 				{
 					$span = $this->useJImage($item->series_thumbnail, Text::_('JBS_CMN_SERIES'), '', '', '', $params->get('rowspanitemimage'));
-				}
-				else
-				{
-					$span = '';
 				}
 				break;
 
 			// Teacher Large image
 			case 4:
-				if (isset($item->teacher_image) && !empty($item->teacher_image))
+				if (!empty($item->teacher_image))
 				{
 					$span = $this->useJImage($item->teacher_image, $item->teachername, '', '', '', $params->get('rowspanitemimage'));
-				}
-				else
-				{
-					$span = '';
 				}
 				break;
 		}
 
 		$rowspanitemspan = $params->get($extra . 'rowspanitemspan');
-		$rowspanbalance  = 12 - intval($rowspanitemspan);
+		$rowspanbalance  = 12 - (int) $rowspanitemspan;
 
 		$frow = '';
 
@@ -879,6 +870,14 @@ class CWMListing
 		$row4count2 = 0;
 		$row5count2 = 0;
 		$row6count2 = 0;
+
+		if ($span)
+		{
+			$frow .= '<div class="row-fluid" about="' . $type . '">';
+			$frow .= '<div class="span' . $rowspanitemspan . ' ' . $pull
+				. '" id="jbsmspan-image"><div ' . $headerstyle . '>' . $span . '</div></div>';
+			$frow .= '<div class="span' . $rowspanbalance . '" about="' . $type . '">';
+		}
 
 		foreach ($listsorts as $sort)
 		{
@@ -979,8 +978,8 @@ class CWMListing
 						$thadd = 'colspan="' . $row->colspan . '"';
 					}
 
-					// $thadd = '';
-					$frow .= '<tr scope="row"> <th ' . $thadd . ' scope="col">' . $this->getFluidData($item, $row, $params, $template, $header = 1, $type);
+					$frow .= '<tr scope="row"> <th ' . $thadd . ' scope="col">'
+						. $this->getFluidData($item, $row, $params, $template, $header = 1, $type);
 				}
 				else
 				{
@@ -1014,8 +1013,8 @@ class CWMListing
 						$thadd = 'colspan="' . $row->colspan . '"';
 					}
 
-					// $thadd = '';
-					$frow .= '<tr scope="row"><th ' . $thadd . ' scope="col">' . $this->getFluidData($item, $row, $params, $template, $header = 1, $type);
+					$frow .= '<tr scope="row"><th ' . $thadd . ' scope="col">'
+						. $this->getFluidData($item, $row, $params, $template, $header = 1, $type);
 				}
 				else
 				{
@@ -1049,8 +1048,8 @@ class CWMListing
 						$thadd = 'colspan="' . $row->colspan . '"';
 					}
 
-					// $thadd = '';
-					$frow .= '<tr scope="row"><th ' . $thadd . ' scope="col">' . $this->getFluidData($item, $row, $params, $template, $header = 1, $type);
+					$frow .= '<tr scope="row"><th ' . $thadd . ' scope="col">'
+						. $this->getFluidData($item, $row, $params, $template, $header = 1, $type);
 				}
 				else
 				{
@@ -1793,11 +1792,11 @@ class CWMListing
 				{
 					$data = Text::_('JBS_CMN_THUMBNAIL');
 				}
-				elseif ($item->thumbnailm || $params->get('studyimage') !== '-1')
+				elseif ($item->thumbnailm || $params->get('studyimage', '-1') !== '-1')
 				{
 					$data = $this->useJImage($item->thumbnailm, Text::_('JBS_CMN_THUMBNAIL'));
 
-					if ($params->get('studyimage') !== '-1')
+					if ($params->get('studyimage', '-1') !== '-1')
 					{
 						$data = $this->useJImage('media/com_proclaim/images/stockimages/'
 							. $registry->get('studyimage'), Text::_('JBS_CMN_THUMBNAIL')
@@ -2090,17 +2089,17 @@ class CWMListing
 				// Assume study thumbnail
 				$element = $this->useJImage($row->thumbnailm, $row->studytitle);
 
-				if ($params->get('studyimage') !== '-1')
+				if ($params->get('studyimage', '-1') !== '-1')
 				{
 					// Clean up extra data in the image
 					$hash = str_contains($params->get('studyimage'), '#');
 
-					if ($hash == 1)
+					if ($hash === 1)
 					{
-						$imageparam = $params->get('studyimage');
+						$imageparam   = $params->get('studyimage');
 						$hashlocation = strpos($imageparam, '#');
-						$image = substr($imageparam, 0, $hashlocation);
-						$element = $this->useJImage($image, $row->studytitle);
+						$image        = substr($imageparam, 0, $hashlocation);
+						$element      = $this->useJImage($image, $row->studytitle);
 					}
 				}
 
@@ -2210,16 +2209,26 @@ class CWMListing
 	 * @param   int       $esv           ESV String
 	 * @param   int       $scripturerow  Scripture Row
 	 *
-	 * @return string|null
+	 * @return string
 	 *
 	 * @since 7.0
 	 */
 	public function getScripture(Registry $params, object $row, int $esv, int $scripturerow): string
 	{
-		$scripture      = '';
-		$book           = '';
+		$scripture  = '';
+		$book       = '';
+		$booknumber = '';
+		$ch_b       = 0;
+		$ch_e       = 0;
+		$v_b        = 0;
+		$v_e        = 0;
 
-		if (!isset($row->id) || ((int) $row->booknumber <= 0 && (int) $row->booknumber2 <= 0))
+		if (!isset($row->booknumber2))
+		{
+			$row->booknumber2 = 0;
+		}
+
+		if (!isset($row->id) || ((int) $row->booknumber <= 0 && $row->booknumber2 !== 0))
 		{
 			return '';
 		}
@@ -2229,27 +2238,22 @@ class CWMListing
 			$row->booknumber = 0;
 		}
 
-		if (!isset($row->booknumber2))
-		{
-			$row->booknumber2 = 0;
-		}
-
-		if ($scripturerow === 2 && $row->booknumber2 >= 1)
+		if ($scripturerow === 2 && $row->booknumber2 > 1)
 		{
 			$booknumber = $row->booknumber2;
-			$ch_b       = $row->chapter_begin2;
-			$ch_e       = $row->chapter_end2;
-			$v_b        = $row->verse_begin2;
-			$v_e        = $row->verse_end2;
+			$ch_b       = (int) $row->chapter_begin2;
+			$ch_e       = (int) $row->chapter_end2;
+			$v_b        = (int) $row->verse_begin2;
+			$v_e        = (int) $row->verse_end2;
 			$book       = Text::_($row->bookname2);
 		}
-		elseif ($scripturerow === 1 && isset($row->booknumber) >= 1)
+		elseif ($scripturerow === 1 && $row->booknumber > 1)
 		{
 			$booknumber = $row->booknumber;
-			$ch_b       = $row->chapter_begin;
-			$ch_e       = $row->chapter_end;
-			$v_b        = $row->verse_begin;
-			$v_e        = $row->verse_end;
+			$ch_b       = (int) $row->chapter_begin;
+			$ch_e       = (int) $row->chapter_end;
+			$v_b        = (int) $row->verse_begin;
+			$v_e        = (int) $row->verse_end;
 
 			if (isset($row->bookname))
 			{
@@ -2257,12 +2261,7 @@ class CWMListing
 			}
 		}
 
-		if (!isset($row->bookname))
-		{
-			return $scripture;
-		}
-
-		if (!isset($booknumber) || $booknumber === "-1")
+		if (!isset($row->bookname) || $booknumber === "-1")
 		{
 			return $scripture;
 		}
@@ -2276,10 +2275,6 @@ class CWMListing
 
 		if ($show_verses === 1)
 		{
-			/** @var $ch_b string */
-			/** @var $v_b string */
-			/** @var $ch_e string */
-			/** @var $v_e string */
 			if ($ch_e === $ch_b)
 			{
 				$ch_e = '';
@@ -2294,7 +2289,7 @@ class CWMListing
 				$v_e  = '';
 			}
 
-			if (empty($v_b) || $v_b === '0')
+			if (empty($v_b))
 			{
 				$v_b = '';
 				$v_e = '';
@@ -2302,18 +2297,18 @@ class CWMListing
 				$b2  = '';
 			}
 
-			if (empty($v_e) || $v_e === '0')
+			if (empty($v_e))
 			{
 				$v_e = '';
 				$b2a = '';
 			}
 
-			if (empty($ch_e) || $ch_e === '0')
+			if (empty($ch_e))
 			{
 				$b2a  = '';
 				$ch_e = '';
 
-				if (empty($v_e) || $v_e === '0')
+				if (empty($v_e))
 				{
 					$b3 = '';
 				}
@@ -2325,8 +2320,6 @@ class CWMListing
 		// Else
 		if ($show_verses === 0)
 		{
-			/** @var $ch_e string */
-			/** @var $ch_b string */
 			if ($ch_e > $ch_b)
 			{
 				$scripture = $book . $b1 . $ch_b . $b3 . $ch_e;
@@ -2339,17 +2332,13 @@ class CWMListing
 
 		if ($esv === 1)
 		{
-			/** @var $ch_b string */
-			/** @var $v_b string */
-			/** @var $ch_e string */
-			/** @var $v_e string */
 			if ($ch_e === $ch_b)
 			{
 				$ch_e = '';
 				$b2a  = '';
 			}
 
-			if (empty($v_b) || $v_b === '0')
+			if (empty($v_b))
 			{
 				$v_b = '';
 				$v_e = '';
@@ -2357,18 +2346,18 @@ class CWMListing
 				$b2  = '';
 			}
 
-			if (empty($v_e) || $v_e === '0')
+			if (empty($v_e))
 			{
 				$v_e = '';
 				$b2a = '';
 			}
 
-			if (empty($ch_e) || $ch_e === '0')
+			if (empty($ch_e))
 			{
 				$b2a  = '';
 				$ch_e = '';
 
-				if (empty($v_e) || $v_e === '0')
+				if (empty($v_e))
 				{
 					$b3 = '';
 				}
@@ -2472,7 +2461,7 @@ class CWMListing
 						break;
 				}
 			}
-			catch (Exception $e)
+			catch (\Exception $e)
 			{
 				return $studydate;
 			}
@@ -2502,17 +2491,17 @@ class CWMListing
 	 * @param   null         $height  Height
 	 * @param   null         $class   CSS Class
 	 *
-	 * @return boolean|\stdClass
+	 * @return boolean|string
 	 *
 	 * @since 9.0.0
 	 */
 	public function useJImage(string $path, string $alt = null, $id = null, $width = null, $height = null, $class = null)
 	{
-		$return = false;
+		$path = HTMLHelper::_('cleanImageURL', $path);
 
 		try
 		{
-			$image = Image::getImageFileProperties($path);
+			$image = Image::getImageFileProperties(JPATH_ROOT . DIRECTORY_SEPARATOR . $path->url);
 		}
 		catch (\Exception $e)
 		{
@@ -2528,10 +2517,18 @@ class CWMListing
 		{
 			$width = ' width="' . $width . '" ';
 		}
+		else
+		{
+			$width = ' width="' . $image->width . '" ';
+		}
 
 		if ($height)
 		{
 			$height = ' height="' . $height . '" ';
+		}
+		else
+		{
+			$height = ' height="' . $image->height . '" ';
 		}
 
 		if ($class)
@@ -2539,13 +2536,8 @@ class CWMListing
 			$class = ' class="' . $class . '" ';
 		}
 
-		if (!empty($path) && isset($image->attributes))
-		{
-			$return = '<img src="' . Uri::base() . $path . '"' . $id . $width . $height
-				. 'alt="' . $alt . '" ' . $class . $image->attributes . ' />';
-		}
-
-		return $return;
+		return '<img src="' . Uri::base() . $path->url . '"' . $id . $width . $height
+			. 'alt="' . $alt . '" ' . $class . ' />';
 	}
 
 	/**
