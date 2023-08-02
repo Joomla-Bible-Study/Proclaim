@@ -29,6 +29,7 @@ try
 }
 catch (Exception $e)
 {
+	return;
 }
 
 // Version information
@@ -52,14 +53,14 @@ const BIBLESTUDY_PATH_ADMIN_HELPERS = BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATO
 
 HTMLHelper::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html');
 
-// If phrase is not found in specific language file, load english language file:
+// If a phrase is not found in a specific language file, load english language file:
 $language = $app->getLanguage();
 $language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
 $language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, null, true);
 
-// Add to to api to load the core CSS and JS for the component to work.
+// Add to api to load the core CSS and JS for the component to work.
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+$wa = $app->getDocument()->getWebAssetManager();
 
 // We register the extension registry because in  modules and plugins the registry is not automatically loaded
 $wa->getRegistry()->addExtensionRegistryFile('com_proclaim');

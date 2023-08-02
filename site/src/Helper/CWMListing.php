@@ -14,7 +14,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-// Always load JBSM API if it exists.
+// Always load CWM API if it exists.
 $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
 if (file_exists($api))
@@ -1206,7 +1206,7 @@ class CWMListing
 				break;
 
 			case $extra . 'teacherallinone':
-				if ($header == 1)
+				if ($header === 1)
 				{
 					$data .= 'Teacher Contact';
 				}
@@ -1215,79 +1215,79 @@ class CWMListing
 					if (isset($item->email))
 					{
 						($item->email ? $data = '<a href="mailto:' . $item->email . '">
-				<span class="fas fa-envelope" style="font-size:20px;" title="Website"></span></a>' : $data = '');
+				<span class="fas fa-envelope" style="font-size:20px;" title="Website"></span></a>' : $data);
 
 						if ($item->website)
 						{
-							if (substr_count($item->website, 'http://', 0))
+							if (substr_count($item->website, 'https://', 0) || substr_count($item->website, 'http://', 0))
 							{
 								$data .= '<a href="' . $item->website . '" target="_blank">
 						<span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
 							}
 							else
 							{
-								$data .= '<a href="http://' . $item->website . '" target="_blank">
+								$data .= '<a href="https://' . $item->website . '" target="_blank">
 						<span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
 							}
 						}
 
 						if ($item->facebooklink)
 						{
-							if (substr_count($item->facebooklink, 'http://', 0))
+							if (substr_count($item->facebooklink, 'https://', 0) || substr_count($item->facebooklink, 'http://', 0))
 							{
 								$data .= '<a href="' . $item->facebooklink . '" target="_blank">
 						<span class="fab fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
 							}
 							else
 							{
-								$data .= '<a href="http://' . $item->facebooklink . '" target="_blank">
+								$data .= '<a href="https://' . $item->facebooklink . '" target="_blank">
 						<span class="fab fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
 							}
 						}
 
 						if ($item->twitterlink)
 						{
-							if (substr_count($item->twitterlink, 'http://', 0))
+							if (substr_count($item->twitterlink, 'https://', 0) || substr_count($item->twitterlink, 'http://', 0))
 							{
 								$data .= '<a href="' . $item->twitterlink . '" target="_blank">
 						<span class="fab fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
 							}
 							else
 							{
-								$data .= '<a href="http://' . $item->twitterlink . '" target="_blank">
+								$data .= '<a href="https://' . $item->twitterlink . '" target="_blank">
 						<span class="fab fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
 							}
 						}
 
 						if ($item->bloglink)
 						{
-							if (substr_count($item->bloglink, 'http://', 0, 7))
+							if (substr_count($item->bloglink, 'https://', 0, 7) || substr_count($item->bloglink, 'http://', 0, 7))
 							{
 								$data .= '<a href="' . $item->bloglink . '" target="_blank">
 						<span class="fas fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
 							}
 							else
 							{
-								$data .= '<a href="http://' . $item->bloglink . '" target="_blank">
+								$data .= '<a href="https://' . $item->bloglink . '" target="_blank">
 						<span class="fas fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
 							}
 						}
 
 						if ($item->link1)
 						{
-							if (substr_count($item->link1, 'http://', 0))
+							if (substr_count($item->link1, 'https://', 0) || substr_count($item->link1, 'http://', 0))
 							{
 								$data .= '<a href="' . $item->link1 . '" target="_blank">' . $item->link1label . '</a>';
 							}
 							else
 							{
-								$data .= '<a href="http://' . $item->link1 . '" target="_blank">' . $item->link1label . '</a>';
+								$data .= '<a href="https://' . $item->link1 . '" target="_blank">' . $item->link1label . '</a>';
 							}
 						}
 
 						if ($item->link2)
 						{
-							if (substr_count($item->link2, 'http://', 0))
+							if (substr_count($item->link2, 'https://', 0) || substr_count($item->link2, 'http://', 0))
 							{
 								$data .= '<a href="' . $item->link2 . '" target="_blank">' . $item->link2label . '</a>';
 							}
@@ -1299,13 +1299,13 @@ class CWMListing
 
 						if ($item->link3)
 						{
-							if (substr_count($item->link3, 'http://', 0))
+							if (substr_count($item->link3, 'https://', 0) || substr_count($item->link3, 'http://', 0))
 							{
 								$data .= '<a href="' . $item->link3 . '" target="_blank">' . $item->link3label . '</a>';
 							}
 							else
 							{
-								$data .= '<a href="http://' . $item->link3 . '" target="_blank">' . $item->link3label . '</a>';
+								$data .= '<a href="https://' . $item->link3 . '" target="_blank">' . $item->link3label . '</a>';
 							}
 						}
 					}
@@ -1878,6 +1878,7 @@ class CWMListing
 		}
 
 		$tdadd = '';
+		$frow  = '';
 
 		if ($row->colspan > 0)
 		{

@@ -377,7 +377,8 @@ class CWMAssetsModel extends ListModel
 	 */
 	public function checkAssets(): array
 	{
-		$return = array();
+		$return = [];
+		$result = '';
 		$db     = Factory::getContainer()->get('DatabaseDriver');
 
 		// First get the new parent_id
@@ -386,7 +387,7 @@ class CWMAssetsModel extends ListModel
 			$this->parentId();
 		}
 
-		// Get the names of the JBS tables
+		// Get the names of the Proclaim tables
 		$objects = CWMAssets::getassetObjects();
 
 		// Run through each table

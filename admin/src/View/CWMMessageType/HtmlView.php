@@ -23,7 +23,7 @@ use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
- * View class for Messagetype
+ * View class for MessageType
  *
  * @package  Proclaim.Admin
  * @since    7.0.0
@@ -116,7 +116,7 @@ class HtmlView extends BaseHtmlView
 	protected function addToolbar(): void
 	{
 		Factory::getApplication()->input->set('hidemainmenu', true);
-		$isNew = ($this->item->id == 0);
+		$isNew = ($this->item->id === 0);
 		$title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
 		ToolbarHelper::title(Text::_('JBS_CMN_MESSAGETYPES') . ': <small><small>[' . $title . ']</small></small>', 'menu menu');
 

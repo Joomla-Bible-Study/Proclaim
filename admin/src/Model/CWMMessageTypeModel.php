@@ -19,6 +19,7 @@ use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Input\Input;
 use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Table\Table;
 
 /**
@@ -37,7 +38,7 @@ class CWMMessageTypeModel extends AdminModel
 	 *
 	 * @since     7.0.0
 	 */
-	public function store()
+	public function store(): bool
 	{
 		$row   = new CWMMessageTable($this->_db);
 		$input = new Input;
@@ -78,19 +79,13 @@ class CWMMessageTypeModel extends AdminModel
 	 *
 	 * @return  mixed  A JForm object on success, false on failure
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
 		// Get the form.
-		$form = $this->loadForm('com_proclaim.messagetype', 'messagetype', array('control' => 'jform', 'load_data' => $loadData));
-
-		if (empty($form))
-		{
-			return false;
-		}
-
-		return $form;
+		return $this->loadForm('com_proclaim.messagetype', 'messagetype', array('control' => 'jform', 'load_data' => $loadData));
 	}
 
 	/**
@@ -102,16 +97,17 @@ class CWMMessageTypeModel extends AdminModel
 	 *
 	 * @since   11.1
 	 */
-	public function checkout($pk = null)
+	public function checkout($pk = null): bool
 	{
-		return $pk;
+		return true;
 	}
 
 	/**
 	 * Method to get the data that should be injected in the form.
 	 *
-	 * @return  array    The default data is an empty array.
+	 * @return  mixed   The default data is an empty array.
 	 *
+	 * @throws \Exception
 	 * @since   7.0
 	 */
 	protected function loadFormData()
@@ -135,7 +131,7 @@ class CWMMessageTypeModel extends AdminModel
 	 *
 	 * @since    1.6
 	 */
-	protected function prepareTable($table)
+	protected function prepareTable($table): void
 	{
 		jimport('joomla.filter.output');
 

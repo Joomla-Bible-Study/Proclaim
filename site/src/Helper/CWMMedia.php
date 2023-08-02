@@ -252,7 +252,7 @@ class CWMMedia
 
 				$url = CWMHelper::remove_http($url);
 
-				$downloadlink = '<a style="color: #5F5A58;" href="http://christianwebministries.org/router.php?file=' .
+				$downloadlink = '<a style="color: #5F5A58;" href="https://christianwebministries.org/router.php?file=' .
 					$url . '&amp;size=' . $size . '">';
 			}
 
@@ -992,7 +992,7 @@ class CWMMedia
 
 		if ($isonlydash)
 		{
-			$mediacode = substr_replace($mediacode, 'http://' . CWMHelper::MediaBuildUrl($media->spath, $media->filename, null), $dashposition, 1);
+			$mediacode = substr_replace($mediacode, 'https://' . CWMHelper::MediaBuildUrl($media->spath, $media->filename, null), $dashposition, 1);
 		}
 		elseif ($dashposition)
 		{

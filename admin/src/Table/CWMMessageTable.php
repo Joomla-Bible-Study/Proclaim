@@ -370,6 +370,12 @@ class CWMMessageTable extends Table
 	public $download_id;
 
 	/**
+	 * @var string|null
+	 * @since version
+	 */
+	public ?string $message_type;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param   DatabaseDriver  $db  Database connector object
@@ -395,7 +401,7 @@ class CWMMessageTable extends Table
 	 * @link    http://docs.joomla.org/JTable/bind
 	 * @since   11.1
 	 */
-	public function bind($array, $ignore = '')
+	public function bind($array, $ignore = ''): bool
 	{
 		if (array_key_exists('params', $array) && is_array($array['params']))
 		{

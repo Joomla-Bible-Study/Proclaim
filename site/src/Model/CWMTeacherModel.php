@@ -51,7 +51,10 @@ class CWMTeacherModel extends ItemModel
 		$app = Factory::getApplication();
 
 		// Initialise variables.
-		$pk = $app->input->getInt('id');
+		if ($pk === null)
+		{
+			$pk = $app->input->getInt('id');
+		}
 
 		if (!isset($this->_item[$pk]))
 		{
@@ -59,7 +62,11 @@ class CWMTeacherModel extends ItemModel
 			{
 				$db    = Factory::getContainer()->get('DatabaseDriver');
 				$query = $db->getQuery(true);
-				$query->select($this->getState('item.select', 't.*,CASE WHEN CHAR_LENGTH(t.alias) THEN CONCAT_WS(\':\', t.id, t.alias) ELSE t.id END as slug'));
+				$query->select(
+					$this->getState('item.select',
+						't.*,CASE WHEN CHAR_LENGTH(t.alias) THEN CONCAT_WS(\':\', t.id, t.alias) ELSE t.id END as slug'
+					)
+				);
 				$query->from('#__bsms_teachers AS t');
 				$query->where('t.id = ' . (int) $pk);
 				$db->setQuery($query);
@@ -74,14 +81,10 @@ class CWMTeacherModel extends ItemModel
 			}
 			catch (\Exception $e)
 			{
-				if ($e->getCode() == 404)
+				$app->enqueueMessage($e->getMessage(), 'error');
+
+				if ($e->getCode() !== 404)
 				{
-					// Need to go through the error handler to allow Redirect to work.
-					$app->enqueueMessage($e->getMessage(), 'error');
-				}
-				else
-				{
-					$app->enqueueMessage($e->getMessage(), 'error');
 					$this->_item[$pk] = false;
 				}
 			}
