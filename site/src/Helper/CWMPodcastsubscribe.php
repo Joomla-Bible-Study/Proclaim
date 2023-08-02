@@ -111,9 +111,8 @@ class CWMPodcastsubscribe
 			->where('p.published = 1')
 			->where('p.access IN (' . $groups . ')');
 		$db->setQuery($query);
-		$podcasts = $db->loadObjectList();
 
-		return $podcasts;
+		return $db->loadObjectList();
 	}
 
 	/**
@@ -158,12 +157,12 @@ class CWMPodcastsubscribe
 	 *
 	 * @return string
 	 *
+	 *
 	 * @since    7.1
 	 */
 	public function buildPodcastImage($podcastimagefromdb = null, $words = null)
 	{
-		$images       = new CWMImages;
-		$image        = $images->getMediaImage($podcastimagefromdb);
+		$image        = CWMImages::getMediaImage($podcastimagefromdb);
 		$podcastimage = null;
 
 		if ($image->path)

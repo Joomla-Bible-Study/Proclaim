@@ -164,7 +164,7 @@ class CWMPodcast
                 	<title>' . $this->escapeHTML($podinfo->title) . '</title>
                 	<link>' . $protocol . $podinfo->podcastlink . '</link>
                 	<image>
-                	    <url>' . $protocol . $podinfo->website . '/' . $podinfo->podcastimage . '</url>
+                	    <url>'  . $protocol . $podinfo->website . '/' . CWMImages::getImagePath($podinfo->podcastimage)->path . '</url>
                         <title>' . $this->escapeHTML($podinfo->title) . '</title>
                         <link>' . $protocol . $podinfo->podcastlink . '</link>
 					</image>
@@ -185,7 +185,7 @@ class CWMPodcast
                 		<itunes:name>' . $this->escapeHTML($podinfo->editor_name) . '</itunes:name>
                 		<itunes:email>' . $podinfo->editor_email . '</itunes:email>
                 	</itunes:owner>
-                	<itunes:image href="' . $protocol . $podinfo->website . '/' . $podinfo->podcastimage . '" />
+                	<itunes:image href="' . $protocol . $podinfo->website . '/' . CWMImages::getImagePath($podinfo->podcastimage)->path . '" />
                 	<itunes:category text="Religion &amp; Spirituality">
                 		<itunes:category text="Christianity" />
                 	</itunes:category>
@@ -577,7 +577,7 @@ class CWMPodcast
 		$query->select('p.id AS pid, p.podcastlimit,'
 			. ' mf.id AS mfid, mf.study_id, mf.server_id, mf.podcast_id,'
 			. ' mf.published AS mfpub, mf.createdate, mf.params,'
-			. ' s.id AS sid, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.verse_begin,'
+			. ' s.id AS sid, s.alias AS alias, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.verse_begin,'
 			. ' s.chapter_end, s.verse_end, s.studytitle, s.studyintro, s.published AS spub,'
 			. ' se.series_text, se.published,'
 			. ' sr.id AS srid, sr.params as srparams,'
