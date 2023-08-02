@@ -8,6 +8,10 @@
  * @link       https://www.christianwebministries.org
  * */
 // No direct access
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+
 defined('_JEXEC') or die();
 
 ?>
@@ -41,11 +45,11 @@ defined('_JEXEC') or die();
 $input = new Joomla\Input\Input;
 if ($input->get('layout', '', 'string') === 'modal')
 {
-    $url = 'index.php?option=com_proclaim&view=upload&tmpl=component&layout=modal';
+    $url = 'index.php?option=com_proclaim&view=cwmupload&tmpl=component&layout=modal';
 }
 else
 {
-    $url = 'index.php?option=com_proclaim&view=upload&layout=default';
+    $url = 'index.php?option=com_proclaim&view=cwmupload&layout=default';
 }
 echo Route::_($url);
 ?>" method="post" name="adminForm" id="item-form" class=" form-horizontal">

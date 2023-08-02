@@ -142,9 +142,9 @@ $this->useCoreUI = true;
 
 		<?php if ($this->canDo->get('core.admin')): ?>
 			<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
-			<div class="row-fluid">
+            <div class="row-fluid">
 				<?php echo $this->form->getInput('rules'); ?>
-			</div>
+            </div>
 			<?php echo HTMLHelper::_('uitab.endTab'); ?>
 		<?php endif; ?>
 

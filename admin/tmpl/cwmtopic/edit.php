@@ -83,7 +83,7 @@ $input  = new Input;
 				<?php endforeach; ?>
 			</div>
 
-			<div class="col-lg-2 form-vertical">
+			<div class="col-lg-3">
 				<div class="control-group">
 					<div class="control-label">
 						<?php echo $this->form->getLabel('published'); ?>
@@ -105,17 +105,15 @@ $input  = new Input;
 		<?php echo HTMLHelper::_('uitab.endTab'); ?>
 
 		<?php if ($this->canDo->get('core.admin')): ?>
-			<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_CMN_FIELDSET_RULES')); ?>
-			<div class="row">
-				<fieldset>
-					<?php echo $this->form->getInput('rules'); ?>
-				</fieldset>
-			</div>
+			<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
+            <div class="row-fluid">
+				<?php echo $this->form->getInput('rules'); ?>
+            </div>
 			<?php echo HTMLHelper::_('uitab.endTab'); ?>
 		<?php endif; ?>
+		<?php echo $this->form->getInput('id'); ?>
+		<?php echo $this->form->getInput('asset_id'); ?>
 		<input type="hidden" name="task" value=""/>
 		<?php echo HTMLHelper::_('form.token'); ?>
 	</div>
-	<?php echo $this->form->getInput('id'); ?>
-	<?php echo $this->form->getInput('asset_id'); ?>
 </form>
