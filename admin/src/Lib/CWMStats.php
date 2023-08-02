@@ -440,17 +440,18 @@ class CWMStats
 	 * @return string number of scores
 	 *
 	 * @throws \Exception
-	 * @since 9.0.0
 	 * @var   Registry $admin_params Admin Prams
 	 *
+	 * @since 9.0.0
 	 */
 	public static function top_score(): string
 	{
-		$final        = [];
-		$admin_params = CWMParams::getAdmin();
-		$format       = $admin_params->params->get('format_popular', '0');
-		$db           = Factory::getContainer()->get('DatabaseDriver');
-		$query        = $db->getQuery(true);
+		$final           = [];
+		$top_score_table = '';
+		$admin_params    = CWMParams::getAdmin();
+		$format          = $admin_params->params->get('format_popular', '0');
+		$db              = Factory::getContainer()->get('DatabaseDriver');
+		$query           = $db->getQuery(true);
 		$query
 			->select('study_id, sum(downloads + plays) as added ')
 			->from('#__bsms_mediafiles')
@@ -649,7 +650,7 @@ class CWMStats
 
 		$admin = CWMParams::getAdmin();
 		$limit = $admin->params->get('popular_limit', '25');
-		$top   = '<select onchange="goTo()" id="urlList"><option value="">' .
+		$top   = '<select onchange="goTo()" id="urlList" class="form-select chzn-color-state valid form-control-success" size="1" aria-invalid="false"><option value="">' .
 			Text::_('JBS_CMN_SELECT_POPULAR_STUDY') . '</option>';
 		$final = array();
 
@@ -679,7 +680,7 @@ class CWMStats
 		foreach ($items as $result)
 		{
 			$query = $db->getQuery(true);
-			$query->select('#__bsms_studies.studydate, #__bsms_studies.studytitle,
+			$query->select('#__bsms_studies.studydate, #__bsms_studies.studytitle, #__bsms_studies.alias,
 							#__bsms_studies.hits, #__bsms_studies.id, #__bsms_mediafiles.study_id')
 				->from('#__bsms_studies')
 				->leftJoin('#__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id)')
@@ -710,8 +711,10 @@ class CWMStats
 				$total = $result->added;
 			}
 
-			// @todo need to build slug instead.
-			$selectvalue   = Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . $hits->id . '&t=' . $t);
+			$hits->slug = $hits->alias ? ($hits->id . ':' . $hits->alias) : $hits->id . ':'
+				. str_replace(' ', '-', htmlspecialchars_decode($hits->studytitle, ENT_QUOTES));
+
+			$selectvalue   = Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . $hits->slug . '&t=' . $t);
 			$selectdisplay = $name . ' - ' . Text::_('JBS_CMN_SCORE') . ': ' . $total;
 			$final2        = array(
 				'score'   => $total,
