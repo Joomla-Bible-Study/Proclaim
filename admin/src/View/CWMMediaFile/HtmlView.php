@@ -99,7 +99,7 @@ class HtmlView extends BaseHtmlView
 		$this->admin_params = $this->state->get('administrator');
 
 		// Load the addon
-		$this->addon = CWMAddon::getInstance($this->media_form->type);
+		$this->addon = CWMAddon::getInstance($this->state->type);
 
 		$options       = $app->input->get('options');
 		$this->options = new \stdClass;

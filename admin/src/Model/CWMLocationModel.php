@@ -134,7 +134,7 @@ class CWMLocationModel extends AdminModel
 	protected function cleanCache($group = null, $client_id = 0)
 	{
 		parent::cleanCache('com_proclaim');
-		parent::cleanCache('mod_biblestudy');
+		parent::cleanCache('mod_proclaim');
 	}
 
 	/**

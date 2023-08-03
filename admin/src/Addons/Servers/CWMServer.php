@@ -12,9 +12,9 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\Input\Input;
-use Symfony\Component\Config\Loader\Loader;
 
 /**
  * Abstract Server class
@@ -118,7 +118,7 @@ abstract class CWMServer
 
 		if (empty(self::$instances[$signature]))
 		{
-			$class = 'JBSServer' . ucfirst($options['type']);
+			$class = 'CWMServer' . ucfirst($options['type']);
 
 			if (!class_exists($class))
 			{
@@ -126,7 +126,7 @@ abstract class CWMServer
 
 				if (file_exists($path))
 				{
-					Loader::register($class, $path);
+					JLoader::register($class, $path);
 				}
 			}
 
@@ -136,7 +136,7 @@ abstract class CWMServer
 			}
 			catch (Exception $e)
 			{
-				JFactory::getApplication()->enqueueMessage("Error obtaining Class '" . $options['type'] . "'", Error);
+				Factory::getApplication()->enqueueMessage("Error obtaining Class '" . $options['type'] . "'", Error);
 			}
 
 			self::$instances[$signature] = $instance;

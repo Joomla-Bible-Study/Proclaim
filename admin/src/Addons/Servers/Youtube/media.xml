@@ -6,7 +6,8 @@
 			       type="text"
 			       label="JBS_ADDON_YOUTUBE_URL"
 			       description="JBS_ADDON_YOUTUBE_URL_DISC"
-			       class="inputbox"/>
+			       class="inputbox"
+				   required="true"/>
 			<field name="popup" type="list" label="JBS_MED_INTERNAL_POPUP"
 			       description="JBS_MED_INTERNAL_POPUP_DESC"
 			       class="form-select-color-state"

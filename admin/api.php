@@ -70,7 +70,7 @@ $wa->useStyle('com_proclaim.cwmcore')
 // Component debugging
 try
 {
-	if (CWMProclaimHelper::debug() === '1' || $app->input->getInt('jbsmdbg', '0') === '1')
+	if (CWMProclaimHelper::debug() === 1 || $app->input->getInt('jbsmdbg', '0') === 1)
 	{
 		define('JBSMDEBUG', 1);
 	}

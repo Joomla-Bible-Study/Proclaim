@@ -58,7 +58,7 @@ class CWMAddonYoutube extends CWMAddon
 	/**
 	 * Render Fields for general view.
 	 *
-	 * @param   object  $media_form  Midea files form
+	 * @param   object  $media_form  Medea files form
 	 * @param   bool    $new         If media is new
 	 *
 	 * @return string

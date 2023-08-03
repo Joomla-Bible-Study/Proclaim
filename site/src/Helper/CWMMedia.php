@@ -1286,4 +1286,38 @@ class CWMMedia
 
 		return $file_size;
 	}
+
+	/**
+	 * @param   string  $url url to process
+	 *
+	 * @return boolean
+	 *
+	 * @since 10.0.0
+	 */
+	public static function isExternal(string $url): bool
+	{
+		// Check if the url has a website string as some time it's just a path to a local file.
+		if (strpos($url, "http") || strpos($url, "https") || strpos($url, "//"))
+		{
+			$components = parse_url($url);
+			$root       = parse_url(Uri::root());
+
+			// We will treat url like '/relative.php' as relative
+			if (empty($components['host']))
+			{
+				return false;
+			}
+
+			// Url host looks exactly like the local host
+			if (strcasecmp($components['host'], $root['host']) === 0)
+			{
+				return false;
+			}
+
+			// Check if the url host is a subdomain
+			return strripos($components['host'], $root['host']) !== strlen($components['host']) - strlen($root['host']);
+		}
+
+		return false;
+	}
 }
