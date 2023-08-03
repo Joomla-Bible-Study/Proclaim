@@ -131,16 +131,6 @@ class CWMPodcastModel extends AdminModel
 * @throws \Exception
 * @since 9.0.0
 */
-	public function save($data)
-	{
-		$image = HTMLHelper::cleanImageURL($data['image']);
-		$data['image'] = $image->url;
-		$podcastimage = HTMLHelper::cleanImageURL($data['podcastimage']);
-		$data['podcastimage'] = $podcastimage->url;
-		$podcast_image_subscribe = HTMLHelper::cleanImageURL($data['podcast_image_subscribe']);
-		$data['podcast_image_subscribe'] = $podcast_image_subscribe->url;
-		return parent::save($data);
 
-	}
 
 }
