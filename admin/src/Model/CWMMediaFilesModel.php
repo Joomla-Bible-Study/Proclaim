@@ -53,11 +53,11 @@ class CWMMediaFilesModel extends ListModel
 	/**
 	 * Number of Deletions
 	 *
-	 * @var object
+	 * @var array
 	 *
 	 * @since 7.0
 	 */
-	private $deletes;
+	private array $deletes;
 
 	/**
 	 * Constructor.
@@ -161,11 +161,11 @@ class CWMMediaFilesModel extends ListModel
 	/**
 	 * Get Deletes
 	 *
-	 * @return object
+	 * @return array
 	 *
 	 * @since 7.0
 	 */
-	public function getDeletes()
+	public function getDeletes(): array
 	{
 		if (empty($this->deletes))
 		{

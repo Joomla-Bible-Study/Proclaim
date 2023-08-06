@@ -120,17 +120,4 @@ class CWMPodcastModel extends AdminModel
 	{
 		return parent::getTable($name, $prefix, $options);
 	}
-
-/**
-* Cleans image
-*
-* @param   array  $data  Data
-*
-* @return boolean
-*
-* @throws \Exception
-* @since 9.0.0
-*/
-
-
 }
