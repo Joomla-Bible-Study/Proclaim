@@ -15,6 +15,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
+use Joomla\Database\DatabaseQuery;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -31,12 +32,12 @@ class CWMTeachersModel extends ListModel
 	/**
 	 * Build an SQL query to load the list data
 	 *
-	 * @return  \Joomla\Database\QueryInterface
+	 * @return  DatabaseQuery A DatabaseQuery object to retrieve the data set.
 	 *
 	 * @throws \Exception
 	 * @since   7.0.0
 	 */
-	protected function getListQuery()
+	protected function getListQuery(): DatabaseQuery
 	{
 		$db = Factory::getContainer()->get('DatabaseDriver');
 
@@ -142,10 +143,10 @@ class CWMTeachersModel extends ListModel
 			$user     = Factory::getApplication()->getIdentity();
 			$groups = $user->getAuthorisedViewLevels();
 
-			for ($x = 0, $count = count($items); $x < $count; $x++)
+			foreach ($items as $x => $xValue)
 			{
 				// Check the access level. Remove articles the user shouldn't see
-				if (!in_array($items[$x]->access, $groups))
+				if (!in_array($xValue->access, $groups, true))
 				{
 					unset($items[$x]);
 				}

@@ -31,7 +31,7 @@ return new class () implements ServiceProviderInterface {
 	 *
 	 * @since   4.2.0
 	 */
-	public function register(Container $container)
+	public function register(Container $container): void
 	{
 		$container->registerServiceProvider(new ModuleDispatcherFactory('\\CWM\\Module\\Proclaim'));
 		$container->registerServiceProvider(new HelperFactory('\\CWM\\Module\\Proclaim\\Site\\Helper'));
