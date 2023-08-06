@@ -16,9 +16,9 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMInstall;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Input\Input;
-use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 
 /**
  * JView class for Install
@@ -103,21 +103,21 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @param   string  $tpl  Template to display
 	 *
-	 * @return null|void
+	 * @return void
 	 *
 	 * @throws  \Exception
 	 * @since   7.0.0
 	 */
-	public function display($tpl = null)
+	public function display($tpl = null): void
 	{
 		$input = new Input;
 		$input->set('hidemainmenu', true);
-		$app   = Factory::getApplication();
+		$app         = Factory::getApplication();
 		$this->state = $app->input->get('scanstate', false);
-		$layout = $app->input->get('layout', 'default');
+		$layout      = $app->input->get('layout', 'default');
 
-		$load = $this->loadStack();
-		$more = true;
+		$load    = $this->loadStack();
+		$more    = true;
 		$percent = 0;
 
 		if ($this->state && $load)
@@ -140,10 +140,13 @@ class HtmlView extends BaseHtmlView
 
 		if ($more)
 		{
-			$script = "window.addEvent( 'domready' ,  function() {\n";
-			$script .= "document.forms.adminForm.submit();\n";
-			$script .= "});\n";
-			$app->getDocument()->addScriptDeclaration($script);
+			/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
+			$wa = $this->document->getWebAssetManager();
+			$wa->useScript('form.validate')
+				->addInlineScript("setTimeout(function(){
+                                    jQuery('#adminForm').submit()
+								}, 3000);"
+				);
 		}
 
 		ToolbarHelper::title(Text::_('JBS_MIG_TITLE'), 'administration');
@@ -171,7 +174,7 @@ class HtmlView extends BaseHtmlView
 	 * @throws \Exception
 	 * @since    7.0.0
 	 */
-	private function loadStack()
+	private function loadStack(): bool
 	{
 		$session = Factory::getApplication()->getSession();
 		$stack   = $session->get('migration_stack', '', 'CWM');
@@ -221,7 +224,7 @@ class HtmlView extends BaseHtmlView
 	 * @since  7.0.0
 	 *
 	 */
-	protected function addToolbar()
+	protected function addToolbar(): void
 	{
 		Factory::getApplication()->input->set('hidemainmenu', true);
 		ToolbarHelper::help('biblestudy', true);
@@ -249,13 +252,13 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return void
 	 */
-	protected function installsetup()
+	protected function installsetup(): void
 	{
 		$installation_queue = array(
 			// Example: modules => { (folder) => { (module) => { (position), (published) } }* }*
 			'modules' => array(
 				'administrator' => array(),
-				'site'  => array(
+				'site'          => array(
 					'biblestudy'         => 0,
 					'biblestudy_podcast' => 0,
 				)

@@ -77,7 +77,7 @@
 			       description="JBS_ADDON_MEDIA_USE_BUTTON_DESC"
 			       class="form-select-color-state"
 			       size="1"
-			       default="-1"
+			       default=""
 			       validate="options">
 				<option value="-1">JBS_MED_SERVER_OPTIONS</option>
 				<option value="">JBS_MED_NONE</option>

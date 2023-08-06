@@ -150,7 +150,7 @@ class HtmlView extends BaseHtmlView
 		if ($this->canDo->get('core.create'))
 		{
 			ToolbarHelper::divider();
-			ToolbarHelper::custom('writeXMLFile', 'xml.png', '', 'JBS_PDC_WRITE_XML_FILES', false);
+			ToolbarHelper::custom('cwmpodcasts.writeXMLFile', 'xml.png', '', 'JBS_PDC_WRITE_XML_FILES', false);
 		}
 	}
 

@@ -34,7 +34,7 @@ $columns   = 6;
 
 $sortFields = $this->getSortFields();
 ?>
-<form action="<?php echo Route::_('index.php?option=com_proclaim&view=podcasts'); ?>" method="post" name="adminForm"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmpodcasts'); ?>" method="post" name="adminForm"
       id="adminForm">
 	<div class="row">
 		<div class="col-md-12">

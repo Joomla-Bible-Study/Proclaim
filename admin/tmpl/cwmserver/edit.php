@@ -44,8 +44,6 @@ $wa->useScript('keepalive')
       method="post" name="adminForm" id="item-form"
       aria-label="<?php echo Text::_('JBS_CMN_' . ((int) $this->item->id === 0 ? 'NEW' : 'EDIT'), true); ?>"
       class="form-validate" enctype="multipart/form-data">
-	<?php echo LayoutHelper::render('joomla.edit.title_alias', $this); ?>
-
 	<div class="main-card">
 		<?php echo HTMLHelper::_('uitab.startTabSet', 'myTab', array('active' => 'general')); ?>
 

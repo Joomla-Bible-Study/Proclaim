@@ -130,7 +130,7 @@ class CWMShowScripture
 	 */
 	public function getBiblegateway($reference, $version, $params)
 	{
-		$link = "http://classic.biblegateway.com/passage/index.php?search=" . $reference . ";&version=" . $version . ";&interface=print";
+		$link = "https://classic.biblegateway.com/passage/index.php?search=" . $reference . ";&version=" . $version . ";&interface=print";
 
 		return $link;
 	}

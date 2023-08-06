@@ -62,6 +62,7 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return  void
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function display($tpl = null)
@@ -105,7 +106,7 @@ class HtmlView extends BaseHtmlView
 	}
 
 	/**
-	 * Parce through the Show hid buttons/links
+	 * Parse through the Show hid buttons/links
 	 *
 	 * @param   string   $showIt         Name of Show
 	 * @param   string   $showIt_phrase  Name of the
@@ -113,6 +114,7 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return string
 	 *
+	 * @throws \Exception
 	 * @since 9.2.4
 	 */
 	public function getShowHide($showIt, $showIt_phrase, $i)
@@ -132,11 +134,13 @@ class HtmlView extends BaseHtmlView
 			{
 				case 0: // Image only
 					$showhideall .= $buttonlink;
-					//$showhideall .= "\n\t\t" . '<img src="' . Uri::base() . $showhide_tmp->path . '" alt="' . Text::_('JBS_CMN_SHOW_HIDE_ALL');
-					//$showhideall .= ' ' . $showIt_phrase . '" title="' . Text::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' .
+
+					// $showhideall .= "\n\t\t" . '<img src="' . Uri::base() . $showhide_tmp->path . '" alt="' . Text::_('JBS_CMN_SHOW_HIDE_ALL');
+					// $showhideall .= ' ' . $showIt_phrase . '" title="' . Text::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' .
 					//	$showIt_phrase . '" border="0" width="';
-					//$showhideall .= $showhide_tmp->width . '" height="' . $showhide_tmp->height . '" />';
-                    $showhideall .= '<i class="fas fa-arrow-down" title="x"></i>';
+					// $showhideall .= $showhide_tmp->width . '" height="' . $showhide_tmp->height . '" />';
+					$showhideall .= '<i class="fas fa-arrow-down" title="x"></i>';
+
 					// Spacer
 					$showhideall .= ' ';
 					$showhideall .= "\n\t" . '</a>';
@@ -144,13 +148,15 @@ class HtmlView extends BaseHtmlView
 
 				case 1: // Image and label
 					$showhideall .= $buttonlink;
-					//$showhideall .= "\n\t\t" . '<img src="' . Uri::base() . $showhide_tmp->path . '" alt="' .
-					//	Text::_('JBS_CMN_SHOW_HIDE_ALL');
-					//$showhideall .= ' ' . $showIt_phrase . '" title="' . Text::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' .
-					//	$showIt_phrase . '" border="0" width="';
-					//$showhideall .= $showhide_tmp->width . '" height="' . $showhide_tmp->height . '" />';
 
-                    $showhideall .= '<i class="fas fa-arrow-down" title="x"></i>';
+					// $showhideall .= "\n\t\t" . '<img src="' . Uri::base() . $showhide_tmp->path . '" alt="' .
+					//	Text::_('JBS_CMN_SHOW_HIDE_ALL');
+					// $showhideall .= ' ' . $showIt_phrase . '" title="' . Text::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' .
+					//	$showIt_phrase . '" border="0" width="';
+					// $showhideall .= $showhide_tmp->width . '" height="' . $showhide_tmp->height . '" />';
+
+					$showhideall .= '<i class="fas fa-arrow-down" title="x"></i>';
+
 					// Spacer
 					$showhideall .= ' ';
 					$showhideall .= "\n\t" . '</a>';

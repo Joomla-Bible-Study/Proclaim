@@ -11,15 +11,16 @@ namespace CWM\Component\Proclaim\Site\View\CWMTeacher;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use CWM\Component\Proclaim\Site\Helper\CWMImages;
 use CWM\Component\Proclaim\Site\Helper\CWMPagebuilder;
-use Joomla\CMS\Language\Text;
-use Joomla\Registry\Registry;
 use Joomla\CMS\Factory;
-use Joomla\CMS\MVC\Model\ItemModel;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\Component\Contact\Site\Model\ContactModel;
+use Joomla\Registry\Registry;
 
 /**
  * View class for Teacher
@@ -80,6 +81,7 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return  void
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function display($tpl = null)
@@ -92,15 +94,15 @@ class HtmlView extends BaseHtmlView
 		/** @var Registry $params */
 		$params = $this->state->template->params;
 
-        $input = Factory::getApplication()->input;
+		$input = Factory::getApplication()->input;
 		$item = $this->get('Item');
 
 		// Add the slug
 		$item->slug = $item->alias ? ($item->id . ':' . $item->alias) : str_replace(
-				' ',
-				'-',
-				htmlspecialchars_decode($item->teachername, ENT_QUOTES)
-			) . ':' . $item->id;
+			' ',
+			'-',
+			htmlspecialchars_decode($item->teachername, ENT_QUOTES)
+		) . ':' . $item->id;
 		$id         = $input->get('id', '0', 'get');
 		$item->id   = $id;
 
@@ -114,7 +116,8 @@ class HtmlView extends BaseHtmlView
 
 		if ($largeimage)
 		{
-			$item->largeimage = '<img src="' . $largeimage->path . '" height="' . $largeimage->height . '" width="' . $largeimage->width . '" alt="" />';
+			$item->largeimage = '<img src="' . $largeimage->path . '" height="' . $largeimage->height . '" width="'
+				. $largeimage->width . '" alt="" />';
 		}
 
 		if (isset($item->information))
@@ -133,39 +136,49 @@ class HtmlView extends BaseHtmlView
 		// Check to see if com_contact used instead
 		if ($item->contact)
 		{
-			$language = Factory::getLanguage();
+			$language = Factory::getApplication()->getLanguage();
 			$language->load('com_contact', JPATH_SITE);
-			//require_once JPATH_ROOT . '/components/com_contact/src/Model/ContactModel.php';
 
-			/** @var ContactModelContact $contactmodel */
-			$contactmodel  = ItemModel::getInstance('contact', 'contactModel');
-			$this->contact = $contactmodel->getItem($pk = $item->contact);
+			$contactmodel  = new ContactModel;
 
-			// Substitute contact info from com_contacts for duplicate fields
-			$item->title       = $this->contact->con_position;
-			$item->teachername = $this->contact->name;
-			$item->email       = $this->contact->email_to;
-			$largeimage        = $images::getImagePath($this->contact->image);
-			$item->largeimage  = '<img src="' . $largeimage->path . '" height="' . $largeimage->height . '" <width="' . $largeimage->width . '" alt="" />';
-			$item->information = $this->contact->misc;
-			$item->phone       = $this->contact->telephone;
-			$cregistry         = new Registry;
-			$cregistry->loadString($this->contact->params);
-			$contact_params     = $cregistry;
-			$item->facebooklink = $contact_params->get('linka');
-			$item->twitterlink  = $contact_params->get('linkb');
-			$item->bloglink     = $contact_params->get('linkc');
-			$item->link1        = $contact_params->get('linkd');
-			$item->linklabel1   = $contact_params->get('linklabel1');
-			$item->link2        = $contact_params->get('linke');
-			$item->linklabel2   = $contact_params->get('linke_name');
-			$item->website      = $this->contact->webpage;
-			$item->address      = $this->contact->address;
+			try
+			{
+				$this->contact = $contactmodel->getItem($pk = $item->contact);
+			}
+			catch (\Throwable $throwable)
+			{
+				$this->contact = null;
+			}
+
+			if ($this->contact !== null)
+			{
+				// Substitute contact info from com_contacts for duplicate fields
+				$item->title       = $this->contact->con_position;
+				$item->teachername = $this->contact->name;
+				$item->email       = $this->contact->email_to;
+				$largeimage        = $images::getImagePath((string) $this->contact->image);
+				$item->largeimage  = '<img src="' . $largeimage->path . '" height="' . $largeimage->height . '" <width="'
+					. $largeimage->width . '" alt="" />';
+				$item->information = $this->contact->misc;
+				$item->phone       = $this->contact->telephone;
+				$cregistry         = new Registry;
+				$cregistry->loadString($this->contact->params);
+				$contact_params     = $cregistry;
+				$item->facebooklink = $contact_params->get('linka');
+				$item->twitterlink  = $contact_params->get('linkb');
+				$item->bloglink     = $contact_params->get('linkc');
+				$item->link1        = $contact_params->get('linkd');
+				$item->linklabel1   = $contact_params->get('linklabel1');
+				$item->link2        = $contact_params->get('linke');
+				$item->linklabel2   = $contact_params->get('linke_name');
+				$item->website      = $this->contact->webpage;
+				$item->address      = $this->contact->address;
+			}
 		}
 
 		$this->item = $item;
 
-		$whereitem  = (int)$item->id;
+		$whereitem  = (int) $item->id;
 		$wherefield = 'study.teacher_id';
 		$limit      = $params->get('studies', '20');
 		$order      = 'DESC';
@@ -182,6 +195,7 @@ class HtmlView extends BaseHtmlView
 				$template
 			);
 			$template = $this->state->template;
+
 			foreach ($studies as $i => $study)
 			{
 				$pelements               = $pagebuilder->buildPage($study, $params, $template);
@@ -248,7 +262,7 @@ class HtmlView extends BaseHtmlView
 		$this->print    = $print;
 		$this->params   = $params;
 		$this->template = $this->state->template;
-		$this->document = Factory::getDocument();
+		$this->document = Factory::getApplication()->getDocument();
 
 		$this->_prepareDocument();
 
@@ -260,16 +274,16 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
-	protected function _prepareDocument()
+	protected function _prepareDocument(): void
 	{
 		$app   = Factory::getApplication('site');
 		$menus = $app->getMenu();
 
 		/** @var $itemparams Registry */
 		$itemparams = $app->getParams();
-		$title      = null;
 
 		// Because the application sets a default page title,
 		// we need to get it from the menu item itself

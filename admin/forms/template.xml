@@ -118,7 +118,7 @@
 			       description="JBS_CMN_FILTERS_DESC">
 				<option value="-1">JBS_CMN_SHOW_ALL</option>
 			</field>
-			<field name="ltopic_id" type="topicslist" default="-1" multiple="true"
+			<field name="ltopic_id" type="TopicsList" default="-1" multiple="true"
 			       size="10" label="JBS_CMN_FILTERS_TOPICS" description="JBS_CMN_FILTERS_DESC"
 			       class="inputbox">
 				<option value="-1">JBS_CMN_SHOW_ALL</option>
@@ -2241,7 +2241,7 @@
 
 	</fields>
 	<field name="asset_id" type="hidden" filter="unset"/>
-	<field name="rules" type="rules" label="JFIELD_RULES_LABEL"
+	<field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL"
 	       translate_label="false" class="inputbox" filter="rules" component="com_proclaim"
 	       section="template" validate="rules"/>
 </form>

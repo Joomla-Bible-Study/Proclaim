@@ -17,10 +17,12 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMMigrate;
 use CWM\Component\Proclaim\Administrator\Model\CWMAdminModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Registry\Registry;
 
@@ -78,7 +80,7 @@ class HtmlView extends BaseHtmlView
 	 * @var string
 	 * @since    7.0.0
 	 */
-	public string $schemaVersion;
+	public string $schemaVersion = '';
 
 	/**
 	 * Update Version
@@ -86,15 +88,7 @@ class HtmlView extends BaseHtmlView
 	 * @var string
 	 * @since 9.0.0
 	 */
-	public string $updateVersion;
-
-	/**
-	 * Filter Params
-	 *
-	 * @var Registry
-	 * @since    7.0.0
-	 */
-	public Registry $filterParams;
+	public string $updateVersion = '';
 
 	/**
 	 * Pagination
@@ -163,10 +157,10 @@ class HtmlView extends BaseHtmlView
 	/**
 	 * Lists
 	 *
-	 * @var string
+	 * @var array
 	 * @since    7.0.0
 	 */
-	public string $lists;
+	public array $lists;
 
 	/**
 	 * PI
@@ -187,18 +181,18 @@ class HtmlView extends BaseHtmlView
 	/**
 	 * Item
 	 *
-	 * @var array
+	 * @var CMSObject
 	 * @since    7.0.0
 	 */
-	protected array $item;
+	protected CMSObject $item;
 
 	/**
 	 * State
 	 *
-	 * @var array
+	 * @var CMSObject
 	 * @since    7.0.0
 	 */
-	protected array $state;
+	protected CMSObject $state;
 
 	/**
 	 * Execute and display a template script.
@@ -220,10 +214,12 @@ class HtmlView extends BaseHtmlView
 		$language->load('com_installer');
 
 		// Get data from the model
-		$this->form  = $this->get("Form");
-		$this->item  = $this->get("Item");
-		$this->state = $this->get("State");
-		$this->canDo = ContentHelper::getActions('com_proclaim');
+		$this->form          = $this->get("Form");
+		$this->item          = $this->get("Item");
+		$this->state         = $this->get("State");
+		$this->canDo         = ContentHelper::getActions('com_proclaim');
+		$this->schemaVersion = '';
+		$this->errorCount    = '0';
 
 		$config         = Factory::getApplication();
 		$this->tmp_dest = $config->get('tmp_path');
@@ -292,11 +288,6 @@ class HtmlView extends BaseHtmlView
 			$this->errorCount++;
 		}
 
-		if (!$this->filterParams)
-		{
-			$this->errorCount++;
-		}
-
 		if (($this->updateVersion != $this->version))
 		{
 			$this->errorCount++;
@@ -322,7 +313,7 @@ class HtmlView extends BaseHtmlView
 	 * @throws \Exception
 	 * @since  7.0.0
 	 */
-	protected function addToolbar()
+	protected function addToolbar(): void
 	{
 		Factory::getApplication()->input->set('hidemainmenu', true);
 
@@ -337,9 +328,10 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since    7.1.0
 	 */
-	protected function setDocument()
+	protected function setDocument(): void
 	{
 		$document = Factory::getApplication()->getDocument();
 		$document->setTitle(Text::_('JBS_TITLE_ADMINISTRATION'));
@@ -354,7 +346,7 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @since 7.1.0
 	 */
-	protected function versionXML($component)
+	protected function versionXML($component): bool
 	{
 		switch ($component)
 		{

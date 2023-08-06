@@ -36,7 +36,7 @@ use Joomla\CMS\Table\Table;
 class CWMMediaFileController extends FormController
 {
 	/**
-	 * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
+	 * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanism from kicking in
 	 *
 	 * @var string
 	 * @since 7.0
@@ -54,7 +54,7 @@ class CWMMediaFileController extends FormController
 	/**
 	 * Method to add a new record.
 	 *
-	 * @return  mixed  True if the record can be added, a error object if not.
+	 * @return  mixed  True, if the record can be added, a error object if not.
 	 *
 	 * @throws  \Exception
 	 * @since   12.2
@@ -86,7 +86,7 @@ class CWMMediaFileController extends FormController
 	 * @throws  \Exception
 	 * @since   9.0.0
 	 */
-	public function edit($key = null, $urlVar = null)
+	public function edit($key = null, $urlVar = null): bool
 	{
 		$app    = Factory::getApplication();
 		$result = parent::edit();
@@ -109,7 +109,7 @@ class CWMMediaFileController extends FormController
 	 * @throws  \Exception
 	 * @since   9.0.0
 	 */
-	public function xhr()
+	public function xhr(): void
 	{
 		Session::checkToken('get') or die('Invalid Token');
 		$input = Factory::getApplication()->input;
@@ -122,14 +122,14 @@ class CWMMediaFileController extends FormController
 
 		if (method_exists($addon, $handler))
 		{
-			echo json_encode($addon->$handler($input));
+			echo json_encode($addon->$handler($input), JSON_THROW_ON_ERROR);
 
 			$app = Factory::getApplication();
 			$app->close();
 		}
 		else
 		{
-			throw new \Exception(Text::sprintf('Handler: "' . $handler . '" does not exist!'), 404);
+			throw new \RuntimeException(Text::sprintf('Handler: "' . $handler . '" does not exist!'), 404);
 		}
 	}
 
@@ -142,7 +142,7 @@ class CWMMediaFileController extends FormController
 	 *
 	 * @since   1.6
 	 */
-	public function batch($model = null)
+	public function batch($model = null): bool
 	{
 		// Preset the redirect
 		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmmediafiles' . $this->getRedirectToListAppend(), false));
@@ -160,7 +160,7 @@ class CWMMediaFileController extends FormController
 	 * @throws \Exception
 	 * @since   12.2
 	 */
-	public function cancel($key = null)
+	public function cancel($key = null): bool
 	{
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
@@ -172,12 +172,12 @@ class CWMMediaFileController extends FormController
 
 		if (empty($key))
 		{
-			$key = $table->getKeyName();
+			$key = (string) $table->getKeyName();
 		}
 
 		$recordId = $app->input->getInt($key);
 
-		// Attempt to check-in the current record.
+		// Attempt to check in the current record.
 		if ($recordId)
 		{
 			if ($checkin)
@@ -220,7 +220,7 @@ class CWMMediaFileController extends FormController
 	 * @throws  \Exception
 	 * @since   9.0.0
 	 */
-	public function setServer()
+	public function setServer(): void
 	{
 		// Check for request forgeries.
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
@@ -253,7 +253,7 @@ class CWMMediaFileController extends FormController
 	 * @throws   \Exception
 	 * @since    3.1
 	 */
-	protected function postSaveHook($model, $validData = array())
+	protected function postSaveHook($model, $validData = array()): void
 	{
 		$return = $this->input->getCmd('return');
 		$task   = $this->input->get('task');
@@ -263,8 +263,6 @@ class CWMMediaFileController extends FormController
 			Factory::getApplication()->enqueueMessage(Text::_('JBS_MED_SAVE'), 'message');
 			$this->setRedirect(base64_decode($return));
 		}
-
-		return;
 	}
 
 	/**
@@ -277,7 +275,7 @@ class CWMMediaFileController extends FormController
 	 *
 	 * @since   12.2
 	 */
-	protected function getRedirectToItemAppend($recordId = null, $urlVar = 'id')
+	protected function getRedirectToItemAppend($recordId = null, $urlVar = 'id'): string
 	{
 		$tmpl    = $this->input->get('tmpl');
 		$layout  = $this->input->get('layout', 'edit', 'string');

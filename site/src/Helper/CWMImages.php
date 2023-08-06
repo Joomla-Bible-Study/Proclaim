@@ -11,11 +11,14 @@
 namespace CWM\Component\Proclaim\Site\Helper;
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Image\Image;
 use Joomla\Registry\Registry;
 
 /**
@@ -32,10 +35,17 @@ class CWMImages
 	 * @param   Registry|null  $params  Sermon Params
 	 *
 	 * @return object
+	 * @example  {
+	 *             path: 'string',
+	 *             width: integer,
+	 *             height: integer,
+	 *             type: 'string',
+	 *             mime: 'string',
+	 *           }
 	 *
-	 * @since 7.0
+	 * @since    7.0
 	 */
-	public static function mainStudyImage(Registry $params = null)
+	public static function mainStudyImage(Registry $params = null): object
 	{
 		if ($params === null)
 		{
@@ -69,56 +79,38 @@ class CWMImages
 	 * @param   string  $path  File path to image
 	 *
 	 * @return object
+	 * @example  {
+	 *             path: 'string',
+	 *             width: integer,
+	 *             height: integer,
+	 *             type: 'string',
+	 *             mime: 'string',
+	 *           }
 	 *
-	 * @since 7.0
+	 * @since    7.0
 	 */
-	public static function getImagePath(string $path)
+	public static function getImagePath(string $path): object
 	{
-		$tmp = new \stdClass;
-		jimport('joomla.filesystem.folder');
-		jimport('joomla.filesystem.file');
+		$tmp         = new \stdClass;
+		$tmp->path   = null;
+		$tmp->size   = null;
+		$tmp->width  = 0;
+		$tmp->height = 0;
 
-		if (File::exists(JPATH_ROOT . DIRECTORY_SEPARATOR . $path))
+		$path       = HTMLHelper::_('cleanImageURL', $path);
+		$FileExists = File::exists(JPATH_ROOT . DIRECTORY_SEPARATOR . $path->url);
+
+		if ($path->attributes['width'] === 0 && $FileExists)
 		{
-			$tmp->path = $path;
-			$tmp->size = filesize($tmp->path);
-			$ext       = strtolower(File::getExt($path));
-
-			switch ($ext)
-			{
-				// Image
-				case 'jpg':
-				case 'png':
-				case 'gif':
-				case 'xcf':
-				case 'odg':
-				case 'bmp':
-				case 'jpeg':
-					$info        = getimagesize($tmp->path);
-					$tmp->width  = $info[0];
-					$tmp->height = $info[1];
-					$tmp->type   = $info[2];
-					$tmp->mime   = $info['mime'];
-
-					if (!$tmp->width)
-					{
-						$tmp->width = 0;
-					}
-
-					if (!$tmp->height)
-					{
-						$tmp->height = 0;
-					}
-			}
+			$tmp       = Image::getImageFileProperties(JPATH_ROOT . DIRECTORY_SEPARATOR . $path->url);
+			$tmp->path = $path->url;
 		}
-		else
+		elseif ($FileExists)
 		{
-			$tmp->path   = null;
-			$tmp->size   = null;
-			$tmp->width  = 0;
-			$tmp->height = 0;
-			$tmp->type   = '';
-			$tmp->mime   = '';
+			$tmp->path   = $path->url;
+			$tmp->size   = filesize(JPATH_ROOT . DIRECTORY_SEPARATOR . $tmp->path);
+			$tmp->width  = $path->attributes['width'];
+			$tmp->height = $path->attributes['height'];
 		}
 
 		return $tmp;
@@ -130,10 +122,17 @@ class CWMImages
 	 * @param   string  $image  file path to image
 	 *
 	 * @return object
+	 * @example  {
+	 *             path: 'string',
+	 *             width: integer,
+	 *             height: integer,
+	 *             type: 'string',
+	 *             mime: 'string',
+	 *           }
 	 *
-	 * @since 7.0
+	 * @since    7.0
 	 */
-	public static function getStudyThumbnail(string $image = 'openbible.png')
+	public static function getStudyThumbnail(string $image = 'openbible.png'): object
 	{
 		$folder = self::getStudiesImageFolder();
 		$path   = $folder . '/' . $image;
@@ -153,7 +152,7 @@ class CWMImages
 	 *
 	 * @since 7.0
 	 */
-	private static function getStudiesImageFolder()
+	private static function getStudiesImageFolder(): string
 	{
 		return 'images';
 	}
@@ -164,10 +163,17 @@ class CWMImages
 	 * @param   string  $image  Image file
 	 *
 	 * @return object
+	 * @example  {
+	 *             path: 'string',
+	 *             width: integer,
+	 *             height: integer,
+	 *             type: 'string',
+	 *             mime: 'string',
+	 *           }
 	 *
-	 * @since 7.0
+	 * @since    7.0
 	 */
-	public static function getSeriesThumbnail(string $image = 'openbible.png')
+	public static function getSeriesThumbnail(string $image = 'openbible.png'): object
 	{
 		$folder = self::getSeriesImageFolder();
 		$path   = $folder . '/' . $image;
@@ -187,7 +193,7 @@ class CWMImages
 	 *
 	 * @since 7.0
 	 */
-	private static function getSeriesImageFolder()
+	private static function getSeriesImageFolder(): string
 	{
 		return 'images';
 	}
@@ -199,10 +205,17 @@ class CWMImages
 	 * @param   string|null  $image2  ?
 	 *
 	 * @return object
+	 * @example  {
+	 *             path: 'string',
+	 *             width: integer,
+	 *             height: integer,
+	 *             type: 'string',
+	 *             mime: 'string',
+	 *           }
 	 *
-	 * @since 7.0
+	 * @since    7.0
 	 */
-	public static function getTeacherThumbnail(?string $image1 = '', ?string $image2 = '')
+	public static function getTeacherThumbnail(?string $image1 = '', ?string $image2 = ''): object
 	{
 		$folder = self::getTeacherImageFolder();
 
@@ -240,7 +253,7 @@ class CWMImages
 	 *
 	 * @since 7.0
 	 */
-	private static function getTeacherImageFolder()
+	private static function getTeacherImageFolder(): string
 	{
 		return 'images';
 	}
@@ -252,10 +265,17 @@ class CWMImages
 	 * @param   string|null  $image2  ?
 	 *
 	 * @return object
+	 * @example  {
+	 *             path: 'string',
+	 *             width: integer,
+	 *             height: integer,
+	 *             type: 'string',
+	 *             mime: 'string',
+	 *           }
 	 *
-	 * @since 7.0
+	 * @since    7.0
 	 */
-	public static function getTeacherImage(string $image1 = null, string $image2 = null)
+	public static function getTeacherImage(string $image1 = null, string $image2 = null): object
 	{
 		$folder = self::getTeacherImageFolder();
 		$path   = '';
@@ -265,7 +285,7 @@ class CWMImages
 			return self::getImagePath($path);
 		}
 
-		if (!$image1 || strncmp($image1, '- ', 2) === 0)
+		if ($image2 && (!$image1 || strncmp($image1, '- ', 2) === 0))
 		{
 			$path = $image2;
 
@@ -294,10 +314,17 @@ class CWMImages
 	 * @param   string  $media2  ?
 	 *
 	 * @return object
+	 * @example  {
+	 *             path: 'string',
+	 *             width: integer,
+	 *             height: integer,
+	 *             type: 'string',
+	 *             mime: 'string',
+	 *           }
 	 *
-	 * @since 7.0
+	 * @since    7.0
 	 */
-	public static function getMediaImage(string $media1 = '', string $media2 = '')
+	public static function getMediaImage(string $media1 = '', string $media2 = ''): object
 	{
 		$folder = self::getMediaImageFolder();
 
@@ -335,7 +362,7 @@ class CWMImages
 	 *
 	 * @since 7.0
 	 */
-	private static function getMediaImageFolder()
+	private static function getMediaImageFolder(): string
 	{
 		return 'media/com_proclaim/images';
 	}
@@ -344,11 +371,18 @@ class CWMImages
 	 * Get Show Hide
 	 *
 	 * @return object
-	 *
 	 * @throws \Exception
-	 * @since 7.0
+	 * @example  {
+	 *             path: 'string',
+	 *             width: integer,
+	 *             height: integer,
+	 *             type: 'string',
+	 *             mime: 'string',
+	 *           }
+	 *
+	 * @since    7.0
 	 */
-	public static function getShowHide()
+	public static function getShowHide(): object
 	{
 		$admin = CWMParams::getAdmin();
 

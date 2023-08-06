@@ -112,6 +112,8 @@ class CWMAdminTable extends Table
 	 */
 	public function bind($array, $ignore = '')
 	{
+		$params = [];
+
 		// For Saving the page.
 		if (isset($array['params']) && is_array($array['params']))
 		{

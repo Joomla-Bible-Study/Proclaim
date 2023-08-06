@@ -121,10 +121,6 @@ class HtmlView extends BaseHtmlView
 			$this->addToolbar();
 		}
 
-		$bar = Toolbar::getInstance('toolbar');
-		$url = Route::_('index.php?option=com_proclaim&view=templates&layout=default_export');
-		$bar->appendButton('Link', 'export', 'JBS_TPL_IMPORT_EXPORT_TEMPLATE', $url);
-
 		// Set the document
 		$this->setDocument();
 
@@ -137,10 +133,17 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0.0
 	 */
 	protected function addToolbar(): void
 	{
+		$canDo = ContentHelper::getActions('com_proclaim');
+		$user  = Factory::getApplication()->getIdentity();
+
+		// Get the toolbar object instance
+		$toolbar = Toolbar::getInstance('toolbar');
+
 		ToolbarHelper::title(Text::_('JBS_CMN_TEMPLATES'), 'grid grid');
 
 		if ($this->canDo->get('core.create'))
@@ -148,28 +151,35 @@ class HtmlView extends BaseHtmlView
 			ToolbarHelper::addNew('cwmtemplate.add');
 		}
 
-		if ($this->canDo->get('core.edit'))
-		{
-			ToolbarHelper::editList('cwmtemplate.edit');
-		}
+		$dropdown = $toolbar->dropdownButton('status-group')
+			->text('JTOOLBAR_CHANGE_STATUS')
+			->toggleSplit(false)
+			->icon('icon-ellipsis-h')
+			->buttonClass('btn btn-action')
+			->listCheck(true);
+		$childBar = $dropdown->getChildToolbar();
 
 		if ($this->canDo->get('core.edit.state'))
 		{
-			ToolbarHelper::divider();
-			ToolbarHelper::publishList('cwmtemplates.publish');
-			ToolbarHelper::unpublishList('cwmtemplates.unpublish');
+			$childBar->publish('cwmtemplates.publish');
+			$childBar->unpublish('cwmtemplates.unpublish');
+
+			if ($canDo->get('core.edit.state'))
+			{
+				$childBar->trash('cwmtemplates.trash');
+			}
 		}
 
 		if ($this->state->get('filter.published') === "-2" && $this->canDo->get('core.delete'))
 		{
-			ToolbarHelper::divider();
-			ToolbarHelper::deleteList('', 'cwmtemplates.delete', 'JTOOLBAR_EMPTY_TRASH');
+			$toolbar->delete('cwmtemplates.delete')
+				->text('JTOOLBAR_EMPTY_TRASH')
+				->message('JGLOBAL_CONFIRM_DELETE')
+				->listCheck(true);
 		}
-		elseif ($this->canDo->get('core.delete'))
-		{
-			ToolbarHelper::divider();
-			ToolbarHelper::trash('cwmtemplates.trash');
-		}
+
+		$url = Route::_('index.php?option=com_proclaim&view=templates&layout=default_export');
+		$toolbar->appendButton('Link', 'export', 'JBS_TPL_IMPORT_EXPORT_TEMPLATE', $url);
 	}
 
 	/**

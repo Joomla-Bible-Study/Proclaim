@@ -3,8 +3,10 @@
 	<fieldset addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
 		<field name="id" type="text" readonly="readonly" class="inputbox"/>
 		<field name="createdate" type="calendar" label="JBS_CMN_CREATE_DATE"
-		       description="JBS_MED_CREATE_DATE_DESC" class="inputbox" size="22"
-		       format="%Y-%m-%d %H:%M:%S" filter="user_utc" required="true"/>
+		       description="JBS_MED_CREATE_DATE_DESC"
+			   translateformat="true"
+			   showtime="true"
+			   filter="user_utc"/>
 		<field name="study_id" type="Modal_Study" label="JBS_CMN_STUDY"
 		       description="JBS_MED_CHOOSE_STUDY_DESC" class="list" required="true"/>
 		<field name="comment" type="textarea" rows="4" label="JBS_CMN_COMMENT"
@@ -42,8 +44,9 @@
 		       class="chzn-color-state">
 			<option value="*">JALL</option>
 		</field>
+		<field name="metadata" type="hidden" filter="unset"/>
 		<field name="asset_id" type="hidden" filter="unset"/>
-		<field name="rules" type="rules" label="JFIELD_RULES_LABEL"
+		<field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL"
 		       translate_label="false" class="inputbox" filter="rules" component="com_proclaim"
 		       section="mediafile" validate="rules"/>
 

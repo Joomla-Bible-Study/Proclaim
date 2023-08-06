@@ -11,11 +11,10 @@
 // Protect from unauthorized access
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
 
 defined('_JEXEC') or die();
-
-HTMLHelper::_('behavior.framework');
 
 if ($this->totalSteps != '0')
 {
@@ -58,18 +57,18 @@ else
 </div>
 <form action="index.php" name="adminForm" id="adminForm" method="get">
 	<input type="hidden" name="option" value="com_proclaim"/>
-	<input type="hidden" name="view" value="install"/>
+	<input type="hidden" name="view" value="cwminstall"/>
 	<?php ?>
 	<?php if ($this->state === 'start')
 	{
 		?>
-		<input type="hidden" name="task" value="install.browse"/>
+		<input type="hidden" name="task" value="cwminstall.browse"/>
 	<?php
 }
 	else
 	{
 		?>
-		<input type="hidden" name="task" value="install.run"/>
+		<input type="hidden" name="task" value="cwminstall.run"/>
 	<?php
 	}
 	?>

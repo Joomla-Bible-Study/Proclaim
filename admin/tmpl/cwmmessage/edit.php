@@ -386,13 +386,12 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
 		<?php echo HTMLHelper::_('uitab.endTab'); ?>
 
 		<?php if ($this->canDo->get('core.admin')): ?>
-			<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_CMN_FIELDSET_RULES')); ?>
-			<div class="row">
+			<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
+            <div class="row-fluid">
 				<?php echo $this->form->getInput('rules'); ?>
-			</div>
+            </div>
 			<?php echo HTMLHelper::_('uitab.endTab'); ?>
 		<?php endif; ?>
-		<?php echo HTMLHelper::_('uitab.endTabSet'); ?>
 
 		<!-- Hidden fields -->
 		<?php echo $this->form->getInput('thumbnailm'); ?>

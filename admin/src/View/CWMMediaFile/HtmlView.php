@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMMediaFile;
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormHelper;
+use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
@@ -81,13 +82,13 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  false|void  A string if successful, otherwise a JError object.
+	 * @return  void  A string if successful, otherwise a JError object.
 	 *
 	 * @throws  \Exception
 	 * @since   11.1
 	 * @see     fetch()
 	 */
-	public function display($tpl = null)
+	public function display($tpl = null): void
 	{
 		$app                = Factory::getApplication();
 		$this->form         = $this->get("Form");
@@ -98,7 +99,7 @@ class HtmlView extends BaseHtmlView
 		$this->admin_params = $this->state->get('administrator');
 
 		// Load the addon
-		$this->addon = CWMAddon::getInstance($this->media_form->type);
+		$this->addon = CWMAddon::getInstance($this->state->type);
 
 		$options       = $app->input->get('options');
 		$this->options = new \stdClass;
@@ -150,7 +151,7 @@ class HtmlView extends BaseHtmlView
 	 * @throws \Exception
 	 * @since 7.0.0
 	 */
-	protected function addToolbar()
+	protected function addToolbar(): void
 	{
 		Factory::getApplication()->input->set('hidemainmenu', true);
 		$user       = $user = Factory::getApplication()->getSession()->get('user');

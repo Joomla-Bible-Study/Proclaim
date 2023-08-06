@@ -12,6 +12,7 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMPodcast;
 
 // No Direct Access
 use Joomla\CMS\Factory;
+use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
@@ -79,7 +80,7 @@ class HtmlView extends BaseHtmlView
 	 * @since   11.1
 	 * @see     fetch()
 	 */
-	public function display($tpl = null)
+	public function display($tpl = null): void
 	{
 		$this->form  = $this->get("Form");
 		$this->item  = $this->get("Item");
@@ -103,7 +104,7 @@ class HtmlView extends BaseHtmlView
 	 * @throws \Exception
 	 * @since 7.0.0
 	 */
-	protected function addToolbar()
+	protected function addToolbar(): void
 	{
 		Factory::getApplication()->input->set('hidemainmenu', true);
 		$isNew = ((int) $this->item->id === 0);
@@ -152,7 +153,7 @@ class HtmlView extends BaseHtmlView
 	 * @throws \Exception
 	 * @since    7.1.0
 	 */
-	protected function setDocument()
+	protected function setDocument(): void
 	{
 		$isNew    = ($this->item->id < 1);
 		$document = Factory::getApplication()->getDocument();

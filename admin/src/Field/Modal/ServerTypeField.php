@@ -65,7 +65,7 @@ class ServerTypeField extends FormField
 		$this->value = strtolower($this->value);
 
 		// Create the modal id.
-		$modalId = 'Types_' . $this->id;
+		$modalId = 'types_' . $this->id;
 
 		/** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
 		$wa = Factory::getApplication()->getDocument()->getWebAssetManager();

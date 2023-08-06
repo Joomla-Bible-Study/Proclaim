@@ -113,12 +113,13 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0.0
 	 */
-	protected function addToolbar()
+	protected function addToolbar(): void
 	{
 		Factory::getApplication()->input->set('hidemainmenu', true);
-		$isNew = ($this->item->id == 0);
+		$isNew = ($this->item->id === 0);
 		$title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
 		ToolbarHelper::title(Text::_('JBS_CMN_TEMPLATE') . ': <small><small>[' . $title . ']</small></small>', 'square square');
 

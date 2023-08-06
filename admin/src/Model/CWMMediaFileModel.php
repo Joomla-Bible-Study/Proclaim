@@ -18,6 +18,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 use CWM\Component\Proclaim\Administrator\Table\CWMMediaFileTable;
 use CWM\Component\Proclaim\Administrator\Table\CWMServerTable;
+use CWM\Component\Proclaim\Site\Helper\CWMMedia;
 use CWM\Component\Proclaim\Site\Helper\CWMPodcast;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\Path;
@@ -55,10 +56,10 @@ class CWMMediaFileModel extends AdminModel
 	/**
 	 * Data
 	 *
-	 * @var CWMMediaFileTable
+	 * @var object
 	 * @since   9.0.0
 	 */
-	private $data;
+	private object $data;
 
 	/**
 	 * Method to move a mediafile listing
@@ -71,7 +72,7 @@ class CWMMediaFileModel extends AdminModel
 	 * @throws \Exception
 	 * @since     1.5
 	 */
-	public function move($direction)
+	public function move(string $direction): bool
 	{
 		$row = $this->getTable();
 
@@ -97,7 +98,7 @@ class CWMMediaFileModel extends AdminModel
 	 *
 	 * @since   7.0
 	 */
-	public function save($data)
+	public function save($data): bool
 	{
 		if ($data)
 		{
@@ -124,7 +125,7 @@ class CWMMediaFileModel extends AdminModel
 			{
 				if ($set_path && !$path->get('protocal'))
 				{
-					$path->set('protocal', 'http://');
+					$path->set('protocal', 'https://');
 				}
 				else
 				{
@@ -140,10 +141,10 @@ class CWMMediaFileModel extends AdminModel
 				}
 			}
 
-			if (($params->toObject()->media_hours === '00' || empty($params->toObject()->media_hours))
+			if (!CWMMedia::isExternal($params->get('filename'))
+				&& ($params->toObject()->media_hours === '00' || empty($params->toObject()->media_hours))
 				&& ($params->toObject()->media_minutes === '00' || empty($params->toObject()->media_minutes))
-				&& ($params->toObject()->media_seconds === '00' || empty($params->toObject()->media_seconds))
-			)
+				&& ($params->toObject()->media_seconds === '00' || (empty($params->toObject()->media_seconds))))
 			{
 				$path       = CWMHelper::MediaBuildUrl($set_path, $params->get('filename'), $params, false, false, true);
 				$jbspodcast = new CWMPodcast;
@@ -186,7 +187,7 @@ class CWMMediaFileModel extends AdminModel
 	 */
 	public function getMediaForm()
 	{
-		// If user hasn't selected a server yet, just return an empty form
+		// If a user hasn't selected a server yet, just return an empty form
 		$server_id = $this->data->server_id;
 
 		if ($server_id === null)
@@ -207,8 +208,8 @@ class CWMMediaFileModel extends AdminModel
 
 		// Reverse lookup server_id to server type
 		$model       = new CWMServerModel;
-		$server_type = $model->getType($server_id, true);
 		$s_item      = $model->getItem($server_id);
+		$server_type = $s_item->type;
 
 		$reg = new Registry;
 		$reg->loadArray($s_item->params);
@@ -227,7 +228,9 @@ class CWMMediaFileModel extends AdminModel
 			// Add language files
 			$lang = Factory::getApplication()->getLanguage();
 
-			if (!$lang->load('jbs_addon_' . $server_type, JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/' . ucfirst($server_type)) && !$server_type)
+			if (!$lang->load('jbs_addon_' . $server_type,
+				JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/' . ucfirst($server_type)
+			))
 			{
 				Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'), 'error');
 			}
@@ -245,8 +248,9 @@ class CWMMediaFileModel extends AdminModel
 			return false;
 		}
 
-		$form->s_params = $reg1->toArray();
-		$form->type     = $server_type;
+		// Pass this data through state.
+		$this->setState('s_params', $reg1->toArray());
+		$this->setState('type', $server_type);
 
 		return $form;
 	}
@@ -351,9 +355,12 @@ class CWMMediaFileModel extends AdminModel
 				$this->data->podcast_id = explode(',', $this->data->podcast_id);
 			}
 
-			// Convert metadata field to array
-			$registry             = new Registry($this->data->metadata);
-			$this->data->metadata = $registry->toArray();
+			// Convert metadata field to array if not null
+			if ($this->data->metadata !== null)
+			{
+				$registry             = new Registry($this->data->metadata);
+				$this->data->metadata = $registry->toArray();
+			}
 
 			// Set the server_id from session if available or fall back on the db value
 			$server_id             = $this->getState('mediafile.server_id');
@@ -380,7 +387,7 @@ class CWMMediaFileModel extends AdminModel
 	 *
 	 * @since    2.5
 	 */
-	public function batch($commands, $pks, $contexts)
+	public function batch($commands, $pks, $contexts): bool
 	{
 		// Sanitize user ids.
 		$pks = array_unique($pks);
@@ -401,7 +408,7 @@ class CWMMediaFileModel extends AdminModel
 
 		$done = false;
 
-		if ($commands['player'] != '')
+		if ($commands['player'] !== '')
 		{
 			if (!$this->batchPlayer($commands['player'], $pks, $contexts))
 			{
@@ -411,7 +418,7 @@ class CWMMediaFileModel extends AdminModel
 			$done = true;
 		}
 
-		if ($commands['link_type'] != '')
+		if ($commands['link_type'] !== '')
 		{
 			if (!$this->batchlink_type($commands['link_type'], $pks, $contexts))
 			{
@@ -421,7 +428,7 @@ class CWMMediaFileModel extends AdminModel
 			$done = true;
 		}
 
-		if ($commands['mimetype'] != '')
+		if ($commands['mimetype'] !== '')
 		{
 			if (!$this->batchMimetype($commands['mimetype'], $pks, $contexts))
 			{
@@ -431,7 +438,7 @@ class CWMMediaFileModel extends AdminModel
 			$done = true;
 		}
 
-		if ($commands['mediatype'] != '')
+		if ($commands['mediatype'] !== '')
 		{
 			if (!$this->batchMediatype($commands['mediatype'], $pks, $contexts))
 			{
@@ -441,7 +448,7 @@ class CWMMediaFileModel extends AdminModel
 			$done = true;
 		}
 
-		if ($commands['popup'] != '')
+		if ($commands['popup'] !== '')
 		{
 			if (!$this->batchPopup($commands['popup'], $pks, $contexts))
 			{
@@ -473,9 +480,10 @@ class CWMMediaFileModel extends AdminModel
 	 *
 	 * @return  boolean  True if successful, false otherwise and internal error is set.
 	 *
+	 * @throws \Exception
 	 * @since   2.5
 	 */
-	protected function batchPlayer($value, $pks, $contexts)
+	protected function batchPlayer($value, $pks, $contexts): bool
 	{
 		// Set the variables
 		$user = Factory::getApplication()->getSession()->get('user');
@@ -514,7 +522,7 @@ class CWMMediaFileModel extends AdminModel
 	}
 
 	/**
-	 * Custom clean the cache of com_proclaim and biblestudy modules
+	 * Custom clean the cache of com_proclaim and Proclaim modules
 	 *
 	 * @param   string   $group      The cache group
 	 * @param   integer  $client_id  The ID of the client
@@ -523,10 +531,10 @@ class CWMMediaFileModel extends AdminModel
 	 *
 	 * @since 7.0.0
 	 */
-	protected function cleanCache($group = null, $client_id = 0)
+	protected function cleanCache($group = null, $client_id = 0): void
 	{
 		parent::cleanCache('com_proclaim');
-		parent::cleanCache('mod_biblestudy');
+		parent::cleanCache('mod_proclaim');
 	}
 
 	/**
@@ -555,9 +563,10 @@ class CWMMediaFileModel extends AdminModel
 	 *
 	 * @return  boolean  True if successful, false otherwise and internal error is set.
 	 *
+	 * @throws \Exception
 	 * @since   2.5
 	 */
-	protected function batchlink_type($value, $pks, $contexts)
+	protected function batchlink_type($value, $pks, $contexts): bool
 	{
 		// Set the variables
 		$user = Factory::getApplication()->getSession()->get('user');
@@ -605,9 +614,10 @@ class CWMMediaFileModel extends AdminModel
 	 *
 	 * @return  boolean  True if successful, false otherwise and internal error is set.
 	 *
+	 * @throws \Exception
 	 * @since   2.5
 	 */
-	protected function batchMimetype($value, $pks, $contexts)
+	protected function batchMimetype($value, $pks, $contexts): bool
 	{
 		// Set the variables
 		$user = Factory::getApplication()->getSession()->get('user');
@@ -655,9 +665,10 @@ class CWMMediaFileModel extends AdminModel
 	 *
 	 * @return  boolean  True if successful, false otherwise and internal error is set.
 	 *
+	 * @throws \Exception
 	 * @since   2.5
 	 */
-	protected function batchMediatype($value, $pks, $contexts)
+	protected function batchMediatype($value, $pks, $contexts): bool
 	{
 		// Set the variables
 		$user  = Factory::getApplication()->getSession()->get('user');
@@ -704,9 +715,10 @@ class CWMMediaFileModel extends AdminModel
 	 *
 	 * @return  boolean  True if successful, false otherwise and internal error is set.
 	 *
+	 * @throws \Exception
 	 * @since   2.5
 	 */
-	protected function batchPopup($value, $pks, $contexts)
+	protected function batchPopup($value, $pks, $contexts): bool
 	{
 		// Set the variables
 		$user  = Factory::getApplication()->getSession()->get('user');
@@ -751,20 +763,19 @@ class CWMMediaFileModel extends AdminModel
 	 *
 	 * @return    boolean    True if allowed to delete the record. Defaults to the permission set in the component.
 	 *
+	 * @throws \Exception
 	 * @since    1.6
 	 */
-	protected function canDelete($record)
+	protected function canDelete($record): bool
 	{
 		if (!empty($record->id))
 		{
-			if ($record->state != -2)
+			if ($record->published !== -2)
 			{
 				return false;
 			}
 
-			$user = Factory::getApplication()->getSession()->get('user');
-
-			return $user->authorise('core.delete', 'com_proclaim.mediafile.' . (int) $record->id);
+			return Factory::getApplication()->getSession()->get('user')->authorise('core.delete', 'com_proclaim.mediafile.' . (int) $record->id);
 		}
 
 		return false;
@@ -773,12 +784,12 @@ class CWMMediaFileModel extends AdminModel
 	/**
 	 * Load Form Data
 	 *
-	 * @return array
+	 * @return object
 	 *
 	 * @throws  \Exception
 	 * @since   7.0
 	 */
-	protected function loadFormData()
+	protected function loadFormData(): object
 	{
 		$session = Factory::getApplication()->getUserState('com_proclaim.mediafile.edit.data', array());
 
@@ -793,7 +804,7 @@ class CWMMediaFileModel extends AdminModel
 	 * @throws  \Exception
 	 * @since   9.0.0
 	 */
-	protected function populateState()
+	protected function populateState(): void
 	{
 		$app   = Factory::getApplication('administrator');
 		$input = $app->input;
@@ -826,7 +837,7 @@ class CWMMediaFileModel extends AdminModel
 	 *
 	 * @since    1.6
 	 */
-	protected function getReorderConditions($table)
+	protected function getReorderConditions($table): array
 	{
 		$condition   = array();
 		$condition[] = 'study_id = ' . (int) $table->study_id;
@@ -841,6 +852,7 @@ class CWMMediaFileModel extends AdminModel
 	 *
 	 * @return  mixed  Boolean false if there is an error, otherwise the count of records checked in.
 	 *
+	 * @throws \Exception
 	 * @since   12.2
 	 */
 	public function checkin($pks = array())

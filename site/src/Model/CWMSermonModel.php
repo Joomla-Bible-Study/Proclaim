@@ -386,7 +386,7 @@ class CWMSermonModel extends FormModel
 	 * @since   4.0.0
 	 *
 	 */
-	public function getForm($data = array(), $loadData = true)
+	public function getForm($data = array(), $loadData = true): Form
 	{
 		return $this->loadForm('com_proclaim.comment', 'comment', array('control' => 'jform', 'load_data' => true));
 	}

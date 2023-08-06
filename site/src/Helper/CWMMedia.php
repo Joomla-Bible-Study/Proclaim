@@ -252,7 +252,7 @@ class CWMMedia
 
 				$url = CWMHelper::remove_http($url);
 
-				$downloadlink = '<a style="color: #5F5A58;" href="http://christianwebministries.org/router.php?file=' .
+				$downloadlink = '<a style="color: #5F5A58;" href="https://christianwebministries.org/router.php?file=' .
 					$url . '&amp;size=' . $size . '">';
 			}
 
@@ -992,7 +992,7 @@ class CWMMedia
 
 		if ($isonlydash)
 		{
-			$mediacode = substr_replace($mediacode, 'http://' . CWMHelper::MediaBuildUrl($media->spath, $media->filename, null), $dashposition, 1);
+			$mediacode = substr_replace($mediacode, 'https://' . CWMHelper::MediaBuildUrl($media->spath, $media->filename, null), $dashposition, 1);
 		}
 		elseif ($dashposition)
 		{
@@ -1241,6 +1241,9 @@ class CWMMedia
 	{
 		switch ($file_size)
 		{
+			case $file_size = 0 :
+				$file_size   = '0 Bytes';
+				break;
 			case  $file_size < 1024 :
 				$this->fsize = $file_size;
 				$file_size   .= ' Bytes';
@@ -1282,5 +1285,39 @@ class CWMMedia
 		}
 
 		return $file_size;
+	}
+
+	/**
+	 * @param   string  $url url to process
+	 *
+	 * @return boolean
+	 *
+	 * @since 10.0.0
+	 */
+	public static function isExternal(string $url): bool
+	{
+		// Check if the url has a website string as some time it's just a path to a local file.
+		if (strpos($url, "http") || strpos($url, "https") || strpos($url, "//"))
+		{
+			$components = parse_url($url);
+			$root       = parse_url(Uri::root());
+
+			// We will treat url like '/relative.php' as relative
+			if (empty($components['host']))
+			{
+				return false;
+			}
+
+			// Url host looks exactly like the local host
+			if (strcasecmp($components['host'], $root['host']) === 0)
+			{
+				return false;
+			}
+
+			// Check if the url host is a subdomain
+			return strripos($components['host'], $root['host']) !== strlen($components['host']) - strlen($root['host']);
+		}
+
+		return false;
 	}
 }

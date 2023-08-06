@@ -15,7 +15,7 @@
 use CWM\Component\Proclaim\Site\Helper\CWMListing;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
-$t = $this->template->id;
+$t = $this->template;
 ?>
 <!-- Begin Fluid layout -->
 <div class="container-fluid">
@@ -40,10 +40,10 @@ $t = $this->template->id;
 			if ($this->params->get('series_list_return') > 0)
 			{
 				echo '<a href="'
-					. Route::_('index.php?option=com_proclaim&view=cwmseriesdisplays&t=' . $t) . '"><button class="btn"><< '
+					. Route::_('index.php?option=com_proclaim&view=cwmseriesdisplays&t=' . $t->id) . '"><button class="btn"><< '
 					. Text::_('JBS_SER_RETURN_SERIES_LIST') . '</button></a>'; ?>
 				<?php echo '<a href="'
-				. Route::_('index.php?option=com_proclaim&view=cwmsermons&filter_series=' . $this->items->id . '&t=' . $t)
+				. Route::_('index.php?option=com_proclaim&view=cwmsermons&filter_series=' . $this->items->id . '&t=' . $t->id)
 				. '"><button class="btn">' . Text::_('JBS_CMN_SHOW_ALL') . ' ' . Text::_('JBS_SER_STUDIES_FROM_THIS_SERIES')
 				. ' >></button></a>'; ?>
 			<?php

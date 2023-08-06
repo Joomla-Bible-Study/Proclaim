@@ -21,7 +21,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
-use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 
 /**
@@ -39,7 +38,7 @@ class CWMAssetsController extends BaseController
 	 *
 	 * @since 7.0
 	 */
-	protected $view_list = 'cwmadmin';
+	protected string $view_list = 'CWMAssets';
 
 	/**
 	 * The default view for the display method.
@@ -47,7 +46,7 @@ class CWMAssetsController extends BaseController
 	 * @var    string
 	 * @since  3.0
 	 */
-	protected $default_view = 'cwmassets';
+	protected $default_view = 'CWMAssets';
 
 	/**
 	 * Constructor.
@@ -59,7 +58,7 @@ class CWMAssetsController extends BaseController
 	 * @throws \Exception
 	 * @since 1.5
 	 */
-	public function execute($task)
+	public function execute($task): void
 	{
 		if ($task !== 'run' && $task !== 'checkassets' && $task !== 'clear')
 		{
@@ -80,13 +79,14 @@ class CWMAssetsController extends BaseController
 	public function checkassets(): void
 	{
 		// Check for request forgeries.
-		Session::checkToken('get') || Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+		(Session::checkToken('get') || Session::checkToken()) or jexit(Text::_('JINVALID_TOKEN'));
 
 		$model = new CWMAssetsModel;
 		$checkassets = $model->checkAssets();
 		$session = Factory::getApplication()->getSession();
 		$session->set('assat_stack', '', 'CWM');
 		$session->set('checkassets', $checkassets, 'CWM');
+		$this->input->set('view', 'CWMAssets');
 
 		$this->display(false);
 	}
@@ -99,10 +99,10 @@ class CWMAssetsController extends BaseController
 	 * @throws \Exception
 	 * @since 8.0.0
 	 */
-	public function browse()
+	public function browse(): void
 	{
 		// Check for request forgeries.
-//		Session::checkToken('get') or jexit(Text::_('JINVALID_TOKEN'));
+		(Session::checkToken('get') || Session::checkToken()) or jexit(Text::_('JINVALID_TOKEN'));
 
 		$app = Factory::getApplication();
 		$session = $app->getSession();
@@ -117,7 +117,7 @@ class CWMAssetsController extends BaseController
 			$model = new CWMAssetsModel;
 			$state = $model->startScanning();
 			$app->input->set('scanstate', $state);
-			$app->input->set('view', 'cwmassets');
+			$app->input->set('view', 'CWMAssets');
 
 			$this->display(false);
 		}
@@ -135,17 +135,17 @@ class CWMAssetsController extends BaseController
 	 * @throws \Exception
 	 * @since 9.0.2
 	 */
-	public function clear()
+	public function clear(): void
 	{
 		// Check for request forgeries.
-		Session::checkToken('get') or jexit(Text::_('JINVALID_TOKEN'));
+		(Session::checkToken('get') || Session::checkToken()) or jexit(Text::_('JINVALID_TOKEN'));
 
 		CWMHelper::clearcache('administrator');
 		CWMHelper::clearcache('site');
-		$session = Factory::getSession();
+		$session = Factory::getApplication()->getSession();
 		$session->set('assat_stack', '', 'CWM');
 		$app = Factory::getApplication();
-		$app->input->set('view', 'cwmassets');
+		$app->input->set('view', 'CWMAssets');
 		$this->display(false);
 	}
 
@@ -157,16 +157,16 @@ class CWMAssetsController extends BaseController
 	 * @throws \Exception
 	 * @since 8.0.0
 	 */
-	public function run()
+	public function run(): void
 	{
 		// Check for request forgeries.
-		Session::checkToken('get') || Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+		(Session::checkToken('get') || Session::checkToken()) or jexit(Text::_('JINVALID_TOKEN'));
 
 		$app   = Factory::getApplication();
 		$model = new CWMAssetsModel;
 		$state = $model->run();
 		$app->input->set('scanstate', $state);
-		$app->input->set('view', 'cwmassets');
+		$app->input->set('view', 'CWMAssets');
 
 		$this->display(false);
 	}
@@ -182,7 +182,7 @@ class CWMAssetsController extends BaseController
 	 *
 	 * @since   1.6
 	 */
-	public function getModel($name = 'CWMAssets', $prefix = '', $config = array('ignore_request' => true))
+	public function getModel($name = 'CWMAssets', $prefix = '', $config = array('ignore_request' => true)): BaseDatabaseModel
 	{
 		return parent::getModel($name, $prefix, $config);
 	}

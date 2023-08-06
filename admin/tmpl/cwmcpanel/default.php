@@ -106,7 +106,7 @@ $simple = CWMHelper::getSimpleView();
 			<p><a href="https://www.christianwebministries.org/documentation/8-proclaim.html"
 			      target="_blank">
 					<?php echo Text::_('JBS_CPL_ONLINE_DOCUMENTATION'); ?></a> - <a
-						href="https://www.christianwebministries.org/support/user-help-forum.html"
+						href="https://github.com/Joomla-Bible-Study/Proclaim/discussions/categories/q-a"
 						target="_blank">
 					<?php echo Text::_('JBS_CPL_VISIT_FAQ'); ?></a></p>
 		</div>

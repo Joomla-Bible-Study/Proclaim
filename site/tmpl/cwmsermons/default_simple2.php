@@ -197,7 +197,7 @@ $count = count($folder);
 	                            $image = 'media/com_proclaim/images/stockimages/'.$params->get('studyimage');
                             }
                         }
-                        if (empty($item->thumbnailm) && ($params->get('studyimage') == -1) || is_null($studyimage))
+                        if ($studyimage === null || (empty($item->thumbnailm) && ($params->get('studyimage') == -1)))
                         {
                             $random = rand(0, $count);
                             if (array_key_exists($random, $folder))

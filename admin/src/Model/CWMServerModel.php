@@ -88,7 +88,7 @@ class CWMServerModel extends AdminModel
 	 *
 	 * @since 9.0.0
 	 */
-	public function getType($pk, $ext = false)
+	public function getType(int $pk, bool $ext = false): string
 	{
 		return $this->getItem($pk, $ext)->type;
 	}
@@ -96,14 +96,14 @@ class CWMServerModel extends AdminModel
 	/**
 	 * Method to get a server item.
 	 *
-	 * @param   null  $pk   An optional id of the object to get
-	 * @param   bool  $ext  If coming from external
+	 * @param   int|null  $pk   An optional id of the object to get
+	 * @param   bool      $ext  If coming from external
 	 *
 	 * @return mixed Server data object, false on failure
 	 *
 	 * @since 9.0.0
 	 */
-	public function getItem($pk = null, $ext = false)
+	public function getItem($pk = null, bool $ext = false)
 	{
 		if (!empty($this->data))
 		{
@@ -150,7 +150,7 @@ class CWMServerModel extends AdminModel
 	 *
 	 * @since   9.0.0
 	 */
-	public function getConfig($addon)
+	public function getConfig(string $addon)
 	{
 		$path = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/' . ucfirst($addon) . '/' . $addon . '.xml';
 
@@ -325,7 +325,7 @@ class CWMServerModel extends AdminModel
 	protected function cleanCache($group = null, int $client_id = 0)
 	{
 		parent::cleanCache('com_proclaim');
-		parent::cleanCache('mod_biblestudy');
+		parent::cleanCache('mod_proclaim');
 	}
 
 	/**

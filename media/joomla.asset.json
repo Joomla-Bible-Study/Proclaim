@@ -18,12 +18,7 @@
 	  },
 	  "version": "dfda2cadb929cf361efab69cd56c9ef003a65dbe"
 	},
-	  {
-		  "name": "com_proclaim.cwmcore",
-		  "type": "script",
-		  "uri": "com_proclaim/cwmcore.min.js",
-		  "version": "dfda2cadb929cf361efab69cd56c9ef003a65dbe"
-	  },
+
 	{
 	  "name": "com_proclaim.administrator-message-pagebreak",
 	  "type": "script",
@@ -405,6 +400,31 @@
 	  "uri": "com_proclaim/cwmadmin-teachers-batch.min.js",
 	  "dependencies": [
 		"com_proclaim.cwmadmin-teachers-batch.es5"
+	  ],
+	  "attributes": {
+		"nomodule": true,
+		"defer": true
+	  },
+	  "version": "9ac1245a9dd2a9bf7e7f95c6e7e24f6075eef0ae"
+	},
+	{
+	  "name": "com_proclaim.cwmadmin-series-batch.es5",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmadmin-series-batch-es5.min.js",
+	  "dependencies": [
+		"core"
+	  ],
+	  "attributes": {
+		"type": "module"
+	  },
+	  "version": "3660f7dadca40d79416fff13b55596f0cec73cd9"
+	},
+	{
+	  "name": "com_proclaim.cwmadmin-series-batch",
+	  "type": "script",
+	  "uri": "com_proclaim/cwmadmin-series-batch.min.js",
+	  "dependencies": [
+		"com_proclaim.cwmadmin-series-batch.es5"
 	  ],
 	  "attributes": {
 		"nomodule": true,
