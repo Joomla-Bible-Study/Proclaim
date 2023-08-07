@@ -10,14 +10,15 @@
  * */
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Installer\Adapter\ComponentAdapter;
 use Joomla\CMS\Installer\Adapter\FileAdapter;
 use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Installer\InstallerAdapter;
+use Joomla\CMS\Installer\InstallerScript;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
+use Joomla\Database\DatabaseDriver;
+use Joomla\Database\DatabaseInterface;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -29,33 +30,50 @@ use Joomla\CMS\Log\Log;
  * @package Proclaim.Admin
  * @since   7.0.0
  */
-class com_proclaimInstallerScript
+class com_proclaimInstallerScript extends InstallerScript
 {
 	/**
-	 * The minimum Joomla! version required to install this extension
+	 * The version number of the extension.
 	 *
-	 * @var   string
-	 * @since 10.0.0
+	 * @var    string
+	 * @since  3.6
 	 */
-	protected string $minimumJoomlaVersion = '4.0.0';
+	protected $release = '10.0.0';
+
+	/**
+	 * @var   DatabaseDriver|DatabaseInterface|null
+	 *
+	 * @since 7.2.0
+	 */
+	protected $dbo;
+
+	/**
+	 * Minimum PHP version required to install the extension
+	 *
+	 * @var    string
+	 * @since  3.6
+	 */
+	protected $minimumPhp = '8.0.0';
+
+	/**
+	 * Minimum Joomla! version required to install the extension
+	 *
+	 * @var    string
+	 * @since  3.6
+	 */
+	protected $minimumJoomla = '4.2.0';
 
 	/**
 	 * @var   string The component's name
 	 * @since 1.5
 	 */
-	protected string $extension = 'com_proclaim';
+	protected $extension = 'com_proclaim';
 
 	/**
 	 * @var   string
 	 * @since 1.5
 	 */
 	protected $xml;
-
-	/**
-	 * @var   string
-	 * @since 1.5
-	 */
-	protected string $srcxml;
 
 	/**
 	 * @var   object
@@ -68,27 +86,6 @@ class com_proclaimInstallerScript
 	 * @since 1.5
 	 */
 	public string $filePath = '/components/com_proclaim/install/sql/updates/mysql';
-
-	/**
-	 * This is Minimum requirements for: PHP, MySQL, Joomla
-	 *
-	 * @var   array Requirements
-	 * @since 9.0.9
-	 */
-	static protected array $versions = [
-		'PHP'   => [
-			'7.1' => '7.1.0',
-			'7.2' => '7.2.1',
-			'0'   => '7.4.1',
-			// Preferred version
-		],
-		'MySQL' => [
-			'5.1' => '5.1',
-			'5.5' => '5.5.3',
-			'0'   => '5.5.3',
-			// Preferred version
-		],
-	];
 
 	/**
 	 * The list of extra modules and plugins to install
@@ -111,7 +108,7 @@ class com_proclaimInstallerScript
 			'finder' => ['proclaim' => 1],
 			'system' => [
 				'proclaimpodcast' => 0,
-				'proclaimbackup'  => '0',
+				'proclaimbackup'  => 0,
 			],
 		],
 	];
@@ -136,43 +133,36 @@ class com_proclaimInstallerScript
 	 * preflight runs before anything else and while the extracted files are in the uploaded temp folder.
 	 * If preflight returns false, Joomla will abort the update and undo everything already done.
 	 *
-	 * @param   string           $type   Type of install
-	 * @param   ComponentAdapter $parent Where it is coming from
+	 * @param   string            $type    Type of installation
+	 * @param   ComponentAdapter  $parent  Where it is coming from
 	 *
 	 * @return boolean
 	 *
 	 * @throws \Exception
 	 * @since  1.5
 	 */
-	public function preflight(string $type, ComponentAdapter $parent): bool
+	public function preflight($type, $parent): bool
 	{
-		// Do not run on uninstall.
+		if (!parent::preflight($type, $parent))
+		{
+			return false;
+		}
+
+		$this->setDboFromAdapter($parent);
+
+		// Do not run uninstall at this point.
 		if ($type === 'uninstall')
 		{
 			return true;
 		}
 
-		$manifest = $parent->getManifest();
-
-		// Check the minimum Joomla! version
-		if (!version_compare(JVERSION, $this->minimumJoomlaVersion, 'ge'))
+		// Prevent users from installing this on Joomla 3
+		if (version_compare(JVERSION, '3.999.999', 'le'))
 		{
-			$msg = "<p>You need Joomla! $this->minimumJoomlaVersion or later to install this component</p>";
+			$msg = "<p>This version of Proclaim cannot run on Joomla 3.</p>";
+
 			Log::add($msg, Log::WARNING, 'jerror');
 
-			return false;
-		}
-
-		// Include the JLog class.
-		Log::addLogger(
-			['text_file' => 'com_proclaim.errors.php'],
-			Log::ALL,
-			'com_proclaim'
-		);
-
-		// Prevent installation if requirements are not met.
-		if (!$this->checkRequirements($manifest->version))
-		{
 			return false;
 		}
 
@@ -191,7 +181,7 @@ class com_proclaimInstallerScript
 	 * @throws Exception
 	 * @since  1.5
 	 */
-	public function uninstall($parent)
+	public function uninstall($parent): bool
 	{
 		// Uninstall sub-extensions
 		$this->uninstallSubextensions($parent);
@@ -207,14 +197,15 @@ class com_proclaimInstallerScript
 	/**
 	 * Post Flight
 	 *
-	 * @param   string           $type   Type of install
-	 * @param   ComponentAdapter $parent Where it is coming from
+	 * @param   string            $type    Type of install
+	 * @param   ComponentAdapter  $parent  Where it is coming from
 	 *
 	 * @return void
 	 *
+	 * @throws Exception
 	 * @since 1.5
 	 */
-	public function postflight(string $type, ComponentAdapter $parent)
+	public function postflight(string $type, ComponentAdapter $parent): void
 	{
 		// Install subExtensions
 		$this->installSubextensions($parent);
@@ -228,14 +219,14 @@ class com_proclaimInstallerScript
 	/**
 	 * Check Requirements
 	 *
-	 * @param   string $version CWM version to check for.
+	 * @param   string  $version  CWM version to check for.
 	 *
 	 * @return boolean
 	 *
 	 * @throws Exception
 	 * @since  7.1.0
 	 */
-	public function checkRequirements($version)
+	public function checkRequirements(string $version): bool
 	{
 		// Include the JLog class.
 		Log::addLogger(
@@ -244,74 +235,31 @@ class com_proclaimInstallerScript
 			'com_proclaim'
 		);
 
-		$db    = Factory::getContainer()->get('DatabaseDriver');
-		$pass  = $this->checkVersion('PHP', PHP_VERSION);
-		$pass &= $this->checkVersion('MySQL', $db->getVersion());
-		$pass &= $this->checkDbo($db->name, ['mysql', 'mysqli', 'pdo']);
-		$pass &= $this->checkExtensions(self::$extensions);
-
-		return $pass;
+		return $this->checkExtensions(self::$extensions);
 
 	}//end checkRequirements()
-
-
-	// Internal functions
-
-
-	/**
-	 * Check Database Driver
-	 *
-	 * @param   string $name  Driver
-	 * @param   array  $types Array of drivers supported
-	 *
-	 * @return boolean
-	 *
-	 * @throws Exception
-	 *
-	 * @since 7.1.0
-	 */
-	protected function checkDbo($name, $types)
-	{
-		$app = Factory::getApplication();
-
-		if (in_array($name, $types, true))
-		{
-			return true;
-		}
-
-		$app->enqueueMessage(sprintf("Database driver '%s' is not supported. Please use MySQL instead.", $name), 'notice');
-		Log::add(
-			sprintf("Database driver '%s' is not supported. Please use MySQL instead.", $name),
-			Log::NOTICE,
-			$this->extension
-		);
-
-		return false;
-
-	}//end checkDbo()
 
 
 	/**
 	 * Check PHP Extension Requirement
 	 *
-	 * @param   array $extensions Array of version to look for
+	 * @param   array  $extensions  Array of version to look for
 	 *
-	 * @return integer 1 is passing, 0 failed php version.
+	 * @return boolean true is passing, false is failed php version.
 	 *
 	 * @throws Exception
-	 *
 	 * @since 7.1.0
 	 */
-	protected function checkExtensions($extensions)
+	protected function checkExtensions(array $extensions): bool
 	{
 		$app  = Factory::getApplication();
-		$pass = 1;
+		$pass = true;
 
 		foreach ($extensions as $name)
 		{
 			if (!extension_loaded($name))
 			{
-				$pass = 0;
+				$pass = false;
 				$app->enqueueMessage(sprintf("Required PHP extension '%s' is missing. Please install it into your system.", $name), 'notice');
 				Log::add(
 					sprintf("Required PHP extension '%s' is missing. Please install it into your system.", $name),
@@ -325,169 +273,6 @@ class com_proclaimInstallerScript
 
 	}//end checkExtensions()
 
-
-	/**
-	 * Check Versions of JBSM
-	 *
-	 * @param   string $name    Name of version
-	 * @param   string $version Version to look for
-	 *
-	 * @return boolean
-	 *
-	 * @throws Exception
-	 *
-	 * @since 7.1.0
-	 */
-	protected function checkVersion($name, $version)
-	{
-		$app   = Factory::getApplication();
-		$major = $minor = 0;
-
-		foreach (self::$versions[$name] as $major => $minor)
-		{
-			if (!$major || version_compare($version, $major, '<'))
-			{
-				continue;
-			}
-
-			if (version_compare($version, $minor, '>='))
-			{
-				return true;
-			}
-
-			break;
-		}
-
-		if (!$major)
-		{
-			$minor = reset(self::$versions[$name]);
-		}
-
-		$recommended = end(self::$versions[$name]);
-		$app->enqueueMessage(
-			sprintf(
-				'%s %s is not supported. Minimum required version is %s %s, but it is higly recommended to use %s %s or later.',
-				$name,
-				$version,
-				$name,
-				$minor,
-				$name,
-				$recommended
-			),
-			'notice'
-		);
-
-		Log::add(
-			sprintf(
-				'%s %s is not supported. Minimum required version is %s %s, but it is higly recommended to use %s %s or later.',
-				$name,
-				$version,
-				$name,
-				$minor,
-				$name,
-				$recommended
-			),
-			Log::ERROR,
-			'com_proclaim'
-		);
-
-		return false;
-
-	}//end checkVersion()
-
-
-	/**
-	 * Check the installed version of Proclaim
-	 *
-	 * @param   string $version Proclaim Version to check for
-	 *
-	 * @return boolean
-	 *
-	 * @throws Exception
-	 *
-	 * @since 7.1.0
-	 */
-	protected function checkJBSM($version)
-	{
-		return false;
-
-	}//end checkJBSM()
-
-
-	/**
-	 * Delete Files
-	 *
-	 * @param   string $path   Path of File
-	 * @param   array  $ignore Array of files to Ignore
-	 *
-	 * @return void
-	 *
-	 * @since 7.1.0
-	 */
-	public function deleteFiles($path, $ignore=[])
-	{
-		$ignore = array_merge($ignore, ['.git', '.svn', 'CVS', '.DS_Store', '__MACOSX']);
-
-		if (Folder::exists($path))
-		{
-			foreach (Folder::files($path, '.', false, true, $ignore) as $file)
-			{
-				if (File::exists($file))
-				{
-					File::delete($file);
-				}
-			}
-		}
-
-	}//end deleteFiles()
-
-
-	/**
-	 * Delete Folders
-	 *
-	 * @param   string $path   Path to folders
-	 * @param   array  $ignore Ingnore array of files
-	 *
-	 * @return void;
-	 *
-	 * @since 7.1.0
-	 */
-	public function deleteFolders($path, $ignore=[])
-	{
-		$ignore = array_merge($ignore, ['.git', '.svn', 'CVS', '.DS_Store', '__MACOSX']);
-
-		if (Folder::exists($path))
-		{
-			foreach (Folder::folders($path, '.', false, true, $ignore) as $folder)
-			{
-				if (Folder::exists($folder))
-				{
-					Folder::delete($folder);
-				}
-			}
-		}
-
-	}//end deleteFolders()
-
-
-	/**
-	 * Delete Folder
-	 *
-	 * @param   string $path   Path of folder
-	 * @param   array  $ignore Ignore list
-	 *
-	 * @return void
-	 *
-	 * @since 7.1.0
-	 */
-	public function deleteFolder($path, $ignore=[])
-	{
-		$this->deleteFiles($path, $ignore);
-		$this->deleteFolders($path, $ignore);
-
-	}//end deleteFolder()
-
-
 	/**
 	 * Renders the post-installation message
 	 *
@@ -495,16 +280,21 @@ class com_proclaimInstallerScript
 	 * @param   InstallerAdapter $parent is the class calling this method.
 	 *
 	 * @return void
-	 *
-	 * @throws \Exception
-	 * @todo   need to add version check system.
 	 * @since  1.7.0
 	 */
-	private function renderPostInstallation($status, $parent)
+	private function renderPostInstallation($status, $parent): void
 	{
-		$language = Factory::getApplication()->getLanguage();
-		$language->load('com_proclaim', JPATH_ADMINISTRATOR . '/components/com_proclaim', 'en-GB', true);
-		$language->load('com_proclaim', JPATH_ADMINISTRATOR . '/components/com_proclaim', null, true);
+		try
+		{
+			$language = Factory::getApplication()->getLanguage();
+			$language->load('com_proclaim', JPATH_ADMINISTRATOR . '/components/com_proclaim', 'en-GB', true);
+			$language->load('com_proclaim', JPATH_ADMINISTRATOR . '/components/com_proclaim', null, true);
+		}
+		catch (\Exception $e)
+		{
+			return;
+		}
+
 		echo '<img src="../media/com_proclaim/images/proclaim.jpg" width="48" height="48"
              alt="Proclaim"/>
 
@@ -568,7 +358,7 @@ class com_proclaimInstallerScript
 				echo '<td class="key">' . ucfirst($plugin['group']) . '</td>';
 				echo '<td>';
 				echo '<strong style="color: ' . ($plugin['result'] ? 'green' : 'red') . ';">';
-				echo '' . ($plugin['result'] ? Text::_('JBS_INS_INSTALLED') : Text::_('JBS_INS_NOT_INSTALLED')) . '';
+				echo ' ' . ($plugin['result'] ? Text::_('JBS_INS_INSTALLED') : Text::_('JBS_INS_NOT_INSTALLED')) . '';
 				echo '</strong>';
 				echo '</td>';
 				echo '</tr>';
@@ -590,7 +380,7 @@ class com_proclaimInstallerScript
 	 *
 	 * @since 1.7.0
 	 */
-	private function renderPostUninstallation($status, $parent)
+	private function renderPostUninstallation($status, $parent): void
 	{
 		$rows = 0;
 		echo '<h2>' . Text::_('JBS_INS_UNINSTALL') . '</h2>
@@ -630,7 +420,7 @@ class com_proclaimInstallerScript
 					<td>
 						<strong style="color: <?php echo '' . ($module['result'] ? 'green' : 'red'); ?>">
 							<?php
-							echo '' . ($module['result'] ? Text::_('JBS_INS_REMOVED') : Text::_('JBS_INS_NOT_REMOVED'));
+							echo ' ' . ($module['result'] ? Text::_('JBS_INS_REMOVED') : Text::_('JBS_INS_NOT_REMOVED'));
 							?>
 						</strong>
 					</td>
@@ -680,10 +470,9 @@ class com_proclaimInstallerScript
 	 *
 	 * @since 1.7.0
 	 */
-	private function installSubextensions($parent)
+	private function installSubextensions($parent): void
 	{
 		$src                   = $parent->getParent()->getPath('source');
-		$db                    = Factory::getContainer()->get('DatabaseDriver');
 		$this->status          = new stdClass;
 		$this->status->modules = [];
 		$this->status->plugins = [];
@@ -726,9 +515,12 @@ class com_proclaimInstallerScript
 						}
 
 						// Was the module already installed?
-						$sql = $db->getQuery(true)->select('COUNT(*)')->from('#__modules')->where($db->qn('module') . ' = ' . $db->q('mod_' . $module));
-						$db->setQuery($sql);
-						$count                   = $db->loadResult();
+						$sql = $this->dbo->getQuery(true)
+							->select('COUNT(*)')
+							->from('#__modules')
+							->where($this->dbo->qn('module') . ' = ' . $this->dbo->q('mod_' . $module));
+						$this->dbo->setQuery($sql);
+						$count                   = $this->dbo->loadResult();
 						$installer               = new Installer;
 						$result                  = $installer->install($path);
 						$this->status->modules[] = [
@@ -748,39 +540,50 @@ class com_proclaimInstallerScript
 								$modulePosition = 'icon';
 							}
 
-							$sql = $db->getQuery(true)->update($db->qn('#__modules'))->set($db->qn('position') . ' = ' . $db->q($modulePosition))->where($db->qn('module') . ' = ' . $db->q('mod_' . $module));
+							$sql = $this->dbo->getQuery(true)
+								->update($this->dbo->qn('#__modules'))
+								->set($this->dbo->qn('position') . ' = ' . $this->dbo->q($modulePosition))
+								->where($this->dbo->qn('module') . ' = ' . $this->dbo->q('mod_' . $module));
 
 							if ($modulePublished)
 							{
-								$sql->set($db->qn('published') . ' = ' . $db->q('1'));
+								$sql->set($this->dbo->qn('published') . ' = ' . $this->dbo->q('1'));
 							}
 
-							$db->setQuery($sql);
-							$db->execute();
+							$this->dbo->setQuery($sql);
+							$this->dbo->execute();
 
 							// B. Change the ordering of back-end modules to 1 + max ordering
 							if ($folder === 'administrator')
 							{
-								$query = $db->getQuery(true);
-								$query->select('MAX(' . $db->qn('ordering') . ')')->from($db->qn('#__modules'))->where($db->qn('position') . '=' . $db->q($modulePosition));
-								$db->setQuery($query);
-								$position = $db->loadResult();
+								$query = $this->dbo->getQuery(true);
+								$query->select('MAX(' . $this->dbo->qn('ordering') . ')')
+									->from($this->dbo->qn('#__modules'))
+									->where($this->dbo->qn('position') . '=' . $this->dbo->q($modulePosition));
+								$this->dbo->setQuery($query);
+								$position = $this->dbo->loadResult();
 								$position++;
-								$query = $db->getQuery(true);
-								$query->update($db->qn('#__modules'))->set($db->qn('ordering') . ' = ' . $db->q($position))->where($db->qn('module') . ' = ' . $db->q('mod_' . $module));
-								$db->setQuery($query);
-								$db->execute();
+								$query = $this->dbo->getQuery(true);
+								$query->update($this->dbo->qn('#__modules'))
+									->set($this->dbo->qn('ordering') . ' = ' . $this->dbo->q($position))
+									->where($this->dbo->qn('module') . ' = ' . $this->dbo->q('mod_' . $module));
+								$this->dbo->setQuery($query);
+								$this->dbo->execute();
 							}
 
 							// C. Link to all pages
-							$query = $db->getQuery(true);
-							$query->select('id')->from($db->qn('#__modules'))->where($db->qn('module') . ' = ' . $db->q('mod_' . $module));
-							$db->setQuery($query);
-							$moduleid = $db->loadResult();
-							$query    = $db->getQuery(true);
-							$query->select('*')->from($db->qn('#__modules_menu'))->where($db->qn('moduleid') . ' = ' . $db->q($moduleid));
-							$db->setQuery($query);
-							$assignments = $db->loadObjectList();
+							$query = $this->dbo->getQuery(true);
+							$query->select('id')
+								->from($this->dbo->qn('#__modules'))
+								->where($this->dbo->qn('module') . ' = ' . $this->dbo->q('mod_' . $module));
+							$this->dbo->setQuery($query);
+							$moduleid = $this->dbo->loadResult();
+							$query    = $this->dbo->getQuery(true);
+							$query->select('*')
+								->from($this->dbo->qn('#__modules_menu'))
+								->where($this->dbo->qn('moduleid') . ' = ' . $this->dbo->q($moduleid));
+							$this->dbo->setQuery($query);
+							$assignments = $this->dbo->loadObjectList();
 							$isAssigned  = !empty($assignments);
 
 							if (!$isAssigned)
@@ -789,7 +592,7 @@ class com_proclaimInstallerScript
 									'moduleid' => $moduleid,
 									'menuid'   => 0,
 								];
-								$db->insertObject('#__modules_menu', $o);
+								$this->dbo->insertObject('#__modules_menu', $o);
 							}
 						}//end if
 					}//end foreach
@@ -829,9 +632,13 @@ class com_proclaimInstallerScript
 						}
 
 						// Was the plugin already installed?
-						$query = $db->getQuery(true)->select('COUNT(*)')->from($db->qn('#__extensions'))->where($db->qn('element') . ' = ' . $db->q($plugin))->where($db->qn('folder') . ' = ' . $db->q($folder));
-						$db->setQuery($query);
-						$count                   = $db->loadResult();
+						$query = $this->dbo->getQuery(true)
+							->select('COUNT(*)')
+							->from($this->dbo->qn('#__extensions'))
+							->where($this->dbo->qn('element') . ' = ' . $this->dbo->q($plugin))
+							->where($this->dbo->qn('folder') . ' = ' . $this->dbo->q($folder));
+						$this->dbo->setQuery($query);
+						$count                   = $this->dbo->loadResult();
 						$installer               = new JInstaller;
 						$result                  = $installer->install($path);
 						$this->status->plugins[] = [
@@ -842,9 +649,13 @@ class com_proclaimInstallerScript
 
 						if ($published && !$count)
 						{
-							$query = $db->getQuery(true)->update($db->qn('#__extensions'))->set($db->qn('enabled') . ' = ' . $db->q('1'))->where($db->qn('element') . ' = ' . $db->q($plugin))->where($db->qn('folder') . ' = ' . $db->q($folder));
-							$db->setQuery($query);
-							$db->execute();
+							$query = $this->dbo->getQuery(true)
+								->update($this->dbo->qn('#__extensions'))
+								->set($this->dbo->qn('enabled') . ' = ' . $this->dbo->q('1'))
+								->where($this->dbo->qn('element') . ' = ' . $this->dbo->q($plugin))
+								->where($this->dbo->qn('folder') . ' = ' . $this->dbo->q($folder));
+							$this->dbo->setQuery($query);
+							$this->dbo->execute();
 						}
 					}//end foreach
 				}//end if
@@ -852,7 +663,6 @@ class com_proclaimInstallerScript
 		}//end if
 
 	}//end installSubextensions()
-
 
 	/**
 	 * Uninstalls subextensions (modules, plugins) bundled with the main extension
@@ -863,9 +673,8 @@ class com_proclaimInstallerScript
 	 *
 	 * @since 9.0.18
 	 */
-	private function uninstallSubextensions($parent)
+	private function uninstallSubextensions($parent): void
 	{
-		$db                    = Factory::getContainer()->get('DatabaseDriver');
 		$this->status          = new stdClass;
 		$this->status->modules = [];
 		$this->status->plugins = [];
@@ -880,9 +689,13 @@ class com_proclaimInstallerScript
 					foreach ($modules as $module => $modulePreferences)
 					{
 						// Find the module ID
-						$sql = $db->getQuery(true)->select($db->qn('extension_id'))->from($db->qn('#__extensions'))->where($db->qn('element') . ' = ' . $db->q('mod_' . $module))->where($db->qn('type') . ' = ' . $db->q('module'));
-						$db->setQuery($sql);
-						$id = $db->loadResult();
+						$sql = $this->db->getQuery(true)
+							->select($this->dbo->qn('extension_id'))
+							->from($this->dbo->qn('#__extensions'))
+							->where($this->dbo->qn('element') . ' = ' . $this->dbo->q('mod_' . $module))
+							->where($this->dbo->qn('type') . ' = ' . $this->dbo->q('module'));
+						$this->dbo->setQuery($sql);
+						$id = $this->dbo->loadResult();
 
 						// Uninstall the module
 						if ($id !== null)
@@ -909,10 +722,15 @@ class com_proclaimInstallerScript
 				{
 					foreach ($plugins as $plugin => $published)
 					{
-						$sql = $db->getQuery(true)->select($db->qn('extension_id'))->from($db->qn('#__extensions'))->where($db->qn('type') . ' = ' . $db->q('plugin'))->where($db->qn('element') . ' = ' . $db->q($plugin))->where($db->qn('folder') . ' = ' . $db->q($folder));
-						$db->setQuery($sql);
+						$sql = $this->dbo->getQuery(true)
+							->select($this->dbo->qn('extension_id'))
+							->from($this->dbo->qn('#__extensions'))
+							->where($this->dbo->qn('type') . ' = ' . $this->dbo->q('plugin'))
+							->where($this->dbo->qn('element') . ' = ' . $this->dbo->q($plugin))
+							->where($this->dbo->qn('folder') . ' = ' . $this->dbo->q($folder));
+						$this->dbo->setQuery($sql);
 
-						$id = $db->loadResult();
+						$id = $this->dbo->loadResult();
 
 						if ($id !== null)
 						{
@@ -931,6 +749,45 @@ class com_proclaimInstallerScript
 
 	}//end uninstallSubextensions()
 
+	/**
+	 * Set the database object from the installation adapter, if possible
+	 *
+	 * @param   InstallerAdapter|mixed  $adapter  The installation adapter, hopefully.
+	 *
+	 * @return  void
+	 * @since   7.2.0
+	 */
+	private function setDboFromAdapter($adapter): void
+	{
+		$this->dbo = null;
 
-}//end class
+		if (class_exists(InstallerAdapter::class) && ($adapter instanceof InstallerAdapter))
+		{
+			/**
+			 * If this is Joomla 4.2+ the adapter has a protected getDatabase() method which we can access with the
+			 * magic property $adapter->db. On Joomla 4.1 and lower this is not available. So, we have to first figure
+			 * out if we can actually use the magic property...
+			 */
 
+			try
+			{
+				$refObj = new ReflectionObject($adapter);
+
+				if ($refObj->hasMethod('getDatabase'))
+				{
+					$this->dbo = $adapter->db;
+
+					return;
+				}
+			}
+			catch (Throwable $e)
+			{
+				// If something breaks we will fall through
+			}
+		}
+
+		$this->dbo = Factory::getContainer()->get('DatabaseDriver');
+	}
+
+
+}
