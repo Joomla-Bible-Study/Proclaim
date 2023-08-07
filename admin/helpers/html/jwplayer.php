@@ -18,9 +18,12 @@ use Joomla\Registry\Registry;
 /**
  * Utility class for JWplayer behaviors
  *
+ * @todo need to move to namespace insted
+ *
  * @package     Proclaim.Admin
  * @subpackage  HTML
  * @since       3.0
+ * @deprecated 10.0.0
  */
 abstract class JHtmlJwplayer
 {
@@ -39,8 +42,9 @@ abstract class JHtmlJwplayer
 	 *
 	 * @throws \Exception
 	 * @since   3.0
+	 * @deprecated 10.0.0
 	 */
-	public static function framework()
+	public static function framework(): void
 	{
 		// Only load once
 		if (!empty(self::$loaded[__METHOD__]))
@@ -79,6 +83,7 @@ abstract class JHtmlJwplayer
 	 * @return  string
 	 *
 	 * @since 9.0.0
+	 * @deprecated 10.0.0
 	 */
 	public static function render($media, $params, $popup = false, $player = null, $t = null)
 	{
