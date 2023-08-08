@@ -26,7 +26,7 @@ use Joomla\CMS\Menu\MenuItem;
 /**
  * Model class for SeriesDisplays
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    7.0.0
  */
 class CWMSeriesDisplaysModel extends ListModel
@@ -45,12 +45,13 @@ class CWMSeriesDisplaysModel extends ListModel
 	 *
 	 * @return  void
 	 *
+	 * @throws \Exception
 	 * @since   11.1
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = null, $direction = null): void
 	{
 		/** @type JApplicationSite $app */
-		$app = Factory::getApplication('site');
+		$app = Factory::getApplication();
 
 		// Adjust the context to support modal layouts.
 		$input  = Factory::getApplication()->input;
@@ -71,11 +72,10 @@ class CWMSeriesDisplaysModel extends ListModel
 		$template->params->merge($admin->params);
 		$params = $template->params;
 
-		$t = $params->get('seriesid');
+		$t = (int) $params->get('seriesid');
 
 		if (!$t)
 		{
-			$input = Factory::getApplication();
 			$t     = $input->get('t', 1, 'int');
 		}
 
@@ -117,20 +117,19 @@ class CWMSeriesDisplaysModel extends ListModel
 	/**
 	 * Build an SQL query to load the list data
 	 *
-	 * @return  \Joomla\Database\QueryInterface
-     *
+	 * @return  DatabaseQuery  A DatabaseQuery object to retrieve the data set.
+	 *
+	 * @throws \Exception
 	 * @since   7.0
 	 */
-	protected function getListQuery()
+	protected function getListQuery(): DatabaseQuery
 	{
 		$db              = Factory::getContainer()->get('DatabaseDriver');
 		$template_params = CWMParams::getTemplateparams();
 		$t_params        = $template_params->params;
-		$app             = Factory::getApplication('site');
+		$app             = Factory::getApplication();
 		$params          = ComponentHelper::getParams('com_proclaim');
 
-		// $menuparams      = new Registry;
-		// $menuparams = new MenuItem();
 		$sitemenu = $app->getMenu();
 		$menuitems = $sitemenu->getItems(array(), array());
 
@@ -138,13 +137,6 @@ class CWMSeriesDisplaysModel extends ListModel
 		{
 			$menuparams = $menuitem->getParams();
 		}
-
-		// $menu            = $app->getMenu()->getActive();
-
-		// If ($menu)
-		// {
-		//	$menuparams->loadString($menu->params);
-		// }
 
 		$query = $db->getQuery(true);
 		$query->select('se.*,CASE WHEN CHAR_LENGTH(se.alias) THEN CONCAT_WS(\':\', se.id, se.alias) ELSE se.id END as slug');
@@ -160,9 +152,9 @@ class CWMSeriesDisplaysModel extends ListModel
 		// Filter by language
 		$language = $params->get('language', '*');
 
-		if ($this->getState('filter.language') || $language != '*')
+		if ($this->getState('filter.language') || $language !== '*')
 		{
-			$query->where('se.language in (' . $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
+			$query->where('se.language in (' . $db->quote($app->getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
 		}
 
 		$orderDir = $t_params->get('series_list_order', 'DESC');
@@ -177,12 +169,13 @@ class CWMSeriesDisplaysModel extends ListModel
 	 *
 	 * @return string
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function _buildContentWhere()
+	public function _buildContentWhere(): string
 	{
 		$mainframe      = Factory::getApplication();
-		$input          = Factory::getApplication();
+		$input          = $mainframe->input;
 		$option         = $input->get('option', '', 'cmd');
 		$params         = ComponentHelper::getParams($option);
 		$filter_series  = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');
@@ -246,7 +239,7 @@ class CWMSeriesDisplaysModel extends ListModel
 
 		if ($continue > 0)
 		{
-			$where = $where . ' AND ( ' . $where2 . ')';
+			$where .= ' AND ( ' . $where2 . ')';
 		}
 
 		return $where;
@@ -258,7 +251,7 @@ class CWMSeriesDisplaysModel extends ListModel
 	 * @since 9.0.0
 	 * @return mixed
 	 */
-	public function getTeachers()
+	public function getTeachers(): array
 	{
 		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
@@ -270,9 +263,8 @@ class CWMSeriesDisplaysModel extends ListModel
 		$query->order('t.teachername ASC');
 
 		$db->setQuery($query->__toString());
-		$items = $db->loadObjectList();
 
-		return $items;
+		return $db->loadObjectList();
 	}
 
 	/**
@@ -281,7 +273,7 @@ class CWMSeriesDisplaysModel extends ListModel
 	 * @since 9.0.0
 	 * @return mixed
 	 */
-	public function getYears()
+	public function getYears(): array
 	{
 		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
@@ -292,18 +284,18 @@ class CWMSeriesDisplaysModel extends ListModel
 		$query->order('value');
 
 		$db->setQuery($query->__toString());
-		$items = $db->loadObjectList();
 
-		return $items;
+		return $db->loadObjectList();
 	}
 
 	/**
 	 * Get a list of all used series
 	 *
+	 * @return array
+	 * @throws \Exception
 	 * @since 7.0
-	 * @return object
 	 */
-	public function getSeries()
+	public function getSeries(): array
 	{
 		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);

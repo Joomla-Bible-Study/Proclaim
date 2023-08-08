@@ -20,7 +20,7 @@ use Joomla\CMS\MVC\Controller\BaseController;
 /**
  * Controller class for Teacher
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    7.0.0
  */
 class CWMTeacherController extends BaseController
@@ -30,14 +30,15 @@ class CWMTeacherController extends BaseController
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function view()
+	public function view(): void
 	{
-		$input = Factory::getApplication('site');
+		$input = Factory::getApplication()->input;
 		$input->set('view', 'CWMTeacher');
 		$input->set('layout', 'default');
 
-		parent::display();
+		$this->display();
 	}
 }

@@ -23,7 +23,7 @@ use Joomla\Registry\Registry;
 /**
  * Class for JBSMLanding
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    8.0.0
  */
 class CWMLanding

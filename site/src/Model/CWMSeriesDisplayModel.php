@@ -23,7 +23,7 @@ use Joomla\Registry\Registry;
 /**
  * Model class for SeriesDisplay
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    7.0.0
  */
 class CWMSeriesDisplayModel extends ItemModel
@@ -47,7 +47,7 @@ class CWMSeriesDisplayModel extends ItemModel
 	 * @throws \Exception
 	 * @since    1.6
 	 */
-	protected function populateState()
+	protected function populateState(): void
 	{
 		$app = Factory::getApplication();
 
@@ -68,12 +68,11 @@ class CWMSeriesDisplayModel extends ItemModel
 		$template->params->merge($admin->params);
 		$params = $template->params;
 
-		$t = $params->get('seriesid');
+		$t = (int) $params->get('seriesid');
 
 		if (!$t)
 		{
-			$input = Factory::getApplication();
-			$t     = $input->get('t', 1, 'int');
+			$t = $app->input->get('t', 1, 'int');
 		}
 
 		$template->id = $t;
@@ -81,7 +80,7 @@ class CWMSeriesDisplayModel extends ItemModel
 		$this->setState('template', $template);
 		$this->setState('administrator', $admin);
 
-		$user = Factory::getApplication()->getSession()->get('user');
+		$user = $app->getSession()->get('user');
 
 		if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise('core.edit', 'com_proclaim')))
 		{
@@ -152,7 +151,7 @@ class CWMSeriesDisplayModel extends ItemModel
 	public function getStudies()
 	{
 		$app = Factory::getApplication();
-		$sid = $app->getUserState('sid');
+		$sid = (int) $app->getUserState('sid');
 
 		/** @var Registry $params */
 		$params          = $app->getParams();
@@ -174,8 +173,10 @@ class CWMSeriesDisplayModel extends ItemModel
 				'study.publish_down,
 		                study.series_id, study.download_id, study.thumbnailm, study.thumbhm, study.thumbwm,
 		                study.access, study.user_name, study.user_id, study.studynumber, study.chapter_begin2, study.chapter_end2,
-		                study.verse_end2, study.verse_begin2,' . ' ' . $query->length('study.studytext') . ' AS readmore' . ',')
-			. ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END AS slug ');
+		                study.verse_end2, study.verse_begin2 ' . $query->length('study.studytext') . ' AS readmore' . ','
+			)
+			. ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END AS slug '
+		);
 		$query->from('#__bsms_studies AS study');
 
 		// Join over Message Types
@@ -184,7 +185,8 @@ class CWMSeriesDisplayModel extends ItemModel
 
 		// Join over Teachers
 		$query->select('teacher.teachername AS teachername, teacher.title AS teachertitle,' .
-			'teacher.teacher_thumbnail AS thumb, teacher.thumbh, teacher.thumbw');
+			'teacher.teacher_thumbnail AS thumb, teacher.thumbh, teacher.thumbw'
+		);
 		$query->join('LEFT', '#__bsms_teachers AS teacher ON teacher.id = study.teacher_id');
 
 		// Join over Series
@@ -228,17 +230,17 @@ class CWMSeriesDisplayModel extends ItemModel
 		// Select only published studies
 		$query->where('study.published = 1');
 		$query->where('(series.published = 1 OR study.series_id <= 0)');
-		$query->where('study.series_id = ' . (int) $sid);
+		$query->where('study.series_id = ' . $sid);
 
 		// Order by order filter
-		$orderparam = $params->get('default_order');
+		$orderparam = (int) $params->get('default_order');
 
 		if (empty($orderparam))
 		{
 			$orderparam = $t_params->get('series_detail_order', '1');
 		}
 
-		if ($orderparam == 2)
+		if ($orderparam === 2)
 		{
 			$order = "ASC";
 		}

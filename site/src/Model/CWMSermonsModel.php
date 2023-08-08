@@ -18,6 +18,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseQuery;
 use Joomla\Input\Input;
+use Joomla\Registry\Registry;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -26,7 +27,7 @@ use Joomla\Input\Input;
 /**
  * Model class for Sermons
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    7.0.0
  */
 class CWMSermonsModel extends ListModel
@@ -87,9 +88,10 @@ class CWMSermonsModel extends ListModel
 	 *
 	 * @return array
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function getTranslated($items = array())
+	public function getTranslated($items = array()): array
 	{
 		foreach ($items as $item)
 		{
@@ -180,7 +182,7 @@ class CWMSermonsModel extends ListModel
 	 * @throws  \Exception
 	 * @since   11.1
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = null, $direction = null): void
 	{
 		$app = Factory::getApplication();
 
@@ -200,12 +202,12 @@ class CWMSermonsModel extends ListModel
 
 		if (!$t)
 		{
-			$t = $this->input->get('t', 1, 'int');
+			$t = $app->input->get('t', 1, 'int');
 		}
 
 		$landing       = 0;
 		$this->landing = 0;
-		$landingcheck  = $this->input->get('sendingview');
+		$landingcheck  = $app->input->get('sendingview');
 
 		if ($landingcheck === 'landing')
 		{
@@ -353,7 +355,7 @@ class CWMSermonsModel extends ListModel
 	 *
 	 * @since    1.6
 	 */
-	protected function getStoreId($id = '')
+	protected function getStoreId($id = ''): string
 	{
 		// Compile the store id.
 		$id .= ':' . serialize($this->getState('filter.published'));
@@ -378,7 +380,7 @@ class CWMSermonsModel extends ListModel
 	 * @throws  \Exception
 	 * @since   7.0
 	 */
-	protected function getListQuery()
+	protected function getListQuery(): DatabaseQuery
 	{
 		$user     = Factory::getApplication()->getIdentity();
 		$groups = implode(',', $user->getAuthorisedViewLevels());
@@ -467,6 +469,7 @@ class CWMSermonsModel extends ListModel
 		}
 
 		// Begin the filters for menu items
+		/** @var Registry $params */
 		$params = $this->getState('params');
 
 		$filters_group = [];
@@ -687,7 +690,7 @@ class CWMSermonsModel extends ListModel
 			$filters_group[] = ['YEAR(study.studydate)' => [$this->getState('filter.year')]];
 		}
 
-		// Work through each filter decelerations
+		// Work through each filter deceleration
 		foreach ($filters_group as $filters)
 		{
 			if (is_array($filters))
@@ -776,7 +779,7 @@ class CWMSermonsModel extends ListModel
 		}
 		elseif ($language !== '*' || $this->getState('filter.language'))
 		{
-			$query->where('study.language in (' . $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
+			$query->where('study.language in (' . $db->quote($app->getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
 		}
 
 		// Adding in search strings
@@ -792,25 +795,25 @@ class CWMSermonsModel extends ListModel
 		}
 
 		// Add the list ordering clause.
-		$orderCol  = $this->state->get('list.fullordering');
+		$orderCol  = $this->getState('list.fullordering');
 		$orderDirn = '';
 
 		if (empty($orderCol) || $orderCol === " ")
 		{
-			$orderCol = $this->state->get('list.ordering', 'study.studydate');
-			$this->state->set('list.direction', $this->state->params->get('default_order'));
+			$orderCol = $this->getState('list.ordering', 'study.studydate');
+			$this->setState('list.direction', $params->get('default_order'));
 
 			// Set order by menu if set. New Default is blank as of 9.2.5
-			if ($this->state->params->get('order') === '2')
+			if ($params->get('order') === '2')
 			{
-				$this->state->set('list.direction', 'ASC');
+				$this->setState('list.direction', 'ASC');
 			}
-			elseif ($this->state->params->get('order') === '1')
+			elseif ($params->get('order') === '1')
 			{
-				$this->state->set('list.direction', 'DESC');
+				$this->setState('list.direction', 'DESC');
 			}
 
-			$orderDirn = $this->state->get('list.direction', 'DESC');
+			$orderDirn = $this->getState('list.direction', 'DESC');
 		}
 
 		$query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));

@@ -103,16 +103,16 @@ class CWMTeacherModel extends ItemModel
 	 * @throws \Exception
 	 * @since    1.6
 	 */
-	protected function populateState()
+	protected function populateState(): void
 	{
-		$app = Factory::getApplication('site');
+		$app = Factory::getApplication();
 
 		// Load state from the request.
 		// $input = new JInput;
-		$pk = $app->get('id', '', 'int');
+		$pk = $app->input->get('id', '', 'int');
 		$this->setState('teacher.id', $pk);
 
-		$offset = $app->get('limitstart', '', 'int');
+		$offset = $app->input->get('limitstart', '', 'int');
 		$this->setState('list.offset', $offset);
 
 		// Load the parameters.
@@ -125,12 +125,11 @@ class CWMTeacherModel extends ItemModel
 		$template->params->merge($admin->params);
 		$params = $template->params;
 
-		$t = $params->get('teachertemplateid');
+		$t = (int) $params->get('teachertemplateid');
 
 		if (!$t)
 		{
-			$input = Factory::getApplication();
-			$t     = $input->get('t', 1, 'int');
+			$t = $app->input->get('t', 1, 'int');
 		}
 
 		$template->id = $t;
@@ -138,7 +137,7 @@ class CWMTeacherModel extends ItemModel
 		$this->setState('template', $template);
 		$this->setState('administrator', $admin);
 		$this->setState('params', $params);
-		$user = Factory::getApplication()->getSession()->get('user');
+		$user = $app->getSession()->get('user');
 
 		if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise('core.edit', 'com_proclaim')))
 		{

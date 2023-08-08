@@ -28,7 +28,7 @@ use Joomla\Registry\Registry;
 /**
  * View for Sermons class
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    7.0.0
  */
 class HtmlView extends BaseHtmlView

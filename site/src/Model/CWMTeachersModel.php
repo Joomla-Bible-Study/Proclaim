@@ -10,11 +10,10 @@
 
 namespace CWM\Component\Proclaim\Site\Model;
 
-use JApplicationSite;
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\MVC\Model\ListModel;
-use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
+use JApplicationSite;
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseQuery;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -24,7 +23,7 @@ use Joomla\Database\DatabaseQuery;
 /**
  * Model class for Teachers
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    7.0.0
  */
 class CWMTeachersModel extends ListModel
@@ -56,7 +55,9 @@ class CWMTeachersModel extends ListModel
 		}
 
 		$query = $db->getQuery(true);
-		$query->select('teachers.*,CASE WHEN CHAR_LENGTH(teachers.alias) THEN CONCAT_WS(\':\', teachers.id, teachers.alias) ELSE teachers.id END as slug');
+		$query->select('teachers.*,CASE WHEN CHAR_LENGTH(teachers.alias) THEN CONCAT_WS(\':\', teachers.id, teachers.alias)'
+			. 'ELSE teachers.id END as slug'
+		);
 		$query->from('#__bsms_teachers as teachers');
 		$query->select('s.id as sid');
 		$query->join('LEFT', '#__bsms_studies as s on teachers.id = s.teacher_id');
@@ -79,16 +80,16 @@ class CWMTeachersModel extends ListModel
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	protected function populateState($ordering = 'teachers.ordering', $direction = 'asc')
+	protected function populateState($ordering = 'teachers.ordering', $direction = 'asc'): void
 	{
 		/** @type JApplicationSite $app */
-		$app = Factory::getApplication('site');
+		$app = Factory::getApplication();
 
 		// Load state from the request.
 		$pk = $app->input->getInt('id', '');
 		$this->setState('sermon.id', $pk);
 
-		$offset = $app->input->getUInt('limitstart', '');
+		$offset = $app->input->getInt('limitstart', '');
 		$this->setState('list.offset', $offset);
 
 		// Load the parameters.
@@ -101,12 +102,11 @@ class CWMTeachersModel extends ListModel
 		$template->params->merge($admin->params);
 		$params = $template->params;
 
-		$t = $params->get('teachersid');
+		$t = (int) $params->get('teachersid');
 
 		if (!$t)
 		{
-			$input = Factory::getApplication();
-			$t     = $input->get('t', 1, 'int');
+			$t = $app->input->get('t', 1, 'int');
 		}
 
 		$template->id = $t;
@@ -114,7 +114,7 @@ class CWMTeachersModel extends ListModel
 		$this->setState('template', $template);
 		$this->setState('administrator', $admin);
 
-		$user = Factory::getApplication()->getSession()->get('user');
+		$user = $app->getSession()->get('user');
 
 		if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise('core.edit', 'com_proclaim')))
 		{
@@ -140,7 +140,7 @@ class CWMTeachersModel extends ListModel
 
 		if (Factory::getApplication()->isClient('site'))
 		{
-			$user     = Factory::getApplication()->getIdentity();
+			$user   = Factory::getApplication()->getIdentity();
 			$groups = $user->getAuthorisedViewLevels();
 
 			foreach ($items as $x => $xValue)

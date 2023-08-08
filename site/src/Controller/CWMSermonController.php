@@ -11,9 +11,11 @@
 namespace CWM\Component\Proclaim\Site\Controller;
 
 use CWM\Component\Proclaim\Site\Helper\CWMDownload;
+use CWM\Component\Proclaim\Site\Model\CWMSermonModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
@@ -27,7 +29,7 @@ use Joomla\Registry\Registry;
 /**
  * Class for Sermon
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    7.0.0
  */
 class CWMSermonController extends FormController
@@ -156,6 +158,7 @@ class CWMSermonController extends FormController
 	public function comment(): void
 	{
 		$input = Factory::getApplication()->input;
+		/** @var CWMSermonModel $model */
 		$model = $this->getModel('sermon');
 		$t     = $input->get('t', '1');
 		$input->set('t', $t);
@@ -176,8 +179,8 @@ class CWMSermonController extends FormController
 			{
 				// What happens when the CAPTCHA was entered incorrectly
 				$mess = Text::_('JBS_STY_INCORRECT_KEY');
-				echo "<script language='javascript' type='text/javascript'>alert('" . $mess . "')</script>";
-				echo "<script language='javascript' type='text/javascript'>window.parent.location.reload()</script>";
+				echo "<script type='text/javascript'>alert('" . $mess . "')</script>";
+				echo "<script type='text/javascript'>window.parent.location.reload()</script>";
 
 				return;
 			}
@@ -213,11 +216,11 @@ class CWMSermonController extends FormController
 	 * @param   string  $prefix  The class prefix. Optional.
 	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return    object    The model.
+	 * @return    BaseDatabaseModel   The model.
 	 *
 	 * @since    1.5
 	 */
-	public function getModel($name = 'Sermon', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true))
+	public function getModel($name = 'CWMSermon', $prefix = '', $config = array('ignore_request' => true)): BaseDatabaseModel
 	{
 		return parent::getModel($name, $prefix, $config);
 	}
@@ -230,9 +233,10 @@ class CWMSermonController extends FormController
 	 * @return void
 	 *
 	 * @throws \PHPMailer\PHPMailer\Exception
+	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function commentsEmail($params)
+	public function commentsEmail($params): void
 	{
 		$input = Factory::getApplication()->input;
 
@@ -288,7 +292,7 @@ class CWMSermonController extends FormController
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function download()
+	public function download(): void
 	{
 		$input = Factory::getApplication()->input;
 		$task  = $input->get('task');
@@ -298,7 +302,6 @@ class CWMSermonController extends FormController
 		{
 			$downloader = new CWMDownload;
 			$downloader->download($mid);
-			die;
 		}
 	}
 

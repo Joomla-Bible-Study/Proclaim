@@ -2,7 +2,7 @@
 /**
  * Controller for Seriesdisplay
  *
- * @package    BibleStudy.Site
+ * @package    Proclaim.Site
  * @copyright  2007 - 2022 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
@@ -20,7 +20,7 @@ use Joomla\CMS\MVC\Controller\BaseController;
 /**
  * Controller for SeriesDisplay
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    7.0.0
  */
 class CWMSeriesDisplayController extends BaseController

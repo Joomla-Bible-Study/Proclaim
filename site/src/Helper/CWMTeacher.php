@@ -25,7 +25,7 @@ use Joomla\Registry\Registry;
 /**
  * Class for Teachers Helper
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    8.0.0
  */
 class CWMTeacher extends CWMListing
@@ -34,19 +34,18 @@ class CWMTeacher extends CWMListing
 	/**
 	 * Get Teacher for Fluid layout
 	 *
-	 * @param   Registry  $params  ?
+	 * @param   Registry  $params  Parameters
 	 *
 	 * @return array
 	 *
 	 * @throws \Exception
 	 * @since    8.0.0
 	 */
-	public function getTeachersFluid($params)
+	public function getTeachersFluid($params): array
 	{
 		$input      = Factory::getApplication()->input;
 		$id         = $input->get('id', '', 'int');
 		$teachers   = array();
-		$teacherid  = null;
 		$teacherIDs = [];
 		$t          = $params->get('teachertemplateid');
 
@@ -71,8 +70,7 @@ class CWMTeacher extends CWMListing
 			// Check to see if com_contact used instead
 			if ($result->contact)
 			{
-				/** @var ContactModel $contactmodel */
-				$contactmodel = ItemModel::getInstance('contact', 'contactModel');
+				$contactmodel = new ContactModel;
 				$contact      = $contactmodel->getItem($pk = $result->contact);
 
 				// Substitute contact info from com_contacts for duplicate fields
@@ -105,7 +103,7 @@ class CWMTeacher extends CWMListing
 	}
 
 	/**
-	 * Get Teacher
+	 * Get a Teacher
 	 *
 	 * @param   Registry  $params  Item Params
 	 * @param   int       $id      Item ID
@@ -116,15 +114,13 @@ class CWMTeacher extends CWMListing
 	 * @todo     need to redo to bootstrap
 	 * @since    8.0.0
 	 */
-	public function getTeacher($params, $id)
+	public function getTeacher($params, $id): string
 	{
 		$input       = Factory::getApplication()->input;
 		$JViewLegacy = new HtmlView;
 		$JViewLegacy->loadHelper('image');
-		$teacher    = null;
-		$teacherid  = null;
 		$teacherids = new \stdClass;
-		$t          = $params->get('teachertemplateid');
+		$t          = (int) $params->get('teachertemplateid');
 
 		if (!$t)
 		{
@@ -133,12 +129,12 @@ class CWMTeacher extends CWMListing
 
 		$viewtype = $input->get('view');
 
-		if ($viewtype == 'sermons')
+		if ($viewtype === 'sermons')
 		{
 			$teacherids = explode(",", $params->get('listteachers'));
 		}
 
-		if ($viewtype == 'sermon' && $id != 0)
+		if ($viewtype === 'sermon' && (int) $id !== 0)
 		{
 			$teacherids->id = $id;
 		}
@@ -157,11 +153,9 @@ class CWMTeacher extends CWMListing
 			$query->select('*')->from('#__bsms_teachers')->where('id = ' . $teachers);
 			$database->setQuery($query);
 			$tresult = $database->loadObject();
-			$i_path  = null;
 
 			// Check to see if there is a teacher image, if not, skip this step
-			$images = new CWMImages;
-			$image  = $images->getTeacherThumbnail($tresult->teacher_thumbnail, $tresult->thumb);
+			$image  = CWMImages::getTeacherThumbnail($tresult->teacher_thumbnail, $tresult->thumb);
 
 			if (!$image)
 			{
@@ -170,14 +164,17 @@ class CWMTeacher extends CWMListing
 				$image->height = 0;
 			}
 
-			$teacher .= '<td><table class="table cellspacing"><tr><td><img src="' . $image->path . '" border="1" width="' . $image->width
+			$teacher .= '<td><table class="table cellspacing"><tr><td><img src="' . $image->path . '" width="' . $image->width
 				. '" height="' . $image->height . '" alt="" /></td></tr>';
 
 			$teacher .= '<tr><td>';
 
 			if ($params->get('teacherlink') > 0)
 			{
-				$teacher .= '<a href="' . Route::_('index.php?option=com_proclaim&amp;view=cwmteacher&amp;id=' . $tresult->id . '&amp;t=' . $t) . '">';
+				$teacher .= '<a href="'
+					. Route::_('index.php?option=com_proclaim&amp;view=cwmteacher&amp;id='
+						. $tresult->id . '&amp;t=' . $t
+					) . '">';
 			}
 
 			$teacher .= $tresult->teachername;
@@ -190,7 +187,7 @@ class CWMTeacher extends CWMListing
 			$teacher .= '</td></tr></table></td>';
 		}
 
-		if ($params->get('intro_show') == 2 && $viewtype == 'sermons')
+		if ($viewtype === 'sermons' && (int) $params->get('intro_show') === 2)
 		{
 			$teacher .= '<td><div id="listintrodiv"><table class="table" id="listintrotable"><tr><td><p>';
 			$teacher .= $params->get('list_intro') . '</p></td></tr></table> </div></td>';
@@ -209,7 +206,7 @@ class CWMTeacher extends CWMListing
 	 * @param   string            $oddeven   Odd Even
 	 * @param   CWMTemplateTable  $template  Template
 	 *
-	 * @return object
+	 * @return array|string|string[]
 	 *
 	 * @since    8.0.0
 	 */
@@ -234,12 +231,11 @@ class CWMTeacher extends CWMListing
 		$label = str_replace('{{thumbnail}}', '<img src="' . $imagesmall->path . '" width="' . $imagesmall->width .
 			'" height="' . $imagesmall->height . '" />', $label
 		);
-		$label = str_replace('{{url}}', Route::_('index.php?option=com_proclaim&amp;view=cwmteacherdisplay&amp;id=' .
+
+		return str_replace('{{url}}', Route::_('index.php?option=com_proclaim&amp;view=cwmteacherdisplay&amp;id=' .
 			$row->id . '&amp;t=' . $template
 		), $label
 		);
-
-		return $label;
 	}
 
 	/**
@@ -273,12 +269,11 @@ class CWMTeacher extends CWMListing
 			. $imagelarge->height . '" />', $label
 		);
 		$label = str_replace('{{short}}', $row->short, $label);
-		$label = str_replace(
+
+		return str_replace(
 			'{{thumbnail}}', '<img src="' . $imagesmall->path . '" width="' . $imagesmall->width . '" height="'
 			. $imagesmall->height . '" />', $label
 		);
-
-		return $label;
 	}
 
 	/**
@@ -289,9 +284,10 @@ class CWMTeacher extends CWMListing
 	 *
 	 * @return string
 	 *
+	 * @throws \Exception
 	 * @since    8.0.0
 	 */
-	public function getTeacherStudiesExp($id, $params)
+	public function getTeacherStudiesExp($id, $params): string
 	{
 		$limit   = '';
 		$input   = Factory::getApplication()->input;
@@ -302,7 +298,7 @@ class CWMTeacher extends CWMListing
 			$limit = $params->get('series_detail_limit');
 		}
 
-		if ($nolimit == 1)
+		if ($nolimit === 1)
 		{
 			$limit = '';
 		}
@@ -312,7 +308,8 @@ class CWMTeacher extends CWMListing
 		$query->select('#__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
 			. ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
 			. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
-			. ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text')
+			. ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text'
+		)
 			->from('#__bsms_studies')
 			->leftJoin('#__bsms_studytopics ON (#__bsms_studies.id = #__bsms_studytopics.study_id)')
 			->leftJoin('#__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)')
@@ -333,12 +330,9 @@ class CWMTeacher extends CWMListing
 
 		foreach ($items as $i => $iValue)
 		{
-			if ($iValue->access > 1)
+			if (($iValue->access > 1) && !in_array($iValue->access, $groups, true))
 			{
-				if (!in_array($iValue->access, $groups))
-				{
-					unset($items[$i]);
-				}
+				unset($items[$i]);
 			}
 		}
 

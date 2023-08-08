@@ -33,7 +33,7 @@ use Joomla\Registry\Registry;
  * View class for Sermon
  *
  * @property mixed document
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    7.0.0
  *
  * @todo     Still need to fix all the problems.

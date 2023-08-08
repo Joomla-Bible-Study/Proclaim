@@ -22,9 +22,9 @@ use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 
 /**
- * Model class for SeriesDisplay
+ * Model class for PodcastDisplay
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    7.0.0
  */
 class CWMPodcastDisplayModel extends ItemModel
@@ -48,7 +48,7 @@ class CWMPodcastDisplayModel extends ItemModel
 	 * @throws \Exception
 	 * @since    1.6
 	 */
-	protected function populateState()
+	protected function populateState(): void
 	{
 		/** @type JApplicationSite $app */
 		$app = Factory::getApplication('site');
@@ -74,8 +74,7 @@ class CWMPodcastDisplayModel extends ItemModel
 
 		if (!$t)
 		{
-			$input = Factory::getApplication();
-			$t     = $input->get('t', 1, 'int');
+			$t     = $app->input->get('t', 1, 'int');
 		}
 
 		$template->id = $t;
@@ -146,12 +145,12 @@ class CWMPodcastDisplayModel extends ItemModel
 	/**
 	 * Get Studies
 	 *
-	 * @return boolean|mixed
+	 * @return array
 	 *
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function getStudies()
+	public function getStudies(): array
 	{
 		/** @type JApplicationSite $app */
 		$app = Factory::getApplication('site');
@@ -250,7 +249,7 @@ class CWMPodcastDisplayModel extends ItemModel
 
 		if (count($studies) < 1)
 		{
-			return false;
+			return [];
 		}
 
 		return $studies;

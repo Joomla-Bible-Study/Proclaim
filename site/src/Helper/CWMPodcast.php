@@ -38,7 +38,7 @@ if (file_exists($api))
 /**
  * BibleStudy Podcast Class
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    7.0.0
  */
 class CWMPodcast

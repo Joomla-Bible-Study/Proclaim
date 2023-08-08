@@ -25,7 +25,7 @@ use CWM\Component\Proclaim\Site\Helper\CWMMedia;
 /**
  * View class for Messages
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    7.0.0
  */
 class HtmlView extends BaseHtmlView
