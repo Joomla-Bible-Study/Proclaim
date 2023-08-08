@@ -106,12 +106,6 @@ class HtmlView extends BaseHtmlView
 	 */
 	protected $page;
 
-	//  /** @var  \stdclass Template
-	//   *
-	//   * @since 7.0
-	//   */
-	//  protected \stdClass $template;
-
 	/** @var  string Article
 	 *
 	 * @since 7.0
