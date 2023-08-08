@@ -13,9 +13,9 @@ namespace CWM\Component\Proclaim\Site\Controller;
 use CWM\Component\Proclaim\Site\Helper\CWMDownload;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
@@ -52,9 +52,10 @@ class CWMSermonController extends FormController
 	 *
 	 * @return    void  True if the article can be added, false if not.
 	 *
+	 * @throws \Exception
 	 * @since    1.6
 	 */
-	public function add()
+	public function add(): void
 	{
 		if (!parent::add())
 		{
@@ -73,7 +74,7 @@ class CWMSermonController extends FormController
 	 * @throws \Exception
 	 * @since    1.6
 	 */
-	protected function getReturnPage()
+	protected function getReturnPage(): string
 	{
 		$return = Factory::getApplication()->input->get('return', null, 'base64');
 
@@ -96,7 +97,7 @@ class CWMSermonController extends FormController
 	 * @throws \Exception
 	 * @since    1.6
 	 */
-	public function cancel($key = 'a_id')
+	public function cancel($key = 'a_id'): void
 	{
 		parent::cancel($key);
 
@@ -114,7 +115,7 @@ class CWMSermonController extends FormController
 	 *
 	 * @since    1.6
 	 */
-	public function edit($key = null, $urlVar = 'a_id')
+	public function edit($key = null, $urlVar = 'a_id'): bool
 	{
 		return parent::edit($key, $urlVar);
 	}
@@ -130,7 +131,7 @@ class CWMSermonController extends FormController
 	 * @throws \Exception
 	 * @since    1.6
 	 */
-	public function save($key = null, $urlVar = 'a_id')
+	public function save($key = null, $urlVar = 'a_id'): bool
 	{
 		$result = parent::save($key, $urlVar);
 
@@ -149,19 +150,14 @@ class CWMSermonController extends FormController
 	 * @return void|null
 	 *
 	 * @throws \PHPMailer\PHPMailer\Exception
+	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function comment()
+	public function comment(): void
 	{
 		$input = Factory::getApplication()->input;
 		$model = $this->getModel('sermon');
-		$t     = '';
-
-		if (!$t)
-		{
-			$t = 1;
-		}
-
+		$t     = $input->get('t', '1');
 		$input->set('t', $t);
 
 		// Convert parameter fields to objects.
@@ -169,11 +165,10 @@ class CWMSermonController extends FormController
 		$registry->loadString($model->_template[0]->params);
 		$params = $registry;
 
-		$cap = 1;
-
 		if ($params->get('use_captcha') > 0)
 		{
 			// Begin reCaptcha
+			$data = $input->post;
 			PluginHelper::importPlugin('captcha');
 			$res = Factory::getApplication()->triggerEvent('onCheckAnswer', $_POST['recaptcha_response_field']);
 
@@ -184,35 +179,31 @@ class CWMSermonController extends FormController
 				echo "<script language='javascript' type='text/javascript'>alert('" . $mess . "')</script>";
 				echo "<script language='javascript' type='text/javascript'>window.parent.location.reload()</script>";
 
-				return null;
+				return;
 			}
-
-			$cap = 1;
 		}
 
-		if ($cap === 1)
+		if ($model->storecomment())
 		{
-			if ($model->storecomment())
-			{
-				$msg = Text::_('JBS_STY_COMMENT_SUBMITTED');
-			}
-			else
-			{
-				$msg = Text::_('JBS_STY_ERROR_SUBMITTING_COMMENT');
-			}
-
-			if ($params->get('email_comments') > 0)
-			{
-				$this->commentsEmail($params);
-			}
-
-			$study_detail_id = $input->get('study_detail_id', 0, 'int');
-
-			$input->redirect(
-				'index.php?option=com_proclaim&id=' . $study_detail_id . '&view=cwmsermon&t=' . $t . '&msg=' . $msg,
-				'Comment Added'
-			);
+			$msg = Text::_('JBS_STY_COMMENT_SUBMITTED');
 		}
+		else
+		{
+			$msg = Text::_('JBS_STY_ERROR_SUBMITTING_COMMENT');
+		}
+
+		if ($params->get('email_comments') > 0)
+		{
+			$this->commentsEmail($params);
+		}
+
+		$study_detail_id = $input->get('study_detail_id', 0, 'int');
+
+		Factory::getApplication()->redirect(
+			Route::_('index.php?option=com_proclaim&id=' . $study_detail_id . '&view=cwmsermon&t=' . $t . '&msg=' . $msg,
+				'Comment Added'
+			)
+		);
 	}
 
 	/**
@@ -249,7 +240,7 @@ class CWMSermonController extends FormController
 		$comment_study_id  = $input->get('study_detail_id', 0, 'int');
 		$comment_published = $input->get('published', 0, 'int');
 		$comment_date      = date('Y-m-d H:i:s');
-        $config         = Factory::getApplication();
+		$config            = Factory::getApplication();
 		$comment_mailfrom  = $config->get('mailfrom');
 
 		$comment_livesite = Uri::root();
@@ -380,13 +371,13 @@ class CWMSermonController extends FormController
 			$append .= '&' . $urlVar . '=' . $recordId;
 		}
 
-//		$itemId = $this->input->getInt('Itemid');
+		//      $itemId = $this->input->getInt('Itemid');
 		$return = $this->getReturnPage();
 
-//		if ($itemId)
-//		{
-//			$append .= '&Itemid=' . $itemId;
-//		}
+		//      if ($itemId)
+		//      {
+		//          $append .= '&Itemid=' . $itemId;
+		//      }
 
 		if ($return)
 		{

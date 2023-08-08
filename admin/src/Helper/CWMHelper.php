@@ -359,7 +359,7 @@ class CWMHelper
 	/**
 	 * Get Simple View Sate
 	 *
-	 * @param   object|null  $params  AdminTable + parametors
+	 * @param   object|null  $params  AdminTable + parameters
 	 *
 	 * @return  object
 	 *
