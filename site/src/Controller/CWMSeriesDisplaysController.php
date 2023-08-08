@@ -17,7 +17,7 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
- * Controller for Teachers
+ * Controller for SeriesDisplays
  *
  * @package  Proclaim.Site
  * @since    7.0.0
