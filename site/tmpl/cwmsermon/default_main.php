@@ -35,7 +35,7 @@ if ($this->item->params->get('showpodcastsubscribedetails') === '1')
 {
 	?>
 	<div class="row-fluid">
-		<div class="span12">
+		<div class="col-lg-12">
 			<?php echo $this->subscribe; ?>
 		</div>
 	</div>
@@ -57,7 +57,7 @@ if ($this->item->params->get('showpodcastsubscribedetails') === '1')
 {
 	?>
 	<div class="row-fluid">
-		<div class="span12">
+		<div class="col-lg-12">
 			<?php echo $this->related; ?>
 		</div>
 	</div>

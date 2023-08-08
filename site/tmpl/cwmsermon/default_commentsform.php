@@ -56,7 +56,7 @@ switch ($this->item->params->get('link_comments', 0))
 <div class="container-fluid" style="padding-bottom: 10px;">
 
     <div class="row-fluid">
-        <div class="span12" style="padding-bottom: 10px;">
+        <div class="col-lg-12" style="padding-bottom: 10px;">
 			<h2><?php echo Text::_('JBS_CMN_COMMENTS'); ?></h2>
         </div>
     </div>
@@ -87,15 +87,15 @@ else
 		$comment_date_display = HtmlHelper::_('date', $comment->comment_date, Text::_('DATE_FORMAT_LC3'));
 		?>
                     <div class="row-fluid">
-                        <div class="span6"><strong><?php echo $comment->full_name ?></strong> <i>
+                        <div class="col-lg-6"><strong><?php echo $comment->full_name ?></strong> <i>
                             - <?php echo $comment_date_display ?></i>
                         </div>
                     </div>
     <div class="row-fluid">
-        <div class="span12"><?php echo Text::_('JBS_CMN_COMMENT') . ': ' . $comment->comment_text ?></div>
+        <div class="col-lg-12"><?php echo Text::_('JBS_CMN_COMMENT') . ': ' . $comment->comment_text ?></div>
     </div>
     <div class="row-fluid">
-        <div class="span12">
+        <div class="col-lg-12">
             <hr />
         </div>
     </div>
@@ -142,7 +142,7 @@ if ($allow > 9)
 		if ($allow >= 10)
 		{
 			?>
-            <div class="span12">
+            <div class="col-lg-12">
 					<?php
 					if ($user->name)
 					{
@@ -165,28 +165,28 @@ if ($allow > 9)
                 </strong>
                 </div>
             <div class="row-fluid">
-                <div class="span2">
+                <div class="col-lg-2">
 					<?php echo Text::_('JBS_CMT_FULL_NAME') ?>
                 </div>
-                <div class="span7">
+                <div class="col-lg-7">
                     <input class="text_area" size="50" type="text" name="full_name" id="full_name"
                            value="<?php echo $full_name ?>"/>
                 </div>
             </div>
             <div class="row-fluid">
-                <div class="span2">
+                <div class="col-lg-2">
 					<?php echo Text::_('JBS_CMT_EMAIL') ?>
                 </div>
-                <div class="span7">
+                <div class="col-lg-7">
                     <input class="text_area" type="text"  name="user_email" id="user_email"
                            value="<?php echo $user->email ?>"/>
                 </div>
             </div>
             <div class="row-fluid">
-                <div class="span2">
+                <div class="col-lg-2">
 					<?php echo Text::_('JBS_CMN_COMMENT') ?>:
                 </div>
-                <div class="span7">
+                <div class="col-lg-7">
                     <textarea class="text_area" cols="20" rows="4" name="comment_text"
                               id="comment_text">
                     </textarea>
@@ -194,7 +194,7 @@ if ($allow > 9)
             </div>
 
             <div class="row-fluid">
-            <div class="span12">
+            <div class="col-lg-12">
 
           <?php foreach ($this->form->getFieldsets() as $fieldset) : ?>
                 <?php if ($fieldset->name === 'captcha' && !$this->captchaEnabled) : ?>

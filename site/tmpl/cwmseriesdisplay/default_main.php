@@ -20,7 +20,7 @@ $t = $this->template;
 <!-- Begin Fluid layout -->
 <div class="container-fluid">
 	<div class="row-fluid">
-		<div class="span12">
+		<div class="col-lg-12">
 			<?php $listing = new CWMListing;
 			$list = $listing->getFluidListing($this->items, $this->params, $t, $type = 'seriesdisplay');
 			echo $list;
@@ -28,14 +28,14 @@ $t = $this->template;
 		</div>
 	</div>
 	<div class="row-fluid">
-		<div class="span12">
+		<div class="col-lg-12">
 			<?php $seriesstudies = $listing->getFluidListing($this->seriesstudies, $this->params, $t, $type = 'sermons');
 			echo $seriesstudies; ?>
 		</div>
 	</div>
 	<hr/>
 	<div class="row-fluid">
-		<div class="span12">
+		<div class="col-lg-12">
 			<?php
 			if ($this->params->get('series_list_return') > 0)
 			{

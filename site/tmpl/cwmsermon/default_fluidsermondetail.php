@@ -19,12 +19,12 @@
   
 
 <div class="row-fluid">
-<div class="span12">
+<div class="col-lg-12">
    <h3 style="text-align:right;">
   Bible Study from Calvary Chapel Newberg
 </h3>
 </div> 
-<div class="span12"> 
+<div class="col-lg-12">
   <h4 style="text-align:right;">
   with <?php echo $this->item->teachername;?>
 </h4>

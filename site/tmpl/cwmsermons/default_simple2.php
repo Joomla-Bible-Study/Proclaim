@@ -252,7 +252,7 @@ $count = count($folder);
 		</div>
 	</div>
 </div>
-<div class="row-fluid span12 pagination pagelinks" style="background-color: #A9A9A9;
+<div class="row-fluid col-sm-12 pagination pagelinks" style="background-color: #A9A9A9;
 	margin: 0 -5px;
 	padding: 8px 8px;
 	border: 1px solid #C5C1BE;
