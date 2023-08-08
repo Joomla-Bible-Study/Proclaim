@@ -173,7 +173,7 @@ class CWMImages
 	 *
 	 * @since    7.0
 	 */
-	public static function getSeriesThumbnail(string $image = 'openbible.png'): object
+	public static function getSeriesThumbnail( $image = 'openbible.png'): object
 	{
 		$folder = self::getSeriesImageFolder();
 		$path   = $folder . '/' . $image;
