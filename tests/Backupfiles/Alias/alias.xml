@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<server type="storage" supports="*.*">
+    <name>Alias</name>
+    <description>Link directly to a file on another server</description>
+
+    <fields name="params">
+        <fieldset name="Server" label="JBS_ADDON_ALIAS_DETAILS">
+            <field name="path" type="text" label="JBS_MED_PATH" description="JBS_MED_PATH_DESC" size="35"/>
+            <field name="protocol" type="list" label="JBS_ADDON_ALIAS_PROTOCOL"
+                   description="JBS_ADDON_ALIAS_PROTOCOL_DESC" default="">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="http://">http://</option>
+                <option value="https://">https://</option>
+            </field>
+        </fieldset>
+    </fields>
+    <fields name="media">
+        <fieldset name="files_settings" label="JBS_ADDON_ALIAS_FILE_SETTINGS">
+            <field name="player" type="list" label="JBS_MED_PLAYER"
+                   description="JBS_MED_PLAYER_DESC" default="">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="0">JBS_CMN_DIRECT_LINK</option>
+                <option value="1">JBS_CMN_USE_INTERNAL_PLAYER</option>
+                <option value="3">JBS_CMN_USE_AV</option>
+                <option value="7">JBS_CMN_USE_MP3_PLAYER</option>
+                <option value="8">JBS_CMN_USE_EMBED_CODE</option>
+            </field>
+            <field name="popup" type="list" label="JBS_MED_INTERNAL_POPUP"
+                   description="JBS_MED_INTERNAL_POPUP_DESC" default="">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="1">JBS_CMN_POPUP</option>
+                <option value="2">JBS_CMN_INLINE</option>
+                <option value="3">JBS_CMN_SQUEEZEBOX</option>
+            </field>
+        </fieldset>
+    </fields>
+</server>
