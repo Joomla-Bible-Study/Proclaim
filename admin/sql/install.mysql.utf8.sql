@@ -384,9 +384,9 @@ CREATE TABLE IF NOT EXISTS `#__bsms_teachers` (
   `link3`             VARCHAR(150)                                              DEFAULT NULL,
   `linklabel3`        VARCHAR(150)                                              DEFAULT NULL,
   `contact`           INT(11)                                                   DEFAULT NULL,
-  `address`           MEDIUMTEXT                                       NOT NULL,
+  `address`           MEDIUMTEXT,
   `landing_show`      INT(3)                                                    DEFAULT NULL,
-  `address1`          MEDIUMTEXT                                       NOT NULL DEFAULT '0',
+  `address1`          MEDIUMTEXT,
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
   KEY `idx_access` (`access`)
