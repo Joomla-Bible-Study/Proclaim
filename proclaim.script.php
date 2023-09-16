@@ -388,7 +388,7 @@ class com_proclaimInstallerScript extends InstallerScript
 			<thead>
 			<tr>
 				<th class="title" colspan="2">' . Text::_('JBS_INS_EXTENSION') . '</th>
-				<th width="30%">' . Text::_('JBS_INS_STATUS') . '</th>
+				<th >' . Text::_('JBS_INS_STATUS') . '</th>
 			</tr>
 			</thead>
 			<tfoot>
@@ -689,7 +689,7 @@ class com_proclaimInstallerScript extends InstallerScript
 					foreach ($modules as $module => $modulePreferences)
 					{
 						// Find the module ID
-						$sql = $this->db->getQuery(true)
+						$sql = $this->dbo->getQuery(true)
 							->select($this->dbo->qn('extension_id'))
 							->from($this->dbo->qn('#__extensions'))
 							->where($this->dbo->qn('element') . ' = ' . $this->dbo->q('mod_' . $module))
