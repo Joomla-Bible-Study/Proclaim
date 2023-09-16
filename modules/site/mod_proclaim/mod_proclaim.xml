@@ -15,6 +15,7 @@
 		<folder>tmpl</folder>
 		<folder>language</folder>
 		<folder>src</folder>
+		<folder>services</folder>
 	</files>
 	<config>
 		<fields name="params">
