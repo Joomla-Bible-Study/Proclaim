@@ -233,8 +233,8 @@ class CWMMedia
 
 			if ($compat_mode === 0)
 			{
-				$downloadlink = '<a style="color: #5F5A58;" href="index.php?option=com_proclaim&amp;view=cwmsermon&amp;id=' .
-					$media->study_id . '&amp;mid=' . $media->id . '&amp;task=cwmsermon.download">' . $download_image . '</a>';
+				$downloadlink = '<a style="color: #5F5A58;" href="index.php?option=com_proclaim&amp;view=CWMSermon&amp;id=' .
+					$media->study_id . '&amp;mid=' . $media->id . '&amp;task=CWMSermon.download">' . $download_image . '</a>';
 			}
 			else
 			{
@@ -278,7 +278,7 @@ class CWMMedia
 				);
 
 				$modalBody = '<div class="alert alert-success">' . $params->get('terms') .
-					'<a style="color: #5F5A58;" href="index.php?option=com_proclaim&task=cwmsermons.download&id=' .
+					'<a style="color: #5F5A58;" href="index.php?option=com_proclaim&task=CWMSermons.download&id=' .
 					$media->study_id . '&mid=' . $media->id . '">'
 					. Text::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a></div>';
 
@@ -662,7 +662,7 @@ class CWMMedia
 					case 2: // New window - popup code added here because new window code does not work (Tom 10-12-2022)
 						$return     = base64_encode($path);
 						$playercode = '<a href="javascript:;" onclick="window.open(\'index.php?option=com_proclaim&amp;' .
-							'task=cwmsermons.playHit&amp;return=' . $return . '&amp;' . Session::getFormToken() . '=1\')" title="' .
+							'task=CWMSermons.playHit&amp;return=' . $return . '&amp;' . Session::getFormToken() . '=1\')" title="' .
 							$media->params->get("media_button_text") . ' - ' . $media->comment . ' '
 							. $filesize . '">' . $image . '</a>';
 						break;

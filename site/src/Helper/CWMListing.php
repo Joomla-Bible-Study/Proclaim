@@ -2610,7 +2610,7 @@ class CWMListing
 
 			case 9 :
 				// Case 9 is a link to download
-				$column .= '<a href="index.php?option=com_proclaim&amp;view=cwmsermon&amp;mid=' .
+				$column .= '<a href="index.php?option=com_proclaim&amp;view=CWMSermon&amp;mid=' .
 					$row->download_id . '&amp;task=download">';
 		}
 
@@ -2701,7 +2701,7 @@ class CWMListing
 		$label  = str_replace('{{studyintro}}', $row->studyintro, $label);
 		$label  = str_replace('{{scripture}}', $this->getScripture($params, $row, 0, 1), $label);
 		$label  = str_replace('{{topics}}', $row->topic_text, $label);
-		$label  = str_replace('{{url}}', Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . $row->id . '&t=' . $template->id), $label);
+		$label  = str_replace('{{url}}', Route::_('index.php?option=com_proclaim&view=CWMSermon&id=' . $row->id . '&t=' . $template->id), $label);
 		$label  = str_replace('{{thumbnail}}', $this->useJImage($image->path, "", "bsms_studyThumbnail" . $row->id, $image->width, $image->height), $label);
 		$label  = str_replace('{{seriestext}}', $row->series_text, $label);
 		$label  = str_replace('{{messagetype}}', $row->message_type, $label);

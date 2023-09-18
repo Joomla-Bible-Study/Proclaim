@@ -946,7 +946,7 @@ class CWMRelatedstudies
 		foreach ($studyrecords as $studyrecord)
 		{
 			$related .= '<option value="'
-				. Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . (int) $studyrecord->id . '&t=' . $input->get('t', '1', 'int'))
+				. Route::_('index.php?option=com_proclaim&view=CWMSermon&id=' . (int) $studyrecord->id . '&t=' . $input->get('t', '1', 'int'))
 				. '">' . $studyrecord->studytitle;
 
 			if (!empty($studyrecord->bookname))

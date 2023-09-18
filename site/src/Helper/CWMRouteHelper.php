@@ -34,7 +34,7 @@ abstract class CWMRouteHelper
 	public static function getMessageRoute(int $id, $language = '*', string $layout = null): string
 	{
 		// Create the link
-		$link = 'index.php?option=com_proclaim&view=cwmsermon&id=' . $id;
+		$link = 'index.php?option=com_proclaim&view=CWMSermon&id=' . $id;
 
 		if ($language && $language !== '*' && Multilanguage::isEnabled())
 		{

@@ -49,7 +49,7 @@ abstract class CWMHelperRoute
 	public static function getArticleRoute(string $id, string $language = null): string
 	{
 		// Create the link
-		$link = 'index.php?option=com_proclaim&view=cwmsermon&id=' . $id;
+		$link = 'index.php?option=com_proclaim&view=CWMSermon&id=' . $id;
 
 		if (!empty($language) && $language !== '*' && Multilanguage::isEnabled())
 		{
