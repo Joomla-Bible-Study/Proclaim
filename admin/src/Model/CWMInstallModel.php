@@ -69,7 +69,7 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @since 7.1
 	 */
-	protected string $filePath = '/components/com_proclaim/install/sql/updates/mysql';
+	protected string $filePath = '/components/com_proclaim/sql/updates/mysql';
 
 	/** @var string Path to PHP Version files
 	 *
