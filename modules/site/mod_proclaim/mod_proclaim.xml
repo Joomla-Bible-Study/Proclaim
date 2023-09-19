@@ -11,7 +11,7 @@
 	<description>JBS_MDL_DESCRIPTION</description>
 	<namespace path="src">CWM\Module\Proclaim</namespace>
 	<files>
-		<filename module="mod_proclaim">services</filename>
+		<filename module="mod_proclaim">mod_proclaim.php</filename>
 		<folder>tmpl</folder>
 		<folder>language</folder>
 		<folder>src</folder>
