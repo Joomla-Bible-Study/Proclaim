@@ -11,10 +11,10 @@
 	<description>JBS_MDL_DESCRIPTION</description>
 	<namespace path="src">CWM\Module\Proclaim</namespace>
 	<files>
-		<filename module="mod_proclaim">services</filename>
+		<folder module="mod_proclaim">services</folder>
 		<folder>tmpl</folder>
 		<folder>language</folder>
-		<folder>src</folder>
+		<folder>src</folder>\
 	</files>
 	<config>
 		<fields name="params">
