@@ -836,13 +836,10 @@ $wa->useScript('keepalive')
         </div>
 		<?php echo HTMLHelper::_('uitab.endTab'); ?>
 		<?php if ($this->canDo->get('core.admin')): ?>
-			<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_CMN_FIELDSET_RULES')); ?>
-			<fieldset id="fieldset-rules" class="options-form">
-				<legend><?php echo Text::_('JBS_CMN_FIELDSET_RULES'); ?></legend>
-				<div>
-					<?php echo $this->form->getInput('rules'); ?>
-				</div>
-			</fieldset>
+			<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
+            <div class="row-fluid">
+				<?php echo $this->form->getInput('rules'); ?>
+            </div>
 			<?php echo HTMLHelper::_('uitab.endTab'); ?>
 		<?php endif; ?>
 

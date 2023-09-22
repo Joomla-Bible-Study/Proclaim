@@ -20,6 +20,7 @@ defined('JPATH_BASE') or die;
  *
  * @package  Proclaim.Admin
  * @since    7.0.0
+ * @deprecated 10.0.0
  */
 abstract class JHtmlProclaim
 {
@@ -41,9 +42,11 @@ abstract class JHtmlProclaim
 	 *
 	 * @throws  \Exception
 	 * @since   9.0.0
+	 * @deprecated 10.0.0
 	 */
 	public static function framework($debug = null, string $extra = null): void
 	{
+		die('using old proclaim framework');
 		// Only load once
 		if (!empty(self::$loaded[__METHOD__]))
 		{

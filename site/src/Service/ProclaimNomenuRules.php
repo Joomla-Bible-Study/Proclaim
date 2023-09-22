@@ -8,7 +8,9 @@
 
 namespace CWM\Component\Proclaim\Site\Service;
 
-defined('JPATH_PLATFORM') or die;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Component\Router\RouterView;
 use Joomla\CMS\Component\Router\Rules\RulesInterface;
@@ -21,12 +23,39 @@ use Joomla\CMS\Component\Router\Rules\RulesInterface;
 class ProclaimNomenuRules implements RulesInterface
 {
 	/**
+	 * Maps Proclaim Views 9.x to Proclaim Views 10x.
+	 *
+	 * @const array
+	 * @since 5.0.0
+	 */
+	private const VIEW_CASE_MAP = [
+		'cwmsermons'        => 'CWMSermons',
+		'cwmsermon'         => 'CWMSermon',
+		'cwmteachers'       => 'CWMTeachers',
+		'cwmteacher'        => 'CWMTeacher',
+		'cwmseriesdisplay'  => 'CWMSeriesDisplay',
+		'cwmseriesdisplays' => 'CWMSeriesDisplays',
+		'cwmcommentform'    => 'CWMCommentForm',
+		'cwmcommentlist'    => 'CWMCommentList',
+		'cwmlandingpage'    => 'CWMLandingPage',
+		'cwmlatest'         => 'CWMLatest',
+		'cwmmediafileform'  => 'CWMMediaFileForm',
+		'cwmmediafilelist'  => 'CWMMediaFileList',
+		'cwmmessageform'    => 'CWMMessageForm',
+		'cwmmessagelist'    => 'CWMMessageList',
+		'cwmpodcastdisplay' => 'CWMPodcastDisplay',
+		'cwmpopup'          => 'CWMPopUp',
+		'cwmsqueezebox'     => 'CWMSqueezebox',
+		'cwmterms'          => 'CWMTerms',
+	];
+
+	/**
 	 * Router this rule belongs to
 	 *
 	 * @var RouterView
 	 * @since 3.4
 	 */
-	protected $router;
+	protected RouterView $router;
 
 	/**
 	 * Class constructor.
@@ -41,201 +70,155 @@ class ProclaimNomenuRules implements RulesInterface
 	}
 
 	/**
-	 * Dummymethod to fullfill the interface requirements
+	 * Dummy method to fulfil the interface requirements
 	 *
-	 * @param   array  &$query  The query array to process
+	 * @param   array  $query  The query array to process
 	 *
 	 * @return  void
 	 *
 	 * @since   3.4
-	 * @codeCoverageIgnore
 	 */
-	public function preprocess(&$query)
+	public function preprocess(&$query): void
 	{
-		$test = 'Test';
 	}
-
 
 	/**
 	 * Parse a menu-less URL
 	 *
-	 * @param   array  &$segments  The URL segments to parse
-	 * @param   array  &$vars      The vars that result from the segments
+	 * @param   array  $segments  The URL segments to parse
+	 * @param   array  $vars      The vars that result from the segments
 	 *
 	 * @return  void
 	 *
 	 * @since   3.4
 	 */
-	public function parse(&$segments, &$vars)
+	public function parse(&$segments, &$vars): void
 	{
+		$views = $this->router->getViews();
 
-        $vars = array();
-		// Count route segments
-		$count = count($segments);
-
-        if ($count == 6) {
-            //$vars['option'] = $segments[0];
-            $vars['sendingview'] = $segments[1];
-            $vars['view'] = $segments[2];
-            $id = explode('/', $segments[3]);
-            $vars['id'] = (int)$id[0];
-            $vars['t'] = $segments[$count - 2];
-            $vars['Itemid'] = $segments[$count - 1];
-            array_shift($segments);
-            array_shift($segments);
-            array_shift($segments);
-            array_shift($segments);
-            array_shift($segments);
-            array_shift($segments);
-
-            return;
-        }
-        if ($count == 5) {
-            //$vars['option'] = $segments[0];
-            $vars['view'] = $segments[1];
-            $id = explode('/', $segments[2]);
-            $vars['id'] = (int)$id[0];
-            $vars['t'] = $segments[$count - 2];
-            $vars['Itemid'] = $segments[$count - 1];
-            array_shift($segments);
-            array_shift($segments);
-            array_shift($segments);
-            array_shift($segments);
-            array_shift($segments);
-
-            return;
-        }
-        if ($count == 4)
-        {
-            $vars['view'] = $segments[1];
-            //$vars['id']   = (int) $segments[$count - 2];
-            $id = explode('/', $segments[2]);
-            $vars['id'] = (int) $id[0];
-            $vars['t']    = $segments[$count - 2];
-            $vars['Itemid'] = $segments[$count -1];
-            array_shift($segments);
-            array_shift($segments);
-            array_shift($segments);
-            array_shift($segments);
-
-            return;
-        }
-		if ($count == 3)
+		if (isset($views[$segments[0]]))
 		{
-			$vars['view'] = $segments[0];
-			//$vars['id']   = (int) $segments[$count - 2];
-		    $id = explode('/', $segments[1]);
-            $vars['id'] = (int) $id[0];
-			$vars['t']    = $segments[$count - 1];
-            array_shift($segments);
-            array_shift($segments);
-            array_shift($segments);
+			$vars['view'] = array_shift($segments);
+			$view         = $views[$vars['view']];
 
-			return;
-		}
-		if ($count == 2)
-		{
-			if ($segments[1] === 'CWMPodcastdisplay')
+			if (isset($view->key) && isset($segments[0]))
 			{
-				$vars['view'] = $segments[1];
-				//$vars['id']   = (int) $segments[1];
-		        $id = explode('/', $segments[2]);
-				$vars['id'] = (int) $id[0];
+				if (\is_callable([$this->router, 'get' . ucfirst($view->name) . 'Id']))
+				{
+					$input = $this->router->app->getInput();
+
+					if ($view->parent_key && $input->get($view->parent_key))
+					{
+						$vars[$view->parent->key] = $input->get($view->parent_key);
+						$vars[$view->parent_key]  = $input->get($view->parent_key);
+					}
+
+					if ($view->nestable)
+					{
+						$vars[$view->key] = 0;
+
+						while (count($segments))
+						{
+							$segment = array_shift($segments);
+							$result  = call_user_func([$this->router, 'get' . ucfirst($view->name) . 'Id'], $segment, $vars);
+
+							if (!$result)
+							{
+								array_unshift($segments, $segment);
+								break;
+							}
+
+							$vars[$view->key] = preg_replace('/-/', ':', $result, 1);
+						}
+					}
+					else
+					{
+						$segment = array_shift($segments);
+						$result  = call_user_func([$this->router, 'get' . ucfirst($view->name) . 'Id'], $segment, $vars);
+
+						$vars[$view->key] = preg_replace('/-/', ':', $result, 1);
+					}
+				}
+				else
+				{
+					$vars[$view->key] = preg_replace('/-/', ':', array_shift($segments), 1);
+				}
 			}
-			else
-			{
-				$vars['view'] = $segments[0];
-				$vars['t']    = $segments[$count - 1];
-			}
-            array_shift($segments);
-            array_shift($segments);
-
-			return;
 		}
-		else
-		{
-			$vars['view'] = $segments[0];
-            array_shift($segments);
-		}
-
-		return;
-
-		/*
-		//with this url: http://localhost/j4x/my-walks/mywalk-n/walk-title.html
-		// segments: [[0] => mywalk-n, [1] => walk-title]
-		// vars: [[option] => com_mywalks, [view] => mywalks, [id] => 0]
-
-		$vars['view'] = 'CWMSermons';
-		$vars['id'] = substr($segments[0], strpos($segments[0], '-') + 1);
-		$vars['t'] = substr($segments[0], strpos($segments[0], '-') + 1);
-		array_shift($segments);
-		array_shift($segments);
-		return; */
 	}
 
 	/**
 	 * Build a menu-less URL
 	 *
-	 * @param   array  &$query     The vars that should be converted
-	 * @param   array  &$segments  The URL segments to create
+	 * @param   array  $query     The vars that should be converted
+	 * @param   array  $segments  The URL segments to create
 	 *
-	 * @return  array
+	 * @return  void
 	 *
 	 * @since   3.4
 	 */
-	public function build(&$query, &$segments)
+	public function build(&$query, &$segments): void
 	{
-		// content of $query ($segments is empty or [[0] => mywalk-3])
-		// when called by the menu: [[option] => com_mywalks, [Itemid] => 126]
-		// when called by the component: [[option] => com_mywalks, [view] => mywalk, [id] => 1, [Itemid] => 126]
-		// when called from a module: [[option] => com_mywalks, [view] => mywalks, [format] => html, [Itemid] => 126]
-		// when called from breadcrumbs: [[option] => com_mywalks, [view] => mywalks, [Itemid] => 126]
-
-		// the url should look like this: /site-root/mywalks/walk-n/walk-title.html
-
-		// if the view is not mywalk - the single walk view
-		/*if (!isset($query['view']) || (isset($query['view']) && $query['view'] !== 'CWMSermon') || isset($query['format']))
-		{
-			return;
-		}
-		$segments[] = $query['view'] . '-' . $query['id'] . '-' . $query['t'];
-		// the last part of the url may be missing
-		if (isset($query['slug'])) {
-			$segments[] = $query['slug'];
-			unset($query['slug']);
-		}
-		unset($query['view']);
-		unset($query['id']);
-		unset($query['t']);
-*/
-		//$segments = array();
-
 		if (isset($query['view']))
 		{
-			$segments[] = $query['view'];
-			unset($query['view']);
+			$views = $this->router->getViews();
+
+			if (isset($views[$query['view']]))
+			{
+				$view       = $views[$query['view']];
+				$segments[] = $query['view'];
+
+				if ($view->key && isset($query[$view->key]))
+				{
+					if (\is_callable([$this->router, 'get' . ucfirst($view->name) . 'Segment']))
+					{
+						$result = \call_user_func_array([$this->router, 'get' . ucfirst($view->name) . 'Segment'], [$query[$view->key], $query]);
+
+						if ($view->nestable)
+						{
+							array_pop($result);
+
+							while (count($result))
+							{
+								$segments[] = str_replace(':', '-', array_pop($result));
+							}
+						}
+						else
+						{
+							$segments[] = str_replace(':', '-', array_pop($result));
+						}
+					}
+					else
+					{
+						$segments[] = str_replace(':', '-', $query[$view->key]);
+					}
+
+					unset($query[$views[$query['view']]->key]);
+				}
+
+				unset($query['view']);
+			}
 		}
-		if (isset($query['id']))
-		{
-			$segments[] = $query['id'];
-			unset($query['id']);
-		}
+
 		if (isset($query['t']))
 		{
-			$segments[] = $query['t'];
+			// Remove do to we don't want to display it but will use it in a hidden format.
 			unset($query['t']);
 		}
-        if (isset($query['Itemid']))
-        {
-            //$segments[] = $query['Itemid'];
-            unset($query['Itemid']);
-        }
-        $total = \count($segments);
+	}
 
-        for ($i = 0; $i < $total; $i++)
-        {
-            $segments[$i] = str_replace(':', '-', $segments[$i]);
-        }
-		return $segments;
+	/**
+	 * Translates view names from older versions of the component to the ones currently in use.
+	 *
+	 * @param   string  $oldViewName  Old view name
+	 *
+	 * @return  string
+	 * @since   5.0.0
+	 */
+	private function translateOldViewName(string $oldViewName): string
+	{
+		$oldViewName = strtolower($oldViewName);
+
+		return self::VIEW_CASE_MAP[$oldViewName] ?? $oldViewName;
 	}
 }

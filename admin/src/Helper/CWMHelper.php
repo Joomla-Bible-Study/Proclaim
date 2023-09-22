@@ -15,10 +15,9 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Site\Helper\CWMListing;
-use Joomla\CMS\Cache\Cache;
+use Joomla\CMS\Cache\CacheControllerFactoryInterface;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
-use Joomla\Component\Mails\Administrator\Table\TemplateTable;
 use Joomla\Registry\Registry;
 
 /**
@@ -41,16 +40,16 @@ class CWMHelper
 	/**
 	 * Get tooltip.
 	 *
-	 * @param   object         $row       JTable
-	 * @param   Registry       $params    Item Params
-	 * @param   TemplateTable  $template  ID
+	 * @param   object     $row       JTable
+	 * @param   Registry   $params    Item Params
+	 * @param   \stdClass  $template  Template Table
 	 *
 	 * @return string
 	 *
 	 * @throws \Exception
 	 * @since  9.0.0
 	 */
-	public static function getTooltip($row, $params, $template)
+	public static function getTooltip(object $row, Registry $params, \stdClass $template): string
 	{
 		$JBSMElements = new CWMListing;
 
@@ -81,7 +80,7 @@ class CWMHelper
 	 *
 	 * @since      8.2.0
 	 */
-	public static function getShowhide()
+	public static function getShowhide(): string
 	{
 		return '
         function HideContent(d) {
@@ -102,12 +101,14 @@ class CWMHelper
 	 *
 	 * @param   string  $url  URL
 	 *
-	 * @return  integer|boolean  Return size or false read.
+	 * @return  integer  Return size or false read.
 	 *
 	 * @since 9.0.0
 	 */
-	public static function getRemoteFileSize($url)
+	public static function getRemoteFileSize(string $url): int
 	{
+		$size = 0;
+
 		if ($url === '')
 		{
 			return 0;
@@ -159,7 +160,7 @@ class CWMHelper
 			return 0;
 		}
 
-		if (is_array($head['content-length']))
+		if (isset($head['content-length']) && is_array($head['content-length']))
 		{
 			if (count($head['content-length']) >= 1)
 			{
@@ -171,12 +172,12 @@ class CWMHelper
 				$size = $head['content-length'][0];
 			}
 		}
-		else
+		elseif (isset($head['content-length']))
 		{
 			$size = $head['content-length'];
 		}
 
-		return $size;
+		return (int) $size;
 	}
 
 	/**
@@ -189,9 +190,9 @@ class CWMHelper
 	 *
 	 * @since 9.0.14
 	 */
-	public static function SetFileSize($id, $size)
+	public static function SetFileSize(int $id, int $size)
 	{
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
 		$query->select('id, params')
 			->from('#__bsms_mediafiles')
@@ -225,17 +226,25 @@ class CWMHelper
 	 *
 	 * @since 9.0.3
 	 */
-	public static function MediaBuildUrl($spath, $path, $params, $setProtocol = false, $local = false, $podcast = false)
+	public static function MediaBuildUrl($spath, $path, Registry $params, bool $setProtocol = false, bool $local = false, bool $podcast = false): string
 	{
-		$spath    = rtrim($spath, '/');
-		$path     = ltrim($path, '/');
-		$host     = $_SERVER['HTTP_HOST'];
-		$protocol = Uri::root();
-
 		if (empty($path))
 		{
 			return false;
 		}
+
+		if ($spath)
+		{
+			$spath = rtrim($spath, '/');
+		}
+		else
+		{
+			$spath = '';
+		}
+
+		$path     = ltrim($path, '/');
+		$host     = $_SERVER['HTTP_HOST'];
+		$protocol = Uri::root();
 
 		// To see if the server is local
 		if (strpos($spath, $host) !== false)
@@ -289,7 +298,7 @@ class CWMHelper
 	}
 
 	/**
-	 * Clear Cache of JBSM
+	 * Clear Cache of Proclaim
 	 *
 	 * @param   string  $state  Where to clean the cache from. Site or Admin.
 	 *
@@ -297,7 +306,7 @@ class CWMHelper
 	 * @throws \Exception
 	 * @since 9.0.4
 	 */
-	public static function clearcache($state = 'site')
+	public static function clearcache(string $state = 'site'): void
 	{
 		$conf    = Factory::getApplication()->getConfig();
 		$options = array();
@@ -321,7 +330,7 @@ class CWMHelper
 			);
 		}
 
-		$cache = Cache::getInstance('', $options);
+		$cache = Factory::getContainer()->get(CacheControllerFactoryInterface::class)->createCacheController('', $options);
 		$cache->clean();
 	}
 
@@ -330,7 +339,7 @@ class CWMHelper
 	 *
 	 * @param   string  $url  Url
 	 *
-	 * @return mixed
+	 * @return array|string|string[]
 	 *
 	 * @since 9.0.18
 	 */
@@ -352,18 +361,18 @@ class CWMHelper
 	/**
 	 * Get Simple View Sate
 	 *
-	 * @param   object  $params  AdminTable + parametors
+	 * @param   object|null  $params  AdminTable + parameters
 	 *
 	 * @return  object
 	 *
 	 * @throws \Exception
 	 * @since 9.1.6
 	 */
-	public static function getSimpleView($params = null)
+	public static function getSimpleView(object $params = null)
 	{
 		$simple = new \stdClass;
 
-		if (is_null($params))
+		if ($params === null)
 		{
 			$params = CWMParams::getAdmin();
 		}

@@ -69,7 +69,7 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @since 7.1
 	 */
-	protected string $filePath = '/components/com_proclaim/install/sql/updates/mysql';
+	protected string $filePath = '/components/com_proclaim/sql/updates/mysql';
 
 	/** @var string Path to PHP Version files
 	 *
@@ -81,7 +81,7 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @since 7.1
 	 */
-	private $startTime = null;
+	private ?float $startTime = null;
 
 	/** @var array The pre versions to process
 	 *
@@ -99,13 +99,13 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @since 7.1
 	 */
-	private $versionSwitch = null;
+	private ?string $versionSwitch = null;
 
 	/** @var integer Id of Extinction Table
 	 *
 	 * @since 7.1
 	 */
-	private $biblestudyEid = 0;
+	private int $biblestudyEid = 0;
 
 	/** @var array Array of Finish Task
 	 *
@@ -187,7 +187,7 @@ class CWMInstallModel extends BaseModel
 	 * @throws  \Exception
 	 * @since   7.1
 	 */
-	public function startScanning()
+	public function startScanning(): bool
 	{
 		$this->resetStack();
 		$this->resetTimer();
@@ -218,7 +218,7 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @since 7.1
 	 */
-	private function resetTimer()
+	private function resetTimer(): void
 	{
 		$this->startTime = $this->microtime_float();
 	}
@@ -230,9 +230,9 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @since 7.1
 	 */
-	private function microtime_float()
+	private function microtime_float(): float
 	{
-		list($usec, $sec) = explode(" ", microtime());
+		[$usec, $sec] = explode(" ", microtime());
 
 		return ((float) $usec + (float) $sec);
 	}
@@ -240,12 +240,12 @@ class CWMInstallModel extends BaseModel
 	/**
 	 * Get migrate versions of DB after import/copy has finished.
 	 *
-	 * @return boolean
+	 * @return void
 	 *
 	 * @throws  \Exception
 	 * @since   7.1
 	 */
-	private function getSteps()
+	private function getSteps(): void
 	{
 		$olderversiontype = 0;
 		$app              = Factory::getApplication();
@@ -413,7 +413,7 @@ class CWMInstallModel extends BaseModel
 				// There is a version installed, but it is older than 6.0.8 and we can't upgrade it
 				$this->setState('scanerror', Text::_('JBS_IBM_VERSION_TOO_OLD'));
 
-				return false;
+				return;
 				break;
 		}
 
@@ -461,7 +461,7 @@ class CWMInstallModel extends BaseModel
 				{
 					$app->enqueueMessage(Text::_('JBS_INS_NO_UPDATE_SQL_FILES'), 'warning');
 
-					return false;
+					return;
 				}
 			}
 
@@ -481,19 +481,17 @@ class CWMInstallModel extends BaseModel
 
 		$this->isimport = Factory::getApplication()->input->getInt('cwmalt', 0);
 		++$this->totalSteps;
-
-		return true;
 	}
 
 	/**
 	 * Correct problem in are update table under 7.0.2 systems
 	 *
-	 * @return boolean
+	 * @return void
 	 *
 	 * @throws  \Exception
 	 * @since   7.1
 	 */
-	private function correctVersions()
+	private function correctVersions(): void
 	{
 		// Find Last updated Version in Update table
 		$query = $this->_db->getQuery(true);
@@ -517,12 +515,11 @@ class CWMInstallModel extends BaseModel
 				{
 					Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_OPERATION_FAILED'), 'error');
 
-					return false;
+					return;
 				}
 			}
 		}
 
-		return true;
 	}
 
 	/**
@@ -536,7 +533,7 @@ class CWMInstallModel extends BaseModel
 	 * @throws  \Exception
 	 * @since   7.1.0
 	 */
-	private function setSchemaVersion($version, $eid)
+	private function setSchemaVersion(string $version, int $eid): bool
 	{
 		$app = Factory::getApplication();
 
@@ -586,7 +583,7 @@ class CWMInstallModel extends BaseModel
 	 * @throws \Exception
 	 * @since 7.1
 	 */
-	public function run($resetTimer = true)
+	public function run(bool $resetTimer = true): bool
 	{
 		if ($resetTimer)
 		{
@@ -611,9 +608,10 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @return void
 	 *
+	 * @throws \JsonException
 	 * @since 7.1
 	 */
-	private function saveStack()
+	private function saveStack(): void
 	{
 		$stack = array(
 			'aversion'   => $this->version,
@@ -653,9 +651,10 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since 7.1
 	 */
-	private function resetStack()
+	private function resetStack(): void
 	{
 		$session = Factory::getApplication()->getSession();
 		$session->set('migration_stack', '', 'CWM');
@@ -679,11 +678,12 @@ class CWMInstallModel extends BaseModel
 	/**
 	 * Loads the Versions/SQL/After stack from the session
 	 *
-	 * @return boolean
+	 * @return void
 	 *
+	 * @throws \JsonException
 	 * @since 7.1
 	 */
-	private function loadStack()
+	private function loadStack(): void
 	{
 		$session = Factory::getApplication()->getSession();
 		$stack   = $session->get('migration_stack', '', 'CWM');
@@ -706,7 +706,7 @@ class CWMInstallModel extends BaseModel
 			$this->running       = Text::_('JBS_MIG_STARTING');
 			$this->query         = array();
 
-			return false;
+			return;
 		}
 
 		if (function_exists('base64_encode') && function_exists('base64_decode'))
@@ -737,7 +737,6 @@ class CWMInstallModel extends BaseModel
 		$this->running       = $stack['run'];
 		$this->query         = $stack['query'];
 
-		return true;
 	}
 
 	/**
@@ -747,7 +746,7 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @since 7.1
 	 */
-	private function haveEnoughTime()
+	private function haveEnoughTime(): bool
 	{
 		$now     = $this->microtime_float();
 		$elapsed = abs($now - $this->startTime);
@@ -763,7 +762,7 @@ class CWMInstallModel extends BaseModel
 	 * @throws  \Exception
 	 * @since   7.1
 	 */
-	private function realRun()
+	private function realRun(): bool
 	{
 		$app = Factory::getApplication();
 		$run = true;
@@ -1001,7 +1000,7 @@ class CWMInstallModel extends BaseModel
 	 * @throws  \Exception
 	 * @since   7.1
 	 */
-	public function uninstall()
+	public function uninstall(): bool
 	{
 		// Check if CWM can be found from the database
 		$table = $this->_db->getPrefix() . 'bsms_admin';
@@ -1096,7 +1095,7 @@ class CWMInstallModel extends BaseModel
 	 * @throws  \Exception
 	 * @since   7.1
 	 */
-	private function finish($step)
+	private function finish(string $step): bool
 	{
 		$app = Factory::getApplication();
 		$run = false;
@@ -1228,7 +1227,7 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @since 7.1
 	 */
-	private function getUpdateVersion()
+	private function getUpdateVersion(): string
 	{
 		// Find Last updated Version in Update table
 
@@ -1249,7 +1248,7 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @since 7.1
 	 */
-	private function fiximport()
+	private function fiximport(): bool
 	{
 		$tables = CWMDbHelper::getObjects();
 		$set    = false;
@@ -1304,7 +1303,7 @@ class CWMInstallModel extends BaseModel
 	 * @throws  \Exception
 	 * @since   7.1.4
 	 */
-	private function allUpdate($value)
+	private function allUpdate(string $value): bool
 	{
 		$buffer = file_get_contents(JPATH_ADMINISTRATOR . $this->filePath . '/' . $value . '.sql');
 
@@ -1378,7 +1377,7 @@ class CWMInstallModel extends BaseModel
 	 * @throws  \Exception
 	 * @since   7.1
 	 */
-	private function runUpdates($string)
+	private function runUpdates(string $string): bool
 	{
 		// Process each query in the $queries array (split out of sql file).
 		$string = trim($string);
@@ -1417,7 +1416,7 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @since 7.1
 	 */
-	private function postinstallclenup()
+	private function postinstallclenup(): void
 	{
 		// Post Install Messages Cleanup for Component
 		$query = $this->_db->getQuery(true);
@@ -1435,7 +1434,7 @@ class CWMInstallModel extends BaseModel
 	 * @since 7.1.0
 	 *
 	 */
-	public function fixMenus()
+	public function fixMenus(): bool
 	{
 		$query = $this->_db->getQuery(true);
 		$query->select('*')
@@ -1471,7 +1470,7 @@ class CWMInstallModel extends BaseModel
 	 * @since 7.1.0
 	 *
 	 */
-	public function fixemptylanguage()
+	public function fixemptylanguage(): bool
 	{
 		// Tables to fix
 		$tables = array(
@@ -1500,10 +1499,12 @@ class CWMInstallModel extends BaseModel
 	 * Function to Find empty access in the db and set them to Public
 	 *
 	 * @return   boolean
+
+	 * @throws \Exception
 	 * @since 7.1.0
 	 *
 	 */
-	public function fixemptyaccess()
+	public function fixemptyaccess(): bool
 	{
 		// Tables to fix
 		$tables = array(

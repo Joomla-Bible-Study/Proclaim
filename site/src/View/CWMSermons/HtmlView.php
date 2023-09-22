@@ -28,7 +28,7 @@ use Joomla\Registry\Registry;
 /**
  * View for Sermons class
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    7.0.0
  */
 class HtmlView extends BaseHtmlView
@@ -195,7 +195,7 @@ class HtmlView extends BaseHtmlView
 	 * @since   11.1
 	 * @see     fetch()
 	 */
-	public function display($tpl = null)
+	public function display($tpl = null): void
 	{
 		$this->state           = $this->get('State');
 
@@ -214,7 +214,12 @@ class HtmlView extends BaseHtmlView
 		$this->admin      = $this->state->get('administrator');
 
 		$params              = $this->state->params;
-		$this->page->popular = (new CWMStats)->top_score_site();
+
+		/**
+		 * @todo not ready for live and could be slowing down site.
+		// Searched all code and not seeing it used in core.
+		// $this->page->popular = (new CWMStats)->top_score_site();
+		 */
 
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 		$user            = $mainframe->getIdentity();
@@ -327,7 +332,7 @@ class HtmlView extends BaseHtmlView
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	protected function _prepareDocument()
+	protected function _prepareDocument(): void
 	{
 		$app   = Factory::getApplication();
 		$menus = $app->getMenu();
@@ -401,7 +406,7 @@ class HtmlView extends BaseHtmlView
 	 * @throws \Exception
 	 * @since 9.1.6
 	 */
-	private function updateFilters()
+	private function updateFilters(): void
 	{
 		$input   = Factory::getApplication()->input;
 		$filters = ['search', 'book', 'teacher', 'series', 'messagetype', 'year', 'topic', 'location', 'language'];

@@ -387,14 +387,19 @@ class CWMProclaimHelper
 	 *
 	 * @return integer '1' is on '0' is off
 	 *
-	 * @throws \Exception
 	 * @since 7.1.0
 	 */
 	public static function debug(): int
 	{
 		if (!CWMDbHelper::getInstallState())
 		{
-			self::$admin_params = CWMParams::getAdmin();
+			try
+			{
+				self::$admin_params = CWMParams::getAdmin();
+			} catch (\Exception $e)
+			{
+				die;
+			}
 
 			if (!isset(self::$admin_params->debug))
 			{

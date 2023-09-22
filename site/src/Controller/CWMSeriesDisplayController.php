@@ -2,7 +2,7 @@
 /**
  * Controller for Seriesdisplay
  *
- * @package    BibleStudy.Site
+ * @package    Proclaim.Site
  * @copyright  2007 - 2022 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
@@ -18,19 +18,38 @@ use Joomla\CMS\MVC\Controller\BaseController;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
- * Controller for Seriesdisplay
+ * Controller for SeriesDisplay
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    7.0.0
  */
 class CWMSeriesDisplayController extends BaseController
 {
+	/**
+	 * The default view for the display method.
+	 *
+	 * @var    string
+	 * @since  3.0
+	 */
+	protected $default_view = 'CWMSeriesDisplay';
 
-    protected $default_view = 'CWMSeriesDisplay';
-
-    public function display($cachable = false, $urlparams = array())
-    {
-        return parent::display();
-    }
+	/**
+	 * Typical view method for MVC based architecture
+	 *
+	 * This function is provide as a default implementation, in most cases
+	 * you will need to override it in your own controllers.
+	 *
+	 * @param   boolean  $cachable   If true, the view output will be cached
+	 * @param   array    $urlparams  An array of safe url parameters and their variable types, for valid values see {@link InputFilter::clean()}.
+	 *
+	 * @return  static  A \JControllerLegacy object to support chaining.
+	 *
+	 * @since   3.0
+	 * @throws  \Exception
+	 */
+	public function display($cachable = false, $urlparams = array()): CWMSeriesDisplayController
+	{
+		return parent::display();
+	}
 
 }

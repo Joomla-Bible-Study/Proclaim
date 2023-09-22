@@ -25,7 +25,7 @@ use Joomla\CMS\Language\Multilanguage;
  * @package  Procalaim.Site
  * @since    7.2
  */
-class CWMHelperRoute
+abstract class CWMHelperRoute
 {
 	/**
 	 * Lookup
@@ -39,36 +39,21 @@ class CWMHelperRoute
 	/**
 	 * Get Article Rout
 	 *
-	 * @param   int     $id        The route of the study item
-	 * @param   string  $language  The state of language
+	 * @param   string       $id        ID or ID:Alias for the route to build
+	 * @param   string|null  $language  The state of language
 	 *
 	 * @return string
 	 *
 	 * @since    7.2
 	 */
-	public static function getArticleRoute($id, string $language = '0'): string
+	public static function getArticleRoute(string $id, string $language = null): string
 	{
 		// Create the link
-		$link = 'index.php?option=com_proclaim&view=cwmsermon&id=' . $id;
+		$link = 'index.php?option=com_proclaim&view=CWMSermon&id=' . $id;
 
-		if ($language && $language !== "*" && Multilanguage::isEnabled())
+		if (!empty($language) && $language !== '*' && Multilanguage::isEnabled())
 		{
-			$db = Factory::getContainer()->get('DatabaseDriver');
-			$query = $db->getQuery(true);
-			$query->select('a.sef AS sef');
-			$query->select('a.lang_code AS lang_code');
-			$query->from('#__languages AS a');
-
-			$db->setQuery($query);
-			$langs = $db->loadObjectList();
-
-			foreach ($langs as $lang)
-			{
-				if ($language == $lang->lang_code)
-				{
-					$link .= '&lang=' . $lang->sef;
-				}
-			}
+			$link .= '&lang=' . $language;
 		}
 
 		return $link;
@@ -154,7 +139,7 @@ class CWMHelperRoute
 	 *
 	 * @since    7.2
 	 */
-	public static function getTeacherRoute($id): string
+	public static function getTeacherRoute(int $id): string
 	{
 		// Create the link
 		return 'index.php?option=com_proclaim&view=cwmteacher&id=' . $id;
@@ -179,14 +164,14 @@ class CWMHelperRoute
 	 * Add Scheme to url
 	 *
 	 * @param   string  $url     URL of website
-	 * @param   string  $scheme  Scheme that need to lead with.
+	 * @param   string  $scheme  Scheme that needs to lead with.
 	 *
 	 * @return string  The fixed URL
 	 *
 	 * @since     7.2
 	 * @deprecate 8.0.7
 	 */
-	public static function addScheme(string $url, string $scheme = 'https://')
+	public static function addScheme(string $url, string $scheme = 'https://'): string
 	{
 		if (parse_url($url, PHP_URL_SCHEME) === null)
 		{

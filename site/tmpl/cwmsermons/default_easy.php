@@ -40,7 +40,7 @@ $columns   = 12;
 <style>img{border-radius:4px;}</style>
 
 
-  <div class="row-fluid span12">
+  <div class="row-fluid col-lg-12">
     <h2>
       Teachings
     </h2>
@@ -48,7 +48,7 @@ $columns   = 12;
 
 
 
-  <div class="row-fluid span12 dropdowns" style="background-color:#A9A9A9; margin:0 -5px; padding:8px 8px; border:1px solid #C5C1BE; position:relative; -webkit-border-radius:10px;">
+  <div class="row-fluid col-lg-12 dropdowns" style="background-color:#A9A9A9; margin:0 -5px; padding:8px 8px; border:1px solid #C5C1BE; position:relative; -webkit-border-radius:10px;">
 
     <?php
     echo $this->page->books;
@@ -64,7 +64,7 @@ $columns   = 12;
 	$oddeven = ($oddeven == $class1) ? $class2 : $class1;
 	?>
 	<div style="width:100%;">
-		<div class="span3"><div style="padding:12px 8px;line-height:22px;height:200px;">
+		<div class="col-lg-3"><div style="padding:12px 8px;line-height:22px;height:200px;">
 				<?php if ($study->study_thumbnail) {echo '<span style="max-width:250px; height:auto;">'.$study->study_thumbnail .'</span>'; echo '<br />';} ?>
 				<strong><?php echo $study->studytitle;?></strong><br />
 				<span style="color:#9b9b9b;"><?php echo $study->scripture1;?> | <?php echo $study->studydate;?></span><br />
@@ -75,7 +75,7 @@ $columns   = 12;
 
 	</div>
 <?php }?>
-<div class="row-fluid span12 pagination pagelinks" style="background-color: #A9A9A9;
+<div class="row-fluid col-lg-12 pagination pagelinks" style="background-color: #A9A9A9;
 	margin: 0 -5px;
 	padding: 8px 8px;
 	border: 1px solid #C5C1BE;

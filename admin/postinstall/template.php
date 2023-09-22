@@ -3,8 +3,8 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2022 (C) CWM Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @copyright  2007-2022 (C) CWM Team All rights reserved
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
 
@@ -15,7 +15,7 @@
 use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 
-// Always load JBSM API if it exists.
+// Always load Proclaim API if it exists.
 $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
 if (file_exists($api))
@@ -24,16 +24,16 @@ if (file_exists($api))
 }
 
 /**
- * Checks if the template is setup right.
+ * Checks if the template is set up right.
  *
  * This check returns true Templates is not setup yet, meaning
  * that the message concerning it should be displayed.
  *
- * @return  boolean|null
+ * @return  boolean
  *
  * @since   3.2
  */
-function Admin_Postinstall_Template_condition()
+function admin_postinstall_template_condition(): bool
 {
 	$results = null;
 
@@ -51,7 +51,7 @@ function Admin_Postinstall_Template_condition()
 			$registry = new Registry;
 			$registry->loadString($table->params);
 
-			if ($registry->get('playerresposive', false) != false)
+			if ($registry->get('playerresposive', false))
 			{
 				$results = false;
 			}
@@ -77,7 +77,7 @@ function Admin_Postinstall_Template_condition()
  * @throws Exception
  * @since  3.2
  */
-function Admin_Postinstall_Template_action()
+function admin_postinstall_template_action(): void
 {
 	$url = 'index.php?option=com_proclaim&view=templates';
 	Factory::getApplication()->redirect($url);

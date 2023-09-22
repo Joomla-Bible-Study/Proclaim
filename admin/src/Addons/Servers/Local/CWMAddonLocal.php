@@ -47,9 +47,10 @@ class CWMAddonLocal extends CWMAddon
 	 *
 	 * @return array
 	 *
+	 * @throws Exception
 	 * @since 9.0.0
 	 */
-	public function upload($data)
+	public function upload($data): array
 	{
 		$upload = new CWMUploadScript;
 
@@ -66,7 +67,7 @@ class CWMAddonLocal extends CWMAddon
 	 *
 	 * @since 9.1.3
 	 */
-	public function renderGeneral($media_form, $new)
+	public function renderGeneral($media_form, $new): string
 	{
 		$html = '';
 		$fields = $media_form->getFieldset('general');
@@ -111,7 +112,7 @@ class CWMAddonLocal extends CWMAddon
 	 *
 	 * @since 9.1.3
 	 */
-	public function render($media_form, $new)
+	public function render($media_form, $new): string
 	{
 		$html = JHtml::_('uitab.addTab', 'myTab', 'options', Text::_('Options'));
 

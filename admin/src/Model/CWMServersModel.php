@@ -114,7 +114,7 @@ class CWMServersModel extends ListModel
 
 		foreach ($servers as $server)
 		{
-			$file = $path . '/' . $server . '/' . $server . '.xml';
+			$file = $path . '/' . $server . '/' . strtolower($server) . '.xml';
 
 			if (is_file($file) && $xml = simplexml_load_string(file_get_contents($file)))
 			{
@@ -125,7 +125,7 @@ class CWMServersModel extends ListModel
 				$o->id          = $i;
 				$o->type        = (string) $xml['type'];
 				$o->name        = (string) $server;
-				$o->image_url   = Uri::base() . 'components/com_proclaim/src/addons/servers/' . $server . '/' . $server . '.png';
+				$o->image_url   = Uri::base() . 'components/com_proclaim/src/Addons/Servers/' . $server . '/' . strtolower($server) . '.png';
 				$o->title       = (string) $xml->name;
 				$o->description = (string) $xml->description;
 				$o->path        = $path . '/' . $server . '/';

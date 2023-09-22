@@ -8,9 +8,9 @@
  * @link       https://www.christianwebministries.org
  * */
 namespace CWM\Component\Proclaim\Site\Helper;
-use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Html\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -20,26 +20,26 @@ use Joomla\Registry\Registry;
 /**
  * Scripture Show class.
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    7.1.0
  */
 class CWMShowScripture
 {
 	/** @var  string Link
 	 * @since 7.1 */
-	public $link;
+	public string $link;
 
 	/**
 	 * Passage Build system
 	 *
-	 * @param   object                    $row     Item Info
+	 * @param   object    $row     Item Info
 	 * @param   Registry  $params  Item Params
 	 *
-	 * @return boolean
+	 * @return string|boolean
 	 *
 	 * @since    7.1
 	 */
-	public function buildPassage($row, $params)
+	public function buildPassage($row, Registry $params)
 	{
 		if (!$row->bookname)
 		{
@@ -78,7 +78,7 @@ class CWMShowScripture
 
 		if ($css)
 		{
-			HtmlHelper::_('stylesheet',Uri::base() . 'media/com_proclaim/css/biblegateway-print.css');
+			HtmlHelper::_('stylesheet', Uri::base() . 'media/com_proclaim/css/biblegateway-print.css');
 		}
 
 		return $passage;
@@ -93,11 +93,11 @@ class CWMShowScripture
 	 *
 	 * @since    7.1
 	 */
-	public function formReference($row)
+	public function formReference($row): string
 	{
 		$book      = Text::_($row->bookname);
 		$book      = str_replace(' ', '+', $book);
-		$book      = $book . '+';
+		$book      .= '+';
 		$reference = $book . $row->chapter_begin;
 
 		if ($row->verse_begin)
@@ -121,18 +121,17 @@ class CWMShowScripture
 	/**
 	 * Get Bible Gateway References
 	 *
-	 * @param   string  $reference  Search string
-	 * @param   string  $version    Bible Version
+	 * @param   string    $reference  Search string
+	 * @param   string    $version    Bible Version
+	 * @param   Registry  $params     Parameters
 	 *
 	 * @return string
 	 *
 	 * @since    7.1
 	 */
-	public function getBiblegateway($reference, $version, $params)
+	public function getBiblegateway($reference, $version, $params): string
 	{
-		$link = "http://classic.biblegateway.com/passage/index.php?search=" . $reference . ";&version=" . $version . ";&interface=print";
-
-		return $link;
+		return "https://classic.biblegateway.com/passage/index.php?search=" . $reference . ";&version=" . $version . ";&interface=print";
 	}
 
 	/**
@@ -142,15 +141,15 @@ class CWMShowScripture
 	 *
 	 * @since    7.1
 	 */
-	public function getHideShow()
+	public function getHideShow(): string
 	{
 		$contents = '<iframe id="scripture" src="' . $this->link . '" width="100%" height="400px;"></iframe>';
 		$passage  = '<div class = "fluid-row"><div class="span12"></div>';
-		$passage .= '<a class="heading" href="javascript:ReverseDisplay(\'scripture\')">>>' . Text::_('JBS_CMN_SHOW_HIDE_SCRIPTURE') . '<<</a>';
-		$passage .= '<div id="scripture" style="display: none;">';
-		$passage .= $contents;
-		$passage .= '</div>';
-		$passage .= '</div>';
+		$passage  .= '<a class="heading" href="javascript:ReverseDisplay(\'scripture\')">>>' . Text::_('JBS_CMN_SHOW_HIDE_SCRIPTURE') . '<<</a>';
+		$passage  .= '<div id="scripture" style="display: none;">';
+		$passage  .= $contents;
+		$passage  .= '</div>';
+		$passage  .= '</div>';
 
 		return $passage;
 	}
@@ -164,7 +163,7 @@ class CWMShowScripture
 	 *
 	 * @since 8.0.0
 	 */
-	public function body_only($html)
+	public function body_only($html): string
 	{
 		return '<iframe id = "scripture" src = "' . $this->link . '" width = "100%" height = "400px;" ></iframe >';
 	}
@@ -176,22 +175,23 @@ class CWMShowScripture
 	 *
 	 * @since    7.1
 	 */
-	public function getShow()
+	public function getShow(): string
 	{
 		$contents = '<iframe id = "scripture" src = "' . $this->link . '" width = "100%" height = "400px;" ></iframe >';
-		$passage  = '<div class = "passage">' . $contents . '</div>';
 
-		return $passage;
+		return '<div class = "passage">' . $contents . '</div>';
 	}
 
 	/**
 	 * Get Link
 	 *
+	 * @param   Registry  $params Parameters
+	 *
 	 * @return string
 	 *
 	 * @since    7.1
 	 */
-	public function getLink($params)
+	public function getLink(Registry $params): string
 	{
 		$passage = '<div class = passage>';
 
@@ -202,14 +202,20 @@ class CWMShowScripture
 		$passage .= "return false;";
 
 		// $rel = "{handler: 'iframe', size: {x: 800, y: 500}}";
-		$passage .= '" title="'. Text::_('JBS_STY_CLICK_TO_OPEN_PASSAGE').'">'; ?>
-<?php
-        if ($params->get('showpassage_icon') >0 ) {
-            if ($params->get('showpassage_icon') == 1) {
-                $passage .= '<i class="fas fa-bible fa-3x" style="display: flex; margin-right: 10px;"></i>';
-            }
-            else $passage .= Text::_('JBS_STY_CLICK_TO_OPEN_PASSAGE');
-        }
+		$passage .= '" title="' . Text::_('JBS_STY_CLICK_TO_OPEN_PASSAGE') . '">'; ?>
+		<?php
+		if ($params->get('showpassage_icon') > 0)
+		{
+			if ((int) $params->get('showpassage_icon') === 1)
+			{
+				$passage .= '<i class="fas fa-bible fa-3x" style="display: flex; margin-right: 10px;"></i>';
+			}
+			else
+			{
+				$passage .= Text::_('JBS_STY_CLICK_TO_OPEN_PASSAGE');
+			}
+		}
+
 		$passage .= '</a></div>';
 
 		return $passage;

@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Database\DatabaseQuery;
 use Joomla\Registry\Registry;
 
 /**
@@ -52,11 +53,11 @@ class CWMMediaFilesModel extends ListModel
 	/**
 	 * Number of Deletions
 	 *
-	 * @var object
+	 * @var array
 	 *
 	 * @since 7.0
 	 */
-	private $deletes;
+	private array $deletes;
 
 	/**
 	 * Constructor.
@@ -160,11 +161,11 @@ class CWMMediaFilesModel extends ListModel
 	/**
 	 * Get Deletes
 	 *
-	 * @return object
+	 * @return array
 	 *
 	 * @since 7.0
 	 */
-	public function getDeletes()
+	public function getDeletes(): array
 	{
 		if (empty($this->deletes))
 		{
@@ -194,7 +195,7 @@ class CWMMediaFilesModel extends ListModel
 	 * @throws  \Exception
 	 * @since   7.0
 	 */
-	protected function populateState($ordering = 'mediafile.createdate', $direction = 'desc')
+	protected function populateState($ordering = 'mediafile.createdate', $direction = 'desc'): void
 	{
 		$app = Factory::getApplication();
 
@@ -262,7 +263,7 @@ class CWMMediaFilesModel extends ListModel
 	 *
 	 * @since 7.0
 	 */
-	protected function getStoreId($id = '')
+	protected function getStoreId($id = ''): string
 	{
 		// Compile the store id.
 		$id .= ':' . $this->getState('filter.search');
@@ -278,11 +279,12 @@ class CWMMediaFilesModel extends ListModel
 	/**
 	 * Build an SQL query to load the list data
 	 *
-	 * @return \JDatabaseQuery|\Joomla\Database\QueryInterface|string
+	 * @return DatabaseQuery
 	 *
+	 * @throws \Exception
 	 * @since   7.0
 	 */
-	protected function getListQuery()
+	protected function getListQuery(): DatabaseQuery
 	{
 		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);

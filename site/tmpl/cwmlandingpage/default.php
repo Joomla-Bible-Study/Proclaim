@@ -2,7 +2,7 @@
 /**
  * Default
  *
- * @package    BibleStudy.Site
+ * @package    Proclaim.Site
  * @copyright  2007 - 2022 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
@@ -16,9 +16,6 @@ use CWM\Component\Proclaim\Site\Helper\CWMLanding;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
-
-// Load CSS for view.
-HTMLHelper::_('proclaim.loadcss', $this->params);
 
 $CWMLanding = new CWMLanding;
 $params = $this->params;

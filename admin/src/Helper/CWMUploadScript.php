@@ -45,12 +45,12 @@ class CWMUploadScript
 	 *
 	 * @param   Input|array  $data  Data to upload
 	 *
-	 * @return array|boolean
+	 * @return array
 	 *
 	 * @throws \Exception
 	 * @since 9.0.0
 	 */
-	public function upload($data)
+	public function upload($data): array
 	{
 		Session::checkToken('get') or die('Invalid Token');
 		$params = ComponentHelper::getParams('com_proclaim');
@@ -145,7 +145,7 @@ class CWMUploadScript
 	 * @throws \Exception
 	 * @since 9.0.0
 	 */
-	public function UIScript()
+	public function UIScript(): string
 	{
 		return '';
 	}

@@ -2,7 +2,7 @@
 /**
  * Default Main
  *
- * @package    BibleStudy.Site
+ * @package    Proclaim.Site
  * @copyright  2007 - 2022 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
@@ -35,7 +35,7 @@ if ($this->item->params->get('showpodcastsubscribedetails') === '1')
 {
 	?>
 	<div class="row-fluid">
-		<div class="span12">
+		<div class="col-lg-12">
 			<?php echo $this->subscribe; ?>
 		</div>
 	</div>
@@ -57,7 +57,7 @@ if ($this->item->params->get('showpodcastsubscribedetails') === '1')
 {
 	?>
 	<div class="row-fluid">
-		<div class="span12">
+		<div class="col-lg-12">
 			<?php echo $this->related; ?>
 		</div>
 	</div>
@@ -79,7 +79,13 @@ if ($this->item->params->get('socialnetworking') > 0)
 	<!-- Begin Fluid layout -->
 
 <?php $listing = new CWMListing;
-$list = $listing->getFluidListing($this->item, $this->item->params, $this->template, $type = 'sermon');
+try
+{
+	$list = $listing->getFluidListing($this->item, $this->item->params, $this->template, $type = 'sermon');
+}
+catch (Exception $e)
+{
+}
 echo $list;
 ?>
 

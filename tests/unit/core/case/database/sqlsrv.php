@@ -6,6 +6,8 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
+use Joomla\CMS\Factory;
+
 /**
  * Abstract test case class for Microsoft SQL Server database testing.
  *

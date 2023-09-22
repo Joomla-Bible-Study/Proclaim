@@ -19,7 +19,7 @@ use CWM\Component\Proclaim\Site\Helper\CWMPagebuilder;
 use CWM\Component\Proclaim\Site\Helper\CWMPodcastsubscribe;
 use CWM\Component\Proclaim\Site\Helper\CWMRelatedstudies;
 use CWM\Component\Proclaim\Site\Helper\CWMShowScripture;
-use Joomla\CMS\Application\SiteApplication;
+use CWM\Component\Proclaim\Site\Model\CWMSermonModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -33,7 +33,7 @@ use Joomla\Registry\Registry;
  * View class for Sermon
  *
  * @property mixed document
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    7.0.0
  *
  * @todo     Still need to fix all the problems.
@@ -106,12 +106,6 @@ class HtmlView extends BaseHtmlView
 	 */
 	protected $page;
 
-	/** @var  string Template
-	 *
-	 * @since 7.0
-	 */
-	protected $template;
-
 	/** @var  string Article
 	 *
 	 * @since 7.0
@@ -139,25 +133,22 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return  void
 	 *
+	 * @todo Need to clean up the display function as there is stuff needed to change up.
+	 *
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function display($tpl = null)
+	public function display($tpl = null): void
 	{
-		$container = Factory::getContainer();
-		$app = $container->get(SiteApplication::class);
-		Factory::$application = $app;
-		HTMLHelper::script('media/com_proclaim/js/cwmcore.js');
-		$this->form = $this->get('Form');
-		$user           = Factory::getApplication()->getSession()->get('user');
-		$CWMListing = new CWMListing;
+		$app            = Factory::getApplication();
+		$this->form     = $this->get('Form');
+		$user           = $app->getSession()->get('user');
+		$CWMListing     = new CWMListing;
 		$this->item     = $this->get('Item');
-
-		// $this->print    = $app->input->getBool('print'); removing this as also remomved in Joomla 4. Browser will do this.
 		$this->state    = $this->get('State');
 		$this->user     = $user;
 		$this->comments = $this->get('comments');
-		$this->simple = CWMHelper::getSimpleView();
+		$this->simple   = CWMHelper::getSimpleView();
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
@@ -177,22 +168,20 @@ class HtmlView extends BaseHtmlView
 
 		if ($this->getLayout() === 'pagebreak')
 		{
-			$this->_displayPagebreak($tpl);
+			$this->_displayPagebrake($tpl);
 
-			return null;
+			return;
 		}
 
-		$Biblepassage  = new CWMShowScripture;
-		$this->passage = $Biblepassage->buildPassage($this->item, $this->item->params);
+		$BiblePassage  = new CWMShowScripture;
+		$this->passage = $BiblePassage->buildPassage($this->item, $this->item->params);
 
 		// Add router helpers.
 		$item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;
 
-		// $item->readmore_link = Route::_(CWMHelperRoute::getArticleRoute($item->slug, ''));
-
 		// Merge article params. If this is single-article view, menu params override article params
 		// Otherwise, article params override menu item params
-		$this->params = $this->state->template->params;
+		$this->params = $this->state->params;
 		$active       = $app->getMenu()->getActive();
 		$temp         = clone $this->params;
 
@@ -208,7 +197,7 @@ class HtmlView extends BaseHtmlView
 				// Merge so that the menu item params take priority
 				$item->params->merge($temp);
 
-				// Load layout from active query (in case it is an alternative menu item)
+				// Load layout from an active query (in case it is an alternative menu item)
 				if (isset($active->query['layout']))
 				{
 					$this->setLayout($active->query['layout']);
@@ -216,8 +205,8 @@ class HtmlView extends BaseHtmlView
 			}
 			else
 			{
-				// Current view is not a single article, so the article params take priority here
-				// Merge the menu item params with the article params so that the article params take priority
+				// The Current view is not a single article, so the article params takes priority here
+				// Merge the menu item params with the article params so that the article params takes priority
 				$temp->merge($item->params);
 				$item->params = $temp;
 
@@ -247,34 +236,18 @@ class HtmlView extends BaseHtmlView
 			}
 		}
 
-		// Technically guest could edit an article, but lets not check that to improve performance a little.
-		if (!$user->get('guest'))
+		$captchaSet = $temp->get('captcha', $app->get('captcha', '0'));
+
+		foreach (PluginHelper::getPlugin('captcha') as $plugin)
 		{
-			$userId = $user->get('id');
-			$asset  = 'com_proclaim.CWMMessage.' . $item->id;
-
-			// Check general edit permission first.
-			if ($user->authorise('core.edit', $asset))
+			if ($captchaSet === $plugin->name)
 			{
-				$item->params->set('access-edit', true);
-			}
-
-			// Now check if edit.own is available.
-			elseif (!empty($userId) && $user->authorise('core.edit.own', $asset))
-			{
-				// Check for a valid user and that they are the owner.
-				if ($userId === $item->created_by)
-				{
-					$item->params->set('access-edit', true);
-				}
+				$this->captchaEnabled = true;
+				break;
 			}
 		}
 
-		$this->captchaEnabled = true;
-
-		$this->simple = CWMHelper::getSimpleView();
-
-		$offset = $this->state->get('list.offset');
+		$offset = (int) $this->state->get('list.offset');
 
 		// Check the view access to the article (the model has already computed the values).
 		if ($item->params->get('access-view') !== true && (($item->params->get('show_noauth') !== true && $user->get('guest'))))
@@ -285,24 +258,23 @@ class HtmlView extends BaseHtmlView
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 		$groups = $user->getAuthorisedViewLevels();
 
-		if ($this->item->access > 1)
+		if (($this->item->access > 1) && !in_array($this->item->access, $groups, true))
 		{
-			if (!in_array($this->item->access, $groups))
-			{
-				$app->enqueueMessage(Text::_('JBS_CMN_ACCESS_FORBIDDEN'), 'error');
-			}
+			$app->enqueueMessage(Text::_('JBS_CMN_ACCESS_FORBIDDEN'), 'error');
 		}
 
-		// Get Scripture references from listing class in case we don't use the pagebuilder class
+		// Get Scripture references from listing class in case we don't use the page-builder class
 		$this->item->scripture1 = $CWMListing->getScripture($this->params, $item, $esv = 0, $scripturerow = 1);
 		$this->item->scripture2 = $CWMListing->getScripture($this->params, $item, $esv = 0, $scripturerow = 2);
 
 		// @todo check to see if this works
 		$this->item->topics = $this->item->topic_text;
-		$relatedstudies     = new CWMRelatedStudies;
 
-		$template      = $this->get('template');
-		$this->related = $relatedstudies->getRelated($this->item, $item->params);
+		if ($item->params->get('showrelated') > 0)
+		{
+			$relatedstudies = new CWMRelatedStudies;
+			$this->related = $relatedstudies->getRelated($this->item, $item->params);
+		}
 
 		// Only load page builder if the default template is NOT being used
 		if ($item->params->get('useexpert_list') > 0
@@ -310,7 +282,7 @@ class HtmlView extends BaseHtmlView
 			|| (is_string($item->params->get('sermontemplate')) === true && $item->params->get('sermontemplate') !== '0'))
 		{
 			$pagebuilder            = new CWMPageBuilder;
-			$pelements              = $pagebuilder->buildPage($this->item, $this->item->params, $template);
+			$pelements              = $pagebuilder->buildPage($this->item, $this->item->params, $this->state->get('template'));
 			$this->item->scripture1 = $pelements->scripture1;
 			$this->item->scripture2 = $pelements->scripture2;
 			$this->item->media      = $pelements->media;
@@ -367,16 +339,24 @@ class HtmlView extends BaseHtmlView
 		PluginHelper::importPlugin('content');
 		$article       = new \stdClass;
 		$article->text = $this->item->scripture1;
-		Factory::getApplication()->triggerEvent('onContentPrepare', array('com_proclaim.sermons', & $article, & $this->item->params, $limitstart = null));
+		$app->triggerEvent('onContentPrepare',
+			array('com_proclaim.sermons', & $article, & $this->item->params, null)
+		);
 		$this->item->scripture1 = $article->text;
 		$article->text          = $this->item->scripture2;
-		Factory::getApplication()->triggerEvent('onContentPrepare', array('com_proclaim.sermons', & $article, & $this->item->params, $limitstart = null));
+		$app->triggerEvent('onContentPrepare',
+			array('com_proclaim.sermons', & $article, & $this->item->params, null)
+		);
 		$this->item->scripture2 = $article->text;
 		$article->text          = $this->item->studyintro;
-		Factory::getApplication()->triggerEvent('onContentPrepare', array('com_proclaim.sermons', & $article, & $this->item->params, $limitstart = null));
+		$app->triggerEvent('onContentPrepare',
+			array('com_proclaim.sermons', & $article, & $this->item->params, null)
+		);
 		$this->item->studyintro = $article->text;
 		$article->text          = $this->item->secondary_reference;
-		Factory::getApplication()->triggerEvent('onContentPrepare', array('com_proclaim.sermons', & $article, & $this->item->params, $limitstart = null));
+		$app->triggerEvent('onContentPrepare',
+			array('com_proclaim.sermons', & $article, & $this->item->params, null)
+		);
 		$this->item->secondary_reference = $article->text;
 		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
 		$this->loadHelper('params');
@@ -413,9 +393,9 @@ class HtmlView extends BaseHtmlView
 
 		if ($this->getLayout() === 'pagebreak')
 		{
-			$this->_displayPagebreak($tpl);
+			$this->_displayPagebrake($tpl);
 
-			return null;
+			return;
 		}
 
 		// Process the prepare content plugins
@@ -436,8 +416,8 @@ class HtmlView extends BaseHtmlView
 					break;
 			}
 
-			$limitstart = $app->input->get('limitstart', 'int');
-			Factory::getApplication()->triggerEvent('onContentPrepare', array('com_proclaim.sermon', & $article, & $this->item->params, $limitstart));
+			$limitstart = (int) $app->input->get('limitstart', 'int');
+			$app->triggerEvent('onContentPrepare', array('com_proclaim.sermon', & $article, & $this->item->params, $limitstart));
 			$article->studytext    = $article->text;
 			$this->item->studytext = $article->text;
 		}
@@ -454,13 +434,14 @@ class HtmlView extends BaseHtmlView
 		$this->page         = new \stdClass;
 		$this->page->social = $CWMListing->getShare($detailslink, $this->item, $this->item->params);
 
-		// End process prepare content plugins
-		$this->template = $template;
+		// End process prepares content plugins
+		$this->template = $this->state->get('template');
 		$this->article  = $article;
 
 		// Increment the hit counter of the Sermon.
-		if (!$this->params->get('intro_only') && $offset == 0)
+		if ($offset === 0 && !$this->params->get('intro_only'))
 		{
+			/** @var CWMSermonModel $model */
 			$model = $this->getModel();
 			$model->hit();
 		}
@@ -471,7 +452,7 @@ class HtmlView extends BaseHtmlView
 	}
 
 	/**
-	 * Display PageBrack
+	 * Display PageBrake
 	 *
 	 * @param   string  $tpl  ?
 	 *
@@ -480,7 +461,7 @@ class HtmlView extends BaseHtmlView
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	protected function _displayPagebreak($tpl)
+	protected function _displayPageBrake(string $tpl): void
 	{
 		$this->document->setTitle(Text::_('JBS_CMN_READ_MORE'));
 		parent::display($tpl);
@@ -494,19 +475,17 @@ class HtmlView extends BaseHtmlView
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	protected function _prepareDocument()
+	protected function _prepareDocument(): void
 	{
 		$app     = Factory::getApplication();
-		$menus   = $app->getMenu();
+		$menu    = $app->getMenu()->getActive();
 		$pathway = $app->getPathway();
-		$title   = null;
 
 		$this->item->metadesc = $this->item->studyintro;
 		$this->item->metakey  = $this->item->topics;
 
 		// Because the application sets a default page title,
 		// we need to get it from the menu item itself
-		$menu = $menus->getActive();
 
 		if ($menu)
 		{
@@ -518,8 +497,12 @@ class HtmlView extends BaseHtmlView
 		}
 
 		$title = $this->params->get('page_title', '');
+		$id    = 0;
 
-		$id = (int) @$menu->query['id'];
+		if (isset($menu->query['id']))
+		{
+			$id = (int) @$menu->query['id'];
+		}
 
 		// If the menu item does not concern this Study
 		if ($menu && ($menu->query['option'] !== 'com_proclaim' || $menu->query['view'] !== 'sermon' || $id !== $this->item->id))
@@ -530,8 +513,7 @@ class HtmlView extends BaseHtmlView
 				$title = $this->item->studytitle;
 			}
 
-			$path = array(array('studytitle' => $this->item->studytitle, 'link' => '')
-			);
+			$path = array(array('studytitle' => $this->item->studytitle, 'link' => ''));
 
 			$path = array_reverse($path);
 
@@ -600,7 +582,7 @@ class HtmlView extends BaseHtmlView
 			$this->document->setMetaData('author', $this->item->teachername);
 		}
 
-		// If there is a pagebreak heading or title, add it to the page title
+		// If there is a page-break heading or title, add it to the page title
 		if (!empty($this->item->page_title))
 		{
 			$this->item->title .= ' - ' . $this->item->page_title;

@@ -11,22 +11,24 @@ namespace CWM\Component\Proclaim\Site\View\CWMTerms;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Document\Document;
-use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Language\Text;
-use Joomla\Registry\Registry;
+use Joomla\CMS\Document\Document;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\Registry\Registry;
 
 // This is the popup window for the teachings.  We could put anything in this window.
+
 /**
  * View class for Terms
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    7.0.0
  */
 class HtmlView extends BaseHtmlView
@@ -34,7 +36,7 @@ class HtmlView extends BaseHtmlView
 	/**
 	 * Media
 	 *
-	 * @var Object
+	 * @var object
 	 *
 	 * @since 7.0
 	 */
@@ -68,7 +70,7 @@ class HtmlView extends BaseHtmlView
 	 * @throws \Exception
 	 * @since 7.0.0
 	 */
-	public function display($tpl = null)
+	public function display($tpl = null): void
 	{
 		$input       = Factory::getApplication()->input;
 		$mid         = $input->get('mid', '', 'int');
@@ -84,6 +86,7 @@ class HtmlView extends BaseHtmlView
 		$query->where('id= ' . (int) $mid);
 		$db->setQuery($query);
 		$this->media = $db->loadObject();
+
 		// Params are the individual params for the media file record
 		$registory = new Registry;
 		$registory->loadString($this->media->params);
@@ -96,15 +99,16 @@ class HtmlView extends BaseHtmlView
 		</div>
 		<div class="termslink">
 			<?php
-			if ($compat_mode == 1)
+			if ((int) $compat_mode === 1)
 			{
-				echo '<a href="http://www.christianwebministries.org/router.php?file=' .
-						CWMHelper::MediaBuildUrl($this->media->spath, $this->media->filename, $this->params)
+				echo '<a href="https://www.christianwebministries.org/router.php?file=' .
+					CWMHelper::MediaBuildUrl($this->media->spath, $this->media->filename, $this->params)
 					. '&size=' . $this->media->size . '">' . Text::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a>';
 			}
 			else
 			{
-				echo '<a href="index.php?option=com_proclaim&task=cwmsermons.download&id='.$this->media->study_id.'&mid=' . $this->media->id . '">'
+				echo '<a href="index.php?option=com_proclaim&task=cwmsermons.download&id=' . $this->media->study_id
+					. '&mid=' . $this->media->id . '">'
 					. Text::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a>';
 			}
 			?>

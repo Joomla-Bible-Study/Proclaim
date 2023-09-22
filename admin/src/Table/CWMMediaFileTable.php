@@ -66,7 +66,7 @@ class CWMMediaFileTable extends Table
 	 * @var null
 	 * @since    7.0.0
 	 */
-	public $metadata = null;
+	public $metadata = '';
 
 	/**
 	 * Ordering
@@ -156,7 +156,7 @@ class CWMMediaFileTable extends Table
 	 *
 	 * @since    7.0.0
 	 */
-	public function bind($array, $ignore = '')
+	public function bind($array, $ignore = ''): bool
 	{
 		if (isset($array['params']) && is_array($array['params']))
 		{
@@ -183,7 +183,7 @@ class CWMMediaFileTable extends Table
 
 	/**
 	 * Method to store a row in the database from the Table instance properties.
-	 * If a primary key value is set the row with that primary key value will be
+	 * If a primary key value is set, the row with that primary key value will be
 	 * updated with the instance property values.  If no primary key value is set
 	 * a new row will be inserted into the database with the properties from the
 	 * Table instance.
@@ -195,7 +195,7 @@ class CWMMediaFileTable extends Table
 	 * @link    https://docs.joomla.org/Table/store
 	 * @since   11.1
 	 */
-	public function store($updateNulls = false)
+	public function store($updateNulls = false): bool
 	{
 		if (!$this->_rules)
 		{
@@ -214,7 +214,7 @@ class CWMMediaFileTable extends Table
 	 *
 	 * @since       1.6
 	 */
-	protected function _getAssetName()
+	protected function _getAssetName(): string
 	{
 		$k = $this->_tbl_key;
 
@@ -228,7 +228,7 @@ class CWMMediaFileTable extends Table
 	 *
 	 * @since       1.6
 	 */
-	protected function _getAssetTitle()
+	protected function _getAssetTitle(): string
 	{
 		return 'JBS Media File: ' . $this->id;
 	}
@@ -239,8 +239,8 @@ class CWMMediaFileTable extends Table
 	 * The extended class can define a table and id to lookup.  If the
 	 * asset does not exist it will be created.
 	 *
-	 * @param   \Joomla\CMS\Table\Table|null  $table  A Table object for the asset parent.
-	 * @param   null                          $id     Id to look up
+	 * @param   Table|null  $table  A Table object for the asset parent.
+	 * @param   null        $id     Id to look up
 	 *
 	 * @return  integer
 	 *
@@ -264,7 +264,7 @@ class CWMMediaFileTable extends Table
 	 * @since   11.1
 	 * @throws  \UnexpectedValueException
 	 */
-	public function checkIn($pk = null)
+	public function checkIn($pk = null): bool
 	{
 		// If there is no checked_out or checked_out_time field, just return true.
 		if (!property_exists($this, 'checked_out') || !property_exists($this, 'checked_out_time'))

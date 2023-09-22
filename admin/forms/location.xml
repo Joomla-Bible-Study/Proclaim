@@ -32,7 +32,7 @@
 		<option value="*">JALL</option>
 	</field>
 	<field name="asset_id" type="hidden" filter="unset"/>
-	<field name="rules" type="rules" label="JFIELD_RULES_LABEL"
+	<field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL"
 	       translate_label="false" class="inputbox" filter="rules" component="com_proclaim"
 	       section="location" validate="rules"/>
 	<field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"

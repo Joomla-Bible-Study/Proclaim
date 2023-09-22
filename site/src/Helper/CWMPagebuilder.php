@@ -34,12 +34,12 @@ class CWMPagebuilder
 	/** @var string Extension Name
 	 * @since 7.0
 	 */
-	public $extension = 'com_proclaim';
+	public string $extension = 'com_proclaim';
 
 	/** @var  string Event
 	 * @since 7.0
 	 */
-	public $event;
+	public string $event;
 
 	/**
 	 * Build Page
@@ -145,7 +145,7 @@ class CWMPagebuilder
 			$page->series_thumnail = '';
 		}
 
-		$page->detailslink = Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . $item->slug . '&t=' . $params->get('detailstemplateid'));
+		$page->detailslink = Route::_('index.php?option=com_proclaim&view=CWMSermon&id=' . $item->slug . '&t=' . $params->get('detailstemplateid'));
 
 		if (!isset($item->image))
 		{

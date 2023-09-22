@@ -38,7 +38,7 @@ $columns   = 12;
       <?php echo Text::_('JBS_CMN_TEACHINGS'); ?>
     </h4>
   </div>
-  <div class="row-fluid span12 dropdowns" style="background-color:#A9A9A9; margin:0 -5px; padding:4px 4px; border:1px solid #C5C1BE; position:relative; -webkit-border-radius:10px;">
+  <div class="row-fluid col-lg-12 dropdowns" style="background-color:#A9A9A9; margin:0 -5px; padding:4px 4px; border:1px solid #C5C1BE; position:relative; -webkit-border-radius:10px;">
 </div>
 <?php foreach ($this->items as $this->item)
 {
@@ -67,7 +67,7 @@ $columns   = 12;
         <?php echo $this->item->media; ?> 	</div>
     <div><hr/></div>
 <?php }?>
-<div class="row-fluid span12 pagination pagelinks" style="background-color: #A9A9A9;
+<div class="row-fluid col-lg-12 pagination pagelinks" style="background-color: #A9A9A9;
 	margin: 0 -5px;
 	padding: 8px 8px;
 	border: 1px solid #C5C1BE;

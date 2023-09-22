@@ -18,17 +18,15 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 use CWM\Component\Proclaim\Administrator\Helper\CWMTranslated;
 use JApplicationSite;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Multilanguage;
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\FormModel;
-use Joomla\CMS\MVC\Model\ItemModel;
 use Joomla\Registry\Registry;
-use Joomla\CMS\Form\Form;
 
 /**
  * Model class for Sermon
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    7.0.0
  */
 class CWMSermonModel extends FormModel
@@ -267,9 +265,9 @@ class CWMSermonModel extends FormModel
 	 * @throws \Exception
 	 * @since   7.0
 	 */
-	public function getComments()
+	public function getComments(): array
 	{
-		$app = Factory::getApplication('site');
+		$app = Factory::getApplication();
 		$id  = $app->input->get('id', '', 'int');
 
 		if (empty($id))
@@ -281,9 +279,8 @@ class CWMSermonModel extends FormModel
 		$query = $db->getQuery(true);
 		$query->select('c.*')->from('#__bsms_comments AS c')->where('c.published = 1')->where('c.study_id = ' . $id)->order('c.comment_date asc');
 		$db->setQuery($query);
-		$comments = $db->loadObjectList();
 
-		return $comments;
+		return $db->loadObjectList();
 	}
 
 	/**
@@ -295,12 +292,11 @@ class CWMSermonModel extends FormModel
 	 * @throws \Exception
 	 * @since     7.0
 	 */
-	public function storecomment()
+	public function storecomment(): bool
 	{
 		$row                  = $this->getTable('comment');
-		$input                = Factory::getApplication();
 		$data                 = $_POST;
-		$data['comment_text'] = $input->get('comment_text', '', 'string');
+		$data['comment_text'] = Factory::getApplication()->input->get('comment_text', '', 'string');
 
 		// Bind the form fields to the table
 		$row->bind($data);
@@ -330,7 +326,7 @@ class CWMSermonModel extends FormModel
 	 * @throws \Exception
 	 * @since    1.6
 	 */
-	protected function populateState()
+	protected function populateState(): void
 	{
 		/** @type JApplicationSite $app */
 		$app = Factory::getApplication('site');
@@ -352,12 +348,11 @@ class CWMSermonModel extends FormModel
 		$template->params->merge($admin->params);
 		$params = $template->params;
 
-		$t = $params->get('sermonid');
+		$t = (int) $params->get('sermonid');
 
 		if (!$t)
 		{
-			$input = Factory::getApplication();
-			$t     = $input->get('t', 1, 'int');
+			$t = $app->input->get('t', 1, 'int');
 		}
 
 		$template->id = $t;
@@ -365,7 +360,7 @@ class CWMSermonModel extends FormModel
 		$this->setState('template', $template);
 		$this->setState('administrator', $admin);
 
-		$user = Factory::getApplication()->getSession()->get('user');
+		$user = $app->getSession()->get('user');
 
 		if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise('core.edit', 'com_proclaim')))
 		{
@@ -380,13 +375,13 @@ class CWMSermonModel extends FormModel
 	 * @param   array    $data      Data for the form.
 	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
-	 * @return  \Joomla\CMS\Form\Form
+	 * @return  Form
 	 *
 	 * @throws \Exception
 	 * @since   4.0.0
 	 *
 	 */
-	public function getForm($data = array(), $loadData = true)
+	public function getForm($data = array(), $loadData = true): Form
 	{
 		return $this->loadForm('com_proclaim.comment', 'comment', array('control' => 'jform', 'load_data' => true));
 	}

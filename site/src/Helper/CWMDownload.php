@@ -2,7 +2,7 @@
 /**
  * BibleStudy Download Class
  *
- * @package    BibleStudy.Site
+ * @package    Proclaim.Site
  * @copyright  2007 - 2022 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
@@ -21,7 +21,7 @@ use Joomla\Registry\Registry;
 /**
  * BibleStudy Download Class
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    7.0.0
  */
 class CWMDownload
@@ -38,12 +38,13 @@ class CWMDownload
 	{
 		// Clears file status cache
 		clearstatcache();
-//var_dump($mid);
-		$this->hitDownloads($mid);
+
+		$this->hitDownloads((int) $mid);
 		$input    = new Input;
 		$template = $input->get('t', '1', 'int');
         $db = Factory::getContainer()->get('DatabaseDriver');
         $mid = $input->get('mid', '1', 'int');
+
 		// Get the template so we can find a protocol
 		$query = $db->getQuery(true);
 		$query->select('id, params')
@@ -154,7 +155,7 @@ class CWMDownload
 	 *
 	 * @since   7.0.0
 	 */
-	protected function hitDownloads($mid)
+	protected function hitDownloads(int $mid): bool
 	{
 		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);

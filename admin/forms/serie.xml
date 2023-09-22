@@ -20,14 +20,20 @@
 				JTRASHED
 			</option>
 		</field>
-		<field name="series_text" type="text" label="JBS_SER_SERIES_NAME"
-		       size="50" required="true"/>
+		<field
+				name="series_text"
+				type="text"
+				label="JBS_SER_SERIES_NAME"
+				required="true"
+				maxlenght="255"
+				labelclass="control-label"
+		/>
 
 		<field name="alias" type="text" label="JFIELD_ALIAS_LABEL"
-		       description="JFIELD_ALIAS_DESC" class="inputbox" size="45" labelclass="control-label"/>
+			   description="JFIELD_ALIAS_DESC" class="inputbox" size="45" labelclass="control-label"/>
 
 		<field name="landing_show" default="1" type="list" label="JBS_CMN_LANDING_SHOW"
-		       description="JBS_CMN_LANDING_SHOW_DESC">
+			   description="JBS_CMN_LANDING_SHOW_DESC">
 			<option value="0">JBS_CMN_NO_SHOW_LANDING</option>
 			<option value="1">JBS_CMN_SHOW_ABOVE_LANDING</option>
 			<option value="2">JBS_CMN_SHOW_BELOW_LANDING</option>
@@ -55,7 +61,7 @@
 		<field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL"
 		       description="JFIELD_ACCESS_DESC" class="span12 small" size="1"/>
 		<field name="asset_id" type="hidden" filter="unset"/>
-		<field name="rules" type="rules" label="JFIELD_RULES_LABEL"
+		<field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL"
 		       translate_label="false" class="inputbox" filter="rules" component="com_proclaim"
 		       section="serie" validate="rules"/>
 		<field name="id" type="hidden" default="0"/>

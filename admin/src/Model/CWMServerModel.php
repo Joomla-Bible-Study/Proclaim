@@ -88,7 +88,7 @@ class CWMServerModel extends AdminModel
 	 *
 	 * @since 9.0.0
 	 */
-	public function getType($pk, $ext = false)
+	public function getType(int $pk, bool $ext = false): string
 	{
 		return $this->getItem($pk, $ext)->type;
 	}
@@ -96,14 +96,14 @@ class CWMServerModel extends AdminModel
 	/**
 	 * Method to get a server item.
 	 *
-	 * @param   null  $pk   An optional id of the object to get
-	 * @param   bool  $ext  If coming from external
+	 * @param   int|null  $pk   An optional id of the object to get
+	 * @param   bool      $ext  If coming from external
 	 *
 	 * @return mixed Server data object, false on failure
 	 *
 	 * @since 9.0.0
 	 */
-	public function getItem($pk = null, $ext = false)
+	public function getItem($pk = null, bool $ext = false)
 	{
 		if (!empty($this->data))
 		{
@@ -150,9 +150,9 @@ class CWMServerModel extends AdminModel
 	 *
 	 * @since   9.0.0
 	 */
-	public function getConfig($addon)
+	public function getConfig(string $addon)
 	{
-		$path = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/' . ucfirst($addon) . '/' . $addon . '.xml';
+		$path = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/' . ucfirst($addon) . '/' . strtolower($addon) . '.xml';
 
 		return simplexml_load_string(file_get_contents($path));
 	}
@@ -166,7 +166,7 @@ class CWMServerModel extends AdminModel
 	 *
 	 * @since   1.6
 	 */
-	public function save($data)
+	public function save($data): bool
 	{
 		if (strpos($data['server_name'], '"onmouseover="prompt(1)"') !== false)
 		{
@@ -222,7 +222,7 @@ class CWMServerModel extends AdminModel
 
 		// Add language files
 		$lang = Factory::getApplication()->getLanguage();
-		$lang->load('jbs_addon_' . $type, $path);
+		$lang->load('jbs_addon_' . strtolower($type), $path);
 
 		return $this->loadForm('com_proclaim.server.' . $type, $type, array('control' => 'jform', 'load_data' => true), true, "/server");
 	}
@@ -325,7 +325,7 @@ class CWMServerModel extends AdminModel
 	protected function cleanCache($group = null, int $client_id = 0)
 	{
 		parent::cleanCache('com_proclaim');
-		parent::cleanCache('mod_biblestudy');
+		parent::cleanCache('mod_proclaim');
 	}
 
 	/**

@@ -28,7 +28,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
 /**
  * View class for Popup
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    7.0.0
  */
 class HtmlView extends BaseHtmlView

@@ -49,15 +49,6 @@ $input  = $app->input;
 		<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'general', Text::_('JBS_CMN_DETAILS')); ?>
 		<div class="row">
 			<div class="col-lg-9">
-				<!-- Begin Tabs -->
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo $this->form->getLabel('id'); ?>
-					</div>
-					<div class="controls">
-						<?php echo $this->form->getInput('id'); ?>
-					</div>
-				</div>
 				<div class="control-group">
 					<div class="control-label">
 						<?php echo $this->form->getLabel('location_text'); ?>
@@ -67,55 +58,58 @@ $input  = $app->input;
 					</div>
 				</div>
 
-				<div class="control-group">
-					<div class="control-label">
+                <div class="control-group">
+                    <div class="control-label">
 						<?php echo $this->form->getLabel('landing_show'); ?>
-					</div>
-					<div class="controls">
+                    </div>
+                    <div class="controls">
 						<?php echo $this->form->getInput('landing_show'); ?>
-					</div>
-				</div>
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo $this->form->getLabel('language'); ?>
-					</div>
-					<div class="controls">
-						<?php echo $this->form->getInput('language'); ?>
-					</div>
-				</div>
+                    </div>
+                </div>
 
-			</div>
-			<div class="col-lg-2">
-				<fieldset class="form-vertical">
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('published'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('published'); ?>
-						</div>
-					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('access'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('access'); ?>
-						</div>
-					</div>
-				</fieldset>
-			</div>
-		</div>
+            </div>
+            <div class="col-lg-3">
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $this->form->getLabel('id'); ?>
+                    </div>
+                    <div class="controls">
+						<?php echo $this->form->getInput('id'); ?>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $this->form->getLabel('published'); ?>
+                    </div>
+                    <div class="controls">
+						<?php echo $this->form->getInput('published'); ?>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $this->form->getLabel('access'); ?>
+                    </div>
+                    <div class="controls">
+						<?php echo $this->form->getInput('access'); ?>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $this->form->getLabel('language'); ?>
+                    </div>
+                    <div class="controls">
+						<?php echo $this->form->getInput('language'); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
 		<?php echo HTMLHelper::_('uitab.endTab'); ?>
 
-		<?php if ($this->canDo->get('core.admin')) : ?>
-			<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_CMN_FIELDSET_RULES')); ?>
-			<fieldset id="fieldset-rules" class="options-form">
-				<legend><?php echo Text::_('JBS_CMN_FIELDSET_RULES'); ?></legend>
-				<div>
-					<?php echo $this->form->getInput('rules'); ?>
-				</div>
-			</fieldset>
+		<?php if ($this->canDo->get('core.admin')): ?>
+			<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
+            <div class="row-fluid">
+				<?php echo $this->form->getInput('rules'); ?>
+            </div>
 			<?php echo HTMLHelper::_('uitab.endTab'); ?>
 		<?php endif; ?>
 

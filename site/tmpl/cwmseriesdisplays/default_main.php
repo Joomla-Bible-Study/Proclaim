@@ -2,7 +2,7 @@
 /**
  * Default Main
  *
- * @package    BibleStudy.Site
+ * @package    Proclaim.Site
  * @copyright  2007 - 2022 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
@@ -21,7 +21,7 @@ use Joomla\CMS\Html\HTMLHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Language\Text;
-HtmlHelper::_('bootstrap.framework');
+
 $document = Factory::getApplication();
 $mainframe = Factory::getApplication();
 $input = Factory::getApplication();
@@ -78,7 +78,13 @@ if ($url)
 		</div>
 
 		<?php
-		$list = $listing->getFluidListing($this->items, $this->params, $this->template, $type = 'seriesdisplays');
+		try
+		{
+			$list = $listing->getFluidListing($this->items, $this->params, $this->template, $type = 'seriesdisplays');
+		}
+		catch (Exception $e)
+		{
+		}
 		echo $list;
 		?>
 

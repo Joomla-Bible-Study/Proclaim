@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<extension type="module" version="10.0" method="upgrade" client="site">
+<extension type="module" method="upgrade" client="site">
 	<name>mod_proclaim</name>
 	<author>CWM Team</author>
 	<authorEmail>info@christianwebministries.org</authorEmail>
@@ -16,6 +15,7 @@
 		<folder>tmpl</folder>
 		<folder>language</folder>
 		<folder>src</folder>
+		<folder>services</folder>
 	</files>
 	<config>
 		<fields name="params">

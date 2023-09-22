@@ -157,14 +157,16 @@ class CWMTopicTable extends Table
 	 *
 	 * @since 9.0.0
 	 */
-	public function load($keys = null, $reset = true)
+	public function load($keys = null, $reset = true): bool
 	{
 		if (parent::load($keys, $reset))
 		{
-			// Convert the languages field to a registry.
-			$params = new Registry;
-			$params->loadString($this->params);
-			$this->params = $params;
+			if ($this->params)
+			{
+				$params = new Registry;
+				$params->loadString($this->params);
+				$this->params = $params;
+			}
 
 			return true;
 		}

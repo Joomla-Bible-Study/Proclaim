@@ -71,6 +71,12 @@ class CWMMessageTypeTable extends Table
 	public $access;
 
 	/**
+	 * @var string|null
+	 * @since version
+	 */
+	public ?string $message_type;
+
+	/**
 	 * Constructor
 	 *
 	 * @param   DatabaseDriver  $db  Database connector object
@@ -92,7 +98,6 @@ class CWMMessageTypeTable extends Table
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @todo    Consider deprecating this override
 	 * @link    http://docs.joomla.org/Table/bind
 	 * @since   11.1
 	 */
@@ -134,7 +139,7 @@ class CWMMessageTypeTable extends Table
 	 * @link    https://docs.joomla.org/Table/store
 	 * @since   11.1
 	 */
-	public function store($updateNulls = false)
+	public function store($updateNulls = false): bool
 	{
 		if (!$this->_rules)
 		{
@@ -157,72 +162,22 @@ class CWMMessageTypeTable extends Table
 	 *
 	 * @since 9.0.0
 	 */
-	public function load($keys = null, $reset = true)
+	public function load($keys = null, $reset = true): bool
 	{
 		if (parent::load($keys, $reset))
 		{
-			// Convert the languages field to a registry.
-			$params = new Registry;
-			$params->loadString($this->params);
-			$this->params = $params;
+			// Convert the language field to a registry.
+			if ($this->params)
+			{
+				$params = new Registry;
+				$params->loadString($this->params);
+				$this->params = $params;
+			}
 
 			return true;
 		}
 
 		return false;
-	}
-
-	/**
-	 * check and (re-)construct the alias before storing the topic
-	 *
-	 * @param   array  $data      Data of record
-	 * @param   int    $recordId  id
-	 *
-	 * @return  boolean|array ?
-	 *
-	 * @since 9.0.0
-	 *
-	 * @todo  this look like it is not used. (Neither Tom nor Brent wrote this one)
-	 */
-	public function checkAlias($data = array(), $recordId = null)
-	{
-		$message_type = $data['message_type'];
-
-		// Topic_text not given? -> use the first language item with some text
-		if ($message_type == null || strlen($message_type) == 0)
-		{
-			if (isset($data['params']) && is_array($data['params']))
-			{
-				foreach ($data['params'] as $language)
-				{
-					if (strlen($language) > 0)
-					{
-						$topic = $language;
-						break;
-					}
-				}
-			}
-		}
-
-		// If still empty: use id
-		// todo: For new items, this is always '0'. Next primary key would be nice...
-		if ($message_type == null || strlen($message_type) == 0)
-		{
-			$message_type = $recordId;
-		}
-
-		// Add prefix if needed
-		if (strncmp($message_type, 'JBS_TOP_', 8) != 0)
-		{
-			$message_type = 'JBS_CMN_MESSAGETYPES' . $message_type;
-		}
-
-		// And form well
-		// replace all non a-Z 0-9 by '_'
-		$message_type         = strtoupper(preg_replace('/[^a-z0-9]/i', '_', $topic));
-		$data['message_type'] = $topic;
-
-		return $data;
 	}
 
 	/**
@@ -234,7 +189,7 @@ class CWMMessageTypeTable extends Table
 	 *
 	 * @since       1.6
 	 */
-	protected function _getAssetName()
+	protected function _getAssetName(): string
 	{
 		$k = $this->_tbl_key;
 
@@ -248,7 +203,7 @@ class CWMMessageTypeTable extends Table
 	 *
 	 * @since       1.6
 	 */
-	protected function _getAssetTitle()
+	protected function _getAssetTitle(): string
 	{
 		return 'CWM MessageType: ' . $this->message_type;
 	}
@@ -259,8 +214,8 @@ class CWMMessageTypeTable extends Table
 	 * The extended class can define a table and id to lookup.  If the
 	 * asset does not exist it will be created.
 	 *
-	 * @param   \Joomla\CMS\Table\Table|null  $table  A Table object for the asset parent.
-	 * @param   null                          $id     Id to look up
+	 * @param   Table|null  $table  A Table object for the asset parent.
+	 * @param   null        $id     Id to look up
 	 *
 	 * @return  integer
 	 *

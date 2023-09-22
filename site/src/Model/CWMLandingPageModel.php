@@ -14,6 +14,7 @@ namespace CWM\Component\Proclaim\Site\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseQuery;
 use Joomla\Registry\Registry;
 use Joomla\CMS\MVC\Model\ListModel;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
@@ -21,7 +22,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 /**
  * Model class for LandingPage
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    7.0.0
  */
 class CWMLandingPageModel extends ListModel
@@ -64,9 +65,10 @@ class CWMLandingPageModel extends ListModel
 	 *
 	 * @return  void
 	 *
+	 * @throws \Exception
 	 * @since   11.1
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = null, $direction = null): void
 	{
 		$order = $this->getUserStateFromRequest($this->context . '.filter.order', 'filter_orders');
 		$this->setState('filter.order', $order);
@@ -96,11 +98,12 @@ class CWMLandingPageModel extends ListModel
 	/**
 	 * Method to get a JDatabaseQuery object for retrieving the data set from a database.
 	 *
-	 * @return  \Joomla\Database\QueryInterface   A JDatabaseQuery object to retrieve the data set.
+	 * @return  DatabaseQuery  A DatabaseQuery object to retrieve the data set.
 	 *
+	 * @throws \Exception
 	 * @since   11.1
 	 */
-	protected function getListQuery()
+	protected function getListQuery(): DatabaseQuery
 	{
 		$db              = Factory::getContainer()->get('DatabaseDriver');
 		$query           = $db->getQuery(true);

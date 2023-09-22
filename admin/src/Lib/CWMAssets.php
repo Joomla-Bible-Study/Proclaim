@@ -217,7 +217,7 @@ class CWMAssets
 			array(
 				'name'       => '#__bsms_templatecode',
 				'titlefield' => 'filename',
-				'assetname'  => 'Templatecode',
+				'assetname'  => 'TemplateCode',
 				'realname'   => 'JBS_CMN_TEMPLATECODE'
 			),
 			array(

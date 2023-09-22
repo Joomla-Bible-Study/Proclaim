@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Site\Service;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+//use Joomla\CMS\Component\Router\Rules\NomenuRules;
 use CWM\Component\Proclaim\Site\Service\ProclaimNomenuRules as NomenuRules;
 use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Categories\CategoryFactoryInterface;
@@ -49,6 +50,14 @@ class Router extends RouterView
 	 */
 	private $db;
 
+	private $cacheiddata = '0';
+
+	/**
+	 * @var CategoryFactoryInterface|null
+	 * @since version
+	 */
+	private ?CategoryFactoryInterface $categoryFactory;
+
 	/**
 	 * Proclaim Component router constructor
 	 *
@@ -59,66 +68,70 @@ class Router extends RouterView
 	 *
 	 * @since 10.0.0
 	 */
-	public function __construct(SiteApplication $app, AbstractMenu $menu, CategoryFactoryInterface $categoryFactory, DatabaseInterface $db)
+	public function __construct(SiteApplication $app, AbstractMenu $menu, CategoryFactoryInterface $categoryFactory = null, DatabaseInterface $db = null)
 	{
 		$this->db              = $db;
-		$this->categoryFactory = $categoryFactory;
-		$params                = ComponentHelper::getParams('com_proclaim');
-		$this->noIDs           = (bool) $params->get('sef_ids');
+
+		$params      = ComponentHelper::getParams('com_proclaim');
+		$this->noIDs = (bool) $params->get('sef_ids', true);
+
+		$landingPage = new RouterViewConfiguration('cwmlandingpage');
+		$this->registerView($landingPage);
+
+		$landingPage = new RouterViewConfiguration('CWMLandingPage');
+		$this->registerView($landingPage);
+
+		$Sermons = new RouterViewConfiguration('cwmsermons');
+		$this->registerView($Sermons);
 
 		$Sermons = new RouterViewConfiguration('CWMSermons');
-		$Sermons->setKey('id');
 		$this->registerView($Sermons);
+
+		$Sermon = new RouterViewConfiguration('cwmsermon');
+		$Sermon->setKey('id');
+		$this->registerView($Sermon);
 
 		$Sermon = new RouterViewConfiguration('CWMSermon');
 		$Sermon->setKey('id');
 		$this->registerView($Sermon);
 
-		$Teachers = new RouterViewConfiguration('CWMTeachers');
-		$Teachers->setKey('id');
+		$Teachers = new RouterViewConfiguration('cwmteachers');
 		$this->registerView($Teachers);
+
+		$Teachers = new RouterViewConfiguration('CWMTeachers');
+		$this->registerView($Teachers);
+
+		$Teacher = new RouterViewConfiguration('cwmteacher');
+		$Teacher->setKey('id');
+		$this->registerView($Teacher);
 
 		$Teacher = new RouterViewConfiguration('CWMTeacher');
 		$Teacher->setKey('id');
 		$this->registerView($Teacher);
 
+		$SeriesDisplay = new RouterViewConfiguration('cwmseriesdisplay');
+		$SeriesDisplay->setKey('id');
+		$this->registerView($SeriesDisplay);
+
 		$SeriesDisplay = new RouterViewConfiguration('CWMSeriesDisplay');
 		$SeriesDisplay->setKey('id');
 		$this->registerView($SeriesDisplay);
 
-		$SeriesDisplays = new RouterViewConfiguration('CWMSeriesDisplays');
-		$SeriesDisplays->setKey('id');
+		$SeriesDisplays = new RouterViewConfiguration('cwmseriesdisplays');
 		$this->registerView($SeriesDisplays);
 
-		$commentform = new RouterViewConfiguration('CWMCommentForm');
-		$commentform->setKey('id');
-		$this->registerView($commentform);
+		$SeriesDisplays = new RouterViewConfiguration('CWMSeriesDisplays');
+		$this->registerView($SeriesDisplays);
 
-		$CommentList = new RouterViewConfiguration('CWMCommentList');
-		$CommentList->setKey('id');
-		$this->registerView($CommentList);
-
-		$LandingPage = new RouterViewConfiguration('CWMLandingPage');
-		$LandingPage->setKey('id');
-		$this->registerView($LandingPage);
+		$Latest = new RouterViewConfiguration('cwmlatest');
+		$Latest->setKey('id');
+		$this->registerView($Latest);
 
 		$Latest = new RouterViewConfiguration('CWMLatest');
 		$Latest->setKey('id');
 		$this->registerView($Latest);
 
-		$MediaFileForm = new RouterViewConfiguration('CWMMediaFileForm');
-		$MediaFileForm->setKey('id');
-		$this->registerView($MediaFileForm);
-
-		$MediaFileList = new RouterViewConfiguration('CWMMediaFileList');
-		$MediaFileList->setKey('id');
-		$this->registerView($MediaFileList);
-
-		$proclaim = new RouterViewConfiguration('CWMMessageForm');
-		$proclaim->setKey('id');
-		$this->registerView($proclaim);
-
-		$proclaim = new RouterViewConfiguration('CWMMessageList');
+		$proclaim = new RouterViewConfiguration('cwmpodcastdisplay');
 		$proclaim->setKey('id');
 		$this->registerView($proclaim);
 
@@ -126,21 +139,25 @@ class Router extends RouterView
 		$proclaim->setKey('id');
 		$this->registerView($proclaim);
 
-		$proclaim = new RouterViewConfiguration('CWMPopUp');
-		$proclaim->setKey('id');
+		$proclaim = new RouterViewConfiguration('cwmpopup');
+		$this->registerView($proclaim);
+
+		$proclaim = new RouterViewConfiguration('CWMPopup');
+		$this->registerView($proclaim);
+
+		$proclaim = new RouterViewConfiguration('cwmsqueezebox');
 		$this->registerView($proclaim);
 
 		$proclaim = new RouterViewConfiguration('CWMSqueezeBox');
+		$this->registerView($proclaim);
+
+		$proclaim = new RouterViewConfiguration('cwmterms');
 		$proclaim->setKey('id');
 		$this->registerView($proclaim);
 
 		$proclaim = new RouterViewConfiguration('CWMTerms');
 		$proclaim->setKey('id');
 		$this->registerView($proclaim);
-
-		$form = new RouterViewConfiguration('form');
-		$form->setKey('a_id');
-		$this->registerView($form);
 
 		parent::__construct($app, $menu);
 
@@ -152,15 +169,15 @@ class Router extends RouterView
 	/**
 	 * Method to get the segment(s) for a sermon
 	 *
-	 * @param   integer  $id     ID of the article to retrieve the segments for
-	 * @param   array    $query  The request that is built right now
+	 * @param   Integer|string  $id     ID of the article to retrieve the segments for
+	 * @param   array           $query  The request that is built right now
 	 *
 	 * @return  array  The segments of this item
 	 * @since 10.0.0
 	 */
-	public function getCWMSermonSegment($id, array $query)
+	public function getCWMSermonSegment($id, array $query): array
 	{
-		if (!strpos($id, ':'))
+		if ((int) $this->cacheiddata !== (int) $id && !strpos($id, ':'))
 		{
 			$id      = (int) $id;
 			$dbquery = $this->db->getQuery(true);
@@ -171,11 +188,18 @@ class Router extends RouterView
 			$this->db->setQuery($dbquery);
 
 			$id .= ':' . $this->db->loadResult();
+
+			$this->cacheiddata = $id;
+		}
+
+		if ((int) $this->cacheiddata === (int) $id)
+		{
+			$id = $this->cacheiddata;
 		}
 
 		if ($this->noIDs)
 		{
-			list($void, $segment) = explode(':', $id, 2);
+			[$void, $segment] = explode(':', $id, 2);
 
 			return array($void => $segment);
 		}
@@ -186,15 +210,15 @@ class Router extends RouterView
 	/**
 	 * Method to get the segment(s) for a teacher
 	 *
-	 * @param   integer  $id     ID of the article to retrieve the segments for
-	 * @param   array    $query  The request that is built right now
+	 * @param   integer|string  $id     ID of the article to retrieve the segments for
+	 * @param   array           $query  The request that is built right now
 	 *
 	 * @return  array  The segments of this item
 	 * @since 10.0.0
 	 */
-	public function getCWMTeacherSegment($id, array $query)
+	public function getCWMTeacherSegment($id, array $query): array
 	{
-		if (!strpos($id, ':'))
+		if ((int) $this->cacheiddata !== (int) $id && !strpos($id, ':'))
 		{
 			$id      = (int) $id;
 			$dbquery = $this->db->getQuery(true);
@@ -205,16 +229,23 @@ class Router extends RouterView
 			$this->db->setQuery($dbquery);
 
 			$id .= ':' . $this->db->loadResult();
+
+			$this->cacheiddata = $id;
+		}
+
+		if ((int) $this->cacheiddata === (int) $id)
+		{
+			$id = $this->cacheiddata;
 		}
 
 		if ($this->noIDs)
 		{
-			list($void, $segment) = explode(':', $id, 2);
+			[$void, $segment] = explode(':', $id, 2);
 
-			return array($void => $segment);
+			return [$void => $segment];
 		}
 
-		return array((int) $id => $id);
+		return [(int) $id => $id];
 	}
 
 	/**
@@ -227,24 +258,9 @@ class Router extends RouterView
 	 *
 	 * @since   3.7.3
 	 */
-	public function getFormSegment($id, $query): array
+	public function getCWMSermonsSegment(string $id, array $query): array
 	{
-		return $this->getCWMSermonSegment($id, $query);
-	}
-
-	/**
-	 * Method to get the segment(s) for a form
-	 *
-	 * @param   string  $id     ID of the article form to retrieve the segments for
-	 * @param   array   $query  The request that is built right now
-	 *
-	 * @return  array  The segments of this item
-	 *
-	 * @since   3.7.3
-	 */
-	public function getCWMSermonsSegment($id, $query): array
-	{
-		return $this->getCWMSermonSegment($id, $query);
+		return []; // $this->getCWMSermonSegment($id, $query);
 	}
 	/**
 	 * Method to get the segment(s) for a sermon
@@ -300,7 +316,6 @@ class Router extends RouterView
 			return (int) $this->db->loadResult();
 		}
 
-//var_dump($segment);
 		return (int) $segment;
 	}
 
@@ -390,7 +405,7 @@ class Router extends RouterView
 
 		if ($this->noIDs)
 		{
-			list($void, $segment) = explode(':', $id, 2);
+			[$void, $segment] = explode(':', $id, 2);
 
 			return array($void => $segment);
 		}
@@ -440,7 +455,7 @@ class Router extends RouterView
 
 			$this->db->setQuery($dbquery);
 
-//var_dump(($this->db->loadResult()));
+			// Var_dump(($this->db->loadResult()));
 			return (int) $this->db->loadResult();
 		}
 
@@ -459,88 +474,6 @@ class Router extends RouterView
 	public function getCWMSeriesDisplaysId($segment, $query)
 	{
 		return $this->getCWMSeriesDisplayId($segment, $query);
-	}
-
-	/**
-	 * Method to get the segment(s) for a comment
-	 *
-	 * @param   integer  $id     ID of the article to retrieve the segments for
-	 * @param   array    $query  The request that is built right now
-	 *
-	 * @return  array  The segments of this item
-	 * @since 10.0.0
-	 */
-	public function getCWMCommentFormSegment($id, array $query)
-	{
-		if (!strpos($id, ':'))
-		{
-			$id      = (int) $id;
-			$dbquery = $this->db->getQuery(true);
-			$dbquery->select($this->db->quoteName('alias'))
-				->from($this->db->quoteName('#__bsms_comments'))
-				->where($this->db->quoteName('id') . ' = :id')
-				->bind(':id', $id, ParameterType::INTEGER);
-			$this->db->setQuery($dbquery);
-
-			$id .= ':' . $this->db->loadResult();
-		}
-
-		if ($this->noIDs)
-		{
-			list($void, $segment) = explode(':', $id, 2);
-
-			return array($void => $segment);
-		}
-
-		return array((int) $id => $id);
-	}
-
-	/**
-	 * Method to get the segment(s) for a comment
-	 *
-	 * @param   string  $id     ID of the article form to retrieve the segments for
-	 * @param   array   $query  The request that is built right now
-	 *
-	 * @return  array  The segments of this item
-	 *
-	 * @since   3.7.3
-	 */
-	public function getCWMCommentListSegment($id, $query): array
-	{
-		return $this->getCWMCommentFormSegment($id, $query);
-	}
-
-
-	/**
-	 * Method to get the segment(s) for a Comment
-	 *
-	 * @param   string  $segment  Segment of the article to retrieve the ID for
-	 * @param   array   $query    The request that is parsed right now
-	 *
-	 * @return  mixed   The id of this item or false
-	 * @since   10.0.0
-	 */
-	public function getCWMCommentFormId($segment, $query)
-	{
-		if ($this->noIDs)
-		{
-			$dbquery = $this->db->getQuery(true);
-			$dbquery->select($this->db->quoteName('id'))
-				->from($this->db->quoteName('#__bsms_comments'))
-				->where(
-					[
-						$this->db->quoteName('alias') . ' = :alias',
-
-					]
-				)
-				->bind(':alias', $segment);
-
-			$this->db->setQuery($dbquery);
-
-			return (int) $this->db->loadResult();
-		}
-
-		return (int) $segment;
 	}
 
 	/**
@@ -570,213 +503,4 @@ class Router extends RouterView
 
 		return (int) $segment;
 	}
-
-	/**
-	 * @Method to get the segment(s) for a sermon
-	 *
-	 * @param   string  $segment  Segment to retrieve the ID for
-	 * @param   array   $query    The request that is parsed right now
-	 *
-	 * @return  mixed   The id of this item or false
-	 * @since  10.0.0
-	 */
-	public function getCWMCommentListId($segment, $query)
-	{
-		return $this->getCWMCommentFormId($segment, $query);
-	}
-
-	/**
-	 * Method to get the segment(s) for a Media File4
-	 *
-	 * @param   integer  $id     ID of the article to retrieve the segments for
-	 * @param   array    $query  The request that is built right now
-	 *
-	 * @return  array  The segments of this item
-	 * @since 10.0.0
-	 */
-	public function getCWMMediaFileFormSegment($id, array $query)
-	{
-		if (!strpos($id, ':'))
-		{
-			$id      = (int) $id;
-			$dbquery = $this->db->getQuery(true);
-			$dbquery->select($this->db->quoteName('alias'))
-				->from($this->db->quoteName('#__bsms_comments'))
-				->where($this->db->quoteName('id') . ' = :id')
-				->bind(':id', $id, ParameterType::INTEGER);
-			$this->db->setQuery($dbquery);
-
-			$id .= ':' . $this->db->loadResult();
-		}
-
-		if ($this->noIDs)
-		{
-			list($void, $segment) = explode(':', $id, 2);
-
-			return array($void => $segment);
-		}
-
-		return array((int) $id => $id);
-	}
-
-	/**
-	 * Method to get the segment(s) for a Media File
-	 *
-	 * @param   string  $id     ID of the article form to retrieve the segments for
-	 * @param   array   $query  The request that is built right now
-	 *
-	 * @return  array  The segments of this item
-	 *
-	 * @since   3.7.3
-	 */
-	public function getCWMMediaFileListSegment($id, $query): array
-	{
-		return $this->getCWMMediaFileFormSegment($id, $query);
-	}
-
-
-	/**
-	 * Method to get the segment(s) for a Media File
-	 *
-	 * @param   string  $segment  Segment of the article to retrieve the ID for
-	 * @param   array   $query    The request that is parsed right now
-	 *
-	 * @return  mixed   The id of this item or false
-	 * @since   10.0.0
-	 */
-	public function getCWMMediaFileFormId($segment, $query)
-	{
-		if ($this->noIDs)
-		{
-			$dbquery = $this->db->getQuery(true);
-			$dbquery->select($this->db->quoteName('id'))
-				->from($this->db->quoteName('#__bsms_mediafiles'))
-				->where(
-					[
-						$this->db->quoteName('id') . ' = :id',
-
-					]
-				)
-				->bind(':id', $segment);
-
-			$this->db->setQuery($dbquery);
-
-			return (int) $this->db->loadResult();
-		}
-
-		return (int) $segment;
-	}
-
-
-	/**
-	 * @Method to get the segment(s) for a media file
-	 *
-	 * @param   string  $segment  Segment to retrieve the ID for
-	 * @param   array   $query    The request that is parsed right now
-	 *
-	 * @return  mixed   The id of this item or false
-	 * @since  10.0.0
-	 */
-	public function getCWMMediaFileListId($segment, $query)
-	{
-		return $this->getCWMMediaFileFormId($segment, $query);
-	}
-
-	/**
-	 * Method to get the segment(s) for a message File
-	 *
-	 * @param   integer  $id     ID of the article to retrieve the segments for
-	 * @param   array    $query  The request that is built right now
-	 *
-	 * @return  array  The segments of this item
-	 * @since 10.0.0
-	 */
-	public function getCWMMessageFileFormSegment($id, array $query)
-	{
-		if (!strpos($id, ':'))
-		{
-			$id      = (int) $id;
-			$dbquery = $this->db->getQuery(true);
-			$dbquery->select($this->db->quoteName('alias'))
-				->from($this->db->quoteName('#__bsms_studies'))
-				->where($this->db->quoteName('alias') . ' = :alias')
-				->bind(':alias', $id, ParameterType::INTEGER);
-			$this->db->setQuery($dbquery);
-
-			$id .= ':' . $this->db->loadResult();
-		}
-
-		if ($this->noIDs)
-		{
-			list($void, $segment) = explode(':', $id, 2);
-
-			return array($void => $segment);
-		}
-
-		return array((int) $id => $id);
-	}
-
-	/**
-	 * Method to get the segment(s) for a message File
-	 *
-	 * @param   string  $id     ID of the article form to retrieve the segments for
-	 * @param   array   $query  The request that is built right now
-	 *
-	 * @return  array  The segments of this item
-	 *
-	 * @since   3.7.3
-	 */
-	public function getCWMMessageFileListSegment($id, $query): array
-	{
-		return $this->getCWMMessageFileFormSegment($id, $query);
-	}
-
-
-	/**
-	 * Method to get the segment(s) for a message File
-	 *
-	 * @param   string  $segment  Segment of the article to retrieve the ID for
-	 * @param   array   $query    The request that is parsed right now
-	 *
-	 * @return  mixed   The id of this item or false
-	 * @since   10.0.0
-	 */
-	public function getCWMMessageFileFormId($segment, $query)
-	{
-		if ($this->noIDs)
-		{
-			$dbquery = $this->db->getQuery(true);
-			$dbquery->select($this->db->quoteName('id'))
-				->from($this->db->quoteName('#__bsms_studies'))
-				->where(
-					[
-						$this->db->quoteName('alias') . ' = :alias',
-
-					]
-				)
-				->bind(':alias', $segment);
-
-			$this->db->setQuery($dbquery);
-
-			return (int) $this->db->loadResult();
-		}
-
-		return (int) $segment;
-	}
-
-
-	/**
-	 * @Method to get the segment(s) for a message file
-	 *
-	 * @param   string  $segment  Segment to retrieve the ID for
-	 * @param   array   $query    The request that is parsed right now
-	 *
-	 * @return  mixed   The id of this item or false
-	 * @since  10.0.0
-	 */
-	public function getCWMMessageFileListId($segment, $query)
-	{
-		return $this->getCWMMessageFileFormId($segment, $query);
-	}
-
 }

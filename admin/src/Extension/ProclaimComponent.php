@@ -28,7 +28,7 @@ use Psr\Container\ContainerInterface;
 use CWM\Component\Proclaim\Administrator\Service\HTML\CWMAdministratorService;
 
 /**
- * Component class for com_mywalks
+ * Component class for com_proclaim
  *
  * @since  4.0.0
  */
@@ -196,7 +196,7 @@ class ProclaimComponent extends MVCComponent implements
 		Factory::getApplication()->getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
 
 		return array(
-			'com_proclaim.cwmadmin' => Text::_('COM_CONTENT')
+			'com_proclaim.cwmadmin' => Text::_('COM_PROCLAIM')
 		);
 	}
 
@@ -207,6 +207,7 @@ class ProclaimComponent extends MVCComponent implements
 	 *
 	 * @return  string|null
 	 *
+	 * @throws \Exception
 	 * @since   4.0.0
 	 */
 	public function getCategoryWorkflowContext(?string $section = null): string

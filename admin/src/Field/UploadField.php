@@ -44,8 +44,8 @@ class UploadField extends FormField
 	{
 		$wa = $this->document->getWebAssetManager();
 		$wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
-		$wa->useScript('/administrator/components/com_proclaim/addons/servers/legacy/includes/js/plupload.full.min.js')
-			->useScript('/administrator/components/com_proclaim/addons/servers/legacy/includes/js/legacy.js');
+		$wa->useScript('/administrator/components/com_proclaim/src/Addons/Servers/Legacy/includes/js/plupload.full.min.js')
+			->useScript('/administrator/components/com_proclaim/src/Addons/Servers/Legacy/includes/js/legacy.js');
 
 		// Include Plupload libraries
 		$document = Factory::getApplication()->getDocument();

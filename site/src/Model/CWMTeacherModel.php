@@ -51,7 +51,10 @@ class CWMTeacherModel extends ItemModel
 		$app = Factory::getApplication();
 
 		// Initialise variables.
-		$pk = $app->input->getInt('id');
+		if ($pk === null)
+		{
+			$pk = $app->input->getInt('id');
+		}
 
 		if (!isset($this->_item[$pk]))
 		{
@@ -59,7 +62,11 @@ class CWMTeacherModel extends ItemModel
 			{
 				$db    = Factory::getContainer()->get('DatabaseDriver');
 				$query = $db->getQuery(true);
-				$query->select($this->getState('item.select', 't.*,CASE WHEN CHAR_LENGTH(t.alias) THEN CONCAT_WS(\':\', t.id, t.alias) ELSE t.id END as slug'));
+				$query->select(
+					$this->getState('item.select',
+						't.*,CASE WHEN CHAR_LENGTH(t.alias) THEN CONCAT_WS(\':\', t.id, t.alias) ELSE t.id END as slug'
+					)
+				);
 				$query->from('#__bsms_teachers AS t');
 				$query->where('t.id = ' . (int) $pk);
 				$db->setQuery($query);
@@ -74,14 +81,10 @@ class CWMTeacherModel extends ItemModel
 			}
 			catch (\Exception $e)
 			{
-				if ($e->getCode() == 404)
+				$app->enqueueMessage($e->getMessage(), 'error');
+
+				if ($e->getCode() !== 404)
 				{
-					// Need to go through the error handler to allow Redirect to work.
-					$app->enqueueMessage($e->getMessage(), 'error');
-				}
-				else
-				{
-					$app->enqueueMessage($e->getMessage(), 'error');
 					$this->_item[$pk] = false;
 				}
 			}
@@ -100,16 +103,16 @@ class CWMTeacherModel extends ItemModel
 	 * @throws \Exception
 	 * @since    1.6
 	 */
-	protected function populateState()
+	protected function populateState(): void
 	{
-		$app = Factory::getApplication('site');
+		$app = Factory::getApplication();
 
 		// Load state from the request.
 		// $input = new JInput;
-		$pk = $app->get('id', '', 'int');
+		$pk = $app->input->get('id', '', 'int');
 		$this->setState('teacher.id', $pk);
 
-		$offset = $app->get('limitstart', '', 'int');
+		$offset = $app->input->get('limitstart', '', 'int');
 		$this->setState('list.offset', $offset);
 
 		// Load the parameters.
@@ -122,12 +125,11 @@ class CWMTeacherModel extends ItemModel
 		$template->params->merge($admin->params);
 		$params = $template->params;
 
-		$t = $params->get('teachertemplateid');
+		$t = (int) $params->get('teachertemplateid');
 
 		if (!$t)
 		{
-			$input = Factory::getApplication();
-			$t     = $input->get('t', 1, 'int');
+			$t = $app->input->get('t', 1, 'int');
 		}
 
 		$template->id = $t;
@@ -135,7 +137,7 @@ class CWMTeacherModel extends ItemModel
 		$this->setState('template', $template);
 		$this->setState('administrator', $admin);
 		$this->setState('params', $params);
-		$user = Factory::getApplication()->getSession()->get('user');
+		$user = $app->getSession()->get('user');
 
 		if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise('core.edit', 'com_proclaim')))
 		{

@@ -46,65 +46,61 @@ $input = $app->input;
 		<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'general', Text::_('JBS_CMN_DETAILS')); ?>
 		<div class="row">
 			<div class="col-lg-9">
-				<!-- Begin Tabs -->
-				<div class="tab-pane active" id="general">
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('comment_text'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('comment_text'); ?>
-						</div>
-					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('study_id'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('study_id'); ?>
-						</div>
-					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('comment_date'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('comment_date'); ?>
-						</div>
-					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('full_name'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('full_name'); ?>
-						</div>
-					</div>
-					<div class="control-group">
-						<div class="control-label">
-							<?php echo $this->form->getLabel('user_email'); ?>
-						</div>
-						<div class="controls">
-							<?php echo $this->form->getInput('user_email'); ?>
-						</div>
-					</div>
+                <div class="control-group">
+                    <div class="control-label">
+                        <?php echo $this->form->getLabel('comment_text'); ?>
+                    </div>
+                    <div class="controls">
+                        <?php echo $this->form->getInput('comment_text'); ?>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label">
+                        <?php echo $this->form->getLabel('study_id'); ?>
+                    </div>
+                    <div class="controls">
+                        <?php echo $this->form->getInput('study_id'); ?>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label">
+                        <?php echo $this->form->getLabel('comment_date'); ?>
+                    </div>
+                    <div class="controls">
+                        <?php echo $this->form->getInput('comment_date'); ?>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label">
+                        <?php echo $this->form->getLabel('full_name'); ?>
+                    </div>
+                    <div class="controls">
+                        <?php echo $this->form->getInput('full_name'); ?>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label">
+						<?php echo $this->form->getLabel('user_email'); ?>
+                    </div>
+                    <div class="controls">
+						<?php echo $this->form->getInput('user_email'); ?>
+                    </div>
+                </div>
+            </div>
 
-				</div>
-			</div>
-
-			<!-- Begin Sidebar -->
-			<div class="col-lg-2 form-vertical">
-				<h4><?php echo Text::_('JDETAILS'); ?></h4>
-				<hr/>
-				<div class="control-group">
-					<div class="control-label">
+            <!-- Begin Sidebar -->
+            <div class="col-lg-3">
+                <h4><?php echo Text::_('JDETAILS'); ?></h4>
+                <hr/>
+                <div class="control-group">
+                    <div class="control-label">
 						<?php echo $this->form->getLabel('id'); ?>
-					</div>
-					<div class="controls">
+                    </div>
+                    <div class="controls">
 						<?php echo $this->form->getInput('id'); ?>
-					</div>
-				</div>
-				<div class="control-group">
+                    </div>
+                </div>
+                <div class="control-group">
 					<div class="control-label">
 						<?php echo $this->form->getLabel('published'); ?>
 					</div>

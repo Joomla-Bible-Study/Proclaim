@@ -40,10 +40,10 @@ class CWMPopUpModel extends ListModel
 	 * @throws \Exception
 	 * @since    1.6
 	 */
-	protected function populateState($ordering = NULL, $direction = NULL)
+	protected function populateState($ordering = null, $direction = null): void
 	{
 		/** @type JApplicationSite $app */
-		$app = Factory::getApplication('site');
+		$app = Factory::getApplication();
 
 		// Load the parameters
 		/** @var Registry $params */
@@ -55,12 +55,11 @@ class CWMPopUpModel extends ListModel
 		$template->params->merge($params);
 		$template->params->merge($admin->params);
 
-		$t = $params->get('popupid');
+		$t = (int) $params->get('popupid');
 
 		if (!$t)
 		{
-			$input = Factory::getApplication()->input;
-			$t     = $input->get('t', 1, 'int');
+			$t     = $app->input->get('t', 1, 'int');
 		}
 
 		$template->id = $t;

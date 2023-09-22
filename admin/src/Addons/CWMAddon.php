@@ -159,11 +159,11 @@ abstract class CWMAddon
 	 * @param   string  $type    ?
 	 * @param   array   $config  ?
 	 *
-	 * @return boolean
+	 * @return mixed
 	 *
 	 * @since   9.0.0
 	 */
-	public static function getInstance($type, $config = array())
+	public static function getInstance(string $type, array $config = array())
 	{
 		$type       = ucfirst(preg_replace('/[^A-Z0-9_\.-]/i', '', $type));
 		$addonClass = "CWMAddon" . ucfirst($type);
@@ -197,7 +197,7 @@ abstract class CWMAddon
 	 *
 	 * @since 9.1.3
 	 */
-	abstract protected function renderGeneral($media_form, $new);
+	abstract protected function renderGeneral($media_form, $new): string;
 
 	/**
 	 * Render Layout and fields
@@ -209,7 +209,7 @@ abstract class CWMAddon
 	 *
 	 * @since 9.1.3
 	 */
-	abstract protected function render($media_form, $new);
+	abstract protected function render($media_form, $new): string;
 
 	/**
 	 * Upload

@@ -20,7 +20,7 @@ use Joomla\CMS\Router\Route;
 /**
  * View class for Latest
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    7.1.0
  */
 class HtmlView extends BaseHtmlView
@@ -47,6 +47,7 @@ class HtmlView extends BaseHtmlView
 		$input = Factory::getApplication()->input;
 		$t     = $input->get('t', '1');
 
+		// @todo move to slug asap
 		$link = Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . $id . '&t=' . $t);
 		$app  = Factory::getApplication();
 
