@@ -24,7 +24,7 @@ use Joomla\Registry\Registry;
 /**
  * BibleStudy images class
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    7.0.0
  */
 class CWMImages
@@ -160,7 +160,7 @@ class CWMImages
 	/**
 	 * Get Series Thumbnail
 	 *
-	 * @param   string  $image  Image file
+	 * @param   string|null  $image  Image file
 	 *
 	 * @return object
 	 * @example  {
@@ -173,7 +173,7 @@ class CWMImages
 	 *
 	 * @since    7.0
 	 */
-	public static function getSeriesThumbnail(string $image = 'openbible.png'): object
+	public static function getSeriesThumbnail(?string $image = 'openbible.png'): object
 	{
 		$folder = self::getSeriesImageFolder();
 		$path   = $folder . '/' . $image;

@@ -2,7 +2,7 @@
 /**
  * Default
  *
- * @package    BibleStudy.Site
+ * @package    Proclaim.Site
  * @copyright  2007 - 2016 (C) CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.christianwebministries.org
@@ -34,7 +34,7 @@ $saveOrder = $listOrder == 'ordering';
 $CWMedia = new CWMMedia;
 ?>
 <div class="container-fluid">
-    <div class="span6">
+    <div class="col-lg-6">
 		<?php echo $this->item->image; ?>
         <h2><?php echo Text::_($this->item->series_text); ?></h2>
         <p class="description"><?php echo $this->item->description; ?></p>
@@ -43,7 +43,7 @@ $CWMedia = new CWMMedia;
 	<?php if (!empty($this->media))
 	{
 		?>
-        <div class="span6">
+        <div class="col-lg-6">
             <?php $this->params->set('player_width', ''); ?>
 			<?php echo $CWMedia->getFluidMedia($this->media[0], $this->params, $this->template); ?>
         </div>

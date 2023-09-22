@@ -49,7 +49,7 @@ abstract class CWMHelperRoute
 	public static function getArticleRoute(string $id, string $language = null): string
 	{
 		// Create the link
-		$link = 'index.php?option=com_proclaim&view=cwmsermon&id=' . $id;
+		$link = 'index.php?option=com_proclaim&view=CWMSermon&id=' . $id;
 
 		if (!empty($language) && $language !== '*' && Multilanguage::isEnabled())
 		{
@@ -164,14 +164,14 @@ abstract class CWMHelperRoute
 	 * Add Scheme to url
 	 *
 	 * @param   string  $url     URL of website
-	 * @param   string  $scheme  Scheme that need to lead with.
+	 * @param   string  $scheme  Scheme that needs to lead with.
 	 *
 	 * @return string  The fixed URL
 	 *
 	 * @since     7.2
 	 * @deprecate 8.0.7
 	 */
-	public static function addScheme(string $url, string $scheme = 'https://')
+	public static function addScheme(string $url, string $scheme = 'https://'): string
 	{
 		if (parse_url($url, PHP_URL_SCHEME) === null)
 		{

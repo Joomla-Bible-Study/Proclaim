@@ -17,13 +17,13 @@
 ?>
 
   
-  <div class="row-fluid span12">
+  <div class="row-fluid col-lg-12">
     <h2>
       Bible Studies
     </h2>
   </div>
 
-<div class="row-fluid span12"> <p>
+<div class="row-fluid col-lg-12"> <p>
   
   <?php echo $this->params->get('list_intro');?> </p></div>
 
@@ -32,23 +32,23 @@
     {
       
       ?>
-  <div class="row-fluid span12">
-    <div class="span3">
+  <div class="row-fluid col-lg-12">
+    <div class="col-lg-3">
     
    <strong> <?php echo $study->scripture1;?></strong>
   </div>
-  <div class="span4">
+  <div class="col-lg-4">
     <a href="<?php echo $study->detailslink;?>"><strong><?php echo $study->studytitle;?></strong></a>
   </div>
-  <div class="span4">
+  <div class="col-lg-4">
     <?php echo $study->media;?>
   </div>
-    <div class="span12" style="margin-left: -2px;">
+    <div class="col-lg-12" style="margin-left: -2px;">
     <p><?php echo $study->studyintro;?></p>
   </div>
-    <hr class="span12" style="border: 0; height: 1px; background-image: -webkit-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.25), rgba(0,0,0,0)); background-image: -moz-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.25), rgba(0,0,0,0)); background-image: -ms-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0)); background-image: -o-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.25), rgba(0,0,0,0));" />
+    <hr class="col-lg-12" style="border: 0; height: 1px; background-image: -webkit-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.25), rgba(0,0,0,0)); background-image: -moz-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.25), rgba(0,0,0,0)); background-image: -ms-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0)); background-image: -o-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.25), rgba(0,0,0,0));" />
   </div>
    <?php }?>
-  <div class="row-fluid span12 pagination">
+  <div class="row-fluid col-lg-12 pagination">
     <?php echo $this->pagination->getPageslinks();?>
   </div>

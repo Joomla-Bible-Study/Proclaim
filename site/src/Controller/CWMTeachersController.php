@@ -10,6 +10,8 @@
 namespace CWM\Component\Proclaim\Site\Controller;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\User\CurrentUserInterface;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -18,7 +20,7 @@ use Joomla\CMS\MVC\Controller\BaseController;
 /**
  * Controller for Teachers
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    7.0.0
  */
 class CWMTeachersController extends BaseController
@@ -30,11 +32,11 @@ class CWMTeachersController extends BaseController
 	 * @param   string  $prefix  The prefix for the PHP class name
 	 * @param   array   $config  Set ignore request
 	 *
-	 * @return $model
+	 * @return boolean|BaseDatabaseModel|CurrentUserInterface $model
 	 *
 	 * @since 7.0
 	 */
-	public function &getModel($name = 'Teacher', $prefix = 'ProclaimModel', $config = array('ignore_request' => true))
+	public function &getModel($name = 'CWMTeacher', $prefix = '', $config = array('ignore_request' => true))
 	{
 		$model = parent::getModel($name, $prefix, $config);
 

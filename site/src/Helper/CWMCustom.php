@@ -19,7 +19,7 @@ use Joomla\Registry\Registry;
 /**
  * Class custom helper
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    8.0.0
  * */
 class CWMCustom
@@ -35,12 +35,13 @@ class CWMCustom
 	 *
 	 * @return array
 	 *
+	 * @throws \Exception
 	 * @since    8.0.0
 	 */
 	public function getCustom($rowid, $custom, $row, $params, $template)
 	{
-		$isCustom = ($rowid == 24) ? true : false;
-		$countbraces = substr_count($custom, '{');
+		$isCustom     = $rowid === 24;
+		$countbraces  = substr_count($custom, '{');
 		$JBSMElements = new CWMListing;
 
 		while ($countbraces > 0)
@@ -51,7 +52,7 @@ class CWMCustom
 
 			if (!$rowid || $isCustom)
 			{
-				$rowid = $this->getElementnumber($subcustom);
+				$rowid = self::getElementnumber($subcustom);
 			}
 
 			$elementid = $JBSMElements->getElement($rowid, $row, $params, $template, $type = 0);
@@ -68,102 +69,104 @@ class CWMCustom
 	/**
 	 * Get Element Number.
 	 *
-	 * @param   int  $rowid  Row ID
+	 * @param   string  $row  Row ID
 	 *
-	 * @return int
+	 * @return integer
 	 *
 	 * @since    8.0.0
 	 */
-	public static function getElementnumber($rowid)
+	public static function getElementnumber($row): int
 	{
-		switch ($rowid)
+		$rowID = 0;
+
+		switch ($row)
 		{
 			case 'scripture1' :
-				$rowid = 1;
+				$rowID = 1;
 				break;
 			case 'scripture2' :
-				$rowid = 2;
+				$rowID = 2;
 				break;
 			case 'secondary' :
-				$rowid = 3;
+				$rowID = 3;
 				break;
 			case 'duration' :
-				$rowid = 4;
+				$rowID = 4;
 				break;
 			case 'studytitle' :
-				$rowid = 5;
+				$rowID = 5;
 				break;
 			case 'studyintro' :
-				$rowid = 6;
+				$rowID = 6;
 				break;
 			case 'teachername' :
-				$rowid = 7;
+				$rowID = 7;
 				break;
 			case 'teacher-title-name' :
-				$rowid = 8;
+				$rowID = 8;
 				break;
 			case 'teacher-image':
-				$rowid = 30;
+				$rowID = 30;
 				break;
 			case 'series_text' :
-				$rowid = 9;
+				$rowID = 9;
 				break;
 			case 'date' :
-				$rowid = 10;
+				$rowID = 10;
 				break;
 			case 'submitted' :
-				$rowid = 11;
+				$rowID = 11;
 				break;
 			case 'hits' :
-				$rowid = 12;
+				$rowID = 12;
 				break;
 			case 'studynumber' :
-				$rowid = 13;
+				$rowID = 13;
 				break;
 			case 'topic_text' :
-				$rowid = 14;
+				$rowID = 14;
 				break;
 			case 'location_text' :
-				$rowid = 15;
+				$rowID = 15;
 				break;
 			case 'message_type' :
-				$rowid = 16;
+				$rowID = 16;
 				break;
 			case 'details-text' :
-				$rowid = 17;
+				$rowID = 17;
 				break;
 			case 'details-text-pdf' :
-				$rowid = 18;
+				$rowID = 18;
 				break;
 			case 'details-pdf' :
-				$rowid = 19;
+				$rowID = 19;
 				break;
 			case 'media' :
-				$rowid = 20;
+				$rowID = 20;
 				break;
 			case 'store' :
-				$rowid = 22;
+				$rowID = 22;
 				break;
 			case 'filesize' :
-				$rowid = 23;
+				$rowID = 23;
 				break;
 			case 'thumbnail' :
-				$rowid = 25;
+				$rowID = 25;
 				break;
 			case 'series_thumbnail':
-				$rowid = 26;
+				$rowID = 26;
 				break;
 			case 'series_description':
-				$rowid = 27;
+				$rowID = 27;
 				break;
 			case 'plays':
-				$rowid = 28;
+				$rowID = 28;
 				break;
 			case 'downloads':
-				$rowid = 29;
+				$rowID = 29;
 				break;
 		}
 
-		return $rowid;
+		return $rowID;
 	}
 }

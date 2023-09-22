@@ -20,7 +20,7 @@ use Joomla\CMS\Router\Route;
 /**
  * View class for Latest
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    7.1.0
  */
 class HtmlView extends BaseHtmlView

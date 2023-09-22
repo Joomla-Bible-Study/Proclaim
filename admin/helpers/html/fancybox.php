@@ -15,6 +15,7 @@ defined('JPATH_PLATFORM') or die;
  *
  * @package  Proclaim.Admin
  * @since    9.0.0
+ * @deprecated 10.0.0
  */
 abstract class JHtmlFancybox
 {
@@ -35,6 +36,7 @@ abstract class JHtmlFancybox
 	 * @return  void
 	 *
 	 * @since   9.0.0
+	 * @deprecated 10.0.0
 	 */
 	public static function framework(bool $option = false, bool $mouseweel = false): void
 	{
@@ -67,6 +69,7 @@ abstract class JHtmlFancybox
 	 * @return  void
 	 *
 	 * @since   3.0
+	 * @deprecated 10.0.0
 	 */
 	public static function loadCss(bool $option = false): void
 	{

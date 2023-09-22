@@ -152,7 +152,7 @@ class CWMServerModel extends AdminModel
 	 */
 	public function getConfig(string $addon)
 	{
-		$path = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/' . ucfirst($addon) . '/' . $addon . '.xml';
+		$path = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/' . ucfirst($addon) . '/' . strtolower($addon) . '.xml';
 
 		return simplexml_load_string(file_get_contents($path));
 	}
@@ -166,7 +166,7 @@ class CWMServerModel extends AdminModel
 	 *
 	 * @since   1.6
 	 */
-	public function save($data)
+	public function save($data): bool
 	{
 		if (strpos($data['server_name'], '"onmouseover="prompt(1)"') !== false)
 		{
@@ -222,7 +222,7 @@ class CWMServerModel extends AdminModel
 
 		// Add language files
 		$lang = Factory::getApplication()->getLanguage();
-		$lang->load('jbs_addon_' . $type, $path);
+		$lang->load('jbs_addon_' . strtolower($type), $path);
 
 		return $this->loadForm('com_proclaim.server.' . $type, $type, array('control' => 'jform', 'load_data' => true), true, "/server");
 	}

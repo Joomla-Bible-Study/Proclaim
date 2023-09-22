@@ -9,6 +9,10 @@
  * */
 
 // phpcs:disable PSR1.Files.SideEffects
+namespace Backupfiles\Amazons3;
+
+use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
@@ -19,22 +23,25 @@
  * @package  Proclaim.Admin
  * @since    9.0.0
  */
-class JBSServerAmazonS3 extends JBSMAddon
+class CWMAddonAmazonS3 extends CWMAddon
 {
 	public $name = 'amazonS3';
 
-	protected function renderGeneral($media_form, $new)
+	protected function renderGeneral($media_form, $new): string
 	{
 		// TODO: Implement renderGeneral() method.
+		return '';
 	}
 
-	protected function render($media_form, $new)
+	protected function render($media_form, $new): string
 	{
 		// TODO: Implement render() method.
+		return '';
 	}
 
 	protected function upload($data)
 	{
 		// TODO: Implement upload() method.
+		return '';
 	}
 }

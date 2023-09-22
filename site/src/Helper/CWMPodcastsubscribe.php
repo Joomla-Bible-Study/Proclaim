@@ -15,14 +15,14 @@ namespace CWM\Component\Proclaim\Site\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Html\HtmlHelper;
+use Joomla\CMS\Uri\Uri;
 
 
 /**
  * A helper to return buttons for podcast subscriptions
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    7.1.0
  *
  */
@@ -31,13 +31,14 @@ class CWMPodcastsubscribe
 	/**
 	 * Build Subscribe Table
 	 *
-	 * @param   string  $introtext  Intro Text
+	 * @param   string|null  $introtext  Intro Text
 	 *
 	 * @return string
 	 *
+	 * @throws \Exception
 	 * @since    7.1
 	 */
-	public function buildSubscribeTable($introtext = 'Our Podcasts')
+	public function buildSubscribeTable(?string $introtext = 'Our Podcasts'): string
 	{
 		$podcasts = $this->getPodcasts();
 
@@ -63,19 +64,20 @@ class CWMPodcastsubscribe
 						break;
 
 					case 2:
-						$subscribe .= '<div class="pcell span6"><h5><i class="fa fa-podcast"></i>' .' '. $podcast->title . '</h5>';
+						$subscribe .= '<div class="pcell span6"><h5><i class="fa fa-podcast"></i> ' . $podcast->title . '</h5>';
 						$subscribe .= $this->buildStandardPodcast($podcast);
 						$subscribe .= '<hr /></div>';
 						break;
 
 					case 3:
-						$subscribe .= '<div class="pcell span6"><h5><i class="fa fa-podcast"></i>' .' '. $podcast->title . '</h5>';
+						$subscribe .= '<div class="pcell span6"><h5><i class="fa fa-podcast"></i> ' . $podcast->title . '</h5>';
 						$subscribe .= $this->buildAlternatePodcast($podcast);
 						$subscribe .= '<hr /></div>';
 						break;
 
 					case 4:
-						$subscribe .= '<div class="pcell span6"><h5><i class="fa fa-podcast"></i>' .' '. $podcast->title . '</h5><div class="span2">';
+						$subscribe .= '<div class="pcell span6"><h5><i class="fa fa-podcast"></i> ' . $podcast->title
+							. '</h5><div class="span2">';
 						$subscribe .= $this->buildStandardPodcast($podcast);
 						$subscribe .= '</div><div class="span2">';
 						$subscribe .= $this->buildAlternatePodcast($podcast);
@@ -83,7 +85,8 @@ class CWMPodcastsubscribe
 						break;
 				}
 			}
-			// End of row
+
+			// End of the row
 			$subscribe .= '</div>';
 
 			// Add a div around it all
@@ -96,11 +99,12 @@ class CWMPodcastsubscribe
 	/**
 	 * Get Podcasts
 	 *
-	 * @return object Object List of Podcasts
+	 * @return array Object List of Podcasts
 	 *
+	 * @throws \Exception
 	 * @since    7.1
 	 */
-	public function getPodcasts()
+	public function getPodcasts(): array
 	{
 		$user     = Factory::getApplication()->getIdentity();
 		$groups = implode(',', $user->getAuthorisedViewLevels());
@@ -124,7 +128,7 @@ class CWMPodcastsubscribe
 	 *
 	 * @since    7.1
 	 */
-	public function buildStandardPodcast($podcast)
+	public function buildStandardPodcast(object $podcast): string
 	{
 		$subscribe = '';
 
@@ -152,15 +156,15 @@ class CWMPodcastsubscribe
 	/**
 	 * Build Podcast Image
 	 *
-	 * @param   array  $podcastimagefromdb  Podcast image
-	 * @param   array  $words               Alt podcast image text
+	 * @param   string|null  $podcastimagefromdb  Podcast image
+	 * @param   string|null  $words               Alt podcast image text
 	 *
 	 * @return string
 	 *
 	 *
 	 * @since    7.1
 	 */
-	public function buildPodcastImage($podcastimagefromdb = null, $words = null)
+	public function buildPodcastImage(?string $podcastimagefromdb = null, ?string $words = null): ?string
 	{
 		$image        = CWMImages::getMediaImage($podcastimagefromdb);
 		$podcastimage = null;
@@ -185,7 +189,7 @@ class CWMPodcastsubscribe
 	 *
 	 * @since    7.1
 	 */
-	public function buildAlternatePodcast($podcast)
+	public function buildAlternatePodcast(object $podcast): string
 	{
 		$subscribe = '';
 

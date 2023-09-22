@@ -66,7 +66,7 @@ $admin_params->merge($template->params);
 $admin_params->merge($params);
 $params = $admin_params;
 
-$items = ModProclaimHelper::getLatest($params);
+$items = (new CWM\Module\Proclaim\Site\Helper\ModProclaimHelper)->getLatest($params);
 
 // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 $user     = Factory::getApplication()->getIdentity();
@@ -77,8 +77,8 @@ if ($params->get('useexpert_module') > 0 || is_string($params->get('moduletempla
 {
 	foreach ($items AS $item)
 	{
-		$item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
-			. str_replace(' ', '-', htmlspecialchars_decode($item->studytitle, ENT_QUOTES));
+		//$item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
+		//	. str_replace(' ', '-', htmlspecialchars_decode($item->studytitle, ENT_QUOTES));
 
 		try
 		{
@@ -167,15 +167,15 @@ $pageclass_sfx = $params->get('pageclass_sfx');
 
 if ($params->get('simple_mode') === '1')
 {
-	$template = 'default_simple';
+	$layout_template = 'default_simple';
 }
 elseif ($params->get('moduletemplate') && !$params->get('simple_mode'))
 {
-	$template = 'default_' . $params->get('moduletemplate');
+	$layout_template = 'default_' . $params->get('moduletemplate');
 }
 else
 {
-	$template = 'default_main';
+	$layout_template = 'default_main';
 }
 
-require ModuleHelper::getLayoutPath('mod_proclaim', $template);
+require ModuleHelper::getLayoutPath('mod_proclaim', $layout_template);

@@ -940,13 +940,13 @@ class CWMRelatedstudies
 		$db->setQuery($query);
 		$studyrecords = $db->loadObjectList();
 
-		$related = '<select onchange="goTo()" id="urlList"><option value="">' . Text::_('JBS_CMN_SELECT_RELATED_STUDY') . '</option>';
+		$related = '<select onchange="goTo()" id="urlList" class="form-select chzn-color-state valid form-control-success"><option value="">' . Text::_('JBS_CMN_SELECT_RELATED_STUDY') . '</option>';
 		$input   = Factory::getApplication()->input;
 
 		foreach ($studyrecords as $studyrecord)
 		{
 			$related .= '<option value="'
-				. Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . (int) $studyrecord->id . '&t=' . $input->get('t', '1', 'int'))
+				. Route::_('index.php?option=com_proclaim&view=CWMSermon&id=' . (int) $studyrecord->id . '&t=' . $input->get('t', '1', 'int'))
 				. '">' . $studyrecord->studytitle;
 
 			if (!empty($studyrecord->bookname))
@@ -960,6 +960,6 @@ class CWMRelatedstudies
 
 		$related .= '</select>';
 
-		return '<div class="related"><form action="#">' . $related . '</form></div>';
+		return '<div class="related col-lg-4"><form action="#">' . $related . '</form></div>';
 	}
 }

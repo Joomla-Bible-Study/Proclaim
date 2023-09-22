@@ -55,22 +55,22 @@ class CWMMedia
 	public function getFluidMedia(object $media, Registry $params, $template): ?string
 	{
 		$mediafile = null;
-		$filesize  = null;
+		$filesize  = 0;
 
 		if (isset($media->smedia))
 		{
-			// Smedia are the media settings for each server
+			// $smedia are the media settings for each server
 			$registory = new Registry;
 			$registory->loadString($media->smedia);
 			$media->smedia = $registory;
 		}
 
-		// Params are the individual params for the media file record
+		// $params are the individual params for the media file record
 		$registory = new Registry;
 		$registory->loadString($media->params);
 		$media->params = $registory;
 
-		// Sparams are the server parameters
+		// Ssparams are the server parameters
 		$registory = new Registry;
 		$registory->loadString($media->sparams);
 		$media->sparams = $registory;
@@ -84,13 +84,13 @@ class CWMMedia
 			$imageparams = $media->params;
 		}
 
-		if ($imageparams->get('media_use_button_icon') >= 1 || $params->get('simple_mode') == 1 || $params->get('sermonstemplate') == 'easy')
+		if ($imageparams->get('media_use_button_icon') >= 1 || (int) $params->get('simple_mode') === 1 || $params->get('sermonstemplate') === 'easy')
 		{
 			$image = $this->mediaButton($imageparams, $params, $media->params);
 		}
 		else
 		{
-			$mediaimage = $imageparams->get('media_image');
+			$mediaimage = (string) $imageparams->get('media_image');
 			$image      = $this->useJImage($mediaimage, $media->params->get('media_button_text', $params->get('download_button_text', 'Audio')));
 		}
 
@@ -121,11 +121,11 @@ class CWMMedia
 			$link_type = 0;
 		}
 
-		if (isset($media) && $link_type < 2 && $params->get('show_filesize') > 0)
+		if ($link_type < 2 && $params->get('show_filesize') > 0)
 		{
-			$file_size = $media->params->get('size', '0');
+			$file_size = (int) $media->params->get('size', 0);
 
-			if (!$file_size && $link_type !== '0')
+			if (!$file_size && $link_type !== 0)
 			{
 				$file_size = CWMHelper::getRemoteFileSize(
 					CWMHelper::MediaBuildUrl($media->sparams->get('path'), $media->params->get('filename'), $params, true)
@@ -233,8 +233,8 @@ class CWMMedia
 
 			if ($compat_mode === 0)
 			{
-				$downloadlink = '<a style="color: #5F5A58;" href="index.php?option=com_proclaim&amp;view=cwmsermon&amp;id=' .
-					$media->study_id . '&amp;mid=' . $media->id . '&amp;task=cwmsermon.download">' . $download_image . '</a>';
+				$downloadlink = '<a style="color: #5F5A58;" href="index.php?option=com_proclaim&amp;view=CWMSermon&amp;id=' .
+					$media->study_id . '&amp;mid=' . $media->id . '&amp;task=CWMSermon.download">' . $download_image . '</a>';
 			}
 			else
 			{
@@ -261,31 +261,28 @@ class CWMMedia
 			$input = $app->input;
 			$opt   = $input->get('option');
 
-			if ($opt == 'com_proclaim')
+			if (($opt === 'com_proclaim') && $params->get('useterms') > 0)
 			{
-				if ($params->get('useterms') > 0)
-				{
-					$downloadlink = '<a style="color: #5F5A58;" href="#modal-test-modal" data-bs-toggle="modal"' .
+				$downloadlink = '<a style="color: #5F5A58;" href="#modal-test-modal" data-bs-toggle="modal"' .
 					'class="btn btn-default btn-small btn-sm">' . $download_image . '</a>';
-					$modalParams  = array(
-						'title'       => Text::_('JBS_TERMS_TITLE'),
-						'closeButton' => true,
-						'height'      => '300px',
-						'width'       => '300px',
-						'backdrop'    => 'static',
-						'keyboard'    => true,
-						'modalWidth'  => 30,
-						'bodyHeight'  => 30,
-						'footer'      => '<div class="alert alert-info">' . Text::_('JBS_TERMS_FOOTER') . '</div>'
-					);
+				$modalParams  = array(
+					'title'       => Text::_('JBS_TERMS_TITLE'),
+					'closeButton' => true,
+					'height'      => '300px',
+					'width'       => '300px',
+					'backdrop'    => 'static',
+					'keyboard'    => true,
+					'modalWidth'  => 30,
+					'bodyHeight'  => 30,
+					'footer'      => '<div class="alert alert-info">' . Text::_('JBS_TERMS_FOOTER') . '</div>'
+				);
 
-					$modalBody = '<div class="alert alert-success">' . $params->get('terms') .
-						'<a style="color: #5F5A58;" href="index.php?option=com_proclaim&task=cwmsermons.download&id=' .
-						$media->study_id . '&mid=' . $media->id . '">'
-						. Text::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a></div>';
+				$modalBody = '<div class="alert alert-success">' . $params->get('terms') .
+					'<a style="color: #5F5A58;" href="index.php?option=com_proclaim&task=CWMSermons.download&id=' .
+					$media->study_id . '&mid=' . $media->id . '">'
+					. Text::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a></div>';
 
-					$downloadlink .= HTMLHelper::_('bootstrap.renderModal', 'modal-test-modal', $modalParams, $modalBody);
-				}
+				$downloadlink .= HTMLHelper::_('bootstrap.renderModal', 'modal-test-modal', $modalParams, $modalBody);
 			}
 		}
 
@@ -524,7 +521,7 @@ class CWMMedia
 
 		/**
 		 * @desc Players - from Template:
-		 * First we check to see if in the template the user has set to use the internal player for all media. This can be overridden by itemparams
+		 * First, we check to see if in the template the user has set to use the internal player for all media. This can be overridden by itemparams
 		 * popuptype = whether AVR should be window or lightbox (handled in avr code)
 		 * internal_popup = whether direct or internal player should be popup/new window or inline
 		 * From media file:
@@ -548,8 +545,9 @@ class CWMMedia
 		else
 		{
 			/*
-			* In this case the item has a player set for it, so we use that instead. We also need to change the old player
-			*		type of 3 to 2 for all videos reloaded which we don't support
+			* In this case, the item has a player set for it, so we use that instead.
+			 * We also need to change the old player
+			*	type of 3 to 2 for all videos reloaded that we don't support
 			*/
 
 			if ($params->get('pcplaylist'))
@@ -664,7 +662,7 @@ class CWMMedia
 					case 2: // New window - popup code added here because new window code does not work (Tom 10-12-2022)
 						$return     = base64_encode($path);
 						$playercode = '<a href="javascript:;" onclick="window.open(\'index.php?option=com_proclaim&amp;' .
-							'task=cwmsermons.playHit&amp;return=' . $return . '&amp;' . Session::getFormToken() . '=1\')" title="' .
+							'task=CWMSermons.playHit&amp;return=' . $return . '&amp;' . Session::getFormToken() . '=1\')" title="' .
 							$media->params->get("media_button_text") . ' - ' . $media->comment . ' '
 							. $filesize . '">' . $image . '</a>';
 						break;
@@ -787,7 +785,7 @@ class CWMMedia
 	}
 
 	/**
-	 * Render Sqeezbox
+	 * Render Squeezebox
 	 *
 	 * @param   object    $media   Media
 	 * @param   Registry  $params  Params.
@@ -930,7 +928,7 @@ class CWMMedia
 	 *
 	 * @since 9.0.0
 	 */
-	public function getMediaRows2($id)
+	public function getMediaRows2(int $id)
 	{
 		// We use this for the popup view because it relies on the media file's id rather than the study_id field above
 		$db = Factory::getContainer()->get('DatabaseDriver');
@@ -1172,7 +1170,7 @@ class CWMMedia
 	/**
 	 * Youtube url to embed.
 	 *
-	 * @param   string  $string  Youtube url to transformm.
+	 * @param   string  $string  YouTube url to transform.
 	 *
 	 * @return null|string|string[]
 	 *
@@ -1190,7 +1188,7 @@ class CWMMedia
 	/**
 	 * Vimeo url to embed.
 	 *
-	 * @param   string  $string  Vimeo url to transformed.
+	 * @param   string  $string  Vimeo url to transform.
 	 *
 	 * @return null|string|string[]
 	 *
@@ -1239,52 +1237,55 @@ class CWMMedia
 	 */
 	public function convertFileSize(int $file_size, Registry $params, object $media): string
 	{
+
+		$file_size_results = '';
+
 		switch ($file_size)
 		{
 			case $file_size = 0 :
-				$file_size   = '0 Bytes';
+				$file_size_results = '0 Bytes';
 				break;
 			case  $file_size < 1024 :
-				$this->fsize = $file_size;
-				$file_size   .= ' Bytes';
+				$this->fsize       = $file_size;
+				$file_size_results .= $file_size . ' Bytes';
 				break;
 			case $file_size < 1048576 :
-				$file_size   /= 1024;
-				$file_size   = number_format($file_size, 0);
-				$this->fsize = $file_size;
-				$file_size   .= ' KB';
+				$file_size         /= 1024;
+				$file_size_results = number_format($file_size, 0);
+				$this->fsize       = $file_size_results;
+				$file_size_results .= ' KB';
 				break;
 			case $file_size < 1073741824 :
-				$file_size   /= 1024;
-				$file_size   /= 1024;
-				$file_size   = number_format($file_size, 1);
-				$this->fsize = $file_size;
-				$file_size   .= ' MB';
+				$file_size         /= 1024;
+				$file_size         /= 1024;
+				$file_size_results = number_format($file_size, 1);
+				$this->fsize       = $file_size_results;
+				$file_size_results .= ' MB';
 				break;
 			case $file_size > 1073741824 :
-				$file_size   /= 1024;
-				$file_size   /= 1024;
-				$file_size   /= 1024;
-				$file_size   = number_format($file_size, 1);
-				$this->fsize = $file_size;
-				$file_size   .= ' GB';
+				$file_size         /= 1024;
+				$file_size         /= 1024;
+				$file_size         /= 1024;
+				$file_size_results = number_format($file_size, 1);
+				$this->fsize       = $file_size_results;
+				$file_size_results .= ' GB';
 				break;
 		}
 
 		switch ($params->get('show_filesize'))
 		{
 			case 2:
-				$file_size = $media->comment;
+				$file_size_results = $media->comment;
 				break;
 			case 3:
 				if ($media->comment)
 				{
-					$file_size = $media->comment;
+					$file_size_results = $media->comment;
 				}
 				break;
 		}
 
-		return $file_size;
+		return $file_size_results;
 	}
 
 	/**

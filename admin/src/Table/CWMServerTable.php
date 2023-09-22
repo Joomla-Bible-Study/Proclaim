@@ -104,7 +104,7 @@ class CWMServerTable extends Table
 	 * @link    http://docs.joomla.org/Table/bind
 	 * @since   11.1
 	 */
-	public function bind($array, $ignore = '')
+	public function bind($array, $ignore = ''): bool
 	{
 		// Bind the server params
 		if (isset($array['params']) && is_array($array['params']))
@@ -146,11 +146,21 @@ class CWMServerTable extends Table
 	 * @link    https://docs.joomla.org/Table/store
 	 * @since   11.1
 	 */
-	public function store($updateNulls = false)
+	public function store($updateNulls = false): bool
 	{
 		if (!$this->_rules)
 		{
 			$this->setRules('{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}');
+		}
+
+		if ($this->params === null && $this->media)
+		{
+			$this->params = '';
+		}
+
+		if ($this->media === null)
+		{
+			$this->media = '';
 		}
 
 		return parent::store($updateNulls);

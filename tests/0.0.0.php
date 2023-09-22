@@ -7,6 +7,10 @@
  */
 
 // phpcs:disable PSR1.Files.SideEffects
+use Joomla\CMS\Filesystem\Folder;
+use \Joomla\CMS\Filesystem\File;
+use Joomla\Database\DatabaseDriver;
+
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
@@ -22,13 +26,13 @@ class Migration000
 	/**
 	 * Call Script for Updates of 0.0.0
 	 *
-	 * @param   JDatabaseDriver  $db  Joomla Data bass driver
+	 * @param   DatabaseDriver  $dbo  Joomla Data bass driver
 	 *
 	 * @return boolean
 	 *
 	 * @since 0.0.0
 	 */
-	public function up ($db)
+	public function up (DatabaseDriver $dbo): bool
 	{
 		$this->deleteUnexistingFiles();
 
@@ -42,21 +46,17 @@ class Migration000
 	 *
 	 * @return   void
 	 */
-	protected function deleteUnexistingFiles()
+	protected function deleteUnexistingFiles(): void
 	{
-		// Import filesystem libraries. Perhaps not necessary, but does not hurt
-		jimport('joomla.filesystem.file');
-		jimport('joomla.filesystem.folder');
-
 		$path = array(
 			BIBLESTUDY_PATH_ADMIN . '/models/style.php'
 		);
 
 			foreach ($path as $file)
 			{
-				if (JFile::exists($file))
+				if (File::exists($file))
 				{
-					JFile::delete($file);
+					File::delete($file);
 				}
 			}
 
@@ -65,9 +65,9 @@ class Migration000
 
 		foreach ($folders as $folder)
 		{
-			if (JFolder::exists($folder))
+			if (Folder::exists($folder))
 			{
-				JFolder::delete($folder);
+				Folder::delete($folder);
 			}
 		}
 	}

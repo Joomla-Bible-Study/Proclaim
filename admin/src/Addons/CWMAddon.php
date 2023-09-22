@@ -209,7 +209,7 @@ abstract class CWMAddon
 	 *
 	 * @since 9.1.3
 	 */
-	abstract protected function render($media_form, $new);
+	abstract protected function render($media_form, $new): string;
 
 	/**
 	 * Upload

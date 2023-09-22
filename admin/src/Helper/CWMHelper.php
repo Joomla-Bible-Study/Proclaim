@@ -107,6 +107,8 @@ class CWMHelper
 	 */
 	public static function getRemoteFileSize(string $url): int
 	{
+		$size = 0;
+
 		if ($url === '')
 		{
 			return 0;
@@ -158,7 +160,7 @@ class CWMHelper
 			return 0;
 		}
 
-		if (is_array($head['content-length']))
+		if (isset($head['content-length']) && is_array($head['content-length']))
 		{
 			if (count($head['content-length']) >= 1)
 			{
@@ -170,7 +172,7 @@ class CWMHelper
 				$size = $head['content-length'][0];
 			}
 		}
-		else
+		elseif (isset($head['content-length']))
 		{
 			$size = $head['content-length'];
 		}
@@ -359,7 +361,7 @@ class CWMHelper
 	/**
 	 * Get Simple View Sate
 	 *
-	 * @param   object|null  $params  AdminTable + parametors
+	 * @param   object|null  $params  AdminTable + parameters
 	 *
 	 * @return  object
 	 *

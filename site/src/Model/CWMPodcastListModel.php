@@ -18,10 +18,13 @@ use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Helper\TagsHelper;
+use Joomla\Database\DatabaseQuery;
+use SimplePie\Registry;
+
 /**
  * Model class for MessageList
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    8.0.0
  */
 class CWMPodcastListModel extends ListModel
@@ -39,7 +42,7 @@ class CWMPodcastListModel extends ListModel
 	 * @throws \Exception
 	 * @since    1.6
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = null, $direction = null): void
 	{
 		$app = Factory::getApplication();
 
@@ -76,7 +79,7 @@ class CWMPodcastListModel extends ListModel
 
 		$params = $app->getParams();
 
-		$user = Factory::getApplication()->getSession()->get('user');
+		$user = $app->getSession()->get('user');
 
 		if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise('core.edit', 'com_proclaim')))
 		{
@@ -103,12 +106,11 @@ class CWMPodcastListModel extends ListModel
 		$template->params->merge($admin->params);
 		$params = $template->params;
 
-		$t = $params->get('messageid');
+		$t = (int) $params->get('messageid');
 
 		if (!$t)
 		{
-			$input = Factory::getApplication()->input;
-			$t     = $input->get('t', 1, 'int');
+			$t     = $app->input->get('t', 1, 'int');
 		}
 
 		$template->id = $t;
@@ -120,14 +122,14 @@ class CWMPodcastListModel extends ListModel
 	/**
 	 * Build an SQL query to load the list data
 	 *
-	 * @return  \Joomla\Database\QueryInterface
+	 * @return  DatabaseQuery  A DatabaseQuery object to retrieve the data set.
 	 *
 	 * @throws \Exception
 	 * @since   7.0
 	 */
-	protected function getListQuery()
+	protected function getListQuery(): DatabaseQuery
 	{
-		// Get the current user for authorisation checks
+		// Get the current user for authorization checks
 		$user = Factory::getApplication()->getSession()->get('user');
 
 		// Create a new query object.
@@ -169,7 +171,7 @@ class CWMPodcastListModel extends ListModel
 		// Filter by language
 		if ($this->getState('filter.language'))
 		{
-			$query->where('a.language in (' . $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
+			$query->where('a.language in (' . $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
 		}
 
 		$query->from('#__bsms_series as a');

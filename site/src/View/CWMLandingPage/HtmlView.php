@@ -24,7 +24,7 @@ use Joomla\CMS\Uri\Uri;
 /**
  * Landing page list view class
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    7.0.0
  */
 class HtmlView extends BaseHtmlView

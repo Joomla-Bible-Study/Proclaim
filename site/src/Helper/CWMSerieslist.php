@@ -21,7 +21,7 @@ use Joomla\Registry\Registry;
 /**
  *  Class for Series List
  *
- * @package  BibleStudy.Site
+ * @package  Proclaim.Site
  * @since    8.0.0
  *
  *
@@ -31,13 +31,13 @@ class CWMSerieslist extends CWMListing
 	/**
 	 * Get Series ElementNumber
 	 *
-	 * @param   string  $subcustom  ?
+	 * @param   string|null  $subcustom  ?
 	 *
-	 * @return int
+	 * @return integer
 	 *
 	 * @since    8.0
 	 */
-	public function getseriesElementnumber($subcustom)
+	public function getseriesElementnumber(?string $subcustom): int
 	{
 		$customelement = null;
 
@@ -76,13 +76,13 @@ class CWMSerieslist extends CWMListing
 	}
 
 	/**
-	 * Get Serieslist Exp
+	 * Get Series-list Exp
 	 *
 	 * @param   object    $row       JTable
 	 * @param   Registry  $params    Item Params
 	 * @param   object    $template  Template
 	 *
-	 * @return object
+	 * @return mixed
 	 *
 	 * @since    8.0
 	 */
@@ -96,10 +96,11 @@ class CWMSerieslist extends CWMListing
 		$label = str_replace('{{teachertitle}}', $row->teachertitle, $label);
 		$label = str_replace('{{title}}', $row->series_text, $label);
 		$label = str_replace('{{description}}', $row->description, $label);
-		$label = str_replace('{{thumbnail}}', '<img src="' . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" />', $label);
-		$label = str_replace('{{url}}', 'index.php?option=com_proclaim&amp;view=cwmseriesdisplay&amp;t=' . $template . '&amp;id=' . $row->id, $label);
+		$label = str_replace('{{thumbnail}}', '<img src="' . $image->path . '" width="'
+			. $image->width . '" height="' . $image->height . '" />', $label);
 
-		return $label;
+		return str_replace('{{url}}', 'index.php?option=com_proclaim&amp;view=cwmseriesdisplay&amp;t='
+			. $template . '&amp;id=' . $row->id, $label);
 	}
 
 	/**
@@ -115,18 +116,17 @@ class CWMSerieslist extends CWMListing
 	 */
 	public function getSeriesDetailsExp($row, $params, $template)
 	{
-		$images = new CWMImages;
-		$image  = $images->getSeriesThumbnail($row->series_thumbnail);
+		$image  = CWMImages::getSeriesThumbnail($row->series_thumbnail);
 		$label  = $params->get('series_detailcode');
 		$label  = str_replace('{{teacher}}', $row->teachername, $label);
 		$label  = str_replace('{{teachertitle}}', $row->teachertitle, $label);
 		$label  = str_replace('{{description}}', $row->description, $label);
 		$label  = str_replace('{{title}}', $row->series_text, $label);
-		$label  = str_replace('{{thumbnail}}', '<img src="' . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" />', $label);
+		$label  = str_replace('{{thumbnail}}', '<img src="' . $image->path . '" width="'
+			. $image->width . '" height="' . $image->height . '" />', $label);
 		$label  = str_replace('{{plays}}', $row->totalplays, $label);
-		$label  = str_replace('{{downloads}}', $row->totaldownloads, $label);
 
-		return $label;
+		return str_replace('{{downloads}}', $row->totaldownloads, $label);
 	}
 
 	/**
@@ -152,7 +152,7 @@ class CWMSerieslist extends CWMListing
 			$limit = ' LIMIT ' . $params->get('series_detail_limit');
 		}
 
-		if ($nolimit == 1)
+		if ($nolimit === 1)
 		{
 			$limit = '';
 		}
@@ -181,16 +181,12 @@ class CWMSerieslist extends CWMListing
 		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
 		$user     = Factory::getApplication()->getIdentity();
 		$groups = $user->getAuthorisedViewLevels();
-		$count  = count($items);
 
-		for ($i = 0; $i < $count; $i++)
+		foreach ($items as $i => $iValue)
 		{
-			if ($items[$i]->access > 1)
+			if (($iValue->access > 1) && !in_array($iValue->access, $groups))
 			{
-				if (!in_array($items[$i]->access, $groups))
-				{
-					unset($items[$i]);
-				}
+				unset($items[$i]);
 			}
 		}
 
@@ -234,8 +230,8 @@ class CWMSerieslist extends CWMListing
 	public function getSeriesstudiesDBO($id, $params, $limit = null)
 	{
 		$db        = Factory::getContainer()->get('DatabaseDriver');
-		$user      = $user = Factory::getApplication()->getSession()->get('user');
-		$language  = $language = $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*');
+		$user      = Factory::getApplication()->getSession()->get('user');
+		$language  = $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*');
 		$set_limit = null;
 
 		if ($limit)
@@ -253,7 +249,8 @@ class CWMSerieslist extends CWMListing
 			. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
 			. ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ")'
 			. ' as topic_text, group_concat(#__bsms_topics.params separator ", ") as topic_params, '
-			. ' #__bsms_locations.id AS lid, #__bsms_locations.location_text ')
+			. ' #__bsms_locations.id AS lid, #__bsms_locations.location_text '
+		)
 			->from('#__bsms_studies AS s')
 			->leftJoin('#__bsms_series AS se ON (s.series_id = se.id)')
 			->leftJoin('#__bsms_teachers AS t ON (s.teacher_id = t.id)')
