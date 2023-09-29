@@ -24,6 +24,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Model\BaseModel;
 use Joomla\Database\DatabaseDriver;
+use Joomla\Database\DatabaseInterface;
 
 // Always load CWM API if it exists.
 $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
@@ -69,7 +70,7 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @since 7.1
 	 */
-	protected string $filePath = '/components/com_proclaim/sql/updates/mysql';
+	protected string $filePath = '/components/com_proclaim/sql/updates/mysql/';
 
 	/** @var string Path to PHP Version files
 	 *
@@ -81,27 +82,27 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @since 7.1
 	 */
-	private ?float $startTime = null;
+	private float $startTime = 0;
 
-	/** @var array The pre versions to process
+	/** @var array The pre-versions to process
 	 *
 	 * @since 7.1
 	 */
 	private array $versionStack = array();
 
-	/** @var array The pre versions sub sql array to process
+	/** @var array The pre-versions sub sql array to process
 	 *
 	 * @since 7.1
 	 */
 	private array $allupdates = array();
 
-	/** @var string Version of BibleStudy
+	/** @var ?string Version of BibleStudy
 	 *
 	 * @since 7.1
 	 */
 	private ?string $versionSwitch = null;
 
-	/** @var integer Id of Extinction Table
+	/** @var integer ID of Extinction Table
 	 *
 	 * @since 7.1
 	 */
@@ -174,7 +175,7 @@ class CWMInstallModel extends BaseModel
 		parent::__construct($config);
 
 		// Joomla 4 drop including db driver.
-		$this->_db = Factory::getDbo();
+		$this->_db = Factory::getContainer()->get(DatabaseInterface::class);
 
 		$this->name = 'install';
 	}
@@ -421,10 +422,18 @@ class CWMInstallModel extends BaseModel
 		{
 			$files = str_replace('.sql', '', Folder::files(JPATH_ADMINISTRATOR . $this->filePath, '\.sql$'));
 			$php   = str_replace('.php', '', Folder::files(JPATH_ADMINISTRATOR . $this->phpPath, '\.php$'));
-			usort($files, 'version_compare');
-			usort($php, 'version_compare');
 
-			// Find Extension ID of component
+			if ($files)
+			{
+				usort($files, 'version_compare');
+			}
+
+			if ($php)
+			{
+				usort($php, 'version_compare');
+			}
+
+			// Find Extension ID of Proclaim
 			$query = $this->_db->getQuery(true);
 			$query
 				->select('extension_id')
@@ -484,7 +493,7 @@ class CWMInstallModel extends BaseModel
 	}
 
 	/**
-	 * Correct problem in are update table under 7.0.2 systems
+	 * Correct problem in update table under 7.0.2 systems
 	 *
 	 * @return void
 	 *
@@ -493,7 +502,7 @@ class CWMInstallModel extends BaseModel
 	 */
 	private function correctVersions(): void
 	{
-		// Find Last updated Version in Update table
+		// Find the Last updated Version in Update table
 		$query = $this->_db->getQuery(true);
 		$query->select('*')
 			->from('#__bsms_update');
@@ -502,11 +511,11 @@ class CWMInstallModel extends BaseModel
 
 		foreach ($updates as $value)
 		{
-			// Check to see if Bad version is in key 3
+			// Check to see if a Bad version is in key 3
 
 			if (($value->id === '3') && ($value->version !== '7.0.1.1'))
 			{
-				// Find Last updated Version in Update table
+				// Find the Last updated Version in Update table
 				$query = "INSERT INTO `#__bsms_update` (id,version) VALUES (3,'7.0.1.1')
                             ON DUPLICATE KEY UPDATE version= '7.0.1.1';";
 				$this->_db->setQuery($query);
@@ -557,7 +566,7 @@ class CWMInstallModel extends BaseModel
 
 				if (!$this->_db->execute())
 				{
-					$app->enqueueMessage('Error instering ID', 'Error');
+					$app->enqueueMessage('Error inserting ID', 'Error');
 
 					return false;
 				}
@@ -1090,12 +1099,12 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @param   string  $step  Step to process
 	 *
-	 * @return boolean
+	 * @return void
 	 *
 	 * @throws  \Exception
 	 * @since   7.1
 	 */
-	private function finish(string $step): bool
+	private function finish(string $step): void
 	{
 		$app = Factory::getApplication();
 		$run = false;
@@ -1189,7 +1198,6 @@ class CWMInstallModel extends BaseModel
 				break;
 		}
 
-		return $run;
 	}
 
 	/**
@@ -1305,13 +1313,13 @@ class CWMInstallModel extends BaseModel
 	 */
 	private function allUpdate(string $value): bool
 	{
-		$buffer = file_get_contents(JPATH_ADMINISTRATOR . $this->filePath . '/' . $value . '.sql');
+		$buffer = file_get_contents(JPATH_ADMINISTRATOR . $this->filePath . $value . '.sql');
 
 		// Graceful exit and rollback if read not successful
 		if ($buffer === false)
 		{
-			Factory::getApplication()->enqueueMessage(Text::sprintf('JLIBinstallER_ERROR_SQL_READBUFFER'), 'WARNING');
-			Log::add(Text::sprintf('JLIBinstallER_ERROR_SQL_READBUFFER'), Log::WARNING, 'com_proclaim');
+			Factory::getApplication()->enqueueMessage(Text::sprintf('JBS_INS_ERROR_SQL_READBUFFER'), 'WARNING');
+			Log::add(Text::sprintf('JBS_INS_ERROR_SQL_READBUFFER'), Log::WARNING, 'com_proclaim');
 
 			return false;
 		}
@@ -1540,7 +1548,7 @@ class CWMInstallModel extends BaseModel
 	}
 
 	/**
-	 * Old Update URL's
+	 * Old Update URLs
 	 *
 	 * @return array
 	 *

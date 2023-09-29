@@ -4,7 +4,7 @@
  *
  * @package     Proclaim
  * @subpackage  Model.Podcast
- * @copyright   2007 - 2019 (C) CWM Team All rights reserved
+ * @copyright   2007-2023 (C) CWM Team All rights reserved
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        https://www.christianwebministries.org
  */
@@ -17,7 +17,7 @@ use CWM\Component\Proclaim\Site\Helper\CWMPodcastsubscribe;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Helper\ModuleHelper;
 
-// Always load JBSM API if it exists.
+// Always load Proclaim API if it exists.
 $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
 if (file_exists($api))
