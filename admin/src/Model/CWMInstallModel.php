@@ -423,12 +423,12 @@ class CWMInstallModel extends BaseModel
 			$files = str_replace('.sql', '', Folder::files(JPATH_ADMINISTRATOR . $this->filePath, '\.sql$'));
 			$php   = str_replace('.php', '', Folder::files(JPATH_ADMINISTRATOR . $this->phpPath, '\.php$'));
 
-			if ($files)
+			if (is_array($files))
 			{
 				usort($files, 'version_compare');
 			}
 
-			if ($php)
+			if (is_array($php))
 			{
 				usort($php, 'version_compare');
 			}
