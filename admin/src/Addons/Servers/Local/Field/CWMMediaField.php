@@ -174,12 +174,26 @@ class CWMMediaField extends FormField
 	}
 
 	/**
+	 * Something everything should work now
+	 *
+	 * @param   string  $name   The property name for which to the value.
+	 *
+	 *
+	 * @since version
+	 * @return void
+	 */
+	public function __isset(string $name)
+	{
+		// TODO: Implement __isset() method.
+	}
+
+	/**
 	 * Method to attach a JForm object to the field.
 	 *
 	 * @param   SimpleXMLElement  $element  The SimpleXMLElement object representing the `<field>` tag for the form field object.
 	 * @param   mixed             $value    The form field value to validate.
 	 * @param   string            $group    The field name group control value. This acts as as an array container for the field.
-	 *                                      For example if the field has name="foo" and the group value is set to "bar" then the
+	 *                                      For example, if the field has name="foo" and the group value is set to "bar" then the
 	 *                                      full field name would end up being "bar[foo]".
 	 *
 	 * @return  boolean  True on success.
@@ -187,11 +201,11 @@ class CWMMediaField extends FormField
 	 * @see     JFormField::setup()
 	 * @since   3.2
 	 */
-	public function setup(SimpleXMLElement $element, $value, $group = null)
+	public function setup(SimpleXMLElement $element, $value, $group = null): bool
 	{
 		$result = parent::setup($element, $value, $group);
 
-		if ($result == true)
+		if ($result)
 		{
 			$assetField = $this->element['asset_field'] ? (string) $this->element['asset_field'] : 'asset_id';
 
@@ -218,7 +232,7 @@ class CWMMediaField extends FormField
 	 * @throws \Exception
 	 * @since   1.6
 	 */
-	protected function getInput()
+	protected function getInput(): string
 	{
 		if (empty($this->layout))
 		{
@@ -235,39 +249,39 @@ class CWMMediaField extends FormField
 	 * @throws \Exception
 	 * @since 7.0.0
 	 */
-	public function getLayoutData()
+	public function getLayoutData(): array
 	{
 		// Get the basic field data
 		$data = parent::getLayoutData();
 
 		$asset = $this->asset;
 
-		if ($asset == '')
+		if ($asset === '')
 		{
 			$asset = Factory::getApplication()->input->get('option');
 		}
 
 		if ($this->value && file_exists(JPATH_ROOT . '/' . $this->value))
 		{
-			$this->folder = explode('/', $this->value);
-			$this->folder = array_diff_assoc($this->folder, explode('/', ComponentHelper::getParams('com_media')->get('image_path', 'images')));
-			array_pop($this->folder);
-			$this->folder = implode('/', $this->folder);
+			$folder = explode('/', $this->value);
+			$folder = array_diff_assoc($folder, explode('/', ComponentHelper::getParams('com_media')->get('image_path', 'images')));
+			array_pop($folder);
+			$folder = implode('/', $folder);
 		}
 		elseif (file_exists(JPATH_ROOT . '/' . ComponentHelper::getParams('com_media')->get('image_path', 'images') . '/' . $this->directory))
 		{
-			$this->folder = $this->directory;
+			$folder = $this->directory;
 		}
 		else
 		{
-			$this->folder = '';
+			$folder = '';
 		}
 
 		$extraData = array(
 			'asset'         => $asset,
 			'authorField'   => $this->authorField,
 			'authorId'      => $this->form->getValue($this->authorField),
-			'folder'        => $this->folder,
+			'folder'        => $folder,
 			'link'          => $this->link,
 			'preview'       => $this->preview,
 			'previewHeight' => $this->previewHeight,

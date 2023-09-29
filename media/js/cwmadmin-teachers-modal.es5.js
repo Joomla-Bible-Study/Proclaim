@@ -62,7 +62,8 @@
 								target.getAttribute('data-title'),
 								target.getAttribute('data-cat-id'), null,
 								target.getAttribute('data-uri'),
-								target.getAttribute('data-language'))
+								target.getAttribute('data-language')
+							)
 						}
 						else
 						{
@@ -71,7 +72,8 @@
 								target.getAttribute('data-title'),
 								target.getAttribute('data-cat-id'), null,
 								target.getAttribute('data-uri'),
-								target.getAttribute('data-language'))
+								target.getAttribute('data-language')
+							)
 						}
 
 						if (window.parent.Joomla.Modal)

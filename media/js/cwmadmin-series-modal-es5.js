@@ -10,8 +10,8 @@
 	(function () {
 		/**
 		 * Javascript to insert the link
-		 * View element calls jSelectArticle when an article is clicked
-		 * jSelectArticle creates the link tag, sends it to the editor,
+		 * View element calls jSelectSeries when a series is clicked
+		 * jSelectSeries creates the link tag, sends it to the editor,
 		 * and closes the select frame.
 		 * */
 		window.jSelectSeries = function (id, title, catid, object, link, lang) {

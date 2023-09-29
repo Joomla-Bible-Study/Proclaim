@@ -10,21 +10,21 @@
 	(function () {
 		/**
 		 * Javascript to insert the link
-		 * View element calls jSelectType when a type is clicked
-		 * jSelectType creates the link tag, sends it to the editor,
+		 * View element calls jSelectServer when a server is clicked
+		 * jSelectServer creates the link tag, sends it to the editor,
 		 * and closes the select frame.
 		 * */
-		window.jSelectSeries = function (id, title, catid, object, link, lang) {
+		window.jSelectSeries = function (id, title, object, link, lang) {
 			var hreflang = ''
 
-			if (!Joomla.getOptions('xtd-types'))
+			if (!Joomla.getOptions('xtd-servers'))
 			{
 				// Something went wrong!
 				// @TODO Close the modal
 				return false
 			}
 
-			var _Joomla$getOptions = Joomla.getOptions('xtd-types'),
+			var _Joomla$getOptions = Joomla.getOptions('xtd-servers'),
 				editor = _Joomla$getOptions.editor
 
 			if (lang !== '')
@@ -34,6 +34,7 @@
 
 			var tag = '<a ' + hreflang + ' href="' + link + '">' + title + '</a>'
 			window.parent.Joomla.editors.instances[editor].replaceSelection(tag)
+			window.parent.Joomla.submitForm();
 
 			if (window.parent.Joomla.Modal)
 			{
@@ -55,28 +56,36 @@
 					var target = event.target
 					var functionName = target.getAttribute('data-function')
 
-					if (functionName === 'jSelectType')
+					if (functionName === 'jSelectServer')
 					{
 						// Used in xtd_contacts
 						window[functionName](target.getAttribute('data-id'),
 							target.getAttribute('data-title'),
-							target.getAttribute('data-cat-id'), null,
 							target.getAttribute('data-uri'),
-							target.getAttribute('data-language'))
+							target.getAttribute('data-language')
+						)
 					}
 					else
 					{
 						// Used in com_menus
 						window.parent[functionName](target.getAttribute('data-id'),
 							target.getAttribute('data-title'),
-							target.getAttribute('data-cat-id'), null,
 							target.getAttribute('data-uri'),
-							target.getAttribute('data-language'))
+							target.getAttribute('data-language')
+						)
 					}
 
 					if (window.parent.Joomla.Modal)
 					{
 						window.parent.Joomla.Modal.getCurrent().close()
+						const doc = window.parent.document,
+							theForm = doc.getElementById("adminForm"),
+							task = doc.getElementsByName('task');
+						for (let i = 0; i < task.length; i++) {
+							task[i].value = "cwmmediafile.setServer";
+						}
+
+						theForm.submit();
 					}
 				})
 			}
