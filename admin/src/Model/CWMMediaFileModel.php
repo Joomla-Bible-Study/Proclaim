@@ -152,17 +152,23 @@ class CWMMediaFileModel extends AdminModel
 				// Make a duration build from Params of media.
 				$prefix = Uri::root();
 				$nohttp = $jbspodcast->remove_http($prefix);
+				$siteinfo = strpos($path, $nohttp);
 
-				if (strpos($path, $nohttp) === 0)
+				if ($siteinfo)
 				{
 					$filename = substr($path, strlen($nohttp));
-					$filename = JPATH_SITE . '/' . $filename;
-					$duration = $jbspodcast->formatTime($jbspodcast->getDuration($filename));
-
-					$params->set('media_hours', $duration->hourse);
-					$params->set('media_minutes', $duration->minutes);
-					$params->set('media_seconds', $duration->seconds);
 				}
+				else
+				{
+					$filename = $path;
+				}
+
+				$filename = JPATH_SITE . '/' . $filename;
+				$duration = $jbspodcast->formatTime($jbspodcast->getDuration($filename));
+
+				$params->set('media_hours', $duration->hourse);
+				$params->set('media_minutes', $duration->minutes);
+				$params->set('media_seconds', $duration->seconds);
 			}
 
 			$data['params'] = $params->toArray();

@@ -9,8 +9,8 @@
 		(function () {
 			/**
 			 * Javascript to insert the link
-			 * View element calls jSelectArticle when an article is clicked
-			 * jSelectArticle creates the link tag, sends it to the editor,
+			 * View element calls jSelectLocations when a location is clicked
+			 * jSelectLocations creates the link tag, sends it to the editor,
 			 * and closes the select frame.
 			 * */
 			window.jSelectTeachers = function (id, title, catid, object, link, lang) {

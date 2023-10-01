@@ -40,14 +40,14 @@ class CWMSermonController extends FormController
 	 * @var string
 	 * @since    1.6
 	 */
-	protected $view_item = 'sermon';
+	protected $view_item = 'Cwmsermon';
 
 	/**
 	 * View list
 	 * @var string
 	 * @since    1.6
 	 */
-	protected $view_list = 'sermons';
+	protected $view_list = 'Cwmsermons';
 
 	/**
 	 * Method to add a new record.

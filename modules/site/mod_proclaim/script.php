@@ -68,7 +68,7 @@ class JoomlaInstallerScript
 		$query = $db->getQuery(true);
 		$query->select('*')
 			->from('#__modules')
-			->where($db->quoteName('module') . ' LIKE ' . $db->quote('%mod_biblestudy'));
+			->where($db->quoteName('module') . ' LIKE ' . $db->quote('%mod_proclaim'));
 		$db->setQuery($query);
 		$data       = $db->loadObjectList();
 		$filenumber = 1;
@@ -112,7 +112,7 @@ class JoomlaInstallerScript
 	 * $parent is the class calling this method
 	 * $type is the type of change (install, update or discover_install)
 	 *
-	 * @param   string          $type    Type of install
+	 * @param   string          $type    Type of installation
 	 * @param   JInstallerFile  $parent  Where it is coming from
 	 *
 	 * @return void
@@ -129,7 +129,7 @@ class JoomlaInstallerScript
 	 * $parent is the class calling this method
 	 * $type is the type of change (install, update or discover_install)
 	 *
-	 * @param   string          $type    Type of install
+	 * @param   string          $type    Type of installation
 	 * @param   JInstallerFile  $parent  Where it is coming from
 	 *
 	 * @return void
