@@ -23,7 +23,7 @@ use Joomla\CMS\MVC\Controller\BaseController;
  * @package  Proclaim.Site
  * @since    7.0.0
  */
-class CWMSeriesDisplayController extends BaseController
+class CwmseriesdisplayController extends BaseController
 {
 	/**
 	 * The default view for the display method.
@@ -31,7 +31,7 @@ class CWMSeriesDisplayController extends BaseController
 	 * @var    string
 	 * @since  3.0
 	 */
-	protected $default_view = 'CWMSeriesDisplay';
+	protected $default_view = 'Cwmseriesdisplay';
 
 	/**
 	 * Typical view method for MVC based architecture
