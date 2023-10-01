@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Mod_Biblestudy core file
+ * Mod_proclaim core file
  *
  * @package     Proclaim
- * @subpackage  Model.BibleStudy
- * @copyright   2007 - 2019 (C) CWM Team All rights reserved
+ * @subpackage  Model.Proclaim
+ * @copyright   2007-2023 (C) CWM Team All rights reserved
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        https://www.christianwebministries
  * */

@@ -20,6 +20,8 @@ use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\Toolbar\ToolbarFactoryInterface;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Registry\Registry;
 use JText;
@@ -153,45 +155,78 @@ class HtmlView extends BaseHtmlView
 	 */
 	protected function addToolbar(): void
 	{
-		Factory::getApplication()->input->set('hidemainmenu', true);
+		Factory::getApplication()->getInput()->set('hidemainmenu', true);
+
 		$user       = $user = Factory::getApplication()->getSession()->get('user');
-		$userId     = $user->get('id');
-		$isNew      = (empty($this->item->id));
-		$checkedOut = !($this->item->checked_out === '0' || $this->item->checked_out == $userId);
+		$userId     = $user->id;
+		$isNew      = ($this->item->id === 0);
+		$checkedOut = !($this->item->checked_out === null || $this->item->checked_out == $userId);
 		$title      = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
+		$toolbar    = Toolbar::getInstance();
+
 		ToolbarHelper::title(JText::_('JBS_CMN_MEDIA_FILES') . ': <small><small>[' . $title . ']</small></small>', 'video video');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_proclaim'))
 		{
-			ToolbarHelper::apply('cwmmediafile.apply');
-			ToolbarHelper::save('cwmmediafile.save');
-			ToolbarHelper::cancel('cwmmediafile.cancel');
-			ToolbarHelper::checkin('cwmmediafile.checkin');
+			$toolbar->apply('cwmmediafile.apply');
+
+			$saveGroup = $toolbar->dropdownButton('save-group');
+			$saveGroup->configure(
+				function (Toolbar $childBar) use ($user) {
+					$childBar->save('cwmmediafile.save');
+
+					$childBar->save2new('cwmmediafile.save2new');
+				}
+			);
+
 		}
 		else
 		{
-			// Can't save the record if it's checked out.
-			if (!$checkedOut && $this->canDo->get('core.edit', 'com_proclaim'))
-			{
-				ToolbarHelper::apply('cwmmediafile.apply');
-				ToolbarHelper::save('cwmmediafile.save');
+			// Since it's an existing record, check the edit permission, or fall back to edit own if the owner.
+			$itemEditable = $this->canDo->get('core.edit') || ($this->canDo->get('core.edit.own'));
 
-				if ($this->canDo->get('core.create', 'com_proclaim'))
-				{
-					ToolbarHelper::save2new('cwmmediafile.save2new');
+			// Can't save the record if it's checked out and editable
+			if (!$checkedOut && $itemEditable)
+			{
+				$toolbar->apply('cwmmediafile.apply');
+			}
+
+			$saveGroup = $toolbar->dropdownButton('save-group');
+
+			$canDo = $this->canDo;
+
+			$saveGroup->configure(
+				function (Toolbar $childBar) use ($checkedOut, $itemEditable, $canDo, $user) {
+					// Can't save the record if it's checked out and editable
+					if (!$checkedOut && $itemEditable)
+					{
+						$childBar->save('cwmmediafile.save');
+
+						// We can save this record, but check the create permission to see if we can return to make a new one.
+						if ($canDo->get('core.create'))
+						{
+							$childBar->save2new('cwmmediafile.save2new');
+						}
+					}
+
+					// If checked out, we can still save2menu
+					if ($user->authorise('core.create', 'com_menus.menu'))
+					{
+						$childBar->save('cwmmediafile.save2menu', 'JTOOLBAR_SAVE_TO_MENU');
+					}
+
+					// If checked out, we can still save
+					if ($canDo->get('core.create'))
+					{
+						$childBar->save2copy('cwmmediafile.save2copy');
+					}
 				}
-			}
+			);
 
-			// If checked out, we can still save
-			if ($this->canDo->get('core.create', 'com_proclaim'))
-			{
-				ToolbarHelper::save2copy('cwmmediafile.save2copy');
-			}
-
-			ToolbarHelper::cancel('cwmmediafile.cancel', 'JTOOLBAR_CLOSE');
 		}
+		$toolbar->cancel('cwmmediafile.cancel');
 
 		ToolbarHelper::divider();
-		ToolbarHelper::help('biblestudy', true);
+		ToolbarHelper::help('proclaim', true);
 	}
 }

@@ -4,11 +4,11 @@
 		<fieldset name="general"
 		          addfieldprefix="CWM\Component\Proclaim\Administrator\Addons\Servers\Legacy\Field">
 			<field name="filename"
-			       type="plupload"
-			       handler="upload"
+			       type="Media"
 			       label="JBS_MED_FILENAME"
 			       description="JBS_MED_USE_FILENAME_AS_PATH"
-			       class="inputbox required"
+				   directory="/images/biblestudy/media/"
+				   types="images,audios,videos,documents"
 			       required="true"/>
 			<field name="size" type="Filesize" label="JBS_CMN_FILESIZE"
 			       description="JBS_MED_FILESIZE_DESC" class="form-control" size="35"/>

@@ -25,7 +25,7 @@ use Joomla\CMS\MVC\Controller\BaseController;
  * @package  Proclaim.Site
  * @since    7.0.0
  */
-class CWMSermonsController extends BaseController
+class CwmsermonsController extends BaseController
 {
 	/**
 	 * Media Code

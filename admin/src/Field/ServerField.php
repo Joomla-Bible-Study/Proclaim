@@ -80,8 +80,8 @@ class ServerField extends FormField
 			{
 				$wa->addInlineScript(
 					"
-				window.jSelectServer_" . $this->id . " = function (id, title, catid, object, url, language) {
-					window.processModalSelect('Server', '" . $this->id . "', id, title, catid, object, url, language);
+				window.jSelectServer_" . $this->id . " = function (id, title, object, url, language) {
+					window.processModalSelect('Server', '" . $this->id . "', id, title, object, url, language);
 				}",
 					[],
 					['type' => 'module']
@@ -101,11 +101,11 @@ class ServerField extends FormField
 		{
 			$linkServers .= '&amp;forcedLanguage=' . $this->element['language'];
 			$linkServers .= '&amp;forcedLanguage=' . $this->element['language'];
-			$modalTitle   = Text::_('COM_CONTENT_SELECT_AN_ARTICLE') . ' &#8212; ' . $this->element['label'];
+			$modalTitle   = Text::_('COM_PROCLAIM_SELECT_AN_SERVER') . ' &#8212; ' . $this->element['label'];
 		}
 		else
 		{
-			$modalTitle = Text::_('COM_CONTENT_SELECT_AN_ARTICLE');
+			$modalTitle = Text::_('COM_PROCLAIM_SELECT_AN_SERVER');
 		}
 
 		$urlSelect = $linkServers . '&amp;function=jSelectServer_' . $this->id;
@@ -138,7 +138,7 @@ class ServerField extends FormField
 			}
 		}
 
-		$title = empty($title) ? Text::_('COM_CONTENT_SELECT_AN_ARTICLE') : htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
+		$title = empty($title) ? Text::_('COM_PROCLAIM_SELECT_AN_SERVER') : htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
 
 		// The current article display field.
 		$html = "";
@@ -150,7 +150,7 @@ class ServerField extends FormField
 
 		$html .= '<input class="form-control" id="' . $this->id . '_name" type="text" value="' . $title . '" readonly size="35">';
 
-		// Select article button
+		// Select server button
 		if ($allowSelect)
 		{
 			$html .= '<button'
@@ -249,7 +249,7 @@ class ServerField extends FormField
 				'bootstrap.renderModal',
 				'ModalNew' . $modalId,
 				array(
-					'title'       => Text::_('COM_CONTENT_NEW_ARTICLE'),
+					'title'       => Text::_('COM_PROCLAIM_NEW_SERVER'),
 					'backdrop'    => 'static',
 					'keyboard'    => false,
 					'closeButton' => false,
@@ -259,13 +259,13 @@ class ServerField extends FormField
 					'bodyHeight'  => 70,
 					'modalWidth'  => 80,
 					'footer'      => '<button type="button" class="btn btn-secondary"'
-						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'article\', \'cancel\', \'item-form\'); return false;">'
+						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'server\', \'cancel\', \'item-form\'); return false;">'
 						. Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>'
 						. '<button type="button" class="btn btn-primary"'
-						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'article\', \'save\', \'item-form\'); return false;">'
+						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'server\', \'save\', \'item-form\'); return false;">'
 						. Text::_('JSAVE') . '</button>'
 						. '<button type="button" class="btn btn-success"'
-						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'article\', \'apply\', \'item-form\'); return false;">'
+						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'server\', \'apply\', \'item-form\'); return false;">'
 						. Text::_('JAPPLY') . '</button>',
 				)
 			);
@@ -278,7 +278,7 @@ class ServerField extends FormField
 				'bootstrap.renderModal',
 				'ModalEdit' . $modalId,
 				array(
-					'title'       => Text::_('COM_CONTENT_EDIT_ARTICLE'),
+					'title'       => Text::_('COM_PROCLAIM_EDIT_SERVER'),
 					'backdrop'    => 'static',
 					'keyboard'    => false,
 					'closeButton' => false,
@@ -288,13 +288,13 @@ class ServerField extends FormField
 					'bodyHeight'  => 70,
 					'modalWidth'  => 80,
 					'footer'      => '<button type="button" class="btn btn-secondary"'
-						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'article\', \'cancel\', \'item-form\'); return false;">'
+						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'server\', \'cancel\', \'item-form\'); return false;">'
 						. Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>'
 						. '<button type="button" class="btn btn-primary"'
-						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'article\', \'save\', \'item-form\'); return false;">'
+						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'server\', \'save\', \'item-form\'); return false;">'
 						. Text::_('JSAVE') . '</button>'
 						. '<button type="button" class="btn btn-success"'
-						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'article\', \'apply\', \'item-form\'); return false;">'
+						. ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'server\', \'apply\', \'item-form\'); return false;">'
 						. Text::_('JAPPLY') . '</button>',
 				)
 			);
@@ -304,7 +304,7 @@ class ServerField extends FormField
 		$class = $this->required ? ' class="required modal-value"' : '';
 
 		$html .= '<input type="hidden" id="' . $this->id . '_id" ' . $class . ' data-required="' . (int) $this->required . '" name="' . $this->name
-			. '" data-text="' . htmlspecialchars(Text::_('COM_CONTENT_SELECT_AN_ARTICLE'), ENT_COMPAT, 'UTF-8') . '" value="' . $value . '">';
+			. '" data-text="' . htmlspecialchars(Text::_('COM_PROCLAIM_SELECT_AN_SERVER'), ENT_COMPAT, 'UTF-8') . '" value="' . $value . '" >';
 
 		return $html;
 	}

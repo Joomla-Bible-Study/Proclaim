@@ -96,14 +96,14 @@ $(function () {
 
 				if (parseInt($(this).val()) === 0)
 				{
-					targetImage.hide()
+					$.find(targetImage).hide()
 				}
 				else
 				{
-					targetImage.show()
+					$.find(targetImage).show()
 				}
 
-				targetImage.attr('src', activeDir.join('/') + '/' + $(this).val())
+			$.find(targetImage).attr('src', activeDir.join('/') + '/' + $(this).val())
 			},
 		)
 
@@ -266,7 +266,7 @@ function bandwidth(bytees, type)
 {
 	let value = bytees
 	let res
-	if (!isNaN(value) && (value != ''))
+	if (!isNaN(value) && (value !== ''))
 	{
 		if (type.toUpperCase() === 'KB')
 		{

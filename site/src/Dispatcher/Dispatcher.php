@@ -28,7 +28,7 @@ class Dispatcher extends ComponentDispatcher
 	 * @var string
 	 * @since 10.0.0
 	 */
-	protected string $defaultController = 'cwmlandingpage';
+	protected string $defaultController ='DisplayController';
 
 	/**
 	 * Dispatch a controller task. Redirecting the user if appropriate.

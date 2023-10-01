@@ -8,37 +8,37 @@
  * @link       https://www.christianwebministries.org
  * */
 namespace CWM\Component\Proclaim\Site\Controller;
-use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
+
 use Joomla\CMS\MVC\Controller\BaseController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
- * Controller class for Teacher
+ * Controller for Series Displays
  *
  * @package  Proclaim.Site
  * @since    7.0.0
  */
-class CWMTeacherController extends BaseController
+class CwmseriesdisplaysController extends BaseController
 {
 	/**
-	 * Display the edit form
+	 * Proxy for getModel
 	 *
-	 * @return void
+	 * @param   string  $name    The name of the model
+	 * @param   string  $prefix  The prefix for the PHP class name
+	 * @param   array   $config  Set ignore request
 	 *
-	 * @throws \Exception
+	 * @return BaseDatabaseModel|boolean
+	 *
 	 * @since 7.0
 	 */
-	public function view(): void
+	public function &getModel($name = 'CWMSeriesDisplays', $prefix = 'Model', $config = array('ignore_request' => true))
 	{
-		$input = Factory::getApplication()->input;
-		$input->set('view', 'CWMTeacher');
-		$input->set('layout', 'default');
+		$model = parent::getModel($name, $prefix, $config);
 
-		$this->display();
+		return $model;
 	}
 }

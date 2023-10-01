@@ -806,13 +806,13 @@ class CWMPodcast
 	/**
 	 * Get Frame Header of the ID3 file
 	 *
-	 * @param   array  $fourbytes  array with four bytes
+	 * @param   string  $fourbytes  array with four bytes
 	 *
 	 * @return array
 	 *
 	 * @since 9.2.4
 	 */
-	public function parseFrameHeader(array $fourbytes): array
+	public function parseFrameHeader(string $fourbytes): array
 	{
 		static $versions = array(
 			0x0 => '2.5', 0x1 => 'x', 0x2 => '2', 0x3 => '1'

@@ -8,21 +8,22 @@
  * @link       https://www.christianwebministries.org
  * */
 namespace CWM\Component\Proclaim\Site\Controller;
-
+use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\User\CurrentUserInterface;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
- * Controller for SeriesDisplays
+ * Controller for Teachers
  *
  * @package  Proclaim.Site
  * @since    7.0.0
  */
-class CWMSeriesDisplaysController extends BaseController
+class CwmteachersController extends BaseController
 {
 	/**
 	 * Proxy for getModel
@@ -31,11 +32,11 @@ class CWMSeriesDisplaysController extends BaseController
 	 * @param   string  $prefix  The prefix for the PHP class name
 	 * @param   array   $config  Set ignore request
 	 *
-	 * @return BaseDatabaseModel|boolean
+	 * @return boolean|BaseDatabaseModel|CurrentUserInterface $model
 	 *
 	 * @since 7.0
 	 */
-	public function &getModel($name = 'CWMSeriesDisplays', $prefix = 'Model', $config = array('ignore_request' => true))
+	public function &getModel($name = 'CWMTeacher', $prefix = '', $config = array('ignore_request' => true))
 	{
 		$model = parent::getModel($name, $prefix, $config);
 
