@@ -190,7 +190,6 @@ class CWMPodcast
                 		<itunes:category text="Christianity" />
                 	</itunes:category>
                 	<itunes:explicit>no</itunes:explicit>
-                	<pubDate>' . $date . '</pubDate>
                 	<managingEditor>' . $podinfo->editor_email . ' (' . $this->escapeHTML($podinfo->editor_name) . ')</managingEditor>
                 	<webMaster>' . $podinfo->editor_email . ' (' . $this->escapeHTML($podinfo->editor_name) . ')</webMaster>
                     <itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>';
