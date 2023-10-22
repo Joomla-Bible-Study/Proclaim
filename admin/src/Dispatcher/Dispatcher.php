@@ -27,7 +27,7 @@ class Dispatcher extends ComponentDispatcher
 	 * @var string
 	 * @since 10.0.0
 	 */
-	protected string $defaultController = 'cwmcpanel';
+	protected string $defaultController = 'CWMCpanel';
 
 	/**
 	 * @return void
