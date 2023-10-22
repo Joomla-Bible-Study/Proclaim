@@ -188,7 +188,7 @@ class HtmlView extends BaseHtmlView
 	 * @var CMSObject
 	 * @since    7.0.0
 	 */
-	protected CMSObject $item;
+	protected $item;
 
 	/**
 	 * State
@@ -196,7 +196,7 @@ class HtmlView extends BaseHtmlView
 	 * @var CMSObject
 	 * @since    7.0.0
 	 */
-	protected CMSObject $state;
+	protected $state;
 
 	/**
 	 * Execute and display a template script.

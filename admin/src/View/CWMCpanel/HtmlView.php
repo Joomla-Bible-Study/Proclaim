@@ -12,9 +12,9 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMCpanel;
 
 use CWM\Component\Proclaim\Administrator\Lib\CWMStats;
 use CWM\Component\Proclaim\Administrator\Model\CWMCpanelModel;
-use Joomla\CMS\Document\Document;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Object\CMSObject;
 use SimpleXMLElement;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -46,10 +46,10 @@ class HtmlView extends BaseHtmlView
 	public string $total_messages;
 
 	/**
-	 * State
+	 * The model state
 	 *
-	 * @var mixed
-	 * @since    7.0.0
+	 * @var   \Joomla\CMS\Object\CMSObject
+	 * @since    10.0.0
 	 */
 	protected $state;
 
@@ -81,9 +81,9 @@ class HtmlView extends BaseHtmlView
 	 */
 	public function display($tpl = null): void
 	{
-		$this->state = $this->get('State');
 		$model       = new CWMCpanelModel;
 		$component   = JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.xml';
+		$this->state = $this->get('State');
 
 		if (file_exists($component))
 		{
