@@ -30,7 +30,7 @@
   "config": {
 	"optimize-autoloader": true,
 	"platform": {
-	  "php": "7.4.999"
+		"php": "8.1.0"
 	},
 	"vendor-dir": "libraries/vendor",
 	"github-protocols": [
@@ -46,7 +46,7 @@
 	"docs": "https://www.christianwebministries.org/docs"
   },
   "require": {
-	"php": "^7.4.0||^8.0.0",
+	  "php": "^8.1.0",
 	"ircmaxell/password-compat": "1.*",
 	"leafo/lessphp": "dev-master",
 	"phpmailer/phpmailer": "6.*",
@@ -55,7 +55,7 @@
 	"symfony/yaml": "3.*",
 	"simplepie/simplepie": "1.*",
 	"google/recaptcha": "^1.1",
-	"typo3/phar-stream-wrapper": "^2.1",
+	"typo3/phar-stream-wrapper": "^3.1.7",
 	"ext-mbstring": "*",
 	  "ext-simplexml": "*",
 	  "ext-zip": "*",

@@ -1,5 +1,7 @@
 <?php
 
+namespace CWM\Plugin\Finder\Proclaim\Extension;
+
 /**
  * Finder adapter for Proclaim.
  *
@@ -12,29 +14,28 @@
 defined('JPATH_BASE') or die;
 
 use CWM\Component\Proclaim\Site\Helper\CWMHelperRoute;
-use Joomla\CMS\Categories\Categories;
 use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Factory;
 use Joomla\CMS\Table\Table;
-use Joomla\Component\Contact\Site\Helper\RouteHelper;
 use Joomla\Component\Finder\Administrator\Indexer\Adapter;
 use Joomla\Component\Finder\Administrator\Indexer\Helper;
 use Joomla\Component\Finder\Administrator\Indexer\Indexer;
 use Joomla\Component\Finder\Administrator\Indexer\Result;
+use Joomla\Database\DatabaseAwareTrait;
 use Joomla\Database\DatabaseQuery;
-use Joomla\Database\QueryInterface;
 use Joomla\Registry\Registry;
 
 
 /**
- * Finder adapter for Proclaim.
+ * Finder adapter for com_proclaim.
  *
  * @package     Proclaim
  * @subpackage  plg_finder_proclaim
  * @since       7.1.0
  */
-class PlgFinderProclaim extends FinderIndexerAdapter
+final class Proclaim extends Adapter
 {
+	use DatabaseAwareTrait;
+
 	/**
 	 * The plugin identifier.
 	 *
@@ -57,7 +58,7 @@ class PlgFinderProclaim extends FinderIndexerAdapter
 	 * @var    string
 	 * @since  7.1.0
 	 */
-	protected $layout = 'sermon';
+	protected $layout = 'cwmsermon';
 
 	/**
 	 * The type of content that the adapter indexes.
@@ -76,14 +77,6 @@ class PlgFinderProclaim extends FinderIndexerAdapter
 	protected $table = '#__bsms_studies';
 
 	/**
-	 * The state field
-	 *
-	 * @var string
-	 * @since 7.1.0
-	 */
-	protected $state_field = 'published';
-
-	/**
 	 * Load the language file on instantiation.
 	 *
 	 * @var    boolean
@@ -92,70 +85,52 @@ class PlgFinderProclaim extends FinderIndexerAdapter
 	protected $autoloadLanguage = true;
 
 	/**
-	 * Method to update the item link information when the item category is
-	 * changed. This is fired when the item category is published or unpublished
-	 * from the list view.
-	 *
-	 * @param   string   $extension  The extension whose category has been updated.
-	 * @param   array    $pks        A list of primary key ids of the content that has changed state.
-	 * @param   integer  $value      The value of the state that the content has been changed to.
-	 *
-	 * @return  void
-	 *
-	 * @since   7.1.0
-	 */
-	public function onFinderCategoryChangeState(string $extension, array $pks, int $value): void
-	{
-	}
-
-	/**
 	 * Method to remove the link information for items that have been deleted.
 	 *
 	 * @param   string  $context  The context of the action being performed.
-	 * @param   JTable  $table    A JTable object containing the record to be deleted
+	 * @param   Table   $table    A Table object containing the record to be deleted
 	 *
-	 * @return  boolean  True on success.
+	 * @return  void
 	 *
-	 * @since   7.1.0
-	 * @throws  Exception on database error.
+	 * @throws  \Exception on database error.
+	 * @since   2.5
 	 */
-	public function onFinderAfterDelete($context, $table): bool
+	public function onFinderAfterDelete($context, $table): void
 	{
-		if ($context == 'com_proclaim.message')
+		if ($context === 'com_proclaim.message')
 		{
 			$id = $table->id;
 		}
-		elseif ($context == 'com_finder.index')
+		elseif ($context === 'com_finder.index')
 		{
 			$id = $table->link_id;
 		}
 		else
 		{
-			return true;
+			return;
 		}
 
 		// Remove the items.
-		return $this->remove($id);
+		$this->remove($id);
 	}
 
 	/**
 	 * Method to determine if the access level of an item changed.
 	 *
 	 * @param   string   $context  The context of the content passed to the plugin.
-	 * @param   JTable   $row      A JTable object
+	 * @param   Table    $row      A JTable object
 	 * @param   boolean  $isNew    If the content has just been created
 	 *
-	 * @return  boolean  True on success.
+	 * @return  void
 	 *
+	 * @throws  \Exception on database error.
 	 * @since   7.1.0
-	 * @throws  Exception on database error.
 	 */
-	public function onFinderAfterSave($context, $row, $isNew): bool
+	public function onFinderAfterSave($context, $row, $isNew): void
 	{
-		if ($context == 'com_proclaim.message' || $context == 'com_proclaim.messageform')
+		if ($context === 'com_proclaim.message')
 		{
 			// Check if the access levels are different
-
 			if (!$isNew && $this->old_access != $row->access)
 			{
 				// Process the change.
@@ -165,8 +140,6 @@ class PlgFinderProclaim extends FinderIndexerAdapter
 			// Reindex the item
 			$this->reindex($row->id);
 		}
-
-		return true;
 	}
 
 	/**
@@ -175,18 +148,18 @@ class PlgFinderProclaim extends FinderIndexerAdapter
 	 * to queue the item to be indexed later.
 	 *
 	 * @param   string   $context  The context of the content passed to the plugin.
-	 * @param   JTable   $row      A JTable object
+	 * @param   Table    $row      A JTable object
 	 * @param   boolean  $isNew    If the content is just about to be created
 	 *
 	 * @return  boolean  True on success.
 	 *
+	 * @throws  \Exception on database error.
 	 * @since   7.1.0
-	 * @throws  Exception on database error.
 	 */
 	public function onFinderBeforeSave($context, $row, $isNew): bool
 	{
-		// We only want to handle sermons here
-		if ($context == 'com_proclaim.message' || $context == 'com_proclaim.messageform')
+		// We only want to handle contacts here
+		if ($context === 'com_proclaim.message')
 		{
 			// Query the database for the old access level if the item isn't new
 			if (!$isNew)
@@ -214,13 +187,13 @@ class PlgFinderProclaim extends FinderIndexerAdapter
 	public function onFinderChangeState($context, $pks, $value)
 	{
 		// We only want to handle sermons here
-		if ($context == 'com_proclaim.message' || $context == 'com_proclaim.messageform')
+		if ($context === 'com_proclaim.message')
 		{
 			$this->itemStateChange($pks, $value);
 		}
 
 		// Handle when the plugin is disabled
-		if ($context == 'com_plugins.plugin' && $value === 0)
+		if ($context === 'com_plugins.plugin' && $value === 0)
 		{
 			$this->pluginDisable($pks);
 		}
@@ -229,37 +202,34 @@ class PlgFinderProclaim extends FinderIndexerAdapter
 	/**
 	 * Method to index an item. The item must be a FinderIndexerResult object.
 	 *
-	 * @param   FinderIndexerResult  $item    The item to index as an FinderIndexerResult object.
-	 * @param   string               $format  The item format
+	 * @param   Result  $item  The item to index as an FinderIndexerResult object.
 	 *
 	 * @return  void
 	 *
-	 * @throws  Exception on database error.
+	 * @throws  \Exception on database error.
 	 * @since   7.1.0
 	 */
-	protected function index(FinderIndexerResult $item, string $format = 'html'): void
+	protected function index(Result $item): void
 	{
-		$item->setLanguage();
-
 		// Check if the extension is enabled
-		if (!JComponentHelper::isEnabled($this->extension))
+		if (ComponentHelper::isEnabled($this->extension) === false)
 		{
 			return;
 		}
 
-		// Initialize the item parameters.
-		$registry = new Registry;
-		$registry->loadString($item->params);
-		$item->params = JComponentHelper::getParams('com_proclaim', true);
-		$item->params->merge($registry);
+		$item->setLanguage();
 
-		$registry = new Registry;
-		$registry->loadString($item->metadata);
-		$item->metadata = $registry;
+		// Initialize the item parameters.
+
+		// Initialize the item parameters.
+		$item->params = new Registry($item->params);
+
+		// Get the menu title if it exists.
+		$title = $this->getItemMenuTitle($item->url);
 
 		// Trigger the onContentPrepare event.
-		$item->summary = FinderIndexerHelper::prepareContent($item->summary, $item->params);
-		$item->body    = FinderIndexerHelper::prepareContent($item->body, $item->params);
+		$item->summary = Helper::prepareContent($item->summary, $item->params);
+		$item->body    = Helper::prepareContent($item->body, $item->params);
 
 		// Build the necessary route and path information.
 		$item->url   = $this->getUrl($item->id, $this->extension, $this->layout);
@@ -274,16 +244,27 @@ class PlgFinderProclaim extends FinderIndexerAdapter
 			$item->title = $title;
 		}
 
+		$images = $item->images ? json_decode($item->images) : false;
+
+		// Add the image.
+		if ($images && !empty($images->image_intro))
+		{
+			$item->imageUrl = $images->image_intro;
+			$item->imageAlt = $images->image_intro_alt ?? '';
+		}
+
 		/*
 		 * Add the meta-data processing instructions based on the newsfeeds
 		 * configuration parameters.
 		 */
-		// Add the meta-author.
 
 		// Handle the link to the meta-data.
-		$item->addInstruction(FinderIndexer::META_CONTEXT, 'summary');
-		$item->addInstruction(FinderIndexer::META_CONTEXT, 'body');
-		$item->addInstruction(FinderIndexer::META_CONTEXT, 'author');
+		$item->addInstruction(Indexer::META_CONTEXT, 'summary');
+		$item->addInstruction(Indexer::META_CONTEXT, 'body');
+		$item->addInstruction(Indexer::META_CONTEXT, 'author');
+
+		// Get taxonomies to display
+		$taxonomies = $this->params->get('taxonomies', ['type', 'author', 'language']);
 
 		// Translate the state. Articles should only be published if the category is published.
 		$item->state = $this->translateState($item->state);
@@ -295,7 +276,7 @@ class PlgFinderProclaim extends FinderIndexerAdapter
 		$item->addTaxonomy('Language', $item->language);
 
 		// Get content extras.
-		FinderIndexerHelper::getContentExtras($item);
+		Helper::getContentExtras($item);
 
 		// Index the item.
 		$this->indexer->index($item);
@@ -306,79 +287,112 @@ class PlgFinderProclaim extends FinderIndexerAdapter
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @since   7.1.0
+	 * @since   2.5
 	 */
 	protected function setup(): bool
 	{
-		// Load dependent classes.
-		//JLoader::register('JBSMHelperRoute', JPATH_SITE . '/components/com_proclaim/helpers/route.php');
-
-		// This is a hack to get around the lack of a route helper.
-		//FinderIndexerHelper::getContentPath('index.php?option=com_proclaim');
-
 		return true;
 	}
 
 	/**
-	 * Method to get a SQL query to load the published and access states for
-	 * an biblestudy.
+	 * Method to update the item link information when the item category is
+	 * changed. This is fired when the item category is published or unpublished
+	 * from the list view.
 	 *
-	 * @return  Joomla\Database\QueryInterface  A database object.
+	 * @param   string   $extension  The extension whose category has been updated.
+	 * @param   array    $pks        A list of primary key ids of the content that has changed state.
+	 * @param   integer  $value      The value of the state that the content has been changed to.
+	 *
+	 * @return  void
 	 *
 	 * @since   2.5
 	 */
-	protected function getStateQuery(): QueryInterface
+	public function onFinderSeriesChangeState($extension, $pks, $value)
 	{
-		$query = $this->db->getQuery(true);
-
-		// Item ID
-		$query->select('a.id');
-
-		// Item and category published state
-		$query->select('a.' . $this->state_field . ' AS state');
-
-		// Item and category access levels
-		$query->select('a.access')
-			->from($this->table . ' AS a');
-
-		return $query;
+		// Make sure we're handling com_content categories.
+		if ($extension === 'com_proclaim')
+		{
+			$this->seriesStateChange($pks, $value);
+		}
 	}
 
 	/**
 	 * Method to get the SQL query used to retrieve the list of content items.
 	 *
-	 * @param   mixed  $sql  A JDatabaseQuery object or null.
+	 * @param   mixed  $query  A JDatabaseQuery object or null.
 	 *
-	 * @return  JDatabaseQuery  A database object.
+	 * @return  DatabaseQuery  A database object.
 	 *
 	 * @since   7.1.0
 	 */
-	protected function getListQuery($sql = null): JDatabaseQuery
+	protected function getListQuery($query = null): DatabaseQuery
 	{
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		$db = $this->getDatabase();
 
 		// Check if we can use the supplied SQL query.
-		$sql = $sql instanceof JDatabaseQuery ? $sql : $db->getQuery(true);
-		$sql->select('a.id, a.studytitle AS title, a.alias, a.studyintro AS summary, a.studytext as body');
-		$sql->select('a.published AS state, a.studydate AS start_date, a.user_id');
-		$sql->select('a.language');
-		$sql->select('a.access, a.ordering, a.params');
-		$sql->select('a.studydate AS publish_start_date');
+		$query = $query instanceof DatabaseQuery ? $query : $db->getQuery(true)
+			->select('a.id, a.studytitle AS title, a.alias, a.studyintro AS summary, a.studytext as body')
+			->select('a.published AS state, a.studydate AS start_date, a.user_id')
+			->select('a.language')
+			->select('a.access, a.ordering, a.params')
+			->select('a.publish_up AS publish_start_date, a.publish_down AS publish_end_date')
+			->select('s.series_text AS series, s.published AS s_state, s.access');
 
 		// Handle the alias CASE WHEN portion of the query
 		$case_when_item_alias = ' CASE WHEN ';
-		$case_when_item_alias .= $sql->charLength('a.alias', '!=', '0');
+		$case_when_item_alias .= $query->charLength('a.alias', '!=', '0');
 		$case_when_item_alias .= ' THEN ';
-		$a_id = $sql->castAsChar('a.id');
-		$case_when_item_alias .= $sql->concatenate(array($a_id, 'a.alias'), ':');
+		$a_id                 = $query->castAsChar('a.id');
+		$case_when_item_alias .= $query->concatenate(array($a_id, 'a.alias'), ':');
 		$case_when_item_alias .= ' ELSE ';
 		$case_when_item_alias .= $a_id . ' END as slug';
-		$sql->select($case_when_item_alias);
+		$query->select($case_when_item_alias);
 
-		$sql->select('u.teachername AS author')
+		$case_when_category_alias = ' CASE WHEN ';
+		$case_when_category_alias .= $query->charLength('s.alias', '!=', '0');
+		$case_when_category_alias .= ' THEN ';
+		$s_id = $query->castAsChar('s.id');
+		$case_when_category_alias .= $query->concatenate([$s_id, 's.alias'], ':');
+		$case_when_category_alias .= ' ELSE ';
+		$case_when_category_alias .= $s_id . ' END as seriesslug';
+		$query->select($case_when_category_alias);
+
+		$query->select('u.teachername AS author')
 			->from('#__bsms_studies AS a')
-			->join('LEFT', '#__bsms_teachers AS u ON u.id = a.teacher_id');
+			->join('LEFT', '#__bsms_teachers AS u ON u.id = a.teacher_id')
+			->join('LEFT', '#__bsms_series AS s ON s.id = a.series_id');
 
-		return $sql;
+		return $query;
+	}
+
+	/**
+	 * @throws \Exception
+	 */
+	private function seriesStateChange(array $pks, int $value)
+	{
+		/*
+		 * The item's published state is tied to the category
+		 * published state so we need to look up all published states
+		 * before we change anything.
+		 */
+		foreach ($pks as $pk)
+		{
+			$query = clone $this->getStateQuery();
+			$query->where('s.id = ' . (int) $pk);
+
+			// Get the published states.
+			$this->db->setQuery($query);
+			$items = $this->db->loadObjectList();
+
+			// Adjust the state for each item within the category.
+			foreach ($items as $item)
+			{
+				// Translate the state.
+				$temp = $this->translateState($item->state, $value);
+
+				// Update the item.
+				$this->change($item->id, 'state', $temp);
+			}
+		}
 	}
 }

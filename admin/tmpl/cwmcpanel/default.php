@@ -110,14 +110,14 @@ $simple = CWMHelper::getSimpleView();
 						target="_blank">
 					<?php echo Text::_('JBS_CPL_VISIT_FAQ'); ?></a></p>
 		</div>
-		<div style="border:1px solid #ddd; background:#FBFBFB;" class="visible-desktop">
-			<h3 style="text-align: center;">
+		<div class="visible-desktop">
+			<h3 class="text-center">
 				<?php echo Text::_('JBS_CPL_MENUE_LINKS'); ?>
 			</h3>
 			<div class="container">
 				<div class="row">
 					<div class="well well-small">
-						<div id="dashboard-icons" class="col" style="white-space:normal;">
+						<div id="dashboard-icons" class="col">
 							<a href="<?php echo Route::_('index.php?option=com_proclaim&amp;task=cwmadmin.edit&amp;id=1'); ?>"
 							   title="<?php echo Text::_('JBS_CMN_ADMINISTRATION'); ?>" class="btn"> <i
 										class="icon-big icon-options"> </i>

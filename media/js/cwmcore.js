@@ -316,9 +316,3 @@ function transferFileSize()
 		return true
 	}
 }
-
-// Load on all pages tooltip
-$(function () {
-		$('[data-toggle=\"tooltip\"]').tooltip()
-	},
-)

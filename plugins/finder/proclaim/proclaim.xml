@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="3.2" type="plugin" group="finder" method="upgrade">
+<extension type="plugin" group="finder" method="upgrade">
 	<name>JBS_PLG_FINDER</name>
 	<author>CWM Team</author>
 	<authorEmail>info@christianwebministries.org</authorEmail>
@@ -9,8 +9,9 @@
 	<creationDate>October 1, 2022</creationDate>
 	<license>https://www.gnu.org/licenses/gpl.html</license>
 	<description>JBS_PLG_FINDER_XML_DESCRIPTION</description>
+	<namespace path="src">CWM\Plugin\Finder\Proclaim</namespace>
 	<files>
-		<file plugin="proclaim">proclaim.php</file>
-		<folder>language</folder>
+		<folder plugin="proclaim">services</folder>
+		<folder>src</folder>
 	</files>
 </extension>
