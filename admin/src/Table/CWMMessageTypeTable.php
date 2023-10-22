@@ -74,7 +74,7 @@ class CWMMessageTypeTable extends Table
 	 * @var string|null
 	 * @since version
 	 */
-	public ?string $message_type;
+	public ?string $message_type = null;
 
 	/**
 	 * Constructor
