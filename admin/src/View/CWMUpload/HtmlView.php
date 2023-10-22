@@ -81,28 +81,13 @@ class HtmlView extends BaseHtmlView
 		$this->runtime    = $runtime;
 		$this->currentDir = '/media';
 
-		// Set the document
-		$this->setDocument();
+		$this->setDocumentTitle(Text::_('JBS_TITLE_UPLOAD_FORM'));
 
 		// Set the toolbar
 		$this->addToolbar();
 
 		// Display the template
 		parent::display($tpl);
-	}
-
-	/**
-	 * Add the page title to browser.
-	 *
-	 * @return void
-	 *
-	 * @throws \Exception
-	 * @since    7.1.0
-	 */
-	protected function setDocument()
-	{
-		$document = Factory::getApplication()->getDocument();
-		$document->setTitle(Text::_('JBS_TITLE_UPLOAD_FORM'));
 	}
 
 	/**

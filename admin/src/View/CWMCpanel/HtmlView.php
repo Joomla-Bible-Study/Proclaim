@@ -12,10 +12,9 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMCpanel;
 
 use CWM\Component\Proclaim\Administrator\Lib\CWMStats;
 use CWM\Component\Proclaim\Administrator\Model\CWMCpanelModel;
-use Joomla\CMS\Factory;
+use Joomla\CMS\Document\Document;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use Joomla\CMS\Toolbar\ToolbarHelper;
 use SimpleXMLElement;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -97,22 +96,9 @@ class HtmlView extends BaseHtmlView
 		$this->extension_id                = (int) $this->state->get('extension_id', 0, 'int');
 
 		// Set the document
-		$this->setDocument();
+		$this->setDocumentTitle(Text::_('JBS_TITLE_CONTROL_PANEL'));
 
 		// Display the template
 		parent::display($tpl);
-	}
-
-	/**
-	 * Add the page title to browser.
-	 *
-	 * @return void
-	 * @throws \Exception
-	 * @since    7.1.0
-	 *
-	 */
-	protected function setDocument(): void
-	{
-		$this->document->setTitle(Text::_('JBS_TITLE_CONTROL_PANEL'));
 	}
 }

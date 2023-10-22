@@ -125,8 +125,7 @@ class HtmlView extends BaseHtmlView
 			$this->addToolbar();
 		}
 
-		// Set the document
-		$this->setDocument();
+		$this->setDocumentTitle(Text::_('JBS_TITLE_TEMPLATECODES'));
 
 		// Display the template
 		parent::display($tpl);
@@ -192,20 +191,6 @@ class HtmlView extends BaseHtmlView
 		}
 
 		$toolbar->help('Messages', true);
-	}
-
-	/**
-	 * Add the page title to browser.
-	 *
-	 * @return void
-	 *
-	 * @throws \Exception
-	 * @since    7.1.0
-	 */
-	protected function setDocument(): void
-	{
-		$document = Factory::getApplication()->getDocument();
-		$document->setTitle(Text::_('JBS_TITLE_TEMPLATECODES'));
 	}
 
 	/**

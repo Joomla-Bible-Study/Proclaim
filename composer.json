@@ -77,8 +77,8 @@
 	  "sebastian/diff": "^3.0.2",
 	  "vimeo/psalm": "^3.17.1",
 	  "phploc/phploc": "*",
-	  "pear/cache_lite": "1.7.16",
-	  "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0"
+		"pear/cache_lite": "1.7.16",
+		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.0"
 	},
 	"extra": {
 		"branch-alias": {

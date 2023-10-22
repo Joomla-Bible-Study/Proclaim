@@ -16,7 +16,6 @@ use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use Joomla\CMS\Table\Content;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -109,8 +108,8 @@ class HtmlView extends BaseHtmlView
 		// Set the toolbar
 		$this->addToolbar();
 
-		// Set the document
-		$this->setDocument();
+		$isNew = ($this->item->id < 1);
+		$this->setDocumentTitle($isNew ? Text::_('JBS_TITLE_SERVERS_CREATING') : Text::sprintf('JBS_TITLE_SERVERS_EDITING', $this->item->server_name));
 
 		// Display the template
 		parent::display($tpl);
@@ -164,20 +163,5 @@ class HtmlView extends BaseHtmlView
 
 		ToolbarHelper::divider();
 		ToolbarHelper::help('biblestudy', true);
-	}
-
-	/**
-	 * Add the page title to browser.
-	 *
-	 * @return void
-	 *
-	 * @throws \Exception
-	 * @since    7.1.0
-	 */
-	protected function setDocument(): void
-	{
-		$isNew    = ($this->item->id < 1);
-		$document = Factory::getApplication()->getDocument();
-		$document->setTitle($isNew ? Text::_('JBS_TITLE_SERVERS_CREATING') : Text::sprintf('JBS_TITLE_SERVERS_EDITING', $this->item->server_name));
 	}
 }

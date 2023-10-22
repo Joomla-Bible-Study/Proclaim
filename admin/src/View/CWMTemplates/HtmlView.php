@@ -121,8 +121,7 @@ class HtmlView extends BaseHtmlView
 			$this->addToolbar();
 		}
 
-		// Set the document
-		$this->setDocument();
+		$this->setDocumentTitle(Text::_('JBS_TITLE_TEMPLATES'));
 
 		// Display the template
 		parent::display($tpl);
@@ -180,20 +179,6 @@ class HtmlView extends BaseHtmlView
 
 		$url = Route::_('index.php?option=com_proclaim&view=templates&layout=default_export');
 		$toolbar->appendButton('Link', 'export', 'JBS_TPL_IMPORT_EXPORT_TEMPLATE', $url);
-	}
-
-	/**
-	 * Add the page title to browser.
-	 *
-	 * @return void
-	 *
-	 * @throws \Exception
-	 * @since    7.1.0
-	 */
-	protected function setDocument(): void
-	{
-		$document = Factory::getApplication()->getDocument();
-		$document->setTitle(Text::_('JBS_TITLE_TEMPLATES'));
 	}
 
 	/**

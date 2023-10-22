@@ -224,6 +224,7 @@ class HtmlView extends BaseHtmlView
 			);
 
 		}
+
 		$toolbar->cancel('cwmmediafile.cancel');
 
 		ToolbarHelper::divider();

@@ -304,8 +304,7 @@ class HtmlView extends BaseHtmlView
 		// Set the toolbar
 		$this->addToolbar();
 
-		// Set the document
-		$this->setDocument();
+		$this->setDocumentTitle(Text::_('JBS_TITLE_ADMINISTRATION'));
 
 		// Display the template
 		parent::display($tpl);
@@ -346,20 +345,6 @@ class HtmlView extends BaseHtmlView
 		ToolbarHelper::inlinehelp();
 
 		$toolbar->help('Proclaim', true);
-	}
-
-	/**
-	 * Add the page title to browser.
-	 *
-	 * @return void
-	 *
-	 * @throws \Exception
-	 * @since    7.1.0
-	 */
-	protected function setDocument()
-	{
-		$document = Factory::getApplication()->getDocument();
-		$document->setTitle(Text::_('JBS_TITLE_ADMINISTRATION'));
 	}
 
 	/**

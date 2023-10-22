@@ -104,8 +104,7 @@ class HtmlView extends BaseHtmlView
 		// Display the template
 		parent::display($tpl);
 
-		// Set the document
-		$this->setDocument();
+		$this->setDocumentTitle(Text::_('JBS_TITLE_PODCASTS'));
 	}
 
 	/**
@@ -152,20 +151,6 @@ class HtmlView extends BaseHtmlView
 			ToolbarHelper::divider();
 			ToolbarHelper::custom('cwmpodcasts.writeXMLFile', 'xml.png', '', 'JBS_PDC_WRITE_XML_FILES', false);
 		}
-	}
-
-	/**
-	 * Add the page title to browser.
-	 *
-	 * @return void
-	 *
-	 * @throws \Exception
-	 * @since    7.1.0
-	 */
-	protected function setDocument(): void
-	{
-		$document = Factory::getApplication()->getDocument();
-		$document->setTitle(Text::_('JBS_TITLE_PODCASTS'));
 	}
 
 	/**

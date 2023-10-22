@@ -159,8 +159,7 @@ class HtmlView extends BaseHtmlView
 
 		$this->addToolbar();
 
-		// Set the document
-		$this->setDocument();
+		$this->setDocumentTitle(Text::sprintf('JBS_TITLE_INSTALL', $this->percentage . '%', $this->running));
 
 		// Display the template
 		parent::display($tpl);
@@ -229,20 +228,6 @@ class HtmlView extends BaseHtmlView
 		Factory::getApplication()->input->set('hidemainmenu', true);
 		ToolbarHelper::help('biblestudy', true);
 		ToolbarHelper::title(Text::_('JBS_CMN_INSTALL'), 'administration');
-	}
-
-	/**
-	 * Add the page title to browser.
-	 *
-	 * @return void
-	 * @throws \Exception
-	 * @since    7.1.0
-	 *
-	 */
-	protected function setDocument()
-	{
-		$document = Factory::getApplication()->getDocument();
-		$document->setTitle(Text::sprintf('JBS_TITLE_INSTALL', $this->percentage . '%', $this->running));
 	}
 
 	/**

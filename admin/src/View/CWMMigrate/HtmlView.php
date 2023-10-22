@@ -298,8 +298,7 @@ class HtmlView extends BaseHtmlView
 		// Set the toolbar
 		$this->addToolbar();
 
-		// Set the document
-		$this->setDocument();
+		$this->setDocumentTitle(Text::_('JBS_TITLE_ADMINISTRATION'));
 
 		// Display the template
 		parent::display($tpl);
@@ -321,20 +320,6 @@ class HtmlView extends BaseHtmlView
 		ToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
 		ToolbarHelper::divider();
 		ToolbarHelper::help('biblestudy', true);
-	}
-
-	/**
-	 * Add the page title to browser.
-	 *
-	 * @return void
-	 *
-	 * @throws \Exception
-	 * @since    7.1.0
-	 */
-	protected function setDocument(): void
-	{
-		$document = Factory::getApplication()->getDocument();
-		$document->setTitle(Text::_('JBS_TITLE_ADMINISTRATION'));
 	}
 
 	/**
