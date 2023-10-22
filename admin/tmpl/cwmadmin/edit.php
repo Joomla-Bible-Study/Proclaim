@@ -90,7 +90,7 @@ $wa->useScript('keepalive')
 						if (resize_thumbnails)
 						{
 							jQuery.getJSON(
-								'index.php?option=com_proclaim&task=cwmadmin.getThumbnailListXHR&" . JSession::getFormToken() . "=1',
+								'index.php?option=com_proclaim&task=cwmadmin.getThumbnailListXHR&" . Session::getFormToken() . "=1',
 								{ images: thumbnail_changes }, function (response) {
 									jQuery('#dialog_thumbnail_resize').modal({ backdrop: 'static', keyboard: false })
 									var total_paths = response.total
@@ -121,7 +121,7 @@ $wa->useScript('keepalive')
 																break
 														}
 														jQuery.getJSON(
-															'index.php?option=com_proclaim&task=cwmadmin.createThumbnailXHR&" . JSession::getFormToken() . "=1',
+															'index.php?option=com_proclaim&task=cwmadmin.createThumbnailXHR&" . Session::getFormToken() . "=1',
 															{
 																image_path: this,
 																new_size: new_size,
@@ -197,7 +197,7 @@ $this->useCoreUI = true;
 				<div class="well well-small">
 					<div id="dashboard-icons" class="btn-group" style="white-space: normal;">
 						<a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmassets&task=cwmassets.checkassets&' .
-							JSession::getFormToken() . '=1'); ?>"
+							Session::getFormToken() . '=1'); ?>"
 						   title="<?php echo Text::_('JBS_ADM_ASSET_CHECK'); ?>" class="btn"> <i
 									class="icon-big icon-list"> </i>
 							<span><br/> <?php echo Text::_('JBS_ADM_ASSET_CHECK'); ?> </span></a>
@@ -214,7 +214,7 @@ $this->useCoreUI = true;
 									class="icon-archive icon-big"></i>
 							<span><br/> <?php echo Text::_('JBS_ADM_ARCHIVE'); ?> </span></a>
 						<a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmadmin&task=cwmadmin.aliasUpdate&' .
-							JSession::getFormToken() . '=1') ?>"
+							Session::getFormToken() . '=1') ?>"
 						   title="<?php echo Text::_('JBS_ADM_RESET_ALIAS'); ?>" class="btn"> <i
 									class="icon-big icon-tree-2"></i>
 							<span><br/> <?php echo Text::_('JBS_ADM_RESET_ALIAS'); ?> </span></a>
