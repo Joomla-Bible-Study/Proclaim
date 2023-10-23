@@ -4,11 +4,9 @@
 		<fieldset name="media" label="JBS_ADDON_LEGACY_MEDIA"
 		          addfieldprefix="CWM\Component\Proclaim\Administrator\Addons\Servers\Legacy\Field">
 			<field name="filename"
-			       type="plupload"
-			       handler="upload"
+				   type="text"
 			       label="JBS_MED_FILENAME"
-			       description="JBS_MED_USE_FILENAME_AS_PATH"
-			       class="inputbox"/>
+			       description="JBS_MED_USE_FILENAME_AS_PATH"/>
 			<field name="mediacode" type="textarea" label="JBS_CMN_AVR"
 			       description="JBS_MED_AVRELOADED_DESC" class="inputbox" cols="64" rows="5"
 			       filter="raw"/>
@@ -78,18 +76,26 @@
 			<field name="docMan_id" type="docman" extension="com_proclaim"
 			       label="JBS_MED_USE_DOCMAN" description="JBS_MED_USE_DOCMAN_DESC"
 			       class="inputbox"/>
-			<field name="article_id" type="Modal_Article" extension="com_content"
-			       label="JBS_MED_USE_ARTICLE" class="inputbox" default="-1"/>
+			<field addfieldprefix="Joomla\Component\Content\Administrator\Field"
+				   name="article_id"
+				   type="modal_article"
+				   extension="com_content"
+				   label="JBS_MED_USE_ARTICLE"
+				   select="true"
+				   new="true"
+				   edit="true"
+				   clear="true"
+				   filter="integer"
+				   showon="privacy_type:article"/>
 			<field name="virtueMart_id" type="virtuemart" label="JBS_MED_VIRTUEMART_ITEM"
-			       description="JBS_MED_VIRTUEMART_ITEM_DESC" default="-1">
+			       description="JBS_MED_VIRTUEMART_ITEM_DESC" default="0">
 				<option value="-1">JBS_MED_SELECT_VM_ITEM</option>
 			</field>
 		</fieldset>
 		<fieldset name="media_type" label="JBS_ADDON_LEGACY_MEDIA_TYPE"
 		          addfieldpath="/administrator/components/com_proclaim/medels/fields">
 			<field name="media_image" type="media" directory="biblestudy"
-			       label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
-			       class="inputbox span6">
+			       label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC">
 			</field>
 			<field name="media_use_button_icon"
 			       label="JBS_ADDON_LEGACY_MEDIA_USE_BUTTON"

@@ -134,10 +134,8 @@ class CWMMediaFileModel extends AdminModel
 
 				if ($table->type === 'legacy' || $table->type === 'local')
 				{
-					$params->set('size',
-						CWMHelper::getRemoteFileSize(CWMHelper::MediaBuildUrl($set_path, $params->get('filename'), $params, true, true)
-						)
-					);
+					$size = CWMHelper::getRemoteFileSize(CWMHelper::MediaBuildUrl($set_path, $params->get('filename'), $params, true, true));
+					$params->set('size', $size);
 				}
 			}
 
@@ -146,24 +144,24 @@ class CWMMediaFileModel extends AdminModel
 				&& ($params->toObject()->media_minutes === '00' || empty($params->toObject()->media_minutes))
 				&& ($params->toObject()->media_seconds === '00' || (empty($params->toObject()->media_seconds))))
 			{
-				$path       = CWMHelper::MediaBuildUrl($set_path, $params->get('filename'), $params, false, false, true);
+				$path_server = CWMHelper::MediaBuildUrl($set_path, $params->get('filename'), $params, false, false, true);
 				$jbspodcast = new CWMPodcast;
 
 				// Make a duration build from Params of media.
 				$prefix = Uri::root();
 				$nohttp = $jbspodcast->remove_http($prefix);
-				$siteinfo = strpos($path, $nohttp);
+				$siteinfo    = strpos($path_server, $nohttp);
 
 				if ($siteinfo)
 				{
-					$filename = substr($path, strlen($nohttp));
+					$filename = substr($path_server, strlen($nohttp));
+					$filename = JPATH_SITE . '/' . $filename;
 				}
 				else
 				{
-					$filename = $path;
+					$filename = $path_server;
 				}
 
-				$filename = JPATH_SITE . '/' . $filename;
 				$duration = $jbspodcast->formatTime($jbspodcast->getDuration($filename));
 
 				$params->set('media_hours', $duration->hourse);
