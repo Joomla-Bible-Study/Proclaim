@@ -672,9 +672,19 @@ class CWMPodcast
 	public function formatTime(int $duration): object
 	{
 		$time          = new \stdClass;
-		$time->hours   = floor($duration / 3600);
-		$time->minutes = floor(($duration - ($time->hours * 3600)) / 60);
-		$time->seconds = $duration - ($time->hours * 3600) - ($time->minutes * 60);
+
+		if ($duration !== 0)
+		{
+			$time->hours   = floor($duration / 3600);
+			$time->minutes = floor(($duration - ($time->hours * 3600)) / 60);
+			$time->seconds = $duration - ($time->hours * 3600) - ($time->minutes * 60);
+		}
+		else
+		{
+			$time->hours   = '00';
+			$time->minutes = '00';
+			$time->seconds = '00';
+		}
 
 		return $time;
 	}
@@ -690,47 +700,49 @@ class CWMPodcast
 	 */
 	public function getDuration(string $filename): int
 	{
-		$fd = fopen($filename, 'rb');
-
 		$duration = 0;
-		$block    = fread($fd, 100);
-		$offset   = $this->skipID3v2Tag($block);
-		@fseek($fd, $offset, SEEK_SET);
 
-		while (!feof($fd))
+		if ($fd = fopen($filename, 'rb'))
 		{
-			$block = fread($fd, 10);
+			$block  = fread($fd, 100);
+			$offset = $this->skipID3v2Tag($block);
+			@fseek($fd, $offset, SEEK_SET);
 
-			if (strlen($block) < 10)
+			while (!feof($fd))
 			{
-				break;
-			}
+				$block = fread($fd, 10);
 
-			// Looking for 1111 1111 111 (frame synchronization bits)
-
-			if ($block[0] === "\xff" && (ord($block[1]) & 0xe0))
-			{
-				$info = $this->parseFrameHeader(substr($block, 0, 4));
-
-				if (empty($info['Framesize']))
+				if (strlen($block) < 10)
 				{
-					return (int) $duration;
-
-					// Some corrupt mp3 files
+					break;
 				}
 
-				fseek($fd, $info['Framesize'] - 10, SEEK_CUR);
-				$duration += ($info['Samples'] / $info['Sampling Rate']);
-			}
-			elseif (strpos($block, 'TAG') === 0)
-			{
-				fseek($fd, 128 - 10, SEEK_CUR);
+				// Looking for 1111 1111 111 (frame synchronization bits)
 
-				// Skip over id3v1 tag size
-			}
-			else
-			{
-				@fseek($fd, -9, SEEK_CUR);
+				if ($block[0] === "\xff" && (ord($block[1]) & 0xe0))
+				{
+					$info = $this->parseFrameHeader(substr($block, 0, 4));
+
+					if (empty($info['Framesize']))
+					{
+						return (int) $duration;
+
+						// Some corrupt mp3 files
+					}
+
+					fseek($fd, $info['Framesize'] - 10, SEEK_CUR);
+					$duration += ($info['Samples'] / $info['Sampling Rate']);
+				}
+				elseif (strpos($block, 'TAG') === 0)
+				{
+					fseek($fd, 128 - 10, SEEK_CUR);
+
+					// Skip over id3v1 tag size
+				}
+				else
+				{
+					@fseek($fd, -9, SEEK_CUR);
+				}
 			}
 		}
 
@@ -773,7 +785,7 @@ class CWMPodcast
 	public function skipID3v2Tag(&$block): int
 	{
 		// Do not worry about string vs array work right.
-		if (strpos($block, "ID3") === 0)
+		if (str_starts_with($block, "ID3"))
 		{
 			$id3v2_major_version    = ord($block[3]);
 			$id3v2_minor_version    = ord($block[4]);

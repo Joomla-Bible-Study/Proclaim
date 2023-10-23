@@ -18,13 +18,12 @@ use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\Helper\ContentHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\Toolbar;
-use Joomla\CMS\Toolbar\ToolbarFactoryInterface;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Registry\Registry;
-use JText;
 
 /**
  * View class for MediaFile
@@ -161,10 +160,10 @@ class HtmlView extends BaseHtmlView
 		$userId     = $user->id;
 		$isNew      = ($this->item->id === 0);
 		$checkedOut = !($this->item->checked_out === null || $this->item->checked_out == $userId);
-		$title      = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
+		$title      = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
 		$toolbar    = Toolbar::getInstance();
 
-		ToolbarHelper::title(JText::_('JBS_CMN_MEDIA_FILES') . ': <small><small>[' . $title . ']</small></small>', 'video video');
+		ToolbarHelper::title(Text::_('JBS_CMN_MEDIA_FILES') . ': <small><small>[' . $title . ']</small></small>', 'video video');
 
 		if ($isNew && $this->canDo->get('core.create', 'com_proclaim'))
 		{

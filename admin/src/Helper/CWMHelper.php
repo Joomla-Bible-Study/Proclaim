@@ -237,7 +237,7 @@ class CWMHelper
 		$protocol = Uri::root();
 
 		// To see if the server is local
-		if (strpos($spath, $host) !== false)
+		if (str_contains($spath, $host))
 		{
 			$local = true;
 		}

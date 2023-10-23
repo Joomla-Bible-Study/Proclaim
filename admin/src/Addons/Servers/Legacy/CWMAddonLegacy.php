@@ -14,6 +14,7 @@
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Helper\CWMUploadScript;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
 /**
@@ -43,7 +44,7 @@ class CWMAddonLegacy extends CWMAddon
 	/**
 	 * Upload
 	 *
-	 * @param   JInput|array  $data  Data to upload
+	 * @param   Input|array  $data  Data to upload
 	 *
 	 * @return array
 	 *
@@ -110,7 +111,7 @@ class CWMAddonLegacy extends CWMAddon
 	{
 		$html = '';
 
-		$html .= JHtml::_('uitab.addTab', 'myTab', 'options', Text::_('Options'));
+		$html .= HTMLHelper::_('uitab.addTab', 'myTab', 'options', Text::_('Options'));
 
 		$html .= '<div class="row-fluid">';
 
@@ -149,7 +150,7 @@ class CWMAddonLegacy extends CWMAddon
 		}
 
 		$html .= '</div>';
-		$html .= JHtml::_('uitab.endTab');
+		$html .= HTMLHelper::_('uitab.endTab');
 
 		return $html;
 	}
