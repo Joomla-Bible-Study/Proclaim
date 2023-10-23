@@ -16,7 +16,7 @@
 				<option value="2">JBS_MED_SHOW_ONLY_DOWNLOAD_ICON</option>
 			</field>
 			<field name="uploadpath" type="text" default="/images/biblestudy/media/" label="JBS_ADM_UPLOAD_PATH" description="JBS_ADM_UPLOAD_PATH_DESC"
-			       class="inputbox" size="35"/>
+			       class="readonly" readonly="true" size="35"/>
 		</fieldset>
 		<fieldset name="files_settings" label="JBS_ADDON_LOCAL_FILE_SETTINGS">
 			<field name="player" type="list" label="JBS_MED_PLAYER"

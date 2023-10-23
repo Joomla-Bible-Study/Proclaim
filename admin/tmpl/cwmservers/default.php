@@ -25,7 +25,7 @@ $wa = $this->document->getWebAssetManager();
 $wa->useScript('table.columns')
 	->useScript('multiselect');
 
-$app       = JFactory::getApplication();
+$app       = Factory::getApplication();
 $user      = $user = Factory::getApplication()->getSession()->get('user');
 $userId    = $user->get('id');
 $listOrder = $this->escape($this->state->get('list.ordering'));
