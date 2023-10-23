@@ -35,7 +35,7 @@ class CWMHelper
 	 *
 	 * @since 8.0.0
 	 */
-	public static $extension = 'com_proclaim';
+	public static string $extension = 'com_proclaim';
 
 	/**
 	 * Get tooltip.
@@ -109,17 +109,7 @@ class CWMHelper
 	{
 		$size = 0;
 
-		if ($url === '')
-		{
-			return 0;
-		}
-
-		if (substr_count($url, 'youtu.be') > 0)
-		{
-			return 0;
-		}
-
-		if (substr_count($url, 'youtube.com') > 0)
+		if ($url === '' || substr_count($url, 'youtu.be') > 0 || substr_count($url, 'youtube.com') > 0)
 		{
 			return 0;
 		}
@@ -190,7 +180,7 @@ class CWMHelper
 	 *
 	 * @since 9.0.14
 	 */
-	public static function SetFileSize(int $id, int $size)
+	public static function SetFileSize(int $id, int $size): void
 	{
 		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
@@ -343,13 +333,13 @@ class CWMHelper
 	 *
 	 * @since 9.0.18
 	 */
-	public static function remove_http(string $url)
+	public static function remove_http(string $url): array|string
 	{
 		$disallowed = array('http://', 'https://');
 
 		foreach ($disallowed as $d)
 		{
-			if (strpos($url, $d) === 0)
+			if (str_starts_with($url, $d))
 			{
 				return str_replace($d, '', $url);
 			}
@@ -363,12 +353,12 @@ class CWMHelper
 	 *
 	 * @param   object|null  $params  AdminTable + parameters
 	 *
-	 * @return  object
+	 * @return  \stdClass
 	 *
 	 * @throws \Exception
 	 * @since 9.1.6
 	 */
-	public static function getSimpleView(object $params = null)
+	public static function getSimpleView(object $params = null): \stdClass
 	{
 		$simple = new \stdClass;
 
