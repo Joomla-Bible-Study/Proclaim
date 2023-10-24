@@ -15,6 +15,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use JComponentHelper;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 
@@ -138,7 +139,7 @@ class CWMLocationsModel extends ListModel
 		}
 
 		// Load the parameters.
-		$params = JComponentHelper::getParams('com_proclaim');
+		$params = ComponentHelper::getParams('com_proclaim');
 		$this->setState('params', $params);
 
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');

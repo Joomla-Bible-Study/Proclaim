@@ -231,10 +231,9 @@ class CWMMediaFileModel extends AdminModel
 
 			// Add language files
 			$lang = Factory::getApplication()->getLanguage();
+			$path = \Joomla\Filesystem\Path::clean(JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/' . ucfirst($server_type));
 
-			if (!$lang->load('jbs_addon_' . $server_type,
-				JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/' . ucfirst($server_type)
-			))
+			if (!$lang->load('jbs_addon_' . strtolower($server_type), $path))
 			{
 				Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'), 'error');
 			}

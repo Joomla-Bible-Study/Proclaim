@@ -63,7 +63,7 @@ class IconTypeField extends ListField
 			$this->value = $convert[$this->value];
 		}
 
-		$data['options'] = (array) $this->getOptions();
+		$data['options'] = $this->getOptions();
 
 		return $this->getRenderer($this->layout)->render($data);
 	}
@@ -80,7 +80,7 @@ class IconTypeField extends ListField
 		$MediaHelper = new CWMMedia;
 		$icontypes   = $MediaHelper->getIcons();
 
-		$options = array();
+		$options = [];
 
 		foreach ($icontypes as $key => $message)
 		{

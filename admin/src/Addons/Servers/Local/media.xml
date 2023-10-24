@@ -103,7 +103,11 @@
 			</field>
 			<field name="media_button_color" type="color" description="JBS_ADDON_LOCAL_BUTTON_COLOR_DESC"
 			       label="JBS_ADDON_LOCAL_BUTTON_COLOR"/>
-			<field name="media_icon_type" type="IconType" class="inputbox" size="15" default=""
+			<field name="media_icon_type" type="IconType"
+				   class="form-select-color-state"
+				   size="1"
+				   default=""
+				   validate="options"
 			       label="JBS_ADDON_LOCAL_ICON_TYPE"
 			       description="JBS_ADDON_LOCAL_ICON_TYPE_DESC">
 			</field>

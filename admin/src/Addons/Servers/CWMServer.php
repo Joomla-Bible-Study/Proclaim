@@ -13,7 +13,7 @@
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\Folder;
+use Joomla\Filesystem\Folder;
 use Joomla\Input\Input;
 
 /**
@@ -108,7 +108,7 @@ abstract class CWMServer
 	 * @throws Exception
 	 * @since 9.0.0
 	 */
-	public static function getInstance(array $options = array())
+	public static function getInstance(array $options = array()): mixed
 	{
 		$options['type'] = $options['type'] ?? 'amazons3';
 		$instance = null;

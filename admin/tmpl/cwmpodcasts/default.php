@@ -17,6 +17,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
 
 /** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
@@ -109,14 +110,14 @@ $sortFields = $this->getSortFields();
 									</div>
 								</td>
 								<td class="center nowrap hidden-phone">
-									<a href="<?php echo Route::_(JUri::root() . $this->escape($item->filename)); ?>"
+									<a href="<?php echo Route::_(Uri::root() . $this->escape($item->filename)); ?>"
 									   target="_blank">
 										<?php echo Text::_('JBS_PDC_XML'); ?>
 									</a>
 								</td>
 								<td class="nowrap has-context">
 									<div class="pull-left">
-										<?php if ($item->language == '*'): ?>
+										<?php if ($item->language === '*'): ?>
 											<?php echo Text::alt('JALL', 'language'); ?>
 										<?php else: ?>
 											<?php echo $item->language_title ? $this->escape($item->language_title) : Text::_('JUNDEFINED'); ?>

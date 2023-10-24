@@ -93,7 +93,7 @@ $sortFields = $this->getSortFields();
 
 										<?php if ($canEdit || $canEditOwn) : ?>
 											<a href="<?php echo Route::_('index.php?option=com_proclaim&task=cwmmessagetype.edit&id=' . (int) $item->id); ?>"
-											   title="<?php echo JText::_('JACTION_EDIT'); ?>">
+											   title="<?php echo Text::_('JACTION_EDIT'); ?>">
 												<?php echo $this->escape($item->message_type); ?></a>
 										<?php else : ?>
 											<span

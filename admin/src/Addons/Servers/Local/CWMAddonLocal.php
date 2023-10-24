@@ -14,6 +14,7 @@
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Helper\CWMUploadScript;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
 /**
@@ -52,9 +53,7 @@ class CWMAddonLocal extends CWMAddon
 	 */
 	public function upload($data): array
 	{
-		$upload = new CWMUploadScript;
-
-		return $upload->upload($data);
+		return (new CWMUploadScript)->upload($data);
 	}
 
 	/**
@@ -74,8 +73,7 @@ class CWMAddonLocal extends CWMAddon
 
 		if ($fields)
 		{
-			foreach ($media_form->getFieldset('general') as $field)
-			:
+			foreach ($media_form->getFieldset('general') as $field):
 				$html .= '<div class="control-group">';
 				$html .= '<div class="control-label">';
 				$html .= $field->label;
@@ -114,7 +112,7 @@ class CWMAddonLocal extends CWMAddon
 	 */
 	public function render($media_form, $new): string
 	{
-		$html = JHtml::_('uitab.addTab', 'myTab', 'options', Text::_('Options'));
+		$html = HTMLHelper::_('uitab.addTab', 'myTab', 'options', Text::_('Options'));
 
 		$html .= '<div class="row-fluid">';
 
@@ -153,7 +151,7 @@ class CWMAddonLocal extends CWMAddon
 		}
 
 		$html .= '</div>';
-		$html .= JHtml::_('uitab.endTab');
+		$html .= HTMLHelper::_('uitab.endTab');
 
 		return $html;
 	}
