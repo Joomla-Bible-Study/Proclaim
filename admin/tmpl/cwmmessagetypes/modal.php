@@ -9,24 +9,30 @@
  * */
 
 // phpcs:disable PSR1.Files.SideEffects
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
+use Joomla\Input\Input;
+
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-JHtml::_('behavior.multiselect');
-$input = new JInput;
+HtmlHelper::_('behavior.multiselect');
+$input = new Input;
 $function = $input->get('function', 'jSelectMessagetype', 'cmd');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn = $this->escape($this->state->get('list.direction'));
+$saveOrder  = $listOrder === 'messagetype.ordering';
 ?>
 <form
-	action="<?php echo Route::_('index.php?option=com_proclaim&view=messagetypes&layout=modal&tmpl=component&function=' . $function . '&' . JSession::getFormToken() . '=1'); ?>"
+	action="<?php echo Route::_('index.php?option=com_proclaim&view=messagetypes&layout=modal&tmpl=component&function=' . $function . '&' . Session::getFormToken() . '=1'); ?>"
 	method="post" name="adminForm" id="adminForm">
 	<fieldset id="filter-bar">
 		<div class="filter-select fltrt">
 			<select name="filter_published" class="inputbox" onchange="this.form.submit()">
 				<option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
-				<?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true); ?>
+				<?php echo HtmlHelper::_('select.options', HtmlHelper::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true); ?>
 			</select>
 		</div>
 	</fieldset>
@@ -39,20 +45,20 @@ $listDirn = $this->escape($this->state->get('list.direction'));
 				<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count($this->items); ?>);"/>
 			</th>
 			<th width="20" align="center">
-				<?php echo JHtml::_('searchtools.sort', 'JBS_CMN_PUBLISHED', 'messagetype.publish', $listDirn, $listOrder); ?>
+				<?php echo HtmlHelper::_('searchtools.sort', 'JBS_CMN_PUBLISHED', 'messagetype.publish', $listDirn, $listOrder); ?>
 			</th>
 
 			<th width="10%">
-				<?php echo JHtml::_('searchtools.sort', 'JBS_CMN_ORDERING', 'messagetype.ordering', $listDirn, $listOrder); ?>
+				<?php echo HtmlHelper::_('searchtools.sort', 'JBS_CMN_ORDERING', 'messagetype.ordering', $listDirn, $listOrder); ?>
 				<?php if ($saveOrder) : ?>
-					<?php echo JHtml::_('grid.order', $this->items, 'filesave.png', 'messagetype.saveorder'); ?>
+					<?php echo HtmlHelper::_('grid.order', $this->items, 'filesave.png', 'messagetype.saveorder'); ?>
 				<?php endif; ?>
 			</th>
 			<th>
-				<?php echo JHtml::_('searchtools.sort', 'JBS_CMN_MESSAGETYPE', 'messagetype.message_type', $listDirn, $listOrder); ?>
+				<?php echo HtmlHelper::_('searchtools.sort', 'JBS_CMN_MESSAGETYPE', 'messagetype.message_type', $listDirn, $listOrder); ?>
 			</th>
 			<th width="1%" class="nowrap">
-				<?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'messagetype.id', $listDirn, $listOrder); ?>
+				<?php echo HtmlHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'messagetype.id', $listDirn, $listOrder); ?>
 			</th>
 		</tr>
 		</thead>
@@ -67,21 +73,20 @@ $listDirn = $this->escape($this->state->get('list.direction'));
 		<?php
 		$n = count($this->items);
 		foreach ($this->items as $i => $item) :
-			$ordering = ($listOrder == 'messagetype.ordering');
 			$link     = Route::_('index.php?option=com_proclaim&task=messagetype.edit&id=' . (int) $item->id);
 			?>
 			<tr class="row<?php echo $i % 2; ?>">
 				<td class="center">
-					<?php echo JHtml::_('grid.id', $i, $item->id); ?>
+					<?php echo HtmlHelper::_('grid.id', $i, $item->id); ?>
 				</td>
 				<td class="center">
-					<?php echo JHtml::_('jgrid.published', $item->published, $i, 'messagetypes.', true, 'cb', '', ''); ?>
+					<?php echo HtmlHelper::_('jgrid.published', $item->published, $i, 'messagetypes.', true, 'cb', '', ''); ?>
 				</td>
 				<td class="order">
-					<?php if ($listDirn == 'asc') : ?>
+					<?php if ($listDirn === 'asc') : ?>
 						<span><?php echo $this->pagination->orderUpIcon($i, ($item->id == @$this->items[$i - 1]->id), 'messagetypes.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
 						<span><?php echo $this->pagination->orderDownIcon($i, $n, ($this->pagination->total == @$this->items[$i + 1]->id), 'messagetypes.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
-					<?php elseif ($listDirn == 'desc') : ?>
+					<?php elseif ($listDirn === 'desc') : ?>
 						<span><?php echo $this->pagination->orderUpIcon($i, ($item->id == @$this->items[$i - 1]->id), 'messagetypes.orderdown', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
 						<span><?php echo $this->pagination->orderDownIcon($i, $n, ($this->pagination->total == @$this->items[$i + 1]->id), 'messagetypes.orderup', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
 					<?php endif; ?>
@@ -93,7 +98,7 @@ $listDirn = $this->escape($this->state->get('list.direction'));
 					<a href="<?php echo $link; ?>"><?php echo $item->message_type; ?></a>
 
 					<p class="smallsub">
-						<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?></p>
+						<?php echo Text::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?></p>
 				</td>
 				<td class="center">
 					<?php echo (int) $item->id; ?>
@@ -108,7 +113,7 @@ $listDirn = $this->escape($this->state->get('list.direction'));
 		<input type="hidden" name="boxchecked" value="0"/>
 		<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
 		<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
-		<?php echo JHtml::_('form.token'); ?>
+		<?php echo HtmlHelper::_('form.token'); ?>
 	</div>
 
 </form>
