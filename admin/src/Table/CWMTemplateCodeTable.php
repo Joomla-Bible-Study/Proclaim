@@ -148,7 +148,7 @@ class CWMTemplateCodeTable extends Table
 				break;
 			case 7:
 				// Module's Display
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'modules/mod_biblestudy/tmpl' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'modules/mod_proclaim/tmpl' . DIRECTORY_SEPARATOR . $filename;
 				break;
 		}
 
@@ -221,7 +221,7 @@ class CWMTemplateCodeTable extends Table
 				break;
 			case 7:
 				// Module's Display
-				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'modules/mod_biblestudy/tmpl' . DIRECTORY_SEPARATOR . $filename;
+				$file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'modules/mod_proclaim/tmpl' . DIRECTORY_SEPARATOR . $filename;
 				break;
 		}
 

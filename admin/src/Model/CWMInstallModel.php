@@ -96,7 +96,7 @@ class CWMInstallModel extends BaseModel
 	 */
 	private array $allupdates = array();
 
-	/** @var ?string Version of BibleStudy
+	/** @var ?string Version of Proclaim
 	 *
 	 * @since 7.1
 	 */

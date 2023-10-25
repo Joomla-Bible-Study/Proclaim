@@ -226,7 +226,7 @@ class HtmlView extends BaseHtmlView
 	protected function addToolbar(): void
 	{
 		Factory::getApplication()->input->set('hidemainmenu', true);
-		ToolbarHelper::help('biblestudy', true);
+		ToolbarHelper::help('proclaim', true);
 		ToolbarHelper::title(Text::_('JBS_CMN_INSTALL'), 'administration');
 	}
 
@@ -237,28 +237,25 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return void
 	 */
-	protected function installsetup(): void
+	protected function installSetup(): void
 	{
 		$installation_queue = array(
 			// Example: modules => { (folder) => { (module) => { (position), (published) } }* }*
 			'modules' => array(
 				'administrator' => array(),
 				'site'          => array(
-					'biblestudy'         => 0,
-					'biblestudy_podcast' => 0,
+					'proclaim'         => 0,
+					'proclaim_podcast' => 0,
 				)
 			),
 			// Example: plugins => { (folder) => { (element) => (published) }* }*
 			'plugins' => array(
 				'finder' => array(
-					'biblestudy' => 1,
-				),
-				'search' => array(
-					'biblestudysearch' => 0,
+					'proclaim' => 1,
 				),
 				'system' => array(
-					'jbsbackup'  => 0,
-					'jbspodcast' => 0,
+					'proclaimbackup'  => 0,
+					'proclaimpodcast' => 0,
 				)
 			)
 		);

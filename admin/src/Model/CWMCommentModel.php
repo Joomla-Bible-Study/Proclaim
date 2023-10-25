@@ -113,8 +113,8 @@ class CWMCommentModel extends AdminModel
 
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
-		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_proclaim.comment.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_proclaim')))
+		if (($id !== 0 && (!$user->authorise('core.edit.state', 'com_proclaim.comment.' . (int) $id)))
+			|| ($id === 0 && !$user->authorise('core.edit.state', 'com_proclaim')))
 		{
 			// Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');
@@ -255,9 +255,7 @@ class CWMCommentModel extends AdminModel
 				return false;
 			}
 
-			$user = Factory::getApplication()->getSession()->get('user');
-
-			return $user->authorise('core.delete', 'com_proclaim.comment.' . (int) $record->id);
+			return Factory::getApplication()->getSession()->get('user')->authorise('core.delete', 'com_proclaim.comment.' . (int) $record->id);
 		}
 
 		return false;

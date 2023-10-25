@@ -136,7 +136,7 @@ abstract class CWMServer
 			}
 			catch (Exception $e)
 			{
-				Factory::getApplication()->enqueueMessage("Error obtaining Class '" . $options['type'] . "'", Error);
+				Factory::getApplication()->enqueueMessage("Error obtaining Class '" . $options['type'] . "'", 'error');
 			}
 
 			self::$instances[$signature] = $instance;

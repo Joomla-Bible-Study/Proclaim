@@ -16,10 +16,12 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMDbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
+use JetBrains\PhpStorm\NoReturn;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
 
 /**
  * JBS Export class
@@ -69,16 +71,17 @@ class CWMBackup
 	 *
 	 * @return boolean
 	 *
+	 * @throws \Exception
 	 * @since 9.0.0
 	 */
-	public function exportdb($run)
+	public function exportdb($run): bool
 	{
 		$date             = date('Y_F_j');
 		$site             = Uri::root(true);
 		$this->saveAsName = $site . '_jbs-db-backup_' . $date . '_' . time() . '.sql';
 		$objects          = CWMDbHelper::getObjects();
 		$tables           = null;
-		$config           = Factory::getConfig();
+		$config           = Factory::getApplication()->getConfig();
 		$path             = $config->get('tmp_path') . $this->saveAsName;
 		$path1            = '';
 
@@ -118,9 +121,7 @@ class CWMBackup
 
 				$this->output_file($path1, basename($path1), $mime_type);
 
-				return true;
 				break;
-
 			case 2:
 				$this->dumpFile = JPATH_SITE . '/media/com_proclaim/backup/' . $this->saveAsName;
 
@@ -145,10 +146,8 @@ class CWMBackup
 					File::delete($this->dumpFile);
 				}
 
-				Factory::getApplication()
-					->enqueueMessage('Backup File Stored at: ' . $path1, 'notice');
+				Factory::getApplication()->enqueueMessage('Backup File Stored at: ' . $path1, 'notice');
 
-				return true;
 				break;
 		}
 
@@ -163,11 +162,11 @@ class CWMBackup
 	 *
 	 * @param   string  $table  Table name
 	 *
-	 * @return boolean|string
+	 * @return boolean
 	 *
 	 * @since 9.0.0
 	 */
-	public function getExportTable($table)
+	public function getExportTable($table): bool
 	{
 		if (!$table)
 		{
@@ -177,10 +176,7 @@ class CWMBackup
 		/**
 		 * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
 		 */
-		if (!ini_get('safe_mode'))
-		{
-			set_time_limit(3000);
-		}
+		set_time_limit(3000);
 
 		$db = Factory::getContainer()->get('DatabaseDriver');
 
@@ -188,7 +184,7 @@ class CWMBackup
 		$prefix = $db->getPrefix();
 		$export = '';
 
-		// Used for Checking file is from the correct version of biblestudy component
+		// Used for Checking file is from the correct version of a Proclaim component
 		if (strpos($table, 'bsms_admin'))
 		{
 			//$export .= "\n--\n-- " . BIBLESTUDY_VERSION_UPDATEFILE . "\n--\n\n";
@@ -262,15 +258,16 @@ class CWMBackup
 	 *
 	 * @return boolean TRUE is saving to the file succeeded
 	 *
+	 * @throws \Exception
 	 * @since 9.0.0
 	 */
-	protected function writeline(&$fileData)
+	protected function writeline(&$fileData): bool
 	{
 		$app = Factory::getApplication();
 
 		if (!$this->fp)
 		{
-			$this->fp = @fopen($this->dumpFile, 'a');
+			$this->fp = @fopen($this->dumpFile, 'b');
 
 			if ($this->fp === false)
 			{
@@ -315,7 +312,7 @@ class CWMBackup
 	 *
 	 * @since 9.0.0
 	 */
-	public function output_file($file, $name, $mime_type = '')
+	#[NoReturn] public function output_file($file, $name, $mime_type = '')
 	{
 		// Clears file status cache
 		clearstatcache();
@@ -326,10 +323,7 @@ class CWMBackup
 		/**
 		 * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
 		 */
-		if (!ini_get('safe_mode'))
-		{
-			set_time_limit(3000);
-		}
+		set_time_limit(3000);
 
 		// Required for IE, otherwise Content-Disposition may be ignored
 		if (ini_get('zlib.output_compression'))
@@ -361,7 +355,7 @@ class CWMBackup
 			"sql"  => "text/x-sql"
 		);
 
-		if ($mime_type == '')
+		if ($mime_type === '')
 		{
 			$file_extension = strtolower(substr(strrchr($file, "."), 1));
 
@@ -382,7 +376,7 @@ class CWMBackup
 		$_tmp_uri      = Uri::getInstance(Uri::current());
 		$_tmp_protocol = $_tmp_uri->getScheme();
 
-		if ($_tmp_protocol == "https")
+		if ($_tmp_protocol === "https")
 		{
 			// SSL Support
 			header('Cache-Control:  private, max-age=0, must-revalidate, no-store');
@@ -488,13 +482,13 @@ class CWMBackup
 	/**
 	 * Update files
 	 *
-	 * @param   Joomla\Registry\Registry  $params  JBSM Params
+	 * @param   Registry|null  $params  Proclaim Params
 	 *
 	 * @return void
 	 *
 	 * @since 7.1.0
 	 */
-	public function updatefiles($params)
+	public function updatefiles(?Registry $params): void
 	{
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');

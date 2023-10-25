@@ -199,7 +199,7 @@ $count = count($folder);
                         }
                         if ($studyimage === null || (empty($item->thumbnailm) && ($params->get('studyimage') == -1)))
                         {
-                            $random = rand(0, $count);
+                            $random = random_int(0, $count);
                             if (array_key_exists($random, $folder))
                             {
 	                            $image = 'media/com_proclaim/images/rotating/' . $folder[$random];

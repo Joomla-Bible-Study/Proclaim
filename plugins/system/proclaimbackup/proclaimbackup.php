@@ -16,6 +16,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\Registry\Registry;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
 
@@ -117,14 +118,7 @@ class PlgSystemProclaimBackup extends CMSPlugin
 		$difference = $frequency * 3600;
 		$checkit    = $now - $lasttime;
 
-		if ($checkit > $difference)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return $checkit > $difference;
 	}
 
 	/**
@@ -134,9 +128,10 @@ class PlgSystemProclaimBackup extends CMSPlugin
 	 *
 	 * @return boolean
 	 *
+	 * @throws Exception
 	 * @since 7.1.0
 	 */
-	public function checkdays($params)
+	public function checkdays(Registry $params): bool
 	{
 		$checkdays = false;
 		$config    = Factory::getApplication()->get();

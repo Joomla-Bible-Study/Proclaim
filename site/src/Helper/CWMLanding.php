@@ -538,7 +538,7 @@ class CWMLanding
 
 					$showdiv = 0;
 
-					foreach ($items as &$b)
+					foreach ($items as $b)
 					{
 						if ($t >= $limit)
 						{
@@ -551,7 +551,7 @@ class CWMLanding
 							}
 						}
 
-						if ($params->get('series_linkto') == '0')
+						if ($params->get('series_linkto') === '0')
 						{
 							$series .= '<div class="span4">';
 							$series .= '<a href="index.php?option=com_proclaim&amp;view=CWMSermons&amp;filter_series=' . $b->id
@@ -756,7 +756,7 @@ class CWMLanding
 			$year = '';
 			$showdiv = 0;
 
-			foreach ($tresult as &$b)
+			foreach ($tresult as $b)
 			{
 				if ($t >= $limit)
 				{
@@ -900,7 +900,7 @@ class CWMLanding
 			$topic = '';
 			$showdiv = 0;
 
-			foreach ($tresult as &$b)
+			foreach ($tresult as $b)
 			{
 				if ($t >= $limit)
 				{
@@ -1053,7 +1053,7 @@ class CWMLanding
 				case 0:
 					$showdiv     = 0;
 
-					foreach ($tresult as &$b)
+					foreach ($tresult as $b)
 					{
 						if ($t >= $limit)
 						{
@@ -1246,7 +1246,7 @@ class CWMLanding
 		{
 			$showdiv = 0;
 
-			foreach ($tresult as &$b)
+			foreach ($tresult as $b)
 			{
 				if ($t >= $limit)
 				{

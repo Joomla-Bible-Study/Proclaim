@@ -24,7 +24,7 @@ use Joomla\Registry\Registry;
 use stdClass;
 
 /**
- * BibleStudy Helper class
+ * Proclaim Helper class
  *
  * @package  Proclaim.Admin
  * @since    7.0.0
@@ -396,7 +396,8 @@ class CWMProclaimHelper
 			try
 			{
 				self::$admin_params = CWMParams::getAdmin();
-			} catch (\Exception $e)
+			}
+			catch (\Exception $e)
 			{
 				die;
 			}

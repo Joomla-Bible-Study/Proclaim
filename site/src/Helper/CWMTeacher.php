@@ -16,7 +16,6 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 use CWM\Component\Proclaim\Administrator\Table\CWMTemplateTable;
 use Joomla\CMS\Factory;
-use Joomla\CMS\MVC\Model\ItemModel;
 use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Router\Route;
 use Joomla\Component\Contact\Site\Model\ContactModel;
@@ -233,7 +232,7 @@ class CWMTeacher extends CWMListing
 		);
 
 		return str_replace('{{url}}', Route::_('index.php?option=com_proclaim&amp;view=cwmteacherdisplay&amp;id=' .
-			$row->id . '&amp;t=' . $template
+			$row->id . '&amp;t=' . (int) $template
 		), $label
 		);
 	}

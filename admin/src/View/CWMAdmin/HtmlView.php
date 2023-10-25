@@ -111,7 +111,7 @@ class HtmlView extends BaseHtmlView
 	public string $errorCount;
 
 	/**
-	 * Joomla BibleStudy Version
+	 * Joomla Version
 	 *
 	 * @var string
 	 * @since    7.0.0

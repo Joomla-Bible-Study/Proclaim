@@ -557,7 +557,7 @@ class CWMAdminController extends FormController
 	}
 
 	/**
-	 * Convert SermonSpeaker to BibleStudy
+	 * Convert SermonSpeaker to Proclaim
 	 *
 	 * @return void
 	 *

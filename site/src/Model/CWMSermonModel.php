@@ -21,6 +21,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\FormModel;
+use Joomla\CMS\User\User;
 use Joomla\Registry\Registry;
 
 /**
@@ -76,6 +77,7 @@ class CWMSermonModel extends FormModel
 	 */
 	public function &getItem(?int $pk = null)
 	{
+		/** @var User $user */
 		$user = Factory::getApplication()->getIdentity();
 
 		// Initialise variables.
@@ -194,8 +196,7 @@ class CWMSermonModel extends FormModel
 				$mj->loadString($mparams);
 				$data->params->merge($mj);
 
-				$a_params           = CWMParams::getAdmin();
-				$data->admin_params = $a_params->params;
+				$data->admin_params = CWMParams::getAdmin()->params;
 
 				// Technically guest could edit an article, but lets not check that to improve performance a little.
 				if (!$user->get('guest'))

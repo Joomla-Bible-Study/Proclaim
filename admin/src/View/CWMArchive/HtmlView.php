@@ -69,6 +69,6 @@ class HtmlView extends BaseHtmlView
 		ToolbarHelper::title(Text::_('JBS_CMN_ARCHIVE'), 'archive');
 		ToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
 		ToolbarHelper::custom('administration.back', 'back', 'back', 'JTOOLBAR_BACK', false);
-		ToolbarHelper::help('biblestudy', true);
+		ToolbarHelper::help('proclaim', true);
 	}
 }

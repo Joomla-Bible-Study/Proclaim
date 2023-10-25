@@ -820,7 +820,7 @@ class CWMRelatedstudies
 		$content     = preg_replace('/\b(' . implode('|', $commonWords) . ')\b/', '', $content);
 		$content     = preg_replace('/\s\s+/', ' ', $content);
 		$content     = str_replace(' ', ',', $content);
-		$content     = substr($content, 1, strlen($content) - 1);
+		$content = substr($content, 1);
 		$content     = substr($content, 0, -1);
 
 		return explode(',', $content);
@@ -918,11 +918,11 @@ class CWMRelatedstudies
 	/**
 	 * Look for Related Links.
 	 *
+	 * @param   int  $id  Id to link to
+	 *
 	 * @return string
 	 *
 	 * @throws \Exception
-	 * @var int $id ID of the related
-	 *
 	 * @since    7.2
 	 */
 	public function getRelatedLinks(int $id): string
@@ -940,7 +940,8 @@ class CWMRelatedstudies
 		$db->setQuery($query);
 		$studyrecords = $db->loadObjectList();
 
-		$related = '<select onchange="goTo()" id="urlList" class="form-select chzn-color-state valid form-control-success"><option value="">' . Text::_('JBS_CMN_SELECT_RELATED_STUDY') . '</option>';
+		$related = '<select onchange="goTo()" id="urlList" class="form-select chzn-color-state valid form-control-success"><option value="">' .
+			Text::_('JBS_CMN_SELECT_RELATED_STUDY') . '</option>';
 		$input   = Factory::getApplication()->input;
 
 		foreach ($studyrecords as $studyrecord)

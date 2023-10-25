@@ -17,14 +17,14 @@ defined('_JEXEC') or die();
 ?>
 <script type="javascript">
     function submitbutton(task) {
-        if (task == '') {
+        if (task === '') {
             return false;
         }
-        else if (task == 'upload') {
-            if (document.adminForm.upload_folder.value == '') {
+        else if (task === 'upload') {
+            if (document.adminForm.upload_folder.value === '') {
                 alert("<?php echo Text::_('JBS_MED_SELECT_FOLDER'); ?>");
             }
-            else if (document.adminForm.upload_server.value == '') {
+            else if (document.adminForm.upload_server.value === '') {
                 alert("<?php echo Text::_('JBS_MED_ENTER_SERVER'); ?>");
             }
             else {

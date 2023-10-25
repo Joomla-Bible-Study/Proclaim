@@ -88,25 +88,25 @@ class CWMAssets
 	 */
 	public static function fixAssets(string $key, array $result): bool
 	{
-		$result          = (object) $result;
+		$result_object          = (object) $result;
 		self::$parent_id = self::parentid();
 
 		// If there is no asset_id it means that this has not been set and should be
-		if (!$result->asset_id)
+		if (!$result_object->asset_id)
 		{
-			self::setAsset($result, $key);
+			self::setAsset($result_object, $key);
 			Log::add('Set Asset Under Key: ' . $key, Log::NOTICE, 'com_proclaim');
 		}
 
 		// If there is a asset_id but no match to the parent_id then a mismatch has occurred
-		if ((self::$parent_id !== $result->parent_id || $result->rules === "") && $result->asset_id)
+		if ((self::$parent_id !== $result_object->parent_id || $result_object->rules === "") && $result_object->asset_id)
 		{
-			Log::add('Reset Asset ID: ' . $result->asset_id, Log::NOTICE, 'com_biblstudy');
-			$deletasset = self::deleteAsset($result);
+			Log::add('Reset Asset ID: ' . $result_object->asset_id, Log::NOTICE, 'com_proclaim');
+			$deletasset = self::deleteAsset($result_object);
 
 			if ($deletasset)
 			{
-				self::setAsset($result, $key);
+				self::setAsset($result_object, $key);
 			}
 		}
 

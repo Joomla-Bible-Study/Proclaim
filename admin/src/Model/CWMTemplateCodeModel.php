@@ -151,9 +151,7 @@ class CWMTemplateCodeModel extends AdminModel
 	 */
 	public function getItem($pk = null)
 	{
-		$item = parent::getItem($pk);
-
-		return $item;
+		return parent::getItem($pk);
 	}
 
 	/**
@@ -163,9 +161,10 @@ class CWMTemplateCodeModel extends AdminModel
 	 *
 	 * @return  void
 	 *
+	 * @throws \Exception
 	 * @since    1.6
 	 */
-	protected function populateState()
+	protected function populateState(): void
 	{
 		$app = Factory::getApplication('administrator');
 

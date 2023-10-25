@@ -21,7 +21,7 @@ use CWM\Component\Proclaim\Administrator\Table\CWMServerTable;
 use CWM\Component\Proclaim\Site\Helper\CWMMedia;
 use CWM\Component\Proclaim\Site\Helper\CWMPodcast;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\Path;
+use Joomla\Filesystem\Path;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
@@ -196,9 +196,9 @@ class CWMMediaFileModel extends AdminModel
 
 		if ($server_id === null)
 		{
-			/** @var Registry $admin */
-			$admin     = CWMParams::getAdmin()->params;
-			$server_id = $admin->get('server');
+			/** @var Registry $params */
+			$params     = CWMParams::getAdmin()->params;
+			$server_id = $params->get('server');
 
 			if ($server_id !== '-1')
 			{

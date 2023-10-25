@@ -71,7 +71,7 @@ class CWMParams
 			$query  = $db->getQuery(true);
 			$query->select('*')
 				->from('#__bsms_admin')
-				->where($db->qn('id') . ' = ' . (int) 1);
+				->where($db->qn('id') . ' = ' . 1);
 			$db->setQuery($query);
 			$admin = $db->loadObject();
 

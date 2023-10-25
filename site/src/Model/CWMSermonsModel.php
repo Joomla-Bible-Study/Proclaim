@@ -851,9 +851,8 @@ class CWMSermonsModel extends ListModel
 		$query->order('t.teachername ASC');
 
 		$db->setQuery($query->__toString());
-		$items = $db->loadObjectList();
 
-		return $items;
+		return $db->loadObjectList();
 	}
 
 	/**

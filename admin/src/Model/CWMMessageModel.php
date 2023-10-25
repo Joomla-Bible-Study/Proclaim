@@ -203,7 +203,7 @@ class CWMMessageModel extends AdminModel
 	/**
 	 * Overrides the JModelAdmin save routine to save the topics(tags)
 	 *
-	 * @param   string  $data  The form data.
+	 * @param   array  $data  The form data.
 	 *
 	 * @return boolean
 	 *
@@ -216,8 +216,8 @@ class CWMMessageModel extends AdminModel
 		$app           = Factory::getApplication();
 		$params        = CWMParams::getAdmin()->params;
 		$input         = $app->input;
-		$path          = 'images/biblestudy/studies/' . $data['id'];
-		$image         = HTMLHelper::cleanImageURL($data['image']);
+		$path          = 'images/biblestudy/studies/' . (int) $data['id'];
+		$image         = HTMLHelper::cleanImageURL((string) $data['image']);
 		$data['image'] = $image->url;
 		$this->cleanCache();
 
@@ -434,7 +434,7 @@ class CWMMessageModel extends AdminModel
 	}
 
 	/**
-	 * Custom clean the cache of com_proclaim and biblestudy modules
+	 * Custom clean the cache of com_proclaim and proclaim modules
 	 *
 	 * @param   string   $group      The cache group
 	 * @param   integer  $client_id  The ID of the client

@@ -33,7 +33,7 @@ use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
 /**
- * BibleStudy listing class
+ * Proclaim listing class
  *
  * @since  7.0.0
  */
@@ -2095,7 +2095,7 @@ class CWMListing
 					// Clean up extra data in the image
 					$hash = str_contains($params->get('studyimage'), '#');
 
-					if ($hash === 1)
+					if ($hash)
 					{
 						$imageparam   = $params->get('studyimage');
 						$hashlocation = strpos($imageparam, '#');

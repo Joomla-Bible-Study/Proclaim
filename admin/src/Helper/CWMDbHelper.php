@@ -20,6 +20,7 @@ use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\Table\Table;
 
 /**
  * Database Helper class for version 7.1.0
@@ -311,7 +312,7 @@ class CWMDbHelper
 
 		foreach ($tables as $table)
 		{
-			if (strstr($table, $prefix) && strstr($table, $bsms))
+			if (str_contains($table, $prefix) && str_contains($table, $bsms))
 			{
 				$table     = substr_replace($table, '#__', 0, $prelength);
 				$objects[] = array('name' => $table);
@@ -380,7 +381,7 @@ class CWMDbHelper
 
 		$db->setQuery($query);
 		$result = $db->loadObject();
-		$oldcss = $result->stylecode;
+		$oldcss = (string) $result->stylecode;
 
 		// Now the arrays of changes that need to be done.
 
@@ -392,7 +393,7 @@ class CWMDbHelper
 			"#bsm_teachertable_list", ".bslisttable", ".bslisttable", ".landing_table", ".landing_separator",
 			".landing_item", ".landing_title", ".landinglist"
 		);
-		$oldcss   = str_replace($oldlines, $newlines, $oldcss);
+		$oldcss   = (string) str_replace($oldlines, $newlines, $oldcss);
 
 		// Now see if we are adding new css to the db css
 
@@ -402,7 +403,7 @@ class CWMDbHelper
 		}
 		else
 		{
-			$newcss = $oldcss;
+			$newcss = (string) $oldcss;
 		}
 
 		// No apply the new css back to the table
@@ -456,8 +457,8 @@ class CWMDbHelper
 		$db     = Factory::getContainer()->get('DatabaseDriver');
 
 		// Store new Recorder so it can be seen.
-		JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
-		$table = JTable::getInstance($table, 'Table', array('dbo' => $db));
+		Table::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
+		$table = Table::getInstance($table, 'Table', array('dbo' => $db));
 
 		try
 		{

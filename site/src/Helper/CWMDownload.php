@@ -1,6 +1,6 @@
 <?php
 /**
- * BibleStudy Download Class
+ * Proclaim Download Class
  *
  * @package    Proclaim.Site
  * @copyright  2007 - 2022 (C) CWM Team All rights reserved
@@ -19,7 +19,7 @@ use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
 /**
- * BibleStudy Download Class
+ * Proclaim Download Class
  *
  * @package  Proclaim.Site
  * @since    7.0.0
@@ -42,8 +42,8 @@ class CWMDownload
 		$this->hitDownloads((int) $mid);
 		$input    = new Input;
 		$template = $input->get('t', '1', 'int');
-        $db = Factory::getContainer()->get('DatabaseDriver');
-        $mid = $input->get('mid', '1', 'int');
+		$db = Factory::getContainer()->get('DatabaseDriver');
+		$mid = $input->get('mid', '1', 'int');
 
 		// Get the template so we can find a protocol
 		$query = $db->getQuery(true);

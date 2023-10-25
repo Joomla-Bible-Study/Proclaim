@@ -36,7 +36,7 @@ if (file_exists($api))
 }
 
 /**
- * BibleStudy Podcast Class
+ * Proclaim Podcast Class
  *
  * @package  Proclaim.Site
  * @since    7.0.0

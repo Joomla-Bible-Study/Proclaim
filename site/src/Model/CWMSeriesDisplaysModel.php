@@ -213,19 +213,17 @@ class CWMSeriesDisplaysModel extends ListModel
 				case is_array($filters) :
 					foreach ($filters AS $filter)
 					{
-						if ($filter == -1)
+						if ($filter === '-1')
 						{
 							break;
 						}
-						else
-						{
-							$continue = 1;
-							$where2[] = 'se.id = ' . (int) $filter;
-						}
+
+						$continue = 1;
+						$where2[] = 'se.id = ' . (int) $filter;
 					}
 					break;
 
-				case -1:
+				case '-1':
 					break;
 
 				default:

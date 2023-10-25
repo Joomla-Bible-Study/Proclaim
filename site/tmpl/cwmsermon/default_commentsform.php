@@ -26,7 +26,7 @@ HtmlHelper::_('behavior.keepalive');
         document.getElementById(d).style.display = "block";
     }
     function ReverseDisplay(d) {
-        if (document.getElementById(d).style.display == "none") {
+        if (document.getElementById(d).style.display === "none") {
             document.getElementById(d).style.display = "block";
         }
         else {
@@ -35,7 +35,7 @@ HtmlHelper::_('behavior.keepalive');
     }
 </script>
 <?php
-$commentjava = "javascript:ReverseDisplay('JBScomments')";
+$commentjava = "javascript:ReverseDisplay('jbscomments')";
 
 switch ($this->item->params->get('link_comments', 0))
 {
@@ -217,7 +217,7 @@ if ($allow > 9)
                 <input type="hidden" name="study_id" id="study_id" value="<?php echo $this->item->id ?>"/>
                 <input type="hidden" name="t" value="<?php echo $t;?>">
                 <input type="hidden" name="task" value="comment"/>
-                <input type="hidden" name="option" value="com_biblestudy"/>
+                <input type="hidden" name="option" value="com_proclaim"/>
                 <input type="hidden" name="published" id="published"
                        value="<?php echo $this->item->params->get('comment_publish') ?>"/>
                 <input type="hidden" name="view" value="sermon"/>

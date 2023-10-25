@@ -15,11 +15,14 @@ namespace Joomla\Plugin\System\ProclaimPodcast;
 use CWM\Component\Proclaim\Site\Helper\CWMPodcast;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Mail\MailerFactoryInterface;
 use Joomla\CMS\Plugin\CMSPlugin;
-use JUri;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
+use PHPMailer\PHPMailer\Exception;
 
 /**
- * JBSPodcast jPlugin class
+ * Proclaim Podcast class
  *
  * @package     Proclaim
  * @subpackage  Plugin.JBSPodcast
@@ -43,7 +46,7 @@ class PlgSystemProclaimPodcast extends CMSPlugin
 
 		$this->loadLanguage();
 
-		// Always load JBSM API if it exists.
+		// Always load CWM API if it exists.
 		$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
 		if (file_exists($api))
@@ -57,9 +60,10 @@ class PlgSystemProclaimPodcast extends CMSPlugin
 	 *
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @since   1.5
 	 */
-	public function onAfterInitialise()
+	public function onAfterInitialise(): void
 	{
 		$params = $this->params;
 
@@ -106,13 +110,13 @@ class PlgSystemProclaimPodcast extends CMSPlugin
 	/**
 	 * Check Time
 	 *
-	 * @param   object  $params  Plugin params
+	 * @param   Registry|null  $params  Plugin params
 	 *
 	 * @return boolean   True if Time is difference. False if not grater then now.
 	 *
 	 * @since   7.0.5
 	 */
-	public function checktime($params)
+	public function checktime(?Registry $params): bool
 	{
 		$now   = time();
 		$db = Factory::getContainer()->get('DatabaseDriver');
@@ -132,13 +136,13 @@ class PlgSystemProclaimPodcast extends CMSPlugin
 	/**
 	 * Check Days
 	 *
-	 * @param   Joomla\Registry\Registry  $params  Plugin params
+	 * @param   Registry|null  $params  Plugin params
 	 *
 	 * @return boolean Check to see if to day is right.
 	 *
 	 * @since   7.0.5
 	 */
-	public function checkdays($params)
+	public function checkdays(?Registry $params)
 	{
 		$checkdays = false;
 		$config    = Factory::getApplication()->get();
@@ -251,13 +255,12 @@ class PlgSystemProclaimPodcast extends CMSPlugin
 	 *
 	 * @return boolean|string
 	 *
+	 * @throws \Exception
 	 * @since   7.0.5
 	 */
-	public function doPodcast()
+	public function doPodcast(): bool|string
 	{
-		$podcasts = new CWMPodcast;
-
-		return $podcasts->makePodcasts();
+		return (new CWMPodcast)->makePodcasts();
 	}
 
 	/**
@@ -267,7 +270,7 @@ class PlgSystemProclaimPodcast extends CMSPlugin
 	 *
 	 * @since 7.0.0
 	 */
-	public function updatetime()
+	public function updatetime(): bool
 	{
 		$time  = time();
 		$db = Factory::getContainer()->get('DatabaseDriver');
@@ -284,19 +287,20 @@ class PlgSystemProclaimPodcast extends CMSPlugin
 	/**
 	 * Send the Email
 	 *
-	 * @param   Joomla\Registry\Registry  $params     Plugin params
-	 * @param   bool|string               $dopodcast  Podcast rendering to send in email.
+	 * @param   Registry     $params     Plugin params
+	 * @param   bool|string  $dopodcast  Podcast rendering to send in email.
 	 *
 	 * @return void
 	 *
+	 * @throws Exception
 	 * @since 7.0.0
 	 */
-	public function doEmail($params, $dopodcast)
+	public function doEmail($params, $dopodcast): void
 	{
-		$livesite = JUri::root();
+		$livesite = Uri::root();
 		jimport('joomla.filesystem.file');
 
-		$mail = Factory::getMailer();
+		$mail = Factory::getContainer()->get(MailerFactoryInterface::class)->createMailer();
 		$mail->isHtml(true);
 		jimport('joomla.utilities.date');
 		$date = date('r');

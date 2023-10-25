@@ -351,24 +351,24 @@ class CWMHelper
 	/**
 	 * Get Simple View Sate
 	 *
-	 * @param   object|null  $params  AdminTable + parameters
+	 * @param   Registry|null  $params  AdminTable + parameters
 	 *
 	 * @return  \stdClass
 	 *
 	 * @throws \Exception
 	 * @since 9.1.6
 	 */
-	public static function getSimpleView(object $params = null): \stdClass
+	public static function getSimpleView(?Registry $params = null): \stdClass
 	{
 		$simple = new \stdClass;
 
 		if ($params === null)
 		{
-			$params = CWMParams::getAdmin();
+			$params = CWMParams::getAdmin()->params;
 		}
 
-		$simple->mode    = (integer) $params->params->get('simple_mode');
-		$simple->display = (integer) $params->params->get('simple_mode_display');
+		$simple->mode    = (integer) $params->get('simple_mode');
+		$simple->display = (integer) $params->get('simple_mode_display');
 
 		return $simple;
 	}

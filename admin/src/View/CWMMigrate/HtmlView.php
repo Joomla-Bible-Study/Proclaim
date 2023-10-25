@@ -107,7 +107,7 @@ class HtmlView extends BaseHtmlView
 	public string $errorCount;
 
 	/**
-	 * Joomla BibleStudy Version
+	 * Joomla Version
 	 *
 	 * @var string
 	 * @since    7.0.0
@@ -319,7 +319,7 @@ class HtmlView extends BaseHtmlView
 		ToolbarHelper::title(Text::_('JBS_CMN_ADMINISTRATION'), 'administration');
 		ToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
 		ToolbarHelper::divider();
-		ToolbarHelper::help('biblestudy', true);
+		ToolbarHelper::help('proclaim', true);
 	}
 
 	/**

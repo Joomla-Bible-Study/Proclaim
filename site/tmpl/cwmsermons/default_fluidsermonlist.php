@@ -3,7 +3,7 @@
 /**
  * Helper for Template Code
  *
- * @package    BibleStudy.Admin
+ * @package    Proclaim.Admin
  * $author		Tom Fuller www.ChristianWebMinistries.org
  * @copyright  (C) 2007 - 2017 Christian Web Ministries Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL

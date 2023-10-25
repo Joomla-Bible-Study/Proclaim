@@ -17,7 +17,6 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Html\HtmlHelper;
-use MailtoHelper;
 
 /**
  * Content Component HTML Helper
@@ -76,54 +75,6 @@ class CWMIcon
 		$output = '<span class="hasTooltip" title="' . HtmlHelper::tooltipText('JBS_CREATE_SERMON') . '">' . $button . '</span>';
 
 		return $output;
-	}
-
-	/**
-	 * Method to generate a link to the email item page for the given article
-	 *
-	 * @param   object    $article  The article information
-	 * @param   Registry  $params   The item parameters
-	 * @param   array     $attribs  Optional attributes for the link
-	 * @param   boolean   $legacy   True to use legacy images, false to use icomoon based graphic
-	 *
-	 * @return  string  The HTML markup for the email item link
-	 *
-	 * @throws \Exception
-	 * @since 7.0
-	 */
-	public static function email($article, $params, $attribs = array(), $legacy = false)
-	{
-		require_once JPATH_SITE . '/components/com_mailto/helpers/mailto.php';
-
-		$uri      = Uri::getInstance();
-		$base     = $uri->toString(array('scheme', 'host', 'port'));
-		$template = Factory::getApplication()->getTemplate();
-		$link     = $base . Route::_(CWMHelperRoute::getArticleRoute($article->id, $article->language), false);
-		$url      = 'index.php?option=com_mailto&tmpl=component&template=' . $template . '&link=' . MailtoHelper::addLink($link);
-
-		$status = 'width=400,height=350,menubar=yes,resizable=yes';
-
-		if ($params->get('show_icons'))
-		{
-			if ($legacy)
-			{
-				$text = HtmlHelper::_('image', 'system/emailButton.png', Text::_('JGLOBAL_EMAIL'), null, true);
-			}
-			else
-			{
-				$text = '<span class="icon-envelope"></span>' . Text::_('JGLOBAL_EMAIL');
-			}
-		}
-		else
-		{
-			$text = Text::_('JGLOBAL_EMAIL');
-		}
-
-		$attribs['title']   = Text::_('JGLOBAL_EMAIL');
-		$attribs['onclick'] = "window.open(this.href,'win2','" . $status . "'); return false;";
-		$attribs['rel']     = 'nofollow';
-
-		return HtmlHelper::_('link', Route::_($url), $text, $attribs);
 	}
 
 	/**
@@ -235,7 +186,7 @@ class CWMIcon
 		$request = $input->request;
 
 		$url = CWMHelperRoute::getArticleRoute($article->id, $article->language);
-		$url .= '&tmpl=component&print=1&layout=default&page=' . @$request->limitstart;
+		$url .= '&tmpl=component&print=1&layout=default&page=' . (int) @$request->limitstart;
 
 		$status = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';
 

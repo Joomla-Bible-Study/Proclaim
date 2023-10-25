@@ -178,10 +178,7 @@ class CWMRestore
 		/**
 		 * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
 		 */
-		if (!ini_get('safe_mode'))
-		{
-			set_time_limit(3000);
-		}
+		set_time_limit(3000);
 
 		$input = Factory::getApplication()->input;
 		$installtype   = $input->getPath('install_directory');

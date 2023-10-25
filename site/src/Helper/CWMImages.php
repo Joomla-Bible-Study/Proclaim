@@ -22,7 +22,7 @@ use Joomla\CMS\Image\Image;
 use Joomla\Registry\Registry;
 
 /**
- * BibleStudy images class
+ * Proclaim images class
  *
  * @package  Proclaim.Site
  * @since    7.0.0

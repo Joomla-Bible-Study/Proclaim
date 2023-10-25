@@ -9,6 +9,8 @@
  * */
 
 // phpcs:disable PSR1.Files.SideEffects
+use Joomla\CMS\MVC\Controller\BaseController;
+
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
@@ -30,7 +32,7 @@ class Pkg_Biblestudy_PackageInstallerScript
 	 *
 	 * @since 9.0.2
 	 */
-	public function install($parent)
+	public function install($parent): void
 	{
 	}
 
@@ -43,7 +45,7 @@ class Pkg_Biblestudy_PackageInstallerScript
 	 *
 	 * @since 9.0.2
 	 */
-	public function uninstall($parent)
+	public function uninstall($parent): void
 	{
 	}
 
@@ -56,7 +58,7 @@ class Pkg_Biblestudy_PackageInstallerScript
 	 *
 	 * @since 9.0.2
 	 */
-	public function update($parent)
+	public function update($parent): void
 	{
 	}
 
@@ -70,7 +72,7 @@ class Pkg_Biblestudy_PackageInstallerScript
 	 *
 	 * @since 9.0.2
 	 */
-	public function preflight($type, $parent)
+	public function preflight($type, $parent): void
 	{
 	}
 
@@ -82,16 +84,16 @@ class Pkg_Biblestudy_PackageInstallerScript
 	 *
 	 * @return void
 	 *
-	 * @since 9.0.2
 	 * @throws Exception
+	 *@since 9.0.2
 	 */
-	public function postflight($type, $parent)
+	public function postflight(string $type, string $parent): void
 	{
-		// An redirect to a new location after the install is completed.
-		$controller = JControllerLegacy::getInstance('Biblestudy');
+		// An redirect to a new location after the installation is completed.
+		$controller = BaseController::getInstance('Proclaim');
 		$controller->setRedirect(
 			JUri::base() .
-			'index.php?option=com_proclaim&view=install&task=install.browse&scanstate=start&' .
+			'index.php?option=com_proclaim&view=cwminstall&task=cwminstall.browse&scanstate=start&' .
 			JSession::getFormToken() . '=1');
 		$controller->redirect();
 	}

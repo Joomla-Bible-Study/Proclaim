@@ -54,7 +54,7 @@ $wa->addInlineScript("if (typeof jQuery == 'function')
                 <input type="hidden" name="task" value="cwmassets.run"/>
 			<?php } ?>
 
-			<?php if ($this->more === false): ?>
+			<?php if (!$this->more): ?>
                 <div class="alert alert-info">
                     <p><?php echo Text::_('Will refresh go back to Assets check in 3 seconds. If not press back button.');
 						$wa->useScript('form.validate')

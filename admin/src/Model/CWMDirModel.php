@@ -73,14 +73,14 @@ class CWMDirModel extends ItemModel
 		$bc         = array();
 		$currentDir = $this->_getCurrentDir();
 
-		$parts = explode(DS, $currentDir);
+		$parts = explode('/', $currentDir);
 		$link  = '';
 		$i     = 0;
 
 		// Fill bc array with objects
 		foreach ($parts as $part)
 		{
-			if (strlen($part) && $part != ' ')
+			if ($part !== '' && $part !== ' ')
 			{
 				$link .= '/' . $part;
 				$bc[$i]       = new \stdClass;
@@ -200,7 +200,7 @@ class CWMDirModel extends ItemModel
 			$path                 = Path::clean($filePaths[$i]);
 			$OFiles[$i]           = new \stdClass;
 			$OFiles[$i]->basename = basename($path);
-			$OFiles[$i]->fullPath = dirname($path) . DS . basename($path);
+			$OFiles[$i]->fullPath = dirname($path) . '/' . basename($path);
 			$OFiles[$i]->link     = Uri::root() . '/images' . $this->_getCurrentDir(false, "/") . '/' . basename($path);
 			$OFiles[$i]->ext      = File::getExt($path);
 

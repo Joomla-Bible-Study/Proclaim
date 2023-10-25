@@ -745,7 +745,7 @@ class CWMPIconvert
 	}
 
 	/**
-	 * Insert Media into BibleStudy
+	 * Insert Media into Proclaim
 	 *
 	 * @param   object  $pi     ?
 	 * @param   string  $type   Type of Media

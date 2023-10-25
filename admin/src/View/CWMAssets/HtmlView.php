@@ -194,6 +194,6 @@ class HtmlView extends BaseHtmlView
 
 		ToolbarHelper::custom('cwmassets.browse', 'fix', 'fix', 'JBS_ADM_FIX', false);
 
-		ToolbarHelper::help('biblestudy', true);
+		ToolbarHelper::help('proclaim', true);
 	}
 }

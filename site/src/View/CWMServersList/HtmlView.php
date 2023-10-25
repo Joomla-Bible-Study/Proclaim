@@ -13,15 +13,13 @@ namespace CWM\Component\Proclaim\Site\View\CWMServersList;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
-use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Factory;
 
 /**
  * View class for Servers
@@ -90,8 +88,9 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 *
-	 * @see     fetch()
+	 * @throws \Exception
 	 * @since   11.1
+	 * @see     fetch()
 	 */
 	public function display($tpl = null): void
 	{
@@ -117,7 +116,7 @@ class HtmlView extends BaseHtmlView
 		}
 
 		// Set the document
-		$this->setDocument();
+		$this->setDocumentTitle(Text::_('JBS_TITLE_SERVERS'));
 
 		// Display the template
 		parent::display($tpl);
@@ -136,7 +135,7 @@ class HtmlView extends BaseHtmlView
 		$user = Factory::getApplication()->getSession()->get('user');
 
 		// Get the toolbar object instance
-		$bar = Toolbar::getInstance('toolbar');
+		$bar = Factory::getApplication()->getDocument()->getToolbar('toolbar');
 
 		ToolbarHelper::title(Text::_('JBS_CMN_SERVERS'), 'servers.png');
 
@@ -180,21 +179,6 @@ class HtmlView extends BaseHtmlView
 						$title</button>";
 			$bar->appendButton('Custom', $dhtml, 'batch');
 		}
-
-
-	}
-
-	/**
-	 * Add the page title to browser.
-	 *
-	 * @return void
-	 *
-	 * @since    7.1.0
-	 */
-	protected function setDocument(): void
-	{
-		$document = Factory::getApplication()->getDocument();
-		$document->setTitle(Text::_('JBS_TITLE_SERVERS'));
 	}
 
 	/**

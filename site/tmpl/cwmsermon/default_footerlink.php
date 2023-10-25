@@ -40,7 +40,7 @@ use Joomla\Input\Input;
 			$returnmenu = 1;
 		}
 
-		$link = Route::_('index.php?option=com_biblestudy&view=cwmsermons&t=' . $t);
+		$link = Route::_('index.php?option=com_proclaim&view=cwmsermons&t=' . $t);
 		?>
 		<a href="<?php echo $link; ?>"> <?php echo $link_text; ?> </a> <?php } // End of if view_link not 0 ?>
 </div><!--end of footer div-->

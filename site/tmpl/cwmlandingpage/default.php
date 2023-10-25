@@ -21,7 +21,7 @@ $CWMLanding = new CWMLanding;
 $params = $this->params;
 ?>
 
-<div id="biblestudy_landing" class="container"> <!-- This div is the container for the whole page -->
+<div id="proclaim_landing" class="container"> <!-- This div is the container for the whole page -->
 	<div id="bsms_header">
 		<h1 class="componentheading">
 			<?php
@@ -140,4 +140,4 @@ $params = $this->params;
 		}
 	} // End Loop for the landing items
 	?>
-</div><!-- end div id="biblestudy_landing" -->
+</div><!-- end div id="proclaim_landing" -->

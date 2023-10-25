@@ -172,7 +172,7 @@ class ProclaimNomenuRules implements RulesInterface
 				{
 					if (\is_callable([$this->router, 'get' . ucfirst($view->name) . 'Segment']))
 					{
-						$result = \call_user_func_array([$this->router, 'get' . ucfirst($view->name) . 'Segment'], [$query[$view->key], $query]);
+						$result = call_user_func([$this->router, 'get' . ucfirst($view->name) . 'Segment'], $query[$view->key], $query);
 
 						if ($view->nestable)
 						{
