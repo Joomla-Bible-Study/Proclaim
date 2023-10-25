@@ -643,7 +643,7 @@ VALUES
 INSERT IGNORE INTO `#__bsms_teachers` (`id`, `teacher_image`, `teacher_thumbnail`, `teachername`, `alias`, `title`, `phone`, `email`, `website`, `information`, `image`, `imageh`, `imagew`, `thumb`, `thumbw`, `thumbh`, `short`, `ordering`, `catid`, `list_show`, `published`, `asset_id`, `access`, `language`, `facebooklink`, `twitterlink`, `bloglink`, `link1`, `linklabel1`, `link2`, `linklabel2`, `link3`, `linklabel3`, `contact`, `address`, `landing_show`, `address1`)
 VALUES
 (1, '', '', 'Billy Sunday', X'62696C6C792D73756E646179', 'Pastor', '555-555-5555', 'billy@sunday.com',
- 'http://billysunday.com',
+ 'https://billysunday.com',
  'William Ashley Sunday was an American athlete who after being a popular outfielder in baseballs National League during the 1880s became the most celebrated and influential American evangelist during the first two decades of the 20th century. ',
  'media/com_proclaim/images/billy_sunday11.jpg', '276', '197', 'media/com_proclaim/images/images.jpg', '101',
  '141', 'Billy Sunday: 1862-1935', 0, 1, 1, 1, 7489, 1, '*', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,

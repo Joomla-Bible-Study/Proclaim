@@ -1,9 +1,9 @@
 <?php
 /**
- * Mod_Biblestudy core file
+ * Mod_Proclaim core file
  *
  * @package     Proclaim
- * @subpackage  Module.BibleStudy
+ * @subpackage  Module.Proclaim
  * @copyright   2007 - 2019 (C) CWM Team All rights reserved
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link        https://www.christianwebministries.org
@@ -15,7 +15,9 @@
 
 use CWM\Component\Proclaim\Site\Helper\CWMListing;
 use Joomla\CMS\Language\Text;
+use Joomla\Registry\Registry;
 
+/** @var Registry $params */
 $show_link = $params->get('show_link', 1);
 
 $Listing = new CWMListing; ?>

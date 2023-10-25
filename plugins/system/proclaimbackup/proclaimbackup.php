@@ -13,12 +13,16 @@
 
 use CWM\Component\Proclaim\Administrator\Lib\CWMBackup;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
+use Joomla\Event\DispatcherInterface;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\Registry\Registry;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Log\Log;
+use Joomla\CMS\Mail\MailerFactoryInterface;
 use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
 
 /**
  * JBSBackup jPlugin class
@@ -30,38 +34,38 @@ use Joomla\CMS\Plugin\CMSPlugin;
 class PlgSystemProclaimBackup extends CMSPlugin
 {
 	/**
-	 * Constructor
+	 * The name of the plugin
 	 *
-	 * @param   object  &$subject  The object to observe
-	 * @param   array   $config    An optional associative array of configuration settings.
-	 *                             Recognized key values include 'name', 'group', 'params', 'language'
-	 *                             (this list is not meant to be comprehensive).
-	 *
-	 * @since 1.5
+	 * @var    string
+	 * @since  1.5
 	 */
-	public function __construct(& $subject, $config)
-	{
-		parent::__construct($subject, $config);
+	protected $_name = 'proclaimbackup';
 
-		// Always load JBSM API if it exists.
-/*		$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
+	/**
+	 * The plugin type
+	 *
+	 * @var    string
+	 * @since  1.5
+	 */
+	protected $_type = 'system';
 
-		if (file_exists($api))
-		{
-			require_once $api;
-		}
-*/
-		$this->loadLanguage();
-	}
+	/**
+	 * Affects constructor behavior. If true, language files will be loaded automatically.
+	 *
+	 * @var    boolean
+	 * @since  3.1
+	 */
+	protected $autoloadLanguage = true;
 
 	/**
 	 * After Initialise system
 	 *
 	 * @return void
 	 *
+	 * @throws Exception
 	 * @since 1.5
 	 */
-	public function onAfterInitialise()
+	public function onAfterInitialise(): void
 	{
 		$params = $this->params;
 
@@ -99,13 +103,13 @@ class PlgSystemProclaimBackup extends CMSPlugin
 	/**
 	 * Check Time
 	 *
-	 * @param   Joomla\Registry\Registry  $params  ?
+	 * @param  Registry  $params  ?
 	 *
 	 * @return boolean
 	 *
 	 * @since 7.1.0
 	 */
-	public function checktime($params)
+	public function checktime($params): bool
 	{
 		$now   = time();
 		$db = Factory::getContainer()->get('DatabaseDriver');
@@ -124,7 +128,7 @@ class PlgSystemProclaimBackup extends CMSPlugin
 	/**
 	 * Check Days
 	 *
-	 * @param   Joomla\Registry\Registry  $params  ?
+	 * @param  Registry  $params  ?
 	 *
 	 * @return boolean
 	 *
@@ -134,7 +138,7 @@ class PlgSystemProclaimBackup extends CMSPlugin
 	public function checkdays(Registry $params): bool
 	{
 		$checkdays = false;
-		$config    = Factory::getApplication()->get();
+		$config    = Factory::getApplication()->getConfig();
 		$offset    = $config->get('config.offset');
 
 		$now   = time();
@@ -245,12 +249,9 @@ class PlgSystemProclaimBackup extends CMSPlugin
 	 *
 	 * @since 7.1.0
 	 */
-	public function doBackup()
+	public function doBackup(): bool
 	{
-		$dbbackup = new CWMBackup;
-		$backup   = $dbbackup->exportdb($run = 2);
-
-		return $backup;
+		return (new CWMBackup)->exportdb($run = 2);
 	}
 
 	/**
@@ -260,7 +261,7 @@ class PlgSystemProclaimBackup extends CMSPlugin
 	 *
 	 * @since 7.1.0
 	 */
-	public function updatetime()
+	public function updatetime(): bool
 	{
 		$time  = time();
 		$db = Factory::getContainer()->get('DatabaseDriver');
@@ -270,36 +271,29 @@ class PlgSystemProclaimBackup extends CMSPlugin
 		$db->execute();
 		$updateresult = $db->getAffectedRows();
 
-		if ($updateresult > 0)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return $updateresult > 0;
 	}
 
 	/**
 	 * Send the Email
 	 *
-	 * @param   Joomla\Registry\Registry  $params    Component Params
-	 * @param   string                    $dobackup  File of Backup
+	 * @param   Registry  $params    Component Params
+	 * @param   string    $dobackup  File of Backup
 	 *
 	 * @return void
 	 *
+	 * @throws Exception
 	 * @since 7.1.0
 	 */
-	public function doEmail($params, $dobackup)
+	public function doEmail($params, $dobackup): void
 	{
-		$livesite = JUri::root();
-		$config   = Factory::getApplication()->get();
+		$livesite = Uri::root();
+		$config   = Factory::getApplication()->getConfig();
 		$mailfrom = $config->get('config.mailfrom');
 		$fromname = $config->get('config.fromname');
-		jimport('joomla.filesystem.file');
 
 		// Check for existence of backup file, then attach to email
-		$backupexists = File::exists($dobackup);
+		$backupexists = file_exists($dobackup);
 
 		if (!$backupexists)
 		{
@@ -315,9 +309,8 @@ class PlgSystemProclaimBackup extends CMSPlugin
 			$fromname = $params->def('fromname', $fromname);
 		}
 
-		$mail = Factory::getMailer();
+		$mail = Factory::getContainer()->get(MailerFactoryInterface::class)->createMailer();
 		$mail->isHtml(true);
-		jimport('joomla.utilities.date');
 		$sender = array(
 			$mailfrom,
 			$fromname);
@@ -330,7 +323,7 @@ class PlgSystemProclaimBackup extends CMSPlugin
 
 		$recipients = explode(',', $params->get('recipients'));
 
-		if ($recipients == false)
+		if (!$recipients)
 		{
 			$recipients = array(
 				$config->get('config.mailfrom'));
@@ -341,30 +334,28 @@ class PlgSystemProclaimBackup extends CMSPlugin
 		$mail->setSubject($Subject . ' ' . $livesite);
 		$mail->setBody($Body);
 
-		if ($params->get('includedb') == 1)
+		if ($params->get('includedb') === 1)
 		{
 			$mail->addAttachment($dobackup);
 		}
 
 		if (!$mail->Send())
 		{
-			JLog::add('CWM Backup Plugin email failed.', JLog::ERROR, 'com_proclaim', DateTime::W3C);
+			Log::add('CWM Backup Plugin email failed.', Log::ERROR, 'com_proclaim', DateTime::W3C);
 		}
 	}
 
 	/**
 	 * Update files
 	 *
-	 * @param   Joomla\Registry\Registry  $params  JBSM Params
+	 * @param  Registry  $params  Proclaim Params
 	 *
 	 * @return void
 	 *
 	 * @since 7.1.0
 	 */
-	public function updatefiles($params)
+	public function updatefiles($params): void
 	{
-		//jimport('joomla.filesystem.folder');
-		//jimport('joomla.filesystem.file');
 		$path          = JPATH_SITE . '/media/com_proclaim/backup';
 		$exclude = array('.git', '.svn', 'CVS', '.DS_Store', '__MACOSX', '.html');
 		$excludefilter = array('^\..*', '.*~');

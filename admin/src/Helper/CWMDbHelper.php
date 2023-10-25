@@ -21,6 +21,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Table\Table;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Database Helper class for version 7.1.0
@@ -457,8 +458,10 @@ class CWMDbHelper
 		$db     = Factory::getContainer()->get('DatabaseDriver');
 
 		// Store new Recorder so it can be seen.
-		Table::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
-		$table = Table::getInstance($table, 'Table', array('dbo' => $db));
+		$table = Factory::getApplication()
+			->bootComponent('com_proclaim')
+			->getMVCFactory()
+			->createTable($table, 'Administrator', ['dbo' => Factory::getContainer()->get(DatabaseInterface::class)]);
 
 		try
 		{

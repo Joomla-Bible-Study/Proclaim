@@ -448,8 +448,7 @@ class CWMStats
 	{
 		$final           = [];
 		$top_score_table = '';
-		$admin_params    = CWMParams::getAdmin()-;
-		$format          = $admin_params->params->get('format_popular', '0');
+		$format          = CWMParams::getAdmin()->params->get('format_popular', '0');
 		$db              = Factory::getContainer()->get('DatabaseDriver');
 		$query           = $db->getQuery(true);
 		$query

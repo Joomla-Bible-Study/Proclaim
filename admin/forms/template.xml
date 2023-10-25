@@ -173,7 +173,7 @@
 			</field>
 		</fieldset>
 		<fieldset name="MEDIA" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-			<field name="protocol" type="list" default="http://"
+			<field name="protocol" type="list" default="https://"
 			       label="JBS_TPL_MEDIA_PROTOCOL" description="JBS_TPL_MEDIA_PROTOCOL_DESC">
 				<option value="http://">http://</option>
 				<option value="https://">https://</option>

@@ -30,6 +30,11 @@ $saveOrder  = $listOrder == 'ordering';
 $sortFields = $this->getSortFields();
 $columns    = 9;
 
+if ($saveOrder)
+{
+	$saveOrderingUrl = 'index.php?option=com_proclaim&task=cwmcomments.saveOrderAjax&tmpl=component';
+	HtmlHelper::_('sortablelist.sortable', 'comments', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+}
 
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
