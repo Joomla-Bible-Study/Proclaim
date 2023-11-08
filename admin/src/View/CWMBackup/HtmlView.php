@@ -113,7 +113,7 @@ class HtmlView extends BaseHtmlView
 
 				$types[]                      = HtmlHelper::_('select.option', '0', Text::_('JBS_IBM_SELECT_DB'));
 				$types                        = array_merge($types, $filelist);
-				$this->lists['backedupfiles'] = HtmlHelper::_('select.genericlist', $types, 'backuprestore', 'class="inputbox" size="1" ', 'value', 'text', '');
+				$this->lists['backedupfiles'] = HtmlHelper::_('select.genericlist', $types, 'backuprestore', 'class="form-select valid form-control-success" size="1" ', 'value', 'text', '');
 			}
 		}
 		else

@@ -201,10 +201,6 @@ $this->useCoreUI = true;
 						   title="<?php echo Text::_('JBS_ADM_ASSET_CHECK'); ?>" class="btn"> <i
 									class="icon-big icon-list"> </i>
 							<span><br/> <?php echo Text::_('JBS_ADM_ASSET_CHECK'); ?> </span></a>
-						<a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmmigrate'); ?>"
-						   title="<?php echo Text::_('JBS_ADM_MIGRATE'); ?>" class="btn"> <i
-									class="icon-big icon-share-alt"></i>
-							<span><br/> <?php echo Text::_('JBS_ADM_MIGRATE'); ?> </span></a>
 						<a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmbackup'); ?>"
 						   title="<?php echo Text::_('JBS_ADM_BACKUP_RESTORE'); ?>" class="btn"> <i
 									class="icon-big icon-database"></i>

@@ -676,14 +676,7 @@ class CWMAdminController extends FormController
 			$alt    = '&cwmalt=1';
 		}
 
-		if ($result || $copysuccess)
-		{
-			$this->setRedirect('index.php?option=com_proclaim&view=cwminstall&scanstate=start&cwmimport=1' . $alt);
-		}
-		else
-		{
-			$this->setRedirect('index.php?option=com_proclaim&view=cwmmigrate');
-		}
+		$this->setRedirect('index.php?option=com_proclaim&view=cwminstall&scanstate=start&cwmimport=1' . $alt);
 	}
 
 	/**

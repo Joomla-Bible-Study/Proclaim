@@ -18,9 +18,9 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMDbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
 use JetBrains\PhpStorm\NoReturn;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
-use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
 /**
@@ -47,22 +47,11 @@ class CWMBackup
 	 * @since 9.0.0 */
 	protected $data_cache = '';
 
-	/** @var string Absolute path to the temp file
-	 *
-	 * @since 9.0.0
-	 * */
-	protected $tempFile = '';
-
 	/** @var string Relative path of how the file should be saved in the archive
 	 *
 	 * @since 9.0.0
 	 */
 	protected $saveAsName = '';
-
-	/** @var resource Filepointer to the current dump part
-	 *
-	 * @since 9.0.0 */
-	private $fp = null;
 
 	/**
 	 * Export DB//
@@ -77,12 +66,11 @@ class CWMBackup
 	public function exportdb($run): bool
 	{
 		$date             = date('Y_F_j');
-		$site             = Uri::root(true);
-		$this->saveAsName = $site . '_jbs-db-backup_' . $date . '_' . time() . '.sql';
+		$site             = Uri::root();
+		$this->saveAsName = strtolower(trim(preg_replace('#\W+#', '_', $site), '_')) . '_jbs-db-backup_' . $date . '_' . time() . '.sql';
 		$objects          = CWMDbHelper::getObjects();
-		$tables           = null;
 		$config           = Factory::getApplication()->getConfig();
-		$path             = $config->get('tmp_path') . $this->saveAsName;
+		$path             = $config->get('tmp_path') . '/' . $this->saveAsName;
 		$path1            = '';
 
 		foreach ($objects as $object)
@@ -151,7 +139,7 @@ class CWMBackup
 				break;
 		}
 
-		// Clean up files for only set amount. filestokeep (Default 5)
+		// Clean up files for only set amount. Files to keep (Default 5)
 		$this->updatefiles(CWMParams::getAdmin()->params);
 
 		return true;
@@ -166,7 +154,7 @@ class CWMBackup
 	 *
 	 * @since 9.0.0
 	 */
-	public function getExportTable($table): bool
+	public function getExportTable(string $table): bool
 	{
 		if (!$table)
 		{
@@ -183,12 +171,6 @@ class CWMBackup
 		// Get the prefix
 		$prefix = $db->getPrefix();
 		$export = '';
-
-		// Used for Checking file is from the correct version of a Proclaim component
-		if (strpos($table, 'bsms_admin'))
-		{
-			//$export .= "\n--\n-- " . BIBLESTUDY_VERSION_UPDATEFILE . "\n--\n\n";
-		}
 
 		// Start of Tables
 		$export .= "--\n-- Table structure for table " . $db->qn($table) . "\n--\n\n";
@@ -251,51 +233,20 @@ class CWMBackup
 	}
 
 	/**
-	 * Saves the string in $fileData to the file $backupfile. Returns TRUE. If saving
-	 * failed, return value is FALSE.
+	 * Saves the string in $fileData to the file.
 	 *
 	 * @param   string  &$fileData  Data to write. Set to null to close the file handle.
 	 *
-	 * @return boolean TRUE is saving to the file succeeded
+	 * @return boolean TRUE if saving to the file succeeded
 	 *
 	 * @throws \Exception
 	 * @since 9.0.0
 	 */
 	protected function writeline(&$fileData): bool
 	{
-		$app = Factory::getApplication();
-
-		if (!$this->fp)
+		if (file_put_contents($this->dumpFile, $fileData, FILE_APPEND))
 		{
-			$this->fp = @fopen($this->dumpFile, 'b');
-
-			if ($this->fp === false)
-			{
-				$app->enqueueMessage('Could not open ' . $this->dumpFile . ' for append, in DB dump.', 'error');
-
-				return false;
-			}
-		}
-
-		if (is_null($fileData))
-		{
-			if (is_resource($this->fp))
-			{
-				@fclose($this->fp);
-			}
-
-			$this->fp = null;
-
 			return true;
-		}
-
-		if ($this->fp)
-		{
-			$ret = fwrite($this->fp, $fileData);
-			@clearstatcache();
-
-			// Make sure that all data was written to disk
-			return ($ret == strlen($fileData));
 		}
 
 		return false;
@@ -312,7 +263,7 @@ class CWMBackup
 	 *
 	 * @since 9.0.0
 	 */
-	#[NoReturn] public function output_file($file, $name, $mime_type = '')
+	#[NoReturn] public function output_file($file, $name, $mime_type = ''): void
 	{
 		// Clears file status cache
 		clearstatcache();
@@ -490,9 +441,13 @@ class CWMBackup
 	 */
 	public function updatefiles(?Registry $params): void
 	{
-		jimport('joomla.filesystem.folder');
-		jimport('joomla.filesystem.file');
-		$path          = JPATH_SITE . '/media/com_proclaim/database';
+		$path          = JPATH_SITE . '/media/com_proclaim/backup';
+
+		if (!is_dir($path))
+		{
+			Folder::create($path);
+		}
+
 		$exclude = array('.git', '.svn', 'CVS', '.DS_Store', '__MACOSX', '.html');
 		$excludefilter = array('^\..*', '.*~');
 		$files         = Folder::files($path, '.', 'false', 'true', $exclude, $excludefilter);

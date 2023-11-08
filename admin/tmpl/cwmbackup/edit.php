@@ -15,44 +15,59 @@
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
 
-HTMLHelper::_('behavior.formvalidator');
-HTMLHelper::_('jquery.framework');
-HTMLHelper::_('formbehavior.chosen', 'select');
+/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
+$wa = $this->document->getWebAssetManager();
+$wa->useScript('keepalive')
+	->useScript('form.validate')
+	->addInlineScript("
+		Joomla.submitbutton = function(task)
+		{
+			var form = document.getElementById('item-assets');
+			if (task == 'cwmadmin.back' || document.formvalidator.isValid(form))
+			{
+				Joomla.submitform(task, form);
+			}
+			elseif (task == 'cwmadmin.doimport' || document.formvalidator.isValid(form))
+			{
+				Joomla.submitform(task, form);
+			}
+		};
+");
 
 ?>
-<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmmigrate'); ?>" enctype="multipart/form-data"
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmbackup'); ?>" enctype="multipart/form-data"
       method="post" name="adminForm" id="adminForm">
     <div class="row-fluid">
-        <div class="span10 form-horizontal">
+        <div class="col-12 col-lg-6 form-horizontal">
             <h3><?php echo Text::_('JBS_CMN_EXPORT'); ?></h3>
 
             <div class="control-group">
                 <div class="control-label">
-                    <img src="<?php echo JUri::base() . '../media/com_proclaim/images/icons/export.png'; ?>"
+                    <img src="<?php echo Uri::base() . '../media/com_proclaim/images/icons/export.png'; ?>"
                          alt="Export" height="48" width="48"/></div>
                 <div class="controls">
                     <!--suppress HtmlUnknownTarget -->
                     <a href="<?php echo Route::_("index.php?option=com_proclaim&task=cwmadmin.export&run=1&" .
-						JSession::getFormToken() . "=1"); ?>" class="btn btn-primary">
+	                    Session::getFormToken() . "=1"); ?>" class="btn btn-primary">
 						<?php echo Text::_('JBS_CMN_EXPORT'); ?>
                     </a>
 					<?php echo '<br /><br />'; ?>
                     <!--suppress HtmlUnknownTarget -->
-                    <a href="index.php?option=com_proclaim&task=cwmadmin.export&run=2&<?php echo JSession::getFormToken(); ?>=1"
-                       class="btn">
+                    <a href="index.php?option=com_proclaim&task=cwmadmin.export&run=2&<?php echo Session::getFormToken(); ?>=1"
+                       class="btn btn-secondary">
 						<?php echo Text::_('JBS_IBM_SAVE_DB'); ?>
                     </a>
                 </div>
             </div>
             <hr/>
             <h3><?php echo Text::_('JBS_CMN_IMPORT'); ?></h3>
-
-            <div class="control-group">
+            <p>
 				<?php echo Text::_('JBS_IBM_MAX_UPLOAD') . ': ' . ini_get('upload_max_filesize'); ?><br/>
-				<?php echo Text::_('JBS_IBM_MAX_EXECUTION_TIME') . ': ' . ini_get('max_execution_time'); ?>
-            </div>
+			    <?php echo Text::_('JBS_IBM_MAX_EXECUTION_TIME') . ': ' . ini_get('max_execution_time'); ?><br/>
+            </p>
             <div class="control-group">
                 <div class="control-label">
                     <img src="<?php echo Uri::base() . '../media/com_proclaim/images/icons/import.png'; ?>"
@@ -60,43 +75,47 @@ HTMLHelper::_('formbehavior.chosen', 'select');
                 </div>
                 <div class="controls">
                     <div style="position:relative;">
+                        <label for="importdb" class="hidden">Import File Selection Button</label>
                         <a class='btn btn-primary' href="javascript:">
                             Choose File...
-                            <input type="file"
+                            <input id="importdb" type="file"
                                    style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;'
                                    name="importdb" size="40"
                                    onchange='jQuery("#upload-file-info").html(jQuery(this).val());'>
                         </a>
-                        <span class='label label-info' id="upload-file-info"></span>
                     </div>
                 </div>
             </div>
             <div class="control-group">
                 <div class="control-label">
-                    <img src="<?php echo JUri::base() . '../media/com_proclaim/images/icons/backuprestore.png'; ?>"
+                    <img src="<?php echo Uri::base() . '../media/com_proclaim/images/icons/backuprestore.png'; ?>"
                          alt="Backup Folder" height="48" width="48"/>
 
                 </div>
                 <div class="controls">
-					<?php echo $this->lists['backedupfiles'] . ' - ' . Text::_('JBS_IBM_IMPORT_FROM_BACKUP_FOLDER'); ?>
+                    <label for="backuprestore"><?php echo ' - ' . Text::_('JBS_IBM_IMPORT_FROM_BACKUP_FOLDER') ?>
+                    </label>
+	                <?php echo $this->lists['backedupfiles']; ?>
                 </div>
             </div>
             <div class="control-group">
                 <div class="control-label">
-                    <img src="<?php echo JUri::base() . '../media/com_proclaim/images/icons/folder.png'; ?>"
+                    <img src="<?php echo Uri::base() . '../media/com_proclaim/images/icons/folder.png'; ?>"
                          alt="Tmp Folder" height="48" width="48"/>
                 </div>
                 <div class="controls">
-					<?php echo ' - ' . Text::_('JBS_IBM_IMPORT_FROM_TMP_FOLDER'); ?>
-                    <input type="text" id="install_directory" name="install_directory" class="input_box" size="70"
-                           value="<?php echo $this->tmp_dest . DIRECTORY_SEPARATOR; ?>"/>
+                    <label for="install_directory"><?php echo ' - ' . Text::_('JBS_IBM_IMPORT_FROM_TMP_FOLDER'); ?>
+                    </label><input type="text" id="install_directory" name="install_directory"
+                                   class="form-control inputbox valid form-control-success"
+                                   value="<?php echo $this->tmp_dest . DIRECTORY_SEPARATOR; ?>"/>
                 </div>
             </div>
             <div class="control-group">
                 <input class="btn btn-primary" type="submit" value="<?php echo Text::_('JBS_CMN_SUBMIT'); ?>"
-                       name="submit"/>
+                       name="submit"/>&nbsp;&nbsp;&nbsp;&nbsp;
                 <a href="index.php?option=com_proclaim&task=cwmadmin.edit&id=1">
-                    <button type="button" class="btn btn-default"><?php echo Text::_('JTOOLBAR_BACK'); ?></button>
+                    <button type="button"
+                            class="btn btn-dark btn-outline-light"><?php echo Text::_('JTOOLBAR_BACK'); ?></button>
                 </a>
             </div>
         </div>

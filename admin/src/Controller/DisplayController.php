@@ -108,6 +108,11 @@ class DisplayController extends BaseController
 		// Get and render the view.
 		if ($view = $this->getView($vName, $vFormat))
 		{
+			if ($vName === 'CWMBackup')
+			{
+				$vName = 'CWMAdmin';
+			}
+
 			// Get the model for the view.
 			$model = $this->getModel($vName, 'Administrator', ['name' => $vName . '.' . substr($this->extension, 4)]);
 

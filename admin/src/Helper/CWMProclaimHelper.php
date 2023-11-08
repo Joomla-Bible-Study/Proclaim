@@ -71,7 +71,6 @@ class CWMProclaimHelper
 		'cwmmessages'      => 'CWMMessages',
 		'cwmmessagetype'   => 'CWMMessageType',
 		'cwmmessagetypes'  => 'CWMMessageTypes',
-		'cwmmigrate'       => 'CWMMigrate',
 		'cwmpodcast'       => 'CWMPodcast',
 		'cwmpodcasts'      => 'CWMPodcasts',
 		'cwmserie'         => 'CWMSerie',
