@@ -132,9 +132,7 @@ class CWMInstallController extends FormController
 			$model = new CWMInstallModel;
 			$state = $model->startScanning();
 			$app->input->set('scanstate', $state);
-			$app->input->set('view', 'cwminstall');
-
-			$this->display(false);
+			$app->input->set('view', 'CWMInstall');
 		}
 		else
 		{

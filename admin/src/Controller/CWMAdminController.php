@@ -602,10 +602,10 @@ class CWMAdminController extends FormController
 	{
 		$user = Factory::getApplication()->getSession()->get('user');
 
-		if (in_array('8', $user->groups, true))
+		if (array_key_exists(8, $user->groups))
 		{
 			CWMDbHelper::resetdb();
-			$this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmassats&task=assets.browse&' . Session::getFormToken() . '=1', false));
+			$this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmassats&task=cwmassets.browse&' . Session::getFormToken() . '=1', false));
 		}
 		else
 		{

@@ -9,10 +9,9 @@
  * */
 
 // Protect from unauthorized access
-use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Session\Session;
+use Joomla\CMS\Router\Route;
 
 defined('_JEXEC') or die();
 
@@ -24,8 +23,7 @@ else
 {
 	$pre = '';
 }
-?>
-<?php
+
 if ($this->more)
 {
 	?>
@@ -38,15 +36,24 @@ else
 	<h1><?php echo Text::_('JBS_MIG_MIGRATION_DONE'); ?></h1>
 	<?php
 }
-?>
-<script type="text/javascript">
-	if (typeof jQuery == 'function') {
-		if (typeof jQuery.ui == 'object') {
-			jQuery('#nojquerywarning').css('display', 'none');
-		}
-	}
-</script>
 
+if ($this->more)
+{
+	/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
+	$wa = $this->document->getWebAssetManager();
+	$wa->useScript('form.validate')
+		->addInlineScript("setTimeout(function(){
+                                    jQuery('#adminForm').submit()
+								}, 3000);"
+		)
+		->addInlineScript("if (typeof jQuery == 'function') {
+	                                    if (typeof jQuery.ui == 'object') {
+		                                    jQuery('#nojquerywarning').css('display', 'none');
+	                                        }
+	                                   }"
+		);
+}
+?>
 <div id="install-progress-pane">
 	<div class="migration-status">
 		<div class="status"><?php echo $pre . ' ' . Text::_('JBS_MIG_PROCESSING') . ' ' . $this->running; ?></div>
@@ -55,7 +62,7 @@ else
 		<div class="bar" style="width: <?php echo $this->percentage ?>%;"></div> <?php echo $this->percentage; ?>%
 	</div>
 </div>
-<form action="index.php" name="adminForm" id="adminForm" method="get">
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwminstall'); ?>" name="adminForm" id="adminForm" method="get">
 	<input type="hidden" name="option" value="com_proclaim"/>
 	<input type="hidden" name="view" value="cwminstall"/>
 	<?php ?>
@@ -72,7 +79,7 @@ else
 	<?php
 	}
 	?>
-	<input type="hidden" name="<?php echo Factory::getApplication()->getSession()->getFormToken() ?>" value="1"/>
+	<?php echo HTMLHelper::_('form.token'); ?>
 </form>
 
 <div id="backup-complete">
@@ -83,12 +90,6 @@ else
 		<div class="alert alert-info">
 			<p><?php echo Text::_('JBS_LBL_REDIRECT_IN_3S'); ?></p>
 		</div>
-		<script type="text/javascript">
-			window.setTimeout('redirect();', 3000);
-			function redirect() {
-				window.location.replace("index.php?option=com_proclaim&view=cwminstall&layout=install_finished&<?php echo Session::getFormToken() ?>=1");
-			}
-		</script>
 	<?php
 	endif;
 	?>

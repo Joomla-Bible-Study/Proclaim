@@ -18,21 +18,12 @@ use CWM\Component\Proclaim\Administrator\Helper\CWMDbHelper;
 use CWM\Component\Proclaim\Administrator\Lib\CWMAssets;
 use CWM\Component\Proclaim\Administrator\Lib\CWMBackup;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Model\BaseModel;
 use Joomla\Database\DatabaseDriver;
 use Joomla\Database\DatabaseInterface;
-
-// Always load CWM API if it exists.
-$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
-
-if (file_exists($api))
-{
-	require_once $api;
-}
+use Joomla\Filesystem\Folder;
 
 /**
  * class Migration model
@@ -257,171 +248,32 @@ class CWMInstallModel extends BaseModel
 		$this->totalSteps += count($this->finish);
 
 		/**
-		 * First we check to see if there is a current version database installed. This will have a #__bsms_version
-		 * table so we check for it's existence.
+		 * First, we check to see if there is a current version database installed. This will have a #__bsms_version
+		 * table, so we check for its existence.
 		 * Check to be sure a really early version is not installed $versiontype: 1 = current version type 2 = older version type 3 = no version
 		 */
+		$this->callstack['versionttype'] = 1;
 
-		$tables         = $this->_db->getTableList();
-		$prefix         = $this->_db->getPrefix();
-		$versiontype    = 0;
-		$currentversion = false;
-		$oldversion     = false;
+		// Find the Last updated Version in Update table
+		$query = $this->_db->getQuery(true);
+		$query->select('version')
+			->from('#__bsms_update')
+			->order($this->_db->qn('id') . ' DESC');
+		$this->_db->setQuery($query, 0, 1);
+		$updates             = $this->_db->loadObject();
+		$version             = $updates->version;
+		$this->versionSwitch = $version;
 
-		// Check to see if version is newer then 7.0.2
-		foreach ($tables as $table)
-		{
-			$studies              = $prefix . 'bsms_update';
-			$currentversionexists = substr_count($table, $studies);
-
-			if ($currentversionexists > 0)
-			{
-				$currentversion = true;
-				$versiontype    = 1;
-			}
-		}
-
-		if ($versiontype !== 1)
-		{
-			foreach ($tables as $table)
-			{
-				$studies              = $prefix . 'bsms_version';
-				$currentversionexists = substr_count($table, $studies);
-
-				if ($currentversionexists > 0)
-				{
-					$currentversion = true;
-					$versiontype    = 2;
-				}
-			}
-		}
-
-		// Only move forward if a current version type is not found
-		if (!$currentversion)
-		{
-			// Now let's check to see if there is an older database type (prior to 6.2)
-			$oldversion = false;
-
-			foreach ($tables as $table)
-			{
-				$studies          = $prefix . 'bsms_schemaVersion';
-				$oldversionexists = substr_count($table, $studies);
-
-				if ($oldversionexists > 0)
-				{
-					$oldversion       = true;
-					$olderversiontype = 1;
-					$versiontype      = 3;
-				}
-			}
-
-			if (!$oldversion)
-			{
-				foreach ($tables as $table)
-				{
-					$studies            = $prefix . 'bsms_schemaversion';
-					$olderversionexists = substr_count($table, $studies);
-
-					if ($olderversionexists > 0)
-					{
-						$oldversion       = true;
-						$olderversiontype = 2;
-						$versiontype      = 3;
-					}
-				}
-			}
-		}
-
-		// Finally if both current version and old version are false, we double check to make sure there are no JBS tables in the database.
-		if (!$currentversion && !$oldversion)
-		{
-			foreach ($tables as $table)
-			{
-				$studies   = $prefix . 'bsms_studies';
-				$jbsexists = substr_count($table, $studies);
-
-				if (!$jbsexists)
-				{
-					$versiontype = 5;
-				}
-
-				if ($jbsexists > 0)
-				{
-					$versiontype = 4;
-				}
-			}
-		}
-
-		$this->callstack['versionttype'] = $versiontype;
-
-		// Now we run a switch case on the VersionType and run an install routine accordingly
-		switch ($versiontype)
-		{
-			case 1:
-				$this->correctVersions();
-
-				// Find Last updated Version in Update table
-				$query = $this->_db->getQuery(true);
-				$query->select('version')
-					->from('#__bsms_update')
-					->order($this->_db->qn('id') . ' DESC');
-				$this->_db->setQuery($query, 0, 1);
-				$updates             = $this->_db->loadObject();
-				$version             = $updates->version;
-				$this->versionSwitch = $version;
-
-				$this->callstack['subversiontype_version'] = $version;
-				break;
-			case 2:
-				// This is a current database version so we check to see which version. We query to get the highest build in the version table
-				$query = $this->_db->getQuery(true);
-				$query->select('*')
-					->from('#__bsms_version')
-					->order('build desc');
-				$this->_db->setQuery($query);
-				$this->_db->execute();
-				$version = $this->_db->loadObject();
-
-				$this->versionSwitch = implode('.', preg_split('//', $version->build, -1, PREG_SPLIT_NO_EMPTY));
-
-				$this->callstack['subversiontype_version'] = $version->build;
-				break;
-
-			case 3:
-				$query = $this->_db->getQuery(true);
-
-				// This is an older version of the software so we check it's version
-				if ($olderversiontype == 1)
-				{
-					$query->select('schemaVersion')->from('#__bsms_schemaVersion');
-				}
-				else
-				{
-					$query->select('schemaVersion')->from('#__bsms_schemaversion');
-				}
-
-				$this->_db->setQuery($query);
-				$schema = $this->_db->loadResult();
-
-				$this->versionSwitch = implode('.', preg_split('//', $schema, -1, PREG_SPLIT_NO_EMPTY));
-
-				$this->callstack['subversiontype_version'] = $schema;
-				break;
-
-			case 4:
-				$this->callstack['subversiontype_version'] = Text::_('JBS_IBM_VERSION_TOO_OLD');
-
-				// There is a version installed, but it is older than 6.0.8 and we can't upgrade it
-				$this->setState('scanerror', Text::_('JBS_IBM_VERSION_TOO_OLD'));
-
-				return;
-				break;
-		}
+		$this->callstack['subversiontype_version'] = $version;
 
 		if ($this->callstack['subversiontype_version'] > 000)
 		{
 			$files = str_replace('.sql', '', Folder::files(JPATH_ADMINISTRATOR . $this->filePath, '\.sql$'));
-			$php   = str_replace('.php', '', Folder::files(JPATH_ADMINISTRATOR . $this->phpPath, '\.php$'));
+
+			if (is_dir(JPATH_ADMINISTRATOR . $this->phpPath))
+			{
+				$php = str_replace('.php', '', Folder::files(JPATH_ADMINISTRATOR . $this->phpPath, '\.php$'));
+			}
 
 			if (is_array($files))
 			{
@@ -454,7 +306,7 @@ class CWMInstallModel extends BaseModel
 				}
 				else
 				{
-					$value = '7.0.0';
+					$value = '9.0.0';
 				}
 
 				if (version_compare($value, $update) <= 0)
@@ -843,7 +695,7 @@ class CWMInstallModel extends BaseModel
 				}
 				elseif (in_array($this->version, $this->subFiles, true) && @empty($this->allupdates[$this->version]))
 				{
-					// Check for corresponding PHP file and run migration
+					// Check for the corresponding PHP file and run migration
 					$migrationfile = JPATH_ADMINISTRATOR . '/components/com_proclaim/install/updates/' . $this->version . '.php';
 
 					require_once $migrationfile;
@@ -1107,7 +959,6 @@ class CWMInstallModel extends BaseModel
 	private function finish(string $step): void
 	{
 		$app = Factory::getApplication();
-		$run = false;
 
 		switch ($step)
 		{
@@ -1121,9 +972,9 @@ class CWMInstallModel extends BaseModel
 			case 'fixassets':
 				// Final step is to fix assets by building what need to be fixed.
 				$assets = new CWMAssets;
-				$assets->build();
-				$this->query      = $assets->query;
-				$this->totalSteps += $assets->count;
+				$string = $assets->build();
+				$this->query      = $string->query;
+				$this->totalSteps += $string->count;
 				break;
 			case 'fixmenus':
 				$run           = $this->fixMenus();
@@ -1250,7 +1101,7 @@ class CWMInstallModel extends BaseModel
 	}
 
 	/**
-	 * Fix Import problem
+	 * Fix an Import problem
 	 *
 	 * @return boolean True if fix complete, False if failure
 	 *
@@ -1263,7 +1114,7 @@ class CWMInstallModel extends BaseModel
 
 		foreach ($tables as $table)
 		{
-			if (strpos($table['name'], '_bsms_timeset') === false)
+			if (!str_contains($table['name'], '_bsms_timeset'))
 			{
 				$query = $this->_db->getQuery(true);
 				$query->select('*')->from($table);
@@ -1339,7 +1190,7 @@ class CWMInstallModel extends BaseModel
 		// Build php steps now.
 		$migrationFile = JPATH_ADMINISTRATOR . '/components/com_proclaim/install/updates/' . $value . '.php';
 
-		if (File::exists($migrationFile))
+		if (file_exists($migrationFile))
 		{
 			require_once $migrationFile;
 			$migrationClass = "Migration" . str_ireplace(".", '', $value);
@@ -1563,8 +1414,6 @@ class CWMInstallModel extends BaseModel
 			$this->_db->q('Proclaim Podcast Module'),
 			$this->_db->qn('name') . ' = ' .
 			$this->_db->q('Proclaim Finder Plg'),
-			$this->_db->qn('name') . ' = ' .
-			$this->_db->q('Proclaim Search Plg'),
 			$this->_db->qn('name') . ' = ' .
 			$this->_db->q('Proclaim Backup Plg'),
 			$this->_db->qn('name') . ' = ' .

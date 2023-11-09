@@ -44,11 +44,11 @@ class HtmlView extends BaseHtmlView
 	 * @since    7.0.0 */
 	public array $callstack = [];
 
-	public string $subSteps = '';
+	public array $subSteps;
 
-	public array $subQuery = [];
+	public mixed $subQuery;
 
-	public array $subFiles = [];
+	public mixed $subFiles;
 
 	public string $version = '0.0.0';
 
@@ -56,7 +56,7 @@ class HtmlView extends BaseHtmlView
 
 	/** @var string More
 	 * @since    7.0.0 */
-	protected $more = null;
+	protected $more;
 
 	/** @var  string Percentage
 	 * @since    7.0.0 */
@@ -72,11 +72,11 @@ class HtmlView extends BaseHtmlView
 
 	/** @var array The pre versions to process
 	 * @since    7.0.0 */
-	private array $versionStack = [];
+	private mixed $versionStack;
 
 	/** @var array The pre versions to process
 	 * @since    7.0.0 */
-	private array $versionSwitch = [];
+	private mixed $versionSwitch;
 
 	/** @var array The pre versions sub sql array to process
 	 * @since    7.0.0 */
@@ -137,21 +137,6 @@ class HtmlView extends BaseHtmlView
 		$this->setLayout($layout);
 
 		$this->percentage = $percent;
-
-		if ($more)
-		{
-			/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-			$wa = $this->document->getWebAssetManager();
-			$wa->useScript('form.validate')
-				->addInlineScript("setTimeout(function(){
-                                    jQuery('#adminForm').submit()
-								}, 3000);"
-				);
-		}
-
-		ToolbarHelper::title(Text::_('JBS_MIG_TITLE'), 'administration');
-		$document = $app->getDocument();
-		$document->setTitle(Text::_('JBS_MIG_TITLE'));
 
 		// Install systems setup files
 		// @todo need to move to a helper as this is call do many times.
@@ -231,7 +216,7 @@ class HtmlView extends BaseHtmlView
 	}
 
 	/**
-	 * Setup Array for install System
+	 * Setup Array for installation System
 	 *
 	 * @since 7.0.0
 	 *

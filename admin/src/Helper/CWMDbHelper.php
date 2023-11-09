@@ -494,7 +494,7 @@ class CWMDbHelper
 		$db     = Factory::getContainer()->get('DatabaseDriver');
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');
-		$path = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_proclaim/install/sql';
+		$path = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_proclaim/sql';
 
 		$files = str_replace('.sql', '', Folder::files($path, '\.sql$'));
 		$files = array_reverse($files, true);

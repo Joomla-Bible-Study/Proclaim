@@ -398,7 +398,7 @@ class CWMProclaimHelper
 			}
 			catch (\Exception $e)
 			{
-				die;
+				return 0;
 			}
 
 			if (!isset(self::$admin_params->debug))
