@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="plugin" group="finder" method="upgrade">
-	<name>JBS_PLG_FINDER</name>
+	<name>plg_finder_proclaim</name>
 	<author>CWM Team</author>
-	<authorEmail>info@christianwebministries.org</authorEmail>
-	<authorUrl>https://www.christianwebministries.org</authorUrl>
-	<copyright>(C) 2007 - 2022 Proclaim All rights reserved.</copyright>
-	<version>10.0.0</version>
 	<creationDate>October 1, 2022</creationDate>
-	<license>https://www.gnu.org/licenses/gpl.html</license>
-	<description>JBS_PLG_FINDER_XML_DESCRIPTION</description>
+	<copyright>(C) 2007 Proclaim All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<authorEmail>info@christianwebministries.org</authorEmail>
+	<authorUrl>www.christianwebministries.org</authorUrl>
+	<version>10.0.0</version>
+	<description>PLG_FINDER_PROCLAIM_XML_DESCRIPTION</description>
 	<namespace path="src">CWM\Plugin\Finder\Proclaim</namespace>
 	<files>
 		<folder plugin="proclaim">services</folder>

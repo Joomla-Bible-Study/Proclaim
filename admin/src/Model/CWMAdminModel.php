@@ -17,36 +17,15 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 use CWM\Component\Proclaim\Administrator\Table\CWMAdminTable;
 use CWM\Component\Proclaim\Site\Helper\CWMMedia;
 use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Event\AbstractEvent;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Form\Form;
-use Joomla\CMS\Form\FormFactoryInterface;
-use Joomla\CMS\Helper\TagsHelper;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Language\Associations;
-use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Model\AdminModel;
-use Joomla\CMS\MVC\Model\WorkflowBehaviorTrait;
-use Joomla\CMS\MVC\Model\WorkflowModelInterface;
-use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Schema\ChangeSet;
 use Joomla\CMS\Session\Session;
-use Joomla\CMS\String\PunycodeHelper;
 use Joomla\CMS\Table\Table;
-use Joomla\CMS\Table\TableInterface;
-use Joomla\CMS\Tag\TaggableTableInterface;
-use Joomla\CMS\UCM\UCMType;
 use Joomla\CMS\Versioning\VersionableModelTrait;
-use Joomla\CMS\Workflow\Workflow;
-use Joomla\Component\Categories\Administrator\Helper\CategoriesHelper;
-use Joomla\Component\Fields\Administrator\Helper\FieldsHelper;
-use Joomla\Database\ParameterType;
 use Joomla\Registry\Registry;
-use Joomla\Utilities\ArrayHelper;
-use JoomlaInstallerScript;
-use JSchemaChangeset;
 
 /**
  * Admin administrator model class
@@ -101,11 +80,12 @@ class CWMAdminModel extends AdminModel
 	 *
 	 * @return  boolean  True if allowed to delete the record. Defaults to the permission set in the component.
 	 *
+	 * @throws \Exception
 	 * @since   1.6
 	 */
-	protected function canDelete($record)
+	protected function canDelete($record): bool
 	{
-		if (empty($record->id) || $record->published != -2)
+		if (empty($record->id) || $record->published !== -2)
 		{
 			return false;
 		}
@@ -120,9 +100,10 @@ class CWMAdminModel extends AdminModel
 	 *
 	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission set in the component.
 	 *
+	 * @throws \Exception
 	 * @since   1.6
 	 */
-	protected function canEditState($record)
+	protected function canEditState($record): bool
 	{
 		// Check against the category.
 		if (!empty($record->catid))
@@ -145,7 +126,7 @@ class CWMAdminModel extends AdminModel
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function getForm($data = array(), $loadData = true)
+	public function getForm($data = array(), $loadData = true): mixed
 	{
 		if (empty($data))
 		{
@@ -155,7 +136,7 @@ class CWMAdminModel extends AdminModel
 		// Get the form.
 		$form = $this->loadForm('com_proclaim.admin', 'admin', array('control' => 'jform', 'load_data' => $loadData));
 
-		if (empty($form))
+		if ($form === null)
 		{
 			return false;
 		}
@@ -175,7 +156,7 @@ class CWMAdminModel extends AdminModel
 	 * @since   3.0
 	 * @throws  \Exception
 	 */
-	public function getTable($name = 'CWMAdmin', $prefix = '', $options = array())
+	public function getTable($name = 'CWMAdmin', $prefix = '', $options = array()): Table
 	{
 		return parent::getTable($name, $prefix, $options);
 	}
@@ -189,7 +170,7 @@ class CWMAdminModel extends AdminModel
 	 *
 	 * @since    1.6
 	 */
-	public function save($data)
+	public function save($data): bool
 	{
 		$params = new Registry;
 		$params->loadArray($data['params']);
@@ -223,13 +204,13 @@ class CWMAdminModel extends AdminModel
 	/**
 	 * Method to check-out a row for editing.
 	 *
-	 * @param   integer  $pk  The numeric id of the primary key.
+	 * @param   null  $pk  The numeric id of the primary key.
 	 *
-	 * @return  boolean  False on failure or error, true otherwise.
+	 * @return boolean|integer|null False on failure or error, true otherwise.
 	 *
 	 * @since   11.1
 	 */
-	public function checkout($pk = null)
+	public function checkout($pk = null): bool|int|null
 	{
 		return $pk;
 	}
@@ -243,7 +224,7 @@ class CWMAdminModel extends AdminModel
 	 *
 	 * @todo  not sure if this should be here.
 	 */
-	public function getMediaFiles()
+	public function getMediaFiles(): mixed
 	{
 		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
@@ -270,7 +251,7 @@ class CWMAdminModel extends AdminModel
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function fix()
+	public function fix(): bool
 	{
 		if (!$changeSet = $this->getItems())
 		{
@@ -287,30 +268,18 @@ class CWMAdminModel extends AdminModel
 		$installer->fixemptylanguage();
 		$this->fixDefaultTextFilters();
 
-		/*
-		 * Finally, if the schema updates succeeded, make sure the database is
-		 * converted to utf8mb4 or, if not suported by the server, compatible to it.
-		 */
-		$installerJoomla = new JoomlaInstallerScript;
-		$statusArray     = $changeSet->getStatus();
-
-		if (count($statusArray['error']) === 0)
-		{
-			$installerJoomla->convertTablesToUtf8mb4(false);
-		}
-
 		return true;
 	}
 
 	/**
 	 * Gets the ChangeSet object
 	 *
-	 * @return \Joomla\CMS\Schema\ChangeSet|boolean JSchema  ChangeSet
+	 * @return ChangeSet|boolean|null JSchema  ChangeSet
 	 *
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function getItems()
+	public function getItems(): ChangeSet|bool|null
 	{
 		$folder = JPATH_ADMINISTRATOR . '/components/com_proclaim/sql/updates/';
 
@@ -334,22 +303,22 @@ class CWMAdminModel extends AdminModel
 	}
 
 	/**
-	 * Fix schema version if wrong.
+	 * Fix a schema version if wrong.
 	 *
-	 * @param   JSchemaChangeSet  $changeSet  Schema change set.
+	 * @param   ChangeSet  $changeSet  Schema change set.
 	 *
-	 * @return   mixed  string schema version if success, false if fail
+	 * @return   mixed  string schema version of success, false if fail
 	 *
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function fixSchemaVersion($changeSet)
+	public function fixSchemaVersion(ChangeSet $changeSet): mixed
 	{
-		// Get correct schema version -- last file in array.
+		// Get a correct schema version -- last file in array.
 		$schema          = $changeSet->getSchema();
 		$extensionresult = $this->getExtentionId();
 
-		if ($schema == $this->getSchemaVersion())
+		if ($schema === $this->getSchemaVersion())
 		{
 			return $schema;
 		}
@@ -388,9 +357,9 @@ class CWMAdminModel extends AdminModel
 	 *
 	 * @since 1.7.3
 	 */
-	public function getCompVersion()
+	public function getCompVersion(): string
 	{
-		$jversion = null;
+		$jversion = '';
 		$file     = JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.xml';
 		$xml      = simplexml_load_string(file_get_contents($file));
 
@@ -410,7 +379,7 @@ class CWMAdminModel extends AdminModel
 	 * @throws \Exception
 	 * @since 7.1.0
 	 */
-	public function getExtentionId()
+	public function getExtentionId(): string
 	{
 		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
@@ -428,14 +397,14 @@ class CWMAdminModel extends AdminModel
 	}
 
 	/**
-	 * Get version from #__schemas table
+	 * Get a version from #__schemas table
 	 *
 	 * @return  mixed  the return value from the query, or null if the query fails
 	 *
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function getSchemaVersion()
+	public function getSchemaVersion(): mixed
 	{
 		$db              = Factory::getContainer()->get('DatabaseDriver');
 		$query           = $db->getQuery(true);
@@ -448,14 +417,14 @@ class CWMAdminModel extends AdminModel
 	}
 
 	/**
-	 * Fix Joomla version in #__extensions table if wrong (doesn't equal JVersion short version)
+	 * Fix a Joomla version in #__extensions table if wrong (doesn't equal JVersion short version)
 	 *
 	 * @return   mixed  string update version if success, false if fail
 	 *
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function fixUpdateVersion()
+	public function fixUpdateVersion(): mixed
 	{
 		$table = Table::getInstance('Extension');
 		$table->load($this->getExtentionId());
@@ -485,7 +454,7 @@ class CWMAdminModel extends AdminModel
 	 *
 	 * @since 9.0.14
 	 */
-	public function getUpdateJBSMVersion()
+	public function getUpdateJBSMVersion(): mixed
 	{
 		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
@@ -504,7 +473,7 @@ class CWMAdminModel extends AdminModel
 	 *
 	 * @since 9.0.14
 	 */
-	public function fixUpdateJBSMVersion()
+	public function fixUpdateJBSMVersion(): mixed
 	{
 		$db    = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
@@ -547,7 +516,7 @@ class CWMAdminModel extends AdminModel
 	 *
 	 * @since 7.0
 	 */
-	public function fixDefaultTextFilters()
+	public function fixDefaultTextFilters(): mixed
 	{
 		$table = Table::getInstance('Extension');
 		$table->load($table->find(array('name' => 'com_proclaim')));
@@ -579,7 +548,7 @@ class CWMAdminModel extends AdminModel
 	 *
 	 * @since 7.0
 	 */
-	public function getPagination()
+	public function getPagination(): bool
 	{
 		return true;
 	}

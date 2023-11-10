@@ -17,8 +17,10 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
 use CWM\Component\Proclaim\Administrator\Model\CWMInstallModel;
 use Joomla\CMS\Factory;
-use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\Session\Session;
 
 /**
  * Controller for Admin
@@ -26,7 +28,7 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CWMInstallController extends FormController
+class CWMInstallController extends BaseController
 {
 	/**
 	 * @var string
@@ -35,43 +37,20 @@ class CWMInstallController extends FormController
 	public string $modelName;
 
 	/**
-	 * The context for storing internal data, e.g. record.
-	 *
-	 * @var    string
-	 * @since  12.2
-	 */
-	protected $context = 'cwminstall';
-
-	/**
-	 * The URL view item variable.
-	 *
-	 * @var    string
-	 * @since  12.2
-	 */
-	protected $view_item = 'cwminstall';
-
-	/**
 	 * The URL view list variable.
 	 *
 	 * @var    string
 	 * @since  12.2
 	 */
-	protected $view_list = 'cwminstall';
+	protected string $view_list = 'CWMInstall';
 
 	/**
-	 * Constructor.
+	 * The default view for the display method.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
-	 *
-	 * @throws \Exception
-	 * @since 1.5
+	 * @var    string
+	 * @since  3.0
 	 */
-	public function __construct($config = array())
-	{
-		parent::__construct($config);
-
-		$this->modelName = 'cwminstall';
-	}
+	protected $default_view = 'CWMInstall';
 
 	/**
 	 * Method to get a model object, loading it if required.
@@ -117,13 +96,16 @@ class CWMInstallController extends FormController
 	 * @throws \Exception
 	 * @since 9.0.0
 	 */
-	public function browse()
+	public function browse(): void
 	{
+		// Check for request forgeries.
+		(Session::checkToken('get') || Session::checkToken()) or jexit(Text::_('JINVALID_TOKEN'));
+
 		$app = Factory::getApplication();
 		$session = $app->getSession();
 		$stack = $session->get('migration_stack', '', 'CWM');
 
-		if (empty($stack))
+		if (empty($stack) || !is_array($stack))
 		{
 			CWMHelper::clearcache('site');
 			CWMHelper::clearcache('administrator');
@@ -133,10 +115,12 @@ class CWMInstallController extends FormController
 			$state = $model->startScanning();
 			$app->input->set('scanstate', $state);
 			$app->input->set('view', 'CWMInstall');
+
+			$this->display(false);
 		}
 		else
 		{
-			$this->clear();
+			$this->run();
 		}
 	}
 
@@ -148,13 +132,19 @@ class CWMInstallController extends FormController
 	 * @throws \Exception
 	 * @since 9.0.0
 	 */
-	public function clear()
+	public function clear(): void
 	{
+		// Check for request forgeries.
+		(Session::checkToken('get') || Session::checkToken()) or jexit(Text::_('JINVALID_TOKEN'));
+
 		CWMHelper::clearcache('site');
 		CWMHelper::clearcache('administrator');
 		$session = Factory::getApplication()->getSession();
 		$session->set('migration_stack', '', 'CWM');
-		$this->browse();
+		$app = Factory::getApplication();
+		$app->input->set('view', 'CWMInstall');
+
+		$this->display(false);
 	}
 
 	/**
@@ -165,13 +155,16 @@ class CWMInstallController extends FormController
 	 * @throws \Exception
 	 * @since 9.0.0
 	 */
-	public function run()
+	public function run(): void
 	{
+		// Check for request forgeries.
+		(Session::checkToken('get') || Session::checkToken()) or jexit(Text::_('JINVALID_TOKEN'));
+
 		$app   = Factory::getApplication();
 		$model = new CWMInstallModel;
 		$state = $model->run();
 		$app->input->set('scanstate', $state);
-		$app->input->set('view', 'cwminstall');
+		$app->input->set('view', 'CWMInstall');
 
 		$this->display(false);
 	}

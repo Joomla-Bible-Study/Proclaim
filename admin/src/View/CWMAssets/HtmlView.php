@@ -148,8 +148,8 @@ class HtmlView extends BaseHtmlView
 
 		if ($this->more)
 		{
-			/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-			$wa = $this->document->getWebAssetManager();
+			$doc = $this->getDocument();
+			$wa = $doc->getWebAssetManager();
 			$wa->useScript('form.validate')
 				->addInlineScript("setTimeout(function(){
                                     jQuery('#adminForm').submit()

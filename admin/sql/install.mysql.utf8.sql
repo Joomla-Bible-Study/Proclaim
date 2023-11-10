@@ -21,6 +21,20 @@ CREATE TABLE IF NOT EXISTS `#__bsms_admin` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `#__bsms_update`
+--
+
+DROP TABLE IF EXISTS `#__bsms_update`;
+CREATE TABLE `#__bsms_update`
+(
+    `id`      int unsigned NOT NULL AUTO_INCREMENT,
+    `version` varchar(255) DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE InnoDB DEFAULT CHARSET = utf8mb4 DEFAULT COLLATE = utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `#__bsms_books`
 --
 

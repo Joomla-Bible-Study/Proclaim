@@ -297,11 +297,11 @@ class PlgSystemProclaimBackup extends CMSPlugin
 
 		if (!$backupexists)
 		{
-			$msg = Text::_('JBS_PLG_BACKUP_EMAIL_MSG_ERROR');
+			$msg = Text::_('PLG_SYSTEM_PROCLAIMBACKUP_EMAIL_MSG_ERROR');
 		}
 		else
 		{
-			$msg = Text::_('JBS_PLG_BACKUP_EMAIL_MSG_SUCCESS');
+			$msg = Text::_('PLG_SYSTEM_PROCLAIMBACKUP_EMAIL_MSG_SUCCESS');
 		}
 
 		if ($params->def('fromname', $fromname))

@@ -50,7 +50,7 @@ class PlgSystemProclaimBackupInstallerScript
 	public function uninstall($parent)
 	{
 		// $parent is the class calling this method
-		echo '<p>' . Text::_('JBS_PLG_BACKUP_UNINSTALL_TEXT') . '</p>';
+		echo '<p>' . Text::_('PLG_SYSTEM_PROCLAIMBACKUP_UNINSTALL_TEXT') . '</p>';
 	}
 
 	/**
@@ -65,7 +65,7 @@ class PlgSystemProclaimBackupInstallerScript
 	public function update($parent)
 	{
 		$this->dbupdate();
-		echo '<p>' . Text::_('JBS_PLG_BACKUP_UPDATE_TEXT') . '</p>';
+		echo '<p>' . Text::_('PLG_SYSTEM_PROCLAIMBACKUP_UPDATE_TEXT') . '</p>';
 	}
 
 	/**

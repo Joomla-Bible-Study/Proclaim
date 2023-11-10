@@ -72,7 +72,7 @@ $session->set('migration_stack', '', 'CWM');
 		</tr>
 		<?php foreach ($this->status->cwmmodules as $module) : ?>
 			<tr class="row<?php echo(++$rows % 2); ?>">
-				<td class="key"><?php echo $module['name']; ?></td>
+				<td class="key"><?php echo Text::_(strtoupper($module['name'])); ?></td>
 				<td class="key"><?php echo ucfirst($module['client']); ?></td>
 				<td><strong
 						style="color: <?php echo ($module['result']) ? "green" : "red" ?>;"><?php echo ($module['result']) ? 'Installed' : 'Not installed'; ?></strong>
@@ -88,7 +88,7 @@ $session->set('migration_stack', '', 'CWM');
 		</tr>
 		<?php foreach ($this->status->cwmplugins as $plugin) : ?>
 			<tr class="row<?php echo(++$rows % 2); ?>">
-				<td class="key"><?php echo ucfirst($plugin['name']); ?></td>
+				<td class="key"><?php echo Text::_(strtoupper($plugin['name'])); ?></td>
 				<td class="key"><?php echo ucfirst($plugin['group']); ?></td>
 				<td><strong
 						style="color: <?php echo ($plugin['result']) ? "green" : "red" ?>;"><?php echo ($plugin['result']) ? 'Installed' : 'Not installed'; ?></strong>

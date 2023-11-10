@@ -80,13 +80,13 @@ class CWMAssets
 	 * Fix Assets function.
 	 *
 	 * @param   string  $key     Asset name to affect
-	 * @param   array   $result  Assets to look at.
+	 * @param   ?object  $result  Assets to look at.
 	 *
 	 * @return boolean
 	 *
 	 * @since 9.0.0
 	 */
-	public static function fixAssets(string $key, array $result): bool
+	public static function fixAssets(string $key, ?object $result): bool
 	{
 		$result_object          = (object) $result;
 		self::$parent_id = self::parentid();

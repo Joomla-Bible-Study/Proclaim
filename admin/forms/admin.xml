@@ -401,7 +401,7 @@
 			<option value="1">JBS_CMN_YES</option>
 		</field>
 		<field name="filestokeep" type="text" default="5" rows="1" class="btn-group" labelclass="control-label"
-		       label="JBS_PLG_BACKUP_FILES" description="JBS_PLG_BACKUP_FILES_DESC"/>
+		       label="PLG_SYSTEM_PROCLAIMBACKUP_FILES" description="PLG_SYSTEM_PROCLAIMBACKUP_FILES_DESC"/>
 		<field name="debug" type="radio" default="0"
 		       label="JBS_ADM_DEBUG_LABEL" description="JBS_ADM_DEBUG_DESC"
 		       class="btn-group" labelclass="control-label" layout="joomla.form.field.radio.switcher">

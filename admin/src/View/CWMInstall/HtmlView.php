@@ -18,7 +18,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
-use Joomla\Input\Input;
 
 /**
  * JView class for Install
@@ -54,9 +53,9 @@ class HtmlView extends BaseHtmlView
 
 	public array $query = [];
 
-	/** @var string More
+	/** @var boolean More
 	 * @since    7.0.0 */
-	protected $more;
+	protected bool $more;
 
 	/** @var  string Percentage
 	 * @since    7.0.0 */
@@ -72,13 +71,13 @@ class HtmlView extends BaseHtmlView
 
 	/** @var array The pre versions to process
 	 * @since    7.0.0 */
-	private mixed $versionStack;
+	private array $versionStack;
 
-	/** @var array The pre versions to process
+	/** @var string The pre-versions to process
 	 * @since    7.0.0 */
-	private mixed $versionSwitch;
+	private string $versionSwitch;
 
-	/** @var array The pre versions sub sql array to process
+	/** @var array The pre-versions sub sql array to process
 	 * @since    7.0.0 */
 	public array $allupdates = [];
 
@@ -110,17 +109,19 @@ class HtmlView extends BaseHtmlView
 	 */
 	public function display($tpl = null): void
 	{
-		$input = new Input;
-		$input->set('hidemainmenu', true);
 		$app         = Factory::getApplication();
-		$this->state = $app->input->get('scanstate', false);
+		$this->scanstate = $app->input->get('scanstate', false);
+
+		// Get data from the model
+		$this->state = $this->get("State");
 		$layout      = $app->input->get('layout', 'default');
+		$task        = $app->input->get('task', 'execute');
 
 		$load    = $this->loadStack();
 		$more    = true;
 		$percent = 0;
 
-		if ($this->state && $load)
+		if ($this->scanstate && $load)
 		{
 			if ($this->totalSteps > 0)
 			{
@@ -137,6 +138,22 @@ class HtmlView extends BaseHtmlView
 		$this->setLayout($layout);
 
 		$this->percentage = $percent;
+
+		if ($this->more)
+		{
+			$doc = $this->getDocument();
+			$wa  = $doc->getWebAssetManager();
+			$wa->useScript('form.validate')
+				->addInlineScript("setTimeout(function(){
+                                    jQuery('#adminForm').submit()
+								}, 3000);"
+				);
+		}
+
+		if ($this->more === false)
+		{
+			$this->setLayout('install_finished');
+		}
 
 		// Install systems setup files
 		// @todo need to move to a helper as this is call do many times.
@@ -210,7 +227,11 @@ class HtmlView extends BaseHtmlView
 	 */
 	protected function addToolbar(): void
 	{
-		Factory::getApplication()->input->set('hidemainmenu', true);
+		if ($this->more)
+		{
+			Factory::getApplication()->input->set('hidemainmenu', true);
+		}
+
 		ToolbarHelper::help('proclaim', true);
 		ToolbarHelper::title(Text::_('JBS_CMN_INSTALL'), 'administration');
 	}
@@ -224,6 +245,8 @@ class HtmlView extends BaseHtmlView
 	 */
 	protected function installSetup(): void
 	{
+		$language = Factory::getApplication()->getLanguage();
+
 		$installation_queue = array(
 			// Example: modules => { (folder) => { (module) => { (position), (published) } }* }*
 			'modules' => array(
@@ -263,14 +286,26 @@ class HtmlView extends BaseHtmlView
 					{
 						// Was the module already installed?
 						$sql = $db->getQuery(true);
-						$sql->select('COUNT(*)')->from('#__modules')->where('module=' . $db->q('mod_' . $module));
+						$sql->select('COUNT(*)')->from('#__extensions')->where('name=' . $db->q('mod_' . $module));
 						$db->setQuery($sql);
 						$result                  = $db->loadResult();
-						$this->status->cwmmodules[] = array(
+						$this->status->cwmmodules[] = array_merge($this->status->cwmmodules,
+							array(
 							'name'   => 'mod_' . $module,
 							'client' => $folder,
 							'result' => $result
+							)
 						);
+
+						if (is_dir(JPATH_ROOT . '/modules/mod_' . $module . '/'))
+						{
+							$language->load('mod_' . $module, JPATH_ROOT . '/modules/mod_' . $module,
+								'en-GB', true
+							);
+							$language->load('mod_' . $module, JPATH_ROOT . '/modules/mod_' . $module,
+								null, true
+							);
+						}
 					}
 				}
 			}
@@ -286,14 +321,29 @@ class HtmlView extends BaseHtmlView
 					foreach ($plugins as $plugin => $published)
 					{
 						$query = $db->getQuery(true);
-						$query->select('COUNT(*)')->from('#__extensions')->where('element=' . $db->q($plugin))->where('folder = ' . $db->q($folder));
+						$query->select('COUNT(*)')
+							->from('#__extensions')
+							->where('folder=' . $db->q($folder))
+							->where('name=' . $db->q('plg_' . $folder . '_' . $plugin));
 						$db->setQuery($query);
 						$result                  = $db->loadResult();
-						$this->status->cwmplugins[] = array(
-							'name'   => 'plg_' . $plugin,
+						$this->status->cwmplugins[] = array_merge($this->status->cwmplugins,
+							array(
+							'name'   => 'plg_' . $folder . '_' . $plugin,
 							'group'  => $folder,
 							'result' => $result
+							)
 						);
+
+						if (is_dir(JPATH_ROOT . '/plugins/' . $folder . '/' . $plugin . '/'))
+						{
+							$language->load('plg_' . $folder . '_' . $plugin, JPATH_ROOT . '/plugins/' . $folder . '/' . $plugin,
+								'en-GB', true
+							);
+							$language->load('plg_' . $folder . '_' . $plugin, JPATH_ROOT . '/plugins/' . $folder . '/' . $plugin,
+								null, true
+							);
+						}
 					}
 				}
 			}

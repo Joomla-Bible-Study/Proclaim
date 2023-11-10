@@ -58,6 +58,12 @@ $language = $app->getLanguage();
 $language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
 $language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, null, true);
 
+if (is_dir(JPATH_ROOT . 'modules/mod_proclaim/'))
+{
+	$language->load('mod_proclaim', JPATH_ROOT . '/modules/mod_proclaim/', 'en-GB', true);
+	$language->load('moc_proclaim', JPATH_ROOT . '/modules/mod_proclaim/', null, true);
+}
+
 // Add to api to load the core CSS and JS for the component to work.
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $app->getDocument()->getWebAssetManager();

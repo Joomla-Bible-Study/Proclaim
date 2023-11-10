@@ -20,7 +20,7 @@ use CWM\Component\Proclaim\Administrator\Lib\CWMBackup;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
-use Joomla\CMS\MVC\Model\BaseModel;
+use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseDriver;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\Folder;
@@ -31,7 +31,7 @@ use Joomla\Filesystem\Folder;
  * @package  Proclaim.Admin
  * @since    7.1.0
  */
-class CWMInstallModel extends BaseModel
+class CWMInstallModel extends ListModel
 {
 	/** @var integer Total numbers of Versions
 	 *
@@ -45,6 +45,12 @@ class CWMInstallModel extends BaseModel
 	 */
 	public $doneSteps = 0;
 
+	/**
+	 * @var string
+	 * @since 7.0
+	 */
+	public string $step = '';
+
 	/** @var string Running Now
 	 *
 	 * @since 7.1
@@ -55,7 +61,7 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @since 7.1
 	 */
-	public array $callstack = array();
+	public array $callstack = [];
 
 	/** @var string Path to Mysql files
 	 *
@@ -73,25 +79,25 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @since 7.1
 	 */
-	private float $startTime = 0;
+	private float $startTime;
 
 	/** @var array The pre-versions to process
 	 *
 	 * @since 7.1
 	 */
-	private array $versionStack = array();
+	private array $versionStack = [];
 
 	/** @var array The pre-versions sub sql array to process
 	 *
 	 * @since 7.1
 	 */
-	private array $allupdates = array();
+	private array $allupdates = [];
 
 	/** @var ?string Version of Proclaim
 	 *
 	 * @since 7.1
 	 */
-	private ?string $versionSwitch = null;
+	private string $versionSwitch = '';
 
 	/** @var integer ID of Extinction Table
 	 *
@@ -103,7 +109,7 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @since 7.1
 	 */
-	private array $finish = array();
+	private array $finish = [];
 
 	/** @var string Version number to be running
 	 *
@@ -115,25 +121,25 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @since 7.1
 	 */
-	private array $subSteps = array();
+	private array $subSteps = [];
 
 	/** @var array Array of Sub Query from php files queries Task
 	 *
 	 * @since 7.1
 	 */
-	private array $subQuery = array();
+	private array $subQuery = [];
 
 	/** @var array list of php files to work through
 	 *
 	 * @since 7.1
 	 */
-	private array $subFiles = array();
+	private array $subFiles = [];
 
 	/** @var array Array of Install Task
 	 *
 	 * @since 9.0.14
 	 */
-	private array $start = array();
+	private array $start = [];
 
 	/** @var integer If was imported
 	 *
@@ -145,7 +151,7 @@ class CWMInstallModel extends BaseModel
 	 *
 	 * @since 7.1
 	 */
-	public array $query = array();
+	public array $installQuery = [];
 
 	/**
 	 * @var \Joomla\Database\DatabaseDriver|null
@@ -161,14 +167,14 @@ class CWMInstallModel extends BaseModel
 	 * @throws  \Exception
 	 * @since   7.1
 	 */
-	public function __construct($config = array())
+	public function __construct($config = [])
 	{
 		parent::__construct($config);
 
 		// Joomla 4 drop including db driver.
 		$this->_db = Factory::getContainer()->get(DatabaseInterface::class);
 
-		$this->name = 'install';
+		$this->name = 'cwminstall';
 	}
 
 	/**
@@ -188,7 +194,7 @@ class CWMInstallModel extends BaseModel
 
 		if (empty($this->versionStack))
 		{
-			$this->versionStack = array();
+			$this->versionStack = [];
 		}
 
 		asort($this->versionStack);
@@ -239,7 +245,6 @@ class CWMInstallModel extends BaseModel
 	 */
 	private function getSteps(): void
 	{
-		$olderversiontype = 0;
 		$app              = Factory::getApplication();
 
 		// Set Finishing Steps
@@ -270,6 +275,8 @@ class CWMInstallModel extends BaseModel
 		{
 			$files = str_replace('.sql', '', Folder::files(JPATH_ADMINISTRATOR . $this->filePath, '\.sql$'));
 
+			$php = null;
+
 			if (is_dir(JPATH_ADMINISTRATOR . $this->phpPath))
 			{
 				$php = str_replace('.php', '', Folder::files(JPATH_ADMINISTRATOR . $this->phpPath, '\.php$'));
@@ -278,11 +285,6 @@ class CWMInstallModel extends BaseModel
 			if (is_array($files))
 			{
 				usort($files, 'version_compare');
-			}
-
-			if (is_array($php))
-			{
-				usort($php, 'version_compare');
 			}
 
 			// Find Extension ID of Proclaim
@@ -316,7 +318,7 @@ class CWMInstallModel extends BaseModel
 				elseif ($files)
 				{
 					$this->totalSteps   += count($files);
-					$this->versionStack = $files;
+					$this->versionStack = (array) $files;
 				}
 				else
 				{
@@ -326,16 +328,21 @@ class CWMInstallModel extends BaseModel
 				}
 			}
 
-			foreach ($php as $i => $value)
+			if (is_array($php))
 			{
-				if (version_compare($value, $this->versionSwitch) <= 0)
+				usort($php, 'version_compare');
+
+				foreach ($php as $i => $value)
 				{
-					unset($php[$i]);
-				}
-				elseif ($php)
-				{
-					$this->totalSteps += count($files);
-					$this->subFiles   = $php;
+					if (version_compare($value, $this->versionSwitch) <= 0)
+					{
+						unset($php[$i]);
+					}
+					elseif ($php)
+					{
+						$this->totalSteps += count($files);
+						$this->subFiles   = $php;
+					}
 				}
 			}
 		}
@@ -489,7 +496,7 @@ class CWMInstallModel extends BaseModel
 			'total'      => $this->totalSteps,
 			'done'       => $this->doneSteps,
 			'run'        => $this->running,
-			'query'      => $this->query,
+			'query' => $this->installQuery,
 		);
 		$stack = json_encode($stack, JSON_THROW_ON_ERROR);
 
@@ -520,20 +527,20 @@ class CWMInstallModel extends BaseModel
 		$session = Factory::getApplication()->getSession();
 		$session->set('migration_stack', '', 'CWM');
 		$this->version       = '0.0.0';
-		$this->versionStack  = array();
-		$this->versionSwitch = null;
-		$this->allupdates    = array();
-		$this->finish        = array();
-		$this->start         = array();
-		$this->subFiles      = array();
-		$this->subQuery      = array();
-		$this->subSteps      = array();
+		$this->versionStack  = [];
+		$this->versionSwitch = '';
+		$this->allupdates    = [];
+		$this->finish        = [];
+		$this->start         = [];
+		$this->subFiles      = [];
+		$this->subQuery      = [];
+		$this->subSteps      = [];
 		$this->isimport      = 0;
-		$this->callstack     = array();
+		$this->callstack     = [];
 		$this->totalSteps    = 0;
 		$this->doneSteps     = 0;
 		$this->running       = Text::_('JBS_MIG_STARTING');
-		$this->query         = array();
+		$this->installQuery  = [];
 	}
 
 	/**
@@ -552,20 +559,20 @@ class CWMInstallModel extends BaseModel
 		if (empty($stack))
 		{
 			$this->version       = '0.0.0';
-			$this->versionStack  = array();
-			$this->versionSwitch = null;
-			$this->allupdates    = array();
-			$this->finish        = array();
-			$this->start         = array();
-			$this->subFiles      = array();
-			$this->subQuery      = array();
-			$this->subSteps      = array();
+			$this->versionStack  = [];
+			$this->versionSwitch = '';
+			$this->allupdates    = [];
+			$this->finish        = [];
+			$this->start         = [];
+			$this->subFiles      = [];
+			$this->subQuery      = [];
+			$this->subSteps      = [];
 			$this->isimport      = 0;
-			$this->callstack     = array();
+			$this->callstack     = [];
 			$this->totalSteps    = 0;
 			$this->doneSteps     = 0;
 			$this->running       = Text::_('JBS_MIG_STARTING');
-			$this->query         = array();
+			$this->installQuery  = [];
 
 			return;
 		}
@@ -596,7 +603,7 @@ class CWMInstallModel extends BaseModel
 		$this->totalSteps    = $stack['total'];
 		$this->doneSteps     = $stack['done'];
 		$this->running       = $stack['run'];
-		$this->query         = $stack['query'];
+		$this->installQuery = $stack['query'];
 
 	}
 
@@ -623,7 +630,7 @@ class CWMInstallModel extends BaseModel
 	 * @throws  \Exception
 	 * @since   7.1
 	 */
-	private function realRun(): bool
+	private function RealRun(): bool
 	{
 		$app = Factory::getApplication();
 		$run = true;
@@ -635,12 +642,12 @@ class CWMInstallModel extends BaseModel
 			$export = new CWMBackup;
 			$export->exportdb(2);
 			Log::add('Backup DB', Log::INFO, 'com_proclaim');
-			$this->start = array();
+			$this->start = [];
 		}
 
 		if ($this->isimport)
 		{
-			$this->fiximport();
+			$this->fixImport();
 			$this->running  = 'Fixing Imported Params';
 			$this->isimport = 0;
 			Log::add('Fixing Imported Params', Log::INFO, 'com_proclaim');
@@ -713,7 +720,7 @@ class CWMInstallModel extends BaseModel
 					{
 						while (!empty($this->subFiles) && $this->haveEnoughTime())
 						{
-							$query = array();
+							$query = [];
 							$step  = $this->versionSwitch;
 
 							if (!isset($this->subQuery[$this->version][$step]) && !empty($this->subSteps[$this->version]))
@@ -807,33 +814,33 @@ class CWMInstallModel extends BaseModel
 		}
 
 		/** We are going to walk thought the assets that need to be fixed that were found form the finish lookup. */
-		if (!empty($this->query)
+		if (!empty($this->installQuery)
 			&& empty($this->finish)
 			&& empty($this->versionStack)
 			&& empty($this->allupdates)
 			&& empty($this->subFiles))
 		{
-			krsort($this->query);
+			krsort($this->installQuery);
 
-			while (!empty($this->query) && $this->haveEnoughTime())
+			while (!empty($this->installQuery) && $this->haveEnoughTime())
 			{
-				$this->versionSwitch = key($this->query);
+				$this->versionSwitch = (string) key($this->installQuery);
 
-				if (isset($this->query[$this->versionSwitch]) && @!empty($this->query[$this->versionSwitch]))
+				if (isset($this->installQuery[$this->versionSwitch]) && @!empty($this->installQuery[$this->versionSwitch]))
 				{
-					$version = array_pop($this->query[$this->versionSwitch]);
+					$version = (object) array_pop($this->installQuery[$this->versionSwitch]);
 					$this->doneSteps++;
 					$this->running = 'Fixing Assets that are not right';
 					CWMAssets::fixAssets($this->versionSwitch, $version);
 				}
 				else
 				{
-					unset($this->query[$this->versionSwitch]);
+					unset($this->installQuery[$this->versionSwitch]);
 				}
 			}
 		}
 
-		if (empty($this->query)
+		if (empty($this->installQuery)
 			&& empty($this->finish)
 			&& empty($this->versionStack)
 			&& empty($this->allupdates)
@@ -973,7 +980,7 @@ class CWMInstallModel extends BaseModel
 				// Final step is to fix assets by building what need to be fixed.
 				$assets = new CWMAssets;
 				$string = $assets->build();
-				$this->query      = $string->query;
+				$this->installQuery = $string->query;
 				$this->totalSteps += $string->count;
 				break;
 			case 'fixmenus':
@@ -1103,11 +1110,11 @@ class CWMInstallModel extends BaseModel
 	/**
 	 * Fix an Import problem
 	 *
-	 * @return boolean True if fix complete, False if failure
+	 * @return void True if fix complete, False if failure
 	 *
 	 * @since 7.1
 	 */
-	private function fiximport(): bool
+	private function fixImport(): void
 	{
 		$tables = CWMDbHelper::getObjects();
 		$set    = false;
@@ -1149,7 +1156,6 @@ class CWMInstallModel extends BaseModel
 			}
 		}
 
-		return true;
 	}
 
 	/**

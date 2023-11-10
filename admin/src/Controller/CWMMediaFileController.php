@@ -54,12 +54,12 @@ class CWMMediaFileController extends FormController
 	/**
 	 * Method to add a new record.
 	 *
-	 * @return  mixed  True, if the record can be added, a error object if not.
+	 * @return  bool  True, if the record can be added, a error object if not.
 	 *
 	 * @throws  \Exception
 	 * @since   12.2
 	 */
-	public function add()
+	public function add(): bool
 	{
 		$app = Factory::getApplication();
 

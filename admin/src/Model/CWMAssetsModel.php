@@ -333,7 +333,7 @@ class CWMAssetsModel extends ListModel
 
 				if (isset($this->versionStack[$this->step]) && @!empty($this->versionStack[$this->step]))
 				{
-					$version = array_pop($this->versionStack[$this->step]);
+					$version = (object) array_pop($this->versionStack[$this->step]);
 					$this->doneSteps++;
 					CWMAssets::fixAssets($this->step, $version);
 				}
