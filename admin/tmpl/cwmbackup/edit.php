@@ -17,6 +17,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Utility\Utility;
 
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
@@ -37,10 +38,11 @@ $wa->useScript('keepalive')
 		};
 ");
 
+$maxSize = HTMLHelper::_('number.bytes', Utility::getMaxUploadSize());
 ?>
 <form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmbackup'); ?>" enctype="multipart/form-data"
       method="post" name="adminForm" id="adminForm">
-    <div class="row-fluid">
+    <div class="row">
         <div class="col-12 col-lg-6 form-horizontal">
             <h3><?php echo Text::_('JBS_CMN_EXPORT'); ?></h3>
 
@@ -76,13 +78,14 @@ $wa->useScript('keepalive')
                 <div class="controls">
                     <div style="position:relative;">
                         <label for="importdb" class="hidden">Import File Selection Button</label>
-                        <a class='btn btn-primary' href="javascript:">
-                            Choose File...
-                            <input id="importdb" type="file"
-                                   style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;'
-                                   name="importdb" size="40"
-                                   onchange='jQuery("#upload-file-info").html(jQuery(this).val());'>
-                        </a>
+                        <input type="file"
+                               name="importdb"
+                               id="importdb"
+                               size="40"
+                               accept="sql"
+                               class="form-control"
+                               onchange='jQuery("#upload-file-info").html(jQuery(this).val());'><br>
+	                    <?php echo Text::sprintf('JGLOBAL_MAXIMUM_UPLOAD_SIZE_LIMIT', $maxSize); ?>
                     </div>
                 </div>
             </div>
@@ -111,11 +114,9 @@ $wa->useScript('keepalive')
                 </div>
             </div>
             <div class="control-group">
-                <input class="btn btn-primary" type="submit" value="<?php echo Text::_('JBS_CMN_SUBMIT'); ?>"
-                       name="submit"/>&nbsp;&nbsp;&nbsp;&nbsp;
+                <button class="btn btn-primary" type="submit" name="submit" ><?php echo Text::_('JBS_CMN_SUBMIT'); ?></button>&nbsp;&nbsp;&nbsp;&nbsp;
                 <a href="index.php?option=com_proclaim&task=cwmadmin.edit&id=1">
-                    <button type="button"
-                            class="btn btn-dark btn-outline-light"><?php echo Text::_('JTOOLBAR_BACK'); ?></button>
+                    <button type="button" class="button-cancel btn btn-danger btn-dark btn-outline-light"><?php echo Text::_('JTOOLBAR_BACK'); ?></button>
                 </a>
             </div>
         </div>

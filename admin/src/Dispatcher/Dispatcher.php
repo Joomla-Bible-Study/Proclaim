@@ -14,7 +14,10 @@ namespace CWM\Component\Proclaim\Administrator\Dispatcher;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use Joomla\CMS\Application\CMSWebApplicationInterface;
 use Joomla\CMS\Dispatcher\ComponentDispatcher;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Router\Route;
 
 /**
  * ComponentDispatcher class for com_users
@@ -30,6 +33,12 @@ class Dispatcher extends ComponentDispatcher
 	protected string $defaultController = 'CWMCpanel';
 
 	/**
+	 * @var string
+	 * @since version
+	 */
+	private string $redirect;
+
+	/**
 	 * @return void
 	 *
 	 * @throws \Throwable
@@ -37,7 +46,25 @@ class Dispatcher extends ComponentDispatcher
 	 */
 	public function dispatch(): void
 	{
+		// -- This is only a fix do to naming of classes --
+		$view = $this->input->get('view');
+		$task = $this->input->get('task');
+
+		if ($view === null && $task === null)
+		{
+			$this->redirect = 'index.php?option=com_proclaim&view=cwmcpanel';
+			$this->redirect();
+		}
+
 		CWMProclaimHelper::applyViewAndController($this->defaultController);
+
+		// Fix for controller name
+		if ($this->input->get('controller') === 'cwmassets')
+		{
+			$this->input->set('controller', 'CWMAssets');
+		}
+
+		// -- end of fix --
 
 		// Always load Proclaim API if it exists.
 		$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
@@ -45,12 +72,6 @@ class Dispatcher extends ComponentDispatcher
 		if (file_exists($api))
 		{
 			require_once $api;
-		}
-
-		// Fix for controller name
-		if ($this->input->get('controller') === 'cwmassets')
-		{
-			$this->input->set('controller', 'CWMAssets');
 		}
 
 		parent::dispatch();
@@ -83,5 +104,39 @@ class Dispatcher extends ComponentDispatcher
 		}
 
 		parent::checkAccess();
+	}
+
+	/**
+	 * Redirects the browser or returns false if no redirect is set.
+	 *
+	 * @return  boolean  False if no redirect exists.
+	 *
+	 * @throws  \Exception
+	 * @since   3.0
+	 */
+	public function redirect(): bool
+	{
+		if (!($this->app instanceof CMSWebApplicationInterface))
+		{
+			throw new \Exception(
+				sprintf(
+					'The %s method requires an instance of %s but instead %s was supplied',
+					__METHOD__,
+					CMSWebApplicationInterface::class,
+					\get_class($this->app)
+				)
+			);
+		}
+
+		if ($this->redirect)
+		{
+			// Enqueue the redirect message
+			// $this->app->enqueueMessage($this->message, $this->messageType);
+
+			// Execute the redirect
+			$this->app->redirect($this->redirect);
+		}
+
+		return false;
 	}
 }

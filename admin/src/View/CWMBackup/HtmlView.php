@@ -13,16 +13,18 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMBackup;
 // Check to ensure this file is included in Joomla!
 use CWM\Component\Proclaim\Administrator\Model\CWMAdminModel;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\Filesystem\Folder;
+use Joomla\Registry\Registry;
+use function defined;
 
 // phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
+defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
@@ -33,23 +35,23 @@ use Joomla\CMS\Toolbar\ToolbarHelper;
  */
 class HtmlView extends BaseHtmlView
 {
-	/** @var string CanDo function
+	/** @var Registry CanDo function
 	 *
 	 * @since 9.0.0
 	 */
-	public $canDo;
+	public Registry $canDo;
 
 	/** @var string Temp Destination
 	 *
 	 * @since 9.0.0
 	 */
-	public $tmp_dest;
+	public string $tmp_dest = '';
 
-	/** @var string Lists
+	/** @var array Lists
 	 *
 	 * @since 9.0.0
 	 */
-	public $lists;
+	public array $lists;
 
 	/** @var array Form
 	 *
@@ -74,13 +76,13 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  void  A string if successful, otherwise a JError object.
+	 * @return  void
 	 *
-	 * @throws \Exception
-	 * @since   11.1
-	 * @see     fetch()
+	 * @throws  \Exception
+	 * @see     \JViewLegacy::loadTemplate()
+	 * @since   3.0
 	 */
-	public function display($tpl = null)
+	public function display($tpl = null): void
 	{
 		$model = new CWMAdminModel;
 		$this->setModel($model, true);
@@ -94,32 +96,41 @@ class HtmlView extends BaseHtmlView
 		// Get the list of backup files
 		$path = JPATH_SITE . '/media/com_proclaim/backup';
 
-		if (Folder::exists($path))
+		if (is_dir($path))
 		{
 			if (!$files = Folder::files($path, '.sql'))
 			{
-				$this->lists['backedupfiles'] = Text::_('JBS_CMN_NO_FILES_TO_DISPLAY');
+				$types[] = HtmlHelper::_('select.option', '0', Text::_('JBS_CMN_NO_FILES_TO_DISPLAY'));
 			}
 			else
 			{
 				asort($files, SORT_STRING);
-				$filelist = array();
+				$fileList = [];
 
 				foreach ($files as $value)
 				{
-					$filelisttemp = array('value' => $value, 'text' => $value);
-					$filelist[]   = $filelisttemp;
+					$fileListTemp = array('value' => $value, 'text' => $value);
+					$fileList[]   = $fileListTemp;
 				}
 
 				$types[]                      = HtmlHelper::_('select.option', '0', Text::_('JBS_IBM_SELECT_DB'));
-				$types                        = array_merge($types, $filelist);
-				$this->lists['backedupfiles'] = HtmlHelper::_('select.genericlist', $types, 'backuprestore', 'class="form-select valid form-control-success" size="1" ', 'value', 'text', '');
+				$types = array_merge($types, $fileList);
 			}
 		}
 		else
 		{
-			$this->lists['backedupfiles'] = Text::_('JBS_CMN_NO_FILES_TO_DISPLAY');
+			$types[] = HtmlHelper::_('select.option', '0', Text::_('JBS_CMN_NO_FILES_TO_DISPLAY'));
 		}
+
+		$this->lists['backedupfiles'] = HtmlHelper::_(
+			'select.genericlist',
+			$types,
+			'backuprestore',
+			'class="form-select valid form-control-success" size="1" ',
+			'value',
+			'text',
+			''
+		);
 
 		$this->setLayout('edit');
 
@@ -140,7 +151,7 @@ class HtmlView extends BaseHtmlView
 	 * @throws \Exception
 	 * @since 7.0.0
 	 */
-	protected function addToolbar()
+	protected function addToolbar(): void
 	{
 		Factory::getApplication()->input->set('hidemainmenu', true);
 
@@ -153,13 +164,13 @@ class HtmlView extends BaseHtmlView
 	/**
 	 * Added for SermonSpeaker and PreachIt.
 	 *
-	 * @param   string  $component  Component it is coming from
+	 * @param   string  $component  The Component it is coming from
 	 *
 	 * @return boolean
 	 *
 	 * @since 7.1.0
 	 */
-	protected function versionXML($component)
+	protected function versionXML(string $component): bool
 	{
 		switch ($component)
 		{
@@ -172,7 +183,6 @@ class HtmlView extends BaseHtmlView
 				}
 
 				return false;
-				break;
 
 			case 'preachit':
 				$data = Installer::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_preachit/preachit.xml');
@@ -183,7 +193,6 @@ class HtmlView extends BaseHtmlView
 				}
 
 				return false;
-				break;
 		}
 
 		return false;
