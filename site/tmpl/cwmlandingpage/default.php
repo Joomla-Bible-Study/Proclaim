@@ -12,12 +12,12 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Site\Helper\CWMLanding;
+use CWM\Component\Proclaim\Site\Helper\Cwmlanding;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 
-$CWMLanding = new CWMLanding;
+$CWMLanding = new Cwmlanding;
 $params = $this->params;
 ?>
 

@@ -14,7 +14,7 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Site\Helper\CWMMedia;
+use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -211,7 +211,7 @@ class MediaFileImagesField extends ListField
 	 */
 	public function getIcon($media)
 	{
-		$MediaHelper = new CWMMedia;
+		$MediaHelper = new Cwmmedia;
 		$mimetypes   = $MediaHelper->getIcons();
 
 		if ($media->params->get('media_icon_type') !== '1'

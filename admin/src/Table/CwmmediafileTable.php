@@ -14,7 +14,7 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Lib\CWMAssets;
+use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Access\Rules;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseDriver;
@@ -26,7 +26,7 @@ use Joomla\Registry\Registry;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CWMMediaFileTable extends Table
+class CwmmediafileTable extends Table
 {
 	/**
 	 * Primary Key
@@ -249,7 +249,7 @@ class CWMMediaFileTable extends Table
 	protected function _getAssetParentId(Table $table = null, $id = null): int
 	{
 		// Get Proclaim Root ID
-		return CWMAssets::parentId();
+		return Cwmassets::parentId();
 	}
 
 	/**

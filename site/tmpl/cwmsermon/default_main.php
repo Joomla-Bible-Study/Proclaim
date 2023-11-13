@@ -12,10 +12,10 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Site\Helper\CWMListing;
+use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
-use CWM\Component\Proclaim\Administrator\Helper\CWMIcon;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmicon;
 
 // Create shortcuts to some parameters.
 /** @type Joomla\Registry\Registry $params */
@@ -78,7 +78,7 @@ if ($this->item->params->get('socialnetworking') > 0)
 ?>
 	<!-- Begin Fluid layout -->
 
-<?php $listing = new CWMListing;
+<?php $listing = new Cwmlisting;
 try
 {
 	$list = $listing->getFluidListing($this->item, $this->item->params, $this->template, $type = 'sermon');

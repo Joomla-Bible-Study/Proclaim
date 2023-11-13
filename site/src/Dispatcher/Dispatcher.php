@@ -13,7 +13,7 @@ namespace CWM\Component\Proclaim\Site\Dispatcher;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
 use Joomla\CMS\Dispatcher\ComponentDispatcher;
 use Joomla\CMS\Language\Text;
 
@@ -40,7 +40,7 @@ class Dispatcher extends ComponentDispatcher
 	 */
 	public function dispatch(): void
 	{
-		CWMProclaimHelper::applyViewAndController($this->defaultController);
+		CwmproclaimHelper::applyViewAndController($this->defaultController);
 
 		// Always load Proclaim API if it exists.
 		$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';

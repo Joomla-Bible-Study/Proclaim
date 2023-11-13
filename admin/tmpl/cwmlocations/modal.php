@@ -11,7 +11,7 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Site\Helper\CWMRouteHelper;
+use CWM\Component\Proclaim\Site\Helper\CwmrouteHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\RouteHelper;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -130,7 +130,7 @@ if (!empty($editor))
 							<?php $attribs = 'data-function="' . $this->escape($onclick) . '"'
 								. ' data-id="' . $item->id . '"'
 								. ' data-title="' . $this->escape($item->title) . '"'
-								. ' data-uri="' . $this->escape(CWMRouteHelper::getLocationsRoute($item->id, $item->language)) . '"'
+								. ' data-uri="' . $this->escape(CwmrouteHelper::getLocationsRoute($item->id, $item->language)) . '"'
 								. ' data-language="' . $this->escape($lang) . '"';
 							?>
 							<a class="select-link" href="javascript:void(0)" <?php echo $attribs; ?>>

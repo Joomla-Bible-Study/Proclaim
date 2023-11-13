@@ -14,54 +14,78 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Lib\CWMAssets;
-use Joomla\CMS\Table\Table;
+use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Access\Rules;
+use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseDriver;
 use Joomla\Registry\Registry;
 
 /**
- * Location table class
+ * Topic table class
  *
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CWMLocationTable extends Table
+class CwmmessagetypeTable extends Table
 {
 	/**
 	 * Primary Key
 	 *
 	 * @var integer
-	 * @since    7.0.0
+	 *
+	 * @since 9.0.0
 	 */
 	public $id = null;
+
+	/**
+	 * Topic text
+	 *
+	 * @var string
+	 *
+	 * @since 9.0.0
+	 */
+	public $topic_text = null;
 
 	/**
 	 * Published
 	 *
 	 * @var integer
-	 * @since    7.0.0
+	 *
+	 * @since 9.0.0
 	 */
 	public $published = 1;
 
 	/**
-	 * Location Text
+	 * Params
 	 *
 	 * @var string
-	 * @since    7.0.0
+	 *
+	 * @since 9.0.0
 	 */
-	public $location_text = null;
+	public $params = null;
+
+	public $asset_id;
+
+	public $language;
+
+	public $access;
+
+	/**
+	 * @var string|null
+	 * @since version
+	 */
+	public ?string $message_type = null;
 
 	/**
 	 * Constructor
 	 *
 	 * @param   DatabaseDriver  $db  Database connector object
 	 *
-	 * @since    7.0.0
+	 * @since 9.0.0
 	 */
 	public function __construct(&$db)
 	{
-		parent::__construct('#__bsms_locations', 'id', $db);
+		parent::__construct('#__bsms_message_type', 'id', $db);
 	}
 
 	/**
@@ -79,6 +103,11 @@ class CWMLocationTable extends Table
 	 */
 	public function bind($array, $ignore = '')
 	{
+		if (is_object($array))
+		{
+			return parent::bind($array, $ignore);
+		}
+
 		if (isset($array['params']) && is_array($array['params']))
 		{
 			$registry = new Registry;
@@ -110,7 +139,7 @@ class CWMLocationTable extends Table
 	 * @link    https://docs.joomla.org/Table/store
 	 * @since   11.1
 	 */
-	public function store($updateNulls = false)
+	public function store($updateNulls = false): bool
 	{
 		if (!$this->_rules)
 		{
@@ -118,6 +147,37 @@ class CWMLocationTable extends Table
 		}
 
 		return parent::store($updateNulls);
+	}
+
+	/**
+	 * Overloaded load function
+	 *
+	 * @param   mixed    $keys   An optional primary key value to load the row by, or an array of fields to match.  If not
+	 *                           set the instance property value is used.
+	 * @param   boolean  $reset  True to reset the default values before loading the new row.
+	 *
+	 * @return  boolean  True if successful. False if row not found.
+	 *
+	 * @see   Table:load
+	 *
+	 * @since 9.0.0
+	 */
+	public function load($keys = null, $reset = true): bool
+	{
+		if (parent::load($keys, $reset))
+		{
+			// Convert the language field to a registry.
+			if ($this->params)
+			{
+				$params = new Registry;
+				$params->loadString($this->params);
+				$this->params = $params;
+			}
+
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -129,11 +189,11 @@ class CWMLocationTable extends Table
 	 *
 	 * @since       1.6
 	 */
-	protected function _getAssetName()
+	protected function _getAssetName(): string
 	{
 		$k = $this->_tbl_key;
 
-		return 'com_proclaim.location.' . (int) $this->$k;
+		return 'com_proclaim.message_type.' . (int) $this->$k;
 	}
 
 	/**
@@ -143,9 +203,9 @@ class CWMLocationTable extends Table
 	 *
 	 * @since       1.6
 	 */
-	protected function _getAssetTitle()
+	protected function _getAssetTitle(): string
 	{
-		return 'JBS Location: ' . $this->location_text;
+		return 'CWM MessageType: ' . $this->message_type;
 	}
 
 	/**
@@ -154,8 +214,8 @@ class CWMLocationTable extends Table
 	 * The extended class can define a table and id to lookup.  If the
 	 * asset does not exist it will be created.
 	 *
-	 * @param   \Joomla\CMS\Table\Table|null  $table  A Table object for the asset parent.
-	 * @param   null                          $id     Id to look up
+	 * @param   Table|null  $table  A Table object for the asset parent.
+	 * @param   null        $id     Id to look up
 	 *
 	 * @return  integer
 	 *
@@ -164,6 +224,6 @@ class CWMLocationTable extends Table
 	protected function _getAssetParentId(Table $table = null, $id = null): int
 	{
 		// Get Proclaim Root ID
-		return CWMAssets::parentId();
+		return Cwmassets::parentId();
 	}
 }

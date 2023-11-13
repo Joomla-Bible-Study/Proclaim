@@ -12,7 +12,7 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -86,7 +86,7 @@ $wa->useScript('keepalive')
 		<div class="row">
 			<?php
 			$c     = 0;
-			$count = CWMProclaimHelper::halfarray($this->form->getFieldset('TEMPLATES'));
+			$count = CwmproclaimHelper::halfarray($this->form->getFieldset('TEMPLATES'));
 			foreach ($this->form->getFieldset('TEMPLATES') as $field):
 				if ($c === 0)
 				{
@@ -132,7 +132,7 @@ $wa->useScript('keepalive')
 		<div class="row">
 			<?php
 			$c     = 0;
-			$count = CWMProclaimHelper::halfarray($this->form->getFieldset('MEDIA'));
+			$count = CwmproclaimHelper::halfarray($this->form->getFieldset('MEDIA'));
 			foreach ($this->form->getFieldset('MEDIA') as $field):
 				if ($c === 0)
 				{
@@ -165,7 +165,7 @@ $wa->useScript('keepalive')
 		<div class="row">
 				<?php
 				$c     = 0;
-				$count = CWMProclaimHelper::halfarray($this->form->getFieldset('LANDINGPAGE'));
+				$count = CwmproclaimHelper::halfarray($this->form->getFieldset('LANDINGPAGE'));
 				foreach ($this->form->getFieldset('LANDINGPAGE') as $field):
 
 					if ($c === 0)

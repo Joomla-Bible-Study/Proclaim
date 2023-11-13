@@ -12,8 +12,8 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
-use CWM\Component\Proclaim\Site\Helper\CWMMedia;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
+use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Html\HTMLHelper;
 use Joomla\CMS\Router\Route;
@@ -23,7 +23,7 @@ $style = 'body { background-color:' . $this->params->get('popupbackground', 'bla
 $app   = Factory::getApplication();
 $doc   = $app->getDocument();
 $doc->addStyleDeclaration($style);
-$CWMedia = new CWMMedia;
+$CWMedia = new Cwmmedia;
 
 // @todo need to move some of the is build process into the media helper. BCC
 
@@ -45,7 +45,7 @@ $CWMedia = new CWMMedia;
 		$player      = new stdClass;
 		$player->mp3 = $this->player === 7;
 		HtmlHelper::_('jwplayer.framework');
-		$path = CWMHelper::MediaBuildUrl($this->media->sparams->get('path'), $this->params->get('filename'), $this->params, true);
+		$path = Cwmhelper::MediaBuildUrl($this->media->sparams->get('path'), $this->params->get('filename'), $this->params, true);
 
 		if (preg_match('(youtube.com|youtu.be)', $path) === 1)
 		{

@@ -14,7 +14,7 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Site\Helper\CWMMedia;
+use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -77,7 +77,7 @@ class IconTypeField extends ListField
 	 */
 	protected function getOptions(): array
 	{
-		$MediaHelper = new CWMMedia;
+		$MediaHelper = new Cwmmedia;
 		$icontypes   = $MediaHelper->getIcons();
 
 		$options = [];

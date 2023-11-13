@@ -22,7 +22,7 @@ use JLoader;
 use Joomla\CMS\Language\Text;
 
 /**
- * Class CWMAlias
+ * Class Cwmalias
  *
  * @package  Proclaim.Admin
  * @since    9.0.0

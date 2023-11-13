@@ -78,34 +78,34 @@ class Router extends RouterView
 		$landingPage = new RouterViewConfiguration('cwmlandingpage');
 		$this->registerView($landingPage);
 
-		$landingPage = new RouterViewConfiguration('CWMLandingPage');
+		$landingPage = new RouterViewConfiguration('cwmlandingpage');
 		$this->registerView($landingPage);
 
 		$Sermons = new RouterViewConfiguration('cwmsermons');
 		$this->registerView($Sermons);
 
-		$Sermons = new RouterViewConfiguration('CWMSermons');
+		$Sermons = new RouterViewConfiguration('cwmsermons');
 		$this->registerView($Sermons);
 
 		$Sermon = new RouterViewConfiguration('cwmsermon');
 		$Sermon->setKey('id');
 		$this->registerView($Sermon);
 
-		$Sermon = new RouterViewConfiguration('CWMSermon');
+		$Sermon = new RouterViewConfiguration('cwmsermon');
 		$Sermon->setKey('id');
 		$this->registerView($Sermon);
 
 		$Teachers = new RouterViewConfiguration('cwmteachers');
 		$this->registerView($Teachers);
 
-		$Teachers = new RouterViewConfiguration('CWMTeachers');
+		$Teachers = new RouterViewConfiguration('cwmteachers');
 		$this->registerView($Teachers);
 
 		$Teacher = new RouterViewConfiguration('cwmteacher');
 		$Teacher->setKey('id');
 		$this->registerView($Teacher);
 
-		$Teacher = new RouterViewConfiguration('CWMTeacher');
+		$Teacher = new RouterViewConfiguration('cwmteacher');
 		$Teacher->setKey('id');
 		$this->registerView($Teacher);
 
@@ -113,21 +113,21 @@ class Router extends RouterView
 		$SeriesDisplay->setKey('id');
 		$this->registerView($SeriesDisplay);
 
-		$SeriesDisplay = new RouterViewConfiguration('CWMSeriesDisplay');
+		$SeriesDisplay = new RouterViewConfiguration('cwmseriesdisplay');
 		$SeriesDisplay->setKey('id');
 		$this->registerView($SeriesDisplay);
 
 		$SeriesDisplays = new RouterViewConfiguration('cwmseriesdisplays');
 		$this->registerView($SeriesDisplays);
 
-		$SeriesDisplays = new RouterViewConfiguration('CWMSeriesDisplays');
+		$SeriesDisplays = new RouterViewConfiguration('cwmseriesdisplays');
 		$this->registerView($SeriesDisplays);
 
 		$Latest = new RouterViewConfiguration('cwmlatest');
 		$Latest->setKey('id');
 		$this->registerView($Latest);
 
-		$Latest = new RouterViewConfiguration('CWMLatest');
+		$Latest = new RouterViewConfiguration('cwmlatest');
 		$Latest->setKey('id');
 		$this->registerView($Latest);
 
@@ -135,27 +135,27 @@ class Router extends RouterView
 		$proclaim->setKey('id');
 		$this->registerView($proclaim);
 
-		$proclaim = new RouterViewConfiguration('CWMPodcastDisplay');
+		$proclaim = new RouterViewConfiguration('cwmpodcastdisplay');
 		$proclaim->setKey('id');
 		$this->registerView($proclaim);
 
 		$proclaim = new RouterViewConfiguration('cwmpopup');
 		$this->registerView($proclaim);
 
-		$proclaim = new RouterViewConfiguration('CWMPopup');
+		$proclaim = new RouterViewConfiguration('cwmpopup');
 		$this->registerView($proclaim);
 
 		$proclaim = new RouterViewConfiguration('cwmsqueezebox');
 		$this->registerView($proclaim);
 
-		$proclaim = new RouterViewConfiguration('CWMSqueezeBox');
+		$proclaim = new RouterViewConfiguration('Cwmsqueezebox');
 		$this->registerView($proclaim);
 
 		$proclaim = new RouterViewConfiguration('cwmterms');
 		$proclaim->setKey('id');
 		$this->registerView($proclaim);
 
-		$proclaim = new RouterViewConfiguration('CWMTerms');
+		$proclaim = new RouterViewConfiguration('cwmterms');
 		$proclaim->setKey('id');
 		$this->registerView($proclaim);
 

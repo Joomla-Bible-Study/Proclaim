@@ -104,21 +104,16 @@ class DisplayController extends BaseController
 							   'limit' => 'UINT', 'limitstart' => 'UINT', 'showall' => 'INT', 'return' => 'BASE64', 'filter' => 'STRING',
 							   'filter_order' => 'CMD', 'filter_order_Dir' => 'CMD', 'filter-search' => 'STRING', 'print' => 'BOOLEAN',
 							   'lang' => 'CMD');
-
-		// Get and render the view.
-		if ($view = $this->getView($vName, $vFormat))
-		{
-			if ($vName === 'CWMBackup')
-			{
-				$vName = 'CWMAdmin';
-			}
-
-			// Get the model for the view.
-			$model = $this->getModel($vName, 'Administrator', ['name' => $vName . '.' . substr($this->extension, 4)]);
-
-			// Push the model into the view (as default).
-			$view->setModel($model, true);
-		}
+//
+//		// Get and render the view.
+//		if ($view = $this->getView($vName, $vFormat))
+//		{
+//			// Get the model for the view.
+//			$model = $this->getModel($vName, 'Administrator', ['name' => $vName . '.' . substr($this->extension, 4)]);
+//
+//			// Push the model into the view (as default).
+//			$view->setModel($model, true);
+//		}
 
 		return parent::display($cachable, $safeurlparams);
 	}

@@ -14,7 +14,7 @@ namespace CWM\Component\Proclaim\Administrator\Field\Modal;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Model\CWMServersModel;
+use CWM\Component\Proclaim\Administrator\Model\CwmserversModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -130,7 +130,7 @@ class ServerTypeField extends FormField
 		}
 
 		// Get a reverse lookup of the endpoint type to endpoint name
-		$model    = new CWMServersModel;
+		$model    = new CwmserversModel;
 		$rlu_type = $model->getTypeReverseLookup();
 
 		$text = (string) ArrayHelper::getValue($rlu_type, $this->value);

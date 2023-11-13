@@ -13,7 +13,7 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Legacy\Field;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Form\FormField;
@@ -53,7 +53,7 @@ class PluploadField extends FormField
 		$document->addScript(Uri::root() . 'administrator/components/com_proclaim/src/Addons/Servers/Legacy/includes/js/plupload.full.min.js');
 		$document->addScript(Uri::root() . 'administrator/components/com_proclaim/src/Addons/Servers/Legacy/includes/js/legacy.js');
 		$view = $app->input->get('view');
-		$admin = CWMParams::getAdmin();
+		$admin = Cwmparams::getAdmin();
 
 		if (isset($this->form->s_params['uploadpath']))
 		{

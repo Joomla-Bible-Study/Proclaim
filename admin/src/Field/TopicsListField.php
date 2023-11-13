@@ -16,7 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\Factory;
-use CWM\Component\Proclaim\Administrator\Helper\CWMTranslated;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
 use Joomla\CMS\Html\HtmlHelper;
 
 /**
@@ -63,7 +63,7 @@ class TopicsListField extends ListField
 		{
 			foreach ($topics as $topic)
 			{
-				$text      = CWMTranslated::getTopicItemTranslated($topic);
+				$text      = Cwmtranslated::getTopicItemTranslated($topic);
 				$options[] = HtmlHelper::_('select.option', $topic->id, $text);
 			}
 		}

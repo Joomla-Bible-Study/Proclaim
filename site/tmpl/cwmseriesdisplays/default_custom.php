@@ -13,7 +13,7 @@
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
-use CWM\Component\Proclaim\Site\Helper\CWMSerieslist;
+use CWM\Component\Proclaim\Site\Helper\Cwmserieslist;
 $mainframe = Factory::getApplication();
 $input = Factory::getApplication();
 $option = $input->get('option', '', 'cmd');
@@ -28,7 +28,7 @@ if ($url)
 	$document->addStyleSheet($url);
 }
 
-$CWMSerieslist = new CWMSerieslist;
+$CWMSerieslist = new Cwmserieslist;
 ?>
 <form action="<?php echo str_replace("&", "&amp;", $this->request_url); ?>" method="post" name="adminForm">
 	<div id="proclaim" class="noRefTagger"> <!-- This div is the container for the whole page -->

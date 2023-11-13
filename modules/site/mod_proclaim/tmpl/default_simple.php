@@ -13,14 +13,14 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Site\Helper\CWMListing;
+use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use Joomla\CMS\Language\Text;
 use Joomla\Registry\Registry;
 
 /** @var Registry $params */
 $show_link = $params->get('show_link', 1);
 
-$Listing = new CWMListing; ?>
+$Listing = new Cwmlisting; ?>
 
   <div class="row-fluid span12">
     <h5>

@@ -10,8 +10,8 @@
 
 namespace CWM\Component\Proclaim\Site\Controller;
 
-use CWM\Component\Proclaim\Site\Helper\CWMDownload;
-use CWM\Component\Proclaim\Site\Model\CWMSermonModel;
+use CWM\Component\Proclaim\Site\Helper\Cwmdownload;
+use CWM\Component\Proclaim\Site\Model\CwmsermonModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
@@ -32,7 +32,7 @@ use Joomla\Registry\Registry;
  * @package  Proclaim.Site
  * @since    7.0.0
  */
-class CWMSermonController extends FormController
+class CwmsermonController extends FormController
 {
 	/**
 	 * View item
@@ -40,14 +40,14 @@ class CWMSermonController extends FormController
 	 * @var string
 	 * @since    1.6
 	 */
-	protected $view_item = 'Cwmsermon';
+	protected $view_item = 'cwmsermon';
 
 	/**
 	 * View list
 	 * @var string
 	 * @since    1.6
 	 */
-	protected $view_list = 'Cwmsermons';
+	protected $view_list = 'cwmsermons';
 
 	/**
 	 * Method to add a new record.
@@ -158,7 +158,7 @@ class CWMSermonController extends FormController
 	public function comment(): void
 	{
 		$input = Factory::getApplication()->input;
-		/** @var CWMSermonModel $model */
+		/** @var CwmsermonModel $model */
 		$model = $this->getModel('sermon');
 		$t     = $input->get('t', '1');
 		$input->set('t', $t);
@@ -220,7 +220,7 @@ class CWMSermonController extends FormController
 	 *
 	 * @since    1.5
 	 */
-	public function getModel($name = 'CWMSermon', $prefix = '', $config = array('ignore_request' => true)): BaseDatabaseModel
+	public function getModel($name = 'Cwmsermon', $prefix = '', $config = array('ignore_request' => true)): BaseDatabaseModel
 	{
 		return parent::getModel($name, $prefix, $config);
 	}
@@ -300,7 +300,7 @@ class CWMSermonController extends FormController
 
 		if ($task === 'download')
 		{
-			$downloader = new CWMDownload;
+			$downloader = new Cwmdownload;
 			$downloader->download($mid);
 		}
 	}

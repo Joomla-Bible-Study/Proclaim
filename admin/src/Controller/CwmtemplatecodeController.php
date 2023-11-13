@@ -22,7 +22,7 @@ use Joomla\CMS\MVC\Controller\FormController;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CWMTemplateCodeController extends FormController
+class CwmtemplatecodeController extends FormController
 {
 	/**
 	 * Protect the view
@@ -52,7 +52,7 @@ class CWMTemplateCodeController extends FormController
 	 *
 	 * @since 7.1.0
 	 */
-	public function getModel($name = 'CWMTemplateCode', $prefix = '', $config = array('ignore_request' => true))
+	public function getModel($name = 'Cwmtemplatecode', $prefix = '', $config = array('ignore_request' => true))
 	{
 		return parent::getModel($name, $prefix, array('ignore_request' => true));
 	}

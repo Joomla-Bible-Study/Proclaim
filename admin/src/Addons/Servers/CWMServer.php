@@ -67,7 +67,7 @@ abstract class CWMServer
 		foreach ($types as $type)
 		{
 			// Derive the class name from the type.
-			$class = 'CWMServer' . ucfirst(trim($type));
+			$class = 'Cwmserver' . ucfirst(trim($type));
 
 			if (!class_exists($class))
 			{
@@ -118,7 +118,7 @@ abstract class CWMServer
 
 		if (empty(self::$instances[$signature]))
 		{
-			$class = 'CWMServer' . ucfirst($options['type']);
+			$class = 'Cwmserver' . ucfirst($options['type']);
 
 			if (!class_exists($class))
 			{

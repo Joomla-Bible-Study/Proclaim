@@ -13,7 +13,7 @@ namespace CWM\Component\Proclaim\Administrator\Service\HTML;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Site\Helper\CWMRouteHelper;
+use CWM\Component\Proclaim\Site\Helper\CwmrouteHelper;
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -145,7 +145,7 @@ class Icon
 			return $output;
 		}
 
-		$contentUrl = CWMRouteHelper::getMessageRoute($article->slug, $article->catid, $article->language);
+		$contentUrl = CwmrouteHelper::getMessageRoute($article->slug, $article->catid, $article->language);
 		$url        = $contentUrl . '&task=cwmmessage.edit&a_id=' . $article->id . '&return=' . base64_encode($uri);
 
 		if ($article->state == Workflow::CONDITION_UNPUBLISHED)

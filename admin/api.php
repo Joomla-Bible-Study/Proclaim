@@ -9,7 +9,7 @@
  * */
 
 // No Direct Access
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Log\Log;
@@ -76,7 +76,7 @@ $wa->useStyle('com_proclaim.cwmcore')
 // Component debugging
 try
 {
-	if (CWMProclaimHelper::debug() === 1 || $app->input->getInt('jbsmdbg', '0') === 1)
+	if (CwmproclaimHelper::debug() === 1 || $app->input->getInt('jbsmdbg', '0') === 1)
 	{
 		define('JBSMDEBUG', 1);
 	}

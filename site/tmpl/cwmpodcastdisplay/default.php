@@ -14,9 +14,9 @@
 
 use Joomla\CMS\Html\HTMLHelper;
 use Joomla\CMS\Factory;
-use CWM\Component\Proclaim\Site\Helper\CWMMedia;
+use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use Joomla\CMS\Language\Text;
-use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 HtmlHelper::_('dropdown.init');
 HtmlHelper::_('formbehavior.chosen', 'select');
@@ -31,7 +31,7 @@ $archived  = $this->state->get('filter.published') == 2 ? true : false;
 $trashed   = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder == 'ordering';
 
-$CWMedia = new CWMMedia;
+$CWMedia = new Cwmmedia;
 ?>
 <div class="container-fluid">
     <div class="col-lg-6">
@@ -75,7 +75,7 @@ $CWMedia = new CWMMedia;
 				$item->params = $reg;
 				?>
                 <tr>
-					<?php $path1 = CWMHelper::MediaBuildUrl($item->sparams->get('path'), $item->params->get('filename'), $item->params, true);?>
+					<?php $path1 = Cwmhelper::MediaBuildUrl($item->sparams->get('path'), $item->params->get('filename'), $item->params, true);?>
                     <td>
 						<?php echo stripslashes($item->studytitle); ?>
                     </td>

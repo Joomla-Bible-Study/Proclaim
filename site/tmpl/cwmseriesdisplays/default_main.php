@@ -15,8 +15,8 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\MVC\View\HtmlView;
-use CWM\Component\Proclaim\Site\Helper\CWMListing;
-use CWM\Component\Proclaim\Site\Helper\CWMSerieslist;
+use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
+use CWM\Component\Proclaim\Site\Helper\Cwmserieslist;
 use Joomla\CMS\Html\HTMLHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
@@ -27,13 +27,13 @@ $mainframe = Factory::getApplication();
 $input = Factory::getApplication();
 $option = $input->get('option', '', 'cmd');
 $JViewLegacy = new HtmlView;
-$CWMSerieslist = new CWMSerieslist;
+$CWMSerieslist = new Cwmserieslist;
 $series_menu = $this->params->get('series_id', 1);
 
 /** @type Joomla\Registry\Registry $params */
 $params = $this->params;
 $url = $params->get('stylesheet');
-$listing = new CWMListing;
+$listing = new Cwmlisting;
 $classelement = $listing->createelement($this->params->get('series_element'));
 
 if ($url)

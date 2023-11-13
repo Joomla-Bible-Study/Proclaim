@@ -13,7 +13,7 @@
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
-use CWM\Component\Proclaim\Site\Helper\CWMRouteHelper;
+use CWM\Component\Proclaim\Site\Helper\CwmrouteHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
@@ -127,7 +127,7 @@ if (!empty($editor))
 						<?php $attribs = 'data-function="' . $this->escape($onclick) . '"'
 							. ' data-id="' . $item->id . '"'
 							. ' data-title="' . $this->escape($item->series_text) . '"'
-							. ' data-uri="' . $this->escape(CWMRouteHelper::getSeriesRoute($item->id, (int) $item->language)) . '"'
+							. ' data-uri="' . $this->escape(CwmrouteHelper::getSeriesRoute($item->id, (int) $item->language)) . '"'
 							. ' data-language="' . $this->escape($lang) . '"';
 						?>
 						<a class="select-link" href="javascript:void(0)" <?php echo $attribs; ?>>

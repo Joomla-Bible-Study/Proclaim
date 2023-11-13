@@ -12,11 +12,11 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Site\Helper\CWMListing;
+use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use Joomla\CMS\Html\HtmlHelper;
 use Joomla\CMS\Language\Text;
 
-$listing = new CWMListing;
+$listing = new Cwmlisting;
 $classelement = $listing->createelement($this->params->get('teachers_element'));
 ?>
 <div class="container">

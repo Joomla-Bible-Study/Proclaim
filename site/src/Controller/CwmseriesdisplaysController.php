@@ -35,7 +35,7 @@ class CwmseriesdisplaysController extends BaseController
 	 *
 	 * @since 7.0
 	 */
-	public function &getModel($name = 'CWMSeriesDisplays', $prefix = 'Model', $config = array('ignore_request' => true))
+	public function &getModel($name = 'Cwmseriesdisplays', $prefix = 'Model', $config = array('ignore_request' => true))
 	{
 		$model = parent::getModel($name, $prefix, $config);
 

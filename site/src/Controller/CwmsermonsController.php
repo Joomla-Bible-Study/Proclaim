@@ -10,8 +10,8 @@
 
 namespace CWM\Component\Proclaim\Site\Controller;
 
-use CWM\Component\Proclaim\Site\Helper\CWMdownload;
-use CWM\Component\Proclaim\Site\Helper\CWMMedia;
+use CWM\Component\Proclaim\Site\Helper\Cwmdownload;
+use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
 
@@ -51,7 +51,7 @@ class CwmsermonsController extends BaseController
 
 		if ($task === 'download')
 		{
-			$downloader = new CWMDownload;
+			$downloader = new Cwmdownload;
 			$downloader->download($mid);
 		}
 	}
@@ -87,7 +87,7 @@ class CwmsermonsController extends BaseController
 	public function playHit(): void
 	{
 		$app      = Factory::getApplication();
-		$getMedia = new CWMMedia;
+		$getMedia = new Cwmmedia;
 		$getMedia->hitPlay((int) $app->input->get('id', '', 'int'));
 
 		// Now the hit has been updated will redirect to the url.

@@ -14,7 +14,7 @@
 
 use Joomla\CMS\Html\HTMLHelper;
 use Joomla\CMS\Factory;
-use CWM\Component\Proclaim\Site\Helper\CWMMedia;
+use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use CWM\Component\Proclaim\Administrator\Helper\CWMImageLib;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
@@ -28,7 +28,7 @@ $archived  = $this->state->get('filter.published') == 2 ? true : false;
 $trashed   = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder === 'ordering';
 
-$CWMedia = new CWMMedia;
+$CWMedia = new Cwmmedia;
 ?>
 <h2><?php echo Text::_('JBS_CMN_PODCASTS_LIST'); ?></h2>
 <form action="<?php echo Route::_('index.php?option=com_proclaim&view=podcastlist'); ?>" method="post"

@@ -172,7 +172,7 @@ class com_proclaimInstallerScript extends InstallerScript
 
 
 	/**
-	 * Uninstall rout to CWMInstallModel
+	 * Uninstall rout to CwminstallModel
 	 *
 	 * @param   FileAdapter $parent ?
 	 *

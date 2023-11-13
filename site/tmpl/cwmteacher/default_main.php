@@ -13,11 +13,11 @@
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Router\Route;
-use CWM\Component\Proclaim\Site\Helper\CWMListing;
+use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use Joomla\CMS\Language\Text;
 
-$listing = new CWMListing;
-$teacher = new CWMListing;
+$listing = new Cwmlisting;
+$teacher = new Cwmlisting;
 ?>
 <div class="container">
 

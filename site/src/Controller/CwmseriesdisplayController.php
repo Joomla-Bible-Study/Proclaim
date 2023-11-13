@@ -31,7 +31,7 @@ class CwmseriesdisplayController extends BaseController
 	 * @var    string
 	 * @since  3.0
 	 */
-	protected $default_view = 'Cwmseriesdisplay';
+	protected $default_view = 'cwmseriesdisplay';
 
 	/**
 	 * Typical view method for MVC based architecture
@@ -47,7 +47,7 @@ class CwmseriesdisplayController extends BaseController
 	 * @since   3.0
 	 * @throws  \Exception
 	 */
-	public function display($cachable = false, $urlparams = array()): CWMSeriesDisplayController
+	public function display($cachable = false, $urlparams = array()): CwmseriesdisplayController
 	{
 		return parent::display();
 	}

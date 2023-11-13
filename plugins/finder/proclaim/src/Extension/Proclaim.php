@@ -13,7 +13,7 @@ namespace CWM\Plugin\Finder\Proclaim\Extension;
  * */
 defined('JPATH_BASE') or die;
 
-use CWM\Component\Proclaim\Site\Helper\CWMHelperRoute;
+use CWM\Component\Proclaim\Site\Helper\Cwmhelperroute;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Table\Table;
 use Joomla\Component\Finder\Administrator\Indexer\Adapter;
@@ -233,7 +233,7 @@ final class Proclaim extends Adapter
 
 		// Build the necessary route and path information.
 		$item->url   = $this->getUrl($item->id, $this->extension, $this->layout);
-		$item->route = CWMHelperRoute::getArticleRoute($item->slug, $item->language);
+		$item->route = Cwmhelperroute::getArticleRoute($item->slug, $item->language);
 
 		// Get the menu title if it exists.
 		$title = $this->getItemMenuTitle($item->url);

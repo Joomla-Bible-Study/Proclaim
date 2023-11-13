@@ -12,8 +12,8 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
-use CWM\Component\Proclaim\Administrator\Lib\CWMStats;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
+use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
@@ -33,7 +33,7 @@ if ($msg)
 	echo $msg;
 }
 
-$simple = CWMHelper::getSimpleView();
+$simple = Cwmhelper::getSimpleView();
 ?>
 <!-- Header -->
 <form action="<?php echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" name="adminForm"
@@ -206,37 +206,37 @@ $simple = CWMHelper::getSimpleView();
 				<tbody>
 				<tr>
 					<td><?php echo Text::_('JBS_CPL_TOTAL_MESSAGES'); ?></td>
-					<td><strong><?php echo CWMStats::get_total_messages(); ?></strong></td>
+					<td><strong><?php echo Cwmstats::get_total_messages(); ?></strong></td>
 					<td><?php echo Text::_('JBS_CPL_TOTAL_COMMENTS'); ?></td>
-					<td><strong><?php echo CWMStats::get_total_comments(); ?></strong></td>
+					<td><strong><?php echo Cwmstats::get_total_comments(); ?></strong></td>
 				</tr>
 				<tr>
 					<td><?php echo Text::_('JBS_CPL_TOTAL_TOPICS'); ?></td>
-					<td><strong><?php echo CWMStats::get_total_topics(); ?></strong></td>
+					<td><strong><?php echo Cwmstats::get_total_topics(); ?></strong></td>
 					<td><?php echo Text::_('JBS_CPL_TOTAL_MEDIA_FILES'); ?></td>
-					<td><strong><?php echo CWMStats::total_media_files(); ?></strong></td>
+					<td><strong><?php echo Cwmstats::total_media_files(); ?></strong></td>
 				</tr>
 				<tr>
 					<td><?php echo Text::_('JBS_CPL_TOP5_STUDIES_HITS'); ?></td>
-					<td><strong><?php echo CWMStats::get_top_studies(); ?></strong></td>
+					<td><strong><?php echo Cwmstats::get_top_studies(); ?></strong></td>
 					<td><?php echo Text::_('JBS_CPL_TOP5_STUDIES_HITS_90DAYS'); ?></td>
-					<td><strong><?php echo CWMStats::get_top_thirty_days(); ?></strong></td>
+					<td><strong><?php echo Cwmstats::get_top_thirty_days(); ?></strong></td>
 				</tr>
 				<tr>
 					<td><?php echo Text::_('JBS_CPL_TOTAL_DOWNLOADS'); ?></td>
-					<td><strong><?php echo CWMStats::total_downloads(); ?></strong></td>
+					<td><strong><?php echo Cwmstats::total_downloads(); ?></strong></td>
 					<td><?php echo Text::_('JBS_CPL_TOP5_DOWNLOADS'); ?></td>
-					<td><strong><?php echo CWMStats::get_top_downloads(); ?></strong></td>
+					<td><strong><?php echo Cwmstats::get_top_downloads(); ?></strong></td>
 				</tr>
 				<tr>
 					<td><?php echo Text::_('JBS_CPL_TOP5_DOWNLOADS_LAST_90DAYS'); ?></td>
-					<td><strong><?php echo CWMStats::get_downloads_ninety(); ?></strong></td>
+					<td><strong><?php echo Cwmstats::get_downloads_ninety(); ?></strong></td>
 					<td></td>
 					<td><strong></strong></td>
 				</tr>
 				<tr>
 					<td> <?php echo Text::_('JBS_CPL_TOP_STUDIES_HITS_PLAYS_DOWNLOADS'); ?></td>
-					<td><strong><?php echo CWMStats::top_score(); ?></strong></td>
+					<td><strong><?php echo Cwmstats::top_score(); ?></strong></td>
 					<td></td>
 					<td></td>
 				</tr>

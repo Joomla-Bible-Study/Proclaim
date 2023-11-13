@@ -23,33 +23,6 @@ use Joomla\CMS\Component\Router\Rules\RulesInterface;
 class ProclaimNomenuRules implements RulesInterface
 {
 	/**
-	 * Maps Proclaim Views 9.x to Proclaim Views 10x.
-	 *
-	 * @const array
-	 * @since 5.0.0
-	 */
-	private const VIEW_CASE_MAP = [
-		'cwmsermons'        => 'CWMSermons',
-		'cwmsermon'         => 'CWMSermon',
-		'cwmteachers'       => 'CWMTeachers',
-		'cwmteacher'        => 'CWMTeacher',
-		'cwmseriesdisplay'  => 'CWMSeriesDisplay',
-		'cwmseriesdisplays' => 'CWMSeriesDisplays',
-		'cwmcommentform'    => 'CWMCommentForm',
-		'cwmcommentlist'    => 'CWMCommentList',
-		'cwmlandingpage'    => 'CWMLandingPage',
-		'cwmlatest'         => 'CWMLatest',
-		'cwmmediafileform'  => 'CWMMediaFileForm',
-		'cwmmediafilelist'  => 'CWMMediaFileList',
-		'cwmmessageform'    => 'CWMMessageForm',
-		'cwmmessagelist'    => 'CWMMessageList',
-		'cwmpodcastdisplay' => 'CWMPodcastDisplay',
-		'cwmpopup'          => 'CWMPopUp',
-		'cwmsqueezebox'     => 'CWMSqueezebox',
-		'cwmterms'          => 'CWMTerms',
-	];
-
-	/**
 	 * Router this rule belongs to
 	 *
 	 * @var RouterView
@@ -205,20 +178,5 @@ class ProclaimNomenuRules implements RulesInterface
 			// Remove do to we don't want to display it but will use it in a hidden format.
 			unset($query['t']);
 		}
-	}
-
-	/**
-	 * Translates view names from older versions of the component to the ones currently in use.
-	 *
-	 * @param   string  $oldViewName  Old view name
-	 *
-	 * @return  string
-	 * @since   5.0.0
-	 */
-	private function translateOldViewName(string $oldViewName): string
-	{
-		$oldViewName = strtolower($oldViewName);
-
-		return self::VIEW_CASE_MAP[$oldViewName] ?? $oldViewName;
 	}
 }

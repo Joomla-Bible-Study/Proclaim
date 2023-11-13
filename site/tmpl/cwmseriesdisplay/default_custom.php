@@ -13,7 +13,7 @@
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
-use CWM\Component\Proclaim\Site\Helper\CWMSerieslist;
+use CWM\Component\Proclaim\Site\Helper\Cwmserieslist;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 $mainframe = Factory::getApplication();
@@ -27,7 +27,7 @@ if ($url)
 {
 	$document->addStyleSheet($url);
 }
-$JBSMSerieslist = new CWMSerieslist;
+$JBSMSerieslist = new Cwmserieslist;
 $t = $this->template->id;
 ?>
 <form action="<?php echo str_replace("&", "&amp;", $this->request_url); ?>" method="post" name="adminForm">

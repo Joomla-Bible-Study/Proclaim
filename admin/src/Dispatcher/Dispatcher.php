@@ -13,7 +13,7 @@ namespace CWM\Component\Proclaim\Administrator\Dispatcher;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
 use Joomla\CMS\Application\CMSWebApplicationInterface;
 use Joomla\CMS\Dispatcher\ComponentDispatcher;
 use Joomla\CMS\Factory;
@@ -30,7 +30,7 @@ class Dispatcher extends ComponentDispatcher
 	 * @var string
 	 * @since 10.0.0
 	 */
-	protected string $defaultController = 'CWMCpanel';
+	protected string $defaultController = 'Cwmcpanel';
 
 	/**
 	 * @var string
@@ -46,25 +46,25 @@ class Dispatcher extends ComponentDispatcher
 	 */
 	public function dispatch(): void
 	{
-		// -- This is only a fix do to naming of classes --
-		$view = $this->input->get('view');
-		$task = $this->input->get('task');
-
-		if ($view === null && $task === null)
-		{
-			$this->redirect = 'index.php?option=com_proclaim&view=cwmcpanel';
-			$this->redirect();
-		}
-
-		CWMProclaimHelper::applyViewAndController($this->defaultController);
-
-		// Fix for controller name
-		if ($this->input->get('controller') === 'cwmassets')
-		{
-			$this->input->set('controller', 'CWMAssets');
-		}
-
-		// -- end of fix --
+//		// -- This is only a fix do to naming of classes --
+//		$view = $this->input->get('view');
+//		$task = $this->input->get('task');
+//
+//		if ($view === null && $task === null)
+//		{
+//			$this->redirect = 'index.php?option=com_proclaim&view=cwmcpanel';
+//			$this->redirect();
+//		}
+//
+//		CwmproclaimHelper::applyViewAndController($this->defaultController);
+//
+//		// Fix for controller name
+//		if ($this->input->get('controller') === 'cwmassets')
+//		{
+//			$this->input->set('controller', 'Cwmassets');
+//		}
+//
+//		// -- end of fix --
 
 		// Always load Proclaim API if it exists.
 		$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';

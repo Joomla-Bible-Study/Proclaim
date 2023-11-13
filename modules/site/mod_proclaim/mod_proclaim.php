@@ -14,8 +14,8 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
-use CWM\Component\Proclaim\Site\Helper\CWMPagebuilder;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
 use CWM\Module\Proclaim\Site\Helper\ModProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ModuleHelper;
@@ -50,16 +50,16 @@ $templatemenuid = $params->get('t');
 
 try
 {
-	$template = CWMParams::getTemplateparams($templatemenuid);
+	$template = Cwmparams::getTemplateparams($templatemenuid);
 }
 catch (\Exception $e)
 {
 	Factory::getApplication()->enqueueMessage($e, 'error');
 }
 
-$pagebuilder = new CWMPageBuilder;
+$pagebuilder = new Cwmpagebuilder;
 
-$admin = CWMParams::getAdmin();
+$admin = Cwmparams::getAdmin();
 /** @var Registry $admin_params */
 $admin_params = $admin->params;
 $admin_params->merge($template->params);

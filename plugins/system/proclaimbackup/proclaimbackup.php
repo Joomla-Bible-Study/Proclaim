@@ -11,7 +11,7 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Lib\CWMBackup;
+use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
 use Joomla\CMS\Factory;
 use Joomla\Event\DispatcherInterface;
 use Joomla\Filesystem\File;
@@ -251,7 +251,7 @@ class PlgSystemProclaimBackup extends CMSPlugin
 	 */
 	public function doBackup(): bool
 	{
-		return (new CWMBackup)->exportdb($run = 2);
+		return (new Cwmbackup)->exportdb($run = 2);
 	}
 
 	/**

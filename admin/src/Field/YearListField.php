@@ -14,7 +14,7 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\CWMProclaimHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
 use Joomla\CMS\Form\Field\ListField;
 
 /**
@@ -44,6 +44,6 @@ class YearListField extends ListField
 	 */
 	protected function getOptions(): array
 	{
-		return array_merge(parent::getOptions(), CWMProclaimHelper::getStudyYears());
+		return array_merge(parent::getOptions(), CwmproclaimHelper::getStudyYears());
 	}
 }

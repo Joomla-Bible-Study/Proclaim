@@ -8,8 +8,8 @@
 
 defined('JPATH_PLATFORM') or die;
 
-use CWM\Component\Proclaim\Administrator\Helper\CWMHelper;
-use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -53,7 +53,7 @@ abstract class JHtmlJwplayer
 		}
 
 		$doc    = Factory::getApplication()->getDocument();
-		$params = CWMParams::getAdmin()->params;
+		$params = Cwmparams::getAdmin()->params;
 		$key    = $params->get('jwplayer_key', '8eJ+ik6aOUabfOisJzomcM2Z3h1VZ9+6cufBXQ==');
 		$cdn    = $params->get('jwplayer_cdn', 'https://content.jwplatform.com/libraries/HPyI6990.js');
 
@@ -99,7 +99,7 @@ abstract class JHtmlJwplayer
 			$media->playerheight = $params->get('player_hight');
 		}
 
-		$media->path1 = CWMHelper::MediaBuildUrl($media->sparams->get('path'), $params->get('filename'), $params, true);
+		$media->path1 = Cwmhelper::MediaBuildUrl($media->sparams->get('path'), $params->get('filename'), $params, true);
 
 		// Fall back check to see if JWplayer can play the media. if not will try and return a link to the file.
 		$acceptedFormats = array('aac', 'm4a', 'f4a', 'mp3', 'ogg', 'oga', 'mp4', 'm4v', 'f4v', 'mov', 'flv', 'webm', 'm3u8', 'mpd', 'DVR');

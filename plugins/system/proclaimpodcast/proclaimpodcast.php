@@ -12,7 +12,7 @@ namespace Joomla\Plugin\System\ProclaimPodcast;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Site\Helper\CWMPodcast;
+use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Mail\MailerFactoryInterface;
@@ -260,7 +260,7 @@ class PlgSystemProclaimPodcast extends CMSPlugin
 	 */
 	public function doPodcast(): bool|string
 	{
-		return (new CWMPodcast)->makePodcasts();
+		return (new Cwmpodcast)->makePodcasts();
 	}
 
 	/**

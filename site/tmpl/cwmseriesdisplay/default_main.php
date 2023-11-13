@@ -12,7 +12,7 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Site\Helper\CWMListing;
+use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 $t = $this->template;
@@ -21,7 +21,7 @@ $t = $this->template;
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="col-lg-12">
-			<?php $listing = new CWMListing;
+			<?php $listing = new Cwmlisting;
 			$list = $listing->getFluidListing($this->items, $this->params, $t, $type = 'seriesdisplay');
 			echo $list;
 			?>

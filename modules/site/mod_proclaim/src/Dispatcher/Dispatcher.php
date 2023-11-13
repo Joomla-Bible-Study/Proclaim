@@ -10,8 +10,8 @@
 
 namespace CWM\Module\Proclaim\Site\Dispatcher;
 
-use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
-use CWM\Component\Proclaim\Site\Helper\CWMPagebuilder;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
 use Joomla\CMS\Dispatcher\AbstractModuleDispatcher;
 use Joomla\CMS\Helper\HelperFactoryAwareInterface;
 use Joomla\CMS\Helper\HelperFactoryAwareTrait;
@@ -59,16 +59,16 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
 
 		try
 		{
-			$data['cwmtemplate'] = CWMParams::getTemplateparams($templatemenuid);
+			$data['cwmtemplate'] = Cwmparams::getTemplateparams($templatemenuid);
 		}
 		catch (\Exception $e)
 		{
 			$this->app->enqueueMessage($e, 'error');
 		}
 
-		$pagebuilder = new CWMPageBuilder;
+		$pagebuilder = new Cwmpagebuilder;
 
-		$admin = CWMParams::getAdmin();
+		$admin = Cwmparams::getAdmin();
 		/** @var Registry $admin_params */
 		$admin_params = $admin->params;
 		$admin_params->merge($data['cwmtemplate']->params);

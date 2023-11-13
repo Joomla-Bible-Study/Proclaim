@@ -13,7 +13,7 @@
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
-use CWM\Component\Proclaim\Administrator\Helper\CWMUploadScript;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmuploadscript;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
@@ -53,7 +53,7 @@ class CWMAddonLocal extends CWMAddon
 	 */
 	public function upload($data): array
 	{
-		return (new CWMUploadScript)->upload($data);
+		return (new Cwmuploadscript)->upload($data);
 	}
 
 	/**
