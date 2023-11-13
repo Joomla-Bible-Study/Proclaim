@@ -10,6 +10,7 @@
 
 defined('_JEXEC') or die;
 
+/* @var $displayData mixed Default is array */
 $form  = $displayData->getForm();
 
 $title = $form->getField('series_text') ? 'series_text' : ($form->getField('name') ? 'name' : '');

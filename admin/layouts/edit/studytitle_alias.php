@@ -12,6 +12,7 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+/* @var $displayData mixed Default is array */
 $form  = $displayData->getForm();
 
 $studyTitle = $form->getField('studytitle') ? 'studytitle' : ($form->getField('name') ? 'name' : '');

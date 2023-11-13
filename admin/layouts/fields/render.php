@@ -13,6 +13,7 @@
 
 use Joomla\Component\Fields\Administrator\Helper\FieldsHelper;
 
+/* @var $displayData mixed Default is array */
 // Check if we have all the data
 if (!array_key_exists('item', $displayData) || !array_key_exists('context', $displayData))
 {
@@ -52,8 +53,8 @@ if (!$fields)
 	return;
 }
 
-// Check if we have mail context in first element
-$isMail = (reset($fields)->context == 'com_contact.mail');
+// Check if we have mail context in a first element
+$isMail = (reset($fields)->context === 'com_contact.mail');
 
 if (!$isMail)
 {

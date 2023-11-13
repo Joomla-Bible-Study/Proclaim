@@ -13,6 +13,7 @@
 
 use Joomla\CMS\Language\Text;
 
+/* @var $displayData mixed Default is array */
 if (!array_key_exists('field', $displayData))
 {
 	return;
@@ -22,10 +23,10 @@ $field     = $displayData['field'];
 $label     = Text::_($field->label);
 $value     = $field->value;
 $class     = $field->params->get('render_class');
-$showLabel = $field->params->get('showlabel');
+$showLabel = (int) $field->params->get('showlabel');
 $labelClass = $field->params->get('label_render_class');
 
-if ($field->context == 'com_contact.mail')
+if ($field->context === 'com_contact.mail')
 {
 	// Prepare the value for the contact form mail
 	$value = html_entity_decode($value);
@@ -41,7 +42,7 @@ if (!strlen($value))
 
 ?>
 <dt class="contact-field-entry <?php echo $class; ?>">
-	<?php if ($showLabel == 1) : ?>
+	<?php if ($showLabel === 1) : ?>
 		<span class="field-label <?php echo $labelClass; ?>"><?php echo htmlentities($label, ENT_QUOTES | ENT_IGNORE, 'UTF-8'); ?>: </span>
 	<?php endif; ?>
 </dt>
