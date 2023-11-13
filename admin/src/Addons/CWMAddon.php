@@ -14,10 +14,9 @@ namespace CWM\Component\Proclaim\Administrator\Addons;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use JLoader;
-use Joomla\Filesystem\Path;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
+use Joomla\Filesystem\Path;
 use Joomla\Input\Input;
 use SimpleXMLElement;
 
@@ -29,12 +28,20 @@ use SimpleXMLElement;
 abstract class CWMAddon
 {
 	/**
+	 * Path for the class to load
+	 *
+	 * @var bool|string
+	 * @since 10.0.0
+	 */
+	private static string|bool $path;
+
+	/**
 	 * Addon configuration
 	 *
-	 * @var     object
+	 * @var     bool|null|SimpleXMLElement
 	 * @since   9.0.0
 	 */
-	protected $xml = null;
+	protected bool|null|SimpleXMLElement $xml = null;
 
 	/**
 	 * Name of Add-on
@@ -77,7 +84,7 @@ abstract class CWMAddon
 	 *
 	 * @since 9.0.0
 	 */
-	public function __construct($config = array())
+	public function __construct(array $config = array())
 	{
 		if (empty($this->type))
 		{
@@ -112,7 +119,7 @@ abstract class CWMAddon
 	 * @throws  \Exception
 	 * @since   9.0.0
 	 */
-	public function getType()
+	public function getType(): string
 	{
 		if (empty($this->type))
 		{
@@ -137,7 +144,7 @@ abstract class CWMAddon
 	 * @throws  \Exception
 	 * @since   9.0.0
 	 */
-	public function getXml()
+	public function getXml(): SimpleXMLElement|bool
 	{
 		$path = Path::find(BIBLESTUDY_PATH_ADMIN . '/src/Addons/Servers/' . ucfirst($this->type), $this->type . '.xml');
 
@@ -163,19 +170,23 @@ abstract class CWMAddon
 	 *
 	 * @since   9.0.0
 	 */
-	public static function getInstance(string $type, array $config = array())
+	public static function getInstance(string $type, array $config = array()): mixed
 	{
 		$type       = ucfirst(preg_replace('/[^A-Z0-9_\.-]/i', '', $type));
 		$addonClass = "CWMAddon" . ucfirst($type);
 
-		if (!class_exists($addonClass))
+		if (!class_exists($addonClass, false))
 		{
-			$path = Path::find(BIBLESTUDY_PATH_ADMIN . '/src/Addons/Servers/' . ucfirst($type) . '/', 'CWMAddon' . $type . '.php');
+			self::$path = Path::find(BIBLESTUDY_PATH_ADMIN . '/src/Addons/Servers/' . ucfirst($type) . '/', 'CWMAddon' . $type . '.php');
 
 			// Try and load missing class
-			JLoader::register($addonClass, $path);
+			spl_autoload_register(
+				static function () {
+					include_once self::$path;
+				}
+			);
 
-			if (!$path)
+			if (!self::$path)
 			{
 				Log::add(Text::sprintf('JBS_CMN_CANT_ADDON_LOAD_CLASS_NAME', $addonClass), Log::WARNING, 'jerror');
 
@@ -219,5 +230,5 @@ abstract class CWMAddon
 	 *
 	 * @since 9.0.0
 	 */
-	abstract protected function upload($data);
+	abstract protected function upload($data): mixed;
 }
