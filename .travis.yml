@@ -24,7 +24,7 @@ matrix:
 services:
 
 before_script:
-  - phpenv config-rm xdebug.ini
+  #- phpenv config-rm xdebug.ini
   # Make sure all dev dependencies are installed
   - composer install
 
