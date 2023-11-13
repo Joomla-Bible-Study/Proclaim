@@ -56,7 +56,7 @@
                 />
 
         <field name="studyintro" type="editor" class="inputbox" label="JBS_CMN_DESCRIPTION"
-               filter="CWMProclaimHelper::filterText" buttons="true"/>
+               filter=CwmproclaimHelper::filterText" buttons="true"/>
 
         <field name="studynumber" type="text" class="inputbox" size="15" label="JBS_CMN_STUDYNUMBER"/>
 
@@ -126,7 +126,7 @@
         <field name="thumbnailm" type="hidden"/>
         <field name="image" type="media" label="JBS_STY_STUDY_IMAGE" class="span12" accept="image/*"/>
         <field name="studytext" type="editor" class="inputbox" label="JBS_STY_STUDY_TEXT"
-               filter="CWMProclaimHelper::filterText" buttons="true"/>
+               filter=CwmproclaimHelper::filterText" buttons="true"/>
         <field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL"
                translate_label="false" class="inputbox" filter="rules" component="com_proclaim"
                section="message" validate="rules"/>

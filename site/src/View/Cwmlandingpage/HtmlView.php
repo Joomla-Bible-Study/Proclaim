@@ -13,13 +13,14 @@ namespace CWM\Component\Proclaim\Site\View\Cwmlandingpage;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Object\CMSObject;
-use Joomla\Registry\Registry;
-use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use Joomla\CMS\Factory;
-use Joomla\CMS\Component\ComponentHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\State;
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
 
 /**
  * Landing page list view class
@@ -47,11 +48,11 @@ class HtmlView extends BaseHtmlView
 	/**
 	 * Params
 	 *
-	 * @var CMSObject
+	 * @var State|CMSObject  State of the page
 	 *
 	 * @since 7.0
 	 */
-	public CMSObject $state;
+	public State|CMSObject $state;
 
 	public $main;
 

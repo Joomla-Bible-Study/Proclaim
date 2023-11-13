@@ -185,7 +185,7 @@ There should always be a space before and after the concatenation operator ('.')
 
 ```php
 $id = 1;
-echo JRoute::_('index.php?option=com_foo&task=foo.edit&id=' . (int) $id);
+echo Route::_('index.php?option=com_foo&task=foo.edit&id=' . (int) $id);
 ```
 
 If the concatenation operator is the first or last character on a line, both spaces are not required. For example:

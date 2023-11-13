@@ -63,9 +63,9 @@
 		/>
 
 		<field name="studyintro" type="editor" label="JBS_CMN_DESCRIPTION"
-		       filter="CWMProclaimHelper::filterText" buttons="true"/>
+		       filter="CwmproclaimHelper::filterText" buttons="true"/>
 		<field name="studytext" type="editor" label="JBS_STY_STUDY_TEXT"
-		       filter="CWMProclaimHelper::filterText" buttons="true"/>
+		       filter="CwmproclaimHelper::filterText" buttons="true"/>
 
 		<field name="studynumber" type="text" class="inputbox" size="15" label="JBS_CMN_STUDYNUMBER"/>
 

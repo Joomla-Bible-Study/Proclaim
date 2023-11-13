@@ -20,7 +20,7 @@ use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 /**
- * JView class for Install
+ * View class for Install
  *
  * @package  Proclaim.Admin
  * @since    7.1.0

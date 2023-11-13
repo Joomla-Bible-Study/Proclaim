@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use JAccessRules;
+use Joomla\CMS\Access\Rules;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Factory\MVCFactory;
 use Joomla\CMS\Table\Table;
@@ -413,7 +414,7 @@ class CwmmessageTable extends Table
 		// Bind the rules.
 		if (isset($array['rules']) && is_array($array['rules']))
 		{
-			$rules = new JAccessRules($array['rules']);
+			$rules = new Rules($array['rules']);
 			$this->setRules($rules);
 		}
 
@@ -425,7 +426,7 @@ class CwmmessageTable extends Table
 	 * If a primary key value is set the row with that primary key value will be
 	 * updated with the instance property values.  If no primary key value is set
 	 * a new row will be inserted into the database with the properties from the
-	 * JTable instance.
+	 * Table instance.
 	 *
 	 * @param   boolean  $updateNulls  True to update fields even if they are null.
 	 *

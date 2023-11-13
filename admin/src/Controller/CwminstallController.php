@@ -42,7 +42,7 @@ class CwminstallController extends BaseController
 	 * @var    string
 	 * @since  12.2
 	 */
-	protected string $view_list = 'Cwminstall';
+	protected string $view_list = 'cwminstall';
 
 	/**
 	 * The default view for the display method.
@@ -50,23 +50,7 @@ class CwminstallController extends BaseController
 	 * @var    string
 	 * @since  3.0
 	 */
-	protected $default_view = 'Cwminstall';
-
-	/**
-	 * Method to get a model object, loading it if required.
-	 *
-	 * @param   string  $name    The model name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return  BaseDatabaseModel  The model.
-	 *
-	 * @since   1.6
-	 */
-	public function getModel($name = 'Cwminstall', $prefix = '', $config = array('ignore_request' => true)): BaseDatabaseModel
-	{
-		return parent::getModel($name, $prefix, $config);
-	}
+	protected $default_view = 'cwminstall';
 
 	/**
 	 * Constructor.

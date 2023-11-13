@@ -58,10 +58,10 @@
 		<field name="website" type="text" class="inputbox" size="60"
 		       label="JBS_TCH_WEBSITE"/>
 		<field name="short" type="editor" class="inputbox"
-		       label="JBS_TCH_SHORT_DESCRIPTION_LIST_PAGE" filter="CWMProclaimHelper::filterText"
+		       label="JBS_TCH_SHORT_DESCRIPTION_LIST_PAGE" filter="CwmproclaimHelper::filterText"
 		       buttons="true"/>
 		<field name="information" type="editor" class="inputbox"
-		       label="JBS_TCH_INFORMATION" filter="CWMProclaimHelper::filterText"
+		       label="JBS_TCH_INFORMATION" filter="CwmproclaimHelper::filterText"
 		       buttons="true"/>
 		<field name="asset_id" type="hidden" filter="unset"/>
 		<field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL"

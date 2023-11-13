@@ -38,7 +38,7 @@ class CwmassetsController extends BaseController
 	 *
 	 * @since 7.0
 	 */
-	protected string $view_list = 'Cwmassets';
+	protected string $view_list = 'cwmassets';
 
 	/**
 	 * The default view for the display method.
@@ -46,7 +46,7 @@ class CwmassetsController extends BaseController
 	 * @var    string
 	 * @since  3.0
 	 */
-	protected $default_view = 'Cwmassets';
+	protected $default_view = 'cwmassets';
 
 	/**
 	 * Constructor.

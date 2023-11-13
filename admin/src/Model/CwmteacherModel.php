@@ -23,7 +23,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
-use Joomla\CMS\Table\Table;
 use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
@@ -49,15 +48,7 @@ class CwmteacherModel extends AdminModel
 	 * @var      string
 	 * @since    3.2
 	 */
-	public $typeAlias = 'com_proclaim.cwmteacher';
-
-	/**
-	 * Items data
-	 *
-	 * @var  object|boolean
-	 * @since 10.0.0
-	 */
-	private $data;
+	public $typeAlias = 'com_proclaim.teacher';
 
 	/**
 	 * Name of the form
@@ -65,7 +56,13 @@ class CwmteacherModel extends AdminModel
 	 * @var string
 	 * @since  4.0.0
 	 */
-	protected $formName = 'teacher';
+	protected string $formName = 'teacher';
+
+	/**
+	 * @var mixed
+	 * @since 10.0.0
+	 */
+	private mixed $data;
 
 	/**
 	 * Get the form data
@@ -78,7 +75,7 @@ class CwmteacherModel extends AdminModel
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function getForm($data = array(), $loadData = true)
+	public function getForm($data = array(), $loadData = true): mixed
 	{
 		if (empty($data))
 		{
@@ -110,8 +107,8 @@ class CwmteacherModel extends AdminModel
 
 		// Check for existing article.
 		// Modify the form based on Edit State access controls.
-		if (($id != 0 && (!$user->authorise('core.edit.state', 'com_proclaim.teacher.' . (int) $id)))
-			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_proclaim')))
+		if (($id !== 0 && (!$user->authorise('core.edit.state', 'com_proclaim.teacher.' . (int) $id)))
+			|| ($id === 0 && !$user->authorise('core.edit.state', 'com_proclaim')))
 		{
 			// Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');
@@ -137,11 +134,11 @@ class CwmteacherModel extends AdminModel
 	 * @throws \Exception
 	 * @since   12.2
 	 */
-	protected function canEditState($record)
+	protected function canEditState($record): bool
 	{
 		$tmp        = (array) $record;
 		$db         = Factory::getContainer()->get('DatabaseDriver');
-		$user       = $user = Factory::getApplication()->getSession()->get('user');
+		$user = Factory::getApplication()->getSession()->get('user');
 		$canDoState = $user->authorise('core.edit.state', $this->option);
 		$text       = '';
 
@@ -185,7 +182,7 @@ class CwmteacherModel extends AdminModel
 	 *
 	 * @since   11.1
 	 */
-	public function checkout($pk = null)
+	public function checkout($pk = null): bool
 	{
 		return true;
 	}
@@ -200,51 +197,61 @@ class CwmteacherModel extends AdminModel
 	 * @throws \Exception
 	 * @since 9.0.0
 	 */
-	public function save($data)
-    {
-        //var_dump($data); die;
-        /** @var Registry $params */
-        $params = Cwmparams::getAdmin()->params;
-        $path = 'images/biblestudy/teachers/' . $data['id'];
-        $prefix = 'thumb_';
-        $image = HTMLHelper::cleanImageURL($data['image']);
-        $data['image'] = $image->url;
-        // If no image uploaded, just save data as usual
-        if (empty($data['image']) || strpos($data['image'], $prefix) !== false) {
-            if (empty($data['image'])) {
-                // Modify model data if no image is set.
-                $data['teacher_image'] = "";
-                $data['teacher_thumbnail'] = "";
-            } elseif (!CwmproclaimHelper::startsWith(basename($data['image']), $prefix)) {
-                // Modify the image and model data
-                Cwmthumbnail::create($data['image'], $path, $params->get('thumbnail_teacher_size', 100));
-                $data['teacher_image'] = $data['image'];
-                $data['teacher_thumbnail'] = $path . '/thumb_' . basename($data['image']);
-            } elseif (substr_count(basename($data['image']), $prefix) > 1) {
-                // Out Fix removing redundent 'thumb_' in path.
-                $x = substr_count(basename($data['image']), $prefix);
+	public function save($data): bool
+	{
+		/** @var Registry $params */
+		$params        = Cwmparams::getAdmin()->params;
+		$path          = 'images/biblestudy/teachers/' . $data['id'];
+		$prefix        = 'thumb_';
+		$image         = HTMLHelper::cleanImageURL($data['image']);
+		$data['image'] = $image->url;
 
-                while ($x > 1) {
-                    if (substr(basename($data['image']), 0, strlen($prefix)) == $prefix) {
-                        $str = substr(basename($data['image']), strlen($prefix));
-                        $data['teacher_image'] = $path . '/' . $str;
-                        $data['teacher_thumbnail'] = $path . '/' . $str;
-                        $data['image'] = $path . '/' . $str;
-                    }
+		// If no image uploaded, just save data as usual
+		if (empty($data['image']) || strpos($data['image'], $prefix) !== false)
+		{
+			if (empty($data['image']))
+			{
+				// Modify model data if no image is set.
+				$data['teacher_image']     = "";
+				$data['teacher_thumbnail'] = "";
+			}
+			elseif (!CwmproclaimHelper::startsWith(basename($data['image']), $prefix))
+			{
+				// Modify the image and model data
+				Cwmthumbnail::create($data['image'], $path, $params->get('thumbnail_teacher_size', 100));
+				$data['teacher_image']     = $data['image'];
+				$data['teacher_thumbnail'] = $path . '/thumb_' . basename($data['image']);
+			}
+			elseif (substr_count(basename($data['image']), $prefix) > 1)
+			{
+				// Out Fix removing redundant 'thumb_' in path.
+				$x = substr_count(basename($data['image']), $prefix);
 
-                    $x--;
-                }
-            }
-        }
-        // Set contact to be a Int to work with Database
+				while ($x > 1)
+				{
+					if (str_starts_with(basename($data['image']), $prefix))
+					{
+						$str                       = substr(basename($data['image']), strlen($prefix));
+						$data['teacher_image']     = $path . '/' . $str;
+						$data['teacher_thumbnail'] = $path . '/' . $str;
+						$data['image']             = $path . '/' . $str;
+					}
 
-        $data['contact'] = intval($data['contact']);
+					$x--;
+				}
+			}
+		}
 
-        //Fix Save of update file to match path.
-        if ($data['teacher_image'] != $data['image']) {
-            $data['teacher_thumbnail'] = $data['image'];
-            $data['teacher_image'] = $data['image'];
-        }
+		// Set contact to be a Int to work with Database
+
+		$data['contact'] = (int) $data['contact'];
+
+		// Fix Save of update file to match path.
+		if ($data['teacher_image'] != $data['image'])
+		{
+			$data['teacher_thumbnail'] = $data['image'];
+			$data['teacher_image']     = $data['image'];
+		}
 
 		return parent::save($data);
 	}
@@ -257,7 +264,7 @@ class CwmteacherModel extends AdminModel
 	 * @throws \Exception
 	 * @since   7.0
 	 */
-	protected function loadFormData()
+	protected function loadFormData(): mixed
 	{
 		// Check the session for previously entered form data.
 		$session = Factory::getApplication()->getUserState('com_proclaim.edit.teacher.data', array());
@@ -275,7 +282,7 @@ class CwmteacherModel extends AdminModel
 	 * @throws \Exception
 	 * @since    1.7.0
 	 */
-	public function getItem($pk = null)
+	public function getItem($pk = null): mixed
 	{
 		$jinput = new Input;
 
@@ -309,10 +316,8 @@ class CwmteacherModel extends AdminModel
 	 *
 	 * @since    1.6
 	 */
-	protected function prepareTable($table)
+	protected function prepareTable($table): void
 	{
-		jimport('joomla.filter.output');
-
 		$table->teachername = htmlspecialchars_decode($table->teachername, ENT_QUOTES);
 		$table->alias       = ApplicationHelper::stringURLSafe($table->alias);
 
@@ -347,26 +352,9 @@ class CwmteacherModel extends AdminModel
 	 *
 	 * @since    1.6
 	 */
-	protected function cleanCache($group = null, $client_id = 0)
+	protected function cleanCache($group = null, $client_id = 0): void
 	{
 		parent::cleanCache('com_proclaim');
 		parent::cleanCache('mod_proclaim');
-	}
-
-	/**
-	 * Method to get a table object, load it if necessary.
-	 *
-	 * @param   string  $name     The table name. Optional.
-	 * @param   string  $prefix   The class prefix. Optional.
-	 * @param   array   $options  Configuration array for model. Optional.
-	 *
-	 * @return  Table  A Table object
-	 *
-	 * @since   3.0
-	 * @throws  \Exception
-	 */
-	public function getTable($name = 'Cwmteacher', $prefix = '', $options = array()): Table
-	{
-		return parent::getTable($name, $prefix, $options);
 	}
 }

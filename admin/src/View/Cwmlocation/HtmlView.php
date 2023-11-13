@@ -1,6 +1,6 @@
 <?php
 /**
- * JView html
+ * View html
  *
  * @package    Proclaim.Admin
  * @copyright  2007 - 2022 (C) CWM Team All rights reserved
@@ -65,7 +65,7 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
-	 * @return  void  A string if successful, otherwise a JError object.
+	 * @return  void  A string if successful, otherwise a Error object.
 	 *
 	 * @throws \Exception
 	 * @since   11.1

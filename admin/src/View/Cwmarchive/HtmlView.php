@@ -39,7 +39,7 @@ class HtmlView extends BaseHtmlView
 	 *
 	 * @throws \Exception
 	 * @since  11.1
-	 * @see    JViewLegacy::loadTemplate()
+	 * @see    ViewLegacy::loadTemplate()
 	 */
 	public function display($tpl = null)
 	{
