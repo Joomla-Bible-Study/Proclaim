@@ -6,10 +6,10 @@
 	"bible",
 	"joomla",
 	"comments",
-	"Cwmproclaim",
 	"Proclaim"
   ],
   "homepage": "https://github.com/Joomla-Bible-Study/Proclaim",
+	"license": "GPL-2.0-or-later",
   "authors": [
 	{
 	  "name": "Tom Fuller",
@@ -24,7 +24,6 @@
 	  "role": "Lead Developer"
 	}
   ],
-  "license": "GPL-3.0-or-later",
   "minimum-stability": "dev",
   "prefer-stable": true,
   "config": {
@@ -79,6 +78,10 @@
 	  "phploc/phploc": "*",
 		"pear/cache_lite": "1.7.16",
 		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.0"
+	},
+	"replace": {
+		"paragonie/random_compat": "9.99.99",
+		"symfony/polyfill-php81": "*"
 	},
 	"extra": {
 		"branch-alias": {
