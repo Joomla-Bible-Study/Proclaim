@@ -151,79 +151,79 @@ class Cwmassets
 			array(
 				'name'       => '#__bsms_servers',
 				'titlefield' => 'server_name',
-				'assetname'  => 'Server',
+				'assetname'  => 'server',
 				'realname'   => 'JBS_CMN_SERVERS'
 			),
 			array(
 				'name'       => '#__bsms_studies',
 				'titlefield' => 'studytitle',
-				'assetname'  => 'Message',
+				'assetname'  => 'message',
 				'realname'   => 'JBS_CMN_STUDIES'
 			),
 			array(
 				'name'       => '#__bsms_comments',
 				'titlefield' => 'comment_date',
-				'assetname'  => 'Comment',
+				'assetname'  => 'comment',
 				'realname'   => 'JBS_CMN_COMMENTS'
 			),
 			array(
 				'name'       => '#__bsms_locations',
 				'titlefield' => 'location_text',
-				'assetname'  => 'Location',
+				'assetname'  => 'location',
 				'realname'   => 'JBS_CMN_LOCATIONS'
 			),
 			array(
 				'name'       => '#__bsms_mediafiles',
 				'titlefield' => 'filename',
-				'assetname'  => 'MediaFile',
+				'assetname'  => 'mediafile',
 				'realname'   => 'JBS_CMN_MEDIA_FILES'
 			),
 			array(
 				'name'       => '#__bsms_message_type',
 				'titlefield' => 'message_type',
-				'assetname'  => 'MessageType',
+				'assetname'  => 'messagetype',
 				'realname'   => 'JBS_CMN_MESSAGETYPES'
 			),
 			array(
 				'name'       => '#__bsms_podcast',
 				'titlefield' => 'title',
-				'assetname'  => 'Podcast',
+				'assetname'  => 'podcast',
 				'realname'   => 'JBS_CMN_PODCASTS'
 			),
 			array(
 				'name'       => '#__bsms_series',
 				'titlefield' => 'series_text',
-				'assetname'  => 'Serie',
+				'assetname'  => 'serie',
 				'realname'   => 'JBS_CMN_SERIES'
 			),
 			array(
 				'name'       => '#__bsms_teachers',
 				'titlefield' => 'teachername',
-				'assetname'  => 'Teacher',
+				'assetname'  => 'teacher',
 				'realname'   => 'JBS_CMN_TEACHERS'
 			),
 			array(
 				'name'       => '#__bsms_templates',
 				'titlefield' => 'title',
-				'assetname'  => 'Template',
+				'assetname'  => 'template',
 				'realname'   => 'JBS_CMN_TEMPLATES'
 			),
 			array(
 				'name'       => '#__bsms_topics',
 				'titlefield' => 'topic_text',
-				'assetname'  => 'Topic',
+				'assetname'  => 'topic',
 				'realname'   => 'JBS_CMN_TOPICS'
 			),
 			array(
 				'name'       => '#__bsms_templatecode',
 				'titlefield' => 'filename',
-				'assetname'  => 'TemplateCode',
+				'assetname'  => 'templatecode',
 				'realname'   => 'JBS_CMN_TEMPLATECODE'
 			),
 			array(
 				'name'       => '#__bsms_admin',
 				'titlefield' => 'id',
-				'assetname'  => 'Admin',
+				'assetname'  => 'admin',
 				'realname'   => 'JBS_CMN_ADMINISTRATION'
 			)
 		);
@@ -242,7 +242,7 @@ class Cwmassets
 	private static function setAsset(object $data, string $assetName): void
 	{
 		$db         = Factory::getContainer()->get('DatabaseDriver');
-		$AssetTable = '\CWM\Component\Proclaim\Administrator\Table\CWM' . $assetName . 'Table';
+		$AssetTable = '\CWM\Component\Proclaim\Administrator\Table\Cwm' . $assetName . 'Table';
 		$table      = new $AssetTable($db);
 
 		if ($data->id)
