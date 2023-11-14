@@ -36,7 +36,7 @@ class CwmtemplateController extends FormController
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function copy()
+	public function copy(): void
 	{
 		$input = Factory::getApplication()->input;
 		$cid   = $input->get('cid', '', 'array');
@@ -90,7 +90,7 @@ class CwmtemplateController extends FormController
 	 *
 	 * @deprecated 8.0.0 Not used in scope bcc
 	 */
-	public function getTemplate($template)
+	public function getTemplate($template): bool|string
 	{
 		$db     = Factory::getContainer()->get('DatabaseDriver');
 		$query  = $db->getQuery(true);
@@ -111,20 +111,5 @@ class CwmtemplateController extends FormController
                         `published` = ' . $db->q('1');
 
 		return $templatereturn;
-	}
-	/**
-	 * Proxy for getModel
-	 *
-	 * @param   string  $name    The model name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return boolean|\Joomla\CMS\MVC\Model\BaseDatabaseModel
-	 *
-	 * @since 7.0.0
-	 */
-	public function getModel($name = 'Cwmtemplate', $prefix = '', $config = array('ignore_request' => true))
-	{
-		return parent::getModel($name, $prefix, $config);
 	}
 }

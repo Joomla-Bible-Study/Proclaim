@@ -44,7 +44,7 @@ class CwmserieController extends FormController
 	 *
 	 * @since   1.6
 	 */
-	public function batch($model = null)
+	public function batch($model = null): bool
 	{
 		// Preset the redirect
 		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmseries' . $this->getRedirectToListAppend(), false));
@@ -61,7 +61,7 @@ class CwmserieController extends FormController
 	 *
 	 * @since   1.6
 	 */
-	protected function allowAdd($data = array())
+	protected function allowAdd($data = array()): bool
 	{
 		$allow = null;
 
@@ -79,7 +79,7 @@ class CwmserieController extends FormController
 	 * @throws \Exception
 	 * @since   1.6
 	 */
-	protected function allowEdit($data = array(), $key = 'id')
+	protected function allowEdit($data = array(), $key = 'id'): bool
 	{
 		$recordId = (int) isset($data[$key]) ? $data[$key] : 0;
 		$user     = Factory::getApplication()->getIdentity();
@@ -92,21 +92,5 @@ class CwmserieController extends FormController
 
 		// Since there is no asset tracking, revert to the component permissions.
 		return parent::allowEdit($data, $key);
-	}
-
-	/**
-	 * Proxy for getModel
-	 *
-	 * @param   string  $name    The model name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return BaseDatabaseModel|null
-	 *
-	 * @since 7.0
-	 */
-	public function getModel($name = 'Cwmserie', $prefix = '', $config = array('ignore_request' => true)): ?BaseDatabaseModel
-	{
-		return parent::getModel($name, $prefix, $config);
 	}
 }

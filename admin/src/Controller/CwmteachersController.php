@@ -34,7 +34,7 @@ class CwmteachersController extends AdminController
 	 * @throws \Exception
 	 * @since   3.0
 	 */
-	public function saveOrderAjax()
+	public function saveOrderAjax(): void
 	{
 		$pks   = $this->input->post->get('cid', array(), 'array');
 		$order = $this->input->post->get('order', array(), 'array');
@@ -56,21 +56,5 @@ class CwmteachersController extends AdminController
 
 		// Close the application
 		Factory::getApplication()->close();
-	}
-
-	/**
-	 * Proxy for getModel
-	 *
-	 * @param   string  $name    The model name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return boolean|\Joomla\CMS\MVC\Model\BaseDatabaseModel
-	 *
-	 * @since 7.0.0
-	 */
-	public function getModel($name = 'Cwmteacher', $prefix = 'Administrator', $config = array('ignore_request' => true))
-	{
-		return parent::getModel($name, $prefix, $config);
 	}
 }

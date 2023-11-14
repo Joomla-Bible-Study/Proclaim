@@ -27,22 +27,6 @@ use Joomla\CMS\Response\JsonResponse;
 class CwmserversController extends AdminController
 {
 	/**
-	 * Proxy for getModel.
-	 *
-	 * @param   string  $name    The model name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  The array of possible config values. Optional.
-	 *
-	 * @return  \Joomla\CMS\MVC\Model\BaseDatabaseModel
-	 *
-	 * @since   1.6
-	 */
-	public function getModel($name = 'Cwmserver', $prefix = 'Administrator', $config = array('ignore_request' => true))
-	{
-		return parent::getModel($name, $prefix, $config);
-	}
-
-	/**
 	 * Method to get the JSON-encoded amount of published articles
 	 *
 	 * @return  void

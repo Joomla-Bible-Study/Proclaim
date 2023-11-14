@@ -226,20 +226,4 @@ class CwmmessageController extends FormController
 
 		return parent::save($key, $urlVar);
 	}
-
-	/**
-	 * Proxy for getModel
-	 *
-	 * @param   string  $name    The model name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return boolean|BaseDatabaseModel
-	 *
-	 * @since 7.0.0
-	 */
-	public function getModel($name = 'Cwmmessage', $prefix = '', $config = array('ignore_request' => true)): BaseDatabaseModel|bool
-	{
-		return parent::getModel($name, $prefix, $config);
-	}
 }

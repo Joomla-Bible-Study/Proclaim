@@ -35,27 +35,11 @@ class CwmmessagetypeController extends FormController
 	 *
 	 * @since   1.6
 	 */
-	public function batch($model = null)
+	public function batch($model = null): bool
 	{
 		// Preset the redirect
 		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmmessagetypes' . $this->getRedirectToListAppend(), false));
 
-		return parent::batch($this->getModel('Messagetype', '', array()));
-	}
-
-	/**
-	 * Method to get a model object, loading it if required.
-	 *
-	 * @param   string  $name    The model name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return  BaseDatabaseModel  The model.
-	 *
-	 * @since   1.6
-	 */
-	public function getModel($name = 'Cwmmessagetype', $prefix = '', $config = array('ignore_request' => true)): BaseDatabaseModel
-	{
-		return parent::getModel($name, $prefix, $config);
+		return parent::batch($this->getModel('Cwmmessagetype', '', array()));
 	}
 }

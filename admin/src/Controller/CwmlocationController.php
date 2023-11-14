@@ -43,6 +43,7 @@ class CwmlocationController extends FormController
 	 *
 	 * @return  boolean     True if successful, false otherwise and internal error is set.
 	 *
+	 * @throws \Exception
 	 * @since   1.6
 	 */
 	public function batch($model = null)

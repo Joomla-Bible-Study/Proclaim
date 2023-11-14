@@ -40,20 +40,4 @@ class CwmtemplatecodeController extends FormController
 	 * @since  12.2
 	 */
 	protected $option = 'com_proclaim';
-
-	/**
-	 * Proxy for getModel
-	 *
-	 * @param   string  $name    The model name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return \Joomla\CMS\MVC\Model\BaseDatabaseModel
-	 *
-	 * @since 7.1.0
-	 */
-	public function getModel($name = 'Cwmtemplatecode', $prefix = '', $config = array('ignore_request' => true))
-	{
-		return parent::getModel($name, $prefix, array('ignore_request' => true));
-	}
 }

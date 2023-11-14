@@ -43,7 +43,7 @@ class CwmtemplatesController extends AdminController
 	 * @throws \Exception
 	 * @since 8.0
 	 */
-	public function template_import()
+	public function template_import(): CwmtemplatesController|int
 	{
 		// Check for request forgeries.
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
@@ -266,7 +266,7 @@ class CwmtemplatesController extends AdminController
 	 *
 	 * @since 8.0
 	 */
-	private function performDB(string $query)
+	private function performDB(string $query): bool
 	{
 		$db = Factory::getContainer()->get('DatabaseDriver');
 		$db->setQuery($query);
@@ -286,7 +286,7 @@ class CwmtemplatesController extends AdminController
 	 *
 	 * @since 8.0
 	 */
-	public function template_export()
+	public function template_export(): bool|CwmtemplatesController
 	{
 		// Check for request forgeries.
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
@@ -336,7 +336,7 @@ class CwmtemplatesController extends AdminController
 	 *
 	 * @since 8.0
 	 */
-	private function getExportSetting($result)
+	private function getExportSetting($result): string
 	{
 		// Export must be in this order: css, template files, template.
 		$registry = new Registry;
@@ -432,7 +432,7 @@ class CwmtemplatesController extends AdminController
 	 *
 	 * @since 8.0
 	 */
-	public function getTemplate($template)
+	public function getTemplate($template): bool|string
 	{
 		$db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery(true);
@@ -454,21 +454,5 @@ class CwmtemplatesController extends AdminController
                         ';
 
 		return $templatereturn;
-	}
-
-	/**
-	 * Proxy for getModel
-	 *
-	 * @param   string  $name    The model name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return boolean|\Joomla\CMS\MVC\Model\BaseDatabaseModel
-	 *
-	 * @since 7.0.0
-	 */
-	public function getModel($name = 'Cwmtemplate', $prefix = 'Administrator', $config = array('ignore_request' => true))
-	{
-		return parent::getModel($name, $prefix, $config);
 	}
 }

@@ -29,22 +29,6 @@ use Joomla\CMS\Session\Session;
 class CwmpodcastsController extends AdminController
 {
 	/**
-	 * Proxy for getModel
-	 *
-	 * @param   string  $name    The model name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return boolean|BaseDatabaseModel
-	 *
-	 * @since 7.0.0
-	 */
-	public function getModel($name = 'Cwmpodcast', $prefix = 'Administrator', $config = array('ignore_request' => true))
-	{
-		return parent::getModel($name, $prefix, $config);
-	}
-
-	/**
 	 * Write the XML file Called from admin podcast list page.
 	 * Used for the Podcasts Page to create xml files.
 	 *

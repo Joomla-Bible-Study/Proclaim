@@ -47,22 +47,6 @@ class CwmadminController extends FormController
 	protected $view_list = 'cwmcpanel';
 
 	/**
-	 * Proxy for getModel
-	 *
-	 * @param   string  $name    The model name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return boolean|\Joomla\CMS\MVC\Model\BaseDatabaseModel
-	 *
-	 * @since 7.0.0
-	 */
-	public function getModel($name = 'Cwmadmin', $prefix = '', $config = array('ignore_request' => true))
-	{
-		return parent::getModel($name, $prefix, $config);
-	}
-
-	/**
 	 * Tools to change player or popup
 	 *
 	 * @return void

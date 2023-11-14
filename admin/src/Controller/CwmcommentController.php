@@ -97,20 +97,4 @@ class CwmcommentController extends FormController
 		// Since there is no asset tracking, revert to the component permissions.
 		return parent::allowEdit($data, $key);
 	}
-
-	/**
-	 * Method to get a model object, loading it if required.
-	 *
-	 * @param   string  $name    The model name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return  \Joomla\CMS\MVC\Model\BaseDatabaseModel
-	 *
-	 * @since   12.2
-	 */
-	public function getModel($name = 'Cwmcomment', $prefix = '', $config = array('ignore_request' => true)): BaseDatabaseModel
-	{
-		return parent::getModel($name, $prefix, array('ignore_request' => true));
-	}
 }

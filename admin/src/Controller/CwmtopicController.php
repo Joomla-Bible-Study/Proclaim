@@ -24,19 +24,4 @@ use Joomla\CMS\MVC\Controller\FormController;
  */
 class CwmtopicController extends FormController
 {
-	/**
-	 * Proxy for getModel
-	 *
-	 * @param   string  $name    The model name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return boolean|\Joomla\CMS\MVC\Model\BaseDatabaseModel
-	 *
-	 * @since 7.0.0
-	 */
-	public function getModel($name = 'Cwmtopic', $prefix = '', $config = array('ignore_request' => true))
-	{
-		return parent::getModel($name, $prefix, $config);
-	}
 }

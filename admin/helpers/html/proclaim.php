@@ -47,6 +47,7 @@ abstract class JHtmlProclaim
 	public static function framework($debug = null, string $extra = null): void
 	{
 		die('using old proclaim framework');
+
 		// Only load once
 		if (!empty(self::$loaded[__METHOD__]))
 		{

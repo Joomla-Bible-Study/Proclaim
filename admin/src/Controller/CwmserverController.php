@@ -34,7 +34,7 @@ class CwmserverController extends FormController
 	 * @throws \Exception
 	 * @since   12.2
 	 */
-	public function add()
+	public function add(): bool
 	{
 		$app = Factory::getApplication();
 
@@ -60,7 +60,7 @@ class CwmserverController extends FormController
 	 * @throws \Exception
 	 * @since   9.0.0
 	 */
-	public function edit($key = null, $urlVar = null)
+	public function edit($key = null, $urlVar = null): bool
 	{
 		$app    = Factory::getApplication();
 		$result = parent::edit();
@@ -82,7 +82,7 @@ class CwmserverController extends FormController
 	 * @throws \Exception
 	 * @since   9.0.0
 	 */
-	public function setType()
+	public function setType(): void
 	{
 		$app   = Factory::getApplication();
 		$input = $app->input;
@@ -102,20 +102,5 @@ class CwmserverController extends FormController
 				$this->getRedirectToItemAppend((int) $recordId), false
 			)
 		);
-	}
-	/**
-	 * Proxy for getModel
-	 *
-	 * @param   string  $name    The model name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return boolean|\Joomla\CMS\MVC\Model\BaseDatabaseModel
-	 *
-	 * @since 7.0.0
-	 */
-	public function getModel($name = 'Cwmserver', $prefix = '', $config = array('ignore_request' => true))
-	{
-		return parent::getModel($name, $prefix, $config);
 	}
 }

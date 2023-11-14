@@ -10,6 +10,7 @@
 
 namespace CWM\Component\Proclaim\Administrator\Controller;
 
+use JetBrains\PhpStorm\NoReturn;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
@@ -41,7 +42,7 @@ class CwmuploadController extends AdminController
 	 * @throws \JsonException
 	 * @since 9.0
 	 */
-	public function upload()
+	public function upload(): void
 	{
 		// Check for request forgeries.
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
@@ -266,7 +267,7 @@ class CwmuploadController extends AdminController
 	 * @throws \JsonException
 	 * @since 9.0
 	 */
-	private function _setResponse(int $code, string $msg = null, bool $error = true)
+	#[NoReturn] private function _setResponse(int $code, string $msg = null, bool $error = true): void
 	{
 		if ($error)
 		{
