@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="module" version="10.0" method="upgrade" client="site">
+<extension type="module" method="upgrade" client="site">
 	<name>mod_proclaim_podcast</name>
 	<author>CWM Team</author>
 	<authorEmail>info@christianwebministries.org</authorEmail>
 	<authorUrl>https://www.christianwebministries.org</authorUrl>
-	<copyright>(C) 2007 - 2022 Christian Web Ministries All rights reserved.</copyright>
-	<version>10.0.0</version>
-	<creationDate>October 1, 2022</creationDate>
-	<license>http://www.gnu.org/licenses/gpl.html</license>
+	<copyright>(C) 2007 Christian Web Ministries All rights reserved.</copyright>
+	<version>10.0.0.DEV-20231114</version>
+	<creationDate>Nov 14, 2023</creationDate>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<description>JBS_MDL_PODCAST_XML_DESCRIPTION</description>
 	<files>
 		<filename module="mod_proclaim_podcast">mod_proclaim_podcast.php</filename>

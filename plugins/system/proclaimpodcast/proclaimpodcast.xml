@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="10.0.0" type="plugin" group="system" method="upgrade">
+<extension type="plugin" group="system" method="upgrade">
     <name>plg_system_proclaimpodcast</name>
     <author>CWM Team</author>
     <authorEmail>info@christianwebministries.org</authorEmail>
     <authorUrl>https://www.christianwebministries.org</authorUrl>
-    <copyright>(C) 2007 - 2019 Proclaim All rights reserved.</copyright>
-    <version>10.0.0</version>
-    <creationDate>October 1, 2022</creationDate>
-    <license>http://www.gnu.org/licenses/gpl.html</license>
+    <copyright>(C) 2007 Proclaim All rights reserved.</copyright>
+    <version>10.0.0.DEV-20231114</version>
+    <creationDate>Nov 14, 2023</creationDate>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
     <description>PLG_SYSTEM_PROCLAIMPODCAST_XML_DESCRIPTION</description>
     <namespace path="src">Joomla\Plugin\System\ProclaimPodcast</namespace>
     <!-- Runs on install/uninstall/update; New in 1.7 -->
@@ -456,7 +456,6 @@
     </tables>
     <!-- Dependencies -->
     <dependencies>
-        <dependency type="platform" name="joomla" operator="="
-                    version="3.2"/>
+        <dependency type="platform" name="joomla" operator="=" version="3.2"/>
     </dependencies>
 </extension>

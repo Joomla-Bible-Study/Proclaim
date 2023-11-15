@@ -4,10 +4,10 @@
 	<author>CWM Team</author>
 	<authorEmail>info@christianwebministries.org</authorEmail>
 	<authorUrl>https://www.christianwebministries.org</authorUrl>
-	<copyright>(C) 2007 - 2022 Proclaim All rights reserved.</copyright>
-	<version>10.0.0</version>
-	<creationDate>October 1, 2022</creationDate>
-	<license>http://www.gnu.org/licenses/gpl.html</license>
+	<copyright>(C) 2007 Proclaim All rights reserved.</copyright>
+	<version>10.0.0.DEV-20231114</version>
+	<creationDate>Nov 14, 2023</creationDate>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<description>JBS_MDL_DESCRIPTION</description>
 	<namespace path="src">CWM\Module\Proclaim</namespace>
 	<files>
@@ -195,7 +195,7 @@
 					<option value="2">JBS_TPL_SHOW_COMMENT</option>
 					<option value="3">JBS_TPL_SHOW_COMMENT_OR_FILESIZE</option>
 				</field>
-				<field name="protocol" type="text" size="10" default="http://"
+				<field name="protocol" type="text" size="10" default="https://"
 				       label="JBS_TPL_MEDIA_PROTOCOL" description="JBS_TPL_MEDIA_PROTOCOL_DESC"/>
 			</fieldset>
 			<fieldset name="JBS_MDL_MORE_SETTINGS" label="JBS_MDL_MORE_SETTINGS">
