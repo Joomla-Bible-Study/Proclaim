@@ -26,8 +26,10 @@ before_script:
   - composer install
 
 script:
-  #- libraries/vendor/bin/phpcs --config-set installed_paths build/coding-standards,libraries/vendor/squizlabs/php_codesniffer/CodeSniffer/Standards
-  - if [[ $RUN_PHPCS == "yes" ]]; then libraries/vendor/bin/phpcs --report=full --standard=PSR12 .; fi
+  # Search for PHP syntax errors.
+  - find -L . -path ./vendor -prune -o -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l
+  # Run PHPCS.
+  - if [[ $RUN_PHPCS == "yes" ]]; then libraries/vendor/bin/phpcs . --standard=./build/psr12/ruleset.xml; fi
   - if [[ $RUN_UNIT_TESTS == "yes" ]]; then libraries/vendor/bin/phpunit --configuration travisci-phpunit.xml; fi
 
 branches:

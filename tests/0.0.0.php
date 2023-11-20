@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package    Proclaim.Admin
  * @copyright  2007 - 2022 (C) CWM Team All rights reserved
@@ -8,7 +9,7 @@
 
 // phpcs:disable PSR1.Files.SideEffects
 use Joomla\CMS\Filesystem\Folder;
-use \Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\File;
 use Joomla\Database\DatabaseDriver;
 
 \defined('_JEXEC') or die;
@@ -23,52 +24,48 @@ use Joomla\Database\DatabaseDriver;
  */
 class Migration000
 {
-	/**
-	 * Call Script for Updates of 0.0.0
-	 *
-	 * @param   DatabaseDriver  $dbo  Joomla Data bass driver
-	 *
-	 * @return boolean
-	 *
-	 * @since 0.0.0
-	 */
-	public function up (DatabaseDriver $dbo): bool
-	{
-		$this->deleteUnexistingFiles();
+    /**
+     * Call Script for Updates of 0.0.0
+     *
+     * @param   DatabaseDriver  $dbo  Joomla Data bass driver
+     *
+     * @return boolean
+     *
+     * @since 0.0.0
+     */
+    public function up(DatabaseDriver $dbo): bool
+    {
+        $this->deleteUnexistingFiles();
 
-		return true;
-	}
+        return true;
+    }
 
-	/**
-	 * Remove Old Files and Folders
-	 *
-	 * @since      0.0.0
-	 *
-	 * @return   void
-	 */
-	protected function deleteUnexistingFiles(): void
-	{
-		$path = array(
-			BIBLESTUDY_PATH_ADMIN . '/models/style.php'
-		);
+    /**
+     * Remove Old Files and Folders
+     *
+     * @since      0.0.0
+     *
+     * @return   void
+     */
+    protected function deleteUnexistingFiles(): void
+    {
+        $path = array(
+            BIBLESTUDY_PATH_ADMIN . '/models/style.php'
+        );
 
-			foreach ($path as $file)
-			{
-				if (File::exists($file))
-				{
-					File::delete($file);
-				}
-			}
+        foreach ($path as $file) {
+            if (File::exists($file)) {
+                File::delete($file);
+            }
+        }
 
-		$folders = array(
-			BIBLESTUDY_PATH_ADMIN . '/views/styles');
+        $folders = array(
+            BIBLESTUDY_PATH_ADMIN . '/views/styles');
 
-		foreach ($folders as $folder)
-		{
-			if (Folder::exists($folder))
-			{
-				Folder::delete($folder);
-			}
-		}
-	}
+        foreach ($folders as $folder) {
+            if (Folder::exists($folder)) {
+                Folder::delete($folder);
+            }
+        }
+    }
 }
