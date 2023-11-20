@@ -27,7 +27,7 @@ before_script:
 
 script:
   #- libraries/vendor/bin/phpcs --config-set installed_paths build/coding-standards,libraries/vendor/squizlabs/php_codesniffer/CodeSniffer/Standards
-  - if [[ $RUN_PHPCS == "yes" ]]; then libraries/vendor/bin/phpcs --report=full --standard=PSR12.; fi
+  - if [[ $RUN_PHPCS == "yes" ]]; then libraries/vendor/bin/phpcs --report=full --standard=PSR12; fi
   - if [[ $RUN_UNIT_TESTS == "yes" ]]; then libraries/vendor/bin/phpunit --configuration travisci-phpunit.xml; fi
 
 branches:
