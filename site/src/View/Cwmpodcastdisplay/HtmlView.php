@@ -7,20 +7,21 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Site\View\CWMPodcastDisplay;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use CWM\Component\Proclaim\Site\Helper\Cwmimages;
+use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Html\HTMLHelper;
-use CWM\Component\Proclaim\Site\Helper\Cwmimages;
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
-use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 
 /**
  * View class for Messages
@@ -30,163 +31,153 @@ use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
  */
 class HtmlView extends BaseHtmlView
 {
-	protected $state;
+    protected $state;
 
-	protected $item;
+    protected $item;
 
-	protected $template;
+    protected $template;
 
-	protected $media;
+    protected $media;
 
-	/** @var  Registry */
-	protected $params;
+    /** @var  Registry */
+    protected $params;
 
-	private $studies;
+    private $studies;
 
-	/**
-	 * Execute and display a template script.
-	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
-	 * @return  void
-	 *
-	 * @since 7.0
-	 */
-	public function display($tpl = null)
-	{
-		$mainframe = Factory::getApplication();
-		$input     = $mainframe->input;
-		$document  = $mainframe->getDocument();
+    /**
+     * Execute and display a template script.
+     *
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return  void
+     *
+     * @since 7.0
+     */
+    public function display($tpl = null)
+    {
+        $mainframe = Factory::getApplication();
+        $input     = $mainframe->input;
+        $document  = $mainframe->getDocument();
 
-		// Get the menu item object
-		// Load the Admin settings and params from the template
-		$item               = $this->get('Item');
-		$this->state        = $this->get('State');
+        // Get the menu item object
+        // Load the Admin settings and params from the template
+        $item        = $this->get('Item');
+        $this->state = $this->get('State');
 
-		/** @var Registry $params */
-		$params             = $this->state->template->params;
-		$this->template     = $this->state->get('template');
+        /** @var Registry $params */
+        $params         = $this->state->template->params;
+        $this->template = $this->state->get('template');
 
-		if (!$item)
-		{
-			return;
-		}
+        if (!$item) {
+            return;
+        }
 
-		// Get studies associated with this series
-		$mainframe->setUserState('sid', $item->id);
-		$this->studies = $this->get('Studies');
+        // Get studies associated with this series
+        $mainframe->setUserState('sid', $item->id);
+        $this->studies = $this->get('Studies');
 
-		// Get the series image
-		$image               = Cwmimages::getSeriesThumbnail($item->series_thumbnail);
-		$item->image         = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="" />';
-		$teacherimage        = Cwmimages::getTeacherThumbnail($item->thumb, $image2 = null);
-		$item->teacherimage = '<img src="' . $teacherimage->path . '" height="' . $teacherimage->height . '" width="'
-			. $teacherimage->width . '" alt="" />';
+        // Get the series image
+        $image              = Cwmimages::getSeriesThumbnail($item->series_thumbnail);
+        $item->image        = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="" />';
+        $teacherimage       = Cwmimages::getTeacherThumbnail($item->thumb, $image2 = null);
+        $item->teacherimage = '<img src="' . $teacherimage->path . '" height="' . $teacherimage->height . '" width="'
+            . $teacherimage->width . '" alt="" />';
 
-		$media = [];
+        $media = [];
 
-		if ($this->studies)
-		{
-			foreach ($this->studies as $s => $stude)
-			{
-				$exmedias = explode(',', $stude->mids);
-				$jbsmedia = new Cwmmedia;
+        if ($this->studies) {
+            foreach ($this->studies as $s => $stude) {
+                $exmedias = explode(',', $stude->mids);
+                $jbsmedia = new Cwmmedia;
 
-				foreach ($exmedias as $i => $exmedia)
-				{
-					$rmedia = $jbsmedia->getMediaRows2($exmedia);
+                foreach ($exmedias as $i => $exmedia) {
+                    $rmedia = $jbsmedia->getMediaRows2($exmedia);
 
-					if ($rmedia)
-					{
-						$reg = new Registry;
-						$reg->loadString($rmedia->params);
-						$rparams = $reg;
+                    if ($rmedia) {
+                        $reg = new Registry;
+                        $reg->loadString($rmedia->params);
+                        $rparams = $reg;
 
-						if ($this->endsWith($rparams->get('filename'), '.mp3') === true)
-						{
-							$media[] = $rmedia;
-						}
-					}
-				}
-			}
-		}
+                        if ($this->endsWith($rparams->get('filename'), '.mp3') === true) {
+                            $media[] = $rmedia;
+                        }
+                    }
+                }
+            }
+        }
 
-		$this->media = $media;
+        $this->media = $media;
 
-		// Set Player build info
-		$params->set('pcplaylist', 1);
-		$params->set('show_filesize', 0);
-		$params->set('mp3', true);
+        // Set Player build info
+        $params->set('pcplaylist', 1);
+        $params->set('show_filesize', 0);
+        $params->set('mp3', true);
 
-		// Prepare meta information (under development)
-		if ($params->get('metakey'))
-		{
-			$document->setMetaData('keywords', $params->get('metakey'));
-		}
+        // Prepare meta information (under development)
+        if ($params->get('metakey')) {
+            $document->setMetaData('keywords', $params->get('metakey'));
+        }
 
-		if ($params->get('metadesc'))
-		{
-			$document->setDescription($params->get('metadesc'));
-		}
+        if ($params->get('metadesc')) {
+            $document->setDescription($params->get('metadesc'));
+        }
 
-		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-		$user     = Factory::getApplication()->getIdentity();
-		$groups = $user->getAuthorisedViewLevels();
+        // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
+        $user   = Factory::getApplication()->getIdentity();
+        $groups = $user->getAuthorisedViewLevels();
 
-		if (!in_array($item->access, $groups) && $item->access)
-		{
-			$mainframe->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'error');
+        if (!in_array($item->access, $groups) && $item->access) {
+            $mainframe->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'error');
 
-			return;
-		}
+            return;
+        }
 
-		$input->set('returnid', $item->id);
+        $input->set('returnid', $item->id);
 
-		// End process prepare content plugins
-		$this->params      = & $params;
-		$this->item        = $item;
-		$uri               = new Uri;
-		$stringuri         = $uri->toString();
-		$this->request_url = $stringuri;
+        // End process prepare content plugins
+        $this->params      = &$params;
+        $this->item        = $item;
+        $uri               = new Uri;
+        $stringuri         = $uri->toString();
+        $this->request_url = $stringuri;
 
-		parent::display($tpl);
-	}
+        parent::display($tpl);
+    }
 
-	/**
-	 * Prepares the document
-	 *
-	 * @return void
-	 *
-	 * @since 7.0
-	 */
-	protected function _prepareDocument()
-	{
-		$app     = Factory::getApplication('site');
-		$menus   = $app->getMenu()->getActive();
-		$this->params->merge($menus->params);
+    /**
+     * Find Ends With
+     *
+     * @param   string  $haystack  Search string
+     * @param   string  $needle    What to search for.
+     *
+     * @return boolean
+     *
+     * @since version
+     */
+    private function endsWith($haystack, $needle)
+    {
+        $length = strlen($needle);
 
-		$title   = null;
-	}
+        if ($length == 0) {
+            return true;
+        }
 
-	/**
-	 * Find Ends With
-	 *
-	 * @param   string  $haystack  Search string
-	 * @param   string  $needle    What to search for.
-	 *
-	 * @return boolean
-	 *
-	 * @since version
-	 */
-	private function endsWith($haystack, $needle)
-	{
-		$length = strlen($needle);
+        return (substr($haystack, -$length) === $needle);
+    }
 
-		if ($length == 0)
-		{
-			return true;
-		}
+    /**
+     * Prepares the document
+     *
+     * @return void
+     *
+     * @since 7.0
+     */
+    protected function _prepareDocument()
+    {
+        $app   = Factory::getApplication('site');
+        $menus = $app->getMenu()->getActive();
+        $this->params->merge($menus->params);
 
-		return (substr($haystack, -$length) === $needle);
-	}
+        $title = null;
+    }
 }

@@ -12,10 +12,10 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\MVC\Controller\FormController;
-use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
 
 /**
@@ -26,20 +26,22 @@ use Joomla\CMS\Router\Route;
  */
 class CwmmessagetypeController extends FormController
 {
-	/**
-	 * Method to run batch operations.
-	 *
-	 * @param   object  $model  The model.
-	 *
-	 * @return  boolean     True if successful, false otherwise and internal error is set.
-	 *
-	 * @since   1.6
-	 */
-	public function batch($model = null): bool
-	{
-		// Preset the redirect
-		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmmessagetypes' . $this->getRedirectToListAppend(), false));
+    /**
+     * Method to run batch operations.
+     *
+     * @param   object  $model  The model.
+     *
+     * @return  boolean     True if successful, false otherwise and internal error is set.
+     *
+     * @since   1.6
+     */
+    public function batch($model = null): bool
+    {
+        // Preset the redirect
+        $this->setRedirect(
+            Route::_('index.php?option=com_proclaim&view=cwmmessagetypes' . $this->getRedirectToListAppend(), false)
+        );
 
-		return parent::batch($this->getModel('Cwmmessagetype', '', array()));
-	}
+        return parent::batch($this->getModel('Cwmmessagetype', '', array()));
+    }
 }

@@ -22,27 +22,27 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
  **/
 class Cwmsearchfilters
 {
-	/**
-	 * Extension Name
-	 *
-	 * @var string
-	 *
-	 * @since 1.5
-	 */
-	public static $extension = 'com_proclaim';
+    /**
+     * Extension Name
+     *
+     * @var string
+     *
+     * @since 1.5
+     */
+    public static $extension = 'com_proclaim';
 
-	/**
-	 * Check to see if Duplicate
-	 *
-	 * @param   int  $study_id  ?
-	 * @param   int  $topic_id  ?
-	 *
-	 * @return boolean
-	 *
-	 * @since 7.0
-	 */
-	public static function genrate($study_id, $topic_id)
-	{
-		return true;
-	}
+    /**
+     * Check to see if Duplicate
+     *
+     * @param   int  $study_id  ?
+     * @param   int  $topic_id  ?
+     *
+     * @return boolean
+     *
+     * @since 7.0
+     */
+    public static function genrate($study_id, $topic_id)
+    {
+        return true;
+    }
 }

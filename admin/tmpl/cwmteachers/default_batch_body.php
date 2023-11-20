@@ -10,6 +10,7 @@
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Component\ComponentHelper;
@@ -21,23 +22,27 @@ $published = $this->state->get('filter.published');
 
 $params = ComponentHelper::getParams('com_proclaim');
 
-$published = (int) $this->state->get('filter.published');
+$published = (int)$this->state->get('filter.published');
 
 $user = Factory::getApplication()->getSession()->get('user');
 ?>
 <div class="p-3">
-	<div class="row">
-		<?php if (Multilanguage::isEnabled()) : ?>
-			<div class="form-group col-md-6">
-				<div class="controls">
-					<?php echo LayoutHelper::render('joomla.html.batch.language', []); ?>
-				</div>
-			</div>
-		<?php endif; ?>
-		<div class="form-group col-md-6">
-			<div class="controls">
-				<?php echo LayoutHelper::render('joomla.html.batch.access', []); ?>
-			</div>
-		</div>
-	</div>
+    <div class="row">
+        <?php
+        if (Multilanguage::isEnabled()) : ?>
+            <div class="form-group col-md-6">
+                <div class="controls">
+                    <?php
+                    echo LayoutHelper::render('joomla.html.batch.language', []); ?>
+                </div>
+            </div>
+        <?php
+        endif; ?>
+        <div class="form-group col-md-6">
+            <div class="controls">
+                <?php
+                echo LayoutHelper::render('joomla.html.batch.access', []); ?>
+            </div>
+        </div>
+    </div>
 </div>

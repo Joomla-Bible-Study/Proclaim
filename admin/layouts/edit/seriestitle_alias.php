@@ -1,26 +1,28 @@
 <?php
 
 /**
- * @package     Joomla.Site
- * @subpackage  Layout
+ * @package         Joomla.Site
+ * @subpackage      Layout
  *
  * @copyright   (C) 2013 Open Source Matters, Inc. <https://www.joomla.org>
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ * @license         GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 defined('_JEXEC') or die;
 
 /* @var $displayData mixed Default is array */
-$form  = $displayData->getForm();
+$form = $displayData->getForm();
 
 $title = $form->getField('series_text') ? 'series_text' : ($form->getField('name') ? 'name' : '');
 
 ?>
 <div class="row title-alias form-vertical mb-3">
     <div class="col-12 col-md-6">
-        <?php echo $title ? $form->renderField($title) : ''; ?>
+        <?php
+        echo $title ? $form->renderField($title) : ''; ?>
     </div>
     <div class="col-12 col-md-6">
-        <?php echo $form->renderField('alias'); ?>
+        <?php
+        echo $form->renderField('alias'); ?>
     </div>
 </div>

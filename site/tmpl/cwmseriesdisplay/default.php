@@ -12,15 +12,10 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-if ($this->params->get('useexpert_seriesdetail') > 0)
-{
-	echo $this->loadTemplate('custom');
-}
-elseif ($this->params->get('seriesdisplaytemplate'))
-{
-	echo $this->loadTemplate($this->params->get('seriesdisplaytemplate'));
-}
-else
-{
-	echo $this->loadTemplate('main');
+if ($this->params->get('useexpert_seriesdetail') > 0) {
+    echo $this->loadTemplate('custom');
+} elseif ($this->params->get('seriesdisplaytemplate')) {
+    echo $this->loadTemplate($this->params->get('seriesdisplaytemplate'));
+} else {
+    echo $this->loadTemplate('main');
 }

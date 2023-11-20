@@ -23,48 +23,46 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
  */
 class CWMImageLib
 {
-	/**
-	 * Extension Name
-	 *
-	 * @var string
-	 *
-	 * @since 1.5
-	 */
-	public static $extension = 'com_proclaim';
+    /**
+     * Extension Name
+     *
+     * @var string
+     *
+     * @since 1.5
+     */
+    public static $extension = 'com_proclaim';
 
-	/**
-	 * Get Series Podcast File
-	 *
-	 * @param   string  $img  Org Image File
-	 *
-	 * @return string
-	 *
-	 * @throws \Exception
-	 * @since 9.0.18
-	 */
-	public static function getSeriesPodcast(string $img)
-	{
-		// Prep files
-		$img_base    = pathinfo($img);
-		$array       = explode('.', $img_base['basename']);
-		$NewfileName = $img_base["dirname"] . '/' . $array[0] . '-200x112.' . $array[1];
-		$new_sub     = JPATH_ROOT . '/' . $NewfileName;
-		$img_sub     = JPATH_ROOT . '/' . $img;
+    /**
+     * Get Series Podcast File
+     *
+     * @param   string  $img  Org Image File
+     *
+     * @return string
+     *
+     * @throws \Exception
+     * @since 9.0.18
+     */
+    public static function getSeriesPodcast(string $img)
+    {
+        // Prep files
+        $img_base    = pathinfo($img);
+        $array       = explode('.', $img_base['basename']);
+        $NewfileName = $img_base["dirname"] . '/' . $array[0] . '-200x112.' . $array[1];
+        $new_sub     = JPATH_ROOT . '/' . $NewfileName;
+        $img_sub     = JPATH_ROOT . '/' . $img;
 
-		if (file_exists($img_sub) && !file_exists($new_sub))
-		{
-			if (function_exists('gd_info') && extension_loaded('gd'))
-			{
-				GDLib::resize_image($new_sub, $img_sub);
+        if (file_exists($img_sub) && !file_exists($new_sub)) {
+            if (function_exists('gd_info') && extension_loaded('gd')) {
+                GDLib::resize_image($new_sub, $img_sub);
 
-				return $NewfileName;
-			}
+                return $NewfileName;
+            }
 
-			return $img;
-		}
+            return $img;
+        }
 
-		return $NewfileName;
-	}
+        return $NewfileName;
+    }
 }
 
 /**
@@ -75,48 +73,44 @@ class CWMImageLib
  */
 class ImageMagickLib extends CWMImageLib
 {
-	/**
-	 * Extension Name
-	 *
-	 * @var string
-	 *
-	 * @since 1.5
-	 */
-	public static $extension = 'com_proclaim';
+    /**
+     * Extension Name
+     *
+     * @var string
+     *
+     * @since 1.5
+     */
+    public static $extension = 'com_proclaim';
 
-	/**
-	 * Resize Image
-	 *
-	 * @param   string  $targetFile    Target File Path
-	 * @param   string  $originalFile  File
-	 * @param   int     $newWidth      Image New Width
-	 * @param   float   $canv_width    Image Canvas Width
-	 * @param   float   $canv_height   Image Canvas Height
-	 *
-	 * @return void
-	 *
-	 * @since 9.0.18
-	 */
-	public static function resize_image(
-		$targetFile,
-		$originalFile,
-		$newWidth = 300,
-		$canv_width = 300,
-		$canv_height = 169
-	)
-	{
-		try
-		{
-			// Need to make
-			return;
-		}
-		catch (\Exception $e)
-		{
-			echo $e->getMessage();
-		}
+    /**
+     * Resize Image
+     *
+     * @param   string  $targetFile    Target File Path
+     * @param   string  $originalFile  File
+     * @param   int     $newWidth      Image New Width
+     * @param   float   $canv_width    Image Canvas Width
+     * @param   float   $canv_height   Image Canvas Height
+     *
+     * @return void
+     *
+     * @since 9.0.18
+     */
+    public static function resize_image(
+        $targetFile,
+        $originalFile,
+        $newWidth = 300,
+        $canv_width = 300,
+        $canv_height = 169
+    ) {
+        try {
+            // Need to make
+            return;
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
 
-		return null;
-	}
+        return null;
+    }
 }
 
 /**
@@ -127,92 +121,86 @@ class ImageMagickLib extends CWMImageLib
  */
 class GDLib extends CWMImageLib
 {
-	/**
-	 * Extension Name
-	 *
-	 * @var string
-	 *
-	 * @since 1.5
-	 */
-	public static $extension = 'com_proclaim';
+    /**
+     * Extension Name
+     *
+     * @var string
+     *
+     * @since 1.5
+     */
+    public static $extension = 'com_proclaim';
 
-	/**
-	 * Construct System.
-	 *
-	 * @since 1.5
-	 */
-	public function __construct()
-	{
-		// Check that the library exists
-		if (!function_exists("gd_info"))
-		{
-			die("GD is not found");
-		}
-	}
+    /**
+     * Construct System.
+     *
+     * @since 1.5
+     */
+    public function __construct()
+    {
+        // Check that the library exists
+        if (!function_exists("gd_info")) {
+            die("GD is not found");
+        }
+    }
 
-	/**
-	 * Resize Image
-	 *
-	 * @param   string  $targetFile    Target File Path
-	 * @param   string  $originalFile  File
-	 * @param   int     $newWidth      Image New Width
-	 * @param   float   $canv_width    Image Canvas Width
-	 * @param   float   $canv_height   Image Canvas Height
-	 *
-	 * @return void
-	 *
-	 * @throws \Exception
-	 * @since 9.0.18
-	 */
-	public static function resize_image(
-		string $targetFile,
-		string $originalFile,
-		int $newWidth = 300,
-		float $canv_width = 300,
-		float $canv_height = 169
-	): void
-	{
-		$info = getimagesize($originalFile);
-		$mime = $info['mime'];
+    /**
+     * Resize Image
+     *
+     * @param   string  $targetFile    Target File Path
+     * @param   string  $originalFile  File
+     * @param   int     $newWidth      Image New Width
+     * @param   float   $canv_width    Image Canvas Width
+     * @param   float   $canv_height   Image Canvas Height
+     *
+     * @return void
+     *
+     * @throws \Exception
+     * @since 9.0.18
+     */
+    public static function resize_image(
+        string $targetFile,
+        string $originalFile,
+        int $newWidth = 300,
+        float $canv_width = 300,
+        float $canv_height = 169
+    ): void {
+        $info = getimagesize($originalFile);
+        $mime = $info['mime'];
 
-		switch ($mime)
-		{
-			case 'image/jpeg':
-				$image_create_func = 'imagecreatefromjpeg';
-				$image_save_func   = 'imagejpeg';
-				$new_image_ext     = 'jpg';
-				break;
+        switch ($mime) {
+            case 'image/jpeg':
+                $image_create_func = 'imagecreatefromjpeg';
+                $image_save_func   = 'imagejpeg';
+                $new_image_ext     = 'jpg';
+                break;
 
-			case 'image/png':
-				$image_create_func = 'imagecreatefrompng';
-				$image_save_func   = 'imagepng';
-				$new_image_ext     = 'png';
-				break;
+            case 'image/png':
+                $image_create_func = 'imagecreatefrompng';
+                $image_save_func   = 'imagepng';
+                $new_image_ext     = 'png';
+                break;
 
-			case 'image/gif':
-				$image_create_func = 'imagecreatefromgif';
-				$image_save_func   = 'imagegif';
-				$new_image_ext     = 'gif';
-				break;
+            case 'image/gif':
+                $image_create_func = 'imagecreatefromgif';
+                $image_save_func   = 'imagegif';
+                $new_image_ext     = 'gif';
+                break;
 
-			default:
-				throw new \Exception('Unknown image type.');
-		}
+            default:
+                throw new \Exception('Unknown image type.');
+        }
 
-		$img = $image_create_func($originalFile);
-		[$width, $height] = getimagesize($originalFile);
+        $img = $image_create_func($originalFile);
+        [$width, $height] = getimagesize($originalFile);
 
-		$newHeight = ($height / $width) * $newWidth;
-		$tmp       = imagecreatetruecolor($canv_width, $canv_height);
-		imagecopyresampled($tmp, $img, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+        $newHeight = ($height / $width) * $newWidth;
+        $tmp       = imagecreatetruecolor($canv_width, $canv_height);
+        imagecopyresampled($tmp, $img, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
 
-		if (file_exists($targetFile))
-		{
-			unlink($targetFile);
-		}
-		else
-		{
-			$image_save_func($tmp, $targetFile);
-		}
-	}
+        if (file_exists($targetFile)) {
+            unlink($targetFile);
+        } else {
+            $image_save_func($tmp, $targetFile);
+        }
+    }
 }

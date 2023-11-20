@@ -12,6 +12,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
@@ -34,327 +35,303 @@ use Joomla\Registry\Registry;
  */
 class CwmteacherModel extends AdminModel
 {
-	/**
-	 * Controller Prefix
-	 *
-	 * @var        string    The prefix to use with controller messages.
-	 * @since    1.6
-	 */
-	protected $text_prefix = 'com_proclaim';
+    /**
+     * The type alias for this content type (for example, 'com_content.article').
+     *
+     * @var      string
+     * @since    3.2
+     */
+    public $typeAlias = 'com_proclaim.teacher';
+    /**
+     * Controller Prefix
+     *
+     * @var        string    The prefix to use with controller messages.
+     * @since    1.6
+     */
+    protected $text_prefix = 'com_proclaim';
+    /**
+     * Name of the form
+     *
+     * @var string
+     * @since  4.0.0
+     */
+    protected string $formName = 'teacher';
 
-	/**
-	 * The type alias for this content type (for example, 'com_content.article').
-	 *
-	 * @var      string
-	 * @since    3.2
-	 */
-	public $typeAlias = 'com_proclaim.teacher';
+    /**
+     * @var mixed
+     * @since 10.0.0
+     */
+    private mixed $data;
 
-	/**
-	 * Name of the form
-	 *
-	 * @var string
-	 * @since  4.0.0
-	 */
-	protected string $formName = 'teacher';
+    /**
+     * Get the form data
+     *
+     * @param   array    $data      Data for the form.
+     * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+     *
+     * @return  mixed  A JForm object on success, false on failure
+     *
+     * @throws \Exception
+     * @since 7.0
+     */
+    public function getForm($data = array(), $loadData = true): mixed
+    {
+        if (empty($data)) {
+            $this->getItem();
+        }
 
-	/**
-	 * @var mixed
-	 * @since 10.0.0
-	 */
-	private mixed $data;
+        // Get the form.
+        $form = $this->loadForm(
+            'com_proclaim.' . $this->formName,
+            $this->formName,
+            array('control' => 'jform', 'load_data' => $loadData)
+        );
 
-	/**
-	 * Get the form data
-	 *
-	 * @param   array    $data      Data for the form.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
-	 *
-	 * @return  mixed  A JForm object on success, false on failure
-	 *
-	 * @throws \Exception
-	 * @since 7.0
-	 */
-	public function getForm($data = array(), $loadData = true): mixed
-	{
-		if (empty($data))
-		{
-			$this->getItem();
-		}
+        if ($form === null) {
+            return false;
+        }
 
-		// Get the form.
-		$form = $this->loadForm('com_proclaim.' . $this->formName, $this->formName, array('control' => 'jform', 'load_data' => $loadData));
+        $jinput = Factory::getApplication()->input;
 
-		if ($form === null)
-		{
-			return false;
-		}
+        // The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
+        if ($jinput->get('a_id')) {
+            $id = $jinput->get('a_id', 0);
+        } else {
+            // The back end uses id so we use that the rest of the time and set it to 0 by default.
+            $id = $jinput->get('id', 0);
+        }
 
-		$jinput = Factory::getApplication()->input;
+        $user = Factory::getApplication()->getSession()->get('user');
 
-		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
-		if ($jinput->get('a_id'))
-		{
-			$id = $jinput->get('a_id', 0);
-		}
-		else
-		{
-			// The back end uses id so we use that the rest of the time and set it to 0 by default.
-			$id = $jinput->get('id', 0);
-		}
+        // Check for existing article.
+        // Modify the form based on Edit State access controls.
+        if (($id !== 0 && (!$user->authorise('core.edit.state', 'com_proclaim.teacher.' . (int)$id)))
+            || ($id === 0 && !$user->authorise('core.edit.state', 'com_proclaim'))) {
+            // Disable fields for display.
+            $form->setFieldAttribute('ordering', 'disabled', 'true');
+            $form->setFieldAttribute('published', 'disabled', 'true');
 
-		$user = Factory::getApplication()->getSession()->get('user');
+            // Disable fields while saving.
+            // The controller has already verified this is a record you can edit.
+            $form->setFieldAttribute('ordering', 'filter', 'unset');
+            $form->setFieldAttribute('published', 'filter', 'unset');
+        }
 
-		// Check for existing article.
-		// Modify the form based on Edit State access controls.
-		if (($id !== 0 && (!$user->authorise('core.edit.state', 'com_proclaim.teacher.' . (int) $id)))
-			|| ($id === 0 && !$user->authorise('core.edit.state', 'com_proclaim')))
-		{
-			// Disable fields for display.
-			$form->setFieldAttribute('ordering', 'disabled', 'true');
-			$form->setFieldAttribute('published', 'disabled', 'true');
+        return $form;
+    }
 
-			// Disable fields while saving.
-			// The controller has already verified this is a record you can edit.
-			$form->setFieldAttribute('ordering', 'filter', 'unset');
-			$form->setFieldAttribute('published', 'filter', 'unset');
-		}
+    /**
+     * Method to get a single record.
+     *
+     * @param   int  $pk  The id of the primary key.
+     *
+     * @return    mixed    Object on success, false on failure.
+     *
+     * @throws \Exception
+     * @since    1.7.0
+     */
+    public function getItem($pk = null): mixed
+    {
+        $jinput = new Input;
 
-		return $form;
-	}
+        // The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
+        if ($jinput->get('a_id')) {
+            $pk = $jinput->get('a_id', 0);
+        } else {
+            // The back end uses id so we use that the rest of the time and set it to 0 by default.
+            $pk = $jinput->get('id', 0);
+        }
 
-	/**
-	 * Method to test whether a record can be deleted.
-	 *
-	 * @param   object  $record  A record object.
-	 *
-	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the
-	 *                   component.
-	 *
-	 * @throws \Exception
-	 * @since   12.2
-	 */
-	protected function canEditState($record): bool
-	{
-		$tmp        = (array) $record;
-		$db         = Factory::getContainer()->get('DatabaseDriver');
-		$user = Factory::getApplication()->getSession()->get('user');
-		$canDoState = $user->authorise('core.edit.state', $this->option);
-		$text       = '';
+        if (!empty($this->data)) {
+            return $this->data;
+        }
 
-		if (!empty($tmp))
-		{
-			$query = $db->getQuery(true);
-			$query->select('id, studytitle')
-				->from('#__bsms_studies')
-				->where('teacher_id = ' . $record->id)
-				->where('published != ' . $db->q('-2'));
-			$db->setQuery($query);
-			$studies = $db->loadObjectList();
+        $this->data = parent::getItem($pk);
 
-			if (!$studies && $canDoState)
-			{
-				return true;
-			}
+        return $this->data;
+    }
 
-			if ($record->published == '-2' || $record->published == '0')
-			{
-				foreach ($studies as $studie)
-				{
-					$text .= ' ' . $studie->id . '-"' . $studie->studytitle . '",';
-				}
+    /**
+     * Method to check-out a row for editing.
+     *
+     * @param   integer  $pk  The numeric id of the primary key.
+     *
+     * @return  boolean  False on failure or error, true otherwise.
+     *
+     * @since   11.1
+     */
+    public function checkout($pk = null): bool
+    {
+        return true;
+    }
 
-				Factory::getApplication()->enqueueMessage(Text::_('JBS_TCH_CAN_NOT_DELETE') . $text);
-			}
+    /**
+     * Saves data creating image thumbnails
+     *
+     * @param   array  $data  Data
+     *
+     * @return boolean
+     *
+     * @throws \Exception
+     * @since 9.0.0
+     */
+    public function save($data): bool
+    {
+        /** @var Registry $params */
+        $params        = Cwmparams::getAdmin()->params;
+        $path          = 'images/biblestudy/teachers/' . $data['id'];
+        $prefix        = 'thumb_';
+        $image         = HTMLHelper::cleanImageURL($data['image']);
+        $data['image'] = $image->url;
 
-			return false;
-		}
+        // If no image uploaded, just save data as usual
+        if (empty($data['image']) || strpos($data['image'], $prefix) !== false) {
+            if (empty($data['image'])) {
+                // Modify model data if no image is set.
+                $data['teacher_image']     = "";
+                $data['teacher_thumbnail'] = "";
+            } elseif (!CwmproclaimHelper::startsWith(basename($data['image']), $prefix)) {
+                // Modify the image and model data
+                Cwmthumbnail::create($data['image'], $path, $params->get('thumbnail_teacher_size', 100));
+                $data['teacher_image']     = $data['image'];
+                $data['teacher_thumbnail'] = $path . '/thumb_' . basename($data['image']);
+            } elseif (substr_count(basename($data['image']), $prefix) > 1) {
+                // Out Fix removing redundant 'thumb_' in path.
+                $x = substr_count(basename($data['image']), $prefix);
 
-		return $canDoState;
-	}
+                while ($x > 1) {
+                    if (str_starts_with(basename($data['image']), $prefix)) {
+                        $str                       = substr(basename($data['image']), strlen($prefix));
+                        $data['teacher_image']     = $path . '/' . $str;
+                        $data['teacher_thumbnail'] = $path . '/' . $str;
+                        $data['image']             = $path . '/' . $str;
+                    }
 
-	/**
-	 * Method to check-out a row for editing.
-	 *
-	 * @param   integer  $pk  The numeric id of the primary key.
-	 *
-	 * @return  boolean  False on failure or error, true otherwise.
-	 *
-	 * @since   11.1
-	 */
-	public function checkout($pk = null): bool
-	{
-		return true;
-	}
+                    $x--;
+                }
+            }
+        }
 
-	/**
-	 * Saves data creating image thumbnails
-	 *
-	 * @param   array  $data  Data
-	 *
-	 * @return boolean
-	 *
-	 * @throws \Exception
-	 * @since 9.0.0
-	 */
-	public function save($data): bool
-	{
-		/** @var Registry $params */
-		$params        = Cwmparams::getAdmin()->params;
-		$path          = 'images/biblestudy/teachers/' . $data['id'];
-		$prefix        = 'thumb_';
-		$image         = HTMLHelper::cleanImageURL($data['image']);
-		$data['image'] = $image->url;
+        // Set contact to be a Int to work with Database
 
-		// If no image uploaded, just save data as usual
-		if (empty($data['image']) || strpos($data['image'], $prefix) !== false)
-		{
-			if (empty($data['image']))
-			{
-				// Modify model data if no image is set.
-				$data['teacher_image']     = "";
-				$data['teacher_thumbnail'] = "";
-			}
-			elseif (!CwmproclaimHelper::startsWith(basename($data['image']), $prefix))
-			{
-				// Modify the image and model data
-				Cwmthumbnail::create($data['image'], $path, $params->get('thumbnail_teacher_size', 100));
-				$data['teacher_image']     = $data['image'];
-				$data['teacher_thumbnail'] = $path . '/thumb_' . basename($data['image']);
-			}
-			elseif (substr_count(basename($data['image']), $prefix) > 1)
-			{
-				// Out Fix removing redundant 'thumb_' in path.
-				$x = substr_count(basename($data['image']), $prefix);
+        $data['contact'] = (int)$data['contact'];
 
-				while ($x > 1)
-				{
-					if (str_starts_with(basename($data['image']), $prefix))
-					{
-						$str                       = substr(basename($data['image']), strlen($prefix));
-						$data['teacher_image']     = $path . '/' . $str;
-						$data['teacher_thumbnail'] = $path . '/' . $str;
-						$data['image']             = $path . '/' . $str;
-					}
+        // Fix Save of update file to match path.
+        if ($data['teacher_image'] != $data['image']) {
+            $data['teacher_thumbnail'] = $data['image'];
+            $data['teacher_image']     = $data['image'];
+        }
 
-					$x--;
-				}
-			}
-		}
+        return parent::save($data);
+    }
 
-		// Set contact to be a Int to work with Database
+    /**
+     * Method to test whether a record can be deleted.
+     *
+     * @param   object  $record  A record object.
+     *
+     * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the
+     *                   component.
+     *
+     * @throws \Exception
+     * @since   12.2
+     */
+    protected function canEditState($record): bool
+    {
+        $tmp        = (array)$record;
+        $db         = Factory::getContainer()->get('DatabaseDriver');
+        $user       = Factory::getApplication()->getSession()->get('user');
+        $canDoState = $user->authorise('core.edit.state', $this->option);
+        $text       = '';
 
-		$data['contact'] = (int) $data['contact'];
+        if (!empty($tmp)) {
+            $query = $db->getQuery(true);
+            $query->select('id, studytitle')
+                ->from('#__bsms_studies')
+                ->where('teacher_id = ' . $record->id)
+                ->where('published != ' . $db->q('-2'));
+            $db->setQuery($query);
+            $studies = $db->loadObjectList();
 
-		// Fix Save of update file to match path.
-		if ($data['teacher_image'] != $data['image'])
-		{
-			$data['teacher_thumbnail'] = $data['image'];
-			$data['teacher_image']     = $data['image'];
-		}
+            if (!$studies && $canDoState) {
+                return true;
+            }
 
-		return parent::save($data);
-	}
+            if ($record->published == '-2' || $record->published == '0') {
+                foreach ($studies as $studie) {
+                    $text .= ' ' . $studie->id . '-"' . $studie->studytitle . '",';
+                }
 
-	/**
-	 * Method to get the data that should be injected in the form.
-	 *
-	 * @return    mixed    The data for the form.
-	 *
-	 * @throws \Exception
-	 * @since   7.0
-	 */
-	protected function loadFormData(): mixed
-	{
-		// Check the session for previously entered form data.
-		$session = Factory::getApplication()->getUserState('com_proclaim.edit.teacher.data', array());
+                Factory::getApplication()->enqueueMessage(Text::_('JBS_TCH_CAN_NOT_DELETE') . $text);
+            }
 
-		return empty($session) ? $this->data : $session;
-	}
+            return false;
+        }
 
-	/**
-	 * Method to get a single record.
-	 *
-	 * @param   int  $pk  The id of the primary key.
-	 *
-	 * @return    mixed    Object on success, false on failure.
-	 *
-	 * @throws \Exception
-	 * @since    1.7.0
-	 */
-	public function getItem($pk = null): mixed
-	{
-		$jinput = new Input;
+        return $canDoState;
+    }
 
-		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
-		if ($jinput->get('a_id'))
-		{
-			$pk = $jinput->get('a_id', 0);
-		}
-		else
-		{
-			// The back end uses id so we use that the rest of the time and set it to 0 by default.
-			$pk = $jinput->get('id', 0);
-		}
+    /**
+     * Method to get the data that should be injected in the form.
+     *
+     * @return    mixed    The data for the form.
+     *
+     * @throws \Exception
+     * @since   7.0
+     */
+    protected function loadFormData(): mixed
+    {
+        // Check the session for previously entered form data.
+        $session = Factory::getApplication()->getUserState('com_proclaim.edit.teacher.data', array());
 
-		if (!empty($this->data))
-		{
-			return $this->data;
-		}
+        return empty($session) ? $this->data : $session;
+    }
 
-		$this->data = parent::getItem($pk);
+    /**
+     * Prepare and sanitise the table prior to saving.
+     *
+     * @param   CwmteacherTable  $table  A reference to a JTable object.
+     *
+     * @return  void
+     *
+     * @since    1.6
+     */
+    protected function prepareTable($table): void
+    {
+        $table->teachername = htmlspecialchars_decode($table->teachername, ENT_QUOTES);
+        $table->alias       = ApplicationHelper::stringURLSafe($table->alias);
 
-		return $this->data;
-	}
+        if (empty($table->alias)) {
+            $table->alias = ApplicationHelper::stringURLSafe($table->teachername);
+        }
 
-	/**
-	 * Prepare and sanitise the table prior to saving.
-	 *
-	 * @param   CwmteacherTable  $table  A reference to a JTable object.
-	 *
-	 * @return  void
-	 *
-	 * @since    1.6
-	 */
-	protected function prepareTable($table): void
-	{
-		$table->teachername = htmlspecialchars_decode($table->teachername, ENT_QUOTES);
-		$table->alias       = ApplicationHelper::stringURLSafe($table->alias);
+        if (empty($table->id)) {
+            // Set ordering to the last item if not set
+            if (empty($table->ordering)) {
+                $db    = Factory::getContainer()->get('DatabaseDriver');
+                $query = $db->getQuery(true);
+                $query->select('MAX(ordering)')->from('#__bsms_teachers');
+                $db->setQuery($query);
+                $max = $db->loadResult();
 
-		if (empty($table->alias))
-		{
-			$table->alias = ApplicationHelper::stringURLSafe($table->teachername);
-		}
+                $table->ordering = $max + 1;
+            }
+        }
+    }
 
-		if (empty($table->id))
-		{
-			// Set ordering to the last item if not set
-			if (empty($table->ordering))
-			{
-				$db = Factory::getContainer()->get('DatabaseDriver');
-				$query = $db->getQuery(true);
-				$query->select('MAX(ordering)')->from('#__bsms_teachers');
-				$db->setQuery($query);
-				$max = $db->loadResult();
-
-				$table->ordering = $max + 1;
-			}
-		}
-	}
-
-	/**
-	 * Custom clean the cache of com_proclaim and proclaim modules
-	 *
-	 * @param   string   $group      The cache group
-	 * @param   integer  $client_id  The ID of the client
-	 *
-	 * @return  void
-	 *
-	 * @since    1.6
-	 */
-	protected function cleanCache($group = null, $client_id = 0): void
-	{
-		parent::cleanCache('com_proclaim');
-		parent::cleanCache('mod_proclaim');
-	}
+    /**
+     * Custom clean the cache of com_proclaim and proclaim modules
+     *
+     * @param   string   $group      The cache group
+     * @param   integer  $client_id  The ID of the client
+     *
+     * @return  void
+     *
+     * @since    1.6
+     */
+    protected function cleanCache($group = null, $client_id = 0): void
+    {
+        parent::cleanCache('com_proclaim');
+        parent::cleanCache('mod_proclaim');
+    }
 }

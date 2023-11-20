@@ -10,6 +10,7 @@
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\MVC\Model\AdminModel;
@@ -22,96 +23,94 @@ use Joomla\CMS\Versioning\VersionableModelTrait;
  */
 class CwmarchiveModel extends AdminModel
 {
-	use VersionableModelTrait;
+    use VersionableModelTrait;
 
-	/**
-	 * @var        string    The prefix to use with controller messages.
-	 * @since    1.6
-	 */
-	protected $text_prefix = 'com_proclaim';
+    /**
+     * @var        string    The prefix to use with controller messages.
+     * @since    1.6
+     */
+    protected $text_prefix = 'com_proclaim';
 
-	/**
-	 * Gets the form from the XML file.
-	 *
-	 * @param   array    $data      Data for the form.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
-	 *
-	 * @return  mixed  A JForm object on success, false on failure
-	 *
-	 * @since 7.0
-	 */
-	public function getForm($data = array(), $loadData = true)
-	{
-		// Get the form.
-		$form = $this->loadForm('com_proclaim.archive', 'archive', array('control' => 'jform', 'load_data' => $loadData));
+    /**
+     * Gets the form from the XML file.
+     *
+     * @param   array    $data      Data for the form.
+     * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+     *
+     * @return  mixed  A JForm object on success, false on failure
+     *
+     * @since 7.0
+     */
+    public function getForm($data = array(), $loadData = true)
+    {
+        // Get the form.
+        $form = $this->loadForm('com_proclaim.archive', 'archive', array('control' => 'jform', 'load_data' => $loadData)
+        );
 
-		if ($form === null)
-		{
-			return false;
-		}
+        if ($form === null) {
+            return false;
+        }
 
-		return $form;
-	}
+        return $form;
+    }
 
-	/**
-	 * Do Archive of Sermons and Media
-	 *
-	 * @return string
-	 *
-	 * @since  9.0.1
-	 */
-	public function doArchive()
-	{
-		$db   = Factory::getContainer()->get('DatabaseDriver');
-		$query = $db->getQuery(true);
-		$studies = 0;
-		$mediafiles = 0;
+    /**
+     * Do Archive of Sermons and Media
+     *
+     * @return string
+     *
+     * @since  9.0.1
+     */
+    public function doArchive()
+    {
+        $db         = Factory::getContainer()->get('DatabaseDriver');
+        $query      = $db->getQuery(true);
+        $studies    = 0;
+        $mediafiles = 0;
 
-		$data = Factory::getApplication()->input->get('jform', array(), 'array');
+        $data = Factory::getApplication()->input->get('jform', array(), 'array');
 
-		// Used this field to show how long back to archive.
-		$timeframe = (int) $data['timeframe'];
+        // Used this field to show how long back to archive.
+        $timeframe = (int)$data['timeframe'];
 
-		// Use this to field (year, month, day)
-		$swich = $data['swich'];
+        // Use this to field (year, month, day)
+        $swich = $data['swich'];
 
-		// Fields to update.
-		$fields = array(
-			$db->qn('published') . ' =' . $db->q('2')
-		);
+        // Fields to update.
+        $fields = array(
+            $db->qn('published') . ' =' . $db->q('2')
+        );
 
-		// Conditions for which records should be updated.
-		$conditions = array(
-			$db->qn('studydate') . ' <= NOW() - INTERVAL ' . $timeframe . ' ' . strtoupper($swich)
-		);
+        // Conditions for which records should be updated.
+        $conditions = array(
+            $db->qn('studydate') . ' <= NOW() - INTERVAL ' . $timeframe . ' ' . strtoupper($swich)
+        );
 
-		$query->update($db->quoteName('#__bsms_studies'))->set($fields)->where($conditions);
+        $query->update($db->quoteName('#__bsms_studies'))->set($fields)->where($conditions);
 
-		$db->setQuery($query);
+        $db->setQuery($query);
 
-		if ($db->execute())
-		{
-			$studies = $db->getAffectedRows();
-		}
+        if ($db->execute()) {
+            $studies = $db->getAffectedRows();
+        }
 
-		$query = $db->getQuery(true);
+        $query = $db->getQuery(true);
 
-		// Conditions for which records should be updated.
-		$conditions = array(
-			$db->qn('createdate') . ' <= NOW() - INTERVAL ' . $timeframe . ' ' . strtoupper($swich)
-		);
+        // Conditions for which records should be updated.
+        $conditions = array(
+            $db->qn('createdate') . ' <= NOW() - INTERVAL ' . $timeframe . ' ' . strtoupper($swich)
+        );
 
-		$query->update($db->quoteName('#__bsms_mediafiles'))->set($fields)->where($conditions);
+        $query->update($db->quoteName('#__bsms_mediafiles'))->set($fields)->where($conditions);
 
-		$db->setQuery($query);
+        $db->setQuery($query);
 
-		if ($db->execute())
-		{
-			$mediafiles = $db->getAffectedRows();
-		}
+        if ($db->execute()) {
+            $mediafiles = $db->getAffectedRows();
+        }
 
-		$frame = $timeframe . ' ' . $swich . 's';
+        $frame = $timeframe . ' ' . $swich . 's';
 
-		return JText::sprintf('JBS_ARCHIVE_DB_CHANGE', $studies, $mediafiles, $frame);
-	}
+        return JText::sprintf('JBS_ARCHIVE_DB_CHANGE', $studies, $mediafiles, $frame);
+    }
 }

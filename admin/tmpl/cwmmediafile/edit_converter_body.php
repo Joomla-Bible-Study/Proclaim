@@ -14,18 +14,18 @@
 
 ?>
 <div class="row-fluid">
-	<div class="control-group">
-		<div class="controls">
-			<input name="size_converter" type=text ID="Text1" onChange="decOnly(this);" size=5>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="controls">
-			<select name="sel" ID="Select1">
-				<option value="KB">KB</option>
-				<option value="MB" selected>MB</option>
-				<option value="GB">GB</option>
-			</select>
-		</div>
-	</div>
+    <div class="control-group">
+        <div class="controls">
+            <input name="size_converter" type=text ID="Text1" onChange="decOnly(this);" size=5>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <select name="sel" ID="Select1">
+                <option value="KB">KB</option>
+                <option value="MB" selected>MB</option>
+                <option value="GB">GB</option>
+            </select>
+        </div>
+    </div>
 </div>

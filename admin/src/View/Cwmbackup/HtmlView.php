@@ -21,6 +21,7 @@ use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
+
 use function defined;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -35,166 +36,158 @@ defined('_JEXEC') or die;
  */
 class HtmlView extends BaseHtmlView
 {
-	/** @var Registry CanDo function
-	 *
-	 * @since 9.0.0
-	 */
-	public Registry $canDo;
+    /** @var Registry CanDo function
+     *
+     * @since 9.0.0
+     */
+    public Registry $canDo;
 
-	/** @var string Temp Destination
-	 *
-	 * @since 9.0.0
-	 */
-	public string $tmp_dest = '';
+    /** @var string Temp Destination
+     *
+     * @since 9.0.0
+     */
+    public string $tmp_dest = '';
 
-	/** @var array Lists
-	 *
-	 * @since 9.0.0
-	 */
-	public array $lists;
+    /** @var array Lists
+     *
+     * @since 9.0.0
+     */
+    public array $lists;
 
-	/** @var array Form
-	 *
-	 * @since 9.0.0
-	 */
-	protected $form;
+    /** @var array Form
+     *
+     * @since 9.0.0
+     */
+    protected $form;
 
-	/** @var array Item
-	 *
-	 * @since 9.0.0
-	 */
-	protected $item;
+    /** @var array Item
+     *
+     * @since 9.0.0
+     */
+    protected $item;
 
-	/** @var array State
-	 *
-	 * @since 9.0.0
-	 */
-	protected $state;
+    /** @var array State
+     *
+     * @since 9.0.0
+     */
+    protected $state;
 
-	/**
-	 * Execute and display a template script.
-	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
-	 * @return  void
-	 *
-	 * @throws  \Exception
-	 * @see     \ViewLegacy::loadTemplate()
-	 * @since   3.0
-	 */
-	public function display($tpl = null): void
-	{
-		$model = new CwmadminModel;
-		$this->setModel($model, true);
+    /**
+     * Execute and display a template script.
+     *
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @see     \ViewLegacy::loadTemplate()
+     * @since   3.0
+     */
+    public function display($tpl = null): void
+    {
+        $model = new CwmadminModel;
+        $this->setModel($model, true);
 
-		// Get data from the model
-		$this->form  = $this->get("Form");
-		$this->item  = $this->get("Item");
-		$this->state = $this->get("State");
-		$this->canDo = ContentHelper::getActions('com_proclaim');
+        // Get data from the model
+        $this->form = $this->get("Form");
+        $this->item = $this->get("Item");
+        $this->state = $this->get("State");
+        $this->canDo = ContentHelper::getActions('com_proclaim');
 
-		// Get the list of backup files
-		$path = JPATH_SITE . '/media/com_proclaim/backup';
+        // Get the list of backup files
+        $path = JPATH_SITE . '/media/com_proclaim/backup';
 
-		if (is_dir($path))
-		{
-			if (!$files = Folder::files($path, '.sql'))
-			{
-				$types[] = HtmlHelper::_('select.option', '0', Text::_('JBS_CMN_NO_FILES_TO_DISPLAY'));
-			}
-			else
-			{
-				asort($files, SORT_STRING);
-				$fileList = [];
+        if (is_dir($path)) {
+            if (!$files = Folder::files($path, '.sql')) {
+                $types[] = HtmlHelper::_('select.option', '0', Text::_('JBS_CMN_NO_FILES_TO_DISPLAY'));
+            } else {
+                asort($files, SORT_STRING);
+                $fileList = [];
 
-				foreach ($files as $value)
-				{
-					$fileListTemp = array('value' => $value, 'text' => $value);
-					$fileList[]   = $fileListTemp;
-				}
+                foreach ($files as $value) {
+                    $fileListTemp = array('value' => $value, 'text' => $value);
+                    $fileList[]   = $fileListTemp;
+                }
 
-				$types[]                      = HtmlHelper::_('select.option', '0', Text::_('JBS_IBM_SELECT_DB'));
-				$types = array_merge($types, $fileList);
-			}
-		}
-		else
-		{
-			$types[] = HtmlHelper::_('select.option', '0', Text::_('JBS_CMN_NO_FILES_TO_DISPLAY'));
-		}
+                $types[] = HtmlHelper::_('select.option', '0', Text::_('JBS_IBM_SELECT_DB'));
+                $types   = array_merge($types, $fileList);
+            }
+        } else {
+            $types[] = HtmlHelper::_('select.option', '0', Text::_('JBS_CMN_NO_FILES_TO_DISPLAY'));
+        }
 
-		$this->lists['backedupfiles'] = HtmlHelper::_(
-			'select.genericlist',
-			$types,
-			'backuprestore',
-			'class="form-select valid form-control-success" size="1" ',
-			'value',
-			'text',
-			''
-		);
+        $this->lists['backedupfiles'] = HtmlHelper::_(
+            'select.genericlist',
+            $types,
+            'backuprestore',
+            'class="form-select valid form-control-success" size="1" ',
+            'value',
+            'text',
+            ''
+        );
 
-		$this->setLayout('edit');
+        $this->setLayout('edit');
 
-		// Set the toolbar
-		$this->addToolbar();
+        // Set the toolbar
+        $this->addToolbar();
 
-		$this->setDocumentTitle(Text::_('JBS_TITLE_ADMINISTRATION'));
+        $this->setDocumentTitle(Text::_('JBS_TITLE_ADMINISTRATION'));
 
-		// Display the template
-		parent::display($tpl);
-	}
+        // Display the template
+        parent::display($tpl);
+    }
 
-	/**
-	 * Add Toolbar
-	 *
-	 * @return void
-	 *
-	 * @throws \Exception
-	 * @since 7.0.0
-	 */
-	protected function addToolbar(): void
-	{
-		Factory::getApplication()->input->set('hidemainmenu', true);
+    /**
+     * Add Toolbar
+     *
+     * @return void
+     *
+     * @throws \Exception
+     * @since 7.0.0
+     */
+    protected function addToolbar(): void
+    {
+        Factory::getApplication()->input->set('hidemainmenu', true);
 
-		ToolbarHelper::title(Text::_('JBS_CMN_ADMINISTRATION'), 'administration');
-		ToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
-		ToolbarHelper::divider();
-		ToolbarHelper::help('proclaim', true);
-	}
+        ToolbarHelper::title(Text::_('JBS_CMN_ADMINISTRATION'), 'administration');
+        ToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
+        ToolbarHelper::divider();
+        ToolbarHelper::help('proclaim', true);
+    }
 
-	/**
-	 * Added for SermonSpeaker and PreachIt.
-	 *
-	 * @param   string  $component  The Component it is coming from
-	 *
-	 * @return boolean
-	 *
-	 * @since 7.1.0
-	 */
-	protected function versionXML(string $component): bool
-	{
-		switch ($component)
-		{
-			case 'sermonspeaker':
-				$data = Installer::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_sermonspeaker/sermonspeaker.xml');
+    /**
+     * Added for SermonSpeaker and PreachIt.
+     *
+     * @param   string  $component  The Component it is coming from
+     *
+     * @return boolean
+     *
+     * @since 7.1.0
+     */
+    protected function versionXML(string $component): bool
+    {
+        switch ($component) {
+            case 'sermonspeaker':
+                $data = Installer::parseXMLInstallFile(
+                    JPATH_ADMINISTRATOR . '/components/com_sermonspeaker/sermonspeaker.xml'
+                );
 
-				if ($data)
-				{
-					return $data['version'];
-				}
+                if ($data) {
+                    return $data['version'];
+                }
 
-				return false;
+                return false;
 
-			case 'preachit':
-				$data = Installer::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_preachit/preachit.xml');
+            case 'preachit':
+                $data = Installer::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_preachit/preachit.xml');
 
-				if ($data)
-				{
-					return $data['version'];
-				}
+                if ($data) {
+                    return $data['version'];
+                }
 
-				return false;
-		}
+                return false;
+        }
 
-		return false;
-	}
+        return false;
+    }
 }

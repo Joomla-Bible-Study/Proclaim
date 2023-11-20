@@ -22,20 +22,20 @@ use Joomla\DI\ServiceProviderInterface;
  * @since  4.2.0
  */
 return new class () implements ServiceProviderInterface {
-	/**
-	 * Registers the service provider with a DI container.
-	 *
-	 * @param   Container  $container  The DI container.
-	 *
-	 * @return  void
-	 *
-	 * @since   4.2.0
-	 */
-	public function register(Container $container): void
-	{
-		$container->registerServiceProvider(new ModuleDispatcherFactory('\\CWM\\Module\\Proclaim'));
-		$container->registerServiceProvider(new HelperFactory('\\CWM\\Module\\Proclaim\\Site\\Helper'));
+    /**
+     * Registers the service provider with a DI container.
+     *
+     * @param   Container  $container  The DI container.
+     *
+     * @return  void
+     *
+     * @since   4.2.0
+     */
+    public function register(Container $container): void
+    {
+        $container->registerServiceProvider(new ModuleDispatcherFactory('\\CWM\\Module\\Proclaim'));
+        $container->registerServiceProvider(new HelperFactory('\\CWM\\Module\\Proclaim\\Site\\Helper'));
 
-		$container->registerServiceProvider(new Module);
-	}
+        $container->registerServiceProvider(new Module);
+    }
 };

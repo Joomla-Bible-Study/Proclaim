@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-	<fieldset>
-		<field name="server" type="sql" extension="com_proclaim" label="JBS_CMN_SERVER"
-		       description="JBS_MED_SERVER_DESC" class="inputbox" default="-1"
-		       query="SELECT id, server_name FROM #__bsms_servers WHERE published=1 ORDER BY server_name ASC"
-		       key_field="id" value_field="server_name">
-			<option value="-1">JBS_CMN_SELECT_SERVER</option>
-		</field>
-	</fieldset>
+    <fieldset>
+        <field name="server" type="sql" extension="com_proclaim" label="JBS_CMN_SERVER"
+               description="JBS_MED_SERVER_DESC" class="inputbox" default="-1"
+               query="SELECT id, server_name FROM #__bsms_servers WHERE published=1 ORDER BY server_name ASC"
+               key_field="id" value_field="server_name">
+            <option value="-1">JBS_CMN_SELECT_SERVER</option>
+        </field>
+    </fieldset>
 </form>

@@ -12,11 +12,8 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-if ($this->params->get('teachertemplate'))
-{
-	echo $this->loadTemplate($this->params->get('teachertemplate'));
-}
-else
-{
-	echo $this->loadTemplate('main');
+if ($this->params->get('teachertemplate')) {
+    echo $this->loadTemplate($this->params->get('teachertemplate'));
+} else {
+    echo $this->loadTemplate('main');
 }

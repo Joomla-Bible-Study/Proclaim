@@ -7,10 +7,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Site\Model;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Model\CwmserversModel;
@@ -23,5 +25,5 @@ use CWM\Component\Proclaim\Administrator\Model\CwmserversModel;
  */
 class CwmserverslistModel extends CwmserversModel
 {
-	// Holder.
+    // Holder.
 }

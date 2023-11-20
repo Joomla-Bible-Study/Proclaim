@@ -26,27 +26,27 @@ use Joomla\CMS\Response\JsonResponse;
  */
 class CwmserversController extends AdminController
 {
-	/**
-	 * Method to get the JSON-encoded amount of published articles
-	 *
-	 * @return  void
-	 *
-	 * @since   4.0.0
-	 */
-	public function getQuickiconContent()
-	{
-		$model = $this->getModel('cwmservers');
+    /**
+     * Method to get the JSON-encoded amount of published articles
+     *
+     * @return  void
+     *
+     * @since   4.0.0
+     */
+    public function getQuickiconContent()
+    {
+        $model = $this->getModel('cwmservers');
 
-		$model->setState('filter.published', 1);
+        $model->setState('filter.published', 1);
 
-		$amount = (int) $model->getTotal();
+        $amount = (int)$model->getTotal();
 
-		$result = [];
+        $result = [];
 
-		$result['amount'] = $amount;
-		$result['sronly'] = Text::plural('COM_CONTENT_N_QUICKICON_SRONLY', $amount);
-		$result['name'] = Text::plural('COM_CONTENT_N_QUICKICON', $amount);
+        $result['amount'] = $amount;
+        $result['sronly'] = Text::plural('COM_CONTENT_N_QUICKICON_SRONLY', $amount);
+        $result['name']   = Text::plural('COM_CONTENT_N_QUICKICON', $amount);
 
-		echo new JsonResponse($result);
-	}
+        echo new JsonResponse($result);
+    }
 }

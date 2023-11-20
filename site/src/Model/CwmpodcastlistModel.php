@@ -7,19 +7,20 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Site\Model;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\MVC\Model\ListModel;
-use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
-use Joomla\CMS\Language\Multilanguage;
+use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\TagsHelper;
+use Joomla\CMS\Language\Multilanguage;
+use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseQuery;
-use SimplePie\Registry;
 
 /**
  * Model class for MessageList
@@ -29,232 +30,216 @@ use SimplePie\Registry;
  */
 class CwmpodcastlistModel extends ListModel
 {
-	/**
-	 * Method to auto-populate the model state.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @param   string  $ordering   An optional ordering field.
-	 * @param   string  $direction  An optional direction (asc|desc).
-	 *
-	 * @return    void
-	 *
-	 * @throws \Exception
-	 * @since    1.6
-	 */
-	protected function populateState($ordering = null, $direction = null): void
-	{
-		$app = Factory::getApplication();
+    /**
+     * Method to get a list of sermons.
+     * Overridden to add a check for access levels.
+     *
+     * @return  mixed  An array of data items on success, false on failure.
+     *
+     * @throws \Exception
+     * @since   9.0.0
+     */
+    public function getItems()
+    {
+        $items  = parent::getItems();
+        $user   = Factory::getApplication()->getSession()->get('user');
+        $userId = $user->get('id');
+        $guest  = $user->get('guest');
+        $groups = $user->getAuthorisedViewLevels();
 
-		// List state information
-		$value = $app->input->get('limit', $app->get('list_limit', 0), 'uint');
-		$this->setState('list.limit', $value);
+        // Convert the parameter fields into objects.
+        foreach ($items as &$item) {
+            $item->params = clone $this->getState('params');
 
-		$value = $app->input->get('limitstart', 0, 'uint');
-		$this->setState('list.start', $value);
+            // Compute the asset access permissions.
+            // Technically guest could edit an article, but lets not check that to improve performance a little.
+            if (!$guest) {
+                $asset = 'com_proclaim.series.' . $item->id;
 
-		$value = $app->input->get('filter_tag', 0, 'uint');
-		$this->setState('filter.tag', $value);
+                // Check general edit permission first.
+                if ($user->authorise('core.edit', $asset)) {
+                    $item->params->set('access-edit', true);
+                } // Now check if edit.own is available.
+                elseif (!empty($userId) && $user->authorise('core.edit.own', $asset)) {
+                    // Check for a valid user and that they are the owner.
+                    if ($userId == $item->created_by) {
+                        $item->params->set('access-edit', true);
+                    }
+                }
+            }
 
-		$value = $app->input->get('filter_pc_show', 1, 'uint');
-		$this->setState('filter.pc_show', $value);
+            $access = $this->getState('filter.access');
 
-		$orderCol = $app->input->get('filter_order', 'a.ordering');
+            if ($access) {
+                // If the access filter has been set, we already have only the articles this user can view.
+                $item->params->set('access-view', true);
+            } else {
+                // If no access filter is set, the layout takes some responsibility for display of limited information.
+                if ($item->catid == 0 || $item->category_access === null) {
+                    $item->params->set('access-view', in_array($item->access, $groups));
+                } else {
+                    $item->params->set(
+                        'access-view',
+                        in_array($item->access, $groups) && in_array($item->category_access, $groups)
+                    );
+                }
+            }
 
-		if (!in_array($orderCol, $this->filter_fields, true))
-		{
-			$orderCol = 'a.id';
-		}
+            // Get the tags
+            if ($item->params->get('show_tags')) {
+                $item->tags = new TagsHelper;
+                $item->tags->getItemTags('com_proclaim.series', $item->id);
+            }
+        }
 
-		$this->setState('list.ordering', $orderCol);
+        return $items;
+    }
 
-		$listOrder = $app->input->get('filter_order_Dir', 'ASC');
+    /**
+     * Method to auto-populate the model state.
+     *
+     * Note. Calling getState in this method will result in recursion.
+     *
+     * @param   string  $ordering   An optional ordering field.
+     * @param   string  $direction  An optional direction (asc|desc).
+     *
+     * @return    void
+     *
+     * @throws \Exception
+     * @since    1.6
+     */
+    protected function populateState($ordering = null, $direction = null): void
+    {
+        $app = Factory::getApplication();
 
-		if (!in_array(strtoupper($listOrder), array('ASC', 'DESC', '')))
-		{
-			$listOrder = 'ASC';
-		}
+        // List state information
+        $value = $app->input->get('limit', $app->get('list_limit', 0), 'uint');
+        $this->setState('list.limit', $value);
 
-		$this->setState('list.direction', $listOrder);
+        $value = $app->input->get('limitstart', 0, 'uint');
+        $this->setState('list.start', $value);
 
-		$params = $app->getParams();
+        $value = $app->input->get('filter_tag', 0, 'uint');
+        $this->setState('filter.tag', $value);
 
-		$user = $app->getSession()->get('user');
+        $value = $app->input->get('filter_pc_show', 1, 'uint');
+        $this->setState('filter.pc_show', $value);
 
-		if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise('core.edit', 'com_proclaim')))
-		{
-			// Filter on published for those who do not have edit or edit.state rights.
-			$this->setState('filter.published', 1);
-		}
+        $orderCol = $app->input->get('filter_order', 'a.ordering');
 
-		$this->setState('filter.language', Multilanguage::isEnabled());
+        if (!in_array($orderCol, $this->filter_fields, true)) {
+            $orderCol = 'a.id';
+        }
 
-		// Process show_noauth parameter
-		if (!$params->get('show_noauth'))
-		{
-			$this->setState('filter.access', true);
-		}
-		else
-		{
-			$this->setState('filter.access', false);
-		}
+        $this->setState('list.ordering', $orderCol);
 
-		$template = Cwmparams::getTemplateparams();
-		$admin    = Cwmparams::getAdmin();
+        $listOrder = $app->input->get('filter_order_Dir', 'ASC');
 
-		$template->params->merge($params);
-		$template->params->merge($admin->params);
-		$params = $template->params;
+        if (!in_array(strtoupper($listOrder), array('ASC', 'DESC', ''))) {
+            $listOrder = 'ASC';
+        }
 
-		$t = (int) $params->get('messageid');
+        $this->setState('list.direction', $listOrder);
 
-		if (!$t)
-		{
-			$t     = $app->input->get('t', 1, 'int');
-		}
+        $params = $app->getParams();
 
-		$template->id = $t;
+        $user = $app->getSession()->get('user');
 
-		$this->setState('template', $template);
-		$this->setState('params', $params);
-	}
+        if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
+                'core.edit',
+                'com_proclaim'
+            ))) {
+            // Filter on published for those who do not have edit or edit.state rights.
+            $this->setState('filter.published', 1);
+        }
 
-	/**
-	 * Build an SQL query to load the list data
-	 *
-	 * @return  DatabaseQuery  A DatabaseQuery object to retrieve the data set.
-	 *
-	 * @throws \Exception
-	 * @since   7.0
-	 */
-	protected function getListQuery(): DatabaseQuery
-	{
-		// Get the current user for authorization checks
-		$user = Factory::getApplication()->getSession()->get('user');
+        $this->setState('filter.language', Multilanguage::isEnabled());
 
-		// Create a new query object.
-		$db = Factory::getContainer()->get('DatabaseDriver');
-		$query = $db->getQuery(true);
+        // Process show_noauth parameter
+        if (!$params->get('show_noauth')) {
+            $this->setState('filter.access', true);
+        } else {
+            $this->setState('filter.access', false);
+        }
 
-		$query->select(
-			$this->getState(
-				'list.select', '*'
-			)
-		);
+        $template = Cwmparams::getTemplateparams();
+        $admin    = Cwmparams::getAdmin();
 
-		// Filter by state
-		$state = $this->getState('filter.published');
+        $template->params->merge($params);
+        $template->params->merge($admin->params);
+        $params = $template->params;
 
-		if (is_numeric($state))
-		{
-			$query->where('a.published = ' . (int) $state);
-		}
-		else
-		{
-			$query->where('(a.published IN (0,1,2))');
-		}
+        $t = (int)$params->get('messageid');
 
-		// Filter by access level.
-		if ($access = $this->getState('filter.access'))
-		{
-			$groups = implode(',', $user->getAuthorisedViewLevels());
-			$query->where('a.access IN (' . $groups . ')');
-		}
+        if (!$t) {
+            $t = $app->input->get('t', 1, 'int');
+        }
 
-		$pc_show = $this->getState('filter.pc_show');
+        $template->id = $t;
 
-		if (is_numeric($pc_show))
-		{
-			$query->where('pc_show = ' . $pc_show);
-		}
+        $this->setState('template', $template);
+        $this->setState('params', $params);
+    }
 
-		// Filter by language
-		if ($this->getState('filter.language'))
-		{
-			$query->where('a.language in (' . $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
-		}
+    /**
+     * Build an SQL query to load the list data
+     *
+     * @return  DatabaseQuery  A DatabaseQuery object to retrieve the data set.
+     *
+     * @throws \Exception
+     * @since   7.0
+     */
+    protected function getListQuery(): DatabaseQuery
+    {
+        // Get the current user for authorization checks
+        $user = Factory::getApplication()->getSession()->get('user');
 
-		$query->from('#__bsms_series as a');
+        // Create a new query object.
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true);
 
-		// Add the list ordering clause.
-		$query->order($this->getState('list.ordering', 'a.id') . ' ' . $this->getState('list.direction', 'ASC'));
+        $query->select(
+            $this->getState(
+                'list.select',
+                '*'
+            )
+        );
 
-		return $query;
-	}
+        // Filter by state
+        $state = $this->getState('filter.published');
 
-	/**
-	 * Method to get a list of sermons.
-	 * Overridden to add a check for access levels.
-	 *
-	 * @return  mixed  An array of data items on success, false on failure.
-	 *
-	 * @throws \Exception
-	 * @since   9.0.0
-	 */
-	public function getItems()
-	{
-		$items = parent::getItems();
-		$user = Factory::getApplication()->getSession()->get('user');
-		$userId = $user->get('id');
-		$guest = $user->get('guest');
-		$groups = $user->getAuthorisedViewLevels();
+        if (is_numeric($state)) {
+            $query->where('a.published = ' . (int)$state);
+        } else {
+            $query->where('(a.published IN (0,1,2))');
+        }
 
-		// Convert the parameter fields into objects.
-		foreach ($items as &$item)
-		{
-			$item->params = clone $this->getState('params');
+        // Filter by access level.
+        if ($access = $this->getState('filter.access')) {
+            $groups = implode(',', $user->getAuthorisedViewLevels());
+            $query->where('a.access IN (' . $groups . ')');
+        }
 
-			// Compute the asset access permissions.
-			// Technically guest could edit an article, but lets not check that to improve performance a little.
-			if (!$guest)
-			{
-				$asset = 'com_proclaim.series.' . $item->id;
+        $pc_show = $this->getState('filter.pc_show');
 
-				// Check general edit permission first.
-				if ($user->authorise('core.edit', $asset))
-				{
-					$item->params->set('access-edit', true);
-				}
+        if (is_numeric($pc_show)) {
+            $query->where('pc_show = ' . $pc_show);
+        }
 
-				// Now check if edit.own is available.
-				elseif (!empty($userId) && $user->authorise('core.edit.own', $asset))
-				{
-					// Check for a valid user and that they are the owner.
-					if ($userId == $item->created_by)
-					{
-						$item->params->set('access-edit', true);
-					}
-				}
-			}
+        // Filter by language
+        if ($this->getState('filter.language')) {
+            $query->where(
+                'a.language in (' . $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote(
+                    '*'
+                ) . ')'
+            );
+        }
 
-			$access = $this->getState('filter.access');
+        $query->from('#__bsms_series as a');
 
-			if ($access)
-			{
-				// If the access filter has been set, we already have only the articles this user can view.
-				$item->params->set('access-view', true);
-			}
-			else
-			{
-				// If no access filter is set, the layout takes some responsibility for display of limited information.
-				if ($item->catid == 0 || $item->category_access === null)
-				{
-					$item->params->set('access-view', in_array($item->access, $groups));
-				}
-				else
-				{
-					$item->params->set('access-view', in_array($item->access, $groups) && in_array($item->category_access, $groups));
-				}
-			}
+        // Add the list ordering clause.
+        $query->order($this->getState('list.ordering', 'a.id') . ' ' . $this->getState('list.direction', 'ASC'));
 
-			// Get the tags
-			if ($item->params->get('show_tags'))
-			{
-				$item->tags = new TagsHelper;
-				$item->tags->getItemTags('com_proclaim.series', $item->id);
-			}
-		}
-
-		return $items;
-	}
+        return $query;
+    }
 }

@@ -17,7 +17,7 @@
                    description="JBS_CMN_FILTERS_DESC"
                    multiple="true"
                    default="-1"
-                    >
+            >
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
             <field name="mseries_id"

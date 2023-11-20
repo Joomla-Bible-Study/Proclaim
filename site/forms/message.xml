@@ -31,10 +31,11 @@
             <option value="*">JALL</option>
         </field>
 
-        <field name="download_id" type="MediaFile" label="JBS_STY_DOWNLOAD_LINK" description="JBS_STY_DOWNLOAD_LINK_DESC" default="0"
-                >
+        <field name="download_id" type="MediaFile" label="JBS_STY_DOWNLOAD_LINK"
+               description="JBS_STY_DOWNLOAD_LINK_DESC" default="0"
+        >
             <option value="-1">JBS_STY_SELECT_DOWNLOAD_LINK</option>
-                </field>
+        </field>
         <field name="studydate" type="calendar" label="JBS_CMN_STUDY_DATE"
                description="JBS_STY_CREATE_DATE_DESC" translateformat="true"
                showtime="true" filter="user_utc" required="true"/>
@@ -53,10 +54,10 @@
                description="JFIELD_ALIAS_DESC"
                class="inputbox"
                size="30"
-                />
+        />
 
         <field name="studyintro" type="editor" class="inputbox" label="JBS_CMN_DESCRIPTION"
-               filter=CwmproclaimHelper::filterText" buttons="true"/>
+               filter= CwmproclaimHelper: :filterText" buttons="true"/>
 
         <field name="studynumber" type="text" class="inputbox" size="15" label="JBS_CMN_STUDYNUMBER"/>
 
@@ -126,7 +127,7 @@
         <field name="thumbnailm" type="hidden"/>
         <field name="image" type="media" label="JBS_STY_STUDY_IMAGE" class="span12" accept="image/*"/>
         <field name="studytext" type="editor" class="inputbox" label="JBS_STY_STUDY_TEXT"
-               filter=CwmproclaimHelper::filterText" buttons="true"/>
+               filter= CwmproclaimHelper: :filterText" buttons="true"/>
         <field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL"
                translate_label="false" class="inputbox" filter="rules" component="com_proclaim"
                section="message" validate="rules"/>
@@ -134,36 +135,36 @@
             <field name="created_by" type="user"
                    label="JGLOBAL_FIELD_CREATED_BY_LABEL" description=""/>
 
-            <field name="user_name" type="text"
-                   label="JGLOBAL_FIELD_CREATED_BY_ALIAS_LABEL" description=""
-                   class="inputbox" size="20"/>
+        <field name="user_name" type="text"
+               label="JGLOBAL_FIELD_CREATED_BY_ALIAS_LABEL" description=""
+               class="inputbox" size="20"/>
 
-            <field name="modified" type="calendar" class="readonly"
-                   label="JGLOBAL_FIELD_MODIFIED_LABEL" description=""
-                   readonly="true" translateformat="true" showtime="true" filter="user_utc"/>
+        <field name="modified" type="calendar" class="readonly"
+               label="JGLOBAL_FIELD_MODIFIED_LABEL" description=""
+               readonly="true" translateformat="true" showtime="true" filter="user_utc"/>
 
-            <field name="modified_by" type="user"
-                   label="JGLOBAL_FIELD_MODIFIED_BY_LABEL"
-                   class="readonly"
-                   readonly="true"
-                   filter="unset"
-                    />
+        <field name="modified_by" type="user"
+               label="JGLOBAL_FIELD_MODIFIED_BY_LABEL"
+               class="readonly"
+               readonly="true"
+               filter="unset"
+        />
 
-            <field name="checked_out" type="hidden" filter="unset"/>
+        <field name="checked_out" type="hidden" filter="unset"/>
 
-            <field name="checked_out_time" type="hidden" filter="unset"/>
+        <field name="checked_out_time" type="hidden" filter="unset"/>
 
-            <field name="publish_up" type="calendar"
-                   label="JGLOBAL_FIELD_PUBLISH_UP_LABEL" description="JGLOBAL_FIELD_PUBLISH_UP_DESC"
-                   translateformat="true"
-                   showtime="true"
-                   filter="user_utc"/>
+        <field name="publish_up" type="calendar"
+               label="JGLOBAL_FIELD_PUBLISH_UP_LABEL" description="JGLOBAL_FIELD_PUBLISH_UP_DESC"
+               translateformat="true"
+               showtime="true"
+               filter="user_utc"/>
 
-            <field name="publish_down" type="calendar"
-                   label="JGLOBAL_FIELD_PUBLISH_DOWN_LABEL" description="JGLOBAL_FIELD_PUBLISH_DOWN_DESC"
-                   translateformat="true"
-                   showtime="true"
-                   filter="user_utc"/>
+        <field name="publish_down" type="calendar"
+               label="JGLOBAL_FIELD_PUBLISH_DOWN_LABEL" description="JGLOBAL_FIELD_PUBLISH_DOWN_DESC"
+               translateformat="true"
+               showtime="true"
+               filter="user_utc"/>
 
         <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL"
                description="JFIELD_ACCESS_DESC" class="inputbox span12 small"/>

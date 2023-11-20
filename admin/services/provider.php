@@ -8,7 +8,8 @@
  */
 
 // phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
+defined('_JEXEC') or die;
+
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Extension\ProclaimComponent;
@@ -30,32 +31,32 @@ use Joomla\DI\ServiceProviderInterface;
  * @since  4.0.0
  */
 return new class implements ServiceProviderInterface {
-	/**
-	 * Registers the service provider with a DI container.
-	 *
-	 * @param   Container  $container  The DI container.
-	 *
-	 * @return  void
-	 *
-	 * @since   4.0.0
-	 */
-	public function register(Container $container): void
-	{
-		$container->registerServiceProvider(new CategoryFactory('\\CWM\\Component\\Proclaim'));
-		$container->registerServiceProvider(new MVCFactory('\\CWM\\Component\\Proclaim'));
-		$container->registerServiceProvider(new ComponentDispatcherFactory('\\CWM\\Component\\Proclaim'));
-		$container->registerServiceProvider(new RouterFactory('\\CWM\\Component\\Proclaim'));
-		$container->set(
-			ComponentInterface::class,
-			function (Container $container) {
-				$component = new ProclaimComponent($container->get(ComponentDispatcherFactoryInterface::class));
+    /**
+     * Registers the service provider with a DI container.
+     *
+     * @param   Container  $container  The DI container.
+     *
+     * @return  void
+     *
+     * @since   4.0.0
+     */
+    public function register(Container $container): void
+    {
+        $container->registerServiceProvider(new CategoryFactory('\\CWM\\Component\\Proclaim'));
+        $container->registerServiceProvider(new MVCFactory('\\CWM\\Component\\Proclaim'));
+        $container->registerServiceProvider(new ComponentDispatcherFactory('\\CWM\\Component\\Proclaim'));
+        $container->registerServiceProvider(new RouterFactory('\\CWM\\Component\\Proclaim'));
+        $container->set(
+            ComponentInterface::class,
+            function (Container $container) {
+                $component = new ProclaimComponent($container->get(ComponentDispatcherFactoryInterface::class));
 
-				$component->setRegistry($container->get(Registry::class));
-				$component->setMVCFactory($container->get(MVCFactoryInterface::class));
-				$component->setRouterFactory($container->get(RouterFactoryInterface::class));
+                $component->setRegistry($container->get(Registry::class));
+                $component->setMVCFactory($container->get(MVCFactoryInterface::class));
+                $component->setRouterFactory($container->get(RouterFactoryInterface::class));
 
-				return $component;
-			}
-		);
-	}
+                return $component;
+            }
+        );
+    }
 };

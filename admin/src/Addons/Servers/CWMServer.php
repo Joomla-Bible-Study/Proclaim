@@ -10,6 +10,7 @@
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
@@ -23,136 +24,121 @@ use Joomla\Input\Input;
  */
 abstract class CWMServer
 {
-	/**
-	 * The type of server
-	 *
-	 * @var     string
-	 * @since   9.0.0
-	 */
-	protected string $type = '';
+    /**
+     * @var array
+     *
+     * @since 9.0.0
+     */
+    protected static array $instances = array();
+    /**
+     * The type of server
+     *
+     * @var     string
+     * @since   9.0.0
+     */
+    protected string $type = '';
+    /**
+     * @var     resource    The server connection resource
+     * @since   9.0.0
+     */
+    protected $connection;
+    /**
+     * @var string
+     *
+     * @since 9.0.0
+     */
+    protected string $file;
 
-	/**
-	 * @var     resource    The server connection resource
-	 * @since   9.0.0
-	 */
-	protected $connection;
+    /**
+     * Get a list of available servers
+     *
+     * @return      array   An Array of available servers
+     *
+     * @since       9.0.0
+     */
+    public static function getServers(): array
+    {
+        $servers = array();
 
-	/**
-	 * @var array
-	 *
-	 * @since 9.0.0
-	 */
-	protected static array $instances = array();
+        $types = Folder::folders(__DIR__);
 
-	/**
-	 * @var string
-	 *
-	 * @since 9.0.0
-	 */
-	protected string $file;
+        foreach ($types as $type) {
+            // Derive the class name from the type.
+            $class = 'Cwmserver' . ucfirst(trim($type));
 
-	/**
-	 * Get a list of available servers
-	 *
-	 * @return      array   An Array of available servers
-	 *
-	 * @since       9.0.0
-	 */
-	public static function getServers(): array
-	{
-		$servers = array();
+            if (!class_exists($class)) {
+                $path = __DIR__ . '/' . $type . '.php';
 
-		$types = Folder::folders(__DIR__);
+                // If the file exists register the class
+                if (file_exists($path)) {
+                    JLoader::register($class, $path);
+                } // If it doesn't exist, skip it
+                else {
+                    continue;
+                }
+            }
 
-		foreach ($types as $type)
-		{
-			// Derive the class name from the type.
-			$class = 'Cwmserver' . ucfirst(trim($type));
+            // If the class still doesn't exist we move on to next server type
+            if (!class_exists($class)) {
+                continue;
+            }
 
-			if (!class_exists($class))
-			{
-				$path = __DIR__ . '/' . $type . '.php';
+            // Add server to our list of available servers
+            $servers[] = $type;
+        }
 
-				// If the file exists register the class
-				if (file_exists($path))
-				{
-					JLoader::register($class, $path);
-				}
-				// If it doesn't exist, skip it
-				else
-				{
-					continue;
-				}
-			}
+        return $servers;
+    }
 
-			// If the class still doesn't exist we move on to next server type
-			if (!class_exists($class))
-			{
-				continue;
-			}
+    /**
+     * Instance
+     *
+     * @param   array  $options  Options to be set
+     *
+     * @return mixed
+     *
+     * @throws Exception
+     * @since 9.0.0
+     */
+    public static function getInstance(array $options = array()): mixed
+    {
+        $options['type'] = $options['type'] ?? 'amazons3';
+        $instance        = null;
 
-			// Add server to our list of available servers
-			$servers[] = $type;
-		}
+        // Get the options signature for this server type
+        $signature = md5(serialize($options));
 
-		return $servers;
-	}
+        if (empty(self::$instances[$signature])) {
+            $class = 'Cwmserver' . ucfirst($options['type']);
 
-	/**
-	 * Instance
-	 *
-	 * @param   array  $options  Options to be set
-	 *
-	 * @return mixed
-	 *
-	 * @throws Exception
-	 * @since 9.0.0
-	 */
-	public static function getInstance(array $options = array()): mixed
-	{
-		$options['type'] = $options['type'] ?? 'amazons3';
-		$instance = null;
+            if (!class_exists($class)) {
+                $path = __DIR__ . '/' . $options['type'] . '.php';
 
-		// Get the options signature for this server type
-		$signature = md5(serialize($options));
+                if (file_exists($path)) {
+                    JLoader::register($class, $path);
+                }
+            }
 
-		if (empty(self::$instances[$signature]))
-		{
-			$class = 'Cwmserver' . ucfirst($options['type']);
+            try {
+                $instance = new $class($options);
+            } catch (Exception $e) {
+                Factory::getApplication()->enqueueMessage("Error obtaining Class '" . $options['type'] . "'", 'error');
+            }
 
-			if (!class_exists($class))
-			{
-				$path = __DIR__ . '/' . $options['type'] . '.php';
+            self::$instances[$signature] = $instance;
+        }
 
-				if (file_exists($path))
-				{
-					JLoader::register($class, $path);
-				}
-			}
+        return self::$instances[$signature];
+    }
 
-			try
-			{
-				$instance = new $class($options);
-			}
-			catch (Exception $e)
-			{
-				Factory::getApplication()->enqueueMessage("Error obtaining Class '" . $options['type'] . "'", 'error');
-			}
-
-			self::$instances[$signature] = $instance;
-		}
-
-		return self::$instances[$signature];
-	}
-
-	/**
-	 * Upload
-	 *
-	 * @param   Input|array  $data  Data for upload
-	 *
-	 * @return mixed
-	 *
-	 * @since 9.0.0
-	 */
-	abstract protected function upload($data);
+    /**
+     * Upload
+     *
+     * @param   Input|array  $data  Data for upload
+     *
+     * @return mixed
+     *
+     * @since 9.0.0
+     */
+    abstract protected function upload($data);
 }

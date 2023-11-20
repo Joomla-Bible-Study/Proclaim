@@ -12,9 +12,9 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // No direct access
 use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Filesystem\Path;
-use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\MVC\Model\ItemModel;
 use Joomla\CMS\Uri\Uri;
 
@@ -32,264 +32,245 @@ jimport('joomla.filesystem.file');
  */
 class CwmdirModel extends ItemModel
 {
-	/**
-	 * Save current directory in session for file upload
-	 *
-	 * @param   string  $directoryPath  ?
-	 *
-	 * @return void
-	 *
-	 * @since 7.0
-	 */
-	private function _setDirectoryState($directoryPath)
-	{
-		$app                  = Factory::getApplication();
-		$session              = $app->getSession();
-		$homeDirBase64        = base64_encode(BIBLESTUDY_ROOT_PATH);
-		$directoryPathCleaned = Path::clean($directoryPath);
-		$currentDir           = Path::check($directoryPathCleaned);
-		$currentDirBase64     = base64_encode($currentDir);
+    /**
+     * Get folder names and their links
+     *
+     * @return array Filled with object with: name, link properties
+     *
+     * @since 7.0
+     */
+    public function getBreadcrumbs()
+    {
+        $bc         = array();
+        $currentDir = $this->_getCurrentDir();
 
-		if (strpos($currentDir, BIBLESTUDY_ROOT_PATH) === false)
-		{
-			// Path is invalid, save default directory
-			$session->set('current_dir', $homeDirBase64, 'com_proclaim');
-		}
-		else
-		{
-			$session->set('current_dir', $currentDirBase64, 'com_proclaim');
-		}
-	}
+        $parts = explode('/', $currentDir);
+        $link  = '';
+        $i     = 0;
 
-	/**
-	 * Get folder names and their links
-	 *
-	 * @return array Filled with object with: name, link properties
-	 *
-	 * @since 7.0
-	 */
-	public function getBreadcrumbs()
-	{
-		$bc         = array();
-		$currentDir = $this->_getCurrentDir();
+        // Fill bc array with objects
+        foreach ($parts as $part) {
+            if ($part !== '' && $part !== ' ') {
+                $link         .= '/' . $part;
+                $bc[$i]       = new \stdClass;
+                $bc[$i]->name = $part;
+                $bc[$i]->link = $link;
+                $i++;
+            }
+        }
 
-		$parts = explode('/', $currentDir);
-		$link  = '';
-		$i     = 0;
+        // Prepend home dir
+        $firstBC       = new stdClass;
+        $firstBC->name = BIBLESTUDY_MEDIA_PATH;
+        $firstBC->link = '';
+        array_unshift($bc, $firstBC);
 
-		// Fill bc array with objects
-		foreach ($parts as $part)
-		{
-			if ($part !== '' && $part !== ' ')
-			{
-				$link .= '/' . $part;
-				$bc[$i]       = new \stdClass;
-				$bc[$i]->name = $part;
-				$bc[$i]->link = $link;
-				$i++;
-			}
-		}
+        return $bc;
+    }
 
-		// Prepend home dir
-		$firstBC       = new stdClass;
-		$firstBC->name = BIBLESTUDY_MEDIA_PATH;
-		$firstBC->link = '';
-		array_unshift($bc, $firstBC);
+    /**
+     * Get current directory from request
+     *
+     * @param   bool    $fullPath   ?
+     * @param   string  $separator  ?
+     *
+     * @return string
+     *
+     * @since 7.0
+     */
+    private function _getCurrentDir($fullPath = false, $separator = '/')
+    {
+        $defaultDirVar  = "";
+        $defaultDirPath = BIBLESTUDY_ROOT_PATH;
 
-		return $bc;
-	}
+        // Filter GET variable
+        $directoryVarFromReq = Factory::getApplication()->input->get('dir', $separator);
+        $directoryVarReplSep = str_replace(array("/", "\\"), $separator, $directoryVarFromReq);
+        $directoryVarWODots  = preg_replace(array("/\.\./", "/\./"), '', $directoryVarReplSep);
+        $directoryVar        = $directoryVarWODots;
 
-	/**
-	 * Folders in current directory
-	 *
-	 * @return array
-	 *
-	 * @since 7.0
-	 */
-	public function getFolders()
-	{
-		$currentDir = $this->_getCurrentDir(true);
+        // Make filtered full directory path
+        $fullDirPath = BIBLESTUDY_ROOT_PATH . $separator . $directoryVar;
+        $dirPath     = Path::check($fullDirPath);
 
-		// Get all folders in current dir
-		$folders = Folder::folders($currentDir, '.', false, true);
+        if (file_exists($dirPath)) {
+            // Save current directory in session whenever this function gets called
+            $this->_setDirectoryState($dirPath);
 
-		// Set current folder on first place in array
-		array_unshift($folders, $currentDir);
+            if ($fullPath) {
+                return $dirPath;
+            }
 
-		return $this->_setFolderInfo($folders);
-	}
+            return $directoryVar;
+        }
 
-	/**
-	 * Files in current directory
-	 *
-	 * @return array
-	 *
-	 * @since 7.0
-	 */
-	public function getFiles()
-	{
-		$currentDir = $this->_getCurrentDir(true);
+        if ($fullPath) {
+            return $defaultDirPath;
+        }
 
-		// Get all files
-		$files = Folder::files($currentDir, '.', false, true, array('index.html'));
+        return $defaultDirVar;
+    }
 
-		return $this->_setFileInfo($files);
-	}
+    /**
+     * Save current directory in session for file upload
+     *
+     * @param   string  $directoryPath  ?
+     *
+     * @return void
+     *
+     * @since 7.0
+     */
+    private function _setDirectoryState($directoryPath)
+    {
+        $app                  = Factory::getApplication();
+        $session              = $app->getSession();
+        $homeDirBase64        = base64_encode(BIBLESTUDY_ROOT_PATH);
+        $directoryPathCleaned = Path::clean($directoryPath);
+        $currentDir           = Path::check($directoryPathCleaned);
+        $currentDirBase64     = base64_encode($currentDir);
 
-	/**
-	 * Get current directory from request
-	 *
-	 * @param   bool    $fullPath   ?
-	 * @param   string  $separator  ?
-	 *
-	 * @return string
-	 *
-	 * @since 7.0
-	 */
-	private function _getCurrentDir($fullPath = false, $separator = '/')
-	{
-		$defaultDirVar  = "";
-		$defaultDirPath = BIBLESTUDY_ROOT_PATH;
+        if (strpos($currentDir, BIBLESTUDY_ROOT_PATH) === false) {
+            // Path is invalid, save default directory
+            $session->set('current_dir', $homeDirBase64, 'com_proclaim');
+        } else {
+            $session->set('current_dir', $currentDirBase64, 'com_proclaim');
+        }
+    }
 
-		// Filter GET variable
-		$directoryVarFromReq = Factory::getApplication()->input->get('dir', $separator);
-		$directoryVarReplSep = str_replace(array("/", "\\"), $separator, $directoryVarFromReq);
-		$directoryVarWODots  = preg_replace(array("/\.\./", "/\./"), '', $directoryVarReplSep);
-		$directoryVar        = $directoryVarWODots;
+    /**
+     * Folders in current directory
+     *
+     * @return array
+     *
+     * @since 7.0
+     */
+    public function getFolders()
+    {
+        $currentDir = $this->_getCurrentDir(true);
 
-		// Make filtered full directory path
-		$fullDirPath = BIBLESTUDY_ROOT_PATH . $separator . $directoryVar;
-		$dirPath     = Path::check($fullDirPath);
+        // Get all folders in current dir
+        $folders = Folder::folders($currentDir, '.', false, true);
 
-		if (file_exists($dirPath))
-		{
-			// Save current directory in session whenever this function gets called
-			$this->_setDirectoryState($dirPath);
+        // Set current folder on first place in array
+        array_unshift($folders, $currentDir);
 
-			if ($fullPath)
-			{
-				return $dirPath;
-			}
+        return $this->_setFolderInfo($folders);
+    }
 
-			return $directoryVar;
-		}
+    /**
+     * Sets the info and path for each folder
+     *
+     * @param   array  $folderPaths  ?
+     *
+     * @return array
+     *
+     * @since 7.0
+     */
+    private function _setFolderInfo($folderPaths)
+    {
+        $OFolders = array();
 
-		if ($fullPath)
-		{
-			return $defaultDirPath;
-		}
+        for ($i = 0, $iMax = count($folderPaths); $i < $iMax; $i++) {
+            $path                         = Path::clean($folderPaths[$i]);
+            $OFolders[$i]                 = new \stdClass;
+            $OFolders[$i]->fullPath       = $path;
+            $OFolders[$i]->basename       = basename($path);
+            $OFolders[$i]->parentFullPath = dirname($path) . '/';
+            $OFolders[$i]->parentBasename = basename(dirname($path) . '/');
+            $OFolders[$i]->folderCount    = count(Folder::folders($path, '.', false, false));
+            $OFolders[$i]->fileCount      = count(Folder::files($path, '.', false, false, array("index.html")));
 
-		return $defaultDirVar;
-	}
+            // Make parent short path for go up directory
+            if ($path == BIBLESTUDY_ROOT_PATH . '/' . basename($path)) {
+                $OFolders[$i]->parentShort = "";
+            } else {
+                $OFolders[$i]->parentShort = dirname(str_replace(BIBLESTUDY_ROOT_PATH, "", $path . '/'));
+            }
 
-	/**
-	 * Set information for each file
-	 *
-	 * @param   array  $filePaths  ?
-	 *
-	 * @return array
-	 *
-	 * @since 7.0
-	 */
-	private function _setFileInfo($filePaths)
-	{
-		$OFiles = array();
+            $OFolders[$i]->folderLink = $OFolders[$i]->parentShort . '/' . basename($path);
+        }
 
-		for ($i = 0, $iMax = count($filePaths); $i < $iMax; $i++)
-		{
-			$path                 = Path::clean($filePaths[$i]);
-			$OFiles[$i]           = new \stdClass;
-			$OFiles[$i]->basename = basename($path);
-			$OFiles[$i]->fullPath = dirname($path) . '/' . basename($path);
-			$OFiles[$i]->link     = Uri::root() . '/images' . $this->_getCurrentDir(false, "/") . '/' . basename($path);
-			$OFiles[$i]->ext      = File::getExt($path);
+        return $OFolders;
+    }
 
-			// Image info, if file is image
-			if (@getimagesize($path))
-			{
-				$OFiles[$i]->imgInfo = @getimagesize($path);
-			}
-			else
-			{
-				$OFiles[$i]->imgInfo = 0;
-			}
+    /**
+     * Files in current directory
+     *
+     * @return array
+     *
+     * @since 7.0
+     */
+    public function getFiles()
+    {
+        $currentDir = $this->_getCurrentDir(true);
 
-			// File size
-			$size = @filesize($path);
+        // Get all files
+        $files = Folder::files($currentDir, '.', false, true, array('index.html'));
 
-			$unit = ' B';
+        return $this->_setFileInfo($files);
+    }
 
-			if ($size > 1024)
-			{
-				$size /= 1024;
-				$unit = 'KB';
-			}
+    /**
+     * Set information for each file
+     *
+     * @param   array  $filePaths  ?
+     *
+     * @return array
+     *
+     * @since 7.0
+     */
+    private function _setFileInfo($filePaths)
+    {
+        $OFiles = array();
 
-			if ($size > 1024)
-			{
-				$size /= 1024;
-				$unit = 'MB';
-			}
+        for ($i = 0, $iMax = count($filePaths); $i < $iMax; $i++) {
+            $path                 = Path::clean($filePaths[$i]);
+            $OFiles[$i]           = new \stdClass;
+            $OFiles[$i]->basename = basename($path);
+            $OFiles[$i]->fullPath = dirname($path) . '/' . basename($path);
+            $OFiles[$i]->link     = Uri::root() . '/images' . $this->_getCurrentDir(false, "/") . '/' . basename($path);
+            $OFiles[$i]->ext      = File::getExt($path);
 
-			if ($size > 1024)
-			{
-				$size /= 1024;
-				$unit = 'GB';
-			}
+            // Image info, if file is image
+            if (@getimagesize($path)) {
+                $OFiles[$i]->imgInfo = @getimagesize($path);
+            } else {
+                $OFiles[$i]->imgInfo = 0;
+            }
 
-			$size             = round($size, 2) . " " . $unit;
-			$OFiles[$i]->size = $size;
+            // File size
+            $size = @filesize($path);
 
-			// Last accessed and last modified time
-			$OFiles[$i]->accessTime   = @strftime("%d/%m/%Y %H:%M:%S", @fileatime($path));
-			$OFiles[$i]->modifiedTime = @strftime("%d/%m/%Y %H:%M:%S", @filemtime($path));
-		}
+            $unit = ' B';
 
-		return $OFiles;
-	}
+            if ($size > 1024) {
+                $size /= 1024;
+                $unit = 'KB';
+            }
 
-	/**
-	 * Sets the info and path for each folder
-	 *
-	 * @param   array  $folderPaths  ?
-	 *
-	 * @return array
-	 *
-	 * @since 7.0
-	 */
-	private function _setFolderInfo($folderPaths)
-	{
-		$OFolders = array();
+            if ($size > 1024) {
+                $size /= 1024;
+                $unit = 'MB';
+            }
 
-		for ($i = 0, $iMax = count($folderPaths); $i < $iMax; $i++)
-		{
-			$path                         = Path::clean($folderPaths[$i]);
-			$OFolders[$i]                 = new \stdClass;
-			$OFolders[$i]->fullPath       = $path;
-			$OFolders[$i]->basename       = basename($path);
-			$OFolders[$i]->parentFullPath = dirname($path) . '/';
-			$OFolders[$i]->parentBasename = basename(dirname($path) . '/');
-			$OFolders[$i]->folderCount    = count(Folder::folders($path, '.', false, false));
-			$OFolders[$i]->fileCount      = count(Folder::files($path, '.', false, false, array("index.html")));
+            if ($size > 1024) {
+                $size /= 1024;
+                $unit = 'GB';
+            }
 
-			// Make parent short path for go up directory
-			if ($path == BIBLESTUDY_ROOT_PATH . '/' . basename($path))
-			{
-				$OFolders[$i]->parentShort = "";
-			}
-			else
-			{
-				$OFolders[$i]->parentShort = dirname(str_replace(BIBLESTUDY_ROOT_PATH, "", $path . '/'));
-			}
+            $size             = round($size, 2) . " " . $unit;
+            $OFiles[$i]->size = $size;
 
-			$OFolders[$i]->folderLink = $OFolders[$i]->parentShort . '/' . basename($path);
-		}
+            // Last accessed and last modified time
+            $OFiles[$i]->accessTime   = @strftime("%d/%m/%Y %H:%M:%S", @fileatime($path));
+            $OFiles[$i]->modifiedTime = @strftime("%d/%m/%Y %H:%M:%S", @filemtime($path));
+        }
 
-		return $OFolders;
-	}
+        return $OFiles;
+    }
 
-	public function getItem($pk = null)
-	{
-		// TODO: Implement getItem() method.
-	}
+    public function getItem($pk = null)
+    {
+        // TODO: Implement getItem() method.
+    }
 }

@@ -30,75 +30,79 @@ defined('_JEXEC') or die();
  */
 class HtmlView extends BaseHtmlView
 {
-	public $enableLog;
+    public $enableLog;
 
-	public $runtime;
+    public $runtime;
 
-	public $currentDir;
+    public $currentDir;
 
-	/**
-	 * Form
-	 *
-	 * @var mixed
-	 * @since 7.0
-	 */
-	protected mixed $form;
+    /**
+     * Form
+     *
+     * @var mixed
+     * @since 7.0
+     */
+    protected mixed $form;
 
-	/**
-	 * View display method
-	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
-	 * @return void
-	 *
-	 * @throws \Exception
-	 * @since 7.0
-	 */
-	public function display($tpl = null)
-	{
-		$this->form = $this->get("Form");
-		HTMLHelper::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/helpers/html/');
-		HTMLHelper::_('jquery.framework', 'false');
+    /**
+     * View display method
+     *
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return void
+     *
+     * @throws \Exception
+     * @since 7.0
+     */
+    public function display($tpl = null)
+    {
+        $this->form = $this->get("Form");
+        HTMLHelper::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/helpers/html/');
+        HTMLHelper::_('jquery.framework', 'false');
 
-		$mediaDir      = Uri::root() . "media/com_proclaim/plupload/";
-		$document      = Factory::getApplication()->getDocument();
-		$params        = ComponentHelper::getParams('com_proclaim');
-		$UploadScript  = new Cwmuploadscript($params, $mediaDir);
-		$runtimeScript = $UploadScript->runtimeScript;
-		$runtime       = $UploadScript->runtime;
+        $mediaDir      = Uri::root() . "media/com_proclaim/plupload/";
+        $document      = Factory::getApplication()->getDocument();
+        $params        = ComponentHelper::getParams('com_proclaim');
+        $UploadScript  = new Cwmuploadscript($params, $mediaDir);
+        $runtimeScript = $UploadScript->runtimeScript;
+        $runtime       = $UploadScript->runtime;
 
-		// Add plupload styles and scripts
-		$document->addScript($mediaDir . 'js/plupload.js');
-		$document->addScript($mediaDir . 'js/plupload.browserplus.js');
-		$document->addScript($mediaDir . 'js/plupload.full.js');
-		$document->addScript($mediaDir . 'js/jquery.plupload.queue/jquery.plupload.queue.js');
-		$document->addScript('https://bp.yahooapis.com/2.4.21/browserplus-min.js');
-		$document->addStyleSheet($mediaDir . 'js/jquery.plupload.queue/css/jquery.plupload.queue.css', 'text/css', 'screen');
-		$document->addScriptDeclaration($UploadScript->UIScript());
+        // Add plupload styles and scripts
+        $document->addScript($mediaDir . 'js/plupload.js');
+        $document->addScript($mediaDir . 'js/plupload.browserplus.js');
+        $document->addScript($mediaDir . 'js/plupload.full.js');
+        $document->addScript($mediaDir . 'js/jquery.plupload.queue/jquery.plupload.queue.js');
+        $document->addScript('https://bp.yahooapis.com/2.4.21/browserplus-min.js');
+        $document->addStyleSheet(
+            $mediaDir . 'js/jquery.plupload.queue/css/jquery.plupload.queue.css',
+            'text/css',
+            'screen'
+        );
+        $document->addScriptDeclaration($UploadScript->UIScript());
 
-		// Set variables for the template
-		$this->enableLog  = 1;
-		$this->runtime    = $runtime;
-		$this->currentDir = '/media';
+        // Set variables for the template
+        $this->enableLog  = 1;
+        $this->runtime    = $runtime;
+        $this->currentDir = '/media';
 
-		$this->setDocumentTitle(Text::_('JBS_TITLE_UPLOAD_FORM'));
+        $this->setDocumentTitle(Text::_('JBS_TITLE_UPLOAD_FORM'));
 
-		// Set the toolbar
-		$this->addToolbar();
+        // Set the toolbar
+        $this->addToolbar();
 
-		// Display the template
-		parent::display($tpl);
-	}
+        // Display the template
+        parent::display($tpl);
+    }
 
-	/**
-	 * Add Toolbar
-	 *
-	 * @return void
-	 *
-	 * @since 7.0
-	 */
-	protected function addToolbar()
-	{
-		ToolbarHelper::title(Text::_('JBS_TITLE_UPLOAD_FORM'), 'mp3.png');
-	}
+    /**
+     * Add Toolbar
+     *
+     * @return void
+     *
+     * @since 7.0
+     */
+    protected function addToolbar()
+    {
+        ToolbarHelper::title(Text::_('JBS_TITLE_UPLOAD_FORM'), 'mp3.png');
+    }
 }

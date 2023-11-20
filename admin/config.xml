@@ -1,102 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
-	<help key="Proclaim:_Options"/>
-	<fieldset
-			name="component"
-			label="JBS_ADM_FIELDSET_OPTIONS_LABEL">
-		<field
-				name="captcha"
-				type="plugins"
-				label="COM_CONTACT_FIELD_CAPTCHA_LABEL"
-				folder="captcha"
-				filter="cmd"
-				useglobal="true"
-		>
-			<option value="0">JOPTION_DO_NOT_USE</option>
-		</field>
-		<field
-				name="upload_extensions"
-				type="text"
-				size="50"
-				default="key,pps,pptx,docx,aac,m4a,f4a,mp3,ogg,oga,mp4,m4v,f4v,mov,flv,webm,m3u8,mpd,DVR,bmp,csv,doc,gif,ico,jpg,jpeg,odg,odp,ods,odt,pdf,png,ppt,txt,xcf,xls,BMP,CSV,DOC,GIF,ICO,JPG,JPEG,ODG,ODP,ODS,ODT,PDF,PNG,PPT,TXT,XCF,XLS"
-				label="JBS_ADM_FIELD_LEGAL_EXTENSIONS_LABEL"
-				description="JBS_ADM_FIELD_LEGAL_EXTENSIONS_DESC"/>
+    <help key="Proclaim:_Options"/>
+    <fieldset
+            name="component"
+            label="JBS_ADM_FIELDSET_OPTIONS_LABEL">
+        <field
+                name="captcha"
+                type="plugins"
+                label="COM_CONTACT_FIELD_CAPTCHA_LABEL"
+                folder="captcha"
+                filter="cmd"
+                useglobal="true"
+        >
+            <option value="0">JOPTION_DO_NOT_USE</option>
+        </field>
+        <field
+                name="upload_extensions"
+                type="text"
+                size="50"
+                default="key,pps,pptx,docx,aac,m4a,f4a,mp3,ogg,oga,mp4,m4v,f4v,mov,flv,webm,m3u8,mpd,DVR,bmp,csv,doc,gif,ico,jpg,jpeg,odg,odp,ods,odt,pdf,png,ppt,txt,xcf,xls,BMP,CSV,DOC,GIF,ICO,JPG,JPEG,ODG,ODP,ODS,ODT,PDF,PNG,PPT,TXT,XCF,XLS"
+                label="JBS_ADM_FIELD_LEGAL_EXTENSIONS_LABEL"
+                description="JBS_ADM_FIELD_LEGAL_EXTENSIONS_DESC"/>
 
-		<field
-				name="upload_maxsize"
-				type="text"
-				size="50"
-				default="10"
-				label="JBS_ADM_FIELD_MAXIMUM_SIZE_LABEL"
-				description="JBS_ADM_FIELD_MAXIMUM_SIZE_DESC"/>
+        <field
+                name="upload_maxsize"
+                type="text"
+                size="50"
+                default="10"
+                label="JBS_ADM_FIELD_MAXIMUM_SIZE_LABEL"
+                description="JBS_ADM_FIELD_MAXIMUM_SIZE_DESC"/>
 
-		<field
-				name="restrict_uploads"
-				type="radio"
-				default="1"
-				layout="joomla.form.field.radio.switcher"
-				label="JBS_ADM_FIELD_RESTRICT_UPLOADS_LABEL">
-			<option value="1">JYES</option>
-			<option value="0">JNO</option>
-		</field>
+        <field
+                name="restrict_uploads"
+                type="radio"
+                default="1"
+                layout="joomla.form.field.radio.switcher"
+                label="JBS_ADM_FIELD_RESTRICT_UPLOADS_LABEL">
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
 
-		<field
-				name="check_mime"
-				type="radio"
-				class="btn-group btn-group-yesno"
-				default="1"
-				label="JBS_ADM_FIELD_CHECK_MIME_LABEL"
-				layout="joomla.form.field.radio.switcher">
-			<option value="1">JYES</option>
-			<option value="0">JNO</option>
-		</field>
+        <field
+                name="check_mime"
+                type="radio"
+                class="btn-group btn-group-yesno"
+                default="1"
+                label="JBS_ADM_FIELD_CHECK_MIME_LABEL"
+                layout="joomla.form.field.radio.switcher">
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
 
-		<field
-				name="image_extensions"
-				type="text"
-				size="50"
-				default="mp3,mp4,m4v,mov,bmp,gif,jpg,png"
-				label="JBS_ADM_FIELD_LEGAL_IMAGE_EXTENSIONS_LABEL"
-				description="JBS_ADM_FIELD_LEGAL_IMAGE_EXTENSIONS_DESC"/>
+        <field
+                name="image_extensions"
+                type="text"
+                size="50"
+                default="mp3,mp4,m4v,mov,bmp,gif,jpg,png"
+                label="JBS_ADM_FIELD_LEGAL_IMAGE_EXTENSIONS_LABEL"
+                description="JBS_ADM_FIELD_LEGAL_IMAGE_EXTENSIONS_DESC"/>
 
-		<field
-				name="ignore_extensions"
-				type="text"
-				size="50"
-				default=""
-				label="JBS_ADM_FIELD_IGNORED_EXTENSIONS_LABEL"
-				description="JBS_ADM_FIELD_IGNORED_EXTENSIONS_DESC"/>
+        <field
+                name="ignore_extensions"
+                type="text"
+                size="50"
+                default=""
+                label="JBS_ADM_FIELD_IGNORED_EXTENSIONS_LABEL"
+                description="JBS_ADM_FIELD_IGNORED_EXTENSIONS_DESC"/>
 
-		<field
-				name="upload_mime"
-				type="text"
-				size="50"
-				default="application/x-iwork-keynote-sffkey,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/vnd.openxmlformats-officedocument.wordprocessingml.document,audio/aac,audio/mp4,audio/ogg,audio/mpeg,audio/x-wav,application/annodex,application/mp4,application/ogg,application/vnd.rn-realmedia,application/x-matroska,video/3gpp,video/3gpp2,video/annodex,video/divx,video/flv,video/h264,video/mp4,video/mp4v-es,video/mpeg,video/mpeg-2,video/mpeg4,video/ogg,video/ogm,video/quicktime,video/ty,video/vdo,video/vivo,video/vnd.rn-realvideo,video/vnd.vivo,video/webm,video/x-bin,video/x-cdg,video/x-divx,video/x-dv,video/x-flv,video/x-la-asf,video/x-m4v,video/x-matroska,video/x-motion-jpeg,video/x-ms-asf,video/x-ms-dvr,video/x-ms-wm,video/x-ms-wmv,video/x-msvideo,video/x-sgi-movie,video/x-tivo,video/avi,video/x-ms-asx,video/x-ms-wvx,video/x-ms-wmx,,image/jpeg,image/gif,image/png,image/bmp,application/x-shockwave-flash,application/msword,application/excel,application/pdf,application/powerpoint,text/plain,application/x-zip"
-				label="JBS_ADM_FIELD_LEGAL_MIME_TYPES_LABEL"
-				description="JBS_ADM_FIELD_LEGAL_MIME_TYPES_DESC"/>
+        <field
+                name="upload_mime"
+                type="text"
+                size="50"
+                default="application/x-iwork-keynote-sffkey,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/vnd.openxmlformats-officedocument.wordprocessingml.document,audio/aac,audio/mp4,audio/ogg,audio/mpeg,audio/x-wav,application/annodex,application/mp4,application/ogg,application/vnd.rn-realmedia,application/x-matroska,video/3gpp,video/3gpp2,video/annodex,video/divx,video/flv,video/h264,video/mp4,video/mp4v-es,video/mpeg,video/mpeg-2,video/mpeg4,video/ogg,video/ogm,video/quicktime,video/ty,video/vdo,video/vivo,video/vnd.rn-realvideo,video/vnd.vivo,video/webm,video/x-bin,video/x-cdg,video/x-divx,video/x-dv,video/x-flv,video/x-la-asf,video/x-m4v,video/x-matroska,video/x-motion-jpeg,video/x-ms-asf,video/x-ms-dvr,video/x-ms-wm,video/x-ms-wmv,video/x-msvideo,video/x-sgi-movie,video/x-tivo,video/avi,video/x-ms-asx,video/x-ms-wvx,video/x-ms-wmx,,image/jpeg,image/gif,image/png,image/bmp,application/x-shockwave-flash,application/msword,application/excel,application/pdf,application/powerpoint,text/plain,application/x-zip"
+                label="JBS_ADM_FIELD_LEGAL_MIME_TYPES_LABEL"
+                description="JBS_ADM_FIELD_LEGAL_MIME_TYPES_DESC"/>
 
-		<field
-				name="upload_mime_illegal"
-				type="text"
-				size="50"
-				default="text/html"
-				label="JBS_ADM_FIELD_ILLEGAL_MIME_TYPES_LABEL"
-				description="JBS_ADM_FIELD_ILLEGAL_MIME_TYPES_DESC"/>
-	</fieldset>
-	<fieldset name="permissions" label="JCONFIG_PERMISSIONS_LABEL"
-	          description="JCONFIG_PERMISSIONS_DESC">
-		<field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL"
-		       validate="rules" filter="rules" component="com_proclaim"
-		       section="component"/>
-	</fieldset>
-	<fieldset addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
-	          name="filters"
-	          label="JBS_ADM_TEXT_FILTERS_LABEL"
-	          description="JBS_ADM_TEXT_FILTERS_DESC">
-		<field
-				name="filters"
-				type="filters"
-				filter=""
-		/>
-	</fieldset>
+        <field
+                name="upload_mime_illegal"
+                type="text"
+                size="50"
+                default="text/html"
+                label="JBS_ADM_FIELD_ILLEGAL_MIME_TYPES_LABEL"
+                description="JBS_ADM_FIELD_ILLEGAL_MIME_TYPES_DESC"/>
+    </fieldset>
+    <fieldset name="permissions" label="JCONFIG_PERMISSIONS_LABEL"
+              description="JCONFIG_PERMISSIONS_DESC">
+        <field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL"
+               validate="rules" filter="rules" component="com_proclaim"
+               section="component"/>
+    </fieldset>
+    <fieldset addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
+              name="filters"
+              label="JBS_ADM_TEXT_FILTERS_LABEL"
+              description="JBS_ADM_TEXT_FILTERS_DESC">
+        <field
+                name="filters"
+                type="filters"
+                filter=""
+        />
+    </fieldset>
 </config>

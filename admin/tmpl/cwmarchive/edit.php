@@ -11,6 +11,7 @@
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
@@ -22,7 +23,8 @@ HTMLHelper::_('behavior.formvalidator');
 HTMLHelper::_('jquery.framework');
 HTMLHelper::_('formbehavior.chosen', 'select');
 
-Factory::getDocument()->addScriptDeclaration("
+Factory::getDocument()->addScriptDeclaration(
+    "
 		Joomla.submitbutton = function(task)
 		{
 			var form = document.getElementById('item-assets');
@@ -31,33 +33,40 @@ Factory::getDocument()->addScriptDeclaration("
 				Joomla.submitform(task, form);
 			}
 		};
-");
+"
+);
 ?>
-<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmarchive'); ?>" enctype="multipart/form-data"
+<form action="<?php
+echo Route::_('index.php?option=com_proclaim&view=cwmarchive'); ?>" enctype="multipart/form-data"
       method="post" name="adminForm" id="adminForm">
-	<div class="row-fluid" style="margin-top: 50px;">
-		<div class="span12 form-horizontal">
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('timeframe'); ?>
-				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('timeframe'); ?>
-					<?php echo $this->form->getInput('switch'); ?>
-				</div>
-			</div>
-			<div class="control-group">
-				<input class="btn btn-primary" type="submit" value="<?php echo Text::_('JBS_CMN_SUBMIT'); ?>"
-				       name="submit"/>
-				<button onclick="Joomla.submitbutton('cwmadmin.back')" class="btn btn-default">
-					<span class="icon-back"></span>
-					Back
-				</button>
-			</div>
-		</div>
-	</div>
-	<input type="hidden" name="option" value="com_proclaim"/>
-	<input type="hidden" name="task" value="cwmadmin.doArchive"/>
-	<input type="hidden" name="controller" value="admin"/>
-	<?php echo HTMLHelper::_('form.token'); ?>
+    <div class="row-fluid" style="margin-top: 50px;">
+        <div class="span12 form-horizontal">
+            <div class="control-group">
+                <div class="control-label">
+                    <?php
+                    echo $this->form->getLabel('timeframe'); ?>
+                </div>
+                <div class="controls">
+                    <?php
+                    echo $this->form->getInput('timeframe'); ?>
+                    <?php
+                    echo $this->form->getInput('switch'); ?>
+                </div>
+            </div>
+            <div class="control-group">
+                <input class="btn btn-primary" type="submit" value="<?php
+                echo Text::_('JBS_CMN_SUBMIT'); ?>"
+                       name="submit"/>
+                <button onclick="Joomla.submitbutton('cwmadmin.back')" class="btn btn-default">
+                    <span class="icon-back"></span>
+                    Back
+                </button>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" name="option" value="com_proclaim"/>
+    <input type="hidden" name="task" value="cwmadmin.doArchive"/>
+    <input type="hidden" name="controller" value="admin"/>
+    <?php
+    echo HTMLHelper::_('form.token'); ?>
 </form>

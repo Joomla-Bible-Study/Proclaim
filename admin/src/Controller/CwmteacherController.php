@@ -26,36 +26,38 @@ use Joomla\CMS\Router\Route;
  */
 class CwmteacherController extends FormController
 {
-	/**
-	 * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
-	 *
-	 * @var   string
-	 * @since 7.0
-	 */
-	protected $view_list = 'cwmteachers';
+    /**
+     * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
+     *
+     * @var   string
+     * @since 7.0
+     */
+    protected $view_list = 'cwmteachers';
 
-	/**
-	 * The URL option for the component.
-	 *
-	 * @var    string
-	 * @since  12.2
-	 */
-	protected $option = 'com_proclaim';
+    /**
+     * The URL option for the component.
+     *
+     * @var    string
+     * @since  12.2
+     */
+    protected $option = 'com_proclaim';
 
-	/**
-	 * Method to run batch operations.
-	 *
-	 * @param   BaseModel  $model  The model.
-	 *
-	 * @return  boolean     True if successful, false otherwise and internal error is set.
-	 *
-	 * @since   1.6
-	 */
-	public function batch($model = null)
-	{
-		// Preset the redirect
-		$this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmteachers' . $this->getRedirectToListAppend(), false));
+    /**
+     * Method to run batch operations.
+     *
+     * @param   BaseModel  $model  The model.
+     *
+     * @return  boolean     True if successful, false otherwise and internal error is set.
+     *
+     * @since   1.6
+     */
+    public function batch($model = null)
+    {
+        // Preset the redirect
+        $this->setRedirect(
+            Route::_('index.php?option=com_proclaim&view=cwmteachers' . $this->getRedirectToListAppend(), false)
+        );
 
-		return parent::batch($this->getModel());
-	}
+        return parent::batch($this->getModel());
+    }
 }

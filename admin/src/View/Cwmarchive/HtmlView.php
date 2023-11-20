@@ -28,47 +28,47 @@ use Joomla\CMS\Toolbar\ToolbarHelper;
  */
 class HtmlView extends BaseHtmlView
 {
-	public mixed $form;
+    public mixed $form;
 
-	/**
-	 * Execute and display a template script.
-	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
-	 * @return  void  A string if successful, otherwise a JError object.
-	 *
-	 * @throws \Exception
-	 * @since  11.1
-	 * @see    ViewLegacy::loadTemplate()
-	 */
-	public function display($tpl = null)
-	{
-		$this->form = $this->get("Form");
+    /**
+     * Execute and display a template script.
+     *
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return  void  A string if successful, otherwise a JError object.
+     *
+     * @throws \Exception
+     * @since  11.1
+     * @see    ViewLegacy::loadTemplate()
+     */
+    public function display($tpl = null)
+    {
+        $this->form = $this->get("Form");
 
-		$this->setLayout('edit');
+        $this->setLayout('edit');
 
-		// Set the toolbar
-		$this->addToolbar();
+        // Set the toolbar
+        $this->addToolbar();
 
-		// Display the template
-		parent::display($tpl);
-	}
+        // Display the template
+        parent::display($tpl);
+    }
 
-	/**
-	 * Add Toolbar
-	 *
-	 * @return void
-	 *
-	 * @throws \Exception
-	 * @since  7.0.0
-	 */
-	protected function addToolbar()
-	{
-		Factory::getApplication()->input->set('hidemainmenu', true);
+    /**
+     * Add Toolbar
+     *
+     * @return void
+     *
+     * @throws \Exception
+     * @since  7.0.0
+     */
+    protected function addToolbar()
+    {
+        Factory::getApplication()->input->set('hidemainmenu', true);
 
-		ToolbarHelper::title(Text::_('JBS_CMN_ARCHIVE'), 'archive');
-		ToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
-		ToolbarHelper::custom('administration.back', 'back', 'back', 'JTOOLBAR_BACK', false);
-		ToolbarHelper::help('proclaim', true);
-	}
+        ToolbarHelper::title(Text::_('JBS_CMN_ARCHIVE'), 'archive');
+        ToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
+        ToolbarHelper::custom('administration.back', 'back', 'back', 'JTOOLBAR_BACK', false);
+        ToolbarHelper::help('proclaim', true);
+    }
 }

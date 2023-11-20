@@ -13,11 +13,8 @@
 // phpcs:enable PSR1.Files.SideEffects
 
 
-if ($this->params->get('teacherstemplate'))
-{
-	echo $this->loadTemplate($this->params->get('teacherstemplate'));
-}
-else
-{
-	echo $this->loadTemplate('main');
+if ($this->params->get('teacherstemplate')) {
+    echo $this->loadTemplate($this->params->get('teacherstemplate'));
+} else {
+    echo $this->loadTemplate('main');
 }

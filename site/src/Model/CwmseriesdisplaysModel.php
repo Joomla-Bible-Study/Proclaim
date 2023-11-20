@@ -7,21 +7,21 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Site\Model;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+
 // phpcs:enable PSR1.Files.SideEffects
 
-use JApplicationSite;
-use Joomla\Database\DatabaseQuery;
-use Joomla\Registry\Registry;
-use Joomla\CMS\MVC\Model\ListModel;
-use Joomla\CMS\Factory;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
-use Joomla\CMS\Language\LanguageHelper;
+use JApplicationSite;
 use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Menu\MenuItem;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\LanguageHelper;
+use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Database\DatabaseQuery;
 
 /**
  * Model class for SeriesDisplays
@@ -31,301 +31,286 @@ use Joomla\CMS\Menu\MenuItem;
  */
 class CwmseriesdisplaysModel extends ListModel
 {
-	/**
-	 * Method to auto-populate the model state.
-	 *
-	 * This method should only be called once per instantiation and is designed
-	 * to be called on the first call to the getState() method unless the model
-	 * configuration flag to ignore the request is set.
-	 *
-	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @param   string  $ordering   An optional ordering field.
-	 * @param   string  $direction  An optional direction (asc|desc).
-	 *
-	 * @return  void
-	 *
-	 * @throws \Exception
-	 * @since   11.1
-	 */
-	protected function populateState($ordering = null, $direction = null): void
-	{
-		/** @type JApplicationSite $app */
-		$app = Factory::getApplication();
+    /**
+     * Get a list of teachers associated with series
+     *
+     * @return mixed
+     * @since 9.0.0
+     */
+    public function getTeachers(): array
+    {
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true);
+        $query->select('t.id AS value, t.teachername AS text');
+        $query->from('#__bsms_teachers AS t');
+        $query->select('series.access');
+        $query->join('INNER', '#__bsms_series AS series ON t.id = series.teacher');
+        $query->group('t.id');
+        $query->order('t.teachername ASC');
 
-		// Adjust the context to support modal layouts.
-		$input  = Factory::getApplication()->input;
-		$layout = $input->get('layout');
+        $db->setQuery($query->__toString());
 
-		if ($layout)
-		{
-			$this->context .= '.' . $layout;
-		}
+        return $db->loadObjectList();
+    }
 
-		// Load the parameters.
-		$params   = $app->getParams();
-		$this->setState('params', $params);
-		$template = Cwmparams::getTemplateparams();
-		$admin    = Cwmparams::getAdmin();
+    /**
+     * Get a list of teachers associated with series
+     *
+     * @return mixed
+     * @since 9.0.0
+     */
+    public function getYears(): array
+    {
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true);
+        $query->select('DISTINCT YEAR(s.studydate) as value, YEAR(s.studydate) as text');
+        $query->from('#__bsms_studies as s');
+        $query->select('series.access');
+        $query->join('INNER', '#__bsms_series as series on s.series_id = series.id');
+        $query->order('value');
 
-		$template->params->merge($params);
-		$template->params->merge($admin->params);
-		$params = $template->params;
+        $db->setQuery($query->__toString());
 
-		$t = (int) $params->get('seriesid');
+        return $db->loadObjectList();
+    }
 
-		if (!$t)
-		{
-			$t     = $input->get('t', 1, 'int');
-		}
+    /**
+     * Get a list of all used series
+     *
+     * @return array
+     * @throws \Exception
+     * @since 7.0
+     */
+    public function getSeries(): array
+    {
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true);
 
-		$template->id = $t;
+        $query->select('series.id AS value, series.series_text AS text, series.access');
+        $query->from('#__bsms_series AS series');
+        $query->join('INNER', '#__bsms_studies AS study ON study.series_id = series.id');
+        $query->group('series.id');
+        $query->order('series.series_text');
 
-		$this->setState('template', $template);
-		$this->setState('administrator', $admin);
+        $db->setQuery($query->__toString());
+        $items = $db->loadObjectList();
 
-		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
-		$this->setState('filter.published', $published);
+        // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
+        $user   = Factory::getApplication()->getIdentity();
+        $groups = $user->getAuthorisedViewLevels();
+        $count  = count($items);
 
-		$series = $this->getUserStateFromRequest($this->context . '.filter.series', 'filter_series');
-		$this->setState('filter.series', $series);
+        if ($count > 0) {
+            foreach ($items as $i => $iValue) {
+                if ($iValue->access > 1) {
+                    if (!in_array($iValue->access, $groups, true)) {
+                        unset($items[$i]);
+                    }
+                }
+            }
+        }
 
-		$this->setState('filter.language', LanguageHelper::getLanguages());
+        return $items;
+    }
 
-		$teacher = $this->getUserStateFromRequest($this->context . '.filter.teacher', 'filter_teacher', '');
-		$this->setState('filter.teacher', $teacher);
+    /**
+     * Method to auto-populate the model state.
+     *
+     * This method should only be called once per instantiation and is designed
+     * to be called on the first call to the getState() method unless the model
+     * configuration flag to ignore the request is set.
+     *
+     * Note. Calling getState in this method will result in recursion.
+     *
+     * @param   string  $ordering   An optional ordering field.
+     * @param   string  $direction  An optional direction (asc|desc).
+     *
+     * @return  void
+     *
+     * @throws \Exception
+     * @since   11.1
+     */
+    protected function populateState($ordering = null, $direction = null): void
+    {
+        /** @type JApplicationSite $app */
+        $app = Factory::getApplication();
 
-		$year = $this->getUserStateFromRequest($this->context . '.filter.year', 'filter_year', '');
-		$this->setState('filter.year', $year);
+        // Adjust the context to support modal layouts.
+        $input  = Factory::getApplication()->input;
+        $layout = $input->get('layout');
 
-		// Process show_noauth parameter
-		if (!$params->get('show_noauth'))
-		{
-			$this->setState('filter.access', true);
-		}
-		else
-		{
-			$this->setState('filter.access', false);
-		}
+        if ($layout) {
+            $this->context .= '.' . $layout;
+        }
 
-		$this->setState('layout', $input->get('layout', '', 'cmd'));
-		parent::populateState('se.id', 'ASC');
-		$value = $input->get('start', '', 'int');
-		$this->setState('list.start', $value);
-	}
+        // Load the parameters.
+        $params = $app->getParams();
+        $this->setState('params', $params);
+        $template = Cwmparams::getTemplateparams();
+        $admin    = Cwmparams::getAdmin();
 
-	/**
-	 * Build an SQL query to load the list data
-	 *
-	 * @return  DatabaseQuery  A DatabaseQuery object to retrieve the data set.
-	 *
-	 * @throws \Exception
-	 * @since   7.0
-	 */
-	protected function getListQuery(): DatabaseQuery
-	{
-		$db              = Factory::getContainer()->get('DatabaseDriver');
-		$template_params = Cwmparams::getTemplateparams();
-		$t_params        = $template_params->params;
-		$app             = Factory::getApplication();
-		$params          = ComponentHelper::getParams('com_proclaim');
+        $template->params->merge($params);
+        $template->params->merge($admin->params);
+        $params = $template->params;
 
-		$sitemenu = $app->getMenu();
-		$menuitems = $sitemenu->getItems(array(), array());
+        $t = (int)$params->get('seriesid');
 
-		foreach ($menuitems as $menuitem)
-		{
-			$menuparams = $menuitem->getParams();
-		}
+        if (!$t) {
+            $t = $input->get('t', 1, 'int');
+        }
 
-		$query = $db->getQuery(true);
-		$query->select('se.*,CASE WHEN CHAR_LENGTH(se.alias) THEN CONCAT_WS(\':\', se.id, se.alias) ELSE se.id END as slug');
-		$query->from('#__bsms_series as se');
-		$query->select('t.id as tid, t.teachername, t.title as teachertitle, t.thumb, t.thumbh, t.thumbw, t.teacher_thumbnail');
-		$query->join('LEFT', '#__bsms_teachers as t on se.teacher = t.id');
-		$query->select('s.id as sid, s.series_id, s.studydate');
-		$query->join('INNER', '#__bsms_studies as s on s.series_id = se.id');
-		$query->group('se.id');
-		$where = $this->_buildContentWhere();
-		$query->where($where);
+        $template->id = $t;
 
-		// Filter by language
-		$language = $params->get('language', '*');
+        $this->setState('template', $template);
+        $this->setState('administrator', $admin);
 
-		if ($this->getState('filter.language') || $language !== '*')
-		{
-			$query->where('se.language in (' . $db->quote($app->getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
-		}
+        $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
+        $this->setState('filter.published', $published);
 
-		$orderDir = $t_params->get('series_list_order', 'DESC');
-		$orderCol = $t_params->get('series_order_field', 'series_text');
-		$query->order($orderCol . ' ' . $orderDir);
+        $series = $this->getUserStateFromRequest($this->context . '.filter.series', 'filter_series');
+        $this->setState('filter.series', $series);
 
-		return $query;
-	}
+        $this->setState('filter.language', LanguageHelper::getLanguages());
 
-	/**
-	 * Build Content of series
-	 *
-	 * @return string
-	 *
-	 * @throws \Exception
-	 * @since 7.0
-	 */
-	public function _buildContentWhere(): string
-	{
-		$mainframe      = Factory::getApplication();
-		$input          = $mainframe->input;
-		$option         = $input->get('option', '', 'cmd');
-		$params         = ComponentHelper::getParams($option);
-		$filter_series  = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');
-		$filter_teacher = $mainframe->getUserStateFromRequest($option . 'filter_teacher', 'filter_teacher', 0, 'int');
-		$filter_year    = $mainframe->getUserStateFromRequest($option . 'filter_year', 'filter_year', 0, 'int');
-		$where          = array();
-		$where[]        = ' se.published = 1';
+        $teacher = $this->getUserStateFromRequest($this->context . '.filter.teacher', 'filter_teacher', '');
+        $this->setState('filter.teacher', $teacher);
 
-		if ($filter_series > 0)
-		{
-			$where[] = ' se.id = ' . (int) $filter_series;
-		}
+        $year = $this->getUserStateFromRequest($this->context . '.filter.year', 'filter_year', '');
+        $this->setState('filter.year', $year);
 
-		if ($filter_teacher > 0)
-		{
-			$where[] = ' se.teacher = ' . (int) $filter_teacher;
-		}
+        // Process show_noauth parameter
+        if (!$params->get('show_noauth')) {
+            $this->setState('filter.access', true);
+        } else {
+            $this->setState('filter.access', false);
+        }
 
-		if ($filter_year > 0)
-		{
-			$where[] = ' YEAR(s.studydate) = ' . (int) $filter_year;
-		}
+        $this->setState('layout', $input->get('layout', '', 'cmd'));
+        parent::populateState('se.id', 'ASC');
+        $value = $input->get('start', '', 'int');
+        $this->setState('list.start', $value);
+    }
 
-		$where = (count($where) ? implode(' AND ', $where) : '');
+    /**
+     * Build an SQL query to load the list data
+     *
+     * @return  DatabaseQuery  A DatabaseQuery object to retrieve the data set.
+     *
+     * @throws \Exception
+     * @since   7.0
+     */
+    protected function getListQuery(): DatabaseQuery
+    {
+        $db              = Factory::getContainer()->get('DatabaseDriver');
+        $template_params = Cwmparams::getTemplateparams();
+        $t_params        = $template_params->params;
+        $app             = Factory::getApplication();
+        $params          = ComponentHelper::getParams('com_proclaim');
 
-		$where2   = array();
-		$continue = 0;
+        $sitemenu  = $app->getMenu();
+        $menuitems = $sitemenu->getItems(array(), array());
 
-		if ($params->get('series_id') && !$filter_series)
-		{
-			$filters = $params->get('series_id');
+        foreach ($menuitems as $menuitem) {
+            $menuparams = $menuitem->getParams();
+        }
 
-			switch ($filters)
-			{
-				case is_array($filters) :
-					foreach ($filters AS $filter)
-					{
-						if ($filter === '-1')
-						{
-							break;
-						}
+        $query = $db->getQuery(true);
+        $query->select(
+            'se.*,CASE WHEN CHAR_LENGTH(se.alias) THEN CONCAT_WS(\':\', se.id, se.alias) ELSE se.id END as slug'
+        );
+        $query->from('#__bsms_series as se');
+        $query->select(
+            't.id as tid, t.teachername, t.title as teachertitle, t.thumb, t.thumbh, t.thumbw, t.teacher_thumbnail'
+        );
+        $query->join('LEFT', '#__bsms_teachers as t on se.teacher = t.id');
+        $query->select('s.id as sid, s.series_id, s.studydate');
+        $query->join('INNER', '#__bsms_studies as s on s.series_id = se.id');
+        $query->group('se.id');
+        $where = $this->_buildContentWhere();
+        $query->where($where);
 
-						$continue = 1;
-						$where2[] = 'se.id = ' . (int) $filter;
-					}
-					break;
+        // Filter by language
+        $language = $params->get('language', '*');
 
-				case '-1':
-					break;
+        if ($this->getState('filter.language') || $language !== '*') {
+            $query->where('se.language in (' . $db->quote($app->getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
+        }
 
-				default:
-					$continue = 1;
-					$where2[] = 'se.id = ' . (int) $filters;
-					break;
-			}
-		}
+        $orderDir = $t_params->get('series_list_order', 'DESC');
+        $orderCol = $t_params->get('series_order_field', 'series_text');
+        $query->order($orderCol . ' ' . $orderDir);
 
-		$where2 = (count($where2) ? ' ' . implode(' OR ', $where2) : '');
+        return $query;
+    }
 
-		if ($continue > 0)
-		{
-			$where .= ' AND ( ' . $where2 . ')';
-		}
+    /**
+     * Build Content of series
+     *
+     * @return string
+     *
+     * @throws \Exception
+     * @since 7.0
+     */
+    public function _buildContentWhere(): string
+    {
+        $mainframe      = Factory::getApplication();
+        $input          = $mainframe->input;
+        $option         = $input->get('option', '', 'cmd');
+        $params         = ComponentHelper::getParams($option);
+        $filter_series  = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');
+        $filter_teacher = $mainframe->getUserStateFromRequest($option . 'filter_teacher', 'filter_teacher', 0, 'int');
+        $filter_year    = $mainframe->getUserStateFromRequest($option . 'filter_year', 'filter_year', 0, 'int');
+        $where          = array();
+        $where[]        = ' se.published = 1';
 
-		return $where;
-	}
+        if ($filter_series > 0) {
+            $where[] = ' se.id = ' . (int)$filter_series;
+        }
 
-	/**
-	 * Get a list of teachers associated with series
-	 *
-	 * @since 9.0.0
-	 * @return mixed
-	 */
-	public function getTeachers(): array
-	{
-		$db    = Factory::getContainer()->get('DatabaseDriver');
-		$query = $db->getQuery(true);
-		$query->select('t.id AS value, t.teachername AS text');
-		$query->from('#__bsms_teachers AS t');
-		$query->select('series.access');
-		$query->join('INNER', '#__bsms_series AS series ON t.id = series.teacher');
-		$query->group('t.id');
-		$query->order('t.teachername ASC');
+        if ($filter_teacher > 0) {
+            $where[] = ' se.teacher = ' . (int)$filter_teacher;
+        }
 
-		$db->setQuery($query->__toString());
+        if ($filter_year > 0) {
+            $where[] = ' YEAR(s.studydate) = ' . (int)$filter_year;
+        }
 
-		return $db->loadObjectList();
-	}
+        $where = (count($where) ? implode(' AND ', $where) : '');
 
-	/**
-	 * Get a list of teachers associated with series
-	 *
-	 * @since 9.0.0
-	 * @return mixed
-	 */
-	public function getYears(): array
-	{
-		$db    = Factory::getContainer()->get('DatabaseDriver');
-		$query = $db->getQuery(true);
-		$query->select('DISTINCT YEAR(s.studydate) as value, YEAR(s.studydate) as text');
-		$query->from('#__bsms_studies as s');
-		$query->select('series.access');
-		$query->join('INNER', '#__bsms_series as series on s.series_id = series.id');
-		$query->order('value');
+        $where2   = array();
+        $continue = 0;
 
-		$db->setQuery($query->__toString());
+        if ($params->get('series_id') && !$filter_series) {
+            $filters = $params->get('series_id');
 
-		return $db->loadObjectList();
-	}
+            switch ($filters) {
+                case is_array($filters) :
+                    foreach ($filters as $filter) {
+                        if ($filter === '-1') {
+                            break;
+                        }
 
-	/**
-	 * Get a list of all used series
-	 *
-	 * @return array
-	 * @throws \Exception
-	 * @since 7.0
-	 */
-	public function getSeries(): array
-	{
-		$db    = Factory::getContainer()->get('DatabaseDriver');
-		$query = $db->getQuery(true);
+                        $continue = 1;
+                        $where2[] = 'se.id = ' . (int)$filter;
+                    }
+                    break;
 
-		$query->select('series.id AS value, series.series_text AS text, series.access');
-		$query->from('#__bsms_series AS series');
-		$query->join('INNER', '#__bsms_studies AS study ON study.series_id = series.id');
-		$query->group('series.id');
-		$query->order('series.series_text');
+                case '-1':
+                    break;
 
-		$db->setQuery($query->__toString());
-		$items = $db->loadObjectList();
+                default:
+                    $continue = 1;
+                    $where2[] = 'se.id = ' . (int)$filters;
+                    break;
+            }
+        }
 
-		// Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-		$user     = Factory::getApplication()->getIdentity();
-		$groups = $user->getAuthorisedViewLevels();
-		$count  = count($items);
+        $where2 = (count($where2) ? ' ' . implode(' OR ', $where2) : '');
 
-		if ($count > 0)
-		{
-			foreach ($items as $i => $iValue)
-			{
-				if ($iValue->access > 1)
-				{
-					if (!in_array($iValue->access, $groups, true))
-					{
-						unset($items[$i]);
-					}
-				}
-			}
-		}
+        if ($continue > 0) {
+            $where .= ' AND ( ' . $where2 . ')';
+        }
 
-		return $items;
-	}
+        return $where;
+    }
 }

@@ -6,28 +6,28 @@ and open the template in the editor.
 <html>
 <head>
     <title>Template Code Helper</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
     <style type="text/css">
         table.sample {
             border-width: 1px;
             border-spacing: 2px;
             border-style: outset;
-            border-color: gray;
+            border-color: rgb(128, 128, 128);
             border-collapse: collapse;
             background-color: white;
         }
 
         table.sample th {
-	        padding: 2px;
-	        border: 1px inset gray;
-	        background-color: white;
+            padding: 2px;
+            border: 1px inset rgb(128, 128, 128);
+            background-color: white;
 
         }
 
         table.sample td {
-	        padding: 2px;
-	        border: 1px inset gray;
-	        background-color: white;
+            padding: 2px;
+            border: 1px inset rgb(128, 128, 128);
+            background-color: white;
 
         }
 
@@ -51,420 +51,422 @@ and open the template in the editor.
 <body><h2>Template Code Helper (click field to select)</h2>
 
 <form action="post">
-<div>
-    <table class="sample">
-        <thead>
-        <th colspan="2">Studies Codes (for all views)</th>
-        </thead>
-        <tbody>
-        <tr>
-            <td>To get the list, see each view</td>
-            <td><input type="text" size="75" onClick="this.select();"
-                       value="foreach ($this->items as $study){put individual items here}"/></td>
-        </tr>
-        <tr>
-            <td>Title</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $study->studytitle;"/></td>
-        </tr>
-        <tr>
-            <td>Study Number</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $study->studynumber;"/></td>
-        </tr>
-        <tr>
-            <td>Description</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $study->studyintro;"/></td>
-        </tr>
-        <tr>
-            <td>Date</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $study->studydate;"/></td>
-        </tr>
-        <tr>
-            <td>Id</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $study->id;"/></td>
-        </tr>
-        <tr>
-            <td>Scripture 1</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $study->scripture1;"/></td>
-        </tr>
-        <tr>
-            <td>Scripture 2</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $study->scripture2;"/></td>
-        </tr>
-        <tr>
-            <td>Title</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $study->studytitle;"/></td>
-        </tr>
-        <tr>
-            <td>Media</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $study->media;"/></td>
-        </tr>
-        <tr>
-            <td>Duration</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $study->duration;"/></td>
-        </tr>
-        <tr>
-            <td>Topics</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $study->topics;"/></td>
-        </tr>
-        <tr>
-            <td>Study Thumbnail</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $study->study_thumbnail;"/></td>
-        </tr>
-        <tr>
-            <td>Series Thumbnail</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $study->series_thumbnail;"/></td>
-        </tr>
-        <tr>
-            <td>Secondary Reference</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $study->secondary_reference;"/></td>
-        </tr>
-        <tr>
-            <td>Link to Details View</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $study->detailslink;"/></td>
-        </tr>
-        <tr>
-            <td>Topics</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $study->topics;"/></td>
-        </tr>
-        <tr>
-            <td>Teacher Name</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $study->teachername;"/></td>
-        </tr>
-        <tr>
-            <td>Teacher Title</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $study->teachertitle;"/></td>
-        </tr>
-        <tr>
-            <td>Teacher Image</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $study->teacherimage;"/></td>
-        </tr>
-        <tr>
-            <td>Topics</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $study->topics;"/></td>
-        </tr>
-        <tr>
-            <td>Hits</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $study->hits;"/></td>
-        </tr>
-        <tr>
-            <td>Submitted By</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $study->submitted;"/></td>
-        </tr>
-        <tr>
-            <td>Slug</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $study->slug;"/></td>
-        </tr>
-        <tr>
-            <td>Total Plays</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $study->totalplays;"/></td>
-        </tr>
-        <tr>
-            <td>Total Downloads</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $study->totaldownloads;"/></td>
-        </tr>
-        <tr>
-            <td>Location</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $study->location_text;"/></td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-<br/>
+    <div>
+        <table class="sample">
+            <thead>
+            <th colspan="2">Studies Codes (for all views)</th>
+            </thead>
+            <tbody>
+            <tr>
+                <td>To get the list, see each view</td>
+                <td><input onClick="this.select();" size="75" type="text"
+                           value="foreach ($this->items as $study){put individual items here}"/></td>
+            </tr>
+            <tr>
+                <td>Title</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $study->studytitle;"/></td>
+            </tr>
+            <tr>
+                <td>Study Number</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $study->studynumber;"/></td>
+            </tr>
+            <tr>
+                <td>Description</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $study->studyintro;"/></td>
+            </tr>
+            <tr>
+                <td>Date</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $study->studydate;"/></td>
+            </tr>
+            <tr>
+                <td>Id</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $study->id;"/></td>
+            </tr>
+            <tr>
+                <td>Scripture 1</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $study->scripture1;"/></td>
+            </tr>
+            <tr>
+                <td>Scripture 2</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $study->scripture2;"/></td>
+            </tr>
+            <tr>
+                <td>Title</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $study->studytitle;"/></td>
+            </tr>
+            <tr>
+                <td>Media</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $study->media;"/></td>
+            </tr>
+            <tr>
+                <td>Duration</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $study->duration;"/></td>
+            </tr>
+            <tr>
+                <td>Topics</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $study->topics;"/></td>
+            </tr>
+            <tr>
+                <td>Study Thumbnail</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $study->study_thumbnail;"/></td>
+            </tr>
+            <tr>
+                <td>Series Thumbnail</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $study->series_thumbnail;"/></td>
+            </tr>
+            <tr>
+                <td>Secondary Reference</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $study->secondary_reference;"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Link to Details View</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $study->detailslink;"/></td>
+            </tr>
+            <tr>
+                <td>Topics</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $study->topics;"/></td>
+            </tr>
+            <tr>
+                <td>Teacher Name</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $study->teachername;"/></td>
+            </tr>
+            <tr>
+                <td>Teacher Title</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $study->teachertitle;"/></td>
+            </tr>
+            <tr>
+                <td>Teacher Image</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $study->teacherimage;"/></td>
+            </tr>
+            <tr>
+                <td>Topics</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $study->topics;"/></td>
+            </tr>
+            <tr>
+                <td>Hits</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $study->hits;"/></td>
+            </tr>
+            <tr>
+                <td>Submitted By</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $study->submitted;"/></td>
+            </tr>
+            <tr>
+                <td>Slug</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $study->slug;"/></td>
+            </tr>
+            <tr>
+                <td>Total Plays</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $study->totalplays;"/></td>
+            </tr>
+            <tr>
+                <td>Total Downloads</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $study->totaldownloads;"/></td>
+            </tr>
+            <tr>
+                <td>Location</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $study->location_text;"/></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <br/>
 
-<div>
-    <table class="sample">
-        <th colspan="2">Sermon List Codes</th>
-        <tr>
-            <td>List Introduction</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->params->get('list_intro');"/></td>
-        </tr>
-        <tr>
-            <td>Search Tools</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->page->searchtools;"/></td>
-        </tr>
-        <tr>
-            <td>Pagination links</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->page->pagelinks"/>;</td>
-        </tr>
-        <tr>
-            <td>Pagination Limit Box</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->page->limitbox;"/></td>
-        </tr>
-        <tr>
-            <td>Pagination array</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->pagination;"/></td>
-        </tr>
-        <tr>
-            <td>Sample Code</td>
-            <td><textarea cols="50" rows="10" onClick="this.select();">
+    <div>
+        <table class="sample">
+            <th colspan="2">Sermon List Codes</th>
+            <tr>
+                <td>List Introduction</td>
+                <td><input onClick="this.select();" size="75" type="text"
+                           value="echo $this->params->get('list_intro');"/></td>
+            </tr>
+            <tr>
+                <td>Search Tools</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->page->searchtools;"/></td>
+            </tr>
+            <tr>
+                <td>Pagination links</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->page->pagelinks"/>;</td>
+            </tr>
+            <tr>
+                <td>Pagination Limit Box</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->page->limitbox;"/></td>
+            </tr>
+            <tr>
+                <td>Pagination array</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->pagination;"/></td>
+            </tr>
+            <tr>
+                <td>Sample Code</td>
+                <td><textarea cols="50" onClick="this.select();" rows="10">
                 foreach ($this->items as $study){echo $study->studyintro.'<br/>';}</textarea></td>
-        </tr>
-    </table>
-</div>
-<br/>
+            </tr>
+        </table>
+    </div>
+    <br/>
 
-<div>
-    <table class="sample">
-        <th colspan="2">Sermon Display Codes (Plus any studies code)</th>
-        <tr>
-            <td>Print Button</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo  $this->page->print;"/></td>
-        </tr>
-        <tr>
-            <td>Social Media Box</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo  $this->page->social;"/></td>
-        </tr>
-        <tr>
-            <td>Study Text</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo  $this->item->studytext;"/></td>
-        </tr>
-        <tr>
-            <td>Main Reference Passage</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo  $this->passage;"/></td>
-        </tr>
-        <tr>
-            <td>Related Studies Drop Down</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo  $this->related;"/></td>
-        </tr>
-        <tr>
-            <td>Sample Code</td>
-            <td><textarea cols="50" rows="10" onClick="this.select();">
+    <div>
+        <table class="sample">
+            <th colspan="2">Sermon Display Codes (Plus any studies code)</th>
+            <tr>
+                <td>Print Button</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo  $this->page->print;"/></td>
+            </tr>
+            <tr>
+                <td>Social Media Box</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo  $this->page->social;"/></td>
+            </tr>
+            <tr>
+                <td>Study Text</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo  $this->item->studytext;"/></td>
+            </tr>
+            <tr>
+                <td>Main Reference Passage</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo  $this->passage;"/></td>
+            </tr>
+            <tr>
+                <td>Related Studies Drop Down</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo  $this->related;"/></td>
+            </tr>
+            <tr>
+                <td>Sample Code</td>
+                <td><textarea cols="50" onClick="this.select();" rows="10">
                 foreach ($this->items as $study){echo $study->studyintro.'<br/>';}</textarea></td>
-        </tr>
+            </tr>
 
-    </table>
-</div>
-<br/>
+        </table>
+    </div>
+    <br/>
 
-<div>
-    <table class="sample">
-        <th colspan="2">Series List Codes (plus Series Display Codes below)</th>
-        <tr>
-            <td>To get each series</td>
-            <td><input type="text" size="75" onClick="this.select();"
-                       value="foreach ($this->items as $series){echo $series->description; etc. See Below for More Codes"/>
-            </td>
-        </tr>
-        <tr>
-            <td>Link to each series</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $series->serieslink;"/></td>
-        </tr>
-        <tr>
-            <td>Series Image</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $series->image;"/></td>
-        </tr>
-        <tr>
-            <td>Series Drop down box</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->page->series;"/></td>
-        </tr>
-        <tr>
-            <td>Main Series Page Image</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->page->main;"/></td>
-        </tr>
-        <tr>
-            <td>Footer Pagination Links</td>
-            <td><input type="text" size="75" onClick="this.select();"
-                       value="echo $this->page->pagelinks; echo $this->page->counter;"/></td>
-        </tr>
-        <tr>
-            <td>Series Title</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $series->series_text;"/></td>
-        </tr>
-        <tr>
-            <td>Series Teacher Image</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $series->teacherimage;"/></td>
-        </tr>
-        <tr>
-            <td>Series Description</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $series->description;"/></td>
-        </tr>
-        <tr>
-            <td>Series Teacher Name</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $series->teachername;"/></td>
-        </tr>
-        <tr>
-            <td>Series Teacher Title</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $series->teachertitle;"/></td>
-        </tr>
-        <tr>
-            <td>Series Teacher Image</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $series->teacherimage;"/></td>
-        </tr>
-        <tr>
-            <td>Sample Code</td>
-            <td><textarea cols="50" rows="10" onClick="this.select();">
+    <div>
+        <table class="sample">
+            <th colspan="2">Series List Codes (plus Series Display Codes below)</th>
+            <tr>
+                <td>To get each series</td>
+                <td><input onClick="this.select();" size="75" type="text"
+                           value="foreach ($this->items as $series){echo $series->description; etc. See Below for More Codes"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Link to each series</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $series->serieslink;"/></td>
+            </tr>
+            <tr>
+                <td>Series Image</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $series->image;"/></td>
+            </tr>
+            <tr>
+                <td>Series Drop down box</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->page->series;"/></td>
+            </tr>
+            <tr>
+                <td>Main Series Page Image</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->page->main;"/></td>
+            </tr>
+            <tr>
+                <td>Footer Pagination Links</td>
+                <td><input onClick="this.select();" size="75" type="text"
+                           value="echo $this->page->pagelinks; echo $this->page->counter;"/></td>
+            </tr>
+            <tr>
+                <td>Series Title</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $series->series_text;"/></td>
+            </tr>
+            <tr>
+                <td>Series Teacher Image</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $series->teacherimage;"/></td>
+            </tr>
+            <tr>
+                <td>Series Description</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $series->description;"/></td>
+            </tr>
+            <tr>
+                <td>Series Teacher Name</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $series->teachername;"/></td>
+            </tr>
+            <tr>
+                <td>Series Teacher Title</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $series->teachertitle;"/></td>
+            </tr>
+            <tr>
+                <td>Series Teacher Image</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $series->teacherimage;"/></td>
+            </tr>
+            <tr>
+                <td>Sample Code</td>
+                <td><textarea cols="50" onClick="this.select();" rows="10">
                 foreach ($this->items as $series){echo $series->series_text.'<br/>';}</textarea></td>
-        </tr>
+            </tr>
 
-    </table>
-</div>
-<br/>
+        </table>
+    </div>
+    <br/>
 
-<div>
-    <table class="sample">
-        <th colspan="2">Series Display Codes</th>
-        <tr>
-            <td>Series Title</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->page->series_text;"/></td>
-        </tr>
-        <tr>
-            <td>Series Thumbnail</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->page->image;"/></td>
-        </tr>
-        <tr>
-            <td>Series Studies</td>
-            <td><input type="text" size="75" onClick="this.select();"
-                       value="foreach ($this->seriesstudies as $study){echo $study-> see Studies List for details;}"/>
-            </td>
-        </tr>
-        <tr>
-            <td>Series Description</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->page->description;"/></td>
-        </tr>
-        <tr>
-            <td>Series Teacher Name</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->page->teachername;"/></td>
-        </tr>
-        <tr>
-            <td>Series Teacher Title</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->page->teachertitle;"/></td>
-        </tr>
-        <tr>
-            <td>Series Teacher Image</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->page->teacherimage;"/></td>
-        </tr>
-        <tr>
-            <td>Sample Code</td>
-            <td><textarea cols="50" rows="10" onClick="this.select();">
+    <div>
+        <table class="sample">
+            <th colspan="2">Series Display Codes</th>
+            <tr>
+                <td>Series Title</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->page->series_text;"/></td>
+            </tr>
+            <tr>
+                <td>Series Thumbnail</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->page->image;"/></td>
+            </tr>
+            <tr>
+                <td>Series Studies</td>
+                <td><input onClick="this.select();" size="75" type="text"
+                           value="foreach ($this->seriesstudies as $study){echo $study-> see Studies List for details;}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Series Description</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->page->description;"/></td>
+            </tr>
+            <tr>
+                <td>Series Teacher Name</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->page->teachername;"/></td>
+            </tr>
+            <tr>
+                <td>Series Teacher Title</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->page->teachertitle;"/></td>
+            </tr>
+            <tr>
+                <td>Series Teacher Image</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->page->teacherimage;"/></td>
+            </tr>
+            <tr>
+                <td>Sample Code</td>
+                <td><textarea cols="50" onClick="this.select();" rows="10">
                 foreach ($this->items as $study){echo $study->studyintro.'<br/>';}</textarea></td>
-        </tr>
-    </table>
-</div>
-<br/>
+            </tr>
+        </table>
+    </div>
+    <br/>
 
-<div>
-    <table class="sample">
-        <th colspan="2">Teacher List Codes (plus Teacher Display Codes below)</th>
-        <tr>
-            <td>Each Teacher's Information</td>
-            <td><input type="text" size="75" onClick="this.select();"
-                       value="foreach ($this->items as $teacher){echo $teacher->teachername; See Teacher Display Codes"/>
-            </td>
-        </tr>
-        <tr>
-            <td>Link to each teacher</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $teacher->teacherlink;"/></td>
-        </tr>
-        <tr>
-            <td>Teacher Image</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $teacher->image;"/></td>
-        </tr>
-        <tr>
-            <td>Sample Code</td>
-            <td><textarea cols="50" rows="10" onClick="this.select();">
+    <div>
+        <table class="sample">
+            <th colspan="2">Teacher List Codes (plus Teacher Display Codes below)</th>
+            <tr>
+                <td>Each Teacher's Information</td>
+                <td><input onClick="this.select();" size="75" type="text"
+                           value="foreach ($this->items as $teacher){echo $teacher->teachername; See Teacher Display Codes"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Link to each teacher</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $teacher->teacherlink;"/></td>
+            </tr>
+            <tr>
+                <td>Teacher Image</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $teacher->image;"/></td>
+            </tr>
+            <tr>
+                <td>Sample Code</td>
+                <td><textarea cols="50" onClick="this.select();" rows="10">
                 foreach ($this->items as $teacher){echo $teacher->teachername.'<br/>';}</textarea></td>
-        </tr>
-    </table>
-</div>
-<br/>
+            </tr>
+        </table>
+    </div>
+    <br/>
 
-<div>
-    <table class="sample">
-        <th colspan="2">Teacher Display Codes</th>
-        <tr>
-            <td>Teacher Thumbnail</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->$item->image;"/></td>
-        </tr>
-        <tr>
-            <td>Large Teacher Image</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->item->largeimage;"/></td>
-        </tr>
-        <tr>
-            <td>Teacher's Studies</td>
-            <td><input type="text" size="75" onClick="this.select();"
-                       value="foreach($this->teacherstudies as $studies){echo $studies->studytitle;}"/></td>
-        </tr>
-        <tr>
-            <td>Teacher Title</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->item->title;"/></td>
-        </tr>
-        <tr>
-            <td>Teacher Phone</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->item->phone;"/></td>
-        </tr>
-        <tr>
-            <td>Teacher Email</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->item->email;"/></td>
-        </tr>
-        <tr>
-            <td>Teacher Website</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->item->website;"/></td>
-        </tr>
-        <tr>
-            <td>Teacher Introduction</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->item->short;"/></td>
-        </tr>
-        <tr>
-            <td>Teacher Long Information</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->item->information;"/></td>
-        </tr>
-        <tr>
-            <td>Teacher Address</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->item->address;"/></td>
-        </tr>
-        <tr>
-            <td>Teacher Facebook URL</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->item->facebooklink;"/></td>
-        </tr>
-        <tr>
-            <td>Teacher Twitter URL</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->item->twitterlink;"/></td>
-        </tr>
-        <tr>
-            <td>Teacher Blog URL</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->item->bloglink;"/></td>
-        </tr>
-        <tr>
-            <td>Teacher Web Link1 URL</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->item->link1;"/></td>
-        </tr>
-        <tr>
-            <td>Teacher Web Link1 Label</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->item->linklabel1;"/></td>
-        </tr>
-        <tr>
-            <td>Teacher Web Link2 URL</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->item->link2;"/></td>
-        </tr>
-        <tr>
-            <td>Teacher Web Link2 Label</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->item->linklabel2;"/></td>
-        </tr>
-        <tr>
-            <td>Teacher Web Link3 URL</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->item->link3;"/></td>
-        </tr>
-        <tr>
-            <td>Teacher Web Link3 Label</td>
-            <td><input type="text" size="75" onClick="this.select();" value="echo $this->item->linklabel3;"/></td>
-        </tr>
-    </table>
-</div>
-<div>
-    <table class="sample">
-        <th colspan="2">Module Codes (Plus any Studies Code from above)</th>
-        <tr>
-            <td>Link to more studies</td>
-            <td><input type="text" onClick="this.select();" value="echo $link;"/></td>
-        </tr>
+    <div>
+        <table class="sample">
+            <th colspan="2">Teacher Display Codes</th>
+            <tr>
+                <td>Teacher Thumbnail</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->$item->image;"/></td>
+            </tr>
+            <tr>
+                <td>Large Teacher Image</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->largeimage;"/></td>
+            </tr>
+            <tr>
+                <td>Teacher's Studies</td>
+                <td><input onClick="this.select();" size="75" type="text"
+                           value="foreach($this->teacherstudies as $studies){echo $studies->studytitle;}"/></td>
+            </tr>
+            <tr>
+                <td>Teacher Title</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->title;"/></td>
+            </tr>
+            <tr>
+                <td>Teacher Phone</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->phone;"/></td>
+            </tr>
+            <tr>
+                <td>Teacher Email</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->email;"/></td>
+            </tr>
+            <tr>
+                <td>Teacher Website</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->website;"/></td>
+            </tr>
+            <tr>
+                <td>Teacher Introduction</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->short;"/></td>
+            </tr>
+            <tr>
+                <td>Teacher Long Information</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->information;"/></td>
+            </tr>
+            <tr>
+                <td>Teacher Address</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->address;"/></td>
+            </tr>
+            <tr>
+                <td>Teacher Facebook URL</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->facebooklink;"/></td>
+            </tr>
+            <tr>
+                <td>Teacher Twitter URL</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->twitterlink;"/></td>
+            </tr>
+            <tr>
+                <td>Teacher Blog URL</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->bloglink;"/></td>
+            </tr>
+            <tr>
+                <td>Teacher Web Link1 URL</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->link1;"/></td>
+            </tr>
+            <tr>
+                <td>Teacher Web Link1 Label</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->linklabel1;"/></td>
+            </tr>
+            <tr>
+                <td>Teacher Web Link2 URL</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->link2;"/></td>
+            </tr>
+            <tr>
+                <td>Teacher Web Link2 Label</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->linklabel2;"/></td>
+            </tr>
+            <tr>
+                <td>Teacher Web Link3 URL</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->link3;"/></td>
+            </tr>
+            <tr>
+                <td>Teacher Web Link3 Label</td>
+                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->linklabel3;"/></td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <table class="sample">
+            <th colspan="2">Module Codes (Plus any Studies Code from above)</th>
+            <tr>
+                <td>Link to more studies</td>
+                <td><input onClick="this.select();" type="text" value="echo $link;"/></td>
+            </tr>
 
-        <tr>
-            <td>Sample Code</td>
-            <td><textarea cols="50" rows="10" onClick="this.select();">
+            <tr>
+                <td>Sample Code</td>
+                <td><textarea cols="50" onClick="this.select();" rows="10">
                 foreach ($list as $study){echo $study->studyintro.'<br/>';}</textarea></td>
-        </tr>
-    </table>
-</div>
+            </tr>
+        </table>
+    </div>
 </form>
 </body>
 </html>

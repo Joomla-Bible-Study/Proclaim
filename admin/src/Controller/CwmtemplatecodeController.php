@@ -24,20 +24,20 @@ use Joomla\CMS\MVC\Controller\FormController;
  */
 class CwmtemplatecodeController extends FormController
 {
-	/**
-	 * Protect the view
-	 *
-	 * @var string
-	 *
-	 * @since 1.5
-	 */
-	protected $view_list = 'cwmtemplatecodes';
+    /**
+     * Protect the view
+     *
+     * @var string
+     *
+     * @since 1.5
+     */
+    protected $view_list = 'cwmtemplatecodes';
 
-	/**
-	 * The URL option for the component.
-	 *
-	 * @var    string
-	 * @since  12.2
-	 */
-	protected $option = 'com_proclaim';
+    /**
+     * The URL option for the component.
+     *
+     * @var    string
+     * @since  12.2
+     */
+    protected $option = 'com_proclaim';
 }

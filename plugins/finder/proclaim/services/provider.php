@@ -21,30 +21,30 @@ use Joomla\Event\DispatcherInterface;
 
 return new class implements ServiceProviderInterface {
 
-	/**
-	 * Registers the service provider with a DI container.
-	 *
-	 * @param   Container  $container  The DI container.
-	 *
-	 * @return  void
-	 *
-	 * @since   4.3.0
-	 */
-	public function register(Container $container): void
-	{
-		$container->set(
-			PluginInterface::class,
-			function (Container $container) {
-				$dispatcher = $container->get(DispatcherInterface::class);
-				$plugin = new Proclaim(
-					$dispatcher,
-					(array) PluginHelper::getPlugin('finder', 'proclaim')
-				);
-				$plugin->setApplication(Factory::getApplication());
-				$plugin->setDatabase($container->get(DatabaseInterface::class));
+    /**
+     * Registers the service provider with a DI container.
+     *
+     * @param   Container  $container  The DI container.
+     *
+     * @return  void
+     *
+     * @since   4.3.0
+     */
+    public function register(Container $container): void
+    {
+        $container->set(
+            PluginInterface::class,
+            function (Container $container) {
+                $dispatcher = $container->get(DispatcherInterface::class);
+                $plugin     = new Proclaim(
+                    $dispatcher,
+                    (array)PluginHelper::getPlugin('finder', 'proclaim')
+                );
+                $plugin->setApplication(Factory::getApplication());
+                $plugin->setDatabase($container->get(DatabaseInterface::class));
 
-				return $plugin;
-			}
-		);
-	}
+                return $plugin;
+            }
+        );
+    }
 };

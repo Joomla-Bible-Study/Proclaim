@@ -7,14 +7,16 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Site\View\Cwmlatest;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Router\Route;
 
 /**
@@ -25,32 +27,32 @@ use Joomla\CMS\Router\Route;
  */
 class HtmlView extends BaseHtmlView
 {
-	/**
-	 * Execute and display a template script.
-	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
-	 * @return  void
-	 *
-	 * @since 7.0
-	 */
-	public function display($tpl = null)
-	{
-		$db = Factory::getContainer()->get('DatabaseDriver');
-		$query = $db->getQuery('true');
-		$query->select('id')
-				->from('#__bsms_studies')
-				->where('published = 1')
-				->order('studydate DESC LIMIT 1');
-		$db->setQuery($query);
-		$id    = $db->loadResult();
-		$input = Factory::getApplication()->input;
-		$t     = $input->get('t', '1');
+    /**
+     * Execute and display a template script.
+     *
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return  void
+     *
+     * @since 7.0
+     */
+    public function display($tpl = null)
+    {
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery('true');
+        $query->select('id')
+            ->from('#__bsms_studies')
+            ->where('published = 1')
+            ->order('studydate DESC LIMIT 1');
+        $db->setQuery($query);
+        $id    = $db->loadResult();
+        $input = Factory::getApplication()->input;
+        $t     = $input->get('t', '1');
 
-		// @todo move to slug asap
-		$link = Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . $id . '&t=' . $t);
-		$app  = Factory::getApplication();
+        // @todo move to slug asap
+        $link = Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . $id . '&t=' . $t);
+        $app  = Factory::getApplication();
 
-		$app->redirect($link);
-	}
+        $app->redirect($link);
+    }
 }

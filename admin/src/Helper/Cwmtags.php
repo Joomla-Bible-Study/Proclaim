@@ -12,6 +12,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
@@ -24,29 +25,29 @@ use Joomla\CMS\Factory;
  **/
 class Cwmtags
 {
-	/**
-	 * Extension Name
-	 *
-	 * @var string
-	 *
-	 * @since 1.5
-	 */
-	public static $extension = 'com_proclaim';
+    /**
+     * Extension Name
+     *
+     * @var string
+     *
+     * @since 1.5
+     */
+    public static $extension = 'com_proclaim';
 
-	/**
-	 * Check to see if Duplicate
-	 *
-	 * @param   int  $study_id  ?
-	 * @param   int  $topic_id  ?
-	 *
-	 * @return boolean
-	 *
-	 * @since 7.0
-	 */
-	public static function isDuplicate($study_id, $topic_id)
-	{
-		Factory::getApplication()->enqueueMessage('Need to update this function', 'error');
+    /**
+     * Check to see if Duplicate
+     *
+     * @param   int  $study_id  ?
+     * @param   int  $topic_id  ?
+     *
+     * @return boolean
+     *
+     * @since 7.0
+     */
+    public static function isDuplicate($study_id, $topic_id)
+    {
+        Factory::getApplication()->enqueueMessage('Need to update this function', 'error');
 
-		return true;
-	}
+        return true;
+    }
 }
