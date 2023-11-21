@@ -10,7 +10,6 @@
  * @link        https://www.christianwebministries.org
  * */
 
-// Check to ensure this file is included in Joomla!
-defined('_JEXEC') or die();
+\defined('_JEXEC') or die();
 
 echo "hit default";

@@ -43,7 +43,10 @@ $Listing = new Cwmlisting();
             /** @var \stdClass $list */
 
             /** @var \stdClass $cwmtemplate */
-            echo $Listing->getFluidListing($list, $params, $cwmtemplate, $type = "sermons");
+            try {
+                echo $Listing->getFluidListing($list, $params, $cwmtemplate, $type = "sermons");
+            } catch (Exception $e) {
+            }
             ?>
         </div>
     </div>

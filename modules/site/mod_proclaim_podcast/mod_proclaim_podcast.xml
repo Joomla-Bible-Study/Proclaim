@@ -1,19 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="module" method="upgrade" client="site">
+<extension type="module" client="site" method="upgrade">
     <name>mod_proclaim_podcast</name>
     <author>CWM Team</author>
-    <authorEmail>info@christianwebministries.org</authorEmail>
-    <authorUrl>https://www.christianwebministries.org</authorUrl>
-    <copyright>(C) 2007 Christian Web Ministries All rights reserved.</copyright>
-    <version>10.0.0.DEV-20231114</version>
     <creationDate>Nov 14, 2023</creationDate>
+    <copyright>(C) 2007 Christian Web Ministries All rights reserved.</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-    <description>JBS_MDL_PODCAST_XML_DESCRIPTION</description>
+    <authorEmail>info@christianwebministries.org</authorEmail>
+    <authorUrl>www.christianwebministries.org</authorUrl>
+    <version>10.0.0.DEV-20231114</version>
+    <description>MOD_PROCLAIM_PODCAST_XML_DESCRIPTION</description>
+    <namespace path="src">CWM\Module\ProclaimPodcast</namespace>
     <files>
-        <filename module="mod_proclaim_podcast">mod_proclaim_podcast.php</filename>
+        <folder module="mod_proclaim_podcast">services</folder>
         <folder>language</folder>
+        <folder>src</folder>
         <folder>tmpl</folder>
     </files>
+    <languages>
+        <language tag="en-GB">language/en-GB/mod_proclaim_podcast.ini</language>
+        <language tag="en-GB">language/en-GB/mod_proclaim_podcast.sys.ini</language>
+    </languages>
+    <help key="Site_Modules:_Proclaim_-_Podcast"/>
     <config>
         <fields name="params">
             <fieldset name="basic"
@@ -28,18 +35,15 @@
                        label="JBS_MDL_HEADER_TEXT" description="JBS_MDL_HEADER_TEXT_DESC"/>
             </fieldset>
             <fieldset name="advanced">
-                <field
-                        name="layout"
-                        type="modulelayout"
-                        label="JFIELD_ALT_LAYOUT_LABEL"
-                        description="JFIELD_ALT_MODULE_LAYOUT_DESC"/>
-
-                <field
-                        name="cache"
-                        type="list"
-                        default="1"
-                        label="COM_MODULES_FIELD_CACHING_LABEL"
-                        description="COM_MODULES_FIELD_CACHING_LABEL">
+                <field name="layout"
+                       type="modulelayout"
+                       label="JFIELD_ALT_LAYOUT_LABEL"
+                       description="JFIELD_ALT_MODULE_LAYOUT_DESC"/>
+                <field name="cache"
+                       type="list"
+                       default="1"
+                       label="COM_MODULES_FIELD_CACHING_LABEL"
+                       description="COM_MODULES_FIELD_CACHING_LABEL">
                     <option
                             value="1">JGLOBAL_USE_GLOBAL
                     </option>
@@ -47,13 +51,11 @@
                             value="0">COM_MODULES_FIELD_VALUE_NOCACHING
                     </option>
                 </field>
-
-                <field
-                        name="cache_time"
-                        type="text"
-                        default="900"
-                        label="COM_MODULES_FIELD_CACHE_TIME_LABEL"
-                        description="COM_MODULES_FIELD_CACHE_TIME_LABEL"/>
+                <field name="cache_time"
+                       type="text"
+                       default="900"
+                       label="COM_MODULES_FIELD_CACHE_TIME_LABEL"
+                       description="COM_MODULES_FIELD_CACHE_TIME_LABEL"/>
             </fieldset>
         </fields>
     </config>

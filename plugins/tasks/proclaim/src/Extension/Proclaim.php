@@ -99,7 +99,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         // Always load CWM API if it exists.
         $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
-        if (file_exists($api)) {
+        if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
             require_once $api;
         }
     }

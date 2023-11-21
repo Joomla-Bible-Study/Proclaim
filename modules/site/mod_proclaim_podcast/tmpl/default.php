@@ -14,4 +14,10 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-echo $subscribe;
+if (!$list) {
+    return;
+}
+
+?>
+
+<?php echo $list; ?>

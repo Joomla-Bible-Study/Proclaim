@@ -19,6 +19,13 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 
+// Always load Proclaim API if it exists.
+$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
+
+if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
+    require_once $api;
+}
+
 /**
  * This is a dummy form element to load the components language file
  *

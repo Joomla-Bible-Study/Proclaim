@@ -30,7 +30,7 @@ use Joomla\Registry\Registry;
  * @subpackage  Model.BibleStudy
  * @since       7.1.0
  */
-class ModProclaimHelper implements DatabaseAwareInterface
+class ProclaimHelper implements DatabaseAwareInterface
 {
     use DatabaseAwareTrait;
 

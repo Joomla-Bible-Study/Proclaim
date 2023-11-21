@@ -3,19 +3,18 @@
     <name>mod_proclaim</name>
     <author>CWM Team</author>
     <authorEmail>info@christianwebministries.org</authorEmail>
-    <authorUrl>https://www.christianwebministries.org</authorUrl>
+    <authorUrl>www.christianwebministries.org</authorUrl>
     <copyright>(C) 2007 Proclaim All rights reserved.</copyright>
     <version>10.0.0.DEV-20231114</version>
     <creationDate>Nov 14, 2023</creationDate>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-    <description>JBS_MDL_DESCRIPTION</description>
+    <description>MOD_PROCLAIM_DESCRIPTION</description>
     <namespace path="src">CWM\Module\Proclaim</namespace>
     <files>
-        <filename module="mod_proclaim">mod_proclaim.php</filename>
+        <folder module="mod_proclaim">services</folder>
         <folder>tmpl</folder>
         <folder>language</folder>
         <folder>src</folder>
-        <folder>services</folder>
     </files>
     <config>
         <fields name="params">
@@ -86,7 +85,7 @@
                     <option value="">JGLOBAL_USE_GLOBAL</option>
                     <option value="-1">JBS_CMN_SHOW_ALL</option>
                 </field>
-                <field name="topic_id" type="topicslist" multiple="true"
+                <field name="topic_id" type="TopicsList" multiple="true"
                        label="JBS_CMN_FILTERS_TOPICS" description="JBS_CMN_FILTERS_DESC"
                        default="">
                     <option value="">JGLOBAL_USE_GLOBAL</option>
@@ -99,7 +98,7 @@
                     <option value="">JGLOBAL_USE_GLOBAL</option>
                     <option value="-1">JBS_CMN_SHOW_ALL</option>
                 </field>
-                <field name="messagetype" type="messagetypeList" multiple="true"
+                <field name="messagetype" type="MessageTypeList" multiple="true"
                        label="JBS_CMN_FILTERS_MESSAGETYPES" description="JBS_CMN_FILTERS_DESC"
                        default="">
                     <option value="">JGLOBAL_USE_GLOBAL</option>
@@ -576,5 +575,4 @@
             </fieldset>
         </fields>
     </config>
-    <scriptfile>script.php</scriptfile>
 </extension>

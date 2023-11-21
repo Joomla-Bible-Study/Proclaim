@@ -32,7 +32,7 @@ function admin_postinstall_template_condition(): bool
     // Always load Proclaim API if it exists.
     $api = '../components/com_proclaim/api.php';
 
-    if (file_exists($api)) {
+    if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
         require_once $api;
     }
 
@@ -76,7 +76,7 @@ function admin_postinstall_template_action(): void
     // Always load Proclaim API if it exists.
     $api = '../components/com_proclaim/api.php';
 
-    if (file_exists($api)) {
+    if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
         require_once $api;
     }
 

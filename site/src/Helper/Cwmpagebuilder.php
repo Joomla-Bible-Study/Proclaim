@@ -244,43 +244,28 @@ class Cwmpagebuilder
     public function runContentPlugins($item, $params)
     {
         // We don't need offset but it is a required argument for the plugin dispatcher
-        $offset = '';
+        $offset = 0;
         PluginHelper::importPlugin('content');
 
         // Run content plugins
         $dispatcher = Factory::getApplication();
+        $contentEventArguments = [
+            'context' => 'com_proclaim.sermon',
+            'subject' => &$item,
+            'params'  => &$params,
+            'page'    => $offset,
+        ];
 
-        $dispatcher->triggerEvent('onContentPrepare', array(
-                'com_proclaim.sermon',
-                & $item,
-                & $params,
-                $offset
-            ));
+        $dispatcher->triggerEvent('onContentPrepare', $contentEventArguments);
 
         $item->event = new \stdClass();
-
-        $results                        = $dispatcher->triggerEvent('onContentAfterTitle', array(
-                'com_proclaim.sermon',
-                &$item,
-                &$params,
-                $offset
-            ));
+        $results                        = $dispatcher->triggerEvent('onContentAfterTitle', $contentEventArguments);
         $item->event->afterDisplayTitle = trim(implode("\n", $results));
 
-        $results                           = $dispatcher->triggerEvent('onContentBeforeDisplay', array(
-                'com_proclaim.sermon',
-                &$item,
-                &$params,
-                $offset
-            ));
+        $results                           = $dispatcher->triggerEvent('onContentBeforeDisplay', $contentEventArguments);
         $item->event->beforeDisplayContent = trim(implode("\n", $results));
 
-        $results                          = $dispatcher->triggerEvent('onContentAfterDisplay', array(
-                'com_proclaim.sermon',
-                &$item,
-                &$params,
-                $offset
-            ));
+        $results                          = $dispatcher->triggerEvent('onContentAfterDisplay', $contentEventArguments);
         $item->event->afterDisplayContent = trim(implode("\n", $results));
 
         return $item;

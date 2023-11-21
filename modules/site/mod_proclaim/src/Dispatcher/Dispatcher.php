@@ -22,6 +22,13 @@ use Joomla\Registry\Registry;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+// Always load Proclaim API if it exists.
+$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
+
+if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
+    require_once $api;
+}
+
 /**
  * Dispatcher class for mod_articles_latest
  *
@@ -41,16 +48,8 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
      */
     protected function getLayoutData(): array
     {
-        // Always load Proclaim API if it exists.
-        $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
-
-        if (file_exists($api)) {
-            require_once $api;
-        } else {
-            return [];
-        }
-
         $data = parent::getLayoutData();
+
 
         $templatemenuid = $data['params']->get('t');
 
@@ -70,10 +69,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         $data['params'] = $admin_params;
 
 
-        $data['list'] = $this->getHelperFactory()->getHelper('ModProclaimHelper')->getLatest(
-            $data['params'],
-            $this->getApplication()
-        );
+        $data['list'] = $this->getHelperFactory()->getHelper('ProclaimHelper')->getLatest($data['params'], $this->getApplication());
 
         if (
             $data['params']->get('useexpert_module') > 0 || is_string(
@@ -129,7 +125,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
             $templatemenuid = $input->getInt('templatemenuid', 1);
         }
 
-        $linkurl = Route::_('index.php?option=com_proclaim&view=cwmsermons&t=' . $templatemenuid);
+        $linkurl      = Route::_('index.php?option=com_proclaim&view=cwmsermons&t=' . $templatemenuid);
         $data['link'] = '<a href="' . $linkurl . '"><button class="btn btn-primary">' . $link_text . '</button></a>';
 
         $wa = $this->app->getDocument()->getWebAssetManager();
