@@ -109,7 +109,7 @@ class com_proclaimInstallerScript extends InstallerScript
             'finder' => ['proclaim' => 1],
             'system' => [
                 'proclaimpodcast' => 0,
-                'proclaimbackup'  => 0,
+                'proclaim'  => 0,
             ],
         ],
     ];
@@ -173,7 +173,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @param   FileAdapter  $parent  ?
      *
-     * @return boolean
+     * @return bool
      *
      * @throws Exception
      * @since  1.5
@@ -216,7 +216,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @param   string  $version  CWM version to check for.
      *
-     * @return boolean
+     * @return bool
      *
      * @throws Exception
      * @since  7.1.0
@@ -239,7 +239,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @param   array  $extensions  Array of version to look for
      *
-     * @return boolean true is passing, false is failed php version.
+     * @return bool true is passing, false is failed php version.
      *
      * @throws Exception
      * @since 7.1.0
@@ -412,8 +412,8 @@ class com_proclaimInstallerScript extends InstallerScript
                         echo '' . ($module['result'] ? 'green' : 'red'); ?>">
                             <?php
                             echo ' ' . ($module['result'] ? Text::_('JBS_INS_REMOVED') : Text::_(
-                                'JBS_INS_NOT_REMOVED'
-                            ));
+                                    'JBS_INS_NOT_REMOVED'
+                                ));
                             ?>
                         </strong>
                     </td>

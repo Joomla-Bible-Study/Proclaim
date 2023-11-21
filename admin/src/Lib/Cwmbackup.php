@@ -18,7 +18,6 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
-use JetBrains\PhpStorm\NoReturn;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Filesystem\File;
@@ -62,7 +61,7 @@ class Cwmbackup
      *
      * @param   int  $run  ID
      *
-     * @return boolean
+     * @return bool
      *
      * @throws \Exception
      * @since 9.0.0
@@ -148,7 +147,7 @@ class Cwmbackup
      *
      * @param   string  $table  Table name
      *
-     * @return boolean
+     * @return bool
      *
      * @since 9.0.0
      */
@@ -226,7 +225,7 @@ class Cwmbackup
      *
      * @param   string  &$fileData  Data to write. Set to null to close the file handle.
      *
-     * @return boolean TRUE if saving to the file succeeded
+     * @return bool TRUE if saving to the file succeeded
      *
      * @throws \Exception
      * @since 9.0.0
